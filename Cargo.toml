@@ -1,0 +1,12 @@
+[package]
+name = "winsafe"
+version = "0.0.1"
+authors = ["Rodrigo Cesar de Freitas Dias <rcesar@gmail.com>"]
+description = "Under development since October, 2019."
+license = "MIT"
+repository = "https://github.com/rodrigocfd/winsafe"
+readme = "README.md"
+include = ["/src/**/*", "/Cargo.toml", "/LICENSE.md", "/README.md"]
+edition = "2018"
+
+[dependencies]
