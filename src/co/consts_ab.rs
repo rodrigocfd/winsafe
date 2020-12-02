@@ -97,6 +97,7 @@ decl!(BCN, i32,
 	[WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).");
 impl BCN {
 	priv_val!(BCN, FIRST, -1250);
+
 	val!(BCN, HOTITEMCHANGE, BCN::FIRST.0 + 0x0001);
 	val!(BCN, DROPDOWN, BCN::FIRST.0 + 0x0002);
 }
