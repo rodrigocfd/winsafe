@@ -1,6 +1,7 @@
 //! Raw FFI bindings.
 
-/// Empty type for underlying handle pointers.
+/// An empty enum, used to represent void pointers.
 pub enum Void {}
 
+pub mod kernel32;
 pub mod user32;

@@ -1,6 +1,8 @@
 use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 
+use crate::ffi::*;
+
 /// Stores a `Vec<u16>`
 /// [Windows UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
 /// string, which can perform UTF-8 conversions and can be used as a buffer to
@@ -9,6 +11,61 @@ use std::os::windows::ffi::OsStrExt;
 pub struct Utf16(pub Option<Vec<u16>>);
 
 impl Utf16 {
+	/// Creates a new UTF-16 string from an optional `String`, and stores it
+	/// internally. If `s` is null, a null pointer will be stored.
+	pub fn from_opt_str(val: Option<&str>) -> Self {
+		match val {
+			Some(val) => Self::from_str(val),
+			None => Self::default(),
+		}
+	}
+
+	/// Creates a new UTF-16 string from an ordinary `String`, and stores it
+	/// internally.
+	pub fn from_str(val: &str) -> Self {
+		Self(Some(
+			OsStr::new(val)
+				.encode_wide()
+				.chain(std::iter::once(0)) // append terminating null
+				.collect::<Vec<u16>>(),
+		))
+	}
+
+	/// Creates a new UTF-16 string by copying from a non-null-terminated buffer,
+	/// specifying the number of existing chars.
+	pub fn from_utf16_nchars(src: *const u16, num_chars: usize) -> Self {
+		if src.is_null() {
+			Self::default()
+		} else {
+			let mut me = Self::new_alloc_buffer(num_chars + 1); // add room for terminating null
+			let buf: &mut Vec<u16> = me.0.as_mut().unwrap(); // our internal buffer
+
+			unsafe {
+				std::ptr::copy_nonoverlapping(src, buf.as_mut_ptr(), num_chars); // won't copy terminating null
+				buf.set_len(num_chars + 1); // leave room for terminating null
+			}
+			me
+		}
+	}
+
+	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
+	pub fn from_utf16_nullt(src: *const u16) -> Self {
+		if src.is_null() {
+			Self::default()
+		} else {
+			let num_chars = unsafe { kernel32::lstrlenW(src) as usize };
+			Self::from_utf16_nchars(src, num_chars)
+		}
+	}
+
+	/// Creates a new UTF-16 buffer allocated with an specific length. All UTF-16
+	/// chars will be set to zero.
+	pub fn new_alloc_buffer(num_chars: usize) -> Self {
+		let mut me = Self::default();
+		me.realloc_buffer(num_chars);
+		me
+	}
+
 	/// Returns a `LPWSTR` mut pointer to the internal UTF-16 string buffer, to
 	/// be passed to native Win32 functions. This is useful to receive strings.
 	///
@@ -34,14 +91,88 @@ impl Utf16 {
 		}
 	}
 
-	/// Creates an UTF-16 string from an ordinary `String`, and stores it
-	/// internally.
-	pub fn from_str(val: &str) -> Utf16 {
-		Utf16(Some(
-			OsStr::new(val)
-				.encode_wide()
-				.chain(std::iter::once(0)) // append terminating null
-				.collect::<Vec<u16>>(),
-		))
+	/// Returns a slice to the internal `u16` buffer. This is useful to receive
+	/// strings.
+	///
+	/// **Note:** Will panic if the buffer wasn't previously allocated. Be sure
+	/// to alloc enough room, otherwise a buffer overrun may occur.
+	pub fn as_mut_slice(&mut self) -> &mut [u16] {
+		match self.0.as_mut() {
+			Some(v) => &mut v[..],
+			None => panic!("Trying to use an unallocated Utf16 buffer."),
+		}
+	}
+
+	/// Returns a slice to the internal UTF-16 string buffer.
+	///
+	/// **Note:** Will panic if the buffer wasn't previously allocated. Make sure
+	/// the `Utf16` object outlives the function call, otherwise it will point to
+	/// an invalid memory location.
+	pub fn as_slice(&mut self) -> &[u16] {
+		match self.0.as_ref() {
+			Some(v) => &v[..],
+			None => panic!("Trying to use an unallocated Utf16 buffer."),
+		}
+	}
+
+	/// Returns the size of the allocated internal buffer.
+	pub fn buffer_size(&self) -> usize {
+		match self.0.as_ref() {
+			Some(buf) => buf.len(),
+			None => 0, // not allocated yet
+		}
+	}
+
+	/// Fills the available buffer with zero values.
+	pub fn fill_with_zero(&mut self) {
+		if let Some(buf) = self.0.as_mut() {
+			for wchar in buf {
+				*wchar = 0;
+			}
+		}
+	}
+
+	/// Returns true if the internal buffer is storing a null string pointer.
+	pub fn is_null(&self) -> bool {
+		self.0.is_none()
+	}
+
+	/// Wrapper to
+	/// [`lstrlen`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
+	///
+	/// Returns the number of `u16` characters stored in the internal buffer, not
+	/// counting the terminating null.
+	pub fn len(&self) -> usize {
+		match self.0.as_ref() {
+			Some(buf) => unsafe { kernel32::lstrlenW(buf.as_ptr()) as usize },
+			None => 0,
+		}
+	}
+
+	/// Resizes the internal buffer, to be used as a buffer for native Win32
+	/// functions. All UTF-16 chars will be set to zero.
+	///
+	/// **Note:** The internal memory can move after a realloc, so if you're
+	/// using the internal buffer somewhere, update it by calling `as_const_ptr`
+	/// or `as_mut_buffer` again.
+	pub fn realloc_buffer(&mut self, size: usize) {
+		if self.0.is_none() {
+			self.0 = Some(Vec::default()); // create if not yet
+		}
+
+		let buf: &mut Vec<u16> = self.0.as_mut().unwrap(); // our internal buffer
+		buf.resize(size, 0); // fill with nulls
+	}
+
+	/// Converts into `String`. An internal null pointer will simply be converted
+	/// into an empty string.
+	pub fn to_string(&self) -> String {
+		match self.0.as_ref() {
+			Some(buf) => {
+				let slice = &buf[..self.len()]; // without terminating null
+				String::from_utf16(slice).unwrap_or_default()
+			},
+			None => String::default(),
+		}
 	}
 }
