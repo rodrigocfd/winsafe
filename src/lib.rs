@@ -4,6 +4,9 @@ pub mod co;
 
 mod ffi;
 
+mod funcs;
+pub use funcs::*;
+
 mod handles;
 pub use handles::*;
 

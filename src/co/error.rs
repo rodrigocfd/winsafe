@@ -52,4 +52,9 @@ impl ERROR {
 	val!(INVALID_FUNCTION, 1);
 	val!(FILE_NOT_FOUND, 2);
 	val!(PATH_NOT_FOUND, 3);
+
+	val!(S_OK, 0);
+	val!(S_FALSE, 1);
+
+	val!(RPC_E_CHANGED_MODE, 0x80010106);
 }
