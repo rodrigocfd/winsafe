@@ -1,4 +1,4 @@
-decl!(ACCELF, u8,
+ty_const!(ACCELF, u8,
 	"[`ACCELL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 	`fVirt`.");
 impl ACCELF {
@@ -9,7 +9,7 @@ impl ACCELF {
 	val!(ALT, 0x10);
 }
 
-decl!(ACCESS_RIGHTS, u32,
+ty_const!(ACCESS_RIGHTS, u32,
 	"[`RegOpenKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
 	`samDesired`.");
 impl ACCESS_RIGHTS {
@@ -20,7 +20,7 @@ impl ACCESS_RIGHTS {
 	val!(SYNCHRONIZE, 0x00100000);
 }
 
-decl!(ADRF, u32,
+ty_const!(ADRF, u32,
 	"[`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 	`dwRetFlags`. Don't seem to be defined anywhere, unconfirmed values.");
 impl ADRF {
@@ -30,7 +30,7 @@ impl ADRF {
 	val!(DRAWIMAGE, 3);
 }
 
-decl!(APPCOMMAND, i16,
+ty_const!(APPCOMMAND, i16,
 	"[`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 	commands.");
 impl APPCOMMAND {
@@ -90,7 +90,7 @@ impl APPCOMMAND {
 	val!(DWM_FLIP3D, 54);
 }
 
-decl!(BCN, i32,
+ty_const!(BCN, i32,
 	"Button control
 	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
 	sent via
@@ -102,7 +102,7 @@ impl BCN {
 	val!(DROPDOWN, BCN::FIRST.0 + 0x0002);
 }
 
-decl!(BI, u32,
+ty_const!(BI, u32,
 	"[`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
 	`biCompression`.");
 impl BI {
@@ -114,7 +114,7 @@ impl BI {
 	val!(PNG, 5);
 }
 
-decl!(BKMODE, i32,
+ty_const!(BKMODE, i32,
 	"[`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	`mode`.");
 impl BKMODE {

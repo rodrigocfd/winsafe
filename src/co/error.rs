@@ -5,7 +5,7 @@ use crate::ffi::*;
 use crate::handles::*;
 use crate::Utf16;
 
-decl!(ERROR, u32,
+ty_const!(ERROR, u32,
 	"A Windows
 	[system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	retrieved by

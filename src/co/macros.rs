@@ -1,7 +1,7 @@
 // Declares the type of a constant with some impls.
 // We use doc as string because of a bug in rust-analyzer:
 // https://stackoverflow.com/q/65112749/6923555
-macro_rules! decl {
+macro_rules! ty_const {
 	($ty: ident, $num: ty, $comm: expr) => {
 		#[doc=$comm]
 		#[repr(C)]

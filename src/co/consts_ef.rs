@@ -1,4 +1,4 @@
-decl!(FORMAT_MESSAGE, u32,
+ty_const!(FORMAT_MESSAGE, u32,
 	"[`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	`dwFlags`.");
 impl FORMAT_MESSAGE {

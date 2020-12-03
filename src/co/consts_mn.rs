@@ -1,4 +1,4 @@
-decl!(MB, u32,
+ty_const!(MB, u32,
 	"[MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
 	`uType`.");
 impl MB {
@@ -37,7 +37,7 @@ impl MB {
 	val!(SERVICE_NOTIFICATION, 0x00200000);
 }
 
-decl!(NM, i32,
+ty_const!(NM, i32,
 	"Common control
 	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications).");
 impl NM {

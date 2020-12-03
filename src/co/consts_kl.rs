@@ -2,7 +2,7 @@
 
 use crate::co;
 
-decl!(LANG, u16,
+ty_const!(LANG, u16,
 	"[`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	`dwLanguageId`.");
 impl LANG {

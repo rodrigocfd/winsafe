@@ -3,11 +3,9 @@
 use crate::co;
 use crate::ffi::*;
 
-/// Handle to a
-/// [local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
-#[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
-pub struct HLOCAL(*mut Void);
+ty_handle!(HLOCAL,
+	"Handle to a
+	[local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).");
 
 impl<T> From<*const T> for HLOCAL {
 	fn from(p: *const T) -> Self {

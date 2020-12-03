@@ -1,4 +1,4 @@
-decl!(DLGID, u32,
+ty_const!(DLGID, u32,
 	"Dialog built-in IDs. These are also returned from
 	[`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw#return-value).");
 impl DLGID {
