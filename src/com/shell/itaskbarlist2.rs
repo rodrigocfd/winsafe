@@ -6,7 +6,7 @@ use crate::com::shell::ITaskbarList;
 use crate::ffi::Void;
 use crate::HWND;
 
-/// [ITaskbarList2](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
+/// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 /// ->
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 /// ->

@@ -5,7 +5,7 @@ macro_rules! const_type {
 	($name:ident, $num:ty, $doc:expr) => {
 		#[doc=$doc]
 		#[repr(C)]
-		#[derive(Default, Copy, Clone, Debug, Eq, PartialEq)]
+		#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 		pub struct $name($num); // declare the newtype constant
 
 		// Conversions from/to underlying number.

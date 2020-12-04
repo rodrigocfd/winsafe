@@ -20,10 +20,12 @@ macro_rules! handle_type {
 // Transforms a pointer into an option, which is None if the pointer is null.
 macro_rules! ptr_to_opt {
 	($ptr:expr) => {
-		if $ptr.is_null() {
-			None
-		} else {
-			Some($ptr)
+		unsafe {
+			if $ptr.is_null() {
+				None
+			} else {
+				Some($ptr)
+			}
 		}
 	};
 }

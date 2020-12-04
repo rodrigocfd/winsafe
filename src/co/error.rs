@@ -12,6 +12,7 @@ const_type!(ERROR, u32,
 	[`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
 	function, or an
 	[`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).");
+
 impl ERROR {
 	/// Returns the last error code with
 	/// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror).
@@ -29,12 +30,12 @@ impl ERROR {
 				u32::from(co::FORMAT_MESSAGE::ALLOCATE_BUFFER
 					| co::FORMAT_MESSAGE::FROM_SYSTEM
 					| co::FORMAT_MESSAGE::IGNORE_INSERTS),
-				std::ptr::null_mut(),
+				std::ptr::null(),
 				self.0,
 				co::LANG::NEUTRAL.MAKELANGID(co::SUBLANG::DEFAULT),
 				(&mut lpBuf as *mut *mut u16) as *mut u16,
 				0,
-				std::ptr::null_mut(),
+				std::ptr::null(),
 			);
 			let text16 = Utf16::from_utf16_nchars(lpBuf, numChars as usize);
 			HLOCAL::from(lpBuf).LocalFree();

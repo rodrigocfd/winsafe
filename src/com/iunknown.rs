@@ -59,7 +59,7 @@ impl IUnknown {
 			let refCount = ptrFun(self.vtbl);
 
 			if refCount == 0 {
-				self.vtbl = std::ptr::null_mut();
+				self.vtbl = std::ptr::null();
 			}
 			refCount
 		}

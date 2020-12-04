@@ -10,13 +10,13 @@ use crate::ffi::{ole32, Void};
 /// Returns a pointer to a pointer to an
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 /// COM virtual table.
-pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *const Void,
+pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: Option<*const Void>,
 	dwClsContext: co::CLSCTX, riid: &IID) -> *const *const T
 {
-	let mut ppv: *const *const T = std::ptr::null_mut();
+	let mut ppv: *const *const T = std::ptr::null();
 	unsafe {
 		ole32::CoCreateInstance(rclsid.as_ref() as *const GUID as *const Void,
-			pUnkOuter,
+			pUnkOuter.unwrap_or(std::ptr::null()),
 			dwClsContext.into(), riid.as_ref() as *const GUID as *const Void,
 			&mut ppv
 				as *const *const *const T
@@ -34,7 +34,7 @@ pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *const Void,
 /// call.
 pub fn CoInitializeEx(dwCoInit: co::COINIT) -> Result<co::ERROR, co::ERROR> {
 	let err = co::ERROR::from(
-		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.into()) }
+		unsafe { ole32::CoInitializeEx(std::ptr::null(), dwCoInit.into()) }
 	);
 	match err {
 		co::ERROR::S_OK

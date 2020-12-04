@@ -12,10 +12,12 @@ handle_type!(HINSTANCE,
 impl HINSTANCE {
 	/// [`GetModuleHandle`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
 	/// function.
-	pub fn GetModuleHandle(lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR> {
-		match ptr_to_opt!(unsafe {
+	pub fn GetModuleHandle(
+		lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR>
+	{
+		match ptr_to_opt!(
 			kernel32::GetModuleHandleW(Utf16::from_opt_str(lpModuleName).as_ptr())
-		}) {
+		) {
 			Some(p) => Ok(HINSTANCE(p)),
 			None => Err(co::ERROR::GetLastError()),
 		}
