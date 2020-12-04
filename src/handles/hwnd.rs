@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::ffi::*;
+use crate::ffi::{user32, Void};
 use crate::Utf16;
 
 ty_handle!(HWND,

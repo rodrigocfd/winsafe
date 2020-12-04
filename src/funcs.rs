@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::*;
+use crate::{CLSID, GUID, IID};
 use crate::co;
-use crate::ffi::*;
+use crate::ffi::{ole32, Void};
 
 pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *mut Void,
 	dwClsContext: co::CLSCTX, riid: &IID) -> *mut *mut T

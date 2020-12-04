@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::ffi::*;
+use crate::ffi::{kernel32, Void};
 
 ty_handle!(HLOCAL,
 	"Handle to a

@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::*;
-use crate::com::*;
-use crate::ffi::*;
+use crate::HWND;
+use crate::com::{IUnknown, IUnknownVtbl};
+use crate::ffi::Void;
 
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 /// -> `IUnknown`.
@@ -30,7 +30,7 @@ impl From<*mut *mut ITaskbarListVtbl> for ITaskbarList {
 
 impl ITaskbarList {
 	pub fn AddRef(&self) -> u32 { self.base.AddRef() }
-	pub fn Release(&self) -> u32 { self.base.Release() }
+	pub fn Release(&mut self) -> u32 { self.base.Release() }
 
 	/// [ITaskbarList::SetActiveAlt](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
 	/// method.
