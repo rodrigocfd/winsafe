@@ -3,27 +3,25 @@
 use crate::co;
 use crate::ffi::{kernel32, Void};
 
-/// Handle to a
-/// [local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
-#[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
-pub struct HLOCAL(*const Void);
+handle_type!(HLOCAL,
+	"Handle to a
+	[local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).");
 
 impl<T> From<*const T> for HLOCAL {
+	/// Wraps a *const T.
 	fn from(p: *const T) -> Self {
-		Self(p as *const Void) // create from a *const T
+		Self(p as *const Void)
 	}
 }
 
 impl<T> From<*mut T> for HLOCAL {
+	/// Wraps a *mut T.
 	fn from(p: *mut T) -> Self {
-		Self(p as *mut Void) // create from a *mut T
+		Self(p as *mut Void)
 	}
 }
 
 impl HLOCAL {
-	as_ptr_method!();
-
 	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
 	pub fn LocalFree(&self) {

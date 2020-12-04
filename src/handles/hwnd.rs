@@ -4,11 +4,9 @@ use crate::co;
 use crate::ffi::{user32, Void};
 use crate::Utf16;
 
-/// Handle to a
-/// [window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
-#[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
-pub struct HWND(*const Void);
+handle_type!(HWND,
+	"Handle to a
+	[window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).");
 
 impl Default for HWND {
 	fn default() -> Self {
@@ -17,8 +15,6 @@ impl Default for HWND {
 }
 
 impl HWND {
-	as_ptr_method!();
-
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// function.
 	pub fn GetForegroundWindow() -> Option<HWND> {
