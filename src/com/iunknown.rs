@@ -16,6 +16,7 @@ pub struct IUnknownVtbl {
 }
 
 impl From<*mut *mut IUnknownVtbl> for IUnknown {
+	/// Creates a new object from a pointer to a pointer to its virtual table.
 	fn from(ppv: *mut *mut IUnknownVtbl) -> Self {
 		Self { vtbl: ppv }
 	}
@@ -32,20 +33,23 @@ impl IUnknown {
 		self.vtbl as *mut *mut T
 	}
 
-	/// [IUnknown::AddRef](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
+	/// [`IUnknown::AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
 	/// method.
 	pub fn AddRef(&self) -> u32 {
 		let pfun = unsafe { (*(*self.vtbl)).addRef };
 		pfun(self.vtbl)
 	}
 
-	/// [IUnknown::Release](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// method.
 	///
 	/// Can be called any number of times, will actually release only while the
 	/// internal ref count is greater than zero.
 	///
-	/// This method will be automatically called by the destructor.
+	/// This method will be automatically called by the destructor, but note that
+	/// this must happen **before** the last
+	/// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
+	/// call.
 	pub fn Release(&mut self) -> u32 {
 		if self.vtbl.is_null() {
 			0

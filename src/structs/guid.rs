@@ -9,8 +9,8 @@ pub struct GUID {
 }
 
 impl GUID {
-	/// Creates a new GUID from hex numbers, which can be copied straight from
-	/// standard GUID definitions.
+	/// Creates a new `GUID` from hex numbers, which can be copied straight from
+	/// standard `GUID` definitions.
 	///
 	/// Example:
 	/// ```rust,ignore
@@ -30,7 +30,8 @@ impl GUID {
 
 //------------------------------------------------------------------------------
 
-/// COM class ID. Just a safe abstraction over a `GUID`.
+/// COM class ID. Just a safe abstraction over a
+/// [`GUID`](https://docs.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid).
 #[repr(C)]
 pub struct CLSID(GUID);
 
@@ -47,8 +48,8 @@ impl AsRef<GUID> for CLSID {
 }
 
 impl CLSID {
-	/// Creates a new CLSID from hex numbers, which can be copied straight from
-	/// standard CLSID definitions.
+	/// Creates a new `CLSID` from hex numbers, which can be copied straight from
+	/// standard `CLSID` definitions.
 	///
 	/// Example:
 	/// ```rust,ignore
@@ -61,7 +62,8 @@ impl CLSID {
 
 //------------------------------------------------------------------------------
 
-/// COM interface ID. Just a safe abstraction over a `GUID`.
+/// COM interface ID. Just a safe abstraction over a
+/// [`GUID`](https://docs.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid).
 #[repr(C)]
 pub struct IID(GUID);
 
@@ -78,8 +80,8 @@ impl AsRef<GUID> for IID {
 }
 
 impl IID {
-	/// Creates a new IID from hex numbers, which can be copied straight from
-	/// standard IID definitions.
+	/// Creates a new `IID` from hex numbers, which can be copied straight from
+	/// standard `IID` definitions.
 	///
 	/// Example:
 	/// ```rust,ignore

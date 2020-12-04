@@ -4,6 +4,12 @@ use crate::{CLSID, GUID, IID};
 use crate::co;
 use crate::ffi::{ole32, Void};
 
+/// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
+/// function.
+///
+/// Returns a pointer to a pointer to an
+/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
+/// COM virtual table.
 pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *mut Void,
 	dwClsContext: co::CLSCTX, riid: &IID) -> *mut *mut T
 {
@@ -21,6 +27,10 @@ pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *mut Void,
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
 /// function.
+///
+/// Must be paired with a
+/// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
+/// call.
 pub fn CoInitializeEx(dwCoInit: co::COINIT) -> Result<co::ERROR, co::ERROR> {
 	let err = co::ERROR::from(
 		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.into()) }
