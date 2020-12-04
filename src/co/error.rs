@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::ffi::*;
-use crate::handles::*;
+use crate::ffi::kernel32;
+use crate::handles::HLOCAL;
 use crate::Utf16;
 
 const_type!(ERROR, u32,
@@ -15,14 +15,14 @@ const_type!(ERROR, u32,
 impl ERROR {
 	/// Returns the last error code with
 	/// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror).
-	pub fn GetLastError() -> Self {
+	pub fn GetLastError() -> ERROR {
 		unsafe { Self(kernel32::GetLastError()) }
 	}
 
 	/// Returns the textual description of the system error, by calling
 	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// function.
-	pub fn FormatMessage(self) -> String {
+	pub fn FormatMessage(&self) -> String {
 		unsafe {
 			let mut lpBuf: *mut u16 = std::ptr::null_mut();
 			let numChars = kernel32::FormatMessageW(
@@ -44,7 +44,7 @@ impl ERROR {
 
 	/// Sets this error as the last error code, by passing it to
 	/// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror).
-	pub fn SetLastError(self) {
+	pub fn SetLastError(&self) {
 		unsafe { kernel32::SetLastError(self.0) }
 	}
 

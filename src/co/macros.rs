@@ -80,7 +80,7 @@ macro_rules! const_type {
 	};
 }
 
-// Syntactic sugar to declare a member pub const.
+// Syntactic sugar to declare a pub const member.
 macro_rules! const_val {
 	($name: ident, $val: expr) => {
 		pub const $name: Self = Self($val);

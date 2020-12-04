@@ -10,16 +10,17 @@ use crate::ffi::{ole32, Void};
 /// Returns a pointer to a pointer to an
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 /// COM virtual table.
-pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *mut Void,
-	dwClsContext: co::CLSCTX, riid: &IID) -> *mut *mut T
+pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *const Void,
+	dwClsContext: co::CLSCTX, riid: &IID) -> *const *const T
 {
-	let mut ppv: *mut *mut T = std::ptr::null_mut();
+	let mut ppv: *const *const T = std::ptr::null_mut();
 	unsafe {
-		ole32::CoCreateInstance(rclsid.as_ref() as *const GUID as *mut Void, pUnkOuter,
-			dwClsContext.into(), riid.as_ref() as *const GUID as *mut Void,
+		ole32::CoCreateInstance(rclsid.as_ref() as *const GUID as *const Void,
+			pUnkOuter,
+			dwClsContext.into(), riid.as_ref() as *const GUID as *const Void,
 			&mut ppv
-				as *mut *mut *mut T
-				as *mut *mut *mut Void,
+				as *const *const *const T
+				as *const *const *const Void,
 		);
 	}
 	ppv

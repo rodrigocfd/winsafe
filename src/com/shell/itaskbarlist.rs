@@ -16,18 +16,18 @@ pub struct ITaskbarList {
 #[repr(C)]
 pub struct ITaskbarListVtbl {
 	iUnknownVtbl: IUnknownVtbl,
-	hrInit: fn(*mut *mut ITaskbarListVtbl) -> u32,
-	addTab: fn(*mut *mut ITaskbarListVtbl, *mut Void) -> u32,
-	deleteTab: fn(*mut *mut ITaskbarListVtbl, *mut Void) -> u32,
-	activateTab: fn(*mut *mut ITaskbarListVtbl, *mut Void) -> u32,
-	setActiveAlt: fn(*mut *mut ITaskbarListVtbl, *mut Void) -> u32,
+	hrInit: fn(*const *const ITaskbarListVtbl) -> u32,
+	addTab: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
+	deleteTab: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
+	activateTab: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
+	setActiveAlt: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
 }
 
-impl From<*mut *mut ITaskbarListVtbl> for ITaskbarList {
+impl From<*const *const ITaskbarListVtbl> for ITaskbarList {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: *mut *mut ITaskbarListVtbl) -> Self {
+	fn from(ppv: *const *const ITaskbarListVtbl) -> Self {
 		Self {
-			base: IUnknown::from(ppv as *mut *mut IUnknownVtbl)
+			base: IUnknown::from(ppv as *const *const IUnknownVtbl)
 		}
 	}
 }
@@ -38,6 +38,6 @@ impl ITaskbarList {
 	pub fn SetActiveAlt(&self, hwnd: HWND) {
 		let ppv = self.base.ppv::<ITaskbarListVtbl>();
 		let pfun = unsafe { (*(*ppv)).setActiveAlt };
-		pfun(ppv, hwnd.0);
+		pfun(ppv, hwnd.as_ptr());
 	}
 }
