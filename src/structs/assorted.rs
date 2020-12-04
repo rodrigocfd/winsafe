@@ -1,6 +1,6 @@
 /// [`ATOM`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by
-/// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+/// [`RegisterClassEx`](crate::RegisterClassEx).
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct ATOM(u16);

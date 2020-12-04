@@ -3,7 +3,7 @@
 use crate::ffi::Void;
 
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
-/// is the base to all COM interfaces.
+/// interface is the base to all COM interfaces.
 pub struct IUnknown {
 	vtbl: *const *const IUnknownVtbl,
 }
@@ -49,8 +49,7 @@ impl IUnknown {
 	///
 	/// This method will be automatically called by the destructor, but note that
 	/// this must happen **before** the last
-	/// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
-	/// call.
+	/// [`CoUninitialize`](crate::CoUninitialize) call.
 	pub fn Release(&mut self) -> u32 {
 		if self.vtbl.is_null() {
 			0

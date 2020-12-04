@@ -6,11 +6,13 @@ use crate::com::{IUnknown, IUnknownVtbl};
 use crate::ffi::Void;
 
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-/// ->
-/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown).
+/// COM interface.
+///
+/// Inherits from:
+/// * [`IUnknown`](crate::com::IUnknown).
 pub struct ITaskbarList {
 	/// Base
-	/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown).
+	/// [`IUnknown`](crate::com::IUnknown).
 	pub iUnknown: IUnknown,
 }
 

@@ -30,8 +30,7 @@ impl GUID {
 
 //------------------------------------------------------------------------------
 
-/// COM class ID. Just a safe abstraction over a
-/// [`GUID`](https://docs.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid).
+/// COM class ID. Just a safe abstraction over a [`GUID`](crate::GUID).
 #[repr(C)]
 pub struct CLSID(GUID);
 
@@ -62,8 +61,7 @@ impl CLSID {
 
 //------------------------------------------------------------------------------
 
-/// COM interface ID. Just a safe abstraction over a
-/// [`GUID`](https://docs.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid).
+/// COM interface ID. Just a safe abstraction over a [`GUID`](crate::GUID).
 #[repr(C)]
 pub struct IID(GUID);
 

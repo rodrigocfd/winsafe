@@ -3,9 +3,11 @@
 use crate::{ATOM, HMENU, Utf16};
 use crate::ffi::{Void};
 
+/// Wraps a variable parameter.
+///
 /// Used in:
-/// * [`CreateWindowEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw) `lpClassName`;
-/// * [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw) `lpClassName`.
+/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
+/// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
 pub enum AtomOrStr<'a> {
 	Atom(ATOM),
 	Str(&'a str),
@@ -13,7 +15,8 @@ pub enum AtomOrStr<'a> {
 
 impl<'a> AtomOrStr<'a> {
 	/// [`MAKEINTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
-	/// macro. Uses an external buffer to keep the string, if needed.
+	/// macro. Uses an external [`Utf16`](crate::Utf16) buffer to keep the
+	/// string, if needed.
 	pub fn MAKEINTRESOURCE(&self, buf16: &mut Utf16) -> *const u16 {
 		match self {
 			AtomOrStr::Str(name) => {
@@ -25,10 +28,14 @@ impl<'a> AtomOrStr<'a> {
 	}
 }
 
+//------------------------------------------------------------------------------
+
+/// Wraps a variable parameter.
+///
 /// Used in
-/// * [`AppendMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw) `uIDNewItem`;
-/// * [`CreateWindowEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw) `hMenu`;
-/// * [`InsertMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuw) `uIDNewItem`.
+/// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
+/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
+/// * [`InsertMenu`](create::HMENU::InsertMenu) `uIDNewItem`.
 pub enum IdOrMenu {
 	Id(i32),
 	Menu(HMENU),
@@ -36,7 +43,7 @@ pub enum IdOrMenu {
 }
 
 impl IdOrMenu {
-	/// Useful to pass as HMENU.
+	/// Useful to pass as [`HMENU`](crate::HMENU).
 	pub fn as_ptr(&self) -> *const Void {
 		match self {
 			IdOrMenu::Id(id) => *id as *const Void,

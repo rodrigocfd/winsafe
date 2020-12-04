@@ -7,13 +7,14 @@ use crate::ffi::Void;
 use crate::HWND;
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
-/// ->
-/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-/// ->
-/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown).
+/// COM interface.
+///
+/// Inherits from:
+/// * [`ITaskbarList`](crate::com::shell::ITaskbarList);
+/// * [`IUnknown`](crate::com::IUnknown).
 pub struct ITaskbarList2 {
 	/// Base
-	/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist).
+	/// [`ITaskbarList`](crate::com::shell::ITaskbarList).
 	pub iTaskbarList: ITaskbarList,
 }
 
