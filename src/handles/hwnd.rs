@@ -17,16 +17,13 @@ impl Default for HWND {
 }
 
 impl HWND {
+	as_ptr_method!();
+
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// function.
 	pub fn GetForegroundWindow() -> Option<HWND> {
 		ptr_to_opt!(unsafe { user32::GetForegroundWindow() })
 			.map(|p| Self(p))
-	}
-
-	/// Returns the raw underlying pointer.
-	pub fn as_ptr(&self) -> *const Void {
-		self.0
 	}
 
 	/// [`GetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getparent)
@@ -55,7 +52,9 @@ impl HWND {
 
 	/// [`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
 	/// method.
-	pub fn MessageBox(&self, lpText: &str, lpCaption: &str, uType: co::MB) -> co::DLGID {
+	pub fn MessageBox(
+		&self, lpText: &str, lpCaption: &str, uType: co::MB) -> co::DLGID
+	{
 		co::DLGID::from(
 			unsafe {
 				user32::MessageBoxW(self.0, Utf16::from_str(lpText).as_ptr(),

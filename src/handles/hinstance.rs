@@ -12,6 +12,8 @@ use crate::Utf16;
 pub struct HINSTANCE(*const Void);
 
 impl HINSTANCE {
+	as_ptr_method!();
+
 	/// [`GetModuleHandle`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
 	/// function.
 	pub fn GetModuleHandle(lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR> {
@@ -21,10 +23,5 @@ impl HINSTANCE {
 			Some(p) => Ok(HINSTANCE(p)),
 			None => Err(co::ERROR::GetLastError()),
 		}
-	}
-
-	/// Returns the raw underlying pointer.
-	pub fn as_ptr(&self) -> *const Void {
-		self.0
 	}
 }

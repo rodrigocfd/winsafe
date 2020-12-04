@@ -29,7 +29,8 @@ impl Drop for IUnknown {
 }
 
 impl IUnknown {
-	pub(crate) fn ppv<T>(&self) -> *const *const T {
+	/// Returns a pointer to a pointer to the underlying COM virtual table.
+	pub unsafe fn ppv<T>(&self) -> *const *const T {
 		self.vtbl as *const *const T
 	}
 

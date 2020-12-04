@@ -8,3 +8,13 @@ macro_rules! ptr_to_opt {
 		}
 	};
 }
+
+// Declares as_ptr method.
+macro_rules! as_ptr_method {
+	() => {
+		/// Returns the raw underlying pointer for this handle.
+		pub unsafe fn as_ptr(&self) -> *const Void {
+			self.0
+		}
+	};
+}

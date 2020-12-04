@@ -22,10 +22,7 @@ impl<T> From<*mut T> for HLOCAL {
 }
 
 impl HLOCAL {
-	/// Returns the raw underlying pointer.
-	pub fn as_ptr(&self) -> *const Void {
-		self.0
-	}
+	as_ptr_method!();
 
 	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
