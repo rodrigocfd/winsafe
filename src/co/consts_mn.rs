@@ -41,25 +41,25 @@ const_type!(NM, i32,
 	"Common control
 	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications).");
 impl NM {
-	priv_const_val!(FIRST, 0);
+	const FIRST: Self = Self(0);
 
-	const_val!(OUTOFMEMORY, NM::FIRST.0 - 1);
-	const_val!(CLICK, NM::FIRST.0 - 2);
-	const_val!(DBLCLK, NM::FIRST.0 - 3);
-	const_val!(RETURN, NM::FIRST.0 - 4);
-	const_val!(RCLICK, NM::FIRST.0 - 5);
-	const_val!(RDBLCLK, NM::FIRST.0 - 6);
-	const_val!(SETFOCUS, NM::FIRST.0 - 7);
-	const_val!(KILLFOCUS, NM::FIRST.0 - 8);
-	const_val!(CUSTOMDRAW, NM::FIRST.0 - 12);
-	const_val!(HOVER, NM::FIRST.0 - 13);
-	const_val!(NCHITTEST, NM::FIRST.0 - 14);
-	const_val!(KEYDOWN, NM::FIRST.0 - 15);
-	const_val!(RELEASEDCAPTURE, NM::FIRST.0 - 16);
-	const_val!(SETCURSOR, NM::FIRST.0 - 17);
-	const_val!(CHAR, NM::FIRST.0 - 18);
-	const_val!(TOOLTIPSCREATED, NM::FIRST.0 - 19);
-	const_val!(LDOWN, NM::FIRST.0 - 20);
-	const_val!(RDOWN, NM::FIRST.0 - 21);
-	const_val!(THEMECHANGED, NM::FIRST.0 - 22);
+	const_val!(OUTOFMEMORY, Self::FIRST.0 - 1);
+	const_val!(CLICK, Self::FIRST.0 - 2);
+	const_val!(DBLCLK, Self::FIRST.0 - 3);
+	const_val!(RETURN, Self::FIRST.0 - 4);
+	const_val!(RCLICK, Self::FIRST.0 - 5);
+	const_val!(RDBLCLK, Self::FIRST.0 - 6);
+	const_val!(SETFOCUS, Self::FIRST.0 - 7);
+	const_val!(KILLFOCUS, Self::FIRST.0 - 8);
+	const_val!(CUSTOMDRAW, Self::FIRST.0 - 12);
+	const_val!(HOVER, Self::FIRST.0 - 13);
+	const_val!(NCHITTEST, Self::FIRST.0 - 14);
+	const_val!(KEYDOWN, Self::FIRST.0 - 15);
+	const_val!(RELEASEDCAPTURE, Self::FIRST.0 - 16);
+	const_val!(SETCURSOR, Self::FIRST.0 - 17);
+	const_val!(CHAR, Self::FIRST.0 - 18);
+	const_val!(TOOLTIPSCREATED, Self::FIRST.0 - 19);
+	const_val!(LDOWN, Self::FIRST.0 - 20);
+	const_val!(RDOWN, Self::FIRST.0 - 21);
+	const_val!(THEMECHANGED, Self::FIRST.0 - 22);
 }

@@ -12,8 +12,8 @@ impl GUID {
 	/// Creates a new GUID from hex numbers, which can be copied straight from
 	/// standard GUID definitions.
 	///
-	/// Example for `IUnknown`:
-	/// ```
+	/// Example:
+	/// ```rust,ignore
 	/// let g = GUID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
 	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> GUID {
@@ -50,11 +50,11 @@ impl CLSID {
 	/// Creates a new CLSID from hex numbers, which can be copied straight from
 	/// standard CLSID definitions.
 	///
-	/// Example for `IUnknown`:
-	/// ```
+	/// Example:
+	/// ```rust,ignore
 	/// let g = CLSID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
-	pub fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> CLSID {
+	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> CLSID {
 		Self(GUID::new(p1, p2, p3, p4, p5))
 	}
 }
@@ -81,11 +81,11 @@ impl IID {
 	/// Creates a new IID from hex numbers, which can be copied straight from
 	/// standard IID definitions.
 	///
-	/// Example for `IUnknown`:
-	/// ```
+	/// Example:
+	/// ```rust,ignore
 	/// let g = IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
-	pub fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> IID {
+	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> IID {
 		Self(GUID::new(p1, p2, p3, p4, p5))
 	}
 }

@@ -1,7 +1,6 @@
 //! Safe, hand-crafted Win32 API bindings, in idiomatic Rust.
 
 pub mod co;
-
 pub mod com;
 
 mod ffi;

@@ -96,10 +96,10 @@ const_type!(BCN, i32,
 	sent via
 	[WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).");
 impl BCN {
-	priv_const_val!(FIRST, -1250);
+	const FIRST: Self = Self(-1250);
 
-	const_val!(HOTITEMCHANGE, BCN::FIRST.0 + 0x0001);
-	const_val!(DROPDOWN, BCN::FIRST.0 + 0x0002);
+	const_val!(HOTITEMCHANGE, Self::FIRST.0 + 0x0001);
+	const_val!(DROPDOWN, Self::FIRST.0 + 0x0002);
 }
 
 const_type!(BI, u32,
