@@ -14,6 +14,18 @@ type PPVtbl = *const *const ITaskbarList3Vtbl;
 /// * [`ITaskbarList2`](crate::com::shell::ITaskbarList2);
 /// * [`ITaskbarList`](crate::com::shell::ITaskbarList);
 /// * [`IUnknown`](crate::com::IUnknown).
+///
+/// Usually instantiated as:
+/// ```rust,ignore
+/// let mut itl = com::shell::ITaskbarList3::from(
+///   CoCreateInstance(
+///     &com::shell::clsid::TaskbarList,
+///     None,
+///     co::CLSCTX::INPROC_SERVER,
+///     &com::shell::iid::ITaskbarList3,
+///   ),
+/// );
+/// ```
 pub struct ITaskbarList3 {
 	/// Base
 	/// [`ITaskbarList2`](crate::com::shell::ITaskbarList2).

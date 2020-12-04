@@ -3,7 +3,7 @@
 use crate::{ATOM, HMENU, Utf16};
 use crate::ffi::{Void};
 
-/// Wraps a variable parameter.
+/// Wraps a variant parameter.
 ///
 /// Used in:
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
@@ -30,7 +30,7 @@ impl<'a> AtomOrStr<'a> {
 
 //------------------------------------------------------------------------------
 
-/// Wraps a variable parameter.
+/// Wraps a variant parameter.
 ///
 /// Used in
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
