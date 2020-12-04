@@ -1,123 +1,123 @@
-ty_const!(ACCELF, u8,
+const_type!(ACCELF, u8,
 	"[`ACCELL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 	`fVirt`.");
 impl ACCELF {
-	val!(NONE, 0);
-	val!(VIRTKEY, 1);
-	val!(SHIFT, 0x04);
-	val!(CONTROL, 0x08);
-	val!(ALT, 0x10);
+	const_val!(NONE, 0);
+	const_val!(VIRTKEY, 1);
+	const_val!(SHIFT, 0x04);
+	const_val!(CONTROL, 0x08);
+	const_val!(ALT, 0x10);
 }
 
-ty_const!(ACCESS_RIGHTS, u32,
+const_type!(ACCESS_RIGHTS, u32,
 	"[`RegOpenKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
 	`samDesired`.");
 impl ACCESS_RIGHTS {
-	val!(DELETE, 0x00010000);
-	val!(READ_CONTROL, 0x00020000);
-	val!(WRITE_DAC, 0x00040000);
-	val!(WRITE_OWNER, 0x00080000);
-	val!(SYNCHRONIZE, 0x00100000);
+	const_val!(DELETE, 0x00010000);
+	const_val!(READ_CONTROL, 0x00020000);
+	const_val!(WRITE_DAC, 0x00040000);
+	const_val!(WRITE_OWNER, 0x00080000);
+	const_val!(SYNCHRONIZE, 0x00100000);
 }
 
-ty_const!(ADRF, u32,
+const_type!(ADRF, u32,
 	"[`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 	`dwRetFlags`. Don't seem to be defined anywhere, unconfirmed values.");
 impl ADRF {
-	val!(DRAWSYNC, 0);
-	val!(DRAWNOTHING, 1);
-	val!(DRAWFALLBACK, 2);
-	val!(DRAWIMAGE, 3);
+	const_val!(DRAWSYNC, 0);
+	const_val!(DRAWNOTHING, 1);
+	const_val!(DRAWFALLBACK, 2);
+	const_val!(DRAWIMAGE, 3);
 }
 
-ty_const!(APPCOMMAND, i16,
+const_type!(APPCOMMAND, i16,
 	"[`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 	commands.");
 impl APPCOMMAND {
-	val!(BROWSER_BACKWARD, 1);
-	val!(BROWSER_FORWARD, 2);
-	val!(BROWSER_REFRESH, 3);
-	val!(BROWSER_STOP, 4);
-	val!(BROWSER_SEARCH, 5);
-	val!(BROWSER_FAVORITES, 6);
-	val!(BROWSER_HOME, 7);
-	val!(VOLUME_MUTE, 8);
-	val!(VOLUME_DOWN, 9);
-	val!(VOLUME_UP, 10);
-	val!(MEDIA_NEXTTRACK, 11);
-	val!(MEDIA_PREVIOUSTRACK, 12);
-	val!(MEDIA_STOP, 13);
-	val!(MEDIA_PLAY_PAUSE, 14);
-	val!(LAUNCH_MAIL, 15);
-	val!(LAUNCH_MEDIA_SELECT, 16);
-	val!(LAUNCH_APP1, 17);
-	val!(LAUNCH_APP2, 18);
-	val!(BASS_DOWN, 19);
-	val!(BASS_BOOST, 20);
-	val!(BASS_UP, 21);
-	val!(TREBLE_DOWN, 22);
-	val!(TREBLE_UP, 23);
-	val!(MICROPHONE_VOLUME_MUTE, 24);
-	val!(MICROPHONE_VOLUME_DOWN, 25);
-	val!(MICROPHONE_VOLUME_UP, 26);
-	val!(HELP, 27);
-	val!(FIND, 28);
-	val!(NEW, 29);
-	val!(OPEN, 30);
-	val!(CLOSE, 31);
-	val!(SAVE, 32);
-	val!(PRINT, 33);
-	val!(UNDO, 34);
-	val!(REDO, 35);
-	val!(COPY, 36);
-	val!(CUT, 37);
-	val!(PASTE, 38);
-	val!(REPLY_TO_MAIL, 39);
-	val!(FORWARD_MAIL, 40);
-	val!(SEND_MAIL, 41);
-	val!(SPELL_CHECK, 42);
-	val!(DICTATE_OR_COMMAND_CONTROL_TOGGLE, 43);
-	val!(MIC_ON_OFF_TOGGLE, 44);
-	val!(CORRECTION_LIST, 45);
-	val!(MEDIA_PLAY, 46);
-	val!(MEDIA_PAUSE, 47);
-	val!(MEDIA_RECORD, 48);
-	val!(MEDIA_FAST_FORWARD, 49);
-	val!(MEDIA_REWIND, 50);
-	val!(MEDIA_CHANNEL_UP, 51);
-	val!(MEDIA_CHANNEL_DOWN, 52);
-	val!(DELETE, 53);
-	val!(DWM_FLIP3D, 54);
+	const_val!(BROWSER_BACKWARD, 1);
+	const_val!(BROWSER_FORWARD, 2);
+	const_val!(BROWSER_REFRESH, 3);
+	const_val!(BROWSER_STOP, 4);
+	const_val!(BROWSER_SEARCH, 5);
+	const_val!(BROWSER_FAVORITES, 6);
+	const_val!(BROWSER_HOME, 7);
+	const_val!(VOLUME_MUTE, 8);
+	const_val!(VOLUME_DOWN, 9);
+	const_val!(VOLUME_UP, 10);
+	const_val!(MEDIA_NEXTTRACK, 11);
+	const_val!(MEDIA_PREVIOUSTRACK, 12);
+	const_val!(MEDIA_STOP, 13);
+	const_val!(MEDIA_PLAY_PAUSE, 14);
+	const_val!(LAUNCH_MAIL, 15);
+	const_val!(LAUNCH_MEDIA_SELECT, 16);
+	const_val!(LAUNCH_APP1, 17);
+	const_val!(LAUNCH_APP2, 18);
+	const_val!(BASS_DOWN, 19);
+	const_val!(BASS_BOOST, 20);
+	const_val!(BASS_UP, 21);
+	const_val!(TREBLE_DOWN, 22);
+	const_val!(TREBLE_UP, 23);
+	const_val!(MICROPHONE_VOLUME_MUTE, 24);
+	const_val!(MICROPHONE_VOLUME_DOWN, 25);
+	const_val!(MICROPHONE_VOLUME_UP, 26);
+	const_val!(HELP, 27);
+	const_val!(FIND, 28);
+	const_val!(NEW, 29);
+	const_val!(OPEN, 30);
+	const_val!(CLOSE, 31);
+	const_val!(SAVE, 32);
+	const_val!(PRINT, 33);
+	const_val!(UNDO, 34);
+	const_val!(REDO, 35);
+	const_val!(COPY, 36);
+	const_val!(CUT, 37);
+	const_val!(PASTE, 38);
+	const_val!(REPLY_TO_MAIL, 39);
+	const_val!(FORWARD_MAIL, 40);
+	const_val!(SEND_MAIL, 41);
+	const_val!(SPELL_CHECK, 42);
+	const_val!(DICTATE_OR_COMMAND_CONTROL_TOGGLE, 43);
+	const_val!(MIC_ON_OFF_TOGGLE, 44);
+	const_val!(CORRECTION_LIST, 45);
+	const_val!(MEDIA_PLAY, 46);
+	const_val!(MEDIA_PAUSE, 47);
+	const_val!(MEDIA_RECORD, 48);
+	const_val!(MEDIA_FAST_FORWARD, 49);
+	const_val!(MEDIA_REWIND, 50);
+	const_val!(MEDIA_CHANNEL_UP, 51);
+	const_val!(MEDIA_CHANNEL_DOWN, 52);
+	const_val!(DELETE, 53);
+	const_val!(DWM_FLIP3D, 54);
 }
 
-ty_const!(BCN, i32,
+const_type!(BCN, i32,
 	"Button control
 	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
 	sent via
 	[WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).");
 impl BCN {
-	priv_val!(FIRST, -1250);
+	priv_const_val!(FIRST, -1250);
 
-	val!(HOTITEMCHANGE, BCN::FIRST.0 + 0x0001);
-	val!(DROPDOWN, BCN::FIRST.0 + 0x0002);
+	const_val!(HOTITEMCHANGE, BCN::FIRST.0 + 0x0001);
+	const_val!(DROPDOWN, BCN::FIRST.0 + 0x0002);
 }
 
-ty_const!(BI, u32,
+const_type!(BI, u32,
 	"[`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
 	`biCompression`.");
 impl BI {
-	val!(RGB, 0);
-	val!(RLE8, 1);
-	val!(RLE4, 2);
-	val!(BITFIELDS, 3);
-	val!(JPEG, 4);
-	val!(PNG, 5);
+	const_val!(RGB, 0);
+	const_val!(RLE8, 1);
+	const_val!(RLE4, 2);
+	const_val!(BITFIELDS, 3);
+	const_val!(JPEG, 4);
+	const_val!(PNG, 5);
 }
 
-ty_const!(BKMODE, i32,
+const_type!(BKMODE, i32,
 	"[`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	`mode`.");
 impl BKMODE {
-	val!(TRANSPARENT, 1);
-	val!(OPAQUE, 2);
+	const_val!(TRANSPARENT, 1);
+	const_val!(OPAQUE, 2);
 }

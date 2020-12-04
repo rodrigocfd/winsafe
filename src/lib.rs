@@ -7,13 +7,11 @@ pub mod com;
 mod ffi;
 
 mod funcs;
-pub use funcs::*;
-
 mod handles;
-pub use handles::*;
-
 mod structs;
-pub use structs::*;
-
 mod utf16;
+
+pub use funcs::*;
+pub use handles::*;
+pub use structs::*;
 pub use utf16::*;

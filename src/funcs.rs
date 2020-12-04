@@ -4,13 +4,13 @@ use crate::*;
 use crate::co;
 use crate::ffi::*;
 
-pub fn CoCreateInstance<T>(rclsid: &GUID, pUnkOuter: *mut Void,
-	dwClsContext: co::CLSCTX, riid: &GUID) -> *mut *mut T
+pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: *mut Void,
+	dwClsContext: co::CLSCTX, riid: &IID) -> *mut *mut T
 {
 	let mut ppv: *mut *mut T = std::ptr::null_mut();
 	unsafe {
-		ole32::CoCreateInstance(rclsid as *const GUID as *mut Void, pUnkOuter,
-			dwClsContext.into(), riid as *const GUID as *mut Void,
+		ole32::CoCreateInstance(rclsid.as_ref() as *const GUID as *mut Void, pUnkOuter,
+			dwClsContext.into(), riid.as_ref() as *const GUID as *mut Void,
 			&mut ppv
 				as *mut *mut *mut T
 				as *mut *mut *mut Void,

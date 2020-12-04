@@ -1,7 +1,7 @@
 // Declares the type of a constant with some impls.
 // We use doc as string because of a bug in rust-analyzer:
 // https://stackoverflow.com/q/65112749/6923555
-macro_rules! ty_const {
+macro_rules! const_type {
 	($ty: ident, $num: ty, $comm: expr) => {
 		#[doc=$comm]
 		#[repr(C)]
@@ -81,14 +81,14 @@ macro_rules! ty_const {
 }
 
 // Syntactic sugar to declare non-pub constant value.
-macro_rules! priv_val {
+macro_rules! priv_const_val {
 	($name: ident, $val: expr) => {
 		pub const $name: Self = Self($val);
 	}
 }
 
 // Syntactic sugar to declare pub constant value.
-macro_rules! val {
+macro_rules! const_val {
 	($name: ident, $val: expr) => {
 		pub const $name: Self = Self($val);
 	}

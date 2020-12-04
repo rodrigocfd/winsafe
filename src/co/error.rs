@@ -5,7 +5,7 @@ use crate::ffi::*;
 use crate::handles::*;
 use crate::Utf16;
 
-ty_const!(ERROR, u32,
+const_type!(ERROR, u32,
 	"A Windows
 	[system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	retrieved by
@@ -48,13 +48,13 @@ impl ERROR {
 		unsafe { kernel32::SetLastError(self.0) }
 	}
 
-	val!(SUCCESS, 0);
-	val!(INVALID_FUNCTION, 1);
-	val!(FILE_NOT_FOUND, 2);
-	val!(PATH_NOT_FOUND, 3);
+	const_val!(SUCCESS, 0);
+	const_val!(INVALID_FUNCTION, 1);
+	const_val!(FILE_NOT_FOUND, 2);
+	const_val!(PATH_NOT_FOUND, 3);
 
-	val!(S_OK, 0);
-	val!(S_FALSE, 1);
+	const_val!(S_OK, 0);
+	const_val!(S_FALSE, 1);
 
-	val!(RPC_E_CHANGED_MODE, 0x80010106);
+	const_val!(RPC_E_CHANGED_MODE, 0x80010106);
 }

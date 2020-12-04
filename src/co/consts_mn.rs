@@ -1,65 +1,65 @@
-ty_const!(MB, u32,
+const_type!(MB, u32,
 	"[MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
 	`uType`.");
 impl MB {
-	val!(ABORTRETRYIGNORE, 0x00000002);
-	val!(CANCELTRYCONTINUE, 0x00000006);
-	val!(HELP, 0x00004000);
-	val!(OK, 0x00000000);
-	val!(OKCANCEL, 0x00000001);
-	val!(RETRYCANCEL, 0x00000005);
-	val!(YESNO, 0x00000004);
-	val!(YESNOCANCEL, 0x00000003);
+	const_val!(ABORTRETRYIGNORE, 0x00000002);
+	const_val!(CANCELTRYCONTINUE, 0x00000006);
+	const_val!(HELP, 0x00004000);
+	const_val!(OK, 0x00000000);
+	const_val!(OKCANCEL, 0x00000001);
+	const_val!(RETRYCANCEL, 0x00000005);
+	const_val!(YESNO, 0x00000004);
+	const_val!(YESNOCANCEL, 0x00000003);
 
-	val!(ICONEXCLAMATION, 0x00000030);
-	val!(ICONWARNING, MB::ICONEXCLAMATION.0);
-	val!(ICONINFORMATION, 0x00000040);
-	val!(ICONASTERISK, MB::ICONINFORMATION.0);
-	val!(ICONQUESTION, 0x00000020);
-	val!(ICONSTOP, MB::ICONERROR.0);
-	val!(ICONERROR, 0x00000010);
-	val!(ICONHAND, MB::ICONERROR.0);
+	const_val!(ICONEXCLAMATION, 0x00000030);
+	const_val!(ICONWARNING, MB::ICONEXCLAMATION.0);
+	const_val!(ICONINFORMATION, 0x00000040);
+	const_val!(ICONASTERISK, MB::ICONINFORMATION.0);
+	const_val!(ICONQUESTION, 0x00000020);
+	const_val!(ICONSTOP, MB::ICONERROR.0);
+	const_val!(ICONERROR, 0x00000010);
+	const_val!(ICONHAND, MB::ICONERROR.0);
 
-	val!(DEFBUTTON1, 0x00000000);
-	val!(DEFBUTTON2, 0x00000100);
-	val!(DEFBUTTON3, 0x00000200);
-	val!(DEFBUTTON4, 0x00000300);
+	const_val!(DEFBUTTON1, 0x00000000);
+	const_val!(DEFBUTTON2, 0x00000100);
+	const_val!(DEFBUTTON3, 0x00000200);
+	const_val!(DEFBUTTON4, 0x00000300);
 
-	val!(APPLMODAL, 0x00000000);
-	val!(SYSTEMMODAL, 0x00001000);
-	val!(TASKMODAL, 0x00002000);
+	const_val!(APPLMODAL, 0x00000000);
+	const_val!(SYSTEMMODAL, 0x00001000);
+	const_val!(TASKMODAL, 0x00002000);
 
-	val!(DEFAULT_DESKTOP_ONLY, 0x00020000);
-	val!(RIGHT, 0x00080000);
-	val!(RTLREADING, 0x00100000);
-	val!(SETFOREGROUND, 0x00010000);
-	val!(TOPMOST, 0x00040000);
-	val!(SERVICE_NOTIFICATION, 0x00200000);
+	const_val!(DEFAULT_DESKTOP_ONLY, 0x00020000);
+	const_val!(RIGHT, 0x00080000);
+	const_val!(RTLREADING, 0x00100000);
+	const_val!(SETFOREGROUND, 0x00010000);
+	const_val!(TOPMOST, 0x00040000);
+	const_val!(SERVICE_NOTIFICATION, 0x00200000);
 }
 
-ty_const!(NM, i32,
+const_type!(NM, i32,
 	"Common control
 	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications).");
 impl NM {
-	priv_val!(FIRST, 0);
+	priv_const_val!(FIRST, 0);
 
-	val!(OUTOFMEMORY, NM::FIRST.0 - 1);
-	val!(CLICK, NM::FIRST.0 - 2);
-	val!(DBLCLK, NM::FIRST.0 - 3);
-	val!(RETURN, NM::FIRST.0 - 4);
-	val!(RCLICK, NM::FIRST.0 - 5);
-	val!(RDBLCLK, NM::FIRST.0 - 6);
-	val!(SETFOCUS, NM::FIRST.0 - 7);
-	val!(KILLFOCUS, NM::FIRST.0 - 8);
-	val!(CUSTOMDRAW, NM::FIRST.0 - 12);
-	val!(HOVER, NM::FIRST.0 - 13);
-	val!(NCHITTEST, NM::FIRST.0 - 14);
-	val!(KEYDOWN, NM::FIRST.0 - 15);
-	val!(RELEASEDCAPTURE, NM::FIRST.0 - 16);
-	val!(SETCURSOR, NM::FIRST.0 - 17);
-	val!(CHAR, NM::FIRST.0 - 18);
-	val!(TOOLTIPSCREATED, NM::FIRST.0 - 19);
-	val!(LDOWN, NM::FIRST.0 - 20);
-	val!(RDOWN, NM::FIRST.0 - 21);
-	val!(THEMECHANGED, NM::FIRST.0 - 22);
+	const_val!(OUTOFMEMORY, NM::FIRST.0 - 1);
+	const_val!(CLICK, NM::FIRST.0 - 2);
+	const_val!(DBLCLK, NM::FIRST.0 - 3);
+	const_val!(RETURN, NM::FIRST.0 - 4);
+	const_val!(RCLICK, NM::FIRST.0 - 5);
+	const_val!(RDBLCLK, NM::FIRST.0 - 6);
+	const_val!(SETFOCUS, NM::FIRST.0 - 7);
+	const_val!(KILLFOCUS, NM::FIRST.0 - 8);
+	const_val!(CUSTOMDRAW, NM::FIRST.0 - 12);
+	const_val!(HOVER, NM::FIRST.0 - 13);
+	const_val!(NCHITTEST, NM::FIRST.0 - 14);
+	const_val!(KEYDOWN, NM::FIRST.0 - 15);
+	const_val!(RELEASEDCAPTURE, NM::FIRST.0 - 16);
+	const_val!(SETCURSOR, NM::FIRST.0 - 17);
+	const_val!(CHAR, NM::FIRST.0 - 18);
+	const_val!(TOOLTIPSCREATED, NM::FIRST.0 - 19);
+	const_val!(LDOWN, NM::FIRST.0 - 20);
+	const_val!(RDOWN, NM::FIRST.0 - 21);
+	const_val!(THEMECHANGED, NM::FIRST.0 - 22);
 }
