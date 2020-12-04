@@ -11,9 +11,9 @@ pub fn CoCreateInstance<T>(rclsid: &GUID, pUnkOuter: *mut Void,
 	unsafe {
 		ole32::CoCreateInstance(rclsid as *const GUID as *mut Void, pUnkOuter,
 			dwClsContext.into(), riid as *const GUID as *mut Void,
-			&mut ppv as
-				*mut *mut *mut T as
-				*mut *mut *mut Void,
+			&mut ppv
+				as *mut *mut *mut T
+				as *mut *mut *mut Void,
 		);
 	}
 	ppv

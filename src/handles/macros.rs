@@ -4,7 +4,7 @@ macro_rules! ty_handle {
 		#[doc=$comm]
 		#[repr(C)]
 		#[derive(Copy, Clone, Eq, PartialEq)]
-		pub struct $ty(*mut Void);
+		pub struct $ty(pub(crate) *mut Void);
 	};
 }
 
