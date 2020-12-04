@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::HWND;
 use crate::com::{IUnknown, IUnknownVtbl};
 use crate::ffi::Void;
@@ -35,9 +36,13 @@ impl From<*const *const ITaskbarListVtbl> for ITaskbarList {
 impl ITaskbarList {
 	/// [`ITaskbarList::SetActiveAlt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
 	/// method.
-	pub fn SetActiveAlt(&self, hwnd: HWND) {
+	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), co::ERROR> {
 		let ppv = self.base.ppv::<ITaskbarListVtbl>();
 		let pfun = unsafe { (*(*ppv)).setActiveAlt };
-		pfun(ppv, hwnd.as_ptr());
+
+		match co::ERROR::from(pfun(ppv, hwnd.as_ptr())) {
+			co::ERROR::S_OK => Ok(()),
+			err => Err(err),
+		}
 	}
 }
