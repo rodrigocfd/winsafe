@@ -2,22 +2,24 @@
 
 use crate::ffi::Void;
 
+type PPVtbl = *const *const IUnknownVtbl;
+
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 /// interface is the base to all COM interfaces.
 pub struct IUnknown {
-	vtbl: *const *const IUnknownVtbl,
+	vtbl: PPVtbl,
 }
 
 #[repr(C)]
 pub struct IUnknownVtbl {
-	queryInterface: *const Void,
-	addRef: fn(*const *const IUnknownVtbl) -> u32,
-	release: fn(*const *const IUnknownVtbl) -> u32,
+	QueryInterface: *const Void,
+	AddRef: fn(PPVtbl) -> u32,
+	Release: fn(PPVtbl) -> u32,
 }
 
-impl From<*const *const IUnknownVtbl> for IUnknown {
+impl From<PPVtbl> for IUnknown {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: *const *const IUnknownVtbl) -> Self {
+	fn from(ppv: PPVtbl) -> Self {
 		Self { vtbl: ppv }
 	}
 }
@@ -37,7 +39,7 @@ impl IUnknown {
 	/// [`IUnknown::AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
 	/// method.
 	pub fn AddRef(&self) -> u32 {
-		let pfun = unsafe { (*(*self.vtbl)).addRef };
+		let pfun = unsafe { (*(*self.vtbl)).AddRef };
 		pfun(self.vtbl)
 	}
 
@@ -54,7 +56,7 @@ impl IUnknown {
 		if self.vtbl.is_null() {
 			0
 		} else {
-			let ptrFun = unsafe { (*(*self.vtbl)).release };
+			let ptrFun = unsafe { (*(*self.vtbl)).Release };
 			let refCount = ptrFun(self.vtbl);
 
 			if refCount == 0 {

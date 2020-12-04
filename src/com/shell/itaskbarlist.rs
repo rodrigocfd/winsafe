@@ -1,9 +1,11 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::HWND;
 use crate::com::{IUnknown, IUnknownVtbl};
 use crate::ffi::Void;
+use crate::HWND;
+
+type PPVtbl = *const *const ITaskbarListVtbl;
 
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 /// COM interface.
@@ -19,16 +21,16 @@ pub struct ITaskbarList {
 #[repr(C)]
 pub struct ITaskbarListVtbl {
 	iUnknownVtbl: IUnknownVtbl,
-	hrInit: fn(*const *const ITaskbarListVtbl) -> u32,
-	addTab: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
-	deleteTab: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
-	activateTab: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
-	setActiveAlt: fn(*const *const ITaskbarListVtbl, *const Void) -> u32,
+	HrInit: fn(PPVtbl) -> u32,
+	AddTab: fn(PPVtbl, *const Void) -> u32,
+	DeleteTab: fn(PPVtbl, *const Void) -> u32,
+	ActivateTab: fn(PPVtbl, *const Void) -> u32,
+	SetActiveAlt: fn(PPVtbl, *const Void) -> u32,
 }
 
-impl From<*const *const ITaskbarListVtbl> for ITaskbarList {
+impl From<PPVtbl> for ITaskbarList {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: *const *const ITaskbarListVtbl) -> Self {
+	fn from(ppv: PPVtbl) -> Self {
 		Self {
 			iUnknown: IUnknown::from(ppv as *const *const IUnknownVtbl)
 		}
@@ -41,7 +43,7 @@ impl ITaskbarList {
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), co::ERROR> {
 		unsafe {
 			let ppv = self.iUnknown.ppv::<ITaskbarListVtbl>();
-			let pfun = (*(*ppv)).setActiveAlt;
+			let pfun = (*(*ppv)).SetActiveAlt;
 
 			match co::ERROR::from(pfun(ppv, hwnd.as_ptr())) {
 				co::ERROR::S_OK => Ok(()),

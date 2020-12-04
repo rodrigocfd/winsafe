@@ -1,10 +1,11 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::com::{IUnknown, IUnknownVtbl};
-use crate::com::shell::ITaskbarList;
+use crate::com::shell::{ITaskbarList, ITaskbarListVtbl};
 use crate::ffi::Void;
 use crate::HWND;
+
+type PPVtbl = *const *const ITaskbarList2Vtbl;
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 /// COM interface.
@@ -20,16 +21,15 @@ pub struct ITaskbarList2 {
 
 #[repr(C)]
 pub struct ITaskbarList2Vtbl {
-	markFullscreenWindow: fn(*const *const ITaskbarList2Vtbl, *const Void, u32) -> u32,
+	iTaskbarListVtbl: ITaskbarListVtbl,
+	MarkFullscreenWindow: fn(PPVtbl, *const Void, u32) -> u32,
 }
 
-impl From<*const *const ITaskbarList2Vtbl> for ITaskbarList2 {
+impl From<PPVtbl> for ITaskbarList2 {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: *const *const ITaskbarList2Vtbl) -> Self {
+	fn from(ppv: PPVtbl) -> Self {
 		Self {
-			iTaskbarList: ITaskbarList {
-				iUnknown: IUnknown::from(ppv as *const *const IUnknownVtbl),
-			},
+			iTaskbarList: ITaskbarList::from(ppv as *const *const ITaskbarListVtbl),
 		}
 	}
 }
@@ -42,7 +42,7 @@ impl ITaskbarList2 {
 	{
 		unsafe {
 			let ppv = self.iTaskbarList.iUnknown.ppv::<ITaskbarList2Vtbl>();
-			let pfun = (*(*ppv)).markFullscreenWindow;
+			let pfun = (*(*ppv)).MarkFullscreenWindow;
 
 			match co::ERROR::from(pfun(ppv, hwnd.as_ptr(), fFullscreen as u32)) {
 				co::ERROR::S_OK => Ok(()),
