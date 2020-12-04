@@ -1,10 +1,6 @@
-//! Component Object Model interfaces.
+//! COM interfaces.
 
-pub mod clsid;
-pub mod iid;
+pub mod shell;
 
-mod itaskbarlist;
 mod iunknown;
-
-pub use itaskbarlist::*;
 pub use iunknown::*;
