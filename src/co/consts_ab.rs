@@ -121,3 +121,72 @@ impl BKMODE {
 	const_val!(TRANSPARENT, 1);
 	const_val!(OPAQUE, 2);
 }
+
+const_type!(BM, u32,
+	"Button control
+	[messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)");
+impl BM {
+	const_val!(GETCHECK, 0x00f0);
+	const_val!(SETCHECK, 0x00f1);
+	const_val!(GETSTATE, 0x00f2);
+	const_val!(SETSTATE, 0x00f3);
+	const_val!(SETSTYLE, 0x00f4);
+	const_val!(CLICK, 0x00f5);
+	const_val!(GETIMAGE, 0x00f6);
+	const_val!(SETIMAGE, 0x00f7);
+	const_val!(SETDONTCLICK, 0x00f8);
+}
+
+const_type!(BN, i32,
+	"Button control
+	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
+	sent via
+	[WM_COMMAND](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command).");
+impl BN {
+	const_val!(CLICKED, 0);
+	const_val!(PAINT, 1);
+	const_val!(HILITE, 2);
+	const_val!(UNHILITE, 3);
+	const_val!(DISABLE, 4);
+	const_val!(DOUBLECLICKED, 5);
+	const_val!(PUSHED, Self::HILITE.0);
+	const_val!(UNPUSHED, Self::UNHILITE.0);
+	const_val!(DBLCLK, Self::DOUBLECLICKED.0);
+	const_val!(SETFOCUS, 6);
+	const_val!(KILLFOCUS, 7);
+}
+
+// Button control styles.
+const_type!(BS, u32,
+	"Button control
+	[styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles).");
+impl BS {
+	const_val!(PUSHBUTTON, 0x00000000);
+	const_val!(DEFPUSHBUTTON, 0x00000001);
+	const_val!(CHECKBOX, 0x00000002);
+	const_val!(AUTOCHECKBOX, 0x00000003);
+	const_val!(RADIOBUTTON, 0x00000004);
+	const_val!(R3STATE, 0x00000005);
+	const_val!(AUTO3STATE, 0x00000006);
+	const_val!(GROUPBOX, 0x00000007);
+	const_val!(USERBUTTON, 0x00000008);
+	const_val!(AUTORADIOBUTTON, 0x00000009);
+	const_val!(PUSHBOX, 0x0000000a);
+	const_val!(OWNERDRAW, 0x0000000b);
+	const_val!(TYPEMASK, 0x0000000f);
+	const_val!(LEFTTEXT, 0x00000020);
+	const_val!(TEXT, 0x00000000);
+	const_val!(ICON, 0x00000040);
+	const_val!(BITMAP, 0x00000080);
+	const_val!(LEFT, 0x00000100);
+	const_val!(RIGHT, 0x00000200);
+	const_val!(CENTER, 0x00000300);
+	const_val!(TOP, 0x00000400);
+	const_val!(BOTTOM, 0x00000800);
+	const_val!(VCENTER, 0x00000c00);
+	const_val!(PUSHLIKE, 0x00001000);
+	const_val!(MULTILINE, 0x00002000);
+	const_val!(NOTIFY, 0x00004000);
+	const_val!(FLAT, 0x00008000);
+	const_val!(RIGHTBUTTON, Self::LEFTTEXT.0);
+}
