@@ -3,9 +3,8 @@
 use crate::co;
 
 const_type! {
-	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
-	/// `dwLanguageId`, used with
-	/// [`SUBLANG`](crate::co::SUBLANG).
+	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`, used
+	/// with [`SUBLANG`](crate::co::SUBLANG).
 	LANG, u16,
 
 	NEUTRAL, 0x00
@@ -155,4 +154,25 @@ impl LANG {
 	pub fn MAKELANGID(self, sublang: co::SUBLANG) -> u32 {
 		((u16::from(sublang) << 10) | self.0) as u32
 	}
+}
+
+const_type! {
+	/// [`LOGFONT`](crate::LOGFONT) `lfWeight`.
+	FW, u32,
+
+	DONTCARE, 0
+	THIN, 100
+	EXTRALIGHT, 200
+	ULTRALIGHT, Self::EXTRALIGHT.0
+	LIGHT, 300
+	NORMAL, 400
+	REGULAR, 400
+	MEDIUM, 500
+	SEMIBOLD, 600
+	DEMIBOLD, Self::SEMIBOLD.0
+	BOLD, 700
+	EXTRABOLD, 800
+	ULTRABOLD, Self::EXTRABOLD.0
+	HEAVY, 900
+	BLACK, Self::HEAVY.0
 }

@@ -5,14 +5,10 @@ use crate::ffi::{user32, Void};
 use crate::{AtomOrStr, HINSTANCE, HMENU};
 use crate::Utf16;
 
-handle_type!(HWND,
-	"Handle to a
-	[window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).");
-
-impl Default for HWND {
-	fn default() -> Self {
-		Self(std::ptr::null())
-	}
+handle_type! {
+	/// Handle to a
+	/// [window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
+	HWND
 }
 
 impl HWND {
@@ -42,6 +38,12 @@ impl HWND {
 			Some(p) => Ok(Self(p)),
 			None => Err(co::ERROR::GetLastError()),
 		}
+	}
+
+	/// [`DestroyWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
+	/// method.
+	pub fn DestroyWindow(&self) {
+		unsafe { user32::DestroyWindow(self.0); }
 	}
 
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)

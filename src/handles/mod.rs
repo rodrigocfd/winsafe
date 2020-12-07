@@ -3,11 +3,17 @@
 #[macro_use]
 mod macros;
 
+mod hbrush;
+mod hcursor;
+mod hicon;
 mod hinstance;
 mod hlocal;
 mod hmenu;
 mod hwnd;
 
+pub use hbrush::*;
+pub use hcursor::*;
+pub use hicon::*;
 pub use hinstance::*;
 pub use hlocal::*;
 pub use hmenu::*;

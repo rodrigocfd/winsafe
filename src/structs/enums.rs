@@ -35,7 +35,7 @@ impl<'a> AtomOrStr<'a> {
 /// Used in
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
-/// * [`InsertMenu`](create::HMENU::InsertMenu) `uIDNewItem`.
+/// * [`InsertMenu`](crate::HMENU::InsertMenu) `uIDNewItem`.
 pub enum IdOrMenu {
 	Id(i32),
 	Menu(HMENU),

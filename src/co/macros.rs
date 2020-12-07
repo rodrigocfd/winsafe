@@ -1,6 +1,4 @@
 // Declares the type of a constant with some impls.
-// We use doc as string because of a bug in rust-analyzer:
-// https://stackoverflow.com/q/65112749/6923555
 macro_rules! const_type {
 	(
 		$(#[$attr:meta])*
@@ -9,7 +7,7 @@ macro_rules! const_type {
 	) => {
 		$(#[$attr])*
 		#[repr(C)]
-		#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+		#[derive(Default, Copy, Clone, Debug, Eq, PartialEq)]
 		pub struct $name($num); // declare the newtype constant
 
 		// Conversions from/to underlying number.

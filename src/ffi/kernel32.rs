@@ -1,3 +1,5 @@
+//! Raw bindings to kernel32.lib functions.
+
 use crate::ffi::Void;
 
 #[link(name = "kernel32")]

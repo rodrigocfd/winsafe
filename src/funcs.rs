@@ -10,19 +10,19 @@ use crate::ffi::{ole32, Void};
 /// Returns an [`IUnknown`](crate::IUnknown)-derived COM interface object.
 pub fn CoCreateInstance<V: ComVtbl, I: From<*const *const V>>(
 	rclsid: &CLSID,
-	pUnkOuter: Option<*const Void>,
+	pUnkOuter: Option<*mut Void>,
 	dwClsContext: co::CLSCTX,
 ) -> I {
 	let mut ppv: *const *const V = std::ptr::null();
 	unsafe {
 		ole32::CoCreateInstance(
 			rclsid.as_ref() as *const GUID as *const Void,
-			pUnkOuter.unwrap_or(std::ptr::null()),
+			pUnkOuter.unwrap_or(std::ptr::null_mut()),
 			dwClsContext.into(),
 			V::IID().as_ref() as *const GUID as *const Void,
 			&mut ppv
-				as *const *const *const V
-				as *const *const *const Void,
+				as *mut *const *const V
+				as *mut *const *const Void,
 		);
 	}
 	I::from(ppv)

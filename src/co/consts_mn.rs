@@ -1,6 +1,5 @@
 const_type! {
-	/// [MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
-	/// `uType`.
+	/// [`MessageBox`](crate::HWND::MessageBox) `uType`.
 	MB, u32,
 
 	ABORTRETRYIGNORE, 0x00000002

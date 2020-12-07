@@ -1,12 +1,20 @@
 // Declares the type of a handle.
-// We use doc as string because of a bug in rust-analyzer:
-// https://stackoverflow.com/q/65112749/6923555
 macro_rules! handle_type {
-	($name:ident, $doc:expr) => {
-		#[doc=$doc]
+	(
+		$(#[$attr:meta])*
+		$name:ident
+	) => {
+		$(#[$attr])*
 		#[repr(C)]
 		#[derive(Copy, Clone, Eq, PartialEq)]
 		pub struct $name(*const Void);
+
+		impl Default for $name {
+			/// Creates a null handle.
+			fn default() -> Self {
+				Self(std::ptr::null())
+			}
+		}
 
 		impl $name {
 			/// Returns the raw underlying pointer for this handle.

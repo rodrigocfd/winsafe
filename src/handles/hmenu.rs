@@ -3,9 +3,11 @@
 use crate::co;
 use crate::ffi::{user32, Void};
 
-handle_type!(HMENU,
-	"Handle to a
-	[menu](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmenu).");
+handle_type! {
+	/// Handle to a
+	/// [menu](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmenu).
+	HMENU
+}
 
 impl HMENU {
 	/// [`CreateMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createmenu)

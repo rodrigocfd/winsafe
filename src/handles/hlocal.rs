@@ -3,9 +3,11 @@
 use crate::co;
 use crate::ffi::{kernel32, Void};
 
-handle_type!(HLOCAL,
-	"Handle to a
-	[local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).");
+handle_type! {
+	/// Handle to a
+	/// [local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
+	HLOCAL
+}
 
 impl<T> From<*const T> for HLOCAL {
 	/// Wraps a *const T.

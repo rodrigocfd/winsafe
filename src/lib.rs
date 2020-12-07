@@ -2,8 +2,7 @@
 //!
 //! Example:
 //! ```rust,ignore
-//! use winsafe::co;
-//! use winsafe::HWND;
+//! use winsafe::{co, HWND};
 //!
 //! fn main() {
 //!   HWND::default().MessageBox("Hello, world", "Title",

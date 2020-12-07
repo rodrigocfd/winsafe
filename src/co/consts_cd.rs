@@ -1,4 +1,18 @@
 const_type! {
+	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`.
+	CLIP, u8,
+
+	DEFAULT_PRECIS, 0
+	CHARACTER_PRECIS, 1
+	STROKE_PRECIS, 2
+	MASK, 0xf
+	LH_ANGLES, 1 << 4
+	TT_ALWAYS, 2 << 4
+	DFA_DISABLE, 4 << 4
+	EMBEDDED, 8 << 4
+}
+
+const_type! {
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration.
 	CLSCTX, u32,
@@ -27,8 +41,7 @@ const_type! {
 }
 
 const_type! {
-	/// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
-	/// `dwCoInit`.
+	/// [`CoInitializeEx`](crate::CoInitializeEx) `dwCoInit`.
 	COINIT, u32,
 
 	APARTMENTTHREADED, 0x2
@@ -38,8 +51,28 @@ const_type! {
 }
 
 const_type! {
+	/// Window class
+	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles).
+	CS, u32,
+
+	VREDRAW, 0x0001
+	HREDRAW, 0x0002
+	DBLCLKS, 0x0008
+	OWNDC, 0x0020
+	CLASSDC, 0x0040
+	PARENTDC, 0x0080
+	NOCLOSE, 0x0200
+	SAVEBITS, 0x0800
+	BYTEALIGNCLIENT, 0x1000
+	BYTEALIGNWINDOW, 0x2000
+	GLOBALCLASS, 0x4000
+	IME, 0x00010000
+	DROPSHADOW, 0x00020000
+}
+
+const_type! {
 	/// Dialog built-in IDs. These are also returned from
-	/// [`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw#return-value).
+	/// [`MessageBox`](crate::MessageBox).
 	DLGID, u32,
 
 	OK, 1

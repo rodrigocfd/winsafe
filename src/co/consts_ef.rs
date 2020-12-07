@@ -1,6 +1,5 @@
 const_type! {
-	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
-	/// `dwFlags`.
+	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwFlags`.
 	FORMAT_MESSAGE, u32,
 
 	ALLOCATE_BUFFER, 0x00000100

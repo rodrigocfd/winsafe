@@ -1,6 +1,5 @@
 const_type! {
-	/// [`ACCELL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
-	/// `fVirt`.
+	/// [`ACCELL`](crate::ACCEL) `fVirt`.
 	ACCELF, u8,
 
 	NONE, 0
@@ -11,8 +10,7 @@ const_type! {
 }
 
 const_type! {
-	/// [`RegOpenKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
-	/// `samDesired`.
+	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`.
 	ACCESS_RIGHTS, u32,
 
 	DELETE, 0x00010000
@@ -23,8 +21,8 @@ const_type! {
 }
 
 const_type! {
-	/// [`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
-	/// `dwRetFlags`. Don't seem to be defined anywhere, unconfirmed values.
+	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags`. Don't seem to be
+	/// defined anywhere, unconfirmed values.
 	ADRF, u32,
 
 	DRAWSYNC, 0
@@ -109,8 +107,7 @@ impl BCN {
 }
 
 const_type! {
-	/// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
-	/// `biCompression`.
+	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression`.
 	BI, u32,
 
 	RGB, 0
@@ -122,8 +119,7 @@ const_type! {
 }
 
 const_type! {
-	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
-	/// `mode`.
+	/// [`SetBkMode`](crate::HDC::SetBkMode) `mode`.
 	BKMODE, i32,
 
 	TRANSPARENT, 1
@@ -150,7 +146,7 @@ const_type! {
 	/// Button control
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
 	/// sent via
-	/// [WM_COMMAND](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command).
+	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command).
 	BN, i32,
 
 	CLICKED, 0

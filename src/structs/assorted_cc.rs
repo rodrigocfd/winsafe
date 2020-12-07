@@ -1,0 +1,1 @@
+//! Assorted Win32 structs used by common controls.

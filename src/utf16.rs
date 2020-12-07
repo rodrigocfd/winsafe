@@ -3,10 +3,12 @@ use std::os::windows::ffi::OsStrExt;
 
 use crate::ffi::kernel32;
 
-/// Stores a `Vec<u16>`
+/// Stores a `Vec<u16>` buffer for an
 /// [Windows UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
-/// string, which can perform UTF-8 conversions and can be used as a buffer to
-/// native Win32 functions.
+/// string.
+///
+/// Performs UTF-8 conversions and can be used as a buffer to native Win32
+/// functions.
 #[derive(Default)]
 pub struct Utf16 {
 	char_vec: Option<Vec<u16>>,

@@ -9,8 +9,7 @@ const_type! {
 }
 
 const_type! {
-	/// [`SetWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
-	/// `idHook`.
+	/// [`SetWindowsHookEx`](crate::SetWindowsHookEx) `idHook`.
 	WH, i32,
 
 	MSGFILTER, -1
@@ -31,8 +30,8 @@ const_type! {
 }
 
 const_type! {
-	/// [`IsWindowsVersionOrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsversionorgreater)
-	/// values. Originally `_WIN32_WINNT`.
+	/// [`IsWindowsVersionOrGreater`](crate::IsWindowsVersionOrGreater) values.
+	/// Originally `_WIN32_WINNT`.
 	WIN32_WINNT, u16,
 
 	NT4, 0x0400
