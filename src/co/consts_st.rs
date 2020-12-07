@@ -1,7 +1,9 @@
 const_type! {
+	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
+	/// `dwLanguageId`, used with
+	/// [`LANG`](crate::co::LANG).
 	SUBLANG, u16,
-	"[`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
-	`dwLanguageId`.",
+
 	NEUTRAL, 0x00
 	DEFAULT, 0x01
 	SYS_DEFAULT, 0x02

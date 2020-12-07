@@ -1,7 +1,8 @@
 const_type! {
+	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
+	/// enumeration.
 	CLSCTX, u32,
-	"[`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
-	enumeration.",
+
 	INPROC_SERVER, 0x1
 	INPROC_HANDLER, 0x2
 	LOCAL_SERVER, 0x4
@@ -26,9 +27,10 @@ const_type! {
 }
 
 const_type! {
+	/// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
+	/// `dwCoInit`.
 	COINIT, u32,
-	"[`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
-	`dwCoInit`.",
+
 	APARTMENTTHREADED, 0x2
 	MULTITHREADED, 0x0
 	DISABLE_OLE1DDE, 0x4
@@ -36,9 +38,10 @@ const_type! {
 }
 
 const_type! {
+	/// Dialog built-in IDs. These are also returned from
+	/// [`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw#return-value).
 	DLGID, u32,
-	"Dialog built-in IDs. These are also returned from
-	[`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw#return-value).",
+
 	OK, 1
 	CANCEL, 2
 	ABORT, 3

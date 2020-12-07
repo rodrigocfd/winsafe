@@ -1,7 +1,8 @@
 const_type! {
+	/// [`ACCELL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
+	/// `fVirt`.
 	ACCELF, u8,
-	"[`ACCELL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
-	`fVirt`.",
+
 	NONE, 0
 	VIRTKEY, 1
 	SHIFT, 0x04
@@ -10,9 +11,10 @@ const_type! {
 }
 
 const_type! {
+	/// [`RegOpenKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
+	/// `samDesired`.
 	ACCESS_RIGHTS, u32,
-	"[`RegOpenKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
-	`samDesired`.",
+
 	DELETE, 0x00010000
 	READ_CONTROL, 0x00020000
 	WRITE_DAC, 0x00040000
@@ -21,9 +23,10 @@ const_type! {
 }
 
 const_type! {
+	/// [`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
+	/// `dwRetFlags`. Don't seem to be defined anywhere, unconfirmed values.
 	ADRF, u32,
-	"[`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
-	`dwRetFlags`. Don't seem to be defined anywhere, unconfirmed values.",
+
 	DRAWSYNC, 0
 	DRAWNOTHING, 1
 	DRAWFALLBACK, 2
@@ -31,9 +34,10 @@ const_type! {
 }
 
 const_type! {
+	/// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
+	/// commands.
 	APPCOMMAND, i16,
-	"[`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
-	commands.",
+
 	BROWSER_BACKWARD, 1
 	BROWSER_FORWARD, 2
 	BROWSER_REFRESH, 3
@@ -91,11 +95,12 @@ const_type! {
 }
 
 const_type! {
+	/// Button control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
+	/// sent via
+	/// [WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	BCN, i32,
-	"Button control
-	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
-	sent via
-	[WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).",
+
 	HOTITEMCHANGE, Self::FIRST.0 + 0x0001
 	DROPDOWN, Self::FIRST.0 + 0x0002
 }
@@ -104,9 +109,10 @@ impl BCN {
 }
 
 const_type! {
+	/// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
+	/// `biCompression`.
 	BI, u32,
-	"[`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
-	`biCompression`.",
+
 	RGB, 0
 	RLE8, 1
 	RLE4, 2
@@ -116,17 +122,19 @@ const_type! {
 }
 
 const_type! {
+	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
+	/// `mode`.
 	BKMODE, i32,
-	"[`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
-	`mode`.",
+
 	TRANSPARENT, 1
 	OPAQUE, 2
 }
 
 const_type! {
+	/// Button control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)",
 	BM, u32,
-	"Button control
-	[messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)",
+
 	GETCHECK, 0x00f0
 	SETCHECK, 0x00f1
 	GETSTATE, 0x00f2
@@ -139,11 +147,12 @@ const_type! {
 }
 
 const_type! {
+	/// Button control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
+	/// sent via
+	/// [WM_COMMAND](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command).
 	BN, i32,
-	"Button control
-	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
-	sent via
-	[WM_COMMAND](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command).",
+
 	CLICKED, 0
 	PAINT, 1
 	HILITE, 2
@@ -158,9 +167,10 @@ const_type! {
 }
 
 const_type! {
+	/// Button control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles).
 	BS, u32,
-	"Button control
-	[styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles).",
+
 	PUSHBUTTON, 0x00000000
 	DEFPUSHBUTTON, 0x00000001
 	CHECKBOX, 0x00000002

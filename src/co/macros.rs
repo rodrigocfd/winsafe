@@ -3,11 +3,11 @@
 // https://stackoverflow.com/q/65112749/6923555
 macro_rules! const_type {
 	(
+		$(#[$attr:meta])*
 		$name:ident, $num:ty,
-		$doc:expr,
 		$($cname:ident, $cval:expr)*
 	) => {
-		#[doc=$doc]
+		$(#[$attr])*
 		#[repr(C)]
 		#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 		pub struct $name($num); // declare the newtype constant

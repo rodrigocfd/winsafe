@@ -1,7 +1,8 @@
 const_type! {
+	/// Window
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles).
 	WS, u32,
-	"Window
-	[styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles).",
+
 	OVERLAPPED, 0x00000000
 	POPUP, 0x80000000
 	CHILD, 0x40000000
@@ -32,9 +33,10 @@ const_type! {
 }
 
 const_type! {
+	/// Extended window
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles).
 	WS_EX, u32,
-	"Extended window
-	[styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles).",
+
 	DLGMODALFRAME, 0x00000001
 	NOPARENTNOTIFY, 0x00000004
 	TOPMOST, 0x00000008

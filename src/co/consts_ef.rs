@@ -1,7 +1,8 @@
 const_type! {
+	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
+	/// `dwFlags`.
 	FORMAT_MESSAGE, u32,
-	"[`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
-	`dwFlags`.",
+
 	ALLOCATE_BUFFER, 0x00000100
 	ARGUMENT_ARRAY, 0x00002000
 	FROM_HMODULE, 0x00000800

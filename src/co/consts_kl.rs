@@ -3,9 +3,11 @@
 use crate::co;
 
 const_type! {
+	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
+	/// `dwLanguageId`, used with
+	/// [`SUBLANG`](crate::co::SUBLANG).
 	LANG, u16,
-	"[`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
-	`dwLanguageId`.",
+
 	NEUTRAL, 0x00
 	INVARIANT, 0x7f
 	AFRIKAANS, 0x36

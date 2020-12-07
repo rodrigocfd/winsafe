@@ -1,7 +1,8 @@
 const_type! {
+	/// [MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
+	/// `uType`.
 	MB, u32,
-	"[MessageBox](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
-	`uType`.",
+
 	ABORTRETRYIGNORE, 0x00000002
 	CANCELTRYCONTINUE, 0x00000006
 	HELP, 0x00004000
@@ -38,9 +39,10 @@ const_type! {
 }
 
 const_type! {
+	/// Common control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications).
 	NM, i32,
-	"Common control
-	[notifications](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications).",
+
 	OUTOFMEMORY, Self::FIRST.0 - 1
 	CLICK, Self::FIRST.0 - 2
 	DBLCLK, Self::FIRST.0 - 3

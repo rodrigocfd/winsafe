@@ -1,7 +1,8 @@
 const_type! {
+	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
+	/// `uCmd`.
 	GW, u32,
-	"[`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
-	`uCmd`.",
+
 	HWNDFIRST, 0
 	HWNDLAST, 1
 	HWNDNEXT, 2
