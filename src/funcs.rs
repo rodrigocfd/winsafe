@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{CLSID, GUID, IID};
+use crate::{CLSID, ComInterface, GUID};
 use crate::co;
 use crate::ffi::{ole32, Void};
 
@@ -9,14 +9,18 @@ use crate::ffi::{ole32, Void};
 ///
 /// Returns a pointer to a pointer to an [`IUnknown`](crate::IUnknown) COM
 /// virtual table.
-pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: Option<*const Void>,
-	dwClsContext: co::CLSCTX, riid: &IID) -> *const *const T
-{
+pub fn CoCreateInstance<T: ComInterface>(
+	rclsid: &CLSID,
+	pUnkOuter: Option<*const Void>,
+	dwClsContext: co::CLSCTX,
+) -> *const *const T {
 	let mut ppv: *const *const T = std::ptr::null();
 	unsafe {
-		ole32::CoCreateInstance(rclsid.as_ref() as *const GUID as *const Void,
+		ole32::CoCreateInstance(
+			rclsid.as_ref() as *const GUID as *const Void,
 			pUnkOuter.unwrap_or(std::ptr::null()),
-			dwClsContext.into(), riid.as_ref() as *const GUID as *const Void,
+			dwClsContext.into(),
+			T::Iid().as_ref() as *const GUID as *const Void,
 			&mut ppv
 				as *const *const *const T
 				as *const *const *const Void,

@@ -1,33 +1,10 @@
 #![allow(non_snake_case)]
 
+use crate::{ComInterface, HWND, IID, IUnknown, IUnknownVtbl};
 use crate::co;
 use crate::ffi::Void;
-use crate::{HWND, IUnknown, IUnknownVtbl};
 
 type PPVtbl = *const *const ITaskbarListVtbl;
-
-/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-/// COM interface.
-///
-/// Inherits from:
-/// * [`IUnknown`](crate::IUnknown).
-///
-/// Usually instantiated as:
-/// ```rust,ignore
-/// let mut itl = shell::ITaskbarList::from(
-///   CoCreateInstance(
-///     &shell::clsid::TaskbarList,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-///     &shell::iid::ITaskbarList,
-///   ),
-/// );
-/// ```
-pub struct ITaskbarList {
-	/// Base
-	/// [`IUnknown`](crate::IUnknown).
-	pub iUnknown: IUnknown,
-}
 
 #[repr(C)]
 pub struct ITaskbarListVtbl {
@@ -37,6 +14,36 @@ pub struct ITaskbarListVtbl {
 	DeleteTab: fn(PPVtbl, *const Void) -> u32,
 	ActivateTab: fn(PPVtbl, *const Void) -> u32,
 	SetActiveAlt: fn(PPVtbl, *const Void) -> u32,
+}
+
+impl ComInterface for ITaskbarListVtbl {
+	fn Iid() -> IID {
+		IID::new(0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
+/// COM interface.
+///
+/// Inherits from:
+/// * [`IUnknown`](crate::IUnknown).
+///
+/// Usually instantiated as:
+/// ```rust,ignore
+/// let mut obj = shell::ITaskbarList::from(
+///   CoCreateInstance(
+///     &shell::clsid::TaskbarList,
+///     None,
+///     co::CLSCTX::INPROC_SERVER,
+///   ),
+/// );
+/// ```
+pub struct ITaskbarList {
+	/// Base
+	/// [`IUnknown`](crate::IUnknown).
+	pub iUnknown: IUnknown,
 }
 
 impl From<PPVtbl> for ITaskbarList {

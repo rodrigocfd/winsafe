@@ -1,25 +1,32 @@
 #![allow(non_snake_case)]
 
+use crate::{ComInterface, IID};
 use crate::ffi::Void;
-
-type PPVtbl = *const *const IUnknownVtbl;
-
-/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
-/// interface is the base to all COM interfaces.
-pub struct IUnknown {
-	vtbl: PPVtbl,
-}
 
 #[repr(C)]
 pub struct IUnknownVtbl {
 	QueryInterface: *const Void,
-	AddRef: fn(PPVtbl) -> u32,
-	Release: fn(PPVtbl) -> u32,
+	AddRef: fn(*const *const Self) -> u32,
+	Release: fn(*const *const Self) -> u32,
 }
 
-impl From<PPVtbl> for IUnknown {
+impl ComInterface for IUnknownVtbl {
+	fn Iid() -> IID {
+		IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
+/// interface is the base to all COM interfaces.
+pub struct IUnknown {
+	vtbl: *const *const IUnknownVtbl,
+}
+
+impl From<*const *const IUnknownVtbl> for IUnknown {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: PPVtbl) -> Self {
+	fn from(ppv: *const *const IUnknownVtbl) -> Self {
 		Self { vtbl: ppv }
 	}
 }
@@ -58,6 +65,8 @@ impl IUnknown {
 		} else {
 			let ptrFun = unsafe { (*(*self.vtbl)).Release };
 			let refCount = ptrFun(self.vtbl);
+
+println!("REFCOUNT {}", refCount);
 
 			if refCount == 0 {
 				self.vtbl = std::ptr::null();

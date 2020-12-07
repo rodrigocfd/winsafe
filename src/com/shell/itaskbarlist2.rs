@@ -1,11 +1,25 @@
 #![allow(non_snake_case)]
 
+use crate::{ComInterface, HWND, IID};
 use crate::co;
 use crate::ffi::Void;
-use crate::HWND;
 use crate::shell::{ITaskbarList, ITaskbarListVtbl};
 
 type PPVtbl = *const *const ITaskbarList2Vtbl;
+
+#[repr(C)]
+pub struct ITaskbarList2Vtbl {
+	iTaskbarListVtbl: ITaskbarListVtbl,
+	MarkFullscreenWindow: fn(PPVtbl, *const Void, u32) -> u32,
+}
+
+impl ComInterface for ITaskbarList2Vtbl {
+	fn Iid() -> IID {
+		IID::new(0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317)
+	}
+}
+
+//------------------------------------------------------------------------------
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 /// COM interface.
@@ -16,12 +30,11 @@ type PPVtbl = *const *const ITaskbarList2Vtbl;
 ///
 /// Usually instantiated as:
 /// ```rust,ignore
-/// let mut itl = shell::ITaskbarList2::from(
+/// let mut obj = shell::ITaskbarList2::from(
 ///   CoCreateInstance(
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-///     &shell::iid::ITaskbarList2,
 ///   ),
 /// );
 /// ```
@@ -29,12 +42,6 @@ pub struct ITaskbarList2 {
 	/// Base
 	/// [`ITaskbarList`](crate::shell::ITaskbarList).
 	pub iTaskbarList: ITaskbarList,
-}
-
-#[repr(C)]
-pub struct ITaskbarList2Vtbl {
-	iTaskbarListVtbl: ITaskbarListVtbl,
-	MarkFullscreenWindow: fn(PPVtbl, *const Void, u32) -> u32,
 }
 
 impl From<PPVtbl> for ITaskbarList2 {

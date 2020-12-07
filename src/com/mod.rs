@@ -5,5 +5,8 @@
 
 pub mod shell;
 
+mod cominterface;
 mod iunknown;
+
+pub use cominterface::*;
 pub use iunknown::*;

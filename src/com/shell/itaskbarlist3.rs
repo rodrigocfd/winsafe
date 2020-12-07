@@ -1,11 +1,36 @@
 #![allow(non_snake_case)]
 
+use crate::{ComInterface, HWND, IID};
 use crate::co;
 use crate::ffi::Void;
-use crate::HWND;
 use crate::shell::{ITaskbarList2, ITaskbarList2Vtbl};
 
 type PPVtbl = *const *const ITaskbarList3Vtbl;
+
+#[repr(C)]
+pub struct ITaskbarList3Vtbl {
+	iTaskbarList2Vtbl: ITaskbarList2Vtbl,
+	SetProgressValue: fn(PPVtbl, *const Void, u64, u64) -> u32,
+	SetProgressState: fn(PPVtbl, *const Void, u32) -> u32,
+	RegisterTab: fn(PPVtbl, *const Void, *const Void) -> u32,
+	UnregisterTab: fn(PPVtbl, *const Void) -> u32,
+	SetTabOrder: fn(PPVtbl, *const Void, *const Void) -> u32,
+	SetTabActive: fn(PPVtbl, *const Void, *const Void, u32) -> u32,
+	ThumbBarAddButtons: fn(PPVtbl, *const Void, u32, *const Void) -> u32,
+	ThumbBarUpdateButtons: fn(PPVtbl, *const Void, u32, *const Void) -> u32,
+	ThumbBarSetImageList: fn(PPVtbl, *const Void, *const Void) -> u32,
+	SetOverlayIcon: fn(PPVtbl, *const Void, *const Void, *const u16) -> u32,
+	SetThumbnailTooltip: fn(PPVtbl, *const Void, *const u16) -> u32,
+	SetThumbnailClip: fn(PPVtbl, *const Void, *const Void) -> u32,
+}
+
+impl ComInterface for ITaskbarList3Vtbl {
+	fn Iid() -> IID {
+		IID::new(0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf)
+	}
+}
+
+//------------------------------------------------------------------------------
 
 /// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
 /// COM interface.
@@ -17,12 +42,11 @@ type PPVtbl = *const *const ITaskbarList3Vtbl;
 ///
 /// Usually instantiated as:
 /// ```rust,ignore
-/// let mut itl = shell::ITaskbarList3::from(
+/// let mut obj = shell::ITaskbarList3::from(
 ///   CoCreateInstance(
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-///     &shell::iid::ITaskbarList3,
 ///   ),
 /// );
 /// ```
@@ -30,23 +54,6 @@ pub struct ITaskbarList3 {
 	/// Base
 	/// [`ITaskbarList2`](crate::shell::ITaskbarList2).
 	pub iTaskbarList2: ITaskbarList2,
-}
-
-#[repr(C)]
-pub struct ITaskbarList3Vtbl {
-	iTaskbarList2Vtbl: ITaskbarList2Vtbl,
-	pub SetProgressValue: fn(PPVtbl, *const Void, u64, u64) -> u32,
-	pub SetProgressState: fn(PPVtbl, *const Void, u32) -> u32,
-	pub RegisterTab: fn(PPVtbl, *const Void, *const Void) -> u32,
-	pub UnregisterTab: fn(PPVtbl, *const Void) -> u32,
-	pub SetTabOrder: fn(PPVtbl, *const Void, *const Void) -> u32,
-	pub SetTabActive: fn(PPVtbl, *const Void, *const Void, u32) -> u32,
-	pub ThumbBarAddButtons: fn(PPVtbl, *const Void, u32, *const Void) -> u32,
-	pub ThumbBarUpdateButtons: fn(PPVtbl, *const Void, u32, *const Void) -> u32,
-	pub ThumbBarSetImageList: fn(PPVtbl, *const Void, *const Void) -> u32,
-	pub SetOverlayIcon: fn(PPVtbl, *const Void, *const Void, *const u16) -> u32,
-	pub SetThumbnailTooltip: fn(PPVtbl, *const Void, *const u16) -> u32,
-	pub SetThumbnailClip: fn(PPVtbl, *const Void, *const Void) -> u32,
 }
 
 impl From<PPVtbl> for ITaskbarList3 {
