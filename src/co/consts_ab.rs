@@ -132,7 +132,7 @@ const_type! {
 
 const_type! {
 	/// Button control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)",
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
 	BM, u32,
 
 	GETCHECK, 0x00f0

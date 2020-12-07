@@ -46,6 +46,8 @@ pub fn CoInitializeEx(dwCoInit: co::COINIT) -> Result<co::ERROR, co::ERROR> {
 
 /// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
 /// function.
+///
+/// Must be called after all COM interfaces have been released.
 pub fn CoUninitialize() {
 	unsafe { ole32::CoUninitialize() }
 }

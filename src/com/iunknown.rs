@@ -43,12 +43,19 @@ impl Drop for IUnknown {
 
 impl IUnknown {
 	/// Returns a pointer to a pointer to the underlying COM virtual table.
+	///
+	/// This method is used internally by COM interface implementations, and may
+	/// cause segmentation faults. Don't use unless you know what you're doing.
 	pub unsafe fn ppv<T>(&self) -> *const *const T {
 		self.vtbl as *const *const T
 	}
 
 	/// [`IUnknown::AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
 	/// method.
+	///
+	/// This method increments the internal COM reference counter, and will cause
+	/// a memory leak if not paired with a [`Release`](crate::IUnknown::Release)
+	/// call. Don't use unless you know what you're doing.
 	pub unsafe fn AddRef(&self) -> u32 {
 		((*(*self.vtbl)).AddRef)(self.vtbl)
 	}
@@ -59,9 +66,10 @@ impl IUnknown {
 	/// Can be called any number of times, will actually release only while the
 	/// internal ref count is greater than zero.
 	///
-	/// This method will be automatically called by the destructor, but note that
-	/// this must happen **before** the last
-	/// [`CoUninitialize`](crate::CoUninitialize) call.
+	/// This method will be automatically called by the destructor, so you don't
+	/// need to manually call it. But note that the last call to
+	/// [`CoUninitialize`](crate::CoUninitialize) must happen after `Release` is
+	/// called.
 	pub fn Release(&mut self) -> u32 {
 		if self.vtbl.is_null() {
 			0
