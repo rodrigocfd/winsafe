@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::{CLSID, ComVtbl, GUID};
+use crate::{ATOM, CLSID, ComVtbl, GUID, HINSTANCE, Utf16, WNDCLASSEX};
 use crate::co;
-use crate::ffi::{ole32, Void};
+use crate::ffi::{ole32, user32, Void};
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
@@ -50,4 +50,31 @@ pub fn CoInitializeEx(dwCoInit: co::COINIT) -> Result<co::ERROR, co::ERROR> {
 /// Must be called after all COM interfaces have been released.
 pub fn CoUninitialize() {
 	unsafe { ole32::CoUninitialize() }
+}
+
+/// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
+/// function.
+pub fn RegisterClassEx(wcx: &WNDCLASSEX) -> Result<ATOM, co::ERROR> {
+	match unsafe {
+		user32::RegisterClassExW(wcx as *const WNDCLASSEX as *const Void)
+	} {
+		0 => Err(co::ERROR::GetLastError()),
+		atom => Ok(ATOM::from(atom)),
+	}
+}
+
+/// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
+/// function.
+pub fn UnregisterClass(
+	lpClassName: &str, hInstance: HINSTANCE) -> Result<(), co::ERROR>
+{
+	match unsafe {
+		user32::UnregisterClassW(
+			Utf16::from_str(lpClassName).as_ptr(),
+			hInstance.as_ptr(),
+		)
+	} {
+		0 => Err(co::ERROR::GetLastError()),
+		_ => Ok(()),
+	}
 }

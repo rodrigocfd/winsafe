@@ -1,7 +1,6 @@
-const_type! {
+const_type! { GW, u32,
 	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
 	/// `uCmd`.
-	GW, u32,
 
 	HWNDFIRST, 0
 	HWNDLAST, 1

@@ -5,14 +5,13 @@ use crate::ffi::kernel32;
 use crate::handles::HLOCAL;
 use crate::Utf16;
 
-const_type! {
+const_type! { ERROR, u32,
 	/// A Windows
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// retrieved by
 	/// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
 	/// function, or an
 	/// [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
-	ERROR, u32,
 
 	SUCCESS, 0
 	INVALID_FUNCTION, 1

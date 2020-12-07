@@ -1,6 +1,5 @@
-const_type! {
+const_type! { MB, u32,
 	/// [`MessageBox`](crate::HWND::MessageBox) `uType`.
-	MB, u32,
 
 	ABORTRETRYIGNORE, 0x00000002
 	CANCELTRYCONTINUE, 0x00000006
@@ -37,10 +36,9 @@ const_type! {
 	SERVICE_NOTIFICATION, 0x00200000
 }
 
-const_type! {
+const_type! { NM, i32,
 	/// Common control
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications).
-	NM, i32,
 
 	OUTOFMEMORY, Self::FIRST.0 - 1
 	CLICK, Self::FIRST.0 - 2

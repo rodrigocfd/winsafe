@@ -1,8 +1,8 @@
 // Declares the type of a constant with some impls.
 macro_rules! const_type {
 	(
-		$(#[$attr:meta])*
 		$name:ident, $num:ty,
+		$(#[$attr:meta])*
 		$($cname:ident, $cval:expr)*
 	) => {
 		$(#[$attr])*

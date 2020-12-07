@@ -1,7 +1,6 @@
-const_type! {
+const_type! { SUBLANG, u16,
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`, used
 	/// with [`LANG`](crate::co::LANG).
-	SUBLANG, u16,
 
 	NEUTRAL, 0x00
 	DEFAULT, 0x01

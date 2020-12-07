@@ -2,10 +2,9 @@
 
 use crate::co;
 
-const_type! {
+const_type! { LANG, u16,
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`, used
 	/// with [`SUBLANG`](crate::co::SUBLANG).
-	LANG, u16,
 
 	NEUTRAL, 0x00
 	INVARIANT, 0x7f
@@ -156,9 +155,8 @@ impl LANG {
 	}
 }
 
-const_type! {
+const_type! { FW, u32,
 	/// [`LOGFONT`](crate::LOGFONT) `lfWeight`.
-	FW, u32,
 
 	DONTCARE, 0
 	THIN, 100

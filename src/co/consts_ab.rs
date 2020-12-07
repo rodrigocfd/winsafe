@@ -1,7 +1,5 @@
-const_type! {
+const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt`.
-	ACCELF, u8,
-
 	NONE, 0
 	VIRTKEY, 1
 	SHIFT, 0x04
@@ -9,9 +7,8 @@ const_type! {
 	ALT, 0x10
 }
 
-const_type! {
+const_type! { ACCESS_RIGHTS, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`.
-	ACCESS_RIGHTS, u32,
 
 	DELETE, 0x00010000
 	READ_CONTROL, 0x00020000
@@ -20,10 +17,9 @@ const_type! {
 	SYNCHRONIZE, 0x00100000
 }
 
-const_type! {
+const_type! { ADRF, u32,
 	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags`. Don't seem to be
 	/// defined anywhere, unconfirmed values.
-	ADRF, u32,
 
 	DRAWSYNC, 0
 	DRAWNOTHING, 1
@@ -31,10 +27,9 @@ const_type! {
 	DRAWIMAGE, 3
 }
 
-const_type! {
+const_type! { APPCOMMAND, i16,
 	/// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 	/// commands.
-	APPCOMMAND, i16,
 
 	BROWSER_BACKWARD, 1
 	BROWSER_FORWARD, 2
@@ -92,12 +87,11 @@ const_type! {
 	DWM_FLIP3D, 54
 }
 
-const_type! {
+const_type! { BCN, i32,
 	/// Button control
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
 	/// sent via
 	/// [WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
-	BCN, i32,
 
 	HOTITEMCHANGE, Self::FIRST.0 + 0x0001
 	DROPDOWN, Self::FIRST.0 + 0x0002
@@ -106,9 +100,8 @@ impl BCN {
 	const FIRST: Self = Self(-1250);
 }
 
-const_type! {
+const_type! { BI, u32,
 	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression`.
-	BI, u32,
 
 	RGB, 0
 	RLE8, 1
@@ -118,18 +111,16 @@ const_type! {
 	PNG, 5
 }
 
-const_type! {
+const_type! { BKMODE, i32,
 	/// [`SetBkMode`](crate::HDC::SetBkMode) `mode`.
-	BKMODE, i32,
 
 	TRANSPARENT, 1
 	OPAQUE, 2
 }
 
-const_type! {
+const_type! { BM, u32,
 	/// Button control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
-	BM, u32,
 
 	GETCHECK, 0x00f0
 	SETCHECK, 0x00f1
@@ -142,12 +133,11 @@ const_type! {
 	SETDONTCLICK, 0x00f8
 }
 
-const_type! {
+const_type! { BN, i32,
 	/// Button control
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
 	/// sent via
 	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command).
-	BN, i32,
 
 	CLICKED, 0
 	PAINT, 1
@@ -162,10 +152,9 @@ const_type! {
 	KILLFOCUS, 7
 }
 
-const_type! {
+const_type! { BS, u32,
 	/// Button control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles).
-	BS, u32,
 
 	PUSHBUTTON, 0x00000000
 	DEFPUSHBUTTON, 0x00000001

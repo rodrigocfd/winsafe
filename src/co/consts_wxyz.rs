@@ -1,16 +1,14 @@
-const_type! {
+const_type! { WA, i32,
 	/// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 	/// activation state.
-	WA, i32,
 
 	INACTIVE, 0
 	ACTIVE, 1
 	CLICKACTIVE, 2
 }
 
-const_type! {
+const_type! { WH, i32,
 	/// [`SetWindowsHookEx`](crate::SetWindowsHookEx) `idHook`.
-	WH, i32,
 
 	MSGFILTER, -1
 	JOURNALRECORD, 0
@@ -29,10 +27,9 @@ const_type! {
 	MOUSE_LL, 14
 }
 
-const_type! {
+const_type! { WIN32_WINNT, u16,
 	/// [`IsWindowsVersionOrGreater`](crate::IsWindowsVersionOrGreater) values.
 	/// Originally `_WIN32_WINNT`.
-	WIN32_WINNT, u16,
 
 	NT4, 0x0400
 	WIN2K, 0x0500
@@ -49,10 +46,9 @@ const_type! {
 	WIN10, 0x0a00
 }
 
-const_type! {
+const_type! { WS, u32,
 	/// Window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles).
-	WS, u32,
 
 	OVERLAPPED, 0x00000000
 	POPUP, 0x80000000
@@ -83,10 +79,9 @@ const_type! {
 	CHILDWINDOW, Self::CHILD.0
 }
 
-const_type! {
+const_type! { WM, u32,
 	/// Window
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
-	WM, u32,
 
 	NULL, 0x0000
 	CREATE, 0x0001
@@ -345,10 +340,9 @@ const_type! {
 	USER, 0x0400
 }
 
-const_type! {
+const_type! { WS_EX, u32,
 	/// Extended window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles).
-	WS_EX, u32,
 
 	DLGMODALFRAME, 0x00000001
 	NOPARENTNOTIFY, 0x00000004
@@ -379,10 +373,9 @@ const_type! {
 	NOACTIVATE, 0x08000000
 }
 
-const_type! {
+const_type! { WVR, u32,
 	/// [`WM_NCCALCSIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
 	/// return flags.
-	WVR, u32,
 
 	ZERO, 0
 	ALIGNTOP, 0x0010

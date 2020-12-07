@@ -46,6 +46,22 @@ impl HWND {
 		unsafe { user32::DestroyWindow(self.0); }
 	}
 
+	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)
+	/// function.
+	pub fn FindWindow(
+		lpClassName: &str, lpWindowName: &str) -> Result<HWND, co::ERROR>
+	{
+		match ptr_to_opt!(
+			user32::FindWindowW(
+				Utf16::from_str(lpClassName).as_ptr(),
+				Utf16::from_str(lpWindowName).as_ptr(),
+			)
+		 ) {
+			Some(p) => Ok(Self(p)),
+			None => Err(co::ERROR::GetLastError()),
+		}
+	}
+
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// function.
 	pub fn GetForegroundWindow() -> Option<HWND> {

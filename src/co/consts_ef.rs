@@ -1,6 +1,5 @@
-const_type! {
+const_type! { FORMAT_MESSAGE, u32,
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwFlags`.
-	FORMAT_MESSAGE, u32,
 
 	ALLOCATE_BUFFER, 0x00000100
 	ARGUMENT_ARRAY, 0x00002000

@@ -1,6 +1,5 @@
-const_type! {
+const_type! { CLIP, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`.
-	CLIP, u8,
 
 	DEFAULT_PRECIS, 0
 	CHARACTER_PRECIS, 1
@@ -12,10 +11,9 @@ const_type! {
 	EMBEDDED, 8 << 4
 }
 
-const_type! {
+const_type! { CLSCTX, u32,
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration.
-	CLSCTX, u32,
 
 	INPROC_SERVER, 0x1
 	INPROC_HANDLER, 0x2
@@ -40,9 +38,8 @@ const_type! {
 	PS_DLL, 0x80000000
 }
 
-const_type! {
+const_type! { COINIT, u32,
 	/// [`CoInitializeEx`](crate::CoInitializeEx) `dwCoInit`.
-	COINIT, u32,
 
 	APARTMENTTHREADED, 0x2
 	MULTITHREADED, 0x0
@@ -50,10 +47,9 @@ const_type! {
 	SPEED_OVER_MEMORY, 0x8
 }
 
-const_type! {
+const_type! { CS, u32,
 	/// Window class
 	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles).
-	CS, u32,
 
 	VREDRAW, 0x0001
 	HREDRAW, 0x0002
@@ -70,10 +66,9 @@ const_type! {
 	DROPSHADOW, 0x00020000
 }
 
-const_type! {
+const_type! { DLGID, u32,
 	/// Dialog built-in IDs. These are also returned from
-	/// [`MessageBox`](crate::MessageBox).
-	DLGID, u32,
+	/// [`MessageBox`](crate::HWND::MessageBox).
 
 	OK, 1
 	CANCEL, 2

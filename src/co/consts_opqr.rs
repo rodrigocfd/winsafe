@@ -1,6 +1,5 @@
-const_type! {
+const_type! { OUT, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision`.
-	OUT, u8,
 
 	DEFAULT_PRECIS, 0
 	STRING_PRECIS, 1
