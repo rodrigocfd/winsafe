@@ -7,7 +7,7 @@ use crate::ffi::{ole32, Void};
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
 ///
-/// Returns a pointer to a pointer to an [`IUnknown`](crate::com::IUnknown) COM
+/// Returns a pointer to a pointer to an [`IUnknown`](crate::IUnknown) COM
 /// virtual table.
 pub fn CoCreateInstance<T>(rclsid: &CLSID, pUnkOuter: Option<*const Void>,
 	dwClsContext: co::CLSCTX, riid: &IID) -> *const *const T

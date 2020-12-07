@@ -1,9 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::com::shell::{ITaskbarList, ITaskbarListVtbl};
 use crate::ffi::Void;
 use crate::HWND;
+use crate::shell::{ITaskbarList, ITaskbarListVtbl};
 
 type PPVtbl = *const *const ITaskbarList2Vtbl;
 
@@ -11,23 +11,23 @@ type PPVtbl = *const *const ITaskbarList2Vtbl;
 /// COM interface.
 ///
 /// Inherits from:
-/// * [`ITaskbarList`](crate::com::shell::ITaskbarList);
-/// * [`IUnknown`](crate::com::IUnknown).
+/// * [`ITaskbarList`](crate::shell::ITaskbarList);
+/// * [`IUnknown`](crate::IUnknown).
 ///
 /// Usually instantiated as:
 /// ```rust,ignore
-/// let mut itl = com::shell::ITaskbarList2::from(
+/// let mut itl = shell::ITaskbarList2::from(
 ///   CoCreateInstance(
-///     &com::shell::clsid::TaskbarList,
+///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-///     &com::shell::iid::ITaskbarList2,
+///     &shell::iid::ITaskbarList2,
 ///   ),
 /// );
 /// ```
 pub struct ITaskbarList2 {
 	/// Base
-	/// [`ITaskbarList`](crate::com::shell::ITaskbarList).
+	/// [`ITaskbarList`](crate::shell::ITaskbarList).
 	pub iTaskbarList: ITaskbarList,
 }
 

@@ -1,9 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::com::{IUnknown, IUnknownVtbl};
 use crate::ffi::Void;
-use crate::HWND;
+use crate::{HWND, IUnknown, IUnknownVtbl};
 
 type PPVtbl = *const *const ITaskbarListVtbl;
 
@@ -11,22 +10,22 @@ type PPVtbl = *const *const ITaskbarListVtbl;
 /// COM interface.
 ///
 /// Inherits from:
-/// * [`IUnknown`](crate::com::IUnknown).
+/// * [`IUnknown`](crate::IUnknown).
 ///
 /// Usually instantiated as:
 /// ```rust,ignore
-/// let mut itl = com::shell::ITaskbarList::from(
+/// let mut itl = shell::ITaskbarList::from(
 ///   CoCreateInstance(
-///     &com::shell::clsid::TaskbarList,
+///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-///     &com::shell::iid::ITaskbarList,
+///     &shell::iid::ITaskbarList,
 ///   ),
 /// );
 /// ```
 pub struct ITaskbarList {
 	/// Base
-	/// [`IUnknown`](crate::com::IUnknown).
+	/// [`IUnknown`](crate::IUnknown).
 	pub iUnknown: IUnknown,
 }
 

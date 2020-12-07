@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 use std::ffi::OsStr;
 use std::os::windows::ffi::OsStrExt;
 
@@ -11,7 +9,7 @@ use crate::ffi::kernel32;
 /// native Win32 functions.
 #[derive(Default)]
 pub struct Utf16 {
-	charVec: Option<Vec<u16>>,
+	char_vec: Option<Vec<u16>>,
 }
 
 impl Utf16 {
@@ -28,7 +26,7 @@ impl Utf16 {
 	/// internally.
 	pub fn from_str(val: &str) -> Self {
 		Self {
-			charVec: Some(
+			char_vec: Some(
 				OsStr::new(val)
 					.encode_wide()
 					.chain(std::iter::once(0)) // append terminating null
@@ -39,16 +37,16 @@ impl Utf16 {
 
 	/// Creates a new UTF-16 string by copying from a non-null-terminated buffer,
 	/// specifying the number of existing chars.
-	pub fn from_utf16_nchars(src: *const u16, numChars: usize) -> Self {
+	pub fn from_utf16_nchars(src: *const u16, num_chars: usize) -> Self {
 		if src.is_null() {
 			Self::default()
 		} else {
-			let mut me = Self::new_alloc_buffer(numChars + 1); // add room for terminating null
-			let buf: &mut Vec<u16> = me.charVec.as_mut().unwrap(); // our internal buffer
+			let mut me = Self::new_alloc_buffer(num_chars + 1); // add room for terminating null
+			let buf: &mut Vec<u16> = me.char_vec.as_mut().unwrap(); // our internal buffer
 
 			unsafe {
-				std::ptr::copy_nonoverlapping(src, buf.as_mut_ptr(), numChars); // won't copy terminating null
-				buf.set_len(numChars + 1); // leave room for terminating null
+				std::ptr::copy_nonoverlapping(src, buf.as_mut_ptr(), num_chars); // won't copy terminating null
+				buf.set_len(num_chars + 1); // leave room for terminating null
 			}
 			me
 		}
@@ -59,16 +57,16 @@ impl Utf16 {
 		if src.is_null() {
 			Self::default()
 		} else {
-			let numChars = unsafe { kernel32::lstrlenW(src) as usize };
-			Self::from_utf16_nchars(src, numChars)
+			let num_chars = unsafe { kernel32::lstrlenW(src) as usize };
+			Self::from_utf16_nchars(src, num_chars)
 		}
 	}
 
 	/// Creates a new UTF-16 buffer allocated with an specific length. All UTF-16
 	/// chars will be set to zero.
-	pub fn new_alloc_buffer(numChars: usize) -> Self {
+	pub fn new_alloc_buffer(num_chars: usize) -> Self {
 		let mut me = Self::default();
-		me.realloc_buffer(numChars);
+		me.realloc_buffer(num_chars);
 		me
 	}
 
@@ -78,7 +76,7 @@ impl Utf16 {
 	/// **Note:** Will panic if the buffer wasn't previously allocated. Be sure
 	/// to alloc enough room, otherwise a buffer overrun may occur.
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
-		match self.charVec.as_mut() {
+		match self.char_vec.as_mut() {
 			Some(buf) => buf.as_mut_ptr(),
 			None => panic!("Trying to use an unallocated Utf16 buffer."),
 		}
@@ -91,7 +89,7 @@ impl Utf16 {
 	/// allocated. Make sure the `Utf16` object outlives the function call,
 	/// otherwise it will point to an invalid memory location.
 	pub unsafe fn as_ptr(&self) -> *const u16 {
-		match self.charVec.as_ref() {
+		match self.char_vec.as_ref() {
 			Some(buf) => buf.as_ptr(),
 			None => std::ptr::null(),
 		}
@@ -103,7 +101,7 @@ impl Utf16 {
 	/// **Note:** Will panic if the buffer wasn't previously allocated. Be sure
 	/// to alloc enough room, otherwise a buffer overrun may occur.
 	pub fn as_mut_slice(&mut self) -> &mut [u16] {
-		match self.charVec.as_mut() {
+		match self.char_vec.as_mut() {
 			Some(v) => &mut v[..],
 			None => panic!("Trying to use an unallocated Utf16 buffer."),
 		}
@@ -115,7 +113,7 @@ impl Utf16 {
 	/// the `Utf16` object outlives the function call, otherwise it will point to
 	/// an invalid memory location.
 	pub fn as_slice(&mut self) -> &[u16] {
-		match self.charVec.as_ref() {
+		match self.char_vec.as_ref() {
 			Some(v) => &v[..],
 			None => panic!("Trying to use an unallocated Utf16 buffer."),
 		}
@@ -123,7 +121,7 @@ impl Utf16 {
 
 	/// Returns the size of the allocated internal buffer.
 	pub fn buffer_size(&self) -> usize {
-		match self.charVec.as_ref() {
+		match self.char_vec.as_ref() {
 			Some(buf) => buf.len(),
 			None => 0, // not allocated yet
 		}
@@ -131,7 +129,7 @@ impl Utf16 {
 
 	/// Fills the available buffer with zero values.
 	pub fn fill_with_zero(&mut self) {
-		if let Some(buf) = self.charVec.as_mut() {
+		if let Some(buf) = self.char_vec.as_mut() {
 			for wchar in buf {
 				*wchar = 0;
 			}
@@ -140,7 +138,7 @@ impl Utf16 {
 
 	/// Returns true if the internal buffer is storing a null string pointer.
 	pub fn is_null(&self) -> bool {
-		self.charVec.is_none()
+		self.char_vec.is_none()
 	}
 
 	/// Wrapper to
@@ -149,7 +147,7 @@ impl Utf16 {
 	/// Returns the number of `u16` characters stored in the internal buffer, not
 	/// counting the terminating null.
 	pub fn len(&self) -> usize {
-		match self.charVec.as_ref() {
+		match self.char_vec.as_ref() {
 			Some(buf) => unsafe { kernel32::lstrlenW(buf.as_ptr()) as usize },
 			None => 0,
 		}
@@ -162,21 +160,21 @@ impl Utf16 {
 	/// using the internal buffer somewhere, update it by calling `as_const_ptr`
 	/// or `as_mut_buffer` again.
 	pub fn realloc_buffer(&mut self, size: usize) {
-		if self.charVec.is_none() {
-			self.charVec = Some(Vec::default()); // create if not yet
+		if self.char_vec.is_none() {
+			self.char_vec = Some(Vec::default()); // create if not yet
 		}
 
-		let buf: &mut Vec<u16> = self.charVec.as_mut().unwrap(); // our internal buffer
+		let buf: &mut Vec<u16> = self.char_vec.as_mut().unwrap(); // our internal buffer
 		buf.resize(size, 0); // fill with nulls
 	}
 
 	/// Converts into `String`. An internal null pointer will simply be converted
 	/// into an empty string.
 	pub fn to_string(&self) -> String {
-		match self.charVec.as_ref() {
+		match self.char_vec.as_ref() {
 			Some(buf) => {
-				let slice = &buf[..self.len()]; // without terminating null
-				String::from_utf16(slice).unwrap_or_default()
+				let slice16 = &buf[..self.len()]; // without terminating null
+				String::from_utf16(slice16).unwrap_or_default()
 			},
 			None => String::default(),
 		}

@@ -1,9 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::com::shell::{ITaskbarList2, ITaskbarList2Vtbl};
 use crate::ffi::Void;
 use crate::HWND;
+use crate::shell::{ITaskbarList2, ITaskbarList2Vtbl};
 
 type PPVtbl = *const *const ITaskbarList3Vtbl;
 
@@ -11,24 +11,24 @@ type PPVtbl = *const *const ITaskbarList3Vtbl;
 /// COM interface.
 ///
 /// Inherits from:
-/// * [`ITaskbarList2`](crate::com::shell::ITaskbarList2);
-/// * [`ITaskbarList`](crate::com::shell::ITaskbarList);
-/// * [`IUnknown`](crate::com::IUnknown).
+/// * [`ITaskbarList2`](crate::shell::ITaskbarList2);
+/// * [`ITaskbarList`](crate::shell::ITaskbarList);
+/// * [`IUnknown`](crate::IUnknown).
 ///
 /// Usually instantiated as:
 /// ```rust,ignore
-/// let mut itl = com::shell::ITaskbarList3::from(
+/// let mut itl = shell::ITaskbarList3::from(
 ///   CoCreateInstance(
-///     &com::shell::clsid::TaskbarList,
+///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-///     &com::shell::iid::ITaskbarList3,
+///     &shell::iid::ITaskbarList3,
 ///   ),
 /// );
 /// ```
 pub struct ITaskbarList3 {
 	/// Base
-	/// [`ITaskbarList2`](crate::com::shell::ITaskbarList2).
+	/// [`ITaskbarList2`](crate::shell::ITaskbarList2).
 	pub iTaskbarList2: ITaskbarList2,
 }
 
