@@ -21,6 +21,9 @@ impl ComVtbl for IUnknownVtbl {
 
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 /// interface is the base to all COM interfaces.
+///
+/// Automatically calls [`Release`](crate::IUnknown::Release) when the object
+/// goes out of scope.
 pub struct IUnknown {
 	vtbl: *const *const IUnknownVtbl,
 }

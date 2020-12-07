@@ -43,14 +43,15 @@ impl ComVtbl for ITaskbarList3Vtbl {
 ///
 /// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
 /// ```rust,ignore
-/// let mut obj = shell::ITaskbarList3::from(
-///   CoCreateInstance(
-///     &shell::clsid::TaskbarList,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-///   ),
+/// let mut obj: w::shell::ITaskbarList3 = w::CoCreateInstance(
+///   &w::shell::clsid::TaskbarList,
+///   None,
+///   w::co::CLSCTX::INPROC_SERVER,
 /// );
 /// ```
+///
+/// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
+/// object goes out of scope.
 pub struct ITaskbarList3 {
 	/// Base
 	/// [`ITaskbarList2`](crate::shell::ITaskbarList2).

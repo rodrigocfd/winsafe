@@ -7,26 +7,25 @@ use crate::ffi::{ole32, Void};
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
 ///
-/// Returns a pointer to a pointer to an [`IUnknown`](crate::IUnknown) COM
-/// virtual table.
-pub fn CoCreateInstance<T: ComVtbl>(
+/// Returns an [`IUnknown`](crate::IUnknown)-derived COM interface object.
+pub fn CoCreateInstance<V: ComVtbl, I: From<*const *const V>>(
 	rclsid: &CLSID,
 	pUnkOuter: Option<*const Void>,
 	dwClsContext: co::CLSCTX,
-) -> *const *const T {
-	let mut ppv: *const *const T = std::ptr::null();
+) -> I {
+	let mut ppv: *const *const V = std::ptr::null();
 	unsafe {
 		ole32::CoCreateInstance(
 			rclsid.as_ref() as *const GUID as *const Void,
 			pUnkOuter.unwrap_or(std::ptr::null()),
 			dwClsContext.into(),
-			T::IID().as_ref() as *const GUID as *const Void,
+			V::IID().as_ref() as *const GUID as *const Void,
 			&mut ppv
-				as *const *const *const T
+				as *const *const *const V
 				as *const *const *const Void,
 		);
 	}
-	ppv
+	I::from(ppv)
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
