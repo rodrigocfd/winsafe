@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{ComInterface, HWND, IID};
+use crate::{ComVtbl, HWND, IID};
 use crate::co;
 use crate::ffi::Void;
 use crate::shell::{ITaskbarList, ITaskbarListVtbl};
@@ -13,8 +13,8 @@ pub struct ITaskbarList2Vtbl {
 	MarkFullscreenWindow: fn(PPVtbl, *const Void, u32) -> u32,
 }
 
-impl ComInterface for ITaskbarList2Vtbl {
-	fn Iid() -> IID {
+impl ComVtbl for ITaskbarList2Vtbl {
+	fn IID() -> IID {
 		IID::new(0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317)
 	}
 }
@@ -61,9 +61,11 @@ impl ITaskbarList2 {
 	{
 		unsafe {
 			let ppv = self.iTaskbarList.iUnknown.ppv::<ITaskbarList2Vtbl>();
-			let pfun = (*(*ppv)).MarkFullscreenWindow;
-
-			match co::ERROR::from(pfun(ppv, hwnd.as_ptr(), fFullscreen as u32)) {
+			match co::ERROR::from(
+				((*(*ppv)).MarkFullscreenWindow)(
+					ppv, hwnd.as_ptr(), fFullscreen as u32,
+				),
+			) {
 				co::ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}

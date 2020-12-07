@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{ComInterface, IID};
+use crate::{ComVtbl, IID};
 use crate::ffi::Void;
 
 #[repr(C)]
@@ -10,8 +10,8 @@ pub struct IUnknownVtbl {
 	Release: fn(*const *const Self) -> u32,
 }
 
-impl ComInterface for IUnknownVtbl {
-	fn Iid() -> IID {
+impl ComVtbl for IUnknownVtbl {
+	fn IID() -> IID {
 		IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046)
 	}
 }
@@ -45,9 +45,8 @@ impl IUnknown {
 
 	/// [`IUnknown::AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
 	/// method.
-	pub fn AddRef(&self) -> u32 {
-		let pfun = unsafe { (*(*self.vtbl)).AddRef };
-		pfun(self.vtbl)
+	pub unsafe fn AddRef(&self) -> u32 {
+		((*(*self.vtbl)).AddRef)(self.vtbl)
 	}
 
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -63,8 +62,7 @@ impl IUnknown {
 		if self.vtbl.is_null() {
 			0
 		} else {
-			let ptrFun = unsafe { (*(*self.vtbl)).Release };
-			let refCount = ptrFun(self.vtbl);
+			let refCount = unsafe { (*(*self.vtbl)).Release }(self.vtbl);
 
 println!("REFCOUNT {}", refCount);
 

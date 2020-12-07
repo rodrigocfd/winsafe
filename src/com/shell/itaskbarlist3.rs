@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{ComInterface, HWND, IID};
+use crate::{ComVtbl, HWND, IID};
 use crate::co;
 use crate::ffi::Void;
 use crate::shell::{ITaskbarList2, ITaskbarList2Vtbl};
@@ -24,8 +24,8 @@ pub struct ITaskbarList3Vtbl {
 	SetThumbnailClip: fn(PPVtbl, *const Void, *const Void) -> u32,
 }
 
-impl ComInterface for ITaskbarList3Vtbl {
-	fn Iid() -> IID {
+impl ComVtbl for ITaskbarList3Vtbl {
+	fn IID() -> IID {
 		IID::new(0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf)
 	}
 }
@@ -73,9 +73,9 @@ impl ITaskbarList3 {
 	{
 		unsafe {
 			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
-			let pfun = (*(*ppv)).RegisterTab;
-
-			match co::ERROR::from(pfun(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr())) {
+			match co::ERROR::from(
+				((*(*ppv)).RegisterTab)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr()),
+			) {
 				co::ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
@@ -90,9 +90,11 @@ impl ITaskbarList3 {
 	{
 		unsafe {
 			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
-			let pfun = (*(*ppv)).SetProgressValue;
-
-			match co::ERROR::from(pfun(ppv, hwnd.as_ptr(), ullCompleted, ullTotal)) {
+			match co::ERROR::from(
+				((*(*ppv)).SetProgressValue)(
+					ppv, hwnd.as_ptr(), ullCompleted, ullTotal,
+				),
+			) {
 				co::ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
@@ -106,9 +108,9 @@ impl ITaskbarList3 {
 	{
 		unsafe {
 			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
-			let pfun = (*(*ppv)).SetTabActive;
-
-			match co::ERROR::from(pfun(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr(), 0)) {
+			match co::ERROR::from(
+				((*(*ppv)).SetTabActive)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr(), 0),
+			) {
 				co::ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
@@ -122,9 +124,11 @@ impl ITaskbarList3 {
 	{
 		unsafe {
 			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
-			let pfun = (*(*ppv)).SetTabOrder;
-
-			match co::ERROR::from(pfun(ppv, hwndTab.as_ptr(), hwndInsertBefore.as_ptr())) {
+			match co::ERROR::from(
+				((*(*ppv)).SetTabOrder)(
+					ppv, hwndTab.as_ptr(), hwndInsertBefore.as_ptr(),
+				),
+			) {
 				co::ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}

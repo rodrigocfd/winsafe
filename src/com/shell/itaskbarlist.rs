@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{ComInterface, HWND, IID, IUnknown, IUnknownVtbl};
+use crate::{ComVtbl, HWND, IID, IUnknown, IUnknownVtbl};
 use crate::co;
 use crate::ffi::Void;
 
@@ -16,8 +16,8 @@ pub struct ITaskbarListVtbl {
 	SetActiveAlt: fn(PPVtbl, *const Void) -> u32,
 }
 
-impl ComInterface for ITaskbarListVtbl {
-	fn Iid() -> IID {
+impl ComVtbl for ITaskbarListVtbl {
+	fn IID() -> IID {
 		IID::new(0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090)
 	}
 }
@@ -61,9 +61,9 @@ impl ITaskbarList {
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), co::ERROR> {
 		unsafe {
 			let ppv = self.iUnknown.ppv::<ITaskbarListVtbl>();
-			let pfun = (*(*ppv)).SetActiveAlt;
-
-			match co::ERROR::from(pfun(ppv, hwnd.as_ptr())) {
+			match co::ERROR::from(
+				((*(*ppv)).SetActiveAlt)(ppv, hwnd.as_ptr()),
+			) {
 				co::ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
