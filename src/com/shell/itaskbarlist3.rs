@@ -7,6 +7,7 @@ use crate::shell::{ITaskbarList2, ITaskbarList2Vtbl};
 
 type PPVtbl = *const *const ITaskbarList3Vtbl;
 
+/// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 #[repr(C)]
 pub struct ITaskbarList3Vtbl {
 	iTaskbarList2Vtbl: ITaskbarList2Vtbl,
@@ -40,7 +41,7 @@ impl ComVtbl for ITaskbarList3Vtbl {
 /// * [`ITaskbarList`](crate::shell::ITaskbarList);
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Usually instantiated as:
+/// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
 /// ```rust,ignore
 /// let mut obj = shell::ITaskbarList3::from(
 ///   CoCreateInstance(
@@ -53,14 +54,14 @@ impl ComVtbl for ITaskbarList3Vtbl {
 pub struct ITaskbarList3 {
 	/// Base
 	/// [`ITaskbarList2`](crate::shell::ITaskbarList2).
-	pub iTaskbarList2: ITaskbarList2,
+	pub ITaskbarList2: ITaskbarList2,
 }
 
 impl From<PPVtbl> for ITaskbarList3 {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
 	fn from(ppv: PPVtbl) -> Self {
 		Self {
-			iTaskbarList2: ITaskbarList2::from(ppv as *const *const ITaskbarList2Vtbl),
+			ITaskbarList2: ITaskbarList2::from(ppv as *const *const ITaskbarList2Vtbl),
 		}
 	}
 }
@@ -72,7 +73,7 @@ impl ITaskbarList3 {
 		&self, hwndTab: HWND, hwndMDI: HWND) -> Result<(), co::ERROR>
 	{
 		unsafe {
-			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
+			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			match co::ERROR::from(
 				((*(*ppv)).RegisterTab)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr()),
 			) {
@@ -89,7 +90,7 @@ impl ITaskbarList3 {
 		ullCompleted: u64, ullTotal: u64) -> Result<(), co::ERROR>
 	{
 		unsafe {
-			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
+			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			match co::ERROR::from(
 				((*(*ppv)).SetProgressValue)(
 					ppv, hwnd.as_ptr(), ullCompleted, ullTotal,
@@ -107,7 +108,7 @@ impl ITaskbarList3 {
 		&self, hwndTab: HWND, hwndMDI: HWND) -> Result<(), co::ERROR>
 	{
 		unsafe {
-			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
+			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			match co::ERROR::from(
 				((*(*ppv)).SetTabActive)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr(), 0),
 			) {
@@ -123,7 +124,7 @@ impl ITaskbarList3 {
 		&self, hwndTab: HWND, hwndInsertBefore: HWND) -> Result<(), co::ERROR>
 	{
 		unsafe {
-			let ppv = self.iTaskbarList2.iTaskbarList.iUnknown.ppv::<ITaskbarList3Vtbl>();
+			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			match co::ERROR::from(
 				((*(*ppv)).SetTabOrder)(
 					ppv, hwndTab.as_ptr(), hwndInsertBefore.as_ptr(),

@@ -6,6 +6,7 @@ use crate::ffi::Void;
 
 type PPVtbl = *const *const ITaskbarListVtbl;
 
+/// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
 #[repr(C)]
 pub struct ITaskbarListVtbl {
 	iUnknownVtbl: IUnknownVtbl,
@@ -30,7 +31,7 @@ impl ComVtbl for ITaskbarListVtbl {
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Usually instantiated as:
+/// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
 /// ```rust,ignore
 /// let mut obj = shell::ITaskbarList::from(
 ///   CoCreateInstance(
@@ -43,14 +44,14 @@ impl ComVtbl for ITaskbarListVtbl {
 pub struct ITaskbarList {
 	/// Base
 	/// [`IUnknown`](crate::IUnknown).
-	pub iUnknown: IUnknown,
+	pub IUnknown: IUnknown,
 }
 
 impl From<PPVtbl> for ITaskbarList {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
 	fn from(ppv: PPVtbl) -> Self {
 		Self {
-			iUnknown: IUnknown::from(ppv as *const *const IUnknownVtbl)
+			IUnknown: IUnknown::from(ppv as *const *const IUnknownVtbl)
 		}
 	}
 }
@@ -60,7 +61,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), co::ERROR> {
 		unsafe {
-			let ppv = self.iUnknown.ppv::<ITaskbarListVtbl>();
+			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
 			match co::ERROR::from(
 				((*(*ppv)).SetActiveAlt)(ppv, hwnd.as_ptr()),
 			) {

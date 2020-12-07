@@ -7,6 +7,7 @@ use crate::shell::{ITaskbarList, ITaskbarListVtbl};
 
 type PPVtbl = *const *const ITaskbarList2Vtbl;
 
+/// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
 #[repr(C)]
 pub struct ITaskbarList2Vtbl {
 	iTaskbarListVtbl: ITaskbarListVtbl,
@@ -28,7 +29,7 @@ impl ComVtbl for ITaskbarList2Vtbl {
 /// * [`ITaskbarList`](crate::shell::ITaskbarList);
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Usually instantiated as:
+/// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
 /// ```rust,ignore
 /// let mut obj = shell::ITaskbarList2::from(
 ///   CoCreateInstance(
@@ -41,14 +42,14 @@ impl ComVtbl for ITaskbarList2Vtbl {
 pub struct ITaskbarList2 {
 	/// Base
 	/// [`ITaskbarList`](crate::shell::ITaskbarList).
-	pub iTaskbarList: ITaskbarList,
+	pub ITaskbarList: ITaskbarList,
 }
 
 impl From<PPVtbl> for ITaskbarList2 {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
 	fn from(ppv: PPVtbl) -> Self {
 		Self {
-			iTaskbarList: ITaskbarList::from(ppv as *const *const ITaskbarListVtbl),
+			ITaskbarList: ITaskbarList::from(ppv as *const *const ITaskbarListVtbl),
 		}
 	}
 }
@@ -60,7 +61,7 @@ impl ITaskbarList2 {
 		&self, hwnd: HWND, fFullscreen: bool) -> Result<(), co::ERROR>
 	{
 		unsafe {
-			let ppv = self.iTaskbarList.iUnknown.ppv::<ITaskbarList2Vtbl>();
+			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();
 			match co::ERROR::from(
 				((*(*ppv)).MarkFullscreenWindow)(
 					ppv, hwnd.as_ptr(), fFullscreen as u32,

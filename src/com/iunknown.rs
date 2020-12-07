@@ -3,6 +3,7 @@
 use crate::{ComVtbl, IID};
 use crate::ffi::Void;
 
+/// [`IUnknown`](crate::IUnknown) virtual table.
 #[repr(C)]
 pub struct IUnknownVtbl {
 	QueryInterface: *const Void,
@@ -63,9 +64,6 @@ impl IUnknown {
 			0
 		} else {
 			let refCount = unsafe { (*(*self.vtbl)).Release }(self.vtbl);
-
-println!("REFCOUNT {}", refCount);
-
 			if refCount == 0 {
 				self.vtbl = std::ptr::null();
 			}

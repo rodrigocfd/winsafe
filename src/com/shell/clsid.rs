@@ -1,3 +1,5 @@
+//! COM class IDs.
+
 #![allow(non_upper_case_globals)]
 
 use crate::CLSID;
