@@ -1,9 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::{ComVtbl, HWND, IID};
-use crate::co;
+use crate::co::ERROR;
 use crate::ffi::Void;
-use crate::shell::{ITaskbarList2, ITaskbarList2Vtbl};
+use crate::shell::{co, ITaskbarList2, ITaskbarList2Vtbl};
 
 type PPVtbl = *const *const ITaskbarList3Vtbl;
 
@@ -53,7 +53,7 @@ impl ComVtbl for ITaskbarList3Vtbl {
 /// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
 /// object goes out of scope.
 pub struct ITaskbarList3 {
-	/// Base
+	/// Methods of base interface
 	/// [`ITaskbarList2`](crate::shell::ITaskbarList2).
 	pub ITaskbarList2: ITaskbarList2,
 }
@@ -71,14 +71,30 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.
 	pub fn RegisterTab(
-		&self, hwndTab: HWND, hwndMDI: HWND) -> Result<(), co::ERROR>
+		&self, hwndTab: HWND, hwndMDI: HWND) -> Result<(), ERROR>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
-			match co::ERROR::from(
+			match ERROR::from(
 				((*(*ppv)).RegisterTab)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr()),
 			) {
-				co::ERROR::S_OK => Ok(()),
+				ERROR::S_OK => Ok(()),
+				err => Err(err),
+			}
+		}
+	}
+
+	/// [`ITaskbarList3::SetProgressState`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
+	/// method.
+	pub fn SetProgressState(&self, hwnd: HWND, tbpfFlags: co::TBPF) -> Result<(), ERROR> {
+		unsafe {
+			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
+			match ERROR::from(
+				((*(*ppv)).SetProgressState)(
+					ppv, hwnd.as_ptr(), tbpfFlags.into(),
+				),
+			) {
+				ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
 		}
@@ -88,16 +104,16 @@ impl ITaskbarList3 {
 	/// method.
 	pub fn SetProgressValue(
 		&self, hwnd: HWND,
-		ullCompleted: u64, ullTotal: u64) -> Result<(), co::ERROR>
+		ullCompleted: u64, ullTotal: u64) -> Result<(), ERROR>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
-			match co::ERROR::from(
+			match ERROR::from(
 				((*(*ppv)).SetProgressValue)(
 					ppv, hwnd.as_ptr(), ullCompleted, ullTotal,
 				),
 			) {
-				co::ERROR::S_OK => Ok(()),
+				ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
 		}
@@ -106,14 +122,14 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::SetTabActive`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
 	/// method.
 	pub fn SetTabActive(
-		&self, hwndTab: HWND, hwndMDI: HWND) -> Result<(), co::ERROR>
+		&self, hwndTab: HWND, hwndMDI: HWND) -> Result<(), ERROR>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
-			match co::ERROR::from(
+			match ERROR::from(
 				((*(*ppv)).SetTabActive)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr(), 0),
 			) {
-				co::ERROR::S_OK => Ok(()),
+				ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
 		}
@@ -122,16 +138,16 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::SetTabOrder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
 	/// method.
 	pub fn SetTabOrder(
-		&self, hwndTab: HWND, hwndInsertBefore: HWND) -> Result<(), co::ERROR>
+		&self, hwndTab: HWND, hwndInsertBefore: HWND) -> Result<(), ERROR>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
-			match co::ERROR::from(
+			match ERROR::from(
 				((*(*ppv)).SetTabOrder)(
 					ppv, hwndTab.as_ptr(), hwndInsertBefore.as_ptr(),
 				),
 			) {
-				co::ERROR::S_OK => Ok(()),
+				ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
 		}

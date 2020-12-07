@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{ComVtbl, HWND, IID};
-use crate::co;
+use crate::co::ERROR;
 use crate::ffi::Void;
 use crate::shell::{ITaskbarList, ITaskbarListVtbl};
 
@@ -41,7 +41,7 @@ impl ComVtbl for ITaskbarList2Vtbl {
 /// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
 /// object goes out of scope.
 pub struct ITaskbarList2 {
-	/// Base
+	/// Methods of base interface
 	/// [`ITaskbarList`](crate::shell::ITaskbarList).
 	pub ITaskbarList: ITaskbarList,
 }
@@ -59,16 +59,16 @@ impl ITaskbarList2 {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	pub fn MarkFullscreenWindow(
-		&self, hwnd: HWND, fFullscreen: bool) -> Result<(), co::ERROR>
+		&self, hwnd: HWND, fFullscreen: bool) -> Result<(), ERROR>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();
-			match co::ERROR::from(
+			match ERROR::from(
 				((*(*ppv)).MarkFullscreenWindow)(
 					ppv, hwnd.as_ptr(), fFullscreen as u32,
 				),
 			) {
-				co::ERROR::S_OK => Ok(()),
+				ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
 		}

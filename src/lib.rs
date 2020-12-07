@@ -15,6 +15,7 @@
 //! due to its hugeness, it will probably remain as a work-in-progress for a
 //! while.
 
+#[macro_use]
 pub mod co;
 
 mod ffi;

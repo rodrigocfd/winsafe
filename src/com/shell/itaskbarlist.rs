@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{ComVtbl, HWND, IID, IUnknown, IUnknownVtbl};
-use crate::co;
+use crate::co::ERROR;
 use crate::ffi::Void;
 
 type PPVtbl = *const *const ITaskbarListVtbl;
@@ -43,7 +43,7 @@ impl ComVtbl for ITaskbarListVtbl {
 /// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
 /// object goes out of scope.
 pub struct ITaskbarList {
-	/// Base
+	/// Methods of base interface
 	/// [`IUnknown`](crate::IUnknown).
 	pub IUnknown: IUnknown,
 }
@@ -58,15 +58,71 @@ impl From<PPVtbl> for ITaskbarList {
 }
 
 impl ITaskbarList {
-	/// [`ITaskbarList::SetActiveAlt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
+	/// [`ITaskbarList::ActivateTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
 	/// method.
-	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), co::ERROR> {
+	pub fn ActivateTab(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			match co::ERROR::from(
+			match ERROR::from(
+				((*(*ppv)).ActivateTab)(ppv, hwnd.as_ptr()),
+			) {
+				ERROR::S_OK => Ok(()),
+				err => Err(err),
+			}
+		}
+	}
+
+	/// [`ITaskbarList::AddTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-addtab)
+	/// method.
+	pub fn AddTab(&self, hwnd: HWND) -> Result<(), ERROR> {
+		unsafe {
+			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			match ERROR::from(
+				((*(*ppv)).AddTab)(ppv, hwnd.as_ptr()),
+			) {
+				ERROR::S_OK => Ok(()),
+				err => Err(err),
+			}
+		}
+	}
+
+	/// [`ITaskbarList::DeleteTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-deletetab)
+	/// method.
+	pub fn DeleteTab(&self, hwnd: HWND) -> Result<(), ERROR> {
+		unsafe {
+			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			match ERROR::from(
+				((*(*ppv)).DeleteTab)(ppv, hwnd.as_ptr()),
+			) {
+				ERROR::S_OK => Ok(()),
+				err => Err(err),
+			}
+		}
+	}
+
+	/// [`ITaskbarList::HrInit`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit)
+	/// method.
+	pub fn HrInit(&self) -> Result<(), ERROR> {
+		unsafe {
+			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			match ERROR::from(
+				((*(*ppv)).HrInit)(ppv),
+			) {
+				ERROR::S_OK => Ok(()),
+				err => Err(err),
+			}
+		}
+	}
+
+	/// [`ITaskbarList::SetActiveAlt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
+	/// method.
+	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), ERROR> {
+		unsafe {
+			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			match ERROR::from(
 				((*(*ppv)).SetActiveAlt)(ppv, hwnd.as_ptr()),
 			) {
-				co::ERROR::S_OK => Ok(()),
+				ERROR::S_OK => Ok(()),
 				err => Err(err),
 			}
 		}

@@ -2,6 +2,7 @@
 //! COM interfaces.
 
 pub mod clsid;
+pub mod co;
 
 mod itaskbarlist;
 mod itaskbarlist2;
