@@ -2,7 +2,11 @@
 // We use doc as string because of a bug in rust-analyzer:
 // https://stackoverflow.com/q/65112749/6923555
 macro_rules! const_type {
-	($name:ident, $num:ty, $doc:expr) => {
+	(
+		$name:ident, $num:ty,
+		$doc:expr,
+		$($cname:ident, $cval:expr)*
+	) => {
 		#[doc=$doc]
 		#[repr(C)]
 		#[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -77,12 +81,10 @@ macro_rules! const_type {
 				Self(!self.0)
 			}
 		}
-	};
-}
 
-// Syntactic sugar to declare a pub const member.
-macro_rules! const_val {
-	($name:ident, $val:expr) => {
-		pub const $name: Self = Self($val);
-	}
+		// All const values.
+		impl $name {
+			$( pub const $cname: Self = Self($cval); )*
+		}
+	};
 }
