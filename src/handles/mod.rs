@@ -3,6 +3,7 @@
 #[macro_use]
 mod macros;
 
+mod hbitmap;
 mod hbrush;
 mod hcursor;
 mod hicon;
@@ -12,6 +13,7 @@ mod hmenu;
 mod hwnd;
 mod types;
 
+pub use hbitmap::*;
 pub use hbrush::*;
 pub use hcursor::*;
 pub use hicon::*;

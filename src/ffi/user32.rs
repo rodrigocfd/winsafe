@@ -4,6 +4,8 @@ use std::ffi::c_void;
 
 #[link(name = "user32")]
 extern "system" {
+	pub fn AppendMenuW(hMenu: *const c_void, uFlags: u32,
+		uIDNewItem: *const c_void, lpNewItem: *const u16) -> u32;
 	pub fn CreateMenu() -> *const c_void;
 	pub fn CreatePopupMenu() -> *const c_void;
 	pub fn CreateWindowExW(dwExStyle: u32, lpClassName: *const u16,
@@ -16,10 +18,15 @@ extern "system" {
 	pub fn FindWindowW(
 		lpClassName: *const u16, lpWindowName: *const u16) -> *const c_void;
 	pub fn GetForegroundWindow() -> *const c_void;
+	pub fn GetMenuItemCount(hMenu: *const c_void) -> i32;
+	pub fn GetMenuItemID(hMenu: *const c_void, nPos: i32) -> i32;
 	pub fn GetMessageW(lpMsg: *const c_void, hWnd: *const c_void,
 		wMsgFilterMin: u32, wMsgFilterMax: u32) -> i32;
 	pub fn GetParent(hWnd: *const c_void) -> *const c_void;
+	pub fn GetSubMenu(hMenu: *const c_void, nPos: i32) -> *const c_void;
 	pub fn GetWindow(hWnd: *const c_void, uCmd: u32) -> *const c_void;
+	pub fn InsertMenuW(hMenu: *const c_void, uPosition: u32, uFlags: u32,
+		uIDNewItem: *const c_void, lpNewItem: *const u16) -> u32;
 	pub fn MessageBoxW(hWnd: *const c_void, lpText: *const u16,
 		lpCaption: *const u16, uType: u32) -> u32;
 	pub fn RegisterClassExW(Arg1: *const c_void) -> u16;
