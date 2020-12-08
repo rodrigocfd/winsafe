@@ -1,6 +1,6 @@
 //! Assorted handle-like Win32 types.
 
-use crate::ffi::Void;
+use std::ffi::c_void;
 
 handle_type! {
 	/// Windows message

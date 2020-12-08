@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::ffi::Void;
+use std::ffi::c_void;
 
 handle_type! {
 	/// Handle to a

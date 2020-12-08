@@ -1,7 +1,8 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate::{ATOM, HMENU, Utf16};
-use crate::ffi::{Void};
 
 /// Wraps a variant parameter.
 ///
@@ -44,9 +45,9 @@ pub enum IdOrMenu {
 
 impl IdOrMenu {
 	/// Converts the internal value to a pointer.
-	pub fn as_ptr(&self) -> *const Void {
+	pub fn as_ptr(&self) -> *const c_void {
 		match self {
-			IdOrMenu::Id(id) => *id as *const Void,
+			IdOrMenu::Id(id) => *id as *const c_void,
 			IdOrMenu::Menu(hMenu) => unsafe { hMenu.as_ptr() },
 			IdOrMenu::None => std::ptr::null(),
 		}

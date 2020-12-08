@@ -1,8 +1,9 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate::{ComVtbl, HWND, IID};
 use crate::co::ERROR;
-use crate::ffi::Void;
 use crate::shell::{ITaskbarList, ITaskbarListVtbl};
 
 type PPVtbl = *const *const ITaskbarList2Vtbl;
@@ -11,7 +12,7 @@ type PPVtbl = *const *const ITaskbarList2Vtbl;
 #[repr(C)]
 pub struct ITaskbarList2Vtbl {
 	iTaskbarListVtbl: ITaskbarListVtbl,
-	MarkFullscreenWindow: fn(PPVtbl, *const Void, u32) -> u32,
+	MarkFullscreenWindow: fn(PPVtbl, *const c_void, u32) -> u32,
 }
 
 impl ComVtbl for ITaskbarList2Vtbl {

@@ -1,7 +1,9 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate::co;
-use crate::ffi::{kernel32, Void};
+use crate::ffi::kernel32;
 
 handle_type! {
 	/// Handle to a
@@ -12,14 +14,14 @@ handle_type! {
 impl<T> From<*const T> for HLOCAL {
 	/// Wraps a *const T.
 	fn from(p: *const T) -> Self {
-		Self(p as *const Void)
+		Self(p as *const c_void)
 	}
 }
 
 impl<T> From<*mut T> for HLOCAL {
 	/// Wraps a *mut T.
 	fn from(p: *mut T) -> Self {
-		Self(p as *mut Void)
+		Self(p as *mut c_void)
 	}
 }
 

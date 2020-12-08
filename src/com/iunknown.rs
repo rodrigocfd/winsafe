@@ -1,12 +1,13 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate::{ComVtbl, IID};
-use crate::ffi::Void;
 
 /// [`IUnknown`](crate::IUnknown) virtual table.
 #[repr(C)]
 pub struct IUnknownVtbl {
-	QueryInterface: *const Void,
+	QueryInterface: *const c_void,
 	AddRef: fn(*const *const Self) -> u32,
 	Release: fn(*const *const Self) -> u32,
 }

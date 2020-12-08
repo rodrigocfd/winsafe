@@ -1,7 +1,9 @@
 #![allow(non_snake_case)]
 
+
+use std::ffi::c_void;
 use crate::co;
-use crate::ffi::{kernel32, Void};
+use crate::ffi::kernel32;
 use crate::Utf16;
 
 handle_type! {

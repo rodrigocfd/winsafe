@@ -2,9 +2,10 @@
 
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate as w;
 use crate::co;
-use crate::ffi::Void;
 use crate::structs::consts;
 
 /// [`ATOM`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
@@ -32,7 +33,7 @@ impl ATOM {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct CREATESTRUCT {
-	pub lpCreateParams: *const Void,
+	pub lpCreateParams: *const c_void,
 	pub hInstance: w::HINSTANCE,
 	pub hMenu: w::HMENU,
 	pub hwndParent: w::HWND,
@@ -144,7 +145,7 @@ pub struct WNDCLASSEX {
 	pub style: co::CS,
 	pub lpfnWndProc: Option<
 		unsafe extern "system" fn(
-			hWnd: w::HWND, uMsg: co::WM, wParam: *const Void, lParam: *const Void,
+			hWnd: w::HWND, uMsg: co::WM, wParam: w::WPARAM, lParam: w::LPARAM,
 		) -> isize,
 	>,
 	pub cbClsExtra: i32,

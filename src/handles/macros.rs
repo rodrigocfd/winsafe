@@ -7,7 +7,7 @@ macro_rules! handle_type {
 		$(#[$attr])*
 		#[repr(C)]
 		#[derive(Copy, Clone, Eq, PartialEq)]
-		pub struct $name(*const Void);
+		pub struct $name(*const c_void);
 
 		impl Default for $name {
 			/// Creates a null handle.
@@ -18,7 +18,7 @@ macro_rules! handle_type {
 
 		impl $name {
 			/// Returns the raw underlying pointer for this handle.
-			pub unsafe fn as_ptr(&self) -> *const Void {
+			pub unsafe fn as_ptr(&self) -> *const c_void {
 				self.0
 			}
 		}

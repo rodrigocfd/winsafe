@@ -1,8 +1,10 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate as w;
 use crate::co;
-use crate::ffi::{user32, Void};
+use crate::ffi::user32;
 
 handle_type! {
 	/// Handle to a
@@ -23,7 +25,7 @@ impl HWND {
 		hWndParent: Option<HWND>,
 		hMenu: w::IdOrMenu,
 		hInstance: w::HINSTANCE,
-		lpParam: Option<*const Void>
+		lpParam: Option<*const c_void>
 ) -> Result<HWND, co::ERROR> {
 		let mut classNameBuf16 = w::Utf16::default();
 

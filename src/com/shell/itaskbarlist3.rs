@@ -1,8 +1,9 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate::{ComVtbl, HWND, IID};
 use crate::co::ERROR;
-use crate::ffi::Void;
 use crate::shell::{co, ITaskbarList2, ITaskbarList2Vtbl};
 
 type PPVtbl = *const *const ITaskbarList3Vtbl;
@@ -11,18 +12,18 @@ type PPVtbl = *const *const ITaskbarList3Vtbl;
 #[repr(C)]
 pub struct ITaskbarList3Vtbl {
 	iTaskbarList2Vtbl: ITaskbarList2Vtbl,
-	SetProgressValue: fn(PPVtbl, *const Void, u64, u64) -> u32,
-	SetProgressState: fn(PPVtbl, *const Void, u32) -> u32,
-	RegisterTab: fn(PPVtbl, *const Void, *const Void) -> u32,
-	UnregisterTab: fn(PPVtbl, *const Void) -> u32,
-	SetTabOrder: fn(PPVtbl, *const Void, *const Void) -> u32,
-	SetTabActive: fn(PPVtbl, *const Void, *const Void, u32) -> u32,
-	ThumbBarAddButtons: fn(PPVtbl, *const Void, u32, *const Void) -> u32,
-	ThumbBarUpdateButtons: fn(PPVtbl, *const Void, u32, *const Void) -> u32,
-	ThumbBarSetImageList: fn(PPVtbl, *const Void, *const Void) -> u32,
-	SetOverlayIcon: fn(PPVtbl, *const Void, *const Void, *const u16) -> u32,
-	SetThumbnailTooltip: fn(PPVtbl, *const Void, *const u16) -> u32,
-	SetThumbnailClip: fn(PPVtbl, *const Void, *const Void) -> u32,
+	SetProgressValue: fn(PPVtbl, *const c_void, u64, u64) -> u32,
+	SetProgressState: fn(PPVtbl, *const c_void, u32) -> u32,
+	RegisterTab: fn(PPVtbl, *const c_void, *const c_void) -> u32,
+	UnregisterTab: fn(PPVtbl, *const c_void) -> u32,
+	SetTabOrder: fn(PPVtbl, *const c_void, *const c_void) -> u32,
+	SetTabActive: fn(PPVtbl, *const c_void, *const c_void, u32) -> u32,
+	ThumbBarAddButtons: fn(PPVtbl, *const c_void, u32, *const c_void) -> u32,
+	ThumbBarUpdateButtons: fn(PPVtbl, *const c_void, u32, *const c_void) -> u32,
+	ThumbBarSetImageList: fn(PPVtbl, *const c_void, *const c_void) -> u32,
+	SetOverlayIcon: fn(PPVtbl, *const c_void, *const c_void, *const u16) -> u32,
+	SetThumbnailTooltip: fn(PPVtbl, *const c_void, *const u16) -> u32,
+	SetThumbnailClip: fn(PPVtbl, *const c_void, *const c_void) -> u32,
 }
 
 impl ComVtbl for ITaskbarList3Vtbl {

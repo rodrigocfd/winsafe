@@ -1,8 +1,9 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate::{ComVtbl, HWND, IID, IUnknown, IUnknownVtbl};
 use crate::co::ERROR;
-use crate::ffi::Void;
 
 type PPVtbl = *const *const ITaskbarListVtbl;
 
@@ -11,10 +12,10 @@ type PPVtbl = *const *const ITaskbarListVtbl;
 pub struct ITaskbarListVtbl {
 	iUnknownVtbl: IUnknownVtbl,
 	HrInit: fn(PPVtbl) -> u32,
-	AddTab: fn(PPVtbl, *const Void) -> u32,
-	DeleteTab: fn(PPVtbl, *const Void) -> u32,
-	ActivateTab: fn(PPVtbl, *const Void) -> u32,
-	SetActiveAlt: fn(PPVtbl, *const Void) -> u32,
+	AddTab: fn(PPVtbl, *const c_void) -> u32,
+	DeleteTab: fn(PPVtbl, *const c_void) -> u32,
+	ActivateTab: fn(PPVtbl, *const c_void) -> u32,
+	SetActiveAlt: fn(PPVtbl, *const c_void) -> u32,
 }
 
 impl ComVtbl for ITaskbarListVtbl {

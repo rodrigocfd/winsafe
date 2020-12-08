@@ -1,7 +1,9 @@
 #![allow(non_snake_case)]
 
+use std::ffi::c_void;
+
 use crate::co;
-use crate::ffi::{user32, Void};
+use crate::ffi::user32;
 
 handle_type! {
 	/// Handle to an
