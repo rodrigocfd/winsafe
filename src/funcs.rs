@@ -52,6 +52,25 @@ pub fn CoUninitialize() {
 	unsafe { ole32::CoUninitialize() }
 }
 
+/// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
+/// function.
+pub fn GetMessage(lpMsg: &w::MSG, hWnd: w::HWND,
+	wMsgFilterMin: u32, wMsgFilterMax: u32) -> Result<bool, co::ERROR>
+{
+	match unsafe {
+		user32::GetMessageW(
+			lpMsg as *const w::MSG as *const Void,
+			hWnd.as_ptr(),
+			wMsgFilterMin,
+			wMsgFilterMax,
+		)
+	} {
+		-1 => Err(co::ERROR::GetLastError()),
+		0 => Ok(false),
+		_ => Ok(true),
+	}
+}
+
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
 pub fn RegisterClassEx(wcx: &w::WNDCLASSEX) -> Result<w::ATOM, co::ERROR> {
@@ -60,6 +79,14 @@ pub fn RegisterClassEx(wcx: &w::WNDCLASSEX) -> Result<w::ATOM, co::ERROR> {
 	} {
 		0 => Err(co::ERROR::GetLastError()),
 		atom => Ok(w::ATOM::from(atom)),
+	}
+}
+
+/// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
+/// function.
+pub fn TranslateMessage(lpMsg: &w::MSG) -> bool {
+	unsafe {
+		user32::TranslateMessage(lpMsg as *const w::MSG as *const Void) != 0
 	}
 }
 

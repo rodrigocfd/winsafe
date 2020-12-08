@@ -15,11 +15,15 @@ extern "system" {
 	pub fn FindWindowW(
 		lpClassName: *const u16, lpWindowName: *const u16) -> *const Void;
 	pub fn GetForegroundWindow() -> *const Void;
+	pub fn GetMessageW(lpMsg: *const Void, hWnd: *const Void,
+		wMsgFilterMin: u32, wMsgFilterMax: u32) -> i32;
 	pub fn GetParent(hWnd: *const Void) -> *const Void;
 	pub fn GetWindow(hWnd: *const Void, uCmd: u32) -> *const Void;
 	pub fn MessageBoxW(hWnd: *const Void, lpText: *const u16,
 		lpCaption: *const u16, uType: u32) -> u32;
 	pub fn RegisterClassExW(Arg1: *const Void) -> u16;
+	pub fn ShowWindow(hWnd: *const Void, nCmdShow: i32) -> u32;
+	pub fn TranslateMessage(lpMsg: *const Void) -> u32;
 	pub fn UnregisterClassW(
 		lpClassName: *const u16, hInstance: *const Void) -> u32;
 }

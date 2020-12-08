@@ -11,7 +11,7 @@ handle_type! {
 
 impl HMENU {
 	/// [`CreateMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createmenu)
-	/// function.
+	/// static method.
 	pub fn CreateMenu() -> Result<HMENU, co::ERROR> {
 		match ptr_to_opt!(user32::CreateMenu()) {
 			Some(p) => Ok(Self(p)),
@@ -20,7 +20,7 @@ impl HMENU {
 	}
 
 	/// [`CreatePopupMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu)
-	/// function.
+	/// static method.
 	pub fn CreatePopupMenu() -> Result<HMENU, co::ERROR> {
 		match ptr_to_opt!(user32::CreatePopupMenu()) {
 			Some(p) => Ok(Self(p)),

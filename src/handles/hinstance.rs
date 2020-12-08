@@ -13,7 +13,7 @@ handle_type! {
 
 impl HINSTANCE {
 	/// [`GetModuleHandle`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
-	/// function.
+	/// static method.
 	pub fn GetModuleHandle(
 		lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR>
 	{

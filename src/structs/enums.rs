@@ -43,7 +43,7 @@ pub enum IdOrMenu {
 }
 
 impl IdOrMenu {
-	/// Useful to pass as [`HMENU`](crate::HMENU).
+	/// Converts the internal value to a pointer.
 	pub fn as_ptr(&self) -> *const Void {
 		match self {
 			IdOrMenu::Id(id) => *id as *const Void,
