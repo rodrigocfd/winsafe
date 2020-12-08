@@ -70,11 +70,11 @@ pub struct LOGFONT {
 	pub lfItalic: u8,
 	pub lfUnderline: u8,
 	pub lfStrikeOut: u8,
-	pub lfCharSet: u8,
-	pub lfOutPrecision: co::OUT,
+	pub lfCharSet: co::CHARSET,
+	pub lfOutPrecision: co::OUT_PRECIS,
 	pub lfClipPrecision: co::CLIP,
-	pub lfQuality: u8,
-	pub lfPitchAndFamily: u8,
+	pub lfQuality: co::QUALITY,
+	pub lfPitchAndFamily: co::PITCH,
 	pub lfFaceName: [u16; consts::LF_FACESIZE],
 }
 

@@ -1,15 +1,45 @@
-const_type! { OUT, u8,
+use crate::co::FF;
+
+const_type! { OUT_PRECIS, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision`.
 
-	DEFAULT_PRECIS, 0
-	STRING_PRECIS, 1
-	CHARACTER_PRECIS, 2
-	STROKE_PRECIS, 3
-	TT_PRECIS, 4
-	DEVICE_PRECIS, 5
-	RASTER_PRECIS, 6
-	TT_ONLY_PRECIS, 7
-	OUTLINE_PRECIS, 8
-	SCREEN_OUTLINE_PRECIS, 9
-	PS_ONLY_PRECIS, 10
+	DEFAULT, 0
+	STRING, 1
+	CHARACTER, 2
+	STROKE, 3
+	TT, 4
+	DEVICE, 5
+	RASTER, 6
+	TT_ONLY, 7
+	OUTLINE, 8
+	SCREEN_OUTLINE, 9
+	PS_ONLY, 10
+}
+
+const_type! { PITCH, u8,
+	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`, used with
+	/// [`FF`](crate::co::FF).
+
+	DEFAULT, 0
+	FIXED, 1
+	VARIABLE, 2
+}
+impl PITCH {
+	/// Composes [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`.
+	pub fn add_family(&mut self, family: FF) -> &PITCH {
+		self.0 |= u8::from(family);
+		self
+	}
+}
+
+const_type! { QUALITY, u8,
+	/// [`LOGFONT`](crate::LOGFONT) `lfQuality`.
+
+	DEFAULT, 0
+	DRAFT, 1
+	PROOF, 2
+	NONANTIALIASED, 3
+	ANTIALIASED, 4
+	CLEARTYPE, 5
+	CLEARTYPE_NATURAL, 6
 }
