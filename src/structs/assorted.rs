@@ -2,7 +2,7 @@
 
 #![allow(non_snake_case)]
 
-use crate::{HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
+use crate as w;
 use crate::co;
 use crate::ffi::Void;
 use crate::structs::consts;
@@ -33,9 +33,9 @@ impl ATOM {
 #[derive(Copy, Clone)]
 pub struct CREATESTRUCT {
 	pub lpCreateParams: *const Void,
-	pub hInstance: HINSTANCE,
-	pub hMenu: HMENU,
-	pub hwndParent: HWND,
+	pub hInstance: w::HINSTANCE,
+	pub hMenu: w::HMENU,
+	pub hwndParent: w::HWND,
 	pub cy: i32,
 	pub cx: i32,
 	pub y: i32,
@@ -78,13 +78,27 @@ pub struct LOGFONT {
 	pub lfFaceName: [u16; consts::LF_FACESIZE],
 }
 
+/// [`MSG`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct MSG {
+	hwnd: w::HWND,
+	message: co::WM,
+	wParam: w::WPARAM,
+	lParam: w::LPARAM,
+	time: u32,
+	pt: POINT,
+	lPrivate: u32,
+}
+
 /// [`NMHDR`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.
 #[repr(C)]
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
-	pub hwndFrom: HWND,
+	pub hwndFrom: w::HWND,
 	/// ID of the control sending the message.
 	pub idFrom: usize, // ideally should be co::ID
 	/// Notification code sent in
@@ -130,18 +144,18 @@ pub struct WNDCLASSEX {
 	pub style: co::CS,
 	pub lpfnWndProc: Option<
 		unsafe extern "system" fn(
-			hWnd: HWND, uMsg: co::WM, wParam: *const Void, lParam: *const Void,
+			hWnd: w::HWND, uMsg: co::WM, wParam: *const Void, lParam: *const Void,
 		) -> isize,
 	>,
 	pub cbClsExtra: i32,
 	pub cbWndExtra: i32,
-	pub hInstance: HINSTANCE,
-	pub hIcon: HICON,
-	pub hCursor: HCURSOR,
-	pub hbrBackground: HBRUSH,
+	pub hInstance: w::HINSTANCE,
+	pub hIcon: w::HICON,
+	pub hCursor: w::HCURSOR,
+	pub hbrBackground: w::HBRUSH,
 	pub lpszMenuName: *const u16,
 	pub lpszClassName: *const u16,
-	pub hIconSm: HICON,
+	pub hIconSm: w::HICON,
 }
 
 impl Default for WNDCLASSEX {

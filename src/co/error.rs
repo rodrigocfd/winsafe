@@ -1,9 +1,8 @@
 #![allow(non_snake_case)]
 
+use crate::{HLOCAL, Utf16};
 use crate::co;
 use crate::ffi::kernel32;
-use crate::handles::HLOCAL;
-use crate::Utf16;
 
 const_type! { ERROR, u32,
 	/// A Windows

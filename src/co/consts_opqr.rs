@@ -1,4 +1,4 @@
-use crate::co::FF;
+use crate::co;
 
 const_type! { OUT_PRECIS, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision`.
@@ -26,7 +26,7 @@ const_type! { PITCH, u8,
 }
 impl PITCH {
 	/// Composes [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`.
-	pub fn add_family(&mut self, family: FF) -> &PITCH {
+	pub fn add_family(&mut self, family: co::FF) -> &PITCH {
 		self.0 |= u8::from(family);
 		self
 	}

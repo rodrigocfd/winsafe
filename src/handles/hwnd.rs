@@ -1,9 +1,8 @@
 #![allow(non_snake_case)]
 
+use crate::{AtomOrStr, HINSTANCE, HMENU, Utf16};
 use crate::co;
 use crate::ffi::{user32, Void};
-use crate::{AtomOrStr, HINSTANCE, HMENU};
-use crate::Utf16;
 
 handle_type! {
 	/// Handle to a

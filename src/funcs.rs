@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{ATOM, CLSID, ComVtbl, GUID, HINSTANCE, Utf16, WNDCLASSEX};
+use crate as w;
 use crate::co;
 use crate::ffi::{ole32, user32, Void};
 
@@ -8,18 +8,18 @@ use crate::ffi::{ole32, user32, Void};
 /// function.
 ///
 /// Returns an [`IUnknown`](crate::IUnknown)-derived COM interface object.
-pub fn CoCreateInstance<V: ComVtbl, I: From<*const *const V>>(
-	rclsid: &CLSID,
+pub fn CoCreateInstance<V: w::ComVtbl, I: From<*const *const V>>(
+	rclsid: &w::CLSID,
 	pUnkOuter: Option<*mut Void>,
 	dwClsContext: co::CLSCTX,
 ) -> I {
 	let mut ppv: *const *const V = std::ptr::null();
 	unsafe {
 		ole32::CoCreateInstance(
-			rclsid.as_ref() as *const GUID as *const Void,
+			rclsid.as_ref() as *const w::GUID as *const Void,
 			pUnkOuter.unwrap_or(std::ptr::null_mut()),
 			dwClsContext.into(),
-			V::IID().as_ref() as *const GUID as *const Void,
+			V::IID().as_ref() as *const w::GUID as *const Void,
 			&mut ppv
 				as *mut *const *const V
 				as *mut *const *const Void,
@@ -54,23 +54,23 @@ pub fn CoUninitialize() {
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
-pub fn RegisterClassEx(wcx: &WNDCLASSEX) -> Result<ATOM, co::ERROR> {
+pub fn RegisterClassEx(wcx: &w::WNDCLASSEX) -> Result<w::ATOM, co::ERROR> {
 	match unsafe {
-		user32::RegisterClassExW(wcx as *const WNDCLASSEX as *const Void)
+		user32::RegisterClassExW(wcx as *const w::WNDCLASSEX as *const Void)
 	} {
 		0 => Err(co::ERROR::GetLastError()),
-		atom => Ok(ATOM::from(atom)),
+		atom => Ok(w::ATOM::from(atom)),
 	}
 }
 
 /// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
 pub fn UnregisterClass(
-	lpClassName: &str, hInstance: HINSTANCE) -> Result<(), co::ERROR>
+	lpClassName: &str, hInstance: w::HINSTANCE) -> Result<(), co::ERROR>
 {
 	match unsafe {
 		user32::UnregisterClassW(
-			Utf16::from_str(lpClassName).as_ptr(),
+			w::Utf16::from_str(lpClassName).as_ptr(),
 			hInstance.as_ptr(),
 		)
 	} {

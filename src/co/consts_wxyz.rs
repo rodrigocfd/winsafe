@@ -27,25 +27,6 @@ const_type! { WH, i32,
 	MOUSE_LL, 14
 }
 
-const_type! { WIN32_WINNT, u16,
-	/// [`IsWindowsVersionOrGreater`](crate::IsWindowsVersionOrGreater) values.
-	/// Originally `_WIN32_WINNT`.
-
-	NT4, 0x0400
-	WIN2K, 0x0500
-	WINXP, 0x0501
-	WS03, 0x0502
-	WIN6, 0x0600
-	VISTA, 0x0600
-	WS08, 0x0600
-	LONGHORN, 0x0600
-	WIN7, 0x0601
-	WIN8, 0x0602
-	WINBLUE, 0x0603
-	WINTHRESHOLD, 0x0a00
-	WIN10, 0x0a00
-}
-
 const_type! { WS, u32,
 	/// Window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles).
