@@ -28,12 +28,10 @@ impl<T> From<*mut T> for HLOCAL {
 impl HLOCAL {
 	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
-	pub fn LocalFree(&self) {
-		if !unsafe { kernel32::LocalFree(self.0) }.is_null() {
-			// We can't call FormatMessage() here because it uses LocalFree itself,
-			// thus we may cause a stack overflow.
-			panic!("LocalFree failed: error code {err} ({err:#010x}).",
-				err = co::ERROR::GetLastError());
+	pub fn LocalFree(&self) -> Result<(), co::ERROR> {
+		match ptr_to_opt!(kernel32::LocalFree(self.0)) {
+			Some(_) => Err(co::ERROR::GetLastError()),
+			None => Ok(()),
 		}
 	}
 }

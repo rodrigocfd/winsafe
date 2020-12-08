@@ -15,6 +15,7 @@ extern "system" {
 		lpParam: *const c_void) -> *const c_void;
 	pub fn DestroyIcon(hIcon: *const c_void) -> u32;
 	pub fn DestroyWindow(hIcon: *const c_void) -> u32;
+	pub fn DispatchMessage(lpMsg: *const c_void) -> isize;
 	pub fn FindWindowW(
 		lpClassName: *const u16, lpWindowName: *const u16) -> *const c_void;
 	pub fn GetForegroundWindow() -> *const c_void;

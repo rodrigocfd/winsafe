@@ -36,7 +36,7 @@ impl ERROR {
 	pub fn FormatMessage(&self) -> String {
 		unsafe {
 			let mut lpBuf: *mut u16 = std::ptr::null_mut();
-			let numChars = kernel32::FormatMessageW(
+			match kernel32::FormatMessageW(
 				u32::from(co::FORMAT_MESSAGE::ALLOCATE_BUFFER
 					| co::FORMAT_MESSAGE::FROM_SYSTEM
 					| co::FORMAT_MESSAGE::IGNORE_INSERTS),
@@ -46,10 +46,16 @@ impl ERROR {
 				(&mut lpBuf as *mut *mut u16) as *mut u16,
 				0,
 				std::ptr::null(),
-			);
-			let text16 = Utf16::from_utf16_nchars(lpBuf, numChars as usize);
-			HLOCAL::from(lpBuf).LocalFree();
-			text16.to_string()
+			) {
+				0 => format!("FormatMessage failed: error {}.", Self::GetLastError()),
+				nChars => {
+					let text16 = Utf16::from_utf16_nchars(lpBuf, nChars as usize);
+					match HLOCAL::from(lpBuf).LocalFree() {
+						Ok(()) => text16.to_string(),
+						Err(err) => format!("LocalFree failed: error {}.", err),
+					}
+				},
+			}
 		}
 	}
 

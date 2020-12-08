@@ -54,6 +54,12 @@ pub fn CoUninitialize() {
 	unsafe { ole32::CoUninitialize() }
 }
 
+/// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessage)
+/// function.
+pub fn DispatchMessage(lpMsg: &w::MSG) -> isize {
+	unsafe { user32::DispatchMessage(lpMsg as *const w::MSG as *const c_void) }
+}
+
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
 pub fn GetMessage(lpMsg: &w::MSG, hWnd: w::HWND,
