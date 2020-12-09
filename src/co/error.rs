@@ -29,7 +29,7 @@ impl ERROR {
 	/// function.
 	pub fn FormatMessage(&self) -> String {
 		unsafe {
-			let mut lpBuf: *mut u16 = std::ptr::null_mut();
+			let mut ptrBuf: *mut u16 = std::ptr::null_mut();
 			match kernel32::FormatMessageW(
 				u32::from(co::FORMAT_MESSAGE::ALLOCATE_BUFFER
 					| co::FORMAT_MESSAGE::FROM_SYSTEM
@@ -37,7 +37,7 @@ impl ERROR {
 				std::ptr::null(),
 				self.0,
 				co::LANG::NEUTRAL.MAKELANGID(co::SUBLANG::DEFAULT),
-				(&mut lpBuf as *mut *mut u16) as *mut u16,
+				(&mut ptrBuf as *mut *mut u16) as *mut u16, // pass pointer to pointer
 				0,
 				std::ptr::null(),
 			) {
@@ -47,8 +47,8 @@ impl ERROR {
 						self, GetLastError())
 				},
 				nChars => {
-					let text16 = Utf16::from_utf16_nchars(lpBuf, nChars as usize);
-					match HLOCAL::from_mut_ptr(lpBuf).LocalFree() {
+					let text16 = Utf16::from_utf16_nchars(ptrBuf, nChars as usize);
+					match HLOCAL::from_mut_ptr(ptrBuf).LocalFree() {
 						Ok(()) => text16.to_string(),
 						Err(err) => {
 							format!(

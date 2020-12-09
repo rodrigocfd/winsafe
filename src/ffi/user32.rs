@@ -29,6 +29,8 @@ extern "system" {
 	pub fn GetSystemMetrics(nIndex: i32) -> i32;
 	pub fn GetWindow(hWnd: *const c_void, uCmd: u32) -> *const c_void;
 	pub fn GetWindowLongPtrW(hWnd: *const c_void, nIndex: i32) -> *const c_void;
+	pub fn GetWindowTextLengthW(hWnd: *const c_void) -> i32;
+	pub fn GetWindowTextW(hWnd: *const c_void, lpString: *const u16, nMaxCount: i32) -> i32;
 	pub fn InsertMenuW(hMenu: *const c_void, uPosition: u32, uFlags: u32, uIDNewItem: *const c_void, lpNewItem: *const u16) -> u32;
 	pub fn InvalidateRect(hWnd: *const c_void, lpRect: *const c_void, bErase: u32) -> u32;
 	pub fn IsWindowEnabled(hWnd: *const c_void) -> u32;

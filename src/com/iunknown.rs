@@ -67,8 +67,8 @@ impl IUnknown {
 	/// Can be called any number of times, will actually release only while the
 	/// internal ref count is greater than zero.
 	///
-	/// This method will be automatically called by the destructor, so you don't
-	/// need to manually call it. But note that the last call to
+	/// This method is automatically called when the object goes out of scope, so
+	/// you don't need to call it manually. But note that the last call to
 	/// [`CoUninitialize`](crate::CoUninitialize) must happen after `Release` is
 	/// called.
 	pub fn Release(&mut self) -> u32 {

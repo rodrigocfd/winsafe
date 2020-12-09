@@ -7,7 +7,7 @@ use crate::{HDC, HINSTANCE};
 use crate::{PAINTSTRUCT, RECT};
 use crate::co;
 use crate::ffi::user32;
-use crate::GetLastError;
+use crate::{GetLastError, SetLastError};
 use crate::Utf16;
 
 handle_type! {
@@ -161,6 +161,55 @@ impl HWND {
 	/// method.
 	pub fn GetWindowLongPtr(&self, nIndex: co::GWLP) -> *const c_void {
 		unsafe { user32::GetWindowLongPtrW(self.0, nIndex.into()) }
+	}
+
+	/// [`GetWindowText`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw)
+	/// method.
+	///
+	/// The passed buffer will be automatically allocated with
+	/// `GetWindowTextLength`.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// let mut buf = Utf16::default();
+	/// my_window.GetWindowText(&mut buf).unwrap();
+	/// println!("Text: {}", buf.to_string());
+	/// ```
+	pub fn GetWindowText(&self, buf: &mut Utf16) -> Result<i32, co::ERROR> {
+		match self.GetWindowTextLength()? {
+			0 => { // window has no text, simply clear buffer
+				buf.realloc_buffer(0);
+				Ok(0)
+			},
+			len => {
+				buf.realloc_buffer(len as usize + 1); // plus terminating null
+
+				match unsafe {
+					user32::GetWindowTextW(self.0, buf.as_mut_ptr(), len + 1)
+				} {
+					0 => match GetLastError() {
+						co::ERROR::SUCCESS => Ok(0), // no chars copied
+						err => Err(err),
+					},
+					nCopied => Ok(nCopied),
+				}
+			},
+		}
+	}
+
+	/// [`GetWindowTextLength`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextlengthw)
+	/// method.
+	pub fn GetWindowTextLength(&self) -> Result<i32, co::ERROR> {
+		SetLastError(co::ERROR::SUCCESS);
+
+		match unsafe { user32::GetWindowTextLengthW(self.0) } {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(0), // actual zero length
+				err => Err(err),
+			},
+			len => Ok(len),
+		}
 	}
 
 	/// [`InvalidateRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidaterect)
