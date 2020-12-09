@@ -3,13 +3,13 @@
 use crate::{HLOCAL, Utf16};
 use crate::co;
 use crate::ffi::kernel32;
+use crate::GetLastError;
 
 const_type! { ERROR, u32,
 	/// A Windows
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// retrieved by
-	/// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
-	/// function, or an
+	/// [`GetLastError`](crate::GetLastError) function, or an
 	/// [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
 
 	SUCCESS, 0
@@ -24,12 +24,6 @@ const_type! { ERROR, u32,
 }
 
 impl ERROR {
-	/// Returns the last error code with
-	/// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror).
-	pub fn GetLastError() -> ERROR {
-		unsafe { Self(kernel32::GetLastError()) }
-	}
-
 	/// Returns the textual description of the system error, by calling
 	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// function.
@@ -47,21 +41,23 @@ impl ERROR {
 				0,
 				std::ptr::null(),
 			) {
-				0 => format!("FormatMessage failed: error {}.", Self::GetLastError()),
+				0 => {
+					format!(
+						"FormatMessage failed to format error {:#06x}: error {:#06x}.",
+						self, GetLastError())
+				},
 				nChars => {
 					let text16 = Utf16::from_utf16_nchars(lpBuf, nChars as usize);
 					match HLOCAL::from_mut_ptr(lpBuf).LocalFree() {
 						Ok(()) => text16.to_string(),
-						Err(err) => format!("LocalFree failed: error {}.", err),
+						Err(err) => {
+							format!(
+								"LocalFree failed after formatting error {:#06x}: error {:#06x}.",
+								self, err)
+						},
 					}
 				},
 			}
 		}
-	}
-
-	/// Sets this error as the last error code, by passing it to
-	/// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror).
-	pub fn SetLastError(&self) {
-		unsafe { kernel32::SetLastError(self.0) }
 	}
 }

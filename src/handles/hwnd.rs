@@ -7,6 +7,7 @@ use crate::{HDC, HINSTANCE};
 use crate::{PAINTSTRUCT, RECT};
 use crate::co;
 use crate::ffi::user32;
+use crate::GetLastError;
 use crate::Utf16;
 
 handle_type! {
@@ -60,7 +61,7 @@ impl HWND {
 			)
 		) {
 			Some(p) => Ok(Self(p)),
-			None => Err(co::ERROR::GetLastError()),
+			None => Err(GetLastError()),
 		}
 	}
 
@@ -107,7 +108,7 @@ impl HWND {
 			)
 		 ) {
 			Some(p) => Ok(Self(p)),
-			None => Err(co::ERROR::GetLastError()),
+			None => Err(GetLastError()),
 		}
 	}
 
@@ -137,7 +138,7 @@ impl HWND {
 	pub fn GetParent(&self) -> Result<HWND, co::ERROR> {
 		match ptr_to_opt!(user32::GetParent(self.0)) {
 			Some(p) => Ok(Self(p)),
-			None => match co::ERROR::GetLastError() {
+			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(Self::default()),
 				err => Err(err),
 			},
@@ -149,7 +150,7 @@ impl HWND {
 	pub fn GetWindow(&self, uCmd: co::GW) -> Result<HWND, co::ERROR> {
 		match ptr_to_opt!(user32::GetWindow(self.0, uCmd.into())) {
 			Some(p) => Ok(Self(p)),
-			None => match co::ERROR::GetLastError() {
+			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(Self::default()),
 				err => Err(err),
 			},
@@ -201,7 +202,7 @@ impl HWND {
 				uType.into(),
 			)
 		} {
-			0 => Err(co::ERROR::GetLastError()),
+			0 => Err(GetLastError()),
 			ret => Ok(co::DLGID::from(ret)),
 		}
 	}
@@ -218,7 +219,7 @@ impl HWND {
 		let text16 = Utf16::from_str(lpString);
 
 		match unsafe { user32::SetWindowTextW(self.0, text16.as_ptr()) } {
-			0 => Err(co::ERROR::GetLastError()),
+			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
 	}

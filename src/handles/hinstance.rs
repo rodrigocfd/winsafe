@@ -6,6 +6,7 @@ use crate::{ATOM, HCURSOR, HICON, WNDCLASSEX};
 use crate::{IdIdcStr, IdIdiStr};
 use crate::co;
 use crate::ffi::{user32, kernel32};
+use crate::GetLastError;
 use crate::Utf16;
 
 handle_type! {
@@ -37,7 +38,7 @@ impl HINSTANCE {
 				lpwcx as *mut WNDCLASSEX as *mut c_void,
 			)
 		} {
-			0 => Err(co::ERROR::GetLastError()),
+			0 => Err(GetLastError()),
 			atom => Ok(ATOM::from(atom as u16)),
 		}
 	}
@@ -60,7 +61,7 @@ impl HINSTANCE {
 			)
 		) {
 			Some(p) => Ok(HINSTANCE(p)),
-			None => Err(co::ERROR::GetLastError()),
+			None => Err(GetLastError()),
 		}
 	}
 
@@ -84,7 +85,7 @@ impl HINSTANCE {
 			user32::LoadCursorW(self.0, lpCursorName.as_ptr(&mut buf16))
 		) {
 			Some(p) => Ok(unsafe { HCURSOR::from_ptr(p) }),
-			None => Err(co::ERROR::GetLastError()),
+			None => Err(GetLastError()),
 		}
 	}
 
@@ -108,7 +109,7 @@ impl HINSTANCE {
 			user32::LoadIconW(self.0, lpIconName.as_ptr(&mut buf16))
 		) {
 			Some(p) => Ok(unsafe { HICON::from_ptr(p) }),
-			None => Err(co::ERROR::GetLastError()),
+			None => Err(GetLastError()),
 		}
 	}
 }

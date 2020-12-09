@@ -4,6 +4,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::ffi::kernel32;
+use crate::GetLastError;
 
 handle_type! {
 	/// Handle to a
@@ -16,7 +17,7 @@ impl HLOCAL {
 	/// method.
 	pub fn LocalFree(&self) -> Result<(), co::ERROR> {
 		match ptr_to_opt!(kernel32::LocalFree(self.0)) {
-			Some(_) => Err(co::ERROR::GetLastError()),
+			Some(_) => Err(GetLastError()),
 			None => Ok(()),
 		}
 	}

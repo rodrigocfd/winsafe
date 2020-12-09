@@ -4,6 +4,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::ffi::user32;
+use crate::GetLastError;
 
 handle_type! {
 	/// Handle to an
@@ -16,7 +17,7 @@ impl HICON {
 	/// method.
 	pub fn DestroyIcon(&self) -> Result<(), co::ERROR> {
 		match unsafe { user32::DestroyIcon(self.0) } {
-			0 => Err(co::ERROR::GetLastError()),
+			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
 	}

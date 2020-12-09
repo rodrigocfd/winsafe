@@ -6,7 +6,7 @@ use crate::{ATOM, CLSID, GUID, MSG, WNDCLASSEX};
 use crate::{HINSTANCE, HWND, RECT};
 use crate::co;
 use crate::ComVtbl;
-use crate::ffi::{comctl32, ole32, user32};
+use crate::ffi::{comctl32, kernel32, ole32, user32};
 use crate::Utf16;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
@@ -23,7 +23,7 @@ pub fn AdjustWindowRectEx(
 			dwExStyle.into(),
 		)
 	} {
-		0 => Err(co::ERROR::GetLastError()),
+		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
 }
@@ -93,6 +93,12 @@ pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(lpMsg as *const MSG as *const c_void) }
 }
 
+/// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
+/// function.
+pub fn GetLastError() -> co::ERROR {
+	unsafe { co::ERROR::from(kernel32::GetLastError()) }
+}
+
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
 pub fn GetMessage(lpMsg: &MSG, hWnd: HWND,
@@ -106,7 +112,7 @@ pub fn GetMessage(lpMsg: &MSG, hWnd: HWND,
 			wMsgFilterMax,
 		)
 	} {
-		-1 => Err(co::ERROR::GetLastError()),
+		-1 => Err(GetLastError()),
 		0 => Ok(false),
 		_ => Ok(true),
 	}
@@ -130,9 +136,15 @@ pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> Result<ATOM, co::ERROR> {
 	match unsafe {
 		user32::RegisterClassExW(lpwcx as *const WNDCLASSEX as *const c_void)
 	} {
-		0 => Err(co::ERROR::GetLastError()),
+		0 => Err(GetLastError()),
 		atom => Ok(ATOM::from(atom)),
 	}
+}
+
+/// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
+/// function.
+pub fn SetLastError(dwErrCode: co::ERROR) {
+	unsafe { kernel32::SetLastError(dwErrCode.into()) }
 }
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
@@ -154,7 +166,7 @@ pub fn UnregisterClass(
 			hInstance.as_ptr(),
 		)
 	} {
-		0 => Err(co::ERROR::GetLastError()),
+		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
 }

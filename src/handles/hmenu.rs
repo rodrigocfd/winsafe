@@ -5,6 +5,7 @@ use std::ffi::c_void;
 use crate::{BitmapPtrStr, IdMenu, IdPos};
 use crate::co;
 use crate::ffi::user32;
+use crate::GetLastError;
 use crate::Utf16;
 
 handle_type! {
@@ -33,7 +34,7 @@ impl HMENU {
 				lpNewItem.as_ptr(&mut buf16),
 			)
 		} {
-			0 => Err(co::ERROR::GetLastError()),
+			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
 	}
@@ -43,7 +44,7 @@ impl HMENU {
 	pub fn CreateMenu() -> Result<HMENU, co::ERROR> {
 		match ptr_to_opt!(user32::CreateMenu()) {
 			Some(p) => Ok(Self(p)),
-			None => Err(co::ERROR::GetLastError()),
+			None => Err(GetLastError()),
 		}
 	}
 
@@ -52,7 +53,7 @@ impl HMENU {
 	pub fn CreatePopupMenu() -> Result<HMENU, co::ERROR> {
 		match ptr_to_opt!(user32::CreatePopupMenu()) {
 			Some(p) => Ok(Self(p)),
-			None => Err(co::ERROR::GetLastError()),
+			None => Err(GetLastError()),
 		}
 	}
 
@@ -60,7 +61,7 @@ impl HMENU {
 	/// method.
 	pub fn GetMenuItemCount(&self) -> Result<u32, co::ERROR> {
 		match unsafe { user32::GetMenuItemCount(self.0) } {
-			-1 => Err(co::ERROR::GetLastError()),
+			-1 => Err(GetLastError()),
 			count => Ok(count as u32),
 		}
 	}
@@ -102,7 +103,7 @@ impl HMENU {
 				lpNewItem.as_ptr(&mut buf16),
 			)
 		} {
-			0 => Err(co::ERROR::GetLastError()),
+			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
 	}
