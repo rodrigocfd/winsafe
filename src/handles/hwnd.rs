@@ -4,10 +4,11 @@ use std::ffi::c_void;
 
 use crate::{AtomStr, IdMenu};
 use crate::{GetLastError, SetLastError};
-use crate::{HACCEL, HDC, HINSTANCE};
+use crate::{HACCEL, HDC, HINSTANCE, HMENU};
 use crate::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::co;
 use crate::ffi::{comctl32, HANDLE, user32};
+use crate::IdPos;
 use crate::Utf16;
 
 /// Type alias to callback function.
@@ -325,6 +326,17 @@ impl HWND {
 		}
 	}
 
+	/// [`HiliteMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hilitemenuitem)
+	/// method.
+	pub fn HiliteMenuItem(
+		self, hMenu: HMENU, uIDHiliteItem: IdPos, uHilite: co::MF) -> bool
+	{
+		unsafe {
+			user32::HiliteMenuItem(self.0,
+				hMenu.as_ptr(), uIDHiliteItem.into(), uHilite.into()) != 0
+		}
+	}
+
 	/// [`InvalidateRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidaterect)
 	/// method.
 	pub fn InvalidateRect(
@@ -388,6 +400,16 @@ impl HWND {
 
 	/// [`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
 	/// method.
+	///
+	/// Usually the message box has a valid parent window, however, if for some
+	/// reason you don't have a window to serve as parent, you still can show a
+	/// parent-less message box by retrieving the desktop handle:
+	///
+	/// ```rust,ignore
+	/// HWND::GetDesktopWindow()
+	///   .MessageBox("Hello, world", "Title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
+	///   .unwrap();
+	/// ```
 	pub fn MessageBox(self, lpText: &str,
 		lpCaption: &str, uType: co::MB) -> Result<co::DLGID, co::ERROR>
 	{

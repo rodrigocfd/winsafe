@@ -4,7 +4,7 @@
 
 use std::ffi::c_void;
 
-use crate::{HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
+use crate::{HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
 use crate::co;
 use crate::structs::const_vals;
 
@@ -88,6 +88,57 @@ pub struct LOGFONT {
 	pub lfQuality: co::QUALITY,
 	pub lfPitchAndFamily: co::PITCH,
 	pub lfFaceName: [u16; const_vals::LF_FACESIZE],
+}
+
+/// [`MENUINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuinfo)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct MENUINFO {
+	cbSize: u32,
+	pub fMask: co::MIM,
+	pub dwStyle: co::MNS,
+	pub cyMax: u32,
+	pub hbrBack: HBRUSH,
+	pub dwContextHelpID: u32,
+	pub dwMenuData: usize,
+}
+
+impl Default for MENUINFO {
+	fn default() -> Self {
+		Self {
+			cbSize: std::mem::size_of::<Self>() as u32,
+			..Default::default()
+		}
+	}
+}
+
+/// [`MENUITEMINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct MENUITEMINFO {
+	cbSize: u32,
+	pub fMask: co::MIIM,
+	pub fType: co::MFT,
+	pub fState: co::MFS,
+	pub wID: u32,
+	pub hSubMenu: HMENU,
+	pub hbmpChecked: HBITMAP,
+	pub hbmpUnchecked: HBITMAP,
+	pub dwItemData: usize,
+	pub dwTypeData: *mut u16,
+	pub cch: u32,
+	pub hbmpItem: HBITMAP,
+}
+
+impl Default for MENUITEMINFO {
+	fn default() -> Self {
+		Self {
+			cbSize: std::mem::size_of::<Self>() as u32,
+			..Default::default()
+		}
+	}
 }
 
 /// [`MSG`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)

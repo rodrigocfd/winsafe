@@ -139,7 +139,7 @@ impl IdMenu {
 /// * [`CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
 /// * [`DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;
 /// * [`EnableMenuItem`](crate::HMENU::EnableMenuItem) `uIDEnableItem`;
-/// * [`HiliteMenuItem`](crate::HMENU::HiliteMenuItem) `uIDHiliteItem`;
+/// * [`HiliteMenuItem`](crate::HWND::HiliteMenuItem) `uIDHiliteItem`;
 /// * [`InsertMenuItem`](crate::HMENU::InsertMenuItem) `item`;
 /// * [`RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
 /// * [`SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
