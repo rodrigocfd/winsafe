@@ -1,12 +1,11 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::{BitmapPtrStr, IdMenu, IdPos};
 use crate::{MENUINFO, MENUITEMINFO};
 use crate::co;
 use crate::ffi::{HANDLE, user32};
 use crate::GetLastError;
+use crate::handles::macros::{const_void, mut_void};
 use crate::HWND;
 use crate::Utf16;
 
@@ -109,9 +108,7 @@ impl HMENU {
 	/// method.
 	pub fn GetMenuInfo(self, lpmi: &mut MENUINFO) -> Result<(), co::ERROR>
 	{
-		match unsafe {
-			user32::GetMenuInfo(self.0, lpmi as *mut MENUINFO as *mut c_void)
-		} {
+		match unsafe { user32::GetMenuInfo(self.0, mut_void(lpmi)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -171,11 +168,7 @@ impl HMENU {
 	{
 		match unsafe {
 			user32::InsertMenuItemW(
-				self.0,
-				item.into(),
-				fByPosition as u32,
-				lpmi as *const MENUITEMINFO as *const c_void,
-			)
+				self.0, item.into(), fByPosition as u32, const_void(lpmi))
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -205,9 +198,7 @@ impl HMENU {
 	/// method.
 	pub fn SetMenuInfo(self, mii: &MENUINFO) -> Result<(), co::ERROR>
 	{
-		match unsafe {
-			user32::SetMenuInfo(self.0, mii as *const MENUINFO as *const c_void)
-		} {
+		match unsafe { user32::SetMenuInfo(self.0, const_void(mii)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -220,11 +211,7 @@ impl HMENU {
 	{
 		match unsafe {
 			user32::SetMenuItemInfo(
-				self.0,
-				item.into(),
-				fByPosition as u32,
-				lpmii as *const MENUITEMINFO as *const c_void,
-			)
+				self.0, item.into(), fByPosition as u32, const_void(lpmii))
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),

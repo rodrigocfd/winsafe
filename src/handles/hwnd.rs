@@ -8,6 +8,7 @@ use crate::{HACCEL, HDC, HINSTANCE, HMENU};
 use crate::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::co;
 use crate::ffi::{comctl32, HANDLE, user32};
+use crate::handles::macros::{const_void, mut_void};
 use crate::IdPos;
 use crate::Utf16;
 
@@ -41,12 +42,7 @@ impl HWND {
 	///
 	/// Must be paired with an [`EndPaint`](crate::HWND::EndPaint) call.
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> Result<HDC, ()> {
-		match ptr_to_opt!(
-			user32::BeginPaint(
-				self.0,
-				lpPaint as *mut PAINTSTRUCT as *mut c_void,
-			)
-		) {
+		match ptr_to_opt!(user32::BeginPaint(self.0, mut_void(lpPaint))) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -117,12 +113,7 @@ impl HWND {
 	/// [`EndPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 	/// method.
 	pub fn EndPaint(self, lpPaint: &PAINTSTRUCT) {
-		unsafe {
-			user32::EndPaint(
-				self.0,
-				lpPaint as *const PAINTSTRUCT as *const c_void,
-			);
-		}
+		unsafe { user32::EndPaint(self.0, const_void(lpPaint)); }
 	}
 
 	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)
@@ -245,9 +236,7 @@ impl HWND {
 	/// [`GetWindowInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowinfo)
 	/// method.
 	pub fn GetWindowInfo(self, pwi: &mut WINDOWINFO) -> Result<(), co::ERROR> {
-		match unsafe {
-			user32::GetWindowInfo(self.0, pwi as *mut WINDOWINFO as *mut c_void)
-		} {
+		match unsafe { user32::GetWindowInfo(self.0, mut_void(pwi)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -264,12 +253,7 @@ impl HWND {
 	pub fn GetWindowPlacement(
 		self, lpwndpl: &mut WINDOWPLACEMENT) -> Result<(), co::ERROR>
 	{
-		match unsafe {
-			user32::GetWindowPlacement(
-				self.0,
-				lpwndpl as *mut WINDOWPLACEMENT as *mut c_void,
-			)
-		} {
+		match unsafe { user32::GetWindowPlacement(self.0, mut_void(lpwndpl)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -348,7 +332,7 @@ impl HWND {
 				self.0,
 				lpRect.map_or(
 					std::ptr::null(),
-					|lpRect| lpRect as *const RECT as *const c_void,
+					|lpRect| const_void(lpRect),
 				),
 				bErase as u32,
 			)
@@ -367,12 +351,7 @@ impl HWND {
 	/// [`IsDialogMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isdialogmessagew)
 	/// method.
 	pub fn IsDialogMessage(self, lpMsg: &mut MSG) -> bool {
-		unsafe {
-			user32::IsDialogMessageW(
-				self.0,
-				lpMsg as *mut MSG as *mut c_void,
-			) != 0
-		}
+		unsafe { user32::IsDialogMessageW(self.0, mut_void(lpMsg)) != 0 }
 	}
 
 	/// [`IsIconic`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isiconic)
@@ -489,12 +468,7 @@ impl HWND {
 	pub fn SetWindowPlacement(
 		self, lpwndpl: &WINDOWPLACEMENT) -> Result<(), co::ERROR>
 	{
-		match unsafe {
-			user32::SetWindowPlacement(
-				self.0,
-				lpwndpl as *const WINDOWPLACEMENT as *const c_void,
-			)
-		} {
+		match unsafe { user32::SetWindowPlacement(self.0, const_void(lpwndpl)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -538,10 +512,7 @@ impl HWND {
 	{
 		match unsafe {
 			user32::TranslateAcceleratorW(
-				self.0,
-				hAccTable.as_ptr(),
-				lpMsg as *mut MSG as *mut c_void,
-			)
+				self.0, hAccTable.as_ptr(), mut_void(lpMsg))
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(())

@@ -1,12 +1,11 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::{ATOM, HCURSOR, HICON, WNDCLASSEX};
 use crate::{IdIdcStr, IdIdiStr};
 use crate::co;
 use crate::ffi::{HANDLE, kernel32, user32};
 use crate::GetLastError;
+use crate::handles::macros::mut_void;
 use crate::Utf16;
 
 handle_type! {
@@ -33,10 +32,7 @@ impl HINSTANCE {
 	{
 		match unsafe {
 			user32::GetClassInfoExW(
-				self.0,
-				Utf16::from_str(lpszClass).as_ptr(),
-				lpwcx as *mut WNDCLASSEX as *mut c_void,
-			)
+				self.0, Utf16::from_str(lpszClass).as_ptr(), mut_void(lpwcx))
 		} {
 			0 => Err(GetLastError()),
 			atom => Ok(ATOM::from(atom as u16)),
