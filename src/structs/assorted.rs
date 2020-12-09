@@ -5,7 +5,6 @@
 use std::ffi::c_void;
 
 use crate::{HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
-use crate::{LPARAM, WPARAM};
 use crate::co;
 use crate::structs::consts;
 
@@ -87,8 +86,8 @@ pub struct LOGFONT {
 pub struct MSG {
 	hwnd: HWND,
 	message: co::WM,
-	wParam: WPARAM,
-	lParam: LPARAM,
+	wParam: usize,
+	lParam: isize,
 	time: u32,
 	pt: POINT,
 	lPrivate: u32,
@@ -159,7 +158,7 @@ pub struct WNDCLASSEX {
 	pub style: co::CS,
 	pub lpfnWndProc: Option<
 		unsafe extern "system" fn(
-			hWnd: HWND, uMsg: co::WM, wParam: WPARAM, lParam: LPARAM,
+			hWnd: HWND, uMsg: co::WM, wParam: usize, lParam: isize,
 		) -> isize,
 	>,
 	pub cbClsExtra: i32,

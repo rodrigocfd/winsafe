@@ -4,6 +4,8 @@ use std::ffi::c_void;
 
 #[link(name = "user32")]
 extern "system" {
+	pub fn AdjustWindowRectEx(
+		lpRect: *mut c_void, dwStyle: u32, bMenu: u32, dwExStyle: u32) -> u32;
 	pub fn AppendMenuW(hMenu: *const c_void, uFlags: u32,
 		uIDNewItem: *const c_void, lpNewItem: *const u16) -> u32;
 	pub fn BeginPaint(
@@ -15,8 +17,8 @@ extern "system" {
 		nWidth: i32, nHeight: i32, hWndParent: *const c_void,
 		hMenu: *const c_void, hInstance: *const c_void,
 		lpParam: *const c_void) -> *const c_void;
-	pub fn DefWindowProcW(hWnd: *const c_void, Msg: u32,
-		wParam: *const c_void, lParam: *const c_void) -> isize;
+	pub fn DefWindowProcW(
+		hWnd: *const c_void, Msg: u32, wParam: usize, lParam: isize) -> isize;
 	pub fn DestroyIcon(hIcon: *const c_void) -> u32;
 	pub fn DestroyWindow(hIcon: *const c_void) -> u32;
 	pub fn DispatchMessageW(lpMsg: *const c_void) -> isize;
@@ -35,6 +37,7 @@ extern "system" {
 		wMsgFilterMin: u32, wMsgFilterMax: u32) -> i32;
 	pub fn GetParent(hWnd: *const c_void) -> *const c_void;
 	pub fn GetSubMenu(hMenu: *const c_void, nPos: i32) -> *const c_void;
+	pub fn GetSystemMetrics(nIndex: i32) -> i32;
 	pub fn GetWindow(hWnd: *const c_void, uCmd: u32) -> *const c_void;
 	pub fn GetWindowLongPtrW(hWnd: *const c_void, nIndex: i32) -> *const c_void;
 	pub fn InsertMenuW(hMenu: *const c_void, uPosition: u32, uFlags: u32,
@@ -49,8 +52,9 @@ extern "system" {
 	pub fn MessageBoxW(hWnd: *const c_void, lpText: *const u16,
 		lpCaption: *const u16, uType: u32) -> u32;
 	pub fn RegisterClassExW(lpwcx: *const c_void) -> u16;
-	pub fn SetWindowLongPtrW(hWnd: *const c_void,
-		nIndex: i32, dwNewLong: *const c_void) -> *const c_void;
+	pub fn SetWindowLongPtrW(
+		hWnd: *const c_void, nIndex: i32, dwNewLong: isize) -> isize;
+	pub fn SetWindowTextW(hWnd: *const c_void, lpString: *const u16) -> u32;
 	pub fn ShowWindow(hWnd: *const c_void, nCmdShow: i32) -> u32;
 	pub fn TranslateMessage(lpMsg: *const c_void) -> u32;
 	pub fn UnregisterClassW(

@@ -3,10 +3,10 @@
 use std::ffi::c_void;
 
 use crate::{AtomStr, IdMenu};
-use crate::{HDC, HINSTANCE, LPARAM, WPARAM};
+use crate::{HDC, HINSTANCE};
+use crate::{PAINTSTRUCT, RECT};
 use crate::co;
 use crate::ffi::user32;
-use crate::{PAINTSTRUCT, RECT};
 use crate::Utf16;
 
 handle_type! {
@@ -67,12 +67,9 @@ impl HWND {
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
 	pub fn DefWindowProc(
-		&self, Msg: co::WM, wParam: WPARAM, lParam: LPARAM) -> isize
+		&self, Msg: co::WM, wParam: usize, lParam: isize) -> isize
 	{
-		unsafe {
-			user32::DefWindowProcW(self.0, Msg.into(),
-				wParam.as_ptr(), lParam.as_ptr())
-		}
+		unsafe { user32::DefWindowProcW(self.0, Msg.into(), wParam, lParam) }
 	}
 
 	/// [`DestroyWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
@@ -211,10 +208,19 @@ impl HWND {
 
 	/// [`SetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// method.
-	pub fn SetWindowLongPtr(
-		&self, nIndex: co::GWLP, dwNewLong: *const c_void) -> *const c_void
-	{
+	pub fn SetWindowLongPtr(&self, nIndex: co::GWLP, dwNewLong: isize) -> isize {
 		unsafe { user32::SetWindowLongPtrW(self.0, nIndex.into(), dwNewLong) }
+	}
+
+	/// [`SetWindowText`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowtextw)
+	/// method.
+	pub fn SetWindowText(&self, lpString: &str) -> Result<(), co::ERROR> {
+		let text16 = Utf16::from_str(lpString);
+
+		match unsafe { user32::SetWindowTextW(self.0, text16.as_ptr()) } {
+			0 => Err(co::ERROR::GetLastError()),
+			_ => Ok(()),
+		}
 	}
 
 	/// [`ShowWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow)

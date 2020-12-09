@@ -3,11 +3,30 @@
 use std::ffi::c_void;
 
 use crate::{ATOM, CLSID, GUID, MSG, WNDCLASSEX};
-use crate::{HINSTANCE, HWND};
+use crate::{HINSTANCE, HWND, RECT};
 use crate::co;
 use crate::ComVtbl;
 use crate::ffi::{comctl32, ole32, user32};
 use crate::Utf16;
+
+/// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
+/// function.
+pub fn AdjustWindowRectEx(
+	lpRect: &mut RECT, dwStyle: co::WS,
+	bMenu: bool, dwExStyle: co::WS_EX) -> Result<(), co::ERROR>
+{
+	match unsafe {
+		user32::AdjustWindowRectEx(
+			lpRect as *mut RECT as *mut c_void,
+			dwStyle.into(),
+			bMenu as u32,
+			dwExStyle.into(),
+		)
+	} {
+		0 => Err(co::ERROR::GetLastError()),
+		_ => Ok(()),
+	}
+}
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
@@ -91,6 +110,12 @@ pub fn GetMessage(lpMsg: &MSG, hWnd: HWND,
 		0 => Ok(false),
 		_ => Ok(true),
 	}
+}
+
+/// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
+/// function.
+pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
+	unsafe { user32::GetSystemMetrics(nIndex.into()) }
 }
 
 /// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
