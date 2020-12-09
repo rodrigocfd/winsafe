@@ -5,8 +5,8 @@
 
 pub mod shell;
 
-mod comvtbl;
 mod iunknown;
+mod vtbl;
 
-pub use comvtbl::*;
 pub use iunknown::*;
+pub use vtbl::*;

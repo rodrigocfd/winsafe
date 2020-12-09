@@ -5,7 +5,7 @@ use std::ffi::c_void;
 use crate::{ATOM, HCURSOR, HICON, WNDCLASSEX};
 use crate::{IdIdcStr, IdIdiStr};
 use crate::co;
-use crate::ffi::{user32, kernel32};
+use crate::ffi::{HANDLE, kernel32, user32};
 use crate::GetLastError;
 use crate::Utf16;
 
@@ -60,7 +60,7 @@ impl HINSTANCE {
 				Utf16::from_opt_str(lpModuleName).as_ptr(),
 			)
 		) {
-			Some(p) => Ok(HINSTANCE(p)),
+			Some(p) => Ok(unsafe { HINSTANCE::from_ptr(p) }),
 			None => Err(GetLastError()),
 		}
 	}

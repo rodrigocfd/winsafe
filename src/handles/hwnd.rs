@@ -6,7 +6,7 @@ use crate::{AtomStr, IdMenu};
 use crate::{HDC, HINSTANCE};
 use crate::{PAINTSTRUCT, RECT};
 use crate::co;
-use crate::ffi::user32;
+use crate::ffi::{HANDLE, user32};
 use crate::{GetLastError, SetLastError};
 use crate::Utf16;
 
@@ -159,7 +159,7 @@ impl HWND {
 
 	/// [`GetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw)
 	/// method.
-	pub fn GetWindowLongPtr(&self, nIndex: co::GWLP) -> *const c_void {
+	pub fn GetWindowLongPtr(&self, nIndex: co::GWLP) -> isize {
 		unsafe { user32::GetWindowLongPtrW(self.0, nIndex.into()) }
 	}
 

@@ -48,7 +48,7 @@ impl ERROR {
 				},
 				nChars => {
 					let text16 = Utf16::from_utf16_nchars(ptrBuf, nChars as usize);
-					match HLOCAL::from_mut_ptr(ptrBuf).LocalFree() {
+					match HLOCAL::from_ptr(ptrBuf).LocalFree() {
 						Ok(()) => text16.to_string(),
 						Err(err) => {
 							format!(

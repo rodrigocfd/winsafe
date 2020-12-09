@@ -2,31 +2,31 @@
 
 use std::ffi::c_void;
 
-use crate::{ComVtbl, HWND, IID};
+use crate::{HWND, IID};
+use crate::{PPVtbl, Vtbl};
 use crate::co::ERROR;
+use crate::ffi::HANDLE;
 use crate::shell::{co, ITaskbarList2, ITaskbarList2Vtbl};
-
-type PPVtbl = *const *const ITaskbarList3Vtbl;
 
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 #[repr(C)]
 pub struct ITaskbarList3Vtbl {
 	iTaskbarList2Vtbl: ITaskbarList2Vtbl,
-	SetProgressValue: fn(PPVtbl, *const c_void, u64, u64) -> u32,
-	SetProgressState: fn(PPVtbl, *const c_void, u32) -> u32,
-	RegisterTab: fn(PPVtbl, *const c_void, *const c_void) -> u32,
-	UnregisterTab: fn(PPVtbl, *const c_void) -> u32,
-	SetTabOrder: fn(PPVtbl, *const c_void, *const c_void) -> u32,
-	SetTabActive: fn(PPVtbl, *const c_void, *const c_void, u32) -> u32,
-	ThumbBarAddButtons: fn(PPVtbl, *const c_void, u32, *const c_void) -> u32,
-	ThumbBarUpdateButtons: fn(PPVtbl, *const c_void, u32, *const c_void) -> u32,
-	ThumbBarSetImageList: fn(PPVtbl, *const c_void, *const c_void) -> u32,
-	SetOverlayIcon: fn(PPVtbl, *const c_void, *const c_void, *const u16) -> u32,
-	SetThumbnailTooltip: fn(PPVtbl, *const c_void, *const u16) -> u32,
-	SetThumbnailClip: fn(PPVtbl, *const c_void, *const c_void) -> u32,
+	SetProgressValue: fn(PPVtbl<Self>, HANDLE, u64, u64) -> u32,
+	SetProgressState: fn(PPVtbl<Self>, HANDLE, u32) -> u32,
+	RegisterTab: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
+	UnregisterTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	SetTabOrder: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
+	SetTabActive: fn(PPVtbl<Self>, HANDLE, HANDLE, u32) -> u32,
+	ThumbBarAddButtons: fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32,
+	ThumbBarUpdateButtons: fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32,
+	ThumbBarSetImageList: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
+	SetOverlayIcon: fn(PPVtbl<Self>, HANDLE, HANDLE, *const u16) -> u32,
+	SetThumbnailTooltip: fn(PPVtbl<Self>, HANDLE, *const u16) -> u32,
+	SetThumbnailClip: fn(PPVtbl<Self>, HANDLE, *const c_void) -> u32,
 }
 
-impl ComVtbl for ITaskbarList3Vtbl {
+impl Vtbl for ITaskbarList3Vtbl {
 	fn IID() -> IID {
 		IID::new(0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf)
 	}
@@ -61,11 +61,11 @@ pub struct ITaskbarList3 {
 	pub ITaskbarList2: ITaskbarList2,
 }
 
-impl From<PPVtbl> for ITaskbarList3 {
+impl From<PPVtbl<ITaskbarList3Vtbl>> for ITaskbarList3 {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: PPVtbl) -> Self {
+	fn from(ppv: PPVtbl<ITaskbarList3Vtbl>) -> Self {
 		Self {
-			ITaskbarList2: ITaskbarList2::from(ppv as *const *const ITaskbarList2Vtbl),
+			ITaskbarList2: ITaskbarList2::from(ppv as PPVtbl<ITaskbarList2Vtbl>),
 		}
 	}
 }
@@ -93,9 +93,7 @@ impl ITaskbarList3 {
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			match ERROR::from(
-				((*(*ppv)).SetProgressState)(
-					ppv, hwnd.as_ptr(), tbpfFlags.into(),
-				),
+				((*(*ppv)).SetProgressState)(ppv, hwnd.as_ptr(), tbpfFlags.into()),
 			) {
 				ERROR::S_OK => Ok(()),
 				err => Err(err),
@@ -130,7 +128,9 @@ impl ITaskbarList3 {
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			match ERROR::from(
-				((*(*ppv)).SetTabActive)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr(), 0),
+				((*(*ppv)).SetTabActive)(
+					ppv, hwndTab.as_ptr(), hwndMDI.as_ptr(), 0,
+				),
 			) {
 				ERROR::S_OK => Ok(()),
 				err => Err(err),

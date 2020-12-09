@@ -2,17 +2,18 @@
 
 use std::ffi::c_void;
 
-use crate::{ComVtbl, IID};
+use crate::{PPVtbl, Vtbl};
+use crate::IID;
 
 /// [`IUnknown`](crate::IUnknown) virtual table.
 #[repr(C)]
 pub struct IUnknownVtbl {
-	QueryInterface: *const c_void,
-	AddRef: fn(*const *const Self) -> u32,
-	Release: fn(*const *const Self) -> u32,
+	QueryInterface: fn(PPVtbl<Self>, *const c_void, *mut PPVtbl<IUnknownVtbl>),
+	AddRef: fn(PPVtbl<Self>) -> u32,
+	Release: fn(PPVtbl<Self>) -> u32,
 }
 
-impl ComVtbl for IUnknownVtbl {
+impl Vtbl for IUnknownVtbl {
 	fn IID() -> IID {
 		IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046)
 	}
@@ -26,12 +27,11 @@ impl ComVtbl for IUnknownVtbl {
 /// Automatically calls [`Release`](crate::IUnknown::Release) when the object
 /// goes out of scope.
 pub struct IUnknown {
-	vtbl: *const *const IUnknownVtbl,
+	vtbl: PPVtbl<IUnknownVtbl>,
 }
 
-impl From<*const *const IUnknownVtbl> for IUnknown {
-	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: *const *const IUnknownVtbl) -> Self {
+impl From<PPVtbl<IUnknownVtbl>> for IUnknown {
+	fn from(ppv: PPVtbl<IUnknownVtbl>) -> Self {
 		Self { vtbl: ppv }
 	}
 }
@@ -47,8 +47,8 @@ impl IUnknown {
 	///
 	/// This method is used internally by COM interface implementations, and may
 	/// cause segmentation faults. Don't use unless you know what you're doing.
-	pub unsafe fn ppv<T>(&self) -> *const *const T {
-		self.vtbl as *const *const T
+	pub unsafe fn ppv<T>(&self) -> PPVtbl<T> {
+		self.vtbl as PPVtbl<T>
 	}
 
 	/// [`IUnknown::AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
@@ -77,7 +77,7 @@ impl IUnknown {
 		} else {
 			let refCount = unsafe { (*(*self.vtbl)).Release }(self.vtbl);
 			if refCount == 0 {
-				self.vtbl = std::ptr::null();
+				self.vtbl = std::ptr::null_mut();
 			}
 			refCount
 		}

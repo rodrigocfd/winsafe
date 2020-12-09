@@ -1,10 +1,8 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::{BitmapPtrStr, IdMenu, IdPos};
 use crate::co;
-use crate::ffi::user32;
+use crate::ffi::{HANDLE, user32};
 use crate::GetLastError;
 use crate::Utf16;
 

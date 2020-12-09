@@ -1,21 +1,19 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
-use crate::{ComVtbl, HWND, IID};
+use crate::{HWND, IID};
+use crate::{PPVtbl, Vtbl};
 use crate::co::ERROR;
+use crate::ffi::HANDLE;
 use crate::shell::{ITaskbarList, ITaskbarListVtbl};
-
-type PPVtbl = *const *const ITaskbarList2Vtbl;
 
 /// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
 #[repr(C)]
 pub struct ITaskbarList2Vtbl {
 	iTaskbarListVtbl: ITaskbarListVtbl,
-	MarkFullscreenWindow: fn(PPVtbl, *const c_void, u32) -> u32,
+	MarkFullscreenWindow: fn(PPVtbl<Self>, HANDLE, u32) -> u32,
 }
 
-impl ComVtbl for ITaskbarList2Vtbl {
+impl Vtbl for ITaskbarList2Vtbl {
 	fn IID() -> IID {
 		IID::new(0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317)
 	}
@@ -49,11 +47,11 @@ pub struct ITaskbarList2 {
 	pub ITaskbarList: ITaskbarList,
 }
 
-impl From<PPVtbl> for ITaskbarList2 {
+impl From<PPVtbl<ITaskbarList2Vtbl>> for ITaskbarList2 {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: PPVtbl) -> Self {
+	fn from(ppv: PPVtbl<ITaskbarList2Vtbl>) -> Self {
 		Self {
-			ITaskbarList: ITaskbarList::from(ppv as *const *const ITaskbarListVtbl),
+			ITaskbarList: ITaskbarList::from(ppv as PPVtbl<ITaskbarListVtbl>),
 		}
 	}
 }

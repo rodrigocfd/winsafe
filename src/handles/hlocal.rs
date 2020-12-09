@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
+use crate::ffi::HANDLE;
 
 use crate::co;
 use crate::ffi::kernel32;

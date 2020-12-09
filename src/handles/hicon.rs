@@ -1,9 +1,7 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::co;
-use crate::ffi::user32;
+use crate::ffi::{HANDLE, user32};
 use crate::GetLastError;
 
 handle_type! {

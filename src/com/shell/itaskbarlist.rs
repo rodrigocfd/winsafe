@@ -1,24 +1,22 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
-use crate::{ComVtbl, HWND, IID, IUnknown, IUnknownVtbl};
+use crate::{HWND, IID, IUnknown, IUnknownVtbl};
+use crate::{PPVtbl, Vtbl};
 use crate::co::ERROR;
-
-type PPVtbl = *const *const ITaskbarListVtbl;
+use crate::ffi::HANDLE;
 
 /// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
 #[repr(C)]
 pub struct ITaskbarListVtbl {
 	iUnknownVtbl: IUnknownVtbl,
-	HrInit: fn(PPVtbl) -> u32,
-	AddTab: fn(PPVtbl, *const c_void) -> u32,
-	DeleteTab: fn(PPVtbl, *const c_void) -> u32,
-	ActivateTab: fn(PPVtbl, *const c_void) -> u32,
-	SetActiveAlt: fn(PPVtbl, *const c_void) -> u32,
+	HrInit: fn(PPVtbl<Self>) -> u32,
+	AddTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	DeleteTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	ActivateTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	SetActiveAlt: fn(PPVtbl<Self>, HANDLE) -> u32,
 }
 
-impl ComVtbl for ITaskbarListVtbl {
+impl Vtbl for ITaskbarListVtbl {
 	fn IID() -> IID {
 		IID::new(0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090)
 	}
@@ -46,16 +44,14 @@ impl ComVtbl for ITaskbarListVtbl {
 /// );
 /// ```
 pub struct ITaskbarList {
-	/// Methods of base interface
-	/// [`IUnknown`](crate::IUnknown).
+	/// Methods of base interface [`IUnknown`](crate::IUnknown).
 	pub IUnknown: IUnknown,
 }
 
-impl From<PPVtbl> for ITaskbarList {
-	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: PPVtbl) -> Self {
+impl From<PPVtbl<ITaskbarListVtbl>> for ITaskbarList {
+	fn from(ppv: PPVtbl<ITaskbarListVtbl>) -> Self {
 		Self {
-			IUnknown: IUnknown::from(ppv as *const *const IUnknownVtbl)
+			IUnknown: IUnknown::from(ppv as PPVtbl<IUnknownVtbl>)
 		}
 	}
 }

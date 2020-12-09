@@ -4,8 +4,8 @@ use std::ffi::c_void;
 
 use crate::{ATOM, CLSID, GUID, MSG, WNDCLASSEX};
 use crate::{HINSTANCE, HWND, RECT};
+use crate::{PPVtbl, Vtbl};
 use crate::co;
-use crate::ComVtbl;
 use crate::ffi::{comctl32, kernel32, ole32, user32};
 use crate::Utf16;
 
@@ -43,12 +43,12 @@ pub fn AdjustWindowRectEx(
 ///   co::CLSCTX::INPROC_SERVER,
 /// );
 /// ```
-pub fn CoCreateInstance<VT: ComVtbl, IF: From<*const *const VT>>(
+pub fn CoCreateInstance<VT: Vtbl, IF: From<PPVtbl<VT>>>(
 	rclsid: &CLSID,
 	pUnkOuter: Option<*mut c_void>,
 	dwClsContext: co::CLSCTX,
 ) -> IF {
-	let mut ppv: *const *const VT = std::ptr::null();
+	let mut ppv: PPVtbl<VT> = std::ptr::null_mut();
 	unsafe {
 		ole32::CoCreateInstance(
 			rclsid.as_ref() as *const GUID as *const c_void,
@@ -56,8 +56,8 @@ pub fn CoCreateInstance<VT: ComVtbl, IF: From<*const *const VT>>(
 			dwClsContext.into(),
 			VT::IID().as_ref() as *const GUID as *const c_void,
 			&mut ppv
-				as *mut *const *const VT
-				as *mut *const *const c_void,
+				as *mut PPVtbl<VT>
+				as *mut *mut *mut c_void,
 		);
 	}
 	IF::from(ppv)

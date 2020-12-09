@@ -7,7 +7,7 @@ macro_rules! handle_type {
 		$(#[$attr])*
 		#[repr(C)]
 		#[derive(Copy, Clone, Eq, PartialEq)]
-		pub struct $name(*const c_void);
+		pub struct $name(HANDLE);
 
 		unsafe impl Send for $name {}
 		unsafe impl Sync for $name {}
@@ -15,23 +15,18 @@ macro_rules! handle_type {
 		impl Default for $name {
 			/// Creates a null handle.
 			fn default() -> Self {
-				Self(std::ptr::null())
+				Self(std::ptr::null_mut())
 			}
 		}
 
 		impl $name {
-			/// Wraps a const pointer.
-			pub unsafe fn from_ptr<T>(p: *const T) -> Self {
-				Self(p as *const c_void)
-			}
-
-			/// Wraps a mut pointer.
-			pub unsafe fn from_mut_ptr<T>(p: *mut T) -> Self {
-				Self(p as *mut T as *const c_void)
+			/// Wraps a pointer.
+			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {
+				Self(p as HANDLE)
 			}
 
 			/// Returns the raw underlying pointer for this handle.
-			pub unsafe fn as_ptr(&self) -> *const c_void {
+			pub unsafe fn as_ptr(&self) -> HANDLE {
 				self.0
 			}
 		}
