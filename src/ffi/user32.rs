@@ -36,6 +36,8 @@ extern "system" {
 	pub fn GetSubMenu(hMenu: HANDLE, nPos: i32) -> HANDLE;
 	pub fn GetSystemMetrics(nIndex: i32) -> i32;
 	pub fn GetWindow(hWnd: HANDLE, uCmd: u32) -> HANDLE;
+	pub fn GetWindowInfo(hwnd: HANDLE, pwi: *mut c_void) -> u32;
+	pub fn GetWindowPlacement(hWnd: HANDLE, lpwndpl: *mut c_void) -> u32;
 	pub fn GetWindowLongPtrW(hWnd: HANDLE, nIndex: i32) -> isize;
 	pub fn GetWindowTextLengthW(hWnd: HANDLE) -> i32;
 	pub fn GetWindowTextW(hWnd: HANDLE, lpString: *const u16, nMaxCount: i32) -> i32;
@@ -43,6 +45,8 @@ extern "system" {
 	pub fn InvalidateRect(hWnd: HANDLE, lpRect: *const c_void, bErase: u32) -> u32;
 	pub fn IsChild(hWndParent: HANDLE, hWnd: HANDLE) -> u32;
 	pub fn IsDialogMessageW(hDlg: HANDLE, lpMsg: *mut c_void) -> u32;
+	pub fn IsGUIThread(bConvert: u32) -> u32;
+	pub fn IsIconic(hWnd: HANDLE) -> u32;
 	pub fn IsWindow(hWnd: HANDLE) -> u32;
 	pub fn IsWindowEnabled(hWnd: HANDLE) -> u32;
 	pub fn IsWindowVisible(hWnd: HANDLE) -> u32;
@@ -57,6 +61,7 @@ extern "system" {
 	pub fn SetFocus(hWnd: HANDLE) -> HANDLE;
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
+	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: *const c_void) -> u32;
 	pub fn SetWindowTextW(hWnd: HANDLE, lpString: *const u16) -> u32;
 	pub fn ShowWindow(hWnd: HANDLE, nCmdShow: i32) -> u32;
 	pub fn TranslateAcceleratorW(hWnd: HANDLE, hAccTable: HANDLE, lpMsg: *mut c_void) -> i32;

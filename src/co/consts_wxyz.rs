@@ -321,6 +321,14 @@ const_type! { WM, u32,
 	USER, 0x0400
 }
 
+const_type! { WPF, u32,
+	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags`.
+
+	SETMINPOSITION, 0x0001
+	RESTORETOMAXIMIZED, 0x0002
+	ASYNCWINDOWPLACEMENT, 0x0004
+}
+
 const_type! { WS_EX, u32,
 	/// Extended window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles).

@@ -136,6 +136,21 @@ pub fn InitCommonControls() {
 	unsafe { comctl32::InitCommonControls() }
 }
 
+/// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
+/// function.
+pub fn IsGUIThread(bConvert: bool) -> Result<bool, co::ERROR> {
+	let r = unsafe { user32::IsGUIThread(bConvert as u32) };
+	if bConvert {
+		match r {
+			0 => Ok(false),
+			1 => Ok(true),
+			err => Err(co::ERROR::from(err)),
+		}
+	} else {
+		Ok(r != 0)
+	}
+}
+
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
 /// function
 pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,

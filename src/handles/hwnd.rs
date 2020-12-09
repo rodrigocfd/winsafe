@@ -5,7 +5,7 @@ use std::ffi::c_void;
 use crate::{AtomStr, IdMenu};
 use crate::{GetLastError, SetLastError};
 use crate::{HACCEL, HDC, HINSTANCE};
-use crate::{MSG, PAINTSTRUCT, RECT};
+use crate::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::co;
 use crate::ffi::{comctl32, HANDLE, user32};
 use crate::Utf16;
@@ -240,10 +240,37 @@ impl HWND {
 		}
 	}
 
+	/// [`GetWindowInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowinfo)
+	/// method.
+	pub fn GetWindowInfo(self, pwi: &mut WINDOWINFO) -> Result<(), co::ERROR> {
+		match unsafe {
+			user32::GetWindowInfo(self.0, pwi as *mut WINDOWINFO as *mut c_void)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
 	/// [`GetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw)
 	/// method.
 	pub fn GetWindowLongPtr(self, nIndex: co::GWLP) -> isize {
 		unsafe { user32::GetWindowLongPtrW(self.0, nIndex.into()) }
+	}
+
+	/// [`GetWindowPlacement`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement)
+	/// method.
+	pub fn GetWindowPlacement(
+		self, lpwndpl: &mut WINDOWPLACEMENT) -> Result<(), co::ERROR>
+	{
+		match unsafe {
+			user32::GetWindowPlacement(
+				self.0,
+				lpwndpl as *mut WINDOWPLACEMENT as *mut c_void,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
 	}
 
 	/// [`GetWindowText`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw)
@@ -333,6 +360,12 @@ impl HWND {
 				lpMsg as *mut MSG as *mut c_void,
 			) != 0
 		}
+	}
+
+	/// [`IsIconic`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isiconic)
+	/// method.
+	pub fn IsIconic(self) -> bool {
+		unsafe { user32::IsIconic(self.0) != 0 }
 	}
 
 	/// [`IsWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindow)
@@ -426,6 +459,22 @@ impl HWND {
 	/// method.
 	pub fn SetWindowLongPtr(self, nIndex: co::GWLP, dwNewLong: isize) -> isize {
 		unsafe { user32::SetWindowLongPtrW(self.0, nIndex.into(), dwNewLong) }
+	}
+
+	/// [`SetWindowPlacement`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowplacement)
+	/// method.
+	pub fn SetWindowPlacement(
+		self, lpwndpl: &WINDOWPLACEMENT) -> Result<(), co::ERROR>
+	{
+		match unsafe {
+			user32::SetWindowPlacement(
+				self.0,
+				lpwndpl as *const WINDOWPLACEMENT as *const c_void,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
 	}
 
 	/// [`SetWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)

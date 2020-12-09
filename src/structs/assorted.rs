@@ -27,8 +27,8 @@ pub type WNDPROC =
 pub struct ATOM(u16);
 
 impl From<u16> for ATOM {
-	fn from(n: u16) -> ATOM {
-		ATOM(n)
+	fn from(n: u16) -> Self {
+		Self(n)
 	}
 }
 
@@ -60,7 +60,7 @@ pub struct CREATESTRUCT {
 
 impl Default for CREATESTRUCT {
 	fn default() -> Self {
-		CREATESTRUCT {
+		Self {
 			lpCreateParams: std::ptr::null(),
 			lpszName: std::ptr::null(),
 			lpszClass: std::ptr::null(),
@@ -121,7 +121,7 @@ pub struct NMHDR {
 /// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct PAINTSTRUCT {
 	pub hdc: HDC,
 	pub fErase: u32,
@@ -160,6 +160,55 @@ pub struct SIZE {
 	pub cy: i32,
 }
 
+/// [`WINDOWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct WINDOWINFO {
+	cbSize: u32,
+	pub rcWindow: RECT,
+	pub rcClient: RECT,
+	pub dwStyle: co::WS,
+	pub dwExStyle: co::WS_EX,
+	pub dwWindowStatus: u32,
+	pub cxWindowBorders: u32,
+	pub cyWindowBorders: u32,
+	pub atomWindowType: ATOM,
+	pub wCreatorVersion: u16,
+}
+
+impl Default for WINDOWINFO {
+	fn default() -> Self {
+		Self {
+			cbSize: std::mem::size_of::<Self>() as u32,
+			..Default::default()
+		}
+	}
+}
+
+/// [`WINDOWPLACEMENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct WINDOWPLACEMENT {
+	length: u32,
+	pub flags: co::WPF,
+	pub showCmd: co::SW,
+	pub ptMinPosition: POINT,
+	pub ptMaxPosition: POINT,
+	pub rcNormalPosition: RECT,
+	pub rcDevice: RECT,
+}
+
+impl Default for WINDOWPLACEMENT {
+	fn default() -> Self {
+		Self {
+			length: std::mem::size_of::<Self>() as u32,
+			..Default::default()
+		}
+	}
+}
+
 /// [`WNDCLASSEX`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassexw)
 /// struct.
 #[repr(C)]
@@ -181,8 +230,8 @@ pub struct WNDCLASSEX {
 
 impl Default for WNDCLASSEX {
 	fn default() -> Self {
-		WNDCLASSEX {
-			cbSize: std::mem::size_of::<WNDCLASSEX>() as u32,
+		Self {
+			cbSize: std::mem::size_of::<Self>() as u32,
 			lpszMenuName: std::ptr::null(),
 			lpszClassName: std::ptr::null(),
 			..Default::default()
