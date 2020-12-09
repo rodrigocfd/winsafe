@@ -6,6 +6,20 @@
 //! due to its hugeness, it will probably remain as a work-in-progress for a
 //! while.
 //!
+//! # Text encoding
+//!
+//! Windows natively uses
+//! [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings).
+//!
+//! WinSafe uses Unicode UTF-16 internally but exposes idiomatic UTF-8,
+//! performing conversions automatically when needed, so you don't have to worry
+//! about [`OsString`](https://doc.rust-lang.org/std/ffi/struct.OsString.html)
+//! or any low-level conversion.
+//!
+//! However, if you still need any kind of string conversion, you can use the
+//! [`Utf16`](crate::Utf16) struct, which is also capable of working as a buffer
+//! to receive text from Win32 calls.
+//!
 //! # Examples
 //!
 //! A message box "hello world":

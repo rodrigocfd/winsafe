@@ -4,10 +4,10 @@ use std::os::windows::ffi::OsStrExt;
 use crate::ffi::kernel32;
 
 /// Stores a `Vec<u16>` buffer for an
-/// [Windows UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
-/// string.
+/// [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
+/// string natively used by Windows.
 ///
-/// Performs UTF-8 conversions and can be used as a buffer to native Win32
+/// Performs UTF-8 conversions and can be used as a buffer to low-level Win32
 /// functions.
 ///
 /// See an example in [`HWND::GetWindowText`](crate::HWND::GetWindowText).
