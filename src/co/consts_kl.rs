@@ -151,7 +151,7 @@ impl LANG {
 	/// [`MAKELANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelangid)
 	/// macro.
 	pub fn MAKELANGID(self, sublang: co::SUBLANG) -> u32 {
-		((u16::from(sublang) << 10) | self.0) as u32
+		((sublang.0 << 10) | self.0) as u32
 	}
 }
 

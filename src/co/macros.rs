@@ -8,7 +8,7 @@ macro_rules! const_type {
 		$(#[$attr])*
 		#[repr(C)]
 		#[derive(Default, Copy, Clone, Debug, Eq, PartialEq)]
-		pub struct $name($num); // declare the newtype constant
+		pub struct $name(pub(super) $num); // so it's possible to build consts from other types
 
 		// Conversions from/to underlying number.
 		impl From<$num> for $name {

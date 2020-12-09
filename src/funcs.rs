@@ -118,6 +118,12 @@ pub fn GetMessage(lpMsg: &MSG, hWnd: HWND,
 	}
 }
 
+/// [`GetQueueStatus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
+/// function.
+pub fn GetQueueStatus(flags: co::QS) -> u32 {
+	unsafe { user32::GetQueueStatus(flags.into()) }
+}
+
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
 /// function.
 pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
@@ -128,6 +134,28 @@ pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
 /// function.
 pub fn InitCommonControls() {
 	unsafe { comctl32::InitCommonControls() }
+}
+
+/// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
+/// function
+pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
+	wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: co::PM) -> bool
+{
+	unsafe {
+		user32::PeekMessageW(
+			lpMsg as *mut MSG as *mut c_void,
+			hWnd.as_ptr(),
+			wMsgFilterMin,
+			wMsgFilterMax,
+			wRemoveMsg.into(),
+		) != 0
+	}
+}
+
+/// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
+/// function.
+pub fn PostQuitMessage(nExitCode: i32) {
+	unsafe { user32::PostQuitMessage(nExitCode) }
 }
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)

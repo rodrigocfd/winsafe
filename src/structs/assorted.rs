@@ -8,6 +8,17 @@ use crate::{HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
 use crate::co;
 use crate::structs::consts;
 
+/// Type alias to callback function.
+///
+/// Used in:
+/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpfnWndProc`.
+pub type WNDPROC =
+	unsafe extern "system" fn(
+		hWnd: HWND, uMsg: co::WM, wParam: usize, lParam: isize,
+	) -> isize;
+
+//------------------------------------------------------------------------------
+
 /// [`ATOM`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by
 /// [`RegisterClassEx`](crate::RegisterClassEx).
@@ -156,11 +167,7 @@ pub struct SIZE {
 pub struct WNDCLASSEX {
 	cbSize: u32,
 	pub style: co::CS,
-	pub lpfnWndProc: Option<
-		unsafe extern "system" fn(
-			hWnd: HWND, uMsg: co::WM, wParam: usize, lParam: isize,
-		) -> isize,
-	>,
+	pub lpfnWndProc: Option<WNDPROC>,
 	pub cbClsExtra: i32,
 	pub cbWndExtra: i32,
 	pub hInstance: HINSTANCE,

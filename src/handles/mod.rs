@@ -3,6 +3,7 @@
 #[macro_use]
 mod macros;
 
+mod haccel;
 mod hbitmap;
 mod hbrush;
 mod hcursor;
@@ -13,6 +14,7 @@ mod hlocal;
 mod hmenu;
 mod hwnd;
 
+pub use haccel::*;
 pub use hbitmap::*;
 pub use hbrush::*;
 pub use hcursor::*;
