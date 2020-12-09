@@ -9,6 +9,9 @@ macro_rules! handle_type {
 		#[derive(Copy, Clone, Eq, PartialEq)]
 		pub struct $name(*const c_void);
 
+		unsafe impl Send for $name {}
+		unsafe impl Sync for $name {}
+
 		impl Default for $name {
 			/// Creates a null handle.
 			fn default() -> Self {
