@@ -4,7 +4,8 @@
 
 use std::ffi::c_void;
 
-use crate as w;
+use crate::{HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
+use crate::{LPARAM, WPARAM};
 use crate::co;
 use crate::structs::consts;
 
@@ -31,12 +32,12 @@ impl ATOM {
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct CREATESTRUCT {
 	pub lpCreateParams: *const c_void,
-	pub hInstance: w::HINSTANCE,
-	pub hMenu: w::HMENU,
-	pub hwndParent: w::HWND,
+	pub hInstance: HINSTANCE,
+	pub hMenu: HMENU,
+	pub hwndParent: HWND,
 	pub cy: i32,
 	pub cx: i32,
 	pub y: i32,
@@ -61,7 +62,7 @@ impl Default for CREATESTRUCT {
 /// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct LOGFONT {
 	pub lfHeight: i32,
 	pub lfWidth: i32,
@@ -84,10 +85,10 @@ pub struct LOGFONT {
 #[repr(C)]
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct MSG {
-	hwnd: w::HWND,
+	hwnd: HWND,
 	message: co::WM,
-	wParam: w::WPARAM,
-	lParam: w::LPARAM,
+	wParam: WPARAM,
+	lParam: LPARAM,
 	time: u32,
 	pt: POINT,
 	lPrivate: u32,
@@ -99,12 +100,25 @@ pub struct MSG {
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
-	pub hwndFrom: w::HWND,
+	pub hwndFrom: HWND,
 	/// ID of the control sending the message.
-	pub idFrom: usize, // ideally should be co::ID
+	pub idFrom: usize,
 	/// Notification code sent in
 	/// [WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	pub code: co::NM,
+}
+
+/// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct PAINTSTRUCT {
+	pub hdc: HDC,
+	pub fErase: u32,
+	pub rcPaint: RECT,
+	pub fRestore: u32,
+	pub fIncUpdate: u32,
+	pub rgbReserved: [u8; 32],
 }
 
 /// [`POINT`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point)
@@ -145,18 +159,18 @@ pub struct WNDCLASSEX {
 	pub style: co::CS,
 	pub lpfnWndProc: Option<
 		unsafe extern "system" fn(
-			hWnd: w::HWND, uMsg: co::WM, wParam: w::WPARAM, lParam: w::LPARAM,
+			hWnd: HWND, uMsg: co::WM, wParam: WPARAM, lParam: LPARAM,
 		) -> isize,
 	>,
 	pub cbClsExtra: i32,
 	pub cbWndExtra: i32,
-	pub hInstance: w::HINSTANCE,
-	pub hIcon: w::HICON,
-	pub hCursor: w::HCURSOR,
-	pub hbrBackground: w::HBRUSH,
+	pub hInstance: HINSTANCE,
+	pub hIcon: HICON,
+	pub hCursor: HCURSOR,
+	pub hbrBackground: HBRUSH,
 	pub lpszMenuName: *const u16,
 	pub lpszClassName: *const u16,
-	pub hIconSm: w::HICON,
+	pub hIconSm: HICON,
 }
 
 impl Default for WNDCLASSEX {

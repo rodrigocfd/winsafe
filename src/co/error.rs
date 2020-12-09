@@ -50,7 +50,7 @@ impl ERROR {
 				0 => format!("FormatMessage failed: error {}.", Self::GetLastError()),
 				nChars => {
 					let text16 = Utf16::from_utf16_nchars(lpBuf, nChars as usize);
-					match HLOCAL::from(lpBuf).LocalFree() {
+					match HLOCAL::from_mut_ptr(lpBuf).LocalFree() {
 						Ok(()) => text16.to_string(),
 						Err(err) => format!("LocalFree failed: error {}.", err),
 					}

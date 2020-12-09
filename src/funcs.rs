@@ -2,32 +2,46 @@
 
 use std::ffi::c_void;
 
-use crate as w;
+use crate::{ATOM, CLSID, GUID, MSG, WNDCLASSEX};
+use crate::{HINSTANCE, HWND};
 use crate::co;
-use crate::ffi::{ole32, user32};
+use crate::ComVtbl;
+use crate::ffi::{comctl32, ole32, user32};
+use crate::Utf16;
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
 ///
 /// Returns an [`IUnknown`](crate::IUnknown)-derived COM interface object.
-pub fn CoCreateInstance<V: w::ComVtbl, I: From<*const *const V>>(
-	rclsid: &w::CLSID,
+///
+/// # Examples
+///
+/// Instantiating an [`ITaskbarList`](crate::shell::ITaskbarList) object:
+/// ```rust,ignore
+/// let mut obj: shell::ITaskbarList = CoCreateInstance(
+///   &shell::clsid::TaskbarList,
+///   None,
+///   co::CLSCTX::INPROC_SERVER,
+/// );
+/// ```
+pub fn CoCreateInstance<VT: ComVtbl, IF: From<*const *const VT>>(
+	rclsid: &CLSID,
 	pUnkOuter: Option<*mut c_void>,
 	dwClsContext: co::CLSCTX,
-) -> I {
-	let mut ppv: *const *const V = std::ptr::null();
+) -> IF {
+	let mut ppv: *const *const VT = std::ptr::null();
 	unsafe {
 		ole32::CoCreateInstance(
-			rclsid.as_ref() as *const w::GUID as *const c_void,
+			rclsid.as_ref() as *const GUID as *const c_void,
 			pUnkOuter.unwrap_or(std::ptr::null_mut()),
 			dwClsContext.into(),
-			V::IID().as_ref() as *const w::GUID as *const c_void,
+			VT::IID().as_ref() as *const GUID as *const c_void,
 			&mut ppv
-				as *mut *const *const V
+				as *mut *const *const VT
 				as *mut *const *const c_void,
 		);
 	}
-	I::from(ppv)
+	IF::from(ppv)
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
@@ -54,20 +68,20 @@ pub fn CoUninitialize() {
 	unsafe { ole32::CoUninitialize() }
 }
 
-/// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessage)
+/// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
-pub fn DispatchMessage(lpMsg: &w::MSG) -> isize {
-	unsafe { user32::DispatchMessage(lpMsg as *const w::MSG as *const c_void) }
+pub fn DispatchMessage(lpMsg: &MSG) -> isize {
+	unsafe { user32::DispatchMessageW(lpMsg as *const MSG as *const c_void) }
 }
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
-pub fn GetMessage(lpMsg: &w::MSG, hWnd: w::HWND,
+pub fn GetMessage(lpMsg: &MSG, hWnd: HWND,
 	wMsgFilterMin: u32, wMsgFilterMax: u32) -> Result<bool, co::ERROR>
 {
 	match unsafe {
 		user32::GetMessageW(
-			lpMsg as *const w::MSG as *const c_void,
+			lpMsg as *const MSG as *const c_void,
 			hWnd.as_ptr(),
 			wMsgFilterMin,
 			wMsgFilterMax,
@@ -79,33 +93,39 @@ pub fn GetMessage(lpMsg: &w::MSG, hWnd: w::HWND,
 	}
 }
 
+/// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
+/// function.
+pub fn InitCommonControls() {
+	unsafe { comctl32::InitCommonControls() }
+}
+
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
-pub fn RegisterClassEx(wcx: &w::WNDCLASSEX) -> Result<w::ATOM, co::ERROR> {
+pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> Result<ATOM, co::ERROR> {
 	match unsafe {
-		user32::RegisterClassExW(wcx as *const w::WNDCLASSEX as *const c_void)
+		user32::RegisterClassExW(lpwcx as *const WNDCLASSEX as *const c_void)
 	} {
 		0 => Err(co::ERROR::GetLastError()),
-		atom => Ok(w::ATOM::from(atom)),
+		atom => Ok(ATOM::from(atom)),
 	}
 }
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
-pub fn TranslateMessage(lpMsg: &w::MSG) -> bool {
+pub fn TranslateMessage(lpMsg: &MSG) -> bool {
 	unsafe {
-		user32::TranslateMessage(lpMsg as *const w::MSG as *const c_void) != 0
+		user32::TranslateMessage(lpMsg as *const MSG as *const c_void) != 0
 	}
 }
 
 /// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
 pub fn UnregisterClass(
-	lpClassName: &str, hInstance: w::HINSTANCE) -> Result<(), co::ERROR>
+	lpClassName: &str, hInstance: HINSTANCE) -> Result<(), co::ERROR>
 {
 	match unsafe {
 		user32::UnregisterClassW(
-			w::Utf16::from_str(lpClassName).as_ptr(),
+			Utf16::from_str(lpClassName).as_ptr(),
 			hInstance.as_ptr(),
 		)
 	} {

@@ -42,17 +42,19 @@ impl ComVtbl for ITaskbarList3Vtbl {
 /// * [`ITaskbarList`](crate::shell::ITaskbarList);
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
-/// ```rust,ignore
-/// let mut obj: w::shell::ITaskbarList3 = w::CoCreateInstance(
-///   &w::shell::clsid::TaskbarList,
-///   None,
-///   w::co::CLSCTX::INPROC_SERVER,
-/// );
-/// ```
-///
 /// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
 /// object goes out of scope.
+///
+/// # Examples
+///
+/// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
+/// ```rust,ignore
+/// let mut obj: shell::ITaskbarList3 = CoCreateInstance(
+///   &shell::clsid::TaskbarList,
+///   None,
+///   co::CLSCTX::INPROC_SERVER,
+/// );
+/// ```
 pub struct ITaskbarList3 {
 	/// Methods of base interface
 	/// [`ITaskbarList2`](crate::shell::ITaskbarList2).

@@ -12,7 +12,8 @@ impl GUID {
 	/// Creates a new `GUID` from hex numbers, which can be copied straight from
 	/// standard `GUID` definitions.
 	///
-	/// Example:
+	/// # Examples
+	///
 	/// ```rust,ignore
 	/// let g = GUID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
@@ -50,7 +51,8 @@ impl CLSID {
 	/// Creates a new `CLSID` from hex numbers, which can be copied straight from
 	/// standard `CLSID` definitions.
 	///
-	/// Example:
+	/// # Examples
+	///
 	/// ```rust,ignore
 	/// let g = CLSID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
@@ -81,7 +83,8 @@ impl IID {
 	/// Creates a new `IID` from hex numbers, which can be copied straight from
 	/// standard `IID` definitions.
 	///
-	/// Example:
+	/// # Examples
+	///
 	/// ```rust,ignore
 	/// let g = IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```

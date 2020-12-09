@@ -17,6 +17,16 @@ macro_rules! handle_type {
 		}
 
 		impl $name {
+			/// Wraps a const pointer.
+			pub unsafe fn from_ptr<T>(p: *const T) -> Self {
+				Self(p as *const c_void)
+			}
+
+			/// Wraps a mut pointer.
+			pub unsafe fn from_mut_ptr<T>(p: *mut T) -> Self {
+				Self(p as *mut T as *const c_void)
+			}
+
 			/// Returns the raw underlying pointer for this handle.
 			pub unsafe fn as_ptr(&self) -> *const c_void {
 				self.0

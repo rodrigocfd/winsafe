@@ -2,9 +2,10 @@
 
 use std::ffi::c_void;
 
-use crate::{BitmapOrStrOrParam, IdOrMenu, IdOrPos, Utf16};
+use crate::{BitmapPtrStr, IdMenu, IdPos};
 use crate::co;
 use crate::ffi::user32;
+use crate::Utf16;
 
 handle_type! {
 	/// Handle to a
@@ -18,8 +19,8 @@ impl HMENU {
 	pub fn AppendMenu(
 		&self,
 		uFlags: co::MF,
-		uIDNewItem: IdOrMenu,
-		lpNewItem: BitmapOrStrOrParam,
+		uIDNewItem: IdMenu,
+		lpNewItem: BitmapPtrStr,
 ) -> Result<(), co::ERROR>
 	{
 		let mut buf16 = Utf16::default();
@@ -85,10 +86,10 @@ impl HMENU {
 	/// method.
 	pub fn InsertMenu(
 		&self,
-		uPosition: IdOrPos,
+		uPosition: IdPos,
 		uFlags: co::MF,
-		uIDNewItem: IdOrMenu,
-		lpNewItem: BitmapOrStrOrParam,
+		uIDNewItem: IdMenu,
+		lpNewItem: BitmapPtrStr,
 	) -> Result<(), co::ERROR> {
 		let mut buf16 = Utf16::default();
 

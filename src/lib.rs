@@ -1,6 +1,8 @@
 //! Safe, hand-crafted Win32 API bindings, in idiomatic Rust.
 //!
-//! Example:
+//! # Examples
+//!
+//! A message box "hello world":
 //! ```rust,ignore
 //! use winsafe::{co, HWND};
 //!

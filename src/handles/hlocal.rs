@@ -11,20 +11,6 @@ handle_type! {
 	HLOCAL
 }
 
-impl<T> From<*const T> for HLOCAL {
-	/// Wraps a *const T.
-	fn from(p: *const T) -> Self {
-		Self(p as *const c_void)
-	}
-}
-
-impl<T> From<*mut T> for HLOCAL {
-	/// Wraps a *mut T.
-	fn from(p: *mut T) -> Self {
-		Self(p as *mut c_void)
-	}
-}
-
 impl HLOCAL {
 	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
