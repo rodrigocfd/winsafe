@@ -21,6 +21,7 @@ extern "system" {
 	pub fn FindWindowW(lpClassName: *const u16, lpWindowName: *const u16) -> HANDLE;
 	pub fn GetAncestor(hwnd: HANDLE, gaFlags: u32) -> HANDLE;
 	pub fn GetClassInfoExW(hInstance: HANDLE, lpszClass: *const u16, lpwcx: *mut c_void) -> u32;
+	pub fn GetDesktopWindow() -> HANDLE;
 	pub fn GetDlgCtrlID(hWnd: HANDLE) -> i32;
 	pub fn GetDlgItem(hDlg: HANDLE, nIDDlgItem: i32) -> HANDLE;
 	pub fn GetFocus() -> HANDLE;

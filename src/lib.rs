@@ -13,8 +13,9 @@
 //! use winsafe::{co, HWND};
 //!
 //! fn main() {
-//!   HWND::default().MessageBox("Hello, world", "Title",
-//!     co::MB::OKCANCEL | co::MB::ICONINFORMATION).unwrap();
+//!   HWND::GetDesktopWindow()
+//!     .MessageBox("Hello, world", "Title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
+//!     .unwrap();
 //! }
 //! ```
 

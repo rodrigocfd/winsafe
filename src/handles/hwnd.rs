@@ -158,6 +158,12 @@ impl HWND {
 		}
 	}
 
+	/// [`GetDesktopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
+	/// static method.
+	pub fn GetDesktopWindow() -> HWND {
+		Self(unsafe { user32::GetDesktopWindow() })
+	}
+
 	/// [`GetDlgItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitem)
 	/// method.
 	pub fn GetDlgItem(self, nIDDlgItem: i32) -> Result<Option<HWND>, co::ERROR> {
