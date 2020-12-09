@@ -1,4 +1,10 @@
-//! Safe, hand-crafted Win32 API bindings, in idiomatic Rust.
+//! Safe, hand-crafted
+//! [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) bindings, in
+//! idiomatic Rust.
+//!
+//! This crate intends to cover the most important parts of the Windows API, but
+//! due to its hugeness, it will probably remain as a work-in-progress for a
+//! while.
 //!
 //! # Examples
 //!
@@ -11,10 +17,6 @@
 //!     co::MB::OKCANCEL | co::MB::ICONINFORMATION).unwrap();
 //! }
 //! ```
-//!
-//! This crate intends to cover the most important parts of the Windows API, but
-//! due to its hugeness, it will probably remain as a work-in-progress for a
-//! while.
 
 #[macro_use]
 pub mod co;
