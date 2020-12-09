@@ -23,7 +23,7 @@ impl From<u16> for ATOM {
 
 impl ATOM {
 	/// Useful to pass the atom as class name.
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(self) -> *const u16 {
 		self.0 as *const u16
 	}
 }

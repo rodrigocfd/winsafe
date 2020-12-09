@@ -26,7 +26,7 @@ macro_rules! handle_type {
 			}
 
 			/// Returns the raw underlying pointer for this handle.
-			pub unsafe fn as_ptr(&self) -> HANDLE {
+			pub unsafe fn as_ptr(self) -> HANDLE {
 				self.0
 			}
 		}
@@ -34,6 +34,7 @@ macro_rules! handle_type {
 }
 
 // Transforms a pointer into an option, which is None if the pointer is null.
+// https://stackoverflow.com/q/65144143/6923555
 macro_rules! ptr_to_opt {
 	($ptr:expr) => {
 		unsafe {

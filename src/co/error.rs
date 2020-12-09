@@ -27,7 +27,7 @@ impl ERROR {
 	/// Returns the textual description of the system error, by calling
 	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// function.
-	pub fn FormatMessage(&self) -> String {
+	pub fn FormatMessage(self) -> String {
 		unsafe {
 			let mut ptrBuf: *mut u16 = std::ptr::null_mut();
 			match kernel32::FormatMessageW(

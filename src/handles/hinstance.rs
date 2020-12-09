@@ -28,7 +28,7 @@ impl HINSTANCE {
 	/// HINSTANCE::GetModuleHandle(None).unwrap()
 	///   .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
 	/// ```
-	pub fn GetClassInfoEx(&self,
+	pub fn GetClassInfoEx(self,
 		lpszClass: &str, lpwcx: &mut WNDCLASSEX) -> Result<ATOM, co::ERROR>
 	{
 		match unsafe {
@@ -77,7 +77,7 @@ impl HINSTANCE {
 	///   .unwrap();
 	/// ```
 	pub fn LoadCursor(
-		&self, lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
+		self, lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
 	{
 		let mut buf16 = Utf16::default();
 
@@ -101,7 +101,7 @@ impl HINSTANCE {
 	///   .unwrap();
 	/// ```
 	pub fn LoadIcon(
-		&self, lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
+		self, lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
 	{
 		let mut buf16 = Utf16::default();
 

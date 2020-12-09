@@ -16,7 +16,7 @@ impl HMENU {
 	/// [`AppendMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// method.
 	pub fn AppendMenu(
-		&self,
+		self,
 		uFlags: co::MF,
 		uIDNewItem: IdMenu,
 		lpNewItem: BitmapPtrStr,
@@ -57,7 +57,7 @@ impl HMENU {
 
 	/// [`GetMenuItemCount`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
 	/// method.
-	pub fn GetMenuItemCount(&self) -> Result<u32, co::ERROR> {
+	pub fn GetMenuItemCount(self) -> Result<u32, co::ERROR> {
 		match unsafe { user32::GetMenuItemCount(self.0) } {
 			-1 => Err(GetLastError()),
 			count => Ok(count as u32),
@@ -66,7 +66,7 @@ impl HMENU {
 
 	/// [`GetMenuItemID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemid)
 	/// method.
-	pub fn GetMenuItemID(&self, nPos: i32) -> Option<i32> {
+	pub fn GetMenuItemID(self, nPos: i32) -> Option<i32> {
 		match unsafe { user32::GetMenuItemID(self.0, nPos) } {
 			-1 => None,
 			id => Some(id),
@@ -75,7 +75,7 @@ impl HMENU {
 
 	/// [`GetSubMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu)
 	/// method.
-	pub fn GetSubMenu(&self, nPos: u32) -> Option<HMENU> {
+	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
 		ptr_to_opt!(
 			user32::GetSubMenu(self.0, nPos as i32)
 		).map(|p| Self(p))
@@ -84,7 +84,7 @@ impl HMENU {
 	/// [`InsertMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuw)
 	/// method.
 	pub fn InsertMenu(
-		&self,
+		self,
 		uPosition: IdPos,
 		uFlags: co::MF,
 		uIDNewItem: IdMenu,
