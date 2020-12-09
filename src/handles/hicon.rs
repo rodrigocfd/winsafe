@@ -7,6 +7,7 @@ use crate::GetLastError;
 handle_type! {
 	/// Handle to an
 	/// [icon](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hicon).
+	/// Exposes methods.
 	HICON
 }
 

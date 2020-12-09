@@ -9,6 +9,7 @@ use crate::GetLastError;
 handle_type! {
 	/// Handle to a
 	/// [local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
+	/// Exposes methods.
 	HLOCAL
 }
 

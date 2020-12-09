@@ -11,8 +11,8 @@ use crate::Utf16;
 
 handle_type! {
 	/// Handle to an
-	/// [instance](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance).
-	/// Same as `HMODULE`.
+	/// [instance](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
+	/// same as `HMODULE`. Exposes methods.
 	HINSTANCE
 }
 
