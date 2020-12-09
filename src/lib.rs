@@ -25,12 +25,14 @@ pub mod co;
 mod ffi;
 
 mod com;
+mod enums;
 mod funcs;
 mod handles;
 mod structs;
 mod utf16;
 
 pub use com::*;
+pub use enums::*;
 pub use funcs::*;
 pub use handles::*;
 pub use structs::*;

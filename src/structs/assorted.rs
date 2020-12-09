@@ -6,7 +6,7 @@ use std::ffi::c_void;
 
 use crate::{HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
 use crate::co;
-use crate::structs::consts;
+use crate::structs::const_vals;
 
 /// Type alias to callback function.
 ///
@@ -87,7 +87,7 @@ pub struct LOGFONT {
 	pub lfClipPrecision: co::CLIP,
 	pub lfQuality: co::QUALITY,
 	pub lfPitchAndFamily: co::PITCH,
-	pub lfFaceName: [u16; consts::LF_FACESIZE],
+	pub lfFaceName: [u16; const_vals::LF_FACESIZE],
 }
 
 /// [`MSG`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
