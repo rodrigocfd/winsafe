@@ -8,9 +8,8 @@ use crate::{ATOM, HBITMAP, HMENU};
 use crate::co;
 use crate::Utf16;
 
-/// Wraps a variant parameter.
+/// Variant parameter used in window class functions.
 ///
-/// Used in:
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
 pub enum AtomStr<'a> {
@@ -35,9 +34,8 @@ impl<'a> AtomStr<'a> {
 
 //------------------------------------------------------------------------------
 
-/// Wraps a variant parameter.
+/// Variant parameter used in menu functions.
 ///
-/// Used in:
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`;
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `lpNewItem`.
 pub enum BitmapPtrStr<'a> {
@@ -63,61 +61,8 @@ impl<'a> BitmapPtrStr<'a> {
 
 //------------------------------------------------------------------------------
 
-/// Wraps a variant parameter.
-///
-/// Used in:
-/// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
-/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
-/// * [`InsertMenu`](crate::HMENU::InsertMenu) `uIDNewItem`.
-pub enum IdMenu {
-	Id(i32),
-	Menu(HMENU),
-	None,
-}
-
-impl IdMenu {
-	/// Converts the internal value to a pointer.
-	pub fn as_ptr(&self) -> *const c_void {
-		match self {
-			IdMenu::Id(id) => *id as *const c_void,
-			IdMenu::Menu(hMenu) => unsafe { hMenu.as_ptr() },
-			IdMenu::None => std::ptr::null(),
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// Wraps a variant parameter.
-///
-/// Used in:
-/// * [`CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
-/// * [`DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;
-/// * [`EnableMenuItem`](crate::HMENU::EnableMenuItem) `uIDEnableItem`;
-/// * [`HiliteMenuItem`](crate::HMENU::HiliteMenuItem) `uIDHiliteItem`;
-/// * [`InsertMenuItem`](crate::HMENU::InsertMenuItem) `item`;
-/// * [`RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
-/// * [`SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
-pub enum IdPos {
-	Id(i32),
-	Pos(u32),
-}
-
-impl From<IdPos> for u32 {
-	fn from(v: IdPos) -> u32 {
-		match v {
-			IdPos::Id(id) => id as u32,
-			IdPos::Pos(pos) => pos,
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// Wraps a variant parameter.
-///
-/// Used in:
-/// * [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
+/// Variant parameter for [`LoadCursor`](crate::HINSTANCE::LoadCursor)
+/// `lpCursorName`.
 pub enum IdIdcStr<'a> {
 	Id(i32),
 	Idc(co::IDC),
@@ -141,10 +86,7 @@ impl<'a> IdIdcStr<'a> {
 
 //------------------------------------------------------------------------------
 
-/// Wraps a variant parameter.
-///
-/// Used in:
-/// * [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
+/// Variant parameter for [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
 pub enum IdIdiStr<'a> {
 	Id(i32),
 	Idi(co::IDI),
@@ -162,6 +104,55 @@ impl<'a> IdIdiStr<'a> {
 				*buf16 = Utf16::from_str(str); // convert string into u16 array, keep in buffer
 				unsafe { buf16.as_ptr() } // return pointer from buffer
 			},
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter used in menu functions.
+///
+/// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
+/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
+/// * [`InsertMenu`](crate::HMENU::InsertMenu) `uIDNewItem`.
+pub enum IdMenu {
+	Id(i32),
+	Menu(HMENU),
+	None,
+}
+
+impl IdMenu {
+	/// Converts the internal value to a pointer.
+	pub fn as_ptr(&self) -> *const c_void {
+		match self {
+			IdMenu::Id(id) => *id as *const c_void,
+			IdMenu::Menu(hMenu) => unsafe { hMenu.as_ptr() },
+			IdMenu::None => std::ptr::null(),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter used in menu functions.
+///
+/// * [`CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
+/// * [`DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;
+/// * [`EnableMenuItem`](crate::HMENU::EnableMenuItem) `uIDEnableItem`;
+/// * [`HiliteMenuItem`](crate::HMENU::HiliteMenuItem) `uIDHiliteItem`;
+/// * [`InsertMenuItem`](crate::HMENU::InsertMenuItem) `item`;
+/// * [`RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
+/// * [`SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
+pub enum IdPos {
+	Id(i32),
+	Pos(u32),
+}
+
+impl From<IdPos> for u32 {
+	fn from(v: IdPos) -> u32 {
+		match v {
+			IdPos::Id(id) => id as u32,
+			IdPos::Pos(pos) => pos,
 		}
 	}
 }

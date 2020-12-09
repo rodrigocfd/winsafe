@@ -37,8 +37,7 @@ const_type! { MB, u32,
 }
 
 const_type! { MF, u32,
-	/// [`AppendMenu`](crate::HMENU::AppendMenu) `uFlags`;
-	/// [`EnableMenuItem`](crate::HMENU::EnableMenuItem) `uEnable`;
+	/// [`AppendMenu`](crate::HMENU::AppendMenu) and
 	/// [`InsertMenu`](crate::HMENU::InsertMenu) `uFlags`.
 
 	INSERT, 0x00000000

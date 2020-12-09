@@ -22,7 +22,7 @@ const_type! { GW, u32,
 
 const_type! { GWLP, i32,
 	/// [`GetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw)
-	/// `nIndex`;
+	/// and
 	/// [`SetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// `nIndex`.
 
