@@ -1,6 +1,6 @@
 const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt`.
-	NONE, 0
+
 	VIRTKEY, 1
 	SHIFT, 0x04
 	CONTROL, 0x08
@@ -8,7 +8,8 @@ const_type! { ACCELF, u8,
 }
 
 const_type! { ACCESS_RIGHTS, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`.
+	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`. Originally has
+	/// no prefix.
 
 	DELETE, 0x00010000
 	READ_CONTROL, 0x00020000

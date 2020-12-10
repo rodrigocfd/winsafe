@@ -179,3 +179,16 @@ impl<'a> IdStr<'a> {
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
+
+/// Variant value returned by [`RegQueryValueEx`](crate::HKEY::RegQueryValueEx).
+///
+/// The type itself is given by [`co::REG`](crate::co::REG) constant.
+pub enum RegistryValue {
+	Binary(Vec<u8>),
+	Dword(u32),
+	Qword(u64),
+	Sz(String),
+	None,
+}

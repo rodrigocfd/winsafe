@@ -1,3 +1,15 @@
+use crate::co;
+
+const_type! { STANDARD_RIGHTS, u32,
+	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`.
+
+	REQUIRED, 0x000f0000
+	READ, co::ACCESS_RIGHTS::READ_CONTROL.0
+	WRITE, co::ACCESS_RIGHTS::READ_CONTROL.0
+	EXECUTE, co::ACCESS_RIGHTS::READ_CONTROL.0
+	ALL, 0x001f0000
+}
+
 const_type! { SM, i32,
 	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `nIndex`.
 
