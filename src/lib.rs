@@ -41,6 +41,46 @@
 //! For example, struct [`WNDCLASSEX`](crate::WNDCLASSEX) has a `style` field
 //! typed as [`CS`](crate::co::CS), which restricts the possible values.
 //!
+//! # Functions
+//!
+//! WinSafe categorizes Win32 API functions in three types:
+//!
+//! * free functions;
+//! * static methods;
+//! * instance methods.
+//!
+//! Free functions, like [`PostQuitMessage`](crate::PostQuitMessage), are those
+//! found at the root of the crate.
+//!
+//! Both static and instance methods belong to handle types, like
+//! [`HDC`](crate::HDC) or [`HWND`](crate::HWND). Handle types always start with
+//! the letter "H", and they are opaque pointers provided by the Win32 API which
+//! we can call functions upon.
+//!
+//! Static methods create new handle objects, whereas instance methods perform
+//! actions on existing handle objects.
+//!
+//! # Errors
+//!
+//! [Win32 errors](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes),
+//! usually returned by [`GetLastError`](crate::GetLastError) function, belong
+//! to the constant type [`ERROR`](crate::co::ERROR), which also holds
+//! [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
+//! values.
+//!
+//! Most functions return a
+//! [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) with a
+//! possible `ERROR`, but some functions simply return an empty error value.
+//! This happens because many Win32 functions can fail without providing any
+//! error information.
+//!
+//! You can retrieve the textual description of an `ERROR` by calling its
+//! [`FormatMessage`](crate::co::ERROR::FormatMessage) instance method. Also,
+//! `ERROR` implements `From<u32>` trait, which allows you to retrieve the
+//! numeric error code.
+//!
+//! No WinSafe function will panic.
+//!
 //! # Examples
 //!
 //! A message box "hello world":
