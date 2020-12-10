@@ -52,7 +52,7 @@ extern "system" {
 	pub fn GetWindowRgn(hWnd: HANDLE, hRgn: HANDLE) -> i32;
 	pub fn GetWindowRgnBox(hWnd: HANDLE, lprc: *mut c_void) -> i32;
 	pub fn GetWindowTextLengthW(hWnd: HANDLE) -> i32;
-	pub fn GetWindowTextW(hWnd: HANDLE, lpString: *const u16, nMaxCount: i32) -> i32;
+	pub fn GetWindowTextW(hWnd: HANDLE, lpString: *mut u16, nMaxCount: i32) -> i32;
 	pub fn HiliteMenuItem(hWnd: HANDLE, hMenu: HANDLE, uIDHiliteItem: u32, uHilite: u32) -> u32;
 	pub fn InsertMenuItemW(hmenu: HANDLE, item: u32, fByPosition: u32, lpmi: *const c_void) -> u32;
 	pub fn InsertMenuW(hMenu: HANDLE, uPosition: u32, uFlags: u32, uIDNewItem: *const c_void, lpNewItem: *const u16) -> u32;

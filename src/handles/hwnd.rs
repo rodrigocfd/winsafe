@@ -314,6 +314,11 @@ impl HWND {
 	/// The passed buffer will be automatically allocated with
 	/// [`GetWindowTextLength`](crate::HWND::GetWindowTextLength).
 	///
+	/// This method is more performant than
+	/// [`GetWindowTextStr`](crate::HWND::GetWindowTextStr) because the buffer
+	/// can be reused, avoiding multiple allocations. However, it has the
+	/// inconvenient of the manual conversion from `Utf16` to `String`.
+	///
 	/// # Examples
 	///
 	/// ```rust,ignore
@@ -358,6 +363,21 @@ impl HWND {
 			},
 			len => Ok(len),
 		}
+	}
+
+	/// A more convenient [`GetWindowText`](crate::HWND::GetWindowText), which
+	/// returns a `String` instead of requiring an external buffer.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// let text = my_window.GetWindowTextStr().unwrap();
+	/// println!("Text: {}", text);
+	/// ```
+	pub fn GetWindowTextStr(self) -> Result<String, co::ERROR> {
+		let mut buf = Utf16::default();
+		self.GetWindowText(&mut buf)?;
+		Ok(buf.to_string())
 	}
 
 	/// [`HiliteMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hilitemenuitem)
@@ -546,9 +566,9 @@ impl HWND {
 	/// [`SetWindowText`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowtextw)
 	/// method.
 	pub fn SetWindowText(self, lpString: &str) -> Result<(), co::ERROR> {
-		let text16 = Utf16::from_str(lpString);
-
-		match unsafe { user32::SetWindowTextW(self.0, text16.as_ptr()) } {
+		match unsafe {
+			user32::SetWindowTextW(self.0, Utf16::from_str(lpString).as_ptr())
+		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
