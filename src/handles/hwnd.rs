@@ -4,7 +4,7 @@ use std::ffi::c_void;
 
 use crate::{AtomStr, IdMenu};
 use crate::{GetLastError, SetLastError};
-use crate::{HACCEL, HDC, HINSTANCE, HMENU};
+use crate::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
 use crate::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::co;
 use crate::ffi::{comctl32, HANDLE, user32};
@@ -139,6 +139,15 @@ impl HWND {
 			.map(|p| Self(p))
 	}
 
+	/// [`GetDC](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
+	/// method.
+	pub fn GetDC(self) -> Result<HDC, ()> {
+		match ptr_as_opt!(user32::GetDC(self.0)) {
+			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
+			None => Err(()),
+		}
+	}
+
 	/// [`GetDlgCtrlID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgctrlid)
 	/// method.
 	pub fn GetDlgCtrlID(self) -> Result<i32, co::ERROR> {
@@ -221,6 +230,19 @@ impl HWND {
 		}
 	}
 
+	/// [`GetUpdateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdatergn)
+	/// method.
+	pub fn GetUpdateRgn(
+		self, hRgn: HRGN, bErase: bool) -> Result<co::REGION, ()>
+	{
+		match unsafe {
+			user32::GetUpdateRgn(self.0, hRgn.as_ptr(), bErase as u32)
+		} {
+			0 => Err(()),
+			ret => Ok(co::REGION::from(ret)),
+		}
+	}
+
 	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
 	/// method.
 	pub fn GetWindow(self, uCmd: co::GW) -> Result<Option<HWND>, co::ERROR> {
@@ -230,6 +252,15 @@ impl HWND {
 				co::ERROR::SUCCESS => Ok(None), // no actual window
 				err => Err(err),
 			},
+		}
+	}
+
+	/// [`GetWindowDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
+	/// method.
+	pub fn GetWindowDC(self) -> Result<HDC, ()> {
+		match ptr_as_opt!(user32::GetWindowDC(self.0)) {
+			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
+			None => Err(()),
 		}
 	}
 
@@ -256,6 +287,24 @@ impl HWND {
 		match unsafe { user32::GetWindowPlacement(self.0, mut_void(lpwndpl)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
+		}
+	}
+
+	/// [`GetWindowRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrgn)
+	/// method.
+	pub fn GetWindowRgn(self, hRgn: HRGN) -> Result<co::REGION, ()> {
+		match unsafe { user32::GetWindowRgn(self.0, hRgn.as_ptr()) } {
+			0 => Err(()),
+			ret => Ok(co::REGION::from(ret)),
+		}
+	}
+
+	/// [`GetWindowRgnBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrgnbox)
+	/// method.
+	pub fn GetWindowRgnBox(self, lprc: &mut RECT) -> Result<co::REGION, ()> {
+		match unsafe { user32::GetWindowRgnBox(self.0, mut_void(lprc)) } {
+			0 => Err(()),
+			ret => Ok(co::REGION::from(ret)),
 		}
 	}
 
@@ -340,6 +389,12 @@ impl HWND {
 			0 => Err(()),
 			_ => Ok(()),
 		}
+	}
+
+	/// [`InvalidateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidatergn)
+	/// method.
+	pub fn InvalidateRgn(self, hRgn: HRGN, bErase: bool) {
+		unsafe { user32::InvalidateRgn(self.0, hRgn.as_ptr(), bErase as u32); }
 	}
 
 	/// [`IsChild`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ischild)
@@ -523,6 +578,24 @@ impl HWND {
 	/// method.
 	pub fn UpdateWindow(self) -> Result<(), ()> {
 		match unsafe { user32::UpdateWindow(self.0) } {
+			0 => Err(()),
+			_ => Ok(()),
+		}
+	}
+
+	/// [`ValidateRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validaterect)
+	/// method.
+	pub fn ValidateRect(self, lpRect: &RECT) -> Result<(), ()> {
+		match unsafe { user32::ValidateRect(self.0, const_void(lpRect)) } {
+			0 => Err(()),
+			_ => Ok(()),
+		}
+	}
+
+	/// [`ValidateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validatergn)
+	/// method.
+	pub fn ValidateRgn(self, hRgn: HRGN) -> Result<(), ()> {
+		match unsafe { user32::ValidateRgn(self.0, hRgn.as_ptr()) } {
 			0 => Err(()),
 			_ => Ok(()),
 		}

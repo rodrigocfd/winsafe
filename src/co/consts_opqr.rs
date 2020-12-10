@@ -76,3 +76,12 @@ const_type! { QS, u32,
 	INPUT, Self::MOUSE.0 | Self::KEY.0 | Self::RAWINPUT.0 | Self::TOUCH.0 | Self::POINTER.0
 	ALLINPUT, Self::INPUT.0 | Self::POSTMESSAGE.0 | Self::TIMER.0 | Self::PAINT.0 | Self::HOTKEY.0 | Self::SENDMESSAGE.0
 }
+
+const_type! { REGION, i32,
+	/// [`GetUpdateRgn`](crate::HWND::GetUpdateRgn) and
+	/// [`GetWindowRgn`](crate::HWND::GetWindowRgn) return value.
+
+	NULL, 1
+	SIMPLE, 2
+	COMPLEX, 3
+}

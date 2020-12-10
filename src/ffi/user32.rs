@@ -27,6 +27,7 @@ extern "system" {
 	pub fn FindWindowW(lpClassName: *const u16, lpWindowName: *const u16) -> HANDLE;
 	pub fn GetAncestor(hwnd: HANDLE, gaFlags: u32) -> HANDLE;
 	pub fn GetClassInfoExW(hInstance: HANDLE, lpszClass: *const u16, lpwcx: *mut c_void) -> u32;
+	pub fn GetDC(hWnd: HANDLE) -> HANDLE;
 	pub fn GetDesktopWindow() -> HANDLE;
 	pub fn GetDlgCtrlID(hWnd: HANDLE) -> i32;
 	pub fn GetDlgItem(hDlg: HANDLE, nIDDlgItem: i32) -> HANDLE;
@@ -42,16 +43,21 @@ extern "system" {
 	pub fn GetQueueStatus(flags: u32) -> u32;
 	pub fn GetSubMenu(hMenu: HANDLE, nPos: i32) -> HANDLE;
 	pub fn GetSystemMetrics(nIndex: i32) -> i32;
+	pub fn GetUpdateRgn(hWnd: HANDLE, hRgn: HANDLE, bErase: u32) -> i32;
 	pub fn GetWindow(hWnd: HANDLE, uCmd: u32) -> HANDLE;
+	pub fn GetWindowDC(hWnd: HANDLE) -> HANDLE;
 	pub fn GetWindowInfo(hwnd: HANDLE, pwi: *mut c_void) -> u32;
 	pub fn GetWindowLongPtrW(hWnd: HANDLE, nIndex: i32) -> isize;
 	pub fn GetWindowPlacement(hWnd: HANDLE, lpwndpl: *mut c_void) -> u32;
+	pub fn GetWindowRgn(hWnd: HANDLE, hRgn: HANDLE) -> i32;
+	pub fn GetWindowRgnBox(hWnd: HANDLE, lprc: *mut c_void) -> i32;
 	pub fn GetWindowTextLengthW(hWnd: HANDLE) -> i32;
 	pub fn GetWindowTextW(hWnd: HANDLE, lpString: *const u16, nMaxCount: i32) -> i32;
 	pub fn HiliteMenuItem(hWnd: HANDLE, hMenu: HANDLE, uIDHiliteItem: u32, uHilite: u32) -> u32;
 	pub fn InsertMenuItemW(hmenu: HANDLE, item: u32, fByPosition: u32, lpmi: *const c_void) -> u32;
 	pub fn InsertMenuW(hMenu: HANDLE, uPosition: u32, uFlags: u32, uIDNewItem: *const c_void, lpNewItem: *const u16) -> u32;
 	pub fn InvalidateRect(hWnd: HANDLE, lpRect: *const c_void, bErase: u32) -> u32;
+	pub fn InvalidateRgn(hWnd: HANDLE, hRgn: HANDLE, bErase: u32) -> u32;
 	pub fn IsChild(hWndParent: HANDLE, hWnd: HANDLE) -> u32;
 	pub fn IsDialogMessageW(hDlg: HANDLE, lpMsg: *mut c_void) -> u32;
 	pub fn IsGUIThread(bConvert: u32) -> u32;
@@ -83,4 +89,6 @@ extern "system" {
 	pub fn TranslateMessage(lpMsg: *const c_void) -> u32;
 	pub fn UnregisterClassW(lpClassName: *const u16, hInstance: HANDLE) -> u32;
 	pub fn UpdateWindow(hWnd: HANDLE) -> u32;
+	pub fn ValidateRect(hWnd: HANDLE, lpRect: *const c_void) -> u32;
+	pub fn ValidateRgn(hWnd: HANDLE, hRgn: HANDLE) -> u32;
 }

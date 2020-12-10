@@ -12,6 +12,7 @@ mod hicon;
 mod hinstance;
 mod hlocal;
 mod hmenu;
+mod hrgn;
 mod hwnd;
 
 pub use haccel::*;
@@ -23,4 +24,5 @@ pub use hicon::*;
 pub use hinstance::*;
 pub use hlocal::*;
 pub use hmenu::*;
+pub use hrgn::*;
 pub use hwnd::*;
