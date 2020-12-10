@@ -20,6 +20,27 @@
 //! [`Utf16`](crate::Utf16) struct, which is also capable of working as a buffer
 //! to receive text from Win32 calls.
 //!
+//! # Constants
+//!
+//! The Win32 API, being a C API, has all its constants as simple `#define`
+//! macros. This has the drawback of different constant types being allowed to
+//! be mixed.
+//!
+//! WinSafe, in the other hand, defines types for all constants, so they cannot
+//! be mixed unless explicitly told to. All constants are defined inside the
+//! [`co`](crate::co) module.
+//!
+//! Most constant types are named according to their prefix. For example,
+//! [`MessageBox`](crate::HWND::MessageBox) constants, like `MB_OKCANCEL`,
+//! belong to a type called [`MB`](crate::co::MB). These types implement bitwise
+//! operator traits, like
+//! [`BirOr`](https://doc.rust-lang.org/std/ops/trait.BitOr.html) and
+//! [`BitAnd`](https://doc.rust-lang.org/std/ops/trait.BitAnd.html).
+//!
+//! Typed constants are used in function arguments and also in struct fields.
+//! For example, struct [`WNDCLASSEX`](crate::WNDCLASSEX) has a `style` field
+//! typed as [`CS`](crate::co::CS), which restricts the possible values.
+//!
 //! # Examples
 //!
 //! A message box "hello world":

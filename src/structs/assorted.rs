@@ -175,7 +175,7 @@ pub struct NMHDR {
 	/// ID of the control sending the message.
 	pub idFrom: usize,
 	/// Notification code sent in
-	/// [WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
+	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	pub code: co::NM,
 }
 
