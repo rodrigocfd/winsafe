@@ -28,7 +28,7 @@ handle_type! {
 	///   )
 	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
 	///
-	/// let (val_type, val) = hkey.RegQueryValueEx("Beep")
+	/// let val = hkey.RegQueryValueEx("Beep")
 	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
 	///
 	/// match val {
@@ -106,10 +106,9 @@ impl HKEY {
 	/// method.
 	///
 	/// The data type will be automatically queried with a first call to
-	/// `RegQueryValueEx`, and it will be returned along with the
-	/// [`RegistryValue`](crate::RegistryValue) itself.
+	/// `RegQueryValueEx`.
 	pub fn RegQueryValueEx(
-		self, lpValueName: &str) -> Result<(co::REG, RegistryValue), co::ERROR>
+		self, lpValueName: &str) -> Result<RegistryValue, co::ERROR>
 	{
 		let valueName16 = Utf16::from_str(lpValueName);
 		let mut rawDataType: u32 = 0;
@@ -117,19 +116,19 @@ impl HKEY {
 
 		match co::ERROR::from(
 			unsafe {
-				advapi32::RegQueryValueExW( // query data type and length
+				advapi32::RegQueryValueExW(
 					self.0,
 					valueName16.as_ptr(),
 					std::ptr::null_mut(),
-					&mut rawDataType,
+					&mut rawDataType, // query data type
 					std::ptr::null_mut(),
-					&mut dataLen,
+					&mut dataLen, // query data length
 				)
 			}
 		) {
 			co::ERROR::SUCCESS => {
 				match co::REG::from(rawDataType) {
-					co::REG::NONE => Ok((co::REG::NONE, RegistryValue::None)), // no value
+					co::REG::NONE => Ok(RegistryValue::None), // no value to query
 					co::REG::DWORD => {
 						let mut dwordBuf: u32 = 0;
 
@@ -145,9 +144,7 @@ impl HKEY {
 								)
 							}
 						) {
-							co::ERROR::SUCCESS => Ok(
-								(co::REG::DWORD, RegistryValue::Dword(dwordBuf)),
-							),
+							co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
 							err => Err(err),
 						}
 					},
@@ -166,9 +163,7 @@ impl HKEY {
 								)
 							}
 						) {
-							co::ERROR::SUCCESS => Ok(
-								(co::REG::QWORD, RegistryValue::Qword(qwordBuf)),
-							),
+							co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
 							err => Err(err),
 						}
 					},
@@ -187,12 +182,11 @@ impl HKEY {
 								)
 							}
 						) {
-							co::ERROR::SUCCESS => Ok((
-								co::REG::SZ,
+							co::ERROR::SUCCESS => Ok(
 								RegistryValue::Sz(
-									Utf16::from_utf16_nullt(&szBuf[0]).to_string()
+									Utf16::from_utf16_nullt(&szBuf[0]).to_string(),
 								),
-							)),
+							),
 							err => Err(err),
 						}
 					},
@@ -211,16 +205,14 @@ impl HKEY {
 								)
 							}
 						) {
-							co::ERROR::SUCCESS => Ok(
-								(co::REG::BINARY, RegistryValue::Binary(byteBuf)),
-							),
+							co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
 							err => Err(err),
 						}
 					},
-					otherType => Ok((otherType, RegistryValue::None)), // not implemented yet
+					_ => Ok(RegistryValue::None), // other types not implemented yet
 				}
 			},
-			err => Err(err),
+			err => Err(err), // data type/length query failed
 		}
 	}
 }
