@@ -35,7 +35,7 @@ macro_rules! handle_type {
 
 // Transforms a pointer into an option, which is None if the pointer is null.
 // https://stackoverflow.com/q/65144143/6923555
-macro_rules! ptr_to_opt {
+macro_rules! ptr_as_opt {
 	($ptr:expr) => {
 		unsafe {
 			if $ptr.is_null() {

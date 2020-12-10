@@ -156,3 +156,26 @@ impl From<IdPos> for u32 {
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for
+/// [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
+pub enum IdStr<'a> {
+	Id(i32),
+	Str(&'a str),
+}
+
+impl<'a> IdStr<'a> {
+	/// Converts the internal value to a pointer. Uses an external
+	/// [`Utf16`](crate::Utf16) buffer to keep the string, if needed.
+	pub fn as_ptr(&self, buf16: &mut Utf16) -> *const u16 {
+		match self {
+			IdStr::Id(id) => *id as *const u16,
+			IdStr::Str(str) => {
+				*buf16 = Utf16::from_str(str); // convert string into u16 array, keep in buffer
+				unsafe { buf16.as_ptr() } // return pointer from buffer
+			},
+		}
+	}
+}

@@ -19,6 +19,16 @@ pub type WNDPROC =
 
 //------------------------------------------------------------------------------
 
+/// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct ACCEL {
+	pub fVirt: co::ACCELF,
+	pub key: co::VK,
+	pub cmd: u16,
+}
+
 /// [`ATOM`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by
 /// [`RegisterClassEx`](crate::RegisterClassEx).

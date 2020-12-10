@@ -42,7 +42,7 @@ impl HWND {
 	///
 	/// Must be paired with an [`EndPaint`](crate::HWND::EndPaint) call.
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> Result<HDC, ()> {
-		match ptr_to_opt!(user32::BeginPaint(self.0, mut_void(lpPaint))) {
+		match ptr_as_opt!(user32::BeginPaint(self.0, mut_void(lpPaint))) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -64,7 +64,7 @@ impl HWND {
 	) -> Result<HWND, co::ERROR> {
 		let mut classNameBuf16 = Utf16::default();
 
-		match ptr_to_opt!(
+		match ptr_as_opt!(
 			user32::CreateWindowExW(
 				dwExStyle.into(),
 				lpClassName.MAKEINTRESOURCE(&mut classNameBuf16),
@@ -121,7 +121,7 @@ impl HWND {
 	pub fn FindWindow(
 		lpClassName: &str, lpWindowName: &str) -> Result<HWND, co::ERROR>
 	{
-		match ptr_to_opt!(
+		match ptr_as_opt!(
 			user32::FindWindowW(
 				Utf16::from_str(lpClassName).as_ptr(),
 				Utf16::from_str(lpWindowName).as_ptr(),
@@ -135,7 +135,7 @@ impl HWND {
 	/// [`GetAncestor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getancestor)
 	/// method.
 	pub fn GetAncestor(self, gaFlags: co::GA) -> Option<HWND> {
-		ptr_to_opt!(user32::GetAncestor(self.0, gaFlags.into()))
+		ptr_as_opt!(user32::GetAncestor(self.0, gaFlags.into()))
 			.map(|p| Self(p))
 	}
 
@@ -160,7 +160,7 @@ impl HWND {
 	/// [`GetDlgItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitem)
 	/// method.
 	pub fn GetDlgItem(self, nIDDlgItem: i32) -> Result<Option<HWND>, co::ERROR> {
-		match ptr_to_opt!(user32::GetDlgItem(self.0, nIDDlgItem)) {
+		match ptr_as_opt!(user32::GetDlgItem(self.0, nIDDlgItem)) {
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no actual window
 				err => Err(err),
@@ -172,14 +172,14 @@ impl HWND {
 	/// [`GetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getfocus)
 	/// static method.
 	pub fn GetFocus() -> Option<HWND> {
-		ptr_to_opt!(user32::GetFocus())
+		ptr_as_opt!(user32::GetFocus())
 			.map(|p| Self(p))
 	}
 
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// static method.
 	pub fn GetForegroundWindow() -> Option<HWND> {
-		ptr_to_opt!(user32::GetForegroundWindow())
+		ptr_as_opt!(user32::GetForegroundWindow())
 			.map(|p| Self(p))
 	}
 
@@ -188,7 +188,7 @@ impl HWND {
 	pub fn GetNextDlgGroupItem(
 		self, hCtl: HWND, bPrevious: bool) -> Result<HWND, co::ERROR>
 	{
-		match ptr_to_opt!(
+		match ptr_as_opt!(
 			user32::GetNextDlgGroupItem(self.0, hCtl.0, bPrevious as u32)
 		) {
 			Some(p) => Ok(Self(p)),
@@ -201,7 +201,7 @@ impl HWND {
 	pub fn GetNextDlgTabItem(
 		self, hCtl: HWND, bPrevious: bool) -> Result<HWND, co::ERROR>
 	{
-		match ptr_to_opt!(
+		match ptr_as_opt!(
 			user32::GetNextDlgTabItem(self.0, hCtl.0, bPrevious as u32)
 		) {
 			Some(p) => Ok(Self(p)),
@@ -212,7 +212,7 @@ impl HWND {
 	/// [`GetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getparent)
 	/// method.
 	pub fn GetParent(self) -> Result<Option<HWND>, co::ERROR> {
-		match ptr_to_opt!(user32::GetParent(self.0)) {
+		match ptr_as_opt!(user32::GetParent(self.0)) {
 			Some(p) => Ok(Some(Self(p))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no actual parent
@@ -224,7 +224,7 @@ impl HWND {
 	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
 	/// method.
 	pub fn GetWindow(self, uCmd: co::GW) -> Result<Option<HWND>, co::ERROR> {
-		match ptr_to_opt!(user32::GetWindow(self.0, uCmd.into())) {
+		match ptr_as_opt!(user32::GetWindow(self.0, uCmd.into())) {
 			Some(p) => Ok(Some(Self(p))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no actual window
@@ -439,7 +439,7 @@ impl HWND {
 	/// [`SetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
 	/// method.
 	pub fn SetFocus(self) -> Option<HWND> {
-		ptr_to_opt!(user32::SetFocus(self.0))
+		ptr_as_opt!(user32::SetFocus(self.0))
 			.map(|p| Self(p))
 	}
 
@@ -448,7 +448,7 @@ impl HWND {
 	pub fn SetParent(
 		self, hWndNewParent: HWND) -> Result<Option<HWND>, co::ERROR>
 	{
-		match ptr_to_opt!(user32::SetParent(self.0, hWndNewParent.0)) {
+		match ptr_as_opt!(user32::SetParent(self.0, hWndNewParent.0)) {
 			Some(p) => Ok(Some(Self(p))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no previous parent

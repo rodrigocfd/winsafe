@@ -53,7 +53,7 @@ impl HMENU {
 	/// [`CreateMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createmenu)
 	/// static method.
 	pub fn CreateMenu() -> Result<HMENU, co::ERROR> {
-		match ptr_to_opt!(user32::CreateMenu()) {
+		match ptr_as_opt!(user32::CreateMenu()) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
 		}
@@ -62,7 +62,7 @@ impl HMENU {
 	/// [`CreatePopupMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu)
 	/// static method.
 	pub fn CreatePopupMenu() -> Result<HMENU, co::ERROR> {
-		match ptr_to_opt!(user32::CreatePopupMenu()) {
+		match ptr_as_opt!(user32::CreatePopupMenu()) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
 		}
@@ -135,7 +135,7 @@ impl HMENU {
 	/// [`GetSubMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu)
 	/// method.
 	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
-		ptr_to_opt!(
+		ptr_as_opt!(
 			user32::GetSubMenu(self.0, nPos as i32)
 		).map(|p| Self(p))
 	}

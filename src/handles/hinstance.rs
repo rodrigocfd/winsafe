@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
-use crate::{ATOM, HCURSOR, HICON, WNDCLASSEX};
-use crate::{IdIdcStr, IdIdiStr};
+use crate::{ATOM, HACCEL, HCURSOR, HICON, WNDCLASSEX};
+use crate::{IdIdcStr, IdIdiStr, IdStr};
 use crate::co;
 use crate::ffi::{HANDLE, kernel32, user32};
 use crate::GetLastError;
@@ -51,12 +51,27 @@ impl HINSTANCE {
 	pub fn GetModuleHandle(
 		lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR>
 	{
-		match ptr_to_opt!(
+		match ptr_as_opt!(
 			kernel32::GetModuleHandleW(
 				Utf16::from_opt_str(lpModuleName).as_ptr(),
 			)
 		) {
 			Some(p) => Ok(unsafe { HINSTANCE::from_ptr(p) }),
+			None => Err(GetLastError()),
+		}
+	}
+
+	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
+	/// method.
+	pub fn LoadAccelerators(
+		self, lpTableName: IdStr) -> Result<HACCEL, co::ERROR>
+	{
+		let mut buf16 = Utf16::default();
+
+		match ptr_as_opt!(
+			user32::LoadAcceleratorsW(self.0, lpTableName.as_ptr(&mut buf16))
+		) {
+			Some(p) => Ok(unsafe { HACCEL::from_ptr(p) }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -77,7 +92,7 @@ impl HINSTANCE {
 	{
 		let mut buf16 = Utf16::default();
 
-		match ptr_to_opt!(
+		match ptr_as_opt!(
 			user32::LoadCursorW(self.0, lpCursorName.as_ptr(&mut buf16))
 		) {
 			Some(p) => Ok(unsafe { HCURSOR::from_ptr(p) }),
@@ -101,7 +116,7 @@ impl HINSTANCE {
 	{
 		let mut buf16 = Utf16::default();
 
-		match ptr_to_opt!(
+		match ptr_as_opt!(
 			user32::LoadIconW(self.0, lpIconName.as_ptr(&mut buf16))
 		) {
 			Some(p) => Ok(unsafe { HICON::from_ptr(p) }),
