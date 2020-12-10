@@ -6,19 +6,24 @@
 //! due to its hugeness, it will probably remain as a work-in-progress for a
 //! while.
 //!
-//! # Text encoding
+//! # Functions
 //!
-//! Windows natively uses
-//! [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings).
+//! WinSafe categorizes Win32 API functions in three types:
 //!
-//! WinSafe uses Unicode UTF-16 internally but exposes idiomatic UTF-8,
-//! performing conversions automatically when needed, so you don't have to worry
-//! about [`OsString`](https://doc.rust-lang.org/std/ffi/struct.OsString.html)
-//! or any low-level conversion.
+//! * free functions;
+//! * static methods;
+//! * instance methods.
 //!
-//! However, if you still need any kind of string conversion, you can use the
-//! [`Utf16`](crate::Utf16) struct, which is also capable of working as a buffer
-//! to receive text from Win32 calls.
+//! Free functions, like [`PostQuitMessage`](crate::PostQuitMessage), are those
+//! found at the root of the crate.
+//!
+//! Both static and instance methods belong to handle types, like
+//! [`HDC`](crate::HDC) or [`HWND`](crate::HWND). Handle types always start with
+//! the letter "H", and they are opaque pointers provided by the Win32 API which
+//! we can call functions upon.
+//!
+//! Static methods create new handle objects, whereas instance methods perform
+//! actions on existing handle objects.
 //!
 //! # Constants
 //!
@@ -41,25 +46,6 @@
 //! For example, struct [`WNDCLASSEX`](crate::WNDCLASSEX) has a `style` field
 //! typed as [`CS`](crate::co::CS), which restricts the possible values.
 //!
-//! # Functions
-//!
-//! WinSafe categorizes Win32 API functions in three types:
-//!
-//! * free functions;
-//! * static methods;
-//! * instance methods.
-//!
-//! Free functions, like [`PostQuitMessage`](crate::PostQuitMessage), are those
-//! found at the root of the crate.
-//!
-//! Both static and instance methods belong to handle types, like
-//! [`HDC`](crate::HDC) or [`HWND`](crate::HWND). Handle types always start with
-//! the letter "H", and they are opaque pointers provided by the Win32 API which
-//! we can call functions upon.
-//!
-//! Static methods create new handle objects, whereas instance methods perform
-//! actions on existing handle objects.
-//!
 //! # Errors
 //!
 //! [Win32 errors](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes),
@@ -80,6 +66,20 @@
 //! numeric error code.
 //!
 //! No WinSafe function will panic.
+//!
+//! # Text encoding
+//!
+//! Windows natively uses
+//! [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings).
+//!
+//! WinSafe uses Unicode UTF-16 internally but exposes idiomatic UTF-8,
+//! performing conversions automatically when needed, so you don't have to worry
+//! about [`OsString`](https://doc.rust-lang.org/std/ffi/struct.OsString.html)
+//! or any low-level conversion.
+//!
+//! However, if you still need any kind of string conversion, you can use the
+//! [`Utf16`](crate::Utf16) struct, which is also capable of working as a buffer
+//! to receive text from Win32 calls.
 //!
 //! # Examples
 //!
