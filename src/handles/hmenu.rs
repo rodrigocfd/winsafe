@@ -210,7 +210,7 @@ impl HMENU {
 		fByPosition: bool, lpmii: &MENUITEMINFO) -> Result<(), co::ERROR>
 	{
 		match unsafe {
-			user32::SetMenuItemInfo(
+			user32::SetMenuItemInfoW(
 				self.0, item.into(), fByPosition as u32, const_void(lpmii))
 		} {
 			0 => Err(GetLastError()),

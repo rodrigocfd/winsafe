@@ -13,14 +13,13 @@ macro_rules! handle_type {
 		unsafe impl Sync for $name {}
 
 		impl Default for $name {
-			/// Creates a null handle.
 			fn default() -> Self {
 				Self(std::ptr::null_mut())
 			}
 		}
 
 		impl $name {
-			/// Wraps a pointer.
+			/// Creates a new handle instance by wrapping a pointer.
 			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {
 				Self(p as HANDLE)
 			}

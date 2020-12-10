@@ -78,7 +78,7 @@ extern "system" {
 	pub fn SendMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> isize;
 	pub fn SetFocus(hWnd: HANDLE) -> HANDLE;
 	pub fn SetMenuInfo(hMenu: HANDLE, mii: *const c_void) -> u32;
-	pub fn SetMenuItemInfo(hmenu: HANDLE, item: u32, fByPosition: u32, lpmii: *const c_void) -> u32;
+	pub fn SetMenuItemInfoW(hmenu: HANDLE, item: u32, fByPosition: u32, lpmii: *const c_void) -> u32;
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: *const c_void) -> u32;

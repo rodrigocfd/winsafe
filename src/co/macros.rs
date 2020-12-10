@@ -38,6 +38,16 @@ macro_rules! const_type {
 				std::fmt::UpperHex::fmt(&self.0, f)
 			}
 		}
+		impl std::fmt::Binary for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::Binary::fmt(&self.0, f)
+			}
+		}
+		impl std::fmt::Octal for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::Octal::fmt(&self.0, f)
+			}
+		}
 
 		// Bitflag operations.
 		impl std::ops::BitAnd for $name {
