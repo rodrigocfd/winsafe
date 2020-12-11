@@ -15,6 +15,8 @@ vtbl_type! {
 	Release, fn(PPVtbl<Self>) -> u32
 }
 
+//------------------------------------------------------------------------------
+
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 /// interface is the base to all COM interfaces.
 ///

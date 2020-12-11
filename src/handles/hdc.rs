@@ -31,7 +31,7 @@ impl HDC {
 			gdi32::GetTextExtentPoint32W(
 				self.0,
 				Utf16::from_str(lpString).as_ptr(),
-				lpString.len() as i32,
+				lpString.chars().count() as i32,
 				mut_void(&mut sz),
 			)
 		} {

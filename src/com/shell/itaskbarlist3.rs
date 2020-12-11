@@ -29,6 +29,8 @@ vtbl_type! {
 	SetThumbnailClip, fn(PPVtbl<Self>, HANDLE, *const c_void) -> u32
 }
 
+//------------------------------------------------------------------------------
+
 /// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
 /// COM interface.
 ///

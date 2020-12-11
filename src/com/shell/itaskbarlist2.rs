@@ -16,6 +16,8 @@ vtbl_type! {
 	MarkFullscreenWindow, fn(PPVtbl<Self>, HANDLE, u32) -> u32
 }
 
+//------------------------------------------------------------------------------
+
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 /// COM interface.
 ///

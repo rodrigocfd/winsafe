@@ -16,37 +16,6 @@ handle_type! {
 	/// [predefined registry keys](https://docs.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),
 	/// like `HKEY::CURRENT_USER`, which are always open and ready to be used.
 	/// Usually, they are the starting point to open a registry key.
-	///
-	/// # Examples
-	///
-	/// Reading a value from the registry:
-	/// ```rust,ignore
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel\\Mouse",
-	///     co::REG_OPTION::default(),
-	///     co::KEY::READ,
-	///   )
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
-	///
-	/// let val = hkey.RegQueryValueEx("Beep")
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
-	///
-	/// match val {
-	///   RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///   RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///   RegistryValue::Sz(str) => println!("String: {}", str),
-	///   RegistryValue::Binary(bin) => {
-	///     println!("Binary:");
-	///     for b in bin.iter() {
-	///       print!("{:02x} ", b);
-	///     }
-	///     println!("");
-	///   },
-	///   _ => {},
-	/// }
-	///
-	/// hkey.RegCloseKey().unwrap();
-	/// ```
 	HKEY
 }
 
@@ -81,6 +50,19 @@ impl HKEY {
 	/// method.
 	///
 	/// Must be paired with a [`RegCloseKey`](crate::HKEY::RegCloseKey) call.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	///     "Control Panel\\Mouse",
+	///     co::REG_OPTION::default(),
+	///     co::KEY::READ,
+	///   )
+	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///
+	/// hkey.RegCloseKey().unwrap();
+	/// ```
 	pub fn RegOpenKeyEx(self, lpSubKey: &str,
 		ulOptions: co::REG_OPTION, samDesired: co::KEY) -> Result<HKEY, co::ERROR>
 	{
@@ -107,6 +89,36 @@ impl HKEY {
 	///
 	/// The data type will be automatically queried with a first call to
 	/// `RegQueryValueEx`.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	///     "Control Panel\\Mouse",
+	///     co::REG_OPTION::default(),
+	///     co::KEY::READ,
+	///   )
+	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///
+	/// let val = hkey.RegQueryValueEx("Beep")
+	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///
+	/// match val {
+	///   RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///   RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///   RegistryValue::Sz(str) => println!("String: {}", str),
+	///   RegistryValue::Binary(bin) => {
+	///     println!("Binary:");
+	///     for b in bin.iter() {
+	///       print!("{:02x} ", b);
+	///     }
+	///     println!("");
+	///   },
+	///   _ => {},
+	/// }
+	///
+	/// hkey.RegCloseKey().unwrap();
+	/// ```
 	pub fn RegQueryValueEx(
 		self, lpValueName: &str) -> Result<RegistryValue, co::ERROR>
 	{
@@ -182,7 +194,7 @@ impl HKEY {
 							valueName16.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							&mut szBuf[0] as *mut u16 as *mut u8,
+							szBuf.as_mut_ptr() as *mut u8,
 							&mut dataLen,
 						)
 					}
@@ -205,7 +217,7 @@ impl HKEY {
 							valueName16.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							&mut byteBuf[0],
+							byteBuf.as_mut_ptr(),
 							&mut dataLen,
 						)
 					}
@@ -215,6 +227,47 @@ impl HKEY {
 				}
 			},
 			_ => Ok(RegistryValue::None), // other types not implemented yet
+		}
+	}
+
+	/// [`RegSetKeyValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
+	/// method.
+	///
+	/// If the value doesn't exist, if will be created.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// HKEY::CURRENT_USER.RegSetKeyValue(
+	///     "Software\\My Company",
+	///     "Color",
+	///     RegistryValue::Sz("blue".to_owned()),
+	///   )
+	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	/// ```
+	pub fn RegSetKeyValue(self, lpSubKey: &str,
+		lpValueName: &str, lpData: RegistryValue) -> Result<(), co::ERROR>
+	{
+		match co::ERROR::from(
+			unsafe {
+				advapi32::RegSetKeyValueW(
+					self.0,
+					Utf16::from_str(lpSubKey).as_ptr(),
+					Utf16::from_str(lpValueName).as_ptr(),
+					lpData.reg_type().into(),
+					match &lpData {
+						RegistryValue::Binary(b) => b.as_ptr() as *const c_void,
+						RegistryValue::Dword(n) => *n as *const c_void,
+						RegistryValue::Qword(n) => *n as *const c_void,
+						RegistryValue::Sz(s) => Utf16::from_str(&s).as_ptr() as *const c_void,
+						RegistryValue::None => std::ptr::null(),
+					},
+					lpData.len() as u32,
+				)
+			}
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
 		}
 	}
 }

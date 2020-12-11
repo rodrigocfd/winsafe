@@ -19,6 +19,8 @@ vtbl_type! {
 	SetActiveAlt, fn(PPVtbl<Self>, HANDLE) -> u32
 }
 
+//------------------------------------------------------------------------------
+
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 /// COM interface.
 ///

@@ -191,3 +191,29 @@ pub enum RegistryValue {
 	Sz(String),
 	None,
 }
+
+impl RegistryValue {
+	/// Returns the correspondent [`co::REG`](crate::co::REG) constant.
+	pub fn reg_type(&self) -> co::REG {
+		match self {
+			RegistryValue::Binary(_) => co::REG::BINARY,
+			RegistryValue::Dword(_) => co::REG::DWORD,
+			RegistryValue::Qword(_) => co::REG::QWORD,
+			RegistryValue::Sz(_) => co::REG::SZ,
+			RegistryValue::None => co::REG::NONE,
+		}
+	}
+
+	/// Returns the length of the stored data.
+	pub fn len(&self) -> usize {
+		match self {
+			RegistryValue::Binary(b) => b.len(),
+			RegistryValue::Dword(_) => std::mem::size_of::<u32>(),
+			RegistryValue::Qword(_) => std::mem::size_of::<u64>(),
+			RegistryValue::Sz(s) => {
+				(s.chars().count() + 1) * std::mem::size_of::<u16>() // including terminating null
+			},
+			RegistryValue::None => 0,
+		}
+	}
+}
