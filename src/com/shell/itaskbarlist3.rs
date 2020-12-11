@@ -9,31 +9,25 @@ use crate::ffi::HANDLE;
 use crate::handles::HWND;
 use crate::structs::IID;
 
-/// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
-#[repr(C)]
-pub struct ITaskbarList3Vtbl {
-	iTaskbarList2Vtbl: ITaskbarList2Vtbl,
-	SetProgressValue: fn(PPVtbl<Self>, HANDLE, u64, u64) -> u32,
-	SetProgressState: fn(PPVtbl<Self>, HANDLE, u32) -> u32,
-	RegisterTab: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
-	UnregisterTab: fn(PPVtbl<Self>, HANDLE) -> u32,
-	SetTabOrder: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
-	SetTabActive: fn(PPVtbl<Self>, HANDLE, HANDLE, u32) -> u32,
-	ThumbBarAddButtons: fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32,
-	ThumbBarUpdateButtons: fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32,
-	ThumbBarSetImageList: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
-	SetOverlayIcon: fn(PPVtbl<Self>, HANDLE, HANDLE, *const u16) -> u32,
-	SetThumbnailTooltip: fn(PPVtbl<Self>, HANDLE, *const u16) -> u32,
-	SetThumbnailClip: fn(PPVtbl<Self>, HANDLE, *const c_void) -> u32,
-}
+vtbl_type! {
+	/// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
+	ITaskbarList3Vtbl,
+	0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf,
 
-impl Vtbl for ITaskbarList3Vtbl {
-	fn IID() -> IID {
-		IID::new(0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf)
-	}
+	iTaskbarList2Vtbl, ITaskbarList2Vtbl
+	SetProgressValue, fn(PPVtbl<Self>, HANDLE, u64, u64) -> u32
+	SetProgressState, fn(PPVtbl<Self>, HANDLE, u32) -> u32
+	RegisterTab, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
+	UnregisterTab, fn(PPVtbl<Self>, HANDLE) -> u32
+	SetTabOrder, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
+	SetTabActive, fn(PPVtbl<Self>, HANDLE, HANDLE, u32) -> u32
+	ThumbBarAddButtons, fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32
+	ThumbBarUpdateButtons, fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32
+	ThumbBarSetImageList, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
+	SetOverlayIcon, fn(PPVtbl<Self>, HANDLE, HANDLE, *const u16) -> u32
+	SetThumbnailTooltip, fn(PPVtbl<Self>, HANDLE, *const u16) -> u32
+	SetThumbnailClip, fn(PPVtbl<Self>, HANDLE, *const c_void) -> u32
 }
-
-//------------------------------------------------------------------------------
 
 /// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
 /// COM interface.

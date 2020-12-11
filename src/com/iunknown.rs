@@ -5,21 +5,15 @@ use std::ffi::c_void;
 use crate::com::{PPVtbl, Vtbl};
 use crate::structs::IID;
 
-/// [`IUnknown`](crate::IUnknown) virtual table.
-#[repr(C)]
-pub struct IUnknownVtbl {
-	QueryInterface: fn(PPVtbl<Self>, *const c_void, *mut PPVtbl<IUnknownVtbl>),
-	AddRef: fn(PPVtbl<Self>) -> u32,
-	Release: fn(PPVtbl<Self>) -> u32,
-}
+vtbl_type! {
+	/// [`IUnknown`](crate::IUnknown) virtual table.
+	IUnknownVtbl,
+	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
 
-impl Vtbl for IUnknownVtbl {
-	fn IID() -> IID {
-		IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046)
-	}
+	QueryInterface, fn(PPVtbl<Self>, *const c_void, *mut PPVtbl<IUnknownVtbl>)
+	AddRef, fn(PPVtbl<Self>) -> u32
+	Release, fn(PPVtbl<Self>) -> u32
 }
-
-//------------------------------------------------------------------------------
 
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 /// interface is the base to all COM interfaces.

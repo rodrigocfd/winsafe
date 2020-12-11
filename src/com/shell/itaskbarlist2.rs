@@ -7,20 +7,14 @@ use crate::ffi::HANDLE;
 use crate::handles::HWND;
 use crate::structs::IID;
 
-/// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
-#[repr(C)]
-pub struct ITaskbarList2Vtbl {
-	iTaskbarListVtbl: ITaskbarListVtbl,
-	MarkFullscreenWindow: fn(PPVtbl<Self>, HANDLE, u32) -> u32,
-}
+vtbl_type! {
+	/// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
+	ITaskbarList2Vtbl,
+	0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317,
 
-impl Vtbl for ITaskbarList2Vtbl {
-	fn IID() -> IID {
-		IID::new(0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317)
-	}
+	iTaskbarListVtbl, ITaskbarListVtbl
+	MarkFullscreenWindow, fn(PPVtbl<Self>, HANDLE, u32) -> u32
 }
-
-//------------------------------------------------------------------------------
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 /// COM interface.
