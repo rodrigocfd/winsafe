@@ -13,21 +13,17 @@ use crate::Utf16;
 ///
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
-pub enum AtomStr<'a> {
+pub enum AtomStr {
 	Atom(ATOM),
-	Str(&'a str),
+	Str(String),
 }
 
-impl<'a> AtomStr<'a> {
+impl AtomStr {
 	/// [`MAKEINTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
-	/// macro. Uses an external [`Utf16`](crate::Utf16) buffer to keep the
-	/// string, if needed.
-	pub fn MAKEINTRESOURCE(&self, buf16: &mut Utf16) -> *const u16 {
+	/// macro.
+	pub fn MAKEINTRESOURCE(&self) -> *const u16 {
 		match self {
-			AtomStr::Str(name) => {
-				*buf16 = Utf16::from_str(name); // convert string into u16 array, keep in buffer
-				unsafe { buf16.as_ptr() } // return pointer from buffer
-			}
+			AtomStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
 			AtomStr::Atom(atom) => atom.as_ptr(),
 		}
 	}
@@ -39,22 +35,18 @@ impl<'a> AtomStr<'a> {
 ///
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`;
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `lpNewItem`.
-pub enum BitmapPtrStr<'a> {
+pub enum BitmapPtrStr {
 	Bitmap(HBITMAP),
-	Str(&'a str),
+	Str(String),
 	Param(*const c_void),
 }
 
-impl<'a> BitmapPtrStr<'a> {
-	/// Converts the internal value to a pointer. Uses an external
-	/// [`Utf16`](crate::Utf16) buffer to keep the string, if needed.
-	pub fn as_ptr(&self, buf16: &mut Utf16) -> *const u16 {
+impl BitmapPtrStr {
+	/// Converts the internal value to a pointer.
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			BitmapPtrStr::Bitmap(hbmp) => unsafe { hbmp.as_ptr() as *const u16 },
-			BitmapPtrStr::Str(str) => {
-				*buf16 = Utf16::from_str(str); // convert string into u16 array, keep in buffer
-				unsafe { buf16.as_ptr() } // return pointer from buffer
-			},
+			BitmapPtrStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
 			BitmapPtrStr::Param(lp) => *lp as *const u16,
 		}
 	}
@@ -64,23 +56,19 @@ impl<'a> BitmapPtrStr<'a> {
 
 /// Variant parameter for [`LoadCursor`](crate::HINSTANCE::LoadCursor)
 /// `lpCursorName`.
-pub enum IdIdcStr<'a> {
+pub enum IdIdcStr {
 	Id(i32),
 	Idc(co::IDC),
-	Str(&'a str),
+	Str(String),
 }
 
-impl<'a> IdIdcStr<'a> {
-	/// Converts the internal value to a pointer. Uses an external
-	/// [`Utf16`](crate::Utf16) buffer to keep the string, if needed.
-	pub fn as_ptr(&self, buf16: &mut Utf16) -> *const u16 {
+impl IdIdcStr {
+	/// Converts the internal value to a pointer.
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			IdIdcStr::Id(id) => *id as *const u16,
 			IdIdcStr::Idc(idc) => usize::from(*idc) as *const u16,
-			IdIdcStr::Str(str) => {
-				*buf16 = Utf16::from_str(str); // convert string into u16 array, keep in buffer
-				unsafe { buf16.as_ptr() } // return pointer from buffer
-			},
+			IdIdcStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
 		}
 	}
 }
@@ -88,23 +76,19 @@ impl<'a> IdIdcStr<'a> {
 //------------------------------------------------------------------------------
 
 /// Variant parameter for [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
-pub enum IdIdiStr<'a> {
+pub enum IdIdiStr {
 	Id(i32),
 	Idi(co::IDI),
-	Str(&'a str),
+	Str(String),
 }
 
-impl<'a> IdIdiStr<'a> {
-	/// Converts the internal value to a pointer. Uses an external
-	/// [`Utf16`](crate::Utf16) buffer to keep the string, if needed.
-	pub fn as_ptr(&self, buf16: &mut Utf16) -> *const u16 {
+impl IdIdiStr {
+	/// Converts the internal value to a pointer.
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			IdIdiStr::Id(id) => *id as *const u16,
 			IdIdiStr::Idi(idi) => usize::from(*idi) as *const u16,
-			IdIdiStr::Str(str) => {
-				*buf16 = Utf16::from_str(str); // convert string into u16 array, keep in buffer
-				unsafe { buf16.as_ptr() } // return pointer from buffer
-			},
+			IdIdiStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
 		}
 	}
 }
@@ -162,21 +146,17 @@ impl From<IdPos> for u32 {
 
 /// Variant parameter for
 /// [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
-pub enum IdStr<'a> {
+pub enum IdStr {
 	Id(i32),
-	Str(&'a str),
+	Str(String),
 }
 
-impl<'a> IdStr<'a> {
-	/// Converts the internal value to a pointer. Uses an external
-	/// [`Utf16`](crate::Utf16) buffer to keep the string, if needed.
-	pub fn as_ptr(&self, buf16: &mut Utf16) -> *const u16 {
+impl IdStr {
+	/// Converts the internal value to a pointer.
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			IdStr::Id(id) => *id as *const u16,
-			IdStr::Str(str) => {
-				*buf16 = Utf16::from_str(str); // convert string into u16 array, keep in buffer
-				unsafe { buf16.as_ptr() } // return pointer from buffer
-			},
+			IdStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
 		}
 	}
 }

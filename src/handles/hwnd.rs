@@ -45,12 +45,10 @@ impl HWND {
 		hInstance: HINSTANCE,
 		lpParam: Option<*const c_void>
 	) -> Result<HWND, co::ERROR> {
-		let mut classNameBuf16 = Utf16::default();
-
 		match ptr_as_opt!(
 			user32::CreateWindowExW(
 				dwExStyle.into(),
-				lpClassName.MAKEINTRESOURCE(&mut classNameBuf16),
+				lpClassName.MAKEINTRESOURCE(),
 				Utf16::from_opt_str(lpWindowName).as_ptr(),
 				dwStyle.into(),
 				X, Y, nWidth, nHeight,

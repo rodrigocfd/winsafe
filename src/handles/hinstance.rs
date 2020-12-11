@@ -53,9 +53,7 @@ impl HINSTANCE {
 		lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR>
 	{
 		match ptr_as_opt!(
-			kernel32::GetModuleHandleW(
-				Utf16::from_opt_str(lpModuleName).as_ptr(),
-			)
+			kernel32::GetModuleHandleW(Utf16::from_opt_str(lpModuleName).as_ptr())
 		) {
 			Some(p) => Ok(unsafe { HINSTANCE::from_ptr(p) }),
 			None => Err(GetLastError()),
@@ -67,10 +65,8 @@ impl HINSTANCE {
 	pub fn LoadAccelerators(
 		self, lpTableName: IdStr) -> Result<HACCEL, co::ERROR>
 	{
-		let mut buf16 = Utf16::default();
-
 		match ptr_as_opt!(
-			user32::LoadAcceleratorsW(self.0, lpTableName.as_ptr(&mut buf16))
+			user32::LoadAcceleratorsW(self.0, lpTableName.as_ptr())
 		) {
 			Some(p) => Ok(unsafe { HACCEL::from_ptr(p) }),
 			None => Err(GetLastError()),
@@ -91,11 +87,7 @@ impl HINSTANCE {
 	pub fn LoadCursor(
 		self, lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
 	{
-		let mut buf16 = Utf16::default();
-
-		match ptr_as_opt!(
-			user32::LoadCursorW(self.0, lpCursorName.as_ptr(&mut buf16))
-		) {
+		match ptr_as_opt!(user32::LoadCursorW(self.0, lpCursorName.as_ptr())) {
 			Some(p) => Ok(unsafe { HCURSOR::from_ptr(p) }),
 			None => Err(GetLastError()),
 		}
@@ -115,11 +107,7 @@ impl HINSTANCE {
 	pub fn LoadIcon(
 		self, lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
 	{
-		let mut buf16 = Utf16::default();
-
-		match ptr_as_opt!(
-			user32::LoadIconW(self.0, lpIconName.as_ptr(&mut buf16))
-		) {
+		match ptr_as_opt!(user32::LoadIconW(self.0, lpIconName.as_ptr())) {
 			Some(p) => Ok(unsafe { HICON::from_ptr(p) }),
 			None => Err(GetLastError()),
 		}

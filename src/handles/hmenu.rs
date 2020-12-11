@@ -22,14 +22,12 @@ impl HMENU {
 	pub fn AppendMenu(self, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> Result<(), co::ERROR>
 	{
-		let mut buf16 = Utf16::default();
-
 		match unsafe {
 			user32::AppendMenuW(
 				self.0,
 				uFlags.into(),
 				uIDNewItem.as_ptr(),
-				lpNewItem.as_ptr(&mut buf16),
+				lpNewItem.as_ptr(),
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -145,15 +143,13 @@ impl HMENU {
 	pub fn InsertMenu(self, uPosition: IdPos, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> Result<(), co::ERROR>
 	{
-		let mut buf16 = Utf16::default();
-
 		match unsafe {
 			user32::InsertMenuW(
 				self.0,
 				uPosition.into(),
 				uFlags.into(),
 				uIDNewItem.as_ptr(),
-				lpNewItem.as_ptr(&mut buf16),
+				lpNewItem.as_ptr(),
 			)
 		} {
 			0 => Err(GetLastError()),
