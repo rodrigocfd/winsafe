@@ -393,6 +393,14 @@ impl HWND {
 
 	/// [`InvalidateRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidaterect)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// Most of the time you'll just want update the entire client area:
+	/// ```rust,ignore
+	/// my_window.InvalidateRect(None, true)
+	///   .unwrap();
+	/// ```
 	pub fn InvalidateRect(
 		self, lpRect: Option<&RECT>, bErase: bool) -> Result<(), ()>
 	{
@@ -456,13 +464,22 @@ impl HWND {
 	/// [`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
 	/// method.
 	///
+	/// # Examples
+	///
+	/// A modal message box, which blocks its parent:
+	///
+	/// ```rust,ignore
+	/// my_window.MessageBox("Hello, world", "title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
+	///   .unwrap();
+	/// ```
+	///
 	/// Usually the message box has a valid parent window, however, if for some
 	/// reason you don't have a window to serve as parent, you still can show a
-	/// parent-less message box by retrieving the desktop handle:
+	/// non-modal, parent-less message box by retrieving the desktop handle:
 	///
 	/// ```rust,ignore
 	/// HWND::GetDesktopWindow()
-	///   .MessageBox("Hello, world", "Title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
+	///   .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)
 	///   .unwrap();
 	/// ```
 	pub fn MessageBox(self, lpText: &str,
