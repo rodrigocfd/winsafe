@@ -98,6 +98,8 @@
 pub mod co;
 
 mod ffi;
+
+#[macro_use]
 mod internal_defs;
 
 mod com;

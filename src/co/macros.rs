@@ -1,4 +1,4 @@
-// Declares the type of a constant with some impls.
+/// Declares the type of a constant with some impls.
 macro_rules! const_type {
 	(
 		$name:ident, $num:ty,

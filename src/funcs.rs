@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use std::collections::HashMap;
 use std::ffi::c_void;
 
 use crate::{ATOM, CLSID, GUID, MSG, WNDCLASSEX};
@@ -103,6 +104,39 @@ pub fn GetComputerName() -> Result<String, co::ERROR> {
 	match unsafe { kernel32::GetComputerNameW(buf.as_mut_ptr(), &mut sz) } {
 		0 => Err(GetLastError()),
 		_ => Ok(buf.to_string()),
+	}
+}
+
+/// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw)
+/// function.
+///
+/// Returns the parsed strings, and automatically frees the retrieved
+/// environment block with
+/// [`FreeEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw).
+///
+/// # Examples
+///
+/// Retrieving and printing the key/value pairs of all environment strings:
+/// ```rust,ignore
+/// let env_vars = GetEnvironmentStrings().unwrap();
+/// for (k, v) in env_vars.iter() {
+///   println!("{} = {}", k, v);
+/// }
+/// ```
+pub fn GetEnvironmentStrings() -> Result<HashMap<String, String>, co::ERROR> {
+	match ptr_as_opt!(kernel32::GetEnvironmentStringsW()) {
+		None => Err(GetLastError()),
+		Some(p) => {
+			let envstrs = internal_defs::parse_multi_z_str(p as *const u16);
+			unsafe { kernel32::FreeEnvironmentStringsW(p); }
+
+			let mut map = HashMap::with_capacity(envstrs.len());
+			for envstr in envstrs {
+				let pair: Vec<&str> = envstr.split("=").collect();
+				map.insert(String::from(pair[0]), String::from(pair[1]));
+			}
+			Ok(map)
+		},
 	}
 }
 

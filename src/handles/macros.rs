@@ -1,4 +1,4 @@
-// Declares the type of a handle.
+/// Declares the type of a handle.
 macro_rules! handle_type {
 	(
 		$(#[$attr:meta])*
@@ -27,20 +27,6 @@ macro_rules! handle_type {
 			/// Returns the raw underlying pointer for this handle.
 			pub unsafe fn as_ptr(self) -> HANDLE {
 				self.0
-			}
-		}
-	};
-}
-
-// Transforms a pointer into an option, which is None if the pointer is null.
-// https://stackoverflow.com/q/65144143/6923555
-macro_rules! ptr_as_opt {
-	($ptr:expr) => {
-		unsafe {
-			if $ptr.is_null() {
-				None
-			} else {
-				Some($ptr)
 			}
 		}
 	};
