@@ -2,8 +2,8 @@
 
 use std::ffi::c_void;
 
-use crate::{PPVtbl, Vtbl};
-use crate::IID;
+use crate::com::{PPVtbl, Vtbl};
+use crate::structs::IID;
 
 /// [`IUnknown`](crate::IUnknown) virtual table.
 #[repr(C)]

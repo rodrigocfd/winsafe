@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::ffi::{HANDLE, user32};
-use crate::GetLastError;
+use crate::funcs::GetLastError;
 
 handle_type! {
 	/// Handle to an

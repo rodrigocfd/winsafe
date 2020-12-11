@@ -3,12 +3,12 @@
 use std::collections::HashMap;
 use std::ffi::c_void;
 
-use crate::{ATOM, CLSID, GUID, MSG, WNDCLASSEX};
-use crate::{HINSTANCE, HWND, RECT};
-use crate::{PPVtbl, Vtbl};
 use crate::co;
+use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::{comctl32, kernel32, ole32, user32};
+use crate::handles::{HINSTANCE, HWND};
 use crate::internal_defs::{parse_multi_z_str};
+use crate::structs::{ATOM, CLSID, GUID, MSG, RECT, WNDCLASSEX};
 use crate::Utf16;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)

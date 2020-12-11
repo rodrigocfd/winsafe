@@ -4,20 +4,10 @@
 
 use std::ffi::c_void;
 
-use crate::{HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
+use crate::aliases::WNDPROC;
 use crate::co;
+use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
 use crate::internal_defs::LF_FACESIZE;
-
-/// Type alias to callback function.
-///
-/// Used in:
-/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpfnWndProc`.
-pub type WNDPROC =
-	unsafe extern "system" fn(
-		hWnd: HWND, uMsg: co::WM, wParam: usize, lParam: isize,
-	) -> isize;
-
-//------------------------------------------------------------------------------
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.
@@ -210,6 +200,26 @@ pub struct RECT {
 	pub top: i32,
 	pub right: i32,
 	pub bottom: i32,
+}
+
+/// [`SECURITY_ATTRIBUTES`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct SECURITY_ATTRIBUTES {
+	nLength: u32,
+	pub lpSecurityDescriptor: *mut c_void,
+	pub bInheritHandle: u32,
+}
+
+impl Default for SECURITY_ATTRIBUTES {
+	fn default() -> Self {
+		Self {
+			nLength: std::mem::size_of::<Self>() as u32,
+			lpSecurityDescriptor: std::ptr::null_mut(),
+			..Default::default()
+		}
+	}
 }
 
 /// [`SIZE`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-size)

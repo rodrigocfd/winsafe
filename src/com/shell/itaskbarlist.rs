@@ -1,9 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::{HWND, IID, IUnknown, IUnknownVtbl};
-use crate::{PPVtbl, Vtbl};
 use crate::co::ERROR;
+use crate::com::{IUnknown, IUnknownVtbl, PPVtbl, Vtbl};
 use crate::ffi::HANDLE;
+use crate::handles::HWND;
+use crate::structs::IID;
 
 /// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
 #[repr(C)]

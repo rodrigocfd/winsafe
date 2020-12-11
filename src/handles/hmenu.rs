@@ -1,12 +1,12 @@
 #![allow(non_snake_case)]
 
-use crate::{BitmapPtrStr, IdMenu, IdPos};
-use crate::{MENUINFO, MENUITEMINFO};
 use crate::co;
+use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
 use crate::ffi::{HANDLE, user32};
-use crate::GetLastError;
+use crate::funcs::GetLastError;
+use crate::handles::HWND;
 use crate::internal_defs::{const_void, mut_void};
-use crate::HWND;
+use crate::structs::{MENUINFO, MENUITEMINFO};
 use crate::Utf16;
 
 handle_type! {

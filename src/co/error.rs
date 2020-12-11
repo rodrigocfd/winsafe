@@ -1,9 +1,10 @@
 #![allow(non_snake_case, non_upper_case_globals)]
 
-use crate::{HLOCAL, Utf16};
 use crate::co;
 use crate::ffi::kernel32;
-use crate::GetLastError;
+use crate::funcs::GetLastError;
+use crate::handles::HLOCAL;
+use crate::Utf16;
 
 const_type! { ERROR, u32,
 	/// A Windows

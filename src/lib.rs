@@ -102,6 +102,7 @@ mod ffi;
 #[macro_use]
 mod internal_defs;
 
+mod aliases;
 mod com;
 mod enums;
 mod funcs;
@@ -109,6 +110,7 @@ mod handles;
 mod structs;
 mod utf16;
 
+pub use aliases::*;
 pub use com::*;
 pub use enums::*;
 pub use funcs::*;

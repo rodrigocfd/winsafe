@@ -2,32 +2,15 @@
 
 use std::ffi::c_void;
 
-use crate::{AtomStr, IdMenu};
-use crate::{GetLastError, SetLastError};
-use crate::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
-use crate::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
+use crate::aliases::SUBCLASSPROC;
 use crate::co;
+use crate::enums::{AtomStr, IdMenu, IdPos};
 use crate::ffi::{comctl32, HANDLE, user32};
-use crate::IdPos;
+use crate::funcs::{GetLastError, SetLastError};
+use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
 use crate::internal_defs::{const_void, mut_void};
+use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::Utf16;
-
-/// Type alias to callback function.
-///
-/// Used in:
-/// * [`RemoveWindowSubclass`](crate::HWND::RemoveWindowSubclass) `pfnSubclass`;
-/// * [`SetWindowSubclass`](crate::HWND::SetWindowSubclass) `pfnSubclass`.
-pub type SUBCLASSPROC =
-	unsafe extern "system" fn(
-		hWnd: HWND,
-		uMsg: co::WM,
-		wParam: usize,
-		lParam: isize,
-		uIdSubclass: usize,
-		dwRefData: usize,
-	) -> isize;
-
-//------------------------------------------------------------------------------
 
 handle_type! {
 	/// Handle to a

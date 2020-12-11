@@ -1,11 +1,12 @@
 #![allow(non_snake_case)]
 
-use crate::{ATOM, HACCEL, HCURSOR, HICON, WNDCLASSEX};
-use crate::{IdIdcStr, IdIdiStr, IdStr};
 use crate::co;
+use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{HANDLE, kernel32, user32};
-use crate::GetLastError;
+use crate::funcs::GetLastError;
+use crate::handles::{HACCEL, HCURSOR, HICON};
 use crate::internal_defs::mut_void;
+use crate::structs::{ATOM, WNDCLASSEX};
 use crate::Utf16;
 
 handle_type! {

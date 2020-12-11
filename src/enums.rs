@@ -4,8 +4,9 @@
 
 use std::ffi::c_void;
 
-use crate::{ATOM, HBITMAP, HMENU};
 use crate::co;
+use crate::handles::{HBITMAP, HMENU};
+use crate::structs::ATOM;
 use crate::Utf16;
 
 /// Variant parameter used in window class functions.

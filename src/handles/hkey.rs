@@ -3,8 +3,8 @@
 use std::ffi::c_void;
 
 use crate::co;
+use crate::enums::RegistryValue;
 use crate::ffi::{advapi32, HANDLE};
-use crate::RegistryValue;
 use crate::Utf16;
 
 handle_type! {

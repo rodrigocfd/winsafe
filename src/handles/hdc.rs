@@ -2,7 +2,7 @@
 
 use crate::ffi::{gdi32, HANDLE};
 use crate::internal_defs::{const_void, mut_void};
-use crate::{POINT, SIZE};
+use crate::structs::{POINT, SIZE};
 use crate::Utf16;
 
 handle_type! {

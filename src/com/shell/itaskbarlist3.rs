@@ -2,11 +2,12 @@
 
 use std::ffi::c_void;
 
-use crate::{HWND, IID};
-use crate::{PPVtbl, Vtbl};
 use crate::co::ERROR;
+use crate::com::{PPVtbl, Vtbl};
+use crate::com::shell::{co, ITaskbarList2, ITaskbarList2Vtbl};
 use crate::ffi::HANDLE;
-use crate::shell::{co, ITaskbarList2, ITaskbarList2Vtbl};
+use crate::handles::HWND;
+use crate::structs::IID;
 
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 #[repr(C)]

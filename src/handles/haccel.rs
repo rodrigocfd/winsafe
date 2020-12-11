@@ -1,12 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::ffi::HANDLE;
-
-use crate::ACCEL;
 use crate::co;
-use crate::ffi::user32;
-use crate::GetLastError;
+use crate::ffi::{HANDLE, user32};
+use crate::funcs::GetLastError;
 use crate::internal_defs::mut_void;
+use crate::structs::ACCEL;
 
 handle_type! {
 	/// Handle to an

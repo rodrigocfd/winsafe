@@ -2,7 +2,7 @@
 
 use crate::ffi::{gdi32, HANDLE};
 use crate::internal_defs::const_void;
-use crate::RECT;
+use crate::structs::RECT;
 
 handle_type! {
 	/// Handle to a
