@@ -193,6 +193,19 @@ pub enum RegistryValue {
 }
 
 impl RegistryValue {
+	/// Converts the internal value to a pointer.
+	pub fn as_ptr(&self) -> *const c_void {
+		match self {
+			RegistryValue::Binary(b) => b.as_ptr() as *const c_void,
+			RegistryValue::Dword(n) => *n as *const c_void,
+			RegistryValue::Qword(n) => *n as *const c_void,
+			RegistryValue::Sz(s) => {
+				unsafe { Utf16::from_str(&s).as_ptr() as *const c_void }
+			},
+			RegistryValue::None => std::ptr::null(),
+		}
+	}
+
 	/// Returns the correspondent [`co::REG`](crate::co::REG) constant.
 	pub fn reg_type(&self) -> co::REG {
 		match self {

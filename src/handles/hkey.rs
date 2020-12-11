@@ -255,13 +255,50 @@ impl HKEY {
 					Utf16::from_str(lpSubKey).as_ptr(),
 					Utf16::from_str(lpValueName).as_ptr(),
 					lpData.reg_type().into(),
-					match &lpData {
-						RegistryValue::Binary(b) => b.as_ptr() as *const c_void,
-						RegistryValue::Dword(n) => *n as *const c_void,
-						RegistryValue::Qword(n) => *n as *const c_void,
-						RegistryValue::Sz(s) => Utf16::from_str(&s).as_ptr() as *const c_void,
-						RegistryValue::None => std::ptr::null(),
-					},
+					lpData.as_ptr(),
+					lpData.len() as u32,
+				)
+			}
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegSetValueEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
+	/// method.
+	///
+	/// If the value doesn't exist, if will be created.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	///     "Console\\Git Bash",
+	///     co::REG_OPTION::default(),
+	///     co::KEY::ALL_ACCESS,
+	///   )
+	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///
+	/// hkey.RegSetValueEx(
+	///     "Color",
+	///     RegistryValue::Sz("blue".to_owned()),
+	///   )
+	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///
+	/// hkey.RegCloseKey().unwrap();
+	/// ```
+	pub fn RegSetValueEx(
+		self, lpValueName: &str, lpData: RegistryValue) -> Result<(), co::ERROR>
+	{
+		match co::ERROR::from(
+			unsafe {
+				advapi32::RegSetValueExW(
+					self.0,
+					Utf16::from_str(lpValueName).as_ptr(),
+					0,
+					lpData.reg_type().into(),
+					lpData.as_ptr() as *const u8,
 					lpData.len() as u32,
 				)
 			}
