@@ -114,105 +114,107 @@ impl HKEY {
 		let mut rawDataType: u32 = 0;
 		let mut dataLen: u32 = 0;
 
+		// Query data type and length.
 		match co::ERROR::from(
 			unsafe {
 				advapi32::RegQueryValueExW(
 					self.0,
 					valueName16.as_ptr(),
 					std::ptr::null_mut(),
-					&mut rawDataType, // query data type
+					&mut rawDataType,
 					std::ptr::null_mut(),
-					&mut dataLen, // query data length
+					&mut dataLen,
 				)
 			}
 		) {
-			co::ERROR::SUCCESS => {
-				match co::REG::from(rawDataType) {
-					co::REG::NONE => Ok(RegistryValue::None), // no value to query
-					co::REG::DWORD => {
-						let mut dwordBuf: u32 = 0;
+			co::ERROR::SUCCESS => {},
+			err => return Err(err),
+		}
 
-						match co::ERROR::from(
-							unsafe {
-								advapi32::RegQueryValueExW( // query DWORD value
-									self.0,
-									valueName16.as_ptr(),
-									std::ptr::null_mut(),
-									std::ptr::null_mut(),
-									&mut dwordBuf as *mut u32 as *mut u8,
-									&mut dataLen,
-								)
-							}
-						) {
-							co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
-							err => Err(err),
-						}
-					},
-					co::REG::QWORD => {
-						let mut qwordBuf: u64 = 0;
+		// Retrieve value according to informed data type.
+		match co::REG::from(rawDataType) {
+			co::REG::NONE => Ok(RegistryValue::None), // no value to query
+			co::REG::DWORD => {
+				let mut dwordBuf: u32 = 0;
 
-						match co::ERROR::from(
-							unsafe {
-								advapi32::RegQueryValueExW( // query QWORD value
-									self.0,
-									valueName16.as_ptr(),
-									std::ptr::null_mut(),
-									std::ptr::null_mut(),
-									&mut qwordBuf as *mut u64 as *mut u8,
-									&mut dataLen,
-								)
-							}
-						) {
-							co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
-							err => Err(err),
-						}
-					},
-					co::REG::SZ => {
-						let mut szBuf: Vec<u16> = vec![0; dataLen as usize]; // alloc wchar buffer
-
-						match co::ERROR::from(
-							unsafe {
-								advapi32::RegQueryValueExW( // query string value
-									self.0,
-									valueName16.as_ptr(),
-									std::ptr::null_mut(),
-									std::ptr::null_mut(),
-									&mut szBuf[0] as *mut u16 as *mut u8,
-									&mut dataLen,
-								)
-							}
-						) {
-							co::ERROR::SUCCESS => Ok(
-								RegistryValue::Sz(
-									Utf16::from_utf16_slice(&szBuf).to_string(),
-								),
-							),
-							err => Err(err),
-						}
-					},
-					co::REG::BINARY => {
-						let mut byteBuf: Vec<u8> = vec![0; dataLen as usize]; // alloc byte buffer
-
-						match co::ERROR::from(
-							unsafe {
-								advapi32::RegQueryValueExW( // query binary value
-									self.0,
-									valueName16.as_ptr(),
-									std::ptr::null_mut(),
-									std::ptr::null_mut(),
-									&mut byteBuf[0],
-									&mut dataLen,
-								)
-							}
-						) {
-							co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
-							err => Err(err),
-						}
-					},
-					_ => Ok(RegistryValue::None), // other types not implemented yet
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegQueryValueExW( // query DWORD value
+							self.0,
+							valueName16.as_ptr(),
+							std::ptr::null_mut(),
+							std::ptr::null_mut(),
+							&mut dwordBuf as *mut u32 as *mut u8,
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
+					err => Err(err),
 				}
 			},
-			err => Err(err), // data type/length query failed
+			co::REG::QWORD => {
+				let mut qwordBuf: u64 = 0;
+
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegQueryValueExW( // query QWORD value
+							self.0,
+							valueName16.as_ptr(),
+							std::ptr::null_mut(),
+							std::ptr::null_mut(),
+							&mut qwordBuf as *mut u64 as *mut u8,
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
+					err => Err(err),
+				}
+			},
+			co::REG::SZ => {
+				let mut szBuf: Vec<u16> = vec![0; dataLen as usize]; // alloc wchar buffer
+
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegQueryValueExW( // query string value
+							self.0,
+							valueName16.as_ptr(),
+							std::ptr::null_mut(),
+							std::ptr::null_mut(),
+							&mut szBuf[0] as *mut u16 as *mut u8,
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(
+						RegistryValue::Sz(
+							Utf16::from_utf16_slice(&szBuf).to_string(),
+						),
+					),
+					err => Err(err),
+				}
+			},
+			co::REG::BINARY => {
+				let mut byteBuf: Vec<u8> = vec![0; dataLen as usize]; // alloc byte buffer
+
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegQueryValueExW( // query binary value
+							self.0,
+							valueName16.as_ptr(),
+							std::ptr::null_mut(),
+							std::ptr::null_mut(),
+							&mut byteBuf[0],
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
+					err => Err(err),
+				}
+			},
+			_ => Ok(RegistryValue::None), // other types not implemented yet
 		}
 	}
 }
