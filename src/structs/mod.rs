@@ -1,7 +1,5 @@
 //! Native Win32 structs.
 
-mod const_vals;
-
 mod assorted;
 mod assorted_cc;
 mod guid;

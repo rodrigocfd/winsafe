@@ -98,6 +98,7 @@
 pub mod co;
 
 mod ffi;
+mod internal_defs;
 
 mod com;
 mod enums;

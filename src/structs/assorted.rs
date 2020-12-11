@@ -6,7 +6,7 @@ use std::ffi::c_void;
 
 use crate::{HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
 use crate::co;
-use crate::structs::const_vals;
+use crate::internal_defs;
 
 /// Type alias to callback function.
 ///
@@ -97,7 +97,7 @@ pub struct LOGFONT {
 	pub lfClipPrecision: co::CLIP,
 	pub lfQuality: co::QUALITY,
 	pub lfPitchAndFamily: co::PITCH,
-	pub lfFaceName: [u16; const_vals::LF_FACESIZE],
+	pub lfFaceName: [u16; internal_defs::LF_FACESIZE],
 }
 
 /// [`MENUINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuinfo)
