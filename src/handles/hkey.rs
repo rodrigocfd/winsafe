@@ -184,7 +184,7 @@ impl HKEY {
 						) {
 							co::ERROR::SUCCESS => Ok(
 								RegistryValue::Sz(
-									Utf16::from_utf16_nullt(&szBuf[0]).to_string(),
+									Utf16::from_utf16_slice(&szBuf).to_string(),
 								),
 							),
 							err => Err(err),

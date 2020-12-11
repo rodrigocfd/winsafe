@@ -61,7 +61,7 @@ impl Utf16 {
 	}
 
 	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
-	pub fn from_utf16_nullt(src: *const u16) -> Self {
+	pub fn from_utf16_nullt(src: *const u16) -> Utf16 {
 		if src.is_null() {
 			Self::default()
 		} else {
@@ -70,9 +70,14 @@ impl Utf16 {
 		}
 	}
 
+	/// Creates a new UTF-16 string by copying from a slice.
+	pub fn from_utf16_slice(src: &[u16]) -> Utf16 {
+		Self::from_utf16_nchars(&src[0], src.len())
+	}
+
 	/// Creates a new UTF-16 buffer allocated with an specific length. All UTF-16
 	/// chars will be set to zero.
-	pub fn new_alloc_buffer(num_chars: usize) -> Self {
+	pub fn new_alloc_buffer(num_chars: usize) -> Utf16 {
 		let mut me = Self::default();
 		me.realloc_buffer(num_chars);
 		me
