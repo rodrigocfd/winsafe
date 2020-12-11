@@ -8,7 +8,6 @@ use crate::ffi::HANDLE;
 extern "system" {
 	pub fn FormatMessageW(dwFlags: u32, lpSource: *const c_void, dwMessageId: u32, dwLanguageId: u32, lpBuffer: *mut u16, nSize: u32, Arguments: *const c_void) -> u32;
 	pub fn FreeEnvironmentStringsW(penv: HANDLE) -> u32;
-	pub fn GetComputerNameW(lpBuffer: *mut u16, nSize: *mut u32) -> u32;
 	pub fn GetEnvironmentStringsW() -> HANDLE;
 	pub fn GetLastError() -> u32;
 	pub fn GetModuleHandleW(lpModuleName: *const u16) -> HANDLE;

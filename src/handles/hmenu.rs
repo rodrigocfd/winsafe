@@ -5,7 +5,7 @@ use crate::{MENUINFO, MENUITEMINFO};
 use crate::co;
 use crate::ffi::{HANDLE, user32};
 use crate::GetLastError;
-use crate::handles::macros::{const_void, mut_void};
+use crate::internal_defs::{const_void, mut_void};
 use crate::HWND;
 use crate::Utf16;
 

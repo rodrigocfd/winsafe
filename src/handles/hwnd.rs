@@ -8,8 +8,8 @@ use crate::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
 use crate::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::co;
 use crate::ffi::{comctl32, HANDLE, user32};
-use crate::handles::macros::{const_void, mut_void};
 use crate::IdPos;
+use crate::internal_defs::{const_void, mut_void};
 use crate::Utf16;
 
 /// Type alias to callback function.

@@ -7,8 +7,8 @@ use crate::{ATOM, CLSID, GUID, MSG, WNDCLASSEX};
 use crate::{HINSTANCE, HWND, RECT};
 use crate::{PPVtbl, Vtbl};
 use crate::co;
-use crate::ffi::{advapi32, comctl32, kernel32, ole32, user32};
-use crate::internal_defs;
+use crate::ffi::{comctl32, kernel32, ole32, user32};
+use crate::internal_defs::{parse_multi_z_str};
 use crate::Utf16;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
@@ -95,18 +95,6 @@ pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(lpMsg as *const MSG as *const c_void) }
 }
 
-/// [`GetComputerName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamew)
-/// function.
-pub fn GetComputerName() -> Result<String, co::ERROR> {
-	let mut buf = Utf16::new_alloc_buffer(internal_defs::MAX_COMPUTERNAME_LENGTH + 1);
-	let mut sz: u32 = buf.buffer_size() as u32;
-
-	match unsafe { kernel32::GetComputerNameW(buf.as_mut_ptr(), &mut sz) } {
-		0 => Err(GetLastError()),
-		_ => Ok(buf.to_string()),
-	}
-}
-
 /// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw)
 /// function.
 ///
@@ -127,7 +115,7 @@ pub fn GetEnvironmentStrings() -> Result<HashMap<String, String>, co::ERROR> {
 	match ptr_as_opt!(kernel32::GetEnvironmentStringsW()) {
 		None => Err(GetLastError()),
 		Some(p) => {
-			let envstrs = internal_defs::parse_multi_z_str(p as *const u16);
+			let envstrs = parse_multi_z_str(p as *const u16);
 			unsafe { kernel32::FreeEnvironmentStringsW(p); }
 
 			let mut map = HashMap::with_capacity(envstrs.len());
@@ -175,18 +163,6 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 /// function.
 pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
 	unsafe { user32::GetSystemMetrics(nIndex.into()) }
-}
-
-/// [`GetUserName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
-/// function.
-pub fn GetUserName() -> Result<String, co::ERROR> {
-	let mut buf = Utf16::new_alloc_buffer(internal_defs::UNLEN + 1);
-	let mut sz: u32 = buf.buffer_size() as u32;
-
-	match unsafe { advapi32::GetUserNameW(buf.as_mut_ptr(), &mut sz) } {
-		0 => Err(GetLastError()),
-		_ => Ok(buf.to_string()),
-	}
 }
 
 /// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)

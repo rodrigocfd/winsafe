@@ -6,7 +6,7 @@ use crate::ACCEL;
 use crate::co;
 use crate::ffi::user32;
 use crate::GetLastError;
-use crate::handles::macros::mut_void;
+use crate::internal_defs::mut_void;
 
 handle_type! {
 	/// Handle to an

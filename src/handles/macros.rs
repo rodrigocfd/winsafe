@@ -31,12 +31,3 @@ macro_rules! handle_type {
 		}
 	};
 }
-
-/// Converts a reference to a const void pointer.
-pub fn const_void<T>(val: &T) -> *const std::ffi::c_void {
-	val as *const T as *const std::ffi::c_void
-}
-/// Converts a mut reference to a mut void pointer.
-pub fn mut_void<T>(val: &mut T) -> *mut std::ffi::c_void {
-	val as *mut T as *mut std::ffi::c_void
-}

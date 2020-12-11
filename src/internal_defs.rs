@@ -3,8 +3,6 @@
 use crate::Utf16;
 
 pub const LF_FACESIZE: usize = 0;
-pub const MAX_COMPUTERNAME_LENGTH: usize = 15;
-pub const UNLEN: usize = 256;
 
 /// Transforms a pointer into an option, which is None if the pointer is null.
 ///
@@ -19,6 +17,15 @@ macro_rules! ptr_as_opt {
 			}
 		}
 	};
+}
+
+/// For an argument, converts a reference to a const void pointer.
+pub fn const_void<T>(val: &T) -> *const std::ffi::c_void {
+	val as *const T as *const std::ffi::c_void
+}
+/// For an argument, converts a mut reference to a mut void pointer.
+pub fn mut_void<T>(val: &mut T) -> *mut std::ffi::c_void {
+	val as *mut T as *mut std::ffi::c_void
 }
 
 /// Parses a null-delimited multi-string, which must terminate with two nulls.

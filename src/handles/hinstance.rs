@@ -5,7 +5,7 @@ use crate::{IdIdcStr, IdIdiStr, IdStr};
 use crate::co;
 use crate::ffi::{HANDLE, kernel32, user32};
 use crate::GetLastError;
-use crate::handles::macros::mut_void;
+use crate::internal_defs::mut_void;
 use crate::Utf16;
 
 handle_type! {
