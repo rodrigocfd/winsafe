@@ -8,7 +8,7 @@ const_type! { WA, i32,
 }
 
 const_type! { WH, i32,
-	/// [`SetWindowsHookEx`](crate::SetWindowsHookEx) `idHook`.
+	/// [`SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook`.
 
 	MSGFILTER, -1
 	JOURNALRECORD, 0

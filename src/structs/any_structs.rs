@@ -39,6 +39,33 @@ impl ATOM {
 	}
 }
 
+/// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
+/// struct;
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct BITMAPINFOHEADER {
+	pub biSize: u32,
+	pub biWidth: i32,
+	pub biHeight: i32,
+	pub biPlanes: u16,
+	pub biBitCount: u16,
+	pub biCompression: co::BI,
+	pub biSizeImage: u32,
+	pub biXPelsPerMeter: i32,
+	pub biYPelsPerMeter: i32,
+	pub biClrUsed: u32,
+	pub biClrImportant: u32,
+}
+
+impl Default for BITMAPINFOHEADER {
+	fn default() -> Self {
+		Self {
+			biSize: std::mem::size_of::<Self>() as u32,
+			..Default::default()
+		}
+	}
+}
+
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
 /// struct.
 #[repr(C)]

@@ -1,5 +1,5 @@
 const_type! { GA, u32,
-	/// [`GetAncestor`](crate::HWND:GetAncestor) `gaFlags`.
+	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags`.
 
 	PARENT, 1
 	ROOOT, 2

@@ -82,6 +82,7 @@ extern "system" {
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: *const c_void) -> u32;
+	pub fn SetWindowsHookExW(idHook: i32, lpfn: *const c_void, hmod: HANDLE, dwThreadId: u32) -> HANDLE;
 	pub fn SetWindowTextW(hWnd: HANDLE, lpString: *const u16) -> u32;
 	pub fn ShowWindow(hWnd: HANDLE, nCmdShow: i32) -> u32;
 	pub fn TrackPopupMenu(hMenu: HANDLE, uFlags: u32, x: i32, y: i32, nReserved: i32, hWnd: HANDLE, prcRect: *const c_void) -> i32;

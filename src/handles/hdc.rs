@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::ffi::{gdi32, HANDLE};
 use crate::internal_defs::{const_void, mut_void};
 use crate::structs::{POINT, SIZE};
@@ -131,6 +132,15 @@ impl HDC {
 		match unsafe { gdi32::SaveDC(self.0) } {
 			0 => Err(()),
 			id => Ok(id),
+		}
+	}
+
+	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
+	/// method
+	pub fn SetBkMode(self, mode: co::BKMODE) -> Result<co::BKMODE, ()> {
+		match unsafe { gdi32::SetBkMode(self.0, mode.into()) } {
+			0 => Err(()),
+			bk => Ok(co::BKMODE::from(bk)),
 		}
 	}
 }

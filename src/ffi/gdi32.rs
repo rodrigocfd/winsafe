@@ -20,4 +20,5 @@ extern "system" {
 	pub fn RestoreDC(hdc: HANDLE, nSavedDC: i32) -> i32;
 	pub fn RoundRect(hdc: HANDLE, left: i32, top: i32, right: i32, bottom: i32, width: i32, height: i32) -> u32;
 	pub fn SaveDC(hdc: HANDLE) -> i32;
+	pub fn SetBkMode(hdc: HANDLE, mode: i32) -> i32;
 }
