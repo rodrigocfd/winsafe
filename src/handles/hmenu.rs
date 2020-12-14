@@ -7,7 +7,6 @@ use crate::funcs::GetLastError;
 use crate::handles::HWND;
 use crate::internal_defs::{const_void, mut_void};
 use crate::structs::{MENUINFO, MENUITEMINFO};
-use crate::Utf16;
 
 handle_type! {
 	/// Handle to a
