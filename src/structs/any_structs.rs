@@ -44,7 +44,7 @@ impl ATOM {
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct BITMAPINFOHEADER {
-	pub biSize: u32,
+	biSize: u32,
 	pub biWidth: i32,
 	pub biHeight: i32,
 	pub biPlanes: u16,
@@ -173,12 +173,12 @@ impl Default for MENUITEMINFO {
 #[repr(C)]
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct MSG {
-	hwnd: HWND,
-	message: co::WM,
-	wParam: usize,
-	lParam: isize,
-	time: u32,
-	pt: POINT,
+	pub hwnd: HWND,
+	pub message: co::WM,
+	pub wParam: usize,
+	pub lParam: isize,
+	pub time: u32,
+	pub pt: POINT,
 	lPrivate: u32,
 }
 
@@ -204,9 +204,9 @@ pub struct PAINTSTRUCT {
 	pub hdc: HDC,
 	pub fErase: u32,
 	pub rcPaint: RECT,
-	pub fRestore: u32,
-	pub fIncUpdate: u32,
-	pub rgbReserved: [u8; 32],
+	fRestore: u32,
+	fIncUpdate: u32,
+	rgbReserved: [u8; 32],
 }
 
 /// [`POINT`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point)
