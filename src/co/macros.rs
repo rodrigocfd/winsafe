@@ -7,7 +7,7 @@ macro_rules! const_type {
 	) => {
 		$(#[$attr])*
 		#[repr(C)]
-		#[derive(Default, Copy, Clone, Debug, Eq, PartialEq)]
+		#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
 		pub struct $name(pub(super) $num); // so it's possible to build consts from other types
 
 		// Conversions from/to underlying number.
