@@ -5,6 +5,7 @@ use std::ffi::c_void;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::{advapi32, HANDLE};
+use crate::internal_defs::mut_void;
 use crate::Utf16;
 
 handle_type! {
@@ -43,6 +44,151 @@ impl HKEY {
 		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.0) }) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
+		}
+	}
+
+	/// [`RegGetValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
+	/// method.
+	///
+	/// The data type will be automatically queried with a first call to `RegGetValue`.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// let val = HKEY::CURRENT_USER.RegGetValue(
+	///     "Control Panel\\Mouse",
+	///     "Beep",
+	///   )
+	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///
+	/// match val {
+	///   RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///   RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///   RegistryValue::Sz(str) => println!("String: {}", str),
+	///   RegistryValue::Binary(bin) => {
+	///     println!("Binary:");
+	///     for b in bin.iter() {
+	///       print!("{:02x} ", b);
+	///     }
+	///     println!("");
+	///   },
+	///   _ => {},
+	/// }
+	/// ```
+	pub fn RegGetValue(
+		self, lpSubKey: &str, lpValue: &str) -> Result<RegistryValue, co::ERROR>
+	{
+		let subKey16 = Utf16::from_str(lpSubKey);
+		let valueName16 = Utf16::from_str(lpValue);
+		let mut rawDataType: u32 = 0;
+		let mut dataLen: u32 = 0;
+
+		// Query data type and length.
+		match co::ERROR::from(
+			unsafe {
+				advapi32::RegGetValueW(
+					self.0,
+					subKey16.as_ptr(),
+					valueName16.as_ptr(),
+					(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
+					&mut rawDataType,
+					std::ptr::null_mut(),
+					&mut dataLen,
+				)
+			}
+		) {
+			co::ERROR::SUCCESS => {},
+			err => return Err(err),
+		}
+
+		// Retrieve value according to informed data type.
+		match co::REG::from(rawDataType) {
+			co::REG::NONE => Ok(RegistryValue::None), // no value to query
+			co::REG::DWORD => {
+				let mut dwordBuf: u32 = 0;
+
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegGetValueW( // query DWORD value
+							self.0,
+							subKey16.as_ptr(),
+							valueName16.as_ptr(),
+							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
+							std::ptr::null_mut(),
+							mut_void(&mut dwordBuf),
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
+					err => Err(err),
+				}
+			},
+			co::REG::QWORD => {
+				let mut qwordBuf: u64 = 0;
+
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegGetValueW( // query QWORD value
+							self.0,
+							subKey16.as_ptr(),
+							valueName16.as_ptr(),
+							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
+							std::ptr::null_mut(),
+							mut_void(&mut qwordBuf),
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
+					err => Err(err),
+				}
+			},
+			co::REG::SZ => {
+				let mut szBuf: Vec<u16> = vec![0; dataLen as usize]; // alloc wchar buffer
+
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegGetValueW( // query string value
+							self.0,
+							subKey16.as_ptr(),
+							valueName16.as_ptr(),
+							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
+							std::ptr::null_mut(),
+							szBuf.as_mut_ptr() as *mut c_void,
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(
+						RegistryValue::Sz(
+							Utf16::from_utf16_slice(&szBuf).to_string(),
+						),
+					),
+					err => Err(err),
+				}
+			},
+			co::REG::BINARY => {
+				let mut byteBuf: Vec<u8> = vec![0; dataLen as usize]; // alloc byte buffer
+
+				match co::ERROR::from(
+					unsafe {
+						advapi32::RegGetValueW( // query binary value
+							self.0,
+							subKey16.as_ptr(),
+							valueName16.as_ptr(),
+							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
+							std::ptr::null_mut(),
+							byteBuf.as_mut_ptr() as *mut c_void,
+							&mut dataLen,
+						)
+					}
+				) {
+					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
+					err => Err(err),
+				}
+			},
+			_ => Ok(RegistryValue::None), // other types not implemented yet
 		}
 	}
 
