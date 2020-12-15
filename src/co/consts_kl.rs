@@ -173,22 +173,66 @@ impl LANG {
 	}
 }
 
-const_type! { FW, u32,
-	/// [`LOGFONT`](crate::LOGFONT) `lfWeight`.
+const_type! { LVCFMT, i32,
+	/// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
+	/// `piColFmt`.
 
-	DONTCARE, 0
-	THIN, 100
-	EXTRALIGHT, 200
-	ULTRALIGHT, Self::EXTRALIGHT.0
-	LIGHT, 300
-	NORMAL, 400
-	REGULAR, 400
-	MEDIUM, 500
-	SEMIBOLD, 600
-	DEMIBOLD, Self::SEMIBOLD.0
-	BOLD, 700
-	EXTRABOLD, 800
-	ULTRABOLD, Self::EXTRABOLD.0
-	HEAVY, 900
-	BLACK, Self::HEAVY.0
+	LEFT, 0x0000
+	RIGHT, 0x0001
+	CENTER, 0x0002
+	JUSTIFYMASK, 0x0003
+
+	IMAGE, 0x0800
+	BITMAP_ON_RIGHT, 0x1000
+	COL_HAS_IMAGES, 0x8000
+
+	FIXED_WIDTH, 0x00100
+	NO_DPI_SCALE, 0x40000
+	FIXED_RATIO, 0x80000
+
+	LINE_BREAK, 0x100000
+	FILL, 0x200000
+	WRAP, 0x400000
+	NO_TITLE, 0x800000
+	TILE_PLACEMENTMASK, Self::LINE_BREAK.0 | Self::FILL.0
+
+	SPLITBUTTON, 0x1000000
+}
+
+const_type! { LVIS, u32,
+	/// ListView item
+	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states).
+
+	NONE, 0
+	FOCUSED, 0x0001
+	SELECTED, 0x0002
+	CUT, 0x0004
+	DROPHILITED, 0x0008
+	GLOW, 0x0010
+	ACTIVATING, 0x0020
+	OVERLAYMASK, 0x0f00
+	STATEIMAGEMASK, 0xf000
+}
+
+const_type! { LVI_GROUPID, i32,
+	/// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
+	/// `iGroupId`.
+
+	I_GROUPIDCALLBACK, -1
+	I_GROUPIDNONE, -2
+}
+
+const_type! { LVIF, u32,
+	/// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
+	/// `mask`.
+
+	COLFMT, 0x00010000
+	COLUMNS, 0x00000200
+	GROUPID, 0x00000100
+	IMAGE, 0x00000002
+	INDENT, 0x00000010
+	NORECOMPUTE, 0x00000800
+	PARAM, 0x00000004
+	STATE, 0x00000008
+	TEXT, 0x00000001
 }

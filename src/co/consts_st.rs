@@ -1,5 +1,15 @@
 use crate::co;
 
+const_type! { SIZE, i32,
+	/// [`WM_SIZE`](crate::params::WmSize) request.
+
+	RESTORED, 0
+	MINIMIZED, 1
+	MAXIMIZED, 2
+	MAXSHOW, 3
+	MAXHIDE, 4
+}
+
 const_type! { STANDARD_RIGHTS, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`.
 

@@ -1,5 +1,3 @@
-//! Variant types needed for some Win32 functions.
-
 #![allow(non_snake_case)]
 
 use std::ffi::c_void;
