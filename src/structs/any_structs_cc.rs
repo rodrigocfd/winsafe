@@ -38,6 +38,33 @@ impl Default for LVITEM {
 	}
 }
 
+/// [`NMCHAR`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmchar)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct NMCHAR {
+	pub hdr: NMHDR,
+	pub ch: u32,
+	pub dwItemPrev: u32,
+	pub dwItemNext: u32,
+}
+
+/// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct NMITEMACTIVATE {
+	pub hdr: NMHDR,
+	pub iItem: i32,
+	pub iSubItem: i32,
+	pub uNewState: co::LVIS,
+	pub uOldState: co::LVIS,
+	pub uChanged: co::LVIF,
+	pub ptAction: POINT,
+	pub lParam: isize,
+	pub uKeyFlags: co::LVKF,
+}
+
 /// [`NMLISTVIEW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlistview)
 /// struct.
 #[repr(C)]

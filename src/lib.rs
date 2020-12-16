@@ -2,9 +2,8 @@
 //! [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) bindings, in
 //! idiomatic Rust.
 //!
-//! This crate intends to cover the most important parts of the Windows API, but
-//! due to its hugeness, it will probably remain as a work-in-progress for a
-//! while.
+//! This crate intends to cover the most important parts of the Windows API,
+//! because the whole API is too huge.
 //!
 //! # Functions
 //!
@@ -40,7 +39,10 @@
 //! belong to a type called [`MB`](crate::co::MB). These types implement bitwise
 //! operator traits, like
 //! [`BirOr`](https://doc.rust-lang.org/std/ops/trait.BitOr.html) and
-//! [`BitAnd`](https://doc.rust-lang.org/std/ops/trait.BitAnd.html).
+//! [`BitAnd`](https://doc.rust-lang.org/std/ops/trait.BitAnd.html). They also
+//! implement [`From`](https://doc.rust-lang.org/std/convert/trait.From.html)
+//! trait conversions for the underlying integer type – usually `u32`, but it
+//! varies.
 //!
 //! Typed constants are used in function arguments and also in struct fields.
 //! For example, struct [`WNDCLASSEX`](crate::WNDCLASSEX) has a `style` field
@@ -65,7 +67,7 @@
 //! `ERROR` implements `From<u32>` trait, which allows you to retrieve the
 //! numeric error code.
 //!
-//! No WinSafe function will panic.
+//! No WinSafe function itself will panic.
 //!
 //! # Text encoding
 //!
@@ -77,7 +79,8 @@
 //! about [`OsString`](https://doc.rust-lang.org/std/ffi/struct.OsString.html)
 //! or any low-level conversion.
 //!
-//! However, if you still need any kind of string conversion, you can use the
+//! However, there are cases where a string conversion is still needed, like
+//! when dealing with native Win32 structs. In such cases, you can use the
 //! [`Utf16`](crate::Utf16) struct, which is also capable of working as a buffer
 //! to receive text from Win32 calls.
 //!
@@ -101,6 +104,8 @@ mod ffi;
 
 #[macro_use]
 mod internal_defs;
+
+pub mod msg;
 
 mod aliases;
 mod com;

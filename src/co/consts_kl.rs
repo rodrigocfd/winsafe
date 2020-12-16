@@ -236,3 +236,12 @@ const_type! { LVIF, u32,
 	STATE, 0x00000008
 	TEXT, 0x00000001
 }
+
+const_type! { LVKF, u32,
+	/// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
+	/// `uKeyFlags`.
+
+	ALT, 0x0001
+	CONTROL, 0x0002
+	SHIFT, 0x0004
+}

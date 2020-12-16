@@ -29,7 +29,7 @@ impl AtomStr {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter used in menu functions.
+/// Variant parameter used in [menu](crate::HMENU) methods.
 ///
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`;
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `lpNewItem`.
@@ -93,7 +93,7 @@ impl IdIdiStr {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter used in menu functions.
+/// Variant parameter used in [menu](crate::HMENU) methods.
 ///
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
@@ -117,7 +117,7 @@ impl IdMenu {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter used in menu functions.
+/// Variant parameter used in [menu](crate::HMENU) methods.
 ///
 /// * [`CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
 /// * [`DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;

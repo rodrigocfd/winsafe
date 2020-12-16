@@ -130,8 +130,10 @@ const_type! { MNS, u32,
 }
 
 const_type! { NM, i32,
-	/// Common control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications).
+	/// Notifications for:
+	///
+	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications);
+	/// * [ListView](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
 
 	OUTOFMEMORY, Self::FIRST.0 - 1
 	CLICK, Self::FIRST.0 - 2
@@ -152,7 +154,36 @@ const_type! { NM, i32,
 	LDOWN, Self::FIRST.0 - 20
 	RDOWN, Self::FIRST.0 - 21
 	THEMECHANGED, Self::FIRST.0 - 22
+
+	LVN_ITEMCHANGING, Self::LVN_FIRST.0 - 0
+	LVN_ITEMCHANGED, Self::LVN_FIRST.0 - 1
+	LVN_INSERTITEM, Self::LVN_FIRST.0 - 2
+	LVN_DELETEITEM, Self::LVN_FIRST.0 - 3
+	LVN_DELETEALLITEMS, Self::LVN_FIRST.0 - 4
+	LVN_BEGINLABELEDIT, Self::LVN_FIRST.0 - 75
+	LVN_ENDLABELEDIT, Self::LVN_FIRST.0 - 76
+	LVN_COLUMNCLICK, Self::LVN_FIRST.0 - 8
+	LVN_BEGINDRAG, Self::LVN_FIRST.0 - 9
+	LVN_BEGINRDRAG, Self::LVN_FIRST.0 - 11
+	LVN_ODCACHEHINT, Self::LVN_FIRST.0 - 13
+	LVN_ODFINDITEM, Self::LVN_FIRST.0 - 79
+	LVN_ITEMACTIVATE, Self::LVN_FIRST.0 - 14
+	LVN_ODSTATECHANGED, Self::LVN_FIRST.0 - 15
+	LVN_HOTTRACK, Self::LVN_FIRST.0 - 21
+	LVN_GETDISPINFO, Self::LVN_FIRST.0 - 77
+	LVN_SETDISPINFO, Self::LVN_FIRST.0 - 78
+	LVN_KEYDOWN, Self::LVN_FIRST.0 - 55
+	LVN_MARQUEEBEGIN, Self::LVN_FIRST.0 - 56
+	LVN_GETINFOTIP, Self::LVN_FIRST.0 - 58
+	LVN_INCREMENTALSEARCH, Self::LVN_FIRST.0 - 63
+	LVN_COLUMNDROPDOWN, Self::LVN_FIRST.0 - 64
+	LVN_COLUMNOVERFLOWCLICK, Self::LVN_FIRST.0 - 66
+	LVN_BEGINSCROLL, Self::LVN_FIRST.0 - 80
+	LVN_ENDSCROLL, Self::LVN_FIRST.0 - 81
+	LVN_LINKCLICK, Self::LVN_FIRST.0 - 84
+	LVN_GETEMPTYMARKUP, Self::LVN_FIRST.0 - 87
 }
 impl NM {
 	const FIRST: Self = Self(0);
+	const LVN_FIRST: Self = Self(-100);
 }

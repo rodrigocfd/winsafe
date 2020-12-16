@@ -95,7 +95,7 @@ pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(lpMsg as *const MSG as *const c_void) }
 }
 
-/// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw)
+/// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
 /// function.
 ///
 /// Returns the parsed strings, and automatically frees the retrieved

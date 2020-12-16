@@ -295,7 +295,7 @@ impl HWND {
 	/// The passed buffer will be automatically allocated with
 	/// [`GetWindowTextLength`](crate::HWND::GetWindowTextLength).
 	///
-	/// This method is more performant than
+	/// This method can be more performant than
 	/// [`GetWindowTextStr`](crate::HWND::GetWindowTextStr) because the buffer
 	/// can be reused, avoiding multiple allocations. However, it has the
 	/// inconvenient of the manual conversion from `Utf16` to `String`.

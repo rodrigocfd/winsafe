@@ -8,7 +8,7 @@ macro_rules! const_type {
 		$(#[$attr])*
 		#[repr(C)]
 		#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
-		pub struct $name(pub(super) $num); // so it's possible to build consts from other types
+		pub struct $name(pub(super) $num); // pub(super) so the .0 is visible in all const files
 
 		// Conversions from/to underlying number.
 		impl From<$num> for $name {
