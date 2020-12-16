@@ -7,7 +7,9 @@ use crate::handles::{HBITMAP, HMENU};
 use crate::structs::ATOM;
 use crate::Utf16;
 
-/// Variant parameter used in window class functions.
+/// Variant parameter used in
+/// [window class](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-classes)
+/// functions.
 ///
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.

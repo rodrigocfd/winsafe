@@ -19,11 +19,11 @@ macro_rules! ptr_as_opt {
 	};
 }
 
-/// For an argument, converts a reference to a const void pointer.
+/// Converts a reference to a const void pointer.
 pub fn const_void<T>(val: &T) -> *const std::ffi::c_void {
 	val as *const T as *const std::ffi::c_void
 }
-/// For an argument, converts a mut reference to a mut void pointer.
+/// Converts a mut reference to a mut void pointer.
 pub fn mut_void<T>(val: &mut T) -> *mut std::ffi::c_void {
 	val as *mut T as *mut std::ffi::c_void
 }

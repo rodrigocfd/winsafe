@@ -379,7 +379,8 @@ impl HKEY {
 	/// [`RegSetKeyValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
 	/// method.
 	///
-	/// If the value doesn't exist, if will be created.
+	/// If the value doesn't exist, if will be created. If new type is different
+	/// from current type, new type will prevail.
 	///
 	/// # Examples
 	///
@@ -414,7 +415,8 @@ impl HKEY {
 	/// [`RegSetValueEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
 	/// method.
 	///
-	/// If the value doesn't exist, if will be created.
+	/// If the value doesn't exist, if will be created. If new type is different
+	/// from current type, new type will prevail.
 	///
 	/// # Examples
 	///
