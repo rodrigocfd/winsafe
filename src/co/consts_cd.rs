@@ -66,7 +66,7 @@ const_type! { CLSCTX, u32,
 }
 
 const_type! { CMD, u16,
-	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// [`WM_COMMAND`](crate::msg::WmCommand)
 	/// notifications for:
 	///
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);

@@ -1,5 +1,5 @@
-const_type! { WA, i32,
-	/// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
+const_type! { WA, u16,
+	/// [`WM_ACTIVATE`](crate::msg::WmActivate)
 	/// activation state.
 
 	INACTIVE, 0
@@ -25,6 +25,20 @@ const_type! { WH, i32,
 	CALLWNDPROCRET, 12
 	KEYBOARD_LL, 13
 	MOUSE_LL, 14
+}
+
+const_type! { WMSZ, i32,
+	/// [`WM_SIZING`](crate::msg::WmSizing)
+	/// window edge.
+
+	LEFT, 1
+	RIGHT, 2
+	TOP, 3
+	TOPLEFT, 4
+	TOPRIGHT, 5
+	BOTTOM, 6
+	BOTTOMLEFT, 7
+	BOTTOMRIGHT, 8
 }
 
 const_type! { WS, u32,

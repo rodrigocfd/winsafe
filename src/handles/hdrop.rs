@@ -17,6 +17,16 @@ impl HDROP {
 	/// [`DragQueryFile`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
 	/// repeatedly to retrieve all files, then calls
 	/// [`DragFinish`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish).
+	///
+	/// # Examples
+	///
+	/// Retrieve all files at once:
+	/// ```rust.ignore
+	/// let files = hdrop.DragQueryFile().unwrap();
+	/// for f in files.iter() {
+	///   println!("File path: {}", f);
+	/// }
+	/// ```
 	pub fn DragQueryFile(&self) -> Result<Vec<String>, ()> {
 		let count = unsafe {
 			shell32::DragQueryFileW(self.0, 0xffff_ffff, std::ptr::null_mut(), 0)

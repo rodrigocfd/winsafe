@@ -32,8 +32,8 @@ pub struct WmNotify<'a> {
 }
 
 impl<'a> From<WmNotify<'a>> for msg::WmAny {
-	fn from(p: WmNotify) -> msg::WmAny {
-		msg::WmAny {
+	fn from(p: WmNotify) -> Self {
+		Self {
 			msg: co::WM::NOTIFY,
 			wparam: unsafe { p.nmhdr.hwndFrom.as_ptr() } as usize,
 			lparam: p.nmhdr as *const NMHDR as isize,
@@ -42,8 +42,8 @@ impl<'a> From<WmNotify<'a>> for msg::WmAny {
 }
 
 impl<'a> From<msg::WmAny> for WmNotify<'a> {
-	fn from(p: msg::WmAny) -> WmNotify<'a> {
-		WmNotify {
+	fn from(p: msg::WmAny) -> Self {
+		Self {
 			nmhdr: unsafe { (p.lparam as *const NMHDR).as_ref() }.unwrap(),
 		}
 	}

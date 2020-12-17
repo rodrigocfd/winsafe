@@ -1,6 +1,9 @@
 //! Parameters of
 //! [window messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
 
+#[macro_use]
+mod macros;
+
 mod wm_any;
 mod wm_notify;
 mod wm_structs;
