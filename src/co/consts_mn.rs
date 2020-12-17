@@ -130,9 +130,11 @@ const_type! { MNS, u32,
 }
 
 const_type! { NM, i32,
-	/// Notifications for:
+	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
+	/// notifications for:
 	///
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications);
+	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
 	/// * [ListView](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
 
 	OUTOFMEMORY, Self::FIRST.0 - 1
@@ -154,6 +156,9 @@ const_type! { NM, i32,
 	LDOWN, Self::FIRST.0 - 20
 	RDOWN, Self::FIRST.0 - 21
 	THEMECHANGED, Self::FIRST.0 - 22
+
+	BCN_HOTITEMCHANGE, Self::BCN_FIRST.0 + 0x0001
+	BCN_DROPDOWN, Self::BCN_FIRST.0 + 0x0002
 
 	LVN_ITEMCHANGING, Self::LVN_FIRST.0 - 0
 	LVN_ITEMCHANGED, Self::LVN_FIRST.0 - 1
@@ -185,5 +190,6 @@ const_type! { NM, i32,
 }
 impl NM {
 	const FIRST: Self = Self(0);
+	const BCN_FIRST: Self = Self(-1250);
 	const LVN_FIRST: Self = Self(-100);
 }

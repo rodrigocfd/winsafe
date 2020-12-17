@@ -1,3 +1,5 @@
+#![allow(non_upper_case_globals)]
+
 const_type! { CHARSET, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfCharset`.
 
@@ -61,6 +63,49 @@ const_type! { CLSCTX, u32,
 	ACTIVATE_AAA_AS_IU, 0x800000
 	ACTIVATE_ARM32_SERVER, 0x2000000
 	PS_DLL, 0x80000000
+}
+
+const_type! { CMD, u16,
+	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// notifications for:
+	///
+	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
+	/// * [ComboBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications);
+	/// * [list box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
+
+	Menu, 0
+	Accelerator, 1
+
+	BN_CLICKED, 0
+	BN_PAINT, 1
+	BN_HILITE, 2
+	BN_UNHILITE, 3
+	BN_DISABLE, 4
+	BN_DOUBLECLICKED, 5
+	BN_PUSHED, Self::BN_HILITE.0
+	BN_UNPUSHED, Self::BN_UNHILITE.0
+	BN_DBLCLK, Self::BN_DOUBLECLICKED.0
+	BN_SETFOCUS, 6
+	BN_KILLFOCUS, 7
+
+	CBN_ERRSPACE, (0 - 1) as u16
+	CBN_SELCHANGE, 1
+	CBN_DBLCLK, 2
+	CBN_SETFOCUS, 3
+	CBN_KILLFOCUS, 4
+	CBN_EDITCHANGE, 5
+	CBN_EDITUPDATE, 6
+	CBN_DROPDOWN, 7
+	CBN_CLOSEUP, 8
+	CBN_SELENDOK, 9
+	CBN_SELENDCANCEL, 10
+
+	LBN_ERRSPACE, (0 -2) as u16
+	LBN_SELCHANGE, 1
+	LBN_DBLCLK, 2
+	LBN_SELCANCEL, 3
+	LBN_SETFOCUS, 4
+	LBN_KILLFOCUS, 5
 }
 
 const_type! { COINIT, u32,

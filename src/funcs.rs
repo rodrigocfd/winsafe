@@ -165,6 +165,18 @@ pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
 	unsafe { user32::GetSystemMetrics(nIndex.into()) }
 }
 
+/// [`HIBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
+/// function. Originally a macro.
+pub fn HIBYTE(v: u16) -> u8 {
+	(v >> 8 & 0xff) as u8
+}
+
+/// [`HIWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
+/// function. Originally a macro.
+pub fn HIWORD(v: u32) -> u16 {
+	(v >> 16 & 0xffff) as u16
+}
+
 /// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
 /// function.
 pub fn InitCommonControls() {
@@ -186,8 +198,36 @@ pub fn IsGUIThread(bConvert: bool) -> Result<bool, co::ERROR> {
 	}
 }
 
+/// [`LOBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
+/// function. Originally a macro.
+pub fn LOBYTE(v: u16) -> u8 {
+	(v & 0xff) as u8
+}
+
+/// [`LOWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))
+/// function. Originally a macro.
+pub fn LOWORD(v: u32) -> u16 {
+	(v & 0xffff) as u16
+}
+
+/// Function that implements
+/// [`MAKELONG`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632660(v=vs.85)),
+/// [`MAKEWPARAM`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makewparam),
+/// and
+/// [`MAKELPARAM`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makelparam)
+/// macros.
+pub fn MAKEDWORD(lo: u16, hi: u16) -> u32 {
+	((lo as u32 & 0xffff) | ((hi as u32 & 0xffff) << 16)) as u32
+}
+
+/// [`MAKEWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
+/// function. Originally a macro.
+pub fn MAKEWORD(lo: u8, hi: u8) -> u16 {
+	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16
+}
+
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
-/// function
+/// function.
 pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
 	wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: co::PM) -> bool
 {

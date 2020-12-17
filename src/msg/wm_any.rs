@@ -7,6 +7,7 @@ use crate::msg;
 /// [window messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
 pub enum Wm<'a> {
 	Close(msg::WmClose),
+	Command(msg::WmCommand),
 	Create(msg::WmCreate<'a>),
 	InitDialog(msg::WmInitDialog),
 	Notify(msg::WmNotify<'a>),
@@ -15,6 +16,7 @@ pub enum Wm<'a> {
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
 /// parameters.
+#[derive(Copy, Clone)]
 pub struct WmAny {
 	pub msg: co::WM,
 	pub wparam: usize,
@@ -22,6 +24,8 @@ pub struct WmAny {
 }
 
 impl WmAny {
+	/// Returns a [`Wm`](crate::msg::Wm) enum, which can be matched to identify
+	/// the exact message type.
 	pub fn message<'a>(self) -> Wm<'a> {
 		match self.msg {
 			co::WM::CLOSE => Wm::Close(self.into()),

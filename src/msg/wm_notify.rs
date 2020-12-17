@@ -42,6 +42,8 @@ macro_rules! ref_hdr {
 }
 
 impl<'a> WmNotify<'a> {
+	/// Returns a [`Nm`](crate::msg::Nm) enum, which can be matched to identify
+	/// the exact notification type.
 	pub fn notification<'b>(self) -> Nm<'b> {
 		match self.nmhdr.code {
 			co::NM::CHAR => Nm::Char(ref_hdr!(self, NMCHAR)),

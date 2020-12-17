@@ -88,19 +88,6 @@ const_type! { APPCOMMAND, i16,
 	DWM_FLIP3D, 54
 }
 
-const_type! { BCN, i32,
-	/// Button control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
-	/// sent via
-	/// [WM_NOTIFY](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
-
-	HOTITEMCHANGE, Self::FIRST.0 + 0x0001
-	DROPDOWN, Self::FIRST.0 + 0x0002
-}
-impl BCN {
-	const FIRST: Self = Self(-1250);
-}
-
 const_type! { BI, u32,
 	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression`.
 
@@ -132,25 +119,6 @@ const_type! { BM, u32,
 	GETIMAGE, 0x00f6
 	SETIMAGE, 0x00f7
 	SETDONTCLICK, 0x00f8
-}
-
-const_type! { BN, i32,
-	/// Button control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications),
-	/// sent via
-	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command).
-
-	CLICKED, 0
-	PAINT, 1
-	HILITE, 2
-	UNHILITE, 3
-	DISABLE, 4
-	DOUBLECLICKED, 5
-	PUSHED, Self::HILITE.0
-	UNPUSHED, Self::UNHILITE.0
-	DBLCLK, Self::DOUBLECLICKED.0
-	SETFOCUS, 6
-	KILLFOCUS, 7
 }
 
 const_type! { BS, u32,
