@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::HWND;
+use crate::handles::{HDROP, HWND};
 use crate::msg::WmAny;
 use crate::structs::CREATESTRUCT;
 
@@ -77,6 +77,31 @@ impl<'a> From<WmAny> for WmCreate<'a> {
 	fn from(p: WmAny) -> WmCreate<'a> {
 		WmCreate {
 			createstruct: unsafe { (p.lparam as *const CREATESTRUCT).as_ref() }.unwrap(),
+		}
+	}
+}
+
+/// [`WM_DROPFILES`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
+/// message parameters.
+#[derive(Copy, Clone)]
+pub struct WmDropFiles {
+	pub hdrop: HDROP,
+}
+
+impl From<WmDropFiles> for WmAny {
+	fn from(p: WmDropFiles) -> WmAny {
+		WmAny {
+			msg: co::WM::DROPFILES,
+			wparam: unsafe { p.hdrop.as_ptr() } as usize,
+			lparam: 0,
+		}
+	}
+}
+
+impl From<WmAny> for WmDropFiles {
+	fn from(p: WmAny) -> WmDropFiles {
+		WmDropFiles {
+			hdrop: unsafe { HDROP::from_ptr(p.wparam as *mut c_void) },
 		}
 	}
 }

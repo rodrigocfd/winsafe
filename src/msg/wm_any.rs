@@ -9,6 +9,7 @@ pub enum Wm<'a> {
 	Close(msg::WmClose),
 	Command(msg::WmCommand),
 	Create(msg::WmCreate<'a>),
+	DropFiles(msg::WmDropFiles),
 	InitDialog(msg::WmInitDialog),
 	Notify(msg::WmNotify<'a>),
 }
@@ -30,6 +31,7 @@ impl WmAny {
 		match self.msg {
 			co::WM::CLOSE => Wm::Close(self.into()),
 			co::WM::CREATE => Wm::Create(self.into()),
+			co::WM::DROPFILES => Wm::DropFiles(self.into()),
 			co::WM::INITDIALOG => Wm::InitDialog(self.into()),
 			co::WM::NOTIFY => Wm::Notify(self.into()),
 			m => panic!("Unsupported message: {}.", m),
