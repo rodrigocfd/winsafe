@@ -89,6 +89,16 @@ pub struct NMLVDISPINFO {
 	pub item: LVITEM,
 }
 
+/// [`NMLVSCROLL`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvscroll)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct NMLVSCROLL {
+	pub hdr: NMHDR,
+	pub dx: i32,
+	pub dy: i32,
+}
+
 /// [`NMMOUSE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmmouse)
 /// struct.
 #[repr(C)]
