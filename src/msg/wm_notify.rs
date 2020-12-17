@@ -12,6 +12,7 @@ pub enum Nm<'a> {
 
 /// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
 /// message parameters.
+#[derive(Copy, Clone)]
 pub struct WmNotify<'a> {
 	pub nmhdr: &'a NMHDR,
 }

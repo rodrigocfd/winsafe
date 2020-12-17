@@ -7,6 +7,7 @@ use crate::structs::CREATESTRUCT;
 
 /// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 /// message parameters.
+#[derive(Copy, Clone)]
 pub struct WmClose {}
 
 impl From<WmClose> for WmAny {
@@ -27,6 +28,7 @@ impl From<WmAny> for WmClose {
 
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
+#[derive(Copy, Clone)]
 pub struct WmCreate<'a> {
 	pub createstruct: &'a CREATESTRUCT,
 }
@@ -51,6 +53,7 @@ impl<'a> From<WmAny> for WmCreate<'a> {
 
 /// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
+#[derive(Copy, Clone)]
 pub struct WmInitDialog {
 	pub hwnd_focus: HWND,
 	pub additional_data: isize,

@@ -7,6 +7,7 @@ use crate::msg::WmAny;
 
 /// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
 /// message parameters.
+#[derive(Copy, Clone)]
 pub struct WmCommand {
 	pub code: co::CMD,
 	pub ctrl_id: u16,
