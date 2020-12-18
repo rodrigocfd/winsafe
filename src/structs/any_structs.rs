@@ -6,7 +6,7 @@ use std::ffi::c_void;
 
 use crate::aliases::WNDPROC;
 use crate::co;
-use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
+use crate::handles as h;
 use crate::internal_defs::LF_FACESIZE;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
@@ -72,9 +72,9 @@ impl Default for BITMAPINFOHEADER {
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct CREATESTRUCT {
 	pub lpCreateParams: *const c_void,
-	pub hInstance: HINSTANCE,
-	pub hMenu: HMENU,
-	pub hwndParent: HWND,
+	pub hInstance: h::HINSTANCE,
+	pub hMenu: h::HMENU,
+	pub hwndParent: h::HWND,
 	pub cy: i32,
 	pub cx: i32,
 	pub y: i32,
@@ -126,7 +126,7 @@ pub struct MENUINFO {
 	pub fMask: co::MIM,
 	pub dwStyle: co::MNS,
 	pub cyMax: u32,
-	pub hbrBack: HBRUSH,
+	pub hbrBack: h::HBRUSH,
 	pub dwContextHelpID: u32,
 	pub dwMenuData: usize,
 }
@@ -150,13 +150,13 @@ pub struct MENUITEMINFO {
 	pub fType: co::MFT,
 	pub fState: co::MFS,
 	pub wID: u32,
-	pub hSubMenu: HMENU,
-	pub hbmpChecked: HBITMAP,
-	pub hbmpUnchecked: HBITMAP,
+	pub hSubMenu: h::HMENU,
+	pub hbmpChecked: h::HBITMAP,
+	pub hbmpUnchecked: h::HBITMAP,
 	pub dwItemData: usize,
 	pub dwTypeData: *mut u16,
 	pub cch: u32,
-	pub hbmpItem: HBITMAP,
+	pub hbmpItem: h::HBITMAP,
 }
 
 impl Default for MENUITEMINFO {
@@ -173,7 +173,7 @@ impl Default for MENUITEMINFO {
 #[repr(C)]
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct MSG {
-	pub hwnd: HWND,
+	pub hwnd: h::HWND,
 	pub message: co::WM,
 	pub wParam: usize,
 	pub lParam: isize,
@@ -188,7 +188,7 @@ pub struct MSG {
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
-	pub hwndFrom: HWND,
+	pub hwndFrom: h::HWND,
 	/// ID of the control sending the message.
 	pub idFrom: usize,
 	/// Notification code sent in
@@ -201,7 +201,7 @@ pub struct NMHDR {
 #[repr(C)]
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct PAINTSTRUCT {
-	pub hdc: HDC,
+	pub hdc: h::HDC,
 	pub fErase: u32,
 	pub rcPaint: RECT,
 	fRestore: u32,
@@ -317,13 +317,13 @@ pub struct WNDCLASSEX {
 	pub lpfnWndProc: Option<WNDPROC>,
 	pub cbClsExtra: i32,
 	pub cbWndExtra: i32,
-	pub hInstance: HINSTANCE,
-	pub hIcon: HICON,
-	pub hCursor: HCURSOR,
-	pub hbrBackground: HBRUSH,
+	pub hInstance: h::HINSTANCE,
+	pub hIcon: h::HICON,
+	pub hCursor: h::HCURSOR,
+	pub hbrBackground: h::HBRUSH,
 	pub lpszMenuName: *const u16,
 	pub lpszClassName: *const u16,
-	pub hIconSm: HICON,
+	pub hIconSm: h::HICON,
 }
 
 impl Default for WNDCLASSEX {

@@ -102,6 +102,8 @@ pub mod co;
 
 mod ffi;
 
+pub mod gui;
+
 #[macro_use]
 mod internal_defs;
 

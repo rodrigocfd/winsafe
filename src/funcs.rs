@@ -8,18 +8,18 @@ use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::{comctl32, kernel32, ole32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::internal_defs::parse_multi_z_str;
-use crate::structs::{ATOM, CLSID, GUID, MSG, RECT, WNDCLASSEX};
+use crate::structs as s;
 use crate::Utf16;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
 pub fn AdjustWindowRectEx(
-	lpRect: &mut RECT, dwStyle: co::WS,
+	lpRect: &mut s::RECT, dwStyle: co::WS,
 	bMenu: bool, dwExStyle: co::WS_EX) -> Result<(), co::ERROR>
 {
 	match unsafe {
 		user32::AdjustWindowRectEx(
-			lpRect as *mut RECT as *mut c_void,
+			lpRect as *mut s::RECT as *mut c_void,
 			dwStyle.into(),
 			bMenu as u32,
 			dwExStyle.into(),
@@ -46,17 +46,17 @@ pub fn AdjustWindowRectEx(
 /// );
 /// ```
 pub fn CoCreateInstance<VT: Vtbl, IF: From<PPVtbl<VT>>>(
-	rclsid: &CLSID,
+	rclsid: &s::CLSID,
 	pUnkOuter: Option<*mut c_void>,
 	dwClsContext: co::CLSCTX,
 ) -> IF {
 	let mut ppv: PPVtbl<VT> = std::ptr::null_mut();
 	unsafe {
 		ole32::CoCreateInstance(
-			rclsid.as_ref() as *const GUID as *const c_void,
+			rclsid.as_ref() as *const s::GUID as *const c_void,
 			pUnkOuter.unwrap_or(std::ptr::null_mut()),
 			dwClsContext.into(),
-			VT::IID().as_ref() as *const GUID as *const c_void,
+			VT::IID().as_ref() as *const s::GUID as *const c_void,
 			&mut ppv
 				as *mut PPVtbl<VT>
 				as *mut *mut *mut c_void,
@@ -91,8 +91,8 @@ pub fn CoUninitialize() {
 
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
-pub fn DispatchMessage(lpMsg: &MSG) -> isize {
-	unsafe { user32::DispatchMessageW(lpMsg as *const MSG as *const c_void) }
+pub fn DispatchMessage(lpMsg: &s::MSG) -> isize {
+	unsafe { user32::DispatchMessageW(lpMsg as *const s::MSG as *const c_void) }
 }
 
 /// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
@@ -136,12 +136,12 @@ pub fn GetLastError() -> co::ERROR {
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
-pub fn GetMessage(lpMsg: &MSG, hWnd: HWND,
+pub fn GetMessage(lpMsg: &s::MSG, hWnd: HWND,
 	wMsgFilterMin: u32, wMsgFilterMax: u32) -> Result<bool, co::ERROR>
 {
 	match unsafe {
 		user32::GetMessageW(
-			lpMsg as *const MSG as *const c_void,
+			lpMsg as *const s::MSG as *const c_void,
 			hWnd.as_ptr(),
 			wMsgFilterMin,
 			wMsgFilterMax,
@@ -228,12 +228,12 @@ pub fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
 /// function.
-pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
+pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
 	wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: co::PM) -> bool
 {
 	unsafe {
 		user32::PeekMessageW(
-			lpMsg as *mut MSG as *mut c_void,
+			lpMsg as *mut s::MSG as *mut c_void,
 			hWnd.as_ptr(),
 			wMsgFilterMin,
 			wMsgFilterMax,
@@ -250,12 +250,12 @@ pub fn PostQuitMessage(nExitCode: i32) {
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
-pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> Result<ATOM, co::ERROR> {
+pub fn RegisterClassEx(lpwcx: &s::WNDCLASSEX) -> Result<s::ATOM, co::ERROR> {
 	match unsafe {
-		user32::RegisterClassExW(lpwcx as *const WNDCLASSEX as *const c_void)
+		user32::RegisterClassExW(lpwcx as *const s::WNDCLASSEX as *const c_void)
 	} {
 		0 => Err(GetLastError()),
-		atom => Ok(ATOM::from(atom)),
+		atom => Ok(s::ATOM::from(atom)),
 	}
 }
 
@@ -267,9 +267,9 @@ pub fn SetLastError(dwErrCode: co::ERROR) {
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
-pub fn TranslateMessage(lpMsg: &MSG) -> bool {
+pub fn TranslateMessage(lpMsg: &s::MSG) -> bool {
 	unsafe {
-		user32::TranslateMessage(lpMsg as *const MSG as *const c_void) != 0
+		user32::TranslateMessage(lpMsg as *const s::MSG as *const c_void) != 0
 	}
 }
 
