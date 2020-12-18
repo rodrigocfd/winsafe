@@ -1,6 +1,7 @@
-use crate::{NMLVDISPINFO, NMLVSCROLL, co};
+use crate::co;
 use crate::msg;
-use crate::structs::{NMCHAR, NMHDR, NMLISTVIEW};
+use crate::structs::{NMCHAR, NMHDR, NMITEMACTIVATE, NMLISTVIEW, NMLVDISPINFO,
+	NMLVEMPTYMARKUP, NMLVFINDITEM, NMLVGETINFOTIP, NMLVSCROLL};
 
 /// Possible
 /// [control notifications](https://docs.microsoft.com/en-us/windows/win32/controls/control-messages).
@@ -19,7 +20,12 @@ pub enum Nm<'a> {
 	LvnEndLabelEdit(&'a NMLVDISPINFO),
 	LvnEndScroll(&'a NMLVSCROLL),
 	LvnGetDispInfo(&'a NMLVDISPINFO),
-
+	LvnGetEmptyMarkup(&'a NMLVEMPTYMARKUP),
+	LvnGetInfoTip(&'a NMLVGETINFOTIP),
+	LvnHotTrack(&'a NMLISTVIEW),
+	LvnIncrementalSearch(&'a NMLVFINDITEM),
+	LvnInsertItem(&'a NMLISTVIEW),
+	LvnItemActivate(&'a NMITEMACTIVATE),
 	LvnItemChanged(&'a NMLISTVIEW),
 	LvnItemChanging(&'a NMLISTVIEW),
 }
@@ -75,7 +81,12 @@ impl<'a> WmNotify<'a> {
 			co::NM::LVN_ENDLABELEDIT => Nm::LvnEndLabelEdit(ref_hdr!(self, NMLVDISPINFO)),
 			co::NM::LVN_ENDSCROLL => Nm::LvnEndScroll(ref_hdr!(self, NMLVSCROLL)),
 			co::NM::LVN_GETDISPINFO => Nm::LvnBeginLabelEdit(ref_hdr!(self, NMLVDISPINFO)),
-
+			co::NM::LVN_GETEMPTYMARKUP => Nm::LvnGetEmptyMarkup(ref_hdr!(self, NMLVEMPTYMARKUP)),
+			co::NM::LVN_GETINFOTIP => Nm::LvnGetInfoTip(ref_hdr!(self, NMLVGETINFOTIP)),
+			co::NM::LVN_HOTTRACK => Nm::LvnHotTrack(ref_hdr!(self, NMLISTVIEW)),
+			co::NM::LVN_INCREMENTALSEARCH => Nm::LvnIncrementalSearch(ref_hdr!(self, NMLVFINDITEM)),
+			co::NM::LVN_INSERTITEM => Nm::LvnInsertItem(ref_hdr!(self, NMLISTVIEW)),
+			co::NM::LVN_ITEMACTIVATE => Nm::LvnItemActivate(ref_hdr!(self, NMITEMACTIVATE)),
 			co::NM::LVN_ITEMCHANGED => Nm::LvnItemChanged(ref_hdr!(self, NMLISTVIEW)),
 			co::NM::LVN_ITEMCHANGING => Nm::LvnItemChanging(ref_hdr!(self, NMLISTVIEW)),
 			_ => panic!("Unsupported notification: {}.", self.nmhdr.code),

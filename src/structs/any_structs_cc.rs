@@ -3,7 +3,29 @@
 #![allow(non_snake_case)]
 
 use crate::co;
+use crate::internal_defs::L_MAX_URL_LENGTH;
 use crate::structs::{NMHDR, POINT};
+
+/// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct LVFINDINFO {
+	pub flags: co::LVFI,
+	pub psz: *const u16,
+	pub lParam: isize,
+	pub pt: POINT,
+	pub vkDirection: co::VK,
+}
+
+impl Default for LVFINDINFO {
+	fn default() -> Self {
+		Self {
+			psz: std::ptr::null(),
+			..Default::default()
+		}
+	}
+}
 
 /// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
@@ -87,6 +109,48 @@ pub struct NMLISTVIEW {
 pub struct NMLVDISPINFO {
 	pub hdr: NMHDR,
 	pub item: LVITEM,
+}
+
+/// [`NMLVEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvemptymarkup)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct NMLVEMPTYMARKUP {
+	pub hdr: NMHDR,
+	pub dwFlags: co::EMF,
+	pub szMarkup: [u16; L_MAX_URL_LENGTH],
+}
+
+impl Default for NMLVEMPTYMARKUP {
+	fn default() -> Self {
+		Self { // https://stackoverflow.com/a/30949671/6923555
+			hdr: NMHDR::default(),
+			dwFlags: co::EMF::default(),
+			szMarkup: [0u16; L_MAX_URL_LENGTH],
+		}
+	}
+}
+
+/// [`NMLVFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct NMLVFINDITEM {
+	pub hdr: NMHDR,
+	pub iStart: i32,
+	pub lvfi: LVFINDINFO,
+}
+
+/// [`NMLVGETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvgetinfotipw)
+/// struct.
+pub struct NMLVGETINFOTIP {
+	pub hdr: NMHDR,
+	pub dwFlags: co::LVGIT,
+	pub pszText: *mut u16,
+	pub cchTextMax: i32,
+	pub iItem: i32,
+	pub iSubItem: i32,
+	pub lParam: isize,
 }
 
 /// [`NMLVSCROLL`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvscroll)

@@ -1,3 +1,10 @@
+const_type! { EMF, u32,
+	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags`.
+
+	LEFT, 0x00000000
+	CENTERED, 0x00000001
+}
+
 const_type! { FF, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`, used with
 	/// [`PITCH`](crate::co::PITCH).

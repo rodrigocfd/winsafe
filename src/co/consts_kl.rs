@@ -174,8 +174,7 @@ impl LANG {
 }
 
 const_type! { LVCFMT, i32,
-	/// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
-	/// `piColFmt`.
+	/// [`LVITEM`](crate::LVITEM) `piColFmt`.
 
 	LEFT, 0x0000
 	RIGHT, 0x0001
@@ -199,6 +198,24 @@ const_type! { LVCFMT, i32,
 	SPLITBUTTON, 0x1000000
 }
 
+const_type! { LVFI, u32,
+	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags`.
+
+	PARAM, 0x0001
+	STRING, 0x0002
+	SUBSTRING, 0x0004
+	PARTIAL, 0x0008
+	WRAP, 0x0020
+	NEARESTXY, 0x0040
+}
+
+const_type! { LVGIT, u32,
+	/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags`.
+
+	LVGIT_FOLDED, 0x0000
+	LVGIT_UNFOLDED, 0x0001
+}
+
 const_type! { LVIS, u32,
 	/// ListView item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states).
@@ -215,16 +232,14 @@ const_type! { LVIS, u32,
 }
 
 const_type! { LVI_GROUPID, i32,
-	/// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
-	/// `iGroupId`.
+	/// [`LVITEM`](crate::LVITEM) `iGroupId`.
 
 	I_GROUPIDCALLBACK, -1
 	I_GROUPIDNONE, -2
 }
 
 const_type! { LVIF, u32,
-	/// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
-	/// `mask`.
+	/// [`LVITEM`](crate::LVITEM) `mask`.
 
 	COLFMT, 0x00010000
 	COLUMNS, 0x00000200
@@ -238,8 +253,7 @@ const_type! { LVIF, u32,
 }
 
 const_type! { LVKF, u32,
-	/// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
-	/// `uKeyFlags`.
+	/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags`.
 
 	ALT, 0x0001
 	CONTROL, 0x0002

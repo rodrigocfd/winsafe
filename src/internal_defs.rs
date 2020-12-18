@@ -2,7 +2,8 @@
 
 use crate::Utf16;
 
-pub const LF_FACESIZE: usize = 0;
+pub const L_MAX_URL_LENGTH: usize = 2048 + 32 + 4;
+pub const LF_FACESIZE: usize = 32;
 
 /// Transforms a pointer into an option, which is None if the pointer is null.
 ///
