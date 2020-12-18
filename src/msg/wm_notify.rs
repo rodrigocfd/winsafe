@@ -29,6 +29,8 @@ pub enum Nm<'a> {
 	LvnItemChanging(&'a s::NMLISTVIEW),
 }
 
+//------------------------------------------------------------------------------
+
 /// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
 /// message parameters.
 #[derive(Copy, Clone)]

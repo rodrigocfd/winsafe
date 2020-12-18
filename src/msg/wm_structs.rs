@@ -6,6 +6,35 @@ use crate::handles::{HDROP, HMENU, HWND};
 use crate::msg::WmAny;
 use crate::structs::{CREATESTRUCT, RECT};
 
+/// Struct for a message that has no parameters.
+macro_rules! empty_msg {
+	(
+		$(#[$attr:meta])*
+		$name:ident, $wmconst:expr
+	) => {
+		$(#[$attr])*
+		pub struct $name {}
+
+		impl From<$name> for WmAny {
+			fn from(_: $name) -> Self {
+				Self {
+					msg: $wmconst,
+					wparam: 0,
+					lparam: 0,
+				}
+			}
+		}
+
+		impl From<WmAny> for $name {
+			fn from(_: WmAny) -> Self {
+				Self {}
+			}
+		}
+	};
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 /// message parameters.
 pub struct WmActivate {
@@ -62,7 +91,7 @@ impl From<WmAny> for WmActivateApp {
 
 empty_msg! {
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
-	/// message parameters.
+	/// message, which has no parameters.
 	WmClose, co::WM::CLOSE
 }
 
@@ -123,7 +152,7 @@ impl<'a> From<WmAny> for WmCreate<'a> {
 
 empty_msg! {
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
-	/// message parameters.
+	/// message, which has no parameters.
 	WmDestroy, co::WM::DESTROY
 }
 
@@ -207,7 +236,7 @@ impl From<WmAny> for WmInitMenuPopup {
 
 empty_msg! {
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
-	/// message parameters.
+	/// message, which has no parameters.
 	WmNull, co::WM::NULL
 }
 

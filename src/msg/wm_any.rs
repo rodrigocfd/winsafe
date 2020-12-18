@@ -21,6 +21,8 @@ pub enum Wm<'a> {
 	Sizing(msg::WmSizing<'a>),
 }
 
+//------------------------------------------------------------------------------
+
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
 /// parameters.
