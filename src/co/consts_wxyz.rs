@@ -377,7 +377,7 @@ const_type! { WS_EX, u32,
 }
 
 const_type! { WVR, u32,
-	/// [`WM_NCCALCSIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
+	/// [`WM_NCCALCSIZE`](crate::msg::WmNcCalcSize)
 	/// return flags.
 
 	ZERO, 0

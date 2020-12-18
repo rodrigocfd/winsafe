@@ -7,8 +7,7 @@ const_type! { GA, u32,
 }
 
 const_type! { GW, u32,
-	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
-	/// `uCmd`.
+	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd`.
 
 	HWNDFIRST, 0
 	HWNDLAST, 1
@@ -21,10 +20,8 @@ const_type! { GW, u32,
 }
 
 const_type! { GWLP, i32,
-	/// [`GetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw)
-	/// and
-	/// [`SetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
-	/// `nIndex`.
+	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
+	/// [`SetWindowLongPtr`](crate:HWND::SetWindowLongPtr) `nIndex`.
 
 	STYLE, -16
 	EXSTYLE, -20

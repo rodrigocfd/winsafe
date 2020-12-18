@@ -29,7 +29,7 @@ const_type! { ADRF, u32,
 }
 
 const_type! { APPCOMMAND, i16,
-	/// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
+	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand)
 	/// commands.
 
 	BROWSER_BACKWARD, 1

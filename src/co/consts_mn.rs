@@ -130,7 +130,7 @@ const_type! { MNS, u32,
 }
 
 const_type! { NM, i32,
-	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
+	/// [`WM_NOTIFY`](crate::msg::WmNotify)
 	/// notifications for:
 	///
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications);
