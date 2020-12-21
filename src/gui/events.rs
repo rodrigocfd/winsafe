@@ -4,7 +4,18 @@ use crate::co;
 use crate::handles::HDC;
 use crate::msg;
 
-/// Allows you to add closures to handle window
+struct MsgMaps {
+	msgs: HashMap< // ordinary WM messages
+		co::WM,
+		Box<dyn FnMut(msg::Wm) -> isize + Send + Sync + 'static>,
+	>,
+	cmds: HashMap< // WM_COMMAND notifications
+		(co::CMD, u16), // code, ctrl_id
+		Box<dyn FnMut() + Send + Sync + 'static>,
+	>,
+}
+
+/// Allows adding closures to handle window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
 pub struct Events {
 	original: bool,
@@ -16,10 +27,7 @@ pub struct Events {
 	// unnecessary cost, since Events is shared only between a parent window and
 	// its child controls, and the controls only use it to add events at the
 	// beginning of the program. Adding events later is not allowed.
-	msgs: *mut HashMap<
-		co::WM,
-		Box<dyn FnMut(msg::Wm) -> isize + Send + Sync + 'static>,
-	>,
+	msg_maps: *mut MsgMaps,
 }
 
 unsafe impl Send for Events {}
@@ -29,7 +37,7 @@ impl Clone for Events {
 	fn clone(&self) -> Self {
 		Events {
 			original: false, // clones won't release the memory
-			msgs: self.msgs, // simply copy away the pointer
+			msg_maps: self.msg_maps, // simply copy away the pointer
 		}
 	}
 }
@@ -37,7 +45,7 @@ impl Clone for Events {
 impl Drop for Events {
 	fn drop(&mut self) {
 		if self.original {
-			unsafe { Box::from_raw(self.msgs); } // release the memory
+			unsafe { Box::from_raw(self.msg_maps); } // release the memory
 		}
 	}
 }
@@ -104,11 +112,16 @@ macro_rules! wm_ret_isize {
 
 impl Events {
 	pub(super) fn new() -> Events {
-		let msgs_heap = Box::new(HashMap::new()); // alloc memory on the heap
+		let heap_msg_maps = Box::new( // alloc memory on the heap
+			MsgMaps {
+				msgs: HashMap::new(),
+				cmds: HashMap::new(),
+			}
+		);
 
 		Self {
 			original: true, // this is the object that will actually release the memory
-			msgs: Box::into_raw(msgs_heap), // leak and keep the pointer
+			msg_maps: Box::into_raw(heap_msg_maps), // leak and keep the pointer
 		}
 	}
 
@@ -119,8 +132,19 @@ impl Events {
 	pub fn wm<F>(&self, ident: co::WM, func: F)
 		where F: FnMut(msg::Wm) -> isize + Send + Sync + 'static,
 	{
-		unsafe { self.msgs.as_mut() }
-			.unwrap().insert(ident, Box::new(func));
+		unsafe { self.msg_maps.as_mut() }.unwrap()
+			.msgs.insert(ident, Box::new(func));
+	}
+
+	/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
+	///
+	/// You should always prefer the specific notification handlers, which will
+	/// give you the correct message parameters.
+	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
+		where F: FnMut() + Send + Sync + 'static,
+	{
+		unsafe { self.msg_maps.as_mut() }.unwrap()
+			.cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
 	wm_ret_isize! {
@@ -138,10 +162,6 @@ impl Events {
 	wm_ret_isize! {
 		/// Adds a handler to [`WM_CLOSE`](crate::msg::WmClose) message.
 		wm_close, msg::WmClose, co::WM::CLOSE, msg::Wm::Close, 0
-	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
-		wm_command, msg::WmCommand, co::WM::COMMAND, msg::Wm::Command, 0
 	}
 	wm_ret_convt! {
 		/// Adds a handler to [`WM_CREATE`](crate::msg::WmCreate) message.

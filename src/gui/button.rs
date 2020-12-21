@@ -14,6 +14,7 @@ pub struct Button {
 }
 
 impl Button {
+	/// Creates a new Button object.
 	pub fn new(parent: &impl Parent) -> Button {
 		Self {
 			base: NativeControlBase::new(),
@@ -22,6 +23,7 @@ impl Button {
 		}
 	}
 
+	/// Returns the underlying handle for this window.
 	pub fn hwnd(&self) -> HWND {
 		self.base.hwnd()
 	}
@@ -32,5 +34,27 @@ impl Button {
 
 	pub fn on_subclass(&self) -> Events {
 		self.subclass_events.clone()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Allows adding closures to handle button
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
+pub struct EventsButton {
+	parent_events: Events,
+}
+
+impl EventsButton {
+	pub(super) fn new(parent_events: Events) -> EventsButton {
+		Self {
+			parent_events
+		}
+	}
+
+	pub fn BnClicked<F>(&self, func: F)
+		where F: FnMut() + Send + Sync + 'static,
+	{
+
 	}
 }

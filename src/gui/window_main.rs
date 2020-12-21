@@ -10,12 +10,14 @@ pub struct WindowMain {
 }
 
 impl WindowMain {
+	/// Creates a new `WindowMain` object.
 	pub fn new() -> WindowMain {
 		Self {
 			base: WindowBase::new(),
 		}
 	}
 
+	/// Returns the underlying handle for this window.
 	pub fn hwnd(&self) -> HWND {
 		self.base.hwnd()
 	}
