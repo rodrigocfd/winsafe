@@ -121,6 +121,11 @@ impl Events {
 	wm_ret_isize!(wm_command, msg::WmCommand, co::WM::COMMAND, msg::Wm::Command, 0);
 	wm_ret_convt!(wm_create, msg::WmCreate, i32, co::WM::CREATE, msg::Wm::Create, as_isize);
 	wm_ret_convt!(wm_ctl_color_btn, msg::WmCtlColorBtn, HDC, co::WM::CTLCOLORBTN, msg::Wm::CtlColorBtn, from_handle);
+	wm_ret_convt!(wm_ctl_color_dlg, msg::WmCtlColorDlg, HDC, co::WM::CTLCOLORDLG, msg::Wm::CtlColorDlg, from_handle);
+	wm_ret_convt!(wm_ctl_color_edit, msg::WmCtlColorEdit, HDC, co::WM::CTLCOLOREDIT, msg::Wm::CtlColorEdit, from_handle);
+	wm_ret_convt!(wm_ctl_color_list_box, msg::WmCtlColorListBox, HDC, co::WM::CTLCOLORLISTBOX, msg::Wm::CtlColorListBox, from_handle);
+	wm_ret_convt!(wm_ctl_color_scroll_bar, msg::WmCtlColorScrollBar, HDC, co::WM::CTLCOLORSCROLLBAR, msg::Wm::CtlColorListScrollBar, from_handle);
+	wm_ret_convt!(wm_ctl_color_static, msg::WmCtlColorStatic, HDC, co::WM::CTLCOLORSTATIC, msg::Wm::CtlColorListStatic, from_handle);
 	wm_ret_isize!(wm_destroy, msg::WmDestroy, co::WM::DESTROY, msg::Wm::Destroy, 0);
 	wm_ret_isize!(wm_drop_files, msg::WmDropFiles, co::WM::DROPFILES, msg::Wm::DropFiles, 0);
 	wm_ret_convt!(wm_init_dialog, msg::WmInitDialog, bool, co::WM::INITDIALOG, msg::Wm::InitDialog, as_isize);

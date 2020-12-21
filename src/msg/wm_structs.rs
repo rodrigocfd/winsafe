@@ -33,6 +33,39 @@ macro_rules! empty_msg {
 	};
 }
 
+/// Struct for WM_CTLCOLOR* messages.
+macro_rules! ctl_color_msg {
+	(
+		$(#[$attr:meta])*
+		$name:ident, $wmconst:expr
+	) => {
+		$(#[$attr])*
+		pub struct $name {
+			pub hdc: HDC,
+			pub hwnd: HWND,
+		}
+
+		impl From<$name> for WmAny {
+			fn from(p: $name) -> Self {
+				Self {
+					msg: $wmconst,
+					wparam: unsafe { p.hdc.as_ptr() } as usize,
+					lparam: unsafe { p.hwnd.as_ptr() } as isize,
+				}
+			}
+		}
+
+		impl From<WmAny> for $name {
+			fn from(p: WmAny) -> Self {
+				Self {
+					hdc: unsafe { HDC::from_ptr(p.wparam as *mut c_void) },
+					hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
+				}
+			}
+		}
+	};
+}
+
 //------------------------------------------------------------------------------
 
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
@@ -150,30 +183,40 @@ impl<'a> From<WmAny> for WmCreate<'a> {
 	}
 }
 
-/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
-/// message parameters.
-pub struct WmCtlColorBtn {
-	pub hdc: HDC,
-	pub hwnd: HWND,
+ctl_color_msg! {
+	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
+	/// message parameters.
+	WmCtlColorBtn, co::WM::CTLCOLORBTN
 }
 
-impl<'a> From<WmCtlColorBtn> for WmAny {
-	fn from(p: WmCtlColorBtn) -> Self {
-		Self {
-			msg: co::WM::CTLCOLORBTN,
-			wparam: unsafe { p.hdc.as_ptr() } as usize,
-			lparam: unsafe { p.hwnd.as_ptr() } as isize,
-		}
-	}
+ctl_color_msg! {
+	/// [`WM_CTLCOLORDLG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
+	/// message parameters.
+	WmCtlColorDlg, co::WM::CTLCOLORDLG
 }
 
-impl<'a> From<WmAny> for WmCtlColorBtn {
-	fn from(p: WmAny) -> Self {
-		Self {
-			hdc: unsafe { HDC::from_ptr(p.wparam as *mut c_void) },
-			hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
-		}
-	}
+ctl_color_msg! {
+	/// [`WM_CTLCOLOREDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
+	/// message parameters.
+	WmCtlColorEdit, co::WM::CTLCOLOREDIT
+}
+
+ctl_color_msg! {
+	/// [`WM_CTLCOLORLISTBOX`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
+	/// message parameters.
+	WmCtlColorListBox, co::WM::CTLCOLORLISTBOX
+}
+
+ctl_color_msg! {
+	/// [`WM_CTLCOLORSCROLLBAR`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
+	/// message parameters.
+	WmCtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR
+}
+
+ctl_color_msg! {
+	/// [`WM_CTLCOLORSTATIC`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
+	/// message parameters.
+	WmCtlColorStatic, co::WM::CTLCOLORSTATIC
 }
 
 empty_msg! {
