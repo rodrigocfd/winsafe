@@ -13,6 +13,10 @@ struct MsgMaps {
 		(co::CMD, u16), // code, ctrl_id
 		Box<dyn FnMut() + Send + Sync + 'static>,
 	>,
+	nfys: HashMap< // WM_NOTIFY notifications
+		(u16, co::NM), // idFrom, code
+		Box<dyn FnMut(msg::WmNotify) -> isize + Send + Sync + 'static>,
+	>,
 }
 
 /// Allows adding closures to handle window
@@ -50,59 +54,27 @@ impl Drop for Events {
 	}
 }
 
-/// Converts a value directly to isize.
-macro_rules! as_isize {
-	($p:expr) => { $p as isize };
+/// Panics when a message is incorrectly handled. Should never happen.
+macro_rules! panic_msg {
+	() => { panic!("Internal event incorrectly handled. This is a bug."); };
 }
 
-/// Converts a handle value to isize.
-macro_rules! from_handle {
-	($p:expr) => { unsafe { $p.as_ptr() } as isize };
-}
-
-/// Implements a handle method for a message that returns an arbitrary type.
-/// Receives a macro that converts this value to isize.
-macro_rules! wm_ret_convt {
+/// A message which has no parameters and returns zero.
+macro_rules! empty_wm {
 	(
+		$name:ident, $wmconst:expr, $wmenum:path,
 		$(#[$attr:meta])*
-		$name:ident, $arg:ty, $ret:ty, $wmconst:expr, $wmpat:path, $conv:tt
 	) => {
 		$(#[$attr])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut($arg) -> $ret + Send + Sync + 'static,
+			where F: FnMut() + Send + Sync + 'static,
 		{
-			self.wm($wmconst, { // add as an ordinary message
+			self.wm($wmconst, {
 				let mut func = func;
 				move |p| {
-					if let $wmpat(p) = p {
-						$conv!(func(p)) // convert user returned value
-					} else {
-						panic!("Event incorrectly handled internally. This is a bug.");
-					}
-				}
-			});
-		}
-	};
-}
-
-/// Implements a handle method for a message that returns the given isize value.
-macro_rules! wm_ret_isize {
-	(
-		$(#[$attr:meta])*
-		$name:ident, $arg:ty, $wmconst:expr, $wmpat:path, $retval:expr
-	) => {
-		$(#[$attr])*
-		pub fn $name<F>(&self, func: F)
-			where F: FnMut($arg) + Send + Sync + 'static,
-		{
-			self.wm($wmconst, { // add as an ordinary message
-				let mut func = func;
-				move |p| {
-					if let $wmpat(p) = p {
-						func(p);
-						$retval // ignore user returned value, return specific value
-					} else {
-						panic!("Event incorrectly handled internally. This is a bug.");
+					match p {
+						$wmenum(_) => { func(); 0 },
+						_ => panic_msg!(),
 					}
 				}
 			});
@@ -116,6 +88,7 @@ impl Events {
 			MsgMaps {
 				msgs: HashMap::new(),
 				cmds: HashMap::new(),
+				nfys: HashMap::new(),
 			}
 		);
 
@@ -138,8 +111,12 @@ impl Events {
 
 	/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
 	///
-	/// You should always prefer the specific notification handlers, which will
-	/// give you the correct message parameters.
+	/// A command notification must be narrowed by the
+	/// [command code](crate::co::CMD) and the control ID, so the closure will
+	/// be fired for that specific control at that specific event.
+	///
+	/// You should always prefer the specific command notification handlers,
+	/// which will give you the correct message parameters.
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
@@ -147,105 +124,299 @@ impl Events {
 			.cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_ACTIVATE`](crate::msg::WmActivate) message.
-		wm_activate, msg::WmActivate, co::WM::ACTIVATE, msg::Wm::Activate, 0
+	/// Adds a handler to [`WM_NOTIFY`](crate::msg::WmNotify) message.
+	///
+	/// A notification must be narrowed by the [notification code](crate::co::NM)
+	/// and the control ID, so the closure will be fired for that specific
+	/// control at the specific event.
+	///
+	/// You should always prefer the specific notification handlers, which
+	/// will give you the correct notification struct.
+	pub fn wm_notify<F>(&self, id_from: u16, code: co::NM, func: F)
+		where F: FnMut(msg::WmNotify) -> isize + Send + Sync + 'static,
+	{
+		unsafe { self.msg_maps.as_mut() }.unwrap()
+			.nfys.insert((id_from, code), Box::new(func));
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
-		wm_activate_app, msg::WmActivateApp, co::WM::ACTIVATEAPP, msg::Wm::ActivateApp, 0
+
+	/// Adds a handler to [`WM_ACTIVATE`](crate::msg::WmActivate) message.
+	pub fn wm_activate<F>(&self, func: F)
+		where F: FnMut(msg::WmActivate) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::ACTIVATE, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::Activate(p) => { func(p); 0 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
-		wm_app_command, msg::WmAppCommand, co::WM::APPCOMMAND, msg::Wm::AppCommand, 1
+
+	/// Adds a handler to [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
+	pub fn wm_activate_app<F>(&self, func: F)
+		where F: FnMut(msg::WmActivateApp) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::ACTIVATEAPP, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::ActivateApp(p) => { func(p); 0 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_isize! {
+
+	/// Adds a handler to [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
+	pub fn wm_app_command<F>(&self, func: F)
+		where F: FnMut(msg::WmAppCommand) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::APPCOMMAND, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::AppCommand(p) => { func(p); 1 },
+					_ => panic_msg!(),
+				}
+			}
+		});
+	}
+
+	empty_wm! { wm_close, co::WM::CLOSE, msg::Wm::Close,
 		/// Adds a handler to [`WM_CLOSE`](crate::msg::WmClose) message.
-		wm_close, msg::WmClose, co::WM::CLOSE, msg::Wm::Close, 0
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_CREATE`](crate::msg::WmCreate) message.
-		wm_create, msg::WmCreate, i32, co::WM::CREATE, msg::Wm::Create, as_isize
+
+	/// Adds a handler to [`WM_CREATE`](crate::msg::WmCreate) message.
+	pub fn wm_create<F>(&self, func: F)
+		where F: FnMut(msg::WmCreate) -> i32 + Send + Sync + 'static,
+	{
+		self.wm(co::WM::CREATE, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::Create(p) => { func(p) as isize },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
-		wm_ctl_color_btn, msg::WmCtlColorBtn, HDC, co::WM::CTLCOLORBTN, msg::Wm::CtlColorBtn, from_handle
+
+	/// Adds a handler to [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
+	pub fn wm_ctl_color_btn<F>(&self, func: F)
+		where F: FnMut(msg::WmCtlColorBtn) -> HDC + Send + Sync + 'static,
+	{
+		self.wm(co::WM::CTLCOLORBTN, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::CtlColorBtn(p) => (unsafe { func(p).as_ptr() }) as isize,
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
-		wm_ctl_color_dlg, msg::WmCtlColorDlg, HDC, co::WM::CTLCOLORDLG, msg::Wm::CtlColorDlg, from_handle
+
+	/// Adds a handler to [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
+	pub fn wm_ctl_color_dlg<F>(&self, func: F)
+		where F: FnMut(msg::WmCtlColorDlg) -> HDC + Send + Sync + 'static,
+	{
+		self.wm(co::WM::CTLCOLORDLG, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::CtlColorDlg(p) => (unsafe { func(p).as_ptr() }) as isize,
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
-		wm_ctl_color_edit, msg::WmCtlColorEdit, HDC, co::WM::CTLCOLOREDIT, msg::Wm::CtlColorEdit, from_handle
+
+	/// Adds a handler to [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
+	pub fn wm_ctl_color_edit<F>(&self, func: F)
+		where F: FnMut(msg::WmCtlColorEdit) -> HDC + Send + Sync + 'static,
+	{
+		self.wm(co::WM::CTLCOLOREDIT, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::CtlColorEdit(p) => (unsafe { func(p).as_ptr() }) as isize,
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
-		wm_ctl_color_list_box, msg::WmCtlColorListBox, HDC, co::WM::CTLCOLORLISTBOX, msg::Wm::CtlColorListBox, from_handle
+
+	/// Adds a handler to [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
+	pub fn wm_ctl_color_list_box<F>(&self, func: F)
+		where F: FnMut(msg::WmCtlColorListBox) -> HDC + Send + Sync + 'static,
+	{
+		self.wm(co::WM::CTLCOLORLISTBOX, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::CtlColorListBox(p) => (unsafe { func(p).as_ptr() }) as isize,
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
-		wm_ctl_color_scroll_bar, msg::WmCtlColorScrollBar, HDC, co::WM::CTLCOLORSCROLLBAR, msg::Wm::CtlColorListScrollBar, from_handle
+
+	/// Adds a handler to [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
+	pub fn wm_ctl_color_scroll_bar<F>(&self, func: F)
+		where F: FnMut(msg::WmCtlColorScrollBar) -> HDC + Send + Sync + 'static,
+	{
+		self.wm(co::WM::CTLCOLORSCROLLBAR, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::CtlColorListScrollBar(p) => (unsafe { func(p).as_ptr() }) as isize,
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
-		wm_ctl_color_static, msg::WmCtlColorStatic, HDC, co::WM::CTLCOLORSTATIC, msg::Wm::CtlColorListStatic, from_handle
+
+	/// Adds a handler to [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
+	pub fn wm_ctl_color_static<F>(&self, func: F)
+		where F: FnMut(msg::WmCtlColorStatic) -> HDC + Send + Sync + 'static,
+	{
+		self.wm(co::WM::CTLCOLORSTATIC, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::CtlColorListStatic(p) => (unsafe { func(p).as_ptr() }) as isize,
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_isize! {
+
+	empty_wm! { wm_destroy, co::WM::DESTROY, msg::Wm::Destroy,
 		/// Adds a handler to [`WM_DESTROY`](crate::msg::WmDestroy) message.
-		wm_destroy, msg::WmDestroy, co::WM::DESTROY, msg::Wm::Destroy, 0
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
-		wm_drop_files, msg::WmDropFiles, co::WM::DROPFILES, msg::Wm::DropFiles, 0
+
+	/// Adds a handler to [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
+	pub fn wm_drop_files<F>(&self, func: F)
+		where F: FnMut(msg::WmDropFiles) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::DROPFILES, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::DropFiles(p) => { func(p); 0 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
-		wm_end_session, msg::WmEndSession, co::WM::ENDSESSION, msg::Wm::EndSession, 0
+
+	/// Adds a handler to [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
+	pub fn wm_end_session<F>(&self, func: F)
+		where F: FnMut(msg::WmEndSession) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::ENDSESSION, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::EndSession(p) => { func(p); 0 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
-		wm_init_dialog, msg::WmInitDialog, bool, co::WM::INITDIALOG, msg::Wm::InitDialog, as_isize
+
+	/// Adds a handler to [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
+	pub fn wm_init_dialog<F>(&self, func: F)
+		where F: FnMut(msg::WmInitDialog) -> bool + Send + Sync + 'static,
+	{
+		self.wm(co::WM::INITDIALOG, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::InitDialog(p) => { func(p) as isize },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_INITMENUPOPUP`](crate::msg::WmInitMenuPopup) message.
-		wm_init_menu_popup, msg::WmInitMenuPopup, co::WM::INITMENUPOPUP, msg::Wm::InitMenuPopup, 0
+
+	/// Adds a handler to [`WM_INITMENUPOPUP`](crate::msg::WmInitMenuPopup) message.
+	pub fn wm_init_menu_popup<F>(&self, func: F)
+		where F: FnMut(msg::WmInitMenuPopup) -> bool + Send + Sync + 'static,
+	{
+		self.wm(co::WM::INITMENUPOPUP, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::InitMenuPopup(p) => { func(p); 0 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_convt! {
-		/// Adds a handler to [`WM_NOTIFY`](crate::msg::WmNotify) message.
-		///
-		/// You should always prefer the specific notification handlers, which
-		/// will give you the correct notification struct.
-		wm_notify, msg::WmNotify, isize, co::WM::NOTIFY, msg::Wm::Notify, as_isize
-	}
-	wm_ret_isize! {
+
+	empty_wm! { wm_nc_destroy, co::WM::NCDESTROY, msg::Wm::NcDestroy,
 		/// Adds a handler to [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
-		wm_nc_destroy, msg::WmNcDestroy, co::WM::NCDESTROY, msg::Wm::NcDestroy, 0
 	}
-	wm_ret_isize! {
+
+	empty_wm! { wm_nc_paint, co::WM::NCPAINT, msg::Wm::NcPaint,
 		/// Adds a handler to [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
-		wm_nc_paint, msg::WmNcPaint, co::WM::NCPAINT, msg::Wm::NcPaint, 0
 	}
-	wm_ret_isize! {
+
+	empty_wm! { wm_null, co::WM::NULL, msg::Wm::Null,
 		/// Adds a handler to [`WM_NULL`](crate::msg::WmNull) message.
 		///
 		/// Usually this message is not handled.
-		wm_null, msg::WmNull, co::WM::NULL, msg::Wm::Null, 0
 	}
-	wm_ret_isize! {
+
+	empty_wm! { wm_paint, co::WM::PAINT, msg::Wm::Paint,
 		/// Adds a handler to [`WM_PAINT`](crate::msg::WmPaint) message.
-		wm_paint, msg::WmPaint, co::WM::PAINT, msg::Wm::Paint, 0
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
-		wm_set_focus, msg::WmSetFocus, co::WM::SETFOCUS, msg::Wm::SetFocus, 0
+
+	/// Adds a handler to [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
+	pub fn wm_set_focus<F>(&self, func: F)
+		where F: FnMut(msg::WmSetFocus) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::SETFOCUS, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::SetFocus(p) => { func(p); 0 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_SIZE`](crate::msg::WmSize) message.
-		wm_size, msg::WmSize, co::WM::SIZE, msg::Wm::Size, 0
+
+	/// Adds a handler to [`WM_SIZE`](crate::msg::WmSize) message.
+	pub fn wm_size<F>(&self, func: F)
+		where F: FnMut(msg::WmSize) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::SIZE, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::Size(p) => { func(p); 0 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
-	wm_ret_isize! {
-		/// Adds a handler to [`WM_SIZING`](crate::msg::WmSizing) message.
-		wm_sizing, msg::WmSizing, co::WM::SIZING, msg::Wm::Sizing, 1
+
+	/// Adds a handler to [`WM_SIZING`](crate::msg::WmSizing) message.
+	pub fn wm_sizing<F>(&self, func: F)
+		where F: FnMut(msg::WmSizing) + Send + Sync + 'static,
+	{
+		self.wm(co::WM::SIZING, {
+			let mut func = func;
+			move |p| {
+				match p {
+					msg::Wm::Sizing(p) => { func(p); 1 },
+					_ => panic_msg!(),
+				}
+			}
+		});
 	}
 }
