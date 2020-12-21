@@ -14,6 +14,17 @@ pub type HOOKPROC =
 	) -> isize;
 
 /// Type alias to
+/// [`TIMERPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-timerproc)
+/// callback function.
+pub type TIMERPROC =
+	unsafe extern "system" fn(
+		hWnd: HWND,
+		msg: co::WM,
+		timerId: usize,
+		nSeconds: u32,
+	);
+
+/// Type alias to
 /// [`SUBCLASSPROC`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-subclassproc)
 /// callback function.
 pub type SUBCLASSPROC =

@@ -31,6 +31,7 @@ pub enum Wm<'a> {
 	SetFocus(msg::WmSetFocus),
 	Size(msg::WmSize),
 	Sizing(msg::WmSizing<'a>),
+	Timer(msg::WmTimer),
 }
 
 //------------------------------------------------------------------------------
@@ -74,6 +75,7 @@ impl WmAny {
 			co::WM::SETFOCUS => Wm::SetFocus(self.into()),
 			co::WM::SIZE => Wm::Size(self.into()),
 			co::WM::SIZING => Wm::Sizing(self.into()),
+			co::WM::TIMER => Wm::Timer(self.into()),
 			m => panic!("Unsupported message: {}.", m),
 		}
 	}

@@ -1,5 +1,6 @@
 use std::ffi::c_void;
 
+use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HDC, HDROP, HMENU, HRGN, HWND};
@@ -465,6 +466,38 @@ impl<'a> From<WmAny> for WmSizing<'a> {
 		Self {
 			window_edge: co::WMSZ::from(p.wparam as i32),
 			coords: unsafe { (p.lparam as *mut RECT).as_mut() }.unwrap(),
+		}
+	}
+}
+
+/// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
+/// message parameters.
+pub struct WmTimer {
+	pub timer_id: u32,
+	pub timer_proc: Option<TIMERPROC>,
+}
+
+impl From<WmTimer> for WmAny {
+	fn from(p: WmTimer) -> Self {
+		Self {
+			msg: co::WM::TIMER,
+			wparam: p.timer_id as usize,
+			lparam: match p.timer_proc {
+				Some(proc) => proc as isize,
+				None => 0,
+			},
+		}
+	}
+}
+
+impl From<WmAny> for WmTimer {
+	fn from(p: WmAny) -> Self {
+		Self {
+			timer_id: p.wparam as u32,
+			timer_proc: match p.lparam {
+				0 => None,
+				addr => unsafe { std::mem::transmute(addr) },
+			}
 		}
 	}
 }

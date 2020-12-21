@@ -16,6 +16,10 @@ struct MsgMaps {
 		co::WM,
 		Box<dyn FnMut(msg::WmAny) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
 	>,
+	tmrs: HashMap< // WM_TIMER messages
+		u32,
+		Box<dyn FnMut() + Send + Sync + 'static>, // return value is never meaningful
+	>,
 	cmds: HashMap< // WM_COMMAND notifications
 		(co::CMD, u16), // code, ctrl_id
 		Box<dyn FnMut() + Send + Sync + 'static>, // return value is never meaningful
@@ -96,6 +100,7 @@ impl Events {
 		let heap_msg_maps = Box::new( // alloc memory on the heap
 			MsgMaps {
 				msgs: HashMap::new(),
+				tmrs: HashMap::new(),
 				cmds: HashMap::new(),
 				nfys: HashMap::new(),
 			}
@@ -130,6 +135,15 @@ impl Events {
 					None => ProcessResult::NotHandled, // no stored function
 				}
 			},
+			msg::Wm::Timer(p) => {
+				match msg_maps.tmrs.get_mut(&p.timer_id) {
+					Some(func) => { // we have a stored function to handle this timer
+						func();
+						ProcessResult::HandledWithoutRet
+					},
+					None => ProcessResult::NotHandled, // no stored function
+				}
+			}
 			_ => { // any other message
 				match msg_maps.msgs.get_mut(&m.msg) {
 					Some(func) => { // we have a stored function to handle this message
@@ -171,6 +185,15 @@ impl Events {
 			let mut func = func;
 			move |p| Some(func(p)) // return value is meaningful
 		});
+	}
+
+	/// Adds a handler to [`WM_TIMER`](crate::msg::WmTimer) message, narrowed to
+	/// a specific timer ID.
+	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
+		where F: FnMut() + Send + Sync + 'static,
+	{
+		unsafe { self.msg_maps.as_mut() }.unwrap()
+			.tmrs.insert(timer_id, Box::new(func));
 	}
 
 	/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
