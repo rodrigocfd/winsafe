@@ -55,7 +55,11 @@ macro_rules! from_handle {
 /// Implements a handle method for a message that returns an arbitrary type.
 /// Receives a macro that converts this value to isize.
 macro_rules! wm_ret_convt {
-	($name:ident, $arg:ty, $ret:ty, $wmconst:expr, $wmpat:path, $conv:tt) => {
+	(
+		$(#[$attr:meta])*
+		$name:ident, $arg:ty, $ret:ty, $wmconst:expr, $wmpat:path, $conv:tt
+	) => {
+		$(#[$attr])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut($arg) -> $ret + Send + Sync + 'static,
 		{
@@ -75,7 +79,11 @@ macro_rules! wm_ret_convt {
 
 /// Implements a handle method for a message that returns the given isize value.
 macro_rules! wm_ret_isize {
-	($name:ident, $arg:ty, $wmconst:expr, $wmpat:path, $retval:expr) => {
+	(
+		$(#[$attr:meta])*
+		$name:ident, $arg:ty, $wmconst:expr, $wmpat:path, $retval:expr
+	) => {
+		$(#[$attr])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut($arg) + Send + Sync + 'static,
 		{
@@ -115,23 +123,80 @@ impl Events {
 			.unwrap().insert(ident, Box::new(func));
 	}
 
-	wm_ret_isize!(wm_activate, msg::WmActivate, co::WM::ACTIVATE, msg::Wm::Activate, 0);
-	wm_ret_isize!(wm_activate_app, msg::WmActivateApp, co::WM::ACTIVATEAPP, msg::Wm::ActivateApp, 0);
-	wm_ret_isize!(wm_close, msg::WmClose, co::WM::CLOSE, msg::Wm::Close, 0);
-	wm_ret_isize!(wm_command, msg::WmCommand, co::WM::COMMAND, msg::Wm::Command, 0);
-	wm_ret_convt!(wm_create, msg::WmCreate, i32, co::WM::CREATE, msg::Wm::Create, as_isize);
-	wm_ret_convt!(wm_ctl_color_btn, msg::WmCtlColorBtn, HDC, co::WM::CTLCOLORBTN, msg::Wm::CtlColorBtn, from_handle);
-	wm_ret_convt!(wm_ctl_color_dlg, msg::WmCtlColorDlg, HDC, co::WM::CTLCOLORDLG, msg::Wm::CtlColorDlg, from_handle);
-	wm_ret_convt!(wm_ctl_color_edit, msg::WmCtlColorEdit, HDC, co::WM::CTLCOLOREDIT, msg::Wm::CtlColorEdit, from_handle);
-	wm_ret_convt!(wm_ctl_color_list_box, msg::WmCtlColorListBox, HDC, co::WM::CTLCOLORLISTBOX, msg::Wm::CtlColorListBox, from_handle);
-	wm_ret_convt!(wm_ctl_color_scroll_bar, msg::WmCtlColorScrollBar, HDC, co::WM::CTLCOLORSCROLLBAR, msg::Wm::CtlColorListScrollBar, from_handle);
-	wm_ret_convt!(wm_ctl_color_static, msg::WmCtlColorStatic, HDC, co::WM::CTLCOLORSTATIC, msg::Wm::CtlColorListStatic, from_handle);
-	wm_ret_isize!(wm_destroy, msg::WmDestroy, co::WM::DESTROY, msg::Wm::Destroy, 0);
-	wm_ret_isize!(wm_drop_files, msg::WmDropFiles, co::WM::DROPFILES, msg::Wm::DropFiles, 0);
-	wm_ret_convt!(wm_init_dialog, msg::WmInitDialog, bool, co::WM::INITDIALOG, msg::Wm::InitDialog, as_isize);
-	wm_ret_isize!(wm_init_menu_popup, msg::WmInitMenuPopup, co::WM::INITMENUPOPUP, msg::Wm::InitMenuPopup, 0);
-	wm_ret_convt!(wm_notify, msg::WmNotify, isize, co::WM::NOTIFY, msg::Wm::Notify, as_isize);
-	wm_ret_isize!(wm_null, msg::WmNull, co::WM::NULL, msg::Wm::Null, 0);
-	wm_ret_isize!(wm_size, msg::WmSize, co::WM::SIZE, msg::Wm::Size, 0);
-	wm_ret_isize!(wm_sizing, msg::WmSizing, co::WM::SIZING, msg::Wm::Sizing, 1);
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_ACTIVATE`](crate::msg::WmActivate) message.
+		wm_activate, msg::WmActivate, co::WM::ACTIVATE, msg::Wm::Activate, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
+		wm_activate_app, msg::WmActivateApp, co::WM::ACTIVATEAPP, msg::Wm::ActivateApp, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_CLOSE`](crate::msg::WmClose) message.
+		wm_close, msg::WmClose, co::WM::CLOSE, msg::Wm::Close, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
+		wm_command, msg::WmCommand, co::WM::COMMAND, msg::Wm::Command, 0
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_CREATE`](crate::msg::WmCreate) message.
+		wm_create, msg::WmCreate, i32, co::WM::CREATE, msg::Wm::Create, as_isize
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
+		wm_ctl_color_btn, msg::WmCtlColorBtn, HDC, co::WM::CTLCOLORBTN, msg::Wm::CtlColorBtn, from_handle
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
+		wm_ctl_color_dlg, msg::WmCtlColorDlg, HDC, co::WM::CTLCOLORDLG, msg::Wm::CtlColorDlg, from_handle
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
+		wm_ctl_color_edit, msg::WmCtlColorEdit, HDC, co::WM::CTLCOLOREDIT, msg::Wm::CtlColorEdit, from_handle
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
+		wm_ctl_color_list_box, msg::WmCtlColorListBox, HDC, co::WM::CTLCOLORLISTBOX, msg::Wm::CtlColorListBox, from_handle
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
+		wm_ctl_color_scroll_bar, msg::WmCtlColorScrollBar, HDC, co::WM::CTLCOLORSCROLLBAR, msg::Wm::CtlColorListScrollBar, from_handle
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
+		wm_ctl_color_static, msg::WmCtlColorStatic, HDC, co::WM::CTLCOLORSTATIC, msg::Wm::CtlColorListStatic, from_handle
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_DESTROY`](crate::msg::WmDestroy) message.
+		wm_destroy, msg::WmDestroy, co::WM::DESTROY, msg::Wm::Destroy, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
+		wm_drop_files, msg::WmDropFiles, co::WM::DROPFILES, msg::Wm::DropFiles, 0
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_INITDIALOG`](crate::msg::WmInitDialog message.
+		wm_init_dialog, msg::WmInitDialog, bool, co::WM::INITDIALOG, msg::Wm::InitDialog, as_isize
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_INITMENUPOPUP`](crate::msg::WmInitMenuPopup) message.
+		wm_init_menu_popup, msg::WmInitMenuPopup, co::WM::INITMENUPOPUP, msg::Wm::InitMenuPopup, 0
+	}
+	wm_ret_convt! {
+		/// Adds a handler to [`WM_NOTIFY`](crate::msg::WmNotify) message.
+		wm_notify, msg::WmNotify, isize, co::WM::NOTIFY, msg::Wm::Notify, as_isize
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_NULL`](crate::msg::WmNull) message.
+		wm_null, msg::WmNull, co::WM::NULL, msg::Wm::Null, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_SIZE`](crate::msg::WmSize) message.
+		wm_size, msg::WmSize, co::WM::SIZE, msg::Wm::Size, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_SIZING`](crate::msg::WmSizing message.
+		wm_sizing, msg::WmSizing, co::WM::SIZING, msg::Wm::Sizing, 1
+	}
 }
