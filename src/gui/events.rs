@@ -4,10 +4,17 @@ use crate::co;
 use crate::handles::HDC;
 use crate::msg;
 
+/// The result of processing a message.
+pub enum ProcessResult {
+	NotHandled,            // message was not handler because no such handler is stored
+	HandledWithRet(isize), // return value is meaningful
+	HandledWithoutRet,     // return value is not meaningful, whatever default value
+}
+
 struct MsgMaps {
 	msgs: HashMap< // ordinary WM messages
 		co::WM,
-		Box<dyn FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
+		Box<dyn FnMut(msg::WmAny) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
 	>,
 	cmds: HashMap< // WM_COMMAND notifications
 		(co::CMD, u16), // code, ctrl_id
@@ -18,6 +25,8 @@ struct MsgMaps {
 		Box<dyn FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
 	>,
 }
+
+//--------------------------------------------------------------------------------
 
 /// Allows adding closures to handle window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
@@ -72,7 +81,7 @@ macro_rules! empty_wm {
 			self.add_msg($wmconst, {
 				let mut func = func;
 				move |p| {
-					match p {
+					match p.message() {
 						$wmenum(_) => { func(); None }, // return value is never meaningful
 						_ => panic_msg!(),
 					}
@@ -98,9 +107,46 @@ impl Events {
 		}
 	}
 
+	pub(super) fn process_message(&self, m: msg::WmAny) -> ProcessResult {
+		let msg_maps = unsafe { self.msg_maps.as_mut() }.unwrap();
+		match m.message() {
+			msg::Wm::Notify(p) => {
+				match msg_maps.nfys.get_mut(&(p.nmhdr.idFrom as u16, p.nmhdr.code)) {
+					Some(func) => { // we have a stored function to handle this notification
+						match func(p) {
+							Some(ret) => ProcessResult::HandledWithRet(ret), // meaningful return value
+							None => ProcessResult::HandledWithoutRet,
+						}
+					},
+					None => ProcessResult::NotHandled, // no stored function
+				}
+			},
+			msg::Wm::Command(p) => {
+				match msg_maps.cmds.get_mut(&(p.code, p.ctrl_id)) {
+					Some(func) => { // we have a stored function to handle this command notification
+						func();
+						ProcessResult::HandledWithoutRet
+					},
+					None => ProcessResult::NotHandled, // no stored function
+				}
+			},
+			_ => { // any other message
+				match msg_maps.msgs.get_mut(&m.msg) {
+					Some(func) => { // we have a stored function to handle this message
+						match func(m) {
+							Some(ret) => ProcessResult::HandledWithRet(ret), // meaningful return value
+							None => ProcessResult::HandledWithoutRet,
+						}
+					},
+					None => ProcessResult::NotHandled, // no stored function
+				}
+			}
+		}
+	}
+
 	/// Raw add message.
 	fn add_msg<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static,
+		where F: FnMut(msg::WmAny) -> Option<isize> + Send + Sync + 'static,
 	{
 		unsafe { self.msg_maps.as_mut() }.unwrap()
 			.msgs.insert(ident, Box::new(func));
@@ -119,7 +165,7 @@ impl Events {
 	/// You should always prefer the specific message handlers, which will give
 	/// you the correct message parameters.
 	pub fn wm<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(msg::Wm) -> isize + Send + Sync + 'static,
+		where F: FnMut(msg::WmAny) -> isize + Send + Sync + 'static,
 	{
 		self.add_msg(ident, {
 			let mut func = func;
@@ -166,7 +212,7 @@ impl Events {
 		self.add_msg(co::WM::ACTIVATE, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::Activate(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
@@ -181,7 +227,7 @@ impl Events {
 		self.add_msg(co::WM::ACTIVATEAPP, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::ActivateApp(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
@@ -196,7 +242,7 @@ impl Events {
 		self.add_msg(co::WM::APPCOMMAND, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::AppCommand(p) => { func(p); Some(1) }, // TRUE
 					_ => panic_msg!(),
 				}
@@ -215,7 +261,7 @@ impl Events {
 		self.add_msg(co::WM::CREATE, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::Create(p) => Some(func(p) as isize),
 					_ => panic_msg!(),
 				}
@@ -230,7 +276,7 @@ impl Events {
 		self.add_msg(co::WM::CTLCOLORBTN, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::CtlColorBtn(p) => Some(unsafe { func(p).as_ptr() } as isize),
 					_ => panic_msg!(),
 				}
@@ -245,7 +291,7 @@ impl Events {
 		self.add_msg(co::WM::CTLCOLORDLG, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::CtlColorDlg(p) => Some(unsafe { func(p).as_ptr() } as isize),
 					_ => panic_msg!(),
 				}
@@ -260,7 +306,7 @@ impl Events {
 		self.add_msg(co::WM::CTLCOLOREDIT, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::CtlColorEdit(p) => Some(unsafe { func(p).as_ptr() } as isize),
 					_ => panic_msg!(),
 				}
@@ -275,7 +321,7 @@ impl Events {
 		self.add_msg(co::WM::CTLCOLORLISTBOX, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::CtlColorListBox(p) => Some(unsafe { func(p).as_ptr() } as isize),
 					_ => panic_msg!(),
 				}
@@ -290,7 +336,7 @@ impl Events {
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::CtlColorListScrollBar(p) => Some(unsafe { func(p).as_ptr() } as isize),
 					_ => panic_msg!(),
 				}
@@ -305,7 +351,7 @@ impl Events {
 		self.add_msg(co::WM::CTLCOLORSTATIC, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::CtlColorListStatic(p) => Some(unsafe { func(p).as_ptr() } as isize),
 					_ => panic_msg!(),
 				}
@@ -324,7 +370,7 @@ impl Events {
 		self.add_msg(co::WM::DROPFILES, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::DropFiles(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
@@ -339,7 +385,7 @@ impl Events {
 		self.add_msg(co::WM::ENDSESSION, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::EndSession(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
@@ -354,7 +400,7 @@ impl Events {
 		self.add_msg(co::WM::INITDIALOG, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::InitDialog(p) => Some(func(p) as isize),
 					_ => panic_msg!(),
 				}
@@ -369,7 +415,7 @@ impl Events {
 		self.add_msg(co::WM::INITMENUPOPUP, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::InitMenuPopup(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
@@ -402,7 +448,7 @@ impl Events {
 		self.add_msg(co::WM::SETFOCUS, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::SetFocus(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
@@ -417,7 +463,7 @@ impl Events {
 		self.add_msg(co::WM::SIZE, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::Size(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
@@ -432,7 +478,7 @@ impl Events {
 		self.add_msg(co::WM::SIZING, {
 			let mut func = func;
 			move |p| {
-				match p {
+				match p.message() {
 					msg::Wm::Sizing(p) => { func(p); None },
 					_ => panic_msg!(),
 				}
