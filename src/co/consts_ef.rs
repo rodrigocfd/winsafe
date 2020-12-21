@@ -5,6 +5,23 @@ const_type! { EMF, u32,
 	CENTERED, 0x00000001
 }
 
+const_type! { ENDSESSION, u32,
+	/// [`WM_ENDSESSION`](crate::msg::WmEndSession) event.
+
+	RESTARTORSHUTDOWN, 0
+	CLOSEAPP, 0x00000001
+	CRITICAL, 0x40000000
+	LOGOFF, 0x80000000
+}
+
+const_type! { FAPPCOMMAND, u16,
+	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) input event.
+
+	MOUSE, 0x8000
+	KEY, 0
+	OEM, 0x1000
+}
+
 const_type! { FF, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`, used with
 	/// [`PITCH`](crate::co::PITCH).

@@ -28,9 +28,8 @@ const_type! { ADRF, u32,
 	DRAWIMAGE, 3
 }
 
-const_type! { APPCOMMAND, i16,
-	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand)
-	/// commands.
+const_type! { APPCOMMAND, u16,
+	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) commands.
 
 	BROWSER_BACKWARD, 1
 	BROWSER_FORWARD, 2

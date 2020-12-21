@@ -49,7 +49,7 @@ macro_rules! as_isize {
 
 /// Converts a handle value to isize.
 macro_rules! from_handle {
-	($p:expr) => { (unsafe { $p.as_ptr() }) as isize };
+	($p:expr) => { unsafe { $p.as_ptr() } as isize };
 }
 
 /// Implements a handle method for a message that returns an arbitrary type.
@@ -132,6 +132,10 @@ impl Events {
 		wm_activate_app, msg::WmActivateApp, co::WM::ACTIVATEAPP, msg::Wm::ActivateApp, 0
 	}
 	wm_ret_isize! {
+		/// Adds a handler to [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
+		wm_app_command, msg::WmAppCommand, co::WM::APPCOMMAND, msg::Wm::AppCommand, 1
+	}
+	wm_ret_isize! {
 		/// Adds a handler to [`WM_CLOSE`](crate::msg::WmClose) message.
 		wm_close, msg::WmClose, co::WM::CLOSE, msg::Wm::Close, 0
 	}
@@ -175,8 +179,12 @@ impl Events {
 		/// Adds a handler to [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
 		wm_drop_files, msg::WmDropFiles, co::WM::DROPFILES, msg::Wm::DropFiles, 0
 	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
+		wm_end_session, msg::WmEndSession, co::WM::ENDSESSION, msg::Wm::EndSession, 0
+	}
 	wm_ret_convt! {
-		/// Adds a handler to [`WM_INITDIALOG`](crate::msg::WmInitDialog message.
+		/// Adds a handler to [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
 		wm_init_dialog, msg::WmInitDialog, bool, co::WM::INITDIALOG, msg::Wm::InitDialog, as_isize
 	}
 	wm_ret_isize! {
@@ -185,18 +193,39 @@ impl Events {
 	}
 	wm_ret_convt! {
 		/// Adds a handler to [`WM_NOTIFY`](crate::msg::WmNotify) message.
+		///
+		/// You should always prefer the specific notification handlers, which
+		/// will give you the correct notification struct.
 		wm_notify, msg::WmNotify, isize, co::WM::NOTIFY, msg::Wm::Notify, as_isize
 	}
 	wm_ret_isize! {
+		/// Adds a handler to [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
+		wm_nc_destroy, msg::WmNcDestroy, co::WM::NCDESTROY, msg::Wm::NcDestroy, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
+		wm_nc_paint, msg::WmNcPaint, co::WM::NCPAINT, msg::Wm::NcPaint, 0
+	}
+	wm_ret_isize! {
 		/// Adds a handler to [`WM_NULL`](crate::msg::WmNull) message.
+		///
+		/// Usually this message is not handled.
 		wm_null, msg::WmNull, co::WM::NULL, msg::Wm::Null, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_PAINT`](crate::msg::WmPaint) message.
+		wm_paint, msg::WmPaint, co::WM::PAINT, msg::Wm::Paint, 0
+	}
+	wm_ret_isize! {
+		/// Adds a handler to [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
+		wm_set_focus, msg::WmSetFocus, co::WM::SETFOCUS, msg::Wm::SetFocus, 0
 	}
 	wm_ret_isize! {
 		/// Adds a handler to [`WM_SIZE`](crate::msg::WmSize) message.
 		wm_size, msg::WmSize, co::WM::SIZE, msg::Wm::Size, 0
 	}
 	wm_ret_isize! {
-		/// Adds a handler to [`WM_SIZING`](crate::msg::WmSizing message.
+		/// Adds a handler to [`WM_SIZING`](crate::msg::WmSizing) message.
 		wm_sizing, msg::WmSizing, co::WM::SIZING, msg::Wm::Sizing, 1
 	}
 }

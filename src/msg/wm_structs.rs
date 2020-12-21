@@ -2,15 +2,16 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::{HDC, HDROP, HMENU, HWND};
+use crate::handles::{HDC, HDROP, HMENU, HRGN, HWND};
+use crate::internal_defs::FAPPCOMMAND_MASK;
 use crate::msg::WmAny;
 use crate::structs::{CREATESTRUCT, RECT};
 
 /// Struct for a message that has no parameters.
 macro_rules! empty_msg {
 	(
+		$name:ident, $wmconst:expr,
 		$(#[$attr:meta])*
-		$name:ident, $wmconst:expr
 	) => {
 		$(#[$attr])*
 		pub struct $name {}
@@ -36,8 +37,8 @@ macro_rules! empty_msg {
 /// Struct for WM_CTLCOLOR* messages.
 macro_rules! ctl_color_msg {
 	(
+		$name:ident, $wmconst:expr,
 		$(#[$attr:meta])*
-		$name:ident, $wmconst:expr
 	) => {
 		$(#[$attr])*
 		pub struct $name {
@@ -122,10 +123,39 @@ impl From<WmAny> for WmActivateApp {
 	}
 }
 
-empty_msg! {
+/// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
+/// message parameters.
+pub struct WmAppCommand {
+	pub hwnd_owner: HWND,
+	pub app_command: co::APPCOMMAND,
+	pub u_device: co::FAPPCOMMAND,
+	pub keys: co::MK,
+}
+
+impl From<WmAppCommand> for WmAny {
+	fn from(p: WmAppCommand) -> Self {
+		Self {
+			msg: co::WM::APPCOMMAND,
+			wparam: unsafe { p.hwnd_owner.as_ptr() } as usize,
+			lparam: MAKEDWORD(p.keys.into(), u16::from(p.app_command) | u16::from(p.u_device)) as isize,
+		}
+	}
+}
+
+impl From<WmAny> for WmAppCommand {
+	fn from(p: WmAny) -> Self {
+		Self {
+			hwnd_owner: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
+			app_command: co::APPCOMMAND::from(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
+			u_device: co::FAPPCOMMAND::from(HIWORD(p.lparam as u32) & FAPPCOMMAND_MASK),
+			keys: co::MK::from(LOWORD(p.lparam as u32)),
+		}
+	}
+}
+
+empty_msg! { WmClose, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 	/// message, which has no parameters.
-	WmClose, co::WM::CLOSE
 }
 
 /// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -183,46 +213,39 @@ impl<'a> From<WmAny> for WmCreate<'a> {
 	}
 }
 
-ctl_color_msg! {
+ctl_color_msg! { WmCtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 	/// message parameters.
-	WmCtlColorBtn, co::WM::CTLCOLORBTN
 }
 
-ctl_color_msg! {
+ctl_color_msg! { WmCtlColorDlg, co::WM::CTLCOLORDLG,
 	/// [`WM_CTLCOLORDLG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 	/// message parameters.
-	WmCtlColorDlg, co::WM::CTLCOLORDLG
 }
 
-ctl_color_msg! {
+ctl_color_msg! { WmCtlColorEdit, co::WM::CTLCOLOREDIT,
 	/// [`WM_CTLCOLOREDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 	/// message parameters.
-	WmCtlColorEdit, co::WM::CTLCOLOREDIT
 }
 
-ctl_color_msg! {
+ctl_color_msg! { WmCtlColorListBox, co::WM::CTLCOLORLISTBOX,
 	/// [`WM_CTLCOLORLISTBOX`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 	/// message parameters.
-	WmCtlColorListBox, co::WM::CTLCOLORLISTBOX
 }
 
-ctl_color_msg! {
+ctl_color_msg! { WmCtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR,
 	/// [`WM_CTLCOLORSCROLLBAR`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 	/// message parameters.
-	WmCtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR
 }
 
-ctl_color_msg! {
+ctl_color_msg! { WmCtlColorStatic, co::WM::CTLCOLORSTATIC,
 	/// [`WM_CTLCOLORSTATIC`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 	/// message parameters.
-	WmCtlColorStatic, co::WM::CTLCOLORSTATIC
 }
 
-empty_msg! {
+empty_msg! { WmDestroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 	/// message, which has no parameters.
-	WmDestroy, co::WM::DESTROY
 }
 
 /// [`WM_DROPFILES`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
@@ -245,6 +268,32 @@ impl From<WmAny> for WmDropFiles {
 	fn from(p: WmAny) -> Self {
 		Self {
 			hdrop: unsafe { HDROP::from_ptr(p.wparam as *mut c_void) },
+		}
+	}
+}
+
+/// [`WM_ENDSESSION`](https://docs.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
+/// message parameters.
+pub struct WmEndSession {
+	pub is_session_being_ended: bool,
+	pub event: co::ENDSESSION,
+}
+
+impl From<WmEndSession> for WmAny {
+	fn from(p: WmEndSession) -> Self {
+		Self {
+			msg: co::WM::ENDSESSION,
+			wparam: p.is_session_being_ended as usize,
+			lparam: u32::from(p.event) as isize,
+		}
+	}
+}
+
+impl From<WmAny> for WmEndSession {
+	fn from(p: WmAny) -> Self {
+		Self {
+			is_session_being_ended: p.wparam != 0,
+			event: co::ENDSESSION::from(p.lparam as u32),
 		}
 	}
 }
@@ -303,10 +352,67 @@ impl From<WmAny> for WmInitMenuPopup {
 	}
 }
 
-empty_msg! {
+empty_msg! { WmNcDestroy, co::WM::NCDESTROY,
+	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
+	/// message, which has no parameters.
+}
+
+/// [`WM_NCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
+/// message parameters.
+pub struct WmNcPaint {
+	pub updated_hrgn: HRGN,
+}
+
+impl From<WmNcPaint> for WmAny {
+	fn from(p: WmNcPaint) -> Self {
+		Self {
+			msg: co::WM::NCPAINT,
+			wparam: unsafe { p.updated_hrgn.as_ptr() } as usize,
+			lparam: 0,
+		}
+	}
+}
+
+impl From<WmAny> for WmNcPaint {
+	fn from(p: WmAny) -> Self {
+		Self {
+			updated_hrgn: unsafe { HRGN::from_ptr(p.wparam as *mut c_void) },
+		}
+	}
+}
+
+empty_msg! { WmNull, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 	/// message, which has no parameters.
-	WmNull, co::WM::NULL
+}
+
+empty_msg! { WmPaint, co::WM::PAINT,
+	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
+	/// message, which has no parameters.
+}
+
+/// [`WM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
+/// message parameters.
+pub struct WmSetFocus {
+	pub hwnd_losing_focus: HWND,
+}
+
+impl From<WmSetFocus> for WmAny {
+	fn from(p: WmSetFocus) -> Self {
+		Self {
+			msg: co::WM::SETFOCUS,
+			wparam: unsafe { p.hwnd_losing_focus.as_ptr() } as usize,
+			lparam: 0,
+		}
+	}
+}
+
+impl From<WmAny> for WmSetFocus {
+	fn from(p: WmAny) -> Self {
+		Self {
+			hwnd_losing_focus: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
+		}
+	}
 }
 
 /// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
