@@ -73,9 +73,9 @@ impl EventsButton {
 	pub fn bcn_drop_down<F>(&self, func: F)
 		where F: FnMut(&NMBCDROPDOWN) + Send + Sync + 'static,
 	{
-		self.parent_events.wm_notify(self.ctrl_id, co::NM::BCN_DROPDOWN, {
+		self.parent_events.add_nfy(self.ctrl_id, co::NM::BCN_DROPDOWN, {
 			let mut func = func;
-			move |p| { func(unsafe { p.cast_nmhdr::<NMBCDROPDOWN>() }); 0 }
+			move |p| { func(unsafe { p.cast_nmhdr::<NMBCDROPDOWN>() }); None }
 		});
 	}
 
@@ -85,9 +85,9 @@ impl EventsButton {
 	pub fn bcn_hot_item_change<F>(&self, func: F)
 		where F: FnMut(&NMBCHOTITEM) + Send + Sync + 'static,
 	{
-		self.parent_events.wm_notify(self.ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
+		self.parent_events.add_nfy(self.ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
 			let mut func = func;
-			move |p| { func(unsafe { p.cast_nmhdr::<NMBCHOTITEM>() }); 0 }
+			move |p| { func(unsafe { p.cast_nmhdr::<NMBCHOTITEM>() }); None }
 		});
 	}
 
@@ -145,9 +145,9 @@ impl EventsButton {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + Send + Sync + 'static,
 	{
-		self.parent_events.wm_notify(self.ctrl_id, co::NM::CUSTOMDRAW, {
+		self.parent_events.add_nfy(self.ctrl_id, co::NM::CUSTOMDRAW, {
 			let mut func = func;
-			move |p| u32::from(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })) as isize
+			move |p| Some(u32::from(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })) as isize)
 		});
 	}
 }
