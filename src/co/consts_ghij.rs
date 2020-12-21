@@ -35,6 +35,20 @@ const_type! { GWLP, i32,
 	GWLP_DWLP_USER, Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
 }
 
+const_type! { HICF, u32,
+	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags`.
+
+	OTHER, 0x00000000
+	ARROWKEYS, 0x00000002
+	ACCELERATOR, 0x00000004
+	DUPACCEL, 0x00000008
+	ENTERING, 0x00000010
+	LEAVING, 0x00000020
+	RESELECT, 0x00000040
+	LMOUSE, 0x00000080
+	TOGGLEDROPDOWN, 0x00000100
+}
+
 const_type! { IDC, usize,
 	/// [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
 

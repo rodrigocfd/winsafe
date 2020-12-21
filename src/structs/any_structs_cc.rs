@@ -3,8 +3,9 @@
 #![allow(non_snake_case)]
 
 use crate::co;
+use crate::handles::HDC;
 use crate::internal_defs::L_MAX_URL_LENGTH;
-use crate::structs::{NMHDR, POINT};
+use crate::structs::{NMHDR, POINT, RECT};
 
 /// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
 /// struct.
@@ -60,6 +61,24 @@ impl Default for LVITEM {
 	}
 }
 
+/// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct NMBCDROPDOWN {
+	pub hdr: NMHDR,
+	pub rcButton: RECT,
+}
+
+/// [`NMBCHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbchotitem)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct NMBCHOTITEM{
+	pub hdr: NMHDR,
+	pub dwFlags: co::HICF,
+}
+
 /// [`NMCHAR`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmchar)
 /// struct.
 #[repr(C)]
@@ -69,6 +88,20 @@ pub struct NMCHAR {
 	pub ch: u32,
 	pub dwItemPrev: u32,
 	pub dwItemNext: u32,
+}
+
+/// [`NMCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmcustomdraw)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct NMCUSTOMDRAW {
+	pub hdr: NMHDR,
+	pub dwDrawStage: co::CDDS,
+	pub hdc: HDC,
+	pub rc: RECT,
+	pub dwItemSpec: usize,
+	pub uItemState: co::CDIS,
+	pub lItemlParam: isize,
 }
 
 /// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)

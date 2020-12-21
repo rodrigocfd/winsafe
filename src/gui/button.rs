@@ -1,8 +1,9 @@
-use crate::co;
+use crate::{NMBCHOTITEM, NMCUSTOMDRAW, co};
 use crate::gui::events::Events;
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::Parent;
 use crate::handles::HWND;
+use crate::structs::NMBCDROPDOWN;
 
 /// Native
 /// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
@@ -67,7 +68,31 @@ impl EventsButton {
 	}
 
 	/// Adds a handler to
-	/// [BN_CLICKED](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
+	/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
+	/// notification.
+	pub fn bcn_drop_down<F>(&self, func: F)
+		where F: FnMut(&NMBCDROPDOWN) + Send + Sync + 'static,
+	{
+		self.parent_events.wm_notify(self.ctrl_id, co::NM::BCN_DROPDOWN, {
+			let mut func = func;
+			move |p| { func(unsafe { p.cast_nmhdr::<NMBCDROPDOWN>() }); 0 }
+		});
+	}
+
+	/// Adds a handler to
+	/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
+	/// notification.
+	pub fn bcn_hot_item_change<F>(&self, func: F)
+		where F: FnMut(&NMBCHOTITEM) + Send + Sync + 'static,
+	{
+		self.parent_events.wm_notify(self.ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
+			let mut func = func;
+			move |p| { func(unsafe { p.cast_nmhdr::<NMBCHOTITEM>() }); 0 }
+		});
+	}
+
+	/// Adds a handler to
+	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 	/// command notification.
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
@@ -79,7 +104,7 @@ impl EventsButton {
 	}
 
 	/// Adds a handler to
-	/// [BN_DBLCLK](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
+	/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 	/// command notification.
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
@@ -91,7 +116,7 @@ impl EventsButton {
 	}
 
 	/// Adds a handler to
-	/// [BN_KILLFOCUS](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
+	/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 	/// command notification.
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
@@ -103,7 +128,7 @@ impl EventsButton {
 	}
 
 	/// Adds a handler to
-	/// [BN_SETFOCUS](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
+	/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 	/// command notification.
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
@@ -111,6 +136,18 @@ impl EventsButton {
 		self.parent_events.wm_command(co::CMD::BN_SETFOCUS, self.ctrl_id, {
 			let mut func = func;
 			move || func()
+		});
+	}
+
+	/// Adds a handler to
+	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
+	/// notification.
+	pub fn nm_custom_draw<F>(&self, func: F)
+		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + Send + Sync + 'static,
+	{
+		self.parent_events.wm_notify(self.ctrl_id, co::NM::CUSTOMDRAW, {
+			let mut func = func;
+			move |p| u32::from(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })) as isize
 		});
 	}
 }
