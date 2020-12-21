@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use crate::co;
+use crate::handles::HDC;
 use crate::msg;
 
 /// Allows you to add closures to handle window
@@ -11,9 +12,9 @@ pub struct Events {
 	// Performs manual memory management by keeping a raw pointer to a
 	// heap-allocated memory block. All cloned objects will have a pointer to the
 	// memory block of the original object, which must outlive them all. This
-	// could be safely achieved with `Arc` and `RwLock`, but it would incur in an
-	// unnecessary cost, since `Events` is shared only between a parent window
-	// and its child controls, and the controls only use it to add events at the
+	// could be safely achieved with Arc and RwLock, but it would incur in an
+	// unnecessary cost, since Events is shared only between a parent window and
+	// its child controls, and the controls only use it to add events at the
 	// beginning of the program. Adding events later is not allowed.
 	msgs: *mut HashMap<
 		co::WM,
@@ -41,18 +42,28 @@ impl Drop for Events {
 	}
 }
 
-/// Implements a method that receives a specific message which returns a
-/// value of a specific type, and wraps it in a generic message.
-macro_rules! wm_ret_t {
-	($name:ident, $arg:ty, $ret:ty, $wmconst:expr, $wmpat:path) => {
+/// Converts a value directly to isize.
+macro_rules! as_isize {
+	($p:expr) => { $p as isize };
+}
+
+/// Converts a handle value to isize.
+macro_rules! from_handle {
+	($p:expr) => { (unsafe { $p.as_ptr() }) as isize };
+}
+
+/// Implements a handle method for a message that returns an arbitrary type.
+/// Receives a macro that converts this value to isize.
+macro_rules! wm_ret_convt {
+	($name:ident, $arg:ty, $ret:ty, $wmconst:expr, $wmpat:path, $conv:tt) => {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut($arg) -> $ret + Send + Sync + 'static,
 		{
-			self.wm($wmconst, {
+			self.wm($wmconst, { // add as an ordinary message
 				let mut func = func;
 				move |p| {
 					if let $wmpat(p) = p {
-						func(p) as isize // convert user returned value
+						$conv!(func(p)) // convert user returned value
 					} else {
 						panic!("Event incorrectly handled internally. This is a bug.");
 					}
@@ -62,14 +73,13 @@ macro_rules! wm_ret_t {
 	};
 }
 
-/// Implements a method that receives a specific message which returns the given
-/// value, and wraps it in a generic message.
-macro_rules! wm_ret_v {
+/// Implements a handle method for a message that returns the given isize value.
+macro_rules! wm_ret_isize {
 	($name:ident, $arg:ty, $wmconst:expr, $wmpat:path, $retval:expr) => {
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut($arg) + Send + Sync + 'static
+			where F: FnMut($arg) + Send + Sync + 'static,
 		{
-			self.wm($wmconst, {
+			self.wm($wmconst, { // add as an ordinary message
 				let mut func = func;
 				move |p| {
 					if let $wmpat(p) = p {
@@ -105,17 +115,18 @@ impl Events {
 			.unwrap().insert(ident, Box::new(func));
 	}
 
-	wm_ret_v!(wm_activate, msg::WmActivate, co::WM::ACTIVATE, msg::Wm::Activate, 0);
-	wm_ret_v!(wm_activate_app, msg::WmActivateApp, co::WM::ACTIVATEAPP, msg::Wm::ActivateApp, 0);
-	wm_ret_v!(wm_close, msg::WmClose, co::WM::CLOSE, msg::Wm::Close, 0);
-	wm_ret_v!(wm_command, msg::WmCommand, co::WM::COMMAND, msg::Wm::Command, 0);
-	wm_ret_t!(wm_create, msg::WmCreate, i32, co::WM::CREATE, msg::Wm::Create);
-	wm_ret_v!(wm_destroy, msg::WmDestroy, co::WM::DESTROY, msg::Wm::Destroy, 0);
-	wm_ret_v!(wm_drop_files, msg::WmDropFiles, co::WM::DROPFILES, msg::Wm::DropFiles, 0);
-	wm_ret_t!(wm_init_dialog, msg::WmInitDialog, bool, co::WM::INITDIALOG, msg::Wm::InitDialog);
-	wm_ret_v!(wm_init_menu_popup, msg::WmInitMenuPopup, co::WM::INITMENUPOPUP, msg::Wm::InitMenuPopup, 0);
-	wm_ret_t!(wm_notify, msg::WmNotify, isize, co::WM::NOTIFY, msg::Wm::Notify);
-	wm_ret_v!(wm_null, msg::WmNull, co::WM::NULL, msg::Wm::Null, 0);
-	wm_ret_v!(wm_size, msg::WmSize, co::WM::SIZE, msg::Wm::Size, 0);
-	wm_ret_v!(wm_sizing, msg::WmSizing, co::WM::SIZING, msg::Wm::Sizing, 1);
+	wm_ret_isize!(wm_activate, msg::WmActivate, co::WM::ACTIVATE, msg::Wm::Activate, 0);
+	wm_ret_isize!(wm_activate_app, msg::WmActivateApp, co::WM::ACTIVATEAPP, msg::Wm::ActivateApp, 0);
+	wm_ret_isize!(wm_close, msg::WmClose, co::WM::CLOSE, msg::Wm::Close, 0);
+	wm_ret_isize!(wm_command, msg::WmCommand, co::WM::COMMAND, msg::Wm::Command, 0);
+	wm_ret_convt!(wm_create, msg::WmCreate, i32, co::WM::CREATE, msg::Wm::Create, as_isize);
+	wm_ret_convt!(wm_ctl_color_btn, msg::WmCtlColorBtn, HDC, co::WM::CTLCOLORBTN, msg::Wm::CtlColorBtn, from_handle);
+	wm_ret_isize!(wm_destroy, msg::WmDestroy, co::WM::DESTROY, msg::Wm::Destroy, 0);
+	wm_ret_isize!(wm_drop_files, msg::WmDropFiles, co::WM::DROPFILES, msg::Wm::DropFiles, 0);
+	wm_ret_convt!(wm_init_dialog, msg::WmInitDialog, bool, co::WM::INITDIALOG, msg::Wm::InitDialog, as_isize);
+	wm_ret_isize!(wm_init_menu_popup, msg::WmInitMenuPopup, co::WM::INITMENUPOPUP, msg::Wm::InitMenuPopup, 0);
+	wm_ret_convt!(wm_notify, msg::WmNotify, isize, co::WM::NOTIFY, msg::Wm::Notify, as_isize);
+	wm_ret_isize!(wm_null, msg::WmNull, co::WM::NULL, msg::Wm::Null, 0);
+	wm_ret_isize!(wm_size, msg::WmSize, co::WM::SIZE, msg::Wm::Size, 0);
+	wm_ret_isize!(wm_sizing, msg::WmSizing, co::WM::SIZING, msg::Wm::Sizing, 1);
 }

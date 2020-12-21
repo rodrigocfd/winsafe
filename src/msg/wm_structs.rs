@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::{HDROP, HMENU, HWND};
+use crate::handles::{HDC, HDROP, HMENU, HWND};
 use crate::msg::WmAny;
 use crate::structs::{CREATESTRUCT, RECT};
 
@@ -146,6 +146,32 @@ impl<'a> From<WmAny> for WmCreate<'a> {
 	fn from(p: WmAny) -> Self {
 		Self {
 			createstruct: unsafe { (p.lparam as *const CREATESTRUCT).as_ref() }.unwrap(),
+		}
+	}
+}
+
+/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
+/// message parameters.
+pub struct WmCtlColorBtn {
+	pub hdc: HDC,
+	pub hwnd: HWND,
+}
+
+impl<'a> From<WmCtlColorBtn> for WmAny {
+	fn from(p: WmCtlColorBtn) -> Self {
+		Self {
+			msg: co::WM::CTLCOLORBTN,
+			wparam: unsafe { p.hdc.as_ptr() } as usize,
+			lparam: unsafe { p.hwnd.as_ptr() } as isize,
+		}
+	}
+}
+
+impl<'a> From<WmAny> for WmCtlColorBtn {
+	fn from(p: WmAny) -> Self {
+		Self {
+			hdc: unsafe { HDC::from_ptr(p.wparam as *mut c_void) },
+			hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
 		}
 	}
 }
