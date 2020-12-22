@@ -107,7 +107,7 @@ macro_rules! const_type {
 
 		impl std::fmt::Display for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-				std::fmt::Display::fmt(&self.0, f)
+				std::fmt::Display::fmt(&self.0, f) // delegate
 			}
 		}
 	};

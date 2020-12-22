@@ -446,6 +446,21 @@ impl Events {
 		});
 	}
 
+	/// Adds a handler to [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
+	pub fn wm_nc_create<F>(&self, func: F)
+		where F: FnMut(msg::WmNcCreate) -> bool + Send + Sync + 'static,
+	{
+		self.add_msg(co::WM::NCCREATE, {
+			let mut func = func;
+			move |p| {
+				match p.message() {
+					msg::Wm::NcCreate(p) => Some(func(p) as isize),
+					_ => panic_msg!(),
+				}
+			}
+		});
+	}
+
 	empty_wm! { wm_nc_destroy, co::WM::NCDESTROY, msg::Wm::NcDestroy,
 		/// Adds a handler to [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
 	}

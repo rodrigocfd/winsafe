@@ -353,6 +353,30 @@ impl From<WmAny> for WmInitMenuPopup {
 	}
 }
 
+/// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
+/// message parameters.
+pub struct WmNcCreate<'a> {
+	pub createstruct: &'a CREATESTRUCT,
+}
+
+impl<'a> From<WmNcCreate<'a>> for WmAny {
+	fn from(p: WmNcCreate) -> Self {
+		Self {
+			msg: co::WM::NCCREATE,
+			wparam: 0,
+			lparam: p.createstruct as *const CREATESTRUCT as isize,
+		}
+	}
+}
+
+impl<'a> From<WmAny> for WmNcCreate<'a> {
+	fn from(p: WmAny) -> Self {
+		Self {
+			createstruct: unsafe { (p.lparam as *const CREATESTRUCT).as_ref() }.unwrap(),
+		}
+	}
+}
+
 empty_msg! { WmNcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 	/// message, which has no parameters.

@@ -9,6 +9,7 @@ use crate::ffi::{comctl32, HANDLE, user32};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
 use crate::internal_defs::{const_void, mut_void};
+use crate::msg::WmAny;
 use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::Utf16;
 
@@ -65,18 +66,24 @@ impl HWND {
 
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
-	pub fn DefSubclassProc(
-		self, uMsg: co::WM, wParam: usize, lParam: isize) -> isize
-	{
-		unsafe { comctl32::DefSubclassProc(self.0, uMsg.into(), wParam, lParam) }
+	pub fn DefSubclassProc<P: Into<WmAny>>(self, uMsg: P) -> isize {
+		let wmAny: WmAny = uMsg.into();
+		unsafe {
+			comctl32::DefSubclassProc(
+				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+			)
+		}
 	}
 
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
-	pub fn DefWindowProc(
-		self, Msg: co::WM, wParam: usize, lParam: isize) -> isize
-	{
-		unsafe { user32::DefWindowProcW(self.0, Msg.into(), wParam, lParam) }
+	pub fn DefWindowProc<P: Into<WmAny>>(self, Msg: P) -> isize {
+		let wmAny: WmAny = Msg.into();
+		unsafe {
+			user32::DefWindowProcW(
+				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+			)
+		}
 	}
 
 	/// [`DestroyWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
@@ -481,10 +488,13 @@ impl HWND {
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method.
-	pub fn PostMessage(
-		self, Msg: co::WM, wParam: usize, lParam: isize) -> isize
-	{
-		unsafe { user32::PostMessageW(self.0, Msg.into(), wParam, lParam) }
+	pub fn PostMessage<P: Into<WmAny>>(self, Msg: P) -> isize {
+		let wmAny: WmAny = Msg.into();
+		unsafe {
+			user32::PostMessageW(
+				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+			)
+		}
 	}
 
 	/// [`RemoveWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
@@ -503,10 +513,13 @@ impl HWND {
 
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
-	pub fn SendMessage(
-		self, Msg: co::WM, wParam: usize, lParam: isize) -> isize
-	{
-		unsafe { user32::SendMessageW(self.0, Msg.into(), wParam, lParam) }
+	pub fn SendMessage<P: Into<WmAny>>(self, Msg: P) -> isize {
+		let wmAny: WmAny = Msg.into();
+		unsafe {
+			user32::SendMessageW(
+				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+			)
+		}
 	}
 
 	/// [`SetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
