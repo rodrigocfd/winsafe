@@ -28,6 +28,11 @@ macro_rules! handle_type {
 			pub unsafe fn as_ptr(self) -> HANDLE {
 				self.0
 			}
+
+			/// Tells if the handle is invalid (null).
+			pub fn is_null(&self) -> bool {
+				self.0.is_null()
+			}
 		}
 	};
 }

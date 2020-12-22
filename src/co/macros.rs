@@ -1,5 +1,5 @@
-/// Declares the type of a constant with some impls.
-macro_rules! const_type {
+/// Declares the type of a constant with some impls, but not Display.
+macro_rules! const_type_no_display {
 	(
 		$name:ident, $num:ty,
 		$(#[$attr:meta])*
@@ -23,11 +23,6 @@ macro_rules! const_type {
 		}
 
 		// Formatters.
-		impl std::fmt::Display for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-				std::fmt::Display::fmt(&self.0, f)
-			}
-		}
 		impl std::fmt::LowerHex for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::LowerHex::fmt(&self.0, f)
@@ -93,6 +88,27 @@ macro_rules! const_type {
 		// All const values.
 		impl $name {
 			$( pub const $cname: Self = Self($cval); )*
+		}
+	};
+}
+
+/// Declares the type of a constant with some impls.
+macro_rules! const_type {
+	(
+		$name:ident, $num:ty,
+		$(#[$attr:meta])*
+		$($cname:ident, $cval:expr)*
+	) => {
+		const_type_no_display! {
+			$name, $num,
+			$(#[$attr])*
+			$($cname, $cval)*
+		}
+
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::Display::fmt(&self.0, f)
+			}
 		}
 	};
 }

@@ -6,12 +6,21 @@ use crate::funcs::GetLastError;
 use crate::handles::HLOCAL;
 use crate::Utf16;
 
-const_type! { ERROR, u32,
+const_type_no_display! { ERROR, u32,
 	/// A Windows
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// retrieved by
 	/// [`GetLastError`](crate::GetLastError) function, or an
 	/// [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
+	///
+	/// Implements the
+	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)
+	/// trait.
+	///
+	/// Implements the
+	/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) trait
+	/// showing the error code and then calling
+	/// [`FormatMessage`](crate::co::ERROR::FormatMessage).
 
 	SUCCESS, 0
 	INVALID_FUNCTION, 1
@@ -2707,6 +2716,19 @@ const_type! { ERROR, u32,
 	CO_E_OBJNOTCONNECTED, 0x800401fd
 	CO_E_APPDIDNTREG, 0x800401fe
 	CO_E_RELEASED, 0x800401ff
+}
+
+impl std::error::Error for ERROR {
+	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+		None
+	}
+}
+
+impl std::fmt::Display for ERROR {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "[{:#06x} {}] {}",
+			self.0, self.0, self.FormatMessage())
+	}
 }
 
 impl ERROR {
