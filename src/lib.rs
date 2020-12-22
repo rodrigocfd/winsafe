@@ -60,11 +60,8 @@
 //! simply return an empty error value. This happens because many Win32
 //! functions can fail without providing any error information.
 //!
-//! High-level abstractions of the [`gui`](crate::gui) module may return a
-//! `Box<dyn Error>`, where the `Error` trait being the constant type `ERROR` or
-//! the [`GuiError`](crate::gui::GuiError) type.
-//!
-//! No WinSafe function itself will panic.
+//! Native Win32 funcions never panic. Methods from the [`gui`](crate::gui)
+//! module will panic if you try to do a forbidden operation.
 //!
 //! # Text encoding
 //!

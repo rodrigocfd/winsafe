@@ -5,7 +5,6 @@ use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::events::{Events, ProcessResult};
-use crate::gui::GuiError;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{Wm, WmAny};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
@@ -66,7 +65,7 @@ impl WindowBase {
 		ex_styles: co::WS_EX, styles: co::WS) -> Result<HWND, Box<dyn Error>>
 	{
 		if self.hwnd.is_null() {
-			return Err(Box::new(GuiError::new("Cannot create a window twice.")));
+			panic!("Cannot create a window twice.");
 		}
 
 		match HWND::CreateWindowEx(ex_styles,
