@@ -1,5 +1,72 @@
+#![allow(non_upper_case_globals)]
+
+const_type! { VER_COND, u8,
+	/// [`VerSetConditionMask`](co::VerSetConditionMask) `Condition` (`u8`).
+
+	EQUAL, 1
+	GREATER, 2
+	GREATER_EQUAL, 3
+	LESS, 4
+	LESS_EQUAL, 5
+	AND, 6
+	OR, 7
+	CONDITION_MASK, 7
+}
+
+const_type! { VER_MASK, u32,
+	/// [`VerSetConditionMask`](co::VerSetConditionMask) `TypeMask` (`u32`).
+
+	MINORVERSION, 0x0000001
+	MAJORVERSION, 0x0000002
+	BUILDNUMBER, 0x0000004
+	PLATFORMID, 0x0000008
+	SERVICEPACKMINOR, 0x0000010
+	SERVICEPACKMAJOR, 0x0000020
+	SUITENAME, 0x0000040
+	PRODUCT_TYPE, 0x0000080
+}
+
+const_type! { VER_NT, u8,
+	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
+
+	WORKSTATION, 0x0000001
+	DOMAIN_CONTROLLER, 0x0000002
+	SERVER, 0x0000003
+}
+
+const_type! { VER_PLATFORM, u32,
+	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
+
+	WIN32s, 0
+	WIN32_WINDOWS, 1
+	WIN32_NT, 2
+}
+
+const_type! { VER_SUITE, u16,
+	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
+
+	SMALLBUSINESS, 0x0001
+	ENTERPRISE, 0x0002
+	BACKOFFICE, 0x0004
+	COMMUNICATIONS, 0x0008
+	TERMINAL, 0x0010
+	SMALLBUSINESS_RESTRICTED, 0x0020
+	EMBEDDEDNT, 0x0040
+	DATACENTER, 0x0080
+	SINGLEUSERTS, 0x0100
+	PERSONAL, 0x0200
+	BLADE, 0x0400
+	EMBEDDED_RESTRICTED, 0x0800
+	SECURITY_APPLIANCE, 0x1000
+	STORAGE_SERVER, 0x2000
+	COMPUTE_SERVER, 0x4000
+	WH_SERVER, 0x8000
+	//MULTIUSERTS, 0x00020000 // Win32 bug, truncated to zero as u16
+}
+
 const_type! { VK, u16,
-	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
+	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
+	/// (`u16`).
 
 	LBUTTON, 0x01
 	RBUTTON, 0x02

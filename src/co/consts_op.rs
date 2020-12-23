@@ -1,7 +1,7 @@
 use crate::co;
 
 const_type! { OUT_PRECIS, u8,
-	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision`.
+	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 
 	DEFAULT, 0
 	STRING, 1
@@ -17,7 +17,7 @@ const_type! { OUT_PRECIS, u8,
 }
 
 const_type! { PITCH, u8,
-	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`, used with
+	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`FF`](crate::co::FF).
 
 	DEFAULT, 0
@@ -33,7 +33,7 @@ impl PITCH {
 }
 
 const_type! { PM, u32,
-	/// [`PeekMessage`](crate::PeekMessage) `wRemoveMsg`.
+	/// [`PeekMessage`](crate::PeekMessage) `wRemoveMsg` (`u32`).
 
 	NOREMOVE, 0x0000
 	REMOVE, 0x0001

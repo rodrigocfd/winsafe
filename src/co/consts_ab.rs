@@ -1,5 +1,5 @@
 const_type! { ACCELF, u8,
-	/// [`ACCELL`](crate::ACCEL) `fVirt`.
+	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
 
 	VIRTKEY, 1
 	SHIFT, 0x04
@@ -8,8 +8,8 @@ const_type! { ACCELF, u8,
 }
 
 const_type! { ACCESS_RIGHTS, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`. Originally has
-	/// no prefix.
+	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
+	/// Originally has no prefix.
 
 	DELETE, 0x00010000
 	READ_CONTROL, 0x00020000
@@ -19,8 +19,8 @@ const_type! { ACCESS_RIGHTS, u32,
 }
 
 const_type! { ADRF, u32,
-	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags`. Don't seem to be
-	/// defined anywhere, unconfirmed values.
+	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`). Don't seem
+	/// to be defined anywhere, unconfirmed values.
 
 	DRAWSYNC, 0
 	DRAWNOTHING, 1
@@ -29,7 +29,7 @@ const_type! { ADRF, u32,
 }
 
 const_type! { APPCOMMAND, u16,
-	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) commands.
+	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) commands (`u16`).
 
 	BROWSER_BACKWARD, 1
 	BROWSER_FORWARD, 2
@@ -88,7 +88,7 @@ const_type! { APPCOMMAND, u16,
 }
 
 const_type! { BI, u32,
-	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression`.
+	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression` (`u32`).
 
 	RGB, 0
 	RLE8, 1
@@ -99,7 +99,7 @@ const_type! { BI, u32,
 }
 
 const_type! { BKMODE, i32,
-	/// [`SetBkMode`](crate::HDC::SetBkMode) `mode`.
+	/// [`SetBkMode`](crate::HDC::SetBkMode) `mode` (`i32`).
 
 	TRANSPARENT, 1
 	OPAQUE, 2
@@ -108,6 +108,7 @@ const_type! { BKMODE, i32,
 const_type! { BM, u32,
 	/// Button control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
+	/// (`u32`).
 
 	GETCHECK, 0x00f0
 	SETCHECK, 0x00f1
@@ -122,7 +123,8 @@ const_type! { BM, u32,
 
 const_type! { BS, u32,
 	/// Button control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles).
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles)
+	/// (`u32`).
 
 	PUSHBUTTON, 0x00000000
 	DEFPUSHBUTTON, 0x00000001

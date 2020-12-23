@@ -1,5 +1,8 @@
 //! Native Win32 structs.
 
+#[macro_use]
+mod macros;
+
 mod any_structs;
 mod any_structs_cc;
 mod guid;

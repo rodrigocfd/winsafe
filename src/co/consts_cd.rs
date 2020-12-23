@@ -1,7 +1,7 @@
 #![allow(non_upper_case_globals)]
 
 const_type! { CDDS, u32,
-	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage`.
+	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
 
 	PREPAINT, 0x00000001
 	POSTPAINT, 0x00000002
@@ -16,7 +16,7 @@ const_type! { CDDS, u32,
 }
 
 const_type! { CDIS, u32,
-	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState`.
+	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState` (`u32`).
 
 	SELECTED, 0x0001
 	GRAYED, 0x0002
@@ -35,7 +35,7 @@ const_type! { CDIS, u32,
 
 const_type! { CDRF, u32,
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
-	/// return value.
+	/// return value (`u32`).
 
 	DODEFAULT, 0x00000000
 	NEWFONT, 0x00000002
@@ -49,7 +49,7 @@ const_type! { CDRF, u32,
 }
 
 const_type! { CHARSET, u8,
-	/// [`LOGFONT`](crate::LOGFONT) `lfCharset`.
+	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 
 	ANSI, 0
 	DEFAULT, 1
@@ -74,7 +74,7 @@ const_type! { CHARSET, u8,
 }
 
 const_type! { CLIP, u8,
-	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`.
+	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision` (`u8`).
 
 	DEFAULT_PRECIS, 0
 	CHARACTER_PRECIS, 1
@@ -88,7 +88,7 @@ const_type! { CLIP, u8,
 
 const_type! { CLSCTX, u32,
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
-	/// enumeration.
+	/// enumeration (`u32`).
 
 	INPROC_SERVER, 0x1
 	INPROC_HANDLER, 0x2
@@ -115,7 +115,7 @@ const_type! { CLSCTX, u32,
 
 const_type! { CMD, u16,
 	/// [`WM_COMMAND`](crate::msg::WmCommand)
-	/// notifications for:
+	/// notifications  (`u16`) for:
 	///
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
 	/// * [ComboBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications);
@@ -157,7 +157,7 @@ const_type! { CMD, u16,
 }
 
 const_type! { COINIT, u32,
-	/// [`CoInitializeEx`](crate::CoInitializeEx) `dwCoInit`.
+	/// [`CoInitializeEx`](crate::CoInitializeEx) `dwCoInit` (`u32`).
 
 	APARTMENTTHREADED, 0x2
 	MULTITHREADED, 0x0
@@ -167,7 +167,8 @@ const_type! { COINIT, u32,
 
 const_type! { CS, u32,
 	/// Window class
-	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles).
+	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
+	/// (`u32`).
 
 	VREDRAW, 0x0001
 	HREDRAW, 0x0002
@@ -185,7 +186,7 @@ const_type! { CS, u32,
 }
 
 const_type! { DLGID, u32,
-	/// Dialog built-in IDs. These are also returned from
+	/// Dialog built-in IDs (`u32`). These are also returned from
 	/// [`MessageBox`](crate::HWND::MessageBox).
 
 	OK, 1

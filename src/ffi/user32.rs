@@ -80,6 +80,7 @@ extern "system" {
 	pub fn SetMenuInfo(hMenu: HANDLE, mii: *const c_void) -> u32;
 	pub fn SetMenuItemInfoW(hmenu: HANDLE, item: u32, fByPosition: u32, lpmii: *const c_void) -> u32;
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
+	pub fn SetProcessDPIAware() -> u32;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: *const c_void) -> u32;
 	pub fn SetWindowsHookExW(idHook: i32, lpfn: *const c_void, hmod: HANDLE, dwThreadId: u32) -> HANDLE;

@@ -1,12 +1,12 @@
 const_type! { EMF, u32,
-	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags`.
+	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
 
 	LEFT, 0x00000000
 	CENTERED, 0x00000001
 }
 
 const_type! { ENDSESSION, u32,
-	/// [`WM_ENDSESSION`](crate::msg::WmEndSession) event.
+	/// [`WM_ENDSESSION`](crate::msg::WmEndSession) event (`u32`).
 
 	RESTARTORSHUTDOWN, 0
 	CLOSEAPP, 0x00000001
@@ -15,7 +15,7 @@ const_type! { ENDSESSION, u32,
 }
 
 const_type! { FAPPCOMMAND, u16,
-	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) input event.
+	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) input event (`u16`).
 
 	MOUSE, 0x8000
 	KEY, 0
@@ -23,7 +23,7 @@ const_type! { FAPPCOMMAND, u16,
 }
 
 const_type! { FF, u8,
-	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`, used with
+	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`PITCH`](crate::co::PITCH).
 
 	DONTCARE, 0 << 4
@@ -35,7 +35,7 @@ const_type! { FF, u8,
 }
 
 const_type! { FORMAT_MESSAGE, u32,
-	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwFlags`.
+	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwFlags` (`u32`).
 
 	ALLOCATE_BUFFER, 0x00000100
 	ARGUMENT_ARRAY, 0x00002000
@@ -47,7 +47,7 @@ const_type! { FORMAT_MESSAGE, u32,
 }
 
 const_type! { FW, u32,
-	/// [`LOGFONT`](crate::LOGFONT) `lfWeight`.
+	/// [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
 
 	DONTCARE, 0
 	THIN, 100

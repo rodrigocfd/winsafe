@@ -1,4 +1,7 @@
+use std::error::Error;
+
 use crate::co;
+use crate::funcs as f;
 use crate::gui::events::Events;
 use crate::gui::Parent;
 use crate::gui::window_base::WindowBase;
@@ -29,11 +32,25 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_as_main(&self, cmd_show: Option<co::SW>) {
+	pub fn run_as_main(
+		&self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
+	{
+		if f::IsWindowsVistaOrGreater()
+			.map_err(|e| Box::new(e))?
+		{
+			f::SetProcessDPIAware()
+				.map_err(|_| Into::<Box<dyn Error>>::into(
+					String::from("SetProcessDPIAware failed.")
+				))?;
+		}
+
+		f::InitCommonControls();
+
+
 		let hinst = HINSTANCE::GetModuleHandle(None)
-			.expect("Failed to get application handle.");
+			.map_err(|e| Box::new(e))?;
 
-
+		Ok(0)
 	}
 }
 

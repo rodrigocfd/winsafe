@@ -1,6 +1,6 @@
 const_type! { WA, u16,
 	/// [`WM_ACTIVATE`](crate::msg::WmActivate)
-	/// activation state.
+	/// activation state (`u16`).
 
 	INACTIVE, 0
 	ACTIVE, 1
@@ -8,7 +8,7 @@ const_type! { WA, u16,
 }
 
 const_type! { WH, i32,
-	/// [`SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook`.
+	/// [`SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook` (`i32`).
 
 	MSGFILTER, -1
 	JOURNALRECORD, 0
@@ -27,9 +27,72 @@ const_type! { WH, i32,
 	MOUSE_LL, 14
 }
 
+const_type! { WIN32, u16,
+	/// [`_WIN32`](https://docs.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
+	/// version definitions (`u16`).
+
+	WINNT_NT4, 0x0400
+	WINNT_WIN2K, 0x0500
+	WINNT_WINXP, 0x0501
+	WINNT_WS03, 0x0502
+	WINNT_WIN6, 0x0600
+	WINNT_VISTA, 0x0600
+	WINNT_WS08, 0x0600
+	WINNT_LONGHORN, 0x0600
+	WINNT_WIN7, 0x0601
+	WINNT_WIN8, 0x0602
+	WINNT_WINBLUE, 0x0603
+	WINNT_WINTHRESHOLD, 0x0a00
+	WINNT_WIN10, 0x0a00
+
+	IE_IE20, 0x0200
+	IE_IE30, 0x0300
+	IE_IE302, 0x0302
+	IE_IE40, 0x0400
+	IE_IE401, 0x0401
+	IE_IE50, 0x0500
+	IE_IE501, 0x0501
+	IE_IE55, 0x0550
+	IE_IE60, 0x0600
+	IE_IE60SP1, 0x0601
+	IE_IE60SP2, 0x0603
+	IE_IE70, 0x0700
+	IE_IE80, 0x0800
+	IE_IE90, 0x0900
+	IE_IE100, 0x0A00
+	IE_IE110, 0x0A00
+
+	IE_NT4, Self::IE_IE20.0
+	IE_NT4SP1, Self::IE_IE20.0
+	IE_NT4SP2, Self::IE_IE20.0
+	IE_NT4SP3, Self::IE_IE302.0
+	IE_NT4SP4, Self::IE_IE401.0
+	IE_NT4SP5, Self::IE_IE401.0
+	IE_NT4SP6, Self::IE_IE50.0
+	IE_WIN98, Self::IE_IE401.0
+	IE_WIN98SE, Self::IE_IE50.0
+	IE_WINME, Self::IE_IE55.0
+	IE_WIN2K, Self::IE_IE501.0
+	IE_WIN2KSP1, Self::IE_IE501.0
+	IE_WIN2KSP2, Self::IE_IE501.0
+	IE_WIN2KSP3, Self::IE_IE501.0
+	IE_WIN2KSP4, Self::IE_IE501.0
+	IE_XP, Self::IE_IE60.0
+	IE_XPSP1, Self::IE_IE60SP1.0
+	IE_XPSP2, Self::IE_IE60SP2.0
+	IE_WS03, 0x0602
+	IE_WS03SP1, Self::IE_IE60SP2.0
+	IE_WIN6, Self::IE_IE70.0
+	IE_LONGHORN, Self::IE_IE70.0
+	IE_WIN7, Self::IE_IE80.0
+	IE_WIN8, Self::IE_IE100.0
+	IE_WINBLUE, Self::IE_IE100.0
+	IE_WINTHRESHOLD, Self::IE_IE110.0
+	IE_WIN10, Self::IE_IE110.0
+}
+
 const_type! { WMSZ, i32,
-	/// [`WM_SIZING`](crate::msg::WmSizing)
-	/// window edge.
+	/// [`WM_SIZING`](crate::msg::WmSizing) window edge (`i32`).
 
 	LEFT, 1
 	RIGHT, 2
@@ -43,7 +106,8 @@ const_type! { WMSZ, i32,
 
 const_type! { WS, u32,
 	/// Window
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles).
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles)
+	/// (`u32`).
 
 	OVERLAPPED, 0x00000000
 	POPUP, 0x80000000
@@ -76,7 +140,8 @@ const_type! { WS, u32,
 
 const_type! { WM, u32,
 	/// Window
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
+	/// (`u32`).
 
 	NULL, 0x0000
 	CREATE, 0x0001
@@ -336,7 +401,7 @@ const_type! { WM, u32,
 }
 
 const_type! { WPF, u32,
-	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags`.
+	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags` (`u32`).
 
 	SETMINPOSITION, 0x0001
 	RESTORETOMAXIMIZED, 0x0002
@@ -345,7 +410,8 @@ const_type! { WPF, u32,
 
 const_type! { WS_EX, u32,
 	/// Extended window
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles).
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
+	/// (`u32`).
 
 	DLGMODALFRAME, 0x00000001
 	NOPARENTNOTIFY, 0x00000004
@@ -378,7 +444,7 @@ const_type! { WS_EX, u32,
 
 const_type! { WVR, u32,
 	/// [`WM_NCCALCSIZE`](crate::msg::WmNcCalcSize)
-	/// return flags.
+	/// return flags (`u32`).
 
 	ZERO, 0
 	ALIGNTOP, 0x0010

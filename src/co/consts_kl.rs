@@ -3,7 +3,7 @@
 use crate::co;
 
 const_type! { KEY, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`.
+	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
 
 	QUERY_VALUE, 0x0001
 	SET_VALUE, 0x0002
@@ -21,8 +21,8 @@ const_type! { KEY, u32,
 }
 
 const_type! { LANG, u16,
-	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`, used
-	/// with [`SUBLANG`](crate::co::SUBLANG).
+	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`
+	/// (`u16`), used with [`SUBLANG`](crate::co::SUBLANG).
 
 	NEUTRAL, 0x00
 	INVARIANT, 0x7f
@@ -174,7 +174,7 @@ impl LANG {
 }
 
 const_type! { LVCFMT, i32,
-	/// [`LVITEM`](crate::LVITEM) `piColFmt`.
+	/// [`LVITEM`](crate::LVITEM) `piColFmt` (`i32`).
 
 	LEFT, 0x0000
 	RIGHT, 0x0001
@@ -199,7 +199,7 @@ const_type! { LVCFMT, i32,
 }
 
 const_type! { LVFI, u32,
-	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags`.
+	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags` (`u32`).
 
 	PARAM, 0x0001
 	STRING, 0x0002
@@ -210,7 +210,7 @@ const_type! { LVFI, u32,
 }
 
 const_type! { LVGIT, u32,
-	/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags`.
+	/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags` (`u32`).
 
 	LVGIT_FOLDED, 0x0000
 	LVGIT_UNFOLDED, 0x0001
@@ -218,7 +218,8 @@ const_type! { LVGIT, u32,
 
 const_type! { LVIS, u32,
 	/// ListView item
-	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states).
+	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
+	/// (`u32`).
 
 	NONE, 0
 	FOCUSED, 0x0001
@@ -232,14 +233,14 @@ const_type! { LVIS, u32,
 }
 
 const_type! { LVI_GROUPID, i32,
-	/// [`LVITEM`](crate::LVITEM) `iGroupId`.
+	/// [`LVITEM`](crate::LVITEM) `iGroupId` (`i32`).
 
 	I_GROUPIDCALLBACK, -1
 	I_GROUPIDNONE, -2
 }
 
 const_type! { LVIF, u32,
-	/// [`LVITEM`](crate::LVITEM) `mask`.
+	/// [`LVITEM`](crate::LVITEM) `mask` (`u32`).
 
 	COLFMT, 0x00010000
 	COLUMNS, 0x00000200
@@ -253,7 +254,7 @@ const_type! { LVIF, u32,
 }
 
 const_type! { LVKF, u32,
-	/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags`.
+	/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags` (`u32`).
 
 	ALT, 0x0001
 	CONTROL, 0x0002

@@ -1,5 +1,5 @@
 const_type! { GA, u32,
-	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags`.
+	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
 
 	PARENT, 1
 	ROOOT, 2
@@ -7,7 +7,7 @@ const_type! { GA, u32,
 }
 
 const_type! { GW, u32,
-	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd`.
+	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 
 	HWNDFIRST, 0
 	HWNDLAST, 1
@@ -21,7 +21,7 @@ const_type! { GW, u32,
 
 const_type! { GWLP, i32,
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
-	/// [`SetWindowLongPtr`](crate:HWND::SetWindowLongPtr) `nIndex`.
+	/// [`SetWindowLongPtr`](crate:HWND::SetWindowLongPtr) `nIndex` (`i32`).
 
 	STYLE, -16
 	EXSTYLE, -20
@@ -36,7 +36,7 @@ const_type! { GWLP, i32,
 }
 
 const_type! { HICF, u32,
-	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags`.
+	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags` (`u32`).
 
 	OTHER, 0x00000000
 	ARROWKEYS, 0x00000002
@@ -50,7 +50,7 @@ const_type! { HICF, u32,
 }
 
 const_type! { IDC, usize,
-	/// [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
+	/// [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName` (`usize`).
 
 	ARROW, 32512
 	IBEAM, 32513
@@ -71,7 +71,7 @@ const_type! { IDC, usize,
 }
 
 const_type! { IDI, usize,
-	/// [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
+	/// [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName` (`usize`).
 
 	APPLICATION, 32512
 	HAND, 32513

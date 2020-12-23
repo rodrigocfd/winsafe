@@ -1,5 +1,5 @@
 const_type! { QUALITY, u8,
-	/// [`LOGFONT`](crate::LOGFONT) `lfQuality`.
+	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 
 	DEFAULT, 0
 	DRAFT, 1
@@ -11,7 +11,7 @@ const_type! { QUALITY, u8,
 }
 
 const_type! { QS, u32,
-	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags`.
+	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags` (`u32`).
 
 	KEY, 0x0001
 	MOUSEMOVE, 0x0002
@@ -32,7 +32,8 @@ const_type! { QS, u32,
 
 const_type! { REG, u32,
 	/// Registry
-	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types).
+	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
+	/// (`u21`).
 
 	NONE, 0
 	SZ, 1
@@ -51,7 +52,7 @@ const_type! { REG, u32,
 }
 
 const_type! { REG_OPTION, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `uOptions`.
+	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `uOptions` (`u32`).
 
 	RESERVED, 0x00000000
 	NON_VOLATILE, 0x00000000
@@ -63,7 +64,7 @@ const_type! { REG_OPTION, u32,
 
 const_type! { REGION, i32,
 	/// [`GetUpdateRgn`](crate::HWND::GetUpdateRgn) and
-	/// [`GetWindowRgn`](crate::HWND::GetWindowRgn) return value.
+	/// [`GetWindowRgn`](crate::HWND::GetWindowRgn) return value (`i32`).
 
 	NULL, 1
 	SIMPLE, 2
@@ -71,7 +72,7 @@ const_type! { REGION, i32,
 }
 
 const_type! { RRF, u32,
-	/// [`RegGetValue`](crate::HKEY::RegGetValue) `dwFlags`.
+	/// [`RegGetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
 
 	RT_REG_NONE, 0x00000001
 	RT_REG_SZ, 0x00000002

@@ -14,4 +14,6 @@ extern "system" {
 	pub fn LocalFree(hMem: HANDLE) -> HANDLE;
 	pub fn lstrlenW(lpString: *const u16) -> i32;
 	pub fn SetLastError(dwErrorCode: u32);
+	pub fn VerifyVersionInfoW(lpVersionInformation: *mut c_void, dwTypeMask: u32, dwlConditionMask: u64) -> u32;
+	pub fn VerSetConditionMask(ConditionMask: u64, TypeMask: u32, Condition: u8) -> u64;
 }

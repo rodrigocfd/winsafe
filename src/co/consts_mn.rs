@@ -1,5 +1,5 @@
 const_type! { MB, u32,
-	/// [`MessageBox`](crate::HWND::MessageBox) `uType`.
+	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
 
 	ABORTRETRYIGNORE, 0x00000002
 	CANCELTRYCONTINUE, 0x00000006
@@ -38,7 +38,7 @@ const_type! { MB, u32,
 
 const_type! { MF, u32,
 	/// [`AppendMenu`](crate::HMENU::AppendMenu) and
-	/// [`InsertMenu`](crate::HMENU::InsertMenu) `uFlags`.
+	/// [`InsertMenu`](crate::HMENU::InsertMenu) `uFlags` (`u32`).
 
 	INSERT, 0x00000000
 	CHANGE, 0x00000080
@@ -70,7 +70,7 @@ const_type! { MF, u32,
 }
 
 const_type! { MFS, u32,
-	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState`.
+	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
 
 	GRAYED, 0x00000003
 	DISABLED, MFS::GRAYED.0
@@ -83,7 +83,7 @@ const_type! { MFS, u32,
 }
 
 const_type! { MFT, u32,
-	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType`.
+	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType` (`u32`).
 
 	STRING, MF::STRING.0
 	BITMAP, MF::BITMAP.0
@@ -96,8 +96,8 @@ const_type! { MFT, u32,
 	RIGHTJUSTIFY, MF::RIGHTJUSTIFY.0
 }
 
-const_type! { MIM,u32,
-	/// [`MENUINFO`](crate::MENUINFO) `fMask`.
+const_type! { MIM, u32,
+	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
 
 	MAXHEIGHT, 0x00000001
 	BACKGROUND, 0x00000002
@@ -108,7 +108,7 @@ const_type! { MIM,u32,
 }
 
 const_type! { MIIM, u32,
-	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask`.
+	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
 
 	MAXHEIGHT, 0x00000001
 	BACKGROUND, 0x00000002
@@ -119,7 +119,8 @@ const_type! { MIIM, u32,
 }
 
 const_type! { MK, u16,
-	/// [`WM_LBUTTONDOWN`](crate::msg::WmLButtonDown) (and similar) virtual keys.
+	/// [`WM_LBUTTONDOWN`](crate::msg::WmLButtonDown) (and similar) virtual keys
+	/// (`u16`).
 
 	LBUTTON, 0x0001
 	RBUTTON, 0x0002
@@ -131,7 +132,7 @@ const_type! { MK, u16,
 }
 
 const_type! { MNS, u32,
-	/// [`MENUINFO`](crate::MENUINFO) `dwStyle`.
+	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
 
 	NOCHECK, 0x80000000
 	MODELESS, 0x40000000
@@ -143,7 +144,7 @@ const_type! { MNS, u32,
 
 const_type! { NM, i32,
 	/// [`WM_NOTIFY`](crate::msg::WmNotify)
-	/// notifications for:
+	/// notifications (`i32`) for:
 	///
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications);
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);

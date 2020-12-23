@@ -9,7 +9,7 @@ use crate::Utf16;
 const_type_no_display! { ERROR, u32,
 	/// A Windows
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
-	/// retrieved by
+	/// (`u32`) retrieved by
 	/// [`GetLastError`](crate::GetLastError) function, or an
 	/// [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
 	///

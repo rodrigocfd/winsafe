@@ -7,7 +7,7 @@ use crate::co;
 use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::{comctl32, kernel32, ole32, user32};
 use crate::handles::{HINSTANCE, HWND};
-use crate::internal_defs::parse_multi_z_str;
+use crate::internal_defs::{const_void, mut_void, parse_multi_z_str};
 use crate::structs as s;
 use crate::Utf16;
 
@@ -19,10 +19,7 @@ pub fn AdjustWindowRectEx(
 {
 	match unsafe {
 		user32::AdjustWindowRectEx(
-			lpRect as *mut s::RECT as *mut c_void,
-			dwStyle.into(),
-			bMenu as u32,
-			dwExStyle.into(),
+			mut_void(lpRect), dwStyle.into(), bMenu as u32, dwExStyle.into(),
 		)
 	} {
 		0 => Err(GetLastError()),
@@ -53,7 +50,7 @@ pub fn CoCreateInstance<VT: Vtbl, IF: From<PPVtbl<VT>>>(
 	let mut ppv: PPVtbl<VT> = std::ptr::null_mut();
 	unsafe {
 		ole32::CoCreateInstance(
-			rclsid.as_ref() as *const s::GUID as *const c_void,
+			const_void(rclsid),
 			pUnkOuter.unwrap_or(std::ptr::null_mut()),
 			dwClsContext.into(),
 			VT::IID().as_ref() as *const s::GUID as *const c_void,
@@ -92,7 +89,7 @@ pub fn CoUninitialize() {
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
 pub fn DispatchMessage(lpMsg: &s::MSG) -> isize {
-	unsafe { user32::DispatchMessageW(lpMsg as *const s::MSG as *const c_void) }
+	unsafe { user32::DispatchMessageW(const_void(lpMsg)) }
 }
 
 /// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
@@ -115,12 +112,12 @@ pub fn GetEnvironmentStrings() -> Result<HashMap<String, String>, co::ERROR> {
 	match ptr_as_opt!(kernel32::GetEnvironmentStringsW()) {
 		None => Err(GetLastError()),
 		Some(p) => {
-			let envstrs = parse_multi_z_str(p as *const u16);
+			let vecEnvStrs = parse_multi_z_str(p as *const u16);
 			unsafe { kernel32::FreeEnvironmentStringsW(p); }
 
-			let mut map = HashMap::with_capacity(envstrs.len());
-			for envstr in envstrs {
-				let pair: Vec<&str> = envstr.split("=").collect();
+			let mut map = HashMap::with_capacity(vecEnvStrs.len());
+			for envStr in vecEnvStrs {
+				let pair: Vec<&str> = envStr.split("=").collect();
 				map.insert(String::from(pair[0]), String::from(pair[1]));
 			}
 			Ok(map)
@@ -141,10 +138,7 @@ pub fn GetMessage(lpMsg: &s::MSG, hWnd: HWND,
 {
 	match unsafe {
 		user32::GetMessageW(
-			lpMsg as *const s::MSG as *const c_void,
-			hWnd.as_ptr(),
-			wMsgFilterMin,
-			wMsgFilterMax,
+			const_void(lpMsg), hWnd.as_ptr(), wMsgFilterMin, wMsgFilterMax,
 		)
 	} {
 		-1 => Err(GetLastError()),
@@ -198,6 +192,95 @@ pub fn IsGUIThread(bConvert: bool) -> Result<bool, co::ERROR> {
 	}
 }
 
+/// [`IsWindows10OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater)
+pub fn IsWindows10OrGreater() -> Result<bool, co::ERROR>
+{
+	IsWindowsVersionOrGreater(
+		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.into()) as u16,
+		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.into()) as u16,
+		0,
+	)
+}
+
+/// [`IsWindows7OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows7orgreater)
+pub fn IsWindows7OrGreater() -> Result<bool, co::ERROR>
+{
+	IsWindowsVersionOrGreater(
+		HIBYTE(co::WIN32::WINNT_WIN7.into()) as u16,
+		LOBYTE(co::WIN32::WINNT_WIN7.into()) as u16,
+		0,
+	)
+}
+
+/// [`IsWindows8OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8orgreater)
+/// function.
+pub fn IsWindows8OrGreater() -> Result<bool, co::ERROR>
+{
+	IsWindowsVersionOrGreater(
+		HIBYTE(co::WIN32::WINNT_WIN8.into()) as u16,
+		LOBYTE(co::WIN32::WINNT_WIN8.into()) as u16,
+		0,
+	)
+}
+
+/// [`IsWindows8Point1OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8point1orgreater)
+/// function.
+pub fn IsWindows8Point1OrGreater() -> Result<bool, co::ERROR>
+{
+	IsWindowsVersionOrGreater(
+		HIBYTE(co::WIN32::WINNT_WINBLUE.into()) as u16,
+		LOBYTE(co::WIN32::WINNT_WINBLUE.into()) as u16,
+		0,
+	)
+}
+
+/// [`IsWindowsServer`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsserver)
+pub fn IsWindowsServer() -> Result<bool, co::ERROR> {
+	let mut osvi = s::OSVERSIONINFOEX::default();
+	osvi.wProductType = co::VER_NT::WORKSTATION;
+	let dwlConditionMask = VerSetConditionMask(
+		0, co::VER_MASK::PRODUCT_TYPE, co::VER_COND::EQUAL);
+	VerifyVersionInfo(&mut osvi, co::VER_MASK::PRODUCT_TYPE, dwlConditionMask)
+		.map(|b| !b) // not workstation
+}
+
+/// [`IsWindowsVersionOrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsversionorgreater)
+/// function.
+pub fn IsWindowsVersionOrGreater(
+	wMajorVersion: u16, wMinorVersion: u16,
+	wServicePackMajor: u16) -> Result<bool, co::ERROR>
+{
+	let mut osvi = s::OSVERSIONINFOEX::default();
+	let dwlConditionMask = VerSetConditionMask(
+		VerSetConditionMask(
+			VerSetConditionMask(0, co::VER_MASK::MAJORVERSION, co::VER_COND::GREATER_EQUAL),
+			co::VER_MASK::MINORVERSION, co::VER_COND::GREATER_EQUAL,
+		),
+		co::VER_MASK::SERVICEPACKMAJOR, co::VER_COND::GREATER_EQUAL
+	);
+
+	osvi.dwMajorVersion = wMajorVersion as u32;
+	osvi.dwMinorVersion = wMinorVersion as u32;
+	osvi.wServicePackMajor = wServicePackMajor;
+
+	return VerifyVersionInfo(
+		&mut osvi,
+		co::VER_MASK::MAJORVERSION | co::VER_MASK::MINORVERSION | co::VER_MASK::SERVICEPACKMAJOR,
+		dwlConditionMask,
+	)
+}
+
+/// [`IsWindowsVistaOrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsvistaorgreater)
+/// function.
+pub fn IsWindowsVistaOrGreater() -> Result<bool, co::ERROR>
+{
+	IsWindowsVersionOrGreater(
+		HIBYTE(co::WIN32::WINNT_VISTA.into()) as u16,
+		LOBYTE(co::WIN32::WINNT_VISTA.into()) as u16,
+		0,
+	)
+}
+
 /// [`LOBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
 /// function. Originally a macro.
 pub fn LOBYTE(v: u16) -> u8 {
@@ -233,7 +316,7 @@ pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
 {
 	unsafe {
 		user32::PeekMessageW(
-			lpMsg as *mut s::MSG as *mut c_void,
+			mut_void(lpMsg),
 			hWnd.as_ptr(),
 			wMsgFilterMin,
 			wMsgFilterMax,
@@ -265,11 +348,20 @@ pub fn SetLastError(dwErrCode: co::ERROR) {
 	unsafe { kernel32::SetLastError(dwErrCode.into()) }
 }
 
+/// [`SetProcessDPIAware`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
+/// function.
+pub fn SetProcessDPIAware() -> Result<(), ()> {
+	match unsafe { user32::SetProcessDPIAware() } {
+		0 => Err(()),
+		_ => Ok(()),
+	}
+}
+
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
 pub fn TranslateMessage(lpMsg: &s::MSG) -> bool {
 	unsafe {
-		user32::TranslateMessage(lpMsg as *const s::MSG as *const c_void) != 0
+		user32::TranslateMessage(const_void(lpMsg)) != 0
 	}
 }
 
@@ -286,5 +378,36 @@ pub fn UnregisterClass(
 	} {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
+	}
+}
+
+/// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
+/// function.
+pub fn VerifyVersionInfo(
+	lpVersionInformation: &mut s::OSVERSIONINFOEX,
+	dwTypeMask: co::VER_MASK, dwlConditionMask: u64) -> Result<bool, co::ERROR>
+{
+	match unsafe {
+		kernel32::VerifyVersionInfoW(
+			mut_void(lpVersionInformation), dwTypeMask.into(), dwlConditionMask,
+		)
+	} {
+		0 => match GetLastError() {
+			co::ERROR::OLD_WIN_VERSION => Ok(false),
+			err => Err(err),
+		},
+		_ => Ok(true),
+	}
+}
+
+/// [`VerSetConditionMask`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-versetconditionmask)
+/// function.
+pub fn VerSetConditionMask(
+	ConditionMask: u64, TypeMask: co::VER_MASK, Condition: co::VER_COND) -> u64
+{
+	unsafe {
+		kernel32::VerSetConditionMask(
+			ConditionMask, TypeMask.into(), Condition.into(),
+		)
 	}
 }

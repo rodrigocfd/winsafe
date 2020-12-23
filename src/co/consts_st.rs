@@ -1,7 +1,7 @@
 use crate::co;
 
 const_type! { SIZE, i32,
-	/// [`WM_SIZE`](crate::params::WmSize) request.
+	/// [`WM_SIZE`](crate::params::WmSize) request (`i32`).
 
 	RESTORED, 0
 	MINIMIZED, 1
@@ -11,7 +11,7 @@ const_type! { SIZE, i32,
 }
 
 const_type! { STANDARD_RIGHTS, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired`.
+	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
 
 	REQUIRED, 0x000f0000
 	READ, co::ACCESS_RIGHTS::READ_CONTROL.0
@@ -21,7 +21,7 @@ const_type! { STANDARD_RIGHTS, u32,
 }
 
 const_type! { SM, i32,
-	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `nIndex`.
+	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `nIndex` (`i32`).
 
 	CXSCREEN, 0
 	CYSCREEN, 1
@@ -127,8 +127,8 @@ const_type! { SM, i32,
 }
 
 const_type! { SUBLANG, u16,
-	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`, used
-	/// with [`LANG`](crate::co::LANG).
+	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`
+	/// (`u16`), used with [`LANG`](crate::co::LANG).
 
 	NEUTRAL, 0x00
 	DEFAULT, 0x01
@@ -377,7 +377,7 @@ const_type! { SUBLANG, u16,
 }
 
 const_type! { SW, i32,
-	/// [`ShowWindow`](crate::HWND::ShowWindow) `nCmdShow`.
+	/// [`ShowWindow`](crate::HWND::ShowWindow) `nCmdShow` (`i32`).
 
 	HIDE, 0
 	SHOWNORMAL, 1
@@ -397,7 +397,7 @@ const_type! { SW, i32,
 }
 
 const_type! { TPM, u32,
-	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `uFlags`.
+	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `uFlags` (`u32`).
 
 	LEFTBUTTON, 0x0000
 	RIGHTBUTTON, 0x0002

@@ -19,14 +19,7 @@ pub struct LVFINDINFO {
 	pub vkDirection: co::VK,
 }
 
-impl Default for LVFINDINFO {
-	fn default() -> Self {
-		Self {
-			psz: std::ptr::null(),
-			..Default::default()
-		}
-	}
-}
+impl_default_zero!(LVFINDINFO);
 
 /// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
@@ -50,16 +43,7 @@ pub struct LVITEM {
 	pub iGroup: i32,
 }
 
-impl Default for LVITEM {
-	fn default() -> Self {
-		Self {
-			pszText: std::ptr::null_mut(),
-			puColumns: std::ptr::null_mut(),
-			piColFmt: std::ptr::null_mut(),
-			..Default::default()
-		}
-	}
-}
+impl_default_zero!(LVITEM);
 
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
@@ -154,15 +138,7 @@ pub struct NMLVEMPTYMARKUP {
 	pub szMarkup: [u16; L_MAX_URL_LENGTH],
 }
 
-impl Default for NMLVEMPTYMARKUP {
-	fn default() -> Self {
-		Self { // https://stackoverflow.com/a/30949671/6923555
-			hdr: NMHDR::default(),
-			dwFlags: co::EMF::default(),
-			szMarkup: [0u16; L_MAX_URL_LENGTH],
-		}
-	}
-}
+impl_default_zero!(NMLVEMPTYMARKUP);
 
 /// [`NMLVFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
 /// struct.

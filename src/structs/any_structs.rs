@@ -59,10 +59,9 @@ pub struct BITMAPINFOHEADER {
 
 impl Default for BITMAPINFOHEADER {
 	fn default() -> Self {
-		Self {
-			biSize: std::mem::size_of::<Self>() as u32,
-			..Default::default()
-		}
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.biSize = std::mem::size_of::<Self>() as u32;
+		obj
 	}
 }
 
@@ -85,16 +84,7 @@ pub struct CREATESTRUCT {
 	pub dwExStyle: co::WS_EX,
 }
 
-impl Default for CREATESTRUCT {
-	fn default() -> Self {
-		Self {
-			lpCreateParams: std::ptr::null(),
-			lpszName: std::ptr::null(),
-			lpszClass: std::ptr::null(),
-			..Default::default()
-		}
-	}
-}
+impl_default_zero!(CREATESTRUCT);
 
 /// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
@@ -133,10 +123,9 @@ pub struct MENUINFO {
 
 impl Default for MENUINFO {
 	fn default() -> Self {
-		Self {
-			cbSize: std::mem::size_of::<Self>() as u32,
-			..Default::default()
-		}
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
 	}
 }
 
@@ -161,10 +150,9 @@ pub struct MENUITEMINFO {
 
 impl Default for MENUITEMINFO {
 	fn default() -> Self {
-		Self {
-			cbSize: std::mem::size_of::<Self>() as u32,
-			..Default::default()
-		}
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
 	}
 }
 
@@ -194,6 +182,32 @@ pub struct NMHDR {
 	/// Notification code sent in
 	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	pub code: co::NM,
+}
+
+/// [`OSVERSIONINFOEX`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct OSVERSIONINFOEX {
+	dwOSVersionInfoSize: u32,
+	pub dwMajorVersion: u32,
+	pub dwMinorVersion: u32,
+	pub dwBuildNumber: u32,
+	pub dwPlatformId: co::VER_PLATFORM,
+	pub szCSDVersion: [u16; 128],
+	pub wServicePackMajor: u16,
+	pub wServicePackMinor: u16,
+	pub wSuiteMask: co::VER_SUITE,
+	pub wProductType: co::VER_NT,
+	wReserved: u8,
+}
+
+impl Default for OSVERSIONINFOEX {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.dwOSVersionInfoSize = std::mem::size_of::<Self>() as u32;
+		obj
+	}
 }
 
 /// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
@@ -241,11 +255,9 @@ pub struct SECURITY_ATTRIBUTES {
 
 impl Default for SECURITY_ATTRIBUTES {
 	fn default() -> Self {
-		Self {
-			nLength: std::mem::size_of::<Self>() as u32,
-			lpSecurityDescriptor: std::ptr::null_mut(),
-			..Default::default()
-		}
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.nLength = std::mem::size_of::<Self>() as u32;
+		obj
 	}
 }
 
@@ -277,10 +289,9 @@ pub struct WINDOWINFO {
 
 impl Default for WINDOWINFO {
 	fn default() -> Self {
-		Self {
-			cbSize: std::mem::size_of::<Self>() as u32,
-			..Default::default()
-		}
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
 	}
 }
 
@@ -300,10 +311,9 @@ pub struct WINDOWPLACEMENT {
 
 impl Default for WINDOWPLACEMENT {
 	fn default() -> Self {
-		Self {
-			length: std::mem::size_of::<Self>() as u32,
-			..Default::default()
-		}
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.length = std::mem::size_of::<Self>() as u32;
+		obj
 	}
 }
 
@@ -328,11 +338,8 @@ pub struct WNDCLASSEX {
 
 impl Default for WNDCLASSEX {
 	fn default() -> Self {
-		Self {
-			cbSize: std::mem::size_of::<Self>() as u32,
-			lpszMenuName: std::ptr::null(),
-			lpszClassName: std::ptr::null(),
-			..Default::default()
-		}
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
 	}
 }
