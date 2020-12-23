@@ -6,6 +6,7 @@ use std::ffi::c_void;
 
 use crate::aliases::WNDPROC;
 use crate::co;
+use crate::funcs::IsWindowsVistaOrGreater;
 use crate::handles as h;
 use crate::internal_defs::LF_FACESIZE;
 
@@ -182,6 +183,40 @@ pub struct NMHDR {
 	/// Notification code sent in
 	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	pub code: co::NM,
+}
+
+/// [`NONCLIENTMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct NONCLIENTMETRICS {
+	cbSize: u32,
+	pub iBorderWidth: i32,
+	pub iScrollWidth: i32,
+	pub iScrollHeight: i32,
+	pub iCaptionWidth: i32,
+	pub iCaptionHeight: i32,
+	pub lfCaptionFont: LOGFONT,
+	pub iSmCaptionWidth: i32,
+	pub iSmCaptionHeight: i32,
+	pub lfSmCaptionFont: LOGFONT,
+	pub iMenuWidth: i32,
+	pub iMenuHeight: i32,
+	pub lfMenuFont: LOGFONT,
+	pub lfStatusFont: LOGFONT,
+	pub lfMessageFont: LOGFONT,
+	pub iPaddedBorderWidth: i32,
+}
+
+impl Default for NONCLIENTMETRICS {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		if !IsWindowsVistaOrGreater().unwrap() {
+			obj.cbSize -= std::mem::size_of::<i32>() as u32
+		}
+		obj
+	}
 }
 
 /// [`OSVERSIONINFOEX`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)

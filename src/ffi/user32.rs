@@ -85,6 +85,7 @@ extern "system" {
 	pub fn SetWindowsHookExW(idHook: i32, lpfn: PFUNC, hmod: HANDLE, dwThreadId: u32) -> HANDLE;
 	pub fn SetWindowTextW(hWnd: HANDLE, lpString: PCSTR) -> BOOL;
 	pub fn ShowWindow(hWnd: HANDLE, nCmdShow: i32) -> BOOL;
+	pub fn SystemParametersInfoW(uiAction: u32, uiParam: u32, pvParam: PVOID, fWinIni: u32) -> BOOL;
 	pub fn TrackPopupMenu(hMenu: HANDLE, uFlags: u32, x: i32, y: i32, nReserved: i32, hWnd: HANDLE, prcRect: PCVOID) -> BOOL;
 	pub fn TranslateAcceleratorW(hWnd: HANDLE, hAccTable: HANDLE, lpMsg: PVOID) -> i32;
 	pub fn TranslateMessage(lpMsg: PCVOID) -> BOOL;

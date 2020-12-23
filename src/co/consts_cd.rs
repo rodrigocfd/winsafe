@@ -167,7 +167,8 @@ const_type! { COINIT, u32,
 
 const_type! { COLOR, u32,
 	/// System
-	/// [colors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor).
+	/// [colors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
+	/// (`u32`).
 
 	SCROLLBAR, 0
 	BACKGROUND, 1

@@ -357,6 +357,23 @@ pub fn SetProcessDPIAware() -> Result<(), ()> {
 	}
 }
 
+/// [`SystemParametersInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)
+/// function.
+///
+/// The `pvParam` type varies according to the `uiAction`. If you set it wrong,
+/// you're likely to cause a buffer overrun.
+pub unsafe fn SystemParametersInfo<T>(
+	uiAction: co::SPI, uiParam: u32,
+	pvParam: &mut T, fWinIni: co::SPIF) -> Result<(), co::ERROR>
+{
+	match user32::SystemParametersInfoW(
+		uiAction.into(), uiParam, mut_void(pvParam), fWinIni.into(),
+	) {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
+}
+
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
 pub fn TranslateMessage(lpMsg: &s::MSG) -> bool {
