@@ -36,3 +36,20 @@ macro_rules! handle_type {
 		}
 	};
 }
+
+/// Implements conversions from and to `HGDIOBJ`.
+macro_rules! convert_hgdiobj {
+	($name:ident) => {
+		impl From<$name> for HGDIOBJ {
+			fn from(h: $name) -> Self {
+				unsafe { Self::from_ptr(h.0) }
+			}
+		}
+
+		impl From<HGDIOBJ> for $name {
+			fn from(hgdiobj: HGDIOBJ) -> Self {
+				unsafe { Self::from_ptr(hgdiobj.as_ptr()) }
+			}
+		}
+	};
+}

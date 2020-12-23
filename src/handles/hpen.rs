@@ -5,9 +5,9 @@ use crate::handles::HGDIOBJ;
 
 handle_type! {
 	/// Handle to a
-	/// [bitmap](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbitmap).
+	/// [pen](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpen).
 	/// Exposes methods.
-	HBITMAP
+	HPEN
 }
 
-convert_hgdiobj!(HBITMAP);
+convert_hgdiobj!(HPEN);

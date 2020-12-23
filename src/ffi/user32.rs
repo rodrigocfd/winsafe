@@ -83,6 +83,7 @@ extern "system" {
 	pub fn SetProcessDPIAware() -> u32;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: *const c_void) -> u32;
+	pub fn SetWindowRgn(hWnd: HANDLE, hRgn: HANDLE, bRedraw: i32) -> i32;
 	pub fn SetWindowsHookExW(idHook: i32, lpfn: *const c_void, hmod: HANDLE, dwThreadId: u32) -> HANDLE;
 	pub fn SetWindowTextW(hWnd: HANDLE, lpString: *const u16) -> u32;
 	pub fn ShowWindow(hWnd: HANDLE, nCmdShow: i32) -> u32;

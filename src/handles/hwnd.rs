@@ -560,6 +560,17 @@ impl HWND {
 		}
 	}
 
+	/// [`SetWindowRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowrgn)
+	/// method.
+	pub fn SetWindowRgn(self, hRgn: HRGN, bRedraw: bool) -> Result<(), ()> {
+		match unsafe {
+			user32::SetWindowRgn(self.0, hRgn.as_ptr(), bRedraw as i32)
+		} {
+			0 => Err(()),
+			_ => Ok(()),
+		}
+	}
+
 	/// [`SetWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
 	/// method.
 	pub fn SetWindowSubclass(self, pfnSubclass: SUBCLASSPROC,

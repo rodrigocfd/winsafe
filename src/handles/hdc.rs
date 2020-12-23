@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::ffi::{gdi32, HANDLE};
+use crate::handles::HGDIOBJ;
 use crate::internal_defs::{const_void, mut_void};
 use crate::structs::{POINT, SIZE};
 use crate::Utf16;
@@ -118,8 +119,9 @@ impl HDC {
 
 	/// [`RoundRect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
 	/// method.
-	pub fn RoundRect(self, left: i32, top: i32, right: i32, bottom: i32,
-		width: i32, height: i32) -> Result<(), ()>
+	pub fn RoundRect(
+		self, left: i32, top: i32,
+		right: i32, bottom: i32, width: i32, height: i32) -> Result<(), ()>
 	{
 		zero_res!(
 			gdi32::RoundRect(self.0, left, top, right, bottom, width, height)
@@ -134,6 +136,12 @@ impl HDC {
 			id => Ok(id),
 		}
 	}
+
+	// /// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	// /// method.
+	// pub fn SelectObject<T: Into<HGDIOBJ>>(self, h: T) {
+		// unsafe { gdi32::SelectObject(self.0, h.into().as_ptr()); }
+	// }
 
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method
