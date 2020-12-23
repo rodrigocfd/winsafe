@@ -9,4 +9,4 @@ mod guid;
 
 pub use any_structs::*;
 pub use any_structs_cc::*;
-pub use guid::*;
+pub use guid::{CLSID, GUID, IID};

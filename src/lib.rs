@@ -121,4 +121,4 @@ pub use enums::*;
 pub use funcs::*;
 pub use handles::*;
 pub use structs::*;
-pub use utf16::*;
+pub use utf16::Utf16;

@@ -11,5 +11,5 @@ pub mod shell;
 mod iunknown;
 mod vtbl;
 
-pub use iunknown::*;
-pub use vtbl::*;
+pub use iunknown::{IUnknown, IUnknownVtbl};
+pub use vtbl::{PPVtbl, Vtbl};
