@@ -1,4 +1,4 @@
-//! Internal value definitions used within the library only.
+//! Internal definitions used by the library.
 
 use std::error::Error;
 
