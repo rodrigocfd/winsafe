@@ -1,12 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::handles::HGDIOBJ;
+use crate::ffi::gdi32;
 
-handle_type! {
+hgdiobj_type! {
 	/// Handle to a
-	/// [brush](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
-	/// Exposes methods.
+	/// [brush](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush)
+	/// GDI object. Exposes methods.
 	HBRUSH
 }
-
-convert_hgdiobj!(HBRUSH);

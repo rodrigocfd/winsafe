@@ -1,18 +1,15 @@
 #![allow(non_snake_case)]
 
 use crate::ffi::gdi32;
-use crate::handles::HGDIOBJ;
 use crate::internal_defs::const_void;
 use crate::structs::LOGFONT;
 
-handle_type! {
+hgdiobj_type! {
 	/// Handle to a
-	/// [font](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
-	/// Exposes methods.
+	/// [font](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont)
+	/// GDI object. Exposes methods.
 	HFONT
 }
-
-convert_hgdiobj!(HFONT);
 
 impl HFONT {
 	/// [`CreateFontIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)

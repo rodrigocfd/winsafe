@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::ffi::gdi32;
-use crate::handles::HGDIOBJ;
+use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
 use crate::internal_defs::{const_void, mut_void};
 use crate::structs::{POINT, SIZE};
 use crate::Utf16;
@@ -14,7 +14,7 @@ handle_type! {
 	HDC
 }
 
-macro_rules! zero_res {
+macro_rules! empty_res {
 	($what:expr) => {
 		match unsafe { $what } {
 			0 => Err(()),
@@ -45,7 +45,7 @@ impl HDC {
 	/// [`LineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
 	/// method.
 	pub fn LineTo(self, x: i32, y: i32) -> Result<(), ()> {
-		zero_res!(gdi32::LineTo(self.0, x, y))
+		empty_res!(gdi32::LineTo(self.0, x, y))
 	}
 
 	/// [`MoveToEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
@@ -58,13 +58,13 @@ impl HDC {
 			Some(ptRef) => mut_void(ptRef),
 		};
 
-		zero_res!(gdi32::MoveToEx(self.0, x, y, pt))
+		empty_res!(gdi32::MoveToEx(self.0, x, y, pt))
 	}
 
 	/// [`PolyBezier`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezier)
 	/// method.
 	pub fn PolyBezier(self, apt: &[POINT]) -> Result<(), ()> {
-		zero_res!(
+		empty_res!(
 			gdi32::PolyBezier(self.0, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
@@ -72,7 +72,7 @@ impl HDC {
 	/// [`PolyBezierTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezierto)
 	/// method.
 	pub fn PolyBezierTo(self, apt: &[POINT]) -> Result<(), ()> {
-		zero_res!(
+		empty_res!(
 			gdi32::PolyBezierTo(self.0, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
@@ -80,7 +80,7 @@ impl HDC {
 	/// [`Polyline`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polyline)
 	/// method.
 	pub fn Polyline(self, apt: &[POINT]) -> Result<(), ()> {
-		zero_res!(
+		empty_res!(
 			gdi32::Polyline(self.0, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
@@ -88,7 +88,7 @@ impl HDC {
 	/// [`PolylineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polylineto)
 	/// method.
 	pub fn PolylineTo(self, apt: &[POINT]) -> Result<(), ()> {
-		zero_res!(
+		empty_res!(
 			gdi32::PolylineTo(self.0, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
@@ -108,13 +108,13 @@ impl HDC {
 	pub fn Rectangle(
 		self, left: i32, top: i32, right: i32, bottom: i32) -> Result<(), ()>
 	{
-		zero_res!(gdi32::Rectangle(self.0, left, top, right, bottom))
+		empty_res!(gdi32::Rectangle(self.0, left, top, right, bottom))
 	}
 
 	/// [`RestoreDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-restoredc)
 	/// method.
 	pub fn RestoreDC(self, nSavedDC: i32) -> Result<(), ()> {
-		zero_res!(gdi32::RestoreDC(self.0, nSavedDC))
+		empty_res!(gdi32::RestoreDC(self.0, nSavedDC))
 	}
 
 	/// [`RoundRect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
@@ -123,7 +123,7 @@ impl HDC {
 		self, left: i32, top: i32,
 		right: i32, bottom: i32, width: i32, height: i32) -> Result<(), ()>
 	{
-		zero_res!(
+		empty_res!(
 			gdi32::RoundRect(self.0, left, top, right, bottom, width, height)
 		)
 	}
@@ -137,11 +137,50 @@ impl HDC {
 		}
 	}
 
-	// /// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
-	// /// method.
-	// pub fn SelectObject<T: Into<HGDIOBJ>>(self, h: T) {
-		// unsafe { gdi32::SelectObject(self.0, h.into().as_ptr()); }
-	// }
+	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// method for [`HBITMAP`](crate::HBITMAP).
+	pub fn SelectObjectBitmap(self, h: HBITMAP) -> Result<HBITMAP, ()> {
+		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+			Some(p) => Ok(unsafe { HBITMAP::from_ptr(p) }),
+			None => Err(()),
+		}
+	}
+
+	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// method for [`HBRUSH`](crate::HBRUSH).
+	pub fn SelectObjectBrush(self, h: HBRUSH) -> Result<HBRUSH, ()> {
+		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+			Some(p) => Ok(unsafe { HBRUSH::from_ptr(p) }),
+			None => Err(()),
+		}
+	}
+
+	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// method for [`HFONT`](crate::HFONT).
+	pub fn SelectObjectFont(self, h: HFONT) -> Result<HFONT, ()> {
+		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+			Some(p) => Ok(unsafe { HFONT::from_ptr(p) }),
+			None => Err(()),
+		}
+	}
+
+	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// method for [`HPEN`](crate::HPEN).
+	pub fn SelectObjectPen(self, h: HPEN) -> Result<HPEN, ()> {
+		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+			Some(p) => Ok(unsafe { HPEN::from_ptr(p) }),
+			None => Err(()),
+		}
+	}
+
+	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// method for [`HRGN`](crate::HRGN).
+	pub fn SelectObjectRgn(self, h: HRGN) -> Result<co::REGION, ()> {
+		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+			Some(p) => Ok(co::REGION::from(p as i32)),
+			None => Err(()),
+		}
+	}
 
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method

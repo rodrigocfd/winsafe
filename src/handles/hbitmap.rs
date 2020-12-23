@@ -1,12 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::handles::HGDIOBJ;
+use crate::ffi::gdi32;
 
-handle_type! {
+hgdiobj_type! {
 	/// Handle to a
-	/// [bitmap](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbitmap).
-	/// Exposes methods.
+	/// [bitmap](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbitmap)
+	/// GDI object. Exposes methods.
 	HBITMAP
 }
-
-convert_hgdiobj!(HBITMAP);

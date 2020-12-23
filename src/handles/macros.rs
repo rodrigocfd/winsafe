@@ -37,18 +37,25 @@ macro_rules! handle_type {
 	};
 }
 
-/// Implements conversions from and to `HGDIOBJ`.
-macro_rules! convert_hgdiobj {
-	($name:ident) => {
-		impl From<$name> for HGDIOBJ {
-			fn from(h: $name) -> Self {
-				unsafe { Self::from_ptr(h.0) }
-			}
+/// Declares the type of an HGDIOBJ handle.
+macro_rules! hgdiobj_type {
+	(
+		$(#[$attr:meta])*
+		$name:ident
+	) => {
+		handle_type! {
+			$(#[$attr])*
+			$name
 		}
 
-		impl From<HGDIOBJ> for $name {
-			fn from(hgdiobj: HGDIOBJ) -> Self {
-				unsafe { Self::from_ptr(hgdiobj.as_ptr()) }
+		impl $name {
+			/// [`DeleteObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
+			/// method.
+			pub fn DeleteObject(self) -> Result<(), ()> {
+				match unsafe { gdi32::DeleteObject(self.0) } {
+					 0 => Err(()),
+					_ => Ok(()),
+				}
 			}
 		}
 	};

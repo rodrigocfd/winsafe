@@ -1,18 +1,15 @@
 #![allow(non_snake_case)]
 
 use crate::ffi::gdi32;
-use crate::handles::HGDIOBJ;
 use crate::internal_defs::const_void;
 use crate::structs::RECT;
 
-handle_type! {
+hgdiobj_type! {
 	/// Handle to a
-	/// [region](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn).
-	/// Exposes methods.
+	/// [region](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
+	/// GDI object. Exposes methods.
 	HRGN
 }
-
-convert_hgdiobj!(HRGN);
 
 impl HRGN {
 	/// [`PtInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptinregion)
