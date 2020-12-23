@@ -4,7 +4,7 @@ use std::ffi::c_void;
 
 use crate::aliases::HOOKPROC;
 use crate::co;
-use crate::ffi::{HANDLE, user32};
+use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HINSTANCE;
 

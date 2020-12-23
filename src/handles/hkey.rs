@@ -4,7 +4,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::enums::RegistryValue;
-use crate::ffi::{advapi32, HANDLE};
+use crate::ffi::advapi32;
 use crate::internal_defs::mut_void;
 use crate::Utf16;
 
@@ -41,7 +41,7 @@ impl HKEY {
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
 	pub fn RegCloseKey(self) -> Result<(), co::ERROR> {
-		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.0) }) {
+		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.0) } as u32) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
@@ -95,7 +95,7 @@ impl HKEY {
 					std::ptr::null_mut(),
 					&mut dataLen,
 				)
-			}
+			} as u32
 		) {
 			co::ERROR::SUCCESS => {},
 			err => return Err(err),
@@ -118,7 +118,7 @@ impl HKEY {
 							mut_void(&mut dwordBuf),
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
 					err => Err(err),
@@ -138,7 +138,7 @@ impl HKEY {
 							mut_void(&mut qwordBuf),
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
 					err => Err(err),
@@ -158,7 +158,7 @@ impl HKEY {
 							szBuf.as_mut_ptr() as *mut c_void,
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(
 						RegistryValue::Sz(
@@ -182,7 +182,7 @@ impl HKEY {
 							byteBuf.as_mut_ptr() as *mut c_void,
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
 					err => Err(err),
@@ -223,7 +223,7 @@ impl HKEY {
 					samDesired.into(),
 					&mut hKey.0,
 				)
-			}
+			} as u32
 		) {
 			co::ERROR::SUCCESS => Ok(hKey),
 			err => Err(err),
@@ -283,7 +283,7 @@ impl HKEY {
 					std::ptr::null_mut(),
 					&mut dataLen,
 				)
-			}
+			} as u32
 		) {
 			co::ERROR::SUCCESS => {},
 			err => return Err(err),
@@ -305,7 +305,7 @@ impl HKEY {
 							&mut dwordBuf as *mut u32 as *mut u8,
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
 					err => Err(err),
@@ -324,7 +324,7 @@ impl HKEY {
 							&mut qwordBuf as *mut u64 as *mut u8,
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
 					err => Err(err),
@@ -343,7 +343,7 @@ impl HKEY {
 							szBuf.as_mut_ptr() as *mut u8,
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(
 						RegistryValue::Sz(
@@ -366,7 +366,7 @@ impl HKEY {
 							byteBuf.as_mut_ptr(),
 							&mut dataLen,
 						)
-					}
+					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
 					err => Err(err),
@@ -405,7 +405,7 @@ impl HKEY {
 					lpData.as_ptr(),
 					lpData.len() as u32,
 				)
-			}
+			} as u32
 		) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -449,7 +449,7 @@ impl HKEY {
 					lpData.as_ptr() as *const u8,
 					lpData.len() as u32,
 				)
-			}
+			} as u32
 		) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),

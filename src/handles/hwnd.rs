@@ -5,7 +5,7 @@ use std::ffi::c_void;
 use crate::aliases::SUBCLASSPROC;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu, IdPos};
-use crate::ffi::{comctl32, HANDLE, user32};
+use crate::ffi::{comctl32, user32};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
 use crate::internal_defs::{const_void, mut_void};
@@ -44,7 +44,7 @@ impl HWND {
 		hWndParent: Option<HWND>,
 		hMenu: IdMenu,
 		hInstance: HINSTANCE,
-		lpParam: Option<*const c_void>
+		lpParam: Option<*mut c_void>
 	) -> Result<HWND, co::ERROR> {
 		match ptr_as_opt!(
 			user32::CreateWindowExW(
@@ -56,7 +56,7 @@ impl HWND {
 				hWndParent.unwrap_or_default().0,
 				hMenu.as_ptr(),
 				hInstance.as_ptr(),
-				lpParam.unwrap_or(std::ptr::null())
+				lpParam.unwrap_or(std::ptr::null_mut()),
 			)
 		) {
 			Some(p) => Ok(Self(p)),
@@ -95,7 +95,7 @@ impl HWND {
 	/// [`EnableWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablewindow)
 	/// method.
 	pub fn EnableWindow(self, bEnable: bool) -> bool {
-		unsafe { user32::EnableWindow(self.0, bEnable as u32) != 0 }
+		unsafe { user32::EnableWindow(self.0, bEnable as i32) != 0 }
 	}
 
 	/// [`EndPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
@@ -186,7 +186,7 @@ impl HWND {
 		self, hCtl: HWND, bPrevious: bool) -> Result<HWND, co::ERROR>
 	{
 		match ptr_as_opt!(
-			user32::GetNextDlgGroupItem(self.0, hCtl.0, bPrevious as u32)
+			user32::GetNextDlgGroupItem(self.0, hCtl.0, bPrevious as i32)
 		) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
@@ -199,7 +199,7 @@ impl HWND {
 		self, hCtl: HWND, bPrevious: bool) -> Result<HWND, co::ERROR>
 	{
 		match ptr_as_opt!(
-			user32::GetNextDlgTabItem(self.0, hCtl.0, bPrevious as u32)
+			user32::GetNextDlgTabItem(self.0, hCtl.0, bPrevious as i32)
 		) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
@@ -224,7 +224,7 @@ impl HWND {
 		self, hRgn: HRGN, bErase: bool) -> Result<co::REGION, ()>
 	{
 		match unsafe {
-			user32::GetUpdateRgn(self.0, hRgn.as_ptr(), bErase as u32)
+			user32::GetUpdateRgn(self.0, hRgn.as_ptr(), bErase as i32)
 		} {
 			0 => Err(()),
 			ret => Ok(co::REGION::from(ret)),
@@ -399,7 +399,7 @@ impl HWND {
 					std::ptr::null(),
 					|lpRect| const_void(lpRect),
 				),
-				bErase as u32,
+				bErase as i32,
 			)
 		} {
 			0 => Err(()),
@@ -410,7 +410,7 @@ impl HWND {
 	/// [`InvalidateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidatergn)
 	/// method.
 	pub fn InvalidateRgn(self, hRgn: HRGN, bErase: bool) {
-		unsafe { user32::InvalidateRgn(self.0, hRgn.as_ptr(), bErase as u32); }
+		unsafe { user32::InvalidateRgn(self.0, hRgn.as_ptr(), bErase as i32); }
 	}
 
 	/// [`IsChild`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ischild)
@@ -482,7 +482,7 @@ impl HWND {
 			)
 		} {
 			0 => Err(GetLastError()),
-			ret => Ok(co::DLGID::from(ret)),
+			ret => Ok(co::DLGID::from(ret as u32)),
 		}
 	}
 

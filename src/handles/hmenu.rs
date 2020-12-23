@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
-use crate::ffi::{HANDLE, user32};
+use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
 use crate::internal_defs::{const_void, mut_void};
@@ -25,7 +25,7 @@ impl HMENU {
 			user32::AppendMenuW(
 				self.0,
 				uFlags.into(),
-				uIDNewItem.as_ptr(),
+				uIDNewItem.into(),
 				lpNewItem.as_ptr(),
 			)
 		} {
@@ -187,7 +187,7 @@ impl HMENU {
 				self.0,
 				uPosition.into(),
 				flags.into(),
-				uIDNewItem.as_ptr(),
+				uIDNewItem.into(),
 				lpNewItem.as_ptr(),
 			)
 		} {
@@ -208,7 +208,7 @@ impl HMENU {
 
 		match unsafe {
 			user32::InsertMenuItemW(
-				self.0, item.into(), byPos as u32, const_void(lpmi))
+				self.0, item.into(), byPos as i32, const_void(lpmi))
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -259,7 +259,7 @@ impl HMENU {
 
 		match unsafe {
 			user32::SetMenuItemInfoW(
-				self.0, item.into(), byPos as u32, const_void(lpmii))
+				self.0, item.into(), byPos as i32, const_void(lpmii))
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),

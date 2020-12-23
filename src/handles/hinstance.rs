@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
-use crate::ffi::{HANDLE, kernel32, user32};
+use crate::ffi::{kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HCURSOR, HICON};
 use crate::internal_defs::mut_void;

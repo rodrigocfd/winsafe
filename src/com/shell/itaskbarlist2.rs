@@ -3,7 +3,7 @@
 use crate::co::ERROR;
 use crate::com::{PPVtbl, Vtbl};
 use crate::com::shell::{ITaskbarList, ITaskbarListVtbl};
-use crate::ffi::HANDLE;
+use crate::ffi::{BOOL, HANDLE};
 use crate::handles::HWND;
 use crate::structs::IID;
 
@@ -13,7 +13,7 @@ vtbl_type! {
 	0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317,
 
 	iTaskbarListVtbl, ITaskbarListVtbl
-	MarkFullscreenWindow, fn(PPVtbl<Self>, HANDLE, u32) -> u32
+	MarkFullscreenWindow, fn(PPVtbl<Self>, HANDLE, BOOL) -> u32
 }
 
 //------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ impl ITaskbarList2 {
 			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();
 			match ERROR::from(
 				((*(*ppv)).MarkFullscreenWindow)(
-					ppv, hwnd.as_ptr(), fFullscreen as u32,
+					ppv, hwnd.as_ptr(), fFullscreen as i32,
 				),
 			) {
 				ERROR::S_OK => Ok(()),

@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::ffi::{HANDLE, kernel32};
+use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 
 handle_type! {

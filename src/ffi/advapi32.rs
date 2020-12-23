@@ -1,15 +1,13 @@
 //! Raw bindings to advapi32.lib functions.
 
-use std::ffi::c_void;
-
-use crate::ffi::HANDLE;
+use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PVOID};
 
 #[link(name = "advapi32")]
 extern "system" {
-	pub fn RegCloseKey(hKey: HANDLE) -> u32;
-	pub fn RegGetValueW(hkey: HANDLE, lpSubKey: *const u16, lpValue: *const u16, dwFlags: u32, pdwType: *mut u32, pvData: *mut c_void, pcbData: *mut u32) -> u32;
-	pub fn RegOpenKeyExW(hKey: HANDLE, lpSubKey: *const u16, ulOptions: u32, samDesired: u32, phkResult: *mut HANDLE) -> u32;
-	pub fn RegQueryValueExW(hKey: HANDLE, lpValueName: *const u16, lpReserved: *mut u32, lpType: *mut u32, lpData: *mut u8, lpcbData: *mut u32) -> u32;
-	pub fn RegSetKeyValueW(hKey: HANDLE, lpSubKey: *const u16, lpValueName: *const u16, dwType: u32, lpData: *const c_void, cbData: u32) -> u32;
-	pub fn RegSetValueExW(hKey: HANDLE, lpValueName: *const u16, Reserved: u32, dwType: u32, lpData: *const u8, cbData: u32) -> u32;
+	pub fn RegCloseKey(hKey: HANDLE) -> BOOL;
+	pub fn RegGetValueW(hkey: HANDLE, lpSubKey: PCSTR, lpValue: PCSTR, dwFlags: u32, pdwType: *mut u32, pvData: PVOID, pcbData: *mut u32) -> BOOL;
+	pub fn RegOpenKeyExW(hKey: HANDLE, lpSubKey: PCSTR, ulOptions: u32, samDesired: u32, phkResult: *mut HANDLE) -> BOOL;
+	pub fn RegQueryValueExW(hKey: HANDLE, lpValueName: PCSTR, lpReserved: *mut u32, lpType: *mut u32, lpData: *mut u8, lpcbData: *mut u32) -> BOOL;
+	pub fn RegSetKeyValueW(hKey: HANDLE, lpSubKey: PCSTR, lpValueName: PCSTR, dwType: u32, lpData: PCVOID, cbData: u32) -> BOOL;
+	pub fn RegSetValueExW(hKey: HANDLE, lpValueName: PCSTR, Reserved: u32, dwType: u32, lpData: *const u8, cbData: u32) -> BOOL;
 }

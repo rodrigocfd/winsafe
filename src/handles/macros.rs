@@ -7,7 +7,7 @@ macro_rules! handle_type {
 		$(#[$attr])*
 		#[repr(C)]
 		#[derive(Copy, Clone, Eq, PartialEq)]
-		pub struct $name(HANDLE);
+		pub struct $name(*mut std::ffi::c_void);
 
 		unsafe impl Send for $name {}
 		unsafe impl Sync for $name {}
@@ -21,11 +21,11 @@ macro_rules! handle_type {
 		impl $name {
 			/// Creates a new handle instance by wrapping a pointer.
 			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {
-				Self(p as HANDLE)
+				Self(p as *mut std::ffi::c_void)
 			}
 
 			/// Returns the raw underlying pointer for this handle.
-			pub unsafe fn as_ptr(self) -> HANDLE {
+			pub unsafe fn as_ptr(self) -> *mut std::ffi::c_void {
 				self.0
 			}
 

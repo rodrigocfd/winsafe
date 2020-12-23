@@ -1,8 +1,7 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::com::{PPVtbl, Vtbl};
+use crate::ffi::PVOID;
 use crate::structs::IID;
 
 vtbl_type! {
@@ -10,7 +9,7 @@ vtbl_type! {
 	IUnknownVtbl,
 	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
 
-	QueryInterface, fn(PPVtbl<Self>, *const c_void, *mut PPVtbl<IUnknownVtbl>)
+	QueryInterface, fn(PPVtbl<Self>, PVOID, *mut PPVtbl<IUnknownVtbl>)
 	AddRef, fn(PPVtbl<Self>) -> u32
 	Release, fn(PPVtbl<Self>) -> u32
 }

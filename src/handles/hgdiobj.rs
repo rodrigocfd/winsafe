@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::ffi::{gdi32, HANDLE};
+use crate::ffi::gdi32;
 
 handle_type! {
 	/// Handle to a

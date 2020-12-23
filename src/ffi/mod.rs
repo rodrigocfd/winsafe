@@ -1,7 +1,15 @@
 //! Raw FFI bindings.
 
-/// Placeholder to any Win32 handle.
+// The aliases below are simplified versions of Win32 types.
+// They are supposed to be used only as syntactic sugar in the FFI calls.
+
+pub type BOOL = i32;
 pub type HANDLE = *mut std::ffi::c_void;
+pub type PCSTR = *const u16;
+pub type PCVOID = *const std::ffi::c_void;
+pub type PFUNC = *const std::ffi::c_void;
+pub type PSTR = *mut u16;
+pub type PVOID = *mut std::ffi::c_void;
 
 pub mod advapi32;
 pub mod comctl32;

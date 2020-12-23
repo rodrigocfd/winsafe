@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::ffi::{HANDLE, shell32};
+use crate::ffi::shell32;
 use crate::internal_defs::mut_void;
 use crate::structs::POINT;
 use crate::Utf16;

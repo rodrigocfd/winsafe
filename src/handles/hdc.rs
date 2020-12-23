@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::ffi::{gdi32, HANDLE};
+use crate::ffi::gdi32;
 use crate::handles::HGDIOBJ;
 use crate::internal_defs::{const_void, mut_void};
 use crate::structs::{POINT, SIZE};

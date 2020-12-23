@@ -2747,7 +2747,7 @@ impl ERROR {
 				co::LANG::NEUTRAL.MAKELANGID(co::SUBLANG::DEFAULT),
 				(&mut ptrBuf as *mut *mut u16) as *mut u16, // pass pointer to pointer
 				0,
-				std::ptr::null(),
+				std::ptr::null_mut(),
 			) {
 				0 => {
 					format!(

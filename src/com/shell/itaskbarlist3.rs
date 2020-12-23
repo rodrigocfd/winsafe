@@ -1,11 +1,9 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::co::ERROR;
 use crate::com::{PPVtbl, Vtbl};
 use crate::com::shell::{co, ITaskbarList2, ITaskbarList2Vtbl};
-use crate::ffi::HANDLE;
+use crate::ffi::{HANDLE, PCSTR, PCVOID};
 use crate::handles::HWND;
 use crate::structs::IID;
 
@@ -21,12 +19,12 @@ vtbl_type! {
 	UnregisterTab, fn(PPVtbl<Self>, HANDLE) -> u32
 	SetTabOrder, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
 	SetTabActive, fn(PPVtbl<Self>, HANDLE, HANDLE, u32) -> u32
-	ThumbBarAddButtons, fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32
-	ThumbBarUpdateButtons, fn(PPVtbl<Self>, HANDLE, u32, *const c_void) -> u32
+	ThumbBarAddButtons, fn(PPVtbl<Self>, HANDLE, u32, PCVOID) -> u32
+	ThumbBarUpdateButtons, fn(PPVtbl<Self>, HANDLE, u32, PCVOID) -> u32
 	ThumbBarSetImageList, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
-	SetOverlayIcon, fn(PPVtbl<Self>, HANDLE, HANDLE, *const u16) -> u32
-	SetThumbnailTooltip, fn(PPVtbl<Self>, HANDLE, *const u16) -> u32
-	SetThumbnailClip, fn(PPVtbl<Self>, HANDLE, *const c_void) -> u32
+	SetOverlayIcon, fn(PPVtbl<Self>, HANDLE, HANDLE, PCSTR) -> u32
+	SetThumbnailTooltip, fn(PPVtbl<Self>, HANDLE, PCSTR) -> u32
+	SetThumbnailClip, fn(PPVtbl<Self>, HANDLE, PCVOID) -> u32
 }
 
 //------------------------------------------------------------------------------

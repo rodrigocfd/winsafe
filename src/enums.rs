@@ -108,11 +108,21 @@ pub enum IdMenu {
 
 impl IdMenu {
 	/// Converts the internal value to a pointer.
-	pub fn as_ptr(&self) -> *const c_void {
+	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
-			IdMenu::Id(id) => *id as *const c_void,
+			IdMenu::Id(id) => *id as *mut c_void,
 			IdMenu::Menu(hMenu) => unsafe { hMenu.as_ptr() },
-			IdMenu::None => std::ptr::null(),
+			IdMenu::None => std::ptr::null_mut(),
+		}
+	}
+}
+
+impl From<IdMenu> for usize {
+	fn from(v: IdMenu) -> usize {
+		match v {
+			IdMenu::Id(id) => id as usize,
+			IdMenu::Menu(hMenu) => (unsafe { hMenu.as_ptr() }) as usize,
+			IdMenu::None => 0,
 		}
 	}
 }

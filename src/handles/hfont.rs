@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::ffi::{gdi32, HANDLE};
+use crate::ffi::gdi32;
 use crate::handles::HGDIOBJ;
 use crate::internal_defs::const_void;
 use crate::structs::LOGFONT;

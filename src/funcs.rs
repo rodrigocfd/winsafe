@@ -19,7 +19,7 @@ pub fn AdjustWindowRectEx(
 {
 	match unsafe {
 		user32::AdjustWindowRectEx(
-			mut_void(lpRect), dwStyle.into(), bMenu as u32, dwExStyle.into(),
+			mut_void(lpRect), dwStyle.into(), bMenu as i32, dwExStyle.into(),
 		)
 	} {
 		0 => Err(GetLastError()),
@@ -42,24 +42,24 @@ pub fn AdjustWindowRectEx(
 ///   co::CLSCTX::INPROC_SERVER,
 /// );
 /// ```
-pub fn CoCreateInstance<VT: Vtbl, IF: From<PPVtbl<VT>>>(
+pub fn CoCreateInstance<VTB: Vtbl, ITFC: From<PPVtbl<VTB>>>(
 	rclsid: &s::CLSID,
 	pUnkOuter: Option<*mut c_void>,
 	dwClsContext: co::CLSCTX,
-) -> IF {
-	let mut ppv: PPVtbl<VT> = std::ptr::null_mut();
+) -> ITFC {
+	let mut ppv: PPVtbl<VTB> = std::ptr::null_mut();
 	unsafe {
 		ole32::CoCreateInstance(
 			const_void(rclsid),
 			pUnkOuter.unwrap_or(std::ptr::null_mut()),
 			dwClsContext.into(),
-			VT::IID().as_ref() as *const s::GUID as *const c_void,
+			VTB::IID().as_ref() as *const s::GUID as *const c_void,
 			&mut ppv
-				as *mut PPVtbl<VT>
-				as *mut *mut *mut c_void,
+				as *mut PPVtbl<VTB>
+				as *mut *mut c_void,
 		);
 	}
-	IF::from(ppv)
+	ITFC::from(ppv)
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
@@ -68,7 +68,7 @@ pub fn CoCreateInstance<VT: Vtbl, IF: From<PPVtbl<VT>>>(
 /// Must be paired with a [`CoUninitialize`](crate::CoUninitialize) call.
 pub fn CoInitializeEx(dwCoInit: co::COINIT) -> Result<co::ERROR, co::ERROR> {
 	let err = co::ERROR::from(
-		unsafe { ole32::CoInitializeEx(std::ptr::null(), dwCoInit.into()) }
+		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.into()) }
 	);
 	match err {
 		co::ERROR::S_OK
@@ -133,12 +133,12 @@ pub fn GetLastError() -> co::ERROR {
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
-pub fn GetMessage(lpMsg: &s::MSG, hWnd: HWND,
+pub fn GetMessage(lpMsg: &mut s::MSG, hWnd: HWND,
 	wMsgFilterMin: u32, wMsgFilterMax: u32) -> Result<bool, co::ERROR>
 {
 	match unsafe {
 		user32::GetMessageW(
-			const_void(lpMsg), hWnd.as_ptr(), wMsgFilterMin, wMsgFilterMax,
+			mut_void(lpMsg), hWnd.as_ptr(), wMsgFilterMin, wMsgFilterMax,
 		)
 	} {
 		-1 => Err(GetLastError()),
@@ -180,12 +180,12 @@ pub fn InitCommonControls() {
 /// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
 /// function.
 pub fn IsGUIThread(bConvert: bool) -> Result<bool, co::ERROR> {
-	let r = unsafe { user32::IsGUIThread(bConvert as u32) };
+	let r = unsafe { user32::IsGUIThread(bConvert as i32) };
 	if bConvert {
 		match r {
 			0 => Ok(false),
 			1 => Ok(true),
-			err => Err(co::ERROR::from(err)),
+			err => Err(co::ERROR::from(err as u32)),
 		}
 	} else {
 		Ok(r != 0)

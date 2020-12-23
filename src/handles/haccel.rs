@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::ffi::{HANDLE, user32};
+use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::internal_defs::mut_void;
 use crate::structs::ACCEL;
