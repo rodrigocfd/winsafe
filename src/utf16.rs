@@ -86,8 +86,10 @@ impl Utf16 {
 	/// Returns a `LPWSTR` mut pointer to the internal UTF-16 string buffer, to
 	/// be passed to native Win32 functions. This is useful to receive strings.
 	///
-	/// **Note:** Will panic if the buffer wasn't previously allocated. Be sure
-	/// to alloc enough room, otherwise a buffer overrun may occur.
+	/// # Panics
+	///
+	/// Panics if the buffer wasn't previously allocated. Be sure to alloc enough
+	/// room, otherwise a buffer overrun may occur.
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self.char_vec.as_mut() {
 			Some(vec_ref) => vec_ref.as_mut_ptr(),
@@ -111,8 +113,10 @@ impl Utf16 {
 	/// Returns a slice to the internal `u16` buffer. This is useful to receive
 	/// strings.
 	///
-	/// **Note:** Will panic if the buffer wasn't previously allocated. Be sure
-	/// to alloc enough room, otherwise a buffer overrun may occur.
+	/// # Panics
+	///
+	/// Panics if the buffer wasn't previously allocated. Be sure to alloc enough
+	/// room, otherwise a buffer overrun may occur.
 	pub fn as_mut_slice(&mut self) -> &mut [u16] {
 		match self.char_vec.as_mut() {
 			Some(vec_ref) => &mut vec_ref[..],
@@ -122,9 +126,11 @@ impl Utf16 {
 
 	/// Returns a slice to the internal UTF-16 string buffer.
 	///
-	/// **Note:** Will panic if the buffer wasn't previously allocated. Make sure
-	/// the `Utf16` object outlives the function call, otherwise it will point to
-	/// an invalid memory location.
+	/// # Panics
+	///
+	/// Panics if the buffer wasn't previously allocated. Make sure the `Utf16`
+	/// object outlives the function call, otherwise it will point to an invalid
+	/// memory location.
 	pub fn as_slice(&mut self) -> &[u16] {
 		match self.char_vec.as_ref() {
 			Some(vec_ref) => &vec_ref[..],

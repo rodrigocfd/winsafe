@@ -1,5 +1,7 @@
 //! Internal value definitions used within the library only.
 
+use std::error::Error;
+
 use crate::Utf16;
 
 pub const FAPPCOMMAND_MASK: u16 = 0xf000;
@@ -28,6 +30,11 @@ pub fn const_void<T>(val: &T) -> *const std::ffi::c_void {
 /// Converts a mut reference to a `*mut c_void`.
 pub fn mut_void<T>(val: &mut T) -> *mut std::ffi::c_void {
 	val as *mut T as *mut std::ffi::c_void
+}
+
+/// Converts a string to  a `Box<dyn Error>`.
+pub fn str_dyn_error(s: &str) -> Box<dyn Error> {
+	Into::<Box<dyn Error>>::into(String::from(s))
 }
 
 /// Parses a null-delimited multi-string, which must terminate with two nulls.

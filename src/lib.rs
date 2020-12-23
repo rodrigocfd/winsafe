@@ -56,12 +56,16 @@
 //! [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
 //! values.
 //!
-//! Most functions return a `Result` with a possible `ERROR`, but some functions
-//! simply return an empty error value. This happens because many Win32
-//! functions can fail without providing any error information.
+//! Most Win32 functions return a `Result` with a possible `ERROR`, but some
+//! functions simply return an empty error value. This happens because many
+//! Win32 functions can fail without providing any error information.
 //!
-//! Native Win32 funcions never panic. Methods from the [`gui`](crate::gui)
-//! module will panic if you try to do a forbidden operation.
+//! Some [`gui`](crate::gui) methods can return a `Result` with a possible
+//! `Box<dyn Error>`. In such cases, the underlying object is always `ERROR` or
+//! `String`.
+//!
+//! Panics will happen only if an internal bug occurs. Please report if you find
+//! one.
 //!
 //! # Text encoding
 //!

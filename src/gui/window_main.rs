@@ -6,6 +6,7 @@ use crate::gui::events::Events;
 use crate::gui::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HINSTANCE, HWND};
+use crate::internal_defs::str_dyn_error;
 
 /// Main application window.
 #[derive(Clone)]
@@ -39,9 +40,7 @@ impl WindowMain {
 			.map_err(|e| Box::new(e))?
 		{
 			f::SetProcessDPIAware()
-				.map_err(|_| Into::<Box<dyn Error>>::into(
-					String::from("SetProcessDPIAware failed.")
-				))?;
+				.map_err(|_| str_dyn_error("SetProcessDPIAware failed."))?;
 		}
 
 		f::InitCommonControls();
