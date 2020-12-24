@@ -6,9 +6,9 @@ use crate::msg;
 
 /// The result of processing a message.
 pub enum ProcessResult {
-	NotHandled,            // message was not handler because no such handler is stored
-	HandledWithRet(isize), // return value is meaningful
-	HandledWithoutRet,     // return value is not meaningful, whatever default value
+	NotHandled,                 // message was not handler because no such handler is stored
+	HandledWithRet(msg::RetWm), // return value is meaningful
+	HandledWithoutRet,          // return value is not meaningful, whatever default value
 }
 
 struct MsgMaps {
@@ -119,7 +119,9 @@ impl Events {
 				match msg_maps.nfys.get_mut(&(p.nmhdr.idFrom as u16, p.nmhdr.code)) {
 					Some(func) => { // we have a stored function to handle this notification
 						match func(p) {
-							Some(ret) => ProcessResult::HandledWithRet(ret), // meaningful return value
+							Some(ret) => ProcessResult::HandledWithRet( // meaningful return value
+								msg::RetWm::from_msg_ret(m.msg, ret),
+							),
 							None => ProcessResult::HandledWithoutRet,
 						}
 					},
@@ -148,7 +150,9 @@ impl Events {
 				match msg_maps.msgs.get_mut(&m.msg) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(m) {
-							Some(ret) => ProcessResult::HandledWithRet(ret), // meaningful return value
+							Some(ret) => ProcessResult::HandledWithRet( // meaningful return value
+								msg::RetWm::from_msg_ret(m.msg, ret),
+							),
 							None => ProcessResult::HandledWithoutRet,
 						}
 					},

@@ -9,7 +9,7 @@ use crate::ffi::{comctl32, user32};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
 use crate::internal_defs::{const_void, mut_void};
-use crate::msg::WmAny;
+use crate::msg::{RetWm, WmAny};
 use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::Utf16;
 
@@ -77,11 +77,14 @@ impl HWND {
 
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
-	pub fn DefWindowProc<P: Into<WmAny>>(self, Msg: P) -> isize {
+	pub fn DefWindowProc<P: Into<WmAny>>(self, Msg: P) -> RetWm {
 		let wmAny: WmAny = Msg.into();
 		unsafe {
-			user32::DefWindowProcW(
-				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+			RetWm::from_msg_ret(
+				wmAny.msg,
+				user32::DefWindowProcW(
+					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+				),
 			)
 		}
 	}
@@ -488,12 +491,15 @@ impl HWND {
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method.
-	pub fn PostMessage<P: Into<WmAny>>(self, Msg: P) -> isize {
+	pub fn PostMessage<P: Into<WmAny>>(self, Msg: P) -> Result<(), co::ERROR> {
 		let wmAny: WmAny = Msg.into();
-		unsafe {
+		match unsafe {
 			user32::PostMessageW(
 				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
 			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
 		}
 	}
 
@@ -513,11 +519,14 @@ impl HWND {
 
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
-	pub fn SendMessage<P: Into<WmAny>>(self, Msg: P) -> isize {
+	pub fn SendMessage<P: Into<WmAny>>(self, Msg: P) -> RetWm {
 		let wmAny: WmAny = Msg.into();
 		unsafe {
-			user32::SendMessageW(
-				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+			RetWm::from_msg_ret(
+				wmAny.msg,
+				user32::SendMessageW(
+					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+				),
 			)
 		}
 	}

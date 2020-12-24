@@ -1,10 +1,13 @@
 use core::panic;
 
-use crate::co;
+use crate::co::WM;
 use crate::msg;
 
 /// Possible
-/// [window messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
+/// [window messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
+/// and their input parameters.
+///
+/// Same variants of [`RetWm`](crate::msg::RetWm).
 pub enum Wm<'a, 'b, 'c> {
 	Activate(msg::WmActivate),
 	ActivateApp(msg::WmActivateApp),
@@ -42,7 +45,7 @@ pub enum Wm<'a, 'b, 'c> {
 /// parameters.
 #[derive(Copy, Clone)]
 pub struct WmAny {
-	pub msg: co::WM,
+	pub msg: WM,
 	pub wparam: usize,
 	pub lparam: isize,
 }
@@ -52,32 +55,32 @@ impl WmAny {
 	/// the exact message type.
 	pub fn message<'a, 'b, 'c>(self) -> Wm<'a, 'b, 'c> {
 		match self.msg {
-			co::WM::ACTIVATE => Wm::Activate(self.into()),
-			co::WM::ACTIVATEAPP => Wm::ActivateApp(self.into()),
-			co::WM::APPCOMMAND => Wm::AppCommand(self.into()),
-			co::WM::CLOSE => Wm::Close(self.into()),
-			co::WM::CREATE => Wm::Create(self.into()),
-			co::WM::CTLCOLORBTN => Wm::CtlColorBtn(self.into()),
-			co::WM::CTLCOLORDLG => Wm::CtlColorDlg(self.into()),
-			co::WM::CTLCOLOREDIT => Wm::CtlColorEdit(self.into()),
-			co::WM::CTLCOLORLISTBOX => Wm::CtlColorListBox(self.into()),
-			co::WM::CTLCOLORSCROLLBAR => Wm::CtlColorListScrollBar(self.into()),
-			co::WM::CTLCOLORSTATIC => Wm::CtlColorListStatic(self.into()),
-			co::WM::DESTROY => Wm::Destroy(self.into()),
-			co::WM::DROPFILES => Wm::DropFiles(self.into()),
-			co::WM::ENDSESSION => Wm::EndSession(self.into()),
-			co::WM::INITDIALOG => Wm::InitDialog(self.into()),
-			co::WM::INITMENUPOPUP => Wm::InitMenuPopup(self.into()),
-			co::WM::NCCREATE => Wm::NcCreate(self.into()),
-			co::WM::NCDESTROY => Wm::NcDestroy(self.into()),
-			co::WM::NCPAINT => Wm::NcPaint(self.into()),
-			co::WM::NOTIFY => Wm::Notify(self.into()),
-			co::WM::NULL => Wm::Null(self.into()),
-			co::WM::PAINT => Wm::Paint(self.into()),
-			co::WM::SETFOCUS => Wm::SetFocus(self.into()),
-			co::WM::SIZE => Wm::Size(self.into()),
-			co::WM::SIZING => Wm::Sizing(self.into()),
-			co::WM::TIMER => Wm::Timer(self.into()),
+			WM::ACTIVATE => Wm::Activate(self.into()),
+			WM::ACTIVATEAPP => Wm::ActivateApp(self.into()),
+			WM::APPCOMMAND => Wm::AppCommand(self.into()),
+			WM::CLOSE => Wm::Close(self.into()),
+			WM::CREATE => Wm::Create(self.into()),
+			WM::CTLCOLORBTN => Wm::CtlColorBtn(self.into()),
+			WM::CTLCOLORDLG => Wm::CtlColorDlg(self.into()),
+			WM::CTLCOLOREDIT => Wm::CtlColorEdit(self.into()),
+			WM::CTLCOLORLISTBOX => Wm::CtlColorListBox(self.into()),
+			WM::CTLCOLORSCROLLBAR => Wm::CtlColorListScrollBar(self.into()),
+			WM::CTLCOLORSTATIC => Wm::CtlColorListStatic(self.into()),
+			WM::DESTROY => Wm::Destroy(self.into()),
+			WM::DROPFILES => Wm::DropFiles(self.into()),
+			WM::ENDSESSION => Wm::EndSession(self.into()),
+			WM::INITDIALOG => Wm::InitDialog(self.into()),
+			WM::INITMENUPOPUP => Wm::InitMenuPopup(self.into()),
+			WM::NCCREATE => Wm::NcCreate(self.into()),
+			WM::NCDESTROY => Wm::NcDestroy(self.into()),
+			WM::NCPAINT => Wm::NcPaint(self.into()),
+			WM::NOTIFY => Wm::Notify(self.into()),
+			WM::NULL => Wm::Null(self.into()),
+			WM::PAINT => Wm::Paint(self.into()),
+			WM::SETFOCUS => Wm::SetFocus(self.into()),
+			WM::SIZE => Wm::Size(self.into()),
+			WM::SIZING => Wm::Sizing(self.into()),
+			WM::TIMER => Wm::Timer(self.into()),
 			m => panic!("Unsupported message: {}.", m),
 		}
 	}

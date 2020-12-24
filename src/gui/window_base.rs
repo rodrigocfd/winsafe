@@ -99,7 +99,7 @@ impl WindowBase {
 		// If no pointer stored, then no processing is done.
 		// Prevents processing before WM_NCCREATE and after WM_NCDESTROY.
 		if ptr_self.is_null() {
-			return hwnd.DefWindowProc(wm_any);
+			return hwnd.DefWindowProc(wm_any).into();
 		}
 
 		// Execute user handler, if any.
@@ -112,9 +112,9 @@ impl WindowBase {
 		}
 
 		match maybe_processed {
-			ProcessResult::HandledWithRet(ret) => ret,
+			ProcessResult::HandledWithRet(ret) => ret.into(),
 			ProcessResult::HandledWithoutRet => 0,
-			ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any),
+			ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any).into(),
 		}
 	}
 }

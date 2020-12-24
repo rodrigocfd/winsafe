@@ -69,7 +69,7 @@ extern "system" {
 	pub fn LoadIconW(hInstance: HANDLE, lpIconName: PCSTR) -> HANDLE;
 	pub fn MessageBoxW(hWnd: HANDLE, lpText: PCSTR, lpCaption: PCSTR, uType: u32) -> i32;
 	pub fn PeekMessageW(lpMsg: PVOID, hWnd: HANDLE, wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: u32) -> BOOL;
-	pub fn PostMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> isize;
+	pub fn PostMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> BOOL;
 	pub fn PostQuitMessage(nExitCode: i32);
 	pub fn RegisterClassExW(lpwcx: PCVOID) -> u16;
 	pub fn RemoveMenu(hMenu: HANDLE, uPosition: u32, uFlags: u32) -> BOOL;
