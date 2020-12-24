@@ -3,13 +3,13 @@
 use std::ffi::c_void;
 
 use crate::co;
-use crate::handles::{HBITMAP, HBRUSH, HFONT, HMENU, HPEN, HRGN};
+use crate::handles::{HBITMAP, HMENU};
 use crate::structs::ATOM;
 use crate::Utf16;
 
 /// Variant parameter used in
 /// [window class](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-classes)
-/// functions.
+/// functions:
 ///
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
@@ -31,7 +31,7 @@ impl AtomStr {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter used in [menu](crate::HMENU) methods.
+/// Variant parameter used in [menu](crate::HMENU) methods:
 ///
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`;
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `lpNewItem`.
@@ -42,7 +42,7 @@ pub enum BitmapPtrStr {
 }
 
 impl BitmapPtrStr {
-	/// Converts the internal value to a pointer.
+	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			BitmapPtrStr::Bitmap(hbmp) => unsafe { hbmp.as_ptr() as *const u16 },
@@ -54,8 +54,9 @@ impl BitmapPtrStr {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter for [`LoadCursor`](crate::HINSTANCE::LoadCursor)
-/// `lpCursorName`.
+/// Variant parameter for:
+///
+/// * [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
 pub enum IdIdcStr {
 	Id(i32),
 	Idc(co::IDC),
@@ -63,7 +64,7 @@ pub enum IdIdcStr {
 }
 
 impl IdIdcStr {
-	/// Converts the internal value to a pointer.
+	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			IdIdcStr::Id(id) => *id as *const u16,
@@ -75,7 +76,9 @@ impl IdIdcStr {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter for [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
+/// Variant parameter for:
+///
+/// * [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
 pub enum IdIdiStr {
 	Id(i32),
 	Idi(co::IDI),
@@ -83,7 +86,7 @@ pub enum IdIdiStr {
 }
 
 impl IdIdiStr {
-	/// Converts the internal value to a pointer.
+	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			IdIdiStr::Id(id) => *id as *const u16,
@@ -95,7 +98,7 @@ impl IdIdiStr {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter used in [menu](crate::HMENU) methods.
+/// Variant parameter used in [menu](crate::HMENU) methods:
 ///
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
@@ -106,23 +109,23 @@ pub enum IdMenu {
 	None,
 }
 
-impl IdMenu {
-	/// Converts the internal value to a pointer.
-	pub fn as_ptr(&self) -> *mut c_void {
-		match self {
-			IdMenu::Id(id) => *id as *mut c_void,
-			IdMenu::Menu(hMenu) => unsafe { hMenu.as_ptr() },
-			IdMenu::None => std::ptr::null_mut(),
-		}
-	}
-}
-
 impl From<IdMenu> for usize {
 	fn from(v: IdMenu) -> usize {
 		match v {
 			IdMenu::Id(id) => id as usize,
 			IdMenu::Menu(hMenu) => (unsafe { hMenu.as_ptr() }) as usize,
 			IdMenu::None => 0,
+		}
+	}
+}
+
+impl IdMenu {
+	/// Converts the internal value to a `*mut c_void`.
+	pub fn as_ptr(&self) -> *mut c_void {
+		match self {
+			IdMenu::Id(id) => *id as *mut c_void,
+			IdMenu::Menu(hMenu) => unsafe { hMenu.as_ptr() },
+			IdMenu::None => std::ptr::null_mut(),
 		}
 	}
 }
@@ -155,18 +158,39 @@ impl From<IdPos> for u32 {
 //------------------------------------------------------------------------------
 
 /// Variant parameter for
-/// [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
+///
+/// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
 pub enum IdStr {
 	Id(i32),
 	Str(String),
 }
 
 impl IdStr {
-	/// Converts the internal value to a pointer.
+	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			IdStr::Id(id) => *id as *const u16,
 			IdStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for
+///
+/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`.
+pub enum IdWchar {
+	Id(i32),
+	Wchar(Utf16),
+}
+
+impl IdWchar {
+	/// Converts the internal value to a `*const u16`.
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			IdWchar::Id(id) => *id as *const u16,
+			IdWchar::Wchar(u) => unsafe { u.as_ptr() },
 		}
 	}
 }
@@ -183,7 +207,7 @@ pub enum RegistryValue {
 }
 
 impl RegistryValue {
-	/// Converts the internal value to a pointer.
+	/// Converts the internal value to a `*const c_void`.
 	pub fn as_ptr(&self) -> *const c_void {
 		match self {
 			RegistryValue::Binary(b) => b.as_ptr() as *const c_void,

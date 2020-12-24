@@ -192,11 +192,11 @@ impl From<WmAny> for WmCommand {
 
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
-pub struct WmCreate<'a> {
-	pub createstruct: &'a CREATESTRUCT,
+pub struct WmCreate<'a, 'b, 'c> {
+	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a> From<WmCreate<'a>> for WmAny {
+impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for WmAny {
 	fn from(p: WmCreate) -> Self {
 		Self {
 			msg: co::WM::CREATE,
@@ -206,7 +206,7 @@ impl<'a> From<WmCreate<'a>> for WmAny {
 	}
 }
 
-impl<'a> From<WmAny> for WmCreate<'a> {
+impl<'a, 'b, 'c> From<WmAny> for WmCreate<'a, 'b, 'c> {
 	fn from(p: WmAny) -> Self {
 		Self {
 			createstruct: unsafe { (p.lparam as *const CREATESTRUCT).as_ref() }.unwrap(),
@@ -355,11 +355,11 @@ impl From<WmAny> for WmInitMenuPopup {
 
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
-pub struct WmNcCreate<'a> {
-	pub createstruct: &'a CREATESTRUCT,
+pub struct WmNcCreate<'a, 'b, 'c> {
+	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a> From<WmNcCreate<'a>> for WmAny {
+impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for WmAny {
 	fn from(p: WmNcCreate) -> Self {
 		Self {
 			msg: co::WM::NCCREATE,
@@ -369,7 +369,7 @@ impl<'a> From<WmNcCreate<'a>> for WmAny {
 	}
 }
 
-impl<'a> From<WmAny> for WmNcCreate<'a> {
+impl<'a, 'b, 'c> From<WmAny> for WmNcCreate<'a, 'b, 'c> {
 	fn from(p: WmAny) -> Self {
 		Self {
 			createstruct: unsafe { (p.lparam as *const CREATESTRUCT).as_ref() }.unwrap(),

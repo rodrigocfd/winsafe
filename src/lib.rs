@@ -58,7 +58,7 @@
 //! use winsafe::{Utf16, WNDCLASSEX};
 //!
 //! let mut wcx = w::WNDCLASSEX::default(); // cbSize automatically set
-//! println!("Class name: {}", wcx.lpszClassName());
+//! println!("Class name: {}", wcx.lpszClassName()); // initially an empty string
 //!
 //! let buf = Utf16::from_str("CLASS_NAME");
 //! wcx.set_lpszClassName(&buf);

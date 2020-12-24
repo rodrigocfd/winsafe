@@ -5,13 +5,13 @@ use crate::msg;
 
 /// Possible
 /// [window messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
-pub enum Wm<'a> {
+pub enum Wm<'a, 'b, 'c> {
 	Activate(msg::WmActivate),
 	ActivateApp(msg::WmActivateApp),
 	AppCommand(msg::WmAppCommand),
 	Close(msg::WmClose),
 	Command(msg::WmCommand),
-	Create(msg::WmCreate<'a>),
+	Create(msg::WmCreate<'a, 'b, 'c>),
 	CtlColorBtn(msg::WmCtlColorBtn),
 	CtlColorDlg(msg::WmCtlColorDlg),
 	CtlColorEdit(msg::WmCtlColorEdit),
@@ -23,7 +23,7 @@ pub enum Wm<'a> {
 	EndSession(msg::WmEndSession),
 	InitDialog(msg::WmInitDialog),
 	InitMenuPopup(msg::WmInitMenuPopup),
-	NcCreate(msg::WmNcCreate<'a>),
+	NcCreate(msg::WmNcCreate<'a, 'b, 'c>),
 	NcDestroy(msg::WmNcDestroy),
 	NcPaint(msg::WmNcPaint),
 	Notify(msg::WmNotify<'a>),
@@ -50,7 +50,7 @@ pub struct WmAny {
 impl WmAny {
 	/// Returns a [`Wm`](crate::msg::Wm) enum, which can be matched to identify
 	/// the exact message type.
-	pub fn message<'a>(self) -> Wm<'a> {
+	pub fn message<'a, 'b, 'c>(self) -> Wm<'a, 'b, 'c> {
 		match self.msg {
 			co::WM::ACTIVATE => Wm::Activate(self.into()),
 			co::WM::ACTIVATEAPP => Wm::ActivateApp(self.into()),

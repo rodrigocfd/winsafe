@@ -165,6 +165,11 @@ pub fn HIBYTE(v: u16) -> u8 {
 	(v >> 8 & 0xff) as u8
 }
 
+/// Returns the high-order `u32` of an `u64`.
+pub fn HIDWORD(v: u64) -> u32 {
+	(v >> 32 & 0xffff_ffff) as u32
+}
+
 /// [`HIWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
 /// function. Originally a macro.
 pub fn HIWORD(v: u32) -> u16 {
@@ -285,6 +290,11 @@ pub fn IsWindowsVistaOrGreater() -> Result<bool, co::ERROR>
 /// function. Originally a macro.
 pub fn LOBYTE(v: u16) -> u8 {
 	(v & 0xff) as u8
+}
+
+/// Returns the low-order `u32` of an `u64`.
+pub fn LODWORD(v: u64) -> u32 {
+	(v & 0xffff_ffff) as u32
 }
 
 /// [`LOWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))

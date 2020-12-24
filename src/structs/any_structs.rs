@@ -7,7 +7,8 @@ use std::marker::PhantomData;
 
 use crate::aliases::WNDPROC;
 use crate::co;
-use crate::funcs::IsWindowsVistaOrGreater;
+use crate::enums::{IdStr, IdWchar};
+use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
 use crate::handles as h;
 use crate::internal_defs::LF_FACESIZE;
 use crate::Utf16;
@@ -72,7 +73,7 @@ impl Default for BITMAPINFOHEADER {
 /// struct.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
-pub struct CREATESTRUCT {
+pub struct CREATESTRUCT<'a, 'b> {
 	pub lpCreateParams: *const c_void,
 	pub hInstance: h::HINSTANCE,
 	pub hMenu: h::HMENU,
@@ -82,12 +83,36 @@ pub struct CREATESTRUCT {
 	pub y: i32,
 	pub x: i32,
 	pub style: co::WS,
-	pub lpszName: *const u16,
-	pub lpszClass: *const u16,
+	lpszName: *const u16,
+	lpszClass: *const u16,
 	pub dwExStyle: co::WS_EX,
+	m_lpszName: PhantomData<&'a u16>,
+	m_lpszClass: PhantomData<&'b u16>,
 }
 
-impl_default_zero!(CREATESTRUCT);
+impl_default_zero!(CREATESTRUCT, 'a, 'b);
+
+impl<'a, 'b> CREATESTRUCT<'a, 'b> {
+	/// Returns the `lpszName` field.
+	pub fn lpszName(&self) -> String {
+		Utf16::from_utf16_nullt(self.lpszName).to_string()
+	}
+
+	/// Sets the `lpszName` field.
+	pub fn set_lpszName(&mut self, buf: &'a Utf16) {
+		self.lpszName = unsafe { buf.as_ptr() };
+	}
+
+	/// Returns the `lpszClass` field.
+	pub fn lpszClass(&self) -> String {
+		Utf16::from_utf16_nullt(self.lpszClass).to_string()
+	}
+
+	/// Sets the `lpszClass` field.
+	pub fn set_lpszClass(&mut self, buf: &'b Utf16) {
+		self.lpszClass = unsafe { buf.as_ptr() };
+	}
+}
 
 /// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
@@ -384,17 +409,23 @@ impl<'a, 'b> Default for WNDCLASSEX<'a, 'b> {
 }
 
 impl<'a, 'b> WNDCLASSEX<'a, 'b> {
-	/// Retrieves the `lpszMenuName` field.
-	pub fn lpszMenuName(&self) -> String {
-		Utf16::from_utf16_nullt(self.lpszMenuName).to_string()
+	/// Returns the `lpszMenuName` field.
+	pub fn lpszMenuName(&self) -> IdStr {
+		if HIDWORD(self.lpszMenuName as u64) == 0
+			&& HIWORD(LODWORD(self.lpszMenuName as u64)) == 0 // https://stackoverflow.com/a/9806654/6923555
+		{
+			IdStr::Id(LOWORD(LODWORD(self.lpszMenuName as u64)) as i32)
+		} else {
+			IdStr::Str(Utf16::from_utf16_nullt(self.lpszMenuName).to_string())
+		}
 	}
 
 	/// Sets the `lpszMenuName` field.
-	pub fn set_lpszMenuName(&mut self, buf: &'a Utf16) {
-		self.lpszMenuName = unsafe { buf.as_ptr() };
+	pub fn set_lpszMenuName(&mut self, menu_name: &'a IdWchar) {
+		self.lpszMenuName = menu_name.as_ptr();
 	}
 
-	/// Retrieves the `lpszClassName` field.
+	/// Returns the `lpszClassName` field.
 	pub fn lpszClassName(&self) -> String {
 		Utf16::from_utf16_nullt(self.lpszClassName).to_string()
 	}
