@@ -10,6 +10,37 @@ use crate::internal_defs::L_MAX_URL_LENGTH;
 use crate::structs::{NMHDR, POINT, RECT};
 use crate::Utf16;
 
+/// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct LVCOLUMN<'a> {
+	pub mask: co::LVCF,
+	pub fmt: co::LVCFMT_C,
+	pub cx: i32,
+	pszText: *mut u16,
+	cchTextMax: i32,
+	pub iSubItem: i32,
+	pub iImage: i32,
+	pub iOrder: i32,
+	pub cxMin: i32,
+	pub cxDefault: i32,
+	pub cxIdeal: i32,
+	m_pszText: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(LVCOLUMN, 'a);
+
+impl<'a> LVCOLUMN<'a> {
+	/// Sets the `pszText` and `cchTextMax` fields. The buffer will be resized to
+	/// hold at least 64 chars.
+	pub fn set_pszText(&mut self, buf: &'a mut Utf16) {
+		if buf.buffer_size() < 64 { buf.realloc_buffer(64); } // arbitrary
+		self.pszText = unsafe { buf.as_mut_ptr() };
+		self.cchTextMax = buf.buffer_size() as i32;
+	}
+}
+
 /// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
 /// struct.
 #[repr(C)]
@@ -55,7 +86,7 @@ pub struct LVITEM<'a> {
 	pub iGroupId: co::LVI_GROUPID,
 	pub cColumns: u32,
 	pub puColumns: *mut i32,
-	pub piColFmt: *mut co::LVCFMT,
+	pub piColFmt: *mut co::LVCFMT_I,
 	pub iGroup: i32,
 	m_pszText: PhantomData<&'a u16>,
 }
