@@ -1,6 +1,7 @@
 use std::error::Error;
 
 use crate::co;
+use crate::enums::IdIdcStr;
 use crate::funcs as f;
 use crate::gui::events::Events;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
@@ -8,12 +9,13 @@ use crate::gui::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::internal_defs::str_dyn_error;
-use crate::structs::SIZE;
+use crate::structs::{SIZE, WNDCLASSEX};
 
 /// Main application window.
 #[derive(Clone)]
 pub struct WindowMain {
 	base: WindowBase,
+	opts: WindowMainOpts,
 }
 
 impl WindowMain {
@@ -21,6 +23,7 @@ impl WindowMain {
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
 		Self {
 			base: WindowBase::new(),
+			opts: WindowMainOpts::default(),
 		}
 	}
 
@@ -48,12 +51,12 @@ impl WindowMain {
 		f::InitCommonControls();
 		create_ui_font()?;
 
-
-
-
-
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;
+		let wcx = self.opts.generate_wndclassex(hinst)?;
+
+
+
 
 		delete_ui_font();
 		Ok(0)
@@ -69,7 +72,7 @@ impl Parent for WindowMain {
 //------------------------------------------------------------------------------
 
 /// Options for [`WindowMain::new`](crate::gui::WindowMain::new).
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct WindowMainOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
@@ -79,8 +82,8 @@ pub struct WindowMainOpts {
 	/// Window class styles to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `co::WS::DBLCLKS`.
-	pub class_style: co::WS,
+	/// Defaults to `co::CS::DBLCLKS`.
+	pub class_style: co::CS,
 	/// Window main icon to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -138,4 +141,26 @@ pub struct WindowMainOpts {
 	///
 	/// Defaults to absent.
 	pub accel_table: HACCEL,
+}
+
+impl WindowMainOpts {
+	fn generate_wndclassex(
+		&self, hinst: HINSTANCE) -> Result<WNDCLASSEX, co::ERROR>
+	{
+		let mut wcx = WNDCLASSEX::default();
+		wcx.hInstance = hinst;
+		wcx.style = self.class_style;
+		wcx.hIcon = self.class_icon;
+		wcx.hIconSm = self.class_icon;
+		wcx.hbrBackground = self.class_bg_brush;
+
+		if wcx.hCursor.is_null() {
+			wcx.hCursor = HINSTANCE::default()
+				.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?;
+		}
+
+
+
+		Ok(wcx)
+	}
 }

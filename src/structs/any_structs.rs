@@ -3,12 +3,14 @@
 #![allow(non_snake_case)]
 
 use std::ffi::c_void;
+use std::marker::PhantomData;
 
 use crate::aliases::WNDPROC;
 use crate::co;
 use crate::funcs::IsWindowsVistaOrGreater;
 use crate::handles as h;
 use crate::internal_defs::LF_FACESIZE;
+use crate::Utf16;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.
@@ -356,7 +358,7 @@ impl Default for WINDOWPLACEMENT {
 /// struct.
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct WNDCLASSEX {
+pub struct WNDCLASSEX<'a, 'b> {
 	cbSize: u32,
 	pub style: co::CS,
 	pub lpfnWndProc: Option<WNDPROC>,
@@ -366,15 +368,39 @@ pub struct WNDCLASSEX {
 	pub hIcon: h::HICON,
 	pub hCursor: h::HCURSOR,
 	pub hbrBackground: h::HBRUSH,
-	pub lpszMenuName: *const u16,
-	pub lpszClassName: *const u16,
+	lpszMenuName: *const u16,
+	lpszClassName: *const u16,
 	pub hIconSm: h::HICON,
+	_markerMenuName: PhantomData<&'a u16>,
+	_markerClassName: PhantomData<&'b u16>,
 }
 
-impl Default for WNDCLASSEX {
+impl<'a, 'b> Default for WNDCLASSEX<'a, 'b> {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.cbSize = std::mem::size_of::<Self>() as u32;
 		obj
+	}
+}
+
+impl<'a, 'b> WNDCLASSEX<'a, 'b> {
+	/// Retrieves the `lpszMenuName` field.
+	pub fn lpszMenuName(&self) -> String {
+		Utf16::from_utf16_nullt(self.lpszMenuName).to_string()
+	}
+
+	/// Sets the `lpszMenuName` field.
+	pub fn set_lpszMenuName(&mut self, buf: &'a Utf16) {
+		self.lpszMenuName = unsafe { buf.as_ptr() };
+	}
+
+	/// Retrieves the `lpszClassName` field.
+	pub fn lpszClassName(&self) -> String {
+		Utf16::from_utf16_nullt(self.lpszClassName).to_string()
+	}
+
+	/// Sets the `lpszClassName` field.
+	pub fn set_lpszClassName(&mut self, buf: &'b Utf16) {
+		self.lpszClassName = unsafe { buf.as_ptr() };
 	}
 }

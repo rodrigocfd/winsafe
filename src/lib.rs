@@ -7,22 +7,62 @@
 //!
 //! # Functions
 //!
-//! WinSafe categorizes Win32 API functions in three types:
+//! WinSafe exposes native Win32 functions using the same original name, so it
+//! should look familiar to anyone who knows Win32. The functions can be
+//! categorized in three types:
 //!
 //! * free functions;
 //! * static methods;
 //! * instance methods.
 //!
-//! Free functions, like [`PostQuitMessage`](crate::PostQuitMessage), are those
-//! found at the root of the crate.
+//! Free functions are those found at the root of the crate:
+//!
+//! ```rust,ignore
+//! use winsafe::PostQuitMessage;
+//!
+//! PostQuitMessage(0);
+//! ```
 //!
 //! Both static and instance methods belong to handle types, like
 //! [`HDC`](crate::HDC) or [`HWND`](crate::HWND). Handle types always start with
-//! the letter "H", and they are opaque pointers provided by the Win32 API which
-//! we can call functions upon.
+//! the letter "H". Static methods create new handle objects, while instance
+//! methods perform operations on existing handle objects.
 //!
-//! Static methods create new handle objects, whereas instance methods perform
-//! actions on existing handle objects.
+//! Take the following C code:
+//!
+//! ```c
+//! HWND h = GetDesktopWindow();
+//! SetFocus(h);
+//! ```
+//!
+//! This is the equivalent of:
+//!
+//! ```rust,ignore
+//! use winsafe::HWND;
+//!
+//! let h = HWND::GetDesktopWindow();
+//! h.SetFocus();
+//! ```
+//!
+//! # Structs
+//!
+//! WinSafe structs are marked with `#[repr(C)]`. They all implement `Default`
+//! trait, and size fields like `cbSize` are private and automatically
+//! initialized.
+//!
+//! String pointer fields are also private, and can be retrieved using a getter
+//! method with the same field name. They can be set through a setter method,
+//! which often requires a buddy [`Utf16`](crate::Utf16) buffer:
+//!
+//! ```rust,ignore
+//! use winsafe::{Utf16, WNDCLASSEX};
+//!
+//! let mut wcx = w::WNDCLASSEX::default(); // cbSize automatically set
+//! println!("Class name: {}", wcx.lpszClassName());
+//!
+//! let buf = Utf16::from_str("CLASS_NAME");
+//! wcx.set_lpszClassName(&buf);
+//! ```
 //!
 //! # Constants
 //!
@@ -47,6 +87,23 @@
 //! Typed constants are used in function arguments and also in struct fields.
 //! For example, struct [`WNDCLASSEX`](crate::WNDCLASSEX) has a `style` field
 //! typed as [`CS`](crate::co::CS), which restricts the possible values.
+//!
+//! A message box "hello world" in C:
+//!
+//! ```c
+//! HWND h = GetDesktopWindow();
+//! MessageBox(h, L"Hello, world", L"Title", MB_OKCANCEL | MB_ICONINFORMATION);
+//! ```
+//!
+//! Is equivalent to:
+//!
+//! ```rust,ignore
+//! use winsafe::{co::MB, HWND};
+//!
+//! let h = HWND::GetDesktopWindow();
+//! h.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)
+//!   .unwrap();
+//! ```
 //!
 //! # Errors
 //!
@@ -81,19 +138,6 @@
 //! when dealing with native Win32 structs. In such cases, you can use the
 //! [`Utf16`](crate::Utf16) struct, which is also capable of working as a buffer
 //! to receive text from Win32 calls.
-//!
-//! # Examples
-//!
-//! A message box "hello world":
-//! ```rust,ignore
-//! use winsafe::{co, HWND};
-//!
-//! fn main() {
-//!   HWND::GetDesktopWindow()
-//!     .MessageBox("Hello, world", "Title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
-//!     .unwrap();
-//! }
-//! ```
 
 #[macro_use]
 pub mod co;
