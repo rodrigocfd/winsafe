@@ -63,11 +63,6 @@ pub struct LVITEM<'a> {
 impl_default_zero!(LVITEM, 'a);
 
 impl<'a> LVITEM<'a> {
-	/// Returns the `pszText` field.
-	pub fn pszText(&self) -> String {
-		Utf16::from_utf16_nullt(self.pszText).to_string()
-	}
-
 	/// Sets the `pszText` and `cchTextMax` fields. The buffer will be resized to
 	/// hold at least 64 chars.
 	pub fn set_pszText(&mut self, buf: &'a mut Utf16) {

@@ -5,70 +5,9 @@ use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HDC, HDROP, HMENU, HRGN, HWND};
 use crate::internal_defs::FAPPCOMMAND_MASK;
+use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
 use crate::msg::WmAny;
 use crate::structs::{CREATESTRUCT, RECT};
-
-/// Struct for a message that has no parameters.
-macro_rules! empty_msg {
-	(
-		$name:ident, $wmconst:expr,
-		$(#[$attr:meta])*
-	) => {
-		$(#[$attr])*
-		pub struct $name {}
-
-		impl From<$name> for WmAny {
-			fn from(_: $name) -> Self {
-				Self {
-					msg: $wmconst,
-					wparam: 0,
-					lparam: 0,
-				}
-			}
-		}
-
-		impl From<WmAny> for $name {
-			fn from(_: WmAny) -> Self {
-				Self {}
-			}
-		}
-	};
-}
-
-/// Struct for WM_CTLCOLOR* messages.
-macro_rules! ctl_color_msg {
-	(
-		$name:ident, $wmconst:expr,
-		$(#[$attr:meta])*
-	) => {
-		$(#[$attr])*
-		pub struct $name {
-			pub hdc: HDC,
-			pub hwnd: HWND,
-		}
-
-		impl From<$name> for WmAny {
-			fn from(p: $name) -> Self {
-				Self {
-					msg: $wmconst,
-					wparam: unsafe { p.hdc.as_ptr() } as usize,
-					lparam: unsafe { p.hwnd.as_ptr() } as isize,
-				}
-			}
-		}
-
-		impl From<WmAny> for $name {
-			fn from(p: WmAny) -> Self {
-				Self {
-					hdc: unsafe { HDC::from_ptr(p.wparam as *mut c_void) },
-					hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
-				}
-			}
-		}
-	};
-}
-
-//------------------------------------------------------------------------------
 
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 /// message parameters.
@@ -201,7 +140,7 @@ impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for WmAny {
 		Self {
 			msg: co::WM::CREATE,
 			wparam: 0,
-			lparam: p.createstruct as *const CREATESTRUCT as isize,
+			lparam: ref_to_lparam(p.createstruct),
 		}
 	}
 }
@@ -209,7 +148,7 @@ impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for WmAny {
 impl<'a, 'b, 'c> From<WmAny> for WmCreate<'a, 'b, 'c> {
 	fn from(p: WmAny) -> Self {
 		Self {
-			createstruct: unsafe { (p.lparam as *const CREATESTRUCT).as_ref() }.unwrap(),
+			createstruct: lparam_to_ref(p),
 		}
 	}
 }
@@ -364,7 +303,7 @@ impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for WmAny {
 		Self {
 			msg: co::WM::NCCREATE,
 			wparam: 0,
-			lparam: p.createstruct as *const CREATESTRUCT as isize,
+			lparam: ref_to_lparam(p.createstruct),
 		}
 	}
 }
@@ -372,7 +311,7 @@ impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for WmAny {
 impl<'a, 'b, 'c> From<WmAny> for WmNcCreate<'a, 'b, 'c> {
 	fn from(p: WmAny) -> Self {
 		Self {
-			createstruct: unsafe { (p.lparam as *const CREATESTRUCT).as_ref() }.unwrap(),
+			createstruct: lparam_to_ref(p),
 		}
 	}
 }
@@ -480,7 +419,7 @@ impl<'a> From<WmSizing<'a>> for WmAny {
 		Self {
 			msg: co::WM::SIZING,
 			wparam: i32::from(p.window_edge) as usize,
-			lparam: p.coords as *mut RECT as isize,
+			lparam: ref_to_lparam(p.coords),
 		}
 	}
 }
@@ -489,7 +428,7 @@ impl<'a> From<WmAny> for WmSizing<'a> {
 	fn from(p: WmAny) -> Self {
 		Self {
 			window_edge: co::WMSZ::from(p.wparam as i32),
-			coords: unsafe { (p.lparam as *mut RECT).as_mut() }.unwrap(),
+			coords: lparam_to_mut_ref(p),
 		}
 	}
 }
