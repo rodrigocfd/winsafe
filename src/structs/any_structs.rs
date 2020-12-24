@@ -74,7 +74,7 @@ impl Default for BITMAPINFOHEADER {
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct CREATESTRUCT<'a, 'b> {
-	pub lpCreateParams: *const c_void,
+	pub lpCreateParams: isize,
 	pub hInstance: h::HINSTANCE,
 	pub hMenu: h::HMENU,
 	pub hwndParent: h::HWND,

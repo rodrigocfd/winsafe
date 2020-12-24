@@ -44,7 +44,7 @@ impl HWND {
 		hWndParent: Option<HWND>,
 		hMenu: IdMenu,
 		hInstance: HINSTANCE,
-		lpParam: Option<*mut c_void>
+		lpParam: Option<isize>
 	) -> Result<HWND, co::ERROR> {
 		match ptr_as_opt!(
 			user32::CreateWindowExW(
@@ -56,7 +56,7 @@ impl HWND {
 				hWndParent.unwrap_or_default().0,
 				hMenu.as_ptr(),
 				hInstance.as_ptr(),
-				lpParam.unwrap_or(std::ptr::null_mut()),
+				lpParam.unwrap_or_default() as *mut c_void,
 			)
 		) {
 			Some(p) => Ok(Self(p)),

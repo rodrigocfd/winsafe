@@ -4,11 +4,11 @@ use crate::structs as s;
 
 /// Possible
 /// [control notifications](https://docs.microsoft.com/en-us/windows/win32/controls/control-messages).
-pub enum Nm<'a> {
+pub enum Nm<'a, 'b> {
 	Char(&'a s::NMCHAR),
 
 	LvnBeginDrag(&'a s::NMLISTVIEW),
-	LvnBeginLabelEdit(&'a s::NMLVDISPINFO),
+	LvnBeginLabelEdit(&'a s::NMLVDISPINFO<'b>),
 	LvnBeginRDrag(&'a s::NMLISTVIEW),
 	LvnBeginScroll(&'a s::NMLVSCROLL),
 	LvnColumnClick(&'a s::NMLISTVIEW),
@@ -16,13 +16,13 @@ pub enum Nm<'a> {
 	LvnColumnOverflowClick(&'a s::NMLISTVIEW),
 	LvnDeleteAllItems(&'a s::NMLISTVIEW),
 	LvnDeleteItem(&'a s::NMLISTVIEW),
-	LvnEndLabelEdit(&'a s::NMLVDISPINFO),
+	LvnEndLabelEdit(&'a s::NMLVDISPINFO<'b>),
 	LvnEndScroll(&'a s::NMLVSCROLL),
-	LvnGetDispInfo(&'a s::NMLVDISPINFO),
+	LvnGetDispInfo(&'a s::NMLVDISPINFO<'b>),
 	LvnGetEmptyMarkup(&'a s::NMLVEMPTYMARKUP),
-	LvnGetInfoTip(&'a s::NMLVGETINFOTIP),
+	LvnGetInfoTip(&'a s::NMLVGETINFOTIP<'b>),
 	LvnHotTrack(&'a s::NMLISTVIEW),
-	LvnIncrementalSearch(&'a s::NMLVFINDITEM),
+	LvnIncrementalSearch(&'a s::NMLVFINDITEM<'b>),
 	LvnInsertItem(&'a s::NMLISTVIEW),
 	LvnItemActivate(&'a s::NMITEMACTIVATE),
 	LvnItemChanged(&'a s::NMLISTVIEW),
@@ -76,7 +76,7 @@ macro_rules! ref_hdr {
 impl<'a> WmNotify<'a> {
 	/// Returns a [`Nm`](crate::msg::Nm) enum, which can be matched to identify
 	/// the exact notification type.
-	pub fn notification<'b>(self) -> Nm<'b> {
+	pub fn notification<'b, 'c>(self) -> Nm<'b, 'c> {
 		match self.nmhdr.code {
 			co::NM::CHAR => Nm::Char(ref_hdr!(self, s::NMCHAR)),
 

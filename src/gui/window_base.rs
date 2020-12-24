@@ -71,7 +71,7 @@ impl WindowBase {
 		match HWND::CreateWindowEx(ex_styles,
 			AtomStr::Str(String::from(class_name)), title,
 			styles, pos.x, pos.y, sz.cx, sz.cy, parent, hmenu, hinst,
-			Some(self as *const WindowBase as *mut c_void)) // pass pointer to self
+			Some(self as *const WindowBase as isize)) // pass pointer to self
 		{
 			Ok(hwnd) => Ok(hwnd), // our hwnd member is set during WM_NCCREATE processing, already set at this point
 			Err(err) => Err(Box::new(err)),

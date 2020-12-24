@@ -2,37 +2,53 @@
 
 #![allow(non_snake_case)]
 
+use std::marker::PhantomData;
+
 use crate::co;
 use crate::handles::HDC;
 use crate::internal_defs::L_MAX_URL_LENGTH;
 use crate::structs::{NMHDR, POINT, RECT};
+use crate::Utf16;
 
 /// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
 /// struct.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
-pub struct LVFINDINFO {
+pub struct LVFINDINFO<'a> {
 	pub flags: co::LVFI,
-	pub psz: *const u16,
+	psz: *const u16,
 	pub lParam: isize,
 	pub pt: POINT,
 	pub vkDirection: co::VK,
+	m_psz: PhantomData<&'a u16>,
 }
 
-impl_default_zero!(LVFINDINFO);
+impl_default_zero!(LVFINDINFO, 'a);
+
+impl<'a> LVFINDINFO<'a> {
+	/// Returns the `psz` field.
+	pub fn psz(&self) -> String {
+		Utf16::from_utf16_nullt(self.psz).to_string()
+	}
+
+	/// Sets the `psz` field.
+	pub fn set_psz(&mut self, buf: &'a Utf16) {
+		self.psz = unsafe { buf.as_ptr() };
+	}
+}
 
 /// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
-pub struct LVITEM {
+pub struct LVITEM<'a> {
 	pub mask: co::LVIF,
 	pub iItem: i32,
 	pub iSubItem: i32,
 	pub state: co::LVIS,
 	pub stateMask: co::LVIS,
-	pub pszText: *mut u16,
-	pub cchTextMax: i32,
+	pszText: *mut u16,
+	cchTextMax: i32,
 	pub iImage: i32,
 	pub lParam: isize,
 	pub iIndent: i32,
@@ -41,9 +57,25 @@ pub struct LVITEM {
 	pub puColumns: *mut i32,
 	pub piColFmt: *mut co::LVCFMT,
 	pub iGroup: i32,
+	m_pszText: PhantomData<&'a u16>,
 }
 
-impl_default_zero!(LVITEM);
+impl_default_zero!(LVITEM, 'a);
+
+impl<'a> LVITEM<'a> {
+	/// Returns the `pszText` field.
+	pub fn pszText(&self) -> String {
+		Utf16::from_utf16_nullt(self.pszText).to_string()
+	}
+
+	/// Sets the `pszText` and `cchTextMax` fields. The buffer will be resized to
+	/// hold at least 64 chars.
+	pub fn set_pszText(&mut self, buf: &'a mut Utf16) {
+		if buf.buffer_size() < 64 { buf.realloc_buffer(64); } // arbitrary
+		self.pszText = unsafe { buf.as_mut_ptr() };
+		self.cchTextMax = buf.buffer_size() as i32;
+	}
+}
 
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
@@ -58,7 +90,7 @@ pub struct NMBCDROPDOWN {
 /// struct.
 #[repr(C)]
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
-pub struct NMBCHOTITEM{
+pub struct NMBCHOTITEM {
 	pub hdr: NMHDR,
 	pub dwFlags: co::HICF,
 }
@@ -123,9 +155,9 @@ pub struct NMLISTVIEW {
 /// struct.
 #[repr(C)]
 #[derive(Default, Copy, Clone, Eq, PartialEq)]
-pub struct NMLVDISPINFO {
+pub struct NMLVDISPINFO<'a> {
 	pub hdr: NMHDR,
-	pub item: LVITEM,
+	pub item: LVITEM<'a>,
 }
 
 /// [`NMLVEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvemptymarkup)
@@ -144,22 +176,41 @@ impl_default_zero!(NMLVEMPTYMARKUP);
 /// struct.
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
-pub struct NMLVFINDITEM {
+pub struct NMLVFINDITEM<'a> {
 	pub hdr: NMHDR,
 	pub iStart: i32,
-	pub lvfi: LVFINDINFO,
+	pub lvfi: LVFINDINFO<'a>,
 }
 
 /// [`NMLVGETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvgetinfotipw)
 /// struct.
-pub struct NMLVGETINFOTIP {
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct NMLVGETINFOTIP<'a> {
 	pub hdr: NMHDR,
 	pub dwFlags: co::LVGIT,
-	pub pszText: *mut u16,
-	pub cchTextMax: i32,
+	pszText: *mut u16,
+	cchTextMax: i32,
 	pub iItem: i32,
 	pub iSubItem: i32,
 	pub lParam: isize,
+	m_pszText: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(NMLVGETINFOTIP, 'a);
+
+impl<'a> NMLVGETINFOTIP<'a> {
+	/// Returns the `pszText` field.
+	pub fn pszText(&self) -> String {
+		Utf16::from_utf16_nullt(self.pszText).to_string()
+	}
+
+	/// Sets the `pszText` and `cchTextMax` fields. The buffer will be resized to
+	/// hold at least 64 chars.
+	pub fn set_pszText(&mut self, buf: &'a mut Utf16) {
+		if buf.buffer_size() < 64 { buf.realloc_buffer(64); } // arbitrary
+		self.pszText = unsafe { buf.as_mut_ptr() };
+		self.cchTextMax = buf.buffer_size() as i32;
+	}
 }
 
 /// [`NMLVSCROLL`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvscroll)
