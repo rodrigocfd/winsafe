@@ -12,6 +12,28 @@ macro_rules! handle_type {
 		unsafe impl Send for $name {}
 		unsafe impl Sync for $name {}
 
+		// Formatters.
+		impl std::fmt::LowerHex for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::LowerHex::fmt(&(self.0 as usize), f)
+			}
+		}
+		impl std::fmt::UpperHex for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::UpperHex::fmt(&(self.0 as usize), f)
+			}
+		}
+		impl std::fmt::Binary for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::Binary::fmt(&(self.0 as usize), f)
+			}
+		}
+		impl std::fmt::Octal for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::Octal::fmt(&(self.0 as usize), f)
+			}
+		}
+
 		impl $name {
 			/// Creates a new handle instance by wrapping a pointer.
 			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {

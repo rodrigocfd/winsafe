@@ -370,7 +370,7 @@ impl HWND {
 	/// println!("Text: {}", text);
 	/// ```
 	pub fn GetWindowTextStr(self) -> Result<String, co::ERROR> {
-		let mut buf = Utf16::default();
+		let mut buf = Utf16::new();
 		self.GetWindowText(&mut buf)?;
 		Ok(buf.to_string())
 	}

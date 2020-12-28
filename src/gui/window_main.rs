@@ -10,6 +10,7 @@ use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::internal_defs::str_dyn_error;
 use crate::structs::{SIZE, WNDCLASSEX};
+use crate::Utf16;
 
 /// Main application window.
 #[derive(Clone)]
@@ -53,7 +54,12 @@ impl WindowMain {
 
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;
-		let wcx = self.opts.generate_wndclassex(hinst)?;
+
+		let mut wcx = WNDCLASSEX::default();
+		let mut class_name_buf = Utf16::new();
+		self.opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
+		self.base.register_class(&mut wcx)?;
+
 
 
 
@@ -162,10 +168,12 @@ impl Default for WindowMainOpts {
 }
 
 impl WindowMainOpts {
-	fn generate_wndclassex(
-		&self, hinst: HINSTANCE) -> Result<WNDCLASSEX, co::ERROR>
+	fn generate_wndclassex<'a, 'b>( // https://stackoverflow.com/q/65481548/6923555
+		&self,
+		hinst: HINSTANCE,
+		wcx: &mut WNDCLASSEX<'_, 'a>,
+		class_name_buf: &'a mut Utf16) -> Result<(), co::ERROR>
 	{
-		let mut wcx = WNDCLASSEX::default();
 		wcx.hInstance = hinst;
 		wcx.style = self.class_style;
 		wcx.hIcon = self.class_icon;
@@ -177,8 +185,13 @@ impl WindowMainOpts {
 				.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?;
 		}
 
+		if wcx.lpszClassName().is_empty() {
+			*class_name_buf = Utf16::from_str(
+				&WindowBase::generate_wcx_class_name_hash(&wcx),
+			);
+			wcx.set_lpszClassName(class_name_buf);
+		}
 
-
-		Ok(wcx)
+		Ok(())
 	}
 }

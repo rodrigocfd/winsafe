@@ -1,5 +1,4 @@
 use std::error::Error;
-use std::ffi::c_void;
 
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
@@ -9,7 +8,6 @@ use crate::handles::{HINSTANCE, HWND};
 use crate::internal_defs::str_dyn_error;
 use crate::msg::{Wm, WmAny};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
-use crate::Utf16;
 
 /// Base to all ordinary windows.
 #[derive(Clone)]
@@ -78,6 +76,21 @@ impl WindowBase {
 		}
 	}
 
+	/// Generates a hash string from current fields, so it must called after all
+	/// the fields are set.
+	pub fn generate_wcx_class_name_hash(wcx: &WNDCLASSEX) -> String {
+		format!("WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
+			wcx.style,
+			match wcx.lpfnWndProc {
+				Some(p) => p as usize,
+				None => 0,
+			},
+			wcx.cbClsExtra, wcx.cbWndExtra,
+			wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
+			wcx.lpszMenuName().as_ptr() as usize, wcx.hIconSm,
+		)
+	}
+
 	unsafe extern "system" fn window_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
@@ -108,7 +121,7 @@ impl WindowBase {
 
 		if let Wm::NcDestroy(_) = wm_any.message() { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
-			ref_self.hwnd = unsafe { HWND::null_handle() }; // clear stored HWND
+			ref_self.hwnd = HWND::null_handle(); // clear stored HWND
 		}
 
 		match maybe_processed {

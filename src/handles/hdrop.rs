@@ -35,7 +35,7 @@ impl HDROP {
 			return Err(());
 		}
 
-		let mut buf = Utf16::default();
+		let mut buf = Utf16::new();
 		let mut files = Vec::default();
 
 		for i in 0..count {
