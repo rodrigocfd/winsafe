@@ -1,5 +1,6 @@
 //! High-level GUI abstractions.
 
+mod control_util;
 mod globals;
 mod native_control_base;
 mod window_base;

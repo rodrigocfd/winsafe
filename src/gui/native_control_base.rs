@@ -1,5 +1,3 @@
-use std::ffi::c_void;
-
 use crate::handles::HWND;
 
 static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values

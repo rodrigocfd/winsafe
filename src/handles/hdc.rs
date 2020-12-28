@@ -24,6 +24,12 @@ macro_rules! empty_res {
 }
 
 impl HDC {
+	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
+	/// method.
+	pub fn GetDeviceCaps(self, index: co::GDC) -> i32 {
+		unsafe { gdi32::GetDeviceCaps(self.0, index.into()) }
+	}
+
 	/// [`GetTextExtentPoint32`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextextentpoint32w)
 	/// method.
 	pub fn GetTextExtentPoint32(self, lpString: &str) -> Result<SIZE, ()> {

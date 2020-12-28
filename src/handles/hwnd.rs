@@ -134,7 +134,7 @@ impl HWND {
 			.map(|p| Self(p))
 	}
 
-	/// [`GetDC](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
+	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
 	pub fn GetDC(self) -> Result<HDC, ()> {
 		match ptr_as_opt!(user32::GetDC(self.0)) {

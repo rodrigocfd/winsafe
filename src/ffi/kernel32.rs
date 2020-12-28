@@ -11,6 +11,7 @@ extern "system" {
 	pub fn GetModuleHandleW(lpModuleName: PCSTR) -> HANDLE;
 	pub fn LocalFree(hMem: HANDLE) -> HANDLE;
 	pub fn lstrlenW(lpString: PCSTR) -> i32;
+	pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32;
 	pub fn SetLastError(dwErrorCode: u32);
 	pub fn VerifyVersionInfoW(lpVersionInformation: PVOID, dwTypeMask: u32, dwlConditionMask: u64) -> BOOL;
 	pub fn VerSetConditionMask(ConditionMask: u64, TypeMask: u32, Condition: u8) -> u64;

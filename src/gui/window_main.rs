@@ -3,6 +3,7 @@ use std::error::Error;
 use crate::co;
 use crate::enums::IdIdcStr;
 use crate::funcs as f;
+use crate::gui::control_util::multiply_dpi;
 use crate::gui::events::Events;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::Parent;
@@ -40,7 +41,7 @@ impl WindowMain {
 	///
 	/// Panics if the window is already created.
 	pub fn run_as_main(
-		&self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
+		&mut self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
 	{
 		if f::IsWindowsVistaOrGreater()
 			.map_err(|e| Box::new(e))?
@@ -60,6 +61,7 @@ impl WindowMain {
 		self.opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
 		self.base.register_class(&mut wcx)?;
 
+		multiply_dpi(None, Some(&mut self.opts.size))?;
 
 
 

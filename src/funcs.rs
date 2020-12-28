@@ -319,6 +319,12 @@ pub fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16
 }
 
+/// [`MulDiv`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-muldiv)
+/// function.
+pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32 {
+	unsafe { kernel32::MulDiv(nNumber, nNumerator, nDenominator) }
+}
+
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
 /// function.
 pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
