@@ -6,9 +6,9 @@ use crate::msg;
 
 /// The result of processing a message.
 pub enum ProcessResult {
-	NotHandled,                 // message was not handler because no such handler is stored
-	HandledWithRet(msg::RetWm), // return value is meaningful
-	HandledWithoutRet,          // return value is not meaningful, whatever default value
+	NotHandled,                   // message was not handler because no such handler is stored
+	HandledWithRet(msg::LResult), // return value is meaningful
+	HandledWithoutRet,            // return value is not meaningful, whatever default value
 }
 
 struct MsgMaps {
@@ -44,7 +44,7 @@ pub struct Events {
 	// unnecessary cost, since Events is shared only between a parent window and
 	// its child controls, and the controls only use it to add events at the
 	// beginning of the program. Adding events later is not allowed.
-	msg_maps: *mut MsgMaps,
+	ptr_msg_maps: *mut MsgMaps,
 }
 
 unsafe impl Send for Events {}
@@ -54,7 +54,7 @@ impl Clone for Events {
 	fn clone(&self) -> Self {
 		Events {
 			original: false, // clones won't release the memory
-			msg_maps: self.msg_maps, // simply copy away the pointer
+			ptr_msg_maps: self.ptr_msg_maps, // simply copy away the pointer
 		}
 	}
 }
@@ -62,7 +62,7 @@ impl Clone for Events {
 impl Drop for Events {
 	fn drop(&mut self) {
 		if self.original {
-			unsafe { Box::from_raw(self.msg_maps); } // release the memory
+			unsafe { Box::from_raw(self.ptr_msg_maps); } // release the memory
 		}
 	}
 }
@@ -108,51 +108,51 @@ impl Events {
 
 		Self {
 			original: true, // this is the object that will actually release the memory
-			msg_maps: Box::into_raw(heap_msg_maps), // leak and keep the pointer
+			ptr_msg_maps: Box::into_raw(heap_msg_maps), // leak and keep the pointer
 		}
 	}
 
-	pub(super) fn process_message(&self, m: msg::WmAny) -> ProcessResult {
-		let msg_maps = unsafe { self.msg_maps.as_mut() }.unwrap();
-		match m.message() {
-			msg::Wm::Notify(p) => {
-				match msg_maps.nfys.get_mut(&(p.nmhdr.idFrom as u16, p.nmhdr.code)) {
-					Some(func) => { // we have a stored function to handle this notification
-						match func(p) {
-							Some(ret) => ProcessResult::HandledWithRet( // meaningful return value
-								msg::RetWm::from_msg_ret(m.msg, ret),
-							),
+	pub(super) fn process_message(&self, wm_any: msg::WmAny) -> ProcessResult {
+		let msg_maps = unsafe { self.ptr_msg_maps.as_mut() }
+			.expect("Failed to retrieve ptr_msg_maps in Events::process_message.");
+
+		match wm_any.message() {
+			msg::Wm::Notify(wm_nfy) => {
+				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
+				match msg_maps.nfys.get_mut(&key) {
+					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
+						match func(wm_nfy) { // execute user function
+							Some(res) => ProcessResult::HandledWithRet(wm_nfy.lresult(res)), // meaningful return value
 							None => ProcessResult::HandledWithoutRet,
 						}
 					},
-					None => ProcessResult::NotHandled, // no stored function
+					None => ProcessResult::NotHandled, // no stored WM_NOTIFY notification
 				}
 			},
-			msg::Wm::Command(p) => {
-				match msg_maps.cmds.get_mut(&(p.code, p.ctrl_id)) {
-					Some(func) => { // we have a stored function to handle this command notification
-						func();
+			msg::Wm::Command(wm_cmd) => {
+				let key = (wm_cmd.code, wm_cmd.ctrl_id);
+				match msg_maps.cmds.get_mut(&key) {
+					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
+						func(); // execute user function
 						ProcessResult::HandledWithoutRet
 					},
-					None => ProcessResult::NotHandled, // no stored function
+					None => ProcessResult::NotHandled, // no stored WM_COMMAND notification
 				}
 			},
-			msg::Wm::Timer(p) => {
-				match msg_maps.tmrs.get_mut(&p.timer_id) {
-					Some(func) => { // we have a stored function to handle this timer
-						func();
+			msg::Wm::Timer(wm_tmr) => {
+				match msg_maps.tmrs.get_mut(&wm_tmr.timer_id) {
+					Some(func) => { // we have a stored function to handle this WM_TIMER message
+						func(); // execute user function
 						ProcessResult::HandledWithoutRet
 					},
-					None => ProcessResult::NotHandled, // no stored function
+					None => ProcessResult::NotHandled, // no stored WM_TIMER message
 				}
 			}
 			_ => { // any other message
-				match msg_maps.msgs.get_mut(&m.msg) {
+				match msg_maps.msgs.get_mut(&wm_any.msg) {
 					Some(func) => { // we have a stored function to handle this message
-						match func(m) {
-							Some(ret) => ProcessResult::HandledWithRet( // meaningful return value
-								msg::RetWm::from_msg_ret(m.msg, ret),
-							),
+						match func(wm_any) { // execute user function
+							Some(res) => ProcessResult::HandledWithRet(wm_any.lresult(res)), // meaningful return value
 							None => ProcessResult::HandledWithoutRet,
 						}
 					},
@@ -166,7 +166,8 @@ impl Events {
 	fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: FnMut(msg::WmAny) -> Option<isize> + Send + Sync + 'static,
 	{
-		unsafe { self.msg_maps.as_mut() }.unwrap()
+		unsafe { self.ptr_msg_maps.as_mut() }
+			.expect("Failed to retrieve ptr_msg_maps in Events::add_msg.")
 			.msgs.insert(ident, Box::new(func));
 	}
 
@@ -174,7 +175,8 @@ impl Events {
 	pub(super) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static,
 	{
-		unsafe { self.msg_maps.as_mut() }.unwrap()
+		unsafe { self.ptr_msg_maps.as_mut() }
+			.expect("Failed to retrieve ptr_msg_maps in Events::add_nfy.")
 			.nfys.insert((id_from, code), Box::new(func));
 	}
 
@@ -196,7 +198,8 @@ impl Events {
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		unsafe { self.msg_maps.as_mut() }.unwrap()
+		unsafe { self.ptr_msg_maps.as_mut() }
+			.expect("Failed to retrieve ptr_msg_maps in Events::wm_timer.")
 			.tmrs.insert(timer_id, Box::new(func));
 	}
 
@@ -211,7 +214,8 @@ impl Events {
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		unsafe { self.msg_maps.as_mut() }.unwrap()
+		unsafe { self.ptr_msg_maps.as_mut() }
+			.expect("Failed to retrieve ptr_msg_maps in Events::wm_command.")
 			.cmds.insert((code, ctrl_id), Box::new(func));
 	}
 

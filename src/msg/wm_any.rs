@@ -1,13 +1,9 @@
-use core::panic;
-
 use crate::co::WM;
 use crate::msg;
 
 /// Possible
 /// [window messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
 /// and their input parameters.
-///
-/// Same variants of [`RetWm`](crate::msg::RetWm).
 pub enum Wm<'a, 'b, 'c> {
 	Activate(msg::WmActivate),
 	ActivateApp(msg::WmActivateApp),
@@ -51,6 +47,11 @@ pub struct WmAny {
 }
 
 impl WmAny {
+	/// Generates the message result value.
+	pub fn lresult(&self, val: isize) -> msg::LResult {
+		msg::LResult(val)
+	}
+
 	/// Returns a [`Wm`](crate::msg::Wm) enum, which can be matched to identify
 	/// the exact message type.
 	pub fn message<'a, 'b, 'c>(self) -> Wm<'a, 'b, 'c> {

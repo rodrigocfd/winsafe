@@ -9,7 +9,7 @@ use crate::ffi::{comctl32, user32};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
 use crate::internal_defs::{const_void, mut_void};
-use crate::msg::{RetWm, WmAny};
+use crate::msg::{LResult, WmAny};
 use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::Utf16;
 
@@ -66,22 +66,23 @@ impl HWND {
 
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
-	pub fn DefSubclassProc<P: Into<WmAny>>(self, uMsg: P) -> isize {
+	pub fn DefSubclassProc<P: Into<WmAny>>(self, uMsg: P) -> LResult {
 		let wmAny: WmAny = uMsg.into();
 		unsafe {
-			comctl32::DefSubclassProc(
-				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+			wmAny.lresult(
+				comctl32::DefSubclassProc(
+					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+				),
 			)
 		}
 	}
 
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
-	pub fn DefWindowProc<P: Into<WmAny>>(self, Msg: P) -> RetWm {
+	pub fn DefWindowProc<P: Into<WmAny>>(self, Msg: P) -> LResult {
 		let wmAny: WmAny = Msg.into();
 		unsafe {
-			RetWm::from_msg_ret(
-				wmAny.msg,
+			wmAny.lresult(
 				user32::DefWindowProcW(
 					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
 				),
@@ -519,11 +520,10 @@ impl HWND {
 
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
-	pub fn SendMessage<P: Into<WmAny>>(self, Msg: P) -> RetWm {
+	pub fn SendMessage<P: Into<WmAny>>(self, Msg: P) -> LResult {
 		let wmAny: WmAny = Msg.into();
 		unsafe {
-			RetWm::from_msg_ret(
-				wmAny.msg,
+			wmAny.lresult(
 				user32::SendMessageW(
 					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
 				),

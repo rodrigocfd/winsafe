@@ -1,6 +1,6 @@
 use crate::co;
 use crate::msg::macros::{lparam_to_ref, ref_to_lparam};
-use crate::msg::WmAny;
+use crate::msg::{LResult, WmAny};
 use crate::structs as s;
 
 empty_msg! { LvmGetHeader, co::WM::LVM_GETHEADER,
@@ -39,6 +39,8 @@ impl<'a, 'b> From<WmAny> for LvmInsertColumn<'a, 'b> {
 	}
 }
 
+msg_lresult_zero!(LvmInsertColumn, 'a, 'b);
+
 /// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
 pub struct LvmInsertItem<'a, 'b> {
@@ -63,6 +65,8 @@ impl<'a, 'b> From<WmAny> for LvmInsertItem<'a, 'b> {
 	}
 }
 
+msg_lresult_zero!(LvmInsertItem, 'a, 'b);
+
 /// [`LVM_ISITEMVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
 /// message parameters.
 pub struct LvmIsItemVisible {
@@ -86,6 +90,8 @@ impl From<WmAny> for LvmIsItemVisible {
 		}
 	}
 }
+
+msg_lresult_zero!(LvmIsItemVisible);
 
 /// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
@@ -113,6 +119,8 @@ impl From<WmAny> for LvmScroll {
 	}
 }
 
+msg_lresult_zero!(LvmScroll);
+
 /// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
 pub struct LvmSetColumn<'a, 'b> {
@@ -139,6 +147,8 @@ impl<'a, 'b> From<WmAny> for LvmSetColumn<'a, 'b> {
 	}
 }
 
+msg_lresult_zero!(LvmSetColumn, 'a, 'b);
+
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
 pub struct LvmSetItem<'a, 'b> {
@@ -162,6 +172,8 @@ impl<'a, 'b> From<WmAny> for LvmSetItem<'a, 'b> {
 		}
 	}
 }
+
+msg_lresult_zero!(LvmSetItem, 'a, 'b);
 
 /// [`LVM_SETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
 /// message parameters.
@@ -189,6 +201,8 @@ impl<'a, 'b> From<WmAny> for LvmSetItemText<'a, 'b> {
 	}
 }
 
+msg_lresult_zero!(LvmSetItemText, 'a, 'b);
+
 /// [`LVM_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-update)
 /// message parameters.
 
@@ -213,3 +227,5 @@ impl From<WmAny> for LvmUpdate {
 		}
 	}
 }
+
+msg_lresult_zero!(LvmUpdate);

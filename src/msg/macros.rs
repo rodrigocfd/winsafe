@@ -1,5 +1,19 @@
 use crate::msg::WmAny;
 
+/// Implements standard `return` method that returns 0 as window, 1 as dialog.
+macro_rules! msg_lresult_zero {
+	($name:ident $(, $life:lifetime)*) => {
+		impl<$($life),*> $name<$($life),*> {
+			/// Generates the message result value.
+			///
+			/// You should return zero for ordinary windows, and 1 for dialogs.
+			pub fn lresult(&self, val: isize) -> LResult {
+				LResult(val)
+			}
+		}
+	};
+}
+
 /// Struct for a message that has no parameters.
 macro_rules! empty_msg {
 	(
@@ -24,6 +38,8 @@ macro_rules! empty_msg {
 				Self {}
 			}
 		}
+
+		msg_lresult_zero!($name);
 	};
 }
 
@@ -55,6 +71,13 @@ macro_rules! ctl_color_msg {
 					hdc: unsafe { HDC::from_ptr(p.wparam as *mut c_void) },
 					hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
 				}
+			}
+		}
+
+		impl $name {
+			/// Generates the message result value.
+			pub fn lresult(&self, val: HBRUSH) -> LResult {
+				LResult(unsafe { val.as_ptr() } as isize)
 			}
 		}
 	};

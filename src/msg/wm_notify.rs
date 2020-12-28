@@ -1,5 +1,6 @@
 use crate::co;
 use crate::msg;
+use crate::msg::LResult;
 use crate::structs as s;
 
 /// Possible
@@ -55,6 +56,8 @@ impl<'a> From<msg::WmAny> for WmNotify<'a> {
 		}
 	}
 }
+
+msg_lresult_zero!(WmNotify, 'a);
 
 impl<'a> WmNotify<'a> {
 	/// Casts the `NMHDR` reference into a derived struct.

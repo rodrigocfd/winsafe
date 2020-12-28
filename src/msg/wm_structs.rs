@@ -3,10 +3,10 @@ use std::ffi::c_void;
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::{HDC, HDROP, HMENU, HRGN, HWND};
+use crate::handles::{HBRUSH, HDC, HDROP, HMENU, HRGN, HWND};
 use crate::internal_defs::FAPPCOMMAND_MASK;
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
-use crate::msg::WmAny;
+use crate::msg::{LResult, WmAny};
 use crate::structs::{CREATESTRUCT, RECT};
 
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
@@ -37,6 +37,8 @@ impl From<WmAny> for WmActivate {
 	}
 }
 
+msg_lresult_zero!(WmActivate);
+
 /// [`WM_ACTIVATEAPP`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
 /// message parameters.
 pub struct WmActivateApp {
@@ -62,6 +64,8 @@ impl From<WmAny> for WmActivateApp {
 		}
 	}
 }
+
+msg_lresult_zero!(WmActivateApp);
 
 /// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 /// message parameters.
@@ -90,6 +94,13 @@ impl From<WmAny> for WmAppCommand {
 			u_device: co::FAPPCOMMAND::from(HIWORD(p.lparam as u32) & FAPPCOMMAND_MASK),
 			keys: co::MK::from(LOWORD(p.lparam as u32)),
 		}
+	}
+}
+
+impl WmAppCommand {
+	/// Generates the message result value.
+	pub fn lresult(&self) -> LResult {
+		LResult(1) // TRUE
 	}
 }
 
@@ -129,6 +140,8 @@ impl From<WmAny> for WmCommand {
 	}
 }
 
+msg_lresult_zero!(WmCommand);
+
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
 pub struct WmCreate<'a, 'b, 'c> {
@@ -152,6 +165,8 @@ impl<'a, 'b, 'c> From<WmAny> for WmCreate<'a, 'b, 'c> {
 		}
 	}
 }
+
+msg_lresult_zero!(WmCreate, 'a, 'b, 'c);
 
 ctl_color_msg! { WmCtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
@@ -212,6 +227,8 @@ impl From<WmAny> for WmDropFiles {
 	}
 }
 
+msg_lresult_zero!(WmDropFiles);
+
 /// [`WM_ENDSESSION`](https://docs.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 /// message parameters.
 pub struct WmEndSession {
@@ -238,6 +255,8 @@ impl From<WmAny> for WmEndSession {
 	}
 }
 
+msg_lresult_zero!(WmEndSession);
+
 /// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
 pub struct WmInitDialog {
@@ -261,6 +280,12 @@ impl From<WmAny> for WmInitDialog {
 			hwnd_focus: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
 			additional_data: p.lparam,
 		}
+	}
+}
+
+impl WmInitDialog {
+	pub fn lresult(&self, val: bool) -> LResult {
+		LResult(val as isize)
 	}
 }
 
@@ -292,6 +317,8 @@ impl From<WmAny> for WmInitMenuPopup {
 	}
 }
 
+msg_lresult_zero!(WmInitMenuPopup);
+
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
 pub struct WmNcCreate<'a, 'b, 'c> {
@@ -313,6 +340,12 @@ impl<'a, 'b, 'c> From<WmAny> for WmNcCreate<'a, 'b, 'c> {
 		Self {
 			createstruct: lparam_to_ref(p),
 		}
+	}
+}
+
+impl<'a, 'b, 'c> WmNcCreate<'a, 'b, 'c> {
+	pub fn lresult(&self, val: bool) -> LResult {
+		LResult(val as isize)
 	}
 }
 
@@ -344,6 +377,8 @@ impl From<WmAny> for WmNcPaint {
 		}
 	}
 }
+
+msg_lresult_zero!(WmNcPaint);
 
 empty_msg! { WmNull, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
@@ -379,6 +414,8 @@ impl From<WmAny> for WmSetFocus {
 	}
 }
 
+msg_lresult_zero!(WmSetFocus);
+
 /// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 /// message parameters.
 pub struct WmSize {
@@ -407,6 +444,8 @@ impl From<WmAny> for WmSize {
 	}
 }
 
+msg_lresult_zero!(WmSize);
+
 /// [`WM_SIZING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
 /// message parameters.
 pub struct WmSizing<'a> {
@@ -430,6 +469,13 @@ impl<'a> From<WmAny> for WmSizing<'a> {
 			window_edge: co::WMSZ::from(p.wparam as i32),
 			coords: lparam_to_mut_ref(p),
 		}
+	}
+}
+
+impl<'a> WmSizing<'a> {
+	/// Generates the message result value.
+	pub fn lresult(&self) -> LResult {
+		LResult(1) // TRUE
 	}
 }
 
@@ -464,3 +510,5 @@ impl From<WmAny> for WmTimer {
 		}
 	}
 }
+
+msg_lresult_zero!(WmTimer);
