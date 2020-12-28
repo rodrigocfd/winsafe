@@ -20,7 +20,7 @@ pub struct WmActivate {
 impl From<WmActivate> for WmAny {
 	fn from(p: WmActivate) -> Self {
 		Self {
-			msg: co::WM::ACTIVATE,
+			msg_id: co::WM::ACTIVATE,
 			wparam: MAKEDWORD(u16::from(p.event), p.is_minimized as u16) as usize,
 			lparam: unsafe { p.hwnd.as_ptr() } as isize,
 		}
@@ -49,7 +49,7 @@ pub struct WmActivateApp {
 impl From<WmActivateApp> for WmAny {
 	fn from(p: WmActivateApp) -> Self {
 		Self {
-			msg: co::WM::ACTIVATEAPP,
+			msg_id: co::WM::ACTIVATEAPP,
 			wparam: p.is_being_activated as usize,
 			lparam: p.thread_id as isize,
 		}
@@ -79,7 +79,7 @@ pub struct WmAppCommand {
 impl From<WmAppCommand> for WmAny {
 	fn from(p: WmAppCommand) -> Self {
 		Self {
-			msg: co::WM::APPCOMMAND,
+			msg_id: co::WM::APPCOMMAND,
 			wparam: unsafe { p.hwnd_owner.as_ptr() } as usize,
 			lparam: MAKEDWORD(p.keys.into(), u16::from(p.app_command) | u16::from(p.u_device)) as isize,
 		}
@@ -123,7 +123,7 @@ pub struct WmCommand {
 impl From<WmCommand> for WmAny {
 	fn from(p: WmCommand) -> Self {
 		Self {
-			msg: co::WM::COMMAND,
+			msg_id: co::WM::COMMAND,
 			wparam: MAKEDWORD(p.ctrl_id, p.code.into()) as usize,
 			lparam: unsafe { p.ctrl_hwnd.as_ptr() } as isize,
 		}
@@ -151,7 +151,7 @@ pub struct WmCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for WmAny {
 	fn from(p: WmCreate) -> Self {
 		Self {
-			msg: co::WM::CREATE,
+			msg_id: co::WM::CREATE,
 			wparam: 0,
 			lparam: ref_to_lparam(p.createstruct),
 		}
@@ -212,7 +212,7 @@ pub struct WmDropFiles {
 impl From<WmDropFiles> for WmAny {
 	fn from(p: WmDropFiles) -> Self {
 		Self {
-			msg: co::WM::DROPFILES,
+			msg_id: co::WM::DROPFILES,
 			wparam: unsafe { p.hdrop.as_ptr() } as usize,
 			lparam: 0,
 		}
@@ -239,7 +239,7 @@ pub struct WmEndSession {
 impl From<WmEndSession> for WmAny {
 	fn from(p: WmEndSession) -> Self {
 		Self {
-			msg: co::WM::ENDSESSION,
+			msg_id: co::WM::ENDSESSION,
 			wparam: p.is_session_being_ended as usize,
 			lparam: u32::from(p.event) as isize,
 		}
@@ -267,7 +267,7 @@ pub struct WmInitDialog {
 impl From<WmInitDialog> for WmAny {
 	fn from(p: WmInitDialog) -> Self {
 		Self {
-			msg: co::WM::INITDIALOG,
+			msg_id: co::WM::INITDIALOG,
 			wparam: unsafe { p.hwnd_focus.as_ptr() } as usize,
 			lparam: p.additional_data,
 		}
@@ -300,7 +300,7 @@ pub struct WmInitMenuPopup {
 impl From<WmInitMenuPopup> for WmAny {
 	fn from(p: WmInitMenuPopup) -> Self {
 		Self {
-			msg: co::WM::INITMENUPOPUP,
+			msg_id: co::WM::INITMENUPOPUP,
 			wparam: unsafe { p.hmenu.as_ptr() } as usize,
 			lparam: MAKEDWORD(p.item_pos, p.is_window_menu as u16) as isize,
 		}
@@ -328,7 +328,7 @@ pub struct WmNcCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for WmAny {
 	fn from(p: WmNcCreate) -> Self {
 		Self {
-			msg: co::WM::NCCREATE,
+			msg_id: co::WM::NCCREATE,
 			wparam: 0,
 			lparam: ref_to_lparam(p.createstruct),
 		}
@@ -363,7 +363,7 @@ pub struct WmNcPaint {
 impl From<WmNcPaint> for WmAny {
 	fn from(p: WmNcPaint) -> Self {
 		Self {
-			msg: co::WM::NCPAINT,
+			msg_id: co::WM::NCPAINT,
 			wparam: unsafe { p.updated_hrgn.as_ptr() } as usize,
 			lparam: 0,
 		}
@@ -399,7 +399,7 @@ pub struct WmSetFocus {
 impl From<WmSetFocus> for WmAny {
 	fn from(p: WmSetFocus) -> Self {
 		Self {
-			msg: co::WM::SETFOCUS,
+			msg_id: co::WM::SETFOCUS,
 			wparam: unsafe { p.hwnd_losing_focus.as_ptr() } as usize,
 			lparam: 0,
 		}
@@ -427,7 +427,7 @@ pub struct WmSize {
 impl From<WmSize> for WmAny {
 	fn from(p: WmSize) -> Self {
 		Self {
-			msg: co::WM::SIZE,
+			msg_id: co::WM::SIZE,
 			wparam: i32::from(p.request) as usize,
 			lparam: MAKEDWORD(p.width, p.height) as isize,
 		}
@@ -456,7 +456,7 @@ pub struct WmSizing<'a> {
 impl<'a> From<WmSizing<'a>> for WmAny {
 	fn from(p: WmSizing) -> Self {
 		Self {
-			msg: co::WM::SIZING,
+			msg_id: co::WM::SIZING,
 			wparam: i32::from(p.window_edge) as usize,
 			lparam: ref_to_lparam(p.coords),
 		}
@@ -489,7 +489,7 @@ pub struct WmTimer {
 impl From<WmTimer> for WmAny {
 	fn from(p: WmTimer) -> Self {
 		Self {
-			msg: co::WM::TIMER,
+			msg_id: co::WM::TIMER,
 			wparam: p.timer_id as usize,
 			lparam: match p.timer_proc {
 				Some(proc) => proc as isize,

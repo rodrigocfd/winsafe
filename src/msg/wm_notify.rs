@@ -42,7 +42,7 @@ pub struct WmNotify<'a> {
 impl<'a> From<WmNotify<'a>> for msg::WmAny {
 	fn from(p: WmNotify) -> Self {
 		Self {
-			msg: co::WM::NOTIFY,
+			msg_id: co::WM::NOTIFY,
 			wparam: unsafe { p.nmhdr.hwndFrom.as_ptr() } as usize,
 			lparam: p.nmhdr as *const s::NMHDR as isize,
 		}

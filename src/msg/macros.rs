@@ -26,7 +26,7 @@ macro_rules! empty_msg {
 		impl From<$name> for WmAny {
 			fn from(_: $name) -> Self {
 				Self {
-					msg: $wmconst,
+					msg_id: $wmconst,
 					wparam: 0,
 					lparam: 0,
 				}
@@ -58,7 +58,7 @@ macro_rules! ctl_color_msg {
 		impl From<$name> for WmAny {
 			fn from(p: $name) -> Self {
 				Self {
-					msg: $wmconst,
+					msg_id: $wmconst,
 					wparam: unsafe { p.hdc.as_ptr() } as usize,
 					lparam: unsafe { p.hwnd.as_ptr() } as isize,
 				}

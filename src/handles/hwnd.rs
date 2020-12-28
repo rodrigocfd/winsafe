@@ -71,7 +71,7 @@ impl HWND {
 		unsafe {
 			wmAny.lresult(
 				comctl32::DefSubclassProc(
-					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+					self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
 				),
 			)
 		}
@@ -84,7 +84,7 @@ impl HWND {
 		unsafe {
 			wmAny.lresult(
 				user32::DefWindowProcW(
-					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+					self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
 				),
 			)
 		}
@@ -496,7 +496,7 @@ impl HWND {
 		let wmAny: WmAny = Msg.into();
 		match unsafe {
 			user32::PostMessageW(
-				self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+				self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -525,7 +525,7 @@ impl HWND {
 		unsafe {
 			wmAny.lresult(
 				user32::SendMessageW(
-					self.0, wmAny.msg.into(), wmAny.wparam, wmAny.lparam,
+					self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
 				),
 			)
 		}

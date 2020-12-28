@@ -81,7 +81,7 @@ impl WindowBase {
 	unsafe extern "system" fn window_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
-		let wm_any = WmAny { msg, wparam, lparam };
+		let wm_any = WmAny { msg_id: msg, wparam, lparam };
 
 		let ptr_self = match wm_any.message() {
 			Wm::NcCreate(wm) => { // first message being handled

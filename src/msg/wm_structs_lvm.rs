@@ -23,7 +23,7 @@ pub struct LvmInsertColumn<'a, 'b> {
 impl<'a, 'b> From<LvmInsertColumn<'a, 'b>> for WmAny {
 	fn from(p: LvmInsertColumn) -> Self {
 		Self {
-			msg: co::WM::LVM_INSERTCOLUMN,
+			msg_id: co::WM::LVM_INSERTCOLUMN,
 			wparam: p.index as usize,
 			lparam: ref_to_lparam(p.lvcolumn),
 		}
@@ -50,7 +50,7 @@ pub struct LvmInsertItem<'a, 'b> {
 impl<'a, 'b> From<LvmInsertItem<'a, 'b>> for WmAny {
 	fn from(p: LvmInsertItem) -> Self {
 		Self {
-			msg: co::WM::LVM_INSERTITEM,
+			msg_id: co::WM::LVM_INSERTITEM,
 			wparam: 0,
 			lparam: ref_to_lparam(p.lvitem),
 		}
@@ -76,7 +76,7 @@ pub struct LvmIsItemVisible {
 impl From<LvmIsItemVisible> for WmAny {
 	fn from(p: LvmIsItemVisible) -> Self {
 		Self {
-			msg: co::WM::LVM_ISITEMVISIBLE,
+			msg_id: co::WM::LVM_ISITEMVISIBLE,
 			wparam: p.index as usize,
 			lparam: 0,
 		}
@@ -103,7 +103,7 @@ pub struct LvmScroll {
 impl From<LvmScroll> for WmAny {
 	fn from(p: LvmScroll) -> Self {
 		Self {
-			msg: co::WM::LVM_SCROLL,
+			msg_id: co::WM::LVM_SCROLL,
 			wparam: p.horizontal as usize,
 			lparam: p.vertical as isize,
 		}
@@ -131,7 +131,7 @@ pub struct LvmSetColumn<'a, 'b> {
 impl<'a, 'b> From<LvmSetColumn<'a, 'b>> for WmAny {
 	fn from(p: LvmSetColumn) -> Self {
 		Self {
-			msg: co::WM::LVM_SETCOLUMN,
+			msg_id: co::WM::LVM_SETCOLUMN,
 			wparam: p.index as usize,
 			lparam: ref_to_lparam(p.lvcolumn),
 		}
@@ -158,7 +158,7 @@ pub struct LvmSetItem<'a, 'b> {
 impl<'a, 'b> From<LvmSetItem<'a, 'b>> for WmAny {
 	fn from(p: LvmSetItem) -> Self {
 		Self {
-			msg: co::WM::LVM_SETITEM,
+			msg_id: co::WM::LVM_SETITEM,
 			wparam: 0,
 			lparam: ref_to_lparam(p.lvitem),
 		}
@@ -185,7 +185,7 @@ pub struct LvmSetItemText<'a, 'b> {
 impl<'a, 'b> From<LvmSetItemText<'a, 'b>> for WmAny {
 	fn from(p: LvmSetItemText) -> Self {
 		Self {
-			msg: co::WM::LVM_SETITEMTEXT,
+			msg_id: co::WM::LVM_SETITEMTEXT,
 			wparam: p.index as usize,
 			lparam: ref_to_lparam(p.lvitem),
 		}
@@ -213,7 +213,7 @@ pub struct LvmUpdate {
 impl From<LvmUpdate> for WmAny {
 	fn from(p: LvmUpdate) -> Self {
 		Self {
-			msg: co::WM::LVM_UPDATE,
+			msg_id: co::WM::LVM_UPDATE,
 			wparam: p.index as usize,
 			lparam: 0,
 		}

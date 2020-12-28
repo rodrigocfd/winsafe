@@ -41,8 +41,11 @@ pub enum Wm<'a, 'b, 'c> {
 /// parameters.
 #[derive(Copy, Clone)]
 pub struct WmAny {
-	pub msg: WM,
+	/// The [`co::WM`](crate::co::WM) constant that identifies the window message.
+	pub msg_id: WM,
+	/// First message parameter.
 	pub wparam: usize,
+	/// Second message parameter.
 	pub lparam: isize,
 }
 
@@ -52,10 +55,11 @@ impl WmAny {
 		msg::LResult(val)
 	}
 
-	/// Returns a [`Wm`](crate::msg::Wm) enum, which can be matched to identify
-	/// the exact message type.
+	/// Returns a [`Wm`](crate::msg::Wm) enum which can be matched to identify
+	/// the exact message type, so you can extract the parameters sent along with
+	/// the message.
 	pub fn message<'a, 'b, 'c>(self) -> Wm<'a, 'b, 'c> {
-		match self.msg {
+		match self.msg_id {
 			WM::ACTIVATE => Wm::Activate(self.into()),
 			WM::ACTIVATEAPP => Wm::ActivateApp(self.into()),
 			WM::APPCOMMAND => Wm::AppCommand(self.into()),

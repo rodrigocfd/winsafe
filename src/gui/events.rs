@@ -149,7 +149,7 @@ impl Events {
 				}
 			}
 			_ => { // any other message
-				match msg_maps.msgs.get_mut(&wm_any.msg) {
+				match msg_maps.msgs.get_mut(&wm_any.msg_id) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(wm_any) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(wm_any.lresult(res)), // meaningful return value
