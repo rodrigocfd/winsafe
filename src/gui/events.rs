@@ -96,7 +96,7 @@ macro_rules! empty_wm {
 }
 
 impl Events {
-	pub(super) fn new() -> Events {
+	pub(crate) fn new() -> Events {
 		let heap_msg_maps = Box::new( // alloc memory on the heap
 			MsgMaps {
 				msgs: HashMap::new(),
@@ -112,7 +112,7 @@ impl Events {
 		}
 	}
 
-	pub(super) fn process_message(&self, wm_any: msg::WmAny) -> ProcessResult {
+	pub(crate) fn process_message(&self, wm_any: msg::WmAny) -> ProcessResult {
 		let msg_maps = unsafe { self.ptr_msg_maps.as_mut() }
 			.expect("Failed to retrieve ptr_msg_maps in Events::process_message.");
 
@@ -163,7 +163,7 @@ impl Events {
 	}
 
 	/// Raw add message.
-	fn add_msg<F>(&self, ident: co::WM, func: F)
+	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: FnMut(msg::WmAny) -> Option<isize> + Send + Sync + 'static,
 	{
 		unsafe { self.ptr_msg_maps.as_mut() }
@@ -172,7 +172,7 @@ impl Events {
 	}
 
 	/// Raw add notification.
-	pub(super) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
+	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static,
 	{
 		unsafe { self.ptr_msg_maps.as_mut() }

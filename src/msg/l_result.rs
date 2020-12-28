@@ -21,7 +21,7 @@
 /// ```
 #[repr(C)]
 #[derive(Copy, Clone, Eq, PartialEq)]
-pub struct LResult(pub(super) isize); // cannot be directly created outside the crate
+pub struct LResult(pub(crate) isize);
 
 impl From<LResult> for isize {
 	fn from(r: LResult) -> isize {

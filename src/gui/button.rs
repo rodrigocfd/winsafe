@@ -60,7 +60,7 @@ pub struct EventsButton {
 }
 
 impl EventsButton {
-	pub(super) fn new(parent_events: Events, ctrl_id: u16) -> EventsButton {
+	pub(crate) fn new(parent_events: Events, ctrl_id: u16) -> EventsButton {
 		Self {
 			parent_events,
 			ctrl_id,
