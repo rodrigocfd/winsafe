@@ -187,7 +187,7 @@ impl Default for MENUITEMINFO {
 /// [`MSG`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct MSG {
 	pub hwnd: h::HWND,
 	pub message: co::WM,
@@ -198,10 +198,12 @@ pub struct MSG {
 	lPrivate: u32,
 }
 
+impl_default_zero!(MSG);
+
 /// [`NMHDR`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
 	pub hwndFrom: h::HWND,
@@ -211,6 +213,8 @@ pub struct NMHDR {
 	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	pub code: co::NM,
 }
+
+impl_default_zero!(NMHDR);
 
 /// [`NONCLIENTMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)
 /// struct.
@@ -275,7 +279,7 @@ impl Default for OSVERSIONINFOEX {
 /// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct PAINTSTRUCT {
 	pub hdc: h::HDC,
 	pub fErase: u32,
@@ -284,6 +288,8 @@ pub struct PAINTSTRUCT {
 	fIncUpdate: u32,
 	rgbReserved: [u8; 32],
 }
+
+impl_default_zero!(PAINTSTRUCT);
 
 /// [`POINT`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point)
 /// struct.

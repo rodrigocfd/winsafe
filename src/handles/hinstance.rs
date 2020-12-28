@@ -17,6 +17,12 @@ handle_type! {
 }
 
 impl HINSTANCE {
+	/// Returns a handle to the system OEM instance. This is used to load
+	/// built-in system resources.
+	pub fn oem() -> HINSTANCE {
+		unsafe { Self::null_handle() }
+	}
+
 	/// [`GetClassInfoEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassinfoexw)
 	/// method.
 	///

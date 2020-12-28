@@ -53,7 +53,10 @@ impl HWND {
 				Utf16::from_opt_str(lpWindowName).as_ptr(),
 				dwStyle.into(),
 				X, Y, nWidth, nHeight,
-				hWndParent.unwrap_or_default().0,
+				match hWndParent {
+					Some(hParent) => hParent.0,
+					None => std::ptr::null_mut(),
+				},
 				hMenu.as_ptr(),
 				hInstance.as_ptr(),
 				lpParam.unwrap_or_default() as *mut c_void,

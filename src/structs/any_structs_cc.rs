@@ -135,7 +135,7 @@ pub struct NMCHAR {
 /// [`NMCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmcustomdraw)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 pub struct NMCUSTOMDRAW {
 	pub hdr: NMHDR,
 	pub dwDrawStage: co::CDDS,
@@ -145,6 +145,8 @@ pub struct NMCUSTOMDRAW {
 	pub uItemState: co::CDIS,
 	pub lItemlParam: isize,
 }
+
+impl_default_zero!(NMCUSTOMDRAW);
 
 /// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
 /// struct.

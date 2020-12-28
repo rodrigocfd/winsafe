@@ -12,16 +12,15 @@ macro_rules! handle_type {
 		unsafe impl Send for $name {}
 		unsafe impl Sync for $name {}
 
-		impl Default for $name {
-			fn default() -> Self {
-				Self(std::ptr::null_mut())
-			}
-		}
-
 		impl $name {
 			/// Creates a new handle instance by wrapping a pointer.
 			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {
 				Self(p as *mut std::ffi::c_void)
+			}
+
+			/// Creates a null, invalid handle.
+			pub unsafe fn null_handle() -> Self {
+				Self(std::ptr::null_mut())
 			}
 
 			/// Returns the raw underlying pointer for this handle.
@@ -32,6 +31,16 @@ macro_rules! handle_type {
 			/// Tells if the handle is invalid (null).
 			pub fn is_null(&self) -> bool {
 				self.0.is_null()
+			}
+
+			/// Transforms the handle into an option, which is `None` if the handle
+			/// pointer is null.
+			pub fn as_opt(self) -> Option<$name> {
+				if self.0.is_null() {
+					None
+				} else {
+					Some(self)
+				}
 			}
 		}
 	};

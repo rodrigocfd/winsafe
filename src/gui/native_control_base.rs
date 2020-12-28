@@ -1,3 +1,5 @@
+use std::ffi::c_void;
+
 use crate::handles::HWND;
 
 static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
@@ -20,7 +22,7 @@ impl NativeControlBase {
 
 	pub fn new_with_id(ctrl_id: u16) -> NativeControlBase {
 		Self {
-			hwnd: HWND::default(),
+			hwnd: unsafe { HWND::null_handle() },
 			ctrl_id,
 		}
 	}

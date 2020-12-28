@@ -21,7 +21,7 @@ pub struct WindowBase {
 impl WindowBase {
 	pub fn new() -> WindowBase {
 		Self {
-			hwnd: HWND::default(),
+			hwnd: unsafe { HWND::null_handle() },
 			events: Events::new(),
 		}
 	}
@@ -108,7 +108,7 @@ impl WindowBase {
 
 		if let Wm::NcDestroy(_) = wm_any.message() { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
-			ref_self.hwnd = HWND::default(); // clear stored HWND
+			ref_self.hwnd = unsafe { HWND::null_handle() }; // clear stored HWND
 		}
 
 		match maybe_processed {

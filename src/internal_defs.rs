@@ -8,7 +8,8 @@ pub const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub const L_MAX_URL_LENGTH: usize = 2048 + 32 + 4;
 pub const LF_FACESIZE: usize = 32;
 
-/// Transforms a pointer into an option, which is None if the pointer is null.
+/// Transforms a raw pointer into an option, which is `None` if the pointer is
+/// null.
 ///
 /// https://stackoverflow.com/q/65144143/6923555
 macro_rules! ptr_as_opt {

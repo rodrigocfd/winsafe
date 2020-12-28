@@ -72,7 +72,7 @@ impl Parent for WindowMain {
 //------------------------------------------------------------------------------
 
 /// Options for [`WindowMain::new`](crate::gui::WindowMain::new).
-#[derive(Default, Clone)]
+#[derive(Clone)]
 pub struct WindowMainOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
@@ -143,6 +143,24 @@ pub struct WindowMainOpts {
 	pub accel_table: HACCEL,
 }
 
+impl Default for WindowMainOpts {
+	fn default() -> Self {
+		Self {
+			class_name: "".to_owned(),
+			class_style: co::CS::DBLCLKS,
+			class_icon: unsafe { HICON::null_handle() },
+			class_cursor: unsafe { HCURSOR::null_handle() },
+			class_bg_brush: unsafe { HBRUSH::null_handle() },
+			title: "".to_owned(),
+			size: SIZE { cx: 600, cy: 500 },
+			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER,
+			ex_style: co::WS_EX::LEFT,
+			menu: unsafe { HMENU::null_handle() },
+			accel_table: unsafe { HACCEL::null_handle() },
+		}
+	}
+}
+
 impl WindowMainOpts {
 	fn generate_wndclassex(
 		&self, hinst: HINSTANCE) -> Result<WNDCLASSEX, co::ERROR>
@@ -155,7 +173,7 @@ impl WindowMainOpts {
 		wcx.hbrBackground = self.class_bg_brush;
 
 		if wcx.hCursor.is_null() {
-			wcx.hCursor = HINSTANCE::default()
+			wcx.hCursor = HINSTANCE::oem()
 				.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?;
 		}
 
