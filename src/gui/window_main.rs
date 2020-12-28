@@ -1,7 +1,7 @@
 use std::error::Error;
 
 use crate::co;
-use crate::enums::IdIdcStr;
+use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs as f;
 use crate::gui::control_util::multiply_dpi;
 use crate::gui::events::Events;
@@ -10,7 +10,7 @@ use crate::gui::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::internal_defs::str_dyn_error;
-use crate::structs::{SIZE, WNDCLASSEX};
+use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::Utf16;
 
 /// Main application window.
@@ -55,13 +55,41 @@ impl WindowMain {
 
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;
-
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = Utf16::new();
 		self.opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
 		self.base.register_class(&mut wcx)?;
 
 		multiply_dpi(None, Some(&mut self.opts.size))?;
+
+		let screen_sz = SIZE {
+			cx: f::GetSystemMetrics(co::SM::CXSCREEN),
+			cy: f::GetSystemMetrics(co::SM::CYSCREEN),
+		};
+
+		let wnd_pos = POINT {
+			x: screen_sz.cx / 2 - self.opts.size.cx / 2, // center on screen
+			y: screen_sz.cx / 2 - self.opts.size.cy / 2,
+		};
+
+		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
+			left: wnd_pos.x,
+			top: wnd_pos.y,
+			right: wnd_pos.x + self.opts.size.cx,
+			bottom: wnd_pos.y + self.opts.size.cy,
+		};
+		f::AdjustWindowRectEx(
+			&mut wnd_rc, self.opts.style, false, self.opts.ex_style)?;
+
+		let our_hwnd = self.base.create_window(hinst, None,
+			&class_name_buf.to_string(), Some(&self.opts.title), IdMenu::None,
+			POINT { x: wnd_rc.left, y: wnd_rc.top },
+			SIZE { cx: wnd_rc.right - wnd_rc.left, cy: wnd_rc.bottom - wnd_rc.top },
+			self.opts.ex_style, self.opts.style)?;
+
+		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		our_hwnd.UpdateWindow()
+			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
 
 
 
