@@ -91,7 +91,7 @@ impl WindowBase {
 		)
 	}
 
-	unsafe extern "system" fn window_proc(
+	extern "system" fn window_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
 		let wm_any = WmAny { msg_id: msg, wparam, lparam };
@@ -99,7 +99,7 @@ impl WindowBase {
 		let ptr_self = match wm_any.message() {
 			Wm::NcCreate(wm) => { // first message being handled
 				let ptr_self = wm.createstruct.lpCreateParams as *mut Self;
-				let ref_self = ptr_self.as_mut().unwrap();
+				let ref_self = unsafe { ptr_self.as_mut() }.unwrap();
 				ref_self.hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
 				ref_self.hwnd = hwnd; // store HWND in struct field
 				ptr_self
@@ -116,12 +116,12 @@ impl WindowBase {
 		}
 
 		// Execute user handler, if any.
-		let ref_self = ptr_self.as_mut().unwrap();
+		let ref_self = unsafe { ptr_self.as_mut() }.unwrap();
 		let maybe_processed = ref_self.events.process_message(wm_any);
 
 		if let Wm::NcDestroy(_) = wm_any.message() { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
-			ref_self.hwnd = HWND::null_handle(); // clear stored HWND
+			ref_self.hwnd = unsafe { HWND::null_handle() }; // clear stored HWND
 		}
 
 		match maybe_processed {
