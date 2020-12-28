@@ -133,12 +133,17 @@ pub fn GetLastError() -> co::ERROR {
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
-pub fn GetMessage(lpMsg: &mut s::MSG, hWnd: HWND,
+pub fn GetMessage(lpMsg: &mut s::MSG, hWnd: Option<HWND>,
 	wMsgFilterMin: u32, wMsgFilterMax: u32) -> Result<bool, co::ERROR>
 {
 	match unsafe {
 		user32::GetMessageW(
-			mut_void(lpMsg), hWnd.as_ptr(), wMsgFilterMin, wMsgFilterMax,
+			mut_void(lpMsg),
+			match hWnd {
+				Some(hWnd) => hWnd.as_ptr(),
+				None => std::ptr::null_mut(),
+			},
+			wMsgFilterMin, wMsgFilterMax,
 		)
 	} {
 		-1 => Err(GetLastError()),

@@ -2,6 +2,7 @@
 
 mod control_util;
 mod globals;
+mod main_loop;
 mod native_control_base;
 mod window_base;
 

@@ -6,6 +6,7 @@ use crate::funcs as f;
 use crate::gui::control_util::multiply_dpi;
 use crate::gui::events::Events;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
+use crate::gui::main_loop::run_loop;
 use crate::gui::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
@@ -91,11 +92,9 @@ impl WindowMain {
 		our_hwnd.UpdateWindow()
 			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
 
-
-
-
+		let res = run_loop(our_hwnd, self.opts.accel_table)?; // blocks until window is closed
 		delete_ui_font();
-		Ok(0)
+		Ok(res)
 	}
 }
 
@@ -123,8 +122,8 @@ pub struct WindowMainOpts {
 	/// Window main icon to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to no icon.
-	pub class_icon: HICON,
+	/// Defaults to no `None`.
+	pub class_icon: Option<HICON>,
 	/// Window cursor to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -170,13 +169,13 @@ pub struct WindowMainOpts {
 	/// This menu is not shared, the window will own it, and destroy it when the
 	/// window is destroyed.
 	///
-	/// Defaults to absent.
-	pub menu: HMENU,
+	/// Defaults to `None`.
+	pub menu: Option<HMENU>,
 	/// Main accelerator table of the window to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to absent.
-	pub accel_table: HACCEL,
+	/// Defaults to `None`.
+	pub accel_table: Option<HACCEL>,
 }
 
 impl Default for WindowMainOpts {
@@ -184,15 +183,15 @@ impl Default for WindowMainOpts {
 		Self {
 			class_name: "".to_owned(),
 			class_style: co::CS::DBLCLKS,
-			class_icon: unsafe { HICON::null_handle() },
+			class_icon: None,
 			class_cursor: unsafe { HCURSOR::null_handle() },
 			class_bg_brush: unsafe { HBRUSH::null_handle() },
 			title: "".to_owned(),
 			size: SIZE { cx: 600, cy: 500 },
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER,
 			ex_style: co::WS_EX::LEFT,
-			menu: unsafe { HMENU::null_handle() },
-			accel_table: unsafe { HACCEL::null_handle() },
+			menu: None,
+			accel_table: None,
 		}
 	}
 }
@@ -206,8 +205,8 @@ impl WindowMainOpts {
 	{
 		wcx.hInstance = hinst;
 		wcx.style = self.class_style;
-		wcx.hIcon = self.class_icon;
-		wcx.hIconSm = self.class_icon;
+		wcx.hIcon = self.class_icon.unwrap_or(unsafe { HICON::null_handle() });
+		wcx.hIconSm = wcx.hIcon;
 		wcx.hbrBackground = self.class_bg_brush;
 
 		if wcx.hCursor.is_null() {

@@ -2,7 +2,7 @@ const_type! { GA, u32,
 	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
 
 	PARENT, 1
-	ROOOT, 2
+	ROOT, 2
 	ROOTOWNER, 3
 }
 

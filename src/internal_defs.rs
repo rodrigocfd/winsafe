@@ -41,7 +41,7 @@ pub fn str_dyn_error(s: &str) -> Box<dyn Error> {
 /// Parses a null-delimited multi-string, which must terminate with two nulls.
 pub fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 	let mut src = src;
-	let mut strings = Vec::new();
+	let mut strings = Vec::default();
 	let mut i = 0;
 
 	loop {
