@@ -5,7 +5,7 @@ use std::error::Error;
 use crate::co;
 use crate::funcs::SystemParametersInfo;
 use crate::handles::HFONT;
-use crate::internal_defs::str_dyn_error;
+use crate::priv_funcs::str_dyn_error;
 use crate::structs::NONCLIENTMETRICS;
 
 /// Global UI font object.

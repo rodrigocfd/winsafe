@@ -3,7 +3,7 @@ use std::error::Error;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::handles::HWND;
-use crate::internal_defs::str_dyn_error;
+use crate::priv_funcs::str_dyn_error;
 use crate::structs::{POINT, SIZE};
 
 static mut DPI: POINT = POINT{ x: 0, y: 0 };

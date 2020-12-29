@@ -143,7 +143,7 @@
 pub mod co;
 
 mod ffi;
-mod internal_defs;
+mod priv_funcs;
 
 pub mod gui;
 pub mod msg;

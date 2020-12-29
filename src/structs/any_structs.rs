@@ -10,7 +10,7 @@ use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
 use crate::handles as h;
-use crate::internal_defs::LF_FACESIZE;
+use crate::priv_funcs::LF_FACESIZE;
 use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
@@ -400,7 +400,7 @@ pub struct WNDCLASSEX<'a, 'b> {
 	pub hCursor: h::HCURSOR,
 	pub hbrBackground: h::HBRUSH,
 	lpszMenuName: *const u16,
-	pub lpszClassName: *const u16,
+	lpszClassName: *const u16,
 	pub hIconSm: h::HICON,
 	_markerMenuName: PhantomData<&'a u16>,
 	_markerClassName: PhantomData<&'b u16>,

@@ -7,7 +7,7 @@ use crate::co;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HINSTANCE;
-use crate::internal_defs::ptr_as_opt;
+use crate::priv_funcs::ptr_as_opt;
 
 handle_type! {
 	/// Handle to a

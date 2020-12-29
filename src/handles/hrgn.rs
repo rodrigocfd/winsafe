@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::ffi::gdi32;
-use crate::internal_defs::const_void;
+use crate::priv_funcs::const_void;
 use crate::structs::RECT;
 
 hgdiobj_type! {

@@ -5,8 +5,8 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::events::{Events, ProcessResult};
 use crate::handles::{HINSTANCE, HWND};
-use crate::internal_defs::str_dyn_error;
 use crate::msg::{Wm, WmNcCreate};
+use crate::priv_funcs::str_dyn_error;
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 

@@ -5,7 +5,7 @@ use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HCURSOR, HICON};
-use crate::internal_defs::{mut_void, ptr_as_opt};
+use crate::priv_funcs::{mut_void, ptr_as_opt};
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::WString;
 

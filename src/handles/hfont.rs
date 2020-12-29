@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::ffi::gdi32;
-use crate::internal_defs::{const_void, ptr_as_opt};
+use crate::priv_funcs::{const_void, ptr_as_opt};
 use crate::structs::LOGFONT;
 use crate::WString;
 

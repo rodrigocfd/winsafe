@@ -3,7 +3,7 @@
 use crate::co;
 use crate::ffi::gdi32;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
-use crate::internal_defs::{const_void, mut_void, ptr_as_opt};
+use crate::priv_funcs::{const_void, mut_void, ptr_as_opt};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 

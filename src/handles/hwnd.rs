@@ -8,8 +8,8 @@ use crate::enums::{AtomStr, IdMenu, IdPos};
 use crate::ffi::{comctl32, user32};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
-use crate::internal_defs::{const_void, mut_void, ptr_as_opt};
 use crate::msg::Wm;
+use crate::priv_funcs::{const_void, mut_void, ptr_as_opt};
 use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::WString;
 

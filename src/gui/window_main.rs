@@ -10,7 +10,7 @@ use crate::gui::main_loop::run_loop;
 use crate::gui::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
-use crate::internal_defs::str_dyn_error;
+use crate::priv_funcs::str_dyn_error;
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 

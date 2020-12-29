@@ -4,8 +4,8 @@ use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HDC, HDROP, HMENU, HRGN, HWND};
-use crate::internal_defs::FAPPCOMMAND_MASK;
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
+use crate::priv_funcs::FAPPCOMMAND_MASK;
 use crate::structs::{CREATESTRUCT, NMHDR, RECT};
 
 /// Generic

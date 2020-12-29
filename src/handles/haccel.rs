@@ -3,7 +3,7 @@
 use crate::co;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
-use crate::internal_defs::{mut_void, ptr_as_opt};
+use crate::priv_funcs::{mut_void, ptr_as_opt};
 use crate::structs::ACCEL;
 
 handle_type! {
