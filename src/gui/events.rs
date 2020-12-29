@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use crate::co;
+use crate::gui::func_store::FuncStore;
 use crate::handles::HDC;
 use crate::msg;
 
@@ -12,19 +11,19 @@ pub enum ProcessResult {
 }
 
 struct MsgMaps {
-	msgs: HashMap< // ordinary WM messages
+	msgs: FuncStore< // ordinary WM messages
 		co::WM,
 		Box<dyn FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
 	>,
-	tmrs: HashMap< // WM_TIMER messages
+	tmrs: FuncStore< // WM_TIMER messages
 		u32,
 		Box<dyn FnMut() + Send + Sync + 'static>, // return value is never meaningful
 	>,
-	cmds: HashMap< // WM_COMMAND notifications
+	cmds: FuncStore< // WM_COMMAND notifications
 		(co::CMD, u16), // code, ctrl_id
 		Box<dyn FnMut() + Send + Sync + 'static>, // return value is never meaningful
 	>,
-	nfys: HashMap< // WM_NOTIFY notifications
+	nfys: FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
 		Box<dyn FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
 	>,
@@ -107,10 +106,10 @@ impl Events {
 	pub(crate) fn new() -> Events {
 		let heap_msg_maps = Box::new( // alloc memory on the heap
 			MsgMaps {
-				msgs: HashMap::new(),
-				tmrs: HashMap::new(),
-				cmds: HashMap::new(),
-				nfys: HashMap::new(),
+				msgs: FuncStore::new(),
+				tmrs: FuncStore::new(),
+				cmds: FuncStore::new(),
+				nfys: FuncStore::new(),
 			}
 		);
 
@@ -128,7 +127,7 @@ impl Events {
 			co::WM::NOTIFY => {
 				let wm_nfy: msg::WmNotify = wm_any.into();
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
-				match msg_maps.nfys.get_mut(&key) {
+				match msg_maps.nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -141,7 +140,7 @@ impl Events {
 			co::WM::COMMAND => {
 				let wm_cmd: msg::WmCommand = wm_any.into();
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
-				match msg_maps.cmds.get_mut(&key) {
+				match msg_maps.cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -151,7 +150,7 @@ impl Events {
 			},
 			co::WM::TIMER => {
 				let wm_tmr: msg::WmTimer = wm_any.into();
-				match msg_maps.tmrs.get_mut(&wm_tmr.timer_id) {
+				match msg_maps.tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -160,7 +159,7 @@ impl Events {
 				}
 			}
 			_ => { // any other message
-				match msg_maps.msgs.get_mut(&wm_any.msg_id) {
+				match msg_maps.msgs.find(wm_any.msg_id) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(wm_any) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value

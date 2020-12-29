@@ -1,6 +1,7 @@
 //! High-level GUI abstractions.
 
 mod control_util;
+mod func_store;
 mod globals;
 mod main_loop;
 mod native_control_base;
