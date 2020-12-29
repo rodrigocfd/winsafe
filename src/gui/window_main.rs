@@ -8,6 +8,7 @@ use crate::gui::events::Events;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
 use crate::gui::managed_box::ManagedBox;
+use crate::gui::parent::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::priv_funcs::str_dyn_error;
@@ -31,6 +32,12 @@ pub struct WindowMain {
 unsafe impl Send for WindowMain {}
 unsafe impl Sync for WindowMain {}
 
+impl Parent for WindowMain {
+	fn on(&self) -> Events {
+		self.obj.as_ref().base.on()
+	}
+}
+
 impl WindowMain {
 	/// Creates a new `WindowMain` object.
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
@@ -51,7 +58,7 @@ impl WindowMain {
 	pub fn hwnd(&self) -> HWND {
 		self.obj.as_ref().base.hwnd()
 	}
-
+/*
 	/// Exposes the events that can be handled with a closure.
 	///
 	/// # Panics
@@ -60,7 +67,7 @@ impl WindowMain {
 	/// events before window creation.
 	pub fn on(&self) -> Events {
 		self.obj.as_ref().base.on()
-	}
+	}*/
 
 	/// Creates the window and runs the main application loop. This function will
 	/// block until the window is closed.

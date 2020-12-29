@@ -2,6 +2,7 @@ use crate::{NMBCHOTITEM, NMCUSTOMDRAW, co};
 use crate::gui::events::Events;
 use crate::gui::managed_box::ManagedBox;
 use crate::gui::native_control_base::NativeControlBase;
+use crate::gui::parent::Parent;
 use crate::handles::HWND;
 use crate::structs::NMBCDROPDOWN;
 
@@ -26,17 +27,17 @@ unsafe impl Sync for Button {}
 
 impl Button {
 	/// Creates a new Button object.
-	pub fn new(parent_on: Events) -> Button {
-		Self::new_with_id(parent_on, NativeControlBase::auto_ctrl_id())
+	pub fn new(parent: &impl Parent) -> Button {
+		Self::new_with_id(parent, NativeControlBase::auto_ctrl_id())
 	}
 
 	/// Creates a new Button object with a specific control ID.
-	pub fn new_with_id(parent_on: Events, ctrl_id: u16) -> Button {
+	pub fn new_with_id(parent: &impl Parent, ctrl_id: u16) -> Button {
 		Self {
 			obj: ManagedBox::new(
 				Obj {
 					base: NativeControlBase::new_with_id(ctrl_id),
-					parent_events: EventsButton::new(parent_on, ctrl_id),
+					parent_events: EventsButton::new(parent.on(), ctrl_id),
 					subclass_events: Events::new(),
 				}
 			),
