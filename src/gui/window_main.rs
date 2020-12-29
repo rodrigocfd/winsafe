@@ -1,4 +1,6 @@
+use std::cell::UnsafeCell;
 use std::error::Error;
+use std::sync::Arc;
 
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
@@ -7,7 +9,6 @@ use crate::gui::control_util::multiply_dpi;
 use crate::gui::events::Events;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
-use crate::gui::managed_box::ManagedBox;
 use crate::gui::parent::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
@@ -26,7 +27,7 @@ struct Obj {
 /// Main application window.
 #[derive(Clone)]
 pub struct WindowMain {
-	obj: ManagedBox<Obj>,
+	obj: Arc<UnsafeCell<Obj>>,
 }
 
 unsafe impl Send for WindowMain {}
@@ -34,7 +35,8 @@ unsafe impl Sync for WindowMain {}
 
 impl Parent for WindowMain {
 	fn on(&self) -> Events {
-		self.obj.as_ref().base.on()
+		let self2 = unsafe { &*self.obj.get() };
+		self2.base.on()
 	}
 }
 
@@ -42,13 +44,13 @@ impl WindowMain {
 	/// Creates a new `WindowMain` object.
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
 		let wnd = Self {
-			obj: ManagedBox::new(
+			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: WindowBase::new(),
 					opts,
 					hchild_prev_focus: None,
 				},
-			),
+			)),
 		};
 		wnd.default_message_handlers();
 		wnd
@@ -56,7 +58,8 @@ impl WindowMain {
 
 	/// Returns the underlying handle for this window.
 	pub fn hwnd(&self) -> HWND {
-		self.obj.as_ref().base.hwnd()
+		let self2 = unsafe { &*self.obj.get() };
+		self2.base.hwnd()
 	}
 /*
 	/// Exposes the events that can be handled with a closure.
@@ -88,7 +91,7 @@ impl WindowMain {
 		f::InitCommonControls();
 		create_ui_font()?;
 
-		let self2 = self.obj.as_mut();
+		let self2 = unsafe { &mut *self.obj.get() };
 
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;
@@ -144,7 +147,7 @@ impl WindowMain {
 		self.on().wm_activate({
 			let cloned = self.clone();
 			move |p| {
-				let self2 = cloned.obj.as_mut();
+				let self2 = unsafe { &mut *cloned.obj.get() };
 				if !p.is_minimized {
 					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
 						if self2.base.hwnd().IsChild(hwnd_cur_focus) {

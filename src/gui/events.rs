@@ -1,6 +1,8 @@
+use std::cell::UnsafeCell;
+use std::rc::Rc;
+
 use crate::co;
 use crate::gui::func_store::FuncStore;
-use crate::gui::managed_box::ManagedBox;
 use crate::handles::HDC;
 use crate::msg;
 
@@ -36,7 +38,7 @@ struct Obj {
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
 #[derive(Clone)]
 pub struct Events {
-	obj: ManagedBox<Obj>,
+	obj: Rc<UnsafeCell<Obj>>,
 }
 
 /// A message which has no parameters and returns zero.
@@ -78,23 +80,24 @@ macro_rules! wm_ret_none {
 impl Events {
 	pub(crate) fn new() -> Events {
 		Self {
-			obj: ManagedBox::new(
+			obj: Rc::new(UnsafeCell::new(
 				Obj {
 					msgs: FuncStore::new(),
 					tmrs: FuncStore::new(),
 					cmds: FuncStore::new(),
 					nfys: FuncStore::new(),
 				},
-			),
+			)),
 		}
 	}
 
 	pub(crate) fn process_message(&self, wm_any: msg::Wm) -> ProcessResult {
+		let self2 = unsafe { &mut *self.obj.get() };
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy: msg::WmNotify = wm_any.into();
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
-				match self.obj.as_mut().nfys.find(key) {
+				match self2.nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -107,7 +110,7 @@ impl Events {
 			co::WM::COMMAND => {
 				let wm_cmd: msg::WmCommand = wm_any.into();
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
-				match self.obj.as_mut().cmds.find(key) {
+				match self2.cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -117,7 +120,7 @@ impl Events {
 			},
 			co::WM::TIMER => {
 				let wm_tmr: msg::WmTimer = wm_any.into();
-				match self.obj.as_mut().tmrs.find(wm_tmr.timer_id) {
+				match self2.tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -126,7 +129,7 @@ impl Events {
 				}
 			}
 			_ => { // any other message
-				match self.obj.as_mut().msgs.find(wm_any.msg_id) {
+				match self2.msgs.find(wm_any.msg_id) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(wm_any) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -143,14 +146,16 @@ impl Events {
 	pub(crate) fn add_msg<F>(&mut self, ident: co::WM, func: F)
 		where F: FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static,
 	{
-		self.obj.as_mut().msgs.insert(ident, Box::new(func));
+		let self2 = unsafe { &mut *self.obj.get() };
+		self2.msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
 	pub(crate) fn add_nfy<F>(&mut self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static,
 	{
-		self.obj.as_mut().nfys.insert((id_from, code), Box::new(func));
+		let self2 = unsafe { &mut *self.obj.get() };
+		self2.nfys.insert((id_from, code), Box::new(func));
 	}
 
 	/// Adds a handler to any [window message](crate::co::WM).
@@ -171,7 +176,8 @@ impl Events {
 	pub fn wm_timer<F>(&mut self, timer_id: u32, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		self.obj.as_mut().tmrs.insert(timer_id, Box::new(func));
+		let self2 = unsafe { &mut *self.obj.get() };
+		self2.tmrs.insert(timer_id, Box::new(func));
 	}
 
 	/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
@@ -185,7 +191,8 @@ impl Events {
 	pub fn wm_command<F>(&mut self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		self.obj.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
+		let self2 = unsafe { &mut *self.obj.get() };
+		self2.cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
 	/// Adds a handler to [`WM_NOTIFY`](crate::msg::WmNotify) message.
