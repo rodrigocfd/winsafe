@@ -7,11 +7,11 @@ use std::marker::PhantomData;
 
 use crate::aliases::WNDPROC;
 use crate::co;
-use crate::enums::{IdStr, IdWchar};
+use crate::enums::IdStr;
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
 use crate::handles as h;
 use crate::internal_defs::LF_FACESIZE;
-use crate::Utf16;
+use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.
@@ -27,7 +27,7 @@ pub struct ACCEL {
 /// returned by
 /// [`RegisterClassEx`](crate::RegisterClassEx).
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct ATOM(u16);
 
 impl From<u16> for ATOM {
@@ -95,21 +95,21 @@ impl_default_zero!(CREATESTRUCT, 'a, 'b);
 impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 	/// Returns the `lpszName` field.
 	pub fn lpszName(&self) -> String {
-		Utf16::from_utf16_nullt(self.lpszName).to_string()
+		WString::from_wchars_nullt(self.lpszName).to_string()
 	}
 
 	/// Sets the `lpszName` field.
-	pub fn set_lpszName(&mut self, buf: &'a Utf16) {
+	pub fn set_lpszName(&mut self, buf: &'a WString) {
 		self.lpszName = unsafe { buf.as_ptr() };
 	}
 
 	/// Returns the `lpszClass` field.
 	pub fn lpszClass(&self) -> String {
-		Utf16::from_utf16_nullt(self.lpszClass).to_string()
+		WString::from_wchars_nullt(self.lpszClass).to_string()
 	}
 
 	/// Sets the `lpszClass` field.
-	pub fn set_lpszClass(&mut self, buf: &'b Utf16) {
+	pub fn set_lpszClass(&mut self, buf: &'b WString) {
 		self.lpszClass = unsafe { buf.as_ptr() };
 	}
 }
@@ -400,7 +400,7 @@ pub struct WNDCLASSEX<'a, 'b> {
 	pub hCursor: h::HCURSOR,
 	pub hbrBackground: h::HBRUSH,
 	lpszMenuName: *const u16,
-	lpszClassName: *const u16,
+	pub lpszClassName: *const u16,
 	pub hIconSm: h::HICON,
 	_markerMenuName: PhantomData<&'a u16>,
 	_markerClassName: PhantomData<&'b u16>,
@@ -422,22 +422,22 @@ impl<'a, 'b> WNDCLASSEX<'a, 'b> {
 		{
 			IdStr::Id(LOWORD(LODWORD(self.lpszMenuName as u64)) as i32)
 		} else {
-			IdStr::Str(Utf16::from_utf16_nullt(self.lpszMenuName).to_string())
+			IdStr::Str(WString::from_wchars_nullt(self.lpszMenuName))
 		}
 	}
 
 	/// Sets the `lpszMenuName` field.
-	pub fn set_lpszMenuName(&mut self, menu_name: &'a IdWchar) {
+	pub fn set_lpszMenuName(&mut self, menu_name: &'a IdStr) {
 		self.lpszMenuName = menu_name.as_ptr();
 	}
 
 	/// Returns the `lpszClassName` field.
 	pub fn lpszClassName(&self) -> String {
-		Utf16::from_utf16_nullt(self.lpszClassName).to_string()
+		WString::from_wchars_nullt(self.lpszClassName).to_string()
 	}
 
 	/// Sets the `lpszClassName` field.
-	pub fn set_lpszClassName(&mut self, buf: &'b Utf16) {
+	pub fn set_lpszClassName(&mut self, buf: &'b WString) {
 		self.lpszClassName = unsafe { buf.as_ptr() };
 	}
 }

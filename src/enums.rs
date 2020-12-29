@@ -5,7 +5,7 @@ use std::ffi::c_void;
 use crate::co;
 use crate::handles::{HBITMAP, HMENU};
 use crate::structs::ATOM;
-use crate::Utf16;
+use crate::WString;
 
 /// Variant parameter used in
 /// [window class](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-classes)
@@ -15,15 +15,14 @@ use crate::Utf16;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
 pub enum AtomStr {
 	Atom(ATOM),
-	Str(String),
+	Str(WString),
 }
 
 impl AtomStr {
-	/// [`MAKEINTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
-	/// macro.
-	pub fn MAKEINTRESOURCE(&self) -> *const u16 {
+	/// Converts the internal value to a `*const u16`.
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			AtomStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
+			AtomStr::Str(u16) => unsafe { u16.as_ptr() },
 			AtomStr::Atom(atom) => atom.as_ptr(),
 		}
 	}
@@ -37,7 +36,7 @@ impl AtomStr {
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `lpNewItem`.
 pub enum BitmapPtrStr {
 	Bitmap(HBITMAP),
-	Str(String),
+	Str(WString),
 	Param(*const c_void),
 }
 
@@ -46,7 +45,7 @@ impl BitmapPtrStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			BitmapPtrStr::Bitmap(hbmp) => unsafe { hbmp.as_ptr() as *const u16 },
-			BitmapPtrStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
+			BitmapPtrStr::Str(u16) => unsafe { u16.as_ptr() },
 			BitmapPtrStr::Param(lp) => *lp as *const u16,
 		}
 	}
@@ -60,7 +59,7 @@ impl BitmapPtrStr {
 pub enum IdIdcStr {
 	Id(i32),
 	Idc(co::IDC),
-	Str(String),
+	Str(WString),
 }
 
 impl IdIdcStr {
@@ -69,7 +68,7 @@ impl IdIdcStr {
 		match self {
 			IdIdcStr::Id(id) => *id as *const u16,
 			IdIdcStr::Idc(idc) => usize::from(*idc) as *const u16,
-			IdIdcStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
+			IdIdcStr::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -82,7 +81,7 @@ impl IdIdcStr {
 pub enum IdIdiStr {
 	Id(i32),
 	Idi(co::IDI),
-	Str(String),
+	Str(WString),
 }
 
 impl IdIdiStr {
@@ -91,7 +90,7 @@ impl IdIdiStr {
 		match self {
 			IdIdiStr::Id(id) => *id as *const u16,
 			IdIdiStr::Idi(idi) => usize::from(*idi) as *const u16,
-			IdIdiStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
+			IdIdiStr::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -132,7 +131,7 @@ impl IdMenu {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter used in [menu](crate::HMENU) methods.
+/// Variant parameter used in [menu](crate::HMENU) methods:
 ///
 /// * [`CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
 /// * [`DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;
@@ -157,12 +156,13 @@ impl From<IdPos> for u32 {
 
 //------------------------------------------------------------------------------
 
-/// Variant parameter for
+/// Variant parameter for:
 ///
 /// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
+/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`;
 pub enum IdStr {
 	Id(i32),
-	Str(String),
+	Str(WString),
 }
 
 impl IdStr {
@@ -170,27 +170,7 @@ impl IdStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			IdStr::Id(id) => *id as *const u16,
-			IdStr::Str(s) => unsafe { Utf16::from_str(&s).as_ptr() },
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// Variant parameter for
-///
-/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`.
-pub enum IdWchar {
-	Id(i32),
-	Wchar(Utf16),
-}
-
-impl IdWchar {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
-		match self {
-			IdWchar::Id(id) => *id as *const u16,
-			IdWchar::Wchar(u) => unsafe { u.as_ptr() },
+			IdStr::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -202,7 +182,7 @@ pub enum RegistryValue {
 	Binary(Vec<u8>),
 	Dword(u32),
 	Qword(u64),
-	Sz(String),
+	Sz(WString),
 	None,
 }
 
@@ -213,9 +193,7 @@ impl RegistryValue {
 			RegistryValue::Binary(b) => b.as_ptr() as *const c_void,
 			RegistryValue::Dword(n) => *n as *const c_void,
 			RegistryValue::Qword(n) => *n as *const c_void,
-			RegistryValue::Sz(s) => {
-				unsafe { Utf16::from_str(&s).as_ptr() as *const c_void }
-			},
+			RegistryValue::Sz(u16) => unsafe { u16.as_ptr() as *const c_void },
 			RegistryValue::None => std::ptr::null(),
 		}
 	}
@@ -237,8 +215,8 @@ impl RegistryValue {
 			RegistryValue::Binary(b) => b.len(),
 			RegistryValue::Dword(_) => std::mem::size_of::<u32>(),
 			RegistryValue::Qword(_) => std::mem::size_of::<u64>(),
-			RegistryValue::Sz(s) => {
-				(s.chars().count() + 1) * std::mem::size_of::<u16>() // including terminating null
+			RegistryValue::Sz(u16) => {
+				(u16.len() + 1) * std::mem::size_of::<u16>() // including terminating null
 			},
 			RegistryValue::None => 0,
 		}

@@ -7,9 +7,9 @@ use crate::co;
 use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::{comctl32, kernel32, ole32, user32};
 use crate::handles::{HINSTANCE, HWND};
-use crate::internal_defs::{const_void, mut_void, parse_multi_z_str};
+use crate::internal_defs::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
 use crate::structs as s;
-use crate::Utf16;
+use crate::WString;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
@@ -109,7 +109,7 @@ pub fn DispatchMessage(lpMsg: &s::MSG) -> isize {
 /// }
 /// ```
 pub fn GetEnvironmentStrings() -> Result<HashMap<String, String>, co::ERROR> {
-	match ptr_as_opt!(kernel32::GetEnvironmentStringsW()) {
+	match ptr_as_opt(unsafe { kernel32::GetEnvironmentStringsW() }) {
 		None => Err(GetLastError()),
 		Some(p) => {
 			let vecEnvStrs = parse_multi_z_str(p as *const u16);
@@ -118,7 +118,7 @@ pub fn GetEnvironmentStrings() -> Result<HashMap<String, String>, co::ERROR> {
 			let mut map = HashMap::with_capacity(vecEnvStrs.len());
 			for envStr in vecEnvStrs {
 				let pair: Vec<&str> = envStr.split("=").collect();
-				map.insert(String::from(pair[0]), String::from(pair[1]));
+				map.insert(pair[0].to_owned(), pair[1].to_owned());
 			}
 			Ok(map)
 		},
@@ -330,6 +330,14 @@ pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32 {
 	unsafe { kernel32::MulDiv(nNumber, nNumerator, nDenominator) }
 }
 
+/// [`OutputDebugString`](https://docs.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
+/// function.
+pub fn OutputDebugString(lpOutputString: &str) {
+	unsafe {
+		kernel32::OutputDebugStringW(WString::from_str(lpOutputString).as_ptr())
+	}
+}
+
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
 /// function.
 pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
@@ -410,7 +418,7 @@ pub fn UnregisterClass(
 {
 	match unsafe {
 		user32::UnregisterClassW(
-			Utf16::from_str(lpClassName).as_ptr(),
+			WString::from_str(lpClassName).as_ptr(),
 			hInstance.as_ptr(),
 		)
 	} {

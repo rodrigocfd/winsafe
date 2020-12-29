@@ -1,6 +1,6 @@
 use crate::co;
 use crate::msg::macros::{lparam_to_ref, ref_to_lparam};
-use crate::msg::{LResult, WmAny};
+use crate::msg::Wm;
 use crate::structs as s;
 
 empty_msg! { LvmGetHeader, co::WM::LVM_GETHEADER,
@@ -20,7 +20,7 @@ pub struct LvmInsertColumn<'a, 'b> {
 	pub lvcolumn: &'b s::LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> From<LvmInsertColumn<'a, 'b>> for WmAny {
+impl<'a, 'b> From<LvmInsertColumn<'a, 'b>> for Wm {
 	fn from(p: LvmInsertColumn) -> Self {
 		Self {
 			msg_id: co::WM::LVM_INSERTCOLUMN,
@@ -30,8 +30,8 @@ impl<'a, 'b> From<LvmInsertColumn<'a, 'b>> for WmAny {
 	}
 }
 
-impl<'a, 'b> From<WmAny> for LvmInsertColumn<'a, 'b> {
-	fn from(p: WmAny) -> Self {
+impl<'a, 'b> From<Wm> for LvmInsertColumn<'a, 'b> {
+	fn from(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 			lvcolumn: lparam_to_ref(p),
@@ -39,15 +39,13 @@ impl<'a, 'b> From<WmAny> for LvmInsertColumn<'a, 'b> {
 	}
 }
 
-msg_lresult_zero!(LvmInsertColumn, 'a, 'b);
-
 /// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
 pub struct LvmInsertItem<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
 
-impl<'a, 'b> From<LvmInsertItem<'a, 'b>> for WmAny {
+impl<'a, 'b> From<LvmInsertItem<'a, 'b>> for Wm {
 	fn from(p: LvmInsertItem) -> Self {
 		Self {
 			msg_id: co::WM::LVM_INSERTITEM,
@@ -57,15 +55,13 @@ impl<'a, 'b> From<LvmInsertItem<'a, 'b>> for WmAny {
 	}
 }
 
-impl<'a, 'b> From<WmAny> for LvmInsertItem<'a, 'b> {
-	fn from(p: WmAny) -> Self {
+impl<'a, 'b> From<Wm> for LvmInsertItem<'a, 'b> {
+	fn from(p: Wm) -> Self {
 		Self {
 			lvitem: lparam_to_ref(p),
 		}
 	}
 }
-
-msg_lresult_zero!(LvmInsertItem, 'a, 'b);
 
 /// [`LVM_ISITEMVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
 /// message parameters.
@@ -73,7 +69,7 @@ pub struct LvmIsItemVisible {
 	pub index: i32,
 }
 
-impl From<LvmIsItemVisible> for WmAny {
+impl From<LvmIsItemVisible> for Wm {
 	fn from(p: LvmIsItemVisible) -> Self {
 		Self {
 			msg_id: co::WM::LVM_ISITEMVISIBLE,
@@ -83,15 +79,13 @@ impl From<LvmIsItemVisible> for WmAny {
 	}
 }
 
-impl From<WmAny> for LvmIsItemVisible {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for LvmIsItemVisible {
+	fn from(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 		}
 	}
 }
-
-msg_lresult_zero!(LvmIsItemVisible);
 
 /// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
@@ -100,7 +94,7 @@ pub struct LvmScroll {
 	pub vertical: i32,
 }
 
-impl From<LvmScroll> for WmAny {
+impl From<LvmScroll> for Wm {
 	fn from(p: LvmScroll) -> Self {
 		Self {
 			msg_id: co::WM::LVM_SCROLL,
@@ -110,16 +104,14 @@ impl From<LvmScroll> for WmAny {
 	}
 }
 
-impl From<WmAny> for LvmScroll {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for LvmScroll {
+	fn from(p: Wm) -> Self {
 		Self {
 			horizontal: p.wparam as i32,
 			vertical: p.lparam as i32,
 		}
 	}
 }
-
-msg_lresult_zero!(LvmScroll);
 
 /// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
@@ -128,7 +120,7 @@ pub struct LvmSetColumn<'a, 'b> {
 	pub lvcolumn: &'b s::LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> From<LvmSetColumn<'a, 'b>> for WmAny {
+impl<'a, 'b> From<LvmSetColumn<'a, 'b>> for Wm {
 	fn from(p: LvmSetColumn) -> Self {
 		Self {
 			msg_id: co::WM::LVM_SETCOLUMN,
@@ -138,8 +130,8 @@ impl<'a, 'b> From<LvmSetColumn<'a, 'b>> for WmAny {
 	}
 }
 
-impl<'a, 'b> From<WmAny> for LvmSetColumn<'a, 'b> {
-	fn from(p: WmAny) -> Self {
+impl<'a, 'b> From<Wm> for LvmSetColumn<'a, 'b> {
+	fn from(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 			lvcolumn: lparam_to_ref(p),
@@ -147,15 +139,13 @@ impl<'a, 'b> From<WmAny> for LvmSetColumn<'a, 'b> {
 	}
 }
 
-msg_lresult_zero!(LvmSetColumn, 'a, 'b);
-
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
 pub struct LvmSetItem<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
 
-impl<'a, 'b> From<LvmSetItem<'a, 'b>> for WmAny {
+impl<'a, 'b> From<LvmSetItem<'a, 'b>> for Wm {
 	fn from(p: LvmSetItem) -> Self {
 		Self {
 			msg_id: co::WM::LVM_SETITEM,
@@ -165,15 +155,13 @@ impl<'a, 'b> From<LvmSetItem<'a, 'b>> for WmAny {
 	}
 }
 
-impl<'a, 'b> From<WmAny> for LvmSetItem<'a, 'b> {
-	fn from(p: WmAny) -> Self {
+impl<'a, 'b> From<Wm> for LvmSetItem<'a, 'b> {
+	fn from(p: Wm) -> Self {
 		Self {
 			lvitem: lparam_to_ref(p),
 		}
 	}
 }
-
-msg_lresult_zero!(LvmSetItem, 'a, 'b);
 
 /// [`LVM_SETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
 /// message parameters.
@@ -182,7 +170,7 @@ pub struct LvmSetItemText<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
 
-impl<'a, 'b> From<LvmSetItemText<'a, 'b>> for WmAny {
+impl<'a, 'b> From<LvmSetItemText<'a, 'b>> for Wm {
 	fn from(p: LvmSetItemText) -> Self {
 		Self {
 			msg_id: co::WM::LVM_SETITEMTEXT,
@@ -192,8 +180,8 @@ impl<'a, 'b> From<LvmSetItemText<'a, 'b>> for WmAny {
 	}
 }
 
-impl<'a, 'b> From<WmAny> for LvmSetItemText<'a, 'b> {
-	fn from(p: WmAny) -> Self {
+impl<'a, 'b> From<Wm> for LvmSetItemText<'a, 'b> {
+	fn from(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 			lvitem: lparam_to_ref(p),
@@ -201,16 +189,13 @@ impl<'a, 'b> From<WmAny> for LvmSetItemText<'a, 'b> {
 	}
 }
 
-msg_lresult_zero!(LvmSetItemText, 'a, 'b);
-
 /// [`LVM_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-update)
 /// message parameters.
-
 pub struct LvmUpdate {
 	pub index: i32,
 }
 
-impl From<LvmUpdate> for WmAny {
+impl From<LvmUpdate> for Wm {
 	fn from(p: LvmUpdate) -> Self {
 		Self {
 			msg_id: co::WM::LVM_UPDATE,
@@ -220,12 +205,10 @@ impl From<LvmUpdate> for WmAny {
 	}
 }
 
-impl From<WmAny> for LvmUpdate {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for LvmUpdate {
+	fn from(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 		}
 	}
 }
-
-msg_lresult_zero!(LvmUpdate);

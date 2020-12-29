@@ -8,7 +8,7 @@ pub fn run_loop(hwnd: HWND, haccel: Option<HACCEL>) -> Result<i32, co::ERROR> {
 		let mut msg = MSG::default();
 		if !GetMessage(&mut msg, None, 0, 0)? {
 			// WM_QUIT was sent, gracefully terminate the program.
-			// The wParam has the program exit code.
+			// wParam has the program exit code.
 			// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
 			return Ok(msg.wParam as i32);
 		}

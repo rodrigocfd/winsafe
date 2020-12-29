@@ -52,15 +52,15 @@
 //!
 //! String pointer fields are also private, and can be retrieved using a getter
 //! method with the same field name. They can be set through a setter method,
-//! which often requires a buddy [`Utf16`](crate::Utf16) buffer:
+//! which often requires a buddy [`WString`](crate::WString) buffer:
 //!
 //! ```rust,ignore
-//! use winsafe::{Utf16, WNDCLASSEX};
+//! use winsafe::{WNDCLASSEX, WString};
 //!
-//! let mut wcx = w::WNDCLASSEX::default(); // cbSize automatically set
+//! let mut wcx = WNDCLASSEX::default(); // cbSize automatically set
 //! println!("Class name: {}", wcx.lpszClassName()); // initially an empty string
 //!
-//! let buf = Utf16::from_str("CLASS_NAME");
+//! let buf = WString::from_str("CLASS_NAME");
 //! wcx.set_lpszClassName(&buf);
 //! ```
 //!
@@ -136,19 +136,16 @@
 //!
 //! However, there are cases where a string conversion is still needed, like
 //! when dealing with native Win32 structs. In such cases, you can use the
-//! [`Utf16`](crate::Utf16) struct, which is also capable of working as a buffer
-//! to receive text from Win32 calls.
+//! [`WString`](crate::WString) struct, which is also capable of working as a
+//! buffer to receive text from Win32 calls.
 
 #[macro_use]
 pub mod co;
 
 mod ffi;
-
-pub mod gui;
-
-#[macro_use]
 mod internal_defs;
 
+pub mod gui;
 pub mod msg;
 
 mod aliases;
@@ -157,7 +154,7 @@ mod enums;
 mod funcs;
 mod handles;
 mod structs;
-mod utf16;
+mod w_string;
 
 pub use aliases::*;
 pub use com::*;
@@ -165,4 +162,4 @@ pub use enums::*;
 pub use funcs::*;
 pub use handles::*;
 pub use structs::*;
-pub use utf16::Utf16;
+pub use w_string::WString;

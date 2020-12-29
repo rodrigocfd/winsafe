@@ -5,20 +5,20 @@ use crate::ffi::kernel32;
 
 /// Stores a `Vec<u16>` buffer for an
 /// [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
-/// string natively used by Windows.
+/// wide string natively used by Windows.
 ///
 /// Performs UTF-8 conversions and can be used as a buffer to low-level Win32
 /// functions.
 ///
 /// See an example in [`HWND::GetWindowText`](crate::HWND::GetWindowText).
-pub struct Utf16 {
+pub struct WString {
 	char_vec: Option<Vec<u16>>,
 }
 
-impl Utf16 {
+impl WString {
 	/// Creates a new UTF-16 string from an optional `&str`, and stores it
 	/// internally. If `s` is null, a null pointer will be stored.
-	pub fn from_opt_str(val: Option<&str>) -> Utf16 {
+	pub fn from_opt_str(val: Option<&str>) -> WString {
 		match val {
 			Some(val) => Self::from_str(val),
 			None => Self::new(),
@@ -27,7 +27,7 @@ impl Utf16 {
 
 	/// Creates a new UTF-16 string from an ordinary `&str`, and stores it
 	/// internally.
-	pub fn from_str(val: &str) -> Utf16 {
+	pub fn from_str(val: &str) -> WString {
 		Self {
 			char_vec: Some(
 				OsStr::new(val)
@@ -40,7 +40,7 @@ impl Utf16 {
 
 	/// Creates a new UTF-16 string by copying from a non-null-terminated buffer,
 	/// specifying the number of existing chars.
-	pub fn from_utf16_nchars(src: *const u16, num_chars: usize) -> Utf16 {
+	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> WString {
 		if src.is_null() {
 			Self::new()
 		} else {
@@ -60,22 +60,22 @@ impl Utf16 {
 	}
 
 	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
-	pub fn from_utf16_nullt(src: *const u16) -> Utf16 {
+	pub fn from_wchars_nullt(src: *const u16) -> WString {
 		if src.is_null() {
 			Self::new()
 		} else {
 			let num_chars = unsafe { kernel32::lstrlenW(src) as usize };
-			Self::from_utf16_nchars(src, num_chars)
+			Self::from_wchars_count(src, num_chars)
 		}
 	}
 
 	/// Creates a new UTF-16 string by copying from a slice.
-	pub fn from_utf16_slice(src: &[u16]) -> Utf16 {
-		Self::from_utf16_nchars(&src[0], src.len())
+	pub fn from_wchars_slice(src: &[u16]) -> WString {
+		Self::from_wchars_count(&src[0], src.len())
 	}
 
 	/// Creates a new, empty UTF-16 buffer.
-	pub fn new() -> Utf16 {
+	pub fn new() -> WString {
 		Self {
 			char_vec: None,
 		}
@@ -83,7 +83,7 @@ impl Utf16 {
 
 	/// Creates a new UTF-16 buffer allocated with an specific length. All UTF-16
 	/// chars will be set to zero.
-	pub fn new_alloc_buffer(num_chars: usize) -> Utf16 {
+	pub fn new_alloc_buffer(num_chars: usize) -> WString {
 		let mut me = Self::new();
 		me.realloc_buffer(num_chars);
 		me
@@ -99,7 +99,7 @@ impl Utf16 {
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self.char_vec.as_mut() {
 			Some(vec_ref) => vec_ref.as_mut_ptr(),
-			None => panic!("Trying to use an unallocated Utf16 buffer."),
+			None => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
 
@@ -107,7 +107,7 @@ impl Utf16 {
 	/// to be passed to native Win32 functions.
 	///
 	/// **Note:** Returns a null pointer if the buffer wasn't previously
-	/// allocated. Make sure the `Utf16` object outlives the function call,
+	/// allocated. Make sure the `WString` object outlives the function call,
 	/// otherwise it will point to an invalid memory location.
 	pub unsafe fn as_ptr(&self) -> *const u16 {
 		match self.char_vec.as_ref() {
@@ -126,7 +126,7 @@ impl Utf16 {
 	pub fn as_mut_slice(&mut self) -> &mut [u16] {
 		match self.char_vec.as_mut() {
 			Some(vec_ref) => &mut vec_ref[..],
-			None => panic!("Trying to use an unallocated Utf16 buffer."),
+			None => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
 
@@ -134,13 +134,13 @@ impl Utf16 {
 	///
 	/// # Panics
 	///
-	/// Panics if the buffer wasn't previously allocated. Make sure the `Utf16`
+	/// Panics if the buffer wasn't previously allocated. Make sure the `WString`
 	/// object outlives the function call, otherwise it will point to an invalid
 	/// memory location.
 	pub fn as_slice(&mut self) -> &[u16] {
 		match self.char_vec.as_ref() {
 			Some(vec_ref) => &vec_ref[..],
-			None => panic!("Trying to use an unallocated Utf16 buffer."),
+			None => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
 

@@ -3,11 +3,25 @@ use std::ffi::c_void;
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::{HBRUSH, HDC, HDROP, HMENU, HRGN, HWND};
+use crate::handles::{HDC, HDROP, HMENU, HRGN, HWND};
 use crate::internal_defs::FAPPCOMMAND_MASK;
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
-use crate::msg::{LResult, WmAny};
-use crate::structs::{CREATESTRUCT, RECT};
+use crate::structs::{CREATESTRUCT, NMHDR, RECT};
+
+/// Generic
+/// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
+/// parameters.
+#[derive(Copy, Clone)]
+pub struct Wm {
+	/// The [`co::WM`](crate::co::WM) constant that identifies the window message.
+	pub msg_id: co::WM,
+	/// First message parameter.
+	pub wparam: usize,
+	/// Second message parameter.
+	pub lparam: isize,
+}
+
+//------------------------------------------------------------------------------
 
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 /// message parameters.
@@ -17,7 +31,7 @@ pub struct WmActivate {
 	pub hwnd: HWND,
 }
 
-impl From<WmActivate> for WmAny {
+impl From<WmActivate> for Wm {
 	fn from(p: WmActivate) -> Self {
 		Self {
 			msg_id: co::WM::ACTIVATE,
@@ -27,8 +41,8 @@ impl From<WmActivate> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmActivate {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmActivate {
+	fn from(p: Wm) -> Self {
 		Self {
 			event: co::WA::from(LOWORD(p.wparam as u32)),
 			is_minimized: HIWORD(p.wparam as u32) != 0,
@@ -37,7 +51,7 @@ impl From<WmAny> for WmActivate {
 	}
 }
 
-msg_lresult_zero!(WmActivate);
+//------------------------------------------------------------------------------
 
 /// [`WM_ACTIVATEAPP`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
 /// message parameters.
@@ -46,7 +60,7 @@ pub struct WmActivateApp {
 	pub thread_id: u32,
 }
 
-impl From<WmActivateApp> for WmAny {
+impl From<WmActivateApp> for Wm {
 	fn from(p: WmActivateApp) -> Self {
 		Self {
 			msg_id: co::WM::ACTIVATEAPP,
@@ -56,8 +70,8 @@ impl From<WmActivateApp> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmActivateApp {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmActivateApp {
+	fn from(p: Wm) -> Self {
 		Self {
 			is_being_activated: p.wparam != 0,
 			thread_id: p.lparam as u32,
@@ -65,7 +79,7 @@ impl From<WmAny> for WmActivateApp {
 	}
 }
 
-msg_lresult_zero!(WmActivateApp);
+//------------------------------------------------------------------------------
 
 /// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 /// message parameters.
@@ -76,7 +90,7 @@ pub struct WmAppCommand {
 	pub keys: co::MK,
 }
 
-impl From<WmAppCommand> for WmAny {
+impl From<WmAppCommand> for Wm {
 	fn from(p: WmAppCommand) -> Self {
 		Self {
 			msg_id: co::WM::APPCOMMAND,
@@ -86,8 +100,8 @@ impl From<WmAppCommand> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmAppCommand {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmAppCommand {
+	fn from(p: Wm) -> Self {
 		Self {
 			hwnd_owner: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
 			app_command: co::APPCOMMAND::from(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
@@ -97,17 +111,14 @@ impl From<WmAny> for WmAppCommand {
 	}
 }
 
-impl WmAppCommand {
-	/// Generates the message result value.
-	pub fn lresult(&self) -> LResult {
-		LResult(1) // TRUE
-	}
-}
+//------------------------------------------------------------------------------
 
 empty_msg! { WmClose, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 	/// message, which has no parameters.
 }
+
+//------------------------------------------------------------------------------
 
 /// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
 /// message parameters.
@@ -120,7 +131,7 @@ pub struct WmCommand {
 	pub ctrl_hwnd: HWND,
 }
 
-impl From<WmCommand> for WmAny {
+impl From<WmCommand> for Wm {
 	fn from(p: WmCommand) -> Self {
 		Self {
 			msg_id: co::WM::COMMAND,
@@ -130,8 +141,8 @@ impl From<WmCommand> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmCommand {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmCommand {
+	fn from(p: Wm) -> Self {
 		Self {
 			code: co::CMD::from(HIWORD(p.wparam as u32)),
 			ctrl_id: LOWORD(p.wparam as u32),
@@ -140,7 +151,7 @@ impl From<WmAny> for WmCommand {
 	}
 }
 
-msg_lresult_zero!(WmCommand);
+//------------------------------------------------------------------------------
 
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
@@ -148,7 +159,7 @@ pub struct WmCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for WmAny {
+impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for Wm {
 	fn from(p: WmCreate) -> Self {
 		Self {
 			msg_id: co::WM::CREATE,
@@ -158,15 +169,15 @@ impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for WmAny {
 	}
 }
 
-impl<'a, 'b, 'c> From<WmAny> for WmCreate<'a, 'b, 'c> {
-	fn from(p: WmAny) -> Self {
+impl<'a, 'b, 'c> From<Wm> for WmCreate<'a, 'b, 'c> {
+	fn from(p: Wm) -> Self {
 		Self {
 			createstruct: lparam_to_ref(p),
 		}
 	}
 }
 
-msg_lresult_zero!(WmCreate, 'a, 'b, 'c);
+//------------------------------------------------------------------------------
 
 ctl_color_msg! { WmCtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
@@ -198,10 +209,14 @@ ctl_color_msg! { WmCtlColorStatic, co::WM::CTLCOLORSTATIC,
 	/// message parameters.
 }
 
+//------------------------------------------------------------------------------
+
 empty_msg! { WmDestroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 	/// message, which has no parameters.
 }
+
+//------------------------------------------------------------------------------
 
 /// [`WM_DROPFILES`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 /// message parameters.
@@ -209,7 +224,7 @@ pub struct WmDropFiles {
 	pub hdrop: HDROP,
 }
 
-impl From<WmDropFiles> for WmAny {
+impl From<WmDropFiles> for Wm {
 	fn from(p: WmDropFiles) -> Self {
 		Self {
 			msg_id: co::WM::DROPFILES,
@@ -219,15 +234,15 @@ impl From<WmDropFiles> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmDropFiles {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmDropFiles {
+	fn from(p: Wm) -> Self {
 		Self {
 			hdrop: unsafe { HDROP::from_ptr(p.wparam as *mut c_void) },
 		}
 	}
 }
 
-msg_lresult_zero!(WmDropFiles);
+//------------------------------------------------------------------------------
 
 /// [`WM_ENDSESSION`](https://docs.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 /// message parameters.
@@ -236,7 +251,7 @@ pub struct WmEndSession {
 	pub event: co::ENDSESSION,
 }
 
-impl From<WmEndSession> for WmAny {
+impl From<WmEndSession> for Wm {
 	fn from(p: WmEndSession) -> Self {
 		Self {
 			msg_id: co::WM::ENDSESSION,
@@ -246,8 +261,8 @@ impl From<WmEndSession> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmEndSession {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmEndSession {
+	fn from(p: Wm) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
 			event: co::ENDSESSION::from(p.lparam as u32),
@@ -255,7 +270,7 @@ impl From<WmAny> for WmEndSession {
 	}
 }
 
-msg_lresult_zero!(WmEndSession);
+//------------------------------------------------------------------------------
 
 /// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
@@ -264,7 +279,7 @@ pub struct WmInitDialog {
 	pub additional_data: isize,
 }
 
-impl From<WmInitDialog> for WmAny {
+impl From<WmInitDialog> for Wm {
 	fn from(p: WmInitDialog) -> Self {
 		Self {
 			msg_id: co::WM::INITDIALOG,
@@ -274,8 +289,8 @@ impl From<WmInitDialog> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmInitDialog {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmInitDialog {
+	fn from(p: Wm) -> Self {
 		Self {
 			hwnd_focus: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
 			additional_data: p.lparam,
@@ -283,11 +298,7 @@ impl From<WmAny> for WmInitDialog {
 	}
 }
 
-impl WmInitDialog {
-	pub fn lresult(&self, val: bool) -> LResult {
-		LResult(val as isize)
-	}
-}
+//------------------------------------------------------------------------------
 
 /// [`WM_INITMENUPOPUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
 /// message parameters.
@@ -297,7 +308,7 @@ pub struct WmInitMenuPopup {
 	pub is_window_menu: bool,
 }
 
-impl From<WmInitMenuPopup> for WmAny {
+impl From<WmInitMenuPopup> for Wm {
 	fn from(p: WmInitMenuPopup) -> Self {
 		Self {
 			msg_id: co::WM::INITMENUPOPUP,
@@ -307,8 +318,8 @@ impl From<WmInitMenuPopup> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmInitMenuPopup {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmInitMenuPopup {
+	fn from(p: Wm) -> Self {
 		Self {
 			hmenu: unsafe { HMENU::from_ptr(p.wparam as *mut c_void) },
 			item_pos: LOWORD(p.lparam as u32),
@@ -317,7 +328,7 @@ impl From<WmAny> for WmInitMenuPopup {
 	}
 }
 
-msg_lresult_zero!(WmInitMenuPopup);
+//------------------------------------------------------------------------------
 
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
@@ -325,7 +336,7 @@ pub struct WmNcCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for WmAny {
+impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for Wm {
 	fn from(p: WmNcCreate) -> Self {
 		Self {
 			msg_id: co::WM::NCCREATE,
@@ -335,24 +346,22 @@ impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for WmAny {
 	}
 }
 
-impl<'a, 'b, 'c> From<WmAny> for WmNcCreate<'a, 'b, 'c> {
-	fn from(p: WmAny) -> Self {
+impl<'a, 'b, 'c> From<Wm> for WmNcCreate<'a, 'b, 'c> {
+	fn from(p: Wm) -> Self {
 		Self {
 			createstruct: lparam_to_ref(p),
 		}
 	}
 }
 
-impl<'a, 'b, 'c> WmNcCreate<'a, 'b, 'c> {
-	pub fn lresult(&self, val: bool) -> LResult {
-		LResult(val as isize)
-	}
-}
+//------------------------------------------------------------------------------
 
 empty_msg! { WmNcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 	/// message, which has no parameters.
 }
+
+//------------------------------------------------------------------------------
 
 /// [`WM_NCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 /// message parameters.
@@ -360,7 +369,7 @@ pub struct WmNcPaint {
 	pub updated_hrgn: HRGN,
 }
 
-impl From<WmNcPaint> for WmAny {
+impl From<WmNcPaint> for Wm {
 	fn from(p: WmNcPaint) -> Self {
 		Self {
 			msg_id: co::WM::NCPAINT,
@@ -370,25 +379,66 @@ impl From<WmNcPaint> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmNcPaint {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmNcPaint {
+	fn from(p: Wm) -> Self {
 		Self {
 			updated_hrgn: unsafe { HRGN::from_ptr(p.wparam as *mut c_void) },
 		}
 	}
 }
 
-msg_lresult_zero!(WmNcPaint);
+//------------------------------------------------------------------------------
 
 empty_msg! { WmNull, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 	/// message, which has no parameters.
 }
 
+//------------------------------------------------------------------------------
+
+/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
+/// message parameters.
+#[derive(Copy, Clone)]
+pub struct WmNotify<'a> {
+	pub nmhdr: &'a NMHDR,
+}
+
+impl<'a> From<WmNotify<'a>> for Wm {
+	fn from(p: WmNotify) -> Self {
+		Self {
+			msg_id: co::WM::NOTIFY,
+			wparam: unsafe { p.nmhdr.hwndFrom.as_ptr() } as usize,
+			lparam: p.nmhdr as *const NMHDR as isize,
+		}
+	}
+}
+
+impl<'a> From<Wm> for WmNotify<'a> {
+	fn from(p: Wm) -> Self {
+		Self {
+			nmhdr: unsafe { (p.lparam as *const NMHDR).as_ref() }.unwrap(),
+		}
+	}
+}
+
+impl<'a> WmNotify<'a> {
+	/// Casts the `NMHDR` reference into a derived struct.
+	///
+	/// You should always prefer the specific notification handlers, which
+	/// perform this conversion for you.
+	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
+		(self.nmhdr as *const NMHDR as *const T).as_ref().unwrap()
+	}
+}
+
+//------------------------------------------------------------------------------
+
 empty_msg! { WmPaint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 	/// message, which has no parameters.
 }
+
+//------------------------------------------------------------------------------
 
 /// [`WM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 /// message parameters.
@@ -396,7 +446,7 @@ pub struct WmSetFocus {
 	pub hwnd_losing_focus: HWND,
 }
 
-impl From<WmSetFocus> for WmAny {
+impl From<WmSetFocus> for Wm {
 	fn from(p: WmSetFocus) -> Self {
 		Self {
 			msg_id: co::WM::SETFOCUS,
@@ -406,15 +456,15 @@ impl From<WmSetFocus> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmSetFocus {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmSetFocus {
+	fn from(p: Wm) -> Self {
 		Self {
 			hwnd_losing_focus: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
 		}
 	}
 }
 
-msg_lresult_zero!(WmSetFocus);
+//------------------------------------------------------------------------------
 
 /// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 /// message parameters.
@@ -424,7 +474,7 @@ pub struct WmSize {
 	pub height: u16,
 }
 
-impl From<WmSize> for WmAny {
+impl From<WmSize> for Wm {
 	fn from(p: WmSize) -> Self {
 		Self {
 			msg_id: co::WM::SIZE,
@@ -434,8 +484,8 @@ impl From<WmSize> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmSize {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmSize {
+	fn from(p: Wm) -> Self {
 		Self {
 			request: co::SIZE::from(p.wparam as i32),
 			width: LOWORD(p.lparam as u32),
@@ -444,7 +494,7 @@ impl From<WmAny> for WmSize {
 	}
 }
 
-msg_lresult_zero!(WmSize);
+//------------------------------------------------------------------------------
 
 /// [`WM_SIZING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
 /// message parameters.
@@ -453,7 +503,7 @@ pub struct WmSizing<'a> {
 	pub coords: &'a mut RECT,
 }
 
-impl<'a> From<WmSizing<'a>> for WmAny {
+impl<'a> From<WmSizing<'a>> for Wm {
 	fn from(p: WmSizing) -> Self {
 		Self {
 			msg_id: co::WM::SIZING,
@@ -463,8 +513,8 @@ impl<'a> From<WmSizing<'a>> for WmAny {
 	}
 }
 
-impl<'a> From<WmAny> for WmSizing<'a> {
-	fn from(p: WmAny) -> Self {
+impl<'a> From<Wm> for WmSizing<'a> {
+	fn from(p: Wm) -> Self {
 		Self {
 			window_edge: co::WMSZ::from(p.wparam as i32),
 			coords: lparam_to_mut_ref(p),
@@ -472,12 +522,7 @@ impl<'a> From<WmAny> for WmSizing<'a> {
 	}
 }
 
-impl<'a> WmSizing<'a> {
-	/// Generates the message result value.
-	pub fn lresult(&self) -> LResult {
-		LResult(1) // TRUE
-	}
-}
+//------------------------------------------------------------------------------
 
 /// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 /// message parameters.
@@ -486,7 +531,7 @@ pub struct WmTimer {
 	pub timer_proc: Option<TIMERPROC>,
 }
 
-impl From<WmTimer> for WmAny {
+impl From<WmTimer> for Wm {
 	fn from(p: WmTimer) -> Self {
 		Self {
 			msg_id: co::WM::TIMER,
@@ -499,8 +544,8 @@ impl From<WmTimer> for WmAny {
 	}
 }
 
-impl From<WmAny> for WmTimer {
-	fn from(p: WmAny) -> Self {
+impl From<Wm> for WmTimer {
+	fn from(p: Wm) -> Self {
 		Self {
 			timer_id: p.wparam as u32,
 			timer_proc: match p.lparam {
@@ -510,5 +555,3 @@ impl From<WmAny> for WmTimer {
 		}
 	}
 }
-
-msg_lresult_zero!(WmTimer);

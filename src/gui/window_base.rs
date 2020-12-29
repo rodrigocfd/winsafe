@@ -6,14 +6,23 @@ use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::events::{Events, ProcessResult};
 use crate::handles::{HINSTANCE, HWND};
 use crate::internal_defs::str_dyn_error;
-use crate::msg::{Wm, WmAny};
+use crate::msg::{Wm, WmNcCreate};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
+use crate::WString;
 
 /// Base to all ordinary windows.
 #[derive(Clone)]
 pub struct WindowBase {
 	hwnd: HWND,
 	events: Events,
+}
+
+impl Drop for WindowBase {
+	fn drop(&mut self) {
+		if !self.hwnd.is_null() {
+			self.hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+		}
+	}
 }
 
 impl WindowBase {
@@ -59,18 +68,23 @@ impl WindowBase {
 		class_name: &str,
 		title: Option<&str>,
 		hmenu: IdMenu,
-		pos: POINT, sz: SIZE,
-		ex_styles: co::WS_EX, styles: co::WS) -> Result<HWND, Box<dyn Error>>
+		pos: POINT,
+		sz: SIZE,
+		ex_styles: co::WS_EX,
+		styles: co::WS) -> Result<HWND, Box<dyn Error>>
 	{
-		if self.hwnd.is_null() {
+		if !self.hwnd.is_null() {
 			return Err(str_dyn_error("Cannot create a window twice."));
 		}
 
-		match HWND::CreateWindowEx(ex_styles,
-			AtomStr::Str(String::from(class_name)), title,
-			styles, pos.x, pos.y, sz.cx, sz.cy, parent, hmenu, hinst,
-			Some(self as *const WindowBase as isize)) // pass pointer to self
-		{
+		match HWND::CreateWindowEx(
+			ex_styles,
+			AtomStr::Str(WString::from_str(class_name)),
+			title, styles,
+			pos.x, pos.y, sz.cx, sz.cy,
+			parent, hmenu, hinst,
+			Some(self as *const WindowBase as isize), // pass pointer to self
+		) {
 			Ok(hwnd) => Ok(hwnd), // our hwnd member is set during WM_NCCREATE processing, already set at this point
 			Err(err) => Err(Box::new(err)),
 		}
@@ -78,29 +92,32 @@ impl WindowBase {
 
 	/// Generates a hash string from current fields, so it must called after all
 	/// the fields are set.
-	pub fn generate_wcx_class_name_hash(wcx: &WNDCLASSEX) -> String {
-		format!("WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
-			wcx.style,
-			match wcx.lpfnWndProc {
-				Some(p) => p as usize,
-				None => 0,
-			},
-			wcx.cbClsExtra, wcx.cbWndExtra,
-			wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
-			wcx.lpszMenuName().as_ptr() as usize, wcx.hIconSm,
+	pub fn generate_wcx_class_name_hash(wcx: &WNDCLASSEX) -> WString {
+		WString::from_str(
+			&format!("WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
+				wcx.style,
+				match wcx.lpfnWndProc {
+					Some(p) => p as usize,
+					None => 0,
+				},
+				wcx.cbClsExtra, wcx.cbWndExtra,
+				wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
+				wcx.lpszMenuName().as_ptr() as usize, wcx.hIconSm,
+			),
 		)
 	}
 
 	extern "system" fn window_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
-		let wm_any = WmAny { msg_id: msg, wparam, lparam };
+		let wm_any = Wm { msg_id: msg, wparam, lparam };
 
-		let ptr_self = match wm_any.message() {
-			Wm::NcCreate(wm) => { // first message being handled
-				let ptr_self = wm.createstruct.lpCreateParams as *mut Self;
+		let ptr_self = match msg {
+			co::WM::NCCREATE => { // first message being handled
+				let wm_ncc: WmNcCreate = wm_any.into();
+				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
+				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
 				let ref_self = unsafe { ptr_self.as_mut() }.unwrap();
-				ref_self.hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
 				ref_self.hwnd = hwnd; // store HWND in struct field
 				ptr_self
 			},
@@ -119,13 +136,13 @@ impl WindowBase {
 		let ref_self = unsafe { ptr_self.as_mut() }.unwrap();
 		let maybe_processed = ref_self.events.process_message(wm_any);
 
-		if let Wm::NcDestroy(_) = wm_any.message() { // always check
+		if msg == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 			ref_self.hwnd = unsafe { HWND::null_handle() }; // clear stored HWND
 		}
 
 		match maybe_processed {
-			ProcessResult::HandledWithRet(ret) => ret.into(),
+			ProcessResult::HandledWithRet(res) => res.into(),
 			ProcessResult::HandledWithoutRet => 0,
 			ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any).into(),
 		}

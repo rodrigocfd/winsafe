@@ -8,10 +8,10 @@ use crate::enums::{AtomStr, IdMenu, IdPos};
 use crate::ffi::{comctl32, user32};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
-use crate::internal_defs::{const_void, mut_void};
-use crate::msg::{LResult, WmAny};
+use crate::internal_defs::{const_void, mut_void, ptr_as_opt};
+use crate::msg::Wm;
 use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
-use crate::Utf16;
+use crate::WString;
 
 handle_type! {
 	/// Handle to a
@@ -26,7 +26,9 @@ impl HWND {
 	///
 	/// Must be paired with an [`EndPaint`](crate::HWND::EndPaint) call.
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> Result<HDC, ()> {
-		match ptr_as_opt!(user32::BeginPaint(self.0, mut_void(lpPaint))) {
+		match ptr_as_opt(
+			unsafe { user32::BeginPaint(self.0, mut_void(lpPaint)) }
+		 ) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -46,21 +48,23 @@ impl HWND {
 		hInstance: HINSTANCE,
 		lpParam: Option<isize>
 	) -> Result<HWND, co::ERROR> {
-		match ptr_as_opt!(
-			user32::CreateWindowExW(
-				dwExStyle.into(),
-				lpClassName.MAKEINTRESOURCE(),
-				Utf16::from_opt_str(lpWindowName).as_ptr(),
-				dwStyle.into(),
-				X, Y, nWidth, nHeight,
-				match hWndParent {
-					Some(hParent) => hParent.0,
-					None => std::ptr::null_mut(),
-				},
-				hMenu.as_ptr(),
-				hInstance.as_ptr(),
-				lpParam.unwrap_or_default() as *mut c_void,
-			)
+		match ptr_as_opt(
+			unsafe {
+				user32::CreateWindowExW(
+					dwExStyle.into(),
+					lpClassName.as_ptr(),
+					WString::from_opt_str(lpWindowName).as_ptr(),
+					dwStyle.into(),
+					X, Y, nWidth, nHeight,
+					match hWndParent {
+						Some(hParent) => hParent.0,
+						None => std::ptr::null_mut(),
+					},
+					hMenu.as_ptr(),
+					hInstance.as_ptr(),
+					lpParam.unwrap_or_default() as *mut c_void,
+				)
+			}
 		) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
@@ -69,26 +73,22 @@ impl HWND {
 
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
-	pub fn DefSubclassProc<P: Into<WmAny>>(self, uMsg: P) -> LResult {
-		let wmAny: WmAny = uMsg.into();
+	pub fn DefSubclassProc<P: Into<Wm>>(self, uMsg: P) -> isize {
+		let wmAny: Wm = uMsg.into();
 		unsafe {
-			wmAny.lresult(
-				comctl32::DefSubclassProc(
-					self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
-				),
+			comctl32::DefSubclassProc(
+				self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
 			)
 		}
 	}
 
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
-	pub fn DefWindowProc<P: Into<WmAny>>(self, Msg: P) -> LResult {
-		let wmAny: WmAny = Msg.into();
+	pub fn DefWindowProc<P: Into<Wm>>(self, Msg: P) -> isize {
+		let wmAny: Wm = Msg.into();
 		unsafe {
-			wmAny.lresult(
-				user32::DefWindowProcW(
-					self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
-				),
+			user32::DefWindowProcW(
+				self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
 			)
 		}
 	}
@@ -116,12 +116,14 @@ impl HWND {
 	pub fn FindWindow(
 		lpClassName: &str, lpWindowName: &str) -> Result<HWND, co::ERROR>
 	{
-		match ptr_as_opt!(
-			user32::FindWindowW(
-				Utf16::from_str(lpClassName).as_ptr(),
-				Utf16::from_str(lpWindowName).as_ptr(),
-			)
-		 ) {
+		match ptr_as_opt(
+			unsafe {
+				user32::FindWindowW(
+					WString::from_str(lpClassName).as_ptr(),
+					WString::from_str(lpWindowName).as_ptr(),
+				)
+			}
+		) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
 		}
@@ -130,14 +132,14 @@ impl HWND {
 	/// [`GetAncestor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getancestor)
 	/// method.
 	pub fn GetAncestor(self, gaFlags: co::GA) -> Option<HWND> {
-		ptr_as_opt!(user32::GetAncestor(self.0, gaFlags.into()))
+		ptr_as_opt(unsafe { user32::GetAncestor(self.0, gaFlags.into()) })
 			.map(|p| Self(p))
 	}
 
 	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
 	pub fn GetDC(self) -> Result<HDC, ()> {
-		match ptr_as_opt!(user32::GetDC(self.0)) {
+		match ptr_as_opt(unsafe { user32::GetDC(self.0) }) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -164,7 +166,7 @@ impl HWND {
 	/// [`GetDlgItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitem)
 	/// method.
 	pub fn GetDlgItem(self, nIDDlgItem: i32) -> Result<Option<HWND>, co::ERROR> {
-		match ptr_as_opt!(user32::GetDlgItem(self.0, nIDDlgItem)) {
+		match ptr_as_opt(unsafe { user32::GetDlgItem(self.0, nIDDlgItem) }) {
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no actual window
 				err => Err(err),
@@ -176,14 +178,14 @@ impl HWND {
 	/// [`GetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getfocus)
 	/// static method.
 	pub fn GetFocus() -> Option<HWND> {
-		ptr_as_opt!(user32::GetFocus())
+		ptr_as_opt(unsafe { user32::GetFocus() })
 			.map(|p| Self(p))
 	}
 
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// static method.
 	pub fn GetForegroundWindow() -> Option<HWND> {
-		ptr_as_opt!(user32::GetForegroundWindow())
+		ptr_as_opt(unsafe { user32::GetForegroundWindow() })
 			.map(|p| Self(p))
 	}
 
@@ -192,8 +194,10 @@ impl HWND {
 	pub fn GetNextDlgGroupItem(
 		self, hCtl: HWND, bPrevious: bool) -> Result<HWND, co::ERROR>
 	{
-		match ptr_as_opt!(
-			user32::GetNextDlgGroupItem(self.0, hCtl.0, bPrevious as i32)
+		match ptr_as_opt(
+			unsafe {
+				user32::GetNextDlgGroupItem(self.0, hCtl.0, bPrevious as i32)
+			}
 		) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
@@ -205,8 +209,10 @@ impl HWND {
 	pub fn GetNextDlgTabItem(
 		self, hCtl: HWND, bPrevious: bool) -> Result<HWND, co::ERROR>
 	{
-		match ptr_as_opt!(
-			user32::GetNextDlgTabItem(self.0, hCtl.0, bPrevious as i32)
+		match ptr_as_opt(
+			unsafe {
+				user32::GetNextDlgTabItem(self.0, hCtl.0, bPrevious as i32)
+			}
 		) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),
@@ -216,7 +222,7 @@ impl HWND {
 	/// [`GetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getparent)
 	/// method.
 	pub fn GetParent(self) -> Result<Option<HWND>, co::ERROR> {
-		match ptr_as_opt!(user32::GetParent(self.0)) {
+		match ptr_as_opt(unsafe { user32::GetParent(self.0) }) {
 			Some(p) => Ok(Some(Self(p))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no actual parent
@@ -241,7 +247,7 @@ impl HWND {
 	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
 	/// method.
 	pub fn GetWindow(self, uCmd: co::GW) -> Result<Option<HWND>, co::ERROR> {
-		match ptr_as_opt!(user32::GetWindow(self.0, uCmd.into())) {
+		match ptr_as_opt(unsafe { user32::GetWindow(self.0, uCmd.into()) }) {
 			Some(p) => Ok(Some(Self(p))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no actual window
@@ -253,7 +259,7 @@ impl HWND {
 	/// [`GetWindowDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
 	pub fn GetWindowDC(self) -> Result<HDC, ()> {
-		match ptr_as_opt!(user32::GetWindowDC(self.0)) {
+		match ptr_as_opt(unsafe { user32::GetWindowDC(self.0) }) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -312,16 +318,16 @@ impl HWND {
 	/// This method can be more performant than
 	/// [`GetWindowTextStr`](crate::HWND::GetWindowTextStr) because the buffer
 	/// can be reused, avoiding multiple allocations. However, it has the
-	/// inconvenient of the manual conversion from `Utf16` to `String`.
+	/// inconvenient of the manual conversion from `WString` to `String`.
 	///
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// let mut buf = Utf16::default();
+	/// let mut buf = WString::new();
 	/// my_window.GetWindowText(&mut buf).unwrap();
 	/// println!("Text: {}", buf.to_string());
 	/// ```
-	pub fn GetWindowText(self, buf: &mut Utf16) -> Result<i32, co::ERROR> {
+	pub fn GetWindowText(self, buf: &mut WString) -> Result<i32, co::ERROR> {
 		match self.GetWindowTextLength()? {
 			0 => { // window has no text, simply clear buffer
 				buf.realloc_buffer(0);
@@ -370,7 +376,7 @@ impl HWND {
 	/// println!("Text: {}", text);
 	/// ```
 	pub fn GetWindowTextStr(self) -> Result<String, co::ERROR> {
-		let mut buf = Utf16::new();
+		let mut buf = WString::new();
 		self.GetWindowText(&mut buf)?;
 		Ok(buf.to_string())
 	}
@@ -483,8 +489,8 @@ impl HWND {
 		match unsafe {
 			user32::MessageBoxW(
 				self.0,
-				Utf16::from_str(lpText).as_ptr(),
-				Utf16::from_str(lpCaption).as_ptr(),
+				WString::from_str(lpText).as_ptr(),
+				WString::from_str(lpCaption).as_ptr(),
 				uType.into(),
 			)
 		} {
@@ -495,8 +501,8 @@ impl HWND {
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method.
-	pub fn PostMessage<P: Into<WmAny>>(self, Msg: P) -> Result<(), co::ERROR> {
-		let wmAny: WmAny = Msg.into();
+	pub fn PostMessage<P: Into<Wm>>(self, Msg: P) -> Result<(), co::ERROR> {
+		let wmAny: Wm = Msg.into();
 		match unsafe {
 			user32::PostMessageW(
 				self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
@@ -523,13 +529,11 @@ impl HWND {
 
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
-	pub fn SendMessage<P: Into<WmAny>>(self, Msg: P) -> LResult {
-		let wmAny: WmAny = Msg.into();
+	pub fn SendMessage<P: Into<Wm>>(self, Msg: P) -> isize {
+		let wmAny: Wm = Msg.into();
 		unsafe {
-			wmAny.lresult(
-				user32::SendMessageW(
-					self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
-				),
+			user32::SendMessageW(
+				self.0, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
 			)
 		}
 	}
@@ -537,7 +541,7 @@ impl HWND {
 	/// [`SetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
 	/// method.
 	pub fn SetFocus(self) -> Option<HWND> {
-		ptr_as_opt!(user32::SetFocus(self.0))
+		ptr_as_opt(unsafe { user32::SetFocus(self.0) })
 			.map(|p| Self(p))
 	}
 
@@ -546,7 +550,7 @@ impl HWND {
 	pub fn SetParent(
 		self, hWndNewParent: HWND) -> Result<Option<HWND>, co::ERROR>
 	{
-		match ptr_as_opt!(user32::SetParent(self.0, hWndNewParent.0)) {
+		match ptr_as_opt(unsafe { user32::SetParent(self.0, hWndNewParent.0) }) {
 			Some(p) => Ok(Some(Self(p))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no previous parent
@@ -601,7 +605,7 @@ impl HWND {
 	/// method.
 	pub fn SetWindowText(self, lpString: &str) -> Result<(), co::ERROR> {
 		match unsafe {
-			user32::SetWindowTextW(self.0, Utf16::from_str(lpString).as_ptr())
+			user32::SetWindowTextW(self.0, WString::from_str(lpString).as_ptr())
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),

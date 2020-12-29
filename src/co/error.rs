@@ -4,7 +4,7 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::handles::HLOCAL;
-use crate::Utf16;
+use crate::WString;
 
 const_type_no_display! { ERROR, u32,
 	/// A Windows
@@ -2755,9 +2755,9 @@ impl ERROR {
 						self, GetLastError())
 				},
 				nChars => {
-					let text16 = Utf16::from_utf16_nchars(ptrBuf, nChars as usize);
+					let wText = WString::from_wchars_count(ptrBuf, nChars as usize);
 					match HLOCAL::from_ptr(ptrBuf).LocalFree() {
-						Ok(()) => text16.to_string(),
+						Ok(()) => wText.to_string(),
 						Err(err) => {
 							format!(
 								"LocalFree failed after formatting error {:#06x}: error {:#06x}.",

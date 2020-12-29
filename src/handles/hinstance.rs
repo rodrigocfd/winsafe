@@ -5,9 +5,9 @@ use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HCURSOR, HICON};
-use crate::internal_defs::mut_void;
+use crate::internal_defs::{mut_void, ptr_as_opt};
 use crate::structs::{ATOM, WNDCLASSEX};
-use crate::Utf16;
+use crate::WString;
 
 handle_type! {
 	/// Handle to an
@@ -39,7 +39,7 @@ impl HINSTANCE {
 	{
 		match unsafe {
 			user32::GetClassInfoExW(
-				self.0, Utf16::from_str(lpszClass).as_ptr(), mut_void(lpwcx))
+				self.0, WString::from_str(lpszClass).as_ptr(), mut_void(lpwcx))
 		} {
 			0 => Err(GetLastError()),
 			atom => Ok(ATOM::from(atom as u16)),
@@ -58,8 +58,12 @@ impl HINSTANCE {
 	pub fn GetModuleHandle(
 		lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR>
 	{
-		match ptr_as_opt!(
-			kernel32::GetModuleHandleW(Utf16::from_opt_str(lpModuleName).as_ptr())
+		match ptr_as_opt(
+			unsafe {
+				kernel32::GetModuleHandleW(
+					WString::from_opt_str(lpModuleName).as_ptr()
+				)
+			}
 		) {
 			Some(p) => Ok(unsafe { HINSTANCE::from_ptr(p) }),
 			None => Err(GetLastError()),
@@ -71,8 +75,10 @@ impl HINSTANCE {
 	pub fn LoadAccelerators(
 		self, lpTableName: IdStr) -> Result<HACCEL, co::ERROR>
 	{
-		match ptr_as_opt!(
-			user32::LoadAcceleratorsW(self.0, lpTableName.as_ptr())
+		match ptr_as_opt(
+			unsafe {
+				user32::LoadAcceleratorsW(self.0, lpTableName.as_ptr())
+			}
 		) {
 			Some(p) => Ok(unsafe { HACCEL::from_ptr(p) }),
 			None => Err(GetLastError()),
@@ -93,7 +99,9 @@ impl HINSTANCE {
 	pub fn LoadCursor(
 		self, lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
 	{
-		match ptr_as_opt!(user32::LoadCursorW(self.0, lpCursorName.as_ptr())) {
+		match ptr_as_opt(
+			unsafe { user32::LoadCursorW(self.0, lpCursorName.as_ptr()) }
+		) {
 			Some(p) => Ok(unsafe { HCURSOR::from_ptr(p) }),
 			None => Err(GetLastError()),
 		}
@@ -113,7 +121,9 @@ impl HINSTANCE {
 	pub fn LoadIcon(
 		self, lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
 	{
-		match ptr_as_opt!(user32::LoadIconW(self.0, lpIconName.as_ptr())) {
+		match ptr_as_opt(
+			unsafe { user32::LoadIconW(self.0, lpIconName.as_ptr()) }
+		) {
 			Some(p) => Ok(unsafe { HICON::from_ptr(p) }),
 			None => Err(GetLastError()),
 		}

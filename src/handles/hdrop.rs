@@ -3,7 +3,7 @@
 use crate::ffi::shell32;
 use crate::internal_defs::mut_void;
 use crate::structs::POINT;
-use crate::Utf16;
+use crate::WString;
 
 handle_type! {
 	/// Handle to an
@@ -35,7 +35,7 @@ impl HDROP {
 			return Err(());
 		}
 
-		let mut buf = Utf16::new();
+		let mut wbuf = WString::new();
 		let mut files = Vec::default();
 
 		for i in 0..count {
@@ -46,15 +46,15 @@ impl HDROP {
 				return Err(());
 			}
 
-			buf.realloc_buffer(len as usize);
+			wbuf.realloc_buffer(len as usize);
 			len = unsafe {
-				shell32::DragQueryFileW(self.0, i, buf.as_mut_ptr(), len)
+				shell32::DragQueryFileW(self.0, i, wbuf.as_mut_ptr(), len)
 			};
 			if len == 0 {
 				return Err(());
 			}
 
-			files.push(buf.to_string());
+			files.push(wbuf.to_string());
 		}
 
 		unsafe { shell32::DragFinish(self.0); }

@@ -6,13 +6,18 @@ macro_rules! handle_type {
 	) => {
 		$(#[$attr])*
 		#[repr(C)]
-		#[derive(Copy, Clone, Eq, PartialEq)]
+		#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 		pub struct $name(*mut std::ffi::c_void);
 
 		unsafe impl Send for $name {}
 		unsafe impl Sync for $name {}
 
 		// Formatters.
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{:#010x}", self.0 as usize)
+			}
+		}
 		impl std::fmt::LowerHex for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::LowerHex::fmt(&(self.0 as usize), f)

@@ -7,6 +7,7 @@ use crate::co;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HINSTANCE;
+use crate::internal_defs::ptr_as_opt;
 
 handle_type! {
 	/// Handle to a
@@ -21,13 +22,15 @@ impl HHOOK {
 	pub fn SetWindowsHookEx(idHook: co::WH, lpfn: HOOKPROC,
 		hmod: HINSTANCE, dwThreadId: u32) -> Result<HHOOK, co::ERROR>
 	{
-		match ptr_as_opt!(
-			user32::SetWindowsHookExW(
-				idHook.into(),
-				lpfn as *const c_void,
-				hmod.as_ptr(),
-				dwThreadId,
-			)
+		match ptr_as_opt(
+			unsafe {
+				user32::SetWindowsHookExW(
+					idHook.into(),
+					lpfn as *const c_void,
+					hmod.as_ptr(),
+					dwThreadId,
+				)
+			}
 		) {
 			Some(p) => Ok(Self(p)),
 			None => Err(GetLastError()),

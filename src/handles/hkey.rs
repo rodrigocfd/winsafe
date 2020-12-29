@@ -6,7 +6,7 @@ use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
 use crate::internal_defs::mut_void;
-use crate::Utf16;
+use crate::WString;
 
 handle_type! {
 	/// Handle to a
@@ -22,6 +22,7 @@ handle_type! {
 
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
+		/// Predefined registry key, always open.
 		pub const $name: Self = Self($val as *mut c_void);
 	};
 }
@@ -78,8 +79,8 @@ impl HKEY {
 	pub fn RegGetValue(
 		self, lpSubKey: &str, lpValue: &str) -> Result<RegistryValue, co::ERROR>
 	{
-		let subKey16 = Utf16::from_str(lpSubKey);
-		let valueName16 = Utf16::from_str(lpValue);
+		let wSubKey = WString::from_str(lpSubKey);
+		let wValueName = WString::from_str(lpValue);
 		let mut rawDataType: u32 = 0;
 		let mut dataLen: u32 = 0;
 
@@ -88,8 +89,8 @@ impl HKEY {
 			unsafe {
 				advapi32::RegGetValueW(
 					self.0,
-					subKey16.as_ptr(),
-					valueName16.as_ptr(),
+					wSubKey.as_ptr(),
+					wValueName.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 					&mut rawDataType,
 					std::ptr::null_mut(),
@@ -111,8 +112,8 @@ impl HKEY {
 					unsafe {
 						advapi32::RegGetValueW( // query DWORD value
 							self.0,
-							subKey16.as_ptr(),
-							valueName16.as_ptr(),
+							wSubKey.as_ptr(),
+							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
 							mut_void(&mut dwordBuf),
@@ -131,8 +132,8 @@ impl HKEY {
 					unsafe {
 						advapi32::RegGetValueW( // query QWORD value
 							self.0,
-							subKey16.as_ptr(),
-							valueName16.as_ptr(),
+							wSubKey.as_ptr(),
+							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
 							mut_void(&mut qwordBuf),
@@ -151,8 +152,8 @@ impl HKEY {
 					unsafe {
 						advapi32::RegGetValueW( // query string value
 							self.0,
-							subKey16.as_ptr(),
-							valueName16.as_ptr(),
+							wSubKey.as_ptr(),
+							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
 							szBuf.as_mut_ptr() as *mut c_void,
@@ -161,9 +162,7 @@ impl HKEY {
 					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(
-						RegistryValue::Sz(
-							Utf16::from_utf16_slice(&szBuf).to_string(),
-						),
+						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
 					),
 					err => Err(err),
 				}
@@ -175,8 +174,8 @@ impl HKEY {
 					unsafe {
 						advapi32::RegGetValueW( // query binary value
 							self.0,
-							subKey16.as_ptr(),
-							valueName16.as_ptr(),
+							wSubKey.as_ptr(),
+							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
 							byteBuf.as_mut_ptr() as *mut c_void,
@@ -218,7 +217,7 @@ impl HKEY {
 			unsafe {
 				advapi32::RegOpenKeyExW(
 					self.0,
-					Utf16::from_str(lpSubKey).as_ptr(),
+					WString::from_str(lpSubKey).as_ptr(),
 					ulOptions.into(),
 					samDesired.into(),
 					&mut hKey.0,
@@ -268,7 +267,7 @@ impl HKEY {
 	pub fn RegQueryValueEx(
 		self, lpValueName: &str) -> Result<RegistryValue, co::ERROR>
 	{
-		let valueName16 = Utf16::from_str(lpValueName);
+		let wValueName = WString::from_str(lpValueName);
 		let mut rawDataType: u32 = 0;
 		let mut dataLen: u32 = 0;
 
@@ -277,7 +276,7 @@ impl HKEY {
 			unsafe {
 				advapi32::RegQueryValueExW(
 					self.0,
-					valueName16.as_ptr(),
+					wValueName.as_ptr(),
 					std::ptr::null_mut(),
 					&mut rawDataType,
 					std::ptr::null_mut(),
@@ -299,7 +298,7 @@ impl HKEY {
 					unsafe {
 						advapi32::RegQueryValueExW( // query DWORD value
 							self.0,
-							valueName16.as_ptr(),
+							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
 							&mut dwordBuf as *mut u32 as *mut u8,
@@ -318,7 +317,7 @@ impl HKEY {
 					unsafe {
 						advapi32::RegQueryValueExW( // query QWORD value
 							self.0,
-							valueName16.as_ptr(),
+							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
 							&mut qwordBuf as *mut u64 as *mut u8,
@@ -337,7 +336,7 @@ impl HKEY {
 					unsafe {
 						advapi32::RegQueryValueExW( // query string value
 							self.0,
-							valueName16.as_ptr(),
+							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
 							szBuf.as_mut_ptr() as *mut u8,
@@ -346,9 +345,7 @@ impl HKEY {
 					} as u32
 				) {
 					co::ERROR::SUCCESS => Ok(
-						RegistryValue::Sz(
-							Utf16::from_utf16_slice(&szBuf).to_string(),
-						),
+						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
 					),
 					err => Err(err),
 				}
@@ -360,7 +357,7 @@ impl HKEY {
 					unsafe {
 						advapi32::RegQueryValueExW( // query binary value
 							self.0,
-							valueName16.as_ptr(),
+							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
 							byteBuf.as_mut_ptr(),
@@ -399,8 +396,8 @@ impl HKEY {
 			unsafe {
 				advapi32::RegSetKeyValueW(
 					self.0,
-					Utf16::from_str(lpSubKey).as_ptr(),
-					Utf16::from_str(lpValueName).as_ptr(),
+					WString::from_str(lpSubKey).as_ptr(),
+					WString::from_str(lpValueName).as_ptr(),
 					lpData.reg_type().into(),
 					lpData.as_ptr(),
 					lpData.len() as u32,
@@ -443,7 +440,7 @@ impl HKEY {
 			unsafe {
 				advapi32::RegSetValueExW(
 					self.0,
-					Utf16::from_str(lpValueName).as_ptr(),
+					WString::from_str(lpValueName).as_ptr(),
 					0,
 					lpData.reg_type().into(),
 					lpData.as_ptr() as *const u8,

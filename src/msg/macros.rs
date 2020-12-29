@@ -1,18 +1,4 @@
-use crate::msg::WmAny;
-
-/// Implements standard `return` method that returns 0 as window, 1 as dialog.
-macro_rules! msg_lresult_zero {
-	($name:ident $(, $life:lifetime)*) => {
-		impl<$($life),*> $name<$($life),*> {
-			/// Generates the message result value.
-			///
-			/// You should return zero for ordinary windows, and 1 for dialogs.
-			pub fn lresult(&self, val: isize) -> LResult {
-				LResult(val)
-			}
-		}
-	};
-}
+use crate::msg::Wm;
 
 /// Struct for a message that has no parameters.
 macro_rules! empty_msg {
@@ -23,7 +9,7 @@ macro_rules! empty_msg {
 		$(#[$attr])*
 		pub struct $name {}
 
-		impl From<$name> for WmAny {
+		impl From<$name> for Wm {
 			fn from(_: $name) -> Self {
 				Self {
 					msg_id: $wmconst,
@@ -33,13 +19,11 @@ macro_rules! empty_msg {
 			}
 		}
 
-		impl From<WmAny> for $name {
-			fn from(_: WmAny) -> Self {
+		impl From<Wm> for $name {
+			fn from(_: Wm) -> Self {
 				Self {}
 			}
 		}
-
-		msg_lresult_zero!($name);
 	};
 }
 
@@ -55,7 +39,7 @@ macro_rules! ctl_color_msg {
 			pub hwnd: HWND,
 		}
 
-		impl From<$name> for WmAny {
+		impl From<$name> for Wm {
 			fn from(p: $name) -> Self {
 				Self {
 					msg_id: $wmconst,
@@ -65,19 +49,12 @@ macro_rules! ctl_color_msg {
 			}
 		}
 
-		impl From<WmAny> for $name {
-			fn from(p: WmAny) -> Self {
+		impl From<Wm> for $name {
+			fn from(p: Wm) -> Self {
 				Self {
 					hdc: unsafe { HDC::from_ptr(p.wparam as *mut c_void) },
 					hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
 				}
-			}
-		}
-
-		impl $name {
-			/// Generates the message result value.
-			pub fn lresult(&self, val: HBRUSH) -> LResult {
-				LResult(unsafe { val.as_ptr() } as isize)
 			}
 		}
 	};
@@ -89,11 +66,11 @@ pub fn ref_to_lparam<T>(field: &T) -> isize {
 }
 
 /// Converts the `LPARAM` field to a mut reference, for message structs.
-pub fn lparam_to_mut_ref<'a, T>(p: WmAny) -> &'a mut T {
+pub fn lparam_to_mut_ref<'a, T>(p: Wm) -> &'a mut T {
 	unsafe { (p.lparam as *mut T).as_mut() }.unwrap()
 }
 
 /// Converts the `LPARAM` field to a reference, for message structs.
-pub fn lparam_to_ref<'a, T>(p: WmAny) -> &'a T {
+pub fn lparam_to_ref<'a, T>(p: Wm) -> &'a T {
 	unsafe { (p.lparam as *const T).as_ref() }.unwrap()
 }

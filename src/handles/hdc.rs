@@ -3,9 +3,9 @@
 use crate::co;
 use crate::ffi::gdi32;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
-use crate::internal_defs::{const_void, mut_void};
+use crate::internal_defs::{const_void, mut_void, ptr_as_opt};
 use crate::structs::{POINT, SIZE};
-use crate::Utf16;
+use crate::WString;
 
 handle_type! {
 	/// Handle to a
@@ -38,7 +38,7 @@ impl HDC {
 		match unsafe {
 			gdi32::GetTextExtentPoint32W(
 				self.0,
-				Utf16::from_str(lpString).as_ptr(),
+				WString::from_str(lpString).as_ptr(),
 				lpString.chars().count() as i32,
 				mut_void(&mut sz),
 			)
@@ -146,7 +146,7 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	pub fn SelectObjectBitmap(self, h: HBITMAP) -> Result<HBITMAP, ()> {
-		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
 			Some(p) => Ok(unsafe { HBITMAP::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -155,7 +155,7 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBRUSH`](crate::HBRUSH).
 	pub fn SelectObjectBrush(self, h: HBRUSH) -> Result<HBRUSH, ()> {
-		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
 			Some(p) => Ok(unsafe { HBRUSH::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -164,7 +164,7 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HFONT`](crate::HFONT).
 	pub fn SelectObjectFont(self, h: HFONT) -> Result<HFONT, ()> {
-		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
 			Some(p) => Ok(unsafe { HFONT::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -173,7 +173,7 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HPEN`](crate::HPEN).
 	pub fn SelectObjectPen(self, h: HPEN) -> Result<HPEN, ()> {
-		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
 			Some(p) => Ok(unsafe { HPEN::from_ptr(p) }),
 			None => Err(()),
 		}
@@ -182,7 +182,7 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HRGN`](crate::HRGN).
 	pub fn SelectObjectRgn(self, h: HRGN) -> Result<co::REGION, ()> {
-		match ptr_as_opt!(gdi32::SelectObject(self.0, h.as_ptr())) {
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
 			Some(p) => Ok(co::REGION::from(p as i32)),
 			None => Err(()),
 		}

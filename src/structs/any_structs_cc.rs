@@ -8,7 +8,7 @@ use crate::co;
 use crate::handles::HDC;
 use crate::internal_defs::L_MAX_URL_LENGTH;
 use crate::structs::{NMHDR, POINT, RECT};
-use crate::Utf16;
+use crate::WString;
 
 /// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
 /// struct.
@@ -34,7 +34,7 @@ impl_default_zero!(LVCOLUMN, 'a);
 impl<'a> LVCOLUMN<'a> {
 	/// Sets the `pszText` and `cchTextMax` fields. The buffer will be resized to
 	/// hold at least 64 chars.
-	pub fn set_pszText(&mut self, buf: &'a mut Utf16) {
+	pub fn set_pszText(&mut self, buf: &'a mut WString) {
 		if buf.buffer_size() < 64 { buf.realloc_buffer(64); } // arbitrary
 		self.pszText = unsafe { buf.as_mut_ptr() };
 		self.cchTextMax = buf.buffer_size() as i32;
@@ -59,11 +59,11 @@ impl_default_zero!(LVFINDINFO, 'a);
 impl<'a> LVFINDINFO<'a> {
 	/// Returns the `psz` field.
 	pub fn psz(&self) -> String {
-		Utf16::from_utf16_nullt(self.psz).to_string()
+		WString::from_wchars_nullt(self.psz).to_string()
 	}
 
 	/// Sets the `psz` field.
-	pub fn set_psz(&mut self, buf: &'a Utf16) {
+	pub fn set_psz(&mut self, buf: &'a WString) {
 		self.psz = unsafe { buf.as_ptr() };
 	}
 }
@@ -96,7 +96,7 @@ impl_default_zero!(LVITEM, 'a);
 impl<'a> LVITEM<'a> {
 	/// Sets the `pszText` and `cchTextMax` fields. The buffer will be resized to
 	/// hold at least 64 chars.
-	pub fn set_pszText(&mut self, buf: &'a mut Utf16) {
+	pub fn set_pszText(&mut self, buf: &'a mut WString) {
 		if buf.buffer_size() < 64 { buf.realloc_buffer(64); } // arbitrary
 		self.pszText = unsafe { buf.as_mut_ptr() };
 		self.cchTextMax = buf.buffer_size() as i32;
@@ -229,12 +229,12 @@ impl_default_zero!(NMLVGETINFOTIP, 'a);
 impl<'a> NMLVGETINFOTIP<'a> {
 	/// Returns the `pszText` field.
 	pub fn pszText(&self) -> String {
-		Utf16::from_utf16_nullt(self.pszText).to_string()
+		WString::from_wchars_nullt(self.pszText).to_string()
 	}
 
 	/// Sets the `pszText` and `cchTextMax` fields. The buffer will be resized to
 	/// hold at least 64 chars.
-	pub fn set_pszText(&mut self, buf: &'a mut Utf16) {
+	pub fn set_pszText(&mut self, buf: &'a mut WString) {
 		if buf.buffer_size() < 64 { buf.realloc_buffer(64); } // arbitrary
 		self.pszText = unsafe { buf.as_mut_ptr() };
 		self.cchTextMax = buf.buffer_size() as i32;
