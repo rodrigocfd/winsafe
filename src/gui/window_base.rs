@@ -11,7 +11,6 @@ use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 /// Base to all ordinary windows.
-#[derive(Clone)]
 pub struct WindowBase {
 	hwnd: HWND,
 	events: Events,
@@ -117,7 +116,7 @@ impl WindowBase {
 				let wm_ncc: WmNcCreate = wm_any.into();
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
-				let ref_self = unsafe { ptr_self.as_mut() }.unwrap();
+				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.hwnd = hwnd; // store HWND in struct field
 				ptr_self
 			},
@@ -133,7 +132,7 @@ impl WindowBase {
 		}
 
 		// Execute user handler, if any.
-		let ref_self = unsafe { ptr_self.as_mut() }.unwrap();
+		let ref_self = unsafe { &mut *ptr_self };
 		let maybe_processed = ref_self.events.process_message(wm_any);
 
 		if msg == co::WM::NCDESTROY { // always check

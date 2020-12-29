@@ -67,10 +67,10 @@ pub fn ref_to_lparam<T>(field: &T) -> isize {
 
 /// Converts the `LPARAM` field to a mut reference, for message structs.
 pub fn lparam_to_mut_ref<'a, T>(p: Wm) -> &'a mut T {
-	unsafe { (p.lparam as *mut T).as_mut() }.unwrap()
+	unsafe { &mut *(p.lparam as *mut T) }
 }
 
 /// Converts the `LPARAM` field to a reference, for message structs.
 pub fn lparam_to_ref<'a, T>(p: Wm) -> &'a T {
-	unsafe { (p.lparam as *const T).as_ref() }.unwrap()
+	unsafe { &*(p.lparam as *const T) }
 }

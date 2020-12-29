@@ -1,16 +1,17 @@
 use crate::co;
 use crate::gui::func_store::FuncStore;
+use crate::gui::managed_box::ManagedBox;
 use crate::handles::HDC;
 use crate::msg;
 
 /// The result of processing a message.
-pub enum ProcessResult {
+pub(crate) enum ProcessResult {
 	NotHandled,            // message was not handler because no such handler is stored
 	HandledWithRet(isize), // return value is meaningful
 	HandledWithoutRet,     // return value is not meaningful, whatever default value
 }
 
-struct MsgMaps {
+struct Obj {
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
 		Box<dyn FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
@@ -33,37 +34,9 @@ struct MsgMaps {
 
 /// Allows adding closures to handle window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
+#[derive(Clone)]
 pub struct Events {
-	original: bool,
-
-	// Performs manual memory management by keeping a raw pointer to a
-	// heap-allocated memory block. All cloned objects will have a pointer to the
-	// memory block of the original object, which must outlive them all. This
-	// could be safely achieved with Arc and RwLock, but it would incur in an
-	// unnecessary cost, since Events is shared only between a parent window and
-	// its child controls, and the controls only use it to add events at the
-	// beginning of the program. Adding events later is not allowed.
-	ptr_msg_maps: *mut MsgMaps,
-}
-
-unsafe impl Send for Events {}
-unsafe impl Sync for Events {}
-
-impl Clone for Events {
-	fn clone(&self) -> Self {
-		Events {
-			original: false, // clones won't release the memory
-			ptr_msg_maps: self.ptr_msg_maps, // simply copy away the pointer
-		}
-	}
-}
-
-impl Drop for Events {
-	fn drop(&mut self) {
-		if self.original {
-			unsafe { Box::from_raw(self.ptr_msg_maps); } // release the memory
-		}
-	}
+	obj: ManagedBox<Obj>,
 }
 
 /// A message which has no parameters and returns zero.
@@ -73,7 +46,7 @@ macro_rules! wm_empty {
 		$(#[$attr:meta])*
 	) => {
 		$(#[$attr])*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&mut self, func: F)
 			where F: FnMut() + Send + Sync + 'static,
 		{
 			self.add_msg($wmconst, {
@@ -91,7 +64,7 @@ macro_rules! wm_ret_none {
 		$(#[$attr:meta])*
 	) => {
 		$(#[$attr])*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&mut self, func: F)
 			where F: FnMut($parm) + Send + Sync + 'static,
 		{
 			self.add_msg($wmconst, {
@@ -104,30 +77,24 @@ macro_rules! wm_ret_none {
 
 impl Events {
 	pub(crate) fn new() -> Events {
-		let heap_msg_maps = Box::new( // alloc memory on the heap
-			MsgMaps {
-				msgs: FuncStore::new(),
-				tmrs: FuncStore::new(),
-				cmds: FuncStore::new(),
-				nfys: FuncStore::new(),
-			}
-		);
-
 		Self {
-			original: true, // this is the object that will actually release the memory
-			ptr_msg_maps: Box::into_raw(heap_msg_maps), // leak and keep the pointer
+			obj: ManagedBox::new(
+				Obj {
+					msgs: FuncStore::new(),
+					tmrs: FuncStore::new(),
+					cmds: FuncStore::new(),
+					nfys: FuncStore::new(),
+				},
+			),
 		}
 	}
 
 	pub(crate) fn process_message(&self, wm_any: msg::Wm) -> ProcessResult {
-		let msg_maps = unsafe { self.ptr_msg_maps.as_mut() }
-			.expect("Failed to retrieve ptr_msg_maps in Events::process_message.");
-
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy: msg::WmNotify = wm_any.into();
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
-				match msg_maps.nfys.find(key) {
+				match self.obj.as_mut().nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -140,7 +107,7 @@ impl Events {
 			co::WM::COMMAND => {
 				let wm_cmd: msg::WmCommand = wm_any.into();
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
-				match msg_maps.cmds.find(key) {
+				match self.obj.as_mut().cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -150,7 +117,7 @@ impl Events {
 			},
 			co::WM::TIMER => {
 				let wm_tmr: msg::WmTimer = wm_any.into();
-				match msg_maps.tmrs.find(wm_tmr.timer_id) {
+				match self.obj.as_mut().tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -159,7 +126,7 @@ impl Events {
 				}
 			}
 			_ => { // any other message
-				match msg_maps.msgs.find(wm_any.msg_id) {
+				match self.obj.as_mut().msgs.find(wm_any.msg_id) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(wm_any) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -173,28 +140,24 @@ impl Events {
 	}
 
 	/// Raw add message.
-	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
+	pub(crate) fn add_msg<F>(&mut self, ident: co::WM, func: F)
 		where F: FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static,
 	{
-		unsafe { self.ptr_msg_maps.as_mut() }
-			.expect("Failed to retrieve ptr_msg_maps in Events::add_msg.")
-			.msgs.insert(ident, Box::new(func));
+		self.obj.as_mut().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
-	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
+	pub(crate) fn add_nfy<F>(&mut self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static,
 	{
-		unsafe { self.ptr_msg_maps.as_mut() }
-			.expect("Failed to retrieve ptr_msg_maps in Events::add_nfy.")
-			.nfys.insert((id_from, code), Box::new(func));
+		self.obj.as_mut().nfys.insert((id_from, code), Box::new(func));
 	}
 
 	/// Adds a handler to any [window message](crate::co::WM).
 	///
 	/// You should always prefer the specific message handlers, which will give
 	/// you the correct message parameters.
-	pub fn wm<F>(&self, ident: co::WM, func: F)
+	pub fn wm<F>(&mut self, ident: co::WM, func: F)
 		where F: FnMut(msg::Wm) -> isize + Send + Sync + 'static,
 	{
 		self.add_msg(ident, {
@@ -205,12 +168,10 @@ impl Events {
 
 	/// Adds a handler to [`WM_TIMER`](crate::msg::WmTimer) message, narrowed to
 	/// a specific timer ID.
-	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
+	pub fn wm_timer<F>(&mut self, timer_id: u32, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		unsafe { self.ptr_msg_maps.as_mut() }
-			.expect("Failed to retrieve ptr_msg_maps in Events::wm_timer.")
-			.tmrs.insert(timer_id, Box::new(func));
+		self.obj.as_mut().tmrs.insert(timer_id, Box::new(func));
 	}
 
 	/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
@@ -221,12 +182,10 @@ impl Events {
 	///
 	/// You should always prefer the specific command notification handlers,
 	/// which will give you the correct message parameters.
-	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
+	pub fn wm_command<F>(&mut self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		unsafe { self.ptr_msg_maps.as_mut() }
-			.expect("Failed to retrieve ptr_msg_maps in Events::wm_command.")
-			.cmds.insert((code, ctrl_id), Box::new(func));
+		self.obj.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
 	/// Adds a handler to [`WM_NOTIFY`](crate::msg::WmNotify) message.
@@ -237,7 +196,7 @@ impl Events {
 	///
 	/// You should always prefer the specific notification handlers, which
 	/// will give you the correct notification struct.
-	pub fn wm_notify<F>(&self, id_from: u16, code: co::NM, func: F)
+	pub fn wm_notify<F>(&mut self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> isize + Send + Sync + 'static,
 	{
 		self.add_nfy(id_from, code, {
@@ -255,7 +214,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
-	pub fn wm_app_command<F>(&self, func: F)
+	pub fn wm_app_command<F>(&mut self, func: F)
 		where F: FnMut(msg::WmAppCommand) + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::APPCOMMAND, {
@@ -269,7 +228,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_CREATE`](crate::msg::WmCreate) message.
-	pub fn wm_create<F>(&self, func: F)
+	pub fn wm_create<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCreate) -> i32 + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::CREATE, {
@@ -279,7 +238,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
-	pub fn wm_ctl_color_btn<F>(&self, func: F)
+	pub fn wm_ctl_color_btn<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorBtn) -> HDC + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORBTN, {
@@ -289,7 +248,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
-	pub fn wm_ctl_color_dlg<F>(&self, func: F)
+	pub fn wm_ctl_color_dlg<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorDlg) -> HDC + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORDLG, {
@@ -299,7 +258,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
-	pub fn wm_ctl_color_edit<F>(&self, func: F)
+	pub fn wm_ctl_color_edit<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorEdit) -> HDC + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLOREDIT, {
@@ -309,7 +268,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
-	pub fn wm_ctl_color_list_box<F>(&self, func: F)
+	pub fn wm_ctl_color_list_box<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorListBox) -> HDC + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORLISTBOX, {
@@ -319,7 +278,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
-	pub fn wm_ctl_color_scroll_bar<F>(&self, func: F)
+	pub fn wm_ctl_color_scroll_bar<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorScrollBar) -> HDC + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
@@ -329,7 +288,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
-	pub fn wm_ctl_color_static<F>(&self, func: F)
+	pub fn wm_ctl_color_static<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorStatic) -> HDC + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSTATIC, {
@@ -351,7 +310,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
-	pub fn wm_init_dialog<F>(&self, func: F)
+	pub fn wm_init_dialog<F>(&mut self, func: F)
 		where F: FnMut(msg::WmInitDialog) -> bool + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::INITDIALOG, {
@@ -365,7 +324,7 @@ impl Events {
 	}
 
 	/// Adds a handler to [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
-	pub fn wm_nc_create<F>(&self, func: F)
+	pub fn wm_nc_create<F>(&mut self, func: F)
 		where F: FnMut(msg::WmNcCreate) -> bool + Send + Sync + 'static,
 	{
 		self.add_msg(co::WM::NCCREATE, {

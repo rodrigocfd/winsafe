@@ -6,7 +6,7 @@ static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Edit
 #[derive(Clone)]
 pub struct NativeControlBase {
 	hwnd: HWND,
-	ctrl_id: u16,
+	ctrl_id: u16, // immutable
 }
 
 impl NativeControlBase {

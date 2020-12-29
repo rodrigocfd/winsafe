@@ -8,40 +8,49 @@ use crate::gui::events::Events;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
 use crate::gui::Parent;
+use crate::gui::managed_box::ManagedBox;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::priv_funcs::str_dyn_error;
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
-/// Main application window.
-#[derive(Clone)]
-pub struct WindowMain {
+struct Obj {
 	base: WindowBase,
 	opts: WindowMainOpts,
 	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
 }
 
+//------------------------------------------------------------------------------
+
+/// Main application window.
+#[derive(Clone)]
+pub struct WindowMain {
+	obj: ManagedBox<Obj>,
+}
+
+unsafe impl Send for WindowMain {}
+unsafe impl Sync for WindowMain {}
+
 impl WindowMain {
 	/// Creates a new `WindowMain` object.
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
-		let w = Self {
-			base: WindowBase::new(),
-			opts,
-			hchild_prev_focus: None,
+		let wnd = Self {
+			obj: ManagedBox::new(
+				Obj {
+					base: WindowBase::new(),
+					opts,
+					hchild_prev_focus: None,
+				},
+			),
 		};
-		w.default_message_handlers();
-		w
+		wnd.default_message_handlers();
+		wnd
 	}
 
 	/// Returns the underlying handle for this window.
 	pub fn hwnd(&self) -> HWND {
-		self.base.hwnd()
-	}
-
-	/// Methods to add handlers to window messages.
-	pub fn on(&self) -> Events {
-		self.base.on()
+		self.obj.as_ref().base.hwnd()
 	}
 
 	/// Creates the window and runs the main application loop. This function will
@@ -51,7 +60,7 @@ impl WindowMain {
 	///
 	/// Panics if the window is already created.
 	pub fn run_as_main(
-		&mut self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
+		&self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
 	{
 		if f::IsWindowsVistaOrGreater()
 			.map_err(|e| Box::new(e))?
@@ -63,14 +72,16 @@ impl WindowMain {
 		f::InitCommonControls();
 		create_ui_font()?;
 
+		let self2 = self.obj.as_mut();
+
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
-		self.opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self.base.register_class(&mut wcx)?;
+		self2.opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
+		self2.base.register_class(&mut wcx)?;
 
-		multiply_dpi(None, Some(&mut self.opts.size))?;
+		multiply_dpi(None, Some(&mut self2.opts.size))?;
 
 		let screen_sz = SIZE {
 			cx: f::GetSystemMetrics(co::SM::CXSCREEN),
@@ -78,36 +89,36 @@ impl WindowMain {
 		};
 
 		let wnd_pos = POINT {
-			x: screen_sz.cx / 2 - self.opts.size.cx / 2, // center on screen
-			y: screen_sz.cy / 2 - self.opts.size.cy / 2,
+			x: screen_sz.cx / 2 - self2.opts.size.cx / 2, // center on screen
+			y: screen_sz.cy / 2 - self2.opts.size.cy / 2,
 		};
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
 			left: wnd_pos.x,
 			top: wnd_pos.y,
-			right: wnd_pos.x + self.opts.size.cx,
-			bottom: wnd_pos.y + self.opts.size.cy,
+			right: wnd_pos.x + self2.opts.size.cx,
+			bottom: wnd_pos.y + self2.opts.size.cy,
 		};
-		f::AdjustWindowRectEx(&mut wnd_rc,
-			self.opts.style, self.opts.menu.is_some(), self.opts.ex_style)?;
+		f::AdjustWindowRectEx(&mut wnd_rc, self2.opts.style,
+			self2.opts.menu.is_some(), self2.opts.ex_style)?;
 
-		let our_hwnd = self.base.create_window(
+		let our_hwnd = self2.base.create_window(
 			hinst,
 			None,
 			&class_name_buf.to_string(),
-			Some(&self.opts.title),
+			Some(&self2.opts.title),
 			IdMenu::None,
 			POINT { x: wnd_rc.left, y: wnd_rc.top },
 			SIZE { cx: wnd_rc.right - wnd_rc.left, cy: wnd_rc.bottom - wnd_rc.top },
-			self.opts.ex_style,
-			self.opts.style,
+			self2.opts.ex_style,
+			self2.opts.style,
 		)?;
 
 		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		our_hwnd.UpdateWindow()
 			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
 
-		let res = run_loop(our_hwnd, self.opts.accel_table)?; // blocks until window is closed
+		let res = run_loop(our_hwnd, self2.opts.accel_table)?; // blocks until window is closed
 		delete_ui_font();
 		Ok(res)
 	}
@@ -115,11 +126,12 @@ impl WindowMain {
 	/// Adds the default event processing.
 	fn default_message_handlers(&self) {
 		self.on().wm_activate({
-			let mut self2 = self.clone();
+			let cloned = self.clone();
 			move |p| {
+				let self2 = cloned.obj.as_mut();
 				if !p.is_minimized {
 					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-						if self2.hwnd().IsChild(hwnd_cur_focus) {
+						if self2.base.hwnd().IsChild(hwnd_cur_focus) {
 							self2.hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
 						}
 					} else if let Some(hwnd_prev_focus) = self2.hchild_prev_focus {
@@ -153,7 +165,7 @@ impl WindowMain {
 
 impl Parent for WindowMain {
 	fn on(&self) -> Events {
-		self.base.on()
+		self.obj.as_ref().base.on()
 	}
 }
 

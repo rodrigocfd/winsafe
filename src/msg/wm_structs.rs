@@ -416,7 +416,7 @@ impl<'a> From<WmNotify<'a>> for Wm {
 impl<'a> From<Wm> for WmNotify<'a> {
 	fn from(p: Wm) -> Self {
 		Self {
-			nmhdr: unsafe { (p.lparam as *const NMHDR).as_ref() }.unwrap(),
+			nmhdr: unsafe { &*(p.lparam as *const NMHDR) },
 		}
 	}
 }
@@ -427,7 +427,7 @@ impl<'a> WmNotify<'a> {
 	/// You should always prefer the specific notification handlers, which
 	/// perform this conversion for you.
 	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
-		(self.nmhdr as *const NMHDR as *const T).as_ref().unwrap()
+		&*(self.nmhdr as *const NMHDR as *const T)
 	}
 }
 
