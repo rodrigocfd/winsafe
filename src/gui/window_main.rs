@@ -7,7 +7,6 @@ use crate::gui::control_util::multiply_dpi;
 use crate::gui::events::Events;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
-use crate::gui::Parent;
 use crate::gui::managed_box::ManagedBox;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
@@ -51,6 +50,16 @@ impl WindowMain {
 	/// Returns the underlying handle for this window.
 	pub fn hwnd(&self) -> HWND {
 		self.obj.as_ref().base.hwnd()
+	}
+
+	/// Exposes the events that can be handled with a closure.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created. Closures must be attached to
+	/// events before window creation.
+	pub fn on(&self) -> Events {
+		self.obj.as_ref().base.on()
 	}
 
 	/// Creates the window and runs the main application loop. This function will
@@ -160,12 +169,6 @@ impl WindowMain {
 		self.on().wm_nc_destroy(|| {
 			f::PostQuitMessage(0);
 		});
-	}
-}
-
-impl Parent for WindowMain {
-	fn on(&self) -> Events {
-		self.obj.as_ref().base.on()
 	}
 }
 
