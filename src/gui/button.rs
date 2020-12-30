@@ -80,14 +80,19 @@ impl Button {
 		self.cref().base.on_subclass()
 	}
 
-	/// Physically creates the control within the parent window.
+	/// Physically creates the control within the parent window. This method
+	/// should be called within parent window's `WM_CREATE` or `WM_INITDIALOG`
+	/// events.
 	///
 	/// # Panics
 	///
-	/// Panics if the control is already created.
+	/// Panics if the control is already created, or if the parent window was not
+	/// created yet.
 	pub fn create(&self, opts: ButtonOpts) -> Result<(), co::ERROR> {
 		if !self.cref().base.hwnd().is_null() {
-			panic!("Cannot create Button twice.");
+			panic!("Cannot create button twice.");
+		} else if !self.cref().base.is_parent_created() {
+			panic!("Cannot create button before parent window is created.");
 		}
 
 		let our_hwnd = self.mref().base.create_window(
