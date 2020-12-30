@@ -1,4 +1,4 @@
-//! Structs that exposes messages to which closures can be attached.
+//! Structs which expose the event methods of windows and controls.
 
 mod func_store;
 

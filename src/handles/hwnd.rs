@@ -529,6 +529,34 @@ impl HWND {
 
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
+	///
+	/// Instead of receiving a message code followed by `WPARAM` and `LPARAM`,
+	/// receives a single message argument, which allows you to pass the message
+	/// parameters safely.
+	///
+	/// # Examples
+	///
+	/// Sending a [`WM_CLOSE`](crate::msg::WmClose) message, which has no
+	/// parameters:
+	/// ```rust,ignore
+	/// use winsafe::msg::WmClose;
+	///
+	/// my_hwnd.SendMessage(WmClose {});
+	/// ```
+	///
+	/// Sending a [`LVM_SETITEM`](crate::msg::LvmSetItem) list view message,
+	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
+	/// ```rust,ignore
+	/// use winsafe::{co, LVITEM, msg::LvmSetItem};
+	///
+	/// let mut lvi = LVITEM::default();
+	/// lvi.mask = co::LVIF::IMAGE;
+	/// lvi.iImage = 3;
+	///
+	/// my_hwnd.SendMessage(LvmSetItem {
+	///   lvitem: &lvi,
+	/// });
+	/// ```
 	pub fn SendMessage<P: Into<Wm>>(self, Msg: P) -> isize {
 		let wmAny: Wm = Msg.into();
 		unsafe {

@@ -138,6 +138,16 @@
 //! when dealing with native Win32 structs. In such cases, you can use the
 //! [`WString`](crate::WString) struct, which is also capable of working as a
 //! buffer to receive text from Win32 calls.
+//!
+//! # High-level GUI
+//!
+//! On top of all Win32 FFI bindings, WinSafe features a set of high-level GUI
+//! structs, which scaffolds the boilerplate needed to build windows and
+//! controls.
+//!
+//! Unless you are writing something really specific, these high-level
+//! abstractions is highly recommended. They can be found in the module
+//! [`gui`](crate::gui).
 
 #[macro_use]
 pub mod co;
