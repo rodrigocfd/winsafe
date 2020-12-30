@@ -3,9 +3,11 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
+use crate::gui::globals::{ui_font};
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::parent::Parent;
 use crate::handles::HWND;
+use crate::msg::WmSetFont;
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -88,12 +90,15 @@ impl Button {
 			panic!("Cannot create Button twice.");
 		}
 
-		self.mref().base.create_window(
+		let our_hwnd = self.mref().base.create_window(
 			"BUTTON", Some(&opts.text), opts.pos,
 			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
 			opts.ex_window_style,
 			opts.window_style | opts.button_style.into(),
-		).map(|_| ())
+		)?;
+
+		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+		Ok(())
 	}
 }
 

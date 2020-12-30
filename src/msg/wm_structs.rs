@@ -3,7 +3,7 @@ use std::ffi::c_void;
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::{HDC, HDROP, HMENU, HRGN, HWND};
+use crate::handles::{HDC, HDROP, HFONT, HMENU, HRGN, HWND};
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
 use crate::priv_funcs::FAPPCOMMAND_MASK;
 use crate::structs::{CREATESTRUCT, NMHDR, RECT};
@@ -460,6 +460,34 @@ impl From<Wm> for WmSetFocus {
 	fn from(p: Wm) -> Self {
 		Self {
 			hwnd_losing_focus: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_SETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-setfont)
+/// message parameters.
+pub struct WmSetFont {
+	pub hfont: HFONT,
+	pub redraw: bool,
+}
+
+impl From<WmSetFont> for Wm {
+	fn from(p: WmSetFont) -> Self {
+		Self {
+			msg_id: co::WM::SETFONT,
+			wparam: unsafe { p.hfont.as_ptr() } as usize,
+			lparam: MAKEDWORD(p.redraw as u16, 0) as isize,
+		}
+	}
+}
+
+impl From<Wm> for WmSetFont {
+	fn from(p: Wm) -> Self {
+		Self {
+			hfont: unsafe { HFONT::from_ptr(p.wparam as *mut c_void) },
+			redraw: LOWORD(p.lparam as u32) != 0,
 		}
 	}
 }
