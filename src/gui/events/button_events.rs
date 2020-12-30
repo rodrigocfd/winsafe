@@ -12,7 +12,7 @@ pub struct ButtonEvents {
 	obj: Rc<UnsafeCell<Obj>>,
 }
 
-struct Obj {
+struct Obj { // actual fields of ButtonEvents
 	parent_events: MsgEvents,
 	ctrl_id: u16,
 }

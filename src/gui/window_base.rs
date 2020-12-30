@@ -29,8 +29,8 @@ impl WindowBase {
 		}
 	}
 
-	pub fn hwnd(&self) -> HWND {
-		self.hwnd
+	pub fn hwnd(&self) -> &HWND {
+		&self.hwnd
 	}
 
 	pub fn on(&self) -> MsgEvents {
@@ -50,7 +50,8 @@ impl WindowBase {
 					// https://devblogs.microsoft.com/oldnewthing/20150429-00/?p=44984
 					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 					// Retrieve ATOM of existing window class.
-					Ok(wcx.hInstance.GetClassInfoEx(&wcx.lpszClassName(), wcx)?)
+					let hinst = wcx.hInstance;
+					Ok(hinst.GetClassInfoEx(&wcx.lpszClassName(), wcx)?)
 				},
 				err => Err(err),
 			}

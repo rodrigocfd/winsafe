@@ -15,6 +15,7 @@ pub struct NativeControlBase {
 	hwnd: HWND,
 	ctrl_id: u16, // cannot be changed
 	subclass_events: MsgEvents,
+	pub ptr_parent_hwnd: *const HWND, // used only in control creation
 }
 
 impl NativeControlBase {
@@ -26,11 +27,12 @@ impl NativeControlBase {
 		}
 	}
 
-	pub fn new_with_id(ctrl_id: u16) -> NativeControlBase {
+	pub fn new_with_id(ctrl_id: u16, parent_hwnd: &HWND) -> NativeControlBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			ctrl_id,
 			subclass_events: MsgEvents::new(),
+			ptr_parent_hwnd: parent_hwnd, // convert reference to pointer
 		}
 	}
 
@@ -48,7 +50,6 @@ impl NativeControlBase {
 
 	pub fn create_window(
 		&self,
-		parent: HWND,
 		class_name: &str,
 		title: Option<&str>,
 		pos: POINT,
@@ -56,15 +57,18 @@ impl NativeControlBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> Result<HWND, co::ERROR>
 	{
+		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
+
 		let our_hwnd = HWND::CreateWindowEx(
 			ex_styles,
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			Some(parent), IdMenu::Id(self.ctrl_id),
+			Some(parent_hwnd),
+			IdMenu::Id(self.ctrl_id),
 			unsafe {
 				HINSTANCE::from_ptr(
-					parent.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut c_void
+					parent_hwnd.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut c_void
 				)
 			},
 			None,

@@ -32,7 +32,7 @@ impl HACCEL {
 
 	/// [`DestroyAcceleratorTable`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
 	/// method.
-	pub fn DestroyAcceleratorTable(self) -> bool {
+	pub fn DestroyAcceleratorTable(&self) -> bool {
 		unsafe { user32::DestroyAcceleratorTable(self.0) != 0 }
 	}
 }

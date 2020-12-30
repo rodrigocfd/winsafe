@@ -1,7 +1,7 @@
 //! High-level GUI abstractions.
 
 #[macro_use]
-pub mod macros;
+mod macros;
 
 mod control_util;
 mod globals;

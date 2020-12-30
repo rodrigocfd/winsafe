@@ -34,7 +34,7 @@ impl HINSTANCE {
 	/// HINSTANCE::GetModuleHandle(None).unwrap()
 	///   .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
 	/// ```
-	pub fn GetClassInfoEx(self,
+	pub fn GetClassInfoEx(&self,
 		lpszClass: &str, lpwcx: &mut WNDCLASSEX) -> Result<ATOM, co::ERROR>
 	{
 		match unsafe {
@@ -72,8 +72,8 @@ impl HINSTANCE {
 
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
-	pub fn LoadAccelerators(
-		self, lpTableName: IdStr) -> Result<HACCEL, co::ERROR>
+	pub fn LoadAccelerators(&self,
+		lpTableName: IdStr) -> Result<HACCEL, co::ERROR>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -96,8 +96,8 @@ impl HINSTANCE {
 	///   .LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))
 	///   .unwrap();
 	/// ```
-	pub fn LoadCursor(
-		self, lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
+	pub fn LoadCursor(&self,
+		lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
 	{
 		match ptr_as_opt(
 			unsafe { user32::LoadCursorW(self.0, lpCursorName.as_ptr()) }
@@ -118,8 +118,8 @@ impl HINSTANCE {
 	///   .LoadIcon(IdIdiStr::Idi(co::IDI::INFORMATION))
 	///   .unwrap();
 	/// ```
-	pub fn LoadIcon(
-		self, lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
+	pub fn LoadIcon(&self,
+		lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
 	{
 		match ptr_as_opt(
 			unsafe { user32::LoadIconW(self.0, lpIconName.as_ptr()) }

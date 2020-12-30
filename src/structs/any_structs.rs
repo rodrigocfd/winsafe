@@ -46,7 +46,7 @@ impl ATOM {
 /// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
 /// struct;
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct BITMAPINFOHEADER {
 	biSize: u32,
 	pub biWidth: i32,
@@ -72,7 +72,7 @@ impl Default for BITMAPINFOHEADER {
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct CREATESTRUCT<'a, 'b> {
 	pub lpCreateParams: isize,
 	pub hInstance: h::HINSTANCE,
@@ -117,7 +117,7 @@ impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 /// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct LOGFONT {
 	pub lfHeight: i32,
 	pub lfWidth: i32,
@@ -138,7 +138,7 @@ pub struct LOGFONT {
 /// [`MENUINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuinfo)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct MENUINFO {
 	cbSize: u32,
 	pub fMask: co::MIM,
@@ -160,7 +160,7 @@ impl Default for MENUINFO {
 /// [`MENUITEMINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct MENUITEMINFO {
 	cbSize: u32,
 	pub fMask: co::MIIM,
@@ -187,7 +187,7 @@ impl Default for MENUITEMINFO {
 /// [`MSG`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct MSG {
 	pub hwnd: h::HWND,
 	pub message: co::WM,
@@ -203,7 +203,7 @@ impl_default_zero!(MSG);
 /// [`NMHDR`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
 	pub hwndFrom: h::HWND,
@@ -219,7 +219,7 @@ impl_default_zero!(NMHDR);
 /// [`NONCLIENTMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct NONCLIENTMETRICS {
 	cbSize: u32,
 	pub iBorderWidth: i32,
@@ -253,7 +253,7 @@ impl Default for NONCLIENTMETRICS {
 /// [`OSVERSIONINFOEX`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct OSVERSIONINFOEX {
 	dwOSVersionInfoSize: u32,
 	pub dwMajorVersion: u32,
@@ -279,7 +279,7 @@ impl Default for OSVERSIONINFOEX {
 /// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct PAINTSTRUCT {
 	pub hdc: h::HDC,
 	pub fErase: u32,
@@ -314,7 +314,7 @@ pub struct RECT {
 /// [`SECURITY_ATTRIBUTES`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct SECURITY_ATTRIBUTES {
 	nLength: u32,
 	pub lpSecurityDescriptor: *mut c_void,
@@ -341,7 +341,7 @@ pub struct SIZE {
 /// [`WINDOWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct WINDOWINFO {
 	cbSize: u32,
 	pub rcWindow: RECT,
@@ -366,7 +366,7 @@ impl Default for WINDOWINFO {
 /// [`WINDOWPLACEMENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct WINDOWPLACEMENT {
 	length: u32,
 	pub flags: co::WPF,
@@ -388,7 +388,7 @@ impl Default for WINDOWPLACEMENT {
 /// [`WNDCLASSEX`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassexw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 pub struct WNDCLASSEX<'a, 'b> {
 	cbSize: u32,
 	pub style: co::CS,

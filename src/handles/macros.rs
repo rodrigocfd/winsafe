@@ -50,7 +50,7 @@ macro_rules! handle_type {
 				Self(std::ptr::null_mut())
 			}
 
-			/// Returns the raw underlying pointer for this handle.
+			/// Consumes the handle returning the underlying raw pointer.
 			pub unsafe fn as_ptr(self) -> *mut std::ffi::c_void {
 				self.0
 			}
@@ -60,7 +60,7 @@ macro_rules! handle_type {
 				self.0.is_null()
 			}
 
-			/// Transforms the handle into an option, which is `None` if the handle
+			/// Consumes the handle into an option, which is `None` if the handle
 			/// pointer is null.
 			pub fn as_opt(self) -> Option<$name> {
 				if self.0.is_null() {

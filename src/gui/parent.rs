@@ -3,8 +3,8 @@ use crate::handles::HWND;
 
 /// Trait to any window which can host child controls.
 pub trait Parent {
-	/// Returns the underlying handle for this window.
-	fn hwnd(&self) -> HWND;
+	/// Returns a reference to the underlying handle for this window.
+	fn hwnd(&self) -> &HWND;
 
 	/// Exposes the window events.
 	///

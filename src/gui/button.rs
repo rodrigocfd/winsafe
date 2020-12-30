@@ -6,19 +6,17 @@ use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::parent::Parent;
 use crate::handles::HWND;
 
-struct Obj {
-	base: NativeControlBase,
-	parent_events: ButtonEvents,
-}
-
-//------------------------------------------------------------------------------
-
 /// Native
 /// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
 /// control.
 #[derive(Clone)]
 pub struct Button {
 	obj: Arc<UnsafeCell<Obj>>,
+}
+
+struct Obj { // actual fields of Button
+	base: NativeControlBase,
+	parent_events: ButtonEvents,
 }
 
 unsafe impl Send for Button {}
@@ -37,7 +35,7 @@ impl Button {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new_with_id(ctrl_id),
+					base: NativeControlBase::new_with_id(ctrl_id, parent.hwnd()),
 					parent_events: ButtonEvents::new(parent.on(), ctrl_id),
 				}
 			)),

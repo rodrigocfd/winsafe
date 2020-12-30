@@ -13,7 +13,7 @@ use crate::WString;
 /// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct LVCOLUMN<'a> {
 	pub mask: co::LVCF,
 	pub fmt: co::LVCFMT_C,
@@ -44,7 +44,7 @@ impl<'a> LVCOLUMN<'a> {
 /// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct LVFINDINFO<'a> {
 	pub flags: co::LVFI,
 	psz: *const u16,
@@ -71,7 +71,7 @@ impl<'a> LVFINDINFO<'a> {
 /// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct LVITEM<'a> {
 	pub mask: co::LVIF,
 	pub iItem: i32,
@@ -106,7 +106,7 @@ impl<'a> LVITEM<'a> {
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMBCDROPDOWN {
 	pub hdr: NMHDR,
 	pub rcButton: RECT,
@@ -115,7 +115,7 @@ pub struct NMBCDROPDOWN {
 /// [`NMBCHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbchotitem)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMBCHOTITEM {
 	pub hdr: NMHDR,
 	pub dwFlags: co::HICF,
@@ -124,7 +124,7 @@ pub struct NMBCHOTITEM {
 /// [`NMCHAR`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmchar)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMCHAR {
 	pub hdr: NMHDR,
 	pub ch: u32,
@@ -135,7 +135,7 @@ pub struct NMCHAR {
 /// [`NMCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmcustomdraw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct NMCUSTOMDRAW {
 	pub hdr: NMHDR,
 	pub dwDrawStage: co::CDDS,
@@ -151,7 +151,7 @@ impl_default_zero!(NMCUSTOMDRAW);
 /// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMITEMACTIVATE {
 	pub hdr: NMHDR,
 	pub iItem: i32,
@@ -167,7 +167,7 @@ pub struct NMITEMACTIVATE {
 /// [`NMLISTVIEW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlistview)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMLISTVIEW {
 	pub hdr: NMHDR,
 	pub iItem: i32,
@@ -182,7 +182,7 @@ pub struct NMLISTVIEW {
 /// [`NMLVDISPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvdispinfow)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMLVDISPINFO<'a> {
 	pub hdr: NMHDR,
 	pub item: LVITEM<'a>,
@@ -191,7 +191,7 @@ pub struct NMLVDISPINFO<'a> {
 /// [`NMLVEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvemptymarkup)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct NMLVEMPTYMARKUP {
 	pub hdr: NMHDR,
 	pub dwFlags: co::EMF,
@@ -203,7 +203,7 @@ impl_default_zero!(NMLVEMPTYMARKUP);
 /// [`NMLVFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct NMLVFINDITEM<'a> {
 	pub hdr: NMHDR,
 	pub iStart: i32,
@@ -212,7 +212,7 @@ pub struct NMLVFINDITEM<'a> {
 
 /// [`NMLVGETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvgetinfotipw)
 /// struct.
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct NMLVGETINFOTIP<'a> {
 	pub hdr: NMHDR,
 	pub dwFlags: co::LVGIT,
@@ -244,7 +244,7 @@ impl<'a> NMLVGETINFOTIP<'a> {
 /// [`NMLVSCROLL`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvscroll)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMLVSCROLL {
 	pub hdr: NMHDR,
 	pub dx: i32,
@@ -254,7 +254,7 @@ pub struct NMLVSCROLL {
 /// [`NMMOUSE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmmouse)
 /// struct.
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct NMMOUSE {
 	pub hdr: NMHDR,
 	pub dwItemSpec: usize,

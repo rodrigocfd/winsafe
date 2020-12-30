@@ -9,25 +9,23 @@ use crate::gui::control_util::multiply_dpi;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
-use crate::gui::parent::Parent;
+use crate::gui::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::priv_funcs::str_dyn_error;
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
-struct Obj {
-	base: WindowBase,
-	opts: WindowMainOpts,
-	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
-}
-
-//------------------------------------------------------------------------------
-
 /// Main application window.
 #[derive(Clone)]
 pub struct WindowMain {
 	obj: Arc<UnsafeCell<Obj>>,
+}
+
+struct Obj { // actual fields of WindowMain
+	base: WindowBase,
+	opts: WindowMainOpts,
+	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
 }
 
 unsafe impl Send for WindowMain {}
@@ -36,7 +34,7 @@ unsafe impl Sync for WindowMain {}
 cref_mref!(WindowMain);
 
 impl Parent for WindowMain {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.cref().base.hwnd()
 	}
 
@@ -151,7 +149,7 @@ impl WindowMain {
 		});
 
 		self.on().wm_set_focus({
-			let our_hwnd = self.hwnd();
+			let our_hwnd = *self.hwnd();
 			move |_| {
 				let hwnd_cur_focus = HWND::GetFocus()
 					.unwrap_or(unsafe { HWND::null_handle() });
