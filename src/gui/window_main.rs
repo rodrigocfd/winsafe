@@ -71,6 +71,11 @@ impl WindowMain {
 	pub fn run_as_main(
 		&self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
 	{
+		let self2 = unsafe { &mut *self.obj.get() };
+		if !self2.base.hwnd().is_null() {
+			panic!("Cannot create WindowMain twice.");
+		}
+
 		if f::IsWindowsVistaOrGreater()
 			.map_err(|e| Box::new(e))?
 		{
@@ -80,8 +85,6 @@ impl WindowMain {
 
 		f::InitCommonControls();
 		create_ui_font()?;
-
-		let self2 = unsafe { &mut *self.obj.get() };
 
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;

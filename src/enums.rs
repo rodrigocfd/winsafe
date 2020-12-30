@@ -103,7 +103,7 @@ impl IdIdiStr {
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `uIDNewItem`.
 pub enum IdMenu {
-	Id(i32),
+	Id(u16),
 	Menu(HMENU),
 	None,
 }

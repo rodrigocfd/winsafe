@@ -1,12 +1,9 @@
-use std::error::Error;
-
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{Wm, WmNcCreate};
-use crate::priv_funcs::str_dyn_error;
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
@@ -70,23 +67,18 @@ impl WindowBase {
 		pos: POINT,
 		sz: SIZE,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> Result<HWND, Box<dyn Error>>
+		styles: co::WS) -> Result<HWND, co::ERROR>
 	{
-		if !self.hwnd.is_null() {
-			return Err(str_dyn_error("Cannot create a window twice."));
-		}
-
-		match HWND::CreateWindowEx(
+		// Our hwnd member is set during WM_NCCREATE processing, already set when
+		// CreateWindowEx returns.
+		HWND::CreateWindowEx(
 			ex_styles,
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
 			parent, hmenu, hinst,
 			Some(self as *const WindowBase as isize), // pass pointer to self
-		) {
-			Ok(hwnd) => Ok(hwnd), // our hwnd member is set during WM_NCCREATE processing, already set at this point
-			Err(err) => Err(Box::new(err)),
-		}
+		)
 	}
 
 	/// Generates a hash string from current fields, so it must called after all

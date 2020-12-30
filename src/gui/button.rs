@@ -9,7 +9,6 @@ use crate::handles::HWND;
 struct Obj {
 	base: NativeControlBase,
 	parent_events: ButtonEvents,
-	subclass_events: MsgEvents,
 }
 
 //------------------------------------------------------------------------------
@@ -38,7 +37,6 @@ impl Button {
 				Obj {
 					base: NativeControlBase::new_with_id(ctrl_id),
 					parent_events: ButtonEvents::new(parent.on(), ctrl_id),
-					subclass_events: MsgEvents::new(),
 				}
 			)),
 		}
@@ -56,13 +54,40 @@ impl Button {
 		self2.base.ctrl_id()
 	}
 
+	/// Exposes the events that can be handled with a closure.
+	///
+	/// # Panics
+	///
+	/// Panics if the control is already created. Closures must be attached to
+	/// events before control creation.
 	pub fn on(&self) -> ButtonEvents {
 		let self2 = unsafe { &*self.obj.get() };
 		self2.parent_events.clone()
 	}
 
+	/// Exposes the subclassing handler methods. If at least one handle is added,
+	/// the control will be subclassed.
+	///
+	/// # Panics
+	///
+	/// Panics if the control is already created. Closures must be attached to
+	/// events before control creation.
 	pub fn on_subclass(&self) -> MsgEvents {
 		let self2 = unsafe { &*self.obj.get() };
-		self2.subclass_events.clone()
+		self2.base.on_subclass()
+	}
+
+	/// Physically creates the control within the parent window.
+	///
+	/// # Panics
+	///
+	/// Panics if the control is already created.
+	pub fn create(&self) {
+		let self2 = unsafe { &mut *self.obj.get() };
+		if !self2.base.hwnd().is_null() {
+			panic!("Cannot create Button twice.");
+		}
+
+
 	}
 }
