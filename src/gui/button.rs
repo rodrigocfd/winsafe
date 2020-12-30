@@ -54,7 +54,7 @@ impl Button {
 		self.cref().base.ctrl_id()
 	}
 
-	/// Exposes the events that can be handled with a closure.
+	/// Exposes the button events.
 	///
 	/// # Panics
 	///
@@ -64,8 +64,9 @@ impl Button {
 		self.cref().parent_events.clone()
 	}
 
-	/// Exposes the subclassing handler methods. If at least one handle is added,
-	/// the control will be subclassed.
+	/// Exposes the subclass events. If at least one event exists, the control
+	/// will be
+	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
 	///
 	/// # Panics
 	///

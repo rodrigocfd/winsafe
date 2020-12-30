@@ -1,8 +1,12 @@
 use crate::gui::events::MsgEvents;
+use crate::handles::HWND;
 
 /// Trait to any window which can host child controls.
 pub trait Parent {
-	/// Exposes the events that can be handled with a closure.
+	/// Returns the underlying handle for this window.
+	fn hwnd(&self) -> HWND;
+
+	/// Exposes the window events.
 	///
 	/// # Panics
 	///

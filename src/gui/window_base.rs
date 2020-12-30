@@ -123,7 +123,7 @@ impl WindowBase {
 			return hwnd.DefWindowProc(wm_any).into();
 		}
 
-		// Execute user handler, if any.
+		// Execute user closure, if any.
 		let ref_self = unsafe { &mut *ptr_self };
 		let maybe_processed = ref_self.events.process_message(wm_any);
 

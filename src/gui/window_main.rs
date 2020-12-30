@@ -36,6 +36,10 @@ unsafe impl Sync for WindowMain {}
 cref_mref!(WindowMain);
 
 impl Parent for WindowMain {
+	fn hwnd(&self) -> HWND {
+		self.cref().base.hwnd()
+	}
+
 	fn on(&self) -> MsgEvents {
 		self.cref().base.on()
 	}
@@ -55,11 +59,6 @@ impl WindowMain {
 		};
 		wnd.default_message_handlers();
 		wnd
-	}
-
-	/// Returns the underlying handle for this window.
-	pub fn hwnd(&self) -> HWND {
-		self.cref().base.hwnd()
 	}
 
 	/// Creates the window and runs the main application loop. This function will

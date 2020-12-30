@@ -13,6 +13,15 @@ pub enum ProcessResult {
 	HandledWithoutRet,     // return value is not meaningful, whatever default value
 }
 
+//------------------------------------------------------------------------------
+
+/// Exposes window
+/// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
+#[derive(Clone)]
+pub struct MsgEvents {
+	obj: Rc<UnsafeCell<Obj>>,
+}
+
 struct Obj {
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
@@ -30,15 +39,6 @@ struct Obj {
 		(u16, co::NM), // idFrom, code
 		Box<dyn FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
 	>,
-}
-
-//------------------------------------------------------------------------------
-
-/// Allows adding closures to handle window
-/// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
-#[derive(Clone)]
-pub struct MsgEvents {
-	obj: Rc<UnsafeCell<Obj>>,
 }
 
 cref_mref!(MsgEvents);
@@ -158,17 +158,18 @@ impl MsgEvents {
 		self.mref().nfys.insert((id_from, code), Box::new(func));
 	}
 
-	/// Adds a handler to any [window message](crate::co::WM).
+	/// Event to any [window message](crate::co::WM).
 	///
-	/// You should always prefer the specific message handlers, which will give
-	/// you the correct message parameters. This generic method should be used
-	/// when you have a custom, non-standard window message.
+	/// You should always prefer the specific events, which will give you the
+	/// correct message parameters. This generic method should be used when you
+	/// have a custom, non-standard window message.
 	///
 	/// # Examples
 	///
 	/// ```rust,ignore
 	/// use winsafe::co::WM;
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	/// use winsafe::gui::Parent; // necessary to access the trait methods
 	///
 	/// let wnd = WindowMain::new(
 	///   WindowMainOpts::default(),
@@ -193,36 +194,38 @@ impl MsgEvents {
 		});
 	}
 
-	/// Adds a handler to [`WM_TIMER`](crate::msg::WmTimer) message, narrowed to
-	/// a specific timer ID.
+	/// [`WM_TIMER`](crate::msg::WmTimer) message, narrowed to a specific timer
+	/// ID.
 	pub fn wm_timer<F>(&mut self, timer_id: u32, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
 		self.mref().tmrs.insert(timer_id, Box::new(func));
 	}
 
-	/// Adds a handler to [`WM_COMMAND`](crate::msg::WmCommand) message.
+	/// [`WM_COMMAND`](crate::msg::WmCommand) message, for specific code and
+	/// control ID.
 	///
 	/// A command notification must be narrowed by the
 	/// [command code](crate::co::CMD) and the control ID, so the closure will
 	/// be fired for that specific control at that specific event.
 	///
-	/// You should always prefer the specific command notification handlers,
-	/// which will give you the correct message parameters.
+	/// You should always prefer the specific command notifications, which will
+	/// give you the correct message parameters.
 	pub fn wm_command<F>(&mut self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
 		self.mref().cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
-	/// Adds a handler to [`WM_NOTIFY`](crate::msg::WmNotify) message.
+	/// [`WM_NOTIFY`](crate::msg::WmNotify) message, for specific ID and
+	/// notification code.
 	///
 	/// A notification must be narrowed by the [notification code](crate::co::NM)
 	/// and the control ID, so the closure will be fired for that specific
 	/// control at the specific event.
 	///
-	/// You should always prefer the specific notification handlers, which
-	/// will give you the correct notification struct.
+	/// You should always prefer the specific notifications, which will give you
+	/// the correct notification struct.
 	pub fn wm_notify<F>(&mut self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> isize + Send + Sync + 'static,
 	{
@@ -233,16 +236,16 @@ impl MsgEvents {
 	}
 
 	wm_ret_none! { wm_activate, co::WM::ACTIVATE, msg::WmActivate,
-		/// Adds a handler to [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
+		/// [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
 		///
 		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, msg::WmActivateApp,
-		/// Adds a handler to [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
+		/// [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
 	}
 
-	/// Adds a handler to [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
+	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
 	pub fn wm_app_command<F>(&mut self, func: F)
 		where F: FnMut(msg::WmAppCommand) + Send + Sync + 'static,
 	{
@@ -253,15 +256,16 @@ impl MsgEvents {
 	}
 
 	wm_empty! { wm_close, co::WM::CLOSE,
-		/// Adds a handler to [`WM_CLOSE`](crate::msg::WmClose) message.
+		/// [`WM_CLOSE`](crate::msg::WmClose) message.
 	}
 
-	/// Adds a handler to [`WM_CREATE`](crate::msg::WmCreate) message.
+	/// [`WM_CREATE`](crate::msg::WmCreate) message.
 	///
 	/// # Examples
 	///
 	/// ```rust,ignore
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	/// use winsafe::gui::Parent; // necessary to access the trait methods
 	///
 	/// let wnd = WindowMain::new(
 	///   WindowMainOpts::default(),
@@ -286,7 +290,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// Adds a handler to [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
+	/// [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
 	pub fn wm_ctl_color_btn<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorBtn) -> HDC + Send + Sync + 'static,
 	{
@@ -296,7 +300,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// Adds a handler to [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
+	/// [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
 	pub fn wm_ctl_color_dlg<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorDlg) -> HDC + Send + Sync + 'static,
 	{
@@ -306,7 +310,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// Adds a handler to [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
+	/// [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
 	pub fn wm_ctl_color_edit<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorEdit) -> HDC + Send + Sync + 'static,
 	{
@@ -316,7 +320,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// Adds a handler to [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
+	/// [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
 	pub fn wm_ctl_color_list_box<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorListBox) -> HDC + Send + Sync + 'static,
 	{
@@ -326,7 +330,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// Adds a handler to [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
+	/// [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
 	pub fn wm_ctl_color_scroll_bar<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorScrollBar) -> HDC + Send + Sync + 'static,
 	{
@@ -336,7 +340,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// Adds a handler to [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
+	/// [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
 	pub fn wm_ctl_color_static<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCtlColorStatic) -> HDC + Send + Sync + 'static,
 	{
@@ -347,18 +351,18 @@ impl MsgEvents {
 	}
 
 	wm_empty! { wm_destroy, co::WM::DESTROY,
-		/// Adds a handler to [`WM_DESTROY`](crate::msg::WmDestroy) message.
+		/// [`WM_DESTROY`](crate::msg::WmDestroy) message.
 	}
 
 	wm_ret_none! { wm_drop_files, co::WM::DROPFILES, msg::WmDropFiles,
-		/// Adds a handler to [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
+		/// [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
 	}
 
 	wm_ret_none! { wm_end_session, co::WM::ENDSESSION, msg::WmEndSession,
-		/// Adds a handler to [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
+		/// [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
 	}
 
-	/// Adds a handler to [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
+	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
 	pub fn wm_init_dialog<F>(&mut self, func: F)
 		where F: FnMut(msg::WmInitDialog) -> bool + Send + Sync + 'static,
 	{
@@ -369,10 +373,10 @@ impl MsgEvents {
 	}
 
 	wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, msg::WmInitMenuPopup,
-		/// Adds a handler to [`WM_INITMENUPOPUP`](crate::msg::WmInitMenuPopup) message.
+		/// [`WM_INITMENUPOPUP`](crate::msg::WmInitMenuPopup) message.
 	}
 
-	/// Adds a handler to [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
+	/// [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
 	pub fn wm_nc_create<F>(&mut self, func: F)
 		where F: FnMut(msg::WmNcCreate) -> bool + Send + Sync + 'static,
 	{
@@ -383,33 +387,33 @@ impl MsgEvents {
 	}
 
 	wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
-		/// Adds a handler to [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
+		/// [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
 		///
 		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_empty! { wm_nc_paint, co::WM::NCPAINT,
-		/// Adds a handler to [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
+		/// [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
 	}
 
 	wm_empty! { wm_null, co::WM::NULL,
-		/// Adds a handler to [`WM_NULL`](crate::msg::WmNull) message.
+		/// [`WM_NULL`](crate::msg::WmNull) message.
 		///
 		/// Usually this message is not handled.
 	}
 
 	wm_empty! { wm_paint, co::WM::PAINT,
-		/// Adds a handler to [`WM_PAINT`](crate::msg::WmPaint) message.
+		/// [`WM_PAINT`](crate::msg::WmPaint) message.
 	}
 
 	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, msg::WmSetFocus,
-		/// Adds a handler to [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
+		/// [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
 		///
 		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_ret_none! { wm_size, co::WM::SIZE, msg::WmSize,
-		/// Adds a handler to [`WM_SIZE`](crate::msg::WmSize) message.
+		/// [`WM_SIZE`](crate::msg::WmSize) message.
 		///
 		/// # Examples
 		///
@@ -432,6 +436,6 @@ impl MsgEvents {
 	}
 
 	wm_ret_none! { wm_sizing, co::WM::SIZING, msg::WmSizing,
-		/// Adds a handler to [`WM_SIZING`](crate::msg::WmSizing) message.
+		/// [`WM_SIZING`](crate::msg::WmSizing) message.
 	}
 }

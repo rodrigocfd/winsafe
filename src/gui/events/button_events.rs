@@ -5,18 +5,16 @@ use crate::co;
 use crate::gui::events::MsgEvents;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
-struct Obj {
-	parent_events: MsgEvents,
-	ctrl_id: u16,
-}
-
-//------------------------------------------------------------------------------
-
-/// Allows adding closures to handle button
+/// Exposes button
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
 #[derive(Clone)]
 pub struct ButtonEvents {
 	obj: Rc<UnsafeCell<Obj>>,
+}
+
+struct Obj {
+	parent_events: MsgEvents,
+	ctrl_id: u16,
 }
 
 cref_mref!(ButtonEvents);
@@ -33,7 +31,6 @@ impl ButtonEvents {
 		}
 	}
 
-	/// Adds a handler to
 	/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 	/// notification.
 	pub fn bcn_drop_down<F>(&self, func: F)
@@ -45,7 +42,6 @@ impl ButtonEvents {
 		});
 	}
 
-	/// Adds a handler to
 	/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
 	/// notification.
 	pub fn bcn_hot_item_change<F>(&self, func: F)
@@ -57,7 +53,6 @@ impl ButtonEvents {
 		});
 	}
 
-	/// Adds a handler to
 	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 	/// command notification.
 	pub fn bn_clicked<F>(&self, func: F)
@@ -69,7 +64,6 @@ impl ButtonEvents {
 		});
 	}
 
-	/// Adds a handler to
 	/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 	/// command notification.
 	pub fn bn_dbl_clk<F>(&self, func: F)
@@ -81,7 +75,6 @@ impl ButtonEvents {
 		});
 	}
 
-	/// Adds a handler to
 	/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 	/// command notification.
 	pub fn bn_kill_focus<F>(&self, func: F)
@@ -93,7 +86,6 @@ impl ButtonEvents {
 		});
 	}
 
-	/// Adds a handler to
 	/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 	/// command notification.
 	pub fn bn_set_focus<F>(&self, func: F)
@@ -105,7 +97,6 @@ impl ButtonEvents {
 		});
 	}
 
-	/// Adds a handler to
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
