@@ -56,8 +56,7 @@ impl NativeControlBase {
 		&mut self,
 		class_name: &str,
 		title: Option<&str>,
-		pos: POINT,
-		sz: SIZE,
+		pos: POINT, sz: SIZE,
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> Result<HWND, co::ERROR>
 	{

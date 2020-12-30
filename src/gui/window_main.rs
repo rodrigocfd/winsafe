@@ -137,9 +137,11 @@ impl WindowMain {
 			let self2 = self.clone();
 			move |p| {
 				if !p.is_minimized {
-					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-						if self2.cref().base.hwnd().IsChild(hwnd_cur_focus) {
-							self2.mref().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
+					if p.event == co::WA::INACTIVE {
+						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
+							if self2.cref().base.hwnd().IsChild(hwnd_cur_focus) {
+								self2.mref().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
+							}
 						}
 					} else if let Some(hwnd_prev_focus) = self2.cref().hchild_prev_focus {
 						hwnd_prev_focus.SetFocus(); // put focus back
@@ -149,14 +151,13 @@ impl WindowMain {
 		});
 
 		self.on().wm_set_focus({
-			let our_hwnd = *self.hwnd();
+			let self2 = self.clone();
 			move |_| {
-				let hwnd_cur_focus = HWND::GetFocus()
-					.unwrap_or(unsafe { HWND::null_handle() });
-				if our_hwnd == hwnd_cur_focus {
-					// If window receives focus, delegate to first child.
-					if let Ok(hchild) = our_hwnd.GetWindow(co::GW::CHILD) {
-						if let Some(hchild) = hchild {
+				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
+					if *self2.hwnd() == hwnd_cur_focus {
+						// If window receives focus, delegate to first child.
+						// https://stackoverflow.com/a/2835220/6923555
+						if let Some(hchild) = self2.hwnd().GetWindow(co::GW::CHILD).unwrap() {
 							hchild.SetFocus();
 						}
 					}
