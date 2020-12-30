@@ -1,5 +1,8 @@
 //! High-level GUI abstractions.
 
+#[macro_use]
+pub mod macros;
+
 mod control_util;
 mod globals;
 mod main_loop;

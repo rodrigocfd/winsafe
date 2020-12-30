@@ -33,10 +33,11 @@ pub struct WindowMain {
 unsafe impl Send for WindowMain {}
 unsafe impl Sync for WindowMain {}
 
+cref_mref!(WindowMain);
+
 impl Parent for WindowMain {
 	fn on(&self) -> MsgEvents {
-		let self2 = unsafe { &*self.obj.get() };
-		self2.base.on()
+		self.cref().base.on()
 	}
 }
 
@@ -58,8 +59,7 @@ impl WindowMain {
 
 	/// Returns the underlying handle for this window.
 	pub fn hwnd(&self) -> HWND {
-		let self2 = unsafe { &*self.obj.get() };
-		self2.base.hwnd()
+		self.cref().base.hwnd()
 	}
 
 	/// Creates the window and runs the main application loop. This function will
@@ -71,8 +71,7 @@ impl WindowMain {
 	pub fn run_as_main(
 		&self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		if !self2.base.hwnd().is_null() {
+		if !self.cref().base.hwnd().is_null() {
 			panic!("Cannot create WindowMain twice.");
 		}
 
@@ -90,10 +89,10 @@ impl WindowMain {
 			.map_err(|e| Box::new(e))?;
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
-		self2.opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self2.base.register_class(&mut wcx)?;
+		self.cref().opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
+		self.cref().base.register_class(&mut wcx)?;
 
-		multiply_dpi(None, Some(&mut self2.opts.size))?;
+		multiply_dpi(None, Some(&mut self.mref().opts.size))?;
 
 		let screen_sz = SIZE {
 			cx: f::GetSystemMetrics(co::SM::CXSCREEN),
@@ -101,36 +100,36 @@ impl WindowMain {
 		};
 
 		let wnd_pos = POINT {
-			x: screen_sz.cx / 2 - self2.opts.size.cx / 2, // center on screen
-			y: screen_sz.cy / 2 - self2.opts.size.cy / 2,
+			x: screen_sz.cx / 2 - self.cref().opts.size.cx / 2, // center on screen
+			y: screen_sz.cy / 2 - self.cref().opts.size.cy / 2,
 		};
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
 			left: wnd_pos.x,
 			top: wnd_pos.y,
-			right: wnd_pos.x + self2.opts.size.cx,
-			bottom: wnd_pos.y + self2.opts.size.cy,
+			right: wnd_pos.x + self.cref().opts.size.cx,
+			bottom: wnd_pos.y + self.cref().opts.size.cy,
 		};
-		f::AdjustWindowRectEx(&mut wnd_rc, self2.opts.style,
-			self2.opts.menu.is_some(), self2.opts.ex_style)?;
+		f::AdjustWindowRectEx(&mut wnd_rc, self.cref().opts.style,
+			self.cref().opts.menu.is_some(), self.cref().opts.ex_style)?;
 
-		let our_hwnd = self2.base.create_window(
+		let our_hwnd = self.cref().base.create_window(
 			hinst,
 			None,
 			&class_name_buf.to_string(),
-			Some(&self2.opts.title),
+			Some(&self.cref().opts.title),
 			IdMenu::None,
 			POINT { x: wnd_rc.left, y: wnd_rc.top },
 			SIZE { cx: wnd_rc.right - wnd_rc.left, cy: wnd_rc.bottom - wnd_rc.top },
-			self2.opts.ex_style,
-			self2.opts.style,
+			self.cref().opts.ex_style,
+			self.cref().opts.style,
 		)?;
 
 		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		our_hwnd.UpdateWindow()
 			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
 
-		let res = run_loop(our_hwnd, self2.opts.accel_table)?; // blocks until window is closed
+		let res = run_loop(our_hwnd, self.cref().opts.accel_table)?; // blocks until window is closed
 		delete_ui_font();
 		Ok(res)
 	}
@@ -138,15 +137,14 @@ impl WindowMain {
 	/// Adds the default event processing.
 	fn default_message_handlers(&self) {
 		self.on().wm_activate({
-			let cloned = self.clone();
+			let self2 = self.clone();
 			move |p| {
-				let self2 = unsafe { &mut *cloned.obj.get() };
 				if !p.is_minimized {
 					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-						if self2.base.hwnd().IsChild(hwnd_cur_focus) {
-							self2.hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
+						if self2.cref().base.hwnd().IsChild(hwnd_cur_focus) {
+							self2.mref().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
 						}
-					} else if let Some(hwnd_prev_focus) = self2.hchild_prev_focus {
+					} else if let Some(hwnd_prev_focus) = self2.cref().hchild_prev_focus {
 						hwnd_prev_focus.SetFocus(); // put focus back
 					}
 				}

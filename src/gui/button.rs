@@ -24,6 +24,8 @@ pub struct Button {
 unsafe impl Send for Button {}
 unsafe impl Sync for Button {}
 
+cref_mref!(Button);
+
 impl Button {
 	/// Creates a new Button object.
 	pub fn new<T: Parent>(parent: T) -> Button {
@@ -44,14 +46,12 @@ impl Button {
 
 	/// Returns the underlying handle for this window.
 	pub fn hwnd(&self) -> HWND {
-		let self2 = unsafe { &*self.obj.get() };
-		self2.base.hwnd()
+		self.cref().base.hwnd()
 	}
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		let self2 = unsafe { &*self.obj.get() };
-		self2.base.ctrl_id()
+		self.cref().base.ctrl_id()
 	}
 
 	/// Exposes the events that can be handled with a closure.
@@ -61,8 +61,7 @@ impl Button {
 	/// Panics if the control is already created. Closures must be attached to
 	/// events before control creation.
 	pub fn on(&self) -> ButtonEvents {
-		let self2 = unsafe { &*self.obj.get() };
-		self2.parent_events.clone()
+		self.cref().parent_events.clone()
 	}
 
 	/// Exposes the subclassing handler methods. If at least one handle is added,
@@ -73,8 +72,7 @@ impl Button {
 	/// Panics if the control is already created. Closures must be attached to
 	/// events before control creation.
 	pub fn on_subclass(&self) -> MsgEvents {
-		let self2 = unsafe { &*self.obj.get() };
-		self2.base.on_subclass()
+		self.cref().base.on_subclass()
 	}
 
 	/// Physically creates the control within the parent window.
@@ -83,8 +81,7 @@ impl Button {
 	///
 	/// Panics if the control is already created.
 	pub fn create(&self) {
-		let self2 = unsafe { &mut *self.obj.get() };
-		if !self2.base.hwnd().is_null() {
+		if !self.cref().base.hwnd().is_null() {
 			panic!("Cannot create Button twice.");
 		}
 

@@ -19,6 +19,8 @@ pub struct ButtonEvents {
 	obj: Rc<UnsafeCell<Obj>>,
 }
 
+cref_mref!(ButtonEvents);
+
 impl ButtonEvents {
 	pub(crate) fn new(parent_events: MsgEvents, ctrl_id: u16) -> ButtonEvents {
 		Self {
@@ -37,8 +39,7 @@ impl ButtonEvents {
 	pub fn bcn_drop_down<F>(&self, func: F)
 		where F: FnMut(&NMBCDROPDOWN) + Send + Sync + 'static,
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		self2.parent_events.add_nfy(self2.ctrl_id, co::NM::BCN_DROPDOWN, {
+		self.mref().parent_events.add_nfy(self.cref().ctrl_id, co::NM::BCN_DROPDOWN, {
 			let mut func = func;
 			move |p| { func(unsafe { p.cast_nmhdr::<NMBCDROPDOWN>() }); None }
 		});
@@ -50,8 +51,7 @@ impl ButtonEvents {
 	pub fn bcn_hot_item_change<F>(&self, func: F)
 		where F: FnMut(&NMBCHOTITEM) + Send + Sync + 'static,
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		self2.parent_events.add_nfy(self2.ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
+		self.mref().parent_events.add_nfy(self.cref().ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
 			let mut func = func;
 			move |p| { func(unsafe { p.cast_nmhdr::<NMBCHOTITEM>() }); None }
 		});
@@ -63,8 +63,7 @@ impl ButtonEvents {
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		self2.parent_events.wm_command(co::CMD::BN_CLICKED, self2.ctrl_id, {
+		self.mref().parent_events.wm_command(co::CMD::BN_CLICKED, self.cref().ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -76,8 +75,7 @@ impl ButtonEvents {
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		self2.parent_events.wm_command(co::CMD::BN_DBLCLK, self2.ctrl_id, {
+		self.mref().parent_events.wm_command(co::CMD::BN_DBLCLK, self.cref().ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -89,8 +87,7 @@ impl ButtonEvents {
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		self2.parent_events.wm_command(co::CMD::BN_KILLFOCUS, self2.ctrl_id, {
+		self.mref().parent_events.wm_command(co::CMD::BN_KILLFOCUS, self.cref().ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -102,8 +99,7 @@ impl ButtonEvents {
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		self2.parent_events.wm_command(co::CMD::BN_SETFOCUS, self2.ctrl_id, {
+		self.mref().parent_events.wm_command(co::CMD::BN_SETFOCUS, self.cref().ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -115,8 +111,7 @@ impl ButtonEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + Send + Sync + 'static,
 	{
-		let self2 = unsafe { &mut *self.obj.get() };
-		self2.parent_events.add_nfy(self2.ctrl_id, co::NM::CUSTOMDRAW, {
+		self.mref().parent_events.add_nfy(self.cref().ctrl_id, co::NM::CUSTOMDRAW, {
 			let mut func = func;
 			move |p| Some(u32::from(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })) as isize)
 		});
