@@ -35,7 +35,7 @@ impl NativeControlBase {
 		}
 	}
 
-	pub(crate) fn is_parent_created(&self) -> bool {
+	pub fn is_parent_created(&self) -> bool {
 		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
 		!parent_hwnd.is_null()
 	}
@@ -53,7 +53,7 @@ impl NativeControlBase {
 	}
 
 	pub fn create_window(
-		&self,
+		&mut self,
 		class_name: &str,
 		title: Option<&str>,
 		pos: POINT,
@@ -63,7 +63,7 @@ impl NativeControlBase {
 	{
 		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
 
-		let our_hwnd = HWND::CreateWindowEx(
+		self.hwnd = HWND::CreateWindowEx(
 			ex_styles,
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
@@ -79,7 +79,7 @@ impl NativeControlBase {
 		)?;
 
 		self.install_subclass_if_needed();
-		Ok(our_hwnd)
+		Ok(self.hwnd)
 	}
 
 	fn install_subclass_if_needed(&self) {

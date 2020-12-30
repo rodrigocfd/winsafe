@@ -15,6 +15,6 @@ mod button;
 mod parent;
 mod window_main;
 
-pub use button::Button;
+pub use button::{Button, ButtonOpts};
 pub use parent::Parent;
 pub use window_main::{WindowMain, WindowMainOpts};

@@ -1,3 +1,5 @@
+use crate::co;
+
 const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
 
@@ -154,4 +156,9 @@ const_type! { BS, u32,
 	NOTIFY, 0x00004000
 	FLAT, 0x00008000
 	RIGHTBUTTON, Self::LEFTTEXT.0
+}
+impl From<BS> for co::WS {
+	fn from(v: BS) -> Self {
+		Self(v.0)
+	}
 }
