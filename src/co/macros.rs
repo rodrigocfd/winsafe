@@ -1,4 +1,4 @@
-/// Declares the type of a constant with some impls, but not Display.
+/// Declares the type of a constant with some impls, but not Debug/Display.
 macro_rules! const_type_no_display {
 	(
 		$name:ident, $num:ty,
@@ -7,7 +7,7 @@ macro_rules! const_type_no_display {
 	) => {
 		$(#[$attr])*
 		#[repr(C)]
-		#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
+		#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
 		pub struct $name(pub(crate) $num);
 
 		// Conversions from/to underlying number.
@@ -102,6 +102,7 @@ macro_rules! const_type {
 		const_type_no_display! {
 			$name, $num,
 			$(#[$attr])*
+			#[derive(Debug)]
 			$($cname, $cval)*
 		}
 

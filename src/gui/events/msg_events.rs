@@ -91,6 +91,7 @@ impl MsgEvents {
 		}
 	}
 
+	/// Searches for an user function for the given message, and runs it if found.
 	pub(crate) fn process_message(&self, wm_any: msg::Wm) -> ProcessResult {
 		let self2 = unsafe { &mut *self.obj.get() };
 		match wm_any.msg_id {

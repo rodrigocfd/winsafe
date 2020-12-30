@@ -2724,10 +2724,21 @@ impl std::error::Error for ERROR {
 	}
 }
 
+impl std::fmt::Debug for ERROR {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		if self.0 > 0xffff {
+			write!(f, "[{:#010x} {}] {}",
+				self.0, self.0, self.FormatMessage())
+		} else {
+			write!(f, "[{:#06x} {}] {}",
+				self.0, self.0, self.FormatMessage())
+		}
+	}
+}
+
 impl std::fmt::Display for ERROR {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "[{:#06x} {}] {}",
-			self.0, self.0, self.FormatMessage())
+		<Self as std::fmt::Debug>::fmt(self, f) // delegate
 	}
 }
 
