@@ -27,4 +27,4 @@ pub use consts_qr::*;
 pub use consts_st::*;
 pub use consts_uv::*;
 pub use consts_wxyz::*;
-pub use error::*;
+pub use error::ERROR;

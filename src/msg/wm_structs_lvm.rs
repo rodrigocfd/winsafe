@@ -13,6 +13,8 @@ empty_msg! { LvmGetItemCount, co::WM::LVM_GETITEMCOUNT,
 	/// message, which has no parameters.
 }
 
+//------------------------------------------------------------------------------
+
 /// [`LVM_INSERTCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertcolumn)
 /// message parameters.
 pub struct LvmInsertColumn<'a, 'b> {
@@ -39,6 +41,8 @@ impl<'a, 'b> From<Wm> for LvmInsertColumn<'a, 'b> {
 	}
 }
 
+//------------------------------------------------------------------------------
+
 /// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
 pub struct LvmInsertItem<'a, 'b> {
@@ -63,6 +67,8 @@ impl<'a, 'b> From<Wm> for LvmInsertItem<'a, 'b> {
 	}
 }
 
+//------------------------------------------------------------------------------
+
 /// [`LVM_ISITEMVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
 /// message parameters.
 pub struct LvmIsItemVisible {
@@ -86,6 +92,8 @@ impl From<Wm> for LvmIsItemVisible {
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
 
 /// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
@@ -113,6 +121,8 @@ impl From<Wm> for LvmScroll {
 	}
 }
 
+//------------------------------------------------------------------------------
+
 /// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
 pub struct LvmSetColumn<'a, 'b> {
@@ -139,6 +149,8 @@ impl<'a, 'b> From<Wm> for LvmSetColumn<'a, 'b> {
 	}
 }
 
+//------------------------------------------------------------------------------
+
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
 pub struct LvmSetItem<'a, 'b> {
@@ -162,6 +174,8 @@ impl<'a, 'b> From<Wm> for LvmSetItem<'a, 'b> {
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
 
 /// [`LVM_SETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
 /// message parameters.
@@ -188,6 +202,8 @@ impl<'a, 'b> From<Wm> for LvmSetItemText<'a, 'b> {
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
 
 /// [`LVM_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-update)
 /// message parameters.

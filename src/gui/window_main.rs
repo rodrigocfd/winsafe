@@ -61,16 +61,6 @@ impl WindowMain {
 		let self2 = unsafe { &*self.obj.get() };
 		self2.base.hwnd()
 	}
-/*
-	/// Exposes the events that can be handled with a closure.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created. Closures must be attached to
-	/// events before window creation.
-	pub fn on(&self) -> Events {
-		self.obj.as_ref().base.on()
-	}*/
 
 	/// Creates the window and runs the main application loop. This function will
 	/// block until the window is closed.
