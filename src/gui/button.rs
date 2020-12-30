@@ -36,15 +36,15 @@ impl Button {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new_with_id(ctrl_id, parent.hwnd()),
-					parent_events: ButtonEvents::new(parent.on(), ctrl_id),
+					parent_events: ButtonEvents::new(parent, ctrl_id),
 				}
 			)),
 		}
 	}
 
-	/// Returns the underlying handle for this window.
-	pub fn hwnd(&self) -> HWND {
-		self.cref().base.hwnd()
+	/// Returns a reference to the underlying handle for this control.
+	pub fn hwnd(&self) -> &HWND {
+		&self.cref().base.hwnd()
 	}
 
 	/// Returns the control ID.
@@ -56,10 +56,12 @@ impl Button {
 	///
 	/// # Panics
 	///
-	/// Panics if the control is already created. Closures must be attached to
-	/// events before control creation.
-	pub fn on(&self) -> ButtonEvents {
-		self.cref().parent_events.clone()
+	/// Panics if the parent window is already created.
+	pub fn on(&self) -> &ButtonEvents {
+		if self.cref().base.is_parent_created() {
+			panic!("Cannot add events after the button parent was created.");
+		}
+		&self.cref().parent_events
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control
@@ -70,7 +72,7 @@ impl Button {
 	///
 	/// Panics if the control is already created. Closures must be attached to
 	/// events before control creation.
-	pub fn on_subclass(&self) -> MsgEvents {
+	pub fn on_subclass(&self) -> &MsgEvents {
 		self.cref().base.on_subclass()
 	}
 

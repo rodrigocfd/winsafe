@@ -33,8 +33,8 @@ impl WindowBase {
 		&self.hwnd
 	}
 
-	pub fn on(&self) -> MsgEvents {
-		self.events.clone()
+	pub fn on(&self) -> &MsgEvents {
+		&self.events
 	}
 
 	pub fn register_class(

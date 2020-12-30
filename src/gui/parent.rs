@@ -12,5 +12,5 @@ pub trait Parent {
 	///
 	/// Panics if the window is already created. Closures must be attached to
 	/// events before window creation.
-	fn on(&self) -> MsgEvents;
+	fn on(&self) -> &MsgEvents;
 }

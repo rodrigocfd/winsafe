@@ -10,7 +10,6 @@ use crate::WString;
 static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
 
 /// Base to all native child controls.
-#[derive(Clone)]
 pub struct NativeControlBase {
 	hwnd: HWND,
 	ctrl_id: u16, // cannot be changed
@@ -36,16 +35,21 @@ impl NativeControlBase {
 		}
 	}
 
-	pub fn hwnd(&self) -> HWND {
-		self.hwnd
+	pub(crate) fn is_parent_created(&self) -> bool {
+		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
+		!parent_hwnd.is_null()
+	}
+
+	pub fn hwnd(&self) -> &HWND {
+		&self.hwnd
 	}
 
 	pub fn ctrl_id(&self) -> u16 {
 		self.ctrl_id
 	}
 
-	pub fn on_subclass(&self) -> MsgEvents {
-		self.subclass_events.clone()
+	pub fn on_subclass(&self) -> &MsgEvents {
+		&self.subclass_events
 	}
 
 	pub fn create_window(

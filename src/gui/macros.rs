@@ -1,5 +1,5 @@
 /// Implements `cref` and `mref` methods to retrieve references to `Obj` within
-/// `Arc` or `Rc` in clonable structs.
+/// `UnsafeCell` in structs.
 macro_rules! cref_mref {
 	($name:ident) => {
 		impl $name {

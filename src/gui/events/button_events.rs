@@ -1,34 +1,25 @@
-use std::cell::UnsafeCell;
-use std::rc::Rc;
-
 use crate::co;
 use crate::gui::events::MsgEvents;
+use crate::gui::Parent;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
 /// Exposes button
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
-#[derive(Clone)]
 pub struct ButtonEvents {
-	obj: Rc<UnsafeCell<Obj>>,
-}
-
-struct Obj { // actual fields of ButtonEvents
-	parent_events: MsgEvents,
+	parent_events: *const MsgEvents, // used only before parent creation
 	ctrl_id: u16,
 }
 
-cref_mref!(ButtonEvents);
-
 impl ButtonEvents {
-	pub(crate) fn new(parent_events: MsgEvents, ctrl_id: u16) -> ButtonEvents {
+	pub(crate) fn new<T: Parent>(parent: T, ctrl_id: u16) -> ButtonEvents {
 		Self {
-			obj: Rc::new(UnsafeCell::new(
-				Obj {
-					parent_events,
-					ctrl_id,
-				},
-			)),
+			parent_events: parent.on(), // convert reference to pointer
+			ctrl_id,
 		}
+	}
+
+	fn parent_events(&self) -> &MsgEvents {
+		unsafe { &*self.parent_events }
 	}
 
 	/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
@@ -36,7 +27,7 @@ impl ButtonEvents {
 	pub fn bcn_drop_down<F>(&self, func: F)
 		where F: FnMut(&NMBCDROPDOWN) + Send + Sync + 'static,
 	{
-		self.mref().parent_events.add_nfy(self.cref().ctrl_id, co::NM::BCN_DROPDOWN, {
+		self.parent_events().add_nfy(self.ctrl_id, co::NM::BCN_DROPDOWN, {
 			let mut func = func;
 			move |p| { func(unsafe { p.cast_nmhdr::<NMBCDROPDOWN>() }); None }
 		});
@@ -47,7 +38,7 @@ impl ButtonEvents {
 	pub fn bcn_hot_item_change<F>(&self, func: F)
 		where F: FnMut(&NMBCHOTITEM) + Send + Sync + 'static,
 	{
-		self.mref().parent_events.add_nfy(self.cref().ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
+		self.parent_events().add_nfy(self.ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
 			let mut func = func;
 			move |p| { func(unsafe { p.cast_nmhdr::<NMBCHOTITEM>() }); None }
 		});
@@ -58,7 +49,7 @@ impl ButtonEvents {
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		self.mref().parent_events.wm_command(co::CMD::BN_CLICKED, self.cref().ctrl_id, {
+		self.parent_events().wm_command(co::CMD::BN_CLICKED, self.ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -69,7 +60,7 @@ impl ButtonEvents {
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		self.mref().parent_events.wm_command(co::CMD::BN_DBLCLK, self.cref().ctrl_id, {
+		self.parent_events().wm_command(co::CMD::BN_DBLCLK, self.ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -80,7 +71,7 @@ impl ButtonEvents {
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		self.mref().parent_events.wm_command(co::CMD::BN_KILLFOCUS, self.cref().ctrl_id, {
+		self.parent_events().wm_command(co::CMD::BN_KILLFOCUS, self.ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -91,7 +82,7 @@ impl ButtonEvents {
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
-		self.mref().parent_events.wm_command(co::CMD::BN_SETFOCUS, self.cref().ctrl_id, {
+		self.parent_events().wm_command(co::CMD::BN_SETFOCUS, self.ctrl_id, {
 			let mut func = func;
 			move || func()
 		});
@@ -102,7 +93,7 @@ impl ButtonEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + Send + Sync + 'static,
 	{
-		self.mref().parent_events.add_nfy(self.cref().ctrl_id, co::NM::CUSTOMDRAW, {
+		self.parent_events().add_nfy(self.ctrl_id, co::NM::CUSTOMDRAW, {
 			let mut func = func;
 			move |p| Some(u32::from(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })) as isize)
 		});
