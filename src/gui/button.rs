@@ -131,7 +131,7 @@ pub struct ButtonOpts {
 	///
 	/// Defaults to `co::BS::PUSHBUTTON`.
 	///
-	/// Suggestion:
+	/// Suggestions:
 	/// * `co::BS::DEFPUSHBUTTON` for the default button of the window.
 	/// * `co::BS::NOTIFY` to receive notifications other than the simple click.
 	pub button_style: co::BS,

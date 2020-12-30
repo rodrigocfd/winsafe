@@ -46,6 +46,25 @@ impl ButtonEvents {
 
 	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 	/// command notification.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	///
+	/// let wnd = WindowMain::new(
+	///   WindowMainOpts::default(),
+	/// );
+	///
+	/// let btn = Button::new(wnd.clone());
+	///
+	/// btn.on().bn_clicked({
+	///   let btn = btn.clone();
+	///   move || {
+	///     println!("HWND: {}", btn.hwnd());
+	///   }
+	/// });
+	/// ```
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: FnMut() + Send + Sync + 'static,
 	{
