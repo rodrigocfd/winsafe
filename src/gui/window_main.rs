@@ -130,7 +130,7 @@ impl WindowMain {
 			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
 
 		let res = run_loop(our_hwnd, self.cref().opts.accel_table)?; // blocks until window is closed
-		delete_ui_font();
+		delete_ui_font(); // cleanup
 		Ok(res)
 	}
 

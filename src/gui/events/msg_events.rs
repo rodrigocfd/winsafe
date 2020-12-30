@@ -161,7 +161,29 @@ impl MsgEvents {
 	/// Adds a handler to any [window message](crate::co::WM).
 	///
 	/// You should always prefer the specific message handlers, which will give
-	/// you the correct message parameters.
+	/// you the correct message parameters. This generic method should be used
+	/// when you have a custom, non-standard window message.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::co::WM;
+	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	///
+	/// let wnd = WindowMain::new(
+	///   WindowMainOpts::default(),
+	/// );
+	///
+	/// let CUSTOM_MSG = WM::from(0x1234);
+	///
+	/// wnd.on().wm(CUSTOM_MSG, {
+	///   let wnd = wnd.clone();
+	///   move |parms| {
+	///     println!("HWND: {}, Message ID: {}", wnd.hwnd(), parms.msg_id);
+	///     0
+	///   }
+	/// });
+	/// ```
 	pub fn wm<F>(&mut self, ident: co::WM, func: F)
 		where F: FnMut(msg::Wm) -> isize + Send + Sync + 'static,
 	{
@@ -212,6 +234,8 @@ impl MsgEvents {
 
 	wm_ret_none! { wm_activate, co::WM::ACTIVATE, msg::WmActivate,
 		/// Adds a handler to [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
+		///
+		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, msg::WmActivateApp,
@@ -233,6 +257,26 @@ impl MsgEvents {
 	}
 
 	/// Adds a handler to [`WM_CREATE`](crate::msg::WmCreate) message.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	///
+	/// let wnd = WindowMain::new(
+	///   WindowMainOpts::default(),
+	/// );
+	///
+	/// wnd.on().wm_create({
+	///   let wnd = wnd.clone();
+	///   move |parms| {
+	///     println!("HWND: {}, client area: {}x{}",
+	///       wnd.hwnd(),
+	///       parms.createstruct.cx, parms.createstruct.cy);
+	///     0
+	///   }
+	/// });
+	/// ```
 	pub fn wm_create<F>(&mut self, func: F)
 		where F: FnMut(msg::WmCreate) -> i32 + Send + Sync + 'static,
 	{
@@ -340,6 +384,8 @@ impl MsgEvents {
 
 	wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
 		/// Adds a handler to [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
+		///
+		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_empty! { wm_nc_paint, co::WM::NCPAINT,
@@ -358,10 +404,31 @@ impl MsgEvents {
 
 	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, msg::WmSetFocus,
 		/// Adds a handler to [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
+		///
+		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_ret_none! { wm_size, co::WM::SIZE, msg::WmSize,
 		/// Adds a handler to [`WM_SIZE`](crate::msg::WmSize) message.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::gui::{WindowMain, WindowMainOpts};
+		///
+		/// let wnd = WindowMain::new(
+		///   WindowMainOpts::default(),
+		/// );
+		///
+		/// wnd.on().wm_size({
+		///   let wnd = wnd.clone();
+		///   move |parms| {
+		///     println!("HWND: {}, client area: {}x{}",
+		///       wnd.hwnd(),
+		///       parms.width, parms.height);
+		///   }
+		/// });
+		/// ```
 	}
 
 	wm_ret_none! { wm_sizing, co::WM::SIZING, msg::WmSizing,
