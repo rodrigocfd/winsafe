@@ -2,12 +2,12 @@ use std::cell::UnsafeCell;
 use std::rc::Rc;
 
 use crate::co;
-use crate::gui::func_store::FuncStore;
+use crate::gui::events::func_store::FuncStore;
 use crate::handles::HDC;
 use crate::msg;
 
 /// The result of processing a message.
-pub(crate) enum ProcessResult {
+pub enum ProcessResult {
 	NotHandled,            // message was not handler because no such handler is stored
 	HandledWithRet(isize), // return value is meaningful
 	HandledWithoutRet,     // return value is not meaningful, whatever default value
@@ -37,7 +37,7 @@ struct Obj {
 /// Allows adding closures to handle window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
 #[derive(Clone)]
-pub struct Events {
+pub struct MsgEvents {
 	obj: Rc<UnsafeCell<Obj>>,
 }
 
@@ -77,8 +77,8 @@ macro_rules! wm_ret_none {
 	};
 }
 
-impl Events {
-	pub(crate) fn new() -> Events {
+impl MsgEvents {
+	pub(crate) fn new() -> MsgEvents {
 		Self {
 			obj: Rc::new(UnsafeCell::new(
 				Obj {

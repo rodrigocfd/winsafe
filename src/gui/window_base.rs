@@ -3,7 +3,7 @@ use std::error::Error;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
-use crate::gui::events::{Events, ProcessResult};
+use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{Wm, WmNcCreate};
 use crate::priv_funcs::str_dyn_error;
@@ -13,7 +13,7 @@ use crate::WString;
 /// Base to all ordinary windows.
 pub struct WindowBase {
 	hwnd: HWND,
-	events: Events,
+	events: MsgEvents,
 }
 
 impl Drop for WindowBase {
@@ -28,7 +28,7 @@ impl WindowBase {
 	pub fn new() -> WindowBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
-			events: Events::new(),
+			events: MsgEvents::new(),
 		}
 	}
 
@@ -36,7 +36,7 @@ impl WindowBase {
 		self.hwnd
 	}
 
-	pub fn on(&self) -> Events {
+	pub fn on(&self) -> MsgEvents {
 		self.events.clone()
 	}
 

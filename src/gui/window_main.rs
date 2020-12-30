@@ -6,7 +6,7 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs as f;
 use crate::gui::control_util::multiply_dpi;
-use crate::gui::events::Events;
+use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
 use crate::gui::parent::Parent;
@@ -34,7 +34,7 @@ unsafe impl Send for WindowMain {}
 unsafe impl Sync for WindowMain {}
 
 impl Parent for WindowMain {
-	fn on(&self) -> Events {
+	fn on(&self) -> MsgEvents {
 		let self2 = unsafe { &*self.obj.get() };
 		self2.base.on()
 	}

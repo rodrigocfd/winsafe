@@ -1,4 +1,4 @@
-use crate::gui::events::Events;
+use crate::gui::events::MsgEvents;
 
 /// Trait to any window which can host child controls.
 pub trait Parent {
@@ -8,5 +8,5 @@ pub trait Parent {
 	///
 	/// Panics if the window is already created. Closures must be attached to
 	/// events before window creation.
-	fn on(&self) -> Events;
+	fn on(&self) -> MsgEvents;
 }
