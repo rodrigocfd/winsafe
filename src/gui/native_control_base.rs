@@ -3,9 +3,8 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
-use crate::gui::events::MsgEvents;
+use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::handles::{HINSTANCE, HWND};
-use crate::gui::events::ProcessResult;
 use crate::msg::Wm;
 use crate::priv_funcs::str_dyn_error;
 use crate::structs::{POINT, SIZE};

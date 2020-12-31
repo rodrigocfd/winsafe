@@ -128,7 +128,7 @@ empty_msg! { WmClose, co::WM::CLOSE,
 pub struct WmCommand {
 	pub code: co::CMD,
 	pub ctrl_id: u16,
-	pub ctrl_hwnd: HWND,
+	pub ctrl_hwnd: Option<HWND>,
 }
 
 impl From<WmCommand> for Wm {
@@ -136,7 +136,10 @@ impl From<WmCommand> for Wm {
 		Self {
 			msg_id: co::WM::COMMAND,
 			wparam: MAKEDWORD(p.ctrl_id, p.code.into()) as usize,
-			lparam: unsafe { p.ctrl_hwnd.as_ptr() } as isize,
+			lparam: match p.ctrl_hwnd {
+				Some(h) => (unsafe { h.as_ptr() }) as isize,
+				None => 0,
+			},
 		}
 	}
 }
@@ -146,7 +149,10 @@ impl From<Wm> for WmCommand {
 		Self {
 			code: co::CMD::from(HIWORD(p.wparam as u32)),
 			ctrl_id: LOWORD(p.wparam as u32),
-			ctrl_hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
+			ctrl_hwnd: match p.lparam {
+				0 => None,
+				ptr => Some(unsafe { HWND::from_ptr(ptr as *mut c_void) }),
+			},
 		}
 	}
 }

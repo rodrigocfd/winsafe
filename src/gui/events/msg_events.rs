@@ -1,4 +1,5 @@
 use std::cell::UnsafeCell;
+use std::rc::Rc;
 
 use crate::co;
 use crate::gui::events::func_store::FuncStore;
@@ -220,6 +221,47 @@ impl MsgEvents {
 		where F: FnMut() + 'static,
 	{
 		self.mref().cmds.insert((code, ctrl_id), Box::new(func));
+	}
+
+	/// [`WM_COMMAND`](crate::msg::WmCommand) message, handling both
+	/// `co::CMD::Accelerator` and `co::CMD::Menu`, for a specific command ID.
+	///
+	/// Ideal to be used with menu commands whose IDs are shared with
+	/// accelerators.
+	///
+	/// # Examples
+	///
+	/// Closing the window on ESC key:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{co, msg::WmClose};
+	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	///
+	/// let wnd = WindowMain::new(
+	///   WindowMainOpts::default(),
+	/// );
+	///
+	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
+	///   let wnd = wnd.clone();
+	///   move || {
+	///     wnd.hwnd().SendMessage(WmClose {});
+	///   }
+	/// });
+	/// ```
+	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
+		where F: FnMut() + 'static,
+	{
+		let shared_func = Rc::new(UnsafeCell::new(func));
+
+		self.wm_command(co::CMD::Menu, ctrl_id, {
+			let shared_func = shared_func.clone();
+			move || (unsafe { &mut *shared_func.get() })()
+		});
+
+		self.wm_command(co::CMD::Accelerator, ctrl_id, {
+			let shared_func = shared_func.clone();
+			move || (unsafe { &mut *shared_func.get() })()
+		});
 	}
 
 	/// [`WM_NOTIFY`](crate::msg::WmNotify) message, for specific ID and

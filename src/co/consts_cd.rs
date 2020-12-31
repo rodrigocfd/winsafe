@@ -228,8 +228,8 @@ const_type! { CS, u32,
 	DROPSHADOW, 0x00020000
 }
 
-const_type! { DLGID, u32,
-	/// Dialog built-in IDs (`u32`). These are also returned from
+const_type! { DLGID, u16,
+	/// Dialog built-in IDs (`u16`). These are also returned from
 	/// [`MessageBox`](crate::HWND::MessageBox).
 
 	OK, 1

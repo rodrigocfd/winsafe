@@ -60,6 +60,9 @@ impl WindowMain {
 	}
 
 	/// Returns the underlying handle for this window.
+	///
+	/// Note that the handle is initially null, receiving an actual value only
+	/// after the window is created.
 	pub fn hwnd(&self) -> HWND {
 		*self.cref().base.hwnd()
 	}

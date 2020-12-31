@@ -495,7 +495,7 @@ impl HWND {
 			)
 		} {
 			0 => Err(GetLastError()),
-			ret => Ok(co::DLGID::from(ret as u32)),
+			ret => Ok(co::DLGID::from(ret as u16)),
 		}
 	}
 

@@ -48,6 +48,9 @@ impl Button {
 	}
 
 	/// Returns the underlying handle for this control.
+	///
+	/// Note that the handle is initially null, receiving an actual value only
+	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
 		*self.cref().base.hwnd()
 	}
