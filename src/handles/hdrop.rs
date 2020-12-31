@@ -27,7 +27,7 @@ impl HDROP {
 	///   println!("File path: {}", f);
 	/// }
 	/// ```
-	pub fn DragQueryFile(&self) -> Result<Vec<String>, ()> {
+	pub fn DragQueryFile(self) -> Result<Vec<String>, ()> {
 		let count = unsafe {
 			shell32::DragQueryFileW(self.0, 0xffff_ffff, std::ptr::null_mut(), 0)
 		};
@@ -64,7 +64,7 @@ impl HDROP {
 
 	/// [`DragQueryPoint`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
 	/// method.
-	pub fn DragQueryPoint(&self) -> (POINT, bool) {
+	pub fn DragQueryPoint(self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let clientArea = unsafe {
 			shell32::DragQueryPoint(self.0, mut_void(&mut pt))

@@ -167,7 +167,6 @@ impl MsgEvents {
 	/// ```rust,ignore
 	/// use winsafe::co::WM;
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
-	/// use winsafe::gui::Parent; // necessary to access the trait methods
 	///
 	/// let wnd = WindowMain::new(
 	///   WindowMainOpts::default(),
@@ -263,7 +262,6 @@ impl MsgEvents {
 	///
 	/// ```rust,ignore
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
-	/// use winsafe::gui::Parent; // necessary to access the trait methods
 	///
 	/// let wnd = WindowMain::new(
 	///   WindowMainOpts::default(),
@@ -417,7 +415,6 @@ impl MsgEvents {
 		///
 		/// ```rust,ignore
 		/// use winsafe::gui::{WindowMain, WindowMainOpts};
-		/// use winsafe::gui::Parent; // necessary to access the trait methods
 		///
 		/// let wnd = WindowMain::new(
 		///   WindowMainOpts::default(),

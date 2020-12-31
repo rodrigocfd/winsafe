@@ -1,6 +1,6 @@
 use crate::co;
 use crate::gui::events::MsgEvents;
-use crate::gui::Parent;
+use crate::gui::parent::Parent;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
 /// Exposes button
@@ -13,7 +13,7 @@ pub struct ButtonEvents {
 impl ButtonEvents {
 	pub(crate) fn new<T: Parent>(parent: T, ctrl_id: u16) -> ButtonEvents {
 		Self {
-			parent_events: parent.on(), // convert reference to pointer
+			parent_events: parent.events_ref(), // convert reference to pointer
 			ctrl_id,
 		}
 	}

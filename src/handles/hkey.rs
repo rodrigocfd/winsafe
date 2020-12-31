@@ -41,7 +41,7 @@ impl HKEY {
 
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
-	pub fn RegCloseKey(&self) -> Result<(), co::ERROR> {
+	pub fn RegCloseKey(self) -> Result<(), co::ERROR> {
 		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.0) } as u32) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -76,7 +76,7 @@ impl HKEY {
 	///   _ => {},
 	/// }
 	/// ```
-	pub fn RegGetValue(&self,
+	pub fn RegGetValue(self,
 		lpSubKey: &str, lpValue: &str) -> Result<RegistryValue, co::ERROR>
 	{
 		let wSubKey = WString::from_str(lpSubKey);
@@ -208,7 +208,7 @@ impl HKEY {
 	///
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
-	pub fn RegOpenKeyEx(&self, lpSubKey: &str,
+	pub fn RegOpenKeyEx(self, lpSubKey: &str,
 		ulOptions: co::REG_OPTION, samDesired: co::KEY) -> Result<HKEY, co::ERROR>
 	{
 		let mut hKey = unsafe { Self::null_handle() };
@@ -264,7 +264,7 @@ impl HKEY {
 	///
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
-	pub fn RegQueryValueEx(&self,
+	pub fn RegQueryValueEx(self,
 		lpValueName: &str) -> Result<RegistryValue, co::ERROR>
 	{
 		let wValueName = WString::from_str(lpValueName);
@@ -389,7 +389,7 @@ impl HKEY {
 	///   )
 	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
 	/// ```
-	pub fn RegSetKeyValue(&self, lpSubKey: &str,
+	pub fn RegSetKeyValue(self, lpSubKey: &str,
 		lpValueName: &str, lpData: RegistryValue) -> Result<(), co::ERROR>
 	{
 		match co::ERROR::from(
@@ -433,7 +433,7 @@ impl HKEY {
 	///
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
-	pub fn RegSetValueEx(&self,
+	pub fn RegSetValueEx(self,
 		lpValueName: &str, lpData: RegistryValue) -> Result<(), co::ERROR>
 	{
 		match co::ERROR::from(

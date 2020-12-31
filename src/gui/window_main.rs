@@ -9,7 +9,7 @@ use crate::gui::control_util::multiply_dpi;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
-use crate::gui::Parent;
+use crate::gui::parent::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::priv_funcs::str_dyn_error;
@@ -34,11 +34,11 @@ unsafe impl Sync for WindowMain {}
 cref_mref!(WindowMain);
 
 impl Parent for WindowMain {
-	fn hwnd(&self) -> &HWND {
+	fn hwnd_ref(&self) -> &HWND {
 		self.cref().base.hwnd()
 	}
 
-	fn on(&self) -> &MsgEvents {
+	fn events_ref(&self) -> &MsgEvents {
 		self.cref().base.on()
 	}
 }
@@ -59,6 +59,21 @@ impl WindowMain {
 		wnd
 	}
 
+	/// Returns the underlying handle for this window.
+	pub fn hwnd(&self) -> HWND {
+		*self.cref().base.hwnd()
+	}
+
+	/// Exposes the window events.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created. Events must be set before window
+	/// creation.
+	pub fn on(&self) -> &MsgEvents {
+		self.cref().base.on()
+	}
+
 	/// Creates the window and runs the main application loop. This function will
 	/// block until the window is closed.
 	///
@@ -68,10 +83,6 @@ impl WindowMain {
 	pub fn run_as_main(
 		&self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
 	{
-		if !self.hwnd().is_null() {
-			panic!("Cannot create WindowMain twice.");
-		}
-
 		if f::IsWindowsVistaOrGreater()
 			.map_err(|e| Box::new(e))?
 		{
@@ -110,7 +121,7 @@ impl WindowMain {
 		f::AdjustWindowRectEx(&mut wnd_rc, self.cref().opts.style,
 			self.cref().opts.menu.is_some(), self.cref().opts.ex_style)?;
 
-		let our_hwnd = self.cref().base.create_window(
+		let our_hwnd = self.cref().base.create_window( // may panic
 			hinst,
 			None,
 			&class_name_buf.to_string(),
@@ -154,7 +165,7 @@ impl WindowMain {
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-					if *self2.hwnd() == hwnd_cur_focus {
+					if self2.hwnd() == hwnd_cur_focus {
 						// If window receives focus, delegate to first child.
 						// https://stackoverflow.com/a/2835220/6923555
 						if let Some(hchild) = self2.hwnd().GetWindow(co::GW::CHILD).unwrap() {

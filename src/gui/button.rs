@@ -39,16 +39,16 @@ impl Button {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new_with_id(ctrl_id, parent.hwnd()),
+					base: NativeControlBase::new_with_id(ctrl_id, parent.hwnd_ref()),
 					parent_events: ButtonEvents::new(parent, ctrl_id),
 				}
 			)),
 		}
 	}
 
-	/// Returns a reference to the underlying handle for this control.
-	pub fn hwnd(&self) -> &HWND {
-		&self.cref().base.hwnd()
+	/// Returns the underlying handle for this control.
+	pub fn hwnd(&self) -> HWND {
+		*self.cref().base.hwnd()
 	}
 
 	/// Returns the control ID.
@@ -60,10 +60,13 @@ impl Button {
 	///
 	/// # Panics
 	///
-	/// Panics if the parent window is already created.
+	/// Panics if the control or the parent window are already created. Events
+	/// must be set before control and parent window creation.
 	pub fn on(&self) -> &ButtonEvents {
-		if self.cref().base.is_parent_created() {
-			panic!("Cannot add events after the button parent was created.");
+		if !self.hwnd().is_null() {
+			panic!("Cannot add events after the control is created.");
+		} else if self.cref().base.is_parent_created() {
+			panic!("Cannot add events after the parent window is created.");
 		}
 		&self.cref().parent_events
 	}
@@ -74,8 +77,8 @@ impl Button {
 	///
 	/// # Panics
 	///
-	/// Panics if the control is already created. Closures must be attached to
-	/// events before control creation.
+	/// Panics if the control or the parent window are already created. Events
+	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
 		self.cref().base.on_subclass()
 	}
@@ -89,13 +92,7 @@ impl Button {
 	/// Panics if the control is already created, or if the parent window was not
 	/// created yet.
 	pub fn create(&self, opts: ButtonOpts) -> Result<(), co::ERROR> {
-		if !self.cref().base.hwnd().is_null() {
-			panic!("Cannot create button twice.");
-		} else if !self.cref().base.is_parent_created() {
-			panic!("Cannot create button before parent window is created.");
-		}
-
-		let our_hwnd = self.mref().base.create_window(
+		let our_hwnd = self.mref().base.create_window( // may panic
 			"BUTTON", Some(&opts.text), opts.pos,
 			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
 			opts.ex_window_style,

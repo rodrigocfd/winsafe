@@ -34,6 +34,9 @@ impl WindowBase {
 	}
 
 	pub fn on(&self) -> &MsgEvents {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add event after window is created.");
+		}
 		&self.events
 	}
 
@@ -70,6 +73,10 @@ impl WindowBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> Result<HWND, co::ERROR>
 	{
+		if !self.hwnd.is_null() {
+			panic!("Cannot create window twice.");
+		}
+
 		// Our hwnd member is set during WM_NCCREATE processing, already set when
 		// CreateWindowEx returns.
 		HWND::CreateWindowEx(

@@ -56,7 +56,7 @@ macro_rules! handle_type {
 			}
 
 			/// Tells if the handle is invalid (null).
-			pub fn is_null(&self) -> bool {
+			pub fn is_null(self) -> bool {
 				self.0.is_null()
 			}
 

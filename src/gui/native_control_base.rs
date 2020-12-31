@@ -49,6 +49,11 @@ impl NativeControlBase {
 	}
 
 	pub fn on_subclass(&self) -> &MsgEvents {
+		if self.hwnd.is_null() {
+			panic!("Cannot add subclass events after the control is created.")
+		} else if self.is_parent_created() {
+			panic!("Cannot add subclass events after the parent window is created.");
+		}
 		&self.subclass_events
 	}
 
@@ -60,6 +65,12 @@ impl NativeControlBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> Result<HWND, co::ERROR>
 	{
+		if !self.hwnd.is_null() {
+			panic!("Cannot create control twice.");
+		} else if !self.is_parent_created() {
+			panic!("Cannot create control before parent window is created.");
+		}
+
 		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
 
 		self.hwnd = HWND::CreateWindowEx(

@@ -18,7 +18,7 @@ handle_type! {
 impl HMENU {
 	/// [`AppendMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// method.
-	pub fn AppendMenu(&self, uFlags: co::MF,
+	pub fn AppendMenu(self, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> Result<(), co::ERROR>
 	{
 		match unsafe {
@@ -36,7 +36,7 @@ impl HMENU {
 
 	/// [`CheckMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem)
 	/// method.
-	pub fn CheckMenuItem(&self,
+	pub fn CheckMenuItem(self,
 		uIDCheckItem: IdPos, uCheck: bool) -> Result<co::MF, ()>
 	{
 		let mut flags = if uCheck {
@@ -84,7 +84,7 @@ impl HMENU {
 
 	/// [`DeleteMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deletemenu)
 	/// method.
-	pub fn DeleteMenu(&self, uPosition: IdPos) -> Result<(), co::ERROR> {
+	pub fn DeleteMenu(self, uPosition: IdPos) -> Result<(), co::ERROR> {
 		let flags = match uPosition {
 			IdPos::Id(_) => co::MF::BYCOMMAND,
 			IdPos::Pos(_) => co::MF::BYPOSITION,
@@ -100,7 +100,7 @@ impl HMENU {
 
 	/// [`DestroyMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu)
 	/// method.
-	pub fn DestroyMenu(&self) -> Result<(), co::ERROR> {
+	pub fn DestroyMenu(self) -> Result<(), co::ERROR> {
 		match unsafe { user32::DestroyMenu(self.0) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -112,7 +112,7 @@ impl HMENU {
 	///
 	/// You don't need to pass `MF::BYCOMMAND` or `MF::BYPOSITION` flags, they
 	/// are inferred by [`IdPos`](crate::IdPos).
-	pub fn EnableMenuItem(&self,
+	pub fn EnableMenuItem(self,
 		uIDEnableItem: IdPos, uEnable: co::MF) -> Result<co::MF, ()>
 	{
 		let mut flags = uEnable;
@@ -132,7 +132,7 @@ impl HMENU {
 
 	/// [`GetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 	/// method.
-	pub fn GetMenuInfo(&self, lpmi: &mut MENUINFO) -> Result<(), co::ERROR> {
+	pub fn GetMenuInfo(self, lpmi: &mut MENUINFO) -> Result<(), co::ERROR> {
 		match unsafe { user32::GetMenuInfo(self.0, mut_void(lpmi)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -141,7 +141,7 @@ impl HMENU {
 
 	/// [`GetMenuItemCount`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
 	/// method.
-	pub fn GetMenuItemCount(&self) -> Result<u32, co::ERROR> {
+	pub fn GetMenuItemCount(self) -> Result<u32, co::ERROR> {
 		match unsafe { user32::GetMenuItemCount(self.0) } {
 			-1 => Err(GetLastError()),
 			count => Ok(count as u32),
@@ -150,7 +150,7 @@ impl HMENU {
 
 	/// [`GetMenuItemID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemid)
 	/// method.
-	pub fn GetMenuItemID(&self, nPos: i32) -> Option<i32> {
+	pub fn GetMenuItemID(self, nPos: i32) -> Option<i32> {
 		match unsafe { user32::GetMenuItemID(self.0, nPos) } {
 			-1 => None,
 			id => Some(id),
@@ -159,7 +159,7 @@ impl HMENU {
 
 	/// [`GetSubMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu)
 	/// method.
-	pub fn GetSubMenu(&self, nPos: u32) -> Option<HMENU> {
+	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
 		ptr_as_opt(
 			unsafe { user32::GetSubMenu(self.0, nPos as i32) }
 		).map(|p| Self(p))
@@ -170,7 +170,7 @@ impl HMENU {
 	///
 	/// You don't need to pass `MF::BYCOMMAND` or `MF::BYPOSITION` flags, they
 	/// are inferred by [`IdPos`](crate::IdPos).
-	pub fn InsertMenu(&self, uPosition: IdPos, uFlags: co::MF,
+	pub fn InsertMenu(self, uPosition: IdPos, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> Result<(), co::ERROR>
 	{
 		let mut flags = uFlags;
@@ -196,7 +196,7 @@ impl HMENU {
 
 	/// [`InsertMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuitemw)
 	/// method.
-	pub fn InsertMenuItem(&self,
+	pub fn InsertMenuItem(self,
 		item: IdPos, lpmi: &MENUITEMINFO) -> Result<(), co::ERROR>
 	{
 		let byPos = match item {
@@ -215,13 +215,13 @@ impl HMENU {
 
 	/// [`IsMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ismenu)
 	/// method.
-	pub fn IsMenu(&self) -> bool {
+	pub fn IsMenu(self) -> bool {
 		unsafe { user32::IsMenu(self.0) != 0 }
 	}
 
 	/// [`RemoveMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-removemenu)
 	/// method.
-	pub fn RemoveMenu(&self, uPosition: IdPos) -> Result<(), co::ERROR> {
+	pub fn RemoveMenu(self, uPosition: IdPos) -> Result<(), co::ERROR> {
 		let byPos = match uPosition {
 			IdPos::Id(_) => false,
 			IdPos::Pos(_) => true,
@@ -237,7 +237,7 @@ impl HMENU {
 
 	/// [`SetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 	/// method.
-	pub fn SetMenuInfo(&self, mii: &MENUINFO) -> Result<(), co::ERROR> {
+	pub fn SetMenuInfo(self, mii: &MENUINFO) -> Result<(), co::ERROR> {
 		match unsafe { user32::SetMenuInfo(self.0, const_void(mii)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -246,7 +246,7 @@ impl HMENU {
 
 	/// [`SetMenuItemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuiteminfow)
 	/// method.
-	pub fn SetMenuItemInfo(&self,
+	pub fn SetMenuItemInfo(self,
 		item: IdPos, lpmii: &MENUITEMINFO) -> Result<(), co::ERROR>
 	{
 		let byPos = match item {
@@ -265,7 +265,7 @@ impl HMENU {
 
 	/// [`TrackPopupMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenu)
 	/// method
-	pub fn TrackPopupMenu(&self, uFlags: co::TPM,
+	pub fn TrackPopupMenu(self, uFlags: co::TPM,
 		x: i32, y: i32, hWnd: HWND) -> Result<Option<i32>, co::ERROR>
 	{
 		let ret = unsafe {
