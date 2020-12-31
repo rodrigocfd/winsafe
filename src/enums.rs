@@ -14,7 +14,10 @@ use crate::WString;
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
 pub enum AtomStr {
+	/// An [`ATOM`](crate::ATOM) returned by
+	/// [`RegisterClassEx`](crate::RegisterClassEx).
 	Atom(ATOM),
+	/// A string.
 	Str(WString),
 }
 
@@ -35,8 +38,11 @@ impl AtomStr {
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`;
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `lpNewItem`.
 pub enum BitmapPtrStr {
+	/// An [`HBITMAP`](crate::HBITMAP).
 	Bitmap(HBITMAP),
+	/// A string.
 	Str(WString),
+	/// A pointer to anything.
 	Param(*const c_void),
 }
 
@@ -57,8 +63,11 @@ impl BitmapPtrStr {
 ///
 /// * [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
 pub enum IdIdcStr {
+	/// A resource ID.
 	Id(i32),
+	/// A [`co::IDC`](crate::co::IDC) constant for a stock system cursor.
 	Idc(co::IDC),
+	/// A resource identified by a string.
 	Str(WString),
 }
 
@@ -79,8 +88,11 @@ impl IdIdcStr {
 ///
 /// * [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
 pub enum IdIdiStr {
+	/// A resource ID.
 	Id(i32),
+	/// A [`co::IDI`](crate::co::IDI) constant for a stock system icon.
 	Idi(co::IDI),
+	/// A resource identified by a string.
 	Str(WString),
 }
 
@@ -103,8 +115,11 @@ impl IdIdiStr {
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `uIDNewItem`.
 pub enum IdMenu {
+	/// A command ID.
 	Id(u16),
+	/// An [`HMENU`](crate::HMENU).
 	Menu(HMENU),
+	/// Nothing.
 	None,
 }
 
@@ -141,7 +156,9 @@ impl IdMenu {
 /// * [`RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
 /// * [`SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
 pub enum IdPos {
-	Id(i32),
+	/// A command ID.
+	Id(u16),
+	/// Zero-based position.
 	Pos(u32),
 }
 
@@ -161,7 +178,9 @@ impl From<IdPos> for u32 {
 /// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
 /// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`;
 pub enum IdStr {
+	/// A resource ID.
 	Id(i32),
+	/// A resource identified by a string.
 	Str(WString),
 }
 
@@ -179,10 +198,15 @@ impl IdStr {
 
 /// Variant value returned by [`RegQueryValueEx`](crate::HKEY::RegQueryValueEx).
 pub enum RegistryValue {
+	/// Binary value.
 	Binary(Vec<u8>),
+	/// An `u32` integer value.
 	Dword(u32),
+	/// An `u64` integer value.
 	Qword(u64),
+	/// String value.
 	Sz(WString),
+	/// No value.
 	None,
 }
 
