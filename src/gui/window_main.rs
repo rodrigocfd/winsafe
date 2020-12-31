@@ -83,8 +83,8 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_as_main(
-		&self, cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
+	pub fn run_as_main(&self,
+		cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
 	{
 		if f::IsWindowsVistaOrGreater()
 			.map_err(|e| Box::new(e))?

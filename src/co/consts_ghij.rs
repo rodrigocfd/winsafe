@@ -77,8 +77,8 @@ const_type! { GWLP, i32,
 	USERDATA, -21
 	ID, -12
 	DWLP_DLGPROC, 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
-	GWLP_DWLP_MSGRESULT, 0
-	GWLP_DWLP_USER, Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
+	DWLP_MSGRESULT, 0
+	DWLP_USER, Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
 }
 
 const_type! { HICF, u32,
@@ -93,6 +93,14 @@ const_type! { HICF, u32,
 	RESELECT, 0x00000040
 	LMOUSE, 0x00000080
 	TOGGLEDROPDOWN, 0x00000100
+}
+
+const_type! { ICON_SZ, i32,
+	/// [`WM_SETICON`](crate::msg::WmSetIcon) icon size (`i32`). Originally has
+	/// `ICON` prefix.
+
+	SMALL, 0
+	BIG, 1
 }
 
 const_type! { IDC, usize,

@@ -306,6 +306,8 @@ impl MsgEvents {
 
 	wm_empty! { wm_close, co::WM::CLOSE,
 		/// [`WM_CLOSE`](crate::msg::WmClose) message.
+		///
+		/// Warning: default handled in [`DialogMain`](crate::gui::DialogMain).
 	}
 
 	/// [`WM_CREATE`](crate::msg::WmCreate) message.
@@ -440,7 +442,8 @@ impl MsgEvents {
 	wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
 		/// [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
 		///
-		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
+		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain) and
+		/// [`DialogMain`](crate::gui::DialogMain).
 	}
 
 	wm_empty! { wm_nc_paint, co::WM::NCPAINT,

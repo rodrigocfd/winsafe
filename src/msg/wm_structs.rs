@@ -3,7 +3,7 @@ use std::ffi::c_void;
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::{HDC, HDROP, HFONT, HMENU, HRGN, HWND};
+use crate::handles::{HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
 use crate::priv_funcs::FAPPCOMMAND_MASK;
 use crate::structs::{CREATESTRUCT, NMHDR, RECT};
@@ -494,6 +494,34 @@ impl From<Wm> for WmSetFont {
 		Self {
 			hfont: unsafe { HFONT::from_ptr(p.wparam as *mut c_void) },
 			redraw: LOWORD(p.lparam as u32) != 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
+/// message parameters.
+pub struct WmSetIcon {
+	pub size: co::ICON_SZ,
+	pub hicon: HICON,
+}
+
+impl From<WmSetIcon> for Wm {
+	fn from(p: WmSetIcon) -> Self {
+		Self {
+			msg_id: co::WM::SETICON,
+			wparam: i32::from(p.size) as usize,
+			lparam: unsafe { p.hicon.as_ptr() } as isize,
+		}
+	}
+}
+
+impl From<Wm> for WmSetIcon {
+	fn from(p: Wm) -> Self {
+		Self {
+			size: co::ICON_SZ::from(p.wparam as i32),
+			hicon: unsafe { HICON::from_ptr(p.lparam as *mut c_void) },
 		}
 	}
 }

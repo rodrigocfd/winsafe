@@ -175,6 +175,7 @@ impl From<IdPos> for u32 {
 
 /// Variant parameter for:
 ///
+/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpTemplateName`.
 /// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
 /// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`;
 pub enum IdStr {

@@ -4,6 +4,17 @@ use crate::co;
 use crate::handles::HWND;
 
 /// Type alias to
+/// [`DLGPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-dlgproc)
+/// callback function.
+pub type DLGPROC =
+	extern "system" fn(
+		hWnd: HWND,
+		uMsg: co::WM,
+		wParam: usize,
+		lParam: isize,
+	) -> isize;
+
+/// Type alias to
 /// [`HOOKPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-hookproc)
 /// callback function.
 pub type HOOKPROC =

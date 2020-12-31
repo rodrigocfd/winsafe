@@ -46,8 +46,8 @@ impl HWND {
 		hWndParent: Option<HWND>,
 		hMenu: IdMenu,
 		hInstance: HINSTANCE,
-		lpParam: Option<isize>
-	) -> Result<HWND, co::ERROR> {
+		lpParam: Option<isize>) -> Result<HWND, co::ERROR>
+	{
 		match ptr_as_opt(
 			unsafe {
 				user32::CreateWindowExW(

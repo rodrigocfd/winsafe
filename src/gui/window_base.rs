@@ -120,9 +120,7 @@ impl WindowBase {
 				ref_self.hwnd = hwnd; // store HWND in struct field
 				ptr_self
 			},
-			_ => {
-				hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self // retrieve
-			},
+			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
 		};
 
 		// If no pointer stored, then no processing is done.
