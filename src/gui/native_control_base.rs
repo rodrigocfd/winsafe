@@ -1,20 +1,25 @@
+use std::error::Error;
 use std::ffi::c_void;
 
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::gui::events::MsgEvents;
 use crate::handles::{HINSTANCE, HWND};
+use crate::gui::events::ProcessResult;
+use crate::msg::Wm;
+use crate::priv_funcs::str_dyn_error;
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
 static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
+static mut BASE_SUBCLASS_ID: usize = 0;
 
 /// Base to all native child controls.
 pub struct NativeControlBase {
 	hwnd: HWND,
 	ctrl_id: u16, // cannot be changed
 	subclass_events: MsgEvents,
-	pub ptr_parent_hwnd: *const HWND, // used only in control creation
+	ptr_parent_hwnd: *const HWND, // used only in control creation
 }
 
 impl NativeControlBase {
@@ -49,8 +54,8 @@ impl NativeControlBase {
 	}
 
 	pub fn on_subclass(&self) -> &MsgEvents {
-		if self.hwnd.is_null() {
-			panic!("Cannot add subclass events after the control is created.")
+		if !self.hwnd.is_null() {
+			panic!("Cannot add subclass events after the control is created.");
 		} else if self.is_parent_created() {
 			panic!("Cannot add subclass events after the parent window is created.");
 		}
@@ -92,7 +97,46 @@ impl NativeControlBase {
 		Ok(self.hwnd)
 	}
 
-	fn install_subclass_if_needed(&self) {
+	fn install_subclass_if_needed(&self) -> Result<(), Box<dyn Error>> {
+		if !self.subclass_events.is_empty() {
+			let subclass_id = unsafe {
+				BASE_SUBCLASS_ID += 1;
+				BASE_SUBCLASS_ID
+			};
 
+			self.hwnd.SetWindowSubclass(
+				Self::subclass_proc, subclass_id,
+				self as *const Self as usize, // pass pointer to self
+			)
+			.map_err(|_| str_dyn_error("SetWindowSubclass failed."))
+		} else {
+			Ok(())
+		}
+	}
+
+	extern "system" fn subclass_proc(
+		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
+		subclass_id: usize, ref_data: usize) -> isize
+	{
+		let ptr_self = ref_data as *mut Self; // retrieve
+		let wm_any = Wm { msg_id: msg, wparam, lparam };
+		let mut maybe_processed = ProcessResult::NotHandled;
+
+		if !ptr_self.is_null() {
+			let ref_self = unsafe { &mut *ptr_self };
+			if !ref_self.hwnd.is_null() {
+				maybe_processed = ref_self.subclass_events.process_message(wm_any);
+			}
+		}
+
+		if msg == co::WM::NCDESTROY { // always check
+			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id).ok();
+		}
+
+		match maybe_processed {
+			ProcessResult::HandledWithRet(res) => res.into(),
+			ProcessResult::HandledWithoutRet => 0,
+			ProcessResult::NotHandled => hwnd.DefSubclassProc(wm_any).into(),
+		}
 	}
 }

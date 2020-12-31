@@ -27,4 +27,9 @@ impl<K: Eq, F> FuncStore<K, F> {
 		}
 		None
 	}
+
+	/// Tells whether no functions have been added.
+	pub fn is_empty(&self) -> bool {
+		self.elems.is_empty()
+	}
 }

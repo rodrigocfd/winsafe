@@ -31,7 +31,7 @@ pub fn create_ui_font() -> Result<(), Box<dyn Error>> {
 pub fn delete_ui_font() {
 	unsafe {
 		if let Some(hfont) = UI_HFONT {
-			hfont.DeleteObject().unwrap();
+			hfont.DeleteObject().ok();
 			UI_HFONT = None;
 		}
 	}

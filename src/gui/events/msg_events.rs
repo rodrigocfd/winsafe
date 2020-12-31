@@ -91,6 +91,14 @@ impl MsgEvents {
 		}
 	}
 
+	/// Tells whether no functions have been added.
+	pub fn is_empty(&self) -> bool {
+		self.cref().msgs.is_empty()
+			&& self.cref().tmrs.is_empty()
+			&& self.cref().cmds.is_empty()
+			&& self.cref().nfys.is_empty()
+	}
+
 	/// Searches for an user function for the given message, and runs it if found.
 	pub(crate) fn process_message(&self, wm_any: msg::Wm) -> ProcessResult {
 		match wm_any.msg_id {

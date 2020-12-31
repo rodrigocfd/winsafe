@@ -85,7 +85,7 @@ impl WindowBase {
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
 			parent, hmenu, hinst,
-			Some(self as *const WindowBase as isize), // pass pointer to self
+			Some(self as *const Self as isize), // pass pointer to self
 		)
 	}
 
