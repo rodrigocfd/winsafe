@@ -1,5 +1,5 @@
 /// Declares the type of a constant with some impls, but not Debug/Display.
-macro_rules! const_type_no_display {
+macro_rules! const_type_no_debug_display {
 	(
 		$name:ident, $num:ty,
 		$(#[$attr:meta])*
@@ -99,7 +99,7 @@ macro_rules! const_type {
 		$(#[$attr:meta])*
 		$($cname:ident, $cval:expr)*
 	) => {
-		const_type_no_display! {
+		const_type_no_debug_display! {
 			$name, $num,
 			$(#[$attr])*
 			#[derive(Debug)]

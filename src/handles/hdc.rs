@@ -14,6 +14,7 @@ handle_type! {
 	HDC
 }
 
+/// Converts expression to `Result<(), ()>`.
 macro_rules! empty_res {
 	($what:expr) => {
 		match unsafe { $what } {
@@ -65,6 +66,17 @@ impl HDC {
 		};
 
 		empty_res!(gdi32::MoveToEx(self.0, x, y, pt))
+	}
+
+	/// [`Pie`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
+	/// method.
+	pub fn Pie(self,
+		left: i32, top: i32, right: i32, bottom: i32,
+		xr1: i32, yr1: i32, xr2: i32, yr2: i32) -> Result<(), ()>
+	{
+		empty_res!(
+			gdi32::Pie(self.0, left, top, right, bottom, xr1, yr1, xr2, yr2)
+		)
 	}
 
 	/// [`PolyBezier`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezier)

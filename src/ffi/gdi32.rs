@@ -11,6 +11,9 @@ extern "system" {
 	pub fn GetTextExtentPoint32W(hdc: HANDLE, lpString: PCSTR, c: i32, psizl: PVOID) -> BOOL;
 	pub fn LineTo(hdc: HANDLE, x: i32, y: i32) -> BOOL;
 	pub fn MoveToEx(hdc: HANDLE, x: i32, y: i32, lppt: PVOID) -> BOOL;
+	pub fn OffsetClipRgn(hrgn: HANDLE, x: i32, y: i32) -> i32;
+	pub fn OffsetRgn(hrgn: HANDLE, x: i32, y: i32) -> i32;
+	pub fn Pie(hdc: HANDLE, left: i32, top: i32, right: i32, bottom: i32, xr1: i32, yr1: i32, xr2: i32, yr2: i32) -> BOOL;
 	pub fn PolyBezier(hdc: HANDLE, apt: PCVOID, cpt: u32) -> BOOL;
 	pub fn PolyBezierTo(hdc: HANDLE, apt: PCVOID, cpt: u32) -> BOOL;
 	pub fn Polyline(hdc: HANDLE, apt: PCVOID, cpt: u32) -> BOOL;

@@ -6,7 +6,7 @@ use crate::funcs::GetLastError;
 use crate::handles::HLOCAL;
 use crate::WString;
 
-const_type_no_display! { ERROR, u32,
+const_type_no_debug_display! { ERROR, u32,
 	/// A Windows
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// (`u32`) retrieved by
@@ -2760,11 +2760,10 @@ impl ERROR {
 				0,
 				std::ptr::null_mut(),
 			) {
-				0 => {
-					format!(
+				0 => format!( // never fails
 						"FormatMessage failed to format error {:#06x}: error {:#06x}.",
-						self, GetLastError())
-				},
+						self, GetLastError()
+				),
 				nChars => {
 					let wText = WString::from_wchars_count(ptrBuf, nChars as usize);
 					match HLOCAL::from_ptr(ptrBuf).LocalFree() {
