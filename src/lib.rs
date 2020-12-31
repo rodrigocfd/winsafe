@@ -2,8 +2,12 @@
 //! [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) bindings, in
 //! idiomatic Rust.
 //!
-//! This crate intends to cover the most important parts of the Windows API,
-//! because the whole API is too huge.
+//! This crate provides bindings for Win32 functions, structs and constants. In
+//! addition, it provides high-level GUI wrappers for windows and controls,
+//! scaffolding the boilerplate.
+//!
+//! This crate intends to cover the most important parts of the Windows API, but
+//! not all of it (well, maybe one day) because the whole API is too huge.
 //!
 //! # Functions
 //!
@@ -46,8 +50,8 @@
 //!
 //! # Structs
 //!
-//! WinSafe structs are marked with `#[repr(C)]`. They all implement `Default`
-//! trait, and size fields like `cbSize` are private and automatically
+//! WinSafe structs are internally marked with `#[repr(C)]`. They all implement
+//! `Default` trait, and size fields like `cbSize` are private and automatically
 //! initialized.
 //!
 //! String pointer fields are also private, and can be retrieved using a getter
@@ -61,7 +65,7 @@
 //! println!("Class name: {}", wcx.lpszClassName()); // initially an empty string
 //!
 //! let buf = WString::from_str("CLASS_NAME");
-//! wcx.set_lpszClassName(&buf);
+//! wcx.set_lpszClassName(&buf); // set string pointer field
 //! ```
 //!
 //! # Constants

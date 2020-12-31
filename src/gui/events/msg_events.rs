@@ -173,6 +173,8 @@ impl MsgEvents {
 	///
 	/// # Examples
 	///
+	/// Handling a custom, user-defined message:
+	///
 	/// ```rust,ignore
 	/// use winsafe::co::WM;
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
@@ -307,6 +309,9 @@ impl MsgEvents {
 	}
 
 	/// [`WM_CREATE`](crate::msg::WmCreate) message.
+	///
+	/// This is where you physically create the child controls, by calling their
+	/// `create` method.
 	///
 	/// # Examples
 	///
