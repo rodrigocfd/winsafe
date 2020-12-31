@@ -1,4 +1,5 @@
 use std::cell::UnsafeCell;
+use std::error::Error;
 use std::sync::Arc;
 
 use crate::co;
@@ -91,7 +92,7 @@ impl Button {
 	///
 	/// Panics if the control is already created, or if the parent window was not
 	/// created yet.
-	pub fn create(&self, opts: ButtonOpts) -> Result<(), co::ERROR> {
+	pub fn create(&self, opts: ButtonOpts) -> Result<(), Box<dyn Error>> {
 		let our_hwnd = self.mref().base.create_window( // may panic
 			"BUTTON", Some(&opts.text), opts.pos,
 			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },

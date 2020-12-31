@@ -8,7 +8,6 @@ use crate::WString;
 pub const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub const L_MAX_URL_LENGTH: usize = 2048 + 32 + 4;
 pub const LF_FACESIZE: usize = 32;
-pub const WC_DIALOG: u16 = 0x8002;
 
 /// Transforms a raw pointer into an option, which is `None` if the pointer is
 /// null.

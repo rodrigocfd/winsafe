@@ -68,7 +68,7 @@ impl NativeControlBase {
 		title: Option<&str>,
 		pos: POINT, sz: SIZE,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> Result<HWND, co::ERROR>
+		styles: co::WS) -> Result<HWND, Box<dyn Error>>
 	{
 		if !self.hwnd.is_null() {
 			panic!("Cannot create control twice.");
@@ -93,7 +93,7 @@ impl NativeControlBase {
 			None,
 		)?;
 
-		self.install_subclass_if_needed();
+		self.install_subclass_if_needed()?;
 		Ok(self.hwnd)
 	}
 

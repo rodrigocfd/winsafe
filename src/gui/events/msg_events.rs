@@ -23,19 +23,19 @@ pub struct MsgEvents {
 struct Obj { // actual fields of MsgEvents
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
-		Box<dyn FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
+		Box<dyn FnMut(msg::Wm) -> Option<isize> + 'static>, // return value may be meaningful
 	>,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
-		Box<dyn FnMut() + Send + Sync + 'static>, // return value is never meaningful
+		Box<dyn FnMut() + 'static>, // return value is never meaningful
 	>,
 	cmds: FuncStore< // WM_COMMAND notifications
 		(co::CMD, u16), // code, ctrl_id
-		Box<dyn FnMut() + Send + Sync + 'static>, // return value is never meaningful
+		Box<dyn FnMut() + 'static>, // return value is never meaningful
 	>,
 	nfys: FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
-		Box<dyn FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static>, // return value may be meaningful
+		Box<dyn FnMut(msg::WmNotify) -> Option<isize> + 'static>, // return value may be meaningful
 	>,
 }
 
@@ -49,7 +49,7 @@ macro_rules! wm_empty {
 	) => {
 		$(#[$attr])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut() + Send + Sync + 'static,
+			where F: FnMut() + 'static,
 		{
 			self.add_msg($wmconst, {
 				let mut func = func;
@@ -67,7 +67,7 @@ macro_rules! wm_ret_none {
 	) => {
 		$(#[$attr])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut($parm) + Send + Sync + 'static,
+			where F: FnMut($parm) + 'static,
 		{
 			self.add_msg($wmconst, {
 				let mut func = func;
@@ -152,14 +152,14 @@ impl MsgEvents {
 
 	/// Raw add message.
 	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(msg::Wm) -> Option<isize> + Send + Sync + 'static,
+		where F: FnMut(msg::Wm) -> Option<isize> + 'static,
 	{
 		self.mref().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
 	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
-		where F: FnMut(msg::WmNotify) -> Option<isize> + Send + Sync + 'static,
+		where F: FnMut(msg::WmNotify) -> Option<isize> + 'static,
 	{
 		self.mref().nfys.insert((id_from, code), Box::new(func));
 	}
@@ -191,7 +191,7 @@ impl MsgEvents {
 	/// });
 	/// ```
 	pub fn wm<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(msg::Wm) -> isize + Send + Sync + 'static,
+		where F: FnMut(msg::Wm) -> isize + 'static,
 	{
 		self.add_msg(ident, {
 			let mut func = func;
@@ -202,7 +202,7 @@ impl MsgEvents {
 	/// [`WM_TIMER`](crate::msg::WmTimer) message, narrowed to a specific timer
 	/// ID.
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
-		where F: FnMut() + Send + Sync + 'static,
+		where F: FnMut() + 'static,
 	{
 		self.mref().tmrs.insert(timer_id, Box::new(func));
 	}
@@ -217,7 +217,7 @@ impl MsgEvents {
 	/// You should always prefer the specific command notifications, which will
 	/// give you the correct message parameters.
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
-		where F: FnMut() + Send + Sync + 'static,
+		where F: FnMut() + 'static,
 	{
 		self.mref().cmds.insert((code, ctrl_id), Box::new(func));
 	}
@@ -232,7 +232,7 @@ impl MsgEvents {
 	/// You should always prefer the specific notifications, which will give you
 	/// the correct notification struct.
 	pub fn wm_notify<F>(&self, id_from: u16, code: co::NM, func: F)
-		where F: FnMut(msg::WmNotify) -> isize + Send + Sync + 'static,
+		where F: FnMut(msg::WmNotify) -> isize + 'static,
 	{
 		self.add_nfy(id_from, code, {
 			let mut func = func;
@@ -252,7 +252,7 @@ impl MsgEvents {
 
 	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
 	pub fn wm_app_command<F>(&self, func: F)
-		where F: FnMut(msg::WmAppCommand) + Send + Sync + 'static,
+		where F: FnMut(msg::WmAppCommand) + 'static,
 	{
 		self.add_msg(co::WM::APPCOMMAND, {
 			let mut func = func;
@@ -286,7 +286,7 @@ impl MsgEvents {
 	/// });
 	/// ```
 	pub fn wm_create<F>(&self, func: F)
-		where F: FnMut(msg::WmCreate) -> i32 + Send + Sync + 'static,
+		where F: FnMut(msg::WmCreate) -> i32 + 'static,
 	{
 		self.add_msg(co::WM::CREATE, {
 			let mut func = func;
@@ -296,7 +296,7 @@ impl MsgEvents {
 
 	/// [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
 	pub fn wm_ctl_color_btn<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorBtn) -> HDC + Send + Sync + 'static,
+		where F: FnMut(msg::WmCtlColorBtn) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORBTN, {
 			let mut func = func;
@@ -306,7 +306,7 @@ impl MsgEvents {
 
 	/// [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
 	pub fn wm_ctl_color_dlg<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorDlg) -> HDC + Send + Sync + 'static,
+		where F: FnMut(msg::WmCtlColorDlg) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORDLG, {
 			let mut func = func;
@@ -316,7 +316,7 @@ impl MsgEvents {
 
 	/// [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
 	pub fn wm_ctl_color_edit<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorEdit) -> HDC + Send + Sync + 'static,
+		where F: FnMut(msg::WmCtlColorEdit) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLOREDIT, {
 			let mut func = func;
@@ -326,7 +326,7 @@ impl MsgEvents {
 
 	/// [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
 	pub fn wm_ctl_color_list_box<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorListBox) -> HDC + Send + Sync + 'static,
+		where F: FnMut(msg::WmCtlColorListBox) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORLISTBOX, {
 			let mut func = func;
@@ -336,7 +336,7 @@ impl MsgEvents {
 
 	/// [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
 	pub fn wm_ctl_color_scroll_bar<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorScrollBar) -> HDC + Send + Sync + 'static,
+		where F: FnMut(msg::WmCtlColorScrollBar) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
 			let mut func = func;
@@ -346,7 +346,7 @@ impl MsgEvents {
 
 	/// [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
 	pub fn wm_ctl_color_static<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorStatic) -> HDC + Send + Sync + 'static,
+		where F: FnMut(msg::WmCtlColorStatic) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSTATIC, {
 			let mut func = func;
@@ -368,7 +368,7 @@ impl MsgEvents {
 
 	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
 	pub fn wm_init_dialog<F>(&mut self, func: F)
-		where F: FnMut(msg::WmInitDialog) -> bool + Send + Sync + 'static,
+		where F: FnMut(msg::WmInitDialog) -> bool + 'static,
 	{
 		self.add_msg(co::WM::INITDIALOG, {
 			let mut func = func;
@@ -382,7 +382,7 @@ impl MsgEvents {
 
 	/// [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
 	pub fn wm_nc_create<F>(&self, func: F)
-		where F: FnMut(msg::WmNcCreate) -> bool + Send + Sync + 'static,
+		where F: FnMut(msg::WmNcCreate) -> bool + 'static,
 	{
 		self.add_msg(co::WM::NCCREATE, {
 			let mut func = func;
