@@ -424,6 +424,38 @@ impl MsgEvents {
 		/// [`WM_INITMENUPOPUP`](crate::msg::WmInitMenuPopup) message.
 	}
 
+	wm_ret_none! { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, msg::WmLButtonDblClk,
+		/// [`WM_LBUTTONDBLCLK`](crate::msg::WmLButtonDblClk) message.
+	}
+
+	wm_ret_none! { wm_l_button_down, co::WM::LBUTTONDOWN, msg::WmLButtonDown,
+		/// [`WM_LBUTTONDOWN`](crate::msg::WmLButtonDown) message.
+	}
+
+	wm_ret_none! { wm_l_button_up, co::WM::LBUTTONUP, msg::WmLButtonUp,
+		/// [`WM_LBUTTONUP`](crate::msg::WmLButtonUp) message.
+	}
+
+	wm_ret_none! { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, msg::WmMButtonDblClk,
+		/// [`WM_MBUTTONDBLCLK`](crate::msg::WmMButtonDblClk) message.
+	}
+
+	wm_ret_none! { wm_m_button_down, co::WM::MBUTTONDOWN, msg::WmMButtonDown,
+		/// [`WM_MBUTTONDOWN`](crate::msg::WmMButtonDown) message.
+	}
+
+	wm_ret_none! { wm_m_button_up, co::WM::MBUTTONUP, msg::WmMButtonUp,
+		/// [`WM_MBUTTONUP`](crate::msg::WmMButtonUp) message.
+	}
+
+	wm_ret_none! { wm_mouse_hover, co::WM::MOUSEHOVER, msg::WmMouseHover,
+		/// [`WM_MOUSEHOVER`](crate::msg::WmMouseHover) message.
+	}
+
+	wm_ret_none! { wm_mouse_move, co::WM::MOUSEMOVE, msg::WmMouseMove,
+		/// [`WM_MOUSEMOVE`](crate::msg::WmMouseMove) message.
+	}
+
 	/// [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
 	pub fn wm_nc_create<F>(&self, func: F)
 		where F: FnMut(msg::WmNcCreate) -> bool + 'static,
@@ -457,6 +489,18 @@ impl MsgEvents {
 		/// [`WM_PAINT`](crate::msg::WmPaint) message.
 	}
 
+	wm_ret_none! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, msg::WmRButtonDblClk,
+		/// [`WM_RBUTTONDBLCLK`](crate::msg::WmRButtonDblClk) message.
+	}
+
+	wm_ret_none! { wm_r_button_down, co::WM::RBUTTONDOWN, msg::WmRButtonDown,
+		/// [`WM_RBUTTONDOWN`](crate::msg::WmRButtonDown) message.
+	}
+
+	wm_ret_none! { wm_r_button_up, co::WM::RBUTTONUP, msg::WmRButtonUp,
+		/// [`WM_RBUTTONUP`](crate::msg::WmRButtonUp) message.
+	}
+
 	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, msg::WmSetFocus,
 		/// [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
 		///
@@ -486,5 +530,17 @@ impl MsgEvents {
 
 	wm_ret_none! { wm_sizing, co::WM::SIZING, msg::WmSizing,
 		/// [`WM_SIZING`](crate::msg::WmSizing) message.
+	}
+
+	wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, msg::WmXButtonDblClk,
+		/// [`WM_XBUTTONDBLCLK`](crate::msg::WmXButtonDblClk) message.
+	}
+
+	wm_ret_none! { wm_x_button_down, co::WM::XBUTTONDOWN, msg::WmXButtonDown,
+		/// [`WM_XBUTTONDOWN`](crate::msg::WmXButtonDown) message.
+	}
+
+	wm_ret_none! { wm_x_button_up, co::WM::XBUTTONUP, msg::WmXButtonUp,
+		/// [`WM_XBUTTONUP`](crate::msg::WmXButtonUp) message.
 	}
 }

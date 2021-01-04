@@ -60,6 +60,42 @@ macro_rules! ctl_color_msg {
 	};
 }
 
+/// Struct for WM_*BUTTON* messages and others.
+macro_rules! button_msg {
+	(
+		$name:ident, $wmconst:expr,
+		$(#[$attr:meta])*
+	) => {
+		$(#[$attr])*
+		pub struct $name {
+			pub vkeys: co::VK,
+			pub coords: POINT,
+		}
+
+		impl From<$name> for Wm {
+			fn from(p: $name) -> Self {
+				Self {
+					msg_id: $wmconst,
+					wparam: u16::from(p.vkeys) as usize,
+					lparam: MAKEDWORD(p.coords.x as u16, p.coords.y as u16) as isize,
+				}
+			}
+		}
+
+		impl From<Wm> for $name {
+			fn from(p: Wm) -> Self {
+				Self {
+					vkeys: co::VK::from(p.wparam as u16),
+					coords: POINT {
+						x: LOWORD(p.lparam as u32) as i32,
+						y: HIWORD(p.lparam as u32) as i32,
+					},
+				}
+			}
+		}
+	};
+}
+
 /// Converts a reference into `LPARAM` field, for message structs.
 pub fn ref_to_lparam<T>(field: &T) -> isize {
 	field as *const T as isize

@@ -6,7 +6,7 @@ use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
 use crate::priv_funcs::FAPPCOMMAND_MASK;
-use crate::structs::{CREATESTRUCT, NMHDR, RECT};
+use crate::structs::{CREATESTRUCT, NMHDR, POINT, RECT, SIZE};
 
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
@@ -336,6 +336,48 @@ impl From<Wm> for WmInitMenuPopup {
 
 //------------------------------------------------------------------------------
 
+button_msg! { WmLButtonDblClk, co::WM::LBUTTONDBLCLK,
+	/// [`WM_LBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
+	/// message parameters.
+}
+
+button_msg! { WmLButtonDown, co::WM::LBUTTONDOWN,
+	/// [`WM_LBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
+	/// message parameters.
+}
+
+button_msg! { WmLButtonUp, co::WM::LBUTTONUP,
+	/// [`WM_LBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
+	/// message parameters.
+}
+
+button_msg! { WmMButtonDblClk, co::WM::MBUTTONDBLCLK,
+	/// [`WM_MBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
+	/// message parameters.
+}
+
+button_msg! { WmMButtonDown, co::WM::MBUTTONDOWN,
+	/// [`WM_MBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
+	/// message parameters.
+}
+
+button_msg! { WmMButtonUp, co::WM::MBUTTONUP,
+	/// [`WM_MBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
+	/// message parameters.
+}
+
+button_msg! { WmMouseHover, co::WM::MOUSEHOVER,
+	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
+	/// message parameters.
+}
+
+button_msg! { WmMouseMove, co::WM::MOUSEMOVE,
+	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
+	/// message parameters.
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
 pub struct WmNcCreate<'a, 'b, 'c> {
@@ -446,6 +488,23 @@ empty_msg! { WmPaint, co::WM::PAINT,
 
 //------------------------------------------------------------------------------
 
+button_msg! { WmRButtonDblClk, co::WM::RBUTTONDBLCLK,
+	/// [`WM_RBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
+	/// message parameters.
+}
+
+button_msg! { WmRButtonDown, co::WM::RBUTTONDOWN,
+	/// [`WM_RBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
+	/// message parameters.
+}
+
+button_msg! { WmRButtonUp, co::WM::RBUTTONUP,
+	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
+	/// message parameters.
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 /// message parameters.
 pub struct WmSetFocus {
@@ -531,9 +590,8 @@ impl From<Wm> for WmSetIcon {
 /// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 /// message parameters.
 pub struct WmSize {
-	pub request: co::SIZE,
-	pub width: u16,
-	pub height: u16,
+	pub request: co::SIZE_REQ,
+	pub client_area: SIZE,
 }
 
 impl From<WmSize> for Wm {
@@ -541,7 +599,7 @@ impl From<WmSize> for Wm {
 		Self {
 			msg_id: co::WM::SIZE,
 			wparam: i32::from(p.request) as usize,
-			lparam: MAKEDWORD(p.width, p.height) as isize,
+			lparam: MAKEDWORD(p.client_area.cx as u16, p.client_area.cy as u16) as isize,
 		}
 	}
 }
@@ -549,9 +607,11 @@ impl From<WmSize> for Wm {
 impl From<Wm> for WmSize {
 	fn from(p: Wm) -> Self {
 		Self {
-			request: co::SIZE::from(p.wparam as i32),
-			width: LOWORD(p.lparam as u32),
-			height: HIWORD(p.lparam as u32),
+			request: co::SIZE_REQ::from(p.wparam as i32),
+			client_area: SIZE {
+				cx: LOWORD(p.lparam as u32) as i32,
+				cy: HIWORD(p.lparam as u32) as i32,
+			},
 		}
 	}
 }
@@ -616,4 +676,21 @@ impl From<Wm> for WmTimer {
 			}
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+
+button_msg! { WmXButtonDblClk, co::WM::XBUTTONDBLCLK,
+	/// [`WM_XBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
+	/// message parameters.
+}
+
+button_msg! { WmXButtonDown, co::WM::XBUTTONDOWN,
+	/// [`WM_XBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
+	/// message parameters.
+}
+
+button_msg! { WmXButtonUp, co::WM::XBUTTONUP,
+	/// [`WM_XBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
+	/// message parameters.
 }

@@ -1,6 +1,6 @@
 use crate::co;
 
-const_type! { SIZE, i32,
+const_type! { SIZE_REQ, i32,
 	/// [`WM_SIZE`](crate::params::WmSize) request (`i32`).
 
 	RESTORED, 0
