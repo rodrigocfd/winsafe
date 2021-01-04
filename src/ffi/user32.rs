@@ -8,6 +8,7 @@ extern "system" {
 	pub fn AppendMenuW(hMenu: HANDLE, uFlags: u32, uIDNewItem: usize, lpNewItem: PCSTR) -> BOOL;
 	pub fn BeginPaint(hWnd: HANDLE, lpPaint: PVOID) -> HANDLE;
 	pub fn CheckMenuItem(hMenu: HANDLE, uIDCheckItem: u32, uCheck: u32) -> i32;
+	pub fn ClientToScreen(hWnd: HANDLE, lpPoint: PVOID) -> BOOL;
 	pub fn CreateAcceleratorTableW(paccel: PVOID, cAccel: i32) -> HANDLE;
 	pub fn CreateDialogParamW(hInstance: HANDLE, lpTemplateName: PCSTR, hWndParent: HANDLE, lpDialogFunc: PFUNC, dwInitParam: isize) -> HANDLE;
 	pub fn CreateMenu() -> HANDLE;
@@ -83,6 +84,7 @@ extern "system" {
 	pub fn PostQuitMessage(nExitCode: i32);
 	pub fn RegisterClassExW(lpwcx: PCVOID) -> u16;
 	pub fn RemoveMenu(hMenu: HANDLE, uPosition: u32, uFlags: u32) -> BOOL;
+	pub fn ScreenToClient(hWnd: HANDLE, lpPoint: PVOID) -> BOOL;
 	pub fn SendMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> isize;
 	pub fn SetFocus(hWnd: HANDLE) -> HANDLE;
 	pub fn SetMenuInfo(hMenu: HANDLE, mii: PCVOID) -> BOOL;

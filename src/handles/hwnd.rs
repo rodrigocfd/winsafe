@@ -10,7 +10,7 @@ use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::Wm;
 use crate::priv_funcs::{const_void, mut_void, ptr_as_opt};
-use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
+use crate::structs::{MSG, PAINTSTRUCT, POINT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::WString;
 
 handle_type! {
@@ -31,6 +31,37 @@ impl HWND {
 		 ) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
 			None => Err(()),
+		}
+	}
+
+	/// [`ClientToScreen`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen)
+	/// method.
+	pub fn ClientToScreen(self, lpPoint: &mut POINT) -> Result<(), ()> {
+		match unsafe { user32::ClientToScreen(self.0, mut_void(lpPoint)) } {
+			0 => Err(()),
+			_ => Ok(()),
+		}
+	}
+
+	/// [`ClientToScreen`](crate::HWND::ClientToScreen) method for a
+	/// [`RECT`](crate::RECT).
+	pub fn ClientToScreenRc(self, lpRect: &mut RECT) -> Result<(), ()> {
+		match unsafe {
+			user32::ClientToScreen(
+				self.0,
+				&mut lpRect.left as *mut i32 as *mut c_void,
+			)
+		} {
+			0 => Err(()),
+			_ => match unsafe {
+				user32::ClientToScreen(
+					self.0,
+					&mut lpRect.right as *mut i32 as *mut c_void,
+				)
+			} {
+				0 => Err(()),
+				_ => Ok(()),
+			},
 		}
 	}
 
@@ -643,6 +674,37 @@ impl HWND {
 		} {
 			0 => Err(()),
 			_ => Ok(()),
+		}
+	}
+
+	/// [`ScreenToClient`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient)
+	/// method;
+	pub fn ScreenToClient(self, lpPoint: &mut POINT) -> Result<(), ()> {
+		match unsafe { user32::ScreenToClient(self.0, mut_void(lpPoint)) } {
+			0 => Err(()),
+			_ => Ok(()),
+		}
+	}
+
+	/// [`ScreenToClient`](crate::HWND::ScreenToClient) method for a
+	/// [`RECT`](crate::RECT).
+	pub fn ScreenToClientRc(self, lpRect: &mut RECT) -> Result<(), ()> {
+		match unsafe {
+			user32::ScreenToClient(
+				self.0,
+				&mut lpRect.left as *mut i32 as *mut c_void,
+			)
+		} {
+			0 => Err(()),
+			_ => match unsafe {
+				user32::ScreenToClient(
+					self.0,
+					&mut lpRect.right as *mut i32 as *mut c_void,
+				)
+			} {
+				0 => Err(()),
+				_ => Ok(()),
+			},
 		}
 	}
 
