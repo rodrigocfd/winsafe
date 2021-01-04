@@ -179,14 +179,12 @@ impl MsgEvents {
 	/// use winsafe::co::WM;
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
 	///
-	/// let wnd = WindowMain::new(
-	///   WindowMainOpts::default(),
-	/// );
+	/// let wnd: WindowMain; // initialize it somewhere...
 	///
 	/// let CUSTOM_MSG = WM::from(0x1234);
 	///
 	/// wnd.on().wm(CUSTOM_MSG, {
-	///   let wnd = wnd.clone();
+	///   let wnd = wnd.clone(); // pass into the closure
 	///   move |parms| {
 	///     println!("HWND: {}, Message ID: {}", wnd.hwnd(), parms.msg_id);
 	///     0
@@ -239,12 +237,10 @@ impl MsgEvents {
 	/// use winsafe::{co, msg::WmClose};
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
 	///
-	/// let wnd = WindowMain::new(
-	///   WindowMainOpts::default(),
-	/// );
+	/// let wnd: WindowMain; // initialize it somewhere...
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
-	///   let wnd = wnd.clone();
+	///   let wnd = wnd.clone(); // pass into the closure
 	///   move || {
 	///     wnd.hwnd().SendMessage(WmClose {});
 	///   }
@@ -320,12 +316,10 @@ impl MsgEvents {
 	/// ```rust,ignore
 	/// use winsafe::gui::{WindowMain, WindowMainOpts};
 	///
-	/// let wnd = WindowMain::new(
-	///   WindowMainOpts::default(),
-	/// );
+	/// let wnd: WindowMain; // initialize it somewhere...
 	///
 	/// wnd.on().wm_create({
-	///   let wnd = wnd.clone();
+	///   let wnd = wnd.clone(); // pass into the closure
 	///   move |parms| {
 	///     println!("HWND: {}, client area: {}x{}",
 	///       wnd.hwnd(),
@@ -474,12 +468,10 @@ impl MsgEvents {
 		/// ```rust,ignore
 		/// use winsafe::gui::{WindowMain, WindowMainOpts};
 		///
-		/// let wnd = WindowMain::new(
-		///   WindowMainOpts::default(),
-		/// );
+		/// let wnd: WindowMain; // initialize it somewhere...
 		///
 		/// wnd.on().wm_size({
-		///   let wnd = wnd.clone();
+		///   let wnd = wnd.clone(); // pass into the closure
 		///   move |parms| {
 		///     println!("HWND: {}, client area: {}x{}",
 		///       wnd.hwnd(),

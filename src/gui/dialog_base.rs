@@ -113,7 +113,7 @@ impl DialogBase {
 	}
 
 	fn set_ui_font_on_children(&self) {
-		self.hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: false });
+		self.hwnd.SendMessage(WmSetFont { hfont: ui_font(), redraw: false });
 		self.hwnd.EnumChildWindows(
 			Self::enum_proc, unsafe { ui_font().as_ptr() } as isize);
 	}

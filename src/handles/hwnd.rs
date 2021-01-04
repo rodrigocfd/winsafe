@@ -113,10 +113,45 @@ impl HWND {
 
 	/// [`EnumChildWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumchildwindows)
 	/// method.
+	///
+	/// This method can be more performant than
+	/// [`EnumChildWindowsVec`](crate::HWND::EnumChildWindowsVec), which passes
+	/// through all children and allocates a `Vec`. However, it has the
+	/// inconvenient of the manual function pointer.
 	pub fn EnumChildWindows(self, lpEnumFunc: WNDENUMPROC, lParam: isize) {
 		unsafe {
 			user32::EnumChildWindows(self.0, lpEnumFunc as *const c_void, lParam);
 		}
+	}
+
+	/// A more convenient [`EnumChildWindows`](co::HWND::EnumChildWindows), which
+	/// returns a `Vec` with the handles of all child windows, instead of taking
+	/// a function pointer.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::HWND;
+	///
+	/// let my_hwnd: HWND; // initialize it somewhere...
+	///
+	/// for hchild in my_hwnd.EnumChildWindowsVec() {
+	///   println!("HWND: {}", hchild);
+	/// }
+	/// ```
+	pub fn EnumChildWindowsVec(self) -> Vec<HWND> {
+		let mut hchildren = Vec::new();
+		self.EnumChildWindows(Self::EnumChildWindowsVecProc,
+			&mut hchildren as *mut Vec<_> as isize);
+		hchildren
+	}
+
+	extern "system" fn EnumChildWindowsVecProc(
+		hchild: HWND, lparam: isize) -> i32
+	{
+		let hchildren = unsafe { &mut *(lparam as *mut Vec<HWND>) };
+		hchildren.push(hchild);
+		true as i32
 	}
 
 	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)
@@ -351,8 +386,12 @@ impl HWND {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::HWND;
+	///
+	/// let my_hwnd: HWND; // initialize it somewhere...
+	///
 	/// let mut buf = WString::new();
-	/// my_window.GetWindowText(&mut buf).unwrap();
+	/// my_hwnd.GetWindowText(&mut buf).unwrap();
 	/// println!("Text: {}", buf.to_string());
 	/// ```
 	pub fn GetWindowText(self, buf: &mut WString) -> Result<i32, co::ERROR> {
@@ -400,7 +439,11 @@ impl HWND {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// let text = my_window.GetWindowTextStr().unwrap();
+	/// use winsafe::HWND;
+	///
+	/// let my_hwnd: HWND; // initialize it somewhere...
+	///
+	/// let text = my_hwnd.GetWindowTextStr().unwrap();
 	/// println!("Text: {}", text);
 	/// ```
 	pub fn GetWindowTextStr(self) -> Result<String, co::ERROR> {
@@ -427,7 +470,11 @@ impl HWND {
 	///
 	/// Most of the time you'll just want update the entire client area:
 	/// ```rust,ignore
-	/// my_window.InvalidateRect(None, true)
+	/// use winsafe::HWND;
+	///
+	/// let my_hwnd: HWND; // initialize it somewhere...
+	///
+	/// my_hwnd.InvalidateRect(None, true)
 	///   .unwrap();
 	/// ```
 	pub fn InvalidateRect(
@@ -498,7 +545,11 @@ impl HWND {
 	/// A modal message box, which blocks its parent:
 	///
 	/// ```rust,ignore
-	/// my_window.MessageBox("Hello, world", "title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
+	/// use winsafe::HWND;
+	///
+	/// let my_hwnd: HWND; // initialize it somewhere...
+	///
+	/// my_hwnd.MessageBox("Hello, world", "title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
 	///   .unwrap();
 	/// ```
 	///
@@ -568,6 +619,9 @@ impl HWND {
 	/// parameters:
 	/// ```rust,ignore
 	/// use winsafe::msg::WmClose;
+	/// use winsafe::HWND;
+	///
+	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
 	/// my_hwnd.SendMessage(WmClose {});
 	/// ```
@@ -575,9 +629,13 @@ impl HWND {
 	/// Sending a [`LVM_SETITEM`](crate::msg::LvmSetItem) list view message,
 	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
 	/// ```rust,ignore
-	/// use winsafe::{co, LVITEM, msg::LvmSetItem};
+	/// use winsafe::co;
+	/// use winsafe::msg::LvmSetItem;
+	/// use winsafe::LVITEM, HWND;
 	///
-	/// let mut lvi = LVITEM::default();
+	/// let my_hwnd: HWND; // initialize it somewhere...
+	///
+	/// let mut lvi = LVITEM::default(); // object to be sent
 	/// lvi.mask = co::LVIF::IMAGE;
 	/// lvi.iImage = 3;
 	///
