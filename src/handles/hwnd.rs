@@ -5,9 +5,9 @@ use std::ffi::c_void;
 use crate::aliases::{SUBCLASSPROC, WNDENUMPROC};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
-use crate::ffi::{comctl32, user32};
+use crate::ffi::{comctl32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
-use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
+use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::Wm;
 use crate::priv_funcs::{const_void, mut_void, ptr_as_opt};
 use crate::structs::{MSG, PAINTSTRUCT, RECT, WINDOWINFO, WINDOWPLACEMENT};
@@ -600,6 +600,22 @@ impl HWND {
 			0 => Err(GetLastError()),
 			ret => Ok(co::DLGID::from(ret as u16)),
 		}
+	}
+
+	/// [`OpenThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
+	/// method.
+	///
+	/// Must be paired with a [`CloseThemeData`](crate::HTHEME::CloseThemeData)
+	/// call.
+	pub fn OpenThemeData(self, pszClassList: &str) -> Option<HTHEME> {
+		ptr_as_opt(
+			unsafe {
+				uxtheme::OpenThemeData(
+					self.0,
+					WString::from_str(pszClassList).as_ptr(),
+				)
+			}
+		).map(|p| unsafe { HTHEME::from_ptr(p) })
 	}
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)

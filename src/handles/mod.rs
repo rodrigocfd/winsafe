@@ -18,6 +18,7 @@ mod hlocal;
 mod hmenu;
 mod hpen;
 mod hrgn;
+mod htheme;
 mod hwnd;
 
 pub use haccel::HACCEL;
@@ -35,4 +36,5 @@ pub use hlocal::HLOCAL;
 pub use hmenu::HMENU;
 pub use hpen::HPEN;
 pub use hrgn::HRGN;
+pub use htheme::HTHEME;
 pub use hwnd::HWND;

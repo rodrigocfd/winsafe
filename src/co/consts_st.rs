@@ -281,6 +281,16 @@ const_type! { SM, i32,
 	SYSTEMDOCKED, 0x2004
 }
 
+const_type! { STAP, u32,
+	/// [`GetThemeAppProperties`](crate::HTHEME::GetThemeAppProperties) return
+	/// value (`u32`).
+
+	ALLOW_NONCLIENT, 1 << 0
+	ALLOW_CONTROLS, 1 << 1
+	ALLOW_WEBCONTENT, 1 << 2
+	VALIDBITS, Self::ALLOW_NONCLIENT.0 | Self::ALLOW_CONTROLS.0 | Self::ALLOW_WEBCONTENT.0
+}
+
 const_type! { SUBLANG, u16,
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`
 	/// (`u16`), used with [`LANG`](crate::co::LANG).
