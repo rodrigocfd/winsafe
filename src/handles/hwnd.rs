@@ -2,9 +2,9 @@
 
 use std::ffi::c_void;
 
-use crate::aliases::SUBCLASSPROC;
+use crate::aliases::{SUBCLASSPROC, WNDENUMPROC};
 use crate::co;
-use crate::enums::{AtomStr, IdMenu, IdPos};
+use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
 use crate::ffi::{comctl32, user32};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN};
@@ -111,6 +111,14 @@ impl HWND {
 		unsafe { user32::EndPaint(self.0, const_void(lpPaint)); }
 	}
 
+	/// [`EnumChildWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumchildwindows)
+	/// method.
+	pub fn EnumChildWindows(self, lpEnumFunc: WNDENUMPROC, lParam: isize) {
+		unsafe {
+			user32::EnumChildWindows(self.0, lpEnumFunc as *const c_void, lParam);
+		}
+	}
+
 	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)
 	/// static method.
 	pub fn FindWindow(
@@ -134,6 +142,16 @@ impl HWND {
 	pub fn GetAncestor(self, gaFlags: co::GA) -> Option<HWND> {
 		ptr_as_opt(unsafe { user32::GetAncestor(self.0, gaFlags.into()) })
 			.map(|p| Self(p))
+	}
+
+	/// [`GetClientRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect)
+	/// method.
+	pub fn GetClientRect(self) -> Result<RECT, co::ERROR> {
+		let mut rc = RECT::default();
+		match unsafe { user32::GetClientRect(self.0, mut_void(&mut rc)) } {
+			0 => Err(GetLastError()),
+			_ => Ok(rc),
+		}
 	}
 
 	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
@@ -288,6 +306,16 @@ impl HWND {
 		match unsafe { user32::GetWindowPlacement(self.0, mut_void(lpwndpl)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
+		}
+	}
+
+	/// [`GetWindowRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrect)
+	/// method.
+	pub fn GetWindowRect(self) -> Result<RECT, co::ERROR> {
+		let mut rc = RECT::default();
+		match unsafe { user32::GetWindowRect(self.0, mut_void(&mut rc)) } {
+			0 => Err(GetLastError()),
+			_ => Ok(rc),
 		}
 	}
 
@@ -599,6 +627,23 @@ impl HWND {
 		&self, lpwndpl: &WINDOWPLACEMENT) -> Result<(), co::ERROR>
 	{
 		match unsafe { user32::SetWindowPlacement(self.0, const_void(lpwndpl)) } {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
+	/// [`SetWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos)
+	/// method.
+	pub fn SetWindowPos(self,
+		hWndInsertAfter: HwndPlace,
+		X: i32, Y: i32, cx: u32, cy: u32, uFlags: co::SWP) -> Result<(), co::ERROR>
+	{
+		match unsafe {
+			user32::SetWindowPos(
+				self.0, hWndInsertAfter.as_ptr(),
+				X, Y, cx as i32, cy as i32, uFlags.into(),
+			)
+		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}

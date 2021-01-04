@@ -51,7 +51,7 @@ impl DialogMain {
 		let dlg = Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: DialogBase::new(),
+					base: DialogBase::new(false),
 					dialog_id,
 					icon_id,
 					accel_table_id,

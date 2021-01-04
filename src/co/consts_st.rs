@@ -551,6 +551,26 @@ const_type! { SW, i32,
 	MAX, 11
 }
 
+const_type! { SWP, u32,
+	/// [`SetWindowPos`](crate::HWND::SetWindowPos) `uFlags` (`u32`).
+
+	NOSIZE, 0x0001
+	NOMOVE, 0x0002
+	NOZORDER, 0x0004
+	NOREDRAW, 0x0008
+	NOACTIVATE, 0x0010
+	FRAMECHANGED, 0x0020
+	SHOWWINDOW, 0x0040
+	HIDEWINDOW, 0x0080
+	NOCOPYBITS, 0x0100
+	NOOWNERZORDER, 0x0200
+	NOSENDCHANGING, 0x0400
+	DRAWFRAME, Self::FRAMECHANGED.0
+	NOREPOSITION, Self::NOOWNERZORDER.0
+	DEFERERASE, 0x2000
+	ASYNCWINDOWPOS, 0x4000
+}
+
 const_type! { TPM, u32,
 	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `uFlags` (`u32`).
 

@@ -95,6 +95,15 @@ const_type! { HICF, u32,
 	TOGGLEDROPDOWN, 0x00000100
 }
 
+const_type! { HWND_PLACE, isize,
+	/// [`SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter` (`isize`).
+
+	TOP, 0
+	BOTTOM, 1
+	TOPMOST, -1
+	NOTOPMOST, -2
+}
+
 const_type! { ICON_SZ, i32,
 	/// [`WM_SETICON`](crate::msg::WmSetIcon) icon size (`i32`). Originally has
 	/// `ICON` prefix.

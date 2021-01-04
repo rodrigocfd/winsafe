@@ -3,7 +3,7 @@
 use std::ffi::c_void;
 
 use crate::co;
-use crate::handles::{HBITMAP, HMENU};
+use crate::handles::{HBITMAP, HMENU, HWND};
 use crate::structs::ATOM;
 use crate::WString;
 
@@ -25,8 +25,8 @@ impl AtomStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			AtomStr::Str(u16) => unsafe { u16.as_ptr() },
-			AtomStr::Atom(atom) => atom.as_ptr(),
+			Self::Str(u16) => unsafe { u16.as_ptr() },
+			Self::Atom(atom) => atom.as_ptr(),
 		}
 	}
 }
@@ -50,9 +50,34 @@ impl BitmapPtrStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			BitmapPtrStr::Bitmap(hbmp) => unsafe { hbmp.as_ptr() as *const u16 },
-			BitmapPtrStr::Str(u16) => unsafe { u16.as_ptr() },
-			BitmapPtrStr::Param(lp) => *lp as *const u16,
+			Self::Bitmap(hbmp) => unsafe { hbmp.as_ptr() as *const u16 },
+			Self::Str(u16) => unsafe { u16.as_ptr() },
+			Self::Param(lp) => *lp as *const u16,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for:
+///
+/// * [`SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`.
+pub enum HwndPlace {
+	/// A handle to the window to precede the positioned window in the Z order.
+	Hwnd(HWND),
+	/// A constant specifying where the window will be placed.
+	Place(co::HWND_PLACE),
+	/// Nothing.
+	None,
+}
+
+impl HwndPlace {
+	/// Converts the internal value to a `*mut c_void`.
+	pub fn as_ptr(&self) -> *mut c_void {
+		match self {
+			Self::Hwnd(hwnd) => unsafe { hwnd.as_ptr() },
+			Self::Place(v) => isize::from(*v) as *mut c_void,
+			Self::None => std::ptr::null_mut(),
 		}
 	}
 }
@@ -75,9 +100,9 @@ impl IdIdcStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			IdIdcStr::Id(id) => *id as *const u16,
-			IdIdcStr::Idc(idc) => usize::from(*idc) as *const u16,
-			IdIdcStr::Str(u16) => unsafe { u16.as_ptr() },
+			Self::Id(id) => *id as *const u16,
+			Self::Idc(idc) => usize::from(*idc) as *const u16,
+			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -100,9 +125,9 @@ impl IdIdiStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			IdIdiStr::Id(id) => *id as *const u16,
-			IdIdiStr::Idi(idi) => usize::from(*idi) as *const u16,
-			IdIdiStr::Str(u16) => unsafe { u16.as_ptr() },
+			Self::Id(id) => *id as *const u16,
+			Self::Idi(idi) => usize::from(*idi) as *const u16,
+			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -137,9 +162,9 @@ impl IdMenu {
 	/// Converts the internal value to a `*mut c_void`.
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
-			IdMenu::Id(id) => *id as *mut c_void,
-			IdMenu::Menu(hMenu) => unsafe { hMenu.as_ptr() },
-			IdMenu::None => std::ptr::null_mut(),
+			Self::Id(id) => *id as *mut c_void,
+			Self::Menu(hMenu) => unsafe { hMenu.as_ptr() },
+			Self::None => std::ptr::null_mut(),
 		}
 	}
 }
@@ -189,8 +214,8 @@ impl IdStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			IdStr::Id(id) => *id as *const u16,
-			IdStr::Str(u16) => unsafe { u16.as_ptr() },
+			Self::Id(id) => *id as *const u16,
+			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -215,35 +240,33 @@ impl RegistryValue {
 	/// Converts the internal value to a `*const c_void`.
 	pub fn as_ptr(&self) -> *const c_void {
 		match self {
-			RegistryValue::Binary(b) => b.as_ptr() as *const c_void,
-			RegistryValue::Dword(n) => *n as *const c_void,
-			RegistryValue::Qword(n) => *n as *const c_void,
-			RegistryValue::Sz(u16) => unsafe { u16.as_ptr() as *const c_void },
-			RegistryValue::None => std::ptr::null(),
+			Self::Binary(b) => b.as_ptr() as *const c_void,
+			Self::Dword(n) => *n as *const c_void,
+			Self::Qword(n) => *n as *const c_void,
+			Self::Sz(u16) => unsafe { u16.as_ptr() as *const c_void },
+			Self::None => std::ptr::null(),
 		}
 	}
 
 	/// Returns the correspondent [`co::REG`](crate::co::REG) constant.
 	pub fn reg_type(&self) -> co::REG {
 		match self {
-			RegistryValue::Binary(_) => co::REG::BINARY,
-			RegistryValue::Dword(_) => co::REG::DWORD,
-			RegistryValue::Qword(_) => co::REG::QWORD,
-			RegistryValue::Sz(_) => co::REG::SZ,
-			RegistryValue::None => co::REG::NONE,
+			Self::Binary(_) => co::REG::BINARY,
+			Self::Dword(_) => co::REG::DWORD,
+			Self::Qword(_) => co::REG::QWORD,
+			Self::Sz(_) => co::REG::SZ,
+			Self::None => co::REG::NONE,
 		}
 	}
 
 	/// Returns the length of the stored data.
 	pub fn len(&self) -> usize {
 		match self {
-			RegistryValue::Binary(b) => b.len(),
-			RegistryValue::Dword(_) => std::mem::size_of::<u32>(),
-			RegistryValue::Qword(_) => std::mem::size_of::<u64>(),
-			RegistryValue::Sz(u16) => {
-				(u16.len() + 1) * std::mem::size_of::<u16>() // including terminating null
-			},
-			RegistryValue::None => 0,
+			Self::Binary(b) => b.len(),
+			Self::Dword(_) => std::mem::size_of::<u32>(),
+			Self::Qword(_) => std::mem::size_of::<u64>(),
+			Self::Sz(u16) => (u16.len() + 1) * std::mem::size_of::<u16>(), // including terminating null
+			Self::None => 0,
 		}
 	}
 }

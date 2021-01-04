@@ -49,6 +49,15 @@ pub type SUBCLASSPROC =
 	) -> isize;
 
 /// Type alias to
+/// [`WNDENUMPROC`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms633493(v=vs.85))
+/// callbak function.
+pub type WNDENUMPROC =
+	extern "system" fn (
+		hwnd: HWND,
+		lParam: isize,
+	) -> i32;
+
+/// Type alias to
 /// [`WNDPROC`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms633573(v=vs.85))
 /// callback function.
 pub type WNDPROC =

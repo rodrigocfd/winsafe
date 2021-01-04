@@ -23,9 +23,11 @@ extern "system" {
 	pub fn EnableMenuItem(hMenu: HANDLE, uIDEnableItem: u32, uEnable: u32) -> BOOL;
 	pub fn EnableWindow(hWnd: HANDLE, bEnable: BOOL) -> BOOL;
 	pub fn EndPaint(hWnd: HANDLE, lpPaint: PCVOID) -> BOOL;
+	pub fn EnumChildWindows(hWndParent: HANDLE, lpEnumFunc: PFUNC, lParam: isize) -> BOOL;
 	pub fn FindWindowW(lpClassName: PCSTR, lpWindowName: PCSTR) -> HANDLE;
 	pub fn GetAncestor(hwnd: HANDLE, gaFlags: u32) -> HANDLE;
 	pub fn GetClassInfoExW(hInstance: HANDLE, lpszClass: PCSTR, lpwcx: PVOID) -> BOOL;
+	pub fn GetClientRect(hWnd: HANDLE, lpRect: PVOID) -> BOOL;
 	pub fn GetDC(hWnd: HANDLE) -> HANDLE;
 	pub fn GetDesktopWindow() -> HANDLE;
 	pub fn GetDlgCtrlID(hWnd: HANDLE) -> i32;
@@ -48,6 +50,7 @@ extern "system" {
 	pub fn GetWindowInfo(hwnd: HANDLE, pwi: PVOID) -> BOOL;
 	pub fn GetWindowLongPtrW(hWnd: HANDLE, nIndex: i32) -> isize;
 	pub fn GetWindowPlacement(hWnd: HANDLE, lpwndpl: PVOID) -> BOOL;
+	pub fn GetWindowRect(hWnd: HANDLE, lpRect: PVOID) -> BOOL;
 	pub fn GetWindowRgn(hWnd: HANDLE, hRgn: HANDLE) -> i32;
 	pub fn GetWindowRgnBox(hWnd: HANDLE, lprc: PVOID) -> i32;
 	pub fn GetWindowTextLengthW(hWnd: HANDLE) -> i32;
@@ -83,6 +86,7 @@ extern "system" {
 	pub fn SetProcessDPIAware() -> BOOL;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: PCVOID) -> BOOL;
+	pub fn SetWindowPos(hWnd: HANDLE, hWndInsertAfter: HANDLE, X: i32, Y: i32, cx: i32, cy: i32, uFlags: u32) -> BOOL;
 	pub fn SetWindowRgn(hWnd: HANDLE, hRgn: HANDLE, bRedraw: BOOL) -> i32;
 	pub fn SetWindowsHookExW(idHook: i32, lpfn: PFUNC, hmod: HANDLE, dwThreadId: u32) -> HANDLE;
 	pub fn SetWindowTextW(hWnd: HANDLE, lpString: PCSTR) -> BOOL;

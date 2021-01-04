@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
-use crate::gui::globals::{ui_font};
+use crate::gui::globals::ui_font;
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::parent::Parent;
 use crate::handles::HWND;

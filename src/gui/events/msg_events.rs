@@ -300,7 +300,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::APPCOMMAND, {
 			let mut func = func;
-			move |p| { func(p.into()); Some(1) } // TRUE
+			move |p| { func(p.into()); Some(true as isize) }
 		});
 	}
 
