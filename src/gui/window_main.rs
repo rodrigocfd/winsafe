@@ -8,7 +8,7 @@ use crate::funcs as f;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font, multiply_dpi};
 use crate::gui::main_loop::run_loop;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::priv_funcs::str_dyn_error;

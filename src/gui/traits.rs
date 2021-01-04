@@ -1,0 +1,37 @@
+use std::error::Error;
+
+use crate::gui::events::MsgEvents;
+use crate::handles::HWND;
+
+/// Internal trait to any window which can host child controls.
+pub trait Parent {
+	fn hwnd_ref(&self) -> &HWND;
+	fn events_ref(&self) -> &MsgEvents;
+}
+
+/// Internal trait to any child control.
+pub trait Child {
+	fn create(&self) -> Result<(), Box<dyn Error>>;
+}
+
+/// Physically creates the controls within the parent window:
+///
+/// * if parent is an ordinary window, calls
+/// [`CreateWindowEx`](crate::HWND::CreateWindowEx);
+/// * if a dialog resource, calls [`GetDlgItem`](crate::HWND::GetDlgItem).
+///
+/// This function should be called within parent's `WM_CREATE` or
+/// `WM_INITDIALOG` events.
+///
+/// Note that the focus order follow creation order.
+///
+/// # Panics
+///
+/// Panics if the control is already created, or if the parent window was not
+/// created yet.
+pub fn create_children<T: Child>(ctrls: &[&T]) -> Result<(), Box<dyn Error>> {
+	for ctrl in ctrls.iter() {
+		ctrl.create()?;
+	}
+	Ok(())
+}

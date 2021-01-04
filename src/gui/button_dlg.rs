@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::native_control_base::NativeControlBase;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 
 /// Native
@@ -25,6 +25,14 @@ unsafe impl Send for ButtonDlg {}
 unsafe impl Sync for ButtonDlg {}
 
 cref_mref!(ButtonDlg);
+
+impl Child for ButtonDlg {
+	fn create(&self) -> Result<(), Box<dyn Error>> {
+		self.mref().base
+			.create_dlg(self.cref().ctrl_id)
+			.map(|_| ())
+	}
+}
 
 impl ButtonDlg {
 	/// Creates a new Button object.
@@ -95,19 +103,5 @@ impl ButtonDlg {
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
 		self.cref().base.on_subclass()
-	}
-
-	/// Physically attaches to a control in a dialog resource by calling
-	/// [`GetDlgItem`](crate::HWND::GetDlgItem). This method should be called
-	/// within parent dialog's `WM_INITDIALOG` event.
-	///
-	/// # Panics
-	///
-	/// Panics if the control is already attached, or if the parent window was
-	/// not created yet.
-	pub fn create(&self) -> Result<(), Box<dyn Error>> {
-		self.mref().base
-			.create_dlg(self.cref().ctrl_id)
-			.map(|_| ())
 	}
 }

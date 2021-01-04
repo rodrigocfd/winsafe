@@ -1,6 +1,6 @@
 use crate::co;
 use crate::gui::events::MsgEvents;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
 /// Exposes button

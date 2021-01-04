@@ -6,7 +6,7 @@ use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_control_base::NativeControlBase;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::WmSetFont;
 use crate::structs::{POINT, SIZE};
@@ -29,6 +29,23 @@ unsafe impl Send for Button {}
 unsafe impl Sync for Button {}
 
 cref_mref!(Button);
+
+impl Child for Button {
+	fn create(&self) -> Result<(), Box<dyn Error>> {
+		let opts = &self.cref().opts;
+
+		let our_hwnd = self.mref().base.create_window( // may panic
+			"BUTTON", Some(&opts.text), opts.pos,
+			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
+			opts.ctrl_id,
+			opts.ex_window_style,
+			opts.window_style | opts.button_style.into(),
+		)?;
+
+		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+		Ok(())
+	}
+}
 
 impl Button {
 	/// Creates a new Button object.
@@ -101,29 +118,6 @@ impl Button {
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
 		self.cref().base.on_subclass()
-	}
-
-	/// Physically creates the control within the parent window by calling
-	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx). This method should be
-	/// be called within parent window's `WM_CREATE` or `WM_INITDIALOG` events.
-	///
-	/// # Panics
-	///
-	/// Panics if the control is already created, or if the parent window was not
-	/// created yet.
-	pub fn create(&self) -> Result<(), Box<dyn Error>> {
-		let opts = &self.cref().opts;
-
-		let our_hwnd = self.mref().base.create_window( // may panic
-			"BUTTON", Some(&opts.text), opts.pos,
-			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
-			opts.ctrl_id,
-			opts.ex_window_style,
-			opts.window_style | opts.button_style.into(),
-		)?;
-
-		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-		Ok(())
 	}
 }
 
