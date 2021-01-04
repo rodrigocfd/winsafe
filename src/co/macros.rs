@@ -88,6 +88,12 @@ macro_rules! const_type_no_debug_display {
 		// All const values.
 		impl $name {
 			$( pub const $cname: Self = Self($cval); )*
+
+			/// Tells whether other bitflag style is present. Equivalent to `(val &
+			/// other) != 0`.
+			pub fn has(&self, other: $name) -> bool {
+				(self.0 & other.0) != 0
+			}
 		}
 	};
 }
