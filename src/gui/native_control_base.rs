@@ -1,10 +1,9 @@
 use std::error::Error;
-use std::ffi::c_void;
 
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::handles::{HINSTANCE, HWND};
+use crate::handles::HWND;
 use crate::msg::Wm;
 use crate::priv_funcs::{str_dyn_error, WC_DIALOG};
 use crate::structs::{POINT, SIZE};
@@ -84,11 +83,7 @@ impl NativeControlBase {
 			pos.x, pos.y, sz.cx, sz.cy,
 			Some(parent_hwnd),
 			IdMenu::Id(self.ctrl_id),
-			unsafe {
-				HINSTANCE::from_ptr(
-					parent_hwnd.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut c_void
-				)
-			},
+			parent_hwnd.Instance(),
 			None,
 		)?;
 

@@ -441,8 +441,10 @@ impl MsgEvents {
 		/// [`DialogMain`](crate::gui::DialogMain).
 	}
 
-	wm_empty! { wm_nc_paint, co::WM::NCPAINT,
+	wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, msg::WmNcPaint,
 		/// [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
+		///
+		/// Warning: default handled in [`WindowControl`](crate::gui::WindowControl).
 	}
 
 	wm_empty! { wm_null, co::WM::NULL,

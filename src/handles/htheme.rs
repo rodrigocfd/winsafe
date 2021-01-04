@@ -28,7 +28,7 @@ impl HTHEME {
 	/// method.
 	pub fn DrawThemeBackground(self,
 		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
-		pRect: &RECT, pClipRect: &RECT) -> Result<(), co::ERROR>
+		pRect: RECT, pClipRect: RECT) -> Result<(), co::ERROR>
 	{
 		match unsafe {
 			uxtheme::DrawThemeBackground(
@@ -36,8 +36,8 @@ impl HTHEME {
 				hdc.as_ptr(),
 				iPartId.into(),
 				iStateId.into(),
-				const_void(pRect),
-				const_void(pClipRect),
+				const_void(&pRect),
+				const_void(&pClipRect),
 			)
 		} {
 			0 => Ok(()),

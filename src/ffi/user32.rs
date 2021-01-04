@@ -83,6 +83,7 @@ extern "system" {
 	pub fn PostMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> BOOL;
 	pub fn PostQuitMessage(nExitCode: i32);
 	pub fn RegisterClassExW(lpwcx: PCVOID) -> u16;
+	pub fn ReleaseDC(hWnd: HANDLE, hDC: HANDLE) -> i32;
 	pub fn RemoveMenu(hMenu: HANDLE, uPosition: u32, uFlags: u32) -> BOOL;
 	pub fn ScreenToClient(hWnd: HANDLE, lpPoint: PVOID) -> BOOL;
 	pub fn SendMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> isize;

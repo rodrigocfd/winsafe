@@ -21,6 +21,16 @@ handle_type! {
 }
 
 impl HWND {
+	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) wrapper to retrieve
+	/// the /// window `HINSTANCE`.
+	pub fn Instance(self) -> HINSTANCE {
+		unsafe {
+			HINSTANCE::from_ptr(
+				self.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut c_void,
+			)
+		}
+	}
+
 	/// [`BeginPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
 	/// method.
 	///
@@ -237,6 +247,8 @@ impl HWND {
 
 	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
+	///
+	/// Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC) call.
 	pub fn GetDC(self) -> Result<HDC, ()> {
 		match ptr_as_opt(unsafe { user32::GetDC(self.0) }) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
@@ -357,6 +369,8 @@ impl HWND {
 
 	/// [`GetWindowDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
+	///
+	/// Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC) call.
 	pub fn GetWindowDC(self) -> Result<HDC, ()> {
 		match ptr_as_opt(unsafe { user32::GetWindowDC(self.0) }) {
 			Some(p) => Ok(unsafe { HDC::from_ptr(p) }),
@@ -661,6 +675,12 @@ impl HWND {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
+	}
+
+	/// [`ReleaseDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
+	/// method.
+	pub fn ReleaseDC(self, hDC: HDC) -> bool {
+		unsafe { user32::ReleaseDC(self.0, hDC.as_ptr()) != 0 }
 	}
 
 	/// [`RemoveWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)

@@ -97,8 +97,9 @@ impl WindowMain {
 		self.cref().base.on()
 	}
 
-	/// Creates the window and runs the main application loop. This function will
-	/// block until the window is closed.
+	/// Creates the window by calling
+	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx), then runs the main
+	/// application loop. This method will block until the window is closed.
 	///
 	/// # Panics
 	///
@@ -118,6 +119,7 @@ impl WindowMain {
 
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;
+
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		self.cref().opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;

@@ -15,8 +15,10 @@ pub mod events;
 
 mod button;
 mod dialog_main;
+mod window_control;
 mod window_main;
 
 pub use button::{Button, ButtonOpts};
 pub use dialog_main::DialogMain;
+pub use window_control::{WindowControl, WindowControlOpts};
 pub use window_main::{WindowMain, WindowMainOpts};
