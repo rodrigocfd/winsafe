@@ -3,6 +3,7 @@ use std::error::Error;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gui::control_util::auto_ctrl_id;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::ui_font;
 use crate::gui::native_control_base::NativeControlBase;
@@ -21,6 +22,7 @@ pub struct Button {
 
 struct Obj { // actual fields of Button
 	base: NativeControlBase,
+	opts: ButtonOpts,
 	parent_events: ButtonEvents,
 }
 
@@ -31,16 +33,13 @@ cref_mref!(Button);
 
 impl Button {
 	/// Creates a new Button object.
-	pub fn new<T: Parent>(parent: T) -> Button {
-		Self::new_with_id(parent, NativeControlBase::auto_ctrl_id())
-	}
-
-	/// Creates a new Button object with a specific control ID.
-	pub fn new_with_id<T: Parent>(parent: T, ctrl_id: u16) -> Button {
+	pub fn new<T: Parent>(parent: T, opts: ButtonOpts) -> Button {
+		let ctrl_id = opts.retrieve_id();
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new_with_id(ctrl_id, parent.hwnd_ref()),
+					base: NativeControlBase::new(ctrl_id, parent.hwnd_ref()),
+					opts,
 					parent_events: ButtonEvents::new(parent, ctrl_id),
 				}
 			)),
@@ -116,7 +115,9 @@ impl Button {
 	///
 	/// Panics if the control is already created, or if the parent window was not
 	/// created yet.
-	pub fn create(&self, opts: ButtonOpts) -> Result<(), Box<dyn Error>> {
+	pub fn create(&self) -> Result<(), Box<dyn Error>> {
+		let opts = &self.cref().opts;
+
 		let our_hwnd = self.mref().base.create_window( // may panic
 			"BUTTON", Some(&opts.text), opts.pos,
 			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
@@ -145,7 +146,7 @@ impl Button {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`Button::create`](crate::gui::Button::create).
+/// Options for [`Button::new`](crate::gui::Button::new).
 pub struct ButtonOpts {
 	/// Text of the button to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -186,6 +187,11 @@ pub struct ButtonOpts {
 	///
 	/// Defaults to `co::WS_EX::LEFT`.
 	pub ex_window_style: co::WS_EX,
+
+	/// The control ID.
+	///
+	/// Defaults to an auto-generated ID.
+	pub ctrl_id: u16,
 }
 
 impl Default for ButtonOpts {
@@ -198,6 +204,17 @@ impl Default for ButtonOpts {
 			button_style: co::BS::PUSHBUTTON,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,
+			ctrl_id: 0,
+		}
+	}
+}
+
+impl ButtonOpts {
+	fn retrieve_id(&self) -> u16 {
+		if self.ctrl_id == 0 {
+			auto_ctrl_id() // if user didn't set, auto generate ID
+		} else {
+			self.ctrl_id
 		}
 	}
 }

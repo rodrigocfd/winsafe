@@ -7,7 +7,16 @@ use crate::msg::WmNcPaint;
 use crate::priv_funcs::str_dyn_error;
 use crate::structs::{POINT, RECT, SIZE};
 
+static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
 static mut DPI: POINT = POINT{ x: 0, y: 0 };
+
+pub fn auto_ctrl_id() -> u16 {
+	unsafe {
+		let new_id = BASE_CTRL_ID;
+		BASE_CTRL_ID += 1;
+		new_id
+	}
+}
 
 /// Multiplies the given coordinates by current system DPI.
 pub fn multiply_dpi(

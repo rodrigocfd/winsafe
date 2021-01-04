@@ -9,7 +9,6 @@ use crate::priv_funcs::{str_dyn_error, WC_DIALOG};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
-static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
 static mut BASE_SUBCLASS_ID: usize = 0;
 
 /// Base to all native child controls.
@@ -21,15 +20,7 @@ pub struct NativeControlBase {
 }
 
 impl NativeControlBase {
-	pub fn auto_ctrl_id() -> u16 {
-		unsafe {
-			let new_id = BASE_CTRL_ID;
-			BASE_CTRL_ID += 1;
-			new_id
-		}
-	}
-
-	pub fn new_with_id(ctrl_id: u16, parent_hwnd: &HWND) -> NativeControlBase {
+	pub fn new(ctrl_id: u16, parent_hwnd: &HWND) -> NativeControlBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			ctrl_id,

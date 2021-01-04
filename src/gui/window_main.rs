@@ -117,15 +117,16 @@ impl WindowMain {
 		f::InitCommonControls();
 		create_ui_font()?;
 
+		let opts = &mut self.mref().opts;
 		let hinst = HINSTANCE::GetModuleHandle(None)
 			.map_err(|e| Box::new(e))?;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
-		self.cref().opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
+		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
 		self.cref().base.register_class(&mut wcx)?;
 
-		multiply_dpi(None, Some(&mut self.mref().opts.size))?;
+		multiply_dpi(None, Some(&mut opts.size))?;
 
 		let screen_sz = SIZE {
 			cx: f::GetSystemMetrics(co::SM::CXSCREEN),
@@ -133,36 +134,36 @@ impl WindowMain {
 		};
 
 		let wnd_pos = POINT {
-			x: screen_sz.cx / 2 - self.cref().opts.size.cx / 2, // center on screen
-			y: screen_sz.cy / 2 - self.cref().opts.size.cy / 2,
+			x: screen_sz.cx / 2 - opts.size.cx / 2, // center on screen
+			y: screen_sz.cy / 2 - opts.size.cy / 2,
 		};
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
 			left: wnd_pos.x,
 			top: wnd_pos.y,
-			right: wnd_pos.x + self.cref().opts.size.cx,
-			bottom: wnd_pos.y + self.cref().opts.size.cy,
+			right: wnd_pos.x + opts.size.cx,
+			bottom: wnd_pos.y + opts.size.cy,
 		};
-		f::AdjustWindowRectEx(&mut wnd_rc, self.cref().opts.style,
-			!self.cref().opts.menu.is_null(), self.cref().opts.ex_style)?;
+		f::AdjustWindowRectEx(&mut wnd_rc, opts.style,
+			!opts.menu.is_null(), opts.ex_style)?;
 
 		let our_hwnd = self.cref().base.create_window( // may panic
 			hinst,
 			None,
 			&class_name_buf.to_string(),
-			Some(&self.cref().opts.title),
+			Some(&opts.title),
 			IdMenu::None,
 			POINT { x: wnd_rc.left, y: wnd_rc.top },
 			SIZE { cx: wnd_rc.right - wnd_rc.left, cy: wnd_rc.bottom - wnd_rc.top },
-			self.cref().opts.ex_style,
-			self.cref().opts.style,
+			opts.ex_style,
+			opts.style,
 		)?;
 
 		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		our_hwnd.UpdateWindow()
 			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
 
-		let res = run_loop(our_hwnd, self.cref().opts.accel_table.as_opt())?; // blocks until window is closed
+		let res = run_loop(our_hwnd, opts.accel_table.as_opt())?; // blocks until window is closed
 		delete_ui_font(); // cleanup
 		Ok(res)
 	}
