@@ -45,12 +45,38 @@ impl HINSTANCE {
 						None => std::ptr::null_mut(),
 					},
 					lpDialogFunc as *const c_void,
-					dwInitParam.unwrap_or_default() as *mut c_void,
+					dwInitParam.unwrap_or_default(),
 				)
 			}
 		) {
 			Some(p) => Ok(unsafe { HWND::from_ptr(p) }),
 			None => Err(GetLastError()),
+		}
+	}
+
+	/// [`DialogBoxParam`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
+	/// method.
+	pub fn DialogBoxParam(
+		self,
+		lpTemplateName: IdStr,
+		hWndParent: Option<HWND>,
+		lpDialogFunc: DLGPROC,
+		dwInitParam: Option<isize>) -> Result<isize, co::ERROR>
+	{
+		match unsafe {
+			user32::DialogBoxParamW(
+				self.0,
+				lpTemplateName.as_ptr(),
+				match hWndParent {
+					Some(hParent) => hParent.as_ptr(),
+					None => std::ptr::null_mut(),
+				},
+				lpDialogFunc as *const c_void,
+				dwInitParam.unwrap_or_default(),
+			)
+		} {
+			-1 => Err(GetLastError()),
+			res => Ok(res), // assumes hWndParent as valid, so no check for zero
 		}
 	}
 

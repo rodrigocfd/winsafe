@@ -59,6 +59,14 @@ impl DialogBase {
 		)
 	}
 
+	pub fn dialog_box_param(&self, hinst: HINSTANCE, parent: Option<HWND>, dialog_id: i32) {
+		if !self.hwnd.is_null() {
+			panic!("Cannot create dialog twice.");
+		}
+
+
+	}
+
 	extern "system" fn dialog_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{

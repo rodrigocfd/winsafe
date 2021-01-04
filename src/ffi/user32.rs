@@ -9,7 +9,7 @@ extern "system" {
 	pub fn BeginPaint(hWnd: HANDLE, lpPaint: PVOID) -> HANDLE;
 	pub fn CheckMenuItem(hMenu: HANDLE, uIDCheckItem: u32, uCheck: u32) -> i32;
 	pub fn CreateAcceleratorTableW(paccel: PVOID, cAccel: i32) -> HANDLE;
-	pub fn CreateDialogParamW(hInstance: HANDLE, lpTemplateName: PCSTR, hWndParent: HANDLE, lpDialogFunc: PFUNC, dwInitParam: PVOID) -> HANDLE;
+	pub fn CreateDialogParamW(hInstance: HANDLE, lpTemplateName: PCSTR, hWndParent: HANDLE, lpDialogFunc: PFUNC, dwInitParam: isize) -> HANDLE;
 	pub fn CreateMenu() -> HANDLE;
 	pub fn CreatePopupMenu() -> HANDLE;
 	pub fn CreateWindowExW(dwExStyle: u32, lpClassName: PCSTR, lpWindowName: PCSTR, dwStyle: u32, X: i32, Y: i32, nWidth: i32, nHeight: i32, hWndParent: HANDLE, hMenu: HANDLE, hInstance: HANDLE, lpParam: PVOID) -> HANDLE;
@@ -19,9 +19,11 @@ extern "system" {
 	pub fn DestroyIcon(hIcon: HANDLE) -> BOOL;
 	pub fn DestroyMenu(hMenu: HANDLE) -> BOOL;
 	pub fn DestroyWindow(hWnd: HANDLE) -> BOOL;
+	pub fn DialogBoxParamW(hInstance: HANDLE, lpTemplateName: PCSTR, hWndParent: HANDLE, lpDialogFunc: PFUNC, dwInitParam: isize) -> isize;
 	pub fn DispatchMessageW(lpMsg: PCVOID) -> isize;
 	pub fn EnableMenuItem(hMenu: HANDLE, uIDEnableItem: u32, uEnable: u32) -> BOOL;
 	pub fn EnableWindow(hWnd: HANDLE, bEnable: BOOL) -> BOOL;
+	pub fn EndDialog(hDlg: HANDLE, nResult: isize) -> BOOL;
 	pub fn EndPaint(hWnd: HANDLE, lpPaint: PCVOID) -> BOOL;
 	pub fn EnumChildWindows(hWndParent: HANDLE, lpEnumFunc: PFUNC, lParam: isize) -> BOOL;
 	pub fn FindWindowW(lpClassName: PCSTR, lpWindowName: PCSTR) -> HANDLE;
@@ -30,6 +32,7 @@ extern "system" {
 	pub fn GetClientRect(hWnd: HANDLE, lpRect: PVOID) -> BOOL;
 	pub fn GetDC(hWnd: HANDLE) -> HANDLE;
 	pub fn GetDesktopWindow() -> HANDLE;
+	pub fn GetDialogBaseUnits() -> i32;
 	pub fn GetDlgCtrlID(hWnd: HANDLE) -> i32;
 	pub fn GetDlgItem(hDlg: HANDLE, nIDDlgItem: i32) -> HANDLE;
 	pub fn GetFocus() -> HANDLE;
@@ -72,6 +75,7 @@ extern "system" {
 	pub fn LoadCursorW(hInstance: HANDLE, lpCursorName: PCSTR) -> HANDLE;
 	pub fn LoadIconW(hInstance: HANDLE, lpIconName: PCSTR) -> HANDLE;
 	pub fn LoadImageW(hInst: HANDLE, name: PCSTR, utype: u32, cx: i32, cy: i32, fuLoad: u32) -> HANDLE;
+	pub fn MapDialogRect(hDlg: HANDLE, lpRect: PVOID) -> BOOL;
 	pub fn MessageBoxW(hWnd: HANDLE, lpText: PCSTR, lpCaption: PCSTR, uType: u32) -> i32;
 	pub fn PeekMessageW(lpMsg: PVOID, hWnd: HANDLE, wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: u32) -> BOOL;
 	pub fn PostMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> BOOL;

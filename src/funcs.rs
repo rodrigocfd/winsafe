@@ -92,6 +92,12 @@ pub fn DispatchMessage(lpMsg: &s::MSG) -> isize {
 	unsafe { user32::DispatchMessageW(const_void(lpMsg)) }
 }
 
+/// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
+/// function.
+pub fn GetDialogBaseUnits() -> i32 {
+	unsafe { user32::GetDialogBaseUnits() }
+}
+
 /// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
 /// function.
 ///

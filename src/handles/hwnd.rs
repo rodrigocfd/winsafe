@@ -105,6 +105,15 @@ impl HWND {
 		unsafe { user32::EnableWindow(self.0, bEnable as i32) != 0 }
 	}
 
+	/// [`EndDialog`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddialog)
+	/// method.
+	pub fn EndDialog(self, nResult: isize) -> Result<(), co::ERROR> {
+		match unsafe { user32::EndDialog(self.0, nResult) } {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
 	/// [`EndPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 	/// method.
 	pub fn EndPaint(self, lpPaint: &PAINTSTRUCT) {
@@ -198,6 +207,12 @@ impl HWND {
 		}
 	}
 
+	/// [`GetDesktopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
+	/// static method.
+	pub fn GetDesktopWindow() -> HWND {
+		Self(unsafe { user32::GetDesktopWindow() })
+	}
+
 	/// [`GetDlgCtrlID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgctrlid)
 	/// method.
 	pub fn GetDlgCtrlID(self) -> Result<i32, co::ERROR> {
@@ -208,12 +223,6 @@ impl HWND {
 			},
 			id => Ok(id),
 		}
-	}
-
-	/// [`GetDesktopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
-	/// static method.
-	pub fn GetDesktopWindow() -> HWND {
-		Self(unsafe { user32::GetDesktopWindow() })
 	}
 
 	/// [`GetDlgItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitem)
@@ -535,6 +544,15 @@ impl HWND {
 	/// method.
 	pub fn IsWindowVisible(self) -> bool {
 		unsafe { user32::IsWindowVisible(self.0) != 0 }
+	}
+
+	/// [`MapDialogRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)
+	/// method.
+	pub fn MapDialogRect(self, lpRect: &mut RECT) -> Result<(), co::ERROR> {
+		match unsafe { user32::MapDialogRect(self.0, mut_void(lpRect)) } {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
 	}
 
 	/// [`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
