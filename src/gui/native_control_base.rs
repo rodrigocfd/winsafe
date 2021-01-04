@@ -14,16 +14,14 @@ static mut BASE_SUBCLASS_ID: usize = 0;
 /// Base to all native child controls.
 pub struct NativeControlBase {
 	hwnd: HWND,
-	ctrl_id: u16, // cannot be changed
 	subclass_events: MsgEvents,
 	ptr_parent_hwnd: *const HWND, // used only in control creation
 }
 
 impl NativeControlBase {
-	pub fn new(ctrl_id: u16, parent_hwnd: &HWND) -> NativeControlBase {
+	pub fn new(parent_hwnd: &HWND) -> NativeControlBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
-			ctrl_id,
 			subclass_events: MsgEvents::new(),
 			ptr_parent_hwnd: parent_hwnd, // convert reference to pointer
 		}
@@ -36,10 +34,6 @@ impl NativeControlBase {
 
 	pub fn hwnd(&self) -> &HWND {
 		&self.hwnd
-	}
-
-	pub fn ctrl_id(&self) -> u16 {
-		self.ctrl_id
 	}
 
 	pub fn on_subclass(&self) -> &MsgEvents {
@@ -56,6 +50,7 @@ impl NativeControlBase {
 		class_name: &str,
 		title: Option<&str>,
 		pos: POINT, sz: SIZE,
+		ctrl_id: u16,
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> Result<HWND, Box<dyn Error>>
 	{
@@ -73,7 +68,7 @@ impl NativeControlBase {
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
 			Some(parent_hwnd),
-			IdMenu::Id(self.ctrl_id),
+			IdMenu::Id(ctrl_id),
 			parent_hwnd.Instance(),
 			None,
 		)?;
@@ -82,7 +77,7 @@ impl NativeControlBase {
 		Ok(self.hwnd)
 	}
 
-	pub fn create_dlg(&mut self) -> Result<HWND, Box<dyn Error>> {
+	pub fn create_dlg(&mut self, ctrl_id: u16) -> Result<HWND, Box<dyn Error>> {
 		if !self.hwnd.is_null() {
 			panic!("Cannot create control twice.");
 		} else if !self.is_parent_created() {
@@ -96,7 +91,7 @@ impl NativeControlBase {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
 
-		self.hwnd = parent_hwnd.GetDlgItem(self.ctrl_id as i32)?.unwrap();
+		self.hwnd = parent_hwnd.GetDlgItem(ctrl_id as i32)?.unwrap();
 		self.install_subclass_if_needed()?;
 		Ok(self.hwnd)
 	}

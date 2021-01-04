@@ -34,11 +34,12 @@ cref_mref!(Button);
 impl Button {
 	/// Creates a new Button object.
 	pub fn new<T: Parent>(parent: T, opts: ButtonOpts) -> Button {
-		let ctrl_id = opts.retrieve_id();
+		let opts = opts.define_id();
+		let ctrl_id = opts.ctrl_id;
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(ctrl_id, parent.hwnd_ref()),
+					base: NativeControlBase::new(parent.hwnd_ref()),
 					opts,
 					parent_events: ButtonEvents::new(parent, ctrl_id),
 				}
@@ -56,7 +57,7 @@ impl Button {
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		self.cref().base.ctrl_id()
+		self.cref().opts.ctrl_id
 	}
 
 	/// Exposes the button events.
@@ -107,10 +108,6 @@ impl Button {
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx). This method should be
 	/// be called within parent window's `WM_CREATE` or `WM_INITDIALOG` events.
 	///
-	/// The child of a dialog window will use
-	/// [`create_dlg`](crate::HWND::create_dlg) instead, unless you're creating
-	/// child controls dynamically, and you *really* know what you're doing.
-	///
 	/// # Panics
 	///
 	/// Panics if the control is already created, or if the parent window was not
@@ -121,26 +118,13 @@ impl Button {
 		let our_hwnd = self.mref().base.create_window( // may panic
 			"BUTTON", Some(&opts.text), opts.pos,
 			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
+			opts.ctrl_id,
 			opts.ex_window_style,
 			opts.window_style | opts.button_style.into(),
 		)?;
 
 		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 		Ok(())
-	}
-
-	/// Physically attaches to a control in a dialog resource by calling
-	/// [`GetDlgItem`](crate::HWND::GetDlgItem). This method should be called
-	/// within parent dialog's `WM_INITDIALOG` event.
-	///
-	/// # Panics
-	///
-	/// Panics if parent window is not a dialog.
-	///
-	/// Panics if the control is already created, or if the parent window was not
-	/// created yet.
-	pub fn create_dlg(&self) -> Result<(), Box<dyn Error>> {
-		self.mref().base.create_dlg().map(|_| ())
 	}
 }
 
@@ -210,11 +194,12 @@ impl Default for ButtonOpts {
 }
 
 impl ButtonOpts {
-	fn retrieve_id(&self) -> u16 {
-		if self.ctrl_id == 0 {
+	fn define_id(self) -> ButtonOpts {
+		let ctrl_id = if self.ctrl_id == 0 {
 			auto_ctrl_id() // if user didn't set, auto generate ID
 		} else {
 			self.ctrl_id
-		}
+		};
+		Self { ctrl_id, ..self }
 	}
 }
