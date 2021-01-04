@@ -3,7 +3,6 @@
 #[macro_use]
 mod macros;
 
-mod control_util;
 mod dialog_base;
 mod globals;
 mod main_loop;

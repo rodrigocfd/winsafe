@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
-use crate::gui::control_util::{multiply_dpi, paint_control_borders};
+use crate::gui::globals::{multiply_dpi, paint_control_borders};
 use crate::gui::events::MsgEvents;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
