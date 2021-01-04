@@ -142,7 +142,7 @@ impl WindowMain {
 			bottom: wnd_pos.y + self.cref().opts.size.cy,
 		};
 		f::AdjustWindowRectEx(&mut wnd_rc, self.cref().opts.style,
-			self.cref().opts.menu.is_some(), self.cref().opts.ex_style)?;
+			!self.cref().opts.menu.is_null(), self.cref().opts.ex_style)?;
 
 		let our_hwnd = self.cref().base.create_window( // may panic
 			hinst,
@@ -160,7 +160,7 @@ impl WindowMain {
 		our_hwnd.UpdateWindow()
 			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
 
-		let res = run_loop(our_hwnd, self.cref().opts.accel_table)?; // blocks until window is closed
+		let res = run_loop(our_hwnd, self.cref().opts.accel_table.as_opt())?; // blocks until window is closed
 		delete_ui_font(); // cleanup
 		Ok(res)
 	}
@@ -222,8 +222,8 @@ pub struct WindowMainOpts {
 	/// Window main icon to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to no `None`.
-	pub class_icon: Option<HICON>,
+	/// Defaults to none.
+	pub class_icon: HICON,
 	/// Window cursor to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -269,13 +269,13 @@ pub struct WindowMainOpts {
 	/// This menu is not shared, the window will own it, and destroy it when the
 	/// window is destroyed.
 	///
-	/// Defaults to `None`.
-	pub menu: Option<HMENU>,
+	/// Defaults to none.
+	pub menu: HMENU,
 	/// Main accelerator table of the window to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `None`.
-	pub accel_table: Option<HACCEL>,
+	/// Defaults to none.
+	pub accel_table: HACCEL,
 }
 
 impl Default for WindowMainOpts {
@@ -283,15 +283,15 @@ impl Default for WindowMainOpts {
 		Self {
 			class_name: "".to_owned(),
 			class_style: co::CS::DBLCLKS,
-			class_icon: None,
+			class_icon: unsafe { HICON::null_handle() },
 			class_cursor: unsafe { HCURSOR::null_handle() },
 			class_bg_brush: unsafe { HBRUSH::null_handle() },
 			title: "".to_owned(),
 			size: SIZE { cx: 600, cy: 500 },
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT,
-			menu: None,
-			accel_table: None,
+			menu: unsafe { HMENU::null_handle() },
+			accel_table: unsafe { HACCEL::null_handle() },
 		}
 	}
 }
@@ -305,8 +305,8 @@ impl WindowMainOpts {
 	{
 		wcx.hInstance = hinst;
 		wcx.style = self.class_style;
-		wcx.hIcon = self.class_icon.unwrap_or(unsafe { HICON::null_handle() });
-		wcx.hIconSm = wcx.hIcon;
+		wcx.hIcon = self.class_icon;
+		wcx.hIconSm = self.class_icon;
 
 		wcx.hbrBackground = self.class_bg_brush.as_opt()
 			.unwrap_or_else(|| HBRUSH::from_sys_color(co::COLOR::BTNFACE));
