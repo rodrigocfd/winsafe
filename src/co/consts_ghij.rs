@@ -6,6 +6,22 @@ const_type! { GA, u32,
 	ROOTOWNER, 3
 }
 
+const_type! { GCLP, i32,
+	/// [`GetClassLongPtr`](crate::HWND::GetClassLongPtr) `nIndex` (`i32`).
+	/// Originally has prefixes `GCW` and `GCL` also.
+
+	ATOM, -32
+	CBWNDEXTRA, -18
+	CBCLSEXTRA, -20
+	MENUNAME, -8
+	HBRBACKGROUND, -10
+	HCURSOR, -12
+	HICON, -14
+	HMODULE, -16
+	WNDPROC, -24
+	HICONSM, -34
+}
+
 const_type! { GDC, i32,
 	/// [`GetDeviceCaps`](crate::HDC::GetDeviceCaps) `index` (`i32`). Originally
 	/// has no prefix.
@@ -68,6 +84,7 @@ const_type! { GW, u32,
 const_type! { GWLP, i32,
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
 	/// [`SetWindowLongPtr`](crate:HWND::SetWindowLongPtr) `nIndex` (`i32`).
+	/// Originally has prefixe `GWL` also.
 
 	STYLE, -16
 	EXSTYLE, -20

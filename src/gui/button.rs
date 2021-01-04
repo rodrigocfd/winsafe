@@ -66,6 +66,23 @@ impl Button {
 	///
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
+	///
+	/// # Examples
+	///
+	/// When button is clicked, becomes disabled:
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::Button;
+	///
+	/// let btn: Button; // initialize it somewhere...
+	///
+	/// btn.on().bn_clicked({
+	///   let btn = btn.clone(); // pass into closure
+	///   move || {
+	///     btn.EnableWindow(false);
+	///   }
+	/// });
+	/// ```
 	pub fn on(&self) -> &ButtonEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control is created.");
@@ -87,9 +104,13 @@ impl Button {
 		self.cref().base.on_subclass()
 	}
 
-	/// Physically creates the control within the parent window. This method
-	/// should be called within parent window's `WM_CREATE` or `WM_INITDIALOG`
-	/// events.
+	/// Physically creates the control within the parent window by calling
+	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx). This method should be
+	/// be called within parent window's `WM_CREATE` or `WM_INITDIALOG` events.
+	///
+	/// The child of a dialog window will use
+	/// [`create_dlg`](crate::HWND::create_dlg) instead, unless you're creating
+	/// child controls dynamically, and you *really* know what you're doing.
 	///
 	/// # Panics
 	///
@@ -105,6 +126,20 @@ impl Button {
 
 		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 		Ok(())
+	}
+
+	/// Physically attaches to a control in a dialog resource by calling
+	/// [`GetDlgItem`](crate::HWND::GetDlgItem). This method should be called
+	/// within parent dialog's `WM_INITDIALOG` event.
+	///
+	/// # Panics
+	///
+	/// Panics if parent window is not a dialog.
+	///
+	/// Panics if the control is already created, or if the parent window was not
+	/// created yet.
+	pub fn create_dlg(&self) -> Result<(), Box<dyn Error>> {
+		self.mref().base.create_dlg().map(|_| ())
 	}
 }
 

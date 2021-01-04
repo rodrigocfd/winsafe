@@ -6,7 +6,7 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::Wm;
-use crate::priv_funcs::str_dyn_error;
+use crate::priv_funcs::{str_dyn_error, WC_DIALOG};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
@@ -92,6 +92,25 @@ impl NativeControlBase {
 			None,
 		)?;
 
+		self.install_subclass_if_needed()?;
+		Ok(self.hwnd)
+	}
+
+	pub fn create_dlg(&mut self) -> Result<HWND, Box<dyn Error>> {
+		if !self.hwnd.is_null() {
+			panic!("Cannot create control twice.");
+		} else if !self.is_parent_created() {
+			panic!("Cannot create control before parent window is created.");
+		}
+
+		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
+
+		let parent_atom = parent_hwnd.GetClassLongPtr(co::GCLP::ATOM);
+		if parent_atom as u16 != WC_DIALOG { // https://stackoverflow.com/a/64437627/6923555
+			panic!("Parent window is not a dialog, cannot create control.");
+		}
+
+		self.hwnd = parent_hwnd.GetDlgItem(self.ctrl_id as i32)?.unwrap();
 		self.install_subclass_if_needed()?;
 		Ok(self.hwnd)
 	}

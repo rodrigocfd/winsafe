@@ -73,6 +73,26 @@ impl WindowMain {
 	///
 	/// Panics if the window is already created. Events must be set before window
 	/// creation.
+	///
+	/// # Examples
+	///
+	/// Prints some info right after the window is created:
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::WindowMain;
+	///
+	/// let wnd: WindowMain; // initialize it somewhere...
+	///
+	/// wnd.on().wm_create({
+	///   let wnd = wnd.clone(); // pass into the closure
+	///   move |parms| {
+	///     println!("HWND: {}, client area: {}x{}",
+	///       wnd.hwnd(),
+	///       parms.createstruct.cx, parms.createstruct.cy);
+	///     0
+	///   }
+	/// });
+	/// ```
 	pub fn on(&self) -> &MsgEvents {
 		self.cref().base.on()
 	}

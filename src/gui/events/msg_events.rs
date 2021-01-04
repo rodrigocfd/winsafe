@@ -177,7 +177,7 @@ impl MsgEvents {
 	///
 	/// ```rust,ignore
 	/// use winsafe::co::WM;
-	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	/// use winsafe::gui::WindowMain;
 	///
 	/// let wnd: WindowMain; // initialize it somewhere...
 	///
@@ -186,7 +186,7 @@ impl MsgEvents {
 	/// wnd.on().wm(CUSTOM_MSG, {
 	///   let wnd = wnd.clone(); // pass into the closure
 	///   move |parms| {
-	///     println!("HWND: {}, Message ID: {}", wnd.hwnd(), parms.msg_id);
+	///     println!("HWND: {}, msg ID: {}", wnd.hwnd(), parms.msg_id);
 	///     0
 	///   }
 	/// });
@@ -234,8 +234,9 @@ impl MsgEvents {
 	/// Closing the window on ESC key:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, msg::WmClose};
-	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	/// use winsafe::co;
+	/// use winsafe::gui::WindowMain;
+	/// use winsafe::msg::WmClose;
 	///
 	/// let wnd: WindowMain; // initialize it somewhere...
 	///
@@ -314,7 +315,7 @@ impl MsgEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	/// use winsafe::gui::WindowMain;
 	///
 	/// let wnd: WindowMain; // initialize it somewhere...
 	///
@@ -410,7 +411,7 @@ impl MsgEvents {
 	}
 
 	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
-	pub fn wm_init_dialog<F>(&mut self, func: F)
+	pub fn wm_init_dialog<F>(&self, func: F)
 		where F: FnMut(msg::WmInitDialog) -> bool + 'static,
 	{
 		self.add_msg(co::WM::INITDIALOG, {
@@ -466,7 +467,7 @@ impl MsgEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::gui::{WindowMain, WindowMainOpts};
+		/// use winsafe::gui::WindowMain;
 		///
 		/// let wnd: WindowMain; // initialize it somewhere...
 		///

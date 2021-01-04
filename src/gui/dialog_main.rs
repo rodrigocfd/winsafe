@@ -76,6 +76,24 @@ impl DialogMain {
 	///
 	/// Panics if the dialog is already created. Events must be set before dialog
 	/// creation.
+	///
+	/// # Examples
+	///
+	/// Prints some info right after the dialog is created:
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::DialogMain;
+	///
+	/// let dlg: DialogMain; // initialize it somewhere...
+	///
+	/// dlg.on().wm_init_dialog({
+	///   let dlg = dlg.clone(); // pass into the closure
+	///   move |parms| {
+	///     println!("HWND: {}, focus: {}", dlg.hwnd(), parms.hwnd_focus);
+	///     true
+	///   }
+	/// });
+	/// ```
 	pub fn on(&self) -> &MsgEvents {
 		self.cref().base.on()
 	}

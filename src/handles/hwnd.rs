@@ -188,6 +188,12 @@ impl HWND {
 			.map(|p| Self(p))
 	}
 
+	/// [`GetClassLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclasslongptrw)
+	/// method.
+	pub fn GetClassLongPtr(self, nIndex: co::GCLP) -> usize {
+		unsafe { user32::GetClassLongPtrW(self.0, nIndex.into()) }
+	}
+
 	/// [`GetClientRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect)
 	/// method.
 	pub fn GetClientRect(self) -> Result<RECT, co::ERROR> {

@@ -29,6 +29,7 @@ extern "system" {
 	pub fn FindWindowW(lpClassName: PCSTR, lpWindowName: PCSTR) -> HANDLE;
 	pub fn GetAncestor(hwnd: HANDLE, gaFlags: u32) -> HANDLE;
 	pub fn GetClassInfoExW(hInstance: HANDLE, lpszClass: PCSTR, lpwcx: PVOID) -> BOOL;
+	pub fn GetClassLongPtrW(hWnd: HANDLE, nIndex: i32) -> usize;
 	pub fn GetClientRect(hWnd: HANDLE, lpRect: PVOID) -> BOOL;
 	pub fn GetDC(hWnd: HANDLE) -> HANDLE;
 	pub fn GetDesktopWindow() -> HANDLE;
