@@ -43,7 +43,7 @@ impl ButtonDlg {
 					base: NativeControlBase::new(parent.hwnd_ref()),
 					ctrl_id,
 					parent_events: ButtonEvents::new(parent, ctrl_id),
-				}
+				},
 			)),
 		}
 	}

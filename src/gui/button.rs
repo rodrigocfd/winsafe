@@ -52,13 +52,14 @@ impl Button {
 	pub fn new<T: Parent>(parent: T, opts: ButtonOpts) -> Button {
 		let opts = opts.define_id();
 		let ctrl_id = opts.ctrl_id;
+		
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new(parent.hwnd_ref()),
 					opts,
 					parent_events: ButtonEvents::new(parent, ctrl_id),
-				}
+				},
 			)),
 		}
 	}

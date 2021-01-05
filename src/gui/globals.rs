@@ -100,6 +100,36 @@ pub fn multiply_dpi(
 
 //------------------------------------------------------------------------------
 
+/// Calculates the bound rectangle to fit the text with current system font.
+pub fn calc_text_bound_box(text: &str) -> Result<SIZE, Box<dyn Error>> {
+	let desktop_hwnd = HWND::GetDesktopWindow();
+	let desktop_hdc = desktop_hwnd.GetDC()
+		.map_err(|_| str_dyn_error("GetDC failed."))?;
+	let clone_dc = desktop_hdc.CreateCompatibleDC()
+		.map_err(|_| str_dyn_error("CreateCompatibleDC failed."))?;
+	let prev_hfont = clone_dc.SelectObjectFont(ui_font())
+		.map_err(|_| str_dyn_error("SelectObjectFont failed."))?;
+
+	let mut bounds = clone_dc.GetTextExtentPoint32(
+		if text.is_empty() {
+			"Pj" // just a placeholder to get the text height
+		} else {
+			text
+		}
+	).map_err(|_| str_dyn_error("GetTextExtentPoint32 failed."))?;
+
+	if text.is_empty() {
+		bounds.cx = 0; // if no text was given, return just the height
+	}
+
+	clone_dc.SelectObjectFont(prev_hfont)
+		.map_err(|_| str_dyn_error("SelectObjectFont failed (cleanup)."))?;
+	clone_dc.DeleteDC()
+	.map_err(|_| str_dyn_error("DeleteDC failed."))?;
+	desktop_hwnd.ReleaseDC(desktop_hdc);
+	Ok(bounds)
+}
+
 /// Paints the themed border of an user control, if it has the proper styles.
 pub fn paint_control_borders(
 	hwnd: HWND, wm_ncp: WmNcPaint) -> Result<(), Box<dyn Error>>
