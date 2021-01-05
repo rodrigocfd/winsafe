@@ -22,8 +22,8 @@ handle_type! {
 
 impl HWND {
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) wrapper to retrieve
-	/// the /// window `HINSTANCE`.
-	pub fn Instance(self) -> HINSTANCE {
+	/// the window `HINSTANCE`.
+	pub fn hinstance(self) -> HINSTANCE {
 		unsafe {
 			HINSTANCE::from_ptr(
 				self.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut c_void,

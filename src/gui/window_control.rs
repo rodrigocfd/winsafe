@@ -90,7 +90,7 @@ impl WindowControl {
 	pub fn create(&self,
 		parent_hwnd: HWND, pos: POINT, size: SIZE) -> Result<(), Box<dyn Error>>
 	{
-		let hinst = parent_hwnd.Instance();
+		let hinst = parent_hwnd.hinstance();
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();

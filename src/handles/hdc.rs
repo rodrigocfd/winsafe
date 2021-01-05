@@ -25,6 +25,23 @@ macro_rules! empty_res {
 }
 
 impl HDC {
+	/// [`CreateCompatibleDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
+	/// method.
+	///
+	/// Must be paired with a [`DeleteDC`](crate::HDC::DeleteDC) call.
+	pub fn CreateCompatibleDC(self) -> Result<HDC, ()> {
+		match ptr_as_opt(unsafe { gdi32::CreateCompatibleDC(self.0) }) {
+			Some(p) => Ok(Self(p)),
+			None => Err(()),
+		}
+	}
+
+	/// [`DeleteDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
+	/// method.
+	pub fn DeleteDC(self) -> Result<(), ()> {
+		empty_res!(gdi32::DeleteDC(self.0))
+	}
+
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
 	/// method.
 	pub fn GetDeviceCaps(self, index: co::GDC) -> i32 {

@@ -69,7 +69,7 @@ impl NativeControlBase {
 			pos.x, pos.y, sz.cx, sz.cy,
 			Some(parent_hwnd),
 			IdMenu::Id(ctrl_id),
-			parent_hwnd.Instance(),
+			parent_hwnd.hinstance(),
 			None,
 		)?;
 
