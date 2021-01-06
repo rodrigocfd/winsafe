@@ -4,6 +4,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::ffi::gdi32;
+use crate::funcs::GetLastError;
 
 hgdiobj_type! {
 	/// Handle to a

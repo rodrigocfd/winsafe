@@ -385,9 +385,9 @@ pub fn SetLastError(dwErrCode: co::ERROR) {
 
 /// [`SetProcessDPIAware`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
 /// function.
-pub fn SetProcessDPIAware() -> Result<(), ()> {
+pub fn SetProcessDPIAware() -> Result<(), co::ERROR> {
 	match unsafe { user32::SetProcessDPIAware() } {
-		0 => Err(()),
+		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
 }
