@@ -19,3 +19,13 @@ macro_rules! vtbl_type {
 		}
 	};
 }
+
+/// Converts an `HRESULT` into a `Result<(), ERROR>`.
+macro_rules! into_result {
+	($hresult:expr) => {
+		match ERROR::from($hresult) {
+			ERROR::S_OK => Ok(()),
+			err => Err(err),
+		}
+	};
+}

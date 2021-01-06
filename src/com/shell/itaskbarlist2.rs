@@ -61,14 +61,11 @@ impl ITaskbarList2 {
 	{
 		unsafe {
 			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();
-			match ERROR::from(
+			into_result!(
 				((**ppv).MarkFullscreenWindow)(
 					ppv, hwnd.as_ptr(), fFullscreen as i32,
-				),
-			) {
-				ERROR::S_OK => Ok(()),
-				err => Err(err),
-			}
+				)
+			)
 		}
 	}
 }

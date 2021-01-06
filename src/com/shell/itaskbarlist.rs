@@ -59,12 +59,7 @@ impl ITaskbarList {
 	pub fn ActivateTab(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			match ERROR::from(
-				((**ppv).ActivateTab)(ppv, hwnd.as_ptr()),
-			) {
-				ERROR::S_OK => Ok(()),
-				err => Err(err),
-			}
+			into_result!( ((**ppv).ActivateTab)(ppv, hwnd.as_ptr()) )
 		}
 	}
 
@@ -73,12 +68,7 @@ impl ITaskbarList {
 	pub fn AddTab(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			match ERROR::from(
-				((**ppv).AddTab)(ppv, hwnd.as_ptr()),
-			) {
-				ERROR::S_OK => Ok(()),
-				err => Err(err),
-			}
+			into_result!( ((**ppv).AddTab)(ppv, hwnd.as_ptr()) )
 		}
 	}
 
@@ -87,12 +77,7 @@ impl ITaskbarList {
 	pub fn DeleteTab(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			match ERROR::from(
-				((**ppv).DeleteTab)(ppv, hwnd.as_ptr()),
-			) {
-				ERROR::S_OK => Ok(()),
-				err => Err(err),
-			}
+			into_result!( ((**ppv).DeleteTab)(ppv, hwnd.as_ptr()) )
 		}
 	}
 
@@ -101,12 +86,7 @@ impl ITaskbarList {
 	pub fn HrInit(&self) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			match ERROR::from(
-				((**ppv).HrInit)(ppv),
-			) {
-				ERROR::S_OK => Ok(()),
-				err => Err(err),
-			}
+			into_result!( ((**ppv).HrInit)(ppv) )
 		}
 	}
 
@@ -115,12 +95,7 @@ impl ITaskbarList {
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			match ERROR::from(
-				((**ppv).SetActiveAlt)(ppv, hwnd.as_ptr()),
-			) {
-				ERROR::S_OK => Ok(()),
-				err => Err(err),
-			}
+			into_result!( ((**ppv).SetActiveAlt)(ppv, hwnd.as_ptr()) )
 		}
 	}
 }
