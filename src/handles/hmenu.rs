@@ -23,7 +23,7 @@ impl HMENU {
 	{
 		match unsafe {
 			user32::AppendMenuW(
-				self.0,
+				self.ptr,
 				uFlags.into(),
 				uIDNewItem.into(),
 				lpNewItem.as_ptr(),
@@ -51,7 +51,7 @@ impl HMENU {
 		}
 
 		match unsafe {
-			user32::CheckMenuItem(self.0, uIDCheckItem.into(), flags.into())
+			user32::CheckMenuItem(self.ptr, uIDCheckItem.into(), flags.into())
 		} {
 			-1 => Err(co::ERROR::INVALID_PARAMETER),
 			ret => Ok(co::MF::from(ret as u32)),
@@ -65,7 +65,7 @@ impl HMENU {
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreateMenu() -> Result<HMENU, co::ERROR> {
 		match ptr_as_opt(unsafe { user32::CreateMenu() }) {
-			Some(p) => Ok(Self(p)),
+			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -77,7 +77,7 @@ impl HMENU {
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreatePopupMenu() -> Result<HMENU, co::ERROR> {
 		match ptr_as_opt(unsafe { user32::CreatePopupMenu() }) {
-			Some(p) => Ok(Self(p)),
+			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -91,7 +91,7 @@ impl HMENU {
 		};
 
 		match unsafe {
-			user32::DeleteMenu(self.0, uPosition.into(), flags.into())
+			user32::DeleteMenu(self.ptr, uPosition.into(), flags.into())
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -101,7 +101,7 @@ impl HMENU {
 	/// [`DestroyMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu)
 	/// method.
 	pub fn DestroyMenu(self) -> Result<(), co::ERROR> {
-		match unsafe { user32::DestroyMenu(self.0) } {
+		match unsafe { user32::DestroyMenu(self.ptr) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -123,7 +123,7 @@ impl HMENU {
 		};
 
 		match unsafe {
-			user32::EnableMenuItem(self.0, uIDEnableItem.into(), flags.into())
+			user32::EnableMenuItem(self.ptr, uIDEnableItem.into(), flags.into())
 		} {
 			-1 => Err(co::ERROR::INVALID_PARAMETER),
 			ret => Ok(co::MF::from(ret as u32)),
@@ -133,7 +133,7 @@ impl HMENU {
 	/// [`GetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 	/// method.
 	pub fn GetMenuInfo(self, lpmi: &mut MENUINFO) -> Result<(), co::ERROR> {
-		match unsafe { user32::GetMenuInfo(self.0, mut_void(lpmi)) } {
+		match unsafe { user32::GetMenuInfo(self.ptr, mut_void(lpmi)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -142,7 +142,7 @@ impl HMENU {
 	/// [`GetMenuItemCount`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
 	/// method.
 	pub fn GetMenuItemCount(self) -> Result<u32, co::ERROR> {
-		match unsafe { user32::GetMenuItemCount(self.0) } {
+		match unsafe { user32::GetMenuItemCount(self.ptr) } {
 			-1 => Err(GetLastError()),
 			count => Ok(count as u32),
 		}
@@ -151,7 +151,7 @@ impl HMENU {
 	/// [`GetMenuItemID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemid)
 	/// method.
 	pub fn GetMenuItemID(self, nPos: i32) -> Option<i32> {
-		match unsafe { user32::GetMenuItemID(self.0, nPos) } {
+		match unsafe { user32::GetMenuItemID(self.ptr, nPos) } {
 			-1 => None,
 			id => Some(id),
 		}
@@ -161,8 +161,8 @@ impl HMENU {
 	/// method.
 	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
 		ptr_as_opt(
-			unsafe { user32::GetSubMenu(self.0, nPos as i32) }
-		).map(|p| Self(p))
+			unsafe { user32::GetSubMenu(self.ptr, nPos as i32) }
+		).map(|ptr| Self { ptr })
 	}
 
 	/// [`InsertMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuw)
@@ -182,7 +182,7 @@ impl HMENU {
 
 		match unsafe {
 			user32::InsertMenuW(
-				self.0,
+				self.ptr,
 				uPosition.into(),
 				flags.into(),
 				uIDNewItem.into(),
@@ -206,7 +206,8 @@ impl HMENU {
 
 		match unsafe {
 			user32::InsertMenuItemW(
-				self.0, item.into(), byPos as i32, const_void(lpmi))
+				self.ptr, item.into(), byPos as i32, const_void(lpmi),
+			)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -216,7 +217,7 @@ impl HMENU {
 	/// [`IsMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ismenu)
 	/// method.
 	pub fn IsMenu(self) -> bool {
-		unsafe { user32::IsMenu(self.0) != 0 }
+		unsafe { user32::IsMenu(self.ptr) != 0 }
 	}
 
 	/// [`RemoveMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-removemenu)
@@ -228,7 +229,7 @@ impl HMENU {
 		};
 
 		match unsafe {
-			user32::RemoveMenu(self.0, uPosition.into(), byPos as u32)
+			user32::RemoveMenu(self.ptr, uPosition.into(), byPos as u32)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -238,7 +239,7 @@ impl HMENU {
 	/// [`SetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 	/// method.
 	pub fn SetMenuInfo(self, mii: &MENUINFO) -> Result<(), co::ERROR> {
-		match unsafe { user32::SetMenuInfo(self.0, const_void(mii)) } {
+		match unsafe { user32::SetMenuInfo(self.ptr, const_void(mii)) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -256,7 +257,8 @@ impl HMENU {
 
 		match unsafe {
 			user32::SetMenuItemInfoW(
-				self.0, item.into(), byPos as i32, const_void(lpmii))
+				self.ptr, item.into(), byPos as i32, const_void(lpmii),
+			)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -269,8 +271,9 @@ impl HMENU {
 		x: i32, y: i32, hWnd: HWND) -> Result<Option<i32>, co::ERROR>
 	{
 		let ret = unsafe {
-			user32::TrackPopupMenu(self.0, uFlags.into(),
-			x, y, 0, hWnd.as_ptr(), std::ptr::null())
+			user32::TrackPopupMenu(
+				self.ptr, uFlags.into(), x, y, 0, hWnd.ptr, std::ptr::null(),
+			)
 		};
 
 		if (uFlags & co::TPM::RETURNCMD) != co::TPM::default() {

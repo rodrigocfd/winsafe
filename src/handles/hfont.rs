@@ -38,7 +38,7 @@ impl HFONT {
 				)
 			}
 		) {
-			Some(p) => Ok(Self(p)),
+			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -49,7 +49,7 @@ impl HFONT {
 		match ptr_as_opt(
 			unsafe {gdi32::CreateFontIndirectW(const_void(lplf)) }
 		) {
-			Some(p) => Ok(Self(p)),
+			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
 		}
 	}

@@ -59,7 +59,7 @@ impl ITaskbarList {
 	pub fn ActivateTab(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			into_result!( ((**ppv).ActivateTab)(ppv, hwnd.as_ptr()) )
+			into_result!( ((**ppv).ActivateTab)(ppv, hwnd.ptr) )
 		}
 	}
 
@@ -68,7 +68,7 @@ impl ITaskbarList {
 	pub fn AddTab(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			into_result!( ((**ppv).AddTab)(ppv, hwnd.as_ptr()) )
+			into_result!( ((**ppv).AddTab)(ppv, hwnd.ptr) )
 		}
 	}
 
@@ -77,7 +77,7 @@ impl ITaskbarList {
 	pub fn DeleteTab(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			into_result!( ((**ppv).DeleteTab)(ppv, hwnd.as_ptr()) )
+			into_result!( ((**ppv).DeleteTab)(ppv, hwnd.ptr) )
 		}
 	}
 
@@ -95,7 +95,7 @@ impl ITaskbarList {
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> Result<(), ERROR> {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
-			into_result!( ((**ppv).SetActiveAlt)(ppv, hwnd.as_ptr()) )
+			into_result!( ((**ppv).SetActiveAlt)(ppv, hwnd.ptr) )
 		}
 	}
 }

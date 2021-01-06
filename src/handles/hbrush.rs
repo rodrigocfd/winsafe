@@ -16,6 +16,8 @@ hgdiobj_type! {
 impl HBRUSH {
 	/// Creates a brush with the given system color.
 	pub fn from_sys_color(color: co::COLOR) -> HBRUSH {
-		unsafe { Self::from_ptr((u32::from(color) + 1) as *mut c_void) }
+		Self {
+			ptr: (u32::from(color) + 1) as *mut c_void,
+		}
 	}
 }

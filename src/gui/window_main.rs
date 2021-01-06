@@ -193,7 +193,7 @@ impl WindowMain {
 					if self2.hwnd() == hwnd_cur_focus {
 						// If window receives focus, delegate to first child.
 						// https://stackoverflow.com/a/2835220/6923555
-						if let Some(hchild) = self2.hwnd().GetWindow(co::GW::CHILD).unwrap() {
+						if let Ok(hchild) = self2.hwnd().GetWindow(co::GW::CHILD) {
 							hchild.SetFocus();
 						}
 					}

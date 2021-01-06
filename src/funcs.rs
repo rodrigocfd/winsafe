@@ -88,7 +88,7 @@ pub fn GetMessage(lpMsg: &mut s::MSG, hWnd: Option<HWND>,
 		user32::GetMessageW(
 			mut_void(lpMsg),
 			match hWnd {
-				Some(hWnd) => hWnd.as_ptr(),
+				Some(hWnd) => hWnd.ptr,
 				None => std::ptr::null_mut(),
 			},
 			wMsgFilterMin, wMsgFilterMax,
@@ -294,7 +294,7 @@ pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
 	unsafe {
 		user32::PeekMessageW(
 			mut_void(lpMsg),
-			hWnd.as_ptr(),
+			hWnd.ptr,
 			wMsgFilterMin,
 			wMsgFilterMax,
 			wRemoveMsg.into(),
@@ -367,7 +367,7 @@ pub fn UnregisterClass(
 	match unsafe {
 		user32::UnregisterClassW(
 			WString::from_str(lpClassName).as_ptr(),
-			hInstance.as_ptr(),
+			hInstance.ptr,
 		)
 	} {
 		0 => Err(GetLastError()),

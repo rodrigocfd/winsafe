@@ -62,9 +62,7 @@ impl ITaskbarList2 {
 		unsafe {
 			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();
 			into_result!(
-				((**ppv).MarkFullscreenWindow)(
-					ppv, hwnd.as_ptr(), fFullscreen as i32,
-				)
+				((**ppv).MarkFullscreenWindow)(ppv, hwnd.ptr, fFullscreen as i32)
 			)
 		}
 	}

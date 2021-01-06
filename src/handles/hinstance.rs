@@ -38,10 +38,10 @@ impl HINSTANCE {
 		match ptr_as_opt(
 			unsafe {
 				user32::CreateDialogParamW(
-					self.0,
+					self.ptr,
 					lpTemplateName.as_ptr(),
 					match hWndParent {
-						Some(hParent) => hParent.as_ptr(),
+						Some(hParent) => hParent.ptr,
 						None => std::ptr::null_mut(),
 					},
 					lpDialogFunc as *const c_void,
@@ -49,7 +49,7 @@ impl HINSTANCE {
 				)
 			}
 		) {
-			Some(p) => Ok(unsafe { HWND::from_ptr(p) }),
+			Some(ptr) => Ok(HWND { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -65,10 +65,10 @@ impl HINSTANCE {
 	{
 		match unsafe {
 			user32::DialogBoxParamW(
-				self.0,
+				self.ptr,
 				lpTemplateName.as_ptr(),
 				match hWndParent {
-					Some(hParent) => hParent.as_ptr(),
+					Some(hParent) => hParent.ptr,
 					None => std::ptr::null_mut(),
 				},
 				lpDialogFunc as *const c_void,
@@ -96,7 +96,8 @@ impl HINSTANCE {
 	{
 		match unsafe {
 			user32::GetClassInfoExW(
-				self.0, WString::from_str(lpszClass).as_ptr(), mut_void(lpwcx))
+				self.ptr, WString::from_str(lpszClass).as_ptr(), mut_void(lpwcx),
+			)
 		} {
 			0 => Err(GetLastError()),
 			atom => Ok(ATOM::from(atom as u16)),
@@ -122,7 +123,7 @@ impl HINSTANCE {
 				)
 			}
 		) {
-			Some(p) => Ok(unsafe { HINSTANCE::from_ptr(p) }),
+			Some(ptr) => Ok(HINSTANCE { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -134,10 +135,10 @@ impl HINSTANCE {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::LoadAcceleratorsW(self.0, lpTableName.as_ptr())
+				user32::LoadAcceleratorsW(self.ptr, lpTableName.as_ptr())
 			}
 		) {
-			Some(p) => Ok(unsafe { HACCEL::from_ptr(p) }),
+			Some(ptr) => Ok(HACCEL { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -157,9 +158,9 @@ impl HINSTANCE {
 		lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
 	{
 		match ptr_as_opt(
-			unsafe { user32::LoadCursorW(self.0, lpCursorName.as_ptr()) }
+			unsafe { user32::LoadCursorW(self.ptr, lpCursorName.as_ptr()) }
 		) {
-			Some(p) => Ok(unsafe { HCURSOR::from_ptr(p) }),
+			Some(ptr) => Ok(HCURSOR { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -179,9 +180,9 @@ impl HINSTANCE {
 		lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
 	{
 		match ptr_as_opt(
-			unsafe { user32::LoadIconW(self.0, lpIconName.as_ptr()) }
+			unsafe { user32::LoadIconW(self.ptr, lpIconName.as_ptr()) }
 		) {
-			Some(p) => Ok(unsafe { HICON::from_ptr(p) }),
+			Some(ptr) => Ok(HICON { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -193,10 +194,12 @@ impl HINSTANCE {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::LoadImageW(self.0, name.as_ptr(), 0, cx, cy, fuLoad.into())
+				user32::LoadImageW(
+					self.ptr, name.as_ptr(), 0, cx, cy, fuLoad.into(),
+				)
 			}
 		) {
-			Some(p) => Ok(unsafe { HBITMAP::from_ptr(p) }),
+			Some(ptr) => Ok(HBITMAP { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -208,10 +211,12 @@ impl HINSTANCE {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::LoadImageW(self.0, name.as_ptr(), 2, cx, cy, fuLoad.into())
+				user32::LoadImageW(
+					self.ptr, name.as_ptr(), 2, cx, cy, fuLoad.into(),
+				)
 			}
 		) {
-			Some(p) => Ok(unsafe { HCURSOR::from_ptr(p) }),
+			Some(ptr) => Ok(HCURSOR { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -223,10 +228,12 @@ impl HINSTANCE {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::LoadImageW(self.0, name.as_ptr(), 1, cx, cy, fuLoad.into())
+				user32::LoadImageW(
+					self.ptr, name.as_ptr(), 1, cx, cy, fuLoad.into(),
+				)
 			}
 		) {
-			Some(p) => Ok(unsafe { HICON::from_ptr(p) }),
+			Some(ptr) => Ok(HICON { ptr }),
 			None => Err(GetLastError()),
 		}
 	}

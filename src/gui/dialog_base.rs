@@ -111,7 +111,7 @@ impl DialogBase {
 	fn center_on_parent_if_modal(&self) -> Result<(), co::ERROR> {
 		if self.is_modal {
 			let rc = self.hwnd.GetWindowRect()?;
-			let rc_parent = self.hwnd.GetParent()?.unwrap().GetWindowRect()?;
+			let rc_parent = self.hwnd.GetParent()?.GetWindowRect()?;
 			self.hwnd.SetWindowPos(HwndPlace::None,
 				rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
 				rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
@@ -122,12 +122,10 @@ impl DialogBase {
 
 	fn set_ui_font_on_children(&self) {
 		self.hwnd.SendMessage(WmSetFont { hfont: ui_font(), redraw: false });
-		self.hwnd.EnumChildWindows(
-			Self::enum_proc, unsafe { ui_font().as_ptr() } as isize);
+		self.hwnd.EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
 	}
-
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
-		let hfont = unsafe { HFONT::from_ptr(lparam as *mut c_void) };
+		let hfont = HFONT { ptr: lparam as *mut c_void };
 		hchild.SendMessage(WmSetFont { hfont, redraw: false });
 		true as i32
 	}

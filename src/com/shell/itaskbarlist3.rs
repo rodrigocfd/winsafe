@@ -73,9 +73,7 @@ impl ITaskbarList3 {
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
-			into_result!(
-				((**ppv).RegisterTab)(ppv, hwndTab.as_ptr(), hwndMDI.as_ptr())
-			)
+			into_result!( ((**ppv).RegisterTab)(ppv, hwndTab.ptr, hwndMDI.ptr) )
 		}
 	}
 
@@ -87,7 +85,7 @@ impl ITaskbarList3 {
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			into_result!(
-				((**ppv).SetProgressState)(ppv, hwnd.as_ptr(), tbpfFlags.into())
+				((**ppv).SetProgressState)(ppv, hwnd.ptr, tbpfFlags.into())
 			)
 		}
 	}
@@ -100,9 +98,7 @@ impl ITaskbarList3 {
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			into_result!(
-				((**ppv).SetProgressValue)(
-					ppv, hwnd.as_ptr(), ullCompleted, ullTotal,
-				)
+				((**ppv).SetProgressValue)(ppv, hwnd.ptr, ullCompleted, ullTotal)
 			)
 		}
 	}
@@ -115,9 +111,7 @@ impl ITaskbarList3 {
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			into_result!(
-				((**ppv).SetTabActive)(
-					ppv, hwndTab.as_ptr(), hwndMDI.as_ptr(), 0,
-				)
+				((**ppv).SetTabActive)(ppv, hwndTab.ptr, hwndMDI.ptr, 0)
 			)
 		}
 	}
@@ -130,9 +124,7 @@ impl ITaskbarList3 {
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			into_result!(
-				((**ppv).SetTabOrder)(
-					ppv, hwndTab.as_ptr(), hwndInsertBefore.as_ptr(),
-				)
+				((**ppv).SetTabOrder)(ppv, hwndTab.ptr, hwndInsertBefore.ptr)
 			)
 		}
 	}

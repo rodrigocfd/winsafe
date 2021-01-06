@@ -25,7 +25,7 @@ impl HACCEL {
 					mut_void(&mut paccel[0]), paccel.len() as i32)
 			}
 		) {
-			Some(p) => Ok(Self(p)),
+			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -33,6 +33,6 @@ impl HACCEL {
 	/// [`DestroyAcceleratorTable`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
 	/// method.
 	pub fn DestroyAcceleratorTable(self) -> bool {
-		unsafe { user32::DestroyAcceleratorTable(self.0) != 0 }
+		unsafe { user32::DestroyAcceleratorTable(self.ptr) != 0 }
 	}
 }

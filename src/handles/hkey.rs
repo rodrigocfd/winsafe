@@ -23,7 +23,7 @@ handle_type! {
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
 		/// Predefined registry key, always open.
-		pub const $name: Self = Self($val as *mut c_void);
+		pub const $name: Self = Self { ptr: $val as *mut c_void };
 	};
 }
 
@@ -42,7 +42,7 @@ impl HKEY {
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
 	pub fn RegCloseKey(self) -> Result<(), co::ERROR> {
-		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.0) } as u32) {
+		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.ptr) } as u32) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
@@ -56,11 +56,12 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::{HKEY, RegistryValue};
+	///
 	/// let val = HKEY::CURRENT_USER.RegGetValue(
-	///     "Control Panel\\Mouse",
-	///     "Beep",
-	///   )
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///   "Control Panel\\Mouse",
+	///   "Beep",
+	/// ).unwrap();
 	///
 	/// match val {
 	///   RegistryValue::Dword(n) => println!("Number u32: {}", n),
@@ -73,7 +74,7 @@ impl HKEY {
 	///     }
 	///     println!("");
 	///   },
-	///   _ => {},
+	///   RegistryValue::None => println!("No value"),
 	/// }
 	/// ```
 	pub fn RegGetValue(self,
@@ -88,7 +89,7 @@ impl HKEY {
 		match co::ERROR::from(
 			unsafe {
 				advapi32::RegGetValueW(
-					self.0,
+					self.ptr,
 					wSubKey.as_ptr(),
 					wValueName.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
@@ -111,7 +112,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegGetValueW( // query DWORD value
-							self.0,
+							self.ptr,
 							wSubKey.as_ptr(),
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
@@ -131,7 +132,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegGetValueW( // query QWORD value
-							self.0,
+							self.ptr,
 							wSubKey.as_ptr(),
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
@@ -151,7 +152,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegGetValueW( // query string value
-							self.0,
+							self.ptr,
 							wSubKey.as_ptr(),
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
@@ -173,7 +174,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegGetValueW( // query binary value
-							self.0,
+							self.ptr,
 							wSubKey.as_ptr(),
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
@@ -199,12 +200,14 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::co::{KEY, REG_OPTION};
+	/// use winsafe::HKEY;
+	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel\\Mouse",
-	///     co::REG_OPTION::default(),
-	///     co::KEY::READ,
-	///   )
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///   "Control Panel\\Mouse",
+	///   REG_OPTION::default(),
+	///   KEY::READ,
+	/// ).unwrap();
 	///
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
@@ -216,11 +219,11 @@ impl HKEY {
 		match co::ERROR::from(
 			unsafe {
 				advapi32::RegOpenKeyExW(
-					self.0,
+					self.ptr,
 					WString::from_str(lpSubKey).as_ptr(),
 					ulOptions.into(),
 					samDesired.into(),
-					&mut hKey.0,
+					&mut hKey.ptr,
 				)
 			} as u32
 		) {
@@ -238,15 +241,17 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::co::{KEY, REG_OPTION};
+	/// use winsafe::{HKEY, RegistryValue};
+	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel\\Mouse",
-	///     co::REG_OPTION::default(),
-	///     co::KEY::READ,
-	///   )
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///   "Control Panel\\Mouse",
+	///   REG_OPTION::default(),
+	///   KEY::READ,
+	/// ).unwrap();
 	///
 	/// let val = hkey.RegQueryValueEx("Beep")
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///   .unwrap();
 	///
 	/// match val {
 	///   RegistryValue::Dword(n) => println!("Number u32: {}", n),
@@ -259,7 +264,7 @@ impl HKEY {
 	///     }
 	///     println!("");
 	///   },
-	///   _ => {},
+	///   RegistryValue::None => println!("No value"),
 	/// }
 	///
 	/// hkey.RegCloseKey().unwrap();
@@ -275,7 +280,7 @@ impl HKEY {
 		match co::ERROR::from(
 			unsafe {
 				advapi32::RegQueryValueExW(
-					self.0,
+					self.ptr,
 					wValueName.as_ptr(),
 					std::ptr::null_mut(),
 					&mut rawDataType,
@@ -297,7 +302,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegQueryValueExW( // query DWORD value
-							self.0,
+							self.ptr,
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
@@ -316,7 +321,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegQueryValueExW( // query QWORD value
-							self.0,
+							self.ptr,
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
@@ -335,7 +340,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegQueryValueExW( // query string value
-							self.0,
+							self.ptr,
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
@@ -356,7 +361,7 @@ impl HKEY {
 				match co::ERROR::from(
 					unsafe {
 						advapi32::RegQueryValueExW( // query binary value
-							self.0,
+							self.ptr,
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
@@ -382,12 +387,13 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::{HKEY, RegistryValue};
+	///
 	/// HKEY::CURRENT_USER.RegSetKeyValue(
-	///     "Software\\My Company",
-	///     "Color",
-	///     RegistryValue::Sz("blue".to_owned()),
-	///   )
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///   "Software\\My Company",
+	///   "Color",
+	///   RegistryValue::Sz("blue".to_owned()),
+	/// ).unwrap();
 	/// ```
 	pub fn RegSetKeyValue(self, lpSubKey: &str,
 		lpValueName: &str, lpData: RegistryValue) -> Result<(), co::ERROR>
@@ -395,7 +401,7 @@ impl HKEY {
 		match co::ERROR::from(
 			unsafe {
 				advapi32::RegSetKeyValueW(
-					self.0,
+					self.ptr,
 					WString::from_str(lpSubKey).as_ptr(),
 					WString::from_str(lpValueName).as_ptr(),
 					lpData.reg_type().into(),
@@ -418,18 +424,19 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::co::{KEY, REG_OPTION};
+	/// use winsafe::{HKEY, RegistryValue};
+	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Console\\Git Bash",
-	///     co::REG_OPTION::default(),
-	///     co::KEY::ALL_ACCESS,
-	///   )
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///   "Console\\Git Bash",
+	///   REG_OPTION::default(),
+	///   KEY::ALL_ACCESS,
+	/// ).unwrap();
 	///
 	/// hkey.RegSetValueEx(
-	///     "Color",
-	///     RegistryValue::Sz("blue".to_owned()),
-	///   )
-	///   .unwrap_or_else(|err| panic!("{}", err.FormatMessage()));
+	///   "Color",
+	///   RegistryValue::Sz("blue".to_owned()),
+	/// ).unwrap();
 	///
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
@@ -439,7 +446,7 @@ impl HKEY {
 		match co::ERROR::from(
 			unsafe {
 				advapi32::RegSetValueExW(
-					self.0,
+					self.ptr,
 					WString::from_str(lpValueName).as_ptr(),
 					0,
 					lpData.reg_type().into(),

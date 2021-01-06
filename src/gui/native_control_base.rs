@@ -91,7 +91,7 @@ impl NativeControlBase {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
 
-		self.hwnd = parent_hwnd.GetDlgItem(ctrl_id as i32)?.unwrap();
+		self.hwnd = parent_hwnd.GetDlgItem(ctrl_id as i32)?;
 		self.install_subclass_if_needed()?;
 		Ok(self.hwnd)
 	}

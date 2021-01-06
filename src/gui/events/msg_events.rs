@@ -344,7 +344,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORBTN, {
 			let mut func = func;
-			move |p| Some(unsafe { func(p.into()).as_ptr() } as isize)
+			move |p| Some(func(p.into()).ptr as isize)
 		});
 	}
 
@@ -354,7 +354,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORDLG, {
 			let mut func = func;
-			move |p| Some(unsafe { func(p.into()).as_ptr() } as isize)
+			move |p| Some(func(p.into()).ptr as isize)
 		});
 	}
 
@@ -364,7 +364,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLOREDIT, {
 			let mut func = func;
-			move |p| Some(unsafe { func(p.into()).as_ptr() } as isize)
+			move |p| Some(func(p.into()).ptr as isize)
 		});
 	}
 
@@ -374,7 +374,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORLISTBOX, {
 			let mut func = func;
-			move |p| Some(unsafe { func(p.into()).as_ptr() } as isize)
+			move |p| Some(func(p.into()).ptr as isize)
 		});
 	}
 
@@ -384,7 +384,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
 			let mut func = func;
-			move |p| Some(unsafe { func(p.into()).as_ptr() } as isize)
+			move |p| Some(func(p.into()).ptr as isize)
 		});
 	}
 
@@ -394,7 +394,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORSTATIC, {
 			let mut func = func;
-			move |p| Some(unsafe { func(p.into()).as_ptr() } as isize)
+			move |p| Some(func(p.into()).ptr as isize)
 		});
 	}
 

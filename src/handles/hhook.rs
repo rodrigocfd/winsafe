@@ -27,12 +27,12 @@ impl HHOOK {
 				user32::SetWindowsHookExW(
 					idHook.into(),
 					lpfn as *const c_void,
-					hmod.as_ptr(),
+					hmod.ptr,
 					dwThreadId,
 				)
 			}
 		) {
-			Some(p) => Ok(Self(p)),
+			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
 		}
 	}

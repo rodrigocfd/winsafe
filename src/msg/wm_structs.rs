@@ -36,7 +36,7 @@ impl From<WmActivate> for Wm {
 		Self {
 			msg_id: co::WM::ACTIVATE,
 			wparam: MAKEDWORD(u16::from(p.event), p.is_minimized as u16) as usize,
-			lparam: unsafe { p.hwnd.as_ptr() } as isize,
+			lparam: p.hwnd.ptr as isize,
 		}
 	}
 }
@@ -46,7 +46,7 @@ impl From<Wm> for WmActivate {
 		Self {
 			event: co::WA::from(LOWORD(p.wparam as u32)),
 			is_minimized: HIWORD(p.wparam as u32) != 0,
-			hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
+			hwnd: HWND { ptr: p.lparam as *mut c_void },
 		}
 	}
 }
@@ -94,7 +94,7 @@ impl From<WmAppCommand> for Wm {
 	fn from(p: WmAppCommand) -> Self {
 		Self {
 			msg_id: co::WM::APPCOMMAND,
-			wparam: unsafe { p.hwnd_owner.as_ptr() } as usize,
+			wparam: p.hwnd_owner.ptr as usize,
 			lparam: MAKEDWORD(p.keys.into(), u16::from(p.app_command) | u16::from(p.u_device)) as isize,
 		}
 	}
@@ -103,7 +103,7 @@ impl From<WmAppCommand> for Wm {
 impl From<Wm> for WmAppCommand {
 	fn from(p: Wm) -> Self {
 		Self {
-			hwnd_owner: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
+			hwnd_owner: HWND { ptr: p.wparam as *mut c_void },
 			app_command: co::APPCOMMAND::from(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
 			u_device: co::FAPPCOMMAND::from(HIWORD(p.lparam as u32) & FAPPCOMMAND_MASK),
 			keys: co::MK::from(LOWORD(p.lparam as u32)),
@@ -137,7 +137,7 @@ impl From<WmCommand> for Wm {
 			msg_id: co::WM::COMMAND,
 			wparam: MAKEDWORD(p.ctrl_id, p.code.into()) as usize,
 			lparam: match p.ctrl_hwnd {
-				Some(h) => (unsafe { h.as_ptr() }) as isize,
+				Some(h) => h.ptr as isize,
 				None => 0,
 			},
 		}
@@ -151,7 +151,7 @@ impl From<Wm> for WmCommand {
 			ctrl_id: LOWORD(p.wparam as u32),
 			ctrl_hwnd: match p.lparam {
 				0 => None,
-				ptr => Some(unsafe { HWND::from_ptr(ptr as *mut c_void) }),
+				ptr => Some(HWND { ptr: ptr as *mut c_void }),
 			},
 		}
 	}
@@ -234,7 +234,7 @@ impl From<WmDropFiles> for Wm {
 	fn from(p: WmDropFiles) -> Self {
 		Self {
 			msg_id: co::WM::DROPFILES,
-			wparam: unsafe { p.hdrop.as_ptr() } as usize,
+			wparam: p.hdrop.ptr as usize,
 			lparam: 0,
 		}
 	}
@@ -243,7 +243,7 @@ impl From<WmDropFiles> for Wm {
 impl From<Wm> for WmDropFiles {
 	fn from(p: Wm) -> Self {
 		Self {
-			hdrop: unsafe { HDROP::from_ptr(p.wparam as *mut c_void) },
+			hdrop: HDROP { ptr: p.wparam as *mut c_void },
 		}
 	}
 }
@@ -289,7 +289,7 @@ impl From<WmInitDialog> for Wm {
 	fn from(p: WmInitDialog) -> Self {
 		Self {
 			msg_id: co::WM::INITDIALOG,
-			wparam: unsafe { p.hwnd_focus.as_ptr() } as usize,
+			wparam: p.hwnd_focus.ptr as usize,
 			lparam: p.additional_data,
 		}
 	}
@@ -298,7 +298,7 @@ impl From<WmInitDialog> for Wm {
 impl From<Wm> for WmInitDialog {
 	fn from(p: Wm) -> Self {
 		Self {
-			hwnd_focus: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
+			hwnd_focus: HWND { ptr: p.wparam as *mut c_void },
 			additional_data: p.lparam,
 		}
 	}
@@ -318,7 +318,7 @@ impl From<WmInitMenuPopup> for Wm {
 	fn from(p: WmInitMenuPopup) -> Self {
 		Self {
 			msg_id: co::WM::INITMENUPOPUP,
-			wparam: unsafe { p.hmenu.as_ptr() } as usize,
+			wparam: p.hmenu.ptr as usize,
 			lparam: MAKEDWORD(p.item_pos, p.is_window_menu as u16) as isize,
 		}
 	}
@@ -327,7 +327,7 @@ impl From<WmInitMenuPopup> for Wm {
 impl From<Wm> for WmInitMenuPopup {
 	fn from(p: Wm) -> Self {
 		Self {
-			hmenu: unsafe { HMENU::from_ptr(p.wparam as *mut c_void) },
+			hmenu: HMENU { ptr: p.wparam as *mut c_void },
 			item_pos: LOWORD(p.lparam as u32),
 			is_window_menu: HIWORD(p.lparam as u32) != 0,
 		}
@@ -421,7 +421,7 @@ impl From<WmNcPaint> for Wm {
 	fn from(p: WmNcPaint) -> Self {
 		Self {
 			msg_id: co::WM::NCPAINT,
-			wparam: unsafe { p.updated_hrgn.as_ptr() } as usize,
+			wparam: p.updated_hrgn.ptr as usize,
 			lparam: 0,
 		}
 	}
@@ -430,7 +430,7 @@ impl From<WmNcPaint> for Wm {
 impl From<Wm> for WmNcPaint {
 	fn from(p: Wm) -> Self {
 		Self {
-			updated_hrgn: unsafe { HRGN::from_ptr(p.wparam as *mut c_void) },
+			updated_hrgn: HRGN { ptr: p.wparam as *mut c_void },
 		}
 	}
 }
@@ -455,7 +455,7 @@ impl<'a> From<WmNotify<'a>> for Wm {
 	fn from(p: WmNotify) -> Self {
 		Self {
 			msg_id: co::WM::NOTIFY,
-			wparam: unsafe { p.nmhdr.hwndFrom.as_ptr() } as usize,
+			wparam: p.nmhdr.hwndFrom.ptr as usize,
 			lparam: p.nmhdr as *const NMHDR as isize,
 		}
 	}
@@ -515,7 +515,7 @@ impl From<WmSetFocus> for Wm {
 	fn from(p: WmSetFocus) -> Self {
 		Self {
 			msg_id: co::WM::SETFOCUS,
-			wparam: unsafe { p.hwnd_losing_focus.as_ptr() } as usize,
+			wparam: p.hwnd_losing_focus.ptr as usize,
 			lparam: 0,
 		}
 	}
@@ -524,7 +524,7 @@ impl From<WmSetFocus> for Wm {
 impl From<Wm> for WmSetFocus {
 	fn from(p: Wm) -> Self {
 		Self {
-			hwnd_losing_focus: unsafe { HWND::from_ptr(p.wparam as *mut c_void) },
+			hwnd_losing_focus: HWND { ptr: p.wparam as *mut c_void },
 		}
 	}
 }
@@ -542,7 +542,7 @@ impl From<WmSetFont> for Wm {
 	fn from(p: WmSetFont) -> Self {
 		Self {
 			msg_id: co::WM::SETFONT,
-			wparam: unsafe { p.hfont.as_ptr() } as usize,
+			wparam: p.hfont.ptr as usize,
 			lparam: MAKEDWORD(p.redraw as u16, 0) as isize,
 		}
 	}
@@ -551,7 +551,7 @@ impl From<WmSetFont> for Wm {
 impl From<Wm> for WmSetFont {
 	fn from(p: Wm) -> Self {
 		Self {
-			hfont: unsafe { HFONT::from_ptr(p.wparam as *mut c_void) },
+			hfont: HFONT { ptr: p.wparam as *mut c_void },
 			redraw: LOWORD(p.lparam as u32) != 0,
 		}
 	}
@@ -571,7 +571,7 @@ impl From<WmSetIcon> for Wm {
 		Self {
 			msg_id: co::WM::SETICON,
 			wparam: i32::from(p.size) as usize,
-			lparam: unsafe { p.hicon.as_ptr() } as isize,
+			lparam: p.hicon.ptr as isize,
 		}
 	}
 }
@@ -580,7 +580,7 @@ impl From<Wm> for WmSetIcon {
 	fn from(p: Wm) -> Self {
 		Self {
 			size: co::ICON_SZ::from(p.wparam as i32),
-			hicon: unsafe { HICON::from_ptr(p.lparam as *mut c_void) },
+			hicon: HICON { ptr: p.lparam as *mut c_void },
 		}
 	}
 }

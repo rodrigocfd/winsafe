@@ -31,7 +31,7 @@ impl HDROP {
 	/// ```
 	pub fn DragQueryFile(self) -> Result<Vec<String>, co::ERROR> {
 		let count = unsafe {
-			shell32::DragQueryFileW(self.0, 0xffff_ffff, std::ptr::null_mut(), 0)
+			shell32::DragQueryFileW(self.ptr, 0xffff_ffff, std::ptr::null_mut(), 0)
 		};
 		if count == 0 {
 			return Err(GetLastError());
@@ -42,7 +42,7 @@ impl HDROP {
 
 		for i in 0..count {
 			let mut len = unsafe {
-				shell32::DragQueryFileW(self.0, i, std::ptr::null_mut(), 0) + 1 // room for terminating null
+				shell32::DragQueryFileW(self.ptr, i, std::ptr::null_mut(), 0) + 1 // room for terminating null
 			};
 			if len == 0 {
 				return Err(GetLastError());
@@ -50,7 +50,7 @@ impl HDROP {
 
 			wbuf.realloc_buffer(len as usize);
 			len = unsafe {
-				shell32::DragQueryFileW(self.0, i, wbuf.as_mut_ptr(), len)
+				shell32::DragQueryFileW(self.ptr, i, wbuf.as_mut_ptr(), len)
 			};
 			if len == 0 {
 				return Err(GetLastError());
@@ -59,7 +59,7 @@ impl HDROP {
 			files.push(wbuf.to_string());
 		}
 
-		unsafe { shell32::DragFinish(self.0); }
+		unsafe { shell32::DragFinish(self.ptr); }
 		files.sort_by(|a, b| a.to_uppercase().cmp(&b.to_uppercase())); // case insensitive
 		Ok(files)
 	}
@@ -69,7 +69,7 @@ impl HDROP {
 	pub fn DragQueryPoint(self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let clientArea = unsafe {
-			shell32::DragQueryPoint(self.0, mut_void(&mut pt))
+			shell32::DragQueryPoint(self.ptr, mut_void(&mut pt))
 		};
 		(pt, clientArea != 0)
 	}

@@ -18,7 +18,7 @@ impl HTHEME {
 	/// [`CloseThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
 	pub fn CloseThemeData(self) -> Result<(), co::ERROR> {
-		match unsafe { uxtheme::CloseThemeData(self.0) } {
+		match unsafe { uxtheme::CloseThemeData(self.ptr) } {
 			0 => Ok(()),
 			err => Err(co::ERROR::from(err)),
 		}
@@ -32,8 +32,8 @@ impl HTHEME {
 	{
 		match unsafe {
 			uxtheme::DrawThemeBackground(
-				self.0,
-				hdc.as_ptr(),
+				self.ptr,
+				hdc.ptr,
 				iPartId.into(),
 				iStateId.into(),
 				const_void(&pRect),

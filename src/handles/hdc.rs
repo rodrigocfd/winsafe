@@ -31,8 +31,8 @@ impl HDC {
 	///
 	/// Must be paired with a [`DeleteDC`](crate::HDC::DeleteDC) call.
 	pub fn CreateCompatibleDC(self) -> Result<HDC, co::ERROR> {
-		match ptr_as_opt(unsafe { gdi32::CreateCompatibleDC(self.0) }) {
-			Some(p) => Ok(Self(p)),
+		match ptr_as_opt(unsafe { gdi32::CreateCompatibleDC(self.ptr) }) {
+			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -40,13 +40,13 @@ impl HDC {
 	/// [`DeleteDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
 	/// method.
 	pub fn DeleteDC(self) -> Result<(), co::ERROR> {
-		zero_err!(gdi32::DeleteDC(self.0))
+		zero_err!(gdi32::DeleteDC(self.ptr))
 	}
 
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
 	/// method.
 	pub fn GetDeviceCaps(self, index: co::GDC) -> i32 {
-		unsafe { gdi32::GetDeviceCaps(self.0, index.into()) }
+		unsafe { gdi32::GetDeviceCaps(self.ptr, index.into()) }
 	}
 
 	/// [`GetTextExtentPoint32`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextextentpoint32w)
@@ -56,7 +56,7 @@ impl HDC {
 
 		match unsafe {
 			gdi32::GetTextExtentPoint32W(
-				self.0,
+				self.ptr,
 				WString::from_str(lpString).as_ptr(),
 				lpString.chars().count() as i32,
 				mut_void(&mut sz),
@@ -70,7 +70,7 @@ impl HDC {
 	/// [`LineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
 	/// method.
 	pub fn LineTo(self, x: i32, y: i32) -> Result<(), co::ERROR> {
-		zero_err!(gdi32::LineTo(self.0, x, y))
+		zero_err!(gdi32::LineTo(self.ptr, x, y))
 	}
 
 	/// [`MoveToEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
@@ -83,7 +83,7 @@ impl HDC {
 			Some(ptRef) => mut_void(ptRef),
 		};
 
-		zero_err!(gdi32::MoveToEx(self.0, x, y, pt))
+		zero_err!(gdi32::MoveToEx(self.ptr, x, y, pt))
 	}
 
 	/// [`Pie`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
@@ -93,7 +93,7 @@ impl HDC {
 		xr1: i32, yr1: i32, xr2: i32, yr2: i32) -> Result<(), co::ERROR>
 	{
 		zero_err!(
-			gdi32::Pie(self.0, left, top, right, bottom, xr1, yr1, xr2, yr2)
+			gdi32::Pie(self.ptr, left, top, right, bottom, xr1, yr1, xr2, yr2)
 		)
 	}
 
@@ -101,7 +101,7 @@ impl HDC {
 	/// method.
 	pub fn PolyBezier(self, apt: &[POINT]) -> Result<(), co::ERROR> {
 		zero_err!(
-			gdi32::PolyBezier(self.0, const_void(&apt[0]), apt.len() as u32)
+			gdi32::PolyBezier(self.ptr, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
 
@@ -109,7 +109,7 @@ impl HDC {
 	/// method.
 	pub fn PolyBezierTo(self, apt: &[POINT]) -> Result<(), co::ERROR> {
 		zero_err!(
-			gdi32::PolyBezierTo(self.0, const_void(&apt[0]), apt.len() as u32)
+			gdi32::PolyBezierTo(self.ptr, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
 
@@ -117,7 +117,7 @@ impl HDC {
 	/// method.
 	pub fn Polyline(self, apt: &[POINT]) -> Result<(), co::ERROR> {
 		zero_err!(
-			gdi32::Polyline(self.0, const_void(&apt[0]), apt.len() as u32)
+			gdi32::Polyline(self.ptr, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
 
@@ -125,14 +125,14 @@ impl HDC {
 	/// method.
 	pub fn PolylineTo(self, apt: &[POINT]) -> Result<(), co::ERROR> {
 		zero_err!(
-			gdi32::PolylineTo(self.0, const_void(&apt[0]), apt.len() as u32)
+			gdi32::PolylineTo(self.ptr, const_void(&apt[0]), apt.len() as u32)
 		)
 	}
 
 	/// [`PtVisible`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptvisible)
 	/// method.
 	pub fn PtVisible(self, x: i32, y: i32) -> Result<bool, co::ERROR> {
-		match unsafe { gdi32::PtVisible(self.0, x, y) } {
+		match unsafe { gdi32::PtVisible(self.ptr, x, y) } {
 			-1 => Err(GetLastError()),
 			0 => Ok(false),
 			_ => Ok(true),
@@ -144,13 +144,13 @@ impl HDC {
 	pub fn Rectangle(self,
 		left: i32, top: i32, right: i32, bottom: i32) -> Result<(), co::ERROR>
 	{
-		zero_err!(gdi32::Rectangle(self.0, left, top, right, bottom))
+		zero_err!(gdi32::Rectangle(self.ptr, left, top, right, bottom))
 	}
 
 	/// [`RestoreDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-restoredc)
 	/// method.
 	pub fn RestoreDC(self, nSavedDC: i32) -> Result<(), co::ERROR> {
-		zero_err!(gdi32::RestoreDC(self.0, nSavedDC))
+		zero_err!(gdi32::RestoreDC(self.ptr, nSavedDC))
 	}
 
 	/// [`RoundRect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
@@ -160,14 +160,14 @@ impl HDC {
 		width: i32, height: i32) -> Result<(), co::ERROR>
 	{
 		zero_err!(
-			gdi32::RoundRect(self.0, left, top, right, bottom, width, height)
+			gdi32::RoundRect(self.ptr, left, top, right, bottom, width, height)
 		)
 	}
 
 	/// [`SaveDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-savedc)
 	/// method.
 	pub fn SaveDC(self) -> Result<i32, co::ERROR> {
-		match unsafe { gdi32::SaveDC(self.0) } {
+		match unsafe { gdi32::SaveDC(self.ptr) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -176,8 +176,8 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	pub fn SelectObjectBitmap(self, h: HBITMAP) -> Result<HBITMAP, co::ERROR> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
-			Some(p) => Ok(unsafe { HBITMAP::from_ptr(p) }),
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
+			Some(ptr) => Ok(HBITMAP { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -185,8 +185,8 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBRUSH`](crate::HBRUSH).
 	pub fn SelectObjectBrush(self, h: HBRUSH) -> Result<HBRUSH, co::ERROR> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
-			Some(p) => Ok(unsafe { HBRUSH::from_ptr(p) }),
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
+			Some(ptr) => Ok(HBRUSH { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -194,8 +194,8 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HFONT`](crate::HFONT).
 	pub fn SelectObjectFont(self, h: HFONT) -> Result<HFONT, co::ERROR> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
-			Some(p) => Ok(unsafe { HFONT::from_ptr(p) }),
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
+			Some(ptr) => Ok(HFONT { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -203,8 +203,8 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HPEN`](crate::HPEN).
 	pub fn SelectObjectPen(self, h: HPEN) -> Result<HPEN, co::ERROR> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
-			Some(p) => Ok(unsafe { HPEN::from_ptr(p) }),
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
+			Some(ptr) => Ok(HPEN { ptr }),
 			None => Err(GetLastError()),
 		}
 	}
@@ -212,7 +212,7 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HRGN`](crate::HRGN).
 	pub fn SelectObjectRgn(self, h: HRGN) -> Result<co::REGION, co::ERROR> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.0, h.as_ptr()) }) {
+		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
 			Some(p) => Ok(co::REGION::from(p as i32)),
 			None => Err(GetLastError()),
 		}
@@ -221,7 +221,7 @@ impl HDC {
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method
 	pub fn SetBkMode(self, mode: co::BKMODE) -> Result<co::BKMODE, co::ERROR> {
-		match unsafe { gdi32::SetBkMode(self.0, mode.into()) } {
+		match unsafe { gdi32::SetBkMode(self.ptr, mode.into()) } {
 			0 => Err(GetLastError()),
 			bk => Ok(co::BKMODE::from(bk)),
 		}

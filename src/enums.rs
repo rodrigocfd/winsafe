@@ -50,7 +50,7 @@ impl BitmapPtrStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Bitmap(hbmp) => unsafe { hbmp.as_ptr() as *const u16 },
+			Self::Bitmap(hbmp) => hbmp.ptr as *const u16,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 			Self::Param(lp) => *lp as *const u16,
 		}
@@ -75,7 +75,7 @@ impl HwndPlace {
 	/// Converts the internal value to a `*mut c_void`.
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
-			Self::Hwnd(hwnd) => unsafe { hwnd.as_ptr() },
+			Self::Hwnd(hwnd) => hwnd.ptr,
 			Self::Place(v) => isize::from(*v) as *mut c_void,
 			Self::None => std::ptr::null_mut(),
 		}
@@ -152,7 +152,7 @@ impl From<IdMenu> for usize {
 	fn from(v: IdMenu) -> usize {
 		match v {
 			IdMenu::Id(id) => id as usize,
-			IdMenu::Menu(hMenu) => (unsafe { hMenu.as_ptr() }) as usize,
+			IdMenu::Menu(hMenu) => hMenu.ptr as usize,
 			IdMenu::None => 0,
 		}
 	}
@@ -163,7 +163,7 @@ impl IdMenu {
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
 			Self::Id(id) => *id as *mut c_void,
-			Self::Menu(hMenu) => unsafe { hMenu.as_ptr() },
+			Self::Menu(hMenu) => hMenu.ptr,
 			Self::None => std::ptr::null_mut(),
 		}
 	}

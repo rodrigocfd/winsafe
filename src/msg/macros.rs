@@ -43,8 +43,8 @@ macro_rules! ctl_color_msg {
 			fn from(p: $name) -> Self {
 				Self {
 					msg_id: $wmconst,
-					wparam: unsafe { p.hdc.as_ptr() } as usize,
-					lparam: unsafe { p.hwnd.as_ptr() } as isize,
+					wparam: p.hdc.ptr as usize,
+					lparam: p.hwnd.ptr as isize,
 				}
 			}
 		}
@@ -52,8 +52,8 @@ macro_rules! ctl_color_msg {
 		impl From<Wm> for $name {
 			fn from(p: Wm) -> Self {
 				Self {
-					hdc: unsafe { HDC::from_ptr(p.wparam as *mut c_void) },
-					hwnd: unsafe { HWND::from_ptr(p.lparam as *mut c_void) },
+					hdc: HDC { ptr: p.wparam as *mut c_void },
+					hwnd: HWND { ptr: p.lparam as *mut c_void },
 				}
 			}
 		}
