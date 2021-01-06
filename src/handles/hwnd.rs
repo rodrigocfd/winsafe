@@ -176,9 +176,9 @@ impl HWND {
 		}
 	}
 
-	/// A more convenient [`EnumChildWindows`](co::HWND::EnumChildWindows), which
-	/// returns a `Vec` with the handles of all child windows, instead of taking
-	/// a function pointer.
+	/// A more convenient [`EnumChildWindows`](crate::HWND::EnumChildWindows),
+	/// which returns a `Vec` with the handles of all child windows, instead of
+	/// taking a function pointer.
 	///
 	/// # Examples
 	///
