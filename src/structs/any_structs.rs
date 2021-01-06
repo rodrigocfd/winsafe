@@ -69,6 +69,12 @@ impl Default for BITMAPINFOHEADER {
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct COLORREF(pub(crate) u32);
 
+impl From<co::CLR> for COLORREF {
+	fn from(v: co::CLR) -> Self {
+		Self(v.0)
+	}
+}
+
 impl COLORREF {
 	/// [`GetRValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getrvalue)
 	/// method. Retrieves the red intensity.

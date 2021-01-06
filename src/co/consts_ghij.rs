@@ -84,7 +84,7 @@ const_type! { GW, u32,
 const_type! { GWLP, i32,
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
 	/// [`SetWindowLongPtr`](crate:HWND::SetWindowLongPtr) `nIndex` (`i32`).
-	/// Originally has prefixe `GWL` also.
+	/// Originally has prefix `GWL` also.
 
 	STYLE, -16
 	EXSTYLE, -20
@@ -163,4 +163,36 @@ const_type! { IDI, usize,
 	WARNING, Self::EXCLAMATION.0
 	ERROR, Self::HAND.0
 	INFORMATION, Self::ASTERISK.0
+}
+
+const_type! { ILD, u32,
+	/// [`IMAGELISTDRAWFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
+	/// enumeration (`u32`).
+
+	NORMAL, 0x00000000
+	TRANSPARENT, 0x00000001
+	MASK, 0x00000010
+	IMAGE, 0x00000020
+	ROP, 0x00000040
+	BLEND25, 0x00000002
+	BLEND50, 0x00000004
+	OVERLAYMASK, 0x00000f00
+	PRESERVEALPHA, 0x00001000
+	SCALE, 0x00002000
+	DPISCALE, 0x00004000
+	ASYNC, 0x00008000
+	SELECTED, Self::BLEND50.0
+	FOCUS, Self::BLEND25.0
+	BLEND, Self::BLEND50.0
+}
+
+const_type! { ILS, u32,
+	/// [`IMAGELISTSTATEFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
+	/// enumeration (`u32`).
+
+	NORMAL, 0x00000000
+	GLOW, 0x00000001
+	SHADOW, 0x00000002
+	SATURATE, 0x00000004
+	ALPHA, 0x00000008
 }

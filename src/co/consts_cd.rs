@@ -86,6 +86,13 @@ const_type! { CLIP, u8,
 	EMBEDDED, 8 << 4
 }
 
+const_type! { CLR, u32,
+	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
+
+	CLR_NONE, 0xffffffff
+	DEFAULT, 0xff000000
+}
+
 const_type! { CLSCTX, u32,
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).

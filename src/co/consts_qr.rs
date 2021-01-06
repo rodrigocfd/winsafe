@@ -33,7 +33,7 @@ const_type! { QS, u32,
 const_type! { REG, u32,
 	/// Registry
 	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
-	/// (`u21`).
+	/// (`u32`).
 
 	NONE, 0
 	SZ, 1
@@ -70,6 +70,26 @@ const_type! { REGION, i32,
 	NULL, 1
 	SIMPLE, 2
 	COMPLEX, 3
+}
+
+const_type! { ROP, u32,
+	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop` (`u32`).
+
+	SRCCOPY, 0x00cc0020
+	SRCPAINT, 0x00ee0086
+	SRCAND, 0x008800c6
+	SRCINVERT, 0x00660046
+	SRCERASE, 0x00440328
+	NOTSRCCOPY, 0x00330008
+	NOTSRCERASE, 0x001100a6
+	MERGECOPY, 0x00c000ca
+	MERGEPAINT, 0x00bb0226
+	PATCOPY, 0x00f00021
+	PATPAINT, 0x00fb0a09
+	PATINVERT, 0x005a0049
+	DSTINVERT, 0x00550009
+	BLACKNESS, 0x00000042
+	WHITENESS, 0x00ff0062
 }
 
 const_type! { RRF, u32,

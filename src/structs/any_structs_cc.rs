@@ -6,9 +6,41 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::funcs_priv::L_MAX_URL_LENGTH;
-use crate::handles::HDC;
-use crate::structs::{NMHDR, POINT, RECT};
+use crate::handles::{HDC, HIMAGELIST, HTREEITEM};
+use crate::structs::{COLORREF, NMHDR, POINT, RECT};
 use crate::WString;
+
+/// [`IMAGELISTDRAWPARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct IMAGELISTDRAWPARAMS {
+	cbSize: u32,
+	pub himl: HIMAGELIST,
+	pub i: i32,
+	pub hdcDst: HDC,
+	pub x: i32,
+	pub y: i32,
+	pub cx: i32,
+	pub cy: i32,
+	pub xBitmap: i32,
+	pub yBitmap: i32,
+	pub rgbBk: COLORREF,
+	pub rgbFg: COLORREF,
+	pub fStyle: co::ILD,
+	pub dwRop: co::ROP,
+	pub fState: co::ILS,
+	pub Frame: u32,
+	pub crEffect: COLORREF,
+}
+
+impl Default for IMAGELISTDRAWPARAMS {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
+	}
+}
 
 /// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
 /// struct.
@@ -261,4 +293,28 @@ pub struct NMMOUSE {
 	pub dwItemData: usize,
 	pub pt: POINT,
 	pub dwHitInfo: isize,
+}
+
+/// [`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
+/// method.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct NMTVASYNCDRAW<'a> {
+	pub hdr: NMHDR,
+	pimldp: *const IMAGELISTDRAWPARAMS,
+	pub hr: co::ERROR,
+	pub hItem: HTREEITEM,
+	pub lParam: isize,
+	pub dwRetFlags: co::ADRF,
+	pub iRetImageIndex: i32,
+	m_pimldp: PhantomData<&'a IMAGELISTDRAWPARAMS>,
+}
+
+impl_default_zero!(NMTVASYNCDRAW, 'a);
+
+impl<'a> NMTVASYNCDRAW<'a> {
+	/// Returns the `pimldp` field.
+	pub fn pimldp(&self) -> &IMAGELISTDRAWPARAMS {
+		unsafe { &*self.pimldp }
+	}
 }
