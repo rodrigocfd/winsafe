@@ -9,7 +9,7 @@ use crate::aliases::WNDPROC;
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs_priv::LF_FACESIZE;
-use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
+use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LOBYTE, LODWORD, LOWORD};
 use crate::handles as h;
 use crate::WString;
 
@@ -28,13 +28,7 @@ pub struct ACCEL {
 /// [`RegisterClassEx`](crate::RegisterClassEx).
 #[repr(C)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct ATOM(u16);
-
-impl From<u16> for ATOM {
-	fn from(n: u16) -> Self {
-		Self(n)
-	}
-}
+pub struct ATOM(pub(crate) u16);
 
 impl ATOM {
 	/// Useful to pass the atom as class name.
@@ -44,7 +38,7 @@ impl ATOM {
 }
 
 /// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
-/// struct;
+/// struct.
 #[repr(C)]
 #[derive(Clone, Eq, PartialEq)]
 pub struct BITMAPINFOHEADER {
@@ -66,6 +60,32 @@ impl Default for BITMAPINFOHEADER {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.biSize = std::mem::size_of::<Self>() as u32;
 		obj
+	}
+}
+
+/// [`COLORREF`](https://docs.microsoft.com/en-us/windows/win32/gdi/colorref)
+/// struct.
+#[repr(C)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub struct COLORREF(pub(crate) u32);
+
+impl COLORREF {
+	/// [`GetRValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getrvalue)
+	/// method. Retrieves the red intensity.
+	pub fn GetRValue(self) -> u8 {
+		LOBYTE(LOWORD(self.0))
+	}
+
+	/// [`GetGValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgvalue)
+	/// method. Retrieves the green intensity.
+	pub fn GetGValue(self) -> u8 {
+		LOBYTE(LOWORD(self.0) >> 8)
+	}
+
+	/// [`GetBValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbvalue)
+	/// method. Retrieves the blue intensity.
+	pub fn GetBValue(self) -> u8 {
+		LOBYTE(LOWORD(self.0 >> 16))
 	}
 }
 

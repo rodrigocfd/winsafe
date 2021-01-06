@@ -315,7 +315,7 @@ pub fn RegisterClassEx(lpwcx: &s::WNDCLASSEX) -> Result<s::ATOM, co::ERROR> {
 		user32::RegisterClassExW(lpwcx as *const s::WNDCLASSEX as *const c_void)
 	} {
 		0 => Err(GetLastError()),
-		atom => Ok(s::ATOM::from(atom)),
+		atom => Ok(s::ATOM(atom)),
 	}
 }
 

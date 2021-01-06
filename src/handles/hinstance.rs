@@ -100,7 +100,7 @@ impl HINSTANCE {
 			)
 		} {
 			0 => Err(GetLastError()),
-			atom => Ok(ATOM::from(atom as u16)),
+			atom => Ok(ATOM(atom as u16)),
 		}
 	}
 
