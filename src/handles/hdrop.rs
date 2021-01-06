@@ -1,6 +1,8 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::ffi::shell32;
+use crate::funcs::GetLastError;
 use crate::priv_funcs::mut_void;
 use crate::structs::POINT;
 use crate::WString;
@@ -27,12 +29,12 @@ impl HDROP {
 	///   println!("File path: {}", f);
 	/// }
 	/// ```
-	pub fn DragQueryFile(self) -> Result<Vec<String>, ()> {
+	pub fn DragQueryFile(self) -> Result<Vec<String>, co::ERROR> {
 		let count = unsafe {
 			shell32::DragQueryFileW(self.0, 0xffff_ffff, std::ptr::null_mut(), 0)
 		};
 		if count == 0 {
-			return Err(());
+			return Err(GetLastError());
 		}
 
 		let mut wbuf = WString::new();
@@ -43,7 +45,7 @@ impl HDROP {
 				shell32::DragQueryFileW(self.0, i, std::ptr::null_mut(), 0) + 1 // room for terminating null
 			};
 			if len == 0 {
-				return Err(());
+				return Err(GetLastError());
 			}
 
 			wbuf.realloc_buffer(len as usize);
@@ -51,7 +53,7 @@ impl HDROP {
 				shell32::DragQueryFileW(self.0, i, wbuf.as_mut_ptr(), len)
 			};
 			if len == 0 {
-				return Err(());
+				return Err(GetLastError());
 			}
 
 			files.push(wbuf.to_string());

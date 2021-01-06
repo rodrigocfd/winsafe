@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::ffi::gdi32;
+use crate::funcs::GetLastError;
 use crate::priv_funcs::{const_void, ptr_as_opt};
 use crate::structs::LOGFONT;
 use crate::WString;
@@ -22,7 +23,7 @@ impl HFONT {
 		iCharSet: co::CHARSET,
 		iOutPrecision: co::OUT_PRECIS, iClipPrecision: co::CLIP,
 		iQuality: co::QUALITY, iPitchAndFamily: co::PITCH,
-		pszFaceName: &str) -> Result<HFONT, ()>
+		pszFaceName: &str) -> Result<HFONT, co::ERROR>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -38,18 +39,18 @@ impl HFONT {
 			}
 		) {
 			Some(p) => Ok(Self(p)),
-			None => Err(()),
+			None => Err(GetLastError()),
 		}
 	}
 
 	/// [`CreateFontIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
-	pub fn CreateFontIndirect(lplf: &LOGFONT) -> Result<HFONT, ()> {
+	pub fn CreateFontIndirect(lplf: &LOGFONT) -> Result<HFONT, co::ERROR> {
 		match ptr_as_opt(
 			unsafe {gdi32::CreateFontIndirectW(const_void(lplf)) }
 		) {
 			Some(p) => Ok(Self(p)),
-			None => Err(()),
+			None => Err(GetLastError()),
 		}
 	}
 }

@@ -37,7 +37,7 @@ impl HMENU {
 	/// [`CheckMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem)
 	/// method.
 	pub fn CheckMenuItem(self,
-		uIDCheckItem: IdPos, uCheck: bool) -> Result<co::MF, ()>
+		uIDCheckItem: IdPos, uCheck: bool) -> Result<co::MF, co::ERROR>
 	{
 		let mut flags = if uCheck {
 			co::MF::CHECKED
@@ -53,7 +53,7 @@ impl HMENU {
 		match unsafe {
 			user32::CheckMenuItem(self.0, uIDCheckItem.into(), flags.into())
 		} {
-			-1 => Err(()),
+			-1 => Err(co::ERROR::INVALID_PARAMETER),
 			ret => Ok(co::MF::from(ret as u32)),
 		}
 	}
@@ -113,7 +113,7 @@ impl HMENU {
 	/// You don't need to pass `MF::BYCOMMAND` or `MF::BYPOSITION` flags, they
 	/// are inferred by [`IdPos`](crate::IdPos).
 	pub fn EnableMenuItem(self,
-		uIDEnableItem: IdPos, uEnable: co::MF) -> Result<co::MF, ()>
+		uIDEnableItem: IdPos, uEnable: co::MF) -> Result<co::MF, co::ERROR>
 	{
 		let mut flags = uEnable;
 		flags &= !(co::MF::BYPOSITION | co::MF::BYCOMMAND); // remove if set
@@ -125,7 +125,7 @@ impl HMENU {
 		match unsafe {
 			user32::EnableMenuItem(self.0, uIDEnableItem.into(), flags.into())
 		} {
-			-1 => Err(()),
+			-1 => Err(co::ERROR::INVALID_PARAMETER),
 			ret => Ok(co::MF::from(ret as u32)),
 		}
 	}
