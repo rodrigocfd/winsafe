@@ -1,5 +1,4 @@
-use std::error::Error;
-
+use crate::co::ERROR;
 use crate::gui::events::MsgEvents;
 use crate::handles::HWND;
 
@@ -11,7 +10,7 @@ pub trait Parent {
 
 /// Internal trait to any child control.
 pub trait Child {
-	fn create(&self) -> Result<(), Box<dyn Error>>;
+	fn create(&self) -> Result<(), ERROR>;
 }
 
 /// Physically creates the controls within the parent window:
@@ -29,7 +28,7 @@ pub trait Child {
 ///
 /// Panics if the control is already created, or if the parent window was not
 /// created yet.
-pub fn create_children<T: Child>(ctrls: &[&T]) -> Result<(), Box<dyn Error>> {
+pub fn create_children<T: Child>(ctrls: &[&T]) -> Result<(), ERROR> {
 	for ctrl in ctrls.iter() {
 		ctrl.create()?;
 	}

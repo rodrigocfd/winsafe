@@ -1,11 +1,9 @@
 use std::cell::UnsafeCell;
-use std::error::Error;
 use std::sync::Arc;
 
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs as f;
-use crate::funcs_priv::str_dyn_error;
 use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
@@ -105,20 +103,16 @@ impl DialogMain {
 	///
 	/// Panics if the dialog is already created.
 	pub fn run_as_main(&self,
-		cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
+		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		if f::IsWindowsVistaOrGreater()
-			.map_err(|e| Box::new(e))?
-		{
-			f::SetProcessDPIAware()
-				.map_err(|_| str_dyn_error("SetProcessDPIAware failed."))?;
+		if f::IsWindowsVistaOrGreater()? {
+			f::SetProcessDPIAware()?;
 		}
 
 		f::InitCommonControls();
 		create_ui_font()?;
 
-		let hinst = HINSTANCE::GetModuleHandle(None)
-			.map_err(|e| Box::new(e))?;
+		let hinst = HINSTANCE::GetModuleHandle(None)?;
 		let our_hwnd = self.cref().base.create_dialog_param( // may panic
 			hinst, None, self.cref().dialog_id)?;
 

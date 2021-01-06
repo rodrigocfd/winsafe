@@ -670,8 +670,11 @@ impl HWND {
 
 	/// [`ReleaseDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 	/// method.
-	pub fn ReleaseDC(self, hDC: HDC) -> bool {
-		unsafe { user32::ReleaseDC(self.ptr, hDC.ptr) != 0 }
+	pub fn ReleaseDC(self, hDC: HDC) -> Result<(), co::ERROR> {
+		match unsafe { user32::ReleaseDC(self.ptr, hDC.ptr) } {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
 	}
 
 	/// [`RemoveWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)

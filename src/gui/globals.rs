@@ -1,10 +1,7 @@
 //! Global objects used within `gui` module.
 
-use std::error::Error;
-
 use crate::co;
 use crate::ffi::kernel32;
-use crate::funcs_priv::str_dyn_error;
 use crate::funcs::SystemParametersInfo;
 use crate::handles::{HFONT, HTHEME, HWND};
 use crate::msg::WmNcPaint;
@@ -14,17 +11,15 @@ use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
 static mut UI_HFONT: Option<HFONT> = None;
 
 /// Creates the global UI font object.
-pub fn create_ui_font() -> Result<(), Box<dyn Error>> {
+pub fn create_ui_font() -> Result<(), co::ERROR> {
 	let mut ncm = NONCLIENTMETRICS::default();
 	unsafe {
-		SystemParametersInfo(co::SPI::GETNONCLIENTMETRICS,
+		SystemParametersInfo(
+			co::SPI::GETNONCLIENTMETRICS,
 			std::mem::size_of::<NONCLIENTMETRICS>() as u32,
-			&mut ncm, co::SPIF::ZERO)?;
-
-		UI_HFONT = Some(
-			HFONT::CreateFontIndirect(&ncm.lfMenuFont)
-				.map_err(|_| str_dyn_error(""))?
-		);
+			&mut ncm, co::SPIF::ZERO,
+		)?;
+		UI_HFONT = Some(HFONT::CreateFontIndirect(&ncm.lfMenuFont)?);
 	}
 	Ok(())
 }
@@ -67,48 +62,36 @@ static mut DPI: POINT = POINT{ x: 0, y: 0 };
 
 /// Multiplies the given coordinates by current system DPI.
 pub fn multiply_dpi(
-	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> Result<(), Box<dyn Error>>
+	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> Result<(), co::ERROR>
 {
-	if (pt.is_some() || sz.is_some())
-		&& unsafe { DPI.x } == 0
-	{
-		let screen_dc = unsafe { HWND::null_handle() }
-			.GetDC()
-			.map_err(|_| str_dyn_error("GetDC failed."))?;
-		unsafe {
+	unsafe {
+		if (pt.is_some() || sz.is_some()) && DPI.x == 0 { // DPI not cached yet?
+			let screen_dc = HWND::null_handle().GetDC()?;
 			DPI.x = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSX); // cache
 			DPI.y = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSY);
 		}
-	}
 
-	if let Some(pt) = pt {
-		unsafe {
+		if let Some(pt) = pt {
 			pt.x = kernel32::MulDiv(pt.x, DPI.x, 96);
 			pt.y = kernel32::MulDiv(pt.y, DPI.y, 96);
 		}
-	}
 
-	if let Some(sz) = sz {
-		unsafe {
+		if let Some(sz) = sz {
 			sz.cx = kernel32::MulDiv(sz.cx, DPI.x, 96);
 			sz.cy = kernel32::MulDiv(sz.cy, DPI.y, 96);
 		}
 	}
-
 	Ok(())
 }
 
 //------------------------------------------------------------------------------
 
 /// Calculates the bound rectangle to fit the text with current system font.
-pub fn calc_text_bound_box(text: &str) -> Result<SIZE, Box<dyn Error>> {
+pub fn calc_text_bound_box(text: &str) -> Result<SIZE, co::ERROR> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
-	let desktop_hdc = desktop_hwnd.GetDC()
-		.map_err(|_| str_dyn_error("GetDC failed."))?;
-	let clone_dc = desktop_hdc.CreateCompatibleDC()
-		.map_err(|_| str_dyn_error("CreateCompatibleDC failed."))?;
-	let prev_hfont = clone_dc.SelectObjectFont(ui_font())
-		.map_err(|_| str_dyn_error("SelectObjectFont failed."))?;
+	let desktop_hdc = desktop_hwnd.GetDC()?;
+	let clone_dc = desktop_hdc.CreateCompatibleDC()?;
+	let prev_hfont = clone_dc.SelectObjectFont(ui_font())?;
 
 	let mut bounds = clone_dc.GetTextExtentPoint32(
 		if text.is_empty() {
@@ -116,23 +99,21 @@ pub fn calc_text_bound_box(text: &str) -> Result<SIZE, Box<dyn Error>> {
 		} else {
 			text
 		}
-	).map_err(|_| str_dyn_error("GetTextExtentPoint32 failed."))?;
+	)?;
 
 	if text.is_empty() {
 		bounds.cx = 0; // if no text was given, return just the height
 	}
 
-	clone_dc.SelectObjectFont(prev_hfont)
-		.map_err(|_| str_dyn_error("SelectObjectFont failed (cleanup)."))?;
-	clone_dc.DeleteDC()
-	.map_err(|_| str_dyn_error("DeleteDC failed."))?;
-	desktop_hwnd.ReleaseDC(desktop_hdc);
+	clone_dc.SelectObjectFont(prev_hfont)?;
+	clone_dc.DeleteDC()?;
+	desktop_hwnd.ReleaseDC(desktop_hdc)?;
 	Ok(bounds)
 }
 
 /// Paints the themed border of an user control, if it has the proper styles.
 pub fn paint_control_borders(
-	hwnd: HWND, wm_ncp: WmNcPaint) -> Result<(), Box<dyn Error>>
+	hwnd: HWND, wm_ncp: WmNcPaint) -> Result<(), co::ERROR>
 {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
@@ -144,14 +125,11 @@ pub fn paint_control_borders(
 		return Ok(());
 	}
 
-	let mut rc = hwnd.GetWindowRect() // window outmost coordinates, including margins
-		.map_err(|_| str_dyn_error("GetWindowRect failed."))?;
-	hwnd.ScreenToClientRc(&mut rc)
-		.map_err(|_| str_dyn_error("ScreenToClientRc failed."))?;
+	let mut rc = hwnd.GetWindowRect()?; // window outmost coordinates, including margins
+	hwnd.ScreenToClientRc(&mut rc)?;
 	rc.left += 2; rc.top += 2; rc.right += 2; rc.bottom += 2; // because it comes up anchored at -2,-2
 
-	let hdc = hwnd.GetWindowDC()
-		.map_err(|_| str_dyn_error("GetWindowDC failed."))?;
+	let hdc = hwnd.GetWindowDC()?;
 
 	if let Some(htheme) = hwnd.OpenThemeData("LISTVIEW") {
 		// Draw only the borders to avoid flickering.
@@ -171,6 +149,5 @@ pub fn paint_control_borders(
 		htheme.CloseThemeData()?;
 	}
 
-	hwnd.ReleaseDC(hdc);
-	Ok(())
+	hwnd.ReleaseDC(hdc)
 }

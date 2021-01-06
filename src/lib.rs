@@ -117,12 +117,7 @@
 //! [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
 //! values. Most Win32 functions return a `Result` with a possible `ERROR`.
 //!
-//! Some [`gui`](crate::gui) methods can return a `Result` with a possible
-//! `Box<dyn Error>`. In such cases, the underlying object is always `ERROR` or
-//! `String`.
-//!
-//! Panics will happen only if an internal bug occurs. Please report if you find
-//! one.
+//! Panics will happen only in case of misuse or internal bug.
 //!
 //! # Text encoding
 //!

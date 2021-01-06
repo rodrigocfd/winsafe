@@ -1,8 +1,6 @@
-use std::error::Error;
-
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
-use crate::funcs_priv::{str_dyn_error, WC_DIALOG};
+use crate::funcs_priv::WC_DIALOG;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::handles::HWND;
 use crate::msg::Wm;
@@ -52,7 +50,7 @@ impl NativeControlBase {
 		pos: POINT, sz: SIZE,
 		ctrl_id: u16,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> Result<HWND, Box<dyn Error>>
+		styles: co::WS) -> Result<HWND, co::ERROR>
 	{
 		if !self.hwnd.is_null() {
 			panic!("Cannot create control twice.");
@@ -77,7 +75,7 @@ impl NativeControlBase {
 		Ok(self.hwnd)
 	}
 
-	pub fn create_dlg(&mut self, ctrl_id: u16) -> Result<HWND, Box<dyn Error>> {
+	pub fn create_dlg(&mut self, ctrl_id: u16) -> Result<HWND, co::ERROR> {
 		if !self.hwnd.is_null() {
 			panic!("Cannot create control twice.");
 		} else if !self.is_parent_created() {
@@ -96,7 +94,7 @@ impl NativeControlBase {
 		Ok(self.hwnd)
 	}
 
-	fn install_subclass_if_needed(&self) -> Result<(), Box<dyn Error>> {
+	fn install_subclass_if_needed(&self) -> Result<(), co::ERROR> {
 		if !self.subclass_events.is_empty() {
 			let subclass_id = unsafe {
 				BASE_SUBCLASS_ID += 1;
@@ -107,7 +105,6 @@ impl NativeControlBase {
 				Self::subclass_proc, subclass_id,
 				self as *const Self as usize, // pass pointer to self
 			)
-			.map_err(|_| str_dyn_error("SetWindowSubclass failed."))
 		} else {
 			Ok(())
 		}

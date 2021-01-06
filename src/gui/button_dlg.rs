@@ -1,7 +1,7 @@
 use std::cell::UnsafeCell;
-use std::error::Error;
 use std::sync::Arc;
 
+use crate::co::ERROR;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::traits::{Child, Parent};
@@ -27,7 +27,7 @@ unsafe impl Sync for ButtonDlg {}
 cref_mref!(ButtonDlg);
 
 impl Child for ButtonDlg {
-	fn create(&self) -> Result<(), Box<dyn Error>> {
+	fn create(&self) -> Result<(), ERROR> {
 		self.mref().base
 			.create_dlg(self.cref().ctrl_id)
 			.map(|_| ())

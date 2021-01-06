@@ -1,5 +1,4 @@
 use std::cell::UnsafeCell;
-use std::error::Error;
 use std::sync::Arc;
 
 use crate::co;
@@ -31,7 +30,7 @@ unsafe impl Sync for Button {}
 cref_mref!(Button);
 
 impl Child for Button {
-	fn create(&self) -> Result<(), Box<dyn Error>> {
+	fn create(&self) -> Result<(), co::ERROR> {
 		let opts = &self.cref().opts;
 
 		let our_hwnd = self.mref().base.create_window( // may panic
@@ -52,7 +51,7 @@ impl Button {
 	pub fn new<T: Parent>(parent: T, opts: ButtonOpts) -> Button {
 		let opts = opts.define_id();
 		let ctrl_id = opts.ctrl_id;
-		
+
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {

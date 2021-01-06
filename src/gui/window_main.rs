@@ -1,11 +1,9 @@
 use std::cell::UnsafeCell;
-use std::error::Error;
 use std::sync::Arc;
 
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs as f;
-use crate::funcs_priv::str_dyn_error;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font, multiply_dpi};
 use crate::gui::main_loop::run_loop;
@@ -104,21 +102,17 @@ impl WindowMain {
 	///
 	/// Panics if the window is already created.
 	pub fn run_as_main(&self,
-		cmd_show: Option<co::SW>) -> Result<i32, Box<dyn Error>>
+		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		if f::IsWindowsVistaOrGreater()
-			.map_err(|e| Box::new(e))?
-		{
-			f::SetProcessDPIAware()
-				.map_err(|_| str_dyn_error("SetProcessDPIAware failed."))?;
+		if f::IsWindowsVistaOrGreater()? {
+			f::SetProcessDPIAware()?;
 		}
 
 		f::InitCommonControls();
 		create_ui_font()?;
 
 		let opts = &mut self.mref().opts;
-		let hinst = HINSTANCE::GetModuleHandle(None)
-			.map_err(|e| Box::new(e))?;
+		let hinst = HINSTANCE::GetModuleHandle(None)?;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
@@ -159,8 +153,7 @@ impl WindowMain {
 		)?;
 
 		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		our_hwnd.UpdateWindow()
-			.map_err(|_| str_dyn_error("UpdateWindow failed."))?;
+		our_hwnd.UpdateWindow()?;
 
 		let res = run_loop(our_hwnd, opts.accel_table.as_opt())?; // blocks until window is closed
 		delete_ui_font(); // cleanup
