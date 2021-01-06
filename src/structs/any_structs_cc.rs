@@ -5,8 +5,8 @@
 use std::marker::PhantomData;
 
 use crate::co;
+use crate::funcs_priv::L_MAX_URL_LENGTH;
 use crate::handles::HDC;
-use crate::priv_funcs::L_MAX_URL_LENGTH;
 use crate::structs::{NMHDR, POINT, RECT};
 use crate::WString;
 

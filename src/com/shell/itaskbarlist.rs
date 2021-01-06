@@ -60,7 +60,7 @@ impl ITaskbarList {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
 			match ERROR::from(
-				((*(*ppv)).ActivateTab)(ppv, hwnd.as_ptr()),
+				((**ppv).ActivateTab)(ppv, hwnd.as_ptr()),
 			) {
 				ERROR::S_OK => Ok(()),
 				err => Err(err),
@@ -74,7 +74,7 @@ impl ITaskbarList {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
 			match ERROR::from(
-				((*(*ppv)).AddTab)(ppv, hwnd.as_ptr()),
+				((**ppv).AddTab)(ppv, hwnd.as_ptr()),
 			) {
 				ERROR::S_OK => Ok(()),
 				err => Err(err),
@@ -88,7 +88,7 @@ impl ITaskbarList {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
 			match ERROR::from(
-				((*(*ppv)).DeleteTab)(ppv, hwnd.as_ptr()),
+				((**ppv).DeleteTab)(ppv, hwnd.as_ptr()),
 			) {
 				ERROR::S_OK => Ok(()),
 				err => Err(err),
@@ -102,7 +102,7 @@ impl ITaskbarList {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
 			match ERROR::from(
-				((*(*ppv)).HrInit)(ppv),
+				((**ppv).HrInit)(ppv),
 			) {
 				ERROR::S_OK => Ok(()),
 				err => Err(err),
@@ -116,7 +116,7 @@ impl ITaskbarList {
 		unsafe {
 			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
 			match ERROR::from(
-				((*(*ppv)).SetActiveAlt)(ppv, hwnd.as_ptr()),
+				((**ppv).SetActiveAlt)(ppv, hwnd.as_ptr()),
 			) {
 				ERROR::S_OK => Ok(()),
 				err => Err(err),

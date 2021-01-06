@@ -40,8 +40,7 @@ impl Drop for IUnknown {
 impl IUnknown {
 	/// Returns a pointer to a pointer to the underlying COM virtual table.
 	///
-	/// This method is used internally by COM interface implementations, and may
-	/// cause segmentation faults. Don't use unless you know what you're doing.
+	/// This method is used internally by COM interface implementations.
 	pub unsafe fn ppv<T>(&self) -> PPVtbl<T> {
 		self.vtbl as PPVtbl<T>
 	}
@@ -51,26 +50,26 @@ impl IUnknown {
 	///
 	/// This method increments the internal COM reference counter, and will cause
 	/// a memory leak if not paired with a [`Release`](crate::IUnknown::Release)
-	/// call. Don't use unless you know what you're doing.
+	/// call.
 	pub unsafe fn AddRef(&self) -> u32 {
-		((*(*self.vtbl)).AddRef)(self.vtbl)
+		((**self.vtbl).AddRef)(self.vtbl)
 	}
 
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// method.
 	///
-	/// Can be called any number of times, will actually release only while the
-	/// internal ref count is greater than zero.
-	///
-	/// This method is automatically called when the object goes out of scope, so
-	/// you don't need to call it manually. But note that the last call to
+	/// Automatically called when the object goes out of scope, so you don't need
+	/// to call it manually. But note that the last call to
 	/// [`CoUninitialize`](crate::CoUninitialize) must happen after `Release` is
 	/// called.
+	///
+	/// This method can be called any number of times, it will be effectively
+	/// fired only while the internal ref count is greater than zero.
 	pub fn Release(&mut self) -> u32 {
 		if self.vtbl.is_null() {
 			0
 		} else {
-			let refCount = unsafe { (*(*self.vtbl)).Release }(self.vtbl);
+			let refCount = unsafe { (**self.vtbl).Release }(self.vtbl);
 			if refCount == 0 {
 				self.vtbl = std::ptr::null_mut();
 			}

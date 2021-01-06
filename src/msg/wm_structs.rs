@@ -2,10 +2,10 @@ use std::ffi::c_void;
 
 use crate::aliases::TIMERPROC;
 use crate::co;
+use crate::funcs_priv::FAPPCOMMAND_MASK;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
-use crate::priv_funcs::FAPPCOMMAND_MASK;
 use crate::structs::{CREATESTRUCT, NMHDR, POINT, RECT, SIZE};
 
 /// Generic

@@ -1,13 +1,14 @@
+//! Win32 free functions.
+
 #![allow(non_snake_case)]
 
 use std::collections::HashMap;
 use std::ffi::c_void;
 
 use crate::co;
-use crate::com::{PPVtbl, Vtbl};
-use crate::ffi::{comctl32, kernel32, ole32, user32};
+use crate::ffi::{comctl32, kernel32, user32};
+use crate::funcs_priv::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
 use crate::handles::{HINSTANCE, HWND};
-use crate::priv_funcs::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
 use crate::structs as s;
 use crate::WString;
 
@@ -25,70 +26,6 @@ pub fn AdjustWindowRectEx(
 		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
-}
-
-/// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
-/// function.
-///
-/// Returns an [`IUnknown`](crate::IUnknown)-derived COM interface object.
-///
-/// # Examples
-///
-/// Instantiating an [`ITaskbarList`](crate::shell::ITaskbarList) object:
-/// ```rust,ignore
-/// let mut obj: shell::ITaskbarList = CoCreateInstance(
-///   &shell::clsid::TaskbarList,
-///   None,
-///   co::CLSCTX::INPROC_SERVER,
-/// ).unwrap();
-/// ```
-pub fn CoCreateInstance<VTB: Vtbl, INTERF: From<PPVtbl<VTB>>>(
-	rclsid: &s::CLSID,
-	pUnkOuter: Option<*mut c_void>,
-	dwClsContext: co::CLSCTX) -> Result<INTERF, co::ERROR>
-{
-	let mut ppv: PPVtbl<VTB> = std::ptr::null_mut();
-
-	match co::ERROR::from(
-		unsafe {
-			ole32::CoCreateInstance(
-				const_void(rclsid),
-				pUnkOuter.unwrap_or(std::ptr::null_mut()),
-				dwClsContext.into(),
-				VTB::IID().as_ref() as *const s::GUID as *const c_void,
-				&mut ppv
-					as *mut PPVtbl<VTB>
-					as *mut *mut c_void,
-			)
-		}
-	) {
-		co::ERROR::S_OK => Ok(INTERF::from(ppv)),
-		err => Err(err),
-	}
-}
-
-/// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
-/// function.
-///
-/// Must be paired with a [`CoUninitialize`](crate::CoUninitialize) call.
-pub fn CoInitializeEx(dwCoInit: co::COINIT) -> Result<co::ERROR, co::ERROR> {
-	let err = co::ERROR::from(
-		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.into()) }
-	);
-	match err {
-		co::ERROR::S_OK
-			| co::ERROR::S_FALSE
-			| co::ERROR::RPC_E_CHANGED_MODE => Ok(err),
-		err => Err(err),
-	}
-}
-
-/// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
-/// function.
-///
-/// Must be called after all COM interfaces have been released.
-pub fn CoUninitialize() {
-	unsafe { ole32::CoUninitialize() }
 }
 
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)

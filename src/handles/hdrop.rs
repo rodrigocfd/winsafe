@@ -2,8 +2,8 @@
 
 use crate::co;
 use crate::ffi::shell32;
+use crate::funcs_priv::mut_void;
 use crate::funcs::GetLastError;
-use crate::priv_funcs::mut_void;
 use crate::structs::POINT;
 use crate::WString;
 

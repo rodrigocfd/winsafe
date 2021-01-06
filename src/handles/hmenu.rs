@@ -3,9 +3,9 @@
 use crate::co;
 use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
 use crate::ffi::user32;
+use crate::funcs_priv::{const_void, mut_void, ptr_as_opt};
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
-use crate::priv_funcs::{const_void, mut_void, ptr_as_opt};
 use crate::structs::{MENUINFO, MENUITEMINFO};
 
 handle_type! {

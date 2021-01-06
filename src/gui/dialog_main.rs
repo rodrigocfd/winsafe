@@ -5,6 +5,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs as f;
+use crate::funcs_priv::str_dyn_error;
 use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
@@ -12,7 +13,6 @@ use crate::gui::main_loop::run_loop;
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::WmSetIcon;
-use crate::priv_funcs::str_dyn_error;
 
 /// Main application dialog.
 #[derive(Clone)]

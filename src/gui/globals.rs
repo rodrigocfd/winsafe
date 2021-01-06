@@ -4,10 +4,10 @@ use std::error::Error;
 
 use crate::co;
 use crate::ffi::kernel32;
+use crate::funcs_priv::str_dyn_error;
 use crate::funcs::SystemParametersInfo;
 use crate::handles::{HFONT, HTHEME, HWND};
 use crate::msg::WmNcPaint;
-use crate::priv_funcs::str_dyn_error;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
 
 /// Global UI font object.

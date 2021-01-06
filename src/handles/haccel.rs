@@ -2,8 +2,8 @@
 
 use crate::co;
 use crate::ffi::user32;
+use crate::funcs_priv::{mut_void, ptr_as_opt};
 use crate::funcs::GetLastError;
-use crate::priv_funcs::{mut_void, ptr_as_opt};
 use crate::structs::ACCEL;
 
 handle_type! {

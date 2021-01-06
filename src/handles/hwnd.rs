@@ -6,10 +6,10 @@ use crate::aliases::{SUBCLASSPROC, WNDENUMPROC};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
 use crate::ffi::{comctl32, user32, uxtheme};
+use crate::funcs_priv::{const_void, mut_void, ptr_as_opt};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::Wm;
-use crate::priv_funcs::{const_void, mut_void, ptr_as_opt};
 use crate::structs::{MSG, PAINTSTRUCT, POINT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::WString;
 
@@ -197,7 +197,6 @@ impl HWND {
 			&mut hchildren as *mut Vec<_> as isize);
 		hchildren
 	}
-
 	extern "system" fn EnumChildWindowsVecProc(
 		hchild: HWND, lparam: isize) -> i32
 	{

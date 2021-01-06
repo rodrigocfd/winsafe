@@ -2,8 +2,8 @@
 
 use crate::co;
 use crate::ffi::kernel32;
+use crate::funcs_priv::ptr_as_opt;
 use crate::funcs::GetLastError;
-use crate::priv_funcs::ptr_as_opt;
 
 handle_type! {
 	/// Handle to a

@@ -5,7 +5,7 @@ use std::ffi::c_void;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
-use crate::priv_funcs::mut_void;
+use crate::funcs_priv::mut_void;
 use crate::WString;
 
 handle_type! {

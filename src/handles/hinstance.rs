@@ -2,13 +2,13 @@
 
 use std::ffi::c_void;
 
-use crate::co;
 use crate::aliases::DLGPROC;
+use crate::co;
 use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{kernel32, user32};
+use crate::funcs_priv::{mut_void, ptr_as_opt};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HWND};
-use crate::priv_funcs::{mut_void, ptr_as_opt};
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::WString;
 

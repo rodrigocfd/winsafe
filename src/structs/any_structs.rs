@@ -8,9 +8,9 @@ use std::marker::PhantomData;
 use crate::aliases::WNDPROC;
 use crate::co;
 use crate::enums::IdStr;
+use crate::funcs_priv::LF_FACESIZE;
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
 use crate::handles as h;
-use crate::priv_funcs::LF_FACESIZE;
 use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)

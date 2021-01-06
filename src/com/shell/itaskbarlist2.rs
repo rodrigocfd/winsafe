@@ -56,13 +56,13 @@ impl From<PPVtbl<ITaskbarList2Vtbl>> for ITaskbarList2 {
 impl ITaskbarList2 {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
-	pub fn MarkFullscreenWindow(
-		&self, hwnd: HWND, fFullscreen: bool) -> Result<(), ERROR>
+	pub fn MarkFullscreenWindow(&self,
+		hwnd: HWND, fFullscreen: bool) -> Result<(), ERROR>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();
 			match ERROR::from(
-				((*(*ppv)).MarkFullscreenWindow)(
+				((**ppv).MarkFullscreenWindow)(
 					ppv, hwnd.as_ptr(), fFullscreen as i32,
 				),
 			) {

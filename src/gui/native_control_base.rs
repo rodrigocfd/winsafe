@@ -2,10 +2,10 @@ use std::error::Error;
 
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
+use crate::funcs_priv::{str_dyn_error, WC_DIALOG};
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::handles::HWND;
 use crate::msg::Wm;
-use crate::priv_funcs::{str_dyn_error, WC_DIALOG};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 

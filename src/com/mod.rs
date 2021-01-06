@@ -8,8 +8,10 @@ mod macros;
 
 pub mod shell;
 
+mod funcs;
 mod iunknown;
 mod vtbl;
 
+pub use funcs::*;
 pub use iunknown::{IUnknown, IUnknownVtbl};
 pub use vtbl::{PPVtbl, Vtbl};
