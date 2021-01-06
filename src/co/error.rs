@@ -2738,7 +2738,7 @@ impl std::fmt::Debug for ERROR {
 
 impl std::fmt::Display for ERROR {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate
+		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
 	}
 }
 
