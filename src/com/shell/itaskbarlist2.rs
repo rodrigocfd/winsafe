@@ -36,7 +36,7 @@ vtbl_type! {
 ///   &shell::clsid::TaskbarList,
 ///   None,
 ///   co::CLSCTX::INPROC_SERVER,
-/// );
+/// ).unwrap();
 /// ```
 pub struct ITaskbarList2 {
 	/// Methods of base interface

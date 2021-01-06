@@ -40,26 +40,31 @@ pub fn AdjustWindowRectEx(
 ///   &shell::clsid::TaskbarList,
 ///   None,
 ///   co::CLSCTX::INPROC_SERVER,
-/// );
+/// ).unwrap();
 /// ```
-pub fn CoCreateInstance<VTB: Vtbl, ITFC: From<PPVtbl<VTB>>>(
+pub fn CoCreateInstance<VTB: Vtbl, INTERF: From<PPVtbl<VTB>>>(
 	rclsid: &s::CLSID,
 	pUnkOuter: Option<*mut c_void>,
-	dwClsContext: co::CLSCTX,
-) -> ITFC {
+	dwClsContext: co::CLSCTX) -> Result<INTERF, co::ERROR>
+{
 	let mut ppv: PPVtbl<VTB> = std::ptr::null_mut();
-	unsafe {
-		ole32::CoCreateInstance(
-			const_void(rclsid),
-			pUnkOuter.unwrap_or(std::ptr::null_mut()),
-			dwClsContext.into(),
-			VTB::IID().as_ref() as *const s::GUID as *const c_void,
-			&mut ppv
-				as *mut PPVtbl<VTB>
-				as *mut *mut c_void,
-		);
+
+	match co::ERROR::from(
+		unsafe {
+			ole32::CoCreateInstance(
+				const_void(rclsid),
+				pUnkOuter.unwrap_or(std::ptr::null_mut()),
+				dwClsContext.into(),
+				VTB::IID().as_ref() as *const s::GUID as *const c_void,
+				&mut ppv
+					as *mut PPVtbl<VTB>
+					as *mut *mut c_void,
+			)
+		}
+	) {
+		co::ERROR::S_OK => Ok(INTERF::from(ppv)),
+		err => Err(err),
 	}
-	ITFC::from(ppv)
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
