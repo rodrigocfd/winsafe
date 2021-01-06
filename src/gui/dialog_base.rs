@@ -17,7 +17,7 @@ pub struct DialogBase {
 impl Drop for DialogBase {
 	fn drop(&mut self) {
 		if !self.hwnd.is_null() {
-			self.hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+			self.hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 		}
 	}
 }
@@ -59,12 +59,20 @@ impl DialogBase {
 		)
 	}
 
-	pub fn dialog_box_param(&self, hinst: HINSTANCE, parent: Option<HWND>, dialog_id: i32) {
+	pub fn dialog_box_param(&self, hinst: HINSTANCE,
+		parent: Option<HWND>, dialog_id: i32) -> Result<(), co::ERROR>
+	{
 		if !self.hwnd.is_null() {
 			panic!("Cannot create dialog twice.");
 		}
 
-
+		// Our hwnd member is set during WM_INITDIALOG processing, already set
+		// when DialogBoxParam returns.
+		hinst.DialogBoxParam(
+			IdStr::Id(dialog_id),
+			parent,
+			Self::dialog_proc, Some(self as *const Self as isize), // pass pointer to self
+		).map(|_| ())
 	}
 
 	extern "system" fn dialog_proc(
