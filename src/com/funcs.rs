@@ -27,12 +27,12 @@ use crate::structs::{CLSID, GUID};
 ///   CLSCTX::INPROC_SERVER,
 /// ).unwrap();
 /// ```
-pub fn CoCreateInstance<VTB: Vtbl, INTERF: From<PPVtbl<VTB>>>(
+pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 	rclsid: &CLSID,
 	pUnkOuter: Option<*mut c_void>,
-	dwClsContext: co::CLSCTX) -> Result<INTERF, co::ERROR>
+	dwClsContext: co::CLSCTX) -> Result<RetInterf, co::ERROR>
 {
-	let mut ppv: PPVtbl<VTB> = std::ptr::null_mut();
+	let mut ppv: PPVtbl<VT> = std::ptr::null_mut();
 
 	match co::ERROR::from(
 		unsafe {
@@ -40,14 +40,14 @@ pub fn CoCreateInstance<VTB: Vtbl, INTERF: From<PPVtbl<VTB>>>(
 				const_void(rclsid),
 				pUnkOuter.unwrap_or(std::ptr::null_mut()),
 				dwClsContext.into(),
-				VTB::IID().as_ref() as *const GUID as *const c_void,
+				VT::IID().as_ref() as *const GUID as *const c_void,
 				&mut ppv
-					as *mut PPVtbl<VTB>
+					as *mut PPVtbl<VT>
 					as *mut *mut c_void,
 			)
 		}
 	) {
-		co::ERROR::S_OK => Ok(INTERF::from(ppv)),
+		co::ERROR::S_OK => Ok(RetInterf::from(ppv)),
 		err => Err(err),
 	}
 }

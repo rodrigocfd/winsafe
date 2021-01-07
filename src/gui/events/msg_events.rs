@@ -5,6 +5,7 @@ use crate::co;
 use crate::gui::events::func_store::FuncStore;
 use crate::handles::HDC;
 use crate::msg;
+use crate::msg::Message;
 
 /// The result of processing a message.
 pub enum ProcessResult {
@@ -72,7 +73,7 @@ macro_rules! wm_ret_none {
 		{
 			self.add_msg($wmconst, {
 				let mut func = func;
-				move |p| { func(p.into()); None } // return value is never meaningful
+				move |p| { func(<$parm>::from_generic_wm(p)); None } // return value is never meaningful
 			});
 		}
 	};
@@ -104,7 +105,7 @@ impl MsgEvents {
 	pub(crate) fn process_message(&self, wm_any: msg::Wm) -> ProcessResult {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
-				let wm_nfy: msg::WmNotify = wm_any.into();
+				let wm_nfy = msg::WmNotify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
 				match self.mref().nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
@@ -117,7 +118,7 @@ impl MsgEvents {
 				}
 			},
 			co::WM::COMMAND => {
-				let wm_cmd: msg::WmCommand = wm_any.into();
+				let wm_cmd = msg::WmCommand::from_generic_wm(wm_any);
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
 				match self.mref().cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
@@ -128,7 +129,7 @@ impl MsgEvents {
 				}
 			},
 			co::WM::TIMER => {
-				let wm_tmr: msg::WmTimer = wm_any.into();
+				let wm_tmr = msg::WmTimer::from_generic_wm(wm_any);
 				match self.mref().tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
@@ -297,7 +298,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::APPCOMMAND, {
 			let mut func = func;
-			move |p| { func(p.into()); Some(true as isize) }
+			move |p| { func(msg::WmAppCommand::from_generic_wm(p)); Some(true as isize) }
 		});
 	}
 
@@ -334,7 +335,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CREATE, {
 			let mut func = func;
-			move |p| Some(func(p.into()) as isize)
+			move |p| Some(func(msg::WmCreate::from_generic_wm(p)) as isize)
 		});
 	}
 
@@ -344,7 +345,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORBTN, {
 			let mut func = func;
-			move |p| Some(func(p.into()).ptr as isize)
+			move |p| Some(func(msg::WmCtlColorBtn::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
@@ -354,7 +355,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORDLG, {
 			let mut func = func;
-			move |p| Some(func(p.into()).ptr as isize)
+			move |p| Some(func(msg::WmCtlColorDlg::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
@@ -364,7 +365,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLOREDIT, {
 			let mut func = func;
-			move |p| Some(func(p.into()).ptr as isize)
+			move |p| Some(func(msg::WmCtlColorEdit::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
@@ -374,7 +375,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORLISTBOX, {
 			let mut func = func;
-			move |p| Some(func(p.into()).ptr as isize)
+			move |p| Some(func(msg::WmCtlColorListBox::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
@@ -384,7 +385,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
 			let mut func = func;
-			move |p| Some(func(p.into()).ptr as isize)
+			move |p| Some(func(msg::WmCtlColorScrollBar::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
@@ -394,7 +395,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORSTATIC, {
 			let mut func = func;
-			move |p| Some(func(p.into()).ptr as isize)
+			move |p| Some(func(msg::WmCtlColorStatic::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
@@ -416,7 +417,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::INITDIALOG, {
 			let mut func = func;
-			move |p| Some(func(p.into()) as isize)
+			move |p| Some(func(msg::WmInitDialog::from_generic_wm(p)) as isize)
 		});
 	}
 
@@ -462,7 +463,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::NCCREATE, {
 			let mut func = func;
-			move |p| Some(func(p.into()) as isize)
+			move |p| Some(func(msg::WmNcCreate::from_generic_wm(p)) as isize)
 		});
 	}
 

@@ -3,7 +3,7 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::{Wm, WmNcCreate};
+use crate::msg::{Message, Wm, WmNcCreate};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
@@ -113,7 +113,7 @@ impl WindowBase {
 
 		let ptr_self = match msg {
 			co::WM::NCCREATE => { // first message being handled
-				let wm_ncc: WmNcCreate = wm_any.into();
+				let wm_ncc = WmNcCreate::from_generic_wm(wm_any);
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
 				let ref_self = unsafe { &mut *ptr_self };

@@ -5,7 +5,7 @@ use crate::enums::{HwndPlace, IdStr};
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::globals::ui_font;
 use crate::handles::{HFONT, HINSTANCE, HWND};
-use crate::msg::{Wm, WmInitDialog, WmSetFont};
+use crate::msg::{Message, Wm, WmInitDialog, WmSetFont};
 
 /// Base to all dialog windows.
 pub struct DialogBase {
@@ -82,7 +82,7 @@ impl DialogBase {
 
 		let ptr_self = match msg {
 			co::WM::INITDIALOG => {
-				let wm_idlg: WmInitDialog = wm_any.into();
+				let wm_idlg = WmInitDialog::from_generic_wm(wm_any);
 				let ptr_self = wm_idlg.additional_data as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
 				let ref_self = unsafe { &mut *ptr_self };

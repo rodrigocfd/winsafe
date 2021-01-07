@@ -92,9 +92,7 @@ impl RadioButton {
 
 	/// Tells if this radio button is currently checked.
 	pub fn is_checked(&self) -> bool {
-		co::BST::from(
-			self.hwnd().SendMessage(BmGetCheck {}) as u32
-		) == co::BST::CHECKED
+		self.hwnd().SendMessage(BmGetCheck {}) == co::BST::CHECKED
 	}
 
 	/// Calculates the ideal size to fit the check followed by the given text.

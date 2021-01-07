@@ -1,6 +1,7 @@
 use crate::co;
+use crate::funcs::GetLastError;
+use crate::msg::{Message, Wm};
 use crate::msg::macros::{lparam_to_ref, ref_to_lparam};
-use crate::msg::Wm;
 use crate::structs as s;
 
 empty_msg! { LvmGetHeader, co::WM::LVM_GETHEADER,
@@ -22,18 +23,25 @@ pub struct LvmInsertColumn<'a, 'b> {
 	pub lvcolumn: &'b s::LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> From<LvmInsertColumn<'a, 'b>> for Wm {
-	fn from(p: LvmInsertColumn) -> Self {
-		Self {
-			msg_id: co::WM::LVM_INSERTCOLUMN,
-			wparam: p.index as usize,
-			lparam: ref_to_lparam(p.lvcolumn),
+impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
+	type RetType = Result<u32, co::ERROR>;
+
+	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+		match v {
+			-1 => Err(GetLastError()),
+			i => Ok(i as u32),
 		}
 	}
-}
 
-impl<'a, 'b> From<Wm> for LvmInsertColumn<'a, 'b> {
-	fn from(p: Wm) -> Self {
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_INSERTCOLUMN,
+			wparam: self.index as usize,
+			lparam: ref_to_lparam(self.lvcolumn),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 			lvcolumn: lparam_to_ref(p),
@@ -49,18 +57,25 @@ pub struct LvmInsertItem<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
 
-impl<'a, 'b> From<LvmInsertItem<'a, 'b>> for Wm {
-	fn from(p: LvmInsertItem) -> Self {
-		Self {
-			msg_id: co::WM::LVM_INSERTITEM,
-			wparam: 0,
-			lparam: ref_to_lparam(p.lvitem),
+impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
+	type RetType = Result<u32, co::ERROR>;
+
+	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+		match v {
+			-1 => Err(GetLastError()),
+			i => Ok(i as u32),
 		}
 	}
-}
 
-impl<'a, 'b> From<Wm> for LvmInsertItem<'a, 'b> {
-	fn from(p: Wm) -> Self {
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_INSERTITEM,
+			wparam: 0,
+			lparam: ref_to_lparam(self.lvitem),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			lvitem: lparam_to_ref(p),
 		}
@@ -75,18 +90,22 @@ pub struct LvmIsItemVisible {
 	pub index: i32,
 }
 
-impl From<LvmIsItemVisible> for Wm {
-	fn from(p: LvmIsItemVisible) -> Self {
-		Self {
+impl Message for LvmIsItemVisible {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::LVM_ISITEMVISIBLE,
-			wparam: p.index as usize,
+			wparam: self.index as usize,
 			lparam: 0,
 		}
 	}
-}
 
-impl From<Wm> for LvmIsItemVisible {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 		}
@@ -102,18 +121,22 @@ pub struct LvmScroll {
 	pub vertical: i32,
 }
 
-impl From<LvmScroll> for Wm {
-	fn from(p: LvmScroll) -> Self {
-		Self {
+impl Message for LvmScroll {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::LVM_SCROLL,
-			wparam: p.horizontal as usize,
-			lparam: p.vertical as isize,
+			wparam: self.horizontal as usize,
+			lparam: self.vertical as isize,
 		}
 	}
-}
 
-impl From<Wm> for LvmScroll {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			horizontal: p.wparam as i32,
 			vertical: p.lparam as i32,
@@ -130,18 +153,22 @@ pub struct LvmSetColumn<'a, 'b> {
 	pub lvcolumn: &'b s::LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> From<LvmSetColumn<'a, 'b>> for Wm {
-	fn from(p: LvmSetColumn) -> Self {
-		Self {
+impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::LVM_SETCOLUMN,
-			wparam: p.index as usize,
-			lparam: ref_to_lparam(p.lvcolumn),
+			wparam: self.index as usize,
+			lparam: ref_to_lparam(self.lvcolumn),
 		}
 	}
-}
 
-impl<'a, 'b> From<Wm> for LvmSetColumn<'a, 'b> {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 			lvcolumn: lparam_to_ref(p),
@@ -157,18 +184,22 @@ pub struct LvmSetItem<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
 
-impl<'a, 'b> From<LvmSetItem<'a, 'b>> for Wm {
-	fn from(p: LvmSetItem) -> Self {
-		Self {
+impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::LVM_SETITEM,
 			wparam: 0,
-			lparam: ref_to_lparam(p.lvitem),
+			lparam: ref_to_lparam(self.lvitem),
 		}
 	}
-}
 
-impl<'a, 'b> From<Wm> for LvmSetItem<'a, 'b> {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			lvitem: lparam_to_ref(p),
 		}
@@ -184,18 +215,22 @@ pub struct LvmSetItemText<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
 
-impl<'a, 'b> From<LvmSetItemText<'a, 'b>> for Wm {
-	fn from(p: LvmSetItemText) -> Self {
-		Self {
+impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::LVM_SETITEMTEXT,
-			wparam: p.index as usize,
-			lparam: ref_to_lparam(p.lvitem),
+			wparam: self.index as usize,
+			lparam: ref_to_lparam(self.lvitem),
 		}
 	}
-}
 
-impl<'a, 'b> From<Wm> for LvmSetItemText<'a, 'b> {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 			lvitem: lparam_to_ref(p),
@@ -211,18 +246,22 @@ pub struct LvmUpdate {
 	pub index: i32,
 }
 
-impl From<LvmUpdate> for Wm {
-	fn from(p: LvmUpdate) -> Self {
-		Self {
+impl Message for LvmUpdate {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::LVM_UPDATE,
-			wparam: p.index as usize,
+			wparam: self.index as usize,
 			lparam: 0,
 		}
 	}
-}
 
-impl From<Wm> for LvmUpdate {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
 		}

@@ -1,6 +1,6 @@
 use crate::msg::Wm;
 
-/// Struct for a message that has no parameters.
+/// Struct for a message that has no parameters and no meaningful return value.
 macro_rules! empty_msg {
 	(
 		$name:ident, $wmconst:expr,
@@ -9,18 +9,22 @@ macro_rules! empty_msg {
 		$(#[$attr])*
 		pub struct $name {}
 
-		impl From<$name> for Wm {
-			fn from(_: $name) -> Self {
-				Self {
+		impl Message for $name {
+			type RetType = ();
+
+			fn convert_ret(_: isize) -> () {
+				()
+			}
+
+			fn into_generic_wm(self) -> Wm {
+				Wm {
 					msg_id: $wmconst,
 					wparam: 0,
 					lparam: 0,
 				}
 			}
-		}
 
-		impl From<Wm> for $name {
-			fn from(_: Wm) -> Self {
+			fn from_generic_wm(_: Wm) -> Self {
 				Self {}
 			}
 		}
@@ -39,18 +43,22 @@ macro_rules! ctl_color_msg {
 			pub hwnd: HWND,
 		}
 
-		impl From<$name> for Wm {
-			fn from(p: $name) -> Self {
-				Self {
+		impl Message for $name {
+			type RetType = HBRUSH;
+
+			fn convert_ret(v: isize) -> HBRUSH {
+				HBRUSH { ptr: v as *mut c_void }
+			}
+
+			fn into_generic_wm(self) -> Wm {
+				Wm {
 					msg_id: $wmconst,
-					wparam: p.hdc.ptr as usize,
-					lparam: p.hwnd.ptr as isize,
+					wparam: self.hdc.ptr as usize,
+					lparam: self.hwnd.ptr as isize,
 				}
 			}
-		}
 
-		impl From<Wm> for $name {
-			fn from(p: Wm) -> Self {
+			fn from_generic_wm(p: Wm) -> Self {
 				Self {
 					hdc: HDC { ptr: p.wparam as *mut c_void },
 					hwnd: HWND { ptr: p.lparam as *mut c_void },
@@ -72,18 +80,22 @@ macro_rules! button_msg {
 			pub coords: POINT,
 		}
 
-		impl From<$name> for Wm {
-			fn from(p: $name) -> Self {
-				Self {
+		impl Message for $name {
+			type RetType = ();
+
+			fn convert_ret(_: isize) -> () {
+				()
+			}
+
+			fn into_generic_wm(self) -> Wm {
+				Wm {
 					msg_id: $wmconst,
-					wparam: u16::from(p.vkeys) as usize,
-					lparam: MAKEDWORD(p.coords.x as u16, p.coords.y as u16) as isize,
+					wparam: u16::from(self.vkeys) as usize,
+					lparam: MAKEDWORD(self.coords.x as u16, self.coords.y as u16) as isize,
 				}
 			}
-		}
 
-		impl From<Wm> for $name {
-			fn from(p: Wm) -> Self {
+			fn from_generic_wm(p: Wm) -> Self {
 				Self {
 					vkeys: co::VK::from(p.wparam as u16),
 					coords: POINT {

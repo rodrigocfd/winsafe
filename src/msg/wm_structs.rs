@@ -4,8 +4,9 @@ use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::funcs_priv::FAPPCOMMAND_MASK;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::{HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
+use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
+use crate::msg::Message;
 use crate::structs::{CREATESTRUCT, NMHDR, POINT, RECT, SIZE};
 
 /// Generic
@@ -21,6 +22,22 @@ pub struct Wm {
 	pub lparam: isize,
 }
 
+impl Message for Wm {
+	type RetType = isize;
+
+	fn convert_ret(v: isize) -> isize {
+		v
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		self
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		p
+	}
+}
+
 //------------------------------------------------------------------------------
 
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
@@ -31,18 +48,22 @@ pub struct WmActivate {
 	pub hwnd: HWND,
 }
 
-impl From<WmActivate> for Wm {
-	fn from(p: WmActivate) -> Self {
-		Self {
+impl Message for WmActivate {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::ACTIVATE,
-			wparam: MAKEDWORD(u16::from(p.event), p.is_minimized as u16) as usize,
-			lparam: p.hwnd.ptr as isize,
+			wparam: MAKEDWORD(u16::from(self.event), self.is_minimized as u16) as usize,
+			lparam: self.hwnd.ptr as isize,
 		}
 	}
-}
 
-impl From<Wm> for WmActivate {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			event: co::WA::from(LOWORD(p.wparam as u32)),
 			is_minimized: HIWORD(p.wparam as u32) != 0,
@@ -60,18 +81,22 @@ pub struct WmActivateApp {
 	pub thread_id: u32,
 }
 
-impl From<WmActivateApp> for Wm {
-	fn from(p: WmActivateApp) -> Self {
-		Self {
+impl Message for WmActivateApp {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::ACTIVATEAPP,
-			wparam: p.is_being_activated as usize,
-			lparam: p.thread_id as isize,
+			wparam: self.is_being_activated as usize,
+			lparam: self.thread_id as isize,
 		}
 	}
-}
 
-impl From<Wm> for WmActivateApp {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			is_being_activated: p.wparam != 0,
 			thread_id: p.lparam as u32,
@@ -90,18 +115,22 @@ pub struct WmAppCommand {
 	pub keys: co::MK,
 }
 
-impl From<WmAppCommand> for Wm {
-	fn from(p: WmAppCommand) -> Self {
-		Self {
+impl Message for WmAppCommand {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::APPCOMMAND,
-			wparam: p.hwnd_owner.ptr as usize,
-			lparam: MAKEDWORD(p.keys.into(), u16::from(p.app_command) | u16::from(p.u_device)) as isize,
+			wparam: self.hwnd_owner.ptr as usize,
+			lparam: MAKEDWORD(self.keys.into(), u16::from(self.app_command) | u16::from(self.u_device)) as isize,
 		}
 	}
-}
 
-impl From<Wm> for WmAppCommand {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_owner: HWND { ptr: p.wparam as *mut c_void },
 			app_command: co::APPCOMMAND::from(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
@@ -131,21 +160,25 @@ pub struct WmCommand {
 	pub ctrl_hwnd: Option<HWND>,
 }
 
-impl From<WmCommand> for Wm {
-	fn from(p: WmCommand) -> Self {
-		Self {
+impl Message for WmCommand {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::COMMAND,
-			wparam: MAKEDWORD(p.ctrl_id, p.code.into()) as usize,
-			lparam: match p.ctrl_hwnd {
+			wparam: MAKEDWORD(self.ctrl_id, self.code.into()) as usize,
+			lparam: match self.ctrl_hwnd {
 				Some(h) => h.ptr as isize,
 				None => 0,
 			},
 		}
 	}
-}
 
-impl From<Wm> for WmCommand {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			code: co::CMD::from(HIWORD(p.wparam as u32)),
 			ctrl_id: LOWORD(p.wparam as u32),
@@ -165,18 +198,22 @@ pub struct WmCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> From<WmCreate<'a, 'b, 'c>> for Wm {
-	fn from(p: WmCreate) -> Self {
-		Self {
+impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
+	type RetType = i32;
+
+	fn convert_ret(v: isize) -> i32 {
+		v as i32
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::CREATE,
 			wparam: 0,
-			lparam: ref_to_lparam(p.createstruct),
+			lparam: ref_to_lparam(self.createstruct),
 		}
 	}
-}
 
-impl<'a, 'b, 'c> From<Wm> for WmCreate<'a, 'b, 'c> {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			createstruct: lparam_to_ref(p),
 		}
@@ -230,18 +267,22 @@ pub struct WmDropFiles {
 	pub hdrop: HDROP,
 }
 
-impl From<WmDropFiles> for Wm {
-	fn from(p: WmDropFiles) -> Self {
-		Self {
+impl Message for WmDropFiles {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::DROPFILES,
-			wparam: p.hdrop.ptr as usize,
+			wparam: self.hdrop.ptr as usize,
 			lparam: 0,
 		}
 	}
-}
 
-impl From<Wm> for WmDropFiles {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hdrop: HDROP { ptr: p.wparam as *mut c_void },
 		}
@@ -257,18 +298,22 @@ pub struct WmEndSession {
 	pub event: co::ENDSESSION,
 }
 
-impl From<WmEndSession> for Wm {
-	fn from(p: WmEndSession) -> Self {
-		Self {
+impl Message for WmEndSession {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::ENDSESSION,
-			wparam: p.is_session_being_ended as usize,
-			lparam: u32::from(p.event) as isize,
+			wparam: self.is_session_being_ended as usize,
+			lparam: u32::from(self.event) as isize,
 		}
 	}
-}
 
-impl From<Wm> for WmEndSession {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
 			event: co::ENDSESSION::from(p.lparam as u32),
@@ -285,18 +330,22 @@ pub struct WmInitDialog {
 	pub additional_data: isize,
 }
 
-impl From<WmInitDialog> for Wm {
-	fn from(p: WmInitDialog) -> Self {
-		Self {
+impl Message for WmInitDialog {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::INITDIALOG,
-			wparam: p.hwnd_focus.ptr as usize,
-			lparam: p.additional_data,
+			wparam: self.hwnd_focus.ptr as usize,
+			lparam: self.additional_data,
 		}
 	}
-}
 
-impl From<Wm> for WmInitDialog {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_focus: HWND { ptr: p.wparam as *mut c_void },
 			additional_data: p.lparam,
@@ -314,18 +363,22 @@ pub struct WmInitMenuPopup {
 	pub is_window_menu: bool,
 }
 
-impl From<WmInitMenuPopup> for Wm {
-	fn from(p: WmInitMenuPopup) -> Self {
-		Self {
+impl Message for WmInitMenuPopup {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::INITMENUPOPUP,
-			wparam: p.hmenu.ptr as usize,
-			lparam: MAKEDWORD(p.item_pos, p.is_window_menu as u16) as isize,
+			wparam: self.hmenu.ptr as usize,
+			lparam: MAKEDWORD(self.item_pos, self.is_window_menu as u16) as isize,
 		}
 	}
-}
 
-impl From<Wm> for WmInitMenuPopup {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hmenu: HMENU { ptr: p.wparam as *mut c_void },
 			item_pos: LOWORD(p.lparam as u32),
@@ -384,18 +437,22 @@ pub struct WmNcCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> From<WmNcCreate<'a, 'b, 'c>> for Wm {
-	fn from(p: WmNcCreate) -> Self {
-		Self {
+impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::NCCREATE,
 			wparam: 0,
-			lparam: ref_to_lparam(p.createstruct),
+			lparam: ref_to_lparam(self.createstruct),
 		}
 	}
-}
 
-impl<'a, 'b, 'c> From<Wm> for WmNcCreate<'a, 'b, 'c> {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			createstruct: lparam_to_ref(p),
 		}
@@ -417,18 +474,22 @@ pub struct WmNcPaint {
 	pub updated_hrgn: HRGN,
 }
 
-impl From<WmNcPaint> for Wm {
-	fn from(p: WmNcPaint) -> Self {
-		Self {
+impl Message for WmNcPaint {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::NCPAINT,
-			wparam: p.updated_hrgn.ptr as usize,
+			wparam: self.updated_hrgn.ptr as usize,
 			lparam: 0,
 		}
 	}
-}
 
-impl From<Wm> for WmNcPaint {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			updated_hrgn: HRGN { ptr: p.wparam as *mut c_void },
 		}
@@ -451,18 +512,22 @@ pub struct WmNotify<'a> {
 	pub nmhdr: &'a NMHDR,
 }
 
-impl<'a> From<WmNotify<'a>> for Wm {
-	fn from(p: WmNotify) -> Self {
-		Self {
+impl<'a> Message for WmNotify<'a> {
+	type RetType = isize;
+
+	fn convert_ret(v: isize) -> isize {
+		v
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::NOTIFY,
-			wparam: p.nmhdr.hwndFrom.ptr as usize,
-			lparam: p.nmhdr as *const NMHDR as isize,
+			wparam: self.nmhdr.hwndFrom.ptr as usize,
+			lparam: self.nmhdr as *const NMHDR as isize,
 		}
 	}
-}
 
-impl<'a> From<Wm> for WmNotify<'a> {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			nmhdr: unsafe { &*(p.lparam as *const NMHDR) },
 		}
@@ -511,18 +576,22 @@ pub struct WmSetFocus {
 	pub hwnd_losing_focus: HWND,
 }
 
-impl From<WmSetFocus> for Wm {
-	fn from(p: WmSetFocus) -> Self {
-		Self {
+impl Message for WmSetFocus {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::SETFOCUS,
-			wparam: p.hwnd_losing_focus.ptr as usize,
+			wparam: self.hwnd_losing_focus.ptr as usize,
 			lparam: 0,
 		}
 	}
-}
 
-impl From<Wm> for WmSetFocus {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_losing_focus: HWND { ptr: p.wparam as *mut c_void },
 		}
@@ -538,18 +607,22 @@ pub struct WmSetFont {
 	pub redraw: bool,
 }
 
-impl From<WmSetFont> for Wm {
-	fn from(p: WmSetFont) -> Self {
-		Self {
+impl Message for WmSetFont {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::SETFONT,
-			wparam: p.hfont.ptr as usize,
-			lparam: MAKEDWORD(p.redraw as u16, 0) as isize,
+			wparam: self.hfont.ptr as usize,
+			lparam: MAKEDWORD(self.redraw as u16, 0) as isize,
 		}
 	}
-}
 
-impl From<Wm> for WmSetFont {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hfont: HFONT { ptr: p.wparam as *mut c_void },
 			redraw: LOWORD(p.lparam as u32) != 0,
@@ -566,18 +639,25 @@ pub struct WmSetIcon {
 	pub hicon: HICON,
 }
 
-impl From<WmSetIcon> for Wm {
-	fn from(p: WmSetIcon) -> Self {
-		Self {
-			msg_id: co::WM::SETICON,
-			wparam: i32::from(p.size) as usize,
-			lparam: p.hicon.ptr as isize,
+impl Message for WmSetIcon {
+	type RetType = Option<HICON>;
+
+	fn convert_ret(v: isize) -> Option<HICON> {
+		match v {
+			0 => None,
+			v => Some(HICON { ptr: v as *mut c_void }),
 		}
 	}
-}
 
-impl From<Wm> for WmSetIcon {
-	fn from(p: Wm) -> Self {
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::SETICON,
+			wparam: i32::from(self.size) as usize,
+			lparam: self.hicon.ptr as isize,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			size: co::ICON_SZ::from(p.wparam as i32),
 			hicon: HICON { ptr: p.lparam as *mut c_void },
@@ -594,18 +674,22 @@ pub struct WmSize {
 	pub client_area: SIZE,
 }
 
-impl From<WmSize> for Wm {
-	fn from(p: WmSize) -> Self {
-		Self {
+impl Message for WmSize {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::SIZE,
-			wparam: i32::from(p.request) as usize,
-			lparam: MAKEDWORD(p.client_area.cx as u16, p.client_area.cy as u16) as isize,
+			wparam: i32::from(self.request) as usize,
+			lparam: MAKEDWORD(self.client_area.cx as u16, self.client_area.cy as u16) as isize,
 		}
 	}
-}
 
-impl From<Wm> for WmSize {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			request: co::SIZE_REQ::from(p.wparam as i32),
 			client_area: SIZE {
@@ -625,18 +709,22 @@ pub struct WmSizing<'a> {
 	pub coords: &'a mut RECT,
 }
 
-impl<'a> From<WmSizing<'a>> for Wm {
-	fn from(p: WmSizing) -> Self {
-		Self {
+impl<'a> Message for WmSizing<'a> {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::SIZING,
-			wparam: i32::from(p.window_edge) as usize,
-			lparam: ref_to_lparam(p.coords),
+			wparam: i32::from(self.window_edge) as usize,
+			lparam: ref_to_lparam(self.coords),
 		}
 	}
-}
 
-impl<'a> From<Wm> for WmSizing<'a> {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			window_edge: co::WMSZ::from(p.wparam as i32),
 			coords: lparam_to_mut_ref(p),
@@ -653,27 +741,31 @@ pub struct WmTimer {
 	pub timer_proc: Option<TIMERPROC>,
 }
 
-impl From<WmTimer> for Wm {
-	fn from(p: WmTimer) -> Self {
-		Self {
+impl Message for WmTimer {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
 			msg_id: co::WM::TIMER,
-			wparam: p.timer_id as usize,
-			lparam: match p.timer_proc {
+			wparam: self.timer_id as usize,
+			lparam: match self.timer_proc {
 				Some(proc) => proc as isize,
 				None => 0,
 			},
 		}
 	}
-}
 
-impl From<Wm> for WmTimer {
-	fn from(p: Wm) -> Self {
+	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			timer_id: p.wparam as u32,
 			timer_proc: match p.lparam {
 				0 => None,
 				addr => unsafe { std::mem::transmute(addr) },
-			}
+			},
 		}
 	}
 }

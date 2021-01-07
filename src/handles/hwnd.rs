@@ -9,7 +9,7 @@ use crate::ffi::{comctl32, user32, uxtheme};
 use crate::funcs_priv::{const_void, mut_void, ptr_as_opt};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
-use crate::msg::Wm;
+use crate::msg::{Message, Wm};
 use crate::structs::{MSG, PAINTSTRUCT, POINT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::WString;
 
@@ -108,24 +108,28 @@ impl HWND {
 
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
-	pub fn DefSubclassProc<P: Into<Wm>>(self, uMsg: P) -> isize {
-		let wmAny: Wm = uMsg.into();
-		unsafe {
-			comctl32::DefSubclassProc(
-				self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
-			)
-		}
+	pub fn DefSubclassProc<M: Message>(self, uMsg: M) -> M::RetType {
+		let wmAny = uMsg.into_generic_wm();
+		M::convert_ret(
+			unsafe {
+				comctl32::DefSubclassProc(
+					self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
+				)
+			},
+		)
 	}
 
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
-	pub fn DefWindowProc<P: Into<Wm>>(self, Msg: P) -> isize {
-		let wmAny: Wm = Msg.into();
-		unsafe {
-			user32::DefWindowProcW(
-				self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
-			)
-		}
+	pub fn DefWindowProc<M: Message>(self, uMsg: M) -> M::RetType {
+		let wmAny = uMsg.into_generic_wm();
+		M::convert_ret(
+			unsafe {
+				user32::DefWindowProcW(
+					self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
+				)
+			},
+		)
 	}
 
 	/// [`DestroyWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
@@ -656,8 +660,8 @@ impl HWND {
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method.
-	pub fn PostMessage<P: Into<Wm>>(self, Msg: P) -> Result<(), co::ERROR> {
-		let wmAny: Wm = Msg.into();
+	pub fn PostMessage<M: Message>(self, uMsg: M) -> Result<(), co::ERROR> {
+		let wmAny = uMsg.into_generic_wm();
 		match unsafe {
 			user32::PostMessageW(
 				self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
@@ -722,12 +726,13 @@ impl HWND {
 	///
 	/// Instead of receiving a message code followed by `WPARAM` and `LPARAM`,
 	/// receives a single message argument, which allows you to pass the message
-	/// parameters safely.
+	/// parameters safely, and also receive the correct return type.
 	///
 	/// # Examples
 	///
 	/// Sending a [`WM_CLOSE`](crate::msg::WmClose) message, which has no
 	/// parameters:
+	///
 	/// ```rust,ignore
 	/// use winsafe::msg::WmClose;
 	/// use winsafe::HWND;
@@ -739,6 +744,7 @@ impl HWND {
 	///
 	/// Sending a [`LVM_SETITEM`](crate::msg::LvmSetItem) list view message,
 	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
+	///
 	/// ```rust,ignore
 	/// use winsafe::co;
 	/// use winsafe::msg::LvmSetItem;
@@ -754,13 +760,15 @@ impl HWND {
 	///   lvitem: &lvi,
 	/// });
 	/// ```
-	pub fn SendMessage<P: Into<Wm>>(self, Msg: P) -> isize {
-		let wmAny: Wm = Msg.into();
-		unsafe {
-			user32::SendMessageW(
-				self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
-			)
-		}
+	pub fn SendMessage<M: Message>(self, uMsg: M) -> M::RetType {
+		let wmAny = uMsg.into_generic_wm();
+		M::convert_ret(
+			unsafe {
+				user32::SendMessageW(
+					self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
+				)
+			},
+		)
 	}
 
 	/// [`SetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
