@@ -7,7 +7,7 @@ use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::WmSetFont;
+use crate::msg::{WmCommand, WmSetFont};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -119,6 +119,17 @@ impl Button {
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
 		self.cref().base.on_subclass()
+	}
+
+	/// Fires the click event for the button.
+	pub fn trigger_click(&self) {
+		self.hwnd().SendMessage(
+			WmCommand {
+				code: co::CMD::BN_CLICKED,
+				ctrl_id: self.ctrl_id(),
+				ctrl_hwnd: Some(self.hwnd()),
+			},
+		);
 	}
 }
 

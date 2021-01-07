@@ -5,7 +5,7 @@ use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box, ui_font};
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
-use crate::msg::{BmGetCheck, WmSetFont};
+use crate::msg::{BmGetCheck, WmCommand, WmSetFont};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -93,6 +93,17 @@ impl RadioButton {
 	/// Tells if this radio button is currently checked.
 	pub fn is_checked(&self) -> bool {
 		self.hwnd().SendMessage(BmGetCheck {}) == co::BST::CHECKED
+	}
+
+	/// Fires the click event for the radio button.
+	pub fn trigger_click(&self) {
+		self.hwnd().SendMessage(
+			WmCommand {
+				code: co::CMD::BN_CLICKED,
+				ctrl_id: self.ctrl_id(),
+				ctrl_hwnd: Some(self.hwnd()),
+			},
+		);
 	}
 
 	/// Calculates the ideal size to fit the check followed by the given text.

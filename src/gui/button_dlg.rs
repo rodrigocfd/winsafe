@@ -1,11 +1,12 @@
 use std::cell::UnsafeCell;
 use std::sync::Arc;
 
-use crate::co::ERROR;
+use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
+use crate::msg::WmCommand;
 
 /// Native
 /// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
@@ -27,7 +28,7 @@ unsafe impl Sync for ButtonDlg {}
 cref_mref!(ButtonDlg);
 
 impl Child for ButtonDlg {
-	fn create(&self) -> Result<(), ERROR> {
+	fn create(&self) -> Result<(), co::ERROR> {
 		self.mref().base
 			.create_dlg(self.cref().ctrl_id)
 			.map(|_| ())
@@ -103,5 +104,16 @@ impl ButtonDlg {
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
 		self.cref().base.on_subclass()
+	}
+
+	/// Fires the click event for the button.
+	pub fn trigger_click(&self) {
+		self.hwnd().SendMessage(
+			WmCommand {
+				code: co::CMD::BN_CLICKED,
+				ctrl_id: self.ctrl_id(),
+				ctrl_hwnd: Some(self.hwnd()),
+			},
+		);
 	}
 }
