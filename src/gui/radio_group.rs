@@ -97,6 +97,26 @@ impl RadioGroup {
 		&self.cref().parent_events
 	}
 
+	/// Returns an iterator over the internal
+	/// [`RadioButton`](crate::gui::RadioButton) slice.
+	///
+	/// # Example
+	///
+	/// Changing the text of all radio buttons to `"One"`:
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::RadioGroup;
+	///
+	/// let radio_group: RadioGroup; // initialize it somewhere...
+	///
+	/// for single_radio in me.rads.iter() {
+	///   single_radio.hwnd().SetWindowText("One").unwrap();
+	/// }
+	/// ```
+	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {
+		self.cref().radios.iter()
+	}
+
 	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton),
 	/// if any.
 	pub fn checked(&self) -> Option<&RadioButton> {
