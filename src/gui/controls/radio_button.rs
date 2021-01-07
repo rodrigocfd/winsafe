@@ -24,7 +24,6 @@ pub struct RadioButton {
 }
 
 impl RadioButton {
-	/// Creates a new RadioButton object.
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
 		let mut opts = opts;
 		opts.define_ctrl_id();
@@ -102,8 +101,10 @@ impl RadioButton {
 	}
 
 	/// Sets the current check state.
-	pub fn set_check(&self, state: co::BST) {
-		self.hwnd().SendMessage(BmSetCheck { state });
+	pub fn set_check(&self, checked: bool) {
+		self.hwnd().SendMessage(BmSetCheck {
+			state: if checked { co::BST::CHECKED } else { co::BST::UNCHECKED },
+		});
 	}
 
 	/// Fires the click event for the radio button.
