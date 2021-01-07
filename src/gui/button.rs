@@ -50,7 +50,7 @@ impl Button {
 	/// Creates a new Button object.
 	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
 		let mut opts = opts;
-		opts.define_id();
+		opts.define_ctrl_id();
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
@@ -199,7 +199,7 @@ impl Default for ButtonOpts {
 }
 
 impl ButtonOpts {
-	fn define_id(&mut self) {
+	fn define_ctrl_id(&mut self) {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();
 		}

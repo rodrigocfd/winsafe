@@ -5,7 +5,7 @@ use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box, ui_font};
 use crate::gui::native_control_base::NativeControlBase;
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
-use crate::msg::{BmGetCheck, WmCommand, WmSetFont};
+use crate::msg::{BmGetCheck, BmSetCheck, WmCommand, WmSetFont};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -26,6 +26,8 @@ pub struct RadioButton {
 impl RadioButton {
 	/// Creates a new RadioButton object.
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
+		let mut opts = opts;
+		opts.define_ctrl_id();
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
@@ -47,6 +49,10 @@ impl RadioButton {
 
 		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 		Ok(())
+	}
+
+	pub(crate) fn is_parent_created(&self) -> bool {
+		self.base.is_parent_created()
 	}
 
 	/// Returns the underlying handle for this control.
@@ -93,6 +99,11 @@ impl RadioButton {
 	/// Tells if this radio button is currently checked.
 	pub fn is_checked(&self) -> bool {
 		self.hwnd().SendMessage(BmGetCheck {}) == co::BST::CHECKED
+	}
+
+	/// Sets the current check state.
+	pub fn set_check(&self, state: co::BST) {
+		self.hwnd().SendMessage(BmSetCheck { state });
 	}
 
 	/// Fires the click event for the radio button.
@@ -175,6 +186,12 @@ impl Default for RadioButtonOpts {
 }
 
 impl RadioButtonOpts {
+	fn define_ctrl_id(&mut self) {
+		if self.ctrl_id == 0 {
+			self.ctrl_id = auto_ctrl_id();
+		}
+	}
+
 	pub(crate) fn manual_clone(&self) -> RadioButtonOpts { // avoids a public clone method
 		Self {
 			text: self.text.clone(),
@@ -182,11 +199,7 @@ impl RadioButtonOpts {
 			button_style: self.button_style,
 			window_style: self.window_style,
 			ex_window_style: self.ex_window_style,
-			ctrl_id: if self.ctrl_id == 0 {
-				auto_ctrl_id()
-			} else {
-				self.ctrl_id
-			},
+			ctrl_id: self.ctrl_id,
 		}
 	}
 }

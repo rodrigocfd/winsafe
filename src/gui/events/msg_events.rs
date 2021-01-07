@@ -94,7 +94,7 @@ impl MsgEvents {
 	}
 
 	/// Tells whether no functions have been added.
-	pub fn is_empty(&self) -> bool {
+	pub(crate) fn is_empty(&self) -> bool {
 		self.cref().msgs.is_empty()
 			&& self.cref().tmrs.is_empty()
 			&& self.cref().cmds.is_empty()

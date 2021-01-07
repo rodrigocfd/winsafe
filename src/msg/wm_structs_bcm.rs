@@ -60,3 +60,33 @@ impl Message for BmGetCheck {
 		Self {}
 	}
 }
+
+//------------------------------------------------------------------------------
+
+/// [`BM_SETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setcheck)
+/// message.
+pub struct BmSetCheck {
+	pub state: co::BST,
+}
+
+impl Message for BmSetCheck {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::BM_SETCHECK,
+			wparam: u32::from(self.state) as usize,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			state: co::BST::from(p.wparam as u32),
+		}
+	}
+}

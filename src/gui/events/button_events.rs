@@ -50,13 +50,10 @@ impl ButtonEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::gui::{WindowMain, WindowMainOpts};
+	/// use winsafe::gui::{Button, WindowMain};
 	///
-	/// let wnd = WindowMain::new(
-	///   WindowMainOpts::default(),
-	/// );
-	///
-	/// let btn = Button::new(wnd.clone());
+	/// let wnd = WindowMain; // initialize them somewhere...
+	/// let btn = Button;
 	///
 	/// btn.on().bn_clicked({
 	///   let btn = btn.clone();
