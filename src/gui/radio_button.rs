@@ -1,14 +1,11 @@
-use std::cell::UnsafeCell;
-use std::sync::Arc;
-
 use crate::co;
 use crate::funcs::GetSystemMetrics;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box, ui_font};
 use crate::gui::native_control_base::NativeControlBase;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::Parent;
 use crate::handles::HWND;
-use crate::msg::WmSetFont;
+use crate::msg::{BmGetCheck, WmSetFont};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -16,54 +13,40 @@ use crate::structs::{POINT, SIZE};
 /// control.
 ///
 /// The radion button is actually a variation of the ordinary
-/// [button](crate::gui::Button): just a button with a specific style.
-#[derive(Clone)]
+/// [`Button`](crate::gui::Button): just a button with a specific style.
+///
+/// You cannot directly instantiate this object, you must use
+/// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton {
-	obj: Arc<UnsafeCell<Obj>>,
-}
-
-struct Obj { // actual fields of RadioButton
 	base: NativeControlBase,
 	opts: RadioButtonOpts,
 	parent_events: ButtonEvents,
 }
 
-unsafe impl Send for RadioButton {}
-unsafe impl Sync for RadioButton {}
+impl RadioButton {
+	/// Creates a new RadioButton object.
+	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
+		let ctrl_id = opts.ctrl_id;
 
-cref_mref!(RadioButton);
+		Self {
+			base: NativeControlBase::new(parent.hwnd_ref()),
+			opts,
+			parent_events: ButtonEvents::new(parent, ctrl_id),
+		}
+	}
 
-impl Child for RadioButton {
-	fn create(&self) -> Result<(), co::ERROR> {
-		let opts = &self.cref().opts;
-		let bound_box = Self::ideal_size(&opts.text)?;
+	pub(crate) fn create(&mut self) -> Result<(), co::ERROR> {
+		let bound_box = Self::ideal_size(&self.opts.text)?;
 
-		let our_hwnd = self.mref().base.create_window( // may panic
-			"BUTTON", Some(&opts.text), opts.pos, bound_box, opts.ctrl_id,
-			opts.ex_window_style,
-			opts.window_style | opts.button_style.into(),
+		let our_hwnd = self.base.create_window( // may panic
+			"BUTTON", Some(&self.opts.text), self.opts.pos, bound_box,
+			self.opts.ctrl_id,
+			self.opts.ex_window_style,
+			self.opts.window_style | self.opts.button_style.into(),
 		)?;
 
 		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 		Ok(())
-	}
-}
-
-impl RadioButton {
-	/// Creates a new RadioButton object.
-	pub fn new<T: Parent>(parent: T, opts: RadioButtonOpts) -> RadioButton {
-		let opts = opts.define_id();
-		let ctrl_id = opts.ctrl_id;
-
-		Self {
-			obj: Arc::new(UnsafeCell::new(
-				Obj {
-					base: NativeControlBase::new(parent.hwnd_ref()),
-					opts,
-					parent_events: ButtonEvents::new(parent, ctrl_id),
-				},
-			)),
-		}
 	}
 
 	/// Returns the underlying handle for this control.
@@ -71,12 +54,12 @@ impl RadioButton {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.cref().base.hwnd()
+		*self.base.hwnd()
 	}
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		self.cref().opts.ctrl_id
+		self.opts.ctrl_id
 	}
 
 	/// Exposes the radio button events.
@@ -89,10 +72,10 @@ impl RadioButton {
 	pub fn on(&self) -> &ButtonEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control is created.");
-		} else if self.cref().base.is_parent_created() {
+		} else if self.base.is_parent_created() {
 			panic!("Cannot add events after the parent window is created.");
 		}
-		&self.cref().parent_events
+		&self.parent_events
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control
@@ -104,7 +87,14 @@ impl RadioButton {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
-		self.cref().base.on_subclass()
+		self.base.on_subclass()
+	}
+
+	/// Tells if this radio button is currently checked.
+	pub fn is_checked(&self) -> bool {
+		co::BST::from(
+			self.hwnd().SendMessage(BmGetCheck {}) as u32
+		) == co::BST::CHECKED
 	}
 
 	/// Calculates the ideal size to fit the check followed by the given text.
@@ -147,6 +137,8 @@ pub struct RadioButtonOpts {
 	/// Defaults to `co::WS_CHILD | co::WS_VISIBLE`.
 	///
 	/// The first RadioButton of a group should also have `co::WS_TABSTOP | co::WS_GROUP`.
+	/// If this object being passed to a [`RadioGroup`](crate::gui::RadioGroup),
+	/// this will be automatically set.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -174,12 +166,18 @@ impl Default for RadioButtonOpts {
 }
 
 impl RadioButtonOpts {
-	fn define_id(self) -> RadioButtonOpts {
-		let ctrl_id = if self.ctrl_id == 0 {
-			auto_ctrl_id() // if user didn't set, auto generate ID
-		} else {
-			self.ctrl_id
-		};
-		Self { ctrl_id, ..self }
+	pub(crate) fn manual_clone(&self) -> RadioButtonOpts { // avoids a public clone method
+		Self {
+			text: self.text.clone(),
+			pos: self.pos,
+			button_style: self.button_style,
+			window_style: self.window_style,
+			ex_window_style: self.ex_window_style,
+			ctrl_id: if self.ctrl_id == 0 {
+				auto_ctrl_id()
+			} else {
+				self.ctrl_id
+			},
+		}
 	}
 }

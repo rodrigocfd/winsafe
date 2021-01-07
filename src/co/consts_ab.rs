@@ -162,3 +162,13 @@ impl From<BS> for co::WS {
 		Self(v.0)
 	}
 }
+
+const_type! { BST, u32,
+	/// [`BM_GETCHECK`](crate::msg::BmGetCheck) return value (`u32`).
+
+	UNCHECKED, 0x0000
+	CHECKED, 0x0001
+	INDETERMINATE, 0x0002
+	PUSHED, 0x0004
+	FOCUS, 0x0008
+}

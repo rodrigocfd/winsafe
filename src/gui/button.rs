@@ -48,8 +48,9 @@ impl Child for Button {
 
 impl Button {
 	/// Creates a new Button object.
-	pub fn new<T: Parent>(parent: T, opts: ButtonOpts) -> Button {
-		let opts = opts.define_id();
+	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
+		let mut opts = opts;
+		opts.define_id();
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
@@ -187,12 +188,9 @@ impl Default for ButtonOpts {
 }
 
 impl ButtonOpts {
-	fn define_id(self) -> ButtonOpts {
-		let ctrl_id = if self.ctrl_id == 0 {
-			auto_ctrl_id() // if user didn't set, auto generate ID
-		} else {
-			self.ctrl_id
-		};
-		Self { ctrl_id, ..self }
+	fn define_id(&mut self) {
+		if self.ctrl_id == 0 {
+			self.ctrl_id = auto_ctrl_id();
+		}
 	}
 }

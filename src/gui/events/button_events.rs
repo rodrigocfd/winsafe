@@ -11,7 +11,7 @@ pub struct ButtonEvents {
 }
 
 impl ButtonEvents {
-	pub(crate) fn new<T: Parent>(parent: T, ctrl_id: u16) -> ButtonEvents {
+	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> ButtonEvents {
 		Self {
 			parent_events: parent.events_ref(), // convert reference to pointer
 			ctrl_id,

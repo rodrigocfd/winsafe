@@ -2,6 +2,7 @@ const_type! { WM, u32,
 	/// Window messages (`u32`) for:
 	///
 	/// * [ordinary controls](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues);
+	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages);
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages);
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
@@ -262,6 +263,28 @@ const_type! { WM, u32,
 	APP, 0x8000
 	USER, 0x0400
 
+	BCM_GETIDEALSIZE, Self::BCM_FIRST.0 + 0x0001
+	BCM_SETIMAGELIST, Self::BCM_FIRST.0 + 0x0002
+	BCM_GETIMAGELIST, Self::BCM_FIRST.0 + 0x0003
+	BCM_SETTEXTMARGIN, Self::BCM_FIRST.0 + 0x0004
+	BCM_GETTEXTMARGIN, Self::BCM_FIRST.0 + 0x0005
+	BCM_SETDROPDOWNSTATE, Self::BCM_FIRST.0 + 0x0006
+	BCM_SETSPLITINFO, Self::BCM_FIRST.0 + 0x0007
+	BCM_GETSPLITINFO, Self::BCM_FIRST.0 + 0x0008
+	BCM_SETNOTE, Self::BCM_FIRST.0 + 0x0009
+	BCM_GETNOTE, Self::BCM_FIRST.0 + 0x000a
+	BCM_GETNOTELENGTH, Self::BCM_FIRST.0 + 0x000b
+	BCM_SETSHIELD, Self::BCM_FIRST.0 + 0x000c
+	BM_GETCHECK, 0x00f0
+	BM_SETCHECK, 0x00f1
+	BM_GETSTATE, 0x00f2
+	BM_SETSTATE, 0x00f3
+	BM_SETSTYLE, 0x00f4
+	BM_CLICK, 0x00f5
+	BM_GETIMAGE, 0x00f6
+	BM_SETIMAGE, 0x00f7
+	BM_SETDONTCLICK, 0x00f8
+
 	CCM_SETBKCOLOR, Self::CCM_FIRST.0 + 1
 	CCM_SETCOLORSCHEME, Self::CCM_FIRST.0 + 2
 	CCM_GETCOLORSCHEME, Self::CCM_FIRST.0 + 3
@@ -453,6 +476,7 @@ const_type! { WM, u32,
 }
 
 impl WM {
+	const BCM_FIRST: Self = Self(0x1600);
 	const CCM_FIRST: Self = Self(0x2000);
 	const LVM_FIRST: Self = Self(0x1000);
 	const TVM_FIRST: Self = Self(0x1100);

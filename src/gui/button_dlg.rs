@@ -36,7 +36,7 @@ impl Child for ButtonDlg {
 
 impl ButtonDlg {
 	/// Creates a new Button object.
-	pub fn new<T: Parent>(parent: T, ctrl_id: u16) -> ButtonDlg {
+	pub fn new(parent: &dyn Parent, ctrl_id: u16) -> ButtonDlg {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
