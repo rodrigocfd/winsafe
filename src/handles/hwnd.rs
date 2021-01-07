@@ -9,7 +9,7 @@ use crate::ffi::{comctl32, user32, uxtheme};
 use crate::funcs_priv::{const_void, mut_void, ptr_as_opt};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
-use crate::msg::{Message, Wm};
+use crate::msg::Message;
 use crate::structs::{MSG, PAINTSTRUCT, POINT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::WString;
 

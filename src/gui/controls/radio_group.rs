@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::{RadioButton, RadioButtonOpts};
-use crate::gui::events::{ButtonEvents, RadioGroupEvents};
+use crate::gui::events::RadioGroupEvents;
 use crate::gui::traits::{Child, Parent};
 
 /// A group of native
