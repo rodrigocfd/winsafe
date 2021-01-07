@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::gui::events::func_store::FuncStore;
-use crate::handles::HDC;
+use crate::handles::{HDC, HICON};
 use crate::msg;
 use crate::msg::Message;
 
@@ -168,9 +168,9 @@ impl MsgEvents {
 
 	/// Event to any [window message](crate::co::WM).
 	///
-	/// You should always prefer the specific events, which will give you the
-	/// correct message parameters. This generic method should be used when you
-	/// have a custom, non-standard window message.
+	/// Instead of using this event, you should always prefer the specific
+	/// events, which will give you the correct message parameters. This generic
+	/// method should be used when you have a custom, non-standard window message.
 	///
 	/// # Examples
 	///
@@ -216,8 +216,10 @@ impl MsgEvents {
 	/// [command code](crate::co::CMD) and the control ID, so the closure will
 	/// be fired for that specific control at that specific event.
 	///
-	/// You should always prefer the specific command notifications, which will
-	/// give you the correct message parameters.
+	/// Instead of using this event, you should always prefer the specific
+	/// command notifications, which will give you the correct message
+	/// parameters. This generic method should be used when you have a custom,
+	/// non-standard window notification.
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + 'static,
 	{
@@ -271,8 +273,10 @@ impl MsgEvents {
 	/// and the control ID, so the closure will be fired for that specific
 	/// control at the specific event.
 	///
-	/// You should always prefer the specific notifications, which will give you
-	/// the correct notification struct.
+	/// Instead of using this event, you should always prefer the specific
+	/// notifications, which will give you the correct notification struct. This
+	/// generic method should be used when you have a custom, non-standard window
+	/// notification.
 	pub fn wm_notify<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> isize + 'static,
 	{
@@ -407,8 +411,22 @@ impl MsgEvents {
 		/// [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
 	}
 
+	wm_ret_none! { wm_enable, co::WM::ENABLE, msg::WmEnable,
+		/// [`WM_ENABLE`](crate::msg::WmEnable) message.
+	}
+
 	wm_ret_none! { wm_end_session, co::WM::ENDSESSION, msg::WmEndSession,
 		/// [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
+	}
+
+	/// [`WM_ERASEBKGND`](crate::msg::WmEraseBkgnd) message.
+	pub fn wm_erase_bkgnd<F>(&self, func: F)
+		where F: FnMut(msg::WmEraseBkgnd) -> i32 + 'static,
+	{
+		self.add_msg(co::WM::ERASEBKGND, {
+			let mut func = func;
+			move |p| Some(func(msg::WmEraseBkgnd::from_generic_wm(p)) as isize)
+		});
 	}
 
 	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
@@ -457,6 +475,14 @@ impl MsgEvents {
 		/// [`WM_MOUSEMOVE`](crate::msg::WmMouseMove) message.
 	}
 
+	wm_ret_none! { wm_move, co::WM::MOVE, msg::WmMove,
+		/// [`WM_MOVE`](crate::msg::WmMove) message.
+	}
+
+	wm_ret_none! { wm_moving, co::WM::MOVING, msg::WmMoving,
+		/// [`WM_MOVING`](crate::msg::WmMoving) message.
+	}
+
 	/// [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
 	pub fn wm_nc_create<F>(&self, func: F)
 		where F: FnMut(msg::WmNcCreate) -> bool + 'static,
@@ -490,6 +516,16 @@ impl MsgEvents {
 		/// [`WM_PAINT`](crate::msg::WmPaint) message.
 	}
 
+	/// [`WM_QUERYOPEN`](crate::msg::WmQueryOpen) message.
+	pub fn wm_query_open<F>(&self, func: F)
+		where F: FnMut(msg::WmQueryOpen) -> bool + 'static,
+	{
+		self.add_msg(co::WM::QUERYOPEN, {
+			let mut func = func;
+			move |p| Some(func(msg::WmQueryOpen::from_generic_wm(p)) as isize)
+		});
+	}
+
 	wm_ret_none! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, msg::WmRButtonDblClk,
 		/// [`WM_RBUTTONDBLCLK`](crate::msg::WmRButtonDblClk) message.
 	}
@@ -506,6 +542,25 @@ impl MsgEvents {
 		/// [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
 		///
 		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
+	}
+
+	wm_ret_none! { wm_set_font, co::WM::SETFONT, msg::WmSetFont,
+		/// [`WM_SETFONT`](crate::msg::WmSetFont) message.
+	}
+
+	/// [`WM_SETICON`](crate::msg::WmSetIcon) message.
+	pub fn wm_set_icon<F>(&self, func: F)
+		where F: FnMut(msg::WmSetIcon) -> Option<HICON> + 'static,
+	{
+		self.add_msg(co::WM::SETICON, {
+			let mut func = func;
+			move |p| Some(
+				match func(msg::WmSetIcon::from_generic_wm(p)) {
+					Some(hicon) => hicon.ptr as isize,
+					None => 0,
+				},
+			)
+		});
 	}
 
 	wm_ret_none! { wm_size, co::WM::SIZE, msg::WmSize,

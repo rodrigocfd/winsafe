@@ -291,6 +291,36 @@ impl Message for WmDropFiles {
 
 //------------------------------------------------------------------------------
 
+/// [`WM_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
+/// message parameters.
+pub struct WmEnable {
+	pub has_been_enabled: bool,
+}
+
+impl Message for WmEnable {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::ENABLE,
+			wparam: self.has_been_enabled as usize,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			has_been_enabled: p.wparam != 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_ENDSESSION`](https://docs.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 /// message parameters.
 pub struct WmEndSession {
@@ -317,6 +347,36 @@ impl Message for WmEndSession {
 		Self {
 			is_session_being_ended: p.wparam != 0,
 			event: co::ENDSESSION::from(p.lparam as u32),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
+/// message parameters.
+pub struct WmEraseBkgnd {
+	pub hdc: HDC,
+}
+
+impl Message for WmEraseBkgnd {
+	type RetType = i32;
+
+	fn convert_ret(v: isize) -> i32 {
+		v as i32
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::ERASEBKGND,
+			wparam: self.hdc.ptr as usize,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			hdc: HDC { ptr: p.wparam as *mut c_void },
 		}
 	}
 }
@@ -427,6 +487,66 @@ button_msg! { WmMouseHover, co::WM::MOUSEHOVER,
 button_msg! { WmMouseMove, co::WM::MOUSEMOVE,
 	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 	/// message parameters.
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_MOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-move)
+/// message parameters.
+pub struct WmMove {
+	pub coords: POINT,
+}
+
+impl Message for WmMove {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::MOVE,
+			wparam: 0,
+			lparam: MAKEDWORD(self.coords.x as u16, self.coords.y as u16) as isize,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			coords: POINT { x: LOWORD(p.lparam as u32) as i32, y: HIWORD(p.lparam as u32) as i32 },
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_MOVING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
+/// message parameters.
+pub struct WmMoving<'a> {
+	pub position: &'a mut RECT,
+}
+
+impl<'a> Message for WmMoving<'a> {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::MOVING,
+			wparam: 0,
+			lparam: ref_to_lparam(self.position),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			position: lparam_to_mut_ref(p),
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -549,6 +669,32 @@ impl<'a> WmNotify<'a> {
 empty_msg! { WmPaint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 	/// message, which has no parameters.
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_QUERYOPEN`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
+/// message parameters.
+pub struct WmQueryOpen {}
+
+impl Message for WmQueryOpen {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::QUERYOPEN,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(_: Wm) -> Self {
+		Self {}
+	}
 }
 
 //------------------------------------------------------------------------------

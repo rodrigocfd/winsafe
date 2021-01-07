@@ -546,7 +546,6 @@ const_type! { SW, i32,
 
 	HIDE, 0
 	SHOWNORMAL, 1
-	NORMAL, 1
 	SHOWMINIMIZED, 2
 	SHOWMAXIMIZED, 3
 	MAXIMIZE, 3
@@ -558,7 +557,6 @@ const_type! { SW, i32,
 	RESTORE, 9
 	SHOWDEFAULT, 10
 	FORCEMINIMIZE, 11
-	MAX, 11
 }
 
 const_type! { SWP, u32,

@@ -1,6 +1,9 @@
 use crate::msg::Wm;
 
 /// Trait to all message parameters.
+///
+/// Allows the conversion from/into the generic [`Wm`](crate::msg::Wm)
+/// parameters, and also defines the return type of the message.
 pub trait Message {
 	/// The specific type of the value returned by the message.
 	type RetType;
