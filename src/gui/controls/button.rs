@@ -20,7 +20,7 @@ pub struct Button {
 
 struct Obj { // actual fields of Button
 	base: NativeControlBase,
-	opts: ButtonOpts,
+	poly_opts: PolyOpts,
 	parent_events: ButtonEvents,
 }
 
@@ -31,23 +31,30 @@ cref_mref!(Button);
 
 impl Child for Button {
 	fn create(&self) -> Result<(), co::ERROR> {
-		let opts = &self.cref().opts;
+		match &self.cref().poly_opts {
+			PolyOpts::Wnd(opts) => {
+				let our_hwnd = self.mref().base.create_window( // may panic
+					"BUTTON", Some(&opts.text), opts.pos,
+					SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
+					opts.ctrl_id,
+					opts.ex_window_style,
+					opts.window_style | opts.button_style.into(),
+				)?;
 
-		let our_hwnd = self.mref().base.create_window( // may panic
-			"BUTTON", Some(&opts.text), opts.pos,
-			SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
-			opts.ctrl_id,
-			opts.ex_window_style,
-			opts.window_style | opts.button_style.into(),
-		)?;
-
-		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-		Ok(())
+				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+				Ok(())
+			},
+			PolyOpts::Dlg(ctrl_id) => {
+				self.mref().base.create_dlg(*ctrl_id) // may panic
+					.map(|_| ())
+			},
+		}
 	}
 }
 
 impl Button {
-	/// Creates a new Button object.
+	/// Instantiates a new `Button` object, to be created on the parent window
+	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
 		let mut opts = opts;
 		opts.define_ctrl_id();
@@ -57,7 +64,21 @@ impl Button {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new(parent.hwnd_ref()),
-					opts,
+					poly_opts: PolyOpts::Wnd(opts),
+					parent_events: ButtonEvents::new(parent, ctrl_id),
+				},
+			)),
+		}
+	}
+
+	/// Instantiates a new `Button` object, to be assigned to the parent dialog
+	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Button {
+		Self {
+			obj: Arc::new(UnsafeCell::new(
+				Obj {
+					base: NativeControlBase::new(parent.hwnd_ref()),
+					poly_opts: PolyOpts::Dlg(ctrl_id),
 					parent_events: ButtonEvents::new(parent, ctrl_id),
 				},
 			)),
@@ -74,7 +95,10 @@ impl Button {
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		self.cref().opts.ctrl_id
+		match &self.cref().poly_opts {
+			PolyOpts::Wnd(opts) => opts.ctrl_id,
+			PolyOpts::Dlg(ctrl_id) => *ctrl_id,
+		}
 	}
 
 	/// Exposes the button events.
@@ -134,6 +158,11 @@ impl Button {
 }
 
 //------------------------------------------------------------------------------
+
+enum PolyOpts {
+	Wnd(ButtonOpts),
+	Dlg(u16),
+}
 
 /// Options for [`Button::new`](crate::gui::Button::new).
 pub struct ButtonOpts {

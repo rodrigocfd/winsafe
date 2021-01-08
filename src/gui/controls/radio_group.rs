@@ -46,7 +46,7 @@ impl Index<usize> for RadioGroup {
 }
 
 impl RadioGroup {
-	/// Creates a new RadioGroup object.
+	/// Instantiates a new `RadioGroup` object.
 	///
 	/// # Panic
 	///
@@ -75,6 +75,32 @@ impl RadioGroup {
 				Obj {
 					radios,
 					parent_events: RadioGroupEvents::new(parent, ctrl_ids),
+				},
+			)),
+		}
+	}
+
+	/// Instantiates a new `RadioGroup` object for dialog controls.
+	///
+	/// # Panic
+	///
+	/// Panics if no control IDs are passed.
+	pub fn new_dlg(parent: &dyn Parent, ctrl_ids: &[u16]) -> RadioGroup {
+		if ctrl_ids.is_empty() {
+			panic!("RadioGroup needs at least one RadioButton.");
+		}
+
+		let mut radios = Vec::with_capacity(ctrl_ids.len());
+
+		for ctrl_id in ctrl_ids.iter() {
+			radios.push(RadioButton::new_dlg(parent, *ctrl_id));
+		}
+
+		Self {
+			obj: Arc::new(UnsafeCell::new(
+				Obj {
+					radios,
+					parent_events: RadioGroupEvents::new(parent, ctrl_ids.to_vec()),
 				},
 			)),
 		}

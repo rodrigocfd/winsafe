@@ -19,7 +19,7 @@ use crate::structs::{POINT, SIZE};
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton {
 	base: NativeControlBase,
-	opts: RadioButtonOpts,
+	poly_opts: PolyOpts,
 	parent_events: ButtonEvents,
 }
 
@@ -31,23 +31,39 @@ impl RadioButton {
 
 		Self {
 			base: NativeControlBase::new(parent.hwnd_ref()),
-			opts,
+			poly_opts: PolyOpts::Wnd(opts),
+			parent_events: ButtonEvents::new(parent, ctrl_id),
+		}
+	}
+
+	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
+		Self {
+			base: NativeControlBase::new(parent.hwnd_ref()),
+			poly_opts: PolyOpts::Dlg(ctrl_id),
 			parent_events: ButtonEvents::new(parent, ctrl_id),
 		}
 	}
 
 	pub(crate) fn create(&mut self) -> Result<(), co::ERROR> {
-		let bound_box = Self::ideal_size(&self.opts.text)?;
+		match &self.poly_opts {
+			PolyOpts::Wnd(opts) => {
+				let bound_box = Self::ideal_size(&opts.text)?;
 
-		let our_hwnd = self.base.create_window( // may panic
-			"BUTTON", Some(&self.opts.text), self.opts.pos, bound_box,
-			self.opts.ctrl_id,
-			self.opts.ex_window_style,
-			self.opts.window_style | self.opts.button_style.into(),
-		)?;
+				let our_hwnd = self.base.create_window( // may panic
+					"BUTTON", Some(&opts.text), opts.pos, bound_box,
+					opts.ctrl_id,
+					opts.ex_window_style,
+					opts.window_style | opts.button_style.into(),
+				)?;
 
-		our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-		Ok(())
+				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+				Ok(())
+			},
+			PolyOpts::Dlg(ctrl_id) => {
+				self.base.create_dlg(*ctrl_id) // may panic
+					.map(|_| ())
+			},
+		}
 	}
 
 	pub(crate) fn is_parent_created(&self) -> bool {
@@ -64,7 +80,10 @@ impl RadioButton {
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		self.opts.ctrl_id
+		match &self.poly_opts {
+			PolyOpts::Wnd(opts) => opts.ctrl_id,
+			PolyOpts::Dlg(ctrl_id) => *ctrl_id,
+		}
 	}
 
 	/// Exposes the radio button events.
@@ -134,6 +153,11 @@ impl RadioButton {
 }
 
 //------------------------------------------------------------------------------
+
+enum PolyOpts {
+	Wnd(RadioButtonOpts),
+	Dlg(u16),
+}
 
 /// Options for [`RadioButton::new`](crate::gui::RadioButton::new).
 pub struct RadioButtonOpts {
