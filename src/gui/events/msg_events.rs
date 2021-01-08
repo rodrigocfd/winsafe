@@ -423,6 +423,10 @@ impl MsgEvents {
 		/// [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) message.
 	}
 
+	wm_ret_none! { wm_enter_size_move, co::WM::ENTERSIZEMOVE, msg::WmEnterSizeMove,
+		/// [`WM_ENTERSIZEMOVE`](crate::msg::WmEnterSizeMove) message.
+	}
+
 	/// [`WM_ERASEBKGND`](crate::msg::WmEraseBkgnd) message.
 	pub fn wm_erase_bkgnd<F>(&self, func: F)
 		where F: FnMut(msg::WmEraseBkgnd) -> i32 + 'static,
@@ -433,6 +437,10 @@ impl MsgEvents {
 		});
 	}
 
+	wm_ret_none! { wm_exit_size_move, co::WM::EXITSIZEMOVE, msg::WmExitSizeMove,
+		/// [`WM_EXITSIZEMOVE`](crate::msg::WmExitSizeMove) message.
+	}
+
 	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
 	pub fn wm_init_dialog<F>(&self, func: F)
 		where F: FnMut(msg::WmInitDialog) -> bool + 'static,
@@ -441,6 +449,10 @@ impl MsgEvents {
 			let mut func = func;
 			move |p| Some(func(msg::WmInitDialog::from_generic_wm(p)) as isize)
 		});
+	}
+
+	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, msg::WmGetMinMaxInfo,
+		/// [`WM_GETMINMAXINFO`](crate::msg::WmGetMinMaxInfo) message.
 	}
 
 	wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, msg::WmInitMenuPopup,
@@ -602,6 +614,18 @@ impl MsgEvents {
 
 	wm_ret_none! { wm_style_changing, co::WM::STYLECHANGING, msg::WmStyleChanging,
 		/// [`WM_STYLECHANGING`](crate::msg::WmStyleChanging) message.
+	}
+
+	wm_ret_none! { wm_theme_changed, co::WM::THEMECHANGED, msg::WmThemeChanged,
+		/// [`WM_THEMECHANGED`](crate::msg::WmThemeChanged) message.
+	}
+
+	wm_ret_none! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, msg::WmWindowPosChanged,
+		/// [`WM_WINDOWPOSCHANGED`](crate::msg::WmWindowPosChanged) message.
+	}
+
+	wm_ret_none! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, msg::WmWindowPosChanging,
+		/// [`WM_WINDOWPOSCHANGING`](crate::msg::WmWindowPosChanging) message.
 	}
 
 	wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, msg::WmXButtonDblClk,

@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 
 use crate::aliases::WNDPROC;
 use crate::co;
-use crate::enums::IdStr;
+use crate::enums::{HwndPlace, IdStr};
 use crate::funcs_priv::LF_FACESIZE;
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LOBYTE, LODWORD, LOWORD};
 use crate::handles as h;
@@ -210,6 +210,16 @@ impl Default for MENUITEMINFO {
 	}
 }
 
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct MINMAXINFO {
+	ptReserved: POINT,
+	pub ptMaxSize: POINT,
+	pub ptMaxPosition: POINT,
+	pub ptMinTrackSize: POINT,
+	pub ptMaxTrackSize: POINT,
+}
+
 /// [`MSG`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
 /// struct.
 #[repr(C)]
@@ -367,7 +377,7 @@ pub struct SIZE {
 /// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
 /// struct for [`WS`](crate::co::WS).
 #[repr(C)]
-#[derive(Default, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct STYLESTRUCT_WS {
 	pub styleOld: co::WS,
 	pub styleNew: co::WS,
@@ -376,7 +386,7 @@ pub struct STYLESTRUCT_WS {
 /// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
 /// struct for [`WS_EX`](crate::co::WS_EX).
 #[repr(C)]
-#[derive(Default, Eq, PartialEq)]
+#[derive(Default, Clone, Eq, PartialEq)]
 pub struct STYLESTRUCT_WS_EX {
 	pub styleOld: co::WS_EX,
 	pub styleNew: co::WS_EX,
@@ -426,6 +436,41 @@ impl Default for WINDOWPLACEMENT {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.length = std::mem::size_of::<Self>() as u32;
 		obj
+	}
+}
+
+/// [`WINDOWPOS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowpos)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct WINDOWPOS {
+	pub hwnd: h::HWND,
+	hwndInsertAfter: isize,
+	pub x: i32,
+	pub y: i32,
+	pub cx: i32,
+	pub cy: i32,
+	pub flags: co::SWP,
+}
+
+impl_default_zero!(WINDOWPOS);
+
+impl WINDOWPOS {
+	/// Returns the `hwndInsertAfter` field.
+	pub fn hwndInsertAfter(&self) -> HwndPlace {
+		match self.hwndInsertAfter {
+			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE::from(self.hwndInsertAfter)),
+			_ => HwndPlace::Hwnd(h::HWND { ptr: self.hwndInsertAfter as *mut c_void }),
+		}
+	}
+
+	/// Sets the `hwndInsertAfter` field.
+	pub fn set_hwndInsertAfter(&mut self, hwnd: HwndPlace) {
+		self.hwndInsertAfter = match hwnd {
+			HwndPlace::Hwnd(h) => h.ptr as isize,
+			HwndPlace::Place(v) => v.into(),
+			HwndPlace::None => 0,
+		};
 	}
 }
 

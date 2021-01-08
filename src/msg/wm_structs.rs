@@ -390,6 +390,13 @@ impl Message for WmEnterIdle {
 
 //------------------------------------------------------------------------------
 
+empty_msg! { WmEnterSizeMove, co::WM::ENTERSIZEMOVE,
+	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
+	/// message, which has no parameters.
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 /// message parameters.
 pub struct WmEraseBkgnd {
@@ -414,6 +421,43 @@ impl Message for WmEraseBkgnd {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hdc: HDC { ptr: p.wparam as *mut c_void },
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+empty_msg! { WmExitSizeMove, co::WM::EXITSIZEMOVE,
+	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
+	/// message, which has no parameters.
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_GETMINMAXINFO`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)
+/// message parameters.
+pub struct WmGetMinMaxInfo<'a> {
+	pub info: &'a mut s::MINMAXINFO,
+}
+
+impl<'a> Message for WmGetMinMaxInfo<'a> {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::GETMINMAXINFO,
+			wparam: 0,
+			lparam: ref_to_lparam(self.info),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			info: lparam_to_mut_ref(p),
 		}
 	}
 }
@@ -1032,6 +1076,13 @@ impl<'a> Message for WmStyleChanging<'a> {
 
 //------------------------------------------------------------------------------
 
+empty_msg! { WmThemeChanged, co::WM::THEMECHANGED,
+	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
+	/// message, which has no parameters.
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 /// message parameters.
 pub struct WmTimer {
@@ -1064,6 +1115,66 @@ impl Message for WmTimer {
 				0 => None,
 				addr => unsafe { std::mem::transmute(addr) },
 			},
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_WINDOWPOSCHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged)
+/// message parameters.
+pub struct WmWindowPosChanged<'a> {
+	pub windowpos: &'a s::WINDOWPOS,
+}
+
+impl<'a> Message for WmWindowPosChanged<'a> {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::WINDOWPOSCHANGED,
+			wparam: 0,
+			lparam: ref_to_lparam(self.windowpos),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			windowpos: lparam_to_ref(p),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_WINDOWPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging)
+/// message parameters.
+pub struct WmWindowPosChanging<'a> {
+	pub windowpos: &'a s::WINDOWPOS,
+}
+
+impl<'a> Message for WmWindowPosChanging<'a> {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::WINDOWPOSCHANGING,
+			wparam: 0,
+			lparam: ref_to_lparam(self.windowpos),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			windowpos: lparam_to_ref(p),
 		}
 	}
 }
