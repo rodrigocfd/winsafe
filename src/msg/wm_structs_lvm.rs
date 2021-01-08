@@ -178,6 +178,32 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 
 //------------------------------------------------------------------------------
 
+/// [`LVM_ISGROUPVIEWENABLED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isgroupviewenabled)
+/// message parameters.
+pub struct LvmIsGroupViewEnabled {}
+
+impl Message for LvmIsGroupViewEnabled {
+	type RetType = bool;
+
+	fn convert_ret(v: isize) -> bool {
+		v != 0
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_ISGROUPVIEWENABLED,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(_: Wm) -> Self {
+		Self {}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`LVM_ISITEMVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
 /// message parameters.
 pub struct LvmIsItemVisible {
@@ -202,6 +228,41 @@ impl Message for LvmIsItemVisible {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_REDRAWITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-redrawitems)
+/// message parameters.
+pub struct LvmRedrawItems {
+	pub first_index: u32,
+	pub last_index: u32,
+}
+
+impl Message for LvmRedrawItems {
+	type RetType = Result<(), co::ERROR>;
+
+	fn convert_ret(v: isize) -> Result<(), co::ERROR> {
+		match v {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_REDRAWITEMS,
+			wparam: self.first_index as usize,
+			lparam: self.last_index as isize,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			first_index: p.wparam as u32,
+			last_index: p.lparam as u32,
 		}
 	}
 }
