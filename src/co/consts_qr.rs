@@ -65,7 +65,7 @@ const_type! { REG_OPTION, u32,
 const_type! { REGION, i32,
 	/// [`GetUpdateRgn`](crate::HWND::GetUpdateRgn),
 	/// [`GetWindowRgn`](crate::HWND::GetWindowRgn) and
-	/// [`SelectObject`](crate::HDC::SelectObject) return value (`i32`).
+	/// [`SelectObjectRgn`](crate::HDC::SelectObjectRgn) return value (`i32`).
 
 	NULL, 1
 	SIMPLE, 2

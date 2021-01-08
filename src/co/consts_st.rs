@@ -1,7 +1,7 @@
 use crate::co;
 
 const_type! { SIZE_R, u8,
-	/// [`WM_SIZE`](crate::params::WmSize) request (`u8`).
+	/// [`WM_SIZE`](crate::msg::WmSize) request (`u8`).
 
 	RESTORED, 0
 	MINIMIZED, 1

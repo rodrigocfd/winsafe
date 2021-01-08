@@ -93,7 +93,6 @@ impl RadioButton {
 	///
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
-	/// ```
 	pub fn on(&self) -> &ButtonEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control is created.");

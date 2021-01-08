@@ -82,7 +82,9 @@ const_type! { GW, u32,
 }
 
 const_type! { GWL_C, i8,
-	/// [`WM_STYLECHANGED`] change (`i8`). Originally has `GWL` prefix.
+	/// [`WM_STYLECHANGED`](crate::msg::WmStyleChanged) and
+	/// [`WM_STYLECHANGING`](crate::msg::WmStyleChanging) change (`i8`).
+	/// Originally has `GWL` prefix.
 
 	EXSTYLE, -20
 	STYLE, -16
@@ -90,7 +92,7 @@ const_type! { GWL_C, i8,
 
 const_type! { GWLP, i32,
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
-	/// [`SetWindowLongPtr`](crate:HWND::SetWindowLongPtr) `nIndex` (`i32`).
+	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) `nIndex` (`i32`).
 	/// Originally has prefix `GWL` also.
 
 	STYLE, -16

@@ -1,7 +1,7 @@
 #![allow(non_upper_case_globals)]
 
 const_type! { VER_COND, u8,
-	/// [`VerSetConditionMask`](co::VerSetConditionMask) `Condition` (`u8`).
+	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `Condition` (`u8`).
 
 	EQUAL, 1
 	GREATER, 2
@@ -14,7 +14,7 @@ const_type! { VER_COND, u8,
 }
 
 const_type! { VER_MASK, u32,
-	/// [`VerSetConditionMask`](co::VerSetConditionMask) `TypeMask` (`u32`).
+	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `TypeMask` (`u32`).
 
 	MINORVERSION, 0x0000001
 	MAJORVERSION, 0x0000002

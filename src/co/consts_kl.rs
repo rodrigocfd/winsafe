@@ -174,7 +174,9 @@ impl LANG {
 }
 
 const_type! { LR, u32,
-	/// [`LoadImage`](crate::HINSTANCE::LoadImage) `fuLoad`.
+	/// [`LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
+	/// [`LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and
+	/// [`LoadImageIcon`](crate::HINSTANCE::LoadImageIcon) `fuLoad`.
 
 	DEFAULTCOLOR, 0x00000000
 	MONOCHROME, 0x00000001
