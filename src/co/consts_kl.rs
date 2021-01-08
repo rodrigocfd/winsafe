@@ -191,6 +191,18 @@ const_type! { LR, u32,
 	SHARED, 0x00008000
 }
 
+const_type! { LV_VIEW, u32,
+	/// ListView
+	/// [views](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
+	/// (`u32`).
+
+	ICON, 0x0000
+	DETAILS, 0x0001
+	SMALLICON, 0x0002
+	LIST, 0x0003
+	TILE, 0x0004
+}
+
 const_type! { LVCF, u32,
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
 

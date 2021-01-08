@@ -38,7 +38,7 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 //------------------------------------------------------------------------------
 
 /// [`BM_GETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getcheck)
-/// message.
+/// message parameters.
 pub struct BmGetCheck {}
 
 impl Message for BmGetCheck {
@@ -64,7 +64,7 @@ impl Message for BmGetCheck {
 //------------------------------------------------------------------------------
 
 /// [`BM_SETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setcheck)
-/// message.
+/// message parameters.
 pub struct BmSetCheck {
 	pub state: co::BST,
 }

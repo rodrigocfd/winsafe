@@ -4,6 +4,74 @@ use crate::msg::{Message, Wm};
 use crate::msg::macros::{lparam_to_ref, ref_to_lparam};
 use crate::structs as s;
 
+/// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
+/// message parameters.
+pub struct LvmGetColumn<'a, 'b> {
+	pub index: i32,
+	pub lvcolumn: &'b s::LVCOLUMN<'a>,
+}
+
+impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
+	type RetType = Result<u32, co::ERROR>;
+
+	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+		match v {
+			-1 => Err(GetLastError()),
+			i => Ok(i as u32),
+		}
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETCOLUMN,
+			wparam: self.index as usize,
+			lparam: ref_to_lparam(self.lvcolumn),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			index: p.wparam as i32,
+			lvcolumn: lparam_to_ref(p),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnwidth)
+/// message parameters.
+pub struct LvmGetColumnWidth {
+	pub index: i32,
+}
+
+impl Message for LvmGetColumnWidth {
+	type RetType = Result<u32, co::ERROR>;
+
+	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+		match v {
+			-1 => Err(GetLastError()),
+			i => Ok(i as u32),
+		}
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETCOLUMNWIDTH,
+			wparam: self.index as usize,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			index: p.wparam as i32,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 empty_msg! { LvmGetHeader, co::WM::LVM_GETHEADER,
 	/// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
 	/// message, which has no parameters.
@@ -12,6 +80,32 @@ empty_msg! { LvmGetHeader, co::WM::LVM_GETHEADER,
 empty_msg! { LvmGetItemCount, co::WM::LVM_GETITEMCOUNT,
 	/// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
 	/// message, which has no parameters.
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getview)
+/// message parameters.
+pub struct LvmGetView {}
+
+impl Message for LvmGetView {
+	type RetType = co::LV_VIEW;
+
+	fn convert_ret(v: isize) -> co::LV_VIEW {
+		co::LV_VIEW::from(v as u32)
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETVIEW,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(_: Wm) -> Self {
+		Self {}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -234,6 +328,39 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 		Self {
 			index: p.wparam as i32,
 			lvitem: lparam_to_ref(p),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_SETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setview)
+/// message parameters.
+pub struct LvmSetView {
+	pub view: co::LV_VIEW,
+}
+
+impl Message for LvmSetView {
+	type RetType = Result<(), co::ERROR>;
+
+	fn convert_ret(v: isize) -> Result<(), co::ERROR> {
+		match v {
+			-1 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_SETVIEW,
+			wparam: u32::from(self.view) as usize,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			view: co::LV_VIEW::from(p.wparam as u32),
 		}
 	}
 }
