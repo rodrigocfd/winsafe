@@ -124,9 +124,10 @@ const_type! { CMD, u16,
 	/// [`WM_COMMAND`](crate::msg::WmCommand)
 	/// notifications  (`u16`) for:
 	///
-	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
+	/// * [Button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
 	/// * [ComboBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications);
-	/// * [list box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
+	/// * [Edit](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications);
+	/// * [ListBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
 
 	Menu, 0
 	Accelerator, 1
@@ -154,6 +155,19 @@ const_type! { CMD, u16,
 	CBN_CLOSEUP, 8
 	CBN_SELENDOK, 9
 	CBN_SELENDCANCEL, 10
+
+	EN_SETFOCUS, 0x0100
+	EN_KILLFOCUS, 0x0200
+	EN_CHANGE, 0x0300
+	EN_UPDATE, 0x0400
+	EN_ERRSPACE, 0x0500
+	EN_MAXTEXT, 0x0501
+	EN_HSCROLL, 0x0601
+	EN_VSCROLL, 0x0602
+	EN_ALIGN_LTR_EC, 0x0700
+	EN_ALIGN_RTL_EC, 0x0701
+	EN_BEFORE_PASTE, 0x0800
+	EN_AFTER_PASTE, 0x0801
 
 	LBN_ERRSPACE, (0 -2) as u16
 	LBN_SELCHANGE, 1

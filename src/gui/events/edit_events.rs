@@ -1,3 +1,4 @@
+use crate::co;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
 
@@ -18,5 +19,36 @@ impl EditEvents {
 
 	fn parent_events(&self) -> &MsgEvents {
 		unsafe { &*self.parent_events }
+	}
+
+	cmd_event! { en_change, co::CMD::EN_CHANGE,
+		/// [`EN_CHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-change)
+		/// command notification.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::gui::Edit;
+		///
+		/// let txt: Edit; // initialize it somewhere...
+		///
+		/// txt.on().en_change({
+		///   let txt = txt.clone(); // pass into the closure
+		///   move || {
+		///     println!("Text: {}",
+		///       btn.hwnd().GetWindowTextStr().unwrap());
+		///   }
+		/// });
+		/// ```
+	}
+
+	cmd_event! { en_kill_focus, co::CMD::EN_KILLFOCUS,
+		/// [`EN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/en-killfocus)
+		/// command notification.
+	}
+
+	cmd_event! { en_max_text, co::CMD::EN_MAXTEXT,
+		/// [`EN_MAXTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/en-maxtext)
+		/// command notification.
 	}
 }

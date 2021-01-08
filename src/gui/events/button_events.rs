@@ -22,86 +22,49 @@ impl ButtonEvents {
 		unsafe { &*self.parent_events }
 	}
 
-	/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
-	/// notification.
-	pub fn bcn_drop_down<F>(&self, func: F)
-		where F: FnMut(&NMBCDROPDOWN) + 'static,
-	{
-		self.parent_events().add_nfy(self.ctrl_id, co::NM::BCN_DROPDOWN, {
-			let mut func = func;
-			move |p| { func(unsafe { p.cast_nmhdr::<NMBCDROPDOWN>() }); None }
-		});
+	nfy_event! { bcn_drop_down, co::NM::BCN_DROPDOWN, NMBCDROPDOWN,
+		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
+		/// notification.
 	}
 
-	/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
-	/// notification.
-	pub fn bcn_hot_item_change<F>(&self, func: F)
-		where F: FnMut(&NMBCHOTITEM) + 'static,
-	{
-		self.parent_events().add_nfy(self.ctrl_id, co::NM::BCN_HOTITEMCHANGE, {
-			let mut func = func;
-			move |p| { func(unsafe { p.cast_nmhdr::<NMBCHOTITEM>() }); None }
-		});
+	nfy_event! { bcn_hot_item_change, co::NM::BCN_HOTITEMCHANGE, NMBCHOTITEM,
+		/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
+		/// notification.
 	}
 
-	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
-	/// command notification.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::gui::{Button, WindowMain};
-	///
-	/// let wnd = WindowMain; // initialize them somewhere...
-	/// let btn = Button;
-	///
-	/// btn.on().bn_clicked({
-	///   let btn = btn.clone();
-	///   move || {
-	///     println!("HWND: {}", btn.hwnd());
-	///   }
-	/// });
-	/// ```
-	pub fn bn_clicked<F>(&self, func: F)
-		where F: FnMut() + 'static,
-	{
-		self.parent_events().wm_command(co::CMD::BN_CLICKED, self.ctrl_id, {
-			let mut func = func;
-			move || func()
-		});
+	cmd_event! { bn_clicked, co::CMD::BN_CLICKED,
+		/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
+		/// command notification.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::gui::Button;
+		///
+		/// let btn: Button; // initialize it somewhere
+		///
+		/// btn.on().bn_clicked({
+		///   let btn = btn.clone(); // pass into the closure
+		///   move || {
+		///     println!("HWND: {}", btn.hwnd());
+		///   }
+		/// });
+		/// ```
 	}
 
-	/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
-	/// command notification.
-	pub fn bn_dbl_clk<F>(&self, func: F)
-		where F: FnMut() + 'static,
-	{
-		self.parent_events().wm_command(co::CMD::BN_DBLCLK, self.ctrl_id, {
-			let mut func = func;
-			move || func()
-		});
+	cmd_event! { bn_dbl_clk, co::CMD::BN_DBLCLK,
+		/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
+		/// command notification.
 	}
 
-	/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
-	/// command notification.
-	pub fn bn_kill_focus<F>(&self, func: F)
-		where F: FnMut() + 'static,
-	{
-		self.parent_events().wm_command(co::CMD::BN_KILLFOCUS, self.ctrl_id, {
-			let mut func = func;
-			move || func()
-		});
+	cmd_event! { bn_kill_focus, co::CMD::BN_KILLFOCUS,
+		/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
+		/// command notification.
 	}
 
-	/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
-	/// command notification.
-	pub fn bn_set_focus<F>(&self, func: F)
-		where F: FnMut() + 'static,
-	{
-		self.parent_events().wm_command(co::CMD::BN_SETFOCUS, self.ctrl_id, {
-			let mut func = func;
-			move || func()
-		});
+	cmd_event! { bn_set_focus, co::CMD::BN_SETFOCUS,
+		/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
+		/// command notification.
 	}
 
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
