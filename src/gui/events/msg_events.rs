@@ -419,6 +419,10 @@ impl MsgEvents {
 		/// [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
 	}
 
+	wm_ret_none! { wm_enter_idle, co::WM::ENTERIDLE, msg::WmEnterIdle,
+		/// [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) message.
+	}
+
 	/// [`WM_ERASEBKGND`](crate::msg::WmEraseBkgnd) message.
 	pub fn wm_erase_bkgnd<F>(&self, func: F)
 		where F: FnMut(msg::WmEraseBkgnd) -> i32 + 'static,
@@ -561,6 +565,10 @@ impl MsgEvents {
 				},
 			)
 		});
+	}
+
+	wm_ret_none! { wm_show_window, co::WM::SHOWWINDOW, msg::WmShowWindow,
+		/// [`WM_SHOWWINDOW`](crate::msg::WmShowWindow) message.
 	}
 
 	wm_ret_none! { wm_size, co::WM::SIZE, msg::WmSize,

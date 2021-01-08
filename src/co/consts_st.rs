@@ -559,6 +559,16 @@ const_type! { SW, i32,
 	FORCEMINIMIZE, 11
 }
 
+const_type! { SW_S, u32,
+	/// [`WM_SHOWWINDOW`](crate::msg::WmShowWindow) status (`u32`). Originally
+	/// has `SW` prefix.
+
+	PARENTCLOSING, 1
+	OTHERZOOM, 2
+	PARENTOPENING, 3
+	OTHERUNZOOM, 4
+}
+
 const_type! { SWP, u32,
 	/// [`SetWindowPos`](crate::HWND::SetWindowPos) `uFlags` (`u32`).
 

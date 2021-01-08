@@ -61,6 +61,27 @@ impl BitmapPtrStr {
 
 /// Variant parameter for:
 ///
+/// * [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) reason.
+pub enum HwndHmenu {
+	/// The system is idle because a dialog box is displayed.
+	Hwnd(HWND),
+	/// The system is idle because a menu is displayed.
+	Hmenu(HMENU),
+}
+
+impl From<HwndHmenu> for isize {
+	fn from(v: HwndHmenu) -> isize {
+		match v {
+			HwndHmenu::Hwnd(hwnd) => hwnd.ptr as isize,
+			HwndHmenu::Hmenu(hmenu) => hmenu.ptr as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for:
+///
 /// * [`SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`.
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.

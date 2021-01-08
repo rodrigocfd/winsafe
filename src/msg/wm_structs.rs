@@ -2,6 +2,7 @@ use std::ffi::c_void;
 
 use crate::aliases::TIMERPROC;
 use crate::co;
+use crate::enums::HwndHmenu;
 use crate::funcs_priv::FAPPCOMMAND_MASK;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
@@ -347,6 +348,43 @@ impl Message for WmEndSession {
 		Self {
 			is_session_being_ended: p.wparam != 0,
 			event: co::ENDSESSION::from(p.lparam as u32),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_ENTERIDLE`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-enteridle)
+/// message parameters.
+pub struct WmEnterIdle {
+	pub reason: co::MSGF,
+	pub handle: HwndHmenu,
+}
+
+impl Message for WmEnterIdle {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::ENTERIDLE,
+			wparam: u32::from(self.reason) as usize,
+			lparam: self.handle.into(),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		let reason = co::MSGF::from(p.wparam as u32);
+		Self {
+			reason,
+			handle: match reason {
+				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(HWND { ptr: p.lparam as *mut c_void }),
+				co::MSGF::MENU => HwndHmenu::Hmenu(HMENU { ptr: p.lparam as *mut c_void }),
+				_ => HwndHmenu::Hwnd(unsafe { HWND::null_handle() }), // should never happen
+			},
 		}
 	}
 }
@@ -807,6 +845,38 @@ impl Message for WmSetIcon {
 		Self {
 			size: co::ICON_SZ::from(p.wparam as i32),
 			hicon: HICON { ptr: p.lparam as *mut c_void },
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_SHOWWINDOW`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
+/// message parameters.
+pub struct WmShowWindow {
+	pub being_shown: bool,
+	pub status: co::SW_S,
+}
+
+impl Message for WmShowWindow {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::SHOWWINDOW,
+			wparam: self.being_shown as usize,
+			lparam: u32::from(self.status) as isize,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			being_shown: p.wparam != 0,
+			status: co::SW_S::from(p.lparam as u32),
 		}
 	}
 }
