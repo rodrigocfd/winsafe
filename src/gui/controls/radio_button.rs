@@ -157,12 +157,12 @@ impl RadioButton {
 
 /// Options for [`RadioButton::new`](crate::gui::RadioButton::new).
 pub struct RadioButtonOpts {
-	/// Text of the radio button to be
+	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
 	pub text: String,
-	/// Radio button position within parent client area, in pixels, to be
+	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to 0x0.
@@ -170,21 +170,21 @@ pub struct RadioButtonOpts {
 	/// Radio button styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `co::BS::AUTORADIOBUTTON`.
+	/// Defaults to `BS::AUTORADIOBUTTON`.
 	pub button_style: co::BS,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `co::WS_CHILD | co::WS_VISIBLE`.
+	/// Defaults to `WS::CHILD | WS::VISIBLE`.
 	///
-	/// The first RadioButton of a group should also have `co::WS_TABSTOP | co::WS_GROUP`.
+	/// The first RadioButton of a group should also have `WS::TABSTOP | WS::GROUP`.
 	/// If this object being passed to a [`RadioGroup`](crate::gui::RadioGroup),
 	/// this will be automatically set.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `co::WS_EX::LEFT`.
+	/// Defaults to `WS_EX::LEFT`.
 	pub ex_window_style: co::WS_EX,
 
 	/// The control ID.

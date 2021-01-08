@@ -1,3 +1,5 @@
+use crate::co;
+
 const_type! { EMF, u32,
 	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
 
@@ -12,6 +14,32 @@ const_type! { ENDSESSION, u32,
 	CLOSEAPP, 0x00000001
 	CRITICAL, 0x40000000
 	LOGOFF, 0x80000000
+}
+
+const_type! { ES, u32,
+	/// Edit control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
+	/// (`u32`).
+
+	LEFT, 0x0000
+	CENTER, 0x0001
+	RIGHT, 0x0002
+	MULTILINE, 0x0004
+	UPPERCASE, 0x0008
+	LOWERCASE, 0x0010
+	PASSWORD, 0x0020
+	AUTOVSCROLL, 0x0040
+	AUTOHSCROLL, 0x0080
+	NOHIDESEL, 0x0100
+	OEMCONVERT, 0x0400
+	READONLY, 0x0800
+	WANTRETURN, 0x1000
+	NUMBER, 0x2000
+}
+impl From<ES> for co::WS {
+	fn from(v: ES) -> Self {
+		Self(v.0)
+	}
 }
 
 const_type! { FAPPCOMMAND, u16,
