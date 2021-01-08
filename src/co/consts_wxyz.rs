@@ -91,8 +91,8 @@ const_type! { WIN32, u16,
 	IE_WIN10, Self::IE_IE110.0
 }
 
-const_type! { WMSZ, i32,
-	/// [`WM_SIZING`](crate::msg::WmSizing) window edge (`i32`).
+const_type! { WMSZ, u8,
+	/// [`WM_SIZING`](crate::msg::WmSizing) window edge (`u8`).
 
 	LEFT, 1
 	RIGHT, 2

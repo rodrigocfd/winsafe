@@ -1,7 +1,7 @@
 use crate::co;
 
-const_type! { SIZE_REQ, i32,
-	/// [`WM_SIZE`](crate::params::WmSize) request (`i32`).
+const_type! { SIZE_REQ, u8,
+	/// [`WM_SIZE`](crate::params::WmSize) request (`u8`).
 
 	RESTORED, 0
 	MINIMIZED, 1
@@ -559,8 +559,8 @@ const_type! { SW, i32,
 	FORCEMINIMIZE, 11
 }
 
-const_type! { SW_S, u32,
-	/// [`WM_SHOWWINDOW`](crate::msg::WmShowWindow) status (`u32`). Originally
+const_type! { SW_S, u8,
+	/// [`WM_SHOWWINDOW`](crate::msg::WmShowWindow) status (`u8`). Originally
 	/// has `SW` prefix.
 
 	PARENTCLOSING, 1

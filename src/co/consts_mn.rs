@@ -142,8 +142,8 @@ const_type! { MNS, u32,
 	CHECKORBMP, 0x04000000
 }
 
-const_type! { MSGF, u32,
-	/// [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) reason (`u32`).
+const_type! { MSGF, u8,
+	/// [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) reason (`u8`).
 
 	DIALOGBOX, 0
 	MENU, 2

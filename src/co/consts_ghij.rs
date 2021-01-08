@@ -121,8 +121,8 @@ const_type! { HWND_PLACE, isize,
 	NOTOPMOST, -2
 }
 
-const_type! { ICON_SZ, i32,
-	/// [`WM_SETICON`](crate::msg::WmSetIcon) icon size (`i32`). Originally has
+const_type! { ICON_SZ, u8,
+	/// [`WM_SETICON`](crate::msg::WmSetIcon) icon size (`u8`). Originally has
 	/// `ICON` prefix.
 
 	SMALL, 0

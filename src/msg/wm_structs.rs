@@ -371,13 +371,13 @@ impl Message for WmEnterIdle {
 	fn into_generic_wm(self) -> Wm {
 		Wm {
 			msg_id: co::WM::ENTERIDLE,
-			wparam: u32::from(self.reason) as usize,
+			wparam: u8::from(self.reason) as usize,
 			lparam: self.handle.into(),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
-		let reason = co::MSGF::from(p.wparam as u32);
+		let reason = co::MSGF::from(p.wparam as u8);
 		Self {
 			reason,
 			handle: match reason {
@@ -836,14 +836,14 @@ impl Message for WmSetIcon {
 	fn into_generic_wm(self) -> Wm {
 		Wm {
 			msg_id: co::WM::SETICON,
-			wparam: i32::from(self.size) as usize,
+			wparam: u8::from(self.size) as usize,
 			lparam: self.hicon.ptr as isize,
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			size: co::ICON_SZ::from(p.wparam as i32),
+			size: co::ICON_SZ::from(p.wparam as u8),
 			hicon: HICON { ptr: p.lparam as *mut c_void },
 		}
 	}
@@ -869,14 +869,14 @@ impl Message for WmShowWindow {
 		Wm {
 			msg_id: co::WM::SHOWWINDOW,
 			wparam: self.being_shown as usize,
-			lparam: u32::from(self.status) as isize,
+			lparam: u8::from(self.status) as isize,
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			being_shown: p.wparam != 0,
-			status: co::SW_S::from(p.lparam as u32),
+			status: co::SW_S::from(p.lparam as u8),
 		}
 	}
 }
@@ -900,14 +900,16 @@ impl Message for WmSize {
 	fn into_generic_wm(self) -> Wm {
 		Wm {
 			msg_id: co::WM::SIZE,
-			wparam: i32::from(self.request) as usize,
-			lparam: MAKEDWORD(self.client_area.cx as u16, self.client_area.cy as u16) as isize,
+			wparam: u8::from(self.request) as usize,
+			lparam: MAKEDWORD(
+				self.client_area.cx as u16,
+				self.client_area.cy as u16) as isize,
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			request: co::SIZE_REQ::from(p.wparam as i32),
+			request: co::SIZE_REQ::from(p.wparam as u8),
 			client_area: SIZE {
 				cx: LOWORD(p.lparam as u32) as i32,
 				cy: HIWORD(p.lparam as u32) as i32,
@@ -935,14 +937,14 @@ impl<'a> Message for WmSizing<'a> {
 	fn into_generic_wm(self) -> Wm {
 		Wm {
 			msg_id: co::WM::SIZING,
-			wparam: i32::from(self.window_edge) as usize,
+			wparam: u8::from(self.window_edge) as usize,
 			lparam: ref_to_lparam(self.coords),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			window_edge: co::WMSZ::from(p.wparam as i32),
+			window_edge: co::WMSZ::from(p.wparam as u8),
 			coords: lparam_to_mut_ref(p),
 		}
 	}
