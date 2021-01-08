@@ -2,13 +2,13 @@ use std::ffi::c_void;
 
 use crate::aliases::TIMERPROC;
 use crate::co;
-use crate::enums::HwndHmenu;
+use crate::enums::{HwndHmenu, WsWsex};
 use crate::funcs_priv::FAPPCOMMAND_MASK;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
 use crate::msg::Message;
-use crate::structs::{CREATESTRUCT, NMHDR, POINT, RECT, SIZE};
+use crate::structs as s;
 
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
@@ -196,7 +196,7 @@ impl Message for WmCommand {
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
 pub struct WmCreate<'a, 'b, 'c> {
-	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
+	pub createstruct: &'c s::CREATESTRUCT<'a, 'b>,
 }
 
 impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
@@ -382,8 +382,7 @@ impl Message for WmEnterIdle {
 			reason,
 			handle: match reason {
 				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(HWND { ptr: p.lparam as *mut c_void }),
-				co::MSGF::MENU => HwndHmenu::Hmenu(HMENU { ptr: p.lparam as *mut c_void }),
-				_ => HwndHmenu::Hwnd(unsafe { HWND::null_handle() }), // should never happen
+				_ => HwndHmenu::Hmenu(HMENU { ptr: p.lparam as *mut c_void }),
 			},
 		}
 	}
@@ -532,7 +531,7 @@ button_msg! { WmMouseMove, co::WM::MOUSEMOVE,
 /// [`WM_MOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-move)
 /// message parameters.
 pub struct WmMove {
-	pub coords: POINT,
+	pub coords: s::POINT,
 }
 
 impl Message for WmMove {
@@ -552,7 +551,10 @@ impl Message for WmMove {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			coords: POINT { x: LOWORD(p.lparam as u32) as i32, y: HIWORD(p.lparam as u32) as i32 },
+			coords: s::POINT {
+				x: LOWORD(p.lparam as u32) as i32,
+				y: HIWORD(p.lparam as u32) as i32,
+			},
 		}
 	}
 }
@@ -562,7 +564,7 @@ impl Message for WmMove {
 /// [`WM_MOVING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
 /// message parameters.
 pub struct WmMoving<'a> {
-	pub position: &'a mut RECT,
+	pub position: &'a mut s::RECT,
 }
 
 impl<'a> Message for WmMoving<'a> {
@@ -592,7 +594,7 @@ impl<'a> Message for WmMoving<'a> {
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
 pub struct WmNcCreate<'a, 'b, 'c> {
-	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
+	pub createstruct: &'c s::CREATESTRUCT<'a, 'b>,
 }
 
 impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
@@ -667,7 +669,7 @@ empty_msg! { WmNull, co::WM::NULL,
 /// message parameters.
 #[derive(Copy, Clone)]
 pub struct WmNotify<'a> {
-	pub nmhdr: &'a NMHDR,
+	pub nmhdr: &'a s::NMHDR,
 }
 
 impl<'a> Message for WmNotify<'a> {
@@ -681,13 +683,13 @@ impl<'a> Message for WmNotify<'a> {
 		Wm {
 			msg_id: co::WM::NOTIFY,
 			wparam: self.nmhdr.hwndFrom.ptr as usize,
-			lparam: self.nmhdr as *const NMHDR as isize,
+			lparam: self.nmhdr as *const s::NMHDR as isize,
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			nmhdr: unsafe { &*(p.lparam as *const NMHDR) },
+			nmhdr: unsafe { &*(p.lparam as *const s::NMHDR) },
 		}
 	}
 }
@@ -698,7 +700,7 @@ impl<'a> WmNotify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
-		&*(self.nmhdr as *const NMHDR as *const T)
+		&*(self.nmhdr as *const s::NMHDR as *const T)
 	}
 }
 
@@ -886,8 +888,8 @@ impl Message for WmShowWindow {
 /// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 /// message parameters.
 pub struct WmSize {
-	pub request: co::SIZE_REQ,
-	pub client_area: SIZE,
+	pub request: co::SIZE_R,
+	pub client_area: s::SIZE,
 }
 
 impl Message for WmSize {
@@ -909,8 +911,8 @@ impl Message for WmSize {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			request: co::SIZE_REQ::from(p.wparam as u8),
-			client_area: SIZE {
+			request: co::SIZE_R::from(p.wparam as u8),
+			client_area: s::SIZE {
 				cx: LOWORD(p.lparam as u32) as i32,
 				cy: HIWORD(p.lparam as u32) as i32,
 			},
@@ -924,7 +926,7 @@ impl Message for WmSize {
 /// message parameters.
 pub struct WmSizing<'a> {
 	pub window_edge: co::WMSZ,
-	pub coords: &'a mut RECT,
+	pub coords: &'a mut s::RECT,
 }
 
 impl<'a> Message for WmSizing<'a> {
@@ -946,6 +948,84 @@ impl<'a> Message for WmSizing<'a> {
 		Self {
 			window_edge: co::WMSZ::from(p.wparam as u8),
 			coords: lparam_to_mut_ref(p),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_STYLECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanged)
+/// message parameters.
+pub struct WmStyleChanged<'a> {
+	pub change: co::GWL_C,
+	pub stylestruct: WsWsex<'a>,
+}
+
+impl<'a> Message for WmStyleChanged<'a> {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::STYLECHANGED,
+			wparam: i8::from(self.change) as usize,
+			lparam: match self.stylestruct {
+				WsWsex::Ws(ws) => ws as *const s::STYLESTRUCT_WS as isize,
+				WsWsex::Wsex(wsx) => wsx as *const s::STYLESTRUCT_WS_EX as isize,
+			},
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		let change = co::GWL_C::from(p.wparam as i8);
+		Self {
+			change,
+			stylestruct: match change {
+				co::GWL_C::STYLE => WsWsex::Ws(lparam_to_ref(p)),
+				_ => WsWsex::Wsex(lparam_to_ref(p)),
+			},
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_STYLECHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanging)
+/// message parameters.
+pub struct WmStyleChanging<'a> {
+	pub change: co::GWL_C,
+	pub stylestruct: WsWsex<'a>,
+}
+
+impl<'a> Message for WmStyleChanging<'a> {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> () {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::STYLECHANGING,
+			wparam: i8::from(self.change) as usize,
+			lparam: match self.stylestruct {
+				WsWsex::Ws(ws) => ws as *const s::STYLESTRUCT_WS as isize,
+				WsWsex::Wsex(wsx) => wsx as *const s::STYLESTRUCT_WS_EX as isize,
+			},
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		let change = co::GWL_C::from(p.wparam as i8);
+		Self {
+			change,
+			stylestruct: match change {
+				co::GWL_C::STYLE => WsWsex::Ws(lparam_to_ref(p)),
+				_ => WsWsex::Wsex(lparam_to_ref(p)),
+			},
 		}
 	}
 }

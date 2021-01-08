@@ -81,6 +81,13 @@ const_type! { GW, u32,
 	MAX, 6
 }
 
+const_type! { GWL_C, i8,
+	/// [`WM_STYLECHANGED`] change (`i8`). Originally has `GWL` prefix.
+
+	EXSTYLE, -20
+	STYLE, -16
+}
+
 const_type! { GWLP, i32,
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
 	/// [`SetWindowLongPtr`](crate:HWND::SetWindowLongPtr) `nIndex` (`i32`).

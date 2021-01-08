@@ -364,6 +364,24 @@ pub struct SIZE {
 	pub cy: i32,
 }
 
+/// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
+/// struct for [`WS`](crate::co::WS).
+#[repr(C)]
+#[derive(Default, Eq, PartialEq)]
+pub struct STYLESTRUCT_WS {
+	pub styleOld: co::WS,
+	pub styleNew: co::WS,
+}
+
+/// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
+/// struct for [`WS_EX`](crate::co::WS_EX).
+#[repr(C)]
+#[derive(Default, Eq, PartialEq)]
+pub struct STYLESTRUCT_WS_EX {
+	pub styleOld: co::WS_EX,
+	pub styleNew: co::WS_EX,
+}
+
 /// [`WINDOWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.
 #[repr(C)]

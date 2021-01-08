@@ -4,7 +4,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::handles::{HBITMAP, HMENU, HWND};
-use crate::structs::ATOM;
+use crate::structs::{ATOM, STYLESTRUCT_WS, STYLESTRUCT_WS_EX};
 use crate::WString;
 
 /// Variant parameter used in
@@ -290,4 +290,16 @@ impl RegistryValue {
 			Self::None => 0,
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for:
+///
+/// * [`WmStyleChanged`](crate::msg::WmStyleChanged) `stylestruct`.
+pub enum WsWsex<'a> {
+	/// [`STYLESTRUCT_WS`](crate::STYLESTRUCT_WS) struct.
+	Ws(&'a STYLESTRUCT_WS),
+	/// [`STYLESTRUCT_WS_EX`](crate::STYLESTRUCT_WS_EX) struct.
+	Wsex(&'a STYLESTRUCT_WS_EX),
 }

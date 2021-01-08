@@ -596,6 +596,14 @@ impl MsgEvents {
 		/// [`WM_SIZING`](crate::msg::WmSizing) message.
 	}
 
+	wm_ret_none! { wm_style_changed, co::WM::STYLECHANGED, msg::WmStyleChanged,
+		/// [`WM_STYLECHANGED`](crate::msg::WmStyleChanged) message.
+	}
+
+	wm_ret_none! { wm_style_changing, co::WM::STYLECHANGING, msg::WmStyleChanging,
+		/// [`WM_STYLECHANGING`](crate::msg::WmStyleChanging) message.
+	}
+
 	wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, msg::WmXButtonDblClk,
 		/// [`WM_XBUTTONDBLCLK`](crate::msg::WmXButtonDblClk) message.
 	}
