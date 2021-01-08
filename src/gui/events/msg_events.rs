@@ -246,7 +246,7 @@ impl MsgEvents {
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
 	///   let wnd = wnd.clone(); // pass into the closure
 	///   move || {
-	///     wnd.hwnd().SendMessage(WmClose {});
+	///     wnd.hwnd().PostMessage(WmClose {}).unwrap();
 	///   }
 	/// });
 	/// ```

@@ -108,6 +108,8 @@ impl HWND {
 
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
+	///
+	/// The return type depends on the message argument.
 	pub fn DefSubclassProc<M: Message>(self, uMsg: M) -> M::RetType {
 		let wmAny = uMsg.into_generic_wm();
 		M::convert_ret(
@@ -121,6 +123,8 @@ impl HWND {
 
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
+	///
+	/// The return type depends on the message argument.
 	pub fn DefWindowProc<M: Message>(self, uMsg: M) -> M::RetType {
 		let wmAny = uMsg.into_generic_wm();
 		M::convert_ret(
@@ -660,6 +664,18 @@ impl HWND {
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// Programatically closing a window:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{HWND, msg::WmClose};
+	///
+	/// let my_hwnd: HWND; // initialize it somewhere...
+	///
+	/// my_hwnd.PostMessage(WmClose {}).unwrap();
+	/// ```
 	pub fn PostMessage<M: Message>(self, uMsg: M) -> Result<(), co::ERROR> {
 		let wmAny = uMsg.into_generic_wm();
 		match unsafe {
@@ -724,23 +740,9 @@ impl HWND {
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
 	///
-	/// Instead of receiving a message code followed by `WPARAM` and `LPARAM`,
-	/// receives a single message argument, which allows you to pass the message
-	/// parameters safely, and also receive the correct return type.
+	/// The return type depends on the message argument.
 	///
 	/// # Examples
-	///
-	/// Sending a [`WM_CLOSE`](crate::msg::WmClose) message, which has no
-	/// parameters:
-	///
-	/// ```rust,ignore
-	/// use winsafe::msg::WmClose;
-	/// use winsafe::HWND;
-	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
-	///
-	/// my_hwnd.SendMessage(WmClose {});
-	/// ```
 	///
 	/// Sending a [`LVM_SETITEM`](crate::msg::LvmSetItem) list view message,
 	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
