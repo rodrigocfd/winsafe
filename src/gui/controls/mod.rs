@@ -1,6 +1,7 @@
 //! Native Win32 controls.
 
 mod native_control_base;
+mod poly_opts;
 
 mod button;
 mod radio_button;

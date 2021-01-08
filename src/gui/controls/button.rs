@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::controls::native_control_base::NativeControlBase;
+use crate::gui::controls::poly_opts::PolyOpts;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::traits::{Child, Parent};
@@ -20,7 +21,7 @@ pub struct Button {
 
 struct Obj { // actual fields of Button
 	base: NativeControlBase,
-	poly_opts: PolyOpts,
+	poly_opts: PolyOpts<ButtonOpts>,
 	parent_events: ButtonEvents,
 }
 
@@ -158,11 +159,6 @@ impl Button {
 }
 
 //------------------------------------------------------------------------------
-
-enum PolyOpts {
-	Wnd(ButtonOpts),
-	Dlg(u16),
-}
 
 /// Options for [`Button::new`](crate::gui::Button::new).
 pub struct ButtonOpts {

@@ -1,6 +1,7 @@
 use crate::co;
 use crate::funcs::GetSystemMetrics;
 use crate::gui::controls::native_control_base::NativeControlBase;
+use crate::gui::controls::poly_opts::PolyOpts;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box, ui_font};
 use crate::gui::traits::Parent;
@@ -19,7 +20,7 @@ use crate::structs::{POINT, SIZE};
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton {
 	base: NativeControlBase,
-	poly_opts: PolyOpts,
+	poly_opts: PolyOpts<RadioButtonOpts>,
 	parent_events: ButtonEvents,
 }
 
@@ -153,11 +154,6 @@ impl RadioButton {
 }
 
 //------------------------------------------------------------------------------
-
-enum PolyOpts {
-	Wnd(RadioButtonOpts),
-	Dlg(u16),
-}
 
 /// Options for [`RadioButton::new`](crate::gui::RadioButton::new).
 pub struct RadioButtonOpts {
