@@ -46,7 +46,7 @@ impl WindowMain {
 		let wnd = Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: WindowBase::new(),
+					base: WindowBase::new(None), // no parent
 					opts,
 					hchild_prev_focus: None,
 				},
@@ -142,7 +142,6 @@ impl WindowMain {
 
 		let our_hwnd = self.cref().base.create_window( // may panic
 			hinst,
-			None,
 			&class_name_buf.to_string(),
 			Some(&opts.title),
 			IdMenu::None,
@@ -241,7 +240,7 @@ pub struct WindowMainOpts {
 	///
 	/// Will be adjusted to match current system DPI.
 	///
-	/// Defaults to 600x500.
+	/// Defaults to 600 x 500.
 	pub size: SIZE,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

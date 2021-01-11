@@ -2,6 +2,7 @@ use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::events::{MsgEvents, ProcessResult};
+use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{Message, Wm, WmNcCreate};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
@@ -11,6 +12,7 @@ use crate::WString;
 pub struct WindowBase {
 	hwnd: HWND,
 	events: MsgEvents,
+	ptr_parent_hwnd: Option<*const HWND>, // used only in control creation
 }
 
 impl Drop for WindowBase {
@@ -22,10 +24,11 @@ impl Drop for WindowBase {
 }
 
 impl WindowBase {
-	pub fn new() -> WindowBase {
+	pub fn new(parent: Option<&dyn Parent>) -> WindowBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			events: MsgEvents::new(),
+			ptr_parent_hwnd: parent.map(|parent| parent.hwnd_ref() as *const _),
 		}
 	}
 
@@ -64,7 +67,6 @@ impl WindowBase {
 	pub fn create_window(
 		&self,
 		hinst: HINSTANCE,
-		parent: Option<HWND>,
 		class_name: &str,
 		title: Option<&str>,
 		hmenu: IdMenu,
@@ -84,7 +86,8 @@ impl WindowBase {
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			parent, hmenu, hinst,
+			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr }),
+			hmenu, hinst,
 			Some(self as *const Self as isize), // pass pointer to self
 		)
 	}

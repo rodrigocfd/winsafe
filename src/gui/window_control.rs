@@ -5,6 +5,7 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::gui::globals::{multiply_dpi, paint_control_borders};
 use crate::gui::events::MsgEvents;
+use crate::gui::traits::{Child, Parent};
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
@@ -26,12 +27,38 @@ unsafe impl Sync for WindowControl {}
 
 cref_mref!(WindowControl);
 
+impl Child for WindowControl {
+	fn create(&self) -> Result<(), co::ERROR> {
+		let opts = &mut self.mref().opts;
+		let hinst = self.cref().base.hwnd().hinstance();
+
+		let mut wcx = WNDCLASSEX::default();
+		let mut class_name_buf = WString::new();
+		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
+		self.cref().base.register_class(&mut wcx)?;
+
+		multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
+
+		self.cref().base.create_window( // may panic
+			hinst,
+			&class_name_buf.to_string(),
+			None,
+			IdMenu::None,
+			opts.position, opts.size,
+			opts.ex_style,
+			opts.style,
+		)?;
+
+		Ok(())
+	}
+}
+
 impl WindowControl {
-	pub fn new(opts: WindowControlOpts) -> WindowControl {
+	pub fn new(parent: &dyn Parent, opts: WindowControlOpts) -> WindowControl {
 		let wnd = Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: WindowBase::new(),
+					base: WindowBase::new(Some(parent)),
 					opts,
 				},
 			)),
@@ -78,42 +105,6 @@ impl WindowControl {
 		self.cref().base.on()
 	}
 
-	/// Physically creates the control within the parent window by calling
-	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx). This method should be
-	/// be called within parent window's `WM_CREATE` or `WM_INITDIALOG` events.
-	///
-	/// # Panics
-	///
-	/// Panics if the control is already created, or if the parent window was not
-	/// created yet.
-	pub fn create(&self,
-		parent_hwnd: HWND, pos: POINT, size: SIZE) -> Result<(), co::ERROR>
-	{
-		let hinst = parent_hwnd.hinstance();
-
-		let mut wcx = WNDCLASSEX::default();
-		let mut class_name_buf = WString::new();
-		self.cref().opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self.cref().base.register_class(&mut wcx)?;
-
-		let mut pos = pos;
-		let mut size = size;
-		multiply_dpi(Some(&mut pos), Some(&mut size))?;
-
-		self.cref().base.create_window( // may panic
-			hinst,
-			Some(parent_hwnd),
-			&class_name_buf.to_string(),
-			None,
-			IdMenu::None,
-			pos, size,
-			self.cref().opts.ex_style,
-			self.cref().opts.style,
-		)?;
-
-		Ok(())
-	}
-
 	/// Adds the default event processing.
 	fn default_message_handlers(&self) {
 		self.on().wm_nc_paint({
@@ -153,6 +144,20 @@ pub struct WindowControlOpts {
 	/// Defaults to `co::COLOR::WINDOW`.
 	pub class_bg_brush: HBRUSH,
 
+	/// Position of window within parent's client area, in pixels, to be
+	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
+	///
+	/// Defaults to 0 x 0.
+	pub position: POINT,
+	/// Size of window, in pixels, to be
+	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
+	///
+	/// Defaults to 0 x 0.
+	pub size: SIZE,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -181,6 +186,8 @@ impl Default for WindowControlOpts {
 			class_icon: unsafe { HICON::null_handle() },
 			class_cursor: unsafe { HCURSOR::null_handle() },
 			class_bg_brush: unsafe { HBRUSH::null_handle() },
+			position: POINT { x: 0, y: 0 },
+			size: SIZE { cx: 0, cy: 0 },
 			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
 			ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,

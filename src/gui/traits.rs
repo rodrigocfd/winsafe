@@ -2,13 +2,13 @@ use crate::co::ERROR;
 use crate::gui::events::MsgEvents;
 use crate::handles::HWND;
 
-/// Internal trait to any window which can host child controls.
+/// Trait to any window which can host child controls.
 pub trait Parent {
 	fn hwnd_ref(&self) -> &HWND;
 	fn events_ref(&self) -> &MsgEvents;
 }
 
-/// Internal trait to any child control.
+/// Trait to any child control.
 pub trait Child {
 	fn create(&self) -> Result<(), ERROR>;
 }
