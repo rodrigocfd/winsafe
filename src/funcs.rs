@@ -333,6 +333,12 @@ pub fn SetProcessDPIAware() -> Result<(), co::ERROR> {
 	}
 }
 
+/// [`Sleep`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
+/// function.
+pub fn Sleep(dwMilliseconds: u32) {
+	unsafe { kernel32::Sleep(dwMilliseconds) }
+}
+
 /// [`SystemParametersInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)
 /// function.
 ///
