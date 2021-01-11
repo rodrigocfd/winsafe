@@ -8,6 +8,7 @@ use crate::msg::{Message, Wm, WmInitDialog, WmSetFont};
 /// Base to all dialog windows.
 pub struct DialogBase {
 	hwnd: HWND,
+	dialog_id: i32,
 	events: MsgEvents,
 	is_modal: bool, // will center on parent
 }
@@ -21,9 +22,10 @@ impl Drop for DialogBase {
 }
 
 impl DialogBase {
-	pub fn new(is_modal: bool) -> DialogBase {
+	pub fn new(dialog_id: i32, is_modal: bool) -> DialogBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
+			dialog_id,
 			events: MsgEvents::new(),
 			is_modal,
 		}
@@ -40,8 +42,8 @@ impl DialogBase {
 		&self.events
 	}
 
-	pub fn create_dialog_param(&self, hinst: HINSTANCE,
-		parent: Option<HWND>, dialog_id: i32) -> Result<HWND, co::ERROR>
+	pub fn create_dialog_param(&self,
+		hinst: HINSTANCE, parent: Option<HWND>) -> Result<HWND, co::ERROR>
 	{
 		if !self.hwnd.is_null() {
 			panic!("Cannot create dialog twice.");
@@ -50,15 +52,15 @@ impl DialogBase {
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when CreateDialogParam returns.
 		hinst.CreateDialogParam(
-			IdStr::Id(dialog_id),
+			IdStr::Id(self.dialog_id),
 			parent,
 			Self::dialog_proc,
 			Some(self as *const Self as isize), // pass pointer to self
 		)
 	}
 
-	pub fn dialog_box_param(&self, hinst: HINSTANCE,
-		parent: Option<HWND>, dialog_id: i32) -> Result<(), co::ERROR>
+	pub fn dialog_box_param(&self,
+		hinst: HINSTANCE, parent: Option<HWND>) -> Result<(), co::ERROR>
 	{
 		if !self.hwnd.is_null() {
 			panic!("Cannot create dialog twice.");
@@ -67,7 +69,7 @@ impl DialogBase {
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when DialogBoxParam returns.
 		hinst.DialogBoxParam(
-			IdStr::Id(dialog_id),
+			IdStr::Id(self.dialog_id),
 			parent,
 			Self::dialog_proc, Some(self as *const Self as isize), // pass pointer to self
 		).map(|_| ())

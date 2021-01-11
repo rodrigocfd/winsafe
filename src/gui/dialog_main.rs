@@ -20,7 +20,6 @@ pub struct DialogMain {
 
 struct Obj { // actual fields of DialogMain
 	base: DialogBase,
-	dialog_id: i32,
 	icon_id: Option<i32>,
 	accel_table_id: Option<i32>,
 }
@@ -49,8 +48,7 @@ impl DialogMain {
 		let dlg = Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: DialogBase::new(false),
-					dialog_id,
+					base: DialogBase::new(dialog_id, false),
 					icon_id,
 					accel_table_id,
 				},
@@ -113,8 +111,7 @@ impl DialogMain {
 		create_ui_font()?;
 
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
-		let our_hwnd = self.cref().base.create_dialog_param( // may panic
-			hinst, None, self.cref().dialog_id)?;
+		let our_hwnd = self.cref().base.create_dialog_param(hinst, None)?; // may panic
 
 		let haccel = match self.cref().accel_table_id {
 			None => None,
