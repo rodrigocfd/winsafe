@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::aliases::HOOKPROC;
 use crate::co;
 use crate::ffi::user32;
@@ -26,7 +24,7 @@ impl HHOOK {
 			unsafe {
 				user32::SetWindowsHookExW(
 					idHook.into(),
-					lpfn as *const c_void,
+					lpfn as *const _,
 					hmod.ptr,
 					dwThreadId,
 				)

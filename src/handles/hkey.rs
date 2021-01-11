@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
@@ -23,7 +21,7 @@ handle_type! {
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
 		/// Predefined registry key, always open.
-		pub const $name: Self = Self { ptr: $val as *mut c_void };
+		pub const $name: Self = Self { ptr: $val as *mut _ };
 	};
 }
 
@@ -157,7 +155,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
-							szBuf.as_mut_ptr() as *mut c_void,
+							szBuf.as_mut_ptr() as *mut _,
 							&mut dataLen,
 						)
 					} as u32
@@ -179,7 +177,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
-							byteBuf.as_mut_ptr() as *mut c_void,
+							byteBuf.as_mut_ptr() as *mut _,
 							&mut dataLen,
 						)
 					} as u32

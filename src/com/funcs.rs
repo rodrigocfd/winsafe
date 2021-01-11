@@ -40,10 +40,10 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 				const_void(rclsid),
 				pUnkOuter.unwrap_or(std::ptr::null_mut()),
 				dwClsContext.into(),
-				VT::IID().as_ref() as *const GUID as *const c_void,
+				VT::IID().as_ref() as *const GUID as *const _,
 				&mut ppv
 					as *mut PPVtbl<VT>
-					as *mut *mut c_void,
+					as *mut *mut _,
 			)
 		}
 	) {

@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::aliases::{SUBCLASSPROC, WNDENUMPROC};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
@@ -24,9 +22,7 @@ impl HWND {
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) wrapper to retrieve
 	/// the window `HINSTANCE`.
 	pub fn hinstance(self) -> HINSTANCE {
-		HINSTANCE {
-			ptr: self.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut c_void,
-		}
+		HINSTANCE { ptr: self.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut _ }
 	}
 
 	/// [`BeginPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
@@ -97,7 +93,7 @@ impl HWND {
 					},
 					hMenu.as_ptr(),
 					hInstance.ptr,
-					lpParam.unwrap_or_default() as *mut c_void,
+					lpParam.unwrap_or_default() as *mut _,
 				)
 			}
 		) {
@@ -172,7 +168,7 @@ impl HWND {
 	/// inconvenient of the manual function pointer.
 	pub fn EnumChildWindows(self, lpEnumFunc: WNDENUMPROC, lParam: isize) {
 		unsafe {
-			user32::EnumChildWindows(self.ptr, lpEnumFunc as *const c_void, lParam);
+			user32::EnumChildWindows(self.ptr, lpEnumFunc as *const _, lParam);
 		}
 	}
 
@@ -704,7 +700,7 @@ impl HWND {
 	{
 		match unsafe {
 			comctl32::RemoveWindowSubclass(
-				self.ptr, pfnSubclass as *const c_void, uIdSubclass,
+				self.ptr, pfnSubclass as *const _, uIdSubclass,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -852,8 +848,9 @@ impl HWND {
 		uIdSubclass: usize, dwRefData: usize) -> Result<(), co::ERROR>
 	{
 		match unsafe {
-			comctl32::SetWindowSubclass(self.ptr,
-				pfnSubclass as *const c_void, uIdSubclass, dwRefData)
+			comctl32::SetWindowSubclass(
+				self.ptr, pfnSubclass as *const _, uIdSubclass, dwRefData,
+			)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),

@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::aliases::DLGPROC;
 use crate::co;
 use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
@@ -44,7 +42,7 @@ impl HINSTANCE {
 						Some(hParent) => hParent.ptr,
 						None => std::ptr::null_mut(),
 					},
-					lpDialogFunc as *const c_void,
+					lpDialogFunc as *const _,
 					dwInitParam.unwrap_or_default(),
 				)
 			}
@@ -71,7 +69,7 @@ impl HINSTANCE {
 					Some(hParent) => hParent.ptr,
 					None => std::ptr::null_mut(),
 				},
-				lpDialogFunc as *const c_void,
+				lpDialogFunc as *const _,
 				dwInitParam.unwrap_or_default(),
 			)
 		} {

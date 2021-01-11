@@ -1,8 +1,7 @@
 #![allow(non_snake_case)]
 
-use crate::ffi::uxtheme;
-
 use crate::co;
+use crate::ffi::uxtheme;
 use crate::funcs_priv::const_void;
 use crate::handles::HDC;
 use crate::structs::RECT;

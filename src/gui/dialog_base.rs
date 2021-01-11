@@ -1,5 +1,3 @@
-use std::ffi::c_void;
-
 use crate::co;
 use crate::enums::{HwndPlace, IdStr};
 use crate::gui::events::{MsgEvents, ProcessResult};
@@ -133,7 +131,7 @@ impl DialogBase {
 		self.hwnd.EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
 	}
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
-		let hfont = HFONT { ptr: lparam as *mut c_void };
+		let hfont = HFONT { ptr: lparam as *mut _ };
 		hchild.SendMessage(WmSetFont { hfont, redraw: false });
 		true as i32
 	}

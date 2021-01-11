@@ -3,7 +3,6 @@
 #![allow(non_snake_case)]
 
 use std::collections::HashMap;
-use std::ffi::c_void;
 
 use crate::co;
 use crate::ffi::{comctl32, kernel32, user32};
@@ -312,7 +311,7 @@ pub fn PostQuitMessage(nExitCode: i32) {
 /// function.
 pub fn RegisterClassEx(lpwcx: &s::WNDCLASSEX) -> Result<s::ATOM, co::ERROR> {
 	match unsafe {
-		user32::RegisterClassExW(lpwcx as *const s::WNDCLASSEX as *const c_void)
+		user32::RegisterClassExW(lpwcx as *const s::WNDCLASSEX as *const _)
 	} {
 		0 => Err(GetLastError()),
 		atom => Ok(s::ATOM(atom)),

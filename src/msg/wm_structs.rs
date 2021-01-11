@@ -1,5 +1,3 @@
-use std::ffi::c_void;
-
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::enums::{HwndHmenu, WsWsex};
@@ -68,7 +66,7 @@ impl Message for WmActivate {
 		Self {
 			event: co::WA::from(LOWORD(p.wparam as u32)),
 			is_minimized: HIWORD(p.wparam as u32) != 0,
-			hwnd: HWND { ptr: p.lparam as *mut c_void },
+			hwnd: HWND { ptr: p.lparam as *mut _ },
 		}
 	}
 }
@@ -133,7 +131,7 @@ impl Message for WmAppCommand {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			hwnd_owner: HWND { ptr: p.wparam as *mut c_void },
+			hwnd_owner: HWND { ptr: p.wparam as *mut _ },
 			app_command: co::APPCOMMAND::from(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
 			u_device: co::FAPPCOMMAND::from(HIWORD(p.lparam as u32) & FAPPCOMMAND_MASK),
 			keys: co::MK::from(LOWORD(p.lparam as u32)),
@@ -185,7 +183,7 @@ impl Message for WmCommand {
 			ctrl_id: LOWORD(p.wparam as u32),
 			ctrl_hwnd: match p.lparam {
 				0 => None,
-				ptr => Some(HWND { ptr: ptr as *mut c_void }),
+				ptr => Some(HWND { ptr: ptr as *mut _ }),
 			},
 		}
 	}
@@ -285,7 +283,7 @@ impl Message for WmDropFiles {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			hdrop: HDROP { ptr: p.wparam as *mut c_void },
+			hdrop: HDROP { ptr: p.wparam as *mut _ },
 		}
 	}
 }
@@ -381,8 +379,8 @@ impl Message for WmEnterIdle {
 		Self {
 			reason,
 			handle: match reason {
-				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(HWND { ptr: p.lparam as *mut c_void }),
-				_ => HwndHmenu::Hmenu(HMENU { ptr: p.lparam as *mut c_void }),
+				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(HWND { ptr: p.lparam as *mut _ }),
+				_ => HwndHmenu::Hmenu(HMENU { ptr: p.lparam as *mut _ }),
 			},
 		}
 	}
@@ -420,7 +418,7 @@ impl Message for WmEraseBkgnd {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			hdc: HDC { ptr: p.wparam as *mut c_void },
+			hdc: HDC { ptr: p.wparam as *mut _ },
 		}
 	}
 }
@@ -488,7 +486,7 @@ impl Message for WmInitDialog {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			hwnd_focus: HWND { ptr: p.wparam as *mut c_void },
+			hwnd_focus: HWND { ptr: p.wparam as *mut _ },
 			additional_data: p.lparam,
 		}
 	}
@@ -521,7 +519,7 @@ impl Message for WmInitMenuPopup {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			hmenu: HMENU { ptr: p.wparam as *mut c_void },
+			hmenu: HMENU { ptr: p.wparam as *mut _ },
 			item_pos: LOWORD(p.lparam as u32),
 			is_window_menu: HIWORD(p.lparam as u32) != 0,
 		}
@@ -695,7 +693,7 @@ impl Message for WmNcPaint {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			updated_hrgn: HRGN { ptr: p.wparam as *mut c_void },
+			updated_hrgn: HRGN { ptr: p.wparam as *mut _ },
 		}
 	}
 }
@@ -823,7 +821,7 @@ impl Message for WmSetFocus {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			hwnd_losing_focus: HWND { ptr: p.wparam as *mut c_void },
+			hwnd_losing_focus: HWND { ptr: p.wparam as *mut _ },
 		}
 	}
 }
@@ -854,7 +852,7 @@ impl Message for WmSetFont {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			hfont: HFONT { ptr: p.wparam as *mut c_void },
+			hfont: HFONT { ptr: p.wparam as *mut _ },
 			redraw: LOWORD(p.lparam as u32) != 0,
 		}
 	}
@@ -875,7 +873,7 @@ impl Message for WmSetIcon {
 	fn convert_ret(v: isize) -> Option<HICON> {
 		match v {
 			0 => None,
-			v => Some(HICON { ptr: v as *mut c_void }),
+			v => Some(HICON { ptr: v as *mut _ }),
 		}
 	}
 
@@ -890,7 +888,7 @@ impl Message for WmSetIcon {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			size: co::ICON_SZ::from(p.wparam as u8),
-			hicon: HICON { ptr: p.lparam as *mut c_void },
+			hicon: HICON { ptr: p.lparam as *mut _ },
 		}
 	}
 }

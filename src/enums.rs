@@ -97,7 +97,7 @@ impl HwndPlace {
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.ptr,
-			Self::Place(v) => isize::from(*v) as *mut c_void,
+			Self::Place(v) => isize::from(*v) as *mut _,
 			Self::None => std::ptr::null_mut(),
 		}
 	}
@@ -183,7 +183,7 @@ impl IdMenu {
 	/// Converts the internal value to a `*mut c_void`.
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
-			Self::Id(id) => *id as *mut c_void,
+			Self::Id(id) => *id as *mut _,
 			Self::Menu(hMenu) => hMenu.ptr,
 			Self::None => std::ptr::null_mut(),
 		}
@@ -261,10 +261,10 @@ impl RegistryValue {
 	/// Converts the internal value to a `*const c_void`.
 	pub fn as_ptr(&self) -> *const c_void {
 		match self {
-			Self::Binary(b) => b.as_ptr() as *const c_void,
-			Self::Dword(n) => *n as *const c_void,
-			Self::Qword(n) => *n as *const c_void,
-			Self::Sz(u16) => unsafe { u16.as_ptr() as *const c_void },
+			Self::Binary(b) => b.as_ptr() as *const _,
+			Self::Dword(n) => *n as *const _,
+			Self::Qword(n) => *n as *const _,
+			Self::Sz(u16) => unsafe { u16.as_ptr() as *const _ },
 			Self::None => std::ptr::null(),
 		}
 	}

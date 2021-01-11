@@ -47,7 +47,7 @@ macro_rules! ctl_color_msg {
 			type RetType = HBRUSH;
 
 			fn convert_ret(v: isize) -> HBRUSH {
-				HBRUSH { ptr: v as *mut c_void }
+				HBRUSH { ptr: v as *mut _ }
 			}
 
 			fn into_generic_wm(self) -> Wm {
@@ -60,8 +60,8 @@ macro_rules! ctl_color_msg {
 
 			fn from_generic_wm(p: Wm) -> Self {
 				Self {
-					hdc: HDC { ptr: p.wparam as *mut c_void },
-					hwnd: HWND { ptr: p.lparam as *mut c_void },
+					hdc: HDC { ptr: p.wparam as *mut _ },
+					hwnd: HWND { ptr: p.lparam as *mut _ },
 				}
 			}
 		}

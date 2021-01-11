@@ -460,7 +460,7 @@ impl WINDOWPOS {
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
 			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE::from(self.hwndInsertAfter)),
-			_ => HwndPlace::Hwnd(h::HWND { ptr: self.hwndInsertAfter as *mut c_void }),
+			_ => HwndPlace::Hwnd(h::HWND { ptr: self.hwndInsertAfter as *mut _ }),
 		}
 	}
 
