@@ -64,7 +64,7 @@ impl Button {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent.hwnd_ref()),
+					base: NativeControlBase::new(parent),
 					poly_opts: PolyOpts::Wnd(opts),
 					parent_events: ButtonEvents::new(parent, ctrl_id),
 				},
@@ -78,7 +78,7 @@ impl Button {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent.hwnd_ref()),
+					base: NativeControlBase::new(parent),
 					poly_opts: PolyOpts::Dlg(ctrl_id),
 					parent_events: ButtonEvents::new(parent, ctrl_id),
 				},

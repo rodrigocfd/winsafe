@@ -2,6 +2,7 @@ use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs_priv::WC_DIALOG;
 use crate::gui::events::{MsgEvents, ProcessResult};
+use crate::gui::traits::Parent;
 use crate::handles::HWND;
 use crate::msg::Wm;
 use crate::structs::{POINT, SIZE};
@@ -17,11 +18,11 @@ pub struct NativeControlBase {
 }
 
 impl NativeControlBase {
-	pub fn new(parent_hwnd: &HWND) -> NativeControlBase {
+	pub fn new(parent: &dyn Parent) -> NativeControlBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			subclass_events: MsgEvents::new(),
-			ptr_parent_hwnd: parent_hwnd, // convert reference to pointer
+			ptr_parent_hwnd: parent.hwnd_ref(), // ref implicitly converted to pointer
 		}
 	}
 

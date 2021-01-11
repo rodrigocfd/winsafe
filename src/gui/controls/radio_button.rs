@@ -31,7 +31,7 @@ impl RadioButton {
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
-			base: NativeControlBase::new(parent.hwnd_ref()),
+			base: NativeControlBase::new(parent),
 			poly_opts: PolyOpts::Wnd(opts),
 			parent_events: ButtonEvents::new(parent, ctrl_id),
 		}
@@ -39,7 +39,7 @@ impl RadioButton {
 
 	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
 		Self {
-			base: NativeControlBase::new(parent.hwnd_ref()),
+			base: NativeControlBase::new(parent),
 			poly_opts: PolyOpts::Dlg(ctrl_id),
 			parent_events: ButtonEvents::new(parent, ctrl_id),
 		}
