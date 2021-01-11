@@ -1,6 +1,6 @@
 //! Assorted Win32 structs.
 
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::ffi::c_void;
 use std::marker::PhantomData;
@@ -235,6 +235,33 @@ pub struct MSG {
 }
 
 impl_default_zero!(MSG);
+
+/// [`NCCALCSIZE_PARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params)
+/// struct.
+#[derive(Clone, Eq, PartialEq)]
+pub struct NCCALCSIZE_PARAMS<'a> {
+	pub rgrc: [RECT; 3],
+	lppos: *mut WINDOWPOS,
+	m_lppos: PhantomData<&'a WINDOWPOS>,
+}
+
+impl_default_zero!(NCCALCSIZE_PARAMS, 'a);
+
+impl<'a> NCCALCSIZE_PARAMS<'a> {
+	/// Returns the `lppos` field.
+	pub fn lppos(&mut self) -> Option<&mut WINDOWPOS> {
+		if self.lppos.is_null() {
+			None
+		} else {
+			Some(unsafe { &mut *self.lppos })
+		}
+	}
+
+	/// Sets the `lppos` field.
+	pub fn set_lppos(&mut self, lppos: &mut WINDOWPOS) {
+		self.lppos = lppos;
+	}
+}
 
 /// [`NMHDR`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.

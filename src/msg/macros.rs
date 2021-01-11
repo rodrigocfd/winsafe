@@ -12,7 +12,7 @@ macro_rules! empty_msg {
 		impl Message for $name {
 			type RetType = ();
 
-			fn convert_ret(_: isize) -> () {
+			fn convert_ret(_: isize) -> Self::RetType {
 				()
 			}
 
@@ -46,7 +46,7 @@ macro_rules! ctl_color_msg {
 		impl Message for $name {
 			type RetType = HBRUSH;
 
-			fn convert_ret(v: isize) -> HBRUSH {
+			fn convert_ret(v: isize) -> Self::RetType {
 				HBRUSH { ptr: v as *mut _ }
 			}
 
@@ -83,7 +83,7 @@ macro_rules! button_msg {
 		impl Message for $name {
 			type RetType = ();
 
-			fn convert_ret(_: isize) -> () {
+			fn convert_ret(_: isize) -> Self::RetType {
 				()
 			}
 

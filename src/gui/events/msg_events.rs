@@ -499,6 +499,16 @@ impl MsgEvents {
 		/// [`WM_MOVING`](crate::msg::WmMoving) message.
 	}
 
+	/// [`WM_NCCALCSIZE`](crate::msg::WmNcCalcSize) message.
+	pub fn wm_nc_calc_size<F>(&self, func: F)
+		where F: FnMut(msg::WmNcCalcSize) -> co::WVR + 'static
+	{
+		self.add_msg(co::WM::NCCALCSIZE, {
+			let mut func = func;
+			move |p| Some(u32::from(func(msg::WmNcCalcSize::from_generic_wm(p))) as isize)
+		});
+	}
+
 	/// [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
 	pub fn wm_nc_create<F>(&self, func: F)
 		where F: FnMut(msg::WmNcCreate) -> bool + 'static,

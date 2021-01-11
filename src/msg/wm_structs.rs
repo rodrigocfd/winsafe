@@ -1,6 +1,6 @@
 use crate::aliases::TIMERPROC;
 use crate::co;
-use crate::enums::{HwndHmenu, WsWsex};
+use crate::enums::{HwndHmenu, NccalcRect, WsWsex};
 use crate::funcs_priv::FAPPCOMMAND_MASK;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
@@ -24,7 +24,7 @@ pub struct Wm {
 impl Message for Wm {
 	type RetType = isize;
 
-	fn convert_ret(v: isize) -> isize {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v
 	}
 
@@ -50,7 +50,7 @@ pub struct WmActivate {
 impl Message for WmActivate {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -83,7 +83,7 @@ pub struct WmActivateApp {
 impl Message for WmActivateApp {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -117,7 +117,7 @@ pub struct WmAppCommand {
 impl Message for WmAppCommand {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -162,7 +162,7 @@ pub struct WmCommand {
 impl Message for WmCommand {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -200,7 +200,7 @@ pub struct WmCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
 	type RetType = i32;
 
-	fn convert_ret(v: isize) -> i32 {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v as i32
 	}
 
@@ -269,7 +269,7 @@ pub struct WmDropFiles {
 impl Message for WmDropFiles {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -299,7 +299,7 @@ pub struct WmEnable {
 impl Message for WmEnable {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -330,7 +330,7 @@ pub struct WmEndSession {
 impl Message for WmEndSession {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -362,7 +362,7 @@ pub struct WmEnterIdle {
 impl Message for WmEnterIdle {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -404,7 +404,7 @@ pub struct WmEraseBkgnd {
 impl Message for WmEraseBkgnd {
 	type RetType = i32;
 
-	fn convert_ret(v: isize) -> i32 {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v as i32
 	}
 
@@ -441,7 +441,7 @@ pub struct WmGetMinMaxInfo<'a> {
 impl<'a> Message for WmGetMinMaxInfo<'a> {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -472,7 +472,7 @@ pub struct WmInitDialog {
 impl Message for WmInitDialog {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -505,7 +505,7 @@ pub struct WmInitMenuPopup {
 impl Message for WmInitMenuPopup {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -579,7 +579,7 @@ pub struct WmMove {
 impl Message for WmMove {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -612,7 +612,7 @@ pub struct WmMoving<'a> {
 impl<'a> Message for WmMoving<'a> {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -633,6 +633,45 @@ impl<'a> Message for WmMoving<'a> {
 
 //------------------------------------------------------------------------------
 
+/// [`WM_NCCALCSIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
+/// message parameters.
+pub struct WmNcCalcSize<'a, 'b> {
+	pub data: NccalcRect<'a, 'b>,
+}
+
+impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
+	type RetType = co::WVR;
+
+	fn convert_ret(v: isize) -> Self::RetType {
+		co::WVR::from(v as u32)
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::NCCALCSIZE,
+			wparam: match &self.data {
+				NccalcRect::Nccalc(_) => true as usize,
+				NccalcRect::Rect(_) => false as usize,
+			},
+			lparam: match &self.data {
+				NccalcRect::Nccalc(nccalc) => ref_to_lparam(nccalc),
+				NccalcRect::Rect(rc) => ref_to_lparam(rc),
+			},
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			data: match p.wparam {
+				0 => NccalcRect::Rect(lparam_to_mut_ref(p)),
+				_ => NccalcRect::Nccalc(lparam_to_mut_ref(p)),
+			},
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
 pub struct WmNcCreate<'a, 'b, 'c> {
@@ -642,7 +681,7 @@ pub struct WmNcCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -679,7 +718,7 @@ pub struct WmNcPaint {
 impl Message for WmNcPaint {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -717,7 +756,7 @@ pub struct WmNotify<'a> {
 impl<'a> Message for WmNotify<'a> {
 	type RetType = isize;
 
-	fn convert_ret(v: isize) -> isize {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v
 	}
 
@@ -762,7 +801,7 @@ pub struct WmQueryOpen {}
 impl Message for WmQueryOpen {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -807,7 +846,7 @@ pub struct WmSetFocus {
 impl Message for WmSetFocus {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -838,7 +877,7 @@ pub struct WmSetFont {
 impl Message for WmSetFont {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -870,7 +909,7 @@ pub struct WmSetIcon {
 impl Message for WmSetIcon {
 	type RetType = Option<HICON>;
 
-	fn convert_ret(v: isize) -> Option<HICON> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			0 => None,
 			v => Some(HICON { ptr: v as *mut _ }),
@@ -905,7 +944,7 @@ pub struct WmShowWindow {
 impl Message for WmShowWindow {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -937,7 +976,7 @@ pub struct WmSize {
 impl Message for WmSize {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -974,7 +1013,7 @@ pub struct WmSizing<'a> {
 impl<'a> Message for WmSizing<'a> {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -1006,7 +1045,7 @@ pub struct WmStyleChanged<'a> {
 impl<'a> Message for WmStyleChanged<'a> {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -1045,7 +1084,7 @@ pub struct WmStyleChanging<'a> {
 impl<'a> Message for WmStyleChanging<'a> {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -1091,7 +1130,7 @@ pub struct WmTimer {
 impl Message for WmTimer {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -1128,7 +1167,7 @@ pub struct WmWindowPosChanged<'a> {
 impl<'a> Message for WmWindowPosChanged<'a> {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 
@@ -1158,7 +1197,7 @@ pub struct WmWindowPosChanging<'a> {
 impl<'a> Message for WmWindowPosChanging<'a> {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 

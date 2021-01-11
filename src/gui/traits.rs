@@ -19,15 +19,16 @@ pub trait Child {
 /// [`CreateWindowEx`](crate::HWND::CreateWindowEx);
 /// * if a dialog resource, calls [`GetDlgItem`](crate::HWND::GetDlgItem).
 ///
-/// This function should be called within parent's `WM_CREATE` or
-/// `WM_INITDIALOG` events.
+/// This function should be called within parent's
+/// [`WM_CREATE`](crate::msg::WmCreate) or
+/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) events.
 ///
 /// Note that tab order follows creation order.
 ///
 /// # Panics
 ///
-/// Panics if the control is already created, or if the parent window was not
-/// created yet.
+/// Panics if one of the controls is already created, or if the parent window
+/// was not created yet.
 pub fn create_children(ctrls: &[&dyn Child]) -> Result<(), ERROR> {
 	for ctrl in ctrls.iter() {
 		ctrl.create()?;

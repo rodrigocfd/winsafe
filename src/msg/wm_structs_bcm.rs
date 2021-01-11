@@ -13,7 +13,7 @@ pub struct BcmGetIdealSize<'a> {
 impl<'a> Message for BcmGetIdealSize<'a> {
 	type RetType = Result<(), co::ERROR>;
 
-	fn convert_ret(v: isize) -> Result<(), co::ERROR> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -44,7 +44,7 @@ pub struct BmGetCheck {}
 impl Message for BmGetCheck {
 	type RetType = co::BST;
 
-	fn convert_ret(v: isize) -> co::BST {
+	fn convert_ret(v: isize) -> Self::RetType {
 		co::BST::from(v as u32)
 	}
 
@@ -72,7 +72,7 @@ pub struct BmSetCheck {
 impl Message for BmSetCheck {
 	type RetType = ();
 
-	fn convert_ret(_: isize) -> () {
+	fn convert_ret(_: isize) -> Self::RetType {
 		()
 	}
 

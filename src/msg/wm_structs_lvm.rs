@@ -14,7 +14,7 @@ pub struct LvmGetColumn<'a, 'b> {
 impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
@@ -48,7 +48,7 @@ pub struct LvmGetColumnWidth {
 impl Message for LvmGetColumnWidth {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
@@ -91,7 +91,7 @@ pub struct LvmGetView {}
 impl Message for LvmGetView {
 	type RetType = co::LV_VIEW;
 
-	fn convert_ret(v: isize) -> co::LV_VIEW {
+	fn convert_ret(v: isize) -> Self::RetType {
 		co::LV_VIEW::from(v as u32)
 	}
 
@@ -120,7 +120,7 @@ pub struct LvmInsertColumn<'a, 'b> {
 impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
@@ -154,7 +154,7 @@ pub struct LvmInsertItem<'a, 'b> {
 impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Result<u32, co::ERROR> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
@@ -185,7 +185,7 @@ pub struct LvmIsGroupViewEnabled {}
 impl Message for LvmIsGroupViewEnabled {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -213,7 +213,7 @@ pub struct LvmIsItemVisible {
 impl Message for LvmIsItemVisible {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -244,7 +244,7 @@ pub struct LvmRedrawItems {
 impl Message for LvmRedrawItems {
 	type RetType = Result<(), co::ERROR>;
 
-	fn convert_ret(v: isize) -> Result<(), co::ERROR> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -279,7 +279,7 @@ pub struct LvmScroll {
 impl Message for LvmScroll {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -311,7 +311,7 @@ pub struct LvmSetColumn<'a, 'b> {
 impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -342,7 +342,7 @@ pub struct LvmSetItem<'a, 'b> {
 impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -373,7 +373,7 @@ pub struct LvmSetItemText<'a, 'b> {
 impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -404,7 +404,7 @@ pub struct LvmSetView {
 impl Message for LvmSetView {
 	type RetType = Result<(), co::ERROR>;
 
-	fn convert_ret(v: isize) -> Result<(), co::ERROR> {
+	fn convert_ret(v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			_ => Ok(()),
@@ -437,7 +437,7 @@ pub struct LvmUpdate {
 impl Message for LvmUpdate {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> bool {
+	fn convert_ret(v: isize) -> Self::RetType {
 		v != 0
 	}
 

@@ -4,7 +4,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::handles::{HBITMAP, HMENU, HWND};
-use crate::structs::{ATOM, STYLESTRUCT_WS, STYLESTRUCT_WS_EX};
+use crate::structs::{ATOM, NCCALCSIZE_PARAMS, RECT, STYLESTRUCT_WS, STYLESTRUCT_WS_EX};
 use crate::WString;
 
 /// Variant parameter used in
@@ -239,6 +239,16 @@ impl IdStr {
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for:
+///
+/// * [`WmNcCalcSize`](crate::msg::WmNcCalcSize) `data`.
+pub enum NccalcRect<'a, 'b> {
+	Nccalc(&'b NCCALCSIZE_PARAMS<'a>),
+	Rect(&'b RECT),
 }
 
 //------------------------------------------------------------------------------
