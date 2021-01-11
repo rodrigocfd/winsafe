@@ -1,4 +1,5 @@
 use std::cell::UnsafeCell;
+use std::ptr::NonNull;
 use std::rc::Rc;
 
 use crate::co;
@@ -9,20 +10,20 @@ use crate::gui::traits::Parent;
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 /// for a [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioGroupEvents {
-	parent_events: *const MsgEvents, // used only before parent creation
+	parent_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_ids: Vec<u16>,
 }
 
 impl RadioGroupEvents {
 	pub(crate) fn new(parent: &dyn Parent, ctrl_ids: Vec<u16>) -> RadioGroupEvents {
 		Self {
-			parent_events: parent.events_ref(), // convert reference to pointer
+			parent_events: NonNull::from(parent.events_ref()), // convert reference to pointer
 			ctrl_ids,
 		}
 	}
 
 	fn parent_events(&self) -> &MsgEvents {
-		unsafe { &*self.parent_events }
+		unsafe { self.parent_events.as_ref() }
 	}
 
 	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)

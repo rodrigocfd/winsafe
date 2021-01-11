@@ -1,3 +1,5 @@
+use std::ptr::NonNull;
+
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
@@ -12,7 +14,7 @@ use crate::WString;
 pub struct WindowBase {
 	hwnd: HWND,
 	events: MsgEvents,
-	ptr_parent_hwnd: Option<*const HWND>, // used only in control creation
+	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
 }
 
 impl Drop for WindowBase {
@@ -28,7 +30,8 @@ impl WindowBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			events: MsgEvents::new(),
-			ptr_parent_hwnd: parent.map(|parent| parent.hwnd_ref() as *const _),
+			ptr_parent_hwnd: parent
+				.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
 		}
 	}
 
@@ -86,7 +89,7 @@ impl WindowBase {
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr }),
+			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() }),
 			hmenu, hinst,
 			Some(self as *const Self as isize), // pass pointer to self
 		)

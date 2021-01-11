@@ -1,3 +1,5 @@
+use std::ptr::NonNull;
+
 use crate::co;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
@@ -5,20 +7,20 @@ use crate::gui::traits::Parent;
 /// Exposes edit
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
 pub struct EditEvents {
-	parent_events: *const MsgEvents, // used only before parent creation
+	parent_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_id: u16,
 }
 
 impl EditEvents {
 	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> EditEvents {
 		Self {
-			parent_events: parent.events_ref(), // convert reference to pointer
+			parent_events: NonNull::from(parent.events_ref()), // convert reference to pointer
 			ctrl_id,
 		}
 	}
 
 	fn parent_events(&self) -> &MsgEvents {
-		unsafe { &*self.parent_events }
+		unsafe { self.parent_events.as_ref() }
 	}
 
 	cmd_event! { en_align_ltr_ec, co::CMD::EN_ALIGN_LTR_EC,

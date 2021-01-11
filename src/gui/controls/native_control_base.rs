@@ -1,3 +1,5 @@
+use std::ptr::NonNull;
+
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs_priv::WC_DIALOG;
@@ -14,7 +16,7 @@ static mut BASE_SUBCLASS_ID: usize = 0;
 pub struct NativeControlBase {
 	hwnd: HWND,
 	subclass_events: MsgEvents,
-	ptr_parent_hwnd: *const HWND, // used only in control creation
+	ptr_parent_hwnd: NonNull<HWND>, // used only in control creation
 }
 
 impl NativeControlBase {
@@ -22,12 +24,12 @@ impl NativeControlBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			subclass_events: MsgEvents::new(),
-			ptr_parent_hwnd: parent.hwnd_ref(), // ref implicitly converted to pointer
+			ptr_parent_hwnd: NonNull::from(parent.hwnd_ref()), // ref implicitly converted to pointer
 		}
 	}
 
 	pub fn is_parent_created(&self) -> bool {
-		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
+		let parent_hwnd = unsafe { self.ptr_parent_hwnd.as_ref() };
 		!parent_hwnd.is_null()
 	}
 
@@ -59,14 +61,14 @@ impl NativeControlBase {
 			panic!("Cannot create control before parent window is created.");
 		}
 
-		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
+		let parent_hwnd = unsafe { self.ptr_parent_hwnd.as_ref() };
 
 		self.hwnd = HWND::CreateWindowEx(
 			ex_styles,
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			Some(parent_hwnd),
+			Some(*parent_hwnd),
 			IdMenu::Id(ctrl_id),
 			parent_hwnd.hinstance(),
 			None,
@@ -83,7 +85,7 @@ impl NativeControlBase {
 			panic!("Cannot create control before parent window is created.");
 		}
 
-		let parent_hwnd = unsafe { *self.ptr_parent_hwnd };
+		let parent_hwnd = unsafe { self.ptr_parent_hwnd.as_ref() };
 
 		let parent_atom = parent_hwnd.GetClassLongPtr(co::GCLP::ATOM);
 		if parent_atom as u16 != WC_DIALOG { // https://stackoverflow.com/a/64437627/6923555
