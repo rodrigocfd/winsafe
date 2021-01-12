@@ -13,16 +13,18 @@ use crate::WString;
 static mut BASE_SUBCLASS_ID: usize = 0;
 
 /// Base to all native child controls.
-pub struct NativeControlBase {
+pub struct NativeControlBase<PEv> {
 	hwnd: HWND,
-	subclass_events: MsgEvents,
+	parent_events: PEv, // controls events, which delegate to parent events
+	subclass_events: MsgEvents, // for control subclassing
 	ptr_parent_hwnd: NonNull<HWND>, // used only in control creation
 }
 
-impl NativeControlBase {
-	pub fn new(parent: &dyn Parent) -> NativeControlBase {
+impl<PEv> NativeControlBase<PEv> {
+	pub fn new(parent: &dyn Parent, parent_events: PEv) -> NativeControlBase<PEv> {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
+			parent_events,
 			subclass_events: MsgEvents::new(),
 			ptr_parent_hwnd: NonNull::from(parent.hwnd_ref()), // ref implicitly converted to pointer
 		}
@@ -35,6 +37,15 @@ impl NativeControlBase {
 
 	pub fn hwnd(&self) -> &HWND {
 		&self.hwnd
+	}
+
+	pub fn on(&self) -> &PEv {
+		if !self.hwnd().is_null() {
+			panic!("Cannot add events after the control is created.");
+		} else if self.is_parent_created() {
+			panic!("Cannot add events after the parent window is created.");
+		}
+		&self.parent_events
 	}
 
 	pub fn on_subclass(&self) -> &MsgEvents {

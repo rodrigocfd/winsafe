@@ -20,9 +20,8 @@ pub struct Edit {
 }
 
 struct Obj { // actual fields of Edit
-	base: NativeControlBase,
+	base: NativeControlBase<EditEvents>,
 	poly_opts: PolyOpts<EditOpts>,
-	parent_events: EditEvents,
 }
 
 unsafe impl Send for Edit {}
@@ -64,23 +63,21 @@ impl Edit {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent),
+					base: NativeControlBase::new(parent, EditEvents::new(parent, ctrl_id)),
 					poly_opts: PolyOpts::Wnd(opts),
-					parent_events: EditEvents::new(parent, ctrl_id),
 				},
 			)),
 		}
 	}
 
-	/// Instantiates a new `Edit` object, to be assigned to the parent dialog
+	/// Instantiates a new `Edit` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Edit {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent),
+					base: NativeControlBase::new(parent, EditEvents::new(parent, ctrl_id)),
 					poly_opts: PolyOpts::Dlg(ctrl_id),
-					parent_events: EditEvents::new(parent, ctrl_id),
 				},
 			)),
 		}
@@ -109,12 +106,7 @@ impl Edit {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on(&self) -> &EditEvents {
-		if !self.hwnd().is_null() {
-			panic!("Cannot add events after the control is created.");
-		} else if self.cref().base.is_parent_created() {
-			panic!("Cannot add events after the parent window is created.");
-		}
-		&self.cref().parent_events
+		&self.cref().base.on()
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control

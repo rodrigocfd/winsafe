@@ -19,9 +19,8 @@ use crate::structs::{POINT, SIZE};
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton {
-	base: NativeControlBase,
+	base: NativeControlBase<ButtonEvents>,
 	poly_opts: PolyOpts<RadioButtonOpts>,
-	parent_events: ButtonEvents,
 }
 
 impl RadioButton {
@@ -31,17 +30,15 @@ impl RadioButton {
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
-			base: NativeControlBase::new(parent),
+			base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
 			poly_opts: PolyOpts::Wnd(opts),
-			parent_events: ButtonEvents::new(parent, ctrl_id),
 		}
 	}
 
 	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
 		Self {
-			base: NativeControlBase::new(parent),
+			base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
 			poly_opts: PolyOpts::Dlg(ctrl_id),
-			parent_events: ButtonEvents::new(parent, ctrl_id),
 		}
 	}
 
@@ -94,12 +91,7 @@ impl RadioButton {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on(&self) -> &ButtonEvents {
-		if !self.hwnd().is_null() {
-			panic!("Cannot add events after the control is created.");
-		} else if self.base.is_parent_created() {
-			panic!("Cannot add events after the parent window is created.");
-		}
-		&self.parent_events
+		&self.base.on()
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control

@@ -20,9 +20,8 @@ pub struct Button {
 }
 
 struct Obj { // actual fields of Button
-	base: NativeControlBase,
+	base: NativeControlBase<ButtonEvents>,
 	poly_opts: PolyOpts<ButtonOpts>,
-	parent_events: ButtonEvents,
 }
 
 unsafe impl Send for Button {}
@@ -64,23 +63,21 @@ impl Button {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent),
+					base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
 					poly_opts: PolyOpts::Wnd(opts),
-					parent_events: ButtonEvents::new(parent, ctrl_id),
 				},
 			)),
 		}
 	}
 
-	/// Instantiates a new `Button` object, to be assigned to the parent dialog
+	/// Instantiates a new `Button` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Button {
 		Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent),
+					base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
 					poly_opts: PolyOpts::Dlg(ctrl_id),
-					parent_events: ButtonEvents::new(parent, ctrl_id),
 				},
 			)),
 		}
@@ -126,12 +123,7 @@ impl Button {
 	/// });
 	/// ```
 	pub fn on(&self) -> &ButtonEvents {
-		if !self.hwnd().is_null() {
-			panic!("Cannot add events after the control is created.");
-		} else if self.cref().base.is_parent_created() {
-			panic!("Cannot add events after the parent window is created.");
-		}
-		&self.cref().parent_events
+		&self.cref().base.on()
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control

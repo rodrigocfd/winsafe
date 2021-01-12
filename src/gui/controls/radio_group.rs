@@ -81,10 +81,10 @@ impl RadioGroup {
 		}
 	}
 
-	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be assigned
-	/// to the parent dialog with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
+	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	///
-	/// # Panic
+	/// # Panics
 	///
 	/// Panics if no control IDs are passed.
 	pub fn new_dlg(parent: &dyn Parent, ctrl_ids: &[u16]) -> RadioGroup {
