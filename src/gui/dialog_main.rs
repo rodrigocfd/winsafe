@@ -3,15 +3,13 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::enums::IdStr;
-use crate::funcs as f;
+use crate::funcs::PostQuitMessage;
 use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
-use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::WmSetIcon;
 
-/// Main application dialog.
 #[derive(Clone)]
 pub struct DialogMain {
 	obj: Arc<UnsafeCell<Obj>>,
@@ -55,13 +53,6 @@ impl DialogMain {
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		if f::IsWindowsVistaOrGreater()? {
-			f::SetProcessDPIAware()?;
-		}
-
-		f::InitCommonControls();
-		create_ui_font()?;
-
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
 		let our_hwnd = self.cref().base.create_dialog_param(hinst, None)?; // may panic
 
@@ -73,9 +64,7 @@ impl DialogMain {
 		self.set_icon_if_any(hinst)?;
 		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
-		let res = run_loop(our_hwnd, haccel)?; // blocks until window is closed
-		delete_ui_font(); // cleanup
-		Ok(res)
+		run_loop(our_hwnd, haccel) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
@@ -87,7 +76,7 @@ impl DialogMain {
 		});
 
 		self.on().wm_nc_destroy(|| {
-			f::PostQuitMessage(0);
+			PostQuitMessage(0);
 		});
 	}
 

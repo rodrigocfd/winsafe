@@ -1,6 +1,8 @@
 use crate::co;
+use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
 use crate::gui::dialog_main::DialogMain;
 use crate::gui::events::MsgEvents;
+use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::traits::Parent;
 use crate::gui::window_main::{CustomMainOpts, WindowMain};
 use crate::handles::HWND;
@@ -13,6 +15,7 @@ enum WndDlg {
 
 //------------------------------------------------------------------------------
 
+/// Main application window.
 #[derive(Clone)]
 pub struct CustomMain(WndDlg);
 
@@ -87,9 +90,19 @@ impl CustomMain {
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		match &self.0 {
+		if IsWindowsVistaOrGreater()? {
+			SetProcessDPIAware()?;
+		}
+
+		InitCommonControls();
+		create_ui_font()?;
+
+		let maybe_res = match &self.0 {
 			WndDlg::Wnd(w) => w.run_as_main(cmd_show),
 			WndDlg::Dlg(d) => d.run_as_main(cmd_show),
-		}
+		};
+
+		delete_ui_font(); // cleanup
+		maybe_res
 	}
 }

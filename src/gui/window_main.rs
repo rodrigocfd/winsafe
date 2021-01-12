@@ -3,16 +3,15 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
-use crate::funcs as f;
+use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::events::MsgEvents;
-use crate::gui::globals::{create_ui_font, delete_ui_font, multiply_dpi};
+use crate::gui::globals::multiply_dpi;
 use crate::gui::main_loop::run_loop;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
-/// Main application window.
 #[derive(Clone)]
 pub struct WindowMain {
 	obj: Arc<UnsafeCell<Obj>>,
@@ -52,13 +51,6 @@ impl WindowMain {
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		if f::IsWindowsVistaOrGreater()? {
-			f::SetProcessDPIAware()?;
-		}
-
-		f::InitCommonControls();
-		create_ui_font()?;
-
 		let opts = &mut self.mref().opts;
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
 
@@ -70,8 +62,8 @@ impl WindowMain {
 		multiply_dpi(None, Some(&mut opts.size))?;
 
 		let screen_sz = SIZE {
-			cx: f::GetSystemMetrics(co::SM::CXSCREEN),
-			cy: f::GetSystemMetrics(co::SM::CYSCREEN),
+			cx: GetSystemMetrics(co::SM::CXSCREEN),
+			cy: GetSystemMetrics(co::SM::CYSCREEN),
 		};
 
 		let wnd_pos = POINT {
@@ -85,7 +77,7 @@ impl WindowMain {
 			right: wnd_pos.x + opts.size.cx,
 			bottom: wnd_pos.y + opts.size.cy,
 		};
-		f::AdjustWindowRectEx(&mut wnd_rc, opts.style,
+		AdjustWindowRectEx(&mut wnd_rc, opts.style,
 			!opts.menu.is_null(), opts.ex_style)?;
 
 		let our_hwnd = self.cref().base.create_window( // may panic
@@ -102,12 +94,9 @@ impl WindowMain {
 		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		our_hwnd.UpdateWindow()?;
 
-		let res = run_loop(our_hwnd, opts.accel_table.as_opt())?; // blocks until window is closed
-		delete_ui_font(); // cleanup
-		Ok(res)
+		run_loop(our_hwnd, opts.accel_table.as_opt()) // blocks until window is closed
 	}
 
-	/// Adds the default event processing.
 	fn default_message_handlers(&self) {
 		self.on().wm_activate({
 			let self2 = self.clone();
@@ -142,7 +131,7 @@ impl WindowMain {
 		});
 
 		self.on().wm_nc_destroy(|| {
-			f::PostQuitMessage(0);
+			PostQuitMessage(0);
 		});
 	}
 }

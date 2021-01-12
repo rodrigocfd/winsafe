@@ -11,6 +11,7 @@ enum WndDlg {
 
 //------------------------------------------------------------------------------
 
+/// Custom child control.
 #[derive(Clone)]
 pub struct CustomControl(WndDlg);
 

@@ -11,7 +11,6 @@ use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
-/// Custom control.
 #[derive(Clone)]
 pub struct WindowControl {
 	obj: Arc<UnsafeCell<Obj>>,
