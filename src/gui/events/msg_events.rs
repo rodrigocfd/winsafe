@@ -295,7 +295,8 @@ impl MsgEvents {
 	wm_ret_none! { wm_activate, co::WM::ACTIVATE, msg::WmActivate,
 		/// [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
 		///
-		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
+		/// Warning: default handled in non-dialog
+		/// [`CustomMain`](crate::gui::CustomMain).
 	}
 
 	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, msg::WmActivateApp,
@@ -315,7 +316,8 @@ impl MsgEvents {
 	wm_empty! { wm_close, co::WM::CLOSE,
 		/// [`WM_CLOSE`](crate::msg::WmClose) message.
 		///
-		/// Warning: default handled in [`DialogMain`](crate::gui::DialogMain).
+		/// Warning: default handled in dialog
+		/// [`CustomMain`](crate::gui::CustomMain).
 	}
 
 	/// [`WM_CREATE`](crate::msg::WmCreate) message.
@@ -528,14 +530,15 @@ impl MsgEvents {
 	wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
 		/// [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
 		///
-		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain) and
-		/// [`DialogMain`](crate::gui::DialogMain).
+		/// Warning: default handled in both dialog and non-dialog
+		/// [`CustomMain`](crate::gui::CustomMain).
 	}
 
 	wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, msg::WmNcPaint,
 		/// [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
 		///
-		/// Warning: default handled in [`WindowControl`](crate::gui::WindowControl).
+		/// Warning: default handled in both dialog and non-dialog
+		/// [`CustomControl`](crate::gui::CustomControl).
 	}
 
 	wm_empty! { wm_null, co::WM::NULL,
@@ -573,7 +576,8 @@ impl MsgEvents {
 	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, msg::WmSetFocus,
 		/// [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
 		///
-		/// Warning: default handled in [`WindowMain`](crate::gui::WindowMain).
+		/// Warning: default handled in non-dialog
+		/// `CustomMain`](crate::gui::CustomMain).
 	}
 
 	wm_ret_none! { wm_set_font, co::WM::SETFONT, msg::WmSetFont,

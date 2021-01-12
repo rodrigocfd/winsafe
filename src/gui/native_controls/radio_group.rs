@@ -7,9 +7,7 @@ use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
 use crate::gui::traits::{Child, Parent};
 
-/// A group of native
-/// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
-/// control.
+/// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
 ///
 /// The radion button is actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.

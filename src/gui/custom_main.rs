@@ -15,7 +15,7 @@ enum WndDlg {
 
 //------------------------------------------------------------------------------
 
-/// Main application window.
+/// Custom main application window.
 #[derive(Clone)]
 pub struct CustomMain(WndDlg);
 
