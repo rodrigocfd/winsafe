@@ -8,7 +8,7 @@ use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{WmCommand, WmSetFont};
+use crate::msg::{BmClick, WmSetFont};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -144,15 +144,10 @@ impl Button {
 		self.base().on_subclass()
 	}
 
-	/// Fires the click event for the button.
-	pub fn trigger_click(&self) {
-		self.hwnd().SendMessage(
-			WmCommand {
-				code: co::CMD::BN_CLICKED,
-				ctrl_id: self.ctrl_id(),
-				ctrl_hwnd: Some(self.hwnd()),
-			},
-		);
+	/// Fires the click event for the radio button. The event is asynchronous,
+	/// the method returns immediately.
+	pub fn trigger_click(&self) -> Result<(), co::ERROR> {
+		self.hwnd().PostMessage(BmClick {})
 	}
 }
 

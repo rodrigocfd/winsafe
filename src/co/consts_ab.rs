@@ -100,6 +100,17 @@ const_type! { BI, u32,
 	PNG, 5
 }
 
+const_type! { BIA, u32,
+	/// [`BUTTON_IMAGELIST`](crate::BUTTON_IMAGELIST) `uAlign` (`u32`).
+	/// Originally has `BUTTON_IMAGELIST_ALIGN_` prefix.
+
+	LEFT, 0
+	RIGHT, 1
+	TOP, 2
+	BOTTOM, 3
+	CENTER, 4
+}
+
 const_type! { BKMODE, i32,
 	/// [`SetBkMode`](crate::HDC::SetBkMode) `mode` (`i32`).
 

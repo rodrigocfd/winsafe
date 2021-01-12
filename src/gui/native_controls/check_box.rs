@@ -8,7 +8,7 @@ use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{BmGetCheck, BmSetCheck, WmCommand, WmSetFont};
+use crate::msg::{BmClick, BmGetCheck, BmSetCheck, WmSetFont};
 use crate::structs::POINT;
 
 /// Native
@@ -141,15 +141,10 @@ impl CheckBox {
 		});
 	}
 
-	/// Fires the click event for the check box.
-	pub fn trigger_click(&self) {
-		self.hwnd().SendMessage(
-			WmCommand {
-				code: co::CMD::BN_CLICKED,
-				ctrl_id: self.ctrl_id(),
-				ctrl_hwnd: Some(self.hwnd()),
-			},
-		);
+	/// Fires the click event for the radio button. The event is asynchronous,
+	/// the method returns immediately.
+	pub fn trigger_click(&self) -> Result<(), co::ERROR> {
+		self.hwnd().PostMessage(BmClick {})
 	}
 }
 

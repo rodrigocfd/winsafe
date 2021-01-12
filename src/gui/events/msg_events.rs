@@ -313,6 +313,14 @@ impl MsgEvents {
 		});
 	}
 
+	wm_empty! { wm_cancel_mode, co::WM::CANCELMODE,
+		/// [`WM_CANCELMODE`](crate::msg::WmCancelMode) message.
+	}
+
+	wm_empty! { wm_child_activate, co::WM::CHILDACTIVATE,
+		/// [`WM_CHILDACTIVATE`](crate::msg::WmChildActivate) message.
+	}
+
 	wm_empty! { wm_close, co::WM::CLOSE,
 		/// [`WM_CLOSE`](crate::msg::WmClose) message.
 		///
@@ -449,6 +457,10 @@ impl MsgEvents {
 		/// [`WM_EXITSIZEMOVE`](crate::msg::WmExitSizeMove) message.
 	}
 
+	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, msg::WmGetMinMaxInfo,
+		/// [`WM_GETMINMAXINFO`](crate::msg::WmGetMinMaxInfo) message.
+	}
+
 	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
 	pub fn wm_init_dialog<F>(&self, func: F)
 		where F: FnMut(msg::WmInitDialog) -> bool + 'static,
@@ -457,10 +469,6 @@ impl MsgEvents {
 			let mut func = func;
 			move |p| Some(func(msg::WmInitDialog::from_generic_wm(p)) as isize)
 		});
-	}
-
-	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, msg::WmGetMinMaxInfo,
-		/// [`WM_GETMINMAXINFO`](crate::msg::WmGetMinMaxInfo) message.
 	}
 
 	wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, msg::WmInitMenuPopup,

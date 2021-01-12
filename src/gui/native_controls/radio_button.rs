@@ -7,7 +7,7 @@ use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
-use crate::msg::{BmGetCheck, BmSetCheck, WmCommand, WmSetFont};
+use crate::msg::{BmClick, BmGetCheck, BmSetCheck, BmSetDontClick, WmSetFont};
 use crate::structs::POINT;
 
 /// Native
@@ -74,13 +74,14 @@ impl RadioButton {
 				)?;
 
 				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-				Ok(())
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.base_mut().create_dlg(*ctrl_id) // may panic
-					.map(|_| ())
+				self.base_mut().create_dlg(*ctrl_id)?; // may panic
 			},
 		}
+
+		self.hwnd().SendMessage(BmSetDontClick { dont_click: true });
+		Ok(())
 	}
 
 	pub(crate) fn is_parent_created(&self) -> bool {
@@ -137,15 +138,10 @@ impl RadioButton {
 		});
 	}
 
-	/// Fires the click event for the radio button.
-	pub fn trigger_click(&self) {
-		self.hwnd().SendMessage(
-			WmCommand {
-				code: co::CMD::BN_CLICKED,
-				ctrl_id: self.ctrl_id(),
-				ctrl_hwnd: Some(self.hwnd()),
-			},
-		);
+	/// Fires the click event for the radio button. The event is asynchronous,
+	/// the method returns immediately.
+	pub fn trigger_click(&self) -> Result<(), co::ERROR> {
+		self.hwnd().PostMessage(BmClick {})
 	}
 }
 

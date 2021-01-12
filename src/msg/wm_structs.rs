@@ -141,6 +141,16 @@ impl Message for WmAppCommand {
 
 //------------------------------------------------------------------------------
 
+empty_msg! { WmCancelMode, co::WM::CANCELMODE,
+	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
+	/// message, which has no parameters.
+}
+
+empty_msg! { WmChildActivate, co::WM::CHILDACTIVATE,
+	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
+	/// message, which has no parameters.
+}
+
 empty_msg! { WmClose, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 	/// message, which has no parameters.

@@ -10,6 +10,16 @@ use crate::handles::{HDC, HIMAGELIST, HTREEITEM};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT};
 use crate::WString;
 
+/// [`BUTTON_IMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct BUTTON_IMAGELIST {
+	pub himl: HIMAGELIST,
+	pub margin: RECT,
+	pub uAlign: co::BIA,
+}
+
 /// [`IMAGELISTDRAWPARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.
 #[repr(C)]
