@@ -18,6 +18,6 @@ mod window_main;
 
 pub use controls::*;
 pub use dialog_main::DialogMain;
-pub use traits::{Child, create_children};
+pub use traits::{Child, create_children, Parent};
 pub use window_control::{WindowControl, WindowControlOpts};
 pub use window_main::{WindowMain, WindowMainOpts};
