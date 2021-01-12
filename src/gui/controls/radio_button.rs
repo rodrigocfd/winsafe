@@ -25,8 +25,7 @@ pub struct RadioButton {
 
 impl RadioButton {
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
-		let mut opts = opts;
-		opts.define_ctrl_id();
+		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
@@ -198,10 +197,11 @@ impl Default for RadioButtonOpts {
 }
 
 impl RadioButtonOpts {
-	fn define_ctrl_id(&mut self) {
+	fn define_ctrl_id(mut self) -> Self {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();
 		}
+		self
 	}
 
 	pub(crate) fn manual_clone(&self) -> RadioButtonOpts { // avoids a public clone method

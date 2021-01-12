@@ -56,8 +56,7 @@ impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window with
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: EditOpts) -> Edit {
-		let mut opts = opts;
-		opts.define_ctrl_id();
+		let opts = EditOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
@@ -194,9 +193,10 @@ impl Default for EditOpts {
 }
 
 impl EditOpts {
-	fn define_ctrl_id(&mut self) {
+	fn define_ctrl_id(mut self) -> Self {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();
 		}
+		self
 	}
 }

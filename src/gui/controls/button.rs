@@ -56,9 +56,10 @@ impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
-		let mut opts = opts;
-		opts.define_ctrl_id();
+		let opts = ButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
+
+		let opts = ButtonOpts::define_ctrl_id(opts);
 
 		Self {
 			obj: Arc::new(UnsafeCell::new(
@@ -216,9 +217,10 @@ impl Default for ButtonOpts {
 }
 
 impl ButtonOpts {
-	fn define_ctrl_id(&mut self) {
+	fn define_ctrl_id(mut self) -> Self {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();
 		}
+		self
 	}
 }
