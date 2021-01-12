@@ -26,11 +26,9 @@ struct Obj { // actual fields of RadioGroup
 unsafe impl Send for RadioGroup {}
 unsafe impl Sync for RadioGroup {}
 
-cref_mref!(RadioGroup);
-
 impl Child for RadioGroup {
 	fn create(&self) -> Result<(), co::ERROR> {
-		for radio in self.mref().radios.iter_mut() {
+		for radio in self.obj_mut().radios.iter_mut() {
 			radio.create()?;
 		}
 		Ok(())
@@ -41,11 +39,19 @@ impl Index<usize> for RadioGroup {
 	type Output = RadioButton;
 
 	fn index(&self, i: usize) -> &Self::Output {
-		&self.cref().radios[i]
+		&self.obj().radios[i]
 	}
 }
 
 impl RadioGroup {
+	fn obj(&self) -> &Obj {
+		unsafe { &*self.obj.get() }
+	}
+
+	fn obj_mut(&self) -> &mut Obj {
+		unsafe { &mut *self.obj.get() }
+	}
+
 	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be created
 	/// on the parent window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
@@ -122,7 +128,7 @@ impl RadioGroup {
 		} else if first_radio.is_parent_created() {
 			panic!("Cannot add events after the parent window is created.");
 		}
-		&self.cref().parent_events
+		&self.obj().parent_events
 	}
 
 	/// Returns an iterator over the internal
@@ -142,13 +148,13 @@ impl RadioGroup {
 	/// }
 	/// ```
 	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {
-		self.cref().radios.iter()
+		self.obj().radios.iter()
 	}
 
 	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton),
 	/// if any.
 	pub fn checked(&self) -> Option<&RadioButton> {
-		for radio in self.cref().radios.iter() {
+		for radio in self.obj().radios.iter() {
 			if radio.is_checked() {
 				return Some(radio);
 			}

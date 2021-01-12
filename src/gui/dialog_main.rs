@@ -1,4 +1,3 @@
-use std::cell::UnsafeCell;
 use std::sync::Arc;
 
 use crate::co;
@@ -12,7 +11,7 @@ use crate::msg::WmSetIcon;
 
 #[derive(Clone)]
 pub struct DialogMain {
-	obj: Arc<UnsafeCell<Obj>>,
+	obj: Arc<Obj>,
 }
 
 struct Obj { // actual fields of DialogMain
@@ -21,8 +20,6 @@ struct Obj { // actual fields of DialogMain
 	accel_table_id: Option<i32>,
 }
 
-cref_mref!(DialogMain);
-
 impl DialogMain {
 	pub fn new(
 		dialog_id: i32,
@@ -30,33 +27,33 @@ impl DialogMain {
 		accel_table_id: Option<i32>) -> DialogMain
 	{
 		let dlg = Self {
-			obj: Arc::new(UnsafeCell::new(
+			obj: Arc::new(
 				Obj {
 					base: DialogBase::new(dialog_id, false),
 					icon_id,
 					accel_table_id,
 				},
-			)),
+			),
 		};
 		dlg.default_message_handlers();
 		dlg
 	}
 
 	pub fn hwnd(&self) -> &HWND {
-		self.cref().base.hwnd()
+		self.obj.base.hwnd()
 	}
 
 	pub fn on(&self) -> &MsgEvents {
-		self.cref().base.on()
+		self.obj.base.on()
 	}
 
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
-		let our_hwnd = self.cref().base.create_dialog_param(hinst, None)?; // may panic
+		let our_hwnd = self.obj.base.create_dialog_param(hinst, None)?; // may panic
 
-		let haccel = match self.cref().accel_table_id {
+		let haccel = match self.obj.accel_table_id {
 			None => None,
 			Some(id) => Some(hinst.LoadAccelerators(IdStr::Id(id))?),
 		};
@@ -83,7 +80,7 @@ impl DialogMain {
 	fn set_icon_if_any(&self, hinst: HINSTANCE) -> Result<(), co::ERROR> {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
-		if let Some(id) = self.cref().icon_id {
+		if let Some(id) = self.obj.icon_id {
 			self.hwnd().SendMessage(
 				WmSetIcon {
 					hicon: hinst.LoadImageIcon(IdStr::Id(id), 16, 16, co::LR::DEFAULTCOLOR)?,

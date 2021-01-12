@@ -1,8 +1,5 @@
 //! High-level GUI abstractions.
 
-#[macro_use]
-mod macros;
-
 pub mod events;
 
 mod custom_control;

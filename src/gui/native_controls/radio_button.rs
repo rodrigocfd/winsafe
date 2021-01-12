@@ -1,3 +1,5 @@
+use std::cell::UnsafeCell;
+
 use crate::co;
 use crate::funcs::GetSystemMetrics;
 use crate::gui::events::{ButtonEvents, MsgEvents};
@@ -19,34 +21,53 @@ use crate::structs::{POINT, SIZE};
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton {
-	base: NativeControlBase<ButtonEvents>,
-	opts_id: OptsId<RadioButtonOpts>,
+	base: UnsafeCell<
+		NativeControlBase<ButtonEvents, RadioButtonOpts>,
+	>,
 }
 
 impl RadioButton {
+	fn base(&self) -> &NativeControlBase<ButtonEvents, RadioButtonOpts> {
+		unsafe { &*self.base.get() }
+	}
+
+	fn base_mut(&self) -> &mut NativeControlBase<ButtonEvents, RadioButtonOpts> {
+		unsafe { &mut *self.base.get() }
+	}
+
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
-			base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
-			opts_id: OptsId::Wnd(opts),
+			base: UnsafeCell::new(
+				NativeControlBase::new(
+					parent,
+					ButtonEvents::new(parent, ctrl_id),
+					OptsId::Wnd(opts),
+				),
+			),
 		}
 	}
 
 	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
 		Self {
-			base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
-			opts_id: OptsId::Dlg(ctrl_id),
+			base: UnsafeCell::new(
+				NativeControlBase::new(
+					parent,
+					ButtonEvents::new(parent, ctrl_id),
+					OptsId::Dlg(ctrl_id),
+				),
+			),
 		}
 	}
 
-	pub(crate) fn create(&mut self) -> Result<(), co::ERROR> {
-		match &self.opts_id {
+	pub(crate) fn create(&self) -> Result<(), co::ERROR> {
+		match self.base().opts_id() {
 			OptsId::Wnd(opts) => {
 				let bound_box = Self::ideal_size(&opts.text)?;
 
-				let our_hwnd = self.base.create_window( // may panic
+				let our_hwnd = self.base_mut().create_window( // may panic
 					"BUTTON", Some(&opts.text), opts.pos, bound_box,
 					opts.ctrl_id,
 					opts.ex_window_style,
@@ -57,14 +78,14 @@ impl RadioButton {
 				Ok(())
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.base.create_dlg(*ctrl_id) // may panic
+				self.base_mut().create_dlg(*ctrl_id) // may panic
 					.map(|_| ())
 			},
 		}
 	}
 
 	pub(crate) fn is_parent_created(&self) -> bool {
-		self.base.is_parent_created()
+		self.base().is_parent_created()
 	}
 
 	/// Returns the underlying handle for this control.
@@ -72,12 +93,12 @@ impl RadioButton {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.base.hwnd()
+		*self.base().hwnd()
 	}
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		match &self.opts_id {
+		match self.base().opts_id() {
 			OptsId::Wnd(opts) => opts.ctrl_id,
 			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
@@ -90,7 +111,7 @@ impl RadioButton {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on(&self) -> &ButtonEvents {
-		&self.base.on()
+		self.base().on()
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control
@@ -102,7 +123,7 @@ impl RadioButton {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
-		self.base.on_subclass()
+		self.base().on_subclass()
 	}
 
 	/// Tells if this radio button is currently checked.

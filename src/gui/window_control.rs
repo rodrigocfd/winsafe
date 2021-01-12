@@ -21,9 +21,15 @@ struct Obj { // actual fields of WindowControl
 	opts: CustomControlOpts,
 }
 
-cref_mref!(WindowControl);
-
 impl WindowControl {
+	fn obj(&self) -> &Obj {
+		unsafe { &*self.obj.get() }
+	}
+
+	fn obj_mut(&self) -> &mut Obj {
+		unsafe { &mut *self.obj.get() }
+	}
+
 	pub fn new(parent: &dyn Parent, opts: CustomControlOpts) -> WindowControl {
 		let wnd = Self {
 			obj: Arc::new(UnsafeCell::new(
@@ -38,17 +44,17 @@ impl WindowControl {
 	}
 
 	pub fn create(&self) -> Result<(), co::ERROR> {
-		let opts = &mut self.mref().opts;
-		let hinst = self.cref().base.hwnd().hinstance();
+		let opts = &mut self.obj_mut().opts;
+		let hinst = self.obj().base.hwnd().hinstance();
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self.cref().base.register_class(&mut wcx)?;
+		self.obj().base.register_class(&mut wcx)?;
 
 		multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
 
-		self.cref().base.create_window( // may panic
+		self.obj().base.create_window( // may panic
 			hinst,
 			&class_name_buf.to_string(),
 			None,
@@ -62,11 +68,11 @@ impl WindowControl {
 	}
 
 	pub fn hwnd(&self) -> HWND {
-		*self.cref().base.hwnd()
+		*self.obj().base.hwnd()
 	}
 
 	pub fn on(&self) -> &MsgEvents {
-		self.cref().base.on()
+		self.obj().base.on()
 	}
 
 	fn default_message_handlers(&self) {

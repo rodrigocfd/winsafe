@@ -41,8 +41,6 @@ struct Obj { // actual fields of MsgEvents
 	>,
 }
 
-cref_mref!(MsgEvents);
-
 /// A message which has no parameters and returns zero.
 macro_rules! wm_empty {
 	(
@@ -80,6 +78,14 @@ macro_rules! wm_ret_none {
 }
 
 impl MsgEvents {
+	fn obj(&self) -> &Obj {
+		unsafe { &*self.obj.get() }
+	}
+
+	fn obj_mut(&self) -> &mut Obj {
+		unsafe { &mut *self.obj.get() }
+	}
+
 	pub(crate) fn new() -> MsgEvents {
 		Self {
 			obj: UnsafeCell::new(
@@ -95,10 +101,10 @@ impl MsgEvents {
 
 	/// Tells whether no functions have been added.
 	pub(crate) fn is_empty(&self) -> bool {
-		self.cref().msgs.is_empty()
-			&& self.cref().tmrs.is_empty()
-			&& self.cref().cmds.is_empty()
-			&& self.cref().nfys.is_empty()
+		self.obj().msgs.is_empty()
+			&& self.obj().tmrs.is_empty()
+			&& self.obj().cmds.is_empty()
+			&& self.obj().nfys.is_empty()
 	}
 
 	/// Searches for an user function for the given message, and runs it if found.
@@ -107,7 +113,7 @@ impl MsgEvents {
 			co::WM::NOTIFY => {
 				let wm_nfy = msg::WmNotify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
-				match self.mref().nfys.find(key) {
+				match self.obj_mut().nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -120,7 +126,7 @@ impl MsgEvents {
 			co::WM::COMMAND => {
 				let wm_cmd = msg::WmCommand::from_generic_wm(wm_any);
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
-				match self.mref().cmds.find(key) {
+				match self.obj_mut().cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -130,7 +136,7 @@ impl MsgEvents {
 			},
 			co::WM::TIMER => {
 				let wm_tmr = msg::WmTimer::from_generic_wm(wm_any);
-				match self.mref().tmrs.find(wm_tmr.timer_id) {
+				match self.obj_mut().tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -139,7 +145,7 @@ impl MsgEvents {
 				}
 			}
 			_ => { // any other message
-				match self.mref().msgs.find(wm_any.msg_id) {
+				match self.obj_mut().msgs.find(wm_any.msg_id) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(wm_any) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -156,14 +162,14 @@ impl MsgEvents {
 	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: FnMut(msg::Wm) -> Option<isize> + 'static,
 	{
-		self.mref().msgs.insert(ident, Box::new(func));
+		self.obj_mut().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
 	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> Option<isize> + 'static,
 	{
-		self.mref().nfys.insert((id_from, code), Box::new(func));
+		self.obj_mut().nfys.insert((id_from, code), Box::new(func));
 	}
 
 	/// Event to any [window message](crate::co::WM).
@@ -206,7 +212,7 @@ impl MsgEvents {
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: FnMut() + 'static,
 	{
-		self.mref().tmrs.insert(timer_id, Box::new(func));
+		self.obj_mut().tmrs.insert(timer_id, Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](crate::msg::WmCommand) message, for specific code and
@@ -223,7 +229,7 @@ impl MsgEvents {
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + 'static,
 	{
-		self.mref().cmds.insert((code, ctrl_id), Box::new(func));
+		self.obj_mut().cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](crate::msg::WmCommand) message, handling both

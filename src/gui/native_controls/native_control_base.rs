@@ -4,6 +4,7 @@ use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs_priv::WC_DIALOG;
 use crate::gui::events::{MsgEvents, ProcessResult};
+use crate::gui::native_controls::opts_id::OptsId;
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
 use crate::msg::Wm;
@@ -13,17 +14,22 @@ use crate::WString;
 static mut BASE_SUBCLASS_ID: usize = 0;
 
 /// Base to all native child controls.
-pub struct NativeControlBase<Ev> {
+pub struct NativeControlBase<Ev, Op> {
 	hwnd: HWND,
+	opts_id: OptsId<Op>, // specific control options, or just a control ID
 	parent_events: Ev, // specific control events, which delegate to parent events
 	subclass_events: MsgEvents, // for control subclassing
 	ptr_parent_hwnd: NonNull<HWND>, // used only in control creation
 }
 
-impl<Ev> NativeControlBase<Ev> {
-	pub fn new(parent: &dyn Parent, parent_events: Ev) -> NativeControlBase<Ev> {
+impl<Ev, Op> NativeControlBase<Ev, Op> {
+	pub fn new(
+		parent: &dyn Parent,
+		parent_events: Ev, opts_id: OptsId<Op>) -> NativeControlBase<Ev, Op>
+	{
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
+			opts_id,
 			parent_events,
 			subclass_events: MsgEvents::new(),
 			ptr_parent_hwnd: NonNull::from(parent.hwnd_ref()), // ref implicitly converted to pointer
@@ -33,6 +39,10 @@ impl<Ev> NativeControlBase<Ev> {
 	pub fn is_parent_created(&self) -> bool {
 		let parent_hwnd = unsafe { self.ptr_parent_hwnd.as_ref() };
 		!parent_hwnd.is_null()
+	}
+
+	pub fn opts_id(&self) -> &OptsId<Op> {
+		&self.opts_id
 	}
 
 	pub fn hwnd(&self) -> &HWND {

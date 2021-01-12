@@ -23,9 +23,15 @@ struct Obj { // actual fields of WindowMain
 	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
 }
 
-cref_mref!(WindowMain);
-
 impl WindowMain {
+	fn obj(&self) -> &Obj {
+		unsafe { &*self.obj.get() }
+	}
+
+	fn obj_mut(&self) -> &mut Obj {
+		unsafe { &mut *self.obj.get() }
+	}
+
 	pub fn new(opts: CustomMainOpts) -> WindowMain {
 		let wnd = Self {
 			obj: Arc::new(UnsafeCell::new(
@@ -41,23 +47,23 @@ impl WindowMain {
 	}
 
 	pub fn hwnd(&self) -> &HWND {
-		self.cref().base.hwnd()
+		self.obj().base.hwnd()
 	}
 
 	pub fn on(&self) -> &MsgEvents {
-		self.cref().base.on()
+		self.obj().base.on()
 	}
 
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		let opts = &mut self.mref().opts;
+		let opts = &mut self.obj_mut().opts;
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self.cref().base.register_class(&mut wcx)?;
+		self.obj().base.register_class(&mut wcx)?;
 
 		multiply_dpi(None, Some(&mut opts.size))?;
 
@@ -80,7 +86,7 @@ impl WindowMain {
 		AdjustWindowRectEx(&mut wnd_rc, opts.style,
 			!opts.menu.is_null(), opts.ex_style)?;
 
-		let our_hwnd = self.cref().base.create_window( // may panic
+		let our_hwnd = self.obj().base.create_window( // may panic
 			hinst,
 			&class_name_buf.to_string(),
 			Some(&opts.title),
@@ -104,11 +110,11 @@ impl WindowMain {
 				if !p.is_minimized {
 					if p.event == co::WA::INACTIVE {
 						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-							if self2.cref().base.hwnd().IsChild(hwnd_cur_focus) {
-								self2.mref().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
+							if self2.obj().base.hwnd().IsChild(hwnd_cur_focus) {
+								self2.obj_mut().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
 							}
 						}
-					} else if let Some(hwnd_prev_focus) = self2.cref().hchild_prev_focus {
+					} else if let Some(hwnd_prev_focus) = self2.obj().hchild_prev_focus {
 						hwnd_prev_focus.SetFocus(); // put focus back
 					}
 				}
