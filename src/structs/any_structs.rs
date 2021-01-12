@@ -363,6 +363,13 @@ pub struct POINT {
 	pub y: i32,
 }
 
+impl POINT {
+	/// Creates a new `POINT`.
+	pub fn new(x: i32, y: i32) -> POINT {
+		Self { x, y }
+	}
+}
+
 /// [`RECT`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect)
 /// struct.
 #[repr(C)]
@@ -372,6 +379,13 @@ pub struct RECT {
 	pub top: i32,
 	pub right: i32,
 	pub bottom: i32,
+}
+
+impl RECT {
+	/// Creates a new `RECT`.
+	pub fn new(left: i32, top: i32, right: i32, bottom: i32) -> RECT {
+		Self { left, top, right, bottom }
+	}
 }
 
 /// [`SECURITY_ATTRIBUTES`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
@@ -399,6 +413,13 @@ impl Default for SECURITY_ATTRIBUTES {
 pub struct SIZE {
 	pub cx: i32,
 	pub cy: i32,
+}
+
+impl SIZE {
+	/// Creates a new `SIZE`.
+	pub fn new(cx: i32, cy: i32) -> SIZE {
+		Self { cx, cy }
+	}
 }
 
 /// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
