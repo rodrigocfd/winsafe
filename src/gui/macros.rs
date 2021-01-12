@@ -1,5 +1,8 @@
 /// Implements `cref` and `mref` methods to retrieve references to `Obj` within
 /// `UnsafeCell` in structs.
+///
+/// A wrapper over `Arc` would be ideal, but unfortunately it's not possible due
+/// to a [compiler bug](https://github.com/rust-lang/rust/issues/26925).
 macro_rules! cref_mref {
 	($name:ident) => {
 		impl $name {

@@ -1,9 +1,9 @@
 use crate::co;
 use crate::funcs::GetSystemMetrics;
-use crate::gui::controls::native_control_base::NativeControlBase;
-use crate::gui::controls::opts_id::OptsId;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box, ui_font};
+use crate::gui::native_controls::native_control_base::NativeControlBase;
+use crate::gui::native_controls::opts_id::OptsId;
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
 use crate::msg::{BmGetCheck, BmSetCheck, WmCommand, WmSetFont};
