@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::controls::native_control_base::NativeControlBase;
-use crate::gui::controls::poly_opts::PolyOpts;
+use crate::gui::controls::opts_id::OptsId;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::traits::{Child, Parent};
@@ -21,7 +21,7 @@ pub struct Button {
 
 struct Obj { // actual fields of Button
 	base: NativeControlBase<ButtonEvents>,
-	poly_opts: PolyOpts<ButtonOpts>,
+	opts_id: OptsId<ButtonOpts>,
 }
 
 unsafe impl Send for Button {}
@@ -31,8 +31,8 @@ cref_mref!(Button);
 
 impl Child for Button {
 	fn create(&self) -> Result<(), co::ERROR> {
-		match &self.cref().poly_opts {
-			PolyOpts::Wnd(opts) => {
+		match &self.cref().opts_id {
+			OptsId::Wnd(opts) => {
 				let our_hwnd = self.mref().base.create_window( // may panic
 					"BUTTON", Some(&opts.text), opts.pos,
 					SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
@@ -44,7 +44,7 @@ impl Child for Button {
 				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 				Ok(())
 			},
-			PolyOpts::Dlg(ctrl_id) => {
+			OptsId::Dlg(ctrl_id) => {
 				self.mref().base.create_dlg(*ctrl_id) // may panic
 					.map(|_| ())
 			},
@@ -64,7 +64,7 @@ impl Button {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
-					poly_opts: PolyOpts::Wnd(opts),
+					opts_id: OptsId::Wnd(opts),
 				},
 			)),
 		}
@@ -77,7 +77,7 @@ impl Button {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
-					poly_opts: PolyOpts::Dlg(ctrl_id),
+					opts_id: OptsId::Dlg(ctrl_id),
 				},
 			)),
 		}
@@ -93,9 +93,9 @@ impl Button {
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		match &self.cref().poly_opts {
-			PolyOpts::Wnd(opts) => opts.ctrl_id,
-			PolyOpts::Dlg(ctrl_id) => *ctrl_id,
+		match &self.cref().opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
 	}
 

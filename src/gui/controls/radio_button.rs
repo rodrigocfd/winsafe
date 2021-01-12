@@ -1,7 +1,7 @@
 use crate::co;
 use crate::funcs::GetSystemMetrics;
 use crate::gui::controls::native_control_base::NativeControlBase;
-use crate::gui::controls::poly_opts::PolyOpts;
+use crate::gui::controls::opts_id::OptsId;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box, ui_font};
 use crate::gui::traits::Parent;
@@ -20,7 +20,7 @@ use crate::structs::{POINT, SIZE};
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton {
 	base: NativeControlBase<ButtonEvents>,
-	poly_opts: PolyOpts<RadioButtonOpts>,
+	opts_id: OptsId<RadioButtonOpts>,
 }
 
 impl RadioButton {
@@ -31,20 +31,20 @@ impl RadioButton {
 
 		Self {
 			base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
-			poly_opts: PolyOpts::Wnd(opts),
+			opts_id: OptsId::Wnd(opts),
 		}
 	}
 
 	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
 		Self {
 			base: NativeControlBase::new(parent, ButtonEvents::new(parent, ctrl_id)),
-			poly_opts: PolyOpts::Dlg(ctrl_id),
+			opts_id: OptsId::Dlg(ctrl_id),
 		}
 	}
 
 	pub(crate) fn create(&mut self) -> Result<(), co::ERROR> {
-		match &self.poly_opts {
-			PolyOpts::Wnd(opts) => {
+		match &self.opts_id {
+			OptsId::Wnd(opts) => {
 				let bound_box = Self::ideal_size(&opts.text)?;
 
 				let our_hwnd = self.base.create_window( // may panic
@@ -57,7 +57,7 @@ impl RadioButton {
 				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 				Ok(())
 			},
-			PolyOpts::Dlg(ctrl_id) => {
+			OptsId::Dlg(ctrl_id) => {
 				self.base.create_dlg(*ctrl_id) // may panic
 					.map(|_| ())
 			},
@@ -78,9 +78,9 @@ impl RadioButton {
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		match &self.poly_opts {
-			PolyOpts::Wnd(opts) => opts.ctrl_id,
-			PolyOpts::Dlg(ctrl_id) => *ctrl_id,
+		match &self.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
 	}
 

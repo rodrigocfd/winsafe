@@ -1,7 +1,7 @@
 //! Native Win32 controls.
 
 mod native_control_base;
-mod poly_opts;
+mod opts_id;
 
 mod button;
 mod edit;

@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::controls::native_control_base::NativeControlBase;
-use crate::gui::controls::poly_opts::PolyOpts;
+use crate::gui::controls::opts_id::OptsId;
 use crate::gui::events::{EditEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::traits::{Child, Parent};
@@ -21,7 +21,7 @@ pub struct Edit {
 
 struct Obj { // actual fields of Edit
 	base: NativeControlBase<EditEvents>,
-	poly_opts: PolyOpts<EditOpts>,
+	opts_id: OptsId<EditOpts>,
 }
 
 unsafe impl Send for Edit {}
@@ -31,8 +31,8 @@ cref_mref!(Edit);
 
 impl Child for Edit {
 	fn create(&self) -> Result<(), co::ERROR> {
-		match &self.cref().poly_opts {
-			PolyOpts::Wnd(opts) => {
+		match &self.cref().opts_id {
+			OptsId::Wnd(opts) => {
 				let our_hwnd = self.mref().base.create_window( // may panic
 					"EDIT", Some(&opts.text), opts.pos,
 					SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
@@ -44,7 +44,7 @@ impl Child for Edit {
 				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 				Ok(())
 			},
-			PolyOpts::Dlg(ctrl_id) => {
+			OptsId::Dlg(ctrl_id) => {
 				self.mref().base.create_dlg(*ctrl_id) // may panic
 					.map(|_| ())
 			},
@@ -64,7 +64,7 @@ impl Edit {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new(parent, EditEvents::new(parent, ctrl_id)),
-					poly_opts: PolyOpts::Wnd(opts),
+					opts_id: OptsId::Wnd(opts),
 				},
 			)),
 		}
@@ -77,7 +77,7 @@ impl Edit {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new(parent, EditEvents::new(parent, ctrl_id)),
-					poly_opts: PolyOpts::Dlg(ctrl_id),
+					opts_id: OptsId::Dlg(ctrl_id),
 				},
 			)),
 		}
@@ -93,9 +93,9 @@ impl Edit {
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		match &self.cref().poly_opts {
-			PolyOpts::Wnd(opts) => opts.ctrl_id,
-			PolyOpts::Dlg(ctrl_id) => *ctrl_id,
+		match &self.cref().opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
 	}
 

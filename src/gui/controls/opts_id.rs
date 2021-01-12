@@ -1,5 +1,5 @@
-/// Polymorphic options of a native child control to be created.
-pub enum PolyOpts<COpt> {
+/// Variant field for child controls: options or just a control ID.
+pub enum OptsId<COpt> {
 	/// The control will be created with
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	Wnd(COpt),
