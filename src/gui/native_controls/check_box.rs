@@ -1,67 +1,34 @@
 use std::cell::UnsafeCell;
+use std::sync::Arc;
 
 use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box_check, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::traits::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{BmGetCheck, BmSetCheck, WmCommand, WmSetFont};
 use crate::structs::POINT;
 
 /// Native
-/// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
+/// [check box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control.
 ///
-/// The radion button is actually a variation of the ordinary
+/// The check box is actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
-///
-/// You cannot directly instantiate this object, you must use
-/// [`RadioGroup`](crate::gui::RadioGroup).
-pub struct RadioButton {
-	base: UnsafeCell<
-		NativeControlBase<ButtonEvents, RadioButtonOpts>,
-	>,
+#[derive(Clone)]
+pub struct CheckBox {
+	base: Arc<UnsafeCell<
+		NativeControlBase<ButtonEvents, CheckBoxOpts>,
+	>>,
 }
 
-impl RadioButton {
-	fn base(&self) -> &NativeControlBase<ButtonEvents, RadioButtonOpts> {
-		unsafe { &*self.base.get() }
-	}
+unsafe impl Send for CheckBox {}
+unsafe impl Sync for CheckBox {}
 
-	fn base_mut(&self) -> &mut NativeControlBase<ButtonEvents, RadioButtonOpts> {
-		unsafe { &mut *self.base.get() }
-	}
-
-	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
-		let opts = RadioButtonOpts::define_ctrl_id(opts);
-		let ctrl_id = opts.ctrl_id;
-
-		Self {
-			base: UnsafeCell::new(
-				NativeControlBase::new(
-					parent,
-					ButtonEvents::new(parent, ctrl_id),
-					OptsId::Wnd(opts),
-				),
-			),
-		}
-	}
-
-	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
-		Self {
-			base: UnsafeCell::new(
-				NativeControlBase::new(
-					parent,
-					ButtonEvents::new(parent, ctrl_id),
-					OptsId::Dlg(ctrl_id),
-				),
-			),
-		}
-	}
-
-	pub(crate) fn create(&self) -> Result<(), co::ERROR> {
+impl Child for CheckBox {
+	fn create(&self) -> Result<(), co::ERROR> {
 		match self.base().opts_id() {
 			OptsId::Wnd(opts) => {
 				let bound_box = calc_text_bound_box_check(&opts.text)?;
@@ -82,9 +49,46 @@ impl RadioButton {
 			},
 		}
 	}
+}
 
-	pub(crate) fn is_parent_created(&self) -> bool {
-		self.base().is_parent_created()
+impl CheckBox {
+	fn base(&self) -> &NativeControlBase<ButtonEvents, CheckBoxOpts> {
+		unsafe { &*self.base.get() }
+	}
+
+	fn base_mut(&self) -> &mut NativeControlBase<ButtonEvents, CheckBoxOpts> {
+		unsafe { &mut *self.base.get() }
+	}
+
+	/// Instantiates a new `CheckBox` object, to be created on the parent window
+	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	pub fn new(parent: &dyn Parent, opts: CheckBoxOpts) -> CheckBox {
+		let opts = CheckBoxOpts::define_ctrl_id(opts);
+		let ctrl_id = opts.ctrl_id;
+
+		Self {
+			base: Arc::new(UnsafeCell::new(
+				NativeControlBase::new(
+					parent,
+					ButtonEvents::new(parent, ctrl_id),
+					OptsId::Wnd(opts),
+				),
+			)),
+		}
+	}
+
+	/// Instantiates a new `CheckBox` object, to be loaded from a dialog resource
+	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> CheckBox {
+		Self {
+			base: Arc::new(UnsafeCell::new(
+				NativeControlBase::new(
+					parent,
+					ButtonEvents::new(parent, ctrl_id),
+					OptsId::Dlg(ctrl_id),
+				),
+			)),
+		}
 	}
 
 	/// Returns the underlying handle for this control.
@@ -103,7 +107,7 @@ impl RadioButton {
 		}
 	}
 
-	/// Exposes the radio button events.
+	/// Exposes the check box events.
 	///
 	/// # Panics
 	///
@@ -125,7 +129,7 @@ impl RadioButton {
 		self.base().on_subclass()
 	}
 
-	/// Tells if this radio button is currently checked.
+	/// Tells if this check box is currently checked.
 	pub fn is_checked(&self) -> bool {
 		self.hwnd().SendMessage(BmGetCheck {}) == co::BST::CHECKED
 	}
@@ -137,7 +141,7 @@ impl RadioButton {
 		});
 	}
 
-	/// Fires the click event for the radio button.
+	/// Fires the click event for the check box.
 	pub fn trigger_click(&self) {
 		self.hwnd().SendMessage(
 			WmCommand {
@@ -151,8 +155,8 @@ impl RadioButton {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`RadioButton::new`](crate::gui::RadioButton::new).
-pub struct RadioButtonOpts {
+/// Options for [`CheckBox::new`](crate::gui::CheckBox::new).
+pub struct CheckBoxOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -163,19 +167,18 @@ pub struct RadioButtonOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub pos: POINT,
-	/// Radio button styles to be
+	/// Check box styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `BS::AUTORADIOBUTTON`.
+	/// Defaults to `BS::AUTOCHECKBOX`.
+	///
+	/// Suggestions:
+	/// * replace with `BS::AUTO3STATE` for a 3-state check box.
 	pub button_style: co::BS,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE`.
-	///
-	/// The first RadioButton of a group should also have `WS::TABSTOP | WS::GROUP`.
-	/// If this object being passed to a [`RadioGroup`](crate::gui::RadioGroup),
-	/// this will be automatically set.
+	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -189,35 +192,24 @@ pub struct RadioButtonOpts {
 	pub ctrl_id: u16,
 }
 
-impl Default for RadioButtonOpts {
+impl Default for CheckBoxOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
 			pos: POINT { x: 0, y: 0 },
-			button_style: co::BS::AUTORADIOBUTTON,
-			window_style: co::WS::CHILD | co::WS::VISIBLE,
+			button_style: co::BS::AUTOCHECKBOX,
+			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 		}
 	}
 }
 
-impl RadioButtonOpts {
+impl CheckBoxOpts {
 	fn define_ctrl_id(mut self) -> Self {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();
 		}
 		self
-	}
-
-	pub(crate) fn manual_clone(&self) -> RadioButtonOpts { // avoids a public clone method
-		Self {
-			text: self.text.clone(),
-			pos: self.pos,
-			button_style: self.button_style,
-			window_style: self.window_style,
-			ex_window_style: self.ex_window_style,
-			ctrl_id: self.ctrl_id,
-		}
 	}
 }

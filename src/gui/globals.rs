@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::ffi::kernel32;
-use crate::funcs::SystemParametersInfo;
+use crate::funcs::{GetSystemMetrics, SystemParametersInfo};
 use crate::handles::{HFONT, HTHEME, HWND};
 use crate::msg::WmNcPaint;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
@@ -109,6 +109,21 @@ pub fn calc_text_bound_box(text: &str) -> Result<SIZE, co::ERROR> {
 	clone_dc.DeleteDC()?;
 	desktop_hwnd.ReleaseDC(desktop_hdc)?;
 	Ok(bounds)
+}
+
+/// Calculates the bound rectangle to fit the text with current system font,
+/// adding a check box.
+pub fn calc_text_bound_box_check(text: &str) -> Result<SIZE, co::ERROR> {
+	let mut bound_box = calc_text_bound_box(text)?;
+	bound_box.cx += GetSystemMetrics(co::SM::CXMENUCHECK) // https://stackoverflow.com/a/1165052/6923555
+		+ GetSystemMetrics(co::SM::CXEDGE);
+
+	let cy_check = GetSystemMetrics(co::SM::CYMENUCHECK);
+	if cy_check > bound_box.cy {
+		bound_box.cy = cy_check; // if the check is taller than the font, use its height
+	}
+
+	Ok(bound_box)
 }
 
 /// Paints the themed border of an user control, if it has the proper styles.
