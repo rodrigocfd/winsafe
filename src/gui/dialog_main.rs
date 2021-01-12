@@ -8,7 +8,6 @@ use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
 use crate::gui::main_loop::run_loop;
-use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::WmSetIcon;
 
@@ -24,20 +23,7 @@ struct Obj { // actual fields of DialogMain
 	accel_table_id: Option<i32>,
 }
 
-unsafe impl Send for DialogMain {}
-unsafe impl Sync for DialogMain {}
-
 cref_mref!(DialogMain);
-
-impl Parent for DialogMain {
-	fn hwnd_ref(&self) -> &HWND {
-		self.cref().base.hwnd()
-	}
-
-	fn events_ref(&self) -> &MsgEvents {
-		self.cref().base.on()
-	}
-}
 
 impl DialogMain {
 	pub fn new(
@@ -58,48 +44,14 @@ impl DialogMain {
 		dlg
 	}
 
-	/// Returns the underlying handle for this dialog.
-	///
-	/// Note that the handle is initially null, receiving an actual value only
-	/// after the dialog is created.
-	pub fn hwnd(&self) -> HWND {
-		*self.cref().base.hwnd()
+	pub fn hwnd(&self) -> &HWND {
+		self.cref().base.hwnd()
 	}
 
-	/// Exposes the dialog events.
-	///
-	/// # Panics
-	///
-	/// Panics if the dialog is already created. Events must be set before dialog
-	/// creation.
-	///
-	/// # Examples
-	///
-	/// Prints some info right after the dialog is created:
-	///
-	/// ```rust,ignore
-	/// use winsafe::gui::DialogMain;
-	///
-	/// let dlg: DialogMain; // initialize it somewhere...
-	///
-	/// dlg.on().wm_init_dialog({
-	///   let dlg = dlg.clone(); // pass into the closure
-	///   move |parms| {
-	///     println!("HWND: {}, focus: {}", dlg.hwnd(), parms.hwnd_focus);
-	///     true
-	///   }
-	/// });
-	/// ```
 	pub fn on(&self) -> &MsgEvents {
 		self.cref().base.on()
 	}
 
-	/// Creates the dialog and runs the main application loop. This function will
-	/// block until the dialog is closed.
-	///
-	/// # Panics
-	///
-	/// Panics if the dialog is already created.
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
@@ -126,7 +78,6 @@ impl DialogMain {
 		Ok(res)
 	}
 
-	/// Adds the default event processing.
 	fn default_message_handlers(&self) {
 		self.on().wm_close({
 			let self2 = self.clone();

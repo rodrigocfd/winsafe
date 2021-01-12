@@ -7,7 +7,6 @@ use crate::funcs as f;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font, multiply_dpi};
 use crate::gui::main_loop::run_loop;
-use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
@@ -21,28 +20,14 @@ pub struct WindowMain {
 
 struct Obj { // actual fields of WindowMain
 	base: WindowBase,
-	opts: WindowMainOpts,
+	opts: CustomMainOpts,
 	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
 }
 
-unsafe impl Send for WindowMain {}
-unsafe impl Sync for WindowMain {}
-
 cref_mref!(WindowMain);
 
-impl Parent for WindowMain {
-	fn hwnd_ref(&self) -> &HWND {
-		self.cref().base.hwnd()
-	}
-
-	fn events_ref(&self) -> &MsgEvents {
-		self.cref().base.on()
-	}
-}
-
 impl WindowMain {
-	/// Creates a new `WindowMain` object.
-	pub fn new(opts: WindowMainOpts) -> WindowMain {
+	pub fn new(opts: CustomMainOpts) -> WindowMain {
 		let wnd = Self {
 			obj: Arc::new(UnsafeCell::new(
 				Obj {
@@ -56,51 +41,14 @@ impl WindowMain {
 		wnd
 	}
 
-	/// Returns the underlying handle for this window.
-	///
-	/// Note that the handle is initially null, receiving an actual value only
-	/// after the window is created.
-	pub fn hwnd(&self) -> HWND {
-		*self.cref().base.hwnd()
+	pub fn hwnd(&self) -> &HWND {
+		self.cref().base.hwnd()
 	}
 
-	/// Exposes the window events.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created. Events must be set before window
-	/// creation.
-	///
-	/// # Examples
-	///
-	/// Prints some info right after the window is created:
-	///
-	/// ```rust,ignore
-	/// use winsafe::gui::WindowMain;
-	///
-	/// let wnd: WindowMain; // initialize it somewhere...
-	///
-	/// wnd.on().wm_create({
-	///   let wnd = wnd.clone(); // pass into the closure
-	///   move |parms| {
-	///     println!("HWND: {}, client area: {}x{}",
-	///       wnd.hwnd(),
-	///       parms.createstruct.cx, parms.createstruct.cy);
-	///     0
-	///   }
-	/// });
-	/// ```
 	pub fn on(&self) -> &MsgEvents {
 		self.cref().base.on()
 	}
 
-	/// Creates the window by calling
-	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx), then runs the main
-	/// application loop. This method will block until the window is closed.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created.
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
@@ -182,7 +130,7 @@ impl WindowMain {
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-					if self2.hwnd() == hwnd_cur_focus {
+					if *self2.hwnd() == hwnd_cur_focus {
 						// If window receives focus, delegate to first child.
 						// https://stackoverflow.com/a/2835220/6923555
 						if let Ok(hchild) = self2.hwnd().GetWindow(co::GW::CHILD) {
@@ -201,8 +149,8 @@ impl WindowMain {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`WindowMain::new`](crate::gui::WindowMain::new).
-pub struct WindowMainOpts {
+/// Options for [`CustomMain::new`](crate::gui::CustomMain::new).
+pub struct CustomMainOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -272,7 +220,7 @@ pub struct WindowMainOpts {
 	pub accel_table: HACCEL,
 }
 
-impl Default for WindowMainOpts {
+impl Default for CustomMainOpts {
 	fn default() -> Self {
 		Self {
 			class_name: "".to_owned(),
@@ -290,7 +238,7 @@ impl Default for WindowMainOpts {
 	}
 }
 
-impl WindowMainOpts {
+impl CustomMainOpts {
 	fn generate_wndclassex<'a, 'b>( // https://stackoverflow.com/q/65481548/6923555
 		&self,
 		hinst: HINSTANCE,

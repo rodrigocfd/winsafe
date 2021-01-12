@@ -5,7 +5,7 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::gui::globals::{multiply_dpi, paint_control_borders};
 use crate::gui::events::MsgEvents;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
@@ -19,16 +19,26 @@ pub struct WindowControl {
 
 struct Obj { // actual fields of WindowControl
 	base: WindowBase,
-	opts: WindowControlOpts,
+	opts: CustomControlOpts,
 }
-
-unsafe impl Send for WindowControl {}
-unsafe impl Sync for WindowControl {}
 
 cref_mref!(WindowControl);
 
-impl Child for WindowControl {
-	fn create(&self) -> Result<(), co::ERROR> {
+impl WindowControl {
+	pub fn new(parent: &dyn Parent, opts: CustomControlOpts) -> WindowControl {
+		let wnd = Self {
+			obj: Arc::new(UnsafeCell::new(
+				Obj {
+					base: WindowBase::new(Some(parent)),
+					opts,
+				},
+			)),
+		};
+		wnd.default_message_handlers();
+		wnd
+	}
+
+	pub fn create(&self) -> Result<(), co::ERROR> {
 		let opts = &mut self.mref().opts;
 		let hinst = self.cref().base.hwnd().hinstance();
 
@@ -51,61 +61,15 @@ impl Child for WindowControl {
 
 		Ok(())
 	}
-}
 
-impl WindowControl {
-	pub fn new(parent: &dyn Parent, opts: WindowControlOpts) -> WindowControl {
-		let wnd = Self {
-			obj: Arc::new(UnsafeCell::new(
-				Obj {
-					base: WindowBase::new(Some(parent)),
-					opts,
-				},
-			)),
-		};
-		wnd.default_message_handlers();
-		wnd
-	}
-
-	/// Returns the underlying handle for this window.
-	///
-	/// Note that the handle is initially null, receiving an actual value only
-	/// after the window is created.
 	pub fn hwnd(&self) -> HWND {
 		*self.cref().base.hwnd()
 	}
 
-	/// Exposes the window events.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created. Events must be set before window
-	/// creation.
-	///
-	/// # Examples
-	///
-	/// Prints some info right after the window is created:
-	///
-	/// ```rust,ignore
-	/// use winsafe::gui::WindowControl;
-	///
-	/// let wnd: WindowControl; // initialize it somewhere...
-	///
-	/// wnd.on().wm_create({
-	///   let wnd = wnd.clone(); // pass into the closure
-	///   move |parms| {
-	///     println!("HWND: {}, client area: {}x{}",
-	///       wnd.hwnd(),
-	///       parms.createstruct.cx, parms.createstruct.cy);
-	///     0
-	///   }
-	/// });
-	/// ```
 	pub fn on(&self) -> &MsgEvents {
 		self.cref().base.on()
 	}
 
-	/// Adds the default event processing.
 	fn default_message_handlers(&self) {
 		self.on().wm_nc_paint({
 			let self2 = self.clone();
@@ -116,8 +80,8 @@ impl WindowControl {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`WindowControl::new`](crate::gui::WindowControl::new).
-pub struct WindowControlOpts {
+/// Options for [`CustomControl::new`](crate::gui::CustomControl::new).
+pub struct CustomControlOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -178,7 +142,7 @@ pub struct WindowControlOpts {
 	pub ctrl_id: u16,
 }
 
-impl Default for WindowControlOpts {
+impl Default for CustomControlOpts {
 	fn default() -> Self {
 		Self {
 			class_name: "".to_owned(),
@@ -195,7 +159,7 @@ impl Default for WindowControlOpts {
 	}
 }
 
-impl WindowControlOpts {
+impl CustomControlOpts {
 	fn generate_wndclassex<'a, 'b>( // https://stackoverflow.com/q/65481548/6923555
 		&self,
 		hinst: HINSTANCE,
