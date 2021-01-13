@@ -746,7 +746,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::co;
 	/// use winsafe::msg::LvmSetItem;
-	/// use winsafe::LVITEM, HWND;
+	/// use winsafe::{LVITEM, HWND};
 	///
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
