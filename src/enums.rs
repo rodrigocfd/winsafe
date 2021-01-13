@@ -41,12 +41,12 @@ pub enum BitmapIcon {
 	Icon(HICON),
 }
 
-impl From<BitmapIcon> for usize {
-	fn from(v: BitmapIcon) -> usize {
-		match v {
-			BitmapIcon::Bitmap(hbmp) => hbmp.ptr as usize,
-			BitmapIcon::Icon(hicon) => hicon.ptr as usize,
-		}
+impl BitmapIcon {
+	pub fn as_isize(&self) -> isize {
+		(match self {
+			BitmapIcon::Bitmap(hbmp) => hbmp.ptr,
+			BitmapIcon::Icon(hicon) => hicon.ptr,
+		}) as isize
 	}
 }
 
@@ -90,10 +90,10 @@ pub enum HwndHmenu {
 
 impl HwndHmenu {
 	pub fn as_isize(&self) -> isize {
-		match self {
-			HwndHmenu::Hwnd(hwnd) => hwnd.ptr as isize,
-			HwndHmenu::Hmenu(hmenu) => hmenu.ptr as isize,
-		}
+		(match self {
+			HwndHmenu::Hwnd(hwnd) => hwnd.ptr,
+			HwndHmenu::Hmenu(hmenu) => hmenu.ptr,
+		}) as isize
 	}
 }
 

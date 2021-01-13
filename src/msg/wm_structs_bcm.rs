@@ -1,4 +1,4 @@
-use crate::{co, ffi::gdi32::GetDeviceCaps};
+use crate::co;
 use crate::enums::BitmapIcon;
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HICON};
@@ -492,6 +492,32 @@ impl Message for BmGetImage {
 
 //------------------------------------------------------------------------------
 
+/// [`BM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getstate)
+/// message parameters.
+pub struct BmGetState {}
+
+impl Message for BmGetState {
+	type RetType = co::BST;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::BST::from(v as u32)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::BM_GETSTATE,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+
+	fn from_generic_wm(_: Wm) -> Self {
+		Self {}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`BM_SETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setcheck)
 /// message parameters.
 pub struct BmSetCheck {
@@ -546,6 +572,46 @@ impl Message for BmSetDontClick {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			dont_click: p.wparam != 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`BM_SETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setimage)
+/// message parameters.
+pub struct BmSetImage {
+	pub image: BitmapIcon,
+}
+
+impl Message for BmSetImage {
+	type RetType = Result<BitmapIcon, co::ERROR>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match self.image {
+			BitmapIcon::Bitmap(_) => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as *mut _ })),
+			BitmapIcon::Icon(_) => Ok(BitmapIcon::Icon(HICON { ptr: v as *mut _ })),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::BM_SETIMAGE,
+			wparam: match self.image {
+				BitmapIcon::Bitmap(_) => u8::from(co::IMAGE_TYPE::BITMAP),
+				BitmapIcon::Icon(_) => u8::from(co::IMAGE_TYPE::ICON),
+			} as usize,
+			lparam: self.image.as_isize(),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			image: match co::IMAGE_TYPE::from(p.wparam as u8) {
+				co::IMAGE_TYPE::BITMAP => BitmapIcon::Bitmap(HBITMAP { ptr: p.lparam as *mut _ }),
+				co::IMAGE_TYPE::ICON => BitmapIcon::Icon(HICON { ptr: p.lparam as *mut _ }),
+				_ => BitmapIcon::Bitmap(HBITMAP { ptr: std::ptr::null_mut() }), // should never happen
+			},
 		}
 	}
 }
