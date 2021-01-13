@@ -3,10 +3,13 @@ const_type! { WM, u32,
 	///
 	/// * [ordinary controls](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues);
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages);
+	/// * [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages);
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages);
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
+}
 
+const_type_values! { WM, // WM
 	NULL, 0x0000
 	CREATE, 0x0001
 	DESTROY, 0x0002
@@ -262,7 +265,9 @@ const_type! { WM, u32,
 	PENWINLAST, 0x038f
 	APP, 0x8000
 	USER, 0x0400
+}
 
+const_type_values! { WM, // BCM, BM
 	BCM_GETIDEALSIZE, Self::BCM_FIRST.0 + 0x0001
 	BCM_SETIMAGELIST, Self::BCM_FIRST.0 + 0x0002
 	BCM_GETIMAGELIST, Self::BCM_FIRST.0 + 0x0003
@@ -284,7 +289,47 @@ const_type! { WM, u32,
 	BM_GETIMAGE, 0x00f6
 	BM_SETIMAGE, 0x00f7
 	BM_SETDONTCLICK, 0x00f8
+}
 
+const_type_values! { WM, // CB
+	CB_GETEDITSEL, 0x0140
+	CB_LIMITTEXT, 0x0141
+	CB_SETEDITSEL, 0x0142
+	CB_ADDSTRING, 0x0143
+	CB_DELETESTRING, 0x0144
+	CB_DIR, 0x0145
+	CB_GETCOUNT, 0x0146
+	CB_GETCURSEL, 0x0147
+	CB_GETLBTEXT, 0x0148
+	CB_GETLBTEXTLEN, 0x0149
+	CB_INSERTSTRING, 0x014a
+	CB_RESETCONTENT, 0x014b
+	CB_FINDSTRING, 0x014c
+	CB_SELECTSTRING, 0x014d
+	CB_SETCURSEL, 0x014e
+	CB_SHOWDROPDOWN, 0x014f
+	CB_GETITEMDATA, 0x0150
+	CB_SETITEMDATA, 0x0151
+	CB_GETDROPPEDCONTROLRECT, 0x0152
+	CB_SETITEMHEIGHT, 0x0153
+	CB_GETITEMHEIGHT, 0x0154
+	CB_SETEXTENDEDUI, 0x0155
+	CB_GETEXTENDEDUI, 0x0156
+	CB_GETDROPPEDSTATE, 0x0157
+	CB_FINDSTRINGEXACT, 0x0158
+	CB_SETLOCALE, 0x0159
+	CB_GETLOCALE, 0x015a
+	CB_GETTOPINDEX, 0x015b
+	CB_SETTOPINDEX, 0x015c
+	CB_GETHORIZONTALEXTENT, 0x015d
+	CB_SETHORIZONTALEXTENT, 0x015e
+	CB_GETDROPPEDWIDTH, 0x015f
+	CB_SETDROPPEDWIDTH, 0x0160
+	CB_INITSTORAGE, 0x0161
+	CB_GETCOMBOBOXINFO, 0x0164
+}
+
+const_type_values! { WM, // CCM
 	CCM_SETBKCOLOR, Self::CCM_FIRST.0 + 1
 	CCM_SETCOLORSCHEME, Self::CCM_FIRST.0 + 2
 	CCM_GETCOLORSCHEME, Self::CCM_FIRST.0 + 3
@@ -296,7 +341,9 @@ const_type! { WM, u32,
 	CCM_SETNOTIFYWINDOW, Self::CCM_FIRST.0 + 0x9
 	CCM_SETWINDOWTHEME, Self::CCM_FIRST.0 + 0xb
 	CCM_DPISCALE, Self::CCM_FIRST.0 + 0xc
+}
 
+const_type_values! { WM, // LVM
 	LVM_GETBKCOLOR, Self::LVM_FIRST.0 + 0
 	LVM_SETBKCOLOR, Self::LVM_FIRST.0 + 1
 	LVM_GETIMAGELIST, Self::LVM_FIRST.0 + 2
@@ -421,7 +468,9 @@ const_type! { WM, u32,
 	LVM_GETITEMINDEXRECT, Self::LVM_FIRST.0 + 209
 	LVM_SETITEMINDEXSTATE, Self::LVM_FIRST.0 + 210
 	LVM_GETNEXTITEMINDEX, Self::LVM_FIRST.0 + 211
+}
 
+const_type_values! { WM, // TVM
 	TVM_INSERTITEM, Self::TVM_FIRST.0 + 50
 	TVM_DELETEITEM, Self::TVM_FIRST.0 + 1
 	TVM_EXPAND, Self::TVM_FIRST.0 + 2
@@ -475,7 +524,7 @@ const_type! { WM, u32,
 	TVM_GETITEMPARTRECT, Self::TVM_FIRST.0 + 72
 }
 
-impl WM {
+impl WM { // private consts
 	const BCM_FIRST: Self = Self(0x1600);
 	const CCM_FIRST: Self = Self(0x2000);
 	const LVM_FIRST: Self = Self(0x1000);

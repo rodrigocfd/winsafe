@@ -1,3 +1,15 @@
+/// Declares multiple constant values for the given type.
+macro_rules! const_type_values {
+	(
+		$name:ident,
+		$($cname:ident, $cval:expr)*
+	) => {
+		impl $name {
+			$( pub const $cname: Self = Self($cval); )*
+		}
+	};
+}
+
 /// Declares the type of a constant with some impls, but not Debug/Display.
 macro_rules! const_type_no_debug_display {
 	(
@@ -85,15 +97,17 @@ macro_rules! const_type_no_debug_display {
 			}
 		}
 
-		// All const values.
 		impl $name {
-			$( pub const $cname: Self = Self($cval); )*
-
-			/// Tells whether other bitflag style is present. Equivalent to `(val &
-			/// other) != 0`.
+			/// Tells whether other bitflag style is present. Equivalent to
+			/// `(val & other) != 0`.
 			pub fn has(&self, other: $name) -> bool {
 				(self.0 & other.0) != 0
 			}
+		}
+
+		// All const values.
+		const_type_values! { $name,
+			$($cname, $cval)*
 		}
 	};
 }
