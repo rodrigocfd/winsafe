@@ -9,7 +9,14 @@ const_type! { WM, u32,
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
 }
 
-const_type_values! { WM, // WM
+const_type_priv_values! { WM,
+	BCM_FIRST, 0x1600
+	CCM_FIRST, 0x2000
+	LVM_FIRST, 0x1000
+	TVM_FIRST, 0x1100
+}
+
+const_type_pub_values! { WM, // WM
 	NULL, 0x0000
 	CREATE, 0x0001
 	DESTROY, 0x0002
@@ -267,7 +274,7 @@ const_type_values! { WM, // WM
 	USER, 0x0400
 }
 
-const_type_values! { WM, // BCM, BM
+const_type_pub_values! { WM, // BCM, BM
 	BCM_GETIDEALSIZE, Self::BCM_FIRST.0 + 0x0001
 	BCM_SETIMAGELIST, Self::BCM_FIRST.0 + 0x0002
 	BCM_GETIMAGELIST, Self::BCM_FIRST.0 + 0x0003
@@ -291,7 +298,7 @@ const_type_values! { WM, // BCM, BM
 	BM_SETDONTCLICK, 0x00f8
 }
 
-const_type_values! { WM, // CB
+const_type_pub_values! { WM, // CB
 	CB_GETEDITSEL, 0x0140
 	CB_LIMITTEXT, 0x0141
 	CB_SETEDITSEL, 0x0142
@@ -329,7 +336,7 @@ const_type_values! { WM, // CB
 	CB_GETCOMBOBOXINFO, 0x0164
 }
 
-const_type_values! { WM, // CCM
+const_type_pub_values! { WM, // CCM
 	CCM_SETBKCOLOR, Self::CCM_FIRST.0 + 1
 	CCM_SETCOLORSCHEME, Self::CCM_FIRST.0 + 2
 	CCM_GETCOLORSCHEME, Self::CCM_FIRST.0 + 3
@@ -343,7 +350,7 @@ const_type_values! { WM, // CCM
 	CCM_DPISCALE, Self::CCM_FIRST.0 + 0xc
 }
 
-const_type_values! { WM, // LVM
+const_type_pub_values! { WM, // LVM
 	LVM_GETBKCOLOR, Self::LVM_FIRST.0 + 0
 	LVM_SETBKCOLOR, Self::LVM_FIRST.0 + 1
 	LVM_GETIMAGELIST, Self::LVM_FIRST.0 + 2
@@ -470,7 +477,7 @@ const_type_values! { WM, // LVM
 	LVM_GETNEXTITEMINDEX, Self::LVM_FIRST.0 + 211
 }
 
-const_type_values! { WM, // TVM
+const_type_pub_values! { WM, // TVM
 	TVM_INSERTITEM, Self::TVM_FIRST.0 + 50
 	TVM_DELETEITEM, Self::TVM_FIRST.0 + 1
 	TVM_EXPAND, Self::TVM_FIRST.0 + 2
@@ -522,11 +529,4 @@ const_type_values! { WM, // TVM
 	TVM_GETSELECTEDCOUNT, Self::TVM_FIRST.0 + 70
 	TVM_SHOWINFOTIP, Self::TVM_FIRST.0 + 71
 	TVM_GETITEMPARTRECT, Self::TVM_FIRST.0 + 72
-}
-
-impl WM { // private consts
-	const BCM_FIRST: Self = Self(0x1600);
-	const CCM_FIRST: Self = Self(0x2000);
-	const LVM_FIRST: Self = Self(0x1000);
-	const TVM_FIRST: Self = Self(0x1100);
 }

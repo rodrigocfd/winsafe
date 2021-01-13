@@ -1,3 +1,5 @@
+use std::u32;
+
 use crate::co;
 
 const_type! { ACCELF, u8,
@@ -87,6 +89,24 @@ const_type! { APPCOMMAND, u16,
 	MEDIA_CHANNEL_DOWN, 52
 	DELETE, 53
 	DWM_FLIP3D, 54
+}
+
+const_type! { BCSIF, u32,
+	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
+
+	GLYPH, 0x0001
+	IMAGE, 0x0002
+	STYLE, 0x0004
+	SIZE, 0x0008
+}
+
+const_type! { BCSS, u32,
+	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `uSplitStyle` (`u32`).
+
+	NOSPLIT, 0x0001
+	STRETCH, 0x0002
+	ALIGNLEFT, 0x0004
+	IMAGE, 0x0008
 }
 
 const_type! { BI, u32,

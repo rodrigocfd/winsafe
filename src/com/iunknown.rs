@@ -5,7 +5,8 @@ use crate::ffi::PVOID;
 use crate::structs::IID;
 
 vtbl_type! {
-	/// [`IUnknown`](crate::IUnknown) virtual table.
+	/// [`IUnknownVtbl`](crate::IUnknown) is the base to all COM interface
+	/// virtual tables.
 	IUnknownVtbl,
 	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
 

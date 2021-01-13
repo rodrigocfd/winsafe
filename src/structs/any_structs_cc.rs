@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::funcs_priv::L_MAX_URL_LENGTH;
 use crate::handles::{HDC, HIMAGELIST, HTREEITEM};
-use crate::structs::{COLORREF, NMHDR, POINT, RECT};
+use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE};
 use crate::WString;
 
 /// [`BUTTON_IMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
@@ -19,6 +19,21 @@ pub struct BUTTON_IMAGELIST {
 	pub margin: RECT,
 	pub uAlign: co::BIA,
 }
+
+impl_default_zero!(BUTTON_IMAGELIST);
+
+/// [`BUTTON_SPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_splitinfo)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct BUTTON_SPLITINFO {
+	pub mask: co::BCSIF,
+	pub himlGlyph: HIMAGELIST,
+	pub uSplitStyle: co::BCSS,
+	pub size: SIZE,
+}
+
+impl_default_zero!(BUTTON_SPLITINFO);
 
 /// [`IMAGELISTDRAWPARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.
