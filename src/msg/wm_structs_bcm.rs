@@ -1,6 +1,6 @@
 use crate::co;
 use crate::funcs::GetLastError;
-use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
+use crate::msg::macros::{lp_to_mut_ref, lp_to_ref, ref_to_lp};
 use crate::msg::{Message, Wm};
 use crate::structs::{BUTTON_IMAGELIST, SIZE};
 
@@ -24,13 +24,13 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 		Wm {
 			msg_id: co::WM::BCM_GETIDEALSIZE,
 			wparam: 0,
-			lparam: ref_to_lparam(self.size),
+			lparam: ref_to_lp(self.size),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			size: lparam_to_ref(p),
+			size: lp_to_ref(p),
 		}
 	}
 }
@@ -57,13 +57,13 @@ impl<'a> Message for BcmGetImageList<'a> {
 		Wm {
 			msg_id: co::WM::BCM_GETIMAGELIST,
 			wparam: 0,
-			lparam: ref_to_lparam(self.info),
+			lparam: ref_to_lp(self.info),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			info: lparam_to_mut_ref(p),
+			info: lp_to_mut_ref(p),
 		}
 	}
 }

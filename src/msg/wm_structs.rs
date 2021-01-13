@@ -4,7 +4,7 @@ use crate::enums::{HwndHmenu, NccalcRect, WsWsex};
 use crate::funcs_priv::FAPPCOMMAND_MASK;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
-use crate::msg::macros::{lparam_to_mut_ref, lparam_to_ref, ref_to_lparam};
+use crate::msg::macros::{lp_to_mut_ref, lp_to_point, lp_to_ref, point_to_lp, ref_to_lp};
 use crate::msg::Message;
 use crate::structs as s;
 
@@ -201,6 +201,38 @@ impl Message for WmCommand {
 
 //------------------------------------------------------------------------------
 
+/// [`WM_CONTEXTMENU`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
+/// message parameters.
+pub struct WmContextMenu {
+	pub hwnd: HWND,
+	pub cursor_pos: s::POINT,
+}
+
+impl Message for WmContextMenu {
+	type RetType = ();
+
+	fn convert_ret(_: isize) -> Self::RetType {
+		()
+	}
+
+	fn into_generic_wm(self) -> Wm {
+		Wm {
+			msg_id: co::WM::CONTEXTMENU,
+			wparam: self.hwnd.ptr as usize,
+			lparam: point_to_lp(self.cursor_pos),
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			hwnd: HWND { ptr: p.wparam as *mut _ },
+			cursor_pos: lp_to_point(p),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
 pub struct WmCreate<'a, 'b, 'c> {
@@ -218,13 +250,13 @@ impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
 		Wm {
 			msg_id: co::WM::CREATE,
 			wparam: 0,
-			lparam: ref_to_lparam(self.createstruct),
+			lparam: ref_to_lp(self.createstruct),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			createstruct: lparam_to_ref(p),
+			createstruct: lp_to_ref(p),
 		}
 	}
 }
@@ -459,13 +491,13 @@ impl<'a> Message for WmGetMinMaxInfo<'a> {
 		Wm {
 			msg_id: co::WM::GETMINMAXINFO,
 			wparam: 0,
-			lparam: ref_to_lparam(self.info),
+			lparam: ref_to_lp(self.info),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			info: lparam_to_mut_ref(p),
+			info: lp_to_mut_ref(p),
 		}
 	}
 }
@@ -597,16 +629,13 @@ impl Message for WmMove {
 		Wm {
 			msg_id: co::WM::MOVE,
 			wparam: 0,
-			lparam: MAKEDWORD(self.coords.x as u16, self.coords.y as u16) as isize,
+			lparam: point_to_lp(self.coords),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			coords: s::POINT {
-				x: LOWORD(p.lparam as u32) as i32,
-				y: HIWORD(p.lparam as u32) as i32,
-			},
+			coords: lp_to_point(p),
 		}
 	}
 }
@@ -616,7 +645,7 @@ impl Message for WmMove {
 /// [`WM_MOVING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
 /// message parameters.
 pub struct WmMoving<'a> {
-	pub position: &'a mut s::RECT,
+	pub window_pos: &'a mut s::RECT,
 }
 
 impl<'a> Message for WmMoving<'a> {
@@ -630,13 +659,13 @@ impl<'a> Message for WmMoving<'a> {
 		Wm {
 			msg_id: co::WM::MOVING,
 			wparam: 0,
-			lparam: ref_to_lparam(self.position),
+			lparam: ref_to_lp(self.window_pos),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			position: lparam_to_mut_ref(p),
+			window_pos: lp_to_mut_ref(p),
 		}
 	}
 }
@@ -664,8 +693,8 @@ impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
 				NccalcRect::Rect(_) => false as usize,
 			},
 			lparam: match &self.data {
-				NccalcRect::Nccalc(nccalc) => ref_to_lparam(nccalc),
-				NccalcRect::Rect(rc) => ref_to_lparam(rc),
+				NccalcRect::Nccalc(nccalc) => ref_to_lp(nccalc),
+				NccalcRect::Rect(rc) => ref_to_lp(rc),
 			},
 		}
 	}
@@ -673,8 +702,8 @@ impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			data: match p.wparam {
-				0 => NccalcRect::Rect(lparam_to_mut_ref(p)),
-				_ => NccalcRect::Nccalc(lparam_to_mut_ref(p)),
+				0 => NccalcRect::Rect(lp_to_mut_ref(p)),
+				_ => NccalcRect::Nccalc(lp_to_mut_ref(p)),
 			},
 		}
 	}
@@ -699,13 +728,13 @@ impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
 		Wm {
 			msg_id: co::WM::NCCREATE,
 			wparam: 0,
-			lparam: ref_to_lparam(self.createstruct),
+			lparam: ref_to_lp(self.createstruct),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			createstruct: lparam_to_ref(p),
+			createstruct: lp_to_ref(p),
 		}
 	}
 }
@@ -1003,10 +1032,10 @@ impl Message for WmSize {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			request: co::SIZE_R::from(p.wparam as u8),
-			client_area: s::SIZE {
-				cx: LOWORD(p.lparam as u32) as i32,
-				cy: HIWORD(p.lparam as u32) as i32,
-			},
+			client_area: s::SIZE::new(
+				LOWORD(p.lparam as u32) as i32,
+				HIWORD(p.lparam as u32) as i32,
+			),
 		}
 	}
 }
@@ -1031,14 +1060,14 @@ impl<'a> Message for WmSizing<'a> {
 		Wm {
 			msg_id: co::WM::SIZING,
 			wparam: u8::from(self.window_edge) as usize,
-			lparam: ref_to_lparam(self.coords),
+			lparam: ref_to_lp(self.coords),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			window_edge: co::WMSZ::from(p.wparam as u8),
-			coords: lparam_to_mut_ref(p),
+			coords: lp_to_mut_ref(p),
 		}
 	}
 }
@@ -1075,8 +1104,8 @@ impl<'a> Message for WmStyleChanged<'a> {
 		Self {
 			change,
 			stylestruct: match change {
-				co::GWL_C::STYLE => WsWsex::Ws(lparam_to_ref(p)),
-				_ => WsWsex::Wsex(lparam_to_ref(p)),
+				co::GWL_C::STYLE => WsWsex::Ws(lp_to_ref(p)),
+				_ => WsWsex::Wsex(lp_to_ref(p)),
 			},
 		}
 	}
@@ -1114,8 +1143,8 @@ impl<'a> Message for WmStyleChanging<'a> {
 		Self {
 			change,
 			stylestruct: match change {
-				co::GWL_C::STYLE => WsWsex::Ws(lparam_to_ref(p)),
-				_ => WsWsex::Wsex(lparam_to_ref(p)),
+				co::GWL_C::STYLE => WsWsex::Ws(lp_to_ref(p)),
+				_ => WsWsex::Wsex(lp_to_ref(p)),
 			},
 		}
 	}
@@ -1185,13 +1214,13 @@ impl<'a> Message for WmWindowPosChanged<'a> {
 		Wm {
 			msg_id: co::WM::WINDOWPOSCHANGED,
 			wparam: 0,
-			lparam: ref_to_lparam(self.windowpos),
+			lparam: ref_to_lp(self.windowpos),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			windowpos: lparam_to_ref(p),
+			windowpos: lp_to_ref(p),
 		}
 	}
 }
@@ -1215,13 +1244,13 @@ impl<'a> Message for WmWindowPosChanging<'a> {
 		Wm {
 			msg_id: co::WM::WINDOWPOSCHANGING,
 			wparam: 0,
-			lparam: ref_to_lparam(self.windowpos),
+			lparam: ref_to_lp(self.windowpos),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			windowpos: lparam_to_ref(p),
+			windowpos: lp_to_ref(p),
 		}
 	}
 }

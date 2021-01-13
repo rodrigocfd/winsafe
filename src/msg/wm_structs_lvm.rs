@@ -1,7 +1,7 @@
 use crate::co;
 use crate::funcs::GetLastError;
 use crate::msg::{Message, Wm};
-use crate::msg::macros::{lparam_to_ref, ref_to_lparam};
+use crate::msg::macros::{lp_to_ref, ref_to_lp};
 use crate::structs as s;
 
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
@@ -25,14 +25,14 @@ impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_GETCOLUMN,
 			wparam: self.index as usize,
-			lparam: ref_to_lparam(self.lvcolumn),
+			lparam: ref_to_lp(self.lvcolumn),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
-			lvcolumn: lparam_to_ref(p),
+			lvcolumn: lp_to_ref(p),
 		}
 	}
 }
@@ -131,14 +131,14 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_INSERTCOLUMN,
 			wparam: self.index as usize,
-			lparam: ref_to_lparam(self.lvcolumn),
+			lparam: ref_to_lp(self.lvcolumn),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
-			lvcolumn: lparam_to_ref(p),
+			lvcolumn: lp_to_ref(p),
 		}
 	}
 }
@@ -165,13 +165,13 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_INSERTITEM,
 			wparam: 0,
-			lparam: ref_to_lparam(self.lvitem),
+			lparam: ref_to_lp(self.lvitem),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			lvitem: lparam_to_ref(p),
+			lvitem: lp_to_ref(p),
 		}
 	}
 }
@@ -319,14 +319,14 @@ impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_SETCOLUMN,
 			wparam: self.index as usize,
-			lparam: ref_to_lparam(self.lvcolumn),
+			lparam: ref_to_lp(self.lvcolumn),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
-			lvcolumn: lparam_to_ref(p),
+			lvcolumn: lp_to_ref(p),
 		}
 	}
 }
@@ -350,13 +350,13 @@ impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_SETITEM,
 			wparam: 0,
-			lparam: ref_to_lparam(self.lvitem),
+			lparam: ref_to_lp(self.lvitem),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			lvitem: lparam_to_ref(p),
+			lvitem: lp_to_ref(p),
 		}
 	}
 }
@@ -381,14 +381,14 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_SETITEMTEXT,
 			wparam: self.index as usize,
-			lparam: ref_to_lparam(self.lvitem),
+			lparam: ref_to_lp(self.lvitem),
 		}
 	}
 
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			index: p.wparam as i32,
-			lvitem: lparam_to_ref(p),
+			lvitem: lp_to_ref(p),
 		}
 	}
 }

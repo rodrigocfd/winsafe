@@ -328,6 +328,10 @@ impl MsgEvents {
 		/// [`CustomMain`](crate::gui::CustomMain).
 	}
 
+	wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,
+		/// [`WM_CONTEXTMENU`](crate::msg::WmContextMenu) message.
+	}
+
 	/// [`WM_CREATE`](crate::msg::WmCreate) message.
 	///
 	/// This is where you physically create the child controls, by calling their
