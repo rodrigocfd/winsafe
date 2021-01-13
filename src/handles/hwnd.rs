@@ -107,8 +107,8 @@ impl HWND {
 	///
 	/// The return type depends on the message argument.
 	pub fn DefSubclassProc<M: Message>(self, uMsg: M) -> M::RetType {
-		let wmAny = uMsg.into_generic_wm();
-		M::convert_ret(
+		let wmAny = uMsg.as_generic_wm();
+		uMsg.convert_ret(
 			unsafe {
 				comctl32::DefSubclassProc(
 					self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
@@ -122,8 +122,8 @@ impl HWND {
 	///
 	/// The return type depends on the message argument.
 	pub fn DefWindowProc<M: Message>(self, uMsg: M) -> M::RetType {
-		let wmAny = uMsg.into_generic_wm();
-		M::convert_ret(
+		let wmAny = uMsg.as_generic_wm();
+		uMsg.convert_ret(
 			unsafe {
 				user32::DefWindowProcW(
 					self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
@@ -659,7 +659,7 @@ impl HWND {
 	}
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
-	/// method.
+	/// method. Note that this method is asychronous.
 	///
 	/// # Examples
 	///
@@ -673,7 +673,7 @@ impl HWND {
 	/// my_hwnd.PostMessage(WmClose {}).unwrap();
 	/// ```
 	pub fn PostMessage<M: Message>(self, uMsg: M) -> Result<(), co::ERROR> {
-		let wmAny = uMsg.into_generic_wm();
+		let wmAny = uMsg.as_generic_wm();
 		match unsafe {
 			user32::PostMessageW(
 				self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
@@ -759,8 +759,8 @@ impl HWND {
 	/// });
 	/// ```
 	pub fn SendMessage<M: Message>(self, uMsg: M) -> M::RetType {
-		let wmAny = uMsg.into_generic_wm();
-		M::convert_ret(
+		let wmAny = uMsg.as_generic_wm();
+		uMsg.convert_ret(
 			unsafe {
 				user32::SendMessageW(
 					self.ptr, wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,

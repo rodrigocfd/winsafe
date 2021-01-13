@@ -3,7 +3,7 @@
 use std::ffi::c_void;
 
 use crate::co;
-use crate::handles::{HBITMAP, HMENU, HWND};
+use crate::handles::{HBITMAP, HICON, HMENU, HWND};
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, RECT, STYLESTRUCT_WS, STYLESTRUCT_WS_EX};
 use crate::WString;
 
@@ -27,6 +27,25 @@ impl AtomStr {
 		match self {
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 			Self::Atom(atom) => atom.as_ptr(),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for:
+///
+/// * [`BM_GETIMAGE`](crate::msg::BmGetImage) `image`.
+pub enum BitmapIcon {
+	Bitmap(HBITMAP),
+	Icon(HICON),
+}
+
+impl From<BitmapIcon> for usize {
+	fn from(v: BitmapIcon) -> usize {
+		match v {
+			BitmapIcon::Bitmap(hbmp) => hbmp.ptr as usize,
+			BitmapIcon::Icon(hicon) => hicon.ptr as usize,
 		}
 	}
 }
@@ -69,9 +88,9 @@ pub enum HwndHmenu {
 	Hmenu(HMENU),
 }
 
-impl From<HwndHmenu> for isize {
-	fn from(v: HwndHmenu) -> isize {
-		match v {
+impl HwndHmenu {
+	pub fn as_isize(&self) -> isize {
+		match self {
 			HwndHmenu::Hwnd(hwnd) => hwnd.ptr as isize,
 			HwndHmenu::Hmenu(hmenu) => hmenu.ptr as isize,
 		}

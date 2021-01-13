@@ -14,14 +14,14 @@ pub struct LvmGetColumn<'a, 'b> {
 impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
 		}
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_GETCOLUMN,
 			wparam: self.index as usize,
@@ -48,14 +48,14 @@ pub struct LvmGetColumnWidth {
 impl Message for LvmGetColumnWidth {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
 		}
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_GETCOLUMNWIDTH,
 			wparam: self.index as usize,
@@ -91,11 +91,11 @@ pub struct LvmGetView {}
 impl Message for LvmGetView {
 	type RetType = co::LV_VIEW;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		co::LV_VIEW::from(v as u32)
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_GETVIEW,
 			wparam: 0,
@@ -120,14 +120,14 @@ pub struct LvmInsertColumn<'a, 'b> {
 impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
 		}
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_INSERTCOLUMN,
 			wparam: self.index as usize,
@@ -154,14 +154,14 @@ pub struct LvmInsertItem<'a, 'b> {
 impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 	type RetType = Result<u32, co::ERROR>;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			i => Ok(i as u32),
 		}
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_INSERTITEM,
 			wparam: 0,
@@ -185,11 +185,11 @@ pub struct LvmIsGroupViewEnabled {}
 impl Message for LvmIsGroupViewEnabled {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_ISGROUPVIEWENABLED,
 			wparam: 0,
@@ -213,11 +213,11 @@ pub struct LvmIsItemVisible {
 impl Message for LvmIsItemVisible {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_ISITEMVISIBLE,
 			wparam: self.index as usize,
@@ -244,14 +244,14 @@ pub struct LvmRedrawItems {
 impl Message for LvmRedrawItems {
 	type RetType = Result<(), co::ERROR>;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_REDRAWITEMS,
 			wparam: self.first_index as usize,
@@ -279,11 +279,11 @@ pub struct LvmScroll {
 impl Message for LvmScroll {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SCROLL,
 			wparam: self.horizontal as usize,
@@ -311,11 +311,11 @@ pub struct LvmSetColumn<'a, 'b> {
 impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETCOLUMN,
 			wparam: self.index as usize,
@@ -342,11 +342,11 @@ pub struct LvmSetItem<'a, 'b> {
 impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETITEM,
 			wparam: 0,
@@ -373,11 +373,11 @@ pub struct LvmSetItemText<'a, 'b> {
 impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETITEMTEXT,
 			wparam: self.index as usize,
@@ -404,14 +404,14 @@ pub struct LvmSetView {
 impl Message for LvmSetView {
 	type RetType = Result<(), co::ERROR>;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(GetLastError()),
 			_ => Ok(()),
 		}
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETVIEW,
 			wparam: u32::from(self.view) as usize,
@@ -437,11 +437,11 @@ pub struct LvmUpdate {
 impl Message for LvmUpdate {
 	type RetType = bool;
 
-	fn convert_ret(v: isize) -> Self::RetType {
+	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn into_generic_wm(self) -> Wm {
+	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_UPDATE,
 			wparam: self.index as usize,

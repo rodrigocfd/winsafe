@@ -13,11 +13,11 @@ pub trait Message {
 
 	/// Converts the generic `isize` return value to the specific type returned
 	/// by the message.
-	fn convert_ret(v: isize) -> Self::RetType;
+	fn convert_ret(&self, v: isize) -> Self::RetType;
 
 	/// Converts the message parameters to the generic [`Wm`](crate::msg::Wm)
 	/// parameters.
-	fn into_generic_wm(self) -> Wm;
+	fn as_generic_wm(&self) -> Wm;
 
 	/// Converts the generic [`Wm`](crate::msg::Wm) parameters into the message
 	/// parameters.

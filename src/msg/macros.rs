@@ -14,11 +14,11 @@ macro_rules! empty_msg {
 		impl Message for $name {
 			type RetType = ();
 
-			fn convert_ret(_: isize) -> Self::RetType {
+			fn convert_ret(&self, _: isize) -> Self::RetType {
 				()
 			}
 
-			fn into_generic_wm(self) -> Wm {
+			fn as_generic_wm(&self) -> Wm {
 				Wm {
 					msg_id: $wmconst,
 					wparam: 0,
@@ -48,11 +48,11 @@ macro_rules! ctl_color_msg {
 		impl Message for $name {
 			type RetType = HBRUSH;
 
-			fn convert_ret(v: isize) -> Self::RetType {
+			fn convert_ret(&self, v: isize) -> Self::RetType {
 				HBRUSH { ptr: v as *mut _ }
 			}
 
-			fn into_generic_wm(self) -> Wm {
+			fn as_generic_wm(&self) -> Wm {
 				Wm {
 					msg_id: $wmconst,
 					wparam: self.hdc.ptr as usize,
@@ -85,11 +85,11 @@ macro_rules! button_msg {
 		impl Message for $name {
 			type RetType = ();
 
-			fn convert_ret(_: isize) -> Self::RetType {
+			fn convert_ret(&self, _: isize) -> Self::RetType {
 				()
 			}
 
-			fn into_generic_wm(self) -> Wm {
+			fn as_generic_wm(&self) -> Wm {
 				Wm {
 					msg_id: $wmconst,
 					wparam: u16::from(self.vkeys) as usize,

@@ -205,3 +205,11 @@ const_type! { ILS, u32,
 	SATURATE, 0x00000004
 	ALPHA, 0x00000008
 }
+
+const_type! { IMAGE_TYPE, u8,
+	/// [`BM_GETIMAGE`](crate::msg::BmGetImage) `img_type` (`u8`). Originally has
+	/// `IMAGE` prefix.
+
+	BITMAP, 0
+	ICON, 1
+}
