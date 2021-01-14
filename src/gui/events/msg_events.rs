@@ -1,8 +1,8 @@
-use std::cell::UnsafeCell;
 use std::rc::Rc;
 
 use crate::co;
 use crate::gui::events::func_store::FuncStore;
+use crate::gui::immut::Immut;
 use crate::handles::{HDC, HICON};
 use crate::msg;
 use crate::msg::Message;
@@ -18,9 +18,7 @@ pub enum ProcessResult {
 
 /// Exposes window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
-pub struct MsgEvents {
-	obj: UnsafeCell<Obj>,
-}
+pub struct MsgEvents(Immut<Obj>);
 
 struct Obj { // actual fields of MsgEvents
 	msgs: FuncStore< // ordinary WM messages
@@ -78,17 +76,9 @@ macro_rules! wm_ret_none {
 }
 
 impl MsgEvents {
-	fn obj(&self) -> &Obj {
-		unsafe { &*self.obj.get() }
-	}
-
-	fn obj_mut(&self) -> &mut Obj {
-		unsafe { &mut *self.obj.get() }
-	}
-
 	pub(crate) fn new() -> MsgEvents {
-		Self {
-			obj: UnsafeCell::new(
+		Self(
+			Immut::new(
 				Obj {
 					msgs: FuncStore::new(),
 					tmrs: FuncStore::new(),
@@ -96,15 +86,15 @@ impl MsgEvents {
 					nfys: FuncStore::new(),
 				},
 			),
-		}
+		)
 	}
 
 	/// Tells whether no functions have been added.
 	pub(crate) fn is_empty(&self) -> bool {
-		self.obj().msgs.is_empty()
-			&& self.obj().tmrs.is_empty()
-			&& self.obj().cmds.is_empty()
-			&& self.obj().nfys.is_empty()
+		self.0.msgs.is_empty()
+			&& self.0.tmrs.is_empty()
+			&& self.0.cmds.is_empty()
+			&& self.0.nfys.is_empty()
 	}
 
 	/// Searches for an user function for the given message, and runs it if found.
@@ -113,7 +103,7 @@ impl MsgEvents {
 			co::WM::NOTIFY => {
 				let wm_nfy = msg::WmNotify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
-				match self.obj_mut().nfys.find(key) {
+				match self.0.as_mut().nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -126,7 +116,7 @@ impl MsgEvents {
 			co::WM::COMMAND => {
 				let wm_cmd = msg::WmCommand::from_generic_wm(wm_any);
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
-				match self.obj_mut().cmds.find(key) {
+				match self.0.as_mut().cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -136,7 +126,7 @@ impl MsgEvents {
 			},
 			co::WM::TIMER => {
 				let wm_tmr = msg::WmTimer::from_generic_wm(wm_any);
-				match self.obj_mut().tmrs.find(wm_tmr.timer_id) {
+				match self.0.as_mut().tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -145,7 +135,7 @@ impl MsgEvents {
 				}
 			}
 			_ => { // any other message
-				match self.obj_mut().msgs.find(wm_any.msg_id) {
+				match self.0.as_mut().msgs.find(wm_any.msg_id) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(wm_any) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -162,14 +152,14 @@ impl MsgEvents {
 	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: FnMut(msg::Wm) -> Option<isize> + 'static,
 	{
-		self.obj_mut().msgs.insert(ident, Box::new(func));
+		self.0.as_mut().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
 	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> Option<isize> + 'static,
 	{
-		self.obj_mut().nfys.insert((id_from, code), Box::new(func));
+		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));
 	}
 
 	/// Event to any [window message](crate::co::WM).
@@ -212,7 +202,7 @@ impl MsgEvents {
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: FnMut() + 'static,
 	{
-		self.obj_mut().tmrs.insert(timer_id, Box::new(func));
+		self.0.as_mut().tmrs.insert(timer_id, Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](crate::msg::WmCommand) message, for specific code and
@@ -229,7 +219,7 @@ impl MsgEvents {
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + 'static,
 	{
-		self.obj_mut().cmds.insert((code, ctrl_id), Box::new(func));
+		self.0.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](crate::msg::WmCommand) message, handling both
@@ -259,16 +249,16 @@ impl MsgEvents {
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(UnsafeCell::new(func));
+		let shared_func = Rc::new(Immut::new(func));
 
 		self.wm_command(co::CMD::Menu, ctrl_id, {
 			let shared_func = shared_func.clone();
-			move || (unsafe { &mut *shared_func.get() })()
+			move || shared_func.as_mut()()
 		});
 
 		self.wm_command(co::CMD::Accelerator, ctrl_id, {
 			let shared_func = shared_func.clone();
-			move || (unsafe { &mut *shared_func.get() })()
+			move || shared_func.as_mut()()
 		});
 	}
 

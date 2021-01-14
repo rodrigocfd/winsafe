@@ -1,4 +1,3 @@
-use std::cell::UnsafeCell;
 use std::sync::Arc;
 
 use crate::co;
@@ -16,9 +15,9 @@ use crate::structs::{POINT, SIZE};
 /// control.
 #[derive(Clone)]
 pub struct Edit {
-	base: Arc<UnsafeCell<
+	base: Arc<
 		NativeControlBase<EditEvents, EditOpts>,
-	>>,
+	>,
 }
 
 unsafe impl Send for Edit {}
@@ -26,9 +25,9 @@ unsafe impl Sync for Edit {}
 
 impl Child for Edit {
 	fn create(&self) -> Result<(), co::ERROR> {
-		match self.base().opts_id() {
+		match self.base.opts_id() {
 			OptsId::Wnd(opts) => {
-				let our_hwnd = self.base_mut().create_window( // may panic
+				let our_hwnd = self.base.create_window( // may panic
 					"EDIT", Some(&opts.text), opts.pos,
 					SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
 					opts.ctrl_id,
@@ -40,7 +39,7 @@ impl Child for Edit {
 				Ok(())
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.base_mut().create_dlg(*ctrl_id) // may panic
+				self.base.create_dlg(*ctrl_id) // may panic
 					.map(|_| ())
 			},
 		}
@@ -48,26 +47,18 @@ impl Child for Edit {
 }
 
 impl Edit {
-	fn base(&self) -> &NativeControlBase<EditEvents, EditOpts> {
-		unsafe { &*self.base.get() }
-	}
-
-	fn base_mut(&self) -> &mut NativeControlBase<EditEvents, EditOpts> {
-		unsafe { &mut *self.base.get() }
-	}
-
 	/// Instantiates a new `Edit` object, to be created on the parent window with
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: EditOpts) -> Edit {
 		let opts = EditOpts::define_ctrl_id(opts);
 		Self {
-			base: Arc::new(UnsafeCell::new(
+			base: Arc::new(
 				NativeControlBase::new(
 					parent,
 					EditEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
-			)),
+			),
 		}
 	}
 
@@ -75,13 +66,13 @@ impl Edit {
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Edit {
 		Self {
-			base: Arc::new(UnsafeCell::new(
+			base: Arc::new(
 				NativeControlBase::new(
 					parent,
 					EditEvents::new(parent, ctrl_id),
 					OptsId::Dlg(ctrl_id),
 				),
-			)),
+			),
 		}
 	}
 
@@ -90,12 +81,12 @@ impl Edit {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.base().hwnd()
+		*self.base.hwnd()
 	}
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		match self.base().opts_id() {
+		match self.base.opts_id() {
 			OptsId::Wnd(opts) => opts.ctrl_id,
 			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
@@ -108,7 +99,7 @@ impl Edit {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on(&self) -> &EditEvents {
-		self.base().on()
+		self.base.on()
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control
@@ -120,7 +111,7 @@ impl Edit {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
-		self.base().on_subclass()
+		self.base.on_subclass()
 	}
 }
 

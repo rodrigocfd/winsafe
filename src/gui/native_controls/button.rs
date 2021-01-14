@@ -1,4 +1,3 @@
-use std::cell::UnsafeCell;
 use std::sync::Arc;
 
 use crate::co;
@@ -16,9 +15,9 @@ use crate::structs::{POINT, SIZE};
 /// control.
 #[derive(Clone)]
 pub struct Button {
-	base: Arc<UnsafeCell<
+	base: Arc<
 		NativeControlBase<ButtonEvents, ButtonOpts>,
-	>>,
+	>,
 }
 
 unsafe impl Send for Button {}
@@ -26,9 +25,9 @@ unsafe impl Sync for Button {}
 
 impl Child for Button {
 	fn create(&self) -> Result<(), co::ERROR> {
-		match self.base().opts_id() {
+		match self.base.opts_id() {
 			OptsId::Wnd(opts) => {
-				let our_hwnd = self.base_mut().create_window( // may panic
+				let our_hwnd = self.base.create_window( // may panic
 					"BUTTON", Some(&opts.text), opts.pos,
 					SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
 					opts.ctrl_id,
@@ -40,7 +39,7 @@ impl Child for Button {
 				Ok(())
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.base_mut().create_dlg(*ctrl_id) // may panic
+				self.base.create_dlg(*ctrl_id) // may panic
 					.map(|_| ())
 			},
 		}
@@ -48,26 +47,18 @@ impl Child for Button {
 }
 
 impl Button {
-	fn base(&self) -> &NativeControlBase<ButtonEvents, ButtonOpts> {
-		unsafe { &*self.base.get() }
-	}
-
-	fn base_mut(&self) -> &mut NativeControlBase<ButtonEvents, ButtonOpts> {
-		unsafe { &mut *self.base.get() }
-	}
-
 	/// Instantiates a new `Button` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
 		let opts = ButtonOpts::define_ctrl_id(opts);
 		Self {
-			base: Arc::new(UnsafeCell::new(
+			base: Arc::new(
 				NativeControlBase::new(
 					parent,
 					ButtonEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
-			)),
+			),
 		}
 	}
 
@@ -75,13 +66,13 @@ impl Button {
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Button {
 		Self {
-			base: Arc::new(UnsafeCell::new(
+			base: Arc::new(
 				NativeControlBase::new(
 					parent,
 					ButtonEvents::new(parent, ctrl_id),
 					OptsId::Dlg(ctrl_id),
 				),
-			)),
+			),
 		}
 	}
 
@@ -90,12 +81,12 @@ impl Button {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.base().hwnd()
+		*self.base.hwnd()
 	}
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		match self.base().opts_id() {
+		match self.base.opts_id() {
 			OptsId::Wnd(opts) => opts.ctrl_id,
 			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
@@ -125,7 +116,7 @@ impl Button {
 	/// });
 	/// ```
 	pub fn on(&self) -> &ButtonEvents {
-		self.base().on()
+		self.base.on()
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control
@@ -137,7 +128,7 @@ impl Button {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
-		self.base().on_subclass()
+		self.base.on_subclass()
 	}
 
 	/// Fires the click event for the radio button. The event is asynchronous,

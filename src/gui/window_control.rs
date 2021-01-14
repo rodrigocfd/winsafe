@@ -1,10 +1,10 @@
-use std::cell::UnsafeCell;
 use std::sync::Arc;
 
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::gui::globals::{multiply_dpi, paint_control_borders};
 use crate::gui::events::MsgEvents;
+use crate::gui::immut::Immut;
 use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
@@ -13,7 +13,7 @@ use crate::WString;
 
 #[derive(Clone)]
 pub struct WindowControl {
-	obj: Arc<UnsafeCell<Obj>>,
+	obj: Arc<Immut<Obj>>,
 }
 
 struct Obj { // actual fields of WindowControl
@@ -23,26 +23,18 @@ struct Obj { // actual fields of WindowControl
 
 impl Parent for WindowControl {
 	fn hwnd_ref(&self) -> &HWND {
-		self.obj().base.hwnd_ref()
+		self.obj.base.hwnd_ref()
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
-		self.obj().base.events_ref()
+		self.obj.base.events_ref()
 	}
 }
 
 impl WindowControl {
-	fn obj(&self) -> &Obj {
-		unsafe { &*self.obj.get() }
-	}
-
-	fn obj_mut(&self) -> &mut Obj {
-		unsafe { &mut *self.obj.get() }
-	}
-
 	pub fn new(parent: &dyn Parent, opts: CustomControlOpts) -> WindowControl {
 		let wnd = Self {
-			obj: Arc::new(UnsafeCell::new(
+			obj: Arc::new(Immut::new(
 				Obj {
 					base: WindowBase::new(Some(parent)),
 					opts,
@@ -54,18 +46,18 @@ impl WindowControl {
 	}
 
 	pub fn create(&self) -> Result<(), co::ERROR> {
-		let opts = &mut self.obj_mut().opts;
-		let hinst = self.obj().base.parent_hwnd()
+		let opts = &mut self.obj.as_mut().opts;
+		let hinst = self.obj.base.parent_hwnd()
 			.expect("Invalid parent window.").hinstance();
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self.obj().base.register_class(&mut wcx)?;
+		self.obj.base.register_class(&mut wcx)?;
 
 		multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
 
-		self.obj().base.create_window( // may panic
+		self.obj.base.create_window( // may panic
 			hinst,
 			&class_name_buf.to_string(),
 			None,

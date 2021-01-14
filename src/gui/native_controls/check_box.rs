@@ -1,4 +1,3 @@
-use std::cell::UnsafeCell;
 use std::sync::Arc;
 
 use crate::co;
@@ -19,9 +18,9 @@ use crate::structs::POINT;
 /// [`Button`](crate::gui::Button): just a button with a specific style.
 #[derive(Clone)]
 pub struct CheckBox {
-	base: Arc<UnsafeCell<
+	base: Arc<
 		NativeControlBase<ButtonEvents, CheckBoxOpts>,
-	>>,
+	>,
 }
 
 unsafe impl Send for CheckBox {}
@@ -29,11 +28,11 @@ unsafe impl Sync for CheckBox {}
 
 impl Child for CheckBox {
 	fn create(&self) -> Result<(), co::ERROR> {
-		match self.base().opts_id() {
+		match self.base.opts_id() {
 			OptsId::Wnd(opts) => {
 				let bound_box = calc_text_bound_box_check(&opts.text)?;
 
-				let our_hwnd = self.base_mut().create_window( // may panic
+				let our_hwnd = self.base.create_window( // may panic
 					"BUTTON", Some(&opts.text), opts.pos, bound_box,
 					opts.ctrl_id,
 					opts.ex_window_style,
@@ -44,7 +43,7 @@ impl Child for CheckBox {
 				Ok(())
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.base_mut().create_dlg(*ctrl_id) // may panic
+				self.base.create_dlg(*ctrl_id) // may panic
 					.map(|_| ())
 			},
 		}
@@ -52,26 +51,18 @@ impl Child for CheckBox {
 }
 
 impl CheckBox {
-	fn base(&self) -> &NativeControlBase<ButtonEvents, CheckBoxOpts> {
-		unsafe { &*self.base.get() }
-	}
-
-	fn base_mut(&self) -> &mut NativeControlBase<ButtonEvents, CheckBoxOpts> {
-		unsafe { &mut *self.base.get() }
-	}
-
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: CheckBoxOpts) -> CheckBox {
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
 		Self {
-			base: Arc::new(UnsafeCell::new(
+			base: Arc::new(
 				NativeControlBase::new(
 					parent,
 					ButtonEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
-			)),
+			),
 		}
 	}
 
@@ -79,13 +70,13 @@ impl CheckBox {
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> CheckBox {
 		Self {
-			base: Arc::new(UnsafeCell::new(
+			base: Arc::new(
 				NativeControlBase::new(
 					parent,
 					ButtonEvents::new(parent, ctrl_id),
 					OptsId::Dlg(ctrl_id),
 				),
-			)),
+			),
 		}
 	}
 
@@ -94,12 +85,12 @@ impl CheckBox {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.base().hwnd()
+		*self.base.hwnd()
 	}
 
 	/// Returns the control ID.
 	pub fn ctrl_id(&self) -> u16 {
-		match self.base().opts_id() {
+		match self.base.opts_id() {
 			OptsId::Wnd(opts) => opts.ctrl_id,
 			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
@@ -112,7 +103,7 @@ impl CheckBox {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on(&self) -> &ButtonEvents {
-		self.base().on()
+		self.base.on()
 	}
 
 	/// Exposes the subclass events. If at least one event exists, the control
@@ -124,7 +115,7 @@ impl CheckBox {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
-		self.base().on_subclass()
+		self.base.on_subclass()
 	}
 
 	/// Tells if this check box is currently checked.

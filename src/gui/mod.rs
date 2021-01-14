@@ -8,6 +8,7 @@ mod dialog_base;
 mod dialog_control;
 mod dialog_main;
 mod globals;
+mod immut;
 mod main_loop;
 mod native_controls;
 mod traits;

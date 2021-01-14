@@ -1,9 +1,9 @@
-use std::cell::UnsafeCell;
 use std::ptr::NonNull;
 use std::rc::Rc;
 
 use crate::co;
 use crate::gui::events::MsgEvents;
+use crate::gui::immut::Immut;
 use crate::gui::traits::Parent;
 
 /// Exposes button
@@ -48,12 +48,12 @@ impl RadioGroupEvents {
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(UnsafeCell::new(func));
+		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_events().wm_command(co::CMD::BN_CLICKED, *ctrl_id, {
 				let shared_func = shared_func.clone();
-				move || (unsafe { &mut *shared_func.get() })()
+				move || shared_func.as_mut()()
 			});
 		}
 	}
@@ -63,12 +63,12 @@ impl RadioGroupEvents {
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(UnsafeCell::new(func));
+		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_events().wm_command(co::CMD::BN_DBLCLK, *ctrl_id, {
 				let shared_func = shared_func.clone();
-				move || (unsafe { &mut *shared_func.get() })()
+				move || shared_func.as_mut()()
 			});
 		}
 	}
@@ -78,12 +78,12 @@ impl RadioGroupEvents {
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(UnsafeCell::new(func));
+		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_events().wm_command(co::CMD::BN_KILLFOCUS, *ctrl_id, {
 				let shared_func = shared_func.clone();
-				move || (unsafe { &mut *shared_func.get() })()
+				move || shared_func.as_mut()()
 			});
 		}
 	}
@@ -93,12 +93,12 @@ impl RadioGroupEvents {
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(UnsafeCell::new(func));
+		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_events().wm_command(co::CMD::BN_SETFOCUS, *ctrl_id, {
 				let shared_func = shared_func.clone();
-				move || (unsafe { &mut *shared_func.get() })()
+				move || shared_func.as_mut()()
 			});
 		}
 	}

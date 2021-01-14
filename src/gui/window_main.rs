@@ -1,4 +1,3 @@
-use std::cell::UnsafeCell;
 use std::sync::Arc;
 
 use crate::co;
@@ -6,6 +5,7 @@ use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::multiply_dpi;
+use crate::gui::immut::Immut;
 use crate::gui::main_loop::run_loop;
 use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
@@ -15,7 +15,7 @@ use crate::WString;
 
 #[derive(Clone)]
 pub struct WindowMain {
-	obj: Arc<UnsafeCell<Obj>>,
+	obj: Arc<Immut<Obj>>,
 }
 
 struct Obj { // actual fields of WindowMain
@@ -26,26 +26,18 @@ struct Obj { // actual fields of WindowMain
 
 impl Parent for WindowMain {
 	fn hwnd_ref(&self) -> &HWND {
-		self.obj().base.hwnd_ref()
+		self.obj.base.hwnd_ref()
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
-		self.obj().base.events_ref()
+		self.obj.base.events_ref()
 	}
 }
 
 impl WindowMain {
-	fn obj(&self) -> &Obj {
-		unsafe { &*self.obj.get() }
-	}
-
-	fn obj_mut(&self) -> &mut Obj {
-		unsafe { &mut *self.obj.get() }
-	}
-
 	pub fn new(opts: CustomMainOpts) -> WindowMain {
 		let wnd = Self {
-			obj: Arc::new(UnsafeCell::new(
+			obj: Arc::new(Immut::new(
 				Obj {
 					base: WindowBase::new(None), // no parent
 					opts,
@@ -60,13 +52,13 @@ impl WindowMain {
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		let opts = &mut self.obj_mut().opts;
+		let opts = &mut self.obj.as_mut().opts;
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self.obj().base.register_class(&mut wcx)?;
+		self.obj.base.register_class(&mut wcx)?;
 
 		multiply_dpi(None, Some(&mut opts.size))?;
 
@@ -89,7 +81,7 @@ impl WindowMain {
 		AdjustWindowRectEx(&mut wnd_rc, opts.style,
 			!opts.menu.is_null(), opts.ex_style)?;
 
-		let our_hwnd = self.obj().base.create_window( // may panic
+		let our_hwnd = self.obj.base.create_window( // may panic
 			hinst,
 			&class_name_buf.to_string(),
 			Some(&opts.title),
@@ -113,11 +105,11 @@ impl WindowMain {
 				if !p.is_minimized {
 					if p.event == co::WA::INACTIVE {
 						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-							if self2.obj().base.hwnd_ref().IsChild(hwnd_cur_focus) {
-								self2.obj_mut().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
+							if self2.obj.base.hwnd_ref().IsChild(hwnd_cur_focus) {
+								self2.obj.as_mut().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
 							}
 						}
-					} else if let Some(hwnd_prev_focus) = self2.obj().hchild_prev_focus {
+					} else if let Some(hwnd_prev_focus) = self2.obj.hchild_prev_focus {
 						hwnd_prev_focus.SetFocus(); // put focus back
 					}
 				}
