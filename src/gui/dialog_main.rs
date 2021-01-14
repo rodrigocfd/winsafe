@@ -51,8 +51,8 @@ impl DialogMain {
 	pub fn run_as_main(&self,
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
-		let hinst = HINSTANCE::GetModuleHandle(None)?;
-		let our_hwnd = self.0.base.create_dialog_param(hinst)?; // may panic
+		self.0.base.create_dialog_param()?; // may panic
+		let hinst = self.0.base.parent_hinstance()?;
 
 		let haccel = match self.0.accel_table_id {
 			None => None,
@@ -60,9 +60,9 @@ impl DialogMain {
 		};
 
 		self.set_icon_if_any(hinst)?;
-		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
-		run_loop(our_hwnd, haccel) // blocks until window is closed
+		run_loop(self.hwnd_ref(), haccel) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {

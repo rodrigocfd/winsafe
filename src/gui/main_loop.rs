@@ -3,7 +3,7 @@ use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::handles::{HACCEL, HWND};
 use crate::structs::MSG;
 
-pub fn run_loop(hwnd: HWND, haccel: Option<HACCEL>) -> Result<i32, co::ERROR> {
+pub fn run_loop(hwnd: &HWND, haccel: Option<HACCEL>) -> Result<i32, co::ERROR> {
 	loop {
 		let mut msg = MSG::default();
 		if !GetMessage(&mut msg, None, 0, 0)? {

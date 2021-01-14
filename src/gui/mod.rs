@@ -2,6 +2,7 @@
 
 pub mod events;
 
+mod base;
 mod custom_control;
 mod custom_main;
 mod dialog_base;

@@ -1,7 +1,6 @@
-use std::ptr::NonNull;
-
 use crate::co;
 use crate::enums::{HwndPlace, IdStr};
+use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::globals::ui_font;
 use crate::gui::traits::Parent;
@@ -19,31 +18,26 @@ pub enum AfterCreate {
 
 /// Base to all dialog windows.
 pub struct DialogBase {
-	hwnd: HWND,
+	base: Base,
 	dialog_id: i32,
-	events: MsgEvents,
 	after_create: AfterCreate, // action to be done before WM_INITDIALOG is dispatched to user
-	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
 }
 
 impl Drop for DialogBase {
 	fn drop(&mut self) {
-		if !self.hwnd.is_null() {
-			self.hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
+		if !self.hwnd_ref().is_null() {
+			self.hwnd_ref().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 		}
 	}
 }
 
 impl Parent for DialogBase {
 	fn hwnd_ref(&self) -> &HWND {
-		&self.hwnd
+		&self.base.hwnd_ref()
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add event after dialog is created.");
-		}
-		&self.events
+		self.base.events_ref()
 	}
 }
 
@@ -54,43 +48,41 @@ impl DialogBase {
 		after_create: AfterCreate) -> DialogBase
 	{
 		Self {
-			hwnd: unsafe { HWND::null_handle() },
+			base: Base::new(parent),
 			dialog_id,
-			events: MsgEvents::new(),
 			after_create,
-			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
 		}
 	}
 
-	pub fn parent_hwnd(&self) -> Option<HWND> {
-		self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() })
+	pub fn parent_hinstance(&self) -> Result<HINSTANCE, co::ERROR> {
+		self.base.parent_hinstance()
 	}
 
-	pub fn create_dialog_param(&self, hinst: HINSTANCE) -> Result<HWND, co::ERROR> {
-		if !self.hwnd.is_null() {
+	pub fn create_dialog_param(&self) -> Result<(), co::ERROR> {
+		if !self.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
 
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when CreateDialogParam returns.
-		hinst.CreateDialogParam(
+		self.base.parent_hinstance()?.CreateDialogParam(
 			IdStr::Id(self.dialog_id),
-			self.parent_hwnd(),
+			self.base.parent_hwnd(),
 			Self::dialog_proc,
 			Some(self as *const Self as isize), // pass pointer to self
-		)
+		).map(|_| ())
 	}
 
-	pub fn dialog_box_param(&self, hinst: HINSTANCE) -> Result<(), co::ERROR> {
-		if !self.hwnd.is_null() {
+	pub fn dialog_box_param(&self) -> Result<(), co::ERROR> {
+		if !self.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
 
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when DialogBoxParam returns.
-		hinst.DialogBoxParam(
+		self.base.parent_hinstance()?.DialogBoxParam(
 			IdStr::Id(self.dialog_id),
-			self.parent_hwnd(),
+			self.base.parent_hwnd(),
 			Self::dialog_proc, Some(self as *const Self as isize), // pass pointer to self
 		).map(|_| ())
 	}
@@ -106,7 +98,7 @@ impl DialogBase {
 				let ptr_self = wm_idlg.additional_data as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
 				let ref_self = unsafe { &mut *ptr_self };
-				ref_self.hwnd = hwnd; // store HWND in struct field
+				ref_self.base.set_hwnd(hwnd); // store HWND in struct field
 				ref_self.after_create_action().expect("Pre-WM_INITDIALOG actions failed.");
 				ref_self.set_ui_font_on_children();
 				ptr_self
@@ -122,11 +114,11 @@ impl DialogBase {
 
 		// Execute user closure, if any.
 		let ref_self = unsafe { &mut *ptr_self };
-		let maybe_processed = ref_self.events.process_message(wm_any);
+		let maybe_processed = ref_self.base.process_message(wm_any);
 
 		if msg == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
-			ref_self.hwnd = unsafe { HWND::null_handle() }; // clear stored HWND
+			ref_self.base.set_hwnd(unsafe { HWND::null_handle() }); // clear stored HWND
 		}
 
 		match maybe_processed {
@@ -140,9 +132,9 @@ impl DialogBase {
 		match self.after_create {
 			AfterCreate::Nothing => Ok(()),
 			AfterCreate::CenterOnParent => {
-				let rc = self.hwnd.GetWindowRect()?;
-				let rc_parent = self.hwnd.GetParent()?.GetWindowRect()?;
-				self.hwnd.SetWindowPos(HwndPlace::None,
+				let rc = self.hwnd_ref().GetWindowRect()?;
+				let rc_parent = self.hwnd_ref().GetParent()?.GetWindowRect()?;
+				self.hwnd_ref().SetWindowPos(HwndPlace::None,
 					rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
 					rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
 					0, 0, co::SWP::NOSIZE | co::SWP::NOZORDER)?;
@@ -158,8 +150,8 @@ impl DialogBase {
 	}
 
 	fn set_ui_font_on_children(&self) {
-		self.hwnd.SendMessage(WmSetFont { hfont: ui_font(), redraw: false });
-		self.hwnd.EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
+		self.hwnd_ref().SendMessage(WmSetFont { hfont: ui_font(), redraw: false });
+		self.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
 	}
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
 		let hfont = HFONT { ptr: lparam as *mut _ };

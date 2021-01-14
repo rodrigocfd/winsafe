@@ -45,18 +45,16 @@ impl WindowControl {
 
 	pub fn create(&self) -> Result<(), co::ERROR> {
 		let opts = &mut self.0.as_mut().opts;
-		let hinst = self.0.base.parent_hwnd()
-			.expect("Invalid parent window.").hinstance();
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
-		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
+		opts.generate_wndclassex(
+			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 		self.0.base.register_class(&mut wcx)?;
 
 		multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
 
 		self.0.base.create_window( // may panic
-			hinst,
 			&class_name_buf.to_string(),
 			None,
 			IdMenu::None,

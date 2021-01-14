@@ -9,15 +9,17 @@ use crate::handles::HWND;
 use crate::structs::POINT;
 
 #[derive(Clone)]
-pub struct DialogControl(Arc<DialogBase>);
+pub struct DialogControl {
+	base: Arc<DialogBase>,
+}
 
 impl Parent for DialogControl {
 	fn hwnd_ref(&self) -> &HWND {
-		self.0.hwnd_ref()
+		self.base.hwnd_ref()
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
-		self.0.events_ref()
+		self.base.events_ref()
 	}
 }
 
@@ -28,8 +30,8 @@ impl DialogControl {
 		position: POINT,
 		ctrl_id: Option<u16>) -> DialogControl
 	{
-		let dlg = Self(
-			Arc::new(
+		let dlg = Self {
+			base: Arc::new(
 				DialogBase::new(
 					Some(parent),
 					dialog_id,
@@ -39,15 +41,13 @@ impl DialogControl {
 					),
 				),
 			),
-		);
+		};
 		dlg.default_message_handlers();
 		dlg
 	}
 
 	pub fn create(&self) -> Result<(), co::ERROR> {
-		let hinst = self.0.parent_hwnd()
-			.expect("Invalid parent window.").hinstance();
-		self.0.create_dialog_param(hinst)?; // may panic
+		self.base.create_dialog_param()?; // may panic
 		Ok(())
 	}
 

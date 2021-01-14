@@ -1,8 +1,7 @@
-use std::ptr::NonNull;
-
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
+use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
@@ -12,43 +11,36 @@ use crate::WString;
 
 /// Base to all ordinary windows.
 pub struct WindowBase {
-	hwnd: HWND,
-	events: MsgEvents,
-	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
+	base: Base,
 }
 
 impl Drop for WindowBase {
 	fn drop(&mut self) {
-		if !self.hwnd.is_null() {
-			self.hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+		if !self.hwnd_ref().is_null() {
+			self.hwnd_ref().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 		}
 	}
 }
 
 impl Parent for WindowBase {
 	fn hwnd_ref(&self) -> &HWND {
-		&self.hwnd
+		self.base.hwnd_ref()
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add event after window is created.");
-		}
-		&self.events
+		&self.base.events_ref()
 	}
 }
 
 impl WindowBase {
 	pub fn new(parent: Option<&dyn Parent>) -> WindowBase {
 		Self {
-			hwnd: unsafe { HWND::null_handle() },
-			events: MsgEvents::new(),
-			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
+			base: Base::new(parent),
 		}
 	}
 
-	pub fn parent_hwnd(&self) -> Option<HWND> {
-		self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() })
+	pub fn parent_hinstance(&self) -> Result<HINSTANCE, co::ERROR> {
+		self.base.parent_hinstance()
 	}
 
 	pub fn register_class(
@@ -74,16 +66,15 @@ impl WindowBase {
 
 	pub fn create_window(
 		&self,
-		hinst: HINSTANCE,
 		class_name: &str,
 		title: Option<&str>,
 		hmenu: IdMenu,
 		pos: POINT,
 		sz: SIZE,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> Result<HWND, co::ERROR>
+		styles: co::WS) -> Result<(), co::ERROR>
 	{
-		if !self.hwnd.is_null() {
+		if !self.hwnd_ref().is_null() {
 			panic!("Cannot create window twice.");
 		}
 
@@ -94,10 +85,10 @@ impl WindowBase {
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			self.parent_hwnd(),
-			hmenu, hinst,
+			self.base.parent_hwnd(),
+			hmenu, self.base.parent_hinstance()?,
 			Some(self as *const Self as isize), // pass pointer to self
-		)
+		).map(|_| ())
 	}
 
 	/// Generates a hash string from current fields, so it must called after all
@@ -128,7 +119,7 @@ impl WindowBase {
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
 				let ref_self = unsafe { &mut *ptr_self };
-				ref_self.hwnd = hwnd; // store HWND in struct field
+				ref_self.base.set_hwnd(hwnd); // store HWND in struct field
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
@@ -142,11 +133,11 @@ impl WindowBase {
 
 		// Execute user closure, if any.
 		let ref_self = unsafe { &mut *ptr_self };
-		let maybe_processed = ref_self.events.process_message(wm_any);
+		let maybe_processed = ref_self.base.process_message(wm_any);
 
 		if msg == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
-			ref_self.hwnd = unsafe { HWND::null_handle() }; // clear stored HWND
+			ref_self.base.set_hwnd(unsafe { HWND::null_handle() }); // clear stored HWND
 		}
 
 		match maybe_processed {

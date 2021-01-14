@@ -51,11 +51,11 @@ impl WindowMain {
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
 		let opts = &mut self.0.as_mut().opts;
-		let hinst = HINSTANCE::GetModuleHandle(None)?;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
-		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
+		opts.generate_wndclassex(
+			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 		self.0.base.register_class(&mut wcx)?;
 
 		multiply_dpi(None, Some(&mut opts.size))?;
@@ -79,8 +79,7 @@ impl WindowMain {
 		AdjustWindowRectEx(&mut wnd_rc, opts.style,
 			!opts.menu.is_null(), opts.ex_style)?;
 
-		let our_hwnd = self.0.base.create_window( // may panic
-			hinst,
+		self.0.base.create_window( // may panic
 			&class_name_buf.to_string(),
 			Some(&opts.title),
 			IdMenu::None,
@@ -90,10 +89,10 @@ impl WindowMain {
 			opts.style,
 		)?;
 
-		our_hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		our_hwnd.UpdateWindow()?;
+		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.hwnd_ref().UpdateWindow()?;
 
-		run_loop(our_hwnd, opts.accel_table.as_opt()) // blocks until window is closed
+		run_loop(self.hwnd_ref(), opts.accel_table.as_opt()) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
