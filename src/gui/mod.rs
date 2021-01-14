@@ -5,6 +5,7 @@ pub mod events;
 mod custom_control;
 mod custom_main;
 mod dialog_base;
+mod dialog_control;
 mod dialog_main;
 mod globals;
 mod main_loop;

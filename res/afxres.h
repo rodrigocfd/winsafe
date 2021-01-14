@@ -1,6 +1,10 @@
 // Constants to be included in resource scripts, if needed.
 
 #define RT_MANIFEST 24
+#define IDC_STATIC  -1
+
+#define LANG_ENGLISH       0x09
+#define SUBLANG_ENGLISH_US 0x01
 
 // Window styles.
 

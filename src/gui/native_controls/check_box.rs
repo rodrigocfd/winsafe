@@ -64,13 +64,11 @@ impl CheckBox {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: CheckBoxOpts) -> CheckBox {
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
-		let ctrl_id = opts.ctrl_id;
-
 		Self {
 			base: Arc::new(UnsafeCell::new(
 				NativeControlBase::new(
 					parent,
-					ButtonEvents::new(parent, ctrl_id),
+					ButtonEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
 			)),
@@ -191,7 +189,7 @@ impl Default for CheckBoxOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT { x: 0, y: 0 },
+			pos: POINT::new(0, 0),
 			button_style: co::BS::AUTOCHECKBOX,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,

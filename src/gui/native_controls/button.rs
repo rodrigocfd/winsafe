@@ -60,15 +60,11 @@ impl Button {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
 		let opts = ButtonOpts::define_ctrl_id(opts);
-		let ctrl_id = opts.ctrl_id;
-
-		let opts = ButtonOpts::define_ctrl_id(opts);
-
 		Self {
 			base: Arc::new(UnsafeCell::new(
 				NativeControlBase::new(
 					parent,
-					ButtonEvents::new(parent, ctrl_id),
+					ButtonEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
 			)),
@@ -205,7 +201,7 @@ impl Default for ButtonOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT { x: 0, y: 0 },
+			pos: POINT::new(0, 0),
 			width: 80,
 			height: 23,
 			button_style: co::BS::PUSHBUTTON,

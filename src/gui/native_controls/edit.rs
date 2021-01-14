@@ -60,13 +60,11 @@ impl Edit {
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: EditOpts) -> Edit {
 		let opts = EditOpts::define_ctrl_id(opts);
-		let ctrl_id = opts.ctrl_id;
-
 		Self {
 			base: Arc::new(UnsafeCell::new(
 				NativeControlBase::new(
 					parent,
-					EditEvents::new(parent, ctrl_id),
+					EditEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
 			)),
@@ -186,7 +184,7 @@ impl Default for EditOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT { x: 0, y: 0 },
+			pos: POINT::new(0, 0),
 			width: 100,
 			height: 21,
 			edit_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL,

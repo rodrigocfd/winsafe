@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
-use crate::gui::dialog_base::DialogBase;
+use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
 use crate::gui::main_loop::run_loop;
 use crate::handles::{HINSTANCE, HWND};
@@ -29,7 +29,7 @@ impl DialogMain {
 		let dlg = Self {
 			obj: Arc::new(
 				Obj {
-					base: DialogBase::new(dialog_id, false),
+					base: DialogBase::new(None, dialog_id, AfterCreate::Nothing),
 					icon_id,
 					accel_table_id,
 				},
@@ -51,7 +51,7 @@ impl DialogMain {
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
-		let our_hwnd = self.obj.base.create_dialog_param(hinst, None)?; // may panic
+		let our_hwnd = self.obj.base.create_dialog_param(hinst)?; // may panic
 
 		let haccel = match self.obj.accel_table_id {
 			None => None,

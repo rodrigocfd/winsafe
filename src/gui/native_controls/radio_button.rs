@@ -36,13 +36,11 @@ impl RadioButton {
 
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
-		let ctrl_id = opts.ctrl_id;
-
 		Self {
 			base: UnsafeCell::new(
 				NativeControlBase::new(
 					parent,
-					ButtonEvents::new(parent, ctrl_id),
+					ButtonEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
 			),
@@ -189,7 +187,7 @@ impl Default for RadioButtonOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT { x: 0, y: 0 },
+			pos: POINT::new(0, 0),
 			button_style: co::BS::AUTORADIOBUTTON,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			ex_window_style: co::WS_EX::LEFT,

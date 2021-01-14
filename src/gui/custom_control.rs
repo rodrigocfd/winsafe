@@ -1,12 +1,15 @@
 use crate::co;
+use crate::gui::dialog_control::DialogControl;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::{Child, Parent};
 use crate::gui::window_control::{CustomControlOpts, WindowControl};
 use crate::handles::HWND;
+use crate::structs::POINT;
 
 #[derive(Clone)]
 enum WndDlg {
 	Wnd(WindowControl),
+	Dlg(DialogControl),
 }
 
 //------------------------------------------------------------------------------
@@ -18,10 +21,27 @@ pub struct CustomControl(WndDlg);
 unsafe impl Send for CustomControl {}
 unsafe impl Sync for CustomControl {}
 
+impl Parent for CustomControl {
+	fn hwnd_ref(&self) -> &HWND {
+		match &self.0 {
+			WndDlg::Wnd(w) => w.hwnd(),
+			WndDlg::Dlg(d) => d.hwnd(),
+		}
+	}
+
+	fn events_ref(&self) -> &MsgEvents {
+		match &self.0 {
+			WndDlg::Wnd(w) => w.on(),
+			WndDlg::Dlg(d) => d.on(),
+		}
+	}
+}
+
 impl Child for CustomControl {
 	fn create(&self) -> Result<(), co::ERROR> {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.create(),
+			WndDlg::Dlg(d) => d.create(),
 		}
 	}
 }
@@ -37,11 +57,20 @@ impl CustomControl {
 		)
 	}
 
-	// /// Instantiates a new `CustomControl` object, to be loaded from a dialog
-	// /// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	// pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> CustomControl {
-
-	// }
+	/// Instantiates a new `CustomControl` object, to be loaded from a dialog
+	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	pub fn new_dlg(
+		parent: &dyn Parent,
+		dialog_id: i32,
+		position: POINT,
+		ctrl_id: Option<u16>) -> CustomControl
+	{
+		Self(
+			WndDlg::Dlg(
+				DialogControl::new(parent, dialog_id, position, ctrl_id),
+			),
+		)
+	}
 
 	/// Returns the underlying handle for this control.
 	///
@@ -49,7 +78,8 @@ impl CustomControl {
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
 		match &self.0 {
-			WndDlg::Wnd(w) => w.hwnd(),
+			WndDlg::Wnd(w) => *w.hwnd(),
+			WndDlg::Dlg(d) => *d.hwnd(),
 		}
 	}
 
@@ -62,6 +92,7 @@ impl CustomControl {
 	pub fn on(&self) -> &MsgEvents {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.on(),
+			WndDlg::Dlg(d) => d.on(),
 		}
 	}
 }

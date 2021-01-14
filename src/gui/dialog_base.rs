@@ -1,16 +1,29 @@
+use std::ptr::NonNull;
+
 use crate::co;
 use crate::enums::{HwndPlace, IdStr};
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::globals::ui_font;
+use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
 use crate::msg::{Message, Wm, WmInitDialog, WmSetFont};
+use crate::structs::POINT;
+
+pub enum AfterCreate {
+	Nothing,
+	CenterOnParent,
+	ReposSetid(POINT, u16),
+}
+
+//------------------------------------------------------------------------------
 
 /// Base to all dialog windows.
 pub struct DialogBase {
 	hwnd: HWND,
 	dialog_id: i32,
 	events: MsgEvents,
-	is_modal: bool, // will center on parent
+	after_create: AfterCreate, // action to be done before WM_INITDIALOG is dispatched to user
+	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
 }
 
 impl Drop for DialogBase {
@@ -22,12 +35,17 @@ impl Drop for DialogBase {
 }
 
 impl DialogBase {
-	pub fn new(dialog_id: i32, is_modal: bool) -> DialogBase {
+	pub fn new(
+		parent: Option<&dyn Parent>,
+		dialog_id: i32,
+		after_create: AfterCreate) -> DialogBase
+	{
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			dialog_id,
 			events: MsgEvents::new(),
-			is_modal,
+			after_create,
+			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
 		}
 	}
 
@@ -42,9 +60,7 @@ impl DialogBase {
 		&self.events
 	}
 
-	pub fn create_dialog_param(&self,
-		hinst: HINSTANCE, parent: Option<HWND>) -> Result<HWND, co::ERROR>
-	{
+	pub fn create_dialog_param(&self, hinst: HINSTANCE) -> Result<HWND, co::ERROR> {
 		if !self.hwnd.is_null() {
 			panic!("Cannot create dialog twice.");
 		}
@@ -53,15 +69,13 @@ impl DialogBase {
 		// when CreateDialogParam returns.
 		hinst.CreateDialogParam(
 			IdStr::Id(self.dialog_id),
-			parent,
+			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() }),
 			Self::dialog_proc,
 			Some(self as *const Self as isize), // pass pointer to self
 		)
 	}
 
-	pub fn dialog_box_param(&self,
-		hinst: HINSTANCE, parent: Option<HWND>) -> Result<(), co::ERROR>
-	{
+	pub fn dialog_box_param(&self, hinst: HINSTANCE) -> Result<(), co::ERROR> {
 		if !self.hwnd.is_null() {
 			panic!("Cannot create dialog twice.");
 		}
@@ -70,7 +84,7 @@ impl DialogBase {
 		// when DialogBoxParam returns.
 		hinst.DialogBoxParam(
 			IdStr::Id(self.dialog_id),
-			parent,
+			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() }),
 			Self::dialog_proc, Some(self as *const Self as isize), // pass pointer to self
 		).map(|_| ())
 	}
@@ -87,7 +101,7 @@ impl DialogBase {
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.hwnd = hwnd; // store HWND in struct field
-				ref_self.center_on_parent_if_modal().expect("Failed to center modal dialog on parent.");
+				ref_self.after_create_action().expect("Pre-WM_INITDIALOG actions failed.");
 				ref_self.set_ui_font_on_children();
 				ptr_self
 			},
@@ -116,16 +130,25 @@ impl DialogBase {
 		}
 	}
 
-	fn center_on_parent_if_modal(&self) -> Result<(), co::ERROR> {
-		if self.is_modal {
-			let rc = self.hwnd.GetWindowRect()?;
-			let rc_parent = self.hwnd.GetParent()?.GetWindowRect()?;
-			self.hwnd.SetWindowPos(HwndPlace::None,
-				rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
-				rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
-				0, 0, co::SWP::NOSIZE | co::SWP::NOZORDER)?;
+	fn after_create_action(&self) -> Result<(), co::ERROR> {
+		match self.after_create {
+			AfterCreate::Nothing => Ok(()),
+			AfterCreate::CenterOnParent => {
+				let rc = self.hwnd.GetWindowRect()?;
+				let rc_parent = self.hwnd.GetParent()?.GetWindowRect()?;
+				self.hwnd.SetWindowPos(HwndPlace::None,
+					rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
+					rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
+					0, 0, co::SWP::NOSIZE | co::SWP::NOZORDER)?;
+				Ok(())
+			},
+			AfterCreate::ReposSetid(pos, ctrl_id) => {
+				self.hwnd().SetWindowPos(HwndPlace::None,
+					pos.x, pos.y, 0, 0, co::SWP::NOZORDER | co::SWP::NOSIZE)?;
+				self.hwnd().SetWindowLongPtr(co::GWLP::ID, ctrl_id as isize); // so the custom control has an ID
+				Ok(())
+			},
 		}
-		Ok(())
 	}
 
 	fn set_ui_font_on_children(&self) {

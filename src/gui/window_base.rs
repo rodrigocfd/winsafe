@@ -30,8 +30,7 @@ impl WindowBase {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
 			events: MsgEvents::new(),
-			ptr_parent_hwnd: parent
-				.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
+			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
 		}
 	}
 

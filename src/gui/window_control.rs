@@ -67,8 +67,8 @@ impl WindowControl {
 		Ok(())
 	}
 
-	pub fn hwnd(&self) -> HWND {
-		*self.obj().base.hwnd()
+	pub fn hwnd(&self) -> &HWND {
+		self.obj().base.hwnd()
 	}
 
 	pub fn on(&self) -> &MsgEvents {
@@ -78,7 +78,7 @@ impl WindowControl {
 	fn default_message_handlers(&self) {
 		self.on().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| { paint_control_borders(self2.hwnd(), p).ok(); }
+			move |p| { paint_control_borders(*self2.hwnd(), p).ok(); }
 		});
 	}
 }
@@ -113,7 +113,7 @@ pub struct CustomControlOpts {
 	/// Defaults to `co::COLOR::WINDOW`.
 	pub class_bg_brush: HBRUSH,
 
-	/// Position of window within parent's client area, in pixels, to be
+	/// Position of control within parent's client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Will be adjusted to match current system DPI.
