@@ -21,6 +21,16 @@ struct Obj { // actual fields of WindowControl
 	opts: CustomControlOpts,
 }
 
+impl Parent for WindowControl {
+	fn hwnd_ref(&self) -> &HWND {
+		self.obj().base.hwnd_ref()
+	}
+
+	fn events_ref(&self) -> &MsgEvents {
+		self.obj().base.events_ref()
+	}
+}
+
 impl WindowControl {
 	fn obj(&self) -> &Obj {
 		unsafe { &*self.obj.get() }
@@ -45,7 +55,8 @@ impl WindowControl {
 
 	pub fn create(&self) -> Result<(), co::ERROR> {
 		let opts = &mut self.obj_mut().opts;
-		let hinst = self.obj().base.hwnd().hinstance();
+		let hinst = self.obj().base.parent_hwnd()
+			.expect("Invalid parent window.").hinstance();
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
@@ -67,18 +78,10 @@ impl WindowControl {
 		Ok(())
 	}
 
-	pub fn hwnd(&self) -> &HWND {
-		self.obj().base.hwnd()
-	}
-
-	pub fn on(&self) -> &MsgEvents {
-		self.obj().base.on()
-	}
-
 	fn default_message_handlers(&self) {
-		self.on().wm_nc_paint({
+		self.events_ref().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| { paint_control_borders(*self2.hwnd(), p).ok(); }
+			move |p| { paint_control_borders(*self2.hwnd_ref(), p).ok(); }
 		});
 	}
 }

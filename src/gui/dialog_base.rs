@@ -10,9 +10,9 @@ use crate::msg::{Message, Wm, WmInitDialog, WmSetFont};
 use crate::structs::POINT;
 
 pub enum AfterCreate {
-	Nothing,
-	CenterOnParent,
-	ReposSetid(POINT, u16),
+	Nothing, // main
+	CenterOnParent, // modal
+	ReposSetid(POINT, u16), // control
 }
 
 //------------------------------------------------------------------------------
@@ -34,6 +34,19 @@ impl Drop for DialogBase {
 	}
 }
 
+impl Parent for DialogBase {
+	fn hwnd_ref(&self) -> &HWND {
+		&self.hwnd
+	}
+
+	fn events_ref(&self) -> &MsgEvents {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add event after dialog is created.");
+		}
+		&self.events
+	}
+}
+
 impl DialogBase {
 	pub fn new(
 		parent: Option<&dyn Parent>,
@@ -49,15 +62,8 @@ impl DialogBase {
 		}
 	}
 
-	pub fn hwnd(&self) -> &HWND {
-		&self.hwnd
-	}
-
-	pub fn on(&self) -> &MsgEvents {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add event after dialog is created.");
-		}
-		&self.events
+	pub fn parent_hwnd(&self) -> Option<HWND> {
+		self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() })
 	}
 
 	pub fn create_dialog_param(&self, hinst: HINSTANCE) -> Result<HWND, co::ERROR> {
@@ -69,7 +75,7 @@ impl DialogBase {
 		// when CreateDialogParam returns.
 		hinst.CreateDialogParam(
 			IdStr::Id(self.dialog_id),
-			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() }),
+			self.parent_hwnd(),
 			Self::dialog_proc,
 			Some(self as *const Self as isize), // pass pointer to self
 		)
@@ -84,7 +90,7 @@ impl DialogBase {
 		// when DialogBoxParam returns.
 		hinst.DialogBoxParam(
 			IdStr::Id(self.dialog_id),
-			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() }),
+			self.parent_hwnd(),
 			Self::dialog_proc, Some(self as *const Self as isize), // pass pointer to self
 		).map(|_| ())
 	}
@@ -95,7 +101,7 @@ impl DialogBase {
 		let wm_any = Wm { msg_id: msg, wparam, lparam };
 
 		let ptr_self = match msg {
-			co::WM::INITDIALOG => {
+			co::WM::INITDIALOG => { // first message being handled
 				let wm_idlg = WmInitDialog::from_generic_wm(wm_any);
 				let ptr_self = wm_idlg.additional_data as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
@@ -143,9 +149,9 @@ impl DialogBase {
 				Ok(())
 			},
 			AfterCreate::ReposSetid(pos, ctrl_id) => {
-				self.hwnd().SetWindowPos(HwndPlace::None,
+				self.hwnd_ref().SetWindowPos(HwndPlace::None,
 					pos.x, pos.y, 0, 0, co::SWP::NOZORDER | co::SWP::NOSIZE)?;
-				self.hwnd().SetWindowLongPtr(co::GWLP::ID, ctrl_id as isize); // so the custom control has an ID
+				self.hwnd_ref().SetWindowLongPtr(co::GWLP::ID, ctrl_id as isize); // so the custom control has an ID
 				Ok(())
 			},
 		}

@@ -7,6 +7,7 @@ use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::multiply_dpi;
 use crate::gui::main_loop::run_loop;
+use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
@@ -21,6 +22,16 @@ struct Obj { // actual fields of WindowMain
 	base: WindowBase,
 	opts: CustomMainOpts,
 	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
+}
+
+impl Parent for WindowMain {
+	fn hwnd_ref(&self) -> &HWND {
+		self.obj().base.hwnd_ref()
+	}
+
+	fn events_ref(&self) -> &MsgEvents {
+		self.obj().base.events_ref()
+	}
 }
 
 impl WindowMain {
@@ -44,14 +55,6 @@ impl WindowMain {
 		};
 		wnd.default_message_handlers();
 		wnd
-	}
-
-	pub fn hwnd(&self) -> &HWND {
-		self.obj().base.hwnd()
-	}
-
-	pub fn on(&self) -> &MsgEvents {
-		self.obj().base.on()
 	}
 
 	pub fn run_as_main(&self,
@@ -104,13 +107,13 @@ impl WindowMain {
 	}
 
 	fn default_message_handlers(&self) {
-		self.on().wm_activate({
+		self.events_ref().wm_activate({
 			let self2 = self.clone();
 			move |p| {
 				if !p.is_minimized {
 					if p.event == co::WA::INACTIVE {
 						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-							if self2.obj().base.hwnd().IsChild(hwnd_cur_focus) {
+							if self2.obj().base.hwnd_ref().IsChild(hwnd_cur_focus) {
 								self2.obj_mut().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
 							}
 						}
@@ -121,14 +124,14 @@ impl WindowMain {
 			}
 		});
 
-		self.on().wm_set_focus({
+		self.events_ref().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-					if *self2.hwnd() == hwnd_cur_focus {
+					if *self2.hwnd_ref() == hwnd_cur_focus {
 						// If window receives focus, delegate to first child.
 						// https://stackoverflow.com/a/2835220/6923555
-						if let Ok(hchild) = self2.hwnd().GetWindow(co::GW::CHILD) {
+						if let Ok(hchild) = self2.hwnd_ref().GetWindow(co::GW::CHILD) {
 							hchild.SetFocus();
 						}
 					}
@@ -136,7 +139,7 @@ impl WindowMain {
 			}
 		});
 
-		self.on().wm_nc_destroy(|| {
+		self.events_ref().wm_nc_destroy(|| {
 			PostQuitMessage(0);
 		});
 	}

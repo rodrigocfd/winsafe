@@ -5,12 +5,22 @@ use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{auto_ctrl_id, paint_control_borders};
 use crate::gui::traits::Parent;
-use crate::handles::{HINSTANCE, HWND};
+use crate::handles::HWND;
 use crate::structs::POINT;
 
 #[derive(Clone)]
 pub struct DialogControl {
 	base: Arc<DialogBase>,
+}
+
+impl Parent for DialogControl {
+	fn hwnd_ref(&self) -> &HWND {
+		self.base.hwnd_ref()
+	}
+
+	fn events_ref(&self) -> &MsgEvents {
+		self.base.events_ref()
+	}
 }
 
 impl DialogControl {
@@ -37,23 +47,16 @@ impl DialogControl {
 	}
 
 	pub fn create(&self) -> Result<(), co::ERROR> {
-		let hinst = HINSTANCE::GetModuleHandle(None)?;
+		let hinst = self.base.parent_hwnd()
+			.expect("Invalid parent window.").hinstance();
 		self.base.create_dialog_param(hinst)?; // may panic
 		Ok(())
 	}
 
-	pub fn hwnd(&self) -> &HWND {
-		self.base.hwnd()
-	}
-
-	pub fn on(&self) -> &MsgEvents {
-		self.base.on()
-	}
-
 	fn default_message_handlers(&self) {
-		self.on().wm_nc_paint({
+		self.events_ref().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| { paint_control_borders(*self2.hwnd(), p).ok(); }
+			move |p| { paint_control_borders(*self2.hwnd_ref(), p).ok(); }
 		});
 	}
 }

@@ -25,6 +25,19 @@ impl Drop for WindowBase {
 	}
 }
 
+impl Parent for WindowBase {
+	fn hwnd_ref(&self) -> &HWND {
+		&self.hwnd
+	}
+
+	fn events_ref(&self) -> &MsgEvents {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add event after window is created.");
+		}
+		&self.events
+	}
+}
+
 impl WindowBase {
 	pub fn new(parent: Option<&dyn Parent>) -> WindowBase {
 		Self {
@@ -34,15 +47,8 @@ impl WindowBase {
 		}
 	}
 
-	pub fn hwnd(&self) -> &HWND {
-		&self.hwnd
-	}
-
-	pub fn on(&self) -> &MsgEvents {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add event after window is created.");
-		}
-		&self.events
+	pub fn parent_hwnd(&self) -> Option<HWND> {
+		self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() })
 	}
 
 	pub fn register_class(
@@ -88,7 +94,7 @@ impl WindowBase {
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() }),
+			self.parent_hwnd(),
 			hmenu, hinst,
 			Some(self as *const Self as isize), // pass pointer to self
 		)

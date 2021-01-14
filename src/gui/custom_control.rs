@@ -24,15 +24,15 @@ unsafe impl Sync for CustomControl {}
 impl Parent for CustomControl {
 	fn hwnd_ref(&self) -> &HWND {
 		match &self.0 {
-			WndDlg::Wnd(w) => w.hwnd(),
-			WndDlg::Dlg(d) => d.hwnd(),
+			WndDlg::Wnd(w) => w.hwnd_ref(),
+			WndDlg::Dlg(d) => d.hwnd_ref(),
 		}
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
 		match &self.0 {
-			WndDlg::Wnd(w) => w.on(),
-			WndDlg::Dlg(d) => d.on(),
+			WndDlg::Wnd(w) => w.events_ref(),
+			WndDlg::Dlg(d) => d.events_ref(),
 		}
 	}
 }
@@ -78,8 +78,8 @@ impl CustomControl {
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
 		match &self.0 {
-			WndDlg::Wnd(w) => *w.hwnd(),
-			WndDlg::Dlg(d) => *d.hwnd(),
+			WndDlg::Wnd(w) => *w.hwnd_ref(),
+			WndDlg::Dlg(d) => *d.hwnd_ref(),
 		}
 	}
 
@@ -91,8 +91,8 @@ impl CustomControl {
 	/// creation.
 	pub fn on(&self) -> &MsgEvents {
 		match &self.0 {
-			WndDlg::Wnd(w) => w.on(),
-			WndDlg::Dlg(d) => d.on(),
+			WndDlg::Wnd(w) => w.events_ref(),
+			WndDlg::Dlg(d) => d.events_ref(),
 		}
 	}
 }
