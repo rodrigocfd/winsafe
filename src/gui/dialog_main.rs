@@ -11,9 +11,7 @@ use crate::handles::{HINSTANCE, HWND};
 use crate::msg::WmSetIcon;
 
 #[derive(Clone)]
-pub struct DialogMain {
-	obj: Arc<Obj>,
-}
+pub struct DialogMain(Arc<Obj>);
 
 struct Obj { // actual fields of DialogMain
 	base: DialogBase,
@@ -23,11 +21,11 @@ struct Obj { // actual fields of DialogMain
 
 impl Parent for DialogMain {
 	fn hwnd_ref(&self) -> &HWND {
-		self.obj.base.hwnd_ref()
+		self.0.base.hwnd_ref()
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
-		self.obj.base.events_ref()
+		self.0.base.events_ref()
 	}
 }
 
@@ -37,15 +35,15 @@ impl DialogMain {
 		icon_id: Option<i32>,
 		accel_table_id: Option<i32>) -> DialogMain
 	{
-		let dlg = Self {
-			obj: Arc::new(
+		let dlg = Self(
+			Arc::new(
 				Obj {
 					base: DialogBase::new(None, dialog_id, AfterCreate::Nothing),
 					icon_id,
 					accel_table_id,
 				},
 			),
-		};
+		);
 		dlg.default_message_handlers();
 		dlg
 	}
@@ -54,9 +52,9 @@ impl DialogMain {
 		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
 	{
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
-		let our_hwnd = self.obj.base.create_dialog_param(hinst)?; // may panic
+		let our_hwnd = self.0.base.create_dialog_param(hinst)?; // may panic
 
-		let haccel = match self.obj.accel_table_id {
+		let haccel = match self.0.accel_table_id {
 			None => None,
 			Some(id) => Some(hinst.LoadAccelerators(IdStr::Id(id))?),
 		};
@@ -83,7 +81,7 @@ impl DialogMain {
 	fn set_icon_if_any(&self, hinst: HINSTANCE) -> Result<(), co::ERROR> {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
-		if let Some(id) = self.obj.icon_id {
+		if let Some(id) = self.0.icon_id {
 			self.hwnd_ref().SendMessage(
 				WmSetIcon {
 					hicon: hinst.LoadImageIcon(IdStr::Id(id), 16, 16, co::LR::DEFAULTCOLOR)?,

@@ -12,9 +12,7 @@ use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub struct WindowControl {
-	obj: Arc<Immut<Obj>>,
-}
+pub struct WindowControl(Arc<Immut<Obj>>);
 
 struct Obj { // actual fields of WindowControl
 	base: WindowBase,
@@ -23,41 +21,41 @@ struct Obj { // actual fields of WindowControl
 
 impl Parent for WindowControl {
 	fn hwnd_ref(&self) -> &HWND {
-		self.obj.base.hwnd_ref()
+		self.0.base.hwnd_ref()
 	}
 
 	fn events_ref(&self) -> &MsgEvents {
-		self.obj.base.events_ref()
+		self.0.base.events_ref()
 	}
 }
 
 impl WindowControl {
 	pub fn new(parent: &dyn Parent, opts: CustomControlOpts) -> WindowControl {
-		let wnd = Self {
-			obj: Arc::new(Immut::new(
+		let wnd = Self(
+			Arc::new(Immut::new(
 				Obj {
 					base: WindowBase::new(Some(parent)),
 					opts,
 				},
 			)),
-		};
+		);
 		wnd.default_message_handlers();
 		wnd
 	}
 
 	pub fn create(&self) -> Result<(), co::ERROR> {
-		let opts = &mut self.obj.as_mut().opts;
-		let hinst = self.obj.base.parent_hwnd()
+		let opts = &mut self.0.as_mut().opts;
+		let hinst = self.0.base.parent_hwnd()
 			.expect("Invalid parent window.").hinstance();
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		opts.generate_wndclassex(hinst, &mut wcx, &mut class_name_buf)?;
-		self.obj.base.register_class(&mut wcx)?;
+		self.0.base.register_class(&mut wcx)?;
 
 		multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
 
-		self.obj.base.create_window( // may panic
+		self.0.base.create_window( // may panic
 			hinst,
 			&class_name_buf.to_string(),
 			None,

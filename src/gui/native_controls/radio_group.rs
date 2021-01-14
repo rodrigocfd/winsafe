@@ -12,9 +12,7 @@ use crate::gui::traits::{Child, Parent};
 /// The radion button is actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
 #[derive(Clone)]
-pub struct RadioGroup {
-	obj: Arc<Immut<Obj>>,
-}
+pub struct RadioGroup(Arc<Immut<Obj>>);
 
 struct Obj { // actual fields of RadioGroup
 	radios: Vec<RadioButton>,
@@ -26,7 +24,7 @@ unsafe impl Sync for RadioGroup {}
 
 impl Child for RadioGroup {
 	fn create(&self) -> Result<(), co::ERROR> {
-		for radio in self.obj.as_mut().radios.iter_mut() {
+		for radio in self.0.as_mut().radios.iter_mut() {
 			radio.create()?;
 		}
 		Ok(())
@@ -37,7 +35,7 @@ impl Index<usize> for RadioGroup {
 	type Output = RadioButton;
 
 	fn index(&self, i: usize) -> &Self::Output {
-		&self.obj.radios[i]
+		&self.0.radios[i]
 	}
 }
 
@@ -67,14 +65,14 @@ impl RadioGroup {
 			radios.push(new_radio);
 		}
 
-		Self {
-			obj: Arc::new(Immut::new(
+		Self(
+			Arc::new(Immut::new(
 				Obj {
 					radios,
 					parent_events: RadioGroupEvents::new(parent, ctrl_ids),
 				},
 			)),
-		}
+		)
 	}
 
 	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
@@ -94,14 +92,14 @@ impl RadioGroup {
 			radios.push(RadioButton::new_dlg(parent, *ctrl_id));
 		}
 
-		Self {
-			obj: Arc::new(Immut::new(
+		Self(
+			Arc::new(Immut::new(
 				Obj {
 					radios,
 					parent_events: RadioGroupEvents::new(parent, ctrl_ids.to_vec()),
 				},
 			)),
-		}
+		)
 	}
 
 	/// Exposes the radio group events.
@@ -118,7 +116,7 @@ impl RadioGroup {
 		} else if first_radio.is_parent_created() {
 			panic!("Cannot add events after the parent window is created.");
 		}
-		&self.obj.parent_events
+		&self.0.parent_events
 	}
 
 	/// Returns an iterator over the internal
@@ -138,13 +136,13 @@ impl RadioGroup {
 	/// }
 	/// ```
 	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {
-		self.obj.radios.iter()
+		self.0.radios.iter()
 	}
 
 	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton),
 	/// if any.
 	pub fn checked(&self) -> Option<&RadioButton> {
-		for radio in self.obj.radios.iter() {
+		for radio in self.0.radios.iter() {
 			if radio.is_checked() {
 				return Some(radio);
 			}
