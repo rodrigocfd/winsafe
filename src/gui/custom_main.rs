@@ -17,6 +17,88 @@ enum WndDlg {
 //------------------------------------------------------------------------------
 
 /// Custom main application window.
+///
+/// # Examples
+///
+/// A full application with a non-dialog `CustomMain`:
+///
+/// ```rust,ignore
+/// #![windows_subsystem = "windows"]
+///
+/// use winsafe as w;
+///
+/// fn main() {
+///   let my_main = MyMain::new();
+///   if let Err(e) = my_main.run() {
+///     eprintln!("{}", e);
+///   }
+/// }
+///
+/// pub struct MyMain {
+///   wnd: w::gui::CustomMain,
+/// }
+///
+/// impl MyMain {
+///   pub fn new() -> MyMain {
+///     let wnd = w::gui::CustomMain::new(
+///       w::gui::CustomMainOpts {
+///         title: "My window".to_owned(),
+///         ..Default::default()
+///       },
+///     );
+///
+///     let me = Self { wnd };
+///     me.events();
+///     me
+///   }
+///
+///   pub fn run(&self) -> w::WinResult<i32> {
+///     self.wnd.run_as_main(None)
+///   }
+///
+///   fn events(&self) {
+///
+///   }
+/// }
+/// ```
+///
+/// A full application with a `CustomMain` loaded from a dialog resource:
+///
+/// ```rust,ignore
+/// #![windows_subsystem = "windows"]
+///
+/// use winsafe as w;
+///
+/// fn main() {
+///   let my_dlg = MyDlg::new();
+///   if let Err(e) = my_dlg.run() {
+///     eprintln!("{}", e);
+///   }
+/// }
+///
+/// pub struct MyDlg {
+///   dlg: w::gui::CustomMain,
+/// }
+///
+/// impl MyDlg {
+///   pub fn new() -> MyDlg {
+///     // 101 is the ID of the dialog resource in the .rc file
+///     let dlg = w::gui::CustomMain::new_dlg(101, None, None);
+///
+///     let me = Self { dlg };
+///     me.events();
+///     me
+///   }
+///
+///   pub fn run(&self) -> w::WinResult<i32> {
+///     self.dlg.run_as_main(None)
+///   }
+///
+///   fn events(&self) {
+///
+///   }
+/// }
+/// ```
 #[derive(Clone)]
 pub struct CustomMain(WndDlg);
 

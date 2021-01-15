@@ -141,7 +141,8 @@ impl WindowMain {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`CustomMain::new`](crate::gui::CustomMain::new).
+/// Options to create a [`CustomMain`](crate::gui::CustomMain) programatically
+/// with [`CustomMain::new`](crate::gui::CustomMain::new).
 pub struct CustomMainOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).

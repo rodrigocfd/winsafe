@@ -145,7 +145,8 @@ impl Button {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`Button::new`](crate::gui::Button::new).
+/// Options to create a [`Button`](crate::gui::Button) programatically with
+/// [`Button::new`](crate::gui::Button::new).
 pub struct ButtonOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

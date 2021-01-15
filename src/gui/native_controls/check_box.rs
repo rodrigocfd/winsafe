@@ -144,7 +144,8 @@ impl CheckBox {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`CheckBox::new`](crate::gui::CheckBox::new).
+/// Options to create a [`CheckBox`](crate::gui::CheckBox) programatically with
+/// [`CheckBox::new`](crate::gui::CheckBox::new).
 pub struct CheckBoxOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

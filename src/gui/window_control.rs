@@ -87,7 +87,8 @@ impl WindowControl {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`CustomControl::new`](crate::gui::CustomControl::new).
+/// Options to create a [`CustomControl`](crate::gui::CustomControl)
+/// programatically with [`CustomControl::new`](crate::gui::CustomControl::new).
 pub struct CustomControlOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).

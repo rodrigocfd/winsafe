@@ -121,7 +121,8 @@ impl Edit {
 
 //------------------------------------------------------------------------------
 
-/// Options for [`Edit::new`](crate::gui::Edit::new).
+/// Options to create an [`Edit`](crate::gui::Edit) programatically with
+/// [`Edit::new`](crate::gui::Edit::new).
 pub struct EditOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
