@@ -1,7 +1,7 @@
 use crate::co;
 use crate::gui::dialog_control::DialogControl;
 use crate::gui::events::MsgEvents;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::parent::Parent;
 use crate::gui::window_control::{CustomControlOpts, WindowControl};
 use crate::handles::HWND;
 use crate::structs::POINT;
@@ -35,13 +35,13 @@ impl Parent for CustomControl {
 			WndDlg::Dlg(d) => d.events_ref(),
 		}
 	}
-}
 
-impl Child for CustomControl {
-	fn create(&self) -> Result<(), co::ERROR> {
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
 		match &self.0 {
-			WndDlg::Wnd(w) => w.create(),
-			WndDlg::Dlg(d) => d.create(),
+			WndDlg::Wnd(w) => w.add_child_to_be_created(func),
+			WndDlg::Dlg(d) => d.add_child_to_be_created(func),
 		}
 	}
 }

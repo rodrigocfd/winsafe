@@ -4,7 +4,7 @@ use crate::co;
 use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{auto_ctrl_id, paint_control_borders};
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::handles::HWND;
 use crate::structs::POINT;
 
@@ -20,6 +20,12 @@ impl Parent for DialogControl {
 
 	fn events_ref(&self) -> &MsgEvents {
 		self.base.events_ref()
+	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		self.base.add_child_to_be_created(func);
 	}
 }
 
@@ -43,12 +49,15 @@ impl DialogControl {
 			),
 		};
 		dlg.default_message_handlers();
+		dlg.add_creation_to_parent(parent);
 		dlg
 	}
 
-	pub fn create(&self) -> Result<(), co::ERROR> {
-		self.base.create_dialog_param()?; // may panic
-		Ok(())
+	fn add_creation_to_parent(&self, parent: &dyn Parent) {
+		let me = self.clone();
+		parent.add_child_to_be_created(
+			Box::new(move || me.base.create_dialog_param()) // may panic
+		);
 	}
 
 	fn default_message_handlers(&self) {

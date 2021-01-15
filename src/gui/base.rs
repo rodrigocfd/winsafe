@@ -2,7 +2,8 @@ use std::ptr::NonNull;
 
 use crate::co;
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::gui::traits::Parent;
+use crate::gui::immut::Immut;
+use crate::gui::parent::Parent;
 use crate::msg::Wm;
 use crate::handles::{HINSTANCE, HWND};
 
@@ -11,6 +12,7 @@ pub struct Base {
 	hwnd: HWND,
 	events: MsgEvents,
 	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
+	children_creates: Immut<Vec<Box<dyn Fn() -> Result<(), co::ERROR> + 'static>>>,
 }
 
 impl Parent for Base {
@@ -24,6 +26,12 @@ impl Parent for Base {
 		}
 		&self.events
 	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		self.children_creates.as_mut().push(func);
+	}
 }
 
 impl Base {
@@ -32,6 +40,7 @@ impl Base {
 			hwnd: unsafe { HWND::null_handle() },
 			events: MsgEvents::new(),
 			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
+ 			children_creates: Immut::new(Vec::with_capacity(16)), // arbitrary, prealloc for speed
 		}
 	}
 
@@ -52,5 +61,12 @@ impl Base {
 
 	pub fn process_message(&mut self, wm_any: Wm) -> ProcessResult {
 		self.events.process_message(wm_any)
+	}
+
+	pub fn create_children(&self) -> Result<(), co::ERROR> {
+		for creat in self.children_creates.iter() {
+			creat()?;
+		}
+		Ok(())
 	}
 }

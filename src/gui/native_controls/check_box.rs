@@ -5,7 +5,7 @@ use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box_check, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::parent::Parent;
 use crate::handles::HWND;
 use crate::msg::{BmClick, BmGetCheck, BmSetCheck, WmSetFont};
 use crate::structs::POINT;
@@ -26,36 +26,12 @@ pub struct CheckBox {
 unsafe impl Send for CheckBox {}
 unsafe impl Sync for CheckBox {}
 
-impl Child for CheckBox {
-	fn create(&self) -> Result<(), co::ERROR> {
-		match self.base.opts_id() {
-			OptsId::Wnd(opts) => {
-				let bound_box = calc_text_bound_box_check(&opts.text)?;
-
-				let our_hwnd = self.base.create_window( // may panic
-					"BUTTON", Some(&opts.text), opts.pos, bound_box,
-					opts.ctrl_id,
-					opts.ex_window_style,
-					opts.window_style | opts.button_style.into(),
-				)?;
-
-				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-				Ok(())
-			},
-			OptsId::Dlg(ctrl_id) => {
-				self.base.create_dlg(*ctrl_id) // may panic
-					.map(|_| ())
-			},
-		}
-	}
-}
-
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: CheckBoxOpts) -> CheckBox {
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
-		Self {
+		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
@@ -63,13 +39,15 @@ impl CheckBox {
 					OptsId::Wnd(opts),
 				),
 			),
-		}
+		};
+		me.add_creation_to_parent(parent);
+		me
 	}
 
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> CheckBox {
-		Self {
+		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
@@ -77,7 +55,33 @@ impl CheckBox {
 					OptsId::Dlg(ctrl_id),
 				),
 			),
-		}
+		};
+		me.add_creation_to_parent(parent);
+		me
+	}
+
+	fn add_creation_to_parent(&self, parent: &dyn Parent) {
+		let me = self.clone();
+		parent.add_child_to_be_created(
+			Box::new(move || {
+				match me.base.opts_id() {
+					OptsId::Wnd(opts) => {
+						let bound_box = calc_text_bound_box_check(&opts.text)?;
+
+						let our_hwnd = me.base.create_window( // may panic
+							"BUTTON", Some(&opts.text), opts.pos, bound_box,
+							opts.ctrl_id,
+							opts.ex_window_style,
+							opts.window_style | opts.button_style.into(),
+						)?;
+
+						our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+						Ok(())
+					},
+					OptsId::Dlg(ctrl_id) => me.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				}
+			})
+		)
 	}
 
 	/// Returns the underlying handle for this control.

@@ -6,7 +6,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
 use crate::gui::main_loop::run_loop;
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::WmSetIcon;
 
@@ -26,6 +26,12 @@ impl Parent for DialogMain {
 
 	fn events_ref(&self) -> &MsgEvents {
 		self.0.base.events_ref()
+	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		self.0.base.add_child_to_be_created(func);
 	}
 }
 

@@ -3,7 +3,7 @@ use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAwa
 use crate::gui::dialog_main::DialogMain;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::gui::window_main::{CustomMainOpts, WindowMain};
 use crate::handles::HWND;
 
@@ -34,6 +34,15 @@ impl Parent for CustomMain {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.events_ref(),
 			WndDlg::Dlg(d) => d.events_ref(),
+		}
+	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		match &self.0 {
+			WndDlg::Wnd(w) => w.add_child_to_be_created(func),
+			WndDlg::Dlg(d) => d.add_child_to_be_created(func),
 		}
 	}
 }

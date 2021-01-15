@@ -3,7 +3,7 @@ use crate::enums::{HwndPlace, IdStr};
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::globals::ui_font;
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
 use crate::msg::{Message, Wm, WmInitDialog, WmSetFont};
 use crate::structs::POINT;
@@ -38,6 +38,12 @@ impl Parent for DialogBase {
 
 	fn events_ref(&self) -> &MsgEvents {
 		self.base.events_ref()
+	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		self.base.add_child_to_be_created(func);
 	}
 }
 
@@ -99,6 +105,7 @@ impl DialogBase {
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(hwnd); // store HWND in struct field
+				ref_self.base.create_children().expect("Children creation failed.");
 				ref_self.after_create_action().expect("Pre-WM_INITDIALOG actions failed.");
 				ref_self.set_ui_font_on_children();
 				ptr_self

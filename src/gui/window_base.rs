@@ -3,7 +3,7 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{Message, Wm, WmNcCreate};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
@@ -29,6 +29,12 @@ impl Parent for WindowBase {
 
 	fn events_ref(&self) -> &MsgEvents {
 		&self.base.events_ref()
+	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		self.base.add_child_to_be_created(func);
 	}
 }
 
@@ -131,8 +137,13 @@ impl WindowBase {
 			return hwnd.DefWindowProc(wm_any).into();
 		}
 
-		// Execute user closure, if any.
+		// Create children.
 		let ref_self = unsafe { &mut *ptr_self };
+		if wm_any.msg_id == co::WM::CREATE {
+			ref_self.base.create_children().expect("Children creation failed.");
+		}
+
+		// Execute user closure, if any.
 		let maybe_processed = ref_self.base.process_message(wm_any);
 
 		if msg == co::WM::NCDESTROY { // always check

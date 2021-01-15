@@ -7,7 +7,7 @@ use crate::gui::events::MsgEvents;
 use crate::gui::globals::multiply_dpi;
 use crate::gui::immut::Immut;
 use crate::gui::main_loop::run_loop;
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
@@ -29,6 +29,12 @@ impl Parent for WindowMain {
 
 	fn events_ref(&self) -> &MsgEvents {
 		self.0.base.events_ref()
+	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		self.0.base.add_child_to_be_created(func);
 	}
 }
 

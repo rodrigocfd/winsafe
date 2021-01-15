@@ -2,10 +2,10 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
-use crate::gui::globals::{multiply_dpi, paint_control_borders};
 use crate::gui::events::MsgEvents;
+use crate::gui::globals::{multiply_dpi, paint_control_borders};
 use crate::gui::immut::Immut;
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
@@ -27,6 +27,12 @@ impl Parent for WindowControl {
 	fn events_ref(&self) -> &MsgEvents {
 		self.0.base.events_ref()
 	}
+
+	fn add_child_to_be_created(&self,
+		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+	{
+		self.0.base.add_child_to_be_created(func);
+	}
 }
 
 impl WindowControl {
@@ -40,30 +46,34 @@ impl WindowControl {
 			)),
 		);
 		wnd.default_message_handlers();
+		wnd.add_creation_to_parent(parent);
 		wnd
 	}
 
-	pub fn create(&self) -> Result<(), co::ERROR> {
-		let opts = &mut self.0.as_mut().opts;
+	fn add_creation_to_parent(&self, parent: &dyn Parent) {
+		let me = self.clone();
+		parent.add_child_to_be_created(
+			Box::new(move || {
+				let opts = &mut me.0.as_mut().opts;
 
-		let mut wcx = WNDCLASSEX::default();
-		let mut class_name_buf = WString::new();
-		opts.generate_wndclassex(
-			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
-		self.0.base.register_class(&mut wcx)?;
+				let mut wcx = WNDCLASSEX::default();
+				let mut class_name_buf = WString::new();
+				opts.generate_wndclassex(
+					me.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
+				me.0.base.register_class(&mut wcx)?;
 
-		multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
+				multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
 
-		self.0.base.create_window( // may panic
-			&class_name_buf.to_string(),
-			None,
-			IdMenu::None,
-			opts.position, opts.size,
-			opts.ex_style,
-			opts.style,
-		)?;
-
-		Ok(())
+				me.0.base.create_window( // may panic
+					&class_name_buf.to_string(),
+					None,
+					IdMenu::None,
+					opts.position, opts.size,
+					opts.ex_style,
+					opts.style,
+				)
+			})
+		);
 	}
 
 	fn default_message_handlers(&self) {

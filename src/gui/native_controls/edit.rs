@@ -5,7 +5,7 @@ use crate::gui::events::{EditEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::parent::Parent;
 use crate::handles::HWND;
 use crate::msg::WmSetFont;
 use crate::structs::{POINT, SIZE};
@@ -23,35 +23,12 @@ pub struct Edit {
 unsafe impl Send for Edit {}
 unsafe impl Sync for Edit {}
 
-impl Child for Edit {
-	fn create(&self) -> Result<(), co::ERROR> {
-		match self.base.opts_id() {
-			OptsId::Wnd(opts) => {
-				let our_hwnd = self.base.create_window( // may panic
-					"EDIT", Some(&opts.text), opts.pos,
-					SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
-					opts.ctrl_id,
-					opts.ex_window_style,
-					opts.window_style | opts.edit_style.into(),
-				)?;
-
-				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-				Ok(())
-			},
-			OptsId::Dlg(ctrl_id) => {
-				self.base.create_dlg(*ctrl_id) // may panic
-					.map(|_| ())
-			},
-		}
-	}
-}
-
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window with
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: EditOpts) -> Edit {
 		let opts = EditOpts::define_ctrl_id(opts);
-		Self {
+		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
@@ -59,13 +36,15 @@ impl Edit {
 					OptsId::Wnd(opts),
 				),
 			),
-		}
+		};
+		me.add_creation_to_parent(parent);
+		me
 	}
 
 	/// Instantiates a new `Edit` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Edit {
-		Self {
+		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
@@ -73,7 +52,32 @@ impl Edit {
 					OptsId::Dlg(ctrl_id),
 				),
 			),
-		}
+		};
+		me.add_creation_to_parent(parent);
+		me
+	}
+
+	fn add_creation_to_parent(&self, parent: &dyn Parent) {
+		let me = self.clone();
+		parent.add_child_to_be_created(
+			Box::new(move || {
+				match me.base.opts_id() {
+					OptsId::Wnd(opts) => {
+						let our_hwnd = me.base.create_window( // may panic
+							"EDIT", Some(&opts.text), opts.pos,
+							SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
+							opts.ctrl_id,
+							opts.ex_window_style,
+							opts.window_style | opts.edit_style.into(),
+						)?;
+
+						our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+						Ok(())
+					},
+					OptsId::Dlg(ctrl_id) => me.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				}
+			})
+		);
 	}
 
 	/// Returns the underlying handle for this control.

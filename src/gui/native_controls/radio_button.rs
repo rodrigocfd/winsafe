@@ -3,7 +3,7 @@ use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box_check, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::handles::HWND;
 use crate::msg::{BmClick, BmGetCheck, BmSetCheck, BmSetDontClick, WmSetFont};
 use crate::structs::POINT;

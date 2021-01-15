@@ -5,7 +5,7 @@ use crate::co;
 use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
 use crate::gui::immut::Immut;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::parent::Parent;
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
 ///
@@ -22,15 +22,6 @@ struct Obj { // actual fields of RadioGroup
 unsafe impl Send for RadioGroup {}
 unsafe impl Sync for RadioGroup {}
 
-impl Child for RadioGroup {
-	fn create(&self) -> Result<(), co::ERROR> {
-		for radio in self.0.as_mut().radios.iter_mut() {
-			radio.create()?;
-		}
-		Ok(())
-	}
-}
-
 impl Index<usize> for RadioGroup {
 	type Output = RadioButton;
 
@@ -43,7 +34,7 @@ impl RadioGroup {
 	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be created
 	/// on the parent window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
-	/// # Panic
+	/// # Panics
 	///
 	/// Panics if no options are passed.
 	pub fn new(parent: &dyn Parent, opts: &[RadioButtonOpts]) -> RadioGroup {
@@ -65,14 +56,16 @@ impl RadioGroup {
 			radios.push(new_radio);
 		}
 
-		Self(
+		let me = Self(
 			Arc::new(Immut::new(
 				Obj {
 					radios,
 					parent_events: RadioGroupEvents::new(parent, ctrl_ids),
 				},
 			)),
-		)
+		);
+		me.add_creation_to_parent(parent);
+		me
 	}
 
 	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
@@ -92,14 +85,28 @@ impl RadioGroup {
 			radios.push(RadioButton::new_dlg(parent, *ctrl_id));
 		}
 
-		Self(
+		let me = Self(
 			Arc::new(Immut::new(
 				Obj {
 					radios,
 					parent_events: RadioGroupEvents::new(parent, ctrl_ids.to_vec()),
 				},
 			)),
-		)
+		);
+		me.add_creation_to_parent(parent);
+		me
+	}
+
+	fn add_creation_to_parent(&self, parent: &dyn Parent) {
+		let me = self.clone();
+		parent.add_child_to_be_created(
+			Box::new(move || {
+				for radio in me.0.as_mut().radios.iter_mut() {
+					radio.create()?;
+				}
+				Ok(())
+			})
+		);
 	}
 
 	/// Exposes the radio group events.

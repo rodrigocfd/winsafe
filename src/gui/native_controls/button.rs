@@ -5,7 +5,7 @@ use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::parent::Parent;
 use crate::handles::HWND;
 use crate::msg::{BmClick, WmSetFont};
 use crate::structs::{POINT, SIZE};
@@ -23,35 +23,12 @@ pub struct Button {
 unsafe impl Send for Button {}
 unsafe impl Sync for Button {}
 
-impl Child for Button {
-	fn create(&self) -> Result<(), co::ERROR> {
-		match self.base.opts_id() {
-			OptsId::Wnd(opts) => {
-				let our_hwnd = self.base.create_window( // may panic
-					"BUTTON", Some(&opts.text), opts.pos,
-					SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
-					opts.ctrl_id,
-					opts.ex_window_style,
-					opts.window_style | opts.button_style.into(),
-				)?;
-
-				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-				Ok(())
-			},
-			OptsId::Dlg(ctrl_id) => {
-				self.base.create_dlg(*ctrl_id) // may panic
-					.map(|_| ())
-			},
-		}
-	}
-}
-
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
 		let opts = ButtonOpts::define_ctrl_id(opts);
-		Self {
+		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
@@ -59,13 +36,15 @@ impl Button {
 					OptsId::Wnd(opts),
 				),
 			),
-		}
+		};
+		me.add_creation_to_parent(parent);
+		me
 	}
 
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Button {
-		Self {
+		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
@@ -73,7 +52,32 @@ impl Button {
 					OptsId::Dlg(ctrl_id),
 				),
 			),
-		}
+		};
+		me.add_creation_to_parent(parent);
+		me
+	}
+
+	fn add_creation_to_parent(&self, parent: &dyn Parent) {
+		let me = self.clone();
+		parent.add_child_to_be_created(
+			Box::new(move || {
+				match me.base.opts_id() {
+					OptsId::Wnd(opts) => {
+						let our_hwnd = me.base.create_window( // may panic
+							"BUTTON", Some(&opts.text), opts.pos,
+							SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
+							opts.ctrl_id,
+							opts.ex_window_style,
+							opts.window_style | opts.button_style.into(),
+						)?;
+
+						our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+						Ok(())
+					},
+					OptsId::Dlg(ctrl_id) => me.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				}
+			})
+		);
 	}
 
 	/// Returns the underlying handle for this control.

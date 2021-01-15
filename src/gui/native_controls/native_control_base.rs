@@ -6,7 +6,7 @@ use crate::funcs_priv::WC_DIALOG;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::immut::Immut;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::traits::Parent;
+use crate::gui::parent::Parent;
 use crate::handles::HWND;
 use crate::msg::Wm;
 use crate::structs::{POINT, SIZE};
