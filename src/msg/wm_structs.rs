@@ -1,7 +1,7 @@
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::enums::{HwndHmenu, NccalcRect, WsWsex};
-use crate::funcs_priv::FAPPCOMMAND_MASK;
+use crate::funcs_priv::{FAPPCOMMAND_MASK, WM_WINSAFE_ERROR};
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::macros::{lp_to_mut_ref, lp_to_point, lp_to_ref, point_to_lp, ref_to_lp};
@@ -34,6 +34,35 @@ impl Message for Wm {
 
 	fn from_generic_wm(p: Wm) -> Self {
 		p
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Internal message, causes program to quit.
+pub(crate) struct WmWinsafeError {
+	pub code: co::ERROR,
+}
+
+impl Message for WmWinsafeError {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: WM_WINSAFE_ERROR,
+			wparam: 0xc0de_f00d,
+			lparam: u32::from(self.code) as isize,
+		}
+	}
+
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			code: co::ERROR::from(p.lparam as u32),
+		}
 	}
 }
 

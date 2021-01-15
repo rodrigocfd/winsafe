@@ -2,12 +2,15 @@
 
 use std::ffi::c_void;
 
+use crate::co::WM;
 use crate::WString;
 
 pub const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub const L_MAX_URL_LENGTH: usize = 2048 + 32 + 4;
 pub const LF_FACESIZE: usize = 32;
 pub const WC_DIALOG: u16 = 0x8002;
+
+pub const WM_WINSAFE_ERROR: WM = WM(WM::APP.0 + 0xbfff); // https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-app
 
 /// Transforms a raw pointer into an option, which is `None` if the pointer is
 /// null.

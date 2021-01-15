@@ -6,7 +6,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::parent::Parent;
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::{Message, Wm, WmNcCreate};
+use crate::msg::{Message, Wm, WmNcCreate, WmWinsafeError};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
@@ -116,44 +116,51 @@ impl WindowBase {
 	extern "system" fn window_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
-		let wm_any = Wm { msg_id: msg, wparam, lparam };
+		|hwnd: HWND, msg, wparam, lparam| -> WinResult<isize>
+		{
+			let wm_any = Wm { msg_id: msg, wparam, lparam };
 
-		let ptr_self = match msg {
-			co::WM::NCCREATE => { // first message being handled
-				let wm_ncc = WmNcCreate::from_generic_wm(wm_any);
-				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
-				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
-				let ref_self = unsafe { &mut *ptr_self };
-				ref_self.base.set_hwnd(hwnd); // store HWND in struct field
-				ptr_self
-			},
-			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
-		};
+			let ptr_self = match msg {
+				co::WM::NCCREATE => { // first message being handled
+					let wm_ncc = WmNcCreate::from_generic_wm(wm_any);
+					let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
+					hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
+					let ref_self = unsafe { &mut *ptr_self };
+					ref_self.base.set_hwnd(hwnd); // store HWND in struct field
+					ptr_self
+				},
+				_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
+			};
 
-		// If no pointer stored, then no processing is done.
-		// Prevents processing before WM_NCCREATE and after WM_NCDESTROY.
-		if ptr_self.is_null() {
-			return hwnd.DefWindowProc(wm_any).into();
+			// If no pointer stored, then no processing is done.
+			// Prevents processing before WM_NCCREATE and after WM_NCDESTROY.
+			if ptr_self.is_null() {
+				return Ok(hwnd.DefWindowProc(wm_any));
+			}
+
+			// Create children.
+			let ref_self = unsafe { &mut *ptr_self };
+			if wm_any.msg_id == co::WM::CREATE {
+				ref_self.base.create_children()?;
+			}
+
+			// Execute user closure, if any.
+			let maybe_processed = ref_self.base.process_message(wm_any);
+
+			if msg == co::WM::NCDESTROY { // always check
+				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+				ref_self.base.set_hwnd(unsafe { HWND::null_handle() }); // clear stored HWND
+			}
+
+			Ok(match maybe_processed {
+				ProcessResult::HandledWithRet(res) => res.into(),
+				ProcessResult::HandledWithoutRet => 0,
+				ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any).into(),
+			})
 		}
-
-		// Create children.
-		let ref_self = unsafe { &mut *ptr_self };
-		if wm_any.msg_id == co::WM::CREATE {
-			ref_self.base.create_children().expect("Children creation failed.");
-		}
-
-		// Execute user closure, if any.
-		let maybe_processed = ref_self.base.process_message(wm_any);
-
-		if msg == co::WM::NCDESTROY { // always check
-			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
-			ref_self.base.set_hwnd(unsafe { HWND::null_handle() }); // clear stored HWND
-		}
-
-		match maybe_processed {
-			ProcessResult::HandledWithRet(res) => res.into(),
-			ProcessResult::HandledWithoutRet => 0,
-			ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any).into(),
-		}
+		(hwnd, msg, wparam, lparam).unwrap_or_else(|err| {
+			hwnd.PostMessage(WmWinsafeError { code: err }).ok();
+			0
+		})
 	}
 }

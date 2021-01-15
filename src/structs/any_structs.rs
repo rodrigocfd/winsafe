@@ -306,7 +306,11 @@ impl Default for NONCLIENTMETRICS {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.cbSize = std::mem::size_of::<Self>() as u32;
-		if !IsWindowsVistaOrGreater().unwrap() {
+
+		let is_vista = IsWindowsVistaOrGreater()
+			.unwrap_or_else(|err| panic!("{}", err)); // should never happen
+
+		if !is_vista {
 			obj.cbSize -= std::mem::size_of::<i32>() as u32
 		}
 		obj

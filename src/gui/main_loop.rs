@@ -1,5 +1,6 @@
 use crate::aliases::WinResult;
 use crate::co;
+use crate::funcs_priv::WM_WINSAFE_ERROR;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::handles::{HACCEL, HWND};
 use crate::structs::MSG;
@@ -14,8 +15,15 @@ pub fn run_loop(hwnd: &HWND, haccel: Option<HACCEL>) -> WinResult<i32> {
 			return Ok(msg.wParam as i32);
 		}
 
+		if msg.message == WM_WINSAFE_ERROR && msg.wParam == 0xc0de_f00d {
+			// A WinResult bubbled-up to here.
+			// Terminate the program returning the error code passed in lParam.
+			return Err(co::ERROR::from(msg.lParam as u32));
+		}
+
 		// Does this message belong to a modeless child window (if any)?
 		// http://www.winprog.org/tutorial/modeless_dialogs.html
+
 
 
 
