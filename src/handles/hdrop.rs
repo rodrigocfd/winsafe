@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::aliases::WinResult;
 use crate::ffi::shell32;
 use crate::funcs_priv::mut_void;
 use crate::funcs::GetLastError;
@@ -29,7 +29,7 @@ impl HDROP {
 	///   println!("File path: {}", f);
 	/// }
 	/// ```
-	pub fn DragQueryFile(self) -> Result<Vec<String>, co::ERROR> {
+	pub fn DragQueryFile(self) -> WinResult<Vec<String>> {
 		let count = unsafe {
 			shell32::DragQueryFileW(self.ptr, 0xffff_ffff, std::ptr::null_mut(), 0)
 		};

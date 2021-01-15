@@ -1,3 +1,4 @@
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BitmapIcon;
 use crate::funcs::GetLastError;
@@ -14,7 +15,7 @@ pub struct BcmGetIdealSize<'a> {
 }
 
 impl<'a> Message for BcmGetIdealSize<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -47,7 +48,7 @@ pub struct BcmGetImageList<'a> {
 }
 
 impl<'a> Message for BcmGetImageList<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -80,7 +81,7 @@ pub struct BcmGetNote<'a> {
 }
 
 impl<'a> Message for BcmGetNote<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -144,7 +145,7 @@ pub struct BcmGetSplitInfo<'a> {
 }
 
 impl<'a> Message for BcmGetSplitInfo<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -177,7 +178,7 @@ pub struct BcmGetTextMargin<'a> {
 }
 
 impl<'a> Message for BcmGetTextMargin<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -210,7 +211,7 @@ pub struct BcmSetDropDownState {
 }
 
 impl Message for BcmSetDropDownState {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -243,7 +244,7 @@ pub struct BcmSetImageList<'a> {
 }
 
 impl<'a> Message for BcmSetImageList<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -276,7 +277,7 @@ pub struct BcmSetNote<'a> {
 }
 
 impl<'a> Message for BcmSetNote<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -314,7 +315,7 @@ pub struct BcmSetShield {
 }
 
 impl Message for BcmSetShield {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -347,7 +348,7 @@ pub struct BcmSetSplitInfo<'a> {
 }
 
 impl<'a> Message for BcmSetSplitInfo<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -380,7 +381,7 @@ pub struct BcmSetTextMargin<'a> {
 }
 
 impl<'a> Message for BcmSetTextMargin<'a> {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -465,7 +466,7 @@ pub struct BmGetImage {
 }
 
 impl Message for BmGetImage {
-	type RetType = Result<BitmapIcon, co::ERROR>;
+	type RetType = WinResult<BitmapIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.img_type {
@@ -585,7 +586,7 @@ pub struct BmSetImage {
 }
 
 impl Message for BmSetImage {
-	type RetType = Result<BitmapIcon, co::ERROR>;
+	type RetType = WinResult<BitmapIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.image {

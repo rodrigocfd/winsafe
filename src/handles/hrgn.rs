@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs_priv::const_void;
@@ -16,7 +17,7 @@ hgdiobj_type! {
 impl HRGN {
 	/// [`OffsetClipRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
 	/// method.
-	pub fn OffsetClipRgn(self, x: i32, y: i32) -> Result<co::REGION, co::ERROR> {
+	pub fn OffsetClipRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
 		match unsafe { gdi32::OffsetClipRgn(self.ptr, x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION::from(ret)),
@@ -25,7 +26,7 @@ impl HRGN {
 
 	/// [`OffsetRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
 	/// method.
-	pub fn OffsetRgn(self, x: i32, y: i32) -> Result<co::REGION, co::ERROR> {
+	pub fn OffsetRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
 		match unsafe { gdi32::OffsetRgn(self.ptr, x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION::from(ret)),

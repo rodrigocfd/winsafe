@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
 use crate::co::ERROR;
 use crate::com::{PPVtbl, Vtbl};
 use crate::com::shell::{co, ITaskbarList2, ITaskbarList2Vtbl};
@@ -69,7 +70,7 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.
 	pub fn RegisterTab(&self,
-		hwndTab: HWND, hwndMDI: HWND) -> Result<(), ERROR>
+		hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
@@ -80,7 +81,7 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::SetProgressState`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
 	/// method.
 	pub fn SetProgressState(&self,
-		hwnd: HWND, tbpfFlags: co::TBPF) -> Result<(), ERROR>
+		hwnd: HWND, tbpfFlags: co::TBPF) -> WinResult<()>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
@@ -93,7 +94,7 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::SetProgressValue`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
 	/// method.
 	pub fn SetProgressValue(&self,
-		hwnd: HWND, ullCompleted: u64, ullTotal: u64) -> Result<(), ERROR>
+		hwnd: HWND, ullCompleted: u64, ullTotal: u64) -> WinResult<()>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
@@ -106,7 +107,7 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::SetTabActive`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
 	/// method.
 	pub fn SetTabActive(&self,
-		hwndTab: HWND, hwndMDI: HWND) -> Result<(), ERROR>
+		hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
@@ -119,7 +120,7 @@ impl ITaskbarList3 {
 	/// [`ITaskbarList3::SetTabOrder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
 	/// method.
 	pub fn SetTabOrder(&self,
-		hwndTab: HWND, hwndInsertBefore: HWND) -> Result<(), ERROR>
+		hwndTab: HWND, hwndInsertBefore: HWND) -> WinResult<()>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();

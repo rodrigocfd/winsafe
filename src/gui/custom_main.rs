@@ -1,3 +1,4 @@
+use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
 use crate::gui::dialog_main::DialogMain;
@@ -38,7 +39,7 @@ impl Parent for CustomMain {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		match &self.0 {
 			WndDlg::Wnd(w) => w.add_child_to_be_created(func),
@@ -96,9 +97,7 @@ impl CustomMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_as_main(&self,
-		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
-	{
+	pub fn run_as_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
 		if IsWindowsVistaOrGreater()? {
 			SetProcessDPIAware()?;
 		}

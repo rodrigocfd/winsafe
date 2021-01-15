@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::co;
+use crate::aliases::WinResult;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::immut::Immut;
 use crate::gui::parent::Parent;
@@ -12,7 +12,7 @@ pub struct Base {
 	hwnd: HWND,
 	events: MsgEvents,
 	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
-	children_creates: Immut<Vec<Box<dyn Fn() -> Result<(), co::ERROR> + 'static>>>,
+	children_creates: Immut<Vec<Box<dyn Fn() -> WinResult<()> + 'static>>>,
 }
 
 impl Parent for Base {
@@ -28,7 +28,7 @@ impl Parent for Base {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.children_creates.as_mut().push(func);
 	}
@@ -52,7 +52,7 @@ impl Base {
 		self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() })
 	}
 
-	pub fn parent_hinstance(&self) -> Result<HINSTANCE, co::ERROR> {
+	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
 		Ok(match self.parent_hwnd() {
 			Some(hparent) => hparent.hinstance(),
 			None => HINSTANCE::GetModuleHandle(None)?,
@@ -63,7 +63,7 @@ impl Base {
 		self.events.process_message(wm_any)
 	}
 
-	pub fn create_children(&self) -> Result<(), co::ERROR> {
+	pub fn create_children(&self) -> WinResult<()> {
 		for creat in self.children_creates.iter() {
 			creat()?;
 		}

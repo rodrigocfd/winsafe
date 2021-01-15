@@ -1,4 +1,4 @@
-use crate::co;
+use crate::aliases::WinResult;
 use crate::gui::events::MsgEvents;
 use crate::handles::HWND;
 
@@ -11,6 +11,5 @@ pub trait Parent {
 	/// Receives a closure that will create a control, to be called either in
 	/// [`WM_CREATE`](crate::msg::WmCreate) or
 	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog).
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>);
+	fn add_child_to_be_created(&self, func: Box<dyn Fn() -> WinResult<()> + 'static>);
 }

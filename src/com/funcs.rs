@@ -4,6 +4,7 @@
 
 use std::ffi::c_void;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::ole32;
@@ -30,7 +31,7 @@ use crate::structs::{CLSID, GUID};
 pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 	rclsid: &CLSID,
 	pUnkOuter: Option<*mut c_void>,
-	dwClsContext: co::CLSCTX) -> Result<RetInterf, co::ERROR>
+	dwClsContext: co::CLSCTX) -> WinResult<RetInterf>
 {
 	let mut ppv: PPVtbl<VT> = std::ptr::null_mut();
 
@@ -53,7 +54,7 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
-/// function.
+/// function. Returns some error codes as success status.
 ///
 /// Must be paired with a [`CoUninitialize`](crate::CoUninitialize) call.
 ///
@@ -64,7 +65,7 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 ///
 /// CoInitializeEx(COINIT::MULTITHREADED).unwrap();
 /// ```
-pub fn CoInitializeEx(dwCoInit: co::COINIT) -> Result<co::ERROR, co::ERROR> {
+pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
 	let err = co::ERROR::from(
 		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.into()) }
 	);

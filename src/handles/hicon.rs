@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::aliases::WinResult;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 
@@ -14,7 +14,7 @@ handle_type! {
 impl HICON {
 	/// [`DestroyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// method.
-	pub fn DestroyIcon(self) -> Result<(), co::ERROR> {
+	pub fn DestroyIcon(self) -> WinResult<()> {
 		match unsafe { user32::DestroyIcon(self.ptr) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),

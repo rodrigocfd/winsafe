@@ -3,6 +3,10 @@
 use crate::co;
 use crate::handles::HWND;
 
+/// A specialized `Result` for Win32 operations, which return an
+/// [`ERROR`](crate::co::ERROR) on failure.
+pub type WinResult<T> = Result<T, co::ERROR>;
+
 /// Type alias to
 /// [`DLGPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-dlgproc)
 /// callback function.

@@ -1,3 +1,4 @@
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{HwndPlace, IdStr};
 use crate::gui::base::Base;
@@ -41,7 +42,7 @@ impl Parent for DialogBase {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.base.add_child_to_be_created(func);
 	}
@@ -60,11 +61,11 @@ impl DialogBase {
 		}
 	}
 
-	pub fn parent_hinstance(&self) -> Result<HINSTANCE, co::ERROR> {
+	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
 		self.base.parent_hinstance()
 	}
 
-	pub fn create_dialog_param(&self) -> Result<(), co::ERROR> {
+	pub fn create_dialog_param(&self) -> WinResult<()> {
 		if !self.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
@@ -79,7 +80,7 @@ impl DialogBase {
 		).map(|_| ())
 	}
 
-	pub fn dialog_box_param(&self) -> Result<(), co::ERROR> {
+	pub fn dialog_box_param(&self) -> WinResult<()> {
 		if !self.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
@@ -135,7 +136,7 @@ impl DialogBase {
 		}
 	}
 
-	fn after_create_action(&self) -> Result<(), co::ERROR> {
+	fn after_create_action(&self) -> WinResult<()> {
 		match self.after_create {
 			AfterCreate::Nothing => Ok(()),
 			AfterCreate::CenterOnParent => {

@@ -115,7 +115,8 @@
 //! natively returned by [`GetLastError`](crate::GetLastError) function, belong
 //! to the constant type [`ERROR`](crate::co::ERROR), which also holds
 //! [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
-//! values. Most Win32 functions return a `Result` with a possible `ERROR`.
+//! values. Most Win32 functions return a [`WinResult`](crate::WinResult) with a
+//! possible `ERROR`.
 //!
 //! Panics will happen only in case of misuse or internal bug.
 //!

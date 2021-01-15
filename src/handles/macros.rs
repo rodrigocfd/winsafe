@@ -93,7 +93,7 @@ macro_rules! hgdiobj_type {
 		impl $name {
 			/// [`DeleteObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 			/// method.
-			pub fn DeleteObject(self) -> Result<(), co::ERROR> {
+			pub fn DeleteObject(self) -> WinResult<()> {
 				match unsafe { gdi32::DeleteObject(self.ptr) } {
 					 0 => Err(GetLastError()),
 					_ => Ok(()),

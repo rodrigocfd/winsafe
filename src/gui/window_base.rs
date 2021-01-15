@@ -1,3 +1,4 @@
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
@@ -32,7 +33,7 @@ impl Parent for WindowBase {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.base.add_child_to_be_created(func);
 	}
@@ -45,13 +46,11 @@ impl WindowBase {
 		}
 	}
 
-	pub fn parent_hinstance(&self) -> Result<HINSTANCE, co::ERROR> {
+	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
 		self.base.parent_hinstance()
 	}
 
-	pub fn register_class(
-		&self, wcx: &mut WNDCLASSEX) -> Result<ATOM, co::ERROR>
-	{
+	pub fn register_class(&self, wcx: &mut WNDCLASSEX) -> WinResult<ATOM> {
 		wcx.lpfnWndProc = Some(Self::window_proc);
 		SetLastError(co::ERROR::SUCCESS);
 
@@ -78,7 +77,7 @@ impl WindowBase {
 		pos: POINT,
 		sz: SIZE,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> Result<(), co::ERROR>
+		styles: co::WS) -> WinResult<()>
 	{
 		if !self.hwnd_ref().is_null() {
 			panic!("Cannot create window twice.");

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::aliases::WinResult;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 

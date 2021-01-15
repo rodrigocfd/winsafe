@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::uxtheme;
 use crate::funcs_priv::{const_void, mut_void};
@@ -16,7 +17,7 @@ handle_type! {
 impl HTHEME {
 	/// [`CloseThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
-	pub fn CloseThemeData(self) -> Result<(), co::ERROR> {
+	pub fn CloseThemeData(self) -> WinResult<()> {
 		match unsafe { uxtheme::CloseThemeData(self.ptr) } {
 			0 => Ok(()),
 			err => Err(co::ERROR::from(err)),
@@ -27,7 +28,7 @@ impl HTHEME {
 	/// method.
 	pub fn DrawThemeBackground(self,
 		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
-		pRect: RECT, pClipRect: RECT) -> Result<(), co::ERROR>
+		pRect: RECT, pClipRect: RECT) -> WinResult<()>
 	{
 		match unsafe {
 			uxtheme::DrawThemeBackground(
@@ -54,7 +55,7 @@ impl HTHEME {
 	/// method.
 	pub fn GetThemeBackgroundContentRect(self,
 		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
-		pBoundingRect: RECT) -> Result<RECT, co::ERROR>
+		pBoundingRect: RECT) -> WinResult<RECT>
 	{
 		let mut pContentRect = RECT::default();
 
@@ -77,7 +78,7 @@ impl HTHEME {
 	/// method.
 	pub fn GetThemeBackgroundExtent(self,
 		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
-		pContentRect: RECT) -> Result<RECT, co::ERROR>
+		pContentRect: RECT) -> WinResult<RECT>
 	{
 		let mut pExtentRect = RECT::default();
 
@@ -100,7 +101,7 @@ impl HTHEME {
 	/// method.
 	pub fn GetThemeBackgroundRegion(self,
 		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
-		pRect: RECT) -> Result<HRGN, co::ERROR>
+		pRect: RECT) -> WinResult<HRGN>
 	{
 		let mut pRegion = unsafe { HRGN::null_handle() };
 

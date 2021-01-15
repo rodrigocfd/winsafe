@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::gui::events::MsgEvents;
@@ -29,7 +30,7 @@ impl Parent for WindowControl {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.0.base.add_child_to_be_created(func);
 	}
@@ -170,7 +171,7 @@ impl CustomControlOpts {
 		&self,
 		hinst: HINSTANCE,
 		wcx: &mut WNDCLASSEX<'_, 'a>,
-		class_name_buf: &'a mut WString) -> Result<(), co::ERROR>
+		class_name_buf: &'a mut WString) -> WinResult<()>
 	{
 		wcx.hInstance = hinst;
 		wcx.style = self.class_style;

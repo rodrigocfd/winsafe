@@ -4,6 +4,7 @@
 
 use std::collections::HashMap;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{comctl32, kernel32, user32};
 use crate::funcs_priv::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
@@ -15,7 +16,7 @@ use crate::WString;
 /// function.
 pub fn AdjustWindowRectEx(
 	lpRect: &mut s::RECT, dwStyle: co::WS,
-	bMenu: bool, dwExStyle: co::WS_EX) -> Result<(), co::ERROR>
+	bMenu: bool, dwExStyle: co::WS_EX) -> WinResult<()>
 {
 	match unsafe {
 		user32::AdjustWindowRectEx(
@@ -55,7 +56,7 @@ pub fn GetDialogBaseUnits() -> i32 {
 ///   println!("{} = {}", k, v);
 /// }
 /// ```
-pub fn GetEnvironmentStrings() -> Result<HashMap<String, String>, co::ERROR> {
+pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 	match ptr_as_opt(unsafe { kernel32::GetEnvironmentStringsW() }) {
 		None => Err(GetLastError()),
 		Some(p) => {
@@ -81,7 +82,7 @@ pub fn GetLastError() -> co::ERROR {
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
 pub fn GetMessage(lpMsg: &mut s::MSG, hWnd: Option<HWND>,
-	wMsgFilterMin: u32, wMsgFilterMax: u32) -> Result<bool, co::ERROR>
+	wMsgFilterMin: u32, wMsgFilterMax: u32) -> WinResult<bool>
 {
 	match unsafe {
 		user32::GetMessageW(
@@ -136,7 +137,7 @@ pub fn InitCommonControls() {
 
 /// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
 /// function.
-pub fn IsGUIThread(bConvert: bool) -> Result<bool, co::ERROR> {
+pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
 	let r = unsafe { user32::IsGUIThread(bConvert as i32) };
 	if bConvert {
 		match r {
@@ -150,8 +151,7 @@ pub fn IsGUIThread(bConvert: bool) -> Result<bool, co::ERROR> {
 }
 
 /// [`IsWindows10OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater)
-pub fn IsWindows10OrGreater() -> Result<bool, co::ERROR>
-{
+pub fn IsWindows10OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.into()) as u16,
 		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.into()) as u16,
@@ -160,8 +160,7 @@ pub fn IsWindows10OrGreater() -> Result<bool, co::ERROR>
 }
 
 /// [`IsWindows7OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows7orgreater)
-pub fn IsWindows7OrGreater() -> Result<bool, co::ERROR>
-{
+pub fn IsWindows7OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WIN7.into()) as u16,
 		LOBYTE(co::WIN32::WINNT_WIN7.into()) as u16,
@@ -171,8 +170,7 @@ pub fn IsWindows7OrGreater() -> Result<bool, co::ERROR>
 
 /// [`IsWindows8OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8orgreater)
 /// function.
-pub fn IsWindows8OrGreater() -> Result<bool, co::ERROR>
-{
+pub fn IsWindows8OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WIN8.into()) as u16,
 		LOBYTE(co::WIN32::WINNT_WIN8.into()) as u16,
@@ -182,8 +180,7 @@ pub fn IsWindows8OrGreater() -> Result<bool, co::ERROR>
 
 /// [`IsWindows8Point1OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8point1orgreater)
 /// function.
-pub fn IsWindows8Point1OrGreater() -> Result<bool, co::ERROR>
-{
+pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WINBLUE.into()) as u16,
 		LOBYTE(co::WIN32::WINNT_WINBLUE.into()) as u16,
@@ -192,7 +189,7 @@ pub fn IsWindows8Point1OrGreater() -> Result<bool, co::ERROR>
 }
 
 /// [`IsWindowsServer`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsserver)
-pub fn IsWindowsServer() -> Result<bool, co::ERROR> {
+pub fn IsWindowsServer() -> WinResult<bool> {
 	let mut osvi = s::OSVERSIONINFOEX::default();
 	osvi.wProductType = co::VER_NT::WORKSTATION;
 	let dwlConditionMask = VerSetConditionMask(
@@ -205,7 +202,7 @@ pub fn IsWindowsServer() -> Result<bool, co::ERROR> {
 /// function.
 pub fn IsWindowsVersionOrGreater(
 	wMajorVersion: u16, wMinorVersion: u16,
-	wServicePackMajor: u16) -> Result<bool, co::ERROR>
+	wServicePackMajor: u16) -> WinResult<bool>
 {
 	let mut osvi = s::OSVERSIONINFOEX::default();
 	let dwlConditionMask = VerSetConditionMask(
@@ -229,8 +226,7 @@ pub fn IsWindowsVersionOrGreater(
 
 /// [`IsWindowsVistaOrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsvistaorgreater)
 /// function.
-pub fn IsWindowsVistaOrGreater() -> Result<bool, co::ERROR>
-{
+pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_VISTA.into()) as u16,
 		LOBYTE(co::WIN32::WINNT_VISTA.into()) as u16,
@@ -309,7 +305,7 @@ pub fn PostQuitMessage(nExitCode: i32) {
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
-pub fn RegisterClassEx(lpwcx: &s::WNDCLASSEX) -> Result<s::ATOM, co::ERROR> {
+pub fn RegisterClassEx(lpwcx: &s::WNDCLASSEX) -> WinResult<s::ATOM> {
 	match unsafe {
 		user32::RegisterClassExW(lpwcx as *const s::WNDCLASSEX as *const _)
 	} {
@@ -326,7 +322,7 @@ pub fn SetLastError(dwErrCode: co::ERROR) {
 
 /// [`SetProcessDPIAware`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
 /// function.
-pub fn SetProcessDPIAware() -> Result<(), co::ERROR> {
+pub fn SetProcessDPIAware() -> WinResult<()> {
 	match unsafe { user32::SetProcessDPIAware() } {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
@@ -346,7 +342,7 @@ pub fn Sleep(dwMilliseconds: u32) {
 /// you're likely to cause a buffer overrun.
 pub unsafe fn SystemParametersInfo<T>(
 	uiAction: co::SPI, uiParam: u32,
-	pvParam: &mut T, fWinIni: co::SPIF) -> Result<(), co::ERROR>
+	pvParam: &mut T, fWinIni: co::SPIF) -> WinResult<()>
 {
 	match user32::SystemParametersInfoW(
 		uiAction.into(), uiParam, mut_void(pvParam), fWinIni.into(),
@@ -367,7 +363,7 @@ pub fn TranslateMessage(lpMsg: &s::MSG) -> bool {
 /// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
 pub fn UnregisterClass(
-	lpClassName: &str, hInstance: HINSTANCE) -> Result<(), co::ERROR>
+	lpClassName: &str, hInstance: HINSTANCE) -> WinResult<()>
 {
 	match unsafe {
 		user32::UnregisterClassW(
@@ -384,7 +380,7 @@ pub fn UnregisterClass(
 /// function.
 pub fn VerifyVersionInfo(
 	lpVersionInformation: &mut s::OSVERSIONINFOEX,
-	dwTypeMask: co::VER_MASK, dwlConditionMask: u64) -> Result<bool, co::ERROR>
+	dwTypeMask: co::VER_MASK, dwlConditionMask: u64) -> WinResult<bool>
 {
 	match unsafe {
 		kernel32::VerifyVersionInfoW(

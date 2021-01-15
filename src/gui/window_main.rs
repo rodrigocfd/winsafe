@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
@@ -32,7 +33,7 @@ impl Parent for WindowMain {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.0.base.add_child_to_be_created(func);
 	}
@@ -53,9 +54,7 @@ impl WindowMain {
 		wnd
 	}
 
-	pub fn run_as_main(&self,
-		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
-	{
+	pub fn run_as_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
 		let opts = &mut self.0.as_mut().opts;
 
 		let mut wcx = WNDCLASSEX::default();
@@ -236,7 +235,7 @@ impl CustomMainOpts {
 		&self,
 		hinst: HINSTANCE,
 		wcx: &mut WNDCLASSEX<'_, 'a>,
-		class_name_buf: &'a mut WString) -> Result<(), co::ERROR>
+		class_name_buf: &'a mut WString) -> WinResult<()>
 	{
 		wcx.hInstance = hinst;
 		wcx.style = self.class_style;

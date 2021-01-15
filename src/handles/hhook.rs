@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::HOOKPROC;
+use crate::aliases::{HOOKPROC, WinResult};
 use crate::co;
 use crate::ffi::user32;
 use crate::funcs_priv::ptr_as_opt;
@@ -18,7 +18,7 @@ impl HHOOK {
 	/// [`SetWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
 	/// static method.
 	pub fn SetWindowsHookEx(idHook: co::WH, lpfn: HOOKPROC,
-		hmod: HINSTANCE, dwThreadId: u32) -> Result<HHOOK, co::ERROR>
+		hmod: HINSTANCE, dwThreadId: u32) -> WinResult<HHOOK>
 	{
 		match ptr_as_opt(
 			unsafe {

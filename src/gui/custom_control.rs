@@ -1,4 +1,4 @@
-use crate::co;
+use crate::aliases::WinResult;
 use crate::gui::dialog_control::DialogControl;
 use crate::gui::events::MsgEvents;
 use crate::gui::parent::Parent;
@@ -37,7 +37,7 @@ impl Parent for CustomControl {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		match &self.0 {
 			WndDlg::Wnd(w) => w.add_child_to_be_created(func),

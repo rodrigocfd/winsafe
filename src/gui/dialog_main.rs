@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
@@ -29,7 +30,7 @@ impl Parent for DialogMain {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.0.base.add_child_to_be_created(func);
 	}
@@ -54,9 +55,7 @@ impl DialogMain {
 		dlg
 	}
 
-	pub fn run_as_main(&self,
-		cmd_show: Option<co::SW>) -> Result<i32, co::ERROR>
-	{
+	pub fn run_as_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.0.base.parent_hinstance()?;
 
@@ -84,7 +83,7 @@ impl DialogMain {
 		});
 	}
 
-	fn set_icon_if_any(&self, hinst: HINSTANCE) -> Result<(), co::ERROR> {
+	fn set_icon_if_any(&self, hinst: HINSTANCE) -> WinResult<()> {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {

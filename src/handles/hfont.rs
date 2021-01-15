@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs_priv::{const_void, ptr_as_opt};
@@ -23,7 +24,7 @@ impl HFONT {
 		iCharSet: co::CHARSET,
 		iOutPrecision: co::OUT_PRECIS, iClipPrecision: co::CLIP,
 		iQuality: co::QUALITY, iPitchAndFamily: co::PITCH,
-		pszFaceName: &str) -> Result<HFONT, co::ERROR>
+		pszFaceName: &str) -> WinResult<HFONT>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -45,7 +46,7 @@ impl HFONT {
 
 	/// [`CreateFontIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
-	pub fn CreateFontIndirect(lplf: &LOGFONT) -> Result<HFONT, co::ERROR> {
+	pub fn CreateFontIndirect(lplf: &LOGFONT) -> WinResult<HFONT> {
 		match ptr_as_opt(
 			unsafe {gdi32::CreateFontIndirectW(const_void(lplf)) }
 		) {

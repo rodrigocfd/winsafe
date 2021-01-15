@@ -1,5 +1,6 @@
 use std::ptr::NonNull;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs_priv::WC_DIALOG;
@@ -81,7 +82,7 @@ impl<Ev, Op> NativeControlBase<Ev, Op> {
 		pos: POINT, sz: SIZE,
 		ctrl_id: u16,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> Result<HWND, co::ERROR>
+		styles: co::WS) -> WinResult<HWND>
 	{
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot create control twice.");
@@ -106,7 +107,7 @@ impl<Ev, Op> NativeControlBase<Ev, Op> {
 		Ok(self.0.hwnd)
 	}
 
-	pub fn create_dlg(&self, ctrl_id: u16) -> Result<HWND, co::ERROR> {
+	pub fn create_dlg(&self, ctrl_id: u16) -> WinResult<HWND> {
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot create control twice.");
 		} else if !self.is_parent_created() {
@@ -125,7 +126,7 @@ impl<Ev, Op> NativeControlBase<Ev, Op> {
 		Ok(self.0.hwnd)
 	}
 
-	fn install_subclass_if_needed(&self) -> Result<(), co::ERROR> {
+	fn install_subclass_if_needed(&self) -> WinResult<()> {
 		if !self.0.subclass_events.is_empty() {
 			let subclass_id = unsafe {
 				BASE_SUBCLASS_ID += 1;

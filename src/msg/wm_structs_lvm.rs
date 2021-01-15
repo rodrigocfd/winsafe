@@ -1,3 +1,4 @@
+use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::GetLastError;
 use crate::msg::{Message, Wm};
@@ -12,7 +13,7 @@ pub struct LvmGetColumn<'a, 'b> {
 }
 
 impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
-	type RetType = Result<u32, co::ERROR>;
+	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -46,7 +47,7 @@ pub struct LvmGetColumnWidth {
 }
 
 impl Message for LvmGetColumnWidth {
-	type RetType = Result<u32, co::ERROR>;
+	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -118,7 +119,7 @@ pub struct LvmInsertColumn<'a, 'b> {
 }
 
 impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
-	type RetType = Result<u32, co::ERROR>;
+	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -152,7 +153,7 @@ pub struct LvmInsertItem<'a, 'b> {
 }
 
 impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
-	type RetType = Result<u32, co::ERROR>;
+	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -242,7 +243,7 @@ pub struct LvmRedrawItems {
 }
 
 impl Message for LvmRedrawItems {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -402,7 +403,7 @@ pub struct LvmSetView {
 }
 
 impl Message for LvmSetView {
-	type RetType = Result<(), co::ERROR>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {

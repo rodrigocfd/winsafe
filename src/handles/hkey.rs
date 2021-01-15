@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
@@ -39,7 +40,7 @@ impl HKEY {
 
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
-	pub fn RegCloseKey(self) -> Result<(), co::ERROR> {
+	pub fn RegCloseKey(self) -> WinResult<()> {
 		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.ptr) } as u32) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -76,7 +77,7 @@ impl HKEY {
 	/// }
 	/// ```
 	pub fn RegGetValue(self,
-		lpSubKey: &str, lpValue: &str) -> Result<RegistryValue, co::ERROR>
+		lpSubKey: &str, lpValue: &str) -> WinResult<RegistryValue>
 	{
 		let wSubKey = WString::from_str(lpSubKey);
 		let wValueName = WString::from_str(lpValue);
@@ -210,7 +211,7 @@ impl HKEY {
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
 	pub fn RegOpenKeyEx(self, lpSubKey: &str,
-		ulOptions: co::REG_OPTION, samDesired: co::KEY) -> Result<HKEY, co::ERROR>
+		ulOptions: co::REG_OPTION, samDesired: co::KEY) -> WinResult<HKEY>
 	{
 		let mut hKey = unsafe { Self::null_handle() };
 
@@ -267,9 +268,7 @@ impl HKEY {
 	///
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
-	pub fn RegQueryValueEx(self,
-		lpValueName: &str) -> Result<RegistryValue, co::ERROR>
-	{
+	pub fn RegQueryValueEx(self, lpValueName: &str) -> WinResult<RegistryValue> {
 		let wValueName = WString::from_str(lpValueName);
 		let mut rawDataType: u32 = 0;
 		let mut dataLen: u32 = 0;
@@ -394,7 +393,7 @@ impl HKEY {
 	/// ).unwrap();
 	/// ```
 	pub fn RegSetKeyValue(self, lpSubKey: &str,
-		lpValueName: &str, lpData: RegistryValue) -> Result<(), co::ERROR>
+		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
 	{
 		match co::ERROR::from(
 			unsafe {
@@ -439,7 +438,7 @@ impl HKEY {
 	/// hkey.RegCloseKey().unwrap();
 	/// ```
 	pub fn RegSetValueEx(self,
-		lpValueName: &str, lpData: RegistryValue) -> Result<(), co::ERROR>
+		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
 	{
 		match co::ERROR::from(
 			unsafe {

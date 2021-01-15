@@ -1,5 +1,6 @@
 //! Global objects used within `gui` module.
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, SystemParametersInfo};
@@ -11,7 +12,7 @@ use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
 static mut UI_HFONT: Option<HFONT> = None;
 
 /// Creates the global UI font object.
-pub fn create_ui_font() -> Result<(), co::ERROR> {
+pub fn create_ui_font() -> WinResult<()> {
 	let mut ncm = NONCLIENTMETRICS::default();
 	unsafe {
 		SystemParametersInfo(
@@ -62,7 +63,7 @@ static mut DPI: POINT = POINT{ x: 0, y: 0 };
 
 /// Multiplies the given coordinates by current system DPI.
 pub fn multiply_dpi(
-	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> Result<(), co::ERROR>
+	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> WinResult<()>
 {
 	unsafe {
 		if (pt.is_some() || sz.is_some()) && DPI.x == 0 { // DPI not cached yet?
@@ -87,7 +88,7 @@ pub fn multiply_dpi(
 //------------------------------------------------------------------------------
 
 /// Calculates the bound rectangle to fit the text with current system font.
-pub fn calc_text_bound_box(text: &str) -> Result<SIZE, co::ERROR> {
+pub fn calc_text_bound_box(text: &str) -> WinResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC()?;
 	let clone_dc = desktop_hdc.CreateCompatibleDC()?;
@@ -113,7 +114,7 @@ pub fn calc_text_bound_box(text: &str) -> Result<SIZE, co::ERROR> {
 
 /// Calculates the bound rectangle to fit the text with current system font,
 /// adding a check box.
-pub fn calc_text_bound_box_check(text: &str) -> Result<SIZE, co::ERROR> {
+pub fn calc_text_bound_box_check(text: &str) -> WinResult<SIZE> {
 	let mut bound_box = calc_text_bound_box(text)?;
 	bound_box.cx += GetSystemMetrics(co::SM::CXMENUCHECK) // https://stackoverflow.com/a/1165052/6923555
 		+ GetSystemMetrics(co::SM::CXEDGE);
@@ -127,9 +128,7 @@ pub fn calc_text_bound_box_check(text: &str) -> Result<SIZE, co::ERROR> {
 }
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub fn paint_control_borders(
-	hwnd: HWND, wm_ncp: WmNcPaint) -> Result<(), co::ERROR>
-{
+pub fn paint_control_borders(hwnd: HWND, wm_ncp: WmNcPaint) -> WinResult<()> {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
 	let ex_style = co::WS_EX::from(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as u32);

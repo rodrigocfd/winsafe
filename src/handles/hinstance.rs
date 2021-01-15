@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::DLGPROC;
+use crate::aliases::{DLGPROC, WinResult};
 use crate::co;
 use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{kernel32, user32};
@@ -31,7 +31,7 @@ impl HINSTANCE {
 		lpTemplateName: IdStr,
 		hWndParent: Option<HWND>,
 		lpDialogFunc: DLGPROC,
-		dwInitParam: Option<isize>) -> Result<HWND, co::ERROR>
+		dwInitParam: Option<isize>) -> WinResult<HWND>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -59,7 +59,7 @@ impl HINSTANCE {
 		lpTemplateName: IdStr,
 		hWndParent: Option<HWND>,
 		lpDialogFunc: DLGPROC,
-		dwInitParam: Option<isize>) -> Result<isize, co::ERROR>
+		dwInitParam: Option<isize>) -> WinResult<isize>
 	{
 		match unsafe {
 			user32::DialogBoxParamW(
@@ -90,7 +90,7 @@ impl HINSTANCE {
 	///   .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
 	/// ```
 	pub fn GetClassInfoEx(self,
-		lpszClass: &str, lpwcx: &mut WNDCLASSEX) -> Result<ATOM, co::ERROR>
+		lpszClass: &str, lpwcx: &mut WNDCLASSEX) -> WinResult<ATOM>
 	{
 		match unsafe {
 			user32::GetClassInfoExW(
@@ -112,7 +112,7 @@ impl HINSTANCE {
 	/// let hinstance = HINSTANCE::GetModuleHandle(None).unwrap();
 	/// ```
 	pub fn GetModuleHandle(
-		lpModuleName: Option<&str>) -> Result<HINSTANCE, co::ERROR>
+		lpModuleName: Option<&str>) -> WinResult<HINSTANCE>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -128,9 +128,7 @@ impl HINSTANCE {
 
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
-	pub fn LoadAccelerators(self,
-		lpTableName: IdStr) -> Result<HACCEL, co::ERROR>
-	{
+	pub fn LoadAccelerators(self, lpTableName: IdStr) -> WinResult<HACCEL> {
 		match ptr_as_opt(
 			unsafe {
 				user32::LoadAcceleratorsW(self.ptr, lpTableName.as_ptr())
@@ -152,9 +150,7 @@ impl HINSTANCE {
 	///   .LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))
 	///   .unwrap();
 	/// ```
-	pub fn LoadCursor(self,
-		lpCursorName: IdIdcStr) -> Result<HCURSOR, co::ERROR>
-	{
+	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
 		match ptr_as_opt(
 			unsafe { user32::LoadCursorW(self.ptr, lpCursorName.as_ptr()) }
 		) {
@@ -174,9 +170,7 @@ impl HINSTANCE {
 	///   .LoadIcon(IdIdiStr::Idi(co::IDI::INFORMATION))
 	///   .unwrap();
 	/// ```
-	pub fn LoadIcon(self,
-		lpIconName: IdIdiStr) -> Result<HICON, co::ERROR>
-	{
+	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
 		match ptr_as_opt(
 			unsafe { user32::LoadIconW(self.ptr, lpIconName.as_ptr()) }
 		) {
@@ -188,7 +182,7 @@ impl HINSTANCE {
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	pub fn LoadImageBitmap(self,
-		name: IdStr, cx: i32, cy: i32, fuLoad: co::LR) -> Result<HBITMAP, co::ERROR>
+		name: IdStr, cx: i32, cy: i32, fuLoad: co::LR) -> WinResult<HBITMAP>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -205,7 +199,7 @@ impl HINSTANCE {
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
 	pub fn LoadImageCursor(self,
-		name: IdStr, cx: i32, cy: i32, fuLoad: co::LR) -> Result<HCURSOR, co::ERROR>
+		name: IdStr, cx: i32, cy: i32, fuLoad: co::LR) -> WinResult<HCURSOR>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -222,7 +216,7 @@ impl HINSTANCE {
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
 	pub fn LoadImageIcon(self,
-		name: IdStr, cx: i32, cy: i32, fuLoad: co::LR) -> Result<HICON, co::ERROR>
+		name: IdStr, cx: i32, cy: i32, fuLoad: co::LR) -> WinResult<HICON>
 	{
 		match ptr_as_opt(
 			unsafe {

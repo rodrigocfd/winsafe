@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
 use crate::co::ERROR;
 use crate::com::{PPVtbl, Vtbl};
 use crate::com::shell::{ITaskbarList, ITaskbarListVtbl};
@@ -57,7 +58,7 @@ impl ITaskbarList2 {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	pub fn MarkFullscreenWindow(&self,
-		hwnd: HWND, fFullscreen: bool) -> Result<(), ERROR>
+		hwnd: HWND, fFullscreen: bool) -> WinResult<()>
 	{
 		unsafe {
 			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();

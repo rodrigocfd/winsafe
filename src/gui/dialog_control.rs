@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::co;
+use crate::aliases::WinResult;
 use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{auto_ctrl_id, paint_control_borders};
@@ -23,7 +23,7 @@ impl Parent for DialogControl {
 	}
 
 	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> Result<(), co::ERROR> + 'static>)
+		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.base.add_child_to_be_created(func);
 	}

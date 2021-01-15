@@ -1,3 +1,4 @@
+use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, calc_text_bound_box_check, ui_font};
@@ -43,7 +44,7 @@ impl RadioButton {
 		}
 	}
 
-	pub(crate) fn create(&self) -> Result<(), co::ERROR> {
+	pub(crate) fn create(&self) -> WinResult<()> {
 		match self.base.opts_id() {
 			OptsId::Wnd(opts) => {
 				let bound_box = calc_text_bound_box_check(&opts.text)?;
@@ -122,7 +123,7 @@ impl RadioButton {
 
 	/// Fires the click event for the radio button. The event is asynchronous,
 	/// the method returns immediately.
-	pub fn trigger_click(&self) -> Result<(), co::ERROR> {
+	pub fn trigger_click(&self) -> WinResult<()> {
 		self.hwnd().PostMessage(BmClick {})
 	}
 }

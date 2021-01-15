@@ -20,7 +20,7 @@ macro_rules! vtbl_type {
 	};
 }
 
-/// Converts an `HRESULT` into a `Result<(), ERROR>`.
+/// Converts an `HRESULT` into a `WinResult<()>`.
 macro_rules! into_result {
 	($hresult:expr) => {
 		match ERROR::from($hresult) {

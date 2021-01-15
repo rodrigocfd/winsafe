@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::aliases::WinResult;
 use crate::ffi::user32;
 use crate::funcs_priv::{mut_void, ptr_as_opt};
 use crate::funcs::GetLastError;
@@ -16,9 +16,7 @@ handle_type! {
 impl HACCEL {
 	/// [`CreateAcceleratorTable`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
 	/// static method.
-	pub fn CreateAcceleratorTable(
-		paccel: &mut [ACCEL]) -> Result<HACCEL, co::ERROR>
-	{
+	pub fn CreateAcceleratorTable(paccel: &mut [ACCEL]) -> WinResult<HACCEL> {
 		match ptr_as_opt(
 			unsafe {
 				user32::CreateAcceleratorTableW(
