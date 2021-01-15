@@ -2,8 +2,8 @@
 
 use crate::co;
 use crate::ffi::uxtheme;
-use crate::funcs_priv::const_void;
-use crate::handles::HDC;
+use crate::funcs_priv::{const_void, mut_void};
+use crate::handles::{HDC, HRGN};
 use crate::structs::RECT;
 
 handle_type! {
@@ -48,6 +48,75 @@ impl HTHEME {
 	/// static method.
 	pub fn GetThemeAppProperties() -> co::STAP {
 		co::STAP::from(unsafe { uxtheme::GetThemeAppProperties() })
+	}
+
+	/// [`GetThemeBackgroundContentRect`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
+	/// method.
+	pub fn GetThemeBackgroundContentRect(self,
+		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
+		pBoundingRect: RECT) -> Result<RECT, co::ERROR>
+	{
+		let mut pContentRect = RECT::default();
+
+		match unsafe {
+			uxtheme::GetThemeBackgroundContentRect(
+				self.ptr,
+				hdc.ptr,
+				iPartId.into(),
+				iStateId.into(),
+				const_void(&pBoundingRect),
+				mut_void(&mut pContentRect),
+			)
+		} {
+			0 => Ok(pContentRect),
+			err => Err(co::ERROR::from(err)),
+		}
+	}
+
+	/// [`GetThemeBackgroundExtent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
+	/// method.
+	pub fn GetThemeBackgroundExtent(self,
+		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
+		pContentRect: RECT) -> Result<RECT, co::ERROR>
+	{
+		let mut pExtentRect = RECT::default();
+
+		match unsafe {
+			uxtheme::GetThemeBackgroundExtent(
+				self.ptr,
+				hdc.ptr,
+				iPartId.into(),
+				iStateId.into(),
+				const_void(&pContentRect),
+				mut_void(&mut pExtentRect),
+			)
+		} {
+			0 => Ok(pExtentRect),
+			err => Err(co::ERROR::from(err)),
+		}
+	}
+
+	/// [`GetThemeBackgroundRegion`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
+	/// method.
+	pub fn GetThemeBackgroundRegion(self,
+		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
+		pRect: RECT) -> Result<HRGN, co::ERROR>
+	{
+		let mut pRegion = unsafe { HRGN::null_handle() };
+
+		match unsafe {
+			uxtheme::GetThemeBackgroundRegion(
+				self.ptr,
+				hdc.ptr,
+				iPartId.into(),
+				iStateId.into(),
+				const_void(&pRect),
+				mut_void(&mut pRegion),
+			)
+		} {
+			0 => Ok(pRegion),
+			err => Err(co::ERROR::from(err)),
+		}
 	}
 
 	/// [`IsAppThemed`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isappthemed)
