@@ -1,6 +1,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::GetLastError;
+use crate::handles::HWND;
 use crate::msg::{Message, Wm};
 use crate::msg::macros::ref_to_lp;
 use crate::structs as s;
@@ -60,14 +61,49 @@ impl Message for LvmGetColumnWidth {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { LvmGetHeader, co::WM::LVM_GETHEADER,
-	/// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
-	/// message, which has no parameters.
+/// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
+/// message, which has no parameters.
+pub struct LvmGetHeader {}
+
+impl Message for LvmGetHeader {
+	type RetType = Option<HWND>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => None,
+			p => Some(HWND { ptr: p as *mut _ }),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETHEADER,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
 }
 
-empty_msg! { LvmGetItemCount, co::WM::LVM_GETITEMCOUNT,
-	/// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
-	/// message, which has no parameters.
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
+/// message, which has no parameters.
+pub struct LvmGetItemCount {}
+
+impl Message for LvmGetItemCount {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as u32
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETITEMCOUNT,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
 }
 
 //------------------------------------------------------------------------------

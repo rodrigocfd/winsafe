@@ -164,9 +164,10 @@ impl MsgEvents {
 
 	/// Event to any [window message](crate::co::WM).
 	///
-	/// Instead of using this event, you should always prefer the specific
-	/// events, which will give you the correct message parameters. This generic
-	/// method should be used when you have a custom, non-standard window message.
+	/// **Note:** Instead of using this event, you should always prefer the
+	/// specific events, which will give you the correct message parameters. This
+	/// generic method should be used when you have a custom, non-standard window
+	/// message.
 	///
 	/// # Examples
 	///
@@ -212,8 +213,8 @@ impl MsgEvents {
 	/// [command code](crate::co::CMD) and the control ID, so the closure will
 	/// be fired for that specific control at that specific event.
 	///
-	/// Instead of using this event, you should always prefer the specific
-	/// command notifications, which will give you the correct message
+	/// **Note:** Instead of using this event, you should always prefer the
+	/// specific command notifications, which will give you the correct message
 	/// parameters. This generic method should be used when you have a custom,
 	/// non-standard window notification.
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
@@ -269,10 +270,10 @@ impl MsgEvents {
 	/// and the control ID, so the closure will be fired for that specific
 	/// control at the specific event.
 	///
-	/// Instead of using this event, you should always prefer the specific
-	/// notifications, which will give you the correct notification struct. This
-	/// generic method should be used when you have a custom, non-standard window
-	/// notification.
+	/// **Note:** Instead of using this event, you should always prefer the
+	/// specific notifications, which will give you the correct notification
+	/// struct. This generic method should be used when you have a custom,
+	/// non-standard window notification.
 	pub fn wm_notify<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: FnMut(msg::WmNotify) -> isize + 'static,
 	{

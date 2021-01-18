@@ -11,6 +11,7 @@ const_type! { WM, u32,
 
 const_type_priv_values! { WM,
 	BCM_FIRST, 0x1600
+	CBM_FIRST, 0x1700
 	CCM_FIRST, 0x2000
 	LVM_FIRST, 0x1000
 	TVM_FIRST, 0x1100
@@ -287,6 +288,7 @@ const_type_pub_values! { WM, // BCM, BM
 	BCM_GETNOTE, Self::BCM_FIRST.0 + 0x000a
 	BCM_GETNOTELENGTH, Self::BCM_FIRST.0 + 0x000b
 	BCM_SETSHIELD, Self::BCM_FIRST.0 + 0x000c
+
 	BM_GETCHECK, 0x00f0
 	BM_SETCHECK, 0x00f1
 	BM_GETSTATE, 0x00f2
@@ -299,6 +301,11 @@ const_type_pub_values! { WM, // BCM, BM
 }
 
 const_type_pub_values! { WM, // CB
+	CB_SETMINVISIBLE, Self::CBM_FIRST.0 + 1
+	CB_GETMINVISIBLE, Self::CBM_FIRST.0 + 2
+	CB_SETCUEBANNER, Self::CBM_FIRST.0 + 3
+	CB_GETCUEBANNER, Self::CBM_FIRST.0 + 4
+
 	CB_GETEDITSEL, 0x0140
 	CB_LIMITTEXT, 0x0141
 	CB_SETEDITSEL, 0x0142
