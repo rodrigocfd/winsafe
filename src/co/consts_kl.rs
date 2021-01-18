@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, SUBLANG};
 
 const_type! { KEY, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
@@ -14,10 +14,10 @@ const_type! { KEY, u32,
 	WOW64_32KEY, 0x0200
 	WOW64_64KEY, 0x0100
 	WOW64_RES, 0x0300
-	READ, (co::STANDARD_RIGHTS::READ.0 | Self::QUERY_VALUE.0 | Self::ENUMERATE_SUB_KEYS.0 | Self::NOTIFY.0) & !co::ACCESS_RIGHTS::SYNCHRONIZE.0
-	WRITE, (co::STANDARD_RIGHTS::WRITE.0 | Self::SET_VALUE.0 | Self::CREATE_SUB_KEY.0) & !co::ACCESS_RIGHTS::SYNCHRONIZE.0
-	EXECUTE, Self::READ.0 & !co::ACCESS_RIGHTS::SYNCHRONIZE.0
-	ALL_ACCESS, (co::STANDARD_RIGHTS::ALL.0 | Self::QUERY_VALUE.0 | Self::SET_VALUE.0 | Self::CREATE_SUB_KEY.0 | Self::ENUMERATE_SUB_KEYS.0 | Self::NOTIFY.0 | Self::CREATE_LINK.0) & !co::ACCESS_RIGHTS::SYNCHRONIZE.0
+	READ, (STANDARD_RIGHTS::READ.0 | Self::QUERY_VALUE.0 | Self::ENUMERATE_SUB_KEYS.0 | Self::NOTIFY.0) & !ACCESS_RIGHTS::SYNCHRONIZE.0
+	WRITE, (STANDARD_RIGHTS::WRITE.0 | Self::SET_VALUE.0 | Self::CREATE_SUB_KEY.0) & !ACCESS_RIGHTS::SYNCHRONIZE.0
+	EXECUTE, Self::READ.0 & !ACCESS_RIGHTS::SYNCHRONIZE.0
+	ALL_ACCESS, (STANDARD_RIGHTS::ALL.0 | Self::QUERY_VALUE.0 | Self::SET_VALUE.0 | Self::CREATE_SUB_KEY.0 | Self::ENUMERATE_SUB_KEYS.0 | Self::NOTIFY.0 | Self::CREATE_LINK.0) & !ACCESS_RIGHTS::SYNCHRONIZE.0
 }
 
 const_type! { LANG, u16,
@@ -168,7 +168,7 @@ const_type! { LANG, u16,
 impl LANG {
 	/// [`MAKELANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelangid)
 	/// macro.
-	pub fn MAKELANGID(self, sublang: co::SUBLANG) -> u32 {
+	pub fn MAKELANGID(self, sublang: SUBLANG) -> u32 {
 		((sublang.0 << 10) | self.0) as u32
 	}
 }

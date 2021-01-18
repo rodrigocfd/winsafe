@@ -109,6 +109,61 @@ impl Message for CbGetCurSel {
 
 //------------------------------------------------------------------------------
 
+/// [`CB_GETLBTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtext)
+/// message parameters.
+pub struct CbGetLbText<'a> {
+	pub index: u32,
+	pub text: &'a mut WString,
+}
+
+impl<'a> Message for CbGetLbText<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(GetLastError()),
+			nchars => Ok(nchars as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::CB_GETLBTEXT,
+			wparam: self.index as usize,
+			lparam: unsafe { self.text.as_ptr() } as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`CB_GETLBTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtextlen)
+/// message parameters.
+pub struct CbGetLbTextLen {
+	pub index: u32,
+}
+
+impl Message for CbGetLbTextLen {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(GetLastError()),
+			nchars => Ok(nchars as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::CB_GETLBTEXTLEN,
+			wparam: self.index as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`CB_GETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getminvisible)
 /// message parameters.
 pub struct CbGetMinVisible {}
@@ -123,6 +178,31 @@ impl Message for CbGetMinVisible {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::CB_GETMINVISIBLE,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`CB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gettopindex)
+/// message parameters.
+pub struct CbGetTopIndex {}
+
+impl Message for CbGetTopIndex {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(GetLastError()),
+			idx => Ok(idx as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::CB_GETTOPINDEX,
 			wparam: 0,
 			lparam: 0,
 		}
@@ -213,6 +293,33 @@ impl Message for CbSetMinVisible {
 		Wm {
 			msg_id: co::WM::CB_SETMINVISIBLE,
 			wparam: self.num_items as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`CB_SETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-settopindex)
+/// message parameters.
+pub struct CbSetTopIndex {
+	pub index: u32,
+}
+
+impl Message for CbSetTopIndex {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::CB_SETTOPINDEX,
+			wparam: self.index as usize,
 			lparam: 0,
 		}
 	}

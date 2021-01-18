@@ -65,19 +65,18 @@ impl WindowBase {
 		wcx.lpfnWndProc = Some(Self::window_proc);
 		SetLastError(co::ERROR::SUCCESS);
 
-		match RegisterClassEx(&wcx) {
-			Ok(atom) => Ok(atom), // window class registered successfully
-			Err(err) => match err {
-				co::ERROR::CLASS_ALREADY_EXISTS => {
+		RegisterClassEx(&wcx)
+			.or_else(|err| {
+				if err == co::ERROR::CLASS_ALREADY_EXISTS {
 					// https://devblogs.microsoft.com/oldnewthing/20150429-00/?p=44984
 					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 					// Retrieve ATOM of existing window class.
 					let hinst = wcx.hInstance;
-					Ok(hinst.GetClassInfoEx(&wcx.lpszClassName(), wcx)?)
-				},
-				err => Err(err),
-			}
-		}
+					hinst.GetClassInfoEx(&wcx.lpszClassName(), wcx)
+				} else {
+					Err(err)
+				}
+			})
 	}
 
 	pub fn create_window(

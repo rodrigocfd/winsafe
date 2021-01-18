@@ -65,7 +65,7 @@ impl Edit {
 					OptsId::Wnd(opts) => {
 						let our_hwnd = me.base.create_window( // may panic
 							"EDIT", Some(&opts.text), opts.pos,
-							SIZE{ cx: opts.width as i32, cy: opts.height as i32 },
+							SIZE::new(opts.width as i32, opts.height as i32),
 							opts.ctrl_id,
 							opts.ex_window_style,
 							opts.window_style | opts.edit_style.into(),

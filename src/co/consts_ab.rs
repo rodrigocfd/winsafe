@@ -1,6 +1,6 @@
 use std::u32;
 
-use crate::co;
+use crate::co::WS;
 
 const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
@@ -188,7 +188,7 @@ const_type! { BS, u32,
 	FLAT, 0x00008000
 	RIGHTBUTTON, Self::LEFTTEXT.0
 }
-impl From<BS> for co::WS {
+impl From<BS> for WS {
 	fn from(v: BS) -> Self {
 		Self(v.0)
 	}

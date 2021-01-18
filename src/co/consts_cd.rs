@@ -1,5 +1,32 @@
 #![allow(non_upper_case_globals)]
 
+use crate::co::WS;
+
+const_type! { CBS, u32,
+	/// Combo box control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
+	/// (`u32`).
+
+	SIMPLE, 0x0001
+	DROPDOWN, 0x0002
+	DROPDOWNLIST, 0x0003
+	OWNERDRAWFIXED, 0x0010
+	OWNERDRAWVARIABLE, 0x0020
+	AUTOHSCROLL, 0x0040
+	OEMCONVERT, 0x0080
+	SORT, 0x0100
+	HASSTRINGS, 0x0200
+	NOINTEGRALHEIGHT, 0x0400
+	DISABLENOSCROLL, 0x0800
+	UPPERCASE, 0x2000
+	LOWERCASE, 0x4000
+}
+impl From<CBS> for WS {
+	fn from(v: CBS) -> Self {
+		Self(v.0)
+	}
+}
+
 const_type! { CDDS, u32,
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
 

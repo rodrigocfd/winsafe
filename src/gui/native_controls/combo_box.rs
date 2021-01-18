@@ -2,38 +2,39 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{ButtonEvents, MsgEvents};
+use crate::gui::events::{ComboBoxEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
 use crate::gui::parent::Parent;
 use crate::handles::HWND;
-use crate::msg::{BmClick, WmSetFont};
+use crate::msg;
 use crate::structs::{POINT, SIZE};
+use crate::WString;
 
 /// Native
-/// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
+/// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
 #[derive(Clone)]
-pub struct Button {
+pub struct ComboBox {
 	base: Arc<
-		NativeControlBase<ButtonEvents, ButtonOpts>,
+		NativeControlBase<ComboBoxEvents, ComboBoxOpts>,
 	>,
 }
 
-unsafe impl Send for Button {}
-unsafe impl Sync for Button {}
+unsafe impl Send for ComboBox {}
+unsafe impl Sync for ComboBox {}
 
-impl Button {
-	/// Instantiates a new `Button` object, to be created on the parent window
+impl ComboBox {
+	/// Instantiates a new `ComboBox` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
-		let opts = ButtonOpts::define_ctrl_id(opts);
+	pub fn new(parent: &dyn Parent, opts: ComboBoxOpts) -> ComboBox {
+		let opts = ComboBoxOpts::define_ctrl_id(opts);
 		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
-					ButtonEvents::new(parent, opts.ctrl_id),
+					ComboBoxEvents::new(parent, opts.ctrl_id),
 					OptsId::Wnd(opts),
 				),
 			),
@@ -44,12 +45,12 @@ impl Button {
 
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Button {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ComboBox {
 		let me = Self {
 			base: Arc::new(
 				NativeControlBase::new(
 					parent,
-					ButtonEvents::new(parent, ctrl_id),
+					ComboBoxEvents::new(parent, ctrl_id),
 					OptsId::Dlg(ctrl_id),
 				),
 			),
@@ -65,14 +66,14 @@ impl Button {
 				match me.base.opts_id() {
 					OptsId::Wnd(opts) => {
 						let our_hwnd = me.base.create_window( // may panic
-							"BUTTON", Some(&opts.text), opts.pos,
-							SIZE::new(opts.width as i32, opts.height as i32),
+							"COMBOBOX", None, opts.pos,
+							SIZE::new(opts.width as i32, 0),
 							opts.ctrl_id,
 							opts.ex_window_style,
-							opts.window_style | opts.button_style.into(),
+							opts.window_style | opts.combo_box_style.into(),
 						)?;
 
-						our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+						our_hwnd.SendMessage(msg::WmSetFont{ hfont: ui_font(), redraw: true });
 						Ok(())
 					},
 					OptsId::Dlg(ctrl_id) => me.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -103,24 +104,7 @@ impl Button {
 	///
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
-	///
-	/// # Examples
-	///
-	/// When button is clicked, becomes disabled:
-	///
-	/// ```rust,ignore
-	/// use winsafe::gui::Button;
-	///
-	/// let btn: Button; // initialize it somewhere...
-	///
-	/// btn.on().bn_clicked({
-	///   let btn = btn.clone(); // pass into closure
-	///   move || {
-	///     btn.EnableWindow(false);
-	///   }
-	/// });
-	/// ```
-	pub fn on(&self) -> &ButtonEvents {
+	pub fn on(&self) -> &ComboBoxEvents {
 		self.base.on()
 	}
 
@@ -136,23 +120,48 @@ impl Button {
 		self.base.on_subclass()
 	}
 
-	/// Fires the click event for the radio button. The event is asynchronous,
-	/// the method returns immediately.
-	pub fn trigger_click(&self) -> WinResult<()> {
-		self.hwnd().PostMessage(BmClick {})
+	/// Adds new texts.
+	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
+		for text in items.iter() {
+			self.hwnd().SendMessage(msg::CbAddString { text })?;
+		}
+		Ok(())
+	}
+
+	/// Retrieves the text at the given position, if any.
+	pub fn item(&self, index: u32) -> Option<String> {
+		self.hwnd().SendMessage(msg::CbGetLbTextLen { index })
+			.ok()
+			.and_then(|len| {
+				let mut buf = WString::new_alloc_buffer(len as usize + 1);
+				self.hwnd().SendMessage(msg::CbGetLbText { index, text: &mut buf })
+					.ok()
+					.map(|_| buf.to_string())
+			})
+	}
+
+	/// Retrieves the index of the currently selected item, if any.
+	pub fn selected_index(&self) -> Option<u32> {
+		self.hwnd().SendMessage(msg::CbGetCurSel {})
+	}
+
+	/// Retrieves the currently selected text, if any.
+	pub fn selected_item(&self) -> Option<String> {
+		self.selected_index()
+			.and_then(|idx| self.item(idx))
+	}
+
+	/// Sets the currently selected text, or clears it.
+	pub fn set_selected_item(&self, index: Option<u32>) {
+		self.hwnd().SendMessage(msg::CbSetCurSel { index });
 	}
 }
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`Button`](crate::gui::Button) programatically with
-/// [`Button::new`](crate::gui::Button::new).
-pub struct ButtonOpts {
-	/// Text of the control to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-	///
-	/// Defaults to empty string.
-	pub text: String,
+/// Options to create a [`ComboBox`](crate::gui::ComboBox) programatically with
+/// [`ComboBox::new`](crate::gui::ComboBox::new).
+pub struct ComboBoxOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -161,22 +170,17 @@ pub struct ButtonOpts {
 	/// Control width, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to 80.
+	/// Defaults to 120.
 	pub width: u32,
-	/// Control height, in pixels, to be
+	/// Combo box styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to 23.
-	pub height: u32,
-	/// Button styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-	///
-	/// Defaults to `BS::PUSHBUTTON`.
+	/// Defaults to `CBS::DROPDOWNLIST`.
 	///
 	/// Suggestions:
-	/// * replace with `BS::DEFPUSHBUTTON` for the default button of the window;
-	/// * add `BS::NOTIFY` to receive notifications other than the simple click.
-	pub button_style: co::BS,
+	/// * replace with `CBS::DROPDOWN` to allow the user to type a text;
+	/// * add `CBS::SORT` to automatically sort the items.
+	pub combo_box_style: co::CBS,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -194,22 +198,20 @@ pub struct ButtonOpts {
 	pub ctrl_id: u16,
 }
 
-impl Default for ButtonOpts {
+impl Default for ComboBoxOpts {
 	fn default() -> Self {
 		Self {
-			text: "".to_owned(),
 			pos: POINT::new(0, 0),
-			width: 80,
-			height: 23,
-			button_style: co::BS::PUSHBUTTON,
+			width: 120,
+			ctrl_id: 0,
+			combo_box_style: co::CBS::DROPDOWNLIST,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,
-			ctrl_id: 0,
 		}
 	}
 }
 
-impl ButtonOpts {
+impl ComboBoxOpts {
 	fn define_ctrl_id(mut self) -> Self {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();

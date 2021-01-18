@@ -6,11 +6,13 @@ mod macros;
 mod func_store;
 
 mod button_events;
+mod combo_box_events;
 mod edit_events;
 mod msg_events;
 mod radio_group_events;
 
 pub use button_events::ButtonEvents;
+pub use combo_box_events::ComboBoxEvents;
 pub use edit_events::EditEvents;
 pub use msg_events::MsgEvents;
 pub(crate) use msg_events::ProcessResult;

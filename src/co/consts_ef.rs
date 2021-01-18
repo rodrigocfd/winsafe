@@ -1,4 +1,4 @@
-use crate::co;
+use crate::co::WS;
 
 const_type! { EMF, u32,
 	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
@@ -36,7 +36,7 @@ const_type! { ES, u32,
 	WANTRETURN, 0x1000
 	NUMBER, 0x2000
 }
-impl From<ES> for co::WS {
+impl From<ES> for WS {
 	fn from(v: ES) -> Self {
 		Self(v.0)
 	}

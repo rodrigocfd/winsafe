@@ -384,7 +384,7 @@ impl Message for BmGetImage {
 		match self.img_type {
 			co::IMAGE_TYPE::BITMAP => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as *mut _ })),
 			co::IMAGE_TYPE::ICON => Ok(BitmapIcon::Icon(HICON { ptr: v as *mut _ })),
-			_ => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Err(co::ERROR::INVALID_PARAMETER),
 		}
 	}
 
