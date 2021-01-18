@@ -45,7 +45,7 @@ impl HINSTANCE {
 					lpDialogFunc as *const _,
 					dwInitParam.unwrap_or_default(),
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(HWND { ptr }),
 			None => Err(GetLastError()),
@@ -119,7 +119,7 @@ impl HINSTANCE {
 				kernel32::GetModuleHandleW(
 					WString::from_opt_str(lpModuleName).as_ptr()
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(HINSTANCE { ptr }),
 			None => Err(GetLastError()),
@@ -132,7 +132,7 @@ impl HINSTANCE {
 		match ptr_as_opt(
 			unsafe {
 				user32::LoadAcceleratorsW(self.ptr, lpTableName.as_ptr())
-			}
+			},
 		) {
 			Some(ptr) => Ok(HACCEL { ptr }),
 			None => Err(GetLastError()),
@@ -152,7 +152,7 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
 		match ptr_as_opt(
-			unsafe { user32::LoadCursorW(self.ptr, lpCursorName.as_ptr()) }
+			unsafe { user32::LoadCursorW(self.ptr, lpCursorName.as_ptr()) },
 		) {
 			Some(ptr) => Ok(HCURSOR { ptr }),
 			None => Err(GetLastError()),
@@ -172,7 +172,7 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
 		match ptr_as_opt(
-			unsafe { user32::LoadIconW(self.ptr, lpIconName.as_ptr()) }
+			unsafe { user32::LoadIconW(self.ptr, lpIconName.as_ptr()) },
 		) {
 			Some(ptr) => Ok(HICON { ptr }),
 			None => Err(GetLastError()),
@@ -189,7 +189,7 @@ impl HINSTANCE {
 				user32::LoadImageW(
 					self.ptr, name.as_ptr(), 0, cx, cy, fuLoad.into(),
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(HBITMAP { ptr }),
 			None => Err(GetLastError()),
@@ -206,7 +206,7 @@ impl HINSTANCE {
 				user32::LoadImageW(
 					self.ptr, name.as_ptr(), 2, cx, cy, fuLoad.into(),
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(HCURSOR { ptr }),
 			None => Err(GetLastError()),
@@ -223,7 +223,7 @@ impl HINSTANCE {
 				user32::LoadImageW(
 					self.ptr, name.as_ptr(), 1, cx, cy, fuLoad.into(),
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(HICON { ptr }),
 			None => Err(GetLastError()),

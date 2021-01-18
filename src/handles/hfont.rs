@@ -37,7 +37,7 @@ impl HFONT {
 					u8::from(iQuality) as u32, u8::from(iPitchAndFamily) as u32,
 					WString::from_str(pszFaceName).as_ptr(),
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),

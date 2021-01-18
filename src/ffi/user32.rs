@@ -7,7 +7,9 @@ extern "system" {
 	pub fn AdjustWindowRectEx(lpRect: PVOID, dwStyle: u32, bMenu: BOOL, dwExStyle: u32) -> BOOL;
 	pub fn AppendMenuW(hMenu: HANDLE, uFlags: u32, uIDNewItem: usize, lpNewItem: PCSTR) -> BOOL;
 	pub fn ArrangeIconicWindows(hWnd: HANDLE) -> u32;
+	pub fn BeginDeferWindowPos(nNumWindows: i32) -> HANDLE;
 	pub fn BeginPaint(hWnd: HANDLE, lpPaint: PVOID) -> HANDLE;
+	pub fn BringWindowToTop(hWnd: HANDLE) -> BOOL;
 	pub fn CheckMenuItem(hMenu: HANDLE, uIDCheckItem: u32, uCheck: u32) -> i32;
 	pub fn ClientToScreen(hWnd: HANDLE, lpPoint: PVOID) -> BOOL;
 	pub fn CloseWindow(hWnd: HANDLE) -> BOOL;
@@ -16,6 +18,7 @@ extern "system" {
 	pub fn CreateMenu() -> HANDLE;
 	pub fn CreatePopupMenu() -> HANDLE;
 	pub fn CreateWindowExW(dwExStyle: u32, lpClassName: PCSTR, lpWindowName: PCSTR, dwStyle: u32, X: i32, Y: i32, nWidth: i32, nHeight: i32, hWndParent: HANDLE, hMenu: HANDLE, hInstance: HANDLE, lpParam: PVOID) -> HANDLE;
+	pub fn DeferWindowPos(hWinPosInfo: HANDLE, hWnd: HANDLE, hWndInsertAfter: HANDLE, X: i32, Y: i32, cx: i32, cy: i32, uFlags: u32) -> HANDLE;
 	pub fn DefWindowProcW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> isize;
 	pub fn DeleteMenu(hMenu: HANDLE, uPosition: u32, uFlags: u32) -> BOOL;
 	pub fn DestroyAcceleratorTable(hAccel: HANDLE) -> BOOL;
@@ -26,6 +29,7 @@ extern "system" {
 	pub fn DispatchMessageW(lpMsg: PCVOID) -> isize;
 	pub fn EnableMenuItem(hMenu: HANDLE, uIDEnableItem: u32, uEnable: u32) -> BOOL;
 	pub fn EnableWindow(hWnd: HANDLE, bEnable: BOOL) -> BOOL;
+	pub fn EndDeferWindowPos(hWinPosInfo: HANDLE) -> BOOL;
 	pub fn EndDialog(hDlg: HANDLE, nResult: isize) -> BOOL;
 	pub fn EndPaint(hWnd: HANDLE, lpPaint: PCVOID) -> BOOL;
 	pub fn EnumChildWindows(hWndParent: HANDLE, lpEnumFunc: PFUNC, lParam: isize) -> BOOL;

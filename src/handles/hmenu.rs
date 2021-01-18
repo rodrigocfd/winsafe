@@ -162,7 +162,7 @@ impl HMENU {
 	/// method.
 	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
 		ptr_as_opt(
-			unsafe { user32::GetSubMenu(self.ptr, nPos as i32) }
+			unsafe { user32::GetSubMenu(self.ptr, nPos as i32) },
 		).map(|ptr| Self { ptr })
 	}
 

@@ -28,7 +28,7 @@ impl HHOOK {
 					hmod.ptr,
 					dwThreadId,
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),

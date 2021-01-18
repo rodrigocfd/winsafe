@@ -40,10 +40,19 @@ impl HWND {
 	/// Must be paired with an [`EndPaint`](crate::HWND::EndPaint) call.
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> WinResult<HDC> {
 		match ptr_as_opt(
-			unsafe { user32::BeginPaint(self.ptr, mut_void(lpPaint)) }
+			unsafe { user32::BeginPaint(self.ptr, mut_void(lpPaint)) },
 		 ) {
 			Some(ptr) => Ok(HDC { ptr }),
 			None => Err(GetLastError()),
+		}
+	}
+
+	/// [`BringWindowToTop`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-bringwindowtotop)
+	/// method.
+	pub fn BringWindowToTop(self) -> WinResult<()> {
+		match unsafe { user32::BringWindowToTop(self.ptr) } {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
 		}
 	}
 
@@ -113,7 +122,7 @@ impl HWND {
 					hInstance.ptr,
 					lpParam.unwrap_or_default() as *mut _,
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
@@ -232,7 +241,7 @@ impl HWND {
 					WString::from_str(lpClassName).as_ptr(),
 					WString::from_str(lpWindowName).as_ptr(),
 				)
-			}
+			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
@@ -324,7 +333,7 @@ impl HWND {
 		match ptr_as_opt(
 			unsafe {
 				user32::GetNextDlgGroupItem(self.ptr, hCtl.ptr, bPrevious as i32)
-			}
+			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
@@ -339,7 +348,7 @@ impl HWND {
 		match ptr_as_opt(
 			unsafe {
 				user32::GetNextDlgTabItem(self.ptr, hCtl.ptr, bPrevious as i32)
-			}
+			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
@@ -686,7 +695,7 @@ impl HWND {
 					self.ptr,
 					WString::from_str(pszClassList).as_ptr(),
 				)
-			}
+			},
 		).map(|ptr| HTHEME { ptr })
 	}
 

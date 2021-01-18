@@ -21,7 +21,7 @@ impl HACCEL {
 			unsafe {
 				user32::CreateAcceleratorTableW(
 					mut_void(&mut paccel[0]), paccel.len() as i32)
-			}
+			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
