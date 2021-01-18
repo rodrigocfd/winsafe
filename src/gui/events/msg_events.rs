@@ -315,7 +315,8 @@ impl MsgEvents {
 		/// [`WM_CLOSE`](crate::msg::WmClose) message.
 		///
 		/// Warning: default handled in dialog
-		/// [`CustomMain`](crate::gui::CustomMain).
+		/// [`CustomMain`](crate::gui::CustomMain) and dialog
+		/// [`CustomModal`](crate::gui::CustomModal).
 	}
 
 	wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,

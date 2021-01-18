@@ -55,7 +55,7 @@ impl DialogMain {
 		dlg
 	}
 
-	pub fn run_as_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.0.base.parent_hinstance()?;
 

@@ -53,7 +53,7 @@ enum WndDlg {
 ///   }
 ///
 ///   pub fn run(&self) -> w::WinResult<i32> {
-///     self.wnd.run_as_main(None)
+///     self.wnd.run_main(None)
 ///   }
 ///
 ///   fn events(&self) {
@@ -91,7 +91,7 @@ enum WndDlg {
 ///   }
 ///
 ///   pub fn run(&self) -> w::WinResult<i32> {
-///     self.dlg.run_as_main(None)
+///     self.dlg.run_main(None)
 ///   }
 ///
 ///   fn events(&self) {
@@ -179,7 +179,7 @@ impl CustomMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_as_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
 		if IsWindowsVistaOrGreater()? {
 			SetProcessDPIAware()?;
 		}
@@ -188,8 +188,8 @@ impl CustomMain {
 		create_ui_font()?;
 
 		let maybe_res = match &self.0 {
-			WndDlg::Wnd(w) => w.run_as_main(cmd_show),
-			WndDlg::Dlg(d) => d.run_as_main(cmd_show),
+			WndDlg::Wnd(w) => w.run_main(cmd_show),
+			WndDlg::Dlg(d) => d.run_main(cmd_show),
 		};
 
 		delete_ui_font(); // cleanup

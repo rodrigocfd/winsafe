@@ -54,7 +54,7 @@ impl WindowMain {
 		wnd
 	}
 
-	pub fn run_as_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
 		let opts = &mut self.0.as_mut().opts;
 
 		let mut wcx = WNDCLASSEX::default();

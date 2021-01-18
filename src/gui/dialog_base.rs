@@ -80,7 +80,7 @@ impl DialogBase {
 		).map(|_| ())
 	}
 
-	pub fn dialog_box_param(&self) -> WinResult<()> {
+	pub fn dialog_box_param(&self) -> WinResult<i32> {
 		if !self.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
@@ -91,7 +91,7 @@ impl DialogBase {
 			IdStr::Id(self.dialog_id),
 			self.base.parent_hwnd(),
 			Self::dialog_proc, Some(self as *const Self as isize), // pass pointer to self
-		).map(|_| ())
+		).map(|res| res as i32)
 	}
 
 	extern "system" fn dialog_proc(
