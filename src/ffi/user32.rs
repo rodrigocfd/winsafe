@@ -6,9 +6,11 @@ use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 extern "system" {
 	pub fn AdjustWindowRectEx(lpRect: PVOID, dwStyle: u32, bMenu: BOOL, dwExStyle: u32) -> BOOL;
 	pub fn AppendMenuW(hMenu: HANDLE, uFlags: u32, uIDNewItem: usize, lpNewItem: PCSTR) -> BOOL;
+	pub fn ArrangeIconicWindows(hWnd: HANDLE) -> u32;
 	pub fn BeginPaint(hWnd: HANDLE, lpPaint: PVOID) -> HANDLE;
 	pub fn CheckMenuItem(hMenu: HANDLE, uIDCheckItem: u32, uCheck: u32) -> i32;
 	pub fn ClientToScreen(hWnd: HANDLE, lpPoint: PVOID) -> BOOL;
+	pub fn CloseWindow(hWnd: HANDLE) -> BOOL;
 	pub fn CreateAcceleratorTableW(paccel: PVOID, cAccel: i32) -> HANDLE;
 	pub fn CreateDialogParamW(hInstance: HANDLE, lpTemplateName: PCSTR, hWndParent: HANDLE, lpDialogFunc: PFUNC, dwInitParam: isize) -> HANDLE;
 	pub fn CreateMenu() -> HANDLE;
@@ -48,10 +50,12 @@ extern "system" {
 	pub fn GetParent(hWnd: HANDLE) -> HANDLE;
 	pub fn GetQueueStatus(flags: u32) -> u32;
 	pub fn GetSubMenu(hMenu: HANDLE, nPos: i32) -> HANDLE;
+	pub fn GetSysColor(nIndex: i32) -> u32;
 	pub fn GetSystemMetrics(nIndex: i32) -> i32;
 	pub fn GetUpdateRgn(hWnd: HANDLE, hRgn: HANDLE, bErase: BOOL) -> i32;
 	pub fn GetWindow(hWnd: HANDLE, uCmd: u32) -> HANDLE;
 	pub fn GetWindowDC(hWnd: HANDLE) -> HANDLE;
+	pub fn GetWindowDisplayAffinity(hWnd: HANDLE, pdwAffinity: PVOID) -> BOOL;
 	pub fn GetWindowInfo(hwnd: HANDLE, pwi: PVOID) -> BOOL;
 	pub fn GetWindowLongPtrW(hWnd: HANDLE, nIndex: i32) -> isize;
 	pub fn GetWindowPlacement(hWnd: HANDLE, lpwndpl: PVOID) -> BOOL;
@@ -73,10 +77,12 @@ extern "system" {
 	pub fn IsWindow(hWnd: HANDLE) -> BOOL;
 	pub fn IsWindowEnabled(hWnd: HANDLE) -> BOOL;
 	pub fn IsWindowVisible(hWnd: HANDLE) -> BOOL;
+	pub fn IsZoomed(hWnd: HANDLE) -> BOOL;
 	pub fn LoadAcceleratorsW(hInstance: HANDLE, lpTableName: PCSTR) -> HANDLE;
 	pub fn LoadCursorW(hInstance: HANDLE, lpCursorName: PCSTR) -> HANDLE;
 	pub fn LoadIconW(hInstance: HANDLE, lpIconName: PCSTR) -> HANDLE;
 	pub fn LoadImageW(hInst: HANDLE, name: PCSTR, utype: u32, cx: i32, cy: i32, fuLoad: u32) -> HANDLE;
+	pub fn LockSetForegroundWindow(uLockCode: u32) -> BOOL;
 	pub fn MapDialogRect(hDlg: HANDLE, lpRect: PVOID) -> BOOL;
 	pub fn MessageBoxW(hWnd: HANDLE, lpText: PCSTR, lpCaption: PCSTR, uType: u32) -> i32;
 	pub fn PeekMessageW(lpMsg: PVOID, hWnd: HANDLE, wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: u32) -> BOOL;
@@ -92,6 +98,7 @@ extern "system" {
 	pub fn SetMenuItemInfoW(hmenu: HANDLE, item: u32, fByPosition: BOOL, lpmii: PCVOID) -> BOOL;
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
 	pub fn SetProcessDPIAware() -> BOOL;
+	pub fn SetWindowDisplayAffinity(hWnd: HANDLE, dwAffinity: u32) -> BOOL;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: PCVOID) -> BOOL;
 	pub fn SetWindowPos(hWnd: HANDLE, hWndInsertAfter: HANDLE, X: i32, Y: i32, cx: i32, cy: i32, uFlags: u32) -> BOOL;

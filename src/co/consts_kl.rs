@@ -193,6 +193,14 @@ const_type! { LR, u32,
 	SHARED, 0x00008000
 }
 
+const_type! { LSFW, u32,
+	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `uLockCode`
+	/// (`u32`).
+
+	LOCK, 1
+	UNLOCK, 2
+}
+
 const_type! { LV_VIEW, u32,
 	/// ListView
 	/// [views](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)

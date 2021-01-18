@@ -25,6 +25,15 @@ impl HWND {
 		HINSTANCE { ptr: self.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut _ }
 	}
 
+	/// [`ArrangeIconicWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-arrangeiconicwindows)
+	/// method.
+	pub fn ArrangeIconicWindows(self) -> WinResult<u32> {
+		match unsafe { user32::ArrangeIconicWindows(self.ptr) } {
+			0 => Err(GetLastError()),
+			height => Ok(height),
+		}
+	}
+
 	/// [`BeginPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
 	/// method.
 	///
@@ -60,6 +69,17 @@ impl HWND {
 				0 => Err(GetLastError()),
 				_ => Ok(()),
 			},
+		}
+	}
+
+	/// [`CloseWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closewindow)
+	/// method.
+	///
+	/// Note that this method will actually minimize the window, not destroy it.
+	pub fn CloseWindow(self) -> WinResult<()> {
+		match unsafe { user32::CloseWindow(self.ptr) } {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
 		}
 	}
 
@@ -366,6 +386,18 @@ impl HWND {
 		}
 	}
 
+	/// [`GetWindowDisplayAffinity`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdisplayaffinity)
+	/// method.
+	pub fn GetWindowDisplayAffinity(self) -> WinResult<co::WDA> {
+		let mut pdwAffinity = co::WDA::default();
+		match unsafe {
+			user32::GetWindowDisplayAffinity(self.ptr, mut_void(&mut pdwAffinity))
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(pdwAffinity),
+		}
+	}
+
 	/// [`GetWindowInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowinfo)
 	/// method.
 	pub fn GetWindowInfo(self, pwi: &mut WINDOWINFO) -> WinResult<()> {
@@ -586,6 +618,12 @@ impl HWND {
 		unsafe { user32::IsWindowVisible(self.ptr) != 0 }
 	}
 
+	/// [`IsZoomed`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iszoomed)
+	/// method.
+	pub fn IsZoomed(self) -> bool {
+		unsafe { user32::IsZoomed(self.ptr) != 0 }
+	}
+
 	/// [`MapDialogRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)
 	/// method.
 	pub fn MapDialogRect(self, lpRect: &mut RECT) -> WinResult<()> {
@@ -781,6 +819,17 @@ impl HWND {
 				co::ERROR::SUCCESS => Ok(None), // no previous parent
 				err => Err(err),
 			},
+		}
+	}
+
+	/// [`SetWindowDisplayAffinity`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowdisplayaffinity)
+	/// method.
+	pub fn SetWindowDisplayAffinity(self, dwAffinity: co::WDA) -> WinResult<()> {
+		match unsafe {
+			user32::SetWindowDisplayAffinity(self.ptr, dwAffinity.into())
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
 		}
 	}
 

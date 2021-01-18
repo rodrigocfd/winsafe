@@ -7,6 +7,16 @@ const_type! { WA, u16,
 	CLICKACTIVE, 2
 }
 
+const_type! { WDA, u32,
+	/// [`GetWindowDisplayAffinity`](crate::HWND::GetWindowDisplayAffinity) and
+	/// [`SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)
+	/// `dwAffinity` (`u32`).
+
+	NONE, 0x00000000
+	MONITOR, 0x00000001
+	EXCLUDEFROMCAPTURE, 0x00000011
+}
+
 const_type! { WH, i32,
 	/// [`SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook` (`i32`).
 

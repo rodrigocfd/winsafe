@@ -106,6 +106,12 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 	unsafe { user32::GetQueueStatus(flags.into()) }
 }
 
+/// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
+/// function.
+pub fn GetSysColor(nIndex: co::COLOR) -> s::COLORREF {
+	s::COLORREF(unsafe { user32::GetSysColor(u32::from(nIndex) as i32) })
+}
+
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
 /// function.
 pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
@@ -238,6 +244,15 @@ pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
 /// function. Originally a macro.
 pub fn LOBYTE(v: u16) -> u8 {
 	(v & 0xff) as u8
+}
+
+/// [`LockSetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow)
+/// function.
+pub fn LockSetForegroundWindow(uLockCode: co::LSFW) -> WinResult<()> {
+	match unsafe { user32::LockSetForegroundWindow(uLockCode.into()) } {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
 }
 
 /// Returns the low-order `u32` of an `u64`.
