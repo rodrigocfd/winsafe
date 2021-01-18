@@ -133,15 +133,15 @@ pub struct CustomControlOpts {
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS`.
+	/// Defaults to `WS::CHILD | WS::TABSTOP | WS::GROUP | WS::VISIBLE | WS::CLIPCHILDREN | WS::CLIPSIBLINGS`.
 	pub style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `co::WS_EX::LEFT`.
+	/// Defaults to `WS_EX::LEFT`.
 	///
 	/// Suggestion:
-	/// * `co::WS_EX::CLIENTEDGE` to have a border.
+	/// * `WS_EX::CLIENTEDGE` to have a border.
 	pub ex_style: co::WS_EX,
 
 	/// The control ID.
@@ -157,7 +157,7 @@ impl Default for CustomControlOpts {
 			class_style: co::CS::DBLCLKS,
 			class_icon: unsafe { HICON::null_handle() },
 			class_cursor: unsafe { HCURSOR::null_handle() },
-			class_bg_brush: unsafe { HBRUSH::null_handle() },
+			class_bg_brush: HBRUSH::from_sys_color(co::COLOR::WINDOW),
 			position: POINT { x: 0, y: 0 },
 			size: SIZE { cx: 0, cy: 0 },
 			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
@@ -178,9 +178,7 @@ impl CustomControlOpts {
 		wcx.style = self.class_style;
 		wcx.hIcon = self.class_icon;
 		wcx.hIconSm = self.class_icon;
-
-		wcx.hbrBackground = self.class_bg_brush.as_opt()
-			.unwrap_or_else(|| HBRUSH::from_sys_color(co::COLOR::WINDOW));
+		wcx.hbrBackground = self.class_bg_brush;
 
 		wcx.hCursor = match self.class_cursor.as_opt() {
 			Some(h) => h,

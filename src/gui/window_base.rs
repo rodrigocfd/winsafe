@@ -46,8 +46,19 @@ impl WindowBase {
 		}
 	}
 
+	pub fn parent_hwnd(&self) -> Option<HWND> {
+		self.base.parent_hwnd()
+	}
+
 	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
 		self.base.parent_hinstance()
+	}
+
+	pub fn focus_first_child(&self) {
+		// https://stackoverflow.com/a/2835220/6923555
+		if let Ok(hchild) = self.hwnd_ref().GetWindow(co::GW::CHILD) {
+			hchild.SetFocus();
+		}
 	}
 
 	pub fn register_class(&self, wcx: &mut WNDCLASSEX) -> WinResult<ATOM> {
@@ -90,7 +101,7 @@ impl WindowBase {
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			self.base.parent_hwnd(),
+			self.parent_hwnd(),
 			hmenu, self.base.parent_hinstance()?,
 			Some(self as *const Self as isize), // pass pointer to self
 		).map(|_| ())

@@ -285,8 +285,8 @@ impl MsgEvents {
 	wm_ret_none! { wm_activate, co::WM::ACTIVATE, msg::WmActivate,
 		/// [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
 		///
-		/// Warning: default handled in non-dialog
-		/// [`CustomMain`](crate::gui::CustomMain).
+		/// Warning: default handled in;
+		/// * non-dialog [`CustomMain`](crate::gui::CustomMain).
 	}
 
 	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, msg::WmActivateApp,
@@ -314,9 +314,10 @@ impl MsgEvents {
 	wm_empty! { wm_close, co::WM::CLOSE,
 		/// [`WM_CLOSE`](crate::msg::WmClose) message.
 		///
-		/// Warning: default handled in dialog
-		/// [`CustomMain`](crate::gui::CustomMain) and dialog
-		/// [`CustomModal`](crate::gui::CustomModal).
+		/// Warning: default handled in:
+		/// * dialog [`CustomMain`](crate::gui::CustomMain);
+		/// * dialog [`CustomModal`](crate::gui::CustomModal);
+		/// * non-dialog [`CustomModal`](crate::gui::CustomModal).
 	}
 
 	wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,
@@ -533,15 +534,17 @@ impl MsgEvents {
 	wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
 		/// [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
 		///
-		/// Warning: default handled in both dialog and non-dialog
-		/// [`CustomMain`](crate::gui::CustomMain).
+		/// Warning: default handled in;
+		/// * non-dialog [`CustomMain`](crate::gui::CustomMain);
+		/// * dialog [`CustomMain`](crate::gui::CustomMain).
 	}
 
 	wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, msg::WmNcPaint,
 		/// [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
 		///
-		/// Warning: default handled in both dialog and non-dialog
-		/// [`CustomControl`](crate::gui::CustomControl).
+		/// Warning: default handled in:
+		/// * non-dialog [`CustomControl`](crate::gui::CustomControl);
+		/// * dialog [`CustomControl`](crate::gui::CustomControl).
 	}
 
 	wm_empty! { wm_null, co::WM::NULL,
@@ -579,8 +582,9 @@ impl MsgEvents {
 	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, msg::WmSetFocus,
 		/// [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
 		///
-		/// Warning: default handled in non-dialog
-		/// `CustomMain`](crate::gui::CustomMain).
+		/// Warning: default handled in:
+		/// * non-dialog [`CustomMain`](crate::gui::CustomMain);
+		/// * non-dialog [`CustomModal`](crate::gui::CustomModal).
 	}
 
 	wm_ret_none! { wm_set_font, co::WM::SETFONT, msg::WmSetFont,

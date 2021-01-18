@@ -18,6 +18,7 @@ mod parent;
 mod window_base;
 mod window_control;
 mod window_main;
+mod window_modal;
 
 pub use custom_control::CustomControl;
 pub use custom_main::CustomMain;
@@ -26,3 +27,4 @@ pub use native_controls::*;
 pub use parent::Parent;
 pub use window_control::CustomControlOpts;
 pub use window_main::CustomMainOpts;
+pub use window_modal::CustomModalOpts;

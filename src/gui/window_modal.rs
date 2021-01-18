@@ -3,27 +3,27 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
-use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
+use crate::funcs_priv::WM_WINSAFE_ERROR;
+use crate::funcs::{AdjustWindowRectEx, DispatchMessage, GetMessage, PostQuitMessage, TranslateMessage};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::multiply_dpi;
 use crate::gui::immut::Immut;
-use crate::gui::main_loop::run_loop;
 use crate::gui::parent::Parent;
 use crate::gui::window_base::WindowBase;
-use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
-use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
+use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
+use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub struct WindowMain(Arc<Immut<Obj>>);
+pub struct WindowModal(Arc<Immut<Obj>>);
 
-struct Obj { // actual fields of WindowMain
+struct Obj { // actual fields of WindowModal
 	base: WindowBase,
-	opts: CustomMainOpts,
-	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
+	opts: CustomModalOpts,
+	hchild_prev_focus_parent: Option<HWND>,
 }
 
-impl Parent for WindowMain {
+impl Parent for WindowModal {
 	fn hwnd_ref(&self) -> &HWND {
 		self.0.base.hwnd_ref()
 	}
@@ -39,14 +39,14 @@ impl Parent for WindowMain {
 	}
 }
 
-impl WindowMain {
-	pub fn new(opts: CustomMainOpts) -> WindowMain {
+impl WindowModal {
+	pub fn new(parent: &dyn Parent, opts: CustomModalOpts) -> WindowModal {
 		let wnd = Self(
 			Arc::new(Immut::new(
 				Obj {
-					base: WindowBase::new(None), // no parent
+					base: WindowBase::new(Some(parent)),
 					opts,
-					hchild_prev_focus: None,
+					hchild_prev_focus_parent: None,
 				},
 			)),
 		);
@@ -54,7 +54,8 @@ impl WindowMain {
 		wnd
 	}
 
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
+	pub fn show_modal(&self) -> WinResult<i32> {
+		let hparent = self.0.base.parent_hwnd().unwrap();
 		let opts = &mut self.0.as_mut().opts;
 
 		let mut wcx = WNDCLASSEX::default();
@@ -63,87 +64,115 @@ impl WindowMain {
 			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 		self.0.base.register_class(&mut wcx)?;
 
+		self.0.as_mut().hchild_prev_focus_parent = HWND::GetFocus();
+		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
+
 		multiply_dpi(None, Some(&mut opts.size))?;
 
-		let screen_sz = SIZE {
-			cx: GetSystemMetrics(co::SM::CXSCREEN),
-			cy: GetSystemMetrics(co::SM::CYSCREEN),
-		};
-
-		let wnd_pos = POINT {
-			x: screen_sz.cx / 2 - opts.size.cx / 2, // center on screen
-			y: screen_sz.cy / 2 - opts.size.cy / 2,
-		};
-
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
-			left: wnd_pos.x,
-			top: wnd_pos.y,
-			right: wnd_pos.x + opts.size.cx,
-			bottom: wnd_pos.y + opts.size.cy,
+			left: 0,
+			top: 0,
+			right: opts.size.cx,
+			bottom: opts.size.cy,
 		};
-		AdjustWindowRectEx(&mut wnd_rc, opts.style,
-			!opts.menu.is_null(), opts.ex_style)?;
+		AdjustWindowRectEx(&mut wnd_rc, opts.style, false, opts.ex_style)?;
 		opts.size = SIZE {
 			cx: wnd_rc.right - wnd_rc.left,
 			cy: wnd_rc.bottom - wnd_rc.top,
+		};
+
+		let rc_parent = hparent.GetWindowRect()?; // relative to screen
+		let wnd_pos = POINT {
+			x: rc_parent.left + (rc_parent.right - rc_parent.left) / 2 - opts.size.cx / 2, // center on parent
+			y: rc_parent.top + (rc_parent.bottom - rc_parent.top) / 2 - opts.size.cy / 2
 		};
 
 		self.0.base.create_window( // may panic
 			&class_name_buf.to_string(),
 			Some(&opts.title),
 			IdMenu::None,
-			POINT { x: wnd_rc.left, y: wnd_rc.top },
+			wnd_pos,
 			opts.size,
 			opts.ex_style,
 			opts.style,
 		)?;
 
-		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		self.hwnd_ref().UpdateWindow()?;
+		self.run_modal_loop()
+	}
 
-		run_loop(self.hwnd_ref(), opts.accel_table.as_opt()) // blocks until window is closed
+	fn run_modal_loop(&self) -> WinResult<i32> {
+		loop {
+			let mut msg = MSG::default();
+			if !GetMessage(&mut msg, None, 0, 0)? {
+				// WM_QUIT was sent, exit modal loop now and signal parent.
+				// wParam has the program exit code.
+				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
+				PostQuitMessage(msg.wParam as i32);
+				return Ok(msg.wParam as i32);
+			}
+
+			if msg.message == WM_WINSAFE_ERROR && msg.wParam == 0xc0de_f00d {
+				// A WinResult bubbled-up to here.
+				// Terminate the program returning the error code passed in lParam.
+				return Err(co::ERROR::from(msg.lParam as u32));
+			}
+
+			// If a child window, will retrieve its top-level parent.
+			// If a top-level, use itself.
+			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
+				.unwrap_or(msg.hwnd);
+
+			// Try to process keyboard actions for child controls.
+			if hwnd_top_level.IsDialogMessage(&mut msg) {
+				// Processed all keyboard actions for child controls.
+				if self.hwnd_ref().is_null() {
+					return Ok(0); // our modal was destroyed, terminate loop
+				} else {
+					continue;
+				}
+			}
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+
+			if self.hwnd_ref().is_null() {
+				return Ok(0); // our modal was destroyed, terminate loop
+			}
+		}
 	}
 
 	fn default_message_handlers(&self) {
-		self.events_ref().wm_activate({
-			let self2 = self.clone();
-			move |p| {
-				if !p.is_minimized {
-					if p.event == co::WA::INACTIVE {
-						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-							if self2.0.base.hwnd_ref().IsChild(hwnd_cur_focus) {
-								self2.0.as_mut().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
-							}
-						}
-					} else if let Some(hwnd_prev_focus) = self2.0.hchild_prev_focus {
-						hwnd_prev_focus.SetFocus(); // put focus back
-					}
-				}
-			}
-		});
-
 		self.events_ref().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
-				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-					if *self2.hwnd_ref() == hwnd_cur_focus {
+				if let Some(hfocus) = HWND::GetFocus() {
+					if hfocus == *self2.hwnd_ref() {
 						self2.0.base.focus_first_child(); // if window receives focus, delegate to first child
 					}
 				}
 			}
 		});
 
-		self.events_ref().wm_nc_destroy(|| {
-			PostQuitMessage(0);
+		self.events_ref().wm_close({
+			let self2 = self.clone();
+			move || {
+				if let Ok(hparent) = self2.hwnd_ref().GetWindow(co::GW::OWNER) {
+					hparent.EnableWindow(true); // re-enable parent
+					self2.hwnd_ref().DestroyWindow(); // then destroy modal
+					if let Some(hprev) = self2.0.hchild_prev_focus_parent {
+						hprev.SetFocus(); // this focus could be set on WM_DESTROY as well
+					}
+				}
+			}
 		});
 	}
 }
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`CustomMain`](crate::gui::CustomMain) programatically
-/// with [`CustomMain::new`](crate::gui::CustomMain::new).
-pub struct CustomMainOpts {
+/// Options to create a [`CustomModal`](crate::gui::CustomModal) programatically
+/// with [`CustomModal::new`](crate::gui::CustomModal::new).
+pub struct CustomModalOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -181,7 +210,7 @@ pub struct CustomMainOpts {
 	///
 	/// Will be adjusted to match current system DPI.
 	///
-	/// Defaults to 600 x 500.
+	/// Defaults to 500 x 400.
 	pub size: SIZE,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -190,30 +219,16 @@ pub struct CustomMainOpts {
 	///
 	/// Suggestions:
 	/// * `WS::SIZEBOX` to make the window resizable;
-	/// * `WS::MINIMIZEBOX` to have a minimize button;
 	/// * `WS::MAXIMIZEBOX` to have a maximize button.
 	pub style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS_EX::LEFT`.
+	/// Defaults to `WS_EX::LEFT | WS_EX::DLGMODALFRAME`.
 	pub ex_style: co::WS_EX,
-	/// Main menu of the window to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-	///
-	/// This menu is not shared, the window will own it, and destroy it when the
-	/// window is destroyed.
-	///
-	/// Defaults to none.
-	pub menu: HMENU,
-	/// Main accelerator table of the window to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-	///
-	/// Defaults to none.
-	pub accel_table: HACCEL,
 }
 
-impl Default for CustomMainOpts {
+impl Default for CustomModalOpts {
 	fn default() -> Self {
 		Self {
 			class_name: "".to_owned(),
@@ -222,16 +237,14 @@ impl Default for CustomMainOpts {
 			class_cursor: unsafe { HCURSOR::null_handle() },
 			class_bg_brush: HBRUSH::from_sys_color(co::COLOR::BTNFACE),
 			title: "".to_owned(),
-			size: SIZE { cx: 600, cy: 500 },
+			size: SIZE { cx: 500, cy: 400 },
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
-			ex_style: co::WS_EX::LEFT,
-			menu: unsafe { HMENU::null_handle() },
-			accel_table: unsafe { HACCEL::null_handle() },
+			ex_style: co::WS_EX::LEFT | co::WS_EX::DLGMODALFRAME,
 		}
 	}
 }
 
-impl CustomMainOpts {
+impl CustomModalOpts {
 	fn generate_wndclassex<'a, 'b>( // https://stackoverflow.com/q/65481548/6923555
 		&self,
 		hinst: HINSTANCE,
