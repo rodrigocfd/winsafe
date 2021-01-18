@@ -25,7 +25,23 @@ macro_rules! empty_msg {
 					lparam: 0,
 				}
 			}
+		}
+	};
+}
 
+/// Struct for a handleable message that has no parameters and no meaningful
+/// return value.
+macro_rules! empty_msg_handleable {
+	(
+		$name:ident, $wmconst:expr,
+		$(#[$attr:meta])*
+	) => {
+		empty_msg! {
+			$name, $wmconst,
+			$(#[$attr])*
+		}
+
+		impl MessageHandleable for $name {
 			fn from_generic_wm(_: Wm) -> Self {
 				Self {}
 			}
@@ -33,7 +49,7 @@ macro_rules! empty_msg {
 	};
 }
 
-/// Struct for WM_CTLCOLOR* messages.
+/// Struct for WM_CTLCOLOR* handleable messages.
 macro_rules! ctl_color_msg {
 	(
 		$name:ident, $wmconst:expr,
@@ -59,7 +75,9 @@ macro_rules! ctl_color_msg {
 					lparam: self.hwnd.ptr as isize,
 				}
 			}
+		}
 
+		impl MessageHandleable for $name {
 			fn from_generic_wm(p: Wm) -> Self {
 				Self {
 					hdc: HDC { ptr: p.wparam as *mut _ },
@@ -70,7 +88,7 @@ macro_rules! ctl_color_msg {
 	};
 }
 
-/// Struct for WM_*BUTTON* messages and others.
+/// Struct for WM_*BUTTON* handleable messages and others.
 macro_rules! button_msg {
 	(
 		$name:ident, $wmconst:expr,
@@ -96,7 +114,9 @@ macro_rules! button_msg {
 					lparam: MAKEDWORD(self.coords.x as u16, self.coords.y as u16) as isize,
 				}
 			}
+		}
 
+		impl MessageHandleable for $name {
 			fn from_generic_wm(p: Wm) -> Self {
 				Self {
 					vkeys: co::VK::from(p.wparam as u16),

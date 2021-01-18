@@ -5,7 +5,7 @@ use crate::funcs_priv::{FAPPCOMMAND_MASK, WM_WINSAFE_ERROR};
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::macros::{lp_to_mut_ref, lp_to_point, lp_to_ref, point_to_lp, ref_to_lp};
-use crate::msg::Message;
+use crate::msg::{Message, MessageHandleable};
 use crate::structs as s;
 
 /// Generic
@@ -31,7 +31,9 @@ impl Message for Wm {
 	fn as_generic_wm(&self) -> Wm {
 		*self
 	}
+}
 
+impl MessageHandleable for Wm {
 	fn from_generic_wm(p: Wm) -> Self {
 		p
 	}
@@ -56,12 +58,6 @@ impl Message for WmWinsafeError {
 			msg_id: WM_WINSAFE_ERROR,
 			wparam: 0xc0de_f00d,
 			lparam: u32::from(self.code) as isize,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			code: co::ERROR::from(p.lparam as u32),
 		}
 	}
 }
@@ -90,7 +86,9 @@ impl Message for WmActivate {
 			lparam: self.hwnd.ptr as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmActivate {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			event: co::WA::from(LOWORD(p.wparam as u32)),
@@ -123,7 +121,9 @@ impl Message for WmActivateApp {
 			lparam: self.thread_id as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmActivateApp {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			is_being_activated: p.wparam != 0,
@@ -157,7 +157,9 @@ impl Message for WmAppCommand {
 			lparam: MAKEDWORD(self.keys.into(), u16::from(self.app_command) | u16::from(self.u_device)) as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmAppCommand {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_owner: HWND { ptr: p.wparam as *mut _ },
@@ -170,17 +172,17 @@ impl Message for WmAppCommand {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmCancelMode, co::WM::CANCELMODE,
+empty_msg_handleable! { WmCancelMode, co::WM::CANCELMODE,
 	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 	/// message, which has no parameters.
 }
 
-empty_msg! { WmChildActivate, co::WM::CHILDACTIVATE,
+empty_msg_handleable! { WmChildActivate, co::WM::CHILDACTIVATE,
 	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 	/// message, which has no parameters.
 }
 
-empty_msg! { WmClose, co::WM::CLOSE,
+empty_msg_handleable! { WmClose, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 	/// message, which has no parameters.
 }
@@ -215,7 +217,9 @@ impl Message for WmCommand {
 			},
 		}
 	}
+}
 
+impl MessageHandleable for WmCommand {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			code: co::CMD::from(HIWORD(p.wparam as u32)),
@@ -251,7 +255,9 @@ impl Message for WmContextMenu {
 			lparam: point_to_lp(self.cursor_pos),
 		}
 	}
+}
 
+impl MessageHandleable for WmContextMenu {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd: HWND { ptr: p.wparam as *mut _ },
@@ -282,7 +288,9 @@ impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
 			lparam: ref_to_lp(self.createstruct),
 		}
 	}
+}
 
+impl<'a, 'b, 'c> MessageHandleable for WmCreate<'a, 'b, 'c> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			createstruct: lp_to_ref(p),
@@ -324,7 +332,7 @@ ctl_color_msg! { WmCtlColorStatic, co::WM::CTLCOLORSTATIC,
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmDestroy, co::WM::DESTROY,
+empty_msg_handleable! { WmDestroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 	/// message, which has no parameters.
 }
@@ -351,7 +359,9 @@ impl Message for WmDropFiles {
 			lparam: 0,
 		}
 	}
+}
 
+impl MessageHandleable for WmDropFiles {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hdrop: HDROP { ptr: p.wparam as *mut _ },
@@ -381,7 +391,9 @@ impl Message for WmEnable {
 			lparam: 0,
 		}
 	}
+}
 
+impl MessageHandleable for WmEnable {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			has_been_enabled: p.wparam != 0,
@@ -412,7 +424,9 @@ impl Message for WmEndSession {
 			lparam: u32::from(self.event) as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmEndSession {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
@@ -444,7 +458,9 @@ impl Message for WmEnterIdle {
 			lparam: self.handle.as_isize(),
 		}
 	}
+}
 
+impl MessageHandleable for WmEnterIdle {
 	fn from_generic_wm(p: Wm) -> Self {
 		let reason = co::MSGF::from(p.wparam as u8);
 		Self {
@@ -459,7 +475,7 @@ impl Message for WmEnterIdle {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmEnterSizeMove, co::WM::ENTERSIZEMOVE,
+empty_msg_handleable! { WmEnterSizeMove, co::WM::ENTERSIZEMOVE,
 	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 	/// message, which has no parameters.
 }
@@ -486,7 +502,9 @@ impl Message for WmEraseBkgnd {
 			lparam: 0,
 		}
 	}
+}
 
+impl MessageHandleable for WmEraseBkgnd {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hdc: HDC { ptr: p.wparam as *mut _ },
@@ -496,7 +514,7 @@ impl Message for WmEraseBkgnd {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmExitSizeMove, co::WM::EXITSIZEMOVE,
+empty_msg_handleable! { WmExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 	/// message, which has no parameters.
 }
@@ -523,7 +541,9 @@ impl<'a> Message for WmGetMinMaxInfo<'a> {
 			lparam: ref_to_lp(self.info),
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmGetMinMaxInfo<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			info: lp_to_mut_ref(p),
@@ -554,7 +574,9 @@ impl Message for WmInitDialog {
 			lparam: self.additional_data,
 		}
 	}
+}
 
+impl MessageHandleable for WmInitDialog {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_focus: HWND { ptr: p.wparam as *mut _ },
@@ -587,7 +609,9 @@ impl Message for WmInitMenuPopup {
 			lparam: MAKEDWORD(self.item_pos, self.is_window_menu as u16) as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmInitMenuPopup {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hmenu: HMENU { ptr: p.wparam as *mut _ },
@@ -661,7 +685,9 @@ impl Message for WmMove {
 			lparam: point_to_lp(self.coords),
 		}
 	}
+}
 
+impl MessageHandleable for WmMove {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			coords: lp_to_point(p),
@@ -691,7 +717,9 @@ impl<'a> Message for WmMoving<'a> {
 			lparam: ref_to_lp(self.window_pos),
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmMoving<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			window_pos: lp_to_mut_ref(p),
@@ -727,7 +755,9 @@ impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
 			},
 		}
 	}
+}
 
+impl<'a, 'b> MessageHandleable for WmNcCalcSize<'a, 'b> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			data: match p.wparam {
@@ -760,7 +790,9 @@ impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
 			lparam: ref_to_lp(self.createstruct),
 		}
 	}
+}
 
+impl<'a, 'b, 'c> MessageHandleable for WmNcCreate<'a, 'b, 'c> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			createstruct: lp_to_ref(p),
@@ -770,7 +802,7 @@ impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmNcDestroy, co::WM::NCDESTROY,
+empty_msg_handleable! { WmNcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 	/// message, which has no parameters.
 }
@@ -797,7 +829,9 @@ impl Message for WmNcPaint {
 			lparam: 0,
 		}
 	}
+}
 
+impl MessageHandleable for WmNcPaint {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			updated_hrgn: HRGN { ptr: p.wparam as *mut _ },
@@ -807,7 +841,7 @@ impl Message for WmNcPaint {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmNull, co::WM::NULL,
+empty_msg_handleable! { WmNull, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 	/// message, which has no parameters.
 }
@@ -835,7 +869,9 @@ impl<'a> Message for WmNotify<'a> {
 			lparam: self.nmhdr as *const s::NMHDR as isize,
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmNotify<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			nmhdr: unsafe { &*(p.lparam as *const s::NMHDR) },
@@ -855,7 +891,7 @@ impl<'a> WmNotify<'a> {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmPaint, co::WM::PAINT,
+empty_msg_handleable! { WmPaint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 	/// message, which has no parameters.
 }
@@ -880,7 +916,9 @@ impl Message for WmQueryOpen {
 			lparam: 0,
 		}
 	}
+}
 
+impl MessageHandleable for WmQueryOpen {
 	fn from_generic_wm(_: Wm) -> Self {
 		Self {}
 	}
@@ -925,7 +963,9 @@ impl Message for WmSetFocus {
 			lparam: 0,
 		}
 	}
+}
 
+impl MessageHandleable for WmSetFocus {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_losing_focus: HWND { ptr: p.wparam as *mut _ },
@@ -956,7 +996,9 @@ impl Message for WmSetFont {
 			lparam: MAKEDWORD(self.redraw as u16, 0) as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmSetFont {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hfont: HFONT { ptr: p.wparam as *mut _ },
@@ -991,7 +1033,9 @@ impl Message for WmSetIcon {
 			lparam: self.hicon.ptr as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmSetIcon {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			size: co::ICON_SZ::from(p.wparam as u8),
@@ -1023,7 +1067,9 @@ impl Message for WmShowWindow {
 			lparam: u8::from(self.status) as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmShowWindow {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			being_shown: p.wparam != 0,
@@ -1057,7 +1103,9 @@ impl Message for WmSize {
 				self.client_area.cy as u16) as isize,
 		}
 	}
+}
 
+impl MessageHandleable for WmSize {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			request: co::SIZE_R::from(p.wparam as u8),
@@ -1092,7 +1140,9 @@ impl<'a> Message for WmSizing<'a> {
 			lparam: ref_to_lp(self.coords),
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmSizing<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			window_edge: co::WMSZ::from(p.wparam as u8),
@@ -1127,7 +1177,9 @@ impl<'a> Message for WmStyleChanged<'a> {
 			},
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmStyleChanged<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		let change = co::GWL_C::from(p.wparam as i8);
 		Self {
@@ -1166,7 +1218,9 @@ impl<'a> Message for WmStyleChanging<'a> {
 			},
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmStyleChanging<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		let change = co::GWL_C::from(p.wparam as i8);
 		Self {
@@ -1181,7 +1235,7 @@ impl<'a> Message for WmStyleChanging<'a> {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { WmThemeChanged, co::WM::THEMECHANGED,
+empty_msg_handleable! { WmThemeChanged, co::WM::THEMECHANGED,
 	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 	/// message, which has no parameters.
 }
@@ -1212,7 +1266,9 @@ impl Message for WmTimer {
 			},
 		}
 	}
+}
 
+impl MessageHandleable for WmTimer {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			timer_id: p.wparam as u32,
@@ -1246,7 +1302,9 @@ impl<'a> Message for WmWindowPosChanged<'a> {
 			lparam: ref_to_lp(self.windowpos),
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmWindowPosChanged<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			windowpos: lp_to_ref(p),
@@ -1276,7 +1334,9 @@ impl<'a> Message for WmWindowPosChanging<'a> {
 			lparam: ref_to_lp(self.windowpos),
 		}
 	}
+}
 
+impl<'a> MessageHandleable for WmWindowPosChanging<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			windowpos: lp_to_ref(p),

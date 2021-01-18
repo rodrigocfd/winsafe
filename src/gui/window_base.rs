@@ -6,7 +6,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::parent::Parent;
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::{Message, Wm, WmNcCreate, WmWinsafeError};
+use crate::msg::{MessageHandleable, Wm, WmNcCreate, WmWinsafeError};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 

@@ -1,4 +1,4 @@
-/// Variant field for child controls: options or just a control ID.
+/// Variant field for child controls: creation options or just a control ID.
 pub enum OptsId<Op> {
 	/// The control will be created with
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).

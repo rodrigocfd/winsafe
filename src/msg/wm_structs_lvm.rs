@@ -2,7 +2,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::GetLastError;
 use crate::msg::{Message, Wm};
-use crate::msg::macros::{lp_to_ref, ref_to_lp};
+use crate::msg::macros::ref_to_lp;
 use crate::structs as s;
 
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
@@ -27,13 +27,6 @@ impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 			msg_id: co::WM::LVM_GETCOLUMN,
 			wparam: self.index as usize,
 			lparam: ref_to_lp(self.lvcolumn),
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			index: p.wparam as i32,
-			lvcolumn: lp_to_ref(p),
 		}
 	}
 }
@@ -61,12 +54,6 @@ impl Message for LvmGetColumnWidth {
 			msg_id: co::WM::LVM_GETCOLUMNWIDTH,
 			wparam: self.index as usize,
 			lparam: 0,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			index: p.wparam as i32,
 		}
 	}
 }
@@ -103,10 +90,6 @@ impl Message for LvmGetView {
 			lparam: 0,
 		}
 	}
-
-	fn from_generic_wm(_: Wm) -> Self {
-		Self {}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -133,13 +116,6 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 			msg_id: co::WM::LVM_INSERTCOLUMN,
 			wparam: self.index as usize,
 			lparam: ref_to_lp(self.lvcolumn),
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			index: p.wparam as i32,
-			lvcolumn: lp_to_ref(p),
 		}
 	}
 }
@@ -169,12 +145,6 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 			lparam: ref_to_lp(self.lvitem),
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			lvitem: lp_to_ref(p),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -196,10 +166,6 @@ impl Message for LvmIsGroupViewEnabled {
 			wparam: 0,
 			lparam: 0,
 		}
-	}
-
-	fn from_generic_wm(_: Wm) -> Self {
-		Self {}
 	}
 }
 
@@ -223,12 +189,6 @@ impl Message for LvmIsItemVisible {
 			msg_id: co::WM::LVM_ISITEMVISIBLE,
 			wparam: self.index as usize,
 			lparam: 0,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			index: p.wparam as i32,
 		}
 	}
 }
@@ -259,13 +219,6 @@ impl Message for LvmRedrawItems {
 			lparam: self.last_index as isize,
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			first_index: p.wparam as u32,
-			last_index: p.lparam as u32,
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -289,13 +242,6 @@ impl Message for LvmScroll {
 			msg_id: co::WM::LVM_SCROLL,
 			wparam: self.horizontal as usize,
 			lparam: self.vertical as isize,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			horizontal: p.wparam as i32,
-			vertical: p.lparam as i32,
 		}
 	}
 }
@@ -323,13 +269,6 @@ impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 			lparam: ref_to_lp(self.lvcolumn),
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			index: p.wparam as i32,
-			lvcolumn: lp_to_ref(p),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -352,12 +291,6 @@ impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 			msg_id: co::WM::LVM_SETITEM,
 			wparam: 0,
 			lparam: ref_to_lp(self.lvitem),
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			lvitem: lp_to_ref(p),
 		}
 	}
 }
@@ -383,13 +316,6 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 			msg_id: co::WM::LVM_SETITEMTEXT,
 			wparam: self.index as usize,
 			lparam: ref_to_lp(self.lvitem),
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			index: p.wparam as i32,
-			lvitem: lp_to_ref(p),
 		}
 	}
 }
@@ -419,12 +345,6 @@ impl Message for LvmSetView {
 			lparam: 0,
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			view: co::LV_VIEW::from(p.wparam as u32),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -447,12 +367,6 @@ impl Message for LvmUpdate {
 			msg_id: co::WM::LVM_UPDATE,
 			wparam: self.index as usize,
 			lparam: 0,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			index: p.wparam as i32,
 		}
 	}
 }

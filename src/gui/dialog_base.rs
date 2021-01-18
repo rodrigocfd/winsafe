@@ -6,7 +6,7 @@ use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::globals::ui_font;
 use crate::gui::parent::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
-use crate::msg::{Message, Wm, WmInitDialog, WmSetFont, WmWinsafeError};
+use crate::msg::{MessageHandleable, Wm, WmInitDialog, WmSetFont, WmWinsafeError};
 use crate::structs::POINT;
 
 pub enum AfterCreate {

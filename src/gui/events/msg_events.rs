@@ -5,7 +5,7 @@ use crate::gui::events::func_store::FuncStore;
 use crate::gui::immut::Immut;
 use crate::handles::{HDC, HICON};
 use crate::msg;
-use crate::msg::Message;
+use crate::msg::MessageHandleable;
 
 /// The result of processing a message.
 pub enum ProcessResult {

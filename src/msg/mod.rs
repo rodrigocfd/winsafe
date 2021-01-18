@@ -7,9 +7,11 @@ mod macros;
 mod message;
 mod wm_structs;
 mod wm_structs_bcm;
+mod wm_structs_cb;
 mod wm_structs_lvm;
 
-pub use message::Message;
+pub use message::{Message, MessageHandleable};
 pub use wm_structs::*;
 pub use wm_structs_bcm::*;
+pub use wm_structs_cb::*;
 pub use wm_structs_lvm::*;

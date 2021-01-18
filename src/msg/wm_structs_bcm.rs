@@ -3,8 +3,8 @@ use crate::co;
 use crate::enums::BitmapIcon;
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HICON};
-use crate::msg::macros::{lp_to_mut_ref, lp_to_ref, ref_to_lp};
 use crate::msg::{Message, Wm};
+use crate::msg::macros::ref_to_lp;
 use crate::structs::{BUTTON_IMAGELIST, BUTTON_SPLITINFO, RECT, SIZE};
 use crate::WString;
 
@@ -29,12 +29,6 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 			msg_id: co::WM::BCM_GETIDEALSIZE,
 			wparam: 0,
 			lparam: ref_to_lp(self.size),
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			size: lp_to_ref(p),
 		}
 	}
 }
@@ -64,12 +58,6 @@ impl<'a> Message for BcmGetImageList<'a> {
 			lparam: ref_to_lp(self.info),
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			info: lp_to_mut_ref(p),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -97,17 +85,6 @@ impl<'a> Message for BcmGetNote<'a> {
 			lparam: unsafe { self.text.as_ptr() } as isize,
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			// This conversion is plain wrong, and it will crash.
-			// It's impossible to retrieve a reference to a non-native object
-			// because this message comes from a native C call, however, since this
-			// message is only sent (and never handled), this conversion actually
-			// never happens.
-			text: lp_to_mut_ref(p),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -129,10 +106,6 @@ impl Message for BcmGetNoteLength {
 			wparam: 0,
 			lparam: 0,
 		}
-	}
-
-	fn from_generic_wm(_: Wm) -> Self {
-		Self {}
 	}
 }
 
@@ -159,12 +132,6 @@ impl<'a> Message for BcmGetSplitInfo<'a> {
 			msg_id: co::WM::BCM_GETSPLITINFO,
 			wparam: 0,
 			lparam: ref_to_lp(self.splitinfo),
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			splitinfo: lp_to_mut_ref(p),
 		}
 	}
 }
@@ -194,12 +161,6 @@ impl<'a> Message for BcmGetTextMargin<'a> {
 			lparam: ref_to_lp(self.margins),
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			margins: lp_to_mut_ref(p),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -225,12 +186,6 @@ impl Message for BcmSetDropDownState {
 			msg_id: co::WM::BCM_SETDROPDOWNSTATE,
 			wparam: self.is_pushed as usize,
 			lparam: 0,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			is_pushed: p.wparam != 0,
 		}
 	}
 }
@@ -260,12 +215,6 @@ impl<'a> Message for BcmSetImageList<'a> {
 			lparam: ref_to_lp(self.info),
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			info: lp_to_ref(p),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -291,17 +240,6 @@ impl<'a> Message for BcmSetNote<'a> {
 			msg_id: co::WM::BCM_SETNOTE,
 			wparam: self.text.buffer_size(),
 			lparam: unsafe { self.text.as_ptr() } as isize,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			// This conversion is plain wrong, and it will crash.
-			// It's impossible to retrieve a reference to a non-native object
-			// because this message comes from a native C call, however, since this
-			// message is only sent (and never handled), this conversion actually
-			// never happens.
-			text: lp_to_mut_ref(p),
 		}
 	}
 }
@@ -331,12 +269,6 @@ impl Message for BcmSetShield {
 			lparam: 0,
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			has_elevated_icon: p.wparam != 0,
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -362,12 +294,6 @@ impl<'a> Message for BcmSetSplitInfo<'a> {
 			msg_id: co::WM::BCM_SETSPLITINFO,
 			wparam: 0,
 			lparam: ref_to_lp(self.splitinfo),
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			splitinfo: lp_to_ref(p),
 		}
 	}
 }
@@ -397,12 +323,6 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 			lparam: ref_to_lp(self.margins),
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			margins: lp_to_ref(p),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -425,10 +345,6 @@ impl Message for BmClick {
 			lparam: 0,
 		}
 	}
-
-	fn from_generic_wm(_: Wm) -> Self {
-		Self {}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -450,10 +366,6 @@ impl Message for BmGetCheck {
 			wparam: 0,
 			lparam: 0,
 		}
-	}
-
-	fn from_generic_wm(_: Wm) -> Self {
-		Self {}
 	}
 }
 
@@ -483,12 +395,6 @@ impl Message for BmGetImage {
 			lparam: 0,
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			img_type: co::IMAGE_TYPE(p.wparam as u8),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -510,10 +416,6 @@ impl Message for BmGetState {
 			wparam: 0,
 			lparam: 0,
 		}
-	}
-
-	fn from_generic_wm(_: Wm) -> Self {
-		Self {}
 	}
 }
 
@@ -539,12 +441,6 @@ impl Message for BmSetCheck {
 			lparam: 0,
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			state: co::BST::from(p.wparam as u32),
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -567,12 +463,6 @@ impl Message for BmSetDontClick {
 			msg_id: co::WM::BM_SETDONTCLICK,
 			wparam: self.dont_click as usize,
 			lparam: 0,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			dont_click: p.wparam != 0,
 		}
 	}
 }
@@ -605,16 +495,6 @@ impl Message for BmSetImage {
 			lparam: self.image.as_isize(),
 		}
 	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			image: match co::IMAGE_TYPE::from(p.wparam as u8) {
-				co::IMAGE_TYPE::BITMAP => BitmapIcon::Bitmap(HBITMAP { ptr: p.lparam as *mut _ }),
-				co::IMAGE_TYPE::ICON => BitmapIcon::Icon(HICON { ptr: p.lparam as *mut _ }),
-				_ => BitmapIcon::Bitmap(HBITMAP { ptr: std::ptr::null_mut() }), // should never happen
-			},
-		}
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -637,12 +517,6 @@ impl Message for BmSetState {
 			msg_id: co::WM::BM_SETSTATE,
 			wparam: self.highlight as usize,
 			lparam: 0,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			highlight: p.wparam != 0,
 		}
 	}
 }
@@ -668,13 +542,6 @@ impl Message for BmSetStyle {
 			msg_id: co::WM::BM_SETSTYLE,
 			wparam: u32::from(self.style) as usize,
 			lparam: self.redraw as isize,
-		}
-	}
-
-	fn from_generic_wm(p: Wm) -> Self {
-		Self {
-			style: co::BS::from(p.wparam as u32),
-			redraw: p.lparam != 0,
 		}
 	}
 }
