@@ -67,6 +67,7 @@ impl Base {
 		for creat in self.children_creates.iter() {
 			creat()?;
 		}
+		*self.children_creates.as_mut() = Vec::default(); // we won't use it anymore
 		Ok(())
 	}
 }
