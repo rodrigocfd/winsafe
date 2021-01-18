@@ -8,14 +8,15 @@ use crate::ffi::{BOOL, HANDLE};
 use crate::handles::HWND;
 use crate::structs::IID;
 
-vtbl_type! {
-	/// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
-	ITaskbarList2Vtbl,
-	0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317,
+/// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
+#[repr(C)]
+pub struct ITaskbarList2Vtbl {
+	iTaskbarListVtbl: ITaskbarListVtbl,
 
-	iTaskbarListVtbl, ITaskbarListVtbl
-	MarkFullscreenWindow, fn(PPVtbl<Self>, HANDLE, BOOL) -> u32
+	MarkFullscreenWindow: fn(PPVtbl<Self>, HANDLE, BOOL) -> u32,
 }
+
+impl_iid!(ITaskbarList2Vtbl, 0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317);
 
 //------------------------------------------------------------------------------
 

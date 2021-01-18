@@ -7,18 +7,19 @@ use crate::ffi::HANDLE;
 use crate::handles::HWND;
 use crate::structs::IID;
 
-vtbl_type! {
-	/// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
-	ITaskbarListVtbl,
-	0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090,
+/// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
+#[repr(C)]
+pub struct ITaskbarListVtbl {
+	iUnknownVtbl: IUnknownVtbl,
 
-	iUnknownVtbl, IUnknownVtbl
-	HrInit, fn(PPVtbl<Self>) -> u32
-	AddTab, fn(PPVtbl<Self>, HANDLE) -> u32
-	DeleteTab, fn(PPVtbl<Self>, HANDLE) -> u32
-	ActivateTab, fn(PPVtbl<Self>, HANDLE) -> u32
-	SetActiveAlt, fn(PPVtbl<Self>, HANDLE) -> u32
+	HrInit: fn(PPVtbl<Self>) -> u32,
+	AddTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	DeleteTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	ActivateTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	SetActiveAlt: fn(PPVtbl<Self>, HANDLE) -> u32,
 }
+
+impl_iid!(ITaskbarListVtbl, 0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090);
 
 //------------------------------------------------------------------------------
 

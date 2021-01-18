@@ -11,6 +11,6 @@ pub type PPVtbl<T> = *mut *mut T;
 /// [COM](https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal)
 /// virtual table.
 pub trait Vtbl {
-	/// Returns the interface ID.
+	/// Returns the COM interface ID.
 	fn IID() -> IID;
 }

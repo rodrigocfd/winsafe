@@ -4,16 +4,16 @@ use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::PVOID;
 use crate::structs::IID;
 
-vtbl_type! {
-	/// [`IUnknownVtbl`](crate::IUnknown) is the base to all COM interface
-	/// virtual tables.
-	IUnknownVtbl,
-	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
-
-	QueryInterface, fn(PPVtbl<Self>, PVOID, *mut PPVtbl<IUnknownVtbl>)
-	AddRef, fn(PPVtbl<Self>) -> u32
-	Release, fn(PPVtbl<Self>) -> u32
+/// [`IUnknownVtbl`](crate::IUnknown) is the base to all COM interface
+/// virtual tables.
+#[repr(C)]
+pub struct IUnknownVtbl {
+	QueryInterface: fn(PPVtbl<Self>, PVOID, *mut PPVtbl<IUnknownVtbl>),
+	AddRef: fn(PPVtbl<Self>) -> u32,
+	Release: fn(PPVtbl<Self>) -> u32,
 }
+
+impl_iid!(IUnknownVtbl, 0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 
 //------------------------------------------------------------------------------
 

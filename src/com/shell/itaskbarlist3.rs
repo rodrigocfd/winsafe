@@ -8,25 +8,26 @@ use crate::ffi::{HANDLE, PCSTR, PCVOID};
 use crate::handles::HWND;
 use crate::structs::IID;
 
-vtbl_type! {
-	/// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
-	ITaskbarList3Vtbl,
-	0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf,
+/// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
+#[repr(C)]
+pub struct ITaskbarList3Vtbl {
+	iTaskbarList2Vtbl: ITaskbarList2Vtbl,
 
-	iTaskbarList2Vtbl, ITaskbarList2Vtbl
-	SetProgressValue, fn(PPVtbl<Self>, HANDLE, u64, u64) -> u32
-	SetProgressState, fn(PPVtbl<Self>, HANDLE, u32) -> u32
-	RegisterTab, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
-	UnregisterTab, fn(PPVtbl<Self>, HANDLE) -> u32
-	SetTabOrder, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
-	SetTabActive, fn(PPVtbl<Self>, HANDLE, HANDLE, u32) -> u32
-	ThumbBarAddButtons, fn(PPVtbl<Self>, HANDLE, u32, PCVOID) -> u32
-	ThumbBarUpdateButtons, fn(PPVtbl<Self>, HANDLE, u32, PCVOID) -> u32
-	ThumbBarSetImageList, fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32
-	SetOverlayIcon, fn(PPVtbl<Self>, HANDLE, HANDLE, PCSTR) -> u32
-	SetThumbnailTooltip, fn(PPVtbl<Self>, HANDLE, PCSTR) -> u32
-	SetThumbnailClip, fn(PPVtbl<Self>, HANDLE, PCVOID) -> u32
+	SetProgressValue: fn(PPVtbl<Self>, HANDLE, u64, u64) -> u32,
+	SetProgressState: fn(PPVtbl<Self>, HANDLE, u32) -> u32,
+	RegisterTab: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
+	UnregisterTab: fn(PPVtbl<Self>, HANDLE) -> u32,
+	SetTabOrder: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
+	SetTabActive: fn(PPVtbl<Self>, HANDLE, HANDLE, u32) -> u32,
+	ThumbBarAddButtons: fn(PPVtbl<Self>, HANDLE, u32, PCVOID) -> u32,
+	ThumbBarUpdateButtons: fn(PPVtbl<Self>, HANDLE, u32, PCVOID) -> u32,
+	ThumbBarSetImageList: fn(PPVtbl<Self>, HANDLE, HANDLE) -> u32,
+	SetOverlayIcon: fn(PPVtbl<Self>, HANDLE, HANDLE, PCSTR) -> u32,
+	SetThumbnailTooltip: fn(PPVtbl<Self>, HANDLE, PCSTR) -> u32,
+	SetThumbnailClip: fn(PPVtbl<Self>, HANDLE, PCVOID) -> u32,
 }
+
+impl_iid!(ITaskbarList3Vtbl, 0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf);
 
 //------------------------------------------------------------------------------
 
