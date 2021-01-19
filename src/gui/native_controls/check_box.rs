@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
-use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, ui_font};
+use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{BmClick, BmGetCheck, BmSetCheck, WmSetFont};
@@ -71,10 +71,13 @@ impl CheckBox {
 			Box::new(move || {
 				match me.base.opts_id() {
 					OptsId::Wnd(opts) => {
+						let mut pos = opts.position;
+						multiply_dpi(Some(&mut pos), None)?;
+
 						let bound_box = calc_text_bound_box_check(&opts.text)?;
 
 						let our_hwnd = me.base.create_window( // may panic
-							"BUTTON", Some(&opts.text), opts.pos, bound_box,
+							"BUTTON", Some(&opts.text), pos, bound_box,
 							opts.ctrl_id,
 							opts.ex_window_style,
 							opts.window_style | opts.button_style.into(),
@@ -159,8 +162,10 @@ pub struct CheckBoxOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
+	/// Will be adjusted to match current system DPI.
+	///
 	/// Defaults to 0 x 0.
-	pub pos: POINT,
+	pub position: POINT,
 	/// Check box styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -190,7 +195,7 @@ impl Default for CheckBoxOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT::new(0, 0),
+			position: POINT::new(0, 0),
 			button_style: co::BS::AUTOCHECKBOX,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,

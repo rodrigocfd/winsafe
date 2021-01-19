@@ -56,7 +56,7 @@ impl WindowModal {
 
 	pub fn show_modal(&self) -> WinResult<i32> {
 		let hparent = self.0.base.parent_hwnd().unwrap();
-		let opts = &mut self.0.as_mut().opts;
+		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
@@ -67,34 +67,31 @@ impl WindowModal {
 		self.0.as_mut().hchild_prev_focus_parent = HWND::GetFocus();
 		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
 
-		multiply_dpi(None, Some(&mut opts.size))?;
+		let mut wnd_sz = opts.size;
+		multiply_dpi(None, Some(&mut wnd_sz))?;
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
 			left: 0,
 			top: 0,
-			right: opts.size.cx,
-			bottom: opts.size.cy,
+			right: wnd_sz.cx,
+			bottom: wnd_sz.cy,
 		};
 		AdjustWindowRectEx(&mut wnd_rc, opts.style, false, opts.ex_style)?;
-		opts.size = SIZE {
-			cx: wnd_rc.right - wnd_rc.left,
-			cy: wnd_rc.bottom - wnd_rc.top,
-		};
+		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
+		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
 		let rc_parent = hparent.GetWindowRect()?; // relative to screen
 		let wnd_pos = POINT {
-			x: rc_parent.left + (rc_parent.right - rc_parent.left) / 2 - opts.size.cx / 2, // center on parent
-			y: rc_parent.top + (rc_parent.bottom - rc_parent.top) / 2 - opts.size.cy / 2
+			x: rc_parent.left + (rc_parent.right - rc_parent.left) / 2 - wnd_sz.cx / 2, // center on parent
+			y: rc_parent.top + (rc_parent.bottom - rc_parent.top) / 2 - wnd_sz.cy / 2
 		};
 
 		self.0.base.create_window( // may panic
 			&class_name_buf.to_string(),
 			Some(&opts.title),
 			IdMenu::None,
-			wnd_pos,
-			opts.size,
-			opts.ex_style,
-			opts.style,
+			wnd_pos, wnd_sz,
+			opts.ex_style, opts.style,
 		)?;
 
 		self.run_modal_loop()

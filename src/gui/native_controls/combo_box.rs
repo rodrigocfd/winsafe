@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::events::{ComboBoxEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
-use crate::gui::privs::{auto_ctrl_id, ui_font};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg;
@@ -69,9 +69,12 @@ impl ComboBox {
 			Box::new(move || {
 				match me.base.opts_id() {
 					OptsId::Wnd(opts) => {
+						let mut pos = opts.position;
+						let mut sz = SIZE::new(opts.width as i32, 0);
+						multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+
 						let our_hwnd = me.base.create_window( // may panic
-							"COMBOBOX", None, opts.pos,
-							SIZE::new(opts.width as i32, 0),
+							"COMBOBOX", None, pos, sz,
 							opts.ctrl_id,
 							opts.ex_window_style,
 							opts.window_style | opts.combo_box_style.into(),
@@ -168,10 +171,14 @@ pub struct ComboBoxOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
+	/// Will be adjusted to match current system DPI.
+	///
 	/// Defaults to 0 x 0.
-	pub pos: POINT,
+	pub position: POINT,
 	/// Control width, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
 	///
 	/// Defaults to 120.
 	pub width: u32,
@@ -204,7 +211,7 @@ pub struct ComboBoxOpts {
 impl Default for ComboBoxOpts {
 	fn default() -> Self {
 		Self {
-			pos: POINT::new(0, 0),
+			position: POINT::new(0, 0),
 			width: 120,
 			ctrl_id: 0,
 			combo_box_style: co::CBS::DROPDOWNLIST,

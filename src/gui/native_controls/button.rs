@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
-use crate::gui::privs::{auto_ctrl_id, ui_font};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{BmClick, WmSetFont};
@@ -68,8 +68,11 @@ impl Button {
 			Box::new(move || {
 				match me.base.opts_id() {
 					OptsId::Wnd(opts) => {
+						let mut pos = opts.position;
+						multiply_dpi(Some(&mut pos), None)?;
+
 						let our_hwnd = me.base.create_window( // may panic
-							"BUTTON", Some(&opts.text), opts.pos,
+							"BUTTON", Some(&opts.text), pos,
 							SIZE::new(opts.width as i32, opts.height as i32),
 							opts.ctrl_id,
 							opts.ex_window_style,
@@ -160,15 +163,21 @@ pub struct ButtonOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
+	/// Will be adjusted to match current system DPI.
+	///
 	/// Defaults to 0 x 0.
-	pub pos: POINT,
+	pub position: POINT,
 	/// Control width, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
 	///
 	/// Defaults to 80.
 	pub width: u32,
 	/// Control height, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to current system DPI.
 	///
 	/// Defaults to 23.
 	pub height: u32,
@@ -202,7 +211,7 @@ impl Default for ButtonOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT::new(0, 0),
+			position: POINT::new(0, 0),
 			width: 80,
 			height: 23,
 			button_style: co::BS::PUSHBUTTON,

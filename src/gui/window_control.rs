@@ -61,7 +61,7 @@ impl WindowControl {
 		let me = self.clone();
 		parent.add_child_to_be_created(
 			Box::new(move || {
-				let opts = &mut me.0.as_mut().opts;
+				let opts = &me.0.opts;
 
 				let mut wcx = WNDCLASSEX::default();
 				let mut class_name_buf = WString::new();
@@ -69,15 +69,16 @@ impl WindowControl {
 					me.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 				me.0.base.register_class(&mut wcx)?;
 
-				multiply_dpi(Some(&mut opts.position), Some(&mut opts.size))?;
+				let mut wnd_pos = opts.position;
+				let mut wnd_sz = opts.size;
+				multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
 				me.0.base.create_window( // may panic
 					&class_name_buf.to_string(),
 					None,
 					IdMenu::None,
-					opts.position, opts.size,
-					opts.ex_style,
-					opts.style,
+					wnd_pos, wnd_sz,
+					opts.ex_style, opts.style,
 				)
 			})
 		);

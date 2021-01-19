@@ -4,7 +4,7 @@ use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::events::{LabelEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
-use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, ui_font};
+use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::WmSetFont;
@@ -69,10 +69,13 @@ impl Label {
 			Box::new(move || {
 				match me.base.opts_id() {
 					OptsId::Wnd(opts) => {
+						let mut pos = opts.position;
+						multiply_dpi(Some(&mut pos), None)?;
+
 						let bound_box = calc_text_bound_box(&opts.text)?;
 
 						let our_hwnd = me.base.create_window( // may panic
-							"STATIC", Some(&opts.text), opts.pos, bound_box,
+							"STATIC", Some(&opts.text), pos, bound_box,
 							opts.ctrl_id,
 							opts.ex_window_style,
 							opts.window_style | opts.label_style.into(),
@@ -149,8 +152,10 @@ pub struct LabelOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
+	/// Will be adjusted to match current system DPI.
+	///
 	/// Defaults to 0 x 0.
-	pub pos: POINT,
+	pub position: POINT,
 	/// label styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -177,7 +182,7 @@ impl Default for LabelOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT::new(0, 0),
+			position: POINT::new(0, 0),
 			label_style: co::SS::LEFT | co::SS::NOTIFY,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			ex_window_style: co::WS_EX::LEFT,

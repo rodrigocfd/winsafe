@@ -3,7 +3,7 @@ use crate::co;
 use crate::enums::{HwndPlace, IdStr};
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::gui::privs::ui_font;
+use crate::gui::privs::{multiply_dpi, ui_font};
 use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
 use crate::msg::{MessageHandleable, Wm, WmInitDialog, WmSetFont, WmWinsafeError};
@@ -157,8 +157,10 @@ impl DialogBase {
 				Ok(())
 			},
 			AfterCreate::ReposSetid(pos, ctrl_id) => {
-				self.hwnd_ref().SetWindowPos(HwndPlace::None,
-					pos.x, pos.y, 0, 0, co::SWP::NOZORDER | co::SWP::NOSIZE)?;
+				let mut dlg_pos = pos;
+				multiply_dpi(Some(&mut dlg_pos), None)?;
+				self.hwnd_ref().SetWindowPos(HwndPlace::None, dlg_pos.x, dlg_pos.y,
+					0, 0, co::SWP::NOZORDER | co::SWP::NOSIZE)?;
 				self.hwnd_ref().SetWindowLongPtr(co::GWLP::ID, ctrl_id as isize); // so the custom control has an ID
 				Ok(())
 			},

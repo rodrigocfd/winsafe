@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::events::{EditEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
-use crate::gui::privs::{auto_ctrl_id, ui_font};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::WmSetFont;
@@ -68,9 +68,12 @@ impl Edit {
 			Box::new(move || {
 				match me.base.opts_id() {
 					OptsId::Wnd(opts) => {
+						let mut pos = opts.position;
+						let mut sz = SIZE::new(opts.width as i32, opts.height as i32);
+						multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+
 						let our_hwnd = me.base.create_window( // may panic
-							"EDIT", Some(&opts.text), opts.pos,
-							SIZE::new(opts.width as i32, opts.height as i32),
+							"EDIT", Some(&opts.text), pos, sz,
 							opts.ctrl_id,
 							opts.ex_window_style,
 							opts.window_style | opts.edit_style.into(),
@@ -147,22 +150,28 @@ pub struct EditOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
+	/// Will be adjusted to match current system DPI.
+	///
 	/// Defaults to 0 x 0.
 	///
-	/// To vertically align side-by-side with a button, add 1 to `y`. That's
-	/// necessary because default button height is 23, while edit is 21.
-	pub pos: POINT,
+	/// **Tip:** To vertically align side-by-side with a button, add 1 to `y`.
+	/// That's necessary because default button height is 23, while edit is 21.
+	pub position: POINT,
 	/// Control width, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
 	///
 	/// Defaults to 100.
 	pub width: u32,
 	/// Control height, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
+	/// Will be adjusted to match current system DPI.
+	///
 	/// Defaults to 21.
 	///
-	/// You should change the default height only in a multi-line edit.
+	/// **Note:** You should change the default height only in a multi-line edit.
 	pub height: u32,
 	/// Edit styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -195,7 +204,7 @@ impl Default for EditOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			pos: POINT::new(0, 0),
+			position: POINT::new(0, 0),
 			width: 100,
 			height: 21,
 			edit_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL,

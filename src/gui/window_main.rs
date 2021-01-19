@@ -55,7 +55,7 @@ impl WindowMain {
 	}
 
 	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
-		let opts = &mut self.0.as_mut().opts;
+		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
@@ -63,7 +63,8 @@ impl WindowMain {
 			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 		self.0.base.register_class(&mut wcx)?;
 
-		multiply_dpi(None, Some(&mut opts.size))?;
+		let mut wnd_sz = opts.size;
+		multiply_dpi(None, Some(&mut wnd_sz))?;
 
 		let screen_sz = SIZE {
 			cx: GetSystemMetrics(co::SM::CXSCREEN),
@@ -71,31 +72,27 @@ impl WindowMain {
 		};
 
 		let wnd_pos = POINT {
-			x: screen_sz.cx / 2 - opts.size.cx / 2, // center on screen
-			y: screen_sz.cy / 2 - opts.size.cy / 2,
+			x: screen_sz.cx / 2 - wnd_sz.cx / 2, // center on screen
+			y: screen_sz.cy / 2 - wnd_sz.cy / 2,
 		};
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
 			left: wnd_pos.x,
 			top: wnd_pos.y,
-			right: wnd_pos.x + opts.size.cx,
-			bottom: wnd_pos.y + opts.size.cy,
+			right: wnd_pos.x + wnd_sz.cx,
+			bottom: wnd_pos.y + wnd_sz.cy,
 		};
 		AdjustWindowRectEx(&mut wnd_rc, opts.style,
 			!opts.menu.is_null(), opts.ex_style)?;
-		opts.size = SIZE {
-			cx: wnd_rc.right - wnd_rc.left,
-			cy: wnd_rc.bottom - wnd_rc.top,
-		};
+		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
+		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
 		self.0.base.create_window( // may panic
 			&class_name_buf.to_string(),
 			Some(&opts.title),
 			IdMenu::None,
-			POINT { x: wnd_rc.left, y: wnd_rc.top },
-			opts.size,
-			opts.ex_style,
-			opts.style,
+			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
+			opts.ex_style, opts.style,
 		)?;
 
 		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));

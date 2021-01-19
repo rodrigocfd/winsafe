@@ -59,7 +59,7 @@ pub fn auto_ctrl_id() -> u16 {
 
 //------------------------------------------------------------------------------
 
-static mut DPI: POINT = POINT{ x: 0, y: 0 };
+static mut DPI: POINT = POINT { x: 0, y: 0 };
 
 /// Multiplies the given coordinates by current system DPI.
 pub fn multiply_dpi(

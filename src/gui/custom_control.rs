@@ -68,6 +68,8 @@ impl CustomControl {
 
 	/// Instantiates a new `CustomControl` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	///
+	/// Position will be adjusted to match current system DPI.
 	pub fn new_dlg(
 		parent: &dyn Parent,
 		dialog_id: i32,
