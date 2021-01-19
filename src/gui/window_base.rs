@@ -67,14 +67,15 @@ impl WindowBase {
 
 		RegisterClassEx(&wcx)
 			.or_else(|err| {
-				if err == co::ERROR::CLASS_ALREADY_EXISTS {
-					// https://devblogs.microsoft.com/oldnewthing/20150429-00/?p=44984
-					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
-					// Retrieve ATOM of existing window class.
-					let hinst = wcx.hInstance;
-					hinst.GetClassInfoEx(&wcx.lpszClassName(), wcx)
-				} else {
-					Err(err)
+				match err {
+					co::ERROR::CLASS_ALREADY_EXISTS => {
+						// https://devblogs.microsoft.com/oldnewthing/20150429-00/?p=44984
+						// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
+						// Retrieve ATOM of existing window class.
+						let hinst = wcx.hInstance;
+						hinst.GetClassInfoEx(&wcx.lpszClassName(), wcx)
+					},
+					_ => Err(err),
 				}
 			})
 	}

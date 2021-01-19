@@ -1,8 +1,8 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs_priv::{CB_ERR, CB_ERRSPACE};
 use crate::funcs::GetLastError;
 use crate::msg::{Message, Wm};
+use crate::privs::{CB_ERR, CB_ERRSPACE};
 use crate::WString;
 
 /// [`CB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-addstring)

@@ -3,17 +3,28 @@ use std::ptr::NonNull;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
-use crate::funcs_priv::WC_DIALOG;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::immut::Immut;
-use crate::gui::native_controls::opts_id::OptsId;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::Wm;
+use crate::privs::WC_DIALOG;
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
 static mut BASE_SUBCLASS_ID: usize = 0;
+
+/// Variant field for child controls: creation options or just a control ID.
+pub enum OptsId<Op> {
+	/// The control will be created with
+	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	Wnd(Op),
+	/// The control belongs to a dialog and will be attached with
+	/// [`GetDlgItem`](crate::HWND::GetDlgItem).
+	Dlg(u16),
+}
+
+//------------------------------------------------------------------------------
 
 /// Base to all native child controls.
 pub struct NativeControlBase<Ev, Op>(Immut<Obj<Ev, Op>>);

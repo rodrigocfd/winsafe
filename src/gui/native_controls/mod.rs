@@ -1,13 +1,11 @@
 //! Native Win32 controls.
 
-mod native_control_base;
-mod opts_id;
-
 mod button;
 mod check_box;
 mod combo_box;
 mod edit;
 mod label;
+mod native_control_base;
 mod radio_button;
 mod radio_group;
 

@@ -4,9 +4,9 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::ffi::user32;
-use crate::funcs_priv::ptr_as_opt;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
+use crate::privs::ptr_as_opt;
 
 handle_type! {
 	/// Handle to a

@@ -3,7 +3,7 @@ use crate::co;
 use crate::enums::{HwndPlace, IdStr};
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::gui::globals::ui_font;
+use crate::gui::privs::ui_font;
 use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
 use crate::msg::{MessageHandleable, Wm, WmInitDialog, WmSetFont, WmWinsafeError};

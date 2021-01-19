@@ -88,6 +88,8 @@ pub fn multiply_dpi(
 //------------------------------------------------------------------------------
 
 /// Calculates the bound rectangle to fit the text with current system font.
+/// Texts with `&` will have the `&` width added to the final length, but for
+/// now that's something we can live with.
 pub fn calc_text_bound_box(text: &str) -> WinResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC()?;

@@ -3,8 +3,8 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
-use crate::funcs_priv::const_void;
 use crate::funcs::GetLastError;
+use crate::privs::const_void;
 use crate::structs::RECT;
 
 hgdiobj_type! {

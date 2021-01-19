@@ -3,9 +3,9 @@
 use crate::aliases::{HOOKPROC, WinResult};
 use crate::co;
 use crate::ffi::user32;
-use crate::funcs_priv::ptr_as_opt;
 use crate::funcs::GetLastError;
 use crate::handles::HINSTANCE;
+use crate::privs::ptr_as_opt;
 
 handle_type! {
 	/// Handle to a

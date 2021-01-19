@@ -3,8 +3,8 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
-use crate::funcs_priv::{const_void, ptr_as_opt};
 use crate::funcs::GetLastError;
+use crate::privs::{const_void, ptr_as_opt};
 use crate::structs::LOGFONT;
 use crate::WString;
 

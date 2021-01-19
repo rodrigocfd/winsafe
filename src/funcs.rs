@@ -7,8 +7,8 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{comctl32, kernel32, user32};
-use crate::funcs_priv::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
 use crate::handles::{HINSTANCE, HWND};
+use crate::privs::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
 use crate::structs as s;
 use crate::WString;
 

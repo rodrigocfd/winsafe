@@ -8,7 +8,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::ole32;
-use crate::funcs_priv::const_void;
+use crate::privs::const_void;
 use crate::structs::{CLSID, GUID};
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)

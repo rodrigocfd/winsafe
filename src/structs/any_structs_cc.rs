@@ -5,8 +5,8 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::funcs_priv::L_MAX_URL_LENGTH;
 use crate::handles::{HDC, HIMAGELIST, HTREEITEM};
+use crate::privs::L_MAX_URL_LENGTH;
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE};
 use crate::WString;
 

@@ -3,9 +3,9 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
-use crate::funcs_priv::{const_void, mut_void, ptr_as_opt};
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
+use crate::privs::{const_void, mut_void, ptr_as_opt};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 

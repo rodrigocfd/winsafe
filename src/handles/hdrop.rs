@@ -2,8 +2,8 @@
 
 use crate::aliases::WinResult;
 use crate::ffi::shell32;
-use crate::funcs_priv::mut_void;
 use crate::funcs::GetLastError;
+use crate::privs::mut_void;
 use crate::structs::POINT;
 use crate::WString;
 

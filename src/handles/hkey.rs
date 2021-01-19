@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
-use crate::funcs_priv::mut_void;
+use crate::privs::mut_void;
 use crate::WString;
 
 handle_type! {

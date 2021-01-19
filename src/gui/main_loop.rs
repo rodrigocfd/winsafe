@@ -1,8 +1,8 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs_priv::WM_WINSAFE_ERROR;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::handles::{HACCEL, HWND};
+use crate::privs::WM_WINSAFE_ERROR;
 use crate::structs::MSG;
 
 pub fn run_loop(hwnd: &HWND, haccel: Option<HACCEL>) -> WinResult<i32> {

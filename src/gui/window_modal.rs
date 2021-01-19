@@ -3,14 +3,14 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
-use crate::funcs_priv::WM_WINSAFE_ERROR;
 use crate::funcs::{AdjustWindowRectEx, DispatchMessage, GetMessage, PostQuitMessage, TranslateMessage};
 use crate::gui::events::MsgEvents;
-use crate::gui::globals::multiply_dpi;
 use crate::gui::immut::Immut;
+use crate::gui::privs::multiply_dpi;
 use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
+use crate::privs::WM_WINSAFE_ERROR;
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 

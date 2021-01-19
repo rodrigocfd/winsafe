@@ -149,7 +149,7 @@
 pub mod co;
 
 mod ffi;
-mod funcs_priv;
+mod privs;
 
 pub mod gui;
 pub mod msg;

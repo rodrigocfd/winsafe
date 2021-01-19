@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
-use crate::gui::globals::{auto_ctrl_id, paint_control_borders};
+use crate::gui::privs::{auto_ctrl_id, paint_control_borders};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::structs::POINT;

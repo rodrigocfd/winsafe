@@ -3,8 +3,8 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::uxtheme;
-use crate::funcs_priv::{const_void, mut_void};
 use crate::handles::{HDC, HRGN};
+use crate::privs::{const_void, mut_void};
 use crate::structs::RECT;
 
 handle_type! {
