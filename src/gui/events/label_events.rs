@@ -1,0 +1,45 @@
+use std::ptr::NonNull;
+
+use crate::co;
+use crate::gui::events::MsgEvents;
+use crate::gui::traits::Parent;
+
+/// Exposes label
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications).
+pub struct LabelEvents {
+	parent_events: NonNull<MsgEvents>, // used only before parent creation
+	ctrl_id: u16,
+}
+
+impl LabelEvents {
+	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> LabelEvents {
+		Self {
+			parent_events: NonNull::from(parent.events_ref()), // convert reference to pointer
+			ctrl_id,
+		}
+	}
+
+	fn parent_events(&self) -> &MsgEvents {
+		unsafe { self.parent_events.as_ref() }
+	}
+
+	cmd_event! { stn_clicked, co::CMD::STN_CLICKED,
+		/// [`STN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-clicked)
+		/// notification.
+	}
+
+	cmd_event! { stn_dbl_clk, co::CMD::STN_DBLCLK,
+		/// [`STN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-dblclk)
+		/// notification.
+	}
+
+	cmd_event! { stn_disable, co::CMD::STN_DISABLE,
+		/// [`STN_DISABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-disable)
+		/// notification.
+	}
+
+	cmd_event! { stn_enable, co::CMD::STN_ENABLE,
+		/// [`STN_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-enable)
+		/// notification.
+	}
+}

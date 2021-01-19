@@ -154,6 +154,7 @@ const_type! { CMD, u16,
 	/// * [Button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
 	/// * [ComboBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications);
 	/// * [Edit](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications);
+	/// * [Label](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications);
 	/// * [ListBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
 
 	Menu, 0
@@ -195,6 +196,11 @@ const_type! { CMD, u16,
 	EN_ALIGN_RTL_EC, 0x0701
 	EN_BEFORE_PASTE, 0x0800
 	EN_AFTER_PASTE, 0x0801
+
+	STN_CLICKED, 0
+	STN_DBLCLK, 1
+	STN_ENABLE, 2
+	STN_DISABLE, 3
 
 	LBN_ERRSPACE, (0 -2) as u16
 	LBN_SELCHANGE, 1

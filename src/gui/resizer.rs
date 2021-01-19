@@ -9,8 +9,8 @@ use crate::handles::{HDWP, HWND};
 use crate::msg::WmSize;
 use crate::structs::{RECT, SIZE};
 
-/// Determines how the child controls will be adjusted automatically when the
-/// parent is resized.
+/// In [`Resizer::add`](crate::gui::Resizer::add), determines how the child
+/// controls will be adjusted automatically when the parent window is resized.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Resz {
 	/// Nothing will be done.

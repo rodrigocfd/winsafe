@@ -5,6 +5,7 @@ const_type! { WM, u32,
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages);
 	/// * [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages);
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro);
+	/// * [label](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages);
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
 }
@@ -355,6 +356,13 @@ const_type_pub_values! { WM, // CCM
 	CCM_SETNOTIFYWINDOW, Self::CCM_FIRST.0 + 0x9
 	CCM_SETWINDOWTHEME, Self::CCM_FIRST.0 + 0xb
 	CCM_DPISCALE, Self::CCM_FIRST.0 + 0xc
+}
+
+const_type_pub_values! { WM, // STM
+	STM_SETICON, 0x0170
+	STM_GETICON, 0x0171
+	STM_SETIMAGE, 0x0172
+	STM_GETIMAGE, 0x0173
 }
 
 const_type_pub_values! { WM, // LVM
