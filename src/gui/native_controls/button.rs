@@ -6,7 +6,7 @@ use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{BmClick, WmSetFont};
 use crate::structs::{POINT, SIZE};
@@ -23,6 +23,12 @@ pub struct Button {
 
 unsafe impl Send for Button {}
 unsafe impl Sync for Button {}
+
+impl Child for Button {
+	fn hctrl_ref(&self) -> &HWND {
+		self.base.hctrl_ref()
+	}
+}
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
@@ -86,7 +92,7 @@ impl Button {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.base.hwnd()
+		*self.hctrl_ref()
 	}
 
 	/// Returns the control ID.

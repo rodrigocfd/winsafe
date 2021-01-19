@@ -5,7 +5,7 @@ use crate::co;
 use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
 use crate::gui::immut::Immut;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
 ///

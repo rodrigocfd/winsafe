@@ -13,3 +13,9 @@ pub trait Parent {
 	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog).
 	fn add_child_to_be_created(&self, func: Box<dyn Fn() -> WinResult<()> + 'static>);
 }
+
+/// Trait to any child control.
+pub trait Child {
+	/// Returns a reference to the control handle.
+	fn hctrl_ref(&self) -> &HWND;
+}

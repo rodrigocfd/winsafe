@@ -3,7 +3,7 @@ use std::ptr::NonNull;
 use crate::aliases::WinResult;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::immut::Immut;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 use crate::msg::Wm;
 use crate::handles::{HINSTANCE, HWND};
 

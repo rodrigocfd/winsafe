@@ -6,7 +6,7 @@ use crate::enums::{IdIdcStr, IdMenu};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{multiply_dpi, paint_control_borders};
 use crate::gui::immut::Immut;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
@@ -33,6 +33,12 @@ impl Parent for WindowControl {
 		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.0.base.add_child_to_be_created(func);
+	}
+}
+
+impl Child for WindowControl {
+	fn hctrl_ref(&self) -> &HWND {
+		self.hwnd_ref()
 	}
 }
 

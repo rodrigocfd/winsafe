@@ -4,7 +4,7 @@ use std::rc::Rc;
 use crate::co;
 use crate::gui::events::MsgEvents;
 use crate::gui::immut::Immut;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 
 /// Exposes button
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)

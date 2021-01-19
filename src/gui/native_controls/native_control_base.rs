@@ -7,7 +7,7 @@ use crate::funcs_priv::WC_DIALOG;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::immut::Immut;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::Wm;
 use crate::structs::{POINT, SIZE};
@@ -26,6 +26,12 @@ struct Obj<Ev, Op> { // actual fields of NativeControlBase
 	ptr_parent_hwnd: NonNull<HWND>, // used only in control creation
 }
 
+impl<Ev, Op> Child for NativeControlBase<Ev, Op> {
+	fn hctrl_ref(&self) -> &HWND {
+		&self.0.hwnd
+	}
+}
+
 impl<Ev, Op> NativeControlBase<Ev, Op> {
 	pub fn new(
 		parent: &dyn Parent,
@@ -39,7 +45,7 @@ impl<Ev, Op> NativeControlBase<Ev, Op> {
 					parent_events,
 					subclass_events: MsgEvents::new(),
 					ptr_parent_hwnd: NonNull::from(parent.hwnd_ref()), // ref implicitly converted to pointer
-				}
+				},
 			),
 		)
 	}
@@ -53,12 +59,8 @@ impl<Ev, Op> NativeControlBase<Ev, Op> {
 		&self.0.opts_id
 	}
 
-	pub fn hwnd(&self) -> &HWND {
-		&self.0.hwnd
-	}
-
 	pub fn on(&self) -> &Ev {
-		if !self.hwnd().is_null() {
+		if !self.hctrl_ref().is_null() {
 			panic!("Cannot add events after the control is created.");
 		} else if self.is_parent_created() {
 			panic!("Cannot add events after the parent window is created.");

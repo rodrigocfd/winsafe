@@ -1,7 +1,7 @@
 use crate::aliases::WinResult;
 use crate::gui::dialog_modal::DialogModal;
 use crate::gui::events::MsgEvents;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 use crate::gui::window_modal::{CustomModalOpts, WindowModal};
 use crate::handles::HWND;
 

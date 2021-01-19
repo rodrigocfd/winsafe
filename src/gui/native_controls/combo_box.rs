@@ -6,7 +6,7 @@ use crate::gui::events::{ComboBoxEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg;
 use crate::structs::{POINT, SIZE};
@@ -24,6 +24,12 @@ pub struct ComboBox {
 
 unsafe impl Send for ComboBox {}
 unsafe impl Sync for ComboBox {}
+
+impl Child for ComboBox {
+	fn hctrl_ref(&self) -> &HWND {
+		self.base.hctrl_ref()
+	}
+}
 
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
@@ -87,7 +93,7 @@ impl ComboBox {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.base.hwnd()
+		*self.hctrl_ref()
 	}
 
 	/// Returns the control ID.

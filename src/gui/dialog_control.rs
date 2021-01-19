@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{auto_ctrl_id, paint_control_borders};
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::structs::POINT;
 
@@ -26,6 +26,12 @@ impl Parent for DialogControl {
 		func: Box<dyn Fn() -> WinResult<()> + 'static>)
 	{
 		self.base.add_child_to_be_created(func);
+	}
+}
+
+impl Child for DialogControl {
+	fn hctrl_ref(&self) -> &HWND {
+		self.hwnd_ref()
 	}
 }
 

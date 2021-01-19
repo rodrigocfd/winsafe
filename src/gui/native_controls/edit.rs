@@ -5,7 +5,7 @@ use crate::gui::events::{EditEvents, MsgEvents};
 use crate::gui::globals::{auto_ctrl_id, ui_font};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::native_controls::opts_id::OptsId;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::WmSetFont;
 use crate::structs::{POINT, SIZE};
@@ -22,6 +22,12 @@ pub struct Edit {
 
 unsafe impl Send for Edit {}
 unsafe impl Sync for Edit {}
+
+impl Child for Edit {
+	fn hctrl_ref(&self) -> &HWND {
+		self.base.hctrl_ref()
+	}
+}
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window with
@@ -85,7 +91,7 @@ impl Edit {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.base.hwnd()
+		*self.hctrl_ref()
 	}
 
 	/// Returns the control ID.

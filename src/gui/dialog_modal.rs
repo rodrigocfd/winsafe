@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::dialog_base::{AfterCreate, DialogBase};
 use crate::gui::events::MsgEvents;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 use crate::handles::HWND;
 
 #[derive(Clone)]

@@ -14,7 +14,7 @@ impl<K: Eq, F> FuncStore<K, F> {
 	/// Inserts a new function into the store, associated to the given identifier.
 	pub fn insert(&mut self, id: K, func: F) {
 		if self.elems.is_empty() {
-			self.elems.reserve(4); // arbitrary, speed up first allocations
+			self.elems.reserve(4); // arbitrary, prealloc for speed
 		}
 		self.elems.push((id, func));
 	}

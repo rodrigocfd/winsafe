@@ -1,7 +1,7 @@
 use crate::aliases::WinResult;
 use crate::gui::dialog_control::DialogControl;
 use crate::gui::events::MsgEvents;
-use crate::gui::parent::Parent;
+use crate::gui::traits::{Child, Parent};
 use crate::gui::window_control::{CustomControlOpts, WindowControl};
 use crate::handles::HWND;
 use crate::structs::POINT;
@@ -42,6 +42,15 @@ impl Parent for CustomControl {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.add_child_to_be_created(func),
 			WndDlg::Dlg(d) => d.add_child_to_be_created(func),
+		}
+	}
+}
+
+impl Child for CustomControl {
+	fn hctrl_ref(&self) -> &HWND {
+		match &self.0 {
+			WndDlg::Wnd(w) => w.hwnd_ref(),
+			WndDlg::Dlg(d) => d.hwnd_ref(),
 		}
 	}
 }

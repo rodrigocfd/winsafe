@@ -4,7 +4,7 @@ use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAwa
 use crate::gui::dialog_main::DialogMain;
 use crate::gui::events::MsgEvents;
 use crate::gui::globals::{create_ui_font, delete_ui_font};
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 use crate::gui::window_main::{CustomMainOpts, WindowMain};
 use crate::handles::HWND;
 

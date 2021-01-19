@@ -4,7 +4,7 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{MessageHandleable, Wm, WmNcCreate, WmWinsafeError};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};

@@ -2,7 +2,7 @@ use std::ptr::NonNull;
 
 use crate::co;
 use crate::gui::events::MsgEvents;
-use crate::gui::parent::Parent;
+use crate::gui::traits::Parent;
 
 /// Exposes edit
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
