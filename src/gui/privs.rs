@@ -49,6 +49,7 @@ pub fn ui_font() -> HFONT {
 
 static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
 
+/// Returns the next sequential control ID.
 pub fn auto_ctrl_id() -> u16 {
 	unsafe {
 		let new_id = BASE_CTRL_ID;
@@ -88,21 +89,17 @@ pub fn multiply_dpi(
 //------------------------------------------------------------------------------
 
 /// Calculates the bound rectangle to fit the text with current system font.
-/// Texts with `&` will have the `&` width added to the final length, but for
-/// now that's something we can live with.
 pub fn calc_text_bound_box(text: &str) -> WinResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC()?;
 	let clone_dc = desktop_hdc.CreateCompatibleDC()?;
 	let prev_hfont = clone_dc.SelectObjectFont(ui_font())?;
 
-	let mut bounds = clone_dc.GetTextExtentPoint32(
-		if text.is_empty() {
-			"Pj" // just a placeholder to get the text height
-		} else {
-			text
-		}
-	)?;
+	let mut bounds = if text.is_empty() {
+		clone_dc.GetTextExtentPoint32("Pj")? // just a placeholder to get the text height
+	} else {
+		clone_dc.GetTextExtentPoint32(&remove_accelerator_ampersands(text))?
+	};
 
 	if text.is_empty() {
 		bounds.cx = 0; // if no text was given, return just the height
@@ -128,6 +125,26 @@ pub fn calc_text_bound_box_check(text: &str) -> WinResult<SIZE> {
 
 	Ok(bound_box)
 }
+
+fn remove_accelerator_ampersands(text: &str) -> String {
+	let mut txt_no_ampersands = String::with_capacity(text.len());
+	let mut last_ch = 'a'; // initial value will be skipped
+
+	for (idx, ch) in text.char_indices() {
+		if idx == 0 { // first char
+			if ch != '&' {
+				txt_no_ampersands.push(ch);
+			}
+		} else if ch != '&' || (ch == '&' && last_ch == '&') {
+			txt_no_ampersands.push(ch);
+		}
+		last_ch = ch;
+	}
+
+	txt_no_ampersands
+}
+
+//------------------------------------------------------------------------------
 
 /// Paints the themed border of an user control, if it has the proper styles.
 pub fn paint_control_borders(hwnd: HWND, wm_ncp: WmNcPaint) -> WinResult<()> {
