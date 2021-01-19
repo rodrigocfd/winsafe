@@ -71,6 +71,7 @@ impl ComboBox {
 					OptsId::Wnd(opts) => {
 						let mut pos = opts.position;
 						let mut sz = SIZE::new(opts.width as i32, 0);
+						if opts.vertical_text_align { pos.y -= 1; }
 						multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
 						let our_hwnd = me.base.create_window( // may panic
@@ -175,6 +176,11 @@ pub struct ComboBoxOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
+	/// Will adjust `position.cy` so that, if the control is placed side-by-side
+	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
+	///
+	/// Defaults to false.
+	pub vertical_text_align: bool,
 	/// Control width, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -212,6 +218,7 @@ impl Default for ComboBoxOpts {
 	fn default() -> Self {
 		Self {
 			position: POINT::new(0, 0),
+			vertical_text_align: false,
 			width: 120,
 			ctrl_id: 0,
 			combo_box_style: co::CBS::DROPDOWNLIST,

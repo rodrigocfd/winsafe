@@ -53,6 +53,7 @@ impl RadioButton {
 		match self.base.opts_id() {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
+				if opts.vertical_text_align { pos.y += 3; }
 				multiply_dpi(Some(&mut pos), None)?;
 
 				let bound_box = calc_text_bound_box_check(&opts.text)?;
@@ -153,6 +154,11 @@ pub struct RadioButtonOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
+	/// Will adjust `position.cy` so that, if the control is placed side-by-side
+	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
+	///
+	/// Defaults to false.
+	pub vertical_text_align: bool,
 	/// Radio button styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -184,6 +190,7 @@ impl Default for RadioButtonOpts {
 		Self {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
+			vertical_text_align: false,
 			button_style: co::BS::AUTORADIOBUTTON,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			ex_window_style: co::WS_EX::LEFT,
@@ -204,6 +211,7 @@ impl RadioButtonOpts {
 		Self {
 			text: self.text.clone(),
 			position: self.position,
+			vertical_text_align: self.vertical_text_align,
 			button_style: self.button_style,
 			window_style: self.window_style,
 			ex_window_style: self.ex_window_style,
