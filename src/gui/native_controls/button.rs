@@ -1,6 +1,5 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
@@ -143,8 +142,8 @@ impl Button {
 
 	/// Fires the click event for the radio button. The event is asynchronous,
 	/// the method returns immediately.
-	pub fn trigger_click(&self) -> WinResult<()> {
-		self.hwnd().PostMessage(BmClick {})
+	pub fn trigger_click(&self) {
+		self.hwnd().PostMessage(BmClick {}).unwrap();
 	}
 }
 

@@ -1,6 +1,5 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{ComboBoxEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
@@ -126,11 +125,10 @@ impl ComboBox {
 	}
 
 	/// Adds new texts.
-	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
+	pub fn add_items(&self, items: &[&str]) {
 		for text in items.iter() {
-			self.hwnd().SendMessage(msg::CbAddString { text })?;
+			self.hwnd().SendMessage(msg::CbAddString { text }).unwrap();
 		}
-		Ok(())
 	}
 
 	/// Retrieves the text at the given position, if any.

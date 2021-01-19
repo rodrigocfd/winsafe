@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use crate::co;
+use crate::enums::HwndPlace;
 use crate::gui::events::{LabelEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, ui_font};
@@ -122,6 +123,16 @@ impl Label {
 	/// must be set before control and parent window creation.
 	pub fn on_subclass(&self) -> &MsgEvents {
 		self.base.on_subclass()
+	}
+
+	/// Calls [`SetWindowText`](crate::HWND::SetWindowText) and resizes the
+	/// control to exactly fit the new text.
+	pub fn set_text(&self, text: &str) {
+		let bound_box = calc_text_bound_box(text).unwrap();
+		self.hwnd().SetWindowText(text).unwrap();
+		self.hwnd().SetWindowPos(
+			HwndPlace::None, 0, 0, bound_box.cx as u32, bound_box.cy as u32,
+			co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 	}
 }
 

@@ -122,6 +122,16 @@ impl Edit {
 	pub fn on_subclass(&self) -> &MsgEvents {
 		self.base.on_subclass()
 	}
+
+	/// Sets the text in the control.
+	pub fn set_text(&self, text: &str) {
+		self.hwnd().SetWindowText(text).unwrap();
+	}
+
+	/// Retrieves the text in the control.
+	pub fn text(&self) -> String {
+		self.hwnd().GetWindowTextStr().unwrap()
+	}
 }
 
 //------------------------------------------------------------------------------
