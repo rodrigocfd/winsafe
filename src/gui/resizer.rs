@@ -1,10 +1,11 @@
 use std::ptr::NonNull;
 use std::sync::Arc;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::immut::Immut;
-use crate::gui::traits::Child;
+use crate::gui::traits::{Child, Parent};
 use crate::handles::{HDWP, HWND};
 use crate::msg::WmSize;
 use crate::structs::{RECT, SIZE};
@@ -43,8 +44,8 @@ struct Obj { // actual fields of Resizer
 
 impl Resizer {
 	/// Instantiates a new `Resizer`.
-	pub fn new() -> Resizer {
-		Self(
+	pub fn new(parent: &dyn Parent) -> Resizer {
+		let resz = Self(
 			Arc::new(Immut::new(
 				Obj {
 					ctrls: Vec::with_capacity(16), // arbitrary, prealloc for speed
@@ -52,7 +53,12 @@ impl Resizer {
 					resize_called: false,
 				}
 			)),
-		)
+		);
+		parent.privileged_events_ref().wm_size({
+			let resz = resz.clone();
+			move |p| { resz.resize(&p).unwrap(); }
+		});
+		resz
 	}
 
 	/// Registers one or more child controls. They will be resized in every
@@ -94,16 +100,12 @@ impl Resizer {
 		self
 	}
 
-	/// Resizes all child controls that have been registered.
-	///
-	/// This method should be called inside parent's
-	/// [`WM_SIZE`](crate::msg::WmSize) event.
-	pub fn resize(&self, size_parm: &WmSize) {
+	fn resize(&self, size_parm: &WmSize) -> WinResult<()> {
 		if self.0.ctrls.is_empty() || size_parm.request == co::SIZE_R::MINIMIZED {
-			return; // if no controls, or if minimized, no need to process
+			return Ok(()); // if no controls, or if minimized, no need to process
 		}
 
-		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as u32).unwrap();
+		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as u32)?;
 
 		let parent_cx = size_parm.client_area.cx;
 		let parent_cy = size_parm.client_area.cy;
@@ -136,9 +138,9 @@ impl Resizer {
 					_ =>ctrl.rc_orig.bottom - ctrl.rc_orig.top // keep original height
 				} as u32,
 				uflags,
-			).unwrap();
+			)?;
 		}
 
-		hdwp.EndDeferWindowPos().unwrap();
+		hdwp.EndDeferWindowPos()
 	}
 }
