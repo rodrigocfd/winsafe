@@ -10,20 +10,20 @@ use crate::gui::traits::Parent;
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 /// for a [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioGroupEvents {
-	parent_events: NonNull<MsgEvents>, // used only before parent creation
+	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_ids: Vec<u16>,
 }
 
 impl RadioGroupEvents {
 	pub(crate) fn new(parent: &dyn Parent, ctrl_ids: Vec<u16>) -> RadioGroupEvents {
 		Self {
-			parent_events: NonNull::from(parent.events_ref()), // convert reference to pointer
+			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
 			ctrl_ids,
 		}
 	}
 
-	fn parent_events(&self) -> &MsgEvents {
-		unsafe { self.parent_events.as_ref() }
+	fn parent_user_events(&self) -> &MsgEvents {
+		unsafe { self.parent_user_events.as_ref() }
 	}
 
 	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
@@ -51,7 +51,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_events().wm_command(co::CMD::BN_CLICKED, *ctrl_id, {
+			self.parent_user_events().wm_command(co::CMD::BN_CLICKED, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});
@@ -66,7 +66,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_events().wm_command(co::CMD::BN_DBLCLK, *ctrl_id, {
+			self.parent_user_events().wm_command(co::CMD::BN_DBLCLK, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});
@@ -81,7 +81,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_events().wm_command(co::CMD::BN_KILLFOCUS, *ctrl_id, {
+			self.parent_user_events().wm_command(co::CMD::BN_KILLFOCUS, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});
@@ -96,7 +96,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(Immut::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_events().wm_command(co::CMD::BN_SETFOCUS, *ctrl_id, {
+			self.parent_user_events().wm_command(co::CMD::BN_SETFOCUS, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});

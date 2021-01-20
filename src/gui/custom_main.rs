@@ -113,19 +113,17 @@ impl Parent for CustomMain {
 		}
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &MsgEvents {
 		match &self.0 {
-			WndDlg::Wnd(w) => w.events_ref(),
-			WndDlg::Dlg(d) => d.events_ref(),
+			WndDlg::Wnd(w) => w.user_events_ref(),
+			WndDlg::Dlg(d) => d.user_events_ref(),
 		}
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
+	fn privileged_events_ref(&self) -> &MsgEvents {
 		match &self.0 {
-			WndDlg::Wnd(w) => w.add_child_to_be_created(func),
-			WndDlg::Dlg(d) => d.add_child_to_be_created(func),
+			WndDlg::Wnd(w) => w.privileged_events_ref(),
+			WndDlg::Dlg(d) => d.privileged_events_ref(),
 		}
 	}
 }
@@ -170,7 +168,7 @@ impl CustomMain {
 	/// Panics if the window is already created. Events must be set before window
 	/// creation.
 	pub fn on(&self) -> &MsgEvents {
-		self.events_ref()
+		self.user_events_ref()
 	}
 
 	/// Physically creates the window, then runs the main application loop. This

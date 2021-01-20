@@ -2,7 +2,8 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::dialog_base::{AfterCreate, DialogBase};
+use crate::enums::HwndPlace;
+use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
@@ -17,14 +18,12 @@ impl Parent for DialogModal {
 		self.base.hwnd_ref()
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
-		self.base.events_ref()
+	fn user_events_ref(&self) -> &MsgEvents {
+		self.base.user_events_ref()
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.base.add_child_to_be_created(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		self.base.privileged_events_ref()
 	}
 }
 
@@ -32,14 +31,14 @@ impl DialogModal {
 	pub fn new(parent: &dyn Parent, dialog_id: i32) -> DialogModal {
 		let dlg = Self {
 			base: Arc::new(
-				DialogBase::new(
-					Some(parent),
-					dialog_id,
-					AfterCreate::CenterOnParent,
-				),
+				DialogBase::new(Some(parent), dialog_id),
 			),
 		};
 		dlg.default_message_handlers();
+		dlg.privileged_events_ref().wm_init_dialog({
+			let dlg = dlg.clone();
+			move |_| { dlg.center_in_parent().unwrap(); true }
+		});
 		dlg
 	}
 
@@ -47,8 +46,18 @@ impl DialogModal {
 		self.base.dialog_box_param()
 	}
 
+	fn center_in_parent(&self) -> WinResult<()> {
+		let rc = self.hwnd_ref().GetWindowRect().unwrap();
+		let rc_parent = self.hwnd_ref().GetParent()?.GetWindowRect()?;
+		self.hwnd_ref().SetWindowPos(HwndPlace::None,
+			rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
+			rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
+			0, 0, co::SWP::NOSIZE | co::SWP::NOZORDER)?;
+		Ok(())
+	}
+
 	fn default_message_handlers(&self) {
-		self.events_ref().wm_close({
+		self.user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
 				self2.hwnd_ref().EndDialog(

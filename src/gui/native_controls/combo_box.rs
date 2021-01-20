@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{ComboBoxEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
@@ -43,7 +44,10 @@ impl ComboBox {
 				),
 			),
 		};
-		me.add_creation_to_parent(parent);
+		parent.privileged_events_ref().wm_create({
+			let me = me.clone();
+			move |_| { me.create().unwrap(); 0 }
+		});
 		me
 	}
 
@@ -59,35 +63,33 @@ impl ComboBox {
 				),
 			),
 		};
-		me.add_creation_to_parent(parent);
+		parent.privileged_events_ref().wm_init_dialog({
+			let me = me.clone();
+			move |_| { me.create().unwrap(); true }
+		});
 		me
 	}
 
-	fn add_creation_to_parent(&self, parent: &dyn Parent) {
-		let me = self.clone();
-		parent.add_child_to_be_created(
-			Box::new(move || {
-				match me.base.opts_id() {
-					OptsId::Wnd(opts) => {
-						let mut pos = opts.position;
-						let mut sz = SIZE::new(opts.width as i32, 0);
-						if opts.vertical_text_align { pos.y -= 1; }
-						multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+	fn create(&self) -> WinResult<()> {
+		match self.base.opts_id() {
+			OptsId::Wnd(opts) => {
+				let mut pos = opts.position;
+				let mut sz = SIZE::new(opts.width as i32, 0);
+				if opts.vertical_text_align { pos.y -= 1; }
+				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-						let our_hwnd = me.base.create_window( // may panic
-							"COMBOBOX", None, pos, sz,
-							opts.ctrl_id,
-							opts.ex_window_style,
-							opts.window_style | opts.combo_box_style.into(),
-						)?;
+				let our_hwnd = self.base.create_window( // may panic
+					"COMBOBOX", None, pos, sz,
+					opts.ctrl_id,
+					opts.ex_window_style,
+					opts.window_style | opts.combo_box_style.into(),
+				)?;
 
-						our_hwnd.SendMessage(msg::WmSetFont{ hfont: ui_font(), redraw: true });
-						Ok(())
-					},
-					OptsId::Dlg(ctrl_id) => me.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-				}
-			})
-		);
+				our_hwnd.SendMessage(msg::WmSetFont{ hfont: ui_font(), redraw: true });
+				Ok(())
+			},
+			OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+		}
 	}
 
 	/// Returns the underlying handle for this control.

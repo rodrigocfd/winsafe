@@ -28,14 +28,12 @@ impl Parent for WindowMain {
 		self.0.base.hwnd_ref()
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
-		self.0.base.events_ref()
+	fn user_events_ref(&self) -> &MsgEvents {
+		self.0.base.user_events_ref()
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.0.base.add_child_to_be_created(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		self.0.base.privileged_events_ref()
 	}
 }
 
@@ -102,7 +100,7 @@ impl WindowMain {
 	}
 
 	fn default_message_handlers(&self) {
-		self.events_ref().wm_activate({
+		self.user_events_ref().wm_activate({
 			let self2 = self.clone();
 			move |p| {
 				if !p.is_minimized {
@@ -119,7 +117,7 @@ impl WindowMain {
 			}
 		});
 
-		self.events_ref().wm_set_focus({
+		self.user_events_ref().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
@@ -130,7 +128,7 @@ impl WindowMain {
 			}
 		});
 
-		self.events_ref().wm_nc_destroy(|| {
+		self.user_events_ref().wm_nc_destroy(|| {
 			PostQuitMessage(0);
 		});
 	}

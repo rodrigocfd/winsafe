@@ -28,14 +28,12 @@ impl Parent for WindowModal {
 		self.0.base.hwnd_ref()
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
-		self.0.base.events_ref()
+	fn user_events_ref(&self) -> &MsgEvents {
+		self.0.base.user_events_ref()
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.0.base.add_child_to_be_created(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		self.0.base.privileged_events_ref()
 	}
 }
 
@@ -139,7 +137,7 @@ impl WindowModal {
 	}
 
 	fn default_message_handlers(&self) {
-		self.events_ref().wm_set_focus({
+		self.user_events_ref().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hfocus) = HWND::GetFocus() {
@@ -150,7 +148,7 @@ impl WindowModal {
 			}
 		});
 
-		self.events_ref().wm_close({
+		self.user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
 				if let Ok(hparent) = self2.hwnd_ref().GetWindow(co::GW::OWNER) {

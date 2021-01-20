@@ -2,7 +2,6 @@ use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::gui::immut::Immut;
 use crate::gui::traits::Parent;
 use crate::msg::Wm;
 use crate::handles::{HINSTANCE, HWND};
@@ -10,9 +9,9 @@ use crate::handles::{HINSTANCE, HWND};
 /// Base to `WindowBase` and `DialogBase`.
 pub struct Base {
 	hwnd: HWND,
-	events: MsgEvents,
+	user_events: MsgEvents, // ordinary window events, inserted by user
+	privileged_events: MsgEvents, // inserted by native controls to automate tasks
 	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
-	children_creates: Immut<Vec<Box<dyn Fn() -> WinResult<()> + 'static>>>,
 }
 
 impl Parent for Base {
@@ -20,17 +19,18 @@ impl Parent for Base {
 		&self.hwnd
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &MsgEvents {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add event after window is created.");
 		}
-		&self.events
+		&self.user_events
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.children_creates.as_mut().push(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add privileged event after window is created.");
+		}
+		&self.privileged_events
 	}
 }
 
@@ -38,9 +38,9 @@ impl Base {
 	pub fn new(parent: Option<&dyn Parent>) -> Base {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
-			events: MsgEvents::new(),
+			user_events: MsgEvents::new(),
+			privileged_events: MsgEvents::new(),
 			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
- 			children_creates: Immut::new(Vec::with_capacity(16)), // arbitrary, prealloc for speed
 		}
 	}
 
@@ -60,14 +60,10 @@ impl Base {
 	}
 
 	pub fn process_message(&mut self, wm_any: Wm) -> ProcessResult {
-		self.events.process_message(wm_any)
+		self.user_events.process_effective_message(wm_any)
 	}
 
-	pub fn create_children(&self) -> WinResult<()> {
-		for creat in self.children_creates.iter() {
-			creat()?;
-		}
-		*self.children_creates.as_mut() = Vec::default(); // we won't use it anymore
-		Ok(())
+	pub fn process_privileged_messages(&mut self, wm_any: Wm) {
+		self.privileged_events.process_all_messages(wm_any);
 	}
 }

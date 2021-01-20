@@ -28,14 +28,12 @@ impl Parent for WindowBase {
 		self.base.hwnd_ref()
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
-		&self.base.events_ref()
+	fn user_events_ref(&self) -> &MsgEvents {
+		self.base.user_events_ref()
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.base.add_child_to_be_created(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		self.base.privileged_events_ref()
 	}
 }
 
@@ -149,11 +147,9 @@ impl WindowBase {
 				return Ok(hwnd.DefWindowProc(wm_any));
 			}
 
-			// Create children.
+			// Execute privileged closures.
 			let ref_self = unsafe { &mut *ptr_self };
-			if wm_any.msg_id == co::WM::CREATE {
-				ref_self.base.create_children()?;
-			}
+			ref_self.base.process_privileged_messages(wm_any);
 
 			// Execute user closure, if any.
 			let maybe_processed = ref_self.base.process_message(wm_any);

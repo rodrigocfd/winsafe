@@ -8,7 +8,7 @@ macro_rules! cmd_event {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut() + 'static,
 		{
-			self.parent_events().wm_command($cmd, self.ctrl_id, {
+			self.parent_user_events().wm_command($cmd, self.ctrl_id, {
 				let mut func = func;
 				move || func()
 			});
@@ -26,7 +26,7 @@ macro_rules! nfy_event {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&$struc) + 'static,
 		{
-			self.parent_events().add_nfy(self.ctrl_id, $nfy, {
+			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
 				let mut func = func;
 				move |p| { func(unsafe { p.cast_nmhdr::<$struc>() }); None }
 			});

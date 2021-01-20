@@ -1,27 +1,17 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{HwndPlace, IdStr};
+use crate::enums::IdStr;
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
-use crate::gui::privs::{multiply_dpi, ui_font};
+use crate::gui::privs::ui_font;
 use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
 use crate::msg::{MessageHandleable, Wm, WmInitDialog, WmSetFont, WmWinsafeError};
-use crate::structs::POINT;
-
-pub enum AfterCreate {
-	Nothing, // main
-	CenterOnParent, // modal
-	ReposSetid(POINT, u16), // control
-}
-
-//------------------------------------------------------------------------------
 
 /// Base to all dialog windows.
 pub struct DialogBase {
 	base: Base,
 	dialog_id: i32,
-	after_create: AfterCreate, // action to be done before WM_INITDIALOG is dispatched to user
 }
 
 impl Drop for DialogBase {
@@ -37,27 +27,20 @@ impl Parent for DialogBase {
 		&self.base.hwnd_ref()
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
-		self.base.events_ref()
+	fn user_events_ref(&self) -> &MsgEvents {
+		self.base.user_events_ref()
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.base.add_child_to_be_created(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		self.base.privileged_events_ref()
 	}
 }
 
 impl DialogBase {
-	pub fn new(
-		parent: Option<&dyn Parent>,
-		dialog_id: i32,
-		after_create: AfterCreate) -> DialogBase
-	{
+	pub fn new(parent: Option<&dyn Parent>, dialog_id: i32) -> DialogBase {
 		Self {
 			base: Base::new(parent),
 			dialog_id,
-			after_create,
 		}
 	}
 
@@ -108,10 +91,6 @@ impl DialogBase {
 					hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
 					let ref_self = unsafe { &mut *ptr_self };
 					ref_self.base.set_hwnd(hwnd); // store HWND in struct field
-
-					ref_self.base.create_children()?;
-					ref_self.after_create_action()?;
-					ref_self.set_ui_font_on_children();
 					ptr_self
 				},
 				_ => hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) as *mut Self, // retrieve
@@ -123,8 +102,16 @@ impl DialogBase {
 				return Ok(hwnd.DefWindowProc(wm_any));
 			}
 
-			// Execute user closure, if any.
+			// Execute privileged closures.
 			let ref_self = unsafe { &mut *ptr_self };
+			ref_self.base.process_privileged_messages(wm_any);
+			if wm_any.msg_id == co::WM::INITDIALOG {
+				// Child controls are created in privileged closures, so we set the
+				// system font only now.
+				ref_self.set_ui_font_on_children();
+			}
+
+			// Execute user closure, if any.
 			let maybe_processed = ref_self.base.process_message(wm_any);
 
 			if msg == co::WM::NCDESTROY { // always check
@@ -142,29 +129,6 @@ impl DialogBase {
 			hwnd.PostMessage(WmWinsafeError { code: err }).ok();
 			true as isize
 		})
-	}
-
-	fn after_create_action(&self) -> WinResult<()> {
-		match self.after_create {
-			AfterCreate::Nothing => Ok(()),
-			AfterCreate::CenterOnParent => {
-				let rc = self.hwnd_ref().GetWindowRect()?;
-				let rc_parent = self.hwnd_ref().GetParent()?.GetWindowRect()?;
-				self.hwnd_ref().SetWindowPos(HwndPlace::None,
-					rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
-					rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
-					0, 0, co::SWP::NOSIZE | co::SWP::NOZORDER)?;
-				Ok(())
-			},
-			AfterCreate::ReposSetid(pos, ctrl_id) => {
-				let mut dlg_pos = pos;
-				multiply_dpi(Some(&mut dlg_pos), None)?;
-				self.hwnd_ref().SetWindowPos(HwndPlace::None, dlg_pos.x, dlg_pos.y,
-					0, 0, co::SWP::NOZORDER | co::SWP::NOSIZE)?;
-				self.hwnd_ref().SetWindowLongPtr(co::GWLP::ID, ctrl_id as isize); // so the custom control has an ID
-				Ok(())
-			},
-		}
 	}
 
 	fn set_ui_font_on_children(&self) {

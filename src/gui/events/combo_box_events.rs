@@ -7,20 +7,20 @@ use crate::gui::traits::Parent;
 /// Exposes button
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications).
 pub struct ComboBoxEvents {
-	parent_events: NonNull<MsgEvents>, // used only before parent creation
+	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_id: u16,
 }
 
 impl ComboBoxEvents {
 	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> ComboBoxEvents {
 		Self {
-			parent_events: NonNull::from(parent.events_ref()), // convert reference to pointer
+			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
 			ctrl_id,
 		}
 	}
 
-	fn parent_events(&self) -> &MsgEvents {
-		unsafe { self.parent_events.as_ref() }
+	fn parent_user_events(&self) -> &MsgEvents {
+		unsafe { self.parent_user_events.as_ref() }
 	}
 
 	cmd_event! { cbn_close_up, co::CMD::CBN_CLOSEUP,

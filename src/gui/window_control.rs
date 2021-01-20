@@ -25,14 +25,12 @@ impl Parent for WindowControl {
 		self.0.base.hwnd_ref()
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
-		self.0.base.events_ref()
+	fn user_events_ref(&self) -> &MsgEvents {
+		self.0.base.user_events_ref()
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.0.base.add_child_to_be_created(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		self.0.base.privileged_events_ref()
 	}
 }
 
@@ -53,39 +51,37 @@ impl WindowControl {
 			)),
 		);
 		wnd.default_message_handlers();
-		wnd.add_creation_to_parent(parent);
+		parent.privileged_events_ref().wm_create({
+			let wnd = wnd.clone();
+			move |_| { wnd.create().unwrap(); 0 }
+		});
 		wnd
 	}
 
-	fn add_creation_to_parent(&self, parent: &dyn Parent) {
-		let me = self.clone();
-		parent.add_child_to_be_created(
-			Box::new(move || {
-				let opts = &me.0.opts;
+	fn create(&self) -> WinResult<()> {
+		let opts = &self.0.opts;
 
-				let mut wcx = WNDCLASSEX::default();
-				let mut class_name_buf = WString::new();
-				opts.generate_wndclassex(
-					me.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
-				me.0.base.register_class(&mut wcx)?;
+		let mut wcx = WNDCLASSEX::default();
+		let mut class_name_buf = WString::new();
+		opts.generate_wndclassex(self.0.base.parent_hinstance()?,
+			&mut wcx, &mut class_name_buf)?;
+		self.0.base.register_class(&mut wcx)?;
 
-				let mut wnd_pos = opts.position;
-				let mut wnd_sz = opts.size;
-				multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
+		let mut wnd_pos = opts.position;
+		let mut wnd_sz = opts.size;
+		multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
-				me.0.base.create_window( // may panic
-					&class_name_buf.to_string(),
-					None,
-					IdMenu::None,
-					wnd_pos, wnd_sz,
-					opts.ex_style, opts.style,
-				)
-			})
-		);
+		self.0.base.create_window( // may panic
+			&class_name_buf.to_string(),
+			None,
+			IdMenu::None,
+			wnd_pos, wnd_sz,
+			opts.ex_style, opts.style,
+		)
 	}
 
 	fn default_message_handlers(&self) {
-		self.events_ref().wm_nc_paint({
+		self.user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
 			move |p| { paint_control_borders(*self2.hwnd_ref(), p).ok(); }
 		});

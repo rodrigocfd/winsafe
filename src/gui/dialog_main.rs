@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
-use crate::gui::dialog_base::{AfterCreate, DialogBase};
+use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
 use crate::gui::main_loop::run_loop;
 use crate::gui::traits::Parent;
@@ -25,14 +25,12 @@ impl Parent for DialogMain {
 		self.0.base.hwnd_ref()
 	}
 
-	fn events_ref(&self) -> &MsgEvents {
-		self.0.base.events_ref()
+	fn user_events_ref(&self) -> &MsgEvents {
+		self.0.base.user_events_ref()
 	}
 
-	fn add_child_to_be_created(&self,
-		func: Box<dyn Fn() -> WinResult<()> + 'static>)
-	{
-		self.0.base.add_child_to_be_created(func);
+	fn privileged_events_ref(&self) -> &MsgEvents {
+		self.0.base.privileged_events_ref()
 	}
 }
 
@@ -45,7 +43,7 @@ impl DialogMain {
 		let dlg = Self(
 			Arc::new(
 				Obj {
-					base: DialogBase::new(None, dialog_id, AfterCreate::Nothing),
+					base: DialogBase::new(None, dialog_id),
 					icon_id,
 					accel_table_id,
 				},
@@ -71,14 +69,14 @@ impl DialogMain {
 	}
 
 	fn default_message_handlers(&self) {
-		self.events_ref().wm_close({
+		self.user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
 				self2.hwnd_ref().DestroyWindow();
 			}
 		});
 
-		self.events_ref().wm_nc_destroy(|| {
+		self.user_events_ref().wm_nc_destroy(|| {
 			PostQuitMessage(0);
 		});
 	}

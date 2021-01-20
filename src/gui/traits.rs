@@ -1,4 +1,3 @@
-use crate::aliases::WinResult;
 use crate::gui::events::MsgEvents;
 use crate::handles::HWND;
 
@@ -6,12 +5,12 @@ use crate::handles::HWND;
 pub trait Parent {
 	/// Returns a reference to the window handle.
 	fn hwnd_ref(&self) -> &HWND;
-	/// Returns a reference to the window events object.
-	fn events_ref(&self) -> &MsgEvents;
-	/// Receives a closure that will create a control, to be called either in
-	/// [`WM_CREATE`](crate::msg::WmCreate) or
-	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog).
-	fn add_child_to_be_created(&self, func: Box<dyn Fn() -> WinResult<()> + 'static>);
+
+	/// Returns a reference to the user events object.
+	fn user_events_ref(&self) -> &MsgEvents;
+
+	/// Returns a reference to the privileged events object.
+	fn privileged_events_ref(&self) -> &MsgEvents;
 }
 
 /// Trait to any child control.

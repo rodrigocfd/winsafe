@@ -166,7 +166,7 @@ impl<Ev, Op> NativeControlBase<Ev, Op> {
 		if !ptr_self.is_null() {
 			let ref_self = unsafe { &mut *ptr_self };
 			if !ref_self.0.hwnd.is_null() {
-				maybe_processed = ref_self.0.subclass_events.process_message(wm_any);
+				maybe_processed = ref_self.0.subclass_events.process_effective_message(wm_any);
 			}
 		}
 

@@ -8,20 +8,20 @@ use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 /// Exposes button
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
 pub struct ButtonEvents {
-	parent_events: NonNull<MsgEvents>, // used only before parent creation
+	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_id: u16,
 }
 
 impl ButtonEvents {
 	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> ButtonEvents {
 		Self {
-			parent_events: NonNull::from(parent.events_ref()), // convert reference to pointer
+			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
 			ctrl_id,
 		}
 	}
 
-	fn parent_events(&self) -> &MsgEvents {
-		unsafe { self.parent_events.as_ref() }
+	fn parent_user_events(&self) -> &MsgEvents {
+		unsafe { self.parent_user_events.as_ref() }
 	}
 
 	nfy_event! { bcn_drop_down, co::NM::BCN_DROPDOWN, NMBCDROPDOWN,
@@ -74,7 +74,7 @@ impl ButtonEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
 	{
-		self.parent_events().add_nfy(self.ctrl_id, co::NM::CUSTOMDRAW, {
+		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::CUSTOMDRAW, {
 			let mut func = func;
 			move |p| Some(u32::from(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })) as isize)
 		});

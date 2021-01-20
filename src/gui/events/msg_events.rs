@@ -97,8 +97,9 @@ impl MsgEvents {
 			&& self.0.nfys.is_empty()
 	}
 
-	/// Searches for an user function for the given message, and runs it if found.
-	pub(crate) fn process_message(&self, wm_any: msg::Wm) -> ProcessResult {
+	/// Searches for the last added user function for the given message, and runs
+	/// if it exists, returning the result.
+	pub(crate) fn process_effective_message(&self, wm_any: msg::Wm) -> ProcessResult {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = msg::WmNotify::from_generic_wm(wm_any);
@@ -144,7 +145,39 @@ impl MsgEvents {
 					},
 					None => ProcessResult::NotHandled, // no stored function
 				}
-			}
+			},
+		}
+	}
+
+	/// Searches for all user functions for the given message, and runs all of
+	/// them, discarding the results.
+	pub(crate) fn process_all_messages(&self, wm_any: msg::Wm) {
+		match wm_any.msg_id {
+			co::WM::NOTIFY => {
+				let wm_nfy = msg::WmNotify::from_generic_wm(wm_any);
+				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
+				self.0.as_mut().nfys.find_all(key, |func| {
+					func(wm_nfy);
+				});
+			},
+			co::WM::COMMAND => {
+				let wm_cmd = msg::WmCommand::from_generic_wm(wm_any);
+				let key = (wm_cmd.code, wm_cmd.ctrl_id);
+				self.0.as_mut().cmds.find_all(key, |func| {
+					func();
+				});
+			},
+			co::WM::TIMER => {
+				let wm_tmr = msg::WmTimer::from_generic_wm(wm_any);
+				self.0.as_mut().tmrs.find_all(wm_tmr.timer_id, |func| {
+					func();
+				});
+			},
+			_ => { // any other message
+				self.0.as_mut().msgs.find_all(wm_any.msg_id, |func| {
+					func(wm_any);
+				});
+			},
 		}
 	}
 
