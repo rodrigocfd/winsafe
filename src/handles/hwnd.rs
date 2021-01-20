@@ -37,7 +37,7 @@ impl HWND {
 	/// [`BeginPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
 	/// method.
 	///
-	/// Must be paired with an [`EndPaint`](crate::HWND::EndPaint) call.
+	/// **Note:** Must be paired with an [`EndPaint`](crate::HWND::EndPaint) call.
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> WinResult<HDC> {
 		match ptr_as_opt(
 			unsafe { user32::BeginPaint(self.ptr, mut_void(lpPaint)) },
@@ -132,7 +132,9 @@ impl HWND {
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
 	///
-	/// The return type depends on the message argument.
+	/// The return type is variable, being defined by the `RetType` associated
+	/// type of the [`Message`](crate::msg::Message) trait. That means each
+	/// message can define its own return type.
 	pub fn DefSubclassProc<M: Message>(self, uMsg: M) -> M::RetType {
 		let wmAny = uMsg.as_generic_wm();
 		uMsg.convert_ret(
@@ -147,7 +149,9 @@ impl HWND {
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
 	/// method.
 	///
-	/// The return type depends on the message argument.
+	/// The return type is variable, being defined by the `RetType` associated
+	/// type of the [`Message`](crate::msg::Message) trait. That means each
+	/// message can define its own return type.
 	pub fn DefWindowProc<M: Message>(self, uMsg: M) -> M::RetType {
 		let wmAny = uMsg.as_generic_wm();
 		uMsg.convert_ret(
@@ -274,7 +278,7 @@ impl HWND {
 	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
 	///
-	/// Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC) call.
+	/// **Note:** Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC) call.
 	pub fn GetDC(self) -> WinResult<HDC> {
 		match ptr_as_opt(unsafe { user32::GetDC(self.ptr) }) {
 			Some(ptr) => Ok(HDC { ptr }),
@@ -387,7 +391,8 @@ impl HWND {
 	/// [`GetWindowDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
 	///
-	/// Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC) call.
+	/// **Note:** Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC)
+	/// call.
 	pub fn GetWindowDC(self) -> WinResult<HDC> {
 		match ptr_as_opt(unsafe { user32::GetWindowDC(self.ptr) }) {
 			Some(ptr) => Ok(HDC { ptr }),
@@ -686,8 +691,8 @@ impl HWND {
 	/// [`OpenThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// method.
 	///
-	/// Must be paired with a [`CloseThemeData`](crate::HTHEME::CloseThemeData)
-	/// call.
+	/// **Note:** Must be paired with a
+	/// [`CloseThemeData`](crate::HTHEME::CloseThemeData) call.
 	pub fn OpenThemeData(self, pszClassList: &str) -> Option<HTHEME> {
 		ptr_as_opt(
 			unsafe {
@@ -702,8 +707,8 @@ impl HWND {
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method. Note that this method is asychronous.
 	///
-	/// To use `HWND_BROADCAST` or `NULL` as the first argument, see the
-	/// [`PostMessage`](crate::PostMessage) free function.
+	/// **Note:** To use `HWND_BROADCAST` or `NULL` as the first argument, see
+	/// the [`PostMessage`](crate::PostMessage) free function.
 	///
 	/// # Examples
 	///
@@ -780,7 +785,9 @@ impl HWND {
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
 	///
-	/// The return type depends on the message argument.
+	/// The return type is variable, being defined by the `RetType` associated
+	/// type of the [`Message`](crate::msg::Message) trait. That means each
+	/// message can define its own return type.
 	///
 	/// # Examples
 	///

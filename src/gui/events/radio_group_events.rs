@@ -38,8 +38,8 @@ impl RadioGroupEvents {
 	/// ```rust,ignore
 	/// use winsafe::gui::{RadioGroup, WindowMain};
 	///
-	/// let wnd = WindowMain; // initialize them somewhere...
-	/// let radios = RadioGroup;
+	/// let wnd: WindowMain; // initialize them somewhere...
+	/// let radios: RadioGroup;
 	///
 	/// radios.on().bn_clicked({
 	///   let radios = radios.clone();

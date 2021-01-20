@@ -19,7 +19,7 @@ impl HDWP {
 	/// [`BeginDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
 	///
-	/// Must be paired with an
+	/// **Note:** Must be paired with an
 	/// [`EndDeferWindowPos`](crate::HDWP::EndDeferWindowPos) call.
 	pub fn BeginDeferWindowPos(nNumWindows: u32) -> WinResult<HDWP> {
 		match ptr_as_opt(

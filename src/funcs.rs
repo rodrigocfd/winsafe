@@ -317,18 +317,18 @@ pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
 /// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 /// function. Note that this function is asychronous.
 ///
-/// To use an actual [`HWND`](crate::HWND) as the first argument, see
+/// **Note:** To use an actual [`HWND`](crate::HWND) as the first argument, see
 /// [`HWND::PostMessage`](crate::HWND::PostMessage) method.
 pub fn PostMessage<M: Message>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
 	let wmAny = uMsg.as_generic_wm();
-		match unsafe {
-			user32::PostMessageW(
-				hWnd.into(), wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(()),
-		}
+	match unsafe {
+		user32::PostMessageW(
+			hWnd.into(), wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
+		)
+	} {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
 }
 
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)

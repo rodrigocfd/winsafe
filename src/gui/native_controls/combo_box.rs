@@ -140,6 +140,16 @@ impl ComboBox {
 	}
 
 	/// Adds new texts.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::ComboBox;
+	///
+	/// let cmb_names: ComboBox; // initialize it somewhere...
+	///
+	/// cmb_names.add_items(&["John", "Mary"]);
+	/// ```
 	pub fn add_items(&self, items: &[&str]) {
 		for text in items.iter() {
 			self.hwnd().SendMessage(msg::CbAddString { text })

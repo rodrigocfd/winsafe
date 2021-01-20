@@ -23,6 +23,7 @@ impl HDROP {
 	/// # Examples
 	///
 	/// Retrieve all files at once:
+	///
 	/// ```rust.ignore
 	/// let files = hdrop.DragQueryFile().unwrap();
 	/// for f in files.iter() {

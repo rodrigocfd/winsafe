@@ -56,7 +56,7 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
 /// function. Returns some error codes as success status.
 ///
-/// Must be paired with a [`CoUninitialize`](crate::CoUninitialize) call.
+/// **Note:** Must be paired with a [`CoUninitialize`](crate::CoUninitialize) call.
 ///
 /// # Examples
 ///

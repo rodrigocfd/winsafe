@@ -358,10 +358,12 @@ impl MsgEvents {
 		/// [`WM_CONTEXTMENU`](crate::msg::WmContextMenu) message.
 	}
 
-	/// [`WM_CREATE`](crate::msg::WmCreate) message.
+	/// [`WM_CREATE`](crate::msg::WmCreate) message, sent only to non-dialog
+	/// windows. Dialog windows receive
+	/// [`WM_INITDIALOG`](crate::gui::events::MsgEvents::wm_init_dialog) instead.
 	///
-	/// This is where you physically create the child controls, by calling their
-	/// `create` method.
+	/// This message is sent right after the window is created, being ideal to
+	/// perform initial setups.
 	///
 	/// # Examples
 	///
@@ -491,7 +493,12 @@ impl MsgEvents {
 		/// [`WM_GETMINMAXINFO`](crate::msg::WmGetMinMaxInfo) message.
 	}
 
-	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message.
+	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message, sent only to dialog
+	/// windows. Non-dialog windows receive
+	/// [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create) instead.
+	///
+	/// This message is sent right after the dialog is created, being ideal to
+	/// perform initial setups.
 	pub fn wm_init_dialog<F>(&self, func: F)
 		where F: FnMut(msg::WmInitDialog) -> bool + 'static,
 	{

@@ -49,9 +49,9 @@ impl IUnknown {
 	/// [`IUnknown::AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
 	/// method.
 	///
-	/// This method increments the internal COM reference counter, and will cause
-	/// a memory leak if not paired with a [`Release`](crate::IUnknown::Release)
-	/// call.
+	/// **Note:** This method increments the internal COM reference counter, and
+	/// will cause a memory leak if not paired with a
+	/// [`Release`](crate::IUnknown::Release) call.
 	pub unsafe fn AddRef(&self) -> u32 {
 		((**self.vtbl).AddRef)(self.vtbl)
 	}

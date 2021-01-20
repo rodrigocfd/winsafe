@@ -30,7 +30,7 @@ impl HDC {
 	/// [`CreateCompatibleDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
 	/// method.
 	///
-	/// Must be paired with a [`DeleteDC`](crate::HDC::DeleteDC) call.
+	/// **Note:** Must be paired with a [`DeleteDC`](crate::HDC::DeleteDC) call.
 	pub fn CreateCompatibleDC(self) -> WinResult<HDC> {
 		match ptr_as_opt(unsafe { gdi32::CreateCompatibleDC(self.ptr) }) {
 			Some(ptr) => Ok(Self { ptr }),

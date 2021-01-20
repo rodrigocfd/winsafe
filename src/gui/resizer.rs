@@ -62,13 +62,41 @@ impl Resizer {
 		resz
 	}
 
-	/// Registers one or more child controls. They will be resized in every
-	/// [`resize`](crate::gui::Resizer::resize) call.
+	/// Registers one or more child controls. Their positions and sizes will be
+	/// updated on parent's resizing.
+	///
+	/// Usually you'll want to call this method on parent's
+	/// [`WM_CREATE`](crate::msg::WmCreate) or
+	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) events.
+	///
+	/// # Examples
+	///
+	/// In the example below, when the parent window is resized, `txtName` and
+	/// `btnClick` will move anchored at right and bottom; `btnAnother` will be
+	/// only resized vertically.
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::{Button, Edit, Resizer, Resz};
+	///
+	/// let resizer: Resizer; // initialize them somewhere...
+	/// let txt_name: Edit;
+	/// let btn_click: Button;
+	/// let txt_another: Edit;
+	///
+	/// resizer.add(
+	///   Resz::Repos, // horizontal
+	///   Resz::Repos, // vertical
+	///   &[&txt_name, &btn_click],
+	/// ).add(
+	///   Resz::Nothing,
+	///   Resz::Resize,
+	///   &[&txt_another],
+	/// );
+	/// ```
 	///
 	/// # Panics
 	///
-	/// Panics if the slice is empty, or if
-	/// [`resize`](crate::gui::Resizer::resize) has already been called.
+	/// Panics if the slice is empty, or if the first resizing already happened.
 	pub fn add(&self,
 		horz: Resz, vert: Resz, children: &[&dyn Child]) -> &Resizer
 	{
