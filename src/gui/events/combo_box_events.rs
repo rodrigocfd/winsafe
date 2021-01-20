@@ -6,6 +6,10 @@ use crate::gui::traits::Parent;
 
 /// Exposes button
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications).
+///
+/// These event methods are just proxies to the
+/// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
+/// the real responsible for the child event handling.
 pub struct ComboBoxEvents {
 	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_id: u16,

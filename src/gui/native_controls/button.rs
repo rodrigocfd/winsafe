@@ -112,6 +112,10 @@ impl Button {
 
 	/// Exposes the button events.
 	///
+	/// These event methods are just proxies to the
+	/// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
+	/// the real responsible for the child event handling.
+	///
 	/// # Panics
 	///
 	/// Panics if the control or the parent window are already created. Events
@@ -140,6 +144,8 @@ impl Button {
 	/// Exposes the subclass events. If at least one event exists, the control
 	/// will be
 	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
+	///
+	/// **Note:** Subclassing may impact performance, use with care.
 	///
 	/// # Panics
 	///
