@@ -1,12 +1,13 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IdStr;
+use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::privs::ui_font;
 use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
-use crate::msg::{MessageHandleable, Wm, WmInitDialog, WmSetFont, WmWinsafeError};
+use crate::msg::{MessageHandleable, Wm, WmInitDialog, WmSetFont};
 
 /// Base to all dialog windows.
 pub struct DialogBase {
@@ -125,10 +126,8 @@ impl DialogBase {
 				ProcessResult::NotHandled => false as isize,
 			})
 		}
-		(hwnd, msg, wparam, lparam).unwrap_or_else(|err| {
-			hwnd.PostMessage(WmWinsafeError { code: err }).ok();
-			true as isize
-		})
+		(hwnd, msg, wparam, lparam)
+			.unwrap_or_else(|err| { PostQuitMessage(err); true as isize })
 	}
 
 	fn set_ui_font_on_children(&self) {

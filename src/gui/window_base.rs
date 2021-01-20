@@ -1,12 +1,12 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
-use crate::funcs::{RegisterClassEx, SetLastError};
+use crate::funcs::{PostQuitMessage, RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::{MessageHandleable, Wm, WmNcCreate, WmWinsafeError};
+use crate::msg::{MessageHandleable, Wm, WmNcCreate};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
@@ -165,9 +165,7 @@ impl WindowBase {
 				ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any).into(),
 			})
 		}
-		(hwnd, msg, wparam, lparam).unwrap_or_else(|err| {
-			hwnd.PostMessage(WmWinsafeError { code: err }).ok();
-			0
-		})
+		(hwnd, msg, wparam, lparam)
+			.unwrap_or_else(|err| { PostQuitMessage(err); 0 })
 	}
 }

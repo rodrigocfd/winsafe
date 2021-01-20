@@ -3,6 +3,7 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
+use crate::funcs::PostQuitMessage;
 use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
@@ -59,31 +60,38 @@ impl DialogControl {
 		dlg
 	}
 
-	fn create(&self) -> WinResult<()> {
-		// Create the control.
-		self.0.base.create_dialog_param()?; // may panic
-
-		// Set control position within parent.
-		let mut dlg_pos = self.0.position;
-		multiply_dpi(Some(&mut dlg_pos), None)?;
-		self.hwnd_ref().SetWindowPos(HwndPlace::None, dlg_pos.x, dlg_pos.y,
-			0, 0, co::SWP::NOZORDER | co::SWP::NOSIZE)?;
-
-		// Give the control an ID.
-		self.hwnd_ref().SetWindowLongPtr(co::GWLP::ID,
-			self.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as isize);
-		Ok(())
-	}
-
 	fn default_message_handlers(&self, parent: &dyn Parent) {
 		parent.privileged_events_ref().wm_init_dialog({
 			let self2 = self.clone();
-			move |_| { self2.create().unwrap(); true }
+			move |p| {
+				|_| -> WinResult<bool> {
+					// Create the control.
+					self2.0.base.create_dialog_param()?; // may panic
+
+					// Set control position within parent.
+					let mut dlg_pos = self2.0.position;
+					multiply_dpi(Some(&mut dlg_pos), None)?;
+					self2.hwnd_ref().SetWindowPos(
+						HwndPlace::None,
+						dlg_pos.x, dlg_pos.y, 0, 0,
+						co::SWP::NOZORDER | co::SWP::NOSIZE,
+					)?;
+
+					// Give the control an ID.
+					self2.hwnd_ref().SetWindowLongPtr(
+						co::GWLP::ID,
+						self2.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as isize,
+					);
+					Ok(true)
+				}
+				(p).unwrap_or_else(|err| { PostQuitMessage(err); true })
+			}
 		});
 
 		self.user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| { paint_control_borders(*self2.hwnd_ref(), p).ok(); }
+			move |p| paint_control_borders(&self2, p)
+				.unwrap_or_else(|err| PostQuitMessage(err))
 		});
 	}
 }

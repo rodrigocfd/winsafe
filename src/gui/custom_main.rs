@@ -177,7 +177,7 @@ impl CustomMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
 		if IsWindowsVistaOrGreater()? {
 			SetProcessDPIAware()?;
 		}
@@ -185,12 +185,11 @@ impl CustomMain {
 		InitCommonControls();
 		create_ui_font()?;
 
-		let maybe_res = match &self.0 {
-			WndDlg::Wnd(w) => w.run_main(cmd_show),
-			WndDlg::Dlg(d) => d.run_main(cmd_show),
-		};
+		match &self.0 {
+			WndDlg::Wnd(w) => w.run_main(cmd_show)?,
+			WndDlg::Dlg(d) => d.run_main(cmd_show)?,
+		}
 
-		delete_ui_font(); // cleanup
-		maybe_res
+		delete_ui_font() // cleanup
 	}
 }

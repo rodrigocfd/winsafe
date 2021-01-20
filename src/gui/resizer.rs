@@ -4,6 +4,7 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
+use crate::funcs::PostQuitMessage;
 use crate::gui::immut::Immut;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::{HDWP, HWND};
@@ -56,7 +57,7 @@ impl Resizer {
 		);
 		parent.privileged_events_ref().wm_size({
 			let resz = resz.clone();
-			move |p| { resz.resize(&p).unwrap(); }
+			move |p| resz.resize(&p).unwrap_or_else(|err| PostQuitMessage(err))
 		});
 		resz
 	}
@@ -77,27 +78,31 @@ impl Resizer {
 			panic!("Cannot add children after Resizer started working.");
 		}
 
-		let ctrls = &mut self.0.as_mut().ctrls;
-		ctrls.reserve(children.len() + children.len());
+		|horz, vert, children: &[&dyn Child]| -> WinResult<&Resizer> {
+			let ctrls = &mut self.0.as_mut().ctrls;
+			ctrls.reserve(children.len() + children.len());
 
-		let hparent = children[0].hctrl_ref().GetParent().unwrap();
-		if ctrls.is_empty() { // first call to add()
-			let rc_parent = hparent.GetClientRect().unwrap();
-			self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
+			let hparent = children[0].hctrl_ref().GetParent()?;
+			if ctrls.is_empty() { // first call to add()
+				let rc_parent = hparent.GetClientRect()?;
+				self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
+			}
+
+			for child in children.iter() {
+				let mut rc_orig = child.hctrl_ref().GetWindowRect()?;
+				hparent.ScreenToClientRc(&mut rc_orig)?; // client coordinates relative to parent
+
+				ctrls.push(Ctrl {
+					hctrl: NonNull::from(child.hctrl_ref()), // ref implicitly converted to pointer
+					rc_orig,
+					horz,
+					vert,
+				});
+			}
+			Ok(self)
 		}
-
-		for child in children.iter() {
-			let mut rc_orig = child.hctrl_ref().GetWindowRect().unwrap();
-			hparent.ScreenToClientRc(&mut rc_orig).unwrap(); // client coordinates relative to parent
-
-			ctrls.push(Ctrl {
-				hctrl: NonNull::from(child.hctrl_ref()), // ref implicitly converted to pointer
-				rc_orig,
-				horz,
-				vert,
-			});
-		}
-		self
+		(horz, vert, children)
+			.unwrap_or_else(|err| { PostQuitMessage(err); self })
 	}
 
 	fn resize(&self, size_parm: &WmSize) -> WinResult<()> {

@@ -6,8 +6,10 @@ use std::collections::HashMap;
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::BroadNull;
 use crate::ffi::{comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
+use crate::msg::Message;
 use crate::privs::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
 use crate::structs as s;
 use crate::WString;
@@ -312,10 +314,27 @@ pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
 	}
 }
 
+/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
+/// function. Note that this function is asychronous.
+///
+/// To use an actual [`HWND`](crate::HWND) as the first argument, see
+/// [`HWND::PostMessage`](crate::HWND::PostMessage) method.
+pub fn PostMessage<M: Message>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
+	let wmAny = uMsg.as_generic_wm();
+		match unsafe {
+			user32::PostMessageW(
+				hWnd.into(), wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+}
+
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
 /// function.
-pub fn PostQuitMessage(nExitCode: i32) {
-	unsafe { user32::PostQuitMessage(nExitCode) }
+pub fn PostQuitMessage(nExitCode: co::ERROR) {
+	unsafe { user32::PostQuitMessage(u32::from(nExitCode) as i32) }
 }
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)

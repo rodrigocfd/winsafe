@@ -10,7 +10,6 @@ use crate::gui::privs::multiply_dpi;
 use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
-use crate::privs::WM_WINSAFE_ERROR;
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
@@ -102,14 +101,8 @@ impl WindowModal {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.
 				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
-				PostQuitMessage(msg.wParam as i32);
+				PostQuitMessage(co::ERROR::from(msg.wParam as u32));
 				return Ok(msg.wParam as i32);
-			}
-
-			if msg.message == WM_WINSAFE_ERROR && msg.wParam == 0xc0de_f00d {
-				// A WinResult bubbled-up to here.
-				// Terminate the program returning the error code passed in lParam.
-				return Err(co::ERROR::from(msg.lParam as u32));
 			}
 
 			// If a child window, will retrieve its top-level parent.

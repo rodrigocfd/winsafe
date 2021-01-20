@@ -1,8 +1,8 @@
 use std::ops::Index;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
+use crate::funcs::PostQuitMessage;
 use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
 use crate::gui::immut::Immut;
@@ -67,7 +67,7 @@ impl RadioGroup {
 		);
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
-			move |_| { me.create().unwrap(); 0 }
+			move |_| { me.create(); 0 }
 		});
 		me
 	}
@@ -99,16 +99,16 @@ impl RadioGroup {
 		);
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
-			move |_| { me.create().unwrap(); true }
+			move |_| { me.create(); true }
 		});
 		me
 	}
 
-	fn create(&self) -> WinResult<()> {
+	fn create(&self) {
 		for radio in self.0.as_mut().radios.iter_mut() {
-			radio.create()?;
+			radio.create()
+				.unwrap_or_else(|err| PostQuitMessage(err));
 		}
-		Ok(())
 	}
 
 	/// Exposes the radio group events.

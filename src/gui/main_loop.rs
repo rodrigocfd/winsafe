@@ -2,23 +2,19 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::handles::{HACCEL, HWND};
-use crate::privs::WM_WINSAFE_ERROR;
 use crate::structs::MSG;
 
-pub fn run_loop(hwnd: &HWND, haccel: Option<HACCEL>) -> WinResult<i32> {
+pub fn run_loop(hwnd: &HWND, haccel: Option<HACCEL>) -> WinResult<()> {
 	loop {
 		let mut msg = MSG::default();
 		if !GetMessage(&mut msg, None, 0, 0)? {
 			// WM_QUIT was sent, gracefully terminate the program.
 			// wParam has the program exit code.
 			// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
-			return Ok(msg.wParam as i32);
-		}
-
-		if msg.message == WM_WINSAFE_ERROR && msg.wParam == 0xc0de_f00d {
-			// A WinResult bubbled-up to here.
-			// Terminate the program returning the error code passed in lParam.
-			return Err(co::ERROR::from(msg.lParam as u32));
+			return match co::ERROR(msg.wParam as u32) {
+				co::ERROR::SUCCESS => Ok(()),
+				err => Err(err),
+			};
 		}
 
 		// Does this message belong to a modeless child window (if any)?

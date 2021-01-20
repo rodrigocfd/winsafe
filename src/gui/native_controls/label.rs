@@ -3,6 +3,7 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
+use crate::funcs::PostQuitMessage;
 use crate::gui::events::{LabelEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
@@ -46,7 +47,7 @@ impl Label {
 		};
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
-			move |_| { me.create().unwrap(); 0 }
+			move |_| { me.create(); 0 }
 		});
 		me
 	}
@@ -65,32 +66,34 @@ impl Label {
 		};
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
-			move |_| { me.create().unwrap(); true }
+			move |_| { me.create(); true }
 		});
 		me
 	}
 
-	fn create(&self) -> WinResult<()> {
-		match self.base.opts_id() {
-			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
-				if opts.vertical_text_align { pos.y += 3; }
-				multiply_dpi(Some(&mut pos), None)?;
+	fn create(&self) {
+		|| -> WinResult<()> {
+			match self.base.opts_id() {
+				OptsId::Wnd(opts) => {
+					let mut pos = opts.position;
+					if opts.vertical_text_align { pos.y += 3; }
+					multiply_dpi(Some(&mut pos), None)?;
 
-				let bound_box = calc_text_bound_box(&opts.text)?;
+					let bound_box = calc_text_bound_box(&opts.text)?;
 
-				let our_hwnd = self.base.create_window( // may panic
-					"STATIC", Some(&opts.text), pos, bound_box,
-					opts.ctrl_id,
-					opts.ex_window_style,
-					opts.window_style | opts.label_style.into(),
-				)?;
+					let our_hwnd = self.base.create_window( // may panic
+						"STATIC", Some(&opts.text), pos, bound_box,
+						opts.ctrl_id,
+						opts.ex_window_style,
+						opts.window_style | opts.label_style.into(),
+					)?;
 
-				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-				Ok(())
-			},
-			OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-		}
+					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+					Ok(())
+				},
+				OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+			}
+		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
 	/// Returns the underlying handle for this control.
@@ -134,11 +137,14 @@ impl Label {
 	/// Calls [`SetWindowText`](crate::HWND::SetWindowText) and resizes the
 	/// control to exactly fit the new text.
 	pub fn set_text(&self, text: &str) {
-		let bound_box = calc_text_bound_box(text).unwrap();
-		self.hwnd().SetWindowText(text).unwrap();
-		self.hwnd().SetWindowPos(
-			HwndPlace::None, 0, 0, bound_box.cx as u32, bound_box.cy as u32,
-			co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
+		|text| -> WinResult<()> {
+			let bound_box = calc_text_bound_box(text)?;
+			self.hwnd().SetWindowText(text)?;
+			self.hwnd().SetWindowPos(
+				HwndPlace::None, 0, 0, bound_box.cx as u32, bound_box.cy as u32,
+				co::SWP::NOZORDER | co::SWP::NOMOVE)
+		}
+		(text).unwrap_or_else(|err| PostQuitMessage(err))
 	}
 }
 

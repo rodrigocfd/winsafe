@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ButtonEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
@@ -45,7 +46,7 @@ impl Button {
 		};
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
-			move |_| { me.create().unwrap(); 0 }
+			move |_| { me.create(); 0 }
 		});
 		me
 	}
@@ -64,31 +65,33 @@ impl Button {
 		};
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
-			move |_| { me.create().unwrap(); true }
+			move |_| { me.create(); true }
 		});
 		me
 	}
 
-	fn create(&self) -> WinResult<()> {
-		match self.base.opts_id() {
-			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
-				if opts.vertical_text_align { pos.y -= 1; }
-				multiply_dpi(Some(&mut pos), None)?;
+	fn create(&self) {
+		|| -> WinResult<()> {
+			match self.base.opts_id() {
+				OptsId::Wnd(opts) => {
+					let mut pos = opts.position;
+					if opts.vertical_text_align { pos.y -= 1; }
+					multiply_dpi(Some(&mut pos), None)?;
 
-				let our_hwnd = self.base.create_window( // may panic
-					"BUTTON", Some(&opts.text), pos,
-					SIZE::new(opts.width as i32, opts.height as i32),
-					opts.ctrl_id,
-					opts.ex_window_style,
-					opts.window_style | opts.button_style.into(),
-				)?;
+					let our_hwnd = self.base.create_window( // may panic
+						"BUTTON", Some(&opts.text), pos,
+						SIZE::new(opts.width as i32, opts.height as i32),
+						opts.ctrl_id,
+						opts.ex_window_style,
+						opts.window_style | opts.button_style.into(),
+					)?;
 
-				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
-				Ok(())
-			},
-			OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-		}
+					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+					Ok(())
+				},
+				OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+			}
+		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
 	/// Returns the underlying handle for this control.
@@ -149,7 +152,8 @@ impl Button {
 	/// Fires the click event for the radio button. The event is asynchronous,
 	/// the method returns immediately.
 	pub fn trigger_click(&self) {
-		self.hwnd().PostMessage(BmClick {}).unwrap();
+		self.hwnd().PostMessage(BmClick {})
+			.unwrap_or_else(|err| PostQuitMessage(err));
 	}
 }
 

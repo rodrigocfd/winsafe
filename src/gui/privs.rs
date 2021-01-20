@@ -4,6 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, SystemParametersInfo};
+use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HTHEME, HWND};
 use crate::msg::WmNcPaint;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
@@ -26,13 +27,14 @@ pub fn create_ui_font() -> WinResult<()> {
 }
 
 /// Frees the global UI font object.
-pub fn delete_ui_font() {
+pub fn delete_ui_font() -> WinResult<()> {
 	unsafe {
 		if let Some(hfont) = UI_HFONT {
-			hfont.DeleteObject().ok();
+			hfont.DeleteObject()?;
 			UI_HFONT = None;
 		}
 	}
+	Ok(())
 }
 
 /// Retrieves the global UI font object, or panics if not created yet.
@@ -147,7 +149,10 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 //------------------------------------------------------------------------------
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub fn paint_control_borders(hwnd: HWND, wm_ncp: WmNcPaint) -> WinResult<()> {
+pub fn paint_control_borders(
+	ctrl: &dyn Parent, wm_ncp: WmNcPaint) -> WinResult<()>
+{
+	let hwnd = ctrl.hwnd_ref();
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
 	let ex_style = co::WS_EX::from(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as u32);

@@ -53,7 +53,7 @@ impl DialogMain {
 		dlg
 	}
 
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.0.base.parent_hinstance()?;
 
@@ -77,7 +77,7 @@ impl DialogMain {
 		});
 
 		self.user_events_ref().wm_nc_destroy(|| {
-			PostQuitMessage(0);
+			PostQuitMessage(co::ERROR::SUCCESS);
 		});
 	}
 

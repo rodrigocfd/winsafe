@@ -5,7 +5,7 @@ use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{Message, MessageHandleable};
 use crate::msg::macros::{lp_to_mut_ref, lp_to_point, lp_to_ref, point_to_lp, ref_to_lp};
-use crate::privs::{FAPPCOMMAND_MASK, WM_WINSAFE_ERROR};
+use crate::privs::FAPPCOMMAND_MASK;
 use crate::structs as s;
 
 /// Generic
@@ -36,29 +36,6 @@ impl Message for Wm {
 impl MessageHandleable for Wm {
 	fn from_generic_wm(p: Wm) -> Self {
 		p
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// Internal message, causes program to quit.
-pub(crate) struct WmWinsafeError {
-	pub code: co::ERROR,
-}
-
-impl Message for WmWinsafeError {
-	type RetType = ();
-
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
-
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
-			msg_id: WM_WINSAFE_ERROR,
-			wparam: 0xc0de_f00d,
-			lparam: u32::from(self.code) as isize,
-		}
 	}
 }
 

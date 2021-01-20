@@ -80,6 +80,25 @@ impl BitmapPtrStr {
 
 /// Variant parameter for:
 ///
+/// * [`PostMessage`](crate::PostMessage) `hWnd`.
+pub enum BroadNull {
+	Broadcast,
+	Null,
+}
+
+impl From<BroadNull> for *mut c_void {
+	fn from(v: BroadNull) -> Self {
+		match v {
+			BroadNull::Broadcast => 0xffff as *mut _,
+			BroadNull::Null => std::ptr::null_mut(),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for:
+///
 /// * [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) reason.
 pub enum HwndHmenu {
 	/// The system is idle because a dialog box is displayed.

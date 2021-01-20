@@ -52,7 +52,7 @@ impl WindowMain {
 		wnd
 	}
 
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
 		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();
@@ -129,7 +129,7 @@ impl WindowMain {
 		});
 
 		self.user_events_ref().wm_nc_destroy(|| {
-			PostQuitMessage(0);
+			PostQuitMessage(co::ERROR::SUCCESS);
 		});
 	}
 }

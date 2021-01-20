@@ -3,6 +3,7 @@ use std::ptr::NonNull;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
+use crate::funcs::PostQuitMessage;
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::immut::Immut;
 use crate::gui::traits::{Child, Parent};
@@ -159,25 +160,30 @@ impl<Ev, Op> NativeControlBase<Ev, Op> {
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
 		subclass_id: usize, ref_data: usize) -> isize
 	{
-		let ptr_self = ref_data as *mut Self; // retrieve
-		let wm_any = Wm { msg_id: msg, wparam, lparam };
-		let mut maybe_processed = ProcessResult::NotHandled;
+		|hwnd: HWND, msg, wparam, lparam| -> WinResult<isize>
+		{
+			let ptr_self = ref_data as *mut Self; // retrieve
+			let wm_any = Wm { msg_id: msg, wparam, lparam };
+			let mut maybe_processed = ProcessResult::NotHandled;
 
-		if !ptr_self.is_null() {
-			let ref_self = unsafe { &mut *ptr_self };
-			if !ref_self.0.hwnd.is_null() {
-				maybe_processed = ref_self.0.subclass_events.process_effective_message(wm_any);
+			if !ptr_self.is_null() {
+				let ref_self = unsafe { &mut *ptr_self };
+				if !ref_self.0.hwnd.is_null() {
+					maybe_processed = ref_self.0.subclass_events.process_effective_message(wm_any);
+				}
 			}
-		}
 
-		if msg == co::WM::NCDESTROY { // always check
-			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id).ok();
-		}
+			if msg == co::WM::NCDESTROY { // always check
+				hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
+			}
 
-		match maybe_processed {
-			ProcessResult::HandledWithRet(res) => res.into(),
-			ProcessResult::HandledWithoutRet => 0,
-			ProcessResult::NotHandled => hwnd.DefSubclassProc(wm_any).into(),
+			Ok(match maybe_processed {
+				ProcessResult::HandledWithRet(res) => res.into(),
+				ProcessResult::HandledWithoutRet => 0,
+				ProcessResult::NotHandled => hwnd.DefSubclassProc(wm_any).into(),
+			})
 		}
+		(hwnd, msg, wparam, lparam)
+			.unwrap_or_else(|err| { PostQuitMessage(err); 0 })
 	}
 }

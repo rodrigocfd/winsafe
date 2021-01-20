@@ -702,6 +702,9 @@ impl HWND {
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method. Note that this method is asychronous.
 	///
+	/// To use `HWND_BROADCAST` or `NULL` as the first argument, see the
+	/// [`PostMessage`](crate::PostMessage) free function.
+	///
 	/// # Examples
 	///
 	/// Programatically closing a window:

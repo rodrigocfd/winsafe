@@ -3,6 +3,7 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
+use crate::funcs::PostQuitMessage;
 use crate::gui::events::MsgEvents;
 use crate::gui::immut::Immut;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
@@ -54,37 +55,40 @@ impl WindowControl {
 		wnd
 	}
 
-	fn create(&self) -> WinResult<()> {
-		let opts = &self.0.opts;
-
-		let mut wcx = WNDCLASSEX::default();
-		let mut class_name_buf = WString::new();
-		opts.generate_wndclassex(self.0.base.parent_hinstance()?,
-			&mut wcx, &mut class_name_buf)?;
-		self.0.base.register_class(&mut wcx)?;
-
-		let mut wnd_pos = opts.position;
-		let mut wnd_sz = opts.size;
-		multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
-
-		self.0.base.create_window( // may panic
-			&class_name_buf.to_string(),
-			None,
-			IdMenu::None,
-			wnd_pos, wnd_sz,
-			opts.ex_style, opts.style,
-		)
-	}
-
 	fn default_message_handlers(&self, parent: &dyn Parent) {
 		parent.privileged_events_ref().wm_create({
 			let self2 = self.clone();
-			move |_| { self2.create().unwrap(); 0 }
+			move |p| {
+				|_| -> WinResult<i32> {
+					let opts = &self2.0.opts;
+
+					let mut wcx = WNDCLASSEX::default();
+					let mut class_name_buf = WString::new();
+					opts.generate_wndclassex(self2.0.base.parent_hinstance()?,
+						&mut wcx, &mut class_name_buf)?;
+					self2.0.base.register_class(&mut wcx)?;
+
+					let mut wnd_pos = opts.position;
+					let mut wnd_sz = opts.size;
+					multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
+
+					self2.0.base.create_window( // may panic
+						&class_name_buf.to_string(),
+						None,
+						IdMenu::None,
+						wnd_pos, wnd_sz,
+						opts.ex_style, opts.style,
+					)?;
+					Ok(0)
+				}
+				(p).unwrap_or_else(|err| { PostQuitMessage(err); 0 })
+			}
 		});
 
 		self.user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| { paint_control_borders(*self2.hwnd_ref(), p).ok(); }
+			move |p| paint_control_borders(&self2, p)
+				.unwrap_or_else(|err| PostQuitMessage(err))
 		});
 	}
 }
