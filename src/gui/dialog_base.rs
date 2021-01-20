@@ -112,7 +112,7 @@ impl DialogBase {
 			}
 
 			// Execute user closure, if any.
-			let maybe_processed = ref_self.base.process_message(wm_any);
+			let maybe_processed = ref_self.base.process_effective_message(wm_any);
 
 			if msg == co::WM::NCDESTROY { // always check
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer

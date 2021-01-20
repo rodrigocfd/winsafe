@@ -59,7 +59,7 @@ impl Base {
 		})
 	}
 
-	pub fn process_message(&mut self, wm_any: Wm) -> ProcessResult {
+	pub fn process_effective_message(&mut self, wm_any: Wm) -> ProcessResult {
 		self.user_events.process_effective_message(wm_any)
 	}
 
