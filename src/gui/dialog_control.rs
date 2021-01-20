@@ -55,11 +55,7 @@ impl DialogControl {
 				},
 			),
 		);
-		dlg.default_message_handlers();
-		parent.privileged_events_ref().wm_init_dialog({
-			let dlg = dlg.clone();
-			move |_| { dlg.create().unwrap(); true }
-		});
+		dlg.default_message_handlers(parent);
 		dlg
 	}
 
@@ -79,7 +75,12 @@ impl DialogControl {
 		Ok(())
 	}
 
-	fn default_message_handlers(&self) {
+	fn default_message_handlers(&self, parent: &dyn Parent) {
+		parent.privileged_events_ref().wm_init_dialog({
+			let self2 = self.clone();
+			move |_| { self2.create().unwrap(); true }
+		});
+
 		self.user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
 			move |p| { paint_control_borders(*self2.hwnd_ref(), p).ok(); }

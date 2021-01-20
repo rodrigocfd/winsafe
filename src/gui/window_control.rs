@@ -50,11 +50,7 @@ impl WindowControl {
 				},
 			)),
 		);
-		wnd.default_message_handlers();
-		parent.privileged_events_ref().wm_create({
-			let wnd = wnd.clone();
-			move |_| { wnd.create().unwrap(); 0 }
-		});
+		wnd.default_message_handlers(parent);
 		wnd
 	}
 
@@ -80,7 +76,12 @@ impl WindowControl {
 		)
 	}
 
-	fn default_message_handlers(&self) {
+	fn default_message_handlers(&self, parent: &dyn Parent) {
+		parent.privileged_events_ref().wm_create({
+			let self2 = self.clone();
+			move |_| { self2.create().unwrap(); 0 }
+		});
+
 		self.user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
 			move |p| { paint_control_borders(*self2.hwnd_ref(), p).ok(); }

@@ -35,10 +35,6 @@ impl DialogModal {
 			),
 		};
 		dlg.default_message_handlers();
-		dlg.privileged_events_ref().wm_init_dialog({
-			let dlg = dlg.clone();
-			move |_| { dlg.center_in_parent().unwrap(); true }
-		});
 		dlg
 	}
 
@@ -57,6 +53,11 @@ impl DialogModal {
 	}
 
 	fn default_message_handlers(&self) {
+		self.privileged_events_ref().wm_init_dialog({
+			let self2 = self.clone();
+			move |_| { self2.center_in_parent().unwrap(); true }
+		});
+
 		self.user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {

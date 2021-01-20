@@ -7,9 +7,14 @@ pub trait Parent {
 	fn hwnd_ref(&self) -> &HWND;
 
 	/// Returns a reference to the user events object.
+	///
+	/// When an user event is added, it will overwrite the previous one.
 	fn user_events_ref(&self) -> &MsgEvents;
 
-	/// Returns a reference to the privileged events object.
+	/// Returns a reference to the privileged events object, which is used
+	/// internally to automate some tasks.
+	///
+	/// All privileged events are executed, and their result is ignored.
 	fn privileged_events_ref(&self) -> &MsgEvents;
 }
 

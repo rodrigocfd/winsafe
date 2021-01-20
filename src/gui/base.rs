@@ -9,8 +9,8 @@ use crate::handles::{HINSTANCE, HWND};
 /// Base to `WindowBase` and `DialogBase`.
 pub struct Base {
 	hwnd: HWND,
-	user_events: MsgEvents, // ordinary window events, inserted by user
-	privileged_events: MsgEvents, // inserted by native controls to automate tasks
+	user_events: MsgEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
+	privileged_events: MsgEvents, // inserted internally to automate tasks: all will be executed
 	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
 }
 
