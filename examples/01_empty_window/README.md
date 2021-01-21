@@ -1,4 +1,4 @@
-# 01 Empty window
+# 01. Empty window
 
 This is a very basic example with just an empty window.
 
