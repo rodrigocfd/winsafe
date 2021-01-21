@@ -152,6 +152,15 @@ impl WString {
 		}
 	}
 
+	/// Copies the content into an external buffer.
+	pub fn copy_to_slice(&self, dest: &mut [u16]) {
+		if let Some(vec_ref) = self.char_vec.as_ref() {
+			for (idx, ch) in vec_ref.iter().enumerate() {
+				dest[idx] = *ch;
+			}
+		}
+	}
+
 	/// Fills the available buffer with zero values.
 	pub fn fill_with_zero(&mut self) {
 		if let Some(vec_ref) = self.char_vec.as_mut() {

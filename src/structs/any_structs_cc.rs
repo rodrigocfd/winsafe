@@ -6,7 +6,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::handles::{HDC, HIMAGELIST, HTREEITEM};
-use crate::privs::L_MAX_URL_LENGTH;
+use crate::privs::{L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE};
 use crate::WString;
 
@@ -64,6 +64,43 @@ impl Default for IMAGELISTDRAWPARAMS {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.cbSize = std::mem::size_of::<Self>() as u32;
 		obj
+	}
+}
+
+/// [`LITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct LITEM {
+	pub mask: co::LIF,
+	pub iLink: i32,
+	pub state: co::LIS,
+	pub stateMask: co::LIS,
+	szID: [u16; MAX_LINKID_TEXT],
+	szUrl: [u16; L_MAX_URL_LENGTH],
+}
+
+impl_default_zero!(LITEM);
+
+impl LITEM {
+	/// Returns the `szID` field.
+	pub fn szID(&self) -> String {
+		WString::from_wchars_slice(&self.szID).to_string()
+	}
+
+	/// Sets the `szID` field.
+	pub fn get_szID(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.szID);
+	}
+
+	/// Returns the `szUrl` field.
+	pub fn szUrl(&self) -> String {
+		WString::from_wchars_slice(&self.szUrl).to_string()
+	}
+
+	/// Sets the `szUrl` field.
+	pub fn set_szUrl(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.szUrl);
 	}
 }
 
@@ -236,6 +273,16 @@ pub struct NMLISTVIEW {
 	pub lParam: isize,
 }
 
+/// [`NMLVCACHEHINT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcachehint)
+/// struct
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct NMLVCACHEHINT {
+	pub hdr: NMHDR,
+	pub iFrom: i32,
+	pub iTo: i32,
+}
+
 /// [`NMLVDISPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvdispinfow)
 /// struct.
 #[repr(C)]
@@ -296,6 +343,39 @@ impl<'a> NMLVGETINFOTIP<'a> {
 		self.pszText = unsafe { buf.as_mut_ptr() };
 		self.cchTextMax = buf.buffer_size() as i32;
 	}
+}
+
+/// [`NMLVKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct NMLVKEYDOWN {
+	pub hdr: NMHDR,
+	pub wVKey: co::VK,
+	flags: u32,
+}
+
+/// [`NMLVLINK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvlink)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct NMLVLINK {
+	pub hdr: NMHDR,
+	pub link: LITEM,
+	pub iItem: i32,
+	pub iSubItem: i32,
+}
+
+/// [`NMLVODSTATECHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvodstatechange)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct NMLVODSTATECHANGE {
+	pub hdr: NMHDR,
+	pub iFrom: i32,
+	pub iTo: i32,
+	pub uNewState: co::LVIS,
+	pub uOldState: co::LVIS,
 }
 
 /// [`NMLVSCROLL`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvscroll)

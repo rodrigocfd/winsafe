@@ -74,6 +74,11 @@ const_type! { CDRF, u32,
 	NOTIFYSUBITEMDRAW, 0x00000020
 	NOTIFYPOSTERASE, 0x00000040
 }
+impl From<CDRF> for isize {
+	fn from(v: CDRF) -> Self {
+		v.0 as isize
+	}
+}
 
 const_type! { CHARSET, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).

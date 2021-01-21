@@ -173,6 +173,25 @@ impl LANG {
 	}
 }
 
+const_type! { LIF, u32,
+	/// [`LITEM`](crate::LITEM) `mask` (`u32`).
+
+	ITEMINDEX, 0x00000001
+	STATE, 0x00000002
+	ITEMID, 0x00000004
+	URL, 0x00000008
+}
+
+const_type! { LIS, u32,
+	/// [`LITEM`](crate::LITEM) `state` (`u32`).
+
+	FOCUSED, 0x00000001
+	ENABLED, 0x00000002
+	VISITED, 0x00000004
+	HOTTRACK, 0x00000008
+	DEFAULTCOLORS, 0x00000010
+}
+
 const_type! { LR, u32,
 	/// [`LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
 	/// [`LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and

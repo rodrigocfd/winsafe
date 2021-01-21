@@ -41,7 +41,7 @@ macro_rules! const_type_no_debug_display {
 			}
 		}
 		impl From<$name> for $num {
-			fn from(n: $name) -> $num {
+			fn from(n: $name) -> Self {
 				n.0 // the number can be created from the type
 			}
 		}

@@ -16,8 +16,27 @@ macro_rules! cmd_event {
 	};
 }
 
-/// Declares a method for a `WM_NOTIFY` notification.
+/// Declares a method for a `WM_NOTIFY` notification which receives a NMHDR
+/// parameter, which is not sent because it carries no useful data.
 macro_rules! nfy_event {
+	(
+		$name:ident, $nfy:expr,
+		$(#[$attr:meta])*
+	) => {
+		$(#[$attr])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut() + 'static,
+		{
+			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
+				let mut func = func;
+				move |_| { func(); None }
+			});
+		}
+	};
+}
+
+/// Declares a method for a `WM_NOTIFY` notification which receives a parameter.
+macro_rules! nfy_event_p {
 	(
 		$name:ident, $nfy:expr, $struc:ty,
 		$(#[$attr:meta])*
@@ -29,6 +48,25 @@ macro_rules! nfy_event {
 			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
 				let mut func = func;
 				move |p| { func(unsafe { p.cast_nmhdr::<$struc>() }); None }
+			});
+		}
+	};
+}
+
+/// Declares a method for a `WM_NOTIFY` notification which receives a parameter,
+/// and whose callback returns bool.
+macro_rules! nfy_event_p_bool {
+	(
+		$name:ident, $nfy:expr, $struc:ty,
+		$(#[$attr:meta])*
+	) => {
+		$(#[$attr])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut(&$struc) -> bool + 'static,
+		{
+			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
+				let mut func = func;
+				move |p| Some(func(unsafe { p.cast_nmhdr::<$struc>() }) as isize)
 			});
 		}
 	};

@@ -208,7 +208,7 @@ pub enum IdMenu {
 }
 
 impl From<IdMenu> for usize {
-	fn from(v: IdMenu) -> usize {
+	fn from(v: IdMenu) -> Self {
 		match v {
 			IdMenu::Id(id) => id as usize,
 			IdMenu::Menu(hMenu) => hMenu.ptr as usize,
@@ -247,7 +247,7 @@ pub enum IdPos {
 }
 
 impl From<IdPos> for u32 {
-	fn from(v: IdPos) -> u32 {
+	fn from(v: IdPos) -> Self {
 		match v {
 			IdPos::Id(id) => id as u32,
 			IdPos::Pos(pos) => pos,

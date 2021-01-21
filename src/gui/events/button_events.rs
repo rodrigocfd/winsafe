@@ -28,12 +28,12 @@ impl ButtonEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 
-	nfy_event! { bcn_drop_down, co::NM::BCN_DROPDOWN, NMBCDROPDOWN,
+	nfy_event_p! { bcn_drop_down, co::NM::BCN_DROPDOWN, NMBCDROPDOWN,
 		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.
 	}
 
-	nfy_event! { bcn_hot_item_change, co::NM::BCN_HOTITEMCHANGE, NMBCHOTITEM,
+	nfy_event_p! { bcn_hot_item_change, co::NM::BCN_HOTITEMCHANGE, NMBCHOTITEM,
 		/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
 		/// notification.
 	}
@@ -80,7 +80,7 @@ impl ButtonEvents {
 	{
 		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::CUSTOMDRAW, {
 			let mut func = func;
-			move |p| Some(u32::from(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })) as isize)
+			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into())
 		});
 	}
 }
