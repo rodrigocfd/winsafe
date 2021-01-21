@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use msg::LvmDeleteAllItems;
-
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;

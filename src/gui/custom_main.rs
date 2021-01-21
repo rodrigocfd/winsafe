@@ -20,12 +20,26 @@ enum WndDlg {
 ///
 /// # Examples
 ///
-/// A full application with a non-dialog `CustomMain`:
+/// ## Programmaticaly creating a window
+///
+/// Below is a full application based on a non-dialog `CustomMain`, whose
+/// instance is kept within `MyMain` struct. This is not necessary, but is
+/// highly recommended, because it makes it easier to manage the window
+/// contents.
+///
+/// The `main` function instantiates `MyMain` by calling `MyMain::new`, which
+/// then calls `CustomMain::new`. Note how it receives a `CustomMainOpts`
+/// argument, who defines all the options.
+///
+/// The window is handling the
+/// [mouse click event](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
+/// with a closure, and it displays the clicked coordinates in the
+/// [title bar](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowtextw).
 ///
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
-/// use winsafe as w;
+/// use winsafe::{gui, WinResult};
 ///
 /// fn main() {
 ///   let my_main = MyMain::new();
@@ -35,39 +49,50 @@ enum WndDlg {
 /// }
 ///
 /// pub struct MyMain {
-///   wnd: w::gui::CustomMain,
+///   wnd: gui::CustomMain,
 /// }
 ///
 /// impl MyMain {
 ///   pub fn new() -> MyMain {
-///     let wnd = w::gui::CustomMain::new(
-///       w::gui::CustomMainOpts {
+///     let wnd = gui::CustomMain::new(
+///       gui::CustomMainOpts {
 ///         title: "My window".to_owned(),
 ///         ..Default::default()
 ///       },
 ///     );
 ///
-///     let me = Self { wnd };
-///     me.events();
-///     me
+///     let new_self = Self { wnd };
+///     new_self.events();
+///     new_self
 ///   }
 ///
-///   pub fn run(&self) -> w::WinResult<i32> {
+///   pub fn run(&self) -> WinResult<()> {
 ///     self.wnd.run_main(None)
 ///   }
 ///
 ///   fn events(&self) {
+/// 	  let wnd = self.wnd.clone(); // clone so it can be passed into the closure
 ///
+/// 	  self.wnd.on().wm_l_button_down(move |params| {
+/// 	    let txt = &format!("Coords {} x {}", params.coords.x, params.coords.y);
+/// 	    wnd.hwnd().SetWindowText(txt).unwrap();
+/// 	  });
 ///   }
 /// }
 /// ```
 ///
-/// A full application with a `CustomMain` loaded from a dialog resource:
+/// ## Loading a window resource from a `.rc` file
+///
+/// A window can also be loaded from a Win32 resource file (usually an `.rc`
+/// file). Below, a full aplication where `CustomMain` loads a window resource,
+/// instead of creating the window programatically. Note how
+/// `CustomMain::new_dlg` instead of `CustomMain::new`.
+///
 ///
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
-/// use winsafe as w;
+/// use winsafe::{gui, WinResult};
 ///
 /// fn main() {
 ///   let my_dlg = MyDlg::new();
@@ -77,20 +102,20 @@ enum WndDlg {
 /// }
 ///
 /// pub struct MyDlg {
-///   dlg: w::gui::CustomMain,
+///   dlg: gui::CustomMain,
 /// }
 ///
 /// impl MyDlg {
 ///   pub fn new() -> MyDlg {
 ///     // 101 is the ID of the dialog resource in the .rc file
-///     let dlg = w::gui::CustomMain::new_dlg(101, None, None);
+///     let dlg = gui::CustomMain::new_dlg(101, None, None);
 ///
-///     let me = Self { dlg };
-///     me.events();
-///     me
+///     let new_self = Self { dlg };
+///     new_self.events();
+///     new_self
 ///   }
 ///
-///   pub fn run(&self) -> w::WinResult<i32> {
+///   pub fn run(&self) -> WinResult<()> {
 ///     self.dlg.run_main(None)
 ///   }
 ///

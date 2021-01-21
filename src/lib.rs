@@ -1,13 +1,9 @@
-//! Safe, hand-crafted
-//! [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) bindings, in
-//! idiomatic Rust.
-//!
-//! This crate provides bindings for Win32 functions, structs and constants. In
-//! addition, it provides high-level GUI wrappers for windows and controls,
-//! scaffolding the boilerplate.
-//!
-//! This crate intends to cover the most important parts of the Windows API, but
-//! not all of it (well, maybe one day) because the whole API is too huge.
+//! This crate provides bindings for a selected subset of the
+//! [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) in safe,
+//! idiomatic Rust. This subset includes functions, structs and constants. In
+//! addition, it provides high-level [GUI wrappers](crate::gui) for windows and
+//! controls, allowing the development of complex and scalable Win32 GUI
+//! applications, in 100% native Win32.
 //!
 //! # Functions
 //!
@@ -137,13 +133,12 @@
 //!
 //! # High-level GUI
 //!
-//! On top of all Win32 FFI bindings, WinSafe features a set of high-level GUI
+//! On top of all Win32 bindings, WinSafe features a set of high-level GUI
 //! structs, which scaffolds the boilerplate needed to build windows and
-//! controls.
+//! controls. Unless you are writing something really specific, these high-level
+//! abstractions are highly recommended.
 //!
-//! Unless you are writing something really specific, these high-level
-//! abstractions is highly recommended. They can be found in the module
-//! [`gui`](crate::gui).
+//! They can be found in the module [`gui`](crate::gui).
 
 #[macro_use]
 pub mod co;

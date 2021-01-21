@@ -1,7 +1,7 @@
 //! Native Win32 controls.
 
 #[macro_use]
-pub mod macros;
+mod macros;
 
 mod button;
 mod check_box;

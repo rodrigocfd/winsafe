@@ -1,4 +1,7 @@
 //! High-level GUI abstractions.
+//!
+//! You'll probably want to start your GUI application using the
+//! [`CustomMain`](crate::gui::CustomMain).
 
 pub mod events;
 
