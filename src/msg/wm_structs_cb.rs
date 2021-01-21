@@ -1,6 +1,5 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::GetLastError;
 use crate::msg::{Message, Wm};
 use crate::privs::{CB_ERR, CB_ERRSPACE};
 use crate::WString;
@@ -16,7 +15,7 @@ impl<'a> Message for CbAddString<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERR | CB_ERRSPACE => Err(GetLastError()),
+			CB_ERR | CB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
 			idx => Ok(idx as u32),
 		}
 	}
@@ -43,7 +42,7 @@ impl Message for CbDeleteString {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERR => Err(GetLastError()),
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			count => Ok(count as u32),
 		}
 	}
@@ -60,7 +59,7 @@ impl Message for CbDeleteString {
 //------------------------------------------------------------------------------
 
 /// [`CB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcount)
-/// message parameters.
+/// message, which has no parameters.
 pub struct CbGetCount {}
 
 impl Message for CbGetCount {
@@ -68,7 +67,7 @@ impl Message for CbGetCount {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERR => Err(GetLastError()),
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			count => Ok(count as u32),
 		}
 	}
@@ -85,7 +84,7 @@ impl Message for CbGetCount {
 //------------------------------------------------------------------------------
 
 /// [`CB_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcursel)
-/// message parameters.
+/// message, which has no parameters.
 pub struct CbGetCurSel {}
 
 impl Message for CbGetCurSel {
@@ -121,7 +120,7 @@ impl<'a> Message for CbGetLbText<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERR => Err(GetLastError()),
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			nchars => Ok(nchars as u32),
 		}
 	}
@@ -148,7 +147,7 @@ impl Message for CbGetLbTextLen {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERR => Err(GetLastError()),
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			nchars => Ok(nchars as u32),
 		}
 	}
@@ -165,7 +164,7 @@ impl Message for CbGetLbTextLen {
 //------------------------------------------------------------------------------
 
 /// [`CB_GETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getminvisible)
-/// message parameters.
+/// message, which has no parameters.
 pub struct CbGetMinVisible {}
 
 impl Message for CbGetMinVisible {
@@ -195,7 +194,7 @@ impl Message for CbGetTopIndex {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERR => Err(GetLastError()),
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			idx => Ok(idx as u32),
 		}
 	}
@@ -223,7 +222,7 @@ impl Message for CbInitStorage {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERRSPACE => Err(GetLastError()),
+			CB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
 			n_items => Ok(n_items as u32),
 		}
 	}
@@ -284,7 +283,7 @@ impl Message for CbSetMinVisible {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -311,7 +310,7 @@ impl Message for CbSetTopIndex {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}

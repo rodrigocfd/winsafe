@@ -1,11 +1,10 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::GetLastError;
 use crate::handles::HICON;
 use crate::msg::{Message, Wm};
 
 /// [`STM_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-geticon)
-/// message parameters.
+/// message, which has no parameters.
 pub struct StmGetIcon {}
 
 impl Message for StmGetIcon {
@@ -13,7 +12,7 @@ impl Message for StmGetIcon {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			p => Ok(HICON { ptr: p as *mut _ }),
 		}
 	}
@@ -40,7 +39,7 @@ impl Message for StmSetIcon {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			p => Ok(HICON { ptr: p as *mut _ }),
 		}
 	}

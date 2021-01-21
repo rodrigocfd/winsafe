@@ -876,7 +876,7 @@ empty_msg_handleable! { WmPaint, co::WM::PAINT,
 //------------------------------------------------------------------------------
 
 /// [`WM_QUERYOPEN`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
-/// message parameters.
+/// message, which has no parameters.
 pub struct WmQueryOpen {}
 
 impl Message for WmQueryOpen {

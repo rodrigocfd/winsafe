@@ -2,6 +2,8 @@
 
 use std::ffi::c_void;
 
+use crate::co;
+use crate::funcs::GetLastError;
 use crate::WString;
 
 pub const CB_ERR: i32 = -1;

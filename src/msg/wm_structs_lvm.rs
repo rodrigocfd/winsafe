@@ -1,10 +1,61 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::GetLastError;
 use crate::handles::HWND;
 use crate::msg::{Message, Wm};
 use crate::msg::macros::ref_to_lp;
 use crate::structs as s;
+
+/// [`LVM_DELETEALLITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteallitems)
+/// message, which has no parameters.
+pub struct LvmDeleteAllItems {}
+
+impl Message for LvmDeleteAllItems {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_DELETEALLITEMS,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteitem)
+/// message parameters.
+pub struct LvmDeleteItem {
+	pub index: i32,
+}
+
+impl Message for LvmDeleteItem {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_DELETEITEM,
+			wparam: self.index as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
 
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
 /// message parameters.
@@ -18,7 +69,7 @@ impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(GetLastError()),
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			i => Ok(i as u32),
 		}
 	}
@@ -45,7 +96,7 @@ impl Message for LvmGetColumnWidth {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(GetLastError()),
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			i => Ok(i as u32),
 		}
 	}
@@ -61,17 +112,39 @@ impl Message for LvmGetColumnWidth {
 
 //------------------------------------------------------------------------------
 
+/// [`LVM_GETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getextendedlistviewstyle)
+/// message, which has no parameters.
+pub struct LvmGetExtendedListViewStyle {}
+
+impl Message for LvmGetExtendedListViewStyle {
+	type RetType = co::LVS_EX;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::LVS_EX::from(v as u32)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETEXTENDEDLISTVIEWSTYLE,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
 /// message, which has no parameters.
 pub struct LvmGetHeader {}
 
 impl Message for LvmGetHeader {
-	type RetType = Option<HWND>;
+	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => None,
-			p => Some(HWND { ptr: p as *mut _ }),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			p => Ok(HWND { ptr: p as *mut _ }),
 		}
 	}
 
@@ -80,6 +153,34 @@ impl Message for LvmGetHeader {
 			msg_id: co::WM::LVM_GETHEADER,
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
+/// message parameters.
+pub struct LvmGetNextItem {
+	pub initial_index: i32,
+	pub relationship: co::LVNI,
+}
+
+impl Message for LvmGetNextItem {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETNEXTITEM,
+			wparam: self.initial_index as usize,
+			lparam: u32::from(self.relationship) as isize,
 		}
 	}
 }
@@ -108,8 +209,80 @@ impl Message for LvmGetItemCount {
 
 //------------------------------------------------------------------------------
 
-/// [`LVM_GETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getview)
+/// [`LVM_GETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemstate)
 /// message parameters.
+pub struct LvmGetItemState {
+	pub index: i32,
+	pub mask: co::LVIS,
+}
+
+impl Message for LvmGetItemState {
+	type RetType = co::LVIS;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::LVIS::from(v as u32)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETITEMSTATE,
+			wparam: self.index as usize,
+			lparam: u32::from(self.mask) as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemtext)
+/// message parameters.
+pub struct LvmGetItemText<'a, 'b> {
+	pub index: i32,
+	pub lvitem: &'b mut s::LVITEM<'a>,
+}
+
+impl<'a, 'b> Message for LvmGetItemText<'a, 'b> {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as u32
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETITEMTEXT,
+			wparam: self.index as usize,
+			lparam: ref_to_lp(self.lvitem),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETSELECTEDCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcount)
+/// message, which has no parameters.
+pub struct LvmGetSelectedCount {}
+
+impl Message for LvmGetSelectedCount {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as u32
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_GETSELECTEDCOUNT,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getview)
+/// message, which has no parameters.
 pub struct LvmGetView {}
 
 impl Message for LvmGetView {
@@ -142,7 +315,7 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(GetLastError()),
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			i => Ok(i as u32),
 		}
 	}
@@ -169,7 +342,7 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(GetLastError()),
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			i => Ok(i as u32),
 		}
 	}
@@ -186,7 +359,7 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 //------------------------------------------------------------------------------
 
 /// [`LVM_ISGROUPVIEWENABLED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isgroupviewenabled)
-/// message parameters.
+/// message, which has no parameters.
 pub struct LvmIsGroupViewEnabled {}
 
 impl Message for LvmIsGroupViewEnabled {
@@ -243,7 +416,7 @@ impl Message for LvmRedrawItems {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -267,10 +440,13 @@ pub struct LvmScroll {
 }
 
 impl Message for LvmScroll {
-	type RetType = bool;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -292,10 +468,13 @@ pub struct LvmSetColumn<'a, 'b> {
 }
 
 impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
-	type RetType = bool;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -309,6 +488,31 @@ impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 
 //------------------------------------------------------------------------------
 
+/// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setextendedlistviewstyle)
+/// message parameters.
+pub struct LvmSetExtendedListViewStyle {
+	pub style: co::LVS_EX,
+	pub mask: co::LVS_EX,
+}
+
+impl Message for LvmSetExtendedListViewStyle {
+	type RetType = co::LVS_EX;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::LVS_EX::from(v as u32)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_SETEXTENDEDLISTVIEWSTYLE,
+			wparam: u32::from(self.style) as usize,
+			lparam: u32::from(self.mask) as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
 pub struct LvmSetItem<'a, 'b> {
@@ -316,16 +520,47 @@ pub struct LvmSetItem<'a, 'b> {
 }
 
 impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
-	type RetType = bool;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
 	}
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETITEM,
 			wparam: 0,
+			lparam: ref_to_lp(self.lvitem),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_SETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemstate)
+/// message parameters.
+pub struct LvmSetItemState<'a, 'b> {
+	pub index: i32,
+	pub lvitem: &'b s::LVITEM<'a>,
+}
+
+impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_SETITEMSTATE,
+			wparam: self.index as usize,
 			lparam: ref_to_lp(self.lvitem),
 		}
 	}
@@ -341,10 +576,13 @@ pub struct LvmSetItemText<'a, 'b> {
 }
 
 impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
-	type RetType = bool;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -369,7 +607,7 @@ impl Message for LvmSetView {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(GetLastError()),
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -392,10 +630,13 @@ pub struct LvmUpdate {
 }
 
 impl Message for LvmUpdate {
-	type RetType = bool;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
 	}
 
 	fn as_generic_wm(&self) -> Wm {

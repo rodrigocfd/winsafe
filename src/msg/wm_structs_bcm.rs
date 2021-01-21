@@ -1,7 +1,6 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BitmapIcon;
-use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HICON};
 use crate::msg::{Message, Wm};
 use crate::msg::macros::ref_to_lp;
@@ -19,7 +18,7 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -46,7 +45,7 @@ impl<'a> Message for BcmGetImageList<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -73,7 +72,7 @@ impl<'a> Message for BcmGetNote<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -90,7 +89,7 @@ impl<'a> Message for BcmGetNote<'a> {
 //------------------------------------------------------------------------------
 
 /// [`BCM_GETNOTELENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnotelength)
-/// message parameters.
+/// message, which has no parameters.
 pub struct BcmGetNoteLength {}
 
 impl Message for BcmGetNoteLength {
@@ -122,7 +121,7 @@ impl<'a> Message for BcmGetSplitInfo<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -149,7 +148,7 @@ impl<'a> Message for BcmGetTextMargin<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -176,7 +175,7 @@ impl Message for BcmSetDropDownState {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -203,7 +202,7 @@ impl<'a> Message for BcmSetImageList<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -230,7 +229,7 @@ impl<'a> Message for BcmSetNote<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -257,7 +256,7 @@ impl Message for BcmSetShield {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -284,7 +283,7 @@ impl<'a> Message for BcmSetSplitInfo<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -311,7 +310,7 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}
@@ -328,7 +327,7 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 //------------------------------------------------------------------------------
 
 /// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
-/// message parameters.
+/// message, which has no parameters.
 pub struct BmClick {}
 
 impl Message for BmClick {
@@ -384,7 +383,7 @@ impl Message for BmGetImage {
 		match self.img_type {
 			co::IMAGE_TYPE::BITMAP => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as *mut _ })),
 			co::IMAGE_TYPE::ICON => Ok(BitmapIcon::Icon(HICON { ptr: v as *mut _ })),
-			_ => Err(co::ERROR::INVALID_PARAMETER),
+			_ => Err(co::ERROR::BAD_ARGUMENTS),
 		}
 	}
 
@@ -400,7 +399,7 @@ impl Message for BmGetImage {
 //------------------------------------------------------------------------------
 
 /// [`BM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getstate)
-/// message parameters.
+/// message, which has no parameters.
 pub struct BmGetState {}
 
 impl Message for BmGetState {

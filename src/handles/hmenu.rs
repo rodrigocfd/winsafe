@@ -54,7 +54,7 @@ impl HMENU {
 		match unsafe {
 			user32::CheckMenuItem(self.ptr, uIDCheckItem.into(), flags.into())
 		} {
-			-1 => Err(co::ERROR::INVALID_PARAMETER),
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			ret => Ok(co::MF::from(ret as u32)),
 		}
 	}
@@ -126,7 +126,7 @@ impl HMENU {
 		match unsafe {
 			user32::EnableMenuItem(self.ptr, uIDEnableItem.into(), flags.into())
 		} {
-			-1 => Err(co::ERROR::INVALID_PARAMETER),
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			ret => Ok(co::MF::from(ret as u32)),
 		}
 	}

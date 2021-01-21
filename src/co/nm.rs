@@ -4,12 +4,14 @@ const_type! { NM, i32,
 	///
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications);
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
+	/// * [header](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications);
 	/// * [ListView](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
 }
 
 const_type_priv_values! { NM,
 	FIRST, 0
 	BCN_FIRST, -1250
+	HDN_FIRST, -300
 	LVN_FIRST, -100
 	TVN_FIRST, -400
 }
@@ -36,9 +38,32 @@ const_type_pub_values! { NM, // NM
 	THEMECHANGED, Self::FIRST.0 - 22
 }
 
+
 const_type_pub_values! { NM, // BCN
 	BCN_HOTITEMCHANGE, Self::BCN_FIRST.0 + 0x0001
 	BCN_DROPDOWN, Self::BCN_FIRST.0 + 0x0002
+}
+
+const_type_pub_values! { NM, // HDM
+	HDN_ITEMCHANGING, Self::HDN_FIRST.0 - 20
+	HDN_ITEMCHANGED, Self::HDN_FIRST.0 - 21
+	HDN_ITEMCLICK, Self::HDN_FIRST.0 - 22
+	HDN_ITEMDBLCLICK, Self::HDN_FIRST.0 - 23
+	HDN_DIVIDERDBLCLICK, Self::HDN_FIRST.0 - 25
+	HDN_BEGINTRACK, Self::HDN_FIRST.0 - 26
+	HDN_ENDTRACK, Self::HDN_FIRST.0 - 27
+	HDN_TRACK, Self::HDN_FIRST.0 - 28
+	HDN_GETDISPINFO, Self::HDN_FIRST.0 - 29
+	HDN_BEGINDRAG, Self::HDN_FIRST.0 - 10
+	HDN_ENDDRAG, Self::HDN_FIRST.0 - 11
+	HDN_FILTERCHANGE, Self::HDN_FIRST.0 - 12
+	HDN_FILTERBTNCLICK, Self::HDN_FIRST.0 - 13
+	HDN_BEGINFILTEREDIT, Self::HDN_FIRST.0 - 14
+	HDN_ENDFILTEREDIT, Self::HDN_FIRST.0 - 15
+	HDN_ITEMSTATEICONCLICK, Self::HDN_FIRST.0 - 16
+	HDN_ITEMKEYDOWN, Self::HDN_FIRST.0 - 17
+	HDN_DROPDOWN, Self::HDN_FIRST.0 - 18
+	HDN_OVERFLOWCLICK, Self::HDN_FIRST.0 - 19
 }
 
 const_type_pub_values! { NM, // LVN

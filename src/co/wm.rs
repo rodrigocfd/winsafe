@@ -5,6 +5,7 @@ const_type! { WM, u32,
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages);
 	/// * [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages);
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro);
+	/// * [header](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages);
 	/// * [label](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages);
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
@@ -14,6 +15,7 @@ const_type_priv_values! { WM,
 	BCM_FIRST, 0x1600
 	CBM_FIRST, 0x1700
 	CCM_FIRST, 0x2000
+	HDM_FIRST, 0x1200
 	LVM_FIRST, 0x1000
 	TVM_FIRST, 0x1100
 }
@@ -356,6 +358,35 @@ const_type_pub_values! { WM, // CCM
 	CCM_SETNOTIFYWINDOW, Self::CCM_FIRST.0 + 0x9
 	CCM_SETWINDOWTHEME, Self::CCM_FIRST.0 + 0xb
 	CCM_DPISCALE, Self::CCM_FIRST.0 + 0xc
+}
+
+const_type_pub_values! { WM, // HDM
+	HDM_GETITEMCOUNT, Self::HDM_FIRST.0 + 0
+	HDM_INSERTITEM, Self::HDM_FIRST.0 + 10
+	HDM_DELETEITEM, Self::HDM_FIRST.0 + 11
+	HDM_GETITEM, Self::HDM_FIRST.0 + 11
+	HDM_SETITEM, Self::HDM_FIRST.0 + 12
+	HDM_LAYOUT, Self::HDM_FIRST.0 + 5
+	HDM_HITTEST, Self::HDM_FIRST.0 + 6
+	HDM_GETITEMRECT, Self::HDM_FIRST.0 + 7
+	HDM_SETIMAGELIST, Self::HDM_FIRST.0 + 8
+	HDM_GETIMAGELIST, Self::HDM_FIRST.0 + 9
+	HDM_ORDERTOINDEX, Self::HDM_FIRST.0 + 15
+	HDM_CREATEDRAGIMAGE, Self::HDM_FIRST.0 + 16
+	HDM_GETORDERARRAY, Self::HDM_FIRST.0 + 17
+	HDM_SETORDERARRAY, Self::HDM_FIRST.0 + 18
+	HDM_SETHOTDIVIDER, Self::HDM_FIRST.0 + 19
+	HDM_SETBITMAPMARGIN, Self::HDM_FIRST.0 + 20
+	HDM_GETBITMAPMARGIN, Self::HDM_FIRST.0 + 21
+	HDM_SETUNICODEFORMAT, Self::CCM_SETUNICODEFORMAT.0
+	HDM_GETUNICODEFORMAT, Self::CCM_GETUNICODEFORMAT.0
+	HDM_SETFILTERCHANGETIMEOUT, Self::HDM_FIRST.0 + 22
+	HDM_EDITFILTER, Self::HDM_FIRST.0 + 23
+	HDM_CLEARFILTER, Self::HDM_FIRST.0 + 24
+	HDM_GETITEMDROPDOWNRECT, Self::HDM_FIRST.0 + 25
+	HDM_GETOVERFLOWRECT, Self::HDM_FIRST.0 + 26
+	HDM_GETFOCUSEDITEM, Self::HDM_FIRST.0 + 27
+	HDM_SETFOCUSEDITEM, Self::HDM_FIRST.0 + 28
 }
 
 const_type_pub_values! { WM, // STM

@@ -95,49 +95,7 @@ impl ComboBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	/// Returns the underlying handle for this control.
-	///
-	/// Note that the handle is initially null, receiving an actual value only
-	/// after the control is created.
-	pub fn hwnd(&self) -> HWND {
-		*self.hctrl_ref()
-	}
-
-	/// Returns the control ID.
-	pub fn ctrl_id(&self) -> u16 {
-		match self.base.opts_id() {
-			OptsId::Wnd(opts) => opts.ctrl_id,
-			OptsId::Dlg(ctrl_id) => *ctrl_id,
-		}
-	}
-
-	/// Exposes the button events.
-	///
-	/// These event methods are just proxies to the
-	/// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
-	/// the real responsible for the child event handling.
-	///
-	/// # Panics
-	///
-	/// Panics if the control or the parent window are already created. Events
-	/// must be set before control and parent window creation.
-	pub fn on(&self) -> &ComboBoxEvents {
-		self.base.on()
-	}
-
-	/// Exposes the subclass events. If at least one event exists, the control
-	/// will be
-	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
-	///
-	/// **Note:** Subclassing may impact performance, use with care.
-	///
-	/// # Panics
-	///
-	/// Panics if the control or the parent window are already created. Events
-	/// must be set before control and parent window creation.
-	pub fn on_subclass(&self) -> &MsgEvents {
-		self.base.on_subclass()
-	}
+	hwnd_ctrlid_on_onsubclass!(ComboBoxEvents);
 
 	/// Adds new texts.
 	///
@@ -150,11 +108,11 @@ impl ComboBox {
 	///
 	/// cmb_names.add_items(&["John", "Mary"]);
 	/// ```
-	pub fn add_items(&self, items: &[&str]) {
+	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
 		for text in items.iter() {
-			self.hwnd().SendMessage(msg::CbAddString { text })
-				.unwrap_or_else(|err| { PostQuitMessage(err); 0 });
+			self.hwnd().SendMessage(msg::CbAddString { text })?;
 		}
+		Ok(())
 	}
 
 	/// Retrieves the text at the given position, if any.
@@ -166,9 +124,13 @@ impl ComboBox {
 			},
 			Ok(len) => {
 				let mut buf = WString::new_alloc_buffer(len as usize + 1);
-				self.hwnd().SendMessage(msg::CbGetLbText { index, text: &mut buf })
-					.unwrap_or_else(|err| { PostQuitMessage(err); 0 });
-				Some(buf.to_string())
+				match self.hwnd().SendMessage(msg::CbGetLbText{
+					index,
+					text: &mut buf,
+				}) {
+					Err(_) => None,
+					Ok(_) => Some(buf.to_string()),
+				}
 			},
 		}
 	}
