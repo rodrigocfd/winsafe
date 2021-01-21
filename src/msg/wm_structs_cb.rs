@@ -6,6 +6,8 @@ use crate::WString;
 
 /// [`CB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-addstring)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct CbAddString<'a> {
 	pub text: &'a str,
 }
@@ -33,6 +35,8 @@ impl<'a> Message for CbAddString<'a> {
 
 /// [`CB_DELETESTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-deletestring)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct CbDeleteString {
 	pub index: u32,
 }
@@ -60,6 +64,8 @@ impl Message for CbDeleteString {
 
 /// [`CB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcount)
 /// message, which has no parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct CbGetCount {}
 
 impl Message for CbGetCount {
@@ -85,6 +91,8 @@ impl Message for CbGetCount {
 
 /// [`CB_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcursel)
 /// message, which has no parameters.
+///
+/// Return type: `Option<u32>`.
 pub struct CbGetCurSel {}
 
 impl Message for CbGetCurSel {
@@ -110,6 +118,8 @@ impl Message for CbGetCurSel {
 
 /// [`CB_GETLBTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtext)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct CbGetLbText<'a> {
 	pub index: u32,
 	pub text: &'a mut WString,
@@ -138,6 +148,8 @@ impl<'a> Message for CbGetLbText<'a> {
 
 /// [`CB_GETLBTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtextlen)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct CbGetLbTextLen {
 	pub index: u32,
 }
@@ -165,6 +177,8 @@ impl Message for CbGetLbTextLen {
 
 /// [`CB_GETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getminvisible)
 /// message, which has no parameters.
+///
+/// Return type: `u32`.
 pub struct CbGetMinVisible {}
 
 impl Message for CbGetMinVisible {
@@ -187,6 +201,8 @@ impl Message for CbGetMinVisible {
 
 /// [`CB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gettopindex)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct CbGetTopIndex {}
 
 impl Message for CbGetTopIndex {
@@ -212,6 +228,8 @@ impl Message for CbGetTopIndex {
 
 /// [`CB_INITSTORAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-initstorage)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct CbInitStorage {
 	pub num_items: u32,
 	pub memory_bytes: u32,
@@ -240,13 +258,17 @@ impl Message for CbInitStorage {
 
 empty_msg! { CbResetContent, co::WM::CB_RESETCONTENT,
 	/// [`CB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
-	/// message parameters.
+	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`CB_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setcursel)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct CbSetCurSel {
 	pub index: Option<u32>,
 }
@@ -274,6 +296,8 @@ impl Message for CbSetCurSel {
 
 /// [`CB_SETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setminvisible)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct CbSetMinVisible {
 	pub num_items: u32,
 }
@@ -301,6 +325,8 @@ impl Message for CbSetMinVisible {
 
 /// [`CB_SETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-settopindex)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct CbSetTopIndex {
 	pub index: u32,
 }
@@ -328,6 +354,8 @@ impl Message for CbSetTopIndex {
 
 /// [`CB_SHOWDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-showdropdown)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct CbShowDropDown {
 	pub show: bool,
 }

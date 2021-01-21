@@ -4,6 +4,8 @@ use crate::msg::{Message, Wm};
 
 /// [`HDM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemcount)
 /// message, which has no parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct HdmGetItemCount {}
 
 impl Message for HdmGetItemCount {

@@ -1,5 +1,7 @@
 use std::sync::Arc;
 
+use msg::LvmDeleteAllItems;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
@@ -145,6 +147,11 @@ impl ListView {
 	pub fn column_count(&self) -> WinResult<u32> {
 		self.hwnd().SendMessage(msg::LvmGetHeader {})?
 			.SendMessage(msg::HdmGetItemCount {})
+	}
+
+	/// Deletes all items.
+	pub fn delete_all_items(&self) -> WinResult<()> {
+		self.hwnd().SendMessage(msg::LvmDeleteAllItems {})
 	}
 
 	/// Deletes the items with the given indexes.

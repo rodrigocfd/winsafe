@@ -5,6 +5,8 @@ use crate::msg::{Message, Wm};
 
 /// [`STM_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-geticon)
 /// message, which has no parameters.
+///
+/// Return type: `WinResult<HICON>`.
 pub struct StmGetIcon {}
 
 impl Message for StmGetIcon {
@@ -30,6 +32,8 @@ impl Message for StmGetIcon {
 
 /// [`STM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-seticon)
 /// message parameters.
+///
+/// Return type: `WinResult<HICON>`.
 pub struct StmSetIcon {
 	pub icon: HICON,
 }

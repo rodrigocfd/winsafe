@@ -7,6 +7,8 @@ use crate::structs as s;
 
 /// [`LVM_DELETEALLITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteallitems)
 /// message, which has no parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmDeleteAllItems {}
 
 impl Message for LvmDeleteAllItems {
@@ -32,6 +34,8 @@ impl Message for LvmDeleteAllItems {
 
 /// [`LVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteitem)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmDeleteItem {
 	pub index: i32,
 }
@@ -59,6 +63,8 @@ impl Message for LvmDeleteItem {
 
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct LvmGetColumn<'a, 'b> {
 	pub index: i32,
 	pub lvcolumn: &'b s::LVCOLUMN<'a>,
@@ -87,6 +93,8 @@ impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 
 /// [`LVM_GETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnwidth)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct LvmGetColumnWidth {
 	pub index: i32,
 }
@@ -114,6 +122,8 @@ impl Message for LvmGetColumnWidth {
 
 /// [`LVM_GETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getextendedlistviewstyle)
 /// message, which has no parameters.
+///
+/// Return type: `LVS_EX`.
 pub struct LvmGetExtendedListViewStyle {}
 
 impl Message for LvmGetExtendedListViewStyle {
@@ -136,6 +146,8 @@ impl Message for LvmGetExtendedListViewStyle {
 
 /// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
 /// message, which has no parameters.
+///
+/// Return type: `WinResult<HWND>`.
 pub struct LvmGetHeader {}
 
 impl Message for LvmGetHeader {
@@ -161,6 +173,8 @@ impl Message for LvmGetHeader {
 
 /// [`LVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
 /// message parameters.
+///
+/// Return type: `Option<u32>`.
 pub struct LvmGetNextItem {
 	pub initial_index: i32,
 	pub relationship: co::LVNI,
@@ -189,6 +203,8 @@ impl Message for LvmGetNextItem {
 
 /// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
 /// message, which has no parameters.
+///
+/// Return type: `u32`.
 pub struct LvmGetItemCount {}
 
 impl Message for LvmGetItemCount {
@@ -211,6 +227,8 @@ impl Message for LvmGetItemCount {
 
 /// [`LVM_GETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemstate)
 /// message parameters.
+///
+/// Return type: `LVIS`.
 pub struct LvmGetItemState {
 	pub index: i32,
 	pub mask: co::LVIS,
@@ -236,6 +254,8 @@ impl Message for LvmGetItemState {
 
 /// [`LVM_GETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemtext)
 /// message parameters.
+///
+/// Return type: `u32`.
 pub struct LvmGetItemText<'a, 'b> {
 	pub index: i32,
 	pub lvitem: &'b mut s::LVITEM<'a>,
@@ -261,6 +281,8 @@ impl<'a, 'b> Message for LvmGetItemText<'a, 'b> {
 
 /// [`LVM_GETSELECTEDCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcount)
 /// message, which has no parameters.
+///
+/// Return type: `u32`.
 pub struct LvmGetSelectedCount {}
 
 impl Message for LvmGetSelectedCount {
@@ -283,6 +305,8 @@ impl Message for LvmGetSelectedCount {
 
 /// [`LVM_GETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getview)
 /// message, which has no parameters.
+///
+/// Return type: `LV_VIEW`.
 pub struct LvmGetView {}
 
 impl Message for LvmGetView {
@@ -305,6 +329,8 @@ impl Message for LvmGetView {
 
 /// [`LVM_INSERTCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertcolumn)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct LvmInsertColumn<'a, 'b> {
 	pub index: i32,
 	pub lvcolumn: &'b s::LVCOLUMN<'a>,
@@ -333,6 +359,8 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 
 /// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
+///
+/// Return type: `WinResult<u32>`.
 pub struct LvmInsertItem<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
@@ -360,6 +388,8 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 
 /// [`LVM_ISGROUPVIEWENABLED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isgroupviewenabled)
 /// message, which has no parameters.
+///
+/// Return type: `bool`.
 pub struct LvmIsGroupViewEnabled {}
 
 impl Message for LvmIsGroupViewEnabled {
@@ -382,6 +412,8 @@ impl Message for LvmIsGroupViewEnabled {
 
 /// [`LVM_ISITEMVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
 /// message parameters.
+///
+/// Return type: `bool`.
 pub struct LvmIsItemVisible {
 	pub index: i32,
 }
@@ -406,6 +438,8 @@ impl Message for LvmIsItemVisible {
 
 /// [`LVM_REDRAWITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-redrawitems)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmRedrawItems {
 	pub first_index: u32,
 	pub last_index: u32,
@@ -434,6 +468,8 @@ impl Message for LvmRedrawItems {
 
 /// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmScroll {
 	pub horizontal: i32,
 	pub vertical: i32,
@@ -462,6 +498,8 @@ impl Message for LvmScroll {
 
 /// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmSetColumn<'a, 'b> {
 	pub index: i32,
 	pub lvcolumn: &'b s::LVCOLUMN<'a>,
@@ -490,6 +528,8 @@ impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 
 /// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setextendedlistviewstyle)
 /// message parameters.
+///
+/// Return type: `LVS_EX`.
 pub struct LvmSetExtendedListViewStyle {
 	pub style: co::LVS_EX,
 	pub mask: co::LVS_EX,
@@ -515,6 +555,8 @@ impl Message for LvmSetExtendedListViewStyle {
 
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmSetItem<'a, 'b> {
 	pub lvitem: &'b s::LVITEM<'a>,
 }
@@ -542,6 +584,8 @@ impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 
 /// [`LVM_SETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemstate)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmSetItemState<'a, 'b> {
 	pub index: i32,
 	pub lvitem: &'b s::LVITEM<'a>,
@@ -570,6 +614,8 @@ impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
 
 /// [`LVM_SETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmSetItemText<'a, 'b> {
 	pub index: i32,
 	pub lvitem: &'b s::LVITEM<'a>,
@@ -598,6 +644,8 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 
 /// [`LVM_SETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setview)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmSetView {
 	pub view: co::LV_VIEW,
 }
@@ -625,6 +673,8 @@ impl Message for LvmSetView {
 
 /// [`LVM_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-update)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct LvmUpdate {
 	pub index: i32,
 }

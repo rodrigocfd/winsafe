@@ -9,6 +9,8 @@ use crate::WString;
 
 /// [`BCM_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getidealsize)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmGetIdealSize<'a> {
 	pub size: &'a SIZE,
 }
@@ -36,6 +38,8 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 
 /// [`BCM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getimagelist)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmGetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
@@ -63,6 +67,8 @@ impl<'a> Message for BcmGetImageList<'a> {
 
 /// [`BCM_GETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnote)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmGetNote<'a> {
 	pub text: &'a mut WString,
 }
@@ -90,6 +96,8 @@ impl<'a> Message for BcmGetNote<'a> {
 
 /// [`BCM_GETNOTELENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnotelength)
 /// message, which has no parameters.
+///
+/// Return type: `u32`.
 pub struct BcmGetNoteLength {}
 
 impl Message for BcmGetNoteLength {
@@ -112,6 +120,8 @@ impl Message for BcmGetNoteLength {
 
 /// [`BCM_GETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getsplitinfo)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmGetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
@@ -139,6 +149,8 @@ impl<'a> Message for BcmGetSplitInfo<'a> {
 
 /// [`BCM_GETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-gettextmargin)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmGetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
@@ -166,6 +178,8 @@ impl<'a> Message for BcmGetTextMargin<'a> {
 
 /// [`BCM_SETDROPDOWNSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setdropdownstate)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmSetDropDownState {
 	pub is_pushed: bool,
 }
@@ -193,6 +207,8 @@ impl Message for BcmSetDropDownState {
 
 /// [`BCM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setimagelist)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmSetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
@@ -220,6 +236,8 @@ impl<'a> Message for BcmSetImageList<'a> {
 
 /// [`BCM_SETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setnote)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmSetNote<'a> {
 	pub text: &'a WString,
 }
@@ -247,6 +265,8 @@ impl<'a> Message for BcmSetNote<'a> {
 
 /// [`BCM_SETSHIELD`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setshield)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmSetShield {
 	pub has_elevated_icon: bool,
 }
@@ -274,6 +294,8 @@ impl Message for BcmSetShield {
 
 /// [`BCM_SETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setsplitinfo)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmSetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
@@ -301,6 +323,8 @@ impl<'a> Message for BcmSetSplitInfo<'a> {
 
 /// [`BCM_SETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-settextmargin)
 /// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct BcmSetTextMargin<'a> {
 	pub margins: &'a RECT,
 }
@@ -328,6 +352,8 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 
 /// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
 /// message, which has no parameters.
+///
+/// Return type: `()`.
 pub struct BmClick {}
 
 impl Message for BmClick {
@@ -350,6 +376,8 @@ impl Message for BmClick {
 
 /// [`BM_GETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getcheck)
 /// message parameters.
+///
+/// Return type: `BST`.
 pub struct BmGetCheck {}
 
 impl Message for BmGetCheck {
@@ -372,6 +400,8 @@ impl Message for BmGetCheck {
 
 /// [`BM_GETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getimage)
 /// message parameters.
+///
+/// Return type: `WinResult<BitmapIcon>`.
 pub struct BmGetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
@@ -400,6 +430,8 @@ impl Message for BmGetImage {
 
 /// [`BM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getstate)
 /// message, which has no parameters.
+///
+/// Return type: `BST`.
 pub struct BmGetState {}
 
 impl Message for BmGetState {
@@ -422,6 +454,8 @@ impl Message for BmGetState {
 
 /// [`BM_SETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setcheck)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct BmSetCheck {
 	pub state: co::BST,
 }
@@ -446,6 +480,8 @@ impl Message for BmSetCheck {
 
 /// [`BM_SETDONTCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setdontclick)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct BmSetDontClick {
 	pub dont_click: bool,
 }
@@ -470,6 +506,8 @@ impl Message for BmSetDontClick {
 
 /// [`BM_SETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setimage)
 /// message parameters.
+///
+/// Return type: `WinResult<BitmapIcon>`.
 pub struct BmSetImage {
 	pub image: BitmapIcon,
 }
@@ -500,6 +538,8 @@ impl Message for BmSetImage {
 
 /// [`BM_SETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setstate)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct BmSetState {
 	pub highlight: bool,
 }
@@ -524,6 +564,8 @@ impl Message for BmSetState {
 
 /// [`BM_SETSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setstyle)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct BmSetStyle {
 	pub style: co::BS,
 	pub redraw: bool,

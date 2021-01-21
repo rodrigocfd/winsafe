@@ -11,6 +11,8 @@ use crate::structs as s;
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
 /// parameters.
+///
+/// Return type: `isize`.
 #[derive(Copy, Clone)]
 pub struct Wm {
 	/// The [`co::WM`](crate::co::WM) constant that identifies the window message.
@@ -43,6 +45,8 @@ impl MessageHandleable for Wm {
 
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmActivate {
 	pub event: co::WA,
 	pub is_minimized: bool,
@@ -79,6 +83,8 @@ impl MessageHandleable for WmActivate {
 
 /// [`WM_ACTIVATEAPP`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmActivateApp {
 	pub is_being_activated: bool,
 	pub thread_id: u32,
@@ -113,6 +119,8 @@ impl MessageHandleable for WmActivateApp {
 
 /// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmAppCommand {
 	pub hwnd_owner: HWND,
 	pub app_command: co::APPCOMMAND,
@@ -152,22 +160,30 @@ impl MessageHandleable for WmAppCommand {
 empty_msg_handleable! { WmCancelMode, co::WM::CANCELMODE,
 	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 empty_msg_handleable! { WmChildActivate, co::WM::CHILDACTIVATE,
 	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 empty_msg_handleable! { WmClose, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
 /// message parameters.
+///
+/// Return type: `()`.
 ///
 /// You'll normally want to match against `code` and `ctrl_id` to identify the
 /// event.
@@ -213,6 +229,8 @@ impl MessageHandleable for WmCommand {
 
 /// [`WM_CONTEXTMENU`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmContextMenu {
 	pub hwnd: HWND,
 	pub cursor_pos: s::POINT,
@@ -247,6 +265,8 @@ impl MessageHandleable for WmContextMenu {
 
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
+///
+/// Return type: `i32`.
 pub struct WmCreate<'a, 'b, 'c> {
 	pub createstruct: &'c s::CREATESTRUCT<'a, 'b>,
 }
@@ -280,31 +300,43 @@ impl<'a, 'b, 'c> MessageHandleable for WmCreate<'a, 'b, 'c> {
 ctl_color_msg! { WmCtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 	/// message parameters.
+	///
+	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { WmCtlColorDlg, co::WM::CTLCOLORDLG,
 	/// [`WM_CTLCOLORDLG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 	/// message parameters.
+	///
+	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { WmCtlColorEdit, co::WM::CTLCOLOREDIT,
 	/// [`WM_CTLCOLOREDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 	/// message parameters.
+	///
+	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { WmCtlColorListBox, co::WM::CTLCOLORLISTBOX,
 	/// [`WM_CTLCOLORLISTBOX`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 	/// message parameters.
+	///
+	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { WmCtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR,
 	/// [`WM_CTLCOLORSCROLLBAR`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 	/// message parameters.
+	///
+	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { WmCtlColorStatic, co::WM::CTLCOLORSTATIC,
 	/// [`WM_CTLCOLORSTATIC`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 	/// message parameters.
+	///
+	/// Return type: `HBRUSH`.
 }
 
 //------------------------------------------------------------------------------
@@ -312,12 +344,16 @@ ctl_color_msg! { WmCtlColorStatic, co::WM::CTLCOLORSTATIC,
 empty_msg_handleable! { WmDestroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_DROPFILES`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmDropFiles {
 	pub hdrop: HDROP,
 }
@@ -350,6 +386,8 @@ impl MessageHandleable for WmDropFiles {
 
 /// [`WM_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmEnable {
 	pub has_been_enabled: bool,
 }
@@ -382,6 +420,8 @@ impl MessageHandleable for WmEnable {
 
 /// [`WM_ENDSESSION`](https://docs.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmEndSession {
 	pub is_session_being_ended: bool,
 	pub event: co::ENDSESSION,
@@ -416,6 +456,8 @@ impl MessageHandleable for WmEndSession {
 
 /// [`WM_ENTERIDLE`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-enteridle)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmEnterIdle {
 	pub reason: co::MSGF,
 	pub handle: HwndHmenu,
@@ -455,12 +497,16 @@ impl MessageHandleable for WmEnterIdle {
 empty_msg_handleable! { WmEnterSizeMove, co::WM::ENTERSIZEMOVE,
 	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 /// message parameters.
+///
+/// Return type: `i32`.
 pub struct WmEraseBkgnd {
 	pub hdc: HDC,
 }
@@ -494,12 +540,16 @@ impl MessageHandleable for WmEraseBkgnd {
 empty_msg_handleable! { WmExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_GETMINMAXINFO`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmGetMinMaxInfo<'a> {
 	pub info: &'a mut s::MINMAXINFO,
 }
@@ -532,6 +582,8 @@ impl<'a> MessageHandleable for WmGetMinMaxInfo<'a> {
 
 /// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
+///
+/// Return type: `bool`.
 pub struct WmInitDialog {
 	pub hwnd_focus: HWND,
 	pub additional_data: isize,
@@ -566,6 +618,8 @@ impl MessageHandleable for WmInitDialog {
 
 /// [`WM_INITMENUPOPUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmInitMenuPopup {
 	pub hmenu: HMENU,
 	pub item_pos: u16,
@@ -603,47 +657,65 @@ impl MessageHandleable for WmInitMenuPopup {
 button_msg! { WmLButtonDblClk, co::WM::LBUTTONDBLCLK,
 	/// [`WM_LBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmLButtonDown, co::WM::LBUTTONDOWN,
 	/// [`WM_LBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmLButtonUp, co::WM::LBUTTONUP,
 	/// [`WM_LBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmMButtonDblClk, co::WM::MBUTTONDBLCLK,
 	/// [`WM_MBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmMButtonDown, co::WM::MBUTTONDOWN,
 	/// [`WM_MBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmMButtonUp, co::WM::MBUTTONUP,
 	/// [`WM_MBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmMouseHover, co::WM::MOUSEHOVER,
 	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmMouseMove, co::WM::MOUSEMOVE,
 	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_MOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-move)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmMove {
 	pub coords: s::POINT,
 }
@@ -676,6 +748,8 @@ impl MessageHandleable for WmMove {
 
 /// [`WM_MOVING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmMoving<'a> {
 	pub window_pos: &'a mut s::RECT,
 }
@@ -708,6 +782,8 @@ impl<'a> MessageHandleable for WmMoving<'a> {
 
 /// [`WM_NCCALCSIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
 /// message parameters.
+///
+/// Return type: `WVR`.
 pub struct WmNcCalcSize<'a, 'b> {
 	pub data: NccalcRect<'a, 'b>,
 }
@@ -749,6 +825,8 @@ impl<'a, 'b> MessageHandleable for WmNcCalcSize<'a, 'b> {
 
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
+///
+/// Return type: `bool`.
 pub struct WmNcCreate<'a, 'b, 'c> {
 	pub createstruct: &'c s::CREATESTRUCT<'a, 'b>,
 }
@@ -782,12 +860,16 @@ impl<'a, 'b, 'c> MessageHandleable for WmNcCreate<'a, 'b, 'c> {
 empty_msg_handleable! { WmNcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_NCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmNcPaint {
 	pub updated_hrgn: HRGN,
 }
@@ -821,12 +903,16 @@ impl MessageHandleable for WmNcPaint {
 empty_msg_handleable! { WmNull, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
 /// message parameters.
+///
+/// Return type: `isize`.
 #[derive(Copy, Clone)]
 pub struct WmNotify<'a> {
 	pub nmhdr: &'a s::NMHDR,
@@ -871,12 +957,16 @@ impl<'a> WmNotify<'a> {
 empty_msg_handleable! { WmPaint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_QUERYOPEN`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
 /// message, which has no parameters.
+///
+/// Return type: `bool`.
 pub struct WmQueryOpen {}
 
 impl Message for WmQueryOpen {
@@ -906,22 +996,30 @@ impl MessageHandleable for WmQueryOpen {
 button_msg! { WmRButtonDblClk, co::WM::RBUTTONDBLCLK,
 	/// [`WM_RBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmRButtonDown, co::WM::RBUTTONDOWN,
 	/// [`WM_RBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmRButtonUp, co::WM::RBUTTONUP,
 	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmSetFocus {
 	pub hwnd_losing_focus: HWND,
 }
@@ -954,6 +1052,8 @@ impl MessageHandleable for WmSetFocus {
 
 /// [`WM_SETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-setfont)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmSetFont {
 	pub hfont: HFONT,
 	pub redraw: bool,
@@ -988,6 +1088,8 @@ impl MessageHandleable for WmSetFont {
 
 /// [`WM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
 /// message parameters.
+///
+/// Return type: `Option<HICON>`.
 pub struct WmSetIcon {
 	pub size: co::ICON_SZ,
 	pub hicon: HICON,
@@ -1025,6 +1127,8 @@ impl MessageHandleable for WmSetIcon {
 
 /// [`WM_SHOWWINDOW`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmShowWindow {
 	pub being_shown: bool,
 	pub status: co::SW_S,
@@ -1059,6 +1163,8 @@ impl MessageHandleable for WmShowWindow {
 
 /// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmSize {
 	pub request: co::SIZE_R,
 	pub client_area: s::SIZE,
@@ -1098,6 +1204,8 @@ impl MessageHandleable for WmSize {
 
 /// [`WM_SIZING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmSizing<'a> {
 	pub window_edge: co::WMSZ,
 	pub coords: &'a mut s::RECT,
@@ -1132,6 +1240,8 @@ impl<'a> MessageHandleable for WmSizing<'a> {
 
 /// [`WM_STYLECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanged)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmStyleChanged<'a> {
 	pub change: co::GWL_C,
 	pub stylestruct: WsWsex<'a>,
@@ -1173,6 +1283,8 @@ impl<'a> MessageHandleable for WmStyleChanged<'a> {
 
 /// [`WM_STYLECHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanging)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmStyleChanging<'a> {
 	pub change: co::GWL_C,
 	pub stylestruct: WsWsex<'a>,
@@ -1215,12 +1327,16 @@ impl<'a> MessageHandleable for WmStyleChanging<'a> {
 empty_msg_handleable! { WmThemeChanged, co::WM::THEMECHANGED,
 	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
 
 /// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmTimer {
 	pub timer_id: u32,
 	pub timer_proc: Option<TIMERPROC>,
@@ -1261,6 +1377,8 @@ impl MessageHandleable for WmTimer {
 
 /// [`WM_WINDOWPOSCHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmWindowPosChanged<'a> {
 	pub windowpos: &'a s::WINDOWPOS,
 }
@@ -1293,6 +1411,8 @@ impl<'a> MessageHandleable for WmWindowPosChanged<'a> {
 
 /// [`WM_WINDOWPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging)
 /// message parameters.
+///
+/// Return type: `()`.
 pub struct WmWindowPosChanging<'a> {
 	pub windowpos: &'a s::WINDOWPOS,
 }
@@ -1326,14 +1446,20 @@ impl<'a> MessageHandleable for WmWindowPosChanging<'a> {
 button_msg! { WmXButtonDblClk, co::WM::XBUTTONDBLCLK,
 	/// [`WM_XBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmXButtonDown, co::WM::XBUTTONDOWN,
 	/// [`WM_XBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
 
 button_msg! { WmXButtonUp, co::WM::XBUTTONUP,
 	/// [`WM_XBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 	/// message parameters.
+	///
+	/// Return type: `()`.
 }
