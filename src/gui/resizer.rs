@@ -67,7 +67,8 @@ impl Resizer {
 	///
 	/// Usually you'll want to call this method on parent's
 	/// [`WM_CREATE`](crate::msg::WmCreate) or
-	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) events.
+	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) events, because the controls
+	/// will already be created.
 	///
 	/// # Examples
 	///
@@ -96,7 +97,8 @@ impl Resizer {
 	///
 	/// # Panics
 	///
-	/// Panics if the slice is empty, or if the first resizing already happened.
+	/// Panics if the slice is empty, if the first resizing already happened, or
+	/// if a passed control has not been created yet.
 	pub fn add(&self,
 		horz: Resz, vert: Resz, children: &[&dyn Child]) -> &Resizer
 	{
@@ -104,6 +106,8 @@ impl Resizer {
 			panic!("No children being added to Resizer.");
 		} else if self.0.resize_called {
 			panic!("Cannot add children after Resizer started working.");
+		} else if children[0].hctrl_ref().is_null() {
+			panic!("Cannot add a child control to Resizer before it's created.");
 		}
 
 		|horz, vert, children: &[&dyn Child]| -> WinResult<&Resizer> {
