@@ -10,4 +10,4 @@ The subfolders are numbered starting from the easiest example. Note that this or
 
 ### 01 Button click
 
-![Example 01](01_button_click/ex01.gif)
+![Example 01](01_button_click/screen.gif)

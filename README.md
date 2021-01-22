@@ -21,7 +21,7 @@ WinSafe works with both ordinary windows (created programatically) and resource 
 
 Here is an [example](examples/01_button_click/) of an ordinary window with a button. Note how the click event is handled with a closure:
 
-![Example 01](examples/01_button_click/ex01.gif)
+![Example 01](examples/01_button_click/screen.gif)
 
 ```rust
 #![windows_subsystem = "windows"]
