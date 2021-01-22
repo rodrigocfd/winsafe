@@ -11,8 +11,8 @@ impl MyWindow {
 	pub fn new() -> MyWindow {
 		let wnd = gui::CustomMain::new( // instantiate the window manager
 			gui::CustomMainOpts {
-				title: "Button click".to_owned(),
-				size: SIZE::new(300, 200),
+				title: "My window title".to_owned(),
+				size: SIZE::new(300, 150),
 				..Default::default() // leave all other options as default
 			},
 		);

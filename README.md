@@ -9,15 +9,17 @@ This crate provides bindings for a selected subset of the [Win32 API](https://do
 
 ## Current status
 
-This crate is still a baby! 👶
+This crate is still in its infancy! 👶
 
-It already works, but it's still very alpha version, and it's under heavy development.
+It already works, but it's still very alpha version, under heavy development.
 
 ## Example
 
 WinSafe works with ordinary windows (created programatically) and also with resource dialogs from `.rc` files. Be sure to check the [examples folder](examples/), which is being constantly updated.
 
 Here is an [example](examples/01_button_click/) of an ordinary window with a button. The click event is handled with a closure:
+
+![Example 01](examples/01_button_click/ex01.gif)
 
 ```rust
 #![windows_subsystem = "windows"]
@@ -42,8 +44,8 @@ impl MyWindow {
     pub fn new() -> MyWindow {
         let wnd = gui::CustomMain::new( // instantiate the window manager
             gui::CustomMainOpts {
-                title: "Button click".to_owned(),
-                size: SIZE::new(300, 200),
+                title: "My window title".to_owned(),
+                size: SIZE::new(300, 150),
                 ..Default::default() // leave all other options as default
             },
         );
