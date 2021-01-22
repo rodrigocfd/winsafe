@@ -7,17 +7,19 @@
 
 This crate provides bindings for a selected subset of the [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) in safe, idiomatic Rust. This subset includes functions, structs and constants. In addition, it provides high-level [GUI wrappers](crate::gui) for windows and controls, allowing the development of complex and scalable Win32 GUI applications, in 100% native Win32.
 
+Documentation for the `master` branch: [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/)
+
 ## Current status
 
 This crate is still in its infancy! 👶
 
-It already works, but it's still very alpha version, under heavy development.
+It already works, but it's still incomplete and under heavy development.
 
 ## Example
 
-WinSafe works with ordinary windows (created programatically) and also with resource dialogs from `.rc` files. Be sure to check the [examples folder](examples/), which is being constantly updated.
+WinSafe works with both ordinary windows (created programatically) and resource dialogs (from `.rc` files). Be sure to check the [examples folder](examples/), which is being constantly updated.
 
-Here is an [example](examples/01_button_click/) of an ordinary window with a button. The click event is handled with a closure:
+Here is an [example](examples/01_button_click/) of an ordinary window with a button. Note how the click event is handled with a closure:
 
 ![Example 01](examples/01_button_click/ex01.gif)
 
@@ -33,6 +35,7 @@ fn main() {
         eprintln!("{}", e);
     }
 }
+
 
 #[derive(Clone)]
 pub struct MyWindow {
@@ -51,7 +54,7 @@ impl MyWindow {
         );
 
         let btn_hello = gui::Button::new(
-            &wnd, // the parent of our button
+            &wnd, // the window manager is the parent of our button
             gui::ButtonOpts {
                 text: "&Click me".to_owned(),
                 position: POINT::new(20, 20),

@@ -18,7 +18,7 @@ impl MyWindow {
 		);
 
 		let btn_hello = gui::Button::new(
-			&wnd, // the parent of our button
+			&wnd, // the window manager is the parent of our button
 			gui::ButtonOpts {
 				text: "&Click me".to_owned(),
 				position: POINT::new(20, 20),
