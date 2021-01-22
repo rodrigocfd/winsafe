@@ -152,8 +152,8 @@ impl RadioGroup {
 		self.0.radios.iter()
 	}
 
-	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton),
-	/// if any.
+	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton) of
+	/// this group, if any.
 	pub fn checked(&self) -> Option<&RadioButton> {
 		for radio in self.0.radios.iter() {
 			if radio.is_checked() {

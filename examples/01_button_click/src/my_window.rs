@@ -3,17 +3,17 @@ use winsafe::{POINT, SIZE, WinResult};
 
 #[derive(Clone)]
 pub struct MyWindow {
-	wnd: gui::CustomMain,
-	btn_hello: gui::Button,
+	wnd:       gui::CustomMain, // responsible for managing the window
+	btn_hello: gui::Button,     // a button
 }
 
 impl MyWindow {
 	pub fn new() -> MyWindow {
-		let wnd = gui::CustomMain::new(
+		let wnd = gui::CustomMain::new( // instantiate the window manager
 			gui::CustomMainOpts {
 				title: "Button click".to_owned(),
 				size: SIZE::new(300, 200),
-				..Default::default()
+				..Default::default() // leave all other options as default
 			},
 		);
 
@@ -27,12 +27,12 @@ impl MyWindow {
 		);
 
 		let new_self = Self { wnd, btn_hello };
-		new_self.events();
+		new_self.events(); // attach our events
 		new_self
 	}
 
 	pub fn run(&self) -> WinResult<()> {
-		self.wnd.run_main(None)
+		self.wnd.run_main(None) // simply let the window manager do the hard work
 	}
 
 	fn events(&self) {

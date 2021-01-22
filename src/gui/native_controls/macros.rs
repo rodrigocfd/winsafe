@@ -3,8 +3,11 @@ macro_rules! hwnd_ctrlid_on_onsubclass {
 	($evstruc:ident) => {
 		/// Returns the underlying handle for this control.
 		///
-		/// Note that the handle is initially null, receiving an actual value only
-		/// after the control is created.
+		/// **Note:** the handle is initially null, receiving an actual value only
+		/// after the control is physically created, what usually happens right
+		/// before [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create) or
+		/// [`WM_INITDIALOG`](crate::gui::events::MsgEvents::wm_init_dialog)
+		/// events.
 		pub fn hwnd(&self) -> HWND {
 			*self.hctrl_ref()
 		}
