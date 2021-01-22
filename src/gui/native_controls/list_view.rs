@@ -16,10 +16,11 @@ use crate::WString;
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control.
 #[derive(Clone)]
-pub struct ListView {
-	base: Arc<
-		NativeControlBase<ListViewEvents, ListViewOpts>,
-	>,
+pub struct ListView(Arc<Obj>);
+
+struct Obj { // actual fields of ListView
+	base: NativeControlBase<ListViewEvents>,
+	opts_id: OptsId<ListViewOpts>,
 }
 
 unsafe impl Send for ListView {}
@@ -27,7 +28,7 @@ unsafe impl Sync for ListView {}
 
 impl Child for ListView {
 	fn hctrl_ref(&self) -> &HWND {
-		self.base.hctrl_ref()
+		self.0.base.hctrl_ref()
 	}
 }
 
@@ -36,15 +37,17 @@ impl ListView {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ListViewOpts) -> ListView {
 		let opts = ListViewOpts::define_ctrl_id(opts);
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					ListViewEvents::new(parent, opts.ctrl_id),
-					OptsId::Wnd(opts),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						ListViewEvents::new(parent, opts.ctrl_id),
+					),
+					opts_id: OptsId::Wnd(opts),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
 			move |_| { me.create(); 0 }
@@ -55,15 +58,17 @@ impl ListView {
 	/// Instantiates a new `ListView` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ListView {
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					ListViewEvents::new(parent, ctrl_id),
-					OptsId::Dlg(ctrl_id),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						ListViewEvents::new(parent, ctrl_id),
+					),
+					opts_id: OptsId::Dlg(ctrl_id),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
 			move |_| { me.create(); true }
@@ -73,13 +78,13 @@ impl ListView {
 
 	fn create(&self) {
 		|| -> WinResult<()> {
-			match self.base.opts_id() {
+			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
 					let mut sz = opts.size;
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					self.base.create_window( // may panic
+					self.0.base.create_window( // may panic
 						"SysListView32", None, pos, sz,
 						opts.ctrl_id,
 						opts.ex_window_style,
@@ -91,7 +96,7 @@ impl ListView {
 					}
 					Ok(())
 				},
-				OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}

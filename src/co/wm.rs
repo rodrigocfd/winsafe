@@ -1,17 +1,18 @@
 const_type! { WM, u32,
 	/// Window messages (`u32`) for:
 	///
-	/// * [ordinary controls](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues);
+	/// * [general](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues);
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages);
 	/// * [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages);
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro);
 	/// * [header](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages);
 	/// * [label](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages);
+	/// * [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages);
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
 }
 
-const_type_priv_values! { WM
+const_type_priv_values! { WM // first markers
 	BCM_FIRST, 0x1600
 	CBM_FIRST, 0x1700
 	CCM_FIRST, 0x2000
@@ -20,7 +21,7 @@ const_type_priv_values! { WM
 	TVM_FIRST, 0x1100
 }
 
-const_type_pub_values! { WM // WM
+const_type_pub_values! { WM // WM, general
 	NULL, 0x0000
 	CREATE, 0x0001
 	DESTROY, 0x0002
@@ -278,7 +279,7 @@ const_type_pub_values! { WM // WM
 	USER, 0x0400
 }
 
-const_type_pub_values! { WM // BCM, BM
+const_type_pub_values! { WM // BCM, BM, button
 	BCM_GETIDEALSIZE, Self::BCM_FIRST.0 + 0x0001
 	BCM_SETIMAGELIST, Self::BCM_FIRST.0 + 0x0002
 	BCM_GETIMAGELIST, Self::BCM_FIRST.0 + 0x0003
@@ -303,7 +304,7 @@ const_type_pub_values! { WM // BCM, BM
 	BM_SETDONTCLICK, 0x00f8
 }
 
-const_type_pub_values! { WM // CB
+const_type_pub_values! { WM // CB, combo box
 	CB_SETMINVISIBLE, Self::CBM_FIRST.0 + 1
 	CB_GETMINVISIBLE, Self::CBM_FIRST.0 + 2
 	CB_SETCUEBANNER, Self::CBM_FIRST.0 + 3
@@ -346,7 +347,7 @@ const_type_pub_values! { WM // CB
 	CB_GETCOMBOBOXINFO, 0x0164
 }
 
-const_type_pub_values! { WM // CCM
+const_type_pub_values! { WM // CCM, common controls
 	CCM_SETBKCOLOR, Self::CCM_FIRST.0 + 1
 	CCM_SETCOLORSCHEME, Self::CCM_FIRST.0 + 2
 	CCM_GETCOLORSCHEME, Self::CCM_FIRST.0 + 3
@@ -360,7 +361,7 @@ const_type_pub_values! { WM // CCM
 	CCM_DPISCALE, Self::CCM_FIRST.0 + 0xc
 }
 
-const_type_pub_values! { WM // HDM
+const_type_pub_values! { WM // HDM, header
 	HDM_GETITEMCOUNT, Self::HDM_FIRST.0 + 0
 	HDM_INSERTITEM, Self::HDM_FIRST.0 + 10
 	HDM_DELETEITEM, Self::HDM_FIRST.0 + 11
@@ -389,14 +390,14 @@ const_type_pub_values! { WM // HDM
 	HDM_SETFOCUSEDITEM, Self::HDM_FIRST.0 + 28
 }
 
-const_type_pub_values! { WM // STM
+const_type_pub_values! { WM // STM, label
 	STM_SETICON, 0x0170
 	STM_GETICON, 0x0171
 	STM_SETIMAGE, 0x0172
 	STM_GETIMAGE, 0x0173
 }
 
-const_type_pub_values! { WM // LVM
+const_type_pub_values! { WM // LVM, list view
 	LVM_GETBKCOLOR, Self::LVM_FIRST.0 + 0
 	LVM_SETBKCOLOR, Self::LVM_FIRST.0 + 1
 	LVM_GETIMAGELIST, Self::LVM_FIRST.0 + 2
@@ -523,7 +524,27 @@ const_type_pub_values! { WM // LVM
 	LVM_GETNEXTITEMINDEX, Self::LVM_FIRST.0 + 211
 }
 
-const_type_pub_values! { WM // TVM
+const_type_pub_values! { WM // SB, status bar
+	SB_SETTEXT, Self::USER.0 + 11
+	SB_GETTEXT, Self::USER.0 + 13
+	SB_GETTEXTLENGTH, Self::USER.0 + 12
+	SB_SETPARTS, Self::USER.0 + 4
+	SB_GETPARTS, Self::USER.0 + 6
+	SB_GETBORDERS, Self::USER.0 + 7
+	SB_SETMINHEIGHT, Self::USER.0 + 8
+	SB_SIMPLE, Self::USER.0 + 9
+	SB_GETRECT, Self::USER.0 + 10
+	SB_ISSIMPLE, Self::USER.0 + 14
+	SB_SETICON, Self::USER.0 + 15
+	SB_SETTIPTEXTW, Self::USER.0 + 17
+	SB_GETTIPTEXTW, Self::USER.0 + 19
+	SB_GETICON, Self::USER.0 + 20
+	SB_SETUNICODEFORMAT, Self::CCM_SETUNICODEFORMAT.0
+	SB_GETUNICODEFORMAT, Self::CCM_GETUNICODEFORMAT.0
+	SB_SETBKCOLOR, Self::CCM_SETBKCOLOR.0
+}
+
+const_type_pub_values! { WM // TVM, tree view
 	TVM_INSERTITEM, Self::TVM_FIRST.0 + 50
 	TVM_DELETEITEM, Self::TVM_FIRST.0 + 1
 	TVM_EXPAND, Self::TVM_FIRST.0 + 2

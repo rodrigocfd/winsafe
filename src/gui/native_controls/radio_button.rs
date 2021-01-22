@@ -17,40 +17,47 @@ use crate::structs::POINT;
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
-pub struct RadioButton {
-	base: NativeControlBase<ButtonEvents, RadioButtonOpts>,
+pub struct RadioButton(Obj);
+
+struct Obj { // actual fields of RadioButton
+	base: NativeControlBase<ButtonEvents>,
+	opts_id: OptsId<RadioButtonOpts>,
 }
 
 impl Child for RadioButton {
 	fn hctrl_ref(&self) -> &HWND {
-		self.base.hctrl_ref()
+		self.0.base.hctrl_ref()
 	}
 }
 
 impl RadioButton {
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
-		Self {
-			base: NativeControlBase::new(
-				parent,
-				ButtonEvents::new(parent, opts.ctrl_id),
-				OptsId::Wnd(opts),
-			),
-		}
+		Self(
+			Obj {
+				base: NativeControlBase::new(
+					parent,
+					ButtonEvents::new(parent, opts.ctrl_id),
+				),
+				opts_id: OptsId::Wnd(opts),
+			},
+		)
 	}
 
 	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
-		Self {
-			base: NativeControlBase::new(
-				parent,
-				ButtonEvents::new(parent, ctrl_id),
-				OptsId::Dlg(ctrl_id),
-			),
-		}
+		Self(
+			Obj {
+				base: NativeControlBase::new(
+					parent,
+					ButtonEvents::new(parent, ctrl_id),
+				),
+				opts_id: OptsId::Dlg(ctrl_id),
+			},
+		)
 	}
 
 	pub(crate) fn create(&self) -> WinResult<()> {
-		match self.base.opts_id() {
+		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				if opts.vertical_text_align { pos.y += 3; }
@@ -58,7 +65,7 @@ impl RadioButton {
 
 				let bound_box = calc_text_bound_box_check(&opts.text)?;
 
-				let our_hwnd = self.base.create_window( // may panic
+				let our_hwnd = self.0.base.create_window( // may panic
 					"BUTTON", Some(&opts.text), pos, bound_box,
 					opts.ctrl_id,
 					opts.ex_window_style,
@@ -68,7 +75,7 @@ impl RadioButton {
 				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.base.create_dlg(*ctrl_id)?; // may panic
+				self.0.base.create_dlg(*ctrl_id)?; // may panic
 			},
 		}
 
@@ -77,7 +84,7 @@ impl RadioButton {
 	}
 
 	pub(crate) fn is_parent_created(&self) -> bool {
-		self.base.is_parent_created()
+		self.0.base.is_parent_created()
 	}
 
 	hwnd_ctrlid_on_onsubclass!(ButtonEvents);

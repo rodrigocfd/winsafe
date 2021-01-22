@@ -18,10 +18,11 @@ use crate::structs::POINT;
 /// The check box is actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
 #[derive(Clone)]
-pub struct CheckBox {
-	base: Arc<
-		NativeControlBase<ButtonEvents, CheckBoxOpts>,
-	>,
+pub struct CheckBox(Arc<Obj>);
+
+struct Obj { // actual fields of CheckBox
+	base: NativeControlBase<ButtonEvents>,
+	opts_id: OptsId<CheckBoxOpts>,
 }
 
 unsafe impl Send for CheckBox {}
@@ -29,7 +30,7 @@ unsafe impl Sync for CheckBox {}
 
 impl Child for CheckBox {
 	fn hctrl_ref(&self) -> &HWND {
-		self.base.hctrl_ref()
+		self.0.base.hctrl_ref()
 	}
 }
 
@@ -38,15 +39,17 @@ impl CheckBox {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: CheckBoxOpts) -> CheckBox {
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					ButtonEvents::new(parent, opts.ctrl_id),
-					OptsId::Wnd(opts),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						ButtonEvents::new(parent, opts.ctrl_id),
+					),
+					opts_id: OptsId::Wnd(opts),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
 			move |_| { me.create(); 0 }
@@ -57,15 +60,17 @@ impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> CheckBox {
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					ButtonEvents::new(parent, ctrl_id),
-					OptsId::Dlg(ctrl_id),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						ButtonEvents::new(parent, ctrl_id),
+					),
+					opts_id: OptsId::Dlg(ctrl_id),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
 			move |_| { me.create(); true }
@@ -75,7 +80,7 @@ impl CheckBox {
 
 	fn create(&self) {
 		|| -> WinResult<()> {
-			match self.base.opts_id() {
+			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
 					if opts.vertical_text_align { pos.y += 3; }
@@ -83,7 +88,7 @@ impl CheckBox {
 
 					let bound_box = calc_text_bound_box_check(&opts.text)?;
 
-					let our_hwnd = self.base.create_window( // may panic
+					let our_hwnd = self.0.base.create_window( // may panic
 						"BUTTON", Some(&opts.text), pos, bound_box,
 						opts.ctrl_id,
 						opts.ex_window_style,
@@ -93,7 +98,7 @@ impl CheckBox {
 					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
-				OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}

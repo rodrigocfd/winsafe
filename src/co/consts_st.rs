@@ -1,5 +1,20 @@
 use crate::co::{ACCESS_RIGHTS, WS};
 
+const_type! { SBARS, u32,
+	/// Status bar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
+	/// (`u32`).
+
+	NONE, 0
+	SIZEGRIP, 0x0100
+	TOOLTIPS, 0x0800
+}
+impl From<SBARS> for WS {
+	fn from(v: SBARS) -> Self {
+		Self(v.0)
+	}
+}
+
 const_type! { SIZE_R, u8,
 	/// [`WM_SIZE`](crate::msg::WmSize) request (`u8`).
 

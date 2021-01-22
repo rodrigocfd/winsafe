@@ -15,10 +15,11 @@ use crate::structs::{POINT, SIZE};
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
 #[derive(Clone)]
-pub struct Edit {
-	base: Arc<
-		NativeControlBase<EditEvents, EditOpts>,
-	>,
+pub struct Edit(Arc<Obj>);
+
+struct Obj { // actual fields of Edit
+	base: NativeControlBase<EditEvents>,
+	opts_id: OptsId<EditOpts>,
 }
 
 unsafe impl Send for Edit {}
@@ -26,7 +27,7 @@ unsafe impl Sync for Edit {}
 
 impl Child for Edit {
 	fn hctrl_ref(&self) -> &HWND {
-		self.base.hctrl_ref()
+		self.0.base.hctrl_ref()
 	}
 }
 
@@ -35,15 +36,17 @@ impl Edit {
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: EditOpts) -> Edit {
 		let opts = EditOpts::define_ctrl_id(opts);
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					EditEvents::new(parent, opts.ctrl_id),
-					OptsId::Wnd(opts),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						EditEvents::new(parent, opts.ctrl_id),
+					),
+					opts_id: OptsId::Wnd(opts),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
 			move |_| { me.create(); 0 }
@@ -54,15 +57,17 @@ impl Edit {
 	/// Instantiates a new `Edit` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Edit {
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					EditEvents::new(parent, ctrl_id),
-					OptsId::Dlg(ctrl_id),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						EditEvents::new(parent, ctrl_id),
+					),
+					opts_id: OptsId::Dlg(ctrl_id),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
 			move |_| { me.create(); true }
@@ -72,13 +77,13 @@ impl Edit {
 
 	fn create(&self) {
 		|| -> WinResult<()> {
-			match self.base.opts_id() {
+			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
 					let mut sz = SIZE::new(opts.width as i32, opts.height as i32);
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					let our_hwnd = self.base.create_window( // may panic
+					let our_hwnd = self.0.base.create_window( // may panic
 						"EDIT", Some(&opts.text), pos, sz,
 						opts.ctrl_id,
 						opts.ex_window_style,
@@ -88,7 +93,7 @@ impl Edit {
 					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
-				OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}

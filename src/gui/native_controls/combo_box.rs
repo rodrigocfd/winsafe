@@ -16,10 +16,11 @@ use crate::WString;
 /// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
 #[derive(Clone)]
-pub struct ComboBox {
-	base: Arc<
-		NativeControlBase<ComboBoxEvents, ComboBoxOpts>,
-	>,
+pub struct ComboBox(Arc<Obj>);
+
+struct Obj { // actual fields of ComboBox
+	base: NativeControlBase<ComboBoxEvents>,
+	opts_id: OptsId<ComboBoxOpts>,
 }
 
 unsafe impl Send for ComboBox {}
@@ -27,7 +28,7 @@ unsafe impl Sync for ComboBox {}
 
 impl Child for ComboBox {
 	fn hctrl_ref(&self) -> &HWND {
-		self.base.hctrl_ref()
+		self.0.base.hctrl_ref()
 	}
 }
 
@@ -36,15 +37,17 @@ impl ComboBox {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ComboBoxOpts) -> ComboBox {
 		let opts = ComboBoxOpts::define_ctrl_id(opts);
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					ComboBoxEvents::new(parent, opts.ctrl_id),
-					OptsId::Wnd(opts),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						ComboBoxEvents::new(parent, opts.ctrl_id),
+					),
+					opts_id: OptsId::Wnd(opts),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
 			move |_| { me.create(); 0 }
@@ -55,15 +58,17 @@ impl ComboBox {
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ComboBox {
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					ComboBoxEvents::new(parent, ctrl_id),
-					OptsId::Dlg(ctrl_id),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						ComboBoxEvents::new(parent, ctrl_id),
+					),
+					opts_id: OptsId::Dlg(ctrl_id),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
 			move |_| { me.create(); true }
@@ -73,14 +78,14 @@ impl ComboBox {
 
 	fn create(&self) {
 		|| -> WinResult<()> {
-			match self.base.opts_id() {
+			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
 					let mut sz = SIZE::new(opts.width as i32, 0);
 					if opts.vertical_text_align { pos.y -= 1; }
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					let our_hwnd = self.base.create_window( // may panic
+					let our_hwnd = self.0.base.create_window( // may panic
 						"COMBOBOX", None, pos, sz,
 						opts.ctrl_id,
 						opts.ex_window_style,
@@ -90,7 +95,7 @@ impl ComboBox {
 					our_hwnd.SendMessage(msg::WmSetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
-				OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}

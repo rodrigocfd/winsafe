@@ -16,10 +16,11 @@ use crate::structs::POINT;
 /// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)
 /// control.
 #[derive(Clone)]
-pub struct Label {
-	base: Arc<
-		NativeControlBase<LabelEvents, LabelOpts>,
-	>,
+pub struct Label(Arc<Obj>);
+
+struct Obj { // actual fields of Label
+	base: NativeControlBase<LabelEvents>,
+	opts_id: OptsId<LabelOpts>,
 }
 
 unsafe impl Send for Label {}
@@ -27,7 +28,7 @@ unsafe impl Sync for Label {}
 
 impl Child for Label {
 	fn hctrl_ref(&self) -> &HWND {
-		self.base.hctrl_ref()
+		self.0.base.hctrl_ref()
 	}
 }
 
@@ -36,15 +37,17 @@ impl Label {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: LabelOpts) -> Label {
 		let opts = LabelOpts::define_ctrl_id(opts);
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					LabelEvents::new(parent, opts.ctrl_id),
-					OptsId::Wnd(opts),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						LabelEvents::new(parent, opts.ctrl_id),
+					),
+					opts_id: OptsId::Wnd(opts),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_create({
 			let me = me.clone();
 			move |_| { me.create(); 0 }
@@ -55,15 +58,17 @@ impl Label {
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Label {
-		let me = Self {
-			base: Arc::new(
-				NativeControlBase::new(
-					parent,
-					LabelEvents::new(parent, ctrl_id),
-					OptsId::Dlg(ctrl_id),
-				),
+		let me = Self(
+			Arc::new(
+				Obj {
+					base: NativeControlBase::new(
+						parent,
+						LabelEvents::new(parent, ctrl_id),
+					),
+					opts_id: OptsId::Dlg(ctrl_id),
+				},
 			),
-		};
+		);
 		parent.privileged_events_ref().wm_init_dialog({
 			let me = me.clone();
 			move |_| { me.create(); true }
@@ -73,7 +78,7 @@ impl Label {
 
 	fn create(&self) {
 		|| -> WinResult<()> {
-			match self.base.opts_id() {
+			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
 					if opts.vertical_text_align { pos.y += 3; }
@@ -81,7 +86,7 @@ impl Label {
 
 					let bound_box = calc_text_bound_box(&opts.text)?;
 
-					let our_hwnd = self.base.create_window( // may panic
+					let our_hwnd = self.0.base.create_window( // may panic
 						"STATIC", Some(&opts.text), pos, bound_box,
 						opts.ctrl_id,
 						opts.ex_window_style,
@@ -91,7 +96,7 @@ impl Label {
 					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
-				OptsId::Dlg(ctrl_id) => self.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
