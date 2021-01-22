@@ -11,7 +11,7 @@ const_type! { WM, u32,
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
 }
 
-const_type_priv_values! { WM,
+const_type_priv_values! { WM
 	BCM_FIRST, 0x1600
 	CBM_FIRST, 0x1700
 	CCM_FIRST, 0x2000
@@ -20,7 +20,7 @@ const_type_priv_values! { WM,
 	TVM_FIRST, 0x1100
 }
 
-const_type_pub_values! { WM, // WM
+const_type_pub_values! { WM // WM
 	NULL, 0x0000
 	CREATE, 0x0001
 	DESTROY, 0x0002
@@ -278,7 +278,7 @@ const_type_pub_values! { WM, // WM
 	USER, 0x0400
 }
 
-const_type_pub_values! { WM, // BCM, BM
+const_type_pub_values! { WM // BCM, BM
 	BCM_GETIDEALSIZE, Self::BCM_FIRST.0 + 0x0001
 	BCM_SETIMAGELIST, Self::BCM_FIRST.0 + 0x0002
 	BCM_GETIMAGELIST, Self::BCM_FIRST.0 + 0x0003
@@ -303,7 +303,7 @@ const_type_pub_values! { WM, // BCM, BM
 	BM_SETDONTCLICK, 0x00f8
 }
 
-const_type_pub_values! { WM, // CB
+const_type_pub_values! { WM // CB
 	CB_SETMINVISIBLE, Self::CBM_FIRST.0 + 1
 	CB_GETMINVISIBLE, Self::CBM_FIRST.0 + 2
 	CB_SETCUEBANNER, Self::CBM_FIRST.0 + 3
@@ -346,7 +346,7 @@ const_type_pub_values! { WM, // CB
 	CB_GETCOMBOBOXINFO, 0x0164
 }
 
-const_type_pub_values! { WM, // CCM
+const_type_pub_values! { WM // CCM
 	CCM_SETBKCOLOR, Self::CCM_FIRST.0 + 1
 	CCM_SETCOLORSCHEME, Self::CCM_FIRST.0 + 2
 	CCM_GETCOLORSCHEME, Self::CCM_FIRST.0 + 3
@@ -360,7 +360,7 @@ const_type_pub_values! { WM, // CCM
 	CCM_DPISCALE, Self::CCM_FIRST.0 + 0xc
 }
 
-const_type_pub_values! { WM, // HDM
+const_type_pub_values! { WM // HDM
 	HDM_GETITEMCOUNT, Self::HDM_FIRST.0 + 0
 	HDM_INSERTITEM, Self::HDM_FIRST.0 + 10
 	HDM_DELETEITEM, Self::HDM_FIRST.0 + 11
@@ -389,14 +389,14 @@ const_type_pub_values! { WM, // HDM
 	HDM_SETFOCUSEDITEM, Self::HDM_FIRST.0 + 28
 }
 
-const_type_pub_values! { WM, // STM
+const_type_pub_values! { WM // STM
 	STM_SETICON, 0x0170
 	STM_GETICON, 0x0171
 	STM_SETIMAGE, 0x0172
 	STM_GETIMAGE, 0x0173
 }
 
-const_type_pub_values! { WM, // LVM
+const_type_pub_values! { WM // LVM
 	LVM_GETBKCOLOR, Self::LVM_FIRST.0 + 0
 	LVM_SETBKCOLOR, Self::LVM_FIRST.0 + 1
 	LVM_GETIMAGELIST, Self::LVM_FIRST.0 + 2
@@ -523,7 +523,7 @@ const_type_pub_values! { WM, // LVM
 	LVM_GETNEXTITEMINDEX, Self::LVM_FIRST.0 + 211
 }
 
-const_type_pub_values! { WM, // TVM
+const_type_pub_values! { WM // TVM
 	TVM_INSERTITEM, Self::TVM_FIRST.0 + 50
 	TVM_DELETEITEM, Self::TVM_FIRST.0 + 1
 	TVM_EXPAND, Self::TVM_FIRST.0 + 2

@@ -8,7 +8,7 @@ const_type! { NM, i32,
 	/// * [ListView](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
 }
 
-const_type_priv_values! { NM,
+const_type_priv_values! { NM
 	FIRST, 0
 	BCN_FIRST, -1250
 	HDN_FIRST, -300
@@ -16,7 +16,7 @@ const_type_priv_values! { NM,
 	TVN_FIRST, -400
 }
 
-const_type_pub_values! { NM, // NM
+const_type_pub_values! { NM // NM
 	OUTOFMEMORY, Self::FIRST.0 - 1
 	CLICK, Self::FIRST.0 - 2
 	DBLCLK, Self::FIRST.0 - 3
@@ -38,13 +38,12 @@ const_type_pub_values! { NM, // NM
 	THEMECHANGED, Self::FIRST.0 - 22
 }
 
-
-const_type_pub_values! { NM, // BCN
+const_type_pub_values! { NM // BCN
 	BCN_HOTITEMCHANGE, Self::BCN_FIRST.0 + 0x0001
 	BCN_DROPDOWN, Self::BCN_FIRST.0 + 0x0002
 }
 
-const_type_pub_values! { NM, // HDM
+const_type_pub_values! { NM // HDM
 	HDN_ITEMCHANGING, Self::HDN_FIRST.0 - 20
 	HDN_ITEMCHANGED, Self::HDN_FIRST.0 - 21
 	HDN_ITEMCLICK, Self::HDN_FIRST.0 - 22
@@ -66,7 +65,7 @@ const_type_pub_values! { NM, // HDM
 	HDN_OVERFLOWCLICK, Self::HDN_FIRST.0 - 19
 }
 
-const_type_pub_values! { NM, // LVN
+const_type_pub_values! { NM // LVN
 	LVN_ITEMCHANGING, Self::LVN_FIRST.0 - 0
 	LVN_ITEMCHANGED, Self::LVN_FIRST.0 - 1
 	LVN_INSERTITEM, Self::LVN_FIRST.0 - 2
@@ -96,7 +95,7 @@ const_type_pub_values! { NM, // LVN
 	LVN_GETEMPTYMARKUP, Self::LVN_FIRST.0 - 87
 }
 
-const_type_pub_values! { NM, // TVN
+const_type_pub_values! { NM // TVN
 	TVN_SELCHANGING, Self::TVN_FIRST.0 - 50
 	TVN_SELCHANGED, Self::TVN_FIRST.0 - 51
 	TVN_GETDISPINFO, Self::TVN_FIRST.0 - 52

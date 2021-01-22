@@ -1,7 +1,7 @@
 /// Declares multiple public constant values for the given type.
 macro_rules! const_type_pub_values {
 	(
-		$name:ident,
+		$name:ident
 		$($cname:ident, $cval:expr)*
 	) => {
 		impl $name {
@@ -13,7 +13,7 @@ macro_rules! const_type_pub_values {
 /// Declares multiple private constant values for the given type.
 macro_rules! const_type_priv_values {
 	(
-		$name:ident,
+		$name:ident
 		$($cname:ident, $cval:expr)*
 	) => {
 		impl $name {
@@ -118,7 +118,7 @@ macro_rules! const_type_no_debug_display {
 		}
 
 		// All public const values.
-		const_type_pub_values! { $name,
+		const_type_pub_values! { $name
 			$($cname, $cval)*
 		}
 	};
