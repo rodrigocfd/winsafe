@@ -642,6 +642,32 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 
 //------------------------------------------------------------------------------
 
+/// [`LVM_SETSELECTEDCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setselectedcolumn)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct LvmSetSelectedColumn {
+	pub index: u32,
+}
+
+impl Message for LvmSetSelectedColumn {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_SETSELECTEDCOLUMN,
+			wparam: u32::from(self.index) as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`LVM_SETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setview)
 /// message parameters.
 ///

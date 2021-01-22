@@ -147,12 +147,17 @@ impl ListView {
 			.SendMessage(msg::HdmGetItemCount {})
 	}
 
+	/// Retrieves the current view.
+	pub fn current_view(&self) -> co::LV_VIEW {
+		self.hwnd().SendMessage(msg::LvmGetView {})
+	}
+
 	/// Deletes all items.
 	pub fn delete_all_items(&self) -> WinResult<()> {
 		self.hwnd().SendMessage(msg::LvmDeleteAllItems {})
 	}
 
-	/// Deletes the items with the given indexes.
+	/// Deletes the items at the given indexes.
 	pub fn delete_items(&self, indexes: &[u32]) -> WinResult<()> {
 		for idx in indexes.iter() {
 			self.hwnd().SendMessage(msg::LvmDeleteItem {
@@ -168,6 +173,22 @@ impl ListView {
 			initial_index: -1,
 			relationship: co::LVNI::FOCUSED,
 		})
+	}
+
+	/// Tells if the item is the focused one.
+	pub fn is_item_focused(&self, index: u32) -> bool {
+		self.hwnd().SendMessage(msg::LvmGetItemState {
+			index: index as i32,
+			mask: co::LVIS::FOCUSED,
+		}).has(co::LVIS::FOCUSED)
+	}
+
+	/// Tells if the item is selected.
+	pub fn is_item_selected(&self, index: u32) -> bool {
+		self.hwnd().SendMessage(msg::LvmGetItemState {
+			index: index as i32,
+			mask: co::LVIS::SELECTED,
+		}).has(co::LVIS::SELECTED)
 	}
 
 	/// Retrieves the total number of items.
@@ -201,6 +222,11 @@ impl ListView {
 		}
 	}
 
+	/// Sets the current view.
+	pub fn set_current_view(&self, view: co::LV_VIEW) -> WinResult<()> {
+		self.hwnd().SendMessage(msg::LvmSetView { view })
+	}
+
 	/// Retrieves the number of selected items.
 	pub fn selected_item_count(&self) -> u32 {
 		self.hwnd().SendMessage(msg::LvmGetSelectedCount {})
@@ -224,6 +250,18 @@ impl ListView {
 		items
 	}
 
+	/// Sets the focused item.
+	pub fn set_focused_item(&self, index: u32) -> WinResult<()> {
+		let mut lvi = LVITEM::default();
+		lvi.stateMask = co::LVIS::FOCUSED;
+		lvi.state = co::LVIS::FOCUSED;
+
+		self.hwnd().SendMessage(msg::LvmSetItemState {
+			index: index as i32,
+			lvitem: &lvi,
+		})
+	}
+
 	/// Sets the text of an item under any column.
 	pub fn set_item_text(&self,
 		item_index: u32, column_index: u32, text: &str) -> WinResult<()>
@@ -238,6 +276,23 @@ impl ListView {
 			index: item_index as i32,
 			lvitem: &lvi,
 		})
+	}
+
+	/// Sets or remove the selection from the given item indexes.
+	pub fn set_selected_items(&self,
+		set: bool, indexes: &[u32]) -> WinResult<()>
+	{
+		let mut lvi = LVITEM::default();
+		lvi.stateMask = co::LVIS::SELECTED;
+		if set { lvi.state = co::LVIS::SELECTED; }
+
+		for idx in indexes.iter() {
+			self.hwnd().SendMessage(msg::LvmSetItemState {
+				index: *idx as i32,
+				lvitem: &lvi,
+			})?;
+		}
+		Ok(())
 	}
 
 	/// Toggles the given extended list view styles.

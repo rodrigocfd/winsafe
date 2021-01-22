@@ -115,6 +115,17 @@ impl ComboBox {
 		Ok(())
 	}
 
+	/// Deletes all items.
+	pub fn delete_all_items(&self) {
+		self.hwnd().SendMessage(msg::CbResetContent {})
+	}
+
+	/// Deletes the item at the given index.
+	pub fn delete_item(&self, index: u32) -> WinResult<()> {
+		self.hwnd().SendMessage(msg::CbDeleteString { index })
+			.map(|_| ())
+	}
+
 	/// Retrieves the text at the given position, if any.
 	pub fn item(&self, index: u32) -> Option<String> {
 		match self.hwnd().SendMessage(msg::CbGetLbTextLen { index }) {
@@ -133,6 +144,11 @@ impl ComboBox {
 				}
 			},
 		}
+	}
+
+	/// Retrieves the total number of items.
+	pub fn item_count(&self) -> WinResult<u32> {
+		self.hwnd().SendMessage(msg::CbGetCount {})
 	}
 
 	/// Retrieves the index of the currently selected item, if any.
