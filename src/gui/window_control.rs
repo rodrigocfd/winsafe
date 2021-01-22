@@ -63,7 +63,7 @@ impl WindowControl {
 					let opts = &self2.0.opts;
 
 					let mut wcx = WNDCLASSEX::default();
-					let mut class_name_buf = WString::new();
+					let mut class_name_buf = WString::default();
 					opts.generate_wndclassex(self2.0.base.parent_hinstance()?,
 						&mut wcx, &mut class_name_buf)?;
 					self2.0.base.register_class(&mut wcx)?;

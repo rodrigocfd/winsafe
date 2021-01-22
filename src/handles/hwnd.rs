@@ -541,7 +541,7 @@ impl HWND {
 	/// println!("Text: {}", text);
 	/// ```
 	pub fn GetWindowTextStr(self) -> WinResult<String> {
-		let mut buf = WString::new();
+		let mut buf = WString::default();
 		self.GetWindowText(&mut buf)?;
 		Ok(buf.to_string())
 	}

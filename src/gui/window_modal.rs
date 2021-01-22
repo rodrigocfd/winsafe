@@ -56,7 +56,7 @@ impl WindowModal {
 		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();
-		let mut class_name_buf = WString::new();
+		let mut class_name_buf = WString::default();
 		opts.generate_wndclassex(
 			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 		self.0.base.register_class(&mut wcx)?;

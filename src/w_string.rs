@@ -15,13 +15,19 @@ pub struct WString {
 	char_vec: Option<Vec<u16>>,
 }
 
+impl Default for WString {
+	fn default() -> Self {
+		Self { char_vec: None }
+	}
+}
+
 impl WString {
 	/// Creates a new UTF-16 string from an optional `&str`, and stores it
 	/// internally. If `s` is null, a null pointer will be stored.
 	pub fn from_opt_str(val: Option<&str>) -> WString {
 		match val {
 			Some(val) => Self::from_str(val),
-			None => Self::new(),
+			None => Self::default(),
 		}
 	}
 
@@ -42,7 +48,7 @@ impl WString {
 	/// specifying the number of existing chars.
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> WString {
 		if src.is_null() {
-			Self::new()
+			Self::default()
 		} else {
 			let mut me = Self::new_alloc_buffer(num_chars + 1); // add room for terminating null
 			let vec_ref = &mut me.char_vec.as_mut().unwrap();
@@ -62,7 +68,7 @@ impl WString {
 	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
 	pub fn from_wchars_nullt(src: *const u16) -> WString {
 		if src.is_null() {
-			Self::new()
+			Self::default()
 		} else {
 			let num_chars = unsafe { kernel32::lstrlenW(src) as usize };
 			Self::from_wchars_count(src, num_chars)
@@ -74,17 +80,10 @@ impl WString {
 		Self::from_wchars_count(&src[0], src.len())
 	}
 
-	/// Creates a new, empty UTF-16 buffer.
-	pub fn new() -> WString {
-		Self {
-			char_vec: None,
-		}
-	}
-
 	/// Creates a new UTF-16 buffer allocated with an specific length. All UTF-16
 	/// chars will be set to zero.
 	pub fn new_alloc_buffer(num_chars: usize) -> WString {
-		let mut me = Self::new();
+		let mut me = Self::default();
 		me.realloc_buffer(num_chars);
 		me
 	}

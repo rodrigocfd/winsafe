@@ -38,7 +38,7 @@ impl HDROP {
 			return Err(GetLastError());
 		}
 
-		let mut wbuf = WString::new();
+		let mut wbuf = WString::default();
 		let mut files = Vec::default();
 
 		for i in 0..count {
