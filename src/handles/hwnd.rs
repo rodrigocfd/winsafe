@@ -252,10 +252,24 @@ impl HWND {
 		}
 	}
 
+	/// [`GetActiveWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)
+	/// static method.
+	pub fn GetActiveWindow() -> Option<HWND> {
+		ptr_as_opt(unsafe { user32::GetActiveWindow() })
+			.map(|ptr| Self { ptr })
+	}
+
 	/// [`GetAncestor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getancestor)
 	/// method.
 	pub fn GetAncestor(self, gaFlags: co::GA) -> Option<HWND> {
 		ptr_as_opt(unsafe { user32::GetAncestor(self.ptr, gaFlags.into()) })
+			.map(|ptr| Self { ptr })
+	}
+
+	/// [`GetCapture`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcapture)
+	/// static method.
+	pub fn GetCapture() -> Option<HWND> {
+		ptr_as_opt(unsafe { user32::GetCapture() })
 			.map(|ptr| Self { ptr })
 	}
 

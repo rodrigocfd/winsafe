@@ -48,6 +48,12 @@ pub fn GetDialogBaseUnits() -> i32 {
 	unsafe { user32::GetDialogBaseUnits() }
 }
 
+/// [`GetDoubleClickTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdoubleclicktime)
+/// function.
+pub fn GetDoubleClickTime() -> u32 {
+	unsafe { user32::GetDoubleClickTime() }
+}
+
 /// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
 /// function.
 ///

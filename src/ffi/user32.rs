@@ -34,8 +34,10 @@ extern "system" {
 	pub fn EndPaint(hWnd: HANDLE, lpPaint: PCVOID) -> BOOL;
 	pub fn EnumChildWindows(hWndParent: HANDLE, lpEnumFunc: PFUNC, lParam: isize) -> BOOL;
 	pub fn FindWindowW(lpClassName: PCSTR, lpWindowName: PCSTR) -> HANDLE;
+	pub fn GetActiveWindow() -> HANDLE;
 	pub fn GetAncestor(hwnd: HANDLE, gaFlags: u32) -> HANDLE;
 	pub fn GetAsyncKeyState(vKey: i32) -> i16;
+	pub fn GetCapture() -> HANDLE;
 	pub fn GetClassInfoExW(hInstance: HANDLE, lpszClass: PCSTR, lpwcx: PVOID) -> BOOL;
 	pub fn GetClassLongPtrW(hWnd: HANDLE, nIndex: i32) -> usize;
 	pub fn GetClientRect(hWnd: HANDLE, lpRect: PVOID) -> BOOL;
@@ -44,6 +46,7 @@ extern "system" {
 	pub fn GetDialogBaseUnits() -> i32;
 	pub fn GetDlgCtrlID(hWnd: HANDLE) -> i32;
 	pub fn GetDlgItem(hDlg: HANDLE, nIDDlgItem: i32) -> HANDLE;
+	pub fn GetDoubleClickTime() -> u32;
 	pub fn GetFocus() -> HANDLE;
 	pub fn GetForegroundWindow() -> HANDLE;
 	pub fn GetMenuInfo(hMenu: HANDLE, lpmi: PVOID) -> BOOL;
