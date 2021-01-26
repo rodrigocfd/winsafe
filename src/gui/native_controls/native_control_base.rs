@@ -59,15 +59,14 @@ impl<Ev> NativeControlBase<Ev> {
 		)
 	}
 
-	pub fn is_parent_created(&self) -> bool {
-		let parent_hwnd = unsafe { self.0.ptr_parent_hwnd.as_ref() };
-		!parent_hwnd.is_null()
+	pub fn parent_hwnd(&self) -> &HWND {
+		unsafe { self.0.ptr_parent_hwnd.as_ref() }
 	}
 
 	pub fn on(&self) -> &Ev {
 		if !self.hctrl_ref().is_null() {
 			panic!("Cannot add events after the control is created.");
-		} else if self.is_parent_created() {
+		} else if !self.parent_hwnd().is_null() {
 			panic!("Cannot add events after the parent window is created.");
 		}
 		&self.0.parent_events
@@ -76,7 +75,7 @@ impl<Ev> NativeControlBase<Ev> {
 	pub fn on_subclass(&self) -> &MsgEvents {
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot add subclass events after the control is created.");
-		} else if self.is_parent_created() {
+		} else if !self.parent_hwnd().is_null() {
 			panic!("Cannot add subclass events after the parent window is created.");
 		}
 		&self.0.subclass_events
@@ -93,7 +92,7 @@ impl<Ev> NativeControlBase<Ev> {
 	{
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot create control twice.");
-		} else if !self.is_parent_created() {
+		} else if self.parent_hwnd().is_null() {
 			panic!("Cannot create control before parent window is created.");
 		}
 
@@ -117,7 +116,7 @@ impl<Ev> NativeControlBase<Ev> {
 	pub fn create_dlg(&self, ctrl_id: u16) -> WinResult<HWND> {
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot create control twice.");
-		} else if !self.is_parent_created() {
+		} else if self.parent_hwnd().is_null() {
 			panic!("Cannot create control before parent window is created.");
 		}
 

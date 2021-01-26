@@ -22,4 +22,4 @@ pub use label::{Label, LabelOpts};
 pub use list_view::{ListView, ListViewOpts};
 pub use radio_button::{RadioButton, RadioButtonOpts};
 pub use radio_group::RadioGroup;
-pub use status_bar::StatusBar;
+pub use status_bar::{StatusBar, StatusBarPart};

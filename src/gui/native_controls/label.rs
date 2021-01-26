@@ -37,7 +37,7 @@ impl Label {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: LabelOpts) -> Label {
 		let opts = LabelOpts::define_ctrl_id(opts);
-		let me = Self(
+		let new_self = Self(
 			Arc::new(
 				Obj {
 					base: NativeControlBase::new(
@@ -49,16 +49,16 @@ impl Label {
 			),
 		);
 		parent.privileged_events_ref().wm_create({
-			let me = me.clone();
+			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
-		me
+		new_self
 	}
 
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Label {
-		let me = Self(
+		let new_self = Self(
 			Arc::new(
 				Obj {
 					base: NativeControlBase::new(
@@ -70,10 +70,10 @@ impl Label {
 			),
 		);
 		parent.privileged_events_ref().wm_init_dialog({
-			let me = me.clone();
+			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
-		me
+		new_self
 	}
 
 	fn create(&self) {

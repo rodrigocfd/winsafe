@@ -15,6 +15,19 @@ impl From<SBARS> for WS {
 	}
 }
 
+const_type! { SBT, u16,
+	/// [`SB_GETTEXT`](crate::msg::SbGetText),
+	/// [`SB_GETTEXTLENGTH`](crate::msg::SbGetTextLength) and
+	/// [`SB_SETTEXT`](crate::msg::SbSetText) drawing operation (`u16`).
+
+	NONE, 0
+	OWNERDRAW, 0x1000
+	NOBORDERS, 0x0100
+	POPOUT, 0x0200
+	RTLREADING, 0x0400
+	NOTABPARSING, 0x0800
+}
+
 const_type! { SIZE_R, u8,
 	/// [`WM_SIZE`](crate::msg::WmSize) request (`u8`).
 

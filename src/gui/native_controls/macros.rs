@@ -1,5 +1,5 @@
 /// Implements methods common to controls.
-macro_rules! hwnd_ctrlid_on_onsubclass {
+macro_rules! hwnd_on_onsubclass {
 	($evstruc:ident) => {
 		/// Returns the underlying handle for this control.
 		///
@@ -10,14 +10,6 @@ macro_rules! hwnd_ctrlid_on_onsubclass {
 		/// events.
 		pub fn hwnd(&self) -> HWND {
 			*self.hctrl_ref()
-		}
-
-		/// Returns the control ID.
-		pub fn ctrl_id(&self) -> u16 {
-			match &self.0.opts_id {
-				OptsId::Wnd(opts) => opts.ctrl_id,
-				OptsId::Dlg(ctrl_id) => *ctrl_id,
-			}
 		}
 
 		/// Exposes the control events.
@@ -46,6 +38,21 @@ macro_rules! hwnd_ctrlid_on_onsubclass {
 		/// must be set before control and parent window creation.
 		pub fn on_subclass(&self) -> &MsgEvents {
 			self.0.base.on_subclass()
+		}
+	};
+}
+
+/// Implements methods common to controls, plus `ctrl_id`.
+macro_rules! hwnd_ctrlid_on_onsubclass {
+	($evstruc: ident) => {
+		hwnd_on_onsubclass!($evstruc);
+
+		/// Returns the control ID.
+		pub fn ctrl_id(&self) -> u16 {
+			match &self.0.opts_id {
+				OptsId::Wnd(opts) => opts.ctrl_id,
+				OptsId::Dlg(ctrl_id) => *ctrl_id,
+			}
 		}
 	};
 }

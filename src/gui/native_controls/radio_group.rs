@@ -57,7 +57,7 @@ impl RadioGroup {
 			radios.push(new_radio);
 		}
 
-		let me = Self(
+		let new_self = Self(
 			Arc::new(Immut::new(
 				Obj {
 					radios,
@@ -66,10 +66,10 @@ impl RadioGroup {
 			)),
 		);
 		parent.privileged_events_ref().wm_create({
-			let me = me.clone();
+			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
-		me
+		new_self
 	}
 
 	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
@@ -89,7 +89,7 @@ impl RadioGroup {
 			radios.push(RadioButton::new_dlg(parent, *ctrl_id));
 		}
 
-		let me = Self(
+		let new_self = Self(
 			Arc::new(Immut::new(
 				Obj {
 					radios,
@@ -98,10 +98,10 @@ impl RadioGroup {
 			)),
 		);
 		parent.privileged_events_ref().wm_init_dialog({
-			let me = me.clone();
+			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
-		me
+		new_self
 	}
 
 	fn create(&self) {
@@ -126,7 +126,7 @@ impl RadioGroup {
 
 		if !first_radio.hwnd().is_null() {
 			panic!("Cannot add events after the control is created.");
-		} else if first_radio.is_parent_created() {
+		} else if !first_radio.parent_hwnd().is_null() {
 			panic!("Cannot add events after the parent window is created.");
 		}
 		&self.0.parent_events

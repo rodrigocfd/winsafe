@@ -83,8 +83,8 @@ impl RadioButton {
 		Ok(())
 	}
 
-	pub(crate) fn is_parent_created(&self) -> bool {
-		self.0.base.is_parent_created()
+	pub(crate) fn parent_hwnd(&self) -> &HWND {
+		self.0.base.parent_hwnd()
 	}
 
 	hwnd_ctrlid_on_onsubclass!(ButtonEvents);
