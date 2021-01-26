@@ -2,14 +2,14 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::PostQuitMessage;
+use crate::funcs::{GetAsyncKeyState, PostQuitMessage};
 use crate::gui::events::{ListViewEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg;
-use crate::structs::{LVCOLUMN, LVITEM, POINT, SIZE};
+use crate::structs::{LVCOLUMN, LVITEM, NMLVKEYDOWN, POINT, SIZE};
 use crate::WString;
 
 /// Native
@@ -37,6 +37,7 @@ impl ListView {
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ListViewOpts) -> ListView {
 		let opts = ListViewOpts::define_ctrl_id(opts);
+		let ctrl_id = opts.ctrl_id;
 		let new_self = Self(
 			Arc::new(
 				Obj {
@@ -52,6 +53,7 @@ impl ListView {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
+		new_self.handled_events(parent, ctrl_id);
 		new_self
 	}
 
@@ -73,6 +75,7 @@ impl ListView {
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
+		new_self.handled_events(parent, ctrl_id);
 		new_self
 	}
 
@@ -99,6 +102,23 @@ impl ListView {
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
+	}
+
+	fn handled_events(&self, parent: &dyn Parent, ctrl_id: u16) {
+		parent.privileged_events_ref().add_nfy(ctrl_id, co::NM::LVN_KEYDOWN, {
+			let me = self.clone();
+			move |p| {
+				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
+
+				if lvnk.wVKey == co::VK::from('A' as u16)
+					&& GetAsyncKeyState(co::VK::CONTROL) // Ctrl+A pressed?
+				{
+					me.set_selected_all_items(true)
+						.unwrap_or_else(|err| PostQuitMessage(err));
+				}
+				None
+			}
+		});
 	}
 
 	hwnd_ctrlid_on_onsubclass!(ListViewEvents);
@@ -294,6 +314,18 @@ impl ListView {
 
 		self.hwnd().SendMessage(msg::LvmSetItemText {
 			index: item_index as i32,
+			lvitem: &lvi,
+		})
+	}
+
+	/// Sets or remove the selection for all items.
+	pub fn set_selected_all_items(&self, set: bool) -> WinResult<()> {
+		let mut lvi = LVITEM::default();
+		lvi.stateMask = co::LVIS::SELECTED;
+		if set { lvi.state = co::LVIS::SELECTED; }
+
+		self.hwnd().SendMessage(msg::LvmSetItemState {
+			index: -1,
 			lvitem: &lvi,
 		})
 	}

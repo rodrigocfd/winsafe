@@ -36,6 +36,12 @@ pub fn DispatchMessage(lpMsg: &s::MSG) -> isize {
 	unsafe { user32::DispatchMessageW(const_void(lpMsg)) }
 }
 
+/// [`GetAsyncKeyState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
+/// function.
+pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
+	unsafe { user32::GetAsyncKeyState(u16::from(vKey) as i32) != 0 }
+}
+
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
 /// function.
 pub fn GetDialogBaseUnits() -> i32 {

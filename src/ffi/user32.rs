@@ -35,6 +35,7 @@ extern "system" {
 	pub fn EnumChildWindows(hWndParent: HANDLE, lpEnumFunc: PFUNC, lParam: isize) -> BOOL;
 	pub fn FindWindowW(lpClassName: PCSTR, lpWindowName: PCSTR) -> HANDLE;
 	pub fn GetAncestor(hwnd: HANDLE, gaFlags: u32) -> HANDLE;
+	pub fn GetAsyncKeyState(vKey: i32) -> i16;
 	pub fn GetClassInfoExW(hInstance: HANDLE, lpszClass: PCSTR, lpwcx: PVOID) -> BOOL;
 	pub fn GetClassLongPtrW(hWnd: HANDLE, nIndex: i32) -> usize;
 	pub fn GetClientRect(hWnd: HANDLE, lpRect: PVOID) -> BOOL;
