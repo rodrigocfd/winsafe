@@ -174,6 +174,14 @@ impl ListView {
 		Ok(())
 	}
 
+	/// Ensures that an item is visible in the list.
+	pub fn ensure_item_visible(&self, index: u32) -> WinResult<()> {
+		self.hwnd().SendMessage(msg::LvmEnsureVisible {
+			index: index as i32,
+			entirely_visible: true,
+		})
+	}
+
 	/// Retrieves the index of the focused item.
 	pub fn focused_item(&self) -> Option<u32> {
 		self.hwnd().SendMessage(msg::LvmGetNextItem {
@@ -196,6 +204,11 @@ impl ListView {
 			index: index as i32,
 			mask: co::LVIS::SELECTED,
 		}).has(co::LVIS::SELECTED)
+	}
+
+	/// Tells if the item is currently visible.
+	pub fn is_item_visible(&self, index: u32) -> bool {
+		self.hwnd().SendMessage(msg::LvmIsItemVisible { index: index as i32 })
 	}
 
 	/// Retrieves the total number of items.
@@ -225,7 +238,7 @@ impl ListView {
 				return buf.to_string();
 			}
 
-			buf_sz += BLOCK; // arbitrary
+			buf_sz += BLOCK; // increase buffer size to try again
 		}
 	}
 

@@ -144,7 +144,7 @@ pub struct LVFINDINFO<'a> {
 	psz: *const u16,
 	pub lParam: isize,
 	pub pt: POINT,
-	pub vkDirection: co::VK,
+	pub vkDirection: co::VK_DIR,
 	m_psz: PhantomData<&'a u16>,
 }
 

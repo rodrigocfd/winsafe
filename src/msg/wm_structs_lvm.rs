@@ -61,6 +61,36 @@ impl Message for LvmDeleteItem {
 
 //------------------------------------------------------------------------------
 
+/// [`LVM_ENSUREVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-ensurevisible)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct LvmEnsureVisible {
+	pub index: i32,
+	pub entirely_visible: bool,
+}
+
+impl Message for LvmEnsureVisible {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_ENSUREVISIBLE,
+			wparam: self.index as usize,
+			lparam: !self.entirely_visible as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
 /// message parameters.
 ///

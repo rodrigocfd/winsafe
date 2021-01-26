@@ -230,6 +230,19 @@ const_type! { VK, u16,
 	OEM_CLEAR, 0xfe
 }
 
+const_type! { VK_DIR, u16,
+	/// [`LVFINDINFO`](crate::LVFINDINFO) `vkDirection` (`u16`).
+
+	PRIOR, 0x21
+	NEXT, 0x22
+	END, 0x23
+	HOME, 0x24
+	LEFT, 0x25
+	UP, 0x26
+	RIGHT, 0x27
+	DOWN, 0x28
+}
+
 const_type! { VS_PART, i32,
 	/// System visual style
 	/// [part](https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states)
