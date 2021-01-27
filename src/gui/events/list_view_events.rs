@@ -5,7 +5,7 @@ use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
 use crate::structs as s;
 
-/// Exposes list view
+/// Exposes list view control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
 ///
 /// These event methods are just proxies to the

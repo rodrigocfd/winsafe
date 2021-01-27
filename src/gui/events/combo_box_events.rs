@@ -4,7 +4,7 @@ use crate::co;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
 
-/// Exposes button
+/// Exposes combo box control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications).
 ///
 /// These event methods are just proxies to the

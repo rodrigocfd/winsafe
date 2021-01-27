@@ -6,7 +6,7 @@ use crate::gui::events::MsgEvents;
 use crate::gui::immut::Immut;
 use crate::gui::traits::Parent;
 
-/// Exposes button
+/// Exposes button control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 /// for a [`RadioGroup`](crate::gui::RadioGroup).
 ///

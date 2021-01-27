@@ -4,7 +4,7 @@ use crate::co;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
 
-/// Exposes edit
+/// Exposes edit control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
