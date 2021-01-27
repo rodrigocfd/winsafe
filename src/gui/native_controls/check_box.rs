@@ -83,7 +83,7 @@ impl CheckBox {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
-					if opts.vertical_text_align { pos.y += 3; }
+					if opts.baseline_text_align { pos.y += 3; }
 					multiply_dpi(Some(&mut pos), None)?;
 
 					let bound_box = calc_text_bound_box_check(&opts.text)?;
@@ -145,7 +145,7 @@ pub struct CheckBoxOpts {
 	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
 	///
 	/// Defaults to false.
-	pub vertical_text_align: bool,
+	pub baseline_text_align: bool,
 	/// Check box styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -176,7 +176,7 @@ impl Default for CheckBoxOpts {
 		Self {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
-			vertical_text_align: false,
+			baseline_text_align: false,
 			button_style: co::BS::AUTOCHECKBOX,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,
