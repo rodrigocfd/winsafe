@@ -210,6 +210,8 @@ impl Default for MENUITEMINFO {
 	}
 }
 
+/// [`MINMAXINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-minmaxinfo)
+/// struct.
 #[repr(C)]
 #[derive(Default, Clone, Eq, PartialEq)]
 pub struct MINMAXINFO {
