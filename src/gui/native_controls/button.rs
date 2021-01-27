@@ -80,12 +80,12 @@ impl Button {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
+					let mut sz = SIZE::new(opts.width as i32, opts.height as i32);
 					if opts.vertical_text_align { pos.y -= 1; }
-					multiply_dpi(Some(&mut pos), None)?;
+					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
 					let our_hwnd = self.0.base.create_window( // may panic
-						"BUTTON", Some(&opts.text), pos,
-						SIZE::new(opts.width as i32, opts.height as i32),
+						"BUTTON", Some(&opts.text), pos, sz,
 						opts.ctrl_id,
 						opts.ex_window_style,
 						opts.window_style | opts.button_style.into(),
