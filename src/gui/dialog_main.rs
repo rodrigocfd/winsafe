@@ -4,9 +4,9 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
+use crate::gui::base::Base;
 use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
-use crate::gui::main_loop::run_loop;
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::WmSetIcon;
@@ -65,7 +65,7 @@ impl DialogMain {
 		self.set_icon_if_any(hinst)?;
 		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
-		run_loop(self.hwnd_ref(), haccel) // blocks until window is closed
+		Base::run_main_loop(haccel) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {

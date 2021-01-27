@@ -1,10 +1,13 @@
 use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
+use crate::co;
+use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::traits::Parent;
+use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::Wm;
-use crate::handles::{HINSTANCE, HWND};
+use crate::structs::MSG;
 
 /// Base to `WindowBase` and `DialogBase`.
 pub struct Base {
@@ -65,5 +68,40 @@ impl Base {
 
 	pub fn process_privileged_messages(&mut self, wm_any: Wm) {
 		self.privileged_events.process_all_messages(wm_any);
+	}
+
+	pub fn run_main_loop(haccel: Option<HACCEL>) -> WinResult<()> {
+		loop {
+			let mut msg = MSG::default();
+			if !GetMessage(&mut msg, None, 0, 0)? {
+				// WM_QUIT was sent, gracefully terminate the program.
+				// wParam has the program exit code.
+				// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
+				return match co::ERROR(msg.wParam as u32) {
+					co::ERROR::SUCCESS => Ok(()),
+					err => Err(err),
+				};
+			}
+
+			// If a child window, will retrieve its top-level parent.
+			// If a top-level, use itself.
+			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
+				.unwrap_or(msg.hwnd);
+
+			// If we have an accelerator table, try to translate the message.
+			if let Some(haccel) = haccel {
+				if hwnd_top_level.TranslateAccelerator(haccel, &mut msg).is_ok() {
+					continue; // message translated
+				}
+			}
+
+			// Try to process keyboard actions for child controls.
+			if hwnd_top_level.IsDialogMessage(&mut msg) {
+				continue;
+			}
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
 }

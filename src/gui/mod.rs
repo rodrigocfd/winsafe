@@ -14,7 +14,6 @@ mod dialog_control;
 mod dialog_main;
 mod dialog_modal;
 mod immut;
-mod main_loop;
 mod native_controls;
 mod privs;
 mod resizer;

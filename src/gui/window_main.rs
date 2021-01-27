@@ -4,9 +4,9 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
+use crate::gui::base::Base;
 use crate::gui::events::MsgEvents;
 use crate::gui::immut::Immut;
-use crate::gui::main_loop::run_loop;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::traits::Parent;
 use crate::gui::window_base::WindowBase;
@@ -96,7 +96,7 @@ impl WindowMain {
 		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		self.hwnd_ref().UpdateWindow()?;
 
-		run_loop(self.hwnd_ref(), opts.accel_table.as_opt()) // blocks until window is closed
+		Base::run_main_loop(opts.accel_table.as_opt()) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
