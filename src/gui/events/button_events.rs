@@ -11,6 +11,9 @@ use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 /// These event methods are just proxies to the
 /// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
 /// the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// control.
 pub struct ButtonEvents {
 	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_id: u16,

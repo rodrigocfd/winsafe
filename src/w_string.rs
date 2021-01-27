@@ -32,20 +32,21 @@ impl WString {
 	}
 
 	/// Creates a new UTF-16 string from an ordinary `&str`, and stores it
-	/// internally.
+	/// internally, appending a terminating null.
 	pub fn from_str(val: &str) -> WString {
 		Self {
 			char_vec: Some(
 				OsStr::new(val)
 					.encode_wide()
-					.chain(std::iter::once(0)) // append terminating null
+					.chain(std::iter::once(0))
 					.collect::<Vec<u16>>(),
 			),
 		}
 	}
 
 	/// Creates a new UTF-16 string by copying from a non-null-terminated buffer,
-	/// specifying the number of existing chars.
+	/// specifying the number of existing chars. A terminating null will be
+	/// appended.
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> WString {
 		if src.is_null() {
 			Self::default()
@@ -57,15 +58,15 @@ impl WString {
 				std::ptr::copy_nonoverlapping(
 					src,
 					vec_ref.as_mut_ptr(),
-					num_chars, // won't copy terminating null
+					num_chars, // copy the exact number of chars, no terminating null
 				);
-				vec_ref.set_len(num_chars + 1); // leave room for terminating null
 			}
 			me
 		}
 	}
 
-	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
+	/// Creates a new UTF-16 string by copying from a null-terminated buffer. The
+	/// terminating null will be appended.
 	pub fn from_wchars_nullt(src: *const u16) -> WString {
 		if src.is_null() {
 			Self::default()
@@ -77,7 +78,7 @@ impl WString {
 
 	/// Creates a new UTF-16 string by copying from a slice.
 	pub fn from_wchars_slice(src: &[u16]) -> WString {
-		Self::from_wchars_count(&src[0], src.len())
+		Self::from_wchars_count(src.as_ptr(), src.len())
 	}
 
 	/// Creates a new UTF-16 buffer allocated with an specific length. All UTF-16
@@ -151,16 +152,49 @@ impl WString {
 		}
 	}
 
-	/// Copies the content into an external buffer.
+	/// Copies the content into the external buffer pointed by `dest`. A
+	/// terminating null will always be appended.
+	///
+	/// # Panics
+	///
+	/// Panics if `dest` is null or if `len` is zero. If `len` is 1, the buffer
+	/// will receive a single null char.
+	pub fn copy_to_pointer(&self, dest: *mut u16, len: usize) {
+		if dest.is_null() {
+			panic!("Destination buffer cannot be null.");
+		} else if len == 0 {
+			panic!("Destination buffer cannot have zero length");
+		}
+
+		let mut dest_slice = unsafe { std::slice::from_raw_parts_mut(dest, len) };
+		self.copy_to_slice(&mut dest_slice);
+	}
+
+	/// Copies the content into an external buffer. A terminating null will
+	/// always be appended.
+	///
+	/// # Panics
+	///
+	/// Panics if `dest` has zero length. If length is 1, the buffer will receive
+	/// a single null char.
 	pub fn copy_to_slice(&self, dest: &mut [u16]) {
+		if dest.is_empty() {
+			panic!("Destination buffer cannot have zero length");
+		}
+
 		if let Some(vec_ref) = self.char_vec.as_ref() {
-			for (idx, ch) in vec_ref.iter().enumerate() {
-				dest[idx] = *ch;
+			unsafe {
+				std::ptr::copy_nonoverlapping(
+					vec_ref.as_ptr(),
+					dest.as_mut_ptr(),
+					std::cmp::min(vec_ref.len(), dest.len()), // copy the exact number of chars, no terminating null
+				);
 			}
+			*dest.last_mut().unwrap() = 0; // terminating null
 		}
 	}
 
-	/// Fills the available buffer with zero values.
+	/// Fills the entire buffer with zero values.
 	pub fn fill_with_zero(&mut self) {
 		if let Some(vec_ref) = self.char_vec.as_mut() {
 			for wchar in vec_ref {

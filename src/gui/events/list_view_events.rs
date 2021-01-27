@@ -11,6 +11,9 @@ use crate::structs as s;
 /// These event methods are just proxies to the
 /// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
 /// the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// control.
 pub struct ListViewEvents {
 	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
 	ctrl_id: u16,
@@ -88,7 +91,7 @@ impl ListViewEvents {
 		/// notification.
 	}
 
-	nfy_event_p_bool! { lvn_get_empty_markup, co::NM::LVN_GETEMPTYMARKUP, s::NMLVEMPTYMARKUP,
+	nfy_event_mut_p_bool! { lvn_get_empty_markup, co::NM::LVN_GETEMPTYMARKUP, s::NMLVEMPTYMARKUP,
 		/// [`LVN_GETEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-getemptymarkup)
 		/// notification.
 	}
@@ -151,12 +154,12 @@ impl ListViewEvents {
 	/// [`LVN_ODFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-odfinditem)
 	/// notification.
 	pub fn lvn_od_find_item<F>(&self, func: F)
-		where F: FnMut(&s::NMLVFINDITEM) -> Option<u32> + 'static,
+		where F: FnMut(&mut s::NMLVFINDITEM) -> Option<u32> + 'static,
 	{
 		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::LVN_ODFINDITEM, {
 			let mut func = func;
 			move |p| {
-				Some(match func(unsafe { p.cast_nmhdr::<s::NMLVFINDITEM>() }) {
+				Some(match func(unsafe { p.cast_nmhdr_mut::<s::NMLVFINDITEM>() }) {
 					Some(idx) => idx as isize,
 					None => -1,
 				})

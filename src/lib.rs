@@ -46,22 +46,24 @@
 //!
 //! # Structs
 //!
-//! WinSafe structs are internally marked with `#[repr(C)]`. They all implement
-//! `Default` trait, and size fields like `cbSize` are private and automatically
-//! initialized.
+//! WinSafe structs are direct representations of Win32 structs, all being
+//! marked with `#[repr(C)]`. Fields that control the struct size, usually named
+//! `cbSize`, are not public. They are automatically filled when the struct is
+//! instantiated.
 //!
-//! String pointer fields are also private, and can be retrieved using a getter
-//! method with the same field name. They can be set through a setter method,
-//! which often requires a buddy [`WString`](crate::WString) buffer:
+//! Pointer fields are also private. They can only be set and retrieved with
+//! getter and setter methods. In particular, when setting a string pointer
+//! field, you need to pass a reference to a [`WString`](crate::WString) buffer,
+//! which will keep the string contents:
 //!
 //! ```rust,ignore
 //! use winsafe::{WNDCLASSEX, WString};
 //!
 //! let mut wcx = WNDCLASSEX::default(); // cbSize automatically set
-//! println!("Class name: {}", wcx.lpszClassName()); // initially an empty string
+//! println!("Class name: {}", wcx.lpszClassName()); // retrieve; initially an empty string
 //!
 //! let buf = WString::from_str("CLASS_NAME");
-//! wcx.set_lpszClassName(&buf); // set string pointer field
+//! wcx.set_lpszClassName(&buf); // set; pass reference to buffer
 //! ```
 //!
 //! # Constants

@@ -18,6 +18,9 @@ pub enum ProcessResult {
 
 /// Exposes window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// window.
 pub struct MsgEvents(Immut<Obj>);
 
 struct Obj { // actual fields of MsgEvents
