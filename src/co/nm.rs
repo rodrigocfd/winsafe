@@ -4,6 +4,7 @@ const_type! { NM, i32,
 	///
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-control-reference#notifications);
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
+	/// * [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications);
 	/// * [header](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications);
 	/// * [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications);
@@ -13,6 +14,8 @@ const_type! { NM, i32,
 const_type_priv_values! { NM // first markers
 	FIRST, 0
 	BCN_FIRST, -1250
+	DTN_FIRST, -740
+	DTN_FIRST2, -753
 	HDN_FIRST, -300
 	LVN_FIRST, -100
 	SBN_FIRST, -880
@@ -44,6 +47,16 @@ const_type_pub_values! { NM // NM, common controls
 const_type_pub_values! { NM // BCN, button
 	BCN_HOTITEMCHANGE, Self::BCN_FIRST.0 + 0x0001
 	BCN_DROPDOWN, Self::BCN_FIRST.0 + 0x0002
+}
+
+const_type_pub_values! { NM // DTN, date and time picker
+	DTN_CLOSEUP, Self::DTN_FIRST2.0
+	DTN_DATETIMECHANGE, Self::DTN_FIRST2.0 - 6
+	DTN_DROPDOWN, Self::DTN_FIRST2.0 - 1
+	DTN_FORMAT, Self::DTN_FIRST2.0 - 3
+	DTN_FORMATQUERY, Self::DTN_FIRST.0 - 3
+	DTN_USERSTRING, Self::DTN_FIRST.0 - 5
+	DTN_WMKEYDOWN, Self::DTN_FIRST.0 - 4
 }
 
 const_type_pub_values! { NM // HDM, header

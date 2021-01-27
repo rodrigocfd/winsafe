@@ -5,6 +5,7 @@ const_type! { WM, u32,
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages);
 	/// * [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages);
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro);
+	/// * [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages);
 	/// * [header](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages);
 	/// * [label](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages);
@@ -16,6 +17,7 @@ const_type_priv_values! { WM // first markers
 	BCM_FIRST, 0x1600
 	CBM_FIRST, 0x1700
 	CCM_FIRST, 0x2000
+	DTM_FIRST, 0x1000
 	HDM_FIRST, 0x1200
 	LVM_FIRST, 0x1000
 	TVM_FIRST, 0x1100
@@ -359,6 +361,24 @@ const_type_pub_values! { WM // CCM, common controls
 	CCM_SETNOTIFYWINDOW, Self::CCM_FIRST.0 + 0x9
 	CCM_SETWINDOWTHEME, Self::CCM_FIRST.0 + 0xb
 	CCM_DPISCALE, Self::CCM_FIRST.0 + 0xc
+}
+
+const_type_pub_values! { WM // DTM, date and time picker
+	DTM_GETSYSTEMTIME, Self::DTM_FIRST.0 + 1
+	DTM_SETSYSTEMTIME, Self::DTM_FIRST.0 + 2
+	DTM_GETRANGE, Self::DTM_FIRST.0 + 3
+	DTM_SETRANGE, Self::DTM_FIRST.0 + 4
+	DTM_SETFORMAT, Self::DTM_FIRST.0 + 50
+	DTM_SETMCCOLOR, Self::DTM_FIRST.0 + 6
+	DTM_GETMCCOLOR, Self::DTM_FIRST.0 + 7
+	DTM_GETMONTHCAL, Self::DTM_FIRST.0 + 8
+	DTM_SETMCFONT, Self::DTM_FIRST.0 + 9
+	DTM_GETMCFONT, Self::DTM_FIRST.0 + 10
+	DTM_SETMCSTYLE, Self::DTM_FIRST.0 + 11
+	DTM_GETMCSTYLE, Self::DTM_FIRST.0 + 12
+	DTM_CLOSEMONTHCAL, Self::DTM_FIRST.0 + 13
+	DTM_GETDATETIMEPICKERINFO, Self::DTM_FIRST.0 + 14
+	DTM_GETIDEALSIZE, Self::DTM_FIRST.0 + 15
 }
 
 const_type_pub_values! { WM // HDM, header
