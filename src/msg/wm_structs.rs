@@ -1,6 +1,6 @@
 use crate::aliases::TIMERPROC;
 use crate::co;
-use crate::enums::{HwndHmenu, NccalcRect, WsWsex};
+use crate::enums::{HwndHmenu, NccspRect, WsWsex};
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{Message, MessageHandleable};
@@ -785,7 +785,7 @@ impl<'a> MessageHandleable for WmMoving<'a> {
 ///
 /// Return type: `WVR`.
 pub struct WmNcCalcSize<'a, 'b> {
-	pub data: NccalcRect<'a, 'b>,
+	pub data: NccspRect<'a, 'b>,
 }
 
 impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
@@ -799,12 +799,12 @@ impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
 		Wm {
 			msg_id: co::WM::NCCALCSIZE,
 			wparam: match &self.data {
-				NccalcRect::Nccalc(_) => true as usize,
-				NccalcRect::Rect(_) => false as usize,
+				NccspRect::Nccsp(_) => true as usize,
+				NccspRect::Rect(_) => false as usize,
 			},
 			lparam: match &self.data {
-				NccalcRect::Nccalc(nccalc) => ref_to_lp(nccalc),
-				NccalcRect::Rect(rc) => ref_to_lp(rc),
+				NccspRect::Nccsp(nccalc) => ref_to_lp(nccalc),
+				NccspRect::Rect(rc) => ref_to_lp(rc),
 			},
 		}
 	}
@@ -814,8 +814,8 @@ impl<'a, 'b> MessageHandleable for WmNcCalcSize<'a, 'b> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			data: match p.wparam {
-				0 => NccalcRect::Rect(lp_to_mut_ref(p)),
-				_ => NccalcRect::Nccalc(lp_to_mut_ref(p)),
+				0 => NccspRect::Rect(lp_to_mut_ref(p)),
+				_ => NccspRect::Nccsp(lp_to_mut_ref(p)),
 			},
 		}
 	}
@@ -949,6 +949,14 @@ impl<'a> WmNotify<'a> {
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
 		&*(self.nmhdr as *const s::NMHDR as *const T)
+	}
+
+	/// Casts the `NMHDR` mutable reference into a derived struct.
+	///
+	/// You should always prefer the specific notifications, which perform this
+	/// conversion for you.
+	pub unsafe fn cast_nmhdr_mut<T>(&self) -> &mut T {
+		&mut *(self.nmhdr as *const s::NMHDR as *mut T)
 	}
 }
 

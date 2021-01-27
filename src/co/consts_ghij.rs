@@ -70,6 +70,14 @@ const_type! { GDC, i32,
 	COLORMGMTCAPS, 121
 }
 
+const_type! { GDT, u32,
+	/// [`NMDATETIMECHANGE`](crate::NMDATETIMECHANGE) and
+	/// [`NMDATETIMESTRING`](crate::NMDATETIMESTRING) `dwFlags` (`u32`).
+
+	VALID, 0
+	NONE, 1
+}
+
 const_type! { GW, u32,
 	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 

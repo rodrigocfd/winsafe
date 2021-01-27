@@ -158,7 +158,19 @@ pub struct LOGFONT {
 	pub lfClipPrecision: co::CLIP,
 	pub lfQuality: co::QUALITY,
 	pub lfPitchAndFamily: co::PITCH,
-	pub lfFaceName: [u16; LF_FACESIZE],
+	lfFaceName: [u16; LF_FACESIZE],
+}
+
+impl LOGFONT {
+	/// Returns the `lfFaceName` field.
+	pub fn lfFaceName(&self) -> String {
+		WString::from_wchars_slice(&self.lfFaceName).to_string()
+	}
+
+	/// Sets the `lfFaceName` field.
+	pub fn set_lfFaceName(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.lfFaceName);
+	}
 }
 
 /// [`MENUINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuinfo)
@@ -329,7 +341,7 @@ pub struct OSVERSIONINFOEX {
 	pub dwMinorVersion: u32,
 	pub dwBuildNumber: u32,
 	pub dwPlatformId: co::VER_PLATFORM,
-	pub szCSDVersion: [u16; 128],
+	szCSDVersion: [u16; 128],
 	pub wServicePackMajor: u16,
 	pub wServicePackMinor: u16,
 	pub wSuiteMask: co::VER_SUITE,
@@ -342,6 +354,18 @@ impl Default for OSVERSIONINFOEX {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.dwOSVersionInfoSize = std::mem::size_of::<Self>() as u32;
 		obj
+	}
+}
+
+impl OSVERSIONINFOEX {
+	/// Returns the `szCSDVersion` field.
+	pub fn szCSDVersion(&self) -> String {
+		WString::from_wchars_slice(&self.szCSDVersion).to_string()
+	}
+
+	/// Sets the `szCSDVersion` field.
+	pub fn get_szCSDVersion(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.szCSDVersion);
 	}
 }
 
@@ -446,6 +470,21 @@ pub struct STYLESTRUCT_WS_EX {
 	pub styleNew: co::WS_EX,
 }
 
+/// [`SYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct SYSTEMTIME {
+	pub wYear: u16,
+	pub wMonth: u16,
+	pub wDayOfWeek: u16,
+	pub wDay: u16,
+	pub wHour: u16,
+	pub wMinute: u16,
+	pub wSecond: u16,
+	pub wMilliseconds: u16,
+}
+
 /// [`WINDOWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.
 #[repr(C)]
@@ -545,8 +584,8 @@ pub struct WNDCLASSEX<'a, 'b> {
 	lpszMenuName: *const u16,
 	lpszClassName: *const u16,
 	pub hIconSm: h::HICON,
-	_markerMenuName: PhantomData<&'a u16>,
-	_markerClassName: PhantomData<&'b u16>,
+	m_lpszMenuName: PhantomData<&'a u16>,
+	m_lpszClassName: PhantomData<&'b u16>,
 }
 
 impl<'a, 'b> Default for WNDCLASSEX<'a, 'b> {

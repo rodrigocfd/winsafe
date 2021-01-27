@@ -7,6 +7,7 @@ mod func_store;
 
 mod button_events;
 mod combo_box_events;
+mod date_time_picker_events;
 mod edit_events;
 mod label_events;
 mod list_view_events;
@@ -16,6 +17,7 @@ mod status_bar_events;
 
 pub use button_events::ButtonEvents;
 pub use combo_box_events::ComboBoxEvents;
+pub use date_time_picker_events::DateTimePickerEvents;
 pub use edit_events::EditEvents;
 pub use label_events::LabelEvents;
 pub use list_view_events::ListViewEvents;

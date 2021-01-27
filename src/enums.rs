@@ -284,9 +284,11 @@ impl IdStr {
 /// Variant parameter for:
 ///
 /// * [`WmNcCalcSize`](crate::msg::WmNcCalcSize) `data`.
-pub enum NccalcRect<'a, 'b> {
-	Nccalc(&'b NCCALCSIZE_PARAMS<'a>),
-	Rect(&'b RECT),
+pub enum NccspRect<'a, 'b> {
+	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).
+	Nccsp(&'b mut NCCALCSIZE_PARAMS<'a>),
+	/// Mutable reference to [`RECT`](crate::RECT).
+	Rect(&'b mut RECT),
 }
 
 //------------------------------------------------------------------------------

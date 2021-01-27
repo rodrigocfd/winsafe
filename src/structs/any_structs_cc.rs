@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::handles::{HDC, HIMAGELIST, HTREEITEM};
 use crate::privs::{L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
-use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE};
+use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
 use crate::WString;
 
 /// [`BUTTON_IMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
@@ -242,6 +242,128 @@ pub struct NMCUSTOMDRAW {
 
 impl_default_zero!(NMCUSTOMDRAW);
 
+/// [`NMDATETIMECHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimechange)
+/// struct
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct NMDATETIMECHANGE {
+	pub nmhdr: NMHDR,
+	pub dwFlags: co::GDT,
+	pub st: SYSTEMTIME,
+}
+
+/// [`NMDATETIMEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatw)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct NMDATETIMEFORMAT<'a> {
+	pub nmhdr: NMHDR,
+	pszFormat: *const u16,
+	pub st: SYSTEMTIME,
+	pszDisplay: *const u16,
+	szDisplay: [u16; 64], // used as a buffer to pszDisplay
+	m_pszFormat: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(NMDATETIMEFORMAT, 'a);
+
+impl<'a> NMDATETIMEFORMAT<'a> {
+	/// Returns the `pszFormat` field.
+	pub fn pszFormat(&self) -> String {
+		WString::from_wchars_nullt(self.pszFormat).to_string()
+	}
+
+	/// Sets the `pszFormat` field.
+	pub fn set_pszFormat(&mut self, buf: &'a WString) {
+		self.pszFormat = unsafe { buf.as_ptr() };
+	}
+
+	/// Returns the `pszDisplay` field.
+	pub fn pszDisplay(&self) -> String {
+		WString::from_wchars_nullt(self.pszDisplay).to_string()
+	}
+
+	/// Sets the `pszDisplay` field.
+	pub fn set_pszDisplay(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.szDisplay);
+	}
+}
+
+/// [`NMDATETIMEFORMATQUERY`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatqueryw)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct NMDATETIMEFORMATQUERY<'a> {
+	pub nmhdr: NMHDR,
+	pszFormat: *const u16,
+	pub szMax: SIZE,
+	m_pszFormat: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(NMDATETIMEFORMATQUERY, 'a);
+
+impl<'a> NMDATETIMEFORMATQUERY<'a> {
+	/// Returns the `pszFormat` field.
+	pub fn pszFormat(&self) -> String {
+		WString::from_wchars_nullt(self.pszFormat).to_string()
+	}
+
+	/// Sets the `pszFormat` field.
+	pub fn set_pszFormat(&mut self, buf: &'a WString) {
+		self.pszFormat = unsafe { buf.as_ptr() };
+	}
+}
+
+/// [`NMDATETIMESTRING`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimestringw)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Eq, PartialEq)]
+pub struct NMDATETIMESTRING<'a> {
+	pub nmhdr: NMHDR,
+	pszUserString: *const u16,
+	pub st: SYSTEMTIME,
+	pub dwFlags: co::GDT,
+	m_pszUserString: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(NMDATETIMESTRING, 'a);
+
+impl<'a> NMDATETIMESTRING<'a> {
+	/// Returns the `pszUserString` field.
+	pub fn pszUserString(&self) -> String {
+		WString::from_wchars_nullt(self.pszUserString).to_string()
+	}
+
+	/// Sets the `pszUserString` field.
+	pub fn set_pszUserString(&mut self, buf: &'a WString) {
+		self.pszUserString = unsafe { buf.as_ptr() };
+	}
+}
+
+/// [`NMDATETIMEWMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimewmkeydownw)
+/// struct.
+pub struct NMDATETIMEWMKEYDOWN<'a> {
+	pub nmhdr: NMHDR,
+	pub nVirtKey: i32,
+	pszFormat: *const u16,
+	pub st: SYSTEMTIME,
+	m_pszFormat: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(NMDATETIMEWMKEYDOWN, 'a);
+
+impl<'a> NMDATETIMEWMKEYDOWN<'a> {
+	/// Returns the `pszFormat` field.
+	pub fn pszFormat(&self) -> String {
+		WString::from_wchars_nullt(self.pszFormat).to_string()
+	}
+
+	/// Sets the `pszFormat` field.
+	pub fn set_pszFormat(&mut self, buf: &'a WString) {
+		self.pszFormat = unsafe { buf.as_ptr() };
+	}
+}
+
 /// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
 /// struct.
 #[repr(C)]
@@ -318,10 +440,22 @@ pub struct NMLVDISPINFO<'a> {
 pub struct NMLVEMPTYMARKUP {
 	pub hdr: NMHDR,
 	pub dwFlags: co::EMF,
-	pub szMarkup: [u16; L_MAX_URL_LENGTH],
+	szMarkup: [u16; L_MAX_URL_LENGTH],
 }
 
 impl_default_zero!(NMLVEMPTYMARKUP);
+
+impl NMLVEMPTYMARKUP {
+	/// Returns the `szMarkup` field.
+	pub fn szMarkup(&self) -> String {
+		WString::from_wchars_slice(&self.szMarkup).to_string()
+	}
+
+	/// Sets the `szMarkup` field.
+	pub fn get_szID(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.szMarkup);
+	}
+}
 
 /// [`NMLVFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
 /// struct.

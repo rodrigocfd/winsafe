@@ -17,7 +17,7 @@ macro_rules! cmd_event {
 }
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a NMHDR
-/// parameter, which is not sent because it carries no useful data.
+/// parameter, which is not passed because it carries no useful data.
 macro_rules! nfy_event {
 	(
 		$name:ident, $nfy:expr,
