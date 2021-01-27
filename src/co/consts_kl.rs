@@ -173,6 +173,30 @@ impl LANG {
 	}
 }
 
+const_type_ws! { LBS,
+	/// List box control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-box-styles)
+	/// (`u32`).
+
+	NOTIFY, 0x0001
+	SORT, 0x0002
+	NOREDRAW, 0x0004
+	MULTIPLESEL, 0x0008
+	OWNERDRAWFIXED, 0x0010
+	OWNERDRAWVARIABLE, 0x0020
+	HASSTRINGS, 0x0040
+	USETABSTOPS, 0x0080
+	NOINTEGRALHEIGHT, 0x0100
+	MULTICOLUMN, 0x0200
+	WANTKEYBOARDINPUT, 0x0400
+	EXTENDEDSEL, 0x0800
+	DISABLENOSCROLL, 0x1000
+	NODATA, 0x2000
+	NOSEL, 0x4000
+	COMBOBOX, 0x8000
+	STANDARD, Self::NOTIFY.0 | Self::SORT.0 | WS::VSCROLL.0 | WS::BORDER.0
+}
+
 const_type! { LIF, u32,
 	/// [`LITEM`](crate::LITEM) `mask` (`u32`).
 
@@ -353,7 +377,7 @@ const_type! { LVNI, u32,
 	TORIGHT, 0x0800
 }
 
-const_type! { LVS, u32,
+const_type_ws! { LVS,
 	/// List view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
 	/// (`u32`).
@@ -381,13 +405,8 @@ const_type! { LVS, u32,
 	NOCOLUMNHEADER, 0x4000
 	NOSORTHEADER, 0x8000
 }
-impl From<LVS> for WS {
-	fn from(v: LVS) -> Self {
-		Self(v.0)
-	}
-}
 
-const_type! { LVS_EX, u32,
+const_type_wsex! { LVS_EX,
 	/// Extended list view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
 	/// (`u32`).
@@ -424,8 +443,16 @@ const_type! { LVS_EX, u32,
 	UNDERLINECOLD, 0x00001000
 	UNDERLINEHOT, 0x00000800
 }
-impl From<LVS_EX> for WS_EX {
-	fn from(v: LVS_EX) -> Self {
-		Self(v.0)
-	}
+
+const_type_ws! { LWS,
+	/// SysLink control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
+	/// (`u32`).
+
+	TRANSPARENT, 0x0001
+	IGNORERETURN, 0x0002
+	NOPREFIX, 0x0004
+	USEVISUALSTYLE, 0x0008
+	USECUSTOMTEXT, 0x0010
+	RIGHT, 0x0020
 }

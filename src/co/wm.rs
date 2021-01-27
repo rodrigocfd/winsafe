@@ -7,7 +7,9 @@ const_type! { WM, u32,
 	/// * [common controls](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro);
 	/// * [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages);
 	/// * [header](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages);
+	/// * [IP address](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages);
 	/// * [label](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages);
+	/// * [list box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages);
 	/// * [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages);
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages).
@@ -410,11 +412,64 @@ const_type_pub_values! { WM // HDM, header
 	HDM_SETFOCUSEDITEM, Self::HDM_FIRST.0 + 28
 }
 
+const_type_pub_values! { WM // IPM, IP address
+	IPM_CLEARADDRESS, Self::USER.0 + 100
+	IPM_SETADDRESS, Self::USER.0 + 101
+	IPM_GETADDRESS, Self::USER.0 + 102
+	IPM_SETRANGE, Self::USER.0 + 103
+	IPM_SETFOCUS, Self::USER.0 + 104
+	IPM_ISBLANK, Self::USER.0 + 105
+}
+
 const_type_pub_values! { WM // STM, label
 	STM_SETICON, 0x0170
 	STM_GETICON, 0x0171
 	STM_SETIMAGE, 0x0172
 	STM_GETIMAGE, 0x0173
+}
+
+const_type_pub_values! { WM // LB, list box
+	LB_ADDSTRING, 0x0180
+	LB_INSERTSTRING, 0x0181
+	LB_DELETESTRING, 0x0182
+	LB_SELITEMRANGEEX, 0x0183
+	LB_RESETCONTENT, 0x0184
+	LB_SETSEL, 0x0185
+	LB_SETCURSEL, 0x0186
+	LB_GETSEL, 0x0187
+	LB_GETCURSEL, 0x0188
+	LB_GETTEXT, 0x0189
+	LB_GETTEXTLEN, 0x018a
+	LB_GETCOUNT, 0x018b
+	LB_SELECTSTRING, 0x018c
+	LB_DIR, 0x018d
+	LB_GETTOPINDEX, 0x018e
+	LB_FINDSTRING, 0x018f
+	LB_GETSELCOUNT, 0x0190
+	LB_GETSELITEMS, 0x0191
+	LB_SETTABSTOPS, 0x0192
+	LB_GETHORIZONTALEXTENT, 0x0193
+	LB_SETHORIZONTALEXTENT, 0x0194
+	LB_SETCOLUMNWIDTH, 0x0195
+	LB_ADDFILE, 0x0196
+	LB_SETTOPINDEX, 0x0197
+	LB_GETITEMRECT, 0x0198
+	LB_GETITEMDATA, 0x0199
+	LB_SETITEMDATA, 0x019a
+	LB_SELITEMRANGE, 0x019b
+	LB_SETANCHORINDEX, 0x019c
+	LB_GETANCHORINDEX, 0x019d
+	LB_SETCARETINDEX, 0x019e
+	LB_GETCARETINDEX, 0x019f
+	LB_SETITEMHEIGHT, 0x01a0
+	LB_GETITEMHEIGHT, 0x01a1
+	LB_FINDSTRINGEXACT, 0x01a2
+	LB_SETLOCALE, 0x01a5
+	LB_GETLOCALE, 0x01a6
+	LB_SETCOUNT, 0x01a7
+	LB_INITSTORAGE, 0x01a8
+	LB_ITEMFROMPOINT, 0x01a9
+	LB_GETLISTBOXINFO, 0x01b2
 }
 
 const_type_pub_values! { WM // LVM, list view

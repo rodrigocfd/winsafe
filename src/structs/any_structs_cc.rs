@@ -258,6 +258,25 @@ pub struct NMITEMACTIVATE {
 	pub uKeyFlags: co::LVKF,
 }
 
+/// [`NMIPADDRESS`](https://docs.microsoft.com/en-us/windows/win32/api/Commctrl/ns-commctrl-nmipaddress)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct NMIPADDRESS {
+	pub hdr: NMHDR,
+	pub iField: i32,
+	pub iValue: i32,
+}
+
+/// [`NMLINK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlink)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct NMLINK {
+	pub hdr: NMHDR,
+	pub item: LITEM,
+}
+
 /// [`NMLISTVIEW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlistview)
 /// struct.
 #[repr(C)]

@@ -1,5 +1,23 @@
 #![allow(non_upper_case_globals)]
 
+use crate::co::WS;
+
+const_type_ws! { UDS,
+	/// Up-down control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
+	/// (`u32`).
+
+	WRAP, 0x0001
+	SETBUDDYINT, 0x0002
+	ALIGNRIGHT, 0x0004
+	ALIGNLEFT, 0x0008
+	AUTOBUDDY, 0x0010
+	ARROWKEYS, 0x0020
+	HORZ, 0x0040
+	NOTHOUSANDS, 0x0080
+	HOTTRACK, 0x0100
+}
+
 const_type! { VER_COND, u8,
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `Condition` (`u8`).
 

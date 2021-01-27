@@ -1,6 +1,6 @@
-use crate::co::{ACCESS_RIGHTS, WS};
+use crate::co::{ACCESS_RIGHTS, WS, WS_EX};
 
-const_type! { SBARS, u32,
+const_type_ws! { SBARS,
 	/// Status bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`).
@@ -8,11 +8,6 @@ const_type! { SBARS, u32,
 	NONE, 0
 	SIZEGRIP, 0x0100
 	TOOLTIPS, 0x0800
-}
-impl From<SBARS> for WS {
-	fn from(v: SBARS) -> Self {
-		Self(v.0)
-	}
 }
 
 const_type! { SBT, u16,
@@ -193,7 +188,7 @@ const_type! { SPIF, u32,
 	SENDCHANGE, Self::SENDWININICHANGE.0
 }
 
-const_type! { SS, u32,
+const_type_ws! { SS,
 	/// Label control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/static-control-styles)
 	/// (`u32`).
@@ -229,11 +224,6 @@ const_type! { SS, u32,
 	ENDELLIPSIS, 0x00004000
 	PATHELLIPSIS, 0x00008000
 	WORDELLIPSIS, 0x0000c000
-}
-impl From<SS> for WS {
-	fn from(v: SS) -> Self {
-		Self(v.0)
-	}
 }
 
 const_type! { STANDARD_RIGHTS, u32,
@@ -660,6 +650,66 @@ const_type! { SWP, u32,
 	ASYNCWINDOWPOS, 0x4000
 }
 
+const_type_ws! { TBS,
+	/// Trackbar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
+	/// (`u32`).
+
+	AUTOTICKS, 0x0001
+	VERT, 0x0002
+	HORZ, 0x0000
+	TOP, 0x0004
+	BOTTOM, 0x0000
+	LEFT, 0x0004
+	RIGHT, 0x0000
+	BOTH, 0x0008
+	NOTICKS, 0x0010
+	ENABLESELRANGE, 0x0020
+	FIXEDLENGTH, 0x0040
+	NOTHUMB, 0x0080
+	TOOLTIPS, 0x0100
+	REVERSED, 0x0200
+	DOWNISLEFT, 0x0400
+	NOTIFYBEFOREMOVE, 0x0800
+	TRANSPARENTBKGND, 0x1000
+}
+
+const_type_ws! { TCS,
+	/// Tab control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
+	/// (`u32`).
+
+	SCROLLOPPOSITE, 0x0001
+	BOTTOM, 0x0002
+	RIGHT, 0x0002
+	MULTISELECT, 0x0004
+	FLATBUTTONS, 0x0008
+	FORCEICONLEFT, 0x0010
+	FORCELABELLEFT, 0x0020
+	HOTTRACK, 0x0040
+	VERTICAL, 0x0080
+	TABS, 0x0000
+	BUTTONS, 0x0100
+	SINGLELINE, 0x0000
+	MULTILINE, 0x0200
+	RIGHTJUSTIFY, 0x0000
+	FIXEDWIDTH, 0x0400
+	RAGGEDRIGHT, 0x0800
+	FOCUSONBUTTONDOWN, 0x1000
+	OWNERDRAWFIXED, 0x2000
+	TOOLTIPS, 0x4000
+	FOCUSNEVER, 0x8000
+}
+
+const_type_wsex! { TCS_EX,
+	/// Extended tab control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
+	/// (`u32`).
+
+	FLATSEPARATORS, 0x00000001
+	REGISTERDROP, 0x00000002
+}
+
 const_type! { TPM, u32,
 	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `uFlags` (`u32`).
 
@@ -683,4 +733,45 @@ const_type! { TPM, u32,
 	NOANIMATION, 0x4000
 	LAYOUTRTL, 0x8000
 	WORKAREA, 0x10000
+}
+
+const_type_ws! { TVS,
+	/// Tree view control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
+	/// (`u32`).
+
+	HASBUTTONS, 0x0001
+	HASLINES, 0x0002
+	LINESATROOT, 0x0004
+	EDITLABELS, 0x0008
+	DISABLEDRAGDROP, 0x0010
+	SHOWSELALWAYS, 0x0020
+	RTLREADING, 0x0040
+	NOTOOLTIPS, 0x0080
+	CHECKBOXES, 0x0100
+	TRACKSELECT, 0x0200
+	SINGLEEXPAND, 0x0400
+	INFOTIP, 0x0800
+	FULLROWSELECT, 0x1000
+	NOSCROLL, 0x2000
+	NONEVENHEIGHT, 0x4000
+	NOHSCROLL, 0x8000
+}
+
+const_type_wsex! { TVS_EX,
+	/// Extended tree view control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
+	/// (`u32`).
+
+	NOSINGLECOLLAPSE, 0x0001
+	MULTISELECT, 0x0002
+	DOUBLEBUFFER, 0x0004
+	NOINDENTSTATE, 0x0008
+	RICHTOOLTIP, 0x0010
+	AUTOHSCROLL, 0x0020
+	FADEINOUTEXPANDOS, 0x0040
+	PARTIALCHECKBOXES, 0x0080
+	EXCLUSIONCHECKBOXES, 0x0100
+	DIMMEDCHECKBOXES, 0x0200
+	DRAWIMAGEASYNC, 0x0400
 }

@@ -6,6 +6,8 @@ const_type! { NM, i32,
 	/// * [button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
 	/// * [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications);
 	/// * [header](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications);
+	/// * [IP address](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications);
+	/// * [list box](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications);
 	/// * [list view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications);
 	/// * [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications);
 	/// * [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications).
@@ -17,6 +19,7 @@ const_type_priv_values! { NM // first markers
 	DTN_FIRST, -740
 	DTN_FIRST2, -753
 	HDN_FIRST, -300
+	IPN_FIRST, -860
 	LVN_FIRST, -100
 	SBN_FIRST, -880
 	TVN_FIRST, -400
@@ -79,6 +82,19 @@ const_type_pub_values! { NM // HDM, header
 	HDN_ITEMKEYDOWN, Self::HDN_FIRST.0 - 17
 	HDN_DROPDOWN, Self::HDN_FIRST.0 - 18
 	HDN_OVERFLOWCLICK, Self::HDN_FIRST.0 - 19
+}
+
+const_type_pub_values! { NM // IPN, IP address
+	IPN_FIELDCHANGED, Self::IPN_FIRST.0 - 0
+}
+
+const_type_pub_values! { NM // LBN, list box
+	LBN_ERRSPACE, -2
+	LBN_SELCHANGE, 1
+	LBN_DBLCLK, 2
+	LBN_SELCANCEL, 3
+	LBN_SETFOCUS, 4
+	LBN_KILLFOCUS, 5
 }
 
 const_type_pub_values! { NM // LVN, list view

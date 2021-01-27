@@ -1,8 +1,8 @@
 #![allow(non_upper_case_globals)]
 
-use crate::co::WS;
+use crate::co::{WS, WS_EX};
 
-const_type! { CBS, u32,
+const_type_ws! { CBS,
 	/// Combo box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`).
@@ -21,10 +21,18 @@ const_type! { CBS, u32,
 	UPPERCASE, 0x2000
 	LOWERCASE, 0x4000
 }
-impl From<CBS> for WS {
-	fn from(v: CBS) -> Self {
-		Self(v.0)
-	}
+
+const_type_wsex! { CBES_EX,
+	/// Extended combo box
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
+	/// (`u32`).
+
+	NOEDITIMAGE, 0x00000001
+	NOEDITIMAGEINDENT, 0x00000002
+	PATHWORDBREAKPROC, 0x00000004
+	NOSIZELIMIT, 0x00000008
+	CASESENSITIVE, 0x00000010
+	TEXTENDELLIPSIS, 0x00000020
 }
 
 const_type! { CDDS, u32,
@@ -300,4 +308,19 @@ const_type! { DLGID, u16,
 	NO, 7
 	TRYAGAIN, 10
 	CONTINUE, 11
+}
+
+const_type_ws! { DTS,
+	/// Date and time picker control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
+	/// (`u32`).
+
+	UPDOWN, 0x0001
+	SHOWNONE, 0x0002
+	SHORTDATEFORMAT, 0x0000
+	LONGDATEFORMAT, 0x0004
+	SHORTDATECENTURYFORMAT, 0x000c
+	TIMEFORMAT, 0x0009
+	APPCANPARSE, 0x0010
+	RIGHTALIGN, 0x0020
 }

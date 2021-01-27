@@ -145,3 +145,47 @@ macro_rules! const_type {
 		}
 	};
 }
+
+/// Declares the type of a constant for a window style.
+macro_rules! const_type_ws {
+	(
+		$name:ident,
+		$(#[$attr:meta])*
+		$($cname:ident, $cval:expr)*
+	) => {
+		const_type! {
+			$name, u32,
+			$(#[$attr])*
+			$($cname, $cval)*
+		}
+
+		// Conversion to WS style.
+		impl From<$name> for WS {
+			fn from(v: $name) -> Self {
+				Self(v.0)
+			}
+		}
+	};
+}
+
+/// Declares the type of a constant for an extended window style.
+macro_rules! const_type_wsex {
+	(
+		$name:ident,
+		$(#[$attr:meta])*
+		$($cname:ident, $cval:expr)*
+	) => {
+		const_type! {
+			$name, u32,
+			$(#[$attr])*
+			$($cname, $cval)*
+		}
+
+		// Conversion to WS_EX style.
+		impl From<$name> for WS_EX {
+			fn from(v: $name) -> Self {
+				Self(v.0)
+			}
+		}
+	};
+}

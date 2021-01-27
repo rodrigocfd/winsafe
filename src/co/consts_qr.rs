@@ -1,3 +1,5 @@
+use crate::co::WS;
+
 const_type! { QUALITY, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 
@@ -28,6 +30,21 @@ const_type! { QS, u32,
 	MOUSE, Self::MOUSEMOVE.0 | Self::MOUSEBUTTON.0
 	INPUT, Self::MOUSE.0 | Self::KEY.0 | Self::RAWINPUT.0 | Self::TOUCH.0 | Self::POINTER.0
 	ALLINPUT, Self::INPUT.0 | Self::POSTMESSAGE.0 | Self::TIMER.0 | Self::PAINT.0 | Self::HOTKEY.0 | Self::SENDMESSAGE.0
+}
+
+const_type_ws! { RBS,
+	/// Rebar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
+	/// (`u32`).
+
+	TOOLTIPS, 0x00000100
+	VARHEIGHT, 0x00000200
+	BANDBORDERS, 0x00000400
+	FIXEDORDER, 0x00000800
+	REGISTERDROP, 0x00001000
+	AUTOSIZE, 0x00002000
+	VERTICALGRIPPER, 0x00004000
+	DBLCLKTOGGLE, 0x00008000
 }
 
 const_type! { REG, u32,

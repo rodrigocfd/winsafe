@@ -1,3 +1,5 @@
+use crate::co::WS;
+
 const_type! { GA, u32,
 	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
 
@@ -105,6 +107,24 @@ const_type! { GWLP, i32,
 	DWLP_DLGPROC, 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
 	DWLP_MSGRESULT, 0
 	DWLP_USER, Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
+}
+
+const_type_ws! { HDS,
+	/// Header control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/header-control-styles)
+	/// (`u32`)
+
+	HORZ, 0x0000
+	BUTTONS, 0x0002
+	HOTTRACK, 0x0004
+	HIDDEN, 0x0008
+	DRAGDROP, 0x0040
+	FULLDRAG, 0x0080
+	FILTERBAR, 0x0100
+	FLAT, 0x0200
+	CHECKBOXES, 0x0400
+	NOSIZING, 0x0800
+	OVERFLOW, 0x1000
 }
 
 const_type! { HICF, u32,

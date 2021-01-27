@@ -16,7 +16,7 @@ const_type! { ENDSESSION, u32,
 	LOGOFF, 0x80000000
 }
 
-const_type! { ES, u32,
+const_type_ws! { ES,
 	/// Edit control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
 	/// (`u32`).
@@ -35,11 +35,6 @@ const_type! { ES, u32,
 	READONLY, 0x0800
 	WANTRETURN, 0x1000
 	NUMBER, 0x2000
-}
-impl From<ES> for WS {
-	fn from(v: ES) -> Self {
-		Self(v.0)
-	}
 }
 
 const_type! { FAPPCOMMAND, u16,

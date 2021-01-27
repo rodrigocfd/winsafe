@@ -1,3 +1,5 @@
+use crate::co::WS;
+
 const_type! { MB, u32,
 	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
 
@@ -34,6 +36,21 @@ const_type! { MB, u32,
 	SETFOREGROUND, 0x00010000
 	TOPMOST, 0x00040000
 	SERVICE_NOTIFICATION, 0x00200000
+}
+
+const_type_ws! { MCS,
+	/// Month calendar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
+	/// (`u32`).
+
+	DAYSTATE, 0x0001
+	MULTISELECT, 0x0002
+	WEEKNUMBERS, 0x0004
+	NOTODAYCIRCLE, 0x0008
+	NOTODAY, 0x0010
+	NOTRAILINGDATES, 0x0040
+	SHORTDAYSOFWEEK, 0x0080
+	NOSELCHANGEONNAV, 0x0100
 }
 
 const_type! { MF, u32,

@@ -1,5 +1,3 @@
-use std::u32;
-
 use crate::co::WS;
 
 const_type! { ACCELF, u8,
@@ -154,7 +152,7 @@ const_type! { BM, u32,
 	SETDONTCLICK, 0x00f8
 }
 
-const_type! { BS, u32,
+const_type_ws! { BS,
 	/// Button control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles)
 	/// (`u32`).
@@ -187,11 +185,6 @@ const_type! { BS, u32,
 	NOTIFY, 0x00004000
 	FLAT, 0x00008000
 	RIGHTBUTTON, Self::LEFTTEXT.0
-}
-impl From<BS> for WS {
-	fn from(v: BS) -> Self {
-		Self(v.0)
-	}
 }
 
 const_type! { BST, u32,

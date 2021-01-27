@@ -1,4 +1,4 @@
-use crate::co::{FF, QS};
+use crate::co::{FF, QS, WS};
 
 const_type! { OUT_PRECIS, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
@@ -14,6 +14,17 @@ const_type! { OUT_PRECIS, u8,
 	OUTLINE, 8
 	SCREEN_OUTLINE, 9
 	PS_ONLY, 10
+}
+
+const_type_ws! { PBS,
+	/// Progress bar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
+	/// (`u32`).
+
+	SMOOTH, 0x01
+	VERTICAL, 0x04
+	MARQUEE, 0x08
+	SMOOTHREVERSE, 0x10
 }
 
 const_type! { PITCH, u8,
