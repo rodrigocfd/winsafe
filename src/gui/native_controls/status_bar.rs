@@ -75,7 +75,7 @@ impl StatusBar {
 				}
 			}
 
-			let parent_style = co::WS::from(
+			let parent_style = co::WS(
 				self.0.base.parent_hwnd().GetWindowLongPtr(co::GWLP::STYLE) as u32,
 			);
 			let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)

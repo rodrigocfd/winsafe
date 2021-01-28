@@ -561,7 +561,7 @@ impl MsgEvents {
 	{
 		self.add_msg(co::WM::NCCALCSIZE, {
 			let mut func = func;
-			move |p| Some(u32::from(func(msg::WmNcCalcSize::from_generic_wm(p))) as isize)
+			move |p| Some(func(msg::WmNcCalcSize::from_generic_wm(p)).0 as isize)
 		});
 	}
 

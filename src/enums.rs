@@ -135,7 +135,7 @@ impl HwndPlace {
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.ptr,
-			Self::Place(v) => isize::from(*v) as *mut _,
+			Self::Place(v) => v.0 as *mut _,
 			Self::None => std::ptr::null_mut(),
 		}
 	}
@@ -160,7 +160,7 @@ impl IdIdcStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => *id as *const u16,
-			Self::Idc(idc) => usize::from(*idc) as *const u16,
+			Self::Idc(idc) => idc.0 as *const u16,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
@@ -185,7 +185,7 @@ impl IdIdiStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => *id as *const u16,
-			Self::Idi(idi) => usize::from(*idi) as *const u16,
+			Self::Idi(idi) => idi.0 as *const u16,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}

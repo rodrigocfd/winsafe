@@ -20,7 +20,7 @@ impl HRGN {
 	pub fn OffsetClipRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
 		match unsafe { gdi32::OffsetClipRgn(self.ptr, x, y) } {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION::from(ret)),
+			ret => Ok(co::REGION(ret)),
 		}
 	}
 
@@ -29,7 +29,7 @@ impl HRGN {
 	pub fn OffsetRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
 		match unsafe { gdi32::OffsetRgn(self.ptr, x, y) } {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION::from(ret)),
+			ret => Ok(co::REGION(ret)),
 		}
 	}
 

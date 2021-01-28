@@ -67,9 +67,8 @@ impl DialogModal {
 		self.user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
-				self2.hwnd_ref().EndDialog(
-					u16::from(co::DLGID::CANCEL) as isize,
-				).unwrap_or_else(|err| PostQuitMessage(err))
+				self2.hwnd_ref().EndDialog(co::DLGID::CANCEL.0 as isize)
+					.unwrap_or_else(|err| PostQuitMessage(err))
 			}
 		});
 	}

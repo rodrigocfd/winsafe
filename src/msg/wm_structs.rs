@@ -63,7 +63,7 @@ impl Message for WmActivate {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::ACTIVATE,
-			wparam: MAKEDWORD(u16::from(self.event), self.is_minimized as u16) as usize,
+			wparam: MAKEDWORD(self.event.0, self.is_minimized as u16) as usize,
 			lparam: self.hwnd.ptr as isize,
 		}
 	}
@@ -72,7 +72,7 @@ impl Message for WmActivate {
 impl MessageHandleable for WmActivate {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			event: co::WA::from(LOWORD(p.wparam as u32)),
+			event: co::WA(LOWORD(p.wparam as u32)),
 			is_minimized: HIWORD(p.wparam as u32) != 0,
 			hwnd: HWND { ptr: p.lparam as *mut _ },
 		}
@@ -139,7 +139,7 @@ impl Message for WmAppCommand {
 		Wm {
 			msg_id: co::WM::APPCOMMAND,
 			wparam: self.hwnd_owner.ptr as usize,
-			lparam: MAKEDWORD(self.keys.into(), u16::from(self.app_command) | u16::from(self.u_device)) as isize,
+			lparam: MAKEDWORD(self.keys.into(), self.app_command.0 | self.u_device.0) as isize,
 		}
 	}
 }
@@ -148,9 +148,9 @@ impl MessageHandleable for WmAppCommand {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_owner: HWND { ptr: p.wparam as *mut _ },
-			app_command: co::APPCOMMAND::from(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
-			u_device: co::FAPPCOMMAND::from(HIWORD(p.lparam as u32) & FAPPCOMMAND_MASK),
-			keys: co::MK::from(LOWORD(p.lparam as u32)),
+			app_command: co::APPCOMMAND(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
+			u_device: co::FAPPCOMMAND(HIWORD(p.lparam as u32) & FAPPCOMMAND_MASK),
+			keys: co::MK(LOWORD(p.lparam as u32)),
 		}
 	}
 }
@@ -215,7 +215,7 @@ impl Message for WmCommand {
 impl MessageHandleable for WmCommand {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			code: co::CMD::from(HIWORD(p.wparam as u32)),
+			code: co::CMD(HIWORD(p.wparam as u32)),
 			ctrl_id: LOWORD(p.wparam as u32),
 			ctrl_hwnd: match p.lparam {
 				0 => None,
@@ -438,7 +438,7 @@ impl Message for WmEndSession {
 		Wm {
 			msg_id: co::WM::ENDSESSION,
 			wparam: self.is_session_being_ended as usize,
-			lparam: u32::from(self.event) as isize,
+			lparam: self.event.0 as isize,
 		}
 	}
 }
@@ -447,7 +447,7 @@ impl MessageHandleable for WmEndSession {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
-			event: co::ENDSESSION::from(p.lparam as u32),
+			event: co::ENDSESSION(p.lparam as u32),
 		}
 	}
 }
@@ -473,7 +473,7 @@ impl Message for WmEnterIdle {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::ENTERIDLE,
-			wparam: u8::from(self.reason) as usize,
+			wparam: self.reason.0 as usize,
 			lparam: self.handle.as_isize(),
 		}
 	}
@@ -481,7 +481,7 @@ impl Message for WmEnterIdle {
 
 impl MessageHandleable for WmEnterIdle {
 	fn from_generic_wm(p: Wm) -> Self {
-		let reason = co::MSGF::from(p.wparam as u8);
+		let reason = co::MSGF(p.wparam as u8);
 		Self {
 			reason,
 			handle: match reason {
@@ -792,7 +792,7 @@ impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
 	type RetType = co::WVR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::WVR::from(v as u32)
+		co::WVR(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -1116,7 +1116,7 @@ impl Message for WmSetIcon {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::SETICON,
-			wparam: u8::from(self.size) as usize,
+			wparam: self.size.0 as usize,
 			lparam: self.hicon.ptr as isize,
 		}
 	}
@@ -1125,7 +1125,7 @@ impl Message for WmSetIcon {
 impl MessageHandleable for WmSetIcon {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			size: co::ICON_SZ::from(p.wparam as u8),
+			size: co::ICON_SZ(p.wparam as u8),
 			hicon: HICON { ptr: p.lparam as *mut _ },
 		}
 	}
@@ -1153,7 +1153,7 @@ impl Message for WmShowWindow {
 		Wm {
 			msg_id: co::WM::SHOWWINDOW,
 			wparam: self.being_shown as usize,
-			lparam: u8::from(self.status) as isize,
+			lparam: self.status.0 as isize,
 		}
 	}
 }
@@ -1162,7 +1162,7 @@ impl MessageHandleable for WmShowWindow {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			being_shown: p.wparam != 0,
-			status: co::SW_S::from(p.lparam as u8),
+			status: co::SW_S(p.lparam as u8),
 		}
 	}
 }
@@ -1188,7 +1188,7 @@ impl Message for WmSize {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::SIZE,
-			wparam: u8::from(self.request) as usize,
+			wparam: self.request.0 as usize,
 			lparam: MAKEDWORD(
 				self.client_area.cx as u16,
 				self.client_area.cy as u16) as isize,
@@ -1199,7 +1199,7 @@ impl Message for WmSize {
 impl MessageHandleable for WmSize {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			request: co::SIZE_R::from(p.wparam as u8),
+			request: co::SIZE_R(p.wparam as u8),
 			client_area: s::SIZE::new(
 				LOWORD(p.lparam as u32) as i32,
 				HIWORD(p.lparam as u32) as i32,
@@ -1229,7 +1229,7 @@ impl<'a> Message for WmSizing<'a> {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::SIZING,
-			wparam: u8::from(self.window_edge) as usize,
+			wparam: self.window_edge.0 as usize,
 			lparam: ref_to_lp(self.coords),
 		}
 	}
@@ -1238,7 +1238,7 @@ impl<'a> Message for WmSizing<'a> {
 impl<'a> MessageHandleable for WmSizing<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			window_edge: co::WMSZ::from(p.wparam as u8),
+			window_edge: co::WMSZ(p.wparam as u8),
 			coords: lp_to_mut_ref(p),
 		}
 	}
@@ -1265,7 +1265,7 @@ impl<'a> Message for WmStyleChanged<'a> {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::STYLECHANGED,
-			wparam: i8::from(self.change) as usize,
+			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
 				WsWsex::Ws(ws) => ws as *const s::STYLESTRUCT_WS as isize,
 				WsWsex::Wsex(wsx) => wsx as *const s::STYLESTRUCT_WS_EX as isize,
@@ -1276,7 +1276,7 @@ impl<'a> Message for WmStyleChanged<'a> {
 
 impl<'a> MessageHandleable for WmStyleChanged<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
-		let change = co::GWL_C::from(p.wparam as i8);
+		let change = co::GWL_C(p.wparam as i8);
 		Self {
 			change,
 			stylestruct: match change {
@@ -1308,7 +1308,7 @@ impl<'a> Message for WmStyleChanging<'a> {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::STYLECHANGING,
-			wparam: i8::from(self.change) as usize,
+			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
 				WsWsex::Ws(ws) => ws as *const s::STYLESTRUCT_WS as isize,
 				WsWsex::Wsex(wsx) => wsx as *const s::STYLESTRUCT_WS_EX as isize,
@@ -1319,7 +1319,7 @@ impl<'a> Message for WmStyleChanging<'a> {
 
 impl<'a> MessageHandleable for WmStyleChanging<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
-		let change = co::GWL_C::from(p.wparam as i8);
+		let change = co::GWL_C(p.wparam as i8);
 		Self {
 			change,
 			stylestruct: match change {

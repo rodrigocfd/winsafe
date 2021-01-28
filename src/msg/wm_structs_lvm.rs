@@ -160,7 +160,7 @@ impl Message for LvmGetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVS_EX::from(v as u32)
+		co::LVS_EX(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -224,7 +224,7 @@ impl Message for LvmGetNextItem {
 		Wm {
 			msg_id: co::WM::LVM_GETNEXTITEM,
 			wparam: self.initial_index as usize,
-			lparam: u32::from(self.relationship) as isize,
+			lparam: self.relationship.0 as isize,
 		}
 	}
 }
@@ -268,14 +268,14 @@ impl Message for LvmGetItemState {
 	type RetType = co::LVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVIS::from(v as u32)
+		co::LVIS(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_GETITEMSTATE,
 			wparam: self.index as usize,
-			lparam: u32::from(self.mask) as isize,
+			lparam: self.mask.0 as isize,
 		}
 	}
 }
@@ -343,7 +343,7 @@ impl Message for LvmGetView {
 	type RetType = co::LV_VIEW;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LV_VIEW::from(v as u32)
+		co::LV_VIEW(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -569,14 +569,14 @@ impl Message for LvmSetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVS_EX::from(v as u32)
+		co::LVS_EX(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETEXTENDEDLISTVIEWSTYLE,
-			wparam: u32::from(self.style) as usize,
-			lparam: u32::from(self.mask) as isize,
+			wparam: self.style.0 as usize,
+			lparam: self.mask.0 as isize,
 		}
 	}
 }
@@ -690,7 +690,7 @@ impl Message for LvmSetSelectedColumn {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETSELECTEDCOLUMN,
-			wparam: u32::from(self.index) as usize,
+			wparam: self.index as usize,
 			lparam: 0,
 		}
 	}
@@ -719,7 +719,7 @@ impl Message for LvmSetView {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::LVM_SETVIEW,
-			wparam: u32::from(self.view) as usize,
+			wparam: self.view.0 as usize,
 			lparam: 0,
 		}
 	}

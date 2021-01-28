@@ -155,7 +155,7 @@ pub fn paint_control_borders(
 	let hwnd = ctrl.hwnd_ref();
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
-	let ex_style = co::WS_EX::from(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as u32);
+	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as u32);
 	if !ex_style.has(co::WS_EX::CLIENTEDGE) // no border
 		|| !HTHEME::IsThemeActive()
 		|| !HTHEME::IsAppThemed()

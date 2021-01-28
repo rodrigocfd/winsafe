@@ -101,7 +101,7 @@ impl WindowModal {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.
 				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
-				PostQuitMessage(co::ERROR::from(msg.wParam as u32));
+				PostQuitMessage(co::ERROR(msg.wParam as u32));
 				return Ok(msg.wParam as i32);
 			}
 

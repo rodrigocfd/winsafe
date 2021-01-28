@@ -20,7 +20,7 @@ impl HTHEME {
 	pub fn CloseThemeData(self) -> WinResult<()> {
 		match unsafe { uxtheme::CloseThemeData(self.ptr) } {
 			0 => Ok(()),
-			err => Err(co::ERROR::from(err)),
+			err => Err(co::ERROR(err)),
 		}
 	}
 
@@ -41,14 +41,14 @@ impl HTHEME {
 			)
 		} {
 			0 => Ok(()),
-			err => Err(co::ERROR::from(err)),
+			err => Err(co::ERROR(err)),
 		}
 	}
 
 	/// [`GetThemeAppProperties`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
 	/// static method.
 	pub fn GetThemeAppProperties() -> co::STAP {
-		co::STAP::from(unsafe { uxtheme::GetThemeAppProperties() })
+		co::STAP(unsafe { uxtheme::GetThemeAppProperties() })
 	}
 
 	/// [`GetThemeBackgroundContentRect`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
@@ -70,7 +70,7 @@ impl HTHEME {
 			)
 		} {
 			0 => Ok(pContentRect),
-			err => Err(co::ERROR::from(err)),
+			err => Err(co::ERROR(err)),
 		}
 	}
 
@@ -93,7 +93,7 @@ impl HTHEME {
 			)
 		} {
 			0 => Ok(pExtentRect),
-			err => Err(co::ERROR::from(err)),
+			err => Err(co::ERROR(err)),
 		}
 	}
 
@@ -116,7 +116,7 @@ impl HTHEME {
 			)
 		} {
 			0 => Ok(pRegion),
-			err => Err(co::ERROR::from(err)),
+			err => Err(co::ERROR(err)),
 		}
 	}
 

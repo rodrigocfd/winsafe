@@ -214,7 +214,7 @@ impl HDC {
 	/// method for [`HRGN`](crate::HRGN).
 	pub fn SelectObjectRgn(self, h: HRGN) -> WinResult<co::REGION> {
 		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
-			Some(p) => Ok(co::REGION::from(p as i32)),
+			Some(p) => Ok(co::REGION(p as i32)),
 			None => Err(GetLastError()),
 		}
 	}
@@ -224,7 +224,7 @@ impl HDC {
 	pub fn SetBkMode(self, mode: co::BKMODE) -> WinResult<co::BKMODE> {
 		match unsafe { gdi32::SetBkMode(self.ptr, mode.into()) } {
 			0 => Err(GetLastError()),
-			bk => Ok(co::BKMODE::from(bk)),
+			bk => Ok(co::BKMODE(bk)),
 		}
 	}
 }

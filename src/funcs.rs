@@ -39,7 +39,7 @@ pub fn DispatchMessage(lpMsg: &s::MSG) -> isize {
 /// [`GetAsyncKeyState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
 /// function.
 pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
-	unsafe { user32::GetAsyncKeyState(u16::from(vKey) as i32) != 0 }
+	unsafe { user32::GetAsyncKeyState(vKey.0 as i32) != 0 }
 }
 
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
@@ -90,7 +90,7 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 /// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
 /// function.
 pub fn GetLastError() -> co::ERROR {
-	unsafe { co::ERROR::from(kernel32::GetLastError()) }
+	unsafe { co::ERROR(kernel32::GetLastError()) }
 }
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
@@ -123,7 +123,7 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
 pub fn GetSysColor(nIndex: co::COLOR) -> s::COLORREF {
-	s::COLORREF(unsafe { user32::GetSysColor(u32::from(nIndex) as i32) })
+	s::COLORREF(unsafe { user32::GetSysColor(nIndex.0 as i32) })
 }
 
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
@@ -163,7 +163,7 @@ pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
 		match r {
 			0 => Ok(false),
 			1 => Ok(true),
-			err => Err(co::ERROR::from(err as u32)),
+			err => Err(co::ERROR(err as u32)),
 		}
 	} else {
 		Ok(r != 0)
@@ -346,7 +346,7 @@ pub fn PostMessage<M: Message>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
 /// function.
 pub fn PostQuitMessage(nExitCode: co::ERROR) {
-	unsafe { user32::PostQuitMessage(u32::from(nExitCode) as i32) }
+	unsafe { user32::PostQuitMessage(nExitCode.0 as i32) }
 }
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)

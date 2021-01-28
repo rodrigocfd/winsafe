@@ -30,11 +30,11 @@ impl HFONT {
 			unsafe {
 				gdi32::CreateFontW(
 					cHeight, cWidth, cEscapement, cOrientation,
-					u32::from(cWeight) as i32,
+					cWeight.0 as i32,
 					bItalic as u32, bUnderline as u32, bStrikeOut as u32,
-					u8::from(iCharSet) as u32,
-					u8::from(iOutPrecision) as u32, u8::from(iClipPrecision) as u32,
-					u8::from(iQuality) as u32, u8::from(iPitchAndFamily) as u32,
+					iCharSet.0 as u32,
+					iOutPrecision.0 as u32, iClipPrecision.0 as u32,
+					iQuality.0 as u32, iPitchAndFamily.0 as u32,
 					WString::from_str(pszFaceName).as_ptr(),
 				)
 			},

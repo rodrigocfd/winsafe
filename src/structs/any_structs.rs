@@ -543,7 +543,7 @@ impl WINDOWPOS {
 	/// Returns the `hwndInsertAfter` field.
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
-			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE::from(self.hwndInsertAfter)),
+			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),
 			_ => HwndPlace::Hwnd(h::HWND { ptr: self.hwndInsertAfter as *mut _ }),
 		}
 	}

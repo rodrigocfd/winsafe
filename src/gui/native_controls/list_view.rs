@@ -110,7 +110,7 @@ impl ListView {
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
 
-				if lvnk.wVKey == co::VK::from('A' as u16)
+				if lvnk.wVKey == co::VK('A' as u16)
 					&& GetAsyncKeyState(co::VK::CONTROL) // Ctrl+A pressed?
 				{
 					me.set_selected_all_items(true)

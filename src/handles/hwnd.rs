@@ -389,7 +389,7 @@ impl HWND {
 			user32::GetUpdateRgn(self.ptr, hRgn.ptr, bErase as i32)
 		} {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION::from(ret)),
+			ret => Ok(co::REGION(ret)),
 		}
 	}
 
@@ -467,7 +467,7 @@ impl HWND {
 	pub fn GetWindowRgn(self, hRgn: HRGN) -> WinResult<co::REGION> {
 		match unsafe { user32::GetWindowRgn(self.ptr, hRgn.ptr) } {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION::from(ret)),
+			ret => Ok(co::REGION(ret)),
 		}
 	}
 
@@ -476,7 +476,7 @@ impl HWND {
 	pub fn GetWindowRgnBox(self, lprc: &mut RECT) -> WinResult<co::REGION> {
 		match unsafe { user32::GetWindowRgnBox(self.ptr, mut_void(lprc)) } {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION::from(ret)),
+			ret => Ok(co::REGION(ret)),
 		}
 	}
 
@@ -698,7 +698,7 @@ impl HWND {
 			)
 		} {
 			0 => Err(GetLastError()),
-			ret => Ok(co::DLGID::from(ret as u16)),
+			ret => Ok(co::DLGID(ret as u16)),
 		}
 	}
 

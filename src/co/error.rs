@@ -2756,31 +2756,28 @@ impl ERROR {
 	/// function.
 	pub fn FormatMessage(self) -> String {
 		unsafe {
-			let mut ptrBuf: *mut u16 = std::ptr::null_mut();
+			let mut ptr_buf: *mut u16 = std::ptr::null_mut();
 			match kernel32::FormatMessageW(
-				u32::from(co::FORMAT_MESSAGE::ALLOCATE_BUFFER
-					| co::FORMAT_MESSAGE::FROM_SYSTEM
-					| co::FORMAT_MESSAGE::IGNORE_INSERTS),
+				co::FORMAT_MESSAGE::ALLOCATE_BUFFER.0
+					| co::FORMAT_MESSAGE::FROM_SYSTEM.0
+					| co::FORMAT_MESSAGE::IGNORE_INSERTS.0,
 				std::ptr::null(),
 				self.0,
 				co::LANG::NEUTRAL.MAKELANGID(co::SUBLANG::DEFAULT),
-				(&mut ptrBuf as *mut *mut u16) as *mut u16, // pass pointer to pointer
+				(&mut ptr_buf as *mut *mut u16) as *mut u16, // pass pointer to pointer
 				0,
 				std::ptr::null_mut(),
 			) {
 				0 => format!( // never fails
-						"FormatMessage failed to format error {:#06x}: error {:#06x}.",
-						self, GetLastError()
+					"FormatMessage failed to format error {:#06x}: error {:#06x}.",
+					self, GetLastError(),
 				),
-				nChars => {
-					let wText = WString::from_wchars_count(ptrBuf, nChars as usize);
-					match HLOCAL::from_ptr(ptrBuf).LocalFree() {
-						Ok(()) => wText.to_string(),
-						Err(err) => {
-							format!(
-								"LocalFree failed after formatting error {:#06x}: error {:#06x}.",
-								self, err)
-						},
+				nchars => {
+					match (HLOCAL { ptr: ptr_buf as *mut _ }).LocalFree() {
+						Ok(()) => WString::from_wchars_count(ptr_buf, nchars as usize).to_string(),
+						Err(err) => format!(
+							"LocalFree failed after formatting error {:#06x}: error {:#06x}.",
+							self, err),
 					}
 				},
 			}

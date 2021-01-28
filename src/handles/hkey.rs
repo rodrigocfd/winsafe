@@ -41,7 +41,7 @@ impl HKEY {
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
 	pub fn RegCloseKey(self) -> WinResult<()> {
-		match co::ERROR::from(unsafe { advapi32::RegCloseKey(self.ptr) } as u32) {
+		match co::ERROR(unsafe { advapi32::RegCloseKey(self.ptr) } as u32) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
@@ -85,7 +85,7 @@ impl HKEY {
 		let mut dataLen: u32 = 0;
 
 		// Query data type and length.
-		match co::ERROR::from(
+		match co::ERROR(
 			unsafe {
 				advapi32::RegGetValueW(
 					self.ptr,
@@ -103,12 +103,12 @@ impl HKEY {
 		}
 
 		// Retrieve value according to informed data type.
-		match co::REG::from(rawDataType) {
+		match co::REG(rawDataType) {
 			co::REG::NONE => Ok(RegistryValue::None), // no value to query
 			co::REG::DWORD => {
 				let mut dwordBuf: u32 = 0;
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegGetValueW( // query DWORD value
 							self.ptr,
@@ -128,7 +128,7 @@ impl HKEY {
 			co::REG::QWORD => {
 				let mut qwordBuf: u64 = 0;
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegGetValueW( // query QWORD value
 							self.ptr,
@@ -148,7 +148,7 @@ impl HKEY {
 			co::REG::SZ => {
 				let mut szBuf: Vec<u16> = vec![0; dataLen as usize]; // alloc wchar buffer
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegGetValueW( // query string value
 							self.ptr,
@@ -170,7 +170,7 @@ impl HKEY {
 			co::REG::BINARY => {
 				let mut byteBuf: Vec<u8> = vec![0; dataLen as usize]; // alloc byte buffer
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegGetValueW( // query binary value
 							self.ptr,
@@ -215,7 +215,7 @@ impl HKEY {
 	{
 		let mut hKey = unsafe { Self::null_handle() };
 
-		match co::ERROR::from(
+		match co::ERROR(
 			unsafe {
 				advapi32::RegOpenKeyExW(
 					self.ptr,
@@ -274,7 +274,7 @@ impl HKEY {
 		let mut dataLen: u32 = 0;
 
 		// Query data type and length.
-		match co::ERROR::from(
+		match co::ERROR(
 			unsafe {
 				advapi32::RegQueryValueExW(
 					self.ptr,
@@ -291,12 +291,12 @@ impl HKEY {
 		}
 
 		// Retrieve value according to informed data type.
-		match co::REG::from(rawDataType) {
+		match co::REG(rawDataType) {
 			co::REG::NONE => Ok(RegistryValue::None), // no value to query
 			co::REG::DWORD => {
 				let mut dwordBuf: u32 = 0;
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegQueryValueExW( // query DWORD value
 							self.ptr,
@@ -315,7 +315,7 @@ impl HKEY {
 			co::REG::QWORD => {
 				let mut qwordBuf: u64 = 0;
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegQueryValueExW( // query QWORD value
 							self.ptr,
@@ -334,7 +334,7 @@ impl HKEY {
 			co::REG::SZ => {
 				let mut szBuf: Vec<u16> = vec![0; dataLen as usize]; // alloc wchar buffer
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegQueryValueExW( // query string value
 							self.ptr,
@@ -355,7 +355,7 @@ impl HKEY {
 			co::REG::BINARY => {
 				let mut byteBuf: Vec<u8> = vec![0; dataLen as usize]; // alloc byte buffer
 
-				match co::ERROR::from(
+				match co::ERROR(
 					unsafe {
 						advapi32::RegQueryValueExW( // query binary value
 							self.ptr,
@@ -395,7 +395,7 @@ impl HKEY {
 	pub fn RegSetKeyValue(self, lpSubKey: &str,
 		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
 	{
-		match co::ERROR::from(
+		match co::ERROR(
 			unsafe {
 				advapi32::RegSetKeyValueW(
 					self.ptr,
@@ -440,7 +440,7 @@ impl HKEY {
 	pub fn RegSetValueEx(self,
 		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
 	{
-		match co::ERROR::from(
+		match co::ERROR(
 			unsafe {
 				advapi32::RegSetValueExW(
 					self.ptr,

@@ -88,7 +88,7 @@ impl Message for DtmGetMcColor {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::DTM_GETMCCOLOR,
-			wparam: u8::from(self.color_index) as usize,
+			wparam: self.color_index.0 as usize,
 			lparam: 0,
 		}
 	}
@@ -135,7 +135,7 @@ impl Message for DtmGetMcStyle {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			v => Ok(co::DTS::from(v as u32)),
+			v => Ok(co::DTS(v as u32)),
 		}
 	}
 
@@ -189,7 +189,7 @@ impl<'a> Message for DtmGetRange<'a> {
 	type RetType = co::GDTR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::GDTR::from(v as u32)
+		co::GDTR(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {

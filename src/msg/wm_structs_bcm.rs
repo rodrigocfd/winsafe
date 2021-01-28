@@ -384,7 +384,7 @@ impl Message for BmGetCheck {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::BST::from(v as u32)
+		co::BST(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -420,7 +420,7 @@ impl Message for BmGetImage {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::BM_GETIMAGE,
-			wparam: u8::from(self.img_type) as usize,
+			wparam: self.img_type.0 as usize,
 			lparam: 0,
 		}
 	}
@@ -438,7 +438,7 @@ impl Message for BmGetState {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::BST::from(v as u32)
+		co::BST(v as u32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -470,7 +470,7 @@ impl Message for BmSetCheck {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::BM_SETCHECK,
-			wparam: u32::from(self.state) as usize,
+			wparam: self.state.0 as usize,
 			lparam: 0,
 		}
 	}
@@ -526,8 +526,8 @@ impl Message for BmSetImage {
 		Wm {
 			msg_id: co::WM::BM_SETIMAGE,
 			wparam: match self.image {
-				BitmapIcon::Bitmap(_) => u8::from(co::IMAGE_TYPE::BITMAP),
-				BitmapIcon::Icon(_) => u8::from(co::IMAGE_TYPE::ICON),
+				BitmapIcon::Bitmap(_) => co::IMAGE_TYPE::BITMAP.0,
+				BitmapIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
 			} as usize,
 			lparam: self.image.as_isize(),
 		}
@@ -581,7 +581,7 @@ impl Message for BmSetStyle {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::BM_SETSTYLE,
-			wparam: u32::from(self.style) as usize,
+			wparam: self.style.0 as usize,
 			lparam: self.redraw as isize,
 		}
 	}

@@ -16,7 +16,7 @@ impl HBRUSH {
 	/// Creates a brush with the given system color.
 	pub fn from_sys_color(color: co::COLOR) -> HBRUSH {
 		Self {
-			ptr: (u32::from(color) + 1) as *mut _,
+			ptr: (color.0 + 1) as *mut _,
 		}
 	}
 }

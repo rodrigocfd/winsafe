@@ -12,7 +12,7 @@ macro_rules! impl_iid {
 /// Converts an `HRESULT` into a `WinResult<()>`.
 macro_rules! into_result {
 	($hresult:expr) => {
-		match ERROR::from($hresult) {
+		match ERROR($hresult) {
 			ERROR::S_OK => Ok(()),
 			err => Err(err),
 		}

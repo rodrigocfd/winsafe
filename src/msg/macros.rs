@@ -110,7 +110,7 @@ macro_rules! button_msg {
 			fn as_generic_wm(&self) -> Wm {
 				Wm {
 					msg_id: $wmconst,
-					wparam: u16::from(self.vkeys) as usize,
+					wparam: self.vkeys.0 as usize,
 					lparam: MAKEDWORD(self.coords.x as u16, self.coords.y as u16) as isize,
 				}
 			}
@@ -119,7 +119,7 @@ macro_rules! button_msg {
 		impl MessageHandleable for $name {
 			fn from_generic_wm(p: Wm) -> Self {
 				Self {
-					vkeys: co::VK::from(p.wparam as u16),
+					vkeys: co::VK(p.wparam as u16),
 					coords: s::POINT {
 						x: LOWORD(p.lparam as u32) as i32,
 						y: HIWORD(p.lparam as u32) as i32,

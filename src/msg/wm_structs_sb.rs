@@ -77,7 +77,7 @@ impl<'a> Message for SbGetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as u32), co::SBT::from(HIWORD(v as u32)))
+		(LOWORD(v as u32), co::SBT(HIWORD(v as u32)))
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -103,7 +103,7 @@ impl Message for SbGetTextLength {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as u32), co::SBT::from(HIWORD(v as u32)))
+		(LOWORD(v as u32), co::SBT(HIWORD(v as u32)))
 	}
 
 	fn as_generic_wm(&self) -> Wm {
