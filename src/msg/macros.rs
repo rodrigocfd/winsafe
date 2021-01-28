@@ -130,7 +130,7 @@ macro_rules! button_msg {
 	};
 }
 
-/// Converts a reference to an `LPARAM` field, for message structs.
+/// Converts a reference, mut or not, to an `LPARAM` field, for message structs.
 pub fn ref_to_lp<T>(field: &T) -> isize {
 	field as *const T as isize
 }

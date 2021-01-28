@@ -5,7 +5,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::handles::{HDC, HIMAGELIST, HTREEITEM};
+use crate::handles::{HDC, HIMAGELIST, HTREEITEM, HWND};
 use crate::privs::{L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
 use crate::WString;
@@ -27,6 +27,28 @@ pub struct BUTTON_SPLITINFO {
 	pub himlGlyph: HIMAGELIST,
 	pub uSplitStyle: co::BCSS,
 	pub size: SIZE,
+}
+
+/// [`DATETIMEPICKERINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-datetimepickerinfo)
+/// struct.
+#[repr(C)]
+pub struct DATETIMEPICKERINFO {
+	cbSize: u32,
+	pub rcCheck: RECT,
+	pub stateCheck: co::STATE_SYSTEM,
+	pub rcButton: RECT,
+	pub stateButton: co::STATE_SYSTEM,
+	pub hwndEdit: HWND,
+	pub hwndUD: HWND,
+	pub hwndDropDown: HWND,
+}
+
+impl Default for DATETIMEPICKERINFO {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
+	}
 }
 
 /// [`IMAGELISTDRAWPARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)

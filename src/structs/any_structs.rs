@@ -74,6 +74,11 @@ impl From<co::CLR> for COLORREF {
 }
 
 impl COLORREF {
+	/// Creates a new `COLORREF` object with the given color intensities.
+	pub fn new(red: u8, green: u8, blue: u8) -> COLORREF {
+		Self(red as u32 | ((green as u32) << 8) | ((blue as u32) << 16))
+	}
+
 	/// [`GetRValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getrvalue)
 	/// method. Retrieves the red intensity.
 	pub fn GetRValue(self) -> u8 {

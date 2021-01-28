@@ -2,13 +2,14 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::{DateTimePickerEvents, MsgEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::WmSetFont;
+use crate::msg::{DtmGetIdealSize, WmSetFont};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -90,6 +91,16 @@ impl DateTimePicker {
 						opts.window_style | opts.date_time_picker_style.into(),
 					)?;
 
+					if sz.cx == 0 { // use ideal width?
+						let mut sz_ideal = SIZE::default();
+						our_hwnd.SendMessage(DtmGetIdealSize { size: &mut sz_ideal });
+						sz.cx = sz_ideal.cx; // already adjusted for DPI
+
+						our_hwnd.SetWindowPos(
+							HwndPlace::None, 0, 0, sz.cx as u32, sz.cy as u32,
+							co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+					}
+
 					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
@@ -119,7 +130,8 @@ pub struct DateTimePickerOpts {
 	///
 	/// Will be adjusted to match current system DPI.
 	///
-	/// Defaults to 230.
+	/// Defaults to ideal width retrieved with
+	/// [`DtmGetIdealSize`](crate::msg::DtmGetIdealSize), usually around 250.
 	pub width: u32,
 	/// Date and time picker styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -147,7 +159,7 @@ impl Default for DateTimePickerOpts {
 	fn default() -> Self {
 		Self {
 			position: POINT::new(0, 0),
-			width: 230,
+			width: 0,
 			date_time_picker_style: co::DTS::LONGDATEFORMAT,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,

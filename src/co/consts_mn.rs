@@ -38,6 +38,17 @@ const_type! { MB, u32,
 	SERVICE_NOTIFICATION, 0x00200000
 }
 
+const_type! { MCSC, u8,
+	/// [`DTM_GETMCCOLOR`](crate::msg::DtmGetMcColor) color (`u8`).
+
+	BACKGROUND, 0
+	TEXT, 1
+	TITLEBK, 2
+	TITLETEXT, 3
+	MONTHBK, 4
+	TRAILINGTEXT, 5
+}
+
 const_type_ws! { MCS,
 	/// Month calendar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)

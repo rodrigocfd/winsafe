@@ -97,7 +97,7 @@ impl Message for LvmEnsureVisible {
 /// Return type: `WinResult<u32>`.
 pub struct LvmGetColumn<'a, 'b> {
 	pub index: i32,
-	pub lvcolumn: &'b s::LVCOLUMN<'a>,
+	pub lvcolumn: &'b mut s::LVCOLUMN<'a>,
 }
 
 impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {

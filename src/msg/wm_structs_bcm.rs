@@ -12,7 +12,7 @@ use crate::WString;
 ///
 /// Return type: `WinResult<()>`.
 pub struct BcmGetIdealSize<'a> {
-	pub size: &'a SIZE,
+	pub size: &'a mut SIZE,
 }
 
 impl<'a> Message for BcmGetIdealSize<'a> {
