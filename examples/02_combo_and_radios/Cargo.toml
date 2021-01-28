@@ -1,0 +1,16 @@
+[package]
+name = "combo-and-radios"
+version = "0.1.0"
+authors = ["Rodrigo Cesar de Freitas Dias <rcesar@gmail.com>"]
+edition = "2018"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[dependencies.winsafe]
+path = "../../../winsafe"
+
+# Embed Windows manifest and RC files into executable.
+[build-dependencies]
+embed-resource = "1.4.1"
