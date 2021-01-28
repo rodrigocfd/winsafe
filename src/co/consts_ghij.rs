@@ -78,6 +78,13 @@ const_type! { GDT, u32,
 	NONE, 1
 }
 
+const_type! { GDTR, u32,
+	/// [`DTM_GETRANGE`](crate::msg::DtmGetRange) return value (`u32`).
+
+	MIN, 0x0001
+	MAX, 0x0002
+}
+
 const_type! { GW, u32,
 	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 

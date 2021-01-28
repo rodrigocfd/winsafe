@@ -1,9 +1,10 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::handles::HFONT;
+use crate::handles::{HWND, HFONT};
 use crate::msg::{Message, Wm};
 use crate::msg::macros::ref_to_lp;
-use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE};
+use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE, SYSTEMTIME};
+use crate::WString;
 
 empty_msg! { DtmCloseMonthCal, co::WM::DTM_CLOSEMONTHCAL,
 	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
@@ -71,7 +72,7 @@ impl<'a> Message for DtmGetIdealSize<'a> {
 ///
 /// Return type: `WinResult<COLORREF>`.
 pub struct DtmGetMcColor {
-	pub color: co::MCSC,
+	pub color_index: co::MCSC,
 }
 
 impl Message for DtmGetMcColor {
@@ -87,7 +88,7 @@ impl Message for DtmGetMcColor {
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
 			msg_id: co::WM::DTM_GETMCCOLOR,
-			wparam: u8::from(self.color) as usize,
+			wparam: u8::from(self.color_index) as usize,
 			lparam: 0,
 		}
 	}
@@ -116,6 +117,177 @@ impl Message for DtmGetMcFont {
 			msg_id: co::WM::DTM_GETMCFONT,
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_GETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcstyle)
+/// message, which has no parameters.
+///
+/// Return type: `WinResult<DTS>`.
+pub struct DtmGetMcStyle {}
+
+impl Message for DtmGetMcStyle {
+	type RetType = WinResult<co::DTS>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			v => Ok(co::DTS::from(v as u32)),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_GETMCSTYLE,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_GETMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmonthcal)
+/// message, which has no parameters.
+///
+/// Return type: `WinResult<HWND>`.
+pub struct DtmGetMonthCalendar {}
+
+impl Message for DtmGetMonthCalendar {
+	type RetType = WinResult<HWND>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			p => Ok(HWND { ptr: p as *mut _ }),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_GETMONTHCAL,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_GETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getrange)
+/// message parameters.
+///
+/// Return type: `GDTR`.
+pub struct DtmGetRange<'a> {
+	pub system_times: &'a mut [SYSTEMTIME; 2],
+}
+
+impl<'a> Message for DtmGetRange<'a> {
+	type RetType = co::GDTR;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::GDTR::from(v as u32)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_GETRANGE,
+			wparam: 0,
+			lparam: ref_to_lp(self.system_times),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_GETSYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getsystemtime)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct DtmGetSystemTime<'a> {
+	pub system_time: &'a mut SYSTEMTIME,
+}
+
+impl<'a> Message for DtmGetSystemTime<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_GETSYSTEMTIME,
+			wparam: 0,
+			lparam: ref_to_lp(self.system_time),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_SETFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setformat)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct DtmSetFormat<'a> {
+	pub format_string: Option<&'a str>,
+}
+
+impl<'a> Message for DtmSetFormat<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_SETFORMAT,
+			wparam: 0,
+			lparam: match self.format_string {
+				None => 0,
+				Some(fmtstr) => (unsafe { WString::from_str(fmtstr).as_ptr() }) as isize,
+			},
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_SETMCCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmccolor)
+/// message parameters.
+///
+/// Return type: `WinResult<COLORREF>`.
+pub struct DtmSetMcColor {
+	pub color_index: co::MCSC,
+	pub color: COLORREF,
+}
+
+impl Message for DtmSetMcColor {
+	type RetType = WinResult<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			rgb => Ok(COLORREF(rgb as u32)),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_SETMCCOLOR,
+			wparam: self.color_index.0 as usize,
+			lparam: self.color.0 as isize,
 		}
 	}
 }
