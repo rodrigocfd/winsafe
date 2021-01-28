@@ -62,6 +62,70 @@ impl Message for CbDeleteString {
 
 //------------------------------------------------------------------------------
 
+/// [`CB_DIR`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-dir)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct CbDir<'a> {
+	pub attributes: co::DDL,
+	pub path: &'a str,
+}
+
+impl<'a> Message for CbDir<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
+			count => Ok(count as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::CB_DELETESTRING,
+			wparam: self.attributes.0 as usize,
+			lparam: unsafe { WString::from_str(self.path).as_ptr() } as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`CB_FINDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-findstring)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct CbFindString<'a> {
+	pub preceding_index: Option<u32>,
+	pub text: &'a str,
+}
+
+impl<'a> Message for CbFindString<'a> {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => None,
+			idx => Some(idx as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::CB_FINDSTRING,
+			wparam: match self.preceding_index {
+				None => -1,
+				Some(idx) => idx as i32,
+			} as usize,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`CB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcount)
 /// message, which has no parameters.
 ///

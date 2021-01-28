@@ -3,6 +3,7 @@ use crate::co;
 use crate::handles::{HWND, HFONT};
 use crate::msg::{Message, Wm};
 use crate::msg::macros::ref_to_lp;
+use crate::privs::GDT_ERROR;
 use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE, SYSTEMTIME};
 use crate::WString;
 
@@ -215,8 +216,10 @@ impl<'a> Message for DtmGetSystemTime<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 | 0 => Err(co::ERROR::BAD_ARGUMENTS), // GDT_ERROR | GDT_NONE
+		const GDT_NONE: i32 = co::GDT::NONE.0 as i32;
+		match v as i32 {
+			GDT_ERROR => Err(co::ERROR::BAD_ARGUMENTS),
+			GDT_NONE => Err(co::ERROR::INVALID_DATA),
 			_ => Ok(()),
 		}
 	}
@@ -393,7 +396,7 @@ impl<'a> Message for DtmSetSystemTime<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
 		}
 	}

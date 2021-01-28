@@ -295,6 +295,20 @@ const_type! { CS, u32,
 	DROPSHADOW, 0x00020000
 }
 
+const_type! { DDL, u16,
+	/// [`CB_DIR`](crate::msg::CbDir) attributes (`u16`).
+
+	READWRITE, 0x0000
+	READONLY, 0x0001
+	HIDDEN, 0x0002
+	SYSTEM, 0x0004
+	DIRECTORY, 0x0010
+	ARCHIVE, 0x0020
+	POSTMSGS, 0x2000
+	DRIVES, 0x4000
+	EXCLUSIVE, 0x8000
+}
+
 const_type! { DLGID, u16,
 	/// Dialog built-in IDs (`u16`). These are also returned from
 	/// [`MessageBox`](crate::HWND::MessageBox).
