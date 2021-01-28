@@ -126,16 +126,16 @@ impl Message for DtmGetMcFont {
 /// [`DTM_GETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcstyle)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<DTS>`.
+/// Return type: `WinResult<MCS>`.
 pub struct DtmGetMcStyle {}
 
 impl Message for DtmGetMcStyle {
-	type RetType = WinResult<co::DTS>;
+	type RetType = WinResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			v => Ok(co::DTS(v as u32)),
+			v => Ok(co::MCS(v as u32)),
 		}
 	}
 
@@ -216,7 +216,7 @@ impl<'a> Message for DtmGetSystemTime<'a> {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			-1 | 0 => Err(co::ERROR::BAD_ARGUMENTS), // GDT_ERROR | GDT_NONE
 			_ => Ok(()),
 		}
 	}
@@ -288,6 +288,127 @@ impl Message for DtmSetMcColor {
 			msg_id: co::WM::DTM_SETMCCOLOR,
 			wparam: self.color_index.0 as usize,
 			lparam: self.color.0 as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_SETMCFONT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmcfont)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct DtmSetMcFont {
+	pub hfont: HFONT,
+	pub redraw: bool,
+}
+
+impl Message for DtmSetMcFont {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_SETMCFONT,
+			wparam: self.hfont.ptr as usize,
+			lparam: self.redraw as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_SETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmcstyle)
+/// message parameters.
+///
+/// Return type: `WinResult<MCS>`.
+pub struct DtmSetMcStyle {
+	pub style: co::MCS,
+}
+
+impl Message for DtmSetMcStyle {
+	type RetType = WinResult<co::MCS>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			s => Ok(co::MCS(s as u32)),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_SETMCSTYLE,
+			wparam: 0,
+			lparam: self.style.0 as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_SETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setrange)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct DtmSetRange<'a> {
+	pub valid: co::GDTR,
+	pub system_times: &'a mut [SYSTEMTIME; 2],
+}
+
+impl<'a> Message for DtmSetRange<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_SETRANGE,
+			wparam: self.valid.0 as usize,
+			lparam: ref_to_lp(self.system_times),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`DTM_SETSYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setsystemtime)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct DtmSetSystemTime<'a> {
+	pub system_time: Option<&'a SYSTEMTIME>,
+}
+
+impl<'a> Message for DtmSetSystemTime<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::DTM_SETSYSTEMTIME,
+			wparam: match self.system_time {
+				None => co::GDT::NONE.0,
+				Some(_) => co::GDT::VALID.0,
+			} as usize,
+			lparam: match self.system_time {
+				None => 0,
+				Some(st) => ref_to_lp(st),
+			},
 		}
 	}
 }
