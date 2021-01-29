@@ -194,7 +194,8 @@ impl HKEY {
 	/// [`RegOpenKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
 	/// method.
 	///
-	/// **Note:** Must be paired with a [`RegCloseKey`](crate::HKEY::RegCloseKey) call.
+	/// **Note:** Must be paired with a [`RegCloseKey`](crate::HKEY::RegCloseKey)
+	/// call.
 	///
 	/// # Examples
 	///

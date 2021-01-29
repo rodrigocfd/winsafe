@@ -292,7 +292,8 @@ impl HWND {
 	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
 	///
-	/// **Note:** Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC) call.
+	/// **Note:** Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC)
+	/// call.
 	pub fn GetDC(self) -> WinResult<HDC> {
 		match ptr_as_opt(unsafe { user32::GetDC(self.ptr) }) {
 			Some(ptr) => Ok(HDC { ptr }),

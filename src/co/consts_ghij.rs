@@ -209,6 +209,23 @@ const_type! { IDI, usize,
 	INFORMATION, Self::ASTERISK.0
 }
 
+const_type! { ILC, u32,
+	/// [`ImageList_Create`](crate::HIMAGELIST::ImageList_Create) `flags` (`u32`).
+
+	MASK, 0x00000001
+	COLOR, 0x00000000
+	COLORDDB, 0x000000fe
+	COLOR4, 0x00000004
+	COLOR8, 0x00000008
+	COLOR16, 0x00000010
+	COLOR24, 0x00000018
+	COLOR32, 0x00000020
+	MIRROR, 0x00002000
+	PERITEMMIRROR, 0x00008000
+	ORIGINALSIZE, 0x00010000
+	HIGHQUALITYSCALE, 0x00020000
+}
+
 const_type! { ILD, u32,
 	/// [`IMAGELISTDRAWFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).

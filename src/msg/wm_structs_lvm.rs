@@ -1,9 +1,88 @@
 use crate::aliases::WinResult;
 use crate::co;
+use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
 use crate::msg::{Message, Wm};
 use crate::msg::macros::ref_to_lp;
 use crate::structs as s;
+
+/// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
+/// message parameters.
+///
+/// Return type: `SIZE`.
+pub struct LvmApproximateViewRect {
+	pub num_items: Option<u32>,
+	pub proposed_x: Option<u16>,
+	pub proposed_y: Option<u16>,
+}
+
+impl Message for LvmApproximateViewRect {
+	type RetType = s::SIZE;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		s::SIZE::new(LOWORD(v as u32) as i32, HIWORD(v as u32) as i32)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_APPROXIMATEVIEWRECT,
+			wparam: match self.num_items {
+				None => -1,
+				Some(num) => num as isize,
+			} as usize,
+			lparam: MAKEDWORD(
+				match self.proposed_x {
+					None => -1,
+					Some(x) => x as i32,
+				} as u16,
+				match self.proposed_y {
+					None => -1,
+					Some(y) => y as i32,
+				} as u16,
+			) as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_ARRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-arrange)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct LvmArrange {
+	pub arrangement: co::LVA,
+}
+
+impl Message for LvmArrange {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::LVM_ARRANGE,
+			wparam: self.arrangement.0 as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+empty_msg! { LvmCancelEditLabel, co::WM::LVM_CANCELEDITLABEL,
+	/// [`LVM_CANCELEDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
+	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
+}
+
+//------------------------------------------------------------------------------
 
 /// [`LVM_DELETEALLITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteallitems)
 /// message, which has no parameters.

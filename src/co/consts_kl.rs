@@ -256,6 +256,13 @@ const_type! { LV_VIEW, u32,
 	TILE, 0x0004
 }
 
+const_type! { LVA, u16,
+	/// [`LVM_ARRANGE`](crate::msg::LvmArrange) arrangement (`u16`).
+
+	DEFAULT, 0x0000
+	SNAPTOGRID, 0x0005
+}
+
 const_type! { LVCF, u32,
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
 
