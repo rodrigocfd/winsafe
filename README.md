@@ -5,15 +5,15 @@
 [![Lines of Code](https://tokei.rs/b1/github/rodrigocfd/winsafe)](https://github.com/rodrigocfd/winsafe)
 [![License](https://img.shields.io/crates/l/winsafe.svg)](https://github.com/rodrigocfd/winsafe)
 
-This crate provides bindings for a selected subset of the [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) in safe, idiomatic Rust. This subset includes functions, structs and constants. In addition, it provides high-level [GUI wrappers](crate::gui) for windows and controls, allowing the development of complex and scalable Win32 GUI applications, in 100% native Win32.
+Win32 GUI and related APIs in safe, idiomatic Rust.
 
 Documentation for the `master` branch: [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/)
 
 ## Current status
 
-This crate is still in its infancy! 👶
+Custom windows (main, modal and control) are complete, but some events, native controls and APIs are not implemented yet, so this crate is still **incomplete**. It's under heavy development, though.
 
-It already works, but it's still incomplete and under heavy development.
+Since it's incomplete, it's not published to [crates.io](https://crates.io/crates/winsafe) yet. To use this crate, simply clone this repo.
 
 ## Example
 

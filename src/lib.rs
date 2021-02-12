@@ -1,21 +1,69 @@
-//! This crate provides bindings for a selected subset of the
-//! [Win32 API](https://docs.microsoft.com/en-us/windows/win32/) in safe,
-//! idiomatic Rust. This subset includes functions, structs and constants. In
-//! addition, it provides high-level [GUI wrappers](crate::gui) for windows and
-//! controls, allowing the development of complex and scalable Win32 GUI
-//! applications, in 100% native Win32.
+//! Win32 GUI and related APIs in safe, idiomatic Rust.
 //!
-//! # Functions
+//! # Safe Win32
 //!
-//! WinSafe exposes native Win32 functions using the same original name, so it
-//! should look familiar to anyone who knows Win32. The functions can be
-//! categorized in three types:
+//! WinSafe exposes native Win32 constants, structs and functions related to GUI
+//! work. This means you'll find only a selected subset of the Win32 API – if
+//! you're looking for a comprehensive Win32 coverage, take a look at
+//! [winapi](https://crates.io/crates/winapi) or
+//! [windows](https://crates.io/crates/windows) crates, which are unsafe, but
+//! have everything.
 //!
-//! * free functions;
-//! * static methods;
-//! * instance methods.
+//! ## Crate modules
 //!
-//! Free functions are those found at the root of the crate:
+//! The Win32 bindings are divided into a few modules:
+//!
+//! * root – the root of the crate has Win32 free functions and structs;
+//! * [`co`](crate::co) – types and values of Win32 constants;
+//! * [`msg`](crate::msg) – window messages;
+//! * [`gui`](crate::gui) – high-level GUI wrappers.
+//!
+//! And additionally:
+//!
+//! * [`shell`](crate::shell) – Win32 shell COM interfaces.
+//!
+//! Other modules are planned to be added in the future, featuring more COM
+//! interfaces.
+//!
+//! ## Native function calls
+//!
+//! The best way to understand the idea behind WinSafe bindings is comparing
+//! them to the correspondent C code.
+//!
+//! For example, take the following C code:
+//!
+//! ```c
+//! HWND hwnd = GetDesktopWindow();
+//! SetFocus(hwnd);
+//! ```
+//!
+//! This is equivalent to:
+//!
+//! ```rust,ignore
+//! use winsafe::HWND;
+//!
+//! let hwnd = HWND::GetDesktopWindow();
+//! hwnd.SetFocus();
+//! ```
+//!
+//! Note how [`GetDesktopWindow`](crate::HWND::GetDesktopWindow) is a static
+//! method of [`HWND`](crate::HWND), and [`SetFocus`](crate::HWND::SetFocus) is
+//! an instance method called directly upon `hwnd`. All native handles (`HWND`,
+//! [`HDC`](crate::HDC), [`HINSTANCE`](crate::HINSTANCE), etc.) are structs,
+//! thus:
+//!
+//! * native Win32 functions that return a handle are *static methods* in
+//! WinSafe;
+//! * native Win32 functions whose *first parameter* is a handle are *instance
+//! methods*.
+//!
+//! Now this C code:
+//!
+//! ```c
+//! PostQuitMessage(0);
+//! ```
+//!
+//! Is equivalent to:
 //!
 //! ```rust,ignore
 //! use winsafe::PostQuitMessage;
@@ -23,102 +71,86 @@
 //! PostQuitMessage(0);
 //! ```
 //!
-//! Both static and instance methods belong to handle types, like
-//! [`HDC`](crate::HDC) or [`HWND`](crate::HWND). Handle types always start with
-//! the letter "H". Static methods create new handle objects, while instance
-//! methods perform operations on existing handle objects.
+//! Since [`PostQuitMessage`](crate::PostQuitMessage) is a free function, it's
+//! simply at the root of the crate.
 //!
-//! Take the following C code:
+//! ## Native constants
 //!
-//! ```c
-//! HWND h = GetDesktopWindow();
-//! SetFocus(h);
-//! ```
+//! All native Win32 constants can be found in the [`co`](crate::co) module.
+//! They're all *typed*, what means that different constant types cannot be
+//! mixed (unless you explicitly say so).
 //!
-//! This is the equivalent of:
 //!
-//! ```rust,ignore
-//! use winsafe::HWND;
+//! The name of the constant type is often its prefix. For example, constants of
+//! [`MessageBox`](crate::HWND::MessageBox) function, like `MB_OKCANCEL`,
+//! belong to a type called [`MB`](crate::co::MB).
 //!
-//! let h = HWND::GetDesktopWindow();
-//! h.SetFocus();
-//! ```
-//!
-//! # Structs
-//!
-//! WinSafe structs are direct representations of Win32 structs, all being
-//! marked with `#[repr(C)]`. Fields that control the struct size, usually named
-//! `cbSize`, are not public. They are automatically filled when the struct is
-//! instantiated.
-//!
-//! Pointer fields are also private. They can only be set and retrieved with
-//! getter and setter methods. In particular, when setting a string pointer
-//! field, you need to pass a reference to a [`WString`](crate::WString) buffer,
-//! which will keep the string contents:
-//!
-//! ```rust,ignore
-//! use winsafe::{WNDCLASSEX, WString};
-//!
-//! let mut wcx = WNDCLASSEX::default(); // cbSize automatically set
-//! println!("Class name: {}", wcx.lpszClassName()); // retrieve; initially an empty string
-//!
-//! let buf = WString::from_str("CLASS_NAME");
-//! wcx.set_lpszClassName(&buf); // set; pass reference to buffer
-//! ```
-//!
-//! # Constants
-//!
-//! The Win32 API, being a C API, has all its constants as simple `#define`
-//! macros. This has the drawback of different constant types being allowed to
-//! be mixed.
-//!
-//! WinSafe, in the other hand, defines types for all constants, so they cannot
-//! be mixed unless explicitly told to. All constants are defined inside the
-//! [`co`](crate::co) module.
-//!
-//! Most constant types are named according to their prefix. For example,
-//! [`MessageBox`](crate::HWND::MessageBox) constants, like `MB_OKCANCEL`,
-//! belong to a type called [`MB`](crate::co::MB). These types implement bitwise
-//! operator traits, like
-//! [`BirOr`](https://doc.rust-lang.org/std/ops/trait.BitOr.html) and
-//! [`BitAnd`](https://doc.rust-lang.org/std/ops/trait.BitAnd.html). They also
-//! implement [`From`](https://doc.rust-lang.org/std/convert/trait.From.html)
-//! trait conversions for the underlying integer type – usually `u32`, but it
-//! varies.
-//!
-//! Typed constants are used in function arguments and also in struct fields.
-//! For example, struct [`WNDCLASSEX`](crate::WNDCLASSEX) has a `style` field
-//! typed as [`CS`](crate::co::CS), which restricts the possible values.
-//!
-//! A message box "hello world" in C:
+//! For example, take the following C code:
 //!
 //! ```c
-//! HWND h = GetDesktopWindow();
-//! MessageBox(h, L"Hello, world", L"Title", MB_OKCANCEL | MB_ICONINFORMATION);
+//! let hwnd = GetDesktopWindow();
+//! MessageBox(hwnd, "Hello, world", "My hello", MB_OKCANCEL | MB_ICONINFORMATION);
+//! ```
+//!
+//! This is equivalent to:
+//!
+//! ```rust,ignore
+//! use winsafe::{co::MB, HWND};
+//!
+//! let hwnd = HWND::GetDesktopWindow();
+//! hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)
+//!     .unwrap();
+//! ```
+//!
+//! The method [`MessageBox`](crate::HWND::MessageBox), like all native
+//! functions that can return errors, will return
+//! [`WinResult`](crate::WinResult), which can contain an
+//! [`ERROR`](crate::co::ERROR) constant.
+//!
+//! ## Native structs
+//!
+//! WinSafe implements native Win32 structs in a very restricted way. First off,
+//! fields which control the size of the struct – often named `cbSize` – are
+//! *private* and automatically set when the struct is instantiated.
+//!
+//! Pointer fields are also private, and they can be set and retrieved only
+//! through getter and setter methods. In particular, when setting a string
+//! pointer field, you need to pass a reference to a [`WString`](crate::WString)
+//! buffer, which will keep the actual string contents.
+//!
+//! For example, the following C code:
+//!
+//! ```c
+//! WNDCLASSEX wcx = {0};
+//! wcx.cbSize = sizeof(WNDCLASSEX);
+//! wcx.lpszClassName = "MY_WINDOW";
+//!
+//! if (RegisterClassEx(&wcx) == 0) {
+//!     DWORD err = GetLastError();
+//!     // handle error...
+//! }
 //! ```
 //!
 //! Is equivalent to:
 //!
 //! ```rust,ignore
-//! use winsafe::{co::MB, HWND};
+//! use winsafe::{RegisterClassEx, WNDCLASSEX, WString};
 //!
-//! let h = HWND::GetDesktopWindow();
-//! h.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)
-//!   .unwrap();
+//! let buf = WString::from_str("MY_WINDOW");
+//!
+//! let mut wcx = WNDCLASSEX::default();
+//! wcx.set_lpszClassName(&buf);
+//!
+//! if let Err(err) = RegisterClassEx(&wcx) {
+//!     // handle error...
+//! }
 //! ```
 //!
-//! # Errors
+//! Note how you *don't need* to call
+//! [`GetLastError`](crate::GetLastError) to retrieve the error code: it's
+//! returned by the method itself.
 //!
-//! [Win32 errors](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes),
-//! natively returned by [`GetLastError`](crate::GetLastError) function, belong
-//! to the constant type [`ERROR`](crate::co::ERROR), which also holds
-//! [`HRESULT`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
-//! values. Most Win32 functions return a [`WinResult`](crate::WinResult) with a
-//! possible `ERROR`.
-//!
-//! Panics will happen only in case of misuse or internal bug.
-//!
-//! # Text encoding
+//! ## Text encoding
 //!
 //! Windows natively uses
 //! [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings).
@@ -133,14 +165,14 @@
 //! [`WString`](crate::WString) struct, which is also capable of working as a
 //! buffer to receive text from Win32 calls.
 //!
-//! # High-level GUI
+//! # GUI
 //!
-//! On top of all Win32 bindings, WinSafe features a set of high-level GUI
-//! structs, which scaffolds the boilerplate needed to build windows and
-//! controls. Unless you are writing something really specific, these high-level
-//! abstractions are highly recommended.
+//! On top of the Win32 bindings, WinSafe features a set of high-level GUI
+//! structs, which scaffolds the boilerplate needed to build native Win32 GUI
+//! applications. Unless you're doing something really specific, these
+//! high-level wrappers are highly recommended.
 //!
-//! They can be found in the module [`gui`](crate::gui).
+//! GUI structs can be found in module [`gui`](crate::gui).
 
 #[macro_use]
 pub mod co;
