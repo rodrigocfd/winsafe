@@ -1,7 +1,5 @@
 //! Win32 GUI and related APIs in safe, idiomatic Rust.
 //!
-//! # Safe Win32
-//!
 //! WinSafe exposes native Win32 constants, structs and functions related to GUI
 //! work. This means you'll find only a selected subset of the Win32 API – if
 //! you're looking for a comprehensive Win32 coverage, take a look at
@@ -9,7 +7,7 @@
 //! [windows](https://crates.io/crates/windows) crates, which are unsafe, but
 //! have everything.
 //!
-//! ## Crate modules
+//! # Modules overview
 //!
 //! The Win32 bindings are divided into a few modules:
 //!
@@ -25,7 +23,7 @@
 //! Other modules are planned to be added in the future, featuring more COM
 //! interfaces.
 //!
-//! ## Native function calls
+//! # Native function calls
 //!
 //! The best way to understand the idea behind WinSafe bindings is comparing
 //! them to the correspondent C code.
@@ -74,7 +72,7 @@
 //! Since [`PostQuitMessage`](crate::PostQuitMessage) is a free function, it's
 //! simply at the root of the crate.
 //!
-//! ## Native constants
+//! # Native constants
 //!
 //! All native Win32 constants can be found in the [`co`](crate::co) module.
 //! They're all *typed*, what means that different constant types cannot be
@@ -107,7 +105,7 @@
 //! [`WinResult`](crate::WinResult), which can contain an
 //! [`ERROR`](crate::co::ERROR) constant.
 //!
-//! ## Native structs
+//! # Native structs
 //!
 //! WinSafe implements native Win32 structs in a very restricted way. First off,
 //! fields which control the size of the struct – often named `cbSize` – are
@@ -150,7 +148,7 @@
 //! [`GetLastError`](crate::GetLastError) to retrieve the error code: it's
 //! returned by the method itself.
 //!
-//! ## Text encoding
+//! # Text encoding
 //!
 //! Windows natively uses
 //! [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings).
