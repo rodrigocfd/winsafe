@@ -23,6 +23,31 @@ const_type! { SBT, u16,
 	NOTABPARSING, 0x0800
 }
 
+const_type! { SC, u32,
+	/// [`WM_SYSCOMMAND`](crate::msg::WmSysCommand) type of system command
+	/// requested (`u32`).
+
+	CLOSE, 0xf060
+	CONTEXTHELP, 0xf180
+	DEFAULT, 0xf160
+	HOTKEY, 0xf150
+	HSCROLL, 0xf080
+	ISSECURE, 0x00000001
+	KEYMENU, 0xf100
+	MAXIMIZE, 0xf030
+	MINIMIZE, 0xf020
+	MONITORPOWER, 0xf170
+	MOUSEMENU, 0xf090
+	MOVE, 0xf010
+	NEXTWINDOW, 0xf040
+	PREVWINDOW, 0xf050
+	RESTORE, 0xf120
+	SCREENSAVE, 0xf140
+	SIZE, 0xf000
+	TASKLIST, 0xf130
+	VSCROLL, 0xf070
+}
+
 const_type! { SIZE_R, u8,
 	/// [`WM_SIZE`](crate::msg::WmSize) request (`u8`).
 
@@ -746,6 +771,16 @@ const_type_wsex! { TCS_EX,
 
 	FLATSEPARATORS, 0x00000001
 	REGISTERDROP, 0x00000002
+}
+
+const_type! { TME, u32,
+	/// [`TrackMouseEvent`](crate::TrackMouseEvent) `dwFlags` (`u32`).
+
+	CANCEL, 0x80000000
+	HOVER, 0x00000001
+	LEAVE, 0x00000002
+	NONCLIENT, 0x00000010
+	QUERY, 0x40000000
 }
 
 const_type! { TPM, u32,

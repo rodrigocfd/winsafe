@@ -479,6 +479,24 @@ pub struct SYSTEMTIME {
 	pub wMilliseconds: u16,
 }
 
+/// [`TRACKMOUSEEVENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)
+/// struct.
+#[repr(C)]
+pub struct TRACKMOUSEEVENT {
+	cbSize: u32,
+	pub dwFlags: co::TME,
+	pub hwndTrack: h::HWND,
+	pub dwHoverTime: u32,
+}
+
+impl Default for TRACKMOUSEEVENT {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
+	}
+}
+
 /// [`WINDOWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.
 #[repr(C)]

@@ -398,6 +398,15 @@ pub unsafe fn SystemParametersInfo<T>(
 	}
 }
 
+/// [`TrackMouseEvent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
+/// function.
+pub fn TrackMouseEvent(lpEventTrack: &mut s::TRACKMOUSEEVENT) -> WinResult<()> {
+	match unsafe { user32::TrackMouseEvent(mut_void(lpEventTrack)) } {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
+}
+
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
 pub fn TranslateMessage(lpMsg: &s::MSG) -> bool {
