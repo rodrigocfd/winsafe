@@ -36,6 +36,8 @@ impl RadioGroupEvents {
 	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 	/// command notification for all radio buttons in the group.
 	///
+	/// Sent when the user clicks a button.
+	///
 	/// # Examples
 	///
 	/// ```rust,ignore
@@ -67,6 +69,12 @@ impl RadioGroupEvents {
 
 	/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 	/// command notification for all radio buttons in the group.
+	///
+	/// Sent when the user double-clicks a button. This notification code is
+	/// sent automatically for [`BS_USERBUTTON`](crate::co::BS::USERBUTTON),
+	/// [`BS_RADIOBUTTON`](crate::co::BS::RADIOBUTTON), and
+	/// [`BS_OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
+	/// send only if they have the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style.
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
@@ -82,6 +90,10 @@ impl RadioGroupEvents {
 
 	/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 	/// command notification for all radio buttons in the group.
+	///
+	/// Sent when a button loses the keyboard focus. The button must have the
+	/// [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
+	/// code.
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
@@ -97,6 +109,10 @@ impl RadioGroupEvents {
 
 	/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 	/// command notification for all radio buttons in the group.
+	///
+	/// Sent when a button receives the keyboard focus. The button must have
+	/// the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this
+	/// notification code.
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{

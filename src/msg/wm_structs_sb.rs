@@ -257,3 +257,27 @@ impl<'a> Message for SbSetTipText<'a> {
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
+
+/// [`SB_SIMPLE`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-simple)
+/// message parameters.
+pub struct SbSimple {
+	pub display_simple: bool,
+}
+
+impl Message for SbSimple {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::SB_SIMPLE,
+			wparam: self.display_simple as usize,
+			lparam: 0,
+		}
+	}
+}

@@ -34,16 +34,23 @@ impl ButtonEvents {
 	nfy_event_p! { bcn_drop_down, co::NM::BCN_DROPDOWN, NMBCDROPDOWN,
 		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.
+		///
+		/// Sent when the user clicks a drop down arrow on a button.
 	}
 
 	nfy_event_p! { bcn_hot_item_change, co::NM::BCN_HOTITEMCHANGE, NMBCHOTITEM,
 		/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
 		/// notification.
+		///
+		/// Notifies the button control owner that the mouse is entering or
+		/// leaving the client area of the button control.
 	}
 
 	cmd_event! { bn_clicked, co::CMD::BN_CLICKED,
 		/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 		/// command notification.
+		///
+		/// Sent when the user clicks a button.
 		///
 		/// # Examples
 		///
@@ -64,20 +71,36 @@ impl ButtonEvents {
 	cmd_event! { bn_dbl_clk, co::CMD::BN_DBLCLK,
 		/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 		/// command notification.
+		///
+		/// Sent when the user double-clicks a button. This notification code is
+		/// sent automatically for [`BS_USERBUTTON`](crate::co::BS::USERBUTTON),
+		/// [`BS_RADIOBUTTON`](crate::co::BS::RADIOBUTTON), and
+		/// [`BS_OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
+		/// send only if they have the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style.
 	}
 
 	cmd_event! { bn_kill_focus, co::CMD::BN_KILLFOCUS,
 		/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 		/// command notification.
+		///
+		/// Sent when a button loses the keyboard focus. The button must have the
+		/// [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
+		/// code.
 	}
 
 	cmd_event! { bn_set_focus, co::CMD::BN_SETFOCUS,
 		/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 		/// command notification.
+		///
+		/// Sent when a button receives the keyboard focus. The button must have
+		/// the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this
+		/// notification code.
 	}
 
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
 	/// notification.
+	///
+	/// Notifies about custom draw operations on the button.
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
 	{

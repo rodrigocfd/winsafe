@@ -33,16 +33,28 @@ impl EditEvents {
 	cmd_event! { en_align_ltr_ec, co::CMD::EN_ALIGN_LTR_EC,
 		/// [`EN_ALIGN_LTR_EC`](https://docs.microsoft.com/en-us/windows/win32/controls/en-align-ltr-ec)
 		/// command notification.
+		///
+		/// Sent when the user has changed the edit control direction to
+		/// left-to-right.
 	}
 
 	cmd_event! { en_align_rtl_ec, co::CMD::EN_ALIGN_RTL_EC,
 		/// [`EN_ALIGN_LTR_EC`](https://docs.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
 		/// command notification.
+		///
+		/// Sent when the user has changed the edit control direction to
+		/// right-to-left.
 	}
 
 	cmd_event! { en_change, co::CMD::EN_CHANGE,
 		/// [`EN_CHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-change)
 		/// command notification.
+		///
+		/// Sent when the user has taken an action that may have altered text in
+		/// an edit control. Unlike the
+		/// [`EN_UPDATE`](crate::gui::events::EditEvents::en_update) notification
+		/// code, this notification code is sent after the system updates the
+		/// screen.
 		///
 		/// # Examples
 		///
@@ -64,35 +76,68 @@ impl EditEvents {
 	cmd_event! { en_err_space, co::CMD::EN_ERRSPACE,
 		/// [`EN_ERRSPACE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-errspace)
 		/// command notification.
+		///
+		/// Sent when an edit control cannot allocate enough memory to meet a
+		/// specific request.
 	}
 
-	cmd_event! { en_h_scoll, co::CMD::EN_HSCROLL,
+	cmd_event! { en_h_scroll, co::CMD::EN_HSCROLL,
 		/// [`EN_HSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/en-hscroll)
 		/// command notification.
+		///
+		/// Sent when the user clicks an edit control's horizontal scroll bar.
+		/// Notified before the screen is updated.
 	}
 
 	cmd_event! { en_kill_focus, co::CMD::EN_KILLFOCUS,
 		/// [`EN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/en-killfocus)
 		/// command notification.
+		///
+		/// Sent when an edit control loses the keyboard focus.
 	}
 
 	cmd_event! { en_max_text, co::CMD::EN_MAXTEXT,
 		/// [`EN_MAXTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/en-maxtext)
 		/// command notification.
+		///
+		/// Sent when the current text insertion has exceeded the specified number
+		/// of characters for the edit control. The text insertion has been
+		/// truncated.
+		///
+		/// This notification code is also sent when an edit control does not have
+		/// the [`ES_AUTOHSCROLL`](crate::co::ES::AUTOHSCROLL) style and the
+		/// number of characters to be inserted would exceed the width of the edit
+		/// control.
+		///
+		/// This notification code is also sent when an edit control does not have
+		/// the [`ES_AUTOVSCROLL`](crate::co::ES::AUTOVSCROLL) style and the total
+		/// number of lines resulting from a text insertion would exceed the
+		/// height of the edit control.
 	}
 
 	cmd_event! { en_set_focus, co::CMD::EN_SETFOCUS,
 		/// [`EN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/en-setfocus)
 		/// command notification.
+		///
+		/// Sent when an edit control receives the keyboard focus.
 	}
 
 	cmd_event! { en_update, co::CMD::EN_UPDATE,
 		/// [`EN_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-update)
 		/// command notification.
+		///
+		/// Sent when an edit control is about to redraw itself. This notification
+		/// code is sent after the control has formatted the text, but before it
+		/// displays the text. This makes it possible to resize the edit control
+		/// window, if necessary.
 	}
 
-	cmd_event! { en_v_scoll, co::CMD::EN_VSCROLL,
+	cmd_event! { en_v_scroll, co::CMD::EN_VSCROLL,
 		/// [`EN_VSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/en-vscroll)
 		/// command notification.
+		///
+		/// Sent when the user clicks an edit control's vertical scroll bar or
+		/// when the user scrolls the mouse wheel over the edit control. Notified
+		/// before the screen is updated.
 	}
 }

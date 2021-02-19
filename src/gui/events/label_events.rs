@@ -33,20 +33,34 @@ impl LabelEvents {
 	cmd_event! { stn_clicked, co::CMD::STN_CLICKED,
 		/// [`STN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-clicked)
 		/// notification.
+		///
+		/// Sent when the user clicks a static control that has the
+		/// [`SS_NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
 	cmd_event! { stn_dbl_clk, co::CMD::STN_DBLCLK,
 		/// [`STN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-dblclk)
 		/// notification.
+		///
+		/// Sent when the user double-clicks a static control that has the
+		/// [`SS_NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
 	cmd_event! { stn_disable, co::CMD::STN_DISABLE,
 		/// [`STN_DISABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-disable)
 		/// notification.
+		///
+		/// Sent when a static control is disabled. The static control must have
+		/// the [`SS_NOTIFY`](crate::co::SS::NOTIFY) style to receive this
+		/// notification code.
 	}
 
 	cmd_event! { stn_enable, co::CMD::STN_ENABLE,
 		/// [`STN_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-enable)
 		/// notification.
+		///
+		/// Sent when a static control is enabled. The static control must have
+		/// the [`SS_NOTIFY`](crate::co::SS::NOTIFY) style to receive this
+		/// notification code.
 	}
 }
