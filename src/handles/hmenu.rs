@@ -40,19 +40,16 @@ impl HMENU {
 	pub fn CheckMenuItem(self,
 		uIDCheckItem: IdPos, uCheck: bool) -> WinResult<co::MF>
 	{
-		let mut flags = if uCheck {
-			co::MF::CHECKED
-		} else {
-			co::MF::UNCHECKED
-		};
-
-		match uIDCheckItem {
-			IdPos::Id(_) => flags |= co::MF::BYCOMMAND,
-			IdPos::Pos(_) => flags |= co::MF::BYPOSITION,
-		}
-
 		match unsafe {
-			user32::CheckMenuItem(self.ptr, uIDCheckItem.into(), flags.into())
+			user32::CheckMenuItem(
+				self.ptr,
+				uIDCheckItem.id_or_pos_u32(),
+				(uIDCheckItem.mf_flag() | if uCheck {
+					co::MF::CHECKED
+				} else {
+					co::MF::UNCHECKED
+				}).into(),
+			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			ret => Ok(co::MF(ret as u32)),
@@ -86,13 +83,12 @@ impl HMENU {
 	/// [`DeleteMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deletemenu)
 	/// method.
 	pub fn DeleteMenu(self, uPosition: IdPos) -> WinResult<()> {
-		let flags = match uPosition {
-			IdPos::Id(_) => co::MF::BYCOMMAND,
-			IdPos::Pos(_) => co::MF::BYPOSITION,
-		};
-
 		match unsafe {
-			user32::DeleteMenu(self.ptr, uPosition.into(), flags.into())
+			user32::DeleteMenu(
+				self.ptr,
+				uPosition.id_or_pos_u32(),
+				uPosition.mf_flag().into(),
+			)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -118,13 +114,14 @@ impl HMENU {
 	{
 		let mut flags = uEnable;
 		flags &= !(co::MF::BYPOSITION | co::MF::BYCOMMAND); // remove if set
-		flags |= match uIDEnableItem {
-			IdPos::Id(_) => co::MF::BYCOMMAND, // set correctly
-			IdPos::Pos(_) => co::MF::BYPOSITION,
-		};
+		flags |= uIDEnableItem.mf_flag(); // set correctly
 
 		match unsafe {
-			user32::EnableMenuItem(self.ptr, uIDEnableItem.into(), flags.into())
+			user32::EnableMenuItem(
+				self.ptr,
+				uIDEnableItem.id_or_pos_u32(),
+				flags.into(),
+			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			ret => Ok(co::MF(ret as u32)),
@@ -176,15 +173,12 @@ impl HMENU {
 	{
 		let mut flags = uFlags;
 		flags &= !(co::MF::BYPOSITION | co::MF::BYCOMMAND); // remove if set
-		flags |= match uPosition {
-			IdPos::Id(_) => co::MF::BYCOMMAND, // set correctly
-			IdPos::Pos(_) => co::MF::BYPOSITION,
-		};
+		flags |= uPosition.mf_flag(); // set correctly
 
 		match unsafe {
 			user32::InsertMenuW(
 				self.ptr,
-				uPosition.into(),
+				uPosition.id_or_pos_u32(),
 				flags.into(),
 				uIDNewItem.into(),
 				lpNewItem.as_ptr(),
@@ -200,16 +194,11 @@ impl HMENU {
 	pub fn InsertMenuItem(self,
 		item: IdPos, lpmi: &MENUITEMINFO) -> WinResult<()>
 	{
-		let byPos = match item {
-			IdPos::Id(_) => false,
-			IdPos::Pos(_) => true,
-		};
-
 		match unsafe {
 			user32::InsertMenuItemW(
 				self.ptr,
-				item.into(),
-				byPos as i32,
+				item.id_or_pos_u32(),
+				item.is_by_pos() as i32,
 				lpmi as *const _ as *const _,
 			)
 		} {
@@ -227,13 +216,12 @@ impl HMENU {
 	/// [`RemoveMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-removemenu)
 	/// method.
 	pub fn RemoveMenu(self, uPosition: IdPos) -> WinResult<()> {
-		let byPos = match uPosition {
-			IdPos::Id(_) => false,
-			IdPos::Pos(_) => true,
-		};
-
 		match unsafe {
-			user32::RemoveMenu(self.ptr, uPosition.into(), byPos as u32)
+			user32::RemoveMenu(
+				self.ptr,
+				uPosition.id_or_pos_u32(),
+				uPosition.mf_flag().into(),
+			)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -256,14 +244,12 @@ impl HMENU {
 	pub fn SetMenuItemInfo(self,
 		item: IdPos, lpmii: &MENUITEMINFO) -> WinResult<()>
 	{
-		let byPos = match item {
-			IdPos::Id(_) => false,
-			IdPos::Pos(_) => true,
-		};
-
 		match unsafe {
 			user32::SetMenuItemInfoW(
-				self.ptr, item.into(), byPos as i32, lpmii as *const _ as *const _,
+				self.ptr,
+				item.id_or_pos_u32(),
+				item.is_by_pos() as i32,
+				lpmii as *const _ as *const _,
 			)
 		} {
 			0 => Err(GetLastError()),

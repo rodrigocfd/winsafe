@@ -239,6 +239,7 @@ impl IdMenu {
 /// * [`InsertMenuItem`](crate::HMENU::InsertMenuItem) `item`;
 /// * [`RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
 /// * [`SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
+#[derive(Copy, Clone)]
 pub enum IdPos {
 	/// A command ID.
 	Id(u16),
@@ -246,11 +247,25 @@ pub enum IdPos {
 	Pos(u32),
 }
 
-impl From<IdPos> for u32 {
-	fn from(v: IdPos) -> Self {
-		match v {
+impl IdPos {
+	pub fn is_by_pos(self) -> bool {
+		match self {
+			IdPos::Id(_) => false,
+			IdPos::Pos(_) => true,
+		}
+	}
+
+	pub fn id_or_pos_u32(self) -> u32 {
+		match self {
 			IdPos::Id(id) => id as u32,
 			IdPos::Pos(pos) => pos,
+		}
+	}
+
+	pub fn mf_flag(self) -> co::MF {
+		match self {
+			IdPos::Id(_) => co::MF::BYCOMMAND,
+			IdPos::Pos(_) => co::MF::BYPOSITION,
 		}
 	}
 }

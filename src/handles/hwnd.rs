@@ -589,7 +589,7 @@ impl HWND {
 	{
 		unsafe {
 			user32::HiliteMenuItem(
-				self.ptr, hMenu.ptr, uIDHiliteItem.into(), uHilite.into(),
+				self.ptr, hMenu.ptr, uIDHiliteItem.id_or_pos_u32(), uHilite.into(),
 			) != 0
 		}
 	}
