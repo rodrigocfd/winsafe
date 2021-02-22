@@ -4,7 +4,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
-use crate::privs::mut_void;
 use crate::WString;
 
 handle_type! {
@@ -116,7 +115,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
-							mut_void(&mut dwordBuf),
+							&mut dwordBuf as *mut _ as *mut _,
 							&mut dataLen,
 						)
 					} as u32
@@ -136,7 +135,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).into(),
 							std::ptr::null_mut(),
-							mut_void(&mut qwordBuf),
+							&mut qwordBuf as *mut _ as *mut _,
 							&mut dataLen,
 						)
 					} as u32

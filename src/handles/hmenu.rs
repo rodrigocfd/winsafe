@@ -6,7 +6,7 @@ use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
-use crate::privs::{const_void, mut_void, ptr_as_opt};
+use crate::privs::ptr_as_opt;
 use crate::structs::{MENUINFO, MENUITEMINFO};
 
 handle_type! {
@@ -134,7 +134,7 @@ impl HMENU {
 	/// [`GetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 	/// method.
 	pub fn GetMenuInfo(self, lpmi: &mut MENUINFO) -> WinResult<()> {
-		match unsafe { user32::GetMenuInfo(self.ptr, mut_void(lpmi)) } {
+		match unsafe { user32::GetMenuInfo(self.ptr, lpmi as *mut _ as *mut _) } {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -207,7 +207,10 @@ impl HMENU {
 
 		match unsafe {
 			user32::InsertMenuItemW(
-				self.ptr, item.into(), byPos as i32, const_void(lpmi),
+				self.ptr,
+				item.into(),
+				byPos as i32,
+				lpmi as *const _ as *const _,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -240,7 +243,9 @@ impl HMENU {
 	/// [`SetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 	/// method.
 	pub fn SetMenuInfo(self, mii: &MENUINFO) -> WinResult<()> {
-		match unsafe { user32::SetMenuInfo(self.ptr, const_void(mii)) } {
+		match unsafe {
+			user32::SetMenuInfo(self.ptr, mii as *const _ as *const _)
+		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
@@ -258,7 +263,7 @@ impl HMENU {
 
 		match unsafe {
 			user32::SetMenuItemInfoW(
-				self.ptr, item.into(), byPos as i32, const_void(lpmii),
+				self.ptr, item.into(), byPos as i32, lpmii as *const _ as *const _,
 			)
 		} {
 			0 => Err(GetLastError()),

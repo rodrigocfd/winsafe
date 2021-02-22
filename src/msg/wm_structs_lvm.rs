@@ -3,7 +3,6 @@ use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
 use crate::msg::{Message, Wm};
-use crate::msg::macros::ref_to_lp;
 use crate::structs::{LVCOLUMN, LVITEM, SIZE};
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
@@ -193,7 +192,7 @@ impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_GETCOLUMN,
 			wparam: self.index as usize,
-			lparam: ref_to_lp(self.lvcolumn),
+			lparam: self.lvcolumn as *const _ as isize,
 		}
 	}
 }
@@ -381,7 +380,7 @@ impl<'a, 'b> Message for LvmGetItemText<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_GETITEMTEXT,
 			wparam: self.index as usize,
-			lparam: ref_to_lp(self.lvitem),
+			lparam: self.lvitem as *const _ as isize,
 		}
 	}
 }
@@ -459,7 +458,7 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_INSERTCOLUMN,
 			wparam: self.index as usize,
-			lparam: ref_to_lp(self.lvcolumn),
+			lparam: self.lvcolumn as *const _ as isize,
 		}
 	}
 }
@@ -488,7 +487,7 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_INSERTITEM,
 			wparam: 0,
-			lparam: ref_to_lp(self.lvitem),
+			lparam: self.lvitem as *const _ as isize,
 		}
 	}
 }
@@ -628,7 +627,7 @@ impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_SETCOLUMN,
 			wparam: self.index as usize,
-			lparam: ref_to_lp(self.lvcolumn),
+			lparam: self.lvcolumn as *const _ as isize,
 		}
 	}
 }
@@ -684,7 +683,7 @@ impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_SETITEM,
 			wparam: 0,
-			lparam: ref_to_lp(self.lvitem),
+			lparam: self.lvitem as *const _ as isize,
 		}
 	}
 }
@@ -714,7 +713,7 @@ impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_SETITEMSTATE,
 			wparam: self.index as usize,
-			lparam: ref_to_lp(self.lvitem),
+			lparam: self.lvitem as *const _ as isize,
 		}
 	}
 }
@@ -744,7 +743,7 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 		Wm {
 			msg_id: co::WM::LVM_SETITEMTEXT,
 			wparam: self.index as usize,
-			lparam: ref_to_lp(self.lvitem),
+			lparam: self.lvitem as *const _ as isize,
 		}
 	}
 }

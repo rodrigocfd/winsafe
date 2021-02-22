@@ -3,7 +3,6 @@ use crate::co;
 use crate::enums::BitmapIcon;
 use crate::handles::{HBITMAP, HICON};
 use crate::msg::{Message, Wm};
-use crate::msg::macros::ref_to_lp;
 use crate::structs::{BUTTON_IMAGELIST, BUTTON_SPLITINFO, RECT, SIZE};
 use crate::WString;
 
@@ -29,7 +28,7 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 		Wm {
 			msg_id: co::WM::BCM_GETIDEALSIZE,
 			wparam: 0,
-			lparam: ref_to_lp(self.size),
+			lparam: self.size as *const _ as isize,
 		}
 	}
 }
@@ -58,7 +57,7 @@ impl<'a> Message for BcmGetImageList<'a> {
 		Wm {
 			msg_id: co::WM::BCM_GETIMAGELIST,
 			wparam: 0,
-			lparam: ref_to_lp(self.info),
+			lparam: self.info as *const _ as isize,
 		}
 	}
 }
@@ -140,7 +139,7 @@ impl<'a> Message for BcmGetSplitInfo<'a> {
 		Wm {
 			msg_id: co::WM::BCM_GETSPLITINFO,
 			wparam: 0,
-			lparam: ref_to_lp(self.splitinfo),
+			lparam: self.splitinfo as *const _ as isize,
 		}
 	}
 }
@@ -169,7 +168,7 @@ impl<'a> Message for BcmGetTextMargin<'a> {
 		Wm {
 			msg_id: co::WM::BCM_GETTEXTMARGIN,
 			wparam: 0,
-			lparam: ref_to_lp(self.margins),
+			lparam: self.margins as *const _ as isize,
 		}
 	}
 }
@@ -227,7 +226,7 @@ impl<'a> Message for BcmSetImageList<'a> {
 		Wm {
 			msg_id: co::WM::BCM_SETIMAGELIST,
 			wparam: 0,
-			lparam: ref_to_lp(self.info),
+			lparam: self.info as *const _ as isize,
 		}
 	}
 }
@@ -314,7 +313,7 @@ impl<'a> Message for BcmSetSplitInfo<'a> {
 		Wm {
 			msg_id: co::WM::BCM_SETSPLITINFO,
 			wparam: 0,
-			lparam: ref_to_lp(self.splitinfo),
+			lparam: self.splitinfo as *const _ as isize,
 		}
 	}
 }
@@ -343,7 +342,7 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 		Wm {
 			msg_id: co::WM::BCM_SETTEXTMARGIN,
 			wparam: 0,
-			lparam: ref_to_lp(self.margins),
+			lparam: self.margins as *const _ as isize,
 		}
 	}
 }

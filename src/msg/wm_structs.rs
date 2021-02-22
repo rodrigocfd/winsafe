@@ -4,7 +4,7 @@ use crate::enums::{HwndHmenu, NccspRect, WsWsex};
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{Message, MessageHandleable};
-use crate::msg::macros::{lp_to_mut_ref, lp_to_point, lp_to_ref, point_to_lp, ref_to_lp};
+use crate::msg::macros::{lp_to_point, point_to_lp};
 use crate::privs::FAPPCOMMAND_MASK;
 use crate::structs::{
 	CREATESTRUCT,
@@ -13,8 +13,8 @@ use crate::structs::{
 	POINT,
 	RECT,
 	SIZE,
-	STYLESTRUCT_WS,
 	STYLESTRUCT_WS_EX,
+	STYLESTRUCT_WS,
 	WINDOWPOS,
 };
 
@@ -292,7 +292,7 @@ impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
 		Wm {
 			msg_id: co::WM::CREATE,
 			wparam: 0,
-			lparam: ref_to_lp(self.createstruct),
+			lparam: self.createstruct as *const _ as isize,
 		}
 	}
 }
@@ -300,7 +300,7 @@ impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> MessageHandleable for WmCreate<'a, 'b, 'c> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			createstruct: lp_to_ref(p),
+			createstruct: unsafe { &*(p.lparam as *const _) },
 		}
 	}
 }
@@ -575,7 +575,7 @@ impl<'a> Message for WmGetMinMaxInfo<'a> {
 		Wm {
 			msg_id: co::WM::GETMINMAXINFO,
 			wparam: 0,
-			lparam: ref_to_lp(self.info),
+			lparam: self.info as *const _ as isize,
 		}
 	}
 }
@@ -583,7 +583,7 @@ impl<'a> Message for WmGetMinMaxInfo<'a> {
 impl<'a> MessageHandleable for WmGetMinMaxInfo<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			info: lp_to_mut_ref(p),
+			info: unsafe { &mut *(p.lparam as *mut _) },
 		}
 	}
 }
@@ -775,7 +775,7 @@ impl<'a> Message for WmMoving<'a> {
 		Wm {
 			msg_id: co::WM::MOVING,
 			wparam: 0,
-			lparam: ref_to_lp(self.window_pos),
+			lparam: self.window_pos as *const _ as isize,
 		}
 	}
 }
@@ -783,7 +783,7 @@ impl<'a> Message for WmMoving<'a> {
 impl<'a> MessageHandleable for WmMoving<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			window_pos: lp_to_mut_ref(p),
+			window_pos: unsafe { &mut *(p.lparam as *mut _) },
 		}
 	}
 }
@@ -813,8 +813,8 @@ impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
 				NccspRect::Rect(_) => false as usize,
 			},
 			lparam: match &self.data {
-				NccspRect::Nccsp(nccalc) => ref_to_lp(nccalc),
-				NccspRect::Rect(rc) => ref_to_lp(rc),
+				NccspRect::Nccsp(nccalc) => *nccalc as *const _ as isize,
+				NccspRect::Rect(rc) => *rc as *const _ as isize,
 			},
 		}
 	}
@@ -824,8 +824,8 @@ impl<'a, 'b> MessageHandleable for WmNcCalcSize<'a, 'b> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			data: match p.wparam {
-				0 => NccspRect::Rect(lp_to_mut_ref(p)),
-				_ => NccspRect::Nccsp(lp_to_mut_ref(p)),
+				0 => NccspRect::Rect(unsafe { &mut *(p.lparam as *mut _) }),
+				_ => NccspRect::Nccsp(unsafe { &mut *(p.lparam as *mut _) }),
 			},
 		}
 	}
@@ -852,7 +852,7 @@ impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
 		Wm {
 			msg_id: co::WM::NCCREATE,
 			wparam: 0,
-			lparam: ref_to_lp(self.createstruct),
+			lparam: self.createstruct as *const _ as isize,
 		}
 	}
 }
@@ -860,7 +860,7 @@ impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> MessageHandleable for WmNcCreate<'a, 'b, 'c> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			createstruct: lp_to_ref(p),
+			createstruct: unsafe { &*(p.lparam as *const _) },
 		}
 	}
 }
@@ -1240,7 +1240,7 @@ impl<'a> Message for WmSizing<'a> {
 		Wm {
 			msg_id: co::WM::SIZING,
 			wparam: self.window_edge.0 as usize,
-			lparam: ref_to_lp(self.coords),
+			lparam: self.coords as *const _ as isize,
 		}
 	}
 }
@@ -1249,7 +1249,7 @@ impl<'a> MessageHandleable for WmSizing<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			window_edge: co::WMSZ(p.wparam as u8),
-			coords: lp_to_mut_ref(p),
+			coords: unsafe { &mut *(p.lparam as *mut _) },
 		}
 	}
 }
@@ -1290,8 +1290,8 @@ impl<'a> MessageHandleable for WmStyleChanged<'a> {
 		Self {
 			change,
 			stylestruct: match change {
-				co::GWL_C::STYLE => WsWsex::Ws(lp_to_ref(p)),
-				_ => WsWsex::Wsex(lp_to_ref(p)),
+				co::GWL_C::STYLE => WsWsex::Ws(unsafe { &*(p.lparam as *const _) }),
+				_ => WsWsex::Wsex(unsafe { &*(p.lparam as *const _) }),
 			},
 		}
 	}
@@ -1333,8 +1333,8 @@ impl<'a> MessageHandleable for WmStyleChanging<'a> {
 		Self {
 			change,
 			stylestruct: match change {
-				co::GWL_C::STYLE => WsWsex::Ws(lp_to_ref(p)),
-				_ => WsWsex::Wsex(lp_to_ref(p)),
+				co::GWL_C::STYLE => WsWsex::Ws(unsafe { &*(p.lparam as *const _) }),
+				_ => WsWsex::Wsex(unsafe { &*(p.lparam as *const _) }),
 			},
 		}
 	}
@@ -1412,7 +1412,7 @@ impl<'a> Message for WmWindowPosChanged<'a> {
 		Wm {
 			msg_id: co::WM::WINDOWPOSCHANGED,
 			wparam: 0,
-			lparam: ref_to_lp(self.windowpos),
+			lparam: self.windowpos as *const _ as isize,
 		}
 	}
 }
@@ -1420,7 +1420,7 @@ impl<'a> Message for WmWindowPosChanged<'a> {
 impl<'a> MessageHandleable for WmWindowPosChanged<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			windowpos: lp_to_ref(p),
+			windowpos: unsafe { &*(p.lparam as *const _) },
 		}
 	}
 }
@@ -1446,7 +1446,7 @@ impl<'a> Message for WmWindowPosChanging<'a> {
 		Wm {
 			msg_id: co::WM::WINDOWPOSCHANGING,
 			wparam: 0,
-			lparam: ref_to_lp(self.windowpos),
+			lparam: self.windowpos as *const _ as isize,
 		}
 	}
 }
@@ -1454,7 +1454,7 @@ impl<'a> Message for WmWindowPosChanging<'a> {
 impl<'a> MessageHandleable for WmWindowPosChanging<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			windowpos: lp_to_ref(p),
+			windowpos: unsafe { &*(p.lparam as *const _) },
 		}
 	}
 }

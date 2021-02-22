@@ -3,7 +3,6 @@
 use crate::aliases::WinResult;
 use crate::ffi::shell32;
 use crate::funcs::GetLastError;
-use crate::privs::mut_void;
 use crate::structs::POINT;
 use crate::WString;
 
@@ -70,7 +69,7 @@ impl HDROP {
 	pub fn DragQueryPoint(self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let clientArea = unsafe {
-			shell32::DragQueryPoint(self.ptr, mut_void(&mut pt))
+			shell32::DragQueryPoint(self.ptr, &mut pt as *mut _ as *mut _)
 		};
 		(pt, clientArea != 0)
 	}

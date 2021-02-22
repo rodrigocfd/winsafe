@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
-use crate::privs::{mut_void, ptr_as_opt};
+use crate::privs::ptr_as_opt;
 use crate::structs::ACCEL;
 
 handle_type! {
@@ -20,7 +20,9 @@ impl HACCEL {
 		match ptr_as_opt(
 			unsafe {
 				user32::CreateAcceleratorTableW(
-					mut_void(&mut paccel[0]), paccel.len() as i32)
+					&mut paccel[0] as *mut _ as *mut _,
+					paccel.len() as i32,
+				)
 			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),

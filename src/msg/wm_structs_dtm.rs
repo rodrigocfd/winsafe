@@ -2,7 +2,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::{HWND, HFONT};
 use crate::msg::{Message, Wm};
-use crate::msg::macros::ref_to_lp;
 use crate::privs::GDT_ERROR;
 use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE, SYSTEMTIME};
 use crate::WString;
@@ -35,7 +34,7 @@ impl<'a> Message for DtmGetDateTimePickerInfo<'a> {
 		Wm {
 			msg_id: co::WM::DTM_GETDATETIMEPICKERINFO,
 			wparam: 0,
-			lparam: ref_to_lp(self.info),
+			lparam: self.info as *const _ as isize,
 		}
 	}
 }
@@ -61,7 +60,7 @@ impl<'a> Message for DtmGetIdealSize<'a> {
 		Wm {
 			msg_id: co::WM::DTM_GETIDEALSIZE,
 			wparam: 0,
-			lparam: ref_to_lp(self.size),
+			lparam: self.size as *const _ as isize,
 		}
 	}
 }
@@ -197,7 +196,7 @@ impl<'a> Message for DtmGetRange<'a> {
 		Wm {
 			msg_id: co::WM::DTM_GETRANGE,
 			wparam: 0,
-			lparam: ref_to_lp(self.system_times),
+			lparam: self.system_times as *const _ as isize,
 		}
 	}
 }
@@ -228,7 +227,7 @@ impl<'a> Message for DtmGetSystemTime<'a> {
 		Wm {
 			msg_id: co::WM::DTM_GETSYSTEMTIME,
 			wparam: 0,
-			lparam: ref_to_lp(self.system_time),
+			lparam: self.system_time as *const _ as isize,
 		}
 	}
 }
@@ -376,7 +375,7 @@ impl<'a> Message for DtmSetRange<'a> {
 		Wm {
 			msg_id: co::WM::DTM_SETRANGE,
 			wparam: self.valid.0 as usize,
-			lparam: ref_to_lp(self.system_times),
+			lparam: self.system_times as *const _ as isize,
 		}
 	}
 }
@@ -410,7 +409,7 @@ impl<'a> Message for DtmSetSystemTime<'a> {
 			} as usize,
 			lparam: match self.system_time {
 				None => 0,
-				Some(st) => ref_to_lp(st),
+				Some(st) => st as *const _ as isize,
 			},
 		}
 	}

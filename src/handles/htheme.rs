@@ -4,7 +4,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::uxtheme;
 use crate::handles::{HDC, HRGN};
-use crate::privs::{const_void, mut_void};
 use crate::structs::RECT;
 
 handle_type! {
@@ -36,8 +35,8 @@ impl HTHEME {
 				hdc.ptr,
 				iPartId.into(),
 				iStateId.into(),
-				const_void(&pRect),
-				const_void(&pClipRect),
+				&pRect as *const _ as *const _,
+				&pClipRect as *const _ as *const _,
 			)
 		} {
 			0 => Ok(()),
@@ -65,8 +64,8 @@ impl HTHEME {
 				hdc.ptr,
 				iPartId.into(),
 				iStateId.into(),
-				const_void(&pBoundingRect),
-				mut_void(&mut pContentRect),
+				&pBoundingRect as *const _ as *const _,
+				&mut pContentRect as *mut _ as *mut _,
 			)
 		} {
 			0 => Ok(pContentRect),
@@ -88,8 +87,8 @@ impl HTHEME {
 				hdc.ptr,
 				iPartId.into(),
 				iStateId.into(),
-				const_void(&pContentRect),
-				mut_void(&mut pExtentRect),
+				&pContentRect as *const _ as *const _,
+				&mut pExtentRect as *mut _ as *mut _,
 			)
 		} {
 			0 => Ok(pExtentRect),
@@ -111,8 +110,8 @@ impl HTHEME {
 				hdc.ptr,
 				iPartId.into(),
 				iStateId.into(),
-				const_void(&pRect),
-				mut_void(&mut pRegion),
+				&pRect as *const _ as *const _,
+				&mut pRegion as *mut _ as *mut _,
 			)
 		} {
 			0 => Ok(pRegion),

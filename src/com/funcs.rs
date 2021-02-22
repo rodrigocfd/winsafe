@@ -8,7 +8,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{PPVtbl, Vtbl};
 use crate::ffi::ole32;
-use crate::privs::const_void;
 use crate::structs::{CLSID, GUID};
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
@@ -38,7 +37,7 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 	match co::ERROR(
 		unsafe {
 			ole32::CoCreateInstance(
-				const_void(rclsid),
+				rclsid as *const _ as *const _,
 				pUnkOuter.unwrap_or(std::ptr::null_mut()),
 				dwClsContext.into(),
 				VT::IID().as_ref() as *const GUID as *const _,

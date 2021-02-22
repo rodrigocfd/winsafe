@@ -25,15 +25,6 @@ pub fn ptr_as_opt(ptr: *mut c_void) -> Option<*mut c_void> {
 	}
 }
 
-/// Converts a reference to a `*const c_void`.
-pub fn const_void<T>(val: &T) -> *const c_void {
-	val as *const T as *const _
-}
-/// Converts a mut reference to a `*mut c_void`.
-pub fn mut_void<T>(val: &mut T) -> *mut c_void {
-	val as *mut T as *mut _
-}
-
 /// Parses a null-delimited multi-string, which must terminate with two nulls.
 pub fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 	let mut src = src;

@@ -2,10 +2,10 @@
 macro_rules! const_type_pub_values {
 	(
 		$name:ident
-		$($cname:ident, $cval:expr)*
+		$($pubcname:ident, $pubcval:expr)*
 	) => {
 		impl $name {
-			$( pub const $cname: Self = Self($cval); )*
+			$( pub const $pubcname: Self = Self($pubcval); )*
 		}
 	};
 }
@@ -14,20 +14,21 @@ macro_rules! const_type_pub_values {
 macro_rules! const_type_priv_values {
 	(
 		$name:ident
-		$($cname:ident, $cval:expr)*
+		$($privcname:ident, $privcval:expr)*
 	) => {
 		impl $name {
-			$( pub(crate) const $cname: Self = Self($cval); )*
+			$( pub(crate) const $privcname: Self = Self($privcval); )*
 		}
 	};
 }
 
 /// Declares the type of a constant with some impls, but not Debug/Display.
+/// Optionally declares multiple public constant values.
 macro_rules! const_type_no_debug_display {
 	(
 		$name:ident, $num:ty,
 		$(#[$attr:meta])*
-		$($cname:ident, $cval:expr)*
+		$($pubcname:ident, $pubcval:expr)*
 	) => {
 		$(#[$attr])*
 		#[repr(C)]
@@ -119,23 +120,24 @@ macro_rules! const_type_no_debug_display {
 
 		// All public const values.
 		const_type_pub_values! { $name
-			$($cname, $cval)*
+			$($pubcname, $pubcval)*
 		}
 	};
 }
 
 /// Declares the type of a constant with some impls.
+/// Optionally declares multiple public constant values.
 macro_rules! const_type {
 	(
 		$name:ident, $num:ty,
 		$(#[$attr:meta])*
-		$($cname:ident, $cval:expr)*
+		$($pubcname:ident, $pubcval:expr)*
 	) => {
 		const_type_no_debug_display! {
 			$name, $num,
 			$(#[$attr])*
 			#[derive(Debug)]
-			$($cname, $cval)*
+			$($pubcname, $pubcval)*
 		}
 
 		impl std::fmt::Display for $name {
@@ -151,12 +153,12 @@ macro_rules! const_type_ws {
 	(
 		$name:ident,
 		$(#[$attr:meta])*
-		$($cname:ident, $cval:expr)*
+		$($pubcname:ident, $pubcval:expr)*
 	) => {
 		const_type! {
 			$name, u32,
 			$(#[$attr])*
-			$($cname, $cval)*
+			$($pubcname, $pubcval)*
 		}
 
 		// Conversion to WS style.
@@ -173,12 +175,12 @@ macro_rules! const_type_wsex {
 	(
 		$name:ident,
 		$(#[$attr:meta])*
-		$($cname:ident, $cval:expr)*
+		$($pubcname:ident, $pubcval:expr)*
 	) => {
 		const_type! {
 			$name, u32,
 			$(#[$attr])*
-			$($cname, $cval)*
+			$($pubcname, $pubcval)*
 		}
 
 		// Conversion to WS_EX style.

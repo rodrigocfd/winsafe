@@ -10,7 +10,7 @@ use crate::enums::BroadNull;
 use crate::ffi::{comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::Message;
-use crate::privs::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
+use crate::privs::{parse_multi_z_str, ptr_as_opt};
 use crate::structs::{ATOM, COLORREF, MSG, OSVERSIONINFOEX, RECT, TRACKMOUSEEVENT, WNDCLASSEX};
 use crate::WString;
 
@@ -22,7 +22,10 @@ pub fn AdjustWindowRectEx(
 {
 	match unsafe {
 		user32::AdjustWindowRectEx(
-			mut_void(lpRect), dwStyle.into(), bMenu as i32, dwExStyle.into(),
+			lpRect as *mut _ as *mut _,
+			dwStyle.into(),
+			bMenu as i32,
+			dwExStyle.into(),
 		)
 	} {
 		0 => Err(GetLastError()),
@@ -33,7 +36,7 @@ pub fn AdjustWindowRectEx(
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
 pub fn DispatchMessage(lpMsg: &MSG) -> isize {
-	unsafe { user32::DispatchMessageW(const_void(lpMsg)) }
+	unsafe { user32::DispatchMessageW(lpMsg as *const _ as *const _) }
 }
 
 /// [`GetAsyncKeyState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
@@ -100,7 +103,7 @@ pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 {
 	match unsafe {
 		user32::GetMessageW(
-			mut_void(lpMsg),
+			lpMsg as *mut _ as *mut _,
 			match hWnd {
 				Some(hWnd) => hWnd.ptr,
 				None => std::ptr::null_mut(),
@@ -317,7 +320,7 @@ pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
 {
 	unsafe {
 		user32::PeekMessageW(
-			mut_void(lpMsg),
+			lpMsg as *mut _ as *mut _,
 			hWnd.ptr,
 			wMsgFilterMin,
 			wMsgFilterMax,
@@ -391,7 +394,7 @@ pub unsafe fn SystemParametersInfo<T>(
 	pvParam: &mut T, fWinIni: co::SPIF) -> WinResult<()>
 {
 	match user32::SystemParametersInfoW(
-		uiAction.into(), uiParam, mut_void(pvParam), fWinIni.into(),
+		uiAction.into(), uiParam, pvParam as *mut _ as *mut _, fWinIni.into(),
 	) {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
@@ -401,7 +404,7 @@ pub unsafe fn SystemParametersInfo<T>(
 /// [`TrackMouseEvent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
 /// function.
 pub fn TrackMouseEvent(lpEventTrack: &mut TRACKMOUSEEVENT) -> WinResult<()> {
-	match unsafe { user32::TrackMouseEvent(mut_void(lpEventTrack)) } {
+	match unsafe { user32::TrackMouseEvent(lpEventTrack as *mut _ as *mut _) } {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
@@ -411,7 +414,7 @@ pub fn TrackMouseEvent(lpEventTrack: &mut TRACKMOUSEEVENT) -> WinResult<()> {
 /// function.
 pub fn TranslateMessage(lpMsg: &MSG) -> bool {
 	unsafe {
-		user32::TranslateMessage(const_void(lpMsg)) != 0
+		user32::TranslateMessage(lpMsg as *const _ as *const _) != 0
 	}
 }
 
@@ -439,7 +442,9 @@ pub fn VerifyVersionInfo(
 {
 	match unsafe {
 		kernel32::VerifyVersionInfoW(
-			mut_void(lpVersionInformation), dwTypeMask.into(), dwlConditionMask,
+			lpVersionInformation as *mut _ as *mut _,
+			dwTypeMask.into(),
+			dwlConditionMask,
 		)
 	} {
 		0 => match GetLastError() {

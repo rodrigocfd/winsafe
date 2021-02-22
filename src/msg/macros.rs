@@ -130,21 +130,6 @@ macro_rules! button_msg {
 	};
 }
 
-/// Converts a reference, mut or not, to an `LPARAM` field, for message structs.
-pub fn ref_to_lp<T>(field: &T) -> isize {
-	field as *const T as isize
-}
-
-/// Converts the `LPARAM` field to a mut reference, for message structs.
-pub fn lp_to_mut_ref<'a, T>(p: Wm) -> &'a mut T {
-	unsafe { &mut *(p.lparam as *mut T) }
-}
-
-/// Converts the `LPARAM` field to a reference, for message structs.
-pub fn lp_to_ref<'a, T>(p: Wm) -> &'a T {
-	unsafe { &*(p.lparam as *const T) }
-}
-
 /// Converts a `POINT` to a an `LPARAM` field.
 pub fn point_to_lp(p: POINT) -> isize {
 	MAKEDWORD(p.x as u16, p.y as u16) as isize

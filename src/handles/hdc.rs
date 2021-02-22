@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
-use crate::privs::{const_void, mut_void, ptr_as_opt};
+use crate::privs::ptr_as_opt;
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
@@ -60,7 +60,7 @@ impl HDC {
 				self.ptr,
 				WString::from_str(lpString).as_ptr(),
 				lpString.chars().count() as i32,
-				mut_void(&mut sz),
+				&mut sz as *mut _ as *mut _,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -79,12 +79,17 @@ impl HDC {
 	pub fn MoveToEx(self,
 		x: i32, y: i32, lppt: Option<&mut POINT>) -> WinResult<()>
 	{
-		let pt = match lppt {
-			None => std::ptr::null_mut(),
-			Some(ptRef) => mut_void(ptRef),
-		};
-
-		zero_err!(gdi32::MoveToEx(self.ptr, x, y, pt))
+		zero_err!(
+			gdi32::MoveToEx(
+				self.ptr,
+				x,
+				y,
+				match lppt {
+					None => std::ptr::null_mut(),
+					Some(ptRef) => ptRef as *mut _ as *mut _,
+				},
+			)
+		)
 	}
 
 	/// [`Pie`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
@@ -102,7 +107,11 @@ impl HDC {
 	/// method.
 	pub fn PolyBezier(self, apt: &[POINT]) -> WinResult<()> {
 		zero_err!(
-			gdi32::PolyBezier(self.ptr, const_void(&apt[0]), apt.len() as u32)
+			gdi32::PolyBezier(
+				self.ptr,
+				&apt[0] as *const _ as *const _,
+				apt.len() as u32,
+			)
 		)
 	}
 
@@ -110,7 +119,11 @@ impl HDC {
 	/// method.
 	pub fn PolyBezierTo(self, apt: &[POINT]) -> WinResult<()> {
 		zero_err!(
-			gdi32::PolyBezierTo(self.ptr, const_void(&apt[0]), apt.len() as u32)
+			gdi32::PolyBezierTo(
+				self.ptr,
+				&apt[0] as *const _ as *const _,
+				apt.len() as u32,
+			)
 		)
 	}
 
@@ -118,7 +131,11 @@ impl HDC {
 	/// method.
 	pub fn Polyline(self, apt: &[POINT]) -> WinResult<()> {
 		zero_err!(
-			gdi32::Polyline(self.ptr, const_void(&apt[0]), apt.len() as u32)
+			gdi32::Polyline(
+				self.ptr,
+				&apt[0] as *const _ as *const _,
+				apt.len() as u32,
+			)
 		)
 	}
 
@@ -126,7 +143,11 @@ impl HDC {
 	/// method.
 	pub fn PolylineTo(self, apt: &[POINT]) -> WinResult<()> {
 		zero_err!(
-			gdi32::PolylineTo(self.ptr, const_void(&apt[0]), apt.len() as u32)
+			gdi32::PolylineTo(
+				self.ptr,
+				&apt[0] as *const _ as *const _,
+				apt.len() as u32,
+			)
 		)
 	}
 

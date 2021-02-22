@@ -4,7 +4,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::privs::const_void;
 use crate::structs::RECT;
 
 hgdiobj_type! {
@@ -42,6 +41,8 @@ impl HRGN {
 	/// [`RectInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// method.
 	pub fn RectInRegion(self, lprect: &RECT) -> bool {
-		unsafe { gdi32::RectInRegion(self.ptr, const_void(lprect)) != 0 }
+		unsafe {
+			gdi32::RectInRegion(self.ptr, lprect as *const _ as *const _) != 0
+		}
 	}
 }
