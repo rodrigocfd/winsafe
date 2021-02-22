@@ -4,7 +4,7 @@ use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
 use crate::msg::{Message, Wm};
 use crate::msg::macros::ref_to_lp;
-use crate::structs as s;
+use crate::structs::{LVCOLUMN, LVITEM, SIZE};
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
@@ -17,10 +17,10 @@ pub struct LvmApproximateViewRect {
 }
 
 impl Message for LvmApproximateViewRect {
-	type RetType = s::SIZE;
+	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		s::SIZE::new(LOWORD(v as u32) as i32, HIWORD(v as u32) as i32)
+		SIZE::new(LOWORD(v as u32) as i32, HIWORD(v as u32) as i32)
 	}
 
 	fn as_generic_wm(&self) -> Wm {
@@ -176,7 +176,7 @@ impl Message for LvmEnsureVisible {
 /// Return type: `WinResult<u32>`.
 pub struct LvmGetColumn<'a, 'b> {
 	pub index: i32,
-	pub lvcolumn: &'b mut s::LVCOLUMN<'a>,
+	pub lvcolumn: &'b mut LVCOLUMN<'a>,
 }
 
 impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
@@ -367,7 +367,7 @@ impl Message for LvmGetItemState {
 /// Return type: `u32`.
 pub struct LvmGetItemText<'a, 'b> {
 	pub index: i32,
-	pub lvitem: &'b mut s::LVITEM<'a>,
+	pub lvitem: &'b mut LVITEM<'a>,
 }
 
 impl<'a, 'b> Message for LvmGetItemText<'a, 'b> {
@@ -442,7 +442,7 @@ impl Message for LvmGetView {
 /// Return type: `WinResult<u32>`.
 pub struct LvmInsertColumn<'a, 'b> {
 	pub index: i32,
-	pub lvcolumn: &'b s::LVCOLUMN<'a>,
+	pub lvcolumn: &'b LVCOLUMN<'a>,
 }
 
 impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
@@ -471,7 +471,7 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct LvmInsertItem<'a, 'b> {
-	pub lvitem: &'b s::LVITEM<'a>,
+	pub lvitem: &'b LVITEM<'a>,
 }
 
 impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
@@ -611,7 +611,7 @@ impl Message for LvmScroll {
 /// Return type: `WinResult<()>`.
 pub struct LvmSetColumn<'a, 'b> {
 	pub index: i32,
-	pub lvcolumn: &'b s::LVCOLUMN<'a>,
+	pub lvcolumn: &'b LVCOLUMN<'a>,
 }
 
 impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
@@ -667,7 +667,7 @@ impl Message for LvmSetExtendedListViewStyle {
 ///
 /// Return type: `WinResult<()>`.
 pub struct LvmSetItem<'a, 'b> {
-	pub lvitem: &'b s::LVITEM<'a>,
+	pub lvitem: &'b LVITEM<'a>,
 }
 
 impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
@@ -697,7 +697,7 @@ impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 /// Return type: `WinResult<()>`.
 pub struct LvmSetItemState<'a, 'b> {
 	pub index: i32,
-	pub lvitem: &'b s::LVITEM<'a>,
+	pub lvitem: &'b LVITEM<'a>,
 }
 
 impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
@@ -727,7 +727,7 @@ impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
 /// Return type: `WinResult<()>`.
 pub struct LvmSetItemText<'a, 'b> {
 	pub index: i32,
-	pub lvitem: &'b s::LVITEM<'a>,
+	pub lvitem: &'b LVITEM<'a>,
 }
 
 impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {

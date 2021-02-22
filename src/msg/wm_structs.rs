@@ -6,7 +6,17 @@ use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{Message, MessageHandleable};
 use crate::msg::macros::{lp_to_mut_ref, lp_to_point, lp_to_ref, point_to_lp, ref_to_lp};
 use crate::privs::FAPPCOMMAND_MASK;
-use crate::structs as s;
+use crate::structs::{
+	CREATESTRUCT,
+	MINMAXINFO,
+	NMHDR,
+	POINT,
+	RECT,
+	SIZE,
+	STYLESTRUCT_WS,
+	STYLESTRUCT_WS_EX,
+	WINDOWPOS,
+};
 
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
@@ -233,7 +243,7 @@ impl MessageHandleable for WmCommand {
 /// Return type: `()`.
 pub struct WmContextMenu {
 	pub hwnd: HWND,
-	pub cursor_pos: s::POINT,
+	pub cursor_pos: POINT,
 }
 
 impl Message for WmContextMenu {
@@ -268,7 +278,7 @@ impl MessageHandleable for WmContextMenu {
 ///
 /// Return type: `i32`.
 pub struct WmCreate<'a, 'b, 'c> {
-	pub createstruct: &'c s::CREATESTRUCT<'a, 'b>,
+	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
 impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
@@ -551,7 +561,7 @@ empty_msg_handleable! { WmExitSizeMove, co::WM::EXITSIZEMOVE,
 ///
 /// Return type: `()`.
 pub struct WmGetMinMaxInfo<'a> {
-	pub info: &'a mut s::MINMAXINFO,
+	pub info: &'a mut MINMAXINFO,
 }
 
 impl<'a> Message for WmGetMinMaxInfo<'a> {
@@ -717,7 +727,7 @@ button_msg! { WmMouseMove, co::WM::MOUSEMOVE,
 ///
 /// Return type: `()`.
 pub struct WmMove {
-	pub coords: s::POINT,
+	pub coords: POINT,
 }
 
 impl Message for WmMove {
@@ -751,7 +761,7 @@ impl MessageHandleable for WmMove {
 ///
 /// Return type: `()`.
 pub struct WmMoving<'a> {
-	pub window_pos: &'a mut s::RECT,
+	pub window_pos: &'a mut RECT,
 }
 
 impl<'a> Message for WmMoving<'a> {
@@ -828,7 +838,7 @@ impl<'a, 'b> MessageHandleable for WmNcCalcSize<'a, 'b> {
 ///
 /// Return type: `bool`.
 pub struct WmNcCreate<'a, 'b, 'c> {
-	pub createstruct: &'c s::CREATESTRUCT<'a, 'b>,
+	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
 impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
@@ -915,7 +925,7 @@ empty_msg_handleable! { WmNull, co::WM::NULL,
 /// Return type: `isize`.
 #[derive(Copy, Clone)]
 pub struct WmNotify<'a> {
-	pub nmhdr: &'a s::NMHDR,
+	pub nmhdr: &'a NMHDR,
 }
 
 impl<'a> Message for WmNotify<'a> {
@@ -929,7 +939,7 @@ impl<'a> Message for WmNotify<'a> {
 		Wm {
 			msg_id: co::WM::NOTIFY,
 			wparam: self.nmhdr.hwndFrom.ptr as usize,
-			lparam: self.nmhdr as *const s::NMHDR as isize,
+			lparam: self.nmhdr as *const NMHDR as isize,
 		}
 	}
 }
@@ -937,7 +947,7 @@ impl<'a> Message for WmNotify<'a> {
 impl<'a> MessageHandleable for WmNotify<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			nmhdr: unsafe { &*(p.lparam as *const s::NMHDR) },
+			nmhdr: unsafe { &*(p.lparam as *const NMHDR) },
 		}
 	}
 }
@@ -948,7 +958,7 @@ impl<'a> WmNotify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
-		&*(self.nmhdr as *const s::NMHDR as *const T)
+		&*(self.nmhdr as *const NMHDR as *const T)
 	}
 
 	/// Casts the `NMHDR` mutable reference into a derived struct.
@@ -956,7 +966,7 @@ impl<'a> WmNotify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr_mut<T>(&self) -> &mut T {
-		&mut *(self.nmhdr as *const s::NMHDR as *mut T)
+		&mut *(self.nmhdr as *const NMHDR as *mut T)
 	}
 }
 
@@ -1175,7 +1185,7 @@ impl MessageHandleable for WmShowWindow {
 /// Return type: `()`.
 pub struct WmSize {
 	pub request: co::SIZE_R,
-	pub client_area: s::SIZE,
+	pub client_area: SIZE,
 }
 
 impl Message for WmSize {
@@ -1200,7 +1210,7 @@ impl MessageHandleable for WmSize {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			request: co::SIZE_R(p.wparam as u8),
-			client_area: s::SIZE::new(
+			client_area: SIZE::new(
 				LOWORD(p.lparam as u32) as i32,
 				HIWORD(p.lparam as u32) as i32,
 			),
@@ -1216,7 +1226,7 @@ impl MessageHandleable for WmSize {
 /// Return type: `()`.
 pub struct WmSizing<'a> {
 	pub window_edge: co::WMSZ,
-	pub coords: &'a mut s::RECT,
+	pub coords: &'a mut RECT,
 }
 
 impl<'a> Message for WmSizing<'a> {
@@ -1267,8 +1277,8 @@ impl<'a> Message for WmStyleChanged<'a> {
 			msg_id: co::WM::STYLECHANGED,
 			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const s::STYLESTRUCT_WS as isize,
-				WsWsex::Wsex(wsx) => wsx as *const s::STYLESTRUCT_WS_EX as isize,
+				WsWsex::Ws(ws) => ws as *const STYLESTRUCT_WS as isize,
+				WsWsex::Wsex(wsx) => wsx as *const STYLESTRUCT_WS_EX as isize,
 			},
 		}
 	}
@@ -1310,8 +1320,8 @@ impl<'a> Message for WmStyleChanging<'a> {
 			msg_id: co::WM::STYLECHANGING,
 			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const s::STYLESTRUCT_WS as isize,
-				WsWsex::Wsex(wsx) => wsx as *const s::STYLESTRUCT_WS_EX as isize,
+				WsWsex::Ws(ws) => ws as *const STYLESTRUCT_WS as isize,
+				WsWsex::Wsex(wsx) => wsx as *const STYLESTRUCT_WS_EX as isize,
 			},
 		}
 	}
@@ -1388,7 +1398,7 @@ impl MessageHandleable for WmTimer {
 ///
 /// Return type: `()`.
 pub struct WmWindowPosChanged<'a> {
-	pub windowpos: &'a s::WINDOWPOS,
+	pub windowpos: &'a WINDOWPOS,
 }
 
 impl<'a> Message for WmWindowPosChanged<'a> {
@@ -1422,7 +1432,7 @@ impl<'a> MessageHandleable for WmWindowPosChanged<'a> {
 ///
 /// Return type: `()`.
 pub struct WmWindowPosChanging<'a> {
-	pub windowpos: &'a s::WINDOWPOS,
+	pub windowpos: &'a WINDOWPOS,
 }
 
 impl<'a> Message for WmWindowPosChanging<'a> {

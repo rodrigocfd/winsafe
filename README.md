@@ -13,9 +13,11 @@ Documentation for the `master` branch: [rodrigocfd.github.io/winsafe/winsafe](ht
 
 ## Current status
 
-Custom windows (main, modal and control) are complete, but some events, native controls and APIs are not implemented yet, so this crate is still **incomplete**. It's under heavy development, though.
+* Custom windows (main, modal and control) – complete
+* Native controls – incomplete
+* APIs – incomplete
 
-Since it's incomplete, it's not published to [crates.io](https://crates.io/crates/winsafe) yet. To use this crate, simply clone this repo.
+Since this crate is *too* incomplete, it's not published to [crates.io](https://crates.io/crates/winsafe) yet. However, you can use this crate simply by cloning this repo.
 
 ## Example
 

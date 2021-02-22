@@ -3,7 +3,13 @@ use std::ptr::NonNull;
 use crate::co;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
-use crate::structs as s;
+use crate::structs::{
+	NMDATETIMECHANGE,
+	NMDATETIMEFORMAT,
+	NMDATETIMEFORMATQUERY,
+	NMDATETIMESTRING,
+	NMDATETIMEWMKEYDOWN,
+};
 
 /// Exposes date and time picker control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
@@ -41,7 +47,7 @@ impl DateTimePickerEvents {
 		/// while the calendar is open.
 	}
 
-	nfy_event_p! { dtn_date_time_change, co::NM::DTN_DATETIMECHANGE, s::NMDATETIMECHANGE,
+	nfy_event_p! { dtn_date_time_change, co::NM::DTN_DATETIMECHANGE, NMDATETIMECHANGE,
 		/// [`DTN_DATETIMECHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-datetimechange)
 		/// notification.
 		///
@@ -56,7 +62,7 @@ impl DateTimePickerEvents {
 		/// drop-down month calendar.
 	}
 
-	nfy_event_mut_p! { dtn_format, co::NM::DTN_FORMAT, s::NMDATETIMEFORMAT,
+	nfy_event_mut_p! { dtn_format, co::NM::DTN_FORMAT, NMDATETIMEFORMAT,
 		/// [`DTN_FORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-format)
 		/// notification.
 		///
@@ -64,7 +70,7 @@ impl DateTimePickerEvents {
 		/// in a callback field.
 	}
 
-	nfy_event_mut_p! { dtn_format_query, co::NM::DTN_FORMATQUERY, s::NMDATETIMEFORMATQUERY,
+	nfy_event_mut_p! { dtn_format_query, co::NM::DTN_FORMATQUERY, NMDATETIMEFORMATQUERY,
 		/// [`DTN_FORMATQUERY`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-formatquery)
 		/// notification.
 		///
@@ -73,7 +79,7 @@ impl DateTimePickerEvents {
 		/// field.
 	}
 
-	nfy_event_mut_p! { dtn_user_string, co::NM::DTN_USERSTRING, s::NMDATETIMESTRING,
+	nfy_event_mut_p! { dtn_user_string, co::NM::DTN_USERSTRING, NMDATETIMESTRING,
 		/// [`DTN_USERSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-userstring)
 		/// notification.
 		///
@@ -83,7 +89,7 @@ impl DateTimePickerEvents {
 		/// [`DTS_APPCANPARSE`](crate::co::DTS::APPCANPARSE) style.
 	}
 
-	nfy_event_p! { dtn_wm_key_down, co::NM::DTN_WMKEYDOWN, s::NMDATETIMEWMKEYDOWN,
+	nfy_event_p! { dtn_wm_key_down, co::NM::DTN_WMKEYDOWN, NMDATETIMEWMKEYDOWN,
 		/// [`DTN_WMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-wmkeydown)
 		/// notification.
 		///

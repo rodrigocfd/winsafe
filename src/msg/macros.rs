@@ -97,7 +97,7 @@ macro_rules! button_msg {
 		$(#[$attr])*
 		pub struct $name {
 			pub vkeys: co::VK,
-			pub coords: s::POINT,
+			pub coords: POINT,
 		}
 
 		impl Message for $name {
@@ -120,7 +120,7 @@ macro_rules! button_msg {
 			fn from_generic_wm(p: Wm) -> Self {
 				Self {
 					vkeys: co::VK(p.wparam as u16),
-					coords: s::POINT {
+					coords: POINT {
 						x: LOWORD(p.lparam as u32) as i32,
 						y: HIWORD(p.lparam as u32) as i32,
 					},

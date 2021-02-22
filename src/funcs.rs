@@ -11,13 +11,13 @@ use crate::ffi::{comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::Message;
 use crate::privs::{const_void, mut_void, parse_multi_z_str, ptr_as_opt};
-use crate::structs as s;
+use crate::structs::{ATOM, COLORREF, MSG, OSVERSIONINFOEX, RECT, TRACKMOUSEEVENT, WNDCLASSEX};
 use crate::WString;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
 pub fn AdjustWindowRectEx(
-	lpRect: &mut s::RECT, dwStyle: co::WS,
+	lpRect: &mut RECT, dwStyle: co::WS,
 	bMenu: bool, dwExStyle: co::WS_EX) -> WinResult<()>
 {
 	match unsafe {
@@ -32,7 +32,7 @@ pub fn AdjustWindowRectEx(
 
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
-pub fn DispatchMessage(lpMsg: &s::MSG) -> isize {
+pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(const_void(lpMsg)) }
 }
 
@@ -95,7 +95,7 @@ pub fn GetLastError() -> co::ERROR {
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
-pub fn GetMessage(lpMsg: &mut s::MSG, hWnd: Option<HWND>,
+pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 	wMsgFilterMin: u32, wMsgFilterMax: u32) -> WinResult<bool>
 {
 	match unsafe {
@@ -122,8 +122,8 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
-pub fn GetSysColor(nIndex: co::COLOR) -> s::COLORREF {
-	s::COLORREF(unsafe { user32::GetSysColor(nIndex.0 as i32) })
+pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
+	COLORREF(unsafe { user32::GetSysColor(nIndex.0 as i32) })
 }
 
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
@@ -210,7 +210,7 @@ pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
 
 /// [`IsWindowsServer`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsserver)
 pub fn IsWindowsServer() -> WinResult<bool> {
-	let mut osvi = s::OSVERSIONINFOEX::default();
+	let mut osvi = OSVERSIONINFOEX::default();
 	osvi.wProductType = co::VER_NT::WORKSTATION;
 	let dwlConditionMask = VerSetConditionMask(
 		0, co::VER_MASK::PRODUCT_TYPE, co::VER_COND::EQUAL);
@@ -224,7 +224,7 @@ pub fn IsWindowsVersionOrGreater(
 	wMajorVersion: u16, wMinorVersion: u16,
 	wServicePackMajor: u16) -> WinResult<bool>
 {
-	let mut osvi = s::OSVERSIONINFOEX::default();
+	let mut osvi = OSVERSIONINFOEX::default();
 	let dwlConditionMask = VerSetConditionMask(
 		VerSetConditionMask(
 			VerSetConditionMask(0, co::VER_MASK::MAJORVERSION, co::VER_COND::GREATER_EQUAL),
@@ -312,7 +312,7 @@ pub fn OutputDebugString(lpOutputString: &str) {
 
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
 /// function.
-pub fn PeekMessage(lpMsg: &mut s::MSG, hWnd: HWND,
+pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
 	wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: co::PM) -> bool
 {
 	unsafe {
@@ -351,12 +351,12 @@ pub fn PostQuitMessage(nExitCode: co::ERROR) {
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
-pub fn RegisterClassEx(lpwcx: &s::WNDCLASSEX) -> WinResult<s::ATOM> {
+pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
 	match unsafe {
-		user32::RegisterClassExW(lpwcx as *const s::WNDCLASSEX as *const _)
+		user32::RegisterClassExW(lpwcx as *const WNDCLASSEX as *const _)
 	} {
 		0 => Err(GetLastError()),
-		atom => Ok(s::ATOM(atom)),
+		atom => Ok(ATOM(atom)),
 	}
 }
 
@@ -400,7 +400,7 @@ pub unsafe fn SystemParametersInfo<T>(
 
 /// [`TrackMouseEvent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
 /// function.
-pub fn TrackMouseEvent(lpEventTrack: &mut s::TRACKMOUSEEVENT) -> WinResult<()> {
+pub fn TrackMouseEvent(lpEventTrack: &mut TRACKMOUSEEVENT) -> WinResult<()> {
 	match unsafe { user32::TrackMouseEvent(mut_void(lpEventTrack)) } {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
@@ -409,7 +409,7 @@ pub fn TrackMouseEvent(lpEventTrack: &mut s::TRACKMOUSEEVENT) -> WinResult<()> {
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
-pub fn TranslateMessage(lpMsg: &s::MSG) -> bool {
+pub fn TranslateMessage(lpMsg: &MSG) -> bool {
 	unsafe {
 		user32::TranslateMessage(const_void(lpMsg)) != 0
 	}
@@ -434,7 +434,7 @@ pub fn UnregisterClass(
 /// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
 /// function.
 pub fn VerifyVersionInfo(
-	lpVersionInformation: &mut s::OSVERSIONINFOEX,
+	lpVersionInformation: &mut OSVERSIONINFOEX,
 	dwTypeMask: co::VER_MASK, dwlConditionMask: u64) -> WinResult<bool>
 {
 	match unsafe {
