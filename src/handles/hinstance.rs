@@ -188,9 +188,7 @@ impl HINSTANCE {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::LoadImageW(
-					self.ptr, name.as_ptr(), 0, cx, cy, fuLoad.into(),
-				)
+				user32::LoadImageW(self.ptr, name.as_ptr(), 0, cx, cy, fuLoad.0)
 			},
 		) {
 			Some(ptr) => Ok(HBITMAP { ptr }),
@@ -205,9 +203,7 @@ impl HINSTANCE {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::LoadImageW(
-					self.ptr, name.as_ptr(), 2, cx, cy, fuLoad.into(),
-				)
+				user32::LoadImageW(self.ptr, name.as_ptr(), 2, cx, cy, fuLoad.0)
 			},
 		) {
 			Some(ptr) => Ok(HCURSOR { ptr }),
@@ -222,9 +218,7 @@ impl HINSTANCE {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::LoadImageW(
-					self.ptr, name.as_ptr(), 1, cx, cy, fuLoad.into(),
-				)
+				user32::LoadImageW(self.ptr, name.as_ptr(), 1, cx, cy, fuLoad.0)
 			},
 		) {
 			Some(ptr) => Ok(HICON { ptr }),

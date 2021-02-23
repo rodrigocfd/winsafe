@@ -89,7 +89,7 @@ impl HIMAGELIST {
 	{
 		match ptr_as_opt(
 			unsafe {
-				comctl32::ImageList_Create(cx, cy, flags.into(), cInitial, cGrow)
+				comctl32::ImageList_Create(cx, cy, flags.0, cInitial, cGrow)
 			}
 		) {
 			Some(ptr) => Ok(Self { ptr }),

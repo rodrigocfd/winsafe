@@ -33,8 +33,8 @@ impl HTHEME {
 			uxtheme::DrawThemeBackground(
 				self.ptr,
 				hdc.ptr,
-				iPartId.into(),
-				iStateId.into(),
+				iPartId.0,
+				iStateId.0,
 				&pRect as *const _ as *const _,
 				&pClipRect as *const _ as *const _,
 			)
@@ -62,8 +62,8 @@ impl HTHEME {
 			uxtheme::GetThemeBackgroundContentRect(
 				self.ptr,
 				hdc.ptr,
-				iPartId.into(),
-				iStateId.into(),
+				iPartId.0,
+				iStateId.0,
 				&pBoundingRect as *const _ as *const _,
 				&mut pContentRect as *mut _ as *mut _,
 			)
@@ -85,8 +85,8 @@ impl HTHEME {
 			uxtheme::GetThemeBackgroundExtent(
 				self.ptr,
 				hdc.ptr,
-				iPartId.into(),
-				iStateId.into(),
+				iPartId.0,
+				iStateId.0,
 				&pContentRect as *const _ as *const _,
 				&mut pExtentRect as *mut _ as *mut _,
 			)
@@ -108,8 +108,8 @@ impl HTHEME {
 			uxtheme::GetThemeBackgroundRegion(
 				self.ptr,
 				hdc.ptr,
-				iPartId.into(),
-				iStateId.into(),
+				iPartId.0,
+				iStateId.0,
 				&pRect as *const _ as *const _,
 				&mut pRegion as *mut _ as *mut _,
 			)

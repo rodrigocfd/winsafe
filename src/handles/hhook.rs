@@ -23,7 +23,7 @@ impl HHOOK {
 		match ptr_as_opt(
 			unsafe {
 				user32::SetWindowsHookExW(
-					idHook.into(),
+					idHook.0,
 					lpfn as *const _,
 					hmod.ptr,
 					dwThreadId,

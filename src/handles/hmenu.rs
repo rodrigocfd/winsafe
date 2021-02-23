@@ -25,7 +25,7 @@ impl HMENU {
 		match unsafe {
 			user32::AppendMenuW(
 				self.ptr,
-				uFlags.into(),
+				uFlags.0,
 				uIDNewItem.into(),
 				lpNewItem.as_ptr(),
 			)
@@ -48,7 +48,7 @@ impl HMENU {
 					co::MF::CHECKED
 				} else {
 					co::MF::UNCHECKED
-				}).into(),
+				}).0,
 			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
@@ -87,7 +87,7 @@ impl HMENU {
 			user32::DeleteMenu(
 				self.ptr,
 				uPosition.id_or_pos_u32(),
-				uPosition.mf_flag().into(),
+				uPosition.mf_flag().0,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -120,7 +120,7 @@ impl HMENU {
 			user32::EnableMenuItem(
 				self.ptr,
 				uIDEnableItem.id_or_pos_u32(),
-				flags.into(),
+				flags.0,
 			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
@@ -179,7 +179,7 @@ impl HMENU {
 			user32::InsertMenuW(
 				self.ptr,
 				uPosition.id_or_pos_u32(),
-				flags.into(),
+				flags.0,
 				uIDNewItem.into(),
 				lpNewItem.as_ptr(),
 			)
@@ -220,7 +220,7 @@ impl HMENU {
 			user32::RemoveMenu(
 				self.ptr,
 				uPosition.id_or_pos_u32(),
-				uPosition.mf_flag().into(),
+				uPosition.mf_flag().0,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -264,7 +264,7 @@ impl HMENU {
 	{
 		let ret = unsafe {
 			user32::TrackPopupMenu(
-				self.ptr, uFlags.into(), x, y, 0, hWnd.ptr, std::ptr::null(),
+				self.ptr, uFlags.0, x, y, 0, hWnd.ptr, std::ptr::null(),
 			)
 		};
 

@@ -47,7 +47,7 @@ impl HDC {
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
 	/// method.
 	pub fn GetDeviceCaps(self, index: co::GDC) -> i32 {
-		unsafe { gdi32::GetDeviceCaps(self.ptr, index.into()) }
+		unsafe { gdi32::GetDeviceCaps(self.ptr, index.0) }
 	}
 
 	/// [`GetTextExtentPoint32`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextextentpoint32w)
@@ -243,7 +243,7 @@ impl HDC {
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method
 	pub fn SetBkMode(self, mode: co::BKMODE) -> WinResult<co::BKMODE> {
-		match unsafe { gdi32::SetBkMode(self.ptr, mode.into()) } {
+		match unsafe { gdi32::SetBkMode(self.ptr, mode.0) } {
 			0 => Err(GetLastError()),
 			bk => Ok(co::BKMODE(bk)),
 		}

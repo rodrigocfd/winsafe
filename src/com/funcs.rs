@@ -39,7 +39,7 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 			ole32::CoCreateInstance(
 				rclsid as *const _ as *const _,
 				pUnkOuter.unwrap_or(std::ptr::null_mut()),
-				dwClsContext.into(),
+				dwClsContext.0,
 				VT::IID().as_ref() as *const GUID as *const _,
 				&mut ppv
 					as *mut PPVtbl<VT>
@@ -67,7 +67,7 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 /// ```
 pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
 	let err = co::ERROR(
-		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.into()) }
+		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.0) }
 	);
 	match err {
 		co::ERROR::S_OK

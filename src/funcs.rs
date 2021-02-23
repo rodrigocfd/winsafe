@@ -23,9 +23,9 @@ pub fn AdjustWindowRectEx(
 	match unsafe {
 		user32::AdjustWindowRectEx(
 			lpRect as *mut _ as *mut _,
-			dwStyle.into(),
+			dwStyle.0,
 			bMenu as i32,
-			dwExStyle.into(),
+			dwExStyle.0,
 		)
 	} {
 		0 => Err(GetLastError()),
@@ -120,7 +120,7 @@ pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 /// [`GetQueueStatus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
 /// function.
 pub fn GetQueueStatus(flags: co::QS) -> u32 {
-	unsafe { user32::GetQueueStatus(flags.into()) }
+	unsafe { user32::GetQueueStatus(flags.0) }
 }
 
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
@@ -132,7 +132,7 @@ pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
 /// function.
 pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
-	unsafe { user32::GetSystemMetrics(nIndex.into()) }
+	unsafe { user32::GetSystemMetrics(nIndex.0) }
 }
 
 /// [`HIBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
@@ -176,8 +176,8 @@ pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
 /// [`IsWindows10OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater)
 pub fn IsWindows10OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.into()) as u16,
-		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.into()) as u16,
+		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as u16,
+		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as u16,
 		0,
 	)
 }
@@ -185,8 +185,8 @@ pub fn IsWindows10OrGreater() -> WinResult<bool> {
 /// [`IsWindows7OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows7orgreater)
 pub fn IsWindows7OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WIN7.into()) as u16,
-		LOBYTE(co::WIN32::WINNT_WIN7.into()) as u16,
+		HIBYTE(co::WIN32::WINNT_WIN7.0) as u16,
+		LOBYTE(co::WIN32::WINNT_WIN7.0) as u16,
 		0,
 	)
 }
@@ -195,8 +195,8 @@ pub fn IsWindows7OrGreater() -> WinResult<bool> {
 /// function.
 pub fn IsWindows8OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WIN8.into()) as u16,
-		LOBYTE(co::WIN32::WINNT_WIN8.into()) as u16,
+		HIBYTE(co::WIN32::WINNT_WIN8.0) as u16,
+		LOBYTE(co::WIN32::WINNT_WIN8.0) as u16,
 		0,
 	)
 }
@@ -205,8 +205,8 @@ pub fn IsWindows8OrGreater() -> WinResult<bool> {
 /// function.
 pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WINBLUE.into()) as u16,
-		LOBYTE(co::WIN32::WINNT_WINBLUE.into()) as u16,
+		HIBYTE(co::WIN32::WINNT_WINBLUE.0) as u16,
+		LOBYTE(co::WIN32::WINNT_WINBLUE.0) as u16,
 		0,
 	)
 }
@@ -251,8 +251,8 @@ pub fn IsWindowsVersionOrGreater(
 /// function.
 pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_VISTA.into()) as u16,
-		LOBYTE(co::WIN32::WINNT_VISTA.into()) as u16,
+		HIBYTE(co::WIN32::WINNT_VISTA.0) as u16,
+		LOBYTE(co::WIN32::WINNT_VISTA.0) as u16,
 		0,
 	)
 }
@@ -266,7 +266,7 @@ pub fn LOBYTE(v: u16) -> u8 {
 /// [`LockSetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow)
 /// function.
 pub fn LockSetForegroundWindow(uLockCode: co::LSFW) -> WinResult<()> {
-	match unsafe { user32::LockSetForegroundWindow(uLockCode.into()) } {
+	match unsafe { user32::LockSetForegroundWindow(uLockCode.0) } {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
@@ -324,7 +324,7 @@ pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
 			hWnd.ptr,
 			wMsgFilterMin,
 			wMsgFilterMax,
-			wRemoveMsg.into(),
+			wRemoveMsg.0,
 		) != 0
 	}
 }
@@ -338,7 +338,7 @@ pub fn PostMessage<M: Message>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
 	let wmAny = uMsg.as_generic_wm();
 	match unsafe {
 		user32::PostMessageW(
-			hWnd.into(), wmAny.msg_id.into(), wmAny.wparam, wmAny.lparam,
+			hWnd.into(), wmAny.msg_id.0, wmAny.wparam, wmAny.lparam,
 		)
 	} {
 		0 => Err(GetLastError()),
@@ -366,7 +366,7 @@ pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
 /// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
 /// function.
 pub fn SetLastError(dwErrCode: co::ERROR) {
-	unsafe { kernel32::SetLastError(dwErrCode.into()) }
+	unsafe { kernel32::SetLastError(dwErrCode.0) }
 }
 
 /// [`SetProcessDPIAware`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
@@ -394,7 +394,7 @@ pub unsafe fn SystemParametersInfo<T>(
 	pvParam: &mut T, fWinIni: co::SPIF) -> WinResult<()>
 {
 	match user32::SystemParametersInfoW(
-		uiAction.into(), uiParam, pvParam as *mut _ as *mut _, fWinIni.into(),
+		uiAction.0, uiParam, pvParam as *mut _ as *mut _, fWinIni.0,
 	) {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
@@ -443,7 +443,7 @@ pub fn VerifyVersionInfo(
 	match unsafe {
 		kernel32::VerifyVersionInfoW(
 			lpVersionInformation as *mut _ as *mut _,
-			dwTypeMask.into(),
+			dwTypeMask.0,
 			dwlConditionMask,
 		)
 	} {
@@ -461,8 +461,6 @@ pub fn VerSetConditionMask(
 	ConditionMask: u64, TypeMask: co::VER_MASK, Condition: co::VER_COND) -> u64
 {
 	unsafe {
-		kernel32::VerSetConditionMask(
-			ConditionMask, TypeMask.into(), Condition.into(),
-		)
+		kernel32::VerSetConditionMask(ConditionMask, TypeMask.0, Condition.0)
 	}
 }

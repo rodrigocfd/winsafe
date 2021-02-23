@@ -39,8 +39,12 @@ impl HDWP {
 		match ptr_as_opt(
 			unsafe {
 				user32::DeferWindowPos(
-					self.ptr, hWnd.ptr, hWndInsertAfter.as_ptr(),
-					X, Y, cx as i32, cy as i32, uFlags.into(),
+					self.ptr,
+					hWnd.ptr,
+					hWndInsertAfter.as_ptr(),
+					X, Y,
+					cx as i32, cy as i32,
+					uFlags.0,
 				)
 			},
 		 ) {

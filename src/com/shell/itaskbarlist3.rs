@@ -87,7 +87,7 @@ impl ITaskbarList3 {
 		unsafe {
 			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3Vtbl>();
 			into_result!(
-				((**ppv).SetProgressState)(ppv, hwnd.ptr, tbpfFlags.into())
+				((**ppv).SetProgressState)(ppv, hwnd.ptr, tbpfFlags.0)
 			)
 		}
 	}
