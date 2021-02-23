@@ -148,6 +148,29 @@ macro_rules! const_type {
 	};
 }
 
+/// Declares the type of a constant for a window message,
+/// convertible to [`WM`](crate::co::WM) constant type.
+/// Optionally declares multiple public constant values.
+macro_rules! const_type_wm {
+	(
+		$name:ident,
+		$(#[$attr:meta])*
+		$($pubcname:ident, $pubcval:expr)*
+	) => {
+		const_type! {
+			$name, u32,
+			$(#[$attr])*
+			$($pubcname, $pubcval)*
+		}
+
+		impl From<$name> for WM {
+			fn from(v: $name) -> Self {
+				Self(v.0)
+			}
+		}
+	};
+}
+
 /// Declares the type of a constant for a WM_COMMAND notification code,
 /// convertible to [`CMD`](crate::co::CMD) constant type.
 /// Optionally declares multiple public constant values.
@@ -163,7 +186,6 @@ macro_rules! const_type_cmd {
 			$($pubcname, $pubcval)*
 		}
 
-		// Conversion to CMD notification code.
 		impl From<$name> for CMD {
 			fn from(v: $name) -> Self {
 				Self(v.0)
@@ -187,7 +209,6 @@ macro_rules! const_type_nm {
 			$($pubcname, $pubcval)*
 		}
 
-		// Conversion to NM notification code.
 		impl From<$name> for NM {
 			fn from(v: $name) -> Self {
 				Self(v.0)
@@ -211,7 +232,6 @@ macro_rules! const_type_ws {
 			$($pubcname, $pubcval)*
 		}
 
-		// Conversion to WS style.
 		impl From<$name> for WS {
 			fn from(v: $name) -> Self {
 				Self(v.0)
@@ -235,7 +255,6 @@ macro_rules! const_type_wsex {
 			$($pubcname, $pubcval)*
 		}
 
-		// Conversion to WS_EX style.
 		impl From<$name> for WS_EX {
 			fn from(v: $name) -> Self {
 				Self(v.0)

@@ -178,7 +178,7 @@ const_type! { MSGF, u8,
 }
 
 const_type! { NM, i32,
-	/// [`WM_NOTIFY`](crate::msg::WmNotify) notification codes.
+	/// [`WM_NOTIFY`](crate::msg::WmNotify) notification codes (`i32`).
 	///
 	/// Control-specific notification codes have their own types, which are
 	/// convertible to `NM`.

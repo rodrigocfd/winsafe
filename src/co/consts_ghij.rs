@@ -1,4 +1,4 @@
-use crate::co::{NM, WS};
+use crate::co::{CCM, NM, WM, WS};
 
 const_type! { GA, u32,
 	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
@@ -122,6 +122,42 @@ const_type! { GWLP, i32,
 	DWLP_DLGPROC, 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
 	DWLP_MSGRESULT, 0
 	DWLP_USER, Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
+}
+
+const_type_wm! { HDM,
+	/// Header control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+
+	GETITEMCOUNT, Self::FIRST.0 + 0
+	INSERTITEM, Self::FIRST.0 + 10
+	DELETEITEM, Self::FIRST.0 + 11
+	GETITEM, Self::FIRST.0 + 11
+	SETITEM, Self::FIRST.0 + 12
+	LAYOUT, Self::FIRST.0 + 5
+	HITTEST, Self::FIRST.0 + 6
+	GETITEMRECT, Self::FIRST.0 + 7
+	SETIMAGELIST, Self::FIRST.0 + 8
+	GETIMAGELIST, Self::FIRST.0 + 9
+	ORDERTOINDEX, Self::FIRST.0 + 15
+	CREATEDRAGIMAGE, Self::FIRST.0 + 16
+	GETORDERARRAY, Self::FIRST.0 + 17
+	SETORDERARRAY, Self::FIRST.0 + 18
+	SETHOTDIVIDER, Self::FIRST.0 + 19
+	SETBITMAPMARGIN, Self::FIRST.0 + 20
+	GETBITMAPMARGIN, Self::FIRST.0 + 21
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+	SETFILTERCHANGETIMEOUT, Self::FIRST.0 + 22
+	EDITFILTER, Self::FIRST.0 + 23
+	CLEARFILTER, Self::FIRST.0 + 24
+	GETITEMDROPDOWNRECT, Self::FIRST.0 + 25
+	GETOVERFLOWRECT, Self::FIRST.0 + 26
+	GETFOCUSEDITEM, Self::FIRST.0 + 27
+	SETFOCUSEDITEM, Self::FIRST.0 + 28
+}
+const_type_priv_values! { HDM
+	FIRST, 0x1200
 }
 
 const_type_nm! { HDN,
@@ -293,6 +329,19 @@ const_type! { IMAGE_TYPE, u8,
 
 	BITMAP, 0
 	ICON, 1
+}
+
+const_type_wm! { IPM,
+	/// IP address control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+
+	CLEARADDRESS, WM::USER.0 + 100
+	SETADDRESS, WM::USER.0 + 101
+	GETADDRESS, WM::USER.0 + 102
+	SETRANGE, WM::USER.0 + 103
+	SETFOCUS, WM::USER.0 + 104
+	ISBLANK, WM::USER.0 + 105
 }
 
 const_type_nm! { IPN,

@@ -20,7 +20,7 @@ impl Message for HdmGetItemCount {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::HDM_GETITEMCOUNT,
+			msg_id: co::HDM::GETITEMCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
 		}

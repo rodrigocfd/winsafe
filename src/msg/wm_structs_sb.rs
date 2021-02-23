@@ -23,7 +23,7 @@ impl Message for SbGetIcon {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_GETICON,
+			msg_id: co::SB::GETICON.into(),
 			wparam: self.part_index as usize,
 			lparam: 0,
 		}
@@ -49,7 +49,7 @@ impl<'a> Message for SbGetParts<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_GETPARTS,
+			msg_id: co::SB::GETPARTS.into(),
 			wparam: match &self.right_edges {
 				Some(right_edges) => right_edges.len(),
 				None => 0,
@@ -82,7 +82,7 @@ impl<'a> Message for SbGetText<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_GETTEXT,
+			msg_id: co::SB::GETTEXT.into(),
 			wparam: self.part_index as usize,
 			lparam: unsafe { self.text.as_ptr() } as isize,
 		}
@@ -108,7 +108,7 @@ impl Message for SbGetTextLength {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_GETTEXTLENGTH,
+			msg_id: co::SB::GETTEXTLENGTH.into(),
 			wparam: self.part_index as usize,
 			lparam: 0,
 		}
@@ -135,7 +135,7 @@ impl<'a> Message for SbGetTipText<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_GETTIPTEXT,
+			msg_id: co::SB::GETTIPTEXT.into(),
 			wparam: MAKEDWORD(self.part_index as u16, self.text.len() as u16) as usize,
 			lparam: unsafe { self.text.as_ptr() } as isize,
 		}
@@ -163,7 +163,7 @@ impl Message for SbSetIcon {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_SETICON,
+			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as usize,
 			lparam: match self.hicon {
 				Some(hicon) => hicon.ptr as isize,
@@ -195,7 +195,7 @@ impl<'a> Message for SbSetParts<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_SETPARTS,
+			msg_id: co::SB::SETPARTS.into(),
 			wparam: self.right_edges.len(),
 			lparam: self.right_edges.as_ptr() as isize,
 		}
@@ -226,7 +226,7 @@ impl<'a> Message for SbSetText<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_SETTEXT,
+			msg_id: co::SB::SETTEXT.into(),
 			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.drawing_operation.into()) as usize,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
 		}
@@ -251,7 +251,7 @@ impl<'a> Message for SbSetTipText<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_SETTIPTEXT,
+			msg_id: co::SB::SETTIPTEXT.into(),
 			wparam: self.part_index as usize,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
 		}
@@ -275,7 +275,7 @@ impl Message for SbSimple {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::SB_SIMPLE,
+			msg_id: co::SB::SIMPLE.into(),
 			wparam: self.display_simple as usize,
 			lparam: 0,
 		}

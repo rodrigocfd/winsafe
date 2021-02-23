@@ -1,4 +1,4 @@
-use crate::co::{CMD, NM, WS};
+use crate::co::{CMD, NM, WM, WS};
 
 const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
@@ -148,10 +148,25 @@ const_type! { BKMODE, i32,
 	OPAQUE, 2
 }
 
-const_type! { BM, u32,
+const_type_wm! { BM,
 	/// Button control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	///
+	/// Also includes constants originally with `BCM` prefix.
+
+	GETIDEALSIZE, Self::FIRST.0 + 0x0001
+	SETIMAGELIST, Self::FIRST.0 + 0x0002
+	GETIMAGELIST, Self::FIRST.0 + 0x0003
+	SETTEXTMARGIN, Self::FIRST.0 + 0x0004
+	GETTEXTMARGIN, Self::FIRST.0 + 0x0005
+	SETDROPDOWNSTATE, Self::FIRST.0 + 0x0006
+	SETSPLITINFO, Self::FIRST.0 + 0x0007
+	GETSPLITINFO, Self::FIRST.0 + 0x0008
+	SETNOTE, Self::FIRST.0 + 0x0009
+	GETNOTE, Self::FIRST.0 + 0x000a
+	GETNOTELENGTH, Self::FIRST.0 + 0x000b
+	SETSHIELD, Self::FIRST.0 + 0x000c
 
 	GETCHECK, 0x00f0
 	SETCHECK, 0x00f1
@@ -162,6 +177,9 @@ const_type! { BM, u32,
 	GETIMAGE, 0x00f6
 	SETIMAGE, 0x00f7
 	SETDONTCLICK, 0x00f8
+}
+const_type_priv_values! { BM
+	FIRST, 0x1600
 }
 
 const_type_cmd! { BN,

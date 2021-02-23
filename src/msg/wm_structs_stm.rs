@@ -21,7 +21,7 @@ impl Message for StmGetIcon {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::STM_GETICON,
+			msg_id: co::STM::GETICON.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -50,7 +50,7 @@ impl Message for StmSetIcon {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::STM_SETICON,
+			msg_id: co::STM::SETICON.into(),
 			wparam: self.icon.ptr as usize,
 			lparam: 0,
 		}

@@ -24,7 +24,7 @@ impl Message for LvmApproximateViewRect {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_APPROXIMATEVIEWRECT,
+			msg_id: co::LVM::APPROXIMATEVIEWRECT.into(),
 			wparam: match self.num_items {
 				None => -1,
 				Some(num) => num as isize,
@@ -65,7 +65,7 @@ impl Message for LvmArrange {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_ARRANGE,
+			msg_id: co::LVM::ARRANGE.into(),
 			wparam: self.arrangement.0 as usize,
 			lparam: 0,
 		}
@@ -74,7 +74,7 @@ impl Message for LvmArrange {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { LvmCancelEditLabel, co::WM::LVM_CANCELEDITLABEL,
+empty_msg! { LvmCancelEditLabel, co::LVM::CANCELEDITLABEL.into(),
 	/// [`LVM_CANCELEDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
 	/// message, which has no parameters.
 	///
@@ -101,7 +101,7 @@ impl Message for LvmDeleteAllItems {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_DELETEALLITEMS,
+			msg_id: co::LVM::DELETEALLITEMS.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -130,7 +130,7 @@ impl Message for LvmDeleteItem {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_DELETEITEM,
+			msg_id: co::LVM::DELETEITEM.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}
@@ -160,7 +160,7 @@ impl Message for LvmEnsureVisible {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_ENSUREVISIBLE,
+			msg_id: co::LVM::ENSUREVISIBLE.into(),
 			wparam: self.index as usize,
 			lparam: !self.entirely_visible as isize,
 		}
@@ -190,7 +190,7 @@ impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETCOLUMN,
+			msg_id: co::LVM::GETCOLUMN.into(),
 			wparam: self.index as usize,
 			lparam: self.lvcolumn as *const _ as isize,
 		}
@@ -219,7 +219,7 @@ impl Message for LvmGetColumnWidth {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETCOLUMNWIDTH,
+			msg_id: co::LVM::GETCOLUMNWIDTH.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}
@@ -243,7 +243,7 @@ impl Message for LvmGetExtendedListViewStyle {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETEXTENDEDLISTVIEWSTYLE,
+			msg_id: co::LVM::GETEXTENDEDLISTVIEWSTYLE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -270,7 +270,7 @@ impl Message for LvmGetHeader {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETHEADER,
+			msg_id: co::LVM::GETHEADER.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -300,7 +300,7 @@ impl Message for LvmGetNextItem {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETNEXTITEM,
+			msg_id: co::LVM::GETNEXTITEM.into(),
 			wparam: self.initial_index as usize,
 			lparam: self.relationship.0 as isize,
 		}
@@ -324,7 +324,7 @@ impl Message for LvmGetItemCount {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETITEMCOUNT,
+			msg_id: co::LVM::GETITEMCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -351,7 +351,7 @@ impl Message for LvmGetItemState {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETITEMSTATE,
+			msg_id: co::LVM::GETITEMSTATE.into(),
 			wparam: self.index as usize,
 			lparam: self.mask.0 as isize,
 		}
@@ -378,7 +378,7 @@ impl<'a, 'b> Message for LvmGetItemText<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETITEMTEXT,
+			msg_id: co::LVM::GETITEMTEXT.into(),
 			wparam: self.index as usize,
 			lparam: self.lvitem as *const _ as isize,
 		}
@@ -402,7 +402,7 @@ impl Message for LvmGetSelectedCount {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETSELECTEDCOUNT,
+			msg_id: co::LVM::GETSELECTEDCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -426,7 +426,7 @@ impl Message for LvmGetView {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_GETVIEW,
+			msg_id: co::LVM::GETVIEW.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -456,7 +456,7 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_INSERTCOLUMN,
+			msg_id: co::LVM::INSERTCOLUMN.into(),
 			wparam: self.index as usize,
 			lparam: self.lvcolumn as *const _ as isize,
 		}
@@ -485,7 +485,7 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_INSERTITEM,
+			msg_id: co::LVM::INSERTITEM.into(),
 			wparam: 0,
 			lparam: self.lvitem as *const _ as isize,
 		}
@@ -509,7 +509,7 @@ impl Message for LvmIsGroupViewEnabled {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_ISGROUPVIEWENABLED,
+			msg_id: co::LVM::ISGROUPVIEWENABLED.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -535,7 +535,7 @@ impl Message for LvmIsItemVisible {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_ISITEMVISIBLE,
+			msg_id: co::LVM::ISITEMVISIBLE.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}
@@ -565,7 +565,7 @@ impl Message for LvmRedrawItems {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_REDRAWITEMS,
+			msg_id: co::LVM::REDRAWITEMS.into(),
 			wparam: self.first_index as usize,
 			lparam: self.last_index as isize,
 		}
@@ -595,7 +595,7 @@ impl Message for LvmScroll {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SCROLL,
+			msg_id: co::LVM::SCROLL.into(),
 			wparam: self.horizontal as usize,
 			lparam: self.vertical as isize,
 		}
@@ -625,7 +625,7 @@ impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SETCOLUMN,
+			msg_id: co::LVM::SETCOLUMN.into(),
 			wparam: self.index as usize,
 			lparam: self.lvcolumn as *const _ as isize,
 		}
@@ -652,7 +652,7 @@ impl Message for LvmSetExtendedListViewStyle {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SETEXTENDEDLISTVIEWSTYLE,
+			msg_id: co::LVM::SETEXTENDEDLISTVIEWSTYLE.into(),
 			wparam: self.style.0 as usize,
 			lparam: self.mask.0 as isize,
 		}
@@ -681,7 +681,7 @@ impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SETITEM,
+			msg_id: co::LVM::SETITEM.into(),
 			wparam: 0,
 			lparam: self.lvitem as *const _ as isize,
 		}
@@ -711,7 +711,7 @@ impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SETITEMSTATE,
+			msg_id: co::LVM::SETITEMSTATE.into(),
 			wparam: self.index as usize,
 			lparam: self.lvitem as *const _ as isize,
 		}
@@ -741,7 +741,7 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SETITEMTEXT,
+			msg_id: co::LVM::SETITEMTEXT.into(),
 			wparam: self.index as usize,
 			lparam: self.lvitem as *const _ as isize,
 		}
@@ -767,7 +767,7 @@ impl Message for LvmSetSelectedColumn {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SETSELECTEDCOLUMN,
+			msg_id: co::LVM::SETSELECTEDCOLUMN.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}
@@ -796,7 +796,7 @@ impl Message for LvmSetView {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_SETVIEW,
+			msg_id: co::LVM::SETVIEW.into(),
 			wparam: self.view.0 as usize,
 			lparam: 0,
 		}
@@ -825,7 +825,7 @@ impl Message for LvmUpdate {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::LVM_UPDATE,
+			msg_id: co::LVM::UPDATE.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}

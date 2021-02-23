@@ -24,7 +24,7 @@ impl<'a> Message for CbAddString<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_ADDSTRING,
+			msg_id: co::CB::ADDSTRING.into(),
 			wparam: 0,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
 		}
@@ -53,7 +53,7 @@ impl Message for CbDeleteString {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_DELETESTRING,
+			msg_id: co::CB::DELETESTRING.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}
@@ -84,7 +84,7 @@ impl<'a> Message for CbDir<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_DELETESTRING,
+			msg_id: co::CB::DELETESTRING.into(),
 			wparam: self.attributes.0 as usize,
 			lparam: unsafe { WString::from_str(self.path).as_ptr() } as isize,
 		}
@@ -114,7 +114,7 @@ impl<'a> Message for CbFindString<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_FINDSTRING,
+			msg_id: co::CB::FINDSTRING.into(),
 			wparam: match self.preceding_index {
 				None => -1,
 				Some(idx) => idx as i32,
@@ -144,7 +144,7 @@ impl Message for CbGetCount {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_GETCOUNT,
+			msg_id: co::CB::GETCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -171,7 +171,7 @@ impl Message for CbGetCurSel {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_GETCURSEL,
+			msg_id: co::CB::GETCURSEL.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -201,7 +201,7 @@ impl<'a> Message for CbGetLbText<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_GETLBTEXT,
+			msg_id: co::CB::GETLBTEXT.into(),
 			wparam: self.index as usize,
 			lparam: unsafe { self.text.as_ptr() } as isize,
 		}
@@ -230,7 +230,7 @@ impl Message for CbGetLbTextLen {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_GETLBTEXTLEN,
+			msg_id: co::CB::GETLBTEXTLEN.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}
@@ -254,7 +254,7 @@ impl Message for CbGetMinVisible {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_GETMINVISIBLE,
+			msg_id: co::CB::GETMINVISIBLE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -281,7 +281,7 @@ impl Message for CbGetTopIndex {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_GETTOPINDEX,
+			msg_id: co::CB::GETTOPINDEX.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -311,7 +311,7 @@ impl Message for CbInitStorage {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_INITSTORAGE,
+			msg_id: co::CB::INITSTORAGE.into(),
 			wparam: self.num_items as usize,
 			lparam: self.memory_bytes as isize,
 		}
@@ -320,7 +320,7 @@ impl Message for CbInitStorage {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { CbResetContent, co::WM::CB_RESETCONTENT,
+empty_msg! { CbResetContent, co::CB::RESETCONTENT.into(),
 	/// [`CB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
 	/// message, which has no parameters.
 	///
@@ -346,7 +346,7 @@ impl Message for CbSetCurSel {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_SETCURSEL,
+			msg_id: co::CB::SETCURSEL.into(),
 			wparam: match self.index {
 				Some(index) => index as i32,
 				None => -1,
@@ -378,7 +378,7 @@ impl Message for CbSetMinVisible {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_SETMINVISIBLE,
+			msg_id: co::CB::SETMINVISIBLE.into(),
 			wparam: self.num_items as usize,
 			lparam: 0,
 		}
@@ -407,7 +407,7 @@ impl Message for CbSetTopIndex {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_SETTOPINDEX,
+			msg_id: co::CB::SETTOPINDEX.into(),
 			wparam: self.index as usize,
 			lparam: 0,
 		}
@@ -433,7 +433,7 @@ impl Message for CbShowDropDown {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::CB_SHOWDROPDOWN,
+			msg_id: co::CB::SHOWDROPDOWN.into(),
 			wparam: self.show as usize,
 			lparam: 0,
 		}

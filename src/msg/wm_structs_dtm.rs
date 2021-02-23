@@ -6,7 +6,7 @@ use crate::privs::GDT_ERROR;
 use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE, SYSTEMTIME};
 use crate::WString;
 
-empty_msg! { DtmCloseMonthCal, co::WM::DTM_CLOSEMONTHCAL,
+empty_msg! { DtmCloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
 	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
 	/// message, which has no parameters.
 	///
@@ -32,7 +32,7 @@ impl<'a> Message for DtmGetDateTimePickerInfo<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETDATETIMEPICKERINFO,
+			msg_id: co::DTM::GETDATETIMEPICKERINFO.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as isize,
 		}
@@ -58,7 +58,7 @@ impl<'a> Message for DtmGetIdealSize<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETIDEALSIZE,
+			msg_id: co::DTM::GETIDEALSIZE.into(),
 			wparam: 0,
 			lparam: self.size as *const _ as isize,
 		}
@@ -87,7 +87,7 @@ impl Message for DtmGetMcColor {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETMCCOLOR,
+			msg_id: co::DTM::GETMCCOLOR.into(),
 			wparam: self.color_index.0 as usize,
 			lparam: 0,
 		}
@@ -114,7 +114,7 @@ impl Message for DtmGetMcFont {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETMCFONT,
+			msg_id: co::DTM::GETMCFONT.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -141,7 +141,7 @@ impl Message for DtmGetMcStyle {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETMCSTYLE,
+			msg_id: co::DTM::GETMCSTYLE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -168,7 +168,7 @@ impl Message for DtmGetMonthCalendar {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETMONTHCAL,
+			msg_id: co::DTM::GETMONTHCAL.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -194,7 +194,7 @@ impl<'a> Message for DtmGetRange<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETRANGE,
+			msg_id: co::DTM::GETRANGE.into(),
 			wparam: 0,
 			lparam: self.system_times as *const _ as isize,
 		}
@@ -225,7 +225,7 @@ impl<'a> Message for DtmGetSystemTime<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_GETSYSTEMTIME,
+			msg_id: co::DTM::GETSYSTEMTIME.into(),
 			wparam: 0,
 			lparam: self.system_time as *const _ as isize,
 		}
@@ -254,7 +254,7 @@ impl<'a> Message for DtmSetFormat<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_SETFORMAT,
+			msg_id: co::DTM::SETFORMAT.into(),
 			wparam: 0,
 			lparam: match self.format_string {
 				None => 0,
@@ -287,7 +287,7 @@ impl Message for DtmSetMcColor {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_SETMCCOLOR,
+			msg_id: co::DTM::SETMCCOLOR.into(),
 			wparam: self.color_index.0 as usize,
 			lparam: self.color.0 as isize,
 		}
@@ -314,7 +314,7 @@ impl Message for DtmSetMcFont {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_SETMCFONT,
+			msg_id: co::DTM::SETMCFONT.into(),
 			wparam: self.hfont.ptr as usize,
 			lparam: self.redraw as isize,
 		}
@@ -343,7 +343,7 @@ impl Message for DtmSetMcStyle {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_SETMCSTYLE,
+			msg_id: co::DTM::SETMCSTYLE.into(),
 			wparam: 0,
 			lparam: self.style.0 as isize,
 		}
@@ -373,7 +373,7 @@ impl<'a> Message for DtmSetRange<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_SETRANGE,
+			msg_id: co::DTM::SETRANGE.into(),
 			wparam: self.valid.0 as usize,
 			lparam: self.system_times as *const _ as isize,
 		}
@@ -402,7 +402,7 @@ impl<'a> Message for DtmSetSystemTime<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::DTM_SETSYSTEMTIME,
+			msg_id: co::DTM::SETSYSTEMTIME.into(),
 			wparam: match self.system_time {
 				None => co::GDT::NONE.0,
 				Some(_) => co::GDT::VALID.0,

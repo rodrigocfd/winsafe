@@ -26,7 +26,7 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_GETIDEALSIZE,
+			msg_id: co::BM::GETIDEALSIZE.into(),
 			wparam: 0,
 			lparam: self.size as *const _ as isize,
 		}
@@ -55,7 +55,7 @@ impl<'a> Message for BcmGetImageList<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_GETIMAGELIST,
+			msg_id: co::BM::GETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as isize,
 		}
@@ -84,7 +84,7 @@ impl<'a> Message for BcmGetNote<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_GETNOTE,
+			msg_id: co::BM::GETNOTE.into(),
 			wparam: self.text.buffer_size(),
 			lparam: unsafe { self.text.as_ptr() } as isize,
 		}
@@ -108,7 +108,7 @@ impl Message for BcmGetNoteLength {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_GETNOTELENGTH,
+			msg_id: co::BM::GETNOTELENGTH.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -137,7 +137,7 @@ impl<'a> Message for BcmGetSplitInfo<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_GETSPLITINFO,
+			msg_id: co::BM::GETSPLITINFO.into(),
 			wparam: 0,
 			lparam: self.splitinfo as *const _ as isize,
 		}
@@ -166,7 +166,7 @@ impl<'a> Message for BcmGetTextMargin<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_GETTEXTMARGIN,
+			msg_id: co::BM::GETTEXTMARGIN.into(),
 			wparam: 0,
 			lparam: self.margins as *const _ as isize,
 		}
@@ -195,7 +195,7 @@ impl Message for BcmSetDropDownState {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_SETDROPDOWNSTATE,
+			msg_id: co::BM::SETDROPDOWNSTATE.into(),
 			wparam: self.is_pushed as usize,
 			lparam: 0,
 		}
@@ -224,7 +224,7 @@ impl<'a> Message for BcmSetImageList<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_SETIMAGELIST,
+			msg_id: co::BM::SETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as isize,
 		}
@@ -253,7 +253,7 @@ impl<'a> Message for BcmSetNote<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_SETNOTE,
+			msg_id: co::BM::SETNOTE.into(),
 			wparam: self.text.buffer_size(),
 			lparam: unsafe { self.text.as_ptr() } as isize,
 		}
@@ -282,7 +282,7 @@ impl Message for BcmSetShield {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_SETSHIELD,
+			msg_id: co::BM::SETSHIELD.into(),
 			wparam: self.has_elevated_icon as usize,
 			lparam: 0,
 		}
@@ -311,7 +311,7 @@ impl<'a> Message for BcmSetSplitInfo<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_SETSPLITINFO,
+			msg_id: co::BM::SETSPLITINFO.into(),
 			wparam: 0,
 			lparam: self.splitinfo as *const _ as isize,
 		}
@@ -340,7 +340,7 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BCM_SETTEXTMARGIN,
+			msg_id: co::BM::SETTEXTMARGIN.into(),
 			wparam: 0,
 			lparam: self.margins as *const _ as isize,
 		}
@@ -349,26 +349,11 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 
 //------------------------------------------------------------------------------
 
-/// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
-/// message, which has no parameters.
-///
-/// Return type: `()`.
-pub struct BmClick {}
-
-impl Message for BmClick {
-	type RetType = ();
-
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
-
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
-			msg_id: co::WM::BM_CLICK,
-			wparam: 0,
-			lparam: 0,
-		}
-	}
+empty_msg! { BmClick, co::BM::CLICK.into(),
+	/// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
+	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -388,7 +373,7 @@ impl Message for BmGetCheck {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_GETCHECK,
+			msg_id: co::BM::GETCHECK.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -418,7 +403,7 @@ impl Message for BmGetImage {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_GETIMAGE,
+			msg_id: co::BM::GETIMAGE.into(),
 			wparam: self.img_type.0 as usize,
 			lparam: 0,
 		}
@@ -442,7 +427,7 @@ impl Message for BmGetState {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_GETSTATE,
+			msg_id: co::BM::GETSTATE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -468,7 +453,7 @@ impl Message for BmSetCheck {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_SETCHECK,
+			msg_id: co::BM::SETCHECK.into(),
 			wparam: self.state.0 as usize,
 			lparam: 0,
 		}
@@ -494,7 +479,7 @@ impl Message for BmSetDontClick {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_SETDONTCLICK,
+			msg_id: co::BM::SETDONTCLICK.into(),
 			wparam: self.dont_click as usize,
 			lparam: 0,
 		}
@@ -523,7 +508,7 @@ impl Message for BmSetImage {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_SETIMAGE,
+			msg_id: co::BM::SETIMAGE.into(),
 			wparam: match self.image {
 				BitmapIcon::Bitmap(_) => co::IMAGE_TYPE::BITMAP.0,
 				BitmapIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
@@ -552,7 +537,7 @@ impl Message for BmSetState {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_SETSTATE,
+			msg_id: co::BM::SETSTATE.into(),
 			wparam: self.highlight as usize,
 			lparam: 0,
 		}
@@ -579,7 +564,7 @@ impl Message for BmSetStyle {
 
 	fn as_generic_wm(&self) -> Wm {
 		Wm {
-			msg_id: co::WM::BM_SETSTYLE,
+			msg_id: co::BM::SETSTYLE.into(),
 			wparam: self.style.0 as usize,
 			lparam: self.redraw as isize,
 		}

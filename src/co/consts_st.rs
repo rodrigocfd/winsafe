@@ -1,4 +1,4 @@
-use crate::co::{ACCESS_RIGHTS, CMD, NM, WS, WS_EX};
+use crate::co::{ACCESS_RIGHTS, CCM, CMD, NM, WM, WS, WS_EX};
 
 const_type_ws! { SBARS,
 	/// Status bar control
@@ -21,6 +21,30 @@ const_type! { SBT, u16,
 	POPOUT, 0x0200
 	RTLREADING, 0x0400
 	NOTABPARSING, 0x0800
+}
+
+const_type_wm! { SB,
+	/// Status bar control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
+	/// (`u32`). Convertible to [`WM`](crate::co::WM).
+
+	SETTEXT, WM::USER.0 + 11
+	GETTEXT, WM::USER.0 + 13
+	GETTEXTLENGTH, WM::USER.0 + 12
+	SETPARTS, WM::USER.0 + 4
+	GETPARTS, WM::USER.0 + 6
+	GETBORDERS, WM::USER.0 + 7
+	SETMINHEIGHT, WM::USER.0 + 8
+	SIMPLE, WM::USER.0 + 9
+	GETRECT, WM::USER.0 + 10
+	ISSIMPLE, WM::USER.0 + 14
+	SETICON, WM::USER.0 + 15
+	SETTIPTEXT, WM::USER.0 + 17
+	GETTIPTEXT, WM::USER.0 + 19
+	GETICON, WM::USER.0 + 20
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+	SETBKCOLOR, CCM::SETBKCOLOR.0
 }
 
 const_type_nm! { SBN,
@@ -426,6 +450,17 @@ const_type! { STATE_SYSTEM, u32,
 	VALID, 0x3fffffff
 }
 
+const_type_wm! { STM,
+	/// Static control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+
+	SETICON, 0x0170
+	GETICON, 0x0171
+	SETIMAGE, 0x0172
+	GETIMAGE, 0x0173
+}
+
 const_type_cmd! { STN,
 	/// Static control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
@@ -828,6 +863,67 @@ const_type! { TPM, u32,
 	NOANIMATION, 0x4000
 	LAYOUTRTL, 0x8000
 	WORKAREA, 0x10000
+}
+
+const_type_wm! { TVM,
+	/// Tree view control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+
+	INSERTITEM, Self::FIRST.0 + 50
+	DELETEITEM, Self::FIRST.0 + 1
+	EXPAND, Self::FIRST.0 + 2
+	GETITEMRECT, Self::FIRST.0 + 4
+	GETCOUNT, Self::FIRST.0 + 5
+	GETINDENT, Self::FIRST.0 + 6
+	SETINDENT, Self::FIRST.0 + 7
+	GETIMAGELIST, Self::FIRST.0 + 8
+	SETIMAGELIST, Self::FIRST.0 + 9
+	GETNEXTITEM, Self::FIRST.0 + 10
+	SELECTITEM, Self::FIRST.0 + 11
+	GETITEM, Self::FIRST.0 + 62
+	SETITEM, Self::FIRST.0 + 63
+	EDITLABEL, Self::FIRST.0 + 65
+	GETEDITCONTROL, Self::FIRST.0 + 15
+	GETVISIBLECOUNT, Self::FIRST.0 + 16
+	HITTEST, Self::FIRST.0 + 17
+	CREATEDRAGIMAGE, Self::FIRST.0 + 18
+	SORTCHILDREN, Self::FIRST.0 + 19
+	ENSUREVISIBLE, Self::FIRST.0 + 20
+	SORTCHILDRENCB, Self::FIRST.0 + 21
+	ENDEDITLABELNOW, Self::FIRST.0 + 22
+	GETISEARCHSTRING, Self::FIRST.0 + 64
+	SETTOOLTIPS, Self::FIRST.0 + 24
+	GETTOOLTIPS, Self::FIRST.0 + 25
+	SETINSERTMARK, Self::FIRST.0 + 26
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+	SETITEMHEIGHT, Self::FIRST.0 + 27
+	GETITEMHEIGHT, Self::FIRST.0 + 28
+	SETBKCOLOR, Self::FIRST.0 + 29
+	SETTEXTCOLOR, Self::FIRST.0 + 30
+	GETBKCOLOR, Self::FIRST.0 + 31
+	GETTEXTCOLOR, Self::FIRST.0 + 32
+	SETSCROLLTIME, Self::FIRST.0 + 33
+	GETSCROLLTIME, Self::FIRST.0 + 34
+	SETINSERTMARKCOLOR, Self::FIRST.0 + 37
+	GETINSERTMARKCOLOR, Self::FIRST.0 + 38
+	SETBORDER, Self::FIRST.0 + 35
+	GETITEMSTATE, Self::FIRST.0 + 39
+	SETLINECOLOR, Self::FIRST.0 + 40
+	GETLINECOLOR, Self::FIRST.0 + 41
+	MAPACCIDTOHTREEITEM, Self::FIRST.0 + 42
+	MAPHTREEITEMTOACCID, Self::FIRST.0 + 43
+	SETEXTENDEDSTYLE, Self::FIRST.0 + 44
+	GETEXTENDEDSTYLE, Self::FIRST.0 + 45
+	SETAUTOSCROLLINFO, Self::FIRST.0 + 59
+	SETHOT, Self::FIRST.0 + 58
+	GETSELECTEDCOUNT, Self::FIRST.0 + 70
+	SHOWINFOTIP, Self::FIRST.0 + 71
+	GETITEMPARTRECT, Self::FIRST.0 + 72
+}
+const_type_priv_values! { TVM
+	FIRST, 0x1100
 }
 
 const_type_nm! { TVN,
