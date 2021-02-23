@@ -19,7 +19,7 @@ const_type! { OUT_PRECIS, u8,
 const_type_ws! { PBS,
 	/// Progress bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	SMOOTH, 0x01
 	VERTICAL, 0x04

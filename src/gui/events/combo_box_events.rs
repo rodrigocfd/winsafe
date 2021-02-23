@@ -30,14 +30,14 @@ impl ComboBoxEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 
-	cmd_event! { cbn_close_up, co::CMD::CBN_CLOSEUP,
+	cmd_event! { cbn_close_up, co::CBN::CLOSEUP.into(),
 		/// [`CBN_CLOSEUP`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-closeup)
 		/// notification.
 		///
 		/// Sent when the list box of a combo box has been closed.
 	}
 
-	cmd_event! { cbn_dbl_clk, co::CMD::CBN_DBLCLK,
+	cmd_event! { cbn_dbl_clk, co::CBN::DBLCLK.into(),
 		/// [`CBN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-dblclk)
 		/// notification.
 		///
@@ -45,14 +45,14 @@ impl ComboBoxEvents {
 		/// box.
 	}
 
-	cmd_event! { cbn_drop_down, co::CMD::CBN_DROPDOWN,
+	cmd_event! { cbn_drop_down, co::CBN::DROPDOWN.into(),
 		/// [`CBN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-dropdown)
 		/// notification.
 		///
 		/// Sent when the list box of a combo box is about to be made visible.
 	}
 
-	cmd_event! { cbn_edit_change, co::CMD::CBN_EDITCHANGE,
+	cmd_event! { cbn_edit_change, co::CBN::EDITCHANGE.into(),
 		/// [`CBN_EDITCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-editchange)
 		/// notification.
 		///
@@ -63,7 +63,7 @@ impl ComboBoxEvents {
 		/// updates the screen.
 	}
 
-	cmd_event! { cbn_edit_update, co::CMD::CBN_EDITUPDATE,
+	cmd_event! { cbn_edit_update, co::CBN::EDITUPDATE.into(),
 		/// [`CBN_EDITUPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-editupdate)
 		/// notification.
 		///
@@ -72,7 +72,7 @@ impl ComboBoxEvents {
 		/// formatted the text, but before it displays the text.
 	}
 
-	cmd_event! { cbn_err_space, co::CMD::CBN_ERRSPACE,
+	cmd_event! { cbn_err_space, co::CBN::ERRSPACE.into(),
 		/// [`CBN_ERRSPACE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-errspace)
 		/// notification.
 		///
@@ -80,14 +80,14 @@ impl ComboBoxEvents {
 		/// request.
 	}
 
-	cmd_event! { cbn_kill_focus, co::CMD::CBN_KILLFOCUS,
+	cmd_event! { cbn_kill_focus, co::CBN::KILLFOCUS.into(),
 		/// [`CBN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-killfocus)
 		/// notification.
 		///
 		/// Sent when a combo box loses the keyboard focus.
 	}
 
-	cmd_event! { cbn_sel_change, co::CMD::CBN_SELCHANGE,
+	cmd_event! { cbn_sel_change, co::CBN::SELCHANGE.into(),
 		/// [`CBN_SELCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-selchange)
 		/// notification.
 		///
@@ -96,7 +96,7 @@ impl ComboBoxEvents {
 		/// box or by using the arrow keys.
 	}
 
-	cmd_event! { cbn_sel_end_cancel, co::CMD::CBN_SELENDCANCEL,
+	cmd_event! { cbn_sel_end_cancel, co::CBN::SELENDCANCEL.into(),
 		/// [`CBN_SELENDCANCEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-selendcancel)
 		/// notification.
 		///
@@ -105,7 +105,7 @@ impl ComboBoxEvents {
 		/// to be ignored.
 	}
 
-	cmd_event! { cbn_sel_end_ok, co::CMD::CBN_SELENDOK,
+	cmd_event! { cbn_sel_end_ok, co::CBN::SELENDOK.into(),
 		/// [`CBN_SELENDOK`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-selendok)
 		/// notification.
 		///
@@ -114,7 +114,7 @@ impl ComboBoxEvents {
 		/// processed.
 	}
 
-	cmd_event! { cbn_set_focus, co::CMD::CBN_SETFOCUS,
+	cmd_event! { cbn_set_focus, co::CBN::SETFOCUS.into(),
 		/// [`CBN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-setfocus)
 		/// notification.
 		///

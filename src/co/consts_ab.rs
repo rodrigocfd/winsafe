@@ -1,4 +1,4 @@
-use crate::co::WS;
+use crate::co::{CMD, NM, WS};
 
 const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
@@ -89,6 +89,18 @@ const_type! { APPCOMMAND, u16,
 	DWM_FLIP3D, 54
 }
 
+const_type_nm! { BCN,
+	/// Button control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	HOTITEMCHANGE, Self::FIRST.0 + 0x0001
+	DROPDOWN, Self::FIRST.0 + 0x0002
+}
+const_type_priv_values! { BCN
+	FIRST, -1250
+}
+
 const_type! { BCSIF, u32,
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
 
@@ -152,10 +164,28 @@ const_type! { BM, u32,
 	SETDONTCLICK, 0x00f8
 }
 
+const_type_cmd! { BN,
+	/// Button control `WM_COMMAND`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
+	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
+
+	CLICKED, 0
+	PAINT, 1
+	HILITE, 2
+	UNHILITE, 3
+	DISABLE, 4
+	DOUBLECLICKED, 5
+	PUSHED, Self::HILITE.0
+	UNPUSHED, Self::UNHILITE.0
+	DBLCLK, Self::DOUBLECLICKED.0
+	SETFOCUS, 6
+	KILLFOCUS, 7
+}
+
 const_type_ws! { BS,
 	/// Button control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	PUSHBUTTON, 0x00000000
 	DEFPUSHBUTTON, 0x00000001

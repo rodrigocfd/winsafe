@@ -105,7 +105,7 @@ impl ListView {
 	}
 
 	fn handled_events(&self, parent: &dyn Parent, ctrl_id: u16) {
-		parent.privileged_events_ref().add_nfy(ctrl_id, co::NM::LVN_KEYDOWN, {
+		parent.privileged_events_ref().add_nfy(ctrl_id, co::LVN::KEYDOWN.into(), {
 			let me = self.clone();
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };

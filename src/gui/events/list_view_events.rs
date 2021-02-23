@@ -44,7 +44,7 @@ impl ListViewEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 
-	nfy_event_p! { lvn_begin_drag, co::NM::LVN_BEGINDRAG, NMLISTVIEW,
+	nfy_event_p! { lvn_begin_drag, co::LVN::BEGINDRAG.into(), NMLISTVIEW,
 		/// [`LVN_BEGINDRAG`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-begindrag)
 		/// notification.
 		///
@@ -52,14 +52,14 @@ impl ListViewEvents {
 		/// button is being initiated.
 	}
 
-	nfy_event_p_bool! { lvn_begin_label_edit, co::NM::LVN_BEGINLABELEDIT, NMLVDISPINFO,
+	nfy_event_p_bool! { lvn_begin_label_edit, co::LVN::BEGINLABELEDIT.into(), NMLVDISPINFO,
 		/// [`LVN_BEGINLABELEDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-beginlabeledit)
 		/// notification.
 		///
 		/// Notifies about the start of label editing for an item.
 	}
 
-	nfy_event_p! { lvn_begin_r_drag, co::NM::LVN_BEGINRDRAG, NMLISTVIEW,
+	nfy_event_p! { lvn_begin_r_drag, co::LVN::BEGINRDRAG.into(), NMLISTVIEW,
 		/// [`LVN_BEGINRDRAG`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-beginrdrag)
 		/// notification.
 		///
@@ -67,14 +67,14 @@ impl ListViewEvents {
 		/// button is being initiated.
 	}
 
-	nfy_event_p! { lvn_begin_scroll, co::NM::LVN_BEGINSCROLL, NMLVSCROLL,
+	nfy_event_p! { lvn_begin_scroll, co::LVN::BEGINSCROLL.into(), NMLVSCROLL,
 		/// [`LVN_BEGINSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-beginscroll)
 		/// notification.
 		///
 		/// Notifies when a scrolling operation starts.
 	}
 
-	nfy_event_p! { lvn_column_click, co::NM::LVN_COLUMNCLICK, NMLISTVIEW,
+	nfy_event_p! { lvn_column_click, co::LVN::COLUMNCLICK.into(), NMLISTVIEW,
 		/// [`LVN_COLUMNCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-columnclick)
 		/// notification.
 		///
@@ -82,7 +82,7 @@ impl ListViewEvents {
 		/// was in report mode.
 	}
 
-	nfy_event_p! { lvn_column_drop_down, co::NM::LVN_COLUMNDROPDOWN, NMLISTVIEW,
+	nfy_event_p! { lvn_column_drop_down, co::LVN::COLUMNDROPDOWN.into(), NMLISTVIEW,
 		/// [`LVN_COLUMNDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-columndropdown)
 		/// notification.
 		///
@@ -90,42 +90,42 @@ impl ListViewEvents {
 		/// pressed.
 	}
 
-	nfy_event_p! { lvn_column_overflow_click, co::NM::LVN_COLUMNOVERFLOWCLICK, NMLISTVIEW,
+	nfy_event_p! { lvn_column_overflow_click, co::LVN::COLUMNOVERFLOWCLICK.into(), NMLISTVIEW,
 		/// [`LVN_COLUMNOVERFLOWCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-columnoverflowclick)
 		/// notification.
 		///
 		/// Sent by a list-view control when its overflow button is clicked.
 	}
 
-	nfy_event_p_bool! { lvn_delete_all_items, co::NM::LVN_DELETEALLITEMS, NMLISTVIEW,
+	nfy_event_p_bool! { lvn_delete_all_items, co::LVN::DELETEALLITEMS.into(), NMLISTVIEW,
 		/// [`LVN_DELETEALLITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-deleteallitems)
 		/// notification.
 		///
 		/// Notifies that all items in the control are about to be deleted.
 	}
 
-	nfy_event_p! { lvn_delete_item, co::NM::LVN_DELETEITEM, NMLISTVIEW,
+	nfy_event_p! { lvn_delete_item, co::LVN::DELETEITEM.into(), NMLISTVIEW,
 		/// [`LVN_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-deleteitem)
 		/// notification.
 		///
 		/// Notifies that an item is about to be deleted.
 	}
 
-	nfy_event_p_bool! { lvn_end_label_edit, co::NM::LVN_ENDLABELEDIT, NMLVDISPINFO,
+	nfy_event_p_bool! { lvn_end_label_edit, co::LVN::ENDLABELEDIT.into(), NMLVDISPINFO,
 		/// [`LVN_ENDLABELEDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-endlabeledit)
 		/// notification.
 		///
 		/// Notifies about the end of label editing for an item.
 	}
 
-	nfy_event_p! { lvn_end_scroll, co::NM::LVN_ENDSCROLL, NMLVSCROLL,
+	nfy_event_p! { lvn_end_scroll, co::LVN::ENDSCROLL.into(), NMLVSCROLL,
 		/// [`LVN_ENDSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-endscroll)
 		/// notification.
 		///
 		/// Notifies when a scrolling operation ends.
 	}
 
-	nfy_event_p! { lvn_get_disp_info, co::NM::LVN_GETDISPINFO, NMLVDISPINFO,
+	nfy_event_p! { lvn_get_disp_info, co::LVN::GETDISPINFO.into(), NMLVDISPINFO,
 		/// [`LVN_GETDISPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-getdispinfo)
 		/// notification.
 		///
@@ -133,7 +133,7 @@ impl ListViewEvents {
 		/// list-view item.
 	}
 
-	nfy_event_mut_p_bool! { lvn_get_empty_markup, co::NM::LVN_GETEMPTYMARKUP, NMLVEMPTYMARKUP,
+	nfy_event_mut_p_bool! { lvn_get_empty_markup, co::LVN::GETEMPTYMARKUP.into(), NMLVEMPTYMARKUP,
 		/// [`LVN_GETEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-getemptymarkup)
 		/// notification.
 		///
@@ -142,7 +142,7 @@ impl ListViewEvents {
 		/// text.
 	}
 
-	nfy_event_p! { lvn_get_info_tip, co::NM::LVN_GETINFOTIP, NMLVGETINFOTIP,
+	nfy_event_p! { lvn_get_info_tip, co::LVN::GETINFOTIP.into(), NMLVGETINFOTIP,
 		/// [`LVN_GETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-getinfotip)
 		/// notification.
 		///
@@ -152,7 +152,7 @@ impl ListViewEvents {
 		/// additional text information to be displayed in a tooltip.
 	}
 
-	nfy_event_p! { lvn_hot_track, co::NM::LVN_HOTTRACK, NMLISTVIEW,
+	nfy_event_p! { lvn_hot_track, co::LVN::HOTTRACK.into(), NMLISTVIEW,
 		/// [`LVN_HOTTRACK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-hottrack)
 		/// notification.
 		///
@@ -162,63 +162,63 @@ impl ListViewEvents {
 		/// extended list-view style.
 	}
 
-	nfy_event_p! { lvn_incremental_search, co::NM::LVN_INCREMENTALSEARCH, NMLVFINDITEM,
+	nfy_event_p! { lvn_incremental_search, co::LVN::INCREMENTALSEARCH.into(), NMLVFINDITEM,
 		/// [`LVN_INCREMENTALSEARCH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-incrementalsearch)
 		/// notification.
 		///
 		/// Notifies that an incremental search has started.
 	}
 
-	nfy_event_p! { lvn_insert_item, co::NM::LVN_INSERTITEM, NMLISTVIEW,
+	nfy_event_p! { lvn_insert_item, co::LVN::INSERTITEM.into(), NMLISTVIEW,
 		/// [`LVN_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-insertitem)
 		/// notification.
 		///
 		/// Notifies that a new item was inserted.
 	}
 
-	nfy_event_p! { lvn_item_activate, co::NM::LVN_ITEMACTIVATE, NMITEMACTIVATE,
+	nfy_event_p! { lvn_item_activate, co::LVN::ITEMACTIVATE.into(), NMITEMACTIVATE,
 		/// [`LVN_ITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-itemactivate)
 		/// notification.
 		///
 		/// Sent by a list-view control when the user activates an item.
 	}
 
-	nfy_event_p! { lvn_item_changed, co::NM::LVN_ITEMCHANGED, NMLISTVIEW,
+	nfy_event_p! { lvn_item_changed, co::LVN::ITEMCHANGED.into(), NMLISTVIEW,
 		/// [`LVN_ITEMCHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-itemchanged)
 		/// notification.
 		///
 		/// Notifies that an item has changed.
 	}
 
-	nfy_event_p_bool! { lvn_item_changing, co::NM::LVN_ITEMCHANGING, NMLISTVIEW,
+	nfy_event_p_bool! { lvn_item_changing, co::LVN::ITEMCHANGING.into(), NMLISTVIEW,
 		/// [`LVN_ITEMCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-itemchanging)
 		/// notification.
 		///
 		/// Notifies that an item is changing.
 	}
 
-	nfy_event_p! { lvn_key_down, co::NM::LVN_KEYDOWN, NMLVKEYDOWN,
+	nfy_event_p! { lvn_key_down, co::LVN::KEYDOWN.into(), NMLVKEYDOWN,
 		/// [`LVN_KEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-keydown)
 		/// notification.
 		///
 		/// Notifies that a key has been pressed.
 	}
 
-	nfy_event_p! { lvn_link_click, co::NM::LVN_LINKCLICK, NMLVLINK,
+	nfy_event_p! { lvn_link_click, co::LVN::LINKCLICK.into(), NMLVLINK,
 		/// [`LVN_LINKCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-linkclick)
 		/// notification.
 		///
 		/// Notifies that a link has been clicked on.
 	}
 
-	nfy_event! { lvn_marquee_begin, co::NM::LVN_MARQUEEBEGIN,
+	nfy_event! { lvn_marquee_begin, co::LVN::MARQUEEBEGIN.into(),
 		/// [`LVN_MARQUEEBEGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-marqueebegin)
 		/// notification.
 		///
 		/// Notifies that a bounding box (marquee) selection has begun.
 	}
 
-	nfy_event_p! { lvn_od_cache_hint, co::NM::LVN_ODCACHEHINT, NMLVCACHEHINT,
+	nfy_event_p! { lvn_od_cache_hint, co::LVN::ODCACHEHINT.into(), NMLVCACHEHINT,
 		/// [`LVN_ODCACHEHINT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-odcachehint)
 		/// notification.
 		///
@@ -237,7 +237,7 @@ impl ListViewEvents {
 	pub fn lvn_od_find_item<F>(&self, func: F)
 		where F: FnMut(&mut NMLVFINDITEM) -> Option<u32> + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::LVN_ODFINDITEM, {
+		self.parent_user_events().add_nfy(self.ctrl_id, co::LVN::ODFINDITEM.into(), {
 			let mut func = func;
 			move |p| {
 				Some(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() }) {
@@ -248,7 +248,7 @@ impl ListViewEvents {
 		});
 	}
 
-	nfy_event_p! { lvn_od_state_changed, co::NM::LVN_ODSTATECHANGED, NMLVODSTATECHANGE,
+	nfy_event_p! { lvn_od_state_changed, co::LVN::ODSTATECHANGED.into(), NMLVODSTATECHANGE,
 		/// [`LVN_ODSTATECHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-odstatechanged)
 		/// notification.
 		///
@@ -256,7 +256,7 @@ impl ListViewEvents {
 		/// items has changed.
 	}
 
-	nfy_event_p! { lvn_set_disp_info, co::NM::LVN_SETDISPINFO, NMLVDISPINFO,
+	nfy_event_p! { lvn_set_disp_info, co::LVN::SETDISPINFO.into(), NMLVDISPINFO,
 		/// [`LVN_SETDISPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-setdispinfo)
 		/// notification.
 		///

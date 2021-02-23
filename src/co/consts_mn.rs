@@ -52,7 +52,7 @@ const_type! { MCSC, u8,
 const_type_ws! { MCS,
 	/// Month calendar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	DAYSTATE, 0x0001
 	MULTISELECT, 0x0002
@@ -175,4 +175,34 @@ const_type! { MSGF, u8,
 
 	DIALOGBOX, 0
 	MENU, 2
+}
+
+const_type! { NM, i32,
+	/// [`WM_NOTIFY`](crate::msg::WmNotify) notification codes.
+	///
+	/// Control-specific notification codes have their own types, which are
+	/// convertible to `NM`.
+
+	OUTOFMEMORY, Self::FIRST.0 - 1
+	CLICK, Self::FIRST.0 - 2
+	DBLCLK, Self::FIRST.0 - 3
+	RETURN, Self::FIRST.0 - 4
+	RCLICK, Self::FIRST.0 - 5
+	RDBLCLK, Self::FIRST.0 - 6
+	SETFOCUS, Self::FIRST.0 - 7
+	KILLFOCUS, Self::FIRST.0 - 8
+	CUSTOMDRAW, Self::FIRST.0 - 12
+	HOVER, Self::FIRST.0 - 13
+	NCHITTEST, Self::FIRST.0 - 14
+	KEYDOWN, Self::FIRST.0 - 15
+	RELEASEDCAPTURE, Self::FIRST.0 - 16
+	SETCURSOR, Self::FIRST.0 - 17
+	CHAR, Self::FIRST.0 - 18
+	TOOLTIPSCREATED, Self::FIRST.0 - 19
+	LDOWN, Self::FIRST.0 - 20
+	RDOWN, Self::FIRST.0 - 21
+	THEMECHANGED, Self::FIRST.0 - 22
+}
+const_type_priv_values! { NM
+	FIRST, 0
 }

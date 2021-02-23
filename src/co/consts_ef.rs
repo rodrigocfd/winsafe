@@ -1,4 +1,23 @@
-use crate::co::WS;
+use crate::co::{CMD, WS};
+
+const_type_cmd! { EN,
+	/// Edit control [`WM_COMMAND`]
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
+	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
+
+	SETFOCUS, 0x0100
+	KILLFOCUS, 0x0200
+	CHANGE, 0x0300
+	UPDATE, 0x0400
+	ERRSPACE, 0x0500
+	MAXTEXT, 0x0501
+	HSCROLL, 0x0601
+	VSCROLL, 0x0602
+	ALIGN_LTR_EC, 0x0700
+	ALIGN_RTL_EC, 0x0701
+	BEFORE_PASTE, 0x0800
+	AFTER_PASTE, 0x0801
+}
 
 const_type! { EMF, u32,
 	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
@@ -19,7 +38,7 @@ const_type! { ENDSESSION, u32,
 const_type_ws! { ES,
 	/// Edit control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	LEFT, 0x0000
 	CENTER, 0x0001

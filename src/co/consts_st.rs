@@ -1,9 +1,9 @@
-use crate::co::{ACCESS_RIGHTS, WS, WS_EX};
+use crate::co::{ACCESS_RIGHTS, CMD, NM, WS, WS_EX};
 
 const_type_ws! { SBARS,
 	/// Status bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	NONE, 0
 	SIZEGRIP, 0x0100
@@ -21,6 +21,17 @@ const_type! { SBT, u16,
 	POPOUT, 0x0200
 	RTLREADING, 0x0400
 	NOTABPARSING, 0x0800
+}
+
+const_type_nm! { SBN,
+	/// Status bar control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	SIMPLEMODECHANGE, Self::FIRST.0 - 0
+}
+const_type_priv_values! { SBN
+	FIRST, -880
 }
 
 const_type! { SC, u32,
@@ -56,6 +67,112 @@ const_type! { SIZE_R, u8,
 	MAXIMIZED, 2
 	MAXSHOW, 3
 	MAXHIDE, 4
+}
+
+const_type! { SM, i32,
+	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `nIndex` (`i32`).
+
+	CXSCREEN, 0
+	CYSCREEN, 1
+	CXVSCROLL, 2
+	CYHSCROLL, 3
+	CYCAPTION, 4
+	CXBORDER, 5
+	CYBORDER, 6
+	CXDLGFRAME, 7
+	CYDLGFRAME, 8
+	CYVTHUMB, 9
+	CXHTHUMB, 10
+	CXICON, 11
+	CYICON, 12
+	CXCURSOR, 13
+	CYCURSOR, 14
+	CYMENU, 15
+	CXFULLSCREEN, 16
+	CYFULLSCREEN, 17
+	CYKANJIWINDOW, 18
+	MOUSEPRESENT, 19
+	CYVSCROLL, 20
+	CXHSCROLL, 21
+	DEBUG, 22
+	SWAPBUTTON, 23
+	RESERVED1, 24
+	RESERVED2, 25
+	RESERVED3, 26
+	RESERVED4, 27
+	CXMIN, 28
+	CYMIN, 29
+	CXSIZE, 30
+	CYSIZE, 31
+	CXFRAME, 32
+	CYFRAME, 33
+	CXMINTRACK, 34
+	CYMINTRACK, 35
+	CXDOUBLECLK, 36
+	CYDOUBLECLK, 37
+	CXICONSPACING, 38
+	CYICONSPACING, 39
+	MENUDROPALIGNMENT, 40
+	PENWINDOWS, 41
+	DBCSENABLED, 42
+	CMOUSEBUTTONS, 43
+	CXFIXEDFRAME, Self::CXDLGFRAME.0
+	CYFIXEDFRAME, Self::CYDLGFRAME.0
+	CXSIZEFRAME, Self::CXFRAME.0
+	CYSIZEFRAME, Self::CYFRAME.0
+	SECURE, 44
+	CXEDGE, 45
+	CYEDGE, 46
+	CXMINSPACING, 47
+	CYMINSPACING, 48
+	CXSMICON, 49
+	CYSMICON, 50
+	CYSMCAPTION, 51
+	CXSMSIZE, 52
+	CYSMSIZE, 53
+	CXMENUSIZE, 54
+	CYMENUSIZE, 55
+	ARRANGE, 56
+	CXMINIMIZED, 57
+	CYMINIMIZED, 58
+	CXMAXTRACK, 59
+	CYMAXTRACK, 60
+	CXMAXIMIZED, 61
+	CYMAXIMIZED, 62
+	NETWORK, 63
+	CLEANBOOT, 67
+	CXDRAG, 68
+	CYDRAG, 69
+	SHOWSOUNDS, 70
+	CXMENUCHECK, 71
+	CYMENUCHECK, 72
+	SLOWMACHINE, 73
+	MIDEASTENABLED, 74
+	MOUSEWHEELPRESENT, 75
+	XVIRTUALSCREEN, 76
+	YVIRTUALSCREEN, 77
+	CXVIRTUALSCREEN, 78
+	CYVIRTUALSCREEN, 79
+	CMONITORS, 80
+	SAMEDISPLAYFORMAT, 81
+	IMMENABLED, 82
+	CXFOCUSBORDER, 83
+	CYFOCUSBORDER, 84
+	TABLETPC, 86
+	MEDIACENTER, 87
+	STARTER, 88
+	SERVERR2, 89
+	MOUSEHORIZONTALWHEELPRESENT, 91
+	CXPADDEDBORDER, 92
+	DIGITIZER, 94
+	MAXIMUMTOUCHES, 95
+	CMETRICS, 97
+	REMOTESESSION, 0x1000
+	SHUTTINGDOWN, 0x2000
+	REMOTECONTROL, 0x2001
+	CARETBLINKINGENABLED, 0x2002
+	CONVERTIBLESLATEMODE, 0x2003
+	SYSTEMDOCKED, 0x2004
 }
 
 const_type! { SPI, u32,
@@ -216,7 +333,7 @@ const_type! { SPIF, u32,
 const_type_ws! { SS,
 	/// Label control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/static-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	LEFT, 0x00000000
 	CENTER, 0x00000001
@@ -259,112 +376,6 @@ const_type! { STANDARD_RIGHTS, u32,
 	WRITE, ACCESS_RIGHTS::READ_CONTROL.0
 	EXECUTE, ACCESS_RIGHTS::READ_CONTROL.0
 	ALL, 0x001f0000
-}
-
-const_type! { SM, i32,
-	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `nIndex` (`i32`).
-
-	CXSCREEN, 0
-	CYSCREEN, 1
-	CXVSCROLL, 2
-	CYHSCROLL, 3
-	CYCAPTION, 4
-	CXBORDER, 5
-	CYBORDER, 6
-	CXDLGFRAME, 7
-	CYDLGFRAME, 8
-	CYVTHUMB, 9
-	CXHTHUMB, 10
-	CXICON, 11
-	CYICON, 12
-	CXCURSOR, 13
-	CYCURSOR, 14
-	CYMENU, 15
-	CXFULLSCREEN, 16
-	CYFULLSCREEN, 17
-	CYKANJIWINDOW, 18
-	MOUSEPRESENT, 19
-	CYVSCROLL, 20
-	CXHSCROLL, 21
-	DEBUG, 22
-	SWAPBUTTON, 23
-	RESERVED1, 24
-	RESERVED2, 25
-	RESERVED3, 26
-	RESERVED4, 27
-	CXMIN, 28
-	CYMIN, 29
-	CXSIZE, 30
-	CYSIZE, 31
-	CXFRAME, 32
-	CYFRAME, 33
-	CXMINTRACK, 34
-	CYMINTRACK, 35
-	CXDOUBLECLK, 36
-	CYDOUBLECLK, 37
-	CXICONSPACING, 38
-	CYICONSPACING, 39
-	MENUDROPALIGNMENT, 40
-	PENWINDOWS, 41
-	DBCSENABLED, 42
-	CMOUSEBUTTONS, 43
-	CXFIXEDFRAME, Self::CXDLGFRAME.0
-	CYFIXEDFRAME, Self::CYDLGFRAME.0
-	CXSIZEFRAME, Self::CXFRAME.0
-	CYSIZEFRAME, Self::CYFRAME.0
-	SECURE, 44
-	CXEDGE, 45
-	CYEDGE, 46
-	CXMINSPACING, 47
-	CYMINSPACING, 48
-	CXSMICON, 49
-	CYSMICON, 50
-	CYSMCAPTION, 51
-	CXSMSIZE, 52
-	CYSMSIZE, 53
-	CXMENUSIZE, 54
-	CYMENUSIZE, 55
-	ARRANGE, 56
-	CXMINIMIZED, 57
-	CYMINIMIZED, 58
-	CXMAXTRACK, 59
-	CYMAXTRACK, 60
-	CXMAXIMIZED, 61
-	CYMAXIMIZED, 62
-	NETWORK, 63
-	CLEANBOOT, 67
-	CXDRAG, 68
-	CYDRAG, 69
-	SHOWSOUNDS, 70
-	CXMENUCHECK, 71
-	CYMENUCHECK, 72
-	SLOWMACHINE, 73
-	MIDEASTENABLED, 74
-	MOUSEWHEELPRESENT, 75
-	XVIRTUALSCREEN, 76
-	YVIRTUALSCREEN, 77
-	CXVIRTUALSCREEN, 78
-	CYVIRTUALSCREEN, 79
-	CMONITORS, 80
-	SAMEDISPLAYFORMAT, 81
-	IMMENABLED, 82
-	CXFOCUSBORDER, 83
-	CYFOCUSBORDER, 84
-	TABLETPC, 86
-	MEDIACENTER, 87
-	STARTER, 88
-	SERVERR2, 89
-	MOUSEHORIZONTALWHEELPRESENT, 91
-	CXPADDEDBORDER, 92
-	DIGITIZER, 94
-	MAXIMUMTOUCHES, 95
-	CMETRICS, 97
-	REMOTESESSION, 0x1000
-	SHUTTINGDOWN, 0x2000
-	REMOTECONTROL, 0x2001
-	CARETBLINKINGENABLED, 0x2002
-	CONVERTIBLESLATEMODE, 0x2003
-	SYSTEMDOCKED, 0x2004
 }
 
 const_type! { STAP, u32,
@@ -413,6 +424,17 @@ const_type! { STATE_SYSTEM, u32,
 	ALERT_HIGH, 0x10000000
 	PROTECTED, 0x20000000
 	VALID, 0x3fffffff
+}
+
+const_type_cmd! { STN,
+	/// Static control `WM_COMMAND`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
+	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
+
+	CLICKED, 0
+	DBLCLK, 1
+	ENABLE, 2
+	DISABLE, 3
 }
 
 const_type! { SUBLANG, u16,
@@ -716,7 +738,7 @@ const_type! { SWP, u32,
 const_type_ws! { TBS,
 	/// Trackbar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	AUTOTICKS, 0x0001
 	VERT, 0x0002
@@ -740,7 +762,7 @@ const_type_ws! { TBS,
 const_type_ws! { TCS,
 	/// Tab control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	SCROLLOPPOSITE, 0x0001
 	BOTTOM, 0x0002
@@ -767,7 +789,7 @@ const_type_ws! { TCS,
 const_type_wsex! { TCS_EX,
 	/// Extended tab control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
 
 	FLATSEPARATORS, 0x00000001
 	REGISTERDROP, 0x00000002
@@ -808,10 +830,37 @@ const_type! { TPM, u32,
 	WORKAREA, 0x10000
 }
 
+const_type_nm! { TVN,
+	/// Tree view control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	SELCHANGING, Self::FIRST.0 - 50
+	SELCHANGED, Self::FIRST.0 - 51
+	GETDISPINFO, Self::FIRST.0 - 52
+	SETDISPINFO, Self::FIRST.0 - 53
+	ITEMEXPANDING, Self::FIRST.0 - 54
+	ITEMEXPANDED, Self::FIRST.0 - 55
+	BEGINDRAG, Self::FIRST.0 - 56
+	BEGINRDRAG, Self::FIRST.0 - 57
+	DELETEITEM, Self::FIRST.0 - 58
+	BEGINLABELEDIT, Self::FIRST.0 - 59
+	ENDLABELEDIT, Self::FIRST.0 - 60
+	KEYDOWN, Self::FIRST.0 - 12
+	GETINFOTIP, Self::FIRST.0 - 14
+	SINGLEEXPAND, Self::FIRST.0 - 15
+	ITEMCHANGING, Self::FIRST.0 - 17
+	ITEMCHANGED, Self::FIRST.0 - 19
+	ASYNCDRAW, Self::FIRST.0 - 20
+}
+const_type_priv_values! { TVN
+	FIRST, -400
+}
+
 const_type_ws! { TVS,
 	/// Tree view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	HASBUTTONS, 0x0001
 	HASLINES, 0x0002
@@ -834,7 +883,7 @@ const_type_ws! { TVS,
 const_type_wsex! { TVS_EX,
 	/// Extended tree view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
 
 	NOSINGLECOLLAPSE, 0x0001
 	MULTISELECT, 0x0002

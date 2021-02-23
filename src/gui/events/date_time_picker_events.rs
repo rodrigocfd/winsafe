@@ -37,7 +37,7 @@ impl DateTimePickerEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 
-	nfy_event! { dtn_close_up, co::NM::DTN_CLOSEUP,
+	nfy_event! { dtn_close_up, co::DTN::CLOSEUP.into(),
 		/// [`DTN_CLOSEUP`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-closeup)
 		/// notification.
 		///
@@ -47,14 +47,14 @@ impl DateTimePickerEvents {
 		/// while the calendar is open.
 	}
 
-	nfy_event_p! { dtn_date_time_change, co::NM::DTN_DATETIMECHANGE, NMDATETIMECHANGE,
+	nfy_event_p! { dtn_date_time_change, co::DTN::DATETIMECHANGE.into(), NMDATETIMECHANGE,
 		/// [`DTN_DATETIMECHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-datetimechange)
 		/// notification.
 		///
 		/// Sent by a date and time picker control whenever a change occurs.
 	}
 
-	nfy_event! { dtn_drop_down, co::NM::DTN_DROPDOWN,
+	nfy_event! { dtn_drop_down, co::DTN::DROPDOWN.into(),
 		/// [`DTN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-dropdown)
 		/// notification.
 		///
@@ -62,7 +62,7 @@ impl DateTimePickerEvents {
 		/// drop-down month calendar.
 	}
 
-	nfy_event_mut_p! { dtn_format, co::NM::DTN_FORMAT, NMDATETIMEFORMAT,
+	nfy_event_mut_p! { dtn_format, co::DTN::FORMAT.into(), NMDATETIMEFORMAT,
 		/// [`DTN_FORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-format)
 		/// notification.
 		///
@@ -70,7 +70,7 @@ impl DateTimePickerEvents {
 		/// in a callback field.
 	}
 
-	nfy_event_mut_p! { dtn_format_query, co::NM::DTN_FORMATQUERY, NMDATETIMEFORMATQUERY,
+	nfy_event_mut_p! { dtn_format_query, co::DTN::FORMATQUERY.into(), NMDATETIMEFORMATQUERY,
 		/// [`DTN_FORMATQUERY`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-formatquery)
 		/// notification.
 		///
@@ -79,7 +79,7 @@ impl DateTimePickerEvents {
 		/// field.
 	}
 
-	nfy_event_mut_p! { dtn_user_string, co::NM::DTN_USERSTRING, NMDATETIMESTRING,
+	nfy_event_mut_p! { dtn_user_string, co::DTN::USERSTRING.into(), NMDATETIMESTRING,
 		/// [`DTN_USERSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-userstring)
 		/// notification.
 		///
@@ -89,7 +89,7 @@ impl DateTimePickerEvents {
 		/// [`DTS_APPCANPARSE`](crate::co::DTS::APPCANPARSE) style.
 	}
 
-	nfy_event_p! { dtn_wm_key_down, co::NM::DTN_WMKEYDOWN, NMDATETIMEWMKEYDOWN,
+	nfy_event_p! { dtn_wm_key_down, co::DTN::WMKEYDOWN.into(), NMDATETIMEWMKEYDOWN,
 		/// [`DTN_WMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-wmkeydown)
 		/// notification.
 		///

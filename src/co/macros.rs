@@ -148,7 +148,57 @@ macro_rules! const_type {
 	};
 }
 
-/// Declares the type of a constant for a window style.
+/// Declares the type of a constant for a WM_COMMAND notification code,
+/// convertible to [`CMD`](crate::co::CMD) constant type.
+/// Optionally declares multiple public constant values.
+macro_rules! const_type_cmd {
+	(
+		$name:ident,
+		$(#[$attr:meta])*
+		$($pubcname:ident, $pubcval:expr)*
+	) => {
+		const_type! {
+			$name, u16,
+			$(#[$attr])*
+			$($pubcname, $pubcval)*
+		}
+
+		// Conversion to CMD notification code.
+		impl From<$name> for CMD {
+			fn from(v: $name) -> Self {
+				Self(v.0)
+			}
+		}
+	};
+}
+
+/// Declares the type of a constant for a WM_NOTIFY notification code,
+/// convertible to [`NM`](crate::co::NM) constant type.
+/// Optionally declares multiple public constant values.
+macro_rules! const_type_nm {
+	(
+		$name:ident,
+		$(#[$attr:meta])*
+		$($pubcname:ident, $pubcval:expr)*
+	) => {
+		const_type! {
+			$name, i32,
+			$(#[$attr])*
+			$($pubcname, $pubcval)*
+		}
+
+		// Conversion to NM notification code.
+		impl From<$name> for NM {
+			fn from(v: $name) -> Self {
+				Self(v.0)
+			}
+		}
+	};
+}
+
+/// Declares the type of a constant for a window style,
+/// convertible to [`WS`](crate::co::WS) constant type.
+/// Optionally declares multiple public constant values.
 macro_rules! const_type_ws {
 	(
 		$name:ident,
@@ -170,7 +220,9 @@ macro_rules! const_type_ws {
 	};
 }
 
-/// Declares the type of a constant for an extended window style.
+/// Declares the type of a constant for an extended window style,
+/// convertible to [`WS_EX`](crate::co::WS_EX) constant type.
+/// Optionally declares multiple public constant values.
 macro_rules! const_type_wsex {
 	(
 		$name:ident,

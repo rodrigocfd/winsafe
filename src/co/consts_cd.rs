@@ -1,11 +1,29 @@
 #![allow(non_upper_case_globals)]
 
-use crate::co::{WS, WS_EX};
+use crate::co::{NM, WS, WS_EX};
+
+const_type_cmd! { CBN,
+	/// Combo box control `WM_COMMAND`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
+	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
+
+	ERRSPACE, (0 - 1) as u16
+	SELCHANGE, 1
+	DBLCLK, 2
+	SETFOCUS, 3
+	KILLFOCUS, 4
+	EDITCHANGE, 5
+	EDITUPDATE, 6
+	DROPDOWN, 7
+	CLOSEUP, 8
+	SELENDOK, 9
+	SELENDCANCEL, 10
+}
 
 const_type_ws! { CBS,
 	/// Combo box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	SIMPLE, 0x0001
 	DROPDOWN, 0x0002
@@ -25,7 +43,7 @@ const_type_ws! { CBS,
 const_type_wsex! { CBES_EX,
 	/// Extended combo box
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
 
 	NOEDITIMAGE, 0x00000001
 	NOEDITIMAGEINDENT, 0x00000002
@@ -161,66 +179,13 @@ const_type! { CLSCTX, u32,
 }
 
 const_type! { CMD, u16,
-	/// [`WM_COMMAND`](crate::msg::WmCommand)
-	/// notifications  (`u16`) for:
+	/// [`WM_COMMAND`](crate::msg::WmCommand) notification codes.
 	///
-	/// * [Button](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications);
-	/// * [ComboBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications);
-	/// * [Edit](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications);
-	/// * [Label](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications);
-	/// * [ListBox](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
+	/// Control-specific notification codes have their own types, which are
+	/// convertible to `CMD`.
 
 	Menu, 0
 	Accelerator, 1
-
-	BN_CLICKED, 0
-	BN_PAINT, 1
-	BN_HILITE, 2
-	BN_UNHILITE, 3
-	BN_DISABLE, 4
-	BN_DOUBLECLICKED, 5
-	BN_PUSHED, Self::BN_HILITE.0
-	BN_UNPUSHED, Self::BN_UNHILITE.0
-	BN_DBLCLK, Self::BN_DOUBLECLICKED.0
-	BN_SETFOCUS, 6
-	BN_KILLFOCUS, 7
-
-	CBN_ERRSPACE, (0 - 1) as u16
-	CBN_SELCHANGE, 1
-	CBN_DBLCLK, 2
-	CBN_SETFOCUS, 3
-	CBN_KILLFOCUS, 4
-	CBN_EDITCHANGE, 5
-	CBN_EDITUPDATE, 6
-	CBN_DROPDOWN, 7
-	CBN_CLOSEUP, 8
-	CBN_SELENDOK, 9
-	CBN_SELENDCANCEL, 10
-
-	EN_SETFOCUS, 0x0100
-	EN_KILLFOCUS, 0x0200
-	EN_CHANGE, 0x0300
-	EN_UPDATE, 0x0400
-	EN_ERRSPACE, 0x0500
-	EN_MAXTEXT, 0x0501
-	EN_HSCROLL, 0x0601
-	EN_VSCROLL, 0x0602
-	EN_ALIGN_LTR_EC, 0x0700
-	EN_ALIGN_RTL_EC, 0x0701
-	EN_BEFORE_PASTE, 0x0800
-	EN_AFTER_PASTE, 0x0801
-
-	STN_CLICKED, 0
-	STN_DBLCLK, 1
-	STN_ENABLE, 2
-	STN_DISABLE, 3
-
-	LBN_ERRSPACE, (0 -2) as u16
-	LBN_SELCHANGE, 1
-	LBN_DBLCLK, 2
-	LBN_SELCANCEL, 3
-	LBN_SETFOCUS, 4
-	LBN_KILLFOCUS, 5
 }
 
 const_type! { COINIT, u32,
@@ -324,10 +289,28 @@ const_type! { DLGID, u16,
 	CONTINUE, 11
 }
 
+const_type_nm! { DTN,
+	/// Date and time picker control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	CLOSEUP, Self::FIRST2.0
+	DATETIMECHANGE, Self::FIRST2.0 - 6
+	DROPDOWN, Self::FIRST2.0 - 1
+	FORMAT, Self::FIRST2.0 - 3
+	FORMATQUERY, Self::FIRST.0 - 3
+	USERSTRING, Self::FIRST.0 - 5
+	WMKEYDOWN, Self::FIRST.0 - 4
+}
+const_type_priv_values! { DTN
+	FIRST, -740
+	FIRST2, -753
+}
+
 const_type_ws! { DTS,
 	/// Date and time picker control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	UPDOWN, 0x0001
 	SHOWNONE, 0x0002

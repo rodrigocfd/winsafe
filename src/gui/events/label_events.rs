@@ -30,7 +30,7 @@ impl LabelEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 
-	cmd_event! { stn_clicked, co::CMD::STN_CLICKED,
+	cmd_event! { stn_clicked, co::STN::CLICKED.into(),
 		/// [`STN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-clicked)
 		/// notification.
 		///
@@ -38,7 +38,7 @@ impl LabelEvents {
 		/// [`SS_NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
-	cmd_event! { stn_dbl_clk, co::CMD::STN_DBLCLK,
+	cmd_event! { stn_dbl_clk, co::STN::DBLCLK.into(),
 		/// [`STN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-dblclk)
 		/// notification.
 		///
@@ -46,7 +46,7 @@ impl LabelEvents {
 		/// [`SS_NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
-	cmd_event! { stn_disable, co::CMD::STN_DISABLE,
+	cmd_event! { stn_disable, co::STN::DISABLE.into(),
 		/// [`STN_DISABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-disable)
 		/// notification.
 		///
@@ -55,7 +55,7 @@ impl LabelEvents {
 		/// notification code.
 	}
 
-	cmd_event! { stn_enable, co::CMD::STN_ENABLE,
+	cmd_event! { stn_enable, co::STN::ENABLE.into(),
 		/// [`STN_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-enable)
 		/// notification.
 		///

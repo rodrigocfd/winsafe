@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, SUBLANG, WS, WS_EX};
+use crate::co::{ACCESS_RIGHTS, CMD, NM, STANDARD_RIGHTS, SUBLANG, WS, WS_EX};
 
 const_type! { KEY, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
@@ -173,10 +173,23 @@ impl LANG {
 	}
 }
 
+const_type_cmd! { LBN,
+	/// List box control `WM_COMMAND`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications)
+	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
+
+	ERRSPACE, (0 -2) as u16
+	SELCHANGE, 1
+	DBLCLK, 2
+	SELCANCEL, 3
+	SETFOCUS, 4
+	KILLFOCUS, 5
+}
+
 const_type_ws! { LBS,
 	/// List box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-box-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	NOTIFY, 0x0001
 	SORT, 0x0002
@@ -366,6 +379,43 @@ const_type! { LVKF, u32,
 	SHIFT, 0x0004
 }
 
+const_type_nm! { LVN,
+	/// List view control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	ITEMCHANGING, Self::FIRST.0 - 0
+	ITEMCHANGED, Self::FIRST.0 - 1
+	INSERTITEM, Self::FIRST.0 - 2
+	DELETEITEM, Self::FIRST.0 - 3
+	DELETEALLITEMS, Self::FIRST.0 - 4
+	BEGINLABELEDIT, Self::FIRST.0 - 75
+	ENDLABELEDIT, Self::FIRST.0 - 76
+	COLUMNCLICK, Self::FIRST.0 - 8
+	BEGINDRAG, Self::FIRST.0 - 9
+	BEGINRDRAG, Self::FIRST.0 - 11
+	ODCACHEHINT, Self::FIRST.0 - 13
+	ODFINDITEM, Self::FIRST.0 - 79
+	ITEMACTIVATE, Self::FIRST.0 - 14
+	ODSTATECHANGED, Self::FIRST.0 - 15
+	HOTTRACK, Self::FIRST.0 - 21
+	GETDISPINFO, Self::FIRST.0 - 77
+	SETDISPINFO, Self::FIRST.0 - 78
+	KEYDOWN, Self::FIRST.0 - 55
+	MARQUEEBEGIN, Self::FIRST.0 - 56
+	GETINFOTIP, Self::FIRST.0 - 58
+	INCREMENTALSEARCH, Self::FIRST.0 - 63
+	COLUMNDROPDOWN, Self::FIRST.0 - 64
+	COLUMNOVERFLOWCLICK, Self::FIRST.0 - 66
+	BEGINSCROLL, Self::FIRST.0 - 80
+	ENDSCROLL, Self::FIRST.0 - 81
+	LINKCLICK, Self::FIRST.0 - 84
+	GETEMPTYMARKUP, Self::FIRST.0 - 87
+}
+const_type_priv_values! { LVN
+	FIRST, -100
+}
+
 const_type! { LVNI, u32,
 	/// [`LVM_GETNEXTITEM`](crate::msg::LvmGetNextItem) relationship (`u32`).
 
@@ -387,7 +437,7 @@ const_type! { LVNI, u32,
 const_type_ws! { LVS,
 	/// List view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	ICON, 0x0000
 	REPORT, 0x0001
@@ -416,7 +466,7 @@ const_type_ws! { LVS,
 const_type_wsex! { LVS_EX,
 	/// Extended list view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
 
 	NONE, 0
 	AUTOAUTOARRANGE, 0x01000000
@@ -454,7 +504,7 @@ const_type_wsex! { LVS_EX,
 const_type_ws! { LWS,
 	/// SysLink control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	TRANSPARENT, 0x0001
 	IGNORERETURN, 0x0002

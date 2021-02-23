@@ -63,7 +63,7 @@ impl StatusBarEvents {
 		/// within the control.
 	}
 
-	nfy_event! { sbn_simple_mode_change, co::NM::SBN_SIMPLEMODECHANGE,
+	nfy_event! { sbn_simple_mode_change, co::SBN::SIMPLEMODECHANGE.into(),
 		/// [`SBN_SIMPLEMODECHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/sbn-simplemodechange)
 		/// notification.
 		///

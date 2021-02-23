@@ -1,4 +1,4 @@
-use crate::co::WS;
+use crate::co::{NM, WS};
 
 const_type! { GA, u32,
 	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
@@ -124,10 +124,39 @@ const_type! { GWLP, i32,
 	DWLP_USER, Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
 }
 
+const_type_nm! { HDN,
+	/// Header control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	ITEMCHANGING, Self::FIRST.0 - 20
+	ITEMCHANGED, Self::FIRST.0 - 21
+	ITEMCLICK, Self::FIRST.0 - 22
+	ITEMDBLCLICK, Self::FIRST.0 - 23
+	DIVIDERDBLCLICK, Self::FIRST.0 - 25
+	BEGINTRACK, Self::FIRST.0 - 26
+	ENDTRACK, Self::FIRST.0 - 27
+	TRACK, Self::FIRST.0 - 28
+	GETDISPINFO, Self::FIRST.0 - 29
+	BEGINDRAG, Self::FIRST.0 - 10
+	ENDDRAG, Self::FIRST.0 - 11
+	FILTERCHANGE, Self::FIRST.0 - 12
+	FILTERBTNCLICK, Self::FIRST.0 - 13
+	BEGINFILTEREDIT, Self::FIRST.0 - 14
+	ENDFILTEREDIT, Self::FIRST.0 - 15
+	ITEMSTATEICONCLICK, Self::FIRST.0 - 16
+	ITEMKEYDOWN, Self::FIRST.0 - 17
+	DROPDOWN, Self::FIRST.0 - 18
+	OVERFLOWCLICK, Self::FIRST.0 - 19
+}
+const_type_priv_values! { HDN
+	FIRST, -300
+}
+
 const_type_ws! { HDS,
 	/// Header control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/header-control-styles)
-	/// (`u32`)
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	HORZ, 0x0000
 	BUTTONS, 0x0002
@@ -264,4 +293,15 @@ const_type! { IMAGE_TYPE, u8,
 
 	BITMAP, 0
 	ICON, 1
+}
+
+const_type_nm! { IPN,
+	/// IP address control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	FIELDCHANGED, Self::FIRST.0 - 0
+}
+const_type_priv_values! { IPN
+	FIRST, -860
 }

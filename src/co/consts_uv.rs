@@ -5,7 +5,7 @@ use crate::co::WS;
 const_type_ws! { UDS,
 	/// Up-down control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	WRAP, 0x0001
 	SETBUDDYINT, 0x0002

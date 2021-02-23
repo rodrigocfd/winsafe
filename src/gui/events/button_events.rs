@@ -31,14 +31,14 @@ impl ButtonEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 
-	nfy_event_p! { bcn_drop_down, co::NM::BCN_DROPDOWN, NMBCDROPDOWN,
+	nfy_event_p! { bcn_drop_down, co::BCN::DROPDOWN.into(), NMBCDROPDOWN,
 		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.
 		///
 		/// Sent when the user clicks a drop down arrow on a button.
 	}
 
-	nfy_event_p! { bcn_hot_item_change, co::NM::BCN_HOTITEMCHANGE, NMBCHOTITEM,
+	nfy_event_p! { bcn_hot_item_change, co::BCN::HOTITEMCHANGE.into(), NMBCHOTITEM,
 		/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
 		/// notification.
 		///
@@ -46,7 +46,7 @@ impl ButtonEvents {
 		/// leaving the client area of the button control.
 	}
 
-	cmd_event! { bn_clicked, co::CMD::BN_CLICKED,
+	cmd_event! { bn_clicked, co::BN::CLICKED.into(),
 		/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 		/// command notification.
 		///
@@ -68,7 +68,7 @@ impl ButtonEvents {
 		/// ```
 	}
 
-	cmd_event! { bn_dbl_clk, co::CMD::BN_DBLCLK,
+	cmd_event! { bn_dbl_clk, co::BN::DBLCLK.into(),
 		/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 		/// command notification.
 		///
@@ -79,7 +79,7 @@ impl ButtonEvents {
 		/// send only if they have the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style.
 	}
 
-	cmd_event! { bn_kill_focus, co::CMD::BN_KILLFOCUS,
+	cmd_event! { bn_kill_focus, co::BN::KILLFOCUS.into(),
 		/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 		/// command notification.
 		///
@@ -88,7 +88,7 @@ impl ButtonEvents {
 		/// code.
 	}
 
-	cmd_event! { bn_set_focus, co::CMD::BN_SETFOCUS,
+	cmd_event! { bn_set_focus, co::BN::SETFOCUS.into(),
 		/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 		/// command notification.
 		///

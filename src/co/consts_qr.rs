@@ -35,7 +35,7 @@ const_type! { QS, u32,
 const_type_ws! { RBS,
 	/// Rebar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
-	/// (`u32`).
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
 
 	TOOLTIPS, 0x00000100
 	VARHEIGHT, 0x00000200
