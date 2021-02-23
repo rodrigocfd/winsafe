@@ -96,6 +96,7 @@ extern "system" {
 	pub fn PeekMessageW(lpMsg: PVOID, hWnd: HANDLE, wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: u32) -> BOOL;
 	pub fn PostMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> BOOL;
 	pub fn PostQuitMessage(nExitCode: i32);
+	pub fn RedrawWindow(hWnd: HANDLE, lprcUpdate: PCVOID, hrgnUpdate: HANDLE, flags: u32) -> BOOL;
 	pub fn RegisterClassExW(lpwcx: PCVOID) -> u16;
 	pub fn ReleaseDC(hWnd: HANDLE, hDC: HANDLE) -> i32;
 	pub fn RemoveMenu(hMenu: HANDLE, uPosition: u32, uFlags: u32) -> BOOL;

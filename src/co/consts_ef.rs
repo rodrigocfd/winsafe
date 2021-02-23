@@ -1,7 +1,7 @@
 use crate::co::{CMD, WS};
 
 const_type_cmd! { EN,
-	/// Edit control [`WM_COMMAND`]
+	/// Edit control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
 	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
 

@@ -409,10 +409,10 @@ impl MsgEvents {
 	/// [`WM_INITDIALOG`](crate::gui::events::MsgEvents::wm_init_dialog) instead.
 	///
 	/// Sent when an application requests that a window be created by calling the
-	/// [`CreateWindowEx`](crate::co::HWND::CreateWindowEx) function. The message
-	/// is sent before the function returns. The window procedure of the new
-	/// window receives this message after the window is created, but before the
-	/// window becomes visible.
+	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx) function. The message is
+	/// sent before the function returns. The window procedure of the new window
+	/// receives this message after the window is created, but before the window
+	/// becomes visible.
 	///
 	/// # Examples
 	///

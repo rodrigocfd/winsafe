@@ -47,6 +47,23 @@ const_type_ws! { RBS,
 	DBLCLKTOGGLE, 0x00008000
 }
 
+const_type! { RDW, u32,
+	/// [`RedrawWindow`](crate::HWND::RedrawWindow) `flags` (`u32`).
+
+	INVALIDATE, 0x0001
+	INTERNALPAINT, 0x0002
+	ERASE, 0x0004
+	VALIDATE, 0x0008
+	NOINTERNALPAINT, 0x0010
+	NOERASE, 0x0020
+	NOCHILDREN, 0x0040
+	ALLCHILDREN, 0x0080
+	UPDATENOW, 0x0100
+	ERASENOW, 0x0200
+	FRAME, 0x0400
+	NOFRAME, 0x0800
+}
+
 const_type! { REG, u32,
 	/// Registry
 	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)

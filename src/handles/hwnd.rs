@@ -773,6 +773,24 @@ impl HWND {
 		}
 	}
 
+	/// [`RedrawWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow)
+	/// method.
+	pub fn RedrawWindow(self,
+		lprcUpdate: &RECT, hrgnUpdate: HRGN, flags: co::RDW) -> WinResult<()>
+	{
+		match unsafe {
+			user32::RedrawWindow(
+				self.ptr,
+				lprcUpdate as *const _ as *const _,
+				hrgnUpdate.ptr,
+				flags.into(),
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
 	/// [`ReleaseDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 	/// method.
 	pub fn ReleaseDC(self, hDC: HDC) -> WinResult<()> {
