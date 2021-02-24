@@ -1,9 +1,10 @@
 # WinSafe
 
-[![Crates.io](https://img.shields.io/crates/v/winsafe.svg)](https://crates.io/crates/winsafe)
-[![Docs.rs](https://docs.rs/winsafe/badge.svg)](https://docs.rs/winsafe)
-[![Lines of Code](https://tokei.rs/b1/github/rodrigocfd/winsafe)](https://github.com/rodrigocfd/winsafe)
-[![License](https://img.shields.io/crates/l/winsafe.svg)](https://github.com/rodrigocfd/winsafe)
+[![Crates.io](https://img.shields.io/crates/v/winsafe.svg)](https://crates.io/crates/winsafe "Link to crates.io")
+[![Docs.rs](https://docs.rs/winsafe/badge.svg)](https://docs.rs/winsafe "Link to docs.rs")
+[![Lines of code](https://tokei.rs/b1/github/rodrigocfd/winsafe)](https://github.com/rodrigocfd/winsafe "Total lines of source code")
+[![Win32 funcs](https://img.shields.io/badge/win32_funcs-208-10bb10.svg)](https://rodrigocfd.github.io/winsafe/winsafe/#native-function-calls "Number of native Win32 functions available via safe FFI")
+[![License](https://img.shields.io/crates/l/winsafe.svg)](https://github.com/rodrigocfd/winsafe "Project license")
 
 Win32 GUI and related APIs in safe, idiomatic Rust.
 

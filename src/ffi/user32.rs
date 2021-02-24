@@ -11,6 +11,7 @@ extern "system" {
 	pub fn BeginPaint(hWnd: HANDLE, lpPaint: PVOID) -> HANDLE;
 	pub fn BringWindowToTop(hWnd: HANDLE) -> BOOL;
 	pub fn CheckMenuItem(hMenu: HANDLE, uIDCheckItem: u32, uCheck: u32) -> i32;
+	pub fn ChildWindowFromPoint(hWndParent: HANDLE, PointX: i32, PointY: i32) -> HANDLE;
 	pub fn ClientToScreen(hWnd: HANDLE, lpPoint: PVOID) -> BOOL;
 	pub fn CloseWindow(hWnd: HANDLE) -> BOOL;
 	pub fn CreateAcceleratorTableW(paccel: PVOID, cAccel: i32) -> HANDLE;
@@ -96,6 +97,7 @@ extern "system" {
 	pub fn PeekMessageW(lpMsg: PVOID, hWnd: HANDLE, wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: u32) -> BOOL;
 	pub fn PostMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> BOOL;
 	pub fn PostQuitMessage(nExitCode: i32);
+	pub fn RealChildWindowFromPoint(hwndParent: HANDLE, PointX: i32, PointY: i32) -> HANDLE;
 	pub fn RedrawWindow(hWnd: HANDLE, lprcUpdate: PCVOID, hrgnUpdate: HANDLE, flags: u32) -> BOOL;
 	pub fn RegisterClassExW(lpwcx: PCVOID) -> u16;
 	pub fn ReleaseDC(hWnd: HANDLE, hDC: HANDLE) -> i32;
@@ -130,4 +132,7 @@ extern "system" {
 	pub fn UpdateWindow(hWnd: HANDLE) -> BOOL;
 	pub fn ValidateRect(hWnd: HANDLE, lpRect: PCVOID) -> BOOL;
 	pub fn ValidateRgn(hWnd: HANDLE, hRgn: HANDLE) -> BOOL;
+	pub fn WaitMessage() -> BOOL;
+	pub fn WindowFromPhysicalPoint(PointX: i32, PointY: i32) -> HANDLE;
+	pub fn WindowFromPoint(PointX: i32, PointY: i32) -> HANDLE;
 }

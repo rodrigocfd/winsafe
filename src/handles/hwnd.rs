@@ -56,6 +56,14 @@ impl HWND {
 		}
 	}
 
+	/// [`ChildWindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-childwindowfrompoint)
+	/// method.
+	pub fn ChildWindowFromPoint(self, point: POINT) -> Option<HWND> {
+		ptr_as_opt(
+			unsafe { user32::ChildWindowFromPoint(self.ptr, point.x, point.y) },
+		).map(|ptr| Self { ptr })
+	}
+
 	/// [`ClientToScreen`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen)
 	/// method.
 	pub fn ClientToScreen(self, lpPoint: &mut POINT) -> WinResult<()> {
@@ -773,6 +781,22 @@ impl HWND {
 		}
 	}
 
+	/// [`RealChildWindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realchildwindowfrompoint)
+	/// method.
+	pub fn RealChildWindowFromPoint(self,
+		ptParentClientCoords: POINT) -> Option<HWND>
+	{
+		ptr_as_opt(
+			unsafe {
+				user32::RealChildWindowFromPoint(
+					self.ptr,
+					ptParentClientCoords.x,
+					ptParentClientCoords.y,
+				)
+			},
+		).map(|ptr| Self { ptr })
+	}
+
 	/// [`RedrawWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow)
 	/// method.
 	pub fn RedrawWindow(self,
@@ -1052,5 +1076,19 @@ impl HWND {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
+	}
+
+	/// [`WindowFromPhysicalPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromphysicalpoint)
+	/// static method.
+	pub fn WindowFromPhysicalPoint(point: POINT) -> Option<HWND> {
+		ptr_as_opt(unsafe { user32::WindowFromPhysicalPoint(point.x, point.y) })
+			.map(|ptr| Self { ptr })
+	}
+
+	/// [`WindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfrompoint)
+	/// static method.
+	pub fn WindowFromPoint(point: POINT) -> Option<HWND> {
+		ptr_as_opt(unsafe { user32::WindowFromPoint(point.x, point.y) })
+			.map(|ptr| Self { ptr })
 	}
 }

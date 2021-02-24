@@ -497,3 +497,12 @@ pub fn VerSetConditionMask(
 		kernel32::VerSetConditionMask(ConditionMask, TypeMask.0, Condition.0)
 	}
 }
+
+/// [`WaitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitmessage)
+/// function.
+pub fn WaitMessage() -> WinResult<()> {
+	match unsafe { user32::WaitMessage() } {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
+}
