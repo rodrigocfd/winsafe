@@ -18,9 +18,22 @@ const_type_no_debug_display! { ERROR, u32,
 	/// trait.
 	///
 	/// Implements the
-	/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) trait
-	/// showing the error code and then calling
-	/// [`FormatMessage`](crate::co::ERROR::FormatMessage).
+	/// [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
+	/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) traits
+	/// to show the error code along with the error description, taken from
+	/// [`FormatMessage`](crate::co::ERROR::FormatMessage). For example, the code
+	/// below:
+	///
+	/// ```rust,ignore
+	/// use winsafe::co::ERROR;
+	/// println!("{}", ERROR::OUT_OF_PAPER);
+	/// ```
+	///
+	/// Will print:
+	///
+	/// ```
+	/// [0x001c 28] The printer is out of paper.
+	/// ```
 }
 
 const_type_pub_values! { ERROR // ordinary codes
@@ -2764,7 +2777,7 @@ impl ERROR {
 				std::ptr::null(),
 				self.0,
 				co::LANG::NEUTRAL.MAKELANGID(co::SUBLANG::DEFAULT),
-				(&mut ptr_buf as *mut *mut u16) as *mut u16, // pass pointer to pointer
+				(&mut ptr_buf as *mut *mut u16) as *mut _, // pass pointer to pointer
 				0,
 				std::ptr::null_mut(),
 			) {
@@ -2773,8 +2786,9 @@ impl ERROR {
 					self, GetLastError(),
 				),
 				nchars => {
+					let final_str = WString::from_wchars_count(ptr_buf, nchars as usize).to_string();
 					match (HLOCAL { ptr: ptr_buf as *mut _ }).LocalFree() {
-						Ok(()) => WString::from_wchars_count(ptr_buf, nchars as usize).to_string(),
+						Ok(()) => final_str,
 						Err(err) => format!(
 							"LocalFree failed after formatting error {:#06x}: error {:#06x}.",
 							self, err),

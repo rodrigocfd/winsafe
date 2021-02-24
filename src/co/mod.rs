@@ -1,4 +1,7 @@
 //! Win32 constants and types of constants.
+//!
+//! All types implement bitflag operations, and can be converted to its
+//! underlying integer type.
 
 #[macro_use]
 mod macros;

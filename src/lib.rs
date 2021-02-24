@@ -78,6 +78,11 @@
 //! They're all *typed*, what means that different constant types cannot be
 //! mixed (unless you explicitly say so).
 //!
+//! Technically, each constant type is simply a
+//! [newtype](https://doc.rust-lang.org/rust-by-example/generics/new_types.html)
+//! with a couple implementations, including those allowing bitflag operations.
+//! Also, all constant values can be converted to its underlying
+//! [integer type](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types).
 //!
 //! The name of the constant type is often its prefix. For example, constants of
 //! [`MessageBox`](crate::HWND::MessageBox) function, like `MB_OKCANCEL`,
