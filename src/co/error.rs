@@ -26,6 +26,7 @@ const_type_no_debug_display! { ERROR, u32,
 	///
 	/// ```rust,ignore
 	/// use winsafe::co::ERROR;
+	///
 	/// println!("{}", ERROR::OUT_OF_PAPER);
 	/// ```
 	///

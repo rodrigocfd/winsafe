@@ -22,9 +22,9 @@ use crate::structs::{CLSID, GUID};
 /// use winsafe::{co::CLSCTX, CoCreateInstance, shell};
 ///
 /// let obj: shell::ITaskbarList = CoCreateInstance(
-///   &shell::clsid::TaskbarList,
-///   None,
-///   CLSCTX::INPROC_SERVER,
+///     &shell::clsid::TaskbarList,
+///     None,
+///     CLSCTX::INPROC_SERVER,
 /// ).unwrap();
 /// ```
 pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(

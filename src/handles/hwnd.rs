@@ -223,7 +223,7 @@ impl HWND {
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
 	/// for hchild in my_hwnd.EnumChildWindowsVec() {
-	///   println!("HWND: {}", hchild);
+	///     println!("HWND: {}", hchild);
 	/// }
 	/// ```
 	pub fn EnumChildWindowsVec(self) -> Vec<HWND> {
@@ -606,7 +606,7 @@ impl HWND {
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
 	/// my_hwnd.InvalidateRect(None, true)
-	///   .unwrap();
+	///     .unwrap();
 	/// ```
 	pub fn InvalidateRect(self,
 		lpRect: Option<&RECT>, bErase: bool) -> WinResult<()>
@@ -700,7 +700,7 @@ impl HWND {
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
 	/// my_hwnd.MessageBox("Hello, world", "title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
-	///   .unwrap();
+	///     .unwrap();
 	/// ```
 	///
 	/// Usually the message box has a valid parent window, however, if for some
@@ -709,8 +709,8 @@ impl HWND {
 	///
 	/// ```rust,ignore
 	/// HWND::GetDesktopWindow()
-	///   .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)
-	///   .unwrap();
+	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)
+	///     .unwrap();
 	/// ```
 	pub fn MessageBox(self, lpText: &str,
 		lpCaption: &str, uType: co::MB) -> WinResult<co::DLGID>
@@ -872,7 +872,7 @@ impl HWND {
 	/// lvi.iImage = 3;
 	///
 	/// my_hwnd.SendMessage(LvmSetItem {
-	///   lvitem: &lvi,
+	///     lvitem: &lvi,
 	/// });
 	/// ```
 	pub fn SendMessage<M: Message>(self, uMsg: M) -> M::RetType {

@@ -57,22 +57,22 @@ impl HKEY {
 	/// use winsafe::{HKEY, RegistryValue};
 	///
 	/// let val = HKEY::CURRENT_USER.RegGetValue(
-	///   "Control Panel\\Mouse",
-	///   "Beep",
+	///     "Control Panel\\Mouse",
+	///     "Beep",
 	/// ).unwrap();
 	///
 	/// match val {
-	///   RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///   RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///   RegistryValue::Sz(str) => println!("String: {}", str),
-	///   RegistryValue::Binary(bin) => {
-	///     println!("Binary:");
-	///     for b in bin.iter() {
-	///       print!("{:02x} ", b);
-	///     }
-	///     println!("");
-	///   },
-	///   RegistryValue::None => println!("No value"),
+	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///     RegistryValue::Sz(str) => println!("String: {}", str),
+	///     RegistryValue::Binary(bin) => {
+	///         println!("Binary:");
+	///         for b in bin.iter() {
+	///             print!("{:02x} ", b);
+	///         }
+	///         println!("");
+	///     },
+	///     RegistryValue::None => println!("No value"),
 	/// }
 	/// ```
 	pub fn RegGetValue(self,
@@ -203,9 +203,9 @@ impl HKEY {
 	/// use winsafe::HKEY;
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///   "Control Panel\\Mouse",
-	///   REG_OPTION::default(),
-	///   KEY::READ,
+	///     "Control Panel\\Mouse",
+	///     REG_OPTION::default(),
+	///     KEY::READ,
 	/// ).unwrap();
 	///
 	/// hkey.RegCloseKey().unwrap();
@@ -244,26 +244,26 @@ impl HKEY {
 	/// use winsafe::{HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///   "Control Panel\\Mouse",
-	///   REG_OPTION::default(),
-	///   KEY::READ,
+	///     "Control Panel\\Mouse",
+	///     REG_OPTION::default(),
+	///     KEY::READ,
 	/// ).unwrap();
 	///
 	/// let val = hkey.RegQueryValueEx("Beep")
 	///   .unwrap();
 	///
 	/// match val {
-	///   RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///   RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///   RegistryValue::Sz(str) => println!("String: {}", str),
-	///   RegistryValue::Binary(bin) => {
-	///     println!("Binary:");
-	///     for b in bin.iter() {
-	///       print!("{:02x} ", b);
-	///     }
-	///     println!("");
-	///   },
-	///   RegistryValue::None => println!("No value"),
+	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///     RegistryValue::Sz(str) => println!("String: {}", str),
+	///     RegistryValue::Binary(bin) => {
+	///         println!("Binary:");
+	///         for b in bin.iter() {
+	///             print!("{:02x} ", b);
+	///         }
+	///         println!("");
+	///     },
+	///     RegistryValue::None => println!("No value"),
 	/// }
 	///
 	/// hkey.RegCloseKey().unwrap();
@@ -387,9 +387,9 @@ impl HKEY {
 	/// use winsafe::{HKEY, RegistryValue};
 	///
 	/// HKEY::CURRENT_USER.RegSetKeyValue(
-	///   "Software\\My Company",
-	///   "Color",
-	///   RegistryValue::Sz("blue".to_owned()),
+	///     "Software\\My Company",
+	///     "Color",
+	///     RegistryValue::Sz("blue".to_owned()),
 	/// ).unwrap();
 	/// ```
 	pub fn RegSetKeyValue(self, lpSubKey: &str,
@@ -425,14 +425,14 @@ impl HKEY {
 	/// use winsafe::{HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///   "Console\\Git Bash",
-	///   REG_OPTION::default(),
-	///   KEY::ALL_ACCESS,
+	///     "Console\\Git Bash",
+	///     REG_OPTION::default(),
+	///     KEY::ALL_ACCESS,
 	/// ).unwrap();
 	///
 	/// hkey.RegSetValueEx(
-	///   "Color",
-	///   RegistryValue::Sz("blue".to_owned()),
+	///     "Color",
+	///     RegistryValue::Sz("blue".to_owned()),
 	/// ).unwrap();
 	///
 	/// hkey.RegCloseKey().unwrap();

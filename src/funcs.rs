@@ -70,7 +70,7 @@ pub fn GetDoubleClickTime() -> u32 {
 /// ```rust,ignore
 /// let env_vars = GetEnvironmentStrings().unwrap();
 /// for (k, v) in env_vars.iter() {
-///   println!("{} = {}", k, v);
+///     println!("{} = {}", k, v);
 /// }
 /// ```
 pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {

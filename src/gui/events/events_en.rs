@@ -64,11 +64,11 @@ impl EditEvents {
 		/// let txt: Edit; // initialize it somewhere...
 		///
 		/// txt.on().en_change({
-		///   let txt = txt.clone(); // pass into the closure
-		///   move || {
-		///     println!("Text: {}",
-		///       btn.hwnd().GetWindowTextStr().unwrap());
-		///   }
+		///     let txt = txt.clone(); // pass into the closure
+		///     move || {
+		///         println!("Text: {}",
+		///             btn.hwnd().GetWindowTextStr().unwrap());
+		///     }
 		/// });
 		/// ```
 	}

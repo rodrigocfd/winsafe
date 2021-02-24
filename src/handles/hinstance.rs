@@ -87,7 +87,7 @@ impl HINSTANCE {
 	/// ```rust,ignore
 	/// let mut wcx = WNDCLASSEX::default();
 	/// HINSTANCE::GetModuleHandle(None).unwrap()
-	///   .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
+	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
 	/// ```
 	pub fn GetClassInfoEx(self,
 		lpszClass: &str, lpwcx: &mut WNDCLASSEX) -> WinResult<ATOM>
@@ -149,8 +149,8 @@ impl HINSTANCE {
 	/// Loading a system cursor:
 	/// ```rust,ignore
 	/// let sys_cursor = HINSTANCE::default()
-	///   .LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))
-	///   .unwrap();
+	///     .LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))
+	///     .unwrap();
 	/// ```
 	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
 		match ptr_as_opt(
@@ -169,8 +169,8 @@ impl HINSTANCE {
 	/// Loading a system icon:
 	/// ```rust,ignore
 	/// let sys_icon = HINSTANCE::default()
-	///   .LoadIcon(IdIdiStr::Idi(co::IDI::INFORMATION))
-	///   .unwrap();
+	///     .LoadIcon(IdIdiStr::Idi(co::IDI::INFORMATION))
+	///     .unwrap();
 	/// ```
 	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
 		match ptr_as_opt(

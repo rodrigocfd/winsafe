@@ -47,11 +47,11 @@ impl RadioGroupEvents {
 	/// let radios: RadioGroup;
 	///
 	/// radios.on().bn_clicked({
-	///   let radios = radios.clone();
-	///   move || {
-	///     println!("Selected {}",
-	///       rads.checked().unwrap().hwnd().GetWindowTextStr().unwrap());
-	///   }
+	///     let radios = radios.clone();
+	///     move || {
+	///         println!("Selected {}",
+	///             rads.checked().unwrap().hwnd().GetWindowTextStr().unwrap());
+	///     }
 	/// });
 	/// ```
 	pub fn bn_clicked<F>(&self, func: F)

@@ -145,7 +145,7 @@ impl RadioGroup {
 	/// let radio_group: RadioGroup; // initialize it somewhere...
 	///
 	/// for single_radio in me.rads.iter() {
-	///   single_radio.hwnd().SetWindowText("One").unwrap();
+	///     single_radio.hwnd().SetWindowText("One").unwrap();
 	/// }
 	/// ```
 	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {

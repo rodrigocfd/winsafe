@@ -42,42 +42,38 @@ enum WndDlg {
 /// use winsafe::{gui, WinResult};
 ///
 /// fn main() {
-///   let my_main = MyMain::new();
-///   if let Err(e) = my_main.run() {
-///     eprintln!("{}", e);
-///   }
+///     let my_main = MyMain::new();
+///     if let Err(e) = my_main.wnd.run_main(None) {
+///         eprintln!("{}", e);
+///     }
 /// }
 ///
 /// pub struct MyMain {
-///   wnd: gui::CustomMain,
+///     wnd: gui::CustomMain,
 /// }
 ///
 /// impl MyMain {
-///   pub fn new() -> MyMain {
-///     let wnd = gui::CustomMain::new(
-///       gui::CustomMainOpts {
-///         title: "My window".to_owned(),
-///         ..Default::default()
-///       },
-///     );
+///     pub fn new() -> MyMain {
+///         let wnd = gui::CustomMain::new(
+///             gui::CustomMainOpts {
+///                 title: "My window".to_owned(),
+///                 ..Default::default()
+///             },
+///         );
 ///
-///     let new_self = Self { wnd };
-///     new_self.events();
-///     new_self
-///   }
+///         let new_self = Self { wnd };
+///         new_self.events();
+///         new_self
+///     }
 ///
-///   pub fn run(&self) -> WinResult<()> {
-///     self.wnd.run_main(None)
-///   }
+///     fn events(&self) {
+///         let wnd = self.wnd.clone(); // clone so it can be passed into the closure
 ///
-///   fn events(&self) {
-/// 	  let wnd = self.wnd.clone(); // clone so it can be passed into the closure
-///
-/// 	  self.wnd.on().wm_l_button_down(move |params| {
-/// 	    let txt = &format!("Coords {} x {}", params.coords.x, params.coords.y);
-/// 	    wnd.hwnd().SetWindowText(txt).unwrap();
-/// 	  });
-///   }
+///         self.wnd.on().wm_l_button_down(move |params| {
+///             let txt = &format!("Coords {} x {}", params.coords.x, params.coords.y);
+///             wnd.hwnd().SetWindowText(txt).unwrap();
+///         });
+///     }
 /// }
 /// ```
 ///
@@ -95,33 +91,29 @@ enum WndDlg {
 /// use winsafe::{gui, WinResult};
 ///
 /// fn main() {
-///   let my_dlg = MyDlg::new();
-///   if let Err(e) = my_dlg.run() {
-///     eprintln!("{}", e);
-///   }
+///     let my_main = MyDlg::new();
+///     if let Err(e) = my_main.dlg.run_main(None) {
+///         eprintln!("{}", e);
+///     }
 /// }
 ///
 /// pub struct MyDlg {
-///   dlg: gui::CustomMain,
+///     dlg: gui::CustomMain,
 /// }
 ///
 /// impl MyDlg {
-///   pub fn new() -> MyDlg {
-///     // 101 is the ID of the dialog resource in the .rc file
-///     let dlg = gui::CustomMain::new_dlg(101, None, None);
+///     pub fn new() -> MyDlg {
+///         // 101 is the ID of the dialog resource in the .rc file
+///         let dlg = gui::CustomMain::new_dlg(101, None, None);
 ///
-///     let new_self = Self { dlg };
-///     new_self.events();
-///     new_self
-///   }
+///         let new_self = Self { dlg };
+///         new_self.events();
+///         new_self
+///     }
 ///
-///   pub fn run(&self) -> WinResult<()> {
-///     self.dlg.run_main(None)
-///   }
+///     fn events(&self) {
 ///
-///   fn events(&self) {
-///
-///   }
+///     }
 /// }
 /// ```
 #[derive(Clone)]

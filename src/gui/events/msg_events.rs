@@ -218,11 +218,11 @@ impl MsgEvents {
 	/// let CUSTOM_MSG = WM::from(0x1234);
 	///
 	/// wnd.on().wm(CUSTOM_MSG, {
-	///   let wnd = wnd.clone(); // pass into the closure
-	///   move |parms| {
-	///     println!("HWND: {}, msg ID: {}", wnd.hwnd(), parms.msg_id);
-	///     0
-	///   }
+	///     let wnd = wnd.clone(); // pass into the closure
+	///     move |parms| {
+	///         println!("HWND: {}, msg ID: {}", wnd.hwnd(), parms.msg_id);
+	///         0
+	///     }
 	/// });
 	/// ```
 	pub fn wm<F>(&self, ident: co::WM, func: F)
@@ -279,10 +279,10 @@ impl MsgEvents {
 	/// let wnd: WindowMain; // initialize it somewhere...
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
-	///   let wnd = wnd.clone(); // pass into the closure
-	///   move || {
-	///     wnd.hwnd().PostMessage(WmClose {}).unwrap();
-	///   }
+	///     let wnd = wnd.clone(); // pass into the closure
+	///     move || {
+	///         wnd.hwnd().PostMessage(WmClose {}).unwrap();
+	///     }
 	/// });
 	/// ```
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
@@ -422,13 +422,15 @@ impl MsgEvents {
 	/// let wnd: WindowMain; // initialize it somewhere...
 	///
 	/// wnd.on().wm_create({
-	///   let wnd = wnd.clone(); // pass into the closure
-	///   move |parms| {
-	///     println!("HWND: {}, client area: {}x{}",
-	///       wnd.hwnd(),
-	///       parms.createstruct.cx, parms.createstruct.cy);
-	///     0
-	///   }
+	///     let wnd = wnd.clone(); // pass into the closure
+	///     move |parms| {
+	///         println!("HWND: {}, client area: {}x{}",
+	///             wnd.hwnd(),
+	///             parms.createstruct.cx,
+	///             parms.createstruct.cy,
+	///         );
+	///         0
+	///     }
 	/// });
 	/// ```
 	pub fn wm_create<F>(&self, func: F)
@@ -925,12 +927,14 @@ impl MsgEvents {
 		/// let wnd: WindowMain; // initialize it somewhere...
 		///
 		/// wnd.on().wm_size({
-		///   let wnd = wnd.clone(); // pass into the closure
-		///   move |parms| {
-		///     println!("HWND: {}, client area: {}x{}",
-		///       wnd.hwnd(),
-		///       parms.width, parms.height);
-		///   }
+		///     let wnd = wnd.clone(); // pass into the closure
+		///     move |parms| {
+		///         println!("HWND: {}, client area: {}x{}",
+		///             wnd.hwnd(),
+		///             parms.width,
+		///             parms.height,
+		///         );
+		///     }
 		/// });
 		/// ```
 	}

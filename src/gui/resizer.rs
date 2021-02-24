@@ -85,13 +85,13 @@ impl Resizer {
 	/// let txt_another: Edit;
 	///
 	/// resizer.add(
-	///   Resz::Repos, // horizontal
-	///   Resz::Repos, // vertical
-	///   &[&txt_name, &btn_click],
+	///     Resz::Repos, // horizontal
+	///     Resz::Repos, // vertical
+	///     &[&txt_name, &btn_click],
 	/// ).add(
-	///   Resz::Nothing,
-	///   Resz::Resize,
-	///   &[&txt_another],
+	///     Resz::Nothing,
+	///     Resz::Resize,
+	///     &[&txt_another],
 	/// );
 	/// ```
 	///

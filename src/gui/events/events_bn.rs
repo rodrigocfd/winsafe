@@ -60,10 +60,10 @@ impl ButtonEvents {
 		/// let btn: Button; // initialize it somewhere
 		///
 		/// btn.on().bn_clicked({
-		///   let btn = btn.clone(); // pass into the closure
-		///   move || {
-		///     println!("HWND: {}", btn.hwnd());
-		///   }
+		///     let btn = btn.clone(); // pass into the closure
+		///     move || {
+		///         println!("HWND: {}", btn.hwnd());
+		///     }
 		/// });
 		/// ```
 	}
