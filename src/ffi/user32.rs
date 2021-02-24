@@ -102,11 +102,15 @@ extern "system" {
 	pub fn RemoveMenu(hMenu: HANDLE, uPosition: u32, uFlags: u32) -> BOOL;
 	pub fn ScreenToClient(hWnd: HANDLE, lpPoint: PVOID) -> BOOL;
 	pub fn SendMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> isize;
+	pub fn SetCaretBlinkTime(uMSeconds: u32) -> BOOL;
+	pub fn SetCaretPos(X: i32, Y: i32) -> BOOL;
+	pub fn SetCursorPos(X: i32, Y: i32) -> BOOL;
 	pub fn SetFocus(hWnd: HANDLE) -> HANDLE;
 	pub fn SetMenuInfo(hMenu: HANDLE, mii: PCVOID) -> BOOL;
 	pub fn SetMenuItemInfoW(hmenu: HANDLE, item: u32, fByPosition: BOOL, lpmii: PCVOID) -> BOOL;
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
 	pub fn SetProcessDPIAware() -> BOOL;
+	pub fn SetSystemCursor(hcur: HANDLE, id: u32) -> BOOL;
 	pub fn SetWindowDisplayAffinity(hWnd: HANDLE, dwAffinity: u32) -> BOOL;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: PCVOID) -> BOOL;
@@ -114,6 +118,8 @@ extern "system" {
 	pub fn SetWindowRgn(hWnd: HANDLE, hRgn: HANDLE, bRedraw: BOOL) -> i32;
 	pub fn SetWindowsHookExW(idHook: i32, lpfn: PFUNC, hmod: HANDLE, dwThreadId: u32) -> HANDLE;
 	pub fn SetWindowTextW(hWnd: HANDLE, lpString: PCSTR) -> BOOL;
+	pub fn ShowCaret(hWnd: HANDLE) -> BOOL;
+	pub fn ShowCursor(bShow: BOOL) -> i32;
 	pub fn ShowWindow(hWnd: HANDLE, nCmdShow: i32) -> BOOL;
 	pub fn SystemParametersInfoW(uiAction: u32, uiParam: u32, pvParam: PVOID, fWinIni: u32) -> BOOL;
 	pub fn TrackMouseEvent(lpEventTrack: PVOID) -> BOOL;

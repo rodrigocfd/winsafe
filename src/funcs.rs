@@ -363,6 +363,33 @@ pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
 	}
 }
 
+/// [`SetCaretBlinkTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)
+/// function.
+pub fn SetCaretBlinkTime(uMSeconds: u32) -> WinResult<()> {
+	match unsafe { user32::SetCaretBlinkTime(uMSeconds) } {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
+}
+
+/// [`SetCaretPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretpos)
+/// function.
+pub fn SetCaretPos(x: i32, y: i32) -> WinResult<()> {
+	match unsafe { user32::SetCaretPos(x, y) } {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
+}
+
+/// [`SetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)
+/// function.
+pub fn SetCursorPos(x: i32, y: i32) -> WinResult<()> {
+	match unsafe { user32::SetCursorPos(x, y) } {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
+	}
+}
+
 /// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
 /// function.
 pub fn SetLastError(dwErrCode: co::ERROR) {
@@ -376,6 +403,12 @@ pub fn SetProcessDPIAware() -> WinResult<()> {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
+}
+
+/// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)
+/// function.
+pub fn ShowCursor(bShow: bool) -> i32 {
+	unsafe { user32::ShowCursor(bShow as i32) }
 }
 
 /// [`Sleep`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)

@@ -993,6 +993,15 @@ impl HWND {
 		}
 	}
 
+	/// [`ShowCaret`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcaret)
+	/// method.
+	pub fn ShowCaret(self) -> WinResult<()> {
+		match unsafe { user32::ShowCaret(self.ptr) } {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
 	/// [`ShowWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow)
 	/// method.
 	pub fn ShowWindow(self, nCmdShow: co::SW) -> bool {
