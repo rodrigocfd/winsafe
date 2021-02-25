@@ -15,11 +15,13 @@ use crate::structs::{RECT, SIZE};
 /// controls will be adjusted automatically when the parent window is resized.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Resz {
-	/// Nothing will be done.
+	/// Nothing will be done when parent window is resized.
 	Nothing,
-	/// Size is fixed, control will move anchored at right/bottom.
+	/// When parent window resizes, the control will move anchored at
+	/// right/bottom. Size of the control will remain fixed.
 	Repos,
-	/// Position is fixed, control will be resized.
+	/// When parent window resizes, the control will be resized. Position will
+	/// remain fixed.
 	Resize,
 }
 
@@ -137,6 +139,7 @@ impl Resizer {
 			.unwrap_or_else(|err| { PostQuitMessage(err); self })
 	}
 
+	/// Resizes all registered children according to the defined rules.
 	fn resize(&self, size_parm: &WmSize) -> WinResult<()> {
 		if self.0.ctrls.is_empty() || size_parm.request == co::SIZE_R::MINIMIZED {
 			return Ok(()); // if no controls, or if minimized, no need to process

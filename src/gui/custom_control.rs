@@ -14,6 +14,9 @@ enum WndDlg {
 //------------------------------------------------------------------------------
 
 /// Custom child control.
+///
+/// A `CustomControl` window can be programatically created or load a dialog
+/// resource from a `.rc` script.
 #[derive(Clone)]
 pub struct CustomControl(WndDlg);
 

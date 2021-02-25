@@ -14,6 +14,9 @@ enum WndDlg {
 //------------------------------------------------------------------------------
 
 /// Custom modal window.
+///
+/// A `CustomModal` window can be programatically created or load a dialog
+/// resource from a `.rc` script.
 #[derive(Clone)]
 pub struct CustomModal(WndDlg);
 

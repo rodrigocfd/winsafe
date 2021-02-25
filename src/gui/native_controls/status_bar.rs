@@ -16,7 +16,7 @@ use crate::WString;
 
 /// Native
 /// [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/status-bars)
-/// control.
+/// control, which has one or more parts.
 #[derive(Clone)]
 pub struct StatusBar(Arc<Immut<Obj>>);
 
@@ -150,7 +150,7 @@ impl StatusBar {
 
 	/// Retrieves the text or a part.
 	pub fn part_text(&self, part_index: u8) -> String {
-		let len = self.hwnd().SendMessage(msg::SbGetTextLength { part_index }).0;
+		let (len, _) = self.hwnd().SendMessage(msg::SbGetTextLength { part_index });
 		let mut buf = WString::new_alloc_buffer(len as usize + 1);
 
 		self.hwnd().SendMessage(msg::SbGetText {

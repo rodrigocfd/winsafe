@@ -16,7 +16,11 @@ enum WndDlg {
 
 //------------------------------------------------------------------------------
 
-/// Custom main application window.
+/// Custom main application window. Usually, this is the first window of your
+/// application, launched directly from the `main` function.
+///
+/// A `CustomMain` window can be programatically created or load a dialog
+/// resource from a `.rc` script.
 ///
 /// # Examples
 ///
