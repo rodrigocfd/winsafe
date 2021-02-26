@@ -15,6 +15,8 @@ use crate::WString;
 /// Native
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control.
+///
+/// Not to be confused with the simpler [list box](crate::gui::ListBox) control.
 #[derive(Clone)]
 pub struct ListView(Arc<Obj>);
 
