@@ -78,7 +78,7 @@ impl<'a> Message for CbDir<'a> {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
-			count => Ok(count as u32),
+			idx => Ok(idx as u32),
 		}
 	}
 
@@ -165,7 +165,7 @@ impl Message for CbGetCurSel {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => None,
-			count => Some(count as u32),
+			idx => Some(idx as u32),
 		}
 	}
 

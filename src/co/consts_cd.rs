@@ -332,7 +332,8 @@ const_type! { CS, u32,
 }
 
 const_type! { DDL, u16,
-	/// [`CB_DIR`](crate::msg::CbDir) attributes (`u16`).
+	/// [`CB_DIR`](crate::msg::CbDir) and [`LB_DIR`](crate::msg::LbDir)
+	/// attributes (`u16`).
 
 	READWRITE, 0x0000
 	READONLY, 0x0001

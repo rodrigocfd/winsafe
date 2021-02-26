@@ -1,5 +1,8 @@
 //! Parameters of
 //! [window messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
+//!
+//! Each message struct defines the parameters it receives and also its return
+//! type.
 
 #[macro_use]
 mod macros;
