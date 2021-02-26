@@ -348,6 +348,30 @@ impl NMDATETIMEWMKEYDOWN {
 	}
 }
 
+/// [`NMDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)
+/// struct.
+///
+/// You cannot directly instantiate this object.
+#[repr(C)]
+pub struct NMDAYSTATE {
+	pub nmhdr: NMHDR,
+	pub stStart: SYSTEMTIME,
+	cDayState: i32,
+	prgDayState: *mut u32,
+}
+
+impl NMDAYSTATE {
+	/// Returns the `prgDayState` field.
+	pub fn prgDayState(&mut self) -> &mut [u32] {
+		unsafe {
+			std::slice::from_raw_parts_mut(
+				self.prgDayState,
+				self.cDayState as usize,
+			)
+		}
+	}
+}
+
 /// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
 /// struct.
 #[repr(C)]
@@ -523,6 +547,15 @@ pub struct NMMOUSE {
 	pub dwHitInfo: isize,
 }
 
+/// [`NMSELCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmselchange)
+/// struct.
+#[repr(C)]
+pub struct NMSELCHANGE {
+	pub nmhdr: NMHDR,
+	pub stSelStart: SYSTEMTIME,
+	pub stSelEnd: SYSTEMTIME,
+}
+
 /// [`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 /// struct.
 ///
@@ -543,4 +576,13 @@ impl NMTVASYNCDRAW {
 	pub fn pimldp(&self) -> &IMAGELISTDRAWPARAMS {
 		unsafe { &*self.pimldp }
 	}
+}
+
+/// [`NMVIEWCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmviewchange)
+/// struct.
+#[repr(C)]
+pub struct NMVIEWCHANGE {
+	pub nmhdr: NMHDR,
+	pub dwOldView: co::MCMV,
+	pub dwNewView: co::MCMV,
 }

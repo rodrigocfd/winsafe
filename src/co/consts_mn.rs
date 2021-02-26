@@ -38,6 +38,29 @@ const_type! { MB, u32,
 	SERVICE_NOTIFICATION, 0x00200000
 }
 
+const_type! { MCMV, u32,
+	/// [`NMVIEWCHANGE`](crate::NMVIEWCHANGE) `dwOldView` and `dwNewView` (`u32`).
+
+	MONTH, 0
+	YEAR, 1
+	DECADE, 2
+	CENTURY, 3
+}
+
+const_type_nm! { MCN,
+	/// Month calendar control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+
+	SELECT, Self::FIRST.0
+	GETDAYSTATE, Self::FIRST.0 - 1
+	SELCHANGE, Self::FIRST.0 - 3
+	VIEWCHANGE, Self::FIRST.0 - 4
+}
+const_type_priv_values! { MCN
+	FIRST, -746
+}
+
 const_type! { MCSC, u8,
 	/// [`DTM_GETMCCOLOR`](crate::msg::DtmGetMcColor) color (`u8`).
 
