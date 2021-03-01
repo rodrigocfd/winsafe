@@ -1346,6 +1346,42 @@ impl<'a> MessageHandleable for StyleChanging<'a> {
 
 //------------------------------------------------------------------------------
 
+/// [`WM_SYSCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syscommand)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SysCommand {
+	pub request: co::SC,
+	pub position: POINT,
+}
+
+impl Message for SysCommand {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::SYSCOMMAND,
+			wparam: self.request.0 as usize,
+			lparam: point_to_lp(self.position),
+		}
+	}
+}
+
+impl MessageHandleable for SysCommand {
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			request: co::SC(p.wparam as u32),
+			position: lp_to_point(p),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 empty_msg_handleable! { ThemeChanged, co::WM::THEMECHANGED,
 	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 	/// message, which has no parameters.

@@ -7,7 +7,7 @@ use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
 use crate::msg::{Message, wm::Wm};
-use crate::structs::{LVCOLUMN, LVITEM, SIZE};
+use crate::structs::{COLORREF, LVCOLUMN, LVFINDINFO, LVITEM, SIZE};
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
@@ -167,6 +167,63 @@ impl Message for EnsureVisible {
 			msg_id: co::LVM::ENSUREVISIBLE.into(),
 			wparam: self.index as usize,
 			lparam: !self.entirely_visible as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_FINDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-finditem)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct FindItem<'a, 'b> {
+	pub index: Option<u32>,
+	pub lvfindinfo: &'b LVFINDINFO<'a>,
+}
+
+impl<'a, 'b> Message for FindItem<'a, 'b> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			i => Ok(i as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LVM::FINDITEM.into(),
+			wparam: match self.index {
+				None => -1,
+				Some(num) => num as isize,
+			} as usize,
+			lparam: self.lvfindinfo as *const _ as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LVM_GETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getbkcolor)
+/// message, which has no parameters.
+///
+/// Return type: `COLORREF`.
+pub struct GetBkColor {}
+
+impl Message for GetBkColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as u32)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LVM::GETBKCOLOR.into(),
+			wparam: 0,
+			lparam: 0,
 		}
 	}
 }

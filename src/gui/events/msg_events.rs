@@ -962,6 +962,15 @@ impl MsgEvents {
 		/// to change one or more of the window's styles.
 	}
 
+	wm_ret_none! { wm_sys_command, co::WM::SYSCOMMAND, wm::SysCommand,
+		/// [`WM_SYSCOMMAND`](crate::msg::wm::SysCommand) message.
+		///
+		/// A window receives this message when the user chooses a command from
+		/// the Window menu (formerly known as the system or control menu) or when
+		/// the user chooses the maximize button, minimize button, restore button,
+		/// or close button.
+	}
+
 	wm_ret_none! { wm_theme_changed, co::WM::THEMECHANGED, wm::ThemeChanged,
 		/// [`WM_THEMECHANGED`](crate::msg::wm::ThemeChanged) message.
 		///
