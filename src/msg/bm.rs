@@ -1,8 +1,12 @@
+//! Button control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages),
+//! whose constants have `BM` and `BCM` prefixes.
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BitmapIcon;
 use crate::handles::{HBITMAP, HICON};
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 use crate::structs::{BUTTON_IMAGELIST, BUTTON_SPLITINFO, RECT, SIZE};
 use crate::WString;
 
@@ -10,11 +14,11 @@ use crate::WString;
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmGetIdealSize<'a> {
+pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-impl<'a> Message for BcmGetIdealSize<'a> {
+impl<'a> Message for GetIdealSize<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -39,11 +43,11 @@ impl<'a> Message for BcmGetIdealSize<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmGetImageList<'a> {
+pub struct GetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
 
-impl<'a> Message for BcmGetImageList<'a> {
+impl<'a> Message for GetImageList<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -68,11 +72,11 @@ impl<'a> Message for BcmGetImageList<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmGetNote<'a> {
+pub struct GetNote<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for BcmGetNote<'a> {
+impl<'a> Message for GetNote<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -97,9 +101,9 @@ impl<'a> Message for BcmGetNote<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct BcmGetNoteLength {}
+pub struct GetNoteLength {}
 
-impl Message for BcmGetNoteLength {
+impl Message for GetNoteLength {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -121,11 +125,11 @@ impl Message for BcmGetNoteLength {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmGetSplitInfo<'a> {
+pub struct GetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
 
-impl<'a> Message for BcmGetSplitInfo<'a> {
+impl<'a> Message for GetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -150,11 +154,11 @@ impl<'a> Message for BcmGetSplitInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmGetTextMargin<'a> {
+pub struct GetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
 
-impl<'a> Message for BcmGetTextMargin<'a> {
+impl<'a> Message for GetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -179,11 +183,11 @@ impl<'a> Message for BcmGetTextMargin<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmSetDropDownState {
+pub struct SetDropDownState {
 	pub is_pushed: bool,
 }
 
-impl Message for BcmSetDropDownState {
+impl Message for SetDropDownState {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -208,11 +212,11 @@ impl Message for BcmSetDropDownState {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmSetImageList<'a> {
+pub struct SetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
 
-impl<'a> Message for BcmSetImageList<'a> {
+impl<'a> Message for SetImageList<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -237,11 +241,11 @@ impl<'a> Message for BcmSetImageList<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmSetNote<'a> {
+pub struct SetNote<'a> {
 	pub text: &'a WString,
 }
 
-impl<'a> Message for BcmSetNote<'a> {
+impl<'a> Message for SetNote<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -266,11 +270,11 @@ impl<'a> Message for BcmSetNote<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmSetShield {
+pub struct SetShield {
 	pub has_elevated_icon: bool,
 }
 
-impl Message for BcmSetShield {
+impl Message for SetShield {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -295,11 +299,11 @@ impl Message for BcmSetShield {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmSetSplitInfo<'a> {
+pub struct SetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
 
-impl<'a> Message for BcmSetSplitInfo<'a> {
+impl<'a> Message for SetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -324,11 +328,11 @@ impl<'a> Message for BcmSetSplitInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct BcmSetTextMargin<'a> {
+pub struct SetTextMargin<'a> {
 	pub margins: &'a RECT,
 }
 
-impl<'a> Message for BcmSetTextMargin<'a> {
+impl<'a> Message for SetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -349,7 +353,7 @@ impl<'a> Message for BcmSetTextMargin<'a> {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { BmClick, co::BM::CLICK.into(),
+empty_msg! { Click, co::BM::CLICK.into(),
 	/// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
 	/// message, which has no parameters.
 	///
@@ -362,9 +366,9 @@ empty_msg! { BmClick, co::BM::CLICK.into(),
 /// message parameters.
 ///
 /// Return type: `BST`.
-pub struct BmGetCheck {}
+pub struct GetCheck {}
 
-impl Message for BmGetCheck {
+impl Message for GetCheck {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -386,11 +390,11 @@ impl Message for BmGetCheck {
 /// message parameters.
 ///
 /// Return type: `WinResult<BitmapIcon>`.
-pub struct BmGetImage {
+pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
 
-impl Message for BmGetImage {
+impl Message for GetImage {
 	type RetType = WinResult<BitmapIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -416,9 +420,9 @@ impl Message for BmGetImage {
 /// message, which has no parameters.
 ///
 /// Return type: `BST`.
-pub struct BmGetState {}
+pub struct GetState {}
 
-impl Message for BmGetState {
+impl Message for GetState {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -440,11 +444,11 @@ impl Message for BmGetState {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct BmSetCheck {
+pub struct SetCheck {
 	pub state: co::BST,
 }
 
-impl Message for BmSetCheck {
+impl Message for SetCheck {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -466,11 +470,11 @@ impl Message for BmSetCheck {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct BmSetDontClick {
+pub struct SetDontClick {
 	pub dont_click: bool,
 }
 
-impl Message for BmSetDontClick {
+impl Message for SetDontClick {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -492,11 +496,11 @@ impl Message for BmSetDontClick {
 /// message parameters.
 ///
 /// Return type: `WinResult<BitmapIcon>`.
-pub struct BmSetImage {
+pub struct SetImage {
 	pub image: BitmapIcon,
 }
 
-impl Message for BmSetImage {
+impl Message for SetImage {
 	type RetType = WinResult<BitmapIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -524,11 +528,11 @@ impl Message for BmSetImage {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct BmSetState {
+pub struct SetState {
 	pub highlight: bool,
 }
 
-impl Message for BmSetState {
+impl Message for SetState {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -550,12 +554,12 @@ impl Message for BmSetState {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct BmSetStyle {
+pub struct SetStyle {
 	pub style: co::BS,
 	pub redraw: bool,
 }
 
-impl Message for BmSetStyle {
+impl Message for SetStyle {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

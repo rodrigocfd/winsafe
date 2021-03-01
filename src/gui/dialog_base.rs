@@ -7,7 +7,7 @@ use crate::gui::events::{MsgEvents, ProcessResult};
 use crate::gui::privs::ui_font;
 use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
-use crate::msg::{MessageHandleable, Wm, WmInitDialog, WmSetFont};
+use crate::msg::{MessageHandleable, wm};
 
 /// Base to all dialog windows.
 pub struct DialogBase {
@@ -83,11 +83,11 @@ impl DialogBase {
 	{
 		|hwnd: HWND, msg, wparam, lparam| -> WinResult<isize>
 		{
-			let wm_any = Wm { msg_id: msg, wparam, lparam };
+			let wm_any = wm::Wm { msg_id: msg, wparam, lparam };
 
 			let ptr_self = match msg {
 				co::WM::INITDIALOG => { // first message being handled
-					let wm_idlg = WmInitDialog::from_generic_wm(wm_any);
+					let wm_idlg = wm::InitDialog::from_generic_wm(wm_any);
 					let ptr_self = wm_idlg.additional_data as *mut Self;
 					hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
 					let ref_self = unsafe { &mut *ptr_self };
@@ -131,12 +131,12 @@ impl DialogBase {
 	}
 
 	fn set_ui_font_on_children(&self) {
-		self.hwnd_ref().SendMessage(WmSetFont { hfont: ui_font(), redraw: false });
+		self.hwnd_ref().SendMessage(wm::SetFont { hfont: ui_font(), redraw: false });
 		self.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
 	}
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
 		let hfont = HFONT { ptr: lparam as *mut _ };
-		hchild.SendMessage(WmSetFont { hfont, redraw: false });
+		hchild.SendMessage(wm::SetFont { hfont, redraw: false });
 		true as i32
 	}
 }

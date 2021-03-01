@@ -1,17 +1,21 @@
+//! Status bar control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages),
+//! whose constants have `SB` prefix.
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::HICON;
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 use crate::WString;
 
 /// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
 /// message parameters.
-pub struct SbGetIcon {
+pub struct GetIcon {
 	pub part_index: u8,
 }
 
-impl Message for SbGetIcon {
+impl Message for GetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -36,11 +40,11 @@ impl Message for SbGetIcon {
 /// message parameters.
 ///
 /// Return type: `u8`.
-pub struct SbGetParts<'a> {
+pub struct GetParts<'a> {
 	pub right_edges: Option<&'a mut [i32]>,
 }
 
-impl<'a> Message for SbGetParts<'a> {
+impl<'a> Message for GetParts<'a> {
 	type RetType = u8;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -68,12 +72,12 @@ impl<'a> Message for SbGetParts<'a> {
 /// message parameters.
 ///
 /// Return type: `(u16, SBT)`.
-pub struct SbGetText<'a> {
+pub struct GetText<'a> {
 	pub part_index: u8,
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for SbGetText<'a> {
+impl<'a> Message for GetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -95,11 +99,11 @@ impl<'a> Message for SbGetText<'a> {
 /// message parameters.
 ///
 /// Return type: `(u16, SBT)`.
-pub struct SbGetTextLength {
+pub struct GetTextLength {
 	pub part_index: u8,
 }
 
-impl Message for SbGetTextLength {
+impl Message for GetTextLength {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -121,12 +125,12 @@ impl Message for SbGetTextLength {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SbGetTipText<'a> {
+pub struct GetTipText<'a> {
 	pub part_index: u8,
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for SbGetTipText<'a> {
+impl<'a> Message for GetTipText<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -146,12 +150,12 @@ impl<'a> Message for SbGetTipText<'a> {
 
 /// [`SB_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-seticon)
 // message parameters.
-pub struct SbSetIcon {
+pub struct SetIcon {
 	pub part_index: u8,
 	pub hicon: Option<HICON>,
 }
 
-impl Message for SbSetIcon {
+impl Message for SetIcon {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -179,11 +183,11 @@ impl Message for SbSetIcon {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct SbSetParts<'a> {
+pub struct SetParts<'a> {
 	pub right_edges: &'a [i32],
 }
 
-impl<'a> Message for SbSetParts<'a> {
+impl<'a> Message for SetParts<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -208,13 +212,13 @@ impl<'a> Message for SbSetParts<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct SbSetText<'a> {
+pub struct SetText<'a> {
 	pub part_index: u8,
 	pub drawing_operation: co::SBT,
 	pub text: &'a str,
 }
 
-impl<'a> Message for SbSetText<'a> {
+impl<'a> Message for SetText<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -237,12 +241,12 @@ impl<'a> Message for SbSetText<'a> {
 
 /// [`SB_SETTIPTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-settiptext)
 /// message parameters.
-pub struct SbSetTipText<'a> {
+pub struct SetTipText<'a> {
 	pub part_index: u8,
 	pub text: &'a str,
 }
 
-impl<'a> Message for SbSetTipText<'a> {
+impl<'a> Message for SetTipText<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -262,11 +266,11 @@ impl<'a> Message for SbSetTipText<'a> {
 
 /// [`SB_SIMPLE`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-simple)
 /// message parameters.
-pub struct SbSimple {
+pub struct Simple {
 	pub display_simple: bool,
 }
 
-impl Message for SbSimple {
+impl Message for Simple {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

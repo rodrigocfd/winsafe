@@ -8,7 +8,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg;
+use crate::msg::{cb, wm};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
@@ -92,7 +92,7 @@ impl ComboBox {
 						opts.window_style | opts.combo_box_style.into(),
 					)?;
 
-					our_hwnd.SendMessage(msg::WmSetFont{ hfont: ui_font(), redraw: true });
+					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -115,32 +115,32 @@ impl ComboBox {
 	/// ```
 	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
 		for text in items.iter() {
-			self.hwnd().SendMessage(msg::CbAddString { text })?;
+			self.hwnd().SendMessage(cb::AddString { text })?;
 		}
 		Ok(())
 	}
 
 	/// Deletes all items.
 	pub fn delete_all_items(&self) {
-		self.hwnd().SendMessage(msg::CbResetContent {})
+		self.hwnd().SendMessage(cb::ResetContent {})
 	}
 
 	/// Deletes the item at the given index.
 	pub fn delete_item(&self, index: u32) -> WinResult<()> {
-		self.hwnd().SendMessage(msg::CbDeleteString { index })
+		self.hwnd().SendMessage(cb::DeleteString { index })
 			.map(|_| ())
 	}
 
 	/// Retrieves the text at the given position, if any.
 	pub fn item(&self, index: u32) -> Option<String> {
-		match self.hwnd().SendMessage(msg::CbGetLbTextLen { index }) {
+		match self.hwnd().SendMessage(cb::GetLbTextLen { index }) {
 			Err(err) => {
 				PostQuitMessage(err);
 				None
 			},
 			Ok(len) => {
 				let mut buf = WString::new_alloc_buffer(len as usize + 1);
-				match self.hwnd().SendMessage(msg::CbGetLbText{
+				match self.hwnd().SendMessage(cb::GetLbText{
 					index,
 					text: &mut buf,
 				}) {
@@ -153,12 +153,12 @@ impl ComboBox {
 
 	/// Retrieves the total number of items.
 	pub fn item_count(&self) -> WinResult<u32> {
-		self.hwnd().SendMessage(msg::CbGetCount {})
+		self.hwnd().SendMessage(cb::GetCount {})
 	}
 
 	/// Retrieves the index of the currently selected item, if any.
 	pub fn selected_index(&self) -> Option<u32> {
-		self.hwnd().SendMessage(msg::CbGetCurSel {})
+		self.hwnd().SendMessage(cb::GetCurSel {})
 	}
 
 	/// Retrieves the currently selected text, if any.
@@ -169,7 +169,7 @@ impl ComboBox {
 
 	/// Sets the currently selected text, or clears it.
 	pub fn set_selected_item(&self, index: Option<u32>) {
-		self.hwnd().SendMessage(msg::CbSetCurSel { index });
+		self.hwnd().SendMessage(cb::SetCurSel { index });
 	}
 }
 

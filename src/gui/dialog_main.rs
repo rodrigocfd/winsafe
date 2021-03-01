@@ -9,7 +9,7 @@ use crate::gui::dialog_base::DialogBase;
 use crate::gui::events::MsgEvents;
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::WmSetIcon;
+use crate::msg::wm;
 
 #[derive(Clone)]
 pub struct DialogMain(Arc<Obj>);
@@ -86,14 +86,14 @@ impl DialogMain {
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {
 			self.hwnd_ref().SendMessage(
-				WmSetIcon {
+				wm::SetIcon {
 					hicon: hinst.LoadImageIcon(IdStr::Id(id), 16, 16, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::SMALL,
 				},
 			);
 
 			self.hwnd_ref().SendMessage(
-				WmSetIcon {
+				wm::SetIcon {
 					hicon: hinst.LoadImageIcon(IdStr::Id(id), 32, 32, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::BIG,
 				},

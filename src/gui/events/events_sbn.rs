@@ -68,6 +68,6 @@ impl StatusBarEvents {
 		/// notification.
 		///
 		/// Sent by a status bar control when the simple mode changes due to a
-		/// [`SB_SIMPLE`](crate::msg::SbSimple) message.
+		/// [`SB_SIMPLE`](crate::msg::sb::Simple) message.
 	}
 }

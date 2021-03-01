@@ -27,7 +27,7 @@ const_type! { EMF, u32,
 }
 
 const_type! { ENDSESSION, u32,
-	/// [`WM_ENDSESSION`](crate::msg::WmEndSession) event (`u32`).
+	/// [`WM_ENDSESSION`](crate::msg::wm::EndSession) event (`u32`).
 
 	RESTARTORSHUTDOWN, 0
 	CLOSEAPP, 0x00000001
@@ -57,7 +57,7 @@ const_type_ws! { ES,
 }
 
 const_type! { FAPPCOMMAND, u16,
-	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) input event (`u16`).
+	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) input event (`u16`).
 
 	MOUSE, 0x8000
 	KEY, 0

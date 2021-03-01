@@ -1,18 +1,23 @@
+//! List box control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages),
+//! whose constants have `LB` prefix.
+
 use crate::aliases::WinResult;
 use crate::co;
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 use crate::privs::{LB_ERR, LB_ERRSPACE};
+use crate::structs::RECT;
 use crate::WString;
 
 /// [`LB_ADDFILE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-addfile)
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LbAddFile<'a> {
+pub struct AddFile<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for LbAddFile<'a> {
+impl<'a> Message for AddFile<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -37,11 +42,11 @@ impl<'a> Message for LbAddFile<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LbAddString<'a> {
+pub struct AddString<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for LbAddString<'a> {
+impl<'a> Message for AddString<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -66,11 +71,11 @@ impl<'a> Message for LbAddString<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LbDeleteString {
+pub struct DeleteString {
 	pub index: u32,
 }
 
-impl Message for LbDeleteString {
+impl Message for DeleteString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -95,12 +100,12 @@ impl Message for LbDeleteString {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LbDir<'a> {
+pub struct Dir<'a> {
 	pub attributes: co::DDL,
 	pub path: &'a str,
 }
 
-impl<'a> Message for LbDir<'a> {
+impl<'a> Message for Dir<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -126,12 +131,12 @@ impl<'a> Message for LbDir<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct LbFindString<'a> {
+pub struct FindString<'a> {
 	pub preceding_index: Option<u32>,
 	pub text: &'a str,
 }
 
-impl<'a> Message for LbFindString<'a> {
+impl<'a> Message for FindString<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -159,12 +164,12 @@ impl<'a> Message for LbFindString<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct LbFindStringExact<'a> {
+pub struct FindStringExact<'a> {
 	pub preceding_index: Option<u32>,
 	pub text: &'a str,
 }
 
-impl<'a> Message for LbFindStringExact<'a> {
+impl<'a> Message for FindStringExact<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -192,9 +197,9 @@ impl<'a> Message for LbFindStringExact<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct LbGetAnchorIndex {}
+pub struct GetAnchorIndex {}
 
-impl Message for LbGetAnchorIndex {
+impl Message for GetAnchorIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -216,9 +221,9 @@ impl Message for LbGetAnchorIndex {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct LbGetCaretIndex {}
+pub struct GetCaretIndex {}
 
-impl Message for LbGetCaretIndex {
+impl Message for GetCaretIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -240,9 +245,9 @@ impl Message for LbGetCaretIndex {
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LbGetCount {}
+pub struct GetCount {}
 
-impl Message for LbGetCount {
+impl Message for GetCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -267,9 +272,9 @@ impl Message for LbGetCount {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct LbGetCurSel {}
+pub struct GetCurSel {}
 
-impl Message for LbGetCurSel {
+impl Message for GetCurSel {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -294,9 +299,9 @@ impl Message for LbGetCurSel {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct LbGetHorizontalExtent {}
+pub struct GetHorizontalExtent {}
 
-impl Message for LbGetHorizontalExtent {
+impl Message for GetHorizontalExtent {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -318,11 +323,11 @@ impl Message for LbGetHorizontalExtent {
 /// message parameters.
 ///
 /// Return type: `WinResult<isize>`.
-pub struct LbGetItemData {
+pub struct GetItemData {
 	pub index: u32,
 }
 
-impl Message for LbGetItemData {
+impl Message for GetItemData {
 	type RetType = WinResult<isize>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -348,11 +353,11 @@ impl Message for LbGetItemData {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LbGetItemHeight {
+pub struct GetItemHeight {
 	pub index: Option<u32>,
 }
 
-impl Message for LbGetItemHeight {
+impl Message for GetItemHeight {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -366,6 +371,116 @@ impl Message for LbGetItemHeight {
 		Wm {
 			msg_id: co::LB::GETITEMHEIGHT.into(),
 			wparam: self.index.unwrap_or(0) as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemrect)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetItemRect<'a> {
+	pub index: u32,
+	pub rect: &'a mut RECT,
+}
+
+impl<'a> Message for GetItemRect<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETITEMRECT.into(),
+			wparam: self.index as usize,
+			lparam: self.rect as *const _ as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETLISTBOXINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getlistboxinfo)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetListBoxInfo {}
+
+impl Message for GetListBoxInfo {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as u32
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETLISTBOXINFO.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getsel)
+/// message parameters.
+///
+/// Return type: `WinResult<bool>`.
+pub struct GetSel {
+	pub index: u32,
+}
+
+impl Message for GetSel {
+	type RetType = WinResult<bool>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			status => Ok(status != 0),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETSEL.into(),
+			wparam: self.index as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETSELCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getselcount)
+/// message, which has no parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetSelCount {}
+
+impl Message for GetSelCount {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			count => Ok(count as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETSELCOUNT.into(),
+			wparam: 0,
 			lparam: 0,
 		}
 	}

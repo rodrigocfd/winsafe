@@ -8,7 +8,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{BmClick, WmSetFont};
+use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -91,7 +91,7 @@ impl Button {
 						opts.window_style | opts.button_style.into(),
 					)?;
 
-					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -104,7 +104,7 @@ impl Button {
 	/// Fires the click event for the radio button. The event is asynchronous,
 	/// the method returns immediately.
 	pub fn trigger_click(&self) -> WinResult<()> {
-		self.hwnd().PostMessage(BmClick {})
+		self.hwnd().PostMessage(bm::Click {})
 	}
 }
 

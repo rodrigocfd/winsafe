@@ -11,9 +11,9 @@ const_type_ws! { SBARS,
 }
 
 const_type! { SBT, u16,
-	/// [`SB_GETTEXT`](crate::msg::SbGetText),
-	/// [`SB_GETTEXTLENGTH`](crate::msg::SbGetTextLength) and
-	/// [`SB_SETTEXT`](crate::msg::SbSetText) drawing operation (`u16`).
+	/// [`SB_GETTEXT`](crate::msg::sb::GetText),
+	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
+	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
 
 	NONE, 0
 	OWNERDRAW, 0x1000
@@ -59,7 +59,7 @@ const_type_priv_values! { SBN
 }
 
 const_type! { SC, u32,
-	/// [`WM_SYSCOMMAND`](crate::msg::WmSysCommand) type of system command
+	/// [`WM_SYSCOMMAND`](crate::msg::wm::SysCommand) type of system command
 	/// requested (`u32`).
 
 	CLOSE, 0xf060
@@ -84,7 +84,7 @@ const_type! { SC, u32,
 }
 
 const_type! { SIZE_R, u8,
-	/// [`WM_SIZE`](crate::msg::WmSize) request (`u8`).
+	/// [`WM_SIZE`](crate::msg::wm::Size) request (`u8`).
 
 	RESTORED, 0
 	MINIMIZED, 1
@@ -741,7 +741,7 @@ const_type! { SW, i32,
 }
 
 const_type! { SW_S, u8,
-	/// [`WM_SHOWWINDOW`](crate::msg::WmShowWindow) status (`u8`). Originally
+	/// [`WM_SHOWWINDOW`](crate::msg::wm::ShowWindow) status (`u8`). Originally
 	/// has `SW` prefix.
 
 	PARENTCLOSING, 1

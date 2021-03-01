@@ -250,7 +250,7 @@ const_type! { CLSCTX, u32,
 }
 
 const_type! { CMD, u16,
-	/// [`WM_COMMAND`](crate::msg::WmCommand) notification codes (`u16`).
+	/// [`WM_COMMAND`](crate::msg::wm::Command) notification codes (`u16`).
 	///
 	/// Control-specific notification codes have their own types, which are
 	/// convertible to `CMD`.
@@ -332,7 +332,7 @@ const_type! { CS, u32,
 }
 
 const_type! { DDL, u16,
-	/// [`CB_DIR`](crate::msg::CbDir) and [`LB_DIR`](crate::msg::LbDir)
+	/// [`CB_DIR`](crate::msg::cb::Dir) and [`LB_DIR`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
 
 	READWRITE, 0x0000

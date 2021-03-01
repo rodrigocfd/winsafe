@@ -1,6 +1,10 @@
+//! Combo box control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages),
+//! whose constants have `CB` prefix.
+
 use crate::aliases::WinResult;
 use crate::co;
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 use crate::privs::{CB_ERR, CB_ERRSPACE};
 use crate::WString;
 
@@ -8,11 +12,11 @@ use crate::WString;
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbAddString<'a> {
+pub struct AddString<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for CbAddString<'a> {
+impl<'a> Message for AddString<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -37,11 +41,11 @@ impl<'a> Message for CbAddString<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbDeleteString {
+pub struct DeleteString {
 	pub index: u32,
 }
 
-impl Message for CbDeleteString {
+impl Message for DeleteString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -66,12 +70,12 @@ impl Message for CbDeleteString {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbDir<'a> {
+pub struct Dir<'a> {
 	pub attributes: co::DDL,
 	pub path: &'a str,
 }
 
-impl<'a> Message for CbDir<'a> {
+impl<'a> Message for Dir<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -97,12 +101,12 @@ impl<'a> Message for CbDir<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct CbFindString<'a> {
+pub struct FindString<'a> {
 	pub preceding_index: Option<u32>,
 	pub text: &'a str,
 }
 
-impl<'a> Message for CbFindString<'a> {
+impl<'a> Message for FindString<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -130,9 +134,9 @@ impl<'a> Message for CbFindString<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbGetCount {}
+pub struct GetCount {}
 
-impl Message for CbGetCount {
+impl Message for GetCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -157,9 +161,9 @@ impl Message for CbGetCount {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct CbGetCurSel {}
+pub struct GetCurSel {}
 
-impl Message for CbGetCurSel {
+impl Message for GetCurSel {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -184,12 +188,12 @@ impl Message for CbGetCurSel {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbGetLbText<'a> {
+pub struct GetLbText<'a> {
 	pub index: u32,
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for CbGetLbText<'a> {
+impl<'a> Message for GetLbText<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -214,11 +218,11 @@ impl<'a> Message for CbGetLbText<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbGetLbTextLen {
+pub struct GetLbTextLen {
 	pub index: u32,
 }
 
-impl Message for CbGetLbTextLen {
+impl Message for GetLbTextLen {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -243,9 +247,9 @@ impl Message for CbGetLbTextLen {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct CbGetMinVisible {}
+pub struct GetMinVisible {}
 
-impl Message for CbGetMinVisible {
+impl Message for GetMinVisible {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -267,9 +271,9 @@ impl Message for CbGetMinVisible {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbGetTopIndex {}
+pub struct GetTopIndex {}
 
-impl Message for CbGetTopIndex {
+impl Message for GetTopIndex {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -294,12 +298,12 @@ impl Message for CbGetTopIndex {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct CbInitStorage {
+pub struct InitStorage {
 	pub num_items: u32,
 	pub memory_bytes: u32,
 }
 
-impl Message for CbInitStorage {
+impl Message for InitStorage {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -320,7 +324,7 @@ impl Message for CbInitStorage {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { CbResetContent, co::CB::RESETCONTENT.into(),
+empty_msg! { ResetContent, co::CB::RESETCONTENT.into(),
 	/// [`CB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
 	/// message, which has no parameters.
 	///
@@ -333,11 +337,11 @@ empty_msg! { CbResetContent, co::CB::RESETCONTENT.into(),
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct CbSetCurSel {
+pub struct SetCurSel {
 	pub index: Option<u32>,
 }
 
-impl Message for CbSetCurSel {
+impl Message for SetCurSel {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -362,11 +366,11 @@ impl Message for CbSetCurSel {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct CbSetMinVisible {
+pub struct SetMinVisible {
 	pub num_items: u32,
 }
 
-impl Message for CbSetMinVisible {
+impl Message for SetMinVisible {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -391,11 +395,11 @@ impl Message for CbSetMinVisible {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct CbSetTopIndex {
+pub struct SetTopIndex {
 	pub index: u32,
 }
 
-impl Message for CbSetTopIndex {
+impl Message for SetTopIndex {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -420,11 +424,11 @@ impl Message for CbSetTopIndex {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct CbShowDropDown {
+pub struct ShowDropDown {
 	pub show: bool,
 }
 
-impl Message for CbShowDropDown {
+impl Message for ShowDropDown {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

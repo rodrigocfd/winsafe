@@ -79,7 +79,7 @@ const_type! { GDT, u32,
 }
 
 const_type! { GDTR, u32,
-	/// [`DTM_GETRANGE`](crate::msg::DtmGetRange) return value (`u32`).
+	/// [`DTM_GETRANGE`](crate::msg::dtm::GetRange) return value (`u32`).
 
 	MIN, 0x0001
 	MAX, 0x0002
@@ -99,8 +99,8 @@ const_type! { GW, u32,
 }
 
 const_type! { GWL_C, i8,
-	/// [`WM_STYLECHANGED`](crate::msg::WmStyleChanged) and
-	/// [`WM_STYLECHANGING`](crate::msg::WmStyleChanging) change (`i8`).
+	/// [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) and
+	/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) change (`i8`).
 	/// Originally has `GWL` prefix.
 
 	EXSTYLE, -20
@@ -231,7 +231,7 @@ const_type! { HWND_PLACE, isize,
 }
 
 const_type! { ICON_SZ, u8,
-	/// [`WM_SETICON`](crate::msg::WmSetIcon) icon size (`u8`). Originally has
+	/// [`WM_SETICON`](crate::msg::wm::SetIcon) icon size (`u8`). Originally has
 	/// `ICON` prefix.
 
 	SMALL, 0
@@ -324,8 +324,8 @@ const_type! { ILS, u32,
 }
 
 const_type! { IMAGE_TYPE, u8,
-	/// [`BM_GETIMAGE`](crate::msg::BmGetImage) `img_type` (`u8`). Originally has
-	/// `IMAGE` prefix.
+	/// [`BM_GETIMAGE`](crate::msg::bm::GetImage) `img_type` (`u8`). Originally
+	/// has `IMAGE` prefix.
 
 	BITMAP, 0
 	ICON, 1

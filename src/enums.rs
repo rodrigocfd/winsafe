@@ -35,7 +35,7 @@ impl AtomStr {
 
 /// Variant parameter for:
 ///
-/// * [`BM_GETIMAGE`](crate::msg::BmGetImage) `image`.
+/// * [`BM_GETIMAGE`](crate::msg::bm::GetImage) `image`.
 pub enum BitmapIcon {
 	Bitmap(HBITMAP),
 	Icon(HICON),
@@ -99,7 +99,7 @@ impl From<BroadNull> for *mut c_void {
 
 /// Variant parameter for:
 ///
-/// * [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) reason.
+/// * [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason.
 pub enum HwndHmenu {
 	/// The system is idle because a dialog box is displayed.
 	Hwnd(HWND),
@@ -298,7 +298,7 @@ impl IdStr {
 
 /// Variant parameter for:
 ///
-/// * [`WmNcCalcSize`](crate::msg::WmNcCalcSize) `data`.
+/// * [`WmNcCalcSize`](crate::msg::wm::NcCalcSize) `data`.
 pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).
 	Nccsp(&'b mut NCCALCSIZE_PARAMS<'a>),
@@ -361,7 +361,7 @@ impl RegistryValue {
 
 /// Variant parameter for:
 ///
-/// * [`WmStyleChanged`](crate::msg::WmStyleChanged) `stylestruct`.
+/// * [`WmStyleChanged`](crate::msg::wm::StyleChanged) `stylestruct`.
 pub enum WsWsex<'a> {
 	/// [`STYLESTRUCT_WS`](crate::STYLESTRUCT_WS) struct.
 	Ws(&'a STYLESTRUCT_WS),

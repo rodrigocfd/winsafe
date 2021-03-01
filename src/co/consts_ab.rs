@@ -31,7 +31,7 @@ const_type! { ADRF, u32,
 }
 
 const_type! { APPCOMMAND, u16,
-	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) commands (`u16`).
+	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) commands (`u16`).
 
 	BROWSER_BACKWARD, 1
 	BROWSER_FORWARD, 2
@@ -236,7 +236,7 @@ const_type_ws! { BS,
 }
 
 const_type! { BST, u32,
-	/// [`BM_GETCHECK`](crate::msg::BmGetCheck) return value (`u32`).
+	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) return value (`u32`).
 
 	UNCHECKED, 0x0000
 	CHECKED, 0x0001

@@ -881,12 +881,11 @@ impl HWND {
 	///
 	/// # Examples
 	///
-	/// Sending a [`LVM_SETITEM`](crate::msg::LvmSetItem) list view message,
+	/// Sending a [`LVM_SETITEM`](crate::msg::lvm::SetItem) list view message,
 	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
 	///
 	/// ```rust,ignore
-	/// use winsafe::co;
-	/// use winsafe::msg::LvmSetItem;
+	/// use winsafe::{co, msg};
 	/// use winsafe::{LVITEM, HWND};
 	///
 	/// let my_hwnd: HWND; // initialize it somewhere...
@@ -895,7 +894,7 @@ impl HWND {
 	/// lvi.mask = co::LVIF::IMAGE;
 	/// lvi.iImage = 3;
 	///
-	/// my_hwnd.SendMessage(LvmSetItem {
+	/// my_hwnd.SendMessage(msg::lvm::SetItem {
 	///     lvitem: &lvi,
 	/// });
 	/// ```

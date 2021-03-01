@@ -1,14 +1,18 @@
+//! Header control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages),
+//! whose constants have `HDM` prefix.
+
 use crate::aliases::WinResult;
 use crate::co;
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 
 /// [`HDM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemcount)
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct HdmGetItemCount {}
+pub struct GetItemCount {}
 
-impl Message for HdmGetItemCount {
+impl Message for GetItemCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

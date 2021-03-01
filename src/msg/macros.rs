@@ -1,5 +1,5 @@
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::msg::Wm;
+use crate::msg::wm::Wm;
 use crate::structs::POINT;
 
 /// Struct for a message that has no parameters and no meaningful return value.

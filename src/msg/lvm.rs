@@ -1,21 +1,25 @@
+//! List view control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages),
+//! whose constants have `LVM` prefix.
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 use crate::structs::{LVCOLUMN, LVITEM, SIZE};
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
 ///
 /// Return type: `SIZE`.
-pub struct LvmApproximateViewRect {
+pub struct ApproximateViewRect {
 	pub num_items: Option<u32>,
 	pub proposed_x: Option<u16>,
 	pub proposed_y: Option<u16>,
 }
 
-impl Message for LvmApproximateViewRect {
+impl Message for ApproximateViewRect {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -49,11 +53,11 @@ impl Message for LvmApproximateViewRect {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmArrange {
+pub struct Arrange {
 	pub arrangement: co::LVA,
 }
 
-impl Message for LvmArrange {
+impl Message for Arrange {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -74,7 +78,7 @@ impl Message for LvmArrange {
 
 //------------------------------------------------------------------------------
 
-empty_msg! { LvmCancelEditLabel, co::LVM::CANCELEDITLABEL.into(),
+empty_msg! { CancelEditLabel, co::LVM::CANCELEDITLABEL.into(),
 	/// [`LVM_CANCELEDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
 	/// message, which has no parameters.
 	///
@@ -87,9 +91,9 @@ empty_msg! { LvmCancelEditLabel, co::LVM::CANCELEDITLABEL.into(),
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmDeleteAllItems {}
+pub struct DeleteAllItems {}
 
-impl Message for LvmDeleteAllItems {
+impl Message for DeleteAllItems {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -114,11 +118,11 @@ impl Message for LvmDeleteAllItems {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmDeleteItem {
+pub struct DeleteItem {
 	pub index: i32,
 }
 
-impl Message for LvmDeleteItem {
+impl Message for DeleteItem {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -143,12 +147,12 @@ impl Message for LvmDeleteItem {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmEnsureVisible {
+pub struct EnsureVisible {
 	pub index: i32,
 	pub entirely_visible: bool,
 }
 
-impl Message for LvmEnsureVisible {
+impl Message for EnsureVisible {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -173,12 +177,12 @@ impl Message for LvmEnsureVisible {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LvmGetColumn<'a, 'b> {
+pub struct GetColumn<'a, 'b> {
 	pub index: i32,
 	pub lvcolumn: &'b mut LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
+impl<'a, 'b> Message for GetColumn<'a, 'b> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -203,11 +207,11 @@ impl<'a, 'b> Message for LvmGetColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LvmGetColumnWidth {
+pub struct GetColumnWidth {
 	pub index: i32,
 }
 
-impl Message for LvmGetColumnWidth {
+impl Message for GetColumnWidth {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -232,9 +236,9 @@ impl Message for LvmGetColumnWidth {
 /// message, which has no parameters.
 ///
 /// Return type: `LVS_EX`.
-pub struct LvmGetExtendedListViewStyle {}
+pub struct GetExtendedListViewStyle {}
 
-impl Message for LvmGetExtendedListViewStyle {
+impl Message for GetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -256,9 +260,9 @@ impl Message for LvmGetExtendedListViewStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<HWND>`.
-pub struct LvmGetHeader {}
+pub struct GetHeader {}
 
-impl Message for LvmGetHeader {
+impl Message for GetHeader {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -283,12 +287,12 @@ impl Message for LvmGetHeader {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct LvmGetNextItem {
+pub struct GetNextItem {
 	pub initial_index: i32,
 	pub relationship: co::LVNI,
 }
 
-impl Message for LvmGetNextItem {
+impl Message for GetNextItem {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -313,9 +317,9 @@ impl Message for LvmGetNextItem {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct LvmGetItemCount {}
+pub struct GetItemCount {}
 
-impl Message for LvmGetItemCount {
+impl Message for GetItemCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -337,12 +341,12 @@ impl Message for LvmGetItemCount {
 /// message parameters.
 ///
 /// Return type: `LVIS`.
-pub struct LvmGetItemState {
+pub struct GetItemState {
 	pub index: i32,
 	pub mask: co::LVIS,
 }
 
-impl Message for LvmGetItemState {
+impl Message for GetItemState {
 	type RetType = co::LVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -364,12 +368,12 @@ impl Message for LvmGetItemState {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct LvmGetItemText<'a, 'b> {
+pub struct GetItemText<'a, 'b> {
 	pub index: i32,
 	pub lvitem: &'b mut LVITEM<'a>,
 }
 
-impl<'a, 'b> Message for LvmGetItemText<'a, 'b> {
+impl<'a, 'b> Message for GetItemText<'a, 'b> {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -391,9 +395,9 @@ impl<'a, 'b> Message for LvmGetItemText<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct LvmGetSelectedCount {}
+pub struct GetSelectedCount {}
 
-impl Message for LvmGetSelectedCount {
+impl Message for GetSelectedCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -415,9 +419,9 @@ impl Message for LvmGetSelectedCount {
 /// message, which has no parameters.
 ///
 /// Return type: `LV_VIEW`.
-pub struct LvmGetView {}
+pub struct GetView {}
 
-impl Message for LvmGetView {
+impl Message for GetView {
 	type RetType = co::LV_VIEW;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -439,12 +443,12 @@ impl Message for LvmGetView {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LvmInsertColumn<'a, 'b> {
+pub struct InsertColumn<'a, 'b> {
 	pub index: i32,
 	pub lvcolumn: &'b LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
+impl<'a, 'b> Message for InsertColumn<'a, 'b> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -469,11 +473,11 @@ impl<'a, 'b> Message for LvmInsertColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct LvmInsertItem<'a, 'b> {
+pub struct InsertItem<'a, 'b> {
 	pub lvitem: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
+impl<'a, 'b> Message for InsertItem<'a, 'b> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -498,9 +502,9 @@ impl<'a, 'b> Message for LvmInsertItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct LvmIsGroupViewEnabled {}
+pub struct IsGroupViewEnabled {}
 
-impl Message for LvmIsGroupViewEnabled {
+impl Message for IsGroupViewEnabled {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -522,11 +526,11 @@ impl Message for LvmIsGroupViewEnabled {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct LvmIsItemVisible {
+pub struct IsItemVisible {
 	pub index: i32,
 }
 
-impl Message for LvmIsItemVisible {
+impl Message for IsItemVisible {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -548,12 +552,12 @@ impl Message for LvmIsItemVisible {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmRedrawItems {
+pub struct RedrawItems {
 	pub first_index: u32,
 	pub last_index: u32,
 }
 
-impl Message for LvmRedrawItems {
+impl Message for RedrawItems {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -578,12 +582,12 @@ impl Message for LvmRedrawItems {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmScroll {
+pub struct Scroll {
 	pub horizontal: i32,
 	pub vertical: i32,
 }
 
-impl Message for LvmScroll {
+impl Message for Scroll {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -608,12 +612,12 @@ impl Message for LvmScroll {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmSetColumn<'a, 'b> {
+pub struct SetColumn<'a, 'b> {
 	pub index: i32,
 	pub lvcolumn: &'b LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
+impl<'a, 'b> Message for SetColumn<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -638,12 +642,12 @@ impl<'a, 'b> Message for LvmSetColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `LVS_EX`.
-pub struct LvmSetExtendedListViewStyle {
+pub struct SetExtendedListViewStyle {
 	pub style: co::LVS_EX,
 	pub mask: co::LVS_EX,
 }
 
-impl Message for LvmSetExtendedListViewStyle {
+impl Message for SetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -665,11 +669,11 @@ impl Message for LvmSetExtendedListViewStyle {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmSetItem<'a, 'b> {
+pub struct SetItem<'a, 'b> {
 	pub lvitem: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
+impl<'a, 'b> Message for SetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -694,12 +698,12 @@ impl<'a, 'b> Message for LvmSetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmSetItemState<'a, 'b> {
+pub struct SetItemState<'a, 'b> {
 	pub index: i32,
 	pub lvitem: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
+impl<'a, 'b> Message for SetItemState<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -724,12 +728,12 @@ impl<'a, 'b> Message for LvmSetItemState<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmSetItemText<'a, 'b> {
+pub struct SetItemText<'a, 'b> {
 	pub index: i32,
 	pub lvitem: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
+impl<'a, 'b> Message for SetItemText<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -754,11 +758,11 @@ impl<'a, 'b> Message for LvmSetItemText<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct LvmSetSelectedColumn {
+pub struct SetSelectedColumn {
 	pub index: u32,
 }
 
-impl Message for LvmSetSelectedColumn {
+impl Message for SetSelectedColumn {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -780,11 +784,11 @@ impl Message for LvmSetSelectedColumn {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmSetView {
+pub struct SetView {
 	pub view: co::LV_VIEW,
 }
 
-impl Message for LvmSetView {
+impl Message for SetView {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -809,11 +813,11 @@ impl Message for LvmSetView {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct LvmUpdate {
+pub struct Update {
 	pub index: i32,
 }
 
-impl Message for LvmUpdate {
+impl Message for Update {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

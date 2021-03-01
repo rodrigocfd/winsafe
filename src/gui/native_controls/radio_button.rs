@@ -5,7 +5,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{BmClick, BmGetCheck, BmSetCheck, BmSetDontClick, WmSetFont};
+use crate::msg::{bm, wm};
 use crate::structs::POINT;
 
 /// Native
@@ -72,14 +72,14 @@ impl RadioButton {
 					opts.window_style | opts.button_style.into(),
 				)?;
 
-				our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 			},
 			OptsId::Dlg(ctrl_id) => {
 				self.0.base.create_dlg(*ctrl_id)?; // may panic
 			},
 		}
 
-		self.hwnd().SendMessage(BmSetDontClick { dont_click: true });
+		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
 		Ok(())
 	}
 
@@ -91,12 +91,12 @@ impl RadioButton {
 
 	/// Tells if this radio button is currently checked.
 	pub fn is_checked(&self) -> bool {
-		self.hwnd().SendMessage(BmGetCheck {}) == co::BST::CHECKED
+		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
 	}
 
 	/// Sets the current check state.
 	pub fn set_check(&self, checked: bool) {
-		self.hwnd().SendMessage(BmSetCheck {
+		self.hwnd().SendMessage(bm::SetCheck {
 			state: if checked { co::BST::CHECKED } else { co::BST::UNCHECKED },
 		});
 	}
@@ -104,7 +104,7 @@ impl RadioButton {
 	/// Fires the click event for the radio button. The event is asynchronous,
 	/// the method returns immediately.
 	pub fn trigger_click(&self) -> WinResult<()> {
-		self.hwnd().PostMessage(BmClick {})
+		self.hwnd().PostMessage(bm::Click {})
 	}
 }
 

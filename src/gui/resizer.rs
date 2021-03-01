@@ -8,7 +8,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::immut::Immut;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::{HDWP, HWND};
-use crate::msg::WmSize;
+use crate::msg::wm;
 use crate::structs::{RECT, SIZE};
 
 /// In [`Resizer::add`](crate::gui::Resizer::add), determines how the child
@@ -68,9 +68,9 @@ impl Resizer {
 	/// updated on parent's resizing.
 	///
 	/// Usually you'll want to call this method on parent's
-	/// [`WM_CREATE`](crate::msg::WmCreate) or
-	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) events, because the controls
-	/// will already be created.
+	/// [`WM_CREATE`](crate::msg::wm::Create) or
+	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) events, because the
+	/// controls will already be created.
 	///
 	/// # Examples
 	///
@@ -140,7 +140,7 @@ impl Resizer {
 	}
 
 	/// Resizes all registered children according to the defined rules.
-	fn resize(&self, size_parm: &WmSize) -> WinResult<()> {
+	fn resize(&self, size_parm: &wm::Size) -> WinResult<()> {
 		if self.0.ctrls.is_empty() || size_parm.request == co::SIZE_R::MINIMIZED {
 			return Ok(()); // if no controls, or if minimized, no need to process
 		}

@@ -8,7 +8,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg;
+use crate::msg::{hdm, lvm};
 use crate::structs::{LVCOLUMN, LVITEM, NMLVKEYDOWN, POINT, SIZE};
 use crate::WString;
 
@@ -142,7 +142,7 @@ impl ListView {
 			let mut wtext = WString::from_str(text);
 			lvc.set_pszText(&mut wtext);
 
-			self.hwnd().SendMessage(msg::LvmInsertColumn {
+			self.hwnd().SendMessage(lvm::InsertColumn {
 				index: 0xffff,
 				lvcolumn: &lvc,
 			})?;
@@ -167,29 +167,29 @@ impl ListView {
 		let mut wtext = WString::from_str(text);
 		lvi.set_pszText(&mut wtext);
 
-		self.hwnd().SendMessage(msg::LvmInsertItem { lvitem: &lvi })
+		self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })
 	}
 
 	/// Retrieves the number of columns.
 	pub fn column_count(&self) -> WinResult<u32> {
-		self.hwnd().SendMessage(msg::LvmGetHeader {})?
-			.SendMessage(msg::HdmGetItemCount {})
+		self.hwnd().SendMessage(lvm::GetHeader {})?
+			.SendMessage(hdm::GetItemCount {})
 	}
 
 	/// Retrieves the current view.
 	pub fn current_view(&self) -> co::LV_VIEW {
-		self.hwnd().SendMessage(msg::LvmGetView {})
+		self.hwnd().SendMessage(lvm::GetView {})
 	}
 
 	/// Deletes all items.
 	pub fn delete_all_items(&self) -> WinResult<()> {
-		self.hwnd().SendMessage(msg::LvmDeleteAllItems {})
+		self.hwnd().SendMessage(lvm::DeleteAllItems {})
 	}
 
 	/// Deletes the items at the given indexes.
 	pub fn delete_items(&self, indexes: &[u32]) -> WinResult<()> {
 		for idx in indexes.iter() {
-			self.hwnd().SendMessage(msg::LvmDeleteItem {
+			self.hwnd().SendMessage(lvm::DeleteItem {
 				index: *idx as i32,
 			})?;
 		}
@@ -198,7 +198,7 @@ impl ListView {
 
 	/// Ensures that an item is visible in the list.
 	pub fn ensure_item_visible(&self, index: u32) -> WinResult<()> {
-		self.hwnd().SendMessage(msg::LvmEnsureVisible {
+		self.hwnd().SendMessage(lvm::EnsureVisible {
 			index: index as i32,
 			entirely_visible: true,
 		})
@@ -206,7 +206,7 @@ impl ListView {
 
 	/// Retrieves the index of the focused item.
 	pub fn focused_item(&self) -> Option<u32> {
-		self.hwnd().SendMessage(msg::LvmGetNextItem {
+		self.hwnd().SendMessage(lvm::GetNextItem {
 			initial_index: -1,
 			relationship: co::LVNI::FOCUSED,
 		})
@@ -214,7 +214,7 @@ impl ListView {
 
 	/// Tells if the item is the focused one.
 	pub fn is_item_focused(&self, index: u32) -> bool {
-		self.hwnd().SendMessage(msg::LvmGetItemState {
+		self.hwnd().SendMessage(lvm::GetItemState {
 			index: index as i32,
 			mask: co::LVIS::FOCUSED,
 		}).has(co::LVIS::FOCUSED)
@@ -222,7 +222,7 @@ impl ListView {
 
 	/// Tells if the item is selected.
 	pub fn is_item_selected(&self, index: u32) -> bool {
-		self.hwnd().SendMessage(msg::LvmGetItemState {
+		self.hwnd().SendMessage(lvm::GetItemState {
 			index: index as i32,
 			mask: co::LVIS::SELECTED,
 		}).has(co::LVIS::SELECTED)
@@ -230,12 +230,12 @@ impl ListView {
 
 	/// Tells if the item is currently visible.
 	pub fn is_item_visible(&self, index: u32) -> bool {
-		self.hwnd().SendMessage(msg::LvmIsItemVisible { index: index as i32 })
+		self.hwnd().SendMessage(lvm::IsItemVisible { index: index as i32 })
 	}
 
 	/// Retrieves the total number of items.
 	pub fn item_count(&self) -> u32 {
-		self.hwnd().SendMessage(msg::LvmGetItemCount {})
+		self.hwnd().SendMessage(lvm::GetItemCount {})
 	}
 
 	/// Retrieves the text of an item under any column.
@@ -251,7 +251,7 @@ impl ListView {
 			let mut buf = WString::new_alloc_buffer(buf_sz);
 			lvi.set_pszText(&mut buf);
 
-			let nchars = self.hwnd().SendMessage(msg::LvmGetItemText {
+			let nchars = self.hwnd().SendMessage(lvm::GetItemText {
 				index: item_index as i32,
 				lvitem: &mut lvi,
 			});
@@ -266,12 +266,12 @@ impl ListView {
 
 	/// Sets the current view.
 	pub fn set_current_view(&self, view: co::LV_VIEW) -> WinResult<()> {
-		self.hwnd().SendMessage(msg::LvmSetView { view })
+		self.hwnd().SendMessage(lvm::SetView { view })
 	}
 
 	/// Retrieves the number of selected items.
 	pub fn selected_item_count(&self) -> u32 {
-		self.hwnd().SendMessage(msg::LvmGetSelectedCount {})
+		self.hwnd().SendMessage(lvm::GetSelectedCount {})
 	}
 
 	/// Retrieves the indexes of the selected items.
@@ -280,7 +280,7 @@ impl ListView {
 		let mut idx = -1;
 
 		loop {
-			idx = match self.hwnd().SendMessage(msg::LvmGetNextItem {
+			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
 				initial_index: idx,
 				relationship: co::LVNI::SELECTED,
 			}) {
@@ -298,7 +298,7 @@ impl ListView {
 		lvi.stateMask = co::LVIS::FOCUSED;
 		lvi.state = co::LVIS::FOCUSED;
 
-		self.hwnd().SendMessage(msg::LvmSetItemState {
+		self.hwnd().SendMessage(lvm::SetItemState {
 			index: index as i32,
 			lvitem: &lvi,
 		})
@@ -314,7 +314,7 @@ impl ListView {
 		let mut wtext = WString::from_str(text);
 		lvi.set_pszText(&mut wtext);
 
-		self.hwnd().SendMessage(msg::LvmSetItemText {
+		self.hwnd().SendMessage(lvm::SetItemText {
 			index: item_index as i32,
 			lvitem: &lvi,
 		})
@@ -326,7 +326,7 @@ impl ListView {
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
 
-		self.hwnd().SendMessage(msg::LvmSetItemState {
+		self.hwnd().SendMessage(lvm::SetItemState {
 			index: -1,
 			lvitem: &lvi,
 		})
@@ -341,7 +341,7 @@ impl ListView {
 		if set { lvi.state = co::LVIS::SELECTED; }
 
 		for idx in indexes.iter() {
-			self.hwnd().SendMessage(msg::LvmSetItemState {
+			self.hwnd().SendMessage(lvm::SetItemState {
 				index: *idx as i32,
 				lvitem: &lvi,
 			})?;
@@ -351,7 +351,7 @@ impl ListView {
 
 	/// Toggles the given extended list view styles.
 	pub fn toggle_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
-		self.hwnd().SendMessage(msg::LvmSetExtendedListViewStyle {
+		self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
 			mask: ex_style,
 			style: if set { ex_style } else { co::LVS_EX::NONE },
 		});

@@ -6,7 +6,7 @@ use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, SystemParametersInfo};
 use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HTHEME, HWND};
-use crate::msg::WmNcPaint;
+use crate::msg::wm;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
 
 /// Global UI font object.
@@ -150,7 +150,7 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 
 /// Paints the themed border of an user control, if it has the proper styles.
 pub fn paint_control_borders(
-	ctrl: &dyn Parent, wm_ncp: WmNcPaint) -> WinResult<()>
+	ctrl: &dyn Parent, wm_ncp: wm::NcPaint) -> WinResult<()>
 {
 	let hwnd = ctrl.hwnd_ref();
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us

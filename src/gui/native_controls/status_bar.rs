@@ -9,8 +9,7 @@ use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg;
-use crate::msg::Message;
+use crate::msg::{Message, sb, wm};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
@@ -96,7 +95,7 @@ impl StatusBar {
 
 			// Force first resizing, so the panels are created.
 			let parent_rc = self.0.base.parent_hwnd().GetClientRect()?;
-			self.resize(&msg::WmSize {
+			self.resize(&wm::Size {
 				client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
 				request: co::SIZE_R::RESTORED,
 			});
@@ -106,8 +105,8 @@ impl StatusBar {
 		().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	fn resize(&self, p: &msg::WmSize) {
-		|p: &msg::WmSize| -> WinResult<()> {
+	fn resize(&self, p: &wm::Size) {
+		|p: &wm::Size| -> WinResult<()> {
 			if p.request == co::SIZE_R::MINIMIZED || self.hwnd().is_null() {
 				return Ok(()); // nothing to do
 			}
@@ -136,7 +135,7 @@ impl StatusBar {
 			}
 			*right_edges.last_mut().unwrap() = -1;
 
-			self.hwnd().SendMessage(msg::SbSetParts { right_edges: &right_edges })
+			self.hwnd().SendMessage(sb::SetParts { right_edges: &right_edges })
 		}
 		(p).unwrap_or_else(|err| PostQuitMessage(err))
 	}
@@ -145,15 +144,15 @@ impl StatusBar {
 
 	/// Retrieves the number of parts.
 	pub fn part_count(&self) -> u8 {
-		self.hwnd().SendMessage(msg::SbGetParts { right_edges: None })
+		self.hwnd().SendMessage(sb::GetParts { right_edges: None })
 	}
 
 	/// Retrieves the text or a part.
 	pub fn part_text(&self, part_index: u8) -> String {
-		let (len, _) = self.hwnd().SendMessage(msg::SbGetTextLength { part_index });
+		let (len, _) = self.hwnd().SendMessage(sb::GetTextLength { part_index });
 		let mut buf = WString::new_alloc_buffer(len as usize + 1);
 
-		self.hwnd().SendMessage(msg::SbGetText {
+		self.hwnd().SendMessage(sb::GetText {
 			part_index,
 			text: &mut buf,
 		});
@@ -162,7 +161,7 @@ impl StatusBar {
 
 	/// Sets the text of a part.
 	pub fn set_part_text(&self, part_index: u8, text: &str) -> WinResult<()> {
-		self.hwnd().SendMessage(msg::SbSetText {
+		self.hwnd().SendMessage(sb::SetText {
 			part_index,
 			drawing_operation: co::SBT::NONE,
 			text,

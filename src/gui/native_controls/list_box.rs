@@ -8,7 +8,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg;
+use crate::msg::{lb, wm};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -93,7 +93,7 @@ impl ListBox {
 						opts.window_style | opts.list_box_style.into(),
 					)?;
 
-					our_hwnd.SendMessage(msg::WmSetFont{ hfont: ui_font(), redraw: true });
+					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -106,14 +106,14 @@ impl ListBox {
 	/// Adds new texts.
 	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
 		for text in items.iter() {
-			self.hwnd().SendMessage(msg::LbAddString { text })?;
+			self.hwnd().SendMessage(lb::AddString { text })?;
 		}
 		Ok(())
 	}
 
 	/// Deletes the item at the given index.
 	pub fn delete_item(&self, index: u32) -> WinResult<()> {
-		self.hwnd().SendMessage(msg::LbDeleteString { index })
+		self.hwnd().SendMessage(lb::DeleteString { index })
 			.map(|_| ())
 	}
 }

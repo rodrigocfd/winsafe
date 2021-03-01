@@ -9,7 +9,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{DtmGetIdealSize, WmSetFont};
+use crate::msg::{dtm, wm};
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -93,7 +93,7 @@ impl DateTimePicker {
 
 					if sz.cx == 0 { // use ideal width?
 						let mut sz_ideal = SIZE::default();
-						our_hwnd.SendMessage(DtmGetIdealSize { size: &mut sz_ideal });
+						our_hwnd.SendMessage(dtm::GetIdealSize { size: &mut sz_ideal });
 						sz.cx = sz_ideal.cx; // already adjusted for DPI
 
 						our_hwnd.SetWindowPos(
@@ -101,7 +101,7 @@ impl DateTimePicker {
 							co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 					}
 
-					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -131,7 +131,7 @@ pub struct DateTimePickerOpts {
 	/// Will be adjusted to match current system DPI.
 	///
 	/// Defaults to ideal width retrieved with
-	/// [`DtmGetIdealSize`](crate::msg::DtmGetIdealSize), usually around 250.
+	/// [`DtmGetIdealSize`](crate::msg::dtm::GetIdealSize), usually around 250.
 	pub width: u32,
 	/// Date and time picker styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

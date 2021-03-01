@@ -318,7 +318,7 @@ const_type! { LV_VIEW, u32,
 }
 
 const_type! { LVA, u16,
-	/// [`LVM_ARRANGE`](crate::msg::LvmArrange) arrangement (`u16`).
+	/// [`LVM_ARRANGE`](crate::msg::lvm::Arrange) arrangement (`u16`).
 
 	DEFAULT, 0x0000
 	SNAPTOGRID, 0x0005
@@ -599,7 +599,7 @@ const_type_priv_values! { LVN
 }
 
 const_type! { LVNI, u32,
-	/// [`LVM_GETNEXTITEM`](crate::msg::LvmGetNextItem) relationship (`u32`).
+	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) relationship (`u32`).
 
 	ALL, 0x0000
 	FOCUSED, 0x0001

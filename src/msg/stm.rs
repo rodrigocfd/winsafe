@@ -1,15 +1,19 @@
+//! Static control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages),
+//! whose constants have `STM` prefix.
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HICON;
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 
 /// [`STM_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-geticon)
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<HICON>`.
-pub struct StmGetIcon {}
+pub struct GetIcon {}
 
-impl Message for StmGetIcon {
+impl Message for GetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -34,11 +38,11 @@ impl Message for StmGetIcon {
 /// message parameters.
 ///
 /// Return type: `WinResult<HICON>`.
-pub struct StmSetIcon {
+pub struct SetIcon {
 	pub icon: HICON,
 }
 
-impl Message for StmSetIcon {
+impl Message for SetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

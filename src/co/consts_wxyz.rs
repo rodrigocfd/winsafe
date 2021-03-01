@@ -1,5 +1,5 @@
 const_type! { WA, u16,
-	/// [`WM_ACTIVATE`](crate::msg::WmActivate)
+	/// [`WM_ACTIVATE`](crate::msg::wm::Activate)
 	/// activation state (`u16`).
 
 	INACTIVE, 0
@@ -365,7 +365,7 @@ const_type! { WM, u32,
 }
 
 const_type! { WMSZ, u8,
-	/// [`WM_SIZING`](crate::msg::WmSizing) window edge (`u8`).
+	/// [`WM_SIZING`](crate::msg::wm::Sizing) window edge (`u8`).
 
 	LEFT, 1
 	RIGHT, 2
@@ -454,7 +454,7 @@ const_type! { WS_EX, u32,
 }
 
 const_type! { WVR, u32,
-	/// [`WM_NCCALCSIZE`](crate::msg::WmNcCalcSize)
+	/// [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize)
 	/// return flags (`u32`).
 
 	ZERO, 0

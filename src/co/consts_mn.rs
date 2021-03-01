@@ -62,7 +62,7 @@ const_type_priv_values! { MCN
 }
 
 const_type! { MCSC, u8,
-	/// [`DTM_GETMCCOLOR`](crate::msg::DtmGetMcColor) color (`u8`).
+	/// [`DTM_GETMCCOLOR`](crate::msg::dtm::GetMcColor) color (`u8`).
 
 	BACKGROUND, 0
 	TEXT, 1
@@ -170,8 +170,8 @@ const_type! { MIIM, u32,
 }
 
 const_type! { MK, u16,
-	/// [`WM_LBUTTONDOWN`](crate::msg::WmLButtonDown) (and similar) virtual keys
-	/// (`u16`).
+	/// [`WM_LBUTTONDOWN`](crate::msg::wm::LButtonDown) (and similar) virtual
+	/// keys (`u16`).
 
 	LBUTTON, 0x0001
 	RBUTTON, 0x0002
@@ -194,14 +194,14 @@ const_type! { MNS, u32,
 }
 
 const_type! { MSGF, u8,
-	/// [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) reason (`u8`).
+	/// [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason (`u8`).
 
 	DIALOGBOX, 0
 	MENU, 2
 }
 
 const_type! { NM, i32,
-	/// [`WM_NOTIFY`](crate::msg::WmNotify) notification codes (`i32`).
+	/// [`WM_NOTIFY`](crate::msg::wm::Notify) notification codes (`i32`).
 	///
 	/// Control-specific notification codes have their own types, which are
 	/// convertible to `NM`.

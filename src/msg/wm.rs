@@ -1,3 +1,7 @@
+//! Generic window
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
+//! whose constants have `WM` prefix.
+
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::enums::{HwndHmenu, NccspRect, WsWsex};
@@ -57,13 +61,13 @@ impl MessageHandleable for Wm {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmActivate {
+pub struct Activate {
 	pub event: co::WA,
 	pub is_minimized: bool,
 	pub hwnd: HWND,
 }
 
-impl Message for WmActivate {
+impl Message for Activate {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -79,7 +83,7 @@ impl Message for WmActivate {
 	}
 }
 
-impl MessageHandleable for WmActivate {
+impl MessageHandleable for Activate {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			event: co::WA(LOWORD(p.wparam as u32)),
@@ -95,12 +99,12 @@ impl MessageHandleable for WmActivate {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmActivateApp {
+pub struct ActivateApp {
 	pub is_being_activated: bool,
 	pub thread_id: u32,
 }
 
-impl Message for WmActivateApp {
+impl Message for ActivateApp {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -116,7 +120,7 @@ impl Message for WmActivateApp {
 	}
 }
 
-impl MessageHandleable for WmActivateApp {
+impl MessageHandleable for ActivateApp {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			is_being_activated: p.wparam != 0,
@@ -131,14 +135,14 @@ impl MessageHandleable for WmActivateApp {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmAppCommand {
+pub struct AppCommand {
 	pub hwnd_owner: HWND,
 	pub app_command: co::APPCOMMAND,
 	pub u_device: co::FAPPCOMMAND,
 	pub keys: co::MK,
 }
 
-impl Message for WmAppCommand {
+impl Message for AppCommand {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -154,7 +158,7 @@ impl Message for WmAppCommand {
 	}
 }
 
-impl MessageHandleable for WmAppCommand {
+impl MessageHandleable for AppCommand {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_owner: HWND { ptr: p.wparam as *mut _ },
@@ -167,21 +171,21 @@ impl MessageHandleable for WmAppCommand {
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmCancelMode, co::WM::CANCELMODE,
+empty_msg_handleable! { CancelMode, co::WM::CANCELMODE,
 	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 	/// message, which has no parameters.
 	///
 	/// Return type: `()`.
 }
 
-empty_msg_handleable! { WmChildActivate, co::WM::CHILDACTIVATE,
+empty_msg_handleable! { ChildActivate, co::WM::CHILDACTIVATE,
 	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 	/// message, which has no parameters.
 	///
 	/// Return type: `()`.
 }
 
-empty_msg_handleable! { WmClose, co::WM::CLOSE,
+empty_msg_handleable! { Close, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 	/// message, which has no parameters.
 	///
@@ -197,13 +201,13 @@ empty_msg_handleable! { WmClose, co::WM::CLOSE,
 ///
 /// You'll normally want to match against `code` and `ctrl_id` to identify the
 /// event.
-pub struct WmCommand {
+pub struct Command {
 	pub code: co::CMD,
 	pub ctrl_id: u16,
 	pub ctrl_hwnd: Option<HWND>,
 }
 
-impl Message for WmCommand {
+impl Message for Command {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -222,7 +226,7 @@ impl Message for WmCommand {
 	}
 }
 
-impl MessageHandleable for WmCommand {
+impl MessageHandleable for Command {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			code: co::CMD(HIWORD(p.wparam as u32)),
@@ -241,12 +245,12 @@ impl MessageHandleable for WmCommand {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmContextMenu {
+pub struct ContextMenu {
 	pub hwnd: HWND,
 	pub cursor_pos: POINT,
 }
 
-impl Message for WmContextMenu {
+impl Message for ContextMenu {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -262,7 +266,7 @@ impl Message for WmContextMenu {
 	}
 }
 
-impl MessageHandleable for WmContextMenu {
+impl MessageHandleable for ContextMenu {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd: HWND { ptr: p.wparam as *mut _ },
@@ -277,11 +281,11 @@ impl MessageHandleable for WmContextMenu {
 /// message parameters.
 ///
 /// Return type: `i32`.
-pub struct WmCreate<'a, 'b, 'c> {
+pub struct Create<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
+impl<'a, 'b, 'c> Message for Create<'a, 'b, 'c> {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -297,7 +301,7 @@ impl<'a, 'b, 'c> Message for WmCreate<'a, 'b, 'c> {
 	}
 }
 
-impl<'a, 'b, 'c> MessageHandleable for WmCreate<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MessageHandleable for Create<'a, 'b, 'c> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			createstruct: unsafe { &*(p.lparam as *const _) },
@@ -307,42 +311,42 @@ impl<'a, 'b, 'c> MessageHandleable for WmCreate<'a, 'b, 'c> {
 
 //------------------------------------------------------------------------------
 
-ctl_color_msg! { WmCtlColorBtn, co::WM::CTLCOLORBTN,
+ctl_color_msg! { CtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 	/// message parameters.
 	///
 	/// Return type: `HBRUSH`.
 }
 
-ctl_color_msg! { WmCtlColorDlg, co::WM::CTLCOLORDLG,
+ctl_color_msg! { CtlColorDlg, co::WM::CTLCOLORDLG,
 	/// [`WM_CTLCOLORDLG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 	/// message parameters.
 	///
 	/// Return type: `HBRUSH`.
 }
 
-ctl_color_msg! { WmCtlColorEdit, co::WM::CTLCOLOREDIT,
+ctl_color_msg! { CtlColorEdit, co::WM::CTLCOLOREDIT,
 	/// [`WM_CTLCOLOREDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 	/// message parameters.
 	///
 	/// Return type: `HBRUSH`.
 }
 
-ctl_color_msg! { WmCtlColorListBox, co::WM::CTLCOLORLISTBOX,
+ctl_color_msg! { CtlColorListBox, co::WM::CTLCOLORLISTBOX,
 	/// [`WM_CTLCOLORLISTBOX`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 	/// message parameters.
 	///
 	/// Return type: `HBRUSH`.
 }
 
-ctl_color_msg! { WmCtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR,
+ctl_color_msg! { CtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR,
 	/// [`WM_CTLCOLORSCROLLBAR`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 	/// message parameters.
 	///
 	/// Return type: `HBRUSH`.
 }
 
-ctl_color_msg! { WmCtlColorStatic, co::WM::CTLCOLORSTATIC,
+ctl_color_msg! { CtlColorStatic, co::WM::CTLCOLORSTATIC,
 	/// [`WM_CTLCOLORSTATIC`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 	/// message parameters.
 	///
@@ -351,7 +355,7 @@ ctl_color_msg! { WmCtlColorStatic, co::WM::CTLCOLORSTATIC,
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmDestroy, co::WM::DESTROY,
+empty_msg_handleable! { Destroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 	/// message, which has no parameters.
 	///
@@ -364,11 +368,11 @@ empty_msg_handleable! { WmDestroy, co::WM::DESTROY,
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmDropFiles {
+pub struct DropFiles {
 	pub hdrop: HDROP,
 }
 
-impl Message for WmDropFiles {
+impl Message for DropFiles {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -384,7 +388,7 @@ impl Message for WmDropFiles {
 	}
 }
 
-impl MessageHandleable for WmDropFiles {
+impl MessageHandleable for DropFiles {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hdrop: HDROP { ptr: p.wparam as *mut _ },
@@ -398,11 +402,11 @@ impl MessageHandleable for WmDropFiles {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmEnable {
+pub struct Enable {
 	pub has_been_enabled: bool,
 }
 
-impl Message for WmEnable {
+impl Message for Enable {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -418,7 +422,7 @@ impl Message for WmEnable {
 	}
 }
 
-impl MessageHandleable for WmEnable {
+impl MessageHandleable for Enable {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			has_been_enabled: p.wparam != 0,
@@ -432,12 +436,12 @@ impl MessageHandleable for WmEnable {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmEndSession {
+pub struct EndSession {
 	pub is_session_being_ended: bool,
 	pub event: co::ENDSESSION,
 }
 
-impl Message for WmEndSession {
+impl Message for EndSession {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -453,7 +457,7 @@ impl Message for WmEndSession {
 	}
 }
 
-impl MessageHandleable for WmEndSession {
+impl MessageHandleable for EndSession {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
@@ -468,12 +472,12 @@ impl MessageHandleable for WmEndSession {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmEnterIdle {
+pub struct EnterIdle {
 	pub reason: co::MSGF,
 	pub handle: HwndHmenu,
 }
 
-impl Message for WmEnterIdle {
+impl Message for EnterIdle {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -489,7 +493,7 @@ impl Message for WmEnterIdle {
 	}
 }
 
-impl MessageHandleable for WmEnterIdle {
+impl MessageHandleable for EnterIdle {
 	fn from_generic_wm(p: Wm) -> Self {
 		let reason = co::MSGF(p.wparam as u8);
 		Self {
@@ -504,7 +508,7 @@ impl MessageHandleable for WmEnterIdle {
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmEnterSizeMove, co::WM::ENTERSIZEMOVE,
+empty_msg_handleable! { EnterSizeMove, co::WM::ENTERSIZEMOVE,
 	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 	/// message, which has no parameters.
 	///
@@ -517,11 +521,11 @@ empty_msg_handleable! { WmEnterSizeMove, co::WM::ENTERSIZEMOVE,
 /// message parameters.
 ///
 /// Return type: `i32`.
-pub struct WmEraseBkgnd {
+pub struct EraseBkgnd {
 	pub hdc: HDC,
 }
 
-impl Message for WmEraseBkgnd {
+impl Message for EraseBkgnd {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -537,7 +541,7 @@ impl Message for WmEraseBkgnd {
 	}
 }
 
-impl MessageHandleable for WmEraseBkgnd {
+impl MessageHandleable for EraseBkgnd {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hdc: HDC { ptr: p.wparam as *mut _ },
@@ -547,7 +551,7 @@ impl MessageHandleable for WmEraseBkgnd {
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmExitSizeMove, co::WM::EXITSIZEMOVE,
+empty_msg_handleable! { ExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 	/// message, which has no parameters.
 	///
@@ -560,11 +564,11 @@ empty_msg_handleable! { WmExitSizeMove, co::WM::EXITSIZEMOVE,
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmGetMinMaxInfo<'a> {
+pub struct GetMinMaxInfo<'a> {
 	pub info: &'a mut MINMAXINFO,
 }
 
-impl<'a> Message for WmGetMinMaxInfo<'a> {
+impl<'a> Message for GetMinMaxInfo<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -580,7 +584,7 @@ impl<'a> Message for WmGetMinMaxInfo<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmGetMinMaxInfo<'a> {
+impl<'a> MessageHandleable for GetMinMaxInfo<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			info: unsafe { &mut *(p.lparam as *mut _) },
@@ -594,12 +598,12 @@ impl<'a> MessageHandleable for WmGetMinMaxInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct WmInitDialog {
+pub struct InitDialog {
 	pub hwnd_focus: HWND,
 	pub additional_data: isize,
 }
 
-impl Message for WmInitDialog {
+impl Message for InitDialog {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -615,7 +619,7 @@ impl Message for WmInitDialog {
 	}
 }
 
-impl MessageHandleable for WmInitDialog {
+impl MessageHandleable for InitDialog {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_focus: HWND { ptr: p.wparam as *mut _ },
@@ -630,13 +634,13 @@ impl MessageHandleable for WmInitDialog {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmInitMenuPopup {
+pub struct InitMenuPopup {
 	pub hmenu: HMENU,
 	pub item_pos: u16,
 	pub is_window_menu: bool,
 }
 
-impl Message for WmInitMenuPopup {
+impl Message for InitMenuPopup {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -652,7 +656,7 @@ impl Message for WmInitMenuPopup {
 	}
 }
 
-impl MessageHandleable for WmInitMenuPopup {
+impl MessageHandleable for InitMenuPopup {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hmenu: HMENU { ptr: p.wparam as *mut _ },
@@ -664,56 +668,56 @@ impl MessageHandleable for WmInitMenuPopup {
 
 //------------------------------------------------------------------------------
 
-button_msg! { WmLButtonDblClk, co::WM::LBUTTONDBLCLK,
+button_msg! { LButtonDblClk, co::WM::LBUTTONDBLCLK,
 	/// [`WM_LBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmLButtonDown, co::WM::LBUTTONDOWN,
+button_msg! { LButtonDown, co::WM::LBUTTONDOWN,
 	/// [`WM_LBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmLButtonUp, co::WM::LBUTTONUP,
+button_msg! { LButtonUp, co::WM::LBUTTONUP,
 	/// [`WM_LBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmMButtonDblClk, co::WM::MBUTTONDBLCLK,
+button_msg! { MButtonDblClk, co::WM::MBUTTONDBLCLK,
 	/// [`WM_MBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmMButtonDown, co::WM::MBUTTONDOWN,
+button_msg! { MButtonDown, co::WM::MBUTTONDOWN,
 	/// [`WM_MBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmMButtonUp, co::WM::MBUTTONUP,
+button_msg! { MButtonUp, co::WM::MBUTTONUP,
 	/// [`WM_MBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmMouseHover, co::WM::MOUSEHOVER,
+button_msg! { MouseHover, co::WM::MOUSEHOVER,
 	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmMouseMove, co::WM::MOUSEMOVE,
+button_msg! { MouseMove, co::WM::MOUSEMOVE,
 	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 	/// message parameters.
 	///
@@ -726,11 +730,11 @@ button_msg! { WmMouseMove, co::WM::MOUSEMOVE,
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmMove {
+pub struct Move {
 	pub coords: POINT,
 }
 
-impl Message for WmMove {
+impl Message for Move {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -746,7 +750,7 @@ impl Message for WmMove {
 	}
 }
 
-impl MessageHandleable for WmMove {
+impl MessageHandleable for Move {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			coords: lp_to_point(p),
@@ -760,11 +764,11 @@ impl MessageHandleable for WmMove {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmMoving<'a> {
+pub struct Moving<'a> {
 	pub window_pos: &'a mut RECT,
 }
 
-impl<'a> Message for WmMoving<'a> {
+impl<'a> Message for Moving<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -780,7 +784,7 @@ impl<'a> Message for WmMoving<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmMoving<'a> {
+impl<'a> MessageHandleable for Moving<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			window_pos: unsafe { &mut *(p.lparam as *mut _) },
@@ -794,11 +798,11 @@ impl<'a> MessageHandleable for WmMoving<'a> {
 /// message parameters.
 ///
 /// Return type: `WVR`.
-pub struct WmNcCalcSize<'a, 'b> {
+pub struct NcCalcSize<'a, 'b> {
 	pub data: NccspRect<'a, 'b>,
 }
 
-impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
+impl<'a, 'b> Message for NcCalcSize<'a, 'b> {
 	type RetType = co::WVR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -820,7 +824,7 @@ impl<'a, 'b> Message for WmNcCalcSize<'a, 'b> {
 	}
 }
 
-impl<'a, 'b> MessageHandleable for WmNcCalcSize<'a, 'b> {
+impl<'a, 'b> MessageHandleable for NcCalcSize<'a, 'b> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			data: match p.wparam {
@@ -837,11 +841,11 @@ impl<'a, 'b> MessageHandleable for WmNcCalcSize<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct WmNcCreate<'a, 'b, 'c> {
+pub struct NcCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
+impl<'a, 'b, 'c> Message for NcCreate<'a, 'b, 'c> {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -857,7 +861,7 @@ impl<'a, 'b, 'c> Message for WmNcCreate<'a, 'b, 'c> {
 	}
 }
 
-impl<'a, 'b, 'c> MessageHandleable for WmNcCreate<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MessageHandleable for NcCreate<'a, 'b, 'c> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			createstruct: unsafe { &*(p.lparam as *const _) },
@@ -867,7 +871,7 @@ impl<'a, 'b, 'c> MessageHandleable for WmNcCreate<'a, 'b, 'c> {
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmNcDestroy, co::WM::NCDESTROY,
+empty_msg_handleable! { NcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 	/// message, which has no parameters.
 	///
@@ -880,11 +884,11 @@ empty_msg_handleable! { WmNcDestroy, co::WM::NCDESTROY,
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmNcPaint {
+pub struct NcPaint {
 	pub updated_hrgn: HRGN,
 }
 
-impl Message for WmNcPaint {
+impl Message for NcPaint {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -900,7 +904,7 @@ impl Message for WmNcPaint {
 	}
 }
 
-impl MessageHandleable for WmNcPaint {
+impl MessageHandleable for NcPaint {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			updated_hrgn: HRGN { ptr: p.wparam as *mut _ },
@@ -910,7 +914,7 @@ impl MessageHandleable for WmNcPaint {
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmNull, co::WM::NULL,
+empty_msg_handleable! { Null, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 	/// message, which has no parameters.
 	///
@@ -924,11 +928,11 @@ empty_msg_handleable! { WmNull, co::WM::NULL,
 ///
 /// Return type: `isize`.
 #[derive(Copy, Clone)]
-pub struct WmNotify<'a> {
+pub struct Notify<'a> {
 	pub nmhdr: &'a NMHDR,
 }
 
-impl<'a> Message for WmNotify<'a> {
+impl<'a> Message for Notify<'a> {
 	type RetType = isize;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -944,7 +948,7 @@ impl<'a> Message for WmNotify<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmNotify<'a> {
+impl<'a> MessageHandleable for Notify<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			nmhdr: unsafe { &*(p.lparam as *const NMHDR) },
@@ -952,7 +956,7 @@ impl<'a> MessageHandleable for WmNotify<'a> {
 	}
 }
 
-impl<'a> WmNotify<'a> {
+impl<'a> Notify<'a> {
 	/// Casts the `NMHDR` reference into a derived struct.
 	///
 	/// You should always prefer the specific notifications, which perform this
@@ -972,7 +976,7 @@ impl<'a> WmNotify<'a> {
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmPaint, co::WM::PAINT,
+empty_msg_handleable! { Paint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 	/// message, which has no parameters.
 	///
@@ -985,9 +989,9 @@ empty_msg_handleable! { WmPaint, co::WM::PAINT,
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct WmQueryOpen {}
+pub struct QueryOpen {}
 
-impl Message for WmQueryOpen {
+impl Message for QueryOpen {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -1003,7 +1007,7 @@ impl Message for WmQueryOpen {
 	}
 }
 
-impl MessageHandleable for WmQueryOpen {
+impl MessageHandleable for QueryOpen {
 	fn from_generic_wm(_: Wm) -> Self {
 		Self {}
 	}
@@ -1011,21 +1015,21 @@ impl MessageHandleable for WmQueryOpen {
 
 //------------------------------------------------------------------------------
 
-button_msg! { WmRButtonDblClk, co::WM::RBUTTONDBLCLK,
+button_msg! { RButtonDblClk, co::WM::RBUTTONDBLCLK,
 	/// [`WM_RBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmRButtonDown, co::WM::RBUTTONDOWN,
+button_msg! { RButtonDown, co::WM::RBUTTONDOWN,
 	/// [`WM_RBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmRButtonUp, co::WM::RBUTTONUP,
+button_msg! { RButtonUp, co::WM::RBUTTONUP,
 	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 	/// message parameters.
 	///
@@ -1038,11 +1042,11 @@ button_msg! { WmRButtonUp, co::WM::RBUTTONUP,
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmSetFocus {
+pub struct SetFocus {
 	pub hwnd_losing_focus: HWND,
 }
 
-impl Message for WmSetFocus {
+impl Message for SetFocus {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1058,7 +1062,7 @@ impl Message for WmSetFocus {
 	}
 }
 
-impl MessageHandleable for WmSetFocus {
+impl MessageHandleable for SetFocus {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hwnd_losing_focus: HWND { ptr: p.wparam as *mut _ },
@@ -1072,12 +1076,12 @@ impl MessageHandleable for WmSetFocus {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmSetFont {
+pub struct SetFont {
 	pub hfont: HFONT,
 	pub redraw: bool,
 }
 
-impl Message for WmSetFont {
+impl Message for SetFont {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1093,7 +1097,7 @@ impl Message for WmSetFont {
 	}
 }
 
-impl MessageHandleable for WmSetFont {
+impl MessageHandleable for SetFont {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hfont: HFONT { ptr: p.wparam as *mut _ },
@@ -1108,12 +1112,12 @@ impl MessageHandleable for WmSetFont {
 /// message parameters.
 ///
 /// Return type: `Option<HICON>`.
-pub struct WmSetIcon {
+pub struct SetIcon {
 	pub size: co::ICON_SZ,
 	pub hicon: HICON,
 }
 
-impl Message for WmSetIcon {
+impl Message for SetIcon {
 	type RetType = Option<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -1132,7 +1136,7 @@ impl Message for WmSetIcon {
 	}
 }
 
-impl MessageHandleable for WmSetIcon {
+impl MessageHandleable for SetIcon {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			size: co::ICON_SZ(p.wparam as u8),
@@ -1147,12 +1151,12 @@ impl MessageHandleable for WmSetIcon {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmShowWindow {
+pub struct ShowWindow {
 	pub being_shown: bool,
 	pub status: co::SW_S,
 }
 
-impl Message for WmShowWindow {
+impl Message for ShowWindow {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1168,7 +1172,7 @@ impl Message for WmShowWindow {
 	}
 }
 
-impl MessageHandleable for WmShowWindow {
+impl MessageHandleable for ShowWindow {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			being_shown: p.wparam != 0,
@@ -1183,12 +1187,12 @@ impl MessageHandleable for WmShowWindow {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmSize {
+pub struct Size {
 	pub request: co::SIZE_R,
 	pub client_area: SIZE,
 }
 
-impl Message for WmSize {
+impl Message for Size {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1206,7 +1210,7 @@ impl Message for WmSize {
 	}
 }
 
-impl MessageHandleable for WmSize {
+impl MessageHandleable for Size {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			request: co::SIZE_R(p.wparam as u8),
@@ -1224,12 +1228,12 @@ impl MessageHandleable for WmSize {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmSizing<'a> {
+pub struct Sizing<'a> {
 	pub window_edge: co::WMSZ,
 	pub coords: &'a mut RECT,
 }
 
-impl<'a> Message for WmSizing<'a> {
+impl<'a> Message for Sizing<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1245,7 +1249,7 @@ impl<'a> Message for WmSizing<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmSizing<'a> {
+impl<'a> MessageHandleable for Sizing<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			window_edge: co::WMSZ(p.wparam as u8),
@@ -1260,12 +1264,12 @@ impl<'a> MessageHandleable for WmSizing<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmStyleChanged<'a> {
+pub struct StyleChanged<'a> {
 	pub change: co::GWL_C,
 	pub stylestruct: WsWsex<'a>,
 }
 
-impl<'a> Message for WmStyleChanged<'a> {
+impl<'a> Message for StyleChanged<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1284,7 +1288,7 @@ impl<'a> Message for WmStyleChanged<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmStyleChanged<'a> {
+impl<'a> MessageHandleable for StyleChanged<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		let change = co::GWL_C(p.wparam as i8);
 		Self {
@@ -1303,12 +1307,12 @@ impl<'a> MessageHandleable for WmStyleChanged<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmStyleChanging<'a> {
+pub struct StyleChanging<'a> {
 	pub change: co::GWL_C,
 	pub stylestruct: WsWsex<'a>,
 }
 
-impl<'a> Message for WmStyleChanging<'a> {
+impl<'a> Message for StyleChanging<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1327,7 +1331,7 @@ impl<'a> Message for WmStyleChanging<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmStyleChanging<'a> {
+impl<'a> MessageHandleable for StyleChanging<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		let change = co::GWL_C(p.wparam as i8);
 		Self {
@@ -1342,7 +1346,7 @@ impl<'a> MessageHandleable for WmStyleChanging<'a> {
 
 //------------------------------------------------------------------------------
 
-empty_msg_handleable! { WmThemeChanged, co::WM::THEMECHANGED,
+empty_msg_handleable! { ThemeChanged, co::WM::THEMECHANGED,
 	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 	/// message, which has no parameters.
 	///
@@ -1355,12 +1359,12 @@ empty_msg_handleable! { WmThemeChanged, co::WM::THEMECHANGED,
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmTimer {
+pub struct Timer {
 	pub timer_id: u32,
 	pub timer_proc: Option<TIMERPROC>,
 }
 
-impl Message for WmTimer {
+impl Message for Timer {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1379,7 +1383,7 @@ impl Message for WmTimer {
 	}
 }
 
-impl MessageHandleable for WmTimer {
+impl MessageHandleable for Timer {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			timer_id: p.wparam as u32,
@@ -1397,11 +1401,11 @@ impl MessageHandleable for WmTimer {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmWindowPosChanged<'a> {
+pub struct WindowPosChanged<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
 
-impl<'a> Message for WmWindowPosChanged<'a> {
+impl<'a> Message for WindowPosChanged<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1417,7 +1421,7 @@ impl<'a> Message for WmWindowPosChanged<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmWindowPosChanged<'a> {
+impl<'a> MessageHandleable for WindowPosChanged<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			windowpos: unsafe { &*(p.lparam as *const _) },
@@ -1431,11 +1435,11 @@ impl<'a> MessageHandleable for WmWindowPosChanged<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct WmWindowPosChanging<'a> {
+pub struct WindowPosChanging<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
 
-impl<'a> Message for WmWindowPosChanging<'a> {
+impl<'a> Message for WindowPosChanging<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -1451,7 +1455,7 @@ impl<'a> Message for WmWindowPosChanging<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WmWindowPosChanging<'a> {
+impl<'a> MessageHandleable for WindowPosChanging<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			windowpos: unsafe { &*(p.lparam as *const _) },
@@ -1461,21 +1465,21 @@ impl<'a> MessageHandleable for WmWindowPosChanging<'a> {
 
 //------------------------------------------------------------------------------
 
-button_msg! { WmXButtonDblClk, co::WM::XBUTTONDBLCLK,
+button_msg! { XButtonDblClk, co::WM::XBUTTONDBLCLK,
 	/// [`WM_XBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmXButtonDown, co::WM::XBUTTONDOWN,
+button_msg! { XButtonDown, co::WM::XBUTTONDOWN,
 	/// [`WM_XBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 	/// message parameters.
 	///
 	/// Return type: `()`.
 }
 
-button_msg! { WmXButtonUp, co::WM::XBUTTONUP,
+button_msg! { XButtonUp, co::WM::XBUTTONUP,
 	/// [`WM_XBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 	/// message parameters.
 	///

@@ -1,12 +1,16 @@
+//! Date and time picker control
+//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages),
+//! whose constants have `DTM` prefix.
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::{HWND, HFONT};
-use crate::msg::{Message, Wm};
+use crate::msg::{Message, wm::Wm};
 use crate::privs::GDT_ERROR;
 use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE, SYSTEMTIME};
 use crate::WString;
 
-empty_msg! { DtmCloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
+empty_msg! { CloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
 	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
 	/// message, which has no parameters.
 	///
@@ -19,11 +23,11 @@ empty_msg! { DtmCloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct DtmGetDateTimePickerInfo<'a> {
+pub struct GetDateTimePickerInfo<'a> {
 	pub info: &'a mut DATETIMEPICKERINFO,
 }
 
-impl<'a> Message for DtmGetDateTimePickerInfo<'a> {
+impl<'a> Message for GetDateTimePickerInfo<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -45,11 +49,11 @@ impl<'a> Message for DtmGetDateTimePickerInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct DtmGetIdealSize<'a> {
+pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-impl<'a> Message for DtmGetIdealSize<'a> {
+impl<'a> Message for GetIdealSize<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -71,11 +75,11 @@ impl<'a> Message for DtmGetIdealSize<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<COLORREF>`.
-pub struct DtmGetMcColor {
+pub struct GetMcColor {
 	pub color_index: co::MCSC,
 }
 
-impl Message for DtmGetMcColor {
+impl Message for GetMcColor {
 	type RetType = WinResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -100,9 +104,9 @@ impl Message for DtmGetMcColor {
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<HFONT>`.
-pub struct DtmGetMcFont {}
+pub struct GetMcFont {}
 
-impl Message for DtmGetMcFont {
+impl Message for GetMcFont {
 	type RetType = WinResult<HFONT>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -127,9 +131,9 @@ impl Message for DtmGetMcFont {
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<MCS>`.
-pub struct DtmGetMcStyle {}
+pub struct GetMcStyle {}
 
-impl Message for DtmGetMcStyle {
+impl Message for GetMcStyle {
 	type RetType = WinResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -154,9 +158,9 @@ impl Message for DtmGetMcStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<HWND>`.
-pub struct DtmGetMonthCalendar {}
+pub struct GetMonthCalendar {}
 
-impl Message for DtmGetMonthCalendar {
+impl Message for GetMonthCalendar {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -181,11 +185,11 @@ impl Message for DtmGetMonthCalendar {
 /// message parameters.
 ///
 /// Return type: `GDTR`.
-pub struct DtmGetRange<'a> {
+pub struct GetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> Message for DtmGetRange<'a> {
+impl<'a> Message for GetRange<'a> {
 	type RetType = co::GDTR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -207,11 +211,11 @@ impl<'a> Message for DtmGetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct DtmGetSystemTime<'a> {
+pub struct GetSystemTime<'a> {
 	pub system_time: &'a mut SYSTEMTIME,
 }
 
-impl<'a> Message for DtmGetSystemTime<'a> {
+impl<'a> Message for GetSystemTime<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -238,11 +242,11 @@ impl<'a> Message for DtmGetSystemTime<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct DtmSetFormat<'a> {
+pub struct SetFormat<'a> {
 	pub format_string: Option<&'a str>,
 }
 
-impl<'a> Message for DtmSetFormat<'a> {
+impl<'a> Message for SetFormat<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -270,12 +274,12 @@ impl<'a> Message for DtmSetFormat<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<COLORREF>`.
-pub struct DtmSetMcColor {
+pub struct SetMcColor {
 	pub color_index: co::MCSC,
 	pub color: COLORREF,
 }
 
-impl Message for DtmSetMcColor {
+impl Message for SetMcColor {
 	type RetType = WinResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -300,12 +304,12 @@ impl Message for DtmSetMcColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct DtmSetMcFont {
+pub struct SetMcFont {
 	pub hfont: HFONT,
 	pub redraw: bool,
 }
 
-impl Message for DtmSetMcFont {
+impl Message for SetMcFont {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -327,11 +331,11 @@ impl Message for DtmSetMcFont {
 /// message parameters.
 ///
 /// Return type: `WinResult<MCS>`.
-pub struct DtmSetMcStyle {
+pub struct SetMcStyle {
 	pub style: co::MCS,
 }
 
-impl Message for DtmSetMcStyle {
+impl Message for SetMcStyle {
 	type RetType = WinResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -356,12 +360,12 @@ impl Message for DtmSetMcStyle {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct DtmSetRange<'a> {
+pub struct SetRange<'a> {
 	pub valid: co::GDTR,
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> Message for DtmSetRange<'a> {
+impl<'a> Message for SetRange<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -386,11 +390,11 @@ impl<'a> Message for DtmSetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct DtmSetSystemTime<'a> {
+pub struct SetSystemTime<'a> {
 	pub system_time: Option<&'a SYSTEMTIME>,
 }
 
-impl<'a> Message for DtmSetSystemTime<'a> {
+impl<'a> Message for SetSystemTime<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

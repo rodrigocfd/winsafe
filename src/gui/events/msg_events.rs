@@ -4,8 +4,7 @@ use crate::co;
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::immut::Immut;
 use crate::handles::{HDC, HICON};
-use crate::msg;
-use crate::msg::MessageHandleable;
+use crate::msg::{MessageHandleable, wm};
 
 /// The result of processing a message.
 pub enum ProcessResult {
@@ -26,7 +25,7 @@ pub struct MsgEvents(Immut<Obj>);
 struct Obj { // actual fields of MsgEvents
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
-		Box<dyn FnMut(msg::Wm) -> Option<isize> + 'static>, // return value may be meaningful
+		Box<dyn FnMut(wm::Wm) -> Option<isize> + 'static>, // return value may be meaningful
 	>,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
@@ -38,7 +37,7 @@ struct Obj { // actual fields of MsgEvents
 	>,
 	nfys: FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
-		Box<dyn FnMut(msg::WmNotify) -> Option<isize> + 'static>, // return value may be meaningful
+		Box<dyn FnMut(wm::Notify) -> Option<isize> + 'static>, // return value may be meaningful
 	>,
 }
 
@@ -102,10 +101,10 @@ impl MsgEvents {
 
 	/// Searches for the last added user function for the given message, and runs
 	/// if it exists, returning the result.
-	pub(crate) fn process_effective_message(&self, wm_any: msg::Wm) -> ProcessResult {
+	pub(crate) fn process_effective_message(&self, wm_any: wm::Wm) -> ProcessResult {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
-				let wm_nfy = msg::WmNotify::from_generic_wm(wm_any);
+				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
 				match self.0.as_mut().nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
@@ -118,7 +117,7 @@ impl MsgEvents {
 				}
 			},
 			co::WM::COMMAND => {
-				let wm_cmd = msg::WmCommand::from_generic_wm(wm_any);
+				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
 				match self.0.as_mut().cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
@@ -129,7 +128,7 @@ impl MsgEvents {
 				}
 			},
 			co::WM::TIMER => {
-				let wm_tmr = msg::WmTimer::from_generic_wm(wm_any);
+				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
 				match self.0.as_mut().tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
@@ -154,24 +153,24 @@ impl MsgEvents {
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
-	pub(crate) fn process_all_messages(&self, wm_any: msg::Wm) {
+	pub(crate) fn process_all_messages(&self, wm_any: wm::Wm) {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
-				let wm_nfy = msg::WmNotify::from_generic_wm(wm_any);
+				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
 				self.0.as_mut().nfys.find_all(key, |func| {
 					func(wm_nfy);
 				});
 			},
 			co::WM::COMMAND => {
-				let wm_cmd = msg::WmCommand::from_generic_wm(wm_any);
+				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = (wm_cmd.code, wm_cmd.ctrl_id);
 				self.0.as_mut().cmds.find_all(key, |func| {
 					func();
 				});
 			},
 			co::WM::TIMER => {
-				let wm_tmr = msg::WmTimer::from_generic_wm(wm_any);
+				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
 				self.0.as_mut().tmrs.find_all(wm_tmr.timer_id, |func| {
 					func();
 				});
@@ -186,14 +185,14 @@ impl MsgEvents {
 
 	/// Raw add message.
 	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(msg::Wm) -> Option<isize> + 'static,
+		where F: FnMut(wm::Wm) -> Option<isize> + 'static,
 	{
 		self.0.as_mut().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
 	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
-		where F: FnMut(msg::WmNotify) -> Option<isize> + 'static,
+		where F: FnMut(wm::Notify) -> Option<isize> + 'static,
 	{
 		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));
 	}
@@ -226,7 +225,7 @@ impl MsgEvents {
 	/// });
 	/// ```
 	pub fn wm<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(msg::Wm) -> isize + 'static,
+		where F: FnMut(wm::Wm) -> isize + 'static,
 	{
 		self.add_msg(ident, {
 			let mut func = func;
@@ -234,7 +233,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// [`WM_TIMER`](crate::msg::WmTimer) message, narrowed to a specific timer
+	/// [`WM_TIMER`](crate::msg::wm::Timer) message, narrowed to a specific timer
 	/// ID.
 	///
 	/// Posted to the installing thread's message queue when a timer expires.
@@ -244,7 +243,7 @@ impl MsgEvents {
 		self.0.as_mut().tmrs.insert(timer_id, Box::new(func));
 	}
 
-	/// [`WM_COMMAND`](crate::msg::WmCommand) message, for specific code and
+	/// [`WM_COMMAND`](crate::msg::wm::Command) message, for specific code and
 	/// control ID.
 	///
 	/// A command notification must be narrowed by the
@@ -261,7 +260,7 @@ impl MsgEvents {
 		self.0.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
-	/// [`WM_COMMAND`](crate::msg::WmCommand) message, handling both
+	/// [`WM_COMMAND`](crate::msg::wm::Command) message, handling both
 	/// `co::CMD::Accelerator` and `co::CMD::Menu`, for a specific command ID.
 	///
 	/// Ideal to be used with menu commands whose IDs are shared with
@@ -301,7 +300,7 @@ impl MsgEvents {
 		});
 	}
 
-	/// [`WM_NOTIFY`](crate::msg::WmNotify) message, for specific ID and
+	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
 	/// notification code.
 	///
 	/// A notification must be narrowed by the [notification code](crate::co::NM)
@@ -313,7 +312,7 @@ impl MsgEvents {
 	/// struct. This generic method should be used when you have a custom,
 	/// non-standard window notification.
 	pub fn wm_notify<F>(&self, id_from: u16, code: co::NM, func: F)
-		where F: FnMut(msg::WmNotify) -> isize + 'static,
+		where F: FnMut(wm::Notify) -> isize + 'static,
 	{
 		self.add_nfy(id_from, code, {
 			let mut func = func;
@@ -321,8 +320,8 @@ impl MsgEvents {
 		});
 	}
 
-	wm_ret_none! { wm_activate, co::WM::ACTIVATE, msg::WmActivate,
-		/// [`WM_ACTIVATE`](crate::msg::WmActivate) message.
+	wm_ret_none! { wm_activate, co::WM::ACTIVATE, wm::Activate,
+		/// [`WM_ACTIVATE`](crate::msg::wm::Activate) message.
 		///
 		/// Sent to both the window being activated and the window being
 		/// deactivated. If the windows use the same input queue, the message is
@@ -339,8 +338,8 @@ impl MsgEvents {
 		/// * non-dialog [`CustomMain`](crate::gui::CustomMain).
 	}
 
-	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, msg::WmActivateApp,
-		/// [`WM_ACTIVATEAPP`](crate::msg::WmActivateApp) message.
+	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp,
+		/// [`WM_ACTIVATEAPP`](crate::msg::wm::ActivateApp) message.
 		///
 		/// Sent when a window belonging to a different application than the
 		/// active window is about to be activated. The message is sent to the
@@ -348,22 +347,22 @@ impl MsgEvents {
 		/// whose window is being deactivated.
 	}
 
-	/// [`WM_APPCOMMAND`](crate::msg::WmAppCommand) message.
+	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) message.
 	///
 	/// Notifies a window that the user generated an application command event,
 	/// for example, by clicking an application command button using the mouse or
 	/// typing an application command key on the keyboard.
 	pub fn wm_app_command<F>(&self, func: F)
-		where F: FnMut(msg::WmAppCommand) + 'static,
+		where F: FnMut(wm::AppCommand) + 'static,
 	{
 		self.add_msg(co::WM::APPCOMMAND, {
 			let mut func = func;
-			move |p| { func(msg::WmAppCommand::from_generic_wm(p)); Some(true as isize) }
+			move |p| { func(wm::AppCommand::from_generic_wm(p)); Some(true as isize) }
 		});
 	}
 
 	wm_empty! { wm_cancel_mode, co::WM::CANCELMODE,
-		/// [`WM_CANCELMODE`](crate::msg::WmCancelMode) message.
+		/// [`WM_CANCELMODE`](crate::msg::wm::CancelMode) message.
 		///
 		/// Sent to cancel certain modes, such as mouse capture. For example, the
 		/// system sends this message to the active window when a dialog box or
@@ -375,14 +374,14 @@ impl MsgEvents {
 	}
 
 	wm_empty! { wm_child_activate, co::WM::CHILDACTIVATE,
-		/// [`WM_CHILDACTIVATE`](crate::msg::WmChildActivate) message.
+		/// [`WM_CHILDACTIVATE`](crate::msg::wm::ChildActivate) message.
 		///
 		/// Sent to a child window when the user clicks the window's title bar or
 		/// when the window is activated, moved, or sized.
 	}
 
 	wm_empty! { wm_close, co::WM::CLOSE,
-		/// [`WM_CLOSE`](crate::msg::WmClose) message.
+		/// [`WM_CLOSE`](crate::msg::wm::Close) message.
 		///
 		/// Sent as a signal that a window or an application should terminate.
 		///
@@ -396,7 +395,7 @@ impl MsgEvents {
 	}
 
 	wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,
-		/// [`WM_CONTEXTMENU`](crate::msg::WmContextMenu) message.
+		/// [`WM_CONTEXTMENU`](crate::msg::wm::ContextMenu) message.
 		///
 		/// Notifies a window that the user desires a context menu to appear. The
 		/// user may have clicked the right mouse button (right-clicked) in the
@@ -404,7 +403,7 @@ impl MsgEvents {
 		/// menu key) available on some keyboards.
 	}
 
-	/// [`WM_CREATE`](crate::msg::WmCreate) message, sent only to non-dialog
+	/// [`WM_CREATE`](crate::msg::wm::Create) message, sent only to non-dialog
 	/// windows. Dialog windows receive
 	/// [`WM_INITDIALOG`](crate::gui::events::MsgEvents::wm_init_dialog) instead.
 	///
@@ -434,89 +433,89 @@ impl MsgEvents {
 	/// });
 	/// ```
 	pub fn wm_create<F>(&self, func: F)
-		where F: FnMut(msg::WmCreate) -> i32 + 'static,
+		where F: FnMut(wm::Create) -> i32 + 'static,
 	{
 		self.add_msg(co::WM::CREATE, {
 			let mut func = func;
-			move |p| Some(func(msg::WmCreate::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::Create::from_generic_wm(p)) as isize)
 		});
 	}
 
-	/// [`WM_CTLCOLORBTN`](crate::msg::WmCtlColorBtn) message.
+	/// [`WM_CTLCOLORBTN`](crate::msg::wm::CtlColorBtn) message.
 	///
 	/// Sent to the parent window of a button before drawing the button. The
 	/// parent window can change the button's text and background colors.
 	/// However, only owner-drawn buttons respond to the parent window processing
 	/// this message.
 	pub fn wm_ctl_color_btn<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorBtn) -> HDC + 'static,
+		where F: FnMut(wm::CtlColorBtn) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORBTN, {
 			let mut func = func;
-			move |p| Some(func(msg::WmCtlColorBtn::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorBtn::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
-	/// [`WM_CTLCOLORDLG`](crate::msg::WmCtlColorDlg) message.
+	/// [`WM_CTLCOLORDLG`](crate::msg::wm::CtlColorDlg) message.
 	///
 	/// Sent to a dialog box before the system draws the dialog box. By
 	/// responding to this message, the dialog box can set its text and
 	/// background colors using the specified display device context handle.
 	pub fn wm_ctl_color_dlg<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorDlg) -> HDC + 'static,
+		where F: FnMut(wm::CtlColorDlg) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORDLG, {
 			let mut func = func;
-			move |p| Some(func(msg::WmCtlColorDlg::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorDlg::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
-	/// [`WM_CTLCOLOREDIT`](crate::msg::WmCtlColorEdit) message.
+	/// [`WM_CTLCOLOREDIT`](crate::msg::wm::CtlColorEdit) message.
 	///
 	/// An edit control that is not read-only or disabled sends the message to
 	/// its parent window when the control is about to be drawn. By responding to
 	/// this message, the parent window can use the specified device context
 	/// handle to set the text and background colors of the edit control.
 	pub fn wm_ctl_color_edit<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorEdit) -> HDC + 'static,
+		where F: FnMut(wm::CtlColorEdit) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLOREDIT, {
 			let mut func = func;
-			move |p| Some(func(msg::WmCtlColorEdit::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorEdit::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
-	/// [`WM_CTLCOLORLISTBOX`](crate::msg::WmCtlColorListBox) message.
+	/// [`WM_CTLCOLORLISTBOX`](crate::msg::wm::CtlColorListBox) message.
 	///
 	/// Sent to the parent window of a list box before the system draws the list
 	/// box. By responding to this message, the parent window can set the text
 	/// and background colors of the list box by using the specified display
 	/// device context handle.
 	pub fn wm_ctl_color_list_box<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorListBox) -> HDC + 'static,
+		where F: FnMut(wm::CtlColorListBox) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORLISTBOX, {
 			let mut func = func;
-			move |p| Some(func(msg::WmCtlColorListBox::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorListBox::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
-	/// [`WM_CTLCOLORSCROLLBAR`](crate::msg::WmCtlColorScrollBar) message.
+	/// [`WM_CTLCOLORSCROLLBAR`](crate::msg::wm::CtlColorScrollBar) message.
 	///
 	/// Sent to the parent window of a scroll bar control when the control is
 	/// about to be drawn. By responding to this message, the parent window can
 	/// use the display context handle to set the background color of the scroll
 	/// bar control.
 	pub fn wm_ctl_color_scroll_bar<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorScrollBar) -> HDC + 'static,
+		where F: FnMut(wm::CtlColorScrollBar) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
 			let mut func = func;
-			move |p| Some(func(msg::WmCtlColorScrollBar::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorScrollBar::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
-	/// [`WM_CTLCOLORSTATIC`](crate::msg::WmCtlColorStatic) message.
+	/// [`WM_CTLCOLORSTATIC`](crate::msg::wm::CtlColorStatic) message.
 	///
 	/// A static control, or an edit control that is read-only or disabled, sends
 	/// the message to its parent window when the control is about to be drawn.
@@ -524,16 +523,16 @@ impl MsgEvents {
 	/// device context handle to set the text foreground and background colors of
 	/// the static control.
 	pub fn wm_ctl_color_static<F>(&self, func: F)
-		where F: FnMut(msg::WmCtlColorStatic) -> HDC + 'static,
+		where F: FnMut(wm::CtlColorStatic) -> HDC + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSTATIC, {
 			let mut func = func;
-			move |p| Some(func(msg::WmCtlColorStatic::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorStatic::from_generic_wm(p)).ptr as isize)
 		});
 	}
 
 	wm_empty! { wm_destroy, co::WM::DESTROY,
-		/// [`WM_DESTROY`](crate::msg::WmDestroy) message.
+		/// [`WM_DESTROY`](crate::msg::wm::Destroy) message.
 		///
 		/// Sent when a window is being destroyed. It is sent to the window
 		/// procedure of the window being destroyed after the window is removed
@@ -545,15 +544,15 @@ impl MsgEvents {
 		/// still exist.
 	}
 
-	wm_ret_none! { wm_drop_files, co::WM::DROPFILES, msg::WmDropFiles,
-		/// [`WM_DROPFILES`](crate::msg::WmDropFiles) message.
+	wm_ret_none! { wm_drop_files, co::WM::DROPFILES, wm::DropFiles,
+		/// [`WM_DROPFILES`](crate::msg::wm::DropFiles) message.
 		///
 		/// Sent when the user drops a file on the window of an application that
 		/// has registered itself as a recipient of dropped files.
 	}
 
-	wm_ret_none! { wm_enable, co::WM::ENABLE, msg::WmEnable,
-		/// [`WM_ENABLE`](crate::msg::WmEnable) message.
+	wm_ret_none! { wm_enable, co::WM::ENABLE, wm::Enable,
+		/// [`WM_ENABLE`](crate::msg::wm::Enable) message.
 		///
 		/// Sent when an application changes the enabled state of a window. It is
 		/// sent to the window whose enabled state is changing. This message is
@@ -563,16 +562,16 @@ impl MsgEvents {
 		/// changed.
 	}
 
-	wm_ret_none! { wm_end_session, co::WM::ENDSESSION, msg::WmEndSession,
-		/// [`WM_ENDSESSION`](crate::msg::WmEndSession) message.
+	wm_ret_none! { wm_end_session, co::WM::ENDSESSION, wm::EndSession,
+		/// [`WM_ENDSESSION`](crate::msg::wm::EndSession) message.
 		///
 		/// Sent to an application after the system processes the results of the
 		/// [`WM_QUERYENDSESSION`](crate::gui::events::MsgEvents) message. The
 		/// `WM_ENDSESSION` message informs the application whether the session is ending.
 	}
 
-	wm_ret_none! { wm_enter_idle, co::WM::ENTERIDLE, msg::WmEnterIdle,
-		/// [`WM_ENTERIDLE`](crate::msg::WmEnterIdle) message.
+	wm_ret_none! { wm_enter_idle, co::WM::ENTERIDLE, wm::EnterIdle,
+		/// [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) message.
 		///
 		/// Sent to the owner window of a modal dialog box or menu that is
 		/// entering an idle state. A modal dialog box or menu enters an idle
@@ -580,8 +579,8 @@ impl MsgEvents {
 		/// one or more previous messages.
 	}
 
-	wm_ret_none! { wm_enter_size_move, co::WM::ENTERSIZEMOVE, msg::WmEnterSizeMove,
-		/// [`WM_ENTERSIZEMOVE`](crate::msg::WmEnterSizeMove) message.
+	wm_ret_none! { wm_enter_size_move, co::WM::ENTERSIZEMOVE, wm::EnterSizeMove,
+		/// [`WM_ENTERSIZEMOVE`](crate::msg::wm::EnterSizeMove) message.
 		///
 		/// Sent one time to a window after it enters the moving or sizing modal
 		/// loop. The window enters the moving or sizing modal loop when the user
@@ -597,22 +596,22 @@ impl MsgEvents {
 		/// full windows is enabled.
 	}
 
-	/// [`WM_ERASEBKGND`](crate::msg::WmEraseBkgnd) message.
+	/// [`WM_ERASEBKGND`](crate::msg::wm::EraseBkgnd) message.
 	///
 	/// Sent when the window background must be erased (for example, when a
 	/// window is resized). The message is sent to prepare an invalidated portion
 	/// of a window for painting.
 	pub fn wm_erase_bkgnd<F>(&self, func: F)
-		where F: FnMut(msg::WmEraseBkgnd) -> i32 + 'static,
+		where F: FnMut(wm::EraseBkgnd) -> i32 + 'static,
 	{
 		self.add_msg(co::WM::ERASEBKGND, {
 			let mut func = func;
-			move |p| Some(func(msg::WmEraseBkgnd::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::EraseBkgnd::from_generic_wm(p)) as isize)
 		});
 	}
 
-	wm_ret_none! { wm_exit_size_move, co::WM::EXITSIZEMOVE, msg::WmExitSizeMove,
-		/// [`WM_EXITSIZEMOVE`](crate::msg::WmExitSizeMove) message.
+	wm_ret_none! { wm_exit_size_move, co::WM::EXITSIZEMOVE, wm::ExitSizeMove,
+		/// [`WM_EXITSIZEMOVE`](crate::msg::wm::ExitSizeMove) message.
 		///
 		/// Sent one time to a window, after it has exited the moving or sizing
 		/// modal loop. The window enters the moving or sizing modal loop when the
@@ -625,8 +624,8 @@ impl MsgEvents {
 		/// `DefWindowProc` returns.
 	}
 
-	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, msg::WmGetMinMaxInfo,
-		/// [`WM_GETMINMAXINFO`](crate::msg::WmGetMinMaxInfo) message.
+	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo,
+		/// [`WM_GETMINMAXINFO`](crate::msg::wm::GetMinMaxInfo) message.
 		///
 		/// Sent to a window when the size or position of the window is about to
 		/// change. An application can use this message to override the window's
@@ -634,7 +633,7 @@ impl MsgEvents {
 		/// tracking size.
 	}
 
-	/// [`WM_INITDIALOG`](crate::msg::WmInitDialog) message, sent only to dialog
+	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to dialog
 	/// windows. Non-dialog windows receive
 	/// [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create) instead.
 	///
@@ -643,24 +642,24 @@ impl MsgEvents {
 	/// controls and carry out any other initialization tasks that affect the
 	/// appearance of the dialog box.
 	pub fn wm_init_dialog<F>(&self, func: F)
-		where F: FnMut(msg::WmInitDialog) -> bool + 'static,
+		where F: FnMut(wm::InitDialog) -> bool + 'static,
 	{
 		self.add_msg(co::WM::INITDIALOG, {
 			let mut func = func;
-			move |p| Some(func(msg::WmInitDialog::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::InitDialog::from_generic_wm(p)) as isize)
 		});
 	}
 
-	wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, msg::WmInitMenuPopup,
-		/// [`WM_INITMENUPOPUP`](crate::msg::WmInitMenuPopup) message.
+	wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup,
+		/// [`WM_INITMENUPOPUP`](crate::msg::wm::InitMenuPopup) message.
 		///
 		/// Sent when a drop-down menu or submenu is about to become active. This
 		/// allows an application to modify the menu before it is displayed,
 		/// without changing the entire menu.
 	}
 
-	wm_ret_none! { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, msg::WmLButtonDblClk,
-		/// [`WM_LBUTTONDBLCLK`](crate::msg::WmLButtonDblClk) message.
+	wm_ret_none! { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, wm::LButtonDblClk,
+		/// [`WM_LBUTTONDBLCLK`](crate::msg::wm::LButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the left mouse button while the
 		/// cursor is in the client area of a window. If the mouse is not
@@ -669,8 +668,8 @@ impl MsgEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_l_button_down, co::WM::LBUTTONDOWN, msg::WmLButtonDown,
-		/// [`WM_LBUTTONDOWN`](crate::msg::WmLButtonDown) message.
+	wm_ret_none! { wm_l_button_down, co::WM::LBUTTONDOWN, wm::LButtonDown,
+		/// [`WM_LBUTTONDOWN`](crate::msg::wm::LButtonDown) message.
 		///
 		/// Posted when the user presses the left mouse button while the cursor is
 		/// in the client area of a window. If the mouse is not captured, the
@@ -678,8 +677,8 @@ impl MsgEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_l_button_up, co::WM::LBUTTONUP, msg::WmLButtonUp,
-		/// [`WM_LBUTTONUP`](crate::msg::WmLButtonUp) message.
+	wm_ret_none! { wm_l_button_up, co::WM::LBUTTONUP, wm::LButtonUp,
+		/// [`WM_LBUTTONUP`](crate::msg::wm::LButtonUp) message.
 		///
 		/// Posted when the user releases the left mouse button while the cursor
 		/// is in the client area of a window. If the mouse is not captured, the
@@ -687,8 +686,8 @@ impl MsgEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, msg::WmMButtonDblClk,
-		/// [`WM_MBUTTONDBLCLK`](crate::msg::WmMButtonDblClk) message.
+	wm_ret_none! { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, wm::MButtonDblClk,
+		/// [`WM_MBUTTONDBLCLK`](crate::msg::wm::MButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the middle mouse button while the
 		/// cursor is in the client area of a window. If the mouse is not
@@ -697,8 +696,8 @@ impl MsgEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_m_button_down, co::WM::MBUTTONDOWN, msg::WmMButtonDown,
-		/// [`WM_MBUTTONDOWN`](crate::msg::WmMButtonDown) message.
+	wm_ret_none! { wm_m_button_down, co::WM::MBUTTONDOWN, wm::MButtonDown,
+		/// [`WM_MBUTTONDOWN`](crate::msg::wm::MButtonDown) message.
 		///
 		/// Posted when the user presses the middle mouse button while the cursor
 		/// is in the client area of a window. If the mouse is not captured, the
@@ -706,8 +705,8 @@ impl MsgEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_m_button_up, co::WM::MBUTTONUP, msg::WmMButtonUp,
-		/// [`WM_MBUTTONUP`](crate::msg::WmMButtonUp) message.
+	wm_ret_none! { wm_m_button_up, co::WM::MBUTTONUP, wm::MButtonUp,
+		/// [`WM_MBUTTONUP`](crate::msg::wm::MButtonUp) message.
 		///
 		/// Posted when the user releases the middle mouse button while the cursor
 		/// is in the client area of a window. If the mouse is not captured, the
@@ -715,16 +714,16 @@ impl MsgEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_mouse_hover, co::WM::MOUSEHOVER, msg::WmMouseHover,
-		/// [`WM_MOUSEHOVER`](crate::msg::WmMouseHover) message.
+	wm_ret_none! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover,
+		/// [`WM_MOUSEHOVER`](crate::msg::wm::MouseHover) message.
 		///
 		/// Posted to a window when the cursor hovers over the client area of the
 		/// window for the period of time specified in a prior call to
 		/// [`TrackMouseEvent`](crate::TrackMouseEvent).
 	}
 
-	wm_ret_none! { wm_mouse_move, co::WM::MOUSEMOVE, msg::WmMouseMove,
-		/// [`WM_MOUSEMOVE`](crate::msg::WmMouseMove) message.
+	wm_ret_none! { wm_mouse_move, co::WM::MOUSEMOVE, wm::MouseMove,
+		/// [`WM_MOUSEMOVE`](crate::msg::wm::MouseMove) message.
 		///
 		/// Posted to a window when the cursor moves. If the mouse is not
 		/// captured, the message is posted to the window that contains the
@@ -732,50 +731,50 @@ impl MsgEvents {
 		/// captured the mouse.
 	}
 
-	wm_ret_none! { wm_move, co::WM::MOVE, msg::WmMove,
-		/// [`WM_MOVE`](crate::msg::WmMove) message.
+	wm_ret_none! { wm_move, co::WM::MOVE, wm::Move,
+		/// [`WM_MOVE`](crate::msg::wm::Move) message.
 		///
 		/// Sent after a window has been moved.
 	}
 
-	wm_ret_none! { wm_moving, co::WM::MOVING, msg::WmMoving,
-		/// [`WM_MOVING`](crate::msg::WmMoving) message.
+	wm_ret_none! { wm_moving, co::WM::MOVING, wm::Moving,
+		/// [`WM_MOVING`](crate::msg::wm::Moving) message.
 		///
 		/// Sent to a window that the user is moving. By processing this message,
 		/// an application can monitor the position of the drag rectangle and, if
 		/// needed, change its position.
 	}
 
-	/// [`WM_NCCALCSIZE`](crate::msg::WmNcCalcSize) message.
+	/// [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize) message.
 	///
 	/// Sent when the size and position of a window's client area must be
 	/// calculated. By processing this message, an application can control the
 	/// content of the window's client area when the size or position of the
 	/// window changes.
 	pub fn wm_nc_calc_size<F>(&self, func: F)
-		where F: FnMut(msg::WmNcCalcSize) -> co::WVR + 'static
+		where F: FnMut(wm::NcCalcSize) -> co::WVR + 'static
 	{
 		self.add_msg(co::WM::NCCALCSIZE, {
 			let mut func = func;
-			move |p| Some(func(msg::WmNcCalcSize::from_generic_wm(p)).0 as isize)
+			move |p| Some(func(wm::NcCalcSize::from_generic_wm(p)).0 as isize)
 		});
 	}
 
-	/// [`WM_NCCREATE`](crate::msg::WmNcCreate) message.
+	/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
 	///
 	/// Sent prior to the [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create)
 	/// message when a window is first created.
 	pub fn wm_nc_create<F>(&self, func: F)
-		where F: FnMut(msg::WmNcCreate) -> bool + 'static,
+		where F: FnMut(wm::NcCreate) -> bool + 'static,
 	{
 		self.add_msg(co::WM::NCCREATE, {
 			let mut func = func;
-			move |p| Some(func(msg::WmNcCreate::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::NcCreate::from_generic_wm(p)) as isize)
 		});
 	}
 
 	wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
-		/// [`WM_NCDESTROY`](crate::msg::WmNcDestroy) message.
+		/// [`WM_NCDESTROY`](crate::msg::wm::NcDestroy) message.
 		///
 		/// Notifies a window that its nonclient area is being destroyed. The
 		/// [`DestroyWindow`](crate::HWND::DestroyWindow) function sends the
@@ -796,8 +795,8 @@ impl MsgEvents {
 		/// * dialog [`CustomMain`](crate::gui::CustomMain).
 	}
 
-	wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, msg::WmNcPaint,
-		/// [`WM_NCPAINT`](crate::msg::WmNcPaint) message.
+	wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint,
+		/// [`WM_NCPAINT`](crate::msg::wm::NcPaint) message.
 		///
 		/// Sent to a window when its frame must be painted.
 		///
@@ -810,14 +809,14 @@ impl MsgEvents {
 	}
 
 	wm_empty! { wm_null, co::WM::NULL,
-		/// [`WM_NULL`](crate::msg::WmNull) message.
+		/// [`WM_NULL`](crate::msg::wm::Null) message.
 		///
 		/// Performs no operation. An application sends the message if it wants to
 		/// post a message that the recipient window will ignore.
 	}
 
 	wm_empty! { wm_paint, co::WM::PAINT,
-		/// [`WM_PAINT`](crate::msg::WmPaint) message.
+		/// [`WM_PAINT`](crate::msg::wm::Paint) message.
 		///
 		/// Sent when the system or another application makes a request to paint a
 		/// portion of an application's window. The message is sent when the
@@ -829,21 +828,21 @@ impl MsgEvents {
 		/// [`PeekMessage`](crate::PeekMessage) function.
 	}
 
-	/// [`WM_QUERYOPEN`](crate::msg::WmQueryOpen) message.
+	/// [`WM_QUERYOPEN`](crate::msg::wm::QueryOpen) message.
 	///
 	/// Sent to an icon when the user requests that the window be restored to its
 	/// previous size and position.
 	pub fn wm_query_open<F>(&self, func: F)
-		where F: FnMut(msg::WmQueryOpen) -> bool + 'static,
+		where F: FnMut(wm::QueryOpen) -> bool + 'static,
 	{
 		self.add_msg(co::WM::QUERYOPEN, {
 			let mut func = func;
-			move |p| Some(func(msg::WmQueryOpen::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::QueryOpen::from_generic_wm(p)) as isize)
 		});
 	}
 
-	wm_ret_none! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, msg::WmRButtonDblClk,
-		/// [`WM_RBUTTONDBLCLK`](crate::msg::WmRButtonDblClk) message.
+	wm_ret_none! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk,
+		/// [`WM_RBUTTONDBLCLK`](crate::msg::wm::RButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the right mouse button while the
 		/// cursor is in the client area of a window. If the mouse is not
@@ -852,8 +851,8 @@ impl MsgEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_r_button_down, co::WM::RBUTTONDOWN, msg::WmRButtonDown,
-		/// [`WM_RBUTTONDOWN`](crate::msg::WmRButtonDown) message.
+	wm_ret_none! { wm_r_button_down, co::WM::RBUTTONDOWN, wm::RButtonDown,
+		/// [`WM_RBUTTONDOWN`](crate::msg::wm::RButtonDown) message.
 		///
 		/// Posted when the user presses the right mouse button while the cursor
 		/// is in the client area of a window. If the mouse is not captured, the
@@ -861,8 +860,8 @@ impl MsgEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_r_button_up, co::WM::RBUTTONUP, msg::WmRButtonUp,
-		/// [`WM_RBUTTONUP`](crate::msg::WmRButtonUp) message.
+	wm_ret_none! { wm_r_button_up, co::WM::RBUTTONUP, wm::RButtonUp,
+		/// [`WM_RBUTTONUP`](crate::msg::wm::RButtonUp) message.
 		///
 		/// Posted when the user releases the right mouse button while the cursor
 		/// is in the client area of a window. If the mouse is not captured, the
@@ -870,8 +869,8 @@ impl MsgEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, msg::WmSetFocus,
-		/// [`WM_SETFOCUS`](crate::msg::WmSetFocus) message.
+	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus,
+		/// [`WM_SETFOCUS`](crate::msg::wm::SetFocus) message.
 		///
 		/// Sent to a window after it has gained the keyboard focus.
 		///
@@ -883,24 +882,24 @@ impl MsgEvents {
 		/// * non-dialog [`CustomModal`](crate::gui::CustomModal).
 	}
 
-	wm_ret_none! { wm_set_font, co::WM::SETFONT, msg::WmSetFont,
-		/// [`WM_SETFONT`](crate::msg::WmSetFont) message.
+	wm_ret_none! { wm_set_font, co::WM::SETFONT, wm::SetFont,
+		/// [`WM_SETFONT`](crate::msg::wm::SetFont) message.
 		///
 		/// Sets the font that a control is to use when drawing text.
 	}
 
-	/// [`WM_SETICON`](crate::msg::WmSetIcon) message.
+	/// [`WM_SETICON`](crate::msg::wm::SetIcon) message.
 	///
 	/// Associates a new large or small icon with a window. The system displays
 	/// the large icon in the Alt+TAB dialog box, and the small icon in the
 	/// window caption.
 	pub fn wm_set_icon<F>(&self, func: F)
-		where F: FnMut(msg::WmSetIcon) -> Option<HICON> + 'static,
+		where F: FnMut(wm::SetIcon) -> Option<HICON> + 'static,
 	{
 		self.add_msg(co::WM::SETICON, {
 			let mut func = func;
 			move |p| Some(
-				match func(msg::WmSetIcon::from_generic_wm(p)) {
+				match func(wm::SetIcon::from_generic_wm(p)) {
 					Some(hicon) => hicon.ptr as isize,
 					None => 0,
 				},
@@ -908,14 +907,14 @@ impl MsgEvents {
 		});
 	}
 
-	wm_ret_none! { wm_show_window, co::WM::SHOWWINDOW, msg::WmShowWindow,
-		/// [`WM_SHOWWINDOW`](crate::msg::WmShowWindow) message.
+	wm_ret_none! { wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow,
+		/// [`WM_SHOWWINDOW`](crate::msg::wm::ShowWindow) message.
 		///
 		/// Sent to a window when the window is about to be hidden or shown.
 	}
 
-	wm_ret_none! { wm_size, co::WM::SIZE, msg::WmSize,
-		/// [`WM_SIZE`](crate::msg::WmSize) message.
+	wm_ret_none! { wm_size, co::WM::SIZE, wm::Size,
+		/// [`WM_SIZE`](crate::msg::wm::Size) message.
 		///
 		/// Sent to a window after its size has changed.
 		///
@@ -939,40 +938,40 @@ impl MsgEvents {
 		/// ```
 	}
 
-	wm_ret_none! { wm_sizing, co::WM::SIZING, msg::WmSizing,
-		/// [`WM_SIZING`](crate::msg::WmSizing) message.
+	wm_ret_none! { wm_sizing, co::WM::SIZING, wm::Sizing,
+		/// [`WM_SIZING`](crate::msg::wm::Sizing) message.
 		///
 		/// Sent to a window that the user is resizing. By processing this
 		/// message, an application can monitor the size and position of the drag
 		/// rectangle and, if needed, change its size or position.
 	}
 
-	wm_ret_none! { wm_style_changed, co::WM::STYLECHANGED, msg::WmStyleChanged,
-		/// [`WM_STYLECHANGED`](crate::msg::WmStyleChanged) message.
+	wm_ret_none! { wm_style_changed, co::WM::STYLECHANGED, wm::StyleChanged,
+		/// [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) message.
 		///
 		/// Sent to a window after the
 		/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function has
 		/// changed one or more of the window's styles.
 	}
 
-	wm_ret_none! { wm_style_changing, co::WM::STYLECHANGING, msg::WmStyleChanging,
-		/// [`WM_STYLECHANGING`](crate::msg::WmStyleChanging) message.
+	wm_ret_none! { wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging,
+		/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) message.
 		///
 		/// Sent to a window when the
 		/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function is about
 		/// to change one or more of the window's styles.
 	}
 
-	wm_ret_none! { wm_theme_changed, co::WM::THEMECHANGED, msg::WmThemeChanged,
-		/// [`WM_THEMECHANGED`](crate::msg::WmThemeChanged) message.
+	wm_ret_none! { wm_theme_changed, co::WM::THEMECHANGED, wm::ThemeChanged,
+		/// [`WM_THEMECHANGED`](crate::msg::wm::ThemeChanged) message.
 		///
 		/// Broadcast to every window following a theme change event. Examples of
 		/// theme change events are the activation of a theme, the deactivation of
 		/// a theme, or a transition from one theme to another.
 	}
 
-	wm_ret_none! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, msg::WmWindowPosChanged,
-		/// [`WM_WINDOWPOSCHANGED`](crate::msg::WmWindowPosChanged) message.
+	wm_ret_none! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged,
+		/// [`WM_WINDOWPOSCHANGED`](crate::msg::wm::WindowPosChanged) message.
 		///
 		/// Sent to a window whose size, position, or place in the Z order has
 		/// changed as a result of a call to the
@@ -980,8 +979,8 @@ impl MsgEvents {
 		/// window-management function.
 	}
 
-	wm_ret_none! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, msg::WmWindowPosChanging,
-		/// [`WM_WINDOWPOSCHANGING`](crate::msg::WmWindowPosChanging) message.
+	wm_ret_none! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging,
+		/// [`WM_WINDOWPOSCHANGING`](crate::msg::wm::WindowPosChanging) message.
 		///
 		/// Sent to a window whose size, position, or place in the Z order is
 		/// about to change as a result of a call to the
@@ -989,8 +988,8 @@ impl MsgEvents {
 		/// window-management function.
 	}
 
-	wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, msg::WmXButtonDblClk,
-		/// [`WM_XBUTTONDBLCLK`](crate::msg::WmXButtonDblClk) message.
+	wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk,
+		/// [`WM_XBUTTONDBLCLK`](crate::msg::wm::XButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the first or second X button while
 		/// the cursor is in the client area of a window. If the mouse is not
@@ -999,8 +998,8 @@ impl MsgEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_x_button_down, co::WM::XBUTTONDOWN, msg::WmXButtonDown,
-		/// [`WM_XBUTTONDOWN`](crate::msg::WmXButtonDown) message.
+	wm_ret_none! { wm_x_button_down, co::WM::XBUTTONDOWN, wm::XButtonDown,
+		/// [`WM_XBUTTONDOWN`](crate::msg::wm::XButtonDown) message.
 		///
 		/// Posted when the user presses the first or second X button while the
 		/// cursor is in the client area of a window. If the mouse is not
@@ -1009,8 +1008,8 @@ impl MsgEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_x_button_up, co::WM::XBUTTONUP, msg::WmXButtonUp,
-		/// [`WM_XBUTTONUP`](crate::msg::WmXButtonUp) message.
+	wm_ret_none! { wm_x_button_up, co::WM::XBUTTONUP, wm::XButtonUp,
+		/// [`WM_XBUTTONUP`](crate::msg::wm::XButtonUp) message.
 		///
 		/// Posted when the user releases the first or second X button while the
 		/// cursor is in the client area of a window. If the mouse is not

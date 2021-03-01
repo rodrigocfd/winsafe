@@ -8,7 +8,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::WmSetFont;
+use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -90,7 +90,7 @@ impl Edit {
 						opts.window_style | opts.edit_style.into(),
 					)?;
 
-					our_hwnd.SendMessage(WmSetFont{ hfont: ui_font(), redraw: true });
+					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
