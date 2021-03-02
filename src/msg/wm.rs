@@ -1,6 +1,6 @@
 //! Generic window
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
-//! whose constants have `WM` prefix.
+//! whose constants have [`WM`](crate::co::WM) prefix.
 
 use crate::aliases::TIMERPROC;
 use crate::co;
@@ -17,8 +17,6 @@ use crate::structs::{
 	POINT,
 	RECT,
 	SIZE,
-	STYLESTRUCT_WS_EX,
-	STYLESTRUCT_WS,
 	WINDOWPOS,
 };
 
@@ -943,7 +941,7 @@ impl<'a> Message for Notify<'a> {
 		Wm {
 			msg_id: co::WM::NOTIFY,
 			wparam: self.nmhdr.hwndFrom.ptr as usize,
-			lparam: self.nmhdr as *const NMHDR as isize,
+			lparam: self.nmhdr as *const _ as isize,
 		}
 	}
 }
@@ -951,7 +949,7 @@ impl<'a> Message for Notify<'a> {
 impl<'a> MessageHandleable for Notify<'a> {
 	fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			nmhdr: unsafe { &*(p.lparam as *const NMHDR) },
+			nmhdr: unsafe { &*(p.lparam as *const _) },
 		}
 	}
 }
@@ -1281,8 +1279,8 @@ impl<'a> Message for StyleChanged<'a> {
 			msg_id: co::WM::STYLECHANGED,
 			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const STYLESTRUCT_WS as isize,
-				WsWsex::Wsex(wsx) => wsx as *const STYLESTRUCT_WS_EX as isize,
+				WsWsex::Ws(ws) => ws as *const _ as isize,
+				WsWsex::Wsex(wsx) => wsx as *const _ as isize,
 			},
 		}
 	}
@@ -1324,8 +1322,8 @@ impl<'a> Message for StyleChanging<'a> {
 			msg_id: co::WM::STYLECHANGING,
 			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const STYLESTRUCT_WS as isize,
-				WsWsex::Wsex(wsx) => wsx as *const STYLESTRUCT_WS_EX as isize,
+				WsWsex::Ws(ws) => ws as *const _ as isize,
+				WsWsex::Wsex(wsx) => wsx as *const _ as isize,
 			},
 		}
 	}

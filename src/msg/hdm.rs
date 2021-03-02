@@ -1,6 +1,6 @@
 //! Header control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages),
-//! whose constants have `HDM` prefix.
+//! whose constants have [`HDM`](crate::co::HDM) prefix.
 
 use crate::aliases::WinResult;
 use crate::co;

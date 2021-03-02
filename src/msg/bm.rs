@@ -1,6 +1,6 @@
 //! Button control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages),
-//! whose constants have `BM` and `BCM` prefixes.
+//! whose constants have [`BM` and `BCM`](crate::co::BM) prefixes.
 
 use crate::aliases::WinResult;
 use crate::co;

@@ -1,6 +1,6 @@
 //! Date and time picker control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages),
-//! whose constants have `DTM` prefix.
+//! whose constants have [`DTM`](crate::co::DTM) prefix.
 
 use crate::aliases::WinResult;
 use crate::co;

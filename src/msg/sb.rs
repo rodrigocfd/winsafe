@@ -1,6 +1,6 @@
 //! Status bar control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages),
-//! whose constants have `SB` prefix.
+//! whose constants have [`SB`](crate::co::SB) prefix.
 
 use crate::aliases::WinResult;
 use crate::co;

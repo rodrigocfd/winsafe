@@ -1,6 +1,6 @@
 //! Static control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages),
-//! whose constants have `STM` prefix.
+//! whose constants have [`STM`](crate::co::STM) prefix.
 
 use crate::aliases::WinResult;
 use crate::co;

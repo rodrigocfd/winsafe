@@ -1,6 +1,6 @@
 //! Combo box control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages),
-//! whose constants have `CB` prefix.
+//! whose constants have [`CB`](crate::co::CB) prefix.
 
 use crate::aliases::WinResult;
 use crate::co;

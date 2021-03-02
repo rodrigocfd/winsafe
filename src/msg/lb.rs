@@ -1,6 +1,6 @@
 //! List box control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages),
-//! whose constants have `LB` prefix.
+//! whose constants have [`LB`](crate::co::LB) prefix.
 
 use crate::aliases::WinResult;
 use crate::co;
