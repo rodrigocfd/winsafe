@@ -633,6 +633,12 @@ impl MsgEvents {
 		/// tracking size.
 	}
 
+	wm_ret_none! { wm_help, co::WM::HELP, wm::Help,
+		/// [`WM_HELP`](crate::msg::wm::Help) message.
+		///
+		/// Indicates that the user pressed the F1 key.
+	}
+
 	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to dialog
 	/// windows. Non-dialog windows receive
 	/// [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create) instead.
@@ -826,6 +832,13 @@ impl MsgEvents {
 		/// application obtains a `WM_PAINT` message by using the
 		/// [`GetMessage`](crate::GetMessage) or
 		/// [`PeekMessage`](crate::PeekMessage) function.
+	}
+
+	wm_ret_none! { wm_parent_notify, co::WM::PARENTNOTIFY, wm::ParentNotify,
+		/// [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) message.
+		///
+		/// Sent to a window when a significant action occurs on a descendant
+		/// window.
 	}
 
 	/// [`WM_QUERYOPEN`](crate::msg::wm::QueryOpen) message.

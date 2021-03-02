@@ -24,9 +24,6 @@ pub trait Message {
 ///
 /// Allows the conversion from and to the generic [`Wm`](crate::msg::wm::Wm)
 /// parameters, and also defines the return type of the message.
-///
-/// Used in functions like [`SendMessage`](crate::HWND::SendMessage) and
-/// [`DefWindowProc`](`crate::HWND::DefWindowProc`).
 pub trait MessageHandleable: Message {
 	/// Converts the generic [`Wm`](crate::msg::wm::Wm) parameters into the message
 	/// parameters.

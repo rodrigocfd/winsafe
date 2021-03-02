@@ -7,9 +7,9 @@ use std::marker::PhantomData;
 
 use crate::aliases::WNDPROC;
 use crate::co;
-use crate::enums::{HwndPlace, IdStr};
+use crate::enums::{HwndHmenu, HwndPlace, IdStr};
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LOBYTE, LODWORD, LOWORD};
-use crate::handles as h;
+use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
 use crate::privs::LF_FACESIZE;
 use crate::WString;
 
@@ -103,9 +103,9 @@ impl COLORREF {
 #[repr(C)]
 pub struct CREATESTRUCT<'a, 'b> {
 	pub lpCreateParams: isize,
-	pub hInstance: h::HINSTANCE,
-	pub hMenu: h::HMENU,
-	pub hwndParent: h::HWND,
+	pub hInstance: HINSTANCE,
+	pub hMenu: HMENU,
+	pub hwndParent: HWND,
 	pub cy: i32,
 	pub cx: i32,
 	pub y: i32,
@@ -139,6 +139,29 @@ impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 	/// Sets the `lpszClass` field.
 	pub fn set_lpszClass(&mut self, buf: &'b WString) {
 		self.lpszClass = unsafe { buf.as_ptr() };
+	}
+}
+
+/// [`HELPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-helpinfo)
+/// struct.
+///
+/// You cannot directly instantiate this object.
+#[repr(C)]
+pub struct HELPINFO {
+	cbSize: u32,
+	pub iContextType: co::HELPINFO,
+	pub iCtrlId: i32,
+	hItemHandle: usize, // HWND|HMENU
+	pub dwContextId: u32,
+	pub MousePos: POINT,
+}
+
+impl HELPINFO {
+	pub fn hItemHandle(&self) -> HwndHmenu {
+		match self.iContextType {
+			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND { ptr: self.hItemHandle as *mut _ }),
+			_ => HwndHmenu::Hmenu(HMENU { ptr: self.hItemHandle as *mut _ }),
+		}
 	}
 }
 
@@ -183,7 +206,7 @@ pub struct MENUINFO {
 	pub fMask: co::MIM,
 	pub dwStyle: co::MNS,
 	pub cyMax: u32,
-	pub hbrBack: h::HBRUSH,
+	pub hbrBack: HBRUSH,
 	pub dwContextHelpID: u32,
 	pub dwMenuData: usize,
 }
@@ -205,13 +228,13 @@ pub struct MENUITEMINFO {
 	pub fType: co::MFT,
 	pub fState: co::MFS,
 	pub wID: u32,
-	pub hSubMenu: h::HMENU,
-	pub hbmpChecked: h::HBITMAP,
-	pub hbmpUnchecked: h::HBITMAP,
+	pub hSubMenu: HMENU,
+	pub hbmpChecked: HBITMAP,
+	pub hbmpUnchecked: HBITMAP,
 	pub dwItemData: usize,
 	pub dwTypeData: *mut u16,
 	pub cch: u32,
-	pub hbmpItem: h::HBITMAP,
+	pub hbmpItem: HBITMAP,
 }
 
 impl Default for MENUITEMINFO {
@@ -239,7 +262,7 @@ pub struct MINMAXINFO {
 #[repr(C)]
 #[derive(Clone)]
 pub struct MSG {
-	pub hwnd: h::HWND,
+	pub hwnd: HWND,
 	pub message: co::WM,
 	pub wParam: usize,
 	pub lParam: isize,
@@ -283,7 +306,7 @@ impl<'a> NCCALCSIZE_PARAMS<'a> {
 #[derive(Clone, Eq, PartialEq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
-	pub hwndFrom: h::HWND,
+	pub hwndFrom: HWND,
 	/// ID of the control sending the message.
 	pub idFrom: usize,
 	/// Notification code sent in
@@ -371,7 +394,7 @@ impl OSVERSIONINFOEX {
 /// struct.
 #[repr(C)]
 pub struct PAINTSTRUCT {
-	pub hdc: h::HDC,
+	pub hdc: HDC,
 	pub fErase: u32,
 	pub rcPaint: RECT,
 	fRestore: u32,
@@ -485,7 +508,7 @@ pub struct SYSTEMTIME {
 pub struct TRACKMOUSEEVENT {
 	cbSize: u32,
 	pub dwFlags: co::TME,
-	pub hwndTrack: h::HWND,
+	pub hwndTrack: HWND,
 	pub dwHoverTime: u32,
 }
 
@@ -546,7 +569,7 @@ impl Default for WINDOWPLACEMENT {
 /// struct.
 #[repr(C)]
 pub struct WINDOWPOS {
-	pub hwnd: h::HWND,
+	pub hwnd: HWND,
 	hwndInsertAfter: isize,
 	pub x: i32,
 	pub y: i32,
@@ -562,7 +585,7 @@ impl WINDOWPOS {
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
 			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),
-			_ => HwndPlace::Hwnd(h::HWND { ptr: self.hwndInsertAfter as *mut _ }),
+			_ => HwndPlace::Hwnd(HWND { ptr: self.hwndInsertAfter as *mut _ }),
 		}
 	}
 
@@ -585,13 +608,13 @@ pub struct WNDCLASSEX<'a, 'b> {
 	pub lpfnWndProc: Option<WNDPROC>,
 	pub cbClsExtra: i32,
 	pub cbWndExtra: i32,
-	pub hInstance: h::HINSTANCE,
-	pub hIcon: h::HICON,
-	pub hCursor: h::HCURSOR,
-	pub hbrBackground: h::HBRUSH,
+	pub hInstance: HINSTANCE,
+	pub hIcon: HICON,
+	pub hCursor: HCURSOR,
+	pub hbrBackground: HBRUSH,
 	lpszMenuName: *const u16,
 	lpszClassName: *const u16,
-	pub hIconSm: h::HICON,
+	pub hIconSm: HICON,
 	m_lpszMenuName: PhantomData<&'a u16>,
 	m_lpszClassName: PhantomData<&'b u16>,
 }

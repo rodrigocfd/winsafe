@@ -4,7 +4,7 @@
 
 use crate::aliases::TIMERPROC;
 use crate::co;
-use crate::enums::{HwndHmenu, NccspRect, WsWsex};
+use crate::enums::{HwndHmenu, HwndPointId, NccspRect, WsWsex};
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{Message, MessageHandleable};
@@ -12,6 +12,7 @@ use crate::msg::macros::{lp_to_point, point_to_lp};
 use crate::privs::FAPPCOMMAND_MASK;
 use crate::structs::{
 	CREATESTRUCT,
+	HELPINFO,
 	MINMAXINFO,
 	NMHDR,
 	POINT,
@@ -592,6 +593,40 @@ impl<'a> MessageHandleable for GetMinMaxInfo<'a> {
 
 //------------------------------------------------------------------------------
 
+/// [`WM_HELP`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-help)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct Help<'a> {
+	pub helpinfo: &'a HELPINFO,
+}
+
+impl<'a> Message for Help<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::HELP,
+			wparam: 0,
+			lparam: self.helpinfo as *const _ as isize,
+		}
+	}
+}
+
+impl<'a> MessageHandleable for Help<'a> {
+	fn from_generic_wm(p: Wm) -> Self {
+		Self {
+			helpinfo: unsafe { &mut *(p.lparam as *mut _) },
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
 ///
@@ -979,6 +1014,49 @@ empty_msg_handleable! { Paint, co::WM::PAINT,
 	/// message, which has no parameters.
 	///
 	/// Return type: `()`.
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_PARENTNOTIFY`](https://docs.microsoft.com/en-us/windows/win32/inputmsg/wm-parentnotify)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct ParentNotify {
+	pub event: co::WMPN,
+	pub child_id: u16,
+	pub data: HwndPointId,
+}
+
+impl Message for ParentNotify {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::WM::PARENTNOTIFY,
+			wparam: MAKEDWORD(self.event.0, self.child_id) as usize,
+			lparam: self.data.as_isize(),
+		}
+	}
+}
+
+impl MessageHandleable for ParentNotify {
+	fn from_generic_wm(p: Wm) -> Self {
+		let event = co::WMPN(LOWORD(p.wparam as u32));
+		Self {
+			event,
+			child_id: HIWORD(p.wparam as u32),
+			data: match event {
+				co::WMPN::CREATE | co::WMPN::DESTROY => HwndPointId::Hwnd(HWND { ptr: p.lparam as *mut _ }),
+				co::WMPN::POINTERDOWN => HwndPointId::Id(p.lparam as u16),
+				_ => HwndPointId::Point(lp_to_point(p)),
+			},
+		}
+	}
 }
 
 //------------------------------------------------------------------------------

@@ -916,6 +916,12 @@ impl HWND {
 			.map(|ptr| Self { ptr })
 	}
 
+	/// [`SetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow)
+	/// method.
+	pub fn SetForegroundWindow(self) -> bool {
+		unsafe { user32::SetForegroundWindow(self.ptr) != 0 }
+	}
+
 	/// [`SetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setparent)
 	/// method.
 	pub fn SetParent(self, hWndNewParent: HWND) -> WinResult<Option<HWND>> {
@@ -1089,5 +1095,23 @@ impl HWND {
 	pub fn WindowFromPoint(point: POINT) -> Option<HWND> {
 		ptr_as_opt(unsafe { user32::WindowFromPoint(point.x, point.y) })
 			.map(|ptr| Self { ptr })
+	}
+
+	/// [`WinHelp`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-winhelpw)
+	/// method.
+	pub fn WinHelp(self,
+		lpszHelp: &str, uCommand: co::HELPW, dwData: usize) -> WinResult<()>
+	{
+		match unsafe {
+			user32::WinHelpW(
+				self.ptr,
+				WString::from_str(lpszHelp).as_ptr(),
+				uCommand.0,
+				dwData,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
 	}
 }

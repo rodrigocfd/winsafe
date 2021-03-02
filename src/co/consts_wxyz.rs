@@ -364,6 +364,18 @@ const_type! { WM, u32,
 	USER, 0x0400
 }
 
+const_type! { WMPN, u16,
+	/// [`WM_PARENTNOFITY`](crate::msg::wm::ParentNotify) event (`u16`).
+	->
+	CREATE, WM::CREATE.0 as u16
+	DESTROY, WM::DESTROY.0 as u16
+	LBUTTONDOWN, WM::LBUTTONDOWN.0 as u16
+	MBUTTONDOWN, WM::MBUTTONDOWN.0 as u16
+	RBUTTONDOWN, WM::RBUTTONDOWN.0 as u16
+	XBUTTONDOWN, WM::XBUTTONDOWN.0 as u16
+	POINTERDOWN, WM::POINTERDOWN.0 as u16
+}
+
 const_type! { WMSZ, u8,
 	/// [`WM_SIZING`](crate::msg::wm::Sizing) window edge (`u8`).
 	->
@@ -498,7 +510,7 @@ const_type! { WS_EX, u32,
 	/// style in the dwStyle parameter.
 	DLGMODALFRAME, 0x00000001
 	/// The child window created with this style does not send the
-	/// [`WM_PARENTNOTIFY`](crate::msg::wm::PARENTNOTIFY) message to its parent
+	/// [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) message to its parent
 	/// window when it is created or destroyed.
 	NOPARENTNOTIFY, 0x00000004
 	/// The window should be placed above all non-topmost windows and should stay
@@ -532,7 +544,7 @@ const_type! { WS_EX, u32,
 	/// The title bar of the window includes a question mark. When the user
 	/// clicks the question mark, the cursor changes to a question mark with a
 	/// pointer. If the user then clicks a child window, the child receives a
-	/// [`WM_HELP`](crate::msg::wm::HELP) message. The child window should pass
+	/// [`WM_HELP`](crate::msg::wm::Help) message. The child window should pass
 	/// the message to the parent window procedure, which should call the
 	/// [`WinHelp`](crate::HWND::WinHelp) function using the `HELP_WM_HELP`
 	/// command. The Help application displays a pop-up window that typically

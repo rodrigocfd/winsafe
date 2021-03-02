@@ -3,8 +3,16 @@
 use std::ffi::c_void;
 
 use crate::co;
+use crate::funcs::MAKEDWORD;
 use crate::handles::{HBITMAP, HICON, HMENU, HWND};
-use crate::structs::{ATOM, NCCALCSIZE_PARAMS, RECT, STYLESTRUCT_WS, STYLESTRUCT_WS_EX};
+use crate::structs::{
+	ATOM,
+	NCCALCSIZE_PARAMS,
+	POINT,
+	RECT,
+	STYLESTRUCT_WS,
+	STYLESTRUCT_WS_EX,
+};
 use crate::WString;
 
 /// Variant parameter used in
@@ -100,10 +108,9 @@ impl From<BroadNull> for *mut c_void {
 /// Variant parameter for:
 ///
 /// * [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason.
+/// * [`HELPINFO`](crate::HELPINFO) `hItemHandle`.
 pub enum HwndHmenu {
-	/// The system is idle because a dialog box is displayed.
 	Hwnd(HWND),
-	/// The system is idle because a menu is displayed.
 	Hmenu(HMENU),
 }
 
@@ -137,6 +144,30 @@ impl HwndPlace {
 			Self::Hwnd(hwnd) => hwnd.ptr,
 			Self::Place(v) => v.0 as *mut _,
 			Self::None => std::ptr::null_mut(),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Variant parameter for:
+///
+/// * [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) `data32`.
+pub enum HwndPointId {
+	/// Handle to the child window.
+	Hwnd(HWND),
+	/// Cursor coordinates.
+	Point(POINT),
+	/// Pointer identifier.
+	Id(u16),
+}
+
+impl HwndPointId {
+	pub fn as_isize(&self) -> isize {
+		match self {
+			Self::Hwnd(hwnd) => hwnd.ptr as isize,
+			Self::Point(pt) => MAKEDWORD(pt.x as u16, pt.y as u16) as isize,
+			Self::Id(id) => *id as isize,
 		}
 	}
 }

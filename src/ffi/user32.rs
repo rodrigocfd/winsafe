@@ -108,6 +108,7 @@ extern "system" {
 	pub fn SetCaretPos(X: i32, Y: i32) -> BOOL;
 	pub fn SetCursorPos(X: i32, Y: i32) -> BOOL;
 	pub fn SetFocus(hWnd: HANDLE) -> HANDLE;
+	pub fn SetForegroundWindow(hWnd: HANDLE) -> BOOL;
 	pub fn SetMenuInfo(hMenu: HANDLE, mii: PCVOID) -> BOOL;
 	pub fn SetMenuItemInfoW(hmenu: HANDLE, item: u32, fByPosition: BOOL, lpmii: PCVOID) -> BOOL;
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
@@ -135,4 +136,5 @@ extern "system" {
 	pub fn WaitMessage() -> BOOL;
 	pub fn WindowFromPhysicalPoint(PointX: i32, PointY: i32) -> HANDLE;
 	pub fn WindowFromPoint(PointX: i32, PointY: i32) -> HANDLE;
+	pub fn WinHelpW(hWndMain: HANDLE, lpszHelp: PCSTR, uCommand: u32, dwData: usize) -> BOOL;
 }
