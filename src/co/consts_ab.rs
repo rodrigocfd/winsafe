@@ -2,7 +2,7 @@ use crate::co::{CMD, NM, WM, WS};
 
 const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
-
+	->
 	VIRTKEY, 1
 	SHIFT, 0x04
 	CONTROL, 0x08
@@ -12,7 +12,7 @@ const_type! { ACCELF, u8,
 const_type! { ACCESS_RIGHTS, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
 	/// Originally has no prefix.
-
+	->
 	DELETE, 0x00010000
 	READ_CONTROL, 0x00020000
 	WRITE_DAC, 0x00040000
@@ -23,7 +23,7 @@ const_type! { ACCESS_RIGHTS, u32,
 const_type! { ADRF, u32,
 	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`). Don't seem
 	/// to be defined anywhere, unconfirmed values.
-
+	->
 	DRAWSYNC, 0
 	DRAWNOTHING, 1
 	DRAWFALLBACK, 2
@@ -32,7 +32,7 @@ const_type! { ADRF, u32,
 
 const_type! { APPCOMMAND, u16,
 	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) commands (`u16`).
-
+	->
 	BROWSER_BACKWARD, 1
 	BROWSER_FORWARD, 2
 	BROWSER_REFRESH, 3
@@ -93,17 +93,17 @@ const_type_nm! { BCN,
 	/// Button control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-
+	->
 	HOTITEMCHANGE, Self::FIRST.0 + 0x0001
 	DROPDOWN, Self::FIRST.0 + 0x0002
 }
-const_type_priv_values! { BCN
+const_type_priv_values! { BCN,
 	FIRST, -1250
 }
 
 const_type! { BCSIF, u32,
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
-
+	->
 	GLYPH, 0x0001
 	IMAGE, 0x0002
 	STYLE, 0x0004
@@ -112,7 +112,7 @@ const_type! { BCSIF, u32,
 
 const_type! { BCSS, u32,
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `uSplitStyle` (`u32`).
-
+	->
 	NOSPLIT, 0x0001
 	STRETCH, 0x0002
 	ALIGNLEFT, 0x0004
@@ -121,7 +121,7 @@ const_type! { BCSS, u32,
 
 const_type! { BI, u32,
 	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression` (`u32`).
-
+	->
 	RGB, 0
 	RLE8, 1
 	RLE4, 2
@@ -133,7 +133,7 @@ const_type! { BI, u32,
 const_type! { BIA, u32,
 	/// [`BUTTON_IMAGELIST`](crate::BUTTON_IMAGELIST) `uAlign` (`u32`).
 	/// Originally has `BUTTON_IMAGELIST_ALIGN_` prefix.
-
+	->
 	LEFT, 0
 	RIGHT, 1
 	TOP, 2
@@ -143,7 +143,7 @@ const_type! { BIA, u32,
 
 const_type! { BKMODE, i32,
 	/// [`SetBkMode`](crate::HDC::SetBkMode) `mode` (`i32`).
-
+	->
 	TRANSPARENT, 1
 	OPAQUE, 2
 }
@@ -154,7 +154,7 @@ const_type_wm! { BM,
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
 	///
 	/// Also includes constants originally with `BCM` prefix.
-
+	->
 	GETIDEALSIZE, Self::FIRST.0 + 0x0001
 	SETIMAGELIST, Self::FIRST.0 + 0x0002
 	GETIMAGELIST, Self::FIRST.0 + 0x0003
@@ -178,7 +178,7 @@ const_type_wm! { BM,
 	SETIMAGE, 0x00f7
 	SETDONTCLICK, 0x00f8
 }
-const_type_priv_values! { BM
+const_type_priv_values! { BM,
 	FIRST, 0x1600
 }
 
@@ -186,7 +186,7 @@ const_type_cmd! { BN,
 	/// Button control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
-
+	->
 	CLICKED, 0
 	PAINT, 1
 	HILITE, 2
@@ -204,7 +204,7 @@ const_type_ws! { BS,
 	/// Button control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	PUSHBUTTON, 0x00000000
 	DEFPUSHBUTTON, 0x00000001
 	CHECKBOX, 0x00000002
@@ -237,7 +237,7 @@ const_type_ws! { BS,
 
 const_type! { BST, u32,
 	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) return value (`u32`).
-
+	->
 	UNCHECKED, 0x0000
 	CHECKED, 0x0001
 	INDETERMINATE, 0x0002

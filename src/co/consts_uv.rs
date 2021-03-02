@@ -6,7 +6,7 @@ const_type_ws! { UDS,
 	/// Up-down control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	WRAP, 0x0001
 	SETBUDDYINT, 0x0002
 	ALIGNRIGHT, 0x0004
@@ -20,7 +20,7 @@ const_type_ws! { UDS,
 
 const_type! { VER_COND, u8,
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `Condition` (`u8`).
-
+	->
 	EQUAL, 1
 	GREATER, 2
 	GREATER_EQUAL, 3
@@ -33,7 +33,7 @@ const_type! { VER_COND, u8,
 
 const_type! { VER_MASK, u32,
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `TypeMask` (`u32`).
-
+	->
 	MINORVERSION, 0x0000001
 	MAJORVERSION, 0x0000002
 	BUILDNUMBER, 0x0000004
@@ -46,7 +46,7 @@ const_type! { VER_MASK, u32,
 
 const_type! { VER_NT, u8,
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
-
+	->
 	WORKSTATION, 0x0000001
 	DOMAIN_CONTROLLER, 0x0000002
 	SERVER, 0x0000003
@@ -54,7 +54,7 @@ const_type! { VER_NT, u8,
 
 const_type! { VER_PLATFORM, u32,
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
-
+	->
 	WIN32s, 0
 	WIN32_WINDOWS, 1
 	WIN32_NT, 2
@@ -62,7 +62,7 @@ const_type! { VER_PLATFORM, u32,
 
 const_type! { VER_SUITE, u16,
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
-
+	->
 	SMALLBUSINESS, 0x0001
 	ENTERPRISE, 0x0002
 	BACKOFFICE, 0x0004
@@ -85,7 +85,7 @@ const_type! { VER_SUITE, u16,
 const_type! { VK, u16,
 	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
-
+	->
 	LBUTTON, 0x01
 	RBUTTON, 0x02
 	CANCEL, 0x03
@@ -250,7 +250,7 @@ const_type! { VK, u16,
 
 const_type! { VK_DIR, u16,
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `vkDirection` (`u16`).
-
+	->
 	PRIOR, 0x21
 	NEXT, 0x22
 	END, 0x23
@@ -265,7 +265,7 @@ const_type! { VS_PART, i32,
 	/// System visual style
 	/// [part](https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states)
 	/// (`i32`).
-
+	->
 	// button parts
 	BP_PUSHBUTTON, 1
 	BP_RADIOBUTTON, 2
@@ -405,7 +405,7 @@ const_type! { VS_STATE, i32,
 	/// System visual style
 	/// [state](https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states)
 	/// (`i32`).
-
+	->
 	NONE, 0
 
 	// list view states

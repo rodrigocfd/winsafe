@@ -1,11 +1,17 @@
 /// Declares multiple public constant values for the given type.
 macro_rules! const_type_pub_values {
 	(
-		$name:ident
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident,
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
-		impl $name {
-			$( pub const $pubcname: Self = Self($pubcval); )*
+		impl $tname {
+			$(
+				$(#[$pubcdoc])*
+				pub const $pubcname: Self = Self($pubcval);
+			)*
 		}
 	};
 }
@@ -13,11 +19,17 @@ macro_rules! const_type_pub_values {
 /// Declares multiple private constant values for the given type.
 macro_rules! const_type_priv_values {
 	(
-		$name:ident
-		$($privcname:ident, $privcval:expr)*
+		$tname:ident,
+		$(
+			$(#[$privcdoc:meta])*
+			$privcname:ident, $privcval:expr
+		)*
 	) => {
-		impl $name {
-			$( pub(crate) const $privcname: Self = Self($privcval); )*
+		impl $tname {
+			$(
+				$(#[$privcdoc])*
+				pub(crate) const $privcname: Self = Self($privcval);
+			)*
 		}
 	};
 }
@@ -26,101 +38,108 @@ macro_rules! const_type_priv_values {
 /// Optionally declares multiple public constant values.
 macro_rules! const_type_no_debug_display {
 	(
-		$name:ident, $num:ty,
-		$(#[$attr:meta])*
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident, $ttype:ty,
+		$(#[$tdoc:meta])*
+		->
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
-		$(#[$attr])*
+		$(#[$tdoc])*
 		#[repr(C)]
 		#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
-		pub struct $name(pub(crate) $num);
+		pub struct $tname(pub(crate) $ttype);
 
 		// Conversions from/to underlying number.
-		impl From<$num> for $name {
-			fn from(n: $num) -> Self {
+		impl From<$ttype> for $tname {
+			fn from(n: $ttype) -> Self {
 				Self(n) // the type can be created from the number
 			}
 		}
-		impl From<$name> for $num {
-			fn from(n: $name) -> Self {
+		impl From<$tname> for $ttype {
+			fn from(n: $tname) -> Self {
 				n.0 // the number can be created from the type
 			}
 		}
 
 		// Formatters.
-		impl std::fmt::LowerHex for $name {
+		impl std::fmt::LowerHex for $tname {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::LowerHex::fmt(&self.0, f)
 			}
 		}
-		impl std::fmt::UpperHex for $name {
+		impl std::fmt::UpperHex for $tname {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::UpperHex::fmt(&self.0, f)
 			}
 		}
-		impl std::fmt::Binary for $name {
+		impl std::fmt::Binary for $tname {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::Binary::fmt(&self.0, f)
 			}
 		}
-		impl std::fmt::Octal for $name {
+		impl std::fmt::Octal for $tname {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::Octal::fmt(&self.0, f)
 			}
 		}
 
 		// Bitflag operations.
-		impl std::ops::BitAnd for $name {
-			type Output = $name;
+		impl std::ops::BitAnd for $tname {
+			type Output = $tname;
 			fn bitand(self, rhs: Self) -> Self::Output {
 				Self(self.0 & rhs.0)
 			}
 		}
-		impl std::ops::BitAndAssign for $name {
+		impl std::ops::BitAndAssign for $tname {
 			fn bitand_assign(&mut self, rhs: Self) {
 				*self = Self(self.0 & rhs.0);
 			}
 		}
-		impl std::ops::BitOr for $name {
-			type Output = $name;
+		impl std::ops::BitOr for $tname {
+			type Output = $tname;
 			fn bitor(self, rhs: Self) -> Self {
 				Self(self.0 | rhs.0)
 			}
 		}
-		impl std::ops::BitOrAssign for $name {
+		impl std::ops::BitOrAssign for $tname {
 			fn bitor_assign(&mut self, rhs: Self) {
 				*self = Self(self.0 | rhs.0);
 			}
 		}
-		impl std::ops::BitXor for $name {
-			type Output = $name;
+		impl std::ops::BitXor for $tname {
+			type Output = $tname;
 			fn bitxor(self, rhs: Self) -> Self::Output {
 				Self(self.0 ^ rhs.0)
 			}
 		}
-		impl std::ops::BitXorAssign for $name {
+		impl std::ops::BitXorAssign for $tname {
 			fn bitxor_assign(&mut self, rhs: Self) {
 				*self = Self(self.0 ^ rhs.0);
 			}
 		}
-		impl std::ops::Not for $name {
-			type Output = $name;
+		impl std::ops::Not for $tname {
+			type Output = $tname;
 			fn not(self) -> Self::Output {
 				Self(!self.0)
 			}
 		}
 
-		impl $name {
+		impl $tname {
 			/// Tells whether other bitflag style is present. Equivalent to
 			/// `(val & other) != 0`.
-			pub fn has(&self, other: $name) -> bool {
+			pub fn has(&self, other: $tname) -> bool {
 				(self.0 & other.0) != 0
 			}
 		}
 
 		// All public const values.
-		const_type_pub_values! { $name
-			$($pubcname, $pubcval)*
+		const_type_pub_values! { $tname,
+			$(
+				$(#[$pubcdoc])*
+				$pubcname, $pubcval
+			)*
 		}
 	};
 }
@@ -129,18 +148,26 @@ macro_rules! const_type_no_debug_display {
 /// Optionally declares multiple public constant values.
 macro_rules! const_type {
 	(
-		$name:ident, $num:ty,
-		$(#[$attr:meta])*
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident, $ttype:ty,
+		$(#[$tdoc:meta])*
+		->
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
 		const_type_no_debug_display! {
-			$name, $num,
-			$(#[$attr])*
+			$tname, $ttype,
+			$(#[$tdoc])*
 			#[derive(Debug)]
-			$($pubcname, $pubcval)*
+			->
+			$(
+				$(#[$pubcdoc])*
+				$pubcname, $pubcval
+			)*
 		}
 
-		impl std::fmt::Display for $name {
+		impl std::fmt::Display for $tname {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::Display::fmt(&self.0, f) // delegate
 			}
@@ -153,18 +180,26 @@ macro_rules! const_type {
 /// Optionally declares multiple public constant values.
 macro_rules! const_type_wm {
 	(
-		$name:ident,
-		$(#[$attr:meta])*
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident,
+		$(#[$tdoc:meta])*
+		->
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
 		const_type! {
-			$name, u32,
-			$(#[$attr])*
-			$($pubcname, $pubcval)*
+			$tname, u32,
+			$(#[$tdoc])*
+			->
+			$(
+				$(#[$pubcdoc])*
+				$pubcname, $pubcval
+			)*
 		}
 
-		impl From<$name> for WM {
-			fn from(v: $name) -> Self {
+		impl From<$tname> for WM {
+			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
 		}
@@ -176,18 +211,26 @@ macro_rules! const_type_wm {
 /// Optionally declares multiple public constant values.
 macro_rules! const_type_cmd {
 	(
-		$name:ident,
-		$(#[$attr:meta])*
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident,
+		$(#[$tdoc:meta])*
+		->
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
 		const_type! {
-			$name, u16,
-			$(#[$attr])*
-			$($pubcname, $pubcval)*
+			$tname, u16,
+			$(#[$tdoc])*
+			->
+			$(
+				$(#[$pubcdoc])*
+				$pubcname, $pubcval
+			)*
 		}
 
-		impl From<$name> for CMD {
-			fn from(v: $name) -> Self {
+		impl From<$tname> for CMD {
+			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
 		}
@@ -199,18 +242,26 @@ macro_rules! const_type_cmd {
 /// Optionally declares multiple public constant values.
 macro_rules! const_type_nm {
 	(
-		$name:ident,
-		$(#[$attr:meta])*
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident,
+		$(#[$tdoc:meta])*
+		->
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
 		const_type! {
-			$name, i32,
-			$(#[$attr])*
-			$($pubcname, $pubcval)*
+			$tname, i32,
+			$(#[$tdoc])*
+			->
+			$(
+				$(#[$pubcdoc])*
+				$pubcname, $pubcval
+			)*
 		}
 
-		impl From<$name> for NM {
-			fn from(v: $name) -> Self {
+		impl From<$tname> for NM {
+			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
 		}
@@ -222,18 +273,26 @@ macro_rules! const_type_nm {
 /// Optionally declares multiple public constant values.
 macro_rules! const_type_ws {
 	(
-		$name:ident,
-		$(#[$attr:meta])*
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident,
+		$(#[$tdoc:meta])*
+		->
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
 		const_type! {
-			$name, u32,
-			$(#[$attr])*
-			$($pubcname, $pubcval)*
+			$tname, u32,
+			$(#[$tdoc])*
+			->
+			$(
+				$(#[$pubcdoc])*
+				$pubcname, $pubcval
+			)*
 		}
 
-		impl From<$name> for WS {
-			fn from(v: $name) -> Self {
+		impl From<$tname> for WS {
+			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
 		}
@@ -245,18 +304,26 @@ macro_rules! const_type_ws {
 /// Optionally declares multiple public constant values.
 macro_rules! const_type_wsex {
 	(
-		$name:ident,
-		$(#[$attr:meta])*
-		$($pubcname:ident, $pubcval:expr)*
+		$tname:ident,
+		$(#[$tdoc:meta])*
+		->
+		$(
+			$(#[$pubcdoc:meta])*
+			$pubcname:ident, $pubcval:expr
+		)*
 	) => {
 		const_type! {
-			$name, u32,
-			$(#[$attr])*
-			$($pubcname, $pubcval)*
+			$tname, u32,
+			$(#[$tdoc])*
+			->
+			$(
+				$(#[$pubcdoc])*
+				$pubcname, $pubcval
+			)*
 		}
 
-		impl From<$name> for WS_EX {
-			fn from(v: $name) -> Self {
+		impl From<$tname> for WS_EX {
+			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
 		}

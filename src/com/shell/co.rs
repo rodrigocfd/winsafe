@@ -4,7 +4,7 @@
 const_type! { TBPF, u32,
 	/// [`ITaskbarList3::SetProgressState`](crate::shell::ITaskbarList3::SetProgressState)
 	/// `tbpFlags`.
-
+	->
 	NOPROGRESS, 0
 	INDETERMINATE, 0x1
 	NORMAL, 0x2

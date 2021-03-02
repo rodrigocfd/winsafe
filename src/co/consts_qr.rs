@@ -2,7 +2,7 @@ use crate::co::WS;
 
 const_type! { QUALITY, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
-
+	->
 	DEFAULT, 0
 	DRAFT, 1
 	PROOF, 2
@@ -14,7 +14,7 @@ const_type! { QUALITY, u8,
 
 const_type! { QS, u32,
 	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags` (`u32`).
-
+	->
 	KEY, 0x0001
 	MOUSEMOVE, 0x0002
 	MOUSEBUTTON, 0x0004
@@ -36,7 +36,7 @@ const_type_ws! { RBS,
 	/// Rebar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	TOOLTIPS, 0x00000100
 	VARHEIGHT, 0x00000200
 	BANDBORDERS, 0x00000400
@@ -49,7 +49,7 @@ const_type_ws! { RBS,
 
 const_type! { RDW, u32,
 	/// [`RedrawWindow`](crate::HWND::RedrawWindow) `flags` (`u32`).
-
+	->
 	INVALIDATE, 0x0001
 	INTERNALPAINT, 0x0002
 	ERASE, 0x0004
@@ -68,7 +68,7 @@ const_type! { REG, u32,
 	/// Registry
 	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
-
+	->
 	NONE, 0
 	SZ, 1
 	EXPAND_SZ, 2
@@ -87,7 +87,7 @@ const_type! { REG, u32,
 
 const_type! { REG_OPTION, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `uOptions` (`u32`).
-
+	->
 	RESERVED, 0x00000000
 	NON_VOLATILE, 0x00000000
 	VOLATILE, 0x00000001
@@ -100,7 +100,7 @@ const_type! { REGION, i32,
 	/// [`GetUpdateRgn`](crate::HWND::GetUpdateRgn),
 	/// [`GetWindowRgn`](crate::HWND::GetWindowRgn) and
 	/// [`SelectObjectRgn`](crate::HDC::SelectObjectRgn) return value (`i32`).
-
+	->
 	NULL, 1
 	SIMPLE, 2
 	COMPLEX, 3
@@ -108,7 +108,7 @@ const_type! { REGION, i32,
 
 const_type! { ROP, u32,
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop` (`u32`).
-
+	->
 	SRCCOPY, 0x00cc0020
 	SRCPAINT, 0x00ee0086
 	SRCAND, 0x008800c6
@@ -128,7 +128,7 @@ const_type! { ROP, u32,
 
 const_type! { RRF, u32,
 	/// [`RegGetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
-
+	->
 	RT_REG_NONE, 0x00000001
 	RT_REG_SZ, 0x00000002
 	RT_REG_EXPAND_SZ, 0x00000004

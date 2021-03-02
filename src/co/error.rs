@@ -35,9 +35,10 @@ const_type_no_debug_display! { ERROR, u32,
 	/// ```
 	/// [0x001c 28] The printer is out of paper.
 	/// ```
+	->
 }
 
-const_type_pub_values! { ERROR // ordinary codes
+const_type_pub_values! { ERROR, // ordinary codes
 	SUCCESS, 0
 	INVALID_FUNCTION, 1
 	FILE_NOT_FOUND, 2
@@ -2645,7 +2646,7 @@ const_type_pub_values! { ERROR // ordinary codes
 	API_UNAVAILABLE, 15841
 }
 
-const_type_pub_values! { ERROR // first COM values
+const_type_pub_values! { ERROR, // first COM values
 	S_OK, 0
 	S_FALSE, 1
 
@@ -2666,7 +2667,7 @@ const_type_pub_values! { ERROR // first COM values
 	E_ILLEGAL_METHOD_CALL, 0x8000000e
 }
 
-const_type_pub_values! { ERROR // RPC_E
+const_type_pub_values! { ERROR, // RPC_E
 	RPC_E_CALL_REJECTED, 0x80010001
 	RPC_E_CALL_CANCELED, 0x80010002
 	RPC_E_CANTPOST_INSENDCALL, 0x80010003
@@ -2721,7 +2722,7 @@ const_type_pub_values! { ERROR // RPC_E
 	RPC_E_UNEXPECTED, 0x8001ffff
 }
 
-const_type_pub_values! { ERROR // CO_E
+const_type_pub_values! { ERROR, // CO_E
 	CO_E_NOTINITIALIZED, 0x800401f0
 	CO_E_ALREADYINITIALIZED, 0x800401f1
 	CO_E_CANTDETERMINECLASS, 0x800401f2

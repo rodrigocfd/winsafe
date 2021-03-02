@@ -2,7 +2,7 @@ use crate::co::{FF, QS, WS};
 
 const_type! { OCR, u32,
 	/// [`SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id` (`u32`).
-
+	->
 	APPSTARTING, 32650
 	NORMAL, 32512
 	CROSS, 32515
@@ -21,7 +21,7 @@ const_type! { OCR, u32,
 
 const_type! { OUT_PRECIS, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
-
+	->
 	DEFAULT, 0
 	STRING, 1
 	CHARACTER, 2
@@ -39,7 +39,7 @@ const_type_ws! { PBS,
 	/// Progress bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	SMOOTH, 0x01
 	VERTICAL, 0x04
 	MARQUEE, 0x08
@@ -49,7 +49,7 @@ const_type_ws! { PBS,
 const_type! { PITCH, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`FF`](crate::co::FF).
-
+	->
 	DEFAULT, 0
 	FIXED, 1
 	VARIABLE, 2
@@ -64,7 +64,7 @@ impl PITCH {
 
 const_type! { PM, u32,
 	/// [`PeekMessage`](crate::PeekMessage) `wRemoveMsg` (`u32`).
-
+	->
 	NOREMOVE, 0x0000
 	REMOVE, 0x0001
 	NOYIELD, 0x0002

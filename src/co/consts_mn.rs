@@ -2,7 +2,7 @@ use crate::co::WS;
 
 const_type! { MB, u32,
 	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
-
+	->
 	ABORTRETRYIGNORE, 0x00000002
 	CANCELTRYCONTINUE, 0x00000006
 	HELP, 0x00004000
@@ -40,7 +40,7 @@ const_type! { MB, u32,
 
 const_type! { MCMV, u32,
 	/// [`NMVIEWCHANGE`](crate::NMVIEWCHANGE) `dwOldView` and `dwNewView` (`u32`).
-
+	->
 	MONTH, 0
 	YEAR, 1
 	DECADE, 2
@@ -51,19 +51,19 @@ const_type_nm! { MCN,
 	/// Month calendar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-
+	->
 	SELECT, Self::FIRST.0
 	GETDAYSTATE, Self::FIRST.0 - 1
 	SELCHANGE, Self::FIRST.0 - 3
 	VIEWCHANGE, Self::FIRST.0 - 4
 }
-const_type_priv_values! { MCN
+const_type_priv_values! { MCN,
 	FIRST, -746
 }
 
 const_type! { MCSC, u8,
 	/// [`DTM_GETMCCOLOR`](crate::msg::dtm::GetMcColor) color (`u8`).
-
+	->
 	BACKGROUND, 0
 	TEXT, 1
 	TITLEBK, 2
@@ -76,7 +76,7 @@ const_type_ws! { MCS,
 	/// Month calendar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	DAYSTATE, 0x0001
 	MULTISELECT, 0x0002
 	WEEKNUMBERS, 0x0004
@@ -90,7 +90,7 @@ const_type_ws! { MCS,
 const_type! { MF, u32,
 	/// [`AppendMenu`](crate::HMENU::AppendMenu) and
 	/// [`InsertMenu`](crate::HMENU::InsertMenu) `uFlags` (`u32`).
-
+	->
 	INSERT, 0x00000000
 	CHANGE, 0x00000080
 	APPEND, 0x00000100
@@ -122,7 +122,7 @@ const_type! { MF, u32,
 
 const_type! { MFS, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
-
+	->
 	GRAYED, 0x00000003
 	DISABLED, MFS::GRAYED.0
 	CHECKED, MF::CHECKED.0
@@ -135,7 +135,7 @@ const_type! { MFS, u32,
 
 const_type! { MFT, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType` (`u32`).
-
+	->
 	STRING, MF::STRING.0
 	BITMAP, MF::BITMAP.0
 	MENUBARBREAK, MF::MENUBARBREAK.0
@@ -149,7 +149,7 @@ const_type! { MFT, u32,
 
 const_type! { MIM, u32,
 	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
-
+	->
 	MAXHEIGHT, 0x00000001
 	BACKGROUND, 0x00000002
 	HELPID, 0x00000004
@@ -160,7 +160,7 @@ const_type! { MIM, u32,
 
 const_type! { MIIM, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
-
+	->
 	MAXHEIGHT, 0x00000001
 	BACKGROUND, 0x00000002
 	HELPID, 0x00000004
@@ -172,7 +172,7 @@ const_type! { MIIM, u32,
 const_type! { MK, u16,
 	/// [`WM_LBUTTONDOWN`](crate::msg::wm::LButtonDown) (and similar) virtual
 	/// keys (`u16`).
-
+	->
 	LBUTTON, 0x0001
 	RBUTTON, 0x0002
 	SHIFT, 0x0004
@@ -184,7 +184,7 @@ const_type! { MK, u16,
 
 const_type! { MNS, u32,
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
-
+	->
 	NOCHECK, 0x80000000
 	MODELESS, 0x40000000
 	DRAGDROP, 0x20000000
@@ -195,7 +195,7 @@ const_type! { MNS, u32,
 
 const_type! { MSGF, u8,
 	/// [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason (`u8`).
-
+	->
 	DIALOGBOX, 0
 	MENU, 2
 }
@@ -205,7 +205,7 @@ const_type! { NM, i32,
 	///
 	/// Control-specific notification codes have their own types, which are
 	/// convertible to `NM`.
-
+	->
 	OUTOFMEMORY, Self::FIRST.0 - 1
 	CLICK, Self::FIRST.0 - 2
 	DBLCLK, Self::FIRST.0 - 3
@@ -226,6 +226,6 @@ const_type! { NM, i32,
 	RDOWN, Self::FIRST.0 - 21
 	THEMECHANGED, Self::FIRST.0 - 22
 }
-const_type_priv_values! { NM
+const_type_priv_values! { NM,
 	FIRST, 0
 }

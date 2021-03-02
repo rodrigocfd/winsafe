@@ -4,7 +4,7 @@ const_type_ws! { SBARS,
 	/// Status bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	NONE, 0
 	SIZEGRIP, 0x0100
 	TOOLTIPS, 0x0800
@@ -14,7 +14,7 @@ const_type! { SBT, u16,
 	/// [`SB_GETTEXT`](crate::msg::sb::GetText),
 	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
 	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
-
+	->
 	NONE, 0
 	OWNERDRAW, 0x1000
 	NOBORDERS, 0x0100
@@ -27,7 +27,7 @@ const_type_wm! { SB,
 	/// Status bar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
 	/// (`u32`). Convertible to [`WM`](crate::co::WM).
-
+	->
 	SETTEXT, WM::USER.0 + 11
 	GETTEXT, WM::USER.0 + 13
 	GETTEXTLENGTH, WM::USER.0 + 12
@@ -51,17 +51,17 @@ const_type_nm! { SBN,
 	/// Status bar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-
+	->
 	SIMPLEMODECHANGE, Self::FIRST.0 - 0
 }
-const_type_priv_values! { SBN
+const_type_priv_values! { SBN,
 	FIRST, -880
 }
 
 const_type! { SC, u32,
 	/// [`WM_SYSCOMMAND`](crate::msg::wm::SysCommand) type of system command
 	/// requested (`u32`).
-
+	->
 	CLOSE, 0xf060
 	CONTEXTHELP, 0xf180
 	DEFAULT, 0xf160
@@ -85,7 +85,7 @@ const_type! { SC, u32,
 
 const_type! { SIZE_R, u8,
 	/// [`WM_SIZE`](crate::msg::wm::Size) request (`u8`).
-
+	->
 	RESTORED, 0
 	MINIMIZED, 1
 	MAXIMIZED, 2
@@ -95,7 +95,7 @@ const_type! { SIZE_R, u8,
 
 const_type! { SM, i32,
 	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `nIndex` (`i32`).
-
+	->
 	CXSCREEN, 0
 	CYSCREEN, 1
 	CXVSCROLL, 2
@@ -201,7 +201,7 @@ const_type! { SM, i32,
 
 const_type! { SPI, u32,
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `uiAction` (`u32`).
-
+	->
 	GETBEEP, 0x0001
 	SETBEEP, 0x0002
 	GETMOUSE, 0x0003
@@ -347,7 +347,7 @@ const_type! { SPI, u32,
 
 const_type! { SPIF, u32,
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `fWinIni` (`u32`).
-
+	->
 	ZERO, 0
 	UPDATEINIFILE, 0x0001
 	SENDWININICHANGE, 0x0002
@@ -358,7 +358,7 @@ const_type_ws! { SS,
 	/// Label control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/static-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	LEFT, 0x00000000
 	CENTER, 0x00000001
 	RIGHT, 0x00000002
@@ -394,7 +394,7 @@ const_type_ws! { SS,
 
 const_type! { STANDARD_RIGHTS, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
-
+	->
 	REQUIRED, 0x000f0000
 	READ, ACCESS_RIGHTS::READ_CONTROL.0
 	WRITE, ACCESS_RIGHTS::READ_CONTROL.0
@@ -405,7 +405,7 @@ const_type! { STANDARD_RIGHTS, u32,
 const_type! { STAP, u32,
 	/// [`GetThemeAppProperties`](crate::HTHEME::GetThemeAppProperties) return
 	/// value (`u32`).
-
+	->
 	ALLOW_NONCLIENT, 1 << 0
 	ALLOW_CONTROLS, 1 << 1
 	ALLOW_WEBCONTENT, 1 << 2
@@ -415,7 +415,7 @@ const_type! { STAP, u32,
 const_type! { STATE_SYSTEM, u32,
 	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and
 	/// `stateButton` (`u32`).
-
+	->
 	UNAVAILABLE, 0x00000001
 	SELECTED, 0x00000002
 	FOCUSED, 0x00000004
@@ -454,7 +454,7 @@ const_type_wm! { STM,
 	/// Static control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-
+	->
 	SETICON, 0x0170
 	GETICON, 0x0171
 	SETIMAGE, 0x0172
@@ -465,7 +465,7 @@ const_type_cmd! { STN,
 	/// Static control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
 	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
-
+	->
 	CLICKED, 0
 	DBLCLK, 1
 	ENABLE, 2
@@ -475,7 +475,7 @@ const_type_cmd! { STN,
 const_type! { SUBLANG, u16,
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`
 	/// (`u16`), used with [`LANG`](crate::co::LANG).
-
+	->
 	NEUTRAL, 0x00
 	DEFAULT, 0x01
 	SYS_DEFAULT, 0x02
@@ -724,7 +724,7 @@ const_type! { SUBLANG, u16,
 
 const_type! { SW, i32,
 	/// [`ShowWindow`](crate::HWND::ShowWindow) `nCmdShow` (`i32`).
-
+	->
 	HIDE, 0
 	SHOWNORMAL, 1
 	SHOWMINIMIZED, 2
@@ -743,7 +743,7 @@ const_type! { SW, i32,
 const_type! { SW_S, u8,
 	/// [`WM_SHOWWINDOW`](crate::msg::wm::ShowWindow) status (`u8`). Originally
 	/// has `SW` prefix.
-
+	->
 	PARENTCLOSING, 1
 	OTHERZOOM, 2
 	PARENTOPENING, 3
@@ -752,7 +752,7 @@ const_type! { SW_S, u8,
 
 const_type! { SWP, u32,
 	/// [`SetWindowPos`](crate::HWND::SetWindowPos) `uFlags` (`u32`).
-
+	->
 	NOSIZE, 0x0001
 	NOMOVE, 0x0002
 	NOZORDER, 0x0004
@@ -774,7 +774,7 @@ const_type_ws! { TBS,
 	/// Trackbar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	AUTOTICKS, 0x0001
 	VERT, 0x0002
 	HORZ, 0x0000
@@ -798,7 +798,7 @@ const_type_ws! { TCS,
 	/// Tab control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	SCROLLOPPOSITE, 0x0001
 	BOTTOM, 0x0002
 	RIGHT, 0x0002
@@ -825,14 +825,14 @@ const_type_wsex! { TCS_EX,
 	/// Extended tab control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
-
+	->
 	FLATSEPARATORS, 0x00000001
 	REGISTERDROP, 0x00000002
 }
 
 const_type! { TME, u32,
 	/// [`TrackMouseEvent`](crate::TrackMouseEvent) `dwFlags` (`u32`).
-
+	->
 	CANCEL, 0x80000000
 	HOVER, 0x00000001
 	LEAVE, 0x00000002
@@ -842,7 +842,7 @@ const_type! { TME, u32,
 
 const_type! { TPM, u32,
 	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `uFlags` (`u32`).
-
+	->
 	LEFTBUTTON, 0x0000
 	RIGHTBUTTON, 0x0002
 	LEFTALIGN, 0x0000
@@ -869,7 +869,7 @@ const_type_wm! { TVM,
 	/// Tree view control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-
+	->
 	INSERTITEM, Self::FIRST.0 + 50
 	DELETEITEM, Self::FIRST.0 + 1
 	EXPAND, Self::FIRST.0 + 2
@@ -922,7 +922,7 @@ const_type_wm! { TVM,
 	SHOWINFOTIP, Self::FIRST.0 + 71
 	GETITEMPARTRECT, Self::FIRST.0 + 72
 }
-const_type_priv_values! { TVM
+const_type_priv_values! { TVM,
 	FIRST, 0x1100
 }
 
@@ -930,7 +930,7 @@ const_type_nm! { TVN,
 	/// Tree view control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-
+	->
 	SELCHANGING, Self::FIRST.0 - 50
 	SELCHANGED, Self::FIRST.0 - 51
 	GETDISPINFO, Self::FIRST.0 - 52
@@ -949,7 +949,7 @@ const_type_nm! { TVN,
 	ITEMCHANGED, Self::FIRST.0 - 19
 	ASYNCDRAW, Self::FIRST.0 - 20
 }
-const_type_priv_values! { TVN
+const_type_priv_values! { TVN,
 	FIRST, -400
 }
 
@@ -957,7 +957,7 @@ const_type_ws! { TVS,
 	/// Tree view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-
+	->
 	HASBUTTONS, 0x0001
 	HASLINES, 0x0002
 	LINESATROOT, 0x0004
@@ -980,7 +980,7 @@ const_type_wsex! { TVS_EX,
 	/// Extended tree view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
-
+	->
 	NOSINGLECOLLAPSE, 0x0001
 	MULTISELECT, 0x0002
 	DOUBLEBUFFER, 0x0004
