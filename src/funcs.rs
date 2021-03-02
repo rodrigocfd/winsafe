@@ -417,6 +417,12 @@ pub fn Sleep(dwMilliseconds: u32) {
 	unsafe { kernel32::Sleep(dwMilliseconds) }
 }
 
+/// [`SoundSentry`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-soundsentry)
+/// function.
+pub fn SoundSentry() -> bool {
+	unsafe { user32::SoundSentry() != 0 }
+}
+
 /// [`SystemParametersInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)
 /// function.
 ///

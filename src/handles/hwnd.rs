@@ -672,6 +672,12 @@ impl HWND {
 		unsafe { user32::IsWindowEnabled(self.ptr) != 0 }
 	}
 
+	/// [`IsWindowUnicode`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowunicode)
+	/// method.
+	pub fn IsWindowUnicode(self) -> bool {
+		unsafe { user32::IsWindowUnicode(self.ptr) != 0 }
+	}
+
 	/// [`IsWindowVisible`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible)
 	/// method.
 	pub fn IsWindowVisible(self) -> bool {
@@ -733,6 +739,19 @@ impl HWND {
 		} {
 			0 => Err(GetLastError()),
 			ret => Ok(co::DLGID(ret as u16)),
+		}
+	}
+
+	/// [`MoveWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow)
+	/// method.
+	pub fn MoveWindow(self,
+		x: i32, y: i32, nWidth: i32, nHeight: i32, bRepaint: bool) -> WinResult<()>
+	{
+		match unsafe {
+			user32::MoveWindow(self.ptr, x, y, nWidth, nHeight, bRepaint as i32)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
 		}
 	}
 

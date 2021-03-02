@@ -85,6 +85,7 @@ extern "system" {
 	pub fn IsMenu(hMenu: HANDLE) -> BOOL;
 	pub fn IsWindow(hWnd: HANDLE) -> BOOL;
 	pub fn IsWindowEnabled(hWnd: HANDLE) -> BOOL;
+	pub fn IsWindowUnicode(hWnd: HANDLE) -> BOOL;
 	pub fn IsWindowVisible(hWnd: HANDLE) -> BOOL;
 	pub fn IsZoomed(hWnd: HANDLE) -> BOOL;
 	pub fn LoadAcceleratorsW(hInstance: HANDLE, lpTableName: PCSTR) -> HANDLE;
@@ -94,6 +95,7 @@ extern "system" {
 	pub fn LockSetForegroundWindow(uLockCode: u32) -> BOOL;
 	pub fn MapDialogRect(hDlg: HANDLE, lpRect: PVOID) -> BOOL;
 	pub fn MessageBoxW(hWnd: HANDLE, lpText: PCSTR, lpCaption: PCSTR, uType: u32) -> i32;
+	pub fn MoveWindow(hWnd: HANDLE, X: i32, Y: i32, nWidth: i32, nHeight: i32, bRepaint: BOOL) -> BOOL;
 	pub fn PeekMessageW(lpMsg: PVOID, hWnd: HANDLE, wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: u32) -> BOOL;
 	pub fn PostMessageW(hWnd: HANDLE, Msg: u32, wParam: usize, lParam: isize) -> BOOL;
 	pub fn PostQuitMessage(nExitCode: i32);
@@ -124,6 +126,7 @@ extern "system" {
 	pub fn ShowCaret(hWnd: HANDLE) -> BOOL;
 	pub fn ShowCursor(bShow: BOOL) -> i32;
 	pub fn ShowWindow(hWnd: HANDLE, nCmdShow: i32) -> BOOL;
+	pub fn SoundSentry() -> BOOL;
 	pub fn SystemParametersInfoW(uiAction: u32, uiParam: u32, pvParam: PVOID, fWinIni: u32) -> BOOL;
 	pub fn TrackMouseEvent(lpEventTrack: PVOID) -> BOOL;
 	pub fn TrackPopupMenu(hMenu: HANDLE, uFlags: u32, x: i32, y: i32, nReserved: i32, hWnd: HANDLE, prcRect: PCVOID) -> BOOL;
