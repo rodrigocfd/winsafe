@@ -20,9 +20,9 @@ pub enum ProcessResult {
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
-pub struct MsgEvents(Immut<Obj>);
+pub struct WindowEvents(Immut<Obj>);
 
-struct Obj { // actual fields of MsgEvents
+struct Obj { // actual fields of WindowEvents
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
 		Box<dyn FnMut(wm::Wm) -> Option<isize> + 'static>, // return value may be meaningful
@@ -77,8 +77,8 @@ macro_rules! wm_ret_none {
 	};
 }
 
-impl MsgEvents {
-	pub(crate) fn new() -> MsgEvents {
+impl WindowEvents {
+	pub(crate) fn new() -> WindowEvents {
 		Self(
 			Immut::new(
 				Obj {
@@ -405,7 +405,8 @@ impl MsgEvents {
 
 	/// [`WM_CREATE`](crate::msg::wm::Create) message, sent only to non-dialog
 	/// windows. Dialog windows receive
-	/// [`WM_INITDIALOG`](crate::gui::events::MsgEvents::wm_init_dialog) instead.
+	/// [`WM_INITDIALOG`](crate::gui::events::WindowEvents::wm_init_dialog)
+	/// instead.
 	///
 	/// Sent when an application requests that a window be created by calling the
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx) function. The message is
@@ -566,7 +567,7 @@ impl MsgEvents {
 		/// [`WM_ENDSESSION`](crate::msg::wm::EndSession) message.
 		///
 		/// Sent to an application after the system processes the results of the
-		/// [`WM_QUERYENDSESSION`](crate::gui::events::MsgEvents) message. The
+		/// [`WM_QUERYENDSESSION`](crate::gui::events::WindowEvents) message. The
 		/// `WM_ENDSESSION` message informs the application whether the session is ending.
 	}
 
@@ -586,7 +587,7 @@ impl MsgEvents {
 		/// loop. The window enters the moving or sizing modal loop when the user
 		/// clicks the window's title bar or sizing border, or when the window
 		/// passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::events::MsgEvents::wm_sys_command)
+		/// [`WM_SYSCOMMAND`](crate::gui::events::WindowEvents::wm_sys_command)
 		/// message to the `DefWindowProc` function and the `wParam` parameter of
 		/// the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
 		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete when
@@ -617,7 +618,7 @@ impl MsgEvents {
 		/// modal loop. The window enters the moving or sizing modal loop when the
 		/// user clicks the window's title bar or sizing border, or when the
 		/// window passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::events::MsgEvents::wm_sys_command)
+		/// [`WM_SYSCOMMAND`](crate::gui::events::WindowEvents::wm_sys_command)
 		/// message to the `DefWindowProc` function and the `wParam` parameter of
 		/// the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
 		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete when
@@ -641,7 +642,7 @@ impl MsgEvents {
 
 	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to dialog
 	/// windows. Non-dialog windows receive
-	/// [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create) instead.
+	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) instead.
 	///
 	/// Sent to the dialog box procedure immediately before a dialog box is
 	/// displayed. Dialog box procedures typically use this message to initialize
@@ -768,8 +769,9 @@ impl MsgEvents {
 
 	/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
 	///
-	/// Sent prior to the [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create)
-	/// message when a window is first created.
+	/// Sent prior to the
+	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) message when a
+	/// window is first created.
 	pub fn wm_nc_create<F>(&self, func: F)
 		where F: FnMut(wm::NcCreate) -> bool + 'static,
 	{
@@ -785,7 +787,7 @@ impl MsgEvents {
 		/// Notifies a window that its nonclient area is being destroyed. The
 		/// [`DestroyWindow`](crate::HWND::DestroyWindow) function sends the
 		/// message to the window following the
-		/// [`WM_DESTROY`](crate::gui::events::MsgEvents::wm_destroy) message.
+		/// [`WM_DESTROY`](crate::gui::events::WindowEvents::wm_destroy) message.
 		/// `WM_DESTROY` is used to free the allocated memory object associated
 		/// with the window.
 		///

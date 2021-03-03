@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::{MsgEvents, ProcessResult};
+use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::immut::Immut;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
@@ -33,7 +33,7 @@ pub struct NativeControlBase<Ev>(Immut<Obj<Ev>>);
 struct Obj<Ev> { // actual fields of NativeControlBase
 	hwnd: HWND,
 	parent_events: Ev, // specific control events, which delegate to parent events
-	subclass_events: MsgEvents, // for control subclassing
+	subclass_events: WindowEvents, // for control subclassing
 	ptr_parent_hwnd: NonNull<HWND>, // used only in control creation
 }
 
@@ -52,7 +52,7 @@ impl<Ev> NativeControlBase<Ev> {
 				Obj {
 					hwnd: unsafe { HWND::null_handle() },
 					parent_events,
-					subclass_events: MsgEvents::new(),
+					subclass_events: WindowEvents::new(),
 					ptr_parent_hwnd: NonNull::from(parent.hwnd_ref()), // ref implicitly converted to pointer
 				},
 			),
@@ -72,7 +72,7 @@ impl<Ev> NativeControlBase<Ev> {
 		&self.0.parent_events
 	}
 
-	pub fn on_subclass(&self) -> &MsgEvents {
+	pub fn on_subclass(&self) -> &WindowEvents {
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot add subclass events after the control is created.");
 		} else if !self.parent_hwnd().is_null() {

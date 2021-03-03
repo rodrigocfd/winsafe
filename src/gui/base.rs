@@ -3,7 +3,7 @@ use std::ptr::NonNull;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
-use crate::gui::events::{MsgEvents, ProcessResult};
+use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::traits::Parent;
 use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::wm;
@@ -12,8 +12,8 @@ use crate::structs::MSG;
 /// Base to `WindowBase` and `DialogBase`.
 pub struct Base {
 	hwnd: HWND,
-	user_events: MsgEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	privileged_events: MsgEvents, // inserted internally to automate tasks: all will be executed
+	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
+	privileged_events: WindowEvents, // inserted internally to automate tasks: all will be executed
 	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
 }
 
@@ -22,14 +22,14 @@ impl Parent for Base {
 		&self.hwnd
 	}
 
-	fn user_events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &WindowEvents {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add event after window is created.");
 		}
 		&self.user_events
 	}
 
-	fn privileged_events_ref(&self) -> &MsgEvents {
+	fn privileged_events_ref(&self) -> &WindowEvents {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add privileged event after window is created.");
 		}
@@ -41,8 +41,8 @@ impl Base {
 	pub fn new(parent: Option<&dyn Parent>) -> Base {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
-			user_events: MsgEvents::new(),
-			privileged_events: MsgEvents::new(),
+			user_events: WindowEvents::new(),
+			privileged_events: WindowEvents::new(),
 			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
 		}
 	}

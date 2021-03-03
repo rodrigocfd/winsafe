@@ -2,7 +2,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
 use crate::gui::dialog_main::DialogMain;
-use crate::gui::events::MsgEvents;
+use crate::gui::events::WindowEvents;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::traits::Parent;
 use crate::gui::window_main::{CustomMainOpts, WindowMain};
@@ -134,14 +134,14 @@ impl Parent for CustomMain {
 		}
 	}
 
-	fn user_events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &WindowEvents {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.user_events_ref(),
 			WndDlg::Dlg(d) => d.user_events_ref(),
 		}
 	}
 
-	fn privileged_events_ref(&self) -> &MsgEvents {
+	fn privileged_events_ref(&self) -> &WindowEvents {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.privileged_events_ref(),
 			WndDlg::Dlg(d) => d.privileged_events_ref(),
@@ -188,7 +188,7 @@ impl CustomMain {
 	///
 	/// Panics if the window is already created. Events must be set before window
 	/// creation.
-	pub fn on(&self) -> &MsgEvents {
+	pub fn on(&self) -> &WindowEvents {
 		self.user_events_ref()
 	}
 

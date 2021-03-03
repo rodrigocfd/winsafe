@@ -1,20 +1,20 @@
 use std::ptr::NonNull;
 
 use crate::co;
-use crate::gui::events::MsgEvents;
+use crate::gui::events::WindowEvents;
 use crate::gui::traits::Parent;
 
 /// Exposes list box control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
-/// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
-/// the real responsible for the child event handling.
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+/// is the real responsible for the child event handling.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 pub struct ListBoxEvents {
-	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
+	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
 	ctrl_id: u16,
 }
 
@@ -26,7 +26,7 @@ impl ListBoxEvents {
 		}
 	}
 
-	fn parent_user_events(&self) -> &MsgEvents {
+	fn parent_user_events(&self) -> &WindowEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 

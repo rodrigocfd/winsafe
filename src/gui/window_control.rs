@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::MsgEvents;
+use crate::gui::events::WindowEvents;
 use crate::gui::immut::Immut;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::traits::{Child, Parent};
@@ -26,11 +26,11 @@ impl Parent for WindowControl {
 		self.0.base.hwnd_ref()
 	}
 
-	fn user_events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &WindowEvents {
 		self.0.base.user_events_ref()
 	}
 
-	fn privileged_events_ref(&self) -> &MsgEvents {
+	fn privileged_events_ref(&self) -> &WindowEvents {
 		self.0.base.privileged_events_ref()
 	}
 }

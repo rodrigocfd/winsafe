@@ -3,7 +3,7 @@ use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{PostQuitMessage, RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
-use crate::gui::events::{MsgEvents, ProcessResult};
+use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{MessageHandleable, wm};
@@ -28,11 +28,11 @@ impl Parent for WindowBase {
 		self.base.hwnd_ref()
 	}
 
-	fn user_events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &WindowEvents {
 		self.base.user_events_ref()
 	}
 
-	fn privileged_events_ref(&self) -> &MsgEvents {
+	fn privileged_events_ref(&self) -> &WindowEvents {
 		self.base.privileged_events_ref()
 	}
 }

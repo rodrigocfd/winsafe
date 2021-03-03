@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::{MsgEvents, StatusBarEvents};
+use crate::gui::events::{StatusBarEvents, WindowEvents};
 use crate::gui::immut::Immut;
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};

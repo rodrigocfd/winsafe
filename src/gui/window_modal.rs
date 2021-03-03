@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, DispatchMessage, GetMessage, PostQuitMessage, TranslateMessage};
-use crate::gui::events::MsgEvents;
+use crate::gui::events::WindowEvents;
 use crate::gui::immut::Immut;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::traits::Parent;
@@ -27,11 +27,11 @@ impl Parent for WindowModal {
 		self.0.base.hwnd_ref()
 	}
 
-	fn user_events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &WindowEvents {
 		self.0.base.user_events_ref()
 	}
 
-	fn privileged_events_ref(&self) -> &MsgEvents {
+	fn privileged_events_ref(&self) -> &WindowEvents {
 		self.0.base.privileged_events_ref()
 	}
 }

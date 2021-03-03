@@ -2,7 +2,7 @@ use std::ptr::NonNull;
 use std::rc::Rc;
 
 use crate::co;
-use crate::gui::events::MsgEvents;
+use crate::gui::events::WindowEvents;
 use crate::gui::immut::Immut;
 use crate::gui::traits::Parent;
 
@@ -11,13 +11,13 @@ use crate::gui::traits::Parent;
 /// for a [`RadioGroup`](crate::gui::RadioGroup).
 ///
 /// These event methods are just proxies to the
-/// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
-/// the real responsible for the child event handling.
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+/// is the real responsible for the child event handling.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 pub struct RadioGroupEvents {
-	parent_user_events: NonNull<MsgEvents>, // used only before parent creation
+	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
 	ctrl_ids: Vec<u16>,
 }
 
@@ -29,7 +29,7 @@ impl RadioGroupEvents {
 		}
 	}
 
-	fn parent_user_events(&self) -> &MsgEvents {
+	fn parent_user_events(&self) -> &WindowEvents {
 		unsafe { self.parent_user_events.as_ref() }
 	}
 

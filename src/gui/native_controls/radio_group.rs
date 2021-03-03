@@ -114,8 +114,8 @@ impl RadioGroup {
 	/// Exposes the radio group events.
 	///
 	/// These event methods are just proxies to the
-	/// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who is
-	/// the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
 	/// # Panics
 	///

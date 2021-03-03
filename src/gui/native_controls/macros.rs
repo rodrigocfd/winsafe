@@ -5,8 +5,8 @@ macro_rules! hwnd_on_onsubclass {
 		///
 		/// **Note:** the handle is initially null, receiving an actual value only
 		/// after the control is physically created, what usually happens right
-		/// before [`WM_CREATE`](crate::gui::events::MsgEvents::wm_create) or
-		/// [`WM_INITDIALOG`](crate::gui::events::MsgEvents::wm_init_dialog)
+		/// before [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) or
+		/// [`WM_INITDIALOG`](crate::gui::events::WindowEvents::wm_init_dialog)
 		/// events.
 		pub fn hwnd(&self) -> HWND {
 			*self.hctrl_ref()
@@ -15,8 +15,8 @@ macro_rules! hwnd_on_onsubclass {
 		/// Exposes the control events.
 		///
 		/// These event methods are just proxies to the
-		/// [`MsgEvents`](crate::gui::events::MsgEvents) of the parent window, who
-		/// is the real responsible for the child event handling.
+		/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent
+		/// window, who is the real responsible for the child event handling.
 		///
 		/// # Panics
 		///
@@ -36,7 +36,7 @@ macro_rules! hwnd_on_onsubclass {
 		///
 		/// Panics if the control or the parent window are already created. Events
 		/// must be set before control and parent window creation.
-		pub fn on_subclass(&self) -> &MsgEvents {
+		pub fn on_subclass(&self) -> &WindowEvents {
 			self.0.base.on_subclass()
 		}
 	};

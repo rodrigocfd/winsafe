@@ -1,5 +1,5 @@
 use crate::gui::dialog_control::DialogControl;
-use crate::gui::events::MsgEvents;
+use crate::gui::events::WindowEvents;
 use crate::gui::traits::{Child, Parent};
 use crate::gui::window_control::{CustomControlOpts, WindowControl};
 use crate::handles::HWND;
@@ -31,14 +31,14 @@ impl Parent for CustomControl {
 		}
 	}
 
-	fn user_events_ref(&self) -> &MsgEvents {
+	fn user_events_ref(&self) -> &WindowEvents {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.user_events_ref(),
 			WndDlg::Dlg(d) => d.user_events_ref(),
 		}
 	}
 
-	fn privileged_events_ref(&self) -> &MsgEvents {
+	fn privileged_events_ref(&self) -> &WindowEvents {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.privileged_events_ref(),
 			WndDlg::Dlg(d) => d.privileged_events_ref(),
@@ -100,7 +100,7 @@ impl CustomControl {
 	///
 	/// Panics if the window is already created. Events must be set before window
 	/// creation.
-	pub fn on(&self) -> &MsgEvents {
+	pub fn on(&self) -> &WindowEvents {
 		match &self.0 {
 			WndDlg::Wnd(w) => w.user_events_ref(),
 			WndDlg::Dlg(d) => d.user_events_ref(),
