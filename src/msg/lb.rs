@@ -4,9 +4,11 @@
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{Message, wm::Wm};
+use crate::msg::macros::point_to_lp;
 use crate::privs::{LB_ERR, LB_ERRSPACE};
-use crate::structs::RECT;
+use crate::structs::{POINT, RECT};
 use crate::WString;
 
 /// [`LB_ADDFILE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-addfile)
@@ -481,6 +483,308 @@ impl Message for GetSelCount {
 		Wm {
 			msg_id: co::LB::GETSELCOUNT.into(),
 			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETSELITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getselitems)
+/// message parameters.
+///
+/// Return type `WinResult<u32>`.
+pub struct GetSelItems<'a> {
+	pub buffer: &'a mut [u32],
+}
+
+impl<'a> Message for GetSelItems<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			count => Ok(count as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETSELITEMS.into(),
+			wparam: self.buffer.len(),
+			lparam: self.buffer.as_ptr() as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettext)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetText<'a> {
+	pub index: u32,
+	pub text: &'a mut WString,
+}
+
+impl<'a> Message for GetText<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			nchars => Ok(nchars as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETTEXT.into(),
+			wparam: self.index as usize,
+			lparam: unsafe { self.text.as_ptr() } as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettextlen)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetTextLen {
+	pub index: u32,
+}
+
+impl Message for GetTextLen {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			nchars => Ok(nchars as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETTEXTLEN.into(),
+			wparam: self.index as usize,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettopindex)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetTopIndex {}
+
+impl Message for GetTopIndex {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			idx => Ok(idx as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::GETTOPINDEX.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_INITSTORAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-initstorage)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct InitStorage {
+	pub num_items: u32,
+	pub memory_bytes: u32,
+}
+
+impl Message for InitStorage {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			n_items => Ok(n_items as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::INITSTORAGE.into(),
+			wparam: self.num_items as usize,
+			lparam: self.memory_bytes as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_INSERTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-insertstring)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct InsertString<'a> {
+	pub text: &'a str,
+}
+
+impl<'a> Message for InsertString<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			idx => Ok(idx as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::INSERTSTRING.into(),
+			wparam: 0,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_ITEMFROMPOINT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-itemfrompoint)
+/// message parameters.
+///
+/// Return type: `(i32, bool)`.
+pub struct ItemFromPoint {
+	pub coords: POINT,
+}
+
+impl Message for ItemFromPoint {
+	type RetType = (i32, bool);
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as u32) as i32, HIWORD(v as u32) == 1)
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::ITEMFROMPOINT.into(),
+			wparam: 0,
+			lparam: point_to_lp(self.coords),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+empty_msg! { ResetContent, co::LB::RESETCONTENT.into(),
+	/// [`LB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-resetcontent)
+	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_SELECTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selectstring)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct SelectString<'a> {
+	pub index: Option<u32>,
+	pub prefix: &'a str,
+}
+
+impl<'a> Message for SelectString<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			idx => Ok(idx as u32),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::SELECTSTRING.into(),
+			wparam: match self.index {
+				None => -1,
+				Some(idx) => idx as i32,
+			} as usize,
+			lparam: unsafe { WString::from_str(self.prefix).as_ptr() } as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_SELITEMRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selitemrange)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SelItemRange {
+	pub select: bool,
+	pub first_item: u32,
+	pub last_item: u32,
+}
+
+impl Message for SelItemRange {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::SELITEMRANGE.into(),
+			wparam: self.select as usize,
+			lparam: MAKEDWORD(self.first_item as u16, self.last_item as u16) as isize,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// [`LB_SETANCHORINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setanchorindex)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetAnchorIndex {
+	pub index: u32,
+}
+
+impl Message for SetAnchorIndex {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> Wm {
+		Wm {
+			msg_id: co::LB::SETANCHORINDEX.into(),
+			wparam: self.index as usize,
 			lparam: 0,
 		}
 	}
