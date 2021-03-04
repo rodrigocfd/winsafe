@@ -355,9 +355,6 @@ impl<'a> MsgSend for SetTextMargin<'a> {
 
 empty_msg! { Click, co::BM::CLICK.into(),
 	/// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------

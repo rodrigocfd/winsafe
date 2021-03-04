@@ -326,9 +326,6 @@ impl MsgSend for InitStorage {
 
 empty_msg! { ResetContent, co::CB::RESETCONTENT.into(),
 	/// [`CB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------

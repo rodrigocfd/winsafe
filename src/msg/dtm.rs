@@ -12,9 +12,6 @@ use crate::WString;
 
 empty_msg! { CloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
 	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
-	/// message, which has no parameters.
-	///
-	/// Return type: `WinResult<()>`.
 }
 
 //------------------------------------------------------------------------------

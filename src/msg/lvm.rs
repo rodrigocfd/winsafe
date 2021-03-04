@@ -80,9 +80,6 @@ impl MsgSend for Arrange {
 
 empty_msg! { CancelEditLabel, co::LVM::CANCELEDITLABEL.into(),
 	/// [`LVM_CANCELEDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------

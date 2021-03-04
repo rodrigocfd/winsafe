@@ -2,9 +2,9 @@
 macro_rules! cmd_event {
 	(
 		$name:ident, $cmd:expr,
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 	) => {
-		$(#[$attr])*
+		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut() + 'static,
 		{
@@ -22,9 +22,9 @@ macro_rules! cmd_event {
 macro_rules! nfy_event {
 	(
 		$name:ident, $nfy:expr,
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 	) => {
-		$(#[$attr])*
+		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut() + 'static,
 		{
@@ -41,9 +41,9 @@ macro_rules! nfy_event {
 macro_rules! nfy_event_p {
 	(
 		$name:ident, $nfy:expr, $struc:ty,
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 	) => {
-		$(#[$attr])*
+		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&$struc) + 'static,
 		{
@@ -60,9 +60,9 @@ macro_rules! nfy_event_p {
 macro_rules! nfy_event_mut_p {
 	(
 		$name:ident, $nfy:expr, $struc:ty,
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 	) => {
-		$(#[$attr])*
+		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&mut $struc) + 'static,
 		{
@@ -79,9 +79,9 @@ macro_rules! nfy_event_mut_p {
 macro_rules! nfy_event_p_bool {
 	(
 		$name:ident, $nfy:expr, $struc:ty,
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 	) => {
-		$(#[$attr])*
+		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&$struc) -> bool + 'static,
 		{
@@ -98,9 +98,9 @@ macro_rules! nfy_event_p_bool {
 macro_rules! nfy_event_mut_p_bool {
 	(
 		$name:ident, $nfy:expr, $struc:ty,
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 	) => {
-		$(#[$attr])*
+		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&mut $struc) -> bool + 'static,
 		{

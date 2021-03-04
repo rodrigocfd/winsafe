@@ -1,10 +1,10 @@
 /// Declares the type of a handle.
 macro_rules! handle_type {
 	(
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 		$name:ident
 	) => {
-		$(#[$attr])*
+		$(#[$doc])*
 		#[repr(C)]
 		#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 		pub struct $name {
@@ -82,11 +82,11 @@ macro_rules! handle_type {
 /// Declares the type of an HGDIOBJ handle.
 macro_rules! hgdiobj_type {
 	(
-		$(#[$attr:meta])*
+		$(#[$doc:meta])*
 		$name:ident
 	) => {
 		handle_type! {
-			$(#[$attr])*
+			$(#[$doc])*
 			$name
 		}
 

@@ -5,7 +5,7 @@
 use crate::aliases::TIMERPROC;
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPointId, NccspRect, WsWsex};
-use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
+use crate::funcs::{HIBYTE, HIWORD, LOBYTE, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
 use crate::msg::macros::{lp_to_point, point_to_lp};
@@ -137,23 +137,18 @@ impl MsgSendRecv for AppCommand {
 
 empty_msg_handleable! { CancelMode, co::WM::CANCELMODE,
 	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 empty_msg_handleable! { ChildActivate, co::WM::CHILDACTIVATE,
 	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 empty_msg_handleable! { Close, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
+}
+
+char_msg! { Char, co::WM::CHAR,
+	/// [`WM_CHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 }
 
 //------------------------------------------------------------------------------
@@ -277,53 +272,34 @@ impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
 
 ctl_color_msg! { CtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
-	/// message parameters.
-	///
-	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { CtlColorDlg, co::WM::CTLCOLORDLG,
 	/// [`WM_CTLCOLORDLG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
-	/// message parameters.
-	///
-	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { CtlColorEdit, co::WM::CTLCOLOREDIT,
 	/// [`WM_CTLCOLOREDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
-	/// message parameters.
-	///
-	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { CtlColorListBox, co::WM::CTLCOLORLISTBOX,
 	/// [`WM_CTLCOLORLISTBOX`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
-	/// message parameters.
-	///
-	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { CtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR,
 	/// [`WM_CTLCOLORSCROLLBAR`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
-	/// message parameters.
-	///
-	/// Return type: `HBRUSH`.
 }
 
 ctl_color_msg! { CtlColorStatic, co::WM::CTLCOLORSTATIC,
 	/// [`WM_CTLCOLORSTATIC`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
-	/// message parameters.
-	///
-	/// Return type: `HBRUSH`.
 }
 
-//------------------------------------------------------------------------------
+char_msg! { DeadChar, co::WM::DEADCHAR,
+	/// [`WM_DEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
+}
 
 empty_msg_handleable! { Destroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -474,9 +450,6 @@ impl MsgSendRecv for EnterIdle {
 
 empty_msg_handleable! { EnterSizeMove, co::WM::ENTERSIZEMOVE,
 	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -517,9 +490,6 @@ impl MsgSendRecv for EraseBkgnd {
 
 empty_msg_handleable! { ExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -666,60 +636,86 @@ impl MsgSendRecv for InitMenuPopup {
 
 //------------------------------------------------------------------------------
 
+char_msg! { KeyDown, co::WM::KEYDOWN,
+	/// [`WM_KEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
+}
+
+char_msg! { KeyUp, co::WM::KEYUP,
+	/// [`WM_KEYUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
+}
+
+//------------------------------------------------------------------------------
+
+/// [`WM_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-killfocus)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct KillFocus {
+	pub hwnd: Option<HWND>,
+}
+
+impl MsgSend for KillFocus {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::KILLFOCUS,
+			wparam: match self.hwnd {
+				Some(h) => h.ptr as usize,
+				None => 0,
+			},
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for KillFocus {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			hwnd: match p.wparam {
+				0 => None,
+				ptr => Some(HWND { ptr: ptr as *mut _ }),
+			},
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 button_msg! { LButtonDblClk, co::WM::LBUTTONDBLCLK,
 	/// [`WM_LBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { LButtonDown, co::WM::LBUTTONDOWN,
 	/// [`WM_LBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { LButtonUp, co::WM::LBUTTONUP,
 	/// [`WM_LBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { MButtonDblClk, co::WM::MBUTTONDBLCLK,
 	/// [`WM_MBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { MButtonDown, co::WM::MBUTTONDOWN,
 	/// [`WM_MBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { MButtonUp, co::WM::MBUTTONUP,
 	/// [`WM_MBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { MouseHover, co::WM::MOUSEHOVER,
 	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { MouseMove, co::WM::MOUSEMOVE,
 	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -871,9 +867,6 @@ impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
 
 empty_msg_handleable! { NcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -914,9 +907,6 @@ impl MsgSendRecv for NcPaint {
 
 empty_msg_handleable! { Null, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -976,9 +966,6 @@ impl<'a> Notify<'a> {
 
 empty_msg_handleable! { Paint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -1058,23 +1045,14 @@ impl MsgSendRecv for QueryOpen {
 
 button_msg! { RButtonDblClk, co::WM::RBUTTONDBLCLK,
 	/// [`WM_RBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { RButtonDown, co::WM::RBUTTONDOWN,
 	/// [`WM_RBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { RButtonUp, co::WM::RBUTTONUP,
 	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -1387,6 +1365,12 @@ impl<'a> MsgSendRecv for StyleChanging<'a> {
 
 //------------------------------------------------------------------------------
 
+char_msg! { SysChar, co::WM::SYSCHAR,
+	/// [`WM_SYSCHAR`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
+}
+
+//------------------------------------------------------------------------------
+
 /// [`WM_SYSCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syscommand)
 /// message parameters.
 ///
@@ -1423,11 +1407,20 @@ impl MsgSendRecv for SysCommand {
 
 //------------------------------------------------------------------------------
 
+char_msg! { SysDeadChar, co::WM::SYSDEADCHAR,
+	/// [`WM_SYSDEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
+}
+
+char_msg! { SysKeyDown, co::WM::SYSKEYDOWN,
+	/// [`WM_SYSKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
+}
+
+char_msg! { SysKeyUp, co::WM::SYSKEYUP,
+	/// [`WM_SYSKEYUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
+}
+
 empty_msg_handleable! { ThemeChanged, co::WM::THEMECHANGED,
 	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
-	/// message, which has no parameters.
-	///
-	/// Return type: `()`.
 }
 
 //------------------------------------------------------------------------------
@@ -1544,21 +1537,12 @@ impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 
 button_msg! { XButtonDblClk, co::WM::XBUTTONDBLCLK,
 	/// [`WM_XBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { XButtonDown, co::WM::XBUTTONDOWN,
 	/// [`WM_XBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
 
 button_msg! { XButtonUp, co::WM::XBUTTONUP,
 	/// [`WM_XBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
-	/// message parameters.
-	///
-	/// Return type: `()`.
 }
