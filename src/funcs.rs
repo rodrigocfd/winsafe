@@ -9,7 +9,7 @@ use crate::co;
 use crate::enums::BroadNull;
 use crate::ffi::{comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::Message;
+use crate::msg::MsgSend;
 use crate::privs::{parse_multi_z_str, ptr_as_opt};
 use crate::structs::{ATOM, COLORREF, MSG, OSVERSIONINFOEX, RECT, TRACKMOUSEEVENT, WNDCLASSEX};
 use crate::WString;
@@ -334,7 +334,7 @@ pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
 ///
 /// **Note:** To use an actual [`HWND`](crate::HWND) as the first argument, see
 /// [`HWND::PostMessage`](crate::HWND::PostMessage) method.
-pub fn PostMessage<M: Message>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
+pub fn PostMessage<M: MsgSend>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
 	let wmAny = uMsg.as_generic_wm();
 	match unsafe {
 		user32::PostMessageW(

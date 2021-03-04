@@ -5,7 +5,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HICON;
-use crate::msg::{Message, wm::Wm};
+use crate::msg::{MsgSend, WndMsg};
 
 /// [`STM_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-geticon)
 /// message, which has no parameters.
@@ -13,7 +13,7 @@ use crate::msg::{Message, wm::Wm};
 /// Return type: `WinResult<HICON>`.
 pub struct GetIcon {}
 
-impl Message for GetIcon {
+impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -23,8 +23,8 @@ impl Message for GetIcon {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::STM::GETICON.into(),
 			wparam: 0,
 			lparam: 0,
@@ -42,7 +42,7 @@ pub struct SetIcon {
 	pub icon: HICON,
 }
 
-impl Message for SetIcon {
+impl MsgSend for SetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -52,8 +52,8 @@ impl Message for SetIcon {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::STM::SETICON.into(),
 			wparam: self.icon.ptr as usize,
 			lparam: 0,

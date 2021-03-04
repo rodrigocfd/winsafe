@@ -4,7 +4,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::msg::{Message, wm::Wm};
+use crate::msg::{MsgSend, WndMsg};
 
 /// [`HDM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemcount)
 /// message, which has no parameters.
@@ -12,7 +12,7 @@ use crate::msg::{Message, wm::Wm};
 /// Return type: `WinResult<u32>`.
 pub struct GetItemCount {}
 
-impl Message for GetItemCount {
+impl MsgSend for GetItemCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -22,8 +22,8 @@ impl Message for GetItemCount {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::HDM::GETITEMCOUNT.into(),
 			wparam: 0,
 			lparam: 0,

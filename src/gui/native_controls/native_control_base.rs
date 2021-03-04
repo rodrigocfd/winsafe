@@ -8,7 +8,7 @@ use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::immut::Immut;
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::wm;
+use crate::msg::WndMsg;
 use crate::privs::WC_DIALOG;
 use crate::structs::{POINT, SIZE};
 use crate::WString;
@@ -155,7 +155,7 @@ impl<Ev> NativeControlBase<Ev> {
 		|hwnd: HWND, msg, wparam, lparam| -> WinResult<isize>
 		{
 			let ptr_self = ref_data as *mut Self; // retrieve
-			let wm_any = wm::Wm { msg_id: msg, wparam, lparam };
+			let wm_any = WndMsg { msg_id: msg, wparam, lparam };
 			let mut maybe_processed = ProcessResult::NotHandled;
 
 			if !ptr_self.is_null() {

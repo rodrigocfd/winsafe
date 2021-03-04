@@ -6,7 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BitmapIcon;
 use crate::handles::{HBITMAP, HICON};
-use crate::msg::{Message, wm::Wm};
+use crate::msg::{MsgSend, WndMsg};
 use crate::structs::{BUTTON_IMAGELIST, BUTTON_SPLITINFO, RECT, SIZE};
 use crate::WString;
 
@@ -18,7 +18,7 @@ pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-impl<'a> Message for GetIdealSize<'a> {
+impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -28,8 +28,8 @@ impl<'a> Message for GetIdealSize<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETIDEALSIZE.into(),
 			wparam: 0,
 			lparam: self.size as *const _ as isize,
@@ -47,7 +47,7 @@ pub struct GetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
 
-impl<'a> Message for GetImageList<'a> {
+impl<'a> MsgSend for GetImageList<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -57,8 +57,8 @@ impl<'a> Message for GetImageList<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as isize,
@@ -76,7 +76,7 @@ pub struct GetNote<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for GetNote<'a> {
+impl<'a> MsgSend for GetNote<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -86,8 +86,8 @@ impl<'a> Message for GetNote<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETNOTE.into(),
 			wparam: self.text.buffer_size(),
 			lparam: unsafe { self.text.as_ptr() } as isize,
@@ -103,15 +103,15 @@ impl<'a> Message for GetNote<'a> {
 /// Return type: `u32`.
 pub struct GetNoteLength {}
 
-impl Message for GetNoteLength {
+impl MsgSend for GetNoteLength {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as u32
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETNOTELENGTH.into(),
 			wparam: 0,
 			lparam: 0,
@@ -129,7 +129,7 @@ pub struct GetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
 
-impl<'a> Message for GetSplitInfo<'a> {
+impl<'a> MsgSend for GetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -139,8 +139,8 @@ impl<'a> Message for GetSplitInfo<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETSPLITINFO.into(),
 			wparam: 0,
 			lparam: self.splitinfo as *const _ as isize,
@@ -158,7 +158,7 @@ pub struct GetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
 
-impl<'a> Message for GetTextMargin<'a> {
+impl<'a> MsgSend for GetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -168,8 +168,8 @@ impl<'a> Message for GetTextMargin<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETTEXTMARGIN.into(),
 			wparam: 0,
 			lparam: self.margins as *const _ as isize,
@@ -187,7 +187,7 @@ pub struct SetDropDownState {
 	pub is_pushed: bool,
 }
 
-impl Message for SetDropDownState {
+impl MsgSend for SetDropDownState {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -197,8 +197,8 @@ impl Message for SetDropDownState {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETDROPDOWNSTATE.into(),
 			wparam: self.is_pushed as usize,
 			lparam: 0,
@@ -216,7 +216,7 @@ pub struct SetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
 
-impl<'a> Message for SetImageList<'a> {
+impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -226,8 +226,8 @@ impl<'a> Message for SetImageList<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as isize,
@@ -245,7 +245,7 @@ pub struct SetNote<'a> {
 	pub text: &'a WString,
 }
 
-impl<'a> Message for SetNote<'a> {
+impl<'a> MsgSend for SetNote<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -255,8 +255,8 @@ impl<'a> Message for SetNote<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETNOTE.into(),
 			wparam: self.text.buffer_size(),
 			lparam: unsafe { self.text.as_ptr() } as isize,
@@ -274,7 +274,7 @@ pub struct SetShield {
 	pub has_elevated_icon: bool,
 }
 
-impl Message for SetShield {
+impl MsgSend for SetShield {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -284,8 +284,8 @@ impl Message for SetShield {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETSHIELD.into(),
 			wparam: self.has_elevated_icon as usize,
 			lparam: 0,
@@ -303,7 +303,7 @@ pub struct SetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
 
-impl<'a> Message for SetSplitInfo<'a> {
+impl<'a> MsgSend for SetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -313,8 +313,8 @@ impl<'a> Message for SetSplitInfo<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETSPLITINFO.into(),
 			wparam: 0,
 			lparam: self.splitinfo as *const _ as isize,
@@ -332,7 +332,7 @@ pub struct SetTextMargin<'a> {
 	pub margins: &'a RECT,
 }
 
-impl<'a> Message for SetTextMargin<'a> {
+impl<'a> MsgSend for SetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -342,8 +342,8 @@ impl<'a> Message for SetTextMargin<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETTEXTMARGIN.into(),
 			wparam: 0,
 			lparam: self.margins as *const _ as isize,
@@ -368,15 +368,15 @@ empty_msg! { Click, co::BM::CLICK.into(),
 /// Return type: `BST`.
 pub struct GetCheck {}
 
-impl Message for GetCheck {
+impl MsgSend for GetCheck {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		co::BST(v as u32)
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETCHECK.into(),
 			wparam: 0,
 			lparam: 0,
@@ -394,7 +394,7 @@ pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
 
-impl Message for GetImage {
+impl MsgSend for GetImage {
 	type RetType = WinResult<BitmapIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -405,8 +405,8 @@ impl Message for GetImage {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETIMAGE.into(),
 			wparam: self.img_type.0 as usize,
 			lparam: 0,
@@ -422,15 +422,15 @@ impl Message for GetImage {
 /// Return type: `BST`.
 pub struct GetState {}
 
-impl Message for GetState {
+impl MsgSend for GetState {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		co::BST(v as u32)
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::GETSTATE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -448,15 +448,15 @@ pub struct SetCheck {
 	pub state: co::BST,
 }
 
-impl Message for SetCheck {
+impl MsgSend for SetCheck {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETCHECK.into(),
 			wparam: self.state.0 as usize,
 			lparam: 0,
@@ -474,15 +474,15 @@ pub struct SetDontClick {
 	pub dont_click: bool,
 }
 
-impl Message for SetDontClick {
+impl MsgSend for SetDontClick {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETDONTCLICK.into(),
 			wparam: self.dont_click as usize,
 			lparam: 0,
@@ -500,7 +500,7 @@ pub struct SetImage {
 	pub image: BitmapIcon,
 }
 
-impl Message for SetImage {
+impl MsgSend for SetImage {
 	type RetType = WinResult<BitmapIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -510,8 +510,8 @@ impl Message for SetImage {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETIMAGE.into(),
 			wparam: match self.image {
 				BitmapIcon::Bitmap(_) => co::IMAGE_TYPE::BITMAP.0,
@@ -532,15 +532,15 @@ pub struct SetState {
 	pub highlight: bool,
 }
 
-impl Message for SetState {
+impl MsgSend for SetState {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETSTATE.into(),
 			wparam: self.highlight as usize,
 			lparam: 0,
@@ -559,15 +559,15 @@ pub struct SetStyle {
 	pub redraw: bool,
 }
 
-impl Message for SetStyle {
+impl MsgSend for SetStyle {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::BM::SETSTYLE.into(),
 			wparam: self.style.0 as usize,
 			lparam: self.redraw as isize,

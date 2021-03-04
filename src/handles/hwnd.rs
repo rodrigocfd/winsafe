@@ -6,7 +6,7 @@ use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
 use crate::ffi::{comctl32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
-use crate::msg::Message;
+use crate::msg::MsgSend;
 use crate::privs::ptr_as_opt;
 use crate::structs::{MSG, PAINTSTRUCT, POINT, RECT, WINDOWINFO, WINDOWPLACEMENT};
 use crate::WString;
@@ -149,9 +149,9 @@ impl HWND {
 	/// method.
 	///
 	/// The return type is variable, being defined by the `RetType` associated
-	/// type of the [`Message`](crate::msg::Message) trait. That means each
+	/// type of the [`MsgSend`](crate::msg::MsgSend) trait. That means each
 	/// message can define its own return type.
-	pub fn DefSubclassProc<M: Message>(self, uMsg: M) -> M::RetType {
+	pub fn DefSubclassProc<M: MsgSend>(self, uMsg: M) -> M::RetType {
 		let wmAny = uMsg.as_generic_wm();
 		uMsg.convert_ret(
 			unsafe {
@@ -166,9 +166,9 @@ impl HWND {
 	/// method.
 	///
 	/// The return type is variable, being defined by the `RetType` associated
-	/// type of the [`Message`](crate::msg::Message) trait. That means each
+	/// type of the [`MsgSend`](crate::msg::MsgSend) trait. That means each
 	/// message can define its own return type.
-	pub fn DefWindowProc<M: Message>(self, uMsg: M) -> M::RetType {
+	pub fn DefWindowProc<M: MsgSend>(self, uMsg: M) -> M::RetType {
 		let wmAny = uMsg.as_generic_wm();
 		uMsg.convert_ret(
 			unsafe {
@@ -788,7 +788,7 @@ impl HWND {
 	///
 	/// my_hwnd.PostMessage(WmClose {}).unwrap();
 	/// ```
-	pub fn PostMessage<M: Message>(self, uMsg: M) -> WinResult<()> {
+	pub fn PostMessage<M: MsgSend>(self, uMsg: M) -> WinResult<()> {
 		let wmAny = uMsg.as_generic_wm();
 		match unsafe {
 			user32::PostMessageW(
@@ -895,7 +895,7 @@ impl HWND {
 	/// method.
 	///
 	/// The return type is variable, being defined by the `RetType` associated
-	/// type of the [`Message`](crate::msg::Message) trait. That means each
+	/// type of the [`MsgSend`](crate::msg::MsgSend) trait. That means each
 	/// message can define its own return type.
 	///
 	/// # Examples
@@ -917,7 +917,7 @@ impl HWND {
 	///     lvitem: &lvi,
 	/// });
 	/// ```
-	pub fn SendMessage<M: Message>(self, uMsg: M) -> M::RetType {
+	pub fn SendMessage<M: MsgSend>(self, uMsg: M) -> M::RetType {
 		let wmAny = uMsg.as_generic_wm();
 		uMsg.convert_ret(
 			unsafe {

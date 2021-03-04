@@ -5,7 +5,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::msg::{Message, wm::Wm};
+use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::point_to_lp;
 use crate::privs::{LB_ERR, LB_ERRSPACE};
 use crate::structs::{POINT, RECT};
@@ -19,7 +19,7 @@ pub struct AddFile<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for AddFile<'a> {
+impl<'a> MsgSend for AddFile<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -29,8 +29,8 @@ impl<'a> Message for AddFile<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
@@ -48,7 +48,7 @@ pub struct AddString<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for AddString<'a> {
+impl<'a> MsgSend for AddString<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -58,8 +58,8 @@ impl<'a> Message for AddString<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
@@ -77,7 +77,7 @@ pub struct DeleteString {
 	pub index: u32,
 }
 
-impl Message for DeleteString {
+impl MsgSend for DeleteString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -87,8 +87,8 @@ impl Message for DeleteString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::DELETESTRING.into(),
 			wparam: self.index as usize,
 			lparam: 0,
@@ -107,7 +107,7 @@ pub struct Dir<'a> {
 	pub path: &'a str,
 }
 
-impl<'a> Message for Dir<'a> {
+impl<'a> MsgSend for Dir<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -118,8 +118,8 @@ impl<'a> Message for Dir<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::DELETESTRING.into(),
 			wparam: self.attributes.0 as usize,
 			lparam: unsafe { WString::from_str(self.path).as_ptr() } as isize,
@@ -138,7 +138,7 @@ pub struct FindString<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for FindString<'a> {
+impl<'a> MsgSend for FindString<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -148,8 +148,8 @@ impl<'a> Message for FindString<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::FINDSTRING.into(),
 			wparam: match self.preceding_index {
 				None => -1,
@@ -171,7 +171,7 @@ pub struct FindStringExact<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for FindStringExact<'a> {
+impl<'a> MsgSend for FindStringExact<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -181,8 +181,8 @@ impl<'a> Message for FindStringExact<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::FINDSTRINGEXACT.into(),
 			wparam: match self.preceding_index {
 				None => -1,
@@ -201,15 +201,15 @@ impl<'a> Message for FindStringExact<'a> {
 /// Return type: `u32`.
 pub struct GetAnchorIndex {}
 
-impl Message for GetAnchorIndex {
+impl MsgSend for GetAnchorIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as u32
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETANCHORINDEX.into(),
 			wparam: 0,
 			lparam: 0,
@@ -225,15 +225,15 @@ impl Message for GetAnchorIndex {
 /// Return type: `u32`.
 pub struct GetCaretIndex {}
 
-impl Message for GetCaretIndex {
+impl MsgSend for GetCaretIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as u32
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETCARETINDEX.into(),
 			wparam: 0,
 			lparam: 0,
@@ -249,7 +249,7 @@ impl Message for GetCaretIndex {
 /// Return type: `WinResult<u32>`.
 pub struct GetCount {}
 
-impl Message for GetCount {
+impl MsgSend for GetCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -259,8 +259,8 @@ impl Message for GetCount {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -276,7 +276,7 @@ impl Message for GetCount {
 /// Return type: `Option<u32>`.
 pub struct GetCurSel {}
 
-impl Message for GetCurSel {
+impl MsgSend for GetCurSel {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -286,8 +286,8 @@ impl Message for GetCurSel {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETCURSEL.into(),
 			wparam: 0,
 			lparam: 0,
@@ -303,15 +303,15 @@ impl Message for GetCurSel {
 /// Return type: `u32`.
 pub struct GetHorizontalExtent {}
 
-impl Message for GetHorizontalExtent {
+impl MsgSend for GetHorizontalExtent {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as u32
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETHORIZONTALEXTENT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -329,7 +329,7 @@ pub struct GetItemData {
 	pub index: u32,
 }
 
-impl Message for GetItemData {
+impl MsgSend for GetItemData {
 	type RetType = WinResult<isize>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -340,8 +340,8 @@ impl Message for GetItemData {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETITEMDATA.into(),
 			wparam: 0,
 			lparam: 0,
@@ -359,7 +359,7 @@ pub struct GetItemHeight {
 	pub index: Option<u32>,
 }
 
-impl Message for GetItemHeight {
+impl MsgSend for GetItemHeight {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -369,8 +369,8 @@ impl Message for GetItemHeight {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETITEMHEIGHT.into(),
 			wparam: self.index.unwrap_or(0) as usize,
 			lparam: 0,
@@ -389,7 +389,7 @@ pub struct GetItemRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> Message for GetItemRect<'a> {
+impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -399,8 +399,8 @@ impl<'a> Message for GetItemRect<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETITEMRECT.into(),
 			wparam: self.index as usize,
 			lparam: self.rect as *const _ as isize,
@@ -416,15 +416,15 @@ impl<'a> Message for GetItemRect<'a> {
 /// Return type: `u32`.
 pub struct GetListBoxInfo {}
 
-impl Message for GetListBoxInfo {
+impl MsgSend for GetListBoxInfo {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as u32
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETLISTBOXINFO.into(),
 			wparam: 0,
 			lparam: 0,
@@ -442,7 +442,7 @@ pub struct GetSel {
 	pub index: u32,
 }
 
-impl Message for GetSel {
+impl MsgSend for GetSel {
 	type RetType = WinResult<bool>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -452,8 +452,8 @@ impl Message for GetSel {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETSEL.into(),
 			wparam: self.index as usize,
 			lparam: 0,
@@ -469,7 +469,7 @@ impl Message for GetSel {
 /// Return type: `WinResult<u32>`.
 pub struct GetSelCount {}
 
-impl Message for GetSelCount {
+impl MsgSend for GetSelCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -479,8 +479,8 @@ impl Message for GetSelCount {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETSELCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -498,7 +498,7 @@ pub struct GetSelItems<'a> {
 	pub buffer: &'a mut [u32],
 }
 
-impl<'a> Message for GetSelItems<'a> {
+impl<'a> MsgSend for GetSelItems<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -508,8 +508,8 @@ impl<'a> Message for GetSelItems<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETSELITEMS.into(),
 			wparam: self.buffer.len(),
 			lparam: self.buffer.as_ptr() as isize,
@@ -528,7 +528,7 @@ pub struct GetText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for GetText<'a> {
+impl<'a> MsgSend for GetText<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -538,8 +538,8 @@ impl<'a> Message for GetText<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETTEXT.into(),
 			wparam: self.index as usize,
 			lparam: unsafe { self.text.as_ptr() } as isize,
@@ -557,7 +557,7 @@ pub struct GetTextLen {
 	pub index: u32,
 }
 
-impl Message for GetTextLen {
+impl MsgSend for GetTextLen {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -567,8 +567,8 @@ impl Message for GetTextLen {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETTEXTLEN.into(),
 			wparam: self.index as usize,
 			lparam: 0,
@@ -584,7 +584,7 @@ impl Message for GetTextLen {
 /// Return type: `WinResult<u32>`.
 pub struct GetTopIndex {}
 
-impl Message for GetTopIndex {
+impl MsgSend for GetTopIndex {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -594,8 +594,8 @@ impl Message for GetTopIndex {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::GETTOPINDEX.into(),
 			wparam: 0,
 			lparam: 0,
@@ -614,7 +614,7 @@ pub struct InitStorage {
 	pub memory_bytes: u32,
 }
 
-impl Message for InitStorage {
+impl MsgSend for InitStorage {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -624,8 +624,8 @@ impl Message for InitStorage {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::INITSTORAGE.into(),
 			wparam: self.num_items as usize,
 			lparam: self.memory_bytes as isize,
@@ -643,7 +643,7 @@ pub struct InsertString<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for InsertString<'a> {
+impl<'a> MsgSend for InsertString<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -653,8 +653,8 @@ impl<'a> Message for InsertString<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
 			wparam: 0,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
@@ -672,15 +672,15 @@ pub struct ItemFromPoint {
 	pub coords: POINT,
 }
 
-impl Message for ItemFromPoint {
+impl MsgSend for ItemFromPoint {
 	type RetType = (i32, bool);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as u32) as i32, HIWORD(v as u32) == 1)
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::ITEMFROMPOINT.into(),
 			wparam: 0,
 			lparam: point_to_lp(self.coords),
@@ -708,7 +708,7 @@ pub struct SelectString<'a> {
 	pub prefix: &'a str,
 }
 
-impl<'a> Message for SelectString<'a> {
+impl<'a> MsgSend for SelectString<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -718,8 +718,8 @@ impl<'a> Message for SelectString<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::SELECTSTRING.into(),
 			wparam: match self.index {
 				None => -1,
@@ -742,7 +742,7 @@ pub struct SelItemRange {
 	pub last_item: u32,
 }
 
-impl Message for SelItemRange {
+impl MsgSend for SelItemRange {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -752,8 +752,8 @@ impl Message for SelItemRange {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::SELITEMRANGE.into(),
 			wparam: self.select as usize,
 			lparam: MAKEDWORD(self.first_item as u16, self.last_item as u16) as isize,
@@ -771,7 +771,7 @@ pub struct SetAnchorIndex {
 	pub index: u32,
 }
 
-impl Message for SetAnchorIndex {
+impl MsgSend for SetAnchorIndex {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -781,8 +781,8 @@ impl Message for SetAnchorIndex {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::LB::SETANCHORINDEX.into(),
 			wparam: self.index as usize,
 			lparam: 0,

@@ -6,7 +6,7 @@ use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::traits::Parent;
 use crate::handles::{HACCEL, HINSTANCE, HWND};
-use crate::msg::wm;
+use crate::msg::WndMsg;
 use crate::structs::MSG;
 
 /// Base to `WindowBase` and `DialogBase`.
@@ -62,11 +62,11 @@ impl Base {
 		})
 	}
 
-	pub fn process_effective_message(&mut self, wm_any: wm::Wm) -> ProcessResult {
+	pub fn process_effective_message(&mut self, wm_any: WndMsg) -> ProcessResult {
 		self.user_events.process_effective_message(wm_any)
 	}
 
-	pub fn process_privileged_messages(&mut self, wm_any: wm::Wm) {
+	pub fn process_privileged_messages(&mut self, wm_any: WndMsg) {
 		self.privileged_events.process_all_messages(wm_any);
 	}
 

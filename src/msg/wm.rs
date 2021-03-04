@@ -7,7 +7,7 @@ use crate::co;
 use crate::enums::{HwndHmenu, HwndPointId, NccspRect, WsWsex};
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
-use crate::msg::{Message, MessageHandleable};
+use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
 use crate::msg::macros::{lp_to_point, point_to_lp};
 use crate::privs::FAPPCOMMAND_MASK;
 use crate::structs::{
@@ -21,41 +21,6 @@ use crate::structs::{
 	WINDOWPOS,
 };
 
-/// Generic
-/// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
-/// parameters.
-///
-/// Return type: `isize`.
-#[derive(Copy, Clone)]
-pub struct Wm {
-	/// The [`co::WM`](crate::co::WM) constant that identifies the window message.
-	pub msg_id: co::WM,
-	/// First message parameter.
-	pub wparam: usize,
-	/// Second message parameter.
-	pub lparam: isize,
-}
-
-impl Message for Wm {
-	type RetType = isize;
-
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v
-	}
-
-	fn as_generic_wm(&self) -> Wm {
-		*self
-	}
-}
-
-impl MessageHandleable for Wm {
-	fn from_generic_wm(p: Wm) -> Self {
-		p
-	}
-}
-
-//------------------------------------------------------------------------------
-
 /// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 /// message parameters.
 ///
@@ -66,15 +31,15 @@ pub struct Activate {
 	pub hwnd: HWND,
 }
 
-impl Message for Activate {
+impl MsgSend for Activate {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::ACTIVATE,
 			wparam: MAKEDWORD(self.event.0, self.is_minimized as u16) as usize,
 			lparam: self.hwnd.ptr as isize,
@@ -82,8 +47,8 @@ impl Message for Activate {
 	}
 }
 
-impl MessageHandleable for Activate {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for Activate {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			event: co::WA(LOWORD(p.wparam as u32)),
 			is_minimized: HIWORD(p.wparam as u32) != 0,
@@ -103,15 +68,15 @@ pub struct ActivateApp {
 	pub thread_id: u32,
 }
 
-impl Message for ActivateApp {
+impl MsgSend for ActivateApp {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::ACTIVATEAPP,
 			wparam: self.is_being_activated as usize,
 			lparam: self.thread_id as isize,
@@ -119,8 +84,8 @@ impl Message for ActivateApp {
 	}
 }
 
-impl MessageHandleable for ActivateApp {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for ActivateApp {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			is_being_activated: p.wparam != 0,
 			thread_id: p.lparam as u32,
@@ -141,15 +106,15 @@ pub struct AppCommand {
 	pub keys: co::MK,
 }
 
-impl Message for AppCommand {
+impl MsgSend for AppCommand {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::APPCOMMAND,
 			wparam: self.hwnd_owner.ptr as usize,
 			lparam: MAKEDWORD(self.keys.into(), self.app_command.0 | self.u_device.0) as isize,
@@ -157,8 +122,8 @@ impl Message for AppCommand {
 	}
 }
 
-impl MessageHandleable for AppCommand {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for AppCommand {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd_owner: HWND { ptr: p.wparam as *mut _ },
 			app_command: co::APPCOMMAND(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
@@ -206,15 +171,15 @@ pub struct Command {
 	pub ctrl_hwnd: Option<HWND>,
 }
 
-impl Message for Command {
+impl MsgSend for Command {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::COMMAND,
 			wparam: MAKEDWORD(self.ctrl_id, self.code.into()) as usize,
 			lparam: match self.ctrl_hwnd {
@@ -225,8 +190,8 @@ impl Message for Command {
 	}
 }
 
-impl MessageHandleable for Command {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for Command {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			code: co::CMD(HIWORD(p.wparam as u32)),
 			ctrl_id: LOWORD(p.wparam as u32),
@@ -249,15 +214,15 @@ pub struct ContextMenu {
 	pub cursor_pos: POINT,
 }
 
-impl Message for ContextMenu {
+impl MsgSend for ContextMenu {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::CONTEXTMENU,
 			wparam: self.hwnd.ptr as usize,
 			lparam: point_to_lp(self.cursor_pos),
@@ -265,8 +230,8 @@ impl Message for ContextMenu {
 	}
 }
 
-impl MessageHandleable for ContextMenu {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for ContextMenu {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd: HWND { ptr: p.wparam as *mut _ },
 			cursor_pos: lp_to_point(p),
@@ -284,15 +249,15 @@ pub struct Create<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> Message for Create<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for Create<'a, 'b, 'c> {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as i32
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::CREATE,
 			wparam: 0,
 			lparam: self.createstruct as *const _ as isize,
@@ -300,8 +265,8 @@ impl<'a, 'b, 'c> Message for Create<'a, 'b, 'c> {
 	}
 }
 
-impl<'a, 'b, 'c> MessageHandleable for Create<'a, 'b, 'c> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			createstruct: unsafe { &*(p.lparam as *const _) },
 		}
@@ -371,15 +336,15 @@ pub struct DropFiles {
 	pub hdrop: HDROP,
 }
 
-impl Message for DropFiles {
+impl MsgSend for DropFiles {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::DROPFILES,
 			wparam: self.hdrop.ptr as usize,
 			lparam: 0,
@@ -387,8 +352,8 @@ impl Message for DropFiles {
 	}
 }
 
-impl MessageHandleable for DropFiles {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for DropFiles {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hdrop: HDROP { ptr: p.wparam as *mut _ },
 		}
@@ -405,15 +370,15 @@ pub struct Enable {
 	pub has_been_enabled: bool,
 }
 
-impl Message for Enable {
+impl MsgSend for Enable {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::ENABLE,
 			wparam: self.has_been_enabled as usize,
 			lparam: 0,
@@ -421,8 +386,8 @@ impl Message for Enable {
 	}
 }
 
-impl MessageHandleable for Enable {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for Enable {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			has_been_enabled: p.wparam != 0,
 		}
@@ -440,15 +405,15 @@ pub struct EndSession {
 	pub event: co::ENDSESSION,
 }
 
-impl Message for EndSession {
+impl MsgSend for EndSession {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::ENDSESSION,
 			wparam: self.is_session_being_ended as usize,
 			lparam: self.event.0 as isize,
@@ -456,8 +421,8 @@ impl Message for EndSession {
 	}
 }
 
-impl MessageHandleable for EndSession {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for EndSession {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
 			event: co::ENDSESSION(p.lparam as u32),
@@ -476,15 +441,15 @@ pub struct EnterIdle {
 	pub handle: HwndHmenu,
 }
 
-impl Message for EnterIdle {
+impl MsgSend for EnterIdle {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::ENTERIDLE,
 			wparam: self.reason.0 as usize,
 			lparam: self.handle.as_isize(),
@@ -492,8 +457,8 @@ impl Message for EnterIdle {
 	}
 }
 
-impl MessageHandleable for EnterIdle {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for EnterIdle {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		let reason = co::MSGF(p.wparam as u8);
 		Self {
 			reason,
@@ -524,15 +489,15 @@ pub struct EraseBkgnd {
 	pub hdc: HDC,
 }
 
-impl Message for EraseBkgnd {
+impl MsgSend for EraseBkgnd {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as i32
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::ERASEBKGND,
 			wparam: self.hdc.ptr as usize,
 			lparam: 0,
@@ -540,8 +505,8 @@ impl Message for EraseBkgnd {
 	}
 }
 
-impl MessageHandleable for EraseBkgnd {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for EraseBkgnd {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hdc: HDC { ptr: p.wparam as *mut _ },
 		}
@@ -567,15 +532,15 @@ pub struct GetMinMaxInfo<'a> {
 	pub info: &'a mut MINMAXINFO,
 }
 
-impl<'a> Message for GetMinMaxInfo<'a> {
+impl<'a> MsgSend for GetMinMaxInfo<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::GETMINMAXINFO,
 			wparam: 0,
 			lparam: self.info as *const _ as isize,
@@ -583,8 +548,8 @@ impl<'a> Message for GetMinMaxInfo<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for GetMinMaxInfo<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			info: unsafe { &mut *(p.lparam as *mut _) },
 		}
@@ -601,15 +566,15 @@ pub struct Help<'a> {
 	pub helpinfo: &'a HELPINFO,
 }
 
-impl<'a> Message for Help<'a> {
+impl<'a> MsgSend for Help<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::HELP,
 			wparam: 0,
 			lparam: self.helpinfo as *const _ as isize,
@@ -617,8 +582,8 @@ impl<'a> Message for Help<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for Help<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for Help<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			helpinfo: unsafe { &mut *(p.lparam as *mut _) },
 		}
@@ -636,15 +601,15 @@ pub struct InitDialog {
 	pub additional_data: isize,
 }
 
-impl Message for InitDialog {
+impl MsgSend for InitDialog {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::INITDIALOG,
 			wparam: self.hwnd_focus.ptr as usize,
 			lparam: self.additional_data,
@@ -652,8 +617,8 @@ impl Message for InitDialog {
 	}
 }
 
-impl MessageHandleable for InitDialog {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for InitDialog {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd_focus: HWND { ptr: p.wparam as *mut _ },
 			additional_data: p.lparam,
@@ -673,15 +638,15 @@ pub struct InitMenuPopup {
 	pub is_window_menu: bool,
 }
 
-impl Message for InitMenuPopup {
+impl MsgSend for InitMenuPopup {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::INITMENUPOPUP,
 			wparam: self.hmenu.ptr as usize,
 			lparam: MAKEDWORD(self.item_pos, self.is_window_menu as u16) as isize,
@@ -689,8 +654,8 @@ impl Message for InitMenuPopup {
 	}
 }
 
-impl MessageHandleable for InitMenuPopup {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for InitMenuPopup {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hmenu: HMENU { ptr: p.wparam as *mut _ },
 			item_pos: LOWORD(p.lparam as u32),
@@ -767,15 +732,15 @@ pub struct Move {
 	pub coords: POINT,
 }
 
-impl Message for Move {
+impl MsgSend for Move {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::MOVE,
 			wparam: 0,
 			lparam: point_to_lp(self.coords),
@@ -783,8 +748,8 @@ impl Message for Move {
 	}
 }
 
-impl MessageHandleable for Move {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for Move {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			coords: lp_to_point(p),
 		}
@@ -801,15 +766,15 @@ pub struct Moving<'a> {
 	pub window_pos: &'a mut RECT,
 }
 
-impl<'a> Message for Moving<'a> {
+impl<'a> MsgSend for Moving<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::MOVING,
 			wparam: 0,
 			lparam: self.window_pos as *const _ as isize,
@@ -817,8 +782,8 @@ impl<'a> Message for Moving<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for Moving<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for Moving<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			window_pos: unsafe { &mut *(p.lparam as *mut _) },
 		}
@@ -835,15 +800,15 @@ pub struct NcCalcSize<'a, 'b> {
 	pub data: NccspRect<'a, 'b>,
 }
 
-impl<'a, 'b> Message for NcCalcSize<'a, 'b> {
+impl<'a, 'b> MsgSend for NcCalcSize<'a, 'b> {
 	type RetType = co::WVR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		co::WVR(v as u32)
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::NCCALCSIZE,
 			wparam: match &self.data {
 				NccspRect::Nccsp(_) => true as usize,
@@ -857,8 +822,8 @@ impl<'a, 'b> Message for NcCalcSize<'a, 'b> {
 	}
 }
 
-impl<'a, 'b> MessageHandleable for NcCalcSize<'a, 'b> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a, 'b> MsgSendRecv for NcCalcSize<'a, 'b> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			data: match p.wparam {
 				0 => NccspRect::Rect(unsafe { &mut *(p.lparam as *mut _) }),
@@ -878,15 +843,15 @@ pub struct NcCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> Message for NcCreate<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::NCCREATE,
 			wparam: 0,
 			lparam: self.createstruct as *const _ as isize,
@@ -894,8 +859,8 @@ impl<'a, 'b, 'c> Message for NcCreate<'a, 'b, 'c> {
 	}
 }
 
-impl<'a, 'b, 'c> MessageHandleable for NcCreate<'a, 'b, 'c> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			createstruct: unsafe { &*(p.lparam as *const _) },
 		}
@@ -921,15 +886,15 @@ pub struct NcPaint {
 	pub updated_hrgn: HRGN,
 }
 
-impl Message for NcPaint {
+impl MsgSend for NcPaint {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::NCPAINT,
 			wparam: self.updated_hrgn.ptr as usize,
 			lparam: 0,
@@ -937,8 +902,8 @@ impl Message for NcPaint {
 	}
 }
 
-impl MessageHandleable for NcPaint {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for NcPaint {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			updated_hrgn: HRGN { ptr: p.wparam as *mut _ },
 		}
@@ -965,15 +930,15 @@ pub struct Notify<'a> {
 	pub nmhdr: &'a NMHDR,
 }
 
-impl<'a> Message for Notify<'a> {
+impl<'a> MsgSend for Notify<'a> {
 	type RetType = isize;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::NOTIFY,
 			wparam: self.nmhdr.hwndFrom.ptr as usize,
 			lparam: self.nmhdr as *const _ as isize,
@@ -981,8 +946,8 @@ impl<'a> Message for Notify<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for Notify<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for Notify<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			nmhdr: unsafe { &*(p.lparam as *const _) },
 		}
@@ -1028,15 +993,15 @@ pub struct ParentNotify {
 	pub data: HwndPointId,
 }
 
-impl Message for ParentNotify {
+impl MsgSend for ParentNotify {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::PARENTNOTIFY,
 			wparam: MAKEDWORD(self.event.0, self.child_id) as usize,
 			lparam: self.data.as_isize(),
@@ -1044,8 +1009,8 @@ impl Message for ParentNotify {
 	}
 }
 
-impl MessageHandleable for ParentNotify {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for ParentNotify {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		let event = co::WMPN(LOWORD(p.wparam as u32));
 		Self {
 			event,
@@ -1067,15 +1032,15 @@ impl MessageHandleable for ParentNotify {
 /// Return type: `bool`.
 pub struct QueryOpen {}
 
-impl Message for QueryOpen {
+impl MsgSend for QueryOpen {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::QUERYOPEN,
 			wparam: 0,
 			lparam: 0,
@@ -1083,8 +1048,8 @@ impl Message for QueryOpen {
 	}
 }
 
-impl MessageHandleable for QueryOpen {
-	fn from_generic_wm(_: Wm) -> Self {
+impl MsgSendRecv for QueryOpen {
+	fn from_generic_wm(_: WndMsg) -> Self {
 		Self {}
 	}
 }
@@ -1122,15 +1087,15 @@ pub struct SetFocus {
 	pub hwnd_losing_focus: HWND,
 }
 
-impl Message for SetFocus {
+impl MsgSend for SetFocus {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::SETFOCUS,
 			wparam: self.hwnd_losing_focus.ptr as usize,
 			lparam: 0,
@@ -1138,8 +1103,8 @@ impl Message for SetFocus {
 	}
 }
 
-impl MessageHandleable for SetFocus {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for SetFocus {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd_losing_focus: HWND { ptr: p.wparam as *mut _ },
 		}
@@ -1157,15 +1122,15 @@ pub struct SetFont {
 	pub redraw: bool,
 }
 
-impl Message for SetFont {
+impl MsgSend for SetFont {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::SETFONT,
 			wparam: self.hfont.ptr as usize,
 			lparam: MAKEDWORD(self.redraw as u16, 0) as isize,
@@ -1173,8 +1138,8 @@ impl Message for SetFont {
 	}
 }
 
-impl MessageHandleable for SetFont {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for SetFont {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hfont: HFONT { ptr: p.wparam as *mut _ },
 			redraw: LOWORD(p.lparam as u32) != 0,
@@ -1193,7 +1158,7 @@ pub struct SetIcon {
 	pub hicon: HICON,
 }
 
-impl Message for SetIcon {
+impl MsgSend for SetIcon {
 	type RetType = Option<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -1203,8 +1168,8 @@ impl Message for SetIcon {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::SETICON,
 			wparam: self.size.0 as usize,
 			lparam: self.hicon.ptr as isize,
@@ -1212,8 +1177,8 @@ impl Message for SetIcon {
 	}
 }
 
-impl MessageHandleable for SetIcon {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for SetIcon {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			size: co::ICON_SZ(p.wparam as u8),
 			hicon: HICON { ptr: p.lparam as *mut _ },
@@ -1232,15 +1197,15 @@ pub struct ShowWindow {
 	pub status: co::SW_S,
 }
 
-impl Message for ShowWindow {
+impl MsgSend for ShowWindow {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::SHOWWINDOW,
 			wparam: self.being_shown as usize,
 			lparam: self.status.0 as isize,
@@ -1248,8 +1213,8 @@ impl Message for ShowWindow {
 	}
 }
 
-impl MessageHandleable for ShowWindow {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for ShowWindow {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			being_shown: p.wparam != 0,
 			status: co::SW_S(p.lparam as u8),
@@ -1268,15 +1233,15 @@ pub struct Size {
 	pub client_area: SIZE,
 }
 
-impl Message for Size {
+impl MsgSend for Size {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::SIZE,
 			wparam: self.request.0 as usize,
 			lparam: MAKEDWORD(
@@ -1286,8 +1251,8 @@ impl Message for Size {
 	}
 }
 
-impl MessageHandleable for Size {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for Size {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			request: co::SIZE_R(p.wparam as u8),
 			client_area: SIZE::new(
@@ -1309,15 +1274,15 @@ pub struct Sizing<'a> {
 	pub coords: &'a mut RECT,
 }
 
-impl<'a> Message for Sizing<'a> {
+impl<'a> MsgSend for Sizing<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::SIZING,
 			wparam: self.window_edge.0 as usize,
 			lparam: self.coords as *const _ as isize,
@@ -1325,8 +1290,8 @@ impl<'a> Message for Sizing<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for Sizing<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for Sizing<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			window_edge: co::WMSZ(p.wparam as u8),
 			coords: unsafe { &mut *(p.lparam as *mut _) },
@@ -1345,15 +1310,15 @@ pub struct StyleChanged<'a> {
 	pub stylestruct: WsWsex<'a>,
 }
 
-impl<'a> Message for StyleChanged<'a> {
+impl<'a> MsgSend for StyleChanged<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::STYLECHANGED,
 			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
@@ -1364,8 +1329,8 @@ impl<'a> Message for StyleChanged<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for StyleChanged<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for StyleChanged<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		let change = co::GWL_C(p.wparam as i8);
 		Self {
 			change,
@@ -1388,15 +1353,15 @@ pub struct StyleChanging<'a> {
 	pub stylestruct: WsWsex<'a>,
 }
 
-impl<'a> Message for StyleChanging<'a> {
+impl<'a> MsgSend for StyleChanging<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::STYLECHANGING,
 			wparam: self.change.0 as usize,
 			lparam: match self.stylestruct {
@@ -1407,8 +1372,8 @@ impl<'a> Message for StyleChanging<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for StyleChanging<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for StyleChanging<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		let change = co::GWL_C(p.wparam as i8);
 		Self {
 			change,
@@ -1431,15 +1396,15 @@ pub struct SysCommand {
 	pub position: POINT,
 }
 
-impl Message for SysCommand {
+impl MsgSend for SysCommand {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::SYSCOMMAND,
 			wparam: self.request.0 as usize,
 			lparam: point_to_lp(self.position),
@@ -1447,8 +1412,8 @@ impl Message for SysCommand {
 	}
 }
 
-impl MessageHandleable for SysCommand {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for SysCommand {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			request: co::SC(p.wparam as u32),
 			position: lp_to_point(p),
@@ -1476,15 +1441,15 @@ pub struct Timer {
 	pub timer_proc: Option<TIMERPROC>,
 }
 
-impl Message for Timer {
+impl MsgSend for Timer {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::TIMER,
 			wparam: self.timer_id as usize,
 			lparam: match self.timer_proc {
@@ -1495,8 +1460,8 @@ impl Message for Timer {
 	}
 }
 
-impl MessageHandleable for Timer {
-	fn from_generic_wm(p: Wm) -> Self {
+impl MsgSendRecv for Timer {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			timer_id: p.wparam as u32,
 			timer_proc: match p.lparam {
@@ -1517,15 +1482,15 @@ pub struct WindowPosChanged<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
 
-impl<'a> Message for WindowPosChanged<'a> {
+impl<'a> MsgSend for WindowPosChanged<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::WINDOWPOSCHANGED,
 			wparam: 0,
 			lparam: self.windowpos as *const _ as isize,
@@ -1533,8 +1498,8 @@ impl<'a> Message for WindowPosChanged<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WindowPosChanged<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for WindowPosChanged<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			windowpos: unsafe { &*(p.lparam as *const _) },
 		}
@@ -1551,15 +1516,15 @@ pub struct WindowPosChanging<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
 
-impl<'a> Message for WindowPosChanging<'a> {
+impl<'a> MsgSend for WindowPosChanging<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::WM::WINDOWPOSCHANGING,
 			wparam: 0,
 			lparam: self.windowpos as *const _ as isize,
@@ -1567,8 +1532,8 @@ impl<'a> Message for WindowPosChanging<'a> {
 	}
 }
 
-impl<'a> MessageHandleable for WindowPosChanging<'a> {
-	fn from_generic_wm(p: Wm) -> Self {
+impl<'a> MsgSendRecv for WindowPosChanging<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			windowpos: unsafe { &*(p.lparam as *const _) },
 		}

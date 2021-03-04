@@ -4,7 +4,7 @@ use crate::co;
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::immut::Immut;
 use crate::handles::{HDC, HICON};
-use crate::msg::{MessageHandleable, wm};
+use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// The result of processing a message.
 pub enum ProcessResult {
@@ -25,7 +25,7 @@ pub struct WindowEvents(Immut<Obj>);
 struct Obj { // actual fields of WindowEvents
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
-		Box<dyn FnMut(wm::Wm) -> Option<isize> + 'static>, // return value may be meaningful
+		Box<dyn FnMut(WndMsg) -> Option<isize> + 'static>, // return value may be meaningful
 	>,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
@@ -101,7 +101,7 @@ impl WindowEvents {
 
 	/// Searches for the last added user function for the given message, and runs
 	/// if it exists, returning the result.
-	pub(crate) fn process_effective_message(&self, wm_any: wm::Wm) -> ProcessResult {
+	pub(crate) fn process_effective_message(&self, wm_any: WndMsg) -> ProcessResult {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
@@ -153,7 +153,7 @@ impl WindowEvents {
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
-	pub(crate) fn process_all_messages(&self, wm_any: wm::Wm) {
+	pub(crate) fn process_all_messages(&self, wm_any: WndMsg) {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
@@ -185,7 +185,7 @@ impl WindowEvents {
 
 	/// Raw add message.
 	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(wm::Wm) -> Option<isize> + 'static,
+		where F: FnMut(WndMsg) -> Option<isize> + 'static,
 	{
 		self.0.as_mut().msgs.insert(ident, Box::new(func));
 	}
@@ -225,7 +225,7 @@ impl WindowEvents {
 	/// });
 	/// ```
 	pub fn wm<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(wm::Wm) -> isize + 'static,
+		where F: FnMut(WndMsg) -> isize + 'static,
 	{
 		self.add_msg(ident, {
 			let mut func = func;

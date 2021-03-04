@@ -7,7 +7,7 @@ use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::ui_font;
 use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HINSTANCE, HWND};
-use crate::msg::{MessageHandleable, wm};
+use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// Base to all dialog windows.
 pub struct DialogBase {
@@ -83,7 +83,7 @@ impl DialogBase {
 	{
 		|hwnd: HWND, msg, wparam, lparam| -> WinResult<isize>
 		{
-			let wm_any = wm::Wm { msg_id: msg, wparam, lparam };
+			let wm_any = WndMsg { msg_id: msg, wparam, lparam };
 
 			let ptr_self = match msg {
 				co::WM::INITDIALOG => { // first message being handled

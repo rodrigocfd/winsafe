@@ -1,5 +1,5 @@
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::msg::wm::Wm;
+use crate::msg::WndMsg;
 use crate::structs::POINT;
 
 /// Struct for a message that has no parameters and no meaningful return value.
@@ -11,15 +11,15 @@ macro_rules! empty_msg {
 		$(#[$attr])*
 		pub struct $name {}
 
-		impl Message for $name {
+		impl MsgSend for $name {
 			type RetType = ();
 
 			fn convert_ret(&self, _: isize) -> Self::RetType {
 				()
 			}
 
-			fn as_generic_wm(&self) -> Wm {
-				Wm {
+			fn as_generic_wm(&self) -> WndMsg {
+				WndMsg {
 					msg_id: $wmconst,
 					wparam: 0,
 					lparam: 0,
@@ -41,8 +41,8 @@ macro_rules! empty_msg_handleable {
 			$(#[$attr])*
 		}
 
-		impl MessageHandleable for $name {
-			fn from_generic_wm(_: Wm) -> Self {
+		impl MsgSendRecv for $name {
+			fn from_generic_wm(_: WndMsg) -> Self {
 				Self {}
 			}
 		}
@@ -61,15 +61,15 @@ macro_rules! ctl_color_msg {
 			pub hwnd: HWND,
 		}
 
-		impl Message for $name {
+		impl MsgSend for $name {
 			type RetType = HBRUSH;
 
 			fn convert_ret(&self, v: isize) -> Self::RetType {
 				HBRUSH { ptr: v as *mut _ }
 			}
 
-			fn as_generic_wm(&self) -> Wm {
-				Wm {
+			fn as_generic_wm(&self) -> WndMsg {
+				WndMsg {
 					msg_id: $wmconst,
 					wparam: self.hdc.ptr as usize,
 					lparam: self.hwnd.ptr as isize,
@@ -77,8 +77,8 @@ macro_rules! ctl_color_msg {
 			}
 		}
 
-		impl MessageHandleable for $name {
-			fn from_generic_wm(p: Wm) -> Self {
+		impl MsgSendRecv for $name {
+			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
 					hdc: HDC { ptr: p.wparam as *mut _ },
 					hwnd: HWND { ptr: p.lparam as *mut _ },
@@ -100,15 +100,15 @@ macro_rules! button_msg {
 			pub coords: POINT,
 		}
 
-		impl Message for $name {
+		impl MsgSend for $name {
 			type RetType = ();
 
 			fn convert_ret(&self, _: isize) -> Self::RetType {
 				()
 			}
 
-			fn as_generic_wm(&self) -> Wm {
-				Wm {
+			fn as_generic_wm(&self) -> WndMsg {
+				WndMsg {
 					msg_id: $wmconst,
 					wparam: self.vkeys.0 as usize,
 					lparam: MAKEDWORD(self.coords.x as u16, self.coords.y as u16) as isize,
@@ -116,8 +116,8 @@ macro_rules! button_msg {
 			}
 		}
 
-		impl MessageHandleable for $name {
-			fn from_generic_wm(p: Wm) -> Self {
+		impl MsgSendRecv for $name {
+			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
 					vkeys: co::VK(p.wparam as u16),
 					coords: POINT {
@@ -136,7 +136,7 @@ pub fn point_to_lp(p: POINT) -> isize {
 }
 
 /// Converts the `LPARAM` field to a `POINT`.
-pub fn lp_to_point(p: Wm) -> POINT {
+pub fn lp_to_point(p: WndMsg) -> POINT {
 	POINT::new(
 		LOWORD(p.lparam as u32) as i32,
 		HIWORD(p.lparam as u32) as i32,

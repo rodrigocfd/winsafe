@@ -6,7 +6,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::{MessageHandleable, wm};
+use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
@@ -127,7 +127,7 @@ impl WindowBase {
 	{
 		|hwnd: HWND, msg, wparam, lparam| -> WinResult<isize>
 		{
-			let wm_any = wm::Wm { msg_id: msg, wparam, lparam };
+			let wm_any = WndMsg { msg_id: msg, wparam, lparam };
 
 			let ptr_self = match msg {
 				co::WM::NCCREATE => { // first message being handled

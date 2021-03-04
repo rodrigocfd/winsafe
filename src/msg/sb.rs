@@ -6,7 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::HICON;
-use crate::msg::{Message, wm::Wm};
+use crate::msg::{MsgSend, WndMsg};
 use crate::WString;
 
 /// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
@@ -15,7 +15,7 @@ pub struct GetIcon {
 	pub part_index: u8,
 }
 
-impl Message for GetIcon {
+impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -25,8 +25,8 @@ impl Message for GetIcon {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::GETICON.into(),
 			wparam: self.part_index as usize,
 			lparam: 0,
@@ -44,15 +44,15 @@ pub struct GetParts<'a> {
 	pub right_edges: Option<&'a mut [i32]>,
 }
 
-impl<'a> Message for GetParts<'a> {
+impl<'a> MsgSend for GetParts<'a> {
 	type RetType = u8;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as u8
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::GETPARTS.into(),
 			wparam: match &self.right_edges {
 				Some(right_edges) => right_edges.len(),
@@ -77,15 +77,15 @@ pub struct GetText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for GetText<'a> {
+impl<'a> MsgSend for GetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as u32), co::SBT(HIWORD(v as u32)))
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::GETTEXT.into(),
 			wparam: self.part_index as usize,
 			lparam: unsafe { self.text.as_ptr() } as isize,
@@ -103,15 +103,15 @@ pub struct GetTextLength {
 	pub part_index: u8,
 }
 
-impl Message for GetTextLength {
+impl MsgSend for GetTextLength {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as u32), co::SBT(HIWORD(v as u32)))
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::GETTEXTLENGTH.into(),
 			wparam: self.part_index as usize,
 			lparam: 0,
@@ -130,15 +130,15 @@ pub struct GetTipText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> Message for GetTipText<'a> {
+impl<'a> MsgSend for GetTipText<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::GETTIPTEXT.into(),
 			wparam: MAKEDWORD(self.part_index as u16, self.text.len() as u16) as usize,
 			lparam: unsafe { self.text.as_ptr() } as isize,
@@ -155,7 +155,7 @@ pub struct SetIcon {
 	pub hicon: Option<HICON>,
 }
 
-impl Message for SetIcon {
+impl MsgSend for SetIcon {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -165,8 +165,8 @@ impl Message for SetIcon {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as usize,
 			lparam: match self.hicon {
@@ -187,7 +187,7 @@ pub struct SetParts<'a> {
 	pub right_edges: &'a [i32],
 }
 
-impl<'a> Message for SetParts<'a> {
+impl<'a> MsgSend for SetParts<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -197,8 +197,8 @@ impl<'a> Message for SetParts<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::SETPARTS.into(),
 			wparam: self.right_edges.len(),
 			lparam: self.right_edges.as_ptr() as isize,
@@ -218,7 +218,7 @@ pub struct SetText<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for SetText<'a> {
+impl<'a> MsgSend for SetText<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -228,8 +228,8 @@ impl<'a> Message for SetText<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::SETTEXT.into(),
 			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.drawing_operation.into()) as usize,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
@@ -246,15 +246,15 @@ pub struct SetTipText<'a> {
 	pub text: &'a str,
 }
 
-impl<'a> Message for SetTipText<'a> {
+impl<'a> MsgSend for SetTipText<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::SETTIPTEXT.into(),
 			wparam: self.part_index as usize,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
@@ -270,15 +270,15 @@ pub struct Simple {
 	pub display_simple: bool,
 }
 
-impl Message for Simple {
+impl MsgSend for Simple {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&self) -> Wm {
-		Wm {
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
 			msg_id: co::SB::SIMPLE.into(),
 			wparam: self.display_simple as usize,
 			lparam: 0,

@@ -8,7 +8,7 @@
 mod macros;
 
 mod message;
-pub use message::{Message, MessageHandleable};
+pub use message::{MsgSend, MsgSendRecv, WndMsg};
 
 pub mod bm;
 pub mod cb;
