@@ -10,7 +10,7 @@ use crate::enums::BroadNull;
 use crate::ffi::{comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::MsgSend;
-use crate::privs::{parse_multi_z_str, ptr_as_opt};
+use crate::privs::{bool_to_winresult, parse_multi_z_str, ptr_as_opt};
 use crate::structs::{ATOM, COLORREF, MSG, OSVERSIONINFOEX, RECT, TRACKMOUSEEVENT, WNDCLASSEX};
 use crate::WString;
 
@@ -20,17 +20,16 @@ pub fn AdjustWindowRectEx(
 	lpRect: &mut RECT, dwStyle: co::WS,
 	bMenu: bool, dwExStyle: co::WS_EX) -> WinResult<()>
 {
-	match unsafe {
-		user32::AdjustWindowRectEx(
-			lpRect as *mut _ as *mut _,
-			dwStyle.0,
-			bMenu as i32,
-			dwExStyle.0,
-		)
-	} {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(
+		unsafe {
+			user32::AdjustWindowRectEx(
+				lpRect as *mut _ as *mut _,
+				dwStyle.0,
+				bMenu as i32,
+				dwExStyle.0,
+			)
+		},
+	)
 }
 
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
@@ -266,10 +265,9 @@ pub fn LOBYTE(v: u16) -> u8 {
 /// [`LockSetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow)
 /// function.
 pub fn LockSetForegroundWindow(uLockCode: co::LSFW) -> WinResult<()> {
-	match unsafe { user32::LockSetForegroundWindow(uLockCode.0) } {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(
+		unsafe { user32::LockSetForegroundWindow(uLockCode.0) },
+	)
 }
 
 /// Returns the low-order `u32` of an `u64`.
@@ -336,14 +334,13 @@ pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
 /// [`HWND::PostMessage`](crate::HWND::PostMessage) method.
 pub fn PostMessage<M: MsgSend>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
 	let wmAny = uMsg.as_generic_wm();
-	match unsafe {
-		user32::PostMessageW(
-			hWnd.into(), wmAny.msg_id.0, wmAny.wparam, wmAny.lparam,
-		)
-	} {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(
+		unsafe {
+			user32::PostMessageW(
+				hWnd.into(), wmAny.msg_id.0, wmAny.wparam, wmAny.lparam,
+			)
+		},
+	)
 }
 
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
@@ -366,28 +363,21 @@ pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
 /// [`SetCaretBlinkTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)
 /// function.
 pub fn SetCaretBlinkTime(uMSeconds: u32) -> WinResult<()> {
-	match unsafe { user32::SetCaretBlinkTime(uMSeconds) } {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(
+		unsafe { user32::SetCaretBlinkTime(uMSeconds) },
+	)
 }
 
 /// [`SetCaretPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretpos)
 /// function.
 pub fn SetCaretPos(x: i32, y: i32) -> WinResult<()> {
-	match unsafe { user32::SetCaretPos(x, y) } {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(unsafe { user32::SetCaretPos(x, y) })
 }
 
 /// [`SetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)
 /// function.
 pub fn SetCursorPos(x: i32, y: i32) -> WinResult<()> {
-	match unsafe { user32::SetCursorPos(x, y) } {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(unsafe { user32::SetCursorPos(x, y) })
 }
 
 /// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
@@ -399,10 +389,7 @@ pub fn SetLastError(dwErrCode: co::ERROR) {
 /// [`SetProcessDPIAware`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
 /// function.
 pub fn SetProcessDPIAware() -> WinResult<()> {
-	match unsafe { user32::SetProcessDPIAware() } {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(unsafe { user32::SetProcessDPIAware() })
 }
 
 /// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)
@@ -432,21 +419,19 @@ pub unsafe fn SystemParametersInfo<T>(
 	uiAction: co::SPI, uiParam: u32,
 	pvParam: &mut T, fWinIni: co::SPIF) -> WinResult<()>
 {
-	match user32::SystemParametersInfoW(
-		uiAction.0, uiParam, pvParam as *mut _ as *mut _, fWinIni.0,
-	) {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(
+		user32::SystemParametersInfoW(
+			uiAction.0, uiParam, pvParam as *mut _ as *mut _, fWinIni.0,
+		),
+	)
 }
 
 /// [`TrackMouseEvent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
 /// function.
 pub fn TrackMouseEvent(lpEventTrack: &mut TRACKMOUSEEVENT) -> WinResult<()> {
-	match unsafe { user32::TrackMouseEvent(lpEventTrack as *mut _ as *mut _) } {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(
+		unsafe { user32::TrackMouseEvent(lpEventTrack as *mut _ as *mut _) },
+	)
 }
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
@@ -462,15 +447,14 @@ pub fn TranslateMessage(lpMsg: &MSG) -> bool {
 pub fn UnregisterClass(
 	lpClassName: &str, hInstance: HINSTANCE) -> WinResult<()>
 {
-	match unsafe {
-		user32::UnregisterClassW(
-			WString::from_str(lpClassName).as_ptr(),
-			hInstance.ptr,
-		)
-	} {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(
+		unsafe {
+			user32::UnregisterClassW(
+				WString::from_str(lpClassName).as_ptr(),
+				hInstance.ptr,
+			)
+		},
+	)
 }
 
 /// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
@@ -507,8 +491,5 @@ pub fn VerSetConditionMask(
 /// [`WaitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitmessage)
 /// function.
 pub fn WaitMessage() -> WinResult<()> {
-	match unsafe { user32::WaitMessage() } {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_winresult(unsafe { user32::WaitMessage() })
 }

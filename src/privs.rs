@@ -2,6 +2,9 @@
 
 use std::ffi::c_void;
 
+use crate::aliases::WinResult;
+use crate::ffi::BOOL;
+use crate::funcs::GetLastError;
 use crate::WString;
 
 pub const CB_ERR: i32 = -1;
@@ -24,6 +27,15 @@ pub fn ptr_as_opt(ptr: *mut c_void) -> Option<*mut c_void> {
 		None
 	} else {
 		Some(ptr)
+	}
+}
+
+/// Converts a `BOOL` value to a `WinResult`. `TRUE` is `Ok(())`, `FALSE` is
+/// `Err(GetLastError())`.
+pub fn bool_to_winresult(expr: BOOL) -> WinResult<()> {
+	match expr {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
 	}
 }
 

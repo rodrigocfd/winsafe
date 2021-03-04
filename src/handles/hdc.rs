@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
-use crate::privs::ptr_as_opt;
+use crate::privs::{bool_to_winresult, ptr_as_opt};
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
@@ -14,16 +14,6 @@ handle_type! {
 	/// [device context](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdc).
 	/// Exposes methods.
 	HDC
-}
-
-/// Converts expression to `WinResult<()>`, zero being an error.
-macro_rules! zero_err {
-	($what:expr) => {
-		match unsafe { $what } {
-			0 => Err(GetLastError()),
-			_ => Ok(()),
-		}
-	};
 }
 
 impl HDC {
@@ -41,7 +31,7 @@ impl HDC {
 	/// [`DeleteDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
 	/// method.
 	pub fn DeleteDC(self) -> WinResult<()> {
-		zero_err!(gdi32::DeleteDC(self.ptr))
+		bool_to_winresult(unsafe { gdi32::DeleteDC(self.ptr) })
 	}
 
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
@@ -71,7 +61,7 @@ impl HDC {
 	/// [`LineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
 	/// method.
 	pub fn LineTo(self, x: i32, y: i32) -> WinResult<()> {
-		zero_err!(gdi32::LineTo(self.ptr, x, y))
+		bool_to_winresult(unsafe { gdi32::LineTo(self.ptr, x, y) })
 	}
 
 	/// [`MoveToEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
@@ -79,16 +69,18 @@ impl HDC {
 	pub fn MoveToEx(self,
 		x: i32, y: i32, lppt: Option<&mut POINT>) -> WinResult<()>
 	{
-		zero_err!(
-			gdi32::MoveToEx(
-				self.ptr,
-				x,
-				y,
-				match lppt {
-					None => std::ptr::null_mut(),
-					Some(ptRef) => ptRef as *mut _ as *mut _,
-				},
-			)
+		bool_to_winresult(
+			unsafe {
+				gdi32::MoveToEx(
+					self.ptr,
+					x,
+					y,
+					match lppt {
+						None => std::ptr::null_mut(),
+						Some(ptRef) => ptRef as *mut _ as *mut _,
+					},
+				)
+			},
 		)
 	}
 
@@ -98,56 +90,66 @@ impl HDC {
 		left: i32, top: i32, right: i32, bottom: i32,
 		xr1: i32, yr1: i32, xr2: i32, yr2: i32) -> WinResult<()>
 	{
-		zero_err!(
-			gdi32::Pie(self.ptr, left, top, right, bottom, xr1, yr1, xr2, yr2)
+		bool_to_winresult(
+			unsafe {
+				gdi32::Pie(self.ptr, left, top, right, bottom, xr1, yr1, xr2, yr2)
+			},
 		)
 	}
 
 	/// [`PolyBezier`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezier)
 	/// method.
 	pub fn PolyBezier(self, apt: &[POINT]) -> WinResult<()> {
-		zero_err!(
-			gdi32::PolyBezier(
-				self.ptr,
-				&apt[0] as *const _ as *const _,
-				apt.len() as u32,
-			)
+		bool_to_winresult(
+			unsafe {
+				gdi32::PolyBezier(
+					self.ptr,
+					&apt[0] as *const _ as *const _,
+					apt.len() as u32,
+				)
+			},
 		)
 	}
 
 	/// [`PolyBezierTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezierto)
 	/// method.
 	pub fn PolyBezierTo(self, apt: &[POINT]) -> WinResult<()> {
-		zero_err!(
-			gdi32::PolyBezierTo(
-				self.ptr,
-				&apt[0] as *const _ as *const _,
-				apt.len() as u32,
-			)
+		bool_to_winresult(
+			unsafe {
+				gdi32::PolyBezierTo(
+					self.ptr,
+					&apt[0] as *const _ as *const _,
+					apt.len() as u32,
+				)
+			},
 		)
 	}
 
 	/// [`Polyline`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polyline)
 	/// method.
 	pub fn Polyline(self, apt: &[POINT]) -> WinResult<()> {
-		zero_err!(
-			gdi32::Polyline(
-				self.ptr,
-				&apt[0] as *const _ as *const _,
-				apt.len() as u32,
-			)
+		bool_to_winresult(
+			unsafe {
+				gdi32::Polyline(
+					self.ptr,
+					&apt[0] as *const _ as *const _,
+					apt.len() as u32,
+				)
+			},
 		)
 	}
 
 	/// [`PolylineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polylineto)
 	/// method.
 	pub fn PolylineTo(self, apt: &[POINT]) -> WinResult<()> {
-		zero_err!(
-			gdi32::PolylineTo(
-				self.ptr,
-				&apt[0] as *const _ as *const _,
-				apt.len() as u32,
-			)
+		bool_to_winresult(
+			unsafe {
+				gdi32::PolylineTo(
+					self.ptr,
+					&apt[0] as *const _ as *const _,
+					apt.len() as u32,
+				)
+			},
 		)
 	}
 
@@ -166,13 +168,15 @@ impl HDC {
 	pub fn Rectangle(self,
 		left: i32, top: i32, right: i32, bottom: i32) -> WinResult<()>
 	{
-		zero_err!(gdi32::Rectangle(self.ptr, left, top, right, bottom))
+		bool_to_winresult(
+			unsafe { gdi32::Rectangle(self.ptr, left, top, right, bottom) },
+		)
 	}
 
 	/// [`RestoreDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-restoredc)
 	/// method.
 	pub fn RestoreDC(self, nSavedDC: i32) -> WinResult<()> {
-		zero_err!(gdi32::RestoreDC(self.ptr, nSavedDC))
+		bool_to_winresult(unsafe { gdi32::RestoreDC(self.ptr, nSavedDC) })
 	}
 
 	/// [`RoundRect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
@@ -181,8 +185,10 @@ impl HDC {
 		left: i32, top: i32, right: i32, bottom: i32,
 		width: i32, height: i32) -> WinResult<()>
 	{
-		zero_err!(
-			gdi32::RoundRect(self.ptr, left, top, right, bottom, width, height)
+		bool_to_winresult(
+			unsafe {
+				gdi32::RoundRect(self.ptr, left, top, right, bottom, width, height)
+			},
 		)
 	}
 

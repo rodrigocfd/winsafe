@@ -6,7 +6,7 @@ use crate::enums::HwndPlace;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
-use crate::privs::ptr_as_opt;
+use crate::privs::{bool_to_winresult, ptr_as_opt};
 
 handle_type! {
 	/// Handle to a
@@ -56,9 +56,6 @@ impl HDWP {
 	/// [`EndDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// method.
 	pub fn EndDeferWindowPos(self) -> WinResult<()> {
-		match unsafe { user32::EndDeferWindowPos(self.ptr) } {
-			0 => Err(GetLastError()),
-			_ => Ok(()),
-		}
+		bool_to_winresult(unsafe { user32::EndDeferWindowPos(self.ptr) })
 	}
 }

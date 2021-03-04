@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
-use crate::funcs::GetLastError;
+use crate::privs::bool_to_winresult;
 
 hgdiobj_type! {
 	/// Handle to a
