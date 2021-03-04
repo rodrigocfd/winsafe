@@ -38,6 +38,7 @@ pub use message::{MsgSend, MsgSendRecv, WndMsg};
 pub mod bm;
 pub mod cb;
 pub mod dtm;
+pub mod em;
 pub mod hdm;
 pub mod lb;
 pub mod lvm;
