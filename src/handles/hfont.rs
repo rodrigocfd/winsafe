@@ -10,8 +10,7 @@ use crate::WString;
 
 hgdiobj_type! {
 	/// Handle to a
-	/// [font](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont)
-	/// GDI object. Exposes methods.
+	/// [font](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 	HFONT
 }
 

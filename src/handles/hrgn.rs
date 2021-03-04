@@ -10,7 +10,7 @@ use crate::structs::RECT;
 hgdiobj_type! {
 	/// Handle to a
 	/// [region](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
-	/// GDI object. Exposes methods.
+	/// GDI object.
 	HRGN
 }
 

@@ -12,7 +12,6 @@ use crate::structs::{MENUINFO, MENUITEMINFO};
 handle_type! {
 	/// Handle to a
 	/// [menu](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmenu).
-	/// Exposes methods.
 	HMENU
 }
 

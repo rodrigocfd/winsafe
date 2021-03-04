@@ -7,8 +7,7 @@ use crate::privs::bool_to_winresult;
 
 hgdiobj_type! {
 	/// Handle to a
-	/// [brush](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush)
-	/// GDI object. Exposes methods.
+	/// [brush](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
 	HBRUSH
 }
 

@@ -9,7 +9,6 @@ use crate::WString;
 handle_type! {
 	/// Handle to a
 	/// [registry key](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hkey).
-	/// Exposes methods.
 	///
 	/// This handle also exposes several
 	/// [predefined registry keys](https://docs.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),

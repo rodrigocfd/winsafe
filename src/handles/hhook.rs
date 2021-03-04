@@ -10,7 +10,6 @@ use crate::privs::ptr_as_opt;
 handle_type! {
 	/// Handle to a
 	/// [hook](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
-	/// Exposes methods.
 	HHOOK
 }
 

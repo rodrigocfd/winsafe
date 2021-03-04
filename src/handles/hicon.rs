@@ -7,7 +7,6 @@ use crate::privs::bool_to_winresult;
 handle_type! {
 	/// Handle to an
 	/// [icon](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hicon).
-	/// Exposes methods.
 	HICON
 }
 

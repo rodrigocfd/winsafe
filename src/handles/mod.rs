@@ -3,8 +3,8 @@
 #[macro_use]
 mod macros;
 
+mod any_handles;
 mod haccel;
-mod hbitmap;
 mod hbrush;
 mod hcursor;
 mod hdc;
@@ -18,14 +18,12 @@ mod hinstance;
 mod hkey;
 mod hlocal;
 mod hmenu;
-mod hpen;
 mod hrgn;
 mod htheme;
-mod htreeitem;
 mod hwnd;
 
+pub use any_handles::*;
 pub use haccel::HACCEL;
-pub use hbitmap::HBITMAP;
 pub use hbrush::HBRUSH;
 pub use hcursor::HCURSOR;
 pub use hdc::HDC;
@@ -39,8 +37,6 @@ pub use hinstance::HINSTANCE;
 pub use hkey::HKEY;
 pub use hlocal::HLOCAL;
 pub use hmenu::HMENU;
-pub use hpen::HPEN;
 pub use hrgn::HRGN;
 pub use htheme::HTHEME;
-pub use htreeitem::HTREEITEM;
 pub use hwnd::HWND;

@@ -7,6 +7,9 @@
 //! [windows](https://crates.io/crates/windows) crates, which are unsafe, but
 //! have everything.
 //!
+//! * Crate – [crates.io/crates/winsafe](https://crates.io/crates/winsafe);
+//! * GitHub – [github.com/rodrigocfd/winsafe](https://github.com/rodrigocfd/winsafe).
+//!
 //! # Modules overview
 //!
 //! The Win32 bindings are divided into a few modules:

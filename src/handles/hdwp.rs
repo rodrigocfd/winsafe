@@ -10,8 +10,7 @@ use crate::privs::{bool_to_winresult, ptr_as_opt};
 
 handle_type! {
 	/// Handle to a
-	/// [deferred window position](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp)
-	/// structure. Exposes methods.
+	/// [deferred window position](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
 	HDWP
 }
 

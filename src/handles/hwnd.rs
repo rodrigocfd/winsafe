@@ -14,7 +14,6 @@ use crate::WString;
 handle_type! {
 	/// Handle to a
 	/// [window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
-	/// Exposes methods.
 	HWND
 }
 

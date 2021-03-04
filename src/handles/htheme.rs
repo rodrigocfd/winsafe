@@ -9,7 +9,6 @@ use crate::structs::RECT;
 handle_type! {
 	/// Handle to a
 	/// [theme](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/).
-	/// Exposes methods.
 	HTHEME
 }
 

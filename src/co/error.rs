@@ -39,6 +39,7 @@ const_type_no_debug_display! { ERROR, u32,
 }
 
 const_type_pub_values! { ERROR, // ordinary codes
+	/// The operation completed successfully.
 	SUCCESS, 0
 	INVALID_FUNCTION, 1
 	FILE_NOT_FOUND, 2
@@ -2647,6 +2648,7 @@ const_type_pub_values! { ERROR, // ordinary codes
 }
 
 const_type_pub_values! { ERROR, // first COM values
+	/// Operation successful.
 	S_OK, 0
 	S_FALSE, 1
 

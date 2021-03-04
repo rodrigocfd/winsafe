@@ -9,7 +9,6 @@ use crate::WString;
 handle_type! {
 	/// Handle to an
 	/// [internal drop structure](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
-	/// Exposes methods.
 	HDROP
 }
 
