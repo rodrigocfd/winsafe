@@ -508,7 +508,7 @@ impl HWND {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::HWND;
+	/// use winsafe::{HWND, WString};
 	///
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
@@ -689,7 +689,7 @@ impl HWND {
 	/// A modal message box, which blocks its parent:
 	///
 	/// ```rust,ignore
-	/// use winsafe::HWND;
+	/// use winsafe::{co, HWND};
 	///
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
@@ -761,11 +761,11 @@ impl HWND {
 	/// Programatically closing a window:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{HWND, msg::WmClose};
+	/// use winsafe::{HWND, msg::wm};
 	///
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
-	/// my_hwnd.PostMessage(WmClose {}).unwrap();
+	/// my_hwnd.PostMessage(wm::Close {}).unwrap();
 	/// ```
 	pub fn PostMessage<M: MsgSend>(self, uMsg: M) -> WinResult<()> {
 		let wmAny = uMsg.as_generic_wm();
@@ -869,8 +869,7 @@ impl HWND {
 	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, msg};
-	/// use winsafe::{LVITEM, HWND};
+	/// use winsafe::{co, HWND, LVITEM, msg::lvm};
 	///
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
@@ -878,7 +877,7 @@ impl HWND {
 	/// lvi.mask = co::LVIF::IMAGE;
 	/// lvi.iImage = 3;
 	///
-	/// my_hwnd.SendMessage(msg::lvm::SetItem {
+	/// my_hwnd.SendMessage(lvm::SetItem {
 	///     lvitem: &lvi,
 	/// });
 	/// ```

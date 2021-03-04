@@ -85,6 +85,8 @@ impl HINSTANCE {
 	///
 	/// Retrieving information of a window class created in our application:
 	/// ```rust,ignore
+	/// use winsafe::{HINSTANCE, WNDCLASSEX};
+	///
 	/// let mut wcx = WNDCLASSEX::default();
 	/// HINSTANCE::GetModuleHandle(None).unwrap()
 	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
@@ -111,6 +113,8 @@ impl HINSTANCE {
 	///
 	/// Retrieving current module instance:
 	/// ```rust,ignore
+	/// use winsafe::HINSTANCE;
+	///
 	/// let hinstance = HINSTANCE::GetModuleHandle(None).unwrap();
 	/// ```
 	pub fn GetModuleHandle(
@@ -148,6 +152,8 @@ impl HINSTANCE {
 	///
 	/// Loading a system cursor:
 	/// ```rust,ignore
+	/// use winsafe::{co, HINSTANCE, IdIdcStr};
+	///
 	/// let sys_cursor = HINSTANCE::default()
 	///     .LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))
 	///     .unwrap();
@@ -168,6 +174,8 @@ impl HINSTANCE {
 	///
 	/// Loading a system icon:
 	/// ```rust,ignore
+	/// use winsafe::{co, IdIdiStr, HINSTANCE};
+	///
 	/// let sys_icon = HINSTANCE::default()
 	///     .LoadIcon(IdIdiStr::Idi(co::IDI::INFORMATION))
 	///     .unwrap();

@@ -67,6 +67,8 @@ pub fn GetDoubleClickTime() -> u32 {
 ///
 /// Retrieving and printing the key/value pairs of all environment strings:
 /// ```rust,ignore
+/// use winsafe::GetEnvironmentStrings;
+///
 /// let env_vars = GetEnvironmentStrings().unwrap();
 /// for (k, v) in env_vars.iter() {
 ///     println!("{} = {}", k, v);

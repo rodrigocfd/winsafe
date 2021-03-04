@@ -19,12 +19,12 @@ use crate::structs::{CLSID, GUID};
 ///
 /// Instantiating an [`ITaskbarList`](crate::shell::ITaskbarList) object:
 /// ```rust,ignore
-/// use winsafe::{co::CLSCTX, CoCreateInstance, shell};
+/// use winsafe::{co, CoCreateInstance, shell};
 ///
 /// let obj: shell::ITaskbarList = CoCreateInstance(
 ///     &shell::clsid::TaskbarList,
 ///     None,
-///     CLSCTX::INPROC_SERVER,
+///     co::CLSCTX::INPROC_SERVER,
 /// ).unwrap();
 /// ```
 pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
@@ -61,9 +61,9 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 /// # Examples
 ///
 /// ```rust,ignore
-/// use winsafe::{co::COINIT, CoInitializeEx};
+/// use winsafe::{co, CoInitializeEx};
 ///
-/// CoInitializeEx(COINIT::MULTITHREADED).unwrap();
+/// CoInitializeEx(co::COINIT::MULTITHREADED).unwrap();
 /// ```
 pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
 	let err = co::ERROR(

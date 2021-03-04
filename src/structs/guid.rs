@@ -15,6 +15,8 @@ impl GUID {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::GUID;
+	///
 	/// let g = GUID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
 	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> GUID {
@@ -54,6 +56,8 @@ impl CLSID {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::CLSID;
+	///
 	/// let g = CLSID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
 	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> CLSID {
@@ -86,6 +90,8 @@ impl IID {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::IID;
+	///
 	/// let g = IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 	/// ```
 	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> IID {

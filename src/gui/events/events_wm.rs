@@ -211,12 +211,11 @@ impl WindowEvents {
 	/// Handling a custom, user-defined message:
 	///
 	/// ```rust,ignore
-	/// use winsafe::co::WM;
-	/// use winsafe::gui::WindowMain;
+	/// use winsafe::{co, gui::WindowMain};
 	///
 	/// let wnd: WindowMain; // initialize it somewhere...
 	///
-	/// let CUSTOM_MSG = WM::from(0x1234);
+	/// let CUSTOM_MSG = co::WM::from(0x1234);
 	///
 	/// wnd.on().wm(CUSTOM_MSG, {
 	///     let wnd = wnd.clone(); // pass into the closure
@@ -273,16 +272,14 @@ impl WindowEvents {
 	/// Closing the window on ESC key:
 	///
 	/// ```rust,ignore
-	/// use winsafe::co;
-	/// use winsafe::gui::WindowMain;
-	/// use winsafe::msg::WmClose;
+	/// use winsafe::{co, gui::WindowMain, msg::wm};
 	///
 	/// let wnd: WindowMain; // initialize it somewhere...
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
 	///     let wnd = wnd.clone(); // pass into the closure
 	///     move || {
-	///         wnd.hwnd().PostMessage(WmClose {}).unwrap();
+	///         wnd.hwnd().PostMessage(wm::Close {}).unwrap();
 	///     }
 	/// });
 	/// ```

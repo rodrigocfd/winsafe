@@ -46,7 +46,7 @@ impl_iid!(ITaskbarList3Vtbl, 0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf)
 ///
 /// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
 /// ```rust,ignore
-/// use winsafe::{co, CoCreateInstance};
+/// use winsafe::{co, CoCreateInstance, shell};
 ///
 /// let mut obj: shell::ITaskbarList3 = CoCreateInstance(
 ///     &shell::clsid::TaskbarList,

@@ -198,13 +198,12 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::co::{KEY, REG_OPTION};
-	/// use winsafe::HKEY;
+	/// use winsafe::{co, HKEY};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Control Panel\\Mouse",
-	///     REG_OPTION::default(),
-	///     KEY::READ,
+	///     co::REG_OPTION::default(),
+	///     co::KEY::READ,
 	/// ).unwrap();
 	///
 	/// hkey.RegCloseKey().unwrap();
@@ -239,13 +238,12 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::co::{KEY, REG_OPTION};
-	/// use winsafe::{HKEY, RegistryValue};
+	/// use winsafe::{co, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Control Panel\\Mouse",
-	///     REG_OPTION::default(),
-	///     KEY::READ,
+	///     co::REG_OPTION::default(),
+	///     co::KEY::READ,
 	/// ).unwrap();
 	///
 	/// let val = hkey.RegQueryValueEx("Beep")
@@ -420,13 +418,12 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::co::{KEY, REG_OPTION};
-	/// use winsafe::{HKEY, RegistryValue};
+	/// use winsafe::{co, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Console\\Git Bash",
-	///     REG_OPTION::default(),
-	///     KEY::ALL_ACCESS,
+	///     co::REG_OPTION::default(),
+	///     co::KEY::ALL_ACCESS,
 	/// ).unwrap();
 	///
 	/// hkey.RegSetValueEx(
