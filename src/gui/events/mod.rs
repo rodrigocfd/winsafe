@@ -1,4 +1,7 @@
 //! Structs which expose the event methods of windows and controls.
+//!
+//! You cannot directly instantiate these objects, they are created internally
+//! by the controls.
 
 #[macro_use]
 mod macros;

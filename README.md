@@ -30,12 +30,11 @@ Here is an [example](examples/01_button_click/) of an ordinary window with a but
 ```rust
 #![windows_subsystem = "windows"]
 
-use winsafe::gui;
-use winsafe::{POINT, SIZE, WinResult};
+use winsafe::{gui, POINT, SIZE, WinResult};
 
 fn main() {
-    let my_window = MyWindow::new();  // instantiate our main window
-    if let Err(e) = my_window.run() { // ... and run it
+    let my = MyWindow::new();  // instantiate our main window
+    if let Err(e) = my.wnd.run_main(None) { // ... and run it
         eprintln!("{}", e);
     }
 }
@@ -69,10 +68,6 @@ impl MyWindow {
         let new_self = Self { wnd, btn_hello };
         new_self.events(); // attach our events
         new_self
-    }
-
-    pub fn run(&self) -> WinResult<()> {
-        self.wnd.run_main(None) // simply let the window manager do the hard work
     }
 
     fn events(&self) {

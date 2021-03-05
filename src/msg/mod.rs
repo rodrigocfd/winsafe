@@ -8,11 +8,12 @@
 //!
 //! # Examples
 //!
-//! Sending [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message with
-//! [`SendMessage`](crate::HWND::SendMessage) to delete the 3rd element in a
-//! [`ListView`](crate::gui::ListView) control. Notice how the `index` parameter
-//! is passed when initializing the message struct, and how it returns a
-//! `WinResult`.
+//! We want to delete the 3rd element of a [`ListView`](crate::gui::ListView)
+//! control. This can be done by sending it a
+//! [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message. Note how the
+//! `index` parameter is set when initializing the message struct, and how
+//! [`SendMessage`](crate::HWND::SendMessage) returns a
+//! [`WinResult`](crate::WinResult).
 //!
 //! ```rust,ignore
 //! use winsafe::{HWND, msg::lvm};

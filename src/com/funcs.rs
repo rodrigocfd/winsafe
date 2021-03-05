@@ -80,8 +80,9 @@ pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
 /// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
 /// function.
 ///
-/// Must be called **after** all COM interfaces have been released, otherwise you'll
-/// get a segmentation fault error with `STATUS_ACCESS_VIOLATION` code.
+/// **Note:** Must be called **after** all COM interfaces have been released,
+/// otherwise you'll get a segmentation fault error with
+/// `STATUS_ACCESS_VIOLATION` code.
 pub fn CoUninitialize() {
 	unsafe { ole32::CoUninitialize() }
 }

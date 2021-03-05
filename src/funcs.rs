@@ -93,6 +93,10 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 
 /// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
 /// function.
+///
+/// This function is automatically called every time a
+/// [`WinResult`](crate::WinResult) evaluates to `Err`, so it's unlikely that
+/// you ever need to call it.
 pub fn GetLastError() -> co::ERROR {
 	unsafe { co::ERROR(kernel32::GetLastError()) }
 }
@@ -175,6 +179,7 @@ pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
 }
 
 /// [`IsWindows10OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater)
+/// function.
 pub fn IsWindows10OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as u16,
@@ -184,6 +189,7 @@ pub fn IsWindows10OrGreater() -> WinResult<bool> {
 }
 
 /// [`IsWindows7OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows7orgreater)
+/// function.
 pub fn IsWindows7OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WIN7.0) as u16,
@@ -213,6 +219,7 @@ pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
 }
 
 /// [`IsWindowsServer`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsserver)
+/// function.
 pub fn IsWindowsServer() -> WinResult<bool> {
 	let mut osvi = OSVERSIONINFOEX::default();
 	osvi.wProductType = co::VER_NT::WORKSTATION;
