@@ -277,6 +277,18 @@ const_type! { LIS, u32,
 	DEFAULTCOLORS, 0x00000010
 }
 
+const_type_wm! { LM,
+	/// SysLink control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	->
+	HITTEST, WM::USER.0 + 0x300
+	GETIDEALHEIGHT, WM::USER.0 + 0x301
+	SETITEM, WM::USER.0 + 0x302
+	GETITEM, WM::USER.0 + 0x303
+	GETIDEALSIZE, Self::GETIDEALHEIGHT.0
+}
+
 const_type! { LR, u32,
 	/// [`LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
 	/// [`LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and

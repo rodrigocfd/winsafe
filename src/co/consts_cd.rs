@@ -72,6 +72,19 @@ const_type_wm! { CBEM,
 	GETITEM, WM::USER.0 + 13
 }
 
+const_type_wsex! { CBES_EX,
+	/// Extended combo box
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
+	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
+	->
+	NOEDITIMAGE, 0x00000001
+	NOEDITIMAGEINDENT, 0x00000002
+	PATHWORDBREAKPROC, 0x00000004
+	NOSIZELIMIT, 0x00000008
+	CASESENSITIVE, 0x00000010
+	TEXTENDELLIPSIS, 0x00000020
+}
+
 const_type_cmd! { CBN,
 	/// Combo box control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
@@ -108,19 +121,6 @@ const_type_ws! { CBS,
 	DISABLENOSCROLL, 0x0800
 	UPPERCASE, 0x2000
 	LOWERCASE, 0x4000
-}
-
-const_type_wsex! { CBES_EX,
-	/// Extended combo box
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
-	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
-	->
-	NOEDITIMAGE, 0x00000001
-	NOEDITIMAGEINDENT, 0x00000002
-	PATHWORDBREAKPROC, 0x00000004
-	NOSIZELIMIT, 0x00000008
-	CASESENSITIVE, 0x00000010
-	TEXTENDELLIPSIS, 0x00000020
 }
 
 const_type_wm! { CCM,

@@ -47,6 +47,13 @@ const_type_wm! { EM,
 	ENABLEFEATURE, 0x00da
 }
 
+const_type! { EMF, u32,
+	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
+	->
+	LEFT, 0x00000000
+	CENTERED, 0x00000001
+}
+
 const_type_cmd! { EN,
 	/// Edit control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
@@ -64,13 +71,6 @@ const_type_cmd! { EN,
 	ALIGN_RTL_EC, 0x0701
 	BEFORE_PASTE, 0x0800
 	AFTER_PASTE, 0x0801
-}
-
-const_type! { EMF, u32,
-	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
-	->
-	LEFT, 0x00000000
-	CENTERED, 0x00000001
 }
 
 const_type! { ENDSESSION, u32,

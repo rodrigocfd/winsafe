@@ -1,6 +1,29 @@
 #![allow(non_upper_case_globals)]
 
-use crate::co::WS;
+use crate::co::{CCM, WM, WS};
+
+const_type_wm! { UDM,
+	/// Static control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	->
+	SETRANGE, WM::USER.0 + 101
+	GETRANGE, WM::USER.0 + 102
+	SETPOS, WM::USER.0 + 103
+	GETPOS, WM::USER.0 + 104
+	SETBUDDY, WM::USER.0 + 105
+	GETBUDDY, WM::USER.0 + 106
+	SETACCEL, WM::USER.0 + 107
+	GETACCEL, WM::USER.0 + 108
+	SETBASE, WM::USER.0 + 109
+	GETBASE, WM::USER.0 + 110
+	SETRANGE32, WM::USER.0 + 111
+	GETRANGE32, WM::USER.0 + 112
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+	SETPOS32, WM::USER.0 + 113
+	GETPOS32, WM::USER.0 + 114
+}
 
 const_type_ws! { UDS,
 	/// Up-down control

@@ -1,28 +1,5 @@
 use crate::co::{ACCESS_RIGHTS, CCM, CMD, NM, WM, WS, WS_EX};
 
-const_type_ws! { SBARS,
-	/// Status bar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
-	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
-	NONE, 0
-	SIZEGRIP, 0x0100
-	TOOLTIPS, 0x0800
-}
-
-const_type! { SBT, u16,
-	/// [`SB_GETTEXT`](crate::msg::sb::GetText),
-	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
-	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
-	->
-	NONE, 0
-	OWNERDRAW, 0x1000
-	NOBORDERS, 0x0100
-	POPOUT, 0x0200
-	RTLREADING, 0x0400
-	NOTABPARSING, 0x0800
-}
-
 const_type_wm! { SB,
 	/// Status bar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
@@ -45,6 +22,29 @@ const_type_wm! { SB,
 	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
 	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
 	SETBKCOLOR, CCM::SETBKCOLOR.0
+}
+
+const_type_ws! { SBARS,
+	/// Status bar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
+	/// (`u32`), convertible to [`WS`](crate::co::WS).
+	->
+	NONE, 0
+	SIZEGRIP, 0x0100
+	TOOLTIPS, 0x0800
+}
+
+const_type! { SBT, u16,
+	/// [`SB_GETTEXT`](crate::msg::sb::GetText),
+	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
+	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
+	->
+	NONE, 0
+	OWNERDRAW, 0x1000
+	NOBORDERS, 0x0100
+	POPOUT, 0x0200
+	RTLREADING, 0x0400
+	NOTABPARSING, 0x0800
 }
 
 const_type_nm! { SBN,
@@ -792,6 +792,46 @@ const_type_ws! { TBS,
 	DOWNISLEFT, 0x0400
 	NOTIFYBEFOREMOVE, 0x0800
 	TRANSPARENTBKGND, 0x1000
+}
+
+const_type_wm! { TCM,
+	/// Tab control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	->
+
+	GETIMAGELIST, Self::FIRST.0 + 2
+	SETIMAGELIST, Self::FIRST.0 + 3
+	GETITEMCOUNT, Self::FIRST.0 + 4
+	GETITEM, Self::FIRST.0 + 60
+	SETITEM, Self::FIRST.0 + 61
+	INSERTITEM, Self::FIRST.0 + 62
+	DELETEITEM, Self::FIRST.0 + 8
+	DELETEALLITEMS, Self::FIRST.0 + 9
+	GETITEMRECT, Self::FIRST.0 + 10
+	GETCURSEL, Self::FIRST.0 + 11
+	SETCURSEL, Self::FIRST.0 + 12
+	HITTEST, Self::FIRST.0 + 13
+	SETITEMEXTRA, Self::FIRST.0 + 14
+	ADJUSTRECT, Self::FIRST.0 + 40
+	SETITEMSIZE, Self::FIRST.0 + 41
+	REMOVEIMAGE, Self::FIRST.0 + 42
+	SETPADDING, Self::FIRST.0 + 43
+	GETROWCOUNT, Self::FIRST.0 + 44
+	GETTOOLTIPS, Self::FIRST.0 + 45
+	SETTOOLTIPS, Self::FIRST.0 + 46
+	GETCURFOCUS, Self::FIRST.0 + 47
+	SETCURFOCUS, Self::FIRST.0 + 48
+	SETMINTABWIDTH, Self::FIRST.0 + 49
+	DESELECTALL, Self::FIRST.0 + 50
+	HIGHLIGHTITEM, Self::FIRST.0 + 51
+	SETEXTENDEDSTYLE, Self::FIRST.0 + 52
+	GETEXTENDEDSTYLE, Self::FIRST.0 + 53
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+}
+const_type_priv_values! { TCM,
+	FIRST, 0x1300
 }
 
 const_type_ws! { TCS,
