@@ -4,45 +4,45 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::{DateTimePickerEvents, WindowEvents};
+use crate::gui::events::{MonthCalendarEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{dtm, wm};
-use crate::structs::{POINT, SIZE};
+use crate::msg::mcm;
+use crate::structs::{POINT, RECT, SIZE};
 
 /// Native
-/// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
+/// [month calendar](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 /// control.
 #[derive(Clone)]
-pub struct DateTimePicker(Arc<Obj>);
+pub struct MonthCalendar(Arc<Obj>);
 
-struct Obj { // actual fields of DateTimePicker
-	base: NativeControlBase<DateTimePickerEvents>,
-	opts_id: OptsId<DateTimePickerOpts>,
+struct Obj { // actual fields of MonthCalendar
+	base: NativeControlBase<MonthCalendarEvents>,
+	opts_id: OptsId<MonthCalendarOpts>,
 }
 
-unsafe impl Send for DateTimePicker {}
-unsafe impl Sync for DateTimePicker {}
+unsafe impl Send for MonthCalendar {}
+unsafe impl Sync for MonthCalendar {}
 
-impl Child for DateTimePicker {
+impl Child for MonthCalendar {
 	fn hctrl_ref(&self) -> &HWND {
 		self.0.base.hctrl_ref()
 	}
 }
 
-impl DateTimePicker {
-	/// Instantiates a new `DateTimePicker` object, to be created on the parent
+impl MonthCalendar {
+	/// Instantiates a new `MonthCalendar` object, to be created on the parent
 	/// window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &dyn Parent, opts: DateTimePickerOpts) -> DateTimePicker {
-		let opts = DateTimePickerOpts::define_ctrl_id(opts);
+	pub fn new(parent: &dyn Parent, opts: MonthCalendarOpts) -> MonthCalendar {
+		let opts = MonthCalendarOpts::define_ctrl_id(opts);
 		let new_self = Self(
 			Arc::new(
 				Obj {
 					base: NativeControlBase::new(
 						parent,
-						DateTimePickerEvents::new(parent, opts.ctrl_id),
+						MonthCalendarEvents::new(parent, opts.ctrl_id),
 					),
 					opts_id: OptsId::Wnd(opts),
 				},
@@ -55,15 +55,15 @@ impl DateTimePicker {
 		new_self
 	}
 
-	/// Instantiates a new `DateTimePicker` object, to be loaded from a dialog
+	/// Instantiates a new `MonthCalendar` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> DateTimePicker {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> MonthCalendar {
 		let new_self = Self(
 			Arc::new(
 				Obj {
 					base: NativeControlBase::new(
 						parent,
-						DateTimePickerEvents::new(parent, ctrl_id),
+						MonthCalendarEvents::new(parent, ctrl_id),
 					),
 					opts_id: OptsId::Dlg(ctrl_id),
 				},
@@ -81,26 +81,23 @@ impl DateTimePicker {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
-					let mut sz = SIZE::new(opts.width as i32, 21); // default height
-					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+					multiply_dpi(Some(&mut pos), None)?;
 
 					let our_hwnd = self.0.base.create_window( // may panic
-						"SysDateTimePick32", None, pos, sz,
+						"SysMonthCal32", None, pos, SIZE::new(0, 0),
 						opts.ctrl_id,
 						opts.ex_window_style,
-						opts.window_style | opts.date_time_picker_style.into(),
+						opts.window_style | opts.month_calendar_style.into(),
 					)?;
 
-					if sz.cx == 0 { // use ideal width?
-						let mut sz_ideal = SIZE::default();
-						our_hwnd.SendMessage(dtm::GetIdealSize { size: &mut sz_ideal });
-						sz.cx = sz_ideal.cx; // already adjusted for DPI
+					let mut bounding_rect = RECT::default();
+					our_hwnd.SendMessage(mcm::GetMinReqRect {
+						bounding_rect: &mut bounding_rect,
+					})?;
+					our_hwnd.SetWindowPos(HwndPlace::None, 0, 0,
+						bounding_rect.right, bounding_rect.bottom,
+						co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 
-						our_hwnd.SetWindowPos(HwndPlace::None, 0, 0, sz.cx, sz.cy,
-							co::SWP::NOZORDER | co::SWP::NOMOVE)?;
-					}
-
-					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -108,15 +105,15 @@ impl DateTimePicker {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	hwnd_ctrlid_on_onsubclass!(DateTimePickerEvents);
+	hwnd_ctrlid_on_onsubclass!(MonthCalendarEvents);
 }
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`DateTimePicker`](crate::gui::DateTimePicker)
+/// Options to create a [`MonthCalendar`](crate::gui::MonthCalendar)
 /// programatically with
-/// [`DateTimePicker::new`](crate::gui::DateTimePicker::new).
-pub struct DateTimePickerOpts {
+/// [`MonthCalendar::new`](crate::gui::MonthCalendar::new).
+pub struct MonthCalendarOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -124,19 +121,11 @@ pub struct DateTimePickerOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control width, in pixels, to be
+	/// Month calendar styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
-	///
-	/// Defaults to ideal width retrieved with
-	/// [`DtmGetIdealSize`](crate::msg::dtm::GetIdealSize), usually around 250.
-	pub width: u32,
-	/// Date and time picker styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-	///
-	/// Defaults to `DTS::LONGDATEFORMAT`.
-	pub date_time_picker_style: co::DTS,
+	/// Defaults to `MCS::NONE`.
+	pub month_calendar_style: co::MCS,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -154,20 +143,19 @@ pub struct DateTimePickerOpts {
 	pub ctrl_id: u16,
 }
 
-impl Default for DateTimePickerOpts {
+impl Default for MonthCalendarOpts {
 	fn default() -> Self {
 		Self {
 			position: POINT::new(0, 0),
-			width: 0,
-			date_time_picker_style: co::DTS::LONGDATEFORMAT,
+			ctrl_id: 0,
+			month_calendar_style: co::MCS::NONE,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT,
-			ctrl_id: 0,
 		}
 	}
 }
 
-impl DateTimePickerOpts {
+impl MonthCalendarOpts {
 	fn define_ctrl_id(mut self) -> Self {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();

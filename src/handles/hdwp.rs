@@ -33,7 +33,7 @@ impl HDWP {
 	/// method.
 	pub fn DeferWindowPos(self,
 		hWnd: HWND, hWndInsertAfter: HwndPlace,
-		X: i32, Y: i32, cx: u32, cy: u32, uFlags: co::SWP) -> WinResult<HDWP>
+		x: i32, y: i32, cx: i32, cy: i32, uFlags: co::SWP) -> WinResult<HDWP>
 	{
 		match ptr_as_opt(
 			unsafe {
@@ -41,8 +41,7 @@ impl HDWP {
 					self.ptr,
 					hWnd.ptr,
 					hWndInsertAfter.as_ptr(),
-					X, Y,
-					cx as i32, cy as i32,
+					x, y, cx, cy,
 					uFlags.0,
 				)
 			},

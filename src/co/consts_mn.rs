@@ -1,4 +1,4 @@
-use crate::co::WS;
+use crate::co::{CCM, WM, WS};
 
 const_type! { MB, u32,
 	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
@@ -36,6 +36,48 @@ const_type! { MB, u32,
 	SETFOREGROUND, 0x00010000
 	TOPMOST, 0x00040000
 	SERVICE_NOTIFICATION, 0x00200000
+}
+
+const_type_wm! { MCM,
+	/// Month calendar control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	->
+	GETCURSEL, Self::FIRST.0 + 1
+	SETCURSEL, Self::FIRST.0 + 2
+	GETMAXSELCOUNT, Self::FIRST.0 + 3
+	SETMAXSELCOUNT, Self::FIRST.0 + 4
+	GETSELRANGE, Self::FIRST.0 + 5
+	SETSELRANGE, Self::FIRST.0 + 6
+	GETMONTHRANGE, Self::FIRST.0 + 7
+	SETDAYSTATE, Self::FIRST.0 + 8
+	GETMINREQRECT, Self::FIRST.0 + 9
+	SETCOLOR, Self::FIRST.0 + 10
+	GETCOLOR, Self::FIRST.0 + 11
+	SETTODAY, Self::FIRST.0 + 12
+	GETTODAY, Self::FIRST.0 + 13
+	HITTEST, Self::FIRST.0 + 14
+	SETFIRSTDAYOFWEEK, Self::FIRST.0 + 15
+	GETFIRSTDAYOFWEEK, Self::FIRST.0 + 16
+	GETRANGE, Self::FIRST.0 + 17
+	SETRANGE, Self::FIRST.0 + 18
+	GETMONTHDELTA, Self::FIRST.0 + 19
+	SETMONTHDELTA, Self::FIRST.0 + 20
+	GETMAXTODAYWIDTH, Self::FIRST.0 + 21
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+	GETCURRENTVIEW, Self::FIRST.0 + 22
+	GETCALENDARCOUNT, Self::FIRST.0 + 23
+	GETCALENDARGRIDINFO, Self::FIRST.0 + 24
+	GETCALID, Self::FIRST.0 + 27
+	SETCALID, Self::FIRST.0 + 28
+	SIZERECTTOMIN, Self::FIRST.0 + 29
+	SETCALENDARBORDER, Self::FIRST.0 + 30
+	GETCALENDARBORDER, Self::FIRST.0 + 31
+	SETCURRENTVIEW, Self::FIRST.0 + 32
+}
+const_type_priv_values! { MCM,
+	FIRST, 0x1000
 }
 
 const_type! { MCMV, u32,
@@ -77,6 +119,7 @@ const_type_ws! { MCS,
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
 	->
+	NONE, 0
 	DAYSTATE, 0x0001
 	MULTISELECT, 0x0002
 	WEEKNUMBERS, 0x0004

@@ -55,7 +55,7 @@ impl ComboBox {
 		new_self
 	}
 
-	/// Instantiates a new `Button` object, to be loaded from a dialog resource
+	/// Instantiates a new `ComboBox` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ComboBox {
 		let new_self = Self(

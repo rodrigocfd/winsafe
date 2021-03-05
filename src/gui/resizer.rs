@@ -172,11 +172,11 @@ impl Resizer {
 				match ctrl.horz {
 					Resz::Resize => parent_cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.right - ctrl.rc_orig.left,
 					_ => ctrl.rc_orig.right - ctrl.rc_orig.left // keep original width
-				} as u32,
+				},
 				match ctrl.vert {
 					Resz::Resize => parent_cy - self.0.sz_parent_orig.cy + ctrl.rc_orig.bottom - ctrl.rc_orig.top,
 					_ =>ctrl.rc_orig.bottom - ctrl.rc_orig.top // keep original height
-				} as u32,
+				},
 				uflags,
 			)?;
 		}

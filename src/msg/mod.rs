@@ -42,6 +42,7 @@ pub mod em;
 pub mod hdm;
 pub mod lb;
 pub mod lvm;
+pub mod mcm;
 pub mod sb;
 pub mod stm;
 pub mod wm;

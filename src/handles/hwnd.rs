@@ -955,15 +955,14 @@ impl HWND {
 	/// method.
 	pub fn SetWindowPos(self,
 		hWndInsertAfter: HwndPlace,
-		X: i32, Y: i32, cx: u32, cy: u32, uFlags: co::SWP) -> WinResult<()>
+		x: i32, y: i32, cx: i32, cy: i32, uFlags: co::SWP) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				user32::SetWindowPos(
 					self.ptr,
 					hWndInsertAfter.as_ptr(),
-					X, Y,
-					cx as i32, cy as i32,
+					x, y, cx, cy,
 					uFlags.0,
 				)
 			},

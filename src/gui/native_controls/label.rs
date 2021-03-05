@@ -109,7 +109,7 @@ impl Label {
 		let bound_box = calc_text_bound_box(text)?;
 		self.hwnd().SetWindowText(text)?;
 		self.hwnd().SetWindowPos(
-			HwndPlace::None, 0, 0, bound_box.cx as u32, bound_box.cy as u32,
+			HwndPlace::None, 0, 0, bound_box.cx, bound_box.cy,
 			co::SWP::NOZORDER | co::SWP::NOMOVE)
 	}
 }
