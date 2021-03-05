@@ -52,6 +52,26 @@ const_type_priv_values! { CB,
 	FIRST, 0x1700
 }
 
+const_type_wm! { CBEM,
+	/// ComboBoxEx control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	->
+	SETIMAGELIST, WM::USER.0 + 2
+	GETIMAGELIST, WM::USER.0 + 3
+	DELETEITEM, CB::DELETESTRING.0
+	GETCOMBOCONTROL, WM::USER.0 + 6
+	GETEDITCONTROL, WM::USER.0 + 7
+	SETEXTENDEDSTYLE, WM::USER.0 + 14
+	GETEXTENDEDSTYLE, WM::USER.0 + 9
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+	HASEDITCHANGED, WM::USER.0 + 10
+	INSERTITEM, WM::USER.0 + 11
+	SETITEM, WM::USER.0 + 12
+	GETITEM, WM::USER.0 + 13
+}
+
 const_type_cmd! { CBN,
 	/// Combo box control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)

@@ -155,17 +155,29 @@ const_type_wm! { BM,
 	///
 	/// Also includes constants originally with `BCM` prefix.
 	->
+	/// Originally with `BCM` prefix.
 	GETIDEALSIZE, Self::FIRST.0 + 0x0001
+	/// Originally with `BCM` prefix.
 	SETIMAGELIST, Self::FIRST.0 + 0x0002
+	/// Originally with `BCM` prefix.
 	GETIMAGELIST, Self::FIRST.0 + 0x0003
+	/// Originally with `BCM` prefix.
 	SETTEXTMARGIN, Self::FIRST.0 + 0x0004
+	/// Originally with `BCM` prefix.
 	GETTEXTMARGIN, Self::FIRST.0 + 0x0005
+	/// Originally with `BCM` prefix.
 	SETDROPDOWNSTATE, Self::FIRST.0 + 0x0006
+	/// Originally with `BCM` prefix.
 	SETSPLITINFO, Self::FIRST.0 + 0x0007
+	/// Originally with `BCM` prefix.
 	GETSPLITINFO, Self::FIRST.0 + 0x0008
+	/// Originally with `BCM` prefix.
 	SETNOTE, Self::FIRST.0 + 0x0009
+	/// Originally with `BCM` prefix.
 	GETNOTE, Self::FIRST.0 + 0x000a
+	/// Originally with `BCM` prefix.
 	GETNOTELENGTH, Self::FIRST.0 + 0x000b
+	/// Originally with `BCM` prefix.
 	SETSHIELD, Self::FIRST.0 + 0x000c
 
 	GETCHECK, 0x00f0
