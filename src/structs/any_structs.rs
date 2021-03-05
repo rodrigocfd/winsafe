@@ -29,6 +29,12 @@ pub struct ACCEL {
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct ATOM(pub(crate) u16);
 
+impl std::fmt::Display for ATOM {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "{}", self.0)
+	}
+}
+
 impl ATOM {
 	/// Useful to pass the atom as class name.
 	pub fn as_ptr(self) -> *const u16 {
@@ -70,6 +76,13 @@ pub struct COLORREF(pub(crate) u32);
 impl From<co::CLR> for COLORREF {
 	fn from(v: co::CLR) -> Self {
 		Self(v.0)
+	}
+}
+
+impl std::fmt::Display for COLORREF {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "R {}, G {}, B {}",
+			self.GetRValue(), self.GetGValue(), self.GetBValue())
 	}
 }
 
@@ -413,6 +426,12 @@ pub struct POINT {
 	pub y: i32,
 }
 
+impl std::fmt::Display for POINT {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "x {}, y {}", self.x, self.y)
+	}
+}
+
 impl POINT {
 	/// Creates a new `POINT`.
 	pub fn new(x: i32, y: i32) -> POINT {
@@ -429,6 +448,13 @@ pub struct RECT {
 	pub top: i32,
 	pub right: i32,
 	pub bottom: i32,
+}
+
+impl std::fmt::Display for RECT {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "left {}, top {}, right {}, bottom {}",
+			self.left, self.top, self.right, self.bottom)
+	}
 }
 
 impl RECT {
@@ -462,6 +488,12 @@ impl Default for SECURITY_ATTRIBUTES {
 pub struct SIZE {
 	pub cx: i32,
 	pub cy: i32,
+}
+
+impl std::fmt::Display for SIZE {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "cx {}, cy {}", self.cx, self.cy)
+	}
 }
 
 impl SIZE {
