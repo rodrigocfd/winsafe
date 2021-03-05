@@ -246,27 +246,55 @@ const_type! { CLSCTX, u32,
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
 	->
+	/// The code that creates and manages objects of this class is a DLL that
+	/// runs in the same process as the caller of the function specifying the
+	/// class context.
 	INPROC_SERVER, 0x1
+	/// The code that manages objects of this class is an in-process handler.
+	/// This is a DLL that runs in the client process and implements client-side
+	/// structures of this class when instances of the class are accessed
+	/// remotely.
 	INPROC_HANDLER, 0x2
+	/// The EXE code that creates and manages objects of this class runs on same
+	/// machine but is loaded in a separate process space.
 	LOCAL_SERVER, 0x4
-	INPROC_SERVER16, 0x8
+	/// A remote context. The `LocalServer32` or `LocalService` code that creates
+	/// and manages objects of this class is run on a different computer.
 	REMOTE_SERVER, 0x10
-	INPROC_HANDLER16, 0x20
+	/// Disables the downloading of code from the directory service or the
+	/// Internet. This flag cannot be set at the same time as
+	/// `CLSCTX_ENABLE_CODE_DOWNLOAD`.
 	NO_CODE_DOWNLOAD, 0x400
+	/// Specify if you want the activation to fail if it uses custom marshalling.
 	NO_CUSTOM_MARSHAL, 0x1000
+	/// Enables the downloading of code from the directory service or the
+	/// Internet. This flag cannot be set at the same time as
+	/// `CLSCTX_NO_CODE_DOWNLOAD`.
 	ENABLE_CODE_DOWNLOAD, 0x2000
+	/// The `CLSCTX_NO_FAILURE_LOG` can be used to override the logging of
+	/// failures in
+	/// [`CoCreateInstanceEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstanceex).
 	NO_FAILURE_LOG, 0x4000
+	/// Disables activate-as-activator (AAA) activations for this activation only.
 	DISABLE_AAA, 0x8000
+	/// Enables activate-as-activator (AAA) activations for this activation only.
 	ENABLE_AAA, 0x10000
+	/// Begin this activation from the default context of the current apartment.
 	FROM_DEFAULT_CONTEXT, 0x20000
+	/// Activate or connect to a 32-bit version of the server; fail if one is not
+	/// registered.
 	ACTIVATE_X86_SERVER, 0x40000
+	/// Activate or connect to a 32-bit version of the server; fail if one is not
+	/// registered.
 	ACTIVATE_32_BIT_SERVER, Self::ACTIVATE_X86_SERVER.0
+	/// Activate or connect to a 64 bit version of the server; fail if one is not
+	/// registered.
 	ACTIVATE_64_BIT_SERVER, 0x80000
-	ENABLE_CLOAKING, 0x100000
-	APPCONTAINER, 0x400000
+	/// Specify this flag for Interactive User activation behavior for
+	/// As-Activator servers.
 	ACTIVATE_AAA_AS_IU, 0x800000
+	/// (No official docs for this entry.)
 	ACTIVATE_ARM32_SERVER, 0x2000000
-	PS_DLL, 0x80000000
 }
 
 const_type! { CMD, u16,
