@@ -846,14 +846,22 @@ impl HWND {
 	/// [`ScreenToClient`](crate::HWND::ScreenToClient) method for a
 	/// [`RECT`](crate::RECT).
 	pub fn ScreenToClientRc(self, lpRect: &mut RECT) -> WinResult<()> {
-		bool_to_winresult(
-			unsafe {
-				user32::ScreenToClient(
-					self.ptr,
-					&mut lpRect.left as *mut _ as *mut _,
-				)
-			},
-		)
+		match unsafe {
+			user32::ScreenToClient(
+				self.ptr,
+				&mut lpRect.left as *mut _ as *mut _,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => bool_to_winresult(
+				unsafe {
+					user32::ScreenToClient(
+						self.ptr,
+						&mut lpRect.right as *mut _ as *mut _,
+					)
+				},
+			),
+		}
 	}
 
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
