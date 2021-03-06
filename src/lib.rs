@@ -1,8 +1,11 @@
 //! Win32 GUI and related APIs in safe, idiomatic Rust.
 //!
-//! WinSafe exposes native Win32 constants, structs and functions related to GUI
-//! work. This means you'll find only a selected subset of the Win32 API – if
-//! you're looking for a comprehensive Win32 coverage, take a look at
+//! WinSafe has:
+//!
+//! * high-level structs to build native Win32 GUI applications;
+//! * low-level Win32 API constants, functions and structs related to GUI.
+//!
+//! If you're looking for a comprehensive Win32 coverage, take a look at
 //! [winapi](https://crates.io/crates/winapi) or
 //! [windows](https://crates.io/crates/windows) crates, which are unsafe, but
 //! have everything.

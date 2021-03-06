@@ -7,15 +7,21 @@
 
 Win32 GUI and related APIs in safe, idiomatic Rust.
 
-WinSafe exposes native Win32 constants, structs and functions related to GUI work. This means you'll find only a selected subset of the Win32 API – if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are unsafe, but have everything.
+WinSafe has:
 
-Documentation for the `master` branch: [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/)
+* high-level structs to build native Win32 GUI applications;
+* low-level Win32 API constants, functions and structs related to GUI.
+
+If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are unsafe, but have everything.
+
+Documentation for the WinSafe `master` branch: [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/)
 
 ## Current status
 
-* Custom windows (main, modal and control) – complete
-* Native controls – incomplete
-* APIs – incomplete
+- [x] Custom windows (main, modal and control)
+- [ ] Window messages
+- [ ] Native controls
+- [ ] APIs
 
 Since this crate is *too* incomplete, it's not published to [crates.io](https://crates.io/crates/winsafe) yet. However, you can use this crate simply by cloning this repo.
 
