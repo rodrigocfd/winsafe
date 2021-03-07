@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
-use crate::gui::dialog_base::DialogBase;
+use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEvents;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
 use crate::gui::traits::{Child, Parent};
@@ -12,15 +12,15 @@ use crate::handles::HWND;
 use crate::structs::POINT;
 
 #[derive(Clone)]
-pub struct DialogControl(Arc<Obj>);
+pub struct DlgControl(Arc<Obj>);
 
-struct Obj { // actual fields of DialogControl
-	base: DialogBase,
+struct Obj { // actual fields of DlgControl
+	base: DlgBase,
 	position: POINT,
 	ctrl_id: Option<u16>,
 }
 
-impl Parent for DialogControl {
+impl Parent for DlgControl {
 	fn hwnd_ref(&self) -> &HWND {
 		self.0.base.hwnd_ref()
 	}
@@ -34,23 +34,23 @@ impl Parent for DialogControl {
 	}
 }
 
-impl Child for DialogControl {
+impl Child for DlgControl {
 	fn hctrl_ref(&self) -> &HWND {
 		self.hwnd_ref()
 	}
 }
 
-impl DialogControl {
+impl DlgControl {
 	pub fn new(
 		parent: &dyn Parent,
 		dialog_id: i32,
 		position: POINT,
-		ctrl_id: Option<u16>) -> DialogControl
+		ctrl_id: Option<u16>) -> DlgControl
 	{
 		let dlg = Self(
 			Arc::new(
 				Obj {
-					base: DialogBase::new(Some(parent), dialog_id),
+					base: DlgBase::new(Some(parent), dialog_id),
 					position,
 					ctrl_id,
 				},

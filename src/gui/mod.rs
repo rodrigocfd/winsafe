@@ -1,34 +1,34 @@
-//! High-level GUI abstractions for custom windows and native controls.
+//! High-level GUI abstractions for user windows and native controls.
 //!
 //! You'll probably want to start your GUI application using the
-//! [`CustomMain`](crate::gui::CustomMain).
+//! [`WindowMain`](crate::gui::WindowMain).
 
 pub mod events;
 
 mod base;
-mod custom_control;
-mod custom_main;
-mod custom_modal;
-mod dialog_base;
-mod dialog_control;
-mod dialog_main;
-mod dialog_modal;
+mod dlg_base;
+mod dlg_control;
+mod dlg_main;
+mod dlg_modal;
 mod immut;
 mod native_controls;
 mod privs;
+mod raw_base;
+mod raw_control;
+mod raw_main;
+mod raw_modal;
 mod resizer;
 mod traits;
-mod window_base;
 mod window_control;
 mod window_main;
 mod window_modal;
 
-pub use custom_control::CustomControl;
-pub use custom_main::CustomMain;
-pub use custom_modal::CustomModal;
 pub use native_controls::*;
+pub use raw_control::WindowControlOpts;
+pub use raw_main::WindowMainOpts;
+pub use raw_modal::WindowModalOpts;
 pub use resizer::{Resizer, Resz};
 pub use traits::{Child, Parent};
-pub use window_control::CustomControlOpts;
-pub use window_main::CustomMainOpts;
-pub use window_modal::CustomModalOpts;
+pub use window_control::WindowControl;
+pub use window_main::WindowMain;
+pub use window_modal::WindowModal;

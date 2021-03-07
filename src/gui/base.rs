@@ -9,7 +9,7 @@ use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
 
-/// Base to `WindowBase` and `DialogBase`.
+/// Base to `RawBase` and `DlgBase`.
 pub struct Base {
 	hwnd: HWND,
 	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)

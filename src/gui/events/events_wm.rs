@@ -334,7 +334,7 @@ impl WindowEvents {
 		///
 		/// If you handle this event, you'll overwrite the default handling in:
 		///
-		/// * non-dialog [`CustomMain`](crate::gui::CustomMain).
+		/// * non-dialog [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp,
@@ -397,9 +397,9 @@ impl WindowEvents {
 		///
 		/// If you handle this event, you'll overwrite the default handling in:
 		///
-		/// * dialog [`CustomMain`](crate::gui::CustomMain);
-		/// * dialog [`CustomModal`](crate::gui::CustomModal);
-		/// * non-dialog [`CustomModal`](crate::gui::CustomModal).
+		/// * dialog [`WindowMain`](crate::gui::WindowMain);
+		/// * dialog [`WindowModal`](crate::gui::WindowModal);
+		/// * non-dialog [`WindowModal`](crate::gui::WindowModal).
 	}
 
 	wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,
@@ -843,8 +843,8 @@ impl WindowEvents {
 		///
 		/// If you handle this event, you'll overwrite the default handling in:
 		///
-		/// * non-dialog [`CustomMain`](crate::gui::CustomMain);
-		/// * dialog [`CustomMain`](crate::gui::CustomMain).
+		/// * non-dialog [`WindowMain`](crate::gui::WindowMain);
+		/// * dialog [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint,
@@ -856,8 +856,8 @@ impl WindowEvents {
 		///
 		/// If you handle this event, you'll overwrite the default handling in:
 		///
-		/// * non-dialog [`CustomControl`](crate::gui::CustomControl);
-		/// * dialog [`CustomControl`](crate::gui::CustomControl).
+		/// * non-dialog [`WindowControl`](crate::gui::WindowControl);
+		/// * dialog [`WindowControl`](crate::gui::WindowControl).
 	}
 
 	wm_empty! { wm_null, co::WM::NULL,
@@ -937,8 +937,8 @@ impl WindowEvents {
 		///
 		/// If you handle this event, you'll overwrite the default handling in:
 		///
-		/// * non-dialog [`CustomMain`](crate::gui::CustomMain);
-		/// * non-dialog [`CustomModal`](crate::gui::CustomModal).
+		/// * non-dialog [`WindowMain`](crate::gui::WindowMain);
+		/// * non-dialog [`WindowModal`](crate::gui::WindowModal).
 	}
 
 	wm_ret_none! { wm_set_font, co::WM::SETFONT, wm::SetFont,

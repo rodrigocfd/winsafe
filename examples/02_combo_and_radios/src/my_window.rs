@@ -3,15 +3,15 @@ use winsafe::{POINT, SIZE, WinResult};
 
 #[derive(Clone)]
 pub struct MyWindow {
-	wnd:        gui::CustomMain,
+	wnd:        gui::WindowMain,
 	cmb_cities: gui::ComboBox,
 	rad_seas:   gui::RadioGroup,
 }
 
 impl MyWindow {
 	pub fn new() -> MyWindow {
-		let wnd = gui::CustomMain::new(
-			gui::CustomMainOpts {
+		let wnd = gui::WindowMain::new(
+			gui::WindowMainOpts {
 				title: "Combo and radios".to_owned(),
 				size: SIZE::new(300, 150),
 				..Default::default()

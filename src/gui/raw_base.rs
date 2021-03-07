@@ -11,11 +11,11 @@ use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 /// Base to all ordinary windows.
-pub struct WindowBase {
+pub struct RawBase {
 	base: Base,
 }
 
-impl Drop for WindowBase {
+impl Drop for RawBase {
 	fn drop(&mut self) {
 		if !self.hwnd_ref().is_null() {
 			self.hwnd_ref().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
@@ -23,7 +23,7 @@ impl Drop for WindowBase {
 	}
 }
 
-impl Parent for WindowBase {
+impl Parent for RawBase {
 	fn hwnd_ref(&self) -> &HWND {
 		self.base.hwnd_ref()
 	}
@@ -37,8 +37,8 @@ impl Parent for WindowBase {
 	}
 }
 
-impl WindowBase {
-	pub fn new(parent: Option<&dyn Parent>) -> WindowBase {
+impl RawBase {
+	pub fn new(parent: Option<&dyn Parent>) -> RawBase {
 		Self {
 			base: Base::new(parent),
 		}

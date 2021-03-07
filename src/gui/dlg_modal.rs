@@ -4,17 +4,17 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
-use crate::gui::dialog_base::DialogBase;
+use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEvents;
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
 
 #[derive(Clone)]
-pub struct DialogModal {
-	base: Arc<DialogBase>,
+pub struct DlgModal {
+	base: Arc<DlgBase>,
 }
 
-impl Parent for DialogModal {
+impl Parent for DlgModal {
 	fn hwnd_ref(&self) -> &HWND {
 		self.base.hwnd_ref()
 	}
@@ -28,11 +28,11 @@ impl Parent for DialogModal {
 	}
 }
 
-impl DialogModal {
-	pub fn new(parent: &dyn Parent, dialog_id: i32) -> DialogModal {
+impl DlgModal {
+	pub fn new(parent: &dyn Parent, dialog_id: i32) -> DlgModal {
 		let dlg = Self {
 			base: Arc::new(
-				DialogBase::new(Some(parent), dialog_id),
+				DlgBase::new(Some(parent), dialog_id),
 			),
 		};
 		dlg.default_message_handlers();

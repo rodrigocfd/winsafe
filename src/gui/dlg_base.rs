@@ -10,12 +10,12 @@ use crate::handles::{HFONT, HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// Base to all dialog windows.
-pub struct DialogBase {
+pub struct DlgBase {
 	base: Base,
 	dialog_id: i32,
 }
 
-impl Drop for DialogBase {
+impl Drop for DlgBase {
 	fn drop(&mut self) {
 		if !self.hwnd_ref().is_null() {
 			self.hwnd_ref().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
@@ -23,7 +23,7 @@ impl Drop for DialogBase {
 	}
 }
 
-impl Parent for DialogBase {
+impl Parent for DlgBase {
 	fn hwnd_ref(&self) -> &HWND {
 		&self.base.hwnd_ref()
 	}
@@ -37,8 +37,8 @@ impl Parent for DialogBase {
 	}
 }
 
-impl DialogBase {
-	pub fn new(parent: Option<&dyn Parent>, dialog_id: i32) -> DialogBase {
+impl DlgBase {
+	pub fn new(parent: Option<&dyn Parent>, dialog_id: i32) -> DlgBase {
 		Self {
 			base: Base::new(parent),
 			dialog_id,

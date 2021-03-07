@@ -18,7 +18,7 @@ Documentation for the WinSafe `master` branch: [rodrigocfd.github.io/winsafe/win
 
 ## Current status
 
-- [x] Custom windows (main, modal and control)
+- [x] User windows (main, modal and control)
 - [ ] Window messages
 - [ ] Native controls
 - [ ] APIs
@@ -48,14 +48,14 @@ fn main() {
 
 #[derive(Clone)]
 pub struct MyWindow {
-    wnd:       gui::CustomMain, // responsible for managing the window
+    wnd:       gui::WindowMain, // responsible for managing the window
     btn_hello: gui::Button,     // a button
 }
 
 impl MyWindow {
     pub fn new() -> MyWindow {
-        let wnd = gui::CustomMain::new( // instantiate the window manager
-            gui::CustomMainOpts {
+        let wnd = gui::WindowMain::new( // instantiate the window manager
+            gui::WindowMainOpts {
                 title: "My window title".to_owned(),
                 size: SIZE::new(300, 150),
                 ..Default::default() // leave all other options as default

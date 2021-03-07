@@ -5,22 +5,22 @@ use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
-use crate::gui::dialog_base::DialogBase;
+use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEvents;
 use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::wm;
 
 #[derive(Clone)]
-pub struct DialogMain(Arc<Obj>);
+pub struct DlgMain(Arc<Obj>);
 
-struct Obj { // actual fields of DialogMain
-	base: DialogBase,
+struct Obj { // actual fields of DlgMain
+	base: DlgBase,
 	icon_id: Option<i32>,
 	accel_table_id: Option<i32>,
 }
 
-impl Parent for DialogMain {
+impl Parent for DlgMain {
 	fn hwnd_ref(&self) -> &HWND {
 		self.0.base.hwnd_ref()
 	}
@@ -34,16 +34,16 @@ impl Parent for DialogMain {
 	}
 }
 
-impl DialogMain {
+impl DlgMain {
 	pub fn new(
 		dialog_id: i32,
 		icon_id: Option<i32>,
-		accel_table_id: Option<i32>) -> DialogMain
+		accel_table_id: Option<i32>) -> DlgMain
 	{
 		let dlg = Self(
 			Arc::new(
 				Obj {
-					base: DialogBase::new(None, dialog_id),
+					base: DlgBase::new(None, dialog_id),
 					icon_id,
 					accel_table_id,
 				},
