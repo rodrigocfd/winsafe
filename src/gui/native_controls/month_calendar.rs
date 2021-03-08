@@ -6,7 +6,7 @@ use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::{MonthCalendarEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::msg::mcm;

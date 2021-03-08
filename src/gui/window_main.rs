@@ -1,7 +1,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
-use crate::gui::dialog_main::DlgMain;
+use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEvents;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{WindowMainOpts, RawMain};

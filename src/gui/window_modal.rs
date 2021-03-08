@@ -1,5 +1,5 @@
 use crate::aliases::WinResult;
-use crate::gui::dialog_modal::DlgModal;
+use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEvents;
 use crate::gui::raw_modal::{WindowModalOpts, RawModal};
 use crate::gui::traits::Parent;
