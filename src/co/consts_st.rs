@@ -34,17 +34,16 @@ const_type_ws! { SBARS,
 	TOOLTIPS, 0x0800
 }
 
-const_type! { SBT, u16,
-	/// [`SB_GETTEXT`](crate::msg::sb::GetText),
-	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
-	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
+const_type! { SBB, i32,
+	/// [`GetScrollInfo`](crate::HWND::GetScrollInfo),
+	/// [`GetScrollRange`](crate::HWND::GetScrollRange),
+	/// [`SetScrollInfo`](crate::HWND::SetScrollInfo) and
+	/// [`SetScrollRange`](crate::HWND::SetScrollRange) `nBar` (`i32`). Originally
+	/// has `SB` prefix.
 	->
-	NONE, 0
-	OWNERDRAW, 0x1000
-	NOBORDERS, 0x0100
-	POPOUT, 0x0200
-	RTLREADING, 0x0400
-	NOTABPARSING, 0x0800
+	HORZ, 0
+	VERT, 1
+	CTL, 2
 }
 
 const_type_nm! { SBN,
@@ -56,6 +55,19 @@ const_type_nm! { SBN,
 }
 const_type_priv_values! { SBN,
 	FIRST, -880
+}
+
+const_type! { SBT, u16,
+	/// [`SB_GETTEXT`](crate::msg::sb::GetText),
+	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
+	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
+	->
+	NONE, 0
+	OWNERDRAW, 0x1000
+	NOBORDERS, 0x0100
+	POPOUT, 0x0200
+	RTLREADING, 0x0400
+	NOTABPARSING, 0x0800
 }
 
 const_type! { SC, u32,
@@ -81,6 +93,17 @@ const_type! { SC, u32,
 	SIZE, 0xf000
 	TASKLIST, 0xf130
 	VSCROLL, 0xf070
+}
+
+const_type! { SIF, u32,
+	/// [`SCROLLINFO`](crate::SCROLLINFO) `fMask` (`u32`).
+	->
+	RANGE, 0x0001
+	PAGE, 0x0002
+	POS, 0x0004
+	DISABLENOSCROLL, 0x0008
+	TRACKPOS, 0x0010
+	ALL, Self::RANGE.0 | Self::PAGE.0 | Self::POS.0 | Self::TRACKPOS.0
 }
 
 const_type! { SIZE_R, u8,
@@ -768,6 +791,21 @@ const_type! { SWP, u32,
 	NOREPOSITION, Self::NOOWNERZORDER.0
 	DEFERERASE, 0x2000
 	ASYNCWINDOWPOS, 0x4000
+}
+
+const_type! { TA, u32,
+	/// [`SetTextAlign`](crate::HDC::SetTextAlign) `align` (`u32`). Also includes
+	/// constants with `VTA` prefix.
+	->
+	NOUPDATECP, 0
+	UPDATECP, 1
+	LEFT, 0
+	RIGHT, 2
+	CENTER, 6
+	TOP, 0
+	BOTTOM, 8
+	BASELINE, 24
+	RTLREADING, 256
 }
 
 const_type_ws! { TBS,

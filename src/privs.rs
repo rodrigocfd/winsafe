@@ -10,6 +10,7 @@ use crate::WString;
 pub const CB_ERR: i32 = -1;
 pub const CB_ERRSPACE: i32 = -2;
 pub const FAPPCOMMAND_MASK: u16 = 0xf000;
+pub const GDI_ERROR: u32 = 0xffffffff;
 pub const GDT_ERROR: i32 = -1;
 pub const L_MAX_URL_LENGTH: usize = 2048 + 32 + 4;
 pub const LB_ERR: i32 = -1;

@@ -58,6 +58,8 @@ extern "system" {
 	pub fn GetNextDlgTabItem(hDlg: HANDLE, hCtl: HANDLE, bPrevious: BOOL) -> HANDLE;
 	pub fn GetParent(hWnd: HANDLE) -> HANDLE;
 	pub fn GetQueueStatus(flags: u32) -> u32;
+	pub fn GetScrollInfo(hwnd: HANDLE, nBar: i32, lpsi: PVOID) -> BOOL;
+	pub fn GetScrollPos(hWnd: HANDLE, nBar: i32) -> i32;
 	pub fn GetSubMenu(hMenu: HANDLE, nPos: i32) -> HANDLE;
 	pub fn GetSysColor(nIndex: i32) -> u32;
 	pub fn GetSystemMetrics(nIndex: i32) -> i32;
@@ -115,6 +117,9 @@ extern "system" {
 	pub fn SetMenuItemInfoW(hmenu: HANDLE, item: u32, fByPosition: BOOL, lpmii: PCVOID) -> BOOL;
 	pub fn SetParent(hWndChild: HANDLE, hWndNewParent: HANDLE) -> HANDLE;
 	pub fn SetProcessDPIAware() -> BOOL;
+	pub fn SetScrollInfo(hwnd: HANDLE, nBar: i32, lpsi: PCVOID, redraw: BOOL) -> i32;
+	pub fn SetScrollPos(hWnd: HANDLE, nBar: i32, nPos: i32, bRedraw: BOOL) -> i32;
+	pub fn SetScrollRange(hWnd: HANDLE, nBar: i32, nMinPos: i32, nMaxPos: i32, bRedraw: BOOL) -> BOOL;
 	pub fn SetSystemCursor(hcur: HANDLE, id: u32) -> BOOL;
 	pub fn SetWindowDisplayAffinity(hWnd: HANDLE, dwAffinity: u32) -> BOOL;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;

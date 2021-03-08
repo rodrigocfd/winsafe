@@ -5,8 +5,8 @@ use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
-use crate::privs::{bool_to_winresult, ptr_as_opt};
-use crate::structs::{POINT, SIZE};
+use crate::privs::{bool_to_winresult, GDI_ERROR, ptr_as_opt};
+use crate::structs::{POINT, SIZE, TEXTMETRIC};
 use crate::WString;
 
 handle_type! {
@@ -55,6 +55,14 @@ impl HDC {
 			0 => Err(GetLastError()),
 			_ => Ok(sz),
 		}
+	}
+
+	/// [`GetTextMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextmetricsw)
+	/// method.
+	pub fn GetTextMetrics(self, lptm: &mut TEXTMETRIC) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe { gdi32::GetTextMetricsW(self.ptr, lptm as *mut _ as *mut _) },
+		)
 	}
 
 	/// [`LineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
@@ -246,11 +254,35 @@ impl HDC {
 	}
 
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
-	/// method
+	/// method.
 	pub fn SetBkMode(self, mode: co::BKMODE) -> WinResult<co::BKMODE> {
 		match unsafe { gdi32::SetBkMode(self.ptr, mode.0) } {
 			0 => Err(GetLastError()),
 			bk => Ok(co::BKMODE(bk)),
 		}
+	}
+
+	/// [`SetTextAlign`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextalign)
+	/// method.
+	pub fn SetTextAlign(self, align: co::TA) -> WinResult<co::TA> {
+		match unsafe { gdi32::SetTextAlign(self.ptr, align.0) } {
+			GDI_ERROR => Err(GetLastError()),
+			ta => Ok(co::TA(ta)),
+		}
+	}
+
+	/// [`TextOut`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textoutw)
+	/// method.
+	pub fn TextOut(self, x: i32, y: i32, lpString: &str) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe {
+				gdi32::TextOutW(
+					self.ptr,
+					x, y,
+					WString::from_str(lpString).as_ptr(),
+					lpString.len() as i32,
+				)
+			},
+		)
 	}
 }

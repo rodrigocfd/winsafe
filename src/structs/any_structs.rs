@@ -464,6 +464,28 @@ impl RECT {
 	}
 }
 
+/// [`SCROLLINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-scrollinfo)
+/// struct.
+#[repr(C)]
+#[derive(Clone)]
+pub struct SCROLLINFO {
+	cbSize: u32,
+	pub fMask: co::SIF,
+	pub nMin: i32,
+	pub nMax: i32,
+	pub nPage: u32,
+	pub nPos: i32,
+	pub nTrackPos: i32,
+}
+
+impl Default for SCROLLINFO {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj
+	}
+}
+
 /// [`SECURITY_ATTRIBUTES`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
 #[repr(C)]
@@ -532,6 +554,33 @@ pub struct SYSTEMTIME {
 	pub wMinute: u16,
 	pub wSecond: u16,
 	pub wMilliseconds: u16,
+}
+
+/// [`TEXTMETRIC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone)]
+pub struct TEXTMETRIC {
+	pub tmHeight: i32,
+	pub tmAscent: i32,
+	pub tmDescent: i32,
+	pub tmInternalLeading: i32,
+	pub tmExternalLeading: i32,
+	pub tmAveCharWidth: i32,
+	pub tmMaxCharWidth: i32,
+	pub tmWeight: i32,
+	pub tmOverhang: i32,
+	pub tmDigitizedAspectX: i32,
+	pub tmDigitizedAspectY: i32,
+	pub tmFirstChar: u16,
+	pub tmLastChar: u16,
+	pub tmDefaultChar: u16,
+	pub tmBreakChar: u16,
+	pub tmItalic: u8,
+	pub tmUnderlined: u8,
+	pub tmStruckOut: u8,
+	pub tmPitchAndFamily: u8,
+	pub tmCharSet: u8,
 }
 
 /// [`TRACKMOUSEEVENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)

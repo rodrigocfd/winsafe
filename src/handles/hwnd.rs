@@ -8,7 +8,15 @@ use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::MsgSend;
 use crate::privs::{bool_to_winresult, ptr_as_opt};
-use crate::structs::{MSG, PAINTSTRUCT, POINT, RECT, WINDOWINFO, WINDOWPLACEMENT};
+use crate::structs::{
+	MSG,
+	PAINTSTRUCT,
+	POINT,
+	RECT,
+	SCROLLINFO,
+	WINDOWINFO,
+	WINDOWPLACEMENT,
+};
 use crate::WString;
 
 handle_type! {
@@ -386,6 +394,30 @@ impl HWND {
 		match ptr_as_opt(unsafe { user32::GetParent(self.ptr) }) {
 			Some(ptr) => Ok(Self { ptr }),
 			None => Err(GetLastError()),
+		}
+	}
+
+	/// [`GetScrollInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getscrollinfo)
+	/// method.
+	pub fn GetScrollInfo(self,
+		nBar: co::SBB, lpsi: &mut SCROLLINFO) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::GetScrollInfo(self.ptr, nBar.0, lpsi as *mut _ as *mut _)
+			}
+		)
+	}
+
+	/// [`GetScrollPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getscrollpos)
+	/// method.
+	pub fn GetScrollPos(self, nBar: co::SBB) -> WinResult<i32> {
+		match unsafe { user32::GetScrollPos(self.ptr, nBar.0) } {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(0), // actual zero position
+				err => Err(err),
+			},
+			pos => Ok(pos),
 		}
 	}
 
@@ -862,6 +894,55 @@ impl HWND {
 				},
 			),
 		}
+	}
+
+	/// [`SetScrollInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollinfo)
+	/// method.
+	pub fn SetScrollInfo(self,
+		nBar: co::SBB, lpsi: &SCROLLINFO, redraw: bool) -> i32
+	{
+		unsafe {
+			user32::SetScrollInfo(
+				self.ptr,
+				nBar.0,
+				lpsi as *const _ as *const _,
+				redraw as i32,
+			)
+		}
+	}
+
+	/// [`SetScrollPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollpos)
+	/// method.
+	pub fn SetScrollPos(self,
+		nBar: co::SBB, nPos: i32, bRedraw: bool) -> WinResult<i32>
+	{
+		match unsafe {
+			user32::SetScrollPos(self.ptr, nBar.0, nPos, bRedraw as i32)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(0), // actual zero position
+				err => Err(err),
+			},
+			pos => Ok(pos),
+		}
+	}
+
+	/// [`SetScrollRange`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollrange)
+	/// method.
+	pub fn SetScrollRange(self,
+		nBar: co::SBB, nMinPos: i32, nMaxPos: i32, bRedraw: bool) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::SetScrollRange(
+					self.ptr,
+					nBar.0,
+					nMinPos,
+					nMaxPos,
+					bRedraw as i32,
+				)
+			},
+		)
 	}
 
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
