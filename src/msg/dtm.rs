@@ -14,8 +14,6 @@ empty_msg! { CloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
 	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_GETDATETIMEPICKERINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getdatetimepickerinfo)
 /// message parameters.
 ///
@@ -40,8 +38,6 @@ impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getidealsize)
 /// message parameters.
 ///
@@ -65,8 +61,6 @@ impl<'a> MsgSend for GetIdealSize<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`DTM_GETMCCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmccolor)
 /// message parameters.
@@ -95,8 +89,6 @@ impl MsgSend for GetMcColor {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_GETMCFONT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcfont)
 /// message, which has no parameters.
 ///
@@ -121,8 +113,6 @@ impl MsgSend for GetMcFont {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`DTM_GETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcstyle)
 /// message, which has no parameters.
@@ -149,8 +139,6 @@ impl MsgSend for GetMcStyle {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_GETMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmonthcal)
 /// message, which has no parameters.
 ///
@@ -176,8 +164,6 @@ impl MsgSend for GetMonthCalendar {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_GETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getrange)
 /// message parameters.
 ///
@@ -201,8 +187,6 @@ impl<'a> MsgSend for GetRange<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`DTM_GETSYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getsystemtime)
 /// message parameters.
@@ -232,8 +216,6 @@ impl<'a> MsgSend for GetSystemTime<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`DTM_SETFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setformat)
 /// message parameters.
@@ -265,8 +247,6 @@ impl<'a> MsgSend for SetFormat<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_SETMCCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmccolor)
 /// message parameters.
 ///
@@ -295,8 +275,6 @@ impl MsgSend for SetMcColor {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_SETMCFONT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmcfont)
 /// message parameters.
 ///
@@ -321,8 +299,6 @@ impl MsgSend for SetMcFont {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`DTM_SETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmcstyle)
 /// message parameters.
@@ -351,8 +327,6 @@ impl MsgSend for SetMcStyle {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`DTM_SETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setrange)
 /// message parameters.
 ///
@@ -380,8 +354,6 @@ impl<'a> MsgSend for SetRange<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`DTM_SETSYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setsystemtime)
 /// message parameters.

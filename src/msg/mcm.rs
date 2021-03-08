@@ -34,8 +34,6 @@ impl<'a> MsgSend for GetCurSel<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`MCM_GETMINREQRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getminreqrect)
 /// message parameters.
 ///
@@ -63,8 +61,6 @@ impl<'a> MsgSend for GetMinReqRect<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`MCM_GETMONTHDELTA`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getmonthdelta)
 /// message, which has no parameters.
 ///
@@ -86,8 +82,6 @@ impl MsgSend for GetMonthDelta {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`MCM_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcursel)
 /// message parameters.
@@ -116,8 +110,6 @@ impl<'a> MsgSend for SetCurSel<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`MCM_SETCURRENTVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcurrentview)
 /// message parameters.
 ///
@@ -144,8 +136,6 @@ impl MsgSend for SetCurrentView {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`MCM_SETTODAY`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-settoday)
 /// message parameters.

@@ -60,8 +60,6 @@ impl<'a> MsgSend for GetItemDropDownRect<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`HDM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemrect)
 /// message parameters.
 ///
@@ -90,8 +88,6 @@ impl<'a> MsgSend for GetItemRect<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`HDM_GETORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getorderarray)
 /// message parameters.
 ///
@@ -118,8 +114,6 @@ impl<'a> MsgSend for GetOrderArray<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`HDM_GETOVERFLOWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getoverflowrect)
 /// message parameters.

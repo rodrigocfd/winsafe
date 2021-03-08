@@ -37,8 +37,6 @@ impl<'a> MsgSend for GetIdealSize<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BCM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getimagelist)
 /// message parameters.
 ///
@@ -65,8 +63,6 @@ impl<'a> MsgSend for GetImageList<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BCM_GETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnote)
 /// message parameters.
@@ -95,8 +91,6 @@ impl<'a> MsgSend for GetNote<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BCM_GETNOTELENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnotelength)
 /// message, which has no parameters.
 ///
@@ -118,8 +112,6 @@ impl MsgSend for GetNoteLength {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BCM_GETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getsplitinfo)
 /// message parameters.
@@ -148,8 +140,6 @@ impl<'a> MsgSend for GetSplitInfo<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BCM_GETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-gettextmargin)
 /// message parameters.
 ///
@@ -176,8 +166,6 @@ impl<'a> MsgSend for GetTextMargin<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BCM_SETDROPDOWNSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setdropdownstate)
 /// message parameters.
@@ -206,8 +194,6 @@ impl MsgSend for SetDropDownState {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BCM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setimagelist)
 /// message parameters.
 ///
@@ -234,8 +220,6 @@ impl<'a> MsgSend for SetImageList<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BCM_SETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setnote)
 /// message parameters.
@@ -264,8 +248,6 @@ impl<'a> MsgSend for SetNote<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BCM_SETSHIELD`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setshield)
 /// message parameters.
 ///
@@ -292,8 +274,6 @@ impl MsgSend for SetShield {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BCM_SETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setsplitinfo)
 /// message parameters.
@@ -322,8 +302,6 @@ impl<'a> MsgSend for SetSplitInfo<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BCM_SETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-settextmargin)
 /// message parameters.
 ///
@@ -351,13 +329,9 @@ impl<'a> MsgSend for SetTextMargin<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg! { Click, co::BM::CLICK.into(),
 	/// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BM_GETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getcheck)
 /// message parameters.
@@ -380,8 +354,6 @@ impl MsgSend for GetCheck {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BM_GETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getimage)
 /// message parameters.
@@ -411,8 +383,6 @@ impl MsgSend for GetImage {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getstate)
 /// message, which has no parameters.
 ///
@@ -434,8 +404,6 @@ impl MsgSend for GetState {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BM_SETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setcheck)
 /// message parameters.
@@ -461,8 +429,6 @@ impl MsgSend for SetCheck {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BM_SETDONTCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setdontclick)
 /// message parameters.
 ///
@@ -486,8 +452,6 @@ impl MsgSend for SetDontClick {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BM_SETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setimage)
 /// message parameters.
@@ -519,8 +483,6 @@ impl MsgSend for SetImage {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`BM_SETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setstate)
 /// message parameters.
 ///
@@ -544,8 +506,6 @@ impl MsgSend for SetState {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`BM_SETSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setstyle)
 /// message parameters.

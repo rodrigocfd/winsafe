@@ -34,8 +34,6 @@ impl MsgSend for GetIcon {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`SB_GETPARTS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getparts)
 /// message parameters.
 ///
@@ -66,8 +64,6 @@ impl<'a> MsgSend for GetParts<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`SB_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettext)
 /// message parameters.
 ///
@@ -93,8 +89,6 @@ impl<'a> MsgSend for GetText<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`SB_GETTEXTLENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettextlength)
 /// message parameters.
 ///
@@ -118,8 +112,6 @@ impl MsgSend for GetTextLength {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`SB_GETTIPTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettiptext)
 /// message parameters.
@@ -145,8 +137,6 @@ impl<'a> MsgSend for GetTipText<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`SB_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-seticon)
 // message parameters.
@@ -177,8 +167,6 @@ impl MsgSend for SetIcon {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`SB_SETPARTS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setparts)
 /// message parameters.
 ///
@@ -205,8 +193,6 @@ impl<'a> MsgSend for SetParts<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`SB_SETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-settext)
 /// message parameters.
@@ -237,8 +223,6 @@ impl<'a> MsgSend for SetText<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`SB_SETTIPTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-settiptext)
 /// message parameters.
 pub struct SetTipText<'a> {
@@ -261,8 +245,6 @@ impl<'a> MsgSend for SetTipText<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`SB_SIMPLE`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-simple)
 /// message parameters.

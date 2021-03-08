@@ -57,8 +57,6 @@ impl MsgSendRecv for Activate {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_ACTIVATEAPP`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
 /// message parameters.
 ///
@@ -92,8 +90,6 @@ impl MsgSendRecv for ActivateApp {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 /// message parameters.
@@ -133,8 +129,6 @@ impl MsgSendRecv for AppCommand {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg_handleable! { CancelMode, co::WM::CANCELMODE,
 	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 }
@@ -150,8 +144,6 @@ empty_msg_handleable! { Close, co::WM::CLOSE,
 char_msg! { Char, co::WM::CHAR,
 	/// [`WM_CHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
 /// message parameters.
@@ -198,8 +190,6 @@ impl MsgSendRecv for Command {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_CONTEXTMENU`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
 /// message parameters.
 ///
@@ -234,8 +224,6 @@ impl MsgSendRecv for ContextMenu {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
 ///
@@ -267,8 +255,6 @@ impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 ctl_color_msg! { CtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
@@ -302,8 +288,6 @@ empty_msg_handleable! { Destroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_DROPFILES`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 /// message parameters.
 ///
@@ -336,8 +320,6 @@ impl MsgSendRecv for DropFiles {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
 /// message parameters.
 ///
@@ -369,8 +351,6 @@ impl MsgSendRecv for Enable {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_ENDSESSION`](https://docs.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 /// message parameters.
@@ -405,8 +385,6 @@ impl MsgSendRecv for EndSession {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_ENTERIDLE`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-enteridle)
 /// message parameters.
@@ -446,13 +424,9 @@ impl MsgSendRecv for EnterIdle {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg_handleable! { EnterSizeMove, co::WM::ENTERSIZEMOVE,
 	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 /// message parameters.
@@ -486,13 +460,9 @@ impl MsgSendRecv for EraseBkgnd {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg_handleable! { ExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_GETMINMAXINFO`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)
 /// message parameters.
@@ -526,8 +496,6 @@ impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_HELP`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-help)
 /// message parameters.
 ///
@@ -559,8 +527,6 @@ impl<'a> MsgSendRecv for Help<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
@@ -595,8 +561,6 @@ impl MsgSendRecv for InitDialog {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_INITMENUPOPUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
 /// message parameters.
@@ -634,8 +598,6 @@ impl MsgSendRecv for InitMenuPopup {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 char_msg! { KeyDown, co::WM::KEYDOWN,
 	/// [`WM_KEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 }
@@ -643,8 +605,6 @@ char_msg! { KeyDown, co::WM::KEYDOWN,
 char_msg! { KeyUp, co::WM::KEYUP,
 	/// [`WM_KEYUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-killfocus)
 /// message parameters.
@@ -684,8 +644,6 @@ impl MsgSendRecv for KillFocus {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 button_msg! { LButtonDblClk, co::WM::LBUTTONDBLCLK,
 	/// [`WM_LBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 }
@@ -717,8 +675,6 @@ button_msg! { MouseHover, co::WM::MOUSEHOVER,
 button_msg! { MouseMove, co::WM::MOUSEMOVE,
 	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_MOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-move)
 /// message parameters.
@@ -752,8 +708,6 @@ impl MsgSendRecv for Move {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_MOVING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
 /// message parameters.
 ///
@@ -785,8 +739,6 @@ impl<'a> MsgSendRecv for Moving<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_NCCALCSIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
 /// message parameters.
@@ -829,8 +781,6 @@ impl<'a, 'b> MsgSendRecv for NcCalcSize<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
 ///
@@ -863,13 +813,9 @@ impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg_handleable! { NcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_NCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 /// message parameters.
@@ -903,13 +849,9 @@ impl MsgSendRecv for NcPaint {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg_handleable! { Null, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
 /// message parameters.
@@ -962,13 +904,9 @@ impl<'a> Notify<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg_handleable! { Paint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_PARENTNOTIFY`](https://docs.microsoft.com/en-us/windows/win32/inputmsg/wm-parentnotify)
 /// message parameters.
@@ -1011,8 +949,6 @@ impl MsgSendRecv for ParentNotify {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_QUERYOPEN`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
 /// message, which has no parameters.
 ///
@@ -1041,8 +977,6 @@ impl MsgSendRecv for QueryOpen {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 button_msg! { RButtonDblClk, co::WM::RBUTTONDBLCLK,
 	/// [`WM_RBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 }
@@ -1054,8 +988,6 @@ button_msg! { RButtonDown, co::WM::RBUTTONDOWN,
 button_msg! { RButtonUp, co::WM::RBUTTONUP,
 	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 /// message parameters.
@@ -1088,8 +1020,6 @@ impl MsgSendRecv for SetFocus {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_SETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-setfont)
 /// message parameters.
@@ -1124,8 +1054,6 @@ impl MsgSendRecv for SetFont {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
 /// message parameters.
@@ -1164,8 +1092,6 @@ impl MsgSendRecv for SetIcon {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_SHOWWINDOW`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
 /// message parameters.
 ///
@@ -1199,8 +1125,6 @@ impl MsgSendRecv for ShowWindow {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 /// message parameters.
@@ -1241,8 +1165,6 @@ impl MsgSendRecv for Size {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_SIZING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
 /// message parameters.
 ///
@@ -1276,8 +1198,6 @@ impl<'a> MsgSendRecv for Sizing<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_STYLECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanged)
 /// message parameters.
@@ -1320,8 +1240,6 @@ impl<'a> MsgSendRecv for StyleChanged<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_STYLECHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanging)
 /// message parameters.
 ///
@@ -1363,13 +1281,9 @@ impl<'a> MsgSendRecv for StyleChanging<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 char_msg! { SysChar, co::WM::SYSCHAR,
 	/// [`WM_SYSCHAR`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_SYSCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syscommand)
 /// message parameters.
@@ -1405,8 +1319,6 @@ impl MsgSendRecv for SysCommand {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 char_msg! { SysDeadChar, co::WM::SYSDEADCHAR,
 	/// [`WM_SYSDEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 }
@@ -1422,8 +1334,6 @@ char_msg! { SysKeyUp, co::WM::SYSKEYUP,
 empty_msg_handleable! { ThemeChanged, co::WM::THEMECHANGED,
 	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 /// message parameters.
@@ -1465,8 +1375,6 @@ impl MsgSendRecv for Timer {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_WINDOWPOSCHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged)
 /// message parameters.
 ///
@@ -1499,8 +1407,6 @@ impl<'a> MsgSendRecv for WindowPosChanged<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`WM_WINDOWPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging)
 /// message parameters.
 ///
@@ -1532,8 +1438,6 @@ impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 button_msg! { XButtonDblClk, co::WM::XBUTTONDBLCLK,
 	/// [`WM_XBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)

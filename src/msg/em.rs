@@ -28,8 +28,6 @@ impl MsgSend for CanUndo {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`EM_UNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-undo)
 /// message, which has no parameters.
 ///

@@ -39,8 +39,6 @@ impl AtomStr {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// Variant parameter for:
 ///
 /// * [`BM_GETIMAGE`](crate::msg::bm::GetImage) `image`.
@@ -57,8 +55,6 @@ impl BitmapIcon {
 		}) as isize
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
@@ -84,8 +80,6 @@ impl BitmapPtrStr {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// Variant parameter for:
 ///
 /// * [`PostMessage`](crate::PostMessage) `hWnd`.
@@ -102,8 +96,6 @@ impl From<BroadNull> for *mut c_void {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant parameter for:
 ///
@@ -122,8 +114,6 @@ impl HwndHmenu {
 		}) as isize
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant parameter for:
 ///
@@ -148,8 +138,6 @@ impl HwndPlace {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// Variant parameter for:
 ///
 /// * [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) `data32`.
@@ -171,8 +159,6 @@ impl HwndPointId {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant parameter for:
 ///
@@ -197,8 +183,6 @@ impl IdIdcStr {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// Variant parameter for:
 ///
 /// * [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
@@ -221,8 +205,6 @@ impl IdIdiStr {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
@@ -258,8 +240,6 @@ impl IdMenu {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
@@ -301,8 +281,6 @@ impl IdPos {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// Variant parameter for:
 ///
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpTemplateName`.
@@ -325,8 +303,6 @@ impl IdStr {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// Variant parameter for:
 ///
 /// * [`WmNcCalcSize`](crate::msg::wm::NcCalcSize) `data`.
@@ -336,8 +312,6 @@ pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`RECT`](crate::RECT).
 	Rect(&'b mut RECT),
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant value returned by [`RegQueryValueEx`](crate::HKEY::RegQueryValueEx).
 pub enum RegistryValue {
@@ -387,8 +361,6 @@ impl RegistryValue {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Variant parameter for:
 ///

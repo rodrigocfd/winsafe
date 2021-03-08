@@ -35,8 +35,6 @@ impl<'a> MsgSend for AddString<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`CB_DELETESTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-deletestring)
 /// message parameters.
 ///
@@ -63,8 +61,6 @@ impl MsgSend for DeleteString {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`CB_DIR`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-dir)
 /// message parameters.
@@ -94,8 +90,6 @@ impl<'a> MsgSend for Dir<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`CB_FINDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-findstring)
 /// message parameters.
@@ -128,8 +122,6 @@ impl<'a> MsgSend for FindString<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`CB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcount)
 /// message, which has no parameters.
 ///
@@ -155,8 +147,6 @@ impl MsgSend for GetCount {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`CB_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcursel)
 /// message, which has no parameters.
 ///
@@ -181,8 +171,6 @@ impl MsgSend for GetCurSel {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`CB_GETLBTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtext)
 /// message parameters.
@@ -212,8 +200,6 @@ impl<'a> MsgSend for GetLbText<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`CB_GETLBTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtextlen)
 /// message parameters.
 ///
@@ -241,8 +227,6 @@ impl MsgSend for GetLbTextLen {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`CB_GETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getminvisible)
 /// message, which has no parameters.
 ///
@@ -264,8 +248,6 @@ impl MsgSend for GetMinVisible {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`CB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gettopindex)
 /// message parameters.
@@ -291,8 +273,6 @@ impl MsgSend for GetTopIndex {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`CB_INITSTORAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-initstorage)
 /// message parameters.
@@ -322,13 +302,9 @@ impl MsgSend for InitStorage {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg! { ResetContent, co::CB::RESETCONTENT.into(),
 	/// [`CB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`CB_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setcursel)
 /// message parameters.
@@ -357,8 +333,6 @@ impl MsgSend for SetCurSel {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`CB_SETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setminvisible)
 /// message parameters.
 ///
@@ -386,8 +360,6 @@ impl MsgSend for SetMinVisible {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`CB_SETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-settopindex)
 /// message parameters.
 ///
@@ -414,8 +386,6 @@ impl MsgSend for SetTopIndex {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`CB_SHOWDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-showdropdown)
 /// message parameters.

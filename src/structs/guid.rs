@@ -31,8 +31,6 @@ impl GUID {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// COM class ID. Just a safe abstraction over a [`GUID`](crate::GUID).
 #[repr(C)]
 pub struct CLSID(GUID);
@@ -64,8 +62,6 @@ impl CLSID {
 		Self(GUID::new(p1, p2, p3, p4, p5))
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// COM interface ID. Just a safe abstraction over a [`GUID`](crate::GUID).
 #[repr(C)]

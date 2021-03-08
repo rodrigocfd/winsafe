@@ -38,8 +38,6 @@ impl<'a> MsgSend for AddFile<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-addstring)
 /// message parameters.
 ///
@@ -67,8 +65,6 @@ impl<'a> MsgSend for AddString<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_DELETESTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-deletestring)
 /// message parameters.
 ///
@@ -95,8 +91,6 @@ impl MsgSend for DeleteString {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_DIR`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-dir)
 /// message parameters.
@@ -126,8 +120,6 @@ impl<'a> MsgSend for Dir<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_FINDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-findstring)
 /// message parameters.
@@ -160,8 +152,6 @@ impl<'a> MsgSend for FindString<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_FINDSTRINGEXACT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-findstringexact)
 /// message parameters.
 ///
@@ -193,8 +183,6 @@ impl<'a> MsgSend for FindStringExact<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETANCHORINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getanchorindex)
 /// message, which has no parameters.
 ///
@@ -217,8 +205,6 @@ impl MsgSend for GetAnchorIndex {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETCARETINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getcaretindex)
 /// message, which has no parameters.
 ///
@@ -240,8 +226,6 @@ impl MsgSend for GetCaretIndex {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getcount)
 /// message, which has no parameters.
@@ -268,8 +252,6 @@ impl MsgSend for GetCount {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getcursel)
 /// message, which has no parameters.
 ///
@@ -295,8 +277,6 @@ impl MsgSend for GetCurSel {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gethorizontalextent)
 /// message, which has no parameters.
 ///
@@ -318,8 +298,6 @@ impl MsgSend for GetHorizontalExtent {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_GETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemdata)
 /// message parameters.
@@ -349,8 +327,6 @@ impl MsgSend for GetItemData {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemheight)
 /// message parameters.
 ///
@@ -377,8 +353,6 @@ impl MsgSend for GetItemHeight {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemrect)
 /// message parameters.
@@ -408,8 +382,6 @@ impl<'a> MsgSend for GetItemRect<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETLISTBOXINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getlistboxinfo)
 /// message, which has no parameters.
 ///
@@ -431,8 +403,6 @@ impl MsgSend for GetListBoxInfo {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_GETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getsel)
 /// message parameters.
@@ -461,8 +431,6 @@ impl MsgSend for GetSel {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETSELCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getselcount)
 /// message, which has no parameters.
 ///
@@ -487,8 +455,6 @@ impl MsgSend for GetSelCount {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_GETSELITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getselitems)
 /// message parameters.
@@ -516,8 +482,6 @@ impl<'a> MsgSend for GetSelItems<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettext)
 /// message parameters.
@@ -547,8 +511,6 @@ impl<'a> MsgSend for GetText<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettextlen)
 /// message parameters.
 ///
@@ -576,8 +538,6 @@ impl MsgSend for GetTextLen {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettopindex)
 /// message parameters.
 ///
@@ -602,8 +562,6 @@ impl MsgSend for GetTopIndex {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_INITSTORAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-initstorage)
 /// message parameters.
@@ -633,8 +591,6 @@ impl MsgSend for InitStorage {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_INSERTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-insertstring)
 /// message parameters.
 ///
@@ -662,8 +618,6 @@ impl<'a> MsgSend for InsertString<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_ITEMFROMPOINT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-itemfrompoint)
 /// message parameters.
 ///
@@ -688,13 +642,9 @@ impl MsgSend for ItemFromPoint {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg! { ResetContent, co::LB::RESETCONTENT.into(),
 	/// [`LB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-resetcontent)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_SELECTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selectstring)
 /// message parameters.
@@ -727,8 +677,6 @@ impl<'a> MsgSend for SelectString<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LB_SELITEMRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selitemrange)
 /// message parameters.
 ///
@@ -757,8 +705,6 @@ impl MsgSend for SelItemRange {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LB_SETANCHORINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setanchorindex)
 /// message parameters.

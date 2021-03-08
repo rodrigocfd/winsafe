@@ -33,8 +33,6 @@ pub trait MsgSendRecv: MsgSend {
 	fn from_generic_wm(parm: WndMsg) -> Self;
 }
 
-//------------------------------------------------------------------------------
-
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
 /// parameters: `WPARAM` and `LPARAM`.

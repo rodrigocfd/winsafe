@@ -32,8 +32,6 @@ impl MsgSend for GetIcon {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`STM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-seticon)
 /// message parameters.
 ///

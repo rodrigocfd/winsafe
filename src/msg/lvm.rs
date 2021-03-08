@@ -47,8 +47,6 @@ impl MsgSend for ApproximateViewRect {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_ARRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-arrange)
 /// message parameters.
 ///
@@ -76,13 +74,9 @@ impl MsgSend for Arrange {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 empty_msg! { CancelEditLabel, co::LVM::CANCELEDITLABEL.into(),
 	/// [`LVM_CANCELEDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_DELETEALLITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteallitems)
 /// message, which has no parameters.
@@ -108,8 +102,6 @@ impl MsgSend for DeleteAllItems {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteitem)
 /// message parameters.
@@ -138,8 +130,6 @@ impl MsgSend for DeleteItem {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_ENSUREVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-ensurevisible)
 /// message parameters.
 ///
@@ -167,8 +157,6 @@ impl MsgSend for EnsureVisible {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_FINDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-finditem)
 /// message parameters.
@@ -201,8 +189,6 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_GETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getbkcolor)
 /// message, which has no parameters.
 ///
@@ -224,8 +210,6 @@ impl MsgSend for GetBkColor {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
 /// message parameters.
@@ -255,8 +239,6 @@ impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_GETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnwidth)
 /// message parameters.
 ///
@@ -284,8 +266,6 @@ impl MsgSend for GetColumnWidth {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_GETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getextendedlistviewstyle)
 /// message, which has no parameters.
 ///
@@ -307,8 +287,6 @@ impl MsgSend for GetExtendedListViewStyle {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
 /// message, which has no parameters.
@@ -334,8 +312,6 @@ impl MsgSend for GetHeader {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
 /// message parameters.
@@ -365,8 +341,6 @@ impl MsgSend for GetNextItem {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
 /// message, which has no parameters.
 ///
@@ -388,8 +362,6 @@ impl MsgSend for GetItemCount {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_GETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemstate)
 /// message parameters.
@@ -416,8 +388,6 @@ impl MsgSend for GetItemState {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_GETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemtext)
 /// message parameters.
 ///
@@ -443,8 +413,6 @@ impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_GETSELECTEDCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcount)
 /// message, which has no parameters.
 ///
@@ -467,8 +435,6 @@ impl MsgSend for GetSelectedCount {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_GETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getview)
 /// message, which has no parameters.
 ///
@@ -490,8 +456,6 @@ impl MsgSend for GetView {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_INSERTCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertcolumn)
 /// message parameters.
@@ -521,8 +485,6 @@ impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
 ///
@@ -550,8 +512,6 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_ISGROUPVIEWENABLED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isgroupviewenabled)
 /// message, which has no parameters.
 ///
@@ -573,8 +533,6 @@ impl MsgSend for IsGroupViewEnabled {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_ISITEMVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
 /// message parameters.
@@ -599,8 +557,6 @@ impl MsgSend for IsItemVisible {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_REDRAWITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-redrawitems)
 /// message parameters.
@@ -630,8 +586,6 @@ impl MsgSend for RedrawItems {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
 ///
@@ -659,8 +613,6 @@ impl MsgSend for Scroll {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
@@ -690,8 +642,6 @@ impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setextendedlistviewstyle)
 /// message parameters.
 ///
@@ -716,8 +666,6 @@ impl MsgSend for SetExtendedListViewStyle {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
@@ -745,8 +693,6 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_SETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemstate)
 /// message parameters.
@@ -776,8 +722,6 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_SETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
 /// message parameters.
 ///
@@ -806,8 +750,6 @@ impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// [`LVM_SETSELECTEDCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setselectedcolumn)
 /// message parameters.
 ///
@@ -831,8 +773,6 @@ impl MsgSend for SetSelectedColumn {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_SETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setview)
 /// message parameters.
@@ -860,8 +800,6 @@ impl MsgSend for SetView {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// [`LVM_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-update)
 /// message parameters.
