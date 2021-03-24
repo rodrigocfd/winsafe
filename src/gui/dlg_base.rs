@@ -5,7 +5,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::ui_font;
-use crate::gui::traits::Parent;
+use crate::gui::traits::{Parent, private::ParentPriv};
 use crate::handles::{HFONT, HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
@@ -20,6 +20,12 @@ impl Drop for DlgBase {
 		if !self.hwnd_ref().is_null() {
 			self.hwnd_ref().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 		}
+	}
+}
+
+impl ParentPriv for DlgBase {
+	fn is_dialog(&self) -> bool {
+		true
 	}
 }
 

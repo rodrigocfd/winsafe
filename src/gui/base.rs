@@ -17,26 +17,6 @@ pub struct Base {
 	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
 }
 
-impl Parent for Base {
-	fn hwnd_ref(&self) -> &HWND {
-		&self.hwnd
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add event after window is created.");
-		}
-		&self.user_events
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add privileged event after window is created.");
-		}
-		&self.privileged_events
-	}
-}
-
 impl Base {
 	pub fn new(parent: Option<&dyn Parent>) -> Base {
 		Self {
@@ -45,6 +25,10 @@ impl Base {
 			privileged_events: WindowEvents::new(),
 			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
 		}
+	}
+
+	pub fn hwnd_ref(&self) -> &HWND {
+		&self.hwnd
 	}
 
 	pub fn set_hwnd(&mut self, hwnd: HWND) {
@@ -60,6 +44,20 @@ impl Base {
 			Some(hparent) => hparent.hinstance(),
 			None => HINSTANCE::GetModuleHandle(None)?,
 		})
+	}
+
+	pub fn user_events_ref(&self) -> &WindowEvents {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add event after window is created.");
+		}
+		&self.user_events
+	}
+
+	pub fn privileged_events_ref(&self) -> &WindowEvents {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add privileged event after window is created.");
+		}
+		&self.privileged_events
 	}
 
 	pub fn process_effective_message(&mut self, wm_any: WndMsg) -> ProcessResult {

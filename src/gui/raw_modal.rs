@@ -8,7 +8,7 @@ use crate::gui::events::WindowEvents;
 use crate::gui::immut::Immut;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
-use crate::gui::traits::Parent;
+use crate::gui::traits::{Parent, private::ParentPriv};
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
@@ -20,6 +20,12 @@ struct Obj { // actual fields of RawModal
 	base: RawBase,
 	opts: WindowModalOpts,
 	hchild_prev_focus_parent: Option<HWND>,
+}
+
+impl ParentPriv for RawModal {
+	fn is_dialog(&self) -> bool {
+		self.0.base.is_dialog()
+	}
 }
 
 impl Parent for RawModal {

@@ -6,12 +6,18 @@ use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
+use crate::gui::traits::{Parent, private::ParentPriv};
 use crate::handles::HWND;
 
 #[derive(Clone)]
 pub struct DlgModal {
 	base: Arc<DlgBase>,
+}
+
+impl ParentPriv for DlgModal {
+	fn is_dialog(&self) -> bool {
+		self.base.is_dialog()
+	}
 }
 
 impl Parent for DlgModal {

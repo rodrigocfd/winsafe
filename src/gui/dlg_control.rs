@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEvents;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{Child, Parent, private::ParentPriv};
 use crate::handles::HWND;
 use crate::structs::POINT;
 
@@ -18,6 +18,12 @@ struct Obj { // actual fields of DlgControl
 	base: DlgBase,
 	position: POINT,
 	ctrl_id: Option<u16>,
+}
+
+impl ParentPriv for DlgControl {
+	fn is_dialog(&self) -> bool {
+		self.0.base.is_dialog()
+	}
 }
 
 impl Parent for DlgControl {
@@ -61,10 +67,10 @@ impl DlgControl {
 	}
 
 	fn default_message_handlers(&self, parent: &dyn Parent) {
-		parent.privileged_events_ref().wm_init_dialog({
+		parent.privileged_events_ref().wm(parent.init_msg(), {
 			let self2 = self.clone();
 			move |p| {
-				|_| -> WinResult<bool> {
+				|_| -> WinResult<isize> {
 					// Create the control.
 					self2.0.base.create_dialog_param()?; // may panic
 
@@ -82,9 +88,9 @@ impl DlgControl {
 						co::GWLP::ID,
 						self2.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as isize,
 					);
-					Ok(true)
+					Ok(0)
 				}
-				(p).unwrap_or_else(|err| { PostQuitMessage(err); true })
+				(p).unwrap_or_else(|err| { PostQuitMessage(err); 0 })
 			}
 		});
 

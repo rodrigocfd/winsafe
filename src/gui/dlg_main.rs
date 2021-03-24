@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
+use crate::gui::traits::{Parent, private::ParentPriv};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::wm;
 
@@ -18,6 +18,12 @@ struct Obj { // actual fields of DlgMain
 	base: DlgBase,
 	icon_id: Option<i32>,
 	accel_table_id: Option<i32>,
+}
+
+impl ParentPriv for DlgMain {
+	fn is_dialog(&self) -> bool {
+		self.0.base.is_dialog()
+	}
 }
 
 impl Parent for DlgMain {

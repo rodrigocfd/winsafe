@@ -1,8 +1,19 @@
+use crate::co;
 use crate::gui::events::WindowEvents;
 use crate::handles::HWND;
 
+pub mod private {
+	/// Internal trait to any window which can host child controls.
+	pub trait ParentPriv {
+		fn is_dialog(&self) -> bool;
+		fn init_msg(&self) -> super::co::WM {
+			if self.is_dialog() { super::co::WM::INITDIALOG } else { super::co::WM::CREATE }
+		}
+	}
+}
+
 /// Trait to any window which can host child controls.
-pub trait Parent {
+pub trait Parent: private::ParentPriv {
 	/// Returns a reference to the window handle.
 	fn hwnd_ref(&self) -> &HWND;
 

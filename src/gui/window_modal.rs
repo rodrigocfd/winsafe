@@ -2,7 +2,7 @@ use crate::aliases::WinResult;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEvents;
 use crate::gui::raw_modal::{WindowModalOpts, RawModal};
-use crate::gui::traits::Parent;
+use crate::gui::traits::{Parent, private::ParentPriv};
 use crate::handles::HWND;
 
 /// An user modal window, which can handle events.
@@ -19,6 +19,15 @@ enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
 
 unsafe impl Send for WindowModal {}
 unsafe impl Sync for WindowModal {}
+
+impl ParentPriv for WindowModal {
+	fn is_dialog(&self) -> bool {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.is_dialog(),
+			RawDlg::Dlg(d) => d.is_dialog(),
+		}
+	}
+}
 
 impl Parent for WindowModal {
 	fn hwnd_ref(&self) -> &HWND {

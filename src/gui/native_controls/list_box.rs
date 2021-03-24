@@ -50,7 +50,7 @@ impl ListBox {
 				},
 			),
 		);
-		parent.privileged_events_ref().wm_create({
+		parent.privileged_events_ref().wm(parent.init_msg(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});

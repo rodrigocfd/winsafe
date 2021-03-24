@@ -1,7 +1,7 @@
 use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEvents;
 use crate::gui::raw_control::{WindowControlOpts, RawControl};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{Child, Parent, private::ParentPriv};
 use crate::handles::HWND;
 use crate::structs::POINT;
 
@@ -19,6 +19,15 @@ enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
 
 unsafe impl Send for WindowControl {}
 unsafe impl Sync for WindowControl {}
+
+impl ParentPriv for WindowControl {
+	fn is_dialog(&self) -> bool {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.is_dialog(),
+			RawDlg::Dlg(d) => d.is_dialog(),
+		}
+	}
+}
 
 impl Parent for WindowControl {
 	fn hwnd_ref(&self) -> &HWND {
