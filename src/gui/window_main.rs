@@ -8,14 +8,6 @@ use crate::gui::raw_main::{WindowMainOpts, RawMain};
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
 
-#[derive(Clone)]
-enum RawDlg {
-	Raw(RawMain),
-	Dlg(DlgMain),
-}
-
-//------------------------------------------------------------------------------
-
 /// An user main window, which can handle events. Usually, this is the first
 /// window of your application, launched directly from the `main` function.
 ///
@@ -121,28 +113,33 @@ enum RawDlg {
 /// }
 /// ```
 #[derive(Clone)]
-pub struct WindowMain(RawDlg);
+pub struct WindowMain {
+	raw_dlg: RawDlg,
+}
+
+#[derive(Clone)]
+enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 
 unsafe impl Send for WindowMain {}
 unsafe impl Sync for WindowMain {}
 
 impl Parent for WindowMain {
 	fn hwnd_ref(&self) -> &HWND {
-		match &self.0 {
+		match &self.raw_dlg {
 			RawDlg::Raw(r) => r.hwnd_ref(),
 			RawDlg::Dlg(d) => d.hwnd_ref(),
 		}
 	}
 
 	fn user_events_ref(&self) -> &WindowEvents {
-		match &self.0 {
+		match &self.raw_dlg {
 			RawDlg::Raw(r) => r.user_events_ref(),
 			RawDlg::Dlg(d) => d.user_events_ref(),
 		}
 	}
 
 	fn privileged_events_ref(&self) -> &WindowEvents {
-		match &self.0 {
+		match &self.raw_dlg {
 			RawDlg::Raw(r) => r.privileged_events_ref(),
 			RawDlg::Dlg(d) => d.privileged_events_ref(),
 		}
@@ -153,11 +150,11 @@ impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
-		Self(
-			RawDlg::Raw(
+		Self {
+			raw_dlg: RawDlg::Raw(
 				RawMain::new(opts),
 			),
-		)
+		}
 	}
 
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
@@ -167,11 +164,11 @@ impl WindowMain {
 		icon_id: Option<i32>,
 		accel_table_id: Option<i32>) -> WindowMain
 	{
-		Self(
-			RawDlg::Dlg(
+		Self {
+			raw_dlg: RawDlg::Dlg(
 				DlgMain::new(dialog_id, icon_id, accel_table_id),
 			),
-		)
+		}
 	}
 
 	/// Returns the underlying handle for this window.
@@ -206,7 +203,7 @@ impl WindowMain {
 		InitCommonControls();
 		create_ui_font()?;
 
-		match &self.0 {
+		match &self.raw_dlg {
 			RawDlg::Raw(r) => r.run_main(cmd_show)?,
 			RawDlg::Dlg(d) => d.run_main(cmd_show)?,
 		}

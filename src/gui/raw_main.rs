@@ -227,10 +227,10 @@ impl Default for WindowMainOpts {
 }
 
 impl WindowMainOpts {
-	fn generate_wndclassex<'a, 'b>( // https://stackoverflow.com/q/65481548/6923555
+	fn generate_wndclassex<'a>( // https://stackoverflow.com/q/65481548/6923555
 		&self,
 		hinst: HINSTANCE,
-		wcx: &mut WNDCLASSEX<'_, 'a>,
+		wcx: &mut WNDCLASSEX<'a, 'a>,
 		class_name_buf: &'a mut WString) -> WinResult<()>
 	{
 		wcx.hInstance = hinst;

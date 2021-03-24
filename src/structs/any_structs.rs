@@ -101,7 +101,7 @@ impl COLORREF {
 	/// [`GetGValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgvalue)
 	/// method. Retrieves the green intensity.
 	pub fn GetGValue(self) -> u8 {
-		LOBYTE(LOWORD(self.0) >> 8)
+		LOBYTE(LOWORD(self.0 >> 8))
 	}
 
 	/// [`GetBValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbvalue)
