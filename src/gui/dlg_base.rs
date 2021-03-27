@@ -112,6 +112,7 @@ impl DlgBase {
 			// Execute privileged closures.
 			let ref_self = unsafe { &mut *ptr_self };
 			ref_self.base.process_privileged_messages(wm_any);
+
 			if wm_any.msg_id == co::WM::INITDIALOG {
 				// Child controls are created in privileged closures, so we set the
 				// system font only now.

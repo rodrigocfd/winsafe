@@ -8,9 +8,12 @@ use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// The result of processing a message.
 pub enum ProcessResult {
-	NotHandled,            // message was not handler because no such handler is stored
-	HandledWithRet(isize), // return value is meaningful
-	HandledWithoutRet,     // return value is not meaningful, whatever default value
+	/// Message was not handled because no function was found.
+	NotHandled,
+	/// Message handled, and return value is meaningful.
+	HandledWithRet(isize),
+	/// Message handled, but you should return the default value (0 or FALSE).
+	HandledWithoutRet,
 }
 
 //------------------------------------------------------------------------------
@@ -39,42 +42,6 @@ struct Obj { // actual fields of WindowEvents
 		(u16, co::NM), // idFrom, code
 		Box<dyn FnMut(wm::Notify) -> Option<isize> + 'static>, // return value may be meaningful
 	>,
-}
-
-/// A message which has no parameters and returns zero.
-macro_rules! wm_empty {
-	(
-		$name:ident, $wmconst:expr,
-		$(#[$doc:meta])*
-	) => {
-		$(#[$doc])*
-		pub fn $name<F>(&self, func: F)
-			where F: FnMut() + 'static,
-		{
-			self.add_msg($wmconst, {
-				let mut func = func;
-				move |_| { func(); None } // return value is never meaningful
-			});
-		}
-	};
-}
-
-/// A message with parameters which returns zero.
-macro_rules! wm_ret_none {
-	(
-		$name:ident, $wmconst:expr, $parm:ty,
-		$(#[$doc:meta])*
-	) => {
-		$(#[$doc])*
-		pub fn $name<F>(&self, func: F)
-			where F: FnMut($parm) + 'static,
-		{
-			self.add_msg($wmconst, {
-				let mut func = func;
-				move |p| { func(<$parm>::from_generic_wm(p)); None } // return value is never meaningful
-			});
-		}
-	};
 }
 
 impl WindowEvents {
@@ -196,6 +163,42 @@ impl WindowEvents {
 	{
 		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));
 	}
+}
+
+/// A message which has no parameters and returns zero.
+macro_rules! wm_empty {
+	(
+		$name:ident, $wmconst:expr,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut() + 'static,
+		{
+			self.add_msg($wmconst, {
+				let mut func = func;
+				move |_| { func(); None } // return value is never meaningful
+			});
+		}
+	};
+}
+
+/// A message with parameters which returns zero.
+macro_rules! wm_ret_none {
+	(
+		$name:ident, $wmconst:expr, $parm:ty,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut($parm) + 'static,
+		{
+			self.add_msg($wmconst, {
+				let mut func = func;
+				move |p| { func(<$parm>::from_generic_wm(p)); None } // return value is never meaningful
+			});
+		}
+	};
 }
 
 impl WindowEvents {

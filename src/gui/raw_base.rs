@@ -79,7 +79,7 @@ impl RawBase {
 						let hinst = wcx.hInstance;
 						hinst.GetClassInfoEx(&wcx.lpszClassName(), wcx)
 					},
-					_ => Err(err),
+					_ => Err(err), // any other error will bubble up
 				}
 			})
 	}
@@ -115,7 +115,8 @@ impl RawBase {
 	/// the fields are set.
 	pub fn generate_wcx_class_name_hash(wcx: &WNDCLASSEX) -> WString {
 		WString::from_str(
-			&format!("WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
+			&format!(
+				"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
 				wcx.style,
 				match wcx.lpfnWndProc {
 					Some(p) => p as usize,

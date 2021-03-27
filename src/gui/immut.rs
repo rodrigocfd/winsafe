@@ -1,7 +1,7 @@
 use std::cell::UnsafeCell;
 use std::ops::Deref;
 
-/// Wraps an object providing internal immutability, with no performance penalty
+/// Wraps an object providing interior mutability, with no performance penalty
 /// but also no race condition guarantees. Be sure to use it safely.
 pub struct Immut<T>(UnsafeCell<T>);
 
