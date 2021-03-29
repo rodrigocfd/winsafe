@@ -4,11 +4,9 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
+use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::WindowEvents;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
-use crate::gui::traits::{Child, Parent};
-use crate::handles::HWND;
 use crate::structs::POINT;
 
 #[derive(Clone)]
@@ -20,33 +18,9 @@ struct Obj { // actual fields of DlgControl
 	ctrl_id: Option<u16>,
 }
 
-impl Parent for DlgControl {
-	fn hwnd_ref(&self) -> &HWND {
-		self.0.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		self.0.base.is_dialog()
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.0.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.0.base.privileged_events_ref()
-	}
-}
-
-impl Child for DlgControl {
-	fn hctrl_ref(&self) -> &HWND {
-		self.hwnd_ref()
-	}
-}
-
 impl DlgControl {
 	pub fn new(
-		parent: &dyn Parent,
+		parent_ref: &Base,
 		dialog_id: i32,
 		position: POINT,
 		ctrl_id: Option<u16>) -> DlgControl
@@ -54,18 +28,22 @@ impl DlgControl {
 		let dlg = Self(
 			Arc::new(
 				Obj {
-					base: DlgBase::new(Some(parent), dialog_id),
+					base: DlgBase::new(Some(parent_ref), dialog_id),
 					position,
 					ctrl_id,
 				},
 			),
 		);
-		dlg.default_message_handlers(parent);
+		dlg.default_message_handlers(parent_ref);
 		dlg
 	}
 
-	fn default_message_handlers(&self, parent: &dyn Parent) {
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+	pub fn base_ref(&self) -> &Base {
+		self.0.base.base_ref()
+	}
+
+	fn default_message_handlers(&self, parent_ref: &Base) {
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let self2 = self.clone();
 			move |p| {
 				|_| -> WinResult<isize> {
@@ -75,14 +53,14 @@ impl DlgControl {
 					// Set control position within parent.
 					let mut dlg_pos = self2.0.position;
 					multiply_dpi(Some(&mut dlg_pos), None)?;
-					self2.hwnd_ref().SetWindowPos(
+					self2.base_ref().hwnd_ref().SetWindowPos(
 						HwndPlace::None,
 						dlg_pos.x, dlg_pos.y, 0, 0,
 						co::SWP::NOZORDER | co::SWP::NOSIZE,
 					)?;
 
 					// Give the control an ID.
-					self2.hwnd_ref().SetWindowLongPtr(
+					self2.base_ref().hwnd_ref().SetWindowLongPtr(
 						co::GWLP::ID,
 						self2.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as isize,
 					);
@@ -92,9 +70,9 @@ impl DlgControl {
 			}
 		});
 
-		self.user_events_ref().wm_nc_paint({
+		self.base_ref().user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| paint_control_borders(&self2, p)
+			move |p| paint_control_borders(*self2.base_ref().hwnd_ref(), p)
 				.unwrap_or_else(|err| PostQuitMessage(err))
 		});
 	}

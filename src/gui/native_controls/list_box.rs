@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -6,31 +7,32 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ListBoxEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{lb, wm};
 use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [list box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
-/// control.
+/// control. Not to be confused with the more complex
+/// [list view](crate::gui::ListView) control.
 ///
-/// Not to be confused with the more complex [list view](crate::gui::ListView)
-/// control.
+/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct ListBox(Arc<Obj>);
 
 struct Obj { // actual fields of ListBox
-	base: NativeControlBase<ListBoxEvents>,
+	base: NativeControlBase,
 	opts_id: OptsId<ListBoxOpts>,
+	events: ListBoxEvents,
 }
 
 unsafe impl Send for ListBox {}
 unsafe impl Sync for ListBox {}
 
 impl Child for ListBox {
-	fn hctrl_ref(&self) -> &HWND {
-		self.0.base.hctrl_ref()
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -38,43 +40,48 @@ impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ListBoxOpts) -> ListBox {
+		let parent_ref = baseref_from_parent(parent);
 		let opts = ListBoxOpts::define_ctrl_id(opts);
+		let ctrl_id = opts.ctrl_id;
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						ListBoxEvents::new(parent, opts.ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
+					events: ListBoxEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
+
 		new_self
 	}
 
 	/// Instantiates a new `ListBox` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ListBox {
+		let parent_ref = baseref_from_parent(parent);
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						ListBoxEvents::new(parent, ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
+					events: ListBoxEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm_init_dialog({
+
+		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
+
 		new_self
 	}
 

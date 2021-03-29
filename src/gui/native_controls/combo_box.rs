@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -6,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ComboBoxEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{cb, wm};
 use crate::structs::{POINT, SIZE};
@@ -15,20 +16,23 @@ use crate::WString;
 /// Native
 /// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
+///
+/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct ComboBox(Arc<Obj>);
 
 struct Obj { // actual fields of ComboBox
-	base: NativeControlBase<ComboBoxEvents>,
+	base: NativeControlBase,
 	opts_id: OptsId<ComboBoxOpts>,
+	events: ComboBoxEvents,
 }
 
 unsafe impl Send for ComboBox {}
 unsafe impl Sync for ComboBox {}
 
 impl Child for ComboBox {
-	fn hctrl_ref(&self) -> &HWND {
-		self.0.base.hctrl_ref()
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -36,43 +40,48 @@ impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ComboBoxOpts) -> ComboBox {
+		let parent_ref = baseref_from_parent(parent);
 		let opts = ComboBoxOpts::define_ctrl_id(opts);
+		let ctrl_id = opts.ctrl_id;
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						ComboBoxEvents::new(parent, opts.ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
+					events: ComboBoxEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
+
 		new_self
 	}
 
 	/// Instantiates a new `ComboBox` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ComboBox {
+		let parent_ref = baseref_from_parent(parent);
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						ComboBoxEvents::new(parent, ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
+					events: ComboBoxEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm_init_dialog({
+
+		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
+
 		new_self
 	}
 

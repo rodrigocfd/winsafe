@@ -1,6 +1,9 @@
+use std::any::Any;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
+use crate::gui::base::Base;
 use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEvents;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
@@ -8,11 +11,14 @@ use crate::gui::raw_main::{WindowMainOpts, RawMain};
 use crate::gui::traits::Parent;
 use crate::handles::HWND;
 
+#[derive(Clone)]
+enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
+
 /// An user main window, which can handle events. Usually, this is the first
-/// window of your application, launched directly from the `main` function.
+/// window of your application, launched directly from the `main` function. Can
+/// be programatically created or load a dialog resource from a `.rc` script.
 ///
-/// A `WindowMain` window can be programatically created or load a dialog
-/// resource from a `.rc` script.
+/// Implements [`Parent`](crate::gui::Parent) trait.
 ///
 /// # Examples
 ///
@@ -117,39 +123,12 @@ pub struct WindowMain {
 	raw_dlg: RawDlg,
 }
 
-#[derive(Clone)]
-enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
-
 unsafe impl Send for WindowMain {}
 unsafe impl Sync for WindowMain {}
 
 impl Parent for WindowMain {
-	fn hwnd_ref(&self) -> &HWND {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.hwnd_ref(),
-			RawDlg::Dlg(d) => d.hwnd_ref(),
-		}
-	}
-
-	fn is_dialog(&self) -> bool {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.is_dialog(),
-			RawDlg::Dlg(d) => d.is_dialog(),
-		}
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.user_events_ref(),
-			RawDlg::Dlg(d) => d.user_events_ref(),
-		}
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.privileged_events_ref(),
-			RawDlg::Dlg(d) => d.privileged_events_ref(),
-		}
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -178,12 +157,19 @@ impl WindowMain {
 		}
 	}
 
+	pub(crate) fn base_ref(&self) -> &Base {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.base_ref(),
+			RawDlg::Dlg(d) => d.base_ref(),
+		}
+	}
+
 	/// Returns the underlying handle for this window.
 	///
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		*self.hwnd_ref()
+		*self.base_ref().hwnd_ref()
 	}
 
 	/// Exposes the window events.
@@ -193,7 +179,7 @@ impl WindowMain {
 	/// Panics if the window is already created. Events must be set before window
 	/// creation.
 	pub fn on(&self) -> &WindowEvents {
-		self.user_events_ref()
+		self.base_ref().user_events_ref()
 	}
 
 	/// Physically creates the window, then runs the main application loop. This

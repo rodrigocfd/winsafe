@@ -20,7 +20,7 @@ struct Obj { // actual fields of DlgMain
 	accel_table_id: Option<i32>,
 }
 
-impl Parent for DlgMain {
+/*impl Parent for DlgMain {
 	fn hwnd_ref(&self) -> &HWND {
 		self.0.base.hwnd_ref()
 	}
@@ -36,7 +36,7 @@ impl Parent for DlgMain {
 	fn privileged_events_ref(&self) -> &WindowEvents {
 		self.0.base.privileged_events_ref()
 	}
-}
+}*/
 
 impl DlgMain {
 	pub fn new(
@@ -57,9 +57,13 @@ impl DlgMain {
 		dlg
 	}
 
+	pub fn base_ref(&self) -> &Base {
+		self.0.base.base_ref()
+	}
+
 	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
 		self.0.base.create_dialog_param()?; // may panic
-		let hinst = self.0.base.parent_hinstance()?;
+		let hinst = self.base_ref().parent_hinstance()?;
 
 		let haccel = match self.0.accel_table_id {
 			None => None,
@@ -67,20 +71,20 @@ impl DlgMain {
 		};
 
 		self.set_icon_if_any(hinst)?;
-		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.base_ref().hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
 		Base::run_main_loop(haccel) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
-		self.user_events_ref().wm_close({
+		self.base_ref().user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
-				self2.hwnd_ref().DestroyWindow();
+				self2.base_ref().hwnd_ref().DestroyWindow();
 			}
 		});
 
-		self.user_events_ref().wm_nc_destroy(|| {
+		self.base_ref().user_events_ref().wm_nc_destroy(|| {
 			PostQuitMessage(co::ERROR::SUCCESS);
 		});
 	}
@@ -89,14 +93,14 @@ impl DlgMain {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {
-			self.hwnd_ref().SendMessage(
+			self.base_ref().hwnd_ref().SendMessage(
 				wm::SetIcon {
 					hicon: hinst.LoadImageIcon(IdStr::Id(id), 16, 16, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::SMALL,
 				},
 			);
 
-			self.hwnd_ref().SendMessage(
+			self.base_ref().hwnd_ref().SendMessage(
 				wm::SetIcon {
 					hicon: hinst.LoadImageIcon(IdStr::Id(id), 32, 32, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::BIG,

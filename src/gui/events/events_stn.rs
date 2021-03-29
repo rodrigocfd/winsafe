@@ -1,35 +1,23 @@
 use std::ptr::NonNull;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
 
-/// Exposes label control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications).
-///
-/// These event methods are just proxies to the
-/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-/// is the real responsible for the child event handling.
-///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct LabelEvents {
-	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
-	ctrl_id: u16,
+ctrl_events_proxy! {
+	/// Exposes label control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications).
+	///
+	/// These event methods are just proxies to the
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+	/// is the real responsible for the child event handling.
+	///
+	/// You cannot directly instantiate this object, it is created internally by the
+	/// control.
+	LabelEvents
 }
 
 impl LabelEvents {
-	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> LabelEvents {
-		Self {
-			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
-			ctrl_id,
-		}
-	}
-
-	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_user_events.as_ref() }
-	}
-
 	cmd_event! { stn_clicked, co::STN::CLICKED.into(),
 		/// [`STN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-clicked)
 		/// notification.

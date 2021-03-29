@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -7,7 +8,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{DateTimePickerEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{dtm, wm};
 use crate::structs::{POINT, SIZE};
@@ -15,20 +16,23 @@ use crate::structs::{POINT, SIZE};
 /// Native
 /// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
 /// control.
+///
+/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct DateTimePicker(Arc<Obj>);
 
 struct Obj { // actual fields of DateTimePicker
-	base: NativeControlBase<DateTimePickerEvents>,
+	base: NativeControlBase,
 	opts_id: OptsId<DateTimePickerOpts>,
+	events: DateTimePickerEvents,
 }
 
 unsafe impl Send for DateTimePicker {}
 unsafe impl Sync for DateTimePicker {}
 
 impl Child for DateTimePicker {
-	fn hctrl_ref(&self) -> &HWND {
-		self.0.base.hctrl_ref()
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -36,43 +40,48 @@ impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent
 	/// window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: DateTimePickerOpts) -> DateTimePicker {
+		let parent_ref = baseref_from_parent(parent);
 		let opts = DateTimePickerOpts::define_ctrl_id(opts);
+		let ctrl_id = opts.ctrl_id;
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						DateTimePickerEvents::new(parent, opts.ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
+					events: DateTimePickerEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
+
 		new_self
 	}
 
 	/// Instantiates a new `DateTimePicker` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> DateTimePicker {
+		let parent_ref = baseref_from_parent(parent);
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						DateTimePickerEvents::new(parent, ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
+					events: DateTimePickerEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm_init_dialog({
+
+		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
+
 		new_self
 	}
 

@@ -6,7 +6,7 @@ use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::immut::Immut;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, hwndref_from_child, Parent};
 use crate::handles::{HDWP, HWND};
 use crate::msg::wm;
 use crate::structs::{RECT, SIZE};
@@ -26,7 +26,7 @@ pub enum Resz {
 }
 
 struct Ctrl {
-	hctrl: NonNull<HWND>,
+	hwnd_ptr: NonNull<HWND>,
 	rc_orig: RECT, // original coordinates relative to parent
 	horz: Resz,
 	vert: Resz,
@@ -48,6 +48,8 @@ struct Obj { // actual fields of Resizer
 impl Resizer {
 	/// Instantiates a new `Resizer`.
 	pub fn new(parent: &dyn Parent) -> Resizer {
+		let parent_ref = baseref_from_parent(parent);
+
 		let resz = Self(
 			Arc::new(Immut::new(
 				Obj {
@@ -57,10 +59,12 @@ impl Resizer {
 				}
 			)),
 		);
-		parent.privileged_events_ref().wm_size({
+
+		parent_ref.privileged_events_ref().wm_size({
 			let resz = resz.clone();
 			move |p| resz.resize(&p).unwrap_or_else(|err| PostQuitMessage(err))
 		});
+
 		resz
 	}
 
@@ -108,7 +112,10 @@ impl Resizer {
 			panic!("No children being added to Resizer.");
 		} else if self.0.resize_called {
 			panic!("Cannot add children after Resizer started working.");
-		} else if children[0].hctrl_ref().is_null() {
+		}
+
+		let first_child_hwnd_ref = hwndref_from_child(children[0]);
+		if first_child_hwnd_ref.is_null() {
 			panic!("Cannot add a child control to Resizer before it's created.");
 		}
 
@@ -116,18 +123,19 @@ impl Resizer {
 			let ctrls = &mut self.0.as_mut().ctrls;
 			ctrls.reserve(children.len() + children.len());
 
-			let hparent = children[0].hctrl_ref().GetParent()?;
+			let hparent = first_child_hwnd_ref.GetParent()?;
 			if ctrls.is_empty() { // first call to add()
 				let rc_parent = hparent.GetClientRect()?;
 				self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
 			}
 
 			for child in children.iter() {
-				let mut rc_orig = child.hctrl_ref().GetWindowRect()?;
+				let child_hwnd_ref = hwndref_from_child(*child);
+				let mut rc_orig = child_hwnd_ref.GetWindowRect()?;
 				hparent.ScreenToClientRc(&mut rc_orig)?; // client coordinates relative to parent
 
 				ctrls.push(Ctrl {
-					hctrl: NonNull::from(child.hctrl_ref()), // ref implicitly converted to pointer
+					hwnd_ptr: NonNull::from(child_hwnd_ref), // ref implicitly converted to pointer
 					rc_orig,
 					horz,
 					vert,
@@ -159,7 +167,7 @@ impl Resizer {
 			}
 
 			hdwp.DeferWindowPos(
-				unsafe { *ctrl.hctrl.as_ref() },
+				unsafe { *ctrl.hwnd_ptr.as_ref() },
 				HwndPlace::None,
 				match ctrl.horz {
 					Resz::Repos => parent_cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.left,
@@ -181,6 +189,7 @@ impl Resizer {
 			)?;
 		}
 
+		self.0.as_mut().resize_called = true;
 		hdwp.EndDeferWindowPos()
 	}
 }

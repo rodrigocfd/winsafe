@@ -1,8 +1,8 @@
 use std::ptr::NonNull;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
 use crate::structs::{
 	NMCUSTOMDRAW,
 	NMITEMACTIVATE,
@@ -18,32 +18,20 @@ use crate::structs::{
 	NMLVSCROLL,
 };
 
-/// Exposes list view control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
-///
-/// These event methods are just proxies to the
-/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-/// is the real responsible for the child event handling.
-///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct ListViewEvents {
-	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
-	ctrl_id: u16,
+ctrl_events_proxy! {
+	/// Exposes list view control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
+	///
+	/// These event methods are just proxies to the
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+	/// is the real responsible for the child event handling.
+	///
+	/// You cannot directly instantiate this object, it is created internally by the
+	/// control.
+	ListViewEvents
 }
 
 impl ListViewEvents {
-	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> ListViewEvents {
-		Self {
-			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
-			ctrl_id,
-		}
-	}
-
-	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_user_events.as_ref() }
-	}
-
 	nfy_event_p! { lvn_begin_drag, co::LVN::BEGINDRAG.into(), NMLISTVIEW,
 		/// [`LVN_BEGINDRAG`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-begindrag)
 		/// notification.

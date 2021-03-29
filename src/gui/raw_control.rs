@@ -4,12 +4,11 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::WindowEvents;
+use crate::gui::base::Base;
 use crate::gui::immut::Immut;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
-use crate::gui::traits::{Child, Parent};
-use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
+use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
@@ -21,46 +20,26 @@ struct Obj { // actual fields of RawControl
 	opts: WindowControlOpts,
 }
 
-impl Parent for RawControl {
-	fn hwnd_ref(&self) -> &HWND {
-		self.0.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		self.0.base.is_dialog()
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.0.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.0.base.privileged_events_ref()
-	}
-}
-
-impl Child for RawControl {
-	fn hctrl_ref(&self) -> &HWND {
-		self.hwnd_ref()
-	}
-}
-
 impl RawControl {
-	pub fn new(parent: &dyn Parent, opts: WindowControlOpts) -> RawControl {
+	pub fn new(parent_ref: &Base, opts: WindowControlOpts) -> RawControl {
 		let wnd = Self(
 			Arc::new(Immut::new(
 				Obj {
-					base: RawBase::new(Some(parent)),
+					base: RawBase::new(Some(parent_ref)),
 					opts,
 				},
 			)),
 		);
-		wnd.default_message_handlers(parent);
+		wnd.default_message_handlers(parent_ref);
 		wnd
 	}
 
-	fn default_message_handlers(&self, parent: &dyn Parent) {
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+	pub fn base_ref(&self) -> &Base {
+		self.0.base.base_ref()
+	}
+
+	fn default_message_handlers(&self, parent_ref: &Base) {
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let self2 = self.clone();
 			move |p| {
 				|_| -> WinResult<isize> {
@@ -68,7 +47,7 @@ impl RawControl {
 
 					let mut wcx = WNDCLASSEX::default();
 					let mut class_name_buf = WString::default();
-					opts.generate_wndclassex(self2.0.base.parent_hinstance()?,
+					opts.generate_wndclassex(self2.base_ref().parent_hinstance()?,
 						&mut wcx, &mut class_name_buf)?;
 					self2.0.base.register_class(&mut wcx)?;
 
@@ -89,9 +68,9 @@ impl RawControl {
 			}
 		});
 
-		self.user_events_ref().wm_nc_paint({
+		self.base_ref().user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| paint_control_borders(&self2, p)
+			move |p| paint_control_borders(*self2.base_ref().hwnd_ref(), p)
 				.unwrap_or_else(|err| PostQuitMessage(err))
 		});
 	}

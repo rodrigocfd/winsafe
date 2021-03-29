@@ -4,43 +4,27 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
+use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
-use crate::handles::HWND;
 
 #[derive(Clone)]
 pub struct DlgModal {
 	base: Arc<DlgBase>,
 }
 
-impl Parent for DlgModal {
-	fn hwnd_ref(&self) -> &HWND {
-		self.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		self.base.is_dialog()
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.base.privileged_events_ref()
-	}
-}
-
 impl DlgModal {
-	pub fn new(parent: &dyn Parent, dialog_id: i32) -> DlgModal {
+	pub fn new(parent_ref: &Base, dialog_id: i32) -> DlgModal {
 		let dlg = Self {
 			base: Arc::new(
-				DlgBase::new(Some(parent), dialog_id),
+				DlgBase::new(Some(parent_ref), dialog_id),
 			),
 		};
 		dlg.default_message_handlers();
 		dlg
+	}
+
+	pub fn base_ref(&self) -> &Base {
+		self.base.base_ref()
 	}
 
 	pub fn show_modal(&self) -> WinResult<i32> {
@@ -48,14 +32,15 @@ impl DlgModal {
 	}
 
 	fn default_message_handlers(&self) {
-		self.privileged_events_ref().wm_init_dialog({
+		self.base_ref().privileged_events_ref().wm_init_dialog({
 			let self2 = self.clone();
 			move |p| {
 				|_| -> WinResult<bool> {
 					// Center modal on parent.
-					let rc = self2.hwnd_ref().GetWindowRect()?;
-					let rc_parent = self2.hwnd_ref().GetParent()?.GetWindowRect()?;
-					self2.hwnd_ref().SetWindowPos(
+					let hwnd = *self2.base_ref().hwnd_ref();
+					let rc = hwnd.GetWindowRect()?;
+					let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
+					hwnd.SetWindowPos(
 						HwndPlace::None,
 						rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
 						rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
@@ -68,10 +53,10 @@ impl DlgModal {
 			}
 		});
 
-		self.user_events_ref().wm_close({
+		self.base_ref().user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
-				self2.hwnd_ref().EndDialog(co::DLGID::CANCEL.0 as isize)
+				self2.base_ref().hwnd_ref().EndDialog(co::DLGID::CANCEL.0 as isize)
 					.unwrap_or_else(|err| PostQuitMessage(err))
 			}
 		});

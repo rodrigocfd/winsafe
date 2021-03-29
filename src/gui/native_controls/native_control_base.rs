@@ -1,15 +1,16 @@
+use std::any::Any;
 use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::PostQuitMessage;
+use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::immut::Immut;
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::Child;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
-use crate::privs::WC_DIALOG;
 use crate::structs::{POINT, SIZE};
 use crate::WString;
 
@@ -28,54 +29,45 @@ pub enum OptsId<Op> {
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.
-pub struct NativeControlBase<Ev>(Immut<Obj<Ev>>);
+pub struct NativeControlBase(Immut<Obj>);
 
-struct Obj<Ev> { // actual fields of NativeControlBase
+struct Obj { // actual fields of NativeControlBase
 	hwnd: HWND,
-	parent_events: Ev, // specific control events, which delegate to parent events
+	ptr_parent: NonNull<Base>,
 	subclass_events: WindowEvents, // for control subclassing
-	ptr_parent_hwnd: NonNull<HWND>, // used only in control creation
 }
 
-impl<Ev> Child for NativeControlBase<Ev> {
-	fn hctrl_ref(&self) -> &HWND {
-		&self.0.hwnd
+impl Child for NativeControlBase {
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
-impl<Ev> NativeControlBase<Ev> {
-	pub fn new(
-		parent: &dyn Parent, parent_events: Ev) -> NativeControlBase<Ev>
-	{
+impl NativeControlBase {
+	pub fn new(parent_ref: &Base) -> NativeControlBase {
 		Self(
 			Immut::new(
 				Obj {
 					hwnd: unsafe { HWND::null_handle() },
-					parent_events,
+					ptr_parent: NonNull::from(parent_ref), // ref implicitly converted to pointer
 					subclass_events: WindowEvents::new(),
-					ptr_parent_hwnd: NonNull::from(parent.hwnd_ref()), // ref implicitly converted to pointer
 				},
 			),
 		)
 	}
 
-	pub fn parent_hwnd(&self) -> &HWND {
-		unsafe { self.0.ptr_parent_hwnd.as_ref() }
+	pub fn hwnd_ref(&self) -> &HWND {
+		&self.0.hwnd
 	}
 
-	pub fn on(&self) -> &Ev {
-		if !self.hctrl_ref().is_null() {
-			panic!("Cannot add events after the control is created.");
-		} else if !self.parent_hwnd().is_null() {
-			panic!("Cannot add events after the parent window is created.");
-		}
-		&self.0.parent_events
+	pub fn parent_ref(&self) -> &Base {
+		unsafe { self.0.ptr_parent.as_ref() }
 	}
 
 	pub fn on_subclass(&self) -> &WindowEvents {
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot add subclass events after the control is created.");
-		} else if !self.parent_hwnd().is_null() {
+		} else if !self.parent_ref().hwnd_ref().is_null() {
 			panic!("Cannot add subclass events after the parent window is created.");
 		}
 		&self.0.subclass_events
@@ -90,22 +82,22 @@ impl<Ev> NativeControlBase<Ev> {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> WinResult<HWND>
 	{
+		let hparent = *self.parent_ref().hwnd_ref();
+
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot create control twice.");
-		} else if self.parent_hwnd().is_null() {
+		} else if hparent.is_null() {
 			panic!("Cannot create control before parent window is created.");
 		}
-
-		let parent_hwnd = unsafe { self.0.ptr_parent_hwnd.as_ref() };
 
 		self.0.as_mut().hwnd = HWND::CreateWindowEx(
 			ex_styles,
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			Some(*parent_hwnd),
+			Some(hparent),
 			IdMenu::Id(ctrl_id),
-			parent_hwnd.hinstance(),
+			hparent.hinstance(),
 			None,
 		)?;
 
@@ -114,20 +106,19 @@ impl<Ev> NativeControlBase<Ev> {
 	}
 
 	pub fn create_dlg(&self, ctrl_id: u16) -> WinResult<HWND> {
-		if !self.0.hwnd.is_null() {
-			panic!("Cannot create control twice.");
-		} else if self.parent_hwnd().is_null() {
-			panic!("Cannot create control before parent window is created.");
-		}
-
-		let parent_hwnd = unsafe { self.0.ptr_parent_hwnd.as_ref() };
-
-		let parent_atom = parent_hwnd.GetClassLongPtr(co::GCLP::ATOM);
-		if parent_atom as u16 != WC_DIALOG { // https://stackoverflow.com/a/64437627/6923555
+		if self.parent_ref().create_wm() != co::WM::INITDIALOG {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
 
-		self.0.as_mut().hwnd = parent_hwnd.GetDlgItem(ctrl_id as i32)?;
+		let hparent = *self.parent_ref().hwnd_ref();
+
+		if !self.0.hwnd.is_null() {
+			panic!("Cannot create control twice.");
+		} else if hparent.is_null() {
+			panic!("Cannot create control before parent window is created.");
+		}
+
+		self.0.as_mut().hwnd = hparent.GetDlgItem(ctrl_id as i32)?;
 		self.install_subclass_if_needed()?;
 		Ok(self.0.hwnd)
 	}

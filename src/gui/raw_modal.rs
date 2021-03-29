@@ -4,11 +4,10 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, DispatchMessage, GetMessage, PostQuitMessage, TranslateMessage};
-use crate::gui::events::WindowEvents;
+use crate::gui::base::Base;
 use crate::gui::immut::Immut;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
-use crate::gui::traits::Parent;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
@@ -22,30 +21,12 @@ struct Obj { // actual fields of RawModal
 	hchild_prev_focus_parent: Option<HWND>,
 }
 
-impl Parent for RawModal {
-	fn hwnd_ref(&self) -> &HWND {
-		self.0.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		self.0.base.is_dialog()
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.0.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.0.base.privileged_events_ref()
-	}
-}
-
 impl RawModal {
-	pub fn new(parent: &dyn Parent, opts: WindowModalOpts) -> RawModal {
+	pub fn new(parent_ref: &Base, opts: WindowModalOpts) -> RawModal {
 		let wnd = Self(
 			Arc::new(Immut::new(
 				Obj {
-					base: RawBase::new(Some(parent)),
+					base: RawBase::new(Some(parent_ref)),
 					opts,
 					hchild_prev_focus_parent: None,
 				},
@@ -55,14 +36,18 @@ impl RawModal {
 		wnd
 	}
 
+	pub fn base_ref(&self) -> &Base {
+		self.0.base.base_ref()
+	}
+
 	pub fn show_modal(&self) -> WinResult<i32> {
-		let hparent = self.0.base.parent_hwnd().unwrap();
+		let hparent = *self.base_ref().parent_ref().unwrap().hwnd_ref();
 		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		opts.generate_wndclassex(
-			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
+			self.base_ref().parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 		self.0.base.register_class(&mut wcx)?;
 
 		self.0.as_mut().hchild_prev_focus_parent = HWND::GetFocus();
@@ -117,7 +102,7 @@ impl RawModal {
 			// Try to process keyboard actions for child controls.
 			if hwnd_top_level.IsDialogMessage(&mut msg) {
 				// Processed all keyboard actions for child controls.
-				if self.hwnd_ref().is_null() {
+				if self.base_ref().hwnd_ref().is_null() {
 					return Ok(0); // our modal was destroyed, terminate loop
 				} else {
 					continue;
@@ -127,30 +112,31 @@ impl RawModal {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 
-			if self.hwnd_ref().is_null() {
+			if self.base_ref().hwnd_ref().is_null() {
 				return Ok(0); // our modal was destroyed, terminate loop
 			}
 		}
 	}
 
 	fn default_message_handlers(&self) {
-		self.user_events_ref().wm_set_focus({
+		self.base_ref().user_events_ref().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hfocus) = HWND::GetFocus() {
-					if hfocus == *self2.hwnd_ref() {
+					if hfocus == *self2.base_ref().hwnd_ref() {
 						self2.0.base.focus_first_child(); // if window receives focus, delegate to first child
 					}
 				}
 			}
 		});
 
-		self.user_events_ref().wm_close({
+		self.base_ref().user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
-				if let Ok(hparent) = self2.hwnd_ref().GetWindow(co::GW::OWNER) {
+				let hwnd = *self2.base_ref().hwnd_ref();
+				if let Ok(hparent) = hwnd.GetWindow(co::GW::OWNER) {
 					hparent.EnableWindow(true); // re-enable parent
-					self2.hwnd_ref().DestroyWindow(); // then destroy modal
+					hwnd.DestroyWindow(); // then destroy modal
 					if let Some(hprev) = self2.0.hchild_prev_focus_parent {
 						hprev.SetFocus(); // this focus could be set on WM_DESTROY as well
 					}

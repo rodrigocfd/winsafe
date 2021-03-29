@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -6,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{EditEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
@@ -14,20 +15,23 @@ use crate::structs::{POINT, SIZE};
 /// Native
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
+///
+/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct Edit(Arc<Obj>);
 
 struct Obj { // actual fields of Edit
-	base: NativeControlBase<EditEvents>,
+	base: NativeControlBase,
 	opts_id: OptsId<EditOpts>,
+	events: EditEvents,
 }
 
 unsafe impl Send for Edit {}
 unsafe impl Sync for Edit {}
 
 impl Child for Edit {
-	fn hctrl_ref(&self) -> &HWND {
-		self.0.base.hctrl_ref()
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -35,43 +39,48 @@ impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window with
 	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: EditOpts) -> Edit {
+		let parent_ref = baseref_from_parent(parent);
 		let opts = EditOpts::define_ctrl_id(opts);
+		let ctrl_id = opts.ctrl_id;
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						EditEvents::new(parent, opts.ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
+					events: EditEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
+
 		new_self
 	}
 
 	/// Instantiates a new `Edit` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Edit {
+		let parent_ref = baseref_from_parent(parent);
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						EditEvents::new(parent, ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
+					events: EditEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm_init_dialog({
+
+		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
+
 		new_self
 	}
 

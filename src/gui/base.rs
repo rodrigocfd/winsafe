@@ -4,7 +4,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::traits::Parent;
 use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
@@ -12,18 +11,20 @@ use crate::structs::MSG;
 /// Base to `RawBase` and `DlgBase`.
 pub struct Base {
 	hwnd: HWND,
+	is_dialog: bool,
+	ptr_parent: Option<NonNull<Base>>,
 	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	privileged_events: WindowEvents, // inserted internally to automate tasks: all will be executed
-	ptr_parent_hwnd: Option<NonNull<HWND>>, // used only in control creation
 }
 
 impl Base {
-	pub fn new(parent: Option<&dyn Parent>) -> Base {
+	pub fn new(parent_ref: Option<&Base>, is_dialog: bool) -> Base {
 		Self {
 			hwnd: unsafe { HWND::null_handle() },
+			is_dialog,
+			ptr_parent: parent_ref.map(|parent_ref| NonNull::from(parent_ref)), // ref implicitly converted to pointer
 			user_events: WindowEvents::new(),
 			privileged_events: WindowEvents::new(),
-			ptr_parent_hwnd: parent.map(|parent| NonNull::from(parent.hwnd_ref())), // ref implicitly converted to pointer
 		}
 	}
 
@@ -35,13 +36,20 @@ impl Base {
 		self.hwnd = hwnd;
 	}
 
-	pub fn parent_hwnd(&self) -> Option<HWND> {
-		self.ptr_parent_hwnd.map(|ptr| unsafe { *ptr.as_ref() })
+	pub fn create_wm(&self) -> co::WM {
+		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
+	}
+
+	pub fn parent_ref(&self) -> Option<&Base> {
+		match &self.ptr_parent {
+			Some(ptr) => Some(unsafe { ptr.as_ref() }),
+			None => None
+		}
 	}
 
 	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
-		Ok(match self.parent_hwnd() {
-			Some(hparent) => hparent.hinstance(),
+		Ok(match self.parent_ref() {
+			Some(parent) => parent.hwnd_ref().hinstance(),
 			None => HINSTANCE::GetModuleHandle(None)?,
 		})
 	}

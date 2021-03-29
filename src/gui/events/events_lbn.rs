@@ -1,35 +1,23 @@
 use std::ptr::NonNull;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
 
-/// Exposes list box control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
-///
-/// These event methods are just proxies to the
-/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-/// is the real responsible for the child event handling.
-///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct ListBoxEvents {
-	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
-	ctrl_id: u16,
+ctrl_events_proxy! {
+	/// Exposes list box control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
+	///
+	/// These event methods are just proxies to the
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+	/// is the real responsible for the child event handling.
+	///
+	/// You cannot directly instantiate this object, it is created internally by the
+	/// control.
+	ListBoxEvents
 }
 
 impl ListBoxEvents {
-	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> ListBoxEvents {
-		Self {
-			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
-			ctrl_id,
-		}
-	}
-
-	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_user_events.as_ref() }
-	}
-
 	cmd_event! { lbn_dbl_clk, co::LBN::DBLCLK.into(),
 		/// [`LBN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-dblclk)
 		/// notification.

@@ -3,9 +3,8 @@ use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{PostQuitMessage, RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
-use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::traits::Parent;
-use crate::handles::{HINSTANCE, HWND};
+use crate::gui::events::ProcessResult;
+use crate::handles::HWND;
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
@@ -17,48 +16,26 @@ pub struct RawBase {
 
 impl Drop for RawBase {
 	fn drop(&mut self) {
-		if !self.hwnd_ref().is_null() {
-			self.hwnd_ref().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+		if !self.base.hwnd_ref().is_null() {
+			self.base.hwnd_ref().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 		}
-	}
-}
-
-impl Parent for RawBase {
-	fn hwnd_ref(&self) -> &HWND {
-		self.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		false
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.base.privileged_events_ref()
 	}
 }
 
 impl RawBase {
-	pub fn new(parent: Option<&dyn Parent>) -> RawBase {
+	pub fn new(parent_ref: Option<&Base>) -> RawBase {
 		Self {
-			base: Base::new(parent),
+			base: Base::new(parent_ref, false),
 		}
 	}
 
-	pub fn parent_hwnd(&self) -> Option<HWND> {
-		self.base.parent_hwnd()
-	}
-
-	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
-		self.base.parent_hinstance()
+	pub fn base_ref(&self) -> &Base {
+		&self.base
 	}
 
 	pub fn focus_first_child(&self) {
 		// https://stackoverflow.com/a/2835220/6923555
-		if let Ok(hchild) = self.hwnd_ref().GetWindow(co::GW::CHILD) {
+		if let Ok(hchild) = self.base.hwnd_ref().GetWindow(co::GW::CHILD) {
 			hchild.SetFocus();
 		}
 	}
@@ -92,7 +69,7 @@ impl RawBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> WinResult<()>
 	{
-		if !self.hwnd_ref().is_null() {
+		if !self.base.hwnd_ref().is_null() {
 			panic!("Cannot create window twice.");
 		}
 
@@ -103,8 +80,9 @@ impl RawBase {
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			self.parent_hwnd(),
-			hmenu, self.base.parent_hinstance()?,
+			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
+			hmenu,
+			self.base.parent_hinstance()?,
 			Some(self as *const Self as isize), // pass pointer to self
 		).map(|_| ())
 	}

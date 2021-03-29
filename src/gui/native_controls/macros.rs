@@ -1,6 +1,10 @@
 /// Implements methods common to controls.
 macro_rules! hwnd_on_onsubclass {
 	($evstruc:ident) => {
+		pub(crate) fn base_ref(&self) -> &NativeControlBase {
+			&self.0.base
+		}
+
 		/// Returns the underlying handle for this control.
 		///
 		/// **Note:** the handle is initially null, receiving an actual value only
@@ -9,7 +13,7 @@ macro_rules! hwnd_on_onsubclass {
 		/// [`WM_INITDIALOG`](crate::gui::events::WindowEvents::wm_init_dialog)
 		/// events.
 		pub fn hwnd(&self) -> HWND {
-			*self.hctrl_ref()
+			*self.0.base.hwnd_ref()
 		}
 
 		/// Exposes the control events.
@@ -23,7 +27,12 @@ macro_rules! hwnd_on_onsubclass {
 		/// Panics if the control or the parent window are already created. Events
 		/// must be set before control and parent window creation.
 		pub fn on(&self) -> &$evstruc {
-			self.0.base.on()
+			if !self.0.base.hwnd_ref().is_null() {
+				panic!("Cannot add events after the control is created.");
+			} else if !self.0.base.parent_ref().hwnd_ref().is_null() {
+				panic!("Cannot add events after the parent window is created.");
+			}
+			&self.0.events
 		}
 
 		/// Exposes the subclass events. If at least one event exists, the control

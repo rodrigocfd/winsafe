@@ -1,61 +1,38 @@
+use std::any::Any;
+
+use crate::gui::base::Base;
 use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEvents;
 use crate::gui::raw_control::{WindowControlOpts, RawControl};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::structs::POINT;
 
-/// An user child window, which can handle events.
+#[derive(Clone)]
+enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
+
+/// An user child window, which can handle events. Can be programatically
+/// created or load a dialog resource from a `.rc` script.
 ///
-/// A `WindowControl` window can be programatically created or load a dialog
-/// resource from a `.rc` script.
+/// Implements [`Parent`](crate::gui::Parent) and [`Child`](crate::gui::Child)
+/// traits.
 #[derive(Clone)]
 pub struct WindowControl {
 	raw_dlg: RawDlg,
 }
 
-#[derive(Clone)]
-enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
-
 unsafe impl Send for WindowControl {}
 unsafe impl Sync for WindowControl {}
 
 impl Parent for WindowControl {
-	fn hwnd_ref(&self) -> &HWND {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.hwnd_ref(),
-			RawDlg::Dlg(d) => d.hwnd_ref(),
-		}
-	}
-
-	fn is_dialog(&self) -> bool {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.is_dialog(),
-			RawDlg::Dlg(d) => d.is_dialog(),
-		}
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.user_events_ref(),
-			RawDlg::Dlg(d) => d.user_events_ref(),
-		}
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.privileged_events_ref(),
-			RawDlg::Dlg(d) => d.privileged_events_ref(),
-		}
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
 impl Child for WindowControl {
-	fn hctrl_ref(&self) -> &HWND {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.hwnd_ref(),
-			RawDlg::Dlg(d) => d.hwnd_ref(),
-		}
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -65,7 +42,7 @@ impl WindowControl {
 	pub fn new(parent: &dyn Parent, opts: WindowControlOpts) -> WindowControl {
 		Self {
 			raw_dlg: RawDlg::Raw(
-				RawControl::new(parent, opts),
+				RawControl::new(baseref_from_parent(parent), opts),
 			),
 		}
 	}
@@ -82,8 +59,17 @@ impl WindowControl {
 	{
 		Self {
 			raw_dlg: RawDlg::Dlg(
-				DlgControl::new(parent, dialog_id, position, ctrl_id),
+				DlgControl::new(
+					baseref_from_parent(parent), dialog_id, position, ctrl_id,
+				),
 			),
+		}
+	}
+
+	pub(crate) fn base_ref(&self) -> &Base {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.base_ref(),
+			RawDlg::Dlg(d) => d.base_ref(),
 		}
 	}
 
@@ -92,10 +78,7 @@ impl WindowControl {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => *r.hwnd_ref(),
-			RawDlg::Dlg(d) => *d.hwnd_ref(),
-		}
+		*self.base_ref().hwnd_ref()
 	}
 
 	/// Exposes the window events.
@@ -105,9 +88,6 @@ impl WindowControl {
 	/// Panics if the window is already created. Events must be set before window
 	/// creation.
 	pub fn on(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.user_events_ref(),
-			RawDlg::Dlg(d) => d.user_events_ref(),
-		}
+		self.base_ref().user_events_ref()
 	}
 }

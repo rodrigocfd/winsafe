@@ -1,33 +1,70 @@
-use crate::co;
-use crate::gui::events::WindowEvents;
+use std::any::Any;
+
+use crate::gui::base::Base;
+use crate::gui::native_controls::{
+	Button,
+	CheckBox,
+	ComboBox,
+	DateTimePicker,
+	Edit,
+	Label,
+	ListBox,
+	ListView,
+	MonthCalendar,
+	RadioButton,
+	StatusBar,
+};
+use crate::gui::{WindowControl, WindowMain, WindowModal};
 use crate::handles::HWND;
 
 /// Trait to any window which can host child controls.
 pub trait Parent {
-	/// Returns a reference to the window handle.
-	fn hwnd_ref(&self) -> &HWND;
-
-	fn init_msg(&self) -> co::WM {
-		if self.is_dialog() { co::WM::INITDIALOG } else { co::WM::CREATE }
-	}
-
-	/// Tells whether this window is a dialog.
-	fn is_dialog(&self) -> bool;
-
-	/// Returns a reference to the user events object.
-	///
-	/// When an user event is added, it will overwrite the previous one.
-	fn user_events_ref(&self) -> &WindowEvents;
-
-	/// Returns a reference to the privileged events object, which is used
-	/// internally to automate some tasks.
-	///
-	/// All privileged events are executed, and their result is ignored.
-	fn privileged_events_ref(&self) -> &WindowEvents;
+	fn as_any(&self) -> &dyn Any;
 }
 
 /// Trait to any child control.
 pub trait Child {
-	/// Returns a reference to the control handle.
-	fn hctrl_ref(&self) -> &HWND;
+	fn as_any(&self) -> &dyn Any;
+}
+
+pub fn baseref_from_parent(parent: &dyn Parent) -> &Base {
+	if let Some(w) = parent.as_any().downcast_ref::<WindowMain>() {
+		w.base_ref()
+	} else if let Some(w) = parent.as_any().downcast_ref::<WindowModal>() {
+		w.base_ref()
+	} else if let Some(w) = parent.as_any().downcast_ref::<WindowControl>() {
+		w.base_ref()
+	} else {
+		panic!("Unknown Parent downcasting, something really bad happened.")
+	}
+}
+
+pub fn hwndref_from_child(child: &dyn Child) -> &HWND {
+	if let Some(c) = child.as_any().downcast_ref::<WindowControl>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<Button>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<CheckBox>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<ComboBox>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<DateTimePicker>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<Edit>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<Label>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<ListBox>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<ListView>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<MonthCalendar>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<RadioButton>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<StatusBar>() {
+		c.base_ref().hwnd_ref()
+	} else {
+		panic!("Unknown Child downcasting, something really bad happened.")
+	}
 }

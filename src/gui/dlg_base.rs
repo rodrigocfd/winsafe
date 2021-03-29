@@ -3,10 +3,9 @@ use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
-use crate::gui::events::{ProcessResult, WindowEvents};
+use crate::gui::events::ProcessResult;
 use crate::gui::privs::ui_font;
-use crate::gui::traits::Parent;
-use crate::handles::{HFONT, HINSTANCE, HWND};
+use crate::handles::{HFONT, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// Base to all dialog windows.
@@ -17,44 +16,26 @@ pub struct DlgBase {
 
 impl Drop for DlgBase {
 	fn drop(&mut self) {
-		if !self.hwnd_ref().is_null() {
-			self.hwnd_ref().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
+		if !self.base.hwnd_ref().is_null() {
+			self.base.hwnd_ref().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 		}
-	}
-}
-
-impl Parent for DlgBase {
-	fn hwnd_ref(&self) -> &HWND {
-		&self.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		true
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.base.privileged_events_ref()
 	}
 }
 
 impl DlgBase {
-	pub fn new(parent: Option<&dyn Parent>, dialog_id: i32) -> DlgBase {
+	pub fn new(parent_ref: Option<&Base>, dialog_id: i32) -> DlgBase {
 		Self {
-			base: Base::new(parent),
+			base: Base::new(parent_ref, true),
 			dialog_id,
 		}
 	}
 
-	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
-		self.base.parent_hinstance()
+	pub fn base_ref(&self) -> &Base {
+		&self.base
 	}
 
 	pub fn create_dialog_param(&self) -> WinResult<()> {
-		if !self.hwnd_ref().is_null() {
+		if !self.base.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
 
@@ -62,14 +43,14 @@ impl DlgBase {
 		// when CreateDialogParam returns.
 		self.base.parent_hinstance()?.CreateDialogParam(
 			IdStr::Id(self.dialog_id),
-			self.base.parent_hwnd(),
+			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
 			Some(self as *const Self as isize), // pass pointer to self
 		).map(|_| ())
 	}
 
 	pub fn dialog_box_param(&self) -> WinResult<i32> {
-		if !self.hwnd_ref().is_null() {
+		if !self.base.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
 
@@ -77,8 +58,9 @@ impl DlgBase {
 		// when DialogBoxParam returns.
 		self.base.parent_hinstance()?.DialogBoxParam(
 			IdStr::Id(self.dialog_id),
-			self.base.parent_hwnd(),
-			Self::dialog_proc, Some(self as *const Self as isize), // pass pointer to self
+			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
+			Self::dialog_proc,
+			Some(self as *const Self as isize), // pass pointer to self
 		).map(|res| res as i32)
 	}
 
@@ -136,8 +118,8 @@ impl DlgBase {
 	}
 
 	fn set_ui_font_on_children(&self) {
-		self.hwnd_ref().SendMessage(wm::SetFont { hfont: ui_font(), redraw: false });
-		self.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
+		self.base.hwnd_ref().SendMessage(wm::SetFont { hfont: ui_font(), redraw: false });
+		self.base.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
 	}
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
 		let hfont = HFONT { ptr: lparam as *mut _ };

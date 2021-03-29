@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -7,7 +8,7 @@ use crate::gui::events::{StatusBarEvents, WindowEvents};
 use crate::gui::immut::Immut;
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{MsgSend, sb, wm};
 use crate::structs::{POINT, SIZE};
@@ -16,12 +17,15 @@ use crate::WString;
 /// Native
 /// [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/status-bars)
 /// control, which has one or more parts.
+///
+/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct StatusBar(Arc<Immut<Obj>>);
 
 struct Obj { // actual fields of StatusBar
-	base: NativeControlBase<StatusBarEvents>,
+	base: NativeControlBase,
 	ctrl_id: u16,
+	events: StatusBarEvents,
 	parts: Vec<StatusBarPart>,
 	right_edges: Vec<i32>, // buffer to speed up resize calls
 }
@@ -30,8 +34,8 @@ unsafe impl Send for StatusBar {}
 unsafe impl Sync for StatusBar {}
 
 impl Child for StatusBar {
-	fn hctrl_ref(&self) -> &HWND {
-		self.0.base.hctrl_ref()
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -39,28 +43,30 @@ impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, parts: &[StatusBarPart]) -> StatusBar {
+		let parent_ref = baseref_from_parent(parent);
 		let ctrl_id = auto_ctrl_id();
+
 		let new_self = Self(
 			Arc::new(Immut::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						StatusBarEvents::new(parent, ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					ctrl_id,
+					events: StatusBarEvents::new(parent_ref, ctrl_id),
 					parts: parts.to_vec(),
 					right_edges: vec![0; parts.len()],
 				},
 			)),
 		);
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
-		parent.privileged_events_ref().wm_size({
+		parent_ref.privileged_events_ref().wm_size({
 			let me = new_self.clone();
 			move |p| me.resize(&p)
 		});
+
 		new_self
 	}
 
@@ -74,8 +80,9 @@ impl StatusBar {
 				}
 			}
 
+			let hparent = *self.0.base.parent_ref().hwnd_ref();
 			let parent_style = co::WS(
-				self.0.base.parent_hwnd().GetWindowLongPtr(co::GWLP::STYLE) as u32,
+				hparent.GetWindowLongPtr(co::GWLP::STYLE) as u32,
 			);
 			let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
 				|| parent_style.has(co::WS::SIZEBOX);
@@ -94,7 +101,7 @@ impl StatusBar {
 			)?;
 
 			// Force first resizing, so the panels are created.
-			let parent_rc = self.0.base.parent_hwnd().GetClientRect()?;
+			let parent_rc = hparent.GetClientRect()?;
 			self.resize(&wm::Size {
 				client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
 				request: co::SIZE_R::RESTORED,

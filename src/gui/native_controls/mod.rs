@@ -17,6 +17,8 @@ mod radio_button;
 mod radio_group;
 mod status_bar;
 
+pub(crate) use native_control_base::NativeControlBase;
+
 pub use button::{Button, ButtonOpts};
 pub use check_box::{CheckBox, CheckBoxOpts};
 pub use combo_box::{ComboBox, ComboBoxOpts};

@@ -2,9 +2,9 @@ use std::ptr::NonNull;
 use std::rc::Rc;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
 use crate::gui::immut::Immut;
-use crate::gui::traits::Parent;
 
 /// Exposes button control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -17,20 +17,20 @@ use crate::gui::traits::Parent;
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 pub struct RadioGroupEvents {
-	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
+	parent_ptr: NonNull<Base>,
 	ctrl_ids: Vec<u16>,
 }
 
 impl RadioGroupEvents {
-	pub(crate) fn new(parent: &dyn Parent, ctrl_ids: Vec<u16>) -> RadioGroupEvents {
+	pub(crate) fn new(parent_ref: &Base, ctrl_ids: Vec<u16>) -> RadioGroupEvents {
 		Self {
-			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
+			parent_ptr: NonNull::from(parent_ref), // convert reference to pointer
 			ctrl_ids,
 		}
 	}
 
 	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_user_events.as_ref() }
+		unsafe { self.parent_ptr.as_ref().user_events_ref() }
 	}
 
 	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)

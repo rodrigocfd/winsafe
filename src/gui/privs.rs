@@ -149,10 +149,7 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 //------------------------------------------------------------------------------
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub fn paint_control_borders(
-	ctrl: &dyn Parent, wm_ncp: wm::NcPaint) -> WinResult<()>
-{
-	let hwnd = ctrl.hwnd_ref();
+pub fn paint_control_borders(hwnd: HWND, wm_ncp: wm::NcPaint) -> WinResult<()> {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
 	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as u32);

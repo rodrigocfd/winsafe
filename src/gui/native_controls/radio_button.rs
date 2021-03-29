@@ -1,57 +1,61 @@
+use std::any::Any;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{ButtonEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::POINT;
 
 /// Native
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
-/// control.
-///
-/// The radion button is actually a variation of the ordinary
+/// control, actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
+///
+/// Implements [`Child`](crate::gui::Child) trait.
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton(Obj);
 
 struct Obj { // actual fields of RadioButton
-	base: NativeControlBase<ButtonEvents>,
+	base: NativeControlBase,
 	opts_id: OptsId<RadioButtonOpts>,
+	events: ButtonEvents,
 }
 
 impl Child for RadioButton {
-	fn hctrl_ref(&self) -> &HWND {
-		self.0.base.hctrl_ref()
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
 impl RadioButton {
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
+		let parent_ref = baseref_from_parent(parent);
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
+		let ctrl_id = opts.ctrl_id;
+
 		Self(
 			Obj {
-				base: NativeControlBase::new(
-					parent,
-					ButtonEvents::new(parent, opts.ctrl_id),
-				),
+				base: NativeControlBase::new(parent_ref),
 				opts_id: OptsId::Wnd(opts),
+				events: ButtonEvents::new(parent_ref, ctrl_id),
 			},
 		)
 	}
 
 	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
+		let parent_ref = baseref_from_parent(parent);
+
 		Self(
 			Obj {
-				base: NativeControlBase::new(
-					parent,
-					ButtonEvents::new(parent, ctrl_id),
-				),
+				base: NativeControlBase::new(parent_ref),
 				opts_id: OptsId::Dlg(ctrl_id),
+				events: ButtonEvents::new(parent_ref, ctrl_id),
 			},
 		)
 	}
@@ -81,10 +85,6 @@ impl RadioButton {
 
 		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
 		Ok(())
-	}
-
-	pub(crate) fn parent_hwnd(&self) -> &HWND {
-		self.0.base.parent_hwnd()
 	}
 
 	hwnd_ctrlid_on_onsubclass!(ButtonEvents);

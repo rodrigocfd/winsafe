@@ -1,3 +1,30 @@
+/// Declares a struct of control events, which is just a proxy to parent events.
+macro_rules! ctrl_events_proxy {
+	(
+		$(#[$doc:meta])*
+		$name:ident
+	) => {
+		$(#[$doc])*
+		pub struct $name {
+			parent_ptr: NonNull<Base>,
+			ctrl_id: u16,
+		}
+
+		impl $name {
+			pub(crate) fn new(parent_ref: &Base, ctrl_id: u16) -> $name {
+				Self {
+					parent_ptr: NonNull::from(parent_ref), // convert reference to pointer
+					ctrl_id,
+				}
+			}
+
+			fn parent_user_events(&self) -> &WindowEvents {
+				unsafe { self.parent_ptr.as_ref().user_events_ref() }
+			}
+		}
+	}
+}
+
 /// Declares a method for a `WM_COMMAND` notification.
 macro_rules! cmd_event {
 	(

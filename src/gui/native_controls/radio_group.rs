@@ -6,12 +6,9 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
 use crate::gui::immut::Immut;
-use crate::gui::traits::Parent;
+use crate::gui::traits::{baseref_from_parent, Parent};
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
-///
-/// The radion button is actually a variation of the ordinary
-/// [`Button`](crate::gui::Button): just a button with a specific style.
 #[derive(Clone)]
 pub struct RadioGroup(Arc<Immut<Obj>>);
 
@@ -43,6 +40,7 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
+		let parent_ref = baseref_from_parent(parent);
 		let mut ctrl_ids = Vec::with_capacity(opts.len());
 		let mut radios = Vec::with_capacity(opts.len());
 
@@ -61,14 +59,16 @@ impl RadioGroup {
 			Arc::new(Immut::new(
 				Obj {
 					radios,
-					parent_events: RadioGroupEvents::new(parent, ctrl_ids),
+					parent_events: RadioGroupEvents::new(parent_ref, ctrl_ids),
 				},
 			)),
 		);
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
+
 		new_self
 	}
 
@@ -83,6 +83,7 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
+		let parent_ref = baseref_from_parent(parent);
 		let mut radios = Vec::with_capacity(ctrl_ids.len());
 
 		for ctrl_id in ctrl_ids.iter() {
@@ -93,14 +94,16 @@ impl RadioGroup {
 			Arc::new(Immut::new(
 				Obj {
 					radios,
-					parent_events: RadioGroupEvents::new(parent, ctrl_ids.to_vec()),
+					parent_events: RadioGroupEvents::new(parent_ref, ctrl_ids.to_vec()),
 				},
 			)),
 		);
-		parent.privileged_events_ref().wm_init_dialog({
+
+		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
+
 		new_self
 	}
 
@@ -126,7 +129,7 @@ impl RadioGroup {
 
 		if !first_radio.hwnd().is_null() {
 			panic!("Cannot add events after the control is created.");
-		} else if !first_radio.parent_hwnd().is_null() {
+		} else if !first_radio.base_ref().parent_ref().hwnd_ref().is_null() {
 			panic!("Cannot add events after the parent window is created.");
 		}
 		&self.0.parent_events

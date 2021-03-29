@@ -1,36 +1,24 @@
 use std::ptr::NonNull;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
 use crate::structs::{NMDAYSTATE, NMSELCHANGE, NMVIEWCHANGE};
 
-/// Exposes month calendar control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications).
-///
-/// These event methods are just proxies to the
-/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-/// is the real responsible for the child event handling.
-///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct MonthCalendarEvents {
-	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
-	ctrl_id: u16,
+ctrl_events_proxy! {
+	/// Exposes month calendar control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications).
+	///
+	/// These event methods are just proxies to the
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+	/// is the real responsible for the child event handling.
+	///
+	/// You cannot directly instantiate this object, it is created internally by the
+	/// control.
+	MonthCalendarEvents
 }
 
 impl MonthCalendarEvents {
-	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> MonthCalendarEvents {
-		Self {
-			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
-			ctrl_id,
-		}
-	}
-
-	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_user_events.as_ref() }
-	}
-
 	nfy_event_p! { mcn_get_day_state, co::MCN::GETDAYSTATE.into(), NMDAYSTATE,
 		/// [`MCN_GETDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-getdaystate)
 		/// notification.

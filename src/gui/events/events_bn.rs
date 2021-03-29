@@ -1,36 +1,24 @@
 use std::ptr::NonNull;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
-/// Exposes button control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
-///
-/// These event methods are just proxies to the
-/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-/// is the real responsible for the child event handling.
-///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct ButtonEvents {
-	parent_user_events: NonNull<WindowEvents>, // used only before parent creation
-	ctrl_id: u16,
+ctrl_events_proxy! {
+	/// Exposes button control
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
+	///
+	/// These event methods are just proxies to the
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+	/// is the real responsible for the child event handling.
+	///
+	/// You cannot directly instantiate this object, it is created internally by the
+	/// control.
+	ButtonEvents
 }
 
 impl ButtonEvents {
-	pub(crate) fn new(parent: &dyn Parent, ctrl_id: u16) -> ButtonEvents {
-		Self {
-			parent_user_events: NonNull::from(parent.user_events_ref()), // convert reference to pointer
-			ctrl_id,
-		}
-	}
-
-	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_user_events.as_ref() }
-	}
-
 	nfy_event_p! { bcn_drop_down, co::BCN::DROPDOWN.into(), NMBCDROPDOWN,
 		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.

@@ -1,52 +1,31 @@
+use std::any::Any;
+
 use crate::aliases::WinResult;
+use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEvents;
 use crate::gui::raw_modal::{WindowModalOpts, RawModal};
-use crate::gui::traits::Parent;
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 
-/// An user modal window, which can handle events.
+#[derive(Clone)]
+enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
+
+/// An user modal window, which can handle events. Can be programatically
+/// created or load a dialog resource from a `.rc` script.
 ///
-/// A `WindowModal` window can be programatically created or load a dialog
-/// resource from a `.rc` script.
+/// Implements [`Parent`](crate::gui::Parent) trait.
 #[derive(Clone)]
 pub struct WindowModal {
 	raw_dlg: RawDlg,
 }
 
-#[derive(Clone)]
-enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
-
 unsafe impl Send for WindowModal {}
 unsafe impl Sync for WindowModal {}
 
 impl Parent for WindowModal {
-	fn hwnd_ref(&self) -> &HWND {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.hwnd_ref(),
-			RawDlg::Dlg(d) => d.hwnd_ref(),
-		}
-	}
-
-	fn is_dialog(&self) -> bool {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.is_dialog(),
-			RawDlg::Dlg(d) => d.is_dialog(),
-		}
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.user_events_ref(),
-			RawDlg::Dlg(d) => d.user_events_ref(),
-		}
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.privileged_events_ref(),
-			RawDlg::Dlg(d) => d.privileged_events_ref(),
-		}
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -56,7 +35,7 @@ impl WindowModal {
 	pub fn new(parent: &dyn Parent, opts: WindowModalOpts) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Raw(
-				RawModal::new(parent, opts),
+				RawModal::new(baseref_from_parent(parent), opts),
 			),
 		}
 	}
@@ -66,8 +45,15 @@ impl WindowModal {
 	pub fn new_dlg(parent: &dyn Parent, dialog_id: i32) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Dlg(
-				DlgModal::new(parent, dialog_id),
+				DlgModal::new(baseref_from_parent(parent), dialog_id),
 			),
+		}
+	}
+
+	pub(crate) fn base_ref(&self) -> &Base {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.base_ref(),
+			RawDlg::Dlg(d) => d.base_ref(),
 		}
 	}
 
@@ -76,10 +62,7 @@ impl WindowModal {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is created.
 	pub fn hwnd(&self) -> HWND {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => *r.hwnd_ref(),
-			RawDlg::Dlg(d) => *d.hwnd_ref(),
-		}
+		*self.base_ref().hwnd_ref()
 	}
 
 	/// Exposes the window events.
@@ -89,10 +72,7 @@ impl WindowModal {
 	/// Panics if the window is already created. Events must be set before window
 	/// creation.
 	pub fn on(&self) -> &WindowEvents {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.user_events_ref(),
-			RawDlg::Dlg(d) => d.user_events_ref(),
-		}
+		self.base_ref().user_events_ref()
 	}
 
 	/// Physically creates the window, then runs the modal loop. This method will

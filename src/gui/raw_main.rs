@@ -5,11 +5,9 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::base::Base;
-use crate::gui::events::WindowEvents;
 use crate::gui::immut::Immut;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
-use crate::gui::traits::Parent;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
@@ -21,24 +19,6 @@ struct Obj { // actual fields of RawMain
 	base: RawBase,
 	opts: WindowMainOpts,
 	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
-}
-
-impl Parent for RawMain {
-	fn hwnd_ref(&self) -> &HWND {
-		self.0.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		self.0.base.is_dialog()
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.0.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.0.base.privileged_events_ref()
-	}
 }
 
 impl RawMain {
@@ -56,13 +36,17 @@ impl RawMain {
 		wnd
 	}
 
+	pub fn base_ref(&self) -> &Base {
+		self.0.base.base_ref()
+	}
+
 	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
 		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		opts.generate_wndclassex(
-			self.0.base.parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
+			self.base_ref().parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
 		self.0.base.register_class(&mut wcx)?;
 
 		let mut wnd_sz = opts.size;
@@ -97,20 +81,21 @@ impl RawMain {
 			opts.ex_style, opts.style,
 		)?;
 
-		self.hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		self.hwnd_ref().UpdateWindow()?;
+		let hwnd = *self.base_ref().hwnd_ref();
+		hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		hwnd.UpdateWindow()?;
 
 		Base::run_main_loop(opts.accel_table.as_opt()) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
-		self.user_events_ref().wm_activate({
+		self.base_ref().user_events_ref().wm_activate({
 			let self2 = self.clone();
 			move |p| {
 				if !p.is_minimized {
 					if p.event == co::WA::INACTIVE {
 						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-							if self2.0.base.hwnd_ref().IsChild(hwnd_cur_focus) {
+							if self2.base_ref().hwnd_ref().IsChild(hwnd_cur_focus) {
 								self2.0.as_mut().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
 							}
 						}
@@ -121,18 +106,18 @@ impl RawMain {
 			}
 		});
 
-		self.user_events_ref().wm_set_focus({
+		self.base_ref().user_events_ref().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-					if *self2.hwnd_ref() == hwnd_cur_focus {
+					if *self2.base_ref().hwnd_ref() == hwnd_cur_focus {
 						self2.0.base.focus_first_child(); // if window receives focus, delegate to first child
 					}
 				}
 			}
 		});
 
-		self.user_events_ref().wm_nc_destroy(|| {
+		self.base_ref().user_events_ref().wm_nc_destroy(|| {
 			PostQuitMessage(co::ERROR::SUCCESS);
 		});
 	}

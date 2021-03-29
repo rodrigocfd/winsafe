@@ -1,12 +1,14 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{GetAsyncKeyState, PostQuitMessage};
+use crate::gui::base::Base;
 use crate::gui::events::{ListViewEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{hdm, lvm};
 use crate::structs::{LVCOLUMN, LVITEM, NMLVKEYDOWN, POINT, SIZE};
@@ -14,23 +16,25 @@ use crate::WString;
 
 /// Native
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
+/// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
 /// control.
 ///
-/// Not to be confused with the simpler [list box](crate::gui::ListBox) control.
+/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct ListView(Arc<Obj>);
 
 struct Obj { // actual fields of ListView
-	base: NativeControlBase<ListViewEvents>,
+	base: NativeControlBase,
 	opts_id: OptsId<ListViewOpts>,
+	events: ListViewEvents,
 }
 
 unsafe impl Send for ListView {}
 unsafe impl Sync for ListView {}
 
 impl Child for ListView {
-	fn hctrl_ref(&self) -> &HWND {
-		self.0.base.hctrl_ref()
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -38,46 +42,50 @@ impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ListViewOpts) -> ListView {
+		let parent_ref = baseref_from_parent(parent);
 		let opts = ListViewOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						ListViewEvents::new(parent, opts.ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
+					events: ListViewEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm(parent.init_msg(), {
+
+		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
-		new_self.handled_events(parent, ctrl_id);
+
+		new_self.handled_events(parent_ref, ctrl_id);
 		new_self
 	}
 
 	/// Instantiates a new `ListView` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ListView {
+		let parent_ref = baseref_from_parent(parent);
+
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(
-						parent,
-						ListViewEvents::new(parent, ctrl_id),
-					),
+					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
+					events: ListViewEvents::new(parent_ref, ctrl_id),
 				},
 			),
 		);
-		parent.privileged_events_ref().wm_init_dialog({
+
+		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
-		new_self.handled_events(parent, ctrl_id);
+
+		new_self.handled_events(parent_ref, ctrl_id);
 		new_self
 	}
 
@@ -106,8 +114,8 @@ impl ListView {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	fn handled_events(&self, parent: &dyn Parent, ctrl_id: u16) {
-		parent.privileged_events_ref().add_nfy(ctrl_id, co::LVN::KEYDOWN.into(), {
+	fn handled_events(&self, parent_ref: &Base, ctrl_id: u16) {
+		parent_ref.privileged_events_ref().add_nfy(ctrl_id, co::LVN::KEYDOWN.into(), {
 			let me = self.clone();
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };

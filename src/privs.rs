@@ -17,7 +17,6 @@ pub const LB_ERR: i32 = -1;
 pub const LB_ERRSPACE: i32 = -2;
 pub const LF_FACESIZE: usize = 32;
 pub const MAX_LINKID_TEXT: usize = 48;
-pub const WC_DIALOG: u16 = 0x8002;
 
 /// Transforms a raw pointer into an option, which is `None` if the pointer is
 /// null.
