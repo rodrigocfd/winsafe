@@ -149,12 +149,14 @@ impl StatusBar {
 
 	hwnd_on_onsubclass!(StatusBarEvents);
 
-	/// Retrieves the number of parts.
+	/// Retrieves the number of parts by sending an
+	/// [`SB_GETPARTS`](crate::msg::sb::GetParts) message.
 	pub fn part_count(&self) -> u8 {
 		self.hwnd().SendMessage(sb::GetParts { right_edges: None })
 	}
 
-	/// Retrieves the text or a part.
+	/// Retrieves the text of a part by sending an
+	/// [`SB_GETTEXT`](crate::msg::sb::GetText) message.
 	pub fn part_text(&self, part_index: u8) -> String {
 		let (len, _) = self.hwnd().SendMessage(sb::GetTextLength { part_index });
 		let mut buf = WString::new_alloc_buffer(len as usize + 1);
@@ -166,7 +168,8 @@ impl StatusBar {
 		buf.to_string()
 	}
 
-	/// Sets the text of a part.
+	/// Sets the text of a part by sending an
+	/// [`SB_SETTEXT`](crate::msg::sb::SetText) message.
 	pub fn set_part_text(&self, part_index: u8, text: &str) -> WinResult<()> {
 		self.hwnd().SendMessage(sb::SetText {
 			part_index,

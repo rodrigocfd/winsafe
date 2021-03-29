@@ -112,8 +112,8 @@ impl Label {
 
 	hwnd_ctrlid_on_onsubclass!(LabelEvents);
 
-	/// Calls [`SetWindowText`](crate::HWND::SetWindowText) and resizes the
-	/// control to exactly fit the new text.
+	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText),
+	/// and resizes the control to exactly fit the new text.
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
 		let bound_box = calc_text_bound_box(text)?;
 		self.hwnd().SetWindowText(text)?;

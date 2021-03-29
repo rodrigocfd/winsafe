@@ -11,7 +11,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::mcm;
-use crate::structs::{POINT, RECT, SIZE};
+use crate::structs::{POINT, RECT, SIZE, SYSTEMTIME};
 
 /// Native
 /// [month calendar](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
@@ -115,6 +115,18 @@ impl MonthCalendar {
 	}
 
 	hwnd_ctrlid_on_onsubclass!(MonthCalendarEvents);
+
+	/// Retrieves the currently selected date by sending an
+	/// [`MCM_GETCURSEL`](crate::msg::mcm::GetCurSel) message.
+	pub fn selected(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
+		self.hwnd().SendMessage(mcm::GetCurSel { info: st })
+	}
+
+	/// Sets the currently selected date by sending an
+	/// [`MCM_SETCURSEL`](crate::msg::mcm::SetCurSel) message.
+	pub fn set_selected(&self, st: &SYSTEMTIME) -> WinResult<()> {
+		self.hwnd().SendMessage(mcm::SetCurSel { info: st })
+	}
 }
 
 //------------------------------------------------------------------------------

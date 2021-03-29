@@ -110,7 +110,8 @@ impl ListBox {
 
 	hwnd_ctrlid_on_onsubclass!(ListBoxEvents);
 
-	/// Adds new texts.
+	/// Adds new texts by sending an [`LB_ADDSTRING`](crate::msg::lb::AddString)
+	/// message.
 	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
 		for text in items.iter() {
 			self.hwnd().SendMessage(lb::AddString { text })?;
@@ -118,7 +119,8 @@ impl ListBox {
 		Ok(())
 	}
 
-	/// Deletes the item at the given index.
+	/// Deletes the item at the given index by sending an
+	/// [`LB_DELETESTRING`](crate::msg::lb::DeleteString) message.
 	pub fn delete_item(&self, index: u32) -> WinResult<()> {
 		self.hwnd().SendMessage(lb::DeleteString { index })
 			.map(|_| ())

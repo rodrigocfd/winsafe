@@ -109,12 +109,14 @@ impl Edit {
 
 	hwnd_ctrlid_on_onsubclass!(EditEvents);
 
-	/// Sets the text in the control.
+	/// Sets the text in the control by calling
+	/// [`SetWindowText`](crate::HWND::SetWindowText).
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
 		self.hwnd().SetWindowText(text)
 	}
 
-	/// Retrieves the text in the control.
+	/// Retrieves the text in the control by calling
+	/// [`GetWindowText`](crate::HWND::GetWindowText).
 	pub fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowTextStr()
 	}

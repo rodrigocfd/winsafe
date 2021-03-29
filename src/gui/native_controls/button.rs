@@ -110,7 +110,8 @@ impl Button {
 
 	hwnd_ctrlid_on_onsubclass!(ButtonEvents);
 
-	/// Fires the click event for the radio button. The event is asynchronous,
+	/// Fires the click event for the button by posting a
+	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
 	/// the method returns immediately.
 	pub fn trigger_click(&self) -> WinResult<()> {
 		self.hwnd().PostMessage(bm::Click {})

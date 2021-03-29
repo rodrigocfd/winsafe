@@ -89,19 +89,22 @@ impl RadioButton {
 
 	hwnd_ctrlid_on_onsubclass!(ButtonEvents);
 
-	/// Tells if this radio button is currently checked.
+	/// Tells if this radio button is currently checked by sending a
+	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) message.
 	pub fn is_checked(&self) -> bool {
 		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
 	}
 
-	/// Sets the current check state.
+	/// Sets the current check state by sending a
+	/// [`BM_SETCHECK`](crate::msg::bm::SetCheck) message.
 	pub fn set_check(&self, checked: bool) {
 		self.hwnd().SendMessage(bm::SetCheck {
 			state: if checked { co::BST::CHECKED } else { co::BST::UNCHECKED },
 		});
 	}
 
-	/// Fires the click event for the radio button. The event is asynchronous,
+	/// Fires the click event for the radio button by posting a
+	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
 	/// the method returns immediately.
 	pub fn trigger_click(&self) -> WinResult<()> {
 		self.hwnd().PostMessage(bm::Click {})

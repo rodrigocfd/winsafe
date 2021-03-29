@@ -111,7 +111,8 @@ impl ComboBox {
 
 	hwnd_ctrlid_on_onsubclass!(ComboBoxEvents);
 
-	/// Adds new texts.
+	/// Adds new texts by sending a [`CB_ADDSTRING`](crate::msg::cb::AddString)
+	/// message.
 	///
 	/// # Examples
 	///
@@ -129,18 +130,21 @@ impl ComboBox {
 		Ok(())
 	}
 
-	/// Deletes all items.
+	/// Deletes all items by sending a
+	/// [`CB_RESETCONTENT`](crate::msg::cb::ResetContent) message.
 	pub fn delete_all_items(&self) {
 		self.hwnd().SendMessage(cb::ResetContent {})
 	}
 
-	/// Deletes the item at the given index.
+	/// Deletes the item at the given index by sending a
+	/// [`CB_DELETESTRING`](crate::msg::cb::DeleteString) message.
 	pub fn delete_item(&self, index: u32) -> WinResult<()> {
 		self.hwnd().SendMessage(cb::DeleteString { index })
 			.map(|_| ())
 	}
 
-	/// Retrieves the text at the given position, if any.
+	/// Retrieves the text at the given position, if any, by sending a
+	/// [`CB_GETLBTEXT`](crate::msg::cb::GetLbText) message.
 	pub fn item(&self, index: u32) -> Option<String> {
 		match self.hwnd().SendMessage(cb::GetLbTextLen { index }) {
 			Err(err) => {
@@ -160,23 +164,28 @@ impl ComboBox {
 		}
 	}
 
-	/// Retrieves the total number of items.
+	/// Retrieves the total number of items by sending a
+	/// [`CB_GETCOUNT`](crate::msg::cb::GetCount) message.
 	pub fn item_count(&self) -> WinResult<u32> {
 		self.hwnd().SendMessage(cb::GetCount {})
 	}
 
-	/// Retrieves the index of the currently selected item, if any.
+	/// Retrieves the index of the currently selected item, if any, by sending a
+	/// [`CB_GETCURSEL`](crate::msg::cb::GetCurSel) message.
 	pub fn selected_index(&self) -> Option<u32> {
 		self.hwnd().SendMessage(cb::GetCurSel {})
 	}
 
-	/// Retrieves the currently selected text, if any.
+	/// Retrieves the currently selected text, if any, by calling
+	/// [`selected_item`](crate::gui::ComboBox::selected_item) and
+	/// [`item`](crate::gui::ComboBox::selected_item) methods.
 	pub fn selected_item(&self) -> Option<String> {
 		self.selected_index()
 			.and_then(|idx| self.item(idx))
 	}
 
-	/// Sets the currently selected text, or clears it.
+	/// Sets the currently selected text, or clears it, by sending a
+	/// [`CB_SETCURSEL`](crate::msg::cb::SetCurSel) message.
 	pub fn set_selected_item(&self, index: Option<u32>) {
 		self.hwnd().SendMessage(cb::SetCurSel { index });
 	}

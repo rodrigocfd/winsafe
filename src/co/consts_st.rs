@@ -36,7 +36,6 @@ const_type_ws! { SBARS,
 
 const_type! { SBB, i32,
 	/// [`GetScrollInfo`](crate::HWND::GetScrollInfo),
-	/// [`GetScrollRange`](crate::HWND::GetScrollRange),
 	/// [`SetScrollInfo`](crate::HWND::SetScrollInfo) and
 	/// [`SetScrollRange`](crate::HWND::SetScrollRange) `nBar` (`i32`). Originally
 	/// has `SB` prefix.
