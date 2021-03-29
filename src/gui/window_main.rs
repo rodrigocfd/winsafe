@@ -5,7 +5,7 @@ use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEvents;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{WindowMainOpts, RawMain};
-use crate::gui::traits::{Parent, private::ParentPriv};
+use crate::gui::traits::Parent;
 use crate::handles::HWND;
 
 /// An user main window, which can handle events. Usually, this is the first
@@ -123,20 +123,18 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 unsafe impl Send for WindowMain {}
 unsafe impl Sync for WindowMain {}
 
-impl ParentPriv for WindowMain {
-	fn is_dialog(&self) -> bool {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.is_dialog(),
-			RawDlg::Dlg(d) => d.is_dialog(),
-		}
-	}
-}
-
 impl Parent for WindowMain {
 	fn hwnd_ref(&self) -> &HWND {
 		match &self.raw_dlg {
 			RawDlg::Raw(r) => r.hwnd_ref(),
 			RawDlg::Dlg(d) => d.hwnd_ref(),
+		}
+	}
+
+	fn is_dialog(&self) -> bool {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.is_dialog(),
+			RawDlg::Dlg(d) => d.is_dialog(),
 		}
 	}
 

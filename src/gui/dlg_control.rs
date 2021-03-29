@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEvents;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
-use crate::gui::traits::{Child, Parent, private::ParentPriv};
+use crate::gui::traits::{Child, Parent};
 use crate::handles::HWND;
 use crate::structs::POINT;
 
@@ -20,15 +20,13 @@ struct Obj { // actual fields of DlgControl
 	ctrl_id: Option<u16>,
 }
 
-impl ParentPriv for DlgControl {
-	fn is_dialog(&self) -> bool {
-		self.0.base.is_dialog()
-	}
-}
-
 impl Parent for DlgControl {
 	fn hwnd_ref(&self) -> &HWND {
 		self.0.base.hwnd_ref()
+	}
+
+	fn is_dialog(&self) -> bool {
+		self.0.base.is_dialog()
 	}
 
 	fn user_events_ref(&self) -> &WindowEvents {

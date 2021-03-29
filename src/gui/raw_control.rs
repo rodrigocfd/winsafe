@@ -8,7 +8,7 @@ use crate::gui::events::WindowEvents;
 use crate::gui::immut::Immut;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
-use crate::gui::traits::{Child, Parent, private::ParentPriv};
+use crate::gui::traits::{Child, Parent};
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::WString;
@@ -21,15 +21,13 @@ struct Obj { // actual fields of RawControl
 	opts: WindowControlOpts,
 }
 
-impl ParentPriv for RawControl {
-	fn is_dialog(&self) -> bool {
-		self.0.base.is_dialog()
-	}
-}
-
 impl Parent for RawControl {
 	fn hwnd_ref(&self) -> &HWND {
 		self.0.base.hwnd_ref()
+	}
+
+	fn is_dialog(&self) -> bool {
+		self.0.base.is_dialog()
 	}
 
 	fn user_events_ref(&self) -> &WindowEvents {

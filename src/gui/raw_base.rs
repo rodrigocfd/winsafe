@@ -4,7 +4,7 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::{PostQuitMessage, RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::traits::{Parent, private::ParentPriv};
+use crate::gui::traits::Parent;
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
@@ -23,15 +23,13 @@ impl Drop for RawBase {
 	}
 }
 
-impl ParentPriv for RawBase {
-	fn is_dialog(&self) -> bool {
-		false
-	}
-}
-
 impl Parent for RawBase {
 	fn hwnd_ref(&self) -> &HWND {
 		self.base.hwnd_ref()
+	}
+
+	fn is_dialog(&self) -> bool {
+		false
 	}
 
 	fn user_events_ref(&self) -> &WindowEvents {
