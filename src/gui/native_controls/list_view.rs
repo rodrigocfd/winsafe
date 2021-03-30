@@ -7,13 +7,13 @@ use crate::funcs::{GetAsyncKeyState, PostQuitMessage};
 use crate::gui::base::Base;
 use crate::gui::events::{ListViewEvents, WindowEvents};
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
+use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::lvm;
-use crate::structs::{LVITEM, NMLVKEYDOWN, POINT, SIZE};
-use crate::WString;
+use crate::structs::{NMLVKEYDOWN, POINT, SIZE};
 
 /// Native
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
@@ -29,6 +29,7 @@ struct Obj { // actual fields of ListView
 	opts_id: OptsId<ListViewOpts>,
 	events: ListViewEvents,
 	columns: ListViewColumns,
+	items: ListViewItems,
 }
 
 unsafe impl Send for ListView {}
@@ -55,10 +56,12 @@ impl ListView {
 					opts_id: OptsId::Wnd(opts),
 					events: ListViewEvents::new(parent_ref, ctrl_id),
 					columns: ListViewColumns::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					items: ListViewItems::new(parent_ref.hwnd_ref()),
 				},
 			),
 		);
 		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
@@ -81,10 +84,12 @@ impl ListView {
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListViewEvents::new(parent_ref, ctrl_id),
 					columns: ListViewColumns::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					items: ListViewItems::new(parent_ref.hwnd_ref()),
 				},
 			),
 		);
 		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -129,7 +134,7 @@ impl ListView {
 				if lvnk.wVKey == co::VK('A' as u16)
 					&& GetAsyncKeyState(co::VK::CONTROL) // Ctrl+A pressed?
 				{
-					me.set_selected_all_items(true)
+					me.items().set_selected_all(true)
 						.unwrap_or_else(|err| PostQuitMessage(err));
 				}
 				None
@@ -139,204 +144,31 @@ impl ListView {
 
 	hwnd_ctrlid_on_onsubclass!(ListViewEvents);
 
-	/// Appends a new item, returning its index.
-	pub fn add_item(&self,
-		text: &str, icon_index: Option<u32>) -> WinResult<u32>
-	{
-		let mut lvi = LVITEM::default();
-		lvi.mask = co::LVIF::TEXT | co::LVIF::IMAGE;
-		lvi.iItem = 0x0fff_ffff; // insert as the last one
-
-		lvi.iImage = match icon_index {
-			Some(idx) => idx as i32,
-			None => -1,
-		};
-
-		let mut wtext = WString::from_str(text);
-		lvi.set_pszText(&mut wtext);
-
-		self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })
-	}
-
 	/// Column methods.
 	pub fn columns(&self) -> &ListViewColumns {
 		&self.0.columns
 	}
 
-	/// Retrieves the current view.
+	/// Item methods.
+	pub fn items(&self) -> &ListViewItems {
+		&self.0.items
+	}
+
+	/// Retrieves the current view by sending an
+	/// [`LVM_GETVIEW`](crate::msg::lvm::GetView) message.
 	pub fn current_view(&self) -> co::LV_VIEW {
 		self.hwnd().SendMessage(lvm::GetView {})
 	}
 
-	/// Deletes all items.
-	pub fn delete_all_items(&self) -> WinResult<()> {
-		self.hwnd().SendMessage(lvm::DeleteAllItems {})
-	}
-
-	/// Deletes the items at the given indexes.
-	pub fn delete_items(&self, indexes: &[u32]) -> WinResult<()> {
-		for idx in indexes.iter() {
-			self.hwnd().SendMessage(lvm::DeleteItem {
-				index: *idx as i32,
-			})?;
-		}
-		Ok(())
-	}
-
-	/// Ensures that an item is visible in the list.
-	pub fn ensure_item_visible(&self, index: u32) -> WinResult<()> {
-		self.hwnd().SendMessage(lvm::EnsureVisible {
-			index: index as i32,
-			entirely_visible: true,
-		})
-	}
-
-	/// Retrieves the index of the focused item.
-	pub fn focused_item(&self) -> Option<u32> {
-		self.hwnd().SendMessage(lvm::GetNextItem {
-			initial_index: -1,
-			relationship: co::LVNI::FOCUSED,
-		})
-	}
-
-	/// Tells if the item is the focused one.
-	pub fn is_item_focused(&self, index: u32) -> bool {
-		self.hwnd().SendMessage(lvm::GetItemState {
-			index: index as i32,
-			mask: co::LVIS::FOCUSED,
-		}).has(co::LVIS::FOCUSED)
-	}
-
-	/// Tells if the item is selected.
-	pub fn is_item_selected(&self, index: u32) -> bool {
-		self.hwnd().SendMessage(lvm::GetItemState {
-			index: index as i32,
-			mask: co::LVIS::SELECTED,
-		}).has(co::LVIS::SELECTED)
-	}
-
-	/// Tells if the item is currently visible.
-	pub fn is_item_visible(&self, index: u32) -> bool {
-		self.hwnd().SendMessage(lvm::IsItemVisible { index: index as i32 })
-	}
-
-	/// Retrieves the total number of items.
-	pub fn item_count(&self) -> u32 {
-		self.hwnd().SendMessage(lvm::GetItemCount {})
-	}
-
-	/// Retrieves the text of an item under any column.
-	pub fn item_text(&self, item_index: u32, column_index: u32) -> String {
-		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
-		const BLOCK: usize = 64; // arbitrary
-		let mut buf_sz = BLOCK;
-
-		loop {
-			let mut lvi = LVITEM::default();
-			lvi.iSubItem = column_index as i32;
-
-			let mut buf = WString::new_alloc_buffer(buf_sz);
-			lvi.set_pszText(&mut buf);
-
-			let nchars = self.hwnd().SendMessage(lvm::GetItemText {
-				index: item_index as i32,
-				lvitem: &mut lvi,
-			});
-
-			if (nchars as usize) < buf_sz { // to break, must have at least 1 char gap
-				return buf.to_string();
-			}
-
-			buf_sz += BLOCK; // increase buffer size to try again
-		}
-	}
-
-	/// Sets the current view.
+	/// Sets the current view by sending an
+	/// [`LVM_SETVIEW`](crate::msg::lvm::SetView) message.
 	pub fn set_current_view(&self, view: co::LV_VIEW) -> WinResult<()> {
 		self.hwnd().SendMessage(lvm::SetView { view })
 	}
 
-	/// Retrieves the number of selected items.
-	pub fn selected_item_count(&self) -> u32 {
-		self.hwnd().SendMessage(lvm::GetSelectedCount {})
-	}
-
-	/// Retrieves the indexes of the selected items.
-	pub fn selected_items(&self) -> Vec<u32> {
-		let mut items = Vec::with_capacity(self.selected_item_count() as usize);
-		let mut idx = -1;
-
-		loop {
-			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
-				initial_index: idx,
-				relationship: co::LVNI::SELECTED,
-			}) {
-				Some(idx) => idx as i32,
-				None => break,
-			};
-			items.push(idx as u32);
-		}
-		items
-	}
-
-	/// Sets the focused item.
-	pub fn set_focused_item(&self, index: u32) -> WinResult<()> {
-		let mut lvi = LVITEM::default();
-		lvi.stateMask = co::LVIS::FOCUSED;
-		lvi.state = co::LVIS::FOCUSED;
-
-		self.hwnd().SendMessage(lvm::SetItemState {
-			index: index as i32,
-			lvitem: &lvi,
-		})
-	}
-
-	/// Sets the text of an item under any column.
-	pub fn set_item_text(&self,
-		item_index: u32, column_index: u32, text: &str) -> WinResult<()>
-	{
-		let mut lvi = LVITEM::default();
-		lvi.iSubItem = column_index as i32;
-
-		let mut wtext = WString::from_str(text);
-		lvi.set_pszText(&mut wtext);
-
-		self.hwnd().SendMessage(lvm::SetItemText {
-			index: item_index as i32,
-			lvitem: &lvi,
-		})
-	}
-
-	/// Sets or remove the selection for all items.
-	pub fn set_selected_all_items(&self, set: bool) -> WinResult<()> {
-		let mut lvi = LVITEM::default();
-		lvi.stateMask = co::LVIS::SELECTED;
-		if set { lvi.state = co::LVIS::SELECTED; }
-
-		self.hwnd().SendMessage(lvm::SetItemState {
-			index: -1,
-			lvitem: &lvi,
-		})
-	}
-
-	/// Sets or remove the selection from the given item indexes.
-	pub fn set_selected_items(&self,
-		set: bool, indexes: &[u32]) -> WinResult<()>
-	{
-		let mut lvi = LVITEM::default();
-		lvi.stateMask = co::LVIS::SELECTED;
-		if set { lvi.state = co::LVIS::SELECTED; }
-
-		for idx in indexes.iter() {
-			self.hwnd().SendMessage(lvm::SetItemState {
-				index: *idx as i32,
-				lvitem: &lvi,
-			})?;
-		}
-		Ok(())
-	}
-
-	/// Toggles the given extended list view styles.
+	/// Toggles the given extended list view styles by sending an
+	/// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](crate::msg::lvm::SetExtendedListViewStyle)
+	/// message.
 	pub fn toggle_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
 		self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
 			mask: ex_style,
