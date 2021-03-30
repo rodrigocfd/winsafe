@@ -5,11 +5,12 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ListBoxEvents, WindowEvents};
+use crate::gui::native_controls::list_box_items::ListBoxItems;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{lb, wm};
+use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -25,6 +26,7 @@ struct Obj { // actual fields of ListBox
 	base: NativeControlBase,
 	opts_id: OptsId<ListBoxOpts>,
 	events: ListBoxEvents,
+	items: ListBoxItems,
 }
 
 unsafe impl Send for ListBox {}
@@ -50,9 +52,11 @@ impl ListBox {
 					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListBoxEvents::new(parent_ref, ctrl_id),
+					items: ListBoxItems::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
@@ -73,9 +77,11 @@ impl ListBox {
 					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListBoxEvents::new(parent_ref, ctrl_id),
+					items: ListBoxItems::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -110,20 +116,9 @@ impl ListBox {
 
 	hwnd_ctrlid_on_onsubclass!(ListBoxEvents);
 
-	/// Adds new texts by sending an [`LB_ADDSTRING`](crate::msg::lb::AddString)
-	/// message.
-	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
-		for text in items.iter() {
-			self.hwnd().SendMessage(lb::AddString { text })?;
-		}
-		Ok(())
-	}
-
-	/// Deletes the item at the given index by sending an
-	/// [`LB_DELETESTRING`](crate::msg::lb::DeleteString) message.
-	pub fn delete_item(&self, index: u32) -> WinResult<()> {
-		self.hwnd().SendMessage(lb::DeleteString { index })
-			.map(|_| ())
+	/// Item methods.
+	pub fn items(&self) -> &ListBoxItems {
+		&self.0.items
 	}
 }
 
