@@ -5,8 +5,8 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
-use crate::gui::immut::Immut;
 use crate::gui::traits::{baseref_from_parent, Child, hwndref_from_child, Parent};
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDWP, HWND};
 use crate::msg::wm;
 use crate::structs::{RECT, SIZE};
@@ -37,7 +37,7 @@ struct Ctrl {
 /// When the parent window is resized, automatically adjusts position and size
 /// of child controls.
 #[derive(Clone)]
-pub struct Resizer(Arc<Immut<Obj>>);
+pub struct Resizer(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of Resizer
 	ctrls: Vec<Ctrl>,
@@ -51,7 +51,7 @@ impl Resizer {
 		let parent_ref = baseref_from_parent(parent);
 
 		let resz = Self(
-			Arc::new(Immut::new(
+			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					ctrls: Vec::with_capacity(16), // arbitrary, prealloc for speed
 					sz_parent_orig: SIZE::default(),

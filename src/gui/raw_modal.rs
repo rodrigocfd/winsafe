@@ -5,15 +5,15 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, DispatchMessage, GetMessage, PostQuitMessage, TranslateMessage};
 use crate::gui::base::Base;
-use crate::gui::immut::Immut;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub struct RawModal(Arc<Immut<Obj>>);
+pub struct RawModal(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of RawModal
 	base: RawBase,
@@ -24,7 +24,7 @@ struct Obj { // actual fields of RawModal
 impl RawModal {
 	pub fn new(parent_ref: &Base, opts: WindowModalOpts) -> RawModal {
 		let wnd = Self(
-			Arc::new(Immut::new(
+			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					base: RawBase::new(Some(parent_ref)),
 					opts,

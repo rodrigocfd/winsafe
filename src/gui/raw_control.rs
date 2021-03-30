@@ -5,15 +5,15 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
-use crate::gui::immut::Immut;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub struct RawControl(Arc<Immut<Obj>>);
+pub struct RawControl(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of RawControl
 	base: RawBase,
@@ -23,7 +23,7 @@ struct Obj { // actual fields of RawControl
 impl RawControl {
 	pub fn new(parent_ref: &Base, opts: WindowControlOpts) -> RawControl {
 		let wnd = Self(
-			Arc::new(Immut::new(
+			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					base: RawBase::new(Some(parent_ref)),
 					opts,

@@ -5,10 +5,10 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::{StatusBarEvents, WindowEvents};
-use crate::gui::immut::Immut;
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::{MsgSend, sb, wm};
 use crate::structs::{POINT, SIZE};
@@ -20,7 +20,7 @@ use crate::WString;
 ///
 /// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
-pub struct StatusBar(Arc<Immut<Obj>>);
+pub struct StatusBar(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of StatusBar
 	base: NativeControlBase,
@@ -47,7 +47,7 @@ impl StatusBar {
 		let ctrl_id = auto_ctrl_id();
 
 		let new_self = Self(
-			Arc::new(Immut::new(
+			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					base: NativeControlBase::new(parent_ref),
 					ctrl_id,

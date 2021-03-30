@@ -4,7 +4,7 @@ use std::rc::Rc;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
-use crate::gui::immut::Immut;
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// Exposes button control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -57,7 +57,7 @@ impl RadioGroupEvents {
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(Immut::new(func));
+		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::CLICKED.into(), *ctrl_id, {
@@ -78,7 +78,7 @@ impl RadioGroupEvents {
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(Immut::new(func));
+		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::DBLCLK.into(), *ctrl_id, {
@@ -97,7 +97,7 @@ impl RadioGroupEvents {
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(Immut::new(func));
+		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::KILLFOCUS.into(), *ctrl_id, {
@@ -116,7 +116,7 @@ impl RadioGroupEvents {
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(Immut::new(func));
+		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::SETFOCUS.into(), *ctrl_id, {

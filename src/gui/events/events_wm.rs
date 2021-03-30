@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::gui::events::func_store::FuncStore;
-use crate::gui::immut::Immut;
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDC, HICON};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
@@ -23,7 +23,7 @@ pub enum ProcessResult {
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
-pub struct WindowEvents(Immut<Obj>);
+pub struct WindowEvents(VeryUnsafeCell<Obj>);
 
 struct Obj { // actual fields of WindowEvents
 	msgs: FuncStore< // ordinary WM messages
@@ -47,7 +47,7 @@ struct Obj { // actual fields of WindowEvents
 impl WindowEvents {
 	pub(crate) fn new() -> WindowEvents {
 		Self(
-			Immut::new(
+			VeryUnsafeCell::new(
 				Obj {
 					msgs: FuncStore::new(),
 					tmrs: FuncStore::new(),
@@ -289,7 +289,7 @@ impl WindowEvents {
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
 		where F: FnMut() + 'static,
 	{
-		let shared_func = Rc::new(Immut::new(func));
+		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		self.wm_command(co::CMD::Menu, ctrl_id, {
 			let shared_func = shared_func.clone();

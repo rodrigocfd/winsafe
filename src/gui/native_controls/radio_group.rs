@@ -5,12 +5,12 @@ use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
-use crate::gui::immut::Immut;
 use crate::gui::traits::{baseref_from_parent, Parent};
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
 #[derive(Clone)]
-pub struct RadioGroup(Arc<Immut<Obj>>);
+pub struct RadioGroup(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of RadioGroup
 	radios: Vec<RadioButton>,
@@ -56,7 +56,7 @@ impl RadioGroup {
 		}
 
 		let new_self = Self(
-			Arc::new(Immut::new(
+			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					radios,
 					parent_events: RadioGroupEvents::new(parent_ref, ctrl_ids),
@@ -91,7 +91,7 @@ impl RadioGroup {
 		}
 
 		let new_self = Self(
-			Arc::new(Immut::new(
+			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					radios,
 					parent_events: RadioGroupEvents::new(parent_ref, ctrl_ids.to_vec()),

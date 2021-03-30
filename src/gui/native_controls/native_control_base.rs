@@ -7,8 +7,8 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::immut::Immut;
 use crate::gui::traits::Child;
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
 use crate::structs::{POINT, SIZE};
@@ -29,7 +29,7 @@ pub enum OptsId<Op> {
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.
-pub struct NativeControlBase(Immut<Obj>);
+pub struct NativeControlBase(VeryUnsafeCell<Obj>);
 
 struct Obj { // actual fields of NativeControlBase
 	hwnd: HWND,
@@ -46,7 +46,7 @@ impl Child for NativeControlBase {
 impl NativeControlBase {
 	pub fn new(parent_ref: &Base) -> NativeControlBase {
 		Self(
-			Immut::new(
+			VeryUnsafeCell::new(
 				Obj {
 					hwnd: unsafe { HWND::null_handle() },
 					ptr_parent: NonNull::from(parent_ref), // ref implicitly converted to pointer

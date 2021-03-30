@@ -5,15 +5,15 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::base::Base;
-use crate::gui::immut::Immut;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub struct RawMain(Arc<Immut<Obj>>);
+pub struct RawMain(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of RawMain
 	base: RawBase,
@@ -24,7 +24,7 @@ struct Obj { // actual fields of RawMain
 impl RawMain {
 	pub fn new(opts: WindowMainOpts) -> RawMain {
 		let wnd = Self(
-			Arc::new(Immut::new(
+			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					base: RawBase::new(None), // no parent
 					opts,

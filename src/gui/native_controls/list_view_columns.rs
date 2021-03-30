@@ -2,8 +2,8 @@ use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::immut::Immut;
 use crate::gui::privs::multiply_dpi;
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::{hdm, lvm};
 use crate::structs::{LVCOLUMN, SIZE};
@@ -14,13 +14,13 @@ use crate::WString;
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 pub struct ListViewColumns {
-	hwnd_ptr: Immut<NonNull<HWND>>,
+	hwnd_ptr: VeryUnsafeCell<NonNull<HWND>>,
 }
 
 impl ListViewColumns {
 	pub(crate) fn new(hwnd_ref: &HWND) -> ListViewColumns {
 		Self {
-			hwnd_ptr: Immut::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
+			hwnd_ptr: VeryUnsafeCell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
 		}
 	}
 

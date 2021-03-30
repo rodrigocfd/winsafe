@@ -11,8 +11,8 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{hdm, lvm};
-use crate::structs::{LVCOLUMN, LVITEM, NMLVKEYDOWN, POINT, SIZE};
+use crate::msg::lvm;
+use crate::structs::{LVITEM, NMLVKEYDOWN, POINT, SIZE};
 use crate::WString;
 
 /// Native
