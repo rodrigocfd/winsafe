@@ -3,7 +3,7 @@
 [![Crates.io](https://img.shields.io/crates/v/winsafe.svg)](https://crates.io/crates/winsafe)
 [![Docs.rs](https://docs.rs/winsafe/badge.svg)](https://docs.rs/winsafe)
 [![Lines of code](https://tokei.rs/b1/github/rodrigocfd/winsafe)](https://github.com/rodrigocfd/winsafe)
-[![License](https://img.shields.io/crates/l/winsafe.svg)](https://github.com/rodrigocfd/winsafe/blob/master/LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Win32 GUI and related APIs in safe, idiomatic Rust.
 
@@ -18,20 +18,27 @@ Documentation for the WinSafe `master` branch: [rodrigocfd.github.io/winsafe/win
 
 ## Current status
 
-- [x] User windows (main, modal and control)
-- [ ] Window messages
-- [ ] Native controls
-- [ ] APIs
+This crate is **not** complete yet, but under heavy development.
 
-Since this crate is *too* incomplete, it's not published to [crates.io](https://crates.io/crates/winsafe) yet. However, you can use this crate simply by cloning this repo.
+| Feature | Estimated progress |
+| - | - |
+| User windows (main, modal and control) | ![Progress](https://progress-bar.dev/100/) |
+| Native controls | ![Progress](https://progress-bar.dev/65/) |
+| Window messages | ![Progress](https://progress-bar.dev/50/) |
+| Overall Win32 APIs | ![Progress](https://progress-bar.dev/25/) | |
 
 ## Example
 
-WinSafe works with both ordinary windows (created programatically) and resource dialogs (from `.rc` files). Be sure to check the [examples folder](examples/), which is being constantly updated.
+You can find several examples in the dedicated repo: [🔗 github.com/rodrigocfd/winsafe-examples](https://github.com/rodrigocfd/winsafe-examples).
 
-Here is an [example](examples/01_button_click/) of an ordinary window with a button. Note how the click event is handled with a closure:
+WinSafe allows you to create windows in two ways:
 
-![Example 01](examples/01_button_click/screen.gif)
+* programmatically defining parameters; or
+* loading resource dialogs from `.res` or `.rc` files.
+
+The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/01_button_click/) creates a window  with a button programmatically. Note how the click event is handled with a closure:
+
+![Example 01](https://raw.githubusercontent.com/rodrigocfd/winsafe-examples/master/01_button_click/screen.gif)
 
 ```rust
 #![windows_subsystem = "windows"]
@@ -88,4 +95,4 @@ impl MyWindow {
 
 ## License
 
-Licensed under [MIT license](https://opensource.org/licenses/MIT), see [LICENSE.txt](LICENSE.txt) for details.
+Licensed under [MIT license](https://opensource.org/licenses/MIT), see [LICENSE.md](LICENSE.md) for details.
