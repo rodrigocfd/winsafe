@@ -5,6 +5,7 @@ mod macros;
 
 mod button;
 mod check_box;
+mod combo_box_items;
 mod combo_box;
 mod date_time_picker;
 mod edit;
@@ -21,6 +22,7 @@ mod status_bar;
 
 pub use button::{Button, ButtonOpts};
 pub use check_box::{CheckBox, CheckBoxOpts};
+pub use combo_box_items::ComboBoxItems;
 pub use combo_box::{ComboBox, ComboBoxOpts};
 pub use date_time_picker::{DateTimePicker, DateTimePickerOpts};
 pub use edit::{Edit, EditOpts};

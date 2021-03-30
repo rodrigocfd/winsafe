@@ -5,13 +5,13 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ComboBoxEvents, WindowEvents};
+use crate::gui::native_controls::combo_box_items::ComboBoxItems;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
-use crate::msg::{cb, wm};
+use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
-use crate::WString;
 
 /// Native
 /// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
@@ -25,6 +25,7 @@ struct Obj { // actual fields of ComboBox
 	base: NativeControlBase,
 	opts_id: OptsId<ComboBoxOpts>,
 	events: ComboBoxEvents,
+	items: ComboBoxItems,
 }
 
 unsafe impl Send for ComboBox {}
@@ -50,9 +51,11 @@ impl ComboBox {
 					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ComboBoxEvents::new(parent_ref, ctrl_id),
+					items: ComboBoxItems::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
@@ -73,9 +76,11 @@ impl ComboBox {
 					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ComboBoxEvents::new(parent_ref, ctrl_id),
+					items: ComboBoxItems::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -111,83 +116,9 @@ impl ComboBox {
 
 	hwnd_ctrlid_on_onsubclass!(ComboBoxEvents);
 
-	/// Adds new texts by sending a [`CB_ADDSTRING`](crate::msg::cb::AddString)
-	/// message.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::ComboBox;
-	///
-	/// let cmb_names: ComboBox; // initialize it somewhere...
-	///
-	/// cmb_names.add_items(&["John", "Mary"]);
-	/// ```
-	pub fn add_items(&self, items: &[&str]) -> WinResult<()> {
-		for text in items.iter() {
-			self.hwnd().SendMessage(cb::AddString { text })?;
-		}
-		Ok(())
-	}
-
-	/// Deletes all items by sending a
-	/// [`CB_RESETCONTENT`](crate::msg::cb::ResetContent) message.
-	pub fn delete_all_items(&self) {
-		self.hwnd().SendMessage(cb::ResetContent {})
-	}
-
-	/// Deletes the item at the given index by sending a
-	/// [`CB_DELETESTRING`](crate::msg::cb::DeleteString) message.
-	pub fn delete_item(&self, index: u32) -> WinResult<()> {
-		self.hwnd().SendMessage(cb::DeleteString { index })
-			.map(|_| ())
-	}
-
-	/// Retrieves the text at the given position, if any, by sending a
-	/// [`CB_GETLBTEXT`](crate::msg::cb::GetLbText) message.
-	pub fn item(&self, index: u32) -> Option<String> {
-		match self.hwnd().SendMessage(cb::GetLbTextLen { index }) {
-			Err(err) => {
-				PostQuitMessage(err);
-				None
-			},
-			Ok(len) => {
-				let mut buf = WString::new_alloc_buffer(len as usize + 1);
-				match self.hwnd().SendMessage(cb::GetLbText{
-					index,
-					text: &mut buf,
-				}) {
-					Err(_) => None,
-					Ok(_) => Some(buf.to_string()),
-				}
-			},
-		}
-	}
-
-	/// Retrieves the total number of items by sending a
-	/// [`CB_GETCOUNT`](crate::msg::cb::GetCount) message.
-	pub fn item_count(&self) -> WinResult<u32> {
-		self.hwnd().SendMessage(cb::GetCount {})
-	}
-
-	/// Retrieves the index of the currently selected item, if any, by sending a
-	/// [`CB_GETCURSEL`](crate::msg::cb::GetCurSel) message.
-	pub fn selected_index(&self) -> Option<u32> {
-		self.hwnd().SendMessage(cb::GetCurSel {})
-	}
-
-	/// Retrieves the currently selected text, if any, by calling
-	/// [`selected_item`](crate::gui::ComboBox::selected_item) and
-	/// [`item`](crate::gui::ComboBox::selected_item) methods.
-	pub fn selected_item(&self) -> Option<String> {
-		self.selected_index()
-			.and_then(|idx| self.item(idx))
-	}
-
-	/// Sets the currently selected text, or clears it, by sending a
-	/// [`CB_SETCURSEL`](crate::msg::cb::SetCurSel) message.
-	pub fn set_selected_item(&self, index: Option<u32>) {
-		self.hwnd().SendMessage(cb::SetCurSel { index });
+	/// Item methods.
+	pub fn items(&self) -> &ComboBoxItems {
+		&self.0.items
 	}
 }
 
