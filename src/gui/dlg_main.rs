@@ -6,9 +6,7 @@ use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::WindowEvents;
-use crate::gui::traits::Parent;
-use crate::handles::{HINSTANCE, HWND};
+use crate::handles::HINSTANCE;
 use crate::msg::wm;
 
 #[derive(Clone)]
@@ -19,24 +17,6 @@ struct Obj { // actual fields of DlgMain
 	icon_id: Option<i32>,
 	accel_table_id: Option<i32>,
 }
-
-/*impl Parent for DlgMain {
-	fn hwnd_ref(&self) -> &HWND {
-		self.0.base.hwnd_ref()
-	}
-
-	fn is_dialog(&self) -> bool {
-		self.0.base.is_dialog()
-	}
-
-	fn user_events_ref(&self) -> &WindowEvents {
-		self.0.base.user_events_ref()
-	}
-
-	fn privileged_events_ref(&self) -> &WindowEvents {
-		self.0.base.privileged_events_ref()
-	}
-}*/
 
 impl DlgMain {
 	pub fn new(

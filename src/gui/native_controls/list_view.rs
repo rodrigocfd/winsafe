@@ -6,6 +6,7 @@ use crate::co;
 use crate::funcs::{GetAsyncKeyState, PostQuitMessage};
 use crate::gui::base::Base;
 use crate::gui::events::{ListViewEvents, WindowEvents};
+use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
@@ -27,6 +28,7 @@ struct Obj { // actual fields of ListView
 	base: NativeControlBase,
 	opts_id: OptsId<ListViewOpts>,
 	events: ListViewEvents,
+	columns: ListViewColumns,
 }
 
 unsafe impl Send for ListView {}
@@ -52,9 +54,11 @@ impl ListView {
 					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListViewEvents::new(parent_ref, ctrl_id),
+					columns: ListViewColumns::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
 			let me = new_self.clone();
@@ -76,9 +80,11 @@ impl ListView {
 					base: NativeControlBase::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListViewEvents::new(parent_ref, ctrl_id),
+					columns: ListViewColumns::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -133,32 +139,6 @@ impl ListView {
 
 	hwnd_ctrlid_on_onsubclass!(ListViewEvents);
 
-	/// Adds many columns at once.
-	///
-	/// Widths will be adjusted to match current system DPI.
-	pub fn add_columns(&self,
-		texts_and_widths: &[(&str, u32)]) -> WinResult<()>
-	{
-		for (text, width) in texts_and_widths.iter() {
-			let mut col_cx = SIZE::new(*width as i32, 0);
-			multiply_dpi(None, Some(&mut col_cx))?;
-
-			let mut lvc = LVCOLUMN::default();
-			lvc.mask = co::LVCF::TEXT | co::LVCF::WIDTH;
-			lvc.cx = col_cx.cx;
-
-			let mut wtext = WString::from_str(text);
-			lvc.set_pszText(&mut wtext);
-
-			self.hwnd().SendMessage(lvm::InsertColumn {
-				index: 0xffff,
-				lvcolumn: &lvc,
-			})?;
-		}
-
-		Ok(())
-	}
-
 	/// Appends a new item, returning its index.
 	pub fn add_item(&self,
 		text: &str, icon_index: Option<u32>) -> WinResult<u32>
@@ -178,10 +158,9 @@ impl ListView {
 		self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })
 	}
 
-	/// Retrieves the number of columns.
-	pub fn column_count(&self) -> WinResult<u32> {
-		self.hwnd().SendMessage(lvm::GetHeader {})?
-			.SendMessage(hdm::GetItemCount {})
+	/// Column methods.
+	pub fn columns(&self) -> &ListViewColumns {
+		&self.0.columns
 	}
 
 	/// Retrieves the current view.

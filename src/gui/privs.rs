@@ -4,7 +4,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, SystemParametersInfo};
-use crate::gui::traits::Parent;
 use crate::handles::{HFONT, HTHEME, HWND};
 use crate::msg::wm;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
