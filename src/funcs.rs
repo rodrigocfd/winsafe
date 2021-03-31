@@ -11,7 +11,18 @@ use crate::ffi::{comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::MsgSend;
 use crate::privs::{bool_to_winresult, parse_multi_z_str, ptr_as_opt};
-use crate::structs::{ATOM, COLORREF, MSG, OSVERSIONINFOEX, RECT, TRACKMOUSEEVENT, WNDCLASSEX};
+use crate::structs::{
+	ATOM,
+	COLORREF,
+	FILETIME,
+	MSG,
+	OSVERSIONINFOEX,
+	RECT,
+	SYSTEMTIME,
+	TIME_ZONE_INFORMATION,
+	TRACKMOUSEEVENT,
+	WNDCLASSEX,
+};
 use crate::WString;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
@@ -36,6 +47,21 @@ pub fn AdjustWindowRectEx(
 /// function.
 pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(lpMsg as *const _ as *const _) }
+}
+
+/// [`FileTimeToSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
+/// function.
+pub fn FileTimeToSystemTime(
+	lpFileTime: &FILETIME, lpSystemTime: &mut SYSTEMTIME) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			kernel32::FileTimeToSystemTime(
+				lpFileTime as *const _ as *const _,
+				lpSystemTime as *mut _ as *mut _,
+			)
+		}
+	)
 }
 
 /// [`GetAsyncKeyState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
@@ -138,6 +164,38 @@ pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
 /// function.
 pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
 	unsafe { user32::GetSystemMetrics(nIndex.0) }
+}
+
+/// [`GetSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
+/// function.
+pub fn GetSystemTime(lpSystemTime: &mut SYSTEMTIME) {
+	unsafe { kernel32::GetSystemTime(lpSystemTime as *mut _ as *mut _) }
+}
+
+/// [`GetSystemTimeAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
+/// function.
+pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
+	unsafe {
+		kernel32::GetSystemTimeAsFileTime(
+			lpSystemTimeAsFileTime as *mut _ as *mut _,
+		)
+	}
+}
+
+/// [`GetSystemTimePreciseAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimepreciseasfiletime)
+/// function.
+pub fn GetSystemTimePreciseAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
+	unsafe {
+		kernel32::GetSystemTimePreciseAsFileTime(
+			lpSystemTimeAsFileTime as *mut _ as *mut _,
+		)
+	}
+}
+
+/// [`GetTickCount64`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64)
+/// function.
+pub fn GetTickCount64() -> u64 {
+	unsafe { kernel32::GetTickCount64() }
 }
 
 /// [`HIBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
@@ -432,6 +490,42 @@ pub unsafe fn SystemParametersInfo<T>(
 		user32::SystemParametersInfoW(
 			uiAction.0, uiParam, pvParam as *mut _ as *mut _, fWinIni.0,
 		),
+	)
+}
+
+/// [`SystemTimeToFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetofiletime)
+/// function.
+pub fn SystemTimeToFileTime(
+	lpSystemTime: &SYSTEMTIME, lpFileTime: &mut FILETIME) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			kernel32::SystemTimeToFileTime(
+				lpSystemTime as *const _ as *const _,
+				lpFileTime as *mut _  as *mut _,
+			)
+		}
+	)
+}
+
+/// [`SystemTimeToTzSpecificLocalTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
+/// function.
+pub fn SystemTimeToTzSpecificLocalTime(
+	lpTimeZoneInformation: Option<&TIME_ZONE_INFORMATION>,
+	lpUniversalTime: &SYSTEMTIME,
+	lpLocalTime: &mut SYSTEMTIME) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			kernel32::SystemTimeToTzSpecificLocalTime(
+				match lpTimeZoneInformation {
+					Some(lp) => lp as *const _ as *const _,
+					None => std::ptr::null(),
+				},
+				lpUniversalTime as *const _ as *const _,
+				lpLocalTime as *mut _ as *mut _,
+			)
+		}
 	)
 }
 

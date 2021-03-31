@@ -155,6 +155,15 @@ impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 	}
 }
 
+/// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Eq, PartialEq)]
+pub struct FILETIME {
+	pub dwLowDateTime: u32,
+	pub dwHighDateTime: u32,
+}
+
 /// [`HELPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-helpinfo)
 /// struct.
 ///
@@ -581,6 +590,42 @@ pub struct TEXTMETRIC {
 	pub tmStruckOut: u8,
 	pub tmPitchAndFamily: u8,
 	pub tmCharSet: u8,
+}
+
+/// [`TIME_ZONE_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct TIME_ZONE_INFORMATION {
+	pub bias: i32,
+	standardName: [u16; 32],
+	pub standardDate: SYSTEMTIME,
+	pub standardBias: i32,
+	daylightName: [u16; 32],
+	pub daylightDate: SYSTEMTIME,
+	pub daylightBias: i32,
+}
+
+impl TIME_ZONE_INFORMATION {
+	/// Returns the `standardName` field.
+	pub fn standardName(&self) -> String {
+		WString::from_wchars_slice(&self.standardName).to_string()
+	}
+
+	/// Sets the `standardName` field.
+	pub fn set_standardName(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.standardName);
+	}
+
+	/// Returns the `daylightName` field.
+	pub fn daylightName(&self) -> String {
+		WString::from_wchars_slice(&self.daylightName).to_string()
+	}
+
+	/// Sets the `daylightName` field.
+	pub fn set_daylightName(&mut self, text: &str) {
+		WString::from_str(text).copy_to_slice(&mut self.daylightName);
+	}
 }
 
 /// [`TRACKMOUSEEVENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)
