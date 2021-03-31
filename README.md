@@ -18,7 +18,7 @@ Documentation for the WinSafe `master` branch: [rodrigocfd.github.io/winsafe/win
 
 ## Current status
 
-This crate is **not** complete yet, but under heavy development.
+This crate is still in early alpha stage, so it's not published to [crates.io](https://crates.io/crates/winsafe) yet. However, you can test it by cloning this repo and use it as a [local dependency](https://stackoverflow.com/a/33025972).
 
 | Feature | Estimated progress |
 | - | - |
