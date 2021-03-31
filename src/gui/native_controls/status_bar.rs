@@ -26,7 +26,7 @@ struct Obj { // actual fields of StatusBar
 	base: NativeControlBase,
 	ctrl_id: u16,
 	events: StatusBarEvents,
-	parts: Vec<StatusBarPart>,
+	parts_info: Vec<StatusBarPart>,
 	right_edges: Vec<i32>, // buffer to speed up resize calls
 }
 
@@ -52,7 +52,7 @@ impl StatusBar {
 					base: NativeControlBase::new(parent_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_ref, ctrl_id),
-					parts: parts.to_vec(),
+					parts_info: parts.to_vec(),
 					right_edges: vec![0; parts.len()],
 				},
 			)),
@@ -72,8 +72,8 @@ impl StatusBar {
 
 	fn create(&self) {
 		|| -> WinResult<()> {
-			for part in self.0.as_mut().parts.iter_mut() {
-				if let StatusBarPart::Fixed(width) = part {
+			for part in self.0.as_mut().parts_info.iter_mut() {
+				if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 					let mut col_cx = SIZE::new(*width as i32, 0);
 					multiply_dpi(None, Some(&mut col_cx))?;
 					*width = col_cx.cx as u32;
@@ -118,13 +118,13 @@ impl StatusBar {
 				return Ok(()); // nothing to do
 			}
 
-			self.hwnd().SendMessage(p.as_generic_wm()); // tell status bar to fit parent
+			self.hwnd().SendMessage(p.as_generic_wm()); // send WM_SIZE to status bar, so it resizes itself to fit parent
 
 			let mut total_proportions: u8 = 0;
 			let mut cx_available = p.client_area.cx as u32;
 
-			for part in self.0.parts.iter() {
-				match part {
+			for part_info in self.0.parts_info.iter() {
+				match part_info {
 					StatusBarPart::Fixed(pixels) => cx_available -= pixels,
 					StatusBarPart::Proportional(prop) => total_proportions += prop,
 				}
@@ -133,9 +133,9 @@ impl StatusBar {
 			let right_edges = &mut self.0.as_mut().right_edges;
 			let mut total_cx = p.client_area.cx as u32;
 
-			for (idx, part) in self.0.parts.iter().rev().enumerate() {
-				right_edges[self.0.parts.len() - idx - 1] = total_cx as i32;
-				total_cx -= match part {
+			for (idx, part_info) in self.0.parts_info.iter().rev().enumerate() {
+				right_edges[self.0.parts_info.len() - idx - 1] = total_cx as i32;
+				total_cx -= match part_info {
 					StatusBarPart::Fixed(pixels) => *pixels,
 					StatusBarPart::Proportional(pp) => (cx_available / total_proportions as u32) * (*pp as u32),
 				};

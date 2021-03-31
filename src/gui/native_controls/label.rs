@@ -105,7 +105,10 @@ impl Label {
 					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
-				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+				OptsId::Dlg(ctrl_id) => {
+					self.0.base.create_dlg(*ctrl_id).map(|_| ())?; // may panic
+					self.adjust_size_to_fit_text(&self.text()?)
+				}
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
@@ -115,8 +118,18 @@ impl Label {
 	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText),
 	/// and resizes the control to exactly fit the new text.
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
-		let bound_box = calc_text_bound_box(text)?;
 		self.hwnd().SetWindowText(text)?;
+		self.adjust_size_to_fit_text(text)
+	}
+
+	/// Retrieves the text by calling
+	/// [`GetWindowTextStr`](crate::HWND::GetWindowText).
+	pub fn text(&self) -> WinResult<String> {
+		self.hwnd().GetWindowTextStr()
+	}
+
+	fn adjust_size_to_fit_text(&self, text: &str) -> WinResult<()> {
+		let bound_box = calc_text_bound_box(text)?;
 		self.hwnd().SetWindowPos(
 			HwndPlace::None, 0, 0, bound_box.cx, bound_box.cy,
 			co::SWP::NOZORDER | co::SWP::NOMOVE)
