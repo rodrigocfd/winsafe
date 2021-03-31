@@ -28,19 +28,19 @@ pub struct WindowEvents(VeryUnsafeCell<Obj>);
 struct Obj { // actual fields of WindowEvents
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
-		Box<dyn FnMut(WndMsg) -> Option<isize> + 'static>, // return value may be meaningful
+		Box<dyn FnMut(WndMsg) -> Option<isize>>, // return value may be meaningful
 	>,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
-		Box<dyn FnMut() + 'static>, // return value is never meaningful
+		Box<dyn FnMut()>, // return value is never meaningful
 	>,
 	cmds: FuncStore< // WM_COMMAND notifications
 		(co::CMD, u16), // code, ctrl_id
-		Box<dyn FnMut() + 'static>, // return value is never meaningful
+		Box<dyn FnMut()>, // return value is never meaningful
 	>,
 	nfys: FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
-		Box<dyn FnMut(wm::Notify) -> Option<isize> + 'static>, // return value may be meaningful
+		Box<dyn FnMut(wm::Notify) -> Option<isize>>, // return value may be meaningful
 	>,
 }
 
