@@ -16,8 +16,8 @@ pub trait MsgSend {
 	/// by the message.
 	fn convert_ret(&self, v: isize) -> Self::RetType;
 
-	/// Converts the message parameters to the generic
-	/// [`WndMsg`](crate::msg::WndMsg) parameters.
+	/// Converts the specific message parameters struct into the generic
+	/// [`WndMsg`](crate::msg::WndMsg) message struct.
 	fn as_generic_wm(&self) -> WndMsg;
 }
 
@@ -28,14 +28,17 @@ pub trait MsgSend {
 /// Allows the conversion from and to the generic [`WndMsg`](crate::msg::WndMsg)
 /// parameters, and also defines the return type of the message.
 pub trait MsgSendRecv: MsgSend {
-	/// Converts the generic [`WndMsg`](crate::msg::WndMsg) parameters into the
-	/// message parameters.
+	/// Converts the generic [`WndMsg`](crate::msg::WndMsg) parameters struct
+	/// into the specific message struct.
 	fn from_generic_wm(parm: WndMsg) -> Self;
 }
 
 /// Generic
 /// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
 /// parameters: `WPARAM` and `LPARAM`.
+///
+/// All message types can be converted to `WndMsg` via the
+/// [`as_generic_wm`](crate::msg::MsgSend::as_generic_wm) method.
 ///
 /// Return type: `isize`.
 #[derive(Copy, Clone)]

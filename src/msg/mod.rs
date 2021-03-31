@@ -9,11 +9,13 @@
 //! # Examples
 //!
 //! We want to delete the 3rd element of a [`ListView`](crate::gui::ListView)
-//! control. This can be done by sending it a
-//! [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message. Note how the
-//! `index` parameter is set when initializing the message struct, and how
-//! [`SendMessage`](crate::HWND::SendMessage) returns a
-//! [`WinResult`](crate::WinResult).
+//! control. This can be done by sending it an
+//! [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message via
+//! [`SendMessage`](crate::HWND::SendMessage). The message itself is a struct,
+//! which is initialized with the specific message parameters.
+//!
+//! The message struct also defines the data type returned by `SendMessage`. In
+//! the example below, `LVM_DELETEITEM` returns `WinResult<()>`.
 //!
 //! ```rust,ignore
 //! use winsafe::{HWND, msg::lvm};
@@ -27,8 +29,9 @@
 //! }).expect("Failed to delete item 2.");
 //! ```
 //!
-//! Each message has its own set of parameters. Also, each message has its own
-//! result type, which will be returned by `SendMessage`.
+//! Messages are organized into modules according to their prefixes:
+//! [`wm`](crate::msg::wm) (window messages), [`lvm`](crate::msg::lvm) (list
+//! view messages), and so on.
 
 #[macro_use]
 mod macros;
