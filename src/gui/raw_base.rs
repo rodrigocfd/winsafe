@@ -10,7 +10,7 @@ use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 /// Base to all ordinary windows.
-pub struct RawBase {
+pub(crate) struct RawBase {
 	base: Base,
 }
 

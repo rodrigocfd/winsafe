@@ -27,7 +27,7 @@ pub trait Child {
 	fn as_any(&self) -> &dyn Any;
 }
 
-pub fn baseref_from_parent(parent: &dyn Parent) -> &Base {
+pub(crate) fn baseref_from_parent(parent: &dyn Parent) -> &Base {
 	if let Some(w) = parent.as_any().downcast_ref::<WindowMain>() {
 		w.base_ref()
 	} else if let Some(w) = parent.as_any().downcast_ref::<WindowModal>() {
@@ -39,7 +39,7 @@ pub fn baseref_from_parent(parent: &dyn Parent) -> &Base {
 	}
 }
 
-pub fn hwndref_from_child(child: &dyn Child) -> &HWND {
+pub(crate) fn hwndref_from_child(child: &dyn Child) -> &HWND {
 	if let Some(c) = child.as_any().downcast_ref::<WindowControl>() {
 		c.base_ref().hwnd_ref()
 	} else if let Some(c) = child.as_any().downcast_ref::<Button>() {

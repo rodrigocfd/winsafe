@@ -10,7 +10,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
 use crate::structs::POINT;
 
 #[derive(Clone)]
-pub struct DlgControl(Arc<Obj>);
+pub(crate) struct DlgControl(Arc<Obj>);
 
 struct Obj { // actual fields of DlgControl
 	base: DlgBase,

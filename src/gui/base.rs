@@ -9,7 +9,7 @@ use crate::msg::WndMsg;
 use crate::structs::MSG;
 
 /// Base to `RawBase` and `DlgBase`.
-pub struct Base {
+pub(crate) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
 	ptr_parent: Option<NonNull<Base>>,

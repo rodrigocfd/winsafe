@@ -5,7 +5,7 @@ use std::ops::Deref;
 ///
 /// **Extremely** unsafe, intended only to provide less verbose internal
 /// mutability within the `gui` module.
-pub struct VeryUnsafeCell<T>(UnsafeCell<T>);
+pub(crate) struct VeryUnsafeCell<T>(UnsafeCell<T>);
 
 impl<T> Deref for VeryUnsafeCell<T> {
 	type Target = T;

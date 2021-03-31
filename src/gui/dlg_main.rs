@@ -10,7 +10,7 @@ use crate::handles::HINSTANCE;
 use crate::msg::wm;
 
 #[derive(Clone)]
-pub struct DlgMain(Arc<Obj>);
+pub(crate) struct DlgMain(Arc<Obj>);
 
 struct Obj { // actual fields of DlgMain
 	base: DlgBase,

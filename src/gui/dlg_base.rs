@@ -9,7 +9,7 @@ use crate::handles::{HFONT, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// Base to all dialog windows.
-pub struct DlgBase {
+pub(crate) struct DlgBase {
 	base: Base,
 	dialog_id: i32,
 }

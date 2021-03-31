@@ -8,7 +8,7 @@ use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 
 #[derive(Clone)]
-pub struct DlgModal {
+pub(crate) struct DlgModal {
 	base: Arc<DlgBase>,
 }
 

@@ -13,7 +13,7 @@ use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub struct RawModal(Arc<VeryUnsafeCell<Obj>>);
+pub(crate) struct RawModal(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of RawModal
 	base: RawBase,

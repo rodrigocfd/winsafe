@@ -7,7 +7,7 @@ use crate::handles::{HDC, HICON};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// The result of processing a message.
-pub enum ProcessResult {
+pub(crate) enum ProcessResult {
 	/// Message was not handled because no function was found.
 	NotHandled,
 	/// Message handled, and return value is meaningful.

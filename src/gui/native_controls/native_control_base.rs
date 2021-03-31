@@ -29,7 +29,7 @@ pub enum OptsId<Op> {
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.
-pub struct NativeControlBase(VeryUnsafeCell<Obj>);
+pub(crate) struct NativeControlBase(VeryUnsafeCell<Obj>);
 
 struct Obj { // actual fields of NativeControlBase
 	hwnd: HWND,
