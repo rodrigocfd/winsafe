@@ -1,8 +1,8 @@
 [package]
 name = "winsafe"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Rodrigo Cesar de Freitas Dias <rcesar@gmail.com>"]
-description = "Under development since October, 2019."
+description = "Win32 GUI and related APIs in safe, idiomatic Rust."
 categories = ["api-bindings", "gui", "os::windows-apis"]
 keywords = ["com", "ffi", "gui", "win32", "windows"]
 license = "MIT"
@@ -10,5 +10,3 @@ repository = "https://github.com/rodrigocfd/winsafe"
 readme = "README.md"
 include = ["/src/**/*", "/Cargo.toml", "/LICENSE.md", "/README.md"]
 edition = "2018"
-
-[dependencies]

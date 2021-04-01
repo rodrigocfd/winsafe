@@ -10,8 +10,17 @@
 //! [windows](https://crates.io/crates/windows) crates, which are unsafe, but
 //! have everything.
 //!
+//! To use this crate, put this in your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! winsafe = "0.0.2"
+//! ```
+//!
+//! Links:
 //! * Crate – [crates.io/crates/winsafe](https://crates.io/crates/winsafe);
-//! * GitHub – [github.com/rodrigocfd/winsafe](https://github.com/rodrigocfd/winsafe).
+//! * GitHub – [github.com/rodrigocfd/winsafe](https://github.com/rodrigocfd/winsafe);
+//! * examples – [github.com/rodrigocfd/winsafe-examples](https://github.com/rodrigocfd/winsafe-examples).
 //!
 //! # Modules overview
 //!
@@ -24,10 +33,10 @@
 //!
 //! And additionally:
 //!
-//! * [`shell`](crate::shell) – Win32 shell COM interfaces.
+//! * [`shell`](crate::shell) – Win32 Shell COM interfaces.
 //!
-//! Other modules are planned to be added in the future, featuring more COM
-//! interfaces.
+//! The COM implementation is still *very* experimental. Other COM modules are
+//! planned to be added in the future.
 //!
 //! # Native function calls
 //!
@@ -122,7 +131,7 @@
 //! fields which control the size of the struct – often named `cbSize` – are
 //! *private* and automatically set when the struct is instantiated.
 //!
-//! Pointer fields are also private, and they can be set and retrieved only
+//! Pointer fields are also private, and they can be set and retrieved *only*
 //! through getter and setter methods. In particular, when setting a string
 //! pointer field, you need to pass a reference to a [`WString`](crate::WString)
 //! buffer, which will keep the actual string contents.
@@ -157,7 +166,7 @@
 //!
 //! Note how you *don't need* to call
 //! [`GetLastError`](crate::GetLastError) to retrieve the error code: it's
-//! returned by the method itself.
+//! returned by the method itself in the [`WinResult`](crate::WinResult).
 //!
 //! # Text encoding
 //!

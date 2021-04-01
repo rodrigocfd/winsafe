@@ -18,9 +18,9 @@ Documentation for the WinSafe `master` branch: [rodrigocfd.github.io/winsafe/win
 
 ## Current status
 
-This crate is still in early alpha stage, so it's not published to [crates.io](https://crates.io/crates/winsafe) yet. However, you can test it by cloning this repo and use it as a [local dependency](https://stackoverflow.com/a/33025972).
+This crate is still in early alpha stage. Below is an estimated progress of feature groups:
 
-| Feature | Estimated progress |
+| Feature group | Estimated progress |
 | - | - |
 | User windows (main, modal and control) | ![Progress](https://progress-bar.dev/100/) |
 | Native controls | ![Progress](https://progress-bar.dev/65/) |
@@ -29,7 +29,14 @@ This crate is still in early alpha stage, so it's not published to [crates.io](h
 
 ## Example
 
-You can find several examples in the dedicated repo: [🔗 github.com/rodrigocfd/winsafe-examples](https://github.com/rodrigocfd/winsafe-examples).
+**Note:** You can find several examples in the dedicated repo: [github.com/rodrigocfd/winsafe-examples](https://github.com/rodrigocfd/winsafe-examples)
+
+First, put this in your `Cargo.toml`:
+
+```toml
+[dependencies]
+winsafe = "0.0.2"
+```
 
 WinSafe allows you to create windows in two ways:
 
