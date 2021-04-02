@@ -10,3 +10,7 @@ repository = "https://github.com/rodrigocfd/winsafe"
 readme = "README.md"
 include = ["/src/**/*", "/Cargo.toml", "/LICENSE.md", "/README.md"]
 edition = "2018"
+
+[package.metadata.docs.rs]
+default-target = "x86_64-pc-windows-msvc"
+targets = ["aarch64-pc-windows-msvc", "i686-pc-windows-msvc", "x86_64-pc-windows-msvc"]
