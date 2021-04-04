@@ -4,6 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
+use crate::structs::FILETIME;
 use crate::WString;
 
 handle_type! {
@@ -43,6 +44,127 @@ impl HKEY {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
+	}
+
+	/// This method calls
+	/// [`RegEnumKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw)
+	/// method repeatedly to retrieve all key names.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{co, HKEY};
+	///
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	///     "Control Panel",
+	///     co::REG_OPTION::default(),
+	///     co::KEY::READ,
+	/// ).unwrap();
+	///
+	/// for key_name in hkey.RegEnumKeyEx().unwrap() {
+	///     println!("{}", key_name);
+	/// }
+	///
+	/// hkey.RegCloseKey().unwrap();
+	/// ```
+	pub fn RegEnumKeyEx(self) -> WinResult<Vec<String>> {
+		let mut nKeys: u32 = 0;
+		let mut maxKeyLen: u32 = 0; // length of longest subkey name
+		self.RegQueryInfoKey(
+			None, Some(&mut nKeys), Some(&mut maxKeyLen),
+			None, None, None, None, None, None)?;
+
+		let mut namesVec = Vec::with_capacity(nKeys as usize);
+		let mut nameBuf = WString::new_alloc_buffer(maxKeyLen as usize + 1);
+		let mut lenBuf;
+
+		for index in 0..nKeys {
+			lenBuf = nameBuf.buffer_size() as u32;
+
+			let err = co::ERROR(
+				unsafe {
+					advapi32::RegEnumKeyExW(
+						self.ptr,
+						index,
+						nameBuf.as_mut_ptr(),
+						&mut lenBuf,
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+					)
+				} as u32
+			);
+
+			if err != co::ERROR::SUCCESS {
+				return Err(err);
+			}
+			namesVec.push(nameBuf.to_string());
+		}
+
+		namesVec.sort_by(|a, b| a.to_uppercase().cmp(&b.to_uppercase()));
+		Ok(namesVec)
+	}
+
+	/// This method calls
+	/// [`RegEnumValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumvaluew)
+	/// method repeatedly to retrieve all value names and types.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{co, HKEY};
+	///
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	///     "Control Panel\\Appearance",
+	///     co::REG_OPTION::default(),
+	///     co::KEY::READ,
+	/// ).unwrap();
+	///
+	/// for (value, reg_type) in hkey.RegEnumValue().unwrap() {
+	///     println!("{}, {}", value, reg_type);
+	/// }
+	///
+	/// hkey.RegCloseKey().unwrap();
+	/// ```
+	pub fn RegEnumValue(self) -> WinResult<Vec<(String, co::REG)>> {
+		let mut nVals: u32 = 0;
+		let mut maxValLen: u32 = 0; // length of longest value name
+		self.RegQueryInfoKey(
+			None, None, None, None, Some(&mut nVals), Some(&mut maxValLen),
+			None, None, None)?;
+
+		let mut namesTypesVec = Vec::with_capacity(nVals as usize);
+		let mut nameBuf = WString::new_alloc_buffer(maxValLen as usize + 1);
+		let mut lenBuf;
+		let mut rawDataType: u32 = 0;
+
+		for index in 0..nVals {
+			lenBuf = nameBuf.buffer_size() as u32;
+
+			let err = co::ERROR(
+				unsafe {
+					advapi32::RegEnumValueW(
+						self.ptr,
+						index,
+						nameBuf.as_mut_ptr(),
+						&mut lenBuf,
+						std::ptr::null_mut(),
+						&mut rawDataType,
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+					)
+				} as u32
+			);
+
+			if err != co::ERROR::SUCCESS {
+				return Err(err);
+			}
+			namesTypesVec.push((nameBuf.to_string(), co::REG(rawDataType)));
+		}
+
+		namesTypesVec.sort_by(|a, b| a.0.to_uppercase().cmp(&b.0.to_uppercase()));
+		Ok(namesTypesVec)
 	}
 
 	/// [`RegGetValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -226,6 +348,71 @@ impl HKEY {
 		) {
 			co::ERROR::SUCCESS => Ok(hKey),
 			err => Err(err),
+		}
+	}
+
+	/// [`RegQueryInfoKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
+	/// method.
+	pub fn RegQueryInfoKey(self,
+		mut lpClass: Option<&mut WString>,
+		lpcSubKeys: Option<&mut u32>,
+		lpcbMaxSubKeyLen: Option<&mut u32>,
+		lpcbMaxClassLen: Option<&mut u32>,
+		lpcValues: Option<&mut u32>,
+		lpcbMaxValueNameLen: Option<&mut u32>,
+		lpcbMaxValueLen: Option<&mut u32>,
+		lpcbSecurityDescriptor: Option<&mut u32>,
+		lpftLastWriteTime: Option<&mut FILETIME>) -> WinResult<()>
+	{
+		let (mut lpClass2, mut lpcchClass) = match &mut lpClass {
+			Some(lpClass) => {
+				if lpClass.buffer_size() < 32 {
+					lpClass.realloc_buffer(32); // arbitrary
+				}
+				(unsafe { lpClass.as_mut_ptr() }, lpClass.buffer_size() as u32)
+			},
+			None => (std::ptr::null_mut(), 0),
+		};
+
+		let lpcSubKeys2 = lpcSubKeys.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpcbMaxSubKeyLen2 = lpcbMaxSubKeyLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpcbMaxClassLen2 = lpcbMaxClassLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpcValues2 = lpcValues.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpcbMaxValueNameLen2 = lpcbMaxValueNameLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpcbMaxValueLen2 = lpcbMaxValueLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpcbSecurityDescriptor2 = lpcbSecurityDescriptor.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpftLastWriteTime2 = lpftLastWriteTime.map(|re| re as *mut _ as *mut _).unwrap_or(std::ptr::null_mut());
+
+		loop { // until lpClass is large enough
+			match co::ERROR(
+				unsafe {
+					advapi32::RegQueryInfoKeyW(
+						self.ptr,
+						lpClass2,
+						&mut lpcchClass as *mut _,
+						std::ptr::null_mut(),
+						lpcSubKeys2,
+						lpcbMaxSubKeyLen2,
+						lpcbMaxClassLen2,
+						lpcValues2,
+						lpcbMaxValueNameLen2,
+						lpcbMaxValueLen2,
+						lpcbSecurityDescriptor2,
+						lpftLastWriteTime2,
+					)
+				} as u32
+			) {
+				co::ERROR::MORE_DATA => match &mut lpClass {
+					Some(lpClass) => {
+						lpClass.realloc_buffer(lpClass.buffer_size() + 32); // arbitrary
+						lpClass2 = unsafe { lpClass.as_mut_ptr() };
+						lpcchClass = lpClass.buffer_size() as u32;
+					},
+					None => return Err(co::ERROR::MORE_DATA),
+				},
+				co::ERROR::SUCCESS => return Ok(()),
+				err => return Err(err),
+			}
 		}
 	}
 
