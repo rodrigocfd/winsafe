@@ -4,6 +4,7 @@ use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
 #[link(name = "kernel32")]
 extern "system" {
+	pub fn ExpandEnvironmentStringsW(lpSrc: PCSTR, lpDst: PSTR, nSize: u32) -> u32;
 	pub fn FileTimeToSystemTime(lpFileTime: PCVOID, lpSystemTime: PVOID) -> BOOL;
 	pub fn FormatMessageW(dwFlags: u32, lpSource: PCVOID, dwMessageId: u32, dwLanguageId: u32, lpBuffer: PSTR, nSize: u32, Arguments: PVOID) -> u32;
 	pub fn FreeEnvironmentStringsW(penv: HANDLE) -> BOOL;

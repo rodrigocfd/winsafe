@@ -49,6 +49,31 @@ pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(lpMsg as *const _ as *const _) }
 }
 
+/// [`ExpandEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw)
+/// function.
+pub fn ExpandEnvironmentStrings(lpSrc: &str) -> WinResult<String> {
+	let wsrc = WString::from_str(lpSrc);
+	let len = unsafe {
+		kernel32::ExpandEnvironmentStringsW(
+			wsrc.as_ptr(),
+			std::ptr::null_mut(),
+			0,
+		)
+	};
+
+	let mut buf = WString::new_alloc_buffer(len as usize);
+	match unsafe {
+		kernel32::ExpandEnvironmentStringsW(
+			wsrc.as_ptr(),
+			buf.as_mut_ptr(),
+			len,
+		)
+	} {
+		0 => Err(GetLastError()),
+		_ => Ok(buf.to_string()),
+	}
+}
+
 /// [`FileTimeToSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
 /// function.
 pub fn FileTimeToSystemTime(
@@ -92,6 +117,7 @@ pub fn GetDoubleClickTime() -> u32 {
 /// # Examples
 ///
 /// Retrieving and printing the key/value pairs of all environment strings:
+///
 /// ```rust,ignore
 /// use winsafe::GetEnvironmentStrings;
 ///

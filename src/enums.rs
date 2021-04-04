@@ -315,15 +315,16 @@ pub enum NccspRect<'a, 'b> {
 
 /// Variant value returned by [`RegQueryValueEx`](crate::HKEY::RegQueryValueEx).
 pub enum RegistryValue {
-	/// Binary value.
+	/// Binary value, defined as [`REG::BINARY`](crate::co::REG::BINARY).
 	Binary(Vec<u8>),
-	/// An `u32` integer value.
+	/// An `u32` integer value, defined as [`REG::DWORD`](crate::co::REG::DWORD).
 	Dword(u32),
-	/// An `u64` integer value.
+	/// An `u64` integer value, defined as [`REG::QWORD`](crate::co::REG::QWORD).
 	Qword(u64),
-	/// String value.
+	/// String value, defined as [`REG::SZ`](crate::co::REG::SZ).
 	Sz(WString),
-	/// No value.
+	/// No value, defined as [`REG::NONE`](crate::co::REG:NONE). Also used for
+	/// non-implemented value types.
 	None,
 }
 
