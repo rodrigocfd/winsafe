@@ -8,7 +8,7 @@ use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, u
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
-use crate::structs::POINT;
+use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
@@ -67,10 +67,15 @@ impl RadioButton {
 				if opts.baseline_text_align { pos.y += 3; }
 				multiply_dpi(Some(&mut pos), None)?;
 
-				let bound_box = calc_text_bound_box_check(&opts.text)?;
+				let mut sz = opts.size;
+					if sz.cx == -1 && sz.cy == -1 {
+						sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
+					} else {
+						multiply_dpi(None, Some(&mut sz))?; // user-defined size
+					}
 
 				let our_hwnd = self.0.base.create_window( // may panic
-					"BUTTON", Some(&opts.text), pos, bound_box,
+					"BUTTON", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.ex_window_style,
 					opts.window_style | opts.button_style.into(),
@@ -128,6 +133,13 @@ pub struct RadioButtonOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
+	/// Control size, in pixels, to be
+	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
+	///
+	/// Defaults to the size needed to fit the text.
+	pub size: SIZE,
 	/// Will adjust `position.cy` so that, if the control is placed side-by-side
 	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
 	///
@@ -164,6 +176,7 @@ impl Default for RadioButtonOpts {
 		Self {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
+			size: SIZE::new(-1, -1), // will resize to fit the text
 			baseline_text_align: false,
 			button_style: co::BS::AUTORADIOBUTTON,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
@@ -185,6 +198,7 @@ impl RadioButtonOpts {
 		Self {
 			text: self.text.clone(),
 			position: self.position,
+			size: self.size,
 			baseline_text_align: self.baseline_text_align,
 			button_style: self.button_style,
 			window_style: self.window_style,

@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ButtonEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
@@ -10,7 +11,7 @@ use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, u
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
-use crate::structs::POINT;
+use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [check box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
@@ -93,10 +94,15 @@ impl CheckBox {
 					if opts.baseline_text_align { pos.y += 3; }
 					multiply_dpi(Some(&mut pos), None)?;
 
-					let bound_box = calc_text_bound_box_check(&opts.text)?;
+					let mut sz = opts.size;
+					if sz.cx == -1 && sz.cy == -1 {
+						sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
+					} else {
+						multiply_dpi(None, Some(&mut sz))?; // user-defined size
+					}
 
 					let our_hwnd = self.0.base.create_window( // may panic
-						"BUTTON", Some(&opts.text), pos, bound_box,
+						"BUTTON", Some(&opts.text), pos, sz,
 						opts.ctrl_id,
 						opts.ex_window_style,
 						opts.window_style | opts.button_style.into(),
@@ -118,6 +124,11 @@ impl CheckBox {
 		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
 	}
 
+	/// Resizes the control to exactly fit current text.
+	pub fn resize_to_text(&self) -> WinResult<()> {
+		self.resize_to_given_text(&self.text()?)
+	}
+
 	/// Sets the current check state by sending a
 	/// [`BM_SETCHECK`](crate::msg::bm::SetCheck) message.
 	pub fn set_check(&self, checked: bool) {
@@ -126,11 +137,36 @@ impl CheckBox {
 		});
 	}
 
+	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText).
+	pub fn set_text(&self, text: &str) -> WinResult<()> {
+		self.hwnd().SetWindowText(text)
+	}
+
+	/// Calls [`set_text`](crate::gui::CheckBox::set_text) and resizes the
+	/// control to exactly fit the new text.
+	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
+		self.set_text(text)?;
+		self.resize_to_given_text(text)
+	}
+
+	/// Retrieves the text by calling
+	/// [`GetWindowTextStr`](crate::HWND::GetWindowText).
+	pub fn text(&self) -> WinResult<String> {
+		self.hwnd().GetWindowTextStr()
+	}
+
 	/// Fires the click event for the check box by posting a
 	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
 	/// the method returns immediately.
 	pub fn trigger_click(&self) -> WinResult<()> {
 		self.hwnd().PostMessage(bm::Click {})
+	}
+
+	fn resize_to_given_text(&self, text: &str) -> WinResult<()> {
+		let bound_box = calc_text_bound_box_check(text)?;
+		self.hwnd().SetWindowPos(
+			HwndPlace::None, 0, 0, bound_box.cx, bound_box.cy,
+			co::SWP::NOZORDER | co::SWP::NOMOVE)
 	}
 }
 
@@ -151,6 +187,13 @@ pub struct CheckBoxOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
+	/// Control size, in pixels, to be
+	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
+	///
+	/// Defaults to the size needed to fit the text.
+	pub size: SIZE,
 	/// Will adjust `position.cy` so that, if the control is placed side-by-side
 	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
 	///
@@ -186,6 +229,7 @@ impl Default for CheckBoxOpts {
 		Self {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
+			size: SIZE::new(-1, -1), // will resize to fit the text
 			baseline_text_align: false,
 			button_style: co::BS::AUTOCHECKBOX,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,

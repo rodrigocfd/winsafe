@@ -11,7 +11,7 @@ use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
-use crate::structs::POINT;
+use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)
@@ -93,10 +93,15 @@ impl Label {
 					if opts.baseline_text_align { pos.y += 3; }
 					multiply_dpi(Some(&mut pos), None)?;
 
-					let bound_box = calc_text_bound_box(&opts.text)?;
+					let mut sz = opts.size;
+					if sz.cx == -1 && sz.cy == -1 {
+						sz = calc_text_bound_box(&opts.text)?; // resize to fit text
+					} else {
+						multiply_dpi(None, Some(&mut sz))?; // user-defined size
+					}
 
 					let our_hwnd = self.0.base.create_window( // may panic
-						"STATIC", Some(&opts.text), pos, bound_box,
+						"STATIC", Some(&opts.text), pos, sz,
 						opts.ctrl_id,
 						opts.ex_window_style,
 						opts.window_style | opts.label_style.into(),
@@ -105,21 +110,28 @@ impl Label {
 					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 					Ok(())
 				},
-				OptsId::Dlg(ctrl_id) => {
-					self.0.base.create_dlg(*ctrl_id).map(|_| ())?; // may panic
-					self.adjust_size_to_fit_text(&self.text()?)
-				}
+				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
 			}
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
 	hwnd_ctrlid_on_onsubclass!(LabelEvents);
 
-	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText),
-	/// and resizes the control to exactly fit the new text.
+	/// Resizes the control to exactly fit current text.
+	pub fn resize_to_text(&self) -> WinResult<()> {
+		self.resize_to_given_text(&self.text()?)
+	}
+
+	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText).
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
-		self.hwnd().SetWindowText(text)?;
-		self.adjust_size_to_fit_text(text)
+		self.hwnd().SetWindowText(text)
+	}
+
+	/// Calls [`set_text`](crate::gui::Label::set_text) and resizes the control
+	/// to exactly fit the new text.
+	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
+		self.set_text(text)?;
+		self.resize_to_given_text(text)
 	}
 
 	/// Retrieves the text by calling
@@ -128,7 +140,7 @@ impl Label {
 		self.hwnd().GetWindowTextStr()
 	}
 
-	fn adjust_size_to_fit_text(&self, text: &str) -> WinResult<()> {
+	fn resize_to_given_text(&self, text: &str) -> WinResult<()> {
 		let bound_box = calc_text_bound_box(text)?;
 		self.hwnd().SetWindowPos(
 			HwndPlace::None, 0, 0, bound_box.cx, bound_box.cy,
@@ -153,6 +165,13 @@ pub struct LabelOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
+	/// Control size, in pixels, to be
+	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Will be adjusted to match current system DPI.
+	///
+	/// Defaults to the size needed to fit the text.
+	pub size: SIZE,
 	/// Will adjust `position.cy` so that, if the control is placed side-by-side
 	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
 	///
@@ -185,6 +204,7 @@ impl Default for LabelOpts {
 		Self {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
+			size: SIZE::new(-1, -1), // will resize to fit the text
 			baseline_text_align: false,
 			label_style: co::SS::LEFT | co::SS::NOTIFY,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
