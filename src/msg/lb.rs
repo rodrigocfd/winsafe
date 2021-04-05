@@ -597,6 +597,7 @@ impl MsgSend for InitStorage {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct InsertString<'a> {
+	pub insertion_index: IndexAll,
 	pub text: &'a str,
 }
 
@@ -613,7 +614,7 @@ impl<'a> MsgSend for InsertString<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
-			wparam: 0,
+			wparam: self.insertion_index.into(),
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
 		}
 	}
