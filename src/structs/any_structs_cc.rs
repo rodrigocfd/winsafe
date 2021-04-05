@@ -586,3 +586,12 @@ pub struct NMVIEWCHANGE {
 	pub dwOldView: co::MCMV,
 	pub dwNewView: co::MCMV,
 }
+
+/// [`PBRANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-pbrange)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct PBRANGE {
+	pub iLow: i32,
+	pub iHigh: i32,
+}

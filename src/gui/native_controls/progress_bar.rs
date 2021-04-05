@@ -39,7 +39,6 @@ impl ProgressBar {
 	pub fn new(parent: &dyn Parent, opts: ProgressBarOpts) -> ProgressBar {
 		let parent_ref = baseref_from_parent(parent);
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
-		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::new(

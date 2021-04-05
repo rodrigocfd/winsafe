@@ -1,4 +1,4 @@
-use crate::co::{FF, QS, WS};
+use crate::co::{CCM, FF, QS, WM, WS};
 
 const_type! { OCR, u32,
 	/// [`SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id` (`u32`).
@@ -35,6 +35,29 @@ const_type! { OUT_PRECIS, u8,
 	PS_ONLY, 10
 }
 
+const_type_wm! { PBM,
+	/// Progress bar control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	->
+	SETRANGE, WM::USER.0 + 1
+	SETPOS, WM::USER.0 + 2
+	DELTAPOS, WM::USER.0 + 3
+	SETSTEP, WM::USER.0 + 4
+	STEPIT, WM::USER.0 + 5
+	SETRANGE32, WM::USER.0 + 6
+	GETRANGE, WM::USER.0 + 7
+	GETPOS, WM::USER.0 + 8
+	SETBARCOLOR, WM::USER.0 + 9
+	SETBKCOLOR, CCM::SETBKCOLOR.0
+	SETMARQUEE, WM::USER.0 + 10
+	GETSTEP, WM::USER.0 + 13
+	GETBKCOLOR, WM::USER.0 + 14
+	GETBARCOLOR, WM::USER.0 + 15
+	SETSTATE, WM::USER.0 + 16
+	GETSTATE, WM::USER.0 + 17
+}
+
 const_type_ws! { PBS,
 	/// Progress bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
@@ -44,6 +67,16 @@ const_type_ws! { PBS,
 	VERTICAL, 0x04
 	MARQUEE, 0x08
 	SMOOTHREVERSE, 0x10
+}
+
+const_type! { PBST, u32,
+	/// Progress bar
+	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
+	/// (`u32`).
+	->
+	NORMAL, 0x0001
+	ERROR, 0x0002
+	PAUSED, 0x0003
 }
 
 const_type! { PITCH, u8,
