@@ -762,3 +762,57 @@ impl MsgSend for SetSel {
 		}
 	}
 }
+
+/// [`LB_SETTABSTOPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-settabstops)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetTabStops<'a> {
+	pub tab_stops: &'a [u32],
+}
+
+impl<'a> MsgSend for SetTabStops<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETTABSTOPS.into(),
+			wparam: self.tab_stops.len(),
+			lparam: self.tab_stops.as_ptr() as isize,
+		}
+	}
+}
+
+/// [`LB_SETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-settopindex)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetTopIndex {
+	pub index: u32,
+}
+
+impl MsgSend for SetTopIndex {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETTOPINDEX.into(),
+			wparam: self.index as usize,
+			lparam: 0,
+		}
+	}
+}

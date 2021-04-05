@@ -2,8 +2,6 @@
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages),
 //! whose constants have [`LVM`](crate::co::LVM) prefix.
 
-use std::ops::Index;
-
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IndexAll;
