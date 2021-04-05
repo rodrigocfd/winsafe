@@ -9,7 +9,8 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
-use crate::structs::{POINT, SIZE};
+use crate::msg::pbm;
+use crate::structs::{PBRANGE, POINT, SIZE};
 
 /// Native
 /// [progress bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
@@ -102,6 +103,71 @@ impl ProgressBar {
 	}
 
 	hwnd_onsubclass!();
+
+	/// Retrieves the current position by sending a
+	/// [`PBM_GETPOS`](crate::msg::pbm::GetPos) message.
+	pub fn position(&self) -> u32 {
+		self.hwnd().SendMessage(pbm::GetPos {})
+	}
+
+	/// Retrieves the current minimum and maximum values by sending a
+	/// [`PBM_GETRANGE`](crate::msg::pbm::GetRange) message. Default values are 0
+	/// and 100.
+	pub fn range(&self) -> (u32, u32) {
+		let mut ranges = PBRANGE::default();
+		self.hwnd().SendMessage(pbm::GetRange {
+			return_low: false, // indifferent, return value not used
+			ranges: Some(&mut ranges),
+		});
+		(ranges.iLow as u32, ranges.iHigh as u32)
+	}
+
+	/// Sets or unsets the marquee mode by sending a
+	/// [`PBM_SETMARQUEE`](crate::msg::pbm::SetMarquee) message combined with a
+	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) call for a style
+	/// change.
+	pub fn set_marquee(&self, marquee: bool) {
+		if marquee {
+			self.hwnd().SetWindowLongPtr(
+				co::GWLP::STYLE,
+				u32::from(self.cur_style() | co::PBS::MARQUEE) as isize,
+			);
+		}
+
+		self.hwnd().SendMessage(pbm::SetMarquee {
+			turn_on: marquee,
+			time_ms: None,
+		});
+
+		if !marquee {
+			self.hwnd().SetWindowLongPtr(
+				co::GWLP::STYLE,
+				u32::from(self.cur_style() & !co::PBS::MARQUEE) as isize,
+			);
+		}
+	}
+
+	/// Sets the current position by sending a
+	/// [`PBM_SETPOS`](crate::msg::pbm::SetPos) message, returning the previous
+	/// position.
+	pub fn set_position(&self, position: u32) -> u32 {
+		if self.cur_style().has(co::PBS::MARQUEE) {
+			self.set_marquee(false); // avoid crash
+		}
+
+		self.hwnd().SendMessage(pbm::SetPos { position })
+	}
+
+	/// Sets the minimum and maximum values by sending a
+	/// [`PBM_SETRANGE32`](crate::msg::pbm::SetRange32) message. Default values
+	/// are 0 and 100.
+	pub fn set_range(&self, min: u32, max: u32) {
+		self.hwnd().SendMessage(pbm::SetRange32 { min, max })
+	}
+
+	fn cur_style(&self) -> co::PBS {
+		co::PBS(self.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as u32)
+	}
 }
 
 //------------------------------------------------------------------------------
