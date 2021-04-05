@@ -116,7 +116,7 @@ impl CheckBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	hwnd_ctrlid_on_onsubclass!(ButtonEvents);
+	ctrlid_hwnd_on_onsubclass!(ButtonEvents);
 
 	/// Tells if this check box is currently checked by sending a
 	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) message.

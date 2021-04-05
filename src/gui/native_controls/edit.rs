@@ -107,7 +107,7 @@ impl Edit {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	hwnd_ctrlid_on_onsubclass!(EditEvents);
+	ctrlid_hwnd_on_onsubclass!(EditEvents);
 
 	/// Sets the text in the control by calling
 	/// [`SetWindowText`](crate::HWND::SetWindowText).

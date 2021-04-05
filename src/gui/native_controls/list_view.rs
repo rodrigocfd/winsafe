@@ -142,7 +142,7 @@ impl ListView {
 		});
 	}
 
-	hwnd_ctrlid_on_onsubclass!(ListViewEvents);
+	ctrlid_hwnd_on_onsubclass!(ListViewEvents);
 
 	/// Column methods.
 	pub fn columns(&self) -> &ListViewColumns {

@@ -1,6 +1,9 @@
-/// Implements methods common to controls.
-macro_rules! hwnd_on_onsubclass {
-	($evstruc:ident) => {
+/// Implements methods common to controls:
+/// * base_ref;
+/// * hwnd;
+/// * on_subclass.
+macro_rules! hwnd_onsubclass {
+	() => {
 		pub(crate) fn base_ref(&self) -> &NativeControlBase {
 			&self.0.base
 		}
@@ -15,6 +18,31 @@ macro_rules! hwnd_on_onsubclass {
 		pub fn hwnd(&self) -> HWND {
 			*self.0.base.hwnd_ref()
 		}
+
+		/// Exposes the subclass events. If at least one event exists, the control
+		/// will be
+		/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
+		///
+		/// **Note:** Subclassing may impact performance, use with care.
+		///
+		/// # Panics
+		///
+		/// Panics if the control or the parent window are already created. Events
+		/// must be set before control and parent window creation.
+		pub fn on_subclass(&self) -> &WindowEvents {
+			self.0.base.on_subclass()
+		}
+	};
+}
+
+/// Implements methods common to controls:
+/// * base_ref;
+/// * hwnd;
+/// * on;
+/// * on_subclass.
+macro_rules! hwnd_on_onsubclass {
+	($evstruc:ident) => {
+		hwnd_onsubclass!();
 
 		/// Exposes the control events.
 		///
@@ -34,25 +62,16 @@ macro_rules! hwnd_on_onsubclass {
 			}
 			&self.0.events
 		}
-
-		/// Exposes the subclass events. If at least one event exists, the control
-		/// will be
-		/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
-		///
-		/// **Note:** Subclassing may impact performance, use with care.
-		///
-		/// # Panics
-		///
-		/// Panics if the control or the parent window are already created. Events
-		/// must be set before control and parent window creation.
-		pub fn on_subclass(&self) -> &WindowEvents {
-			self.0.base.on_subclass()
-		}
 	};
 }
 
-/// Implements methods common to controls, plus `ctrl_id`.
-macro_rules! hwnd_ctrlid_on_onsubclass {
+/// Implements methods common to controls:
+/// * base_ref;
+/// * ctrl_id;
+/// * hwnd;
+/// * on;
+/// * on_subclass.
+macro_rules! ctrlid_hwnd_on_onsubclass {
 	($evstruc: ident) => {
 		hwnd_on_onsubclass!($evstruc);
 

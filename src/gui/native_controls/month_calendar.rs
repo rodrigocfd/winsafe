@@ -114,7 +114,7 @@ impl MonthCalendar {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	hwnd_ctrlid_on_onsubclass!(MonthCalendarEvents);
+	ctrlid_hwnd_on_onsubclass!(MonthCalendarEvents);
 
 	/// Retrieves the currently selected date by sending an
 	/// [`MCM_GETCURSEL`](crate::msg::mcm::GetCurSel) message.

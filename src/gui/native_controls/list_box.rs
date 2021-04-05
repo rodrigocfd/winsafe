@@ -114,7 +114,7 @@ impl ListBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	hwnd_ctrlid_on_onsubclass!(ListBoxEvents);
+	ctrlid_hwnd_on_onsubclass!(ListBoxEvents);
 
 	/// Item methods.
 	pub fn items(&self) -> &ListBoxItems {

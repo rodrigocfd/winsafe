@@ -11,6 +11,7 @@ use crate::gui::native_controls::{
 	ListBox,
 	ListView,
 	MonthCalendar,
+	ProgressBar,
 	RadioButton,
 	StatusBar,
 };
@@ -59,6 +60,8 @@ pub(crate) fn hwndref_from_child(child: &dyn Child) -> &HWND {
 	} else if let Some(c) = child.as_any().downcast_ref::<ListView>() {
 		c.base_ref().hwnd_ref()
 	} else if let Some(c) = child.as_any().downcast_ref::<MonthCalendar>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<ProgressBar>() {
 		c.base_ref().hwnd_ref()
 	} else if let Some(c) = child.as_any().downcast_ref::<RadioButton>() {
 		c.base_ref().hwnd_ref()
