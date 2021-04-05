@@ -2,6 +2,7 @@ use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::IndexAll;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::lvm;
@@ -61,7 +62,7 @@ impl ListViewItems {
 	pub fn delete(&self, item_indexes: &[u32]) -> WinResult<()> {
 		for idx in item_indexes.iter() {
 			self.hwnd().SendMessage(lvm::DeleteItem {
-				index: *idx as i32,
+				index: *idx,
 			})?;
 		}
 		Ok(())
@@ -78,7 +79,7 @@ impl ListViewItems {
 	/// item is visible in the list.
 	pub fn ensure_visible(&self, item_index: u32) -> WinResult<()> {
 		self.hwnd().SendMessage(lvm::EnsureVisible {
-			index: item_index as i32,
+			index: item_index,
 			entirely_visible: true,
 		})
 	}
@@ -87,7 +88,7 @@ impl ListViewItems {
 	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) message
 	pub fn focused(&self) -> Option<u32> {
 		self.hwnd().SendMessage(lvm::GetNextItem {
-			initial_index: -1,
+			initial_index: IndexAll::All,
 			relationship: co::LVNI::FOCUSED,
 		})
 	}
@@ -96,7 +97,7 @@ impl ListViewItems {
 	/// [`LVM_GETITEMSTATE`](crate::msg::lvm::GetItemState) message.
 	pub fn is_focused(&self, item_index: u32) -> bool {
 		self.hwnd().SendMessage(lvm::GetItemState {
-			index: item_index as i32,
+			index: item_index,
 			mask: co::LVIS::FOCUSED,
 		}).has(co::LVIS::FOCUSED)
 	}
@@ -105,7 +106,7 @@ impl ListViewItems {
 	/// [`LVM_GETITEMSTATE`](crate::msg::lvm::GetItemState) message.
 	pub fn is_selected(&self, item_index: u32) -> bool {
 		self.hwnd().SendMessage(lvm::GetItemState {
-			index: item_index as i32,
+			index: item_index,
 			mask: co::LVIS::SELECTED,
 		}).has(co::LVIS::SELECTED)
 	}
@@ -113,24 +114,24 @@ impl ListViewItems {
 	/// Tells if the item is currently visible by sending an
 	/// [`LVM_ISITEMVISIBLE`](crate::msg::lvm::IsItemVisible) message.
 	pub fn is_visible(&self, item_index: u32) -> bool {
-		self.hwnd().SendMessage(lvm::IsItemVisible { index: item_index as i32 })
+		self.hwnd().SendMessage(lvm::IsItemVisible { index: item_index })
 	}
 
 	/// Retrieves the indexes of the selected items by sending
 	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) messages.
 	pub fn selected(&self) -> Vec<u32> {
 		let mut items = Vec::with_capacity(self.selected_count() as usize);
-		let mut idx = -1;
+		let mut idx = IndexAll::All;
 
 		loop {
 			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
 				initial_index: idx,
 				relationship: co::LVNI::SELECTED,
 			}) {
-				Some(idx) => idx as i32,
+				Some(idx) => IndexAll::Index(idx),
 				None => break,
 			};
-			items.push(idx as u32);
+			items.push(idx.into());
 		}
 		items
 	}
@@ -149,7 +150,7 @@ impl ListViewItems {
 		lvi.state = co::LVIS::FOCUSED;
 
 		self.hwnd().SendMessage(lvm::SetItemState {
-			index: item_index as i32,
+			index: IndexAll::Index(item_index),
 			lvitem: &lvi,
 		})
 	}
@@ -165,7 +166,7 @@ impl ListViewItems {
 
 		for idx in item_indexes.iter() {
 			self.hwnd().SendMessage(lvm::SetItemState {
-				index: *idx as i32,
+				index: IndexAll::Index(*idx),
 				lvitem: &lvi,
 			})?;
 		}
@@ -180,7 +181,7 @@ impl ListViewItems {
 		if set { lvi.state = co::LVIS::SELECTED; }
 
 		self.hwnd().SendMessage(lvm::SetItemState {
-			index: -1,
+			index: IndexAll::All,
 			lvitem: &lvi,
 		})
 	}
@@ -197,7 +198,7 @@ impl ListViewItems {
 		lvi.set_pszText(&mut wtext);
 
 		self.hwnd().SendMessage(lvm::SetItemText {
-			index: item_index as i32,
+			index: item_index,
 			lvitem: &lvi,
 		})
 	}
@@ -217,7 +218,7 @@ impl ListViewItems {
 			lvi.set_pszText(&mut buf);
 
 			let nchars = self.hwnd().SendMessage(lvm::GetItemText {
-				index: item_index as i32,
+				index: item_index,
 				lvitem: &mut lvi,
 			});
 

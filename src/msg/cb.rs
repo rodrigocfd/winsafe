@@ -4,6 +4,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::IndexAll;
 use crate::msg::{MsgSend, WndMsg};
 use crate::privs::{CB_ERR, CB_ERRSPACE};
 use crate::WString;
@@ -96,7 +97,7 @@ impl<'a> MsgSend for Dir<'a> {
 ///
 /// Return type: `Option<u32>`.
 pub struct FindString<'a> {
-	pub preceding_index: Option<u32>,
+	pub preceding_index: IndexAll,
 	pub text: &'a str,
 }
 
@@ -113,10 +114,7 @@ impl<'a> MsgSend for FindString<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::FINDSTRING.into(),
-			wparam: match self.preceding_index {
-				None => -1,
-				Some(idx) => idx as i32,
-			} as usize,
+			wparam: self.preceding_index.into(),
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
 		}
 	}

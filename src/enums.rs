@@ -305,7 +305,40 @@ impl IdStr {
 
 /// Variant parameter for:
 ///
-/// * [`WmNcCalcSize`](crate::msg::wm::NcCalcSize) `data`.
+/// * [`LB_SETSEL`](crate::msg::lb::SetSel) `index`;
+/// * [`LVM_FINDITEM`](crate::msg::lvm::FindItem) `index`.
+#[derive(Copy, Clone)]
+pub enum IndexAll {
+	/// A single item with the given index.
+	Index(u32),
+	/// All items, same of using -1 as the index.
+	All,
+}
+
+impl From<IndexAll> for isize {
+	fn from(v: IndexAll) -> Self {
+		match v {
+			IndexAll::All => -1,
+			IndexAll::Index(i) => i as isize,
+		}
+	}
+}
+
+impl From<IndexAll> for usize {
+	fn from(v: IndexAll) -> Self {
+		isize::from(v) as usize
+	}
+}
+
+impl From<IndexAll> for u32 {
+	fn from(v: IndexAll) -> Self {
+		isize::from(v) as u32
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize) `data`.
 pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).
 	Nccsp(&'b mut NCCALCSIZE_PARAMS<'a>),
@@ -365,7 +398,7 @@ impl RegistryValue {
 
 /// Variant parameter for:
 ///
-/// * [`WmStyleChanged`](crate::msg::wm::StyleChanged) `stylestruct`.
+/// * [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) `stylestruct`.
 pub enum WsWsex<'a> {
 	/// [`STYLESTRUCT_WS`](crate::STYLESTRUCT_WS) struct.
 	Ws(&'a STYLESTRUCT_WS),

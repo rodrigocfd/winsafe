@@ -4,6 +4,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::IndexAll;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::point_to_lp;
@@ -729,6 +730,34 @@ impl MsgSend for SetAnchorIndex {
 			msg_id: co::LB::SETANCHORINDEX.into(),
 			wparam: self.index as usize,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`LB_SETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setsel)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetSel {
+	pub select: bool,
+	pub index: IndexAll,
+}
+
+impl MsgSend for SetSel {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETSEL.into(),
+			wparam: self.select as usize,
+			lparam: self.index.into(),
 		}
 	}
 }

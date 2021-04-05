@@ -2,8 +2,11 @@
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages),
 //! whose constants have [`LVM`](crate::co::LVM) prefix.
 
+use std::ops::Index;
+
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::IndexAll;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
 use crate::msg::{MsgSend, WndMsg};
@@ -108,7 +111,7 @@ impl MsgSend for DeleteAllItems {
 ///
 /// Return type: `WinResult<()>`.
 pub struct DeleteItem {
-	pub index: i32,
+	pub index: u32,
 }
 
 impl MsgSend for DeleteItem {
@@ -135,7 +138,7 @@ impl MsgSend for DeleteItem {
 ///
 /// Return type: `WinResult<()>`.
 pub struct EnsureVisible {
-	pub index: i32,
+	pub index: u32,
 	pub entirely_visible: bool,
 }
 
@@ -163,7 +166,7 @@ impl MsgSend for EnsureVisible {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct FindItem<'a, 'b> {
-	pub index: Option<u32>,
+	pub index: IndexAll,
 	pub lvfindinfo: &'b LVFINDINFO<'a>,
 }
 
@@ -180,10 +183,7 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::FINDITEM.into(),
-			wparam: match self.index {
-				None => -1,
-				Some(num) => num as isize,
-			} as usize,
+			wparam: self.index.into(),
 			lparam: self.lvfindinfo as *const _ as isize,
 		}
 	}
@@ -216,7 +216,7 @@ impl MsgSend for GetBkColor {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct GetColumn<'a, 'b> {
-	pub index: i32,
+	pub index: u32,
 	pub lvcolumn: &'b mut LVCOLUMN<'a>,
 }
 
@@ -244,7 +244,7 @@ impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct GetColumnWidth {
-	pub index: i32,
+	pub index: u32,
 }
 
 impl MsgSend for GetColumnWidth {
@@ -318,7 +318,7 @@ impl MsgSend for GetHeader {
 ///
 /// Return type: `Option<u32>`.
 pub struct GetNextItem {
-	pub initial_index: i32,
+	pub initial_index: IndexAll,
 	pub relationship: co::LVNI,
 }
 
@@ -335,7 +335,7 @@ impl MsgSend for GetNextItem {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETNEXTITEM.into(),
-			wparam: self.initial_index as usize,
+			wparam: self.initial_index.into(),
 			lparam: self.relationship.0 as isize,
 		}
 	}
@@ -368,7 +368,7 @@ impl MsgSend for GetItemCount {
 ///
 /// Return type: `LVIS`.
 pub struct GetItemState {
-	pub index: i32,
+	pub index: u32,
 	pub mask: co::LVIS,
 }
 
@@ -393,7 +393,7 @@ impl MsgSend for GetItemState {
 ///
 /// Return type: `u32`.
 pub struct GetItemText<'a, 'b> {
-	pub index: i32,
+	pub index: u32,
 	pub lvitem: &'b mut LVITEM<'a>,
 }
 
@@ -462,7 +462,7 @@ impl MsgSend for GetView {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct InsertColumn<'a, 'b> {
-	pub index: i32,
+	pub index: u32,
 	pub lvcolumn: &'b LVCOLUMN<'a>,
 }
 
@@ -539,7 +539,7 @@ impl MsgSend for IsGroupViewEnabled {
 ///
 /// Return type: `bool`.
 pub struct IsItemVisible {
-	pub index: i32,
+	pub index: u32,
 }
 
 impl MsgSend for IsItemVisible {
@@ -619,7 +619,7 @@ impl MsgSend for Scroll {
 ///
 /// Return type: `WinResult<()>`.
 pub struct SetColumn<'a, 'b> {
-	pub index: i32,
+	pub index: u32,
 	pub lvcolumn: &'b LVCOLUMN<'a>,
 }
 
@@ -699,7 +699,7 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 ///
 /// Return type: `WinResult<()>`.
 pub struct SetItemState<'a, 'b> {
-	pub index: i32,
+	pub index: IndexAll,
 	pub lvitem: &'b LVITEM<'a>,
 }
 
@@ -716,7 +716,7 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETITEMSTATE.into(),
-			wparam: self.index as usize,
+			wparam: self.index.into(),
 			lparam: self.lvitem as *const _ as isize,
 		}
 	}
@@ -727,7 +727,7 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 ///
 /// Return type: `WinResult<()>`.
 pub struct SetItemText<'a, 'b> {
-	pub index: i32,
+	pub index: u32,
 	pub lvitem: &'b LVITEM<'a>,
 }
 
@@ -806,7 +806,7 @@ impl MsgSend for SetView {
 ///
 /// Return type: `WinResult<()>`.
 pub struct Update {
-	pub index: i32,
+	pub index: u32,
 }
 
 impl MsgSend for Update {
