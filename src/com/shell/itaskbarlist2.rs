@@ -8,7 +8,8 @@ use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
 use crate::handles::HWND;
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
-/// COM interface.
+/// COM interface. Backed by [`ITaskbarList2VT`](crate::shell::ITaskbarList2VT)
+/// virtual table.
 ///
 /// Inherits from:
 /// * [`ITaskbarList`](crate::shell::ITaskbarList);
