@@ -102,11 +102,7 @@ impl IShellItem {
 
 		hr_to_winresult(
 			unsafe {
-				((**self.ppv()).GetDisplayName)(
-					self.ppv(),
-					sigdnName.0,
-					&mut pstr,
-				)
+				((**self.ppv()).GetDisplayName)(self.ppv(), sigdnName.0, &mut pstr)
 			},
 		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);

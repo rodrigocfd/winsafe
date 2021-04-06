@@ -195,6 +195,9 @@
 #[macro_use]
 pub mod co;
 
+#[macro_use]
+mod structs;
+
 mod ffi;
 mod privs;
 
@@ -206,7 +209,6 @@ mod com;
 mod enums;
 mod funcs;
 mod handles;
-mod structs;
 mod w_string;
 
 pub use aliases::*;

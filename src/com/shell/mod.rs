@@ -4,6 +4,7 @@
 pub mod clsid;
 pub mod vt;
 
+mod any_structs;
 mod ifiledialog;
 mod ifileopendialog;
 mod imodalwindow;
@@ -13,6 +14,7 @@ mod itaskbarlist;
 mod itaskbarlist2;
 mod itaskbarlist3;
 
+pub use any_structs::*;
 pub use ifiledialog::IFileDialog;
 pub use ifileopendialog::IFileOpenDialog;
 pub use imodalwindow::IModalWindow;

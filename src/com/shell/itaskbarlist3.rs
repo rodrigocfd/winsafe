@@ -23,7 +23,6 @@ use crate::handles::HWND;
 ///
 /// # Examples
 ///
-/// Usually instantiated with [`CoCreateInstance`](crate::CoCreateInstance):
 /// ```rust,ignore
 /// use winsafe::{co, CoCreateInstance, shell};
 ///

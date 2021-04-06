@@ -4,8 +4,9 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::funcs::hr_to_winresult;
 use crate::com::PPComVT;
-use crate::com::shell::IModalWindow;
-use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
+use crate::com::shell::{COMDLG_FILTERSPEC, IModalWindow, IShellItem};
+use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT, IShellItemVT};
+use crate::WString;
 
 /// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
 /// interface. Backed by [`IFileDialogVT`](crate::shell::IFileDialogVT) virtual
@@ -51,11 +52,87 @@ impl IFileDialog {
 		)
 	}
 
+	/// [`IFileDialog::GetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
+	/// method.
+	pub fn GetOptions(&self) -> WinResult<co::FOS> {
+		let mut opts: u32 = 0;
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).GetOptions)(self.ppv(), &mut opts) },
+		).map(|_| co::FOS(opts))
+	}
+
+	/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
+	/// method.
+	pub fn GetResult(&self) -> WinResult<IShellItem> {
+		let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetResult)(
+					self.ppv(),
+					&mut ppvQueried
+						as *mut PPComVT<IShellItemVT>
+						as *mut *mut _,
+				)
+			},
+		).map(|_| IShellItem::from(ppvQueried))
+	}
+
 	/// [`IFileDialog::SetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypeindex)
 	/// method.
 	pub fn SetFileTypeIndex(&self, iFileType: u32) -> WinResult<()> {
 		hr_to_winresult(
 			unsafe { ((**self.ppv()).SetFileTypeIndex)(self.ppv(), iFileType) },
+		)
+	}
+
+	/// [`IFileDialog::SetFileTypes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypes)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::shell::IFileDialog;
+	///
+	/// let file_dlg: IFileDialog; // initialize it somewhere
+	///
+	/// file_dlg.SetFileTypes(&[
+	///     ("Documents", "*.docx;*.txt"),
+	///     ("Images", "*.jpg;*.png;*.bmp"),
+	///     ("All files", "*.*"),
+	/// ]).unwrap();
+	/// ```
+	pub fn SetFileTypes(&self, filterSpec: &[(&str, &str)]) -> WinResult<()> {
+		let mut namesBuf = Vec::with_capacity(filterSpec.len());
+		let mut specsBuf = Vec::with_capacity(filterSpec.len());
+		let mut comDlgs = Vec::with_capacity(filterSpec.len());
+
+		for (name, spec) in filterSpec.iter() {
+			namesBuf.push(WString::from_str(name));
+			specsBuf.push(WString::from_str(spec));
+			comDlgs.push(COMDLG_FILTERSPEC::default());
+		}
+
+		for i in 0..filterSpec.len() {
+			comDlgs[i].set_pszName(&namesBuf[i]);
+			comDlgs[i].set_pszSpec(&specsBuf[i]);
+		}
+
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetFileTypes)(
+					self.ppv(),
+					filterSpec.len() as u32,
+					comDlgs.as_ptr() as *mut _,
+				)
+			},
+		)
+	}
+
+	/// [`IFileDialog::SetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setoptions)
+	/// method.
+	pub fn SetOptions(&self, opts: co::FOS) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).SetOptions)(self.ppv(), opts.0) },
 		)
 	}
 }
