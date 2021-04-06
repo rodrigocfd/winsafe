@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co::ERROR;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
+use crate::com::funcs::hr_to_winresult;
 use crate::com::shell::vt::ITaskbarListVT;
 use crate::handles::HWND;
 
@@ -42,12 +42,15 @@ impl From<PPComVT<ITaskbarListVT>> for ITaskbarList {
 }
 
 impl ITaskbarList {
+	unsafe fn ppv(&self) -> PPComVT<ITaskbarListVT> {
+		self.IUnknown.ppv::<ITaskbarListVT>()
+	}
+
 	/// [`ITaskbarList::ActivateTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
 	/// method.
 	pub fn ActivateTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
-			into_result!( ((**ppv).ActivateTab)(ppv, hwnd.ptr) )
+			hr_to_winresult( ((**self.ppv()).ActivateTab)(self.ppv(), hwnd.ptr) )
 		}
 	}
 
@@ -55,8 +58,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn AddTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
-			into_result!( ((**ppv).AddTab)(ppv, hwnd.ptr) )
+			hr_to_winresult( ((**self.ppv()).AddTab)(self.ppv(), hwnd.ptr) )
 		}
 	}
 
@@ -64,8 +66,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn DeleteTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
-			into_result!( ((**ppv).DeleteTab)(ppv, hwnd.ptr) )
+			hr_to_winresult( ((**self.ppv()).DeleteTab)(self.ppv(), hwnd.ptr) )
 		}
 	}
 
@@ -73,8 +74,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn HrInit(&self) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
-			into_result!( ((**ppv).HrInit)(ppv) )
+			hr_to_winresult( ((**self.ppv()).HrInit)(self.ppv()) )
 		}
 	}
 
@@ -82,8 +82,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
-			into_result!( ((**ppv).SetActiveAlt)(ppv, hwnd.ptr) )
+			hr_to_winresult( ((**self.ppv()).SetActiveAlt)(self.ppv(), hwnd.ptr) )
 		}
 	}
 }

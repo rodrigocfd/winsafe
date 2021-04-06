@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co::ERROR;
+use crate::com::funcs::hr_to_winresult;
 use crate::com::PPComVT;
 use crate::com::shell::{co, ITaskbarList2};
 use crate::com::shell::vt::{ITaskbarList2VT, ITaskbarList3VT};
@@ -47,14 +47,19 @@ impl From<PPComVT<ITaskbarList3VT>> for ITaskbarList3 {
 }
 
 impl ITaskbarList3 {
+	unsafe fn ppv(&self) -> PPComVT<ITaskbarList3VT> {
+		self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3VT>()
+	}
+
 	/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.
 	pub fn RegisterTab(&self,
 		hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
 	{
 		unsafe {
-			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3VT>();
-			into_result!( ((**ppv).RegisterTab)(ppv, hwndTab.ptr, hwndMDI.ptr) )
+			hr_to_winresult(
+				((**self.ppv()).RegisterTab)(self.ppv(), hwndTab.ptr, hwndMDI.ptr),
+			)
 		}
 	}
 
@@ -64,9 +69,10 @@ impl ITaskbarList3 {
 		hwnd: HWND, tbpfFlags: co::TBPF) -> WinResult<()>
 	{
 		unsafe {
-			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3VT>();
-			into_result!(
-				((**ppv).SetProgressState)(ppv, hwnd.ptr, tbpfFlags.0)
+			hr_to_winresult(
+				((**self.ppv()).SetProgressState)(
+					self.ppv(), hwnd.ptr, tbpfFlags.0,
+				),
 			)
 		}
 	}
@@ -77,9 +83,10 @@ impl ITaskbarList3 {
 		hwnd: HWND, ullCompleted: u64, ullTotal: u64) -> WinResult<()>
 	{
 		unsafe {
-			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3VT>();
-			into_result!(
-				((**ppv).SetProgressValue)(ppv, hwnd.ptr, ullCompleted, ullTotal)
+			hr_to_winresult(
+				((**self.ppv()).SetProgressValue)(
+					self.ppv(), hwnd.ptr, ullCompleted, ullTotal,
+				),
 			)
 		}
 	}
@@ -90,9 +97,10 @@ impl ITaskbarList3 {
 		hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
 	{
 		unsafe {
-			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3VT>();
-			into_result!(
-				((**ppv).SetTabActive)(ppv, hwndTab.ptr, hwndMDI.ptr, 0)
+			hr_to_winresult(
+				((**self.ppv()).SetTabActive)(
+					self.ppv(), hwndTab.ptr, hwndMDI.ptr, 0,
+				),
 			)
 		}
 	}
@@ -103,9 +111,10 @@ impl ITaskbarList3 {
 		hwndTab: HWND, hwndInsertBefore: HWND) -> WinResult<()>
 	{
 		unsafe {
-			let ppv = self.ITaskbarList2.ITaskbarList.IUnknown.ppv::<ITaskbarList3VT>();
-			into_result!(
-				((**ppv).SetTabOrder)(ppv, hwndTab.ptr, hwndInsertBefore.ptr)
+			hr_to_winresult(
+				((**self.ppv()).SetTabOrder)(
+					self.ppv(), hwndTab.ptr, hwndInsertBefore.ptr,
+				),
 			)
 		}
 	}

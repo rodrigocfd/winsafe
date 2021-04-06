@@ -13,5 +13,5 @@ mod funcs;
 mod iunknown;
 
 pub use comvt::{ComVT, PPComVT};
-pub use funcs::*;
+pub use funcs::{CoCreateInstance, CoInitializeEx, CoUninitialize};
 pub use iunknown::{IUnknown, IUnknownVT};

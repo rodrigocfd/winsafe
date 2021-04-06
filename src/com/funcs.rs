@@ -10,6 +10,13 @@ use crate::com::{ComVT, PPComVT};
 use crate::ffi::ole32;
 use crate::structs::{CLSID, GUID};
 
+pub(crate) fn hr_to_winresult(hresult: u32) -> WinResult<()> {
+	match co::ERROR(hresult) {
+		co::ERROR::S_OK => Ok(()),
+		err => Err(err),
+	}
+}
+
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
 ///

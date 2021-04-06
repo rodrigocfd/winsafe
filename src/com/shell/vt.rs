@@ -10,7 +10,7 @@ use crate::structs::IID;
 /// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
 #[repr(C)]
 pub struct ITaskbarListVT {
-	pub iUnknownVtbl: IUnknownVT,
+	pub iUnknownVT: IUnknownVT,
 
 	pub HrInit: fn(PPComVT<Self>) -> u32,
 	pub AddTab: fn(PPComVT<Self>, HANDLE) -> u32,
@@ -34,7 +34,7 @@ impl_iid!(ITaskbarList2VT, 0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317);
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 #[repr(C)]
 pub struct ITaskbarList3VT {
-	pub iTaskbarList2Vtbl: ITaskbarList2VT,
+	pub iTaskbarList2VT: ITaskbarList2VT,
 
 	pub SetProgressValue: fn(PPComVT<Self>, HANDLE, u64, u64) -> u32,
 	pub SetProgressState: fn(PPComVT<Self>, HANDLE, u32) -> u32,

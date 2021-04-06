@@ -1,14 +1,16 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
+use crate::co;
 use crate::com::{ComVT, PPComVT};
-use crate::ffi::PVOID;
-use crate::structs::IID;
+use crate::ffi::PCVOID;
+use crate::structs::{GUID, IID};
 
-/// [`IUnknownVtbl`](crate::IUnknown) is the base to all COM interface
-/// virtual tables.
+/// [`IUnknownVT`](crate::IUnknown) is the base to all COM interface virtual
+/// tables.
 #[repr(C)]
 pub struct IUnknownVT {
-	pub QueryInterface: fn(PPComVT<Self>, PVOID, *mut PPComVT<IUnknownVT>),
+	pub QueryInterface: fn(PPComVT<Self>, PCVOID, *mut PPComVT<IUnknownVT>) -> u32,
 	pub AddRef: fn(PPComVT<Self>) -> u32,
 	pub Release: fn(PPComVT<Self>) -> u32,
 }
@@ -61,5 +63,26 @@ impl IUnknown {
 	/// This method is used internally by COM interface implementations.
 	pub unsafe fn ppv<T>(&self) -> PPComVT<T> {
 		self.ppv as PPComVT<T>
+	}
+
+	/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
+	/// method.
+	pub fn QueryInterface<VT: ComVT, RetInterf: From<PPComVT<VT>>>(&self)
+		-> WinResult<RetInterf>
+	{
+		let mut ppvQueried: PPComVT<VT> = std::ptr::null_mut();
+
+		match co::ERROR(
+			(unsafe { (**self.ppv).QueryInterface })(
+				self.ppv,
+				VT::IID().as_ref() as *const GUID as *const _,
+				&mut ppvQueried
+					as *mut PPComVT<VT>
+					as *mut *mut _,
+			)
+		) {
+			co::ERROR::S_OK => Ok(RetInterf::from(ppvQueried)),
+			err => Err(err),
+		}
 	}
 }
