@@ -668,6 +668,40 @@ button_msg! { MButtonUp, co::WM::MBUTTONUP,
 	/// [`WM_MBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 }
 
+/// [`WM_MENUCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-menucommand)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct MenuCommand {
+	pub item_index: u32,
+	pub hmenu: HMENU,
+}
+
+impl MsgSend for MenuCommand {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::MENUCOMMAND,
+			wparam: self.item_index as usize,
+			lparam: self.hmenu.ptr as isize,
+		}
+	}
+}
+
+impl MsgSendRecv for MenuCommand {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			item_index: p.wparam as u32,
+			hmenu: HMENU { ptr: p.lparam as *mut _ },
+		}
+	}
+}
+
 button_msg! { MouseHover, co::WM::MOUSEHOVER,
 	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 }

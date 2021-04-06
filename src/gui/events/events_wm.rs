@@ -768,6 +768,12 @@ impl WindowEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
+	wm_ret_none! { wm_menu_command, co::WM::MENUCOMMAND, wm::MenuCommand,
+		/// [`WM_MENUCOMMAND`](crate::msg::wm::MenuCommand) message.
+		///
+		/// Sent when the user makes a selection from a menu.
+	}
+
 	wm_ret_none! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover,
 		/// [`WM_MOUSEHOVER`](crate::msg::wm::MouseHover) message.
 		///
