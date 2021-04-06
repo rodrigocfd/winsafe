@@ -30,6 +30,7 @@ use crate::handles::HWND;
 ///     co::CLSCTX::INPROC_SERVER,
 /// ).unwrap();
 /// ```
+#[derive(Clone)]
 pub struct ITaskbarList3 {
 	/// Methods of base interface
 	/// [`ITaskbarList2`](crate::shell::ITaskbarList2).

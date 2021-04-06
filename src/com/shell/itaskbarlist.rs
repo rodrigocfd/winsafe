@@ -27,6 +27,7 @@ use crate::handles::HWND;
 ///     co::CLSCTX::INPROC_SERVER,
 /// ).unwrap();
 /// ```
+#[derive(Clone)]
 pub struct ITaskbarList {
 	/// Methods of base interface [`IUnknown`](crate::IUnknown).
 	pub IUnknown: IUnknown,
