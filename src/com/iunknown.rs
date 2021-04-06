@@ -1,19 +1,19 @@
 #![allow(non_snake_case)]
 
-use crate::com::{PPVtbl, Vtbl};
+use crate::com::{ComVT, PPComVT};
 use crate::ffi::PVOID;
 use crate::structs::IID;
 
 /// [`IUnknownVtbl`](crate::IUnknown) is the base to all COM interface
 /// virtual tables.
 #[repr(C)]
-pub struct IUnknownVtbl {
-	QueryInterface: fn(PPVtbl<Self>, PVOID, *mut PPVtbl<IUnknownVtbl>),
-	AddRef: fn(PPVtbl<Self>) -> u32,
-	Release: fn(PPVtbl<Self>) -> u32,
+pub struct IUnknownVT {
+	pub QueryInterface: fn(PPComVT<Self>, PVOID, *mut PPComVT<IUnknownVT>),
+	pub AddRef: fn(PPComVT<Self>) -> u32,
+	pub Release: fn(PPComVT<Self>) -> u32,
 }
 
-impl_iid!(IUnknownVtbl, 0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
+impl_iid!(IUnknownVT, 0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 
 //------------------------------------------------------------------------------
 
@@ -23,12 +23,12 @@ impl_iid!(IUnknownVtbl, 0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
 /// Automatically calls [`Release`](crate::IUnknown::Release) when the object
 /// goes out of scope.
 pub struct IUnknown {
-	vtbl: PPVtbl<IUnknownVtbl>,
+	vtbl: PPComVT<IUnknownVT>,
 }
 
-impl From<PPVtbl<IUnknownVtbl>> for IUnknown {
-	fn from(ppv: PPVtbl<IUnknownVtbl>) -> Self {
-		Self { vtbl: ppv }
+impl From<PPComVT<IUnknownVT>> for IUnknown {
+	fn from(ppv: PPComVT<IUnknownVT>) -> Self {
+		Self { vtbl: ppv } // converts a **vtbl to the interface object
 	}
 }
 
@@ -42,8 +42,8 @@ impl IUnknown {
 	/// Returns a pointer to a pointer to the underlying COM virtual table.
 	///
 	/// This method is used internally by COM interface implementations.
-	pub unsafe fn ppv<T>(&self) -> PPVtbl<T> {
-		self.vtbl as PPVtbl<T>
+	pub unsafe fn ppv<T>(&self) -> PPComVT<T> {
+		self.vtbl as PPComVT<T>
 	}
 
 	/// [`IUnknown::AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)

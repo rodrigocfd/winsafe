@@ -2,23 +2,10 @@
 
 use crate::aliases::WinResult;
 use crate::co::ERROR;
-use crate::com::{PPVtbl, Vtbl};
-use crate::com::shell::{ITaskbarList, ITaskbarListVtbl};
-use crate::ffi::{BOOL, HANDLE};
+use crate::com::PPComVT;
+use crate::com::shell::ITaskbarList;
+use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
 use crate::handles::HWND;
-use crate::structs::IID;
-
-/// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
-#[repr(C)]
-pub struct ITaskbarList2Vtbl {
-	iTaskbarListVtbl: ITaskbarListVtbl,
-
-	MarkFullscreenWindow: fn(PPVtbl<Self>, HANDLE, BOOL) -> u32,
-}
-
-impl_iid!(ITaskbarList2Vtbl, 0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317);
-
-//------------------------------------------------------------------------------
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 /// COM interface.
@@ -36,7 +23,7 @@ impl_iid!(ITaskbarList2Vtbl, 0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317)
 /// ```rust,ignore
 /// use winsafe::{co, CoCreateInstance, shell};
 ///
-/// let mut obj: shell::ITaskbarList2 = CoCreateInstance(
+/// let obj: shell::ITaskbarList2 = CoCreateInstance(
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
@@ -48,11 +35,11 @@ pub struct ITaskbarList2 {
 	pub ITaskbarList: ITaskbarList,
 }
 
-impl From<PPVtbl<ITaskbarList2Vtbl>> for ITaskbarList2 {
+impl From<PPComVT<ITaskbarList2VT>> for ITaskbarList2 {
 	/// Creates a new object from a pointer to a pointer to its virtual table.
-	fn from(ppv: PPVtbl<ITaskbarList2Vtbl>) -> Self {
+	fn from(ppv: PPComVT<ITaskbarList2VT>) -> Self {
 		Self {
-			ITaskbarList: ITaskbarList::from(ppv as PPVtbl<ITaskbarListVtbl>),
+			ITaskbarList: ITaskbarList::from(ppv as PPComVT<ITaskbarListVT>),
 		}
 	}
 }
@@ -64,7 +51,7 @@ impl ITaskbarList2 {
 		hwnd: HWND, fFullscreen: bool) -> WinResult<()>
 	{
 		unsafe {
-			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2Vtbl>();
+			let ppv = self.ITaskbarList.IUnknown.ppv::<ITaskbarList2VT>();
 			into_result!(
 				((**ppv).MarkFullscreenWindow)(ppv, hwnd.ptr, fFullscreen as i32)
 			)

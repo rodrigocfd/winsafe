@@ -1,3 +1,4 @@
+//! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
 //! COM class IDs.
 
 #![allow(non_upper_case_globals)]

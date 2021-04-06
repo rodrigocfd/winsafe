@@ -3,11 +3,12 @@
 
 pub mod clsid;
 pub mod co;
+pub mod vt;
 
 mod itaskbarlist;
 mod itaskbarlist2;
 mod itaskbarlist3;
 
-pub use itaskbarlist::{ITaskbarList, ITaskbarListVtbl};
-pub use itaskbarlist2::{ITaskbarList2, ITaskbarList2Vtbl};
-pub use itaskbarlist3::{ITaskbarList3, ITaskbarList3Vtbl};
+pub use itaskbarlist::ITaskbarList;
+pub use itaskbarlist2::ITaskbarList2;
+pub use itaskbarlist3::ITaskbarList3;

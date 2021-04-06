@@ -2,26 +2,9 @@
 
 use crate::aliases::WinResult;
 use crate::co::ERROR;
-use crate::com::{IUnknown, IUnknownVtbl, PPVtbl, Vtbl};
-use crate::ffi::HANDLE;
+use crate::com::{IUnknown, IUnknownVT, PPComVT};
+use crate::com::shell::vt::ITaskbarListVT;
 use crate::handles::HWND;
-use crate::structs::IID;
-
-/// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
-#[repr(C)]
-pub struct ITaskbarListVtbl {
-	iUnknownVtbl: IUnknownVtbl,
-
-	HrInit: fn(PPVtbl<Self>) -> u32,
-	AddTab: fn(PPVtbl<Self>, HANDLE) -> u32,
-	DeleteTab: fn(PPVtbl<Self>, HANDLE) -> u32,
-	ActivateTab: fn(PPVtbl<Self>, HANDLE) -> u32,
-	SetActiveAlt: fn(PPVtbl<Self>, HANDLE) -> u32,
-}
-
-impl_iid!(ITaskbarListVtbl, 0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090);
-
-//------------------------------------------------------------------------------
 
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 /// COM interface.
@@ -38,7 +21,7 @@ impl_iid!(ITaskbarListVtbl, 0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090);
 /// ```rust,ignore
 /// use winsafe::{co, CoCreateInstance, shell};
 ///
-/// let mut obj: shell::ITaskbarList = CoCreateInstance(
+/// let obj: shell::ITaskbarList = CoCreateInstance(
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
@@ -49,10 +32,10 @@ pub struct ITaskbarList {
 	pub IUnknown: IUnknown,
 }
 
-impl From<PPVtbl<ITaskbarListVtbl>> for ITaskbarList {
-	fn from(ppv: PPVtbl<ITaskbarListVtbl>) -> Self {
+impl From<PPComVT<ITaskbarListVT>> for ITaskbarList {
+	fn from(ppv: PPComVT<ITaskbarListVT>) -> Self {
 		Self {
-			IUnknown: IUnknown::from(ppv as PPVtbl<IUnknownVtbl>)
+			IUnknown: IUnknown::from(ppv as PPComVT<IUnknownVT>)
 		}
 	}
 }
@@ -62,7 +45,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn ActivateTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
 			into_result!( ((**ppv).ActivateTab)(ppv, hwnd.ptr) )
 		}
 	}
@@ -71,7 +54,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn AddTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
 			into_result!( ((**ppv).AddTab)(ppv, hwnd.ptr) )
 		}
 	}
@@ -80,7 +63,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn DeleteTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
 			into_result!( ((**ppv).DeleteTab)(ppv, hwnd.ptr) )
 		}
 	}
@@ -89,7 +72,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn HrInit(&self) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
 			into_result!( ((**ppv).HrInit)(ppv) )
 		}
 	}
@@ -98,7 +81,7 @@ impl ITaskbarList {
 	/// method.
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
-			let ppv = self.IUnknown.ppv::<ITaskbarListVtbl>();
+			let ppv = self.IUnknown.ppv::<ITaskbarListVT>();
 			into_result!( ((**ppv).SetActiveAlt)(ppv, hwnd.ptr) )
 		}
 	}

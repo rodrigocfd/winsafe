@@ -6,7 +6,7 @@ use std::ffi::c_void;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::{PPVtbl, Vtbl};
+use crate::com::{ComVT, PPComVT};
 use crate::ffi::ole32;
 use crate::structs::{CLSID, GUID};
 
@@ -27,12 +27,12 @@ use crate::structs::{CLSID, GUID};
 ///     co::CLSCTX::INPROC_SERVER,
 /// ).unwrap();
 /// ```
-pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
+pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 	rclsid: &CLSID,
 	pUnkOuter: Option<*mut c_void>,
 	dwClsContext: co::CLSCTX) -> WinResult<RetInterf>
 {
-	let mut ppv: PPVtbl<VT> = std::ptr::null_mut();
+	let mut ppv: PPComVT<VT> = std::ptr::null_mut();
 
 	match co::ERROR(
 		unsafe {
@@ -42,7 +42,7 @@ pub fn CoCreateInstance<VT: Vtbl, RetInterf: From<PPVtbl<VT>>>(
 				dwClsContext.0,
 				VT::IID().as_ref() as *const GUID as *const _,
 				&mut ppv
-					as *mut PPVtbl<VT>
+					as *mut PPComVT<VT>
 					as *mut *mut _,
 			)
 		}

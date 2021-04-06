@@ -1,5 +1,5 @@
 //! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
-//! COM interfaces constants.
+//! COM constants.
 
 const_type! { TBPF, u32,
 	/// [`ITaskbarList3::SetProgressState`](crate::shell::ITaskbarList3::SetProgressState)
