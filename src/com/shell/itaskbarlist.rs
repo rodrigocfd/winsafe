@@ -13,8 +13,9 @@ use crate::handles::HWND;
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
-/// object goes out of scope.
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
 ///
 /// # Examples
 ///
@@ -50,40 +51,36 @@ impl ITaskbarList {
 	/// [`ITaskbarList::ActivateTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
 	/// method.
 	pub fn ActivateTab(&self, hwnd: HWND) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult( ((**self.ppv()).ActivateTab)(self.ppv(), hwnd.ptr) )
-		}
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).ActivateTab)(self.ppv(), hwnd.ptr) },
+		)
 	}
 
 	/// [`ITaskbarList::AddTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-addtab)
 	/// method.
 	pub fn AddTab(&self, hwnd: HWND) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult( ((**self.ppv()).AddTab)(self.ppv(), hwnd.ptr) )
-		}
+		hr_to_winresult(unsafe { ((**self.ppv()).AddTab)(self.ppv(), hwnd.ptr) })
 	}
 
 	/// [`ITaskbarList::DeleteTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-deletetab)
 	/// method.
 	pub fn DeleteTab(&self, hwnd: HWND) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult( ((**self.ppv()).DeleteTab)(self.ppv(), hwnd.ptr) )
-		}
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).DeleteTab)(self.ppv(), hwnd.ptr) },
+		)
 	}
 
 	/// [`ITaskbarList::HrInit`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit)
 	/// method.
 	pub fn HrInit(&self) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult( ((**self.ppv()).HrInit)(self.ppv()) )
-		}
+		hr_to_winresult(unsafe { ((**self.ppv()).HrInit)(self.ppv()) })
 	}
 
 	/// [`ITaskbarList::SetActiveAlt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
 	/// method.
 	pub fn SetActiveAlt(&self, hwnd: HWND) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult( ((**self.ppv()).SetActiveAlt)(self.ppv(), hwnd.ptr) )
-		}
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).SetActiveAlt)(self.ppv(), hwnd.ptr) },
+		)
 	}
 }

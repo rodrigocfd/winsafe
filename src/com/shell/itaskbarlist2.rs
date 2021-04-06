@@ -15,8 +15,9 @@ use crate::handles::HWND;
 /// * [`ITaskbarList`](crate::shell::ITaskbarList);
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
-/// object goes out of scope.
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
 ///
 /// # Examples
 ///
@@ -32,8 +33,7 @@ use crate::handles::HWND;
 /// ```
 #[derive(Clone)]
 pub struct ITaskbarList2 {
-	/// Methods of base interface
-	/// [`ITaskbarList`](crate::shell::ITaskbarList).
+	/// Methods of base interface [`ITaskbarList`](crate::shell::ITaskbarList).
 	pub ITaskbarList: ITaskbarList,
 }
 
@@ -55,12 +55,12 @@ impl ITaskbarList2 {
 	pub fn MarkFullscreenWindow(&self,
 		hwnd: HWND, fFullscreen: bool) -> WinResult<()>
 	{
-		unsafe {
-			hr_to_winresult(
+		hr_to_winresult(
+			unsafe {
 				((**self.ppv()).MarkFullscreenWindow)(
 					self.ppv(), hwnd.ptr, fFullscreen as i32,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 }

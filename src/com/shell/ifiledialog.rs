@@ -15,12 +15,12 @@ use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
 /// * [`IModalWindow`](crate::shell::IModalWindow);
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
-/// object goes out of scope.
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
 #[derive(Clone)]
 pub struct IFileDialog {
-	/// Methods of base interface
-	/// [`IModalWindow`](crate::shell::IModalWindow).
+	/// Methods of base interface [`IModalWindow`](crate::shell::IModalWindow).
 	pub IModalWindow: IModalWindow,
 }
 
@@ -40,26 +40,22 @@ impl IFileDialog {
 	/// [`IFileDialog::ClearClientData`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-clearclientdata)
 	/// method.
 	pub fn ClearClientData(&self) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult( ((**self.ppv()).ClearClientData)(self.ppv()) )
-		}
+		hr_to_winresult(unsafe { ((**self.ppv()).ClearClientData)(self.ppv()) })
 	}
 
 	/// [`IFileDialog::Close`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-close)
 	/// method.
 	pub fn Close(&self, hr: co::ERROR) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult( ((**self.ppv()).Close)(self.ppv(), hr.0 as i32) )
-		}
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).Close)(self.ppv(), hr.0 as i32) },
+		)
 	}
 
 	/// [`IFileDialog::SetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypeindex)
 	/// method.
 	pub fn SetFileTypeIndex(&self, iFileType: u32) -> WinResult<()> {
-		unsafe {
-			hr_to_winresult(
-				((**self.ppv()).SetFileTypeIndex)(self.ppv(), iFileType),
-			)
-		}
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).SetFileTypeIndex)(self.ppv(), iFileType) },
+		)
 	}
 }

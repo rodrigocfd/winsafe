@@ -18,6 +18,7 @@ mod consts_st;
 mod consts_uv;
 mod consts_wxyz;
 mod error;
+mod shell;
 
 pub use consts_ab::*;
 pub use consts_cd::*;
@@ -31,3 +32,4 @@ pub use consts_st::*;
 pub use consts_uv::*;
 pub use consts_wxyz::*;
 pub use error::ERROR;
+pub use shell::*;

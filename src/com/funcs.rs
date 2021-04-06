@@ -85,6 +85,12 @@ pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
 	}
 }
 
+/// [`CoTaskMemFree`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
+/// function.
+pub fn CoTaskMemFree<T>(pv: *mut T) {
+	unsafe { ole32::CoTaskMemFree(pv as *mut _) }
+}
+
 /// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
 /// function.
 ///

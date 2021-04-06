@@ -14,8 +14,9 @@ use crate::handles::HWND;
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).
 ///
-/// Automatically calls [`IUnknown::Release`](crate::IUnknown::Release) when the
-/// object goes out of scope.
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
 #[derive(Clone)]
 pub struct IModalWindow {
 	/// Methods of base interface [`IUnknown`](crate::IUnknown).
@@ -40,11 +41,11 @@ impl IModalWindow {
 	///
 	/// Returns false if user clicked Cancel.
 	pub fn Show(&self, hwndOwner: HWND) -> WinResult<bool> {
-		let code = unsafe { ((**self.ppv()).Show)(self.ppv(), hwndOwner.ptr) };
-		match HRESULT_FROM_WIN32(code) {
+		let hr = unsafe { ((**self.ppv()).Show)(self.ppv(), hwndOwner.ptr) };
+		match HRESULT_FROM_WIN32(hr) {
 			co::ERROR::S_OK => Ok(true),
 			co::ERROR::CANCELLED => Ok(false),
-			_ => Err(co::ERROR(code as u32)),
+			_ => Err(co::ERROR(hr as u32)),
 		}
 	}
 }

@@ -38,6 +38,16 @@ com_virtual_table! { IFileDialogVT,
   	SetFilter, fn(PPComVT<Self>, PVOID) -> i32
 }
 
+com_virtual_table! { IFileOpenDialogVT,
+	/// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) virtual table.
+	->
+	0xd57c7288, 0xd4ad, 0x4768, 0xbe02, 0x9d969532d960,
+	IFileDialogVT, IFileDialogVT
+
+	GetResults, fn(PPComVT<Self>, *mut PVOID) -> i32
+	GetSelectedItems, fn(PPComVT<Self>, *mut PVOID) -> i32
+}
+
 com_virtual_table! { IModalWindowVT,
 	/// [`IModalWindow`](crate::shell::IModalWindow) virtual table.
 	->
@@ -45,6 +55,34 @@ com_virtual_table! { IModalWindowVT,
 	IUnknownVT, IUnknownVT
 
 	Show, fn(PPComVT<Self>, HANDLE) -> i32
+}
+
+com_virtual_table! { IShellItemArrayVT,
+	/// [`IShellItemArray`](crate::shell::IShellItemArray) virtual table.
+	->
+	0xb63ea76d, 0x1f85, 0x456f, 0xa19c, 0x48159efa858b,
+	IUnknownVT, IUnknownVT
+
+	BindToHandler, fn(PPComVT<Self>, PVOID, PCVOID, PCVOID, *mut PPComVT<IUnknownVT>) -> i32
+	GetPropertyStore, fn(PPComVT<Self>, u32, PCVOID, *mut PPComVT<IUnknownVT>) -> i32
+	GetPropertyDescriptionList, fn(PPComVT<Self>, PVOID, PCVOID, *mut PPComVT<IUnknownVT>) -> i32
+	GetAttributes, fn(PPComVT<Self>, u32, u32, PVOID) -> i32
+	GetCount, fn(PPComVT<Self>, *mut u32) -> i32
+	GetItemAt, fn(PPComVT<Self>, u32, *mut PVOID) -> i32
+	EnumItems, fn(PPComVT<Self>, *mut PVOID) -> i32
+}
+
+com_virtual_table! { IShellItemVT,
+	/// [`IShellItem`](crate::shell::IShellItem) virtual table.
+	->
+	0x43826d1e, 0xe718, 0x42ee, 0xbc55, 0xa1e261c37bfe,
+	IUnknownVT, IUnknownVT
+
+	BindToHandler, fn(PPComVT<Self>, PVOID, PCVOID, PCVOID, *mut PPComVT<IUnknownVT>) -> i32
+	GetParent, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
+	GetDisplayName, fn(PPComVT<Self>, u32, *mut PSTR) -> i32
+	GetAttributes, fn(PPComVT<Self>, u32, *mut u32) -> i32
+	Compare, fn(PPComVT<Self>, PVOID, u32, *mut i32) -> i32
 }
 
 com_virtual_table! { ITaskbarListVT,
