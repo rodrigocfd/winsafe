@@ -241,6 +241,12 @@ pub fn HIWORD(v: u32) -> u16 {
 	(v >> 16 & 0xffff) as u16
 }
 
+/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
+/// function. Originally a macro.
+pub fn HRESULT_FROM_WIN32(hresult: i32) -> co::ERROR {
+	co::ERROR((hresult as u32) & 0xffff)
+}
+
 /// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
 /// function.
 pub fn InitCommonControls() {

@@ -5,10 +5,12 @@ pub mod clsid;
 pub mod co;
 pub mod vt;
 
+mod imodalwindow;
 mod itaskbarlist;
 mod itaskbarlist2;
 mod itaskbarlist3;
 
+pub use imodalwindow::IModalWindow;
 pub use itaskbarlist::ITaskbarList;
 pub use itaskbarlist2::ITaskbarList2;
 pub use itaskbarlist3::ITaskbarList3;

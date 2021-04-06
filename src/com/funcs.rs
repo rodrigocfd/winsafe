@@ -8,12 +8,13 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{ComVT, PPComVT};
 use crate::ffi::ole32;
+use crate::funcs::HRESULT_FROM_WIN32;
 use crate::structs::{CLSID, GUID};
 
-pub(crate) fn hr_to_winresult(hresult: u32) -> WinResult<()> {
-	match co::ERROR(hresult) {
+pub(crate) fn hr_to_winresult(hresult: i32) -> WinResult<()> {
+	match HRESULT_FROM_WIN32(hresult) {
 		co::ERROR::S_OK => Ok(()),
-		err => Err(err),
+		_ => Err(co::ERROR(hresult as u32)),
 	}
 }
 
