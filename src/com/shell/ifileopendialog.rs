@@ -1,8 +1,10 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
+use crate::com::funcs::hr_to_winresult;
 use crate::com::PPComVT;
-use crate::com::shell::IFileDialog;
-use crate::com::shell::vt::{IFileDialogVT, IFileOpenDialogVT};
+use crate::com::shell::{IFileDialog, IShellItemArray};
+use crate::com::shell::vt::{IFileDialogVT, IFileOpenDialogVT, IShellItemArrayVT};
 
 /// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
 /// COM interface. Backed by [`IFileOpenDialogVT`](crate::shell::IFileOpenDialogVT)
@@ -47,4 +49,35 @@ impl IFileOpenDialog {
 		self.IFileDialog.IModalWindow.IUnknown.ppv::<IFileOpenDialogVT>()
 	}
 
+	/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
+	/// method.
+	pub fn GetResults(&self) -> WinResult<IShellItemArray> {
+		let mut ppvQueried: PPComVT<IShellItemArrayVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetResults)(
+					self.ppv(),
+					&mut ppvQueried
+						as *mut PPComVT<IShellItemArrayVT>
+						as *mut *mut _,
+				)
+			},
+		).map(|_| IShellItemArray::from(ppvQueried))
+	}
+
+	/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
+	/// method.
+	pub fn GetSelectedItems(&self) -> WinResult<IShellItemArray> {
+		let mut ppvQueried: PPComVT<IShellItemArrayVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetSelectedItems)(
+					self.ppv(),
+					&mut ppvQueried
+						as *mut PPComVT<IShellItemArrayVT>
+						as *mut *mut _,
+				)
+			},
+		).map(|_| IShellItemArray::from(ppvQueried))
+	}
 }

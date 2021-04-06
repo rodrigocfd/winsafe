@@ -23,13 +23,13 @@ com_virtual_table! { IFileDialogVT,
 	SetDefaultFolder, fn(PPComVT<Self>, PVOID) -> i32
 	SetFolder, fn(PPComVT<Self>, PVOID) -> i32
 	GetFolder, fn(PPComVT<Self>, *mut PVOID) -> i32
-	GetCurrentSelection, fn(PPComVT<Self>, *mut PVOID) -> i32
+	GetCurrentSelection, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
 	SetFileName, fn(PPComVT<Self>, PCSTR) -> i32
-	GetFileName, fn(PPComVT<Self>, PSTR) -> i32
+	GetFileName, fn(PPComVT<Self>, *mut PSTR) -> i32
 	SetTitle, fn(PPComVT<Self>, PCSTR) -> i32
 	SetOkButtonLabel, fn(PPComVT<Self>, PCSTR) -> i32
 	SetFileNameLabel, fn(PPComVT<Self>, PCSTR) -> i32
-	GetResult, fn(PPComVT<Self>, *mut PVOID) -> i32
+	GetResult, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
 	AddPlace, fn(PPComVT<Self>, PVOID, u32) -> i32
 	SetDefaultExtension, fn(PPComVT<Self>, PCSTR) -> i32
 	Close, fn(PPComVT<Self>, i32) -> i32
@@ -44,8 +44,8 @@ com_virtual_table! { IFileOpenDialogVT,
 	0xd57c7288, 0xd4ad, 0x4768, 0xbe02, 0x9d969532d960,
 	IFileDialogVT, IFileDialogVT
 
-	GetResults, fn(PPComVT<Self>, *mut PVOID) -> i32
-	GetSelectedItems, fn(PPComVT<Self>, *mut PVOID) -> i32
+	GetResults, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
+	GetSelectedItems, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
 }
 
 com_virtual_table! { IModalWindowVT,
@@ -68,7 +68,7 @@ com_virtual_table! { IShellItemArrayVT,
 	GetPropertyDescriptionList, fn(PPComVT<Self>, PVOID, PCVOID, *mut PPComVT<IUnknownVT>) -> i32
 	GetAttributes, fn(PPComVT<Self>, u32, u32, PVOID) -> i32
 	GetCount, fn(PPComVT<Self>, *mut u32) -> i32
-	GetItemAt, fn(PPComVT<Self>, u32, *mut PVOID) -> i32
+	GetItemAt, fn(PPComVT<Self>, u32, *mut PPComVT<IUnknownVT>) -> i32
 	EnumItems, fn(PPComVT<Self>, *mut PVOID) -> i32
 }
 

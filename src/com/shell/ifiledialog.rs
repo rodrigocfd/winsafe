@@ -2,7 +2,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::funcs::hr_to_winresult;
+use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
 use crate::com::PPComVT;
 use crate::com::shell::{COMDLG_FILTERSPEC, IModalWindow, IShellItem};
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT, IShellItemVT};
@@ -52,6 +52,61 @@ impl IFileDialog {
 		)
 	}
 
+	/// [`IFileDialog::GetCurrentSelection`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
+	/// method.
+	pub fn GetCurrentSelection(&self) -> WinResult<IShellItem> {
+		let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetCurrentSelection)(
+					self.ppv(),
+					&mut ppvQueried
+						as *mut PPComVT<IShellItemVT>
+						as *mut *mut _,
+				)
+			},
+		).map(|_| IShellItem::from(ppvQueried))
+	}
+
+	/// [`IFileDialog::GetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfilename)
+	/// method.
+	pub fn GetFileName(&self) -> WinResult<String> {
+		let mut pstr: *mut u16 = std::ptr::null_mut();
+
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).GetFileName)(self.ppv(), &mut pstr) },
+		).map(|_| {
+			let name = WString::from_wchars_nullt(pstr);
+			CoTaskMemFree(pstr);
+			name.to_string()
+		})
+	}
+
+	/// [`IFileDialog::GetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfiletypeindex)
+	/// method.
+	pub fn GetFileTypeIndex(&self) -> WinResult<u32> {
+		let mut index: u32 = 0;
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).GetFileTypeIndex)(self.ppv(), &mut index) },
+		).map(|_| index)
+	}
+
+	/// [`IFileDialog::GetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
+	/// method.
+	pub fn GetFolder(&self) -> WinResult<IShellItem> {
+		let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetFolder)(
+					self.ppv(),
+					&mut ppvQueried
+						as *mut PPComVT<IShellItemVT>
+						as *mut *mut _,
+				)
+			},
+		).map(|_| IShellItem::from(ppvQueried))
+	}
+
 	/// [`IFileDialog::GetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
 	/// method.
 	pub fn GetOptions(&self) -> WinResult<co::FOS> {
@@ -75,6 +130,19 @@ impl IFileDialog {
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))
+	}
+
+	/// [`IFileDialog::SetDefaultExtension`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultextension)
+	/// method.
+	pub fn SetDefaultExtension(&self, defaultExtension: &str) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetDefaultExtension)(
+					self.ppv(),
+					WString::from_str(defaultExtension).as_ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypeindex)

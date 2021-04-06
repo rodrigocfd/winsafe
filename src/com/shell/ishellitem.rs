@@ -48,9 +48,9 @@ impl IShellItem {
 	/// ```rust,ignore
 	/// use winsafe::shell;
 	///
-	/// let shi = shell::IShellItem::new("C:\\Temp\\test.txt").unwrap();
+	/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt").unwrap();
 	/// ```
-	pub fn new(file_or_folder_path: &str) -> WinResult<IShellItem> {
+	pub fn from_path(file_or_folder_path: &str) -> WinResult<IShellItem> {
 		let mut ppv: PPComVT<IShellItemVT> = std::ptr::null_mut();
 
 		let hr = unsafe {
