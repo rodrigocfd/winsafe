@@ -39,7 +39,6 @@ pub struct ITaskbarList3 {
 }
 
 impl From<PPComVT<ITaskbarList3VT>> for ITaskbarList3 {
-	/// Creates a new object from a pointer to a pointer to its virtual table.
 	fn from(ppv: PPComVT<ITaskbarList3VT>) -> Self {
 		Self {
 			ITaskbarList2: ITaskbarList2::from(ppv as PPComVT<ITaskbarList2VT>),
