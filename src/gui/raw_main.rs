@@ -76,7 +76,11 @@ impl RawMain {
 		self.0.base.create_window( // may panic
 			&class_name_buf.to_string(),
 			Some(&opts.title),
-			IdMenu::None,
+			if opts.menu.is_null() {
+				IdMenu::None
+			} else {
+				IdMenu::Menu(opts.menu)
+			},
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
 		)?;
