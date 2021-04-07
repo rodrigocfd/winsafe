@@ -48,6 +48,19 @@ com_virtual_table! { IFileOpenDialogVT,
 	GetSelectedItems, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
 }
 
+com_virtual_table! { IFileSaveDialogVT,
+	/// [`IFileSaveDialog`](crate::shell::IFileSaveDialog) virtual table.
+	->
+	0x84bccd23, 0x5fde, 0x4cdb, 0xaea4, 0xaf64b83d78ab,
+	IFileDialogVT, IFileDialogVT
+
+	SetSaveAsItem, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> i32
+	SetProperties, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> i32
+	SetCollectedProperties, fn(PPComVT<Self>, PPComVT<IUnknownVT>, BOOL) -> i32
+	GetProperties, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
+	ApplyProperties, fn(PPComVT<Self>, PPComVT<IUnknownVT>, PPComVT<IUnknownVT>, HANDLE, PPComVT<IUnknownVT>) -> i32
+}
+
 com_virtual_table! { IModalWindowVT,
 	/// [`IModalWindow`](crate::shell::IModalWindow) virtual table.
 	->
