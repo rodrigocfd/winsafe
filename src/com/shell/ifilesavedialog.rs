@@ -7,8 +7,8 @@ use crate::com::shell::{IFileDialog, IShellItem};
 use crate::com::shell::vt::{IFileDialogVT, IFileSaveDialogVT};
 
 /// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
-/// COM interface. Backed by [`IFileSaveDialogVT`](crate::shell::IFileSaveDialogVT)
-/// virtual table.
+/// COM interface. Backed by
+/// [`IFileSaveDialogVT`](crate::shell::vt::IFileSaveDialogVT) virtual table.
 ///
 /// Inherits from:
 /// * [`IFileDialog`](crate::shell::IFileDialog);

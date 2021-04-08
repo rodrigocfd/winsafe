@@ -9,7 +9,7 @@ use crate::ffi::shell32;
 use crate::WString;
 
 /// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
-/// COM interface. Backed by [`IShellItemVT`](crate::shell::IShellItemVT)
+/// COM interface. Backed by [`IShellItemVT`](crate::shell::vt::IShellItemVT)
 /// virtual table.
 ///
 /// Inherits from:

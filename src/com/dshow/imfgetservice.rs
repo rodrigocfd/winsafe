@@ -7,8 +7,8 @@ use crate::com::funcs::hr_to_winresult;
 use crate::structs::GUID;
 
 /// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
-/// COM interface. Backed by [`IMFGetServiceVT`](crate::dshow::IMFGetServiceVT)
-/// virtual table.
+/// COM interface. Backed by
+/// [`IMFGetServiceVT`](crate::dshow::vt::IMFGetServiceVT) virtual table.
 ///
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).

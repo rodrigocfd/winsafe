@@ -10,7 +10,8 @@ use crate::handles::HWND;
 use crate::structs::{RECT, SIZE};
 
 /// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
-/// COM interface. Backed by [`IMFVideoDisplayControlVT`](crate::dshow::IMFVideoDisplayControlVT)
+/// COM interface. Backed by
+/// [`IMFVideoDisplayControlVT`](crate::dshow::vt::IMFVideoDisplayControlVT)
 /// virtual table.
 ///
 /// Inherits from:

@@ -9,8 +9,8 @@ use crate::privs::INFINITE;
 use crate::WString;
 
 /// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
-/// COM interface. Backed by [`IMediaControlVT`](crate::dshow::IMediaControlVT)
-/// virtual table.
+/// COM interface. Backed by
+/// [`IMediaControlVT`](crate::dshow::vt::IMediaControlVT) virtual table.
 ///
 /// Inherits from:
 /// * [`IDispatch`](crate::IDispatch);

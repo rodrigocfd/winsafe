@@ -8,7 +8,7 @@ use crate::com::PPComVT;
 use crate::WString;
 
 /// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
-/// COM interface. Backed by [`IBaseFilterVT`](crate::dshow::IBaseFilterVT)
+/// COM interface. Backed by [`IBaseFilterVT`](crate::dshow::vt::IBaseFilterVT)
 /// virtual table.
 ///
 /// Inherits from:
@@ -21,7 +21,7 @@ use crate::WString;
 /// when the object goes out of scope.
 #[derive(Clone)]
 pub struct IBaseFilter {
-	/// Methods of base interface [`IMediaFilter`](crate::IMediaFilter).
+	/// Methods of base interface [`IMediaFilter`](crate::dshow::IMediaFilter).
 	pub IMediaFilter: IMediaFilter,
 }
 

@@ -7,8 +7,8 @@ use crate::com::funcs::hr_to_winresult_bool;
 use crate::com::PPComVT;
 
 /// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
-/// COM interface. Backed by [`IMediaFilterVT`](crate::dshow::IMediaFilterVT)
-/// virtual table.
+/// COM interface. Backed by
+/// [`IMediaFilterVT`](crate::dshow::vt::IMediaFilterVT) virtual table.
 ///
 /// Inherits from:
 /// * [`IPersist`](crate::IPersist);

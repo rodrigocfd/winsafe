@@ -7,8 +7,8 @@ use crate::com::shell::{IFileDialog, IShellItemArray};
 use crate::com::shell::vt::{IFileDialogVT, IFileOpenDialogVT, IShellItemArrayVT};
 
 /// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
-/// COM interface. Backed by [`IFileOpenDialogVT`](crate::shell::IFileOpenDialogVT)
-/// virtual table.
+/// COM interface. Backed by
+/// [`IFileOpenDialogVT`](crate::shell::vt::IFileOpenDialogVT) virtual table.
 ///
 /// Inherits from:
 /// * [`IFileDialog`](crate::shell::IFileDialog);

@@ -359,7 +359,7 @@ pub enum RegistryValue {
 	Qword(u64),
 	/// String value, defined as [`REG::SZ`](crate::co::REG::SZ).
 	Sz(WString),
-	/// No value, defined as [`REG::NONE`](crate::co::REG:NONE). Also used for
+	/// No value, defined as [`REG::NONE`](crate::co::REG::NONE). Also used for
 	/// non-implemented value types.
 	None,
 }

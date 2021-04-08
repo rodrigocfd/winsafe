@@ -8,8 +8,8 @@ use crate::com::funcs::hr_to_winresult;
 use crate::WString;
 
 /// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
-/// COM interface. Backed by [`IFilterGraphVT`](crate::dshow::IFilterGraphVT)
-/// virtual table.
+/// COM interface. Backed by
+/// [`IFilterGraphVT`](crate::dshow::vt::IFilterGraphVT) virtual table.
 ///
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).

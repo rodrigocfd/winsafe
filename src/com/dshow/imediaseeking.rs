@@ -9,8 +9,8 @@ use crate::com::funcs::hr_to_winresult;
 use crate::structs::GUID;
 
 /// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
-/// COM interface. Backed by [`IMediaSeekingVT`](crate::dshow::IMediaSeekingVT)
-/// virtual table.
+/// COM interface. Backed by
+/// [`IMediaSeekingVT`](crate::dshow::vt::IMediaSeekingVT) virtual table.
 ///
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).
