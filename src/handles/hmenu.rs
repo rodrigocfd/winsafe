@@ -8,6 +8,7 @@ use crate::funcs::GetLastError;
 use crate::handles::HWND;
 use crate::privs::{bool_to_winresult, ptr_as_opt};
 use crate::structs::{MENUINFO, MENUITEMINFO};
+use crate::WString;
 
 handle_type! {
 	/// Handle to a
@@ -30,6 +31,32 @@ impl HMENU {
 					lpNewItem.as_ptr(),
 				)
 			},
+		)
+	}
+
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which appends
+	/// a new item at the menu with its command ID.
+	pub fn AppendMenuItem(self, command_id: u16, text: &str) -> WinResult<()> {
+		self.AppendMenu(
+			co::MF::STRING,
+			IdMenu::Id(command_id),
+			BitmapPtrStr::Str(WString::from_str(text)),
+		)
+	}
+
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which appends
+	/// a separator.
+	pub fn AppendMenuSeparator(self) -> WinResult<()> {
+		self.AppendMenu(co::MF::SEPARATOR, IdMenu::None, BitmapPtrStr::None)
+	}
+
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which appends
+	/// a menu as a new submenu entry.
+	pub fn AppendMenuSubmenu(self, submenu: HMENU, text: &str) -> WinResult<()> {
+		self.AppendMenu(
+			co::MF::POPUP,
+			IdMenu::Menu(submenu),
+			BitmapPtrStr::Str(WString::from_str(text)),
 		)
 	}
 

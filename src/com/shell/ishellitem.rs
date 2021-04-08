@@ -6,7 +6,6 @@ use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
 use crate::com::shell::vt::IShellItemVT;
 use crate::ffi::shell32;
-use crate::structs::GUID;
 use crate::WString;
 
 /// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
@@ -56,7 +55,7 @@ impl IShellItem {
 				shell32::SHCreateItemFromParsingName(
 					WString::from_str(file_or_folder_path).as_ptr(),
 					std::ptr::null_mut(),
-					IShellItemVT::IID().as_ref() as *const GUID as *const _,
+					IShellItemVT::IID().as_ref() as *const _ as *const _,
 					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},

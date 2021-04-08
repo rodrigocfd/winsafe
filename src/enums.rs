@@ -67,6 +67,8 @@ pub enum BitmapPtrStr {
 	Str(WString),
 	/// A pointer to anything.
 	Param(*const c_void),
+	/// Nothing.
+	None,
 }
 
 impl BitmapPtrStr {
@@ -76,6 +78,7 @@ impl BitmapPtrStr {
 			Self::Bitmap(hbmp) => hbmp.ptr as *const u16,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 			Self::Param(lp) => *lp as *const u16,
+			Self::None => std::ptr::null(),
 		}
 	}
 }

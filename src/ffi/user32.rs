@@ -90,6 +90,7 @@ extern "system" {
 	pub fn IsWindowUnicode(hWnd: HANDLE) -> BOOL;
 	pub fn IsWindowVisible(hWnd: HANDLE) -> BOOL;
 	pub fn IsZoomed(hWnd: HANDLE) -> BOOL;
+	pub fn KillTimer(hWnd: HANDLE, uIDEvent: usize) -> BOOL;
 	pub fn LoadAcceleratorsW(hInstance: HANDLE, lpTableName: PCSTR) -> HANDLE;
 	pub fn LoadCursorW(hInstance: HANDLE, lpCursorName: PCSTR) -> HANDLE;
 	pub fn LoadIconW(hInstance: HANDLE, lpIconName: PCSTR) -> HANDLE;
@@ -121,6 +122,7 @@ extern "system" {
 	pub fn SetScrollPos(hWnd: HANDLE, nBar: i32, nPos: i32, bRedraw: BOOL) -> i32;
 	pub fn SetScrollRange(hWnd: HANDLE, nBar: i32, nMinPos: i32, nMaxPos: i32, bRedraw: BOOL) -> BOOL;
 	pub fn SetSystemCursor(hcur: HANDLE, id: u32) -> BOOL;
+	pub fn SetTimer(hWnd: HANDLE, nIDEvent: usize, uElapse: u32, lpTimerFunc: PFUNC) -> usize;
 	pub fn SetWindowDisplayAffinity(hWnd: HANDLE, dwAffinity: u32) -> BOOL;
 	pub fn SetWindowLongPtrW(hWnd: HANDLE, nIndex: i32, dwNewLong: isize) -> isize;
 	pub fn SetWindowPlacement(hWnd: HANDLE, lpwndpl: PCVOID) -> BOOL;

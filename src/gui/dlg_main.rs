@@ -47,7 +47,7 @@ impl DlgMain {
 
 		let haccel = match self.0.accel_table_id {
 			None => None,
-			Some(id) => Some(hinst.LoadAccelerators(IdStr::Id(id))?),
+			Some(id) => Some(hinst.LoadAccelerators(IdStr::Id(id))?), // resources are automatically freed
 		};
 
 		self.set_icon_if_any(hinst)?;

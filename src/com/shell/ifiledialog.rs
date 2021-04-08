@@ -6,6 +6,7 @@ use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
 use crate::com::PPComVT;
 use crate::com::shell::{COMDLG_FILTERSPEC, IModalWindow, IShellItem};
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT, IShellItemVT};
+use crate::structs::GUID;
 use crate::WString;
 
 /// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
@@ -125,6 +126,19 @@ impl IFileDialog {
 		).map(|_| IShellItem::from(ppvQueried))
 	}
 
+	/// [`IFileDialog::SetClientGuid`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setclientguid)
+	/// method.
+	pub fn SetClientGuid(&self, guid: &GUID) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetClientGuid)(
+					self.ppv(),
+					guid as *const _ as *const _,
+				)
+			},
+		)
+	}
+
 	/// [`IFileDialog::SetDefaultExtension`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultextension)
 	/// method.
 	pub fn SetDefaultExtension(&self, defaultExtension: &str) -> WinResult<()> {
@@ -133,6 +147,42 @@ impl IFileDialog {
 				((**self.ppv()).SetDefaultExtension)(
 					self.ppv(),
 					WString::from_str(defaultExtension).as_ptr(),
+				)
+			},
+		)
+	}
+
+	/// [`IFileDialog::SetDefaultFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultfolder)
+	/// method.
+	pub fn SetDefaultFolder(&self, si: &IShellItem) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetDefaultFolder)(self.ppv(), si.IUnknown.ppv())
+			},
+		)
+	}
+
+	/// [`IFileDialog::SetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilename)
+	/// method.
+	pub fn SetFileName(&self, name: &str) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetFileName)(
+					self.ppv(),
+					WString::from_str(name).as_ptr(),
+				)
+			},
+		)
+	}
+
+	/// [`IFileDialog::SetFileNameLabel`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilenamelabel)
+	/// method.
+	pub fn SetFileNameLabel(&self, label: &str) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetFileNameLabel)(
+					self.ppv(),
+					WString::from_str(label).as_ptr(),
 				)
 			},
 		)
@@ -189,11 +239,45 @@ impl IFileDialog {
 		)
 	}
 
+	/// [`IFileDialog::SetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfolder)
+	/// method.
+	pub fn SetFolder(&self, si: &IShellItem) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).SetFolder)(self.ppv(), si.IUnknown.ppv()) },
+		)
+	}
+
+	/// [`IFileDialog::SetOkButtonLabel`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setokbuttonlabel)
+	/// method.
+	pub fn SetOkButtonLabel(&self, text: &str) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetOkButtonLabel)(
+					self.ppv(),
+					WString::from_str(text).as_ptr(),
+				)
+			},
+		)
+	}
+
 	/// [`IFileDialog::SetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setoptions)
 	/// method.
 	pub fn SetOptions(&self, opts: co::FOS) -> WinResult<()> {
 		hr_to_winresult(
 			unsafe { ((**self.ppv()).SetOptions)(self.ppv(), opts.0) },
+		)
+	}
+
+	/// [`IFileDialog::SetTitle`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-settitle)
+	/// method.
+	pub fn SetTitle(&self, text: &str) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetTitle)(
+					self.ppv(),
+					WString::from_str(text).as_ptr(),
+				)
+			},
 		)
 	}
 }

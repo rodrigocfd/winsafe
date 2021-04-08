@@ -1,9 +1,12 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
+use crate::co;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
+use crate::com::dshow::clsid;
 use crate::com::dshow::vt::IMediaSeekingVT;
 use crate::com::funcs::hr_to_winresult;
+use crate::structs::GUID;
 
 /// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
 /// COM interface. Backed by [`IMediaSeekingVT`](crate::dshow::IMediaSeekingVT)
@@ -32,6 +35,48 @@ impl From<PPComVT<IMediaSeekingVT>> for IMediaSeeking {
 impl IMediaSeeking {
 	unsafe fn ppv(&self) -> PPComVT<IMediaSeekingVT> {
 		self.IUnknown.ppv::<IMediaSeekingVT>()
+	}
+
+	/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
+	/// method.
+	pub fn ConvertTimeFormat(&self,
+		targetFormat: &GUID, source: i64, sourceFormat: &GUID) -> WinResult<i64>
+	{
+		let mut target: i64 = 0;
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).ConvertTimeFormat)(
+					self.ppv(),
+					&mut target,
+					targetFormat as *const _ as *const _,
+					source,
+					sourceFormat as *const _ as *const _,
+				)
+			},
+		).map(|_| target)
+	}
+
+	/// [`IMediaSeeking::GetAvailable`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getavailable)
+	/// method.
+	///
+	/// Returns earliest and latest times for efficient seeking.
+	pub fn GetAvailable(&self) -> WinResult<(i64, i64)> {
+		let mut early: i64 = 0;
+		let mut late: i64 = 0;
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetPositions)(self.ppv(), &mut early, &mut late)
+			},
+		).map(|_| (early, late))
+	}
+
+	/// [`IMediaSeeking::GetCurrentPosition method`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getcurrentposition)
+	/// method.
+	pub fn GetCurrentPosition(&self) -> WinResult<i64> {
+		let mut pos: i64 = 0;
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).GetCurrentPosition)(self.ppv(), &mut pos) },
+		).map(|_| pos)
 	}
 
 	/// [`IMediaSeeking::GetDuration`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getduration)
@@ -82,5 +127,62 @@ impl IMediaSeeking {
 		hr_to_winresult(
 			unsafe { ((**self.ppv()).GetStopPosition)(self.ppv(), &mut pos) },
 		).map(|_| pos)
+	}
+
+	/// [`IMediaSeeking::GetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-gettimeformat)
+	/// method.
+	pub fn GetTimeFormat(&self) -> WinResult<GUID> {
+		let mut guid = clsid::TIME_FORMAT_NONE;
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetStopPosition)(
+					self.ppv(),
+					&mut guid as *mut _ as *mut _,
+				)
+			},
+		).map(|_| guid)
+	}
+
+	/// [`IMediaSeeking::SetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
+	/// method.
+	pub fn SetPositions(&self,
+		mut current: i64, currentFlags: co::SEEKING_FLAGS,
+		mut stop: i64, stopFlags: co::SEEKING_FLAGS) -> WinResult<()>
+	{
+		match co::ERROR(
+			unsafe {
+				((**self.ppv()).SetPositions)(
+					self.ppv(),
+					&mut current,
+					currentFlags.0,
+					&mut stop,
+					stopFlags.0,
+				)
+			} as u32,
+		) {
+			co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`IMediaSeeking::SetRate`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setrate)
+	/// method.
+	pub fn SetRate(&self, rate: f64) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe { ((**self.ppv()).SetRate)(self.ppv(), rate) },
+		)
+	}
+
+	/// [`IMediaSeeking::SetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-settimeformat)
+	/// method.
+	pub fn SetTimeFormat(&self, format: &GUID) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).SetTimeFormat)(
+					self.ppv(),
+					format as *const _ as *const _,
+				)
+			},
+		)
 	}
 }

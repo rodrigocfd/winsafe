@@ -1,11 +1,16 @@
 use crate::co::{CMD, NM, WM, WS};
 
 const_type! { ACCELF, u8,
-	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
+	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`). Originally has `F` prefix.
 	->
+	/// The `key` member specifies a virtual-key code. If this flag is not
+	/// specified, key is assumed to specify a character code.
 	VIRTKEY, 1
+	/// The SHIFT key must be held down when the accelerator key is pressed.
 	SHIFT, 0x04
+	/// The CTRL key must be held down when the accelerator key is pressed.
 	CONTROL, 0x08
+	/// The ALT key must be held down when the accelerator key is pressed.
 	ALT, 0x10
 }
 
@@ -155,29 +160,29 @@ const_type_wm! { BM,
 	///
 	/// Also includes constants originally with `BCM` prefix.
 	->
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	GETIDEALSIZE, Self::FIRST.0 + 0x0001
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	SETIMAGELIST, Self::FIRST.0 + 0x0002
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	GETIMAGELIST, Self::FIRST.0 + 0x0003
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	SETTEXTMARGIN, Self::FIRST.0 + 0x0004
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	GETTEXTMARGIN, Self::FIRST.0 + 0x0005
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	SETDROPDOWNSTATE, Self::FIRST.0 + 0x0006
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	SETSPLITINFO, Self::FIRST.0 + 0x0007
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	GETSPLITINFO, Self::FIRST.0 + 0x0008
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	SETNOTE, Self::FIRST.0 + 0x0009
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	GETNOTE, Self::FIRST.0 + 0x000a
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	GETNOTELENGTH, Self::FIRST.0 + 0x000b
-	/// Originally with `BCM` prefix.
+	/// Originally has `BCM` prefix.
 	SETSHIELD, Self::FIRST.0 + 0x000c
 
 	GETCHECK, 0x00f0

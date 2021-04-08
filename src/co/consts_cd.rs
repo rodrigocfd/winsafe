@@ -308,11 +308,16 @@ const_type! { CMD, u16,
 }
 
 const_type! { COINIT, u32,
-	/// [`CoInitializeEx`](crate::CoInitializeEx) `dwCoInit` (`u32`).
+	/// [`COINIT`](https://docs.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
+	/// enumeration (`u32`).
 	->
+	/// Initializes the thread for apartment-threaded object concurrency.
 	APARTMENTTHREADED, 0x2
+	/// Initializes the thread for multithreaded object concurrency.
 	MULTITHREADED, 0x0
+	/// Disables DDE for OLE1 support.
 	DISABLE_OLE1DDE, 0x4
+	/// Increase memory usage in an attempt to increase performance.
 	SPEED_OVER_MEMORY, 0x8
 }
 

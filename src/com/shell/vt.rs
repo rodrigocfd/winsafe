@@ -20,8 +20,8 @@ com_virtual_table! { IFileDialogVT,
 	Unadvise, fn(PPComVT<Self>, u32) -> i32
 	SetOptions, fn(PPComVT<Self>, u32) -> i32
 	GetOptions, fn(PPComVT<Self>, *mut u32) -> i32
-	SetDefaultFolder, fn(PPComVT<Self>, PVOID) -> i32
-	SetFolder, fn(PPComVT<Self>, PVOID) -> i32
+	SetDefaultFolder, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> i32
+	SetFolder, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> i32
 	GetFolder, fn(PPComVT<Self>, *mut PVOID) -> i32
 	GetCurrentSelection, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
 	SetFileName, fn(PPComVT<Self>, PCSTR) -> i32

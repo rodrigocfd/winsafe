@@ -1,9 +1,11 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
+use crate::co;
+use crate::com::{IDispatch, IDispatchVT, PPComVT};
 use crate::com::dshow::vt::IMediaControlVT;
 use crate::com::funcs::{hr_to_winresult, hr_to_winresult_bool};
-use crate::com::{IDispatch, IDispatchVT, PPComVT};
+use crate::privs::INFINITE;
 use crate::WString;
 
 /// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
@@ -49,6 +51,23 @@ impl IMediaControl {
 				)
 			},
 		).map(|_| IDispatch::from(ppvQueried))
+	}
+
+	/// [`IMediaControl::GetState`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
+	/// method.
+	pub fn GetState(&self,
+		msTimeout: Option<i32>) -> WinResult<co::FILTER_STATE>
+	{
+		let mut state = co::FILTER_STATE::Stopped;
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).GetState)(
+					self.ppv(),
+					msTimeout.unwrap_or(INFINITE as i32),
+					&mut state.0,
+				)
+			},
+		).map(|_| state)
 	}
 
 	/// [`IMediaControl::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-pause)

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::{SUBCLASSPROC, WinResult, WNDENUMPROC};
+use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult, WNDENUMPROC};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
 use crate::ffi::{comctl32, user32, uxtheme};
@@ -705,6 +705,12 @@ impl HWND {
 		unsafe { user32::IsZoomed(self.ptr) != 0 }
 	}
 
+	/// [`KillTimer`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-killtimer)
+	/// method.
+	pub fn KillTimer(self, uIDEvent: usize) -> WinResult<()> {
+		bool_to_winresult(unsafe { user32::KillTimer(self.ptr, uIDEvent) })
+	}
+
 	/// [`MapDialogRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)
 	/// method.
 	pub fn MapDialogRect(self, lpRect: &mut RECT) -> WinResult<()> {
@@ -896,55 +902,6 @@ impl HWND {
 		}
 	}
 
-	/// [`SetScrollInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollinfo)
-	/// method.
-	pub fn SetScrollInfo(self,
-		nBar: co::SBB, lpsi: &SCROLLINFO, redraw: bool) -> i32
-	{
-		unsafe {
-			user32::SetScrollInfo(
-				self.ptr,
-				nBar.0,
-				lpsi as *const _ as *const _,
-				redraw as i32,
-			)
-		}
-	}
-
-	/// [`SetScrollPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollpos)
-	/// method.
-	pub fn SetScrollPos(self,
-		nBar: co::SBB, nPos: i32, bRedraw: bool) -> WinResult<i32>
-	{
-		match unsafe {
-			user32::SetScrollPos(self.ptr, nBar.0, nPos, bRedraw as i32)
-		} {
-			0 => match GetLastError() {
-				co::ERROR::SUCCESS => Ok(0), // actual zero position
-				err => Err(err),
-			},
-			pos => Ok(pos),
-		}
-	}
-
-	/// [`SetScrollRange`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollrange)
-	/// method.
-	pub fn SetScrollRange(self,
-		nBar: co::SBB, nMinPos: i32, nMaxPos: i32, bRedraw: bool) -> WinResult<()>
-	{
-		bool_to_winresult(
-			unsafe {
-				user32::SetScrollRange(
-					self.ptr,
-					nBar.0,
-					nMinPos,
-					nMaxPos,
-					bRedraw as i32,
-				)
-			},
-		)
-	}
-
 	/// [`SendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
 	///
@@ -1005,6 +962,77 @@ impl HWND {
 				co::ERROR::SUCCESS => Ok(None), // no previous parent
 				err => Err(err),
 			},
+		}
+	}
+
+	/// [`SetScrollInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollinfo)
+	/// method.
+	pub fn SetScrollInfo(self,
+		nBar: co::SBB, lpsi: &SCROLLINFO, redraw: bool) -> i32
+	{
+		unsafe {
+			user32::SetScrollInfo(
+				self.ptr,
+				nBar.0,
+				lpsi as *const _ as *const _,
+				redraw as i32,
+			)
+		}
+	}
+
+	/// [`SetScrollPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollpos)
+	/// method.
+	pub fn SetScrollPos(self,
+		nBar: co::SBB, nPos: i32, bRedraw: bool) -> WinResult<i32>
+	{
+		match unsafe {
+			user32::SetScrollPos(self.ptr, nBar.0, nPos, bRedraw as i32)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(0), // actual zero position
+				err => Err(err),
+			},
+			pos => Ok(pos),
+		}
+	}
+
+	/// [`SetScrollRange`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollrange)
+	/// method.
+	pub fn SetScrollRange(self,
+		nBar: co::SBB, nMinPos: i32, nMaxPos: i32, bRedraw: bool) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::SetScrollRange(
+					self.ptr,
+					nBar.0,
+					nMinPos,
+					nMaxPos,
+					bRedraw as i32,
+				)
+			},
+		)
+	}
+
+	/// [`SetTimer`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-settimer)
+	/// method.
+	pub fn SetTimer(self,
+		nIDEvent: usize, uElapse: u32,
+		lpTimerFunc: Option<TIMERPROC>) -> WinResult<usize>
+	{
+		match unsafe {
+			user32::SetTimer(
+				self.ptr,
+				nIDEvent,
+				uElapse,
+				match lpTimerFunc {
+					Some(proc) => proc as *const _,
+					None => std::ptr::null(),
+				},
+			)
+		} {
+			0 => Err(GetLastError()),
+			tid => Ok(tid),
 		}
 	}
 

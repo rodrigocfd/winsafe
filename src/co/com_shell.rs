@@ -1,6 +1,6 @@
 const_type! { DROPEFFECT, u32,
 	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
-	/// constants.
+	/// constants (`u32`).
 	->
 	NONE, 0
 	COPY, 1
@@ -11,7 +11,7 @@ const_type! { DROPEFFECT, u32,
 
 const_type! { FOS, u32,
 	/// [`_FILEOPENDIALOGOPTIONS`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
-	/// enumeration.
+	/// enumeration (`u32`).
 	->
 	OVERWRITEPROMPT, 0x2
 	STRICTFILETYPES, 0x4
@@ -40,7 +40,7 @@ const_type! { FOS, u32,
 
 const_type! { SFGAO, u32,
 	/// [`SFGAO`](https://docs.microsoft.com/en-us/windows/win32/shell/sfgao)
-	/// constants.
+	/// constants (`u32`).
 	->
 	CANCOPY, DROPEFFECT::COPY.0
 	CANMOVE, DROPEFFECT::MOVE.0
@@ -80,7 +80,7 @@ const_type! { SFGAO, u32,
 
 const_type! { SIGDN, u32,
 	/// [`SIGDN`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
-	/// enumeration.
+	/// enumeration (`u32`).
 	->
 	NORMALDISPLAY, 0
 	PARENTRELATIVEPARSING, 0x80018001
@@ -96,7 +96,7 @@ const_type! { SIGDN, u32,
 
 const_type! { TBPF, u32,
 	/// [`ITaskbarList3::SetProgressState`](crate::shell::ITaskbarList3::SetProgressState)
-	/// `tbpFlags`.
+	/// `tbpFlags` (`u32`).
 	->
 	NOPROGRESS, 0
 	INDETERMINATE, 0x1

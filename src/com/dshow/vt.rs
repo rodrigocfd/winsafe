@@ -60,7 +60,7 @@ com_virtual_table! { IMediaControlVT,
 	Run, fn(PPComVT<Self>) -> i32
 	Pause, fn(PPComVT<Self>) -> i32
 	Stop, fn(PPComVT<Self>) -> i32
-	GetState, fn(PPComVT<Self>, i32, *mut i32) -> i32
+	GetState, fn(PPComVT<Self>, i32, *mut u32) -> i32
 	RenderFile, fn(PPComVT<Self>, PSTR) -> i32
 	AddSourceFilter, fn(PPComVT<Self>, PSTR, *mut PPComVT<IUnknownVT>) -> i32
 	GetFilterCollection, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32

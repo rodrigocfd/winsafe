@@ -89,7 +89,12 @@ impl RawMain {
 		hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		hwnd.UpdateWindow()?;
 
-		Base::run_main_loop(opts.accel_table.as_opt()) // blocks until window is closed
+		let res = Base::run_main_loop(opts.accel_table.as_opt()); // blocks until window is closed
+
+		if let Some(haccel) = opts.accel_table.as_opt() {
+			haccel.DestroyAcceleratorTable();
+		}
+		res
 	}
 
 	fn default_message_handlers(&self) {
@@ -189,13 +194,16 @@ pub struct WindowMainOpts {
 	/// Main menu of the window to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// This menu is not shared, the window will own it, and destroy it when the
-	/// window is destroyed.
+	/// This menu is **not** shared: the window will own it, and destroy it when
+	/// the window is destroyed.
 	///
 	/// Defaults to none.
 	pub menu: HMENU,
 	/// Main accelerator table of the window to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// This accelerator table is **not** shared: the window will own it, and
+	/// destroy it when the window is destroyed.
 	///
 	/// Defaults to none.
 	pub accel_table: HACCEL,
