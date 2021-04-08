@@ -44,7 +44,7 @@ impl IModalWindow {
 		let hr = unsafe { ((**self.ppv()).Show)(self.ppv(), hwndOwner.ptr) };
 		match HRESULT_FROM_WIN32(hr) {
 			co::ERROR::S_OK => Ok(true),
-			co::ERROR::CANCELLED => Ok(false),
+			co::ERROR::CANCELLED => Ok(false), // ordinary error, not a COM error
 			_ => Err(co::ERROR(hr as u32)),
 		}
 	}

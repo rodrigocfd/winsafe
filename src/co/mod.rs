@@ -6,6 +6,8 @@
 #[macro_use]
 mod macros;
 
+mod com_dshow;
+mod com_shell;
 mod consts_ab;
 mod consts_cd;
 mod consts_ef;
@@ -18,8 +20,9 @@ mod consts_st;
 mod consts_uv;
 mod consts_wxyz;
 mod error;
-mod shell;
 
+pub use com_dshow::*;
+pub use com_shell::*;
 pub use consts_ab::*;
 pub use consts_cd::*;
 pub use consts_ef::*;
@@ -32,4 +35,3 @@ pub use consts_st::*;
 pub use consts_uv::*;
 pub use consts_wxyz::*;
 pub use error::ERROR;
-pub use shell::*;

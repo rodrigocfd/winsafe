@@ -60,9 +60,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).GetCurrentSelection)(
 					self.ppv(),
-					&mut ppvQueried
-						as *mut PPComVT<IShellItemVT>
-						as *mut *mut _,
+					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))
@@ -72,7 +70,6 @@ impl IFileDialog {
 	/// method.
 	pub fn GetFileName(&self) -> WinResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
-
 		hr_to_winresult(
 			unsafe { ((**self.ppv()).GetFileName)(self.ppv(), &mut pstr) },
 		).map(|_| {
@@ -99,9 +96,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).GetFolder)(
 					self.ppv(),
-					&mut ppvQueried
-						as *mut PPComVT<IShellItemVT>
-						as *mut *mut _,
+					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))
@@ -124,9 +119,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).GetResult)(
 					self.ppv(),
-					&mut ppvQueried
-						as *mut PPComVT<IShellItemVT>
-						as *mut *mut _,
+					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))

@@ -1,17 +1,16 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co;
 use crate::com::{ComVT, PPComVT};
+use crate::com::funcs::hr_to_winresult;
 use crate::ffi::PCVOID;
-use crate::structs::{GUID, IID};
+use crate::structs::IID;
 
 com_virtual_table! { IUnknownVT,
-	/// [`IUnknownVT`](crate::IUnknown) is the base to all COM interface virtual
-	/// tables.
+	/// [`IUnknown`](crate::IUnknown) virtual table.
 	->
 	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
-	QueryInterface, fn(PPComVT<Self>, PCVOID, *mut PPComVT<IUnknownVT>) -> u32
+	QueryInterface, fn(PPComVT<Self>, PCVOID, *mut PPComVT<IUnknownVT>) -> i32
 	AddRef, fn(PPComVT<Self>) -> u32
 	Release, fn(PPComVT<Self>) -> u32
 }
@@ -69,18 +68,12 @@ impl IUnknown {
 		-> WinResult<RetInterf>
 	{
 		let mut ppvQueried: PPComVT<VT> = std::ptr::null_mut();
-
-		match co::ERROR(
+		hr_to_winresult(
 			(unsafe { (**self.ppv).QueryInterface })(
 				self.ppv,
-				VT::IID().as_ref() as *const GUID as *const _,
-				&mut ppvQueried
-					as *mut PPComVT<VT>
-					as *mut *mut _,
-			)
-		) {
-			co::ERROR::S_OK => Ok(RetInterf::from(ppvQueried)),
-			err => Err(err),
-		}
+				VT::IID().as_ref() as *const _ as *const _,
+				&mut ppvQueried as *mut _ as *mut _,
+			),
+		).map(|_| RetInterf::from(ppvQueried))
 	}
 }

@@ -1,6 +1,7 @@
 /// [`GUID`](https://docs.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid)
 /// struct.
 #[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash)]
 pub struct GUID {
 	data1: u32,
 	data2: u16,
@@ -33,6 +34,7 @@ impl GUID {
 
 /// COM class ID. Just a safe abstraction over a [`GUID`](crate::GUID).
 #[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash)]
 pub struct CLSID(GUID);
 
 impl From<GUID> for CLSID {
@@ -65,6 +67,7 @@ impl CLSID {
 
 /// COM interface ID. Just a safe abstraction over a [`GUID`](crate::GUID).
 #[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash)]
 pub struct IID(GUID);
 
 impl From<GUID> for IID {

@@ -6,7 +6,6 @@ use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
 use crate::com::shell::vt::IShellItemVT;
 use crate::ffi::shell32;
-use crate::funcs::HRESULT_FROM_WIN32;
 use crate::structs::GUID;
 use crate::WString;
 
@@ -51,37 +50,30 @@ impl IShellItem {
 	/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt").unwrap();
 	/// ```
 	pub fn from_path(file_or_folder_path: &str) -> WinResult<IShellItem> {
-		let mut ppv: PPComVT<IShellItemVT> = std::ptr::null_mut();
-
-		let hr = unsafe {
-			shell32::SHCreateItemFromParsingName(
-				WString::from_str(file_or_folder_path).as_ptr(),
-				std::ptr::null_mut(),
-				IShellItemVT::IID().as_ref() as *const GUID as *const _,
-				&mut ppv
-					as *mut PPComVT<IShellItemVT>
-					as *mut *mut _,
-			)
-		};
-
-		match HRESULT_FROM_WIN32(hr) {
-			co::ERROR::S_OK => Ok(IShellItem::from(ppv)),
-			_ => Err(co::ERROR(hr as u32)),
-		}
+		let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				shell32::SHCreateItemFromParsingName(
+					WString::from_str(file_or_folder_path).as_ptr(),
+					std::ptr::null_mut(),
+					IShellItemVT::IID().as_ref() as *const GUID as *const _,
+					&mut ppvQueried as *mut _ as *mut _,
+				)
+			},
+		).map(|_| IShellItem::from(ppvQueried))
 	}
 
 	/// [`IShellItem::GetAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
 	/// method.
 	pub fn GetAttributes(&self, sfgaoMask: co::SFGAO) -> WinResult<co::SFGAO> {
-		let mut attribs: u32 = 0;
-
-		let hr = unsafe {
-			((**self.ppv()).GetAttributes)(self.ppv(), sfgaoMask.0, &mut attribs)
-		};
-
-		match HRESULT_FROM_WIN32(hr) {
-			co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(co::SFGAO(attribs)),
-			_ => Err(co::ERROR(hr as u32)),
+		let mut attrs: u32 = 0;
+		match co::ERROR(
+			unsafe {
+				((**self.ppv()).GetAttributes)(self.ppv(), sfgaoMask.0, &mut attrs)
+			} as u32,
+		) {
+			co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(co::SFGAO(attrs)),
+			err => Err(err),
 		}
 	}
 
@@ -99,7 +91,6 @@ impl IShellItem {
 	/// ```
 	pub fn GetDisplayName(&self, sigdnName: co::SIGDN) -> WinResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
-
 		hr_to_winresult(
 			unsafe {
 				((**self.ppv()).GetDisplayName)(self.ppv(), sigdnName.0, &mut pstr)
@@ -126,14 +117,11 @@ impl IShellItem {
 	/// ```
 	pub fn GetParent(&self) -> WinResult<IShellItem> {
 		let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
-
 		hr_to_winresult(
 			unsafe {
 				((**self.ppv()).GetParent)(
 					self.ppv(),
-					&mut ppvQueried
-						as *mut PPComVT<IShellItemVT>
-						as *mut *mut _,
+					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))

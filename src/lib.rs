@@ -33,10 +33,8 @@
 //!
 //! And additionally:
 //!
+//! * [`dshow`](crate::dshow) – Win32 DirectShow COM interfaces;
 //! * [`shell`](crate::shell) – Win32 Shell COM interfaces.
-//!
-//! The COM implementation is still *very* experimental. Other COM modules are
-//! planned to be added in the future.
 //!
 //! # Native function calls
 //!

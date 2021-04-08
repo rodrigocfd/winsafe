@@ -8,13 +8,20 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{ComVT, PPComVT};
 use crate::ffi::ole32;
-use crate::funcs::HRESULT_FROM_WIN32;
 use crate::structs::{CLSID, GUID};
 
 pub(crate) fn hr_to_winresult(hresult: i32) -> WinResult<()> {
-	match HRESULT_FROM_WIN32(hresult) {
+	match co::ERROR(hresult as u32) {
 		co::ERROR::S_OK => Ok(()),
-		_ => Err(co::ERROR(hresult as u32)),
+		err => Err(err),
+	}
+}
+
+pub(crate) fn hr_to_winresult_bool(hresult: i32) -> WinResult<bool> {
+	match co::ERROR(hresult as u32) {
+		co::ERROR::S_OK => Ok(true),
+		co::ERROR::S_FALSE => Ok(false),
+		err => Err(err),
 	}
 }
 
@@ -49,9 +56,7 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 				pUnkOuter.unwrap_or(std::ptr::null_mut()),
 				dwClsContext.0,
 				VT::IID().as_ref() as *const GUID as *const _,
-				&mut ppv
-					as *mut PPComVT<VT>
-					as *mut *mut _,
+				&mut ppv as *mut _ as *mut _,
 			)
 		}
 	) {

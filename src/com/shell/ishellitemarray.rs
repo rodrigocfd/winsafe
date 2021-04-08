@@ -39,7 +39,6 @@ impl IShellItemArray {
 	/// method.
 	pub fn GetCount(&self) -> WinResult<u32> {
 		let mut count: u32 = 0;
-
 		hr_to_winresult(
 			unsafe { ((**self.ppv()).GetCount)(self.ppv(), &mut count) },
 		).map(|_| count)
@@ -49,15 +48,12 @@ impl IShellItemArray {
 	/// method.
 	pub fn GetItemAt(&self, dwIndex: u32) -> WinResult<IShellItem> {
 		let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
-
 		hr_to_winresult(
 			unsafe {
 				((**self.ppv()).GetItemAt)(
 					self.ppv(),
 					dwIndex,
-					&mut ppvQueried
-						as *mut PPComVT<IShellItemVT>
-						as *mut *mut _,
+					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))
