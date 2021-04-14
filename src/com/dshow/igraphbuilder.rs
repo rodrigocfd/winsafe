@@ -9,8 +9,9 @@ use crate::handles::HFILE;
 use crate::WString;
 
 /// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
-/// COM interface. Backed by
-/// [`IGraphBuilderVT`](crate::dshow::vt::IGraphBuilderVT) virtual table.
+/// COM interface.
+///
+/// Virtual table: [`IGraphBuilderVT`](crate::dshow::vt::IGraphBuilderVT).
 ///
 /// Inherits from:
 /// * [`IFilterGraph`](crate::dshow::IFilterGraph);

@@ -8,8 +8,9 @@ use crate::funcs::HRESULT_FROM_WIN32;
 use crate::handles::HWND;
 
 /// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
-/// COM interface. Backed by
-/// [`IModalWindowVT`](crate::shell::vt::IModalWindowVT) virtual table.
+/// COM interface.
+///
+/// Virtual table: [`IModalWindowVT`](crate::shell::vt::IModalWindowVT).
 ///
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).

@@ -8,8 +8,9 @@ use crate::com::PPComVT;
 use crate::WString;
 
 /// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
-/// COM interface. Backed by [`IBaseFilterVT`](crate::dshow::vt::IBaseFilterVT)
-/// virtual table.
+/// COM interface.
+///
+/// Virtual table: [`IBaseFilterVT`](crate::dshow::vt::IBaseFilterVT).
 ///
 /// Inherits from:
 /// * [`IMediaFilter`](crate::dshow::IMediaFilter);

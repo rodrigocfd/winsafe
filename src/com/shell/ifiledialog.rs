@@ -10,8 +10,9 @@ use crate::structs::GUID;
 use crate::WString;
 
 /// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
-/// interface. Backed by [`IFileDialogVT`](crate::shell::vt::IFileDialogVT)
-/// virtual table.
+/// interface.
+///
+/// Virtual table: [`IFileDialogVT`](crate::shell::vt::IFileDialogVT).
 ///
 /// Inherits from:
 /// * [`IModalWindow`](crate::shell::IModalWindow);

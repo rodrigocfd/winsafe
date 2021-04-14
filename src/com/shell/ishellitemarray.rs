@@ -7,8 +7,9 @@ use crate::com::shell::IShellItem;
 use crate::com::shell::vt::{IShellItemArrayVT, IShellItemVT};
 
 /// [`IShellItemArray`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
-/// COM interface. Backed by
-/// [`IShellItemArrayVT`](crate::shell::vt::IShellItemArrayVT) virtual table.
+/// COM interface.
+///
+/// Virtual table: [`IShellItemArrayVT`](crate::shell::vt::IShellItemArrayVT).
 ///
 /// Inherits from:
 /// * [`IUnknown`](crate::IUnknown).
