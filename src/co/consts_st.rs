@@ -807,6 +807,48 @@ const_type! { TA, u32,
 	RTLREADING, 256
 }
 
+const_type_wm! { TBM,
+	/// Trackbar control
+	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
+	/// (`u32`), convertible to [`WM`](crate::co::WM).
+	->
+	GETPOS, WM::USER.0
+	GETRANGEMIN, WM::USER.0 + 1
+	GETRANGEMAX, WM::USER.0 + 2
+	GETTIC, WM::USER.0 + 3
+	SETTIC, WM::USER.0 + 4
+	SETPOS, WM::USER.0 + 5
+	SETRANGE, WM::USER.0 + 6
+	SETRANGEMIN, WM::USER.0 + 7
+	SETRANGEMAX, WM::USER.0 + 8
+	CLEARTICS, WM::USER.0 + 9
+	SETSEL, WM::USER.0 + 10
+	SETSELSTART, WM::USER.0 + 11
+	SETSELEND, WM::USER.0 + 12
+	GETPTICS, WM::USER.0 + 14
+	GETTICPOS, WM::USER.0 + 15
+	GETNUMTICS, WM::USER.0 + 16
+	GETSELSTART, WM::USER.0 + 17
+	GETSELEND, WM::USER.0 + 18
+	CLEARSEL, WM::USER.0 + 19
+	SETTICFREQ, WM::USER.0 + 20
+	SETPAGESIZE, WM::USER.0 + 21
+	GETPAGESIZE, WM::USER.0 + 22
+	SETLINESIZE, WM::USER.0 + 23
+	GETLINESIZE, WM::USER.0 + 24
+	GETTHUMBRECT, WM::USER.0 + 25
+	GETCHANNELRECT, WM::USER.0 + 26
+	SETTHUMBLENGTH, WM::USER.0 + 27
+	GETTHUMBLENGTH, WM::USER.0 + 28
+	SETTOOLTIPS, WM::USER.0 + 29
+	GETTOOLTIPS, WM::USER.0 + 30
+	SETTIPSIDE, WM::USER.0 + 31
+	SETBUDDY, WM::USER.0 + 32
+	GETBUDDY, WM::USER.0 + 33
+	SETUNICODEFORMAT, CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT, CCM::GETUNICODEFORMAT.0
+}
+
 const_type_ws! { TBS,
 	/// Trackbar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
@@ -836,7 +878,6 @@ const_type_wm! { TCM,
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
 	->
-
 	GETIMAGELIST, Self::FIRST.0 + 2
 	SETIMAGELIST, Self::FIRST.0 + 3
 	GETITEMCOUNT, Self::FIRST.0 + 4

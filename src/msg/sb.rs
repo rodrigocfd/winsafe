@@ -11,6 +11,8 @@ use crate::WString;
 
 /// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
 /// message parameters.
+///
+/// Return type: `WinResult<HICON>`.
 pub struct GetIcon {
 	pub part_index: u8,
 }

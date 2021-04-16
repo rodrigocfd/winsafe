@@ -50,4 +50,5 @@ pub mod mcm;
 pub mod pbm;
 pub mod sb;
 pub mod stm;
+pub mod tbm;
 pub mod wm;
