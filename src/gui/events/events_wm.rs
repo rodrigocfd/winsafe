@@ -664,6 +664,15 @@ impl WindowEvents {
 		/// Indicates that the user pressed the F1 key.
 	}
 
+	wm_ret_none! { wm_h_scroll, co::WM::HSCROLL, wm::HScroll,
+		/// [`WM_HSCROLL`](crate::msg::wm::HScroll) message.
+		///
+		/// The WM_HSCROLL message is sent to a window when a scroll event occurs
+		/// in the window's standard horizontal scroll bar. This message is also
+		/// sent to the owner of a horizontal scroll bar control when a scroll
+		/// event occurs in the control.
+	}
+
 	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to dialog
 	/// windows. Non-dialog windows receive
 	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) instead.
@@ -1088,6 +1097,15 @@ impl WindowEvents {
 		/// Broadcast to every window following a theme change event. Examples of
 		/// theme change events are the activation of a theme, the deactivation of
 		/// a theme, or a transition from one theme to another.
+	}
+
+	wm_ret_none! { wm_v_scroll, co::WM::VSCROLL, wm::VScroll,
+		/// [`WM_VSCROLL`](crate::msg::wm::VScroll) message.
+		///
+		/// The WM_VSCROLL message is sent to a window when a scroll event occurs
+		/// in the window's standard vertical scroll bar. This message is also
+		/// sent to the owner of a vertical scroll bar control when a scroll event
+		/// occurs in the control.
 	}
 
 	wm_ret_none! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged,

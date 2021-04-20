@@ -14,6 +14,7 @@ use crate::gui::native_controls::{
 	ProgressBar,
 	RadioButton,
 	StatusBar,
+	Trackbar,
 };
 use crate::gui::{WindowControl, WindowMain, WindowModal};
 use crate::handles::HWND;
@@ -66,6 +67,8 @@ pub(crate) fn hwndref_from_child(child: &dyn Child) -> &HWND {
 	} else if let Some(c) = child.as_any().downcast_ref::<RadioButton>() {
 		c.base_ref().hwnd_ref()
 	} else if let Some(c) = child.as_any().downcast_ref::<StatusBar>() {
+		c.base_ref().hwnd_ref()
+	} else if let Some(c) = child.as_any().downcast_ref::<Trackbar>() {
 		c.base_ref().hwnd_ref()
 	} else {
 		panic!("Unknown Child downcasting, something really bad happened.")

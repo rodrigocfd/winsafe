@@ -21,6 +21,7 @@ mod progress_bar;
 mod radio_button;
 mod radio_group;
 mod status_bar;
+mod trackbar;
 
 pub use button::{Button, ButtonOpts};
 pub use check_box::{CheckBox, CheckBoxOpts};
@@ -39,3 +40,4 @@ pub use progress_bar::{ProgressBar, ProgressBarOpts};
 pub use radio_button::{RadioButton, RadioButtonOpts};
 pub use radio_group::RadioGroup;
 pub use status_bar::{StatusBar, StatusBarPart};
+pub use trackbar::{Trackbar, TrackbarOpts};

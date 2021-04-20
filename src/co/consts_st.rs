@@ -69,6 +69,28 @@ const_type! { SBT, u16,
 	NOTABPARSING, 0x0800
 }
 
+const_type! { SB_REQ, u16,
+	/// [`WM_HSCROLL`](crate::msg::wm::HScroll) and
+	/// [`WM_VSCROLL`](crate::msg::wm::VScroll) request (`u16`). Originally has
+	/// `SB` prefix.
+	->
+	LINEUP, 0
+	LINELEFT, 0
+	LINEDOWN, 1
+	LINERIGHT, 1
+	PAGEUP, 2
+	PAGELEFT, 2
+	PAGEDOWN, 3
+	PAGERIGHT, 3
+	THUMBPOSITION, 4
+	THUMBTRACK, 5
+	TOP, 6
+	LEFT, 6
+	BOTTOM, 7
+	RIGHT, 7
+	ENDSCROLL, 8
+}
+
 const_type! { SC, u32,
 	/// [`WM_SYSCOMMAND`](crate::msg::wm::SysCommand) type of system command
 	/// requested (`u32`).
@@ -807,6 +829,21 @@ const_type! { TA, u32,
 	RTLREADING, 256
 }
 
+const_type! { TB, i32,
+	/// [`NMTRBTHUMBPOSCHANGING`](crate::NMTRBTHUMBPOSCHANGING) `nReason`
+	/// (`i32`).
+	->
+	LINEUP, 0
+	LINEDOWN, 1
+	PAGEUP, 2
+	PAGEDOWN, 3
+	THUMBPOSITION, 4
+	THUMBTRACK, 5
+	TOP, 6
+	BOTTOM, 7
+	ENDTRACK, 8
+}
+
 const_type_wm! { TBM,
 	/// Trackbar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
@@ -982,6 +1019,17 @@ const_type! { TPM, u32,
 	NOANIMATION, 0x4000
 	LAYOUTRTL, 0x8000
 	WORKAREA, 0x10000
+}
+
+const_type_nm! { TRBN,
+	/// Trackbar control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+	->
+	THUMBPOSCHANGING, Self::FIRST.0 - 1
+}
+const_type_priv_values! { TRBN,
+	FIRST, -1501
 }
 
 const_type_wm! { TVM,

@@ -69,7 +69,7 @@ impl MsgSend for GetBuddy {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => None,
-			h => Some(HWND { ptr: h as *mut _ }),
+			ptr => Some(HWND { ptr: ptr as *mut _ }),
 		}
 	}
 
@@ -340,7 +340,7 @@ impl MsgSend for GetTooltips {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => None,
-			h => Some(HWND { ptr: h as *mut _ }),
+			ptr => Some(HWND { ptr: ptr as *mut _ }),
 		}
 	}
 
@@ -368,7 +368,7 @@ impl MsgSend for SetBuddy {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => None,
-			h => Some(HWND { ptr: h as *mut _ }),
+			ptr => Some(HWND { ptr: ptr as *mut _ }),
 		}
 	}
 

@@ -547,6 +547,15 @@ pub struct NMMOUSE {
 	pub dwHitInfo: isize,
 }
 
+/// [`NMTRBTHUMBPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtrbthumbposchanging)
+/// struct.
+#[repr(C)]
+pub struct NMTRBTHUMBPOSCHANGING {
+	pub hdr: NMHDR,
+	pub dwPos: u32,
+	pub nReason: co::TB,
+}
+
 /// [`NMSELCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmselchange)
 /// struct.
 #[repr(C)]

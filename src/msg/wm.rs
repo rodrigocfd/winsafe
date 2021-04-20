@@ -169,10 +169,7 @@ impl MsgSend for Command {
 		WndMsg {
 			msg_id: co::WM::COMMAND,
 			wparam: MAKEDWORD(self.ctrl_id, self.code.into()) as usize,
-			lparam: match self.ctrl_hwnd {
-				Some(h) => h.ptr as isize,
-				None => 0,
-			},
+			lparam: self.ctrl_hwnd.map(|h| h.ptr as isize).unwrap_or_default(),
 		}
 	}
 }
@@ -528,6 +525,45 @@ impl<'a> MsgSendRecv for Help<'a> {
 	}
 }
 
+/// [`WM_HSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-hscroll)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct HScroll {
+	pub scroll_box_pos: u16,
+	pub request: co::SB_REQ,
+	pub hcontrol: Option<HWND>,
+}
+
+impl MsgSend for HScroll {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::HSCROLL,
+			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as usize,
+			lparam: self.hcontrol.map(|h| h.ptr as isize).unwrap_or_default(),
+		}
+	}
+}
+
+impl MsgSendRecv for HScroll {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			scroll_box_pos: HIWORD(p.wparam as u32),
+			request: co::SB_REQ(LOWORD(p.wparam as u32)),
+			hcontrol: match p.lparam {
+				0 => None,
+				ptr => Some(HWND { ptr: ptr as *mut _ }),
+			},
+		}
+	}
+}
+
 /// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
 ///
@@ -624,10 +660,7 @@ impl MsgSend for KillFocus {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::KILLFOCUS,
-			wparam: match self.hwnd {
-				Some(h) => h.ptr as usize,
-				None => 0,
-			},
+			wparam: self.hwnd.map(|h| h.ptr as usize).unwrap_or_default(),
 			lparam: 0,
 		}
 	}
@@ -1404,6 +1437,45 @@ impl MsgSendRecv for Timer {
 			timer_proc: match p.lparam {
 				0 => None,
 				addr => unsafe { std::mem::transmute(addr) },
+			},
+		}
+	}
+}
+
+/// [`WM_VSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-vscroll)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct VScroll {
+	pub scroll_box_pos: u16,
+	pub request: co::SB_REQ,
+	pub hcontrol: Option<HWND>,
+}
+
+impl MsgSend for VScroll {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::VSCROLL,
+			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as usize,
+			lparam: self.hcontrol.map(|h| h.ptr as isize).unwrap_or_default(),
+		}
+	}
+}
+
+impl MsgSendRecv for VScroll {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			scroll_box_pos: HIWORD(p.wparam as u32),
+			request: co::SB_REQ(LOWORD(p.wparam as u32)),
+			hcontrol: match p.lparam {
+				0 => None,
+				ptr => Some(HWND { ptr: ptr as *mut _ }),
 			},
 		}
 	}

@@ -161,10 +161,7 @@ impl MsgSend for SetIcon {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as usize,
-			lparam: match self.hicon {
-				Some(hicon) => hicon.ptr as isize,
-				None => 0,
-			},
+			lparam: self.hicon.map(|h| h.ptr as isize).unwrap_or_default(),
 		}
 	}
 }
