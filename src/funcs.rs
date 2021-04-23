@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BroadNull;
-use crate::ffi::{advapi32, comctl32, kernel32, user32};
+use crate::ffi::{advapi32, BOOL, comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::MsgSend;
 use crate::privs::{
@@ -40,7 +40,7 @@ pub fn AdjustWindowRectEx(
 			user32::AdjustWindowRectEx(
 				lpRect as *mut _ as *mut _,
 				dwStyle.0,
-				bMenu as i32,
+				bMenu as BOOL,
 				dwExStyle.0,
 			)
 		},
@@ -58,7 +58,7 @@ pub fn CopyFileW(
 			kernel32::CopyFileW(
 				WString::from_str(lpExistingFileName).as_ptr(),
 				WString::from_str(lpNewFileName).as_ptr(),
-				bFailIfExists as i32,
+				bFailIfExists as BOOL,
 			)
 		},
 	)
@@ -105,7 +105,7 @@ pub fn EncryptionDisable(DirPath: &str, Disable: bool) -> WinResult<()> {
 		unsafe {
 			advapi32::EncryptionDisable(
 				WString::from_str(DirPath).as_ptr(),
-				Disable as i32,
+				Disable as BOOL,
 			)
 		},
 	)
@@ -354,7 +354,7 @@ pub fn InitCommonControls() {
 /// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
 /// function.
 pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
-	let r = unsafe { user32::IsGUIThread(bConvert as i32) };
+	let r = unsafe { user32::IsGUIThread(bConvert as BOOL) };
 	if bConvert {
 		match r {
 			0 => Ok(false),
@@ -607,7 +607,7 @@ pub fn SetProcessDPIAware() -> WinResult<()> {
 /// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)
 /// function.
 pub fn ShowCursor(bShow: bool) -> i32 {
-	unsafe { user32::ShowCursor(bShow as i32) }
+	unsafe { user32::ShowCursor(bShow as BOOL) }
 }
 
 /// [`Sleep`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)

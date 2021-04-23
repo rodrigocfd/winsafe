@@ -1,6 +1,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IdStr;
+use crate::ffi::BOOL;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
@@ -124,6 +125,6 @@ impl DlgBase {
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
 		let hfont = HFONT { ptr: lparam as *mut _ };
 		hchild.SendMessage(wm::SetFont { hfont, redraw: false });
-		true as i32
+		true as BOOL
 	}
 }

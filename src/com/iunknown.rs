@@ -3,14 +3,14 @@
 use crate::aliases::WinResult;
 use crate::com::{ComVT, PPComVT};
 use crate::com::funcs::hr_to_winresult;
-use crate::ffi::PCVOID;
+use crate::ffi::{HRESULT, PCVOID};
 use crate::structs::IID;
 
 com_virtual_table! { IUnknownVT,
 	/// [`IUnknown`](crate::IUnknown) virtual table.
 	->
 	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
-	QueryInterface, fn(PPComVT<Self>, PCVOID, *mut PPComVT<IUnknownVT>) -> i32
+	QueryInterface, fn(PPComVT<Self>, PCVOID, *mut PPComVT<IUnknownVT>) -> HRESULT
 	AddRef, fn(PPComVT<Self>) -> u32
 	Release, fn(PPComVT<Self>) -> u32
 }

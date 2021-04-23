@@ -3,7 +3,7 @@
 use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult, WNDENUMPROC};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
-use crate::ffi::{comctl32, user32, uxtheme};
+use crate::ffi::{BOOL, comctl32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::MsgSend;
@@ -187,7 +187,7 @@ impl HWND {
 	/// [`EnableWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablewindow)
 	/// method.
 	pub fn EnableWindow(self, bEnable: bool) -> bool {
-		unsafe { user32::EnableWindow(self.ptr, bEnable as i32) != 0 }
+		unsafe { user32::EnableWindow(self.ptr, bEnable as BOOL) != 0 }
 	}
 
 	/// [`EndDialog`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddialog)
@@ -239,11 +239,11 @@ impl HWND {
 		hchildren
 	}
 	extern "system" fn EnumChildWindowsVecProc(
-		hchild: HWND, lparam: isize) -> i32
+		hchild: HWND, lparam: isize) -> BOOL
 	{
 		let hchildren = unsafe { &mut *(lparam as *mut Vec<HWND>) }; // retrieve pointer to Vec
 		hchildren.push(hchild);
-		true as i32
+		true as BOOL
 	}
 
 	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)
@@ -365,7 +365,7 @@ impl HWND {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::GetNextDlgGroupItem(self.ptr, hCtl.ptr, bPrevious as i32)
+				user32::GetNextDlgGroupItem(self.ptr, hCtl.ptr, bPrevious as BOOL)
 			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
@@ -380,7 +380,7 @@ impl HWND {
 	{
 		match ptr_as_opt(
 			unsafe {
-				user32::GetNextDlgTabItem(self.ptr, hCtl.ptr, bPrevious as i32)
+				user32::GetNextDlgTabItem(self.ptr, hCtl.ptr, bPrevious as BOOL)
 			},
 		) {
 			Some(ptr) => Ok(Self { ptr }),
@@ -425,7 +425,7 @@ impl HWND {
 	/// method.
 	pub fn GetUpdateRgn(self, hRgn: HRGN, bErase: bool) -> WinResult<co::REGION> {
 		match unsafe {
-			user32::GetUpdateRgn(self.ptr, hRgn.ptr, bErase as i32)
+			user32::GetUpdateRgn(self.ptr, hRgn.ptr, bErase as BOOL)
 		} {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
@@ -643,7 +643,7 @@ impl HWND {
 						std::ptr::null(),
 						|lpRect| lpRect as *const _ as *const _,
 					),
-					bErase as i32,
+					bErase as BOOL,
 				)
 			},
 		)
@@ -652,7 +652,7 @@ impl HWND {
 	/// [`InvalidateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidatergn)
 	/// method.
 	pub fn InvalidateRgn(self, hRgn: HRGN, bErase: bool) {
-		unsafe { user32::InvalidateRgn(self.ptr, hRgn.ptr, bErase as i32); }
+		unsafe { user32::InvalidateRgn(self.ptr, hRgn.ptr, bErase as BOOL); }
 	}
 
 	/// [`IsChild`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ischild)
@@ -767,7 +767,12 @@ impl HWND {
 	{
 		bool_to_winresult(
 			unsafe {
-				user32::MoveWindow(self.ptr, x, y, nWidth, nHeight, bRepaint as i32)
+				user32::MoveWindow(
+					self.ptr,
+					x, y,
+					nWidth, nHeight,
+					bRepaint as BOOL,
+				)
 			},
 		)
 	}
@@ -975,7 +980,7 @@ impl HWND {
 				self.ptr,
 				nBar.0,
 				lpsi as *const _ as *const _,
-				redraw as i32,
+				redraw as BOOL,
 			)
 		}
 	}
@@ -986,7 +991,7 @@ impl HWND {
 		nBar: co::SBB, nPos: i32, bRedraw: bool) -> WinResult<i32>
 	{
 		match unsafe {
-			user32::SetScrollPos(self.ptr, nBar.0, nPos, bRedraw as i32)
+			user32::SetScrollPos(self.ptr, nBar.0, nPos, bRedraw as BOOL)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero position
@@ -1008,7 +1013,7 @@ impl HWND {
 					nBar.0,
 					nMinPos,
 					nMaxPos,
-					bRedraw as i32,
+					bRedraw as BOOL,
 				)
 			},
 		)
@@ -1082,7 +1087,7 @@ impl HWND {
 	/// method.
 	pub fn SetWindowRgn(self, hRgn: HRGN, bRedraw: bool) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::SetWindowRgn(self.ptr, hRgn.ptr, bRedraw as i32) },
+			unsafe { user32::SetWindowRgn(self.ptr, hRgn.ptr, bRedraw as BOOL) },
 		)
 	}
 

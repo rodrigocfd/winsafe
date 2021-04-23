@@ -1,6 +1,7 @@
 //! Aliases to Win32 types.
 
 use crate::co;
+use crate::ffi::BOOL;
 use crate::handles::HWND;
 
 /// A specialized
@@ -60,7 +61,7 @@ pub type WNDENUMPROC =
 	extern "system" fn (
 		hwnd: HWND,
 		lParam: isize,
-	) -> i32;
+	) -> BOOL;
 
 /// Type alias to
 /// [`WNDPROC`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms633573(v=vs.85))

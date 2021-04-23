@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::com::funcs::hr_to_winresult;
-use crate::ffi::PVOID;
+use crate::ffi::{HRESULT, PVOID};
 use crate::structs::{CLSID, IID};
 
 com_virtual_table! { IPersistVT,
@@ -12,7 +12,7 @@ com_virtual_table! { IPersistVT,
 	0x0000010c, 0x0000, 0x0000, 0xc000, 0x000000000046,
 	IUnknownVT, IUnknownVT
 
-	GetClassID, fn(PPComVT<Self>, PVOID) -> i32
+	GetClassID, fn(PPComVT<Self>, PVOID) -> HRESULT
 }
 
 /// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)

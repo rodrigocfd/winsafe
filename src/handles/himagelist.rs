@@ -2,7 +2,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::ffi::comctl32;
+use crate::ffi::{BOOL, comctl32};
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HICON};
 use crate::privs::{bool_to_winresult, ptr_as_opt};
@@ -111,7 +111,7 @@ impl HIMAGELIST {
 	/// static method.
 	pub fn ImageList_DragShowNolock(fShow: bool) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { comctl32::ImageList_DragShowNolock(fShow as i32) },
+			unsafe { comctl32::ImageList_DragShowNolock(fShow as BOOL) },
 		)
 	}
 

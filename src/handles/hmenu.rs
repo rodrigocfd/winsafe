@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
-use crate::ffi::user32;
+use crate::ffi::{BOOL, user32};
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
 use crate::privs::{bool_to_winresult, ptr_as_opt};
@@ -218,7 +218,7 @@ impl HMENU {
 				user32::InsertMenuItemW(
 					self.ptr,
 					item.id_or_pos_u32(),
-					item.is_by_pos() as i32,
+					item.is_by_pos() as BOOL,
 					lpmi as *const _ as *const _,
 				)
 			},
@@ -263,7 +263,7 @@ impl HMENU {
 				user32::SetMenuItemInfoW(
 					self.ptr,
 					item.id_or_pos_u32(),
-					item.is_by_pos() as i32,
+					item.is_by_pos() as BOOL,
 					lpmii as *const _ as *const _,
 				)
 			},

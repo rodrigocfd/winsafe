@@ -6,6 +6,7 @@ use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::vt::IMFVideoDisplayControlVT;
 use crate::com::funcs::{hr_to_winresult, hr_to_winresult_bool};
 use crate::dshow::MFVideoNormalizedRect;
+use crate::ffi::BOOL;
 use crate::handles::HWND;
 use crate::structs::{RECT, SIZE};
 
@@ -136,7 +137,7 @@ impl IMFVideoDisplayControl {
 	pub fn SetFullscreen(&self, fullScreen: bool) -> WinResult<()> {
 		hr_to_winresult(
 			unsafe {
-				((**self.ppv()).SetFullscreen)(self.ppv(), fullScreen as i32)
+				((**self.ppv()).SetFullscreen)(self.ppv(), fullScreen as BOOL)
 			},
 		)
 	}

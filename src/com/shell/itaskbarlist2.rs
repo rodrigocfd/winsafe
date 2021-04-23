@@ -5,6 +5,7 @@ use crate::com::funcs::hr_to_winresult;
 use crate::com::PPComVT;
 use crate::com::shell::ITaskbarList;
 use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
+use crate::ffi::BOOL;
 use crate::handles::HWND;
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
@@ -59,7 +60,7 @@ impl ITaskbarList2 {
 		hr_to_winresult(
 			unsafe {
 				((**self.ppv()).MarkFullscreenWindow)(
-					self.ppv(), hwnd.ptr, fFullscreen as i32,
+					self.ppv(), hwnd.ptr, fFullscreen as BOOL,
 				)
 			},
 		)
