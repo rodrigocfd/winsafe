@@ -14,6 +14,7 @@ extern "system" {
 	pub fn FreeEnvironmentStringsW(penv: HANDLE) -> BOOL;
 	pub fn GetEnvironmentStringsW() -> HANDLE;
 	pub fn GetFileAttributesW(lpFileName: PCSTR) -> u32;
+	pub fn GetFileSizeEx(hFile: HANDLE, lpFileSize: *mut i64) -> BOOL;
 	pub fn GetLastError() -> u32;
 	pub fn GetModuleHandleW(lpModuleName: PCSTR) -> HANDLE;
 	pub fn GetSystemTime(lpSystemTime: PVOID);

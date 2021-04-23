@@ -96,4 +96,14 @@ impl HFILE {
 			None => Err(GetLastError()),
 		}
 	}
+
+	/// [`GetFileSizeEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
+	/// method.
+	pub fn GetFileSizeEx(&self) -> WinResult<i64> {
+		let mut ibuf = 0;
+		match unsafe { kernel32::GetFileSizeEx(self.ptr, &mut ibuf) } {
+			0 => Err(GetLastError()),
+			_ => Ok(ibuf),
+		}
+	}
 }
