@@ -7,10 +7,14 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BroadNull;
-use crate::ffi::{comctl32, kernel32, user32};
+use crate::ffi::{advapi32, comctl32, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::MsgSend;
-use crate::privs::{bool_to_winresult, parse_multi_z_str, ptr_as_opt};
+use crate::privs::{
+	bool_to_winresult,
+	INVALID_FILE_ATTRIBUTES,
+	parse_multi_z_str, ptr_as_opt,
+};
 use crate::structs::{
 	ATOM,
 	COLORREF,
@@ -43,10 +47,68 @@ pub fn AdjustWindowRectEx(
 	)
 }
 
+/// [`CopyFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
+/// function.
+pub fn CopyFileW(
+	lpExistingFileName: &str, lpNewFileName: &str,
+	bFailIfExists: bool) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			kernel32::CopyFileW(
+				WString::from_str(lpExistingFileName).as_ptr(),
+				WString::from_str(lpNewFileName).as_ptr(),
+				bFailIfExists as i32,
+			)
+		},
+	)
+}
+
+/// [`DecryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
+/// function.
+pub fn DecryptFile(lpFileName: &str) -> WinResult<()> {
+	bool_to_winresult(
+		unsafe {
+			advapi32::DecryptFileW(WString::from_str(lpFileName).as_ptr(), 0)
+		},
+	)
+}
+
+/// [`DeleteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
+/// function.
+pub fn DeleteFile(lpFileName: &str) -> WinResult<()> {
+	bool_to_winresult(
+		unsafe { kernel32::DeleteFileW(WString::from_str(lpFileName).as_ptr()) },
+	)
+}
+
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
 pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(lpMsg as *const _ as *const _) }
+}
+
+/// [`EncryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
+/// function.
+pub fn EncryptFile(lpFileName: &str) -> WinResult<()> {
+	bool_to_winresult(
+		unsafe {
+			advapi32::EncryptFileW(WString::from_str(lpFileName).as_ptr())
+		},
+	)
+}
+
+/// [`EncryptionDisable`](https://docs.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
+/// function.
+pub fn EncryptionDisable(DirPath: &str, Disable: bool) -> WinResult<()> {
+	bool_to_winresult(
+		unsafe {
+			advapi32::EncryptionDisable(
+				WString::from_str(DirPath).as_ptr(),
+				Disable as i32,
+			)
+		},
+	)
 }
 
 /// [`ExpandEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw)
@@ -140,6 +202,42 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 			}
 			Ok(map)
 		},
+	}
+}
+
+/// [`GetFileAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
+/// method.
+///
+/// # Examples
+///
+/// Checking whether a file or folder exists:
+///
+/// ```rust,ignore
+/// use winsafe::{co, GetFileAttributes};
+///
+/// let file_exists = GetFileAttributes("C:\\Temp\\something.txt").is_ok();
+/// ```
+///
+/// Retrieving various information about a file or folder path:
+///
+/// ```rust,ignore
+/// use winsafe::{co, GetFileAttributes};
+///
+/// let flags = GetFileAttributes("C:\\Temp\\something.txt").unwrap();
+///
+/// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
+/// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
+/// let is_encrypted  = flags.has(co::FILE_ATTRIBUTE::ENCRYPTED);
+/// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
+/// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
+/// ```
+pub fn GetFileAttributes(lpFileName: &str) -> WinResult<co::FILE_ATTRIBUTE> {
+	const INVALID: u32 = INVALID_FILE_ATTRIBUTES as u32;
+	match unsafe {
+		kernel32::GetFileAttributesW(WString::from_str(lpFileName).as_ptr())
+	} {
+		INVALID => Err(GetLastError()),
+		flags => Ok(co::FILE_ATTRIBUTE(flags)),
 	}
 }
 
@@ -394,6 +492,21 @@ pub fn MAKEDWORD(lo: u16, hi: u16) -> u32 {
 /// function. Originally a macro.
 pub fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16
+}
+
+/// [`MoveFile`]()
+/// function.
+pub fn MoveFile(
+	lpExistingFileName: &str, lpNewFileName: &str) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			kernel32::MoveFileW(
+				WString::from_str(lpExistingFileName).as_ptr(),
+				WString::from_str(lpNewFileName).as_ptr(),
+			)
+		},
+	)
 }
 
 /// [`MulDiv`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-muldiv)

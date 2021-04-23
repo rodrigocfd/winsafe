@@ -130,7 +130,7 @@ impl HWND {
 					dwStyle.0,
 					X, Y, nWidth, nHeight,
 					match hWndParent {
-						Some(hParent) => hParent.ptr,
+						Some(h) => h.ptr,
 						None => std::ptr::null_mut(),
 					},
 					hMenu.as_ptr(),

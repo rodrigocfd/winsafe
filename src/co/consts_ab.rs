@@ -15,8 +15,9 @@ const_type! { ACCELF, u8,
 }
 
 const_type! { ACCESS_RIGHTS, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
-	/// Originally has no prefix.
+	/// Standard access rights
+	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
+	/// (`u32`). Originally has no prefix.
 	->
 	DELETE, 0x00010000
 	READ_CONTROL, 0x00020000

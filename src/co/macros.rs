@@ -129,6 +129,8 @@ macro_rules! const_type_no_debug_display {
 		impl $tname {
 			/// Tells whether other bitflag style is present. Equivalent to
 			/// `(val & other) != 0`.
+			///
+			/// This method is common to all constant types.
 			pub fn has(&self, other: $tname) -> bool {
 				(self.0 & other.0) != 0
 			}

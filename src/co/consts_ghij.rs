@@ -85,6 +85,21 @@ const_type! { GDTR, u32,
 	MAX, 0x0002
 }
 
+const_type! { GENERIC, u32,
+	/// Generic access rights
+	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
+	/// (`u32`).
+	->
+	/// Read access.
+	READ, 0x80000000
+	/// Write access.
+	WRITE, 0x40000000
+	/// Execute access.
+	EXECUTE, 0x20000000
+	/// All possible access rights.
+	ALL, 0x10000000
+}
+
 const_type! { GW, u32,
 	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 	->

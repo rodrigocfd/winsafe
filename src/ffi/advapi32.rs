@@ -4,6 +4,9 @@ use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
 #[link(name = "advapi32")]
 extern "system" {
+	pub fn DecryptFileW(lpFileName: PCSTR, dwReserved: u32) -> BOOL;
+	pub fn EncryptFileW(lpFileName: PCSTR) -> BOOL;
+	pub fn EncryptionDisable(DirPath: PCSTR, Disable: BOOL) -> BOOL;
 	pub fn RegCloseKey(hKey: HANDLE) -> BOOL;
 	pub fn RegEnumKeyExW(hKey: HANDLE, dwIndex: u32, lpName: PSTR, lpcchName: *mut u32, lpReserved: *mut u32, lpClass: PSTR, lpcchClass: *mut u32, lpftLastWriteTime: PVOID) -> BOOL;
 	pub fn RegEnumValueW(hKey: HANDLE, dwIndex: u32, lpValueName: PSTR, lpcchValueName: *mut u32, lpReserved: *mut u32, lpType: *mut u32, lpData: *mut u8, lpcbData: *mut u32) -> BOOL;

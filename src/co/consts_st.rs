@@ -437,7 +437,9 @@ const_type_ws! { SS,
 }
 
 const_type! { STANDARD_RIGHTS, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
+	/// Standard access rights
+	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
+	/// (`u32`).
 	->
 	REQUIRED, 0x000f0000
 	READ, ACCESS_RIGHTS::READ_CONTROL.0

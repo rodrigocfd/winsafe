@@ -23,6 +23,18 @@ pub struct ACCEL {
 	pub cmd: u16,
 }
 
+/// [`ACL`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct ACL {
+	pub AclRevision: u8,
+	pub Sbz1: u8,
+	pub AclSize: u16,
+	pub AceCount: u16,
+	pub Sbz2: u16,
+}
+
 /// [`ATOM`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by [`RegisterClassEx`](crate::RegisterClassEx).
 #[repr(C)]
@@ -500,7 +512,7 @@ impl Default for SCROLLINFO {
 #[repr(C)]
 pub struct SECURITY_ATTRIBUTES {
 	nLength: u32,
-	pub lpSecurityDescriptor: *mut c_void,
+	pub lpSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
 	pub bInheritHandle: u32,
 }
 
@@ -510,6 +522,19 @@ impl Default for SECURITY_ATTRIBUTES {
 		obj.nLength = std::mem::size_of::<Self>() as u32;
 		obj
 	}
+}
+
+/// [`SECURITY_DESCRIPTOR`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
+/// struct.
+#[repr(C)]
+pub struct SECURITY_DESCRIPTOR {
+	pub Revision: u8,
+   pub Sbz1: u8,
+   pub Control: u16,
+   pub Owner: *mut c_void,
+   pub Group: *mut c_void,
+   pub Sacl: *mut ACL,
+   pub Dacl: *mut ACL,
 }
 
 /// [`SIZE`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-size)

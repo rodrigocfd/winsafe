@@ -43,6 +43,8 @@ macro_rules! handle_type {
 
 		impl $name {
 			/// Creates a new handle instance by wrapping a pointer.
+			///
+			/// This method is common to all handle types.
 			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {
 				Self {
 					ptr: p as *mut std::ffi::c_void,
@@ -50,6 +52,8 @@ macro_rules! handle_type {
 			}
 
 			/// Creates a null, invalid handle.
+			///
+			/// This method is common to all handle types.
 			pub unsafe fn null_handle() -> Self {
 				Self {
 					ptr: std::ptr::null_mut(),
@@ -57,17 +61,23 @@ macro_rules! handle_type {
 			}
 
 			/// Consumes the handle returning the underlying raw pointer.
+			///
+			/// This method is common to all handle types.
 			pub unsafe fn as_ptr(self) -> *mut std::ffi::c_void {
 				self.ptr
 			}
 
 			/// Tells if the handle is invalid (null).
+			///
+			/// This method is common to all handle types.
 			pub fn is_null(self) -> bool {
 				self.ptr.is_null()
 			}
 
 			/// Consumes the handle into an option, which is `None` if the handle
 			/// pointer is null.
+			///
+			/// This method is common to all handle types.
 			pub fn as_opt(self) -> Option<$name> {
 				if self.ptr.is_null() {
 					None
@@ -93,6 +103,8 @@ macro_rules! hgdiobj_type {
 		impl $name {
 			/// [`DeleteObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 			/// method.
+			///
+			/// This method is common to all GDI handle types.
 			pub fn DeleteObject(self) -> WinResult<()> {
 				bool_to_winresult(unsafe { gdi32::DeleteObject(self.ptr) })
 			}
