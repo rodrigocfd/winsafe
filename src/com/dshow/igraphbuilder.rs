@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::com::dshow::{IBaseFilter, IFilterGraph};
+use crate::com::dshow::{IBaseFilter, IFilterGraph, IPin};
 use crate::com::dshow::vt::{IBaseFilterVT, IFilterGraphVT, IGraphBuilderVT};
 use crate::com::funcs::{hr_to_winresult, hr_to_winresult_bool};
 use crate::com::PPComVT;
@@ -73,6 +73,20 @@ impl IGraphBuilder {
 				)
 			},
 		).map(|_| IBaseFilter::from(ppvQueried))
+	}
+
+	/// [`IGraphBuilder::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
+	/// method.
+	pub fn Connect(&self, ppinOut: &IPin, ppinIn: &IPin) -> WinResult<()> {
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).Connect)(
+					self.ppv(),
+					ppinOut.IUnknown.ppv(),
+					ppinIn.IUnknown.ppv(),
+				)
+			},
+		)
 	}
 
 	/// [`IGraphBuilder::RenderFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)

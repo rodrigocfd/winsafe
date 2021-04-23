@@ -140,3 +140,26 @@ com_virtual_table! { IMFVideoDisplayControlVT,
 	SetFullscreen, fn(PPComVT<Self>, BOOL) -> i32
 	GetFullscreen, fn(PPComVT<Self>, *mut BOOL) -> i32
 }
+
+com_virtual_table! { IPinVT,
+	/// [`IPin`](crate::dshow::IPin) virtual table.
+	->
+	0x56a86891, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
+	IUnknownVT, IUnknownVT
+
+	Connect, fn(PPComVT<Self>, PPComVT<Self>, PPComVT<IUnknownVT>, PCVOID) -> i32
+	ReceiveConnection, fn(PPComVT<Self>, PPComVT<IUnknownVT>, PCVOID) -> i32
+	Disconnect, fn(PPComVT<Self>) -> i32
+	ConnectedTo, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
+	ConnectionMediaType, fn(PPComVT<Self>, PVOID) -> i32
+	QueryPinInfo, fn(PPComVT<Self>, PVOID) -> i32
+	QueryDirection, fn(PPComVT<Self>, PVOID) -> i32
+	QueryId, fn(PPComVT<Self>, *mut PSTR) -> i32
+	QueryAccept, fn(PPComVT<Self>, PCVOID) -> i32
+	EnumMediaTypes, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> i32
+	QueryInternalConnections, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>, *mut u32) -> i32
+	EndOfStream, fn(PPComVT<Self>) -> i32
+	BeginFlush, fn(PPComVT<Self>) -> i32
+	EndFlush, fn(PPComVT<Self>) -> i32
+	NewSegment, fn(PPComVT<Self>, i64, i64, f64) -> i32
+}

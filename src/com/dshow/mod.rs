@@ -13,6 +13,7 @@ mod imediafilter;
 mod imediaseeking;
 mod imfgetservice;
 mod imfvideodisplaycontrol;
+mod ipin;
 
 pub use any_structs::*;
 pub use ibasefilter::IBaseFilter;
@@ -23,3 +24,4 @@ pub use imediafilter::IMediaFilter;
 pub use imediaseeking::IMediaSeeking;
 pub use imfgetservice::IMFGetService;
 pub use imfvideodisplaycontrol::IMFVideoDisplayControl;
+pub use ipin::IPin;

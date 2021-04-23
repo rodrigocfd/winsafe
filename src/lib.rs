@@ -98,8 +98,8 @@
 //! [integer type](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types).
 //!
 //! The name of the constant type is often its prefix. For example, constants of
-//! [`MessageBox`](crate::HWND::MessageBox) function, like `MB_OKCANCEL`,
-//! belong to a type called [`MB`](crate::co::MB).
+//! [`MessageBox`](crate::HWND::MessageBox) function, like `MB_OKCANCEL`, belong
+//! to a type called [`MB`](crate::co::MB).
 //!
 //! For example, take the following C code:
 //!
@@ -162,9 +162,9 @@
 //! }
 //! ```
 //!
-//! Note how you *don't need* to call
-//! [`GetLastError`](crate::GetLastError) to retrieve the error code: it's
-//! returned by the method itself in the [`WinResult`](crate::WinResult).
+//! Note how you *don't need* to call [`GetLastError`](crate::GetLastError) to
+//! retrieve the error code: it's returned by the method itself in the
+//! [`WinResult`](crate::WinResult).
 //!
 //! # Text encoding
 //!
