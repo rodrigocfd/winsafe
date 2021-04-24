@@ -63,8 +63,8 @@ impl CheckBox {
 		new_self
 	}
 
-	/// Instantiates a new `CheckBox` object, to be loaded from a dialog resource
-	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// Instantiates a new `CheckBox` object, to be loaded from a dialog
+	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> CheckBox {
 		let parent_ref = baseref_from_parent(parent);
 
@@ -172,7 +172,7 @@ impl CheckBox {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`CheckBox`](crate::gui::CheckBox) programatically with
+/// Options to create a [`CheckBox`](crate::gui::CheckBox) programmatically with
 /// [`CheckBox::new`](crate::gui::CheckBox::new).
 pub struct CheckBoxOpts {
 	/// Text of the control to be

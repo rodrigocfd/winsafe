@@ -61,8 +61,8 @@ impl Trackbar {
 		new_self
 	}
 
-	/// Instantiates a new `Trackbar` object, to be loaded from a dialog resource
-	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// Instantiates a new `Trackbar` object, to be loaded from a dialog
+	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Trackbar {
 		let parent_ref = baseref_from_parent(parent);
 
@@ -145,7 +145,7 @@ impl Trackbar {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`Trackbar`](crate::gui::Trackbar) programatically with
+/// Options to create a [`Trackbar`](crate::gui::Trackbar) programmatically with
 /// [`Trackbar::new`](crate::gui::Trackbar::new).
 pub struct TrackbarOpts {
 	/// Control position within parent client area, in pixels, to be

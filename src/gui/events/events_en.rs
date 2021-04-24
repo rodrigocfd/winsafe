@@ -9,11 +9,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	EditEvents
 }
 
@@ -40,9 +40,9 @@ impl EditEvents {
 		///
 		/// Sent when the user has taken an action that may have altered text in
 		/// an edit control. Unlike the
-		/// [`EN_UPDATE`](crate::gui::events::EditEvents::en_update) notification
-		/// code, this notification code is sent after the system updates the
-		/// screen.
+		/// [`EN_UPDATE`](crate::gui::events::EditEvents::en_update)
+		/// notification code, this notification code is sent after the system
+		/// updates the screen.
 		///
 		/// # Examples
 		///
@@ -88,19 +88,19 @@ impl EditEvents {
 		/// [`EN_MAXTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/en-maxtext)
 		/// command notification.
 		///
-		/// Sent when the current text insertion has exceeded the specified number
-		/// of characters for the edit control. The text insertion has been
-		/// truncated.
+		/// Sent when the current text insertion has exceeded the specified
+		/// number of characters for the edit control. The text insertion has
+		/// been truncated.
 		///
-		/// This notification code is also sent when an edit control does not have
-		/// the [`ES_AUTOHSCROLL`](crate::co::ES::AUTOHSCROLL) style and the
-		/// number of characters to be inserted would exceed the width of the edit
-		/// control.
+		/// This notification code is also sent when an edit control does not
+		/// have the [`ES_AUTOHSCROLL`](crate::co::ES::AUTOHSCROLL) style and
+		/// the number of characters to be inserted would exceed the width of
+		/// the edit control.
 		///
-		/// This notification code is also sent when an edit control does not have
-		/// the [`ES_AUTOVSCROLL`](crate::co::ES::AUTOVSCROLL) style and the total
-		/// number of lines resulting from a text insertion would exceed the
-		/// height of the edit control.
+		/// This notification code is also sent when an edit control does not
+		/// have the [`ES_AUTOVSCROLL`](crate::co::ES::AUTOVSCROLL) style and
+		/// the total number of lines resulting from a text insertion would
+		/// exceed the height of the edit control.
 	}
 
 	cmd_event! { en_set_focus, co::EN::SETFOCUS.into(),
@@ -114,10 +114,10 @@ impl EditEvents {
 		/// [`EN_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-update)
 		/// command notification.
 		///
-		/// Sent when an edit control is about to redraw itself. This notification
-		/// code is sent after the control has formatted the text, but before it
-		/// displays the text. This makes it possible to resize the edit control
-		/// window, if necessary.
+		/// Sent when an edit control is about to redraw itself. This
+		/// notification code is sent after the control has formatted the text,
+		/// but before it displays the text. This makes it possible to resize
+		/// the edit control window, if necessary.
 	}
 
 	cmd_event! { en_v_scroll, co::EN::VSCROLL.into(),
@@ -125,7 +125,7 @@ impl EditEvents {
 		/// command notification.
 		///
 		/// Sent when the user clicks an edit control's vertical scroll bar or
-		/// when the user scrolls the mouse wheel over the edit control. Notified
-		/// before the screen is updated.
+		/// when the user scrolls the mouse wheel over the edit control.
+		/// Notified before the screen is updated.
 	}
 }

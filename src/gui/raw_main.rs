@@ -134,7 +134,7 @@ impl RawMain {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`WindowMain`](crate::gui::WindowMain) programatically
+/// Options to create a [`WindowMain`](crate::gui::WindowMain) programmatically
 /// with [`WindowMain::new`](crate::gui::WindowMain::new).
 pub struct WindowMainOpts {
 	/// Window class name to be

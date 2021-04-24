@@ -123,7 +123,7 @@ impl DateTimePicker {
 //------------------------------------------------------------------------------
 
 /// Options to create a [`DateTimePicker`](crate::gui::DateTimePicker)
-/// programatically with
+/// programmatically with
 /// [`DateTimePicker::new`](crate::gui::DateTimePicker::new).
 pub struct DateTimePickerOpts {
 	/// Control position within parent client area, in pixels, to be

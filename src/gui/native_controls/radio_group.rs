@@ -30,7 +30,8 @@ impl Index<usize> for RadioGroup {
 
 impl RadioGroup {
 	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be created
-	/// on the parent window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// on the parent window with
+	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///

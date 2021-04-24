@@ -40,8 +40,8 @@ impl Child for StatusBar {
 }
 
 impl StatusBar {
-	/// Instantiates a new `StatusBar` object, to be created on the parent window
-	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// Instantiates a new `StatusBar` object, to be created on the parent
+	/// window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, parts: &[StatusBarPart]) -> StatusBar {
 		let parent_ref = baseref_from_parent(parent);
 		let ctrl_id = auto_ctrl_id();
@@ -181,23 +181,22 @@ impl StatusBar {
 
 //------------------------------------------------------------------------------
 
-/// Used when adding the parts in [`StatusBar::new`](crate::gui::StatusBar::new).
+/// Used when adding the parts in
+/// [`StatusBar::new`](crate::gui::StatusBar::new).
 #[derive(Clone, Copy)]
 pub enum StatusBarPart {
 	/// A part that has a fixed size, in pixels.
 	//
 	/// Will be adjusted to match current system DPI.
 	Fixed(u32),
-	/// A part that will resize when the parent window resizes, filling the space
-	/// left by the fixed-size parts. Has the resizing proportion.
+	/// A part that will resize when the parent window resizes, filling the
+	/// space left by the fixed-size parts. Has the resizing proportion.
 	///
 	/// How proportion works:
 	///
 	/// 1. Suppose you have 3 parts, respectively with proportions of 1, 1 and 2.
-	/// 2. If available client area width is 400px, respective part widths will
-	/// be 100, 100 and 200px.
-	/// 3. If parent is resized to have a client area of 600px, parts will then
-	/// have 200, 200 and 400px.
+	/// 2. If available client area width is 400px, respective part widths will be 100, 100 and 200px.
+	/// 3. If parent is resized to have a client area of 600px, parts will then have 200, 200 and 400px.
 	///
 	/// If you're uncertain, just give all resizable parts the proportion 1.
 	Proportional(u8),

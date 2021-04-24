@@ -23,11 +23,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	ListViewEvents
 }
 
@@ -66,8 +66,8 @@ impl ListViewEvents {
 		/// [`LVN_COLUMNCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-columnclick)
 		/// notification.
 		///
-		/// Notifies that a column header was clicked while the list-view control
-		/// was in report mode.
+		/// Notifies that a column header was clicked while the list-view
+		/// control was in report mode.
 	}
 
 	nfy_event_p! { lvn_column_drop_down, co::LVN::COLUMNDROPDOWN.into(), NMLISTVIEW,
@@ -126,8 +126,8 @@ impl ListViewEvents {
 		/// notification.
 		///
 		/// Sent by list-view control when the control has no items. The
-		/// notification code is a request for the parent window to provide markup
-		/// text.
+		/// notification code is a request for the parent window to provide
+		/// markup text.
 	}
 
 	nfy_event_p! { lvn_get_info_tip, co::LVN::GETINFOTIP.into(), NMLVGETINFOTIP,
@@ -248,15 +248,16 @@ impl ListViewEvents {
 		/// [`LVN_SETDISPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-setdispinfo)
 		/// notification.
 		///
-		/// Notifies that you must update the information it maintains for an item.
+		/// Notifies that you must update the information it maintains for an
+		/// item.
 	}
 
 	nfy_event_p! { nm_click, co::NM::CLICK, NMITEMACTIVATE,
 		/// [`NM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-click-list-view)
 		/// notification.
 		///
-		/// Sent by a list-view control when the user clicks an item with the left
-		/// mouse button.
+		/// Sent by a list-view control when the user clicks an item with the
+		/// left mouse button.
 	}
 
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-list-view)

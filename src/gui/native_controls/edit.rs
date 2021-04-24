@@ -36,8 +36,8 @@ impl Child for Edit {
 }
 
 impl Edit {
-	/// Instantiates a new `Edit` object, to be created on the parent window with
-	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// Instantiates a new `Edit` object, to be created on the parent window
+	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: EditOpts) -> Edit {
 		let parent_ref = baseref_from_parent(parent);
 		let opts = EditOpts::define_ctrl_id(opts);
@@ -124,7 +124,7 @@ impl Edit {
 
 //------------------------------------------------------------------------------
 
-/// Options to create an [`Edit`](crate::gui::Edit) programatically with
+/// Options to create an [`Edit`](crate::gui::Edit) programmatically with
 /// [`Edit::new`](crate::gui::Edit::new).
 pub struct EditOpts {
 	/// Text of the control to be

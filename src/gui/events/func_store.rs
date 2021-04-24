@@ -11,7 +11,8 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 		}
 	}
 
-	/// Inserts a new function into the store, associated to the given identifier.
+	/// Inserts a new function into the store, associated to the given
+	/// identifier.
 	pub fn insert(&mut self, id: K, func: F) {
 		if self.elems.is_empty() {
 			self.elems.reserve(16); // arbitrary, prealloc for speed
@@ -19,7 +20,8 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 		self.elems.push((id, func));
 	}
 
-	/// Finds the last added function associated to the given identifier, if any.
+	/// Finds the last added function associated to the given identifier, if
+	/// any.
 	pub fn find(&mut self, id: K) -> Option<&mut F> {
 		// Linear search, more performant for small collections.
 		// Searches backwards, so the function added last will overwrite the first.

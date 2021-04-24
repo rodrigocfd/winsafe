@@ -10,11 +10,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	MonthCalendarEvents
 }
 
@@ -41,8 +41,8 @@ impl MonthCalendarEvents {
 		/// [`MCN_SELECT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-select)
 		/// notification.
 		///
-		/// Sent by a month calendar control when the user makes an explicit date
-		/// selection within a month calendar control.
+		/// Sent by a month calendar control when the user makes an explicit
+		/// date selection within a month calendar control.
 	}
 
 	nfy_event_p! { mcn_view_change, co::MCN::VIEWCHANGE.into(), NMVIEWCHANGE,

@@ -58,8 +58,8 @@ impl ListViewColumns {
 	}
 
 	/// Retrieves the number of columns by sending an
-	/// [`HDM_GETITEMCOUNT`](crate::msg::hdm::GetItemCount) message to the handle
-	/// returned by [`LVM_GETHEADER`](crate::msg::lvm::GetHeader).
+	/// [`HDM_GETITEMCOUNT`](crate::msg::hdm::GetItemCount) message to the
+	/// handle returned by [`LVM_GETHEADER`](crate::msg::lvm::GetHeader).
 	pub fn count(&self) -> WinResult<u32> {
 		self.hwnd().SendMessage(lvm::GetHeader {})?
 			.SendMessage(hdm::GetItemCount {})

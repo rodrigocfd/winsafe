@@ -66,8 +66,8 @@ impl WindowEvents {
 			&& self.0.nfys.is_empty()
 	}
 
-	/// Searches for the last added user function for the given message, and runs
-	/// if it exists, returning the result.
+	/// Searches for the last added user function for the given message, and
+	/// runs if it exists, returning the result.
 	pub(crate) fn process_effective_message(&self, wm_any: WndMsg) -> ProcessResult {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
@@ -205,9 +205,9 @@ impl WindowEvents {
 	/// Event to any [window message](crate::co::WM).
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
-	/// specific events, which will give you the correct message parameters. This
-	/// generic method should be used when you have a custom, non-standard window
-	/// message.
+	/// specific events, which will give you the correct message parameters.
+	/// This generic method should be used when you have a custom, non-standard
+	/// window message.
 	///
 	/// # Examples
 	///
@@ -237,8 +237,8 @@ impl WindowEvents {
 		});
 	}
 
-	/// [`WM_TIMER`](crate::msg::wm::Timer) message, narrowed to a specific timer
-	/// ID.
+	/// [`WM_TIMER`](crate::msg::wm::Timer) message, narrowed to a specific
+	/// timer ID.
 	///
 	/// Posted to the installing thread's message queue when a timer expires.
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
@@ -305,9 +305,9 @@ impl WindowEvents {
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
 	/// notification code.
 	///
-	/// A notification must be narrowed by the [notification code](crate::co::NM)
-	/// and the control ID, so the closure will be fired for that specific
-	/// control at the specific event.
+	/// A notification must be narrowed by the
+	/// [notification code](crate::co::NM) and the control ID, so the closure
+	/// will be fired for that specific control at the specific event.
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
 	/// specific notifications, which will give you the correct notification
@@ -330,8 +330,8 @@ impl WindowEvents {
 		/// sent synchronously, first to the window procedure of the top-level
 		/// window being deactivated, then to the window procedure of the
 		/// top-level window being activated. If the windows use different input
-		/// queues, the message is sent asynchronously, so the window is activated
-		/// immediately.
+		/// queues, the message is sent asynchronously, so the window is
+		/// activated immediately.
 		///
 		/// # Default handling
 		///
@@ -352,8 +352,8 @@ impl WindowEvents {
 	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) message.
 	///
 	/// Notifies a window that the user generated an application command event,
-	/// for example, by clicking an application command button using the mouse or
-	/// typing an application command key on the keyboard.
+	/// for example, by clicking an application command button using the mouse
+	/// or typing an application command key on the keyboard.
 	pub fn wm_app_command<F>(&self, func: F)
 		where F: FnMut(wm::AppCommand) + 'static,
 	{
@@ -366,11 +366,11 @@ impl WindowEvents {
 	wm_empty! { wm_cancel_mode, co::WM::CANCELMODE,
 		/// [`WM_CANCELMODE`](crate::msg::wm::CancelMode) message.
 		///
-		/// Sent to cancel certain modes, such as mouse capture. For example, the
-		/// system sends this message to the active window when a dialog box or
-		/// message box is displayed. Certain functions also send this message
-		/// explicitly to the specified window regardless of whether it is the
-		/// active window. For example, the
+		/// Sent to cancel certain modes, such as mouse capture. For example,
+		/// the system sends this message to the active window when a dialog box
+		/// or message box is displayed. Certain functions also send this
+		/// message explicitly to the specified window regardless of whether it
+		/// is the active window. For example, the
 		/// [`EnableWindow`](crate::HWND::EnableWindow) function sends this
 		/// message when disabling the specified window.
 	}
@@ -380,15 +380,16 @@ impl WindowEvents {
 		///
 		/// Posted to the window with the keyboard focus when a
 		/// [`WM_KEYDOWN`](crate::msg::wm::KeyDown) message is translated by the
-		/// [`TranslateMessage`](crate::TranslateMessage) function. The `WM_CHAR`
-		/// message contains the character code of the key that was pressed.
+		/// [`TranslateMessage`](crate::TranslateMessage) function. The
+		/// `WM_CHAR` message contains the character code of the key that was
+		/// pressed.
 	}
 
 	wm_empty! { wm_child_activate, co::WM::CHILDACTIVATE,
 		/// [`WM_CHILDACTIVATE`](crate::msg::wm::ChildActivate) message.
 		///
-		/// Sent to a child window when the user clicks the window's title bar or
-		/// when the window is activated, moved, or sized.
+		/// Sent to a child window when the user clicks the window's title bar
+		/// or when the window is activated, moved, or sized.
 	}
 
 	wm_empty! { wm_close, co::WM::CLOSE,
@@ -408,10 +409,10 @@ impl WindowEvents {
 	wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,
 		/// [`WM_CONTEXTMENU`](crate::msg::wm::ContextMenu) message.
 		///
-		/// Notifies a window that the user desires a context menu to appear. The
-		/// user may have clicked the right mouse button (right-clicked) in the
-		/// window, pressed Shift+F10 or pressed the applications key (context
-		/// menu key) available on some keyboards.
+		/// Notifies a window that the user desires a context menu to appear.
+		/// The user may have clicked the right mouse button (right-clicked) in
+		/// the window, pressed Shift+F10 or pressed the applications key
+		/// (context menu key) available on some keyboards.
 	}
 
 	/// [`WM_CREATE`](crate::msg::wm::Create) message, sent only to non-dialog
@@ -419,11 +420,11 @@ impl WindowEvents {
 	/// [`WM_INITDIALOG`](crate::gui::events::WindowEvents::wm_init_dialog)
 	/// instead.
 	///
-	/// Sent when an application requests that a window be created by calling the
-	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx) function. The message is
-	/// sent before the function returns. The window procedure of the new window
-	/// receives this message after the window is created, but before the window
-	/// becomes visible.
+	/// Sent when an application requests that a window be created by calling
+	/// the [`CreateWindowEx`](crate::HWND::CreateWindowEx) function. The
+	/// message is sent before the function returns. The window procedure of the
+	/// new window receives this message after the window is created, but before
+	/// the window becomes visible.
 	///
 	/// # Examples
 	///
@@ -457,8 +458,8 @@ impl WindowEvents {
 	///
 	/// Sent to the parent window of a button before drawing the button. The
 	/// parent window can change the button's text and background colors.
-	/// However, only owner-drawn buttons respond to the parent window processing
-	/// this message.
+	/// However, only owner-drawn buttons respond to the parent window
+	/// processing this message.
 	pub fn wm_ctl_color_btn<F>(&self, func: F)
 		where F: FnMut(wm::CtlColorBtn) -> HDC + 'static,
 	{
@@ -485,8 +486,8 @@ impl WindowEvents {
 	/// [`WM_CTLCOLOREDIT`](crate::msg::wm::CtlColorEdit) message.
 	///
 	/// An edit control that is not read-only or disabled sends the message to
-	/// its parent window when the control is about to be drawn. By responding to
-	/// this message, the parent window can use the specified device context
+	/// its parent window when the control is about to be drawn. By responding
+	/// to this message, the parent window can use the specified device context
 	/// handle to set the text and background colors of the edit control.
 	pub fn wm_ctl_color_edit<F>(&self, func: F)
 		where F: FnMut(wm::CtlColorEdit) -> HDC + 'static,
@@ -529,11 +530,11 @@ impl WindowEvents {
 
 	/// [`WM_CTLCOLORSTATIC`](crate::msg::wm::CtlColorStatic) message.
 	///
-	/// A static control, or an edit control that is read-only or disabled, sends
-	/// the message to its parent window when the control is about to be drawn.
-	/// By responding to this message, the parent window can use the specified
-	/// device context handle to set the text foreground and background colors of
-	/// the static control.
+	/// A static control, or an edit control that is read-only or disabled,
+	/// sends the message to its parent window when the control is about to be
+	/// drawn. By responding to this message, the parent window can use the
+	/// specified device context handle to set the text foreground and
+	/// background colors of the static control.
 	pub fn wm_ctl_color_static<F>(&self, func: F)
 		where F: FnMut(wm::CtlColorStatic) -> HDC + 'static,
 	{
@@ -548,12 +549,13 @@ impl WindowEvents {
 		///
 		/// Posted to the window with the keyboard focus when a
 		/// [`WM_KEYUP`](crate::msg::wm::KeyUp) message is translated by the
-		/// [`TranslateMessage`](crate::TranslateMessage) function. `WM_DEADCHAR`
-		/// specifies a character code generated by a dead key. A dead key is a
-		/// key that generates a character, such as the umlaut (double-dot), that
-		/// is combined with another character to form a composite character. For
-		/// example, the umlaut-O character (Ö) is generated by typing the dead
-		/// key for the umlaut character, and then typing the O key.
+		/// [`TranslateMessage`](crate::TranslateMessage) function.
+		/// `WM_DEADCHAR` specifies a character code generated by a dead key. A
+		/// dead key is a key that generates a character, such as the umlaut
+		/// (double-dot), that is combined with another character to form a
+		/// composite character. For example, the umlaut-O character (Ö) is
+		/// generated by typing the dead key for the umlaut character, and then
+		/// typing the O key.
 	}
 
 	wm_empty! { wm_destroy, co::WM::DESTROY,
@@ -579,20 +581,21 @@ impl WindowEvents {
 	wm_ret_none! { wm_enable, co::WM::ENABLE, wm::Enable,
 		/// [`WM_ENABLE`](crate::msg::wm::Enable) message.
 		///
-		/// Sent when an application changes the enabled state of a window. It is
-		/// sent to the window whose enabled state is changing. This message is
-		/// sent before the [`EnableWindow`](crate::HWND::EnableWindow) function
-		/// returns, but after the enabled state
-		/// ([`WS_DISABLED`](crate::co::WS::DISABLED) style bit) of the window has
-		/// changed.
+		/// Sent when an application changes the enabled state of a window. It
+		/// is sent to the window whose enabled state is changing. This message
+		/// is sent before the [`EnableWindow`](crate::HWND::EnableWindow)
+		/// function returns, but after the enabled state
+		/// ([`WS_DISABLED`](crate::co::WS::DISABLED) style bit) of the window
+		/// has changed.
 	}
 
 	wm_ret_none! { wm_end_session, co::WM::ENDSESSION, wm::EndSession,
 		/// [`WM_ENDSESSION`](crate::msg::wm::EndSession) message.
 		///
 		/// Sent to an application after the system processes the results of the
-		/// [`WM_QUERYENDSESSION`](crate::gui::events::WindowEvents) message. The
-		/// `WM_ENDSESSION` message informs the application whether the session is ending.
+		/// [`WM_QUERYENDSESSION`](crate::gui::events::WindowEvents) message.
+		/// The `WM_ENDSESSION` message informs the application whether the
+		/// session is ending.
 	}
 
 	wm_ret_none! { wm_enter_idle, co::WM::ENTERIDLE, wm::EnterIdle,
@@ -600,22 +603,22 @@ impl WindowEvents {
 		///
 		/// Sent to the owner window of a modal dialog box or menu that is
 		/// entering an idle state. A modal dialog box or menu enters an idle
-		/// state when no messages are waiting in its queue after it has processed
-		/// one or more previous messages.
+		/// state when no messages are waiting in its queue after it has
+		/// processed one or more previous messages.
 	}
 
 	wm_ret_none! { wm_enter_size_move, co::WM::ENTERSIZEMOVE, wm::EnterSizeMove,
 		/// [`WM_ENTERSIZEMOVE`](crate::msg::wm::EnterSizeMove) message.
 		///
 		/// Sent one time to a window after it enters the moving or sizing modal
-		/// loop. The window enters the moving or sizing modal loop when the user
-		/// clicks the window's title bar or sizing border, or when the window
-		/// passes the
+		/// loop. The window enters the moving or sizing modal loop when the
+		/// user clicks the window's title bar or sizing border, or when the
+		/// window passes the
 		/// [`WM_SYSCOMMAND`](crate::gui::events::WindowEvents::wm_sys_command)
-		/// message to the `DefWindowProc` function and the `wParam` parameter of
-		/// the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
-		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete when
-		/// `DefWindowProc` returns.
+		/// message to the `DefWindowProc` function and the `wParam` parameter
+		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
+		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
+		/// when `DefWindowProc` returns.
 		///
 		/// The system sends the message regardless of whether the dragging of
 		/// full windows is enabled.
@@ -624,8 +627,8 @@ impl WindowEvents {
 	/// [`WM_ERASEBKGND`](crate::msg::wm::EraseBkgnd) message.
 	///
 	/// Sent when the window background must be erased (for example, when a
-	/// window is resized). The message is sent to prepare an invalidated portion
-	/// of a window for painting.
+	/// window is resized). The message is sent to prepare an invalidated
+	/// portion of a window for painting.
 	pub fn wm_erase_bkgnd<F>(&self, func: F)
 		where F: FnMut(wm::EraseBkgnd) -> i32 + 'static,
 	{
@@ -639,14 +642,14 @@ impl WindowEvents {
 		/// [`WM_EXITSIZEMOVE`](crate::msg::wm::ExitSizeMove) message.
 		///
 		/// Sent one time to a window, after it has exited the moving or sizing
-		/// modal loop. The window enters the moving or sizing modal loop when the
-		/// user clicks the window's title bar or sizing border, or when the
+		/// modal loop. The window enters the moving or sizing modal loop when
+		/// the user clicks the window's title bar or sizing border, or when the
 		/// window passes the
 		/// [`WM_SYSCOMMAND`](crate::gui::events::WindowEvents::wm_sys_command)
-		/// message to the `DefWindowProc` function and the `wParam` parameter of
-		/// the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
-		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete when
-		/// `DefWindowProc` returns.
+		/// message to the `DefWindowProc` function and the `wParam` parameter
+		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
+		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
+		/// when `DefWindowProc` returns.
 	}
 
 	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo,
@@ -654,8 +657,8 @@ impl WindowEvents {
 		///
 		/// Sent to a window when the size or position of the window is about to
 		/// change. An application can use this message to override the window's
-		/// default maximized size and position, or its default minimum or maximum
-		/// tracking size.
+		/// default maximized size and position, or its default minimum or
+		/// maximum tracking size.
 	}
 
 	wm_ret_none! { wm_help, co::WM::HELP, wm::Help,
@@ -667,20 +670,20 @@ impl WindowEvents {
 	wm_ret_none! { wm_h_scroll, co::WM::HSCROLL, wm::HScroll,
 		/// [`WM_HSCROLL`](crate::msg::wm::HScroll) message.
 		///
-		/// The WM_HSCROLL message is sent to a window when a scroll event occurs
-		/// in the window's standard horizontal scroll bar. This message is also
-		/// sent to the owner of a horizontal scroll bar control when a scroll
-		/// event occurs in the control.
+		/// The WM_HSCROLL message is sent to a window when a scroll event
+		/// occurs in the window's standard horizontal scroll bar. This message
+		/// is also sent to the owner of a horizontal scroll bar control when a
+		/// scroll event occurs in the control.
 	}
 
-	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to dialog
-	/// windows. Non-dialog windows receive
+	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to
+	/// dialog windows. Non-dialog windows receive
 	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) instead.
 	///
 	/// Sent to the dialog box procedure immediately before a dialog box is
-	/// displayed. Dialog box procedures typically use this message to initialize
-	/// controls and carry out any other initialization tasks that affect the
-	/// appearance of the dialog box.
+	/// displayed. Dialog box procedures typically use this message to
+	/// initialize controls and carry out any other initialization tasks that
+	/// affect the appearance of the dialog box.
 	pub fn wm_init_dialog<F>(&self, func: F)
 		where F: FnMut(wm::InitDialog) -> bool + 'static,
 	{
@@ -693,26 +696,26 @@ impl WindowEvents {
 	wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup,
 		/// [`WM_INITMENUPOPUP`](crate::msg::wm::InitMenuPopup) message.
 		///
-		/// Sent when a drop-down menu or submenu is about to become active. This
-		/// allows an application to modify the menu before it is displayed,
-		/// without changing the entire menu.
+		/// Sent when a drop-down menu or submenu is about to become active.
+		/// This allows an application to modify the menu before it is
+		/// displayed, without changing the entire menu.
 	}
 
 	wm_ret_none! { wm_key_down, co::WM::KEYDOWN, wm::KeyDown,
 		/// [`WM_KEYDOWN`](crate::msg::wm::KeyDown) message.
 		///
 		/// Posted to the window with the keyboard focus when a nonsystem key is
-		/// pressed. A nonsystem key is a key that is pressed when the ALT key is
-		/// not pressed.
+		/// pressed. A nonsystem key is a key that is pressed when the ALT key
+		/// is not pressed.
 	}
 
 	wm_ret_none! { wm_key_up, co::WM::KEYUP, wm::KeyUp,
 		/// [`WM_KEYUP`](crate::msg::wm::KeyUp) message.
 		///
 		/// Posted to the window with the keyboard focus when a nonsystem key is
-		/// released. A nonsystem key is a key that is pressed when the ALT key is
-		/// not pressed, or a keyboard key that is pressed when a window has the
-		/// keyboard focus.
+		/// released. A nonsystem key is a key that is pressed when the ALT key
+		/// is not pressed, or a keyboard key that is pressed when a window has
+		/// the keyboard focus.
 	}
 
 	wm_ret_none! { wm_kill_focus, co::WM::KILLFOCUS, wm::KillFocus,
@@ -734,8 +737,8 @@ impl WindowEvents {
 	wm_ret_none! { wm_l_button_down, co::WM::LBUTTONDOWN, wm::LButtonDown,
 		/// [`WM_LBUTTONDOWN`](crate::msg::wm::LButtonDown) message.
 		///
-		/// Posted when the user presses the left mouse button while the cursor is
-		/// in the client area of a window. If the mouse is not captured, the
+		/// Posted when the user presses the left mouse button while the cursor
+		/// is in the client area of a window. If the mouse is not captured, the
 		/// message is posted to the window beneath the cursor. Otherwise, the
 		/// message is posted to the window that has captured the mouse.
 	}
@@ -762,19 +765,21 @@ impl WindowEvents {
 	wm_ret_none! { wm_m_button_down, co::WM::MBUTTONDOWN, wm::MButtonDown,
 		/// [`WM_MBUTTONDOWN`](crate::msg::wm::MButtonDown) message.
 		///
-		/// Posted when the user presses the middle mouse button while the cursor
-		/// is in the client area of a window. If the mouse is not captured, the
-		/// message is posted to the window beneath the cursor. Otherwise, the
-		/// message is posted to the window that has captured the mouse.
+		/// Posted when the user presses the middle mouse button while the
+		/// cursor is in the client area of a window. If the mouse is not
+		/// captured, the message is posted to the window beneath the cursor.
+		/// Otherwise, the message is posted to the window that has captured the
+		/// mouse.
 	}
 
 	wm_ret_none! { wm_m_button_up, co::WM::MBUTTONUP, wm::MButtonUp,
 		/// [`WM_MBUTTONUP`](crate::msg::wm::MButtonUp) message.
 		///
-		/// Posted when the user releases the middle mouse button while the cursor
-		/// is in the client area of a window. If the mouse is not captured, the
-		/// message is posted to the window beneath the cursor. Otherwise, the
-		/// message is posted to the window that has captured the mouse.
+		/// Posted when the user releases the middle mouse button while the
+		/// cursor is in the client area of a window. If the mouse is not
+		/// captured, the message is posted to the window beneath the cursor.
+		/// Otherwise, the message is posted to the window that has captured the
+		/// mouse.
 	}
 
 	wm_ret_none! { wm_menu_command, co::WM::MENUCOMMAND, wm::MenuCommand,
@@ -786,8 +791,8 @@ impl WindowEvents {
 	wm_ret_none! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover,
 		/// [`WM_MOUSEHOVER`](crate::msg::wm::MouseHover) message.
 		///
-		/// Posted to a window when the cursor hovers over the client area of the
-		/// window for the period of time specified in a prior call to
+		/// Posted to a window when the cursor hovers over the client area of
+		/// the window for the period of time specified in a prior call to
 		/// [`TrackMouseEvent`](crate::TrackMouseEvent).
 	}
 
@@ -809,9 +814,9 @@ impl WindowEvents {
 	wm_ret_none! { wm_moving, co::WM::MOVING, wm::Moving,
 		/// [`WM_MOVING`](crate::msg::wm::Moving) message.
 		///
-		/// Sent to a window that the user is moving. By processing this message,
-		/// an application can monitor the position of the drag rectangle and, if
-		/// needed, change its position.
+		/// Sent to a window that the user is moving. By processing this
+		/// message, an application can monitor the position of the drag
+		/// rectangle and, if needed, change its position.
 	}
 
 	/// [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize) message.
@@ -832,8 +837,8 @@ impl WindowEvents {
 	/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
 	///
 	/// Sent prior to the
-	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) message when a
-	/// window is first created.
+	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) message when
+	/// a window is first created.
 	pub fn wm_nc_create<F>(&self, func: F)
 		where F: FnMut(wm::NcCreate) -> bool + 'static,
 	{
@@ -849,13 +854,13 @@ impl WindowEvents {
 		/// Notifies a window that its nonclient area is being destroyed. The
 		/// [`DestroyWindow`](crate::HWND::DestroyWindow) function sends the
 		/// message to the window following the
-		/// [`WM_DESTROY`](crate::gui::events::WindowEvents::wm_destroy) message.
-		/// `WM_DESTROY` is used to free the allocated memory object associated
-		/// with the window.
+		/// [`WM_DESTROY`](crate::gui::events::WindowEvents::wm_destroy)
+		/// message. `WM_DESTROY` is used to free the allocated memory object
+		/// associated with the window.
 		///
 		/// The `WM_NCDESTROY` message is sent after the child windows have been
-		/// destroyed. In contrast, `WM_DESTROY` is sent before the child windows
-		/// are destroyed.
+		/// destroyed. In contrast, `WM_DESTROY` is sent before the child
+		/// windows are destroyed.
 		///
 		/// # Default handling
 		///
@@ -881,18 +886,18 @@ impl WindowEvents {
 	wm_empty! { wm_null, co::WM::NULL,
 		/// [`WM_NULL`](crate::msg::wm::Null) message.
 		///
-		/// Performs no operation. An application sends the message if it wants to
-		/// post a message that the recipient window will ignore.
+		/// Performs no operation. An application sends the message if it wants
+		/// to post a message that the recipient window will ignore.
 	}
 
 	wm_empty! { wm_paint, co::WM::PAINT,
 		/// [`WM_PAINT`](crate::msg::wm::Paint) message.
 		///
-		/// Sent when the system or another application makes a request to paint a
-		/// portion of an application's window. The message is sent when the
+		/// Sent when the system or another application makes a request to paint
+		/// a portion of an application's window. The message is sent when the
 		/// [`UpdateWindow`](crate::HWND::UpdateWindow) or
-		/// [`RedrawWindow`](crate::HWND::RedrawWindow) function is called, or by
-		/// the [`DispatchMessage`](crate::DispatchMessage) function when the
+		/// [`RedrawWindow`](crate::HWND::RedrawWindow) function is called, or
+		/// by the [`DispatchMessage`](crate::DispatchMessage) function when the
 		/// application obtains a `WM_PAINT` message by using the
 		/// [`GetMessage`](crate::GetMessage) or
 		/// [`PeekMessage`](crate::PeekMessage) function.
@@ -907,8 +912,8 @@ impl WindowEvents {
 
 	/// [`WM_QUERYOPEN`](crate::msg::wm::QueryOpen) message.
 	///
-	/// Sent to an icon when the user requests that the window be restored to its
-	/// previous size and position.
+	/// Sent to an icon when the user requests that the window be restored to
+	/// its previous size and position.
 	pub fn wm_query_open<F>(&self, func: F)
 		where F: FnMut(wm::QueryOpen) -> bool + 'static,
 	{
@@ -940,10 +945,11 @@ impl WindowEvents {
 	wm_ret_none! { wm_r_button_up, co::WM::RBUTTONUP, wm::RButtonUp,
 		/// [`WM_RBUTTONUP`](crate::msg::wm::RButtonUp) message.
 		///
-		/// Posted when the user releases the right mouse button while the cursor
-		/// is in the client area of a window. If the mouse is not captured, the
-		/// message is posted to the window beneath the cursor. Otherwise, the
-		/// message is posted to the window that has captured the mouse.
+		/// Posted when the user releases the right mouse button while the
+		/// cursor is in the client area of a window. If the mouse is not
+		/// captured, the message is posted to the window beneath the cursor.
+		/// Otherwise, the message is posted to the window that has captured the
+		/// mouse.
 	}
 
 	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus,
@@ -1019,8 +1025,8 @@ impl WindowEvents {
 		/// [`WM_SIZING`](crate::msg::wm::Sizing) message.
 		///
 		/// Sent to a window that the user is resizing. By processing this
-		/// message, an application can monitor the size and position of the drag
-		/// rectangle and, if needed, change its size or position.
+		/// message, an application can monitor the size and position of the
+		/// drag rectangle and, if needed, change its size or position.
 	}
 
 	wm_ret_none! { wm_style_changed, co::WM::STYLECHANGED, wm::StyleChanged,
@@ -1035,16 +1041,16 @@ impl WindowEvents {
 		/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) message.
 		///
 		/// Sent to a window when the
-		/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function is about
-		/// to change one or more of the window's styles.
+		/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function is
+		/// about to change one or more of the window's styles.
 	}
 
 	wm_ret_none! { wm_sys_char, co::WM::SYSCHAR, wm::SysChar,
 		/// [`WM_SYSCHAR`](crate::msg::wm::SysChar) message.
 		///
 		/// Posted to the window with the keyboard focus when a
-		/// [`WM_SYSKEYDOWN`](crate::msg::wm::SysKeyDown) message is translated by
-		/// the [`TranslateMessage`](crate::TranslateMessage) function. It
+		/// [`WM_SYSKEYDOWN`](crate::msg::wm::SysKeyDown) message is translated
+		/// by the [`TranslateMessage`](crate::TranslateMessage) function. It
 		/// specifies the character code of a system character key that is, a
 		/// character key that is pressed while the ALT key is down.
 	}
@@ -1053,17 +1059,17 @@ impl WindowEvents {
 		/// [`WM_SYSCOMMAND`](crate::msg::wm::SysCommand) message.
 		///
 		/// A window receives this message when the user chooses a command from
-		/// the Window menu (formerly known as the system or control menu) or when
-		/// the user chooses the maximize button, minimize button, restore button,
-		/// or close button.
+		/// the Window menu (formerly known as the system or control menu) or
+		/// when the user chooses the maximize button, minimize button, restore
+		/// button, or close button.
 	}
 
 	wm_ret_none! { wm_sys_dead_char, co::WM::SYSDEADCHAR, wm::SysDeadChar,
 		/// [`WM_SYSDEADCHAR`](crate::msg::wm::SysDeadChar) message.
 		///
 		/// Sent to the window with the keyboard focus when a
-		/// [`WM_SYSKEYDOWN`](crate::msg::wm::SysKeyDown) message is translated by
-		/// the [`TranslateMessage`](crate::TranslateMessage) function.
+		/// [`WM_SYSKEYDOWN`](crate::msg::wm::SysKeyDown) message is translated
+		/// by the [`TranslateMessage`](crate::TranslateMessage) function.
 		/// `WM_SYSDEADCHAR` specifies the character code of a system dead key
 		/// that is, a dead key that is pressed while holding down the ALT key.
 	}
@@ -1071,41 +1077,41 @@ impl WindowEvents {
 	wm_ret_none! { wm_sys_key_down, co::WM::SYSKEYDOWN, wm::SysKeyDown,
 		/// [`WM_SYSKEYDOWN`](crate::msg::wm::SysKeyDown) message.
 		///
-		/// Posted to the window with the keyboard focus when the user presses the
-		/// F10 key (which activates the menu bar) or holds down the ALT key and
-		/// then presses another key. It also occurs when no window currently has
-		/// the keyboard focus; in this case, the `WM_SYSKEYDOWN` message is sent
-		/// to the active window. The window that receives the message can
-		/// distinguish between these two contexts by checking the context code in
-		/// the lParam parameter.
+		/// Posted to the window with the keyboard focus when the user presses
+		/// the F10 key (which activates the menu bar) or holds down the ALT key
+		/// and then presses another key. It also occurs when no window
+		/// currently has the keyboard focus; in this case, the `WM_SYSKEYDOWN`
+		/// message is sent to the active window. The window that receives the
+		/// message can distinguish between these two contexts by checking the
+		/// context code in the lParam parameter.
 	}
 
 	wm_ret_none! { wm_sys_key_up, co::WM::SYSKEYUP, wm::SysKeyUp,
 		/// [`WM_SYSKEYUP`](crate::msg::wm::SysKeyUp) message.
 		///
-		/// Posted to the window with the keyboard focus when the user releases a
-		/// key that was pressed while the ALT key was held down. It also occurs
-		/// when no window currently has the keyboard focus; in this case, the
-		/// `WM_SYSKEYUP` message is sent to the active window. The window that
-		/// receives the message can distinguish between these two contexts by
-		/// checking the context code in the lParam parameter.
+		/// Posted to the window with the keyboard focus when the user releases
+		/// a key that was pressed while the ALT key was held down. It also
+		/// occurs when no window currently has the keyboard focus; in this
+		/// case, the `WM_SYSKEYUP` message is sent to the active window. The
+		/// window that receives the message can distinguish between these two
+		/// contexts by checking the context code in the lParam parameter.
 	}
 
 	wm_ret_none! { wm_theme_changed, co::WM::THEMECHANGED, wm::ThemeChanged,
 		/// [`WM_THEMECHANGED`](crate::msg::wm::ThemeChanged) message.
 		///
-		/// Broadcast to every window following a theme change event. Examples of
-		/// theme change events are the activation of a theme, the deactivation of
-		/// a theme, or a transition from one theme to another.
+		/// Broadcast to every window following a theme change event. Examples
+		/// of theme change events are the activation of a theme, the
+		/// deactivation of a theme, or a transition from one theme to another.
 	}
 
 	wm_ret_none! { wm_v_scroll, co::WM::VSCROLL, wm::VScroll,
 		/// [`WM_VSCROLL`](crate::msg::wm::VScroll) message.
 		///
-		/// The WM_VSCROLL message is sent to a window when a scroll event occurs
-		/// in the window's standard vertical scroll bar. This message is also
-		/// sent to the owner of a vertical scroll bar control when a scroll event
-		/// occurs in the control.
+		/// The WM_VSCROLL message is sent to a window when a scroll event
+		/// occurs in the window's standard vertical scroll bar. This message is
+		/// also sent to the owner of a vertical scroll bar control when a
+		/// scroll event occurs in the control.
 	}
 
 	wm_ret_none! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged,
@@ -1129,11 +1135,11 @@ impl WindowEvents {
 	wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk,
 		/// [`WM_XBUTTONDBLCLK`](crate::msg::wm::XButtonDblClk) message.
 		///
-		/// Posted when the user double-clicks the first or second X button while
-		/// the cursor is in the client area of a window. If the mouse is not
-		/// captured, the message is posted to the window beneath the cursor.
-		/// Otherwise, the message is posted to the window that has captured the
-		/// mouse.
+		/// Posted when the user double-clicks the first or second X button
+		/// while the cursor is in the client area of a window. If the mouse is
+		/// not captured, the message is posted to the window beneath the
+		/// cursor. Otherwise, the message is posted to the window that has
+		/// captured the mouse.
 	}
 
 	wm_ret_none! { wm_x_button_down, co::WM::XBUTTONDOWN, wm::XButtonDown,

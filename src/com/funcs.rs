@@ -37,6 +37,7 @@ pub(crate) fn hr_to_winresult_bool(hresult: i32) -> WinResult<bool> {
 /// # Examples
 ///
 /// Instantiating an [`ITaskbarList`](crate::shell::ITaskbarList) object:
+///
 /// ```rust,ignore
 /// use winsafe::{co, CoCreateInstance, shell};
 ///
@@ -78,9 +79,13 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 /// # Examples
 ///
 /// ```rust,ignore
-/// use winsafe::{co, CoInitializeEx};
+/// use winsafe::{co, CoInitializeEx, CoUninitialize};
 ///
 /// CoInitializeEx(co::COINIT::MULTITHREADED).unwrap();
+///
+/// // program runs...
+///
+/// CoUninitialize().
 /// ```
 pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
 	let err = co::ERROR(

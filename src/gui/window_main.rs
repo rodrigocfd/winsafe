@@ -16,7 +16,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 
 /// An user main window, which can handle events. Usually, this is the first
 /// window of your application, launched directly from the `main` function. Can
-/// be programatically created or load a dialog resource from a `.rc` script.
+/// be programmatically created or load a dialog resource from a `.rc` script.
 ///
 /// Implements [`Parent`](crate::gui::Parent) trait.
 ///
@@ -83,7 +83,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///
 /// A window can also be loaded from a Win32 resource file (usually an `.rc`
 /// file). Below, a full aplication where `WindowMain` loads a window resource,
-/// instead of creating the window programatically. Note how
+/// instead of creating the window programmatically. Note how
 /// `WindowMain::new_dlg` instead of `WindowMain::new`.
 ///
 ///
@@ -176,8 +176,8 @@ impl WindowMain {
 	///
 	/// # Panics
 	///
-	/// Panics if the window is already created. Events must be set before window
-	/// creation.
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
 	pub fn on(&self) -> &WindowEvents {
 		self.base_ref().user_events_ref()
 	}

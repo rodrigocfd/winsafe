@@ -11,7 +11,7 @@ use crate::handles::HWND;
 #[derive(Clone)]
 enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
 
-/// An user modal window, which can handle events. Can be programatically
+/// An user modal window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.rc` script.
 ///
 /// Implements [`Parent`](crate::gui::Parent) trait.
@@ -69,14 +69,14 @@ impl WindowModal {
 	///
 	/// # Panics
 	///
-	/// Panics if the window is already created. Events must be set before window
-	/// creation.
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
 	pub fn on(&self) -> &WindowEvents {
 		self.base_ref().user_events_ref()
 	}
 
-	/// Physically creates the window, then runs the modal loop. This method will
-	/// block until the window is closed.
+	/// Physically creates the window, then runs the modal loop. This method
+	/// will block until the window is closed.
 	///
 	/// # Panics
 	///

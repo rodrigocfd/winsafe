@@ -34,8 +34,8 @@ impl HMENU {
 		)
 	}
 
-	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which appends
-	/// a new item at the menu with its command ID.
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
+	/// appends a new item at the menu with its command ID.
 	pub fn AppendMenuItem(self, command_id: u16, text: &str) -> WinResult<()> {
 		self.AppendMenu(
 			co::MF::STRING,
@@ -44,14 +44,14 @@ impl HMENU {
 		)
 	}
 
-	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which appends
-	/// a separator.
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
+	/// appends a separator.
 	pub fn AppendMenuSeparator(self) -> WinResult<()> {
 		self.AppendMenu(co::MF::SEPARATOR, IdMenu::None, BitmapPtrStr::None)
 	}
 
-	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which appends
-	/// a menu as a new submenu entry.
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
+	/// appends a menu as a new submenu entry.
 	pub fn AppendMenuSubmenu(self, submenu: HMENU, text: &str) -> WinResult<()> {
 		self.AppendMenu(
 			co::MF::POPUP,

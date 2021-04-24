@@ -10,11 +10,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	StatusBarEvents
 }
 
@@ -31,8 +31,8 @@ impl StatusBarEvents {
 		/// [`NM_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-dblclk-status-bar)
 		/// notification.
 		///
-		/// Notifies that the user has double-clicked the left mouse button within
-		/// the control.
+		/// Notifies that the user has double-clicked the left mouse button
+		/// within the control.
 	}
 
 	nfy_event_p_bool! { nm_rclick, co::NM::RCLICK, NMMOUSE,

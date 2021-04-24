@@ -72,8 +72,8 @@ impl ListView {
 		new_self
 	}
 
-	/// Instantiates a new `ListView` object, to be loaded from a dialog resource
-	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// Instantiates a new `ListView` object, to be loaded from a dialog
+	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ListView {
 		let parent_ref = baseref_from_parent(parent);
 
@@ -179,7 +179,7 @@ impl ListView {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`ListView`](crate::gui::ListView) programatically with
+/// Options to create a [`ListView`](crate::gui::ListView) programmatically with
 /// [`ListView::new`](crate::gui::ListView::new).
 pub struct ListViewOpts {
 	/// Control position within parent client area, in pixels, to be

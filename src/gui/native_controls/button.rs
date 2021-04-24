@@ -120,7 +120,7 @@ impl Button {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`Button`](crate::gui::Button) programatically with
+/// Options to create a [`Button`](crate::gui::Button) programmatically with
 /// [`Button::new`](crate::gui::Button::new).
 pub struct ButtonOpts {
 	/// Text of the control to be

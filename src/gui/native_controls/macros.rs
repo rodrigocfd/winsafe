@@ -12,25 +12,26 @@ macro_rules! hwnd_onsubclass {
 
 		/// Returns the underlying handle for this control.
 		///
-		/// **Note:** the handle is initially null, receiving an actual value only
-		/// after the control is physically created, what usually happens right
-		/// before [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) or
+		/// **Note:** the handle is initially null, receiving an actual value
+		/// only after the control is physically created, what usually happens
+		/// right before
+		/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) or
 		/// [`WM_INITDIALOG`](crate::gui::events::WindowEvents::wm_init_dialog)
 		/// events.
 		pub fn hwnd(&self) -> HWND {
 			*self.0.base.hwnd_ref()
 		}
 
-		/// Exposes the subclass events. If at least one event exists, the control
-		/// will be
+		/// Exposes the subclass events. If at least one event exists, the
+		/// control will be
 		/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
 		///
 		/// **Note:** Subclassing may impact performance, use with care.
 		///
 		/// # Panics
 		///
-		/// Panics if the control or the parent window are already created. Events
-		/// must be set before control and parent window creation.
+		/// Panics if the control or the parent window are already created.
+		/// Events must be set before control and parent window creation.
 		pub fn on_subclass(&self) -> &WindowEvents {
 			self.0.base.on_subclass()
 		}
@@ -54,8 +55,8 @@ macro_rules! hwnd_on_onsubclass {
 		///
 		/// # Panics
 		///
-		/// Panics if the control or the parent window are already created. Events
-		/// must be set before control and parent window creation.
+		/// Panics if the control or the parent window are already created.
+		/// Events must be set before control and parent window creation.
 		pub fn on(&self) -> &$evstruc {
 			if !self.0.base.hwnd_ref().is_null() {
 				panic!("Cannot add events after the control is created.");

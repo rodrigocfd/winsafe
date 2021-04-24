@@ -16,11 +16,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	DateTimePickerEvents
 }
 
@@ -54,8 +54,8 @@ impl DateTimePickerEvents {
 		/// [`DTN_FORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-format)
 		/// notification.
 		///
-		/// Sent by a date and time picker control to request text to be displayed
-		/// in a callback field.
+		/// Sent by a date and time picker control to request text to be
+		/// displayed in a callback field.
 	}
 
 	nfy_event_mut_p! { dtn_format_query, co::DTN::FORMATQUERY.into(), NMDATETIMEFORMATQUERY,

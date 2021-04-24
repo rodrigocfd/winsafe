@@ -44,9 +44,9 @@ impl WString {
 		}
 	}
 
-	/// Creates a new UTF-16 string by copying from a non-null-terminated buffer,
-	/// specifying the number of existing chars. A terminating null will be
-	/// appended.
+	/// Creates a new UTF-16 string by copying from a non-null-terminated
+	/// buffer, specifying the number of existing chars. A terminating null will
+	/// be appended.
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> WString {
 		if src.is_null() {
 			Self::default()
@@ -65,8 +65,8 @@ impl WString {
 		}
 	}
 
-	/// Creates a new UTF-16 string by copying from a null-terminated buffer. The
-	/// terminating null will be appended.
+	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
+	/// The terminating null will be appended.
 	pub fn from_wchars_nullt(src: *const u16) -> WString {
 		if src.is_null() {
 			Self::default()
@@ -81,8 +81,8 @@ impl WString {
 		Self::from_wchars_count(src.as_ptr(), src.len())
 	}
 
-	/// Creates a new UTF-16 buffer allocated with an specific length. All UTF-16
-	/// chars will be set to zero.
+	/// Creates a new UTF-16 buffer allocated with an specific length. All
+	/// UTF-16 chars will be set to zero.
 	pub fn new_alloc_buffer(num_chars: usize) -> WString {
 		let mut me = Self::default();
 		me.realloc_buffer(num_chars);
@@ -94,8 +94,8 @@ impl WString {
 	///
 	/// # Panics
 	///
-	/// Panics if the buffer wasn't previously allocated. Be sure to alloc enough
-	/// room, otherwise a buffer overrun may occur.
+	/// Panics if the buffer wasn't previously allocated. Be sure to alloc
+	/// enough room, otherwise a buffer overrun may occur.
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self.char_vec.as_mut() {
 			Some(vec_ref) => vec_ref.as_mut_ptr(),
@@ -121,8 +121,8 @@ impl WString {
 	///
 	/// # Panics
 	///
-	/// Panics if the buffer wasn't previously allocated. Be sure to alloc enough
-	/// room, otherwise a buffer overrun may occur.
+	/// Panics if the buffer wasn't previously allocated. Be sure to alloc
+	/// enough room, otherwise a buffer overrun may occur.
 	pub fn as_mut_slice(&mut self) -> &mut [u16] {
 		match self.char_vec.as_mut() {
 			Some(vec_ref) => &mut vec_ref[..],
@@ -134,9 +134,9 @@ impl WString {
 	///
 	/// # Panics
 	///
-	/// Panics if the buffer wasn't previously allocated. Make sure the `WString`
-	/// object outlives the function call, otherwise it will point to an invalid
-	/// memory location.
+	/// Panics if the buffer wasn't previously allocated. Make sure the
+	/// `WString` object outlives the function call, otherwise it will point to
+	/// an invalid memory location.
 	pub fn as_slice(&mut self) -> &[u16] {
 		match self.char_vec.as_ref() {
 			Some(vec_ref) => &vec_ref[..],
@@ -175,8 +175,8 @@ impl WString {
 	///
 	/// # Panics
 	///
-	/// Panics if `dest` has zero length. If length is 1, the buffer will receive
-	/// a single null char.
+	/// Panics if `dest` has zero length. If length is 1, the buffer will
+	/// receive a single null char.
 	pub fn copy_to_slice(&self, dest: &mut [u16]) {
 		if dest.is_empty() {
 			panic!("Destination buffer cannot have zero length");
@@ -211,8 +211,8 @@ impl WString {
 	/// Wrapper to
 	/// [`lstrlen`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
 	///
-	/// Returns the number of `u16` characters stored in the internal buffer, not
-	/// counting the terminating null.
+	/// Returns the number of `u16` characters stored in the internal buffer,
+	/// not counting the terminating null.
 	pub fn len(&self) -> usize {
 		match self.char_vec.as_ref() {
 			Some(vec_ref) => unsafe { kernel32::lstrlenW(vec_ref.as_ptr()) as usize },

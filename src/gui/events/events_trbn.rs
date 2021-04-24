@@ -10,11 +10,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	TrackbarEvents
 }
 
@@ -29,7 +29,8 @@ impl TrackbarEvents {
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-trackbar)
 	/// notification.
 	///
-	/// Sent by a trackbar control to notify its parent windows about drawing operations.
+	/// Sent by a trackbar control to notify its parent windows about drawing
+	/// operations.
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
 	{
@@ -43,6 +44,7 @@ impl TrackbarEvents {
 		/// [`NM_RELEASEDCAPTURE`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
 		/// notification.
 		///
-		/// Notifies a trackbar control's parent window that the control is releasing mouse capture.
+		/// Notifies a trackbar control's parent window that the control is
+		/// releasing mouse capture.
 	}
 }

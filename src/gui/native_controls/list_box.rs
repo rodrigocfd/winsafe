@@ -124,7 +124,7 @@ impl ListBox {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`ListBox`](crate::gui::ListBox) programatically with
+/// Options to create a [`ListBox`](crate::gui::ListBox) programmatically with
 /// [`ListBox::new`](crate::gui::ListBox::new).
 pub struct ListBoxOpts {
 	/// Control position within parent client area, in pixels, to be

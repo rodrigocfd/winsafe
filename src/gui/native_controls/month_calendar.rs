@@ -132,7 +132,7 @@ impl MonthCalendar {
 //------------------------------------------------------------------------------
 
 /// Options to create a [`MonthCalendar`](crate::gui::MonthCalendar)
-/// programatically with
+/// programmatically with
 /// [`MonthCalendar::new`](crate::gui::MonthCalendar::new).
 pub struct MonthCalendarOpts {
 	/// Control position within parent client area, in pixels, to be

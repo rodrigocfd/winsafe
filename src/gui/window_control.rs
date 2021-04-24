@@ -11,7 +11,7 @@ use crate::structs::POINT;
 #[derive(Clone)]
 enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
 
-/// An user child window, which can handle events. Can be programatically
+/// An user child window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.rc` script.
 ///
 /// Implements [`Parent`](crate::gui::Parent) and [`Child`](crate::gui::Child)
@@ -85,8 +85,8 @@ impl WindowControl {
 	///
 	/// # Panics
 	///
-	/// Panics if the window is already created. Events must be set before window
-	/// creation.
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
 	pub fn on(&self) -> &WindowEvents {
 		self.base_ref().user_events_ref()
 	}

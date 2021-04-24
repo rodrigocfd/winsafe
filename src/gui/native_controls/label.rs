@@ -62,8 +62,8 @@ impl Label {
 		new_self
 	}
 
-	/// Instantiates a new `CheckBox` object, to be loaded from a dialog resource
-	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// Instantiates a new `CheckBox` object, to be loaded from a dialog
+	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Label {
 		let parent_ref = baseref_from_parent(parent);
 
@@ -150,7 +150,7 @@ impl Label {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`Label`](crate::gui::Label) programatically with
+/// Options to create a [`Label`](crate::gui::Label) programmatically with
 /// [`label::new`](crate::gui::Label::new).
 pub struct LabelOpts {
 	/// Text of the control to be

@@ -9,11 +9,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	ComboBoxEvents
 }
 
@@ -44,8 +44,8 @@ impl ComboBoxEvents {
 		/// [`CBN_EDITCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-editchange)
 		/// notification.
 		///
-		/// Sent after the user has taken an action that may have altered the text
-		/// in the edit control portion of a combo box. Unlike the
+		/// Sent after the user has taken an action that may have altered the
+		/// text in the edit control portion of a combo box. Unlike the
 		/// [`CBN_EDITUPDATE`](crate::gui::events::ComboBoxEvents::cbn_edit_update)
 		/// notification code, this notification code is sent after the system
 		/// updates the screen.
@@ -55,17 +55,17 @@ impl ComboBoxEvents {
 		/// [`CBN_EDITUPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-editupdate)
 		/// notification.
 		///
-		/// Sent when the edit control portion of a combo box is about to display
-		/// altered text. This notification code is sent after the control has
-		/// formatted the text, but before it displays the text.
+		/// Sent when the edit control portion of a combo box is about to
+		/// display altered text. This notification code is sent after the
+		/// control has formatted the text, but before it displays the text.
 	}
 
 	cmd_event! { cbn_err_space, co::CBN::ERRSPACE.into(),
 		/// [`CBN_ERRSPACE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-errspace)
 		/// notification.
 		///
-		/// Sent when a combo box cannot allocate enough memory to meet a specific
-		/// request.
+		/// Sent when a combo box cannot allocate enough memory to meet a
+		/// specific request.
 	}
 
 	cmd_event! { cbn_kill_focus, co::CBN::KILLFOCUS.into(),
@@ -79,9 +79,9 @@ impl ComboBoxEvents {
 		/// [`CBN_SELCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cbn-selchange)
 		/// notification.
 		///
-		/// Sent when the user changes the current selection in the list box of a
-		/// combo box. The user can change the selection by clicking in the list
-		/// box or by using the arrow keys.
+		/// Sent when the user changes the current selection in the list box of
+		/// a combo box. The user can change the selection by clicking in the
+		/// list box or by using the arrow keys.
 	}
 
 	cmd_event! { cbn_sel_end_cancel, co::CBN::SELENDCANCEL.into(),
@@ -89,8 +89,8 @@ impl ComboBoxEvents {
 		/// notification.
 		///
 		/// Sent when the user selects an item, but then selects another control
-		/// or closes the dialog box. It indicates the user's initial selection is
-		/// to be ignored.
+		/// or closes the dialog box. It indicates the user's initial selection
+		/// is to be ignored.
 	}
 
 	cmd_event! { cbn_sel_end_ok, co::CBN::SELENDOK.into(),

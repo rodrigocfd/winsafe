@@ -111,8 +111,8 @@ impl ProgressBar {
 	}
 
 	/// Retrieves the current minimum and maximum values by sending a
-	/// [`PBM_GETRANGE`](crate::msg::pbm::GetRange) message. Default values are 0
-	/// and 100.
+	/// [`PBM_GETRANGE`](crate::msg::pbm::GetRange) message. Default values are
+	/// 0 and 100.
 	pub fn range(&self) -> (u32, u32) {
 		let mut ranges = PBRANGE::default();
 		self.hwnd().SendMessage(pbm::GetRange {
@@ -172,8 +172,8 @@ impl ProgressBar {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`ProgressBar`](crate::gui::ProgressBar) programatically
-/// with [`ProgressBar::new`](crate::gui::ProgressBar::new).
+/// Options to create a [`ProgressBar`](crate::gui::ProgressBar)
+/// programmatically with [`ProgressBar::new`](crate::gui::ProgressBar::new).
 pub struct ProgressBarOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

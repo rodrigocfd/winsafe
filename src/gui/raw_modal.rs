@@ -148,7 +148,7 @@ impl RawModal {
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`WindowModal`](crate::gui::WindowModal) programatically
+/// Options to create a [`WindowModal`](crate::gui::WindowModal) programmatically
 /// with [`WindowModal::new`](crate::gui::WindowModal::new).
 pub struct WindowModalOpts {
 	/// Window class name to be

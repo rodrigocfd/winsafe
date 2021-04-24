@@ -10,11 +10,11 @@ ctrl_events_proxy! {
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
 	///
 	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-	/// is the real responsible for the child event handling.
+	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+	/// who is the real responsible for the child event handling.
 	///
-	/// You cannot directly instantiate this object, it is created internally by the
-	/// control.
+	/// You cannot directly instantiate this object, it is created internally by
+	/// the control.
 	ButtonEvents
 }
 
@@ -63,17 +63,18 @@ impl ButtonEvents {
 		/// Sent when the user double-clicks a button. This notification code is
 		/// sent automatically for [`BS_USERBUTTON`](crate::co::BS::USERBUTTON),
 		/// [`BS_RADIOBUTTON`](crate::co::BS::RADIOBUTTON), and
-		/// [`BS_OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
-		/// send only if they have the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style.
+		/// [`BS_OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button
+		/// types send only if they have the
+		/// [`BS_NOTIFY`](crate::co::BS::NOTIFY) style.
 	}
 
 	cmd_event! { bn_kill_focus, co::BN::KILLFOCUS.into(),
 		/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 		/// command notification.
 		///
-		/// Sent when a button loses the keyboard focus. The button must have the
-		/// [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
-		/// code.
+		/// Sent when a button loses the keyboard focus. The button must have
+		/// the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this
+		/// notification code.
 	}
 
 	cmd_event! { bn_set_focus, co::BN::SETFOCUS.into(),

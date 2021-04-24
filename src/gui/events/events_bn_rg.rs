@@ -110,9 +110,9 @@ impl RadioGroupEvents {
 	/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 	/// command notification for all radio buttons in the group.
 	///
-	/// Sent when a button receives the keyboard focus. The button must have
-	/// the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this
-	/// notification code.
+	/// Sent when a button receives the keyboard focus. The button must have the
+	/// [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
+	/// code.
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: FnMut() + 'static,
 	{
