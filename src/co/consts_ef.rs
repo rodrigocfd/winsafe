@@ -191,6 +191,23 @@ const_type! { FILE_SHARE, u32,
 	DELETE, 0x00000004
 }
 
+const_type! { FILE_TYPE, u32,
+	/// [`GetFileType`](crate::HFILE::GetFileType) return value (`u32`).
+	->
+	/// The specified file is a character file, typically an LPT device or a
+	/// console.
+	CHAR, 0x0002
+	/// The specified file is a disk file.
+	DISK, 0x0001
+	/// The specified file is a socket, a named pipe, or an anonymous pipe.
+	PIPE, 0x0003
+	/// Unused.
+	REMOTE, 0x8000
+	/// Either the type of the specified file is unknown, or the function
+	/// failed.
+	UNKNOWN, 0x0000
+}
+
 const_type! { FF, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`PITCH`](crate::co::PITCH).

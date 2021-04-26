@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::{bool_to_winresult, ptr_as_opt};
-use crate::structs::SECURITY_ATTRIBUTES;
+use crate::structs::{BY_HANDLE_FILE_INFORMATION, SECURITY_ATTRIBUTES};
 use crate::WString;
 
 handle_type! {
@@ -17,7 +17,7 @@ handle_type! {
 impl HFILE {
 	/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// method.
-	pub fn CloseHandle(&self) -> WinResult<()> {
+	pub fn CloseHandle(self) -> WinResult<()> {
 		bool_to_winresult(unsafe { kernel32::CloseHandle(self.ptr) })
 	}
 
@@ -97,13 +97,40 @@ impl HFILE {
 		}
 	}
 
+	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
+	/// method.
+	pub fn GetFileInformationByHandle(self,
+		lpFileInformation: &mut BY_HANDLE_FILE_INFORMATION) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				kernel32::GetFileInformationByHandle(
+					self.ptr,
+					lpFileInformation as *mut _ as *mut _,
+				)
+			},
+		)
+	}
+
 	/// [`GetFileSizeEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// method.
-	pub fn GetFileSizeEx(&self) -> WinResult<i64> {
+	pub fn GetFileSizeEx(self) -> WinResult<i64> {
 		let mut ibuf = 0;
 		match unsafe { kernel32::GetFileSizeEx(self.ptr, &mut ibuf) } {
 			0 => Err(GetLastError()),
 			_ => Ok(ibuf),
+		}
+	}
+
+	/// [`GetFileType`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
+	/// method.
+	pub fn GetFileType(self) -> WinResult<co::FILE_TYPE> {
+		match co::FILE_TYPE(unsafe { kernel32::GetFileType(self.ptr) }) {
+			co::FILE_TYPE::UNKNOWN => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(co::FILE_TYPE::UNKNOWN), // actual unknown type
+				err => Err(err),
+			},
+			ty => Ok(ty),
 		}
 	}
 }

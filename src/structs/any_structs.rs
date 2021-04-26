@@ -79,6 +79,23 @@ impl Default for BITMAPINFOHEADER {
 	}
 }
 
+/// [`BY_HANDLE_FILE_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information)
+/// method.
+#[repr(C)]
+#[derive(Default)]
+pub struct BY_HANDLE_FILE_INFORMATION {
+	pub dwFileAttributes: co::FILE_ATTRIBUTE,
+	pub ftCreationTime: FILETIME,
+	pub ftLastAccessTime: FILETIME,
+	pub ftLastWriteTime: FILETIME,
+	pub dwVolumeSerialNumber: u32,
+	pub nFileSizeHigh: u32,
+	pub nFileSizeLow: u32,
+	pub nNumberOfLinks: u32,
+	pub nFileIndexHigh: u32,
+	pub nFileIndexLow: u32,
+}
+
 /// [`COLORREF`](https://docs.microsoft.com/en-us/windows/win32/gdi/colorref)
 /// struct.
 #[repr(C)]
