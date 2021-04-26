@@ -19,7 +19,7 @@ impl HHOOK {
 	pub fn SetWindowsHookEx(idHook: co::WH, lpfn: HOOKPROC,
 		hmod: HINSTANCE, dwThreadId: u32) -> WinResult<HHOOK>
 	{
-		match ptr_as_opt(
+		ptr_as_opt(
 			unsafe {
 				user32::SetWindowsHookExW(
 					idHook.0,
@@ -28,9 +28,6 @@ impl HHOOK {
 					dwThreadId,
 				)
 			},
-		) {
-			Some(ptr) => Ok(Self { ptr }),
-			None => Err(GetLastError()),
-		}
+		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 }

@@ -46,7 +46,7 @@ impl IModalWindow {
 		match HRESULT_FROM_WIN32(hr) {
 			co::ERROR::S_OK => Ok(true),
 			co::ERROR::CANCELLED => Ok(false), // ordinary error, not a COM error
-			_ => Err(co::ERROR(hr as u32)),
+			_ => Err(co::ERROR(hr as _)),
 		}
 	}
 }

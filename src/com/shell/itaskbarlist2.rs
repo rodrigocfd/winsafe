@@ -4,7 +4,6 @@ use crate::aliases::WinResult;
 use crate::com::PPComVT;
 use crate::com::shell::ITaskbarList;
 use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
-use crate::ffi::BOOL;
 use crate::handles::HWND;
 use crate::privs::hr_to_winresult;
 
@@ -60,7 +59,7 @@ impl ITaskbarList2 {
 		hr_to_winresult(
 			unsafe {
 				((**self.ppv()).MarkFullscreenWindow)(
-					self.ppv(), hwnd.ptr, fFullscreen as BOOL,
+					self.ppv(), hwnd.ptr, fFullscreen as _,
 				)
 			},
 		)

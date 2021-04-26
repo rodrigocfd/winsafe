@@ -3,10 +3,10 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
-use crate::ffi::{BOOL, user32};
+use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
-use crate::privs::{bool_to_winresult, ptr_as_opt};
+use crate::privs::{bool_to_winresult, ptr_as_opt, ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::{MENUINFO, MENUITEMINFO};
 use crate::WString;
 
@@ -77,7 +77,7 @@ impl HMENU {
 			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			ret => Ok(co::MF(ret as u32)),
+			ret => Ok(co::MF(ret as _)),
 		}
 	}
 
@@ -87,10 +87,8 @@ impl HMENU {
 	/// **Note:** If not attached to a window, must be paired with a
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreateMenu() -> WinResult<HMENU> {
-		match ptr_as_opt(unsafe { user32::CreateMenu() }) {
-			Some(ptr) => Ok(Self { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { user32::CreateMenu() })
+			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreatePopupMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu)
@@ -99,10 +97,8 @@ impl HMENU {
 	/// **Note:** If not attached to a window, must be paired with a
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreatePopupMenu() -> WinResult<HMENU> {
-		match ptr_as_opt(unsafe { user32::CreatePopupMenu() }) {
-			Some(ptr) => Ok(Self { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { user32::CreatePopupMenu() })
+			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`DeleteMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deletemenu)
@@ -145,7 +141,7 @@ impl HMENU {
 			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			ret => Ok(co::MF(ret as u32)),
+			ret => Ok(co::MF(ret as _)),
 		}
 	}
 
@@ -153,7 +149,7 @@ impl HMENU {
 	/// method.
 	pub fn GetMenuInfo(self, lpmi: &mut MENUINFO) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::GetMenuInfo(self.ptr, lpmi as *mut _ as *mut _) },
+			unsafe { user32::GetMenuInfo(self.ptr, ref_as_pvoid(lpmi)) },
 		)
 	}
 
@@ -162,7 +158,7 @@ impl HMENU {
 	pub fn GetMenuItemCount(self) -> WinResult<u32> {
 		match unsafe { user32::GetMenuItemCount(self.ptr) } {
 			-1 => Err(GetLastError()),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
@@ -179,7 +175,7 @@ impl HMENU {
 	/// method.
 	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
 		ptr_as_opt(
-			unsafe { user32::GetSubMenu(self.ptr, nPos as i32) },
+			unsafe { user32::GetSubMenu(self.ptr, nPos as _) },
 		).map(|ptr| Self { ptr })
 	}
 
@@ -218,8 +214,8 @@ impl HMENU {
 				user32::InsertMenuItemW(
 					self.ptr,
 					item.id_or_pos_u32(),
-					item.is_by_pos() as BOOL,
-					lpmi as *const _ as *const _,
+					item.is_by_pos() as _,
+					ref_as_pcvoid(lpmi),
 				)
 			},
 		)
@@ -249,7 +245,7 @@ impl HMENU {
 	/// method.
 	pub fn SetMenuInfo(self, mii: &MENUINFO) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::SetMenuInfo(self.ptr, mii as *const _ as *const _) },
+			unsafe { user32::SetMenuInfo(self.ptr, ref_as_pcvoid(mii)) },
 		)
 	}
 
@@ -263,8 +259,8 @@ impl HMENU {
 				user32::SetMenuItemInfoW(
 					self.ptr,
 					item.id_or_pos_u32(),
-					item.is_by_pos() as BOOL,
-					lpmii as *const _ as *const _,
+					item.is_by_pos() as _,
+					ref_as_pcvoid(lpmii),
 				)
 			},
 		)

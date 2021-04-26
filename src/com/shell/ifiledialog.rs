@@ -6,8 +6,7 @@ use crate::com::funcs::CoTaskMemFree;
 use crate::com::PPComVT;
 use crate::com::shell::{COMDLG_FILTERSPEC, IModalWindow, IShellItem};
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT, IShellItemVT};
-use crate::ffi::HRESULT;
-use crate::privs::hr_to_winresult;
+use crate::privs::{hr_to_winresult, ref_as_pcvoid};
 use crate::structs::GUID;
 use crate::WString;
 
@@ -52,7 +51,7 @@ impl IFileDialog {
 	/// method.
 	pub fn Close(&self, hr: co::ERROR) -> WinResult<()> {
 		hr_to_winresult(
-			unsafe { ((**self.ppv()).Close)(self.ppv(), hr.0 as HRESULT) },
+			unsafe { ((**self.ppv()).Close)(self.ppv(), hr.0 as _) },
 		)
 	}
 
@@ -136,7 +135,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).SetClientGuid)(
 					self.ppv(),
-					guid as *const _ as *const _,
+					ref_as_pcvoid(guid),
 				)
 			},
 		)
@@ -235,7 +234,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).SetFileTypes)(
 					self.ppv(),
-					filterSpec.len() as u32,
+					filterSpec.len() as _,
 					comDlgs.as_ptr() as *mut _,
 				)
 			},

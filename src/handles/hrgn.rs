@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::privs::bool_to_winresult;
+use crate::privs::{bool_to_winresult, ref_as_pcvoid};
 use crate::structs::RECT;
 
 hgdiobj_type! {
@@ -43,7 +43,7 @@ impl HRGN {
 	/// method.
 	pub fn RectInRegion(self, lprect: &RECT) -> bool {
 		unsafe {
-			gdi32::RectInRegion(self.ptr, lprect as *const _ as *const _) != 0
+			gdi32::RectInRegion(self.ptr, ref_as_pcvoid(lprect)) != 0
 		}
 	}
 }

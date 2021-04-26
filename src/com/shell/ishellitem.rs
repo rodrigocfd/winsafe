@@ -6,7 +6,7 @@ use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::shell::vt::IShellItemVT;
 use crate::ffi::shell32;
-use crate::privs::hr_to_winresult;
+use crate::privs::{hr_to_winresult, ref_as_pcvoid};
 use crate::WString;
 
 /// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
@@ -57,7 +57,7 @@ impl IShellItem {
 				shell32::SHCreateItemFromParsingName(
 					WString::from_str(file_or_folder_path).as_ptr(),
 					std::ptr::null_mut(),
-					IShellItemVT::IID().as_ref() as *const _ as *const _,
+					ref_as_pcvoid(&IShellItemVT::IID()),
 					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},
@@ -71,7 +71,7 @@ impl IShellItem {
 		match co::ERROR(
 			unsafe {
 				((**self.ppv()).GetAttributes)(self.ppv(), sfgaoMask.0, &mut attrs)
-			} as u32,
+			} as _,
 		) {
 			co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(co::SFGAO(attrs)),
 			err => Err(err),

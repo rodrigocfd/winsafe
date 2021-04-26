@@ -4,6 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
+use crate::privs::{bool_to_winresult, ref_as_pvoid};
 use crate::structs::FILETIME;
 use crate::WString;
 
@@ -40,10 +41,7 @@ impl HKEY {
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
 	pub fn RegCloseKey(self) -> WinResult<()> {
-		match co::ERROR(unsafe { advapi32::RegCloseKey(self.ptr) } as u32) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+		bool_to_winresult(unsafe { advapi32::RegCloseKey(self.ptr) })
 	}
 
 	/// This method calls
@@ -74,7 +72,7 @@ impl HKEY {
 			None, Some(&mut nKeys), Some(&mut maxKeyLen),
 			None, None, None, None, None, None)?;
 
-		let mut namesVec = Vec::with_capacity(nKeys as usize);
+		let mut namesVec = Vec::with_capacity(nKeys as _);
 		let mut nameBuf = WString::new_alloc_buffer(maxKeyLen as usize + 1);
 		let mut lenBuf;
 
@@ -93,7 +91,7 @@ impl HKEY {
 						std::ptr::null_mut(),
 						std::ptr::null_mut(),
 					)
-				} as u32
+				} as _
 			);
 
 			if err != co::ERROR::SUCCESS {
@@ -134,7 +132,7 @@ impl HKEY {
 			None, None, None, None, Some(&mut nVals), Some(&mut maxValLen),
 			None, None, None)?;
 
-		let mut namesTypesVec = Vec::with_capacity(nVals as usize);
+		let mut namesTypesVec = Vec::with_capacity(nVals as _);
 		let mut nameBuf = WString::new_alloc_buffer(maxValLen as usize + 1);
 		let mut lenBuf;
 		let mut rawDataType: u32 = 0;
@@ -154,7 +152,7 @@ impl HKEY {
 						std::ptr::null_mut(),
 						std::ptr::null_mut(),
 					)
-				} as u32
+				} as _
 			);
 
 			if err != co::ERROR::SUCCESS {
@@ -216,7 +214,7 @@ impl HKEY {
 					std::ptr::null_mut(),
 					&mut dataLen,
 				)
-			} as u32
+			} as _
 		) {
 			co::ERROR::SUCCESS => {},
 			err => return Err(err),
@@ -236,10 +234,10 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 							std::ptr::null_mut(),
-							&mut dwordBuf as *mut _ as *mut _,
+							ref_as_pvoid(&mut dwordBuf),
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
 					err => Err(err),
@@ -256,10 +254,10 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 							std::ptr::null_mut(),
-							&mut qwordBuf as *mut _ as *mut _,
+							ref_as_pvoid(&mut qwordBuf),
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
 					err => Err(err),
@@ -279,7 +277,7 @@ impl HKEY {
 							szBuf.as_mut_ptr() as *mut _,
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(
 						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
@@ -301,7 +299,7 @@ impl HKEY {
 							byteBuf.as_mut_ptr() as *mut _,
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
 					err => Err(err),
@@ -344,7 +342,7 @@ impl HKEY {
 					samDesired.0,
 					&mut hKey.ptr,
 				)
-			} as u32
+			} as _
 		) {
 			co::ERROR::SUCCESS => Ok(hKey),
 			err => Err(err),
@@ -374,14 +372,14 @@ impl HKEY {
 			None => (std::ptr::null_mut(), 0),
 		};
 
-		let lpcSubKeys2 = lpcSubKeys.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
-		let lpcbMaxSubKeyLen2 = lpcbMaxSubKeyLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
-		let lpcbMaxClassLen2 = lpcbMaxClassLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
-		let lpcValues2 = lpcValues.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
-		let lpcbMaxValueNameLen2 = lpcbMaxValueNameLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
-		let lpcbMaxValueLen2 = lpcbMaxValueLen.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
-		let lpcbSecurityDescriptor2 = lpcbSecurityDescriptor.map(|re| re as *mut _).unwrap_or(std::ptr::null_mut());
-		let lpftLastWriteTime2 = lpftLastWriteTime.map(|re| re as *mut _ as *mut _).unwrap_or(std::ptr::null_mut());
+		let lpcSubKeys2 = lpcSubKeys.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpcbMaxSubKeyLen2 = lpcbMaxSubKeyLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpcbMaxClassLen2 = lpcbMaxClassLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpcValues2 = lpcValues.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpcbMaxValueNameLen2 = lpcbMaxValueNameLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpcbMaxValueLen2 = lpcbMaxValueLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpcbSecurityDescriptor2 = lpcbSecurityDescriptor.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpftLastWriteTime2 = lpftLastWriteTime.map_or(std::ptr::null_mut(), |re| ref_as_pvoid(re));
 
 		loop { // until lpClass is large enough
 			match co::ERROR(
@@ -389,7 +387,7 @@ impl HKEY {
 					advapi32::RegQueryInfoKeyW(
 						self.ptr,
 						lpClass2,
-						&mut lpcchClass as *mut _,
+						&mut lpcchClass,
 						std::ptr::null_mut(),
 						lpcSubKeys2,
 						lpcbMaxSubKeyLen2,
@@ -400,13 +398,13 @@ impl HKEY {
 						lpcbSecurityDescriptor2,
 						lpftLastWriteTime2,
 					)
-				} as u32
+				} as _
 			) {
 				co::ERROR::MORE_DATA => match &mut lpClass {
 					Some(lpClass) => {
 						lpClass.realloc_buffer(lpClass.buffer_size() + 32); // arbitrary
 						lpClass2 = unsafe { lpClass.as_mut_ptr() };
-						lpcchClass = lpClass.buffer_size() as u32;
+						lpcchClass = lpClass.buffer_size() as _;
 					},
 					None => return Err(co::ERROR::MORE_DATA),
 				},
@@ -468,7 +466,7 @@ impl HKEY {
 					std::ptr::null_mut(),
 					&mut dataLen,
 				)
-			} as u32
+			} as _
 		) {
 			co::ERROR::SUCCESS => {},
 			err => return Err(err),
@@ -487,10 +485,10 @@ impl HKEY {
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							&mut dwordBuf as *mut u32 as *mut u8,
+							&mut dwordBuf as *mut _ as *mut _,
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
 					err => Err(err),
@@ -506,10 +504,10 @@ impl HKEY {
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							&mut qwordBuf as *mut u64 as *mut u8,
+							&mut qwordBuf as *mut _ as *mut _,
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
 					err => Err(err),
@@ -525,10 +523,10 @@ impl HKEY {
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							szBuf.as_mut_ptr() as *mut u8,
+							szBuf.as_mut_ptr() as *mut _,
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(
 						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
@@ -549,7 +547,7 @@ impl HKEY {
 							byteBuf.as_mut_ptr(),
 							&mut dataLen,
 						)
-					} as u32
+					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
 					err => Err(err),
@@ -587,9 +585,9 @@ impl HKEY {
 					WString::from_str(lpValueName).as_ptr(),
 					lpData.reg_type().0,
 					lpData.as_ptr(),
-					lpData.len() as u32,
+					lpData.len() as _,
 				)
-			} as u32
+			} as _
 		) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -630,10 +628,10 @@ impl HKEY {
 					WString::from_str(lpValueName).as_ptr(),
 					0,
 					lpData.reg_type().0,
-					lpData.as_ptr() as *const u8,
-					lpData.len() as u32,
+					lpData.as_ptr() as *const _,
+					lpData.len() as _,
 				)
-			} as u32
+			} as _
 		) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),

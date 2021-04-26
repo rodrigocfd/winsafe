@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::privs::{bool_to_winresult, ptr_as_opt};
+use crate::privs::{bool_to_winresult, ptr_as_opt, ref_as_pcvoid};
 use crate::structs::LOGFONT;
 use crate::WString;
 
@@ -25,32 +25,26 @@ impl HFONT {
 		iQuality: co::QUALITY, iPitchAndFamily: co::PITCH,
 		pszFaceName: &str) -> WinResult<HFONT>
 	{
-		match ptr_as_opt(
+		ptr_as_opt(
 			unsafe {
 				gdi32::CreateFontW(
 					cHeight, cWidth, cEscapement, cOrientation,
-					cWeight.0 as i32,
-					bItalic as u32, bUnderline as u32, bStrikeOut as u32,
-					iCharSet.0 as u32,
-					iOutPrecision.0 as u32, iClipPrecision.0 as u32,
-					iQuality.0 as u32, iPitchAndFamily.0 as u32,
+					cWeight.0 as _,
+					bItalic as _, bUnderline as _, bStrikeOut as _,
+					iCharSet.0 as _,
+					iOutPrecision.0 as _, iClipPrecision.0 as _,
+					iQuality.0 as _, iPitchAndFamily.0 as _,
 					WString::from_str(pszFaceName).as_ptr(),
 				)
 			},
-		) {
-			Some(ptr) => Ok(Self { ptr }),
-			None => Err(GetLastError()),
-		}
+		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreateFontIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
 	pub fn CreateFontIndirect(lplf: &LOGFONT) -> WinResult<HFONT> {
-		match ptr_as_opt(
-			unsafe {gdi32::CreateFontIndirectW(lplf as *const _ as *const _) }
-		) {
-			Some(ptr) => Ok(Self { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(
+			unsafe { gdi32::CreateFontIndirectW(ref_as_pcvoid(lplf)) },
+		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 }

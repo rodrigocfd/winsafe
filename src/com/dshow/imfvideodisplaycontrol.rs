@@ -5,9 +5,13 @@ use crate::co;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::vt::IMFVideoDisplayControlVT;
 use crate::dshow::MFVideoNormalizedRect;
-use crate::ffi::BOOL;
 use crate::handles::HWND;
-use crate::privs::{hr_to_winresult, hr_to_winresult_bool};
+use crate::privs::{
+	hr_to_winresult_bool,
+	hr_to_winresult,
+	ref_as_pcvoid,
+	ref_as_pvoid,
+};
 use crate::structs::{RECT, SIZE};
 
 /// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
@@ -79,8 +83,8 @@ impl IMFVideoDisplayControl {
 			unsafe {
 				((**self.ppv()).GetIdealVideoSize)(
 					self.ppv(),
-					&mut min as *mut _ as *mut _,
-					&mut max as *mut _ as *mut _,
+					ref_as_pvoid(&mut min),
+					ref_as_pvoid(&mut max),
 				)
 			},
 		).map(|_| (min, max))
@@ -97,8 +101,8 @@ impl IMFVideoDisplayControl {
 			unsafe {
 				((**self.ppv()).GetNativeVideoSize)(
 					self.ppv(),
-					&mut native as *mut _ as *mut _,
-					&mut aspec as *mut _ as *mut _,
+					ref_as_pvoid(&mut native),
+					ref_as_pvoid(&mut aspec),
 				)
 			},
 		).map(|_| (native, aspec))
@@ -117,7 +121,7 @@ impl IMFVideoDisplayControl {
 	/// method.
 	pub fn RepaintVideo(&self) -> WinResult<()> {
 		match co::ERROR(
-			unsafe { ((**self.ppv()).RepaintVideo)(self.ppv()) } as u32,
+			unsafe { ((**self.ppv()).RepaintVideo)(self.ppv()) } as _,
 		) {
 			co::ERROR::S_OK | co::ERROR::MF_E_INVALIDREQUEST => Ok(()),
 			err => Err(err),
@@ -137,7 +141,7 @@ impl IMFVideoDisplayControl {
 	pub fn SetFullscreen(&self, fullScreen: bool) -> WinResult<()> {
 		hr_to_winresult(
 			unsafe {
-				((**self.ppv()).SetFullscreen)(self.ppv(), fullScreen as BOOL)
+				((**self.ppv()).SetFullscreen)(self.ppv(), fullScreen as _)
 			},
 		)
 	}
@@ -153,14 +157,8 @@ impl IMFVideoDisplayControl {
 			unsafe {
 				((**self.ppv()).SetVideoPosition)(
 					self.ppv(),
-					match &src {
-						Some(src) => src as *const _ as *const _,
-						None => std::ptr::null(),
-					},
-					match &dest {
-						Some(dest) => dest as *const _ as *const _,
-						None => std::ptr::null(),
-					},
+					src.as_ref().map_or(std::ptr::null(), |src| ref_as_pcvoid(src)),
+					dest.as_ref().map_or(std::ptr::null(), |dest| ref_as_pcvoid(dest)),
 				)
 			},
 		)

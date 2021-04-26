@@ -5,7 +5,13 @@ use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
-use crate::privs::{bool_to_winresult, GDI_ERROR, ptr_as_opt};
+use crate::privs::{
+	bool_to_winresult,
+	GDI_ERROR,
+	ptr_as_opt,
+	ref_as_pcvoid,
+	ref_as_pvoid,
+};
 use crate::structs::{POINT, SIZE, TEXTMETRIC};
 use crate::WString;
 
@@ -21,10 +27,8 @@ impl HDC {
 	///
 	/// **Note:** Must be paired with a [`DeleteDC`](crate::HDC::DeleteDC) call.
 	pub fn CreateCompatibleDC(self) -> WinResult<HDC> {
-		match ptr_as_opt(unsafe { gdi32::CreateCompatibleDC(self.ptr) }) {
-			Some(ptr) => Ok(Self { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { gdi32::CreateCompatibleDC(self.ptr) })
+			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`DeleteDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
@@ -48,8 +52,8 @@ impl HDC {
 			gdi32::GetTextExtentPoint32W(
 				self.ptr,
 				WString::from_str(lpString).as_ptr(),
-				lpString.chars().count() as i32,
-				&mut sz as *mut _ as *mut _,
+				lpString.chars().count() as _,
+				ref_as_pvoid(&mut sz),
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -61,7 +65,7 @@ impl HDC {
 	/// method.
 	pub fn GetTextMetrics(self, lptm: &mut TEXTMETRIC) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { gdi32::GetTextMetricsW(self.ptr, lptm as *mut _ as *mut _) },
+			unsafe { gdi32::GetTextMetricsW(self.ptr, ref_as_pvoid(lptm)) },
 		)
 	}
 
@@ -82,7 +86,7 @@ impl HDC {
 					self.ptr,
 					x,
 					y,
-					lppt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as *mut _),
+					lppt.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
 				)
 			},
 		)
@@ -108,8 +112,8 @@ impl HDC {
 			unsafe {
 				gdi32::PolyBezier(
 					self.ptr,
-					&apt[0] as *const _ as *const _,
-					apt.len() as u32,
+					ref_as_pcvoid(&apt[0]),
+					apt.len() as _,
 				)
 			},
 		)
@@ -122,8 +126,8 @@ impl HDC {
 			unsafe {
 				gdi32::PolyBezierTo(
 					self.ptr,
-					&apt[0] as *const _ as *const _,
-					apt.len() as u32,
+					ref_as_pcvoid(&apt[0]),
+					apt.len() as _,
 				)
 			},
 		)
@@ -136,8 +140,8 @@ impl HDC {
 			unsafe {
 				gdi32::Polyline(
 					self.ptr,
-					&apt[0] as *const _ as *const _,
-					apt.len() as u32,
+					ref_as_pcvoid(&apt[0]),
+					apt.len() as _,
 				)
 			},
 		)
@@ -150,8 +154,8 @@ impl HDC {
 			unsafe {
 				gdi32::PolylineTo(
 					self.ptr,
-					&apt[0] as *const _ as *const _,
-					apt.len() as u32,
+					ref_as_pcvoid(&apt[0]),
+					apt.len() as _,
 				)
 			},
 		)
@@ -208,46 +212,36 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	pub fn SelectObjectBitmap(self, h: HBITMAP) -> WinResult<HBITMAP> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
-			Some(ptr) => Ok(HBITMAP { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+			.map(|ptr| HBITMAP { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBRUSH`](crate::HBRUSH).
 	pub fn SelectObjectBrush(self, h: HBRUSH) -> WinResult<HBRUSH> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
-			Some(ptr) => Ok(HBRUSH { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+			.map(|ptr| HBRUSH { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HFONT`](crate::HFONT).
 	pub fn SelectObjectFont(self, h: HFONT) -> WinResult<HFONT> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
-			Some(ptr) => Ok(HFONT { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+			.map(|ptr| HFONT { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HPEN`](crate::HPEN).
 	pub fn SelectObjectPen(self, h: HPEN) -> WinResult<HPEN> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
-			Some(ptr) => Ok(HPEN { ptr }),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+			.map(|ptr| HPEN { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HRGN`](crate::HRGN).
 	pub fn SelectObjectRgn(self, h: HRGN) -> WinResult<co::REGION> {
-		match ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) }) {
-			Some(p) => Ok(co::REGION(p as i32)),
-			None => Err(GetLastError()),
-		}
+		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+			.map(|ptr| co::REGION(ptr as i32)).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
@@ -277,7 +271,7 @@ impl HDC {
 					self.ptr,
 					x, y,
 					WString::from_str(lpString).as_ptr(),
-					lpString.len() as i32,
+					lpString.len() as _,
 				)
 			},
 		)

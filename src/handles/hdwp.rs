@@ -21,12 +21,9 @@ impl HDWP {
 	/// **Note:** Must be paired with an
 	/// [`EndDeferWindowPos`](crate::HDWP::EndDeferWindowPos) call.
 	pub fn BeginDeferWindowPos(nNumWindows: u32) -> WinResult<HDWP> {
-		match ptr_as_opt(
+		ptr_as_opt(
 			unsafe { user32::BeginDeferWindowPos(nNumWindows as i32) },
-		) {
-			None => Err(GetLastError()),
-			Some(ptr) => Ok(Self { ptr }),
-		}
+		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`DeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
@@ -35,7 +32,7 @@ impl HDWP {
 		hWnd: HWND, hWndInsertAfter: HwndPlace,
 		x: i32, y: i32, cx: i32, cy: i32, uFlags: co::SWP) -> WinResult<HDWP>
 	{
-		match ptr_as_opt(
+		ptr_as_opt(
 			unsafe {
 				user32::DeferWindowPos(
 					self.ptr,
@@ -45,10 +42,7 @@ impl HDWP {
 					uFlags.0,
 				)
 			},
-		 ) {
-			None => Err(GetLastError()),
-			Some(ptr) => Ok(Self { ptr }),
-		}
+		 ).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`EndDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)

@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::ffi::{HRESULT, PVOID};
-use crate::privs::hr_to_winresult;
+use crate::privs::{hr_to_winresult, ref_as_pvoid};
 use crate::structs::{CLSID, IID};
 
 com_virtual_table! { IPersistVT,
@@ -49,9 +49,7 @@ impl IPersist {
 		let mut clsid = CLSID::new(0, 0, 0, 0, 0);
 		hr_to_winresult(
 			unsafe {
-				((**self.ppv()).GetClassID)(
-					self.ppv(), &mut clsid as *mut _ as *mut _,
-				)
+				((**self.ppv()).GetClassID)(self.ppv(), ref_as_pvoid(&mut clsid))
 			},
 		).map(|_| clsid)
 	}

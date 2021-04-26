@@ -63,7 +63,7 @@ impl IMediaControl {
 			unsafe {
 				((**self.ppv()).GetState)(
 					self.ppv(),
-					msTimeout.unwrap_or(INFINITE as i32),
+					msTimeout.unwrap_or(INFINITE as _),
 					&mut state.0,
 				)
 			},

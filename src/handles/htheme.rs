@@ -5,6 +5,7 @@ use crate::co;
 use crate::ffi::uxtheme;
 use crate::handles::{HDC, HRGN};
 use crate::structs::RECT;
+use crate::privs::{hr_to_winresult, ref_as_pcvoid, ref_as_pvoid};
 
 handle_type! {
 	/// Handle to a
@@ -16,10 +17,7 @@ impl HTHEME {
 	/// [`CloseThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
 	pub fn CloseThemeData(self) -> WinResult<()> {
-		match unsafe { uxtheme::CloseThemeData(self.ptr) } {
-			0 => Ok(()),
-			err => Err(co::ERROR(err)),
-		}
+		hr_to_winresult(unsafe { uxtheme::CloseThemeData(self.ptr) })
 	}
 
 	/// [`DrawThemeBackground`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
@@ -28,19 +26,18 @@ impl HTHEME {
 		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
 		pRect: RECT, pClipRect: RECT) -> WinResult<()>
 	{
-		match unsafe {
-			uxtheme::DrawThemeBackground(
-				self.ptr,
-				hdc.ptr,
-				iPartId.0,
-				iStateId.0,
-				&pRect as *const _ as *const _,
-				&pClipRect as *const _ as *const _,
-			)
-		} {
-			0 => Ok(()),
-			err => Err(co::ERROR(err)),
-		}
+		hr_to_winresult(
+			unsafe {
+				uxtheme::DrawThemeBackground(
+					self.ptr,
+					hdc.ptr,
+					iPartId.0,
+					iStateId.0,
+					ref_as_pcvoid(&pRect),
+					ref_as_pcvoid(&pClipRect),
+				)
+			},
+		)
 	}
 
 	/// [`GetThemeAppProperties`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
@@ -57,19 +54,18 @@ impl HTHEME {
 	{
 		let mut pContentRect = RECT::default();
 
-		match unsafe {
-			uxtheme::GetThemeBackgroundContentRect(
-				self.ptr,
-				hdc.ptr,
-				iPartId.0,
-				iStateId.0,
-				&pBoundingRect as *const _ as *const _,
-				&mut pContentRect as *mut _ as *mut _,
-			)
-		} {
-			0 => Ok(pContentRect),
-			err => Err(co::ERROR(err)),
-		}
+		hr_to_winresult(
+			unsafe {
+				uxtheme::GetThemeBackgroundContentRect(
+					self.ptr,
+					hdc.ptr,
+					iPartId.0,
+					iStateId.0,
+					ref_as_pcvoid(&pBoundingRect),
+					ref_as_pvoid(&mut pContentRect),
+				)
+			},
+		).map(|_| pContentRect)
 	}
 
 	/// [`GetThemeBackgroundExtent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
@@ -80,19 +76,18 @@ impl HTHEME {
 	{
 		let mut pExtentRect = RECT::default();
 
-		match unsafe {
-			uxtheme::GetThemeBackgroundExtent(
-				self.ptr,
-				hdc.ptr,
-				iPartId.0,
-				iStateId.0,
-				&pContentRect as *const _ as *const _,
-				&mut pExtentRect as *mut _ as *mut _,
-			)
-		} {
-			0 => Ok(pExtentRect),
-			err => Err(co::ERROR(err)),
-		}
+		hr_to_winresult(
+			unsafe {
+				uxtheme::GetThemeBackgroundExtent(
+					self.ptr,
+					hdc.ptr,
+					iPartId.0,
+					iStateId.0,
+					ref_as_pcvoid(&pContentRect),
+					ref_as_pvoid(&mut pExtentRect),
+				)
+			},
+		 ).map(|_| pExtentRect)
 	}
 
 	/// [`GetThemeBackgroundRegion`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
@@ -103,19 +98,18 @@ impl HTHEME {
 	{
 		let mut pRegion = unsafe { HRGN::null_handle() };
 
-		match unsafe {
-			uxtheme::GetThemeBackgroundRegion(
-				self.ptr,
-				hdc.ptr,
-				iPartId.0,
-				iStateId.0,
-				&pRect as *const _ as *const _,
-				&mut pRegion as *mut _ as *mut _,
-			)
-		} {
-			0 => Ok(pRegion),
-			err => Err(co::ERROR(err)),
-		}
+		hr_to_winresult(
+			unsafe {
+				uxtheme::GetThemeBackgroundRegion(
+					self.ptr,
+					hdc.ptr,
+					iPartId.0,
+					iStateId.0,
+					ref_as_pcvoid(&pRect),
+					ref_as_pvoid(&mut pRegion),
+				)
+			},
+		).map(|_| pRegion)
 	}
 
 	/// [`IsAppThemed`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isappthemed)

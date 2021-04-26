@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::vt::IMFGetServiceVT;
-use crate::privs::hr_to_winresult;
+use crate::privs::{hr_to_winresult, ref_as_pcvoid};
 use crate::structs::GUID;
 
 /// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
@@ -46,8 +46,8 @@ impl IMFGetService {
 			unsafe {
 				((**self.ppv()).GetService)(
 					self.ppv(),
-					guidService as *const _ as *const _,
-					VT::IID().as_ref() as *const _ as *const _,
+					ref_as_pcvoid(guidService),
+					ref_as_pcvoid(&VT::IID()),
 					&mut ppvQueried as *mut _ as *mut _,
 				)
 			},

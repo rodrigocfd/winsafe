@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::com::{ComVT, PPComVT};
 use crate::ffi::{HRESULT, PCVOID};
-use crate::privs::hr_to_winresult;
+use crate::privs::{hr_to_winresult, ref_as_pcvoid};
 use crate::structs::IID;
 
 com_virtual_table! { IUnknownVT,
@@ -71,7 +71,7 @@ impl IUnknown {
 		hr_to_winresult(
 			(unsafe { (**self.ppv).QueryInterface })(
 				self.ppv,
-				VT::IID().as_ref() as *const _ as *const _,
+				ref_as_pcvoid(&VT::IID()),
 				&mut ppvQueried as *mut _ as *mut _,
 			),
 		).map(|_| RetInterf::from(ppvQueried))

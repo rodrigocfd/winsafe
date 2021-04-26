@@ -7,13 +7,16 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BroadNull;
-use crate::ffi::{advapi32, BOOL, comctl32, kernel32, user32};
+use crate::ffi::{advapi32, comctl32, HRESULT, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::MsgSend;
 use crate::privs::{
 	bool_to_winresult,
 	INVALID_FILE_ATTRIBUTES,
-	parse_multi_z_str, ptr_as_opt,
+	parse_multi_z_str,
+	ptr_as_opt,
+	ref_as_pcvoid,
+	ref_as_pvoid,
 };
 use crate::structs::{
 	ATOM,
@@ -38,9 +41,9 @@ pub fn AdjustWindowRectEx(
 	bool_to_winresult(
 		unsafe {
 			user32::AdjustWindowRectEx(
-				lpRect as *mut _ as *mut _,
+				ref_as_pvoid(lpRect),
 				dwStyle.0,
-				bMenu as BOOL,
+				bMenu as _,
 				dwExStyle.0,
 			)
 		},
@@ -58,7 +61,7 @@ pub fn CopyFileW(
 			kernel32::CopyFileW(
 				WString::from_str(lpExistingFileName).as_ptr(),
 				WString::from_str(lpNewFileName).as_ptr(),
-				bFailIfExists as BOOL,
+				bFailIfExists as _,
 			)
 		},
 	)
@@ -85,7 +88,7 @@ pub fn DeleteFile(lpFileName: &str) -> WinResult<()> {
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
 pub fn DispatchMessage(lpMsg: &MSG) -> isize {
-	unsafe { user32::DispatchMessageW(lpMsg as *const _ as *const _) }
+	unsafe { user32::DispatchMessageW(ref_as_pcvoid(lpMsg)) }
 }
 
 /// [`EncryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
@@ -105,7 +108,7 @@ pub fn EncryptionDisable(DirPath: &str, Disable: bool) -> WinResult<()> {
 		unsafe {
 			advapi32::EncryptionDisable(
 				WString::from_str(DirPath).as_ptr(),
-				Disable as BOOL,
+				Disable as _,
 			)
 		},
 	)
@@ -144,8 +147,8 @@ pub fn FileTimeToSystemTime(
 	bool_to_winresult(
 		unsafe {
 			kernel32::FileTimeToSystemTime(
-				lpFileTime as *const _ as *const _,
-				lpSystemTime as *mut _ as *mut _,
+				ref_as_pcvoid(lpFileTime),
+				ref_as_pvoid(lpSystemTime),
 			)
 		}
 	)
@@ -154,7 +157,7 @@ pub fn FileTimeToSystemTime(
 /// [`GetAsyncKeyState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
 /// function.
 pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
-	unsafe { user32::GetAsyncKeyState(vKey.0 as i32) != 0 }
+	unsafe { user32::GetAsyncKeyState(vKey.0 as _) != 0 }
 }
 
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
@@ -189,20 +192,19 @@ pub fn GetDoubleClickTime() -> u32 {
 /// }
 /// ```
 pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
-	match ptr_as_opt(unsafe { kernel32::GetEnvironmentStringsW() }) {
-		None => Err(GetLastError()),
-		Some(p) => {
-			let vecEnvStrs = parse_multi_z_str(p as *const u16);
-			unsafe { kernel32::FreeEnvironmentStringsW(p); }
+	ptr_as_opt(unsafe { kernel32::GetEnvironmentStringsW() })
+		.map(|ptr| {
+			let vecEnvStrs = parse_multi_z_str(ptr as *const u16);
+			unsafe { kernel32::FreeEnvironmentStringsW(ptr); }
 
 			let mut map = HashMap::with_capacity(vecEnvStrs.len());
 			for envStr in vecEnvStrs {
 				let pair: Vec<&str> = envStr.split("=").collect();
 				map.insert(pair[0].to_owned(), pair[1].to_owned());
 			}
-			Ok(map)
-		},
-	}
+			map
+		})
+		.ok_or_else(|| GetLastError())
 }
 
 /// [`GetFileAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
@@ -258,11 +260,8 @@ pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 {
 	match unsafe {
 		user32::GetMessageW(
-			lpMsg as *mut _ as *mut _,
-			match hWnd {
-				Some(hWnd) => hWnd.ptr,
-				None => std::ptr::null_mut(),
-			},
+			ref_as_pvoid(lpMsg),
+			hWnd.map_or(std::ptr::null_mut(), |h| h.ptr),
 			wMsgFilterMin, wMsgFilterMax,
 		)
 	} {
@@ -281,7 +280,7 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
 pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
-	COLORREF(unsafe { user32::GetSysColor(nIndex.0 as i32) })
+	COLORREF(unsafe { user32::GetSysColor(nIndex.0 as _) })
 }
 
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
@@ -293,16 +292,14 @@ pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
 /// [`GetSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
 /// function.
 pub fn GetSystemTime(lpSystemTime: &mut SYSTEMTIME) {
-	unsafe { kernel32::GetSystemTime(lpSystemTime as *mut _ as *mut _) }
+	unsafe { kernel32::GetSystemTime(ref_as_pvoid(lpSystemTime)) }
 }
 
 /// [`GetSystemTimeAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
 pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 	unsafe {
-		kernel32::GetSystemTimeAsFileTime(
-			lpSystemTimeAsFileTime as *mut _ as *mut _,
-		)
+		kernel32::GetSystemTimeAsFileTime(ref_as_pvoid(lpSystemTimeAsFileTime))
 	}
 }
 
@@ -311,7 +308,7 @@ pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 pub fn GetSystemTimePreciseAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 	unsafe {
 		kernel32::GetSystemTimePreciseAsFileTime(
-			lpSystemTimeAsFileTime as *mut _ as *mut _,
+			ref_as_pvoid(lpSystemTimeAsFileTime),
 		)
 	}
 }
@@ -325,23 +322,23 @@ pub fn GetTickCount64() -> u64 {
 /// [`HIBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
 /// function. Originally a macro.
 pub fn HIBYTE(v: u16) -> u8 {
-	(v >> 8 & 0xff) as u8
+	(v >> 8 & 0xff) as _
 }
 
 /// Returns the high-order `u32` of an `u64`.
 pub fn HIDWORD(v: u64) -> u32 {
-	(v >> 32 & 0xffff_ffff) as u32
+	(v >> 32 & 0xffff_ffff) as _
 }
 
 /// [`HIWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
 /// function. Originally a macro.
 pub fn HIWORD(v: u32) -> u16 {
-	(v >> 16 & 0xffff) as u16
+	(v >> 16 & 0xffff) as _
 }
 
 /// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 /// function. Originally a macro.
-pub fn HRESULT_FROM_WIN32(hresult: i32) -> co::ERROR {
+pub fn HRESULT_FROM_WIN32(hresult: HRESULT) -> co::ERROR {
 	co::ERROR((hresult as u32) & 0xffff)
 }
 
@@ -354,12 +351,12 @@ pub fn InitCommonControls() {
 /// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
 /// function.
 pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
-	let r = unsafe { user32::IsGUIThread(bConvert as BOOL) };
+	let r = unsafe { user32::IsGUIThread(bConvert as _) };
 	if bConvert {
 		match r {
 			0 => Ok(false),
 			1 => Ok(true),
-			err => Err(co::ERROR(err as u32)),
+			err => Err(co::ERROR(err as _)),
 		}
 	} else {
 		Ok(r != 0)
@@ -370,8 +367,8 @@ pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
 /// function.
 pub fn IsWindows10OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as u16,
-		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as u16,
+		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as _,
+		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as _,
 		0,
 	)
 }
@@ -380,8 +377,8 @@ pub fn IsWindows10OrGreater() -> WinResult<bool> {
 /// function.
 pub fn IsWindows7OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WIN7.0) as u16,
-		LOBYTE(co::WIN32::WINNT_WIN7.0) as u16,
+		HIBYTE(co::WIN32::WINNT_WIN7.0) as _,
+		LOBYTE(co::WIN32::WINNT_WIN7.0) as _,
 		0,
 	)
 }
@@ -390,8 +387,8 @@ pub fn IsWindows7OrGreater() -> WinResult<bool> {
 /// function.
 pub fn IsWindows8OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WIN8.0) as u16,
-		LOBYTE(co::WIN32::WINNT_WIN8.0) as u16,
+		HIBYTE(co::WIN32::WINNT_WIN8.0) as _,
+		LOBYTE(co::WIN32::WINNT_WIN8.0) as _,
 		0,
 	)
 }
@@ -400,8 +397,8 @@ pub fn IsWindows8OrGreater() -> WinResult<bool> {
 /// function.
 pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WINBLUE.0) as u16,
-		LOBYTE(co::WIN32::WINNT_WINBLUE.0) as u16,
+		HIBYTE(co::WIN32::WINNT_WINBLUE.0) as _,
+		LOBYTE(co::WIN32::WINNT_WINBLUE.0) as _,
 		0,
 	)
 }
@@ -447,8 +444,8 @@ pub fn IsWindowsVersionOrGreater(
 /// function.
 pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_VISTA.0) as u16,
-		LOBYTE(co::WIN32::WINNT_VISTA.0) as u16,
+		HIBYTE(co::WIN32::WINNT_VISTA.0) as _,
+		LOBYTE(co::WIN32::WINNT_VISTA.0) as _,
 		0,
 	)
 }
@@ -456,7 +453,7 @@ pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
 /// [`LOBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
 /// function. Originally a macro.
 pub fn LOBYTE(v: u16) -> u8 {
-	(v & 0xff) as u8
+	(v & 0xff) as _
 }
 
 /// [`LockSetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow)
@@ -469,13 +466,13 @@ pub fn LockSetForegroundWindow(uLockCode: co::LSFW) -> WinResult<()> {
 
 /// Returns the low-order `u32` of an `u64`.
 pub fn LODWORD(v: u64) -> u32 {
-	(v & 0xffff_ffff) as u32
+	(v & 0xffff_ffff) as _
 }
 
 /// [`LOWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))
 /// function. Originally a macro.
 pub fn LOWORD(v: u32) -> u16 {
-	(v & 0xffff) as u16
+	(v & 0xffff) as _
 }
 
 /// Function that implements
@@ -485,7 +482,7 @@ pub fn LOWORD(v: u32) -> u16 {
 /// [`MAKELPARAM`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makelparam)
 /// macros.
 pub fn MAKEDWORD(lo: u16, hi: u16) -> u32 {
-	((lo as u32 & 0xffff) | ((hi as u32 & 0xffff) << 16)) as u32
+	((lo as u32 & 0xffff) | ((hi as u32 & 0xffff) << 16)) as _
 }
 
 /// [`MAKEWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
@@ -530,7 +527,7 @@ pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
 {
 	unsafe {
 		user32::PeekMessageW(
-			lpMsg as *mut _ as *mut _,
+			ref_as_pvoid(lpMsg),
 			hWnd.ptr,
 			wMsgFilterMin,
 			wMsgFilterMax,
@@ -558,15 +555,13 @@ pub fn PostMessage<M: MsgSend>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
 /// function.
 pub fn PostQuitMessage(nExitCode: co::ERROR) {
-	unsafe { user32::PostQuitMessage(nExitCode.0 as i32) }
+	unsafe { user32::PostQuitMessage(nExitCode.0 as _) }
 }
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
 pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
-	match unsafe {
-		user32::RegisterClassExW(lpwcx as *const WNDCLASSEX as *const _)
-	} {
+	match unsafe { user32::RegisterClassExW(ref_as_pcvoid(lpwcx)) } {
 		0 => Err(GetLastError()),
 		atom => Ok(ATOM(atom)),
 	}
@@ -607,7 +602,7 @@ pub fn SetProcessDPIAware() -> WinResult<()> {
 /// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)
 /// function.
 pub fn ShowCursor(bShow: bool) -> i32 {
-	unsafe { user32::ShowCursor(bShow as BOOL) }
+	unsafe { user32::ShowCursor(bShow as _) }
 }
 
 /// [`Sleep`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
@@ -633,7 +628,10 @@ pub unsafe fn SystemParametersInfo<T>(
 {
 	bool_to_winresult(
 		user32::SystemParametersInfoW(
-			uiAction.0, uiParam, pvParam as *mut _ as *mut _, fWinIni.0,
+			uiAction.0,
+			uiParam,
+			ref_as_pvoid(pvParam),
+			fWinIni.0,
 		),
 	)
 }
@@ -646,8 +644,8 @@ pub fn SystemTimeToFileTime(
 	bool_to_winresult(
 		unsafe {
 			kernel32::SystemTimeToFileTime(
-				lpSystemTime as *const _ as *const _,
-				lpFileTime as *mut _  as *mut _,
+				ref_as_pcvoid(lpSystemTime),
+				ref_as_pvoid(lpFileTime),
 			)
 		}
 	)
@@ -663,9 +661,9 @@ pub fn SystemTimeToTzSpecificLocalTime(
 	bool_to_winresult(
 		unsafe {
 			kernel32::SystemTimeToTzSpecificLocalTime(
-				lpTimeZoneInformation.map_or(std::ptr::null(), |lp| lp as *const _ as *const _),
-				lpUniversalTime as *const _ as *const _,
-				lpLocalTime as *mut _ as *mut _,
+				lpTimeZoneInformation.map_or(std::ptr::null(), |lp| ref_as_pcvoid(lp)),
+				ref_as_pcvoid(lpUniversalTime),
+				ref_as_pvoid(lpLocalTime),
 			)
 		}
 	)
@@ -675,16 +673,14 @@ pub fn SystemTimeToTzSpecificLocalTime(
 /// function.
 pub fn TrackMouseEvent(lpEventTrack: &mut TRACKMOUSEEVENT) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { user32::TrackMouseEvent(lpEventTrack as *mut _ as *mut _) },
+		unsafe { user32::TrackMouseEvent(ref_as_pvoid(lpEventTrack)) },
 	)
 }
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
 pub fn TranslateMessage(lpMsg: &MSG) -> bool {
-	unsafe {
-		user32::TranslateMessage(lpMsg as *const _ as *const _) != 0
-	}
+	unsafe { user32::TranslateMessage(ref_as_pcvoid(lpMsg)) != 0 }
 }
 
 /// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
@@ -710,7 +706,7 @@ pub fn VerifyVersionInfo(
 {
 	match unsafe {
 		kernel32::VerifyVersionInfoW(
-			lpVersionInformation as *mut _ as *mut _,
+			ref_as_pvoid(lpVersionInformation),
 			dwTypeMask.0,
 			dwlConditionMask,
 		)

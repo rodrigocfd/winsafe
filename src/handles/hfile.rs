@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
-use crate::privs::{bool_to_winresult, ptr_as_opt};
+use crate::privs::{bool_to_winresult, ptr_as_opt, ref_as_pvoid};
 use crate::structs::{BY_HANDLE_FILE_INFORMATION, SECURITY_ATTRIBUTES};
 use crate::WString;
 
@@ -73,22 +73,19 @@ impl HFILE {
 		dwFlagsAndAttributes: co::FILE_ATTRIBUTE,
 		hTemplateFile: Option<HFILE>) -> WinResult<HFILE>
 	{
-		match ptr_as_opt(
+		ptr_as_opt(
 			unsafe {
 				kernel32::CreateFileW(
 					WString::from_str(lpFileName).as_ptr(),
 					dwDesiredAccess.0,
 					dwShareMode.0,
-					lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as *mut _),
+					lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
 					dwCreationDisposition.0,
 					dwFlagsAndAttributes.0,
 					hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
 				)
 			},
-		) {
-			Some(ptr) => Ok(Self { ptr }),
-			None => Err(GetLastError()),
-		}
+		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
@@ -100,7 +97,7 @@ impl HFILE {
 			unsafe {
 				kernel32::GetFileInformationByHandle(
 					self.ptr,
-					lpFileInformation as *mut _ as *mut _,
+					ref_as_pvoid(lpFileInformation),
 				)
 			},
 		)

@@ -5,7 +5,7 @@ use crate::co;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::clsid;
 use crate::com::dshow::vt::IMediaSeekingVT;
-use crate::privs::hr_to_winresult;
+use crate::privs::{hr_to_winresult, ref_as_pcvoid};
 use crate::structs::GUID;
 
 /// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
@@ -159,7 +159,7 @@ impl IMediaSeeking {
 					&mut stop,
 					stopFlags.0,
 				)
-			} as u32,
+			} as _,
 		) {
 			co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(()),
 			err => Err(err),
@@ -181,7 +181,7 @@ impl IMediaSeeking {
 			unsafe {
 				((**self.ppv()).SetTimeFormat)(
 					self.ppv(),
-					format as *const _ as *const _,
+					ref_as_pcvoid(format),
 				)
 			},
 		)
