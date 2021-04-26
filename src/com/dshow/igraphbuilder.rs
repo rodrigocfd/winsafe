@@ -77,13 +77,13 @@ impl IGraphBuilder {
 
 	/// [`IGraphBuilder::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 	/// method.
-	pub fn Connect(&self, ppinOut: &IPin, ppinIn: &IPin) -> WinResult<()> {
+	pub fn Connect(&self, pinOut: &IPin, pinIn: &IPin) -> WinResult<()> {
 		hr_to_winresult(
 			unsafe {
 				((**self.ppv()).Connect)(
 					self.ppv(),
-					ppinOut.IUnknown.ppv(),
-					ppinIn.IUnknown.ppv(),
+					pinOut.IUnknown.ppv(),
+					pinIn.IUnknown.ppv(),
 				)
 			},
 		)

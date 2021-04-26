@@ -6,6 +6,7 @@ pub mod vt;
 
 mod any_structs;
 mod ibasefilter;
+mod ienumfilters;
 mod ifiltergraph;
 mod igraphbuilder;
 mod imediacontrol;
@@ -17,6 +18,7 @@ mod ipin;
 
 pub use any_structs::*;
 pub use ibasefilter::IBaseFilter;
+pub use ienumfilters::IEnumFilters;
 pub use ifiltergraph::IFilterGraph;
 pub use igraphbuilder::IGraphBuilder;
 pub use imediacontrol::IMediaControl;

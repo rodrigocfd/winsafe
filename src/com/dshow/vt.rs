@@ -20,6 +20,18 @@ com_virtual_table! { IBaseFilterVT,
 	QueryVendorInfo, fn(PPComVT<Self>, *mut PSTR) -> HRESULT
 }
 
+com_virtual_table! { IEnumFiltersVT,
+	/// [`IEnumFilters`](crate::dshow::IEnumFilters) virtual table.
+	->
+	0x56a86893, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
+	IUnknownVT, IUnknownVT
+
+	Next, fn(PPComVT<Self>, u32, *mut PPComVT<IUnknownVT>, *mut u32) -> HRESULT
+	Skip, fn(PPComVT<Self>, u32) -> HRESULT
+	Reset, fn(PPComVT<Self>) -> HRESULT
+	Clone, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
+}
+
 com_virtual_table! { IFilterGraphVT,
 	/// [`IFilterGraph`](crate::dshow::IFilterGraph) virtual table.
 	->

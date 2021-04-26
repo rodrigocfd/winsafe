@@ -2,8 +2,8 @@
 
 use crate::aliases::WinResult;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
-use crate::com::dshow::IBaseFilter;
-use crate::com::dshow::vt::IFilterGraphVT;
+use crate::com::dshow::{IBaseFilter, IEnumFilters};
+use crate::com::dshow::vt::{IBaseFilterVT, IEnumFiltersVT, IFilterGraphVT};
 use crate::com::funcs::hr_to_winresult;
 use crate::WString;
 
@@ -49,6 +49,35 @@ impl IFilterGraph {
 				)
 			},
 		)
+	}
+
+	/// [`IFilterGraph::EnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
+	/// method.
+	pub fn EnumFilters(&self) -> WinResult<IEnumFilters> {
+		let mut ppvQueried: PPComVT<IEnumFiltersVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).EnumFilters)(
+					self.ppv(),
+					&mut ppvQueried as *mut _ as *mut _,
+				)
+			},
+		).map(|_| IEnumFilters::from(ppvQueried))
+	}
+
+	/// [`IFilterGraph::FindFilterByName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
+	/// method.
+	pub fn FindFilterByName(&self, name: &str) -> WinResult<IBaseFilter> {
+		let mut ppvQueried: PPComVT<IBaseFilterVT> = std::ptr::null_mut();
+		hr_to_winresult(
+			unsafe {
+				((**self.ppv()).FindFilterByName)(
+					self.ppv(),
+					WString::from_str(name).as_ptr(),
+					&mut ppvQueried as *mut _ as *mut _,
+				)
+			},
+		).map(|_| IBaseFilter::from(ppvQueried))
 	}
 
 	/// [`IFilterGraph::RemoveFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-removefilter)
