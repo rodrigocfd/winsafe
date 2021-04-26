@@ -3,6 +3,7 @@
 use std::ffi::c_void;
 
 use crate::aliases::WinResult;
+use crate::co;
 use crate::ffi::BOOL;
 use crate::funcs::GetLastError;
 use crate::WString;
@@ -38,6 +39,25 @@ pub(crate) fn bool_to_winresult(expr: BOOL) -> WinResult<()> {
 	match expr {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
+	}
+}
+
+/// Converts a native `HRESULT` to `WinResult`, `S_OK` yielding `Ok` and
+/// anything else yielding `Err`.
+pub(crate) fn hr_to_winresult(hresult: i32) -> WinResult<()> {
+	match co::ERROR(hresult as u32) {
+		co::ERROR::S_OK => Ok(()),
+		err => Err(err),
+	}
+}
+
+/// Converts a native `HRESULT` to `WinResult`, `S_OK` yielding `Ok(true)`,
+/// `S_FALSE` yielding `Ok(false)` and anything else yielding `Err`.
+pub(crate) fn hr_to_winresult_bool(hresult: i32) -> WinResult<bool> {
+	match co::ERROR(hresult as u32) {
+		co::ERROR::S_OK => Ok(true),
+		co::ERROR::S_FALSE => Ok(false),
+		err => Err(err),
 	}
 }
 

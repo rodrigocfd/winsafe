@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::vt::IEnumFiltersVT;
-use crate::com::funcs::{hr_to_winresult, hr_to_winresult_bool};
+use crate::privs::{hr_to_winresult, hr_to_winresult_bool};
 
 /// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
 /// COM interface.

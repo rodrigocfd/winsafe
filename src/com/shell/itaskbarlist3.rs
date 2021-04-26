@@ -2,11 +2,11 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::funcs::hr_to_winresult;
 use crate::com::PPComVT;
 use crate::com::shell::ITaskbarList2;
 use crate::com::shell::vt::{ITaskbarList2VT, ITaskbarList3VT};
 use crate::handles::HWND;
+use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
 /// COM interface.

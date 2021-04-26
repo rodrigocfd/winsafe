@@ -376,14 +376,8 @@ impl<'a> MsgSend for SetSystemTime<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETSYSTEMTIME.into(),
-			wparam: match self.system_time {
-				None => co::GDT::NONE.0,
-				Some(_) => co::GDT::VALID.0,
-			} as usize,
-			lparam: match self.system_time {
-				None => 0,
-				Some(st) => st as *const _ as isize,
-			},
+			wparam: self.system_time.as_ref().map_or(co::GDT::NONE.0, |_| co::GDT::VALID.0) as usize,
+			lparam: self.system_time.as_ref().map_or(0, |st| st as *const _ as isize),
 		}
 	}
 }

@@ -79,16 +79,10 @@ impl HFILE {
 					WString::from_str(lpFileName).as_ptr(),
 					dwDesiredAccess.0,
 					dwShareMode.0,
-					match lpSecurityAttributes {
-						Some(lp) => lp as *mut _ as *mut _,
-						None => std::ptr::null_mut(),
-					},
+					lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as *mut _),
 					dwCreationDisposition.0,
 					dwFlagsAndAttributes.0,
-					match hTemplateFile {
-						Some(h) => h.ptr,
-						None => std::ptr::null_mut(),
-					},
+					hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
 				)
 			},
 		) {

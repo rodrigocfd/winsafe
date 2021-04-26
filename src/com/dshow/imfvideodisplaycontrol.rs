@@ -4,10 +4,10 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::vt::IMFVideoDisplayControlVT;
-use crate::com::funcs::{hr_to_winresult, hr_to_winresult_bool};
 use crate::dshow::MFVideoNormalizedRect;
 use crate::ffi::BOOL;
 use crate::handles::HWND;
+use crate::privs::{hr_to_winresult, hr_to_winresult_bool};
 use crate::structs::{RECT, SIZE};
 
 /// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)

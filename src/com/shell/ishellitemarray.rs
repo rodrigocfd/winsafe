@@ -2,9 +2,9 @@
 
 use crate::aliases::WinResult;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
-use crate::com::funcs::hr_to_winresult;
 use crate::com::shell::IShellItem;
 use crate::com::shell::vt::{IShellItemArrayVT, IShellItemVT};
+use crate::privs::hr_to_winresult;
 
 /// [`IShellItemArray`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
 /// COM interface.

@@ -74,10 +74,7 @@ impl<'a> MsgSend for GetRange<'a> {
 		WndMsg {
 			msg_id: co::PBM::GETRANGE.into(),
 			wparam: self.return_low as usize,
-			lparam: match &self.ranges {
-				None => 0,
-				Some(r) => r as *const _ as isize,
-			},
+			lparam: self.ranges.as_ref().map_or(0, |r| r as *const _ as isize),
 		}
 	}
 }

@@ -2,8 +2,8 @@
 
 use crate::aliases::WinResult;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
-use crate::com::funcs::hr_to_winresult;
 use crate::ffi::{HRESULT, PCVOID, PVOID};
+use crate::privs::hr_to_winresult;
 use crate::structs::IID;
 
 com_virtual_table! { IDispatchVT,

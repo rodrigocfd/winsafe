@@ -25,10 +25,7 @@ impl WString {
 	/// Creates a new UTF-16 string from an optional `&str`, and stores it
 	/// internally. If `s` is null, a null pointer will be stored.
 	pub fn from_opt_str(val: Option<&str>) -> WString {
-		match val {
-			Some(val) => Self::from_str(val),
-			None => Self::default(),
-		}
+		val.map_or(Self::default(), |val| Self::from_str(val))
 	}
 
 	/// Creates a new UTF-16 string from an ordinary `&str`, and stores it

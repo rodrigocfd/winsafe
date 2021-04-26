@@ -119,14 +119,8 @@ impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETSEL.into(),
-			wparam: match &self.first_index {
-				None => 0,
-				Some(r) => r as *const _ as usize,
-			},
-			lparam: match &self.past_last_index {
-				None => 0,
-				Some(r) => r as *const _ as isize,
-			},
+			wparam: self.first_index.as_ref().map_or(0, |r| r as *const _ as usize),
+			lparam: self.past_last_index.as_ref().map_or(0, |r| r as *const _ as isize),
 		}
 	}
 }

@@ -5,7 +5,7 @@ use crate::co;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::clsid;
 use crate::com::dshow::vt::IMediaSeekingVT;
-use crate::com::funcs::hr_to_winresult;
+use crate::privs::hr_to_winresult;
 use crate::structs::GUID;
 
 /// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)

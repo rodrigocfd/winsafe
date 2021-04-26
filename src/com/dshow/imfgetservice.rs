@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::vt::IMFGetServiceVT;
-use crate::com::funcs::hr_to_winresult;
+use crate::privs::hr_to_winresult;
 use crate::structs::GUID;
 
 /// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)

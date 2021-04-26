@@ -54,14 +54,8 @@ impl<'a> MsgSend for GetParts<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETPARTS.into(),
-			wparam: match &self.right_edges {
-				Some(right_edges) => right_edges.len(),
-				None => 0,
-			},
-			lparam: match &self.right_edges {
-				Some(right_edges) => right_edges.as_ptr() as isize,
-				None => 0,
-			},
+			wparam: self.right_edges.as_ref().map_or(0, |re| re.len()),
+			lparam: self.right_edges.as_ref().map_or(0, |re| re.as_ptr() as isize),
 		}
 	}
 }

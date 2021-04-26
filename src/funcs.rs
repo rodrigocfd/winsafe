@@ -663,10 +663,7 @@ pub fn SystemTimeToTzSpecificLocalTime(
 	bool_to_winresult(
 		unsafe {
 			kernel32::SystemTimeToTzSpecificLocalTime(
-				match lpTimeZoneInformation {
-					Some(lp) => lp as *const _ as *const _,
-					None => std::ptr::null(),
-				},
+				lpTimeZoneInformation.map_or(std::ptr::null(), |lp| lp as *const _ as *const _),
 				lpUniversalTime as *const _ as *const _,
 				lpLocalTime as *mut _ as *mut _,
 			)

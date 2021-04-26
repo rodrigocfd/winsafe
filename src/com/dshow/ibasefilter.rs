@@ -3,8 +3,9 @@
 use crate::aliases::WinResult;
 use crate::com::dshow::{IFilterGraph, IMediaFilter};
 use crate::com::dshow::vt::{IBaseFilterVT, IMediaFilterVT};
-use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
+use crate::com::funcs::CoTaskMemFree;
 use crate::com::PPComVT;
+use crate::privs::hr_to_winresult;
 use crate::WString;
 
 /// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
@@ -48,10 +49,7 @@ impl IBaseFilter {
 			unsafe {
 				((**self.ppv()).JoinFilterGraph)(
 					self.ppv(),
-					match graph {
-						Some(graph) => graph.IUnknown.ppv(),
-						None => std::ptr::null_mut(),
-					},
+					graph.map_or(std::ptr::null_mut(), |g| g.IUnknown.ppv()),
 					WString::from_str(name).as_ptr(),
 				)
 			},

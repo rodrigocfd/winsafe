@@ -10,25 +10,6 @@ use crate::com::{ComVT, PPComVT};
 use crate::ffi::ole32;
 use crate::structs::{CLSID, GUID};
 
-/// Converts a native `HRESULT` to `WinResult`, `S_OK` yielding `Ok` and
-/// anything else yielding `Err`.
-pub(crate) fn hr_to_winresult(hresult: i32) -> WinResult<()> {
-	match co::ERROR(hresult as u32) {
-		co::ERROR::S_OK => Ok(()),
-		err => Err(err),
-	}
-}
-
-/// Converts a native `HRESULT` to `WinResult`, `S_OK` yielding `Ok(true)`,
-/// `S_FALSE` yielding `Ok(false)` and anything else yielding `Err`.
-pub(crate) fn hr_to_winresult_bool(hresult: i32) -> WinResult<bool> {
-	match co::ERROR(hresult as u32) {
-		co::ERROR::S_OK => Ok(true),
-		co::ERROR::S_FALSE => Ok(false),
-		err => Err(err),
-	}
-}
-
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
 ///

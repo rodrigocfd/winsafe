@@ -41,10 +41,7 @@ impl Base {
 	}
 
 	pub fn parent_ref(&self) -> Option<&Base> {
-		match &self.ptr_parent {
-			Some(ptr) => Some(unsafe { ptr.as_ref() }),
-			None => None
-		}
+		self.ptr_parent.as_ref().map(|ptr| unsafe { ptr.as_ref() })
 	}
 
 	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {

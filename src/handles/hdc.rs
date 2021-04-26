@@ -82,10 +82,7 @@ impl HDC {
 					self.ptr,
 					x,
 					y,
-					match lppt {
-						None => std::ptr::null_mut(),
-						Some(ptRef) => ptRef as *mut _ as *mut _,
-					},
+					lppt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as *mut _),
 				)
 			},
 		)

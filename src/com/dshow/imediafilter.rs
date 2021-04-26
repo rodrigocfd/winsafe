@@ -3,8 +3,8 @@
 use crate::aliases::WinResult;
 use crate::com::{IPersist, IPersistVT};
 use crate::com::dshow::vt::IMediaFilterVT;
-use crate::com::funcs::hr_to_winresult_bool;
 use crate::com::PPComVT;
+use crate::privs::hr_to_winresult_bool;
 
 /// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
 /// COM interface.

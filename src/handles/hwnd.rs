@@ -44,7 +44,8 @@ impl HWND {
 	/// [`BeginPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
 	/// method.
 	///
-	/// **Note:** Must be paired with an [`EndPaint`](crate::HWND::EndPaint) call.
+	/// **Note:** Must be paired with an [`EndPaint`](crate::HWND::EndPaint)
+	/// call.
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> WinResult<HDC> {
 		match ptr_as_opt(
 			unsafe { user32::BeginPaint(self.ptr, lpPaint as *mut _ as *mut _) },
@@ -129,10 +130,7 @@ impl HWND {
 					WString::from_opt_str(lpWindowName).as_ptr(),
 					dwStyle.0,
 					X, Y, nWidth, nHeight,
-					match hWndParent {
-						Some(h) => h.ptr,
-						None => std::ptr::null_mut(),
-					},
+					hWndParent.map_or(std::ptr::null_mut(), |h| h.ptr),
 					hMenu.as_ptr(),
 					hInstance.ptr,
 					lpParam.unwrap_or_default() as *mut _,
@@ -624,6 +622,7 @@ impl HWND {
 	/// # Examples
 	///
 	/// Most of the time you'll just want update the entire client area:
+	///
 	/// ```rust,ignore
 	/// use winsafe::HWND;
 	///
@@ -639,10 +638,7 @@ impl HWND {
 			unsafe {
 				user32::InvalidateRect(
 					self.ptr,
-					lpRect.map_or(
-						std::ptr::null(),
-						|lpRect| lpRect as *const _ as *const _,
-					),
+					lpRect.map_or(std::ptr::null(), |lp| lp as *const _ as *const _),
 					bErase as BOOL,
 				)
 			},
@@ -877,7 +873,7 @@ impl HWND {
 	}
 
 	/// [`ScreenToClient`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient)
-	/// method;
+	/// method.
 	pub fn ScreenToClient(self, lpPoint: &mut POINT) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
@@ -1030,10 +1026,7 @@ impl HWND {
 				self.ptr,
 				nIDEvent,
 				uElapse,
-				match lpTimerFunc {
-					Some(proc) => proc as *const _,
-					None => std::ptr::null(),
-				},
+				lpTimerFunc.map_or(std::ptr::null(), |lp| lp as *const _),
 			)
 		} {
 			0 => Err(GetLastError()),

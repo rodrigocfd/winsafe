@@ -4,8 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{IDispatch, IDispatchVT, PPComVT};
 use crate::com::dshow::vt::IMediaControlVT;
-use crate::com::funcs::{hr_to_winresult, hr_to_winresult_bool};
-use crate::privs::INFINITE;
+use crate::privs::{hr_to_winresult, hr_to_winresult_bool, INFINITE};
 use crate::WString;
 
 /// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)

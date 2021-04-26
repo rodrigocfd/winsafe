@@ -3,7 +3,8 @@
 use crate::aliases::WinResult;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::vt::IPinVT;
-use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
+use crate::com::funcs::CoTaskMemFree;
+use crate::privs::hr_to_winresult;
 use crate::WString;
 
 /// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)

@@ -134,10 +134,7 @@ impl HIMAGELIST {
 			unsafe {
 				comctl32::ImageList_Remove(
 					self.ptr,
-					match i {
-						None => -1,
-						Some(i) => i as i32,
-					},
+					i.map_or(-1, |i| i as i32),
 				)
 			},
 		)
@@ -157,10 +154,7 @@ impl HIMAGELIST {
 		match unsafe {
 			comctl32::ImageList_ReplaceIcon(
 				self.ptr,
-				match i {
-					None => -1,
-					Some(i) => i as i32,
-				},
+				i.map_or(-1, |i| i as i32),
 				hicon.ptr,
 			)
 		} {

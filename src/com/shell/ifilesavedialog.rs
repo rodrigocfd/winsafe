@@ -1,10 +1,10 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::com::funcs::hr_to_winresult;
 use crate::com::PPComVT;
 use crate::com::shell::{IFileDialog, IShellItem};
 use crate::com::shell::vt::{IFileDialogVT, IFileSaveDialogVT};
+use crate::privs::hr_to_winresult;
 
 /// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
 /// COM interface.

@@ -1,12 +1,12 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::com::funcs::hr_to_winresult;
 use crate::com::PPComVT;
 use crate::com::shell::ITaskbarList;
 use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
 use crate::ffi::BOOL;
 use crate::handles::HWND;
+use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 /// COM interface.

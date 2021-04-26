@@ -3,9 +3,10 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
-use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
+use crate::com::funcs::CoTaskMemFree;
 use crate::com::shell::vt::IShellItemVT;
 use crate::ffi::shell32;
+use crate::privs::hr_to_winresult;
 use crate::WString;
 
 /// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)

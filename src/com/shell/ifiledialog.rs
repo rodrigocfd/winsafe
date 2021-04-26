@@ -2,11 +2,12 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::funcs::{CoTaskMemFree, hr_to_winresult};
+use crate::com::funcs::CoTaskMemFree;
 use crate::com::PPComVT;
 use crate::com::shell::{COMDLG_FILTERSPEC, IModalWindow, IShellItem};
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT, IShellItemVT};
 use crate::ffi::HRESULT;
+use crate::privs::hr_to_winresult;
 use crate::structs::GUID;
 use crate::WString;
 

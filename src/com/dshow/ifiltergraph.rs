@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::{IBaseFilter, IEnumFilters};
 use crate::com::dshow::vt::{IBaseFilterVT, IEnumFiltersVT, IFilterGraphVT};
-use crate::com::funcs::hr_to_winresult;
+use crate::privs::hr_to_winresult;
 use crate::WString;
 
 /// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
