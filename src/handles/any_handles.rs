@@ -19,6 +19,13 @@ hgdiobj_type! {
 
 handle_type! {
 	/// Handle to an
+	/// [event](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).
+	/// Originally just a `HANDLE`.
+	HEVENT
+}
+
+handle_type! {
+	/// Handle to an
 	/// [tree view item](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls).
 	HTREEITEM
 }

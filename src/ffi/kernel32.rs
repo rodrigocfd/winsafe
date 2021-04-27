@@ -18,6 +18,7 @@ extern "system" {
 	pub fn GetFileSizeEx(hFile: HANDLE, lpFileSize: *mut i64) -> BOOL;
 	pub fn GetFileType(hFile: HANDLE) -> u32;
 	pub fn GetLastError() -> u32;
+	pub fn GetLogicalDriveStringsW(nBufferLength: u32, lpBuffer: PSTR) -> u32;
 	pub fn GetModuleHandleW(lpModuleName: PCSTR) -> HANDLE;
 	pub fn GetSystemTime(lpSystemTime: PVOID);
 	pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: PVOID);
@@ -28,10 +29,14 @@ extern "system" {
 	pub fn MoveFileW(lpExistingFileName: PCSTR, lpNewFileName: PCSTR) -> BOOL;
 	pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32;
 	pub fn OutputDebugStringW(lpOutputString: PCSTR);
+	pub fn ReadFile(hFile: HANDLE, lpBuffer: PVOID, nNumberOfBytesToRead: u32, lpNumberOfBytesRead: *mut u32, lpOverlapped: PVOID) -> BOOL;
+	pub fn SetEndOfFile(hFile: HANDLE) -> BOOL;
+	pub fn SetFilePointerEx(hFile: HANDLE, liDistanceToMove: i64, lpNewFilePointer: *mut i64, dwMoveMethod: u32) -> BOOL;
 	pub fn SetLastError(dwErrorCode: u32);
 	pub fn Sleep(dwMilliseconds: u32);
 	pub fn SystemTimeToFileTime(lpSystemTime: PCVOID, lpFileTime: PVOID) -> BOOL;
 	pub fn SystemTimeToTzSpecificLocalTime(lpTimeZoneInformation: PCVOID, lpUniversalTime: PCVOID, lpLocalTime: PVOID) -> BOOL;
 	pub fn VerifyVersionInfoW(lpVersionInformation: PVOID, dwTypeMask: u32, dwlConditionMask: u64) -> BOOL;
 	pub fn VerSetConditionMask(ConditionMask: u64, TypeMask: u32, Condition: u8) -> u64;
+	pub fn WriteFile(hFile: HANDLE, lpBuffer: PCVOID, nNumberOfBytesToWrite: u32, lpNumberOfBytesWritten: *mut u32, lpOverlapped: PVOID) -> BOOL;
 }

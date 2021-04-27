@@ -253,6 +253,26 @@ pub fn GetLastError() -> co::ERROR {
 	unsafe { co::ERROR(kernel32::GetLastError()) }
 }
 
+/// [`GetLogicalDriveStrings`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)
+/// function.
+pub fn GetLogicalDriveStrings() -> WinResult<Vec<String>> {
+	match unsafe {
+		kernel32::GetLogicalDriveStringsW(0, std::ptr::null_mut())
+	} {
+		0 => Err(GetLastError()),
+		len => {
+			let mut buf = WString::new_alloc_buffer(len as usize + 1);
+
+			match unsafe {
+				kernel32::GetLogicalDriveStringsW(len, buf.as_mut_ptr())
+			} {
+				0 => Err(GetLastError()),
+				_ => Ok(parse_multi_z_str(unsafe { buf.as_ptr() })),
+			}
+		},
+	}
+}
+
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
 pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,

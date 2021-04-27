@@ -5,12 +5,17 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::{bool_to_winresult, ptr_as_opt, ref_as_pvoid};
-use crate::structs::{BY_HANDLE_FILE_INFORMATION, SECURITY_ATTRIBUTES};
+use crate::structs::{
+	BY_HANDLE_FILE_INFORMATION,
+	OVERLAPPED,
+	SECURITY_ATTRIBUTES,
+};
 use crate::WString;
 
 handle_type! {
 	/// Handle to a
 	/// [file](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
+	/// Originally just a `HANDLE`.
 	HFILE
 }
 
@@ -123,5 +128,74 @@ impl HFILE {
 			},
 			ty => Ok(ty),
 		}
+	}
+
+	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
+	/// method.
+	pub fn ReadFile(self,
+		numBytesToRead: u32,
+		lpOverlapped: Option<&mut OVERLAPPED>) -> WinResult<Vec<u8>>
+	{
+		let mut buf = vec![0; numBytesToRead as _];
+		let mut bytesRead: u32 = 0;
+
+		bool_to_winresult(
+			unsafe {
+				kernel32::ReadFile(
+					self.ptr,
+					buf.as_mut_ptr() as *mut _,
+					numBytesToRead,
+					&mut bytesRead,
+					lpOverlapped.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				)
+			},
+		).map(|_| buf)
+	}
+
+	/// [`SetEndOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
+	/// method.
+	pub fn SetEndOfFile(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { kernel32::SetEndOfFile(self.ptr) })
+	}
+
+	/// [`SetFilePointerEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
+	/// method.
+	pub fn SetFilePointerEx(self,
+		liDistanceToMove: i64,
+		dwMoveMethod: co::FILE_STARTING_POINT) -> WinResult<i64>
+	{
+		let mut newOffset: i64 = 0;
+
+		bool_to_winresult(
+			unsafe {
+				kernel32::SetFilePointerEx(
+					self.ptr,
+					liDistanceToMove,
+					&mut newOffset,
+					dwMoveMethod.0,
+				)
+			},
+		).map(|_| newOffset)
+	}
+
+	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
+	/// method.
+	pub fn WriteFile(self,
+		buffer: &[u8],
+		lpOverlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+	{
+		let mut bytesWritten: u32 = 0;
+
+		bool_to_winresult(
+			unsafe {
+				kernel32::WriteFile(
+					self.ptr,
+					buffer.as_ptr() as *const _,
+					buffer.len() as _,
+					&mut bytesWritten,
+					lpOverlapped.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				)
+			},
+		).map(|_| bytesWritten)
 	}
 }

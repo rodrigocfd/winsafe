@@ -9,7 +9,7 @@ use crate::aliases::WNDPROC;
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPlace, IdStr};
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LOBYTE, LODWORD, LOWORD};
-use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HINSTANCE, HMENU, HWND};
+use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HEVENT, HICON, HINSTANCE, HMENU, HWND};
 use crate::privs::LF_FACESIZE;
 use crate::WString;
 
@@ -74,7 +74,7 @@ pub struct BITMAPINFOHEADER {
 impl Default for BITMAPINFOHEADER {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.biSize = std::mem::size_of::<Self>() as u32;
+		obj.biSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -265,7 +265,7 @@ pub struct MENUINFO {
 impl Default for MENUINFO {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -291,7 +291,7 @@ pub struct MENUITEMINFO {
 impl Default for MENUITEMINFO {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -392,7 +392,7 @@ pub struct NONCLIENTMETRICS {
 impl Default for NONCLIENTMETRICS {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 
 		let is_vista = IsWindowsVistaOrGreater()
 			.unwrap_or_else(|err| panic!("{}", err)); // should never happen
@@ -424,7 +424,7 @@ pub struct OSVERSIONINFOEX {
 impl Default for OSVERSIONINFOEX {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.dwOSVersionInfoSize = std::mem::size_of::<Self>() as u32;
+		obj.dwOSVersionInfoSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -440,6 +440,18 @@ impl OSVERSIONINFOEX {
 		WString::from_str(text).copy_to_slice(&mut self.szCSDVersion);
 	}
 }
+
+/// [`OVERLAPPED`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped)
+/// struct.
+#[repr(C)]
+pub struct OVERLAPPED {
+	pub Internal: usize,
+	pub InternalHigh: usize,
+	pub Pointer: usize,
+	pub hEvent: HEVENT,
+}
+
+impl_default_zero!(OVERLAPPED);
 
 /// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
 /// struct.
@@ -519,7 +531,7 @@ pub struct SCROLLINFO {
 impl Default for SCROLLINFO {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -536,7 +548,7 @@ pub struct SECURITY_ATTRIBUTES {
 impl Default for SECURITY_ATTRIBUTES {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.nLength = std::mem::size_of::<Self>() as u32;
+		obj.nLength = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -683,7 +695,7 @@ pub struct TRACKMOUSEEVENT {
 impl Default for TRACKMOUSEEVENT {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -707,7 +719,7 @@ pub struct WINDOWINFO {
 impl Default for WINDOWINFO {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -728,7 +740,7 @@ pub struct WINDOWPLACEMENT {
 impl Default for WINDOWPLACEMENT {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.length = std::mem::size_of::<Self>() as u32;
+		obj.length = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -790,7 +802,7 @@ pub struct WNDCLASSEX<'a, 'b> {
 impl<'a, 'b> Default for WNDCLASSEX<'a, 'b> {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -801,7 +813,7 @@ impl<'a, 'b> WNDCLASSEX<'a, 'b> {
 		if HIDWORD(self.lpszMenuName as u64) == 0
 			&& HIWORD(LODWORD(self.lpszMenuName as u64)) == 0 // https://stackoverflow.com/a/9806654/6923555
 		{
-			IdStr::Id(LOWORD(LODWORD(self.lpszMenuName as u64)) as i32)
+			IdStr::Id(LOWORD(LODWORD(self.lpszMenuName as u64)) as _)
 		} else {
 			IdStr::Str(WString::from_wchars_nullt(self.lpszMenuName))
 		}

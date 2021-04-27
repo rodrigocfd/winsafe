@@ -111,25 +111,16 @@ const_type! { FAPPCOMMAND, u16,
 	OEM, 0x1000
 }
 
-const_type! { FILE, u32,
-	/// File access rights
-	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants)
-	/// (`u32`).
+const_type! { FF, u8,
+	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
+	/// [`PITCH`](crate::co::PITCH).
 	->
-	ADD_FILE, 0x0002
-	ADD_SUBDIRECTORY, 0x0004
-	ALL_ACCESS, STANDARD_RIGHTS::REQUIRED.0 | ACCESS_RIGHTS::SYNCHRONIZE.0 | 0x1ff
-	APPEND_DATA, 0x0004
-	CREATE_PIPE_INSTANCE, 0x0004
-	DELETE_CHILD, 0x0040
-	EXECUTE, 0x0020
-	LIST_DIRECTORY, 0x0001
-	READ_ATTRIBUTES, 0x0080
-	READ_DATA, 0x0001
-	READ_EA, 0x0008
-	TRAVERSE, 0x0020
-	WRITE_ATTRIBUTES, 0x0100
-	WRITE_DATA, 0x0002
+	DONTCARE, 0 << 4
+	ROMAN, 1 << 4
+	SWISS, 2 << 4
+	MODERN, 3 << 4
+	SCRIPT, 4 << 4
+	DECORATIVE, 5 << 4
 }
 
 const_type! { FILE_ATTRIBUTE, u32,
@@ -182,6 +173,27 @@ const_type! { FILE_ATTRIBUTE, u32,
 	SECURITY_EFFECTIVE_ONLY, 0x00080000
 }
 
+const_type! { FILE_RIGHT, u32,
+	/// File access rights
+	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants)
+	/// (`u32`). Originally has `FILE` prefix.
+	->
+	ADD_FILE, 0x0002
+	ADD_SUBDIRECTORY, 0x0004
+	ALL_ACCESS, STANDARD_RIGHTS::REQUIRED.0 | ACCESS_RIGHTS::SYNCHRONIZE.0 | 0x1ff
+	APPEND_DATA, 0x0004
+	CREATE_PIPE_INSTANCE, 0x0004
+	DELETE_CHILD, 0x0040
+	EXECUTE, 0x0020
+	LIST_DIRECTORY, 0x0001
+	READ_ATTRIBUTES, 0x0080
+	READ_DATA, 0x0001
+	READ_EA, 0x0008
+	TRAVERSE, 0x0020
+	WRITE_ATTRIBUTES, 0x0100
+	WRITE_DATA, 0x0002
+}
+
 const_type! { FILE_SHARE, u32,
 	/// [`CreateFile`](crate::HFILE::CreateFile) `dwShareMode` (`u32`).
 	->
@@ -189,6 +201,20 @@ const_type! { FILE_SHARE, u32,
 	READ, 0x00000001
 	WRITE, 0x00000002
 	DELETE, 0x00000004
+}
+
+const_type! { FILE_STARTING_POINT, u32,
+	/// [`SetFilePointerEx`](crate::HFILE::SetFilePointerEx) `dwMoveMethod`
+	/// (`u32`). Originally has `FILE` prefix.
+	->
+	/// The starting point is zero or the beginning of the file. If this flag is
+	/// specified, then the `liDistanceToMove` parameter is interpreted as an
+	/// unsigned value.
+	BEGIN, 0
+	/// The start point is the current value of the file pointer.
+	CURRENT, 1
+	/// The starting point is the current end-of-file position.
+	END, 2
 }
 
 const_type! { FILE_TYPE, u32,
@@ -206,18 +232,6 @@ const_type! { FILE_TYPE, u32,
 	/// Either the type of the specified file is unknown, or the function
 	/// failed.
 	UNKNOWN, 0x0000
-}
-
-const_type! { FF, u8,
-	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
-	/// [`PITCH`](crate::co::PITCH).
-	->
-	DONTCARE, 0 << 4
-	ROMAN, 1 << 4
-	SWISS, 2 << 4
-	MODERN, 3 << 4
-	SCRIPT, 4 << 4
-	DECORATIVE, 5 << 4
 }
 
 const_type! { FORMAT_MESSAGE, u32,
