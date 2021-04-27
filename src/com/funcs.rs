@@ -2,13 +2,12 @@
 
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::{ComVT, PPComVT};
+use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::ffi::ole32;
-use crate::structs::{CLSID, GUID};
+use crate::privs::{hr_to_winresult, ref_as_pcvoid};
+use crate::structs::CLSID;
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
@@ -30,25 +29,29 @@ use crate::structs::{CLSID, GUID};
 /// ```
 pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 	rclsid: &CLSID,
-	pUnkOuter: Option<*mut c_void>,
+	pUnkOuter: Option<&mut IUnknown>,
 	dwClsContext: co::CLSCTX) -> WinResult<RetInterf>
 {
 	let mut ppv: PPComVT<VT> = std::ptr::null_mut();
+	let mut ppvOuter: PPComVT<IUnknownVT> = std::ptr::null_mut();
 
-	match co::ERROR(
+	hr_to_winresult(
 		unsafe {
 			ole32::CoCreateInstance(
-				rclsid as *const _ as *const _,
-				pUnkOuter.unwrap_or(std::ptr::null_mut()),
+				ref_as_pcvoid(rclsid),
+				pUnkOuter.as_ref()
+					.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as *mut _),
 				dwClsContext.0,
-				VT::IID().as_ref() as *const GUID as *const _,
+				ref_as_pcvoid(&VT::IID()),
 				&mut ppv as *mut _ as *mut _,
 			)
+		},
+	).map(|_| {
+		if let Some(iunkOuter) = pUnkOuter {
+			*iunkOuter = IUnknown::from(ppvOuter);
 		}
-	) {
-		co::ERROR::S_OK => Ok(RetInterf::from(ppv)),
-		err => Err(err),
-	}
+		RetInterf::from(ppv)
+	})
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
@@ -69,13 +72,13 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 /// CoUninitialize().
 /// ```
 pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
-	let err = co::ERROR(
-		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.0) }
+	let code = co::ERROR(
+		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.0) } as _
 	);
-	match err {
+	match code {
 		co::ERROR::S_OK
 			| co::ERROR::S_FALSE
-			| co::ERROR::RPC_E_CHANGED_MODE => Ok(err),
+			| co::ERROR::RPC_E_CHANGED_MODE => Ok(code),
 		err => Err(err),
 	}
 }
