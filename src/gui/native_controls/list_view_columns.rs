@@ -38,7 +38,7 @@ impl ListViewColumns {
 	/// Widths will be adjusted to match current system DPI.
 	pub fn add(&self, texts_and_widths: &[(&str, u32)]) -> WinResult<()> {
 		for (text, width) in texts_and_widths.iter() {
-			let mut col_cx = SIZE::new(*width as i32, 0);
+			let mut col_cx = SIZE::new(*width as _, 0);
 			multiply_dpi(None, Some(&mut col_cx))?;
 
 			let mut lvc = LVCOLUMN::default();

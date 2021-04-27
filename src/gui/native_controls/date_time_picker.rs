@@ -90,7 +90,7 @@ impl DateTimePicker {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
-					let mut sz = SIZE::new(opts.width as i32, 21); // default height
+					let mut sz = SIZE::new(opts.width as _, 21); // default height
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
 					let our_hwnd = self.0.base.create_window( // may panic

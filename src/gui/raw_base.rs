@@ -83,7 +83,7 @@ impl RawBase {
 			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
 			hmenu,
 			self.base.parent_hinstance()?,
-			Some(self as *const Self as isize), // pass pointer to self
+			Some(self as *const Self as _), // pass pointer to self
 		).map(|_| ())
 	}
 
@@ -94,10 +94,7 @@ impl RawBase {
 			&format!(
 				"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
 				wcx.style,
-				match wcx.lpfnWndProc {
-					Some(p) => p as usize,
-					None => 0,
-				},
+				wcx.lpfnWndProc.map_or(0, |p| p as usize),
 				wcx.cbClsExtra, wcx.cbWndExtra,
 				wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
 				wcx.lpszMenuName().as_ptr() as usize, wcx.hIconSm,
@@ -116,7 +113,7 @@ impl RawBase {
 				co::WM::NCCREATE => { // first message being handled
 					let wm_ncc = wm::NcCreate::from_generic_wm(wm_any);
 					let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
-					hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as isize); // store
+					hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
 					let ref_self = unsafe { &mut *ptr_self };
 					ref_self.base.set_hwnd(hwnd); // store HWND in struct field
 					ptr_self

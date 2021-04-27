@@ -118,7 +118,7 @@ impl NativeControlBase {
 			panic!("Cannot create control before parent window is created.");
 		}
 
-		self.0.as_mut().hwnd = hparent.GetDlgItem(ctrl_id as i32)?;
+		self.0.as_mut().hwnd = hparent.GetDlgItem(ctrl_id as _)?;
 		self.install_subclass_if_needed()?;
 		Ok(self.0.hwnd)
 	}
@@ -132,7 +132,7 @@ impl NativeControlBase {
 
 			self.0.hwnd.SetWindowSubclass(
 				Self::subclass_proc, subclass_id,
-				self as *const Self as usize, // pass pointer to self
+				self as *const Self as _, // pass pointer to self
 			)
 		} else {
 			Ok(())

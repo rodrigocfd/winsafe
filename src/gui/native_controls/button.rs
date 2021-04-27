@@ -89,7 +89,7 @@ impl Button {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
-					let mut sz = SIZE::new(opts.width as i32, opts.height as i32);
+					let mut sz = SIZE::new(opts.width as _, opts.height as _);
 					if opts.baseline_text_align { pos.y -= 1; }
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 

@@ -119,7 +119,7 @@ impl ProgressBar {
 			return_low: false, // indifferent, return value not used
 			ranges: Some(&mut ranges),
 		});
-		(ranges.iLow as u32, ranges.iHigh as u32)
+		(ranges.iLow as _, ranges.iHigh as _)
 	}
 
 	/// Sets or unsets the marquee mode by sending a
@@ -130,7 +130,7 @@ impl ProgressBar {
 		if marquee {
 			self.hwnd().SetWindowLongPtr(
 				co::GWLP::STYLE,
-				u32::from(self.cur_style() | co::PBS::MARQUEE) as isize,
+				u32::from(self.cur_style() | co::PBS::MARQUEE) as _,
 			);
 		}
 
@@ -142,7 +142,7 @@ impl ProgressBar {
 		if !marquee {
 			self.hwnd().SetWindowLongPtr(
 				co::GWLP::STYLE,
-				u32::from(self.cur_style() & !co::PBS::MARQUEE) as isize,
+				u32::from(self.cur_style() & !co::PBS::MARQUEE) as _,
 			);
 		}
 	}
@@ -166,7 +166,7 @@ impl ProgressBar {
 	}
 
 	fn cur_style(&self) -> co::PBS {
-		co::PBS(self.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as u32)
+		co::PBS(self.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _)
 	}
 }
 

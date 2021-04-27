@@ -56,7 +56,7 @@ impl DlgModal {
 		self.base_ref().user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || {
-				self2.base_ref().hwnd_ref().EndDialog(co::DLGID::CANCEL.0 as isize)
+				self2.base_ref().hwnd_ref().EndDialog(co::DLGID::CANCEL.0 as _)
 					.unwrap_or_else(|err| PostQuitMessage(err))
 			}
 		});

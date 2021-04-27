@@ -89,7 +89,7 @@ impl Edit {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
-					let mut sz = SIZE::new(opts.width as i32, opts.height as i32);
+					let mut sz = SIZE::new(opts.width as _, opts.height as _);
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
 					let our_hwnd = self.0.base.create_window( // may panic

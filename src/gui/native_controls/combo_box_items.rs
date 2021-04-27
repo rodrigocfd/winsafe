@@ -98,13 +98,10 @@ impl ComboBoxItems {
 			},
 			Ok(len) => {
 				let mut buf = WString::new_alloc_buffer(len as usize + 1);
-				match self.hwnd().SendMessage(cb::GetLbText{
+				self.hwnd().SendMessage(cb::GetLbText{
 					index,
 					text: &mut buf,
-				}) {
-					Err(_) => None,
-					Ok(_) => Some(buf.to_string()),
-				}
+				}).ok().map(|_| buf.to_string())
 			},
 		}
 	}

@@ -74,15 +74,15 @@ impl StatusBar {
 		|| -> WinResult<()> {
 			for part in self.0.as_mut().parts_info.iter_mut() {
 				if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
-					let mut col_cx = SIZE::new(*width as i32, 0);
+					let mut col_cx = SIZE::new(*width as _, 0);
 					multiply_dpi(None, Some(&mut col_cx))?;
-					*width = col_cx.cx as u32;
+					*width = col_cx.cx as _;
 				}
 			}
 
 			let hparent = *self.0.base.parent_ref().hwnd_ref();
 			let parent_style = co::WS(
-				hparent.GetWindowLongPtr(co::GWLP::STYLE) as u32,
+				hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
 			);
 			let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
 				|| parent_style.has(co::WS::SIZEBOX);
@@ -134,7 +134,7 @@ impl StatusBar {
 			let mut total_cx = p.client_area.cx as u32;
 
 			for (idx, part_info) in self.0.parts_info.iter().rev().enumerate() {
-				right_edges[self.0.parts_info.len() - idx - 1] = total_cx as i32;
+				right_edges[self.0.parts_info.len() - idx - 1] = total_cx as _;
 				total_cx -= match part_info {
 					StatusBarPart::Fixed(pixels) => *pixels,
 					StatusBarPart::Proportional(pp) => (cx_available / total_proportions as u32) * (*pp as u32),

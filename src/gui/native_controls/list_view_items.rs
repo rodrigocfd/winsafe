@@ -41,7 +41,7 @@ impl ListViewItems {
 		lvi.iItem = 0x0fff_ffff; // insert as the last one
 
 		lvi.iImage = match icon_index {
-			Some(idx) => idx as i32,
+			Some(idx) => idx as _,
 			None => -1,
 		};
 

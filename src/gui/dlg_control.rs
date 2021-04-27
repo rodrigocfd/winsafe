@@ -62,7 +62,7 @@ impl DlgControl {
 					// Give the control an ID.
 					self2.base_ref().hwnd_ref().SetWindowLongPtr(
 						co::GWLP::ID,
-						self2.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as isize,
+						self2.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as _,
 					);
 					Ok(0)
 				}

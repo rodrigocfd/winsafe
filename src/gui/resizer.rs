@@ -153,7 +153,7 @@ impl Resizer {
 			return Ok(()); // if no controls, or if minimized, no need to process
 		}
 
-		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as u32)?;
+		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as _)?;
 
 		let parent_cx = size_parm.client_area.cx;
 		let parent_cy = size_parm.client_area.cy;

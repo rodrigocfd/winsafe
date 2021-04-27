@@ -1,7 +1,6 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IdStr;
-use crate::ffi::BOOL;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
@@ -46,7 +45,7 @@ impl DlgBase {
 			IdStr::Id(self.dialog_id),
 			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
-			Some(self as *const Self as isize), // pass pointer to self
+			Some(self as *const Self as _), // pass pointer to self
 		).map(|_| ())
 	}
 
@@ -61,8 +60,8 @@ impl DlgBase {
 			IdStr::Id(self.dialog_id),
 			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
-			Some(self as *const Self as isize), // pass pointer to self
-		).map(|res| res as i32)
+			Some(self as *const Self as _), // pass pointer to self
+		).map(|res| res as _)
 	}
 
 	extern "system" fn dialog_proc(
@@ -76,7 +75,7 @@ impl DlgBase {
 				co::WM::INITDIALOG => { // first message being handled
 					let wm_idlg = wm::InitDialog::from_generic_wm(wm_any);
 					let ptr_self = wm_idlg.additional_data as *mut Self;
-					hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as isize); // store
+					hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
 					let ref_self = unsafe { &mut *ptr_self };
 					ref_self.base.set_hwnd(hwnd); // store HWND in struct field
 					ptr_self
@@ -110,21 +109,21 @@ impl DlgBase {
 
 			Ok(match maybe_processed {
 				ProcessResult::HandledWithRet(res) => res.into(),
-				ProcessResult::HandledWithoutRet => true as isize,
-				ProcessResult::NotHandled => false as isize,
+				ProcessResult::HandledWithoutRet => true as _,
+				ProcessResult::NotHandled => false as _,
 			})
 		}
 		(hwnd, msg, wparam, lparam)
-			.unwrap_or_else(|err| { PostQuitMessage(err); true as isize })
+			.unwrap_or_else(|err| { PostQuitMessage(err); true as _ })
 	}
 
 	fn set_ui_font_on_children(&self) {
 		self.base.hwnd_ref().SendMessage(wm::SetFont { hfont: ui_font(), redraw: false });
-		self.base.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as isize);
+		self.base.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as _);
 	}
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
 		let hfont = HFONT { ptr: lparam as *mut _ };
 		hchild.SendMessage(wm::SetFont { hfont, redraw: false });
-		true as BOOL
+		true as _
 	}
 }
