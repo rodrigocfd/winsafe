@@ -116,6 +116,18 @@ const_type! { SC, u32,
 	VSCROLL, 0xf070
 }
 
+const_type! { SECTION, u32,
+	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
+	->
+	QUERY, 0x0001
+	MAP_WRITE, 0x0002
+	MAP_READ, 0x0004
+	MAP_EXECUTE, 0x0008
+	EXTEND_SIZE, 0x0010
+	MAP_EXECUTE_EXPLICIT, 0x0020
+	ALL_ACCESS, STANDARD_RIGHTS::REQUIRED.0 | Self::QUERY.0 | Self::MAP_WRITE.0 | Self::MAP_EXECUTE.0 | Self::EXTEND_SIZE.0
+}
+
 const_type! { SIF, u32,
 	/// [`SCROLLINFO`](crate::SCROLLINFO) `fMask` (`u32`).
 	->

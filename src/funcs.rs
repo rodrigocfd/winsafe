@@ -13,6 +13,7 @@ use crate::msg::MsgSend;
 use crate::privs::{
 	bool_to_winresult,
 	INVALID_FILE_ATTRIBUTES,
+	MAX_PATH,
 	parse_multi_z_str,
 	ptr_as_opt,
 	ref_as_pcvoid,
@@ -330,6 +331,18 @@ pub fn GetSystemTimePreciseAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 		kernel32::GetSystemTimePreciseAsFileTime(
 			ref_as_pvoid(lpSystemTimeAsFileTime),
 		)
+	}
+}
+
+/// [`GetTempPath`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppathw)
+/// function.
+pub fn GetTempPath() -> WinResult<String> {
+	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+	match unsafe {
+		kernel32::GetTempPathW(buf.buffer_size() as _, buf.as_mut_ptr()) }
+	{
+		0 => Err(GetLastError()),
+		_ => Ok(buf.to_string()),
 	}
 }
 

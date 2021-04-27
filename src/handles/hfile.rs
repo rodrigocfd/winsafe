@@ -3,7 +3,8 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
-use crate::funcs::GetLastError;
+use crate::funcs::{GetLastError, HIDWORD, LODWORD};
+use crate::handles::HFILEMAP;
 use crate::privs::{bool_to_winresult, ptr_as_opt, ref_as_pvoid};
 use crate::structs::{
 	BY_HANDLE_FILE_INFORMATION,
@@ -93,6 +94,31 @@ impl HFILE {
 		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
+	/// [`CreateFileMapping`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
+	/// method.
+	///
+	/// **Note:** Must be paired with a
+	/// [`CloseHandle`](crate::HFILEMAP::CloseHandle) call.
+	pub fn CreateFileMapping(self,
+		lpFileMappingAttributes: Option<&mut SECURITY_ATTRIBUTES>,
+		flProtect: co::PAGE,
+		maximumSize: u64,
+		lpName: Option<&str>) -> WinResult<HFILEMAP>
+	{
+		ptr_as_opt(
+			unsafe {
+				kernel32::CreateFileMappingW(
+					self.ptr,
+					lpFileMappingAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+					flProtect.0,
+					HIDWORD(maximumSize),
+					LODWORD(maximumSize),
+					lpName.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
+				)
+			},
+		).map(|ptr| HFILEMAP { ptr }).ok_or_else(|| GetLastError())
+	}
+
 	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 	/// method.
 	pub fn GetFileInformationByHandle(self,
@@ -128,6 +154,25 @@ impl HFILE {
 			},
 			ty => Ok(ty),
 		}
+	}
+
+	/// [`LockFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
+	/// method.
+	///
+	/// **Note:** Must be paired with an
+	/// [`UnlockFile`](crate::HFILE::UnlockFile) call.
+	pub fn LockFile(self, offset: u64, numBytesToLock: u64) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe {
+				kernel32::LockFile(
+					self.ptr,
+					LODWORD(offset),
+					HIDWORD(offset),
+					LODWORD(numBytesToLock),
+					HIDWORD(numBytesToLock),
+				)
+			},
+		)
 	}
 
 	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
@@ -176,6 +221,22 @@ impl HFILE {
 				)
 			},
 		).map(|_| newOffset)
+	}
+
+	/// [`UnlockFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
+	/// method.
+	pub fn UnlockFile(self, offset: u64, numBytesToLock: u64) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe {
+				kernel32::UnlockFile(
+					self.ptr,
+					LODWORD(offset),
+					HIDWORD(offset),
+					LODWORD(numBytesToLock),
+					HIDWORD(numBytesToLock),
+				)
+			},
+		)
 	}
 
 	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)

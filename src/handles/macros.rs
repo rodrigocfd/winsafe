@@ -105,8 +105,10 @@ macro_rules! hgdiobj_type {
 			/// method.
 			///
 			/// This method is common to all GDI handle types.
-			pub fn DeleteObject(self) -> WinResult<()> {
-				bool_to_winresult(unsafe { gdi32::DeleteObject(self.ptr) })
+			pub fn DeleteObject(self) -> crate::aliases::WinResult<()> {
+				crate::privs::bool_to_winresult(
+					unsafe { crate::ffi::gdi32::DeleteObject(self.ptr) },
+				)
 			}
 		}
 	};

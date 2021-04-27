@@ -338,11 +338,7 @@ pub struct NCCALCSIZE_PARAMS<'a> {
 impl<'a> NCCALCSIZE_PARAMS<'a> {
 	/// Returns the `lppos` field.
 	pub fn lppos(&mut self) -> Option<&mut WINDOWPOS> {
-		if self.lppos.is_null() {
-			None
-		} else {
-			Some(unsafe { &mut *self.lppos })
-		}
+		unsafe { self.lppos.as_mut() }
 	}
 
 	/// Sets the `lppos` field.

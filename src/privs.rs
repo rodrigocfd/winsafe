@@ -20,6 +20,7 @@ pub(crate) const LB_ERR: i32 = -1;
 pub(crate) const LB_ERRSPACE: i32 = -2;
 pub(crate) const LF_FACESIZE: usize = 32;
 pub(crate) const MAX_LINKID_TEXT: usize = 48;
+pub(crate) const MAX_PATH: usize = 260;
 
 /// Transforms a raw pointer into an option, which is `None` if the pointer is
 /// null.

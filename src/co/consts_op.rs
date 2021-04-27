@@ -35,6 +35,26 @@ const_type! { OUT_PRECIS, u8,
 	PS_ONLY, 10
 }
 
+const_type! { PAGE, u32,
+	/// [`CreateFileMapping`](crate::HFILE::CreateFileMapping) `flProtect`
+	/// (`u32`).
+	->
+	EXECUTE_READ, 0x20
+	EXECUTE_READWRITE, 0x40
+	EXECUTE_WRITECOPY, 0x80
+	READONLY, 0x02
+	READWRITE, 0x04
+	WRITECOPY, 0x08
+
+	SEC_COMMIT, 0x8000000
+	SEC_IMAGE, 0x1000000
+	SEC_IMAGE_NO_EXECUTE, 0x11000000
+	SEC_LARGE_PAGES, 0x80000000
+	SEC_NOCACHE, 0x10000000
+	SEC_RESERVE, 0x4000000
+	SEC_WRITECOMBINE, 0x40000000
+}
+
 const_type_wm! { PBM,
 	/// Progress bar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)

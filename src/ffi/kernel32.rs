@@ -6,6 +6,7 @@ use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 extern "system" {
 	pub fn CloseHandle(hObject: HANDLE) -> BOOL;
 	pub fn CopyFileW(lpExistingFileName: PCSTR, lpNewFileName: PCSTR, bFailIfExists: BOOL) -> BOOL;
+	pub fn CreateFileMappingW(hFile: HANDLE, lpFileMappingAttributes: PVOID, flProtect: u32, dwMaximumSizeHigh: u32, dwMaximumSizeLow: u32, lpName: PCSTR) -> HANDLE;
 	pub fn CreateFileW(lpFileName: PCSTR, dwDesiredAccess: u32, dwShareMode: u32, lpSecurityAttributes: PVOID, dwCreationDisposition: u32, dwFlagsAndAttributes: u32, hTemplateFile: HANDLE) -> HANDLE;
 	pub fn DeleteFileW(lpFileName: PCSTR) -> BOOL;
 	pub fn ExpandEnvironmentStringsW(lpSrc: PCSTR, lpDst: PSTR, nSize: u32) -> u32;
@@ -23,9 +24,12 @@ extern "system" {
 	pub fn GetSystemTime(lpSystemTime: PVOID);
 	pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: PVOID);
 	pub fn GetSystemTimePreciseAsFileTime(lpSystemTimeAsFileTime: PVOID);
+	pub fn GetTempPathW(nBufferLength: u32, lpBuffer: PSTR) -> u32;
 	pub fn GetTickCount64() -> u64;
 	pub fn LocalFree(hMem: HANDLE) -> HANDLE;
+	pub fn LockFile(hFile: HANDLE, dwFileOffsetLow: u32, dwFileOffsetHigh: u32, nNumberOfBytesToLockLow: u32, nNumberOfBytesToLockHigh: u32) -> BOOL;
 	pub fn lstrlenW(lpString: PCSTR) -> i32;
+	pub fn MapViewOfFile(hFileMappingObject: HANDLE, dwDesiredAccess: u32, dwFileOffsetHigh: u32, dwFileOffsetLow: u32, dwNumberOfBytesToMap: i64) -> PVOID;
 	pub fn MoveFileW(lpExistingFileName: PCSTR, lpNewFileName: PCSTR) -> BOOL;
 	pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32;
 	pub fn OutputDebugStringW(lpOutputString: PCSTR);
@@ -36,6 +40,8 @@ extern "system" {
 	pub fn Sleep(dwMilliseconds: u32);
 	pub fn SystemTimeToFileTime(lpSystemTime: PCVOID, lpFileTime: PVOID) -> BOOL;
 	pub fn SystemTimeToTzSpecificLocalTime(lpTimeZoneInformation: PCVOID, lpUniversalTime: PCVOID, lpLocalTime: PVOID) -> BOOL;
+	pub fn UnlockFile(hFile: HANDLE, dwFileOffsetLow: u32, dwFileOffsetHigh: u32, nNumberOfBytesToLockLow: u32, nNumberOfBytesToLockHigh: u32) -> BOOL;
+	pub fn UnmapViewOfFile(lpBaseAddress: PCVOID) -> BOOL;
 	pub fn VerifyVersionInfoW(lpVersionInformation: PVOID, dwTypeMask: u32, dwlConditionMask: u64) -> BOOL;
 	pub fn VerSetConditionMask(ConditionMask: u64, TypeMask: u32, Condition: u8) -> u64;
 	pub fn WriteFile(hFile: HANDLE, lpBuffer: PCVOID, nNumberOfBytesToWrite: u32, lpNumberOfBytesWritten: *mut u32, lpOverlapped: PVOID) -> BOOL;
