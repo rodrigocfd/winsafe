@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co::{ACCESS_RIGHTS, CMD, NM, STANDARD_RIGHTS, SUBLANG, WM, WS, WS_EX};
+use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, SUBLANG, WM, WS};
 
 const_type! { KEY, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
@@ -700,10 +700,19 @@ const_type_ws! { LWS,
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
 	->
+	/// The background mix mode is transparent.
 	TRANSPARENT, 0x0001
+	/// When the link has keyboard focus and the user presses Enter, the
+	/// keystroke is ignored by the control and passed to the host dialog box.
 	IGNORERETURN, 0x0002
+	/// If the text contains an ampersand, it is treated as a literal character
+	/// rather than the prefix to a shortcut key.
 	NOPREFIX, 0x0004
+	/// The link is displayed in the current visual style.
 	USEVISUALSTYLE, 0x0008
+	/// An `NM_CUSTOMTEXT` notification is sent when the control is drawn, so
+	/// that the application can supply text dynamically.
 	USECUSTOMTEXT, 0x0010
+	/// The text is right-justified.
 	RIGHT, 0x0020
 }

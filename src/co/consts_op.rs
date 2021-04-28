@@ -1,4 +1,4 @@
-use crate::co::{CCM, FF, QS, WM, WS};
+use crate::co::{CCM, FF, QS, WM};
 
 const_type! { OCR, u32,
 	/// [`SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id` (`u32`).

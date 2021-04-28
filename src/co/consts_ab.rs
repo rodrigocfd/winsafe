@@ -1,5 +1,3 @@
-use crate::co::{CMD, NM, WM, WS};
-
 const_type! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`). Originally has `F` prefix.
 	->

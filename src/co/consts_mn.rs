@@ -1,4 +1,4 @@
-use crate::co::{CCM, WM, WS};
+use crate::co::CCM;
 
 const_type! { MB, u32,
 	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).

@@ -1,4 +1,4 @@
-use crate::co::{CCM, WM, WS};
+use crate::co::{CCM, WM};
 
 const_type! { QUALITY, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).

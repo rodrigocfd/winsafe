@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-use crate::co::{NM, WM, WS, WS_EX};
+use crate::co::WM;
 
 const_type_wm! { CB,
 	/// Combo box control

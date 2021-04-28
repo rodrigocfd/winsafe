@@ -1,4 +1,4 @@
-use crate::co::{CCM, NM, WM, WS};
+use crate::co::{CCM, WM};
 
 const_type! { GA, u32,
 	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).

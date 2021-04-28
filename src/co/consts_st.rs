@@ -1,4 +1,4 @@
-use crate::co::{ACCESS_RIGHTS, CCM, CMD, NM, WM, WS, WS_EX};
+use crate::co::{ACCESS_RIGHTS, CCM, WM};
 
 const_type_wm! { SB,
 	/// Status bar control
@@ -962,6 +962,21 @@ const_type_wm! { TCM,
 }
 const_type_priv_values! { TCM,
 	FIRST, 0x1300
+}
+
+const_type_nm! { TCN,
+	/// Tab control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+	->
+	FOCUSCHANGE, Self::FIRST.0 - 4
+	GETOBJECT, Self::FIRST.0 - 3
+	KEYDOWN, Self::FIRST.0 - 0
+	SELCHANGE, Self::FIRST.0 - 1
+	SELCHANGING, Self::FIRST.0 - 2
+}
+const_type_priv_values! { TCN,
+	FIRST, -550
 }
 
 const_type_ws! { TCS,

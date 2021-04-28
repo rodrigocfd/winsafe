@@ -1,4 +1,4 @@
-use crate::co::{ACCESS_RIGHTS, CMD, SECTION, STANDARD_RIGHTS, WM, WS};
+use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS};
 
 const_type_wm! { EM,
 	/// Edit control

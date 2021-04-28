@@ -200,7 +200,7 @@ macro_rules! const_type_wm {
 			)*
 		}
 
-		impl From<$tname> for WM {
+		impl From<$tname> for crate::co::WM {
 			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
@@ -231,7 +231,7 @@ macro_rules! const_type_cmd {
 			)*
 		}
 
-		impl From<$tname> for CMD {
+		impl From<$tname> for crate::co::CMD {
 			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
@@ -262,7 +262,7 @@ macro_rules! const_type_nm {
 			)*
 		}
 
-		impl From<$tname> for NM {
+		impl From<$tname> for crate::co::NM {
 			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
@@ -293,7 +293,7 @@ macro_rules! const_type_ws {
 			)*
 		}
 
-		impl From<$tname> for WS {
+		impl From<$tname> for crate::co::WS {
 			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
@@ -324,7 +324,7 @@ macro_rules! const_type_wsex {
 			)*
 		}
 
-		impl From<$tname> for WS_EX {
+		impl From<$tname> for crate::co::WS_EX {
 			fn from(v: $tname) -> Self {
 				Self(v.0)
 			}
