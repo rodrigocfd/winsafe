@@ -35,10 +35,7 @@ const_type_no_debug_display! { ERROR, u32,
 	/// ```
 	/// [0x001c 28] The printer is out of paper.
 	/// ```
-	->
-}
-
-const_type_pub_values! { ERROR, // ordinary codes
+	=>
 	/// The operation completed successfully.
 	SUCCESS, 0
 	INVALID_FUNCTION, 1
@@ -2645,9 +2642,7 @@ const_type_pub_values! { ERROR, // ordinary codes
 	STATE_SETTING_NAME_SIZE_LIMIT_EXCEEDED, 15817
 	STATE_CONTAINER_NAME_SIZE_LIMIT_EXCEEDED, 15818
 	API_UNAVAILABLE, 15841
-}
 
-const_type_pub_values! { ERROR, // first COM values
 	/// Operation successful.
 	S_OK, 0
 	S_FALSE, 1
@@ -2667,9 +2662,7 @@ const_type_pub_values! { ERROR, // first COM values
 	E_CHANGED_STATE, 0x8000000c
 	E_ILLEGAL_STATE_CHANGE, 0x8000000d
 	E_ILLEGAL_METHOD_CALL, 0x8000000e
-}
 
-const_type_pub_values! { ERROR, // RPC_E
 	RPC_E_CALL_REJECTED, 0x80010001
 	RPC_E_CALL_CANCELED, 0x80010002
 	RPC_E_CANTPOST_INSENDCALL, 0x80010003
@@ -2722,9 +2715,7 @@ const_type_pub_values! { ERROR, // RPC_E
 	RPC_E_FULLSIC_REQUIRED, 0x80010121
 	RPC_E_INVALID_STD_NAME, 0x80010122
 	RPC_E_UNEXPECTED, 0x8001ffff
-}
 
-const_type_pub_values! { ERROR, // CO_E
 	CO_E_NOTINITIALIZED, 0x800401f0
 	CO_E_ALREADYINITIALIZED, 0x800401f1
 	CO_E_CANTDETERMINECLASS, 0x800401f2
@@ -2741,9 +2732,7 @@ const_type_pub_values! { ERROR, // CO_E
 	CO_E_OBJNOTCONNECTED, 0x800401fd
 	CO_E_APPDIDNTREG, 0x800401fe
 	CO_E_RELEASED, 0x800401ff
-}
 
-const_type_pub_values! { ERROR, // MF_E
 	MF_E_PLATFORM_NOT_INITIALIZED, 0xc00d36b0
 	MF_E_BUFFERTOOSMALL, 0xc00d36b1
 	MF_E_INVALIDREQUEST, 0xc00d36b2

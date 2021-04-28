@@ -1,7 +1,7 @@
 const_type! { WA, u16,
 	/// [`WM_ACTIVATE`](crate::msg::wm::Activate)
 	/// activation state (`u16`).
-	->
+	=>
 	INACTIVE, 0
 	ACTIVE, 1
 	CLICKACTIVE, 2
@@ -11,7 +11,7 @@ const_type! { WDA, u32,
 	/// [`GetWindowDisplayAffinity`](crate::HWND::GetWindowDisplayAffinity) and
 	/// [`SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)
 	/// `dwAffinity` (`u32`).
-	->
+	=>
 	NONE, 0x00000000
 	MONITOR, 0x00000001
 	EXCLUDEFROMCAPTURE, 0x00000011
@@ -19,7 +19,7 @@ const_type! { WDA, u32,
 
 const_type! { WH, i32,
 	/// [`SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook` (`i32`).
-	->
+	=>
 	MSGFILTER, -1
 	JOURNALRECORD, 0
 	JOURNALPLAYBACK, 1
@@ -40,7 +40,7 @@ const_type! { WH, i32,
 const_type! { WIN32, u16,
 	/// [`_WIN32`](https://docs.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
-	->
+	=>
 	WINNT_NT4, 0x0400
 	WINNT_WIN2K, 0x0500
 	WINNT_WINXP, 0x0501
@@ -106,7 +106,7 @@ const_type! { WM, u32,
 	///
 	/// Control-specific messages codes have their own types, which are
 	/// convertible to `WM`.
-	->
+	=>
 	NULL, 0x0000
 	CREATE, 0x0001
 	DESTROY, 0x0002
@@ -367,7 +367,7 @@ const_type! { WM, u32,
 
 const_type! { WMPN, u16,
 	/// [`WM_PARENTNOFITY`](crate::msg::wm::ParentNotify) event (`u16`).
-	->
+	=>
 	CREATE, WM::CREATE.0 as u16
 	DESTROY, WM::DESTROY.0 as u16
 	LBUTTONDOWN, WM::LBUTTONDOWN.0 as u16
@@ -379,7 +379,7 @@ const_type! { WMPN, u16,
 
 const_type! { WMSZ, u8,
 	/// [`WM_SIZING`](crate::msg::wm::Sizing) window edge (`u8`).
-	->
+	=>
 	LEFT, 1
 	RIGHT, 2
 	TOP, 3
@@ -392,7 +392,7 @@ const_type! { WMSZ, u8,
 
 const_type! { WPF, u32,
 	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags` (`u32`).
-	->
+	=>
 	SETMINPOSITION, 0x0001
 	RESTORETOMAXIMIZED, 0x0002
 	ASYNCWINDOWPLACEMENT, 0x0004
@@ -402,7 +402,7 @@ const_type! { WS, u32,
 	/// Window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles)
 	/// (`u32`).
-	->
+	=>
 	/// The window is an overlapped window. An overlapped window has a title bar
 	/// and a border. Same as the `WS_TILED` style.
 	OVERLAPPED, 0x00000000
@@ -505,7 +505,7 @@ const_type! { WS_EX, u32,
 	/// Extended window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
 	/// (`u32`).
-	->
+	=>
 	/// The window has a double border; the window can, optionally, be created
 	/// with a title bar by specifying the [`WS_CAPTION`](crate::co::WS::CAPTION)
 	/// style in the dwStyle parameter.
@@ -646,7 +646,7 @@ const_type! { WS_EX, u32,
 const_type! { WVR, u32,
 	/// [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize)
 	/// return flags (`u32`).
-	->
+	=>
 	ZERO, 0
 	ALIGNTOP, 0x0010
 	ALIGNLEFT, 0x0020

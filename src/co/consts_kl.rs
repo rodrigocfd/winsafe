@@ -4,7 +4,7 @@ use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, SUBLANG, WM, WS};
 
 const_type! { KEY, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
-	->
+	=>
 	QUERY_VALUE, 0x0001
 	SET_VALUE, 0x0002
 	CREATE_SUB_KEY, 0x0004
@@ -23,7 +23,7 @@ const_type! { KEY, u32,
 const_type! { LANG, u16,
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`
 	/// (`u16`), used with [`SUBLANG`](crate::co::SUBLANG).
-	->
+	=>
 	NEUTRAL, 0x00
 	INVARIANT, 0x7f
 	AFRIKAANS, 0x36
@@ -177,7 +177,8 @@ const_type_wm! { LB,
 	/// List box control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	=>
 	ADDSTRING, 0x0180
 	INSERTSTRING, 0x0181
 	DELETESTRING, 0x0182
@@ -225,7 +226,7 @@ const_type_cmd! { LBN,
 	/// List box control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications)
 	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
-	->
+	=>
 	ERRSPACE, (0 -2) as u16
 	SELCHANGE, 1
 	DBLCLK, 2
@@ -238,7 +239,7 @@ const_type_ws! { LBS,
 	/// List box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-box-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
+	=>
 	NOTIFY, 0x0001
 	SORT, 0x0002
 	NOREDRAW, 0x0004
@@ -260,7 +261,7 @@ const_type_ws! { LBS,
 
 const_type! { LIF, u32,
 	/// [`LITEM`](crate::LITEM) `mask` (`u32`).
-	->
+	=>
 	ITEMINDEX, 0x00000001
 	STATE, 0x00000002
 	ITEMID, 0x00000004
@@ -269,7 +270,7 @@ const_type! { LIF, u32,
 
 const_type! { LIS, u32,
 	/// [`LITEM`](crate::LITEM) `state` (`u32`).
-	->
+	=>
 	FOCUSED, 0x00000001
 	ENABLED, 0x00000002
 	VISITED, 0x00000004
@@ -281,7 +282,8 @@ const_type_wm! { LM,
 	/// SysLink control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	=>
 	HITTEST, WM::USER.0 + 0x300
 	GETIDEALHEIGHT, WM::USER.0 + 0x301
 	SETITEM, WM::USER.0 + 0x302
@@ -293,7 +295,7 @@ const_type! { LR, u32,
 	/// [`LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
 	/// [`LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and
 	/// [`LoadImageIcon`](crate::HINSTANCE::LoadImageIcon) `fuLoad`.
-	->
+	=>
 	DEFAULTCOLOR, 0x00000000
 	MONOCHROME, 0x00000001
 	COLOR, 0x00000002
@@ -312,7 +314,7 @@ const_type! { LR, u32,
 const_type! { LSFW, u32,
 	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `uLockCode`
 	/// (`u32`).
-	->
+	=>
 	LOCK, 1
 	UNLOCK, 2
 }
@@ -321,7 +323,7 @@ const_type! { LV_VIEW, u32,
 	/// ListView
 	/// [views](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 	/// (`u32`).
-	->
+	=>
 	ICON, 0x0000
 	DETAILS, 0x0001
 	SMALLICON, 0x0002
@@ -331,14 +333,14 @@ const_type! { LV_VIEW, u32,
 
 const_type! { LVA, u16,
 	/// [`LVM_ARRANGE`](crate::msg::lvm::Arrange) arrangement (`u16`).
-	->
+	=>
 	DEFAULT, 0x0000
 	SNAPTOGRID, 0x0005
 }
 
 const_type! { LVCF, u32,
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
-	->
+	=>
 	DEFAULTWIDTH, 0x0080
 	FMT, 0x0001
 	IDEALWIDTH, 0x0100
@@ -352,7 +354,7 @@ const_type! { LVCF, u32,
 
 const_type! { LVCFMT_C, i32,
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`i32`).
-	->
+	=>
 	LEFT, 0x0000
 	RIGHT, 0x0001
 	CENTER, 0x0002
@@ -368,7 +370,7 @@ const_type! { LVCFMT_C, i32,
 
 const_type! { LVCFMT_I, i32,
 	/// [`LVITEM`](crate::LVITEM) `piColFmt` (`i32`).
-	->
+	=>
 	LINE_BREAK, 0x100000
 	FILL, 0x200000
 	WRAP, 0x400000
@@ -378,7 +380,7 @@ const_type! { LVCFMT_I, i32,
 
 const_type! { LVFI, u32,
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags` (`u32`).
-	->
+	=>
 	PARAM, 0x0001
 	STRING, 0x0002
 	SUBSTRING, 0x0004
@@ -389,7 +391,7 @@ const_type! { LVFI, u32,
 
 const_type! { LVGIT, u32,
 	/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags` (`u32`).
-	->
+	=>
 	LVGIT_FOLDED, 0x0000
 	LVGIT_UNFOLDED, 0x0001
 }
@@ -398,7 +400,7 @@ const_type! { LVIS, u32,
 	/// ListView item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
 	/// (`u32`).
-	->
+	=>
 	NONE, 0
 	FOCUSED, 0x0001
 	SELECTED, 0x0002
@@ -412,14 +414,14 @@ const_type! { LVIS, u32,
 
 const_type! { LVI_GROUPID, i32,
 	/// [`LVITEM`](crate::LVITEM) `iGroupId` (`i32`).
-	->
+	=>
 	I_GROUPIDCALLBACK, -1
 	I_GROUPIDNONE, -2
 }
 
 const_type! { LVIF, u32,
 	/// [`LVITEM`](crate::LVITEM) `mask` (`u32`).
-	->
+	=>
 	COLFMT, 0x00010000
 	COLUMNS, 0x00000200
 	GROUPID, 0x00000100
@@ -433,7 +435,7 @@ const_type! { LVIF, u32,
 
 const_type! { LVKF, u32,
 	/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags` (`u32`).
-	->
+	=>
 	ALT, 0x0001
 	CONTROL, 0x0002
 	SHIFT, 0x0004
@@ -443,7 +445,9 @@ const_type_wm! { LVM,
 	/// List view control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	FIRST, 0x1000
+	=>
 	GETBKCOLOR, Self::FIRST.0 + 0
 	SETBKCOLOR, Self::FIRST.0 + 1
 	GETIMAGELIST, Self::FIRST.0 + 2
@@ -569,15 +573,14 @@ const_type_wm! { LVM,
 	SETITEMINDEXSTATE, Self::FIRST.0 + 210
 	GETNEXTITEMINDEX, Self::FIRST.0 + 211
 }
-const_type_priv_values! { LVM,
-	FIRST, 0x1000
-}
 
 const_type_nm! { LVN,
 	/// List view control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-	->
+	=>
+	FIRST, -100
+	=>
 	ITEMCHANGING, Self::FIRST.0 - 0
 	ITEMCHANGED, Self::FIRST.0 - 1
 	INSERTITEM, Self::FIRST.0 - 2
@@ -606,13 +609,10 @@ const_type_nm! { LVN,
 	LINKCLICK, Self::FIRST.0 - 84
 	GETEMPTYMARKUP, Self::FIRST.0 - 87
 }
-const_type_priv_values! { LVN,
-	FIRST, -100
-}
 
 const_type! { LVNI, u32,
 	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) relationship (`u32`).
-	->
+	=>
 	ALL, 0x0000
 	FOCUSED, 0x0001
 	SELECTED, 0x0002
@@ -632,7 +632,7 @@ const_type_ws! { LVS,
 	/// List view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
+	=>
 	ICON, 0x0000
 	REPORT, 0x0001
 	SMALLICON, 0x0002
@@ -661,7 +661,7 @@ const_type_wsex! { LVS_EX,
 	/// Extended list view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
-	->
+	=>
 	NONE, 0
 	AUTOAUTOARRANGE, 0x01000000
 	AUTOCHECKSELECT, 0x08000000
@@ -699,7 +699,7 @@ const_type_ws! { LWS,
 	/// SysLink control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
+	=>
 	/// The background mix mode is transparent.
 	TRANSPARENT, 0x0001
 	/// When the link has keyboard focus and the user presses Enter, the

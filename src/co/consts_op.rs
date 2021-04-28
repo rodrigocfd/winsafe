@@ -2,7 +2,7 @@ use crate::co::{CCM, FF, QS, WM};
 
 const_type! { OCR, u32,
 	/// [`SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id` (`u32`).
-	->
+	=>
 	APPSTARTING, 32650
 	NORMAL, 32512
 	CROSS, 32515
@@ -21,7 +21,7 @@ const_type! { OCR, u32,
 
 const_type! { OUT_PRECIS, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
-	->
+	=>
 	DEFAULT, 0
 	STRING, 1
 	CHARACTER, 2
@@ -38,7 +38,7 @@ const_type! { OUT_PRECIS, u8,
 const_type! { PAGE, u32,
 	/// [`CreateFileMapping`](crate::HFILE::CreateFileMapping) `flProtect`
 	/// (`u32`).
-	->
+	=>
 	EXECUTE_READ, 0x20
 	EXECUTE_READWRITE, 0x40
 	EXECUTE_WRITECOPY, 0x80
@@ -59,7 +59,8 @@ const_type_wm! { PBM,
 	/// Progress bar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	=>
 	SETRANGE, WM::USER.0 + 1
 	SETPOS, WM::USER.0 + 2
 	DELTAPOS, WM::USER.0 + 3
@@ -82,7 +83,7 @@ const_type_ws! { PBS,
 	/// Progress bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
+	=>
 	SMOOTH, 0x01
 	VERTICAL, 0x04
 	MARQUEE, 0x08
@@ -93,7 +94,7 @@ const_type! { PBST, u32,
 	/// Progress bar
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 	/// (`u32`).
-	->
+	=>
 	NORMAL, 0x0001
 	ERROR, 0x0002
 	PAUSED, 0x0003
@@ -102,7 +103,7 @@ const_type! { PBST, u32,
 const_type! { PITCH, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`FF`](crate::co::FF).
-	->
+	=>
 	DEFAULT, 0
 	FIXED, 1
 	VARIABLE, 2
@@ -117,7 +118,7 @@ impl PITCH {
 
 const_type! { PM, u32,
 	/// [`PeekMessage`](crate::PeekMessage) `wRemoveMsg` (`u32`).
-	->
+	=>
 	NOREMOVE, 0x0000
 	REMOVE, 0x0001
 	NOYIELD, 0x0002

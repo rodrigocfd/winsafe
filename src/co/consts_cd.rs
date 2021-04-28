@@ -6,7 +6,9 @@ const_type_wm! { CB,
 	/// Combo box control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	FIRST, 0x1700
+	=>
 	SETMINVISIBLE, Self::FIRST.0 + 1
 	GETMINVISIBLE, Self::FIRST.0 + 2
 	SETCUEBANNER, Self::FIRST.0 + 3
@@ -48,15 +50,13 @@ const_type_wm! { CB,
 	INITSTORAGE, 0x0161
 	GETCOMBOBOXINFO, 0x0164
 }
-const_type_priv_values! { CB,
-	FIRST, 0x1700
-}
 
 const_type_wm! { CBEM,
 	/// ComboBoxEx control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	=>
 	SETIMAGELIST, WM::USER.0 + 2
 	GETIMAGELIST, WM::USER.0 + 3
 	DELETEITEM, CB::DELETESTRING.0
@@ -76,7 +76,7 @@ const_type_wsex! { CBES_EX,
 	/// Extended combo box
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
-	->
+	=>
 	NOEDITIMAGE, 0x00000001
 	NOEDITIMAGEINDENT, 0x00000002
 	PATHWORDBREAKPROC, 0x00000004
@@ -89,7 +89,7 @@ const_type_cmd! { CBN,
 	/// Combo box control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
 	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
-	->
+	=>
 	ERRSPACE, (0 - 1) as u16
 	SELCHANGE, 1
 	DBLCLK, 2
@@ -107,7 +107,7 @@ const_type_ws! { CBS,
 	/// Combo box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
+	=>
 	SIMPLE, 0x0001
 	DROPDOWN, 0x0002
 	DROPDOWNLIST, 0x0003
@@ -127,7 +127,9 @@ const_type_wm! { CCM,
 	/// Generic common controls
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	FIRST, 0x2000
+	=>
 	SETBKCOLOR, Self::FIRST.0 + 1
 	SETCOLORSCHEME, Self::FIRST.0 + 2
 	GETCOLORSCHEME, Self::FIRST.0 + 3
@@ -140,13 +142,10 @@ const_type_wm! { CCM,
 	SETWINDOWTHEME, Self::FIRST.0 + 0xb
 	DPISCALE, Self::FIRST.0 + 0xc
 }
-const_type_priv_values! { CCM,
-	FIRST, 0x2000
-}
 
 const_type! { CDDS, u32,
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
-	->
+	=>
 	PREPAINT, 0x00000001
 	POSTPAINT, 0x00000002
 	PREERASE, 0x00000003
@@ -161,7 +160,7 @@ const_type! { CDDS, u32,
 
 const_type! { CDIS, u32,
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState` (`u32`).
-	->
+	=>
 	SELECTED, 0x0001
 	GRAYED, 0x0002
 	DISABLED, 0x0004
@@ -180,7 +179,7 @@ const_type! { CDIS, u32,
 const_type! { CDRF, u32,
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
 	/// return value (`u32`).
-	->
+	=>
 	DODEFAULT, 0x00000000
 	NEWFONT, 0x00000002
 	SKIPDEFAULT, 0x00000004
@@ -199,7 +198,7 @@ impl From<CDRF> for isize {
 
 const_type! { CHARSET, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
-	->
+	=>
 	ANSI, 0
 	DEFAULT, 1
 	SYMBOL, 2
@@ -224,7 +223,7 @@ const_type! { CHARSET, u8,
 
 const_type! { CLIP, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision` (`u8`).
-	->
+	=>
 	DEFAULT_PRECIS, 0
 	CHARACTER_PRECIS, 1
 	STROKE_PRECIS, 2
@@ -237,7 +236,7 @@ const_type! { CLIP, u8,
 
 const_type! { CLR, u32,
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
-	->
+	=>
 	CLR_NONE, 0xffffffff
 	DEFAULT, 0xff000000
 }
@@ -245,7 +244,7 @@ const_type! { CLR, u32,
 const_type! { CLSCTX, u32,
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
-	->
+	=>
 	/// The code that creates and manages objects of this class is a DLL that
 	/// runs in the same process as the caller of the function specifying the
 	/// class context.
@@ -302,7 +301,7 @@ const_type! { CMD, u16,
 	///
 	/// Control-specific notification codes have their own types, which are
 	/// convertible to `CMD`.
-	->
+	=>
 	Menu, 0
 	Accelerator, 1
 }
@@ -310,7 +309,7 @@ const_type! { CMD, u16,
 const_type! { COINIT, u32,
 	/// [`COINIT`](https://docs.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
 	/// enumeration (`u32`).
-	->
+	=>
 	/// Initializes the thread for apartment-threaded object concurrency.
 	APARTMENTTHREADED, 0x2
 	/// Initializes the thread for multithreaded object concurrency.
@@ -325,7 +324,7 @@ const_type! { COLOR, u32,
 	/// System
 	/// [colors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 	/// (`u32`).
-	->
+	=>
 	SCROLLBAR, 0
 	BACKGROUND, 1
 	ACTIVECAPTION, 2
@@ -368,7 +367,7 @@ const_type! { CS, u32,
 	/// Window class
 	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).
-	->
+	=>
 	VREDRAW, 0x0001
 	HREDRAW, 0x0002
 	DBLCLKS, 0x0008
@@ -387,7 +386,7 @@ const_type! { CS, u32,
 const_type! { DDL, u16,
 	/// [`CB_DIR`](crate::msg::cb::Dir) and [`LB_DIR`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
-	->
+	=>
 	READWRITE, 0x0000
 	READONLY, 0x0001
 	HIDDEN, 0x0002
@@ -402,7 +401,7 @@ const_type! { DDL, u16,
 const_type! { DISPOSITION, u32,
 	/// [`CreateFile`](crate::HFILE::CreateFile) `dwCreationDisposition` (`u32`).
 	/// Originally has no prefix.
-	->
+	=>
 	/// Creates a new file, only if it does not already exist.
 	///
 	/// If the specified file exists, the function fails and the last-error code
@@ -453,7 +452,7 @@ const_type! { DISPOSITION, u32,
 const_type! { DLGID, u16,
 	/// Dialog built-in IDs (`u16`). These are also returned from
 	/// [`MessageBox`](crate::HWND::MessageBox).
-	->
+	=>
 	OK, 1
 	CANCEL, 2
 	ABORT, 3
@@ -469,7 +468,9 @@ const_type_wm! { DTM,
 	/// Date and time picker control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	FIRST, 0x1000
+	=>
 	GETSYSTEMTIME, Self::FIRST.0 + 1
 	SETSYSTEMTIME, Self::FIRST.0 + 2
 	GETRANGE, Self::FIRST.0 + 3
@@ -486,15 +487,15 @@ const_type_wm! { DTM,
 	GETDATETIMEPICKERINFO, Self::FIRST.0 + 14
 	GETIDEALSIZE, Self::FIRST.0 + 15
 }
-const_type_priv_values! { DTM,
-	FIRST, 0x1000
-}
 
 const_type_nm! { DTN,
 	/// Date and time picker control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-	->
+	=>
+	FIRST, -740
+	FIRST2, -753
+	=>
 	CLOSEUP, Self::FIRST2.0
 	DATETIMECHANGE, Self::FIRST2.0 - 6
 	DROPDOWN, Self::FIRST2.0 - 1
@@ -503,16 +504,12 @@ const_type_nm! { DTN,
 	USERSTRING, Self::FIRST.0 - 5
 	WMKEYDOWN, Self::FIRST.0 - 4
 }
-const_type_priv_values! { DTN,
-	FIRST, -740
-	FIRST2, -753
-}
 
 const_type_ws! { DTS,
 	/// Date and time picker control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
+	=>
 	UPDOWN, 0x0001
 	SHOWNONE, 0x0002
 	SHORTDATEFORMAT, 0x0000

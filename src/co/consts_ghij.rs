@@ -2,7 +2,7 @@ use crate::co::{CCM, WM};
 
 const_type! { GA, u32,
 	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
-	->
+	=>
 	PARENT, 1
 	ROOT, 2
 	ROOTOWNER, 3
@@ -11,7 +11,7 @@ const_type! { GA, u32,
 const_type! { GCLP, i32,
 	/// [`GetClassLongPtr`](crate::HWND::GetClassLongPtr) `nIndex` (`i32`).
 	/// Originally has prefixes `GCW` and `GCL` also.
-	->
+	=>
 	ATOM, -32
 	CBWNDEXTRA, -18
 	CBCLSEXTRA, -20
@@ -27,7 +27,7 @@ const_type! { GCLP, i32,
 const_type! { GDC, i32,
 	/// [`GetDeviceCaps`](crate::HDC::GetDeviceCaps) `index` (`i32`). Originally
 	/// has no prefix.
-	->
+	=>
 	DRIVERVERSION, 0
 	TECHNOLOGY, 2
 	HORZSIZE, 4
@@ -73,14 +73,14 @@ const_type! { GDC, i32,
 const_type! { GDT, u32,
 	/// [`NMDATETIMECHANGE`](crate::NMDATETIMECHANGE) and
 	/// [`NMDATETIMESTRING`](crate::NMDATETIMESTRING) `dwFlags` (`u32`).
-	->
+	=>
 	VALID, 0
 	NONE, 1
 }
 
 const_type! { GDTR, u32,
 	/// [`DTM_GETRANGE`](crate::msg::dtm::GetRange) return value (`u32`).
-	->
+	=>
 	MIN, 0x0001
 	MAX, 0x0002
 }
@@ -89,7 +89,7 @@ const_type! { GENERIC, u32,
 	/// Generic access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
-	->
+	=>
 	/// Read access.
 	READ, 0x80000000
 	/// Write access.
@@ -102,7 +102,7 @@ const_type! { GENERIC, u32,
 
 const_type! { GW, u32,
 	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
-	->
+	=>
 	HWNDFIRST, 0
 	HWNDLAST, 1
 	HWNDNEXT, 2
@@ -117,7 +117,7 @@ const_type! { GWL_C, i8,
 	/// [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) and
 	/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) change (`i8`).
 	/// Originally has `GWL` prefix.
-	->
+	=>
 	EXSTYLE, -20
 	STYLE, -16
 }
@@ -126,7 +126,7 @@ const_type! { GWLP, i32,
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
 	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) `nIndex` (`i32`).
 	/// Originally has prefix `GWL` also.
-	->
+	=>
 	STYLE, -16
 	EXSTYLE, -20
 	WNDPROC, -4
@@ -143,7 +143,9 @@ const_type_wm! { HDM,
 	/// Header control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	FIRST, 0x1200
+	=>
 	GETITEMCOUNT, Self::FIRST.0 + 0
 	INSERTITEM, Self::FIRST.0 + 10
 	DELETEITEM, Self::FIRST.0 + 11
@@ -171,15 +173,14 @@ const_type_wm! { HDM,
 	GETFOCUSEDITEM, Self::FIRST.0 + 27
 	SETFOCUSEDITEM, Self::FIRST.0 + 28
 }
-const_type_priv_values! { HDM,
-	FIRST, 0x1200
-}
 
 const_type_nm! { HDN,
 	/// Header control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-	->
+	=>
+	FIRST, -300
+	=>
 	ITEMCHANGING, Self::FIRST.0 - 20
 	ITEMCHANGED, Self::FIRST.0 - 21
 	ITEMCLICK, Self::FIRST.0 - 22
@@ -200,15 +201,12 @@ const_type_nm! { HDN,
 	DROPDOWN, Self::FIRST.0 - 18
 	OVERFLOWCLICK, Self::FIRST.0 - 19
 }
-const_type_priv_values! { HDN,
-	FIRST, -300
-}
 
 const_type_ws! { HDS,
 	/// Header control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/header-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	->
+	=>
 	HORZ, 0x0000
 	BUTTONS, 0x0002
 	HOTTRACK, 0x0004
@@ -224,14 +222,14 @@ const_type_ws! { HDS,
 
 const_type! { HELPINFO, i32,
 	/// [`HELPINFO`](crate::HELPINFO) `iContextType` (`i32`).
-	->
+	=>
 	WINDOW, 0x0001
 	MENUITEM, 0x0002
 }
 
 const_type! { HELPW, u32,
 	/// [`WinHelp`](crate::HWND::WinHelp) `uCommand` (`u32`).
-	->
+	=>
 	CONTEXT, 0x0001
 	QUIT, 0x0002
 	INDEX, 0x0003
@@ -257,7 +255,7 @@ const_type! { HELPW, u32,
 
 const_type! { HICF, u32,
 	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags` (`u32`).
-	->
+	=>
 	OTHER, 0x00000000
 	ARROWKEYS, 0x00000002
 	ACCELERATOR, 0x00000004
@@ -271,7 +269,7 @@ const_type! { HICF, u32,
 
 const_type! { HWND_PLACE, isize,
 	/// [`SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter` (`isize`).
-	->
+	=>
 	TOP, 0
 	BOTTOM, 1
 	TOPMOST, -1
@@ -281,14 +279,14 @@ const_type! { HWND_PLACE, isize,
 const_type! { ICON_SZ, u8,
 	/// [`WM_SETICON`](crate::msg::wm::SetIcon) icon size (`u8`). Originally has
 	/// `ICON` prefix.
-	->
+	=>
 	SMALL, 0
 	BIG, 1
 }
 
 const_type! { IDC, usize,
 	/// [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName` (`usize`).
-	->
+	=>
 	ARROW, 32512
 	IBEAM, 32513
 	WAIT, 32514
@@ -309,7 +307,7 @@ const_type! { IDC, usize,
 
 const_type! { IDI, usize,
 	/// [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName` (`usize`).
-	->
+	=>
 	APPLICATION, 32512
 	HAND, 32513
 	QUESTION, 32514
@@ -324,7 +322,7 @@ const_type! { IDI, usize,
 
 const_type! { ILC, u32,
 	/// [`ImageList_Create`](crate::HIMAGELIST::ImageList_Create) `flags` (`u32`).
-	->
+	=>
 	MASK, 0x00000001
 	COLOR, 0x00000000
 	COLORDDB, 0x000000fe
@@ -342,7 +340,7 @@ const_type! { ILC, u32,
 const_type! { ILD, u32,
 	/// [`IMAGELISTDRAWFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).
-	->
+	=>
 	NORMAL, 0x00000000
 	TRANSPARENT, 0x00000001
 	MASK, 0x00000010
@@ -363,7 +361,7 @@ const_type! { ILD, u32,
 const_type! { ILS, u32,
 	/// [`IMAGELISTSTATEFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
 	/// enumeration (`u32`).
-	->
+	=>
 	NORMAL, 0x00000000
 	GLOW, 0x00000001
 	SHADOW, 0x00000002
@@ -374,7 +372,7 @@ const_type! { ILS, u32,
 const_type! { IMAGE_TYPE, u8,
 	/// [`BM_GETIMAGE`](crate::msg::bm::GetImage) `img_type` (`u8`). Originally
 	/// has `IMAGE` prefix.
-	->
+	=>
 	BITMAP, 0
 	ICON, 1
 }
@@ -383,7 +381,8 @@ const_type_wm! { IPM,
 	/// IP address control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	->
+	=>
+	=>
 	CLEARADDRESS, WM::USER.0 + 100
 	SETADDRESS, WM::USER.0 + 101
 	GETADDRESS, WM::USER.0 + 102
@@ -396,9 +395,8 @@ const_type_nm! { IPN,
 	/// IP address control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
-	->
-	FIELDCHANGED, Self::FIRST.0 - 0
-}
-const_type_priv_values! { IPN,
+	=>
 	FIRST, -860
+	=>
+	FIELDCHANGED, Self::FIRST.0 - 0
 }
