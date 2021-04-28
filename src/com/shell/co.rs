@@ -1,3 +1,6 @@
+//! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
+//! constants.
+
 const_type! { DROPEFFECT, u32,
 	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
 	/// constants (`u32`).

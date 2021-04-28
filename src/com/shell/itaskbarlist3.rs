@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co;
 use crate::com::PPComVT;
+use crate::com::shell::co;
 use crate::com::shell::ITaskbarList2;
 use crate::com::shell::vt::{ITaskbarList2VT, ITaskbarList3VT};
 use crate::handles::HWND;

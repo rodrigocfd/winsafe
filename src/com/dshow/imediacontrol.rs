@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co;
 use crate::com::{IDispatch, IDispatchVT, PPComVT};
+use crate::com::dshow::co;
 use crate::com::dshow::vt::IMediaControlVT;
 use crate::privs::{hr_to_winresult, hr_to_winresult_bool, INFINITE};
 use crate::WString;

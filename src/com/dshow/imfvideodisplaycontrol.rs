@@ -1,8 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co;
+use crate::co::ERROR;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
+use crate::com::dshow::co;
 use crate::com::dshow::vt::IMFVideoDisplayControlVT;
 use crate::dshow::MFVideoNormalizedRect;
 use crate::handles::HWND;
@@ -120,10 +121,10 @@ impl IMFVideoDisplayControl {
 	/// [`IMFVideoDisplayControl::RepaintVideo`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-repaintvideo)
 	/// method.
 	pub fn RepaintVideo(&self) -> WinResult<()> {
-		match co::ERROR(
+		match ERROR(
 			unsafe { ((**self.ppv()).RepaintVideo)(self.ppv()) } as _,
 		) {
-			co::ERROR::S_OK | co::ERROR::MF_E_INVALIDREQUEST => Ok(()),
+			ERROR::S_OK | ERROR::MF_E_INVALIDREQUEST => Ok(()),
 			err => Err(err),
 		}
 	}

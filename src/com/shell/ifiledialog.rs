@@ -1,10 +1,11 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co;
+use crate::co::ERROR;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::PPComVT;
 use crate::com::shell::{COMDLG_FILTERSPEC, IModalWindow, IShellItem};
+use crate::com::shell::co;
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT, IShellItemVT};
 use crate::privs::{hr_to_winresult, ref_as_pcvoid};
 use crate::structs::GUID;
@@ -49,7 +50,7 @@ impl IFileDialog {
 
 	/// [`IFileDialog::Close`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-close)
 	/// method.
-	pub fn Close(&self, hr: co::ERROR) -> WinResult<()> {
+	pub fn Close(&self, hr: ERROR) -> WinResult<()> {
 		hr_to_winresult(
 			unsafe { ((**self.ppv()).Close)(self.ppv(), hr.0 as _) },
 		)

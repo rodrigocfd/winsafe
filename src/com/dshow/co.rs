@@ -1,3 +1,6 @@
+//! [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow)
+//! constants.
+
 #![allow(non_upper_case_globals)]
 
 const_type! { FILTER_STATE, u32,
