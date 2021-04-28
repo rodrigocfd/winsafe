@@ -23,7 +23,7 @@ impl<'a> MsgSend for AddString<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR | CB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
@@ -31,7 +31,7 @@ impl<'a> MsgSend for AddString<'a> {
 		WndMsg {
 			msg_id: co::CB::ADDSTRING.into(),
 			wparam: 0,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -50,14 +50,14 @@ impl MsgSend for DeleteString {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::DELETESTRING.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -79,15 +79,15 @@ impl<'a> MsgSend for Dir<'a> {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::DELETESTRING.into(),
-			wparam: self.attributes.0 as usize,
-			lparam: unsafe { WString::from_str(self.path).as_ptr() } as isize,
+			wparam: self.attributes.0 as _,
+			lparam: unsafe { WString::from_str(self.path).as_ptr() } as _,
 		}
 	}
 }
@@ -107,7 +107,7 @@ impl<'a> MsgSend for FindString<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => None,
-			idx => Some(idx as u32),
+			idx => Some(idx as _),
 		}
 	}
 
@@ -115,7 +115,7 @@ impl<'a> MsgSend for FindString<'a> {
 		WndMsg {
 			msg_id: co::CB::FINDSTRING.into(),
 			wparam: self.preceding_index.into(),
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -132,7 +132,7 @@ impl MsgSend for GetCount {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
@@ -157,7 +157,7 @@ impl MsgSend for GetCurSel {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => None,
-			idx => Some(idx as u32),
+			idx => Some(idx as _),
 		}
 	}
 
@@ -185,15 +185,15 @@ impl<'a> MsgSend for GetLbText<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			nchars => Ok(nchars as u32),
+			nchars => Ok(nchars as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETLBTEXT.into(),
-			wparam: self.index as usize,
-			lparam: unsafe { self.text.as_ptr() } as isize,
+			wparam: self.index as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -212,14 +212,14 @@ impl MsgSend for GetLbTextLen {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			nchars => Ok(nchars as u32),
+			nchars => Ok(nchars as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETLBTEXTLEN.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -235,7 +235,7 @@ impl MsgSend for GetMinVisible {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -259,7 +259,7 @@ impl MsgSend for GetTopIndex {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
@@ -287,15 +287,15 @@ impl MsgSend for InitStorage {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			n_items => Ok(n_items as u32),
+			n_items => Ok(n_items as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::INITSTORAGE.into(),
-			wparam: self.num_items as usize,
-			lparam: self.memory_bytes as isize,
+			wparam: self.num_items as _,
+			lparam: self.memory_bytes as _,
 		}
 	}
 }
@@ -325,7 +325,7 @@ impl MsgSend for SetCurSel {
 			wparam: match self.index {
 				Some(index) => index as i32,
 				None => -1,
-			} as usize,
+			} as _,
 			lparam: 0,
 		}
 	}
@@ -352,7 +352,7 @@ impl MsgSend for SetMinVisible {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETMINVISIBLE.into(),
-			wparam: self.num_items as usize,
+			wparam: self.num_items as _,
 			lparam: 0,
 		}
 	}
@@ -379,7 +379,7 @@ impl MsgSend for SetTopIndex {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETTOPINDEX.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -403,7 +403,7 @@ impl MsgSend for ShowDropDown {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SHOWDROPDOWN.into(),
-			wparam: self.show as usize,
+			wparam: self.show as _,
 			lparam: 0,
 		}
 	}

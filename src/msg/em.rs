@@ -39,7 +39,7 @@ impl MsgSend for GetLimitText {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -61,7 +61,7 @@ impl MsgSend for GetLineCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -95,7 +95,7 @@ impl<'a> MsgSend for GetRect<'a> {
 		WndMsg {
 			msg_id: co::EM::GETRECT.into(),
 			wparam: 0,
-			lparam: self.rect as *const _ as isize,
+			lparam: self.rect as *const _ as _,
 		}
 	}
 }
@@ -119,8 +119,8 @@ impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETSEL.into(),
-			wparam: self.first_index.as_ref().map_or(0, |r| r as *const _ as usize),
-			lparam: self.past_last_index.as_ref().map_or(0, |r| r as *const _ as isize),
+			wparam: self.first_index.as_ref().map_or(0, |r| r as *const _ as _),
+			lparam: self.past_last_index.as_ref().map_or(0, |r| r as *const _ as _),
 		}
 	}
 }
@@ -135,7 +135,7 @@ impl MsgSend for GetThumb {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {

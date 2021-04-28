@@ -38,7 +38,7 @@ impl HINSTANCE {
 				self.ptr,
 				lpTemplateName.as_ptr(),
 				hWndParent.map_or(std::ptr::null_mut(), |h| h.ptr),
-				lpDialogFunc as *const _,
+				lpDialogFunc as _,
 				dwInitParam.unwrap_or_default(),
 			).as_mut()
 		}.map(|ptr| HWND { ptr }).ok_or_else(|| GetLastError())
@@ -58,7 +58,7 @@ impl HINSTANCE {
 				self.ptr,
 				lpTemplateName.as_ptr(),
 				hWndParent.map_or(std::ptr::null_mut(), |h| h.ptr),
-				lpDialogFunc as *const _,
+				lpDialogFunc as _,
 				dwInitParam.unwrap_or_default(),
 			)
 		} {

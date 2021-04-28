@@ -75,9 +75,9 @@ impl BitmapPtrStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Bitmap(hbmp) => hbmp.ptr as *const u16,
+			Self::Bitmap(hbmp) => hbmp.ptr as _,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
-			Self::Param(lp) => *lp as *const u16,
+			Self::Param(lp) => *lp as _,
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -94,7 +94,7 @@ pub enum BroadNull {
 impl From<BroadNull> for *mut c_void {
 	fn from(v: BroadNull) -> Self {
 		match v {
-			BroadNull::Broadcast => 0xffff as *mut _,
+			BroadNull::Broadcast => 0xffff as _,
 			BroadNull::Null => std::ptr::null_mut(),
 		}
 	}
@@ -114,7 +114,7 @@ impl HwndHmenu {
 		(match self {
 			Self::Hwnd(hwnd) => hwnd.ptr,
 			Self::Hmenu(hmenu) => hmenu.ptr,
-		}) as isize
+		}) as _
 	}
 }
 
@@ -135,7 +135,7 @@ impl HwndPlace {
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.ptr,
-			Self::Place(v) => v.0 as *mut _,
+			Self::Place(v) => v.0 as _,
 			Self::None => std::ptr::null_mut(),
 		}
 	}
@@ -156,9 +156,9 @@ pub enum HwndPointId {
 impl HwndPointId {
 	pub fn as_isize(&self) -> isize {
 		match self {
-			Self::Hwnd(hwnd) => hwnd.ptr as isize,
-			Self::Point(pt) => MAKEDWORD(pt.x as u16, pt.y as u16) as isize,
-			Self::Id(id) => *id as isize,
+			Self::Hwnd(hwnd) => hwnd.ptr as _,
+			Self::Point(pt) => MAKEDWORD(pt.x as _, pt.y as _) as _,
+			Self::Id(id) => *id as _,
 		}
 	}
 }
@@ -179,8 +179,8 @@ impl IdIdcStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Id(id) => *id as *const u16,
-			Self::Idc(idc) => idc.0 as *const u16,
+			Self::Id(id) => *id as _,
+			Self::Idc(idc) => idc.0 as _,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
@@ -202,8 +202,8 @@ impl IdIdiStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Id(id) => *id as *const u16,
-			Self::Idi(idi) => idi.0 as *const u16,
+			Self::Id(id) => *id as _,
+			Self::Idi(idi) => idi.0 as _,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
@@ -226,8 +226,8 @@ pub enum IdMenu {
 impl From<IdMenu> for usize {
 	fn from(v: IdMenu) -> Self {
 		match v {
-			IdMenu::Id(id) => id as usize,
-			IdMenu::Menu(hMenu) => hMenu.ptr as usize,
+			IdMenu::Id(id) => id as _,
+			IdMenu::Menu(hMenu) => hMenu.ptr as _,
 			IdMenu::None => 0,
 		}
 	}
@@ -237,7 +237,7 @@ impl IdMenu {
 	/// Converts the internal value to a `*mut c_void`.
 	pub fn as_ptr(&self) -> *mut c_void {
 		match self {
-			Self::Id(id) => *id as *mut _,
+			Self::Id(id) => *id as _,
 			Self::Menu(hMenu) => hMenu.ptr,
 			Self::None => std::ptr::null_mut(),
 		}
@@ -271,7 +271,7 @@ impl IdPos {
 
 	pub fn id_or_pos_u32(self) -> u32 {
 		match self {
-			IdPos::Id(id) => id as u32,
+			IdPos::Id(id) => id as _,
 			IdPos::Pos(pos) => pos,
 		}
 	}
@@ -300,7 +300,7 @@ impl IdStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Id(id) => *id as *const u16,
+			Self::Id(id) => *id as _,
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
@@ -322,20 +322,20 @@ impl From<IndexAll> for isize {
 	fn from(v: IndexAll) -> Self {
 		match v {
 			IndexAll::All => -1,
-			IndexAll::Index(i) => i as isize,
+			IndexAll::Index(i) => i as _,
 		}
 	}
 }
 
 impl From<IndexAll> for usize {
 	fn from(v: IndexAll) -> Self {
-		isize::from(v) as usize
+		isize::from(v) as _
 	}
 }
 
 impl From<IndexAll> for u32 {
 	fn from(v: IndexAll) -> Self {
-		isize::from(v) as u32
+		isize::from(v) as _
 	}
 }
 
@@ -368,10 +368,10 @@ impl RegistryValue {
 	/// Converts the internal value to a `*const c_void`.
 	pub fn as_ptr(&self) -> *const c_void {
 		match self {
-			Self::Binary(b) => b.as_ptr() as *const _,
-			Self::Dword(n) => *n as *const _,
-			Self::Qword(n) => *n as *const _,
-			Self::Sz(u16) => unsafe { u16.as_ptr() as *const _ },
+			Self::Binary(b) => b.as_ptr() as _,
+			Self::Dword(n) => *n as _,
+			Self::Qword(n) => *n as _,
+			Self::Sz(u16) => unsafe { u16.as_ptr() as _ },
 			Self::None => std::ptr::null(),
 		}
 	}

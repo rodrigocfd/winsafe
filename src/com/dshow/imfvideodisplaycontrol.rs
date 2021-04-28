@@ -53,7 +53,7 @@ impl IMFVideoDisplayControl {
 			unsafe {
 				((**self.ppv()).GetAspectRatioMode)(
 					self.ppv(),
-					&mut mode as *mut _ as *mut _,
+					&mut mode as *mut _ as _,
 				)
 			},
 		).map(|_| mode)
@@ -67,7 +67,7 @@ impl IMFVideoDisplayControl {
 			unsafe {
 				((**self.ppv()).GetFullscreen)(
 					self.ppv(),
-					&mut fulls as *mut _ as *mut _,
+					&mut fulls as *mut _ as _,
 				)
 			},
 		).map(|_| fulls)

@@ -23,14 +23,14 @@ impl MsgSend for GetIcon {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			ptr => Ok(HICON { ptr: ptr as *mut _ }),
+			ptr => Ok(HICON { ptr: ptr as _ }),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETICON.into(),
-			wparam: self.part_index as usize,
+			wparam: self.part_index as _,
 			lparam: 0,
 		}
 	}
@@ -48,14 +48,14 @@ impl<'a> MsgSend for GetParts<'a> {
 	type RetType = u8;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u8
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETPARTS.into(),
 			wparam: self.right_edges.as_ref().map_or(0, |re| re.len()),
-			lparam: self.right_edges.as_ref().map_or(0, |re| re.as_ptr() as isize),
+			lparam: self.right_edges.as_ref().map_or(0, |re| re.as_ptr() as _),
 		}
 	}
 }
@@ -73,14 +73,14 @@ impl<'a> MsgSend for GetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as u32), co::SBT(HIWORD(v as u32)))
+		(LOWORD(v as _), co::SBT(HIWORD(v as _)))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETTEXT.into(),
-			wparam: self.part_index as usize,
-			lparam: unsafe { self.text.as_ptr() } as isize,
+			wparam: self.part_index as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -97,13 +97,13 @@ impl MsgSend for GetTextLength {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as u32), co::SBT(HIWORD(v as u32)))
+		(LOWORD(v as _), co::SBT(HIWORD(v as _)))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETTEXTLENGTH.into(),
-			wparam: self.part_index as usize,
+			wparam: self.part_index as _,
 			lparam: 0,
 		}
 	}
@@ -128,8 +128,8 @@ impl<'a> MsgSend for GetTipText<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETTIPTEXT.into(),
-			wparam: MAKEDWORD(self.part_index as u16, self.text.len() as u16) as usize,
-			lparam: unsafe { self.text.as_ptr() } as isize,
+			wparam: MAKEDWORD(self.part_index as _, self.text.len() as _) as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -154,8 +154,8 @@ impl MsgSend for SetIcon {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
-			wparam: self.part_index as usize,
-			lparam: self.hicon.map(|h| h.ptr as isize).unwrap_or_default(),
+			wparam: self.part_index as _,
+			lparam: self.hicon.map(|h| h.ptr as _).unwrap_or_default(),
 		}
 	}
 }
@@ -182,7 +182,7 @@ impl<'a> MsgSend for SetParts<'a> {
 		WndMsg {
 			msg_id: co::SB::SETPARTS.into(),
 			wparam: self.right_edges.len(),
-			lparam: self.right_edges.as_ptr() as isize,
+			lparam: self.right_edges.as_ptr() as _,
 		}
 	}
 }
@@ -210,8 +210,8 @@ impl<'a> MsgSend for SetText<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETTEXT.into(),
-			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.drawing_operation.into()) as usize,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.drawing_operation.into()) as _,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -233,8 +233,8 @@ impl<'a> MsgSend for SetTipText<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETTIPTEXT.into(),
-			wparam: self.part_index as usize,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			wparam: self.part_index as _,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -255,7 +255,7 @@ impl MsgSend for Simple {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SIMPLE.into(),
-			wparam: self.display_simple as usize,
+			wparam: self.display_simple as _,
 			lparam: 0,
 		}
 	}

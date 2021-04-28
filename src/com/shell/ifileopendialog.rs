@@ -58,7 +58,7 @@ impl IFileOpenDialog {
 			unsafe {
 				((**self.ppv()).GetResults)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItemArray::from(ppvQueried))
@@ -72,7 +72,7 @@ impl IFileOpenDialog {
 			unsafe {
 				((**self.ppv()).GetSelectedItems)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItemArray::from(ppvQueried))

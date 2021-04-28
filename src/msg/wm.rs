@@ -41,8 +41,8 @@ impl MsgSend for Activate {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ACTIVATE,
-			wparam: MAKEDWORD(self.event.0, self.is_minimized as u16) as usize,
-			lparam: self.hwnd.ptr as isize,
+			wparam: MAKEDWORD(self.event.0, self.is_minimized as _) as _,
+			lparam: self.hwnd.ptr as _,
 		}
 	}
 }
@@ -50,9 +50,9 @@ impl MsgSend for Activate {
 impl MsgSendRecv for Activate {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			event: co::WA(LOWORD(p.wparam as u32)),
-			is_minimized: HIWORD(p.wparam as u32) != 0,
-			hwnd: HWND { ptr: p.lparam as *mut _ },
+			event: co::WA(LOWORD(p.wparam as _)),
+			is_minimized: HIWORD(p.wparam as _) != 0,
+			hwnd: HWND { ptr: p.lparam as _ },
 		}
 	}
 }
@@ -76,8 +76,8 @@ impl MsgSend for ActivateApp {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ACTIVATEAPP,
-			wparam: self.is_being_activated as usize,
-			lparam: self.thread_id as isize,
+			wparam: self.is_being_activated as _,
+			lparam: self.thread_id as _,
 		}
 	}
 }
@@ -86,7 +86,7 @@ impl MsgSendRecv for ActivateApp {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			is_being_activated: p.wparam != 0,
-			thread_id: p.lparam as u32,
+			thread_id: p.lparam as _,
 		}
 	}
 }
@@ -112,8 +112,8 @@ impl MsgSend for AppCommand {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::APPCOMMAND,
-			wparam: self.hwnd_owner.ptr as usize,
-			lparam: MAKEDWORD(self.keys.into(), self.app_command.0 | self.u_device.0) as isize,
+			wparam: self.hwnd_owner.ptr as _,
+			lparam: MAKEDWORD(self.keys.into(), self.app_command.0 | self.u_device.0) as _,
 		}
 	}
 }
@@ -121,10 +121,10 @@ impl MsgSend for AppCommand {
 impl MsgSendRecv for AppCommand {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd_owner: HWND { ptr: p.wparam as *mut _ },
-			app_command: co::APPCOMMAND(HIWORD(p.lparam as u32) & !FAPPCOMMAND_MASK),
-			u_device: co::FAPPCOMMAND(HIWORD(p.lparam as u32) & FAPPCOMMAND_MASK),
-			keys: co::MK(LOWORD(p.lparam as u32)),
+			hwnd_owner: HWND { ptr: p.wparam as _ },
+			app_command: co::APPCOMMAND(HIWORD(p.lparam as _) & !FAPPCOMMAND_MASK),
+			u_device: co::FAPPCOMMAND(HIWORD(p.lparam as _) & FAPPCOMMAND_MASK),
+			keys: co::MK(LOWORD(p.lparam as _)),
 		}
 	}
 }
@@ -168,8 +168,8 @@ impl MsgSend for Command {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::COMMAND,
-			wparam: MAKEDWORD(self.ctrl_id, self.code.into()) as usize,
-			lparam: self.ctrl_hwnd.map(|h| h.ptr as isize).unwrap_or_default(),
+			wparam: MAKEDWORD(self.ctrl_id, self.code.into()) as _,
+			lparam: self.ctrl_hwnd.map(|h| h.ptr as _).unwrap_or_default(),
 		}
 	}
 }
@@ -177,11 +177,11 @@ impl MsgSend for Command {
 impl MsgSendRecv for Command {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			code: co::CMD(HIWORD(p.wparam as u32)),
-			ctrl_id: LOWORD(p.wparam as u32),
+			code: co::CMD(HIWORD(p.wparam as _)),
+			ctrl_id: LOWORD(p.wparam as _),
 			ctrl_hwnd: match p.lparam {
 				0 => None,
-				ptr => Some(HWND { ptr: ptr as *mut _ }),
+				ptr => Some(HWND { ptr: ptr as _ }),
 			},
 		}
 	}
@@ -206,7 +206,7 @@ impl MsgSend for ContextMenu {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::CONTEXTMENU,
-			wparam: self.hwnd.ptr as usize,
+			wparam: self.hwnd.ptr as _,
 			lparam: point_to_lp(self.cursor_pos),
 		}
 	}
@@ -215,7 +215,7 @@ impl MsgSend for ContextMenu {
 impl MsgSendRecv for ContextMenu {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd: HWND { ptr: p.wparam as *mut _ },
+			hwnd: HWND { ptr: p.wparam as _ },
 			cursor_pos: lp_to_point(p),
 		}
 	}
@@ -233,14 +233,14 @@ impl<'a, 'b, 'c> MsgSend for Create<'a, 'b, 'c> {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as i32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::CREATE,
 			wparam: 0,
-			lparam: self.createstruct as *const _ as isize,
+			lparam: self.createstruct as *const _ as _,
 		}
 	}
 }
@@ -303,7 +303,7 @@ impl MsgSend for DropFiles {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::DROPFILES,
-			wparam: self.hdrop.ptr as usize,
+			wparam: self.hdrop.ptr as _,
 			lparam: 0,
 		}
 	}
@@ -312,7 +312,7 @@ impl MsgSend for DropFiles {
 impl MsgSendRecv for DropFiles {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hdrop: HDROP { ptr: p.wparam as *mut _ },
+			hdrop: HDROP { ptr: p.wparam as _ },
 		}
 	}
 }
@@ -335,7 +335,7 @@ impl MsgSend for Enable {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ENABLE,
-			wparam: self.has_been_enabled as usize,
+			wparam: self.has_been_enabled as _,
 			lparam: 0,
 		}
 	}
@@ -368,8 +368,8 @@ impl MsgSend for EndSession {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ENDSESSION,
-			wparam: self.is_session_being_ended as usize,
-			lparam: self.event.0 as isize,
+			wparam: self.is_session_being_ended as _,
+			lparam: self.event.0 as _,
 		}
 	}
 }
@@ -378,7 +378,7 @@ impl MsgSendRecv for EndSession {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
-			event: co::ENDSESSION(p.lparam as u32),
+			event: co::ENDSESSION(p.lparam as _),
 		}
 	}
 }
@@ -402,7 +402,7 @@ impl MsgSend for EnterIdle {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ENTERIDLE,
-			wparam: self.reason.0 as usize,
+			wparam: self.reason.0 as _,
 			lparam: self.handle.as_isize(),
 		}
 	}
@@ -410,12 +410,12 @@ impl MsgSend for EnterIdle {
 
 impl MsgSendRecv for EnterIdle {
 	fn from_generic_wm(p: WndMsg) -> Self {
-		let reason = co::MSGF(p.wparam as u8);
+		let reason = co::MSGF(p.wparam as _);
 		Self {
 			reason,
 			handle: match reason {
-				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(HWND { ptr: p.lparam as *mut _ }),
-				_ => HwndHmenu::Hmenu(HMENU { ptr: p.lparam as *mut _ }),
+				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(HWND { ptr: p.lparam as _ }),
+				_ => HwndHmenu::Hmenu(HMENU { ptr: p.lparam as _ }),
 			},
 		}
 	}
@@ -437,13 +437,13 @@ impl MsgSend for EraseBkgnd {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as i32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ERASEBKGND,
-			wparam: self.hdc.ptr as usize,
+			wparam: self.hdc.ptr as _,
 			lparam: 0,
 		}
 	}
@@ -452,7 +452,7 @@ impl MsgSend for EraseBkgnd {
 impl MsgSendRecv for EraseBkgnd {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hdc: HDC { ptr: p.wparam as *mut _ },
+			hdc: HDC { ptr: p.wparam as _ },
 		}
 	}
 }
@@ -480,7 +480,7 @@ impl<'a> MsgSend for GetMinMaxInfo<'a> {
 		WndMsg {
 			msg_id: co::WM::GETMINMAXINFO,
 			wparam: 0,
-			lparam: self.info as *const _ as isize,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }
@@ -512,7 +512,7 @@ impl<'a> MsgSend for Help<'a> {
 		WndMsg {
 			msg_id: co::WM::HELP,
 			wparam: 0,
-			lparam: self.helpinfo as *const _ as isize,
+			lparam: self.helpinfo as *const _ as _,
 		}
 	}
 }
@@ -545,8 +545,8 @@ impl MsgSend for HScroll {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::HSCROLL,
-			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as usize,
-			lparam: self.hcontrol.map(|h| h.ptr as isize).unwrap_or_default(),
+			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
+			lparam: self.hcontrol.map(|h| h.ptr as _).unwrap_or_default(),
 		}
 	}
 }
@@ -554,11 +554,11 @@ impl MsgSend for HScroll {
 impl MsgSendRecv for HScroll {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			scroll_box_pos: HIWORD(p.wparam as u32),
-			request: co::SB_REQ(LOWORD(p.wparam as u32)),
+			scroll_box_pos: HIWORD(p.wparam as _),
+			request: co::SB_REQ(LOWORD(p.wparam as _)),
 			hcontrol: match p.lparam {
 				0 => None,
-				ptr => Some(HWND { ptr: ptr as *mut _ }),
+				ptr => Some(HWND { ptr: ptr as _ }),
 			},
 		}
 	}
@@ -583,7 +583,7 @@ impl MsgSend for InitDialog {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::INITDIALOG,
-			wparam: self.hwnd_focus.ptr as usize,
+			wparam: self.hwnd_focus.ptr as _,
 			lparam: self.additional_data,
 		}
 	}
@@ -592,7 +592,7 @@ impl MsgSend for InitDialog {
 impl MsgSendRecv for InitDialog {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd_focus: HWND { ptr: p.wparam as *mut _ },
+			hwnd_focus: HWND { ptr: p.wparam as _ },
 			additional_data: p.lparam,
 		}
 	}
@@ -618,8 +618,8 @@ impl MsgSend for InitMenuPopup {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::INITMENUPOPUP,
-			wparam: self.hmenu.ptr as usize,
-			lparam: MAKEDWORD(self.item_pos, self.is_window_menu as u16) as isize,
+			wparam: self.hmenu.ptr as _,
+			lparam: MAKEDWORD(self.item_pos, self.is_window_menu as _) as _,
 		}
 	}
 }
@@ -627,9 +627,9 @@ impl MsgSend for InitMenuPopup {
 impl MsgSendRecv for InitMenuPopup {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hmenu: HMENU { ptr: p.wparam as *mut _ },
-			item_pos: LOWORD(p.lparam as u32),
-			is_window_menu: HIWORD(p.lparam as u32) != 0,
+			hmenu: HMENU { ptr: p.wparam as _ },
+			item_pos: LOWORD(p.lparam as _),
+			is_window_menu: HIWORD(p.lparam as _) != 0,
 		}
 	}
 }
@@ -660,7 +660,7 @@ impl MsgSend for KillFocus {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::KILLFOCUS,
-			wparam: self.hwnd.map(|h| h.ptr as usize).unwrap_or_default(),
+			wparam: self.hwnd.map(|h| h.ptr as _).unwrap_or_default(),
 			lparam: 0,
 		}
 	}
@@ -671,7 +671,7 @@ impl MsgSendRecv for KillFocus {
 		Self {
 			hwnd: match p.wparam {
 				0 => None,
-				ptr => Some(HWND { ptr: ptr as *mut _ }),
+				ptr => Some(HWND { ptr: ptr as _ }),
 			},
 		}
 	}
@@ -720,8 +720,8 @@ impl MsgSend for MenuCommand {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::MENUCOMMAND,
-			wparam: self.item_index as usize,
-			lparam: self.hmenu.ptr as isize,
+			wparam: self.item_index as _,
+			lparam: self.hmenu.ptr as _,
 		}
 	}
 }
@@ -729,8 +729,8 @@ impl MsgSend for MenuCommand {
 impl MsgSendRecv for MenuCommand {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			item_index: p.wparam as u32,
-			hmenu: HMENU { ptr: p.lparam as *mut _ },
+			item_index: p.wparam as _,
+			hmenu: HMENU { ptr: p.lparam as _ },
 		}
 	}
 }
@@ -794,7 +794,7 @@ impl<'a> MsgSend for Moving<'a> {
 		WndMsg {
 			msg_id: co::WM::MOVING,
 			wparam: 0,
-			lparam: self.window_pos as *const _ as isize,
+			lparam: self.window_pos as *const _ as _,
 		}
 	}
 }
@@ -819,19 +819,19 @@ impl<'a, 'b> MsgSend for NcCalcSize<'a, 'b> {
 	type RetType = co::WVR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::WVR(v as u32)
+		co::WVR(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCCALCSIZE,
 			wparam: match &self.data {
-				NccspRect::Nccsp(_) => true as usize,
-				NccspRect::Rect(_) => false as usize,
+				NccspRect::Nccsp(_) => true as _,
+				NccspRect::Rect(_) => false as _,
 			},
 			lparam: match &self.data {
-				NccspRect::Nccsp(nccalc) => *nccalc as *const _ as isize,
-				NccspRect::Rect(rc) => *rc as *const _ as isize,
+				NccspRect::Nccsp(nccalc) => *nccalc as *const _ as _,
+				NccspRect::Rect(rc) => *rc as *const _ as _,
 			},
 		}
 	}
@@ -867,7 +867,7 @@ impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 		WndMsg {
 			msg_id: co::WM::NCCREATE,
 			wparam: 0,
-			lparam: self.createstruct as *const _ as isize,
+			lparam: self.createstruct as *const _ as _,
 		}
 	}
 }
@@ -902,7 +902,7 @@ impl MsgSend for NcPaint {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCPAINT,
-			wparam: self.updated_hrgn.ptr as usize,
+			wparam: self.updated_hrgn.ptr as _,
 			lparam: 0,
 		}
 	}
@@ -911,7 +911,7 @@ impl MsgSend for NcPaint {
 impl MsgSendRecv for NcPaint {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			updated_hrgn: HRGN { ptr: p.wparam as *mut _ },
+			updated_hrgn: HRGN { ptr: p.wparam as _ },
 		}
 	}
 }
@@ -939,8 +939,8 @@ impl<'a> MsgSend for Notify<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NOTIFY,
-			wparam: self.nmhdr.hwndFrom.ptr as usize,
-			lparam: self.nmhdr as *const _ as isize,
+			wparam: self.nmhdr.hwndFrom.ptr as _,
+			lparam: self.nmhdr as *const _ as _,
 		}
 	}
 }
@@ -959,7 +959,7 @@ impl<'a> Notify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
-		&*(self.nmhdr as *const NMHDR as *const T)
+		&*(self.nmhdr as *const _ as *const _)
 	}
 
 	/// Casts the `NMHDR` mutable reference into a derived struct.
@@ -967,7 +967,7 @@ impl<'a> Notify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr_mut<T>(&self) -> &mut T {
-		&mut *(self.nmhdr as *const NMHDR as *mut T)
+		&mut *(self.nmhdr as *const _ as *mut _)
 	}
 }
 
@@ -995,7 +995,7 @@ impl MsgSend for ParentNotify {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::PARENTNOTIFY,
-			wparam: MAKEDWORD(self.event.0, self.child_id) as usize,
+			wparam: MAKEDWORD(self.event.0, self.child_id) as _,
 			lparam: self.data.as_isize(),
 		}
 	}
@@ -1003,13 +1003,13 @@ impl MsgSend for ParentNotify {
 
 impl MsgSendRecv for ParentNotify {
 	fn from_generic_wm(p: WndMsg) -> Self {
-		let event = co::WMPN(LOWORD(p.wparam as u32));
+		let event = co::WMPN(LOWORD(p.wparam as _));
 		Self {
 			event,
-			child_id: HIWORD(p.wparam as u32),
+			child_id: HIWORD(p.wparam as _),
 			data: match event {
-				co::WMPN::CREATE | co::WMPN::DESTROY => HwndPointId::Hwnd(HWND { ptr: p.lparam as *mut _ }),
-				co::WMPN::POINTERDOWN => HwndPointId::Id(p.lparam as u16),
+				co::WMPN::CREATE | co::WMPN::DESTROY => HwndPointId::Hwnd(HWND { ptr: p.lparam as _ }),
+				co::WMPN::POINTERDOWN => HwndPointId::Id(p.lparam as _),
 				_ => HwndPointId::Point(lp_to_point(p)),
 			},
 		}
@@ -1074,7 +1074,7 @@ impl MsgSend for SetFocus {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETFOCUS,
-			wparam: self.hwnd_losing_focus.ptr as usize,
+			wparam: self.hwnd_losing_focus.ptr as _,
 			lparam: 0,
 		}
 	}
@@ -1083,7 +1083,7 @@ impl MsgSend for SetFocus {
 impl MsgSendRecv for SetFocus {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd_losing_focus: HWND { ptr: p.wparam as *mut _ },
+			hwnd_losing_focus: HWND { ptr: p.wparam as _ },
 		}
 	}
 }
@@ -1107,8 +1107,8 @@ impl MsgSend for SetFont {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETFONT,
-			wparam: self.hfont.ptr as usize,
-			lparam: MAKEDWORD(self.redraw as u16, 0) as isize,
+			wparam: self.hfont.ptr as _,
+			lparam: MAKEDWORD(self.redraw as _, 0) as _,
 		}
 	}
 }
@@ -1116,8 +1116,8 @@ impl MsgSend for SetFont {
 impl MsgSendRecv for SetFont {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hfont: HFONT { ptr: p.wparam as *mut _ },
-			redraw: LOWORD(p.lparam as u32) != 0,
+			hfont: HFONT { ptr: p.wparam as _ },
+			redraw: LOWORD(p.lparam as _) != 0,
 		}
 	}
 }
@@ -1137,15 +1137,15 @@ impl MsgSend for SetIcon {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => None,
-			v => Some(HICON { ptr: v as *mut _ }),
+			p => Some(HICON { ptr: p as _ }),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETICON,
-			wparam: self.size.0 as usize,
-			lparam: self.hicon.ptr as isize,
+			wparam: self.size.0 as _,
+			lparam: self.hicon.ptr as _,
 		}
 	}
 }
@@ -1153,8 +1153,8 @@ impl MsgSend for SetIcon {
 impl MsgSendRecv for SetIcon {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			size: co::ICON_SZ(p.wparam as u8),
-			hicon: HICON { ptr: p.lparam as *mut _ },
+			size: co::ICON_SZ(p.wparam as _),
+			hicon: HICON { ptr: p.lparam as _ },
 		}
 	}
 }
@@ -1178,8 +1178,8 @@ impl MsgSend for ShowWindow {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SHOWWINDOW,
-			wparam: self.being_shown as usize,
-			lparam: self.status.0 as isize,
+			wparam: self.being_shown as _,
+			lparam: self.status.0 as _,
 		}
 	}
 }
@@ -1188,7 +1188,7 @@ impl MsgSendRecv for ShowWindow {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			being_shown: p.wparam != 0,
-			status: co::SW_S(p.lparam as u8),
+			status: co::SW_S(p.lparam as _),
 		}
 	}
 }
@@ -1212,10 +1212,11 @@ impl MsgSend for Size {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SIZE,
-			wparam: self.request.0 as usize,
+			wparam: self.request.0 as _,
 			lparam: MAKEDWORD(
-				self.client_area.cx as u16,
-				self.client_area.cy as u16) as isize,
+				self.client_area.cx as _,
+				self.client_area.cy as _,
+			) as _,
 		}
 	}
 }
@@ -1223,10 +1224,10 @@ impl MsgSend for Size {
 impl MsgSendRecv for Size {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			request: co::SIZE_R(p.wparam as u8),
+			request: co::SIZE_R(p.wparam as _),
 			client_area: SIZE::new(
-				LOWORD(p.lparam as u32) as i32,
-				HIWORD(p.lparam as u32) as i32,
+				LOWORD(p.lparam as _) as _,
+				HIWORD(p.lparam as _) as _,
 			),
 		}
 	}
@@ -1251,8 +1252,8 @@ impl<'a> MsgSend for Sizing<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SIZING,
-			wparam: self.window_edge.0 as usize,
-			lparam: self.coords as *const _ as isize,
+			wparam: self.window_edge.0 as _,
+			lparam: self.coords as *const _ as _,
 		}
 	}
 }
@@ -1260,7 +1261,7 @@ impl<'a> MsgSend for Sizing<'a> {
 impl<'a> MsgSendRecv for Sizing<'a> {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			window_edge: co::WMSZ(p.wparam as u8),
+			window_edge: co::WMSZ(p.wparam as _),
 			coords: unsafe { &mut *(p.lparam as *mut _) },
 		}
 	}
@@ -1285,10 +1286,10 @@ impl<'a> MsgSend for StyleChanged<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::STYLECHANGED,
-			wparam: self.change.0 as usize,
+			wparam: self.change.0 as _,
 			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const _ as isize,
-				WsWsex::Wsex(wsx) => wsx as *const _ as isize,
+				WsWsex::Ws(ws) => ws as *const _ as _,
+				WsWsex::Wsex(wsx) => wsx as *const _ as _,
 			},
 		}
 	}
@@ -1296,7 +1297,7 @@ impl<'a> MsgSend for StyleChanged<'a> {
 
 impl<'a> MsgSendRecv for StyleChanged<'a> {
 	fn from_generic_wm(p: WndMsg) -> Self {
-		let change = co::GWL_C(p.wparam as i8);
+		let change = co::GWL_C(p.wparam as _);
 		Self {
 			change,
 			stylestruct: match change {
@@ -1326,10 +1327,10 @@ impl<'a> MsgSend for StyleChanging<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::STYLECHANGING,
-			wparam: self.change.0 as usize,
+			wparam: self.change.0 as _,
 			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const _ as isize,
-				WsWsex::Wsex(wsx) => wsx as *const _ as isize,
+				WsWsex::Ws(ws) => ws as *const _ as _,
+				WsWsex::Wsex(wsx) => wsx as *const _ as _,
 			},
 		}
 	}
@@ -1337,7 +1338,7 @@ impl<'a> MsgSend for StyleChanging<'a> {
 
 impl<'a> MsgSendRecv for StyleChanging<'a> {
 	fn from_generic_wm(p: WndMsg) -> Self {
-		let change = co::GWL_C(p.wparam as i8);
+		let change = co::GWL_C(p.wparam as _);
 		Self {
 			change,
 			stylestruct: match change {
@@ -1371,7 +1372,7 @@ impl MsgSend for SysCommand {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SYSCOMMAND,
-			wparam: self.request.0 as usize,
+			wparam: self.request.0 as _,
 			lparam: point_to_lp(self.position),
 		}
 	}
@@ -1380,7 +1381,7 @@ impl MsgSend for SysCommand {
 impl MsgSendRecv for SysCommand {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			request: co::SC(p.wparam as u32),
+			request: co::SC(p.wparam as _),
 			position: lp_to_point(p),
 		}
 	}
@@ -1421,9 +1422,9 @@ impl MsgSend for Timer {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::TIMER,
-			wparam: self.timer_id as usize,
+			wparam: self.timer_id as _,
 			lparam: match self.timer_proc {
-				Some(proc) => proc as isize,
+				Some(proc) => proc as _,
 				None => 0,
 			},
 		}
@@ -1433,7 +1434,7 @@ impl MsgSend for Timer {
 impl MsgSendRecv for Timer {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			timer_id: p.wparam as u32,
+			timer_id: p.wparam as _,
 			timer_proc: match p.lparam {
 				0 => None,
 				addr => unsafe { std::mem::transmute(addr) },
@@ -1462,8 +1463,8 @@ impl MsgSend for VScroll {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::VSCROLL,
-			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as usize,
-			lparam: self.hcontrol.map(|h| h.ptr as isize).unwrap_or_default(),
+			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
+			lparam: self.hcontrol.map(|h| h.ptr as _).unwrap_or_default(),
 		}
 	}
 }
@@ -1471,11 +1472,11 @@ impl MsgSend for VScroll {
 impl MsgSendRecv for VScroll {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			scroll_box_pos: HIWORD(p.wparam as u32),
-			request: co::SB_REQ(LOWORD(p.wparam as u32)),
+			scroll_box_pos: HIWORD(p.wparam as _),
+			request: co::SB_REQ(LOWORD(p.wparam as _)),
 			hcontrol: match p.lparam {
 				0 => None,
-				ptr => Some(HWND { ptr: ptr as *mut _ }),
+				ptr => Some(HWND { ptr: ptr as _ }),
 			},
 		}
 	}
@@ -1500,7 +1501,7 @@ impl<'a> MsgSend for WindowPosChanged<'a> {
 		WndMsg {
 			msg_id: co::WM::WINDOWPOSCHANGED,
 			wparam: 0,
-			lparam: self.windowpos as *const _ as isize,
+			lparam: self.windowpos as *const _ as _,
 		}
 	}
 }
@@ -1532,7 +1533,7 @@ impl<'a> MsgSend for WindowPosChanging<'a> {
 		WndMsg {
 			msg_id: co::WM::WINDOWPOSCHANGING,
 			wparam: 0,
-			lparam: self.windowpos as *const _ as isize,
+			lparam: self.windowpos as *const _ as _,
 		}
 	}
 }

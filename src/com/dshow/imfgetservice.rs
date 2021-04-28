@@ -48,7 +48,7 @@ impl IMFGetService {
 					self.ppv(),
 					ref_as_pcvoid(guidService),
 					ref_as_pcvoid(&VT::IID()),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| RetInterf::from(ppvQueried))

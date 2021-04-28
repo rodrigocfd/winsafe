@@ -47,7 +47,7 @@ macro_rules! handle_type {
 			/// This method is common to all handle types.
 			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {
 				Self {
-					ptr: p as *mut std::ffi::c_void,
+					ptr: p as _,
 				}
 			}
 

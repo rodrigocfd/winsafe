@@ -69,7 +69,7 @@ impl IGraphBuilder {
 					self.ppv(),
 					WString::from_str(fileName).as_ptr(),
 					WString::from_str(filterName).as_ptr(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IBaseFilter::from(ppvQueried))

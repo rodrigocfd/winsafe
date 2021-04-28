@@ -19,6 +19,12 @@ handle_type! {
 impl HMENU {
 	/// [`AppendMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// method.
+	///
+	/// This method is rather tricky, consider using the wrappers:
+	///
+	/// * [`AppendMenuItem`](crate::HMENU::AppendMenuItem);
+	/// * [`AppendMenuSeparator`](crate::HMENU::AppendMenuSeparator);
+	/// * [`AppendMenuSubmenu`](crate::HMENU::AppendMenuSubmenu).
 	pub fn AppendMenu(self, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> WinResult<()>
 	{
@@ -124,8 +130,9 @@ impl HMENU {
 	/// [`EnableMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablemenuitem)
 	/// method.
 	///
-	/// You don't need to pass `MF::BYCOMMAND` or `MF::BYPOSITION` flags, they
-	/// are inferred by [`IdPos`](crate::IdPos).
+	/// You don't need to pass [`MF::BYCOMMAND`](crate::co::MF::BYCOMMAND) or
+	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION) flags, they are inferred
+	/// by [`IdPos`](crate::IdPos).
 	pub fn EnableMenuItem(self,
 		uIDEnableItem: IdPos, uEnable: co::MF) -> WinResult<co::MF>
 	{

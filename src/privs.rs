@@ -22,12 +22,12 @@ pub(crate) const MAX_PATH: usize = 260;
 
 /// Converts a const reference to `ffi::PCVOID`.
 pub(crate) fn ref_as_pcvoid<T>(r: &T) -> PCVOID {
-	r as *const _ as *const _
+	r as *const _ as _
 }
 
 /// Converts a mut reference to `ffi::PVOID`.
 pub(crate) fn ref_as_pvoid<T>(r: &mut T) -> PVOID {
-	r as *mut _ as *mut _
+	r as *mut _ as _
 }
 
 /// Converts a `BOOL` value to a `WinResult`. `TRUE` is `Ok(())`, `FALSE` is

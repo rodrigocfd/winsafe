@@ -83,7 +83,7 @@ impl RawBase {
 			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
 			hmenu,
 			self.base.parent_hinstance()?,
-			Some(self as *const Self as _), // pass pointer to self
+			Some(self as *const _ as _), // pass pointer to self
 		).map(|_| ())
 	}
 

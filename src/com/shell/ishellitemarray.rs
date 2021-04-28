@@ -54,7 +54,7 @@ impl IShellItemArray {
 				((**self.ppv()).GetItemAt)(
 					self.ppv(),
 					dwIndex,
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))

@@ -82,7 +82,7 @@ macro_rules! char_msg {
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
-					wparam: self.char_code as usize,
+					wparam: self.char_code as _,
 					lparam: MAKEDWORD(
 						self.repeat_count,
 						MAKEWORD(
@@ -92,7 +92,7 @@ macro_rules! char_msg {
 							if self.key_was_previously_down { 0b0100_0000 } else { 0 } |
 							if self.key_is_being_released { 0b1000_0000 } else { 0 },
 						),
-					) as isize,
+					) as _,
 				}
 			}
 		}
@@ -100,13 +100,13 @@ macro_rules! char_msg {
 		impl MsgSendRecv for $name {
 			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
-					char_code: p.wparam as u32,
-					repeat_count: LOWORD(p.lparam as u32),
-					scan_code: LOBYTE(HIWORD(p.lparam as u32)),
-					is_extended_key: (HIBYTE(HIWORD(p.lparam as u32)) & 0b0000_0001) != 0,
-					has_alt_key: (HIBYTE(HIWORD(p.lparam as u32)) & 0b0010_0000) != 0,
-					key_was_previously_down: (HIBYTE(HIWORD(p.lparam as u32)) & 0b0100_0000) != 0,
-					key_is_being_released: (HIBYTE(HIWORD(p.lparam as u32)) & 0b1000_0000) != 0,
+					char_code: p.wparam as _,
+					repeat_count: LOWORD(p.lparam as _),
+					scan_code: LOBYTE(HIWORD(p.lparam as _)),
+					is_extended_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0000_0001) != 0,
+					has_alt_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0010_0000) != 0,
+					key_was_previously_down: (HIBYTE(HIWORD(p.lparam as _)) & 0b0100_0000) != 0,
+					key_is_being_released: (HIBYTE(HIWORD(p.lparam as _)) & 0b1000_0000) != 0,
 				}
 			}
 		}
@@ -132,7 +132,7 @@ macro_rules! ctl_color_msg {
 			type RetType = HBRUSH;
 
 			fn convert_ret(&self, v: isize) -> Self::RetType {
-				HBRUSH { ptr: v as *mut _ }
+				HBRUSH { ptr: v as _ }
 			}
 
 			fn as_generic_wm(&self) -> WndMsg {
@@ -147,8 +147,8 @@ macro_rules! ctl_color_msg {
 		impl MsgSendRecv for $name {
 			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
-					hdc: HDC { ptr: p.wparam as *mut _ },
-					hwnd: HWND { ptr: p.lparam as *mut _ },
+					hdc: HDC { ptr: p.wparam as _ },
+					hwnd: HWND { ptr: p.lparam as _ },
 				}
 			}
 		}
@@ -181,7 +181,7 @@ macro_rules! button_msg {
 				WndMsg {
 					msg_id: $wmconst,
 					wparam: self.vkeys.0 as usize,
-					lparam: MAKEDWORD(self.coords.x as u16, self.coords.y as u16) as isize,
+					lparam: MAKEDWORD(self.coords.x as _, self.coords.y as _) as _,
 				}
 			}
 		}
@@ -189,10 +189,10 @@ macro_rules! button_msg {
 		impl MsgSendRecv for $name {
 			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
-					vkeys: co::VK(p.wparam as u16),
+					vkeys: co::VK(p.wparam as _),
 					coords: POINT {
-						x: LOWORD(p.lparam as u32) as i32,
-						y: HIWORD(p.lparam as u32) as i32,
+						x: LOWORD(p.lparam as _) as _,
+						y: HIWORD(p.lparam as _) as _,
 					},
 				}
 			}
@@ -208,7 +208,7 @@ pub fn point_to_lp(p: POINT) -> isize {
 /// Converts the `LPARAM` field to a `POINT`.
 pub fn lp_to_point(p: WndMsg) -> POINT {
 	POINT::new(
-		LOWORD(p.lparam as u32) as i32,
-		HIWORD(p.lparam as u32) as i32,
+		LOWORD(p.lparam as _) as _,
+		HIWORD(p.lparam as _) as _,
 	)
 }

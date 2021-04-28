@@ -19,7 +19,7 @@ impl MsgSend for GetItemCount {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
@@ -54,8 +54,8 @@ impl<'a> MsgSend for GetItemDropDownRect<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETITEMDROPDOWNRECT.into(),
-			wparam: self.index as usize,
-			lparam: self.rect as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.rect as *const _ as _,
 		}
 	}
 }
@@ -82,8 +82,8 @@ impl<'a> MsgSend for GetItemRect<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETITEMRECT.into(),
-			wparam: self.index as usize,
-			lparam: self.rect as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.rect as *const _ as _,
 		}
 	}
 }
@@ -110,7 +110,7 @@ impl<'a> MsgSend for GetOrderArray<'a> {
 		WndMsg {
 			msg_id: co::HDM::GETORDERARRAY.into(),
 			wparam: self.buffer.len(),
-			lparam: self.buffer.as_ptr() as isize,
+			lparam: self.buffer.as_ptr() as _,
 		}
 	}
 }
@@ -137,7 +137,7 @@ impl<'a> MsgSend for GetOverflowRect<'a> {
 		WndMsg {
 			msg_id: co::HDM::GETOVERFLOWRECT.into(),
 			wparam: 0,
-			lparam: self.rect as *const _ as isize,
+			lparam: self.rect as *const _ as _,
 		}
 	}
 }

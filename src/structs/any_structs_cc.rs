@@ -46,7 +46,7 @@ pub struct DATETIMEPICKERINFO {
 impl Default for DATETIMEPICKERINFO {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -77,7 +77,7 @@ pub struct IMAGELISTDRAWPARAMS {
 impl Default for IMAGELISTDRAWPARAMS {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as u32;
+		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
 }
@@ -147,7 +147,7 @@ impl<'a> LVCOLUMN<'a> {
 	/// Sets the `pszText` field.
 	pub fn set_pszText(&mut self, buf: &'a mut WString) {
 		self.pszText = unsafe { buf.as_mut_ptr() };
-		self.cchTextMax = buf.buffer_size() as i32;
+		self.cchTextMax = buf.buffer_size() as _;
 	}
 }
 
@@ -210,7 +210,7 @@ impl<'a> LVITEM<'a> {
 	/// Sets the `pszText` field.
 	pub fn set_pszText(&mut self, buf: &'a mut WString) {
 		self.pszText = unsafe { buf.as_mut_ptr() };
-		self.cchTextMax = buf.buffer_size() as i32;
+		self.cchTextMax = buf.buffer_size() as _;
 	}
 }
 
@@ -366,7 +366,7 @@ impl NMDAYSTATE {
 		unsafe {
 			std::slice::from_raw_parts_mut(
 				self.prgDayState,
-				self.cDayState as usize,
+				self.cDayState as _,
 			)
 		}
 	}
@@ -491,7 +491,7 @@ impl NMLVGETINFOTIP {
 	/// Sets the `pszText` field.
 	pub fn get_pszText(&mut self, text: &str) {
 		WString::from_str(text)
-			.copy_to_pointer(self.pszText, self.cchTextMax as usize);
+			.copy_to_pointer(self.pszText, self.cchTextMax as _);
 	}
 }
 

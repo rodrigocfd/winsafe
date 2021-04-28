@@ -24,7 +24,7 @@ impl MsgSend for ApproximateViewRect {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::new(LOWORD(v as u32) as i32, HIWORD(v as u32) as i32)
+		SIZE::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -33,17 +33,17 @@ impl MsgSend for ApproximateViewRect {
 			wparam: match self.num_items {
 				None => -1,
 				Some(num) => num as isize,
-			} as usize,
+			} as _,
 			lparam: MAKEDWORD(
 				match self.proposed_x {
 					None => -1,
 					Some(x) => x as i32,
-				} as u16,
+				} as _,
 				match self.proposed_y {
 					None => -1,
 					Some(y) => y as i32,
-				} as u16,
-			) as isize,
+				} as _,
+			) as _,
 		}
 	}
 }
@@ -69,7 +69,7 @@ impl MsgSend for Arrange {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ARRANGE.into(),
-			wparam: self.arrangement.0 as usize,
+			wparam: self.arrangement.0 as _,
 			lparam: 0,
 		}
 	}
@@ -125,7 +125,7 @@ impl MsgSend for DeleteItem {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::DELETEITEM.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -153,8 +153,8 @@ impl MsgSend for EnsureVisible {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ENSUREVISIBLE.into(),
-			wparam: self.index as usize,
-			lparam: !self.entirely_visible as isize,
+			wparam: self.index as _,
+			lparam: !self.entirely_visible as _,
 		}
 	}
 }
@@ -174,7 +174,7 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as u32),
+			i => Ok(i as _),
 		}
 	}
 
@@ -182,7 +182,7 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 		WndMsg {
 			msg_id: co::LVM::FINDITEM.into(),
 			wparam: self.index.into(),
-			lparam: self.lvfindinfo as *const _ as isize,
+			lparam: self.lvfindinfo as *const _ as _,
 		}
 	}
 }
@@ -197,7 +197,7 @@ impl MsgSend for GetBkColor {
 	type RetType = COLORREF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		COLORREF(v as u32)
+		COLORREF(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -224,15 +224,15 @@ impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as u32),
+			i => Ok(i as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETCOLUMN.into(),
-			wparam: self.index as usize,
-			lparam: self.lvcolumn as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.lvcolumn as *const _ as _,
 		}
 	}
 }
@@ -251,14 +251,14 @@ impl MsgSend for GetColumnWidth {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as u32),
+			i => Ok(i as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETCOLUMNWIDTH.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -274,7 +274,7 @@ impl MsgSend for GetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVS_EX(v as u32)
+		co::LVS_EX(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -298,7 +298,7 @@ impl MsgSend for GetHeader {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HWND { ptr: p as *mut _ }),
+			p => Ok(HWND { ptr: p as _ }),
 		}
 	}
 
@@ -326,7 +326,7 @@ impl MsgSend for GetNextItem {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => None,
-			idx => Some(idx as u32),
+			idx => Some(idx as _),
 		}
 	}
 
@@ -334,7 +334,7 @@ impl MsgSend for GetNextItem {
 		WndMsg {
 			msg_id: co::LVM::GETNEXTITEM.into(),
 			wparam: self.initial_index.into(),
-			lparam: self.relationship.0 as isize,
+			lparam: self.relationship.0 as _,
 		}
 	}
 }
@@ -349,7 +349,7 @@ impl MsgSend for GetItemCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -374,14 +374,14 @@ impl MsgSend for GetItemState {
 	type RetType = co::LVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVIS(v as u32)
+		co::LVIS(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETITEMSTATE.into(),
-			wparam: self.index as usize,
-			lparam: self.mask.0 as isize,
+			wparam: self.index as _,
+			lparam: self.mask.0 as _,
 		}
 	}
 }
@@ -399,14 +399,14 @@ impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETITEMTEXT.into(),
-			wparam: self.index as usize,
-			lparam: self.lvitem as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.lvitem as *const _ as _,
 		}
 	}
 }
@@ -421,7 +421,7 @@ impl MsgSend for GetSelectedCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -443,7 +443,7 @@ impl MsgSend for GetView {
 	type RetType = co::LV_VIEW;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LV_VIEW(v as u32)
+		co::LV_VIEW(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -470,15 +470,15 @@ impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as u32),
+			i => Ok(i as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::INSERTCOLUMN.into(),
-			wparam: self.index as usize,
-			lparam: self.lvcolumn as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.lvcolumn as *const _ as _,
 		}
 	}
 }
@@ -497,7 +497,7 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as u32),
+			i => Ok(i as _),
 		}
 	}
 
@@ -505,7 +505,7 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 		WndMsg {
 			msg_id: co::LVM::INSERTITEM.into(),
 			wparam: 0,
-			lparam: self.lvitem as *const _ as isize,
+			lparam: self.lvitem as *const _ as _,
 		}
 	}
 }
@@ -550,7 +550,7 @@ impl MsgSend for IsItemVisible {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ISITEMVISIBLE.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -578,8 +578,8 @@ impl MsgSend for RedrawItems {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::REDRAWITEMS.into(),
-			wparam: self.first_index as usize,
-			lparam: self.last_index as isize,
+			wparam: self.first_index as _,
+			lparam: self.last_index as _,
 		}
 	}
 }
@@ -606,8 +606,8 @@ impl MsgSend for Scroll {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SCROLL.into(),
-			wparam: self.horizontal as usize,
-			lparam: self.vertical as isize,
+			wparam: self.horizontal as _,
+			lparam: self.vertical as _,
 		}
 	}
 }
@@ -634,8 +634,8 @@ impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETCOLUMN.into(),
-			wparam: self.index as usize,
-			lparam: self.lvcolumn as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.lvcolumn as *const _ as _,
 		}
 	}
 }
@@ -653,14 +653,14 @@ impl MsgSend for SetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVS_EX(v as u32)
+		co::LVS_EX(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETEXTENDEDLISTVIEWSTYLE.into(),
-			wparam: self.style.0 as usize,
-			lparam: self.mask.0 as isize,
+			wparam: self.style.0 as _,
+			lparam: self.mask.0 as _,
 		}
 	}
 }
@@ -687,7 +687,7 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 		WndMsg {
 			msg_id: co::LVM::SETITEM.into(),
 			wparam: 0,
-			lparam: self.lvitem as *const _ as isize,
+			lparam: self.lvitem as *const _ as _,
 		}
 	}
 }
@@ -715,7 +715,7 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 		WndMsg {
 			msg_id: co::LVM::SETITEMSTATE.into(),
 			wparam: self.index.into(),
-			lparam: self.lvitem as *const _ as isize,
+			lparam: self.lvitem as *const _ as _,
 		}
 	}
 }
@@ -742,8 +742,8 @@ impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETITEMTEXT.into(),
-			wparam: self.index as usize,
-			lparam: self.lvitem as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.lvitem as *const _ as _,
 		}
 	}
 }
@@ -766,7 +766,7 @@ impl MsgSend for SetSelectedColumn {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETSELECTEDCOLUMN.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -793,7 +793,7 @@ impl MsgSend for SetView {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETVIEW.into(),
-			wparam: self.view.0 as usize,
+			wparam: self.view.0 as _,
 			lparam: 0,
 		}
 	}
@@ -820,7 +820,7 @@ impl MsgSend for Update {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::UPDATE.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}

@@ -21,7 +21,7 @@ impl HHOOK {
 		unsafe {
 			user32::SetWindowsHookExW(
 				idHook.0,
-				lpfn as *const _,
+				lpfn as _,
 				hmod.ptr,
 				dwThreadId,
 			).as_mut()

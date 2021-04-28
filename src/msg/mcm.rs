@@ -29,7 +29,7 @@ impl<'a> MsgSend for GetCurSel<'a> {
 		WndMsg {
 			msg_id: co::MCM::GETCURSEL.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as isize,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }
@@ -56,7 +56,7 @@ impl<'a> MsgSend for GetMinReqRect<'a> {
 		WndMsg {
 			msg_id: co::MCM::GETMINREQRECT.into(),
 			wparam: 0,
-			lparam: self.bounding_rect as *const _ as isize,
+			lparam: self.bounding_rect as *const _ as _,
 		}
 	}
 }
@@ -71,7 +71,7 @@ impl MsgSend for GetMonthDelta {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -105,7 +105,7 @@ impl<'a> MsgSend for SetCurSel<'a> {
 		WndMsg {
 			msg_id: co::MCM::SETCURSEL.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as isize,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }
@@ -132,7 +132,7 @@ impl MsgSend for SetCurrentView {
 		WndMsg {
 			msg_id: co::MCM::SETCURRENTVIEW.into(),
 			wparam: 0,
-			lparam: self.view.0 as isize,
+			lparam: self.view.0 as _,
 		}
 	}
 }
@@ -156,7 +156,7 @@ impl<'a> MsgSend for SetToday<'a> {
 		WndMsg {
 			msg_id: co::MCM::SETTODAY.into(),
 			wparam: 0,
-			lparam: self.today as *const _ as isize,
+			lparam: self.today as *const _ as _,
 		}
 	}
 }

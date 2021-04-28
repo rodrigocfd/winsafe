@@ -2843,7 +2843,7 @@ impl ERROR {
 				std::ptr::null(),
 				self.0,
 				co::LANG::NEUTRAL.MAKELANGID(co::SUBLANG::DEFAULT),
-				(&mut ptr_buf as *mut *mut u16) as *mut _, // pass pointer to pointer
+				(&mut ptr_buf as *mut *mut u16) as _, // pass pointer to pointer
 				0,
 				std::ptr::null_mut(),
 			) {
@@ -2852,8 +2852,8 @@ impl ERROR {
 					self, GetLastError(),
 				),
 				nchars => {
-					let final_str = WString::from_wchars_count(ptr_buf, nchars as usize).to_string();
-					match (HLOCAL { ptr: ptr_buf as *mut _ }).LocalFree() {
+					let final_str = WString::from_wchars_count(ptr_buf, nchars as _).to_string();
+					match (HLOCAL { ptr: ptr_buf as _ }).LocalFree() {
 						Ok(()) => final_str,
 						Err(err) => format!(
 							"LocalFree failed after formatting error {:#06x}: error {:#06x}.",

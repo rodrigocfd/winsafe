@@ -45,7 +45,7 @@ impl DlgBase {
 			IdStr::Id(self.dialog_id),
 			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
-			Some(self as *const Self as _), // pass pointer to self
+			Some(self as *const _ as _), // pass pointer to self
 		).map(|_| ())
 	}
 
@@ -60,7 +60,7 @@ impl DlgBase {
 			IdStr::Id(self.dialog_id),
 			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
-			Some(self as *const Self as _), // pass pointer to self
+			Some(self as *const _ as _), // pass pointer to self
 		).map(|res| res as _)
 	}
 
@@ -122,7 +122,7 @@ impl DlgBase {
 		self.base.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as _);
 	}
 	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
-		let hfont = HFONT { ptr: lparam as *mut _ };
+		let hfont = HFONT { ptr: lparam as _ };
 		hchild.SendMessage(wm::SetFont { hfont, redraw: false });
 		true as _
 	}

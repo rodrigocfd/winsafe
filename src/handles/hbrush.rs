@@ -11,8 +11,6 @@ hgdiobj_type! {
 impl HBRUSH {
 	/// Creates a brush with the given system color.
 	pub fn from_sys_color(color: co::COLOR) -> HBRUSH {
-		Self {
-			ptr: (color.0 + 1) as *mut _,
-		}
+		Self { ptr: (color.0 + 1) as _ }
 	}
 }

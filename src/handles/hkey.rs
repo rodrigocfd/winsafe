@@ -274,7 +274,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 							std::ptr::null_mut(),
-							szBuf.as_mut_ptr() as *mut _,
+							szBuf.as_mut_ptr() as _,
 							&mut dataLen,
 						)
 					} as _
@@ -296,7 +296,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 							std::ptr::null_mut(),
-							byteBuf.as_mut_ptr() as *mut _,
+							byteBuf.as_mut_ptr() as _,
 							&mut dataLen,
 						)
 					} as _
@@ -372,13 +372,13 @@ impl HKEY {
 			None => (std::ptr::null_mut(), 0),
 		};
 
-		let lpcSubKeys2 = lpcSubKeys.map_or(std::ptr::null_mut(), |re| re as *mut _);
-		let lpcbMaxSubKeyLen2 = lpcbMaxSubKeyLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
-		let lpcbMaxClassLen2 = lpcbMaxClassLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
-		let lpcValues2 = lpcValues.map_or(std::ptr::null_mut(), |re| re as *mut _);
-		let lpcbMaxValueNameLen2 = lpcbMaxValueNameLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
-		let lpcbMaxValueLen2 = lpcbMaxValueLen.map_or(std::ptr::null_mut(), |re| re as *mut _);
-		let lpcbSecurityDescriptor2 = lpcbSecurityDescriptor.map_or(std::ptr::null_mut(), |re| re as *mut _);
+		let lpcSubKeys2 = lpcSubKeys.map_or(std::ptr::null_mut(), |re| re as _);
+		let lpcbMaxSubKeyLen2 = lpcbMaxSubKeyLen.map_or(std::ptr::null_mut(), |re| re as _);
+		let lpcbMaxClassLen2 = lpcbMaxClassLen.map_or(std::ptr::null_mut(), |re| re as _);
+		let lpcValues2 = lpcValues.map_or(std::ptr::null_mut(), |re| re as _);
+		let lpcbMaxValueNameLen2 = lpcbMaxValueNameLen.map_or(std::ptr::null_mut(), |re| re as _);
+		let lpcbMaxValueLen2 = lpcbMaxValueLen.map_or(std::ptr::null_mut(), |re| re as _);
+		let lpcbSecurityDescriptor2 = lpcbSecurityDescriptor.map_or(std::ptr::null_mut(), |re| re as _);
 		let lpftLastWriteTime2 = lpftLastWriteTime.map_or(std::ptr::null_mut(), |re| ref_as_pvoid(re));
 
 		loop { // until lpClass is large enough
@@ -485,7 +485,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							&mut dwordBuf as *mut _ as *mut _,
+							&mut dwordBuf as *mut _ as _,
 							&mut dataLen,
 						)
 					} as _
@@ -504,7 +504,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							&mut qwordBuf as *mut _ as *mut _,
+							&mut qwordBuf as *mut _ as _,
 							&mut dataLen,
 						)
 					} as _
@@ -523,7 +523,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							std::ptr::null_mut(),
 							std::ptr::null_mut(),
-							szBuf.as_mut_ptr() as *mut _,
+							szBuf.as_mut_ptr() as _,
 							&mut dataLen,
 						)
 					} as _
@@ -628,7 +628,7 @@ impl HKEY {
 					WString::from_str(lpValueName).as_ptr(),
 					0,
 					lpData.reg_type().0,
-					lpData.as_ptr() as *const _,
+					lpData.as_ptr() as _,
 					lpData.len() as _,
 				)
 			} as _

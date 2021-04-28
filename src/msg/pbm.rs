@@ -20,13 +20,13 @@ impl MsgSend for DeltaPos {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::DELTAPOS.into(),
-			wparam: self.advance_amount as usize,
+			wparam: self.advance_amount as _,
 			lparam: 0,
 		}
 	}
@@ -42,7 +42,7 @@ impl MsgSend for GetPos {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -67,14 +67,14 @@ impl<'a> MsgSend for GetRange<'a> {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as i32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::GETRANGE.into(),
-			wparam: self.return_low as usize,
-			lparam: self.ranges.as_ref().map_or(0, |r| r as *const _ as isize),
+			wparam: self.return_low as _,
+			lparam: self.ranges.as_ref().map_or(0, |r| r as *const _ as _),
 		}
 	}
 }
@@ -89,7 +89,7 @@ impl MsgSend for GetState {
 	type RetType = co::PBST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::PBST(v as u32)
+		co::PBST(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -120,8 +120,8 @@ impl MsgSend for SetMarquee {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETMARQUEE.into(),
-			wparam: self.turn_on as usize,
-			lparam: self.time_ms.unwrap_or_default() as isize,
+			wparam: self.turn_on as _,
+			lparam: self.time_ms.unwrap_or_default() as _,
 		}
 	}
 }
@@ -138,13 +138,13 @@ impl MsgSend for SetPos {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETPOS.into(),
-			wparam: self.position as usize,
+			wparam: self.position as _,
 			lparam: 0,
 		}
 	}
@@ -173,7 +173,7 @@ impl MsgSend for SetRange {
 		WndMsg {
 			msg_id: co::PBM::SETPOS.into(),
 			wparam: 0,
-			lparam: MAKEDWORD(self.min, self.max) as isize,
+			lparam: MAKEDWORD(self.min, self.max) as _,
 		}
 	}
 }
@@ -197,8 +197,8 @@ impl MsgSend for SetRange32 {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETRANGE32.into(),
-			wparam: self.min as usize,
-			lparam: self.max as isize,
+			wparam: self.min as _,
+			lparam: self.max as _,
 		}
 	}
 }
@@ -215,13 +215,13 @@ impl MsgSend for SetState {
 	type RetType = co::PBST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::PBST(v as u32)
+		co::PBST(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETSTATE.into(),
-			wparam: self.state.0 as usize,
+			wparam: self.state.0 as _,
 			lparam: 0,
 		}
 	}
@@ -239,13 +239,13 @@ impl MsgSend for SetStep {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETSTEP.into(),
-			wparam: self.step as usize,
+			wparam: self.step as _,
 			lparam: 0,
 		}
 	}
@@ -261,7 +261,7 @@ impl MsgSend for StepIt {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {

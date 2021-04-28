@@ -32,7 +32,7 @@ impl<'a> MsgSend for GetIdealSize<'a> {
 		WndMsg {
 			msg_id: co::BM::GETIDEALSIZE.into(),
 			wparam: 0,
-			lparam: self.size as *const _ as isize,
+			lparam: self.size as *const _ as _,
 		}
 	}
 }
@@ -59,7 +59,7 @@ impl<'a> MsgSend for GetImageList<'a> {
 		WndMsg {
 			msg_id: co::BM::GETIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as isize,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }
@@ -86,7 +86,7 @@ impl<'a> MsgSend for GetNote<'a> {
 		WndMsg {
 			msg_id: co::BM::GETNOTE.into(),
 			wparam: self.text.buffer_size(),
-			lparam: unsafe { self.text.as_ptr() } as isize,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -101,7 +101,7 @@ impl MsgSend for GetNoteLength {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -135,7 +135,7 @@ impl<'a> MsgSend for GetSplitInfo<'a> {
 		WndMsg {
 			msg_id: co::BM::GETSPLITINFO.into(),
 			wparam: 0,
-			lparam: self.splitinfo as *const _ as isize,
+			lparam: self.splitinfo as *const _ as _,
 		}
 	}
 }
@@ -162,7 +162,7 @@ impl<'a> MsgSend for GetTextMargin<'a> {
 		WndMsg {
 			msg_id: co::BM::GETTEXTMARGIN.into(),
 			wparam: 0,
-			lparam: self.margins as *const _ as isize,
+			lparam: self.margins as *const _ as _,
 		}
 	}
 }
@@ -188,7 +188,7 @@ impl MsgSend for SetDropDownState {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETDROPDOWNSTATE.into(),
-			wparam: self.is_pushed as usize,
+			wparam: self.is_pushed as _,
 			lparam: 0,
 		}
 	}
@@ -216,7 +216,7 @@ impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::BM::SETIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as isize,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }
@@ -243,7 +243,7 @@ impl<'a> MsgSend for SetNote<'a> {
 		WndMsg {
 			msg_id: co::BM::SETNOTE.into(),
 			wparam: self.text.buffer_size(),
-			lparam: unsafe { self.text.as_ptr() } as isize,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -269,7 +269,7 @@ impl MsgSend for SetShield {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSHIELD.into(),
-			wparam: self.has_elevated_icon as usize,
+			wparam: self.has_elevated_icon as _,
 			lparam: 0,
 		}
 	}
@@ -297,7 +297,7 @@ impl<'a> MsgSend for SetSplitInfo<'a> {
 		WndMsg {
 			msg_id: co::BM::SETSPLITINFO.into(),
 			wparam: 0,
-			lparam: self.splitinfo as *const _ as isize,
+			lparam: self.splitinfo as *const _ as _,
 		}
 	}
 }
@@ -324,7 +324,7 @@ impl<'a> MsgSend for SetTextMargin<'a> {
 		WndMsg {
 			msg_id: co::BM::SETTEXTMARGIN.into(),
 			wparam: 0,
-			lparam: self.margins as *const _ as isize,
+			lparam: self.margins as *const _ as _,
 		}
 	}
 }
@@ -343,7 +343,7 @@ impl MsgSend for GetCheck {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::BST(v as u32)
+		co::BST(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -368,8 +368,8 @@ impl MsgSend for GetImage {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.img_type {
-			co::IMAGE_TYPE::BITMAP => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as *mut _ })),
-			co::IMAGE_TYPE::ICON => Ok(BitmapIcon::Icon(HICON { ptr: v as *mut _ })),
+			co::IMAGE_TYPE::BITMAP => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as _ })),
+			co::IMAGE_TYPE::ICON => Ok(BitmapIcon::Icon(HICON { ptr: v as _ })),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
 		}
 	}
@@ -377,7 +377,7 @@ impl MsgSend for GetImage {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETIMAGE.into(),
-			wparam: self.img_type.0 as usize,
+			wparam: self.img_type.0 as _,
 			lparam: 0,
 		}
 	}
@@ -393,7 +393,7 @@ impl MsgSend for GetState {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::BST(v as u32)
+		co::BST(v as _)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -423,7 +423,7 @@ impl MsgSend for SetCheck {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETCHECK.into(),
-			wparam: self.state.0 as usize,
+			wparam: self.state.0 as _,
 			lparam: 0,
 		}
 	}
@@ -447,7 +447,7 @@ impl MsgSend for SetDontClick {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETDONTCLICK.into(),
-			wparam: self.dont_click as usize,
+			wparam: self.dont_click as _,
 			lparam: 0,
 		}
 	}
@@ -466,8 +466,8 @@ impl MsgSend for SetImage {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.image {
-			BitmapIcon::Bitmap(_) => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as *mut _ })),
-			BitmapIcon::Icon(_) => Ok(BitmapIcon::Icon(HICON { ptr: v as *mut _ })),
+			BitmapIcon::Bitmap(_) => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as _ })),
+			BitmapIcon::Icon(_) => Ok(BitmapIcon::Icon(HICON { ptr: v as _ })),
 		}
 	}
 
@@ -477,7 +477,7 @@ impl MsgSend for SetImage {
 			wparam: match self.image {
 				BitmapIcon::Bitmap(_) => co::IMAGE_TYPE::BITMAP.0,
 				BitmapIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
-			} as usize,
+			} as _,
 			lparam: self.image.as_isize(),
 		}
 	}
@@ -501,7 +501,7 @@ impl MsgSend for SetState {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSTATE.into(),
-			wparam: self.highlight as usize,
+			wparam: self.highlight as _,
 			lparam: 0,
 		}
 	}
@@ -526,8 +526,8 @@ impl MsgSend for SetStyle {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSTYLE.into(),
-			wparam: self.style.0 as usize,
-			lparam: self.redraw as isize,
+			wparam: self.style.0 as _,
+			lparam: self.redraw as _,
 		}
 	}
 }

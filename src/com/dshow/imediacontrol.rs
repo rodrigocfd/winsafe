@@ -47,7 +47,7 @@ impl IMediaControl {
 				((**self.ppv()).AddSourceFilter)(
 					self.ppv(),
 					WString::from_str(fileName).as_mut_ptr(), // BSTR
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IDispatch::from(ppvQueried))

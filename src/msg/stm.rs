@@ -19,7 +19,7 @@ impl MsgSend for GetIcon {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HICON { ptr: p as *mut _ }),
+			p => Ok(HICON { ptr: p as _ }),
 		}
 	}
 
@@ -46,14 +46,14 @@ impl MsgSend for SetIcon {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HICON { ptr: p as *mut _ }),
+			p => Ok(HICON { ptr: p as _ }),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::STM::SETICON.into(),
-			wparam: self.icon.ptr as usize,
+			wparam: self.icon.ptr as _,
 			lparam: 0,
 		}
 	}

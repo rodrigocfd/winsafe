@@ -29,7 +29,7 @@ impl HWND {
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) wrapper to retrieve
 	/// the window [`HINSTANCE`](crate::HINSTANCE).
 	pub fn hinstance(self) -> HINSTANCE {
-		HINSTANCE { ptr: self.GetWindowLongPtr(co::GWLP::HINSTANCE) as *mut _ }
+		HINSTANCE { ptr: self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _ }
 	}
 
 	/// [`ArrangeIconicWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-arrangeiconicwindows)
@@ -127,7 +127,7 @@ impl HWND {
 				hWndParent.map_or(std::ptr::null_mut(), |h| h.ptr),
 				hMenu.as_ptr(),
 				hInstance.ptr,
-				lpParam.unwrap_or_default() as *mut _,
+				lpParam.unwrap_or_default() as _,
 			).as_mut()
 		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
@@ -199,7 +199,7 @@ impl HWND {
 	/// inconvenient of the manual function pointer.
 	pub fn EnumChildWindows(self, lpEnumFunc: WNDENUMPROC, lParam: isize) {
 		unsafe {
-			user32::EnumChildWindows(self.ptr, lpEnumFunc as *const _, lParam);
+			user32::EnumChildWindows(self.ptr, lpEnumFunc as _, lParam);
 		}
 	}
 
@@ -497,7 +497,8 @@ impl HWND {
 	/// This method can be more performant than
 	/// [`GetWindowTextStr`](crate::HWND::GetWindowTextStr) because the buffer
 	/// can be reused, avoiding multiple allocations. However, it has the
-	/// inconvenient of the manual conversion from `WString` to `String`.
+	/// inconvenient of the manual conversion from [`WString`](crate::WString)
+	/// to `String`.
 	///
 	/// # Examples
 	///
@@ -550,7 +551,7 @@ impl HWND {
 	}
 
 	/// A more convenient [`GetWindowText`](crate::HWND::GetWindowText), which
-	/// returns a `String` instead of requiring an external buffer.
+	/// directly returns a `String` instead of requiring an external buffer.
 	///
 	/// # Examples
 	///
@@ -826,7 +827,9 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				comctl32::RemoveWindowSubclass(
-					self.ptr, pfnSubclass as *const _, uIdSubclass,
+					self.ptr,
+					pfnSubclass as _,
+					uIdSubclass,
 				)
 			},
 		)
@@ -985,7 +988,7 @@ impl HWND {
 				self.ptr,
 				nIDEvent,
 				uElapse,
-				lpTimerFunc.map_or(std::ptr::null(), |lp| lp as *const _),
+				lpTimerFunc.map_or(std::ptr::null(), |lp| lp as _),
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -1052,7 +1055,10 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				comctl32::SetWindowSubclass(
-					self.ptr, pfnSubclass as *const _, uIdSubclass, dwRefData,
+					self.ptr,
+					pfnSubclass as _,
+					uIdSubclass,
+					dwRefData,
 				)
 			},
 		)

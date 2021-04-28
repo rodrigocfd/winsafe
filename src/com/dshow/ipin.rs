@@ -51,7 +51,7 @@ impl IPin {
 			unsafe {
 				((**self.ppv()).ConnectedTo)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IPin::from(ppvQueried))

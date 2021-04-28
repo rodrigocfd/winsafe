@@ -72,7 +72,7 @@ impl IUnknown {
 			(unsafe { (**self.ppv).QueryInterface })(
 				self.ppv,
 				ref_as_pcvoid(&VT::IID()),
-				&mut ppvQueried as *mut _ as *mut _,
+				&mut ppvQueried as *mut _ as _,
 			),
 		).map(|_| RetInterf::from(ppvQueried))
 	}

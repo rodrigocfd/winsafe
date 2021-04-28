@@ -59,7 +59,7 @@ impl IShellItem {
 					WString::from_str(file_or_folder_path).as_ptr(),
 					std::ptr::null_mut(),
 					ref_as_pcvoid(&IShellItemVT::IID()),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))
@@ -123,7 +123,7 @@ impl IShellItem {
 			unsafe {
 				((**self.ppv()).GetParent)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))

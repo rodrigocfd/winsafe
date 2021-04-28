@@ -59,7 +59,7 @@ impl IFilterGraph {
 			unsafe {
 				((**self.ppv()).EnumFilters)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IEnumFilters::from(ppvQueried))
@@ -74,7 +74,7 @@ impl IFilterGraph {
 				((**self.ppv()).FindFilterByName)(
 					self.ppv(),
 					WString::from_str(name).as_ptr(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IBaseFilter::from(ppvQueried))

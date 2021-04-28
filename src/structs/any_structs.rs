@@ -50,7 +50,7 @@ impl std::fmt::Display for ATOM {
 impl ATOM {
 	/// Useful to pass the atom as class name.
 	pub fn as_ptr(self) -> *const u16 {
-		self.0 as *const u16
+		self.0 as _
 	}
 }
 
@@ -210,8 +210,8 @@ pub struct HELPINFO {
 impl HELPINFO {
 	pub fn hItemHandle(&self) -> HwndHmenu {
 		match self.iContextType {
-			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND { ptr: self.hItemHandle as *mut _ }),
-			_ => HwndHmenu::Hmenu(HMENU { ptr: self.hItemHandle as *mut _ }),
+			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND { ptr: self.hItemHandle as _ }),
+			_ => HwndHmenu::Hmenu(HMENU { ptr: self.hItemHandle as _ }),
 		}
 	}
 }
@@ -761,14 +761,14 @@ impl WINDOWPOS {
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
 			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),
-			_ => HwndPlace::Hwnd(HWND { ptr: self.hwndInsertAfter as *mut _ }),
+			_ => HwndPlace::Hwnd(HWND { ptr: self.hwndInsertAfter as _ }),
 		}
 	}
 
 	/// Sets the `hwndInsertAfter` field.
 	pub fn set_hwndInsertAfter(&mut self, hwnd: HwndPlace) {
 		self.hwndInsertAfter = match hwnd {
-			HwndPlace::Hwnd(h) => h.ptr as isize,
+			HwndPlace::Hwnd(h) => h.ptr as _,
 			HwndPlace::Place(v) => v.into(),
 			HwndPlace::None => 0,
 		};
@@ -806,10 +806,10 @@ impl<'a, 'b> Default for WNDCLASSEX<'a, 'b> {
 impl<'a, 'b> WNDCLASSEX<'a, 'b> {
 	/// Returns the `lpszMenuName` field.
 	pub fn lpszMenuName(&self) -> IdStr {
-		if HIDWORD(self.lpszMenuName as u64) == 0
-			&& HIWORD(LODWORD(self.lpszMenuName as u64)) == 0 // https://stackoverflow.com/a/9806654/6923555
+		if HIDWORD(self.lpszMenuName as _) == 0
+			&& HIWORD(LODWORD(self.lpszMenuName as _)) == 0 // https://stackoverflow.com/a/9806654/6923555
 		{
-			IdStr::Id(LOWORD(LODWORD(self.lpszMenuName as u64)) as _)
+			IdStr::Id(LOWORD(LODWORD(self.lpszMenuName as _)) as _)
 		} else {
 			IdStr::Str(WString::from_wchars_nullt(self.lpszMenuName))
 		}

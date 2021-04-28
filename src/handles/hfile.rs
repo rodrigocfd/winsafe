@@ -184,7 +184,7 @@ impl HFILE {
 			unsafe {
 				kernel32::ReadFile(
 					self.ptr,
-					buf.as_mut_ptr() as *mut _,
+					buf.as_mut_ptr() as _,
 					numBytesToRead,
 					&mut bytesRead,
 					lpOverlapped.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
@@ -247,7 +247,7 @@ impl HFILE {
 			unsafe {
 				kernel32::WriteFile(
 					self.ptr,
-					buffer.as_ptr() as *const _,
+					buffer.as_ptr() as _,
 					buffer.len() as _,
 					&mut bytesWritten,
 					lpOverlapped.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),

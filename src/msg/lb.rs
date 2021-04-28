@@ -26,7 +26,7 @@ impl<'a> MsgSend for AddFile<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
@@ -34,7 +34,7 @@ impl<'a> MsgSend for AddFile<'a> {
 		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -53,7 +53,7 @@ impl<'a> MsgSend for AddString<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
@@ -61,7 +61,7 @@ impl<'a> MsgSend for AddString<'a> {
 		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -80,14 +80,14 @@ impl MsgSend for DeleteString {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::DELETESTRING.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -109,15 +109,15 @@ impl<'a> MsgSend for Dir<'a> {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::DELETESTRING.into(),
-			wparam: self.attributes.0 as usize,
-			lparam: unsafe { WString::from_str(self.path).as_ptr() } as isize,
+			wparam: self.attributes.0 as _,
+			lparam: unsafe { WString::from_str(self.path).as_ptr() } as _,
 		}
 	}
 }
@@ -137,7 +137,7 @@ impl<'a> MsgSend for FindString<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => None,
-			idx => Some(idx as u32),
+			idx => Some(idx as _),
 		}
 	}
 
@@ -147,8 +147,8 @@ impl<'a> MsgSend for FindString<'a> {
 			wparam: match self.preceding_index {
 				None => -1,
 				Some(idx) => idx as i32,
-			} as usize,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			} as _,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -168,7 +168,7 @@ impl<'a> MsgSend for FindStringExact<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => None,
-			idx => Some(idx as u32),
+			idx => Some(idx as _),
 		}
 	}
 
@@ -178,8 +178,8 @@ impl<'a> MsgSend for FindStringExact<'a> {
 			wparam: match self.preceding_index {
 				None => -1,
 				Some(idx) => idx as i32,
-			} as usize,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			} as _,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -194,7 +194,7 @@ impl MsgSend for GetAnchorIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -216,7 +216,7 @@ impl MsgSend for GetCaretIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -240,7 +240,7 @@ impl MsgSend for GetCount {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
@@ -265,7 +265,7 @@ impl MsgSend for GetCurSel {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => None,
-			idx => Some(idx as u32),
+			idx => Some(idx as _),
 		}
 	}
 
@@ -288,7 +288,7 @@ impl MsgSend for GetHorizontalExtent {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -342,14 +342,14 @@ impl MsgSend for GetItemHeight {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			height => Ok(height as u32),
+			height => Ok(height as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETITEMHEIGHT.into(),
-			wparam: self.index.unwrap_or(0) as usize,
+			wparam: self.index.unwrap_or_default() as _,
 			lparam: 0,
 		}
 	}
@@ -377,8 +377,8 @@ impl<'a> MsgSend for GetItemRect<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETITEMRECT.into(),
-			wparam: self.index as usize,
-			lparam: self.rect as *const _ as isize,
+			wparam: self.index as _,
+			lparam: self.rect as *const _ as _,
 		}
 	}
 }
@@ -393,7 +393,7 @@ impl MsgSend for GetListBoxInfo {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as u32
+		v as _
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -426,7 +426,7 @@ impl MsgSend for GetSel {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETSEL.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -444,7 +444,7 @@ impl MsgSend for GetSelCount {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
@@ -471,7 +471,7 @@ impl<'a> MsgSend for GetSelItems<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as u32),
+			count => Ok(count as _),
 		}
 	}
 
@@ -479,7 +479,7 @@ impl<'a> MsgSend for GetSelItems<'a> {
 		WndMsg {
 			msg_id: co::LB::GETSELITEMS.into(),
 			wparam: self.buffer.len(),
-			lparam: self.buffer.as_ptr() as isize,
+			lparam: self.buffer.as_ptr() as _,
 		}
 	}
 }
@@ -499,15 +499,15 @@ impl<'a> MsgSend for GetText<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			nchars => Ok(nchars as u32),
+			nchars => Ok(nchars as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETTEXT.into(),
-			wparam: self.index as usize,
-			lparam: unsafe { self.text.as_ptr() } as isize,
+			wparam: self.index as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -526,14 +526,14 @@ impl MsgSend for GetTextLen {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			nchars => Ok(nchars as u32),
+			nchars => Ok(nchars as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETTEXTLEN.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -551,7 +551,7 @@ impl MsgSend for GetTopIndex {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
@@ -579,15 +579,15 @@ impl MsgSend for InitStorage {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			n_items => Ok(n_items as u32),
+			n_items => Ok(n_items as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::INITSTORAGE.into(),
-			wparam: self.num_items as usize,
-			lparam: self.memory_bytes as isize,
+			wparam: self.num_items as _,
+			lparam: self.memory_bytes as _,
 		}
 	}
 }
@@ -607,7 +607,7 @@ impl<'a> MsgSend for InsertString<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
@@ -615,7 +615,7 @@ impl<'a> MsgSend for InsertString<'a> {
 		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
 			wparam: self.insertion_index.into(),
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as isize,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
 }
@@ -632,7 +632,7 @@ impl MsgSend for ItemFromPoint {
 	type RetType = (i32, bool);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as u32) as i32, HIWORD(v as u32) == 1)
+		(LOWORD(v as _) as _, HIWORD(v as _) == 1)
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -663,7 +663,7 @@ impl<'a> MsgSend for SelectString<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as u32),
+			idx => Ok(idx as _),
 		}
 	}
 
@@ -673,8 +673,8 @@ impl<'a> MsgSend for SelectString<'a> {
 			wparam: match self.index {
 				None => -1,
 				Some(idx) => idx as i32,
-			} as usize,
-			lparam: unsafe { WString::from_str(self.prefix).as_ptr() } as isize,
+			} as _,
+			lparam: unsafe { WString::from_str(self.prefix).as_ptr() } as _,
 		}
 	}
 }
@@ -703,7 +703,7 @@ impl MsgSend for SelItemRange {
 		WndMsg {
 			msg_id: co::LB::SELITEMRANGE.into(),
 			wparam: self.select as usize,
-			lparam: MAKEDWORD(self.first_item as u16, self.last_item as u16) as isize,
+			lparam: MAKEDWORD(self.first_item as _, self.last_item as _) as _,
 		}
 	}
 }
@@ -729,7 +729,7 @@ impl MsgSend for SetAnchorIndex {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETANCHORINDEX.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -757,7 +757,7 @@ impl MsgSend for SetSel {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETSEL.into(),
-			wparam: self.select as usize,
+			wparam: self.select as _,
 			lparam: self.index.into(),
 		}
 	}
@@ -785,7 +785,7 @@ impl<'a> MsgSend for SetTabStops<'a> {
 		WndMsg {
 			msg_id: co::LB::SETTABSTOPS.into(),
 			wparam: self.tab_stops.len(),
-			lparam: self.tab_stops.as_ptr() as isize,
+			lparam: self.tab_stops.as_ptr() as _,
 		}
 	}
 }
@@ -811,7 +811,7 @@ impl MsgSend for SetTopIndex {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETTOPINDEX.into(),
-			wparam: self.index as usize,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}

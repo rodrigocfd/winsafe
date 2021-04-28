@@ -50,9 +50,9 @@ impl IMediaSeeking {
 				((**self.ppv()).ConvertTimeFormat)(
 					self.ppv(),
 					&mut target,
-					targetFormat as *const _ as *const _,
+					targetFormat as *const _ as _,
 					source,
-					sourceFormat as *const _ as *const _,
+					sourceFormat as *const _ as _,
 				)
 			},
 		).map(|_| target)
@@ -139,7 +139,7 @@ impl IMediaSeeking {
 			unsafe {
 				((**self.ppv()).GetStopPosition)(
 					self.ppv(),
-					&mut guid as *mut _ as *mut _,
+					&mut guid as *mut _ as _,
 				)
 			},
 		).map(|_| guid)

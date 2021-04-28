@@ -40,10 +40,10 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 			ole32::CoCreateInstance(
 				ref_as_pcvoid(rclsid),
 				pUnkOuter.as_ref()
-					.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as *mut _),
+					.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as _),
 				dwClsContext.0,
 				ref_as_pcvoid(&VT::IID()),
-				&mut ppv as *mut _ as *mut _,
+				&mut ppv as *mut _ as _,
 			)
 		},
 	).map(|_| {
@@ -86,7 +86,7 @@ pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
 /// [`CoTaskMemFree`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.
 pub fn CoTaskMemFree<T>(pv: *mut T) {
-	unsafe { ole32::CoTaskMemFree(pv as *mut _) }
+	unsafe { ole32::CoTaskMemFree(pv as _) }
 }
 
 /// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)

@@ -132,7 +132,7 @@ impl NativeControlBase {
 
 			self.0.hwnd.SetWindowSubclass(
 				Self::subclass_proc, subclass_id,
-				self as *const Self as _, // pass pointer to self
+				self as *const _ as _, // pass pointer to self
 			)
 		} else {
 			Ok(())

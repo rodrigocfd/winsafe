@@ -64,7 +64,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).GetCurrentSelection)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))
@@ -100,7 +100,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).GetFolder)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))
@@ -123,7 +123,7 @@ impl IFileDialog {
 			unsafe {
 				((**self.ppv()).GetResult)(
 					self.ppv(),
-					&mut ppvQueried as *mut _ as *mut _,
+					&mut ppvQueried as *mut _ as _,
 				)
 			},
 		).map(|_| IShellItem::from(ppvQueried))

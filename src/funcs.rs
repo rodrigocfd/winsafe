@@ -194,7 +194,7 @@ pub fn GetDoubleClickTime() -> u32 {
 pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 	unsafe { kernel32::GetEnvironmentStringsW().as_mut() }
 		.map(|ptr| {
-			let vecEnvStrs = parse_multi_z_str(ptr as *mut _ as *const u16);
+			let vecEnvStrs = parse_multi_z_str(ptr as *mut _ as _);
 			unsafe { kernel32::FreeEnvironmentStringsW(ptr); }
 
 			let mut map = HashMap::with_capacity(vecEnvStrs.len());
