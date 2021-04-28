@@ -24,11 +24,11 @@ impl HFILEMAP {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`UnmapViewOfFile`](crate::HFILEMAPADDR::UnmapViewOfFile) call.
+	/// [`UnmapViewOfFile`](crate::HFILEMAPVIEW::UnmapViewOfFile) call.
 	pub fn MapViewOfFile(self,
 		desiredAccess: co::FILE_MAP,
 		offset: u64,
-		numberOfBytesToMap: Option<i64>) -> WinResult<HFILEMAPADDR>
+		numberOfBytesToMap: Option<i64>) -> WinResult<HFILEMAPVIEW>
 	{
 		unsafe {
 			kernel32::MapViewOfFile(
@@ -38,7 +38,7 @@ impl HFILEMAP {
 				LODWORD(offset),
 				numberOfBytesToMap.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| HFILEMAPADDR { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HFILEMAPVIEW { ptr }).ok_or_else(|| GetLastError())
 	}
 }
 
@@ -48,10 +48,10 @@ handle_type! {
 	/// Address of a
 	/// [mapped view](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
 	/// Originally just an `LPVOID`.
-	HFILEMAPADDR
+	HFILEMAPVIEW
 }
 
-impl HFILEMAPADDR {
+impl HFILEMAPVIEW {
 	/// [`UnmapViewOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
 	/// method.
 	pub fn UnmapViewOfFile(self) -> WinResult<()> {

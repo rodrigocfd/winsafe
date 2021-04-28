@@ -32,7 +32,7 @@ pub use hdc::HDC;
 pub use hdrop::HDROP;
 pub use hdwp::HDWP;
 pub use hfile::HFILE;
-pub use hfilemap::{HFILEMAP, HFILEMAPADDR};
+pub use hfilemap::{HFILEMAP, HFILEMAPVIEW};
 pub use hfont::HFONT;
 pub use hhook::HHOOK;
 pub use hicon::HICON;
