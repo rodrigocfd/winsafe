@@ -2,7 +2,6 @@
 //! COM interfaces.
 
 pub mod clsid;
-pub mod co;
 pub mod vt;
 
 mod any_structs;

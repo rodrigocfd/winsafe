@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co::ERROR;
+use crate::co;
 use crate::com::{IUnknown, IUnknownVT, PPComVT};
 use crate::com::dshow::clsid;
-use crate::com::dshow::co;
 use crate::com::dshow::vt::IMediaSeekingVT;
 use crate::privs::{hr_to_winresult, ref_as_pcvoid};
 use crate::structs::GUID;
@@ -151,7 +150,7 @@ impl IMediaSeeking {
 		mut current: i64, currentFlags: co::SEEKING_FLAGS,
 		mut stop: i64, stopFlags: co::SEEKING_FLAGS) -> WinResult<()>
 	{
-		match ERROR(
+		match co::ERROR(
 			unsafe {
 				((**self.ppv()).SetPositions)(
 					self.ppv(),
@@ -162,7 +161,7 @@ impl IMediaSeeking {
 				)
 			} as _,
 		) {
-			ERROR::S_OK | ERROR::S_FALSE => Ok(()),
+			co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(()),
 			err => Err(err),
 		}
 	}

@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co::ERROR;
+use crate::co;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::com::funcs::CoTaskMemFree;
-use crate::com::shell::co;
 use crate::com::shell::vt::IShellItemVT;
 use crate::ffi::shell32;
 use crate::privs::{hr_to_winresult, ref_as_pcvoid};
@@ -69,12 +68,12 @@ impl IShellItem {
 	/// method.
 	pub fn GetAttributes(&self, sfgaoMask: co::SFGAO) -> WinResult<co::SFGAO> {
 		let mut attrs: u32 = 0;
-		match ERROR(
+		match co::ERROR(
 			unsafe {
 				((**self.ppv()).GetAttributes)(self.ppv(), sfgaoMask.0, &mut attrs)
 			} as _,
 		) {
-			ERROR::S_OK | ERROR::S_FALSE => Ok(co::SFGAO(attrs)),
+			co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(co::SFGAO(attrs)),
 			err => Err(err),
 		}
 	}
