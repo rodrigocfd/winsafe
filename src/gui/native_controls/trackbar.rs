@@ -9,7 +9,7 @@ use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
-use crate::msg::tbm;
+use crate::msg::trbm;
 use crate::structs::{POINT, SIZE};
 
 /// Native
@@ -113,33 +113,33 @@ impl Trackbar {
 	ctrlid_hwnd_on_onsubclass!(TrackbarEvents);
 
 	/// Retrieves the current position by sending a
-	/// [`TBM_GETPOS`](crate::msg::tbm::GetPos) message.
+	/// [`TBM_GETPOS`](crate::msg::trbm::GetPos) message.
 	pub fn pos(&self) -> u32 {
-		self.hwnd().SendMessage(tbm::GetPos {})
+		self.hwnd().SendMessage(trbm::GetPos {})
 	}
 
 	/// Retrieves the minimum and maximum position values by sending
-	/// [`TBM_GETRANGEMIN`](crate::msg::tbm::GetRangeMin) and
-	/// [`TBM_GETRANGEMAX`](crate::msg::tbm::GetRangeMax) messages.
+	/// [`TBM_GETRANGEMIN`](crate::msg::trbm::GetRangeMin) and
+	/// [`TBM_GETRANGEMAX`](crate::msg::trbm::GetRangeMax) messages.
 	pub fn range(&self) -> (u32, u32) {
 		(
-			self.hwnd().SendMessage(tbm::GetRangeMin {}),
-			self.hwnd().SendMessage(tbm::GetRangeMax {}),
+			self.hwnd().SendMessage(trbm::GetRangeMin {}),
+			self.hwnd().SendMessage(trbm::GetRangeMax {}),
 		)
 	}
 
 	/// Sets the current position by sending a
-	/// [`TBM_SETPOS`](crate::msg::tbm::SetPos) message.
+	/// [`TBM_SETPOS`](crate::msg::trbm::SetPos) message.
 	pub fn set_pos(&self, pos: u32) {
-		self.hwnd().SendMessage(tbm::SetPos { redraw: true, pos });
+		self.hwnd().SendMessage(trbm::SetPos { redraw: true, pos });
 	}
 
 	/// Sets the minimum and maximum position values by sending
-	/// [`TBM_SETRANGEMIN`](crate::msg::tbm::SetRangeMin) and
-	/// [`TBM_SETRANGEMAX`](crate::msg::tbm::SetRangeMax) messages.
+	/// [`TBM_SETRANGEMIN`](crate::msg::trbm::SetRangeMin) and
+	/// [`TBM_SETRANGEMAX`](crate::msg::trbm::SetRangeMax) messages.
 	pub fn set_range(&self, min: u32, max: u32) {
-		self.hwnd().SendMessage(tbm::SetRangeMin { redraw: false, min });
-		self.hwnd().SendMessage(tbm::SetRangeMax { redraw: true, max });
+		self.hwnd().SendMessage(trbm::SetRangeMin { redraw: false, min });
+		self.hwnd().SendMessage(trbm::SetRangeMax { redraw: true, max });
 	}
 }
 

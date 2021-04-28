@@ -82,6 +82,28 @@ const_type_wm! { RB,
 	SETBANDWIDTH, WM::USER.0 + 44
 }
 
+const_type_nm! { RBN,
+	/// Rebar control `WM_NOTIFY`
+	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-notifications)
+	/// (`i32`), convertible to [`NM`](crate::co::NM).
+	=>
+	FIRST, -831
+	=>
+	HEIGHTCHANGE, Self::FIRST.0 - 0
+	GETOBJECT, Self::FIRST.0 - 1
+	LAYOUTCHANGED, Self::FIRST.0 - 2
+	AUTOSIZE, Self::FIRST.0 - 3
+	BEGINDRAG, Self::FIRST.0 - 4
+	ENDDRAG, Self::FIRST.0 - 5
+	DELETINGBAND, Self::FIRST.0 - 6
+	DELETEDBAND, Self::FIRST.0 - 7
+	CHILDSIZE, Self::FIRST.0 - 8
+	CHEVRONPUSHED, Self::FIRST.0 - 10
+	SPLITTERDRAG, Self::FIRST.0 - 11
+	MINMAX, Self::FIRST.0 - 21
+	AUTOBREAK, Self::FIRST.0 - 22
+}
+
 const_type_ws! { RBS,
 	/// Rebar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)

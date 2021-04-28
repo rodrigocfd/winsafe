@@ -1,6 +1,6 @@
 //! Trackbar control
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
-//! whose constants have [`TBM`](crate::co::TBM) prefix.
+//! whose constants have [`TRBM`](crate::co::TRBM) prefix.
 
 use crate::co;
 use crate::handles::HWND;
@@ -24,7 +24,7 @@ impl MsgSend for ClearSel {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::CLEARSEL.into(),
+			msg_id: co::TRBM::CLEARSEL.into(),
 			wparam: self.redraw as _,
 			lparam: 0,
 		}
@@ -48,7 +48,7 @@ impl MsgSend for ClearTics {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::CLEARTICS.into(),
+			msg_id: co::TRBM::CLEARTICS.into(),
 			wparam: self.redraw as _,
 			lparam: 0,
 		}
@@ -75,7 +75,7 @@ impl MsgSend for GetBuddy {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETBUDDY.into(),
+			msg_id: co::TRBM::GETBUDDY.into(),
 			wparam: self.left_above as _,
 			lparam: 0,
 		}
@@ -99,7 +99,7 @@ impl<'a> MsgSend for GetChannelRect<'a> {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETCHANNELRECT.into(),
+			msg_id: co::TRBM::GETCHANNELRECT.into(),
 			wparam: 0,
 			lparam: self.rect as *const _ as _,
 		}
@@ -121,7 +121,7 @@ impl MsgSend for GetLineSize {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETLINESIZE.into(),
+			msg_id: co::TRBM::GETLINESIZE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -143,7 +143,7 @@ impl MsgSend for GetNumTics {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETNUMTICS.into(),
+			msg_id: co::TRBM::GETNUMTICS.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -165,7 +165,7 @@ impl MsgSend for GetPageSize {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETPAGESIZE.into(),
+			msg_id: co::TRBM::GETPAGESIZE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -187,7 +187,7 @@ impl MsgSend for GetPos {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETPOS.into(),
+			msg_id: co::TRBM::GETPOS.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -209,7 +209,7 @@ impl MsgSend for GetRangeMax {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETRANGEMAX.into(),
+			msg_id: co::TRBM::GETRANGEMAX.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -231,7 +231,7 @@ impl MsgSend for GetRangeMin {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETRANGEMIN.into(),
+			msg_id: co::TRBM::GETRANGEMIN.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -253,7 +253,7 @@ impl MsgSend for GetSelEnd {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETSELEND.into(),
+			msg_id: co::TRBM::GETSELEND.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -275,7 +275,7 @@ impl MsgSend for GetSelStart {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETSELSTART.into(),
+			msg_id: co::TRBM::GETSELSTART.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -297,7 +297,7 @@ impl MsgSend for GetThumbLength {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETTHUMBLENGTH.into(),
+			msg_id: co::TRBM::GETTHUMBLENGTH.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -321,7 +321,7 @@ impl<'a> MsgSend for GetThumbRect<'a> {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETTHUMBRECT.into(),
+			msg_id: co::TRBM::GETTHUMBRECT.into(),
 			wparam: 0,
 			lparam: self.rect as *const _ as _,
 		}
@@ -346,7 +346,7 @@ impl MsgSend for GetTooltips {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::GETTOOLTIPS.into(),
+			msg_id: co::TRBM::GETTOOLTIPS.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -374,7 +374,7 @@ impl MsgSend for SetBuddy {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETBUDDY.into(),
+			msg_id: co::TRBM::SETBUDDY.into(),
 			wparam: self.left_above as _,
 			lparam: self.hwnd_buddy.ptr as _,
 		}
@@ -398,7 +398,7 @@ impl MsgSend for SetPageSize {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETPAGESIZE.into(),
+			msg_id: co::TRBM::SETPAGESIZE.into(),
 			wparam: 0,
 			lparam: self.page_size as _,
 		}
@@ -423,7 +423,7 @@ impl MsgSend for SetPos {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETPOS.into(),
+			msg_id: co::TRBM::SETPOS.into(),
 			wparam: self.redraw as _,
 			lparam: self.pos as _,
 		}
@@ -447,7 +447,7 @@ impl MsgSend for SetPosNotify {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETPOSNOTIFY.into(),
+			msg_id: co::TRBM::SETPOSNOTIFY.into(),
 			wparam: 0,
 			lparam: self.pos as _,
 		}
@@ -472,7 +472,7 @@ impl MsgSend for SetRangeMax {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETRANGEMAX.into(),
+			msg_id: co::TRBM::SETRANGEMAX.into(),
 			wparam: self.redraw as _,
 			lparam: self.max as _,
 		}
@@ -497,7 +497,7 @@ impl MsgSend for SetRangeMin {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETRANGEMIN.into(),
+			msg_id: co::TRBM::SETRANGEMIN.into(),
 			wparam: self.redraw as _,
 			lparam: self.min as _,
 		}
@@ -522,7 +522,7 @@ impl MsgSend for SetSelEnd {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETSELEND.into(),
+			msg_id: co::TRBM::SETSELEND.into(),
 			wparam: self.redraw as _,
 			lparam: self.end as _,
 		}
@@ -547,7 +547,7 @@ impl MsgSend for SetSelStart {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETSELSTART.into(),
+			msg_id: co::TRBM::SETSELSTART.into(),
 			wparam: self.redraw as _,
 			lparam: self.start as _,
 		}
@@ -571,7 +571,7 @@ impl MsgSend for SetThumbLength {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETTHUMBLENGTH.into(),
+			msg_id: co::TRBM::SETTHUMBLENGTH.into(),
 			wparam: self.length as _,
 			lparam: 0,
 		}
@@ -595,7 +595,7 @@ impl MsgSend for SetTicFreq {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETTICFREQ.into(),
+			msg_id: co::TRBM::SETTICFREQ.into(),
 			wparam: self.freq as _,
 			lparam: 0,
 		}
@@ -619,7 +619,7 @@ impl MsgSend for SetTooltips {
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TBM::SETTOOLTIPS.into(),
+			msg_id: co::TRBM::SETTOOLTIPS.into(),
 			wparam: self.hwnd_tooltip.ptr as _,
 			lparam: 0,
 		}
