@@ -41,7 +41,7 @@ impl HFILE {
 	/// use winsafe::{co, HFILE};
 	///
 	/// let hfile = HFILE::CreateFile(
-	///     "C:\\Temp\\something.txt",
+	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ,
 	///     co::FILE_SHARE::READ,
 	///     None,
@@ -59,7 +59,7 @@ impl HFILE {
 	/// use winsafe::{co, HFILE};
 	///
 	/// let hfile = w::HFILE::CreateFile(
-	///     "C:\\Temp\\something.txt",
+	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ | co::GENERIC::WRITE,
 	///     co::FILE_SHARE::NONE,
 	///     None,
@@ -100,7 +100,7 @@ impl HFILE {
 	pub fn CreateFileMapping(self,
 		lpFileMappingAttributes: Option<&mut SECURITY_ATTRIBUTES>,
 		flProtect: co::PAGE,
-		maximumSize: u64,
+		maximumSize: Option<u64>,
 		lpName: Option<&str>) -> WinResult<HFILEMAP>
 	{
 		unsafe {
@@ -108,8 +108,8 @@ impl HFILE {
 				self.ptr,
 				lpFileMappingAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
 				flProtect.0,
-				HIDWORD(maximumSize),
-				LODWORD(maximumSize),
+				maximumSize.map_or(0, |n| HIDWORD(n)),
+				maximumSize.map_or(0, |n| LODWORD(n)),
 				lpName.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
 			).as_mut()
 		}.map(|ptr| HFILEMAP { ptr }).ok_or_else(|| GetLastError())
@@ -132,11 +132,11 @@ impl HFILE {
 
 	/// [`GetFileSizeEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// method.
-	pub fn GetFileSizeEx(self) -> WinResult<i64> {
-		let mut ibuf = 0;
-		match unsafe { kernel32::GetFileSizeEx(self.ptr, &mut ibuf) } {
+	pub fn GetFileSizeEx(self) -> WinResult<usize> {
+		let mut szBuf = 0;
+		match unsafe { kernel32::GetFileSizeEx(self.ptr, &mut szBuf) } {
 			0 => Err(GetLastError()),
-			_ => Ok(ibuf),
+			_ => Ok(szBuf as _),
 		}
 	}
 

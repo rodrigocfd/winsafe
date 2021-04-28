@@ -217,7 +217,7 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 /// ```rust,ignore
 /// use winsafe::{co, GetFileAttributes};
 ///
-/// let file_exists = GetFileAttributes("C:\\Temp\\something.txt").is_ok();
+/// let file_exists = GetFileAttributes("C:\\Temp\\test.txt").is_ok();
 /// ```
 ///
 /// Retrieving various information about a file or folder path:
@@ -225,7 +225,7 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 /// ```rust,ignore
 /// use winsafe::{co, GetFileAttributes};
 ///
-/// let flags = GetFileAttributes("C:\\Temp\\something.txt").unwrap();
+/// let flags = GetFileAttributes("C:\\Temp\\test.txt").unwrap();
 ///
 /// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
 /// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
