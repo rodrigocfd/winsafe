@@ -8,7 +8,6 @@ use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
 use crate::privs::{
 	bool_to_winresult,
 	GDI_ERROR,
-	ptr_as_opt,
 	ref_as_pcvoid,
 	ref_as_pvoid,
 };
@@ -27,7 +26,7 @@ impl HDC {
 	///
 	/// **Note:** Must be paired with a [`DeleteDC`](crate::HDC::DeleteDC) call.
 	pub fn CreateCompatibleDC(self) -> WinResult<HDC> {
-		ptr_as_opt(unsafe { gdi32::CreateCompatibleDC(self.ptr) })
+		unsafe { gdi32::CreateCompatibleDC(self.ptr).as_mut() }
 			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
@@ -212,36 +211,36 @@ impl HDC {
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	pub fn SelectObjectBitmap(self, h: HBITMAP) -> WinResult<HBITMAP> {
-		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
 			.map(|ptr| HBITMAP { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBRUSH`](crate::HBRUSH).
 	pub fn SelectObjectBrush(self, h: HBRUSH) -> WinResult<HBRUSH> {
-		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
 			.map(|ptr| HBRUSH { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HFONT`](crate::HFONT).
 	pub fn SelectObjectFont(self, h: HFONT) -> WinResult<HFONT> {
-		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
 			.map(|ptr| HFONT { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HPEN`](crate::HPEN).
 	pub fn SelectObjectPen(self, h: HPEN) -> WinResult<HPEN> {
-		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
+		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
 			.map(|ptr| HPEN { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HRGN`](crate::HRGN).
 	pub fn SelectObjectRgn(self, h: HRGN) -> WinResult<co::REGION> {
-		ptr_as_opt(unsafe { gdi32::SelectObject(self.ptr, h.ptr) })
-			.map(|ptr| co::REGION(ptr as i32)).ok_or_else(|| GetLastError())
+		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
+			.map(|ptr| co::REGION(ptr as *mut _ as _)).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)

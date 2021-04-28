@@ -6,7 +6,7 @@ use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
-use crate::privs::{bool_to_winresult, ptr_as_opt, ref_as_pcvoid, ref_as_pvoid};
+use crate::privs::{bool_to_winresult, ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::{MENUINFO, MENUITEMINFO};
 use crate::WString;
 
@@ -87,7 +87,7 @@ impl HMENU {
 	/// **Note:** If not attached to a window, must be paired with a
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreateMenu() -> WinResult<HMENU> {
-		ptr_as_opt(unsafe { user32::CreateMenu() })
+		unsafe { user32::CreateMenu().as_mut() }
 			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
@@ -97,7 +97,7 @@ impl HMENU {
 	/// **Note:** If not attached to a window, must be paired with a
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreatePopupMenu() -> WinResult<HMENU> {
-		ptr_as_opt(unsafe { user32::CreatePopupMenu() })
+		unsafe { user32::CreatePopupMenu().as_mut() }
 			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
@@ -174,9 +174,8 @@ impl HMENU {
 	/// [`GetSubMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu)
 	/// method.
 	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
-		ptr_as_opt(
-			unsafe { user32::GetSubMenu(self.ptr, nPos as _) },
-		).map(|ptr| Self { ptr })
+		unsafe { user32::GetSubMenu(self.ptr, nPos as _).as_mut() }
+			.map(|ptr| Self { ptr })
 	}
 
 	/// [`InsertMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuw)

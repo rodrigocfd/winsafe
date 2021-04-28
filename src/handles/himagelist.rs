@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::comctl32;
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HICON};
-use crate::privs::{bool_to_winresult, ptr_as_opt};
+use crate::privs::bool_to_winresult;
 use crate::structs::COLORREF;
 
 handle_type! {
@@ -82,11 +82,9 @@ impl HIMAGELIST {
 	pub fn ImageList_Create(cx: i32, cy: i32,
 		flags: co::ILS, cInitial: i32, cGrow: i32) -> WinResult<HIMAGELIST>
 	{
-		ptr_as_opt(
-			unsafe {
-				comctl32::ImageList_Create(cx, cy, flags.0, cInitial, cGrow)
-			}
-		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		unsafe {
+			comctl32::ImageList_Create(cx, cy, flags.0, cInitial, cGrow).as_mut()
+		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`ImageList_Destroy`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)

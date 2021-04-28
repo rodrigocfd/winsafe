@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
 use crate::handles::HFILEMAP;
-use crate::privs::{bool_to_winresult, ptr_as_opt, ref_as_pvoid};
+use crate::privs::{bool_to_winresult, ref_as_pvoid};
 use crate::structs::{
 	BY_HANDLE_FILE_INFORMATION,
 	OVERLAPPED,
@@ -79,19 +79,17 @@ impl HFILE {
 		dwFlagsAndAttributes: co::FILE_ATTRIBUTE,
 		hTemplateFile: Option<HFILE>) -> WinResult<HFILE>
 	{
-		ptr_as_opt(
-			unsafe {
-				kernel32::CreateFileW(
-					WString::from_str(lpFileName).as_ptr(),
-					dwDesiredAccess.0,
-					dwShareMode.0,
-					lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
-					dwCreationDisposition.0,
-					dwFlagsAndAttributes.0,
-					hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
-				)
-			},
-		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		unsafe {
+			kernel32::CreateFileW(
+				WString::from_str(lpFileName).as_ptr(),
+				dwDesiredAccess.0,
+				dwShareMode.0,
+				lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				dwCreationDisposition.0,
+				dwFlagsAndAttributes.0,
+				hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
+			).as_mut()
+		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreateFileMapping`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
@@ -105,18 +103,16 @@ impl HFILE {
 		maximumSize: u64,
 		lpName: Option<&str>) -> WinResult<HFILEMAP>
 	{
-		ptr_as_opt(
-			unsafe {
-				kernel32::CreateFileMappingW(
-					self.ptr,
-					lpFileMappingAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
-					flProtect.0,
-					HIDWORD(maximumSize),
-					LODWORD(maximumSize),
-					lpName.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
-				)
-			},
-		).map(|ptr| HFILEMAP { ptr }).ok_or_else(|| GetLastError())
+		unsafe {
+			kernel32::CreateFileMappingW(
+				self.ptr,
+				lpFileMappingAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				flProtect.0,
+				HIDWORD(maximumSize),
+				LODWORD(maximumSize),
+				lpName.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
+			).as_mut()
+		}.map(|ptr| HFILEMAP { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)

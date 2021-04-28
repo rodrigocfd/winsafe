@@ -6,7 +6,7 @@ use crate::enums::HwndPlace;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
-use crate::privs::{bool_to_winresult, ptr_as_opt};
+use crate::privs::bool_to_winresult;
 
 handle_type! {
 	/// Handle to a
@@ -21,9 +21,8 @@ impl HDWP {
 	/// **Note:** Must be paired with an
 	/// [`EndDeferWindowPos`](crate::HDWP::EndDeferWindowPos) call.
 	pub fn BeginDeferWindowPos(nNumWindows: u32) -> WinResult<HDWP> {
-		ptr_as_opt(
-			unsafe { user32::BeginDeferWindowPos(nNumWindows as i32) },
-		).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		unsafe { user32::BeginDeferWindowPos(nNumWindows as _).as_mut() }
+			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`DeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
@@ -32,17 +31,15 @@ impl HDWP {
 		hWnd: HWND, hWndInsertAfter: HwndPlace,
 		x: i32, y: i32, cx: i32, cy: i32, uFlags: co::SWP) -> WinResult<HDWP>
 	{
-		ptr_as_opt(
-			unsafe {
-				user32::DeferWindowPos(
-					self.ptr,
-					hWnd.ptr,
-					hWndInsertAfter.as_ptr(),
-					x, y, cx, cy,
-					uFlags.0,
-				)
-			},
-		 ).map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		unsafe {
+			user32::DeferWindowPos(
+				self.ptr,
+				hWnd.ptr,
+				hWndInsertAfter.as_ptr(),
+				x, y, cx, cy,
+				uFlags.0,
+			).as_mut()
+		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
 	}
 
 	/// [`EndDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)

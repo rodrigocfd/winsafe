@@ -15,7 +15,6 @@ use crate::privs::{
 	INVALID_FILE_ATTRIBUTES,
 	MAX_PATH,
 	parse_multi_z_str,
-	ptr_as_opt,
 	ref_as_pcvoid,
 	ref_as_pvoid,
 };
@@ -193,9 +192,9 @@ pub fn GetDoubleClickTime() -> u32 {
 /// }
 /// ```
 pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
-	ptr_as_opt(unsafe { kernel32::GetEnvironmentStringsW() })
+	unsafe { kernel32::GetEnvironmentStringsW().as_mut() }
 		.map(|ptr| {
-			let vecEnvStrs = parse_multi_z_str(ptr as *const u16);
+			let vecEnvStrs = parse_multi_z_str(ptr as *mut _ as *const u16);
 			unsafe { kernel32::FreeEnvironmentStringsW(ptr); }
 
 			let mut map = HashMap::with_capacity(vecEnvStrs.len());

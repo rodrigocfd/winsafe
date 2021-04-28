@@ -1,7 +1,5 @@
 //! Internal definitions used by the library.
 
-use std::ffi::c_void;
-
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, HRESULT, PCVOID, PVOID};
@@ -21,18 +19,6 @@ pub(crate) const LB_ERRSPACE: i32 = -2;
 pub(crate) const LF_FACESIZE: usize = 32;
 pub(crate) const MAX_LINKID_TEXT: usize = 48;
 pub(crate) const MAX_PATH: usize = 260;
-
-/// Transforms a raw pointer into an option, which is `None` if the pointer is
-/// null.
-///
-/// https://stackoverflow.com/q/65144143/6923555
-pub(crate) fn ptr_as_opt(ptr: *mut c_void) -> Option<*mut c_void> {
-	if ptr.is_null() {
-		None
-	} else {
-		Some(ptr)
-	}
-}
 
 /// Converts a const reference to `ffi::PCVOID`.
 pub(crate) fn ref_as_pcvoid<T>(r: &T) -> PCVOID {
