@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BroadNull;
-use crate::ffi::{advapi32, comctl32, HRESULT, kernel32, user32};
+use crate::ffi::{advapi32, BOOL, comctl32, HRESULT, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::MsgSend;
 use crate::privs::{
@@ -544,6 +544,43 @@ pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32 {
 	unsafe { kernel32::MulDiv(nNumber, nNumerator, nDenominator) }
 }
 
+/// [`MultiByteToWideChar`](https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar)
+/// function.
+pub fn MultiByteToWideChar(
+	CodePage: co::CP, dwFlags: co::MBC,
+	lpMultiByteStr: &[u8]) -> WinResult<Vec<u16>> {
+
+	match unsafe {
+		kernel32::MultiByteToWideChar(
+			CodePage.0,
+			dwFlags.0,
+			lpMultiByteStr.as_ptr(),
+			lpMultiByteStr.len() as _,
+			std::ptr::null_mut(),
+			0,
+		)
+	} {
+		0 => Err(GetLastError()),
+		numBytes => {
+			let mut destBuf: Vec<u16> = vec![0, numBytes as _];
+
+			match unsafe {
+				kernel32::MultiByteToWideChar(
+					CodePage.0,
+					dwFlags.0,
+					lpMultiByteStr.as_ptr(),
+					lpMultiByteStr.len() as _,
+					destBuf.as_mut_ptr(),
+					numBytes as _,
+				)
+			} {
+				0 => Err(GetLastError()),
+				_ => Ok(destBuf),
+			}
+		},
+	}
+}
+
 /// [`OutputDebugString`](https://docs.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
 /// function.
 pub fn OutputDebugString(lpOutputString: &str) {
@@ -765,4 +802,54 @@ pub fn VerSetConditionMask(
 /// function.
 pub fn WaitMessage() -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::WaitMessage() })
+}
+
+/// [`WideCharToMultiByte`](https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte)
+/// function.
+pub fn WideCharToMultiByte(
+	CodePage: co::CP, dwFlags: co::WC,
+	lpWideCharStr: &[u16], lpDefaultChar: Option<u8>,
+	lpUsedDefaultChar: Option<&mut bool>) -> WinResult<Vec<u8>> {
+
+	let mut lpDefaulCharBuf = lpDefaultChar.unwrap_or_default();
+
+	match unsafe {
+		kernel32::WideCharToMultiByte(
+			CodePage.0,
+			dwFlags.0,
+			lpWideCharStr.as_ptr(),
+			lpWideCharStr.len() as _,
+			std::ptr::null_mut(),
+			0,
+			&mut lpDefaulCharBuf,
+			std::ptr::null_mut(),
+		)
+	} {
+		0 => Err(GetLastError()),
+		numBytes => {
+			let mut destBuf: Vec<u8> = vec![0; numBytes as _];
+			let mut boolBuf: BOOL = 0;
+
+			match unsafe {
+				kernel32::WideCharToMultiByte(
+					CodePage.0,
+					dwFlags.0,
+					lpWideCharStr.as_ptr(),
+					lpWideCharStr.len() as _,
+					destBuf.as_mut_ptr() as _,
+					numBytes,
+					&mut lpDefaulCharBuf,
+					&mut boolBuf,
+				)
+			} {
+				0 => Err(GetLastError()),
+				_ => {
+					if let Some(lp) = lpUsedDefaultChar {
+						*lp = boolBuf != 0;
+					}
+					Ok(destBuf)
+				},
+			}
+		},
+	}
 }

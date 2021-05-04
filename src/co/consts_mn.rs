@@ -38,6 +38,16 @@ const_type! { MB, u32,
 	SERVICE_NOTIFICATION, 0x00200000
 }
 
+const_type! { MBC, u32,
+	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `dwFlags` (`u32`).
+	/// Originally has `MB` prefix.
+	=>
+	COMPOSITE, 0x00000002
+	ERR_INVALID_CHARS, 0x00000008
+	PRECOMPOSED, 0x00000001
+	USEGLYPHCHARS, 0x00000004
+}
+
 const_type_wm! { MCM,
 	/// Month calendar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)

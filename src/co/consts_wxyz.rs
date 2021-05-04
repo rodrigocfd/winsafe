@@ -7,6 +7,17 @@ const_type! { WA, u16,
 	CLICKACTIVE, 2
 }
 
+const_type! { WC, u32,
+	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `dwFlags` (`u32`).
+	=>
+	COMPOSITECHECK, 0x00000200
+	ERR_INVALID_CHARS, 0x00000080
+	NO_BEST_FIT_CHARS, 0x00000400
+	DEFAULTCHAR, 0x00000040
+	DISCARDNS, 0x00000010
+	SEPCHARS, 0x00000020
+}
+
 const_type! { WDA, u32,
 	/// [`GetWindowDisplayAffinity`](crate::HWND::GetWindowDisplayAffinity) and
 	/// [`SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)

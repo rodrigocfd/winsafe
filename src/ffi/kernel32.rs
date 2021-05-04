@@ -32,6 +32,7 @@ extern "system" {
 	pub fn MapViewOfFile(hFileMappingObject: HANDLE, dwDesiredAccess: u32, dwFileOffsetHigh: u32, dwFileOffsetLow: u32, dwNumberOfBytesToMap: i64) -> PVOID;
 	pub fn MoveFileW(lpExistingFileName: PCSTR, lpNewFileName: PCSTR) -> BOOL;
 	pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32;
+	pub fn MultiByteToWideChar(CodePage: u32, dwFlags: u32, lpMultiByteStr: *const u8, cbMultiByte: i32, lpWideCharStr: PSTR, cchWideChar: i32) -> i32;
 	pub fn OutputDebugStringW(lpOutputString: PCSTR);
 	pub fn ReadFile(hFile: HANDLE, lpBuffer: PVOID, nNumberOfBytesToRead: u32, lpNumberOfBytesRead: *mut u32, lpOverlapped: PVOID) -> BOOL;
 	pub fn SetEndOfFile(hFile: HANDLE) -> BOOL;
@@ -44,5 +45,6 @@ extern "system" {
 	pub fn UnmapViewOfFile(lpBaseAddress: PCVOID) -> BOOL;
 	pub fn VerifyVersionInfoW(lpVersionInformation: PVOID, dwTypeMask: u32, dwlConditionMask: u64) -> BOOL;
 	pub fn VerSetConditionMask(ConditionMask: u64, TypeMask: u32, Condition: u8) -> u64;
+	pub fn WideCharToMultiByte(CodePage: u32, dwFlags: u32, lpWideCharStr: PCSTR, cchWideChar: i32, lpMultiByteStr: PSTR, cbMultiByte: i32, lpDefaultChar: *const u8, lpUsedDefaultChar: *mut BOOL) -> i32;
 	pub fn WriteFile(hFile: HANDLE, lpBuffer: PCVOID, nNumberOfBytesToWrite: u32, lpNumberOfBytesWritten: *mut u32, lpOverlapped: PVOID) -> BOOL;
 }

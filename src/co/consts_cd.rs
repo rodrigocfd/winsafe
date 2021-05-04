@@ -363,6 +363,29 @@ const_type! { COLOR, u32,
 	BTNHILIGHT, Self::BTNHIGHLIGHT.0
 }
 
+const_type! { CP, u32,
+	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
+	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `CodePage` (`u32`).
+	=>
+	/// The system default Windows ANSI code page.
+	ACP, 0
+	/// The current system OEM code page.
+	OEMCP, 1
+	/// The current system Macintosh code page.
+	MACCP, 2
+	/// The Windows ANSI code page for the current thread.
+	THREAD_ACP, 3
+	/// Symbol code page (42).
+	SYMBOL, 42
+	/// UTF-7. Use this value only when forced by a 7-bit transport mechanism.
+	/// Use of UTF-8 is preferred. With this value set, `lpDefaultChar` and
+	/// `lpUsedDefaultChar` must be set to null.
+	UTF7, 65000
+	/// UTF-8. With this value set, `lpDefaultChar` and `lpUsedDefaultChar` must
+	/// be set to null.
+	UTF8, 65001
+}
+
 const_type! { CS, u32,
 	/// Window class
 	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
