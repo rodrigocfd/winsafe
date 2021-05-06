@@ -3,9 +3,8 @@
 
 #![allow(non_snake_case)]
 
-use crate::com::{ComVT, IUnknownVT, PPComVT};
+use crate::com::{IUnknownVT, PPComVT};
 use crate::ffi::{BOOL, HANDLE, HRESULT, PCSTR, PCVOID, PSTR, PVOID};
-use crate::structs::IID;
 
 com_virtual_table! { IFileDialogVT,
 	/// [`IFileDialog`](crate::shell::IFileDialog) virtual table.

@@ -4,16 +4,19 @@
 pub mod clsid;
 pub mod vt;
 
+#[macro_use] mod imodalwindow;
+#[macro_use] mod ishellitem;
+#[macro_use] mod ishellitemarray;
+#[macro_use] mod itaskbarlist;
+
+#[macro_use] mod ifiledialog;
+#[macro_use] mod itaskbarlist2;
+
+#[macro_use] mod ifileopendialog;
+#[macro_use] mod ifilesavedialog;
+#[macro_use] mod itaskbarlist3;
+
 mod any_structs;
-mod ifiledialog;
-mod ifileopendialog;
-mod ifilesavedialog;
-mod imodalwindow;
-mod ishellitem;
-mod ishellitemarray;
-mod itaskbarlist;
-mod itaskbarlist2;
-mod itaskbarlist3;
 
 pub use any_structs::*;
 pub use ifiledialog::IFileDialog;

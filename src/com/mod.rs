@@ -3,17 +3,17 @@
 //! Since Rust, by design, doesn't support inheritance, the interfaces use
 //! composition with its ancestors.
 
-#[macro_use]
-mod macros;
+#[macro_use] mod macros;
+
+#[macro_use] mod iunknown;
+#[macro_use] mod idispatch;
+#[macro_use] mod ipersist;
 
 pub mod dshow;
 pub mod shell;
 
 mod comvt;
 mod funcs;
-mod idispatch;
-mod ipersist;
-mod iunknown;
 
 pub use comvt::{ComVT, PPComVT};
 pub use funcs::{CoCreateInstance, CoInitializeEx, CoTaskMemFree, CoUninitialize};

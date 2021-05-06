@@ -3,9 +3,8 @@
 
 #![allow(non_snake_case)]
 
-use crate::com::{ComVT, IDispatchVT, IPersistVT, IUnknownVT, PPComVT};
+use crate::com::{IDispatchVT, IPersistVT, IUnknownVT, PPComVT};
 use crate::ffi::{BOOL, HANDLE, HRESULT, PCSTR, PCVOID, PSTR, PVOID};
-use crate::structs::IID;
 
 com_virtual_table! { IBaseFilterVT,
 	/// [`IBaseFilter`](crate::dshow::IBaseFilter) virtual table.

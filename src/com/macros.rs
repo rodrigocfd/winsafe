@@ -15,9 +15,9 @@ macro_rules! com_virtual_table {
 			)*
 		}
 
-		impl ComVT for $name {
-			fn IID() -> IID {
-				IID::new($iid1, $iid2, $iid3, $iid4, $iid5)
+		impl crate::com::ComVT for $name {
+			fn IID() -> crate::structs::IID {
+				crate::structs::IID::new($iid1, $iid2, $iid3, $iid4, $iid5)
 			}
 		}
 	};

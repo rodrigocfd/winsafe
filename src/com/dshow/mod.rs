@@ -4,17 +4,19 @@
 pub mod clsid;
 pub mod vt;
 
+#[macro_use] mod ienumfilters;
+#[macro_use] mod ifiltergraph;
+#[macro_use] mod imediacontrol;
+#[macro_use] mod imediafilter;
+#[macro_use] mod imediaseeking;
+#[macro_use] mod imfgetservice;
+#[macro_use] mod imfvideodisplaycontrol;
+#[macro_use] mod ipin;
+
+#[macro_use] mod ibasefilter;
+#[macro_use] mod igraphbuilder;
+
 mod any_structs;
-mod ibasefilter;
-mod ienumfilters;
-mod ifiltergraph;
-mod igraphbuilder;
-mod imediacontrol;
-mod imediafilter;
-mod imediaseeking;
-mod imfgetservice;
-mod imfvideodisplaycontrol;
-mod ipin;
 
 pub use any_structs::*;
 pub use ibasefilter::IBaseFilter;
