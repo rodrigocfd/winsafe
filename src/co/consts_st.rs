@@ -255,6 +255,31 @@ const_type! { SM, i32,
 	SYSTEMDOCKED, 0x2004
 }
 
+const_type! { SORT, u16,
+	/// Sort order
+	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
+	/// (`u16`).
+	=>
+	DEFAULT, 0x0
+	INVARIANT_MATH, 0x1
+	JAPANESE_XJIS, 0x0
+	JAPANESE_UNICODE, 0x1
+	JAPANESE_RADICALSTROKE, 0x4
+	CHINESE_BIG5, 0x0
+	CHINESE_PRCP, 0x0
+	CHINESE_UNICODE, 0x1
+	CHINESE_PRC, 0x2
+	CHINESE_BOPOMOFO, 0x3
+	CHINESE_RADICALSTROKE, 0x4
+	KOREAN_KSC, 0x0
+	KOREAN_UNICODE, 0x1
+	GERMAN_PHONE_BOOK, 0x1
+	HUNGARIAN_DEFAULT, 0x0
+	HUNGARIAN_TECHNICAL, 0x1
+	GEORGIAN_TRADITIONAL, 0x0
+	GEORGIAN_MODERN, 0x1
+}
+
 const_type! { SPI, u32,
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `uiAction` (`u32`).
 	=>
@@ -532,8 +557,9 @@ const_type_cmd! { STN,
 }
 
 const_type! { SUBLANG, u16,
-	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`
-	/// (`u16`), used with [`LANG`](crate::co::LANG).
+	/// Sublanguage
+	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
+	/// (`u16`).
 	=>
 	NEUTRAL, 0x00
 	DEFAULT, 0x01

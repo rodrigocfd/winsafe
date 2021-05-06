@@ -8,9 +8,10 @@ use std::marker::PhantomData;
 use crate::aliases::WNDPROC;
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPlace, IdStr};
-use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LOBYTE, LODWORD, LOWORD};
+use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
 use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HEVENT, HICON, HINSTANCE, HMENU, HWND};
 use crate::privs::LF_FACESIZE;
+use crate::structs::ATOM;
 use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
@@ -33,25 +34,6 @@ pub struct ACL {
 	pub AclSize: u16,
 	pub AceCount: u16,
 	pub Sbz2: u16,
-}
-
-/// [`ATOM`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
-/// returned by [`RegisterClassEx`](crate::RegisterClassEx).
-#[repr(C)]
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct ATOM(pub(crate) u16);
-
-impl std::fmt::Display for ATOM {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{}", self.0)
-	}
-}
-
-impl ATOM {
-	/// Useful to pass the atom as class name.
-	pub fn as_ptr(self) -> *const u16 {
-		self.0 as _
-	}
 }
 
 /// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
@@ -94,50 +76,6 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 	pub nNumberOfLinks: u32,
 	pub nFileIndexHigh: u32,
 	pub nFileIndexLow: u32,
-}
-
-/// [`COLORREF`](https://docs.microsoft.com/en-us/windows/win32/gdi/colorref)
-/// struct.
-#[repr(C)]
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct COLORREF(pub(crate) u32);
-
-impl From<co::CLR> for COLORREF {
-	fn from(v: co::CLR) -> Self {
-		Self(v.0)
-	}
-}
-
-impl std::fmt::Display for COLORREF {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "R {}, G {}, B {}",
-			self.GetRValue(), self.GetGValue(), self.GetBValue())
-	}
-}
-
-impl COLORREF {
-	/// Creates a new `COLORREF` object with the given color intensities.
-	pub fn new(red: u8, green: u8, blue: u8) -> COLORREF {
-		Self(red as u32 | ((green as u32) << 8) | ((blue as u32) << 16))
-	}
-
-	/// [`GetRValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getrvalue)
-	/// method. Retrieves the red intensity.
-	pub fn GetRValue(self) -> u8 {
-		LOBYTE(LOWORD(self.0))
-	}
-
-	/// [`GetGValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgvalue)
-	/// method. Retrieves the green intensity.
-	pub fn GetGValue(self) -> u8 {
-		LOBYTE(LOWORD(self.0 >> 8))
-	}
-
-	/// [`GetBValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbvalue)
-	/// method. Retrieves the blue intensity.
-	pub fn GetBValue(self) -> u8 {
-		LOBYTE(LOWORD(self.0 >> 16))
-	}
 }
 
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, SUBLANG, WM, WS};
+use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, WM, WS};
 
 const_type! { KEY, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
@@ -21,8 +21,9 @@ const_type! { KEY, u32,
 }
 
 const_type! { LANG, u16,
-	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwLanguageId`
-	/// (`u16`), used with [`SUBLANG`](crate::co::SUBLANG).
+	/// Language
+	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
+	/// (`u16`).
 	=>
 	NEUTRAL, 0x00
 	INVARIANT, 0x7f
@@ -164,13 +165,6 @@ const_type! { LANG, u16,
 	YI, 0x78
 	YORUBA, 0x6a
 	ZULU, 0x35
-}
-impl LANG {
-	/// [`MAKELANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelangid)
-	/// macro.
-	pub fn MAKELANGID(self, sublang: SUBLANG) -> u32 {
-		((sublang.0 << 10) | self.0) as u32
-	}
 }
 
 const_type_wm! { LB,

@@ -4,6 +4,7 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::handles::HLOCAL;
+use crate::structs::LANGID;
 use crate::WString;
 
 const_type_no_debug_display! { ERROR, u32,
@@ -2831,7 +2832,7 @@ impl ERROR {
 					| co::FORMAT_MESSAGE::IGNORE_INSERTS.0,
 				std::ptr::null(),
 				self.0,
-				co::LANG::NEUTRAL.MAKELANGID(co::SUBLANG::DEFAULT),
+				LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::DEFAULT).0 as _,
 				(&mut ptr_buf as *mut *mut u16) as _, // pass pointer to pointer
 				0,
 				std::ptr::null_mut(),

@@ -353,24 +353,24 @@ pub fn GetTickCount64() -> u64 {
 
 /// [`HIBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
 /// function. Originally a macro.
-pub fn HIBYTE(v: u16) -> u8 {
+pub const fn HIBYTE(v: u16) -> u8 {
 	(v >> 8 & 0xff) as _
 }
 
 /// Returns the high-order `u32` of an `u64`.
-pub fn HIDWORD(v: u64) -> u32 {
+pub const fn HIDWORD(v: u64) -> u32 {
 	(v >> 32 & 0xffff_ffff) as _
 }
 
 /// [`HIWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
 /// function. Originally a macro.
-pub fn HIWORD(v: u32) -> u16 {
+pub const fn HIWORD(v: u32) -> u16 {
 	(v >> 16 & 0xffff) as _
 }
 
 /// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 /// function. Originally a macro.
-pub fn HRESULT_FROM_WIN32(hresult: HRESULT) -> co::ERROR {
+pub const fn HRESULT_FROM_WIN32(hresult: HRESULT) -> co::ERROR {
 	co::ERROR((hresult as u32) & 0xffff)
 }
 
@@ -484,7 +484,7 @@ pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
 
 /// [`LOBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
 /// function. Originally a macro.
-pub fn LOBYTE(v: u16) -> u8 {
+pub const fn LOBYTE(v: u16) -> u8 {
 	(v & 0xff) as _
 }
 
@@ -497,13 +497,13 @@ pub fn LockSetForegroundWindow(uLockCode: co::LSFW) -> WinResult<()> {
 }
 
 /// Returns the low-order `u32` of an `u64`.
-pub fn LODWORD(v: u64) -> u32 {
+pub const fn LODWORD(v: u64) -> u32 {
 	(v & 0xffff_ffff) as _
 }
 
 /// [`LOWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))
 /// function. Originally a macro.
-pub fn LOWORD(v: u32) -> u16 {
+pub const fn LOWORD(v: u32) -> u16 {
 	(v & 0xffff) as _
 }
 
@@ -513,13 +513,13 @@ pub fn LOWORD(v: u32) -> u16 {
 /// and
 /// [`MAKELPARAM`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makelparam)
 /// macros.
-pub fn MAKEDWORD(lo: u16, hi: u16) -> u32 {
+pub const fn MAKEDWORD(lo: u16, hi: u16) -> u32 {
 	((lo as u32 & 0xffff) | ((hi as u32 & 0xffff) << 16)) as _
 }
 
 /// [`MAKEWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
 /// function. Originally a macro.
-pub fn MAKEWORD(lo: u8, hi: u8) -> u16 {
+pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16
 }
 
