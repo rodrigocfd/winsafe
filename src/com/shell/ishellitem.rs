@@ -116,12 +116,8 @@ macro_rules! IShellItem_impl {
 
 IShellItem_impl! {
 	/// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
-	/// COM interface.
-	///
-	/// Virtual table: [`IShellItemVT`](crate::shell::vt::IShellItemVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IShellItemVT`](crate::shell::vt::IShellItemVT).
+	/// Inherits from [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

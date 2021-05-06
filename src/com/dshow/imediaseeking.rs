@@ -179,12 +179,9 @@ macro_rules! IMediaSeeking_impl {
 
 IMediaSeeking_impl! {
 	/// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
-	/// COM interface.
-	///
-	/// Virtual table: [`IMediaSeekingVT`](crate::dshow::vt::IMediaSeekingVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over
+	/// [`IMediaSeekingVT`](crate::dshow::vt::IMediaSeekingVT). Inherits from
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -59,12 +59,8 @@ macro_rules! ITaskbarList_impl {
 
 ITaskbarList_impl! {
 	/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-	/// COM interface.
-	///
-	/// Virtual table: [`ITaskbarListVT`](crate::shell::vt::ITaskbarListVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`ITaskbarListVT`](crate::shell::vt::ITaskbarListVT).
+	/// Inherits from [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

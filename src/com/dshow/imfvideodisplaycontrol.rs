@@ -162,12 +162,9 @@ macro_rules! IMFVideoDisplayControl_impl {
 
 IMFVideoDisplayControl_impl! {
 	/// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
-	/// COM interface.
-	///
-	/// Virtual table: [`IMFVideoDisplayControlVT`](crate::dshow::vt::IMFVideoDisplayControlVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over
+	/// [`IMFVideoDisplayControlVT`](crate::dshow::vt::IMFVideoDisplayControlVT).
+	/// Inherits from [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

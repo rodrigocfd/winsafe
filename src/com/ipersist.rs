@@ -41,13 +41,11 @@ macro_rules! IPersist_impl {
 
 IPersist_impl! {
 	/// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
-	/// COM interface. Backed by [`IPersistVT`](crate::IPersistVT) virtual table.
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IPersistVT`](crate::IPersistVT). Inherits from
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	IPersist, IPersistVT
 }

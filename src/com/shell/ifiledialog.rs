@@ -282,16 +282,12 @@ macro_rules! IFileDialog_impl {
 
 IFileDialog_impl! {
 	/// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
-	/// interface.
-	///
-	/// Virtual table: [`IFileDialogVT`](crate::shell::vt::IFileDialogVT).
-	///
-	/// Inherits from:
-	/// * [`IModalWindow`](crate::shell::IModalWindow);
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IFileDialogVT`](crate::shell::vt::IFileDialogVT).
+	/// Inherits from [`IModalWindow`](crate::shell::IModalWindow),
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	IFileDialog, IFileDialogVT
 }

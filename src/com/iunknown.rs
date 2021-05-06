@@ -77,8 +77,8 @@ macro_rules! IUnknown_impl {
 
 IUnknown_impl! {
 	/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
-	/// interface is the base to all COM interfaces. Backed by
-	/// [`IUnknownVT`](crate::IUnknownVT) virtual table.
+	/// COM interface over [`IUnknownVT`](crate::IUnknownVT). It's the base to
+	/// all COM interfaces.
 	///
 	/// The `clone` method calls
 	/// [`AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)

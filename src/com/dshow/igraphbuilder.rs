@@ -107,13 +107,10 @@ macro_rules! IGraphBuilder_impl {
 
 IGraphBuilder_impl! {
 	/// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
-	/// COM interface.
-	///
-	/// Virtual table: [`IGraphBuilderVT`](crate::dshow::vt::IGraphBuilderVT).
-	///
-	/// Inherits from:
-	/// * [`IFilterGraph`](crate::dshow::IFilterGraph);
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over
+	/// [`IGraphBuilderVT`](crate::dshow::vt::IGraphBuilderVT). Inherits from
+	/// [`IFilterGraph`](crate::dshow::IFilterGraph),
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -41,12 +41,9 @@ macro_rules! IMFGetService_impl {
 
 IMFGetService_impl! {
 	/// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
-	/// COM interface.
-	///
-	/// Virtual table: [`IMFGetServiceVT`](crate::dshow::vt::IMFGetServiceVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over
+	/// [`IMFGetServiceVT`](crate::dshow::vt::IMFGetServiceVT). Inherits from
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

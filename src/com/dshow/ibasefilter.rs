@@ -57,14 +57,9 @@ macro_rules! IBaseFilter_impl {
 
 IBaseFilter_impl! {
 	/// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
-	/// COM interface.
-	///
-	/// Virtual table: [`IBaseFilterVT`](crate::dshow::vt::IBaseFilterVT).
-	///
-	/// Inherits from:
-	/// * [`IMediaFilter`](crate::dshow::IMediaFilter);
-	/// * [`IPersist`](crate::IPersist);
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IBaseFilterVT`](crate::dshow::vt::IBaseFilterVT).
+	/// Inherits from [`IMediaFilter`](crate::dshow::IMediaFilter),
+	/// [`IPersist`](crate::IPersist), [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

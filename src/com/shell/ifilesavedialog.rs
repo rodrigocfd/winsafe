@@ -42,14 +42,11 @@ macro_rules! IFileSaveDialog_impl {
 
 IFileSaveDialog_impl! {
 	/// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
-	/// COM interface.
-	///
-	/// Virtual table: [`IFileSaveDialogVT`](crate::shell::vt::IFileSaveDialogVT).
-	///
-	/// Inherits from:
-	/// * [`IFileDialog`](crate::shell::IFileDialog);
-	/// * [`IModalWindow`](crate::shell::IModalWindow);
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over
+	/// [`IFileSaveDialogVT`](crate::shell::vt::IFileSaveDialogVT). Inherits
+	/// from [`IFileDialog`](crate::shell::IFileDialog),
+	/// [`IModalWindow`](crate::shell::IModalWindow),
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

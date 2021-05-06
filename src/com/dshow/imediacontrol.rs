@@ -99,13 +99,9 @@ macro_rules! IMediaControl_impl {
 
 IMediaControl_impl! {
 	/// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
-	/// COM interface.
-	///
-	/// Virtual table: [`IMediaControlVT`](crate::dshow::vt::IMediaControlVT).
-	///
-	/// Inherits from:
-	/// * [`IDispatch`](crate::IDispatch);
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over
+	/// [`IMediaControlVT`](crate::dshow::vt::IMediaControlVT). Inherits from
+	/// [`IDispatch`](crate::IDispatch) [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

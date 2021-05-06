@@ -44,13 +44,9 @@ macro_rules! IMediaFilter_impl {
 
 IMediaFilter_impl! {
 	/// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
-	/// COM interface.
-	///
-	/// Virtual table: [`IMediaFilterVT`](crate::dshow::vt::IMediaFilterVT).
-	///
-	/// Inherits from:
-	/// * [`IPersist`](crate::IPersist);
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IMediaFilterVT`](crate::dshow::vt::IMediaFilterVT).
+	/// Inherits from [`IPersist`](crate::IPersist),
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

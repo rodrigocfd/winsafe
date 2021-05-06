@@ -43,13 +43,11 @@ macro_rules! IDispatch_impl {
 
 IDispatch_impl! {
 	/// [`IDispatch`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
-	/// COM interface. Backed by [`IDispatchVT`](crate::IDispatchVT) virtual table.
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IDispatchVT`](crate::IDispatchVT). Inherits from
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	IDispatch, IDispatchVT
 }

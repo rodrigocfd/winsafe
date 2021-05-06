@@ -38,12 +38,8 @@ macro_rules! IModalWindow_impl {
 
 IModalWindow_impl! {
 	/// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
-	/// COM interface.
-	///
-	/// Virtual table: [`IModalWindowVT`](crate::shell::vt::IModalWindowVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IModalWindowVT`](crate::shell::vt::IModalWindowVT).
+	/// Inherits from [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

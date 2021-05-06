@@ -77,12 +77,8 @@ macro_rules! IPin_impl {
 
 IPin_impl! {
 	/// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
-	/// COM interface.
-	///
-	/// Virtual table: [`IPinVT`](crate::dshow::vt::IPinVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IPinVT`](crate::dshow::vt::IPinVT). Inherits from
+	/// [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

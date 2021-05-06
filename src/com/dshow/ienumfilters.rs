@@ -35,12 +35,8 @@ macro_rules! IEnumFilters_impl {
 
 IEnumFilters_impl! {
 	/// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
-	/// COM interface.
-	///
-	/// Virtual table: [`IEnumFiltersVT`](crate::dshow::vt::IEnumFiltersVT).
-	///
-	/// Inherits from:
-	/// * [`IUnknown`](crate::IUnknown).
+	/// COM interface over [`IEnumFiltersVT`](crate::dshow::vt::IEnumFiltersVT).
+	/// Inherits from [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
