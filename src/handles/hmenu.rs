@@ -41,7 +41,20 @@ impl HMENU {
 	}
 
 	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
-	/// appends a new item at the menu with its command ID.
+	/// appends a new item with its command ID.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::HMENU;
+	///
+	/// const ID_FILE_OPEN: u16 = 101;
+	///
+	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
+	///
+	/// hmenu.AppendMenuItem(ID_FILE_OPEN, "&Open file...")
+	///     .unwrap();
+	/// ```
 	pub fn AppendMenuItem(self, command_id: u16, text: &str) -> WinResult<()> {
 		self.AppendMenu(
 			co::MF::STRING,
@@ -51,13 +64,64 @@ impl HMENU {
 	}
 
 	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
+	/// appends multiple new items with their command IDs.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::HMENU;
+	///
+	/// const ID_FILE_OPEN: u16 = 101;
+	/// const ID_FILE_SAVE: u16 = 102;
+	///
+	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
+	///
+	/// hmenu.AppendMenuItems(&[
+	///     (ID_FILE_OPEN, "&Open file..."),
+	///     (ID_FILE_SAVE, "&Save file"),
+	/// ]).unwrap();
+	/// ```
+	pub fn AppendMenuItems(self,
+		command_ids_and_texts: &[(u16, &str)]) -> WinResult<()>
+	{
+		for (command_id, text) in command_ids_and_texts.iter() {
+			self.AppendMenuItem(*command_id, text)?;
+		}
+		Ok(())
+	}
+
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
 	/// appends a separator.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::HMENU;
+	///
+	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
+	///
+	/// hmenu.AppendSeparator().unwrap();
+	/// ```
 	pub fn AppendMenuSeparator(self) -> WinResult<()> {
 		self.AppendMenu(co::MF::SEPARATOR, IdMenu::None, BitmapPtrStr::None)
 	}
 
 	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
 	/// appends a menu as a new submenu entry.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::HMENU;
+	///
+	/// let hmenu_file = HMENU::CreatePopupMenu().unwrap();
+	/// let hmenu_edit = HMENU::CreatePopupMenu().unwrap();
+	///
+	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
+	///
+	/// hmenu.AppendMenuSubmenu(hmenu_file, "&File").unwrap();
+	/// hmenu.AppendMenuSubmenu(hmenu_edit, "&Edit").unwrap();
+	/// ```
 	pub fn AppendMenuSubmenu(self, submenu: HMENU, text: &str) -> WinResult<()> {
 		self.AppendMenu(
 			co::MF::POPUP,
