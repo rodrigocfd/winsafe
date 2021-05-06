@@ -1,6 +1,3 @@
-use std::ffi::OsStr;
-use std::os::windows::ffi::OsStrExt;
-
 use crate::ffi::kernel32;
 
 /// Stores a `Vec<u16>` buffer for an
@@ -12,49 +9,49 @@ use crate::ffi::kernel32;
 ///
 /// See an example in [`HWND::GetWindowText`](crate::HWND::GetWindowText).
 pub struct WString {
-	char_vec: Option<Vec<u16>>,
+	vec_u16: Option<Vec<u16>>,
 }
 
 impl Default for WString {
 	fn default() -> Self {
-		Self { char_vec: None }
+		Self { vec_u16: None }
 	}
 }
 
 impl WString {
-	/// Creates a new UTF-16 string from an optional `&str`, and stores it
-	/// internally. If `s` is null, a null pointer will be stored.
-	pub fn from_opt_str(val: Option<&str>) -> WString {
-		val.map_or(Self::default(), |val| Self::from_str(val))
-	}
-
-	/// Creates a new UTF-16 string from an ordinary `&str`, and stores it
-	/// internally, appending a terminating null.
-	pub fn from_str(val: &str) -> WString {
+	/// Creates and stores a new UTF-16 string from an optional `&str`.
+	///
+	/// The string will be stored with a terminating null.
+	pub fn from_opt_str(s: Option<&str>) -> WString {
 		Self {
-			char_vec: Some(
-				OsStr::new(val)
-					.encode_wide()
-					.chain(std::iter::once(0))
-					.collect::<Vec<u16>>(),
-			),
+			vec_u16: s.map(
+				|s| s.encode_utf16()
+					.chain(std::iter::once(0)) // append a terminating null
+					.collect(),
+			)
 		}
 	}
 
+	/// Creates and stores a new UTF-16 string from an ordinary `&str`.
+	///
+	/// The string will be stored with a terminating null.
+	pub fn from_str(s: &str) -> WString {
+		Self::from_opt_str(Some(s))
+	}
+
 	/// Creates a new UTF-16 string by copying from a non-null-terminated
-	/// buffer, specifying the number of existing chars. A terminating null will
-	/// be appended.
+	/// buffer, specifying the number of existing chars.
+	///
+	/// The string will be stored with a terminating null.
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> WString {
 		if src.is_null() {
 			Self::default()
 		} else {
 			let mut me = Self::new_alloc_buffer(num_chars + 1); // add room for terminating null
-			let vec_ref = &mut me.char_vec.as_mut().unwrap();
-
 			unsafe {
 				std::ptr::copy_nonoverlapping(
 					src,
-					vec_ref.as_mut_ptr(),
+					me.vec_u16.as_mut().unwrap().as_mut_ptr(),
 					num_chars, // copy the exact number of chars, no terminating null
 				);
 			}
@@ -63,17 +60,19 @@ impl WString {
 	}
 
 	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
-	/// The terminating null will be appended.
+	///
+	/// The string will be stored with a terminating null.
 	pub fn from_wchars_nullt(src: *const u16) -> WString {
 		if src.is_null() {
 			Self::default()
 		} else {
-			let num_chars = unsafe { kernel32::lstrlenW(src) as usize };
-			Self::from_wchars_count(src, num_chars)
+			Self::from_wchars_count(src, unsafe { kernel32::lstrlenW(src) } as _)
 		}
 	}
 
 	/// Creates a new UTF-16 string by copying from a slice.
+	///
+	/// The string will be stored with a terminating null.
 	pub fn from_wchars_slice(src: &[u16]) -> WString {
 		Self::from_wchars_count(src.as_ptr(), src.len())
 	}
@@ -94,10 +93,11 @@ impl WString {
 	/// Panics if the buffer wasn't previously allocated. Be sure to alloc
 	/// enough room, otherwise a buffer overrun may occur.
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
-		match self.char_vec.as_mut() {
-			Some(vec_ref) => vec_ref.as_mut_ptr(),
-			None => panic!("Trying to use an unallocated WString buffer."),
-		}
+		self.vec_u16.as_mut()
+			.map_or_else(
+				|| panic!("Trying to use an unallocated WString buffer."),
+				|v| v.as_mut_ptr(),
+			)
 	}
 
 	/// Returns a `LPCWSTR` const pointer to the internal UTF-16 string buffer,
@@ -107,10 +107,8 @@ impl WString {
 	/// allocated. Make sure the `WString` object outlives the function call,
 	/// otherwise it will point to an invalid memory location.
 	pub unsafe fn as_ptr(&self) -> *const u16 {
-		match self.char_vec.as_ref() {
-			Some(vec_ref) => vec_ref.as_ptr(),
-			None => std::ptr::null(),
-		}
+		self.vec_u16.as_ref()
+			.map_or(std::ptr::null(), |v| v.as_ptr())
 	}
 
 	/// Returns a slice to the internal `u16` buffer. This is useful to receive
@@ -121,10 +119,11 @@ impl WString {
 	/// Panics if the buffer wasn't previously allocated. Be sure to alloc
 	/// enough room, otherwise a buffer overrun may occur.
 	pub fn as_mut_slice(&mut self) -> &mut [u16] {
-		match self.char_vec.as_mut() {
-			Some(vec_ref) => &mut vec_ref[..],
-			None => panic!("Trying to use an unallocated WString buffer."),
-		}
+		self.vec_u16.as_mut()
+			.map_or_else(
+				|| panic!("Trying to use an unallocated WString buffer."),
+				|v| v.as_mut_slice(),
+			)
 	}
 
 	/// Returns a slice to the internal UTF-16 string buffer.
@@ -135,18 +134,19 @@ impl WString {
 	/// `WString` object outlives the function call, otherwise it will point to
 	/// an invalid memory location.
 	pub fn as_slice(&mut self) -> &[u16] {
-		match self.char_vec.as_ref() {
-			Some(vec_ref) => &vec_ref[..],
-			None => panic!("Trying to use an unallocated WString buffer."),
-		}
+		self.vec_u16.as_ref()
+			.map_or_else(
+				|| panic!("Trying to use an unallocated WString buffer."),
+				|v| v.as_slice(),
+			)
 	}
 
 	/// Returns the size of the allocated internal buffer.
+	///
+	/// If the buffer was not allocated yet, returns zero.
 	pub fn buffer_size(&self) -> usize {
-		match self.char_vec.as_ref() {
-			Some(vec_ref) => vec_ref.len(),
-			None => 0, // not allocated yet
-		}
+		self.vec_u16.as_ref()
+			.map_or(0, |v| v.len())
 	}
 
 	/// Copies the content into the external buffer pointed by `dest`. A
@@ -179,22 +179,23 @@ impl WString {
 			panic!("Destination buffer cannot have zero length");
 		}
 
-		if let Some(vec_ref) = self.char_vec.as_ref() {
+		if let Some(vec_u16_ref) = self.vec_u16.as_ref() {
 			unsafe {
 				std::ptr::copy_nonoverlapping(
-					vec_ref.as_ptr(),
+					vec_u16_ref.as_ptr(),
 					dest.as_mut_ptr(),
-					std::cmp::min(vec_ref.len(), dest.len()), // copy the exact number of chars, no terminating null
+					std::cmp::min(vec_u16_ref.len(), dest.len()), // copy the exact number of chars, no terminating null
 				);
 			}
 			*dest.last_mut().unwrap() = 0; // terminating null
 		}
 	}
 
-	/// Fills the entire buffer with zero values.
+	/// Fills the entire buffer with zero values. The buffer size is not
+	/// changed.
 	pub fn fill_with_zero(&mut self) {
-		if let Some(vec_ref) = self.char_vec.as_mut() {
-			for wchar in vec_ref {
+		if let Some(vec_u16_ref) = self.vec_u16.as_mut() {
+			for wchar in vec_u16_ref {
 				*wchar = 0;
 			}
 		}
@@ -202,7 +203,7 @@ impl WString {
 
 	/// Returns true if the internal buffer is storing a null string pointer.
 	pub fn is_null(&self) -> bool {
-		self.char_vec.is_none()
+		self.vec_u16.is_none()
 	}
 
 	/// Wrapper to
@@ -211,10 +212,8 @@ impl WString {
 	/// Returns the number of `u16` characters stored in the internal buffer,
 	/// not counting the terminating null.
 	pub fn len(&self) -> usize {
-		match self.char_vec.as_ref() {
-			Some(vec_ref) => unsafe { kernel32::lstrlenW(vec_ref.as_ptr()) as usize },
-			None => 0,
-		}
+		self.vec_u16.as_ref()
+			.map_or(0, |v| unsafe { kernel32::lstrlenW(v.as_ptr())} as _ )
 	}
 
 	/// Resizes the internal buffer, to be used as a buffer for native Win32
@@ -227,26 +226,22 @@ impl WString {
 	/// or `as_mut_buffer` again.
 	pub fn realloc_buffer(&mut self, new_size: usize) {
 		if new_size == 0 {
-			self.char_vec = None; // dealloc
+			self.vec_u16 = None; // dealloc
 		} else {
-			if self.char_vec.is_none() {
-				self.char_vec = Some(Vec::default()); // create if not yet; default Vec is empty
+			if self.vec_u16.is_none() {
+				self.vec_u16 = Some(Vec::default()); // create if not yet; default Vec is empty
 			}
-
-			let vec_ref = &mut self.char_vec.as_mut().unwrap();
-			vec_ref.resize(new_size, 0); // fill with nulls
+			self.vec_u16.as_mut().unwrap().resize(new_size, 0); // filled with nulls
 		}
 	}
 
 	/// Converts into `String`. An internal null pointer will simply be converted
 	/// into an empty string.
 	pub fn to_string(&self) -> String {
-		match self.char_vec.as_ref() {
-			Some(vec_ref) => {
-				let slice16 = &vec_ref[..self.len()]; // without terminating null
-				String::from_utf16(slice16).unwrap_or_default()
-			},
-			None => String::default(),
-		}
+		self.vec_u16.as_ref()
+			.map_or(
+				String::default(),
+				|v| String::from_utf16(&v[..self.len()]).unwrap(), // without terminating null
+			)
 	}
 }
