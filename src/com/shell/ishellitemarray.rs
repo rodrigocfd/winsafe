@@ -5,6 +5,7 @@ macro_rules! IShellItemArray_impl {
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
 	) => {
+		use crate::co;
 		use crate::com::shell::IShellItem;
 		use crate::com::shell::vt::{IShellItemVT, IShellItemArrayVT};
 
@@ -26,6 +27,23 @@ macro_rules! IShellItemArray_impl {
 						&mut count,
 					),
 				).map(|_| count)
+			}
+
+			/// Iterates through all items with
+			/// [`GetCount`](crate::shell::IShellItemArray::GetCount) and
+			/// [`GetItemAt`](crate::shell::IShellItemArray::GetItemAt), then
+			/// calls
+			/// [`GetDisplayName`](crate::shell::IShellItem::GetDisplayName) on
+			/// each one of them.
+			pub fn GetDisplayNames(&self,
+				sigdnName: co::SIGDN) -> WinResult<Vec<String>>
+			{
+				let mut names = Vec::default();
+				for i in 0..self.GetCount()? {
+					let shellItem = self.GetItemAt(i)?;
+					names.push(shellItem.GetDisplayName(sigdnName)?);
+				}
+				Ok(names)
 			}
 
 			/// [`IShellItemArray::GetItemAt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
