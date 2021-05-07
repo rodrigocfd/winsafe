@@ -41,7 +41,8 @@ impl HINSTANCE {
 				lpDialogFunc as _,
 				dwInitParam.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| HWND { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HWND { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`DialogBoxParam`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
@@ -113,7 +114,8 @@ impl HINSTANCE {
 			kernel32::GetModuleHandleW(
 				WString::from_opt_str(lpModuleName).as_ptr()
 			).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
@@ -121,7 +123,8 @@ impl HINSTANCE {
 	pub fn LoadAccelerators(self, lpTableName: IdStr) -> WinResult<HACCEL> {
 		unsafe {
 			user32::LoadAcceleratorsW(self.ptr, lpTableName.as_ptr()).as_mut()
-		}.map(|ptr| HACCEL { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HACCEL { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursorw)
@@ -139,7 +142,8 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
 		unsafe { user32::LoadCursorW(self.ptr, lpCursorName.as_ptr()).as_mut() }
-			.map(|ptr| HCURSOR { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| HCURSOR { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
@@ -157,7 +161,8 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
 		unsafe { user32::LoadIconW(self.ptr, lpIconName.as_ptr()).as_mut() }
-			.map(|ptr| HICON { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| HICON { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -168,7 +173,8 @@ impl HINSTANCE {
 		unsafe {
 			user32::LoadImageW(self.ptr, name.as_ptr(), 0, cx, cy, fuLoad.0)
 				.as_mut()
-		}.map(|ptr| HBITMAP { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HBITMAP { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -179,7 +185,8 @@ impl HINSTANCE {
 		unsafe {
 			user32::LoadImageW(self.ptr, name.as_ptr(), 2, cx, cy, fuLoad.0)
 				.as_mut()
-		}.map(|ptr| HCURSOR { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HCURSOR { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -190,6 +197,7 @@ impl HINSTANCE {
 		unsafe {
 			user32::LoadImageW(self.ptr, name.as_ptr(), 1, cx, cy, fuLoad.0)
 				.as_mut()
-		}.map(|ptr| HICON { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HICON { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 }

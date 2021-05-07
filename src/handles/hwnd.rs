@@ -48,7 +48,8 @@ impl HWND {
 	/// call.
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> WinResult<HDC> {
 		unsafe { user32::BeginPaint(self.ptr, ref_as_pvoid(lpPaint)).as_mut() }
-			.map(|ptr| HDC { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| HDC { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`BringWindowToTop`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-bringwindowtotop)
@@ -129,7 +130,8 @@ impl HWND {
 				hInstance.ptr,
 				lpParam.unwrap_or_default() as _,
 			).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
@@ -244,7 +246,8 @@ impl HWND {
 				WString::from_str(lpClassName).as_ptr(),
 				WString::from_str(lpWindowName).as_ptr(),
 			).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetActiveWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)
@@ -293,7 +296,8 @@ impl HWND {
 	/// call.
 	pub fn GetDC(self) -> WinResult<HDC> {
 		unsafe { user32::GetDC(self.ptr).as_mut() }
-			.map(|ptr| HDC { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| HDC { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetDesktopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
@@ -320,7 +324,8 @@ impl HWND {
 	/// method.
 	pub fn GetDlgItem(self, nIDDlgItem: i32) -> WinResult<HWND> {
 		unsafe { user32::GetDlgItem(self.ptr, nIDDlgItem).as_mut() }
-			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getfocus)
@@ -345,7 +350,8 @@ impl HWND {
 		unsafe {
 			user32::GetNextDlgGroupItem(self.ptr, hCtl.ptr, bPrevious as _)
 				.as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetNextDlgTabItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlgtabitem)
@@ -355,14 +361,16 @@ impl HWND {
 	{
 		unsafe {
 			user32::GetNextDlgTabItem(self.ptr, hCtl.ptr, bPrevious as _).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getparent)
 	/// method.
 	pub fn GetParent(self) -> WinResult<HWND> {
 		unsafe { user32::GetParent(self.ptr).as_mut() }
-			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetScrollInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getscrollinfo)
@@ -402,7 +410,8 @@ impl HWND {
 	/// method.
 	pub fn GetWindow(self, uCmd: co::GW) -> WinResult<HWND> {
 		unsafe { user32::GetWindow(self.ptr, uCmd.0).as_mut() }
-			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetWindowDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
@@ -412,7 +421,8 @@ impl HWND {
 	/// call.
 	pub fn GetWindowDC(self) -> WinResult<HDC> {
 		unsafe { user32::GetWindowDC(self.ptr).as_mut() }
-			.map(|ptr| HDC { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| HDC { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetWindowDisplayAffinity`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdisplayaffinity)

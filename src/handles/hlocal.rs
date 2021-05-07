@@ -15,6 +15,7 @@ impl HLOCAL {
 	/// method.
 	pub fn LocalFree(self) -> WinResult<()> {
 		unsafe { kernel32::LocalFree(self.ptr).as_mut() }
-			.map(|_| ()).ok_or_else(|| GetLastError())
+			.map(|_| ())
+			.ok_or_else(|| GetLastError())
 	}
 }

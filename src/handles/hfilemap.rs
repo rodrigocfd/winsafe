@@ -38,7 +38,8 @@ impl HFILEMAP {
 				LODWORD(offset),
 				numberOfBytesToMap.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| HFILEMAPVIEW { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HFILEMAPVIEW { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 }
 

@@ -84,7 +84,8 @@ impl HIMAGELIST {
 	{
 		unsafe {
 			comctl32::ImageList_Create(cx, cy, flags.0, cInitial, cGrow).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`ImageList_Destroy`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)

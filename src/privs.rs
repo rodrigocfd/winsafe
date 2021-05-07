@@ -8,6 +8,7 @@ use crate::WString;
 
 pub(crate) const CB_ERR: i32 = -1;
 pub(crate) const CB_ERRSPACE: i32 = -2;
+pub(crate) const CLR_INVALID: u32 = 0xffff_ffff;
 pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub(crate) const GDI_ERROR: u32 = 0xffff_ffff;
 pub(crate) const GDT_ERROR: i32 = -1;
@@ -55,6 +56,14 @@ pub(crate) fn hr_to_winresult_bool(hresult: HRESULT) -> WinResult<bool> {
 		co::ERROR::S_OK => Ok(true),
 		co::ERROR::S_FALSE => Ok(false),
 		err => Err(err),
+	}
+}
+
+/// If number is zero, yields `Err(GetLastError)`, otherwise `Ok(expr)`.
+pub(crate) fn nonzero_to_winresult(expr: i32) -> WinResult<i32> {
+	match expr {
+		0 => Err(GetLastError()),
+		val => Ok(val),
 	}
 }
 

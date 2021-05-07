@@ -25,6 +25,7 @@ impl HHOOK {
 				hmod.ptr,
 				dwThreadId,
 			).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 }

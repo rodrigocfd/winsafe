@@ -158,7 +158,8 @@ impl HMENU {
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreateMenu() -> WinResult<HMENU> {
 		unsafe { user32::CreateMenu().as_mut() }
-			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreatePopupMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu)
@@ -168,7 +169,8 @@ impl HMENU {
 	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreatePopupMenu() -> WinResult<HMENU> {
 		unsafe { user32::CreatePopupMenu().as_mut() }
-			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`DeleteMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deletemenu)

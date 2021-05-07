@@ -100,6 +100,13 @@ const_type! { GENERIC, u32,
 	ALL, 0x10000000
 }
 
+const_type! { GM, i32,
+	/// [`SetGraphicsMode`](crate::HDC::SetGraphicsMode) `iMode` (`i32`).
+	=>
+	COMPATIBLE, 1
+	ADVANCED, 2
+}
+
 const_type! { GW, u32,
 	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 	=>

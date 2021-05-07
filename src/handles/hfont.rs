@@ -35,13 +35,15 @@ impl HFONT {
 				iQuality.0 as _, iPitchAndFamily.0 as _,
 				WString::from_str(pszFaceName).as_ptr(),
 			).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreateFontIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
 	pub fn CreateFontIndirect(lplf: &LOGFONT) -> WinResult<HFONT> {
 		unsafe { gdi32::CreateFontIndirectW(ref_as_pcvoid(lplf)).as_mut() }
-			.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 }

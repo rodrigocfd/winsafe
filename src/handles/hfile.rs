@@ -89,7 +89,8 @@ impl HFILE {
 				dwFlagsAndAttributes.0,
 				hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
 			).as_mut()
-		}.map(|ptr| Self { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreateFileMapping`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
@@ -112,7 +113,8 @@ impl HFILE {
 				maximumSize.map_or(0, |n| LODWORD(n)),
 				lpName.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
 			).as_mut()
-		}.map(|ptr| HFILEMAP { ptr }).ok_or_else(|| GetLastError())
+		}.map(|ptr| HFILEMAP { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)

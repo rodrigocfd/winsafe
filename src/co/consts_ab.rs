@@ -24,6 +24,13 @@ const_type! { ACCESS_RIGHTS, u32,
 	SYNCHRONIZE, 0x00100000
 }
 
+const_type! { AD, i32,
+	/// [`SetArcDirection`](crate::HDC::SetArcDirection) `dir` (`i32`).
+	=>
+	COUNTERCLOCKWISE, 1
+	CLOCKWISE, 2
+}
+
 const_type! { ADRF, u32,
 	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`). Don't seem
 	/// to be defined anywhere, unconfirmed values.

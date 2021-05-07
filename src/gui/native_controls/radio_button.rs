@@ -119,7 +119,7 @@ impl RadioButton {
 //------------------------------------------------------------------------------
 
 /// Options to create a [`RadioButton`](crate::gui::RadioButton)
-/// programmatically with [`RadioButton::new`](crate::gui::RadioButton::new).
+/// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).
 pub struct RadioButtonOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
