@@ -1,31 +1,29 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::co;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::com::shell::vt::IModalWindowVT;
-use crate::funcs::HRESULT_FROM_WIN32;
-use crate::handles::HWND;
-use crate::privs::hr_to_winresult;
-
 macro_rules! IModalWindow_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::co;
+		use crate::com::shell::vt::IModalWindowVT;
+		use crate::funcs::HRESULT_FROM_WIN32;
+		use crate::handles::HWND;
+
 		IUnknown_impl! {
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(imodalwindow_vt, IModalWindowVT);
+
 			/// [`IModalWindow::Show`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-imodalwindow-show)
 			/// method.
 			///
 			/// Returns false if user clicked Cancel.
 			pub fn Show(&self, hwndOwner: HWND) -> WinResult<bool> {
-				let ppvt = unsafe { self.ppvt::<IModalWindowVT>() };
-				let hr = unsafe { ((**ppvt).Show)(ppvt, hwndOwner.ptr) };
+				let hr = (self.imodalwindow_vt().Show)(self.ppvt, hwndOwner.ptr);
 				match HRESULT_FROM_WIN32(hr) {
 					co::ERROR::S_OK => Ok(true),
 					co::ERROR::CANCELLED => Ok(false), // ordinary error, not a COM error
@@ -44,5 +42,5 @@ IModalWindow_impl! {
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	IModalWindow, IModalWindowVT
+	IModalWindow, crate::com::shell::vt::IModalWindowVT
 }

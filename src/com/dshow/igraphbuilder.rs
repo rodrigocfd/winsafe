@@ -1,34 +1,27 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::com::dshow::{IBaseFilter, IEnumFilters, IPin};
-use crate::com::dshow::vt::{
-	IBaseFilterVT,
-	IEnumFiltersVT,
-	IFilterGraphVT,
-	IGraphBuilderVT,
-};
-use crate::handles::HFILE;
-use crate::privs::{hr_to_winresult, hr_to_winresult_bool};
-use crate::WString;
-
 macro_rules! IGraphBuilder_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::com::dshow::IPin;
+		use crate::com::dshow::vt::IGraphBuilderVT;
+		use crate::handles::HFILE;
+		use crate::privs::hr_to_winresult_bool;
+
 		IFilterGraph_impl! {
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(igraphbuilder_vt, IGraphBuilderVT);
+
 			/// [`IGraphBuilder::Abort`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
 			/// method.
 			pub fn Abort(&self) -> WinResult<()> {
-				let ppvt = unsafe { self.ppvt::<IGraphBuilderVT>() };
-				hr_to_winresult(unsafe { ((**ppvt).Abort)(ppvt) })
+				hr_to_winresult((self.igraphbuilder_vt().Abort)(self.ppvt))
 			}
 
 			/// [`IGraphBuilder::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)
@@ -37,68 +30,56 @@ macro_rules! IGraphBuilder_impl {
 				fileName: &str, filterName: &str) -> WinResult<IBaseFilter>
 			{
 				let mut ppvQueried: PPComVT<IBaseFilterVT> = std::ptr::null_mut();
-				let ppvt = unsafe { self.ppvt::<IGraphBuilderVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).AddSourceFilter)(
-							ppvt,
-							WString::from_str(fileName).as_ptr(),
-							WString::from_str(filterName).as_ptr(),
-							&mut ppvQueried as *mut _ as _,
-						)
-					},
+					(self.igraphbuilder_vt().AddSourceFilter)(
+						self.ppvt,
+						unsafe { WString::from_str(fileName).as_ptr() },
+						unsafe { WString::from_str(filterName).as_ptr() },
+						&mut ppvQueried as *mut _ as _,
+					),
 				).map(|_| IBaseFilter::from(ppvQueried))
 			}
 
 			/// [`IGraphBuilder::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 			/// method.
 			pub fn Connect(&self, pinOut: &IPin, pinIn: &IPin) -> WinResult<()> {
-				let ppvt = unsafe { self.ppvt::<IGraphBuilderVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).Connect)(ppvt, pinOut.ppvt(), pinIn.ppvt())
-					},
+					(self.igraphbuilder_vt().Connect)(
+						self.ppvt,
+						pinOut.ppvt,
+						pinIn.ppvt,
+					),
 				)
 			}
 
 			/// [`IGraphBuilder::RenderFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)
 			/// method.
 			pub fn RenderFile(&self, file: &str) -> WinResult<()> {
-				let ppvt = unsafe { self.ppvt::<IGraphBuilderVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).RenderFile)(
-							ppvt,
-							WString::from_str(file).as_ptr(),
-							std::ptr::null(),
-						)
-					},
+					(self.igraphbuilder_vt().RenderFile)(
+						self.ppvt,
+						unsafe { WString::from_str(file).as_ptr() },
+						std::ptr::null(),
+					),
 				)
 			}
 
 			/// [`IGraphBuilder::SetLogFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
 			/// method.
 			pub fn SetLogFile(&self, hFile: Option<HFILE>) -> WinResult<()> {
-				let ppvt = unsafe { self.ppvt::<IGraphBuilderVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).SetLogFile)(
-							ppvt,
-							match hFile {
-								Some(hFile) => hFile.ptr,
-								None => std::ptr::null_mut(),
-							},
-						)
-					},
+					(self.igraphbuilder_vt().SetLogFile)(
+						self.ppvt,
+						hFile.map_or(std::ptr::null_mut(), |h| h.ptr),
+					),
 				)
 			}
 
 			/// [`IGraphBuilder::ShouldOperationContinue`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-shouldoperationcontinue)
 			/// method.
 			pub fn ShouldOperationContinue(&self) -> WinResult<bool> {
-				let ppvt = unsafe { self.ppvt::<IGraphBuilderVT>() };
 				hr_to_winresult_bool(
-					unsafe { ((**ppvt).ShouldOperationContinue)(ppvt) },
+					(self.igraphbuilder_vt().ShouldOperationContinue)(self.ppvt),
 				)
 			}
 		}
@@ -127,5 +108,5 @@ IGraphBuilder_impl! {
 	///     co::CLSCTX::INPROC_SERVER,
 	/// ).unwrap();
 	/// ```
-	IGraphBuilder, IGraphBuilderVT
+	IGraphBuilder, crate::com::dshow::vt::IGraphBuilderVT
 }

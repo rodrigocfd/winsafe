@@ -1,33 +1,32 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::co;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT, ITaskbarList3VT};
-use crate::handles::HWND;
-use crate::privs::hr_to_winresult;
-
 macro_rules! ITaskbarList3_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::co;
+		use crate::com::shell::vt::ITaskbarList3VT;
+
 		ITaskbarList2_impl!{
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(itaskbarlist3_vt, ITaskbarList3VT);
+
 			/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 			/// method.
 			pub fn RegisterTab(&self,
 				hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
 			{
-				let ppvt = unsafe { self.ppvt::<ITaskbarList3VT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).RegisterTab)(ppvt, hwndTab.ptr, hwndMDI.ptr)
-					},
+					(self.itaskbarlist3_vt().RegisterTab)(
+						self.ppvt,
+						hwndTab.ptr,
+						hwndMDI.ptr,
+					),
 				)
 			}
 
@@ -36,11 +35,12 @@ macro_rules! ITaskbarList3_impl {
 			pub fn SetProgressState(&self,
 				hwnd: HWND, tbpfFlags: co::TBPF) -> WinResult<()>
 			{
-				let ppvt = unsafe { self.ppvt::<ITaskbarList3VT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).SetProgressState)(ppvt, hwnd.ptr, tbpfFlags.0)
-					},
+					(self.itaskbarlist3_vt().SetProgressState)(
+						self.ppvt,
+						hwnd.ptr,
+						tbpfFlags.0,
+					),
 				)
 			}
 
@@ -49,13 +49,13 @@ macro_rules! ITaskbarList3_impl {
 			pub fn SetProgressValue(&self,
 				hwnd: HWND, ullCompleted: u64, ullTotal: u64) -> WinResult<()>
 			{
-				let ppvt = unsafe { self.ppvt::<ITaskbarList3VT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).SetProgressValue)(
-							ppvt, hwnd.ptr, ullCompleted, ullTotal,
-						)
-					},
+					(self.itaskbarlist3_vt().SetProgressValue)(
+						self.ppvt,
+						hwnd.ptr,
+						ullCompleted,
+						ullTotal,
+					),
 				)
 			}
 
@@ -64,11 +64,13 @@ macro_rules! ITaskbarList3_impl {
 			pub fn SetTabActive(&self,
 				hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
 			{
-				let ppvt = unsafe { self.ppvt::<ITaskbarList3VT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).SetTabActive)(ppvt, hwndTab.ptr, hwndMDI.ptr, 0)
-					},
+					(self.itaskbarlist3_vt().SetTabActive)(
+						self.ppvt,
+						hwndTab.ptr,
+						hwndMDI.ptr,
+						0,
+					),
 				)
 			}
 
@@ -77,13 +79,12 @@ macro_rules! ITaskbarList3_impl {
 			pub fn SetTabOrder(&self,
 				hwndTab: HWND, hwndInsertBefore: HWND) -> WinResult<()>
 			{
-				let ppvt = unsafe { self.ppvt::<ITaskbarList3VT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).SetTabOrder)(
-							ppvt, hwndTab.ptr, hwndInsertBefore.ptr,
-						)
-					},
+					(self.itaskbarlist3_vt().SetTabOrder)(
+						self.ppvt,
+						hwndTab.ptr,
+						hwndInsertBefore.ptr,
+					),
 				)
 			}
 		}
@@ -113,5 +114,5 @@ ITaskbarList3_impl! {
 	///     co::CLSCTX::INPROC_SERVER,
 	/// ).unwrap();
 	/// ```
-	ITaskbarList3, ITaskbarList3VT
+	ITaskbarList3, crate::com::shell::vt::ITaskbarList3VT
 }

@@ -6,17 +6,20 @@
 #[macro_use] mod macros;
 
 #[macro_use] mod iunknown;
+
 #[macro_use] mod idispatch;
 #[macro_use] mod ipersist;
+#[macro_use] mod itypeinfo;
 
 pub mod dshow;
 pub mod shell;
 
-mod comvt;
 mod funcs;
+mod vt;
 
-pub use comvt::{ComVT, PPComVT};
 pub use funcs::{CoCreateInstance, CoInitializeEx, CoTaskMemFree, CoUninitialize};
-pub use idispatch::{IDispatch, IDispatchVT};
-pub use ipersist::{IPersist, IPersistVT};
-pub use iunknown::{IUnknown, IUnknownVT};
+pub use idispatch::IDispatch;
+pub use ipersist::IPersist;
+pub use itypeinfo::ITypeInfo;
+pub use iunknown::IUnknown;
+pub use vt::*;

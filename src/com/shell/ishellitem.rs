@@ -1,25 +1,24 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::co;
-use crate::com::{ComVT, IUnknownVT, PPComVT};
-use crate::com::funcs::CoTaskMemFree;
-use crate::com::shell::vt::IShellItemVT;
-use crate::ffi::shell32;
-use crate::privs::{hr_to_winresult, ref_as_pcvoid};
-use crate::WString;
-
 macro_rules! IShellItem_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::co;
+		use crate::com::CoTaskMemFree;
+		use crate::com::shell::vt::IShellItemVT;
+		use crate::ffi::shell32;
+		use crate::WString;
+
 		IUnknown_impl! {
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(ishellitem_vt, IShellItemVT);
+
 			/// Calls
 			/// [`SHCreateItemFromParsingName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
 			/// function to create a new shell item, using the given folder or file path.
@@ -50,12 +49,13 @@ macro_rules! IShellItem_impl {
 			pub fn GetAttributes(&self,
 				sfgaoMask: co::SFGAO) -> WinResult<co::SFGAO>
 			{
-				let ppvt = unsafe { self.ppvt::<IShellItemVT>() };
 				let mut attrs: u32 = 0;
 				match co::ERROR(
-					unsafe {
-						((**ppvt).GetAttributes)(ppvt, sfgaoMask.0, &mut attrs)
-					} as _,
+					(self.ishellitem_vt().GetAttributes)(
+						self.ppvt,
+						sfgaoMask.0,
+						&mut attrs,
+					) as _,
 				) {
 					co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(co::SFGAO(attrs)),
 					err => Err(err),
@@ -75,12 +75,13 @@ macro_rules! IShellItem_impl {
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetDisplayName(&self, sigdnName: co::SIGDN) -> WinResult<String> {
-				let ppvt = unsafe { self.ppvt::<IShellItemVT>() };
 				let mut pstr: *mut u16 = std::ptr::null_mut();
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).GetDisplayName)(ppvt, sigdnName.0, &mut pstr)
-					},
+					(self.ishellitem_vt().GetDisplayName)(
+						self.ppvt,
+						sigdnName.0,
+						&mut pstr,
+					),
 				).map(|_| {
 					let name = WString::from_wchars_nullt(pstr);
 					CoTaskMemFree(pstr);
@@ -102,12 +103,12 @@ macro_rules! IShellItem_impl {
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetParent(&self) -> WinResult<IShellItem> {
-				let ppvt = unsafe { self.ppvt::<IShellItemVT>() };
 				let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).GetParent)(ppvt, &mut ppvQueried as *mut _ as _)
-					},
+					(self.ishellitem_vt().GetParent)(
+						self.ppvt,
+						&mut ppvQueried as *mut _ as _,
+					),
 				).map(|_| IShellItem::from(ppvQueried))
 			}
 		}
@@ -122,5 +123,5 @@ IShellItem_impl! {
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	IShellItem, IShellItemVT
+	IShellItem, crate::com::shell::vt::IShellItemVT
 }

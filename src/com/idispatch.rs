@@ -1,41 +1,43 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::ffi::{HRESULT, PCVOID, PVOID};
-use crate::privs::hr_to_winresult;
-
-com_virtual_table! { IDispatchVT,
-	/// [`IDispatch`](crate::IDispatch) virtual table.
-	->
-	0x00020400, 0x0000, 0x0000, 0xc000, 0x000000000046,
-	IUnknownVT, IUnknownVT
-
-	GetTypeInfoCount, fn(PPComVT<Self>, *mut u32) -> HRESULT
-	GetTypeInfo, fn(PPComVT<Self>, u32, u32, *mut PPComVT<IUnknownVT>) -> HRESULT
-	GetIDsOfNames, fn(PPComVT<Self>, PCVOID, PVOID, u32, u32, PVOID) -> HRESULT
-	Invoke, fn(PPComVT<Self>, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRESULT
-}
-
 macro_rules! IDispatch_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::com::ITypeInfo;
+		use crate::com::vt::{IDispatchVT, ITypeInfoVT};
+		use crate::structs::LCID;
+
 		IUnknown_impl! {
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(idispatch_vt, IDispatchVT);
+
 			/// [`IDispatch::GetTypeInfoCount`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
 			/// method.
 			pub fn GetTypeInfoCount(&self) -> WinResult<u32> {
-				let ppvt = unsafe { self.ppvt::<IDispatchVT>() };
 				let mut count: u32 = 0;
 				hr_to_winresult(
-					unsafe { ((**ppvt).GetTypeInfoCount)(ppvt, &mut count) },
+					(self.idispatch_vt().GetTypeInfoCount)(self.ppvt, &mut count),
 				).map(|_| count)
+			}
+
+			/// [`IDispatch::GetTypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)
+			/// method.
+			pub fn GetTypeInfo(&self, iTInfo: u32, lcid: LCID) -> WinResult<ITypeInfo> {
+				let mut ppvQueried: PPComVT<ITypeInfoVT> = std::ptr::null_mut();
+				hr_to_winresult(
+					(self.idispatch_vt().GetTypeInfo)(
+						self.ppvt,
+						iTInfo,
+						lcid.0,
+						&mut ppvQueried as *mut _ as _,
+					),
+				).map(|_| ITypeInfo::from(ppvQueried))
 			}
 		}
 	};
@@ -49,5 +51,5 @@ IDispatch_impl! {
 	/// Automatically calls
 	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	IDispatch, IDispatchVT
+	IDispatch, crate::com::vt::IDispatchVT
 }

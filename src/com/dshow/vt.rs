@@ -6,17 +6,19 @@
 use crate::com::{IDispatchVT, IPersistVT, IUnknownVT, PPComVT};
 use crate::ffi::{BOOL, HANDLE, HRESULT, PCSTR, PCVOID, PSTR, PVOID};
 
+type IUnkPP = PPComVT<IUnknownVT>;
+
 com_virtual_table! { IBaseFilterVT,
 	/// [`IBaseFilter`](crate::dshow::IBaseFilter) virtual table.
 	->
 	0x56a86895, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IMediaFilterVT, IMediaFilterVT
 
-	EnumPins, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
-	FindPin, fn(PPComVT<Self>, PCSTR, *mut PPComVT<IUnknownVT>) -> HRESULT
-	QueryFilterInfo, fn(PPComVT<Self>, PVOID) -> HRESULT
-	JoinFilterGraph, fn(PPComVT<Self>, PPComVT<IUnknownVT>, PCSTR) -> HRESULT
-	QueryVendorInfo, fn(PPComVT<Self>, *mut PSTR) -> HRESULT
+	EnumPins, fn(IUnkPP, *mut IUnkPP) -> HRESULT
+	FindPin, fn(IUnkPP, PCSTR, *mut IUnkPP) -> HRESULT
+	QueryFilterInfo, fn(IUnkPP, PVOID) -> HRESULT
+	JoinFilterGraph, fn(IUnkPP, IUnkPP, PCSTR) -> HRESULT
+	QueryVendorInfo, fn(IUnkPP, *mut PSTR) -> HRESULT
 }
 
 com_virtual_table! { IEnumFiltersVT,
@@ -25,10 +27,10 @@ com_virtual_table! { IEnumFiltersVT,
 	0x56a86893, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IUnknownVT, IUnknownVT
 
-	Next, fn(PPComVT<Self>, u32, *mut PPComVT<IUnknownVT>, *mut u32) -> HRESULT
-	Skip, fn(PPComVT<Self>, u32) -> HRESULT
-	Reset, fn(PPComVT<Self>) -> HRESULT
-	Clone, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
+	Next, fn(IUnkPP, u32, *mut IUnkPP, *mut u32) -> HRESULT
+	Skip, fn(IUnkPP, u32) -> HRESULT
+	Reset, fn(IUnkPP) -> HRESULT
+	Clone, fn(IUnkPP, *mut IUnkPP) -> HRESULT
 }
 
 com_virtual_table! { IFilterGraphVT,
@@ -37,14 +39,14 @@ com_virtual_table! { IFilterGraphVT,
 	0x56a8689f, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IUnknownVT, IUnknownVT
 
-	AddFilter, fn(PPComVT<Self>, PPComVT<IUnknownVT>, PCSTR) -> HRESULT
-	RemoveFilter, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> HRESULT
-	EnumFilters, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
-	FindFilterByName, fn(PPComVT<Self>, PCSTR, *mut PPComVT<IUnknownVT>) -> HRESULT
-	ConnectDirect, fn(PPComVT<Self>, PPComVT<IUnknownVT>, PPComVT<IUnknownVT>, PCVOID) -> HRESULT
-	Reconnect, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> HRESULT
-	Disconnect, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> HRESULT
-	SetDefaultSyncSource, fn(PPComVT<Self>) -> HRESULT
+	AddFilter, fn(IUnkPP, IUnkPP, PCSTR) -> HRESULT
+	RemoveFilter, fn(IUnkPP, IUnkPP) -> HRESULT
+	EnumFilters, fn(IUnkPP, *mut IUnkPP) -> HRESULT
+	FindFilterByName, fn(IUnkPP, PCSTR, *mut IUnkPP) -> HRESULT
+	ConnectDirect, fn(IUnkPP, IUnkPP, IUnkPP, PCVOID) -> HRESULT
+	Reconnect, fn(IUnkPP, IUnkPP) -> HRESULT
+	Disconnect, fn(IUnkPP, IUnkPP) -> HRESULT
+	SetDefaultSyncSource, fn(IUnkPP) -> HRESULT
 }
 
 com_virtual_table! { IGraphBuilderVT,
@@ -53,13 +55,13 @@ com_virtual_table! { IGraphBuilderVT,
 	0x56a868a9, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IFilterGraphVT, IFilterGraphVT
 
-	Connect, fn(PPComVT<Self>, PPComVT<IUnknownVT>, PPComVT<IUnknownVT>) -> HRESULT
-	Render, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> HRESULT
-	RenderFile, fn(PPComVT<Self>, PCSTR, PCSTR) -> HRESULT
-	AddSourceFilter, fn(PPComVT<Self>, PCSTR, PCSTR, *mut PPComVT<IUnknownVT>) -> HRESULT
-	SetLogFile, fn(PPComVT<Self>, HANDLE) -> HRESULT
-	Abort, fn(PPComVT<Self>) -> HRESULT
-	ShouldOperationContinue, fn(PPComVT<Self>) -> HRESULT
+	Connect, fn(IUnkPP, IUnkPP, IUnkPP) -> HRESULT
+	Render, fn(IUnkPP, IUnkPP) -> HRESULT
+	RenderFile, fn(IUnkPP, PCSTR, PCSTR) -> HRESULT
+	AddSourceFilter, fn(IUnkPP, PCSTR, PCSTR, *mut IUnkPP) -> HRESULT
+	SetLogFile, fn(IUnkPP, HANDLE) -> HRESULT
+	Abort, fn(IUnkPP) -> HRESULT
+	ShouldOperationContinue, fn(IUnkPP) -> HRESULT
 }
 
 com_virtual_table! { IMediaControlVT,
@@ -68,15 +70,15 @@ com_virtual_table! { IMediaControlVT,
 	0x56a868b1, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IDispatchVT, IDispatchVT
 
-	Run, fn(PPComVT<Self>) -> HRESULT
-	Pause, fn(PPComVT<Self>) -> HRESULT
-	Stop, fn(PPComVT<Self>) -> HRESULT
-	GetState, fn(PPComVT<Self>, i32, *mut u32) -> HRESULT
-	RenderFile, fn(PPComVT<Self>, PSTR) -> HRESULT
-	AddSourceFilter, fn(PPComVT<Self>, PSTR, *mut PPComVT<IUnknownVT>) -> HRESULT
-	GetFilterCollection, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
-	GetRegFilterCollection, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
-	StopWhenReady, fn(PPComVT<Self>) -> HRESULT
+	Run, fn(IUnkPP) -> HRESULT
+	Pause, fn(IUnkPP) -> HRESULT
+	Stop, fn(IUnkPP) -> HRESULT
+	GetState, fn(IUnkPP, i32, *mut u32) -> HRESULT
+	RenderFile, fn(IUnkPP, PSTR) -> HRESULT
+	AddSourceFilter, fn(IUnkPP, PSTR, *mut IUnkPP) -> HRESULT
+	GetFilterCollection, fn(IUnkPP, *mut IUnkPP) -> HRESULT
+	GetRegFilterCollection, fn(IUnkPP, *mut IUnkPP) -> HRESULT
+	StopWhenReady, fn(IUnkPP) -> HRESULT
 }
 
 com_virtual_table! { IMediaFilterVT,
@@ -85,12 +87,12 @@ com_virtual_table! { IMediaFilterVT,
 	0x56a86899, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IPersistVT, IPersistVT
 
-	Stop, fn(PPComVT<Self>) -> HRESULT
-	Pause, fn(PPComVT<Self>) -> HRESULT
-   Run, fn(PPComVT<Self>, i64) -> HRESULT
-	GetState, fn(PPComVT<Self>, i64, PVOID, *mut u32) -> HRESULT
-	SetSyncSource, fn(PPComVT<Self>, PPComVT<IUnknownVT>) -> HRESULT
-	GetSyncSource, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
+	Stop, fn(IUnkPP) -> HRESULT
+	Pause, fn(IUnkPP) -> HRESULT
+   Run, fn(IUnkPP, i64) -> HRESULT
+	GetState, fn(IUnkPP, i64, PVOID, *mut u32) -> HRESULT
+	SetSyncSource, fn(IUnkPP, IUnkPP) -> HRESULT
+	GetSyncSource, fn(IUnkPP, *mut IUnkPP) -> HRESULT
 }
 
 com_virtual_table! { IMediaSeekingVT,
@@ -99,23 +101,23 @@ com_virtual_table! { IMediaSeekingVT,
 	0x36b73880, 0xc2c8, 0x11cf, 0x8b46, 0x00805f6cef60,
 	IUnknownVT, IUnknownVT
 
-	GetCapabilities, fn(PPComVT<Self>, *mut u32) -> HRESULT
-	CheckCapabilities, fn(PPComVT<Self>, *mut u32) -> HRESULT
-	IsFormatSupported, fn(PPComVT<Self>, PCVOID) -> HRESULT
-	QueryPreferredFormat, fn(PPComVT<Self>, PVOID) -> HRESULT
-	GetTimeFormat, fn(PPComVT<Self>, PVOID) -> HRESULT
-	IsUsingTimeFormat, fn(PPComVT<Self>, PCVOID) -> HRESULT
-	SetTimeFormat, fn(PPComVT<Self>, PCVOID) -> HRESULT
-   GetDuration, fn(PPComVT<Self>, *mut i64) -> HRESULT
-	GetStopPosition, fn(PPComVT<Self>, *mut i64) -> HRESULT
-	GetCurrentPosition, fn(PPComVT<Self>, *mut i64) -> HRESULT
-	ConvertTimeFormat, fn(PPComVT<Self>, *mut i64, PCVOID, i64, PCVOID) -> HRESULT
-	SetPositions, fn(PPComVT<Self>, *mut i64, u32, *mut i64, u32) -> HRESULT
-	GetPositions, fn(PPComVT<Self>, *mut i64, *mut i64) -> HRESULT
-	GetAvailable, fn(PPComVT<Self>, *mut i64, *mut i64) -> HRESULT
-	SetRate, fn(PPComVT<Self>, f64) -> HRESULT
-	GetRate, fn(PPComVT<Self>, *mut f64) -> HRESULT
-	GetPreroll, fn(PPComVT<Self>, *mut i64) -> HRESULT
+	GetCapabilities, fn(IUnkPP, *mut u32) -> HRESULT
+	CheckCapabilities, fn(IUnkPP, *mut u32) -> HRESULT
+	IsFormatSupported, fn(IUnkPP, PCVOID) -> HRESULT
+	QueryPreferredFormat, fn(IUnkPP, PVOID) -> HRESULT
+	GetTimeFormat, fn(IUnkPP, PVOID) -> HRESULT
+	IsUsingTimeFormat, fn(IUnkPP, PCVOID) -> HRESULT
+	SetTimeFormat, fn(IUnkPP, PCVOID) -> HRESULT
+   GetDuration, fn(IUnkPP, *mut i64) -> HRESULT
+	GetStopPosition, fn(IUnkPP, *mut i64) -> HRESULT
+	GetCurrentPosition, fn(IUnkPP, *mut i64) -> HRESULT
+	ConvertTimeFormat, fn(IUnkPP, *mut i64, PCVOID, i64, PCVOID) -> HRESULT
+	SetPositions, fn(IUnkPP, *mut i64, u32, *mut i64, u32) -> HRESULT
+	GetPositions, fn(IUnkPP, *mut i64, *mut i64) -> HRESULT
+	GetAvailable, fn(IUnkPP, *mut i64, *mut i64) -> HRESULT
+	SetRate, fn(IUnkPP, f64) -> HRESULT
+	GetRate, fn(IUnkPP, *mut f64) -> HRESULT
+	GetPreroll, fn(IUnkPP, *mut i64) -> HRESULT
 }
 
 com_virtual_table! { IMFGetServiceVT,
@@ -124,7 +126,7 @@ com_virtual_table! { IMFGetServiceVT,
 	0xfa993888, 0x4383, 0x415a, 0xa930, 0xdd472a8cf6f7,
 	IUnknownVT, IUnknownVT
 
-	GetService, fn(PPComVT<Self>, PCVOID, PCVOID, *mut PPComVT<IUnknownVT>) -> HRESULT
+	GetService, fn(IUnkPP, PCVOID, PCVOID, *mut IUnkPP) -> HRESULT
 }
 
 com_virtual_table! { IMFVideoDisplayControlVT,
@@ -134,22 +136,22 @@ com_virtual_table! { IMFVideoDisplayControlVT,
 	0xa490b1e4, 0xab84, 0x4d31, 0xa1b2, 0x181e03b1077a,
 	IUnknownVT, IUnknownVT
 
-	GetNativeVideoSize, fn(PPComVT<Self>, PVOID, PVOID) -> HRESULT
-	GetIdealVideoSize, fn(PPComVT<Self>, PVOID, PVOID) -> HRESULT
-	SetVideoPosition, fn(PPComVT<Self>, PCVOID, PCVOID) -> HRESULT
-	GetVideoPosition, fn(PPComVT<Self>, PVOID, PCVOID) -> HRESULT
-	SetAspectRatioMode, fn(PPComVT<Self>, u32) -> HRESULT
-	GetAspectRatioMode, fn(PPComVT<Self>, *mut u32) -> HRESULT
-	SetVideoWindow, fn(PPComVT<Self>, HANDLE) -> HRESULT
-	GetVideoWindow, fn(PPComVT<Self>, *mut HANDLE) -> HRESULT
-	RepaintVideo, fn(PPComVT<Self>) -> HRESULT
-	GetCurrentImage, fn(PPComVT<Self>, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRESULT
-	SetBorderColor, fn(PPComVT<Self>, u32) -> HRESULT
-	GetBorderColor, fn(PPComVT<Self>, *mut u32) -> HRESULT
-	SetRenderingPrefs, fn(PPComVT<Self>, u32) -> HRESULT
-	GetRenderingPrefs, fn(PPComVT<Self>, *mut u32) -> HRESULT
-	SetFullscreen, fn(PPComVT<Self>, BOOL) -> HRESULT
-	GetFullscreen, fn(PPComVT<Self>, *mut BOOL) -> HRESULT
+	GetNativeVideoSize, fn(IUnkPP, PVOID, PVOID) -> HRESULT
+	GetIdealVideoSize, fn(IUnkPP, PVOID, PVOID) -> HRESULT
+	SetVideoPosition, fn(IUnkPP, PCVOID, PCVOID) -> HRESULT
+	GetVideoPosition, fn(IUnkPP, PVOID, PCVOID) -> HRESULT
+	SetAspectRatioMode, fn(IUnkPP, u32) -> HRESULT
+	GetAspectRatioMode, fn(IUnkPP, *mut u32) -> HRESULT
+	SetVideoWindow, fn(IUnkPP, HANDLE) -> HRESULT
+	GetVideoWindow, fn(IUnkPP, *mut HANDLE) -> HRESULT
+	RepaintVideo, fn(IUnkPP) -> HRESULT
+	GetCurrentImage, fn(IUnkPP, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRESULT
+	SetBorderColor, fn(IUnkPP, u32) -> HRESULT
+	GetBorderColor, fn(IUnkPP, *mut u32) -> HRESULT
+	SetRenderingPrefs, fn(IUnkPP, u32) -> HRESULT
+	GetRenderingPrefs, fn(IUnkPP, *mut u32) -> HRESULT
+	SetFullscreen, fn(IUnkPP, BOOL) -> HRESULT
+	GetFullscreen, fn(IUnkPP, *mut BOOL) -> HRESULT
 }
 
 com_virtual_table! { IPinVT,
@@ -158,19 +160,19 @@ com_virtual_table! { IPinVT,
 	0x56a86891, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IUnknownVT, IUnknownVT
 
-	Connect, fn(PPComVT<Self>, PPComVT<Self>, PPComVT<IUnknownVT>, PCVOID) -> HRESULT
-	ReceiveConnection, fn(PPComVT<Self>, PPComVT<IUnknownVT>, PCVOID) -> HRESULT
-	Disconnect, fn(PPComVT<Self>) -> HRESULT
-	ConnectedTo, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
-	ConnectionMediaType, fn(PPComVT<Self>, PVOID) -> HRESULT
-	QueryPinInfo, fn(PPComVT<Self>, PVOID) -> HRESULT
-	QueryDirection, fn(PPComVT<Self>, PVOID) -> HRESULT
-	QueryId, fn(PPComVT<Self>, *mut PSTR) -> HRESULT
-	QueryAccept, fn(PPComVT<Self>, PCVOID) -> HRESULT
-	EnumMediaTypes, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>) -> HRESULT
-	QueryInternalConnections, fn(PPComVT<Self>, *mut PPComVT<IUnknownVT>, *mut u32) -> HRESULT
-	EndOfStream, fn(PPComVT<Self>) -> HRESULT
-	BeginFlush, fn(PPComVT<Self>) -> HRESULT
-	EndFlush, fn(PPComVT<Self>) -> HRESULT
-	NewSegment, fn(PPComVT<Self>, i64, i64, f64) -> HRESULT
+	Connect, fn(IUnkPP, IUnkPP, IUnkPP, PCVOID) -> HRESULT
+	ReceiveConnection, fn(IUnkPP, IUnkPP, PCVOID) -> HRESULT
+	Disconnect, fn(IUnkPP) -> HRESULT
+	ConnectedTo, fn(IUnkPP, *mut IUnkPP) -> HRESULT
+	ConnectionMediaType, fn(IUnkPP, PVOID) -> HRESULT
+	QueryPinInfo, fn(IUnkPP, PVOID) -> HRESULT
+	QueryDirection, fn(IUnkPP, PVOID) -> HRESULT
+	QueryId, fn(IUnkPP, *mut PSTR) -> HRESULT
+	QueryAccept, fn(IUnkPP, PCVOID) -> HRESULT
+	EnumMediaTypes, fn(IUnkPP, *mut IUnkPP) -> HRESULT
+	QueryInternalConnections, fn(IUnkPP, *mut IUnkPP, *mut u32) -> HRESULT
+	EndOfStream, fn(IUnkPP) -> HRESULT
+	BeginFlush, fn(IUnkPP) -> HRESULT
+	EndFlush, fn(IUnkPP) -> HRESULT
+	NewSegment, fn(IUnkPP, i64, i64, f64) -> HRESULT
 }

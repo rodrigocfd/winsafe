@@ -1,41 +1,37 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::co;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::com::dshow::clsid;
-use crate::com::dshow::vt::IMediaSeekingVT;
-use crate::privs::{hr_to_winresult, ref_as_pcvoid};
-use crate::structs::GUID;
-
 macro_rules! IMediaSeeking_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::co;
+		use crate::com::dshow::clsid;
+		use crate::com::dshow::vt::IMediaSeekingVT;
+		use crate::structs::GUID;
+
 		IUnknown_impl! {
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(imediaseeking_vt, IMediaSeekingVT);
+
 			/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 			/// method.
 			pub fn ConvertTimeFormat(&self,
 				targetFormat: &GUID, source: i64, sourceFormat: &GUID) -> WinResult<i64>
 			{
 				let mut target: i64 = 0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).ConvertTimeFormat)(
-							ppvt,
-							&mut target,
-							targetFormat as *const _ as _,
-							source,
-							sourceFormat as *const _ as _,
-						)
-					},
+					(self.imediaseeking_vt().ConvertTimeFormat)(
+						self.ppvt,
+						&mut target,
+						targetFormat as *const _ as _,
+						source,
+						sourceFormat as *const _ as _,
+					),
 				).map(|_| target)
 			}
 
@@ -46,11 +42,12 @@ macro_rules! IMediaSeeking_impl {
 			pub fn GetAvailable(&self) -> WinResult<(i64, i64)> {
 				let mut early: i64 = 0;
 				let mut late: i64 = 0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).GetPositions)(ppvt, &mut early, &mut late)
-					},
+					(self.imediaseeking_vt().GetPositions)(
+						self.ppvt,
+						&mut early,
+						&mut late,
+					),
 				).map(|_| (early, late))
 			}
 
@@ -58,9 +55,11 @@ macro_rules! IMediaSeeking_impl {
 			/// method.
 			pub fn GetCurrentPosition(&self) -> WinResult<i64> {
 				let mut pos: i64 = 0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe { ((**ppvt).GetCurrentPosition)(ppvt, &mut pos) },
+					(self.imediaseeking_vt().GetCurrentPosition)(
+						self.ppvt,
+						&mut pos,
+					),
 				).map(|_| pos)
 			}
 
@@ -68,9 +67,8 @@ macro_rules! IMediaSeeking_impl {
 			/// method.
 			pub fn GetDuration(&self) -> WinResult<i64> {
 				let mut duration: i64 = 0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe { ((**ppvt).GetDuration)(ppvt, &mut duration) },
+					(self.imediaseeking_vt().GetDuration)(self.ppvt, &mut duration),
 				).map(|_| duration)
 			}
 
@@ -81,11 +79,12 @@ macro_rules! IMediaSeeking_impl {
 			pub fn GetPositions(&self) -> WinResult<(i64, i64)> {
 				let mut current: i64 = 0;
 				let mut stop: i64 = 0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).GetPositions)(ppvt, &mut current, &mut stop)
-					},
+					(self.imediaseeking_vt().GetPositions)(
+						self.ppvt,
+						&mut current,
+						&mut stop,
+					),
 				).map(|_| (current, stop))
 			}
 
@@ -93,9 +92,8 @@ macro_rules! IMediaSeeking_impl {
 			/// method.
 			pub fn GetPreroll(&self) -> WinResult<i64> {
 				let mut preroll: i64 = 0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe { ((**ppvt).GetPreroll)(ppvt, &mut preroll) },
+					(self.imediaseeking_vt().GetPreroll)(self.ppvt, &mut preroll),
 				).map(|_| preroll)
 			}
 
@@ -103,9 +101,8 @@ macro_rules! IMediaSeeking_impl {
 			/// method.
 			pub fn GetRate(&self) -> WinResult<f64> {
 				let mut rate: f64 = 0.0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe { ((**ppvt).GetRate)(ppvt, &mut rate) },
+					(self.imediaseeking_vt().GetRate)(self.ppvt, &mut rate),
 				).map(|_| rate)
 			}
 
@@ -113,9 +110,8 @@ macro_rules! IMediaSeeking_impl {
 			/// method.
 			pub fn GetStopPosition(&self) -> WinResult<i64> {
 				let mut pos: i64 = 0;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe { ((**ppvt).GetStopPosition)(ppvt, &mut pos) },
+					(self.imediaseeking_vt().GetStopPosition)(self.ppvt, &mut pos),
 				).map(|_| pos)
 			}
 
@@ -123,11 +119,11 @@ macro_rules! IMediaSeeking_impl {
 			/// method.
 			pub fn GetTimeFormat(&self) -> WinResult<GUID> {
 				let mut guid = clsid::TIME_FORMAT_NONE;
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).GetStopPosition)(ppvt, &mut guid as *mut _ as _)
-					},
+					(self.imediaseeking_vt().GetStopPosition)(
+						self.ppvt,
+						&mut guid as *mut _ as _,
+					),
 				).map(|_| guid)
 			}
 
@@ -137,17 +133,14 @@ macro_rules! IMediaSeeking_impl {
 				mut current: i64, currentFlags: co::SEEKING_FLAGS,
 				mut stop: i64, stopFlags: co::SEEKING_FLAGS) -> WinResult<()>
 			{
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				match co::ERROR(
-					unsafe {
-						((**ppvt).SetPositions)(
-							ppvt,
-							&mut current,
-							currentFlags.0,
-							&mut stop,
-							stopFlags.0,
-						)
-					} as _,
+					(self.imediaseeking_vt().SetPositions)(
+						self.ppvt,
+						&mut current,
+						currentFlags.0,
+						&mut stop,
+						stopFlags.0,
+					) as _,
 				) {
 					co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(()),
 					err => Err(err),
@@ -157,20 +150,19 @@ macro_rules! IMediaSeeking_impl {
 			/// [`IMediaSeeking::SetRate`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setrate)
 			/// method.
 			pub fn SetRate(&self, rate: f64) -> WinResult<()> {
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe { ((**ppvt).SetRate)(ppvt, rate) },
+					(self.imediaseeking_vt().SetRate)(self.ppvt, rate),
 				)
 			}
 
 			/// [`IMediaSeeking::SetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-settimeformat)
 			/// method.
 			pub fn SetTimeFormat(&self, format: &GUID) -> WinResult<()> {
-				let ppvt = unsafe { self.ppvt::<IMediaSeekingVT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).SetTimeFormat)(ppvt, ref_as_pcvoid(format))
-					},
+					(self.imediaseeking_vt().SetTimeFormat)(
+						self.ppvt,
+						ref_as_pcvoid(format),
+					),
 				)
 			}
 		}
@@ -186,5 +178,5 @@ IMediaSeeking_impl! {
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	IMediaSeeking, IMediaSeekingVT
+	IMediaSeeking, crate::com::dshow::vt::IMediaSeekingVT
 }

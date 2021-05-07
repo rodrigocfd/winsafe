@@ -1,38 +1,31 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::ffi::{HRESULT, PVOID};
-use crate::privs::{hr_to_winresult, ref_as_pvoid};
-use crate::structs::CLSID;
-
-com_virtual_table! { IPersistVT,
-	/// [`IPersist`](crate::IPersist) virtual table.
-	->
-	0x0000010c, 0x0000, 0x0000, 0xc000, 0x000000000046,
-	IUnknownVT, IUnknownVT
-
-	GetClassID, fn(PPComVT<Self>, PVOID) -> HRESULT
-}
-
 macro_rules! IPersist_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::com::vt::IPersistVT;
+		use crate::privs::ref_as_pvoid;
+		use crate::structs::CLSID;
+
 		IUnknown_impl! {
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(idispatch_vt, IPersistVT);
+
 			/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 			/// method.
 			pub fn GetClassID(&self) -> WinResult<CLSID> {
-				let ppvt = unsafe { self.ppvt::<IPersistVT>() };
 				let mut clsid = CLSID::new(0, 0, 0, 0, 0);
 				hr_to_winresult(
-					unsafe { ((**ppvt).GetClassID)(ppvt, ref_as_pvoid(&mut clsid)) },
+					(self.idispatch_vt().GetClassID)(
+						self.ppvt,
+						ref_as_pvoid(&mut clsid),
+					),
 				).map(|_| clsid)
 			}
 		}
@@ -47,5 +40,5 @@ IPersist_impl! {
 	/// Automatically calls
 	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	IPersist, IPersistVT
+	IPersist, crate::com::vt::IPersistVT
 }

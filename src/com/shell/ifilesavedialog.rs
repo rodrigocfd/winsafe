@@ -1,39 +1,25 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::co;
-use crate::com::funcs::CoTaskMemFree;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::com::shell::{COMDLG_FILTERSPEC, IShellItem};
-use crate::com::shell::vt::{
-	IFileDialogVT,
-	IFileSaveDialogVT,
-	IModalWindowVT,
-	IShellItemVT,
-};
-use crate::funcs::HRESULT_FROM_WIN32;
-use crate::handles::HWND;
-use crate::privs::{hr_to_winresult, ref_as_pcvoid};
-use crate::structs::GUID;
-use crate::WString;
-
 macro_rules! IFileSaveDialog_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::com::shell::vt::IFileSaveDialogVT;
+
 		IFileDialog_impl! {
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(ifilesavedialog_vt, IFileSaveDialogVT);
+
 			/// [`IFileSaveDialog::SetSaveAsItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 			/// method.
 			pub fn SetSaveAsItem(&self, psi: IShellItem) -> WinResult<()> {
-				let ppvt = unsafe { self.ppvt::<IFileSaveDialogVT>() };
 				hr_to_winresult(
-					unsafe { ((**ppvt).SetSaveAsItem)(ppvt, psi.ppvt()) },
+					(self.ifilesavedialog_vt().SetSaveAsItem)(self.ppvt, psi.ppvt),
 				)
 			}
 		}
@@ -63,5 +49,5 @@ IFileSaveDialog_impl! {
 	///     co::CLSCTX::INPROC_SERVER,
 	/// ).unwrap();
 	/// ```
-	IFileSaveDialog, IFileSaveDialogVT
+	IFileSaveDialog, crate::com::shell::vt::IFileSaveDialogVT
 }

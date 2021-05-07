@@ -1,34 +1,31 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::com::{IUnknownVT, PPComVT};
-use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
-use crate::handles::HWND;
-use crate::privs::hr_to_winresult;
-
 macro_rules! ITaskbarList2_impl {
 	(
 		$(#[$doc:meta])*
-		$name:ident, $vt:ident
+		$name:ident, $vt:ty
 	) => {
+		use crate::com::shell::vt::ITaskbarList2VT;
+
 		ITaskbarList_impl!{
 			$(#[$doc])*
 			$name, $vt
 		}
 
 		impl $name {
+			ppvt_conv!(itaskbarlist2_vt, ITaskbarList2VT);
+
 			/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 			/// method.
 			pub fn MarkFullscreenWindow(&self,
 				hwnd: HWND, fFullscreen: bool) -> WinResult<()>
 			{
-				let ppvt = unsafe { self.ppvt::<ITaskbarList2VT>() };
 				hr_to_winresult(
-					unsafe {
-						((**ppvt).MarkFullscreenWindow)(
-							ppvt, hwnd.ptr, fFullscreen as _,
-						)
-					},
+					(self.itaskbarlist2_vt().MarkFullscreenWindow)(
+						self.ppvt,
+						hwnd.ptr,
+						fFullscreen as _,
+					),
 				)
 			}
 		}
@@ -57,5 +54,5 @@ ITaskbarList2_impl! {
 	///     co::CLSCTX::INPROC_SERVER,
 	/// ).unwrap();
 	/// ```
-	ITaskbarList2, ITaskbarList2VT
+	ITaskbarList2, crate::com::shell::vt::ITaskbarList2VT
 }
