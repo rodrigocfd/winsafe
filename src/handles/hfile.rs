@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
 use crate::handles::HFILEMAP;
-use crate::privs::{bool_to_winresult, ref_as_pvoid};
+use crate::privs::{bool_to_winresult, INVALID_HANDLE_VALUE, ref_as_pvoid};
 use crate::structs::{
 	BY_HANDLE_FILE_INFORMATION,
 	OVERLAPPED,
@@ -40,7 +40,7 @@ impl HFILE {
 	/// ```rust,ignore
 	/// use winsafe::{co, HFILE};
 	///
-	/// let hfile = HFILE::CreateFile(
+	/// let (hfile, status) = HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ,
 	///     co::FILE_SHARE::READ,
@@ -58,7 +58,7 @@ impl HFILE {
 	/// ```rust,ignore
 	/// use winsafe::{co, HFILE};
 	///
-	/// let hfile = w::HFILE::CreateFile(
+	/// let (hfile, status) = w::HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ | co::GENERIC::WRITE,
 	///     co::FILE_SHARE::NONE,
@@ -77,9 +77,9 @@ impl HFILE {
 		lpSecurityAttributes: Option<&mut SECURITY_ATTRIBUTES>,
 		dwCreationDisposition: co::DISPOSITION,
 		dwFlagsAndAttributes: co::FILE_ATTRIBUTE,
-		hTemplateFile: Option<HFILE>) -> WinResult<HFILE>
+		hTemplateFile: Option<HFILE>) -> WinResult<(HFILE, co::ERROR)>
 	{
-		unsafe {
+		match unsafe {
 			kernel32::CreateFileW(
 				WString::from_str(lpFileName).as_ptr(),
 				dwDesiredAccess.0,
@@ -88,9 +88,11 @@ impl HFILE {
 				dwCreationDisposition.0,
 				dwFlagsAndAttributes.0,
 				hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
-			).as_mut()
-		}.map(|ptr| Self { ptr })
-			.ok_or_else(|| GetLastError())
+			) as isize
+		} {
+			INVALID_HANDLE_VALUE => Err(GetLastError()),
+			ptr => Ok((Self { ptr: ptr as _ }, GetLastError())),
+		}
 	}
 
 	/// [`CreateFileMapping`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)

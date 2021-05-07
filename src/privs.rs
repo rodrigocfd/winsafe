@@ -14,6 +14,7 @@ pub(crate) const GDI_ERROR: u32 = 0xffff_ffff;
 pub(crate) const GDT_ERROR: i32 = -1;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
 pub(crate) const INVALID_FILE_ATTRIBUTES: i32 = -1;
+pub(crate) const INVALID_HANDLE_VALUE: isize = -1;
 pub(crate) const L_MAX_URL_LENGTH: usize = 2048 + 32 + 4;
 pub(crate) const LB_ERR: i32 = -1;
 pub(crate) const LB_ERRSPACE: i32 = -2;
