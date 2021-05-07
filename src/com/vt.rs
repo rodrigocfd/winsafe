@@ -19,9 +19,11 @@ pub trait ComVT {
 type IUnkPP = PPComVT<IUnknownVT>;
 
 com_virtual_table! { IUnknownVT,
-	/// [`IUnknown`](crate::IUnknown) virtual table.
+	/// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual
+	/// tables.
 	->
 	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
+
 	QueryInterface, fn(IUnkPP, PCVOID, *mut IUnkPP) -> HRESULT
 	AddRef, fn(IUnkPP) -> u32
 	Release, fn(IUnkPP) -> u32
