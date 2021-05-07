@@ -16,28 +16,100 @@ const_type! { FOS, u32,
 	/// [`_FILEOPENDIALOGOPTIONS`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
 	=>
+	/// When saving a file, prompt before overwriting an existing file of the
+	/// same name. This is a default value for the Save dialog.
 	OVERWRITEPROMPT, 0x2
+	/// In the Save dialog, only allow the user to choose a file that has one of
+	/// the file name extensions specified through
+	/// [`IFileDialog::SetFileTypes`](crate::shell::IFileDialog::SetFileTypes).
 	STRICTFILETYPES, 0x4
+	/// Don't change the current working directory.
 	NOCHANGEDIR, 0x8
+	/// Present an Open dialog that offers a choice of folders rather than
+	/// files.
 	PICKFOLDERS, 0x20
+	/// Ensures that returned items are file system items
+	/// ([`SFGAO::FILESYSTEM`](crate::co::SFGAO::FILESYSTEM)). Note that this
+	/// does not apply to items returned by
+	/// [`IFileDialog::GetCurrentSelection`](crate::shell::IFileDialog::GetCurrentSelection).
 	FORCEFILESYSTEM, 0x40
+	/// Enables the user to choose any item in the Shell namespace, not just
+	/// those with [`SFGAO::STREAM`](crate::co::SFGAO::STREAM) or
+	/// [`SFAGO::FILESYSTEM`](crate::co::SFGAO::FILESYSTEM) attributes. This
+	/// flag cannot be combined with
+	/// [`FOS::FORCEFILESYSTEM`](crate::co::FOS::FORCEFILESYSTEM).
 	ALLNONSTORAGEITEMS, 0x80
+	/// Do not check for situations that would prevent an application from
+	/// opening the selected file, such as sharing violations or access denied
+	/// errors.
 	NOVALIDATE, 0x100
+	/// Enables the user to select multiple items in the open dialog. Note that
+	/// when this flag is set, the
+	/// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) interface must be
+	/// used to retrieve those items.
 	ALLOWMULTISELECT, 0x200
+	/// The item returned must be in an existing folder. This is a default
+	/// value.
 	PATHMUSTEXIST, 0x800
+	/// The item returned must exist. This is a default value for the Open
+	/// dialog.
 	FILEMUSTEXIST, 0x1000
+	/// Prompt for creation if the item returned in the save dialog does not
+	/// exist. Note that this does not actually create the item.
 	CREATEPROMPT, 0x2000
+	/// In the case of a sharing violation when an application is opening a
+	/// file, call the application back through
+	/// [`OnShareViolation`](crate::shell::IFileDialogEvents::OnShareViolation)
+	/// for guidance. This flag is overridden by
+	/// [`FOS::NOVALIDATE`](crate::co::FOS::NOVALIDATE).
 	SHAREAWARE, 0x4000
+	/// Do not return read-only items. This is a default value for the Save
+	/// dialog.
 	NOREADONLYRETURN, 0x8000
+	/// Do not test whether creation of the item as specified in the Save dialog
+	/// will be successful. If this flag is not set, the calling application
+	/// must handle errors, such as denial of access, discovered when the item
+	/// is created.
 	NOTESTFILECREATE, 0x10000
+	/// Hide the list of places from which the user has recently opened or saved
+	/// items. This value is not supported as of Windows 7.
 	HIDEMRUPLACES, 0x20000
+	/// Hide items shown by default in the view's navigation pane. This flag is
+	/// often used in conjunction with the
+	/// [`IFileDialog::AddPlace`](crate::shell::IFileDialog::AddPlace) method,
+	/// to hide standard locations and replace them with custom locations.
+	///
+	/// Windows 7 and later. Hide all of the standard namespace locations (such
+	/// as Favorites, Libraries, Computer, and Network) shown in the navigation
+	/// pane.
+	///
+	/// Windows Vista. Hide the contents of the Favorite Links tree in the
+	/// navigation pane. Note that the category itself is still displayed, but
+	/// shown as empty.
 	HIDEPINNEDPLACES, 0x40000
+	/// Shortcuts should not be treated as their target items. This allows an
+	/// application to open a .lnk file rather than what that file is a shortcut
+	/// to.
 	NODEREFERENCELINKS, 0x100000
+	/// (This constant has no official documentation.)
 	OKBUTTONNEEDSINTERACTION, 0x200000
+	/// Do not add the item being opened or saved to the recent documents list
+	/// ([`SHAddToRecentDocs`](crate::shell::SHAddToRecentDocs)).
 	DONTADDTORECENT, 0x2000000
+	/// Include hidden and system items.
 	FORCESHOWHIDDEN, 0x10000000
+	/// Indicates to the Save As dialog box that it should open in expanded
+	/// mode. Expanded mode is the mode that is set and unset by clicking the
+	/// button in the lower-left corner of the Save As dialog box that switches
+	/// between Browse Folders and Hide Folders when clicked. This value is not
+	/// supported as of Windows 7.
 	DEFAULTNOMINIMODE, 0x20000000
+	/// Indicates to the Open dialog box that the preview pane should always be
+	/// displayed.
 	FORCEPREVIEWPANEON, 0x40000000
+	/// Indicates that the caller is opening a file as a stream
+	/// ([`BHID_Stream`](crate::shell::IShellItem::BindToHandler)), so there is
+	/// no need to download that file.
 	SUPPORTSTREAMABLEITEMS, 0x80000000
 }
 
