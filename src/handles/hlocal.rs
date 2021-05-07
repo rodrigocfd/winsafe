@@ -14,8 +14,9 @@ impl HLOCAL {
 	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
 	pub fn LocalFree(self) -> WinResult<()> {
-		unsafe { kernel32::LocalFree(self.ptr).as_mut() }
-			.map(|_| ())
-			.ok_or_else(|| GetLastError())
+		match unsafe { kernel32::LocalFree(self.ptr).as_mut() } {
+			None => Ok(()),
+			Some(_) => Err(GetLastError()),
+		}
 	}
 }

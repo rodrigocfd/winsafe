@@ -20,6 +20,7 @@ use crate::WString;
 /// functions:
 ///
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
+/// * [`FindWindowEx`](crate::HWND::FindWindowEx) `lpszClass`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
 pub enum AtomStr {
 	/// An [`ATOM`](crate::ATOM) returned by

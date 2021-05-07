@@ -36,6 +36,29 @@ pub struct ACL {
 	pub Sbz2: u16,
 }
 
+/// [`ALTTABINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-alttabinfo)
+/// struct.
+#[repr(C)]
+pub struct ALTTABINFO {
+	cbSize: u32,
+	pub cItems: i32,
+	pub cColumns: i32,
+	pub cRows: i32,
+	pub iColFocus: i32,
+	pub iRowFocus: i32,
+	pub cxItem: i32,
+	pub cyItem: i32,
+	pub ptStart: POINT,
+}
+
+impl Default for ALTTABINFO {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cbSize = std::mem::size_of::<Self>() as _;
+		obj
+	}
+}
+
 /// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
 /// struct.
 #[repr(C)]

@@ -9,6 +9,7 @@ use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::MsgSend;
 use crate::privs::{bool_to_winresult, ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::{
+	ALTTABINFO,
 	MSG,
 	PAINTSTRUCT,
 	POINT,
@@ -250,11 +251,58 @@ impl HWND {
 			.ok_or_else(|| GetLastError())
 	}
 
+	/// [`FindWindowEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw)
+	/// method.
+	pub fn FindWindowEx(self,
+		hWndChildAfter: Option<HWND>,
+		lpszClass: AtomStr, lpszWindow: Option<&str>) -> WinResult<HWND>
+	{
+		unsafe {
+			user32::FindWindowExW(
+				self.ptr,
+				hWndChildAfter.map_or(std::ptr::null_mut(), |h| h.ptr),
+				lpszClass.as_ptr(),
+				lpszWindow.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
+			).as_mut()
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
 	/// [`GetActiveWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)
 	/// static method.
 	pub fn GetActiveWindow() -> Option<HWND> {
 		unsafe { user32::GetActiveWindow().as_mut() }
 			.map(|ptr| Self { ptr })
+	}
+
+	/// [`GetAltTabInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getalttabinfow)
+	/// method.
+	///
+	/// If `iItem` is `None`, the item text is not retrieved.
+	///
+	/// The `cchItemText` is the maximum number of expected chars for the item
+	/// text. If `None`, defaults to 100.
+	pub fn GetAltTabInfo(self,
+		iItem: Option<u32>, pati: &mut ALTTABINFO,
+		cchItemText: Option<u32>) -> WinResult<String>
+	{
+		let bufSz = cchItemText.unwrap_or(100) + 1;
+		let mut buf = iItem.map_or(
+			WString::default(),
+			|_| WString::new_alloc_buffer(bufSz as _), // room for terminating null
+		);
+
+		bool_to_winresult(
+			unsafe {
+				user32::GetAltTabInfoW(
+					self.ptr,
+					iItem.map(|iItem| iItem as _).unwrap_or(-1),
+					ref_as_pvoid(pati),
+					iItem.map_or(std::ptr::null_mut(), |_| buf.as_mut_ptr()),
+					bufSz,
+				)
+			},
+		).map(|_| buf.to_string())
 	}
 
 	/// [`GetAncestor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getancestor)

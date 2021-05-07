@@ -34,8 +34,10 @@ extern "system" {
 	pub fn EndDialog(_: HANDLE, _: isize) -> BOOL;
 	pub fn EndPaint(_: HANDLE, _: PCVOID) -> BOOL;
 	pub fn EnumChildWindows(_: HANDLE, _: PFUNC, _: isize) -> BOOL;
+	pub fn FindWindowExW(_: HANDLE, _: HANDLE, _: PCSTR, _: PCSTR) -> HANDLE;
 	pub fn FindWindowW(_: PCSTR, _: PCSTR) -> HANDLE;
 	pub fn GetActiveWindow() -> HANDLE;
+	pub fn GetAltTabInfoW(_: HANDLE, _: i32, _: PVOID, _: PSTR, _: u32) -> BOOL;
 	pub fn GetAncestor(_: HANDLE, _: u32) -> HANDLE;
 	pub fn GetAsyncKeyState(_: i32) -> i16;
 	pub fn GetCapture() -> HANDLE;

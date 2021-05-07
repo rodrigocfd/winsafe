@@ -2837,17 +2837,17 @@ impl ERROR {
 				0,
 				std::ptr::null_mut(),
 			) {
-				0 => format!( // never fails
+				0 => format!( // never fails, returns a message instead
 					"FormatMessage failed to format error {:#06x}: error {:#06x}.",
-					self, GetLastError(),
+					self.0, GetLastError(),
 				),
 				nchars => {
-					let final_str = WString::from_wchars_count(ptr_buf, nchars as _).to_string();
+					let final_str = WString::from_wchars_count(ptr_buf, nchars as _);
 					match (HLOCAL { ptr: ptr_buf as _ }).LocalFree() {
-						Ok(()) => final_str,
+						Ok(()) => final_str.to_string(),
 						Err(err) => format!(
 							"LocalFree failed after formatting error {:#06x}: error {:#06x}.",
-							self, err),
+							self.0, err.0),
 					}
 				},
 			}
