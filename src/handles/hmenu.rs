@@ -48,14 +48,14 @@ impl HMENU {
 	/// ```rust,ignore
 	/// use winsafe::HMENU;
 	///
-	/// const ID_FILE_OPEN: u16 = 101;
+	/// const ID_FILE_OPEN: i32 = 101;
 	///
 	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
 	///
 	/// hmenu.AppendMenuItem(ID_FILE_OPEN, "&Open file...")
 	///     .unwrap();
 	/// ```
-	pub fn AppendMenuItem(self, command_id: u16, text: &str) -> WinResult<()> {
+	pub fn AppendMenuItem(self, command_id: i32, text: &str) -> WinResult<()> {
 		self.AppendMenu(
 			co::MF::STRING,
 			IdMenu::Id(command_id),
@@ -71,8 +71,8 @@ impl HMENU {
 	/// ```rust,ignore
 	/// use winsafe::HMENU;
 	///
-	/// const ID_FILE_OPEN: u16 = 101;
-	/// const ID_FILE_SAVE: u16 = 102;
+	/// const ID_FILE_OPEN: i32 = 101;
+	/// const ID_FILE_SAVE: i32 = 102;
 	///
 	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
 	///
@@ -82,7 +82,7 @@ impl HMENU {
 	/// ]).unwrap();
 	/// ```
 	pub fn AppendMenuItems(self,
-		command_ids_and_texts: &[(u16, &str)]) -> WinResult<()>
+		command_ids_and_texts: &[(i32, &str)]) -> WinResult<()>
 	{
 		for (command_id, text) in command_ids_and_texts.iter() {
 			self.AppendMenuItem(*command_id, text)?;

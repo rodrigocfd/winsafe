@@ -217,7 +217,7 @@ impl IdIdiStr {
 /// * [`InsertMenu`](crate::HMENU::InsertMenu) `uIDNewItem`.
 pub enum IdMenu {
 	/// A command ID.
-	Id(u16),
+	Id(i32),
 	/// An [`HMENU`](crate::HMENU).
 	Menu(HMENU),
 	/// Nothing.

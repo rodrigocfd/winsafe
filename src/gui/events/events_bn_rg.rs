@@ -18,11 +18,11 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 /// control.
 pub struct RadioGroupEvents {
 	parent_ptr: NonNull<Base>,
-	ctrl_ids: Vec<u16>,
+	ctrl_ids: Vec<i32>,
 }
 
 impl RadioGroupEvents {
-	pub(crate) fn new(parent_ref: &Base, ctrl_ids: Vec<u16>) -> RadioGroupEvents {
+	pub(crate) fn new(parent_ref: &Base, ctrl_ids: Vec<i32>) -> RadioGroupEvents {
 		Self {
 			parent_ptr: NonNull::from(parent_ref), // convert reference to pointer
 			ctrl_ids,
@@ -60,7 +60,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::CLICKED.into(), *ctrl_id, {
+			self.parent_user_events().wm_command(co::BN::CLICKED.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});
@@ -81,7 +81,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::DBLCLK.into(), *ctrl_id, {
+			self.parent_user_events().wm_command(co::BN::DBLCLK.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});
@@ -100,7 +100,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::KILLFOCUS.into(), *ctrl_id, {
+			self.parent_user_events().wm_command(co::BN::KILLFOCUS.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});
@@ -119,7 +119,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::SETFOCUS.into(), *ctrl_id, {
+			self.parent_user_events().wm_command(co::BN::SETFOCUS.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
 				move || shared_func.as_mut()()
 			});

@@ -67,7 +67,7 @@ impl ComboBox {
 
 	/// Instantiates a new `ComboBox` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ComboBox {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> ComboBox {
 		let parent_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
@@ -169,7 +169,7 @@ pub struct ComboBoxOpts {
 	/// The control ID.
 	///
 	/// Defaults to an auto-generated ID.
-	pub ctrl_id: u16,
+	pub ctrl_id: i32,
 }
 
 impl Default for ComboBoxOpts {

@@ -7,11 +7,11 @@ macro_rules! ctrl_events_proxy {
 		$(#[$doc])*
 		pub struct $name {
 			parent_ptr: NonNull<Base>,
-			ctrl_id: u16,
+			ctrl_id: i32,
 		}
 
 		impl $name {
-			pub(crate) fn new(parent_ref: &Base, ctrl_id: u16) -> $name {
+			pub(crate) fn new(parent_ref: &Base, ctrl_id: i32) -> $name {
 				Self {
 					parent_ptr: NonNull::from(parent_ref), // convert reference to pointer
 					ctrl_id,
@@ -35,7 +35,7 @@ macro_rules! cmd_event {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut() + 'static,
 		{
-			self.parent_user_events().wm_command($cmd, self.ctrl_id, {
+			self.parent_user_events().wm_command($cmd, self.ctrl_id as _, {
 				let mut func = func;
 				move || func()
 			});
@@ -55,7 +55,7 @@ macro_rules! nfy_event {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut() + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
 				move |_| { func(); None }
 			});
@@ -74,7 +74,7 @@ macro_rules! nfy_event_p {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&$struc) + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
 				move |p| { func(unsafe { p.cast_nmhdr::<$struc>() }); None }
 			});
@@ -93,7 +93,7 @@ macro_rules! nfy_event_mut_p {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&mut $struc) + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
 				move |p| { func(unsafe { p.cast_nmhdr_mut::<$struc>() }); None }
 			});
@@ -112,7 +112,7 @@ macro_rules! nfy_event_p_bool {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&$struc) -> bool + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
 				move |p| Some(func(unsafe { p.cast_nmhdr::<$struc>() }) as isize)
 			});
@@ -131,7 +131,7 @@ macro_rules! nfy_event_mut_p_bool {
 		pub fn $name<F>(&self, func: F)
 			where F: FnMut(&mut $struc) -> bool + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id, $nfy, {
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
 				move |p| Some(func(unsafe { p.cast_nmhdr_mut::<$struc>() }) as isize)
 			});

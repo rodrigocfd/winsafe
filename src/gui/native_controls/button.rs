@@ -63,7 +63,7 @@ impl Button {
 
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
 	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Button {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> Button {
 		let parent_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
@@ -177,7 +177,7 @@ pub struct ButtonOpts {
 	/// The control ID.
 	///
 	/// Defaults to an auto-generated ID.
-	pub ctrl_id: u16,
+	pub ctrl_id: i32,
 }
 
 impl Default for ButtonOpts {

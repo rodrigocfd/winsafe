@@ -74,7 +74,7 @@ impl ListView {
 
 	/// Instantiates a new `ListView` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ListView {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> ListView {
 		let parent_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
@@ -125,8 +125,8 @@ impl ListView {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	fn handled_events(&self, parent_ref: &Base, ctrl_id: u16) {
-		parent_ref.privileged_events_ref().add_nfy(ctrl_id, co::LVN::KEYDOWN.into(), {
+	fn handled_events(&self, parent_ref: &Base, ctrl_id: i32) {
+		parent_ref.privileged_events_ref().add_nfy(ctrl_id as _, co::LVN::KEYDOWN.into(), {
 			let me = self.clone();
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
@@ -220,7 +220,7 @@ pub struct ListViewOpts {
 	/// The control ID.
 	///
 	/// Defaults to an auto-generated ID.
-	pub ctrl_id: u16,
+	pub ctrl_id: i32,
 }
 
 impl Default for ListViewOpts {

@@ -24,7 +24,7 @@ pub struct StatusBar(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of StatusBar
 	base: NativeControlBase,
-	ctrl_id: u16,
+	ctrl_id: i32,
 	events: StatusBarEvents,
 	parts_info: Vec<StatusBarPart>,
 	right_edges: Vec<i32>, // buffer to speed up resize calls

@@ -55,7 +55,7 @@ impl WindowControl {
 		parent: &dyn Parent,
 		dialog_id: i32,
 		position: POINT,
-		ctrl_id: Option<u16>) -> WindowControl
+		ctrl_id: Option<i32>) -> WindowControl
 	{
 		Self {
 			raw_dlg: RawDlg::Dlg(

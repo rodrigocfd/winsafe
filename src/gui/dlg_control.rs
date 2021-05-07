@@ -15,7 +15,7 @@ pub(crate) struct DlgControl(Arc<Obj>);
 struct Obj { // actual fields of DlgControl
 	base: DlgBase,
 	position: POINT,
-	ctrl_id: Option<u16>,
+	ctrl_id: Option<i32>,
 }
 
 impl DlgControl {
@@ -23,7 +23,7 @@ impl DlgControl {
 		parent_ref: &Base,
 		dialog_id: i32,
 		position: POINT,
-		ctrl_id: Option<u16>) -> DlgControl
+		ctrl_id: Option<i32>) -> DlgControl
 	{
 		let dlg = Self(
 			Arc::new(

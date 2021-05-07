@@ -58,7 +58,7 @@ impl RawControl {
 					self2.0.base.create_window( // may panic
 						&class_name_buf.to_string(),
 						None,
-						IdMenu::None,
+						IdMenu::Id(opts.ctrl_id),
 						wnd_pos, wnd_sz,
 						opts.ex_style, opts.style,
 					)?;
@@ -138,7 +138,7 @@ pub struct WindowControlOpts {
 	/// The control ID.
 	///
 	/// Defaults to an auto-generated ID.
-	pub ctrl_id: u16,
+	pub ctrl_id: i32,
 }
 
 impl Default for WindowControlOpts {

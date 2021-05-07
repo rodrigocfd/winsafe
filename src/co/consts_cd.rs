@@ -472,8 +472,8 @@ const_type! { DISPOSITION, u32,
 	TRUNCATE_EXISTING, 5
 }
 
-const_type! { DLGID, u16,
-	/// Dialog built-in IDs (`u16`). These are also returned from
+const_type! { DLGID, i32,
+	/// Dialog built-in IDs (`i32`). These are also returned from
 	/// [`MessageBox`](crate::HWND::MessageBox).
 	=>
 	OK, 1
@@ -485,6 +485,11 @@ const_type! { DLGID, u16,
 	NO, 7
 	TRYAGAIN, 10
 	CONTINUE, 11
+}
+impl From<DLGID> for u16 {
+	fn from(n: DLGID) -> Self {
+		n.0 as _ // conversion to u16 is necessary to pass it to wm_command()
+	}
 }
 
 const_type_wm! { DTM,

@@ -225,7 +225,7 @@ impl ListViewEvents {
 	pub fn lvn_od_find_item<F>(&self, func: F)
 		where F: FnMut(&mut NMLVFINDITEM) -> Option<u32> + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id, co::LVN::ODFINDITEM.into(), {
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::LVN::ODFINDITEM.into(), {
 			let mut func = func;
 			move |p| {
 				Some(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() }) {
@@ -267,7 +267,7 @@ impl ListViewEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::CUSTOMDRAW, {
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW, {
 			let mut func = func;
 			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into())
 		});
@@ -288,7 +288,7 @@ impl ListViewEvents {
 	pub fn nm_hover<F>(&self, func: F)
 		where F: FnMut() -> i32 + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::HOVER, {
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::HOVER, {
 			let mut func = func;
 			move |_| Some(func() as isize)
 		});
@@ -309,7 +309,7 @@ impl ListViewEvents {
 	pub fn nm_r_click<F>(&self, func: F)
 		where F: FnMut(&NMITEMACTIVATE) -> i32 + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::RCLICK, {
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::RCLICK, {
 			let mut func = func;
 			move |p| Some(func(unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() }) as isize)
 		});

@@ -34,7 +34,7 @@ impl TrackbarEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id, co::NM::CUSTOMDRAW, {
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW, {
 			let mut func = func;
 			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into())
 		});
