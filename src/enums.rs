@@ -103,6 +103,14 @@ impl From<BroadNull> for *mut c_void {
 
 /// Variant parameter for:
 ///
+/// * [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
+pub enum HwndFocus {
+	Hwnd(HWND),
+	FocusPrev(bool),
+}
+
+/// Variant parameter for:
+///
 /// * [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason.
 /// * [`HELPINFO`](crate::HELPINFO) `hItemHandle`.
 pub enum HwndHmenu {

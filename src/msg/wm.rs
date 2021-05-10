@@ -4,7 +4,7 @@
 
 use crate::aliases::TIMERPROC;
 use crate::co;
-use crate::enums::{HwndHmenu, HwndPointId, NccspRect, WsWsex};
+use crate::enums::{HwndFocus, HwndHmenu, HwndPointId, NccspRect, WsWsex};
 use crate::funcs::{HIBYTE, HIWORD, LOBYTE, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
@@ -912,6 +912,47 @@ impl MsgSendRecv for NcPaint {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			updated_hrgn: HRGN { ptr: p.wparam as _ },
+		}
+	}
+}
+
+/// [`WM_NEXTDLGCTL`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-nextdlgctl)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct NextDlgCtl {
+	pub hwnd_focus: HwndFocus,
+}
+
+impl MsgSend for NextDlgCtl {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::NEXTDLGCTL,
+			wparam: match self.hwnd_focus {
+				HwndFocus::Hwnd(hctl) => hctl.ptr as _,
+				HwndFocus::FocusPrev(prev) => prev as _,
+			},
+			lparam: MAKEDWORD(match self.hwnd_focus {
+				HwndFocus::Hwnd(_) => 1,
+				HwndFocus::FocusPrev(_) => 0,
+			}, 0) as _,
+		}
+	}
+}
+
+impl MsgSendRecv for NextDlgCtl {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			hwnd_focus: match p.wparam {
+				1 => HwndFocus::Hwnd(HWND { ptr: p.wparam as _ }),
+				_ => HwndFocus::FocusPrev(p.wparam != 0),
+			},
 		}
 	}
 }

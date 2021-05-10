@@ -883,6 +883,13 @@ impl WindowEvents {
 		/// * dialog [`WindowControl`](crate::gui::WindowControl).
 	}
 
+	wm_ret_none! { wm_next_dlg_ctl, co::WM::NEXTDLGCTL, wm::NextDlgCtl,
+		/// [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) message.
+		///
+		/// Sent to a dialog box procedure to set the keyboard focus to a
+		/// different control in the dialog box.
+	}
+
 	wm_empty! { wm_null, co::WM::NULL,
 		/// [`WM_NULL`](crate::msg::wm::Null) message.
 		///
