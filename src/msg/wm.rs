@@ -4,7 +4,7 @@
 
 use crate::aliases::TIMERPROC;
 use crate::co;
-use crate::enums::{HwndFocus, HwndHmenu, HwndPointId, NccspRect, WsWsex};
+use crate::enums::{HwndFocus, HwndHmenu, HwndPointId, NccspRect};
 use crate::funcs::{HIBYTE, HIWORD, LOBYTE, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
@@ -18,6 +18,7 @@ use crate::structs::{
 	POINT,
 	RECT,
 	SIZE,
+	STYLESTRUCT,
 	WINDOWPOS,
 };
 
@@ -1314,7 +1315,7 @@ impl<'a> MsgSendRecv for Sizing<'a> {
 /// Return type: `()`.
 pub struct StyleChanged<'a> {
 	pub change: co::GWL_C,
-	pub stylestruct: WsWsex<'a>,
+	pub stylestruct: &'a STYLESTRUCT,
 }
 
 impl<'a> MsgSend for StyleChanged<'a> {
@@ -1328,10 +1329,7 @@ impl<'a> MsgSend for StyleChanged<'a> {
 		WndMsg {
 			msg_id: co::WM::STYLECHANGED,
 			wparam: self.change.0 as _,
-			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const _ as _,
-				WsWsex::Wsex(wsx) => wsx as *const _ as _,
-			},
+			lparam: self.stylestruct as *const _ as _,
 		}
 	}
 }
@@ -1341,10 +1339,7 @@ impl<'a> MsgSendRecv for StyleChanged<'a> {
 		let change = co::GWL_C(p.wparam as _);
 		Self {
 			change,
-			stylestruct: match change {
-				co::GWL_C::STYLE => WsWsex::Ws(unsafe { &*(p.lparam as *const _) }),
-				_ => WsWsex::Wsex(unsafe { &*(p.lparam as *const _) }),
-			},
+			stylestruct: unsafe { &*(p.lparam as *const _) },
 		}
 	}
 }
@@ -1355,7 +1350,7 @@ impl<'a> MsgSendRecv for StyleChanged<'a> {
 /// Return type: `()`.
 pub struct StyleChanging<'a> {
 	pub change: co::GWL_C,
-	pub stylestruct: WsWsex<'a>,
+	pub stylestruct: &'a STYLESTRUCT,
 }
 
 impl<'a> MsgSend for StyleChanging<'a> {
@@ -1369,10 +1364,7 @@ impl<'a> MsgSend for StyleChanging<'a> {
 		WndMsg {
 			msg_id: co::WM::STYLECHANGING,
 			wparam: self.change.0 as _,
-			lparam: match self.stylestruct {
-				WsWsex::Ws(ws) => ws as *const _ as _,
-				WsWsex::Wsex(wsx) => wsx as *const _ as _,
-			},
+			lparam: self.stylestruct as *const _ as _,
 		}
 	}
 }
@@ -1382,10 +1374,7 @@ impl<'a> MsgSendRecv for StyleChanging<'a> {
 		let change = co::GWL_C(p.wparam as _);
 		Self {
 			change,
-			stylestruct: match change {
-				co::GWL_C::STYLE => WsWsex::Ws(unsafe { &*(p.lparam as *const _) }),
-				_ => WsWsex::Wsex(unsafe { &*(p.lparam as *const _) }),
-			},
+			stylestruct: unsafe { &*(p.lparam as *const _) },
 		}
 	}
 }

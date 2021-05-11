@@ -5,14 +5,7 @@ use std::ffi::c_void;
 use crate::co;
 use crate::funcs::MAKEDWORD;
 use crate::handles::{HBITMAP, HICON, HMENU, HWND};
-use crate::structs::{
-	ATOM,
-	NCCALCSIZE_PARAMS,
-	POINT,
-	RECT,
-	STYLESTRUCT_WS,
-	STYLESTRUCT_WS_EX,
-};
+use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
 use crate::WString;
 
 /// Variant parameter used in
@@ -406,14 +399,4 @@ impl RegistryValue {
 			Self::None => 0,
 		}
 	}
-}
-
-/// Variant parameter for:
-///
-/// * [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) `stylestruct`.
-pub enum WsWsex<'a> {
-	/// [`STYLESTRUCT_WS`](crate::STYLESTRUCT_WS) struct.
-	Ws(&'a STYLESTRUCT_WS),
-	/// [`STYLESTRUCT_WS_EX`](crate::STYLESTRUCT_WS_EX) struct.
-	Wsex(&'a STYLESTRUCT_WS_EX),
 }

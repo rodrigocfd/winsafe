@@ -4,33 +4,33 @@ const_type! { MB, u32,
 	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
 	=>
 	/// The message box contains three push buttons: Abort, Retry, and Ignore.
-	ABORTRETRYIGNORE, 0x00000002
+	ABORTRETRYIGNORE, 0x0000_0002
 	/// The message box contains three push buttons: Cancel, Try Again,
 	/// Continue. Use this message box type instead of
 	/// [`MB::ABORTRETRYIGNORE`](crate::co::MB::ABORTRETRYIGNORE).
-	CANCELTRYCONTINUE, 0x00000006
+	CANCELTRYCONTINUE, 0x0000_0006
 	/// Adds a Help button to the message box. When the user clicks the Help
 	/// button or presses F1, the system sends a
 	/// [`WM_HELP`](crate::msg::wm::Help) message to the owner.
-	HELP, 0x00004000
+	HELP, 0x0000_4000
 	/// The message box contains one push button: OK. This is the default.
-	OK, 0x00000000
+	OK, 0x0000_0000
 	/// The message box contains two push buttons: OK and Cancel.
-	OKCANCEL, 0x00000001
+	OKCANCEL, 0x0000_0001
 	/// The message box contains two push buttons: Retry and Cancel.
-	RETRYCANCEL, 0x00000005
+	RETRYCANCEL, 0x0000_0005
 	/// The message box contains two push buttons: Yes and No.
-	YESNO, 0x00000004
+	YESNO, 0x0000_0004
 	/// The message box contains three push buttons: Yes, No, and Cancel.
-	YESNOCANCEL, 0x00000003
+	YESNOCANCEL, 0x0000_0003
 
 	/// An exclamation-point icon appears in the message box.
-	ICONEXCLAMATION, 0x00000030
+	ICONEXCLAMATION, 0x0000_0030
 	/// An exclamation-point icon appears in the message box.
 	ICONWARNING, Self::ICONEXCLAMATION.0
 	/// An icon consisting of a lowercase letter i in a circle appears in the
 	/// message box.
-	ICONINFORMATION, 0x00000040
+	ICONINFORMATION, 0x0000_0040
 	/// An icon consisting of a lowercase letter i in a circle appears in the
 	/// message box.
 	ICONASTERISK, Self::ICONINFORMATION.0
@@ -42,11 +42,11 @@ const_type! { MB, u32,
 	/// information. Therefore, do not use this question mark message symbol in
 	/// your message boxes. The system continues to support its inclusion only
 	/// for backward compatibility.
-	ICONQUESTION, 0x00000020
+	ICONQUESTION, 0x0000_0020
 	/// A stop-sign icon appears in the message box.
 	ICONSTOP, Self::ICONERROR.0
 	/// A stop-sign icon appears in the message box.
-	ICONERROR, 0x00000010
+	ICONERROR, 0x0000_0010
 	/// A stop-sign icon appears in the message box.
 	ICONHAND, Self::ICONERROR.0
 
@@ -54,13 +54,13 @@ const_type! { MB, u32,
 	/// unless [`MB::DEFBUTTON2`](crate::co::MB::DEFBUTTON2),
 	/// [`MB::DEFBUTTON3`](crate::co::MB::DEFBUTTON3), or
 	/// [`MB::DEFBUTTON4`](crate::co::MB::DEFBUTTON4) is specified.
-	DEFBUTTON1, 0x00000000
+	DEFBUTTON1, 0x0000_0000
 	/// The second button is the default button.
-	DEFBUTTON2, 0x00000100
+	DEFBUTTON2, 0x0000_0100
 	/// The third button is the default button.
-	DEFBUTTON3, 0x00000200
+	DEFBUTTON3, 0x0000_0200
 	/// The fourth button is the default button.
-	DEFBUTTON4, 0x00000300
+	DEFBUTTON4, 0x0000_0300
 
 	/// The user must respond to the message box before continuing work in the
 	/// window identified by the hWnd parameter. However, the user can move to
@@ -74,21 +74,21 @@ const_type! { MB, u32,
 	/// `MB::APPLMODAL` is the default if neither
 	/// [`MB::SYSTEMMODAL`](crate::co::MB::SYSTEMMODAL) nor
 	/// [`MB::TASKMODAL`](crate::co::MB::TASKMODAL) is specified.
-	APPLMODAL, 0x00000000
+	APPLMODAL, 0x0000_0000
 	/// Same as [`MB::APPLMODAL`](crate::co::MB::APPLMODAL) except that the
 	/// message box has the [`WS_EX::TOPMOST`](crate::co::WS_EX::TOPMOST) style.
 	/// Use system-modal message boxes to notify the user of serious,
 	/// potentially damaging errors that require immediate attention (for
 	/// example, running out of memory). This flag has no effect on the user's
 	/// ability to interact with windows other than those associated with hWnd.
-	SYSTEMMODAL, 0x00001000
+	SYSTEMMODAL, 0x0000_1000
 	/// Same as [`MB::APPLMODAL`](crate::co::MB::APPLMODAL) except that all the
 	/// top-level windows belonging to the current thread are disabled if the
 	/// hWnd parameter is NULL. Use this flag when the calling application or
 	/// library does not have a window handle available but still needs to
 	/// prevent input to other windows in the calling thread without suspending
 	/// other threads.
-	TASKMODAL, 0x00002000
+	TASKMODAL, 0x0000_2000
 
 	/// Same as desktop of the interactive window station. For more information,
 	/// see
@@ -97,19 +97,19 @@ const_type! { MB, u32,
 	/// If the current input desktop is not the default desktop,
 	/// [`MessageBox`](crate::HWND::MessageBox) does not return until the user
 	/// switches to the default desktop.
-	DEFAULT_DESKTOP_ONLY, 0x00020000
+	DEFAULT_DESKTOP_ONLY, 0x0002_0000
 	/// The text is right-justified.
-	RIGHT, 0x00080000
+	RIGHT, 0x0008_0000
 	/// Displays message and caption text using right-to-left reading order on
 	/// Hebrew and Arabic systems.
-	RTLREADING, 0x00100000
+	RTLREADING, 0x0010_0000
 	/// The message box becomes the foreground window. Internally, the system
 	/// calls the [`SetForegroundWindow`](crate::HWND::SetForegroundWindow)
 	/// function for the message box.
-	SETFOREGROUND, 0x00010000
+	SETFOREGROUND, 0x0001_0000
 	/// The message box is created with the
 	/// [`WS_EX::TOPMOST`](crate::co::WS_EX::TOPMOST) window style.
-	TOPMOST, 0x00040000
+	TOPMOST, 0x0004_0000
 	/// The caller is a service notifying the user of an event. The function
 	/// displays a message box on the current active desktop, even if there is
 	/// no user logged on to the computer.
@@ -128,17 +128,17 @@ const_type! { MB, u32,
 	/// In particular, be aware that this flag can produce interactive content
 	/// on a locked desktop and should therefore be used for only a very limited
 	/// set of scenarios, such as resource exhaustion.
-	SERVICE_NOTIFICATION, 0x00200000
+	SERVICE_NOTIFICATION, 0x0020_0000
 }
 
 const_type! { MBC, u32,
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `dwFlags` (`u32`).
 	/// Originally has `MB` prefix.
 	=>
-	COMPOSITE, 0x00000002
-	ERR_INVALID_CHARS, 0x00000008
-	PRECOMPOSED, 0x00000001
-	USEGLYPHCHARS, 0x00000004
+	COMPOSITE, 0x0000_0002
+	ERR_INVALID_CHARS, 0x0000_0008
+	PRECOMPOSED, 0x0000_0001
+	USEGLYPHCHARS, 0x0000_0004
 }
 
 const_type_wm! { MCM,
@@ -235,39 +235,39 @@ const_type! { MF, u32,
 	/// [`AppendMenu`](crate::HMENU::AppendMenu) and
 	/// [`InsertMenu`](crate::HMENU::InsertMenu) `uFlags` (`u32`).
 	=>
-	INSERT, 0x00000000
-	CHANGE, 0x00000080
-	APPEND, 0x00000100
-	DELETE, 0x00000200
-	REMOVE, 0x00001000
-	BYCOMMAND, 0x00000000
-	BYPOSITION, 0x00000400
-	SEPARATOR, 0x00000800
-	ENABLED, 0x00000000
-	GRAYED, 0x00000001
-	DISABLED, 0x00000002
-	UNCHECKED, 0x00000000
-	CHECKED, 0x00000008
-	USECHECKBITMAPS, 0x00000200
-	STRING, 0x00000000
-	BITMAP, 0x00000004
-	OWNERDRAW, 0x00000100
-	POPUP, 0x00000010
-	MENUBARBREAK, 0x00000020
-	MENUBREAK, 0x00000040
-	UNHILITE, 0x00000000
-	HILITE, 0x00000080
-	DEFAULT, 0x00001000
-	SYSMENU, 0x00002000
-	HELP, 0x00004000
-	RIGHTJUSTIFY, 0x00004000
-	MOUSESELECT, 0x00008000
+	INSERT, 0x0000_0000
+	CHANGE, 0x0000_0080
+	APPEND, 0x0000_0100
+	DELETE, 0x0000_0200
+	REMOVE, 0x0000_1000
+	BYCOMMAND, 0x0000_0000
+	BYPOSITION, 0x0000_0400
+	SEPARATOR, 0x0000_0800
+	ENABLED, 0x0000_0000
+	GRAYED, 0x0000_0001
+	DISABLED, 0x0000_0002
+	UNCHECKED, 0x0000_0000
+	CHECKED, 0x0000_0008
+	USECHECKBITMAPS, 0x0000_0200
+	STRING, 0x0000_0000
+	BITMAP, 0x0000_0004
+	OWNERDRAW, 0x0000_0100
+	POPUP, 0x0000_0010
+	MENUBARBREAK, 0x0000_0020
+	MENUBREAK, 0x0000_0040
+	UNHILITE, 0x0000_0000
+	HILITE, 0x0000_0080
+	DEFAULT, 0x0000_1000
+	SYSMENU, 0x0000_2000
+	HELP, 0x0000_4000
+	RIGHTJUSTIFY, 0x0000_4000
+	MOUSESELECT, 0x0000_8000
 }
 
 const_type! { MFS, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
 	=>
-	GRAYED, 0x00000003
+	GRAYED, 0x0000_0003
 	DISABLED, MFS::GRAYED.0
 	CHECKED, MF::CHECKED.0
 	HILITE, MF::HILITE.0
@@ -294,23 +294,23 @@ const_type! { MFT, u32,
 const_type! { MIM, u32,
 	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
 	=>
-	MAXHEIGHT, 0x00000001
-	BACKGROUND, 0x00000002
-	HELPID, 0x00000004
-	MENUDATA, 0x00000008
-	STYLE, 0x00000010
-	APPLYTOSUBMENUS, 0x80000000
+	MAXHEIGHT, 0x0000_0001
+	BACKGROUND, 0x0000_0002
+	HELPID, 0x0000_0004
+	MENUDATA, 0x0000_0008
+	STYLE, 0x0000_0010
+	APPLYTOSUBMENUS, 0x8000_0000
 }
 
 const_type! { MIIM, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
 	=>
-	MAXHEIGHT, 0x00000001
-	BACKGROUND, 0x00000002
-	HELPID, 0x00000004
-	MENUDATA, 0x00000008
-	STYLE, 0x00000010
-	APPLYTOSUBMENUS, 0x80000000
+	MAXHEIGHT, 0x0000_0001
+	BACKGROUND, 0x0000_0002
+	HELPID, 0x0000_0004
+	MENUDATA, 0x0000_0008
+	STYLE, 0x0000_0010
+	APPLYTOSUBMENUS, 0x8000_0000
 }
 
 const_type! { MK, u16,
@@ -329,12 +329,12 @@ const_type! { MK, u16,
 const_type! { MNS, u32,
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
 	=>
-	NOCHECK, 0x80000000
-	MODELESS, 0x40000000
-	DRAGDROP, 0x20000000
-	AUTODISMISS, 0x10000000
-	NOTIFYBYPOS, 0x08000000
-	CHECKORBMP, 0x04000000
+	NOCHECK, 0x8000_0000
+	MODELESS, 0x4000_0000
+	DRAGDROP, 0x2000_0000
+	AUTODISMISS, 0x1000_0000
+	NOTIFYBYPOS, 0x0800_0000
+	CHECKORBMP, 0x0400_0000
 }
 
 const_type! { MSGF, u8,

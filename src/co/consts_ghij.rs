@@ -91,13 +91,13 @@ const_type! { GENERIC, u32,
 	/// (`u32`).
 	=>
 	/// Read access.
-	READ, 0x80000000
+	READ, 0x8000_0000
 	/// Write access.
-	WRITE, 0x40000000
+	WRITE, 0x4000_0000
 	/// Execute access.
-	EXECUTE, 0x20000000
+	EXECUTE, 0x2000_0000
 	/// All possible access rights.
-	ALL, 0x10000000
+	ALL, 0x1000_0000
 }
 
 const_type! { GM, i32,
@@ -263,15 +263,15 @@ const_type! { HELPW, u32,
 const_type! { HICF, u32,
 	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags` (`u32`).
 	=>
-	OTHER, 0x00000000
-	ARROWKEYS, 0x00000002
-	ACCELERATOR, 0x00000004
-	DUPACCEL, 0x00000008
-	ENTERING, 0x00000010
-	LEAVING, 0x00000020
-	RESELECT, 0x00000040
-	LMOUSE, 0x00000080
-	TOGGLEDROPDOWN, 0x00000100
+	OTHER, 0x0000_0000
+	ARROWKEYS, 0x0000_0002
+	ACCELERATOR, 0x0000_0004
+	DUPACCEL, 0x0000_0008
+	ENTERING, 0x0000_0010
+	LEAVING, 0x0000_0020
+	RESELECT, 0x0000_0040
+	LMOUSE, 0x0000_0080
+	TOGGLEDROPDOWN, 0x0000_0100
 }
 
 const_type! { HWND_PLACE, isize,
@@ -281,6 +281,23 @@ const_type! { HWND_PLACE, isize,
 	BOTTOM, 1
 	TOPMOST, -1
 	NOTOPMOST, -2
+}
+
+const_type! { HS, i32,
+	/// [`CreateHatchBrush`](crate::HBRUSH::CreateHatchBrush) `ìHatch` (`i32`).
+	=>
+	/// Horizontal hatch: `-----`.
+	HORIZONTAL, 0
+	/// Vertical hatch: `|||||`.
+	VERTICAL, 1
+	/// 45-degree downward left-to-right hatch: `\\\\\`.
+	FDIAGONAL, 2
+	/// 45-degree upward left-to-right hatch: `/////`.
+	BDIAGONAL, 3
+	/// Horizontal and vertical crosshatch: `+++++`.
+	CROSS, 4
+	/// 45-degree crosshatch: `xxxxx`.
+	DIAGCROSS, 5
 }
 
 const_type! { ICON_SZ, u8,
@@ -330,36 +347,36 @@ const_type! { IDI, usize,
 const_type! { ILC, u32,
 	/// [`ImageList_Create`](crate::HIMAGELIST::ImageList_Create) `flags` (`u32`).
 	=>
-	MASK, 0x00000001
-	COLOR, 0x00000000
-	COLORDDB, 0x000000fe
-	COLOR4, 0x00000004
-	COLOR8, 0x00000008
-	COLOR16, 0x00000010
-	COLOR24, 0x00000018
-	COLOR32, 0x00000020
-	MIRROR, 0x00002000
-	PERITEMMIRROR, 0x00008000
-	ORIGINALSIZE, 0x00010000
-	HIGHQUALITYSCALE, 0x00020000
+	MASK, 0x0000_0001
+	COLOR, 0x0000_0000
+	COLORDDB, 0x0000_00fe
+	COLOR4, 0x0000_0004
+	COLOR8, 0x0000_0008
+	COLOR16, 0x0000_0010
+	COLOR24, 0x0000_0018
+	COLOR32, 0x0000_0020
+	MIRROR, 0x0000_2000
+	PERITEMMIRROR, 0x0000_8000
+	ORIGINALSIZE, 0x0001_0000
+	HIGHQUALITYSCALE, 0x0002_0000
 }
 
 const_type! { ILD, u32,
 	/// [`IMAGELISTDRAWFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).
 	=>
-	NORMAL, 0x00000000
-	TRANSPARENT, 0x00000001
-	MASK, 0x00000010
-	IMAGE, 0x00000020
-	ROP, 0x00000040
-	BLEND25, 0x00000002
-	BLEND50, 0x00000004
-	OVERLAYMASK, 0x00000f00
-	PRESERVEALPHA, 0x00001000
-	SCALE, 0x00002000
-	DPISCALE, 0x00004000
-	ASYNC, 0x00008000
+	NORMAL, 0x0000_0000
+	TRANSPARENT, 0x0000_0001
+	MASK, 0x0000_0010
+	IMAGE, 0x0000_0020
+	ROP, 0x0000_0040
+	BLEND25, 0x0000_0002
+	BLEND50, 0x0000_0004
+	OVERLAYMASK, 0x0000_0f00
+	PRESERVEALPHA, 0x0000_1000
+	SCALE, 0x0000_2000
+	DPISCALE, 0x0000_4000
+	ASYNC, 0x0000_8000
 	SELECTED, Self::BLEND50.0
 	FOCUS, Self::BLEND25.0
 	BLEND, Self::BLEND50.0
@@ -369,11 +386,11 @@ const_type! { ILS, u32,
 	/// [`IMAGELISTSTATEFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
 	/// enumeration (`u32`).
 	=>
-	NORMAL, 0x00000000
-	GLOW, 0x00000001
-	SHADOW, 0x00000002
-	SATURATE, 0x00000004
-	ALPHA, 0x00000008
+	NORMAL, 0x0000_0000
+	GLOW, 0x0000_0001
+	SHADOW, 0x0000_0002
+	SATURATE, 0x0000_0004
+	ALPHA, 0x0000_0008
 }
 
 const_type! { IMAGE_TYPE, u8,

@@ -300,7 +300,7 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
 pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
-	COLORREF(unsafe { user32::GetSysColor(nIndex.0 as _) })
+	COLORREF(unsafe { user32::GetSysColor(nIndex.0) })
 }
 
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)

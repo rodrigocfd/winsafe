@@ -12,6 +12,7 @@ use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
 use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HEVENT, HICON, HINSTANCE, HMENU, HWND};
 use crate::privs::LF_FACESIZE;
 use crate::structs::ATOM;
+use crate::unions::{ColorrefDib, ColorrefHbitmap};
 use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
@@ -57,6 +58,14 @@ impl Default for ALTTABINFO {
 		obj.cbSize = std::mem::size_of::<Self>() as _;
 		obj
 	}
+}
+
+/// [`BITMAPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
+/// struct.
+#[repr(C)]
+pub struct BITMAPINFO {
+	pub bmiHeader: BITMAPINFOHEADER,
+	pub bmiColors: [RGBQUAD; 1],
 }
 
 /// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
@@ -175,6 +184,15 @@ impl HELPINFO {
 			_ => HwndHmenu::Hmenu(HMENU { ptr: self.hItemHandle as _ }),
 		}
 	}
+}
+
+/// [`LOGBRUSH`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)
+/// struct.
+#[repr(C)]
+pub struct LOGBRUSH {
+	pub lbStyle: co::BSS,
+	pub lbColor: ColorrefDib,
+	pub lbHatch: ColorrefHbitmap,
 }
 
 /// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
@@ -471,6 +489,23 @@ impl RECT {
 	}
 }
 
+/// [`RGBQUAD`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
+/// struct.
+#[repr(C)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct RGBQUAD {
+	pub rgbBlue: u8,
+	pub rgbGreen: u8,
+	pub rgbRed: u8,
+	rgbReserved: u8,
+}
+
+impl Default for RGBQUAD {
+	fn default() -> Self {
+		unsafe { std::mem::zeroed::<Self>() }
+	}
+}
+
 /// [`SCROLLINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-scrollinfo)
 /// struct.
 #[repr(C)]
@@ -546,19 +581,36 @@ impl SIZE {
 }
 
 /// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
-/// struct for [`WS`](crate::co::WS).
+/// struct.
+///
+/// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct STYLESTRUCT_WS {
-	pub styleOld: co::WS,
-	pub styleNew: co::WS,
+#[derive(Default)]
+pub struct STYLESTRUCT {
+	styleOld: u32, // both fields contain WS and WS_EX mixed
+	styleNew: u32,
 }
 
-/// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
-/// struct for [`WS_EX`](crate::co::WS_EX).
-#[repr(C)]
-pub struct STYLESTRUCT_WS_EX {
-	pub styleOld: co::WS_EX,
-	pub styleNew: co::WS_EX,
+impl STYLESTRUCT {
+	/// Returns the [`WS`](crate::co::WS) of `styleOld` field.
+	pub fn styleOld_WS(&self) -> co::WS {
+		co::WS(self.styleOld)
+	}
+
+	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleOld` field.
+	pub fn styleOld_WSEX(&self) -> co::WS_EX {
+		co::WS_EX(self.styleOld)
+	}
+
+	/// Returns the [`WS`](crate::co::WS) of `styleNew` field.
+	pub fn styleNew_WS(&self) -> co::WS {
+		co::WS(self.styleNew)
+	}
+
+	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleNew` field.
+	pub fn styleNew_WSEX(&self) -> co::WS_EX {
+		co::WS_EX(self.styleNew)
+	}
 }
 
 /// [`SYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)

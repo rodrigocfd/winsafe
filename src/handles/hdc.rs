@@ -176,6 +176,14 @@ impl HDC {
 		)
 	}
 
+	/// [`PatBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-patblt)
+	/// method.
+	pub fn PatBlt(self, x: i32, y: i32,
+		w: i32, h: i32, rop: co::ROP) -> WinResult<()>
+	{
+		bool_to_winresult(unsafe { gdi32::PatBlt(self.ptr, x, y, w, h, rop.0) })
+	}
+
 	/// [`PathToRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pathtoregion)
 	/// method.
 	///

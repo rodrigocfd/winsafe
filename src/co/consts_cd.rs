@@ -77,12 +77,12 @@ const_type_wsex! { CBES_EX,
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
 	=>
-	NOEDITIMAGE, 0x00000001
-	NOEDITIMAGEINDENT, 0x00000002
-	PATHWORDBREAKPROC, 0x00000004
-	NOSIZELIMIT, 0x00000008
-	CASESENSITIVE, 0x00000010
-	TEXTENDELLIPSIS, 0x00000020
+	NOEDITIMAGE, 0x0000_0001
+	NOEDITIMAGEINDENT, 0x0000_0002
+	PATHWORDBREAKPROC, 0x0000_0004
+	NOSIZELIMIT, 0x0000_0008
+	CASESENSITIVE, 0x0000_0010
+	TEXTENDELLIPSIS, 0x0000_0020
 }
 
 const_type_cmd! { CBN,
@@ -146,16 +146,16 @@ const_type_wm! { CCM,
 const_type! { CDDS, u32,
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
 	=>
-	PREPAINT, 0x00000001
-	POSTPAINT, 0x00000002
-	PREERASE, 0x00000003
-	POSTERASE, 0x00000004
-	ITEM, 0x00010000
+	PREPAINT, 0x0000_0001
+	POSTPAINT, 0x0000_0002
+	PREERASE, 0x0000_0003
+	POSTERASE, 0x0000_0004
+	ITEM, 0x0001_0000
 	ITEMPREPAINT, Self::ITEM.0 | Self::PREPAINT.0
 	ITEMPOSTPAINT, Self::ITEM.0 | Self::POSTPAINT.0
 	ITEMPREERASE, Self::ITEM.0 | Self::PREERASE.0
 	ITEMPOSTERASE, Self::ITEM.0 | Self::POSTERASE.0
-	SUBITEM, 0x00020000
+	SUBITEM, 0x0002_0000
 }
 
 const_type! { CDIS, u32,
@@ -180,15 +180,15 @@ const_type! { CDRF, u32,
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
 	/// return value (`u32`).
 	=>
-	DODEFAULT, 0x00000000
-	NEWFONT, 0x00000002
-	SKIPDEFAULT, 0x00000004
-	DOERASE, 0x00000008
-	SKIPPOSTPAINT, 0x00000100
-	NOTIFYPOSTPAINT, 0x00000010
-	NOTIFYITEMDRAW, 0x00000020
-	NOTIFYSUBITEMDRAW, 0x00000020
-	NOTIFYPOSTERASE, 0x00000040
+	DODEFAULT, 0x0000_0000
+	NEWFONT, 0x0000_0002
+	SKIPDEFAULT, 0x0000_0004
+	DOERASE, 0x0000_0008
+	SKIPPOSTPAINT, 0x0000_0100
+	NOTIFYPOSTPAINT, 0x0000_0010
+	NOTIFYITEMDRAW, 0x0000_0020
+	NOTIFYSUBITEMDRAW, 0x0000_0020
+	NOTIFYPOSTERASE, 0x0000_0040
 }
 impl From<CDRF> for isize {
 	fn from(v: CDRF) -> Self {
@@ -237,8 +237,8 @@ const_type! { CLIP, u8,
 const_type! { CLR, u32,
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
 	=>
-	CLR_NONE, 0xffffffff
-	DEFAULT, 0xff000000
+	CLR_NONE, 0xffff_ffff
+	DEFAULT, 0xff00_0000
 }
 
 const_type! { CLSCTX, u32,
@@ -277,23 +277,23 @@ const_type! { CLSCTX, u32,
 	/// Disables activate-as-activator (AAA) activations for this activation only.
 	DISABLE_AAA, 0x8000
 	/// Enables activate-as-activator (AAA) activations for this activation only.
-	ENABLE_AAA, 0x10000
+	ENABLE_AAA, 0x1_0000
 	/// Begin this activation from the default context of the current apartment.
-	FROM_DEFAULT_CONTEXT, 0x20000
+	FROM_DEFAULT_CONTEXT, 0x2_0000
 	/// Activate or connect to a 32-bit version of the server; fail if one is not
 	/// registered.
-	ACTIVATE_X86_SERVER, 0x40000
+	ACTIVATE_X86_SERVER, 0x4_0000
 	/// Activate or connect to a 32-bit version of the server; fail if one is not
 	/// registered.
 	ACTIVATE_32_BIT_SERVER, Self::ACTIVATE_X86_SERVER.0
 	/// Activate or connect to a 64 bit version of the server; fail if one is not
 	/// registered.
-	ACTIVATE_64_BIT_SERVER, 0x80000
+	ACTIVATE_64_BIT_SERVER, 0x8_0000
 	/// Specify this flag for Interactive User activation behavior for
 	/// As-Activator servers.
-	ACTIVATE_AAA_AS_IU, 0x800000
+	ACTIVATE_AAA_AS_IU, 0x80_0000
 	/// (No official docs for this entry.)
-	ACTIVATE_ARM32_SERVER, 0x2000000
+	ACTIVATE_ARM32_SERVER, 0x200_0000
 }
 
 const_type! { CMD, u16,
@@ -320,10 +320,10 @@ const_type! { COINIT, u32,
 	SPEED_OVER_MEMORY, 0x8
 }
 
-const_type! { COLOR, u32,
+const_type! { COLOR, i32,
 	/// System
 	/// [colors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
-	/// (`u32`).
+	/// (`i32`).
 	=>
 	SCROLLBAR, 0
 	BACKGROUND, 1
@@ -346,8 +346,8 @@ const_type! { COLOR, u32,
 	BTNTEXT, 18
 	INACTIVECAPTIONTEXT, 19
 	BTNHIGHLIGHT, 20
-	_3DDKSHADOW, 21
-	_3DLIGHT, 22
+	C3DDKSHADOW, 21
+	C3DLIGHT, 22
 	INFOTEXT, 23
 	INFOBK, 24
 	HOTLIGHT, 26
@@ -356,10 +356,10 @@ const_type! { COLOR, u32,
 	MENUHILIGHT, 29
 	MENUBAR, 30
 	DESKTOP, Self::BACKGROUND.0
-	_3DFACE, Self::BTNFACE.0
-	_3DSHADOW, Self::BTNSHADOW.0
-	_3DHIGHLIGHT, Self::BTNHIGHLIGHT.0
-	_3DHILIGHT, Self::BTNHIGHLIGHT.0
+	C3DFACE, Self::BTNFACE.0
+	C3DSHADOW, Self::BTNSHADOW.0
+	C3DHIGHLIGHT, Self::BTNHIGHLIGHT.0
+	C3DHILIGHT, Self::BTNHIGHLIGHT.0
 	BTNHILIGHT, Self::BTNHIGHLIGHT.0
 }
 
@@ -419,6 +419,16 @@ const_type! { DDL, u16,
 	POSTMSGS, 0x2000
 	DRIVES, 0x4000
 	EXCLUSIVE, 0x8000
+}
+
+const_type! { DIB, u32,
+	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
+	=>
+	/// The color table consists of an array of 16-bit indexes into the
+	/// currently realized logical palette.
+	RGB_COLORS, 0
+	/// The color table contains literal RGB values.
+	PAL_COLORS, 1
 }
 
 const_type! { DISPOSITION, u32,

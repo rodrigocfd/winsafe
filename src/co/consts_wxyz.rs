@@ -10,12 +10,12 @@ const_type! { WA, u16,
 const_type! { WC, u32,
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `dwFlags` (`u32`).
 	=>
-	COMPOSITECHECK, 0x00000200
-	ERR_INVALID_CHARS, 0x00000080
-	NO_BEST_FIT_CHARS, 0x00000400
-	DEFAULTCHAR, 0x00000040
-	DISCARDNS, 0x00000010
-	SEPCHARS, 0x00000020
+	COMPOSITECHECK, 0x0000_0200
+	ERR_INVALID_CHARS, 0x0000_0080
+	NO_BEST_FIT_CHARS, 0x0000_0400
+	DEFAULTCHAR, 0x0000_0040
+	DISCARDNS, 0x0000_0010
+	SEPCHARS, 0x0000_0020
 }
 
 const_type! { WDA, u32,
@@ -23,9 +23,9 @@ const_type! { WDA, u32,
 	/// [`SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)
 	/// `dwAffinity` (`u32`).
 	=>
-	NONE, 0x00000000
-	MONITOR, 0x00000001
-	EXCLUDEFROMCAPTURE, 0x00000011
+	NONE, 0x0000_0000
+	MONITOR, 0x0000_0001
+	EXCLUDEFROMCAPTURE, 0x0000_0011
 }
 
 const_type! { WH, i32,
@@ -416,23 +416,23 @@ const_type! { WS, u32,
 	=>
 	/// The window is an overlapped window. An overlapped window has a title bar
 	/// and a border. Same as the `WS_TILED` style.
-	OVERLAPPED, 0x00000000
+	OVERLAPPED, 0x0000_0000
 	/// The window is a pop-up window. This style cannot be used with the
 	/// `WS_CHILD` style.
-	POPUP, 0x80000000
+	POPUP, 0x8000_0000
 	/// The window is a child window. A window with this style cannot have a menu
 	/// bar. This style cannot be used with the `WS_POPUP` style.
-	CHILD, 0x40000000
+	CHILD, 0x4000_0000
 	/// The window is initially minimized. Same as the `WS_ICONIC` style.
-	MINIMIZE, 0x20000000
+	MINIMIZE, 0x2000_0000
 	/// The window is initially visible. This style can be turned on and off by
 	/// using the [`ShowWindow`](crate::HWND::ShowWindow) or
 	/// [`SetWindowPos`](crate::HWND::SetWindowPos) function.
-	VISIBLE, 0x10000000
+	VISIBLE, 0x1000_0000
 	/// The window is initially disabled. A disabled window cannot receive input
 	/// from the user. To change this after a window has been created, use the
 	/// [`EnableWindow`](crate::HWND::EnableWindow) function.
-	DISABLED, 0x08000000
+	DISABLED, 0x0800_0000
 	/// Clips child windows relative to each other; that is, when a particular
 	/// child window receives a [`WM_PAINT`](crate::msg::wm::Paint) message, the
 	/// `WS_CLIPSIBLINGS` style clips all other overlapping child windows out of
@@ -440,28 +440,28 @@ const_type! { WS, u32,
 	/// specified and child windows overlap, it is possible, when drawing within
 	/// the client area of a child window, to draw within the client area of a
 	/// neighboring child window.
-	CLIPSIBLINGS, 0x04000000
+	CLIPSIBLINGS, 0x0400_0000
 	/// Excludes the area occupied by child windows when drawing occurs within
 	/// the parent window. This style is used when creating the parent window.
-	CLIPCHILDREN, 0x02000000
+	CLIPCHILDREN, 0x0200_0000
 	/// The window is initially maximized.
-	MAXIMIZE, 0x01000000
+	MAXIMIZE, 0x0100_0000
 	/// The window has a title bar (includes the `WS_BORDER` style).
-	CAPTION, 0x00c00000
+	CAPTION, 0x00c0_0000
 	/// The window has a thin-line border.
-	BORDER, 0x00800000
+	BORDER, 0x0080_0000
 	/// The window has a border of a style typically used with dialog boxes. A
 	/// window with this style cannot have a title bar.
-	DLGFRAME, 0x00400000
+	DLGFRAME, 0x0040_0000
 	/// The window has a vertical scroll bar.
-	VSCROLL, 0x00200000
+	VSCROLL, 0x0020_0000
 	/// The window has a horizontal scroll bar.
-	HSCROLL, 0x00100000
+	HSCROLL, 0x0010_0000
 	/// The window has a window menu on its title bar. The `WS_CAPTION` style
 	/// must also be specified.
-	SYSMENU, 0x00080000
+	SYSMENU, 0x0008_0000
 	/// The window has a sizing border. Same as the `WS_SIZEBOX` style.
-	THICKFRAME, 0x00040000
+	THICKFRAME, 0x0004_0000
 	/// The window is the first control of a group of controls. The group
 	/// consists of this first control and all controls defined after it, up to
 	/// the next control with the `WS_GROUP` style. The first control in each
@@ -473,7 +473,7 @@ const_type! { WS, u32,
 	/// You can turn this style on and off to change dialog box navigation. To
 	/// change this style after a window has been created, use the
 	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function.
-	GROUP, 0x00020000
+	GROUP, 0x0002_0000
 	/// The window is a control that can receive the keyboard focus when the user
 	/// presses the TAB key. Pressing the TAB key changes the keyboard focus to
 	/// the next control with the `WS_TABSTOP` style.
@@ -484,15 +484,15 @@ const_type! { WS, u32,
 	/// For user-created windows and modeless dialogs to work with tab stops,
 	/// alter the message loop to call the
 	/// [`IsDialogMessage`](crate::HWND::IsDialogMessage) function.
-	TABSTOP, 0x00010000
+	TABSTOP, 0x0001_0000
 	/// The window has a minimize button. Cannot be combined with the
 	/// [`WS_EX_CONTEXTHELP`](crate::co::WS_EX::CONTEXTHELP) style. The
 	/// `WS_SYSMENU` style must also be specified.
-	MINIMIZEBOX, 0x00020000
+	MINIMIZEBOX, 0x0002_0000
 	/// The window has a maximize button. Cannot be combined with the
 	/// [`WS_EX_CONTEXTHELP`](crate::co::WS_EX::CONTEXTHELP) style. The
 	/// `WS_SYSMENU` style must also be specified.
-	MAXIMIZEBOX, 0x00010000
+	MAXIMIZEBOX, 0x0001_0000
 	/// The window is an overlapped window. An overlapped window has a title bar
 	/// and a border. Same as the `WS_OVERLAPPED` style.
 	TILED, Self::OVERLAPPED.0
@@ -520,17 +520,17 @@ const_type! { WS_EX, u32,
 	/// The window has a double border; the window can, optionally, be created
 	/// with a title bar by specifying the [`WS_CAPTION`](crate::co::WS::CAPTION)
 	/// style in the dwStyle parameter.
-	DLGMODALFRAME, 0x00000001
+	DLGMODALFRAME, 0x0000_0001
 	/// The child window created with this style does not send the
 	/// [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) message to its parent
 	/// window when it is created or destroyed.
-	NOPARENTNOTIFY, 0x00000004
+	NOPARENTNOTIFY, 0x0000_0004
 	/// The window should be placed above all non-topmost windows and should stay
 	/// above them, even when the window is deactivated. To add or remove this
 	/// style, use the [`SetWindowPos`](crate::HWND::SetWindowPos) function.
-	TOPMOST, 0x00000008
+	TOPMOST, 0x0000_0008
 	/// The window accepts drag-drop files.
-	ACCEPTFILES, 0x00000010
+	ACCEPTFILES, 0x0000_0010
 	/// The window should not be painted until siblings beneath the window (that
 	/// were created by the same thread) have been painted. The window appears
 	/// transparent because the bits of underlying sibling windows have already
@@ -538,9 +538,9 @@ const_type! { WS_EX, u32,
 	///
 	/// To achieve transparency without these restrictions, use the
 	/// [`SetWindowRgn`](crate::HWND::SetWindowRgn) function.
-	TRANSPARENT, 0x00000020
+	TRANSPARENT, 0x0000_0020
 	/// The window is a MDI child window.
-	MDICHILD, 0x00000040
+	MDICHILD, 0x0000_0040
 	/// The window is intended to be used as a floating toolbar. A tool window
 	/// has a title bar that is shorter than a normal title bar, and the window
 	/// title is drawn using a smaller font. A tool window does not appear in the
@@ -548,11 +548,11 @@ const_type! { WS_EX, u32,
 	/// tool window has a system menu, its icon is not displayed on the title
 	/// bar. However, you can display the system menu by right-clicking or by
 	/// typing ALT+SPACE.
-	TOOLWINDOW, 0x00000080
+	TOOLWINDOW, 0x0000_0080
 	/// The window has a border with a raised edge.
-	WINDOWEDGE, 0x00000100
+	WINDOWEDGE, 0x0000_0100
 	/// The window has a border with a sunken edge.
-	CLIENTEDGE, 0x00000200
+	CLIENTEDGE, 0x0000_0200
 	/// The title bar of the window includes a question mark. When the user
 	/// clicks the question mark, the cursor changes to a question mark with a
 	/// pointer. If the user then clicks a child window, the child receives a
@@ -565,7 +565,7 @@ const_type! { WS_EX, u32,
 	/// `WS_EX_CONTEXTHELP` cannot be used with the
 	/// [`WS_MAXIMIZEBOX`](crate::co::WS::MAXIMIZEBOX) or
 	/// [`WS_MINIMIZEBOX`](crate::co::WS::MINIMIZEBOX) styles.
-	CONTEXTHELP, 0x00000400
+	CONTEXTHELP, 0x0000_0400
 	/// The window has generic "right-aligned" properties. This depends on the
 	/// window class. This style has an effect only if the shell language is
 	/// Hebrew, Arabic, or another language that supports reading-order
@@ -577,34 +577,34 @@ const_type! { WS_EX, u32,
 	/// with button controls has the same effect as using
 	/// [`BS_RIGHT`](crate::co::BS::RIGHT) and
 	/// [`BS_RIGHTBUTTON`](crate::co::BS::RIGHTBUTTON) styles.
-	RIGHT, 0x00001000
+	RIGHT, 0x0000_1000
 	/// The window has generic left-aligned properties. This is the default.
-	LEFT, 0x00000000
+	LEFT, 0x0000_0000
 	/// If the shell language is Hebrew, Arabic, or another language that
 	/// supports reading-order alignment, the window text is displayed using
 	/// right-to-left reading-order properties. For other languages, the style is
 	/// ignored.
-	RTLREADING, 0x00002000
+	RTLREADING, 0x0000_2000
 	/// The window text is displayed using left-to-right reading-order
 	/// properties. This is the default.
-	LTRREADING, 0x00000000
+	LTRREADING, 0x0000_0000
 	/// If the shell language is Hebrew, Arabic, or another language that
 	/// supports reading order alignment, the vertical scroll bar (if present) is
 	/// to the left of the client area. For other languages, the style is ignored.
-	LEFTSCROLLBAR, 0x00004000
+	LEFTSCROLLBAR, 0x0000_4000
 	/// The vertical scroll bar (if present) is to the right of the client area.
 	/// This is the default.
-	RIGHTSCROLLBAR, 0x00000000
+	RIGHTSCROLLBAR, 0x0000_0000
 	/// The window itself contains child windows that should take part in dialog
 	/// box navigation. If this style is specified, the dialog manager recurses
 	/// into children of this window when performing navigation operations such
 	/// as handling the TAB key, an arrow key, or a keyboard mnemonic.
-	CONTROLPARENT, 0x00010000
+	CONTROLPARENT, 0x0001_0000
 	/// The window has a three-dimensional border style intended to be used for
 	/// items that do not accept user input.
-	STATICEDGE, 0x00020000
+	STATICEDGE, 0x0002_0000
 	/// Forces a top-level window onto the taskbar when the window is visible.
-	APPWINDOW, 0x00040000
+	APPWINDOW, 0x0004_0000
 	/// The window is an overlapped window.
 	OVERLAPPEDWINDOW, Self::WINDOWEDGE.0 | Self::CLIENTEDGE.0
 	/// The window is palette window, which is a modeless dialog box that
@@ -617,17 +617,17 @@ const_type! { WS_EX, u32,
 	/// Windows 8: The `WS_EX_LAYERED` style is supported for top-level windows
 	/// and child windows. Previous Windows versions support `WS_EX_LAYERED` only
 	/// for top-level windows.
-	LAYERED, 0x00080000
+	LAYERED, 0x0008_0000
 	/// The window does not pass its window layout to its child windows.
-	NOINHERITLAYOUT, 0x00100000
+	NOINHERITLAYOUT, 0x0010_0000
 	/// The window does not render to a redirection surface. This is for windows
 	/// that do not have visible content or that use mechanisms other than
 	/// surfaces to provide their visual.
-	NOREDIRECTIONBITMAP, 0x00200000
+	NOREDIRECTIONBITMAP, 0x0020_0000
 	/// If the shell language is Hebrew, Arabic, or another language that
 	/// supports reading order alignment, the horizontal origin of the window is
 	/// on the right edge. Increasing horizontal values advance to the left.
-	LAYOUTRTL, 0x00400000
+	LAYOUTRTL, 0x0040_0000
 	/// Paints all descendants of a window in bottom-to-top painting order using
 	/// double-buffering. Bottom-to-top painting order allows a descendent window
 	/// to have translucency (alpha) and transparency (color-key) effects, but
@@ -638,7 +638,7 @@ const_type! { WS_EX, u32,
 	/// [`CS_CLASSDC`](crate::co::CS::CLASSDC).
 	///
 	/// Windows 2000: This style is not supported.
-	COMPOSITED, 0x02000000
+	COMPOSITED, 0x0200_0000
 	/// A top-level window created with this style does not become the foreground
 	/// window when the user clicks it. The system does not bring this window to
 	/// the foreground when the user minimizes or closes the foreground window.
@@ -651,7 +651,7 @@ const_type! { WS_EX, u32,
 	///
 	/// The window does not appear on the taskbar by default. To force the window
 	/// to appear on the taskbar, use the `WS_EX_APPWINDOW` style.
-	NOACTIVATE, 0x08000000
+	NOACTIVATE, 0x0800_0000
 }
 
 const_type! { WVR, u32,
