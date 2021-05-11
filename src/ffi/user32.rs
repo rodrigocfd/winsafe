@@ -141,6 +141,7 @@ extern "system" {
 	pub fn TrackPopupMenu(_: HANDLE, _: u32, _: i32, _: i32, _: i32, _: HANDLE, _: PCVOID) -> BOOL;
 	pub fn TranslateAcceleratorW(_: HANDLE, _: HANDLE, _: PVOID) -> i32;
 	pub fn TranslateMessage(_: PCVOID) -> BOOL;
+	pub fn UnhookWindowsHookEx(_: HANDLE) -> BOOL;
 	pub fn UnregisterClassW(_: PCSTR, _: HANDLE) -> BOOL;
 	pub fn UpdateWindow(_: HANDLE) -> BOOL;
 	pub fn ValidateRect(_: HANDLE, _: PCVOID) -> BOOL;

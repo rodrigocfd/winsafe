@@ -13,6 +13,7 @@ extern "system" {
 	pub fn CreateCompatibleDC(_: HANDLE) -> HANDLE;
 	pub fn CreateFontIndirectW(_: PCVOID) -> HANDLE;
 	pub fn CreateFontW(_: i32, _: i32, _: i32, _: i32, _: i32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: PCSTR) -> HANDLE;
+	pub fn CreateSolidBrush(_: u32) -> HANDLE;
 	pub fn DeleteDC(_: HANDLE) -> BOOL;
 	pub fn DeleteObject(_: HANDLE) -> BOOL;
 	pub fn EndPath(_: HANDLE) -> BOOL;

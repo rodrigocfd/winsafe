@@ -5,6 +5,7 @@ use crate::co;
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HINSTANCE;
+use crate::privs::bool_to_winresult;
 
 handle_type! {
 	/// Handle to a
@@ -27,5 +28,11 @@ impl HHOOK {
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`UnhookWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
+	/// method.
+	pub fn UnhookWindowsHookEx(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { user32::UnhookWindowsHookEx(self.ptr) })
 	}
 }
