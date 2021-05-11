@@ -13,7 +13,9 @@ macro_rules! IFileSaveDialog_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(ifilesavedialog_vt, IFileSaveDialogVT);
+			fn ifilesavedialog_vt(&self) -> &IFileSaveDialogVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IFileSaveDialog::SetSaveAsItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 			/// method.

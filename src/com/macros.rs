@@ -22,12 +22,3 @@ macro_rules! com_virtual_table {
 		}
 	};
 }
-
-/// For a COM interface, creates a method to convert the **vtbl to a reference.
-macro_rules! ppvt_conv {
-	($name:ident, $vt:ty) => {
-		fn $name(&self) -> &$vt {
-			unsafe { &**(self.ppvt as PPComVT<$vt>) }
-		}
-	};
-}

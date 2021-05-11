@@ -19,7 +19,9 @@ macro_rules! IMFVideoDisplayControl_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(imfvideodisplaycontrol_vt, IMFVideoDisplayControlVT);
+			fn imfvideodisplaycontrol_vt(&self) -> &IMFVideoDisplayControlVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 			/// method.

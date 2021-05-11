@@ -17,7 +17,9 @@ macro_rules! IMediaControl_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(imediacontrol_vt, IMediaControlVT);
+			fn imediacontrol_vt(&self) -> &IMediaControlVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 			/// method.

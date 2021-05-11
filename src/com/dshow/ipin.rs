@@ -20,7 +20,9 @@ macro_rules! IPin_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(ipin_vt, IPinVT);
+			fn ipin_vt(&self) -> &IPinVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IPin::BeginFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
 			/// method.

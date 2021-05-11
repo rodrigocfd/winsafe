@@ -16,7 +16,9 @@ macro_rules! IModalWindow_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(imodalwindow_vt, IModalWindowVT);
+			fn imodalwindow_vt(&self) -> &IModalWindowVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IModalWindow::Show`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-imodalwindow-show)
 			/// method.

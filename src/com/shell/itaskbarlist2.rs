@@ -13,7 +13,9 @@ macro_rules! ITaskbarList2_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(itaskbarlist2_vt, ITaskbarList2VT);
+			fn itaskbarlist2_vt(&self) -> &ITaskbarList2VT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 			/// method.

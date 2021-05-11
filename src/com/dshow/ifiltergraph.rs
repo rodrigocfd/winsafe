@@ -15,7 +15,9 @@ macro_rules! IFilterGraph_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(ifiltergraph_vt, IFilterGraphVT);
+			fn ifiltergraph_vt(&self) -> &IFilterGraphVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IFilterGraph::AddFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 			/// method.

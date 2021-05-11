@@ -15,7 +15,9 @@ macro_rules! IShellItemArray_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(ishellitemarray_vt, IShellItemArrayVT);
+			fn ishellitemarray_vt(&self) -> &IShellItemArrayVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IShellItemArray::GetCount`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)
 			/// method.

@@ -14,7 +14,9 @@ macro_rules! IEnumFilters_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(ienumfilters_vt, IEnumFiltersVT);
+			fn ienumfilters_vt(&self) -> &IEnumFiltersVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IEnumFilters::Reset`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-reset)
 			/// method.

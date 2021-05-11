@@ -15,7 +15,9 @@ macro_rules! IDispatch_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(idispatch_vt, IDispatchVT);
+			fn idispatch_vt(&self) -> &IDispatchVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IDispatch::GetTypeInfoCount`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
 			/// method.

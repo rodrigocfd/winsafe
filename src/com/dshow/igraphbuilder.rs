@@ -16,7 +16,9 @@ macro_rules! IGraphBuilder_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(igraphbuilder_vt, IGraphBuilderVT);
+			fn igraphbuilder_vt(&self) -> &IGraphBuilderVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IGraphBuilder::Abort`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
 			/// method.

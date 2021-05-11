@@ -16,7 +16,9 @@ macro_rules! IBaseFilter_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(ibasefilter_vt, IBaseFilterVT);
+			fn ibasefilter_vt(&self) -> &IBaseFilterVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IBaseFilter::JoinFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 			/// method.

@@ -15,14 +15,16 @@ macro_rules! IPersist_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(idispatch_vt, IPersistVT);
+			fn ipersist_vt(&self) -> &IPersistVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 			/// method.
 			pub fn GetClassID(&self) -> WinResult<CLSID> {
 				let mut clsid = CLSID::new(0, 0, 0, 0, 0);
 				hr_to_winresult(
-					(self.idispatch_vt().GetClassID)(
+					(self.ipersist_vt().GetClassID)(
 						self.ppvt,
 						ref_as_pvoid(&mut clsid),
 					),

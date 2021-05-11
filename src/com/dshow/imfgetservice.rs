@@ -14,7 +14,9 @@ macro_rules! IMFGetService_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(imfgetservice_vt, IMFGetServiceVT);
+			fn imfgetservice_vt(&self) -> &IMFGetServiceVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IMFGetService::GetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
 			/// method.

@@ -14,7 +14,9 @@ macro_rules! IMediaFilter_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(imediafilter_vt, IMediaFilterVT);
+			fn imediafilter_vt(&self) -> &IMediaFilterVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IMediaFilter::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 			/// method.

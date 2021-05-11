@@ -14,7 +14,9 @@ macro_rules! ITypeInfo_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(itypeinfo_vt, ITypeInfoVT);
+			fn itypeinfo_vt(&self) -> &ITypeInfoVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`ITypeInfo::CreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 			/// method.

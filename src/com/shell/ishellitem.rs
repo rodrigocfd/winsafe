@@ -17,7 +17,9 @@ macro_rules! IShellItem_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(ishellitem_vt, IShellItemVT);
+			fn ishellitem_vt(&self) -> &IShellItemVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// Calls
 			/// [`SHCreateItemFromParsingName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)

@@ -16,7 +16,9 @@ macro_rules! IMediaSeeking_impl {
 		}
 
 		impl $name {
-			ppvt_conv!(imediaseeking_vt, IMediaSeekingVT);
+			fn imediaseeking_vt(&self) -> &IMediaSeekingVT {
+				unsafe { &**(self.ppvt as PPComVT<_>) }
+			}
 
 			/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 			/// method.
