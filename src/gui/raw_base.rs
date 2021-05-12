@@ -52,7 +52,7 @@ impl RawBase {
 						// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 						// Retrieve ATOM of existing window class.
 						let hinst = wcx.hInstance;
-						hinst.GetClassInfoEx(&wcx.lpszClassName(), wcx)
+						hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap(), wcx)
 					},
 					_ => Err(err), // any other error will bubble up
 				}
@@ -97,7 +97,8 @@ impl RawBase {
 				wcx.lpfnWndProc.map_or(0, |p| p as usize),
 				wcx.cbClsExtra, wcx.cbWndExtra,
 				wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
-				wcx.lpszMenuName().as_ptr() as usize, wcx.hIconSm,
+				wcx.lpszMenuName().map_or(0, |lpsz| lpsz.as_ptr() as usize),
+				wcx.hIconSm,
 			),
 		)
 	}

@@ -14,6 +14,7 @@ pub(crate) type PVOID = *mut std::ffi::c_void;
 
 pub(crate) mod advapi32;
 pub(crate) mod comctl32;
+pub(crate) mod comdlg32;
 pub(crate) mod gdi32;
 pub(crate) mod kernel32;
 pub(crate) mod msimg32;

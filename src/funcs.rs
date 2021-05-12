@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::BroadNull;
-use crate::ffi::{advapi32, BOOL, comctl32, HRESULT, kernel32, user32};
+use crate::ffi::{advapi32, BOOL, comctl32, comdlg32, HRESULT, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::MsgSend;
 use crate::privs::{
@@ -20,6 +20,7 @@ use crate::privs::{
 };
 use crate::structs::{
 	ATOM,
+	CHOOSECOLOR,
 	COLORREF,
 	FILETIME,
 	MSG,
@@ -48,6 +49,48 @@ pub fn AdjustWindowRectEx(
 			)
 		},
 	)
+}
+
+/// [`ChooseColor`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms646912(v=vs.85))
+/// function.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{co, ChooseColor, CHOOSECOLOR};
+///
+/// let parent_hwnd: HWND; // initialize it somewhere...
+///
+/// let mut cc = CHOOSECOLOR::default();
+/// let mut custom_colors = [COLORREF::new(255, 255, 255); 16];
+///
+/// cc.hwndOwner = parent_hwnd;
+/// cc.Flags = co::CC::ANYCOLOR | co::CC::FULLOPEN | co::CC::RGBINIT;
+/// cc.rgbResult = COLORREF::new(255, 0, 0); // color initially chosen
+/// cc.set_lpCustColors(&mut custom_colors);
+///
+/// if ChooseColor(&mut cc).unwrap() {
+///     println!("The color: {} {} {}",
+///         cc.rgbResult.GetRValue(),
+///         cc.rgbResult.GetGValue(),
+///         cc.rgbResult.GetBValue(),
+///     );
+/// }
+/// ```
+pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> WinResult<bool> {
+	match unsafe { comdlg32::ChooseColorW(ref_as_pvoid(lpcc)) } {
+		0 => match CommDlgExtendedError() {
+			co::ERROR::SUCCESS => Ok(false),
+			err => Err(err),
+		},
+		_ => Ok(true),
+	}
+}
+
+/// [`CommDlgExtendedError`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
+/// function.
+pub fn CommDlgExtendedError() -> co::ERROR {
+	co::ERROR(unsafe { comdlg32::CommDlgExtendedError() })
 }
 
 /// [`CopyFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
@@ -250,7 +293,7 @@ pub fn GetFileAttributes(lpFileName: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 /// [`WinResult`](crate::WinResult) evaluates to `Err`, so it's unlikely that
 /// you ever need to call it.
 pub fn GetLastError() -> co::ERROR {
-	unsafe { co::ERROR(kernel32::GetLastError()) }
+	co::ERROR(unsafe { kernel32::GetLastError() })
 }
 
 /// [`GetLogicalDriveStrings`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)

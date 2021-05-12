@@ -172,7 +172,7 @@ macro_rules! IFileDialog_impl {
 			/// ```rust,ignore
 			/// use winsafe::shell::IFileDialog;
 			///
-			/// let file_dlg: IFileDialog; // initialize it somewhere
+			/// let file_dlg: IFileDialog; // initialize it somewhere...
 			///
 			/// file_dlg.SetFileTypes(&[
 			///     ("Documents", "*.docx;*.txt"),

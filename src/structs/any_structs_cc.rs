@@ -84,8 +84,6 @@ impl Default for IMAGELISTDRAWPARAMS {
 
 /// [`LITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
 pub struct LITEM {
 	pub mask: co::LIF,
@@ -95,6 +93,8 @@ pub struct LITEM {
 	szID: [u16; MAX_LINKID_TEXT],
 	szUrl: [u16; L_MAX_URL_LENGTH],
 }
+
+impl_default_zero!(LITEM);
 
 impl LITEM {
 	/// Returns the `szID` field.
@@ -140,8 +140,9 @@ impl_default_zero!(LVCOLUMN, 'a);
 
 impl<'a> LVCOLUMN<'a> {
 	/// Returns the `pszText` field.
-	pub fn pszText(&self) -> String {
-		WString::from_wchars_nullt(self.pszText).to_string()
+	pub fn pszText(&self) -> Option<String> {
+		unsafe { self.pszText.as_mut() }
+			.map(|psz| WString::from_wchars_nullt(psz).to_string())
 	}
 
 	/// Sets the `pszText` field.
@@ -156,7 +157,7 @@ impl<'a> LVCOLUMN<'a> {
 #[repr(C)]
 pub struct LVFINDINFO<'a> {
 	pub flags: co::LVFI,
-	psz: *const u16,
+	psz: *mut u16,
 	pub lParam: isize,
 	pub pt: POINT,
 	pub vkDirection: co::VK_DIR,
@@ -167,13 +168,14 @@ impl_default_zero!(LVFINDINFO, 'a);
 
 impl<'a> LVFINDINFO<'a> {
 	/// Returns the `psz` field.
-	pub fn psz(&self) -> String {
-		WString::from_wchars_nullt(self.psz).to_string()
+	pub fn psz(&self) -> Option<String> {
+		unsafe { self.psz.as_mut() }
+			.map(|psz| WString::from_wchars_nullt(psz).to_string())
 	}
 
 	/// Sets the `psz` field.
-	pub fn set_psz(&mut self, buf: &'a WString) {
-		self.psz = unsafe { buf.as_ptr() };
+	pub fn set_psz(&mut self, buf: &'a mut WString) {
+		self.psz = unsafe { buf.as_mut_ptr() };
 	}
 }
 
@@ -203,8 +205,9 @@ impl_default_zero!(LVITEM, 'a);
 
 impl<'a> LVITEM<'a> {
 	/// Returns the `pszText` field.
-	pub fn pszText(&self) -> String {
-		WString::from_wchars_nullt(self.pszText).to_string()
+	pub fn pszText(&self) -> Option<String> {
+		unsafe { self.pszText.as_mut() }
+			.map(|psz| WString::from_wchars_nullt(psz).to_string())
 	}
 
 	/// Sets the `pszText` field.
@@ -264,21 +267,28 @@ pub struct NMDATETIMECHANGE {
 
 /// [`NMDATETIMEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatw)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct NMDATETIMEFORMAT {
+pub struct NMDATETIMEFORMAT<'a> {
 	pub nmhdr: NMHDR,
-	pszFormat: *const u16,
+	pszFormat: *mut u16,
 	pub st: SYSTEMTIME,
-	pszDisplay: *const u16,
+	pszDisplay: *mut u16,
 	szDisplay: [u16; 64], // used as a buffer to pszDisplay
+	m_pszFormat: PhantomData<&'a u16>,
 }
 
-impl NMDATETIMEFORMAT {
+impl_default_zero!(NMDATETIMEFORMAT, 'a);
+
+impl<'a> NMDATETIMEFORMAT<'a> {
 	/// Returns the `pszFormat` field.
-	pub fn pszFormat(&self) -> String {
-		WString::from_wchars_nullt(self.pszFormat).to_string()
+	pub fn pszFormat(&self) -> Option<String> {
+		unsafe { self.pszFormat.as_mut() }
+			.map(|psz| WString::from_wchars_nullt(psz).to_string())
+	}
+
+	/// Sets the `pszFormat` field.
+	pub fn set_pszFormat(&mut self, buf: &'a mut WString) {
+		self.pszFormat = unsafe { buf.as_mut_ptr() };
 	}
 
 	/// Returns the `pszDisplay` field.
@@ -294,19 +304,26 @@ impl NMDATETIMEFORMAT {
 
 /// [`NMDATETIMEFORMATQUERY`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatqueryw)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct NMDATETIMEFORMATQUERY {
+pub struct NMDATETIMEFORMATQUERY<'a> {
 	pub nmhdr: NMHDR,
-	pszFormat: *const u16,
+	pszFormat: *mut u16,
 	pub szMax: SIZE,
+	m_pszFormat: PhantomData<&'a u16>,
 }
 
-impl NMDATETIMEFORMATQUERY {
+impl_default_zero!(NMDATETIMEFORMATQUERY, 'a);
+
+impl<'a> NMDATETIMEFORMATQUERY<'a> {
 	/// Returns the `pszFormat` field.
-	pub fn pszFormat(&self) -> String {
-		WString::from_wchars_nullt(self.pszFormat).to_string()
+	pub fn pszFormat(&self) -> Option<String> {
+		unsafe { self.pszFormat.as_mut() }
+			.map(|psz| WString::from_wchars_nullt(psz).to_string())
+	}
+
+	/// Sets the `pszFormat` field.
+	pub fn set_pszFormat(&mut self, buf: &'a mut WString) {
+		self.pszFormat = unsafe { buf.as_mut_ptr() };
 	}
 }
 
@@ -315,37 +332,35 @@ impl NMDATETIMEFORMATQUERY {
 ///
 /// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct NMDATETIMESTRING {
+pub struct NMDATETIMESTRING<'a> {
 	pub nmhdr: NMHDR,
-	pszUserString: *const u16,
+	pszUserString: *mut u16,
 	pub st: SYSTEMTIME,
 	pub dwFlags: co::GDT,
+	m_pszUserString: PhantomData<&'a u16>,
 }
 
-impl NMDATETIMESTRING {
-	/// Returns the `pszUserString` field.
-	pub fn pszUserString(&self) -> String {
-		WString::from_wchars_nullt(self.pszUserString).to_string()
-	}
+impl_default_zero!(NMDATETIMESTRING, 'a);
+
+impl<'a> NMDATETIMESTRING<'a> {
+	string_get_set!('a, pszUserString, set_pszUserString);
 }
 
 /// [`NMDATETIMEWMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimewmkeydownw)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct NMDATETIMEWMKEYDOWN {
+pub struct NMDATETIMEWMKEYDOWN<'a> {
 	pub nmhdr: NMHDR,
 	pub nVirtKey: i32,
-	pszFormat: *const u16,
+	pszFormat: *mut u16,
 	pub st: SYSTEMTIME,
+	m_pszFormat: PhantomData<&'a u16>,
 }
 
-impl NMDATETIMEWMKEYDOWN {
-	/// Returns the `pszFormat` field.
-	pub fn pszFormat(&self) -> String {
-		WString::from_wchars_nullt(self.pszFormat).to_string()
-	}
+impl_default_zero!(NMDATETIMEWMKEYDOWN, 'a);
+
+impl<'a> NMDATETIMEWMKEYDOWN<'a> {
+	string_get_set!('a, pszFormat, set_pszFormat);
 }
 
 /// [`NMDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)

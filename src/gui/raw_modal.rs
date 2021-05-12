@@ -240,7 +240,7 @@ impl WindowModalOpts {
 			None => HINSTANCE::oem().LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
 		};
 
-		if wcx.lpszClassName().is_empty() {
+		if wcx.lpszClassName().is_none() {
 			*class_name_buf = RawBase::generate_wcx_class_name_hash(&wcx);
 			wcx.set_lpszClassName(class_name_buf);
 		}

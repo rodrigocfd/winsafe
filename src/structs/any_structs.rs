@@ -5,13 +5,13 @@
 use std::ffi::c_void;
 use std::marker::PhantomData;
 
-use crate::aliases::WNDPROC;
+use crate::aliases::{CCHOOKPROC, WNDPROC};
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPlace, IdStr};
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
 use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HEVENT, HICON, HINSTANCE, HMENU, HWND};
 use crate::privs::LF_FACESIZE;
-use crate::structs::ATOM;
+use crate::structs::{ATOM, COLORREF};
 use crate::unions::{ColorrefDib, ColorrefHbitmap};
 use crate::WString;
 
@@ -110,6 +110,45 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 	pub nFileIndexLow: u32,
 }
 
+/// [`CHOOSECOLOR`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-choosecolorw-r1)
+/// struct.
+#[repr(C)]
+pub struct CHOOSECOLOR<'a, 'b> {
+	pub lStructSize: u32,
+	pub hwndOwner: HWND,
+	pub hInstance: HWND,
+	pub rgbResult: COLORREF,
+	lpCustColors: *mut [COLORREF; 16],
+	pub Flags: co::CC,
+	pub lCustData: isize,
+	pub lpfnHook: Option<CCHOOKPROC>,
+	lpTemplateName: *mut u16,
+	m_lpCustColors: PhantomData<&'a COLORREF>,
+	m_lpTemplateName: PhantomData<&'b u16>,
+}
+
+impl<'a, 'b> Default for CHOOSECOLOR<'a, 'b> {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.lStructSize = std::mem::size_of::<Self>() as _;
+		obj
+	}
+}
+
+impl<'a, 'b> CHOOSECOLOR<'a, 'b> {
+	/// Returns the `lpCustColors` field.
+	pub fn lpCustColors(&self) -> Option<&mut [COLORREF; 16]> {
+		unsafe { self.lpCustColors.as_mut() }
+	}
+
+	// Sets the `lpCustColors` field.
+	pub fn set_lpCustColors(&mut self, buf: &'a mut [COLORREF; 16]) {
+		self.lpCustColors = buf;
+	}
+
+	string_get_set!('b, lpTemplateName, set_lpTemplateName);
+}
+
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
 /// struct.
 #[repr(C)]
@@ -123,8 +162,8 @@ pub struct CREATESTRUCT<'a, 'b> {
 	pub y: i32,
 	pub x: i32,
 	pub style: co::WS,
-	lpszName: *const u16,
-	lpszClass: *const u16,
+	lpszName: *mut u16,
+	lpszClass: *mut u16,
 	pub dwExStyle: co::WS_EX,
 	m_lpszName: PhantomData<&'a u16>,
 	m_lpszClass: PhantomData<&'b u16>,
@@ -133,25 +172,8 @@ pub struct CREATESTRUCT<'a, 'b> {
 impl_default_zero!(CREATESTRUCT, 'a, 'b);
 
 impl<'a, 'b> CREATESTRUCT<'a, 'b> {
-	/// Returns the `lpszName` field.
-	pub fn lpszName(&self) -> String {
-		WString::from_wchars_nullt(self.lpszName).to_string()
-	}
-
-	/// Sets the `lpszName` field.
-	pub fn set_lpszName(&mut self, buf: &'a WString) {
-		self.lpszName = unsafe { buf.as_ptr() };
-	}
-
-	/// Returns the `lpszClass` field.
-	pub fn lpszClass(&self) -> String {
-		WString::from_wchars_nullt(self.lpszClass).to_string()
-	}
-
-	/// Sets the `lpszClass` field.
-	pub fn set_lpszClass(&mut self, buf: &'b WString) {
-		self.lpszClass = unsafe { buf.as_ptr() };
-	}
+	string_get_set!('a, lpszName, set_lpszName);
+	string_get_set!('b, lpszClass, set_lpszClass);
 }
 
 /// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
@@ -316,12 +338,12 @@ pub struct NCCALCSIZE_PARAMS<'a> {
 
 impl<'a> NCCALCSIZE_PARAMS<'a> {
 	/// Returns the `lppos` field.
-	pub fn lppos(&mut self) -> Option<&mut WINDOWPOS> {
+	pub fn lppos(&self) -> Option<&mut WINDOWPOS> {
 		unsafe { self.lppos.as_mut() }
 	}
 
 	/// Sets the `lppos` field.
-	pub fn set_lppos(&mut self, lppos: &mut WINDOWPOS) {
+	pub fn set_lppos(&mut self, lppos: &'a mut WINDOWPOS) {
 		self.lppos = lppos;
 	}
 }
@@ -531,17 +553,30 @@ impl Default for SCROLLINFO {
 /// [`SECURITY_ATTRIBUTES`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
 #[repr(C)]
-pub struct SECURITY_ATTRIBUTES {
+pub struct SECURITY_ATTRIBUTES<'a> {
 	nLength: u32,
-	pub lpSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
-	pub bInheritHandle: u32,
+	lpSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
+	pub bInheritHandle: i32,
+	m_lpSecurityDescriptor: PhantomData<&'a SECURITY_DESCRIPTOR>,
 }
 
-impl Default for SECURITY_ATTRIBUTES {
+impl<'a> Default for SECURITY_ATTRIBUTES<'a> {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.nLength = std::mem::size_of::<Self>() as _;
 		obj
+	}
+}
+
+impl<'a> SECURITY_ATTRIBUTES<'a> {
+	/// Returns the `lpSecurityDescriptor` field.
+	pub fn lpSecurityDescriptor(&self) -> Option<&mut SECURITY_DESCRIPTOR> {
+		unsafe { self.lpSecurityDescriptor.as_mut() }
+	}
+
+	/// Sets the `lppos` field.
+	pub fn set_lpSecurityDescriptor(&mut self, sd: &'a mut SECURITY_DESCRIPTOR) {
+		self.lpSecurityDescriptor = sd;
 	}
 }
 
@@ -801,8 +836,8 @@ pub struct WNDCLASSEX<'a, 'b> {
 	pub hIcon: HICON,
 	pub hCursor: HCURSOR,
 	pub hbrBackground: HBRUSH,
-	lpszMenuName: *const u16,
-	lpszClassName: *const u16,
+	lpszMenuName: *mut u16,
+	lpszClassName: *mut u16,
 	pub hIconSm: HICON,
 	m_lpszMenuName: PhantomData<&'a u16>,
 	m_lpszClassName: PhantomData<&'b u16>,
@@ -818,28 +853,22 @@ impl<'a, 'b> Default for WNDCLASSEX<'a, 'b> {
 
 impl<'a, 'b> WNDCLASSEX<'a, 'b> {
 	/// Returns the `lpszMenuName` field.
-	pub fn lpszMenuName(&self) -> IdStr {
-		if HIDWORD(self.lpszMenuName as _) == 0
-			&& HIWORD(LODWORD(self.lpszMenuName as _)) == 0 // https://stackoverflow.com/a/9806654/6923555
-		{
-			IdStr::Id(LOWORD(LODWORD(self.lpszMenuName as _)) as _)
-		} else {
-			IdStr::Str(WString::from_wchars_nullt(self.lpszMenuName))
-		}
+	pub fn lpszMenuName(&self) -> Option<IdStr> {
+		unsafe { self.lpszMenuName.as_mut() }
+			.map(|lp| {
+				let lp2 = lp as *mut _; // https://stackoverflow.com/a/9806654/6923555
+				if HIDWORD(lp2 as _) == 0 && HIWORD(LODWORD(lp2 as _)) == 0 {
+					IdStr::Id(LOWORD(LODWORD(lp2 as _)) as _)
+				} else {
+					IdStr::Str(WString::from_wchars_nullt(lp))
+				}
+			})
 	}
 
 	/// Sets the `lpszMenuName` field.
-	pub fn set_lpszMenuName(&mut self, menu_name: &'a IdStr) {
-		self.lpszMenuName = menu_name.as_ptr();
+	pub fn set_lpszMenuName(&mut self, menu_name: &'a mut IdStr) {
+		self.lpszMenuName = menu_name.as_mut_ptr();
 	}
 
-	/// Returns the `lpszClassName` field.
-	pub fn lpszClassName(&self) -> String {
-		WString::from_wchars_nullt(self.lpszClassName).to_string()
-	}
-
-	/// Sets the `lpszClassName` field.
-	pub fn set_lpszClassName(&mut self, buf: &'b WString) {
-		self.lpszClassName = unsafe { buf.as_ptr() };
-	}
+	string_get_set!('b, lpszClassName, set_lpszClassName);
 }

@@ -306,6 +306,14 @@ impl IdStr {
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
+
+	/// Converts the internal value to a `*mut u16`.
+	pub fn as_mut_ptr(&mut self) -> *mut u16 {
+		match self {
+			Self::Id(id) => *id as _,
+			Self::Str(u16) => unsafe { u16.as_mut_ptr() },
+		}
+	}
 }
 
 /// Variant parameter for:
