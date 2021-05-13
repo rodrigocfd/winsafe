@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! ITypeInfo_impl {
+macro_rules! pub_struct_ITypeInfo {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -8,7 +8,7 @@ macro_rules! ITypeInfo_impl {
 		use crate::com::IUnknown;
 		use crate::com::vt::ITypeInfoVT;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -39,7 +39,7 @@ macro_rules! ITypeInfo_impl {
 	};
 }
 
-ITypeInfo_impl! {
+pub_struct_ITypeInfo! {
 	/// [`ITypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
 	/// COM interface over [`ITypeInfoVT`](crate::ITypeInfoVT). Inherits from
 	/// [`IUnknown`](crate::IUnknown).

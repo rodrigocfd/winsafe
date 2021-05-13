@@ -1,5 +1,5 @@
 /// Base to all const type macros, with basic impls.
-macro_rules! const_type_base {
+macro_rules! pub_struct_const_base {
 	(
 		$name:ident, $ntype:ty,
 		$(#[$doc:meta])*
@@ -97,7 +97,7 @@ macro_rules! const_type_base {
 }
 
 /// Declares multiple public constant values for the given const type.
-macro_rules! const_type_pub_values {
+macro_rules! impl_pub_const_values {
 	(
 		$name:ident,
 		$(
@@ -115,7 +115,7 @@ macro_rules! const_type_pub_values {
 }
 
 /// Declares multiple private constant values for the given const type.
-macro_rules! const_type_priv_values {
+macro_rules! impl_const_values {
 	(
 		$name:ident,
 		$(
@@ -133,7 +133,7 @@ macro_rules! const_type_priv_values {
 }
 
 /// Declares the type of a constant, along with values.
-macro_rules! const_type {
+macro_rules! pub_struct_const {
 	(
 		$name:ident, $ntype:ty,
 		$(#[$doc:meta])*
@@ -143,7 +143,7 @@ macro_rules! const_type {
 			$pubvalname:ident, $pubval:expr
 		)*
 	) => {
-		const_type_base! {
+		pub_struct_const_base! {
 			$name, $ntype,
 			$(#[$doc])*
 			#[derive(Debug)]
@@ -156,7 +156,7 @@ macro_rules! const_type {
 		}
 
 		// All public const values.
-		const_type_pub_values! { $name,
+		impl_pub_const_values! { $name,
 			$(
 				$(#[$pubvaldoc])*
 				$pubvalname, $pubval
@@ -167,7 +167,7 @@ macro_rules! const_type {
 
 /// Declares the type of a constant, along with public values. Won't include
 /// `Debug` and `Display` impls.
-macro_rules! const_type_no_debug_display {
+macro_rules! pub_struct_const_no_debug_display {
 	(
 		$name:ident, $ntype:ty,
 		$(#[$doc:meta])*
@@ -177,13 +177,13 @@ macro_rules! const_type_no_debug_display {
 			$pubvalname:ident, $pubval:expr
 		)*
 	) => {
-		const_type_base! {
+		pub_struct_const_base! {
 			$name, $ntype,
 			$(#[$doc])*
 		}
 
 		// All public const values.
-		const_type_pub_values! { $name,
+		impl_pub_const_values! { $name,
 			$(
 				$(#[$pubvaldoc])*
 				$pubvalname, $pubval
@@ -194,7 +194,7 @@ macro_rules! const_type_no_debug_display {
 
 /// Declares the type of a constant for a window message, convertible to
 /// [`WM`](crate::co::WM) constant type, along with private and public values.
-macro_rules! const_type_wm {
+macro_rules! pub_struct_const_wm {
 	(
 		$name:ident,
 		$(#[$doc:meta])*
@@ -209,7 +209,7 @@ macro_rules! const_type_wm {
 			$pubvalname:ident, $pubval:expr
 		)*
 	) => {
-		const_type! {
+		pub_struct_const! {
 			$name, u32,
 			$(#[$doc])*
 			=>
@@ -226,7 +226,7 @@ macro_rules! const_type_wm {
 		}
 
 		// All private const values.
-		const_type_priv_values! { $name,
+		impl_const_values! { $name,
 			$(
 				$(#[$privvaldoc])*
 				$privvalname, $privval
@@ -238,7 +238,7 @@ macro_rules! const_type_wm {
 /// Declares the type of a constant for a WM_COMMAND notification code,
 /// convertible to [`CMD`](crate::co::CMD) constant type, along with public
 /// values.
-macro_rules! const_type_cmd {
+macro_rules! pub_struct_const_cmd {
 	(
 		$name:ident,
 		$(#[$doc:meta])*
@@ -248,7 +248,7 @@ macro_rules! const_type_cmd {
 			$pubvalname:ident, $pubval:expr
 		)*
 	) => {
-		const_type! {
+		pub_struct_const! {
 			$name, u16,
 			$(#[$doc])*
 			=>
@@ -269,7 +269,7 @@ macro_rules! const_type_cmd {
 /// Declares the type of a constant for a WM_NOTIFY notification code,
 /// convertible to [`NM`](crate::co::NM) constant type, along with private and
 /// public values.
-macro_rules! const_type_nm {
+macro_rules! pub_struct_const_nm {
 	(
 		$name:ident,
 		$(#[$doc:meta])*
@@ -284,7 +284,7 @@ macro_rules! const_type_nm {
 			$pubvalname:ident, $pubval:expr
 		)*
 	) => {
-		const_type! {
+		pub_struct_const! {
 			$name, i32,
 			$(#[$doc])*
 			=>
@@ -301,7 +301,7 @@ macro_rules! const_type_nm {
 		}
 
 		// All private const values.
-		const_type_priv_values! { $name,
+		impl_const_values! { $name,
 			$(
 				$(#[$privvaldoc])*
 				$privvalname, $privval
@@ -312,7 +312,7 @@ macro_rules! const_type_nm {
 
 /// Declares the type of a constant for a window style, convertible to
 /// [`WS`](crate::co::WS) constant type, along with public values.
-macro_rules! const_type_ws {
+macro_rules! pub_struct_const_ws {
 	(
 		$name:ident,
 		$(#[$doc:meta])*
@@ -322,7 +322,7 @@ macro_rules! const_type_ws {
 			$pubvalname:ident, $pubval:expr
 		)*
 	) => {
-		const_type! {
+		pub_struct_const! {
 			$name, u32,
 			$(#[$doc])*
 			=>
@@ -342,7 +342,7 @@ macro_rules! const_type_ws {
 
 /// Declares the type of a constant for an extended window style, convertible to
 /// [`WS_EX`](crate::co::WS_EX) constant type, along with public values.
-macro_rules! const_type_wsex {
+macro_rules! pub_struct_const_wsex {
 	(
 		$name:ident,
 		$(#[$doc:meta])*
@@ -352,7 +352,7 @@ macro_rules! const_type_wsex {
 			$pubvalname:ident, $pubval:expr
 		)*
 	) => {
-		const_type! {
+		pub_struct_const! {
 			$name, u32,
 			$(#[$doc])*
 			=>

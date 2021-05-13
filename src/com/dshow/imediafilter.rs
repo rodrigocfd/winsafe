@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IMediaFilter_impl {
+macro_rules! pub_struct_IMediaFilter {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -8,7 +8,7 @@ macro_rules! IMediaFilter_impl {
 		use crate::com::dshow::vt::IMediaFilterVT;
 		use crate::privs::hr_to_winresult_bool;
 
-		IPersist_impl! {
+		pub_struct_IPersist! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -41,7 +41,7 @@ macro_rules! IMediaFilter_impl {
 	};
 }
 
-IMediaFilter_impl! {
+pub_struct_IMediaFilter! {
 	/// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
 	/// COM interface over [`IMediaFilterVT`](crate::dshow::vt::IMediaFilterVT).
 	/// Inherits from [`IPersist`](crate::IPersist),

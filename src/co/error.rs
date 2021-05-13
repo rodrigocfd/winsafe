@@ -7,7 +7,7 @@ use crate::handles::HLOCAL;
 use crate::structs::LANGID;
 use crate::WString;
 
-const_type_no_debug_display! { ERROR, u32,
+pub_struct_const_no_debug_display! { ERROR, u32,
 	/// A Windows
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// (`u32`) retrieved by

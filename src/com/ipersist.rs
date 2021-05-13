@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IPersist_impl {
+macro_rules! pub_struct_IPersist {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -9,7 +9,7 @@ macro_rules! IPersist_impl {
 		use crate::privs::ref_as_pvoid;
 		use crate::structs::CLSID;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -34,7 +34,7 @@ macro_rules! IPersist_impl {
 	};
 }
 
-IPersist_impl! {
+pub_struct_IPersist! {
 	/// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
 	/// COM interface over [`IPersistVT`](crate::IPersistVT). Inherits from
 	/// [`IUnknown`](crate::IUnknown).

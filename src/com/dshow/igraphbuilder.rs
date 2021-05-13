@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IGraphBuilder_impl {
+macro_rules! pub_struct_IGraphBuilder {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -10,7 +10,7 @@ macro_rules! IGraphBuilder_impl {
 		use crate::handles::HFILE;
 		use crate::privs::hr_to_winresult_bool;
 
-		IFilterGraph_impl! {
+		pub_struct_IFilterGraph! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -88,7 +88,7 @@ macro_rules! IGraphBuilder_impl {
 	};
 }
 
-IGraphBuilder_impl! {
+pub_struct_IGraphBuilder! {
 	/// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
 	/// COM interface over
 	/// [`IGraphBuilderVT`](crate::dshow::vt::IGraphBuilderVT). Inherits from

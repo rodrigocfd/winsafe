@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IShellItemArray_impl {
+macro_rules! pub_struct_IShellItemArray {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -9,7 +9,7 @@ macro_rules! IShellItemArray_impl {
 		use crate::com::shell::IShellItem;
 		use crate::com::shell::vt::{IShellItemVT, IShellItemArrayVT};
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -64,7 +64,7 @@ macro_rules! IShellItemArray_impl {
 	};
 }
 
-IShellItemArray_impl! {
+pub_struct_IShellItemArray! {
 	/// [`IShellItemArray`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
 	/// COM interface over
 	/// [`IShellItemArrayVT`](crate::shell::vt::IShellItemArrayVT). Inherits

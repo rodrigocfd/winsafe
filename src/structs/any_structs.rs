@@ -54,6 +54,21 @@ pub struct ALTTABINFO {
 
 impl_default_with_size!(ALTTABINFO, cbSize);
 
+/// [`BITMAP`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)
+/// struct.
+#[repr(C)]
+pub struct BITMAP {
+	pub bmType: i32,
+	pub bmWidth: i32,
+	pub bmHeight: i32,
+	pub bmWidthBytes: i32,
+	pub bmPlanes: u16,
+	pub bmBitsPixel: u16,
+	pub bmBits: *mut u8,
+}
+
+impl_default_zero!(BITMAP);
+
 /// [`BITMAPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 /// struct.
 #[repr(C)]
@@ -123,12 +138,12 @@ impl<'a, 'b> CHOOSECOLOR<'a, 'b> {
 		unsafe { self.lpCustColors.as_mut() }
 	}
 
-	// Sets the `lpCustColors` field.
+	/// Sets the `lpCustColors` field.
 	pub fn set_lpCustColors(&mut self, buf: &'a mut [COLORREF; 16]) {
 		self.lpCustColors = buf;
 	}
 
-	string_ptr_get_set!('b, lpTemplateName, set_lpTemplateName);
+	pub_fn_string_ptr_get_set!('b, lpTemplateName, set_lpTemplateName);
 }
 
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
@@ -154,8 +169,8 @@ pub struct CREATESTRUCT<'a, 'b> {
 impl_default_zero!(CREATESTRUCT, 'a, 'b);
 
 impl<'a, 'b> CREATESTRUCT<'a, 'b> {
-	string_ptr_get_set!('a, lpszName, set_lpszName);
-	string_ptr_get_set!('b, lpszClass, set_lpszClass);
+	pub_fn_string_ptr_get_set!('a, lpszName, set_lpszName);
+	pub_fn_string_ptr_get_set!('b, lpszClass, set_lpszClass);
 }
 
 /// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
@@ -199,6 +214,8 @@ pub struct LOGBRUSH {
 	pub lbHatch: ColorrefHbitmap,
 }
 
+impl_default_zero!(LOGBRUSH);
+
 /// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
 #[repr(C)]
@@ -221,7 +238,7 @@ pub struct LOGFONT {
 }
 
 impl LOGFONT {
-	string_arr_get_set!(lfFaceName, set_lfFaceName);
+	pub_fn_string_arr_get_set!(lfFaceName, set_lfFaceName);
 }
 
 /// [`MEMORYSTATUSEX`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
@@ -412,7 +429,7 @@ pub struct OSVERSIONINFOEX {
 impl_default_with_size!(OSVERSIONINFOEX, dwOSVersionInfoSize);
 
 impl OSVERSIONINFOEX {
-	string_arr_get_set!(szCSDVersion, set_szCSDVersion);
+	pub_fn_string_arr_get_set!(szCSDVersion, set_szCSDVersion);
 }
 
 /// [`OVERLAPPED`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped)
@@ -664,8 +681,8 @@ pub struct TIME_ZONE_INFORMATION {
 }
 
 impl TIME_ZONE_INFORMATION {
-	string_arr_get_set!(standardName, set_standardName);
-	string_arr_get_set!(daylightName, set_daylightName);
+	pub_fn_string_arr_get_set!(standardName, set_standardName);
+	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
 
 /// [`TRACKMOUSEEVENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)
@@ -788,5 +805,5 @@ impl<'a, 'b> WNDCLASSEX<'a, 'b> {
 		self.lpszMenuName = menu_name.as_mut_ptr();
 	}
 
-	string_ptr_get_set!('b, lpszClassName, set_lpszClassName);
+	pub_fn_string_ptr_get_set!('b, lpszClassName, set_lpszClassName);
 }

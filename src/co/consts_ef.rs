@@ -1,6 +1,6 @@
 use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS};
 
-const_type_wm! { EM,
+pub_struct_const_wm! { EM,
 	/// Edit control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -48,14 +48,14 @@ const_type_wm! { EM,
 	ENABLEFEATURE, 0x00da
 }
 
-const_type! { EMF, u32,
+pub_struct_const! { EMF, u32,
 	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
 	=>
 	LEFT, 0x0000_0000
 	CENTERED, 0x0000_0001
 }
 
-const_type_cmd! { EN,
+pub_struct_const_cmd! { EN,
 	/// Edit control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
 	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
@@ -74,7 +74,7 @@ const_type_cmd! { EN,
 	AFTER_PASTE, 0x0801
 }
 
-const_type! { ENDSESSION, u32,
+pub_struct_const! { ENDSESSION, u32,
 	/// [`WM_ENDSESSION`](crate::msg::wm::EndSession) event (`u32`).
 	=>
 	RESTARTORSHUTDOWN, 0
@@ -83,7 +83,7 @@ const_type! { ENDSESSION, u32,
 	LOGOFF, 0x8000_0000
 }
 
-const_type_ws! { ES,
+pub_struct_const_ws! { ES,
 	/// Edit control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -104,7 +104,7 @@ const_type_ws! { ES,
 	NUMBER, 0x2000
 }
 
-const_type! { FAPPCOMMAND, u16,
+pub_struct_const! { FAPPCOMMAND, u16,
 	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) input event (`u16`).
 	=>
 	MOUSE, 0x8000
@@ -112,7 +112,7 @@ const_type! { FAPPCOMMAND, u16,
 	OEM, 0x1000
 }
 
-const_type! { FF, u8,
+pub_struct_const! { FF, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`PITCH`](crate::co::PITCH).
 	=>
@@ -124,7 +124,7 @@ const_type! { FF, u8,
 	DECORATIVE, 5 << 4
 }
 
-const_type! { FILE_ATTRIBUTE, u32,
+pub_struct_const! { FILE_ATTRIBUTE, u32,
 	/// File attribute
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
 	/// also other flags from [`CreateFile`](crate::HFILE::CreateFile)
@@ -174,7 +174,7 @@ const_type! { FILE_ATTRIBUTE, u32,
 	SECURITY_EFFECTIVE_ONLY, 0x0008_0000
 }
 
-const_type! { FILE_MAP, u32,
+pub_struct_const! { FILE_MAP, u32,
 	/// [`MapViewOfFile`](crate::HFILEMAP::MapViewOfFile) `dwDesiredAccess`
 	/// (`u32`).
 	=>
@@ -188,7 +188,7 @@ const_type! { FILE_MAP, u32,
 	TARGETS_INVALID, 0x4000_0000
 }
 
-const_type! { FILE_RIGHT, u32,
+pub_struct_const! { FILE_RIGHT, u32,
 	/// File access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants)
 	/// (`u32`). Originally has `FILE` prefix.
@@ -209,7 +209,7 @@ const_type! { FILE_RIGHT, u32,
 	WRITE_DATA, 0x0002
 }
 
-const_type! { FILE_SHARE, u32,
+pub_struct_const! { FILE_SHARE, u32,
 	/// [`CreateFile`](crate::HFILE::CreateFile) `dwShareMode` (`u32`).
 	=>
 	NONE, 0
@@ -218,7 +218,7 @@ const_type! { FILE_SHARE, u32,
 	DELETE, 0x0000_0004
 }
 
-const_type! { FILE_STARTING_POINT, u32,
+pub_struct_const! { FILE_STARTING_POINT, u32,
 	/// [`SetFilePointerEx`](crate::HFILE::SetFilePointerEx) `dwMoveMethod`
 	/// (`u32`). Originally has `FILE` prefix.
 	=>
@@ -232,7 +232,7 @@ const_type! { FILE_STARTING_POINT, u32,
 	END, 2
 }
 
-const_type! { FILE_TYPE, u32,
+pub_struct_const! { FILE_TYPE, u32,
 	/// [`GetFileType`](crate::HFILE::GetFileType) return value (`u32`).
 	=>
 	/// The specified file is a character file, typically an LPT device or a
@@ -249,7 +249,7 @@ const_type! { FILE_TYPE, u32,
 	UNKNOWN, 0x0000
 }
 
-const_type! { FORMAT_MESSAGE, u32,
+pub_struct_const! { FORMAT_MESSAGE, u32,
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwFlags` (`u32`).
 	=>
 	ALLOCATE_BUFFER, 0x0000_0100
@@ -261,7 +261,7 @@ const_type! { FORMAT_MESSAGE, u32,
 	MAX_WIDTH_MASK, 0x0000_00ff
 }
 
-const_type! { FW, u32,
+pub_struct_const! { FW, u32,
 	/// [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
 	=>
 	DONTCARE, 0

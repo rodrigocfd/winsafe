@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IMediaSeeking_impl {
+macro_rules! pub_struct_IMediaSeeking {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -10,7 +10,7 @@ macro_rules! IMediaSeeking_impl {
 		use crate::com::dshow::vt::IMediaSeekingVT;
 		use crate::structs::GUID;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -171,7 +171,7 @@ macro_rules! IMediaSeeking_impl {
 	};
 }
 
-IMediaSeeking_impl! {
+pub_struct_IMediaSeeking! {
 	/// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
 	/// COM interface over
 	/// [`IMediaSeekingVT`](crate::dshow::vt::IMediaSeekingVT). Inherits from

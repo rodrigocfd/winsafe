@@ -24,7 +24,7 @@ macro_rules! impl_default_with_size {
 }
 
 /// Implements getter and setter methods for the given `*mut u16` member.
-macro_rules! string_ptr_get_set {
+macro_rules! pub_fn_string_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident) => {
 		/// Returns the string field, if any.
 		pub fn $field(&self) -> Option<String> {
@@ -40,7 +40,7 @@ macro_rules! string_ptr_get_set {
 }
 
 /// Implements getter and setter methods for the given `[u16; N]` member.
-macro_rules! string_arr_get_set {
+macro_rules! pub_fn_string_arr_get_set {
 	($field:ident, $setter:ident) => {
 		/// Returns the string field.
 		pub fn $field(&self) -> String {

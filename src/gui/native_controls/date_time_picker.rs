@@ -117,7 +117,7 @@ impl DateTimePicker {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	ctrlid_hwnd_on_onsubclass!(DateTimePickerEvents);
+	pub_fn_ctrlid_hwnd_on_onsubclass!(DateTimePickerEvents);
 }
 
 //------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IFileDialog_impl {
+macro_rules! pub_struct_IFileDialog {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -11,7 +11,7 @@ macro_rules! IFileDialog_impl {
 		use crate::structs::GUID;
 		use crate::WString;
 
-		IModalWindow_impl! {
+		pub_struct_IModalWindow! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -246,7 +246,7 @@ macro_rules! IFileDialog_impl {
 	};
 }
 
-IFileDialog_impl! {
+pub_struct_IFileDialog! {
 	/// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
 	/// COM interface over [`IFileDialogVT`](crate::shell::vt::IFileDialogVT).
 	/// Inherits from [`IModalWindow`](crate::shell::IModalWindow),

@@ -1,13 +1,13 @@
 #![allow(non_snake_case)]
 
-macro_rules! IFileSaveDialog_impl {
+macro_rules! pub_struct_IFileSaveDialog {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
 	) => {
 		use crate::com::shell::vt::IFileSaveDialogVT;
 
-		IFileDialog_impl! {
+		pub_struct_IFileDialog! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -28,7 +28,7 @@ macro_rules! IFileSaveDialog_impl {
 	};
 }
 
-IFileSaveDialog_impl! {
+pub_struct_IFileSaveDialog! {
 	/// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
 	/// COM interface over
 	/// [`IFileSaveDialogVT`](crate::shell::vt::IFileSaveDialogVT). Inherits

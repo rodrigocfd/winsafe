@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IBaseFilter_impl {
+macro_rules! pub_struct_IBaseFilter {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -10,7 +10,7 @@ macro_rules! IBaseFilter_impl {
 		use crate::com::funcs::CoTaskMemFree;
 		use crate::WString;
 
-		IMediaFilter_impl! {
+		pub_struct_IMediaFilter! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -50,7 +50,7 @@ macro_rules! IBaseFilter_impl {
 	};
 }
 
-IBaseFilter_impl! {
+pub_struct_IBaseFilter! {
 	/// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
 	/// COM interface over [`IBaseFilterVT`](crate::dshow::vt::IBaseFilterVT).
 	/// Inherits from [`IMediaFilter`](crate::dshow::IMediaFilter),

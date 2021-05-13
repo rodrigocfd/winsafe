@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IModalWindow_impl {
+macro_rules! pub_struct_IModalWindow {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -10,7 +10,7 @@ macro_rules! IModalWindow_impl {
 		use crate::funcs::HRESULT_FROM_WIN32;
 		use crate::handles::HWND;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -36,7 +36,7 @@ macro_rules! IModalWindow_impl {
 	};
 }
 
-IModalWindow_impl! {
+pub_struct_IModalWindow! {
 	/// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
 	/// COM interface over [`IModalWindowVT`](crate::shell::vt::IModalWindowVT).
 	/// Inherits from [`IUnknown`](crate::IUnknown).

@@ -2,7 +2,7 @@
 /// * base_ref;
 /// * hwnd;
 /// * on_subclass.
-macro_rules! hwnd_onsubclass {
+macro_rules! pub_fn_hwnd_onsubclass {
 	() => {
 		/// Returns a reference to the underlying `NativeControlBase`, used in
 		/// `hwndref_from_child` downcasting function.
@@ -43,9 +43,9 @@ macro_rules! hwnd_onsubclass {
 /// * hwnd;
 /// * on;
 /// * on_subclass.
-macro_rules! hwnd_on_onsubclass {
+macro_rules! pub_fn_hwnd_on_onsubclass {
 	($evstruc:ident) => {
-		hwnd_onsubclass!();
+		pub_fn_hwnd_onsubclass!();
 
 		/// Exposes the control events.
 		///
@@ -74,9 +74,9 @@ macro_rules! hwnd_on_onsubclass {
 /// * hwnd;
 /// * on;
 /// * on_subclass.
-macro_rules! ctrlid_hwnd_on_onsubclass {
+macro_rules! pub_fn_ctrlid_hwnd_on_onsubclass {
 	($evstruc: ident) => {
-		hwnd_on_onsubclass!($evstruc);
+		pub_fn_hwnd_on_onsubclass!($evstruc);
 
 		/// Returns the control ID.
 		pub fn ctrl_id(&self) -> i32 {

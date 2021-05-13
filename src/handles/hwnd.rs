@@ -20,7 +20,7 @@ use crate::structs::{
 };
 use crate::WString;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to a
 	/// [window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
 	HWND

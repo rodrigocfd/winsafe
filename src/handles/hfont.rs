@@ -4,11 +4,11 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::privs::ref_as_pcvoid;
+use crate::privs::{ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::LOGFONT;
 use crate::WString;
 
-hgdiobj_type! {
+pub_struct_handle_gdi! {
 	/// Handle to a
 	/// [font](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 	HFONT
@@ -51,5 +51,23 @@ impl HFONT {
 		unsafe { gdi32::CreateFontIndirectW(ref_as_pcvoid(lplf)).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
+	/// method.
+	pub fn GetObject(self, pv: &mut LOGFONT) -> WinResult<()> {
+		match unsafe {
+			gdi32::GetObjectW(
+				self.ptr,
+				std::mem::size_of::<LOGFONT>() as _,
+				ref_as_pvoid(pv),
+			)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(()), // not really an error
+				err => Err(err),
+			},
+			_ => Ok(()),
+		}
 	}
 }

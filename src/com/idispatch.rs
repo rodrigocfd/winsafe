@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IDispatch_impl {
+macro_rules! pub_struct_IDispatch {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -9,7 +9,7 @@ macro_rules! IDispatch_impl {
 		use crate::com::vt::{IDispatchVT, ITypeInfoVT};
 		use crate::structs::LCID;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -45,7 +45,7 @@ macro_rules! IDispatch_impl {
 	};
 }
 
-IDispatch_impl! {
+pub_struct_IDispatch! {
 	/// [`IDispatch`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
 	/// COM interface over [`IDispatchVT`](crate::IDispatchVT). Inherits from
 	/// [`IUnknown`](crate::IUnknown).

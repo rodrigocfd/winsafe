@@ -5,7 +5,7 @@ use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
-ctrl_events_proxy! {
+pub_struct_ctrl_events_proxy! {
 	/// Exposes button control
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
 	///
@@ -19,14 +19,14 @@ ctrl_events_proxy! {
 }
 
 impl ButtonEvents {
-	nfy_event_p! { bcn_drop_down, co::BCN::DROPDOWN.into(), NMBCDROPDOWN,
+	pub_fn_nfy_event_param! { bcn_drop_down, co::BCN::DROPDOWN.into(), NMBCDROPDOWN,
 		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.
 		///
 		/// Sent when the user clicks a drop down arrow on a button.
 	}
 
-	nfy_event_p! { bcn_hot_item_change, co::BCN::HOTITEMCHANGE.into(), NMBCHOTITEM,
+	pub_fn_nfy_event_param! { bcn_hot_item_change, co::BCN::HOTITEMCHANGE.into(), NMBCHOTITEM,
 		/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
 		/// notification.
 		///
@@ -34,7 +34,7 @@ impl ButtonEvents {
 		/// leaving the client area of the button control.
 	}
 
-	cmd_event! { bn_clicked, co::BN::CLICKED.into(),
+	pub_fn_cmd_event! { bn_clicked, co::BN::CLICKED.into(),
 		/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 		/// command notification.
 		///
@@ -56,7 +56,7 @@ impl ButtonEvents {
 		/// ```
 	}
 
-	cmd_event! { bn_dbl_clk, co::BN::DBLCLK.into(),
+	pub_fn_cmd_event! { bn_dbl_clk, co::BN::DBLCLK.into(),
 		/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 		/// command notification.
 		///
@@ -68,7 +68,7 @@ impl ButtonEvents {
 		/// [`BS_NOTIFY`](crate::co::BS::NOTIFY) style.
 	}
 
-	cmd_event! { bn_kill_focus, co::BN::KILLFOCUS.into(),
+	pub_fn_cmd_event! { bn_kill_focus, co::BN::KILLFOCUS.into(),
 		/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 		/// command notification.
 		///
@@ -77,7 +77,7 @@ impl ButtonEvents {
 		/// notification code.
 	}
 
-	cmd_event! { bn_set_focus, co::BN::SETFOCUS.into(),
+	pub_fn_cmd_event! { bn_set_focus, co::BN::SETFOCUS.into(),
 		/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 		/// command notification.
 		///

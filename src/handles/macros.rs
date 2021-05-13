@@ -1,5 +1,5 @@
 /// Declares the type of a handle.
-macro_rules! handle_type {
+macro_rules! pub_struct_handle {
 	(
 		$(#[$doc:meta])*
 		$name:ident
@@ -84,12 +84,12 @@ macro_rules! handle_type {
 }
 
 /// Declares the type of an HGDIOBJ handle.
-macro_rules! hgdiobj_type {
+macro_rules! pub_struct_handle_gdi {
 	(
 		$(#[$doc:meta])*
 		$name:ident
 	) => {
-		handle_type! {
+		pub_struct_handle! {
 			$(#[$doc])*
 			$name
 		}
@@ -100,9 +100,13 @@ macro_rules! hgdiobj_type {
 			///
 			/// This method is common to all GDI handle types.
 			pub fn DeleteObject(self) -> crate::aliases::WinResult<()> {
-				crate::privs::bool_to_winresult(
-					unsafe { crate::ffi::gdi32::DeleteObject(self.ptr) },
-				)
+				match unsafe { crate::ffi::gdi32::DeleteObject(self.ptr) } {
+					0 => match crate::funcs::GetLastError() {
+						crate::co::ERROR::SUCCESS => Ok(()), // not really an error
+						err => Err(err),
+					},
+					_ => Ok(()),
+				}
 			}
 		}
 	};

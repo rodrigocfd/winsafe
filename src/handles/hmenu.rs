@@ -10,7 +10,7 @@ use crate::privs::{bool_to_winresult, ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::{MENUINFO, MENUITEMINFO};
 use crate::WString;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to a
 	/// [menu](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmenu).
 	HMENU

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IMFVideoDisplayControl_impl {
+macro_rules! pub_struct_IMFVideoDisplayControl {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -13,7 +13,7 @@ macro_rules! IMFVideoDisplayControl_impl {
 		use crate::privs::ref_as_pvoid;
 		use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -219,7 +219,7 @@ macro_rules! IMFVideoDisplayControl_impl {
 	};
 }
 
-IMFVideoDisplayControl_impl! {
+pub_struct_IMFVideoDisplayControl! {
 	/// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
 	/// COM interface over
 	/// [`IMFVideoDisplayControlVT`](crate::dshow::vt::IMFVideoDisplayControlVT).

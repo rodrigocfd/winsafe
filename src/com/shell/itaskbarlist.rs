@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! ITaskbarList_impl {
+macro_rules! pub_struct_ITaskbarList {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -8,7 +8,7 @@ macro_rules! ITaskbarList_impl {
 		use crate::com::shell::vt::ITaskbarListVT;
 		use crate::handles::HWND;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -59,7 +59,7 @@ macro_rules! ITaskbarList_impl {
 	};
 }
 
-ITaskbarList_impl! {
+pub_struct_ITaskbarList! {
 	/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 	/// COM interface over [`ITaskbarListVT`](crate::shell::vt::ITaskbarListVT).
 	/// Inherits from [`IUnknown`](crate::IUnknown).

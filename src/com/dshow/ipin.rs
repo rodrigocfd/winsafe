@@ -1,11 +1,6 @@
 #![allow(non_snake_case)]
 
-// use crate::com::{IUnknownVT, PPComVT};
-// use crate::com::dshow::vt::IPinVT;
-// use crate::com::funcs::CoTaskMemFree;
-// use crate::WString;
-
-macro_rules! IPin_impl {
+macro_rules! pub_struct_IPin {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -14,7 +9,7 @@ macro_rules! IPin_impl {
 		use crate::com::funcs::CoTaskMemFree;
 		use crate::WString;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -75,7 +70,7 @@ macro_rules! IPin_impl {
 	};
 }
 
-IPin_impl! {
+pub_struct_IPin! {
 	/// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
 	/// COM interface over [`IPinVT`](crate::dshow::vt::IPinVT). Inherits from
 	/// [`IUnknown`](crate::IUnknown).

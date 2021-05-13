@@ -6,7 +6,7 @@ use crate::funcs::GetLastError;
 use crate::privs::ref_as_pvoid;
 use crate::structs::ACCEL;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to an
 	/// [accelerator table](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#haccel).
 	HACCEL

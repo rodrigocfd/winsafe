@@ -130,19 +130,19 @@ impl MsgSendRecv for AppCommand {
 	}
 }
 
-empty_msg_handleable! { CancelMode, co::WM::CANCELMODE,
+pub_struct_msg_empty_handleable! { CancelMode, co::WM::CANCELMODE,
 	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 }
 
-empty_msg_handleable! { ChildActivate, co::WM::CHILDACTIVATE,
+pub_struct_msg_empty_handleable! { ChildActivate, co::WM::CHILDACTIVATE,
 	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 }
 
-empty_msg_handleable! { Close, co::WM::CLOSE,
+pub_struct_msg_empty_handleable! { Close, co::WM::CLOSE,
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 }
 
-char_msg! { Char, co::WM::CHAR,
+pub_struct_msg_char! { Char, co::WM::CHAR,
 	/// [`WM_CHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 }
 
@@ -254,35 +254,35 @@ impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
 	}
 }
 
-ctl_color_msg! { CtlColorBtn, co::WM::CTLCOLORBTN,
+pub_struct_msg_ctlcolor! { CtlColorBtn, co::WM::CTLCOLORBTN,
 	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 }
 
-ctl_color_msg! { CtlColorDlg, co::WM::CTLCOLORDLG,
+pub_struct_msg_ctlcolor! { CtlColorDlg, co::WM::CTLCOLORDLG,
 	/// [`WM_CTLCOLORDLG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 }
 
-ctl_color_msg! { CtlColorEdit, co::WM::CTLCOLOREDIT,
+pub_struct_msg_ctlcolor! { CtlColorEdit, co::WM::CTLCOLOREDIT,
 	/// [`WM_CTLCOLOREDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 }
 
-ctl_color_msg! { CtlColorListBox, co::WM::CTLCOLORLISTBOX,
+pub_struct_msg_ctlcolor! { CtlColorListBox, co::WM::CTLCOLORLISTBOX,
 	/// [`WM_CTLCOLORLISTBOX`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 }
 
-ctl_color_msg! { CtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR,
+pub_struct_msg_ctlcolor! { CtlColorScrollBar, co::WM::CTLCOLORSCROLLBAR,
 	/// [`WM_CTLCOLORSCROLLBAR`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 }
 
-ctl_color_msg! { CtlColorStatic, co::WM::CTLCOLORSTATIC,
+pub_struct_msg_ctlcolor! { CtlColorStatic, co::WM::CTLCOLORSTATIC,
 	/// [`WM_CTLCOLORSTATIC`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 }
 
-char_msg! { DeadChar, co::WM::DEADCHAR,
+pub_struct_msg_char! { DeadChar, co::WM::DEADCHAR,
 	/// [`WM_DEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
 }
 
-empty_msg_handleable! { Destroy, co::WM::DESTROY,
+pub_struct_msg_empty_handleable! { Destroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 }
 
@@ -422,7 +422,7 @@ impl MsgSendRecv for EnterIdle {
 	}
 }
 
-empty_msg_handleable! { EnterSizeMove, co::WM::ENTERSIZEMOVE,
+pub_struct_msg_empty_handleable! { EnterSizeMove, co::WM::ENTERSIZEMOVE,
 	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 }
 
@@ -490,7 +490,7 @@ impl MsgSendRecv for ExitMenuLoop {
 	}
 }
 
-empty_msg_handleable! { ExitSizeMove, co::WM::EXITSIZEMOVE,
+pub_struct_msg_empty_handleable! { ExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 }
 
@@ -729,11 +729,11 @@ impl MsgSendRecv for InitMenuPopup {
 	}
 }
 
-char_msg! { KeyDown, co::WM::KEYDOWN,
+pub_struct_msg_char! { KeyDown, co::WM::KEYDOWN,
 	/// [`WM_KEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 }
 
-char_msg! { KeyUp, co::WM::KEYUP,
+pub_struct_msg_char! { KeyUp, co::WM::KEYUP,
 	/// [`WM_KEYUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 }
 
@@ -772,27 +772,27 @@ impl MsgSendRecv for KillFocus {
 	}
 }
 
-button_msg! { LButtonDblClk, co::WM::LBUTTONDBLCLK,
+pub_struct_msg_button! { LButtonDblClk, co::WM::LBUTTONDBLCLK,
 	/// [`WM_LBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 }
 
-button_msg! { LButtonDown, co::WM::LBUTTONDOWN,
+pub_struct_msg_button! { LButtonDown, co::WM::LBUTTONDOWN,
 	/// [`WM_LBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 }
 
-button_msg! { LButtonUp, co::WM::LBUTTONUP,
+pub_struct_msg_button! { LButtonUp, co::WM::LBUTTONUP,
 	/// [`WM_LBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 }
 
-button_msg! { MButtonDblClk, co::WM::MBUTTONDBLCLK,
+pub_struct_msg_button! { MButtonDblClk, co::WM::MBUTTONDBLCLK,
 	/// [`WM_MBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 }
 
-button_msg! { MButtonDown, co::WM::MBUTTONDOWN,
+pub_struct_msg_button! { MButtonDown, co::WM::MBUTTONDOWN,
 	/// [`WM_MBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 }
 
-button_msg! { MButtonUp, co::WM::MBUTTONUP,
+pub_struct_msg_button! { MButtonUp, co::WM::MBUTTONUP,
 	/// [`WM_MBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 }
 
@@ -830,11 +830,11 @@ impl MsgSendRecv for MenuCommand {
 	}
 }
 
-button_msg! { MouseHover, co::WM::MOUSEHOVER,
+pub_struct_msg_button! { MouseHover, co::WM::MOUSEHOVER,
 	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 }
 
-button_msg! { MouseMove, co::WM::MOUSEMOVE,
+pub_struct_msg_button! { MouseMove, co::WM::MOUSEMOVE,
 	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 }
 
@@ -975,7 +975,7 @@ impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
 	}
 }
 
-empty_msg_handleable! { NcDestroy, co::WM::NCDESTROY,
+pub_struct_msg_empty_handleable! { NcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 }
 
@@ -1052,7 +1052,7 @@ impl MsgSendRecv for NextDlgCtl {
 	}
 }
 
-empty_msg_handleable! { Null, co::WM::NULL,
+pub_struct_msg_empty_handleable! { Null, co::WM::NULL,
 	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 }
 
@@ -1107,7 +1107,7 @@ impl<'a> Notify<'a> {
 	}
 }
 
-empty_msg_handleable! { Paint, co::WM::PAINT,
+pub_struct_msg_empty_handleable! { Paint, co::WM::PAINT,
 	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 }
 
@@ -1180,15 +1180,15 @@ impl MsgSendRecv for QueryOpen {
 	}
 }
 
-button_msg! { RButtonDblClk, co::WM::RBUTTONDBLCLK,
+pub_struct_msg_button! { RButtonDblClk, co::WM::RBUTTONDBLCLK,
 	/// [`WM_RBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 }
 
-button_msg! { RButtonDown, co::WM::RBUTTONDOWN,
+pub_struct_msg_button! { RButtonDown, co::WM::RBUTTONDOWN,
 	/// [`WM_RBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 }
 
-button_msg! { RButtonUp, co::WM::RBUTTONUP,
+pub_struct_msg_button! { RButtonUp, co::WM::RBUTTONUP,
 	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 }
 
@@ -1473,7 +1473,7 @@ impl<'a> MsgSendRecv for StyleChanging<'a> {
 	}
 }
 
-char_msg! { SysChar, co::WM::SYSCHAR,
+pub_struct_msg_char! { SysChar, co::WM::SYSCHAR,
 	/// [`WM_SYSCHAR`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 }
 
@@ -1511,19 +1511,19 @@ impl MsgSendRecv for SysCommand {
 	}
 }
 
-char_msg! { SysDeadChar, co::WM::SYSDEADCHAR,
+pub_struct_msg_char! { SysDeadChar, co::WM::SYSDEADCHAR,
 	/// [`WM_SYSDEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 }
 
-char_msg! { SysKeyDown, co::WM::SYSKEYDOWN,
+pub_struct_msg_char! { SysKeyDown, co::WM::SYSKEYDOWN,
 	/// [`WM_SYSKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
 }
 
-char_msg! { SysKeyUp, co::WM::SYSKEYUP,
+pub_struct_msg_char! { SysKeyUp, co::WM::SYSKEYUP,
 	/// [`WM_SYSKEYUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
 }
 
-empty_msg_handleable! { ThemeChanged, co::WM::THEMECHANGED,
+pub_struct_msg_empty_handleable! { ThemeChanged, co::WM::THEMECHANGED,
 	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 }
 
@@ -1670,14 +1670,14 @@ impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 	}
 }
 
-button_msg! { XButtonDblClk, co::WM::XBUTTONDBLCLK,
+pub_struct_msg_button! { XButtonDblClk, co::WM::XBUTTONDBLCLK,
 	/// [`WM_XBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 }
 
-button_msg! { XButtonDown, co::WM::XBUTTONDOWN,
+pub_struct_msg_button! { XButtonDown, co::WM::XBUTTONDOWN,
 	/// [`WM_XBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 }
 
-button_msg! { XButtonUp, co::WM::XBUTTONUP,
+pub_struct_msg_button! { XButtonUp, co::WM::XBUTTONUP,
 	/// [`WM_XBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 }

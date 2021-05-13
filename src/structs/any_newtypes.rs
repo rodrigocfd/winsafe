@@ -43,8 +43,36 @@ impl std::fmt::Display for COLORREF {
 
 impl COLORREF {
 	/// Creates a new `COLORREF` object with the given color intensities.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::COLORREF;
+	///
+	/// let color = COLORREF::new(0xff, 0x80, 0x00);
+	/// ```
 	pub const fn new(red: u8, green: u8, blue: u8) -> COLORREF {
 		Self(red as u32 | ((green as u32) << 8) | ((blue as u32) << 16))
+	}
+
+	/// Creates an array of `COLORREF` objects with the given color intensities.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::COLORREF;
+	///
+	/// let colors: [COLORREF; 2] = COLORREF::new_array(&[
+	///     (0xff, 0xb2, 0x80),
+	///     (0x00, 0xa0, 0x40),
+	/// ]);
+	/// ```
+	pub fn new_array<const N: usize>(rgbs: &[(u8, u8, u8); N]) -> [COLORREF; N] {
+		let mut arr = [Self::new(0, 0, 0); N];
+		for (i, rgb) in rgbs.iter().enumerate() {
+			arr[i] = Self::new(rgb.0, rgb.1, rgb.2);
+		}
+		arr
 	}
 
 	/// Retrieves the red intensity. Originally

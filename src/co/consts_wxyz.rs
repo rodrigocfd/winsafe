@@ -1,4 +1,4 @@
-const_type! { WA, u16,
+pub_struct_const! { WA, u16,
 	/// [`WM_ACTIVATE`](crate::msg::wm::Activate)
 	/// activation state (`u16`).
 	=>
@@ -7,7 +7,7 @@ const_type! { WA, u16,
 	CLICKACTIVE, 2
 }
 
-const_type! { WC, u32,
+pub_struct_const! { WC, u32,
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `dwFlags` (`u32`).
 	=>
 	COMPOSITECHECK, 0x0000_0200
@@ -18,7 +18,7 @@ const_type! { WC, u32,
 	SEPCHARS, 0x0000_0020
 }
 
-const_type! { WDA, u32,
+pub_struct_const! { WDA, u32,
 	/// [`GetWindowDisplayAffinity`](crate::HWND::GetWindowDisplayAffinity) and
 	/// [`SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)
 	/// `dwAffinity` (`u32`).
@@ -28,7 +28,7 @@ const_type! { WDA, u32,
 	EXCLUDEFROMCAPTURE, 0x0000_0011
 }
 
-const_type! { WH, i32,
+pub_struct_const! { WH, i32,
 	/// [`SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook` (`i32`).
 	=>
 	MSGFILTER, -1
@@ -48,7 +48,7 @@ const_type! { WH, i32,
 	MOUSE_LL, 14
 }
 
-const_type! { WIN32, u16,
+pub_struct_const! { WIN32, u16,
 	/// [`_WIN32`](https://docs.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
 	=>
@@ -112,7 +112,7 @@ const_type! { WIN32, u16,
 	IE_WIN10, Self::IE_IE110.0
 }
 
-const_type! { WM, u32,
+pub_struct_const! { WM, u32,
 	/// Window message codes (`u32`).
 	///
 	/// Control-specific messages codes have their own types, which are
@@ -377,7 +377,7 @@ const_type! { WM, u32,
 	USER, 0x0400
 }
 
-const_type! { WMPN, u16,
+pub_struct_const! { WMPN, u16,
 	/// [`WM_PARENTNOFITY`](crate::msg::wm::ParentNotify) event (`u16`).
 	=>
 	CREATE, WM::CREATE.0 as u16
@@ -389,7 +389,7 @@ const_type! { WMPN, u16,
 	POINTERDOWN, WM::POINTERDOWN.0 as u16
 }
 
-const_type! { WMSZ, u8,
+pub_struct_const! { WMSZ, u8,
 	/// [`WM_SIZING`](crate::msg::wm::Sizing) window edge (`u8`).
 	=>
 	LEFT, 1
@@ -402,7 +402,7 @@ const_type! { WMSZ, u8,
 	BOTTOMRIGHT, 8
 }
 
-const_type! { WPF, u32,
+pub_struct_const! { WPF, u32,
 	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags` (`u32`).
 	=>
 	SETMINPOSITION, 0x0001
@@ -410,7 +410,7 @@ const_type! { WPF, u32,
 	ASYNCWINDOWPLACEMENT, 0x0004
 }
 
-const_type! { WS, u32,
+pub_struct_const! { WS, u32,
 	/// Window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles)
 	/// (`u32`).
@@ -513,7 +513,7 @@ const_type! { WS, u32,
 	CHILDWINDOW, Self::CHILD.0
 }
 
-const_type! { WS_EX, u32,
+pub_struct_const! { WS_EX, u32,
 	/// Extended window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
 	/// (`u32`).
@@ -655,7 +655,7 @@ const_type! { WS_EX, u32,
 	NOACTIVATE, 0x0800_0000
 }
 
-const_type! { WVR, u32,
+pub_struct_const! { WVR, u32,
 	/// [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize)
 	/// return flags (`u32`).
 	=>

@@ -114,7 +114,7 @@ impl ComboBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	ctrlid_hwnd_on_onsubclass!(ComboBoxEvents);
+	pub_fn_ctrlid_hwnd_on_onsubclass!(ComboBoxEvents);
 
 	/// Item methods.
 	pub fn items(&self) -> &ComboBoxItems {

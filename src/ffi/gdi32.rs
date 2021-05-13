@@ -21,7 +21,9 @@ extern "system" {
 	pub fn DeleteObject(_: HANDLE) -> BOOL;
 	pub fn EndPath(_: HANDLE) -> BOOL;
 	pub fn FillPath(_: HANDLE) -> BOOL;
+	pub fn FillRect(_: HANDLE, _: PCVOID, _: HANDLE) -> i32;
 	pub fn GetDeviceCaps(_: HANDLE, _: i32) -> i32;
+	pub fn GetObjectW(_: HANDLE, _: i32, _: PVOID) -> i32;
 	pub fn GetSysColorBrush(_: i32) -> HANDLE;
 	pub fn GetTextColor(_: HANDLE) -> u32;
 	pub fn GetTextExtentPoint32W(_: HANDLE, _: PCSTR, _: i32, _: PVOID) -> BOOL;

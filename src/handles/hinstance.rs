@@ -10,7 +10,7 @@ use crate::privs::ref_as_pvoid;
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::WString;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to an
 	/// [instance](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
 	/// same as `HMODULE`.

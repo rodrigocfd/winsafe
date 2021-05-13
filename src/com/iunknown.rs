@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
-macro_rules! IUnknown_impl {
+/// Generates the `IUnknown`-derived struct.
+macro_rules! pub_struct_IUnknown {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -62,7 +63,7 @@ macro_rules! IUnknown_impl {
 	};
 }
 
-IUnknown_impl! {
+pub_struct_IUnknown! {
 	/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 	/// COM interface over [`IUnknownVT`](crate::IUnknownVT). It's the base to
 	/// all COM interfaces.

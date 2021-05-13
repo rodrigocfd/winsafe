@@ -1,5 +1,5 @@
 /// Declares a struct of control events, which is just a proxy to parent events.
-macro_rules! ctrl_events_proxy {
+macro_rules! pub_struct_ctrl_events_proxy {
 	(
 		$(#[$doc:meta])*
 		$name:ident
@@ -26,7 +26,7 @@ macro_rules! ctrl_events_proxy {
 }
 
 /// Declares a method for a `WM_COMMAND` notification.
-macro_rules! cmd_event {
+macro_rules! pub_fn_cmd_event {
 	(
 		$name:ident, $cmd:expr,
 		$(#[$doc:meta])*
@@ -46,7 +46,7 @@ macro_rules! cmd_event {
 /// Declares a method for a `WM_NOTIFY` notification which receives a NMHDR
 /// parameter, which is not passed because it carries no useful data, and whose
 /// callback has no return.
-macro_rules! nfy_event {
+macro_rules! pub_fn_nfy_event {
 	(
 		$name:ident, $nfy:expr,
 		$(#[$doc:meta])*
@@ -65,18 +65,18 @@ macro_rules! nfy_event {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a parameter,
 /// and whose callback has no return.
-macro_rules! nfy_event_p {
+macro_rules! pub_fn_nfy_event_param {
 	(
-		$name:ident, $nfy:expr, $struc:ty,
+		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&$struc) + 'static,
+			where F: FnMut(&$param) + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
-				move |p| { func(unsafe { p.cast_nmhdr::<$struc>() }); None }
+				move |p| { func(unsafe { p.cast_nmhdr::<$param>() }); None }
 			});
 		}
 	};
@@ -84,18 +84,18 @@ macro_rules! nfy_event_p {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a mutable
 /// parameter, and whose callback has no return.
-macro_rules! nfy_event_mut_p {
+macro_rules! pub_fn_nfy_event_mutparam {
 	(
-		$name:ident, $nfy:expr, $struc:ty,
+		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&mut $struc) + 'static,
+			where F: FnMut(&mut $param) + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
-				move |p| { func(unsafe { p.cast_nmhdr_mut::<$struc>() }); None }
+				move |p| { func(unsafe { p.cast_nmhdr_mut::<$param>() }); None }
 			});
 		}
 	};
@@ -103,18 +103,18 @@ macro_rules! nfy_event_mut_p {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a parameter,
 /// and whose callback returns bool.
-macro_rules! nfy_event_p_bool {
+macro_rules! pub_fn_nfy_event_param_retbool {
 	(
-		$name:ident, $nfy:expr, $struc:ty,
+		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&$struc) -> bool + 'static,
+			where F: FnMut(&$param) -> bool + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
-				move |p| Some(func(unsafe { p.cast_nmhdr::<$struc>() }) as isize)
+				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as isize)
 			});
 		}
 	};
@@ -122,18 +122,18 @@ macro_rules! nfy_event_p_bool {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a mutable
 /// parameter, and whose callback returns bool.
-macro_rules! nfy_event_mut_p_bool {
+macro_rules! pub_fn_nfy_event_mutparam_retbool {
 	(
-		$name:ident, $nfy:expr, $struc:ty,
+		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&mut $struc) -> bool + 'static,
+			where F: FnMut(&mut $param) -> bool + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
-				move |p| Some(func(unsafe { p.cast_nmhdr_mut::<$struc>() }) as isize)
+				move |p| Some(func(unsafe { p.cast_nmhdr_mut::<$param>() }) as isize)
 			});
 		}
 	};

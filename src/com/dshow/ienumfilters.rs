@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IEnumFilters_impl {
+macro_rules! pub_struct_IEnumFilters {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -8,7 +8,7 @@ macro_rules! IEnumFilters_impl {
 		use crate::com::dshow::vt::IEnumFiltersVT;
 		use crate::privs::hr_to_winresult_bool;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -35,7 +35,7 @@ macro_rules! IEnumFilters_impl {
 	};
 }
 
-IEnumFilters_impl! {
+pub_struct_IEnumFilters! {
 	/// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
 	/// COM interface over [`IEnumFiltersVT`](crate::dshow::vt::IEnumFiltersVT).
 	/// Inherits from [`IUnknown`](crate::IUnknown).

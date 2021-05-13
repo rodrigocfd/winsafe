@@ -6,7 +6,7 @@ use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::{bool_to_winresult, GMEM_INVALID_HANDLE};
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to a
 	/// [global memory block](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc).
 	/// Originally just a `HANDLE`.

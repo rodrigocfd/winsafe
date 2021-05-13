@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IShellItem_impl {
+macro_rules! pub_struct_IShellItem {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -11,7 +11,7 @@ macro_rules! IShellItem_impl {
 		use crate::ffi::shell32;
 		use crate::WString;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -117,7 +117,7 @@ macro_rules! IShellItem_impl {
 	};
 }
 
-IShellItem_impl! {
+pub_struct_IShellItem! {
 	/// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
 	/// COM interface over [`IShellItemVT`](crate::shell::vt::IShellItemVT).
 	/// Inherits from [`IUnknown`](crate::IUnknown).

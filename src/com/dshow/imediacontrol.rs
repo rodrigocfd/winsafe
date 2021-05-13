@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IMediaControl_impl {
+macro_rules! pub_struct_IMediaControl {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -11,7 +11,7 @@ macro_rules! IMediaControl_impl {
 		use crate::privs::{hr_to_winresult_bool, INFINITE};
 		use crate::WString;
 
-		IDispatch_impl! {
+		pub_struct_IDispatch! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -89,7 +89,7 @@ macro_rules! IMediaControl_impl {
 	};
 }
 
-IMediaControl_impl! {
+pub_struct_IMediaControl! {
 	/// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
 	/// COM interface over
 	/// [`IMediaControlVT`](crate::dshow::vt::IMediaControlVT). Inherits from

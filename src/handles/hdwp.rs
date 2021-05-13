@@ -8,7 +8,7 @@ use crate::funcs::GetLastError;
 use crate::handles::HWND;
 use crate::privs::bool_to_winresult;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to a
 	/// [deferred window position](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
 	HDWP

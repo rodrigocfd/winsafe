@@ -3,7 +3,7 @@ use crate::msg::WndMsg;
 use crate::structs::POINT;
 
 /// Struct for a message that has no parameters and no meaningful return value.
-macro_rules! empty_msg {
+macro_rules! pub_struct_msg_empty {
 	(
 		$name:ident, $wmconst:expr,
 		$(#[$msdn:meta])*
@@ -34,12 +34,12 @@ macro_rules! empty_msg {
 
 /// Struct for a handleable message that has no parameters and no meaningful
 /// return value.
-macro_rules! empty_msg_handleable {
+macro_rules! pub_struct_msg_empty_handleable {
 	(
 		$name:ident, $wmconst:expr,
 		$(#[$msdn:meta])*
 	) => {
-		empty_msg! {
+		pub_struct_msg_empty! {
 			$name, $wmconst,
 			$(#[$msdn])*
 		}
@@ -53,7 +53,7 @@ macro_rules! empty_msg_handleable {
 }
 
 /// Struct for WM_CHAR-based handleable messages.
-macro_rules! char_msg {
+macro_rules! pub_struct_msg_char {
 	(
 		$name:ident, $wmconst:expr,
 		$(#[$msdn:meta])*
@@ -114,7 +114,7 @@ macro_rules! char_msg {
 }
 
 /// Struct for WM_CTLCOLOR* handleable messages.
-macro_rules! ctl_color_msg {
+macro_rules! pub_struct_msg_ctlcolor {
 	(
 		$name:ident, $wmconst:expr,
 		$(#[$msdn:meta])*
@@ -156,7 +156,7 @@ macro_rules! ctl_color_msg {
 }
 
 /// Struct for WM_*BUTTON* handleable messages and others.
-macro_rules! button_msg {
+macro_rules! pub_struct_msg_button {
 	(
 		$name:ident, $wmconst:expr,
 		$(#[$doc:meta])*

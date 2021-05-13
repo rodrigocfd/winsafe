@@ -3,7 +3,7 @@
 
 #![allow(non_upper_case_globals)]
 
-const_type! { FILTER_STATE, u32,
+pub_struct_const! { FILTER_STATE, u32,
 	/// [`FILTER_STATE`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ne-strmif-filter_state)
 	/// enumeration (`u32`).
 	=>
@@ -12,7 +12,7 @@ const_type! { FILTER_STATE, u32,
 	Running, 2
 }
 
-const_type! { MFVideoARMode, u32,
+pub_struct_const! { MFVideoARMode, u32,
 	/// [`MFVideoAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideoaspectratiomode)
 	/// enumeration (`u32`).
 	=>
@@ -22,7 +22,7 @@ const_type! { MFVideoARMode, u32,
 	NonLinearStretch, 0x4
 }
 
-const_type! { SEEKING_FLAGS, u32,
+pub_struct_const! { SEEKING_FLAGS, u32,
 	/// [`IMediaSeeking::SetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 	/// flags (`u32`). Originally AM_SEEKING_SeekingFlags enum.
 	=>

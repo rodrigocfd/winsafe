@@ -5,7 +5,7 @@ use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
 use crate::structs::{NMCUSTOMDRAW, NMTRBTHUMBPOSCHANGING};
 
-ctrl_events_proxy! {
+pub_struct_ctrl_events_proxy! {
 	/// Exposes trackbar control
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
 	///
@@ -19,7 +19,7 @@ ctrl_events_proxy! {
 }
 
 impl TrackbarEvents {
-	nfy_event_p! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING.into(), NMTRBTHUMBPOSCHANGING,
+	pub_fn_nfy_event_param! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING.into(), NMTRBTHUMBPOSCHANGING,
 		/// [`TRBN_THUMBPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/trbn-thumbposchanging)
 		/// notification.
 		///
@@ -40,7 +40,7 @@ impl TrackbarEvents {
 		});
 	}
 
-	nfy_event! { nm_released_capture, co::NM::RELEASEDCAPTURE,
+	pub_fn_nfy_event! { nm_released_capture, co::NM::RELEASEDCAPTURE,
 		/// [`NM_RELEASEDCAPTURE`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
 		/// notification.
 		///

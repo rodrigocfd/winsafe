@@ -8,7 +8,7 @@ use crate::handles::{HBITMAP, HICON};
 use crate::privs::bool_to_winresult;
 use crate::structs::COLORREF;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to an
 	/// [image list](https://docs.microsoft.com/en-us/windows/win32/controls/image-lists).
 	HIMAGELIST

@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to a
 	/// [local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
 	HLOCAL

@@ -2,7 +2,7 @@
 
 use crate::co::WM;
 
-const_type_wm! { CB,
+pub_struct_const_wm! { CB,
 	/// Combo box control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -51,7 +51,7 @@ const_type_wm! { CB,
 	GETCOMBOBOXINFO, 0x0164
 }
 
-const_type_wm! { CBEM,
+pub_struct_const_wm! { CBEM,
 	/// ComboBoxEx control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -72,7 +72,7 @@ const_type_wm! { CBEM,
 	GETITEM, WM::USER.0 + 13
 }
 
-const_type_wsex! { CBES_EX,
+pub_struct_const_wsex! { CBES_EX,
 	/// Extended combo box
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
@@ -85,7 +85,7 @@ const_type_wsex! { CBES_EX,
 	TEXTENDELLIPSIS, 0x0000_0020
 }
 
-const_type_cmd! { CBN,
+pub_struct_const_cmd! { CBN,
 	/// Combo box control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
 	/// (`u16`), convertible to [`CMD`](crate::co::CMD).
@@ -103,7 +103,7 @@ const_type_cmd! { CBN,
 	SELENDCANCEL, 10
 }
 
-const_type_ws! { CBS,
+pub_struct_const_ws! { CBS,
 	/// Combo box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -123,7 +123,7 @@ const_type_ws! { CBS,
 	LOWERCASE, 0x4000
 }
 
-const_type! { CC, u32,
+pub_struct_const! { CC, u32,
 	/// [`CHOOSECOLOR`](crate::CHOOSECOLOR) `Flags` (`u32`).
 	=>
 	/// Causes the dialog box to use the color specified in the `rgbResult`
@@ -160,7 +160,7 @@ const_type! { CC, u32,
 	ANYCOLOR, 0x0000_0100
 }
 
-const_type_wm! { CCM,
+pub_struct_const_wm! { CCM,
 	/// Generic common controls
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -180,7 +180,7 @@ const_type_wm! { CCM,
 	DPISCALE, Self::FIRST.0 + 0xc
 }
 
-const_type! { CDDS, u32,
+pub_struct_const! { CDDS, u32,
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
 	=>
 	PREPAINT, 0x0000_0001
@@ -195,7 +195,7 @@ const_type! { CDDS, u32,
 	SUBITEM, 0x0002_0000
 }
 
-const_type! { CDIS, u32,
+pub_struct_const! { CDIS, u32,
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState` (`u32`).
 	=>
 	SELECTED, 0x0001
@@ -213,7 +213,7 @@ const_type! { CDIS, u32,
 	DROPHILITED, 0x1000
 }
 
-const_type! { CDRF, u32,
+pub_struct_const! { CDRF, u32,
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
 	/// return value (`u32`).
 	=>
@@ -233,7 +233,7 @@ impl From<CDRF> for isize {
 	}
 }
 
-const_type! { CF, u32,
+pub_struct_const! { CF, u32,
 	/// Standard clipboard
 	/// [formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
 	/// (`u32`).
@@ -266,7 +266,7 @@ const_type! { CF, u32,
 	GDIOBJLAST, 0x03ff
 }
 
-const_type! { CHARSET, u8,
+pub_struct_const! { CHARSET, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 	=>
 	ANSI, 0
@@ -291,7 +291,7 @@ const_type! { CHARSET, u8,
 	BALTIC, 186
 }
 
-const_type! { CLIP, u8,
+pub_struct_const! { CLIP, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision` (`u8`).
 	=>
 	DEFAULT_PRECIS, 0
@@ -304,14 +304,14 @@ const_type! { CLIP, u8,
 	EMBEDDED, 8 << 4
 }
 
-const_type! { CLR, u32,
+pub_struct_const! { CLR, u32,
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
 	=>
 	CLR_NONE, 0xffff_ffff
 	DEFAULT, 0xff00_0000
 }
 
-const_type! { CLSCTX, u32,
+pub_struct_const! { CLSCTX, u32,
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
 	=>
@@ -366,7 +366,7 @@ const_type! { CLSCTX, u32,
 	ACTIVATE_ARM32_SERVER, 0x200_0000
 }
 
-const_type! { CMD, u16,
+pub_struct_const! { CMD, u16,
 	/// [`WM_COMMAND`](crate::msg::wm::Command) notification codes (`u16`).
 	///
 	/// Control-specific notification codes have their own types, which are
@@ -376,7 +376,7 @@ const_type! { CMD, u16,
 	Accelerator, 1
 }
 
-const_type! { COINIT, u32,
+pub_struct_const! { COINIT, u32,
 	/// [`COINIT`](https://docs.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
 	/// enumeration (`u32`).
 	=>
@@ -390,7 +390,7 @@ const_type! { COINIT, u32,
 	SPEED_OVER_MEMORY, 0x8
 }
 
-const_type! { COLOR, i32,
+pub_struct_const! { COLOR, i32,
 	/// System
 	/// [colors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 	/// (`i32`).
@@ -433,7 +433,7 @@ const_type! { COLOR, i32,
 	BTNHILIGHT, Self::BTNHIGHLIGHT.0
 }
 
-const_type! { CP, u32,
+pub_struct_const! { CP, u32,
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `CodePage` (`u32`).
 	=>
@@ -456,7 +456,7 @@ const_type! { CP, u32,
 	UTF8, 65001
 }
 
-const_type! { CS, u32,
+pub_struct_const! { CS, u32,
 	/// Window class
 	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).
@@ -476,7 +476,7 @@ const_type! { CS, u32,
 	DROPSHADOW, 0x00020000
 }
 
-const_type! { DDL, u16,
+pub_struct_const! { DDL, u16,
 	/// [`CB_DIR`](crate::msg::cb::Dir) and [`LB_DIR`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
 	=>
@@ -491,7 +491,7 @@ const_type! { DDL, u16,
 	EXCLUSIVE, 0x8000
 }
 
-const_type! { DIB, u32,
+pub_struct_const! { DIB, u32,
 	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
 	=>
 	/// The color table consists of an array of 16-bit indexes into the
@@ -501,7 +501,7 @@ const_type! { DIB, u32,
 	PAL_COLORS, 1
 }
 
-const_type! { DISPOSITION, u32,
+pub_struct_const! { DISPOSITION, u32,
 	/// [`CreateFile`](crate::HFILE::CreateFile) `dwCreationDisposition` (`u32`).
 	/// Originally has no prefix.
 	=>
@@ -552,7 +552,7 @@ const_type! { DISPOSITION, u32,
 	TRUNCATE_EXISTING, 5
 }
 
-const_type! { DLGID, i32,
+pub_struct_const! { DLGID, i32,
 	/// Dialog built-in IDs (`i32`). These are also returned from
 	/// [`MessageBox`](crate::HWND::MessageBox).
 	=>
@@ -572,7 +572,7 @@ impl From<DLGID> for u16 {
 	}
 }
 
-const_type_wm! { DTM,
+pub_struct_const_wm! { DTM,
 	/// Date and time picker control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -596,7 +596,7 @@ const_type_wm! { DTM,
 	GETIDEALSIZE, Self::FIRST.0 + 15
 }
 
-const_type_nm! { DTN,
+pub_struct_const_nm! { DTN,
 	/// Date and time picker control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
@@ -613,7 +613,7 @@ const_type_nm! { DTN,
 	WMKEYDOWN, Self::FIRST.0 - 4
 }
 
-const_type_ws! { DTS,
+pub_struct_const_ws! { DTS,
 	/// Date and time picker control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

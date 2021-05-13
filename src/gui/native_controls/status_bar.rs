@@ -147,7 +147,7 @@ impl StatusBar {
 		(p).unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	hwnd_on_onsubclass!(StatusBarEvents);
+	pub_fn_hwnd_on_onsubclass!(StatusBarEvents);
 
 	/// Retrieves the number of parts by sending an
 	/// [`SB_GETPARTS`](crate::msg::sb::GetParts) message.

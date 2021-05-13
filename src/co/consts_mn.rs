@@ -1,6 +1,6 @@
 use crate::co::CCM;
 
-const_type! { MB, u32,
+pub_struct_const! { MB, u32,
 	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
 	=>
 	/// The message box contains three push buttons: Abort, Retry, and Ignore.
@@ -131,7 +131,7 @@ const_type! { MB, u32,
 	SERVICE_NOTIFICATION, 0x0020_0000
 }
 
-const_type! { MBC, u32,
+pub_struct_const! { MBC, u32,
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `dwFlags` (`u32`).
 	/// Originally has `MB` prefix.
 	=>
@@ -141,7 +141,7 @@ const_type! { MBC, u32,
 	USEGLYPHCHARS, 0x0000_0004
 }
 
-const_type_wm! { MCM,
+pub_struct_const_wm! { MCM,
 	/// Month calendar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -182,7 +182,7 @@ const_type_wm! { MCM,
 	SETCURRENTVIEW, Self::FIRST.0 + 32
 }
 
-const_type! { MCMV, u32,
+pub_struct_const! { MCMV, u32,
 	/// [`NMVIEWCHANGE`](crate::NMVIEWCHANGE) `dwOldView` and `dwNewView` (`u32`).
 	=>
 	MONTH, 0
@@ -191,7 +191,7 @@ const_type! { MCMV, u32,
 	CENTURY, 3
 }
 
-const_type_nm! { MCN,
+pub_struct_const_nm! { MCN,
 	/// Month calendar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
@@ -204,7 +204,7 @@ const_type_nm! { MCN,
 	VIEWCHANGE, Self::FIRST.0 - 4
 }
 
-const_type! { MCSC, u8,
+pub_struct_const! { MCSC, u8,
 	/// [`DTM_GETMCCOLOR`](crate::msg::dtm::GetMcColor) color (`u8`).
 	=>
 	BACKGROUND, 0
@@ -215,7 +215,7 @@ const_type! { MCSC, u8,
 	TRAILINGTEXT, 5
 }
 
-const_type_ws! { MCS,
+pub_struct_const_ws! { MCS,
 	/// Month calendar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -231,7 +231,7 @@ const_type_ws! { MCS,
 	NOSELCHANGEONNAV, 0x0100
 }
 
-const_type! { MF, u32,
+pub_struct_const! { MF, u32,
 	/// [`AppendMenu`](crate::HMENU::AppendMenu) and
 	/// [`InsertMenu`](crate::HMENU::InsertMenu) `uFlags` (`u32`).
 	=>
@@ -264,7 +264,7 @@ const_type! { MF, u32,
 	MOUSESELECT, 0x0000_8000
 }
 
-const_type! { MFS, u32,
+pub_struct_const! { MFS, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
 	=>
 	GRAYED, 0x0000_0003
@@ -277,7 +277,7 @@ const_type! { MFS, u32,
 	DEFAULT, MF::DEFAULT.0
 }
 
-const_type! { MFT, u32,
+pub_struct_const! { MFT, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType` (`u32`).
 	=>
 	STRING, MF::STRING.0
@@ -291,7 +291,7 @@ const_type! { MFT, u32,
 	RIGHTJUSTIFY, MF::RIGHTJUSTIFY.0
 }
 
-const_type! { MIM, u32,
+pub_struct_const! { MIM, u32,
 	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
 	=>
 	MAXHEIGHT, 0x0000_0001
@@ -302,7 +302,7 @@ const_type! { MIM, u32,
 	APPLYTOSUBMENUS, 0x8000_0000
 }
 
-const_type! { MIIM, u32,
+pub_struct_const! { MIIM, u32,
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
 	=>
 	MAXHEIGHT, 0x0000_0001
@@ -313,7 +313,7 @@ const_type! { MIIM, u32,
 	APPLYTOSUBMENUS, 0x8000_0000
 }
 
-const_type! { MK, u16,
+pub_struct_const! { MK, u16,
 	/// [`WM_LBUTTONDOWN`](crate::msg::wm::LButtonDown) (and similar) virtual
 	/// keys (`u16`).
 	=>
@@ -326,7 +326,7 @@ const_type! { MK, u16,
 	XBUTTON2, 0x0040
 }
 
-const_type! { MNS, u32,
+pub_struct_const! { MNS, u32,
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
 	=>
 	NOCHECK, 0x8000_0000
@@ -337,14 +337,14 @@ const_type! { MNS, u32,
 	CHECKORBMP, 0x0400_0000
 }
 
-const_type! { MSGF, u8,
+pub_struct_const! { MSGF, u8,
 	/// [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason (`u8`).
 	=>
 	DIALOGBOX, 0
 	MENU, 2
 }
 
-const_type! { NM, i32,
+pub_struct_const! { NM, i32,
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) notification codes (`i32`).
 	///
 	/// Control-specific notification codes have their own types, which are
@@ -370,6 +370,6 @@ const_type! { NM, i32,
 	RDOWN, Self::FIRST.0 - 21
 	THEMECHANGED, Self::FIRST.0 - 22
 }
-const_type_priv_values! { NM,
+impl_const_values! { NM,
 	FIRST, 0
 }

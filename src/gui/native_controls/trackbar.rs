@@ -110,7 +110,7 @@ impl Trackbar {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	ctrlid_hwnd_on_onsubclass!(TrackbarEvents);
+	pub_fn_ctrlid_hwnd_on_onsubclass!(TrackbarEvents);
 
 	/// Retrieves the current position by sending a
 	/// [`TBM_GETPOS`](crate::msg::trbm::GetPos) message.

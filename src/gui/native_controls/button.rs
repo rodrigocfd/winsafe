@@ -108,7 +108,7 @@ impl Button {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	ctrlid_hwnd_on_onsubclass!(ButtonEvents);
+	pub_fn_ctrlid_hwnd_on_onsubclass!(ButtonEvents);
 
 	/// Fires the click event for the button by posting a
 	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,

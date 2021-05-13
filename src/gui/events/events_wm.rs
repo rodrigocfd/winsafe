@@ -165,8 +165,8 @@ impl WindowEvents {
 	}
 }
 
-/// A message which has no parameters and returns zero.
-macro_rules! wm_empty {
+/// An ordinary message which has no parameters and returns zero.
+macro_rules! pub_fn_wm_empty {
 	(
 		$name:ident, $wmconst:expr,
 		$(#[$doc:meta])*
@@ -183,8 +183,8 @@ macro_rules! wm_empty {
 	};
 }
 
-/// A message with parameters which returns zero.
-macro_rules! wm_ret_none {
+/// An ordinary message with parameters which returns zero.
+macro_rules! pub_fn_wm_ret_none {
 	(
 		$name:ident, $wmconst:expr, $parm:ty,
 		$(#[$doc:meta])*
@@ -322,7 +322,7 @@ impl WindowEvents {
 		});
 	}
 
-	wm_ret_none! { wm_activate, co::WM::ACTIVATE, wm::Activate,
+	pub_fn_wm_ret_none! { wm_activate, co::WM::ACTIVATE, wm::Activate,
 		/// [`WM_ACTIVATE`](crate::msg::wm::Activate) message.
 		///
 		/// Sent to both the window being activated and the window being
@@ -340,7 +340,7 @@ impl WindowEvents {
 		/// * non-dialog [`WindowMain`](crate::gui::WindowMain).
 	}
 
-	wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp,
+	pub_fn_wm_ret_none! { wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp,
 		/// [`WM_ACTIVATEAPP`](crate::msg::wm::ActivateApp) message.
 		///
 		/// Sent when a window belonging to a different application than the
@@ -363,7 +363,7 @@ impl WindowEvents {
 		});
 	}
 
-	wm_empty! { wm_cancel_mode, co::WM::CANCELMODE,
+	pub_fn_wm_empty! { wm_cancel_mode, co::WM::CANCELMODE,
 		/// [`WM_CANCELMODE`](crate::msg::wm::CancelMode) message.
 		///
 		/// Sent to cancel certain modes, such as mouse capture. For example,
@@ -375,7 +375,7 @@ impl WindowEvents {
 		/// message when disabling the specified window.
 	}
 
-	wm_ret_none! { wm_char, co::WM::CHAR, wm::Char,
+	pub_fn_wm_ret_none! { wm_char, co::WM::CHAR, wm::Char,
 		/// [`WM_CHAR`](crate::msg::wm::Char) message.
 		///
 		/// Posted to the window with the keyboard focus when a
@@ -385,14 +385,14 @@ impl WindowEvents {
 		/// pressed.
 	}
 
-	wm_empty! { wm_child_activate, co::WM::CHILDACTIVATE,
+	pub_fn_wm_empty! { wm_child_activate, co::WM::CHILDACTIVATE,
 		/// [`WM_CHILDACTIVATE`](crate::msg::wm::ChildActivate) message.
 		///
 		/// Sent to a child window when the user clicks the window's title bar
 		/// or when the window is activated, moved, or sized.
 	}
 
-	wm_empty! { wm_close, co::WM::CLOSE,
+	pub_fn_wm_empty! { wm_close, co::WM::CLOSE,
 		/// [`WM_CLOSE`](crate::msg::wm::Close) message.
 		///
 		/// Sent as a signal that a window or an application should terminate.
@@ -406,7 +406,7 @@ impl WindowEvents {
 		/// * non-dialog [`WindowModal`](crate::gui::WindowModal).
 	}
 
-	wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,
+	pub_fn_wm_empty! { wm_context_menu, co::WM::CONTEXTMENU,
 		/// [`WM_CONTEXTMENU`](crate::msg::wm::ContextMenu) message.
 		///
 		/// Notifies a window that the user desires a context menu to appear.
@@ -544,7 +544,7 @@ impl WindowEvents {
 		});
 	}
 
-	wm_ret_none! { wm_dead_char, co::WM::DEADCHAR, wm::DeadChar,
+	pub_fn_wm_ret_none! { wm_dead_char, co::WM::DEADCHAR, wm::DeadChar,
 		/// [`WM_DEADCHAR`](crate::msg::wm::DeadChar) message.
 		///
 		/// Posted to the window with the keyboard focus when a
@@ -558,7 +558,7 @@ impl WindowEvents {
 		/// typing the O key.
 	}
 
-	wm_empty! { wm_destroy, co::WM::DESTROY,
+	pub_fn_wm_empty! { wm_destroy, co::WM::DESTROY,
 		/// [`WM_DESTROY`](crate::msg::wm::Destroy) message.
 		///
 		/// Sent when a window is being destroyed. It is sent to the window
@@ -571,14 +571,14 @@ impl WindowEvents {
 		/// still exist.
 	}
 
-	wm_ret_none! { wm_drop_files, co::WM::DROPFILES, wm::DropFiles,
+	pub_fn_wm_ret_none! { wm_drop_files, co::WM::DROPFILES, wm::DropFiles,
 		/// [`WM_DROPFILES`](crate::msg::wm::DropFiles) message.
 		///
 		/// Sent when the user drops a file on the window of an application that
 		/// has registered itself as a recipient of dropped files.
 	}
 
-	wm_ret_none! { wm_enable, co::WM::ENABLE, wm::Enable,
+	pub_fn_wm_ret_none! { wm_enable, co::WM::ENABLE, wm::Enable,
 		/// [`WM_ENABLE`](crate::msg::wm::Enable) message.
 		///
 		/// Sent when an application changes the enabled state of a window. It
@@ -589,7 +589,7 @@ impl WindowEvents {
 		/// has changed.
 	}
 
-	wm_ret_none! { wm_end_session, co::WM::ENDSESSION, wm::EndSession,
+	pub_fn_wm_ret_none! { wm_end_session, co::WM::ENDSESSION, wm::EndSession,
 		/// [`WM_ENDSESSION`](crate::msg::wm::EndSession) message.
 		///
 		/// Sent to an application after the system processes the results of the
@@ -598,7 +598,7 @@ impl WindowEvents {
 		/// session is ending.
 	}
 
-	wm_ret_none! { wm_enter_idle, co::WM::ENTERIDLE, wm::EnterIdle,
+	pub_fn_wm_ret_none! { wm_enter_idle, co::WM::ENTERIDLE, wm::EnterIdle,
 		/// [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) message.
 		///
 		/// Sent to the owner window of a modal dialog box or menu that is
@@ -607,7 +607,7 @@ impl WindowEvents {
 		/// processed one or more previous messages.
 	}
 
-	wm_ret_none! { wm_enter_size_move, co::WM::ENTERSIZEMOVE, wm::EnterSizeMove,
+	pub_fn_wm_ret_none! { wm_enter_size_move, co::WM::ENTERSIZEMOVE, wm::EnterSizeMove,
 		/// [`WM_ENTERSIZEMOVE`](crate::msg::wm::EnterSizeMove) message.
 		///
 		/// Sent one time to a window after it enters the moving or sizing modal
@@ -638,14 +638,14 @@ impl WindowEvents {
 		});
 	}
 
-	wm_ret_none! { wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop,
+	pub_fn_wm_ret_none! { wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop,
 		/// [`WM_EXITMENULOOP`](crate::msg::wm::ExitMenuLoop) message.
 		///
 		/// Notifies an application's main window procedure that a menu modal
 		/// loop has been exited.
 	}
 
-	wm_empty! { wm_exit_size_move, co::WM::EXITSIZEMOVE,
+	pub_fn_wm_empty! { wm_exit_size_move, co::WM::EXITSIZEMOVE,
 		/// [`WM_EXITSIZEMOVE`](crate::msg::wm::ExitSizeMove) message.
 		///
 		/// Sent one time to a window, after it has exited the moving or sizing
@@ -683,7 +683,7 @@ impl WindowEvents {
 		});
 	}
 
-	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo,
+	pub_fn_wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo,
 		/// [`WM_GETMINMAXINFO`](crate::msg::wm::GetMinMaxInfo) message.
 		///
 		/// Sent to a window when the size or position of the window is about to
@@ -692,13 +692,13 @@ impl WindowEvents {
 		/// maximum tracking size.
 	}
 
-	wm_ret_none! { wm_help, co::WM::HELP, wm::Help,
+	pub_fn_wm_ret_none! { wm_help, co::WM::HELP, wm::Help,
 		/// [`WM_HELP`](crate::msg::wm::Help) message.
 		///
 		/// Indicates that the user pressed the F1 key.
 	}
 
-	wm_ret_none! { wm_h_scroll, co::WM::HSCROLL, wm::HScroll,
+	pub_fn_wm_ret_none! { wm_h_scroll, co::WM::HSCROLL, wm::HScroll,
 		/// [`WM_HSCROLL`](crate::msg::wm::HScroll) message.
 		///
 		/// The WM_HSCROLL message is sent to a window when a scroll event
@@ -724,7 +724,7 @@ impl WindowEvents {
 		});
 	}
 
-	wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup,
+	pub_fn_wm_ret_none! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup,
 		/// [`WM_INITMENUPOPUP`](crate::msg::wm::InitMenuPopup) message.
 		///
 		/// Sent when a drop-down menu or submenu is about to become active.
@@ -732,7 +732,7 @@ impl WindowEvents {
 		/// displayed, without changing the entire menu.
 	}
 
-	wm_ret_none! { wm_key_down, co::WM::KEYDOWN, wm::KeyDown,
+	pub_fn_wm_ret_none! { wm_key_down, co::WM::KEYDOWN, wm::KeyDown,
 		/// [`WM_KEYDOWN`](crate::msg::wm::KeyDown) message.
 		///
 		/// Posted to the window with the keyboard focus when a nonsystem key is
@@ -740,7 +740,7 @@ impl WindowEvents {
 		/// is not pressed.
 	}
 
-	wm_ret_none! { wm_key_up, co::WM::KEYUP, wm::KeyUp,
+	pub_fn_wm_ret_none! { wm_key_up, co::WM::KEYUP, wm::KeyUp,
 		/// [`WM_KEYUP`](crate::msg::wm::KeyUp) message.
 		///
 		/// Posted to the window with the keyboard focus when a nonsystem key is
@@ -749,13 +749,13 @@ impl WindowEvents {
 		/// the keyboard focus.
 	}
 
-	wm_ret_none! { wm_kill_focus, co::WM::KILLFOCUS, wm::KillFocus,
+	pub_fn_wm_ret_none! { wm_kill_focus, co::WM::KILLFOCUS, wm::KillFocus,
 		/// [`WM_KILLFOCUS`](crate::msg::wm::KillFocus) message.
 		///
 		/// Sent to a window immediately before it loses the keyboard focus.
 	}
 
-	wm_ret_none! { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, wm::LButtonDblClk,
+	pub_fn_wm_ret_none! { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, wm::LButtonDblClk,
 		/// [`WM_LBUTTONDBLCLK`](crate::msg::wm::LButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the left mouse button while the
@@ -765,7 +765,7 @@ impl WindowEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_l_button_down, co::WM::LBUTTONDOWN, wm::LButtonDown,
+	pub_fn_wm_ret_none! { wm_l_button_down, co::WM::LBUTTONDOWN, wm::LButtonDown,
 		/// [`WM_LBUTTONDOWN`](crate::msg::wm::LButtonDown) message.
 		///
 		/// Posted when the user presses the left mouse button while the cursor
@@ -774,7 +774,7 @@ impl WindowEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_l_button_up, co::WM::LBUTTONUP, wm::LButtonUp,
+	pub_fn_wm_ret_none! { wm_l_button_up, co::WM::LBUTTONUP, wm::LButtonUp,
 		/// [`WM_LBUTTONUP`](crate::msg::wm::LButtonUp) message.
 		///
 		/// Posted when the user releases the left mouse button while the cursor
@@ -783,7 +783,7 @@ impl WindowEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, wm::MButtonDblClk,
+	pub_fn_wm_ret_none! { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, wm::MButtonDblClk,
 		/// [`WM_MBUTTONDBLCLK`](crate::msg::wm::MButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the middle mouse button while the
@@ -793,7 +793,7 @@ impl WindowEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_m_button_down, co::WM::MBUTTONDOWN, wm::MButtonDown,
+	pub_fn_wm_ret_none! { wm_m_button_down, co::WM::MBUTTONDOWN, wm::MButtonDown,
 		/// [`WM_MBUTTONDOWN`](crate::msg::wm::MButtonDown) message.
 		///
 		/// Posted when the user presses the middle mouse button while the
@@ -803,7 +803,7 @@ impl WindowEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_m_button_up, co::WM::MBUTTONUP, wm::MButtonUp,
+	pub_fn_wm_ret_none! { wm_m_button_up, co::WM::MBUTTONUP, wm::MButtonUp,
 		/// [`WM_MBUTTONUP`](crate::msg::wm::MButtonUp) message.
 		///
 		/// Posted when the user releases the middle mouse button while the
@@ -813,13 +813,13 @@ impl WindowEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_menu_command, co::WM::MENUCOMMAND, wm::MenuCommand,
+	pub_fn_wm_ret_none! { wm_menu_command, co::WM::MENUCOMMAND, wm::MenuCommand,
 		/// [`WM_MENUCOMMAND`](crate::msg::wm::MenuCommand) message.
 		///
 		/// Sent when the user makes a selection from a menu.
 	}
 
-	wm_ret_none! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover,
+	pub_fn_wm_ret_none! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover,
 		/// [`WM_MOUSEHOVER`](crate::msg::wm::MouseHover) message.
 		///
 		/// Posted to a window when the cursor hovers over the client area of
@@ -827,7 +827,7 @@ impl WindowEvents {
 		/// [`TrackMouseEvent`](crate::TrackMouseEvent).
 	}
 
-	wm_ret_none! { wm_mouse_move, co::WM::MOUSEMOVE, wm::MouseMove,
+	pub_fn_wm_ret_none! { wm_mouse_move, co::WM::MOUSEMOVE, wm::MouseMove,
 		/// [`WM_MOUSEMOVE`](crate::msg::wm::MouseMove) message.
 		///
 		/// Posted to a window when the cursor moves. If the mouse is not
@@ -836,13 +836,13 @@ impl WindowEvents {
 		/// captured the mouse.
 	}
 
-	wm_ret_none! { wm_move, co::WM::MOVE, wm::Move,
+	pub_fn_wm_ret_none! { wm_move, co::WM::MOVE, wm::Move,
 		/// [`WM_MOVE`](crate::msg::wm::Move) message.
 		///
 		/// Sent after a window has been moved.
 	}
 
-	wm_ret_none! { wm_moving, co::WM::MOVING, wm::Moving,
+	pub_fn_wm_ret_none! { wm_moving, co::WM::MOVING, wm::Moving,
 		/// [`WM_MOVING`](crate::msg::wm::Moving) message.
 		///
 		/// Sent to a window that the user is moving. By processing this
@@ -879,7 +879,7 @@ impl WindowEvents {
 		});
 	}
 
-	wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
+	pub_fn_wm_empty! { wm_nc_destroy, co::WM::NCDESTROY,
 		/// [`WM_NCDESTROY`](crate::msg::wm::NcDestroy) message.
 		///
 		/// Notifies a window that its nonclient area is being destroyed. The
@@ -901,7 +901,7 @@ impl WindowEvents {
 		/// * dialog [`WindowMain`](crate::gui::WindowMain).
 	}
 
-	wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint,
+	pub_fn_wm_ret_none! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint,
 		/// [`WM_NCPAINT`](crate::msg::wm::NcPaint) message.
 		///
 		/// Sent to a window when its frame must be painted.
@@ -914,21 +914,21 @@ impl WindowEvents {
 		/// * dialog [`WindowControl`](crate::gui::WindowControl).
 	}
 
-	wm_ret_none! { wm_next_dlg_ctl, co::WM::NEXTDLGCTL, wm::NextDlgCtl,
+	pub_fn_wm_ret_none! { wm_next_dlg_ctl, co::WM::NEXTDLGCTL, wm::NextDlgCtl,
 		/// [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) message.
 		///
 		/// Sent to a dialog box procedure to set the keyboard focus to a
 		/// different control in the dialog box.
 	}
 
-	wm_empty! { wm_null, co::WM::NULL,
+	pub_fn_wm_empty! { wm_null, co::WM::NULL,
 		/// [`WM_NULL`](crate::msg::wm::Null) message.
 		///
 		/// Performs no operation. An application sends the message if it wants
 		/// to post a message that the recipient window will ignore.
 	}
 
-	wm_empty! { wm_paint, co::WM::PAINT,
+	pub_fn_wm_empty! { wm_paint, co::WM::PAINT,
 		/// [`WM_PAINT`](crate::msg::wm::Paint) message.
 		///
 		/// Sent when the system or another application makes a request to paint
@@ -941,7 +941,7 @@ impl WindowEvents {
 		/// [`PeekMessage`](crate::PeekMessage) function.
 	}
 
-	wm_ret_none! { wm_parent_notify, co::WM::PARENTNOTIFY, wm::ParentNotify,
+	pub_fn_wm_ret_none! { wm_parent_notify, co::WM::PARENTNOTIFY, wm::ParentNotify,
 		/// [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) message.
 		///
 		/// Sent to a window when a significant action occurs on a descendant
@@ -961,7 +961,7 @@ impl WindowEvents {
 		});
 	}
 
-	wm_ret_none! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk,
+	pub_fn_wm_ret_none! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk,
 		/// [`WM_RBUTTONDBLCLK`](crate::msg::wm::RButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the right mouse button while the
@@ -971,7 +971,7 @@ impl WindowEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_r_button_down, co::WM::RBUTTONDOWN, wm::RButtonDown,
+	pub_fn_wm_ret_none! { wm_r_button_down, co::WM::RBUTTONDOWN, wm::RButtonDown,
 		/// [`WM_RBUTTONDOWN`](crate::msg::wm::RButtonDown) message.
 		///
 		/// Posted when the user presses the right mouse button while the cursor
@@ -980,7 +980,7 @@ impl WindowEvents {
 		/// message is posted to the window that has captured the mouse.
 	}
 
-	wm_ret_none! { wm_r_button_up, co::WM::RBUTTONUP, wm::RButtonUp,
+	pub_fn_wm_ret_none! { wm_r_button_up, co::WM::RBUTTONUP, wm::RButtonUp,
 		/// [`WM_RBUTTONUP`](crate::msg::wm::RButtonUp) message.
 		///
 		/// Posted when the user releases the right mouse button while the
@@ -990,7 +990,7 @@ impl WindowEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus,
+	pub_fn_wm_ret_none! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus,
 		/// [`WM_SETFOCUS`](crate::msg::wm::SetFocus) message.
 		///
 		/// Sent to a window after it has gained the keyboard focus.
@@ -1003,7 +1003,7 @@ impl WindowEvents {
 		/// * non-dialog [`WindowModal`](crate::gui::WindowModal).
 	}
 
-	wm_ret_none! { wm_set_font, co::WM::SETFONT, wm::SetFont,
+	pub_fn_wm_ret_none! { wm_set_font, co::WM::SETFONT, wm::SetFont,
 		/// [`WM_SETFONT`](crate::msg::wm::SetFont) message.
 		///
 		/// Sets the font that a control is to use when drawing text.
@@ -1026,13 +1026,13 @@ impl WindowEvents {
 		});
 	}
 
-	wm_ret_none! { wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow,
+	pub_fn_wm_ret_none! { wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow,
 		/// [`WM_SHOWWINDOW`](crate::msg::wm::ShowWindow) message.
 		///
 		/// Sent to a window when the window is about to be hidden or shown.
 	}
 
-	wm_ret_none! { wm_size, co::WM::SIZE, wm::Size,
+	pub_fn_wm_ret_none! { wm_size, co::WM::SIZE, wm::Size,
 		/// [`WM_SIZE`](crate::msg::wm::Size) message.
 		///
 		/// Sent to a window after its size has changed.
@@ -1057,7 +1057,7 @@ impl WindowEvents {
 		/// ```
 	}
 
-	wm_ret_none! { wm_sizing, co::WM::SIZING, wm::Sizing,
+	pub_fn_wm_ret_none! { wm_sizing, co::WM::SIZING, wm::Sizing,
 		/// [`WM_SIZING`](crate::msg::wm::Sizing) message.
 		///
 		/// Sent to a window that the user is resizing. By processing this
@@ -1065,7 +1065,7 @@ impl WindowEvents {
 		/// drag rectangle and, if needed, change its size or position.
 	}
 
-	wm_ret_none! { wm_style_changed, co::WM::STYLECHANGED, wm::StyleChanged,
+	pub_fn_wm_ret_none! { wm_style_changed, co::WM::STYLECHANGED, wm::StyleChanged,
 		/// [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) message.
 		///
 		/// Sent to a window after the
@@ -1073,7 +1073,7 @@ impl WindowEvents {
 		/// changed one or more of the window's styles.
 	}
 
-	wm_ret_none! { wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging,
+	pub_fn_wm_ret_none! { wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging,
 		/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) message.
 		///
 		/// Sent to a window when the
@@ -1081,7 +1081,7 @@ impl WindowEvents {
 		/// about to change one or more of the window's styles.
 	}
 
-	wm_ret_none! { wm_sys_char, co::WM::SYSCHAR, wm::SysChar,
+	pub_fn_wm_ret_none! { wm_sys_char, co::WM::SYSCHAR, wm::SysChar,
 		/// [`WM_SYSCHAR`](crate::msg::wm::SysChar) message.
 		///
 		/// Posted to the window with the keyboard focus when a
@@ -1091,7 +1091,7 @@ impl WindowEvents {
 		/// character key that is pressed while the ALT key is down.
 	}
 
-	wm_ret_none! { wm_sys_command, co::WM::SYSCOMMAND, wm::SysCommand,
+	pub_fn_wm_ret_none! { wm_sys_command, co::WM::SYSCOMMAND, wm::SysCommand,
 		/// [`WM_SYSCOMMAND`](crate::msg::wm::SysCommand) message.
 		///
 		/// A window receives this message when the user chooses a command from
@@ -1100,7 +1100,7 @@ impl WindowEvents {
 		/// button, or close button.
 	}
 
-	wm_ret_none! { wm_sys_dead_char, co::WM::SYSDEADCHAR, wm::SysDeadChar,
+	pub_fn_wm_ret_none! { wm_sys_dead_char, co::WM::SYSDEADCHAR, wm::SysDeadChar,
 		/// [`WM_SYSDEADCHAR`](crate::msg::wm::SysDeadChar) message.
 		///
 		/// Sent to the window with the keyboard focus when a
@@ -1110,7 +1110,7 @@ impl WindowEvents {
 		/// that is, a dead key that is pressed while holding down the ALT key.
 	}
 
-	wm_ret_none! { wm_sys_key_down, co::WM::SYSKEYDOWN, wm::SysKeyDown,
+	pub_fn_wm_ret_none! { wm_sys_key_down, co::WM::SYSKEYDOWN, wm::SysKeyDown,
 		/// [`WM_SYSKEYDOWN`](crate::msg::wm::SysKeyDown) message.
 		///
 		/// Posted to the window with the keyboard focus when the user presses
@@ -1122,7 +1122,7 @@ impl WindowEvents {
 		/// context code in the lParam parameter.
 	}
 
-	wm_ret_none! { wm_sys_key_up, co::WM::SYSKEYUP, wm::SysKeyUp,
+	pub_fn_wm_ret_none! { wm_sys_key_up, co::WM::SYSKEYUP, wm::SysKeyUp,
 		/// [`WM_SYSKEYUP`](crate::msg::wm::SysKeyUp) message.
 		///
 		/// Posted to the window with the keyboard focus when the user releases
@@ -1133,7 +1133,7 @@ impl WindowEvents {
 		/// contexts by checking the context code in the lParam parameter.
 	}
 
-	wm_empty! { wm_theme_changed, co::WM::THEMECHANGED,
+	pub_fn_wm_empty! { wm_theme_changed, co::WM::THEMECHANGED,
 		/// [`WM_THEMECHANGED`](crate::msg::wm::ThemeChanged) message.
 		///
 		/// Broadcast to every window following a theme change event. Examples
@@ -1141,7 +1141,7 @@ impl WindowEvents {
 		/// deactivation of a theme, or a transition from one theme to another.
 	}
 
-	wm_ret_none! { wm_v_scroll, co::WM::VSCROLL, wm::VScroll,
+	pub_fn_wm_ret_none! { wm_v_scroll, co::WM::VSCROLL, wm::VScroll,
 		/// [`WM_VSCROLL`](crate::msg::wm::VScroll) message.
 		///
 		/// The WM_VSCROLL message is sent to a window when a scroll event
@@ -1150,7 +1150,7 @@ impl WindowEvents {
 		/// scroll event occurs in the control.
 	}
 
-	wm_ret_none! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged,
+	pub_fn_wm_ret_none! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged,
 		/// [`WM_WINDOWPOSCHANGED`](crate::msg::wm::WindowPosChanged) message.
 		///
 		/// Sent to a window whose size, position, or place in the Z order has
@@ -1159,7 +1159,7 @@ impl WindowEvents {
 		/// window-management function.
 	}
 
-	wm_ret_none! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging,
+	pub_fn_wm_ret_none! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging,
 		/// [`WM_WINDOWPOSCHANGING`](crate::msg::wm::WindowPosChanging) message.
 		///
 		/// Sent to a window whose size, position, or place in the Z order is
@@ -1168,7 +1168,7 @@ impl WindowEvents {
 		/// window-management function.
 	}
 
-	wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk,
+	pub_fn_wm_ret_none! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk,
 		/// [`WM_XBUTTONDBLCLK`](crate::msg::wm::XButtonDblClk) message.
 		///
 		/// Posted when the user double-clicks the first or second X button
@@ -1178,7 +1178,7 @@ impl WindowEvents {
 		/// captured the mouse.
 	}
 
-	wm_ret_none! { wm_x_button_down, co::WM::XBUTTONDOWN, wm::XButtonDown,
+	pub_fn_wm_ret_none! { wm_x_button_down, co::WM::XBUTTONDOWN, wm::XButtonDown,
 		/// [`WM_XBUTTONDOWN`](crate::msg::wm::XButtonDown) message.
 		///
 		/// Posted when the user presses the first or second X button while the
@@ -1188,7 +1188,7 @@ impl WindowEvents {
 		/// mouse.
 	}
 
-	wm_ret_none! { wm_x_button_up, co::WM::XBUTTONUP, wm::XButtonUp,
+	pub_fn_wm_ret_none! { wm_x_button_up, co::WM::XBUTTONUP, wm::XButtonUp,
 		/// [`WM_XBUTTONUP`](crate::msg::wm::XButtonUp) message.
 		///
 		/// Posted when the user releases the first or second X button while the

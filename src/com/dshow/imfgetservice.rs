@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IMFGetService_impl {
+macro_rules! pub_struct_IMFGetService {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -8,7 +8,7 @@ macro_rules! IMFGetService_impl {
 		use crate::com::dshow::vt::IMFGetServiceVT;
 		use crate::structs::GUID;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -37,7 +37,7 @@ macro_rules! IMFGetService_impl {
 	};
 }
 
-IMFGetService_impl! {
+pub_struct_IMFGetService! {
 	/// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
 	/// COM interface over
 	/// [`IMFGetServiceVT`](crate::dshow::vt::IMFGetServiceVT). Inherits from

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IFilterGraph_impl {
+macro_rules! pub_struct_IFilterGraph {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -9,7 +9,7 @@ macro_rules! IFilterGraph_impl {
 		use crate::com::dshow::vt::{IBaseFilterVT, IEnumFiltersVT, IFilterGraphVT};
 		use crate::WString;
 
-		IUnknown_impl! {
+		pub_struct_IUnknown! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -77,7 +77,7 @@ macro_rules! IFilterGraph_impl {
 	};
 }
 
-IFilterGraph_impl! {
+pub_struct_IFilterGraph! {
 	/// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
 	/// COM interface over [`IFilterGraphVT`](crate::dshow::vt::IFilterGraphVT).
 	/// Inherits from [`IUnknown`](crate::IUnknown).

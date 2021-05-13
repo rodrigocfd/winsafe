@@ -2,7 +2,7 @@
 
 use crate::co::{CCM, WM};
 
-const_type_wm! { UDM,
+pub_struct_const_wm! { UDM,
 	/// Up-down control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -26,7 +26,7 @@ const_type_wm! { UDM,
 	GETPOS32, WM::USER.0 + 114
 }
 
-const_type_nm! { UDN,
+pub_struct_const_nm! { UDN,
 	/// Up-down control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
@@ -36,7 +36,7 @@ const_type_nm! { UDN,
 	DELTAPOS, Self::FIRST.0 - 1
 }
 
-const_type_ws! { UDS,
+pub_struct_const_ws! { UDS,
 	/// Up-down control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -52,7 +52,7 @@ const_type_ws! { UDS,
 	HOTTRACK, 0x0100
 }
 
-const_type! { VER_COND, u8,
+pub_struct_const! { VER_COND, u8,
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `Condition` (`u8`).
 	=>
 	EQUAL, 1
@@ -65,7 +65,7 @@ const_type! { VER_COND, u8,
 	CONDITION_MASK, 7
 }
 
-const_type! { VER_MASK, u32,
+pub_struct_const! { VER_MASK, u32,
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `TypeMask` (`u32`).
 	=>
 	MINORVERSION, 0x000_0001
@@ -78,7 +78,7 @@ const_type! { VER_MASK, u32,
 	PRODUCT_TYPE, 0x000_0080
 }
 
-const_type! { VER_NT, u8,
+pub_struct_const! { VER_NT, u8,
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
 	=>
 	WORKSTATION, 0x000_0001
@@ -86,7 +86,7 @@ const_type! { VER_NT, u8,
 	SERVER, 0x000_0003
 }
 
-const_type! { VER_PLATFORM, u32,
+pub_struct_const! { VER_PLATFORM, u32,
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
 	=>
 	WIN32s, 0
@@ -94,7 +94,7 @@ const_type! { VER_PLATFORM, u32,
 	WIN32_NT, 2
 }
 
-const_type! { VER_SUITE, u16,
+pub_struct_const! { VER_SUITE, u16,
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
 	=>
 	SMALLBUSINESS, 0x0001
@@ -116,7 +116,7 @@ const_type! { VER_SUITE, u16,
 	//MULTIUSERTS, 0x00020000 // Win32 bug, truncated to zero as u16
 }
 
-const_type! { VK, u16,
+pub_struct_const! { VK, u16,
 	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
 	=>
@@ -282,7 +282,7 @@ const_type! { VK, u16,
 	OEM_CLEAR, 0xfe
 }
 
-const_type! { VK_DIR, u16,
+pub_struct_const! { VK_DIR, u16,
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `vkDirection` (`u16`).
 	=>
 	PRIOR, 0x21
@@ -295,7 +295,7 @@ const_type! { VK_DIR, u16,
 	DOWN, 0x28
 }
 
-const_type! { VS_PART, i32,
+pub_struct_const! { VS_PART, i32,
 	/// System visual style
 	/// [part](https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states)
 	/// (`i32`).
@@ -435,7 +435,7 @@ const_type! { VS_PART, i32,
 	LVP_COLUMNDETAIL, 10
 }
 
-const_type! { VS_STATE, i32,
+pub_struct_const! { VS_STATE, i32,
 	/// System visual style
 	/// [state](https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states)
 	/// (`i32`).

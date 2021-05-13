@@ -1,5 +1,5 @@
 /// Declares a COM virtual table struct, and implements the `ComVT` trait.
-macro_rules! com_virtual_table {
+macro_rules! pub_struct_vtable {
 	(
 		$name:ident,
 		$(#[$doc:meta])*

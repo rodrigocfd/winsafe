@@ -13,10 +13,10 @@ use crate::privs::{
 	ref_as_pcvoid,
 	ref_as_pvoid,
 };
-use crate::structs::{COLORREF, POINT, SIZE, TEXTMETRIC};
+use crate::structs::{COLORREF, POINT, RECT, SIZE, TEXTMETRIC};
 use crate::WString;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to a
 	/// [device context](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdc).
 	HDC
@@ -112,6 +112,14 @@ impl HDC {
 	/// method.
 	pub fn FillPath(self) -> WinResult<()> {
 		bool_to_winresult(unsafe { gdi32::FillPath(self.ptr) })
+	}
+
+	/// [`FillRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
+	/// method.
+	pub fn FillRect(self, lprc: RECT, hbr: HBRUSH) -> WinResult<()> {
+		nonzero_to_winresult(
+			unsafe { gdi32::FillRect(self.ptr, ref_as_pcvoid(&lprc), hbr.ptr) },
+		).map(|_| ())
 	}
 
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)

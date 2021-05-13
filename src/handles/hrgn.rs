@@ -7,7 +7,7 @@ use crate::funcs::GetLastError;
 use crate::privs::ref_as_pcvoid;
 use crate::structs::RECT;
 
-hgdiobj_type! {
+pub_struct_handle_gdi! {
 	/// Handle to a
 	/// [region](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
 	/// GDI object.

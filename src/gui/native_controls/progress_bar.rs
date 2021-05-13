@@ -102,7 +102,7 @@ impl ProgressBar {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	hwnd_onsubclass!();
+	pub_fn_hwnd_onsubclass!();
 
 	/// Retrieves the current position by sending a
 	/// [`PBM_GETPOS`](crate::msg::pbm::GetPos) message.

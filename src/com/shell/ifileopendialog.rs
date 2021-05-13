@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-macro_rules! IFileOpenDialog_impl {
+macro_rules! pub_struct_IFileOpenDialog {
 	(
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
@@ -8,7 +8,7 @@ macro_rules! IFileOpenDialog_impl {
 		use crate::com::shell::IShellItemArray;
 		use crate::com::shell::vt::{IFileOpenDialogVT, IShellItemArrayVT};
 
-		IFileDialog_impl! {
+		pub_struct_IFileDialog! {
 			$(#[$doc])*
 			$name, $vt
 		}
@@ -45,7 +45,7 @@ macro_rules! IFileOpenDialog_impl {
 	};
 }
 
-IFileOpenDialog_impl! {
+pub_struct_IFileOpenDialog! {
 	/// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
 	/// COM interface over
 	/// [`IFileOpenDialogVT`](crate::shell::vt::IFileOpenDialogVT). Inherits

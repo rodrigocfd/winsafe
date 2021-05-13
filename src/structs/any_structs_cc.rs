@@ -85,8 +85,8 @@ pub struct LITEM {
 impl_default_zero!(LITEM);
 
 impl LITEM {
-	string_arr_get_set!(szID, set_szID);
-	string_arr_get_set!(szUrl, set_szUrl);
+	pub_fn_string_arr_get_set!(szID, set_szID);
+	pub_fn_string_arr_get_set!(szUrl, set_szUrl);
 }
 
 /// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
@@ -251,7 +251,7 @@ pub struct NMDATETIMEFORMAT<'a> {
 impl_default_zero!(NMDATETIMEFORMAT, 'a);
 
 impl<'a> NMDATETIMEFORMAT<'a> {
-	string_ptr_get_set!('a, pszFormat, set_pszFormat);
+	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
 
 	/// Returns the `pszDisplay` field.
 	pub fn pszDisplay(&self) -> String {
@@ -305,7 +305,7 @@ pub struct NMDATETIMESTRING<'a> {
 impl_default_zero!(NMDATETIMESTRING, 'a);
 
 impl<'a> NMDATETIMESTRING<'a> {
-	string_ptr_get_set!('a, pszUserString, set_pszUserString);
+	pub_fn_string_ptr_get_set!('a, pszUserString, set_pszUserString);
 }
 
 /// [`NMDATETIMEWMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimewmkeydownw)
@@ -322,7 +322,7 @@ pub struct NMDATETIMEWMKEYDOWN<'a> {
 impl_default_zero!(NMDATETIMEWMKEYDOWN, 'a);
 
 impl<'a> NMDATETIMEWMKEYDOWN<'a> {
-	string_ptr_get_set!('a, pszFormat, set_pszFormat);
+	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
 }
 
 /// [`NMDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)
@@ -424,7 +424,7 @@ pub struct NMLVEMPTYMARKUP {
 }
 
 impl NMLVEMPTYMARKUP {
-	string_arr_get_set!(szMarkup, set_szMarkup);
+	pub_fn_string_arr_get_set!(szMarkup, set_szMarkup);
 }
 
 /// [`NMLVFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)

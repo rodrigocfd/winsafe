@@ -1,6 +1,6 @@
 use crate::co::{CCM, WM};
 
-const_type! { QUALITY, u8,
+pub_struct_const! { QUALITY, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	=>
 	DEFAULT, 0
@@ -12,7 +12,7 @@ const_type! { QUALITY, u8,
 	CLEARTYPE_NATURAL, 6
 }
 
-const_type! { QS, u32,
+pub_struct_const! { QS, u32,
 	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags` (`u32`).
 	=>
 	KEY, 0x0001
@@ -32,7 +32,7 @@ const_type! { QS, u32,
 	ALLINPUT, Self::INPUT.0 | Self::POSTMESSAGE.0 | Self::TIMER.0 | Self::PAINT.0 | Self::HOTKEY.0 | Self::SENDMESSAGE.0
 }
 
-const_type_wm! { RB,
+pub_struct_const_wm! { RB,
 	/// Rebar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -82,7 +82,7 @@ const_type_wm! { RB,
 	SETBANDWIDTH, WM::USER.0 + 44
 }
 
-const_type_nm! { RBN,
+pub_struct_const_nm! { RBN,
 	/// Rebar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-notifications)
 	/// (`i32`), convertible to [`NM`](crate::co::NM).
@@ -104,7 +104,7 @@ const_type_nm! { RBN,
 	AUTOBREAK, Self::FIRST.0 - 22
 }
 
-const_type_ws! { RBS,
+pub_struct_const_ws! { RBS,
 	/// Rebar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -119,7 +119,7 @@ const_type_ws! { RBS,
 	DBLCLKTOGGLE, 0x0000_8000
 }
 
-const_type! { RDW, u32,
+pub_struct_const! { RDW, u32,
 	/// [`RedrawWindow`](crate::HWND::RedrawWindow) `flags` (`u32`).
 	=>
 	INVALIDATE, 0x0001
@@ -136,7 +136,7 @@ const_type! { RDW, u32,
 	NOFRAME, 0x0800
 }
 
-const_type! { REG, u32,
+pub_struct_const! { REG, u32,
 	/// Registry
 	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
@@ -157,7 +157,7 @@ const_type! { REG, u32,
 	QWORD_LITTLE_ENDIAN, 11
 }
 
-const_type! { REG_OPTION, u32,
+pub_struct_const! { REG_OPTION, u32,
 	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `uOptions` (`u32`).
 	=>
 	RESERVED, 0x0000_0000
@@ -168,7 +168,7 @@ const_type! { REG_OPTION, u32,
 	OPEN_LINK, 0x0000_0008
 }
 
-const_type! { REGION, i32,
+pub_struct_const! { REGION, i32,
 	/// [`GetUpdateRgn`](crate::HWND::GetUpdateRgn),
 	/// [`GetWindowRgn`](crate::HWND::GetWindowRgn) and
 	/// [`SelectObjectRgn`](crate::HDC::SelectObjectRgn) return value (`i32`).
@@ -178,7 +178,7 @@ const_type! { REGION, i32,
 	COMPLEX, 3
 }
 
-const_type! { ROP, u32,
+pub_struct_const! { ROP, u32,
 	/// Raster operation code (`u32`).
 	/// [`BitBlt`](crate::HDC::BitBlt) `rop`,
 	/// [`PatBlt`](crate::HDC::PatBlt) `rop` and
@@ -204,7 +204,7 @@ const_type! { ROP, u32,
 	CAPTUREBLT, 0x4000_0000
 }
 
-const_type! { RRF, u32,
+pub_struct_const! { RRF, u32,
 	/// [`RegGetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
 	=>
 	RT_REG_NONE, 0x0000_0001

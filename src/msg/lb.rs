@@ -644,7 +644,7 @@ impl MsgSend for ItemFromPoint {
 	}
 }
 
-empty_msg! { ResetContent, co::LB::RESETCONTENT.into(),
+pub_struct_msg_empty! { ResetContent, co::LB::RESETCONTENT.into(),
 	/// [`LB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-resetcontent)
 }
 

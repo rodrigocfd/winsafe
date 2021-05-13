@@ -1,7 +1,7 @@
 //! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
 //! constants.
 
-const_type! { DROPEFFECT, u32,
+pub_struct_const! { DROPEFFECT, u32,
 	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
 	/// constants (`u32`).
 	=>
@@ -12,7 +12,7 @@ const_type! { DROPEFFECT, u32,
 	SCROLL, 0x8000_0000
 }
 
-const_type! { FOS, u32,
+pub_struct_const! { FOS, u32,
 	/// [`_FILEOPENDIALOGOPTIONS`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
 	=>
@@ -113,7 +113,7 @@ const_type! { FOS, u32,
 	SUPPORTSTREAMABLEITEMS, 0x8000_0000
 }
 
-const_type! { SFGAO, u32,
+pub_struct_const! { SFGAO, u32,
 	/// [`SFGAO`](https://docs.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
 	=>
@@ -153,7 +153,7 @@ const_type! { SFGAO, u32,
 	PKEYSFGAOMASK, 0x8104_4000
 }
 
-const_type! { SIGDN, u32,
+pub_struct_const! { SIGDN, u32,
 	/// [`SIGDN`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
 	/// enumeration (`u32`).
 	=>
@@ -196,7 +196,7 @@ const_type! { SIGDN, u32,
 	PARENTRELATIVEFORUI, 0x8009_4001
 }
 
-const_type! { TBPF, u32,
+pub_struct_const! { TBPF, u32,
 	/// [`ITaskbarList3::SetProgressState`](crate::shell::ITaskbarList3::SetProgressState)
 	/// `tbpFlags` (`u32`).
 	=>

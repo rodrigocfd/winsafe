@@ -18,7 +18,7 @@ pub trait ComVT {
 
 type IUnkPP = PPComVT<IUnknownVT>;
 
-com_virtual_table! { IUnknownVT,
+pub_struct_vtable! { IUnknownVT,
 	/// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual
 	/// tables.
 	->
@@ -29,7 +29,7 @@ com_virtual_table! { IUnknownVT,
 	Release, fn(IUnkPP) -> u32
 }
 
-com_virtual_table! { IDispatchVT,
+pub_struct_vtable! { IDispatchVT,
 	/// [`IDispatch`](crate::IDispatch) virtual table.
 	->
 	0x00020400, 0x0000, 0x0000, 0xc000, 0x000000000046,
@@ -41,7 +41,7 @@ com_virtual_table! { IDispatchVT,
 	Invoke, fn(IUnkPP, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRESULT
 }
 
-com_virtual_table! { IPersistVT,
+pub_struct_vtable! { IPersistVT,
 	/// [`IPersist`](crate::IPersist) virtual table.
 	->
 	0x0000010c, 0x0000, 0x0000, 0xc000, 0x000000000046,
@@ -50,7 +50,7 @@ com_virtual_table! { IPersistVT,
 	GetClassID, fn(IUnkPP, PVOID) -> HRESULT
 }
 
-com_virtual_table! { ITypeInfoVT,
+pub_struct_vtable! { ITypeInfoVT,
 	/// [`ITypeInfo`](crate::ITypeInfo) virtual table.
 	->
 	0x00020401, 0x0000, 0x0000, 0xc000, 0x000000000046,

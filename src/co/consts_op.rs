@@ -1,6 +1,6 @@
 use crate::co::{CCM, FF, QS, WM};
 
-const_type! { OCR, u32,
+pub_struct_const! { OCR, u32,
 	/// [`SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id` (`u32`).
 	=>
 	APPSTARTING, 32650
@@ -19,7 +19,7 @@ const_type! { OCR, u32,
 	WAIT, 32514
 }
 
-const_type! { OUT_PRECIS, u8,
+pub_struct_const! { OUT_PRECIS, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	=>
 	DEFAULT, 0
@@ -35,7 +35,7 @@ const_type! { OUT_PRECIS, u8,
 	PS_ONLY, 10
 }
 
-const_type! { PAGE, u32,
+pub_struct_const! { PAGE, u32,
 	/// [`CreateFileMapping`](crate::HFILE::CreateFileMapping) `flProtect`
 	/// (`u32`).
 	=>
@@ -55,7 +55,7 @@ const_type! { PAGE, u32,
 	SEC_WRITECOMBINE, 0x4000_0000
 }
 
-const_type_wm! { PBM,
+pub_struct_const_wm! { PBM,
 	/// Progress bar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
 	/// (`u32`), convertible to [`WM`](crate::co::WM).
@@ -79,7 +79,7 @@ const_type_wm! { PBM,
 	GETSTATE, WM::USER.0 + 17
 }
 
-const_type_ws! { PBS,
+pub_struct_const_ws! { PBS,
 	/// Progress bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -90,7 +90,7 @@ const_type_ws! { PBS,
 	SMOOTHREVERSE, 0x10
 }
 
-const_type! { PBST, u32,
+pub_struct_const! { PBST, u32,
 	/// Progress bar
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 	/// (`u32`).
@@ -100,7 +100,7 @@ const_type! { PBST, u32,
 	PAUSED, 0x0003
 }
 
-const_type! { PITCH, u8,
+pub_struct_const! { PITCH, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`FF`](crate::co::FF).
 	=>
@@ -116,7 +116,7 @@ impl PITCH {
 	}
 }
 
-const_type! { PM, u32,
+pub_struct_const! { PM, u32,
 	/// [`PeekMessage`](crate::PeekMessage) `wRemoveMsg` (`u32`).
 	=>
 	NOREMOVE, 0x0000

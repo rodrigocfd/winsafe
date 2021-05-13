@@ -6,7 +6,7 @@ use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
 use crate::privs::bool_to_winresult;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to a
 	/// [file mapping](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
 	/// Originally just a `HANDLE`.
@@ -45,7 +45,7 @@ impl HFILEMAP {
 
 //------------------------------------------------------------------------------
 
-handle_type! {
+pub_struct_handle! {
 	/// Address of a
 	/// [mapped view](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
 	/// Originally just an `LPVOID`.

@@ -5,7 +5,7 @@ use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::privs::bool_to_winresult;
 
-handle_type! {
+pub_struct_handle! {
 	/// Handle to an
 	/// [icon](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hicon).
 	HICON

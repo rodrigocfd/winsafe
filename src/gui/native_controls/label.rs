@@ -115,7 +115,7 @@ impl Label {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	ctrlid_hwnd_on_onsubclass!(LabelEvents);
+	pub_fn_ctrlid_hwnd_on_onsubclass!(LabelEvents);
 
 	/// Resizes the control to exactly fit current text.
 	pub fn resize_to_text(&self) -> WinResult<()> {

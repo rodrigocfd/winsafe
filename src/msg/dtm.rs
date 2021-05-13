@@ -10,7 +10,7 @@ use crate::privs::GDT_ERROR;
 use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE, SYSTEMTIME};
 use crate::WString;
 
-empty_msg! { CloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
+pub_struct_msg_empty! { CloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
 	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
 }
 

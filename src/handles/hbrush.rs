@@ -5,10 +5,10 @@ use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 use crate::handles::HBITMAP;
-use crate::privs::ref_as_pcvoid;
+use crate::privs::{ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::{COLORREF, LOGBRUSH};
 
-hgdiobj_type! {
+pub_struct_handle_gdi! {
 	/// Handle to a
 	/// [brush](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
 	HBRUSH
@@ -16,6 +16,10 @@ hgdiobj_type! {
 
 impl HBRUSH {
 	/// Creates a brush with the given system color.
+	///
+	/// **Note:** This should be used only to initialize the
+	/// [`WNDCLASSEX`](crate::WNDCLASSEX)'s `hbrBackground` field. Any other use
+	/// will yield an invalid handle.
 	pub const fn from_sys_color(color: co::COLOR) -> HBRUSH {
 		Self { ptr: (color.0 + 1) as _ }
 	}
@@ -66,11 +70,29 @@ impl HBRUSH {
 			.ok_or_else(|| GetLastError())
 	}
 
+	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
+	/// method.
+	pub fn GetObject(self, pv: &mut LOGBRUSH) -> WinResult<()> {
+		match unsafe {
+			gdi32::GetObjectW(
+				self.ptr,
+				std::mem::size_of::<LOGBRUSH>() as _,
+				ref_as_pvoid(pv),
+			)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(()), // not really an error
+				err => Err(err),
+			},
+			_ => Ok(()),
+		}
+	}
+
 	/// [`GetSysColorBrush`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
 	pub fn GetSysColorBrush(nIndex: co::COLOR) -> WinResult<HBRUSH> {
 		unsafe { gdi32::GetSysColorBrush(nIndex.0).as_mut() }
-		.map(|ptr| Self { ptr })
-		.ok_or_else(|| GetLastError())
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 }
