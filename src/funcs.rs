@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{advapi32, BOOL, comctl32, comdlg32, HRESULT, kernel32, user32};
-use crate::handles::{HINSTANCE, HPROCESS, HWND};
+use crate::handles::{HINSTANCE, HWND};
 use crate::privs::{
 	bool_to_winresult,
 	INVALID_FILE_ATTRIBUTES,
@@ -311,17 +311,6 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 			map
 		})
 		.ok_or_else(|| GetLastError())
-}
-
-/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
-/// function.
-pub fn GetExitCodeProcess(hProcess: HPROCESS) -> WinResult<u32> {
-	let mut lpExitCode: u32 = 0;
-	bool_to_winresult(
-		unsafe {
-			kernel32::GetExitCodeProcess(hProcess.ptr, &mut lpExitCode)
-		},
-	).map(|_| lpExitCode)
 }
 
 /// [`GetFileAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
