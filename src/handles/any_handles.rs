@@ -13,11 +13,25 @@ pub_struct_handle_gdi! {
 	HPEN
 }
 
-pub_struct_handle! {
+pub_struct_handle_closeable! {
 	/// Handle to an
 	/// [event](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).
 	/// Originally just a `HANDLE`.
 	HEVENT
+}
+
+pub_struct_handle_closeable! {
+	/// Handle to a
+	/// [process](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information).
+	/// Originally just a `HANDLE`.
+	HPROCESS
+}
+
+pub_struct_handle_closeable! {
+	/// Handle to a
+	/// [thread](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information).
+	/// Originally just a `HANDLE`.
+	HTHREAD
 }
 
 pub_struct_handle! {

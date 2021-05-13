@@ -9,7 +9,20 @@ use crate::aliases::{CCHOOKPROC, WNDPROC};
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPlace, IdStr};
 use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
-use crate::handles::{HBITMAP, HBRUSH, HCURSOR, HDC, HEVENT, HICON, HINSTANCE, HMENU, HWND};
+use crate::handles::{
+	HBITMAP,
+	HBRUSH,
+	HCURSOR,
+	HDC,
+	HEVENT,
+	HICON,
+	HINSTANCE,
+	HMENU,
+	HPIPE,
+	HPROCESS,
+	HTHREAD,
+	HWND,
+};
 use crate::privs::LF_FACESIZE;
 use crate::structs::{ATOM, COLORREF};
 use crate::unions::{ColorrefDib, ColorrefHbitmap};
@@ -480,6 +493,18 @@ impl POINT {
 	}
 }
 
+/// [`PROCESS_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information)
+/// struct.
+#[repr(C)]
+pub struct PROCESS_INFORMATION {
+	pub hProcess: HPROCESS,
+	pub hThread: HTHREAD,
+	pub dwProcessId: u32,
+	pub dwThreadId: u32,
+}
+
+impl_default_zero!(PROCESS_INFORMATION);
+
 /// [`RECT`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect)
 /// struct.
 #[repr(C)]
@@ -589,6 +614,39 @@ impl SIZE {
 	pub fn new(cx: i32, cy: i32) -> SIZE {
 		Self { cx, cy }
 	}
+}
+
+/// [`STARTUPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow)
+/// method.
+#[repr(C)]
+pub struct STARTUPINFO<'a, 'b> {
+	cb: u32,
+	lpReserved: *mut u16,
+	pub lpDesktop: *mut u16,
+	pub lpTitle: *mut u16,
+	pub dwX: u32,
+	pub dwY: u32,
+	pub dwXSize: u32,
+	pub dwYSize: u32,
+	pub dwXCountChars: u32,
+	pub dwYCountChars: u32,
+	pub dwFillAttribute: u32,
+	pub dwFlags: co::STARTF,
+	pub wShowWindow: u16,
+	cbReserved2: u16,
+	lpReserved2: *mut u8,
+	pub hStdInput: HPIPE,
+	pub hStdOutput: HPIPE,
+	pub hStdError: HPIPE,
+	m_lpDesktop: PhantomData<&'a u16>,
+	m_lpTitle: PhantomData<&'b u16>,
+}
+
+impl_default_with_size!(STARTUPINFO, cb, 'a, 'b);
+
+impl<'a, 'b> STARTUPINFO<'a, 'b> {
+	pub_fn_string_ptr_get_set!('a, lpDesktop, set_lpDesktop);
+	pub_fn_string_ptr_get_set!('a, lpTitle, set_lpTitle);
 }
 
 /// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)

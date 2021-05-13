@@ -456,6 +456,35 @@ pub_struct_const! { CP, u32,
 	UTF8, 65001
 }
 
+pub_struct_const! { CREATE, u32,
+	/// Process creation
+	/// [flags](https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
+	/// (`u32`).
+	=>
+	BREAKAWAY_FROM_JOB, 0x0100_0000
+	DEFAULT_ERROR_MODE, 0x0400_0000
+	NEW_CONSOLE, 0x0000_0010
+	NEW_PROCESS_GROUP, 0x0000_0200
+	NO_WINDOW, 0x0800_0000
+	PROTECTED_PROCESS, 0x0004_0000
+	PRESERVE_CODE_AUTHZ_LEVEL, 0x0200_0000
+	SECURE_PROCESS, 0x0040_0000
+	SEPARATE_WOW_VDM, 0x0000_0800
+	SHARED_WOW_VDM, 0x0000_1000
+	SUSPENDED, 0x0000_0004
+	UNICODE_ENVIRONMENT, 0x0000_0400
+	/// Originally has no `CREATE` prefix.
+	DEBUG_ONLY_THIS_PROCESS, 0x0000_0002
+	/// Originally has no `CREATE` prefix.
+	DEBUG_PROCESS, 0x0000_0001
+	/// Originally has no `CREATE` prefix.
+	DETACHED_PROCESS, 0x0000_0008
+	/// Originally has no `CREATE` prefix.
+	EXTENDED_STARTUPINFO_PRESENT, 0x0008_0000
+	/// Originally has no `CREATE` prefix.
+	INHERIT_PARENT_AFFINITY, 0x0001_0000
+}
+
 pub_struct_const! { CS, u32,
 	/// Window class
 	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)

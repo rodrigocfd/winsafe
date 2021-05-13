@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{advapi32, BOOL, comctl32, comdlg32, HRESULT, kernel32, user32};
-use crate::handles::{HINSTANCE, HWND};
+use crate::handles::{HINSTANCE, HPROCESS, HWND};
 use crate::privs::{
 	bool_to_winresult,
 	INVALID_FILE_ATTRIBUTES,
@@ -25,7 +25,10 @@ use crate::structs::{
 	MSG,
 	OSVERSIONINFOEX,
 	POINT,
+	PROCESS_INFORMATION,
 	RECT,
+	SECURITY_ATTRIBUTES,
+	STARTUPINFO,
 	SYSTEMTIME,
 	TIME_ZONE_INFORMATION,
 	TRACKMOUSEEVENT,
@@ -125,6 +128,39 @@ pub fn CopyFile(
 	)
 }
 
+/// [`CreateProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
+/// function.
+pub fn CreateProcess(
+	lpApplicationName: Option<&str>,
+	lpCommandLine: Option<&str>,
+	lpProcessAttributes: Option<&mut SECURITY_ATTRIBUTES>,
+	lpThreadAttributes: Option<&mut SECURITY_ATTRIBUTES>,
+	nInheritHandles: bool,
+	dwCreationFlags: co::CREATE,
+	lpEnvironment: *mut u8,
+	lpCurrentDirectory: Option<&str>,
+	lpStartupInfo: &mut STARTUPINFO,
+	lpProcessInformation: &mut PROCESS_INFORMATION) -> WinResult<()>
+{
+	let mut bufCommandLine = lpCommandLine.map_or(WString::default(), |lp| WString::from_str(lp));
+	bool_to_winresult(
+		unsafe {
+			kernel32::CreateProcessW(
+				lpApplicationName.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
+				bufCommandLine.as_mut_ptr(),
+				lpProcessAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				nInheritHandles as _,
+				dwCreationFlags.0,
+				lpEnvironment as _,
+				lpCurrentDirectory.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
+				ref_as_pvoid(lpStartupInfo),
+				ref_as_pvoid(lpProcessInformation),
+			)
+		},
+	)
+}
+
 /// [`DecryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
 /// function.
 pub fn DecryptFile(lpFileName: &str) -> WinResult<()> {
@@ -190,7 +226,7 @@ pub fn ExpandEnvironmentStrings(lpSrc: &str) -> WinResult<String> {
 		)
 	};
 
-	let mut buf = WString::new_alloc_buffer(len as usize);
+	let mut buf = WString::new_alloc_buffer(len as _);
 	match unsafe {
 		kernel32::ExpandEnvironmentStringsW(
 			wsrc.as_ptr(),
@@ -214,7 +250,7 @@ pub fn FileTimeToSystemTime(
 				ref_as_pcvoid(lpFileTime),
 				ref_as_pvoid(lpSystemTime),
 			)
-		}
+		},
 	)
 }
 
@@ -275,6 +311,17 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 			map
 		})
 		.ok_or_else(|| GetLastError())
+}
+
+/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
+/// function.
+pub fn GetExitCodeProcess(hProcess: HPROCESS) -> WinResult<u32> {
+	let mut lpExitCode: u32 = 0;
+	bool_to_winresult(
+		unsafe {
+			kernel32::GetExitCodeProcess(hProcess.ptr, &mut lpExitCode)
+		},
+	).map(|_| lpExitCode)
 }
 
 /// [`GetFileAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
@@ -792,7 +839,7 @@ pub fn SystemTimeToFileTime(
 				ref_as_pcvoid(lpSystemTime),
 				ref_as_pvoid(lpFileTime),
 			)
-		}
+		},
 	)
 }
 
@@ -810,7 +857,7 @@ pub fn SystemTimeToTzSpecificLocalTime(
 				ref_as_pcvoid(lpUniversalTime),
 				ref_as_pvoid(lpLocalTime),
 			)
-		}
+		},
 	)
 }
 

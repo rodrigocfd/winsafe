@@ -6,7 +6,7 @@ use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
 use crate::privs::bool_to_winresult;
 
-pub_struct_handle! {
+pub_struct_handle_closeable! {
 	/// Handle to a
 	/// [file mapping](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
 	/// Originally just a `HANDLE`.
@@ -14,12 +14,6 @@ pub_struct_handle! {
 }
 
 impl HFILEMAP {
-	/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
-	/// method.
-	pub fn CloseHandle(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel32::CloseHandle(self.ptr) })
-	}
-
 	/// [`MapViewOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
 	/// method.
 	///

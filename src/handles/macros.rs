@@ -83,6 +83,29 @@ macro_rules! pub_struct_handle {
 	};
 }
 
+/// Declares the type of a handle with `CloseHandle` method.
+macro_rules! pub_struct_handle_closeable {
+	(
+		$(#[$doc:meta])*
+		$name:ident
+	) => {
+		pub_struct_handle! {
+			$(#[$doc])*
+			$name
+		}
+
+		impl $name {
+			/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
+			/// method.
+			pub fn CloseHandle(self) -> crate::aliases::WinResult<()> {
+				crate::privs::bool_to_winresult(
+					unsafe { crate::ffi::kernel32::CloseHandle(self.ptr) },
+				)
+			}
+		}
+	};
+}
+
 /// Declares the type of an HGDIOBJ handle.
 macro_rules! pub_struct_handle_gdi {
 	(

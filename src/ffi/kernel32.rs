@@ -8,12 +8,15 @@ extern "system" {
 	pub fn CopyFileW(_: PCSTR, _: PCSTR, _: BOOL) -> BOOL;
 	pub fn CreateFileMappingW(_: HANDLE, _: PVOID, _: u32, _: u32, _: u32, _: PCSTR) -> HANDLE;
 	pub fn CreateFileW(_: PCSTR, _: u32, _: u32, _: PVOID, _: u32, _: u32, _: HANDLE) -> HANDLE;
+	pub fn CreatePipe(_: *mut HANDLE, _: *mut HANDLE, _: PVOID, _: u32) -> BOOL;
+	pub fn CreateProcessW(_: PCSTR, _: PSTR, _: PVOID, _: PVOID, _: BOOL, _: u32, _: PVOID, _: PCSTR, _: PVOID, _: PVOID) -> BOOL;
 	pub fn DeleteFileW(_: PCSTR) -> BOOL;
 	pub fn ExpandEnvironmentStringsW(_: PCSTR, _: PSTR, _: u32) -> u32;
 	pub fn FileTimeToSystemTime(_: PCVOID, _: PVOID) -> BOOL;
 	pub fn FormatMessageW(_: u32, _: PCVOID, _: u32, _: u32, _: PSTR, _: u32, _: PVOID) -> u32;
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
 	pub fn GetEnvironmentStringsW() -> HANDLE;
+	pub fn GetExitCodeProcess(_: HANDLE, _: *mut u32) -> BOOL;
 	pub fn GetFileAttributesW(_: PCSTR) -> u32;
 	pub fn GetFileInformationByHandle(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn GetFileSizeEx(_: HANDLE, _: *mut i64) -> BOOL;

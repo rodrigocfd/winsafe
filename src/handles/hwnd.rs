@@ -601,7 +601,6 @@ impl HWND {
 	/// method. Does not count the terminating null.
 	pub fn GetWindowTextLength(self) -> WinResult<i32> {
 		SetLastError(co::ERROR::SUCCESS);
-
 		match unsafe { user32::GetWindowTextLengthW(self.ptr) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero length
@@ -1179,7 +1178,7 @@ impl HWND {
 			)
 		} {
 			0 => Err(GetLastError()),
-			_ => Ok(())
+			_ => Ok(()),
 		}
 	}
 

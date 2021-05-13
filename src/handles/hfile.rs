@@ -13,7 +13,7 @@ use crate::structs::{
 };
 use crate::WString;
 
-pub_struct_handle! {
+pub_struct_handle_closeable! {
 	/// Handle to a
 	/// [file](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
 	/// Originally just a `HANDLE`.
@@ -21,12 +21,6 @@ pub_struct_handle! {
 }
 
 impl HFILE {
-	/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
-	/// method.
-	pub fn CloseHandle(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel32::CloseHandle(self.ptr) })
-	}
-
 	/// [`CreateFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
 	/// static method.
 	///
@@ -88,7 +82,7 @@ impl HFILE {
 				dwCreationDisposition.0,
 				dwFlagsAndAttributes.0,
 				hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
-			) as isize
+			) as _
 		} {
 			INVALID_HANDLE_VALUE => Err(GetLastError()),
 			ptr => Ok((Self { ptr: ptr as _ }, GetLastError())),
