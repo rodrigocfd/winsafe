@@ -6,10 +6,8 @@ use std::collections::HashMap;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::BroadNull;
 use crate::ffi::{advapi32, BOOL, comctl32, comdlg32, HRESULT, kernel32, user32};
 use crate::handles::{HINSTANCE, HWND};
-use crate::msg::MsgSend;
 use crate::privs::{
 	bool_to_winresult,
 	INVALID_FILE_ATTRIBUTES,
@@ -23,8 +21,10 @@ use crate::structs::{
 	CHOOSECOLOR,
 	COLORREF,
 	FILETIME,
+	MEMORYSTATUSEX,
 	MSG,
 	OSVERSIONINFOEX,
+	POINT,
 	RECT,
 	SYSTEMTIME,
 	TIME_ZONE_INFORMATION,
@@ -87,15 +87,29 @@ pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> WinResult<bool> {
 	}
 }
 
+/// [`CloseClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
+/// function.
+pub fn CloseClipboard() -> WinResult<()> {
+	bool_to_winresult(unsafe { user32::CloseClipboard() })
+}
+
 /// [`CommDlgExtendedError`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
+///
+/// **Note:** The [`co::ERROR`](crate::co::ERROR) returned by this function
+/// cannot be properly formatted by
+/// [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
+/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) traits,
+/// thus showing a wrong message which actually corresponds to the
+/// [standard error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
+/// of the same value.
 pub fn CommDlgExtendedError() -> co::ERROR {
 	co::ERROR(unsafe { comdlg32::CommDlgExtendedError() })
 }
 
 /// [`CopyFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
-pub fn CopyFileW(
+pub fn CopyFile(
 	lpExistingFileName: &str, lpNewFileName: &str,
 	bFailIfExists: bool) -> WinResult<()>
 {
@@ -132,6 +146,12 @@ pub fn DeleteFile(lpFileName: &str) -> WinResult<()> {
 /// function.
 pub fn DispatchMessage(lpMsg: &MSG) -> isize {
 	unsafe { user32::DispatchMessageW(ref_as_pcvoid(lpMsg)) }
+}
+
+/// [`EmptyClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
+/// function.
+pub fn EmptyClipboard() -> WinResult<()> {
+	bool_to_winresult(unsafe { user32::EmptyClipboard() })
 }
 
 /// [`EncryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
@@ -201,6 +221,12 @@ pub fn FileTimeToSystemTime(
 /// function.
 pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
 	unsafe { user32::GetAsyncKeyState(vKey.0 as _) != 0 }
+}
+
+/// [`GetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
+/// function.
+pub fn GetCursorPos(lpPoint: &mut POINT) -> WinResult<()> {
+	bool_to_winresult(unsafe { user32::GetCursorPos(ref_as_pvoid(lpPoint)) })
 }
 
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
@@ -284,6 +310,12 @@ pub fn GetFileAttributes(lpFileName: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 		INVALID => Err(GetLastError()),
 		flags => Ok(co::FILE_ATTRIBUTE(flags)),
 	}
+}
+
+/// [`GetLargePageMinimum`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getlargepageminimum)
+/// function.
+pub fn GetLargePageMinimum() -> u64 {
+	unsafe { kernel32::GetLargePageMinimum() }
 }
 
 /// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
@@ -392,6 +424,14 @@ pub fn GetTempPath() -> WinResult<String> {
 /// function.
 pub fn GetTickCount64() -> u64 {
 	unsafe { kernel32::GetTickCount64() }
+}
+
+/// [`GlobalMemoryStatusEx`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
+/// function.
+pub fn GlobalMemoryStatusEx(lpBuffer: &mut MEMORYSTATUSEX) -> WinResult<()> {
+	bool_to_winresult(
+		unsafe { kernel32::GlobalMemoryStatusEx(ref_as_pvoid(lpBuffer)) },
+	)
 }
 
 /// [`HIBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
@@ -504,11 +544,11 @@ pub fn IsWindowsVersionOrGreater(
 		co::VER_MASK::SERVICEPACKMAJOR, co::VER_COND::GREATER_EQUAL
 	);
 
-	osvi.dwMajorVersion = wMajorVersion as u32;
-	osvi.dwMinorVersion = wMinorVersion as u32;
+	osvi.dwMajorVersion = wMajorVersion as _;
+	osvi.dwMinorVersion = wMinorVersion as _;
 	osvi.wServicePackMajor = wServicePackMajor;
 
-	return VerifyVersionInfo(
+	VerifyVersionInfo(
 		&mut osvi,
 		co::VER_MASK::MAJORVERSION | co::VER_MASK::MINORVERSION | co::VER_MASK::SERVICEPACKMAJOR,
 		dwlConditionMask,
@@ -634,34 +674,18 @@ pub fn OutputDebugString(lpOutputString: &str) {
 
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
 /// function.
-pub fn PeekMessage(lpMsg: &mut MSG, hWnd: HWND,
+pub fn PeekMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 	wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: co::PM) -> bool
 {
 	unsafe {
 		user32::PeekMessageW(
 			ref_as_pvoid(lpMsg),
-			hWnd.ptr,
+			hWnd.map_or(std::ptr::null_mut(), |h| h.ptr),
 			wMsgFilterMin,
 			wMsgFilterMax,
 			wRemoveMsg.0,
 		) != 0
 	}
-}
-
-/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
-/// function. Note that this function is asychronous.
-///
-/// **Note:** To use an actual [`HWND`](crate::HWND) as the first argument, see
-/// [`HWND::PostMessage`](crate::HWND::PostMessage) method.
-pub fn PostMessage<M: MsgSend>(hWnd: BroadNull, uMsg: M) -> WinResult<()> {
-	let wmAny = uMsg.as_generic_wm();
-	bool_to_winresult(
-		unsafe {
-			user32::PostMessageW(
-				hWnd.into(), wmAny.msg_id.0, wmAny.wparam, wmAny.lparam,
-			)
-		},
-	)
 }
 
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
@@ -691,6 +715,14 @@ pub fn SetCaretBlinkTime(uMSeconds: u32) -> WinResult<()> {
 /// function.
 pub fn SetCaretPos(x: i32, y: i32) -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::SetCaretPos(x, y) })
+}
+
+/// [`SetClipboardData`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
+/// function.
+pub fn SetClipboardData(uFormat: co::CF, hMem: *mut u8) -> WinResult<*mut u8> {
+	unsafe { user32::SetClipboardData(uFormat.0, hMem as _).as_mut() }
+		.map(|hMem| hMem as *mut _ as _)
+		.ok_or_else(|| GetLastError())
 }
 
 /// [`SetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)

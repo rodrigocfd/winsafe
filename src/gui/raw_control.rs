@@ -146,8 +146,8 @@ impl Default for WindowControlOpts {
 		Self {
 			class_name: "".to_owned(),
 			class_style: co::CS::DBLCLKS,
-			class_icon: unsafe { HICON::null_handle() },
-			class_cursor: unsafe { HCURSOR::null_handle() },
+			class_icon: HICON::NULL,
+			class_cursor: HCURSOR::NULL,
 			class_bg_brush: HBRUSH::from_sys_color(co::COLOR::WINDOW),
 			position: POINT { x: 0, y: 0 },
 			size: SIZE { cx: 0, cy: 0 },
@@ -173,7 +173,7 @@ impl WindowControlOpts {
 
 		wcx.hCursor = match self.class_cursor.as_opt() {
 			Some(h) => h,
-			None => HINSTANCE::oem().LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
+			None => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
 		};
 
 		if wcx.lpszClassName().is_none() {

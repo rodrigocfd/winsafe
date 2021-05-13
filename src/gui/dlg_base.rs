@@ -104,7 +104,7 @@ impl DlgBase {
 
 			if msg == co::WM::NCDESTROY { // always check
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
-				ref_self.base.set_hwnd(unsafe { HWND::null_handle() }); // clear stored HWND
+				ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 			}
 
 			Ok(match maybe_processed {

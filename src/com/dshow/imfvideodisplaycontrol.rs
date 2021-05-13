@@ -136,7 +136,7 @@ macro_rules! IMFVideoDisplayControl_impl {
 			/// [`IMFVideoDisplayControl::GetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideowindow)
 			/// method.
 			pub fn GetVideoWindow(&self) -> WinResult<HWND> {
-				let mut hwnd = unsafe { HWND::null_handle() };
+				let mut hwnd = HWND::NULL;
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetVideoWindow)(
 						self.ppvt,

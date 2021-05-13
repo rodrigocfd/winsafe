@@ -5,7 +5,7 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{kernel32, user32};
 use crate::funcs::GetLastError;
-use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HWND};
+use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
 use crate::privs::ref_as_pvoid;
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::WString;
@@ -18,12 +18,6 @@ handle_type! {
 }
 
 impl HINSTANCE {
-	/// Returns a handle to the system OEM instance. This is used to load
-	/// built-in system resources.
-	pub fn oem() -> HINSTANCE {
-		unsafe { Self::null_handle() }
-	}
-
 	/// [`CreateDialogParam`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// method.
 	pub fn CreateDialogParam(
@@ -198,6 +192,15 @@ impl HINSTANCE {
 			user32::LoadImageW(self.ptr, name.as_ptr(), 1, cx, cy, fuLoad.0)
 				.as_mut()
 		}.map(|ptr| HICON { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`LoadMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
+	/// method.
+	pub fn LoadMenu(self, lpMenuName: IdStr) -> WinResult<HMENU> {
+		unsafe {
+			user32::LoadMenuW(self.ptr, lpMenuName.as_ptr()).as_mut()
+		}.map(|ptr| HMENU { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 }

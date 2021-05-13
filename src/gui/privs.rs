@@ -74,7 +74,7 @@ pub fn multiply_dpi(
 {
 	unsafe {
 		if (pt.is_some() || sz.is_some()) && DPI.x == 0 { // DPI not cached yet?
-			let screen_dc = HWND::null_handle().GetDC()?;
+			let screen_dc = HWND::NULL.GetDC()?;
 			DPI.x = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSX); // cache
 			DPI.y = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSY);
 		}

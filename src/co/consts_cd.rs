@@ -233,6 +233,39 @@ impl From<CDRF> for isize {
 	}
 }
 
+const_type! { CF, u32,
+	/// Standard clipboard
+	/// [formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
+	/// (`u32`).
+	=>
+	TEXT, 1
+	BITMAP, 2
+	METAFILEPICT, 3
+	SYLK, 4
+	DIF, 5
+	TIFF, 6
+	OEMTEXT, 7
+	DIB, 8
+	PALETTE, 9
+	PENDATA, 10
+	RIFF, 11
+	WAVE, 12
+	UNICODETEXT, 13
+	ENHMETAFILE, 14
+	HDROP, 15
+	LOCALE, 16
+	DIBV5, 17
+	OWNERDISPLAY, 0x0080
+	DSPTEXT, 0x0081
+	DSPBITMAP, 0x0082
+	DSPMETAFILEPICT, 0x0083
+	DSPENHMETAFILE, 0x008e
+	PRIVATEFIRST, 0x0200
+	PRIVATELAST, 0x02ff
+	GDIOBJFIRST, 0x0300
+	GDIOBJLAST, 0x03ff
+}
+
 const_type! { CHARSET, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 	=>

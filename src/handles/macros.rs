@@ -42,22 +42,16 @@ macro_rules! handle_type {
 		}
 
 		impl $name {
+			/// The null, invalid handle.
+			///
+			/// This constant is common to all handle types.
+			pub const NULL: Self = Self { ptr: std::ptr::null_mut() };
+
 			/// Creates a new handle instance by wrapping a pointer.
 			///
 			/// This method is common to all handle types.
 			pub unsafe fn from_ptr<T>(p: *mut T) -> $name {
-				Self {
-					ptr: p as _,
-				}
-			}
-
-			/// Creates a null, invalid handle.
-			///
-			/// This method is common to all handle types.
-			pub unsafe fn null_handle() -> Self {
-				Self {
-					ptr: std::ptr::null_mut(),
-				}
+				Self { ptr: p as _ }
 			}
 
 			/// Consumes the handle returning the underlying raw pointer.

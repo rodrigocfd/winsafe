@@ -272,6 +272,14 @@ const_type! { LIS, u32,
 	DEFAULTCOLORS, 0x0000_0010
 }
 
+const_type! { LLMHF, u32,
+	/// [`MSLLHOOKSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msllhookstruct)
+	/// `flags` (`u32`).
+	=>
+	INJECTED, 0x0000_0001
+	LOWER_IL_INJECTED, 0x0000_0002
+}
+
 const_type_wm! { LM,
 	/// SysLink control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)

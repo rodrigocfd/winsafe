@@ -20,7 +20,7 @@ pub(crate) struct Base {
 impl Base {
 	pub fn new(parent_ref: Option<&Base>, is_dialog: bool) -> Base {
 		Self {
-			hwnd: unsafe { HWND::null_handle() },
+			hwnd: HWND::NULL,
 			is_dialog,
 			ptr_parent: parent_ref.map(|parent_ref| NonNull::from(parent_ref)), // ref implicitly converted to pointer
 			user_events: WindowEvents::new(),

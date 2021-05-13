@@ -107,6 +107,16 @@ const_type! { GM, i32,
 	ADVANCED, 2
 }
 
+const_type! { GMEM, u32,
+	/// [`GlobalAlloc`](crate::GlobalAlloc) `uFlags` (`u32`).
+	=>
+	FIXED, 0x0000
+	MOVEABLE, 0x0002
+	ZEROINIT, 0x0040
+	GHND, Self::MOVEABLE.0 | Self::ZEROINIT.0
+	GPTR, Self::FIXED.0 | Self::ZEROINIT.0
+}
+
 const_type! { GW, u32,
 	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 	=>

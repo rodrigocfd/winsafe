@@ -48,7 +48,7 @@ impl NativeControlBase {
 		Self(
 			VeryUnsafeCell::new(
 				Obj {
-					hwnd: unsafe { HWND::null_handle() },
+					hwnd: HWND::NULL,
 					ptr_parent: NonNull::from(parent_ref), // ref implicitly converted to pointer
 					subclass_events: WindowEvents::new(),
 				},

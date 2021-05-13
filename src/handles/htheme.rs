@@ -99,7 +99,7 @@ impl HTHEME {
 		hdc: HDC, iPartId: co::VS_PART, iStateId: co::VS_STATE,
 		pRect: RECT) -> WinResult<HRGN>
 	{
-		let mut pRegion = unsafe { HRGN::null_handle() };
+		let mut pRegion = HRGN::NULL;
 
 		hr_to_winresult(
 			unsafe {

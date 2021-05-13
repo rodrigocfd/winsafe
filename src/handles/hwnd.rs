@@ -27,6 +27,9 @@ handle_type! {
 }
 
 impl HWND {
+	/// For some specific functions, represents all top-level windows.
+	pub const BROADCAST: Self = Self { ptr: std::ptr::null_mut() };
+
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) wrapper to retrieve
 	/// the window [`HINSTANCE`](crate::HINSTANCE).
 	pub fn hinstance(self) -> HINSTANCE {
@@ -796,6 +799,15 @@ impl HWND {
 		)
 	}
 
+	/// [`OpenClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openclipboard)
+	/// method.
+	///
+	/// **Note:** Must be paired with a
+	/// [`CloseClipboard`](crate::CloseClipboard) call.
+	pub fn OpenClipboard(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { user32::OpenClipboard(self.ptr) })
+	}
+
 	/// [`OpenThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// method.
 	///
@@ -813,9 +825,6 @@ impl HWND {
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method. Note that this method is asychronous.
 	///
-	/// **Note:** To use `HWND_BROADCAST` or `NULL` as the first argument, see
-	/// the [`PostMessage`](crate::PostMessage) free function.
-	///
 	/// # Examples
 	///
 	/// Programatically closing a window:
@@ -826,6 +835,16 @@ impl HWND {
 	/// let my_hwnd: HWND; // initialize it somewhere...
 	///
 	/// my_hwnd.PostMessage(wm::Close {}).unwrap();
+	/// ```
+	///
+	/// Sending a message to all top-level windows:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{HWND, msg::wm};
+	///
+	/// HWND::BROADCAST.PostMessage(
+	///     wm::ExitMenuLoop { is_shortcut: false },
+	/// ).unwrap();
 	/// ```
 	pub fn PostMessage<M: MsgSend>(self, uMsg: M) -> WinResult<()> {
 		let wmAny = uMsg.as_generic_wm();

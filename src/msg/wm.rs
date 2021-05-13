@@ -458,8 +458,102 @@ impl MsgSendRecv for EraseBkgnd {
 	}
 }
 
+/// [`WM_EXITMENULOOP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-exitmenuloop)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct ExitMenuLoop {
+	pub is_shortcut: bool,
+}
+
+impl MsgSend for ExitMenuLoop {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::EXITMENULOOP,
+			wparam: self.is_shortcut as _,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for ExitMenuLoop {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			is_shortcut: p.wparam != 0,
+		}
+	}
+}
+
 empty_msg_handleable! { ExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
+}
+
+/// [`WM_GETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HFONT>`.
+pub struct GetFont {}
+
+impl MsgSend for GetFont {
+	type RetType = Option<HFONT>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => None,
+			p => Some(HFONT { ptr: p as _ }),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::GETFONT,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for GetFont {
+	fn from_generic_wm(_: WndMsg) -> Self {
+		Self {}
+	}
+}
+
+/// [`WM_GETHMENU`](https://docs.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HMENU>`.
+pub struct GetHMenu {}
+
+impl MsgSend for GetHMenu {
+	type RetType = Option<HMENU>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => None,
+			p => Some(HMENU { ptr: p as _ }),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::MN_GETHMENU,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for GetHMenu {
+	fn from_generic_wm(_: WndMsg) -> Self {
+		Self {}
+	}
 }
 
 /// [`WM_GETMINMAXINFO`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)

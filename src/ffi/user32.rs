@@ -10,10 +10,13 @@ extern "system" {
 	pub fn BeginDeferWindowPos(_: i32) -> HANDLE;
 	pub fn BeginPaint(_: HANDLE, _: PVOID) -> HANDLE;
 	pub fn BringWindowToTop(_: HANDLE) -> BOOL;
+	pub fn CallNextHookEx(_: HANDLE, _: i32, _: usize, _: isize) -> isize;
 	pub fn CheckMenuItem(_: HANDLE, _: u32, _: u32) -> i32;
 	pub fn ChildWindowFromPoint(_: HANDLE, _: i32, _: i32) -> HANDLE;
 	pub fn ClientToScreen(_: HANDLE, _: PVOID) -> BOOL;
+	pub fn CloseClipboard() -> BOOL;
 	pub fn CloseWindow(_: HANDLE) -> BOOL;
+	pub fn CopyIcon(_: HANDLE) -> HANDLE;
 	pub fn CreateAcceleratorTableW(_: PVOID, _: i32) -> HANDLE;
 	pub fn CreateDialogParamW(_: HANDLE, _: PCSTR, _: HANDLE, _: PFUNC, _: isize) -> HANDLE;
 	pub fn CreateMenu() -> HANDLE;
@@ -23,11 +26,13 @@ extern "system" {
 	pub fn DefWindowProcW(_: HANDLE, _: u32, _: usize, _: isize) -> isize;
 	pub fn DeleteMenu(_: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn DestroyAcceleratorTable(_: HANDLE) -> BOOL;
+	pub fn DestroyCursor(_: HANDLE) -> BOOL;
 	pub fn DestroyIcon(_: HANDLE) -> BOOL;
 	pub fn DestroyMenu(_: HANDLE) -> BOOL;
 	pub fn DestroyWindow(_: HANDLE) -> BOOL;
 	pub fn DialogBoxParamW(_: HANDLE, _: PCSTR, _: HANDLE, _: PFUNC, _: isize) -> isize;
 	pub fn DispatchMessageW(_: PCVOID) -> isize;
+	pub fn EmptyClipboard() -> BOOL;
 	pub fn EnableMenuItem(_: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn EnableWindow(_: HANDLE, _: BOOL) -> BOOL;
 	pub fn EndDeferWindowPos(_: HANDLE) -> BOOL;
@@ -44,6 +49,7 @@ extern "system" {
 	pub fn GetClassInfoExW(_: HANDLE, _: PCSTR, _: PVOID) -> BOOL;
 	pub fn GetClassLongPtrW(_: HANDLE, _: i32) -> usize;
 	pub fn GetClientRect(_: HANDLE, _: PVOID) -> BOOL;
+	pub fn GetCursorPos(_: PVOID) -> BOOL;
 	pub fn GetDC(_: HANDLE) -> HANDLE;
 	pub fn GetDesktopWindow() -> HANDLE;
 	pub fn GetDialogBaseUnits() -> i32;
@@ -97,10 +103,12 @@ extern "system" {
 	pub fn LoadCursorW(_: HANDLE, _: PCSTR) -> HANDLE;
 	pub fn LoadIconW(_: HANDLE, _: PCSTR) -> HANDLE;
 	pub fn LoadImageW(_: HANDLE, _: PCSTR, _: u32, _: i32, _: i32, _: u32) -> HANDLE;
+	pub fn LoadMenuW(_: HANDLE, _: PCSTR) -> HANDLE;
 	pub fn LockSetForegroundWindow(_: u32) -> BOOL;
 	pub fn MapDialogRect(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn MessageBoxW(_: HANDLE, _: PCSTR, _: PCSTR, _: u32) -> i32;
 	pub fn MoveWindow(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: BOOL) -> BOOL;
+	pub fn OpenClipboard(_: HANDLE) -> BOOL;
 	pub fn PeekMessageW(_: PVOID, _: HANDLE, _: u32, _: u32, _: u32) -> BOOL;
 	pub fn PostMessageW(_: HANDLE, _: u32, _: usize, _: isize) -> BOOL;
 	pub fn PostQuitMessage(_: i32);
@@ -113,6 +121,7 @@ extern "system" {
 	pub fn SendMessageW(_: HANDLE, _: u32, _: usize, _: isize) -> isize;
 	pub fn SetCaretBlinkTime(_: u32) -> BOOL;
 	pub fn SetCaretPos(_: i32, _: i32) -> BOOL;
+	pub fn SetClipboardData(_: u32, _: HANDLE) -> HANDLE;
 	pub fn SetCursorPos(_: i32, _: i32) -> BOOL;
 	pub fn SetFocus(_: HANDLE) -> HANDLE;
 	pub fn SetForegroundWindow(_: HANDLE) -> BOOL;

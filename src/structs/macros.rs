@@ -9,6 +9,20 @@ macro_rules! impl_default_zero {
 	};
 }
 
+/// Implements `Default` trait by zeroing all members. Also sets the size field
+/// to struct size.
+macro_rules! impl_default_with_size {
+	($name:ident, $field:ident $(, $life:lifetime)*) => {
+		impl<$($life),*> Default for $name<$($life),*> {
+			fn default() -> Self {
+				let mut obj = unsafe { std::mem::zeroed::<Self>() };
+				obj.$field = std::mem::size_of::<Self>() as _;
+				obj
+			}
+		}
+	};
+}
+
 /// Implements getter and setter methods for the given `*mut u16` member.
 macro_rules! string_get_set {
 	($life:lifetime, $field:ident, $setter:ident) => {

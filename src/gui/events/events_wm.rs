@@ -3,7 +3,7 @@ use std::rc::Rc;
 use crate::co;
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{HDC, HICON};
+use crate::handles::{HDC, HFONT, HICON, HMENU};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// The result of processing a message.
@@ -359,7 +359,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::APPCOMMAND, {
 			let mut func = func;
-			move |p| { func(wm::AppCommand::from_generic_wm(p)); Some(true as isize) }
+			move |p| { func(wm::AppCommand::from_generic_wm(p)); Some(true as _) }
 		});
 	}
 
@@ -450,7 +450,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::CREATE, {
 			let mut func = func;
-			move |p| Some(func(wm::Create::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::Create::from_generic_wm(p)) as _)
 		});
 	}
 
@@ -465,7 +465,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORBTN, {
 			let mut func = func;
-			move |p| Some(func(wm::CtlColorBtn::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorBtn::from_generic_wm(p)).ptr as _)
 		});
 	}
 
@@ -479,7 +479,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORDLG, {
 			let mut func = func;
-			move |p| Some(func(wm::CtlColorDlg::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorDlg::from_generic_wm(p)).ptr as _)
 		});
 	}
 
@@ -494,7 +494,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::CTLCOLOREDIT, {
 			let mut func = func;
-			move |p| Some(func(wm::CtlColorEdit::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorEdit::from_generic_wm(p)).ptr as _)
 		});
 	}
 
@@ -509,7 +509,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORLISTBOX, {
 			let mut func = func;
-			move |p| Some(func(wm::CtlColorListBox::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorListBox::from_generic_wm(p)).ptr as _)
 		});
 	}
 
@@ -524,7 +524,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
 			let mut func = func;
-			move |p| Some(func(wm::CtlColorScrollBar::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorScrollBar::from_generic_wm(p)).ptr as _)
 		});
 	}
 
@@ -540,7 +540,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::CTLCOLORSTATIC, {
 			let mut func = func;
-			move |p| Some(func(wm::CtlColorStatic::from_generic_wm(p)).ptr as isize)
+			move |p| Some(func(wm::CtlColorStatic::from_generic_wm(p)).ptr as _)
 		});
 	}
 
@@ -634,11 +634,18 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::ERASEBKGND, {
 			let mut func = func;
-			move |p| Some(func(wm::EraseBkgnd::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::EraseBkgnd::from_generic_wm(p)) as _)
 		});
 	}
 
-	wm_ret_none! { wm_exit_size_move, co::WM::EXITSIZEMOVE, wm::ExitSizeMove,
+	wm_ret_none! { wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop,
+		/// [`WM_EXITMENULOOP`](crate::msg::wm::ExitMenuLoop) message.
+		///
+		/// Notifies an application's main window procedure that a menu modal
+		/// loop has been exited.
+	}
+
+	wm_empty! { wm_exit_size_move, co::WM::EXITSIZEMOVE,
 		/// [`WM_EXITSIZEMOVE`](crate::msg::wm::ExitSizeMove) message.
 		///
 		/// Sent one time to a window, after it has exited the moving or sizing
@@ -650,6 +657,30 @@ impl WindowEvents {
 		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
 		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
 		/// when `DefWindowProc` returns.
+	}
+
+	/// [`WM_GETFONT`](crate::msg::wm::GetFont) message.
+	///
+	/// Retrieves the font with which the control is currently drawing its text.
+	pub fn wm_get_font<F>(&self, func: F)
+		where F: FnMut() -> Option<HFONT> + 'static,
+	{
+		self.add_msg(co::WM::GETFONT, {
+			let mut func = func;
+			move |_| Some(func().map(|h| h.ptr as _).unwrap_or_default())
+		});
+	}
+
+	/// [`MN_GETHMENU`](crate::msg::wm::GetHMenu) message.
+	///
+	/// Retrieves the menu handle for the current window.
+	pub fn wm_get_h_menu<F>(&self, func: F)
+		where F: FnMut() -> Option<HMENU> + 'static
+	{
+		self.add_msg(co::WM::MN_GETHMENU, {
+			let mut func = func;
+			move |_| Some(func().map(|h| h.ptr as _).unwrap_or_default())
+		});
 	}
 
 	wm_ret_none! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo,
@@ -689,7 +720,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::INITDIALOG, {
 			let mut func = func;
-			move |p| Some(func(wm::InitDialog::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::InitDialog::from_generic_wm(p)) as _)
 		});
 	}
 
@@ -830,7 +861,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::NCCALCSIZE, {
 			let mut func = func;
-			move |p| Some(func(wm::NcCalcSize::from_generic_wm(p)).0 as isize)
+			move |p| Some(func(wm::NcCalcSize::from_generic_wm(p)).0 as _)
 		});
 	}
 
@@ -844,7 +875,7 @@ impl WindowEvents {
 	{
 		self.add_msg(co::WM::NCCREATE, {
 			let mut func = func;
-			move |p| Some(func(wm::NcCreate::from_generic_wm(p)) as isize)
+			move |p| Some(func(wm::NcCreate::from_generic_wm(p)) as _)
 		});
 	}
 
@@ -922,11 +953,11 @@ impl WindowEvents {
 	/// Sent to an icon when the user requests that the window be restored to
 	/// its previous size and position.
 	pub fn wm_query_open<F>(&self, func: F)
-		where F: FnMut(wm::QueryOpen) -> bool + 'static,
+		where F: FnMut() -> bool + 'static,
 	{
 		self.add_msg(co::WM::QUERYOPEN, {
 			let mut func = func;
-			move |p| Some(func(wm::QueryOpen::from_generic_wm(p)) as isize)
+			move |_| Some(func() as _)
 		});
 	}
 
@@ -989,10 +1020,8 @@ impl WindowEvents {
 		self.add_msg(co::WM::SETICON, {
 			let mut func = func;
 			move |p| Some(
-				match func(wm::SetIcon::from_generic_wm(p)) {
-					Some(hicon) => hicon.ptr as isize,
-					None => 0,
-				},
+				func(wm::SetIcon::from_generic_wm(p))
+					.map(|h| h.ptr as _).unwrap_or_default(),
 			)
 		});
 	}
@@ -1104,7 +1133,7 @@ impl WindowEvents {
 		/// contexts by checking the context code in the lParam parameter.
 	}
 
-	wm_ret_none! { wm_theme_changed, co::WM::THEMECHANGED, wm::ThemeChanged,
+	wm_empty! { wm_theme_changed, co::WM::THEMECHANGED,
 		/// [`WM_THEMECHANGED`](crate::msg::wm::ThemeChanged) message.
 		///
 		/// Broadcast to every window following a theme change event. Examples

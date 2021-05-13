@@ -331,7 +331,7 @@ impl HKEY {
 	pub fn RegOpenKeyEx(self, lpSubKey: &str,
 		ulOptions: co::REG_OPTION, samDesired: co::KEY) -> WinResult<HKEY>
 	{
-		let mut hKey = unsafe { Self::null_handle() };
+		let mut hKey = Self::NULL;
 
 		match co::ERROR(
 			unsafe {

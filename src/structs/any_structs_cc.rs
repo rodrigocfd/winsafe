@@ -43,13 +43,7 @@ pub struct DATETIMEPICKERINFO {
 	pub hwndDropDown: HWND,
 }
 
-impl Default for DATETIMEPICKERINFO {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(DATETIMEPICKERINFO, cbSize);
 
 /// [`IMAGELISTDRAWPARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.
@@ -74,13 +68,7 @@ pub struct IMAGELISTDRAWPARAMS {
 	pub crEffect: COLORREF,
 }
 
-impl Default for IMAGELISTDRAWPARAMS {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(IMAGELISTDRAWPARAMS, cbSize);
 
 /// [`LITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
 /// struct.

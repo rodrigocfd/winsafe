@@ -19,4 +19,13 @@ impl HLOCAL {
 			Some(_) => Err(GetLastError()),
 		}
 	}
+
+	/// [`LocalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
+	/// method.
+	pub fn LocalSize(self) -> WinResult<u64> {
+		match unsafe { kernel32::LocalSize(self.ptr) } {
+			0 => Err(GetLastError()),
+			sz => Ok(sz),
+		}
+	}
 }

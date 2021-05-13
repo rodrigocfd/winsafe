@@ -79,23 +79,6 @@ impl BitmapPtrStr {
 
 /// Variant parameter for:
 ///
-/// * [`PostMessage`](crate::PostMessage) `hWnd`.
-pub enum BroadNull {
-	Broadcast,
-	Null,
-}
-
-impl From<BroadNull> for *mut c_void {
-	fn from(v: BroadNull) -> Self {
-		match v {
-			BroadNull::Broadcast => 0xffff as _,
-			BroadNull::Null => std::ptr::null_mut(),
-		}
-	}
-}
-
-/// Variant parameter for:
-///
 /// * [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
 pub enum HwndFocus {
 	Hwnd(HWND),
@@ -289,8 +272,9 @@ impl IdPos {
 /// Variant parameter for:
 ///
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpTemplateName`.
-/// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
-/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`;
+/// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`;
+/// * [`LoadMenu`](crate::HINSTANCE::LoadMenu) `lpMenuName`;
+/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`.
 pub enum IdStr {
 	/// A resource ID.
 	Id(i32),

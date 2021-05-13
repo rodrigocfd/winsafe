@@ -12,6 +12,7 @@ pub(crate) const CLR_INVALID: u32 = 0xffff_ffff;
 pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub(crate) const GDI_ERROR: u32 = 0xffff_ffff;
 pub(crate) const GDT_ERROR: i32 = -1;
+pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
 pub(crate) const INVALID_FILE_ATTRIBUTES: i32 = -1;
 pub(crate) const INVALID_HANDLE_VALUE: isize = -1;

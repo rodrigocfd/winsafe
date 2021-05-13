@@ -52,13 +52,7 @@ pub struct ALTTABINFO {
 	pub ptStart: POINT,
 }
 
-impl Default for ALTTABINFO {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(ALTTABINFO, cbSize);
 
 /// [`BITMAPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 /// struct.
@@ -85,13 +79,7 @@ pub struct BITMAPINFOHEADER {
 	pub biClrImportant: u32,
 }
 
-impl Default for BITMAPINFOHEADER {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.biSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(BITMAPINFOHEADER, biSize);
 
 /// [`BY_HANDLE_FILE_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information)
 /// method.
@@ -127,13 +115,7 @@ pub struct CHOOSECOLOR<'a, 'b> {
 	m_lpTemplateName: PhantomData<&'b u16>,
 }
 
-impl<'a, 'b> Default for CHOOSECOLOR<'a, 'b> {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.lStructSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a, 'b);
 
 impl<'a, 'b> CHOOSECOLOR<'a, 'b> {
 	/// Returns the `lpCustColors` field.
@@ -250,6 +232,23 @@ impl LOGFONT {
 	}
 }
 
+/// [`MEMORYSTATUSEX`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
+/// struct.
+#[repr(C)]
+pub struct MEMORYSTATUSEX {
+	dwLength: u32,
+	pub dwMemoryLoad: u32,
+	pub ullTotalPhys: u64,
+	pub ullAvailPhys: u64,
+	pub ullTotalPageFile: u64,
+	pub ullAvailPageFile: u64,
+	pub ullTotalVirtual: u64,
+	pub ullAvailVirtual: u64,
+	pub ullAvailExtendedVirtual: u64,
+}
+
+impl_default_with_size!(MEMORYSTATUSEX, dwLength);
+
 /// [`MENUINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuinfo)
 /// struct.
 #[repr(C)]
@@ -263,13 +262,7 @@ pub struct MENUINFO {
 	pub dwMenuData: usize,
 }
 
-impl Default for MENUINFO {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(MENUINFO, cbSize);
 
 /// [`MENUITEMINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow)
 /// struct.
@@ -289,13 +282,7 @@ pub struct MENUITEMINFO {
 	pub hbmpItem: HBITMAP,
 }
 
-impl Default for MENUITEMINFO {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(MENUITEMINFO, cbSize);
 
 /// [`MINMAXINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-minmaxinfo)
 /// struct.
@@ -324,6 +311,18 @@ pub struct MSG {
 }
 
 impl_default_zero!(MSG);
+
+/// [`MSLLHOOKSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msllhookstruct)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct MSLLHOOKSTRUCT {
+	pub pt: POINT,
+	pub mouseData: u32,
+	pub flags: co::LLMHF,
+	pub time: u32,
+	pub dwExtraInfo: u64,
+}
 
 /// [`NCCALCSIZE_PARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params)
 /// struct.
@@ -418,13 +417,7 @@ pub struct OSVERSIONINFOEX {
 	wReserved: u8,
 }
 
-impl Default for OSVERSIONINFOEX {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.dwOSVersionInfoSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(OSVERSIONINFOEX, dwOSVersionInfoSize);
 
 impl OSVERSIONINFOEX {
 	/// Returns the `szCSDVersion` field.
@@ -514,18 +507,12 @@ impl RECT {
 /// [`RGBQUAD`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
 /// struct.
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
 pub struct RGBQUAD {
 	pub rgbBlue: u8,
 	pub rgbGreen: u8,
 	pub rgbRed: u8,
 	rgbReserved: u8,
-}
-
-impl Default for RGBQUAD {
-	fn default() -> Self {
-		unsafe { std::mem::zeroed::<Self>() }
-	}
 }
 
 /// [`SCROLLINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-scrollinfo)
@@ -542,13 +529,7 @@ pub struct SCROLLINFO {
 	pub nTrackPos: i32,
 }
 
-impl Default for SCROLLINFO {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(SCROLLINFO, cbSize);
 
 /// [`SECURITY_ATTRIBUTES`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
@@ -560,13 +541,7 @@ pub struct SECURITY_ATTRIBUTES<'a> {
 	m_lpSecurityDescriptor: PhantomData<&'a SECURITY_DESCRIPTOR>,
 }
 
-impl<'a> Default for SECURITY_ATTRIBUTES<'a> {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.nLength = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(SECURITY_ATTRIBUTES, nLength, 'a);
 
 impl<'a> SECURITY_ATTRIBUTES<'a> {
 	/// Returns the `lpSecurityDescriptor` field.
@@ -736,13 +711,7 @@ pub struct TRACKMOUSEEVENT {
 	pub dwHoverTime: u32,
 }
 
-impl Default for TRACKMOUSEEVENT {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(TRACKMOUSEEVENT, cbSize);
 
 /// [`WINDOWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.
@@ -760,13 +729,7 @@ pub struct WINDOWINFO {
 	pub wCreatorVersion: u16,
 }
 
-impl Default for WINDOWINFO {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(WINDOWINFO, cbSize);
 
 /// [`WINDOWPLACEMENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement)
 /// struct.
@@ -781,13 +744,7 @@ pub struct WINDOWPLACEMENT {
 	pub rcDevice: RECT,
 }
 
-impl Default for WINDOWPLACEMENT {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.length = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(WINDOWPLACEMENT, length);
 
 /// [`WINDOWPOS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowpos)
 /// struct.
@@ -843,13 +800,7 @@ pub struct WNDCLASSEX<'a, 'b> {
 	m_lpszClassName: PhantomData<&'b u16>,
 }
 
-impl<'a, 'b> Default for WNDCLASSEX<'a, 'b> {
-	fn default() -> Self {
-		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		obj.cbSize = std::mem::size_of::<Self>() as _;
-		obj
-	}
-}
+impl_default_with_size!(WNDCLASSEX, cbSize, 'a, 'b);
 
 impl<'a, 'b> WNDCLASSEX<'a, 'b> {
 	/// Returns the `lpszMenuName` field.

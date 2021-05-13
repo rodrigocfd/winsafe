@@ -18,6 +18,7 @@ extern "system" {
 	pub fn GetFileInformationByHandle(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn GetFileSizeEx(_: HANDLE, _: *mut i64) -> BOOL;
 	pub fn GetFileType(_: HANDLE) -> u32;
+	pub fn GetLargePageMinimum() -> u64;
 	pub fn GetLastError() -> u32;
 	pub fn GetLogicalDriveStringsW(_: u32, _: PSTR) -> u32;
 	pub fn GetModuleHandleW(_: PCSTR) -> HANDLE;
@@ -26,7 +27,16 @@ extern "system" {
 	pub fn GetSystemTimePreciseAsFileTime(_: PVOID);
 	pub fn GetTempPathW(_: u32, _: PSTR) -> u32;
 	pub fn GetTickCount64() -> u64;
+	pub fn GlobalAlloc(_: u32, _: u64) -> HANDLE;
+	pub fn GlobalFlags(_: HANDLE) -> u32;
+	pub fn GlobalFree(_: HANDLE) -> HANDLE;
+	pub fn GlobalLock(_: HANDLE) -> PVOID;
+	pub fn GlobalMemoryStatusEx(_: PVOID) -> BOOL;
+	pub fn GlobalReAlloc(_: HANDLE, _: u64, _: u32) -> HANDLE;
+	pub fn GlobalSize(_: HANDLE) -> u64;
+	pub fn GlobalUnlock(_: HANDLE) -> BOOL;
 	pub fn LocalFree(_: HANDLE) -> HANDLE;
+	pub fn LocalSize(_: HANDLE) -> u64;
 	pub fn LockFile(_: HANDLE, _: u32, _: u32, _: u32, _: u32) -> BOOL;
 	pub fn lstrlenW(_: PCSTR) -> i32;
 	pub fn MapViewOfFile(_: HANDLE, _: u32, _: u32, _: u32, _: i64) -> PVOID;
