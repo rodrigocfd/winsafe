@@ -24,7 +24,7 @@ macro_rules! impl_default_with_size {
 }
 
 /// Implements getter and setter methods for the given `*mut u16` member.
-macro_rules! string_get_set {
+macro_rules! string_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident) => {
 		/// Returns the string field, if any.
 		pub fn $field(&self) -> Option<String> {
@@ -35,6 +35,21 @@ macro_rules! string_get_set {
 		/// Sets the string field.
 		pub fn $setter(&mut self, buf: &$life mut WString) {
 			self.$field = unsafe { buf.as_mut_ptr() };
+		}
+	};
+}
+
+/// Implements getter and setter methods for the given `[u16; N]` member.
+macro_rules! string_arr_get_set {
+	($field:ident, $setter:ident) => {
+		/// Returns the string field.
+		pub fn $field(&self) -> String {
+			WString::from_wchars_slice(&self.$field).to_string()
+		}
+
+		/// Sets the string field.
+		pub fn $setter(&mut self, text: &str) {
+			WString::from_str(text).copy_to_slice(&mut self.$field);
 		}
 	};
 }

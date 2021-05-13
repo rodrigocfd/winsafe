@@ -100,9 +100,10 @@ pub fn CloseClipboard() -> WinResult<()> {
 /// cannot be properly formatted by
 /// [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
 /// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) traits,
-/// thus showing a wrong message which actually corresponds to the
+/// thus showing a wrong description. The formatted text actually will belong to
+/// the
 /// [standard error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
-/// of the same value.
+/// of the same value. Do not rely on these descriptions.
 pub fn CommDlgExtendedError() -> co::ERROR {
 	co::ERROR(unsafe { comdlg32::CommDlgExtendedError() })
 }

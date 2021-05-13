@@ -128,7 +128,7 @@ impl<'a, 'b> CHOOSECOLOR<'a, 'b> {
 		self.lpCustColors = buf;
 	}
 
-	string_get_set!('b, lpTemplateName, set_lpTemplateName);
+	string_ptr_get_set!('b, lpTemplateName, set_lpTemplateName);
 }
 
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
@@ -154,8 +154,8 @@ pub struct CREATESTRUCT<'a, 'b> {
 impl_default_zero!(CREATESTRUCT, 'a, 'b);
 
 impl<'a, 'b> CREATESTRUCT<'a, 'b> {
-	string_get_set!('a, lpszName, set_lpszName);
-	string_get_set!('b, lpszClass, set_lpszClass);
+	string_ptr_get_set!('a, lpszName, set_lpszName);
+	string_ptr_get_set!('b, lpszClass, set_lpszClass);
 }
 
 /// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
@@ -221,15 +221,7 @@ pub struct LOGFONT {
 }
 
 impl LOGFONT {
-	/// Returns the `lfFaceName` field.
-	pub fn lfFaceName(&self) -> String {
-		WString::from_wchars_slice(&self.lfFaceName).to_string()
-	}
-
-	/// Sets the `lfFaceName` field.
-	pub fn set_lfFaceName(&mut self, text: &str) {
-		WString::from_str(text).copy_to_slice(&mut self.lfFaceName);
-	}
+	string_arr_get_set!(lfFaceName, set_lfFaceName);
 }
 
 /// [`MEMORYSTATUSEX`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
@@ -420,15 +412,7 @@ pub struct OSVERSIONINFOEX {
 impl_default_with_size!(OSVERSIONINFOEX, dwOSVersionInfoSize);
 
 impl OSVERSIONINFOEX {
-	/// Returns the `szCSDVersion` field.
-	pub fn szCSDVersion(&self) -> String {
-		WString::from_wchars_slice(&self.szCSDVersion).to_string()
-	}
-
-	/// Sets the `szCSDVersion` field.
-	pub fn get_szCSDVersion(&mut self, text: &str) {
-		WString::from_str(text).copy_to_slice(&mut self.szCSDVersion);
-	}
+	string_arr_get_set!(szCSDVersion, set_szCSDVersion);
 }
 
 /// [`OVERLAPPED`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped)
@@ -680,25 +664,8 @@ pub struct TIME_ZONE_INFORMATION {
 }
 
 impl TIME_ZONE_INFORMATION {
-	/// Returns the `standardName` field.
-	pub fn standardName(&self) -> String {
-		WString::from_wchars_slice(&self.standardName).to_string()
-	}
-
-	/// Sets the `standardName` field.
-	pub fn set_standardName(&mut self, text: &str) {
-		WString::from_str(text).copy_to_slice(&mut self.standardName);
-	}
-
-	/// Returns the `daylightName` field.
-	pub fn daylightName(&self) -> String {
-		WString::from_wchars_slice(&self.daylightName).to_string()
-	}
-
-	/// Sets the `daylightName` field.
-	pub fn set_daylightName(&mut self, text: &str) {
-		WString::from_str(text).copy_to_slice(&mut self.daylightName);
-	}
+	string_arr_get_set!(standardName, set_standardName);
+	string_arr_get_set!(daylightName, set_daylightName);
 }
 
 /// [`TRACKMOUSEEVENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)
@@ -821,5 +788,5 @@ impl<'a, 'b> WNDCLASSEX<'a, 'b> {
 		self.lpszMenuName = menu_name.as_mut_ptr();
 	}
 
-	string_get_set!('b, lpszClassName, set_lpszClassName);
+	string_ptr_get_set!('b, lpszClassName, set_lpszClassName);
 }

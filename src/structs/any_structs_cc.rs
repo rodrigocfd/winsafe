@@ -85,25 +85,8 @@ pub struct LITEM {
 impl_default_zero!(LITEM);
 
 impl LITEM {
-	/// Returns the `szID` field.
-	pub fn szID(&self) -> String {
-		WString::from_wchars_slice(&self.szID).to_string()
-	}
-
-	/// Sets the `szID` field.
-	pub fn get_szID(&mut self, text: &str) {
-		WString::from_str(text).copy_to_slice(&mut self.szID);
-	}
-
-	/// Returns the `szUrl` field.
-	pub fn szUrl(&self) -> String {
-		WString::from_wchars_slice(&self.szUrl).to_string()
-	}
-
-	/// Sets the `szUrl` field.
-	pub fn set_szUrl(&mut self, text: &str) {
-		WString::from_str(text).copy_to_slice(&mut self.szUrl);
-	}
+	string_arr_get_set!(szID, set_szID);
+	string_arr_get_set!(szUrl, set_szUrl);
 }
 
 /// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
@@ -268,16 +251,7 @@ pub struct NMDATETIMEFORMAT<'a> {
 impl_default_zero!(NMDATETIMEFORMAT, 'a);
 
 impl<'a> NMDATETIMEFORMAT<'a> {
-	/// Returns the `pszFormat` field.
-	pub fn pszFormat(&self) -> Option<String> {
-		unsafe { self.pszFormat.as_mut() }
-			.map(|psz| WString::from_wchars_nullt(psz).to_string())
-	}
-
-	/// Sets the `pszFormat` field.
-	pub fn set_pszFormat(&mut self, buf: &'a mut WString) {
-		self.pszFormat = unsafe { buf.as_mut_ptr() };
-	}
+	string_ptr_get_set!('a, pszFormat, set_pszFormat);
 
 	/// Returns the `pszDisplay` field.
 	pub fn pszDisplay(&self) -> String {
@@ -331,7 +305,7 @@ pub struct NMDATETIMESTRING<'a> {
 impl_default_zero!(NMDATETIMESTRING, 'a);
 
 impl<'a> NMDATETIMESTRING<'a> {
-	string_get_set!('a, pszUserString, set_pszUserString);
+	string_ptr_get_set!('a, pszUserString, set_pszUserString);
 }
 
 /// [`NMDATETIMEWMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimewmkeydownw)
@@ -348,7 +322,7 @@ pub struct NMDATETIMEWMKEYDOWN<'a> {
 impl_default_zero!(NMDATETIMEWMKEYDOWN, 'a);
 
 impl<'a> NMDATETIMEWMKEYDOWN<'a> {
-	string_get_set!('a, pszFormat, set_pszFormat);
+	string_ptr_get_set!('a, pszFormat, set_pszFormat);
 }
 
 /// [`NMDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)
@@ -450,15 +424,7 @@ pub struct NMLVEMPTYMARKUP {
 }
 
 impl NMLVEMPTYMARKUP {
-	/// Returns the `szMarkup` field.
-	pub fn szMarkup(&self) -> String {
-		WString::from_wchars_slice(&self.szMarkup).to_string()
-	}
-
-	/// Sets the `szMarkup` field.
-	pub fn get_szID(&mut self, text: &str) {
-		WString::from_str(text).copy_to_slice(&mut self.szMarkup);
-	}
+	string_arr_get_set!(szMarkup, set_szMarkup);
 }
 
 /// [`NMLVFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
