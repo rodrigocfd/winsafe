@@ -2,6 +2,7 @@
 //! COM interfaces.
 
 pub mod clsid;
+pub mod guid;
 pub mod vt;
 
 #[macro_use] mod imodalwindow;

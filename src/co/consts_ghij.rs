@@ -108,7 +108,7 @@ pub_struct_const! { GM, i32,
 }
 
 pub_struct_const! { GMEM, u32,
-	/// [`GlobalAlloc`](crate::GlobalAlloc) `uFlags` (`u32`).
+	/// [`GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) `uFlags` (`u32`).
 	=>
 	FIXED, 0x0000
 	MOVEABLE, 0x0002

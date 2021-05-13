@@ -6,7 +6,7 @@ macro_rules! pub_struct_IMediaSeeking {
 		$name:ident, $vt:ty
 	) => {
 		use crate::co;
-		use crate::com::dshow::clsid;
+		use crate::com::dshow::guid;
 		use crate::com::dshow::vt::IMediaSeekingVT;
 		use crate::structs::GUID;
 
@@ -120,13 +120,13 @@ macro_rules! pub_struct_IMediaSeeking {
 			/// [`IMediaSeeking::GetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-gettimeformat)
 			/// method.
 			pub fn GetTimeFormat(&self) -> WinResult<GUID> {
-				let mut guid = clsid::TIME_FORMAT_NONE;
+				let mut timeGuid = guid::TIME_FORMAT_NONE;
 				hr_to_winresult(
 					(self.imediaseeking_vt().GetStopPosition)(
 						self.ppvt,
-						&mut guid as *mut _ as _,
+						&mut timeGuid as *mut _ as _,
 					),
-				).map(|_| guid)
+				).map(|_| timeGuid)
 			}
 
 			/// [`IMediaSeeking::SetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
