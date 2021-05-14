@@ -9,7 +9,7 @@ use crate::structs::SECURITY_ATTRIBUTES;
 
 pub_struct_handle_closeable! {
 	/// Handle to a
-	/// [thread](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread).
+	/// [thread](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
 	/// Originally just a `HANDLE`.
 	HTHREAD
 }

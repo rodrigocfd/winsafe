@@ -9,7 +9,7 @@ use crate::WString;
 
 pub_struct_handle_closeable! {
 	/// Handle to a
-	/// [process](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information).
+	/// [process](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
 	/// Originally just a `HANDLE`.
 	HPROCESS
 }

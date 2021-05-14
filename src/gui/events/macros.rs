@@ -1,3 +1,41 @@
+/// Declares a method for an ordinary message notification, which has no
+/// parameters and returns zero (or a non-meaningful value).
+macro_rules! pub_fn_wm_ret0 {
+	(
+		$name:ident, $wmconst:expr,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut() + 'static,
+		{
+			self.add_msg($wmconst, {
+				let mut func = func;
+				move |_| { func(); None } // return value is never meaningful
+			});
+		}
+	};
+}
+
+/// Declares a method for an ordinary message notification, which carries an
+/// object with its parameters, and returns zero (or a non-meaningful value).
+macro_rules! pub_fn_wm_ret0_param {
+	(
+		$name:ident, $wmconst:expr, $parm:ty,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut($parm) + 'static,
+		{
+			self.add_msg($wmconst, {
+				let mut func = func;
+				move |p| { func(<$parm>::from_generic_wm(p)); None } // return value is never meaningful
+			});
+		}
+	};
+}
+
 /// Declares a struct of control events, which is just a proxy to parent events.
 macro_rules! pub_struct_ctrl_events_proxy {
 	(
@@ -26,7 +64,7 @@ macro_rules! pub_struct_ctrl_events_proxy {
 }
 
 /// Declares a method for a `WM_COMMAND` notification.
-macro_rules! pub_fn_cmd_event {
+macro_rules! pub_fn_cmd_ret0 {
 	(
 		$name:ident, $cmd:expr,
 		$(#[$doc:meta])*
@@ -46,7 +84,7 @@ macro_rules! pub_fn_cmd_event {
 /// Declares a method for a `WM_NOTIFY` notification which receives a NMHDR
 /// parameter, which is not passed because it carries no useful data, and whose
 /// callback has no return.
-macro_rules! pub_fn_nfy_event {
+macro_rules! pub_fn_nfy_ret0 {
 	(
 		$name:ident, $nfy:expr,
 		$(#[$doc:meta])*
@@ -65,7 +103,7 @@ macro_rules! pub_fn_nfy_event {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a parameter,
 /// and whose callback has no return.
-macro_rules! pub_fn_nfy_event_param {
+macro_rules! pub_fn_nfy_ret0_param {
 	(
 		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*
@@ -84,7 +122,7 @@ macro_rules! pub_fn_nfy_event_param {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a mutable
 /// parameter, and whose callback has no return.
-macro_rules! pub_fn_nfy_event_mutparam {
+macro_rules! pub_fn_nfy_ret0_mutparam {
 	(
 		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*
@@ -103,7 +141,7 @@ macro_rules! pub_fn_nfy_event_mutparam {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a parameter,
 /// and whose callback returns bool.
-macro_rules! pub_fn_nfy_event_param_retbool {
+macro_rules! pub_fn_nfy_retbool_param {
 	(
 		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*
@@ -122,7 +160,7 @@ macro_rules! pub_fn_nfy_event_param_retbool {
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a mutable
 /// parameter, and whose callback returns bool.
-macro_rules! pub_fn_nfy_event_mutparam_retbool {
+macro_rules! pub_fn_nfy_retbool_mutparam {
 	(
 		$name:ident, $nfy:expr, $param:ty,
 		$(#[$doc:meta])*

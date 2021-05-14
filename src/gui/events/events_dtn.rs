@@ -25,7 +25,7 @@ pub_struct_ctrl_events_proxy! {
 }
 
 impl DateTimePickerEvents {
-	pub_fn_nfy_event! { dtn_close_up, co::DTN::CLOSEUP.into(),
+	pub_fn_nfy_ret0! { dtn_close_up, co::DTN::CLOSEUP.into(),
 		/// [`DTN_CLOSEUP`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-closeup)
 		/// notification.
 		///
@@ -35,14 +35,14 @@ impl DateTimePickerEvents {
 		/// while the calendar is open.
 	}
 
-	pub_fn_nfy_event_param! { dtn_date_time_change, co::DTN::DATETIMECHANGE.into(), NMDATETIMECHANGE,
+	pub_fn_nfy_ret0_param! { dtn_date_time_change, co::DTN::DATETIMECHANGE.into(), NMDATETIMECHANGE,
 		/// [`DTN_DATETIMECHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-datetimechange)
 		/// notification.
 		///
 		/// Sent by a date and time picker control whenever a change occurs.
 	}
 
-	pub_fn_nfy_event! { dtn_drop_down, co::DTN::DROPDOWN.into(),
+	pub_fn_nfy_ret0! { dtn_drop_down, co::DTN::DROPDOWN.into(),
 		/// [`DTN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-dropdown)
 		/// notification.
 		///
@@ -50,7 +50,7 @@ impl DateTimePickerEvents {
 		/// drop-down month calendar.
 	}
 
-	pub_fn_nfy_event_mutparam! { dtn_format, co::DTN::FORMAT.into(), NMDATETIMEFORMAT,
+	pub_fn_nfy_ret0_mutparam! { dtn_format, co::DTN::FORMAT.into(), NMDATETIMEFORMAT,
 		/// [`DTN_FORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-format)
 		/// notification.
 		///
@@ -58,7 +58,7 @@ impl DateTimePickerEvents {
 		/// displayed in a callback field.
 	}
 
-	pub_fn_nfy_event_mutparam! { dtn_format_query, co::DTN::FORMATQUERY.into(), NMDATETIMEFORMATQUERY,
+	pub_fn_nfy_ret0_mutparam! { dtn_format_query, co::DTN::FORMATQUERY.into(), NMDATETIMEFORMATQUERY,
 		/// [`DTN_FORMATQUERY`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-formatquery)
 		/// notification.
 		///
@@ -67,7 +67,7 @@ impl DateTimePickerEvents {
 		/// field.
 	}
 
-	pub_fn_nfy_event_mutparam! { dtn_user_string, co::DTN::USERSTRING.into(), NMDATETIMESTRING,
+	pub_fn_nfy_ret0_mutparam! { dtn_user_string, co::DTN::USERSTRING.into(), NMDATETIMESTRING,
 		/// [`DTN_USERSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-userstring)
 		/// notification.
 		///
@@ -77,7 +77,7 @@ impl DateTimePickerEvents {
 		/// [`DTS_APPCANPARSE`](crate::co::DTS::APPCANPARSE) style.
 	}
 
-	pub_fn_nfy_event_param! { dtn_wm_key_down, co::DTN::WMKEYDOWN.into(), NMDATETIMEWMKEYDOWN,
+	pub_fn_nfy_ret0_param! { dtn_wm_key_down, co::DTN::WMKEYDOWN.into(), NMDATETIMEWMKEYDOWN,
 		/// [`DTN_WMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-wmkeydown)
 		/// notification.
 		///
@@ -85,14 +85,14 @@ impl DateTimePickerEvents {
 		/// callback field.
 	}
 
-	pub_fn_nfy_event! { nm_kill_focus, co::NM::KILLFOCUS,
+	pub_fn_nfy_ret0! { nm_kill_focus, co::NM::KILLFOCUS,
 		/// [`NM_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-killfocus-date-time)
 		/// notification.
 		///
 		/// Notifies that the control has lost the input focus.
 	}
 
-	pub_fn_nfy_event! { nm_set_focus, co::NM::SETFOCUS,
+	pub_fn_nfy_ret0! { nm_set_focus, co::NM::SETFOCUS,
 		/// [`NM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-setfocus-date-time-)
 		/// notification.
 		///

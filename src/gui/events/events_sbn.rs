@@ -19,7 +19,7 @@ pub_struct_ctrl_events_proxy! {
 }
 
 impl StatusBarEvents {
-	pub_fn_nfy_event_param_retbool! { nm_click, co::NM::CLICK, NMMOUSE,
+	pub_fn_nfy_retbool_param! { nm_click, co::NM::CLICK, NMMOUSE,
 		/// [`NM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-click-status-bar)
 		/// notification.
 		///
@@ -27,7 +27,7 @@ impl StatusBarEvents {
 		/// control.
 	}
 
-	pub_fn_nfy_event_param_retbool! { nm_dbl_clk, co::NM::DBLCLK, NMMOUSE,
+	pub_fn_nfy_retbool_param! { nm_dbl_clk, co::NM::DBLCLK, NMMOUSE,
 		/// [`NM_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-dblclk-status-bar)
 		/// notification.
 		///
@@ -35,7 +35,7 @@ impl StatusBarEvents {
 		/// within the control.
 	}
 
-	pub_fn_nfy_event_param_retbool! { nm_rclick, co::NM::RCLICK, NMMOUSE,
+	pub_fn_nfy_retbool_param! { nm_rclick, co::NM::RCLICK, NMMOUSE,
 		/// [`NM_RCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rclick-status-bar)
 		/// notification.
 		///
@@ -43,7 +43,7 @@ impl StatusBarEvents {
 		/// control.
 	}
 
-	pub_fn_nfy_event_param_retbool! { nm_r_dbl_clk, co::NM::RDBLCLK, NMMOUSE,
+	pub_fn_nfy_retbool_param! { nm_r_dbl_clk, co::NM::RDBLCLK, NMMOUSE,
 		/// [`NM_RDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-status-bar)
 		/// notification.
 		///
@@ -51,7 +51,7 @@ impl StatusBarEvents {
 		/// within the control.
 	}
 
-	pub_fn_nfy_event! { sbn_simple_mode_change, co::SBN::SIMPLEMODECHANGE.into(),
+	pub_fn_nfy_ret0! { sbn_simple_mode_change, co::SBN::SIMPLEMODECHANGE.into(),
 		/// [`SBN_SIMPLEMODECHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/sbn-simplemodechange)
 		/// notification.
 		///

@@ -7,8 +7,8 @@ use crate::privs::{bool_to_winresult, ref_as_pvoid};
 use crate::structs::{OVERLAPPED, SECURITY_ATTRIBUTES};
 
 pub_struct_handle_closeable! {
-	/// Handle to a
-	/// [pipe](https://docs.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe).
+	/// Handle to an
+	/// [anonymous pipe](https://docs.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes).
 	/// Originally just a `HANDLE`.
 	HPIPE
 }

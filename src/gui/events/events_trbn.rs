@@ -19,7 +19,7 @@ pub_struct_ctrl_events_proxy! {
 }
 
 impl TrackbarEvents {
-	pub_fn_nfy_event_param! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING.into(), NMTRBTHUMBPOSCHANGING,
+	pub_fn_nfy_ret0_param! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING.into(), NMTRBTHUMBPOSCHANGING,
 		/// [`TRBN_THUMBPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/trbn-thumbposchanging)
 		/// notification.
 		///
@@ -40,7 +40,7 @@ impl TrackbarEvents {
 		});
 	}
 
-	pub_fn_nfy_event! { nm_released_capture, co::NM::RELEASEDCAPTURE,
+	pub_fn_nfy_ret0! { nm_released_capture, co::NM::RELEASEDCAPTURE,
 		/// [`NM_RELEASEDCAPTURE`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
 		/// notification.
 		///
