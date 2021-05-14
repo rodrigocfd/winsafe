@@ -63,7 +63,7 @@ impl<'a> MsgSend for GetParts<'a> {
 /// [`SB_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettext)
 /// message parameters.
 ///
-/// Return type: `(u16, SBT)`.
+/// Return type: `(u16, co::SBT)`.
 pub struct GetText<'a> {
 	pub part_index: u8,
 	pub text: &'a mut WString,
@@ -88,7 +88,7 @@ impl<'a> MsgSend for GetText<'a> {
 /// [`SB_GETTEXTLENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettextlength)
 /// message parameters.
 ///
-/// Return type: `(u16, SBT)`.
+/// Return type: `(u16, co::SBT)`.
 pub struct GetTextLength {
 	pub part_index: u8,
 }

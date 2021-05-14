@@ -82,7 +82,7 @@ impl<'a> MsgSend for GetRange<'a> {
 /// [`PBM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getstate)
 /// message, which has no parameters.
 ///
-/// Return type: `PBST`.
+/// Return type: `co::PBST`.
 pub struct GetState {}
 
 impl MsgSend for GetState {
@@ -206,7 +206,7 @@ impl MsgSend for SetRange32 {
 /// [`PBM_SETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 /// message parameters.
 ///
-/// Return type: `PBST`.
+/// Return type: `co::PBST`.
 pub struct SetState {
 	pub state: co::PBST,
 }

@@ -326,6 +326,13 @@ pub_struct_const! { MK, u16,
 	XBUTTON2, 0x0040
 }
 
+pub_struct_const! { MND, u8,
+	/// [`WM_MENUDRAG`](crate::msg::wm::MenuDrag) return value.
+	=>
+	CONTINUE, 0
+	ENDMENU, 1
+}
+
 pub_struct_const! { MNS, u32,
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
 	=>

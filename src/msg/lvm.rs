@@ -267,7 +267,7 @@ impl MsgSend for GetColumnWidth {
 /// [`LVM_GETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getextendedlistviewstyle)
 /// message, which has no parameters.
 ///
-/// Return type: `LVS_EX`.
+/// Return type: `co::LVS_EX`.
 pub struct GetExtendedListViewStyle {}
 
 impl MsgSend for GetExtendedListViewStyle {
@@ -364,7 +364,7 @@ impl MsgSend for GetItemCount {
 /// [`LVM_GETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemstate)
 /// message parameters.
 ///
-/// Return type: `LVIS`.
+/// Return type: `co::LVIS`.
 pub struct GetItemState {
 	pub index: u32,
 	pub mask: co::LVIS,
@@ -436,7 +436,7 @@ impl MsgSend for GetSelectedCount {
 /// [`LVM_GETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getview)
 /// message, which has no parameters.
 ///
-/// Return type: `LV_VIEW`.
+/// Return type: `co::LV_VIEW`.
 pub struct GetView {}
 
 impl MsgSend for GetView {
@@ -643,7 +643,7 @@ impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 /// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setextendedlistviewstyle)
 /// message parameters.
 ///
-/// Return type: `LVS_EX`.
+/// Return type: `co::LVS_EX`.
 pub struct SetExtendedListViewStyle {
 	pub style: co::LVS_EX,
 	pub mask: co::LVS_EX,

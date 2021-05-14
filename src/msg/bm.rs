@@ -336,7 +336,7 @@ pub_struct_msg_empty! { Click, co::BM::CLICK.into(),
 /// [`BM_GETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getcheck)
 /// message parameters.
 ///
-/// Return type: `BST`.
+/// Return type: `co::BST`.
 pub struct GetCheck {}
 
 impl MsgSend for GetCheck {
@@ -386,7 +386,7 @@ impl MsgSend for GetImage {
 /// [`BM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getstate)
 /// message, which has no parameters.
 ///
-/// Return type: `BST`.
+/// Return type: `co::BST`.
 pub struct GetState {}
 
 impl MsgSend for GetState {

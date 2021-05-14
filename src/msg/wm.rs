@@ -19,6 +19,7 @@ use crate::structs::{
 	RECT,
 	SIZE,
 	STYLESTRUCT,
+	TITLEBARINFOEX,
 	WINDOWPOS,
 };
 
@@ -426,6 +427,38 @@ pub_struct_msg_empty_handleable! { EnterSizeMove, co::WM::ENTERSIZEMOVE,
 	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 }
 
+/// [`WM_ENTERMENULOOP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-entermenuloop)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct EnterMenuLoop {
+	pub with_trackpopupmenu: bool,
+}
+
+impl MsgSend for EnterMenuLoop {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::ENTERMENULOOP,
+			wparam: self.with_trackpopupmenu as _,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for EnterMenuLoop {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			with_trackpopupmenu: p.wparam != 0,
+		}
+	}
+}
+
 /// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 /// message parameters.
 ///
@@ -581,6 +614,38 @@ impl<'a> MsgSend for GetMinMaxInfo<'a> {
 }
 
 impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			info: unsafe { &mut *(p.lparam as *mut _) },
+		}
+	}
+}
+
+/// [`WM_GETTITLEBARINFOEX`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-gettitlebarinfoex)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct GetTitleBarInfoEx<'a> {
+	pub info: &'a mut TITLEBARINFOEX,
+}
+
+impl<'a> MsgSend for GetTitleBarInfoEx<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::GETTITLEBARINFOEX,
+			wparam: 0,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+impl<'a> MsgSendRecv for GetTitleBarInfoEx<'a> {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			info: unsafe { &mut *(p.lparam as *mut _) },
@@ -830,6 +895,74 @@ impl MsgSendRecv for MenuCommand {
 	}
 }
 
+/// [`WM_MENUDRAG`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-menudrag)
+/// message parameters.
+///
+/// Return type: `co::MND`.
+pub struct MenuDrag {
+	pub position: u32,
+	pub hmenu: HMENU,
+}
+
+impl MsgSend for MenuDrag {
+	type RetType = co::MND;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::MND(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::MENUDRAG,
+			wparam: self.position as _,
+			lparam: self.hmenu.ptr as _,
+		}
+	}
+}
+
+impl MsgSendRecv for MenuDrag {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			position: p.wparam as _,
+			hmenu: HMENU { ptr: p.lparam as _ },
+		}
+	}
+}
+
+/// [`WM_MENURBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-menurbuttonup)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct MenuRButtonUp {
+	pub position: u32,
+	pub hmenu: HMENU,
+}
+
+impl MsgSend for MenuRButtonUp {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::MENURBUTTONUP,
+			wparam: self.position as _,
+			lparam: self.hmenu.ptr as _,
+		}
+	}
+}
+
+impl MsgSendRecv for MenuRButtonUp {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			position: p.wparam as _,
+			hmenu: HMENU { ptr: p.lparam as _ },
+		}
+	}
+}
+
 pub_struct_msg_button! { MouseHover, co::WM::MOUSEHOVER,
 	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 }
@@ -905,7 +1038,7 @@ impl<'a> MsgSendRecv for Moving<'a> {
 /// [`WM_NCCALCSIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
 /// message parameters.
 ///
-/// Return type: `WVR`.
+/// Return type: `co::WVR`.
 pub struct NcCalcSize<'a, 'b> {
 	pub data: NccspRect<'a, 'b>,
 }
@@ -1563,6 +1696,40 @@ impl MsgSendRecv for Timer {
 				0 => None,
 				addr => unsafe { std::mem::transmute(addr) },
 			},
+		}
+	}
+}
+
+/// [`WM_UNINITMENUPOPUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-uninitmenupopup)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct UninitMenuPopup {
+	pub hmenu: HMENU,
+	pub which: co::MF,
+}
+
+impl MsgSend for UninitMenuPopup {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::UNINITMENUPOPUP,
+			wparam: self.hmenu.ptr as _,
+			lparam: MAKEDWORD(0, self.which.0 as _) as _,
+		}
+	}
+}
+
+impl MsgSendRecv for UninitMenuPopup {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			hmenu: HMENU { ptr: p.wparam as _ },
+			which: co::MF(LOWORD(p.lparam as _) as _),
 		}
 	}
 }

@@ -516,7 +516,8 @@ pub_struct_const! { STARTF, u32,
 
 pub_struct_const! { STATE_SYSTEM, u32,
 	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and
-	/// `stateButton` (`u32`).
+	/// `stateButton`, [`TITLEBARINFOEX`](crate::TITLEBARINFOEX) `rgstate`
+	/// (`u32`).
 	=>
 	UNAVAILABLE, 0x0000_0001
 	SELECTED, 0x0000_0002

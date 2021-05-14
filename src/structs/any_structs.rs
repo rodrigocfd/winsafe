@@ -23,7 +23,7 @@ use crate::handles::{
 	HTHREAD,
 	HWND,
 };
-use crate::privs::LF_FACESIZE;
+use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE};
 use crate::structs::{ATOM, COLORREF};
 use crate::unions::{ColorrefDib, ColorrefHbitmap};
 use crate::WString;
@@ -742,6 +742,18 @@ impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(standardName, set_standardName);
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
+
+/// [`TITLEBARINFOEX`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-titlebarinfoex)
+/// struct.
+#[repr(C)]
+pub struct TITLEBARINFOEX {
+	cbSize: u32,
+	pub rcTitleBar: RECT,
+	pub rgstate: [co::STATE_SYSTEM; CCHILDREN_TITLEBAR + 1],
+	pub rgrect: [RECT; CCHILDREN_TITLEBAR + 1],
+}
+
+impl_default_with_size!(TITLEBARINFOEX, cbSize);
 
 /// [`TRACKMOUSEEVENT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)
 /// struct.

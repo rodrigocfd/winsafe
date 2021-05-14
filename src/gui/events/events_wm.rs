@@ -569,6 +569,13 @@ impl WindowEvents {
 		/// processed one or more previous messages.
 	}
 
+	pub_fn_wm_ret0_param! { wm_enter_menu_loop, co::WM::ENTERMENULOOP, wm::EnterMenuLoop,
+		/// [`WM_ENTERMENULOOP`](crate::msg::wm::EnterMenuLoop) message.
+		///
+		/// Notifies an application's main window procedure that a menu modal
+		/// loop has been entered.
+	}
+
 	pub_fn_wm_ret0_param! { wm_enter_size_move, co::WM::ENTERSIZEMOVE, wm::EnterSizeMove,
 		/// [`WM_ENTERSIZEMOVE`](crate::msg::wm::EnterSizeMove) message.
 		///
@@ -652,6 +659,12 @@ impl WindowEvents {
 		/// change. An application can use this message to override the window's
 		/// default maximized size and position, or its default minimum or
 		/// maximum tracking size.
+	}
+
+	pub_fn_wm_ret0_param! { wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, wm::GetTitleBarInfoEx,
+		/// [`WM_GETTITLEBARINFOEX`](crate::msg::wm::GetTitleBarInfoEx) message.
+		///
+		/// Sent to request extended title bar information.
 	}
 
 	pub_fn_wm_ret0_param! { wm_help, co::WM::HELP, wm::Help,
@@ -779,6 +792,26 @@ impl WindowEvents {
 		/// [`WM_MENUCOMMAND`](crate::msg::wm::MenuCommand) message.
 		///
 		/// Sent when the user makes a selection from a menu.
+	}
+
+	/// [`WM_MENUDRAG`](crate::msg::wm::MenuDrag) message.
+	///
+	/// Sent to the owner of a drag-and-drop menu when the user drags a menu
+	/// item.
+	pub fn wm_menu_drag<F>(&self, func: F)
+		where F: FnMut(wm::MenuDrag) -> co::MND + 'static,
+	{
+		self.add_msg(co::WM::MENUDRAG, {
+			let mut func = func;
+			move |p| Some(func(wm::MenuDrag::from_generic_wm(p)).0 as _)
+		});
+	}
+
+	pub_fn_wm_ret0_param! { wm_menu_r_button_up, co::WM::MENURBUTTONUP, wm::MenuRButtonUp,
+		/// [`WM_MENURBUTTONUP`](crate::msg::wm::MenuRButtonUp) message.
+		///
+		/// Sent when the user releases the right mouse button while the cursor
+		/// is on a menu item.
 	}
 
 	pub_fn_wm_ret0_param! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover,
@@ -1101,6 +1134,12 @@ impl WindowEvents {
 		/// Broadcast to every window following a theme change event. Examples
 		/// of theme change events are the activation of a theme, the
 		/// deactivation of a theme, or a transition from one theme to another.
+	}
+
+	pub_fn_wm_ret0_param! { wm_uninit_menu_popup, co::WM::UNINITMENUPOPUP, wm::UninitMenuPopup,
+		/// [`WM_UNINITMENUPOPUP`](crate::msg::wm::UninitMenuPopup) message.
+		///
+		/// Sent when a drop-down menu or submenu has been destroyed.
 	}
 
 	pub_fn_wm_ret0_param! { wm_v_scroll, co::WM::VSCROLL, wm::VScroll,

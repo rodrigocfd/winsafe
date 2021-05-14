@@ -117,7 +117,7 @@ impl MsgSend for GetMcFont {
 /// [`DTM_GETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcstyle)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<MCS>`.
+/// Return type: `WinResult<co::MCS>`.
 pub struct GetMcStyle {}
 
 impl MsgSend for GetMcStyle {
@@ -167,7 +167,7 @@ impl MsgSend for GetMonthCalendar {
 /// [`DTM_GETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getrange)
 /// message parameters.
 ///
-/// Return type: `GDTR`.
+/// Return type: `co::GDTR`.
 pub struct GetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
@@ -303,7 +303,7 @@ impl MsgSend for SetMcFont {
 /// [`DTM_SETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmcstyle)
 /// message parameters.
 ///
-/// Return type: `WinResult<MCS>`.
+/// Return type: `WinResult<co::MCS>`.
 pub struct SetMcStyle {
 	pub style: co::MCS,
 }
