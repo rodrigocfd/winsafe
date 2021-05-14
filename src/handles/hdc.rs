@@ -5,14 +5,7 @@ use crate::co;
 use crate::ffi::{gdi32, msimg32};
 use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
-use crate::privs::{
-	bool_to_winresult,
-	CLR_INVALID,
-	GDI_ERROR,
-	nonzero_to_winresult,
-	ref_as_pcvoid,
-	ref_as_pvoid,
-};
+use crate::privs::{bool_to_winresult, CLR_INVALID, GDI_ERROR};
 use crate::structs::{COLORREF, POINT, RECT, SIZE, TEXTMETRIC};
 use crate::WString;
 
@@ -117,9 +110,12 @@ impl HDC {
 	/// [`FillRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
 	/// method.
 	pub fn FillRect(self, lprc: RECT, hbr: HBRUSH) -> WinResult<()> {
-		nonzero_to_winresult(
-			unsafe { gdi32::FillRect(self.ptr, ref_as_pcvoid(&lprc), hbr.ptr) },
-		).map(|_| ())
+		match unsafe {
+			gdi32::FillRect(self.ptr, &lprc as *const _ as _, hbr.ptr)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
 	}
 
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
@@ -147,7 +143,7 @@ impl HDC {
 					self.ptr,
 					WString::from_str(lpString).as_ptr(),
 					lpString.chars().count() as _,
-					ref_as_pvoid(&mut sz),
+					&mut sz as *mut _ as _,
 				)
 			},
 		).map(|_| sz)
@@ -157,7 +153,7 @@ impl HDC {
 	/// method.
 	pub fn GetTextMetrics(self, lptm: &mut TEXTMETRIC) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { gdi32::GetTextMetricsW(self.ptr, ref_as_pvoid(lptm)) },
+			unsafe { gdi32::GetTextMetricsW(self.ptr, lptm as *mut _ as _) },
 		)
 	}
 
@@ -178,7 +174,7 @@ impl HDC {
 					self.ptr,
 					x,
 					y,
-					lppt.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+					lppt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
 		)
@@ -223,7 +219,7 @@ impl HDC {
 			unsafe {
 				gdi32::PolyBezier(
 					self.ptr,
-					ref_as_pcvoid(&apt[0]),
+					apt.as_ptr() as _,
 					apt.len() as _,
 				)
 			},
@@ -237,7 +233,7 @@ impl HDC {
 			unsafe {
 				gdi32::PolyBezierTo(
 					self.ptr,
-					ref_as_pcvoid(&apt[0]),
+					apt.as_ptr() as _,
 					apt.len() as _,
 				)
 			},
@@ -251,7 +247,7 @@ impl HDC {
 			unsafe {
 				gdi32::Polyline(
 					self.ptr,
-					ref_as_pcvoid(&apt[0]),
+					apt.as_ptr() as _,
 					apt.len() as _,
 				)
 			},
@@ -265,7 +261,7 @@ impl HDC {
 			unsafe {
 				gdi32::PolylineTo(
 					self.ptr,
-					ref_as_pcvoid(&apt[0]),
+					apt.as_ptr() as _,
 					apt.len() as _,
 				)
 			},
@@ -314,7 +310,10 @@ impl HDC {
 	/// [`SaveDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-savedc)
 	/// method.
 	pub fn SaveDC(self) -> WinResult<i32> {
-		nonzero_to_winresult(unsafe { gdi32::SaveDC(self.ptr) })
+		match unsafe { gdi32::SaveDC(self.ptr) } {
+			0 => Err(GetLastError()),
+			v => Ok(v),
+		}
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
@@ -360,15 +359,19 @@ impl HDC {
 	/// [`SetArcDirection`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)
 	/// method.
 	pub fn SetArcDirection(self, dir: co::AD) -> WinResult<co::AD> {
-		nonzero_to_winresult(unsafe { gdi32::SetArcDirection(self.ptr, dir.0) })
-			.map(|v| co::AD(v))
+		match unsafe { gdi32::SetArcDirection(self.ptr, dir.0) } {
+			0 => Err(GetLastError()),
+			v => Ok(co::AD(v)),
+		}
 	}
 
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method.
 	pub fn SetBkMode(self, mode: co::BKMODE) -> WinResult<co::BKMODE> {
-		nonzero_to_winresult(unsafe { gdi32::SetBkMode(self.ptr, mode.0) })
-			.map(|v| co::BKMODE(v))
+		match unsafe { gdi32::SetBkMode(self.ptr, mode.0) } {
+			0 => Err(GetLastError()),
+			v => Ok(co::BKMODE(v)),
+		}
 	}
 
 	/// [`SetDCPenColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcpencolor)
@@ -382,8 +385,10 @@ impl HDC {
 	/// [`SetGraphicsMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode)
 	/// method.
 	pub fn SetGraphicsMode(self, iMode: co::GM) -> WinResult<co::GM> {
-		nonzero_to_winresult(unsafe { gdi32::SetGraphicsMode(self.ptr, iMode.0) })
-			.map(|v| co::GM(v))
+		match unsafe { gdi32::SetGraphicsMode(self.ptr, iMode.0) } {
+			0 => Err(GetLastError()),
+			v => Ok(co::GM(v))
+		}
 	}
 
 	/// [`SetTextAlign`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextalign)
@@ -418,7 +423,7 @@ impl HDC {
 		let mut lpsz = SIZE::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetViewportExtEx(self.ptr, x, y, ref_as_pvoid(&mut lpsz))
+				gdi32::SetViewportExtEx(self.ptr, x, y, &mut lpsz as *mut _ as _)
 			}
 		).map(|_| lpsz)
 	}
@@ -429,7 +434,7 @@ impl HDC {
 		let mut lppt = POINT::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetViewportOrgEx(self.ptr, x, y, ref_as_pvoid(&mut lppt))
+				gdi32::SetViewportOrgEx(self.ptr, x, y, &mut lppt as *mut _ as _)
 			}
 		).map(|_| lppt)
 	}
@@ -440,7 +445,7 @@ impl HDC {
 		let mut lpsz = SIZE::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetWindowExtEx(self.ptr, x, y, ref_as_pvoid(&mut lpsz))
+				gdi32::SetWindowExtEx(self.ptr, x, y, &mut lpsz as *mut _ as _)
 			}
 		).map(|_| lpsz)
 	}
@@ -451,7 +456,7 @@ impl HDC {
 		let mut lppt = POINT::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetWindowOrgEx(self.ptr, x, y, ref_as_pvoid(&mut lppt))
+				gdi32::SetWindowOrgEx(self.ptr, x, y, &mut lppt as *mut _ as _)
 			}
 		).map(|_| lppt)
 	}

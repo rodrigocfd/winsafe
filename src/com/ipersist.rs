@@ -6,7 +6,6 @@ macro_rules! pub_struct_IPersist {
 		$name:ident, $vt:ty
 	) => {
 		use crate::com::vt::IPersistVT;
-		use crate::privs::ref_as_pvoid;
 		use crate::structs::CLSID;
 
 		pub_struct_IUnknown! {
@@ -26,7 +25,7 @@ macro_rules! pub_struct_IPersist {
 				hr_to_winresult(
 					(self.ipersist_vt().GetClassID)(
 						self.ppvt,
-						ref_as_pvoid(&mut clsid),
+						&mut clsid as *mut _ as _,
 					),
 				).map(|_| clsid)
 			}

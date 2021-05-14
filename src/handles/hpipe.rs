@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::ffi::kernel32;
 use crate::handles::HFILE;
-use crate::privs::{bool_to_winresult, ref_as_pvoid};
+use crate::privs::bool_to_winresult;
 use crate::structs::{OVERLAPPED, SECURITY_ATTRIBUTES};
 
 pub_struct_handle_closeable! {
@@ -31,7 +31,7 @@ impl HPIPE {
 				kernel32::CreatePipe(
 					&mut hread.ptr,
 					&mut hwrite.ptr,
-					lpPipeAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+					lpPipeAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					nSize,
 				)
 			},

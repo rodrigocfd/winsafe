@@ -5,7 +5,6 @@ use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 use crate::handles::HBITMAP;
-use crate::privs::{ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::{COLORREF, LOGBRUSH};
 
 pub_struct_handle_gdi! {
@@ -30,7 +29,7 @@ impl HBRUSH {
 	/// **Note:** Must be paired with a
 	/// [`DeleteObject`](crate::HBRUSH::DeleteObject) call.
 	pub fn CreateBrushIndirect(plbrush: &LOGBRUSH) -> WinResult<HBRUSH> {
-		unsafe { gdi32::CreateBrushIndirect(ref_as_pcvoid(plbrush)).as_mut() }
+		unsafe { gdi32::CreateBrushIndirect(plbrush as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -77,7 +76,7 @@ impl HBRUSH {
 			gdi32::GetObjectW(
 				self.ptr,
 				std::mem::size_of::<LOGBRUSH>() as _,
-				ref_as_pvoid(pv),
+				pv as *mut _ as _,
 			)
 		} {
 			0 => match GetLastError() {

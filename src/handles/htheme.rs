@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::uxtheme;
 use crate::handles::{HDC, HRGN};
 use crate::structs::RECT;
-use crate::privs::{hr_to_winresult, ref_as_pcvoid, ref_as_pvoid};
+use crate::privs::hr_to_winresult;
 
 pub_struct_handle! {
 	/// Handle to a
@@ -33,8 +33,8 @@ impl HTHEME {
 					hdc.ptr,
 					iPartId.0,
 					iStateId.0,
-					ref_as_pcvoid(&pRect),
-					ref_as_pcvoid(&pClipRect),
+					&pRect as *const _ as _,
+					&pClipRect as *const _ as _,
 				)
 			},
 		)
@@ -61,8 +61,8 @@ impl HTHEME {
 					hdc.ptr,
 					iPartId.0,
 					iStateId.0,
-					ref_as_pcvoid(&pBoundingRect),
-					ref_as_pvoid(&mut pContentRect),
+					&pBoundingRect as *const _ as _,
+					&mut pContentRect as *mut _ as _,
 				)
 			},
 		).map(|_| pContentRect)
@@ -83,8 +83,8 @@ impl HTHEME {
 					hdc.ptr,
 					iPartId.0,
 					iStateId.0,
-					ref_as_pcvoid(&pContentRect),
-					ref_as_pvoid(&mut pExtentRect),
+					&pContentRect as *const _ as _,
+					&mut pExtentRect as *mut _ as _,
 				)
 			},
 		 ).map(|_| pExtentRect)
@@ -108,8 +108,8 @@ impl HTHEME {
 					hdc.ptr,
 					iPartId.0,
 					iStateId.0,
-					ref_as_pcvoid(&pRect),
-					ref_as_pvoid(&mut pRegion),
+					&pRect as *const _ as _,
+					&mut pRegion as *mut _ as _,
 				)
 			},
 		).map(|_| pRegion)

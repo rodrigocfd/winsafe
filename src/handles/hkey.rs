@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
-use crate::privs::{bool_to_winresult, ref_as_pvoid};
+use crate::privs::bool_to_winresult;
 use crate::structs::FILETIME;
 use crate::WString;
 
@@ -234,7 +234,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 							std::ptr::null_mut(),
-							ref_as_pvoid(&mut dwordBuf),
+							&mut dwordBuf as *mut _ as _,
 							&mut dataLen,
 						)
 					} as _
@@ -254,7 +254,7 @@ impl HKEY {
 							wValueName.as_ptr(),
 							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 							std::ptr::null_mut(),
-							ref_as_pvoid(&mut qwordBuf),
+							&mut qwordBuf as *mut _ as _,
 							&mut dataLen,
 						)
 					} as _
@@ -379,7 +379,7 @@ impl HKEY {
 		let lpcbMaxValueNameLen2 = lpcbMaxValueNameLen.map_or(std::ptr::null_mut(), |re| re as _);
 		let lpcbMaxValueLen2 = lpcbMaxValueLen.map_or(std::ptr::null_mut(), |re| re as _);
 		let lpcbSecurityDescriptor2 = lpcbSecurityDescriptor.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpftLastWriteTime2 = lpftLastWriteTime.map_or(std::ptr::null_mut(), |re| ref_as_pvoid(re));
+		let lpftLastWriteTime2 = lpftLastWriteTime.map_or(std::ptr::null_mut(), |re| re as *mut _ as _);
 
 		loop { // until lpClass is large enough
 			match co::ERROR(

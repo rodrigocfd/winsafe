@@ -27,8 +27,8 @@ macro_rules! pub_struct_IMFGetService {
 				hr_to_winresult(
 					(self.imfgetservice_vt().GetService)(
 						self.ppvt,
-						ref_as_pcvoid(guidService),
-						ref_as_pcvoid(&VT::IID()),
+						guidService as *const _ as _,
+						&VT::IID() as *const _ as _,
 						&mut ppvQueried as *mut _ as _,
 					),
 				).map(|_| RetInterf::from(ppvQueried))

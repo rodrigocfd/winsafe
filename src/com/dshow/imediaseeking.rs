@@ -163,7 +163,7 @@ macro_rules! pub_struct_IMediaSeeking {
 				hr_to_winresult(
 					(self.imediaseeking_vt().SetTimeFormat)(
 						self.ppvt,
-						ref_as_pcvoid(format),
+						format as *const _ as _,
 					),
 				)
 			}

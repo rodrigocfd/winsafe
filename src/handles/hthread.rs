@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
-use crate::privs::{bool_to_winresult, ref_as_pvoid};
+use crate::privs::bool_to_winresult;
 use crate::structs::SECURITY_ATTRIBUTES;
 
 pub_struct_handle_closeable! {
@@ -32,7 +32,7 @@ impl HTHREAD {
 		let mut lpThreadId: u32 = 0;
 		unsafe {
 			kernel32::CreateThread(
-				lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				dwStackSize,
 				lpStartAddress,
 				lpParameter,

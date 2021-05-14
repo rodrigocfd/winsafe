@@ -3,7 +3,6 @@
 use crate::aliases::WinResult;
 use crate::ffi::shell32;
 use crate::funcs::GetLastError;
-use crate::privs::ref_as_pvoid;
 use crate::structs::POINT;
 use crate::WString;
 
@@ -66,10 +65,13 @@ impl HDROP {
 
 	/// [`DragQueryPoint`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
 	/// method.
+	///
+	/// Returns the coordinates and whether the drop occurred in the client
+	/// area of the window
 	pub fn DragQueryPoint(self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let clientArea = unsafe {
-			shell32::DragQueryPoint(self.ptr, ref_as_pvoid(&mut pt))
+			shell32::DragQueryPoint(self.ptr, &mut pt as *mut _ as _)
 		};
 		(pt, clientArea != 0)
 	}

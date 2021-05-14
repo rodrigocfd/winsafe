@@ -10,7 +10,6 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 		use crate::com::dshow::vt::IMFVideoDisplayControlVT;
 		use crate::com::funcs::CoTaskMemFree;
 		use crate::handles::HWND;
-		use crate::privs::ref_as_pvoid;
 		use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
 
 		pub_struct_IUnknown! {
@@ -61,7 +60,7 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetCurrentImage)(
 						self.ppvt,
-						ref_as_pvoid(&mut bih),
+						&mut bih as *mut _ as _,
 						&mut pDib,
 						&mut cbDib,
 						&mut timeStamp,
@@ -95,8 +94,8 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetIdealVideoSize)(
 						self.ppvt,
-						ref_as_pvoid(&mut min),
-						ref_as_pvoid(&mut max),
+						&mut min as *mut _ as _,
+						&mut max as *mut _ as _,
 					),
 				).map(|_| (min, max))
 			}
@@ -111,8 +110,8 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetNativeVideoSize)(
 						self.ppvt,
-						ref_as_pvoid(&mut native),
-						ref_as_pvoid(&mut aspec),
+						&mut native as *mut _ as _,
+						&mut aspec as *mut _ as _,
 					),
 				).map(|_| (native, aspec))
 			}
@@ -127,8 +126,8 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetVideoPosition)(
 						self.ppvt,
-						ref_as_pvoid(&mut pnrc),
-						ref_as_pvoid(&mut rc),
+						&mut pnrc as *mut _ as _,
+						&mut rc as *mut _ as _,
 					),
 				).map(|_| (pnrc, rc))
 			}
@@ -199,8 +198,8 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().SetVideoPosition)(
 						self.ppvt,
-						src.as_ref().map_or(std::ptr::null(), |src| ref_as_pcvoid(src)),
-						dest.as_ref().map_or(std::ptr::null(), |dest| ref_as_pcvoid(dest)),
+						src.as_ref().map_or(std::ptr::null(), |src| src as *const _ as _),
+						dest.as_ref().map_or(std::ptr::null(), |dest| dest as *const _ as _),
 					),
 				)
 			}

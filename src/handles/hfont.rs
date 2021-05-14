@@ -4,7 +4,6 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::privs::{ref_as_pcvoid, ref_as_pvoid};
 use crate::structs::LOGFONT;
 use crate::WString;
 
@@ -48,7 +47,7 @@ impl HFONT {
 	/// **Note:** Must be paired with a
 	/// [`DeleteObject`](crate::HFONT::DeleteObject) call.
 	pub fn CreateFontIndirect(lplf: &LOGFONT) -> WinResult<HFONT> {
-		unsafe { gdi32::CreateFontIndirectW(ref_as_pcvoid(lplf)).as_mut() }
+		unsafe { gdi32::CreateFontIndirectW(lplf as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -60,7 +59,7 @@ impl HFONT {
 			gdi32::GetObjectW(
 				self.ptr,
 				std::mem::size_of::<LOGFONT>() as _,
-				ref_as_pvoid(pv),
+				pv as *mut _ as _,
 			)
 		} {
 			0 => match GetLastError() {

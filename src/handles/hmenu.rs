@@ -6,7 +6,7 @@ use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
-use crate::privs::{bool_to_winresult, ref_as_pcvoid, ref_as_pvoid};
+use crate::privs::bool_to_winresult;
 use crate::structs::{MENUINFO, MENUITEMINFO};
 use crate::WString;
 
@@ -222,7 +222,7 @@ impl HMENU {
 	/// method.
 	pub fn GetMenuInfo(self, lpmi: &mut MENUINFO) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::GetMenuInfo(self.ptr, ref_as_pvoid(lpmi)) },
+			unsafe { user32::GetMenuInfo(self.ptr, lpmi as *mut _ as _) },
 		)
 	}
 
@@ -287,7 +287,7 @@ impl HMENU {
 					self.ptr,
 					item.id_or_pos_u32(),
 					item.is_by_pos() as _,
-					ref_as_pcvoid(lpmi),
+					lpmi as *const _ as _,
 				)
 			},
 		)
@@ -317,7 +317,7 @@ impl HMENU {
 	/// method.
 	pub fn SetMenuInfo(self, mii: &MENUINFO) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::SetMenuInfo(self.ptr, ref_as_pcvoid(mii)) },
+			unsafe { user32::SetMenuInfo(self.ptr, mii as *const _ as _) },
 		)
 	}
 
@@ -332,7 +332,7 @@ impl HMENU {
 					self.ptr,
 					item.id_or_pos_u32(),
 					item.is_by_pos() as _,
-					ref_as_pcvoid(lpmii),
+					lpmii as *const _ as _,
 				)
 			},
 		)

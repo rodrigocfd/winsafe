@@ -2,7 +2,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::ffi::{BOOL, HRESULT, PCVOID, PVOID};
+use crate::ffi::{BOOL, HRESULT};
 use crate::funcs::GetLastError;
 use crate::WString;
 
@@ -24,18 +24,7 @@ pub(crate) const LF_FACESIZE: usize = 32;
 pub(crate) const MAX_LINKID_TEXT: usize = 48;
 pub(crate) const MAX_PATH: usize = 260;
 
-/// Converts a const reference to `ffi::PCVOID`.
-pub(crate) fn ref_as_pcvoid<T>(r: &T) -> PCVOID {
-	r as *const _ as _
-}
-
-/// Converts a mut reference to `ffi::PVOID`.
-pub(crate) fn ref_as_pvoid<T>(r: &mut T) -> PVOID {
-	r as *mut _ as _
-}
-
-/// Converts a `BOOL` value to a `WinResult`. `TRUE` is `Ok(())`, `FALSE` is
-/// `Err(GetLastError())`.
+/// If value is FALSE, yields `Err(GetLastError)`, otherwise `Ok()`.
 pub(crate) fn bool_to_winresult(expr: BOOL) -> WinResult<()> {
 	match expr {
 		0 => Err(GetLastError()),
@@ -43,30 +32,21 @@ pub(crate) fn bool_to_winresult(expr: BOOL) -> WinResult<()> {
 	}
 }
 
-/// Converts a native `HRESULT` to `WinResult`, `S_OK` yielding `Ok` and
-/// anything else yielding `Err`.
+/// If value is `S_OK` yields `Ok()`, othersize `Err(hresult)`.
 pub(crate) fn hr_to_winresult(hresult: HRESULT) -> WinResult<()> {
 	match co::ERROR(hresult as _) {
 		co::ERROR::S_OK => Ok(()),
-		err => Err(err),
+		hresult => Err(hresult),
 	}
 }
 
-/// Converts a native `HRESULT` to `WinResult`, `S_OK` yielding `Ok(true)`,
-/// `S_FALSE` yielding `Ok(false)` and anything else yielding `Err`.
+/// If value is `S_OK` yields `Ok(true)`, if `S_FALSE` yields `Ok(false)`
+/// othersize `Err(hresult)`.
 pub(crate) fn hr_to_winresult_bool(hresult: HRESULT) -> WinResult<bool> {
 	match co::ERROR(hresult as _) {
 		co::ERROR::S_OK => Ok(true),
 		co::ERROR::S_FALSE => Ok(false),
-		err => Err(err),
-	}
-}
-
-/// If number is zero, yields `Err(GetLastError)`, otherwise `Ok(expr)`.
-pub(crate) fn nonzero_to_winresult(expr: i32) -> WinResult<i32> {
-	match expr {
-		0 => Err(GetLastError()),
-		val => Ok(val),
+		hresult => Err(hresult),
 	}
 }
 

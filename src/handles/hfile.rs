@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
 use crate::handles::HFILEMAP;
-use crate::privs::{bool_to_winresult, INVALID_HANDLE_VALUE, ref_as_pvoid};
+use crate::privs::{bool_to_winresult, INVALID_HANDLE_VALUE};
 use crate::structs::{
 	BY_HANDLE_FILE_INFORMATION,
 	OVERLAPPED,
@@ -78,7 +78,7 @@ impl HFILE {
 				WString::from_str(lpFileName).as_ptr(),
 				dwDesiredAccess.0,
 				dwShareMode.0,
-				lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				dwCreationDisposition.0,
 				dwFlagsAndAttributes.0,
 				hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
@@ -103,7 +103,7 @@ impl HFILE {
 		unsafe {
 			kernel32::CreateFileMappingW(
 				self.ptr,
-				lpFileMappingAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+				lpFileMappingAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				flProtect.0,
 				maximumSize.map_or(0, |n| HIDWORD(n)),
 				maximumSize.map_or(0, |n| LODWORD(n)),
@@ -122,7 +122,7 @@ impl HFILE {
 			unsafe {
 				kernel32::GetFileInformationByHandle(
 					self.ptr,
-					ref_as_pvoid(lpFileInformation),
+					lpFileInformation as *mut _ as _,
 				)
 			},
 		)
@@ -185,7 +185,7 @@ impl HFILE {
 					buf.as_mut_ptr() as _,
 					numBytesToRead,
 					&mut bytesRead,
-					lpOverlapped.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+					lpOverlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
 		).map(|_| buf)
@@ -248,7 +248,7 @@ impl HFILE {
 					buffer.as_ptr() as _,
 					buffer.len() as _,
 					&mut bytesWritten,
-					lpOverlapped.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+					lpOverlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
 		).map(|_| bytesWritten)

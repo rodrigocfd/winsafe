@@ -6,7 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
 use crate::ffi::ole32;
-use crate::privs::{hr_to_winresult, ref_as_pcvoid};
+use crate::privs::hr_to_winresult;
 use crate::structs::CLSID;
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
@@ -38,11 +38,11 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 	hr_to_winresult(
 		unsafe {
 			ole32::CoCreateInstance(
-				ref_as_pcvoid(rclsid),
+				rclsid as *const _ as _,
 				pUnkOuter.as_ref()
 					.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as _),
 				dwClsContext.0,
-				ref_as_pcvoid(&VT::IID()),
+				&VT::IID() as *const _ as _,
 				&mut ppv as *mut _ as _,
 			)
 		},

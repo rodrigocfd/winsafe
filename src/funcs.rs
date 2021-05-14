@@ -13,8 +13,6 @@ use crate::privs::{
 	INVALID_FILE_ATTRIBUTES,
 	MAX_PATH,
 	parse_multi_z_str,
-	ref_as_pcvoid,
-	ref_as_pvoid,
 };
 use crate::structs::{
 	ATOM,
@@ -42,7 +40,7 @@ pub fn AdjustWindowRectEx(
 	bool_to_winresult(
 		unsafe {
 			user32::AdjustWindowRectEx(
-				ref_as_pvoid(lpRect),
+				lpRect as *mut _ as _,
 				dwStyle.0,
 				bMenu as _,
 				dwExStyle.0,
@@ -78,7 +76,7 @@ pub fn AdjustWindowRectEx(
 /// }
 /// ```
 pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> WinResult<bool> {
-	match unsafe { comdlg32::ChooseColorW(ref_as_pvoid(lpcc)) } {
+	match unsafe { comdlg32::ChooseColorW(lpcc as *mut _ as _) } {
 		0 => match CommDlgExtendedError() {
 			co::ERROR::SUCCESS => Ok(false),
 			err => Err(err),
@@ -146,7 +144,7 @@ pub fn DeleteFile(lpFileName: &str) -> WinResult<()> {
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
 pub fn DispatchMessage(lpMsg: &MSG) -> isize {
-	unsafe { user32::DispatchMessageW(ref_as_pcvoid(lpMsg)) }
+	unsafe { user32::DispatchMessageW(lpMsg as *const _ as _) }
 }
 
 /// [`EmptyClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
@@ -211,8 +209,8 @@ pub fn FileTimeToSystemTime(
 	bool_to_winresult(
 		unsafe {
 			kernel32::FileTimeToSystemTime(
-				ref_as_pcvoid(lpFileTime),
-				ref_as_pvoid(lpSystemTime),
+				lpFileTime as *const _ as _,
+				lpSystemTime as *mut _ as _,
 			)
 		},
 	)
@@ -227,7 +225,7 @@ pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
 /// [`GetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
 /// function.
 pub fn GetCursorPos(lpPoint: &mut POINT) -> WinResult<()> {
-	bool_to_winresult(unsafe { user32::GetCursorPos(ref_as_pvoid(lpPoint)) })
+	bool_to_winresult(unsafe { user32::GetCursorPos(lpPoint as *mut _ as _) })
 }
 
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
@@ -356,7 +354,7 @@ pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 {
 	match unsafe {
 		user32::GetMessageW(
-			ref_as_pvoid(lpMsg),
+			lpMsg as *mut _ as _,
 			hWnd.map_or(std::ptr::null_mut(), |h| h.ptr),
 			wMsgFilterMin, wMsgFilterMax,
 		)
@@ -388,14 +386,14 @@ pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
 /// [`GetSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
 /// function.
 pub fn GetSystemTime(lpSystemTime: &mut SYSTEMTIME) {
-	unsafe { kernel32::GetSystemTime(ref_as_pvoid(lpSystemTime)) }
+	unsafe { kernel32::GetSystemTime(lpSystemTime as *mut _ as _) }
 }
 
 /// [`GetSystemTimeAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
 pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 	unsafe {
-		kernel32::GetSystemTimeAsFileTime(ref_as_pvoid(lpSystemTimeAsFileTime))
+		kernel32::GetSystemTimeAsFileTime(lpSystemTimeAsFileTime as *mut _ as _)
 	}
 }
 
@@ -404,7 +402,7 @@ pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 pub fn GetSystemTimePreciseAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 	unsafe {
 		kernel32::GetSystemTimePreciseAsFileTime(
-			ref_as_pvoid(lpSystemTimeAsFileTime),
+			lpSystemTimeAsFileTime as *mut _ as _,
 		)
 	}
 }
@@ -431,7 +429,7 @@ pub fn GetTickCount64() -> u64 {
 /// function.
 pub fn GlobalMemoryStatusEx(lpBuffer: &mut MEMORYSTATUSEX) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { kernel32::GlobalMemoryStatusEx(ref_as_pvoid(lpBuffer)) },
+		unsafe { kernel32::GlobalMemoryStatusEx(lpBuffer as *mut _ as _) },
 	)
 }
 
@@ -680,7 +678,7 @@ pub fn PeekMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 {
 	unsafe {
 		user32::PeekMessageW(
-			ref_as_pvoid(lpMsg),
+			lpMsg as *mut _ as _,
 			hWnd.map_or(std::ptr::null_mut(), |h| h.ptr),
 			wMsgFilterMin,
 			wMsgFilterMax,
@@ -698,7 +696,7 @@ pub fn PostQuitMessage(nExitCode: co::ERROR) {
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
 pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
-	match unsafe { user32::RegisterClassExW(ref_as_pcvoid(lpwcx)) } {
+	match unsafe { user32::RegisterClassExW(lpwcx as *const _ as _) } {
 		0 => Err(GetLastError()),
 		atom => Ok(ATOM(atom)),
 	}
@@ -768,14 +766,16 @@ pub fn SoundSentry() -> bool {
 /// The `pvParam` type varies according to the `uiAction`. If you set it wrong,
 /// you're likely to cause a buffer overrun.
 pub unsafe fn SystemParametersInfo<T>(
-	uiAction: co::SPI, uiParam: u32,
-	pvParam: &mut T, fWinIni: co::SPIF) -> WinResult<()>
+	uiAction: co::SPI,
+	uiParam: u32,
+	pvParam: &mut T,
+	fWinIni: co::SPIF) -> WinResult<()>
 {
 	bool_to_winresult(
 		user32::SystemParametersInfoW(
 			uiAction.0,
 			uiParam,
-			ref_as_pvoid(pvParam),
+			pvParam as *mut _ as _,
 			fWinIni.0,
 		),
 	)
@@ -789,8 +789,8 @@ pub fn SystemTimeToFileTime(
 	bool_to_winresult(
 		unsafe {
 			kernel32::SystemTimeToFileTime(
-				ref_as_pcvoid(lpSystemTime),
-				ref_as_pvoid(lpFileTime),
+				lpSystemTime as *const _ as _,
+				lpFileTime as *mut _ as _,
 			)
 		},
 	)
@@ -806,9 +806,9 @@ pub fn SystemTimeToTzSpecificLocalTime(
 	bool_to_winresult(
 		unsafe {
 			kernel32::SystemTimeToTzSpecificLocalTime(
-				lpTimeZoneInformation.map_or(std::ptr::null(), |lp| ref_as_pcvoid(lp)),
-				ref_as_pcvoid(lpUniversalTime),
-				ref_as_pvoid(lpLocalTime),
+				lpTimeZoneInformation.map_or(std::ptr::null(), |lp| lp as *const _ as _),
+				lpUniversalTime as *const _ as _,
+				lpLocalTime as *mut _ as _,
 			)
 		},
 	)
@@ -818,14 +818,14 @@ pub fn SystemTimeToTzSpecificLocalTime(
 /// function.
 pub fn TrackMouseEvent(lpEventTrack: &mut TRACKMOUSEEVENT) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { user32::TrackMouseEvent(ref_as_pvoid(lpEventTrack)) },
+		unsafe { user32::TrackMouseEvent(lpEventTrack as *mut _ as _) },
 	)
 }
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
 pub fn TranslateMessage(lpMsg: &MSG) -> bool {
-	unsafe { user32::TranslateMessage(ref_as_pcvoid(lpMsg)) != 0 }
+	unsafe { user32::TranslateMessage(lpMsg as *const _ as _) != 0 }
 }
 
 /// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
@@ -847,11 +847,12 @@ pub fn UnregisterClass(
 /// function.
 pub fn VerifyVersionInfo(
 	lpVersionInformation: &mut OSVERSIONINFOEX,
-	dwTypeMask: co::VER_MASK, dwlConditionMask: u64) -> WinResult<bool>
+	dwTypeMask: co::VER_MASK,
+	dwlConditionMask: u64) -> WinResult<bool>
 {
 	match unsafe {
 		kernel32::VerifyVersionInfoW(
-			ref_as_pvoid(lpVersionInformation),
+			lpVersionInformation as *mut _ as _,
 			dwTypeMask.0,
 			dwlConditionMask,
 		)

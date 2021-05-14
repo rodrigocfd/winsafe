@@ -6,7 +6,6 @@ use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
-use crate::privs::ref_as_pvoid;
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::WString;
 
@@ -82,7 +81,7 @@ impl HINSTANCE {
 			user32::GetClassInfoExW(
 				self.ptr,
 				WString::from_str(lpszClass).as_ptr(),
-				ref_as_pvoid(lpwcx),
+				lpwcx as *mut _ as _,
 			)
 		} {
 			0 => Err(GetLastError()),

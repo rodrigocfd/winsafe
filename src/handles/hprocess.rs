@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
-use crate::privs::{bool_to_winresult, ref_as_pvoid};
+use crate::privs::bool_to_winresult;
 use crate::structs::{PROCESS_INFORMATION, SECURITY_ATTRIBUTES, STARTUPINFO};
 use crate::WString;
 
@@ -40,14 +40,14 @@ impl HPROCESS {
 				kernel32::CreateProcessW(
 					lpApplicationName.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
 					bufCommandLine.as_mut_ptr(),
-					lpProcessAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
-					lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
+					lpProcessAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					nInheritHandles as _,
 					dwCreationFlags.0,
 					lpEnvironment as _,
 					lpCurrentDirectory.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
-					ref_as_pvoid(lpStartupInfo),
-					ref_as_pvoid(&mut lpProcessInformation),
+					lpStartupInfo as *mut _ as _,
+					&mut lpProcessInformation as *mut _ as _,
 				)
 			},
 		).map(|_| lpProcessInformation)

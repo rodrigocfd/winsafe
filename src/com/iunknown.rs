@@ -8,7 +8,7 @@ macro_rules! pub_struct_IUnknown {
 	) => {
 		use crate::aliases::WinResult;
 		use crate::com::vt::{ComVT, IUnknownVT, PPComVT};
-		use crate::privs::{hr_to_winresult, ref_as_pcvoid};
+		use crate::privs::hr_to_winresult;
 
 		$(#[$doc])*
 		pub struct $name {
@@ -54,7 +54,7 @@ macro_rules! pub_struct_IUnknown {
 				hr_to_winresult(
 					(unsafe { (**self.ppvt).QueryInterface })(
 						self.ppvt,
-						ref_as_pcvoid(&VT::IID()),
+						&VT::IID() as *const _ as _,
 						&mut ppvQueried as *mut _ as _,
 					),
 				).map(|_| RetInterf::from(ppvQueried))

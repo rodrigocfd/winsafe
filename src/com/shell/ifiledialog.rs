@@ -108,7 +108,7 @@ macro_rules! pub_struct_IFileDialog {
 				hr_to_winresult(
 					(self.ifiledialog_vt().SetClientGuid)(
 						self.ppvt,
-						ref_as_pcvoid(guid),
+						guid as *const _ as _,
 					),
 				)
 			}
