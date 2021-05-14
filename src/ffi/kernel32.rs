@@ -11,6 +11,7 @@ extern "system" {
 	pub fn CreatePipe(_: *mut HANDLE, _: *mut HANDLE, _: PVOID, _: u32) -> BOOL;
 	pub fn CreateProcessW(_: PCSTR, _: PSTR, _: PVOID, _: PVOID, _: BOOL, _: u32, _: PVOID, _: PCSTR, _: PVOID, _: PVOID) -> BOOL;
 	pub fn CreateThread(_: PVOID, _: u64, _: PVOID, _: PVOID, _: u32, _: &mut u32) -> HANDLE;
+	pub fn CreateToolhelp32Snapshot(_: u32, _: u32) -> HANDLE;
 	pub fn DeleteFileW(_: PCSTR) -> BOOL;
 	pub fn ExitProcess(_: u32);
 	pub fn ExitThread(_: u32);
@@ -53,6 +54,8 @@ extern "system" {
 	pub fn MulDiv(_: i32, _: i32, _: i32) -> i32;
 	pub fn MultiByteToWideChar(_: u32, _: u32, _: *const u8, _: i32, _: PSTR, _: i32) -> i32;
 	pub fn OutputDebugStringW(_: PCSTR);
+	pub fn Process32FirstW(_: HANDLE, _: PVOID) -> BOOL;
+	pub fn Process32NextW(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn ReadFile(_: HANDLE, _: PVOID, _: u32, _: *mut u32, _: PVOID) -> BOOL;
 	pub fn SetEndOfFile(_: HANDLE) -> BOOL;
 	pub fn SetFilePointerEx(_: HANDLE, _: i64, _: *mut i64, _: u32) -> BOOL;

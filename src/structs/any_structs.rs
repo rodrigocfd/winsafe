@@ -23,7 +23,7 @@ use crate::handles::{
 	HTHREAD,
 	HWND,
 };
-use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE};
+use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH};
 use crate::structs::{ATOM, COLORREF};
 use crate::unions::{ColorrefDib, ColorrefHbitmap};
 use crate::WString;
@@ -504,6 +504,29 @@ pub struct PROCESS_INFORMATION {
 }
 
 impl_default_zero!(PROCESS_INFORMATION);
+
+/// [`PROCESSENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)
+/// struct.
+#[allow(dead_code)]
+#[repr(C)]
+pub struct PROCESSENTRY32 {
+	dwSize: u32,
+	cntUsage: u32,
+	pub th32ProcessID: u32,
+	th32DefaultHeapID: u64,
+	th32ModuleID: u32,
+	pub cntThreads: u32,
+	pub th32ParentProcessID: u32,
+	pub pcPriClassBase: i32,
+	dwFlags: u32,
+	szExeFile: [u16; MAX_PATH],
+}
+
+impl_default_with_size!(PROCESSENTRY32, dwSize);
+
+impl PROCESSENTRY32 {
+	pub_fn_string_arr_get_set!(szExeFile, set_szExeFile);
+}
 
 /// [`RECT`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect)
 /// struct.

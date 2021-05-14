@@ -1163,6 +1163,18 @@ pub_struct_const_wsex! { TCS_EX,
 	REGISTERDROP, 0x0000_0002
 }
 
+pub_struct_const! { TH32CS, u32,
+	/// [`CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `dwFlags` (`u32`).
+	=>
+	SNAPHEAPLIST, 0x0000_0001
+	SNAPPROCESS, 0x0000_0002
+	SNAPTHREAD, 0x0000_0004
+	SNAPMODULE, 0x0000_0008
+	SNAPMODULE32, 0x0000_0010
+	SNAPALL, Self::SNAPHEAPLIST.0 | Self::SNAPPROCESS.0 | Self::SNAPTHREAD.0 | Self::SNAPMODULE.0
+	INHERIT, 0x8000_0000
+}
+
 pub_struct_const! { THREAD_CREATE, u32,
 	/// [`CreateThread`](crate::HTHREAD::CreateThread) `dwFlags` (`u32`).
 	/// Originally with no prefix.
