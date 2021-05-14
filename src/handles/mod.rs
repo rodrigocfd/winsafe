@@ -25,6 +25,7 @@ mod hpipe;
 mod hprocess;
 mod hrgn;
 mod htheme;
+mod hthread;
 mod hwnd;
 
 pub use any_handles::*;
@@ -49,4 +50,5 @@ pub use hpipe::HPIPE;
 pub use hprocess::HPROCESS;
 pub use hrgn::HRGN;
 pub use htheme::HTHEME;
+pub use hthread::HTHREAD;
 pub use hwnd::HWND;

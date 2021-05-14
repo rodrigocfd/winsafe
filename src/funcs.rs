@@ -25,10 +25,7 @@ use crate::structs::{
 	MSG,
 	OSVERSIONINFOEX,
 	POINT,
-	PROCESS_INFORMATION,
 	RECT,
-	SECURITY_ATTRIBUTES,
-	STARTUPINFO,
 	SYSTEMTIME,
 	TIME_ZONE_INFORMATION,
 	TRACKMOUSEEVENT,
@@ -123,39 +120,6 @@ pub fn CopyFile(
 				WString::from_str(lpExistingFileName).as_ptr(),
 				WString::from_str(lpNewFileName).as_ptr(),
 				bFailIfExists as _,
-			)
-		},
-	)
-}
-
-/// [`CreateProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
-/// function.
-pub fn CreateProcess(
-	lpApplicationName: Option<&str>,
-	lpCommandLine: Option<&str>,
-	lpProcessAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-	lpThreadAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-	nInheritHandles: bool,
-	dwCreationFlags: co::CREATE,
-	lpEnvironment: *mut u8,
-	lpCurrentDirectory: Option<&str>,
-	lpStartupInfo: &mut STARTUPINFO,
-	lpProcessInformation: &mut PROCESS_INFORMATION) -> WinResult<()>
-{
-	let mut bufCommandLine = lpCommandLine.map_or(WString::default(), |lp| WString::from_str(lp));
-	bool_to_winresult(
-		unsafe {
-			kernel32::CreateProcessW(
-				lpApplicationName.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
-				bufCommandLine.as_mut_ptr(),
-				lpProcessAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
-				lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| ref_as_pvoid(lp)),
-				nInheritHandles as _,
-				dwCreationFlags.0,
-				lpEnvironment as _,
-				lpCurrentDirectory.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
-				ref_as_pvoid(lpStartupInfo),
-				ref_as_pvoid(lpProcessInformation),
 			)
 		},
 	)

@@ -1162,6 +1162,16 @@ pub_struct_const_wsex! { TCS_EX,
 	REGISTERDROP, 0x0000_0002
 }
 
+pub_struct_const! { THREAD_CREATE, u32,
+	/// [`CreateThread`](crate::HTHREAD::CreateThread) `dwFlags` (`u32`).
+	/// Originally with no prefix.
+	=>
+	/// Originally just a zero.
+	RUN_IMMEDIATELY, 0
+	CREATE_SUSPENDED, 0x0000_0004
+	STACK_SIZE_PARAM_IS_A_RESERVATION, 0x0001_0000
+}
+
 pub_struct_const! { TME, u32,
 	/// [`TrackMouseEvent`](crate::TrackMouseEvent) `dwFlags` (`u32`).
 	=>

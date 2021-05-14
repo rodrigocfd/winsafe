@@ -20,13 +20,6 @@ pub_struct_handle_closeable! {
 	HEVENT
 }
 
-pub_struct_handle_closeable! {
-	/// Handle to a
-	/// [thread](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information).
-	/// Originally just a `HANDLE`.
-	HTHREAD
-}
-
 pub_struct_handle! {
 	/// Handle to an
 	/// [tree view item](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls).
