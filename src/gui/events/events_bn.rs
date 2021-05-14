@@ -45,7 +45,7 @@ impl ButtonEvents {
 		/// ```rust,ignore
 		/// use winsafe::gui::Button;
 		///
-		/// let btn: Button; // initialize it somewhere...
+		/// let btn: Button; // initialized somewhere
 		///
 		/// btn.on().bn_clicked({
 		///     let btn = btn.clone(); // pass into the closure

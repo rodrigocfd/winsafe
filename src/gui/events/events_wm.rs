@@ -176,16 +176,16 @@ impl WindowEvents {
 	/// Handling a custom, user-defined message:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, gui::WindowMain};
+	/// use winsafe::{co, gui::WindowMain, msg};
 	///
-	/// let wnd: WindowMain; // initialize it somewhere...
+	/// let wnd: WindowMain; // initialized somewhere
 	///
 	/// let CUSTOM_MSG = co::WM::from(0x1234);
 	///
 	/// wnd.on().wm(CUSTOM_MSG, {
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move |parms| {
-	///         println!("HWND: {}, msg ID: {}", wnd.hwnd(), parms.msg_id);
+	///     move |p: msg::WndMsg| -> isize {
+	///         println!("HWND: {}, msg ID: {}", wnd.hwnd(), p.msg_id);
 	///         0
 	///     }
 	/// });
@@ -237,14 +237,14 @@ impl WindowEvents {
 	/// Closing the window on ESC key:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, gui::WindowMain, msg::wm};
+	/// use winsafe::{co, gui::WindowMain, msg};
 	///
-	/// let wnd: WindowMain; // initialize it somewhere...
+	/// let wnd: WindowMain; // initialized somewhere
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
 	///     let wnd = wnd.clone(); // pass into the closure
 	///     move || {
-	///         wnd.hwnd().PostMessage(wm::Close {}).unwrap();
+	///         wnd.hwnd().PostMessage(msg::wm::Close {}).unwrap();
 	///     }
 	/// });
 	/// ```
@@ -391,17 +391,17 @@ impl WindowEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::gui::WindowMain;
+	/// use winsafe::{gui, msg};
 	///
-	/// let wnd: WindowMain; // initialize it somewhere...
+	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
 	/// wnd.on().wm_create({
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move |parms| {
+	///     move |p: msg::wm::Create| -> i32 {
 	///         println!("HWND: {}, client area: {}x{}",
 	///             wnd.hwnd(),
-	///             parms.createstruct.cx,
-	///             parms.createstruct.cy,
+	///             p.createstruct.cx,
+	///             p.createstruct.cy,
 	///         );
 	///         0
 	///     }
@@ -531,6 +531,18 @@ impl WindowEvents {
 		/// the child windows (if any) as they are destroyed. During the
 		/// processing of the message, it can be assumed that all child windows
 		/// still exist.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::gui;
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		///
+		/// wnd.on().wm_destroy(|| {
+		///     println!("Window is gone, goodbye!");
+		/// });
+		/// ```
 	}
 
 	pub_fn_wm_ret0_param! { wm_drop_files, co::WM::DROPFILES, wm::DropFiles,
@@ -690,6 +702,22 @@ impl WindowEvents {
 	/// displayed. Dialog box procedures typically use this message to
 	/// initialize controls and carry out any other initialization tasks that
 	/// affect the appearance of the dialog box.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{gui, msg};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	///
+	/// wnd.on().wm_init_dialog({
+	///     let wnd = wnd.clone(); // pass into the closure
+	///     move |p: msg::wm::InitDialog| -> bool {
+	///         println!("Focused HWND: {}", p.hwnd_focus);
+	///         true
+	///     }
+	/// });
+	/// ```
 	pub fn wm_init_dialog<F>(&self, func: F)
 		where F: FnMut(wm::InitDialog) -> bool + 'static,
 	{
@@ -747,6 +775,21 @@ impl WindowEvents {
 		/// is in the client area of a window. If the mouse is not captured, the
 		/// message is posted to the window beneath the cursor. Otherwise, the
 		/// message is posted to the window that has captured the mouse.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::{gui, msg};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		///
+		/// wnd.on().wm_l_button_down({
+		///     let wnd = wnd.clone(); // pass into the closure
+		///     move |p: msg::wm::LButtonDown| {
+		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
+		///     }
+		/// });
+		/// ```
 	}
 
 	pub_fn_wm_ret0_param! { wm_l_button_up, co::WM::LBUTTONUP, wm::LButtonUp,
@@ -1035,17 +1078,17 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::gui::WindowMain;
+		/// use winsafe::{gui, msg};
 		///
-		/// let wnd: WindowMain; // initialize it somewhere...
+		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_size({
 		///     let wnd = wnd.clone(); // pass into the closure
-		///     move |parms| {
+		///     move |p: msg::wm::Size| {
 		///         println!("HWND: {}, client area: {}x{}",
 		///             wnd.hwnd(),
-		///             parms.width,
-		///             parms.height,
+		///             p.width,
+		///             p.height,
 		///         );
 		///     }
 		/// });

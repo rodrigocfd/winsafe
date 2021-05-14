@@ -146,7 +146,7 @@ impl RadioGroup {
 	/// ```rust,ignore
 	/// use winsafe::gui::RadioGroup;
 	///
-	/// let radio_group: RadioGroup; // initialize it somewhere...
+	/// let radio_group: RadioGroup; // initialized somewhere
 	///
 	/// for single_radio in me.rads.iter() {
 	///     single_radio.hwnd().SetWindowText("One").unwrap();

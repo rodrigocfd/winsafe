@@ -49,7 +49,7 @@ impl EditEvents {
 		/// ```rust,ignore
 		/// use winsafe::gui::Edit;
 		///
-		/// let txt: Edit; // initialize it somewhere...
+		/// let txt: Edit; // initialized somewhere
 		///
 		/// txt.on().en_change({
 		///     let txt = txt.clone(); // pass into the closure

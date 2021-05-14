@@ -85,7 +85,7 @@ impl Resizer {
 	/// ```rust,ignore
 	/// use winsafe::gui::{Button, Edit, Resizer, Resz};
 	///
-	/// let resizer: Resizer; // initialize them somewhere...
+	/// let resizer: Resizer; // initialized somewhere
 	/// let txt_name: Edit;
 	/// let btn_click: Button;
 	/// let txt_another: Edit;

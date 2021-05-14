@@ -218,7 +218,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::HWND;
 	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
+	/// let my_hwnd: HWND; // initialized somewhere
 	///
 	/// for hchild in my_hwnd.EnumChildWindowsVec() {
 	///     println!("HWND: {}", hchild);
@@ -566,7 +566,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::{HWND, WString};
 	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
+	/// let my_hwnd: HWND; // initialized somewhere
 	///
 	/// let mut buf = WString::new();
 	/// my_hwnd.GetWindowText(&mut buf).unwrap();
@@ -618,7 +618,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::HWND;
 	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
+	/// let my_hwnd: HWND; // initialized somewhere
 	///
 	/// let text = my_hwnd.GetWindowTextStr().unwrap();
 	/// println!("Text: {}", text);
@@ -651,7 +651,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::HWND;
 	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
+	/// let my_hwnd: HWND; // initialized somewhere
 	///
 	/// my_hwnd.InvalidateRect(None, true)
 	///     .unwrap();
@@ -750,7 +750,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::{co, HWND};
 	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
+	/// let my_hwnd: HWND; // initialized somewhere
 	///
 	/// my_hwnd.MessageBox("Hello, world", "title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
 	///     .unwrap();
@@ -831,7 +831,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::{HWND, msg::wm};
 	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
+	/// let my_hwnd: HWND; // initialized somewhere
 	///
 	/// my_hwnd.PostMessage(wm::Close {}).unwrap();
 	/// ```
@@ -956,7 +956,7 @@ impl HWND {
 	/// ```rust,ignore
 	/// use winsafe::{co, HWND, LVITEM, msg::lvm};
 	///
-	/// let my_hwnd: HWND; // initialize it somewhere...
+	/// let my_hwnd: HWND; // initialized somewhere
 	///
 	/// let mut lvi = LVITEM::default(); // object to be sent
 	/// lvi.mask = co::LVIF::IMAGE;

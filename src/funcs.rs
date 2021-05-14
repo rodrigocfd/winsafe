@@ -57,7 +57,7 @@ pub fn AdjustWindowRectEx(
 /// ```rust,ignore
 /// use winsafe::{co, ChooseColor, CHOOSECOLOR};
 ///
-/// let parent_hwnd: HWND; // initialize it somewhere...
+/// let parent_hwnd: HWND; // initialized somewhere
 ///
 /// let mut cc = CHOOSECOLOR::default();
 /// let mut custom_colors = [COLORREF::new(255, 255, 255); 16];

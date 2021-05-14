@@ -38,7 +38,7 @@ impl ComboBoxItems {
 	/// ```rust,ignore
 	/// use winsafe::ComboBox;
 	///
-	/// let cmb_names: ComboBox; // initialize it somewhere...
+	/// let cmb_names: ComboBox; // initialized somewhere
 	///
 	/// cmb_names.items().add(&["John", "Mary"]);
 	/// ```

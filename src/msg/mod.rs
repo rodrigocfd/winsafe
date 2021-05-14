@@ -20,7 +20,7 @@
 //! ```rust,ignore
 //! use winsafe::{HWND, msg::lvm};
 //!
-//! let hlistview: HWND; // initialize it somewhere...
+//! let hlistview: HWND; // initialized somewhere
 //!
 //! hlistview.SendMessage({
 //!     lvm::DeleteItem {

@@ -41,7 +41,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
-/// use winsafe::{gui, WinResult};
+/// use winsafe::{gui, msg, WinResult};
 ///
 /// fn main() {
 ///     let my_main = MyMain::new();
@@ -69,11 +69,12 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///     }
 ///
 ///     fn events(&self) {
-///         let wnd = self.wnd.clone(); // clone so it can be passed into the closure
-///
-///         self.wnd.on().wm_l_button_down(move |params| {
-///             let txt = &format!("Coords {} x {}", params.coords.x, params.coords.y);
-///             wnd.hwnd().SetWindowText(txt).unwrap();
+///         self.wnd.on().wm_l_button_down({
+///             let wnd = self.wnd.clone(); // clone to pass it to the closure
+///             move |p: msg::wm::LButtonDown| {
+///                 let txt = &format!("Coords {} x {}", p.coords.x, p.coords.y);
+///                 wnd.hwnd().SetWindowText(txt).unwrap();
+///             }
 ///         });
 ///     }
 /// }
