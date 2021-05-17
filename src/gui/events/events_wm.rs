@@ -237,9 +237,9 @@ impl WindowEvents {
 	/// Closing the window on ESC key:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, gui::WindowMain, msg};
+	/// use winsafe::{co, gui, msg};
 	///
-	/// let wnd: WindowMain; // initialized somewhere
+	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
 	///     let wnd = wnd.clone(); // pass into the closure

@@ -2,7 +2,6 @@ use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::IndexAll;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::lvm;
@@ -88,7 +87,7 @@ impl ListViewItems {
 	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) message
 	pub fn focused(&self) -> Option<u32> {
 		self.hwnd().SendMessage(lvm::GetNextItem {
-			initial_index: IndexAll::All,
+			initial_index: None,
 			relationship: co::LVNI::FOCUSED,
 		})
 	}
@@ -120,18 +119,20 @@ impl ListViewItems {
 	/// Retrieves the indexes of the selected items by sending
 	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) messages.
 	pub fn selected(&self) -> Vec<u32> {
-		let mut items = Vec::with_capacity(self.selected_count() as usize);
-		let mut idx = IndexAll::All;
+		let mut items = Vec::with_capacity(self.selected_count() as _);
+		let mut idx = None;
 
 		loop {
 			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
 				initial_index: idx,
 				relationship: co::LVNI::SELECTED,
 			}) {
-				Some(idx) => IndexAll::Index(idx),
+				Some(idx) => {
+					items.push(idx);
+					Some(idx)
+				},
 				None => break,
 			};
-			items.push(idx.into());
 		}
 		items
 	}
@@ -150,7 +151,7 @@ impl ListViewItems {
 		lvi.state = co::LVIS::FOCUSED;
 
 		self.hwnd().SendMessage(lvm::SetItemState {
-			index: IndexAll::Index(item_index),
+			index: Some(item_index),
 			lvitem: &lvi,
 		})
 	}
@@ -166,7 +167,7 @@ impl ListViewItems {
 
 		for idx in item_indexes.iter() {
 			self.hwnd().SendMessage(lvm::SetItemState {
-				index: IndexAll::Index(*idx),
+				index: Some(*idx),
 				lvitem: &lvi,
 			})?;
 		}
@@ -181,7 +182,7 @@ impl ListViewItems {
 		if set { lvi.state = co::LVIS::SELECTED; }
 
 		self.hwnd().SendMessage(lvm::SetItemState {
-			index: IndexAll::All,
+			index: None,
 			lvitem: &lvi,
 		})
 	}
@@ -192,7 +193,7 @@ impl ListViewItems {
 		item_index: u32, column_index: u32, text: &str) -> WinResult<()>
 	{
 		let mut lvi = LVITEM::default();
-		lvi.iSubItem = column_index as i32;
+		lvi.iSubItem = column_index as _;
 
 		let mut wtext = WString::from_str(text);
 		lvi.set_pszText(&mut wtext);
@@ -205,28 +206,64 @@ impl ListViewItems {
 
 	/// Retrieves the text of an item under a column by sending an
 	/// [`LVM_GETITEMTEXT`](crate::msg::lvm::GetItemText) message.
-	pub fn text(&self, item_index: u32, column_index: u32) -> String {
+	///
+	/// The passed buffer will be automatically allocated.
+	///
+	/// This method can be more performant than
+	/// [`text_str`](crate::gui::ListViewItems::text_str) because the buffer can be
+	/// reused, avoiding multiple allocations. However, it has the inconvenient
+	/// of the manual conversion from [`WString`](crate::WString) to `String`.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{gui, WString};
+	///
+	/// let my_list: gui::ListView; // initialized somewhere
+	///
+	/// let mut buf = WString::default();
+	/// my_list.items().text(0, 2, &mut buf); // 1st item, 3rd column
+	///
+	/// println!("Text: {}", buf.to_string());
+	/// ```
+	pub fn text(&self, item_index: u32, column_index: u32, buf: &mut WString) {
+		Self::text_retrieve(self.hwnd(), item_index, column_index, buf)
+	}
+
+	pub(crate) fn text_retrieve(
+		hwnd: HWND, item_index: u32, column_index: u32, mut buf: &mut WString)
+	{
+		// Static method because it's also used by ListViewColumns.
+
 		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
 		const BLOCK: usize = 64; // arbitrary
 		let mut buf_sz = BLOCK;
 
 		loop {
 			let mut lvi = LVITEM::default();
-			lvi.iSubItem = column_index as i32;
+			lvi.iSubItem = column_index as _;
 
-			let mut buf = WString::new_alloc_buffer(buf_sz);
+			buf.realloc_buffer(buf_sz);
 			lvi.set_pszText(&mut buf);
 
-			let nchars = self.hwnd().SendMessage(lvm::GetItemText {
+			let nchars = hwnd.SendMessage(lvm::GetItemText {
 				index: item_index,
 				lvitem: &mut lvi,
 			});
 
 			if (nchars as usize) < buf_sz { // to break, must have at least 1 char gap
-				return buf.to_string();
+				break;
 			}
 
 			buf_sz += BLOCK; // increase buffer size to try again
 		}
+	}
+
+	/// A more convenient [`text`](crate::gui::ListViewItems::text), which
+	/// directly returns a `String` instead of requiring an external buffer.
+	pub fn text_str(&self, item_index: u32, column_index: u32) -> String {
+		let mut buf = WString::default();
+		self.text(item_index, column_index, &mut buf);
+		buf.to_string()
 	}
 }

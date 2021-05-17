@@ -4,7 +4,6 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::IndexAll;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
 use crate::msg::{MsgSend, WndMsg};
@@ -164,7 +163,7 @@ impl MsgSend for EnsureVisible {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct FindItem<'a, 'b> {
-	pub index: IndexAll,
+	pub index: Option<u32>,
 	pub lvfindinfo: &'b LVFINDINFO<'a>,
 }
 
@@ -181,7 +180,7 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::FINDITEM.into(),
-			wparam: self.index.into(),
+			wparam: self.index.map(|i| i as i32).unwrap_or(-1) as _,
 			lparam: self.lvfindinfo as *const _ as _,
 		}
 	}
@@ -212,19 +211,19 @@ impl MsgSend for GetBkColor {
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `WinResult<()>`.
 pub struct GetColumn<'a, 'b> {
 	pub index: u32,
 	pub lvcolumn: &'b mut LVCOLUMN<'a>,
 }
 
 impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
-	type RetType = WinResult<u32>;
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as _),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
 		}
 	}
 
@@ -311,34 +310,6 @@ impl MsgSend for GetHeader {
 	}
 }
 
-/// [`LVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
-/// message parameters.
-///
-/// Return type: `Option<u32>`.
-pub struct GetNextItem {
-	pub initial_index: IndexAll,
-	pub relationship: co::LVNI,
-}
-
-impl MsgSend for GetNextItem {
-	type RetType = Option<u32>;
-
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
-	}
-
-	fn as_generic_wm(&self) -> WndMsg {
-		WndMsg {
-			msg_id: co::LVM::GETNEXTITEM.into(),
-			wparam: self.initial_index.into(),
-			lparam: self.relationship.0 as _,
-		}
-	}
-}
-
 /// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
 /// message, which has no parameters.
 ///
@@ -407,6 +378,34 @@ impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 			msg_id: co::LVM::GETITEMTEXT.into(),
 			wparam: self.index as _,
 			lparam: self.lvitem as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct GetNextItem {
+	pub initial_index: Option<u32>,
+	pub relationship: co::LVNI,
+}
+
+impl MsgSend for GetNextItem {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETNEXTITEM.into(),
+			wparam: self.initial_index.map(|i| i as i32).unwrap_or(-1) as _,
+			lparam: self.relationship.0 as _,
 		}
 	}
 }
@@ -640,6 +639,34 @@ impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 	}
 }
 
+/// [`LVM_SETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnwidth)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetColumnWidth {
+	pub index: u32,
+	pub width: u32,
+}
+
+impl MsgSend for SetColumnWidth {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETCOLUMNWIDTH.into(),
+			wparam: self.index as _,
+			lparam: self.width as _,
+		}
+	}
+}
+
 /// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setextendedlistviewstyle)
 /// message parameters.
 ///
@@ -697,7 +724,7 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 ///
 /// Return type: `WinResult<()>`.
 pub struct SetItemState<'a, 'b> {
-	pub index: IndexAll,
+	pub index: Option<u32>,
 	pub lvitem: &'b LVITEM<'a>,
 }
 
@@ -714,7 +741,7 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETITEMSTATE.into(),
-			wparam: self.index.into(),
+			wparam: self.index.map(|i| i as i32).unwrap_or(-1) as _,
 			lparam: self.lvitem as *const _ as _,
 		}
 	}

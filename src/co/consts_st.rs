@@ -496,7 +496,7 @@ pub_struct_const! { STAP, u32,
 }
 
 pub_struct_const! { STARTF, u32,
-	/// [`CreateProcess`](crate::CreateProcess) `dwFlags` (`u32`).
+	/// [`CreateProcess`](crate::HPROCESS::CreateProcess) `dwFlags` (`u32`).
 	=>
 	FORCEONFEEDBACK , 0x0000_0040
 	FORCEOFFFEEDBACK, 0x0000_0080

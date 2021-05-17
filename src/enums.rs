@@ -302,39 +302,6 @@ impl IdStr {
 
 /// Variant parameter for:
 ///
-/// * [`LB_SETSEL`](crate::msg::lb::SetSel) `index`;
-/// * [`LVM_FINDITEM`](crate::msg::lvm::FindItem) `index`.
-#[derive(Copy, Clone)]
-pub enum IndexAll {
-	/// A single item with the given index.
-	Index(u32),
-	/// All items, same of using -1 as the index.
-	All,
-}
-
-impl From<IndexAll> for isize {
-	fn from(v: IndexAll) -> Self {
-		match v {
-			IndexAll::All => -1,
-			IndexAll::Index(i) => i as _,
-		}
-	}
-}
-
-impl From<IndexAll> for usize {
-	fn from(v: IndexAll) -> Self {
-		isize::from(v) as _
-	}
-}
-
-impl From<IndexAll> for u32 {
-	fn from(v: IndexAll) -> Self {
-		isize::from(v) as _
-	}
-}
-
-/// Variant parameter for:
-///
 /// * [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize) `data`.
 pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).

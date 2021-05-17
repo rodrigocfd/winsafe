@@ -4,7 +4,6 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::IndexAll;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::point_to_lp;
@@ -597,7 +596,7 @@ impl MsgSend for InitStorage {
 ///
 /// Return type: `WinResult<u32>`.
 pub struct InsertString<'a> {
-	pub insertion_index: IndexAll,
+	pub insertion_index: Option<u32>,
 	pub text: &'a str,
 }
 
@@ -614,7 +613,7 @@ impl<'a> MsgSend for InsertString<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
-			wparam: self.insertion_index.into(),
+			wparam: self.insertion_index.map(|i| i as i32).unwrap_or(-1) as _,
 			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
 		}
 	}
@@ -741,7 +740,7 @@ impl MsgSend for SetAnchorIndex {
 /// Return type: `WinResult<()>`.
 pub struct SetSel {
 	pub select: bool,
-	pub index: IndexAll,
+	pub index: Option<u32>,
 }
 
 impl MsgSend for SetSel {
@@ -758,7 +757,7 @@ impl MsgSend for SetSel {
 		WndMsg {
 			msg_id: co::LB::SETSEL.into(),
 			wparam: self.select as _,
-			lparam: self.index.into(),
+			lparam: self.index.map(|i| i as i32).unwrap_or(-1) as _,
 		}
 	}
 }

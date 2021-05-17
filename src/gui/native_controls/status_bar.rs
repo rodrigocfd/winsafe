@@ -42,6 +42,20 @@ impl Child for StatusBar {
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
 	/// window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	///
+	/// let status_bar = gui::StatusBar::new(&[
+	///     gui::StatusBarPart::Fixed(200),      // 200 pixels, never resizes
+	///     gui::StatusBarPart::Proportional(1), // these two will fill the remaning space
+	///     gui::StatusBarPart::Proportional(1),
+	/// ]);
+	/// ```
 	pub fn new(parent: &dyn Parent, parts: &[StatusBarPart]) -> StatusBar {
 		let parent_ref = baseref_from_parent(parent);
 		let ctrl_id = auto_ctrl_id();
