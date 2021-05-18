@@ -1,10 +1,10 @@
+use std::cell::Cell;
 use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::ListViewItems;
 use crate::gui::privs::multiply_dpi;
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::{hdm, lvm};
 use crate::structs::{LVCOLUMN, SIZE};
@@ -15,22 +15,22 @@ use crate::WString;
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 pub struct ListViewColumns {
-	hwnd_ptr: VeryUnsafeCell<NonNull<HWND>>,
+	hwnd_ptr: Cell<NonNull<HWND>>,
 }
 
 impl ListViewColumns {
 	pub(crate) fn new(hwnd_ref: &HWND) -> ListViewColumns {
 		Self {
-			hwnd_ptr: VeryUnsafeCell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
+			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
 		}
 	}
 
 	pub(crate) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
-		*self.hwnd_ptr.as_mut() = NonNull::from(hwnd_ref); // ref implicitly converted to pointer
+		self.hwnd_ptr.replace(NonNull::from(hwnd_ref)); // ref implicitly converted to pointer
 	}
 
 	pub(crate) fn hwnd(&self) -> HWND {
-		unsafe { *self.hwnd_ptr.as_ref() }
+		unsafe { *self.hwnd_ptr.get().as_ref() }
 	}
 
 	/// Adds many columns at once by sending an
@@ -71,7 +71,7 @@ impl ListViewColumns {
 		Ok(())
 	}
 
-	/// Retrieves the texts of the selected items at the given column.
+	/// Retrieves the texts of all items at the given column.
 	pub fn all_texts(&self, column_index: u32) -> Vec<String> {
 		let count = self.hwnd().SendMessage(lvm::GetItemCount {});
 		let mut texts = Vec::with_capacity(count as _);

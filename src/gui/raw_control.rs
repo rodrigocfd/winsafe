@@ -7,13 +7,12 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub(crate) struct RawControl(Arc<VeryUnsafeCell<Obj>>);
+pub(crate) struct RawControl(Arc<Obj>);
 
 struct Obj { // actual fields of RawControl
 	base: RawBase,
@@ -23,12 +22,12 @@ struct Obj { // actual fields of RawControl
 impl RawControl {
 	pub fn new(parent_ref: &Base, opts: WindowControlOpts) -> RawControl {
 		let wnd = Self(
-			Arc::new(VeryUnsafeCell::new(
+			Arc::new(
 				Obj {
 					base: RawBase::new(Some(parent_ref)),
 					opts,
 				},
-			)),
+			),
 		);
 		wnd.default_message_handlers(parent_ref);
 		wnd
@@ -39,7 +38,7 @@ impl RawControl {
 	}
 
 	fn default_message_handlers(&self, parent_ref: &Base) {
-		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
+		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
 			let self2 = self.clone();
 			move |p| {
 				|_| -> WinResult<isize> {

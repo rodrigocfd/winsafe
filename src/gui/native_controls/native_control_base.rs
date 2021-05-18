@@ -106,7 +106,7 @@ impl NativeControlBase {
 	}
 
 	pub fn create_dlg(&self, ctrl_id: i32) -> WinResult<HWND> {
-		if self.parent_ref().create_wm() != co::WM::INITDIALOG {
+		if self.parent_ref().creation_wm() != co::WM::INITDIALOG {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
 

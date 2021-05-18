@@ -57,7 +57,7 @@ impl ComboBox {
 		);
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
-		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
+		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});

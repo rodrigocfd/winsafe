@@ -63,7 +63,7 @@ impl ListView {
 		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
-		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
+		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});

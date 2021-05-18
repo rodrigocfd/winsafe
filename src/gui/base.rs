@@ -36,7 +36,7 @@ impl Base {
 		self.hwnd = hwnd;
 	}
 
-	pub fn create_wm(&self) -> co::WM {
+	pub fn creation_wm(&self) -> co::WM {
 		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
 	}
 

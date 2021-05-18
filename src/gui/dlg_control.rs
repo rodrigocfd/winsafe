@@ -43,7 +43,7 @@ impl DlgControl {
 	}
 
 	fn default_message_handlers(&self, parent_ref: &Base) {
-		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
+		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
 			let self2 = self.clone();
 			move |p| {
 				|_| -> WinResult<isize> {

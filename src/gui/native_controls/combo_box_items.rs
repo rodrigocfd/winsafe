@@ -1,8 +1,8 @@
+use std::cell::Cell;
 use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::funcs::PostQuitMessage;
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::cb;
 use crate::WString;
@@ -12,22 +12,22 @@ use crate::WString;
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 pub struct ComboBoxItems {
-	hwnd_ptr: VeryUnsafeCell<NonNull<HWND>>,
+	hwnd_ptr: Cell<NonNull<HWND>>,
 }
 
 impl ComboBoxItems {
 	pub(crate) fn new(hwnd_ref: &HWND) -> ComboBoxItems {
 		Self {
-			hwnd_ptr: VeryUnsafeCell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
+			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
 		}
 	}
 
 	pub(crate) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
-		*self.hwnd_ptr.as_mut() = NonNull::from(hwnd_ref); // ref implicitly converted to pointer
+		self.hwnd_ptr.replace(NonNull::from(hwnd_ref)); // ref implicitly converted to pointer
 	}
 
 	pub(crate) fn hwnd(&self) -> HWND {
-		unsafe { *self.hwnd_ptr.as_ref() }
+		unsafe { *self.hwnd_ptr.get().as_ref() }
 	}
 
 	/// Adds new texts by sending [`CB_ADDSTRING`](crate::msg::cb::AddString)

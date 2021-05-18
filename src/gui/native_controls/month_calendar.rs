@@ -54,7 +54,7 @@ impl MonthCalendar {
 			),
 		);
 
-		parent_ref.privileged_events_ref().wm(parent_ref.create_wm(), {
+		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
