@@ -1,17 +1,19 @@
 use std::ptr::NonNull;
+use std::rc::Rc;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
+use crate::gui::base::Base;
 use crate::gui::traits::{baseref_from_parent, Child, hwndref_from_child, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDWP, HWND};
 use crate::msg::wm;
 use crate::structs::{RECT, SIZE};
 
-/// In [`Resizer::add`](crate::gui::Resizer::add), determines how the child
+/// In [`Resizer::new`](crate::gui::Resizer::new), determines how the child
 /// controls will be adjusted automatically when the parent window is resized.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Resz {
@@ -32,6 +34,12 @@ struct Ctrl {
 	vert: Resz,
 }
 
+struct ChildEntry { // parameters passed to constructor
+	horz: Resz,
+	vert: Resz,
+	children: Vec<NonNull<HWND>>,
+}
+
 //------------------------------------------------------------------------------
 
 /// When the parent window is resized, automatically adjusts position and size
@@ -42,109 +50,118 @@ pub struct Resizer(Arc<VeryUnsafeCell<Obj>>);
 struct Obj { // actual fields of Resizer
 	ctrls: Vec<Ctrl>,
 	sz_parent_orig: SIZE, // original parent client area
-	resize_called: bool,
 }
 
 impl Resizer {
-	/// Instantiates a new `Resizer`.
-	pub fn new(parent: &dyn Parent) -> Resizer {
-		let parent_base_ref = baseref_from_parent(parent);
-
-		let resz = Self(
-			Arc::new(VeryUnsafeCell::new(
-				Obj {
-					ctrls: Vec::with_capacity(16), // arbitrary, prealloc for speed
-					sz_parent_orig: SIZE::default(),
-					resize_called: false,
-				}
-			)),
-		);
-
-		parent_base_ref.privileged_events_ref().wm_size({
-			let resz = resz.clone();
-			move |p| resz.resize(&p).unwrap_or_else(|err| PostQuitMessage(err))
-		});
-
-		resz
-	}
-
-	/// Registers one or more child controls. Their positions and sizes will be
-	/// updated on parent's resizing.
-	///
-	/// Usually you'll want to call this method on parent's
-	/// [`WM_CREATE`](crate::msg::wm::Create) or
-	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) events, because the
-	/// controls will already be created.
+	/// Instantiates a new `Resizer`, receiving the controls along with their
+	/// horizontal and vertical behaviors when the owner window is resized.
 	///
 	/// # Examples
 	///
-	/// In the example below, when the parent window is resized, `txtName` and
-	/// `btnClick` will move anchored at right and bottom; `btnAnother` will be
-	/// only resized vertically.
-	///
 	/// ```rust,ignore
-	/// use winsafe::gui::{Button, Edit, Resizer, Resz};
+	/// use winsafe::gui::{Button, Edit, Resizer, Resz, WindowMain};
 	///
-	/// let resizer: Resizer; // initialized somewhere
+	/// let wnd: WindowMain; // initialized somewhere
 	/// let txt_name: Edit;
-	/// let btn_click: Button;
+	/// let txt_surname: Edit;
 	/// let txt_another: Edit;
+	/// let btn_click: Button;
 	///
-	/// resizer.add(
-	///     Resz::Repos, // horizontal
-	///     Resz::Repos, // vertical
-	///     &[&txt_name, &btn_click],
-	/// ).add(
-	///     Resz::Nothing,
-	///     Resz::Resize,
-	///     &[&txt_another],
-	/// );
+	/// let layout_resizer = Resizer::new(&wnd, &[
+	///
+	///     // The first parameter of the tuple is the horizontal behavior,
+	///     // the second one is the vertical behavior,
+	///     // and the third specifies all controls to which the behaviors apply.
+	///     //
+	///     // Horizontally: stretch or shrink.
+	///     // Vertically: don't move or stretch/shrink; do nothing.
+	///     (Resz::Resize, Resz::Nothing, &[&txt_name, &txt_surname]),
+	///
+	///     // Horizontally: don't move or stretch/shrink; do nothing.
+	///     // Vertically: move up or down.
+	///     (Resz::Resize, Resz::Repos, &[&txt_another]),
+	///
+	///     // Horizontally: move left or right.
+	///     // Vertically: move up or down.
+	///     (Resz::Repos, Resz::Repos, &[&btn_click]),
+	/// ]);
 	/// ```
 	///
 	/// # Panics
 	///
-	/// Panics if the slice is empty, if the first resizing already happened, or
-	/// if a passed control has not been created yet.
-	pub fn add(&self,
-		horz: Resz, vert: Resz, children: &[&dyn Child]) -> &Resizer
+	/// Panics if no child controls are passed.
+	pub fn new(
+		parent: &dyn Parent, children: &[(Resz, Resz, &[&dyn Child])]) -> Resizer
 	{
 		if children.is_empty() {
-			panic!("No children being added to Resizer.");
-		} else if self.0.resize_called {
-			panic!("Cannot add children after Resizer started working.");
+			panic!("Cannot create a Resizer without child controls.");
 		}
 
-		let first_child_hwnd_ref = hwndref_from_child(children[0]);
-		if first_child_hwnd_ref.is_null() {
-			panic!("Cannot add a child control to Resizer before it's created.");
-		}
+		let parent_base_ref = baseref_from_parent(parent);
 
-		|horz, vert, children: &[&dyn Child]| -> WinResult<&Resizer> {
-			let ctrls = &mut self.0.as_mut().ctrls;
-			ctrls.reserve(children.len() + children.len());
+		let new_self = Self(
+			Arc::new(VeryUnsafeCell::new(
+				Obj {
+					ctrls: Vec::with_capacity(16), // arbitrary, prealloc for speed
+					sz_parent_orig: SIZE::default(),
+				}
+			)),
+		);
 
-			let hparent = first_child_hwnd_ref.GetParent()?;
-			if ctrls.is_empty() { // first call to add()
-				let rc_parent = hparent.GetClientRect()?;
-				self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
+		let ptr_parent = NonNull::from(parent_base_ref); // ref implicitly converted to pointer
+		let rc_children = Rc::new(
+			children.iter()
+			.map(|c| ChildEntry {
+				horz: c.0,
+				vert: c.1,
+				children: c.2.iter()
+					.map(|dyn_child| NonNull::from(hwndref_from_child(*dyn_child))) // convert reference to pointer
+					.collect()
+			}).collect::<Vec<_>>()
+		);
+
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+			let me = new_self.clone();
+			move |_| { me.add_children(ptr_parent, rc_children.clone()); 0 }
+		});
+		parent_base_ref.privileged_events_ref().wm_size({
+			let me = new_self.clone();
+			move |p| me.resize(&p).unwrap_or_else(|err| PostQuitMessage(err))
+		});
+
+		new_self
+	}
+
+	fn add_children(&self,
+		ptr_parent: NonNull<Base>, rc_children: Rc<Vec<ChildEntry>>)
+	{
+		let ctrls = &mut self.0.as_mut().ctrls;
+		ctrls.reserve(rc_children.len());
+
+		|ptr_parent: NonNull<Base>, rc_children: Rc<Vec<ChildEntry>>| -> WinResult<()> {
+			let parent_base_ref = unsafe { ptr_parent.as_ref() };
+			let rc_parent = parent_base_ref.hwnd_ref().GetClientRect()?;
+			self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
+
+			for entry in rc_children.iter() {
+				for child_hwnd_ptr in entry.children.iter() {
+					let child_hwnd_ref = unsafe { child_hwnd_ptr.as_ref() };
+					let mut rc_orig = child_hwnd_ref.GetWindowRect()?;
+					parent_base_ref.hwnd_ref().ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
+
+					ctrls.push(Ctrl {
+						hwnd_ptr: *child_hwnd_ptr,
+						rc_orig,
+						horz: entry.horz,
+						vert: entry.vert,
+					});
+				}
 			}
 
-			for child in children.iter() {
-				let child_hwnd_ref = hwndref_from_child(*child);
-				let mut rc_orig = child_hwnd_ref.GetWindowRect()?;
-				hparent.ScreenToClientRc(&mut rc_orig)?; // client coordinates relative to parent
-
-				ctrls.push(Ctrl {
-					hwnd_ptr: NonNull::from(child_hwnd_ref), // ref implicitly converted to pointer
-					rc_orig,
-					horz,
-					vert,
-				});
-			}
-			Ok(self)
+			Ok(())
 		}
-		(horz, vert, children)
-			.unwrap_or_else(|err| { PostQuitMessage(err); self })
+		(ptr_parent, rc_children)
+			.unwrap_or_else(|err| { PostQuitMessage(err); });
 	}
 
 	/// Resizes all registered children according to the defined rules.
@@ -189,7 +206,6 @@ impl Resizer {
 			)?;
 		}
 
-		self.0.as_mut().resize_called = true;
 		hdwp.EndDeferWindowPos()
 	}
 }
