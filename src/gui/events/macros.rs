@@ -49,9 +49,9 @@ macro_rules! pub_struct_ctrl_events_proxy {
 		}
 
 		impl $name {
-			pub(crate) fn new(parent_ref: &Base, ctrl_id: i32) -> $name {
+			pub(crate) fn new(parent_base_ref: &Base, ctrl_id: i32) -> $name {
 				Self {
-					parent_ptr: NonNull::from(parent_ref), // convert reference to pointer
+					parent_ptr: NonNull::from(parent_base_ref), // convert reference to pointer
 					ctrl_id,
 				}
 			}

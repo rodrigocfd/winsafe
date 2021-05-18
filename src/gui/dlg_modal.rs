@@ -15,11 +15,11 @@ struct Obj { // actual fields of DlgModal
 }
 
 impl DlgModal {
-	pub fn new(parent_ref: &Base, dialog_id: i32) -> DlgModal {
+	pub fn new(parent_base_ref: &Base, dialog_id: i32) -> DlgModal {
 		let dlg = Self(
 			Arc::new(
 				Obj {
-					base: DlgBase::new(Some(parent_ref), dialog_id),
+					base: DlgBase::new(Some(parent_base_ref), dialog_id),
 				},
 			),
 		);

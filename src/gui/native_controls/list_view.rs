@@ -45,58 +45,58 @@ impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ListViewOpts) -> ListView {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ListViewOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_ref),
+					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: ListViewEvents::new(parent_ref, ctrl_id),
-					columns: ListViewColumns::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
-					items: ListViewItems::new(parent_ref.hwnd_ref()),
+					events: ListViewEvents::new(parent_base_ref, ctrl_id),
+					columns: ListViewColumns::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					items: ListViewItems::new(parent_base_ref.hwnd_ref()),
 				},
 			),
 		);
 		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
-		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
 
-		new_self.handled_events(parent_ref, ctrl_id);
+		new_self.handled_events(parent_base_ref, ctrl_id);
 		new_self
 	}
 
 	/// Instantiates a new `ListView` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> ListView {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_ref),
+					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ListViewEvents::new(parent_ref, ctrl_id),
-					columns: ListViewColumns::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
-					items: ListViewItems::new(parent_ref.hwnd_ref()),
+					events: ListViewEvents::new(parent_base_ref, ctrl_id),
+					columns: ListViewColumns::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					items: ListViewItems::new(parent_base_ref.hwnd_ref()),
 				},
 			),
 		);
 		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
-		parent_ref.privileged_events_ref().wm_init_dialog({
+		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
 
-		new_self.handled_events(parent_ref, ctrl_id);
+		new_self.handled_events(parent_base_ref, ctrl_id);
 		new_self
 	}
 
@@ -125,8 +125,8 @@ impl ListView {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	fn handled_events(&self, parent_ref: &Base, ctrl_id: i32) {
-		parent_ref.privileged_events_ref().add_nfy(ctrl_id as _, co::LVN::KEYDOWN.into(), {
+	fn handled_events(&self, parent_base_ref: &Base, ctrl_id: i32) {
+		parent_base_ref.privileged_events_ref().add_nfy(ctrl_id as _, co::LVN::KEYDOWN.into(), {
 			let me = self.clone();
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };

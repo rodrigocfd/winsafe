@@ -22,11 +22,11 @@ struct Obj { // actual fields of RawModal
 }
 
 impl RawModal {
-	pub fn new(parent_ref: &Base, opts: WindowModalOpts) -> RawModal {
+	pub fn new(parent_base_ref: &Base, opts: WindowModalOpts) -> RawModal {
 		let wnd = Self(
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
-					base: RawBase::new(Some(parent_ref)),
+					base: RawBase::new(Some(parent_base_ref)),
 					opts,
 					hchild_prev_focus_parent: None,
 				},
@@ -41,7 +41,7 @@ impl RawModal {
 	}
 
 	pub fn show_modal(&self) -> WinResult<i32> {
-		let hparent = *self.base_ref().parent_ref().unwrap().hwnd_ref();
+		let hparent = *self.base_ref().parent_base_ref().unwrap().hwnd_ref();
 		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();

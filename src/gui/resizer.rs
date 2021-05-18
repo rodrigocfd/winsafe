@@ -48,7 +48,7 @@ struct Obj { // actual fields of Resizer
 impl Resizer {
 	/// Instantiates a new `Resizer`.
 	pub fn new(parent: &dyn Parent) -> Resizer {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 
 		let resz = Self(
 			Arc::new(VeryUnsafeCell::new(
@@ -60,7 +60,7 @@ impl Resizer {
 			)),
 		);
 
-		parent_ref.privileged_events_ref().wm_size({
+		parent_base_ref.privileged_events_ref().wm_size({
 			let resz = resz.clone();
 			move |p| resz.resize(&p).unwrap_or_else(|err| PostQuitMessage(err))
 		});

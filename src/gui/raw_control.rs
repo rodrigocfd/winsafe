@@ -20,16 +20,16 @@ struct Obj { // actual fields of RawControl
 }
 
 impl RawControl {
-	pub fn new(parent_ref: &Base, opts: WindowControlOpts) -> RawControl {
+	pub fn new(parent_base_ref: &Base, opts: WindowControlOpts) -> RawControl {
 		let wnd = Self(
 			Arc::new(
 				Obj {
-					base: RawBase::new(Some(parent_ref)),
+					base: RawBase::new(Some(parent_base_ref)),
 					opts,
 				},
 			),
 		);
-		wnd.default_message_handlers(parent_ref);
+		wnd.default_message_handlers(parent_base_ref);
 		wnd
 	}
 
@@ -37,8 +37,8 @@ impl RawControl {
 		self.0.base.base_ref()
 	}
 
-	fn default_message_handlers(&self, parent_ref: &Base) {
-		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
+	fn default_message_handlers(&self, parent_base_ref: &Base) {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let self2 = self.clone();
 			move |p| {
 				|_| -> WinResult<isize> {

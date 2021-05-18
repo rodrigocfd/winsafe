@@ -22,9 +22,9 @@ pub struct RadioGroupEvents {
 }
 
 impl RadioGroupEvents {
-	pub(crate) fn new(parent_ref: &Base, ctrl_ids: Vec<i32>) -> RadioGroupEvents {
+	pub(crate) fn new(parent_base_ref: &Base, ctrl_ids: Vec<i32>) -> RadioGroupEvents {
 		Self {
-			parent_ptr: NonNull::from(parent_ref), // convert reference to pointer
+			parent_ptr: NonNull::from(parent_base_ref), // convert reference to pointer
 			ctrl_ids,
 		}
 	}

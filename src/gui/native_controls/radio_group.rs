@@ -41,7 +41,7 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 		let mut ctrl_ids = Vec::with_capacity(opts.len());
 		let mut radios = Vec::with_capacity(opts.len());
 
@@ -60,12 +60,12 @@ impl RadioGroup {
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					radios,
-					parent_events: RadioGroupEvents::new(parent_ref, ctrl_ids),
+					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
 				},
 			)),
 		);
 
-		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
@@ -84,7 +84,7 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 		let mut radios = Vec::with_capacity(ctrl_ids.len());
 
 		for ctrl_id in ctrl_ids.iter() {
@@ -95,12 +95,12 @@ impl RadioGroup {
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					radios,
-					parent_events: RadioGroupEvents::new(parent_ref, ctrl_ids.to_vec()),
+					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids.to_vec()),
 				},
 			)),
 		);
 
-		parent_ref.privileged_events_ref().wm_init_dialog({
+		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});
@@ -130,7 +130,7 @@ impl RadioGroup {
 
 		if !first_radio.hwnd().is_null() {
 			panic!("Cannot add events after the control is created.");
-		} else if !first_radio.base_ref().parent_ref().hwnd_ref().is_null() {
+		} else if !first_radio.base_ref().parent_base_ref().hwnd_ref().is_null() {
 			panic!("Cannot add events after the parent window is created.");
 		}
 		&self.0.parent_events

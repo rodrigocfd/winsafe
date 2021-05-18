@@ -39,21 +39,21 @@ impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: TrackbarOpts) -> Trackbar {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 		let opts = TrackbarOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_ref),
+					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: TrackbarEvents::new(parent_ref, ctrl_id),
+					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
 				},
 			),
 		);
 
-		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
@@ -64,19 +64,19 @@ impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> Trackbar {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_ref),
+					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: TrackbarEvents::new(parent_ref, ctrl_id),
+					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
 				},
 			),
 		);
 
-		parent_ref.privileged_events_ref().wm_init_dialog({
+		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});

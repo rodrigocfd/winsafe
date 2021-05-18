@@ -23,9 +23,9 @@ impl Drop for DlgBase {
 }
 
 impl DlgBase {
-	pub fn new(parent_ref: Option<&Base>, dialog_id: i32) -> DlgBase {
+	pub fn new(parent_base_ref: Option<&Base>, dialog_id: i32) -> DlgBase {
 		Self {
-			base: Base::new(parent_ref, true),
+			base: Base::new(parent_base_ref, true),
 			dialog_id,
 		}
 	}
@@ -43,7 +43,7 @@ impl DlgBase {
 		// when CreateDialogParam returns.
 		self.base.parent_hinstance()?.CreateDialogParam(
 			IdStr::Id(self.dialog_id),
-			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
+			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
 			Some(self as *const _ as _), // pass pointer to self
 		).map(|_| ())
@@ -58,7 +58,7 @@ impl DlgBase {
 		// when DialogBoxParam returns.
 		self.base.parent_hinstance()?.DialogBoxParam(
 			IdStr::Id(self.dialog_id),
-			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
+			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
 			Some(self as *const _ as _), // pass pointer to self
 		).map(|res| res as _)

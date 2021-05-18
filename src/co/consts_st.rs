@@ -142,10 +142,18 @@ pub_struct_const! { SIF, u32,
 pub_struct_const! { SIZE_R, u8,
 	/// [`WM_SIZE`](crate::msg::wm::Size) request (`u8`).
 	=>
+	/// The window has been resized, but neither the `SIZE_R::MINIMIZED` nor
+	/// `SIZE_R::MAXIMIZED` value applies.
 	RESTORED, 0
+	/// The window has been minimized.
 	MINIMIZED, 1
+	/// The window has been maximized.
 	MAXIMIZED, 2
+	/// Message is sent to all pop-up windows when some other window has been
+	/// restored to its former size.
 	MAXSHOW, 3
+	/// Message is sent to all pop-up windows when some other window is
+	/// maximized.
 	MAXHIDE, 4
 }
 

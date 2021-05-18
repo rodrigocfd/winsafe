@@ -57,26 +57,26 @@ impl StatusBar {
 	/// ]);
 	/// ```
 	pub fn new(parent: &dyn Parent, parts: &[StatusBarPart]) -> StatusBar {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 		let ctrl_id = auto_ctrl_id();
 
 		let new_self = Self(
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent_ref),
+					base: NativeControlBase::new(parent_base_ref),
 					ctrl_id,
-					events: StatusBarEvents::new(parent_ref, ctrl_id),
+					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
 					parts_info: parts.to_vec(),
 					right_edges: vec![0; parts.len()],
 				},
 			)),
 		);
 
-		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
-		parent_ref.privileged_events_ref().wm_size({
+		parent_base_ref.privileged_events_ref().wm_size({
 			let me = new_self.clone();
 			move |p| me.resize(&p)
 		});
@@ -94,7 +94,7 @@ impl StatusBar {
 				}
 			}
 
-			let hparent = *self.0.base.parent_ref().hwnd_ref();
+			let hparent = *self.0.base.parent_base_ref().hwnd_ref();
 			let parent_style = co::WS(
 				hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
 			);

@@ -44,12 +44,12 @@ impl Child for NativeControlBase {
 }
 
 impl NativeControlBase {
-	pub fn new(parent_ref: &Base) -> NativeControlBase {
+	pub fn new(parent_base_ref: &Base) -> NativeControlBase {
 		Self(
 			VeryUnsafeCell::new(
 				Obj {
 					hwnd: HWND::NULL,
-					ptr_parent: NonNull::from(parent_ref), // ref implicitly converted to pointer
+					ptr_parent: NonNull::from(parent_base_ref), // ref implicitly converted to pointer
 					subclass_events: WindowEvents::new(),
 				},
 			),
@@ -60,14 +60,14 @@ impl NativeControlBase {
 		&self.0.hwnd
 	}
 
-	pub fn parent_ref(&self) -> &Base {
+	pub fn parent_base_ref(&self) -> &Base {
 		unsafe { self.0.ptr_parent.as_ref() }
 	}
 
 	pub fn on_subclass(&self) -> &WindowEvents {
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot add subclass events after the control is created.");
-		} else if !self.parent_ref().hwnd_ref().is_null() {
+		} else if !self.parent_base_ref().hwnd_ref().is_null() {
 			panic!("Cannot add subclass events after the parent window is created.");
 		}
 		&self.0.subclass_events
@@ -82,7 +82,7 @@ impl NativeControlBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> WinResult<HWND>
 	{
-		let hparent = *self.parent_ref().hwnd_ref();
+		let hparent = *self.parent_base_ref().hwnd_ref();
 
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot create control twice.");
@@ -106,11 +106,11 @@ impl NativeControlBase {
 	}
 
 	pub fn create_dlg(&self, ctrl_id: i32) -> WinResult<HWND> {
-		if self.parent_ref().creation_wm() != co::WM::INITDIALOG {
+		if self.parent_base_ref().creation_wm() != co::WM::INITDIALOG {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
 
-		let hparent = *self.parent_ref().hwnd_ref();
+		let hparent = *self.parent_base_ref().hwnd_ref();
 
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot create control twice.");

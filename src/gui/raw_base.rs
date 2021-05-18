@@ -23,9 +23,9 @@ impl Drop for RawBase {
 }
 
 impl RawBase {
-	pub fn new(parent_ref: Option<&Base>) -> RawBase {
+	pub fn new(parent_base_ref: Option<&Base>) -> RawBase {
 		Self {
-			base: Base::new(parent_ref, false),
+			base: Base::new(parent_base_ref, false),
 		}
 	}
 
@@ -80,7 +80,7 @@ impl RawBase {
 			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
-			self.base.parent_ref().map(|parent| *parent.hwnd_ref()),
+			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			hmenu,
 			self.base.parent_hinstance()?,
 			Some(self as *const _ as _), // pass pointer to self

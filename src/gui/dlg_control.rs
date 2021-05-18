@@ -20,7 +20,7 @@ struct Obj { // actual fields of DlgControl
 
 impl DlgControl {
 	pub fn new(
-		parent_ref: &Base,
+		parent_base_ref: &Base,
 		dialog_id: i32,
 		position: POINT,
 		ctrl_id: Option<i32>) -> DlgControl
@@ -28,13 +28,13 @@ impl DlgControl {
 		let dlg = Self(
 			Arc::new(
 				Obj {
-					base: DlgBase::new(Some(parent_ref), dialog_id),
+					base: DlgBase::new(Some(parent_base_ref), dialog_id),
 					position,
 					ctrl_id,
 				},
 			),
 		);
-		dlg.default_message_handlers(parent_ref);
+		dlg.default_message_handlers(parent_base_ref);
 		dlg
 	}
 
@@ -42,8 +42,8 @@ impl DlgControl {
 		self.0.base.base_ref()
 	}
 
-	fn default_message_handlers(&self, parent_ref: &Base) {
-		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
+	fn default_message_handlers(&self, parent_base_ref: &Base) {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let self2 = self.clone();
 			move |p| {
 				|_| -> WinResult<isize> {

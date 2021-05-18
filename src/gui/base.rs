@@ -12,17 +12,17 @@ use crate::structs::MSG;
 pub(crate) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
-	ptr_parent: Option<NonNull<Base>>,
+	ptr_parent: Option<NonNull<Base>>, // parent of this window
 	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	privileged_events: WindowEvents, // inserted internally to automate tasks: all will be executed
 }
 
 impl Base {
-	pub fn new(parent_ref: Option<&Base>, is_dialog: bool) -> Base {
+	pub fn new(parent_base_ref: Option<&Base>, is_dialog: bool) -> Base {
 		Self {
 			hwnd: HWND::NULL,
 			is_dialog,
-			ptr_parent: parent_ref.map(|parent_ref| NonNull::from(parent_ref)), // ref implicitly converted to pointer
+			ptr_parent: parent_base_ref.map(|pb_ref| NonNull::from(pb_ref)), // ref implicitly converted to pointer
 			user_events: WindowEvents::new(),
 			privileged_events: WindowEvents::new(),
 		}
@@ -40,12 +40,12 @@ impl Base {
 		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
 	}
 
-	pub fn parent_ref(&self) -> Option<&Base> {
+	pub fn parent_base_ref(&self) -> Option<&Base> {
 		self.ptr_parent.as_ref().map(|ptr| unsafe { ptr.as_ref() })
 	}
 
 	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
-		Ok(match self.parent_ref() {
+		Ok(match self.parent_base_ref() {
 			Some(parent) => parent.hwnd_ref().hinstance(),
 			None => HINSTANCE::GetModuleHandle(None)?,
 		})
@@ -80,7 +80,7 @@ impl Base {
 				// WM_QUIT was sent, gracefully terminate the program.
 				// wParam has the program exit code.
 				// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
-				return match co::ERROR(msg.wParam as u32) {
+				return match co::ERROR(msg.wParam as _) {
 					co::ERROR::SUCCESS => Ok(()),
 					err => Err(err),
 				};

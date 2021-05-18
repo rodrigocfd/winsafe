@@ -41,23 +41,23 @@ impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ComboBoxOpts) -> ComboBox {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ComboBoxOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_ref),
+					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: ComboBoxEvents::new(parent_ref, ctrl_id),
-					items: ComboBoxItems::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
+					items: ComboBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
-		parent_ref.privileged_events_ref().wm(parent_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
 			move |_| { me.create(); 0 }
 		});
@@ -68,21 +68,21 @@ impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> ComboBox {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_ref),
+					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ComboBoxEvents::new(parent_ref, ctrl_id),
-					items: ComboBoxItems::new(parent_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
+					items: ComboBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
-		parent_ref.privileged_events_ref().wm_init_dialog({
+		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
 			move |_| { me.create(); true }
 		});

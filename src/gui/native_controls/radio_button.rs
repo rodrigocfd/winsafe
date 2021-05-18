@@ -35,27 +35,27 @@ impl Child for RadioButton {
 
 impl RadioButton {
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		Self(
 			Obj {
-				base: NativeControlBase::new(parent_ref),
+				base: NativeControlBase::new(parent_base_ref),
 				opts_id: OptsId::Wnd(opts),
-				events: ButtonEvents::new(parent_ref, ctrl_id),
+				events: ButtonEvents::new(parent_base_ref, ctrl_id),
 			},
 		)
 	}
 
 	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> RadioButton {
-		let parent_ref = baseref_from_parent(parent);
+		let parent_base_ref = baseref_from_parent(parent);
 
 		Self(
 			Obj {
-				base: NativeControlBase::new(parent_ref),
+				base: NativeControlBase::new(parent_base_ref),
 				opts_id: OptsId::Dlg(ctrl_id),
-				events: ButtonEvents::new(parent_ref, ctrl_id),
+				events: ButtonEvents::new(parent_base_ref, ctrl_id),
 			},
 		)
 	}

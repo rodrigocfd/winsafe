@@ -60,7 +60,7 @@ macro_rules! pub_fn_hwnd_on_onsubclass {
 		pub fn on(&self) -> &$evstruc {
 			if !self.0.base.hwnd_ref().is_null() {
 				panic!("Cannot add events after the control is created.");
-			} else if !self.0.base.parent_ref().hwnd_ref().is_null() {
+			} else if !self.0.base.parent_base_ref().hwnd_ref().is_null() {
 				panic!("Cannot add events after the parent window is created.");
 			}
 			&self.0.events
