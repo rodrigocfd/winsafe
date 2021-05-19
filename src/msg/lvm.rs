@@ -169,26 +169,26 @@ impl MsgSend for EnsureVisible {
 /// [`LVM_FINDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-finditem)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `Option<u32>`.
 pub struct FindItem<'a, 'b> {
-	pub index: Option<u32>,
+	pub start_index: Option<u32>,
 	pub lvfindinfo: &'b LVFINDINFO<'a>,
 }
 
 impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
-	type RetType = WinResult<u32>;
+	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as _),
+			-1 => None,
+			i => Some(i as _),
 		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::FINDITEM.into(),
-			wparam: self.index.map(|i| i as i32).unwrap_or(-1) as _,
+			wparam: self.start_index.map(|i| i as i32).unwrap_or(-1) as _,
 			lparam: self.lvfindinfo as *const _ as _,
 		}
 	}

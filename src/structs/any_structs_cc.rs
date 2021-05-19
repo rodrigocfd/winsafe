@@ -138,16 +138,7 @@ pub struct LVFINDINFO<'a> {
 impl_default_zero!(LVFINDINFO, 'a);
 
 impl<'a> LVFINDINFO<'a> {
-	/// Returns the `psz` field.
-	pub fn psz(&self) -> Option<String> {
-		unsafe { self.psz.as_mut() }
-			.map(|psz| WString::from_wchars_nullt(psz).to_string())
-	}
-
-	/// Sets the `psz` field.
-	pub fn set_psz(&mut self, buf: &'a mut WString) {
-		self.psz = unsafe { buf.as_mut_ptr() };
-	}
+	pub_fn_string_ptr_get_set!('a, psz, set_psz);
 }
 
 /// [`LVHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvhittestinfo)
@@ -289,16 +280,7 @@ pub struct NMDATETIMEFORMATQUERY<'a> {
 impl_default_zero!(NMDATETIMEFORMATQUERY, 'a);
 
 impl<'a> NMDATETIMEFORMATQUERY<'a> {
-	/// Returns the `pszFormat` field.
-	pub fn pszFormat(&self) -> Option<String> {
-		unsafe { self.pszFormat.as_mut() }
-			.map(|psz| WString::from_wchars_nullt(psz).to_string())
-	}
-
-	/// Sets the `pszFormat` field.
-	pub fn set_pszFormat(&mut self, buf: &'a mut WString) {
-		self.pszFormat = unsafe { buf.as_mut_ptr() };
-	}
+	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
 }
 
 /// [`NMDATETIMESTRING`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimestringw)
@@ -450,10 +432,8 @@ pub struct NMLVFINDITEM<'a> {
 
 /// [`NMLVGETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvgetinfotipw)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct NMLVGETINFOTIP {
+pub struct NMLVGETINFOTIP<'a> {
 	pub hdr: NMHDR,
 	pub dwFlags: co::LVGIT,
 	pszText: *mut u16,
@@ -461,18 +441,22 @@ pub struct NMLVGETINFOTIP {
 	pub iItem: i32,
 	pub iSubItem: i32,
 	pub lParam: isize,
+	m_pszText: PhantomData<&'a u16>,
 }
 
-impl NMLVGETINFOTIP {
+impl_default_zero!(NMLVGETINFOTIP, 'a);
+
+impl<'a> NMLVGETINFOTIP<'a> {
 	/// Returns the `pszText` field.
-	pub fn pszText(&self) -> String {
-		WString::from_wchars_nullt(self.pszText).to_string()
+	pub fn pszText(&self) -> Option<String> {
+		unsafe { self.pszText.as_mut() }
+			.map(|psz| WString::from_wchars_nullt(psz).to_string())
 	}
 
 	/// Sets the `pszText` field.
-	pub fn get_pszText(&mut self, text: &str) {
-		WString::from_str(text)
-			.copy_to_pointer(self.pszText, self.cchTextMax as _);
+	pub fn set_pszText(&mut self, buf: &'a mut WString) {
+		self.pszText = unsafe { buf.as_mut_ptr() };
+		self.cchTextMax = buf.buffer_size() as _;
 	}
 }
 

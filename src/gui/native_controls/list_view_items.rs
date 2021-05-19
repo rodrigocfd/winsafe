@@ -5,7 +5,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HWND;
 use crate::msg::lvm;
-use crate::structs::{LVHITTESTINFO, LVITEM, RECT};
+use crate::structs::{LVFINDINFO, LVHITTESTINFO, LVITEM, RECT};
 use crate::WString;
 
 /// Exposes item methods of a [`ListView`](crate::gui::ListView) control.
@@ -80,6 +80,21 @@ impl ListViewItems {
 		self.hwnd().SendMessage(lvm::EnsureVisible {
 			index: item_index,
 			entirely_visible: true,
+		})
+	}
+
+	/// Searches for an item with the given text, case-insensitive, by sending
+	/// an [`LVM_FINDITEM`](crate::msg::lvm::FindItem) message.
+	pub fn find(&self, text: &str) -> Option<u32> {
+		let mut buf = WString::from_str(text);
+
+		let mut lvfi = LVFINDINFO::default();
+		lvfi.flags = co::LVFI::STRING;
+		lvfi.set_psz(&mut buf);
+
+		self.hwnd().SendMessage(lvm::FindItem {
+			start_index: None,
+			lvfindinfo: &mut lvfi,
 		})
 	}
 
