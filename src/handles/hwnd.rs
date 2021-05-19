@@ -990,6 +990,12 @@ impl HWND {
 		unsafe { user32::SetForegroundWindow(self.ptr) != 0 }
 	}
 
+	/// [`SetMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenu)
+	/// method.
+	pub fn SetMenu(self, hMenu: HMENU) -> WinResult<()> {
+		bool_to_winresult(unsafe { user32::SetMenu(self.ptr, hMenu.ptr) })
+	}
+
 	/// [`SetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setparent)
 	/// method.
 	pub fn SetParent(self, hWndNewParent: HWND) -> WinResult<Option<HWND>> {

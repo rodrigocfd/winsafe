@@ -85,6 +85,18 @@ pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> WinResult<bool> {
 	}
 }
 
+/// [`ClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor)
+/// method.
+pub fn ClipCursor(lpRect: Option<&RECT>) -> WinResult<()> {
+	bool_to_winresult(
+		unsafe {
+			user32::ClipCursor(
+				lpRect.map_or(std::ptr::null(), |lp| lp as *const _ as _),
+			)
+		},
+	)
+}
+
 /// [`CloseClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 /// function.
 pub fn CloseClipboard() -> WinResult<()> {
@@ -222,10 +234,19 @@ pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
 	unsafe { user32::GetAsyncKeyState(vKey.0 as _) != 0 }
 }
 
+/// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
+/// method.
+pub fn GetClipCursor(lpRect: &mut RECT) -> WinResult<()> {
+	bool_to_winresult(unsafe { user32::GetClipCursor(lpRect as *mut _ as _) })
+}
+
 /// [`GetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
 /// function.
-pub fn GetCursorPos(lpPoint: &mut POINT) -> WinResult<()> {
-	bool_to_winresult(unsafe { user32::GetCursorPos(lpPoint as *mut _ as _) })
+pub fn GetCursorPos() -> WinResult<POINT> {
+	let mut lpPoint = POINT::default();
+	bool_to_winresult(
+		unsafe { user32::GetCursorPos(&mut lpPoint as *mut _ as _) },
+	).map(|_| lpPoint)
 }
 
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
@@ -605,7 +626,7 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16
 }
 
-/// [`MoveFile`]()
+/// [`MoveFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefilew)
 /// function.
 pub fn MoveFile(
 	lpExistingFileName: &str, lpNewFileName: &str) -> WinResult<()>

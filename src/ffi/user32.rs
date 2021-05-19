@@ -14,6 +14,7 @@ extern "system" {
 	pub fn CheckMenuItem(_: HANDLE, _: u32, _: u32) -> i32;
 	pub fn ChildWindowFromPoint(_: HANDLE, _: i32, _: i32) -> HANDLE;
 	pub fn ClientToScreen(_: HANDLE, _: PVOID) -> BOOL;
+	pub fn ClipCursor(_: PCVOID) -> BOOL;
 	pub fn CloseClipboard() -> BOOL;
 	pub fn CloseWindow(_: HANDLE) -> BOOL;
 	pub fn CopyIcon(_: HANDLE) -> HANDLE;
@@ -49,6 +50,7 @@ extern "system" {
 	pub fn GetClassInfoExW(_: HANDLE, _: PCSTR, _: PVOID) -> BOOL;
 	pub fn GetClassLongPtrW(_: HANDLE, _: i32) -> usize;
 	pub fn GetClientRect(_: HANDLE, _: PVOID) -> BOOL;
+	pub fn GetClipCursor(_: PVOID) -> BOOL;
 	pub fn GetCursorPos(_: PVOID) -> BOOL;
 	pub fn GetDC(_: HANDLE) -> HANDLE;
 	pub fn GetDesktopWindow() -> HANDLE;
@@ -125,6 +127,8 @@ extern "system" {
 	pub fn SetCursorPos(_: i32, _: i32) -> BOOL;
 	pub fn SetFocus(_: HANDLE) -> HANDLE;
 	pub fn SetForegroundWindow(_: HANDLE) -> BOOL;
+	pub fn SetMenu(_: HANDLE, _: HANDLE) -> BOOL;
+	pub fn SetMenuDefaultItem(_: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn SetMenuInfo(_: HANDLE, _: PCVOID) -> BOOL;
 	pub fn SetMenuItemInfoW(_: HANDLE, _: u32, _: BOOL, _: PCVOID) -> BOOL;
 	pub fn SetParent(_: HANDLE, _: HANDLE) -> HANDLE;

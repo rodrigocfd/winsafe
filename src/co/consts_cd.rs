@@ -595,11 +595,6 @@ pub_struct_const! { DLGID, i32,
 	TRYAGAIN, 10
 	CONTINUE, 11
 }
-impl From<DLGID> for u16 {
-	fn from(n: DLGID) -> Self {
-		n.0 as _ // conversion to u16 is necessary to pass it to wm_command()
-	}
-}
 
 pub_struct_const_wm! { DTM,
 	/// Date and time picker control

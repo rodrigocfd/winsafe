@@ -313,6 +313,20 @@ impl HMENU {
 		)
 	}
 
+	/// [`SetMenuDefaultItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenudefaultitem)
+	/// method.
+	pub fn SetMenuDefaultItem(self, uItem: IdPos) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe {
+				user32::SetMenuDefaultItem(
+					self.ptr,
+					uItem.id_or_pos_u32(),
+					uItem.is_by_pos() as _,
+				)
+			},
+		)
+	}
+
 	/// [`SetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 	/// method.
 	pub fn SetMenuInfo(self, mii: &MENUINFO) -> WinResult<()> {
