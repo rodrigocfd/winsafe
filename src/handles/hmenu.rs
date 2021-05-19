@@ -6,8 +6,9 @@ use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
+use crate::msg;
 use crate::privs::bool_to_winresult;
-use crate::structs::{MENUINFO, MENUITEMINFO};
+use crate::structs::{MENUINFO, MENUITEMINFO, POINT};
 use crate::WString;
 
 pub_struct_handle! {
@@ -353,7 +354,10 @@ impl HMENU {
 	}
 
 	/// [`TrackPopupMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenu)
-	/// method
+	/// method.
+	///
+	/// **Note:** If you just want to display a popup menu, consider the simpler
+	/// [`TrackPopupMenuAtPoint`](crate::HMENU::TrackPopupMenuAtPoint).
 	pub fn TrackPopupMenu(self, uFlags: co::TPM,
 		x: i32, y: i32, hWnd: HWND) -> WinResult<Option<i32>>
 	{
@@ -377,5 +381,20 @@ impl HMENU {
 				_ => Ok(None),
 			}
 		}
+	}
+
+	/// Shows the popup menu anchored at the given coordinates using
+	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu), and performs other
+	/// needed operations.
+	///
+	/// This method will block until the menu disappears.
+	pub fn TrackPopupMenuAtPoint(self,
+		mut pos: POINT, hParent: HWND, hCoordsRelativeTo: HWND) -> WinResult<()>
+	{
+		hCoordsRelativeTo.ClientToScreen(&mut pos)?; // now relative to screen
+		hParent.SetForegroundWindow();
+		self.TrackPopupMenu(co::TPM::LEFTBUTTON, pos.x, pos.y, hParent)?;
+		hParent.PostMessage(msg::wm::Null {})?; // necessary according to TrackPopupMenu docs
+		Ok(())
 	}
 }

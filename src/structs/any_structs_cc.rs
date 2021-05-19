@@ -150,6 +150,18 @@ impl<'a> LVFINDINFO<'a> {
 	}
 }
 
+/// [`LVHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvhittestinfo)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct LVHITTESTINFO {
+	pub pt: POINT,
+	pub flags: co::LVHT,
+	pub iItem: i32,
+	pub iSubItem: i32,
+	pub iGroup: i32,
+}
+
 /// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
 #[repr(C)]

@@ -7,7 +7,15 @@ use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HWND;
 use crate::msg::{MsgSend, WndMsg};
-use crate::structs::{COLORREF, LVCOLUMN, LVFINDINFO, LVITEM, SIZE};
+use crate::structs::{
+	COLORREF,
+	LVCOLUMN,
+	LVFINDINFO,
+	LVHITTESTINFO,
+	LVITEM,
+	RECT,
+	SIZE,
+};
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
@@ -410,6 +418,38 @@ impl MsgSend for GetNextItem {
 	}
 }
 
+/// [`LVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemrect)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetItemRect<'a> {
+	pub index: u32,
+	pub rect: &'a mut RECT,
+	pub portion: co::LVIR,
+}
+
+impl<'a> MsgSend for GetItemRect<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		let ptr_rect = self.rect as *const _ as *mut RECT;
+		unsafe { &mut *ptr_rect }.left = self.portion.0 as _;
+
+		WndMsg {
+			msg_id: co::LVM::GETITEMRECT.into(),
+			wparam: self.index as _,
+			lparam: self.rect as *const _ as _,
+		}
+	}
+}
+
 /// [`LVM_GETSELECTEDCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcount)
 /// message, which has no parameters.
 ///
@@ -450,6 +490,32 @@ impl MsgSend for GetView {
 			msg_id: co::LVM::GETVIEW.into(),
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+/// [`LVM_HITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-hittest)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct HitTest<'a> {
+	pub info: &'a mut LVHITTESTINFO,
+}
+
+impl<'a> MsgSend for HitTest<'a> {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			i => Some(i as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::HITTEST.into(),
+			wparam: -1 as _,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }

@@ -5,7 +5,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HWND;
 use crate::msg::lvm;
-use crate::structs::LVITEM;
+use crate::structs::{LVHITTESTINFO, LVITEM, RECT};
 use crate::WString;
 
 /// Exposes item methods of a [`ListView`](crate::gui::ListView) control.
@@ -84,12 +84,18 @@ impl ListViewItems {
 	}
 
 	/// Retrieves the index of the focused item by sending an
-	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) message
+	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) message.
 	pub fn focused(&self) -> Option<u32> {
 		self.hwnd().SendMessage(lvm::GetNextItem {
 			initial_index: None,
 			relationship: co::LVNI::FOCUSED,
 		})
+	}
+
+	/// Retrieves the item at the specified position by sending an
+	/// [`LVM_HITTEST`](crate::msg::lvm::HitTest) message
+	pub fn hit_test(&self, info: &mut LVHITTESTINFO) -> Option<u32> {
+		self.hwnd().SendMessage(lvm::HitTest { info })
 	}
 
 	/// Tells if the item is the focused one by sending an
@@ -114,6 +120,18 @@ impl ListViewItems {
 	/// [`LVM_ISITEMVISIBLE`](crate::msg::lvm::IsItemVisible) message.
 	pub fn is_visible(&self, item_index: u32) -> bool {
 		self.hwnd().SendMessage(lvm::IsItemVisible { index: item_index })
+	}
+
+	/// Retrieves the bound rectangle of item by sending an
+	/// [`LVM_GETITEMRECT`](crate::msg::lvm::GetItemRect) message.
+	pub fn rect(&self, item_index: u32, portion: co::LVIR) -> WinResult<RECT> {
+		let mut rc = RECT::default();
+		self.hwnd().SendMessage(lvm::GetItemRect {
+			index: item_index,
+			rect: &mut rc,
+			portion,
+		})?;
+		Ok(rc)
 	}
 
 	/// Retrieves the indexes of the selected items by sending
