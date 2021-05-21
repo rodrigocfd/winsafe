@@ -279,12 +279,12 @@ impl ListViewItems {
 			buf.realloc_buffer(buf_sz);
 			lvi.set_pszText(&mut buf);
 
-			let nchars = hwnd.SendMessage(lvm::GetItemText {
+			let nchars = hwnd.SendMessage(lvm::GetItemText { // char count without terminating null
 				index: item_index,
 				lvitem: &mut lvi,
 			});
 
-			if (nchars as usize) < buf_sz { // to break, must have at least 1 char gap
+			if (nchars as usize) + 1 < buf_sz { // to break, must have at least 1 char gap
 				break;
 			}
 
