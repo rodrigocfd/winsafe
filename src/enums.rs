@@ -272,12 +272,13 @@ impl IdMenu {
 #[derive(Copy, Clone)]
 pub enum IdPos {
 	/// A command ID.
-	Id(u16),
+	Id(i32),
 	/// Zero-based position.
 	Pos(u32),
 }
 
 impl IdPos {
+	/// Returns whether value is `Pos`.
 	pub fn is_by_pos(self) -> bool {
 		match self {
 			IdPos::Id(_) => false,
@@ -285,6 +286,7 @@ impl IdPos {
 		}
 	}
 
+	/// Returns the ID or the position as a plain `u32`.
 	pub fn id_or_pos_u32(self) -> u32 {
 		match self {
 			IdPos::Id(id) => id as _,
@@ -292,6 +294,8 @@ impl IdPos {
 		}
 	}
 
+	/// Returns [`MF::BYCOMMAND`](crate::co::MF::BYCOMMAND) or
+	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION).
 	pub fn mf_flag(self) -> co::MF {
 		match self {
 			IdPos::Id(_) => co::MF::BYCOMMAND,

@@ -201,17 +201,14 @@ impl HMENU {
 	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION) flags, they are inferred
 	/// by [`IdPos`](crate::IdPos).
 	pub fn EnableMenuItem(self,
-		uIDEnableItem: IdPos, uEnable: co::MF) -> WinResult<co::MF>
+		uIDEnableItem: IdPos, uEnable: bool) -> WinResult<co::MF>
 	{
-		let mut flags = uEnable;
-		flags &= !(co::MF::BYPOSITION | co::MF::BYCOMMAND); // remove if set
-		flags |= uIDEnableItem.mf_flag(); // set correctly
-
 		match unsafe {
 			user32::EnableMenuItem(
 				self.ptr,
 				uIDEnableItem.id_or_pos_u32(),
-				flags.0,
+				(uIDEnableItem.mf_flag()
+					| if uEnable { co::MF::ENABLED } else { co::MF::DISABLED }).0,
 			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
