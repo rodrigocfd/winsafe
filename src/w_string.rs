@@ -201,7 +201,13 @@ impl WString {
 		}
 	}
 
-	/// Returns true if the internal buffer is storing a null string pointer.
+	/// Tells whether the internal buffer is storing a null string pointer, or
+	/// if it's holding a string with a length of zero.
+	pub fn is_empty(&self) -> bool {
+		self.len() == 0
+	}
+
+	/// Tells whether the internal buffer is storing a null string pointer.
 	pub fn is_null(&self) -> bool {
 		self.vec_u16.is_none()
 	}
@@ -237,11 +243,28 @@ impl WString {
 
 	/// Converts into `String`. An internal null pointer will simply be converted
 	/// into an empty string.
+	///
+	/// # Panics
+	///
+	/// Panics if any invalid character is found.
+	///
+	/// If you're parsing raw data which may contain errors, prefer using
+ 	/// [`to_string_checked`](crate::WString::to_string_checked) instead.
 	pub fn to_string(&self) -> String {
+		self.to_string_checked().unwrap()
+	}
+
+	/// Converts into `String` by calling `String::from_utf16`. An internal null
+	/// pointer will simply be converted into an empty string.
+	///
+	/// This method is useful if you're parsing raw data which may contain
+	/// invalid characters. If you're dealing with a string known to be valid,
+	/// [`to_string`](crate::WString::to_string) is more practical.
+	pub fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
 		self.vec_u16.as_ref()
 			.map_or(
-				String::default(),
-				|v| String::from_utf16(&v[..self.len()]).unwrap(), // without terminating null
+				Ok(String::default()),
+				|v| String::from_utf16(&v[..self.len()]), // without terminating null
 			)
 	}
 }
