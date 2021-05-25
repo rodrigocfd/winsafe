@@ -120,68 +120,205 @@ pub_struct_const! { VK, u16,
 	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
 	=>
+	/// Left mouse button.
 	LBUTTON, 0x01
+	/// Right mouse button.
 	RBUTTON, 0x02
+	/// Control-break processing.
 	CANCEL, 0x03
+	/// Middle mouse button (three-button mouse).
 	MBUTTON, 0x04
+	/// X1 mouse button.
 	XBUTTON1, 0x05
+	/// X2 mouse button.
 	XBUTTON2, 0x06
+	/// BACKSPACE key.
 	BACK, 0x08
+	/// TAB key.
 	TAB, 0x09
+	/// CLEAR key.
 	CLEAR, 0x0c
+	/// ENTER key.
 	RETURN, 0x0d
+	/// SHIFT key.
 	SHIFT, 0x10
+	/// CTRL key.
 	CONTROL, 0x11
+	/// ALT key.
 	MENU, 0x12
+	/// PAUSE key.
 	PAUSE, 0x13
+	/// CAPS LOCK key.
 	CAPITAL, 0x14
+	/// IME Kana mode.
 	KANA, 0x15
-	HANGEUL, 0x15
+	/// IME Hangul mode.
 	HANGUL, 0x15
+	/// IME On.
+	IME_ON, 0x16
+	/// IME Junja mode.
 	JUNJA, 0x17
+	/// IME final mode.
 	FINAL, 0x18
+	/// IME Hanja mode.
 	HANJA, 0x19
+	/// IME Kanji mode.
 	KANJI, 0x19
+	/// ESC key.
 	ESCAPE, 0x1b
+	/// IME convert.
 	CONVERT, 0x1c
+	/// IME nonconvert.
 	NONCONVERT, 0x1d
+	/// IME accept.
 	ACCEPT, 0x1e
+	/// IME mode change request.
 	MODECHANGE, 0x1f
+	/// SPACEBAR key.
 	SPACE, 0x20
+	/// PAGE UP key.
 	PRIOR, 0x21
+	/// PAGE DOWN key.
 	NEXT, 0x22
+	/// END key.
 	END, 0x23
+	/// HOME key.
 	HOME, 0x24
+	/// LEFT ARROW key.
 	LEFT, 0x25
+	/// UP ARROW key.
 	UP, 0x26
+	/// RIGHT ARROW key.
 	RIGHT, 0x27
+	/// DOWN ARROW key.
 	DOWN, 0x28
+	/// SELECT key.
 	SELECT, 0x29
+	/// PRINT key.
 	PRINT, 0x2a
+	/// EXECUTE key.
 	EXECUTE, 0x2b
+	/// PRINT SCREEN key.
 	SNAPSHOT, 0x2c
+	/// INS key.
 	INSERT, 0x2d
+	/// DEL key.
 	DELETE, 0x2e
+	/// HELP key.
 	HELP, 0x2f
+
+	/// Number 0 key.
+	CHAR_0, 0x30
+	/// Number 1 key.
+	CHAR_1, 0x31
+	/// Number 2 key.
+	CHAR_2, 0x32
+	/// Number 3 key.
+	CHAR_3, 0x33
+	/// Number 4 key.
+	CHAR_4, 0x34
+	/// Number 5 key.
+	CHAR_5, 0x35
+	/// Number 6 key.
+	CHAR_6, 0x36
+	/// Number 7 key.
+	CHAR_7, 0x37
+	/// Number 8 key.
+	CHAR_8, 0x38
+	/// Number 9 key.
+	CHAR_9, 0x39
+	/// Character A key.
+	CHAR_A, 0x41
+	/// Character B key.
+	CHAR_B, 0x42
+	/// Character C key.
+	CHAR_C, 0x43
+	/// Character D key.
+	CHAR_D, 0x44
+	/// Character E key.
+	CHAR_E, 0x45
+	/// Character F key.
+	CHAR_F, 0x46
+	/// Character G key.
+	CHAR_G, 0x47
+	/// Character H key.
+	CHAR_H, 0x48
+	/// Character I key.
+	CHAR_I, 0x49
+	/// Character J key.
+	CHAR_J, 0x4a
+	/// Character K key.
+	CHAR_K, 0x4b
+	/// Character L key.
+	CHAR_L, 0x4c
+	/// Character M key.
+	CHAR_M, 0x4d
+	/// Character N key.
+	CHAR_N, 0x4e
+	/// Character O key.
+	CHAR_O, 0x4f
+	/// Character P key.
+	CHAR_P, 0x50
+	/// Character Q key.
+	CHAR_Q, 0x51
+	/// Character R key.
+	CHAR_R, 0x52
+	/// Character S key.
+	CHAR_S, 0x53
+	/// Character T key.
+	CHAR_T, 0x54
+	/// Character U key.
+	CHAR_U, 0x55
+	/// Character V key.
+	CHAR_V, 0x56
+	/// Character W key.
+	CHAR_W, 0x57
+	/// Character X key.
+	CHAR_X, 0x58
+	/// Character Y key.
+	CHAR_Y, 0x59
+	/// Character Z key.
+	CHAR_Z, 0x5a
+
+	/// Left Windows key (Natural keyboard).
 	LWIN, 0x5b
+	/// Right Windows key (Natural keyboard).
 	RWIN, 0x5c
+	/// Applications key, context menu (Natural keyboard).
 	APPS, 0x5d
+	/// Computer Sleep key.
 	SLEEP, 0x5f
+	/// Numeric keypad 0 key.
 	NUMPAD0, 0x60
+	/// Numeric keypad 1 key.
 	NUMPAD1, 0x61
+	/// Numeric keypad 2 key.
 	NUMPAD2, 0x62
+	/// Numeric keypad 3 key.
 	NUMPAD3, 0x63
+	/// Numeric keypad 4 key.
 	NUMPAD4, 0x64
+	/// Numeric keypad 5 key.
 	NUMPAD5, 0x65
+	/// Numeric keypad 6 key.
 	NUMPAD6, 0x66
+	/// Numeric keypad 7 key.
 	NUMPAD7, 0x67
+	/// Numeric keypad 8 key.
 	NUMPAD8, 0x68
+	/// Numeric keypad 9 key.
 	NUMPAD9, 0x69
+	/// Numeric keypad multiply key.
 	MULTIPLY, 0x6a
+	/// Numeric keypad add key.
 	ADD, 0x6b
+	/// Numeric keypad separator key.
 	SEPARATOR, 0x6c
+	/// Numeric keypad subtract key.
 	SUBTRACT, 0x6d
+	/// Numeric keypad decimal key.
 	DECIMAL, 0x6e
+	/// Numeric keypad divide key.
 	DIVIDE, 0x6f
 	F1, 0x70
 	F2, 0x71
@@ -207,7 +344,9 @@ pub_struct_const! { VK, u16,
 	F22, 0x85
 	F23, 0x86
 	F24, 0x87
+	/// NUM LOCK key.
 	NUMLOCK, 0x90
+	/// SCROLL LOCK key.
 	SCROLL, 0x91
 	OEM_NEC_EQUAL, 0x92
 	OEM_FJ_JISHO, 0x92
@@ -215,11 +354,17 @@ pub_struct_const! { VK, u16,
 	OEM_FJ_TOUROKU, 0x94
 	OEM_FJ_LOYA, 0x95
 	OEM_FJ_ROYA, 0x96
+	/// Left SHIFT key.
 	LSHIFT, 0xa0
+	/// Right SHIFT key.
 	RSHIFT, 0xa1
+	/// Left CONTROL key.
 	LCONTROL, 0xa2
+	/// Right CONTROL key.
 	RCONTROL, 0xa3
+	/// Left MENU key.
 	LMENU, 0xa4
+	/// Right MENU key.
 	RMENU, 0xa5
 	BROWSER_BACK, 0xa6
 	BROWSER_FORWARD, 0xa7

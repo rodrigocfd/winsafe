@@ -58,8 +58,11 @@ impl ListViewItems {
 
 	/// Deletes the items at the given indexes by sending an
 	/// [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message.
+	///
+	/// The indexes are iterated backwards, so the last item will be deleted
+	/// first.
 	pub fn delete(&self, item_indexes: &[u32]) -> WinResult<()> {
-		for idx in item_indexes.iter() {
+		for idx in item_indexes.iter().rev() {
 			self.hwnd().SendMessage(lvm::DeleteItem {
 				index: *idx,
 			})?;
