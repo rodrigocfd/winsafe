@@ -30,7 +30,7 @@ struct Obj { // actual fields of ListView
 	events: ListViewEvents,
 	columns: ListViewColumns,
 	items: ListViewItems,
-	context_menu: HMENU,
+	context_menu: Option<HMENU>,
 }
 
 unsafe impl Send for ListView {}
@@ -96,7 +96,7 @@ impl ListView {
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
 					columns: ListViewColumns::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
 					items: ListViewItems::new(parent_base_ref.hwnd_ref()),
-					context_menu: context_menu.unwrap_or(HMENU::NULL),
+					context_menu,
 				},
 			),
 		);
@@ -170,12 +170,21 @@ impl ListView {
 
 	pub_fn_ctrlid_hwnd_on_onsubclass!(ListViewEvents);
 
-	/// Column methods.
+	/// Exposes the column methods.
 	pub fn columns(&self) -> &ListViewColumns {
 		&self.0.columns
 	}
 
-	/// Item methods.
+	/// Returns the context menu attached to this list view, if any.
+	///
+	/// The context menu is attached when the list view is created, either by
+	/// calling [`new`](crate::gui::ListView::new) or
+	/// [`new_dlg`](crate::gui::ListView::new_dlg).
+	pub fn context_menu(&self) -> Option<HMENU> {
+		self.0.context_menu
+	}
+
+	/// Exposes the item methods.
 	pub fn items(&self) -> &ListViewItems {
 		&self.0.items
 	}
@@ -205,9 +214,10 @@ impl ListView {
 	fn show_context_menu(&self,
 		follow_cursor: bool, has_ctrl: bool, has_shift: bool) -> WinResult<()>
 	{
-		if self.0.context_menu.is_null() { // no menu, nothing to do
-			return Ok(());
-		}
+		let hmenu = match self.0.context_menu {
+			Some(h) => h,
+			None => return Ok(()), // no menu, nothing to do
+		};
 
 		let menu_pos = if follow_cursor { // usually when fired by a right-click
 			let mut menu_pos = GetCursorPos()?; // relative to screen
@@ -247,7 +257,7 @@ impl ListView {
 			}
 		};
 
-		self.0.context_menu.TrackPopupMenuAtPoint(
+		hmenu.TrackPopupMenuAtPoint(
 			menu_pos, self.hwnd().GetParent()?, self.hwnd())
 	}
 }
@@ -302,8 +312,8 @@ pub struct ListViewOpts {
 	/// destroyed. But note that menus loaded from resources don't need to be
 	/// destroyed.
 	///
-	/// Defaults to none.
-	pub context_menu: HMENU,
+	/// Defaults to `None`.
+	pub context_menu: Option<HMENU>,
 }
 
 impl Default for ListViewOpts {
@@ -316,7 +326,7 @@ impl Default for ListViewOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			ex_window_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
-			context_menu: HMENU::NULL,
+			context_menu: None,
 		}
 	}
 }
