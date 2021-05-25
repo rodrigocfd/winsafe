@@ -4,7 +4,14 @@
 
 use crate::aliases::TIMERPROC;
 use crate::co;
-use crate::enums::{HwndFocus, HwndHmenu, HwndPointId, NccspRect};
+use crate::enums::{
+	AccelMenuCtrl,
+	AccelMenuCtrlData,
+	HwndFocus,
+	HwndHmenu,
+	HwndPointId,
+	NccspRect,
+};
 use crate::funcs::{HIBYTE, HIWORD, LOBYTE, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
@@ -151,13 +158,8 @@ pub_struct_msg_char! { Char, co::WM::CHAR,
 /// message parameters.
 ///
 /// Return type: `()`.
-///
-/// You'll normally want to match against `code` and `ctrl_id` to identify the
-/// event.
 pub struct Command {
-	pub code: co::CMD,
-	pub ctrl_id: u16,
-	pub ctrl_hwnd: Option<HWND>,
+	pub event: AccelMenuCtrl,
 }
 
 impl MsgSend for Command {
@@ -170,8 +172,16 @@ impl MsgSend for Command {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::COMMAND,
-			wparam: MAKEDWORD(self.ctrl_id, self.code.into()) as _,
-			lparam: self.ctrl_hwnd.map(|h| h.ptr as _).unwrap_or_default(),
+			wparam: match self.event {
+				AccelMenuCtrl::Accel(id) => MAKEDWORD(id, 1) as _,
+				AccelMenuCtrl::Menu(id) => MAKEDWORD(id, 0) as _,
+				AccelMenuCtrl::Ctrl(data) => MAKEDWORD(data.ctrl_id, data.notif_code.0) as _,
+			},
+			lparam: match self.event {
+				AccelMenuCtrl::Accel(_) => co::CMD::Accelerator.0 as _,
+				AccelMenuCtrl::Menu(_) => co::CMD::Menu.0 as _,
+				AccelMenuCtrl::Ctrl(data) => data.ctrl_hwnd.ptr as _,
+			},
 		}
 	}
 }
@@ -179,11 +189,16 @@ impl MsgSend for Command {
 impl MsgSendRecv for Command {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			code: co::CMD(HIWORD(p.wparam as _)),
-			ctrl_id: LOWORD(p.wparam as _),
-			ctrl_hwnd: match p.lparam {
-				0 => None,
-				ptr => Some(HWND { ptr: ptr as _ }),
+			event: match HIWORD(p.wparam as _) {
+				1 => AccelMenuCtrl::Accel(LOWORD(p.wparam as _)),
+				0 => AccelMenuCtrl::Menu(LOWORD(p.wparam as _)),
+				code => AccelMenuCtrl::Ctrl(
+					AccelMenuCtrlData {
+						notif_code: co::CMD(code),
+						ctrl_id: LOWORD(p.wparam as _),
+						ctrl_hwnd: HWND { ptr: p.lparam as _ },
+					},
+				),
 			},
 		}
 	}

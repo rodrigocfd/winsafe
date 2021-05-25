@@ -8,6 +8,37 @@ use crate::handles::{HBITMAP, HICON, HMENU, HWND};
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
 use crate::WString;
 
+/// Variant parameters of a [`WM_COMMAND`](crate::msg::wm::Command) message.
+#[derive(Copy, Clone)]
+pub enum AccelMenuCtrl {
+	/// Accelerator event. Contains the accelerator command ID.
+	Accel(u16),
+	/// Menu item click event. Contains the menu item command ID.
+	Menu(u16),
+	/// Some child control event. Contains
+	/// [`AccelMenuCtrlData`](crate::AccelMenuCtrlData) data.
+	Ctrl(AccelMenuCtrlData),
+}
+
+impl AccelMenuCtrl {
+	/// Returns the notification code and the control ID pair.
+	pub fn code_id(&self) -> (co::CMD, u16) {
+		match self {
+			AccelMenuCtrl::Accel(id) => (co::CMD::Accelerator, *id),
+			AccelMenuCtrl::Menu(id) => (co::CMD::Menu, *id),
+			AccelMenuCtrl::Ctrl(data) => (data.notif_code, data.ctrl_id),
+		}
+	}
+}
+
+/// The data of the [`AccelMenuCtrl`](crate::AccelMenuCtrl) `Ctrl` option.
+#[derive(Copy, Clone)]
+pub struct AccelMenuCtrlData {
+	pub notif_code: co::CMD,
+	pub ctrl_id: u16,
+	pub ctrl_hwnd: HWND,
+}
+
 /// Variant parameter used in
 /// [window class](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-classes)
 /// functions:

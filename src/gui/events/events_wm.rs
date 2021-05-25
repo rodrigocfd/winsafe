@@ -1,6 +1,7 @@
 use std::rc::Rc;
 
 use crate::co;
+use crate::enums::AccelMenuCtrl;
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDC, HFONT, HICON, HMENU};
@@ -35,7 +36,7 @@ struct Obj { // actual fields of WindowEvents
 		Box<dyn FnMut()>, // return value is never meaningful
 	>,
 	cmds: FuncStore< // WM_COMMAND notifications
-		(co::CMD, u16), // code, ctrl_id
+		(co::CMD, u16), // notif code, control ID
 		Box<dyn FnMut()>, // return value is never meaningful
 	>,
 	nfys: FuncStore< // WM_NOTIFY notifications
@@ -85,7 +86,7 @@ impl WindowEvents {
 			},
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
-				let key = (wm_cmd.code, wm_cmd.ctrl_id);
+				let key = wm_cmd.event.code_id();
 				match self.0.as_mut().cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func(); // execute user function
@@ -131,7 +132,7 @@ impl WindowEvents {
 			},
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
-				let key = (wm_cmd.code, wm_cmd.ctrl_id);
+				let key = wm_cmd.event.code_id();
 				self.0.as_mut().cmds.find_all(key, |func| {
 					func();
 				});

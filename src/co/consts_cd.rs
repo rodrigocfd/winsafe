@@ -369,8 +369,8 @@ pub_struct_const! { CLSCTX, u32,
 pub_struct_const! { CMD, u16,
 	/// [`WM_COMMAND`](crate::msg::wm::Command) notification codes (`u16`).
 	///
-	/// Control-specific notification codes have their own types, which are
-	/// convertible to `CMD`.
+	/// **Note:** Control-specific notification codes have their own types,
+	/// which are convertible to `CMD`.
 	=>
 	Menu, 0
 	Accelerator, 1
