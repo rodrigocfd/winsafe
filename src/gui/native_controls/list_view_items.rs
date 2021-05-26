@@ -297,6 +297,16 @@ impl ListViewItems {
 
 	/// A more convenient [`text`](crate::gui::ListViewItems::text), which
 	/// directly returns a `String` instead of requiring an external buffer.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_list: gui::ListView; // initialized somewhere
+	///
+	/// println!("Text: {}", my_list.items().text(0, 2)); // 1st item, 3rd column
+	/// ```
 	pub fn text_str(&self, item_index: u32, column_index: u32) -> String {
 		let mut buf = WString::default();
 		self.text(item_index, column_index, &mut buf);

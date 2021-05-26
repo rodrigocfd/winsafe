@@ -54,14 +54,20 @@ impl HFILEMAPVIEW {
 	}
 
 	/// Returns a slice representing the mapped memory. You can modify the
-	/// contents.
+	/// contents. You should call this method only if the file has write access.
 	///
-	/// **Note:** You should call this method only if the file has write access.
+	/// **Note**: If the file is resized to a smaller size, the slice will still
+	/// map the bytes beyond the file. This may cause serious errors. So, if the
+	/// file is resized, re-generate the slice by calling `as_slice` again.
 	pub fn as_mut_slice<'a>(self, len: usize) -> &'a mut [u8] {
 		unsafe { std::slice::from_raw_parts_mut(self.ptr as _, len) }
 	}
 
 	/// Returns a slice representing the mapped memory.
+	///
+	/// **Note**: If the file is resized to a smaller size, the slice will still
+	/// map the bytes beyond the file. This may cause serious errors. So, if the
+	/// file is resized, re-generate the slice by calling `as_slice` again.
 	///
 	/// # Examples
 	///

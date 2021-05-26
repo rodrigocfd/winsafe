@@ -7,7 +7,7 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 	/// Creates a new, empty store.
 	pub fn new() -> FuncStore<K, F> {
 		Self {
-			elems: Vec::new(),
+			elems: Vec::default(),
 		}
 	}
 

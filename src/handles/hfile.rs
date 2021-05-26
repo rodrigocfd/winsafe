@@ -235,6 +235,8 @@ impl HFILE {
 
 	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// method.
+	///
+	/// Returns the number of bytes written.
 	pub fn WriteFile(self,
 		buffer: &[u8],
 		lpOverlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>

@@ -225,7 +225,7 @@ impl HWND {
 	/// }
 	/// ```
 	pub fn EnumChildWindowsVec(self) -> Vec<HWND> {
-		let mut hchildren = Vec::new();
+		let mut hchildren = Vec::default();
 		self.EnumChildWindows(
 			Self::EnumChildWindowsVecProc,
 			&mut hchildren as *mut Vec<_> as _, // pass pointer to Vec
