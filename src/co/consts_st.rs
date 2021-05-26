@@ -116,6 +116,18 @@ pub_struct_const! { SC, u32,
 	VSCROLL, 0xf070
 }
 
+pub_struct_const! { SCS, u32,
+	/// [`GetBinaryType`](crate::GetBinaryType) return value (`u32`).
+	=>
+	W_32BIT_BINARY, 0
+	DOS_BINARY, 1
+	WOW_BINARY, 2
+	PIF_BINARY, 3
+	POSIX_BINARY, 4
+	OS216_BINARY, 5
+	W_64BIT_BINARY, 6
+}
+
 pub_struct_const! { SECTION, u32,
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	=>

@@ -234,6 +234,20 @@ pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
 	unsafe { user32::GetAsyncKeyState(vKey.0 as _) != 0 }
 }
 
+/// [`GetBinaryType`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getbinarytypew)
+/// function.
+pub fn GetBinaryType(lpApplicationName: &str) -> WinResult<co::SCS> {
+	let mut lpBinaryType = co::SCS::W_32BIT_BINARY;
+	bool_to_winresult(
+		unsafe {
+			kernel32::GetBinaryTypeW(
+				WString::from_str(lpApplicationName).as_ptr(),
+				&mut lpBinaryType.0,
+			)
+		}
+	).map(|_| lpBinaryType)
+}
+
 /// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
 /// method.
 pub fn GetClipCursor(lpRect: &mut RECT) -> WinResult<()> {
@@ -721,6 +735,12 @@ pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
 		0 => Err(GetLastError()),
 		atom => Ok(ATOM(atom)),
 	}
+}
+
+/// [`ReleaseCapture`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
+/// function.
+pub fn ReleaseCapture() -> WinResult<()> {
+	bool_to_winresult(unsafe { user32::ReleaseCapture() })
 }
 
 /// [`SetCaretBlinkTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)

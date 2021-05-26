@@ -1,7 +1,6 @@
 use std::rc::Rc;
 
 use crate::co;
-use crate::enums::AccelMenuCtrl;
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDC, HFONT, HICON, HMENU};

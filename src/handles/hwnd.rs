@@ -977,6 +977,16 @@ impl HWND {
 		)
 	}
 
+	/// [`SetCapture`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
+	/// method.
+	///
+	/// **Note:** Must be paired with a
+	/// [`ReleaseCapture`](crate::ReleaseCapture) call.
+	pub fn SetCapture(&self) -> Option<HWND> {
+		unsafe { user32::SetCapture(self.ptr).as_mut() }
+			.map(|ptr| Self { ptr })
+	}
+
 	/// [`SetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
 	/// method.
 	pub fn SetFocus(self) -> Option<HWND> {

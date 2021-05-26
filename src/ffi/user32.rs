@@ -117,10 +117,12 @@ extern "system" {
 	pub fn RealChildWindowFromPoint(_: HANDLE, _: i32, _: i32) -> HANDLE;
 	pub fn RedrawWindow(_: HANDLE, _: PCVOID, _: HANDLE, _: u32) -> BOOL;
 	pub fn RegisterClassExW(_: PCVOID) -> u16;
+	pub fn ReleaseCapture() -> BOOL;
 	pub fn ReleaseDC(_: HANDLE, _: HANDLE) -> i32;
 	pub fn RemoveMenu(_: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn ScreenToClient(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn SendMessageW(_: HANDLE, _: u32, _: usize, _: isize) -> isize;
+	pub fn SetCapture(_: HANDLE) -> HANDLE;
 	pub fn SetCaretBlinkTime(_: u32) -> BOOL;
 	pub fn SetCaretPos(_: i32, _: i32) -> BOOL;
 	pub fn SetClipboardData(_: u32, _: HANDLE) -> HANDLE;

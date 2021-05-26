@@ -21,6 +21,7 @@ extern "system" {
 	pub fn FlushProcessWriteBuffers();
 	pub fn FormatMessageW(_: u32, _: PCVOID, _: u32, _: u32, _: PSTR, _: u32, _: PVOID) -> u32;
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
+	pub fn GetBinaryTypeW(_: PCSTR, _: &mut u32) -> BOOL;
 	pub fn GetEnvironmentStringsW() -> HANDLE;
 	pub fn GetExitCodeProcess(_: HANDLE, _: *mut u32) -> BOOL;
 	pub fn GetExitCodeThread(_: HANDLE, _: *mut u32) -> BOOL;
