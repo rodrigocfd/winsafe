@@ -50,6 +50,30 @@ impl HWND {
 	///
 	/// **Note:** Must be paired with an [`EndPaint`](crate::HWND::EndPaint)
 	/// call.
+	///
+	/// # Examples
+	///
+	/// `BeginPaint` is usually called inside a
+	/// [`WM_PAINT`](crate::gui::events::WindowEvents::wm_paint) event to paint
+	/// the window client area:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{gui, PAINTSTRUCT};
+	///
+	/// let my_main: gui::WindowMain; // initialized somewhere
+	///
+	/// my_main.on().wm_paint({
+	///     let my_main = my_main.clone();
+	///     move || {
+	///         let mut ps = PAINTSTRUCT::default();
+	///         let hdc = my_main.hwnd().BeginPaint(&mut ps).unwrap();
+	///
+	///         // paint the HDC...
+	///
+	///         my_main.hwnd().EndPaint(&ps);
+	///     }
+	/// });
+	/// ```
 	pub fn BeginPaint(self, lpPaint: &mut PAINTSTRUCT) -> WinResult<HDC> {
 		unsafe { user32::BeginPaint(self.ptr, lpPaint as *mut _ as _).as_mut() }
 			.map(|ptr| HDC { ptr })
@@ -744,6 +768,9 @@ impl HWND {
 	/// [`MessageBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
 	/// method.
 	///
+	/// Consider using the more modern [`TaskDialog`](crate::HWND::TaskDialog)
+	/// method.
+	///
 	/// # Examples
 	///
 	/// A modal message box, which blocks its parent:
@@ -1184,6 +1211,46 @@ impl HWND {
 
 	/// [`TaskDialog`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// An information message with just an OK button:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{co, HWND, IdTdicon};
+	///
+	/// let my_hwnd: HWND; // initialized somewhere
+	///
+	/// my_hwnd.TaskDialog(
+	///     None,
+	///     Some("My app name"),
+	///     Some("Operation successful"),
+	///     Some("The operation completed successfully."),
+	///     co::TDCBF::OK
+	///     IdTdicon::Tdicon(co::TD_ICON::INFORMATION),
+	/// ).unwrap();
+	/// ```
+	///
+	/// Prompt the user to click OK or Cancel upon a question:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{co, HWND, IdTdicon};
+	///
+	/// let my_hwnd: HWND; // initialized somewhere
+	///
+	/// let answer = my_hwnd.TaskDialog(
+	///     None,
+	///     Some("My app name"),
+	///     Some("File modified"),
+	///     Some("The file has been modified.\nProceed closing the application?"),
+	///     co::TDCBF::OK | co::TDCBF::CANCEL,
+	///     IdTdicon::Tdicon(co::TD_ICON::WARNING),
+	/// ).unwrap();
+	///
+	/// if answer == co::DLGID::OK {
+	///     println!("User clicked OK.");
+	/// }
+	/// ```
 	pub fn TaskDialog(self,
 		hInstance: Option<HINSTANCE>,
 		pszWindowTitle: Option<&str>,

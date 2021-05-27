@@ -6,7 +6,7 @@ use crate::structs::COLORREF;
 ///
 /// * [`LOGBRUSH`](crate::LOGBRUSH) `lbColor`.
 #[repr(C)]
-pub union ColorrefDib {
+pub union ColorrefDibU {
 	pub colorref: COLORREF,
 	pub dib: co::DIB,
 }
@@ -15,7 +15,7 @@ pub union ColorrefDib {
 ///
 /// * [`LOGBRUSH`](crate::LOGBRUSH) `lbHatch`.
 #[repr(C)]
-pub union ColorrefHbitmap {
+pub union ColorrefHbitmapU {
 	pub colorref: COLORREF,
 	pub hbitmap: HBITMAP,
 }

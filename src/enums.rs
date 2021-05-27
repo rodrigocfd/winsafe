@@ -295,8 +295,8 @@ impl IdPos {
 		}
 	}
 
-	/// Returns [`MF::BYCOMMAND`](crate::co::MF::BYCOMMAND) or
-	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION).
+	/// Returns [`MF::BYCOMMAND`](crate::co::MF::BYCOMMAND) if value is `Id`, or
+	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION) if value is `Pos`.
 	pub fn mf_flag(self) -> co::MF {
 		match self {
 			IdPos::Id(_) => co::MF::BYCOMMAND,
@@ -307,7 +307,7 @@ impl IdPos {
 
 /// Variant parameter for:
 ///
-/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpTemplateName`.
+/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpTemplateName`;
 /// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`;
 /// * [`LoadMenu`](crate::HINSTANCE::LoadMenu) `lpMenuName`;
 /// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`.

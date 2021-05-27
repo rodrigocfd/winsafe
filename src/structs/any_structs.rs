@@ -25,7 +25,7 @@ use crate::handles::{
 };
 use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH};
 use crate::structs::{ATOM, COLORREF};
-use crate::unions::{ColorrefDib, ColorrefHbitmap};
+use crate::unions::{ColorrefDibU, ColorrefHbitmapU};
 use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
@@ -223,8 +223,8 @@ impl HELPINFO {
 #[repr(C)]
 pub struct LOGBRUSH {
 	pub lbStyle: co::BSS,
-	pub lbColor: ColorrefDib,
-	pub lbHatch: ColorrefHbitmap,
+	pub lbColor: ColorrefDibU,
+	pub lbHatch: ColorrefHbitmapU,
 }
 
 impl_default_zero!(LOGBRUSH);
