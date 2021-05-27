@@ -1,5 +1,7 @@
 //! Internal definitions used by the library.
 
+#![allow(non_snake_case)]
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, HRESULT};
@@ -23,6 +25,12 @@ pub(crate) const LB_ERRSPACE: i32 = -2;
 pub(crate) const LF_FACESIZE: usize = 32;
 pub(crate) const MAX_LINKID_TEXT: usize = 48;
 pub(crate) const MAX_PATH: usize = 260;
+
+/// [`MAKEINTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
+/// macro.
+pub(crate) fn MAKEINTRESOURCE(val: isize) -> *const u16 {
+	val as u16 as _
+}
 
 /// If value is FALSE, yields `Err(GetLastError)`, otherwise `Ok()`.
 pub(crate) fn bool_to_winresult(expr: BOOL) -> WinResult<()> {

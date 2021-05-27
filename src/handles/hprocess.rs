@@ -38,14 +38,14 @@ impl HPROCESS {
 		bool_to_winresult(
 			unsafe {
 				kernel32::CreateProcessW(
-					lpApplicationName.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
+					WString::from_opt_str(lpApplicationName).as_ptr(),
 					bufCommandLine.as_mut_ptr(),
 					lpProcessAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					nInheritHandles as _,
 					dwCreationFlags.0,
 					lpEnvironment as _,
-					lpCurrentDirectory.map_or(std::ptr::null_mut(), |lp| WString::from_str(lp).as_ptr()),
+					WString::from_opt_str(lpCurrentDirectory).as_ptr(),
 					lpStartupInfo as *mut _ as _,
 					&mut lpProcessInformation as *mut _ as _,
 				)

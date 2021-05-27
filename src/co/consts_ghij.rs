@@ -318,8 +318,8 @@ pub_struct_const! { ICON_SZ, u8,
 	BIG, 1
 }
 
-pub_struct_const! { IDC, usize,
-	/// [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName` (`usize`).
+pub_struct_const! { IDC, isize,
+	/// [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName` (`isize`).
 	=>
 	ARROW, 32512
 	IBEAM, 32513
@@ -339,8 +339,8 @@ pub_struct_const! { IDC, usize,
 	PERSON, 32672
 }
 
-pub_struct_const! { IDI, usize,
-	/// [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName` (`usize`).
+pub_struct_const! { IDI, isize,
+	/// [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName` (`isize`).
 	=>
 	APPLICATION, 32512
 	HAND, 32513

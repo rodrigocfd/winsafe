@@ -2,12 +2,12 @@
 
 use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult, WNDENUMPROC};
 use crate::co;
-use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos};
+use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos, IdTdicon};
 use crate::ffi::{BOOL, comctl32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::MsgSend;
-use crate::privs::bool_to_winresult;
+use crate::privs::{bool_to_winresult, hr_to_winresult};
 use crate::structs::{
 	ALTTABINFO,
 	MSG,
@@ -258,14 +258,15 @@ impl HWND {
 	/// method.
 	pub fn FindWindowEx(self,
 		hWndChildAfter: Option<HWND>,
-		lpszClass: AtomStr, lpszWindow: Option<&str>) -> WinResult<HWND>
+		lpszClass: AtomStr,
+		lpszWindow: Option<&str>) -> WinResult<HWND>
 	{
 		unsafe {
 			user32::FindWindowExW(
 				self.ptr,
 				hWndChildAfter.map_or(std::ptr::null_mut(), |h| h.ptr),
 				lpszClass.as_ptr(),
-				lpszWindow.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
+				WString::from_opt_str(lpszWindow).as_ptr(),
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
@@ -1179,6 +1180,34 @@ impl HWND {
 	/// method.
 	pub fn ShowWindow(self, nCmdShow: co::SW) -> bool {
 		unsafe { user32::ShowWindow(self.ptr, nCmdShow.0) != 0 }
+	}
+
+	/// [`TaskDialog`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
+	/// method.
+	pub fn TaskDialog(self,
+		hInstance: Option<HINSTANCE>,
+		pszWindowTitle: Option<&str>,
+		pszMainInstruction: Option<&str>,
+		pszContent: Option<&str>,
+		dwCommonButtons: co::TDCBF,
+		pszIcon: IdTdicon) -> WinResult<co::DLGID>
+	{
+		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
+		let mut pnButton = co::DLGID::CANCEL;
+		hr_to_winresult(
+			unsafe {
+				comctl32::TaskDialog(
+					self.ptr,
+					hInstance.map_or(std::ptr::null_mut(), |h| h.ptr),
+					WString::from_opt_str(pszWindowTitle).as_ptr(),
+					WString::from_opt_str(pszMainInstruction).as_ptr(),
+					WString::from_opt_str(pszContent).as_ptr(),
+					dwCommonButtons.0,
+					pszIcon.as_ptr(),
+					&mut pnButton.0,
+				)
+			},
+		).map(|_| pnButton)
 	}
 
 	/// [`TranslateAccelerator`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translateacceleratorw)

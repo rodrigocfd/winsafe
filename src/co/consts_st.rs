@@ -1183,6 +1183,28 @@ pub_struct_const_wsex! { TCS_EX,
 	REGISTERDROP, 0x0000_0002
 }
 
+pub_struct_const! { TD_ICON, isize,
+	/// [`TaskDialog`](crate::HWND::TaskDialog) `pszIcon` (`isize`). Originally
+	/// has `TD` prefix and `ICON` suffix.
+	=>
+	WARNING, -1
+	ERROR, -2
+	INFORMATION, -3
+	SHIELD, -4
+}
+
+pub_struct_const! { TDCBF, i32,
+	/// [`TaskDialog`](crate::HWND::TaskDialog) `dwCommonButtons` (`i32`).
+	/// Originally has `TDCBF` prefix and `BUTTON` suffix.
+	=>
+	OK, 0x0001
+	YES, 0x0002
+	NO, 0x0004
+	CANCEL, 0x0008
+	RETRY, 0x0010
+	CLOSE, 0x0020
+}
+
 pub_struct_const! { TH32CS, u32,
 	/// [`CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `dwFlags` (`u32`).
 	=>
@@ -1197,7 +1219,7 @@ pub_struct_const! { TH32CS, u32,
 
 pub_struct_const! { THREAD_CREATE, u32,
 	/// [`CreateThread`](crate::HTHREAD::CreateThread) `dwFlags` (`u32`).
-	/// Originally with no prefix.
+	/// Originally has no prefix.
 	=>
 	/// Originally just a zero.
 	RUN_IMMEDIATELY, 0

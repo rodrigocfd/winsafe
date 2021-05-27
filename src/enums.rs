@@ -5,6 +5,7 @@ use std::ffi::c_void;
 use crate::co;
 use crate::funcs::MAKEDWORD;
 use crate::handles::{HBITMAP, HICON, HMENU, HWND};
+use crate::privs::MAKEINTRESOURCE;
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
 use crate::WString;
 
@@ -196,7 +197,7 @@ impl IdIdcStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => *id as _,
-			Self::Idc(idc) => idc.0 as _,
+			Self::Idc(idc) => MAKEINTRESOURCE(idc.0),
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
@@ -219,7 +220,7 @@ impl IdIdiStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => *id as _,
-			Self::Idi(idi) => idi.0 as _,
+			Self::Idi(idi) => MAKEINTRESOURCE(idi.0),
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
@@ -331,6 +332,29 @@ impl IdStr {
 		match self {
 			Self::Id(id) => *id as _,
 			Self::Str(u16) => unsafe { u16.as_mut_ptr() },
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`TaskDialog`](crate::HWND::TaskDialog) `pszIcon`.
+pub enum IdTdicon {
+	/// No icon.
+	None,
+	/// A resource ID.
+	Id(i32),
+	/// A predefined icon.
+	Tdicon(co::TD_ICON),
+}
+
+impl IdTdicon {
+	/// Converts the internal value to a `*const u16`.
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::None => std::ptr::null(),
+			Self::Id(id) => *id as _,
+			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0),
 		}
 	}
 }

@@ -13,9 +13,9 @@ pub_struct_handle! {
 }
 
 impl HDROP {
-	/// This method calls
+	/// This method is a wrapper that calls the native
 	/// [`DragQueryFile`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
-	/// repeatedly to retrieve all files, then calls
+	/// repeatedly to retrieve all files, then calls the native
 	/// [`DragFinish`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish).
 	///
 	/// # Examples
@@ -28,7 +28,7 @@ impl HDROP {
 	///   println!("File path: {}", f);
 	/// }
 	/// ```
-	pub fn DragQueryFile(self) -> WinResult<Vec<String>> {
+	pub fn DragQueryFiles(self) -> WinResult<Vec<String>> {
 		let count = unsafe {
 			shell32::DragQueryFileW(self.ptr, 0xffff_ffff, std::ptr::null_mut(), 0)
 		};
