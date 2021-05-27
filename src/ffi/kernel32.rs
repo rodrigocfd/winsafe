@@ -17,6 +17,9 @@ extern "system" {
 	pub fn ExitThread(_: u32);
 	pub fn ExpandEnvironmentStringsW(_: PCSTR, _: PSTR, _: u32) -> u32;
 	pub fn FileTimeToSystemTime(_: PCVOID, _: PVOID) -> BOOL;
+	pub fn FindClose(_: HANDLE) -> BOOL;
+	pub fn FindFirstFileW(_: PCSTR, _: PVOID) -> HANDLE;
+	pub fn FindNextFileW(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn FlushInstructionCache(_: HANDLE, _: PCVOID, _: u64) -> BOOL;
 	pub fn FlushProcessWriteBuffers();
 	pub fn FormatMessageW(_: u32, _: PCVOID, _: u32, _: u32, _: PSTR, _: u32, _: PVOID) -> u32;

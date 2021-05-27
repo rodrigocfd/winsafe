@@ -8,7 +8,14 @@ use std::marker::PhantomData;
 use crate::aliases::{CCHOOKPROC, WNDPROC};
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPlace, IdStr};
-use crate::funcs::{IsWindowsVistaOrGreater, HIDWORD, HIWORD, LODWORD, LOWORD};
+use crate::funcs::{
+	IsWindowsVistaOrGreater,
+	HIDWORD,
+	HIWORD,
+	LODWORD,
+	LOWORD,
+	MAKEQWORD,
+};
 use crate::handles::{
 	HBITMAP,
 	HBRUSH,
@@ -789,6 +796,34 @@ pub struct TRACKMOUSEEVENT {
 }
 
 impl_default_with_size!(TRACKMOUSEEVENT, cbSize);
+
+/// [`WIN32_FIND_DATA`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-win32_find_dataw)
+/// struct.
+#[repr(C)]
+pub struct WIN32_FIND_DATA {
+	pub dwFileAttributes: co::FILE_ATTRIBUTE,
+	pub ftCreationTime: FILETIME,
+	pub ftLastAccessTime: FILETIME,
+	pub tLastWriteTime: FILETIME,
+	nFileSizeHigh: u32,
+	nFileSizeLow: u32,
+	dwReserved0: u32,
+	dwReserved1: u32,
+	cFileName: [u16; MAX_PATH],
+	cAlternateFileName: [u16; 14],
+}
+
+impl_default_zero!(WIN32_FIND_DATA);
+
+impl WIN32_FIND_DATA {
+	pub_fn_string_arr_get_set!(cFileName, set_cFileName);
+	pub_fn_string_arr_get_set!(cAlternateFileName, set_cAlternateFileName);
+
+	/// Returns the nFileSizeHigh and nFileSizeLow fields.
+	pub fn nFileSize(&self) -> u64 {
+		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
+	}
+}
 
 /// [`WINDOWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.

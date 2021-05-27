@@ -634,6 +634,11 @@ pub const fn MAKEDWORD(lo: u16, hi: u16) -> u32 {
 	((lo as u32 & 0xffff) | ((hi as u32 & 0xffff) << 16)) as _
 }
 
+/// Similar to [`MAKEDWORD`](crate::MAKEDWORD), but for `u64`.
+pub const fn MAKEQWORD(lo: u32, hi: u32) -> u64 {
+	((lo as u64 & 0xffff_ffff) | ((hi as u64 & 0xffff_ffff) << 32)) as _
+}
+
 /// [`MAKEWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
 /// function. Originally a macro.
 pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
