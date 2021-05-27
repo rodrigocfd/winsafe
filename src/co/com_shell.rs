@@ -12,6 +12,14 @@ pub_struct_const! { DROPEFFECT, u32,
 	SCROLL, 0x8000_0000
 }
 
+pub_struct_const! { FDAP, u32,
+	/// [`FDAP`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fdap)
+	/// enumeration (`u32`).
+	=>
+	BOTTOM, 0
+	TOP, 1
+}
+
 pub_struct_const! { FOS, u32,
 	/// [`_FILEOPENDIALOGOPTIONS`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).

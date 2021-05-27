@@ -31,7 +31,7 @@ pub_struct_vtable! { IFileDialogVT,
 	SetOkButtonLabel, fn(IUnkPP, PCSTR) -> HRESULT
 	SetFileNameLabel, fn(IUnkPP, PCSTR) -> HRESULT
 	GetResult, fn(IUnkPP, *mut IUnkPP) -> HRESULT
-	AddPlace, fn(IUnkPP, PVOID, u32) -> HRESULT
+	AddPlace, fn(IUnkPP, IUnkPP, u32) -> HRESULT
 	SetDefaultExtension, fn(IUnkPP, PCSTR) -> HRESULT
 	Close, fn(IUnkPP, HRESULT) -> HRESULT
 	SetClientGuid, fn(IUnkPP, PCVOID) -> HRESULT
