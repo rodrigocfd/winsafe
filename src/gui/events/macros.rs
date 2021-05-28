@@ -44,19 +44,19 @@ macro_rules! pub_struct_ctrl_events_proxy {
 	) => {
 		$(#[$doc])*
 		pub struct $name {
-			parent_ptr: NonNull<Base>,
+			parent_ptr: NonNull<crate::gui::base::Base>,
 			ctrl_id: i32,
 		}
 
 		impl $name {
-			pub(crate) fn new(parent_base_ref: &Base, ctrl_id: i32) -> $name {
+			pub(crate) fn new(parent_base_ref: &crate::gui::base::Base, ctrl_id: i32) -> $name {
 				Self {
 					parent_ptr: NonNull::from(parent_base_ref), // convert reference to pointer
 					ctrl_id,
 				}
 			}
 
-			fn parent_user_events(&self) -> &WindowEvents {
+			fn parent_user_events(&self) -> &crate::gui::events::WindowEvents {
 				unsafe { self.parent_ptr.as_ref().user_events_ref() }
 			}
 		}

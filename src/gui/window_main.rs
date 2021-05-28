@@ -22,6 +22,9 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///
 /// # Examples
 ///
+/// The two examples below show how to create the main window: programmatically,
+/// or by loading a dialog resource from a `.rc` file.
+///
 /// ## Programmaticaly creating a window
 ///
 /// Below is a full application based on a non-dialog `WindowMain`, whose
@@ -93,6 +96,8 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///
 /// use winsafe::{gui, WinResult};
 ///
+/// const ID_DLG_MAIN: i32 = 101; // in our .rc file, this is the dialog ID
+///
 /// fn main() {
 ///     let my_main = MyDlg::new();
 ///     if let Err(e) = my_main.dlg.run_main(None) {
@@ -106,8 +111,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///
 /// impl MyDlg {
 ///     pub fn new() -> MyDlg {
-///         // 101 is the ID of the dialog resource in the .rc file
-///         let dlg = gui::WindowMain::new_dlg(101, None, None);
+///         let dlg = gui::WindowMain::new_dlg(ID_DLG_MAIN, None, None);
 ///
 ///         let new_self = Self { dlg };
 ///         new_self.events();

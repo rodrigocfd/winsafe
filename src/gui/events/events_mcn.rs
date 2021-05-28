@@ -1,8 +1,6 @@
 use std::ptr::NonNull;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::WindowEvents;
 use crate::structs::{NMDAYSTATE, NMSELCHANGE, NMVIEWCHANGE};
 
 pub_struct_ctrl_events_proxy! {

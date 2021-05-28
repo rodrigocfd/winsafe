@@ -46,15 +46,39 @@ impl HMENU {
 	///
 	/// # Examples
 	///
+	/// Adding a new menu item, with its associated command ID:
+	///
 	/// ```rust,ignore
 	/// use winsafe::HMENU;
 	///
 	/// const ID_FILE_OPEN: i32 = 101;
 	///
-	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
+	/// let hmenu: HMENU; // initialized somewhere
 	///
-	/// hmenu.AppendMenuItem(ID_FILE_OPEN, "&Open file...")
-	///     .unwrap();
+	/// hmenu.AppendMenuItem(
+	///     ID_FILE_OPEN,
+	///     "&Open file...",
+	/// ).unwrap();
+	/// ```
+	///
+	/// Adding multiple menu items at once, each one with its command ID:
+	///
+	/// ```rust,ignore
+	/// use winsafe::HMENU;
+	///
+	/// const ID_FILE_OPEN: i32 = 201;
+	/// const ID_FILE_SAVE: i32 = 202;
+	///
+	/// let hmenu: HMENU; // initialized somewhere
+	///
+	/// [
+	///     (ID_FILE_OPEN, "Open\tCtrl+O"),
+	///     (ID_FILE_SAVE, "&Save"),
+	/// ].iter()
+	///     .for_each(|(id, text)| hmenu.AppendMenuItem(
+	///         *id,
+	///         text,
+	///     ).unwrap());
 	/// ```
 	pub fn AppendMenuItem(self, command_id: i32, text: &str) -> WinResult<()> {
 		self.AppendMenu(
@@ -62,33 +86,6 @@ impl HMENU {
 			IdMenu::Id(command_id),
 			BitmapPtrStr::Str(WString::from_str(text)),
 		)
-	}
-
-	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
-	/// appends multiple new items with their command IDs.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::HMENU;
-	///
-	/// const ID_FILE_OPEN: i32 = 101;
-	/// const ID_FILE_SAVE: i32 = 102;
-	///
-	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
-	///
-	/// hmenu.AppendMenuItems(&[
-	///     (ID_FILE_OPEN, "&Open file..."),
-	///     (ID_FILE_SAVE, "&Save file"),
-	/// ]).unwrap();
-	/// ```
-	pub fn AppendMenuItems(self,
-		command_ids_and_texts: &[(i32, &str)]) -> WinResult<()>
-	{
-		for (command_id, text) in command_ids_and_texts.iter() {
-			self.AppendMenuItem(*command_id, text)?;
-		}
-		Ok(())
 	}
 
 	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
@@ -197,9 +194,42 @@ impl HMENU {
 	/// [`EnableMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablemenuitem)
 	/// method.
 	///
-	/// You don't need to pass [`MF::BYCOMMAND`](crate::co::MF::BYCOMMAND) or
-	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION) flags, they are inferred
-	/// by [`IdPos`](crate::IdPos).
+	/// # Examples
+	///
+	/// Disabling a menu item:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{HMENU, IdPos};
+	///
+	/// const ID_FILE_OPEN: i32 = 101;
+	///
+	/// let hmenu: HMENU; // initialized somewhere
+	///
+	/// hmenu.EnableMenuItem(
+	///     IdPos::Id(ID_FILE_OPEN),
+	///     false,
+	/// ).unwrap();
+	/// ```
+	///
+	/// Disabling multiple menu items at once:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{HMENU, IdPos};
+	///
+	/// const ID_FILE_OPEN: i32 = 201;
+	/// const ID_FILE_SAVE: i32 = 202;
+	///
+	/// let hmenu: HMENU; // initialized somewhere
+	///
+	/// [
+	///     (ID_FILE_OPEN, "Open\tCtrl+O"),
+	///     (ID_FILE_SAVE, "&Save"),
+	/// ].iter()
+	///     .for_each(|(id, txt)| hmenu.EnableMenuItem(
+	///         IdPos::Id(*id),
+	///         false,
+	///     ).unwrap());
+	/// ```
 	pub fn EnableMenuItem(self,
 		uIDEnableItem: IdPos, uEnable: bool) -> WinResult<co::MF>
 	{
