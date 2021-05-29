@@ -16,14 +16,14 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 
 /// An user main window, which can handle events. Usually, this is the first
 /// window of your application, launched directly from the `main` function. Can
-/// be programmatically created or load a dialog resource from a `.rc` script.
+/// be programmatically created or load a dialog resource from a `.res` file.
 ///
 /// Implements [`Parent`](crate::gui::Parent) trait.
 ///
 /// # Examples
 ///
 /// The two examples below show how to create the main window: programmatically,
-/// or by loading a dialog resource from a `.rc` file.
+/// or by loading a dialog resource from a `.res` file.
 ///
 /// ## Programmaticaly creating a window
 ///
@@ -83,9 +83,9 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// }
 /// ```
 ///
-/// ## Loading a window resource from a `.rc` file
+/// ## Loading a window resource from a `.res` file
 ///
-/// A window can also be loaded from a Win32 resource file (usually an `.rc`
+/// A window can also be loaded from a Win32 resource file (usually a `.res`
 /// file). Below, a full aplication where `WindowMain` loads a window resource,
 /// instead of creating the window programmatically. Note how
 /// `WindowMain::new_dlg` instead of `WindowMain::new`.
@@ -96,7 +96,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///
 /// use winsafe::{gui, WinResult};
 ///
-/// const ID_DLG_MAIN: i32 = 101; // in our .rc file, this is the dialog ID
+/// const ID_DLG_MAIN: i32 = 101; // in our .res file, this is the dialog ID
 ///
 /// fn main() {
 ///     let my_main = MyDlg::new();

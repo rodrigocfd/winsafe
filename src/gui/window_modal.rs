@@ -12,7 +12,7 @@ use crate::handles::HWND;
 enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
 
 /// An user modal window, which can handle events. Can be programmatically
-/// created or load a dialog resource from a `.rc` script.
+/// created or load a dialog resource from a `.res` file.
 ///
 /// Implements [`Parent`](crate::gui::Parent) trait.
 #[derive(Clone)]

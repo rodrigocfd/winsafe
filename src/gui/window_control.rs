@@ -12,7 +12,7 @@ use crate::structs::POINT;
 enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
 
 /// An user child window, which can handle events. Can be programmatically
-/// created or load a dialog resource from a `.rc` script.
+/// created or load a dialog resource from a `.res` file.
 ///
 /// Implements [`Parent`](crate::gui::Parent) and [`Child`](crate::gui::Child)
 /// traits.

@@ -111,12 +111,33 @@ impl Edit {
 
 	/// Sets the text in the control by calling
 	/// [`SetWindowText`](crate::HWND::SetWindowText).
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	///
+	/// my_edit.set_text("This my text").unwrap();
+	/// ```
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
 		self.hwnd().SetWindowText(text)
 	}
 
 	/// Retrieves the text in the control by calling
 	/// [`GetWindowText`](crate::HWND::GetWindowText).
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	///
+	/// let the_text = my_edit.text().unwrap();
+	/// println!("The text is: {}", the_text);
+	/// ```
 	pub fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowTextStr()
 	}

@@ -1,5 +1,5 @@
 //! High-level GUI abstractions for user windows and native controls. They can
-//! be created programmatically or by loading resources from a `.rc` file.
+//! be created programmatically or by loading resources from a `.res` file.
 //!
 //! You'll probably want to start your GUI application using the
 //! [`WindowMain`](crate::gui::WindowMain).

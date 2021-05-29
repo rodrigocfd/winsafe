@@ -123,12 +123,32 @@ impl Label {
 	}
 
 	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText).
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_label: gui::Label; // initialized somewhere
+	///
+	/// my_label.set_text("This my text").unwrap();
+	/// ```
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
 		self.hwnd().SetWindowText(text)
 	}
 
 	/// Calls [`set_text`](crate::gui::Label::set_text) and resizes the control
 	/// to exactly fit the new text.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_label: gui::Label; // initialized somewhere
+	///
+	/// my_label.set_text_and_resize("This my text").unwrap();
+	/// ```
 	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
 		self.set_text(text)?;
 		self.resize_to_given_text(text)
@@ -136,6 +156,17 @@ impl Label {
 
 	/// Retrieves the text by calling
 	/// [`GetWindowTextStr`](crate::HWND::GetWindowText).
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_label: gui::Label; // initialized somewhere
+	///
+	/// let the_text = my_label.text().unwrap();
+	/// println!("The text is: {}", the_text);
+	/// ```
 	pub fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowTextStr()
 	}
