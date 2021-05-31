@@ -21,11 +21,13 @@ use crate::handles::HWND;
 
 /// Trait to any window which can host child controls.
 pub trait Parent {
+	/// Returns a reference to the `Any` trait, allowing downcasting.
 	fn as_any(&self) -> &dyn Any;
 }
 
 /// Trait to any child control.
 pub trait Child {
+	/// Returns a reference to the `Any` trait, allowing downcasting.
 	fn as_any(&self) -> &dyn Any;
 }
 

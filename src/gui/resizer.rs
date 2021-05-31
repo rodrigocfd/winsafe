@@ -104,20 +104,21 @@ impl Resizer {
 				Obj {
 					ctrls: Vec::with_capacity(16), // arbitrary, prealloc for speed
 					sz_parent_orig: SIZE::default(),
-				}
+				},
 			)),
 		);
 
 		let ptr_parent = NonNull::from(parent_base_ref); // ref implicitly converted to pointer
 		let rc_children = Rc::new(
-			children.iter()
-			.map(|c| ChildEntry {
-				horz: c.0,
-				vert: c.1,
-				children: c.2.iter()
-					.map(|dyn_child| NonNull::from(hwndref_from_child(*dyn_child))) // convert reference to pointer
-					.collect()
-			}).collect::<Vec<_>>()
+			children.iter().map(|c|
+				ChildEntry {
+					horz: c.0,
+					vert: c.1,
+					children: c.2.iter()
+						.map(|dyn_child| NonNull::from(hwndref_from_child(*dyn_child))) // convert reference to pointer
+						.collect(),
+				},
+			).collect::<Vec<_>>()
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {

@@ -41,7 +41,7 @@ winsafe = "0.0.2"
 WinSafe allows you to create windows in two ways:
 
 * programmatically defining parameters; or
-* loading dialogs from a `.res` file (created with a [resource editor]()).
+* loading dialogs from a `.res` file (created with a [resource editor](https://en.wikipedia.org/wiki/Resource_(Windows)#Resource_software)).
 
 The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/01_button_click/) creates a window  with a button programmatically. Note how the click event is handled with a closure:
 
