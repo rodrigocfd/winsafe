@@ -1,5 +1,3 @@
-use std::ptr::NonNull;
-
 use crate::co;
 
 pub_struct_ctrl_events_proxy! {

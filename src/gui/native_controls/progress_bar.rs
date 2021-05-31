@@ -1,10 +1,8 @@
-use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::WindowEvents;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
@@ -84,7 +82,7 @@ impl ProgressBar {
 					self.0.base.create_window( // may panic
 						"msctls_progress32", None, pos, sz,
 						opts.ctrl_id,
-						opts.ex_window_style,
+						opts.window_ex_style,
 						opts.window_style | opts.progress_bar_style.into(),
 					)?;
 
@@ -196,7 +194,7 @@ pub struct ProgressBarOpts {
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
-	pub ex_window_style: co::WS_EX,
+	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
 	///
@@ -211,7 +209,7 @@ impl Default for ProgressBarOpts {
 			size: SIZE::new(120, 23),
 			progress_bar_style: co::PBS::SMOOTH,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
-			ex_window_style: co::WS_EX::LEFT,
+			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 		}
 	}

@@ -694,37 +694,31 @@ impl WindowEvents {
 		/// scroll event occurs in the control.
 	}
 
-	/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to
-	/// dialog windows. Non-dialog windows receive
-	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) instead.
-	///
-	/// Sent to the dialog box procedure immediately before a dialog box is
-	/// displayed. Dialog box procedures typically use this message to
-	/// initialize controls and carry out any other initialization tasks that
-	/// affect the appearance of the dialog box.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::{gui, msg};
-	///
-	/// let wnd: gui::WindowMain; // initialized somewhere
-	///
-	/// wnd.on().wm_init_dialog({
-	///     let wnd = wnd.clone(); // pass into the closure
-	///     move |p: msg::wm::InitDialog| -> bool {
-	///         println!("Focused HWND: {}", p.hwnd_focus);
-	///         true
-	///     }
-	/// });
-	/// ```
-	pub fn wm_init_dialog<F>(&self, func: F)
-		where F: FnMut(wm::InitDialog) -> bool + 'static,
-	{
-		self.add_msg(co::WM::INITDIALOG, {
-			let mut func = func;
-			move |p| Some(func(wm::InitDialog::from_generic_wm(p)) as _)
-		});
+	pub_fn_wm_retbool_param! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog,
+		/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to
+		/// dialog windows. Non-dialog windows receive
+		/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) instead.
+		///
+		/// Sent to the dialog box procedure immediately before a dialog box is
+		/// displayed. Dialog box procedures typically use this message to
+		/// initialize controls and carry out any other initialization tasks that
+		/// affect the appearance of the dialog box.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::{gui, msg};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		///
+		/// wnd.on().wm_init_dialog({
+		///     let wnd = wnd.clone(); // pass into the closure
+		///     move |p: msg::wm::InitDialog| -> bool {
+		///         println!("Focused HWND: {}", p.hwnd_focus);
+		///         true
+		///     }
+		/// });
+		/// ```
 	}
 
 	pub_fn_wm_ret0_param! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup,
@@ -903,18 +897,12 @@ impl WindowEvents {
 		});
 	}
 
-	/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
-	///
-	/// Sent prior to the
-	/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) message when
-	/// a window is first created.
-	pub fn wm_nc_create<F>(&self, func: F)
-		where F: FnMut(wm::NcCreate) -> bool + 'static,
-	{
-		self.add_msg(co::WM::NCCREATE, {
-			let mut func = func;
-			move |p| Some(func(wm::NcCreate::from_generic_wm(p)) as _)
-		});
+	pub_fn_wm_retbool_param! { wm_nc_create, co::WM::NCCREATE, wm::NcCreate,
+		/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
+		///
+		/// Sent prior to the
+		/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) message when
+		/// a window is first created.
 	}
 
 	pub_fn_wm_ret0! { wm_nc_destroy, co::WM::NCDESTROY,
@@ -937,6 +925,25 @@ impl WindowEvents {
 		///
 		/// * non-dialog [`WindowMain`](crate::gui::WindowMain);
 		/// * dialog [`WindowMain`](crate::gui::WindowMain).
+	}
+
+	/// [`WM_NCHITTEST`](crate::msg::wm::NcHitTest) message.
+	///
+	/// Sent to a window in order to determine what part of the window
+	/// corresponds to a particular screen coordinate. This can happen, for
+	/// example, when the cursor moves, when a mouse button is pressed or
+	/// released, or in response to a call to a function such as
+	/// [`WindowFromPoint`](crate::HWND::WindowFromPoint). If the mouse is not
+	/// captured, the message is sent to the window beneath the cursor.
+	/// Otherwise, the message is sent to the window that has captured the
+	/// mouse.
+	pub fn wm_nc_hit_test<F>(&self, func: F)
+		where F: FnMut(wm::NcHitTest) -> co::HT + 'static
+	{
+		self.add_msg(co::WM::NCHITTEST, {
+			let mut func = func;
+			move |p| Some(func(wm::NcHitTest::from_generic_wm(p)).0 as _)
+		});
 	}
 
 	pub_fn_wm_ret0_param! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint,
@@ -1026,6 +1033,13 @@ impl WindowEvents {
 		/// captured, the message is posted to the window beneath the cursor.
 		/// Otherwise, the message is posted to the window that has captured the
 		/// mouse.
+	}
+
+	pub_fn_wm_retbool_param! { wm_set_cursor, co::WM::SETCURSOR, wm::SetCursor,
+		/// [`WM_SETCURSOR`](crate::msg::wm::SetCursor) message.
+		///
+		/// Sent to a window if the mouse causes the cursor to move within a window
+		/// and mouse input is not captured.
 	}
 
 	pub_fn_wm_ret0_param! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus,

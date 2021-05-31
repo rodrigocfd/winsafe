@@ -1,11 +1,10 @@
-use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{GetAsyncKeyState, GetCursorPos, PostQuitMessage};
 use crate::gui::base::Base;
-use crate::gui::events::{ListViewEvents, WindowEvents};
+use crate::gui::events::ListViewEvents;
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
@@ -116,12 +115,12 @@ impl ListView {
 					self.0.base.create_window( // may panic
 						"SysListView32", None, pos, sz,
 						opts.ctrl_id,
-						opts.ex_window_style,
+						opts.window_ex_style,
 						opts.window_style | opts.list_view_style.into(),
 					)?;
 
-					if opts.ex_list_view_style != co::LVS_EX::NONE {
-						self.toggle_extended_style(true, opts.ex_list_view_style);
+					if opts.list_view_ex_style != co::LVS_EX::NONE {
+						self.toggle_extended_style(true, opts.list_view_ex_style);
 					}
 					Ok(())
 				},
@@ -283,7 +282,7 @@ pub struct ListViewOpts {
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `LVS_EX::NONE`.
-	pub ex_list_view_style: co::LVS_EX,
+	pub list_view_ex_style: co::LVS_EX,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -293,7 +292,7 @@ pub struct ListViewOpts {
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT | WS_EX::CLIENTEDGE`.
-	pub ex_window_style: co::WS_EX,
+	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
 	///
@@ -315,9 +314,9 @@ impl Default for ListViewOpts {
 			position: POINT::new(0, 0),
 			size: SIZE::new(50, 50),
 			list_view_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS | co::LVS::SHAREIMAGELISTS,
-			ex_list_view_style: co::LVS_EX::NONE,
+			list_view_ex_style: co::LVS_EX::NONE,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
-			ex_window_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
+			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 			context_menu: None,
 		}

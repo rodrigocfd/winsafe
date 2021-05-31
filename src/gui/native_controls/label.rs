@@ -1,11 +1,10 @@
-use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::{LabelEvents, WindowEvents};
+use crate::gui::events::LabelEvents;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Parent};
@@ -96,7 +95,7 @@ impl Label {
 					let our_hwnd = self.0.base.create_window( // may panic
 						"STATIC", Some(&opts.text), pos, sz,
 						opts.ctrl_id,
-						opts.ex_window_style,
+						opts.window_ex_style,
 						opts.window_style | opts.label_style.into(),
 					)?;
 
@@ -215,7 +214,7 @@ pub struct LabelOpts {
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
-	pub ex_window_style: co::WS_EX,
+	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
 	///
@@ -232,7 +231,7 @@ impl Default for LabelOpts {
 			baseline_text_align: false,
 			label_style: co::SS::LEFT | co::SS::NOTIFY,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
-			ex_window_style: co::WS_EX::LEFT,
+			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 		}
 	}

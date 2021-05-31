@@ -1,5 +1,3 @@
-use std::ptr::NonNull;
-
 use crate::co;
 use crate::structs::{NMCUSTOMDRAW, NMTRBTHUMBPOSCHANGING};
 

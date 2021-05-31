@@ -536,6 +536,7 @@ pub_struct_const_wsex! { TVS_EX,
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
 	=>
+	NONE, 0
 	NOSINGLECOLLAPSE, 0x0001
 	MULTISELECT, 0x0002
 	DOUBLEBUFFER, 0x0004

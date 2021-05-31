@@ -36,6 +36,25 @@ macro_rules! pub_fn_wm_ret0_param {
 	};
 }
 
+/// Declares a method for an ordinary message notification, which carries an
+/// object with its parameters, and returns `bool`.
+macro_rules! pub_fn_wm_retbool_param {
+	(
+		$name:ident, $wmconst:expr, $parm:ty,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut($parm) -> bool + 'static,
+		{
+			self.add_msg($wmconst, {
+				let mut func = func;
+				move |p| Some(func(<$parm>::from_generic_wm(p)) as _)
+			});
+		}
+	};
+}
+
 /// Declares a struct of control events, which is just a proxy to parent events.
 macro_rules! pub_struct_ctrl_events_proxy {
 	(
@@ -44,14 +63,14 @@ macro_rules! pub_struct_ctrl_events_proxy {
 	) => {
 		$(#[$doc])*
 		pub struct $name {
-			parent_ptr: NonNull<crate::gui::base::Base>,
+			parent_ptr: std::ptr::NonNull<crate::gui::base::Base>,
 			ctrl_id: i32,
 		}
 
 		impl $name {
 			pub(crate) fn new(parent_base_ref: &crate::gui::base::Base, ctrl_id: i32) -> $name {
 				Self {
-					parent_ptr: NonNull::from(parent_base_ref), // convert reference to pointer
+					parent_ptr: std::ptr::NonNull::from(parent_base_ref), // convert reference to pointer
 					ctrl_id,
 				}
 			}
@@ -81,7 +100,7 @@ macro_rules! pub_fn_cmd_ret0 {
 	};
 }
 
-/// Declares a method for a `WM_NOTIFY` notification which receives a NMHDR
+/// Declares a method for a `WM_NOTIFY` notification which receives an `NMHDR`
 /// parameter, which is not passed because it carries no useful data, and whose
 /// callback has no return.
 macro_rules! pub_fn_nfy_ret0 {
@@ -140,7 +159,7 @@ macro_rules! pub_fn_nfy_ret0_mutparam {
 }
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a parameter,
-/// and whose callback returns bool.
+/// and whose callback returns `bool`.
 macro_rules! pub_fn_nfy_retbool_param {
 	(
 		$name:ident, $nfy:expr, $param:ty,
@@ -152,14 +171,14 @@ macro_rules! pub_fn_nfy_retbool_param {
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
-				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as isize)
+				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as _)
 			});
 		}
 	};
 }
 
 /// Declares a method for a `WM_NOTIFY` notification which receives a mutable
-/// parameter, and whose callback returns bool.
+/// parameter, and whose callback returns `bool`.
 macro_rules! pub_fn_nfy_retbool_mutparam {
 	(
 		$name:ident, $nfy:expr, $param:ty,
@@ -171,7 +190,46 @@ macro_rules! pub_fn_nfy_retbool_mutparam {
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
 				let mut func = func;
-				move |p| Some(func(unsafe { p.cast_nmhdr_mut::<$param>() }) as isize)
+				move |p| Some(func(unsafe { p.cast_nmhdr_mut::<$param>() }) as _)
+			});
+		}
+	};
+}
+
+/// Declares a method for a `WM_NOTIFY` notification which receives an `NMHDR`
+/// parameter, which is not passed because it carries no useful data, and whose
+/// callback returns `i32`.
+macro_rules! pub_fn_nfy_reti32 {
+	(
+		$name:ident, $nfy:expr,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut() -> i32 + 'static,
+		{
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
+				let mut func = func;
+				move |_| Some(func() as _)
+			});
+		}
+	};
+}
+
+/// Declares a method for a `WM_NOTIFY` notification which receives a parameter,
+/// and whose callback returns `i32`.
+macro_rules! pub_fn_nfy_reti32_param {
+	(
+		$name:ident, $nfy:expr, $param:ty,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		pub fn $name<F>(&self, func: F)
+			where F: FnMut(&$param) -> i32 + 'static,
+		{
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
+				let mut func = func;
+				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as _)
 			});
 		}
 	};

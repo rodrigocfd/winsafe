@@ -1,10 +1,9 @@
-use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::{ListBoxEvents, WindowEvents};
+use crate::gui::events::ListBoxEvents;
 use crate::gui::native_controls::list_box_items::ListBoxItems;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
@@ -95,7 +94,7 @@ impl ListBox {
 					let our_hwnd = self.0.base.create_window( // may panic
 						"ListBox", None, pos, sz,
 						opts.ctrl_id,
-						opts.ex_window_style,
+						opts.window_ex_style,
 						opts.window_style | opts.list_box_style.into(),
 					)?;
 
@@ -148,7 +147,7 @@ pub struct ListBoxOpts {
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT | WS_EX::CLIENTEDGE`.
-	pub ex_window_style: co::WS_EX,
+	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
 	///
@@ -163,7 +162,7 @@ impl Default for ListBoxOpts {
 			size: SIZE::new(50, 50),
 			list_box_style: co::LBS::NOTIFY,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
-			ex_window_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
+			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 		}
 	}

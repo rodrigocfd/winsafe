@@ -19,6 +19,7 @@ mod events_mcn;
 mod events_sbn;
 mod events_stn;
 mod events_trbn;
+mod events_tvn;
 mod events_wm;
 
 pub use events_bn_rg::RadioGroupEvents;
@@ -32,5 +33,6 @@ pub use events_mcn::MonthCalendarEvents;
 pub use events_sbn::StatusBarEvents;
 pub use events_stn::LabelEvents;
 pub use events_trbn::TrackbarEvents;
+pub use events_tvn::TreeViewEvents;
 pub use events_wm::WindowEvents;
 pub(crate) use events_wm::ProcessResult;

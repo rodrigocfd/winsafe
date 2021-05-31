@@ -398,6 +398,24 @@ pub struct NMLVCACHEHINT {
 	pub iTo: i32,
 }
 
+/// [`NMLVCUSTOMDRAW`] (https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcustomdraw)
+/// struct.
+#[repr(C)]
+pub struct NMLVCUSTOMDRAW {
+	pub mcd: NMCUSTOMDRAW,
+	pub clrText: COLORREF,
+	pub clrTextBk: COLORREF,
+	pub iSubItem: i32,
+	pub dwItemType: co::LVCDI,
+	pub clrFace: COLORREF,
+	pub iIconEffect: i32,
+	pub iIconPhase: i32,
+	pub iPartId: i32,
+	pub iStateId: i32,
+	pub rcText: RECT,
+	pub uAlign: co::LVGA_HEADER,
+}
+
 /// [`NMLVDISPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvdispinfow)
 /// struct.
 #[repr(C)]
@@ -550,6 +568,16 @@ impl NMTVASYNCDRAW {
 	pub fn pimldp(&self) -> &IMAGELISTDRAWPARAMS {
 		unsafe { &*self.pimldp }
 	}
+}
+
+/// [`NMTVCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvcustomdraw)
+/// stuct.
+#[repr(C)]
+pub struct NMTVCUSTOMDRAW {
+	pub nmcd: NMCUSTOMDRAW,
+	pub clrText: COLORREF,
+	pub clrTextBk: COLORREF,
+	pub iLevel: i32,
 }
 
 /// [`NMVIEWCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmviewchange)

@@ -1127,6 +1127,38 @@ pub_struct_msg_empty_handleable! { NcDestroy, co::WM::NCDESTROY,
 	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 }
 
+/// [`WM_NCHITTEST`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-nchittest)
+/// message parameters.
+///
+/// Return type: `co::HT`.
+pub struct NcHitTest{
+	pub cursor_pos: POINT,
+}
+
+impl MsgSend for NcHitTest {
+	type RetType = co::HT;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::HT(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::NCHITTEST,
+			wparam: 0,
+			lparam: point_to_lp(self.cursor_pos),
+		}
+	}
+}
+
+impl MsgSendRecv for NcHitTest {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			cursor_pos: lp_to_point(p),
+		}
+	}
+}
+
 /// [`WM_NCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 /// message parameters.
 ///
@@ -1338,6 +1370,42 @@ pub_struct_msg_button! { RButtonDown, co::WM::RBUTTONDOWN,
 
 pub_struct_msg_button! { RButtonUp, co::WM::RBUTTONUP,
 	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
+}
+
+/// [`WM_SETCURSOR`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-setcursor)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct SetCursor {
+	pub hwnd: HWND,
+	pub hit_test: co::HT,
+	pub mouse_msg: u16,
+}
+
+impl MsgSend for SetCursor {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::SETCURSOR,
+			wparam: self.hwnd.ptr as _,
+			lparam: MAKEDWORD(self.hit_test.0, self.mouse_msg) as _,
+		}
+	}
+}
+
+impl MsgSendRecv for SetCursor {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			hwnd: HWND { ptr: p.wparam as _ },
+			hit_test: co::HT(LOWORD(p.lparam as _)),
+			mouse_msg: HIWORD(p.lparam as _),
+		}
+	}
 }
 
 /// [`WM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)

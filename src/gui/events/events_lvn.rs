@@ -1,11 +1,9 @@
-use std::ptr::NonNull;
-
 use crate::co;
 use crate::structs::{
-	NMCUSTOMDRAW,
 	NMITEMACTIVATE,
 	NMLISTVIEW,
 	NMLVCACHEHINT,
+	NMLVCUSTOMDRAW,
 	NMLVDISPINFO,
 	NMLVEMPTYMARKUP,
 	NMLVFINDITEM,
@@ -263,11 +261,11 @@ impl ListViewEvents {
 	///
 	/// Sent by a list-view control to notify about drawing operations.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
+		where F: FnMut(&NMLVCUSTOMDRAW) -> co::CDRF + 'static,
 	{
 		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW, {
 			let mut func = func;
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into())
+			move |p| Some(func(unsafe { p.cast_nmhdr::<NMLVCUSTOMDRAW>() }).into())
 		});
 	}
 
@@ -279,17 +277,11 @@ impl ListViewEvents {
 		/// the left mouse button.
 	}
 
-	/// [`NM_HOVER`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-hover-list-view)
-	/// notification.
-	///
-	/// Sent by a list-view control when the mouse hovers over an item.
-	pub fn nm_hover<F>(&self, func: F)
-		where F: FnMut() -> i32 + 'static,
-	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::HOVER, {
-			let mut func = func;
-			move |_| Some(func() as _)
-		});
+	pub_fn_nfy_reti32! { nm_hover, co::NM::HOVER,
+		/// [`NM_HOVER`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-hover-list-view)
+		/// notification.
+		///
+		/// Sent by a list-view control when the mouse hovers over an item.
 	}
 
 	pub_fn_nfy_ret0! { nm_kill_focus, co::NM::KILLFOCUS,
@@ -299,18 +291,12 @@ impl ListViewEvents {
 		/// Notifies that the control has lost the input focus.
 	}
 
-	/// [`NM_RCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rclick-list-view)
-	/// notification.
-	///
-	/// Sent by a list-view control when the user clicks an item with the right
-	/// mouse button.
-	pub fn nm_r_click<F>(&self, func: F)
-		where F: FnMut(&NMITEMACTIVATE) -> i32 + 'static,
-	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::RCLICK, {
-			let mut func = func;
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() }) as _)
-		});
+	pub_fn_nfy_reti32_param! { nm_r_click, co::NM::RCLICK, NMITEMACTIVATE,
+		/// [`NM_RCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rclick-list-view)
+		/// notification.
+		///
+		/// Sent by a list-view control when the user clicks an item with the right
+		/// mouse button.
 	}
 
 	pub_fn_nfy_ret0_param! { nm_r_dbl_clk, co::NM::RDBLCLK, NMITEMACTIVATE,

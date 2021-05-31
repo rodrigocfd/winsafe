@@ -22,6 +22,7 @@ mod radio_button;
 mod radio_group;
 mod status_bar;
 mod trackbar;
+mod tree_view;
 
 pub use button::{Button, ButtonOpts};
 pub use check_box::{CheckBox, CheckBoxOpts};
@@ -41,3 +42,4 @@ pub use radio_button::{RadioButton, RadioButtonOpts};
 pub use radio_group::RadioGroup;
 pub use status_bar::{StatusBar, StatusBarPart};
 pub use trackbar::{Trackbar, TrackbarOpts};
+pub use tree_view::{TreeView, TreeViewOpts};

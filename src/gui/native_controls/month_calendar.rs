@@ -1,11 +1,10 @@
-use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::{MonthCalendarEvents, WindowEvents};
+use crate::gui::events::MonthCalendarEvents;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
@@ -88,7 +87,7 @@ impl MonthCalendar {
 					let our_hwnd = self.0.base.create_window( // may panic
 						"SysMonthCal32", None, pos, SIZE::new(0, 0),
 						opts.ctrl_id,
-						opts.ex_window_style,
+						opts.window_ex_style,
 						opts.window_style | opts.month_calendar_style.into(),
 					)?;
 
@@ -149,7 +148,7 @@ pub struct MonthCalendarOpts {
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
-	pub ex_window_style: co::WS_EX,
+	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
 	///
@@ -164,7 +163,7 @@ impl Default for MonthCalendarOpts {
 			ctrl_id: 0,
 			month_calendar_style: co::MCS::NONE,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
-			ex_window_style: co::WS_EX::LEFT,
+			window_ex_style: co::WS_EX::LEFT,
 		}
 	}
 }

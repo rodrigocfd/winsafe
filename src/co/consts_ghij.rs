@@ -310,6 +310,38 @@ pub_struct_const! { HS, i32,
 	DIAGCROSS, 5
 }
 
+pub_struct_const! { HT, u16,
+	/// [`WM_NCHITTEST`](crate::msg::wm::NcHitTest),
+	/// [`WM_SETCURSOR`](crate::msg::wm::SetCursor) `hit_test` (`u16`).
+	=>
+	BORDER, 18
+	BOTTOM, 15
+	BOTTOMLEFT, 16
+	BOTTOMRIGHT, 17
+	CAPTION, 2
+	CLIENT, 1
+	CLOSE, 20
+	ERROR, -2i16 as u16
+	GROWBOX, 4
+	HELP, 21
+	HSCROLL, 6
+	LEFT, 10
+	MENU, 5
+	MAXBUTTON, 9
+	MINBUTTON, 8
+	NOWHERE, 0
+	REDUCE, 8
+	RIGHT, 11
+	SIZE, 4
+	SYSMENU, 3
+	TOP, 12
+	TOPLEFT, 13
+	TOPRIGHT, 14
+	TRANSPARENT, -1i16 as u16
+	VSCROLL, 7
+	ZOOM, 9
+}
+
 pub_struct_const! { ICON_SZ, u8,
 	/// [`WM_SETICON`](crate::msg::wm::SetIcon) icon size (`u8`). Originally has
 	/// `ICON` prefix.

@@ -340,6 +340,14 @@ pub_struct_const! { LVA, u16,
 	SNAPTOGRID, 0x0005
 }
 
+pub_struct_const! { LVCDI, u32,
+	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `dwItemType` (`u32`).
+	=>
+	LVCDI_ITEM, 0x0000_0000
+	GROUP, 0x0000_0001
+	ITEMSLIST, 0x0000_0002
+}
+
 pub_struct_const! { LVCF, u32,
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
 	=>
@@ -389,6 +397,14 @@ pub_struct_const! { LVFI, u32,
 	PARTIAL, 0x0008
 	WRAP, 0x0020
 	NEARESTXY, 0x0040
+}
+
+pub_struct_const! { LVGA_HEADER, u32,
+	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `uAlign` (`u32`).
+	=>
+	LEFT, 0x0000_0001
+	CENTER, 0x0000_0002
+	RIGHT, 0x0000_0004
 }
 
 pub_struct_const! { LVGIT, u32,

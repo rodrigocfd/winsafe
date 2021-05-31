@@ -3,38 +3,36 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
-use crate::gui::events::ComboBoxEvents;
-use crate::gui::native_controls::combo_box_items::ComboBoxItems;
+use crate::gui::events::TreeViewEvents;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
-use crate::msg::wm;
+use crate::msg::tvm;
 use crate::structs::{POINT, SIZE};
 
 /// Native
-/// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
+/// [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 /// control.
 ///
 /// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
-pub struct ComboBox(Arc<Obj>);
+pub struct TreeView(Arc<Obj>);
 
-struct Obj { // actual fields of ComboBox
+struct Obj { // actual fields of TreeView
 	base: NativeControlBase,
-	opts_id: OptsId<ComboBoxOpts>,
-	events: ComboBoxEvents,
-	items: ComboBoxItems,
+	opts_id: OptsId<TreeViewOpts>,
+	events: TreeViewEvents,
 }
 
-impl_send_sync_child!(ComboBox);
+impl_send_sync_child!(TreeView);
 
-impl ComboBox {
-	/// Instantiates a new `ComboBox` object, to be created on the parent window
+impl TreeView {
+	/// Instantiates a new `TreeView` object, to be created on the parent window
 	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &dyn Parent, opts: ComboBoxOpts) -> ComboBox {
+	pub fn new(parent: &dyn Parent, opts: TreeViewOpts) -> TreeView {
 		let parent_base_ref = baseref_from_parent(parent);
-		let opts = ComboBoxOpts::define_ctrl_id(opts);
+		let opts = TreeViewOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
@@ -42,12 +40,10 @@ impl ComboBox {
 				Obj {
 					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ComboBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -57,9 +53,9 @@ impl ComboBox {
 		new_self
 	}
 
-	/// Instantiates a new `ComboBox` object, to be loaded from a dialog
+	/// Instantiates a new `TreeView` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> ComboBox {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> TreeView {
 		let parent_base_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
@@ -67,12 +63,10 @@ impl ComboBox {
 				Obj {
 					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ComboBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -87,18 +81,19 @@ impl ComboBox {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
-					let mut sz = SIZE::new(opts.width as _, 0);
-					if opts.baseline_text_align { pos.y -= 1; }
+					let mut sz = opts.size;
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					let our_hwnd = self.0.base.create_window( // may panic
-						"COMBOBOX", None, pos, sz,
+					self.0.base.create_window( // may panic
+						"SysTreeView32", None, pos, sz,
 						opts.ctrl_id,
 						opts.window_ex_style,
-						opts.window_style | opts.combo_box_style.into(),
+						opts.window_style | opts.tree_view_style.into(),
 					)?;
 
-					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+					if opts.tree_view_ex_style != co::TVS_EX::NONE {
+						self.toggle_extended_style(true, opts.tree_view_ex_style)?;
+					}
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -106,19 +101,26 @@ impl ComboBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(ComboBoxEvents);
+	pub_fn_ctrlid_hwnd_on_onsubclass!(TreeViewEvents);
 
-	/// Item methods.
-	pub fn items(&self) -> &ComboBoxItems {
-		&self.0.items
+	/// Toggles the given extended list view styles by sending an
+	/// [`TVM_SETEXTENDEDSTYLE`](crate::msg::lvm::SetExtendedStyle)
+	/// message.
+	pub fn toggle_extended_style(&self,
+		set: bool, ex_style: co::TVS_EX) -> WinResult<()>
+	{
+		self.hwnd().SendMessage(tvm::SetExtendedStyle {
+			mask: ex_style,
+			style: if set { ex_style } else { co::TVS_EX::NONE },
+		})
 	}
 }
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`ComboBox`](crate::gui::ComboBox) programmatically with
-/// [`ComboBox::new`](crate::gui::ComboBox::new).
-pub struct ComboBoxOpts {
+/// Options to create a [`TreeView`](crate::gui::TreeView) programmatically with
+/// [`TreeView::new`](crate::gui::TreeView::new).
+pub struct TreeViewOpts {
 	/// Control position within parent client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -126,27 +128,23 @@ pub struct ComboBoxOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Will adjust `position.cy` so that, if the control is placed side-by-side
-	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
-	///
-	/// Defaults to false.
-	pub baseline_text_align: bool,
-	/// Control width, in pixels, to be
+	/// Control size, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Will be adjusted to match current system DPI.
 	///
-	/// Defaults to 120.
-	pub width: u32,
-	/// Combo box styles to be
+	/// Defaults to 50 x 50.
+	pub size: SIZE,
+	/// Tree view styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `CBS::DROPDOWNLIST`.
+	/// Defaults to `TVS::HASLINES | TVS::LINESATROOT | TVS::SHOWSELALWAYS | TVS::HASBUTTONS`.
+	pub tree_view_style: co::TVS,
+	/// Extended tree view styles to be
+	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Suggestions:
-	/// * replace with `CBS::DROPDOWN` to allow the user to type a text;
-	/// * add `CBS::SORT` to automatically sort the items.
-	pub combo_box_style: co::CBS,
+	/// Defaults to `TVS_EX::NONE`.
+	pub tree_view_ex_style: co::TVS_EX,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -155,7 +153,7 @@ pub struct ComboBoxOpts {
 	/// Extended window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS_EX::LEFT`.
+	/// Defaults to `WS_EX::LEFT | WS_EX::CLIENTEDGE`.
 	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
@@ -164,21 +162,21 @@ pub struct ComboBoxOpts {
 	pub ctrl_id: i32,
 }
 
-impl Default for ComboBoxOpts {
+impl Default for TreeViewOpts {
 	fn default() -> Self {
 		Self {
 			position: POINT::new(0, 0),
-			baseline_text_align: false,
-			width: 120,
-			ctrl_id: 0,
-			combo_box_style: co::CBS::DROPDOWNLIST,
+			size: SIZE::new(50, 50),
+			tree_view_style: co::TVS::HASLINES | co::TVS::LINESATROOT | co::TVS::SHOWSELALWAYS | co::TVS::HASBUTTONS,
+			tree_view_ex_style: co::TVS_EX::NONE,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
-			window_ex_style: co::WS_EX::LEFT,
+			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
+			ctrl_id: 0,
 		}
 	}
 }
 
-impl ComboBoxOpts {
+impl TreeViewOpts {
 	fn define_ctrl_id(mut self) -> Self {
 		if self.ctrl_id == 0 {
 			self.ctrl_id = auto_ctrl_id();

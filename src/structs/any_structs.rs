@@ -117,7 +117,7 @@ pub struct BITMAPINFOHEADER {
 impl_default_with_size!(BITMAPINFOHEADER, biSize);
 
 /// [`BY_HANDLE_FILE_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information)
-/// method.
+/// struct.
 #[repr(C)]
 #[derive(Default)]
 pub struct BY_HANDLE_FILE_INFORMATION {
@@ -647,7 +647,7 @@ impl SIZE {
 }
 
 /// [`STARTUPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow)
-/// method.
+/// struct.
 #[repr(C)]
 pub struct STARTUPINFO<'a, 'b> {
 	cb: u32,

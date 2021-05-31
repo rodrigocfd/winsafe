@@ -5,7 +5,7 @@ macro_rules! impl_send_sync_child {
 		unsafe impl Sync for $name {}
 
 		impl crate::gui::traits::Child for $name {
-			fn as_any(&self) -> &dyn Any {
+			fn as_any(&self) -> &dyn std::any::Any {
 				self
 			}
 		}
@@ -46,7 +46,7 @@ macro_rules! pub_fn_hwnd_onsubclass {
 		///
 		/// Panics if the control or the parent window are already created.
 		/// Events must be set before control and parent window creation.
-		pub fn on_subclass(&self) -> &WindowEvents {
+		pub fn on_subclass(&self) -> &crate::gui::events::WindowEvents {
 			self.0.base.on_subclass()
 		}
 	};
