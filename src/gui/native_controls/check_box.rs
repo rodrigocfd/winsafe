@@ -8,7 +8,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ButtonEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
@@ -28,14 +28,7 @@ struct Obj { // actual fields of CheckBox
 	events: ButtonEvents,
 }
 
-unsafe impl Send for CheckBox {}
-unsafe impl Sync for CheckBox {}
-
-impl Child for CheckBox {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(CheckBox);
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window

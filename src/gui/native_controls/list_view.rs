@@ -10,7 +10,7 @@ use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::{HMENU, HWND};
 use crate::msg::lvm;
 use crate::structs::{LVHITTESTINFO, NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
@@ -33,14 +33,7 @@ struct Obj { // actual fields of ListView
 	context_menu: Option<HMENU>,
 }
 
-unsafe impl Send for ListView {}
-unsafe impl Sync for ListView {}
-
-impl Child for ListView {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(ListView);
 
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window

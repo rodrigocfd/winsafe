@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{TrackbarEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::trbm;
 use crate::structs::{POINT, SIZE};
@@ -26,14 +26,7 @@ struct Obj { // actual fields of Trackbar
 	events: TrackbarEvents,
 }
 
-unsafe impl Send for Trackbar {}
-unsafe impl Sync for Trackbar {}
-
-impl Child for Trackbar {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(Trackbar);
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window

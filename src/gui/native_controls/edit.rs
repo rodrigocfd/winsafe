@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{EditEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
@@ -26,14 +26,7 @@ struct Obj { // actual fields of Edit
 	events: EditEvents,
 }
 
-unsafe impl Send for Edit {}
-unsafe impl Sync for Edit {}
-
-impl Child for Edit {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(Edit);
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window

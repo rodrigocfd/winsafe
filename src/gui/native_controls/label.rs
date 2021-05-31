@@ -8,7 +8,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{LabelEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
@@ -27,14 +27,7 @@ struct Obj { // actual fields of Label
 	events: LabelEvents,
 }
 
-unsafe impl Send for Label {}
-unsafe impl Sync for Label {}
-
-impl Child for Label {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(Label);
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window

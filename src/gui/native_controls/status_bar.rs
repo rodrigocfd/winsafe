@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::NativeControlBase;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::{MsgSend, sb, wm};
@@ -30,14 +30,7 @@ struct Obj { // actual fields of StatusBar
 	right_edges: Vec<i32>, // buffer to speed up resize calls
 }
 
-unsafe impl Send for StatusBar {}
-unsafe impl Sync for StatusBar {}
-
-impl Child for StatusBar {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(StatusBar);
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent

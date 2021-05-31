@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{ButtonEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
@@ -26,14 +26,7 @@ struct Obj { // actual fields of Button
 	events: ButtonEvents,
 }
 
-unsafe impl Send for Button {}
-unsafe impl Sync for Button {}
-
-impl Child for Button {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(Button);
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window

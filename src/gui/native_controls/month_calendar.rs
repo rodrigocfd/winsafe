@@ -8,7 +8,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::{MonthCalendarEvents, WindowEvents};
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::mcm;
 use crate::structs::{POINT, RECT, SIZE, SYSTEMTIME};
@@ -27,14 +27,7 @@ struct Obj { // actual fields of MonthCalendar
 	events: MonthCalendarEvents,
 }
 
-unsafe impl Send for MonthCalendar {}
-unsafe impl Sync for MonthCalendar {}
-
-impl Child for MonthCalendar {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(MonthCalendar);
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent

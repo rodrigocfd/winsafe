@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::events::WindowEvents;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::pbm;
 use crate::structs::{PBRANGE, POINT, SIZE};
@@ -25,14 +25,7 @@ struct Obj { // actual fields of ProgressBar
 	opts_id: OptsId<ProgressBarOpts>,
 }
 
-unsafe impl Send for ProgressBar {}
-unsafe impl Sync for ProgressBar {}
-
-impl Child for ProgressBar {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(ProgressBar);
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent

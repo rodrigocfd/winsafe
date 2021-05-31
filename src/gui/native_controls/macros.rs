@@ -1,3 +1,17 @@
+/// Implements `Send`, `Sync` and `Child` traits for a control.
+macro_rules! impl_send_sync_child {
+	($name:ident) => {
+		unsafe impl Send for $name {}
+		unsafe impl Sync for $name {}
+
+		impl crate::gui::traits::Child for $name {
+			fn as_any(&self) -> &dyn Any {
+				self
+			}
+		}
+	};
+}
+
 /// Implements methods common to controls:
 /// * base_ref;
 /// * hwnd;

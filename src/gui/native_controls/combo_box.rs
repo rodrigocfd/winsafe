@@ -8,7 +8,7 @@ use crate::gui::events::{ComboBoxEvents, WindowEvents};
 use crate::gui::native_controls::combo_box_items::ComboBoxItems;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
@@ -28,14 +28,7 @@ struct Obj { // actual fields of ComboBox
 	items: ComboBoxItems,
 }
 
-unsafe impl Send for ComboBox {}
-unsafe impl Sync for ComboBox {}
-
-impl Child for ComboBox {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_child!(ComboBox);
 
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
