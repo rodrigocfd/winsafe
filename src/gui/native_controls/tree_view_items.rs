@@ -127,6 +127,15 @@ impl TreeViewItems {
 		})
 	}
 
+	/// Tells if the item is expanded by sending a
+	/// [`TVN_GETITEMSTATE`](crate::msg::tvm::GetItemState) message.
+	pub fn is_expanded(&self, hitem: HTREEITEM) -> bool {
+		self.hwnd().SendMessage(tvm::GetItemState {
+			hitem,
+			mask: co::TVIS::EXPANDED,
+		}).has(co::TVIS::EXPANDED)
+	}
+
 	/// Tells if the item is a root by sending a
 	/// [`TVN_GETNEXTITEM`](crate::msg::tvm::GetNextItem) message.
 	pub fn is_root(&self, hitem: HTREEITEM) -> bool {

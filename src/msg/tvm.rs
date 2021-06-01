@@ -6,7 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HTREEITEM;
 use crate::msg::{MsgSend, WndMsg};
-use crate::structs::{TVINSERTSTRUCT, TVITEMEX};
+use crate::structs::{RECT, TVINSERTSTRUCT, TVITEMEX};
 
 /// [`TVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-deleteitem)
 /// message parameters.
@@ -112,6 +112,81 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	}
 }
 
+/// [`TVM_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitemheight)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetItemHeight {}
+
+impl MsgSend for GetItemHeight {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETITEMHEIGHT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitemrect)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetItemRect<'a> {
+	pub text_only: bool,
+	pub rect: &'a mut RECT,
+}
+
+impl<'a> MsgSend for GetItemRect<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETITEMRECT.into(),
+			wparam: self.text_only as _,
+			lparam: self.rect as *const _ as _,
+		}
+	}
+}
+
+/// [`TVM_GETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitemstate)
+/// message parameters.
+///
+/// Return type: `co::TVIS`.
+pub struct GetItemState {
+	pub hitem: HTREEITEM,
+	pub mask: co::TVIS,
+}
+
+impl MsgSend for GetItemState {
+	type RetType = co::TVIS;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::TVIS(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETITEMSTATE.into(),
+			wparam: self.hitem.ptr as _,
+			lparam: self.mask.0 as _,
+		}
+	}
+}
+
 /// [`TVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getnextitem)
 /// message parameters.
 ///
@@ -163,6 +238,34 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 			msg_id: co::TVM::INSERTITEM.into(),
 			wparam: 0,
 			lparam: self.tvinsertstruct as *const _ as _,
+		}
+	}
+}
+
+/// [`TVM_SELECTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-selectitem)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SelectItem {
+	pub action: co::TVGN,
+	pub hitem: HTREEITEM,
+}
+
+impl MsgSend for SelectItem {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match co::ERROR(v as _) {
+			co::ERROR::S_OK => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SELECTITEM.into(),
+			wparam: self.action.0 as _,
+			lparam: self.hitem.ptr as _,
 		}
 	}
 }

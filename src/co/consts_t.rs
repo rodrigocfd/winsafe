@@ -447,6 +447,8 @@ pub_struct_const! { TVGN, u32,
 	CARET, 0x0009
 	LASTVISIBLE, 0x000a
 	NEXTSELECTED, 0x000b
+	/// Originally has no `TVGN` prefix.
+	TVSI_NOSINGLEEXPAND, 0x8000
 }
 
 pub_struct_const! { TVI, isize,
