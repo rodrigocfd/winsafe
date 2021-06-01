@@ -1,5 +1,5 @@
 use crate::co;
-use crate::structs::{NMMOUSE, NMTVCUSTOMDRAW};
+use crate::structs::{NMMOUSE, NMTREEVIEW, NMTVCUSTOMDRAW};
 
 pub_struct_ctrl_events_proxy! {
 	/// Exposes tree view control
@@ -15,6 +15,62 @@ pub_struct_ctrl_events_proxy! {
 }
 
 impl TreeViewEvents {
+	pub_fn_nfy_ret0_param! { tvn_delete_item, co::TVN::DELETEITEM.into(), NMTREEVIEW,
+		/// [`TVN_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-deleteitem)
+		/// notification.
+		///
+		/// Notifies a tree-view control's parent window that an item is being
+		/// deleted.
+	}
+
+	pub_fn_nfy_ret0_param! { tvn_item_changed, co::TVN::ITEMCHANGED.into(), NMTREEVIEW,
+		/// [`TVN_ITEMCHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanged)
+		/// notification.
+		///
+		/// Notifies a tree-view control's parent window that item attributes
+		/// have changed.
+	}
+
+	pub_fn_nfy_retbool_param! { tvn_item_changing, co::TVN::ITEMCHANGING.into(), NMTREEVIEW,
+		/// [`TVN_ITEMCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanging)
+		/// notification.
+		///
+		/// Notifies a tree-view control's parent window that item attributes
+		/// are about to change.
+	}
+
+	pub_fn_nfy_ret0_param! { tvn_item_expanded, co::TVN::ITEMEXPANDED.into(), NMTREEVIEW,
+		/// [`TVN_ITEMEXPANDED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanded)
+		/// notification.
+		///
+		/// Notifies a tree-view control's parent window that a parent item's
+		/// list of child items has expanded or collapsed.
+	}
+
+	pub_fn_nfy_retbool_param! { tvn_item_expanding, co::TVN::ITEMEXPANDING.into(), NMTREEVIEW,
+		/// [`TVN_ITEMEXPANDING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanding)
+		/// notification.
+		///
+		/// Notifies a tree-view control's parent window that a parent item's
+		/// list of child items is about to expand or collapse.
+	}
+
+	pub_fn_nfy_ret0_param! { tvn_sel_changed, co::TVN::SELCHANGED.into(), NMTREEVIEW,
+		/// [`TVN_SELCHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanged)
+		/// notification.
+		///
+		/// Notifies a tree-view control's parent window that the selection has
+		/// changed from one item to another.
+	}
+
+	pub_fn_nfy_retbool_param! { tvn_sel_changing, co::TVN::SELCHANGING.into(), NMTREEVIEW,
+		/// [`TVN_SELCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanging)
+		/// notification.
+		///
+		/// Notifies a tree-view control's parent window that the selection is
+		/// about to change from one item to another.
+	}
+
 	pub_fn_nfy_reti32! { nm_click, co::NM::CLICK,
 		/// [`NM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-click-tree-view)
 		/// notification.

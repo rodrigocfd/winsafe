@@ -4,7 +4,7 @@ use std::ffi::c_void;
 
 use crate::co;
 use crate::funcs::MAKEDWORD;
-use crate::handles::{HBITMAP, HICON, HMENU, HWND};
+use crate::handles::{HBITMAP, HICON, HMENU, HTREEITEM, HWND};
 use crate::privs::MAKEINTRESOURCE;
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
 use crate::WString;
@@ -105,6 +105,35 @@ impl BitmapPtrStr {
 			Self::Str(u16) => unsafe { u16.as_ptr() },
 			Self::Param(lp) => *lp as _,
 			Self::None => std::ptr::null(),
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
+pub enum HtreeitemTvi {
+	/// Handle to a tree view item.
+	Htreeitem(HTREEITEM),
+	/// One of the predefined values.
+	Tvi(co::TVI),
+}
+
+impl HtreeitemTvi {
+	pub fn from_isize(val: isize) -> HtreeitemTvi {
+		match co::TVI(val) {
+			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
+			co::TVI::LAST => Self::Tvi(co::TVI::LAST),
+			co::TVI::ROOT => Self::Tvi(co::TVI::ROOT),
+			co::TVI::SORT => Self::Tvi(co::TVI::SORT),
+			val => Self::Htreeitem(HTREEITEM { ptr: val.0 as _ }),
+		}
+	}
+
+	pub fn as_isize(&self) -> isize {
+		match self {
+			Self::Htreeitem(htreeitem) => htreeitem.ptr as _,
+			Self::Tvi(tvi) => tvi.0 as _,
 		}
 	}
 }

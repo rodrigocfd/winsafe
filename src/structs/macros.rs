@@ -53,3 +53,21 @@ macro_rules! pub_fn_string_arr_get_set {
 		}
 	};
 }
+
+/// Implements getter and setter methods for the given `*mut 16` and `i32`
+/// members, setting buffer and its size.
+macro_rules! pub_fn_string_buf_get_set {
+	($field:ident, $setter:ident, $cch:ident) => {
+		/// Returns the string field.
+		pub fn $field(&self) -> Option<String> {
+			unsafe { self.$field.as_mut() }
+				.map(|psz| WString::from_wchars_nullt(psz).to_string())
+		}
+
+		/// Sets the string field.
+		pub fn $setter(&mut self, buf: &'a mut WString) {
+			self.$field = unsafe { buf.as_mut_ptr() };
+			self.$cch = buf.buffer_size() as _;
+		}
+	};
+}

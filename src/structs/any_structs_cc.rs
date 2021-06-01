@@ -5,6 +5,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
+use crate::enums::HtreeitemTvi;
 use crate::handles::{HDC, HIMAGELIST, HTREEITEM, HWND};
 use crate::privs::{L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
@@ -110,17 +111,7 @@ pub struct LVCOLUMN<'a> {
 impl_default_zero!(LVCOLUMN, 'a);
 
 impl<'a> LVCOLUMN<'a> {
-	/// Returns the `pszText` field.
-	pub fn pszText(&self) -> Option<String> {
-		unsafe { self.pszText.as_mut() }
-			.map(|psz| WString::from_wchars_nullt(psz).to_string())
-	}
-
-	/// Sets the `pszText` field.
-	pub fn set_pszText(&mut self, buf: &'a mut WString) {
-		self.pszText = unsafe { buf.as_mut_ptr() };
-		self.cchTextMax = buf.buffer_size() as _;
-	}
+	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
 }
 
 /// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
@@ -178,17 +169,7 @@ pub struct LVITEM<'a> {
 impl_default_zero!(LVITEM, 'a);
 
 impl<'a> LVITEM<'a> {
-	/// Returns the `pszText` field.
-	pub fn pszText(&self) -> Option<String> {
-		unsafe { self.pszText.as_mut() }
-			.map(|psz| WString::from_wchars_nullt(psz).to_string())
-	}
-
-	/// Sets the `pszText` field.
-	pub fn set_pszText(&mut self, buf: &'a mut WString) {
-		self.pszText = unsafe { buf.as_mut_ptr() };
-		self.cchTextMax = buf.buffer_size() as _;
-	}
+	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
 }
 
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
@@ -465,17 +446,7 @@ pub struct NMLVGETINFOTIP<'a> {
 impl_default_zero!(NMLVGETINFOTIP, 'a);
 
 impl<'a> NMLVGETINFOTIP<'a> {
-	/// Returns the `pszText` field.
-	pub fn pszText(&self) -> Option<String> {
-		unsafe { self.pszText.as_mut() }
-			.map(|psz| WString::from_wchars_nullt(psz).to_string())
-	}
-
-	/// Sets the `pszText` field.
-	pub fn set_pszText(&mut self, buf: &'a mut WString) {
-		self.pszText = unsafe { buf.as_mut_ptr() };
-		self.cchTextMax = buf.buffer_size() as _;
-	}
+	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
 }
 
 /// [`NMLVKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
@@ -548,6 +519,17 @@ pub struct NMSELCHANGE {
 	pub stSelEnd: SYSTEMTIME,
 }
 
+/// [`NMTREEVIEW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtreevieww)
+/// struct.
+#[repr(C)]
+pub struct NMTREEVIEW<'a, 'b> {
+	pub hdr: NMHDR,
+	pub action: u32, // actual type varies
+	pub itemOld: TVITEM<'a>,
+	pub itemNew: TVITEM<'b>,
+	pub ptDrag: POINT,
+}
+
 /// [`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 /// struct.
 ///
@@ -580,6 +562,18 @@ pub struct NMTVCUSTOMDRAW {
 	pub iLevel: i32,
 }
 
+/// [`NMTVITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvitemchange)
+/// struct.
+#[repr(C)]
+pub struct NMTVITEMCHANGE {
+	pub hdr: NMHDR,
+	pub uChanged: co::TVIF,
+	pub hItem: HTREEITEM,
+	pub uStateNew: co::TVIS,
+	pub uStateOld: co::TVIS,
+	pub lParam: isize,
+}
+
 /// [`NMVIEWCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmviewchange)
 /// struct.
 #[repr(C)]
@@ -596,4 +590,78 @@ pub struct NMVIEWCHANGE {
 pub struct PBRANGE {
 	pub iLow: i32,
 	pub iHigh: i32,
+}
+
+/// [`TVINSERTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
+/// struct.
+#[repr(C)]
+pub struct TVINSERTSTRUCT<'a> {
+	pub hParent: HTREEITEM,
+	hInsertAfter: isize,
+	pub itemex: TVITEMEX<'a>,
+}
+
+impl_default_zero!(TVINSERTSTRUCT, 'a);
+
+impl<'a> TVINSERTSTRUCT<'a> {
+	/// Returns the `hInsertAfter` field.
+	pub fn hInsertAfter(&self) -> HtreeitemTvi {
+		HtreeitemTvi::from_isize(self.hInsertAfter)
+	}
+
+	/// Sets the `hInsertAfter` field.
+	pub fn set_hInsertAfter(&mut self, val: HtreeitemTvi) {
+		self.hInsertAfter = val.as_isize();
+	}
+}
+
+/// [`TVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemw)
+/// struct.
+#[repr(C)]
+pub struct TVITEM<'a> {
+	pub mask: co::TVIF,
+	pub hItem: HTREEITEM,
+	pub state: co::TVIS,
+	pub stateMask: co::TVIS,
+	pszText: *mut u16,
+	cchTextMax: i32,
+	pub iImage: i32,
+	pub iSelectedImage: i32,
+	pub cChildren: i32,
+	pub lParam: isize,
+	m_pszText: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(TVITEM, 'a);
+
+impl<'a> TVITEM<'a> {
+	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
+}
+
+/// [`TVITEMEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemexw)
+/// struct.
+#[repr(C)]
+pub struct TVITEMEX<'a> {
+	pub mask: co::TVIF,
+	pub hItem: HTREEITEM,
+	pub state: co::TVIS,
+	pub stateMask: co::TVIS,
+	pszText: *mut u16,
+	cchTextMax: i32,
+	pub iImage: i32,
+	pub iSelectedImage: i32,
+	pub cChildren: i32,
+	pub lParam: isize,
+	pub iIntegral: i32,
+	pub uStateEx: co::TVIS_EX,
+	hwnd: HWND,
+	pub iExpandedImage: i32,
+	iReserved: i32,
+	m_pszText: PhantomData<&'a u16>,
+}
+
+impl_default_zero!(TVITEMEX, 'a);
+
+impl<'a> TVITEMEX<'a> {
+	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
 }

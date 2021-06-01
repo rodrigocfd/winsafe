@@ -5,6 +5,7 @@ use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::TreeViewEvents;
 use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::tree_view_items::TreeViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
@@ -23,6 +24,7 @@ struct Obj { // actual fields of TreeView
 	base: NativeControlBase,
 	opts_id: OptsId<TreeViewOpts>,
 	events: TreeViewEvents,
+	items: TreeViewItems,
 }
 
 impl_send_sync_child!(TreeView);
@@ -41,9 +43,11 @@ impl TreeView {
 					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
+					items: TreeViewItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -64,9 +68,11 @@ impl TreeView {
 					base: NativeControlBase::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
+					items: TreeViewItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
 				},
 			),
 		);
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -103,8 +109,13 @@ impl TreeView {
 
 	pub_fn_ctrlid_hwnd_on_onsubclass!(TreeViewEvents);
 
+	/// Exposes the item methods.
+	pub fn items(&self) -> &TreeViewItems {
+		&self.0.items
+	}
+
 	/// Toggles the given extended list view styles by sending an
-	/// [`TVM_SETEXTENDEDSTYLE`](crate::msg::lvm::SetExtendedStyle)
+	/// [`TVM_SETEXTENDEDSTYLE`](crate::msg::tvm::SetExtendedStyle)
 	/// message.
 	pub fn toggle_extended_style(&self,
 		set: bool, ex_style: co::TVS_EX) -> WinResult<()>

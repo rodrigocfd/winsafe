@@ -422,6 +422,83 @@ pub_struct_const_nm! { TRBN,
 	THUMBPOSCHANGING, Self::FIRST.0 - 1
 }
 
+pub_struct_const! { TVE, u32,
+	/// [`TVM_EXPAND`](crate::msg::tvm::Expand) `action` (`u32`).
+	=>
+	COLLAPSE, 0x0001
+	EXPAND, 0x0002
+	TOGGLE, 0x0003
+	EXPANDPARTIAL, 0x4000
+	COLLAPSERESET, 0x8000
+}
+
+pub_struct_const! { TVGN, u32,
+	/// [`TVM_GETNEXTITEM`](crate::msg::tvm::GetNextItem) `which` (`u32`).
+	=>
+	ROOT, 0x0000
+	NEXT, 0x0001
+	PREVIOUS, 0x0002
+	PARENT, 0x0003
+	CHILD, 0x0004
+	FIRSTVISIBLE, 0x0005
+	NEXTVISIBLE, 0x0006
+	PREVIOUSVISIBLE, 0x0007
+	DROPHILITE, 0x0008
+	CARET, 0x0009
+	LASTVISIBLE, 0x000a
+	NEXTSELECTED, 0x000b
+}
+
+pub_struct_const! { TVI, isize,
+	/// [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter` (`isize`).
+	=>
+	ROOT, -0x10000
+	FIRST, -0x0ffff
+	LAST, -0x0fffe
+	SORT, -0x0fffd
+}
+
+pub_struct_const! { TVIF, u32,
+	/// [`TVITEM`](crate::TVITEM) `mask` (`u32`).
+	=>
+	TEXT, 0x0001
+	IMAGE, 0x0002
+	PARAM, 0x0004
+	STATE, 0x0008
+	HANDLE, 0x0010
+	SELECTEDIMAGE, 0x0020
+	CHILDREN, 0x0040
+	INTEGRAL, 0x0080
+	STATEEX, 0x0100
+	EXPANDEDIMAGE, 0x0200
+}
+
+pub_struct_const! { TVIS, u32,
+	/// Tree view item
+	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
+	/// (`u32`)
+	=>
+	SELECTED, 0x0002
+	CUT, 0x0004
+	DROPHILITED, 0x0008
+	BOLD, 0x0010
+	EXPANDED, 0x0020
+	EXPANDEDONCE, 0x0040
+	EXPANDPARTIAL, 0x0080
+	OVERLAYMASK, 0x0f00
+	STATEIMAGEMASK, 0xf000
+	USERMASK, 0xf000
+}
+
+pub_struct_const! { TVIS_EX, u32,
+	/// [`TVITEMEX`](crate::TVITEMEX) `uStateEx` (`u32`).
+	=>
+	DISABLED, 0x0002
+	FLAT, 0x0001
+	/// This value is not declared in any header, it may not be accurate.
+	HWND, 0x0000
+}
+
 pub_struct_const_wm! { TVM,
 	/// Tree view control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
