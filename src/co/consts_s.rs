@@ -850,18 +850,43 @@ pub_struct_const! { SUBLANG, u16,
 pub_struct_const! { SW, i32,
 	/// [`ShowWindow`](crate::HWND::ShowWindow) `nCmdShow` (`i32`).
 	=>
+	/// Hides the window and activates another window.
 	HIDE, 0
+	/// Activates and displays a window. If the window is minimized or
+	/// maximized, the system restores it to its original size and position. An
+	/// application should specify this flag when displaying the window for the
+	/// first time.
 	SHOWNORMAL, 1
+	/// Activates the window and displays it as a minimized window.
 	SHOWMINIMIZED, 2
+	/// Activates the window and displays it as a maximized window.
 	SHOWMAXIMIZED, 3
-	MAXIMIZE, 3
+	/// Displays a window in its most recent size and position. This value is
+	/// similar to `SW::SHOWNORMAL`, except that the window is not activated.
 	SHOWNOACTIVATE, 4
+	/// Activates the window and displays it in its current size and position.
 	SHOW, 5
+	/// Minimizes the specified window and activates the next top-level window
+	/// in the Z order.
 	MINIMIZE, 6
+	/// Displays the window as a minimized window. This value is similar to
+	/// `SW::SHOWMINIMIZED`, except the window is not activated.
 	SHOWMINNOACTIVE, 7
+	// Displays the window in its current size and position. This value is
+	// similar to `SW::SHOW`, except that the window is not activated.
 	SHOWNA, 8
+	/// Activates and displays the window. If the window is minimized or
+	/// maximized, the system restores it to its original size and position. An
+	/// application should specify this flag when restoring a minimized window.
 	RESTORE, 9
+	/// Sets the show state based on the SW value specified in the
+	/// [`STARTUPINFO`](crate::STARTUPINFO) structure passed to the
+	/// [`CreateProcess`](crate::HPROCESS::CreateProcess) function by the
+	/// program that started the application.
 	SHOWDEFAULT, 10
+	/// Minimizes a window, even if the thread that owns the window is not
+	/// responding. This flag should only be used when minimizing windows from a
+	/// different thread.
 	FORCEMINIMIZE, 11
 }
 
