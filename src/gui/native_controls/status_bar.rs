@@ -5,13 +5,13 @@ use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::StatusBarEvents;
 use crate::gui::native_controls::native_control_base::NativeControlBase;
+use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::{MsgSend, sb, wm};
 use crate::structs::{POINT, SIZE};
-use crate::WString;
 
 /// Native
 /// [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/status-bars)
@@ -25,6 +25,7 @@ struct Obj { // actual fields of StatusBar
 	base: NativeControlBase,
 	ctrl_id: i32,
 	events: StatusBarEvents,
+	parts: StatusBarParts,
 	parts_info: Vec<StatusBarPart>,
 	right_edges: Vec<i32>, // buffer to speed up resize calls
 }
@@ -58,11 +59,13 @@ impl StatusBar {
 					base: NativeControlBase::new(parent_base_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
+					parts: StatusBarParts::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
 					parts_info: parts.to_vec(),
 					right_edges: vec![0; parts.len()],
 				},
 			)),
 		);
+		new_self.0.parts.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -155,33 +158,9 @@ impl StatusBar {
 
 	pub_fn_hwnd_on_onsubclass!(StatusBarEvents);
 
-	/// Retrieves the number of parts by sending an
-	/// [`SB_GETPARTS`](crate::msg::sb::GetParts) message.
-	pub fn part_count(&self) -> u8 {
-		self.hwnd().SendMessage(sb::GetParts { right_edges: None })
-	}
-
-	/// Retrieves the text of a part by sending an
-	/// [`SB_GETTEXT`](crate::msg::sb::GetText) message.
-	pub fn part_text(&self, part_index: u8) -> String {
-		let (len, _) = self.hwnd().SendMessage(sb::GetTextLength { part_index });
-		let mut buf = WString::new_alloc_buffer(len as usize + 1);
-
-		self.hwnd().SendMessage(sb::GetText {
-			part_index,
-			text: &mut buf,
-		});
-		buf.to_string()
-	}
-
-	/// Sets the text of a part by sending an
-	/// [`SB_SETTEXT`](crate::msg::sb::SetText) message.
-	pub fn set_part_text(&self, part_index: u8, text: &str) -> WinResult<()> {
-		self.hwnd().SendMessage(sb::SetText {
-			part_index,
-			drawing_operation: co::SBT::NONE,
-			text,
-		})
+	/// Exposes the part methods.
+	pub fn parts(&self) -> &StatusBarParts {
+		&self.0.parts
 	}
 }
 
