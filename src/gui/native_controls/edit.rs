@@ -10,6 +10,7 @@ use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
+use crate::WString;
 
 /// Native
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
@@ -120,6 +121,32 @@ impl Edit {
 	/// Retrieves the text in the control by calling
 	/// [`GetWindowText`](crate::HWND::GetWindowText).
 	///
+	/// The passed buffer will be automatically allocated.
+	///
+	/// This method can be more performant than
+	/// [`text_str`](crate::gui::Edit::text_str) because the buffer can be
+	/// reused, avoiding multiple allocations. However, it has the inconvenient
+	/// of the manual conversion from [`WString`](crate::WString) to `String`.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{gui, WString};
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	///
+	/// let mut buf = WString::default;
+	/// my_edit.text(&mut buf).unwrap();
+	///
+	/// println!("The text is: {}", buf.to_string());
+	/// ```
+	pub fn text(&self, buf: &mut WString) -> WinResult<()> {
+		self.hwnd().GetWindowText(buf).map(|_| ())
+	}
+
+	/// A more convenient [`text`](crate::gui::Edit::text), which directly
+	/// returns a `String` instead of requiring an external buffer.
+	///
 	/// # Examples
 	///
 	/// ```rust,ignore
@@ -127,10 +154,9 @@ impl Edit {
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere
 	///
-	/// let the_text = my_edit.text().unwrap();
-	/// println!("The text is: {}", the_text);
+	/// println!("The text is: {}", my_edit.text().unwrap());
 	/// ```
-	pub fn text(&self) -> WinResult<String> {
+	pub fn text_str(&self) -> WinResult<String> {
 		self.hwnd().GetWindowTextStr()
 	}
 }

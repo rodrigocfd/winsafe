@@ -11,6 +11,7 @@ use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
+use crate::WString;
 
 /// Native
 /// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)
@@ -111,7 +112,7 @@ impl Label {
 
 	/// Resizes the control to exactly fit current text.
 	pub fn resize_to_text(&self) -> WinResult<()> {
-		self.resize_to_given_text(&self.text()?)
+		self.resize_to_given_text(&self.text_str()?)
 	}
 
 	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText).
@@ -146,8 +147,34 @@ impl Label {
 		self.resize_to_given_text(text)
 	}
 
-	/// Retrieves the text by calling
-	/// [`GetWindowTextStr`](crate::HWND::GetWindowText).
+	/// Retrieves the text in the control by calling
+	/// [`GetWindowText`](crate::HWND::GetWindowText).
+	///
+	/// The passed buffer will be automatically allocated.
+	///
+	/// This method can be more performant than
+	/// [`text_str`](crate::gui::Label::text_str) because the buffer can be
+	/// reused, avoiding multiple allocations. However, it has the inconvenient
+	/// of the manual conversion from [`WString`](crate::WString) to `String`.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{gui, WString};
+	///
+	/// let my_label: gui::Label; // initialized somewhere
+	///
+	/// let mut buf = WString::default;
+	/// my_label.text(&mut buf).unwrap();
+	///
+	/// println!("The text is: {}", buf.to_string());
+	/// ```
+	pub fn text(&self, buf: &mut WString) -> WinResult<()> {
+		self.hwnd().GetWindowText(buf).map(|_| ())
+	}
+
+	/// A more convenient [`text`](crate::gui::Label::text), which directly
+	/// returns a `String` instead of requiring an external buffer.
 	///
 	/// # Examples
 	///
@@ -156,10 +183,9 @@ impl Label {
 	///
 	/// let my_label: gui::Label; // initialized somewhere
 	///
-	/// let the_text = my_label.text().unwrap();
-	/// println!("The text is: {}", the_text);
+	/// println!("The text is: {}", my_label.text().unwrap());
 	/// ```
-	pub fn text(&self) -> WinResult<String> {
+	pub fn text_str(&self) -> WinResult<String> {
 		self.hwnd().GetWindowTextStr()
 	}
 

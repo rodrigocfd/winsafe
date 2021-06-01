@@ -192,7 +192,7 @@ impl StatusBar {
 #[derive(Clone, Copy)]
 pub enum StatusBarPart {
 	/// A part that has a fixed size, in pixels.
-	//
+	///
 	/// Will be adjusted to match current system DPI.
 	Fixed(u32),
 	/// A part that will resize when the parent window resizes, filling the
