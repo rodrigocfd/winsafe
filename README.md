@@ -12,19 +12,21 @@ WinSafe has:
 * high-level structs to build native Win32 GUI applications;
 * low-level Win32 API constants, functions and structs related to GUI.
 
-If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are unsafe, but have everything.
+If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
-Documentation for the WinSafe `master` branch: [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/)
+WinSafe documentation:
+* stable release: [docs.rs/winsafe](https://docs.rs/winsafe)
+* master branch: [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/)
 
 ## Current status
 
-This crate is still in early alpha stage. Below is an estimated progress of feature groups:
+This crate is still in alpha stage. Below is an estimated progress of feature groups:
 
 | Feature group | Estimated progress |
 | - | - |
 | User windows (main, modal and control) | ![Progress](https://progress-bar.dev/100/) |
-| Native controls | ![Progress](https://progress-bar.dev/65/) |
-| Window messages | ![Progress](https://progress-bar.dev/50/) |
+| Native controls | ![Progress](https://progress-bar.dev/75/) |
+| Window messages | ![Progress](https://progress-bar.dev/55/) |
 | Overall Win32 APIs | ![Progress](https://progress-bar.dev/25/) | |
 
 ## Example
@@ -35,7 +37,7 @@ First, put this in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = "0.0.2"
+winsafe = "0.0.3"
 ```
 
 WinSafe allows you to create windows in two ways:
@@ -91,10 +93,11 @@ impl MyWindow {
     }
 
     fn events(&self) {
-        let wnd = self.wnd.clone(); // clone so it can be passed into the closure
-
-        self.btn_hello.on().bn_clicked(move || {
-            wnd.hwnd().SetWindowText("Hello, world!").unwrap();
+        self.btn_hello.on().bn_clicked({
+            let wnd = self.wnd.clone(); // clone so it can be passed into the closure
+            move || {
+                wnd.hwnd().SetWindowText("Hello, world!").unwrap();
+            }
         });
     }
 }

@@ -7,14 +7,14 @@
 //!
 //! If you're looking for a comprehensive Win32 coverage, take a look at
 //! [winapi](https://crates.io/crates/winapi) or
-//! [windows](https://crates.io/crates/windows) crates, which are unsafe, but
+//! [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but
 //! have everything.
 //!
 //! To use this crate, put this in your `Cargo.toml`:
 //!
 //! ```toml
 //! [dependencies]
-//! winsafe = "0.0.2"
+//! winsafe = "0.0.3"
 //! ```
 //!
 //! Links:
@@ -35,6 +35,16 @@
 //!
 //! * [`dshow`](crate::dshow) – Win32 DirectShow COM interfaces;
 //! * [`shell`](crate::shell) – Win32 Shell COM interfaces.
+//!
+//! # The GUI API
+//!
+//! WinSafe features idiomatic bindings for the Win32 API, but on top of that,
+//! it features a set of high-level GUI structs, which scaffolds the boilerplate
+//! needed to build native Win32 GUI applications. Unless you're doing something
+//! really specific, these high-level wrappers are highly recommended – you'll
+//! usually start with the [`WindowMain`](crate::gui::WindowMain).
+//!
+//! GUI structs can be found in module [`gui`](crate::gui).
 //!
 //! # Native function calls
 //!
@@ -180,15 +190,6 @@
 //! when dealing with native Win32 structs. In such cases, you can use the
 //! [`WString`](crate::WString) struct, which is also capable of working as a
 //! buffer to receive text from Win32 calls.
-//!
-//! # GUI
-//!
-//! On top of the Win32 bindings, WinSafe features a set of high-level GUI
-//! structs, which scaffolds the boilerplate needed to build native Win32 GUI
-//! applications. Unless you're doing something really specific, these
-//! high-level wrappers are highly recommended.
-//!
-//! GUI structs can be found in module [`gui`](crate::gui).
 
 #[macro_use]
 pub mod co;
