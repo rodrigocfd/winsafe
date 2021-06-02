@@ -19,13 +19,8 @@ pub_struct_handle! {
 impl HFINDFILE {
 	/// [`FindClose`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
 	/// method.
-	///
-	/// Can be safely called even if the handle is null.
 	pub fn FindClose(self) -> WinResult<()> {
-		match self.as_opt() {
-			Some(h) => bool_to_winresult(unsafe { kernel32::FindClose(h.ptr) }),
-			None => Ok(())
-		}
+		bool_to_winresult(unsafe { kernel32::FindClose(self.ptr) })
 	}
 
 	/// [`FindFirstFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
@@ -48,12 +43,14 @@ impl HFINDFILE {
 	///     &mut wfd,
 	/// ).unwrap();
 	///
-	/// while found {
-	///     println!("File: {}", wfd.cFileName());
-	///     found = hfind.FindNextFile(&mut wfd).unwrap();
-	/// }
+	/// if found {
+	///     while found {
+	///         println!("File: {}", wfd.cFileName());
+	///         found = hfind.FindNextFile(&mut wfd).unwrap();
+	///     }
 	///
-	/// hfind.FindClose().unwrap();
+	///     hfind.FindClose().unwrap();
+	/// }
 	/// ```
 	pub fn FindFirstFile(
 		lpFileName: &str,
@@ -117,12 +114,15 @@ impl HFINDFILE {
 			|idx| pathAndPattern.chars().take(idx).collect(),
 		);
 
-		while found {
-			files.push(format!("{}\\{}", the_path, wfd.cFileName()));
-			found = hfind.FindNextFile(&mut wfd)?;
+		if found {
+			while found {
+				files.push(format!("{}\\{}", the_path, wfd.cFileName()));
+				found = hfind.FindNextFile(&mut wfd)?;
+			}
+
+			hfind.FindClose()?;
 		}
 
-		hfind.FindClose()?;
 		Ok(files)
 	}
 }
