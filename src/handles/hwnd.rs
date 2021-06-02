@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult, WNDENUMPROC};
+use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos, IdTdicon};
 use crate::ffi::{BOOL, comctl32, user32, uxtheme};
@@ -223,20 +223,6 @@ impl HWND {
 	/// [`EnumChildWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumchildwindows)
 	/// method.
 	///
-	/// This method can be more performant than
-	/// [`EnumChildWindowsVec`](crate::HWND::EnumChildWindowsVec), which passes
-	/// through all children and allocates a `Vec`. However, it has the
-	/// inconvenient of the manual function pointer.
-	pub fn EnumChildWindows(self, lpEnumFunc: WNDENUMPROC, lParam: isize) {
-		unsafe {
-			user32::EnumChildWindows(self.ptr, lpEnumFunc as _, lParam);
-		}
-	}
-
-	/// A more convenient [`EnumChildWindows`](crate::HWND::EnumChildWindows),
-	/// which returns a `Vec` with the handles of all child windows, instead of
-	/// taking a function pointer.
-	///
 	/// # Examples
 	///
 	/// ```rust,ignore
@@ -244,24 +230,27 @@ impl HWND {
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
 	///
-	/// for hchild in my_hwnd.EnumChildWindowsVec() {
-	///     println!("HWND: {}", hchild);
-	/// }
+	/// my_hwnd.EnumChildWindows(|hchild: HWND| -> bool {
+	///     println!("Child HWND: {}", hchild);
+	///     true
+	/// });
 	/// ```
-	pub fn EnumChildWindowsVec(self) -> Vec<HWND> {
-		let mut hchildren = Vec::default();
-		self.EnumChildWindows(
-			Self::EnumChildWindowsVecProc,
-			&mut hchildren as *mut Vec<_> as _, // pass pointer to Vec
-		);
-		hchildren
-	}
-	extern "system" fn EnumChildWindowsVecProc(
-		hchild: HWND, lparam: isize) -> BOOL
+	pub fn EnumChildWindows<F>(self, mut func: F)
+		where F: FnMut(HWND) -> bool + 'static,
 	{
-		let hchildren = unsafe { &mut *(lparam as *mut Vec<HWND>) }; // retrieve pointer to Vec
-		hchildren.push(hchild);
-		true as _
+		unsafe {
+			user32::EnumChildWindows(
+				self.ptr,
+				Self::EnumChildProc::<F> as _, // https://redd.it/npehj9
+				&mut func as *mut _ as _,
+			);
+		}
+	}
+	extern "system" fn EnumChildProc<F>(hwnd: HWND, lParam: isize) -> BOOL
+		where F: FnMut(HWND) -> bool,
+	{
+		let func = unsafe { &mut *(lParam as *mut F) };
+		func(hwnd) as _
 	}
 
 	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)

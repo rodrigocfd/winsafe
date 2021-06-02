@@ -5,7 +5,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
 use crate::gui::privs::ui_font;
-use crate::handles::{HFONT, HWND};
+use crate::handles::HWND;
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// Base to all dialog windows.
@@ -118,12 +118,16 @@ impl DlgBase {
 	}
 
 	fn set_ui_font_on_children(&self) {
-		self.base.hwnd_ref().SendMessage(wm::SetFont { hfont: ui_font(), redraw: false });
-		self.base.hwnd_ref().EnumChildWindows(Self::enum_proc, ui_font().ptr as _);
-	}
-	extern "system" fn enum_proc(hchild: HWND, lparam: isize) -> i32 {
-		let hfont = HFONT { ptr: lparam as _ };
-		hchild.SendMessage(wm::SetFont { hfont, redraw: false });
-		true as _
+		self.base.hwnd_ref().SendMessage(wm::SetFont {
+			hfont: ui_font(),
+			redraw: false,
+		});
+		self.base.hwnd_ref().EnumChildWindows(|hchild| {
+			hchild.SendMessage(wm::SetFont {
+				hfont: ui_font(),
+				redraw: false,
+			});
+			true
+		});
 	}
 }
