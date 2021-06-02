@@ -2,7 +2,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{BitmapPtrStr, IdMenu, IdPos};
+use crate::enums::{BitmapPtrStr, EntrySeparatorSubmenu, IdMenu, IdPos};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
@@ -21,11 +21,8 @@ impl HMENU {
 	/// [`AppendMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// method.
 	///
-	/// This method is rather tricky, consider using the wrappers:
-	///
-	/// * [`AppendMenuItem`](crate::HMENU::AppendMenuItem);
-	/// * [`AppendMenuSeparator`](crate::HMENU::AppendMenuSeparator);
-	/// * [`AppendMenuSubmenu`](crate::HMENU::AppendMenuSubmenu).
+	/// This method is rather tricky, consider using
+	/// [`AppendMenuEnum`](crate::HMENU::AppendMenuEnum).
 	pub fn AppendMenu(self, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> WinResult<()>
 	{
@@ -41,91 +38,61 @@ impl HMENU {
 		)
 	}
 
-	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
-	/// appends a new item with its command ID.
+	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu).
 	///
 	/// # Examples
 	///
-	/// Adding a new menu item, with its associated command ID:
+	/// Adding a new menu entry, with its command ID:
 	///
 	/// ```rust,ignore
-	/// use winsafe::HMENU;
+	/// use winsafe::{EntrySeparatorSubmenu, HMENU};
 	///
-	/// const ID_FILE_OPEN: i32 = 101;
+	/// let my_hmenu: HMENU; // initialized somewhere
 	///
-	/// let hmenu: HMENU; // initialized somewhere
+	/// const ID_FILE_OPEN: i32 = 2001;
 	///
-	/// hmenu.AppendMenuItem(
-	///     ID_FILE_OPEN,
-	///     "&Open file...",
+	/// my_hmenu.AppendMenuEnum(
+	///    &EntrySeparatorSubmenu::Entry(ID_FILE_OPEN, "&Open"),
 	/// ).unwrap();
 	/// ```
 	///
-	/// Adding multiple menu items at once, each one with its command ID:
+	/// Adding multiple entries at once:
 	///
 	/// ```rust,ignore
-	/// use winsafe::HMENU;
+	/// use winsafe::{EntrySeparatorSubmenu, HMENU};
 	///
-	/// const ID_FILE_OPEN: i32 = 201;
-	/// const ID_FILE_SAVE: i32 = 202;
+	/// let my_hmenu: HMENU; // initialized somewhere
 	///
-	/// let hmenu: HMENU; // initialized somewhere
+	/// const ID_FILE_OPEN: i32 = 2001;
+	/// const ID_FILE_SAVE: i32 = 2002;
+	/// const ID_FILE_EXIT: i32 = 2003;
 	///
 	/// [
-	///     (ID_FILE_OPEN, "Open\tCtrl+O"),
-	///     (ID_FILE_SAVE, "&Save"),
+	///     EntrySeparatorSubmenu::Entry(ID_FILE_OPEN, "&Open"),
+	///     EntrySeparatorSubmenu::Entry(ID_FILE_OPEN, "&Save"),
+	///     EntrySeparatorSubmenu::Separator,
+	///     EntrySeparatorSubmenu::Entry(ID_FILE_EXIT, "E&xit"),
 	/// ].iter()
-	///     .for_each(|(id, text)| hmenu.AppendMenuItem(
-	///         *id,
-	///         text,
-	///     ).unwrap());
+	///     .for_each(|e| file_menu.AppendMenuEnum(e).unwrap());
 	/// ```
-	pub fn AppendMenuItem(self, command_id: i32, text: &str) -> WinResult<()> {
-		self.AppendMenu(
-			co::MF::STRING,
-			IdMenu::Id(command_id),
-			BitmapPtrStr::Str(WString::from_str(text)),
-		)
-	}
-
-	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
-	/// appends a separator.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::HMENU;
-	///
-	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
-	///
-	/// hmenu.AppendSeparator().unwrap();
-	/// ```
-	pub fn AppendMenuSeparator(self) -> WinResult<()> {
-		self.AppendMenu(co::MF::SEPARATOR, IdMenu::None, BitmapPtrStr::None)
-	}
-
-	/// A more convenient [`AppendMenu`](crate::HMENU::AppendMenu), which
-	/// appends a menu as a new submenu entry.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::HMENU;
-	///
-	/// let hmenu_file = HMENU::CreatePopupMenu().unwrap();
-	/// let hmenu_edit = HMENU::CreatePopupMenu().unwrap();
-	///
-	/// let hmenu = HMENU::CreatePopupMenu().unwrap();
-	///
-	/// hmenu.AppendMenuSubmenu(hmenu_file, "&File").unwrap();
-	/// hmenu.AppendMenuSubmenu(hmenu_edit, "&Edit").unwrap();
-	/// ```
-	pub fn AppendMenuSubmenu(self, submenu: HMENU, text: &str) -> WinResult<()> {
-		self.AppendMenu(
-			co::MF::POPUP,
-			IdMenu::Menu(submenu),
-			BitmapPtrStr::Str(WString::from_str(text)),
-		)
+	pub fn AppendMenuEnum(self, item: &EntrySeparatorSubmenu) -> WinResult<()> {
+		match item {
+			EntrySeparatorSubmenu::Entry(cmd_id, text) => self.AppendMenu(
+				co::MF::STRING,
+				IdMenu::Id(*cmd_id),
+				BitmapPtrStr::Str(WString::from_str(text)),
+			),
+			EntrySeparatorSubmenu::Separator => self.AppendMenu(
+				co::MF::SEPARATOR,
+				IdMenu::None,
+				BitmapPtrStr::None,
+			),
+			EntrySeparatorSubmenu::Submenu(hmenu, text) => self.AppendMenu(
+				co::MF::POPUP,
+				IdMenu::Menu(*hmenu),
+				BitmapPtrStr::Str(WString::from_str(text)),
+			),
+		}
 	}
 
 	/// [`CheckMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem)
@@ -277,31 +244,6 @@ impl HMENU {
 	pub fn GetSubMenu(self, nPos: u32) -> Option<HMENU> {
 		unsafe { user32::GetSubMenu(self.ptr, nPos as _).as_mut() }
 			.map(|ptr| Self { ptr })
-	}
-
-	/// [`InsertMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuw)
-	/// method.
-	///
-	/// You don't need to pass `MF::BYCOMMAND` or `MF::BYPOSITION` flags, they
-	/// are inferred by [`IdPos`](crate::IdPos).
-	pub fn InsertMenu(self, uPosition: IdPos, uFlags: co::MF,
-		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> WinResult<()>
-	{
-		let mut flags = uFlags;
-		flags &= !(co::MF::BYPOSITION | co::MF::BYCOMMAND); // remove if set
-		flags |= uPosition.mf_flag(); // set correctly
-
-		bool_to_winresult(
-			unsafe {
-				user32::InsertMenuW(
-					self.ptr,
-					uPosition.id_or_pos_u32(),
-					flags.0,
-					uIDNewItem.into(),
-					lpNewItem.as_ptr(),
-				)
-			},
-		)
 	}
 
 	/// [`InsertMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuitemw)

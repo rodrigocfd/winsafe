@@ -87,7 +87,6 @@ extern "system" {
 	pub fn GetWindowTextW(_: HANDLE, _: PSTR, _: i32) -> i32;
 	pub fn HiliteMenuItem(_: HANDLE, _: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn InsertMenuItemW(_: HANDLE, _: u32, _: BOOL, _: PCVOID) -> BOOL;
-	pub fn InsertMenuW(_: HANDLE, _: u32, _: u32, _: usize, _: PCSTR) -> BOOL;
 	pub fn InvalidateRect(_: HANDLE, _: PCVOID, _: BOOL) -> BOOL;
 	pub fn InvalidateRgn(_: HANDLE, _: HANDLE, _: BOOL) -> BOOL;
 	pub fn IsChild(_: HANDLE, _: HANDLE) -> BOOL;

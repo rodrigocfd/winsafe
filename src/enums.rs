@@ -111,6 +111,18 @@ impl BitmapPtrStr {
 
 /// Variant parameter for:
 ///
+/// * [`AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
+pub enum EntrySeparatorSubmenu<'a> {
+	/// A selectable entry item, with command ID and text.
+	Entry(i32, &'a str),
+	/// A separator.
+	Separator,
+	/// A submenu, with its entry text.
+	Submenu(HMENU, &'a str),
+}
+
+/// Variant parameter for:
+///
 /// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
 pub enum HtreeitemTvi {
 	/// Handle to a tree view item.
