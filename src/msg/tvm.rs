@@ -4,7 +4,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::handles::{HIMAGELIST, HTREEITEM};
+use crate::handles::{HIMAGELIST, HTREEITEM, HWND};
 use crate::msg::{MsgSend, WndMsg};
 use crate::structs::{RECT, TVINSERTSTRUCT, TVITEMEX};
 
@@ -24,6 +24,74 @@ impl MsgSend for DeleteItem {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::DELETEITEM.into(),
+			wparam: 0,
+			lparam: self.hitem.ptr as _,
+		}
+	}
+}
+
+/// [`TVM_EDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-editlabel)
+/// message parameters.
+///
+/// Return type: `WinResult<HWND>.
+pub struct EditLabel {
+	pub hitem: HTREEITEM,
+}
+
+impl MsgSend for EditLabel {
+	type RetType = WinResult<HWND>;
+
+	fn_convert_ret_winresult_handle!(HWND);
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::EDITLABEL.into(),
+			wparam: 0,
+			lparam: self.hitem.ptr as _,
+		}
+	}
+}
+
+/// [`TVM_ENDEDITLABELNOW`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-endeditlabelnow)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct EndEditLabelNow {
+	pub save: bool,
+}
+
+impl MsgSend for EndEditLabelNow {
+	type RetType = WinResult<()>;
+
+	fn_convert_ret_winresult_void!();
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::ENDEDITLABELNOW.into(),
+			wparam: if self.save { 0 } else { 1 }, // logic is reversed
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_ENSUREVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-ensurevisible)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct EnsureVisible {
+	pub hitem: HTREEITEM,
+}
+
+impl MsgSend for EnsureVisible {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
 			lparam: self.hitem.ptr as _,
 		}

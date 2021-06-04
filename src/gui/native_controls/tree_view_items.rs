@@ -118,6 +118,29 @@ impl TreeViewItems {
 		self.hwnd().SendMessage(tvm::GetCount {})
 	}
 
+	/// Begins in-place editing of the item's text by sending a
+	/// [`TVN_EDITLABEL`](crate::msg::tvm::EditLabel) message.
+	///
+	/// Returns a handle to the edit control.
+	pub fn edit_label(&self, hitem: HTREEITEM) -> WinResult<HWND> {
+		self.hwnd().SendMessage(tvm::EditLabel { hitem })
+	}
+
+	/// Ends the editing of the item's text by sending a
+	/// [`TVN_ENDEDITLABELNOW`](crate::msg::tvm::EndEditLabelNow) message.
+	pub fn end_edit_label_now(&self, save: bool) -> WinResult<()> {
+		self.hwnd().SendMessage(tvm::EndEditLabelNow { save })
+	}
+
+	/// Ensures that a tree-view item is visible, expanding the parent item or
+	/// scrolling the tree-view control, if necessary, by sending a
+	/// [`TVN_ENSUREVISIBLE`](crate::msg::tvm::EnsureVisible) message.
+	///
+	/// Returns whether a scroll occurred and no items were expanded.
+	pub fn ensure_visible(&self, hitem: HTREEITEM) -> bool {
+		self.hwnd().SendMessage(tvm::EnsureVisible { hitem }) != 0
+	}
+
 	/// Expands or collapse an item by sending a
 	/// [`TVM_EXPAND`](crate::msg::tvm::Expand) message.
 	pub fn expand(&self, hitem: HTREEITEM, expand: bool) -> WinResult<()> {
