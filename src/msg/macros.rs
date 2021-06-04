@@ -2,6 +2,41 @@ use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::WndMsg;
 use crate::structs::POINT;
 
+/// Implements the `convert_ret` method for message structs that returns a `()`.
+macro_rules! fn_convert_ret_void {
+	() => {
+		fn convert_ret(&self, _: isize) -> Self::RetType {
+			()
+		}
+	};
+}
+
+/// Implements the `convert_ret` method for message structs that returns a
+/// `WinResult<()>`.
+macro_rules! fn_convert_ret_winresult_void {
+	() => {
+		fn convert_ret(&self, v: isize) -> Self::RetType {
+			match v {
+				0 => Err(co::ERROR::BAD_ARGUMENTS),
+				_ => Ok(()),
+			}
+		}
+	};
+}
+
+/// Implements the `convert_ret` method for message structs that returns a
+/// `WinResult<HANDLE>`.
+macro_rules! fn_convert_ret_winresult_handle {
+	($handle:ident) => {
+		fn convert_ret(&self, v: isize) -> Self::RetType {
+			match v {
+				0 => Err(co::ERROR::BAD_ARGUMENTS),
+				p => Ok($handle { ptr: p as _ }),
+			}
+		}
+	};
+}
+
 /// Struct for a message that has no parameters and no meaningful return value.
 macro_rules! pub_struct_msg_empty {
 	(
@@ -17,9 +52,7 @@ macro_rules! pub_struct_msg_empty {
 		impl MsgSend for $name {
 			type RetType = ();
 
-			fn convert_ret(&self, _: isize) -> Self::RetType {
-				()
-			}
+			fn_convert_ret_void!();
 
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
@@ -75,9 +108,7 @@ macro_rules! pub_struct_msg_char {
 		impl MsgSend for $name {
 			type RetType = ();
 
-			fn convert_ret(&self, _: isize) -> Self::RetType {
-				()
-			}
+			fn_convert_ret_void!();
 
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
@@ -173,9 +204,7 @@ macro_rules! pub_struct_msg_button {
 		impl MsgSend for $name {
 			type RetType = ();
 
-			fn convert_ret(&self, _: isize) -> Self::RetType {
-				()
-			}
+			fn_convert_ret_void!();
 
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {

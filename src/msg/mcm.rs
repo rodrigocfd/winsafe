@@ -18,12 +18,7 @@ pub struct GetCurSel<'a> {
 impl<'a> MsgSend for GetCurSel<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -45,12 +40,7 @@ pub struct GetMinReqRect<'a> {
 impl<'a> MsgSend for GetMinReqRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -94,12 +84,7 @@ pub struct SetCurSel<'a> {
 impl<'a> MsgSend for SetCurSel<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -121,12 +106,7 @@ pub struct SetCurrentView {
 impl MsgSend for SetCurrentView {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -148,9 +128,7 @@ pub struct SetToday<'a> {
 impl<'a> MsgSend for SetToday<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

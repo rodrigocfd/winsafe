@@ -25,9 +25,7 @@ pub struct GetDateTimePickerInfo<'a> {
 impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -49,9 +47,7 @@ pub struct GetIdealSize<'a> {
 impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -98,12 +94,7 @@ pub struct GetMcFont {}
 impl MsgSend for GetMcFont {
 	type RetType = WinResult<HFONT>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HFONT { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_winresult_handle!(HFONT);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -148,12 +139,7 @@ pub struct GetMonthCalendar {}
 impl MsgSend for GetMonthCalendar {
 	type RetType = WinResult<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HWND { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_winresult_handle!(HWND);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -228,12 +214,7 @@ pub struct SetFormat<'a> {
 impl<'a> MsgSend for SetFormat<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -287,9 +268,7 @@ pub struct SetMcFont {
 impl MsgSend for SetMcFont {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -314,7 +293,7 @@ impl MsgSend for SetMcStyle {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			s => Ok(co::MCS(s as _)),
+			v => Ok(co::MCS(v as _)),
 		}
 	}
 
@@ -339,12 +318,7 @@ pub struct SetRange<'a> {
 impl<'a> MsgSend for SetRange<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -366,12 +340,7 @@ pub struct SetSystemTime<'a> {
 impl<'a> MsgSend for SetSystemTime<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

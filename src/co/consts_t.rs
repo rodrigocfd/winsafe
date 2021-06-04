@@ -628,3 +628,11 @@ pub_struct_const_wsex! { TVS_EX,
 	DIMMEDCHECKBOXES, 0x0200
 	DRAWIMAGEASYNC, 0x0400
 }
+
+pub_struct_const! { TVSIL, u8,
+	/// [`TVM_GETIMAGELIST`](crate::msg::tvm::GetImageList) and
+	/// [`TVM_SETIMAGELIST`](crate::msg::tvm::SetImageList) `kind`.
+	=>
+	NORMAL, 0
+	STATE, 2
+}

@@ -66,12 +66,7 @@ pub struct Arrange {
 impl MsgSend for Arrange {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -95,12 +90,7 @@ pub struct DeleteAllItems {}
 impl MsgSend for DeleteAllItems {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -122,12 +112,7 @@ pub struct DeleteItem {
 impl MsgSend for DeleteItem {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -150,12 +135,7 @@ pub struct EnsureVisible {
 impl MsgSend for EnsureVisible {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -228,12 +208,7 @@ pub struct GetColumn<'a, 'b> {
 impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -302,12 +277,7 @@ pub struct GetHeader {}
 impl MsgSend for GetHeader {
 	type RetType = WinResult<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HWND { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_winresult_handle!(HWND);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -431,12 +401,7 @@ pub struct GetItemRect<'a> {
 impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		let ptr_rect = self.rect as *const _ as *mut RECT;
@@ -633,12 +598,7 @@ pub struct RedrawItems {
 impl MsgSend for RedrawItems {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -661,12 +621,7 @@ pub struct Scroll {
 impl MsgSend for Scroll {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -689,12 +644,7 @@ pub struct SetColumn<'a, 'b> {
 impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -717,12 +667,7 @@ pub struct SetColumnWidth {
 impl MsgSend for SetColumnWidth {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -769,12 +714,7 @@ pub struct SetItem<'a, 'b> {
 impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -797,12 +737,7 @@ pub struct SetItemState<'a, 'b> {
 impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -825,12 +760,7 @@ pub struct SetItemText<'a, 'b> {
 impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -852,9 +782,7 @@ pub struct SetSelectedColumn {
 impl MsgSend for SetSelectedColumn {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -903,12 +831,7 @@ pub struct Update {
 impl MsgSend for Update {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

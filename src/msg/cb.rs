@@ -314,9 +314,7 @@ pub struct SetCurSel {
 impl MsgSend for SetCurSel {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -341,12 +339,7 @@ pub struct SetMinVisible {
 impl MsgSend for SetMinVisible {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -368,12 +361,7 @@ pub struct SetTopIndex {
 impl MsgSend for SetTopIndex {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -395,9 +383,7 @@ pub struct ShowDropDown {
 impl MsgSend for ShowDropDown {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

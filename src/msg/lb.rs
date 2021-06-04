@@ -773,12 +773,7 @@ pub struct SetTabStops<'a> {
 impl<'a> MsgSend for SetTabStops<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

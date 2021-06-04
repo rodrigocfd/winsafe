@@ -76,7 +76,7 @@ impl MsgSend for GetLineCount {
 /// [`EM_GETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getrect)
 /// message parameters.
 ///
-/// Return type: `RECT`.
+/// Return type: `WinResult<()>`.
 pub struct GetRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -84,12 +84,7 @@ pub struct GetRect<'a> {
 impl<'a> MsgSend for GetRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -112,9 +107,7 @@ pub struct GetSel<'a, 'b> {
 impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -156,12 +149,7 @@ pub struct Undo {}
 impl MsgSend for Undo {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

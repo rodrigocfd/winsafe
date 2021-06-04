@@ -16,12 +16,7 @@ pub struct GetIcon {}
 impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HICON { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_winresult_handle!(HICON);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -43,12 +38,7 @@ pub struct SetIcon {
 impl MsgSend for SetIcon {
 	type RetType = WinResult<HICON>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HICON { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_winresult_handle!(HICON);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

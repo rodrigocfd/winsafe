@@ -20,12 +20,7 @@ pub struct GetIcon {
 impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			ptr => Ok(HICON { ptr: ptr as _ }),
-		}
-	}
+	fn_convert_ret_winresult_handle!(HICON);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -121,9 +116,7 @@ pub struct GetTipText<'a> {
 impl<'a> MsgSend for GetTipText<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -135,7 +128,9 @@ impl<'a> MsgSend for GetTipText<'a> {
 }
 
 /// [`SB_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-seticon)
-// message parameters.
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
 pub struct SetIcon {
 	pub part_index: u8,
 	pub hicon: Option<HICON>,
@@ -144,12 +139,7 @@ pub struct SetIcon {
 impl MsgSend for SetIcon {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -171,12 +161,7 @@ pub struct SetParts<'a> {
 impl<'a> MsgSend for SetParts<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -200,12 +185,7 @@ pub struct SetText<'a> {
 impl<'a> MsgSend for SetText<'a> {
 	type RetType = WinResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
-	}
+	fn_convert_ret_winresult_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -226,9 +206,7 @@ pub struct SetTipText<'a> {
 impl<'a> MsgSend for SetTipText<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -248,9 +226,7 @@ pub struct Simple {
 impl MsgSend for Simple {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
+	fn_convert_ret_void!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
