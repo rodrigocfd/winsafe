@@ -8,4 +8,5 @@ extern "system" {
 	pub fn DragQueryFileW(_: HANDLE, _: u32, _: PSTR, _: u32) -> u32;
 	pub fn DragQueryPoint(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn SHCreateItemFromParsingName(_: PCSTR, _: PVOID, _: PCVOID, _: *mut PVOID) -> HRESULT;
+	pub fn Shell_NotifyIconW(_: u32, _: PVOID) -> BOOL;
 }

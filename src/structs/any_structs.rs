@@ -31,7 +31,7 @@ use crate::handles::{
 	HWND,
 };
 use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH};
-use crate::structs::{ATOM, COLORREF};
+use crate::structs::{ATOM, COLORREF, GUID};
 use crate::unions::{ColorrefDibU, ColorrefHbitmapU};
 use crate::WString;
 
@@ -427,6 +427,35 @@ impl Default for NONCLIENTMETRICS {
 		}
 		obj
 	}
+}
+
+/// [`NOTIFYICONDATA`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)
+/// struct.
+#[repr(C)]
+pub struct NOTIFYICONDATA {
+	cbSize: u32,
+	pub hWnd: HWND,
+	pub uID: u32,
+	pub uFlags: co::NIF,
+	pub uCallbackMessage: co::WM,
+	pub hIcon: HICON,
+	szTip: [u16; 128],
+	pub dwState: co::NIS,
+	pub dwStateMask: co::NIS,
+	szInfo: [u16; 256],
+	pub uTimeoutVersion: u32, // union
+	szInfoTitle: [u16; 64],
+	pub dwInfoFlags: co::NIIF,
+	pub guidItem: GUID,
+	pub hBalloonIcon: HICON,
+}
+
+impl_default_with_size!(NOTIFYICONDATA, cbSize);
+
+impl NOTIFYICONDATA {
+	pub_fn_string_arr_get_set!(szTip, set_szTip);
+	pub_fn_string_arr_get_set!(szInfo, set_szInfo);
+	pub_fn_string_arr_get_set!(szInfoTitle, set_szInfoTitle);
 }
 
 /// [`OSVERSIONINFOEX`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)

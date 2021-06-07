@@ -351,6 +351,50 @@ pub_struct_const! { MSGF, u8,
 	MENU, 2
 }
 
+pub_struct_const! { NIF, u32,
+	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `uFlags` (`u32`).
+	=>
+	MESSAGE, 0x0000_0001
+	ICON, 0x0000_0002
+	TIP, 0x0000_0004
+	STATE, 0x0000_0008
+	INFO, 0x0000_0010
+	GUID, 0x0000_0020
+	REALTIME, 0x0000_0040
+	SHOWTIP, 0x0000_0080
+}
+
+pub_struct_const! { NIIF, u32,
+	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwInfoFlags` (`u32`).
+	=>
+	NONE, 0x0000_0000
+	INFO, 0x0000_0001
+	WARNING, 0x0000_0002
+	ERROR, 0x0000_0003
+	USER, 0x0000_0004
+	NOSOUND, 0x0000_0010
+	LARGE_ICON, 0x0000_0020
+	RESPECT_QUIET_TIME, 0x0000_0080
+}
+
+pub_struct_const! { NIM, u32,
+	/// [`Shell_NotifyIcon`](crate::Shell_NotifyIcon) `dwMessage` (`u32`).
+	=>
+	ADD, 0x0000_0000
+	MODIFY, 0x0000_0001
+	DELETE, 0x0000_0002
+	SETFOCUS, 0x0000_0003
+	SETVERSION, 0x0000_0004
+}
+
+pub_struct_const! { NIS, u32,
+	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwState` and `dwStateFlags`
+	/// (`u32`).
+	=>
+	HIDDEN, 0x0000_0001
+	SHAREDICON, 0x0000_0002
+}
+
 pub_struct_const! { NM, i32,
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) notification codes (`i32`).
 	///

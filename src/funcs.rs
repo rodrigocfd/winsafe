@@ -6,7 +6,16 @@ use std::collections::HashMap;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::ffi::{advapi32, BOOL, comctl32, comdlg32, HRESULT, kernel32, user32};
+use crate::ffi::{
+	advapi32,
+	BOOL,
+	comctl32,
+	comdlg32,
+	HRESULT,
+	kernel32,
+	shell32,
+	user32,
+};
 use crate::handles::{HINSTANCE, HWND};
 use crate::privs::{
 	bool_to_winresult,
@@ -21,6 +30,7 @@ use crate::structs::{
 	FILETIME,
 	MEMORYSTATUSEX,
 	MSG,
+	NOTIFYICONDATA,
 	OSVERSIONINFOEX,
 	POINT,
 	RECT,
@@ -786,6 +796,16 @@ pub fn SetLastError(dwErrCode: co::ERROR) {
 /// function.
 pub fn SetProcessDPIAware() -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::SetProcessDPIAware() })
+}
+
+/// [`Shell_NotifyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
+/// function.
+pub fn Shell_NotifyIcon(
+	dwMessage: co::NIM, lpData: &mut NOTIFYICONDATA) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe { shell32::Shell_NotifyIconW(dwMessage.0, lpData as *mut _ as _) },
+	)
 }
 
 /// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)
