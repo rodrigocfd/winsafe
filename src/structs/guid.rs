@@ -9,6 +9,16 @@ pub struct GUID {
 	data4: u64,
 }
 
+impl std::fmt::Display for GUID {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "{:08x}-{:04x}-{:04x}-{:04x}-{:012x}",
+			self.data1, self.data2, self.data3,
+			self.data4.swap_bytes() >> 48,
+			self.data4.swap_bytes() & 0x0000_ffff_ffff_ffff,
+		)
+	}
+}
+
 impl GUID {
 	/// Creates a new `GUID` from hex numbers, which can be copied straight from
 	/// standard `GUID` definitions.
@@ -49,6 +59,12 @@ impl AsRef<GUID> for CLSID {
 	}
 }
 
+impl std::fmt::Display for CLSID {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		self.0.fmt(f)
+	}
+}
+
 impl CLSID {
 	/// Creates a new `CLSID` from hex numbers, which can be copied straight from
 	/// standard `CLSID` definitions.
@@ -79,6 +95,12 @@ impl From<GUID> for IID {
 impl AsRef<GUID> for IID {
 	fn as_ref(&self) -> &GUID {
 		&self.0
+	}
+}
+
+impl std::fmt::Display for IID {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		self.0.fmt(f)
 	}
 }
 
