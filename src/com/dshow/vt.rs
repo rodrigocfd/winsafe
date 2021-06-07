@@ -10,7 +10,7 @@ type IUnkPP = PPComVT<IUnknownVT>;
 
 pub_struct_vtable! { IBaseFilterVT,
 	/// [`IBaseFilter`](crate::dshow::IBaseFilter) virtual table.
-	->
+	=>
 	0x56a86895, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IMediaFilterVT, IMediaFilterVT
 
@@ -23,7 +23,7 @@ pub_struct_vtable! { IBaseFilterVT,
 
 pub_struct_vtable! { IEnumFiltersVT,
 	/// [`IEnumFilters`](crate::dshow::IEnumFilters) virtual table.
-	->
+	=>
 	0x56a86893, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IUnknownVT, IUnknownVT
 
@@ -33,9 +33,19 @@ pub_struct_vtable! { IEnumFiltersVT,
 	Clone, fn(IUnkPP, *mut IUnkPP) -> HRESULT
 }
 
+pub_struct_vtable! { IFileSinkFilterVT,
+	/// [`IFileSinkFilter`](crate::dshow::IFileSinkFilter) virtual table.
+	=>
+	0xa2104830, 0x7c70, 0x11cf, 0x8bce, 0x00aa00a3f1a6,
+	IUnknownVT, IUnknownVT
+
+	SetFileName, fn(IUnkPP, PCSTR, PCVOID) -> HRESULT
+	GetCurFile, fn(IUnkPP, *mut PSTR, PVOID) -> HRESULT
+}
+
 pub_struct_vtable! { IFilterGraphVT,
 	/// [`IFilterGraph`](crate::dshow::IFilterGraph) virtual table.
-	->
+	=>
 	0x56a8689f, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IUnknownVT, IUnknownVT
 
@@ -51,7 +61,7 @@ pub_struct_vtable! { IFilterGraphVT,
 
 pub_struct_vtable! { IGraphBuilderVT,
 	/// [`IGraphBuilder`](crate::dshow::IGraphBuilder) virtual table.
-	->
+	=>
 	0x56a868a9, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IFilterGraphVT, IFilterGraphVT
 
@@ -66,7 +76,7 @@ pub_struct_vtable! { IGraphBuilderVT,
 
 pub_struct_vtable! { IMediaControlVT,
 	/// [`IMediaControl`](crate::dshow::IMediaControl) virtual table.
-	->
+	=>
 	0x56a868b1, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IDispatchVT, IDispatchVT
 
@@ -83,7 +93,7 @@ pub_struct_vtable! { IMediaControlVT,
 
 pub_struct_vtable! { IMediaFilterVT,
 	/// [`IMediaFilter`](crate::dshow::IMediaFilter) virtual table.
-	->
+	=>
 	0x56a86899, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IPersistVT, IPersistVT
 
@@ -97,7 +107,7 @@ pub_struct_vtable! { IMediaFilterVT,
 
 pub_struct_vtable! { IMediaSeekingVT,
 	/// [`IMediaSeeking`](crate::dshow::IMediaSeeking) virtual table.
-	->
+	=>
 	0x36b73880, 0xc2c8, 0x11cf, 0x8b46, 0x00805f6cef60,
 	IUnknownVT, IUnknownVT
 
@@ -122,7 +132,7 @@ pub_struct_vtable! { IMediaSeekingVT,
 
 pub_struct_vtable! { IMFGetServiceVT,
 	/// [`IMFGetService`](crate::dshow::IMFGetService) virtual table.
-	->
+	=>
 	0xfa993888, 0x4383, 0x415a, 0xa930, 0xdd472a8cf6f7,
 	IUnknownVT, IUnknownVT
 
@@ -132,7 +142,7 @@ pub_struct_vtable! { IMFGetServiceVT,
 pub_struct_vtable! { IMFVideoDisplayControlVT,
 	/// [`IMFVideoDisplayControl`](crate::dshow::IMFVideoDisplayControl) virtual
 	/// table.
-	->
+	=>
 	0xa490b1e4, 0xab84, 0x4d31, 0xa1b2, 0x181e03b1077a,
 	IUnknownVT, IUnknownVT
 
@@ -156,7 +166,7 @@ pub_struct_vtable! { IMFVideoDisplayControlVT,
 
 pub_struct_vtable! { IPinVT,
 	/// [`IPin`](crate::dshow::IPin) virtual table.
-	->
+	=>
 	0x56a86891, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770,
 	IUnknownVT, IUnknownVT
 

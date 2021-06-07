@@ -3,7 +3,7 @@ macro_rules! pub_struct_vtable {
 	(
 		$name:ident,
 		$(#[$doc:meta])*
-		->
+		=>
 		$iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr,
 		$($member:ident, $descr:ty)*
 	) => {

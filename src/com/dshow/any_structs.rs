@@ -3,7 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::ffi::BOOL;
-use crate::structs::GUID;
+use crate::structs::{BITMAPINFOHEADER, GUID, RECT};
 
 /// [`AM_MEDIA_TYPE`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)
 /// struct.
@@ -17,7 +17,7 @@ pub struct AM_MEDIA_TYPE<'a> {
 	pub formattype: GUID,
 	pUnk: usize,
 	cbFormat: u32,
-	pbFormat: usize,
+	pbFormat: *mut std::ffi::c_void,
 	m_pbFormat: PhantomData<&'a usize>,
 }
 
@@ -48,8 +48,8 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 	///
 	/// Varies according to the `formattype`. If you set it wrong, you're likely
 	/// to cause a buffer overrun.
-	pub unsafe fn pbFormat<T>(&self) -> &T {
-		&*(self.pbFormat as *const T)
+	pub unsafe fn pbFormat<T>(&self) -> Option<&mut T> {
+		(self.pbFormat as *mut T).as_mut()
 	}
 
 	/// Sets the `pbFormat` field.
@@ -60,6 +60,20 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 		self.pbFormat = val as *mut _ as _;
 		self.cbFormat = std::mem::size_of::<T>() as _;
 	}
+}
+
+/// [`DVINFO`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-dvinfo)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct DVINFO {
+	pub dwDVAAuxSrc: u32,
+	pub dwDVAAuxCtl: u32,
+	pub dwDVAAuxSrc1: u32,
+	pub dwDVAAuxCtl1: u32,
+	pub dwDVVAuxSrc: u32,
+	pub dwDVVAuxCtl: u32,
+	dwDVReserved: [u32; 2],
 }
 
 /// [`MFVideoNormalizedRect`](https://docs.microsoft.com/en-us/windows/win32/api/evr/ns-evr-mfvideonormalizedrect)
@@ -87,4 +101,17 @@ impl MFVideoNormalizedRect {
 	{
 		Self { left, top, right, bottom }
 	}
+}
+
+/// [`VIDEOINFOHEADER`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/api/amvideo/ns-amvideo-videoinfoheader)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct VIDEOINFOHEADER {
+	pub rcSource: RECT,
+	pub rcTarget: RECT,
+	pub dwBitRate: u32,
+	pub dwBitErrorRate: u32,
+	pub AvgTimePerFrame: i64,
+	pub bmiHeader: BITMAPINFOHEADER,
 }

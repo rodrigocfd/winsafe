@@ -10,7 +10,7 @@ type IUnkPP = PPComVT<IUnknownVT>;
 
 pub_struct_vtable! { IFileDialogVT,
 	/// [`IFileDialog`](crate::shell::IFileDialog) virtual table.
-	->
+	=>
 	0x42f85136, 0xdb7e, 0x439c, 0x85f1, 0xe4075d135fc8,
 	IModalWindowVT, IModalWindowVT
 
@@ -41,7 +41,7 @@ pub_struct_vtable! { IFileDialogVT,
 
 pub_struct_vtable! { IFileOpenDialogVT,
 	/// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) virtual table.
-	->
+	=>
 	0xd57c7288, 0xd4ad, 0x4768, 0xbe02, 0x9d969532d960,
 	IFileDialogVT, IFileDialogVT
 
@@ -51,7 +51,7 @@ pub_struct_vtable! { IFileOpenDialogVT,
 
 pub_struct_vtable! { IFileSaveDialogVT,
 	/// [`IFileSaveDialog`](crate::shell::IFileSaveDialog) virtual table.
-	->
+	=>
 	0x84bccd23, 0x5fde, 0x4cdb, 0xaea4, 0xaf64b83d78ab,
 	IFileDialogVT, IFileDialogVT
 
@@ -64,7 +64,7 @@ pub_struct_vtable! { IFileSaveDialogVT,
 
 pub_struct_vtable! { IModalWindowVT,
 	/// [`IModalWindow`](crate::shell::IModalWindow) virtual table.
-	->
+	=>
 	0xb4db1657, 0x70d7, 0x485e, 0x8e3e, 0x6fcb5a5c1802,
 	IUnknownVT, IUnknownVT
 
@@ -73,7 +73,7 @@ pub_struct_vtable! { IModalWindowVT,
 
 pub_struct_vtable! { IShellItemArrayVT,
 	/// [`IShellItemArray`](crate::shell::IShellItemArray) virtual table.
-	->
+	=>
 	0xb63ea76d, 0x1f85, 0x456f, 0xa19c, 0x48159efa858b,
 	IUnknownVT, IUnknownVT
 
@@ -88,7 +88,7 @@ pub_struct_vtable! { IShellItemArrayVT,
 
 pub_struct_vtable! { IShellItemVT,
 	/// [`IShellItem`](crate::shell::IShellItem) virtual table.
-	->
+	=>
 	0x43826d1e, 0xe718, 0x42ee, 0xbc55, 0xa1e261c37bfe,
 	IUnknownVT, IUnknownVT
 
@@ -101,7 +101,7 @@ pub_struct_vtable! { IShellItemVT,
 
 pub_struct_vtable! { ITaskbarListVT,
 	/// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
-	->
+	=>
 	0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090,
 	IUnknownVT, IUnknownVT
 
@@ -114,7 +114,7 @@ pub_struct_vtable! { ITaskbarListVT,
 
 pub_struct_vtable! { ITaskbarList2VT,
 	/// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
-	->
+	=>
 	0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317,
 	ITaskbarListVT, ITaskbarListVT
 
@@ -123,7 +123,7 @@ pub_struct_vtable! { ITaskbarList2VT,
 
 pub_struct_vtable! { ITaskbarList3VT,
 	/// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
-	->
+	=>
 	0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf,
 	ITaskbarList2VT, ITaskbarList2VT
 

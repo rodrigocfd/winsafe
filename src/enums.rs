@@ -82,10 +82,9 @@ impl BitmapIcon {
 	}
 }
 
-/// Variant parameter used in [menu](crate::HMENU) methods:
+/// Variant parameter for:
 ///
-/// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`;
-/// * [`InsertMenu`](crate::HMENU::InsertMenu) `lpNewItem`.
+/// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`.
 pub enum BitmapPtrStr {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bitmap(HBITMAP),
@@ -270,8 +269,7 @@ impl IdIdiStr {
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
 /// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
-/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`;
-/// * [`InsertMenu`](crate::HMENU::InsertMenu) `uIDNewItem`.
+/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`.
 pub enum IdMenu {
 	/// A command ID.
 	Id(i32),

@@ -6,6 +6,7 @@ pub mod guid;
 pub mod vt;
 
 #[macro_use] mod ienumfilters;
+#[macro_use] mod ifilesinkfilter;
 #[macro_use] mod ifiltergraph;
 #[macro_use] mod imediacontrol;
 #[macro_use] mod imediafilter;
@@ -21,6 +22,7 @@ mod any_structs;
 
 pub use any_structs::*;
 pub use ibasefilter::IBaseFilter;
+pub use ifilesinkfilter::IFileSinkFilter;
 pub use ienumfilters::IEnumFilters;
 pub use ifiltergraph::IFilterGraph;
 pub use igraphbuilder::IGraphBuilder;

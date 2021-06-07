@@ -21,7 +21,7 @@ type IUnkPP = PPComVT<IUnknownVT>;
 pub_struct_vtable! { IUnknownVT,
 	/// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual
 	/// tables.
-	->
+	=>
 	0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046,
 
 	QueryInterface, fn(IUnkPP, PCVOID, *mut IUnkPP) -> HRESULT
@@ -31,7 +31,7 @@ pub_struct_vtable! { IUnknownVT,
 
 pub_struct_vtable! { IDispatchVT,
 	/// [`IDispatch`](crate::IDispatch) virtual table.
-	->
+	=>
 	0x00020400, 0x0000, 0x0000, 0xc000, 0x000000000046,
 	IUnknownVT, IUnknownVT
 
@@ -43,7 +43,7 @@ pub_struct_vtable! { IDispatchVT,
 
 pub_struct_vtable! { IPersistVT,
 	/// [`IPersist`](crate::IPersist) virtual table.
-	->
+	=>
 	0x0000010c, 0x0000, 0x0000, 0xc000, 0x000000000046,
 	IUnknownVT, IUnknownVT
 
@@ -52,7 +52,7 @@ pub_struct_vtable! { IPersistVT,
 
 pub_struct_vtable! { ITypeInfoVT,
 	/// [`ITypeInfo`](crate::ITypeInfo) virtual table.
-	->
+	=>
 	0x00020401, 0x0000, 0x0000, 0xc000, 0x000000000046,
 	IUnknownVT, IUnknownVT
 
