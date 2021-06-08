@@ -32,7 +32,7 @@ pub(crate) fn MAKEINTRESOURCE(val: isize) -> *const u16 {
 	val as u16 as _
 }
 
-/// If value is FALSE, yields `Err(GetLastError)`, otherwise `Ok()`.
+/// If value is `FALSE`, yields `Err(GetLastError)`, otherwise `Ok()`.
 pub(crate) fn bool_to_winresult(expr: BOOL) -> WinResult<()> {
 	match expr {
 		0 => Err(GetLastError()),
@@ -56,6 +56,13 @@ pub(crate) fn hr_to_winresult_bool(hresult: HRESULT) -> WinResult<bool> {
 		co::ERROR::S_FALSE => Ok(false),
 		hresult => Err(hresult),
 	}
+}
+
+/// Converts a string to a ISO-8859-1 null-terminated byte array.
+pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
+	s.chars().map(|ch| ch as u8)
+		.chain(std::iter::once(0)) // append a terminating null
+		.collect()
 }
 
 /// Parses a null-delimited multi-string, which must terminate with two nulls.

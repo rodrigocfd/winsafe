@@ -6,6 +6,7 @@ use crate::enums::{IdIdcStr, IdIdiStr, IdStr};
 use crate::ffi::{kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
+use crate::privs::{bool_to_winresult, str_to_iso88591};
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::WString;
 
@@ -61,6 +62,12 @@ impl HINSTANCE {
 		}
 	}
 
+	/// [`FreeLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
+	/// method.
+	pub fn FreeLibrary(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { kernel32::FreeLibrary(self.ptr) })
+	}
+
 	/// [`GetClassInfoEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassinfoexw)
 	/// method.
 	///
@@ -108,6 +115,20 @@ impl HINSTANCE {
 				WString::from_opt_str(lpModuleName).as_ptr()
 			).as_mut()
 		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`GetProcAddress`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
+	/// method.
+	pub fn GetProcAddress(self,
+		lpProcName: &str) -> WinResult<*const std::ffi::c_void>
+	{
+		unsafe {
+			kernel32::GetProcAddress(
+				self.ptr,
+				str_to_iso88591(lpProcName).as_ptr(),
+			).as_ref()
+		}.map(|ptr| ptr as _)
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -191,6 +212,19 @@ impl HINSTANCE {
 			user32::LoadImageW(self.ptr, name.as_ptr(), 1, cx, cy, fuLoad.0)
 				.as_mut()
 		}.map(|ptr| HICON { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`LoadLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
+	/// static method.
+	///
+	/// **Note:** Must be paired with a
+	/// [`FreeLibrary`](crate::HINSTANCE::FreeLibrary) call.
+	pub fn LoadLibrary(lpLibFileName: &str) -> WinResult<HINSTANCE> {
+		unsafe {
+			kernel32::LoadLibraryW(WString::from_str(lpLibFileName).as_ptr())
+				.as_mut()
+		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 

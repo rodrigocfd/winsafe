@@ -24,6 +24,7 @@ extern "system" {
 	pub fn FlushProcessWriteBuffers();
 	pub fn FormatMessageW(_: u32, _: PCVOID, _: u32, _: u32, _: PSTR, _: u32, _: PVOID) -> u32;
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
+	pub fn FreeLibrary(_: HANDLE) -> BOOL;
 	pub fn GetBinaryTypeW(_: PCSTR, _: &mut u32) -> BOOL;
 	pub fn GetEnvironmentStringsW() -> HANDLE;
 	pub fn GetExitCodeProcess(_: HANDLE, _: *mut u32) -> BOOL;
@@ -36,6 +37,7 @@ extern "system" {
 	pub fn GetLastError() -> u32;
 	pub fn GetLogicalDriveStringsW(_: u32, _: PSTR) -> u32;
 	pub fn GetModuleHandleW(_: PCSTR) -> HANDLE;
+	pub fn GetProcAddress(_: HANDLE, _: *const u8) -> PCVOID;
 	pub fn GetSystemTime(_: PVOID);
 	pub fn GetSystemTimeAsFileTime(_: PVOID);
 	pub fn GetSystemTimePreciseAsFileTime(_: PVOID);
@@ -49,6 +51,7 @@ extern "system" {
 	pub fn GlobalReAlloc(_: HANDLE, _: u64, _: u32) -> HANDLE;
 	pub fn GlobalSize(_: HANDLE) -> u64;
 	pub fn GlobalUnlock(_: HANDLE) -> BOOL;
+	pub fn LoadLibraryW(_: PCSTR) -> HANDLE;
 	pub fn LocalFree(_: HANDLE) -> HANDLE;
 	pub fn LocalSize(_: HANDLE) -> u64;
 	pub fn LockFile(_: HANDLE, _: u32, _: u32, _: u32, _: u32) -> BOOL;

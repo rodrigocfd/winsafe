@@ -2,7 +2,6 @@
 
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::ffi::c_void;
 use std::marker::PhantomData;
 
 use crate::aliases::{CCHOOKPROC, WNDPROC};
@@ -647,8 +646,8 @@ pub struct SECURITY_DESCRIPTOR {
 	pub Revision: u8,
    pub Sbz1: u8,
    pub Control: u16,
-   pub Owner: *mut c_void,
-   pub Group: *mut c_void,
+   pub Owner: *mut std::ffi::c_void,
+   pub Group: *mut std::ffi::c_void,
    pub Sacl: *mut ACL,
    pub Dacl: *mut ACL,
 }

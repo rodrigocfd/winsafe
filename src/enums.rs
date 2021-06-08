@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::co;
 use crate::funcs::MAKEDWORD;
 use crate::handles::{HBITMAP, HICON, HMENU, HTREEITEM, HWND};
@@ -91,7 +89,7 @@ pub enum BitmapPtrStr {
 	/// A string.
 	Str(WString),
 	/// A pointer to anything.
-	Param(*const c_void),
+	Param(*const std::ffi::c_void),
 	/// Nothing.
 	None,
 }
@@ -189,7 +187,7 @@ pub enum HwndPlace {
 
 impl HwndPlace {
 	/// Converts the internal value to a `*mut c_void`.
-	pub fn as_ptr(&self) -> *mut c_void {
+	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.ptr,
 			Self::Place(v) => v.0 as _,
@@ -291,7 +289,7 @@ impl From<IdMenu> for usize {
 
 impl IdMenu {
 	/// Converts the internal value to a `*mut c_void`.
-	pub fn as_ptr(&self) -> *mut c_void {
+	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
 			Self::Menu(hMenu) => hMenu.ptr,
@@ -425,7 +423,7 @@ pub enum RegistryValue {
 
 impl RegistryValue {
 	/// Converts the internal value to a `*const c_void`.
-	pub fn as_ptr(&self) -> *const c_void {
+	pub fn as_ptr(&self) -> *const std::ffi::c_void {
 		match self {
 			Self::Binary(b) => b.as_ptr() as _,
 			Self::Dword(n) => *n as _,
