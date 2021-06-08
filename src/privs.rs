@@ -11,6 +11,7 @@ use crate::WString;
 pub(crate) const CB_ERR: i32 = -1;
 pub(crate) const CB_ERRSPACE: i32 = -2;
 pub(crate) const CCHILDREN_TITLEBAR: usize = 5;
+pub(crate) const CLR_DEFAULT: u32 = 0xff00_0000;
 pub(crate) const CLR_INVALID: u32 = 0xffff_ffff;
 pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub(crate) const GDI_ERROR: u32 = 0xffff_ffff;

@@ -6,7 +6,8 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::{HIMAGELIST, HTREEITEM, HWND};
 use crate::msg::{MsgSend, WndMsg};
-use crate::structs::{RECT, TVINSERTSTRUCT, TVITEMEX};
+use crate::privs::CLR_DEFAULT;
+use crate::structs::{COLORREF, RECT, TVINSERTSTRUCT, TVITEMEX};
 
 /// [`TVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-deleteitem)
 /// message parameters.
@@ -121,6 +122,31 @@ impl MsgSend for Expand {
 	}
 }
 
+/// [`TVM_GETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getbkcolor)
+/// message, which has no parameters.
+///
+/// Return type: `Option<COLORREF>`.
+pub struct GetBkColor {}
+
+impl MsgSend for GetBkColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			c => Some(COLORREF(c as _)),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETBKCOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`TVM_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getcount)
 /// message, which has no parameters.
 ///
@@ -143,22 +169,47 @@ impl MsgSend for GetCount {
 	}
 }
 
-/// [`TVM_GETINDENT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getindent)
+/// [`TVM_GETEDITCONTROL`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-geteditcontrol)
 /// message, which has no parameters.
 ///
-/// Return type: `u32`.
-pub struct GetIndent {}
+/// Return type: `WinResult<HWND>`.
+pub struct GetEditControl {}
 
-impl MsgSend for GetIndent {
-	type RetType = u32;
+impl MsgSend for GetEditControl {
+	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as _
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			p => Ok(HWND { ptr: p as _ }),
+		}
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
-			msg_id: co::TVM::GETINDENT.into(),
+			msg_id: co::TVM::GETEDITCONTROL.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETEXTENDEDSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getextendedstyle)
+/// message, which has no parameters.
+///
+/// Return type: `co::TVS_EX`.
+pub struct GetExtendedStyle {}
+
+impl MsgSend for GetExtendedStyle {
+	type RetType = co::TVS_EX;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::TVS_EX(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETEXTENDEDSTYLE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -187,6 +238,50 @@ impl MsgSend for GetImageList {
 		WndMsg {
 			msg_id: co::TVM::GETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETINDENT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getindent)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetIndent {}
+
+impl MsgSend for GetIndent {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETINDENT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETINSERTMARKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getinsertmarkcolor)
+/// message, which has no parameters.
+///
+/// Return type: `COLORREF`.
+pub struct GetInsertMarkColor {}
+
+impl MsgSend for GetInsertMarkColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETINSERTMARKCOLOR.into(),
+			wparam: 0,
 			lparam: 0,
 		}
 	}
@@ -284,6 +379,31 @@ impl MsgSend for GetItemState {
 	}
 }
 
+/// [`TVM_GETLINECOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getlinecolor)
+/// message, which has no parameters.
+///
+/// Return type: `Option<COLORREF>`.
+pub struct GetLineColor {}
+
+impl MsgSend for GetLineColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as u32 {
+			CLR_DEFAULT => None,
+			c => Some(COLORREF(c))
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETLINECOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`TVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getnextitem)
 /// message parameters.
 ///
@@ -308,6 +428,100 @@ impl MsgSend for GetNextItem {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.which.0 as _,
 			lparam: self.hitem.ptr as _,
+		}
+	}
+}
+
+/// [`TVM_GETSCROLLTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getscrolltime)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetScrollTime {}
+
+impl MsgSend for GetScrollTime {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETSCROLLTIME.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETTEXTCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-gettextcolor)
+/// message, which has no parameters.
+///
+/// Return type: `Option<COLORREF>`.
+pub struct GetTextColor {}
+
+impl MsgSend for GetTextColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			c => Some(COLORREF(c as _)),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETTEXTCOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETTOOLTIPS`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-gettooltips)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HWND>`.
+pub struct GetTooltips {}
+
+impl MsgSend for GetTooltips {
+	type RetType = Option<HWND>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => None,
+			p => Some(HWND { ptr: p as _ }),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETTOOLTIPS.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETVISIBLECOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getvisiblecount)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetVisibleCount {}
+
+impl MsgSend for GetVisibleCount {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETVISIBLECOUNT.into(),
+			wparam: 0,
+			lparam: 0,
 		}
 	}
 }
