@@ -16,17 +16,19 @@ pub struct ComboBoxItems {
 }
 
 impl ComboBoxItems {
-	pub(crate) fn new(hwnd_ref: &HWND) -> ComboBoxItems {
+	pub(in crate::gui::native_controls) fn new(
+		hwnd_ref: &HWND) -> ComboBoxItems
+	{
 		Self {
 			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
 		}
 	}
 
-	pub(crate) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
+	pub(in crate::gui::native_controls) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
 		self.hwnd_ptr.replace(NonNull::from(hwnd_ref)); // ref implicitly converted to pointer
 	}
 
-	pub(crate) fn hwnd(&self) -> HWND {
+	pub(in crate::gui::native_controls) fn hwnd(&self) -> HWND {
 		unsafe { *self.hwnd_ptr.get().as_ref() }
 	}
 

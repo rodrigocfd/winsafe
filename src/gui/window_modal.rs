@@ -50,7 +50,7 @@ impl WindowModal {
 		}
 	}
 
-	pub(crate) fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		match &self.raw_dlg {
 			RawDlg::Raw(r) => r.base_ref(),
 			RawDlg::Dlg(d) => d.base_ref(),

@@ -13,7 +13,7 @@ use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub(crate) struct RawMain(Arc<VeryUnsafeCell<Obj>>);
+pub(in crate::gui) struct RawMain(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of RawMain
 	base: RawBase,
@@ -22,7 +22,7 @@ struct Obj { // actual fields of RawMain
 }
 
 impl RawMain {
-	pub fn new(opts: WindowMainOpts) -> RawMain {
+	pub(in crate::gui) fn new(opts: WindowMainOpts) -> RawMain {
 		let wnd = Self(
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
@@ -36,11 +36,13 @@ impl RawMain {
 		wnd
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
 	}
 
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
+	pub(in crate::gui) fn run_main(&self,
+		cmd_show: Option<co::SW>) -> WinResult<()>
+	{
 		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();

@@ -10,7 +10,7 @@ use crate::handles::HINSTANCE;
 use crate::msg::wm;
 
 #[derive(Clone)]
-pub(crate) struct DlgMain(Arc<Obj>);
+pub(in crate::gui) struct DlgMain(Arc<Obj>);
 
 struct Obj { // actual fields of DlgMain
 	base: DlgBase,
@@ -19,7 +19,7 @@ struct Obj { // actual fields of DlgMain
 }
 
 impl DlgMain {
-	pub fn new(
+	pub(in crate::gui) fn new(
 		dialog_id: i32,
 		icon_id: Option<i32>,
 		accel_table_id: Option<i32>) -> DlgMain
@@ -37,11 +37,13 @@ impl DlgMain {
 		dlg
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
 	}
 
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
+	pub(in crate::gui) fn run_main(&self,
+		cmd_show: Option<co::SW>) -> WinResult<()>
+	{
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.base_ref().parent_hinstance()?;
 

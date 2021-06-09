@@ -17,17 +17,19 @@ pub struct ListViewItems {
 }
 
 impl ListViewItems {
-	pub(crate) fn new(hwnd_ref: &HWND) -> ListViewItems {
+	pub(in crate::gui::native_controls) fn new(
+		hwnd_ref: &HWND) -> ListViewItems
+	{
 		Self {
 			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
 		}
 	}
 
-	pub(crate) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
+	pub(in crate::gui::native_controls) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
 		self.hwnd_ptr.replace(NonNull::from(hwnd_ref)); // ref implicitly converted to pointer
 	}
 
-	pub(crate) fn hwnd(&self) -> HWND {
+	pub(in crate::gui::native_controls) fn hwnd(&self) -> HWND {
 		unsafe { *self.hwnd_ptr.get().as_ref() }
 	}
 
@@ -266,7 +268,7 @@ impl ListViewItems {
 		Self::text_retrieve(self.hwnd(), item_index, column_index, buf)
 	}
 
-	pub(crate) fn text_retrieve(
+	pub(in crate::gui::native_controls) fn text_retrieve(
 		hwnd: HWND, item_index: u32, column_index: u32, mut buf: &mut WString)
 	{
 		// Static method because it's also used by ListViewColumns.

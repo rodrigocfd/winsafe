@@ -20,7 +20,7 @@ macro_rules! pub_fn_hwnd_onsubclass {
 	() => {
 		/// Returns a reference to the underlying `NativeControlBase`, used in
 		/// `hwndref_from_child` downcasting function.
-		pub(crate) fn base_ref(&self) -> &NativeControlBase {
+		pub(in crate::gui) fn base_ref(&self) -> &NativeControlBase {
 			&self.0.base
 		}
 

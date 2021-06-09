@@ -29,7 +29,7 @@ pub enum OptsId<Op> {
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.
-pub(crate) struct NativeControlBase(VeryUnsafeCell<Obj>);
+pub(in crate::gui) struct NativeControlBase(VeryUnsafeCell<Obj>);
 
 struct Obj { // actual fields of NativeControlBase
 	hwnd: HWND,
@@ -44,7 +44,7 @@ impl Child for NativeControlBase {
 }
 
 impl NativeControlBase {
-	pub fn new(parent_base_ref: &Base) -> NativeControlBase {
+	pub(in crate::gui) fn new(parent_base_ref: &Base) -> NativeControlBase {
 		Self(
 			VeryUnsafeCell::new(
 				Obj {
@@ -56,15 +56,15 @@ impl NativeControlBase {
 		)
 	}
 
-	pub fn hwnd_ref(&self) -> &HWND {
+	pub(in crate::gui) fn hwnd_ref(&self) -> &HWND {
 		&self.0.hwnd
 	}
 
-	pub fn parent_base_ref(&self) -> &Base {
+	pub(in crate::gui) fn parent_base_ref(&self) -> &Base {
 		unsafe { self.0.ptr_parent.as_ref() }
 	}
 
-	pub fn on_subclass(&self) -> &WindowEvents {
+	pub(in crate::gui) fn on_subclass(&self) -> &WindowEvents {
 		if !self.0.hwnd.is_null() {
 			panic!("Cannot add subclass events after the control is created.");
 		} else if !self.parent_base_ref().hwnd_ref().is_null() {
@@ -73,7 +73,7 @@ impl NativeControlBase {
 		&self.0.subclass_events
 	}
 
-	pub fn create_window(
+	pub(in crate::gui) fn create_window(
 		&self,
 		class_name: &str,
 		title: Option<&str>,
@@ -105,7 +105,7 @@ impl NativeControlBase {
 		Ok(self.0.hwnd)
 	}
 
-	pub fn create_dlg(&self, ctrl_id: i32) -> WinResult<HWND> {
+	pub(in crate::gui) fn create_dlg(&self, ctrl_id: i32) -> WinResult<HWND> {
 		if self.parent_base_ref().creation_wm() != co::WM::INITDIALOG {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}

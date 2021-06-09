@@ -9,7 +9,7 @@ use crate::handles::HWND;
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// Base to all dialog windows.
-pub(crate) struct DlgBase {
+pub(in crate::gui) struct DlgBase {
 	base: Base,
 	dialog_id: i32,
 }
@@ -23,18 +23,20 @@ impl Drop for DlgBase {
 }
 
 impl DlgBase {
-	pub fn new(parent_base_ref: Option<&Base>, dialog_id: i32) -> DlgBase {
+	pub(in crate::gui) fn new(
+		parent_base_ref: Option<&Base>, dialog_id: i32) -> DlgBase
+	{
 		Self {
 			base: Base::new(parent_base_ref, true),
 			dialog_id,
 		}
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		&self.base
 	}
 
-	pub fn create_dialog_param(&self) -> WinResult<()> {
+	pub(in crate::gui) fn create_dialog_param(&self) -> WinResult<()> {
 		if !self.base.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
@@ -49,7 +51,7 @@ impl DlgBase {
 		).map(|_| ())
 	}
 
-	pub fn dialog_box_param(&self) -> WinResult<i32> {
+	pub(in crate::gui) fn dialog_box_param(&self) -> WinResult<i32> {
 		if !self.base.hwnd_ref().is_null() {
 			panic!("Cannot create dialog twice.");
 		}

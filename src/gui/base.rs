@@ -9,7 +9,7 @@ use crate::msg::WndMsg;
 use crate::structs::MSG;
 
 /// Base to `RawBase` and `DlgBase`.
-pub(crate) struct Base {
+pub(in crate::gui) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
 	ptr_parent: Option<NonNull<Base>>, // parent of this window
@@ -18,7 +18,9 @@ pub(crate) struct Base {
 }
 
 impl Base {
-	pub fn new(parent_base_ref: Option<&Base>, is_dialog: bool) -> Base {
+	pub(in crate::gui) fn new(
+		parent_base_ref: Option<&Base>, is_dialog: bool) -> Base
+	{
 		Self {
 			hwnd: HWND::NULL,
 			is_dialog,
@@ -28,52 +30,58 @@ impl Base {
 		}
 	}
 
-	pub fn hwnd_ref(&self) -> &HWND {
+	pub(in crate::gui) fn hwnd_ref(&self) -> &HWND {
 		&self.hwnd
 	}
 
-	pub fn set_hwnd(&mut self, hwnd: HWND) {
+	pub(in crate::gui) fn set_hwnd(&mut self, hwnd: HWND) {
 		self.hwnd = hwnd;
 	}
 
-	pub fn creation_wm(&self) -> co::WM {
+	pub(in crate::gui) fn creation_wm(&self) -> co::WM {
 		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
 	}
 
-	pub fn parent_base_ref(&self) -> Option<&Base> {
+	pub(in crate::gui) fn parent_base_ref(&self) -> Option<&Base> {
 		self.ptr_parent.as_ref().map(|ptr| unsafe { ptr.as_ref() })
 	}
 
-	pub fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
+	pub(in crate::gui) fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
 		Ok(match self.parent_base_ref() {
 			Some(parent) => parent.hwnd_ref().hinstance(),
 			None => HINSTANCE::GetModuleHandle(None)?,
 		})
 	}
 
-	pub fn user_events_ref(&self) -> &WindowEvents {
+	pub(in crate::gui) fn user_events_ref(&self) -> &WindowEvents {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add event after window is created.");
 		}
 		&self.user_events
 	}
 
-	pub fn privileged_events_ref(&self) -> &WindowEvents {
+	pub(in crate::gui) fn privileged_events_ref(&self) -> &WindowEvents {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add privileged event after window is created.");
 		}
 		&self.privileged_events
 	}
 
-	pub fn process_effective_message(&mut self, wm_any: WndMsg) -> ProcessResult {
+	pub(in crate::gui) fn process_effective_message(&mut self,
+		wm_any: WndMsg) -> ProcessResult
+	{
 		self.user_events.process_effective_message(wm_any)
 	}
 
-	pub fn process_privileged_messages(&mut self, wm_any: WndMsg) {
+	pub(in crate::gui) fn process_privileged_messages(&mut self,
+		wm_any: WndMsg)
+	{
 		self.privileged_events.process_all_messages(wm_any);
 	}
 
-	pub fn run_main_loop(haccel: Option<HACCEL>) -> WinResult<()> {
+	pub(in crate::gui) fn run_main_loop(
+		haccel: Option<HACCEL>) -> WinResult<()>
+	{
 		loop {
 			let mut msg = MSG::default();
 			if !GetMessage(&mut msg, None, 0, 0)? {

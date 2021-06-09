@@ -8,14 +8,14 @@ use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 
 #[derive(Clone)]
-pub(crate) struct DlgModal(Arc<Obj>);
+pub(in crate::gui) struct DlgModal(Arc<Obj>);
 
 struct Obj { // actual fields of DlgModal
 	base: DlgBase,
 }
 
 impl DlgModal {
-	pub fn new(parent_base_ref: &Base, dialog_id: i32) -> DlgModal {
+	pub(in crate::gui) fn new(parent_base_ref: &Base, dialog_id: i32) -> DlgModal {
 		let dlg = Self(
 			Arc::new(
 				Obj {
@@ -27,11 +27,11 @@ impl DlgModal {
 		dlg
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
 	}
 
-	pub fn show_modal(&self) -> WinResult<i32> {
+	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {
 		self.0.base.dialog_box_param()
 	}
 

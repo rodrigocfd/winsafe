@@ -13,7 +13,7 @@ use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub(crate) struct RawModal(Arc<VeryUnsafeCell<Obj>>);
+pub(in crate::gui) struct RawModal(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of RawModal
 	base: RawBase,
@@ -22,7 +22,9 @@ struct Obj { // actual fields of RawModal
 }
 
 impl RawModal {
-	pub fn new(parent_base_ref: &Base, opts: WindowModalOpts) -> RawModal {
+	pub(in crate::gui) fn new(
+		parent_base_ref: &Base, opts: WindowModalOpts) -> RawModal
+	{
 		let wnd = Self(
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
@@ -36,11 +38,11 @@ impl RawModal {
 		wnd
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
 	}
 
-	pub fn show_modal(&self) -> WinResult<i32> {
+	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {
 		let hparent = *self.base_ref().parent_base_ref().unwrap().hwnd_ref();
 		let opts = &self.0.opts;
 

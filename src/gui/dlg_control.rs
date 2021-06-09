@@ -10,7 +10,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
 use crate::structs::POINT;
 
 #[derive(Clone)]
-pub(crate) struct DlgControl(Arc<Obj>);
+pub(in crate::gui) struct DlgControl(Arc<Obj>);
 
 struct Obj { // actual fields of DlgControl
 	base: DlgBase,
@@ -19,7 +19,7 @@ struct Obj { // actual fields of DlgControl
 }
 
 impl DlgControl {
-	pub fn new(
+	pub(in crate::gui) fn new(
 		parent_base_ref: &Base,
 		dialog_id: i32,
 		position: POINT,
@@ -38,7 +38,7 @@ impl DlgControl {
 		dlg
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
 	}
 

@@ -10,7 +10,7 @@ use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 /// Base to all ordinary windows.
-pub(crate) struct RawBase {
+pub(in crate::gui) struct RawBase {
 	base: Base,
 }
 
@@ -23,24 +23,26 @@ impl Drop for RawBase {
 }
 
 impl RawBase {
-	pub fn new(parent_base_ref: Option<&Base>) -> RawBase {
+	pub(in crate::gui) fn new(parent_base_ref: Option<&Base>) -> RawBase {
 		Self {
 			base: Base::new(parent_base_ref, false),
 		}
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		&self.base
 	}
 
-	pub fn focus_first_child(&self) {
+	pub(in crate::gui) fn focus_first_child(&self) {
 		// https://stackoverflow.com/a/2835220/6923555
 		if let Ok(hchild) = self.base.hwnd_ref().GetWindow(co::GW::CHILD) {
 			hchild.SetFocus();
 		}
 	}
 
-	pub fn register_class(&self, wcx: &mut WNDCLASSEX) -> WinResult<ATOM> {
+	pub(in crate::gui) fn register_class(&self,
+		wcx: &mut WNDCLASSEX) -> WinResult<ATOM>
+	{
 		wcx.lpfnWndProc = Some(Self::window_proc);
 		SetLastError(co::ERROR::SUCCESS);
 
@@ -59,7 +61,7 @@ impl RawBase {
 			})
 	}
 
-	pub fn create_window(
+	pub(in crate::gui) fn create_window(
 		&self,
 		class_name: &str,
 		title: Option<&str>,
@@ -89,7 +91,9 @@ impl RawBase {
 
 	/// Generates a hash string from current fields, so it must called after all
 	/// the fields are set.
-	pub fn generate_wcx_class_name_hash(wcx: &WNDCLASSEX) -> WString {
+	pub(in crate::gui) fn generate_wcx_class_name_hash(
+		wcx: &WNDCLASSEX) -> WString
+	{
 		WString::from_str(
 			&format!(
 				"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",

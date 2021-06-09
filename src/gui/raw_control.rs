@@ -12,7 +12,7 @@ use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::WString;
 
 #[derive(Clone)]
-pub(crate) struct RawControl(Arc<Obj>);
+pub(in crate::gui) struct RawControl(Arc<Obj>);
 
 struct Obj { // actual fields of RawControl
 	base: RawBase,
@@ -20,7 +20,9 @@ struct Obj { // actual fields of RawControl
 }
 
 impl RawControl {
-	pub fn new(parent_base_ref: &Base, opts: WindowControlOpts) -> RawControl {
+	pub(in crate::gui) fn new(
+		parent_base_ref: &Base, opts: WindowControlOpts) -> RawControl
+	{
 		let wnd = Self(
 			Arc::new(
 				Obj {
@@ -33,7 +35,7 @@ impl RawControl {
 		wnd
 	}
 
-	pub fn base_ref(&self) -> &Base {
+	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
 	}
 
