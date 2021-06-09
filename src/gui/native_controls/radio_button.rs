@@ -1,7 +1,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::ButtonEvents;
-use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
@@ -20,7 +20,7 @@ use crate::structs::{POINT, SIZE};
 pub struct RadioButton(Obj);
 
 struct Obj { // actual fields of RadioButton
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	opts_id: OptsId<RadioButtonOpts>,
 	events: ButtonEvents,
 }
@@ -35,7 +35,7 @@ impl RadioButton {
 
 		Self(
 			Obj {
-				base: NativeControlBase::new(parent_base_ref),
+				base: BaseNativeControl::new(parent_base_ref),
 				opts_id: OptsId::Wnd(opts),
 				events: ButtonEvents::new(parent_base_ref, ctrl_id),
 			},
@@ -47,7 +47,7 @@ impl RadioButton {
 
 		Self(
 			Obj {
-				base: NativeControlBase::new(parent_base_ref),
+				base: BaseNativeControl::new(parent_base_ref),
 				opts_id: OptsId::Dlg(ctrl_id),
 				events: ButtonEvents::new(parent_base_ref, ctrl_id),
 			},

@@ -5,7 +5,7 @@ use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::ComboBoxEvents;
 use crate::gui::native_controls::combo_box_items::ComboBoxItems;
-use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
@@ -21,7 +21,7 @@ use crate::structs::{POINT, SIZE};
 pub struct ComboBox(Arc<Obj>);
 
 struct Obj { // actual fields of ComboBox
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	opts_id: OptsId<ComboBoxOpts>,
 	events: ComboBoxEvents,
 	items: ComboBoxItems,
@@ -40,7 +40,7 @@ impl ComboBox {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
 					items: ComboBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
@@ -65,7 +65,7 @@ impl ComboBox {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
 					items: ComboBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object

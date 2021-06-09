@@ -7,7 +7,7 @@ use crate::gui::base::Base;
 use crate::gui::events::ListViewEvents;
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
-use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::{HMENU, HWND};
@@ -24,7 +24,7 @@ use crate::structs::{LVHITTESTINFO, NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 pub struct ListView(Arc<Obj>);
 
 struct Obj { // actual fields of ListView
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	opts_id: OptsId<ListViewOpts>,
 	events: ListViewEvents,
 	columns: ListViewColumns,
@@ -46,7 +46,7 @@ impl ListView {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
 					columns: ListViewColumns::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
@@ -83,7 +83,7 @@ impl ListView {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
 					columns: ListViewColumns::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object

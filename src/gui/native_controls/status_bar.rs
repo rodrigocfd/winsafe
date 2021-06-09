@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::StatusBarEvents;
-use crate::gui::native_controls::native_control_base::NativeControlBase;
+use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
@@ -22,7 +22,7 @@ use crate::structs::{POINT, SIZE};
 pub struct StatusBar(Arc<VeryUnsafeCell<Obj>>);
 
 struct Obj { // actual fields of StatusBar
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	ctrl_id: i32,
 	events: StatusBarEvents,
 	parts: StatusBarParts,
@@ -56,7 +56,7 @@ impl StatusBar {
 		let new_self = Self(
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
 					parts: StatusBarParts::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object

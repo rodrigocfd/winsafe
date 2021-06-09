@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::TrackbarEvents;
-use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
@@ -20,7 +20,7 @@ use crate::structs::{POINT, SIZE};
 pub struct Trackbar(Arc<Obj>);
 
 struct Obj { // actual fields of Trackbar
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	opts_id: OptsId<TrackbarOpts>,
 	events: TrackbarEvents,
 }
@@ -38,7 +38,7 @@ impl Trackbar {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
 				},
@@ -61,7 +61,7 @@ impl Trackbar {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
 				},

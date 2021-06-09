@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::TreeViewEvents;
-use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::native_controls::tree_view_items::TreeViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
@@ -21,7 +21,7 @@ use crate::structs::{POINT, SIZE};
 pub struct TreeView(Arc<Obj>);
 
 struct Obj { // actual fields of TreeView
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	opts_id: OptsId<TreeViewOpts>,
 	events: TreeViewEvents,
 	items: TreeViewItems,
@@ -40,7 +40,7 @@ impl TreeView {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
 					items: TreeViewItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
@@ -65,7 +65,7 @@ impl TreeView {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
 					items: TreeViewItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object

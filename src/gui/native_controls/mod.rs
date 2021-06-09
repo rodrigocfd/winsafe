@@ -3,6 +3,7 @@
 #[macro_use]
 mod macros;
 
+mod base_native_control;
 mod button;
 mod check_box;
 mod combo_box_items;
@@ -16,7 +17,6 @@ mod list_view_columns;
 mod list_view_items;
 mod list_view;
 mod month_calendar;
-mod native_control_base;
 mod progress_bar;
 mod radio_button;
 mod radio_group;

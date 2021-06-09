@@ -29,22 +29,22 @@ pub enum OptsId<Op> {
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.
-pub(in crate::gui) struct NativeControlBase(VeryUnsafeCell<Obj>);
+pub(in crate::gui) struct BaseNativeControl(VeryUnsafeCell<Obj>);
 
-struct Obj { // actual fields of NativeControlBase
+struct Obj { // actual fields of BaseNativeControl
 	hwnd: HWND,
 	ptr_parent: NonNull<Base>,
 	subclass_events: WindowEvents, // for control subclassing
 }
 
-impl Child for NativeControlBase {
+impl Child for BaseNativeControl {
 	fn as_any(&self) -> &dyn Any {
 		self
 	}
 }
 
-impl NativeControlBase {
-	pub(in crate::gui) fn new(parent_base_ref: &Base) -> NativeControlBase {
+impl BaseNativeControl {
+	pub(in crate::gui) fn new(parent_base_ref: &Base) -> BaseNativeControl {
 		Self(
 			VeryUnsafeCell::new(
 				Obj {
@@ -77,7 +77,8 @@ impl NativeControlBase {
 		&self,
 		class_name: &str,
 		title: Option<&str>,
-		pos: POINT, sz: SIZE,
+		pos: POINT,
+		sz: SIZE,
 		ctrl_id: i32,
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> WinResult<HWND>

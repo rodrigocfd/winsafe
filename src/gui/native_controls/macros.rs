@@ -18,9 +18,9 @@ macro_rules! impl_send_sync_child {
 /// * on_subclass.
 macro_rules! pub_fn_hwnd_onsubclass {
 	() => {
-		/// Returns a reference to the underlying `NativeControlBase`, used in
+		/// Returns a reference to the underlying `BaseNativeControl`, used in
 		/// `hwndref_from_child` downcasting function.
-		pub(in crate::gui) fn base_ref(&self) -> &NativeControlBase {
+		pub(in crate::gui) fn base_ref(&self) -> &BaseNativeControl {
 			&self.0.base
 		}
 

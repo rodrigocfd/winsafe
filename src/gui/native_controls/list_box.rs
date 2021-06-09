@@ -5,7 +5,7 @@ use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::ListBoxEvents;
 use crate::gui::native_controls::list_box_items::ListBoxItems;
-use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
@@ -22,7 +22,7 @@ use crate::structs::{POINT, SIZE};
 pub struct ListBox(Arc<Obj>);
 
 struct Obj { // actual fields of ListBox
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	opts_id: OptsId<ListBoxOpts>,
 	events: ListBoxEvents,
 	items: ListBoxItems,
@@ -41,7 +41,7 @@ impl ListBox {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListBoxEvents::new(parent_base_ref, ctrl_id),
 					items: ListBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
@@ -66,7 +66,7 @@ impl ListBox {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListBoxEvents::new(parent_base_ref, ctrl_id),
 					items: ListBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object

@@ -5,7 +5,7 @@ use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::events::LabelEvents;
-use crate::gui::native_controls::native_control_base::{NativeControlBase, OptsId};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
@@ -22,7 +22,7 @@ use crate::WString;
 pub struct Label(Arc<Obj>);
 
 struct Obj { // actual fields of Label
-	base: NativeControlBase,
+	base: BaseNativeControl,
 	opts_id: OptsId<LabelOpts>,
 	events: LabelEvents,
 }
@@ -40,7 +40,7 @@ impl Label {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: LabelEvents::new(parent_base_ref, ctrl_id),
 				},
@@ -63,7 +63,7 @@ impl Label {
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: NativeControlBase::new(parent_base_ref),
+					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: LabelEvents::new(parent_base_ref, ctrl_id),
 				},
