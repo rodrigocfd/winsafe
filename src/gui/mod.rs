@@ -4,6 +4,9 @@
 //! You'll probably want to start your GUI application using the
 //! [`WindowMain`](crate::gui::WindowMain).
 
+#[macro_use]
+mod macros;
+
 pub mod events;
 
 mod base;
