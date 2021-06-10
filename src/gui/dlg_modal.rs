@@ -23,12 +23,17 @@ impl DlgModal {
 				},
 			),
 		);
+		dlg.0.base.ui_thread_message_handler();
 		dlg.default_message_handlers();
 		dlg
 	}
 
 	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F: FnOnce()>(&self, func: F) {
+		self.0.base.run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {

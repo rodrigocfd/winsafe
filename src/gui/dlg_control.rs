@@ -34,12 +34,17 @@ impl DlgControl {
 				},
 			),
 		);
+		dlg.0.base.ui_thread_message_handler();
 		dlg.default_message_handlers(parent_base_ref);
 		dlg
 	}
 
 	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F: FnOnce()>(&self, func: F) {
+		self.0.base.run_ui_thread(func);
 	}
 
 	fn default_message_handlers(&self, parent_base_ref: &Base) {

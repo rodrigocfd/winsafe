@@ -107,6 +107,14 @@ impl RawBase {
 		)
 	}
 
+	pub(in crate::gui) fn ui_thread_message_handler(&self) {
+		self.base.ui_thread_message_handler();
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F: FnOnce()>(&self, func: F) {
+		self.base.run_ui_thread(func);
+	}
+
 	extern "system" fn window_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
@@ -137,15 +145,15 @@ impl RawBase {
 			ref_self.base.process_privileged_messages(wm_any);
 
 			// Execute user closure, if any.
-			let maybe_processed = ref_self.base.process_effective_message(wm_any);
+			let process_result = ref_self.base.process_effective_message(wm_any);
 
 			if msg == co::WM::NCDESTROY { // always check
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 				ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 			}
 
-			Ok(match maybe_processed {
-				ProcessResult::HandledWithRet(res) => res.into(),
+			Ok(match process_result {
+				ProcessResult::HandledWithRet(res) => res,
 				ProcessResult::HandledWithoutRet => 0,
 				ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any).into(),
 			})

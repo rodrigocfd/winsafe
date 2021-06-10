@@ -26,6 +26,8 @@ extern "system" {
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
 	pub fn FreeLibrary(_: HANDLE) -> BOOL;
 	pub fn GetBinaryTypeW(_: PCSTR, _: &mut u32) -> BOOL;
+	pub fn GetCurrentProcessId() -> u32;
+	pub fn GetCurrentThreadId() -> u32;
 	pub fn GetEnvironmentStringsW() -> HANDLE;
 	pub fn GetExitCodeProcess(_: HANDLE, _: *mut u32) -> BOOL;
 	pub fn GetExitCodeThread(_: HANDLE, _: *mut u32) -> BOOL;

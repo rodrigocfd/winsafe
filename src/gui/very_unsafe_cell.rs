@@ -7,6 +7,9 @@ use std::ops::Deref;
 /// mutability within the `gui` module.
 pub(crate) struct VeryUnsafeCell<T>(UnsafeCell<T>);
 
+unsafe impl<T> Send for VeryUnsafeCell<T> {}
+unsafe impl<T> Sync for VeryUnsafeCell<T> {}
+
 impl<T> Deref for VeryUnsafeCell<T> {
 	type Target = T;
 	fn deref(&self) -> &Self::Target {

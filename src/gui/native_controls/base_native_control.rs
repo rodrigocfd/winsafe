@@ -148,12 +148,12 @@ impl BaseNativeControl {
 		{
 			let ptr_self = ref_data as *mut Self; // retrieve
 			let wm_any = WndMsg { msg_id: msg, wparam, lparam };
-			let mut maybe_processed = ProcessResult::NotHandled;
+			let mut process_result = ProcessResult::NotHandled;
 
 			if !ptr_self.is_null() {
 				let ref_self = unsafe { &mut *ptr_self };
 				if !ref_self.0.hwnd.is_null() {
-					maybe_processed = ref_self.0.subclass_events.process_effective_message(wm_any);
+					process_result = ref_self.0.subclass_events.process_effective_message(wm_any);
 				}
 			}
 
@@ -161,8 +161,8 @@ impl BaseNativeControl {
 				hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
 			}
 
-			Ok(match maybe_processed {
-				ProcessResult::HandledWithRet(res) => res.into(),
+			Ok(match process_result {
+				ProcessResult::HandledWithRet(res) => res,
 				ProcessResult::HandledWithoutRet => 0,
 				ProcessResult::NotHandled => hwnd.DefSubclassProc(wm_any).into(),
 			})

@@ -66,6 +66,14 @@ impl DlgBase {
 		).map(|res| res as _)
 	}
 
+	pub(in crate::gui) fn ui_thread_message_handler(&self) {
+		self.base.ui_thread_message_handler();
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F: FnOnce()>(&self, func: F) {
+		self.base.run_ui_thread(func);
+	}
+
 	extern "system" fn dialog_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
@@ -98,38 +106,34 @@ impl DlgBase {
 			if wm_any.msg_id == co::WM::INITDIALOG {
 				// Child controls are created in privileged closures, so we set the
 				// system font only now.
-				ref_self.set_ui_font_on_children();
+				ref_self.base.hwnd_ref().SendMessage(wm::SetFont { // on the window itself
+					hfont: ui_font(),
+					redraw: false,
+				});
+				ref_self.base.hwnd_ref().EnumChildWindows(|hchild| {
+					hchild.SendMessage(wm::SetFont { // on each child control
+						hfont: ui_font(),
+						redraw: false,
+					});
+					true
+				});
 			}
 
 			// Execute user closure, if any.
-			let maybe_processed = ref_self.base.process_effective_message(wm_any);
+			let process_result = ref_self.base.process_effective_message(wm_any);
 
 			if msg == co::WM::NCDESTROY { // always check
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 				ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 			}
 
-			Ok(match maybe_processed {
-				ProcessResult::HandledWithRet(res) => res.into(),
-				ProcessResult::HandledWithoutRet => true as _,
-				ProcessResult::NotHandled => false as _,
+			Ok(match process_result {
+				ProcessResult::HandledWithRet(res) => res,
+				ProcessResult::HandledWithoutRet => 1, // TRUE
+				ProcessResult::NotHandled => 0, // FALSE
 			})
 		}
 		(hwnd, msg, wparam, lparam)
-			.unwrap_or_else(|err| { PostQuitMessage(err); true as _ })
-	}
-
-	fn set_ui_font_on_children(&self) {
-		self.base.hwnd_ref().SendMessage(wm::SetFont {
-			hfont: ui_font(),
-			redraw: false,
-		});
-		self.base.hwnd_ref().EnumChildWindows(|hchild| {
-			hchild.SendMessage(wm::SetFont {
-				hfont: ui_font(),
-				redraw: false,
-			});
-			true
-		});
+			.unwrap_or_else(|err| { PostQuitMessage(err); 1 }) // TRUE
 	}
 }

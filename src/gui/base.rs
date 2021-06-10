@@ -18,6 +18,8 @@ pub(in crate::gui) struct Base {
 }
 
 impl Base {
+	const WM_UI_THREAD: co::WM = co::WM(co::WM::APP.0 + 0x3fff);
+
 	pub(in crate::gui) fn new(
 		parent_base_ref: Option<&Base>, is_dialog: bool) -> Base
 	{
@@ -47,10 +49,10 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
-		Ok(match self.parent_base_ref() {
-			Some(parent) => parent.hwnd_ref().hinstance(),
-			None => HINSTANCE::GetModuleHandle(None)?,
-		})
+		self.parent_base_ref().map_or_else(
+			|| HINSTANCE::GetModuleHandle(None),
+			|parent| Ok(parent.hwnd_ref().hinstance()),
+		)
 	}
 
 	pub(in crate::gui) fn user_events_ref(&self) -> &WindowEvents {
@@ -77,6 +79,34 @@ impl Base {
 		wm_any: WndMsg)
 	{
 		self.privileged_events.process_all_messages(wm_any);
+	}
+
+	pub(in crate::gui) fn ui_thread_message_handler(&self) {
+		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
+			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
+				let ptr_pack = p.lparam as *mut Box<dyn FnOnce()>;
+				let pack: Box<Box<dyn FnOnce()>> = unsafe { Box::from_raw(ptr_pack) };
+				pack();
+			}
+			0
+		});
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F: FnOnce()>(&self, func: F) {
+		// This method is analog to SendMessage (synchronous), but intended to
+		// be called from another thread, so a callback function can, tunelled
+		// by wndproc, run in the original thread of the window, thus allowing
+		// GUI updates. With this, the user doesn't have to deal with a custom
+		// WM_ message.
+
+		// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
+		let pack: Box<Box<dyn FnOnce()>> = Box::new(Box::new(func));
+		let ptr_pack = Box::into_raw(pack);
+		self.hwnd.SendMessage(WndMsg {
+			msg_id: Self::WM_UI_THREAD,
+			wparam: Self::WM_UI_THREAD.0 as _,
+			lparam: ptr_pack as _,
+		});
 	}
 
 	pub(in crate::gui) fn run_main_loop(

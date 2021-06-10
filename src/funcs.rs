@@ -258,6 +258,19 @@ pub fn GetBinaryType(lpApplicationName: &str) -> WinResult<co::SCS> {
 	).map(|_| lpBinaryType)
 }
 
+
+/// [`GetCurrentProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
+/// function.
+pub fn GetCurrentProcessId() -> u32 {
+	unsafe { kernel32::GetCurrentProcessId() }
+}
+
+/// [`GetCurrentThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid)
+/// function.
+pub fn GetCurrentThreadId() -> u32 {
+	unsafe { kernel32::GetCurrentThreadId() }
+}
+
 /// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
 /// method.
 pub fn GetClipCursor(lpRect: &mut RECT) -> WinResult<()> {
