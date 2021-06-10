@@ -65,6 +65,8 @@ extern "system" {
 	pub fn OutputDebugStringW(_: PCSTR);
 	pub fn Process32FirstW(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn Process32NextW(_: HANDLE, _: PVOID) -> BOOL;
+	pub fn QueryPerformanceCounter(_: *mut i64) -> BOOL;
+	pub fn QueryPerformanceFrequency(_: *mut i64) -> BOOL;
 	pub fn ReadFile(_: HANDLE, _: PVOID, _: u32, _: *mut u32, _: PVOID) -> BOOL;
 	pub fn SetEndOfFile(_: HANDLE) -> BOOL;
 	pub fn SetFilePointerEx(_: HANDLE, _: i64, _: *mut i64, _: u32) -> BOOL;

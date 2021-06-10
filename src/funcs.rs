@@ -756,6 +756,40 @@ pub fn PostQuitMessage(nExitCode: co::ERROR) {
 	unsafe { user32::PostQuitMessage(nExitCode.0 as _) }
 }
 
+/// [`QueryPerformanceCounter`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{QueryPerformanceCounter, QueryPerformanceFrequency};
+///
+/// let freq = QueryPerformanceFrequency().unwrap();
+/// let start = QueryPerformanceCounter().unwrap();
+///
+/// // perform some operation...
+///
+/// let duration_ms =
+///     ((QueryPerformanceCounter().unwrap() - t0) as f64 / freq as f64) * 1000.0;
+///
+/// println!("Operation lasted {:.2} ms", duration_ms);
+/// ```
+pub fn QueryPerformanceCounter() -> WinResult<i64> {
+	let mut lpPerformanceCount: i64 = 0;
+	bool_to_winresult(
+		unsafe { kernel32::QueryPerformanceCounter(&mut lpPerformanceCount) },
+	).map(|_| lpPerformanceCount)
+}
+
+/// [`QueryPerformanceFrequency`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
+/// function.
+pub fn QueryPerformanceFrequency() -> WinResult<i64> {
+	let mut lpFrequency: i64 = 0;
+	bool_to_winresult(
+		unsafe { kernel32::QueryPerformanceFrequency(&mut lpFrequency) },
+	).map(|_| lpFrequency)
+}
+
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
 pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
