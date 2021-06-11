@@ -236,4 +236,20 @@ impl HINSTANCE {
 		}.map(|ptr| HMENU { ptr })
 			.ok_or_else(|| GetLastError())
 	}
+
+	/// [`LoadString`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
+	/// method.
+	pub fn LoadString(self, uID: u16) -> WinResult<String> {
+		let mut pData: *const u16 = std::ptr::null_mut();
+		match unsafe {
+			user32::LoadStringW(
+				self.ptr,
+				uID as _,
+				&mut pData as *mut _ as  _, 0,
+			)
+		} {
+			0 => Err(GetLastError()),
+			len => Ok(WString::from_wchars_count(pData, len as _).to_string())
+		}
+	}
 }

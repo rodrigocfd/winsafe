@@ -105,6 +105,7 @@ extern "system" {
 	pub fn LoadIconW(_: HANDLE, _: PCSTR) -> HANDLE;
 	pub fn LoadImageW(_: HANDLE, _: PCSTR, _: u32, _: i32, _: i32, _: u32) -> HANDLE;
 	pub fn LoadMenuW(_: HANDLE, _: PCSTR) -> HANDLE;
+	pub fn LoadStringW(_: HANDLE, _: u32, _: PSTR, _: i32) -> i32;
 	pub fn LockSetForegroundWindow(_: u32) -> BOOL;
 	pub fn MapDialogRect(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn MessageBoxW(_: HANDLE, _: PCSTR, _: PCSTR, _: u32) -> i32;
