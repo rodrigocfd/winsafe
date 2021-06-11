@@ -6,15 +6,8 @@ use std::marker::PhantomData;
 
 use crate::aliases::{CCHOOKPROC, WNDPROC};
 use crate::co;
-use crate::enums::{HwndHmenu, HwndPlace, IdStr};
-use crate::funcs::{
-	IsWindowsVistaOrGreater,
-	HIDWORD,
-	HIWORD,
-	LODWORD,
-	LOWORD,
-	MAKEQWORD,
-};
+use crate::enums::{HwndHmenu, HwndPlace};
+use crate::funcs::{IsWindowsVistaOrGreater, MAKEQWORD};
 use crate::handles::{
 	HBITMAP,
 	HBRUSH,
@@ -31,7 +24,6 @@ use crate::handles::{
 };
 use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH};
 use crate::structs::{ATOM, COLORREF, GUID};
-use crate::unions::{ColorrefDibU, ColorrefHbitmapU};
 use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
@@ -135,7 +127,7 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 /// [`CHOOSECOLOR`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-choosecolorw-r1)
 /// struct.
 #[repr(C)]
-pub struct CHOOSECOLOR<'a, 'b> {
+pub struct CHOOSECOLOR<'a> {
 	pub lStructSize: u32,
 	pub hwndOwner: HWND,
 	pub hInstance: HWND,
@@ -144,14 +136,13 @@ pub struct CHOOSECOLOR<'a, 'b> {
 	pub Flags: co::CC,
 	pub lCustData: isize,
 	pub lpfnHook: Option<CCHOOKPROC>,
-	lpTemplateName: *mut u16,
+	lpTemplateName: *mut u16, // u16 resource ID
 	m_lpCustColors: PhantomData<&'a COLORREF>,
-	m_lpTemplateName: PhantomData<&'b u16>,
 }
 
-impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a, 'b);
+impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a);
 
-impl<'a, 'b> CHOOSECOLOR<'a, 'b> {
+impl<'a> CHOOSECOLOR<'a> {
 	/// Returns the `lpCustColors` field.
 	pub fn lpCustColors(&self) -> Option<&mut [COLORREF; 16]> {
 		unsafe { self.lpCustColors.as_mut() }
@@ -162,7 +153,7 @@ impl<'a, 'b> CHOOSECOLOR<'a, 'b> {
 		self.lpCustColors = buf;
 	}
 
-	pub_fn_string_ptr_get_set!('b, lpTemplateName, set_lpTemplateName);
+	pub_fn_resource_id_get_set!(lpTemplateName, set_lpTemplateName);
 }
 
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
@@ -229,8 +220,8 @@ impl HELPINFO {
 #[repr(C)]
 pub struct LOGBRUSH {
 	pub lbStyle: co::BSS,
-	pub lbColor: ColorrefDibU,
-	pub lbHatch: ColorrefHbitmapU,
+	pub lbColor: COLORREF,
+	pub lbHatch: usize, // weird field
 }
 
 impl_default_zero!(LOGBRUSH);
@@ -382,14 +373,25 @@ impl<'a> NCCALCSIZE_PARAMS<'a> {
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
 	pub hwndFrom: HWND,
-	/// ID of the control sending the message.
-	pub idFrom: usize,
+	idFrom: usize,
 	/// Notification code sent in
 	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	pub code: co::NM,
 }
 
 impl_default_zero!(NMHDR);
+
+impl NMHDR {
+	/// `Returns the `idFrom` field, the ID of the control sending the message.
+	pub fn idFrom(&self) -> u16 {
+		self.idFrom as _
+	}
+
+	/// Sets the `idFrom` field, the ID of the control sending the message.
+	pub fn set_idFrom(&mut self, val: u16) {
+		self.idFrom = val as _
+	}
+}
 
 /// [`NONCLIENTMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)
 /// struct.
@@ -923,7 +925,7 @@ impl WINDOWPOS {
 /// [`WNDCLASSEX`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassexw)
 /// struct.
 #[repr(C)]
-pub struct WNDCLASSEX<'a, 'b> {
+pub struct WNDCLASSEX<'a> {
 	cbSize: u32,
 	pub style: co::CS,
 	pub lpfnWndProc: Option<WNDPROC>,
@@ -933,33 +935,15 @@ pub struct WNDCLASSEX<'a, 'b> {
 	pub hIcon: HICON,
 	pub hCursor: HCURSOR,
 	pub hbrBackground: HBRUSH,
-	lpszMenuName: *mut u16,
+	lpszMenuName: *mut u16, // u16 resource ID
 	lpszClassName: *mut u16,
 	pub hIconSm: HICON,
-	m_lpszMenuName: PhantomData<&'a u16>,
-	m_lpszClassName: PhantomData<&'b u16>,
+	m_lpszClassName: PhantomData<&'a u16>,
 }
 
-impl_default_with_size!(WNDCLASSEX, cbSize, 'a, 'b);
+impl_default_with_size!(WNDCLASSEX, cbSize, 'a);
 
-impl<'a, 'b> WNDCLASSEX<'a, 'b> {
-	/// Returns the `lpszMenuName` field.
-	pub fn lpszMenuName(&self) -> Option<IdStr> {
-		unsafe { self.lpszMenuName.as_mut() }
-			.map(|lp| {
-				let lp2 = lp as *mut _; // https://stackoverflow.com/a/9806654/6923555
-				if HIDWORD(lp2 as _) == 0 && HIWORD(LODWORD(lp2 as _)) == 0 {
-					IdStr::Id(LOWORD(LODWORD(lp2 as _)) as _)
-				} else {
-					IdStr::Str(WString::from_wchars_nullt(lp))
-				}
-			})
-	}
-
-	/// Sets the `lpszMenuName` field.
-	pub fn set_lpszMenuName(&mut self, menu_name: &'a mut IdStr) {
-		self.lpszMenuName = menu_name.as_mut_ptr();
-	}
-
-	pub_fn_string_ptr_get_set!('b, lpszClassName, set_lpszClassName);
+impl<'a> WNDCLASSEX<'a> {
+	pub_fn_resource_id_get_set!(lpszMenuName, set_lpszMenuName);
+	pub_fn_string_ptr_get_set!('a, lpszClassName, set_lpszClassName);
 }

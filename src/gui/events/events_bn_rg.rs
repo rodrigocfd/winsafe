@@ -18,12 +18,12 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 /// control.
 pub struct RadioGroupEvents {
 	parent_ptr: NonNull<Base>,
-	ctrl_ids: Vec<i32>,
+	ctrl_ids: Vec<u16>,
 }
 
 impl RadioGroupEvents {
 	pub(in crate::gui) fn new(
-		parent_base_ref: &Base, ctrl_ids: Vec<i32>) -> RadioGroupEvents
+		parent_base_ref: &Base, ctrl_ids: Vec<u16>) -> RadioGroupEvents
 	{
 		Self {
 			parent_ptr: NonNull::from(parent_base_ref), // convert reference to pointer

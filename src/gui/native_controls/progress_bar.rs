@@ -51,7 +51,7 @@ impl ProgressBar {
 
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> ProgressBar {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ProgressBar {
 		let parent_base_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
@@ -199,7 +199,7 @@ pub struct ProgressBarOpts {
 	/// The control ID.
 	///
 	/// Defaults to an auto-generated ID.
-	pub ctrl_id: i32,
+	pub ctrl_id: u16,
 }
 
 impl Default for ProgressBarOpts {

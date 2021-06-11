@@ -71,3 +71,19 @@ macro_rules! pub_fn_string_buf_get_set {
 		}
 	};
 }
+
+/// Implements getter and setter methods for the given resource ID field, stored
+/// as `*mut u16`.
+macro_rules! pub_fn_resource_id_get_set {
+	($field:ident, $setter:ident) => {
+		/// Returns the resource ID field.
+		pub fn $field(&self) -> u16 {
+			self.$field as _
+		}
+
+		/// Sets the resource ID field.
+		pub fn $setter(&mut self, val: u16) {
+			self.$field = val as _;
+		}
+	};
+}

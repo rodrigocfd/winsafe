@@ -23,7 +23,7 @@ pub enum OptsId<Op> {
 	Wnd(Op),
 	/// The control belongs to a dialog and will be attached with
 	/// [`GetDlgItem`](crate::HWND::GetDlgItem).
-	Dlg(i32),
+	Dlg(u16),
 }
 
 //------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ impl BaseNativeControl {
 		title: Option<&str>,
 		pos: POINT,
 		sz: SIZE,
-		ctrl_id: i32,
+		ctrl_id: u16,
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> WinResult<HWND>
 	{
@@ -106,7 +106,7 @@ impl BaseNativeControl {
 		Ok(self.0.hwnd)
 	}
 
-	pub(in crate::gui) fn create_dlg(&self, ctrl_id: i32) -> WinResult<HWND> {
+	pub(in crate::gui) fn create_dlg(&self, ctrl_id: u16) -> WinResult<HWND> {
 		if self.parent_base_ref().creation_wm() != co::WM::INITDIALOG {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}

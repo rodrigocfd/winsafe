@@ -581,9 +581,10 @@ pub_struct_const! { DISPOSITION, u32,
 	TRUNCATE_EXISTING, 5
 }
 
-pub_struct_const! { DLGID, i32,
-	/// Dialog built-in IDs (`i32`). These are also returned from
-	/// [`MessageBox`](crate::HWND::MessageBox).
+pub_struct_const! { DLGID, u16,
+	/// Dialog built-in IDs (`u16`). These are also returned from
+	/// [`MessageBox`](crate::HWND::MessageBox) and
+	/// [`TaskDialog`](crate::HWND::TaskDialog).
 	=>
 	OK, 1
 	CANCEL, 2

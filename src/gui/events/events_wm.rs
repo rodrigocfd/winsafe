@@ -72,7 +72,7 @@ impl WindowEvents {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
-				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
+				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 				match self.0.as_mut().nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy) { // execute user function
@@ -124,7 +124,7 @@ impl WindowEvents {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
-				let key = (wm_nfy.nmhdr.idFrom as u16, wm_nfy.nmhdr.code);
+				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 				self.0.as_mut().nfys.find_all(key, |func| {
 					func(wm_nfy);
 				});
@@ -220,10 +220,10 @@ impl WindowEvents {
 	/// specific command notifications, which will give you the correct message
 	/// parameters. This generic method should be used when you have a custom,
 	/// non-standard window notification.
-	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: i32, func: F)
+	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: FnMut() + 'static,
 	{
-		self.0.as_mut().cmds.insert((code, ctrl_id as _), Box::new(func));
+		self.0.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](crate::msg::wm::Command) message, handling both
@@ -248,7 +248,7 @@ impl WindowEvents {
 	///     }
 	/// });
 	/// ```
-	pub fn wm_command_accel_menu<F>(&self, ctrl_id: i32, func: F)
+	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
 		where F: FnMut() + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));

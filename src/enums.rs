@@ -111,7 +111,7 @@ impl BitmapPtrStr {
 /// * [`AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
 pub enum EntrySeparatorSubmenu<'a> {
 	/// A selectable entry item, with command ID and text.
-	Entry(i32, &'a str),
+	Entry(u16, &'a str),
 	/// A separator.
 	Separator,
 	/// A submenu, with its entry text.
@@ -221,22 +221,19 @@ impl HwndPointId {
 /// Variant parameter for:
 ///
 /// * [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
-pub enum IdIdcStr {
+pub enum IdIdc {
 	/// A resource ID.
-	Id(i32),
+	Id(u16),
 	/// A [`co::IDC`](crate::co::IDC) constant for a stock system cursor.
 	Idc(co::IDC),
-	/// A resource identified by a string.
-	Str(WString),
 }
 
-impl IdIdcStr {
+impl IdIdc {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => *id as _,
 			Self::Idc(idc) => MAKEINTRESOURCE(idc.0),
-			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -244,22 +241,19 @@ impl IdIdcStr {
 /// Variant parameter for:
 ///
 /// * [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
-pub enum IdIdiStr {
+pub enum IdIdi {
 	/// A resource ID.
-	Id(i32),
+	Id(u16),
 	/// A [`co::IDI`](crate::co::IDI) constant for a stock system icon.
 	Idi(co::IDI),
-	/// A resource identified by a string.
-	Str(WString),
 }
 
-impl IdIdiStr {
+impl IdIdi {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => *id as _,
 			Self::Idi(idi) => MAKEINTRESOURCE(idi.0),
-			Self::Str(u16) => unsafe { u16.as_ptr() },
 		}
 	}
 }
@@ -270,7 +264,7 @@ impl IdIdiStr {
 /// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`.
 pub enum IdMenu {
 	/// A command ID.
-	Id(i32),
+	Id(u16),
 	/// An [`HMENU`](crate::HMENU).
 	Menu(HMENU),
 	/// Nothing.
@@ -310,7 +304,7 @@ impl IdMenu {
 #[derive(Copy, Clone)]
 pub enum IdPos {
 	/// A command ID.
-	Id(i32),
+	Id(u16),
 	/// Zero-based position.
 	Pos(u32),
 }
@@ -344,43 +338,12 @@ impl IdPos {
 
 /// Variant parameter for:
 ///
-/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpTemplateName`;
-/// * [`LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`;
-/// * [`LoadMenu`](crate::HINSTANCE::LoadMenu) `lpMenuName`;
-/// * [`WNDCLASSEX`](crate::WNDCLASSEX) `lpszMenuName`.
-pub enum IdStr {
-	/// A resource ID.
-	Id(i32),
-	/// A resource identified by a string.
-	Str(WString),
-}
-
-impl IdStr {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
-		match self {
-			Self::Id(id) => *id as _,
-			Self::Str(u16) => unsafe { u16.as_ptr() },
-		}
-	}
-
-	/// Converts the internal value to a `*mut u16`.
-	pub fn as_mut_ptr(&mut self) -> *mut u16 {
-		match self {
-			Self::Id(id) => *id as _,
-			Self::Str(u16) => unsafe { u16.as_mut_ptr() },
-		}
-	}
-}
-
-/// Variant parameter for:
-///
 /// * [`TaskDialog`](crate::HWND::TaskDialog) `pszIcon`.
 pub enum IdTdicon {
 	/// No icon.
 	None,
 	/// A resource ID.
-	Id(i32),
+	Id(u16),
 	/// A predefined icon.
 	Tdicon(co::TD_ICON),
 }

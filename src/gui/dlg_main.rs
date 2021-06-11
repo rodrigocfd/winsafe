@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
@@ -14,15 +13,15 @@ pub(in crate::gui) struct DlgMain(Arc<Obj>);
 
 struct Obj { // actual fields of DlgMain
 	base: DlgBase,
-	icon_id: Option<i32>,
-	accel_table_id: Option<i32>,
+	icon_id: Option<u16>,
+	accel_table_id: Option<u16>,
 }
 
 impl DlgMain {
 	pub(in crate::gui) fn new(
-		dialog_id: i32,
-		icon_id: Option<i32>,
-		accel_table_id: Option<i32>) -> DlgMain
+		dialog_id: u16,
+		icon_id: Option<u16>,
+		accel_table_id: Option<u16>) -> DlgMain
 	{
 		let dlg = Self(
 			Arc::new(
@@ -51,11 +50,9 @@ impl DlgMain {
 	{
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.base_ref().parent_hinstance()?;
-
-		let haccel = match self.0.accel_table_id {
-			None => None,
-			Some(id) => Some(hinst.LoadAccelerators(IdStr::Id(id))?), // resources are automatically freed
-		};
+		let haccel = self.0.accel_table_id
+			.map(|id| hinst.LoadAccelerators(id)) // resources are automatically freed
+			.transpose()?;
 
 		self.set_icon_if_any(hinst)?;
 		self.base_ref().hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
@@ -82,14 +79,14 @@ impl DlgMain {
 		if let Some(id) = self.0.icon_id {
 			self.base_ref().hwnd_ref().SendMessage(
 				wm::SetIcon {
-					hicon: hinst.LoadImageIcon(IdStr::Id(id), 16, 16, co::LR::DEFAULTCOLOR)?,
+					hicon: hinst.LoadImageIcon(id, 16, 16, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::SMALL,
 				},
 			);
 
 			self.base_ref().hwnd_ref().SendMessage(
 				wm::SetIcon {
-					hicon: hinst.LoadImageIcon(IdStr::Id(id), 32, 32, co::LR::DEFAULTCOLOR)?,
+					hicon: hinst.LoadImageIcon(id, 32, 32, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::BIG,
 				},
 			);

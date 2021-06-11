@@ -15,7 +15,9 @@ struct Obj { // actual fields of DlgModal
 }
 
 impl DlgModal {
-	pub(in crate::gui) fn new(parent_base_ref: &Base, dialog_id: i32) -> DlgModal {
+	pub(in crate::gui) fn new(
+		parent_base_ref: &Base, dialog_id: u16) -> DlgModal
+	{
 		let dlg = Self(
 			Arc::new(
 				Obj {

@@ -289,8 +289,9 @@ pub_struct_const_wsex! { TCS_EX,
 }
 
 pub_struct_const! { TD_ICON, isize,
-	/// [`TaskDialog`](crate::HWND::TaskDialog) `pszIcon` (`isize`). Originally
-	/// has `TD` prefix and `ICON` suffix.
+	/// [`TaskDialog`](crate::HWND::TaskDialog) `pszIcon` and
+	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `pszMainIcon` (`isize`).
+	/// Originally has `TD` prefix and `ICON` suffix.
 	=>
 	WARNING, -1
 	ERROR, -2
@@ -299,7 +300,8 @@ pub_struct_const! { TD_ICON, isize,
 }
 
 pub_struct_const! { TDCBF, i32,
-	/// [`TaskDialog`](crate::HWND::TaskDialog) `dwCommonButtons` (`i32`).
+	/// [`TaskDialog`](crate::HWND::TaskDialog) and
+	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
 	/// Originally has `TDCBF` prefix and `BUTTON` suffix.
 	=>
 	OK, 0x0001
@@ -308,6 +310,29 @@ pub_struct_const! { TDCBF, i32,
 	CANCEL, 0x0008
 	RETRY, 0x0010
 	CLOSE, 0x0020
+}
+
+pub_struct_const! { TDF, u32,
+	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwFlags` (`i32`).
+	=>
+	ENABLE_HYPERLINKS, 0x0001
+	USE_HICON_MAIN, 0x0002
+	USE_HICON_FOOTER, 0x0004
+	ALLOW_DIALOG_CANCELLATION, 0x0008
+	USE_COMMAND_LINKS, 0x0010
+	USE_COMMAND_LINKS_NO_ICON, 0x0020
+	EXPAND_FOOTER_AREA, 0x0040
+	EXPANDED_BY_DEFAULT, 0x0080
+	VERIFICATION_FLAG_CHECKED, 0x0100
+	SHOW_PROGRESS_BAR, 0x0200
+	SHOW_MARQUEE_PROGRESS_BAR, 0x0400
+	CALLBACK_TIMER, 0x0800
+	POSITION_RELATIVE_TO_WINDOW, 0x1000
+	RTL_LAYOUT, 0x2000
+	NO_DEFAULT_RADIO_BUTTON, 0x4000
+	CAN_BE_MINIMIZED, 0x8000
+	NO_SET_FOREGROUND, 0x0001_0000
+	SIZE_TO_CONTENT, 0x0100_0000
 }
 
 pub_struct_const! { TH32CS, u32,

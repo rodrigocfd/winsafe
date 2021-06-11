@@ -257,7 +257,8 @@ pub_struct_const_ws! { BS,
 }
 
 pub_struct_const! { BSS, u32,
-	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbStyle` (`u32`).
+	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbStyle` (`u32`). Originally has `BS`
+	/// prefix.
 	=>
 	SOLID, 0
 	NULL, 1

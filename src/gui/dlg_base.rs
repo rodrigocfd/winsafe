@@ -1,6 +1,5 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
@@ -11,7 +10,7 @@ use crate::msg::{MsgSendRecv, wm, WndMsg};
 /// Base to all dialog windows.
 pub(in crate::gui) struct DlgBase {
 	base: Base,
-	dialog_id: i32,
+	dialog_id: u16,
 }
 
 impl Drop for DlgBase {
@@ -24,7 +23,7 @@ impl Drop for DlgBase {
 
 impl DlgBase {
 	pub(in crate::gui) fn new(
-		parent_base_ref: Option<&Base>, dialog_id: i32) -> DlgBase
+		parent_base_ref: Option<&Base>, dialog_id: u16) -> DlgBase
 	{
 		Self {
 			base: Base::new(parent_base_ref, true),
@@ -44,7 +43,7 @@ impl DlgBase {
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when CreateDialogParam returns.
 		self.base.parent_hinstance()?.CreateDialogParam(
-			IdStr::Id(self.dialog_id),
+			self.dialog_id,
 			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
 			Some(self as *const _ as _), // pass pointer to self
@@ -59,7 +58,7 @@ impl DlgBase {
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when DialogBoxParam returns.
 		self.base.parent_hinstance()?.DialogBoxParam(
-			IdStr::Id(self.dialog_id),
+			self.dialog_id,
 			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
 			Some(self as *const _ as _), // pass pointer to self

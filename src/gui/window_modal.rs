@@ -42,7 +42,7 @@ impl WindowModal {
 
 	/// Instantiates a new `WindowModal` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, dialog_id: i32) -> WindowModal {
+	pub fn new_dlg(parent: &dyn Parent, dialog_id: u16) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Dlg(
 				DlgModal::new(baseref_from_parent(parent), dialog_id),

@@ -48,15 +48,10 @@ pub fn ui_font() -> HFONT {
 
 //------------------------------------------------------------------------------
 
-static mut BASE_CTRL_ID: i32 = 20_000; // in-between Visual Studio Resource Editor values
+static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
 
 /// Returns the next sequential control ID.
-///
-/// Control IDs are actually `u16` because they must be matched in `WM_COMMAND`
-/// processing as `LOWORD(wParam)`, but Win32 functions actually use `i32`.
-/// Also, it's common practice to use `IDC_STATIC` in resource dialogs, which is
-/// defined as -1 and would require an explicit cast to `u16`.
-pub fn auto_ctrl_id() -> i32 {
+pub fn auto_ctrl_id() -> u16 {
 	unsafe {
 		let new_id = BASE_CTRL_ID;
 		BASE_CTRL_ID += 1;

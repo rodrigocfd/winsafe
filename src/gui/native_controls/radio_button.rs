@@ -42,7 +42,7 @@ impl RadioButton {
 		)
 	}
 
-	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: i32) -> RadioButton {
+	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
 		let parent_base_ref = baseref_from_parent(parent);
 
 		Self(
@@ -162,7 +162,7 @@ pub struct RadioButtonOpts {
 	/// The control ID.
 	///
 	/// Defaults to an auto-generated ID.
-	pub ctrl_id: i32,
+	pub ctrl_id: u16,
 }
 
 impl Default for RadioButtonOpts {

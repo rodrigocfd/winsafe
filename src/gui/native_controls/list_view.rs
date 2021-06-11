@@ -75,7 +75,7 @@ impl ListView {
 	/// resources don't need to be destroyed.
 	pub fn new_dlg(
 		parent: &dyn Parent,
-		ctrl_id: i32,
+		ctrl_id: u16,
 		context_menu: Option<HMENU>) -> ListView
 	{
 		let parent_base_ref = baseref_from_parent(parent);
@@ -129,8 +129,8 @@ impl ListView {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	fn handled_events(&self, parent_base_ref: &Base, ctrl_id: i32) {
-		parent_base_ref.privileged_events_ref().add_nfy(ctrl_id as _, co::LVN::KEYDOWN.into(), {
+	fn handled_events(&self, parent_base_ref: &Base, ctrl_id: u16) {
+		parent_base_ref.privileged_events_ref().add_nfy(ctrl_id, co::LVN::KEYDOWN.into(), {
 			let me = self.clone();
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
@@ -147,7 +147,7 @@ impl ListView {
 			}
 		});
 
-		parent_base_ref.privileged_events_ref().add_nfy(ctrl_id as _, co::NM::RCLICK.into(), {
+		parent_base_ref.privileged_events_ref().add_nfy(ctrl_id, co::NM::RCLICK.into(), {
 			let me = self.clone();
 			move |p| {
 				let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
@@ -297,7 +297,7 @@ pub struct ListViewOpts {
 	/// The control ID.
 	///
 	/// Defaults to an auto-generated ID.
-	pub ctrl_id: i32,
+	pub ctrl_id: u16,
 	/// Context popup menu.
 	///
 	/// This menu is shared: it must be destroyed manually after the control is

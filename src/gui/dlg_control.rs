@@ -15,15 +15,15 @@ pub(in crate::gui) struct DlgControl(Arc<Obj>);
 struct Obj { // actual fields of DlgControl
 	base: DlgBase,
 	position: POINT,
-	ctrl_id: Option<i32>,
+	ctrl_id: Option<u16>,
 }
 
 impl DlgControl {
 	pub(in crate::gui) fn new(
 		parent_base_ref: &Base,
-		dialog_id: i32,
+		dialog_id: u16,
 		position: POINT,
-		ctrl_id: Option<i32>) -> DlgControl
+		ctrl_id: Option<u16>) -> DlgControl
 	{
 		let dlg = Self(
 			Arc::new(

@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{IdIdcStr, IdMenu};
+use crate::enums::{IdIdc, IdMenu};
 use crate::funcs::{AdjustWindowRectEx, DispatchMessage, GetMessage, PostQuitMessage, TranslateMessage};
 use crate::gui::base::Base;
 use crate::gui::privs::multiply_dpi;
@@ -230,10 +230,10 @@ impl Default for WindowModalOpts {
 }
 
 impl WindowModalOpts {
-	fn generate_wndclassex<'a, 'b>( // https://stackoverflow.com/q/65481548/6923555
+	fn generate_wndclassex<'a>(
 		&self,
 		hinst: HINSTANCE,
-		wcx: &mut WNDCLASSEX<'_, 'a>,
+		wcx: &mut WNDCLASSEX<'a>,
 		class_name_buf: &'a mut WString) -> WinResult<()>
 	{
 		wcx.hInstance = hinst;
@@ -244,7 +244,7 @@ impl WindowModalOpts {
 
 		wcx.hCursor = match self.class_cursor.as_opt() {
 			Some(h) => h,
-			None => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
+			None => HINSTANCE::NULL.LoadCursor(IdIdc::Idc(co::IDC::ARROW))?,
 		};
 
 		if wcx.lpszClassName().is_none() {

@@ -64,12 +64,12 @@ macro_rules! pub_struct_ctrl_events_proxy {
 		$(#[$doc])*
 		pub struct $name {
 			parent_ptr: std::ptr::NonNull<crate::gui::base::Base>,
-			ctrl_id: i32,
+			ctrl_id: u16,
 		}
 
 		impl $name {
 			pub(in crate::gui) fn new(
-				parent_base_ref: &crate::gui::base::Base, ctrl_id: i32) -> $name
+				parent_base_ref: &crate::gui::base::Base, ctrl_id: u16) -> $name
 			{
 				Self {
 					parent_ptr: std::ptr::NonNull::from(parent_base_ref), // convert reference to pointer

@@ -53,9 +53,9 @@ impl WindowControl {
 	/// Position will be adjusted to match current system DPI.
 	pub fn new_dlg(
 		parent: &dyn Parent,
-		dialog_id: i32,
+		dialog_id: u16,
 		position: POINT,
-		ctrl_id: Option<i32>) -> WindowControl
+		ctrl_id: Option<u16>) -> WindowControl
 	{
 		Self {
 			raw_dlg: RawDlg::Dlg(

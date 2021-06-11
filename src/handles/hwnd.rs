@@ -375,20 +375,20 @@ impl HWND {
 
 	/// [`GetDlgCtrlID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgctrlid)
 	/// method.
-	pub fn GetDlgCtrlID(self) -> WinResult<i32> {
+	pub fn GetDlgCtrlID(self) -> WinResult<u16> {
 		match unsafe { user32::GetDlgCtrlID(self.ptr) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual ID is zero
 				err => Err(err),
 			},
-			id => Ok(id),
+			id => Ok(id as _),
 		}
 	}
 
 	/// [`GetDlgItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitem)
 	/// method.
-	pub fn GetDlgItem(self, nIDDlgItem: i32) -> WinResult<HWND> {
-		unsafe { user32::GetDlgItem(self.ptr, nIDDlgItem).as_mut() }
+	pub fn GetDlgItem(self, nIDDlgItem: u16) -> WinResult<HWND> {
+		unsafe { user32::GetDlgItem(self.ptr, nIDDlgItem as _).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -1249,7 +1249,7 @@ impl HWND {
 		pszIcon: IdTdicon) -> WinResult<co::DLGID>
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
-		let mut pnButton = co::DLGID::CANCEL;
+		let mut pnButton: i32 = 0;
 		hr_to_winresult(
 			unsafe {
 				comctl32::TaskDialog(
@@ -1260,10 +1260,10 @@ impl HWND {
 					WString::from_opt_str(pszContent).as_ptr(),
 					dwCommonButtons.0,
 					pszIcon.as_ptr(),
-					&mut pnButton.0,
+					&mut pnButton,
 				)
 			},
-		).map(|_| pnButton)
+		).map(|_| co::DLGID(pnButton as _))
 	}
 
 	/// [`TranslateAccelerator`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translateacceleratorw)

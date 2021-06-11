@@ -101,7 +101,7 @@ impl RawBase {
 				wcx.lpfnWndProc.map_or(0, |p| p as usize),
 				wcx.cbClsExtra, wcx.cbWndExtra,
 				wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
-				wcx.lpszMenuName().map_or(0, |lpsz| lpsz.as_ptr() as usize),
+				wcx.lpszMenuName(),
 				wcx.hIconSm,
 			),
 		)

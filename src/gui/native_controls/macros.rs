@@ -93,7 +93,7 @@ macro_rules! pub_fn_ctrlid_hwnd_on_onsubclass {
 		pub_fn_hwnd_on_onsubclass!($evstruc);
 
 		/// Returns the control ID.
-		pub fn ctrl_id(&self) -> i32 {
+		pub fn ctrl_id(&self) -> u16 {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => opts.ctrl_id,
 				OptsId::Dlg(ctrl_id) => *ctrl_id,

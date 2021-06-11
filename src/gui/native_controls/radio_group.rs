@@ -79,7 +79,7 @@ impl RadioGroup {
 	/// # Panics
 	///
 	/// Panics if no control IDs are passed.
-	pub fn new_dlg(parent: &dyn Parent, ctrl_ids: &[i32]) -> RadioGroup {
+	pub fn new_dlg(parent: &dyn Parent, ctrl_ids: &[u16]) -> RadioGroup {
 		if ctrl_ids.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}

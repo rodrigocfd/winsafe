@@ -151,9 +151,9 @@ impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
 	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		dialog_id: i32,
-		icon_id: Option<i32>,
-		accel_table_id: Option<i32>) -> WindowMain
+		dialog_id: u16,
+		icon_id: Option<u16>,
+		accel_table_id: Option<u16>) -> WindowMain
 	{
 		Self {
 			raw_dlg: RawDlg::Dlg(
@@ -166,6 +166,9 @@ impl WindowMain {
 
 	/// Physically creates the window, then runs the main application loop. This
 	/// method will block until the window is closed.
+	///
+	/// The `cmd_show` parameter defaults to
+	/// [`co::SW::SHOW`](crate::co::SW::SHOW).
 	///
 	/// # Panics
 	///
