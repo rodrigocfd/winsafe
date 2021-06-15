@@ -34,6 +34,7 @@ use crate::structs::{
 	OSVERSIONINFOEX,
 	POINT,
 	RECT,
+	SHFILEINFO,
 	SYSTEMTIME,
 	TIME_ZONE_INFORMATION,
 	TRACKMOUSEEVENT,
@@ -853,6 +854,30 @@ pub fn Shell_NotifyIcon(
 	bool_to_winresult(
 		unsafe { shell32::Shell_NotifyIconW(dwMessage.0, lpData as *mut _ as _) },
 	)
+}
+
+/// [`SHGetFileInfo`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
+/// function.
+///
+/// **Note:** If you are returning an icon in the `hIcon` member of
+/// [`SHFILEINFO`](crate::SHFILEINFO), it must be paired with a
+/// [`DestroyIcon`](crate::HICON::DestroyIcon) call.
+pub fn SHGetFileInfo(
+	pszPath: &str, dwFileAttributes: co::FILE_ATTRIBUTE,
+	psfi: &mut SHFILEINFO, uFlags: co::SHGFI) -> WinResult<u32>
+{
+	match unsafe {
+		shell32::SHGetFileInfoW(
+			WString::from_str(pszPath).as_ptr(),
+			dwFileAttributes.0,
+			psfi as *mut _ as _,
+			std::mem::size_of::<SHFILEINFO>() as _,
+			uFlags.0,
+		)
+	} {
+		0 => Err(GetLastError()),
+		n => Ok(n as _),
+	}
 }
 
 /// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)

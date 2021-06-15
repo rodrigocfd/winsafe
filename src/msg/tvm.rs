@@ -227,12 +227,7 @@ pub struct GetImageList {
 impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => None,
-			p => Some(HIMAGELIST { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_option_handle!(HIMAGELIST);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -416,12 +411,7 @@ pub struct GetNextItem {
 impl MsgSend for GetNextItem {
 	type RetType = Option<HTREEITEM>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => None,
-			p => Some(HTREEITEM { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_option_handle!(HTREEITEM);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -488,12 +478,7 @@ pub struct GetTooltips {}
 impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => None,
-			p => Some(HWND { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_option_handle!(HWND);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -633,12 +618,7 @@ pub struct SetImageList {
 impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => None,
-			p => Some(HIMAGELIST { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_option_handle!(HIMAGELIST);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

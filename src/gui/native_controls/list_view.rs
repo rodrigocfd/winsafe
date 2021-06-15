@@ -10,7 +10,7 @@ use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::{HMENU, HWND};
+use crate::handles::{HIMAGELIST, HMENU, HWND};
 use crate::msg::lvm;
 use crate::structs::{LVHITTESTINFO, NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 
@@ -176,6 +176,12 @@ impl ListView {
 		self.0.context_menu
 	}
 
+	/// Retrieves one of the associated image lists by sending an
+	/// [`LVM_GETIMAGELIST`](crate::msg::lvm::GetImageList) message.
+	pub fn image_list(&self, kind: co::LVSIL) -> Option<HIMAGELIST> {
+		self.hwnd().SendMessage(lvm::GetImageList { kind })
+	}
+
 	/// Exposes the item methods.
 	pub fn items(&self) -> &ListViewItems {
 		&self.0.items
@@ -191,6 +197,16 @@ impl ListView {
 	/// [`LVM_SETVIEW`](crate::msg::lvm::SetView) message.
 	pub fn set_current_view(&self, view: co::LV_VIEW) -> WinResult<()> {
 		self.hwnd().SendMessage(lvm::SetView { view })
+	}
+
+	/// Sets the one of the associated image lists by sending an
+	/// [`LVM_SETIMAGELIST`](crate::msg::lvm::SetImageList) message.
+	///
+	/// Returns the previous image list, if any.
+	pub fn set_image_list(&self,
+		kind: co::LVSIL, himagelist: HIMAGELIST) -> Option<HIMAGELIST>
+	{
+		self.hwnd().SendMessage(lvm::SetImageList { kind, himagelist })
 	}
 
 	/// Toggles the given extended list view styles by sending an

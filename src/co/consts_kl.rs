@@ -746,6 +746,15 @@ pub_struct_const_wsex! { LVS_EX,
 	UNDERLINEHOT, 0x0000_0800
 }
 
+pub_struct_const! { LVSIL, u8,
+	/// [`LVM_GETIMAGELIST`](crate::msg::lvm::GetImageList) `kind` (`u8`).
+	=>
+	NORMAL, 0
+	SMALL, 1
+	STATE, 2
+	GROUPHEADER, 3
+}
+
 pub_struct_const_ws! { LWS,
 	/// SysLink control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)

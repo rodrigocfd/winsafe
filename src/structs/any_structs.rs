@@ -654,6 +654,24 @@ pub struct SECURITY_DESCRIPTOR {
    pub Dacl: *mut ACL,
 }
 
+/// [`SHFILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
+/// struct.
+#[repr(C)]
+pub struct SHFILEINFO {
+	pub hIcon: HICON,
+	pub iIcon: i32,
+	dwAttributes: u32,
+	szDisplayName: [u16; MAX_PATH],
+	szTypeName: [u16; 80],
+}
+
+impl_default_zero!(SHFILEINFO);
+
+impl SHFILEINFO {
+	pub_fn_string_arr_get_set!(szDisplayName, set_szDisplayName);
+	pub_fn_string_arr_get_set!(szTypeName, set_szTypeName);
+}
+
 /// [`SIZE`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-size)
 /// struct.
 #[repr(C)]

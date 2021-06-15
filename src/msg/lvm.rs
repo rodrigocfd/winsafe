@@ -5,7 +5,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::handles::HWND;
+use crate::handles::{HIMAGELIST, HWND};
 use crate::msg::{MsgSend, WndMsg};
 use crate::structs::{
 	COLORREF,
@@ -283,6 +283,28 @@ impl MsgSend for GetHeader {
 		WndMsg {
 			msg_id: co::LVM::GETHEADER.into(),
 			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getimagelist)
+/// message parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+pub struct GetImageList {
+	pub kind: co::LVSIL,
+}
+
+impl MsgSend for GetImageList {
+	type RetType = Option<HIMAGELIST>;
+
+	fn_convert_ret_option_handle!(HIMAGELIST);
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETIMAGELIST.into(),
+			wparam: self.kind.0 as _,
 			lparam: 0,
 		}
 	}
@@ -699,6 +721,29 @@ impl MsgSend for SetExtendedListViewStyle {
 			msg_id: co::LVM::SETEXTENDEDLISTVIEWSTYLE.into(),
 			wparam: self.style.0 as _,
 			lparam: self.mask.0 as _,
+		}
+	}
+}
+
+/// [`LVM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setimagelist)
+/// message parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+pub struct SetImageList {
+	pub kind: co::LVSIL,
+	pub himagelist: HIMAGELIST,
+}
+
+impl MsgSend for SetImageList {
+	type RetType = Option<HIMAGELIST>;
+
+	fn_convert_ret_option_handle!(HIMAGELIST);
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETIMAGELIST.into(),
+			wparam: self.kind.0 as _,
+			lparam: self.himagelist.ptr as _,
 		}
 	}
 }

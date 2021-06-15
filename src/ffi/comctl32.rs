@@ -13,6 +13,7 @@ extern "system" {
 	pub fn ImageList_DragMove(_: HANDLE, _: i32, _: i32) -> BOOL;
 	pub fn ImageList_DragShowNolock(_: BOOL) -> BOOL;
 	pub fn ImageList_EndDrag();
+	pub fn ImageList_GetIconSize(_: HANDLE, _: *mut i32, _: *mut i32) -> BOOL;
 	pub fn ImageList_GetImageCount(_: HANDLE) -> i32;
 	pub fn ImageList_Remove(_: HANDLE, _: i32) -> BOOL;
 	pub fn ImageList_ReplaceIcon(_: HANDLE, _: i32, _: HANDLE) -> i32;

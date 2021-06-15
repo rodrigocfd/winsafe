@@ -529,12 +529,7 @@ pub struct GetFont {}
 impl MsgSend for GetFont {
 	type RetType = Option<HFONT>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => None,
-			p => Some(HFONT { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_option_handle!(HFONT);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -560,12 +555,7 @@ pub struct GetHMenu {}
 impl MsgSend for GetHMenu {
 	type RetType = Option<HMENU>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => None,
-			p => Some(HMENU { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_option_handle!(HMENU);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1434,12 +1424,7 @@ pub struct SetIcon {
 impl MsgSend for SetIcon {
 	type RetType = Option<HICON>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => None,
-			p => Some(HICON { ptr: p as _ }),
-		}
-	}
+	fn_convert_ret_option_handle!(HICON);
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

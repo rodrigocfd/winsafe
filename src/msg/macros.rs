@@ -37,6 +37,19 @@ macro_rules! fn_convert_ret_winresult_handle {
 	};
 }
 
+/// Implements the `convert_ret` method for message structs that returns an
+/// `Option<HANDLE>`.
+macro_rules! fn_convert_ret_option_handle {
+	($handle:ident) => {
+		fn convert_ret(&self, v: isize) -> Self::RetType {
+			match v {
+				0 => None,
+				ptr => Some($handle { ptr: ptr as _ }),
+			}
+		}
+	};
+}
+
 /// Struct for a message that has no parameters and no meaningful return value.
 macro_rules! pub_struct_msg_empty {
 	(
