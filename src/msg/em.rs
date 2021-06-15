@@ -16,9 +16,7 @@ pub struct CanUndo {}
 impl MsgSend for CanUndo {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
-	}
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

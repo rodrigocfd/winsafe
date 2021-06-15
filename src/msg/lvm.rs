@@ -13,9 +13,12 @@ use crate::structs::{
 	LVFINDINFO,
 	LVHITTESTINFO,
 	LVITEM,
+	LVITEMINDEX,
+	POINT,
 	RECT,
 	SIZE,
 };
+use crate::WString;
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
@@ -382,6 +385,33 @@ impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 	}
 }
 
+/// [`LVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemrect)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetItemRect<'a> {
+	pub index: u32,
+	pub rect: &'a mut RECT,
+	pub portion: co::LVIR,
+}
+
+impl<'a> MsgSend for GetItemRect<'a> {
+	type RetType = WinResult<()>;
+
+	fn_convert_ret_winresult_void!();
+
+	fn as_generic_wm(&self) -> WndMsg {
+		let ptr_rect = self.rect as *const _ as *mut RECT;
+		unsafe { &mut *ptr_rect }.left = self.portion.0 as _;
+
+		WndMsg {
+			msg_id: co::LVM::GETITEMRECT.into(),
+			wparam: self.index as _,
+			lparam: self.rect as *const _ as _,
+		}
+	}
+}
+
 /// [`LVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
 /// message parameters.
 ///
@@ -410,29 +440,116 @@ impl MsgSend for GetNextItem {
 	}
 }
 
-/// [`LVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemrect)
+/// [`LVM_GETNEXTITEMINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitemindex)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
-pub struct GetItemRect<'a> {
-	pub index: u32,
-	pub rect: &'a mut RECT,
-	pub portion: co::LVIR,
+/// Return type: `bool`.
+pub struct GetNextItemIndex<'a> {
+	pub initial_item: &'a mut LVITEMINDEX,
+	pub relationship: co::LVNI,
 }
 
-impl<'a> MsgSend for GetItemRect<'a> {
-	type RetType = WinResult<()>;
+impl<'a> MsgSend for GetNextItemIndex<'a> {
+	type RetType = bool;
 
-	fn_convert_ret_winresult_void!();
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
-		let ptr_rect = self.rect as *const _ as *mut RECT;
-		unsafe { &mut *ptr_rect }.left = self.portion.0 as _;
-
 		WndMsg {
-			msg_id: co::LVM::GETITEMRECT.into(),
-			wparam: self.index as _,
-			lparam: self.rect as *const _ as _,
+			msg_id: co::LVM::GETNEXTITEMINDEX.into(),
+			wparam: self.initial_item as *const _ as _,
+			lparam: self.relationship.0 as _,
+		}
+	}
+}
+
+/// [`LVM_GETNUMBEROFWORKAREAS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnumberofworkareas)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct GetNumberOfWorkAreas<'a> {
+	pub num: &'a mut u32,
+}
+
+impl<'a> MsgSend for GetNumberOfWorkAreas<'a> {
+	type RetType = ();
+
+	fn_convert_ret_void!();
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETNUMBEROFWORKAREAS.into(),
+			wparam: 0,
+			lparam: self.num as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_GETORIGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getorigin)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct GetOrigin<'a> {
+	pub origin: &'a mut POINT,
+}
+
+impl<'a> MsgSend for GetOrigin<'a> {
+	type RetType = bool;
+
+	fn_convert_ret_bool!();
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETORIGIN.into(),
+			wparam: 0,
+			lparam: self.origin as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_GETOUTLINECOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getoutlinecolor)
+/// message, which has no parameters.
+///
+/// Return type: `COLORREF`.
+pub struct GetOutlineColor {}
+
+impl MsgSend for GetOutlineColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETOUTLINECOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_GETSELECTEDCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcolumn)
+/// message, which has no parameters.
+///
+/// Return type: `Option<u32>.
+pub struct GetSelectedColumn {}
+
+impl MsgSend for GetSelectedColumn {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETSELECTEDCOLUMN.into(),
+			wparam: 0,
+			lparam: 0,
 		}
 	}
 }
@@ -453,6 +570,127 @@ impl MsgSend for GetSelectedCount {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETSELECTEDCOUNT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_GETSELECTIONMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectionmark)
+/// message, which has no parameters.
+///
+/// Return type: `Option<u32>.
+pub struct GetSelectionMark {}
+
+impl MsgSend for GetSelectionMark {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETSELECTIONMARK.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_GETSTRINGWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getstringwidth)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetStringWidth<'a> {
+	pub text: &'a str,
+}
+
+impl<'a> MsgSend for GetStringWidth<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			len => Ok(len as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETSTRINGWIDTH.into(),
+			wparam: 0,
+			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+		}
+	}
+}
+
+/// [`LVM_GETTEXTBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettextbkcolor)
+/// message, which has no parameters.
+///
+/// Return type: `COLORREF`.
+pub struct GetTextBkColor {}
+
+impl MsgSend for GetTextBkColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETTEXTBKCOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_GETTEXTCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettextcolor)
+/// message, which has no parameters.
+///
+/// Return type: `COLORREF`.
+pub struct GetTextColor {}
+
+impl MsgSend for GetTextColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETTEXTCOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettopindex)
+/// message, which has no parameters.
+///
+/// In case of error or when there are no items, this message returns zero, so
+/// other checks must be made.
+///
+/// Return type: `u32`.
+pub struct GetTopIndex {}
+
+impl MsgSend for GetTopIndex {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETTOPINDEX.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -480,6 +718,29 @@ impl MsgSend for GetView {
 		}
 	}
 }
+
+/// [`LVM_GETVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getviewrect)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetViewRect<'a> {
+	pub rect: &'a mut RECT,
+}
+
+impl<'a> MsgSend for GetViewRect<'a> {
+	type RetType = WinResult<()>;
+
+	fn_convert_ret_winresult_void!();
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETVIEWRECT.into(),
+			wparam: 0,
+			lparam: self.rect as *const _ as _,
+		}
+	}
+}
+
 /// [`LVM_HITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-hittest)
 /// message parameters.
 ///
@@ -571,9 +832,7 @@ pub struct IsGroupViewEnabled {}
 impl MsgSend for IsGroupViewEnabled {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
-	}
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -595,13 +854,65 @@ pub struct IsItemVisible {
 impl MsgSend for IsItemVisible {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
-	}
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ISITEMVISIBLE.into(),
+			wparam: self.index as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_MAPIDTOINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-mapidtoindex)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct MapIdToIndex {
+	pub id: u32,
+}
+
+impl MsgSend for MapIdToIndex {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::MAPIDTOINDEX.into(),
+			wparam: self.id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_MAPINDEXTOID`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-mapindextoid)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct MapIndexToId {
+	pub index: u32,
+}
+
+impl MsgSend for MapIndexToId {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::MAPINDEXTOID.into(),
 			wparam: self.index as _,
 			lparam: 0,
 		}

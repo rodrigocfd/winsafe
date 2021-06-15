@@ -12,6 +12,16 @@ macro_rules! fn_convert_ret_void {
 }
 
 /// Implements the `convert_ret` method for message structs that returns a
+/// `bool`.
+macro_rules! fn_convert_ret_bool {
+	() => {
+		fn convert_ret(&self, v: isize) -> Self::RetType {
+			v != 0
+		}
+	};
+}
+
+/// Implements the `convert_ret` method for message structs that returns a
 /// `WinResult<()>`.
 macro_rules! fn_convert_ret_winresult_void {
 	() => {

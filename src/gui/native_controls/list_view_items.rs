@@ -142,6 +142,18 @@ impl ListViewItems {
 		self.hwnd().SendMessage(lvm::IsItemVisible { index: item_index })
 	}
 
+	/// Retrieves the actual index of the unique ID by sending an
+	/// [`LVM_MAPIDTOINDEX`](crate::msg::lvm::MapIdToIndex) message.
+	pub fn map_id_to_index(&self, item_id: u32) -> Option<u32> {
+		self.hwnd().SendMessage(lvm::MapIdToIndex { id: item_id })
+	}
+
+	/// Retrieves an unique ID for the given index by sending an
+	/// [`LVM_MAPINDEXTOID`](crate::msg::lvm::MapIndexToId) message.
+	pub fn map_index_to_id(&self, item_index: u32) -> Option<u32> {
+		self.hwnd().SendMessage(lvm::MapIndexToId { index: item_index })
+	}
+
 	/// Retrieves the bound rectangle of item by sending an
 	/// [`LVM_GETITEMRECT`](crate::msg::lvm::GetItemRect) message.
 	pub fn rect(&self, item_index: u32, portion: co::LVIR) -> WinResult<RECT> {

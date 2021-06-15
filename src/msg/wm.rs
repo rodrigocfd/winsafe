@@ -711,9 +711,7 @@ pub struct InitDialog {
 impl MsgSend for InitDialog {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
-	}
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1050,9 +1048,7 @@ pub struct NcCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
-	}
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1283,9 +1279,7 @@ pub struct QueryOpen {}
 impl MsgSend for QueryOpen {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
-	}
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1327,9 +1321,7 @@ pub struct SetCursor {
 impl MsgSend for SetCursor {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
-	}
+	fn_convert_ret_bool!();
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

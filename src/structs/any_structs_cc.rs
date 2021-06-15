@@ -172,6 +172,15 @@ impl<'a> LVITEM<'a> {
 	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
 }
 
+/// [`LVITEMINDEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemindex)
+/// struct.
+#[repr(C)]
+#[derive(Default, Copy, Clone, Eq, PartialEq)]
+pub struct LVITEMINDEX {
+	pub iItem: i32,
+	pub iGroup: i32,
+}
+
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
 #[repr(C)]
