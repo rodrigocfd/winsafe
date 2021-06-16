@@ -62,7 +62,7 @@ impl ListViewColumns {
 			lvc.cx = col_cx.cx;
 
 			let mut wtext = WString::from_str(text);
-			lvc.set_pszText(&mut wtext);
+			lvc.set_pszText(Some(&mut wtext));
 
 			self.hwnd().SendMessage(lvm::InsertColumn {
 				index: 0xffff,
@@ -145,7 +145,7 @@ impl ListViewColumns {
 		lvc.mask = co::LVCF::TEXT;
 
 		let mut buf = WString::from_str(text);
-		lvc.set_pszText(&mut buf);
+		lvc.set_pszText(Some(&mut buf));
 
 		self.set_info(column_index, &lvc)
 	}
@@ -202,7 +202,7 @@ impl ListViewColumns {
 		lvc.mask = co::LVCF::TEXT;
 
 		buf.realloc_buffer(128); // arbitrary
-		lvc.set_pszText(&mut buf);
+		lvc.set_pszText(Some(&mut buf));
 
 		self.info(column_index, &mut lvc)?;
 		Ok(buf.to_string())

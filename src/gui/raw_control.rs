@@ -184,7 +184,7 @@ impl WindowControlOpts {
 
 		if wcx.lpszClassName().is_none() {
 			*class_name_buf = RawBase::generate_wcx_class_name_hash(&wcx);
-			wcx.set_lpszClassName(class_name_buf);
+			wcx.set_lpszClassName(Some(class_name_buf));
 		}
 
 		Ok(())

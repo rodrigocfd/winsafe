@@ -156,6 +156,19 @@ impl ProgressBar {
 		self.hwnd().SendMessage(pbm::SetRange32 { min, max })
 	}
 
+	/// Sets the current state by sending a
+	/// [`PBM_SETSTATE`](crate::msg::pbm::SetState) message, retuning the
+	/// previous state.
+	pub fn set_state(&self, state: co::PBST) -> co::PBST {
+		self.hwnd().SendMessage(pbm::SetState { state })
+	}
+
+	/// Retrieves the current state by sending a
+	/// [`PBM_GETSTATE`](crate::msg::pbm::GetState) message.
+	pub fn state(&self) -> co::PBST {
+		self.hwnd().SendMessage(pbm::GetState {})
+	}
+
 	fn cur_style(&self) -> co::PBS {
 		co::PBS(self.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _)
 	}

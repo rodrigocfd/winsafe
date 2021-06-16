@@ -24,25 +24,8 @@ pub struct AM_MEDIA_TYPE<'a> {
 impl_default_zero!(AM_MEDIA_TYPE, 'a);
 
 impl<'a> AM_MEDIA_TYPE<'a> {
-	/// Returns the `bFixedSizeSamples` field.
-	pub fn bFixedSizeSamples(&self) -> bool {
-		self.bFixedSizeSamples != 0
-	}
-
-	/// Sets the `bFixedSizeSamples` field.
-	pub fn set_bFixedSizeSamples(&mut self, val: bool) {
-		self.bFixedSizeSamples = val as _;
-	}
-
-	/// Returns the `bTemporalCompression` field.
-	pub fn bTemporalCompression(&self) -> bool {
-		self.bTemporalCompression != 0
-	}
-
-	/// Sets the `bTemporalCompression` field.
-	pub fn set_bTemporalCompression(&mut self, val: bool) {
-		self.bTemporalCompression = val as _;
-	}
+	pub_fn_bool_get_set!(bFixedSizeSamples, set_bFixedSizeSamples);
+	pub_fn_bool_get_set!(bTemporalCompression, set_bTemporalCompression);
 
 	/// Returns the `pbFormat` field.
 	///

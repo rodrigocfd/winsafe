@@ -111,7 +111,7 @@ pub struct LVCOLUMN<'a> {
 impl_default_zero!(LVCOLUMN, 'a);
 
 impl<'a> LVCOLUMN<'a> {
-	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
 /// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
@@ -169,7 +169,7 @@ pub struct LVITEM<'a> {
 impl_default_zero!(LVITEM, 'a);
 
 impl<'a> LVITEM<'a> {
-	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
 /// [`LVITEMINDEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemindex)
@@ -388,7 +388,7 @@ pub struct NMLVCACHEHINT {
 	pub iTo: i32,
 }
 
-/// [`NMLVCUSTOMDRAW`] (https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcustomdraw)
+/// [`NMLVCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcustomdraw)
 /// struct.
 #[repr(C)]
 pub struct NMLVCUSTOMDRAW {
@@ -455,7 +455,7 @@ pub struct NMLVGETINFOTIP<'a> {
 impl_default_zero!(NMLVGETINFOTIP, 'a);
 
 impl<'a> NMLVGETINFOTIP<'a> {
-	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
 /// [`NMLVKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
@@ -644,7 +644,7 @@ pub struct TVITEM<'a> {
 impl_default_zero!(TVITEM, 'a);
 
 impl<'a> TVITEM<'a> {
-	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
 /// [`TVITEMEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemexw)
@@ -672,5 +672,5 @@ pub struct TVITEMEX<'a> {
 impl_default_zero!(TVITEMEX, 'a);
 
 impl<'a> TVITEMEX<'a> {
-	pub_fn_string_buf_get_set!(pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }

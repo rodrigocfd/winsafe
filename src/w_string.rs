@@ -39,6 +39,31 @@ impl WString {
 		Self::from_opt_str(Some(s))
 	}
 
+	/// Creates and stores a new UTF-16 string from a `Vec` of ordinary strings.
+	/// This new string will be stored as sequential null-separated strings,
+	/// terminated with two nulls. That means that further retrieval operations
+	/// will "see" only the first string.
+	///
+	/// This method is intended to pass multi-strings to native APIs, not to
+	/// retrieve them.
+	pub fn from_str_vec<S: AsRef<str>>(v: &[S]) -> WString {
+		let mut tot_chars = 0;
+		for s in v.iter() {
+			tot_chars = s.as_ref().len();
+		}
+
+		let mut buf: Vec<u16> = vec![0; tot_chars + v.len() + 1]; // add room for nulls
+		for s in v.iter() {
+			let block: Vec<u16> = s.as_ref().encode_utf16()
+				.chain(std::iter::once(0)) // append a terminating null
+				.collect();
+			buf.extend(&block);
+		}
+		buf.push(0); // so we have two terminating nulls
+
+		Self { vec_u16: Some(buf) }
+	}
+
 	/// Creates a new UTF-16 string by copying from a non-null-terminated
 	/// buffer, specifying the number of existing chars.
 	///

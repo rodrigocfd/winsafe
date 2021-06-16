@@ -7,6 +7,7 @@ use std::marker::PhantomData;
 use crate::aliases::{CCHOOKPROC, WNDPROC};
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPlace};
+use crate::ffi::BOOL;
 use crate::funcs::{
 	HIDWORD,
 	HIWORD,
@@ -30,7 +31,7 @@ use crate::handles::{
 	HTHREAD,
 	HWND,
 };
-use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH};
+use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH, parse_multi_z_str};
 use crate::structs::{ATOM, COLORREF, GUID};
 use crate::WString;
 
@@ -678,6 +679,59 @@ impl_default_zero!(SHFILEINFO);
 impl SHFILEINFO {
 	pub_fn_string_arr_get_set!(szDisplayName, set_szDisplayName);
 	pub_fn_string_arr_get_set!(szTypeName, set_szTypeName);
+}
+
+/// [`SHFILEOPSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileopstructw)
+/// struct.
+#[repr(C)]
+pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
+	pub hwnd: HWND,
+	pub wFunc: co::FO,
+	pFrom: *mut u16, // double-null terminated
+	pTo: *mut u16, // double-null terminated
+	pub fFlags: co::FOF,
+	fAnyOperationsAborted: BOOL,
+	hNameMappings: *mut std::ffi::c_void, // lots of stuff going here...
+	lpszProgressTitle: *mut u16,
+	m_pFrom: PhantomData<&'a usize>,
+	m_pTo: PhantomData<&'b usize>,
+	m_lpszProgressTitle: PhantomData<&'c usize>,
+}
+
+impl_default_zero!(SHFILEOPSTRUCT, 'a, 'b, 'c);
+
+impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
+	pub_fn_bool_get_set!(fAnyOperationsAborted, set_fAnyOperationsAborted);
+
+	/// Retrieves the `pFrom` field.
+	pub fn pFrom(&self) -> Option<Vec<String>> {
+ 		unsafe { self.pFrom.as_mut() }
+			.map(|p| parse_multi_z_str(p))
+	}
+
+	/// Sets the `pFrom` field.
+	///
+	/// **Note:** You must create the string with
+	/// [`WString::from_str_vec`](crate::WString::from_str_vec).
+	pub fn set_pFrom(&mut self, val: Option<&'a mut WString>) {
+		self.pFrom = val.map_or(std::ptr::null_mut(), |v| unsafe { v.as_mut_ptr() });
+	}
+
+	/// Retrieves the `pTo` field.
+	pub fn pTo(&self) -> Option<Vec<String>> {
+		unsafe { self.pTo.as_mut() }
+		  .map(|p| parse_multi_z_str(p))
+	}
+
+	/// Sets the `pTo` field.
+	///
+	/// **Note:** You must create the string with
+	/// [`WString::from_str_vec`](crate::WString::from_str_vec).
+	pub fn set_pTo(&mut self, val: Option<&'b mut WString>) {
+		self.pTo = val.map_or(std::ptr::null_mut(), |v| unsafe { v.as_mut_ptr() });
+	}
+
+	pub_fn_string_ptr_get_set!('c, lpszProgressTitle, set_lpszProgressTitle);
 }
 
 /// [`SIZE`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-size)

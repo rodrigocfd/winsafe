@@ -23,6 +23,21 @@ macro_rules! impl_default_with_size {
 	};
 }
 
+/// Implements getter and setter methods for the given `BOOL` member.
+macro_rules! pub_fn_bool_get_set {
+	($field:ident, $setter:ident) => {
+		/// Returns the bool field.
+		pub fn $field(&self) -> bool {
+			self.$field != 0
+		}
+
+		/// Sets the bool field.
+		pub fn $setter(&mut self, val: bool) {
+			self.$field = val as _
+		}
+	};
+}
+
 /// Implements getter and setter methods for the given `*mut u16` member.
 macro_rules! pub_fn_string_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident) => {
@@ -33,8 +48,8 @@ macro_rules! pub_fn_string_ptr_get_set {
 		}
 
 		/// Sets the string field.
-		pub fn $setter(&mut self, buf: &$life mut WString) {
-			self.$field = unsafe { buf.as_mut_ptr() };
+		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
+			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
 		}
 	};
 }
@@ -57,7 +72,7 @@ macro_rules! pub_fn_string_arr_get_set {
 /// Implements getter and setter methods for the given `*mut 16` and `i32`
 /// members, setting buffer and its size.
 macro_rules! pub_fn_string_buf_get_set {
-	($field:ident, $setter:ident, $cch:ident) => {
+	($life:lifetime, $field:ident, $setter:ident, $cch:ident) => {
 		/// Returns the string field.
 		pub fn $field(&self) -> Option<String> {
 			unsafe { self.$field.as_mut() }
@@ -65,9 +80,9 @@ macro_rules! pub_fn_string_buf_get_set {
 		}
 
 		/// Sets the string field.
-		pub fn $setter(&mut self, buf: &'a mut WString) {
-			self.$field = unsafe { buf.as_mut_ptr() };
-			self.$cch = buf.buffer_size() as _;
+		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
+			self.$cch = buf.as_ref().map_or(0, |buf| buf.buffer_size() as _);
+			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
 		}
 	};
 }

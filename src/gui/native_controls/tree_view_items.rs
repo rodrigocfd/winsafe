@@ -50,7 +50,7 @@ impl TreeViewItems {
 			tvix.mask |= co::TVIF::IMAGE;
 			tvix.iImage = icon_index as _;
 		}
-		tvix.set_pszText(&mut buf);
+		tvix.set_pszText(Some(&mut buf));
 
 		let mut tvis = TVINSERTSTRUCT::default();
 		tvis.hParent = hparent;
@@ -73,7 +73,7 @@ impl TreeViewItems {
 			tvix.mask |= co::TVIF::IMAGE;
 			tvix.iImage = icon_index as _;
 		}
-		tvix.set_pszText(&mut buf);
+		tvix.set_pszText(Some(&mut buf));
 
 		let mut tvis = TVINSERTSTRUCT::default();
 		tvis.set_hInsertAfter(HtreeitemTvi::Tvi(co::TVI::LAST));
@@ -211,7 +211,7 @@ impl TreeViewItems {
 		let mut tvi = TVITEMEX::default();
 		tvi.hItem = hitem;
 		tvi.mask = co::TVIF::TEXT;
-		tvi.set_pszText(&mut buf);
+		tvi.set_pszText(Some(&mut buf));
 
 		self.hwnd().SendMessage(tvm::SetItem { tvitem: &tvi })
 	}
@@ -247,7 +247,7 @@ impl TreeViewItems {
 		let mut tvi = TVITEMEX::default();
 		tvi.hItem = hitem;
 		tvi.mask = co::TVIF::TEXT;
-		tvi.set_pszText(&mut buf);
+		tvi.set_pszText(Some(&mut buf));
 
 		self.hwnd().SendMessage(tvm::GetItem { tvitem: &mut tvi })
 	}

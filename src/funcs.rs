@@ -36,6 +36,7 @@ use crate::structs::{
 	POINT,
 	RECT,
 	SHFILEINFO,
+	SHFILEOPSTRUCT,
 	SYSTEM_INFO,
 	SYSTEMTIME,
 	TIME_ZONE_INFORMATION,
@@ -927,6 +928,17 @@ pub fn SHGetFileInfo(
 	} {
 		0 => Err(GetLastError()),
 		n => Ok(n as _),
+	}
+}
+
+/// [`SHFileOperation`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
+/// function.
+pub fn SHFileOperation(lpFileOp: &mut SHFILEOPSTRUCT) -> WinResult<()> {
+	match unsafe {
+		shell32::SHFileOperationW(lpFileOp as *mut _ as _)
+	} {
+		0 => Err(GetLastError()),
+		_ => Ok(()),
 	}
 }
 

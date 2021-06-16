@@ -47,7 +47,7 @@ impl ListViewItems {
 		};
 
 		let mut wtext = WString::from_str(text);
-		lvi.set_pszText(&mut wtext);
+		lvi.set_pszText(Some(&mut wtext));
 
 		self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })
 	}
@@ -95,7 +95,7 @@ impl ListViewItems {
 
 		let mut lvfi = LVFINDINFO::default();
 		lvfi.flags = co::LVFI::STRING;
-		lvfi.set_psz(&mut buf);
+		lvfi.set_psz(Some(&mut buf));
 
 		self.hwnd().SendMessage(lvm::FindItem {
 			start_index: None,
@@ -246,7 +246,7 @@ impl ListViewItems {
 		lvi.iSubItem = column_index as _;
 
 		let mut wtext = WString::from_str(text);
-		lvi.set_pszText(&mut wtext);
+		lvi.set_pszText(Some(&mut wtext));
 
 		self.hwnd().SendMessage(lvm::SetItemText {
 			index: item_index,
@@ -294,7 +294,7 @@ impl ListViewItems {
 			lvi.iSubItem = column_index as _;
 
 			buf.realloc_buffer(buf_sz);
-			lvi.set_pszText(&mut buf);
+			lvi.set_pszText(Some(&mut buf));
 
 			let nchars = hwnd.SendMessage(lvm::GetItemText { // char count without terminating null
 				index: item_index,
