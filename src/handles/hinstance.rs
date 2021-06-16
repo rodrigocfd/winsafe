@@ -6,7 +6,7 @@ use crate::enums::{IdIdc, IdIdi};
 use crate::ffi::{kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
-use crate::privs::{bool_to_winresult, str_to_iso88591};
+use crate::privs::{bool_to_winresult, MAX_PATH, str_to_iso88591};
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::WString;
 
@@ -93,6 +93,32 @@ impl HINSTANCE {
 		} {
 			0 => Err(GetLastError()),
 			atom => Ok(ATOM(atom as _)),
+		}
+	}
+
+	/// [`GetModuleFileName`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// Retrieving the full path of currently running .exe file:
+	///
+	/// ```rust,ignore
+	/// use winsafe::HINSTANCE;
+	///
+	/// println!("EXE: {}", HINSTANCE::NULL.GetModuleFileName().unwrap());
+	/// ```
+	pub fn GetModuleFileName(self) -> WinResult<String> {
+		let mut buf = [0; MAX_PATH];
+		match unsafe {
+			kernel32::GetModuleFileNameW(
+				self.ptr,
+				buf.as_mut_ptr(),
+				buf.len() as _,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(WString::from_wchars_slice(&buf).to_string()),
 		}
 	}
 

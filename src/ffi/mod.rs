@@ -22,3 +22,4 @@ pub(crate) mod ole32;
 pub(crate) mod shell32;
 pub(crate) mod user32;
 pub(crate) mod uxtheme;
+pub(crate) mod version;

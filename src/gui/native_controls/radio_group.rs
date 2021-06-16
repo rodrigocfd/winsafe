@@ -166,4 +166,10 @@ impl RadioGroup {
 		}
 		None
 	}
+
+	/// Returns the number of [`RadioButton`](crate::gui::RadioButton) controls
+	/// in this group.
+	pub fn count(&self) -> usize {
+		self.0.radios.len()
+	}
 }

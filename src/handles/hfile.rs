@@ -107,7 +107,7 @@ impl HFILE {
 				flProtect.0,
 				maximumSize.map_or(0, |n| HIDWORD(n)),
 				maximumSize.map_or(0, |n| LODWORD(n)),
-				lpName.map_or(std::ptr::null(), |s| WString::from_str(s).as_ptr()),
+				lpName.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
 			).as_mut()
 		}.map(|ptr| HFILEMAP { ptr })
 			.ok_or_else(|| GetLastError())

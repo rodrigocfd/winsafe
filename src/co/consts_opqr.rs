@@ -1,3 +1,5 @@
+#![allow(non_upper_case_globals)]
+
 use crate::co::{CCM, FF, WM};
 
 pub_struct_const! { OCR, u32,
@@ -162,6 +164,55 @@ pub_struct_const! { PM, u32,
 	QS_POSTMESSAGE, (QS::POSTMESSAGE.0 | QS::HOTKEY.0 | QS::TIMER.0) << 16
 	QS_PAINT, QS::PAINT.0 << 16
 	QS_SENDMESSAGE, QS::SENDMESSAGE.0 << 16
+}
+
+pub_struct_const! { PROCESSOR, u32,
+	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `dwProcessorType` (`u32`).
+	=>
+	INTEL_386, 386
+	INTEL_486, 486
+	INTEL_PENTIUM, 586
+	INTEL_IA64, 2200
+	AMD_X8664, 8664
+	MIPS_R4000, 4000
+	ALPHA_21064, 21064
+	PPC_601, 601
+	PPC_603, 603
+	PPC_604, 604
+	PPC_620, 620
+	HITACHI_SH3, 10003
+	HITACHI_SH3E, 10004
+	HITACHI_SH4, 10005
+	MOTOROLA_821, 821
+	SHx_SH3, 103
+	SHx_SH4, 104
+	STRONGARM, 2577
+	ARM720, 1824
+	ARM820, 2080
+	ARM920, 2336
+	ARM_7TDMI, 70001
+	OPTIL, 0x494f
+}
+
+pub_struct_const! { PROCESSOR_ARCHITECTURE, u16,
+	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `wProcessorArchitecture` (`u16`).
+	=>
+	INTEL, 0
+	MIPS, 1
+	ALPHA, 2
+	PPC, 3
+	SHX, 4
+	ARM, 5
+	IA64, 6
+	ALPHA64, 7
+	MSIL, 8
+	AMD64, 9
+	IA32_ON_WIN64, 10
+	NEUTRAL, 11
+	ARM64, 12
+	ARM32_ON_WIN64, 13
+	IA32_ON_ARM64, 14
+	UNKNOWN, 0xffff
 }
 
 pub_struct_const! { QUALITY, u8,

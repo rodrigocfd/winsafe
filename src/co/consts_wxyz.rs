@@ -7,6 +7,16 @@ pub_struct_const! { WA, u16,
 	CLICKACTIVE, 2
 }
 
+pub_struct_const! { WAIT, u32,
+	/// [`WaitForSingleObject`](co::HPROCESS::WaitForSingleObject) return value
+	/// (`u32`).
+	=>
+	ABANDONED, 0x0000_0080
+	OBJECT_0, 0x0000_0000
+	TIMEOUT, 0x0000_0102
+	FAILED, 0xffff_ffff
+}
+
 pub_struct_const! { WC, u32,
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `dwFlags` (`u32`).
 	=>

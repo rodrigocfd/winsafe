@@ -3,7 +3,8 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
-use crate::privs::bool_to_winresult;
+use crate::funcs::GetLastError;
+use crate::privs::{bool_to_winresult, INFINITE};
 use crate::structs::{PROCESS_INFORMATION, SECURITY_ATTRIBUTES, STARTUPINFO};
 use crate::WString;
 
@@ -85,5 +86,23 @@ impl HPROCESS {
 		bool_to_winresult(
 			unsafe { kernel32::GetExitCodeProcess(self.ptr, &mut lpExitCode) },
 		).map(|_| lpExitCode)
+	}
+
+	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
+	/// method.
+	pub fn WaitForSingleObject(self,
+		dwMilliseconds: Option<u32>) -> WinResult<co::WAIT>
+	{
+		match unsafe {
+			co::WAIT(
+				kernel32::WaitForSingleObject(
+					self.ptr,
+					dwMilliseconds.unwrap_or(INFINITE),
+				),
+			)
+		} {
+			co::WAIT::FAILED => Err(GetLastError()),
+			wait => Ok(wait),
+		}
 	}
 }

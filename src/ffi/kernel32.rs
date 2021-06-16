@@ -38,8 +38,11 @@ extern "system" {
 	pub fn GetLargePageMinimum() -> u64;
 	pub fn GetLastError() -> u32;
 	pub fn GetLogicalDriveStringsW(_: u32, _: PSTR) -> u32;
+	pub fn GetModuleFileNameW(_: HANDLE, _: PSTR, _: u32) -> u32;
 	pub fn GetModuleHandleW(_: PCSTR) -> HANDLE;
+	pub fn GetNativeSystemInfo(_: PVOID);
 	pub fn GetProcAddress(_: HANDLE, _: *const u8) -> PCVOID;
+	pub fn GetSystemInfo(_: PVOID);
 	pub fn GetSystemTime(_: PVOID);
 	pub fn GetSystemTimeAsFileTime(_: PVOID);
 	pub fn GetSystemTimePreciseAsFileTime(_: PVOID);
@@ -78,6 +81,7 @@ extern "system" {
 	pub fn UnmapViewOfFile(_: PCVOID) -> BOOL;
 	pub fn VerifyVersionInfoW(_: PVOID, _: u32, _: u64) -> BOOL;
 	pub fn VerSetConditionMask(_: u64, _: u32, _: u8) -> u64;
+	pub fn WaitForSingleObject(_: HANDLE, _: u32) -> u32;
 	pub fn WideCharToMultiByte(_: u32, _: u32, _: PCSTR, _: i32, _: PSTR, _: i32, _: *const u8, _: *mut BOOL) -> i32;
 	pub fn WriteFile(_: HANDLE, _: PCVOID, _: u32, _: *mut u32, _: PVOID) -> BOOL;
 }

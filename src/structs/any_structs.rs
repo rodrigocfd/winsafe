@@ -7,7 +7,15 @@ use std::marker::PhantomData;
 use crate::aliases::{CCHOOKPROC, WNDPROC};
 use crate::co;
 use crate::enums::{HwndHmenu, HwndPlace};
-use crate::funcs::{IsWindowsVistaOrGreater, MAKEQWORD};
+use crate::funcs::{
+	HIDWORD,
+	HIWORD,
+	IsWindowsVistaOrGreater,
+	MAKEDWORD,
+	MAKEQWORD,
+	LODWORD,
+	LOWORD,
+};
 use crate::handles::{
 	HBITMAP,
 	HBRUSH,
@@ -700,8 +708,8 @@ impl SIZE {
 pub struct STARTUPINFO<'a, 'b> {
 	cb: u32,
 	lpReserved: *mut u16,
-	pub lpDesktop: *mut u16,
-	pub lpTitle: *mut u16,
+	lpDesktop: *mut u16,
+	lpTitle: *mut u16,
 	pub dwX: u32,
 	pub dwY: u32,
 	pub dwXSize: u32,
@@ -710,7 +718,7 @@ pub struct STARTUPINFO<'a, 'b> {
 	pub dwYCountChars: u32,
 	pub dwFillAttribute: u32,
 	pub dwFlags: co::STARTF,
-	pub wShowWindow: u16,
+	wShowWindow: u16, // co::SW, should be 32-bit
 	cbReserved2: u16,
 	lpReserved2: *mut u8,
 	pub hStdInput: HPIPE,
@@ -725,6 +733,16 @@ impl_default_with_size!(STARTUPINFO, cb, 'a, 'b);
 impl<'a, 'b> STARTUPINFO<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, lpDesktop, set_lpDesktop);
 	pub_fn_string_ptr_get_set!('a, lpTitle, set_lpTitle);
+
+	/// Returns the `wShowWindow` field.
+	pub fn wShowWindow(&self) -> co::SW {
+		co::SW(self.wShowWindow as _)
+	}
+
+	/// Sets the `wShowWindow` field.
+	pub fn set_wShowWindow(&mut self, val: co::SW) {
+		self.wShowWindow = val.0 as _;
+	}
 }
 
 /// [`STYLESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-stylestruct)
@@ -759,6 +777,25 @@ impl STYLESTRUCT {
 		co::WS_EX(self.styleNew)
 	}
 }
+
+/// [`SYSTEM_INFO`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info)
+/// struct.
+#[repr(C)]
+pub struct SYSTEM_INFO {
+	pub wProcessorArchitecture: co::PROCESSOR_ARCHITECTURE,
+	wReserved: u16,
+	pub dwPageSize: u32,
+	pub lpMinimumApplicationAddress: *mut std::ffi::c_void,
+	pub lpMaximumApplicationAddress: *mut std::ffi::c_void,
+	pub dwActiveProcessorMask: usize,
+	pub dwNumberOfProcessors: u32,
+	pub dwProcessorType: co::PROCESSOR,
+	pub dwAllocationGranularity: u32,
+	pub wProcessorLevel: u16,
+	pub wProcessorRevision: u16,
+}
+
+impl_default_zero!(SYSTEM_INFO);
 
 /// [`SYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
 /// struct.
@@ -844,6 +881,70 @@ pub struct TRACKMOUSEEVENT {
 }
 
 impl_default_with_size!(TRACKMOUSEEVENT, cbSize);
+
+/// [`VS_FIXEDFILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo)
+/// struct.
+#[repr(C)]
+pub struct VS_FIXEDFILEINFO {
+	dwSignature: u32,
+	pub dwStrucVersion: u32,
+	dwFileVersionMS: u32,
+	dwFileVersionLS: u32,
+	dwProductVersionMS: u32,
+	dwProductVersionLS: u32,
+	pub dwFileFlagsMask: co::VS_FF,
+	pub dwFileFlags: co::VS_FF,
+	pub dwFileOS: co::VOS,
+	pub dwFileType: co::VFT,
+	pub dwFileSubtype: co::VFT2,
+	dwFileDateMS: u32,
+	dwFileDateLS: u32,
+}
+
+impl Default for VS_FIXEDFILEINFO {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.dwSignature = 0xfeef_04bd;
+		obj
+	}
+}
+
+impl VS_FIXEDFILEINFO {
+	/// Returns the `dwFileVersionMS` and `dwFileVersionLS` fields.
+	pub fn dwFileVersion(&self) -> [u16; 4] {
+		[HIWORD(self.dwFileVersionMS), LOWORD(self.dwFileVersionMS),
+			HIWORD(self.dwFileVersionLS), LOWORD(self.dwFileVersionLS)]
+	}
+
+	/// Sets the `dwFileVersionMS` and `dwFileVersionLS` fields.
+	pub fn set_dwFileVersion(&mut self, val: [u16; 4]) {
+		self.dwFileVersionMS = MAKEDWORD(val[1], val[0]);
+		self.dwFileVersionLS = MAKEDWORD(val[3], val[2]);
+	}
+
+	/// Returns the `dwProductVersionMS` and `dwProductVersionLS` fields.
+	pub fn dwProductVersion(&self) -> [u16; 4] {
+		[HIWORD(self.dwProductVersionMS), LOWORD(self.dwProductVersionMS),
+			HIWORD(self.dwProductVersionLS), LOWORD(self.dwProductVersionLS)]
+	}
+
+	/// Sets the `dwProductVersionMS` and `dwProductVersionLS` fields.
+	pub fn set_dwProductVersion(&mut self, val: [u16; 4]) {
+		self.dwProductVersionMS = MAKEDWORD(val[1], val[0]);
+		self.dwProductVersionLS = MAKEDWORD(val[3], val[2]);
+	}
+
+	/// Returns the `dwFileDateMS` and `dwFileDateLS` fields.
+	pub fn dwFileDate(&self) -> u64 {
+		MAKEQWORD(self.dwFileDateLS, self.dwFileDateMS)
+	}
+
+	/// Sets the `dwFileDateMS` and `dwFileDateLS` fields.
+	pub fn set_dwFileDate(&mut self, val: u64) {
+		self.dwFileDateLS = LODWORD(val);
+		self.dwFileDateMS = HIDWORD(val);
+	}
+}
 
 /// [`WIN32_FIND_DATA`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-win32_find_dataw)
 /// struct.

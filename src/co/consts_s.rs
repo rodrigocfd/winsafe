@@ -128,6 +128,25 @@ pub_struct_const! { SCS, u32,
 	W_64BIT_BINARY, 6
 }
 
+pub_struct_const! { SE_ERR, u32,
+	/// [`ShellExecute`](crate::HWND::ShellExecute) return value (`u32`).
+	=>
+	FILE_NOT_FOUND, 2
+	PATH_NOT_FOUND, 3
+	BAD_FORMAT, 11
+
+	ACCESSDENIED, 5
+	OOM, 8
+	DLLNOTFOUND, 32
+
+	SHARE, 26
+	ASSOCINCOMPLETE, 27
+	DDETIMEOUT, 28
+	DDEFAIL, 29
+	DDEBUSY, 30
+	NOASSOC, 31
+}
+
 pub_struct_const! { SECTION, u32,
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	=>
@@ -541,7 +560,7 @@ pub_struct_const! { STAP, u32,
 pub_struct_const! { STARTF, u32,
 	/// [`CreateProcess`](crate::HPROCESS::CreateProcess) `dwFlags` (`u32`).
 	=>
-	FORCEONFEEDBACK , 0x0000_0040
+	FORCEONFEEDBACK, 0x0000_0040
 	FORCEOFFFEEDBACK, 0x0000_0080
 	PREVENTPINNING, 0x0000_2000
 	RUNFULLSCREEN, 0x0000_0020

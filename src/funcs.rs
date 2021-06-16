@@ -15,6 +15,7 @@ use crate::ffi::{
 	kernel32,
 	shell32,
 	user32,
+	version,
 };
 use crate::handles::{HINSTANCE, HWND};
 use crate::privs::{
@@ -35,6 +36,7 @@ use crate::structs::{
 	POINT,
 	RECT,
 	SHFILEINFO,
+	SYSTEM_INFO,
 	SYSTEMTIME,
 	TIME_ZONE_INFORMATION,
 	TRACKMOUSEEVENT,
@@ -370,6 +372,42 @@ pub fn GetFileAttributes(lpFileName: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 	}
 }
 
+/// [`GetFileVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
+/// function.
+///
+/// The passed buffer will be automatically allocated with
+/// [`GetFileVersionInfoSize`](crate::GetFileVersionInfoSize).
+pub fn GetFileVersionInfo(
+	lptstrFilename: &str, lpData: &mut Vec<u8>) -> WinResult<()>
+{
+	lpData.resize(GetFileVersionInfoSize(lptstrFilename).unwrap() as _, 0);
+	bool_to_winresult(
+		unsafe {
+			version::GetFileVersionInfoW(
+				WString::from_str(lptstrFilename).as_ptr(),
+				0,
+				lpData.len() as _,
+				lpData.as_mut_ptr() as _,
+			)
+		},
+	)
+}
+
+/// [`GetFileVersionInfoSize`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
+/// function.
+pub fn GetFileVersionInfoSize(lptstrFilename: &str) -> WinResult<u32> {
+	let mut lpdwHandle = 0;
+	match unsafe {
+		version::GetFileVersionInfoSizeW(
+			WString::from_str(lptstrFilename).as_ptr(),
+			&mut lpdwHandle,
+		)
+	} {
+		0 => Err(GetLastError()),
+		sz => Ok(sz)
+	}
+}
+
 /// [`GetLargePageMinimum`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getlargepageminimum)
 /// function.
 pub fn GetLargePageMinimum() -> u64 {
@@ -424,6 +462,12 @@ pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 	}
 }
 
+/// [`GetNativeSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
+/// function.
+pub fn GetNativeSystemInfo(lpSystemInfo: &mut SYSTEM_INFO) {
+	unsafe { kernel32::GetNativeSystemInfo(lpSystemInfo as *mut _ as _) }
+}
+
 /// [`GetQueueStatus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
 /// function.
 pub fn GetQueueStatus(flags: co::QS) -> u32 {
@@ -434,6 +478,12 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 /// function.
 pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
 	COLORREF(unsafe { user32::GetSysColor(nIndex.0) })
+}
+
+/// [`GetSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
+/// function.
+pub fn GetSystemInfo(lpSystemInfo: &mut SYSTEM_INFO) {
+	unsafe { kernel32::GetSystemInfo(lpSystemInfo as *mut _ as _) }
 }
 
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
@@ -979,6 +1029,25 @@ pub fn UnregisterClass(
 			)
 		},
 	)
+}
+
+/// [`VarQueryValue`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
+/// function.
+pub fn VarQueryValue<'a>(
+	pBlock: &'a [u8], lpSubBlock: &str) -> WinResult<&'a [u8]>
+{
+	let mut lplpBuffer = std::ptr::null();
+	let mut puLen = 0;
+	bool_to_winresult(
+		unsafe {
+			version::VerQueryValueW(
+				pBlock.as_ptr() as _,
+				WString::from_str(lpSubBlock).as_ptr(),
+				&mut lplpBuffer as *mut _ as _,
+				&mut puLen,
+			)
+		},
+	).map(|_| unsafe { std::slice::from_raw_parts(lplpBuffer, puLen as _) })
 }
 
 /// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)

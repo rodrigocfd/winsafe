@@ -3,7 +3,7 @@
 use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos, IdTdicon};
-use crate::ffi::{BOOL, comctl32, user32, uxtheme};
+use crate::ffi::{BOOL, comctl32, shell32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
 use crate::msg::MsgSend;
@@ -1184,6 +1184,33 @@ impl HWND {
 				)
 			},
 		)
+	}
+
+	/// [`ShellExecute`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
+	/// method.
+	pub fn ShellExecute(self,
+		lpOperation: &str,
+		lpFile: &str,
+		lpParameters: Option<&str>,
+		lpDirectory: Option<&str>,
+		nShowCmd: co::SW) -> Result<HINSTANCE, co::SE_ERR>
+	{
+		let ret = unsafe {
+			shell32::ShellExecuteW(
+				self.ptr,
+				WString::from_str(lpOperation).as_ptr(),
+				WString::from_str(lpFile).as_ptr(),
+				lpParameters.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				lpDirectory.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				nShowCmd.0,
+			)
+		};
+
+		if ret <= 32 as _ {
+			Err(co::SE_ERR(ret as _))
+		} else {
+			Ok(HINSTANCE { ptr: ret as _ })
+		}
 	}
 
 	/// [`ShowCaret`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcaret)
