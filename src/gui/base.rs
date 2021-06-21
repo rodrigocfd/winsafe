@@ -26,7 +26,7 @@ impl Base {
 		Self {
 			hwnd: HWND::NULL,
 			is_dialog,
-			ptr_parent: parent_base_ref.map(|pb_ref| NonNull::from(pb_ref)), // ref implicitly converted to pointer
+			ptr_parent: parent_base_ref.map(|pb_ref| NonNull::from(pb_ref)),
 			user_events: WindowEvents::new(),
 			privileged_events: WindowEvents::new(),
 		}

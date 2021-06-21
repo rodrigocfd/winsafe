@@ -108,14 +108,14 @@ impl Resizer {
 			)),
 		);
 
-		let ptr_parent = NonNull::from(parent_base_ref); // ref implicitly converted to pointer
+		let ptr_parent = NonNull::from(parent_base_ref);
 		let rc_children = Rc::new(
 			children.iter().map(|c|
 				ChildEntry {
 					horz: c.0,
 					vert: c.1,
 					children: c.2.iter()
-						.map(|dyn_child| NonNull::from(hwndref_from_child(*dyn_child))) // convert reference to pointer
+						.map(|dyn_child| NonNull::from(hwndref_from_child(*dyn_child)))
 						.collect(),
 				},
 			).collect::<Vec<_>>()

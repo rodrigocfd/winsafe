@@ -16,12 +16,12 @@ pub struct ListBoxItems {
 impl ListBoxItems {
 	pub(in crate::gui::native_controls) fn new(hwnd_ref: &HWND) -> ListBoxItems {
 		Self {
-			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)), // ref implicitly converted to pointer
+			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)),
 		}
 	}
 
 	pub(in crate::gui::native_controls) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
-		self.hwnd_ptr.replace(NonNull::from(hwnd_ref)); // ref implicitly converted to pointer
+		self.hwnd_ptr.replace(NonNull::from(hwnd_ref));
 	}
 
 	pub(in crate::gui::native_controls) fn hwnd(&self) -> HWND {

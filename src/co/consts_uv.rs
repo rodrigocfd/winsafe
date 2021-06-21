@@ -129,7 +129,7 @@ pub_struct_const! { VFT, u32,
 }
 
 pub_struct_const! { VFT2, u32,
-	/// [`VS_FIXEDFILEINFO`](crate:VS_FIXEDFILEINFO) `dwFileType` (`u32`).
+	/// [`VS_FIXEDFILEINFO`](crate:VS_FIXEDFILEINFO) `dwFileSubType` (`u32`).
 	=>
 	UNKNOWN, 0x0000_0000
 	DRV_PRINTER, 0x0000_0001

@@ -26,7 +26,7 @@ impl RadioGroupEvents {
 		parent_base_ref: &Base, ctrl_ids: Vec<u16>) -> RadioGroupEvents
 	{
 		Self {
-			parent_ptr: NonNull::from(parent_base_ref), // convert reference to pointer
+			parent_ptr: NonNull::from(parent_base_ref),
 			ctrl_ids,
 		}
 	}

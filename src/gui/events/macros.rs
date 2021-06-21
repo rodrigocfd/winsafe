@@ -72,7 +72,7 @@ macro_rules! pub_struct_ctrl_events_proxy {
 				parent_base_ref: &crate::gui::base::Base, ctrl_id: u16) -> $name
 			{
 				Self {
-					parent_ptr: std::ptr::NonNull::from(parent_base_ref), // convert reference to pointer
+					parent_ptr: std::ptr::NonNull::from(parent_base_ref),
 					ctrl_id,
 				}
 			}

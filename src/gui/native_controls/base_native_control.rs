@@ -49,7 +49,7 @@ impl BaseNativeControl {
 			VeryUnsafeCell::new(
 				Obj {
 					hwnd: HWND::NULL,
-					ptr_parent: NonNull::from(parent_base_ref), // ref implicitly converted to pointer
+					ptr_parent: NonNull::from(parent_base_ref),
 					subclass_events: WindowEvents::new(),
 				},
 			),
