@@ -29,6 +29,7 @@ use crate::structs::{
 	CHOOSECOLOR,
 	COLORREF,
 	FILETIME,
+	GUITHREADINFO,
 	MEMORYSTATUSEX,
 	MSG,
 	NOTIFYICONDATA,
@@ -37,6 +38,7 @@ use crate::structs::{
 	RECT,
 	SHFILEINFO,
 	SHFILEOPSTRUCT,
+	STARTUPINFO,
 	SYSTEM_INFO,
 	SYSTEMTIME,
 	TIME_ZONE_INFORMATION,
@@ -258,7 +260,7 @@ pub fn GetBinaryType(lpApplicationName: &str) -> WinResult<co::SCS> {
 				WString::from_str(lpApplicationName).as_ptr(),
 				&mut lpBinaryType.0,
 			)
-		}
+		},
 	).map(|_| lpBinaryType)
 }
 
@@ -409,6 +411,32 @@ pub fn GetFileVersionInfoSize(lptstrFilename: &str) -> WinResult<u32> {
 	}
 }
 
+/// [`GetGUIThreadInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguithreadinfo)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{GetGUIThreadInfo, GUITHREADINFO, HWND};
+///
+/// let hwnd: HWND; // initialized somewhere
+///
+/// let mut gti = GUITHREADINFO::default();
+/// GetGUIThreadInfo(
+///     hwnd.GetWindowThreadProcessId(),
+///     &mut gti,
+/// ).unwrap();
+///
+/// println!("Caret rect: {}", gti.rcCaret);
+/// ```
+pub fn GetGUIThreadInfo(
+	idThread: u32, pgui: &mut GUITHREADINFO) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe { user32::GetGUIThreadInfo(idThread, pgui as *mut _ as _) }
+	)
+}
+
 /// [`GetLargePageMinimum`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getlargepageminimum)
 /// function.
 pub fn GetLargePageMinimum() -> u64 {
@@ -475,6 +503,12 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 	unsafe { user32::GetQueueStatus(flags.0) }
 }
 
+/// [`GetStartupInfo`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
+/// function.
+pub fn GetStartupInfo(lpStartupInfo: &mut STARTUPINFO) {
+	unsafe { kernel32::GetStartupInfoW(lpStartupInfo as *mut _ as _) }
+}
+
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
 pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
@@ -515,6 +549,24 @@ pub fn GetSystemTimePreciseAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
 			lpSystemTimeAsFileTime as *mut _ as _,
 		)
 	}
+}
+
+/// [`GetSystemTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes)
+/// function.
+pub fn GetSystemTimes(
+	lpIdleTime: &mut FILETIME,
+	lpKernelTime: &mut FILETIME,
+	lpUserTime: &mut FILETIME) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			kernel32::GetSystemTimes(
+				lpIdleTime as *mut _ as _,
+				lpKernelTime as *mut _ as _,
+				lpUserTime as *mut _ as _,
+			)
+		},
+	)
 }
 
 /// [`GetTempPath`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppathw)

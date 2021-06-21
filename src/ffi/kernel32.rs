@@ -26,7 +26,9 @@ extern "system" {
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
 	pub fn FreeLibrary(_: HANDLE) -> BOOL;
 	pub fn GetBinaryTypeW(_: PCSTR, _: &mut u32) -> BOOL;
+	pub fn GetCurrentProcess() -> HANDLE;
 	pub fn GetCurrentProcessId() -> u32;
+	pub fn GetCurrentThread() -> HANDLE;
 	pub fn GetCurrentThreadId() -> u32;
 	pub fn GetEnvironmentStringsW() -> HANDLE;
 	pub fn GetExitCodeProcess(_: HANDLE, _: *mut u32) -> BOOL;
@@ -35,6 +37,7 @@ extern "system" {
 	pub fn GetFileInformationByHandle(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn GetFileSizeEx(_: HANDLE, _: *mut i64) -> BOOL;
 	pub fn GetFileType(_: HANDLE) -> u32;
+	pub fn GetGuiResources(_: HANDLE, _: u32) -> u32;
 	pub fn GetLargePageMinimum() -> u64;
 	pub fn GetLastError() -> u32;
 	pub fn GetLogicalDriveStringsW(_: u32, _: PSTR) -> u32;
@@ -42,11 +45,18 @@ extern "system" {
 	pub fn GetModuleHandleW(_: PCSTR) -> HANDLE;
 	pub fn GetNativeSystemInfo(_: PVOID);
 	pub fn GetProcAddress(_: HANDLE, _: *const u8) -> PCVOID;
+	pub fn GetProcessId(_: HANDLE) -> u32;
+	pub fn GetProcessIdOfThread(_: HANDLE) -> u32;
+	pub fn GetProcessTimes(_: HANDLE, _: PVOID, _: PVOID, _: PVOID, _: PVOID) -> BOOL;
+	pub fn GetStartupInfoW(_: PVOID);
 	pub fn GetSystemInfo(_: PVOID);
 	pub fn GetSystemTime(_: PVOID);
 	pub fn GetSystemTimeAsFileTime(_: PVOID);
 	pub fn GetSystemTimePreciseAsFileTime(_: PVOID);
+	pub fn GetSystemTimes(_: PVOID, _: PVOID, _: PVOID) -> BOOL;
 	pub fn GetTempPathW(_: u32, _: PSTR) -> u32;
+	pub fn GetThreadId(_: HANDLE) -> u32;
+	pub fn GetThreadTimes(_: HANDLE, _: PVOID, _: PVOID, _: PVOID, _: PVOID) -> BOOL;
 	pub fn GetTickCount64() -> u64;
 	pub fn GlobalAlloc(_: u32, _: u64) -> HANDLE;
 	pub fn GlobalFlags(_: HANDLE) -> u32;

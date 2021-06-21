@@ -5,7 +5,12 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::{bool_to_winresult, INFINITE};
-use crate::structs::{PROCESS_INFORMATION, SECURITY_ATTRIBUTES, STARTUPINFO};
+use crate::structs::{
+	FILETIME,
+	PROCESS_INFORMATION,
+	SECURITY_ATTRIBUTES,
+	STARTUPINFO,
+};
 use crate::WString;
 
 pub_struct_handle_closeable! {
@@ -79,6 +84,12 @@ impl HPROCESS {
 		unsafe { kernel32::FlushProcessWriteBuffers() }
 	}
 
+	/// [`GetCurrentProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
+	/// static method.
+	pub fn GetCurrentProcess() -> HPROCESS {
+		Self { ptr: unsafe { kernel32::GetCurrentProcess() } }
+	}
+
 	/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
 	/// method.
 	pub fn GetExitCodeProcess(self) -> WinResult<u32> {
@@ -86,6 +97,45 @@ impl HPROCESS {
 		bool_to_winresult(
 			unsafe { kernel32::GetExitCodeProcess(self.ptr, &mut lpExitCode) },
 		).map(|_| lpExitCode)
+	}
+
+	/// [`GetGuiResources`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
+	/// method.
+	pub fn GetGuiResources(self, uiFlags: co::GR) -> WinResult<u32> {
+		match unsafe { kernel32::GetGuiResources(self.ptr, uiFlags.0) } {
+			0 => Err(GetLastError()),
+			count => Ok(count),
+		}
+	}
+
+	/// [`GetProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
+	/// method.
+	pub fn GetProcessId(self) -> WinResult<u32> {
+		match unsafe { kernel32::GetProcessId(self.ptr) } {
+			0 => Err(GetLastError()),
+			id => Ok(id),
+		}
+	}
+
+	/// [`GetProcessTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
+	/// method.
+	pub fn GetProcessTimes(self,
+		lpCreationTime: &mut FILETIME,
+		lpExitTime: &mut FILETIME,
+		lpKernelTime: &mut FILETIME,
+		lpUserTime: &mut FILETIME) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				kernel32::GetProcessTimes(
+					self.ptr,
+					lpCreationTime as *mut _ as _,
+					lpExitTime as *mut _ as _,
+					lpKernelTime as *mut _ as _,
+					lpUserTime as *mut _ as _,
+				)
+			},
+		)
 	}
 
 	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)

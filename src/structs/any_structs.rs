@@ -201,6 +201,23 @@ pub struct FILETIME {
 	pub dwHighDateTime: u32,
 }
 
+/// [`GUITHREADINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-guithreadinfo)
+/// struct.
+#[repr(C)]
+pub struct GUITHREADINFO {
+	cbSize: u32,
+	pub flags: co::GUI,
+	pub hwndActive: HWND,
+	pub hwndFocus: HWND,
+	pub hwndCapture: HWND,
+	pub hwndMenuOwner: HWND,
+	pub hwndMoveSize: HWND,
+	pub hwndCaret: HWND,
+	pub rcCaret: RECT,
+}
+
+impl_default_with_size!(GUITHREADINFO, cbSize);
+
 /// [`HELPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-helpinfo)
 /// struct.
 ///

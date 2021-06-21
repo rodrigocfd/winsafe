@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::bool_to_winresult;
-use crate::structs::SECURITY_ATTRIBUTES;
+use crate::structs::{FILETIME, SECURITY_ATTRIBUTES};
 
 pub_struct_handle_closeable! {
 	/// Handle to a
@@ -49,6 +49,12 @@ impl HTHREAD {
 		unsafe { kernel32::ExitThread(dwExitCode) }
 	}
 
+	/// [`GetCurrentThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
+	/// static method.
+	pub fn GetCurrentThread() -> HTHREAD {
+		Self { ptr: unsafe { kernel32::GetCurrentThread() } }
+	}
+
 	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
 	/// method.
 	pub fn GetExitCodeThread(self) -> WinResult<u32> {
@@ -56,5 +62,44 @@ impl HTHREAD {
 		bool_to_winresult(
 			unsafe { kernel32::GetExitCodeThread(self.ptr, &mut lpExitCode) },
 		).map(|_| lpExitCode)
+	}
+
+	/// [`GetProcessIdOfThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessidofthread)
+	/// method.
+	pub fn GetProcessIdOfThread(self) -> WinResult<u32> {
+		match unsafe { kernel32::GetProcessIdOfThread(self.ptr) } {
+			0 => Err(GetLastError()),
+			id => Ok(id),
+		}
+	}
+
+	/// [`GetThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadid)
+	/// method.
+	pub fn GetThreadId(self) -> WinResult<u32> {
+		match unsafe { kernel32::GetThreadId(self.ptr) } {
+			0 => Err(GetLastError()),
+			id => Ok(id),
+		}
+	}
+
+	/// [`GetThreadTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes)
+	/// method.
+	pub fn GetThreadTimes(self,
+		lpCreationTime: &mut FILETIME,
+		lpExitTime: &mut FILETIME,
+		lpKernelTime: &mut FILETIME,
+		lpUserTime: &mut FILETIME) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				kernel32::GetThreadTimes(
+					self.ptr,
+					lpCreationTime as *mut _ as _,
+					lpExitTime as *mut _ as _,
+					lpKernelTime as *mut _ as _,
+					lpUserTime as *mut _ as _,
+				)
+			},
+		)
 	}
 }

@@ -117,6 +117,25 @@ pub_struct_const! { GMEM, u32,
 	GPTR, Self::FIXED.0 | Self::ZEROINIT.0
 }
 
+pub_struct_const! { GR, u32,
+	/// [`GetGuiResources`](crate::HPROCESS::GetGuiResources) `uiFlags` (`u32`).
+	=>
+	GDIOBJECTS, 0
+	GDIOBJECTS_PEAK, 2
+	USEROBJECTS, 1
+	USEROBJECTS_PEAK, 4
+}
+
+pub_struct_const! { GUI, u32,
+	/// [`GUITHREADINFO`](crate::GUITHREADINFO) `flags` (`u32`).
+	=>
+	CARETBLINKING, 0x0000_0001
+	INMENUMODE, 0x0000_0004
+	INMOVESIZE, 0x0000_0002
+	POPUPMENUMODE, 0x0000_00010
+	SYSTEMMENUMODE, 0x0000_0008
+}
+
 pub_struct_const! { GW, u32,
 	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 	=>

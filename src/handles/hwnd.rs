@@ -643,6 +643,12 @@ impl HWND {
 		Ok(buf.to_string())
 	}
 
+	/// [`GetWindowThreadProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid)
+	/// method.
+	pub fn GetWindowThreadProcessId(self) -> u32 {
+		unsafe { user32::GetWindowThreadProcessId(self.ptr, std::ptr::null_mut()) }
+	}
+
 	/// [`HiliteMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hilitemenuitem)
 	/// method.
 	pub fn HiliteMenuItem(self,

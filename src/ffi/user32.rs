@@ -60,6 +60,7 @@ extern "system" {
 	pub fn GetDoubleClickTime() -> u32;
 	pub fn GetFocus() -> HANDLE;
 	pub fn GetForegroundWindow() -> HANDLE;
+	pub fn GetGUIThreadInfo(_: u32, _: PVOID) -> BOOL;
 	pub fn GetMenuInfo(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn GetMenuItemCount(_: HANDLE) -> i32;
 	pub fn GetMenuItemID(_: HANDLE, _: i32) -> i32;
@@ -85,6 +86,7 @@ extern "system" {
 	pub fn GetWindowRgnBox(_: HANDLE, _: PVOID) -> i32;
 	pub fn GetWindowTextLengthW(_: HANDLE) -> i32;
 	pub fn GetWindowTextW(_: HANDLE, _: PSTR, _: i32) -> i32;
+	pub fn GetWindowThreadProcessId(_: HANDLE, _: *mut u32) -> u32;
 	pub fn HiliteMenuItem(_: HANDLE, _: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn InsertMenuItemW(_: HANDLE, _: u32, _: BOOL, _: PCVOID) -> BOOL;
 	pub fn InvalidateRect(_: HANDLE, _: PCVOID, _: BOOL) -> BOOL;
