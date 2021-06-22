@@ -59,13 +59,13 @@ impl StatusBar {
 					base: BaseNativeControl::new(parent_base_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
-					parts: StatusBarParts::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					parts: StatusBarParts::new(),
 					parts_info: parts.to_vec(),
 					right_edges: vec![0; parts.len()],
 				},
 			)),
 		);
-		new_self.0.parts.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
+		new_self.0.parts.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();

@@ -16,11 +16,11 @@ pub struct ComboBoxItems {
 }
 
 impl ComboBoxItems {
-	pub(in crate::gui::native_controls) fn new(
-		hwnd_ref: &HWND) -> ComboBoxItems
-	{
+	pub(in crate::gui::native_controls) fn new() -> ComboBoxItems {
 		Self {
-			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)),
+			hwnd_ptr: Cell::new(
+				unsafe { NonNull::new_unchecked(std::ptr::null_mut()) },
+			),
 		}
 	}
 

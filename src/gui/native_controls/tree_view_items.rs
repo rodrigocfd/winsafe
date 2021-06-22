@@ -19,11 +19,11 @@ pub struct TreeViewItems {
 }
 
 impl TreeViewItems {
-	pub(in crate::gui::native_controls) fn new(
-		hwnd_ref: &HWND) -> TreeViewItems
-	{
+	pub(in crate::gui::native_controls) fn new() -> TreeViewItems {
 		Self {
-			hwnd_ptr: Cell::new(NonNull::from(hwnd_ref)),
+			hwnd_ptr: Cell::new(
+				unsafe { NonNull::new_unchecked(std::ptr::null_mut()) },
+			),
 		}
 	}
 

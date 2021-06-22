@@ -49,13 +49,13 @@ impl ListView {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
-					columns: ListViewColumns::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
-					items: ListViewItems::new(parent_base_ref.hwnd_ref()),
+					columns: ListViewColumns::new(),
+					items: ListViewItems::new(),
 					context_menu,
 				},
 			),
 		);
-		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
+		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref());
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
@@ -86,13 +86,13 @@ impl ListView {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
-					columns: ListViewColumns::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
-					items: ListViewItems::new(parent_base_ref.hwnd_ref()),
+					columns: ListViewColumns::new(),
+					items: ListViewItems::new(),
 					context_menu,
 				},
 			),
 		);
-		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
+		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref());
 		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({

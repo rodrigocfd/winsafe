@@ -44,11 +44,11 @@ impl ListBox {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ListBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					items: ListBoxItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -69,11 +69,11 @@ impl ListBox {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ListBoxItems::new(parent_base_ref.hwnd_ref()), // wrong HWND, just to construct the object
+					items: ListBoxItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref()); // correct HWND
+		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
