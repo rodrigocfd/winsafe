@@ -6,13 +6,6 @@ pub_struct_handle_gdi! {
 	HBITMAP
 }
 
-pub_struct_handle_gdi! {
-	/// Handle to a
-	/// [pen](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpen)
-	/// GDI object.
-	HPEN
-}
-
 pub_struct_handle_closeable! {
 	/// Handle to an
 	/// [event](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).

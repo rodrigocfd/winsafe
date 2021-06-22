@@ -215,6 +215,18 @@ pub_struct_const! { PROCESSOR_ARCHITECTURE, u16,
 	UNKNOWN, 0xffff
 }
 
+pub_struct_const! { PS, i32,
+	/// [`CreatePen`](crate::HPEN::CreatePen) `iStyle` (`i32`).
+	=>
+	SOLID, 0
+	DASH, 1
+	DOT, 2
+	DASHDOT, 3
+	DASHDOTDOT, 4
+	NULL, 5
+	INSIDEFRAME, 6
+}
+
 pub_struct_const! { QUALITY, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	=>

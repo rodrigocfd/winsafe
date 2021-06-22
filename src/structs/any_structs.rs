@@ -241,6 +241,17 @@ impl HELPINFO {
 	}
 }
 
+/// [`LOGPEN`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpen)
+/// struct.
+#[repr(C)]
+pub struct LOGPEN {
+	pub lopnStyle: co::PS,
+	pub lopnWidth: POINT,
+	pub lopnColor: COLORREF,
+}
+
+impl_default_zero!(LOGPEN);
+
 /// [`LOGBRUSH`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)
 /// struct.
 #[repr(C)]

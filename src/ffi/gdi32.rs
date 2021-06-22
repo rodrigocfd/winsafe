@@ -16,6 +16,8 @@ extern "system" {
 	pub fn CreateFontW(_: i32, _: i32, _: i32, _: i32, _: i32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: PCSTR) -> HANDLE;
 	pub fn CreateHatchBrush(_: i32, _: u32) -> HANDLE;
 	pub fn CreatePatternBrush(_: HANDLE) -> HANDLE;
+	pub fn CreatePen(_: i32, _: i32, _: u32) -> HANDLE;
+	pub fn CreatePenIndirect(_: PCVOID) -> HANDLE;
 	pub fn CreateRectRgn(_: i32, _: i32, _: i32, _: i32) -> HANDLE;
 	pub fn CreateRectRgnIndirect(_: PCVOID) -> HANDLE;
 	pub fn CreateRoundRectRgn(_: i32, _: i32, _: i32, _: i32, _: i32, _: i32) -> HANDLE;
