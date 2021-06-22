@@ -6,7 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{MsgSend, WndMsg};
-use crate::msg::macros::point_to_lp;
+use crate::msg::macros::{point_to_lp, zero_as_err};
 use crate::privs::{LB_ERR, LB_ERRSPACE};
 use crate::structs::{POINT, RECT};
 use crate::WString;
@@ -773,7 +773,9 @@ pub struct SetTabStops<'a> {
 impl<'a> MsgSend for SetTabStops<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

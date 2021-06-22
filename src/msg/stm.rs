@@ -6,6 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HICON;
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_err;
 
 /// [`STM_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-geticon)
 /// message, which has no parameters.
@@ -16,7 +17,9 @@ pub struct GetIcon {}
 impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
-	fn_convert_ret_winresult_handle!(HICON);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HICON { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -38,7 +41,9 @@ pub struct SetIcon {
 impl MsgSend for SetIcon {
 	type RetType = WinResult<HICON>;
 
-	fn_convert_ret_winresult_handle!(HICON);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HICON { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

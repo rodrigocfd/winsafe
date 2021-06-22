@@ -5,6 +5,7 @@
 use crate::co;
 use crate::handles::HWND;
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_none;
 use crate::structs::RECT;
 
 /// [`TBM_CLEARSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-clearsel)
@@ -18,7 +19,9 @@ pub struct ClearSel {
 impl MsgSend for ClearSel {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -40,7 +43,9 @@ pub struct ClearTics {
 impl MsgSend for ClearTics {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -62,7 +67,9 @@ pub struct GetBuddy {
 impl MsgSend for GetBuddy {
 	type RetType = Option<HWND>;
 
-	fn_convert_ret_option_handle!(HWND);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -84,7 +91,9 @@ pub struct GetChannelRect<'a> {
 impl<'a> MsgSend for GetChannelRect<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -304,7 +313,9 @@ pub struct GetThumbRect<'a> {
 impl<'a> MsgSend for GetThumbRect<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -324,7 +335,9 @@ pub struct GetTooltips {}
 impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
-	fn_convert_ret_option_handle!(HWND);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -347,7 +360,9 @@ pub struct SetBuddy {
 impl MsgSend for SetBuddy {
 	type RetType = Option<HWND>;
 
-	fn_convert_ret_option_handle!(HWND);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -394,7 +409,9 @@ pub struct SetPos {
 impl MsgSend for SetPos {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -416,7 +433,9 @@ pub struct SetPosNotify {
 impl MsgSend for SetPosNotify {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -439,7 +458,9 @@ pub struct SetRangeMax {
 impl MsgSend for SetRangeMax {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -462,7 +483,9 @@ pub struct SetRangeMin {
 impl MsgSend for SetRangeMin {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -485,7 +508,9 @@ pub struct SetSelEnd {
 impl MsgSend for SetSelEnd {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -508,7 +533,9 @@ pub struct SetSelStart {
 impl MsgSend for SetSelStart {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -530,7 +557,9 @@ pub struct SetThumbLength {
 impl MsgSend for SetThumbLength {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -552,7 +581,9 @@ pub struct SetTicFreq {
 impl MsgSend for SetTicFreq {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -574,7 +605,9 @@ pub struct SetTooltips {
 impl MsgSend for SetTooltips {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

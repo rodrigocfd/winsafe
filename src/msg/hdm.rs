@@ -5,6 +5,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_err;
 use crate::structs::RECT;
 
 /// [`HDM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemcount)
@@ -44,7 +45,9 @@ pub struct GetItemDropDownRect<'a> {
 impl<'a> MsgSend for GetItemDropDownRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -67,7 +70,9 @@ pub struct GetItemRect<'a> {
 impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -89,7 +94,9 @@ pub struct GetOrderArray<'a> {
 impl<'a> MsgSend for GetOrderArray<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -111,7 +118,9 @@ pub struct GetOverflowRect<'a> {
 impl<'a> MsgSend for GetOverflowRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

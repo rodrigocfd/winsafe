@@ -113,7 +113,9 @@ pub struct SetMarquee {
 impl MsgSend for SetMarquee {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -188,7 +190,9 @@ pub struct SetRange32 {
 impl MsgSend for SetRange32 {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

@@ -5,6 +5,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_err;
 use crate::structs::RECT;
 
 /// [`EN_CANUNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-canundo)
@@ -16,7 +17,9 @@ pub struct CanUndo {}
 impl MsgSend for CanUndo {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -82,7 +85,9 @@ pub struct GetRect<'a> {
 impl<'a> MsgSend for GetRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -105,7 +110,9 @@ pub struct GetSel<'a, 'b> {
 impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -147,7 +154,9 @@ pub struct Undo {}
 impl MsgSend for Undo {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

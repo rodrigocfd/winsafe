@@ -7,6 +7,7 @@ use crate::co;
 use crate::enums::BitmapIcon;
 use crate::handles::{HBITMAP, HICON};
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_err;
 use crate::structs::{BUTTON_IMAGELIST, BUTTON_SPLITINFO, RECT, SIZE};
 use crate::WString;
 
@@ -21,7 +22,9 @@ pub struct GetIdealSize<'a> {
 impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -43,7 +46,9 @@ pub struct GetImageList<'a> {
 impl<'a> MsgSend for GetImageList<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -65,7 +70,9 @@ pub struct GetNote<'a> {
 impl<'a> MsgSend for GetNote<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -109,7 +116,9 @@ pub struct GetSplitInfo<'a> {
 impl<'a> MsgSend for GetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -131,7 +140,9 @@ pub struct GetTextMargin<'a> {
 impl<'a> MsgSend for GetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -153,7 +164,9 @@ pub struct SetDropDownState {
 impl MsgSend for SetDropDownState {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -175,7 +188,9 @@ pub struct SetImageList<'a> {
 impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -197,7 +212,9 @@ pub struct SetNote<'a> {
 impl<'a> MsgSend for SetNote<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -219,7 +236,9 @@ pub struct SetShield {
 impl MsgSend for SetShield {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -241,7 +260,9 @@ pub struct SetSplitInfo<'a> {
 impl<'a> MsgSend for SetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -263,7 +284,9 @@ pub struct SetTextMargin<'a> {
 impl<'a> MsgSend for SetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -361,7 +384,9 @@ pub struct SetCheck {
 impl MsgSend for SetCheck {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -383,7 +408,9 @@ pub struct SetDontClick {
 impl MsgSend for SetDontClick {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -435,7 +462,9 @@ pub struct SetState {
 impl MsgSend for SetState {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -458,7 +487,9 @@ pub struct SetStyle {
 impl MsgSend for SetStyle {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

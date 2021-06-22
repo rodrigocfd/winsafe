@@ -6,6 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::{HIMAGELIST, HTREEITEM, HWND};
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::{zero_as_err, zero_as_none};
 use crate::privs::CLR_DEFAULT;
 use crate::structs::{COLORREF, RECT, TVINSERTSTRUCT, TVITEMEX};
 
@@ -20,7 +21,9 @@ pub struct DeleteItem {
 impl MsgSend for DeleteItem {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -42,7 +45,9 @@ pub struct EditLabel {
 impl MsgSend for EditLabel {
 	type RetType = WinResult<HWND>;
 
-	fn_convert_ret_winresult_handle!(HWND);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HWND { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -64,7 +69,9 @@ pub struct EndEditLabelNow {
 impl MsgSend for EndEditLabelNow {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -111,7 +118,9 @@ pub struct Expand {
 impl MsgSend for Expand {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -227,7 +236,9 @@ pub struct GetImageList {
 impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn_convert_ret_option_handle!(HIMAGELIST);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -293,7 +304,9 @@ pub struct GetItem<'a, 'b> {
 impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -338,7 +351,9 @@ pub struct GetItemRect<'a> {
 impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -411,7 +426,9 @@ pub struct GetNextItem {
 impl MsgSend for GetNextItem {
 	type RetType = Option<HTREEITEM>;
 
-	fn_convert_ret_option_handle!(HTREEITEM);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HTREEITEM { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -478,7 +495,9 @@ pub struct GetTooltips {}
 impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
-	fn_convert_ret_option_handle!(HWND);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -522,7 +541,9 @@ pub struct InsertItem<'a, 'b> {
 impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = WinResult<HTREEITEM>;
 
-	fn_convert_ret_winresult_handle!(HTREEITEM);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HTREEITEM { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -545,7 +566,9 @@ pub struct SelectItem {
 impl MsgSend for SelectItem {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -595,7 +618,9 @@ pub struct SetHot {
 impl MsgSend for SetHot {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -618,7 +643,9 @@ pub struct SetImageList {
 impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn_convert_ret_option_handle!(HIMAGELIST);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -640,7 +667,9 @@ pub struct SetIndent {
 impl MsgSend for SetIndent {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -662,7 +691,9 @@ pub struct SetItem<'a, 'b> {
 impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -684,7 +715,9 @@ pub struct ShowInfoTip {
 impl MsgSend for ShowInfoTip {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -706,7 +739,9 @@ pub struct SortChildren {
 impl MsgSend for SortChildren {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

@@ -15,7 +15,7 @@ use crate::enums::{
 use crate::funcs::{HIBYTE, HIWORD, LOBYTE, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
-use crate::msg::macros::{lp_to_point, point_to_lp};
+use crate::msg::macros::{lp_to_point, point_to_lp, zero_as_none};
 use crate::privs::FAPPCOMMAND_MASK;
 use crate::structs::{
 	CREATESTRUCT,
@@ -43,7 +43,9 @@ pub struct Activate {
 impl MsgSend for Activate {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -76,7 +78,9 @@ pub struct ActivateApp {
 impl MsgSend for ActivateApp {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -110,7 +114,9 @@ pub struct AppCommand {
 impl MsgSend for AppCommand {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -159,7 +165,9 @@ pub struct Command {
 impl MsgSend for Command {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -208,7 +216,9 @@ pub struct ContextMenu {
 impl MsgSend for ContextMenu {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -303,7 +313,9 @@ pub struct DropFiles {
 impl MsgSend for DropFiles {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -333,7 +345,9 @@ pub struct Enable {
 impl MsgSend for Enable {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -364,7 +378,9 @@ pub struct EndSession {
 impl MsgSend for EndSession {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -396,7 +412,9 @@ pub struct EnterIdle {
 impl MsgSend for EnterIdle {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -435,7 +453,9 @@ pub struct EnterMenuLoop {
 impl MsgSend for EnterMenuLoop {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -497,7 +517,9 @@ pub struct ExitMenuLoop {
 impl MsgSend for ExitMenuLoop {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -529,7 +551,9 @@ pub struct GetFont {}
 impl MsgSend for GetFont {
 	type RetType = Option<HFONT>;
 
-	fn_convert_ret_option_handle!(HFONT);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HFONT { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -555,7 +579,9 @@ pub struct GetHMenu {}
 impl MsgSend for GetHMenu {
 	type RetType = Option<HMENU>;
 
-	fn_convert_ret_option_handle!(HMENU);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HMENU { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -583,7 +609,9 @@ pub struct GetMinMaxInfo<'a> {
 impl<'a> MsgSend for GetMinMaxInfo<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -613,7 +641,9 @@ pub struct GetTitleBarInfoEx<'a> {
 impl<'a> MsgSend for GetTitleBarInfoEx<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -643,7 +673,9 @@ pub struct Help<'a> {
 impl<'a> MsgSend for Help<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -675,7 +707,9 @@ pub struct HScroll {
 impl MsgSend for HScroll {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -711,7 +745,9 @@ pub struct InitDialog {
 impl MsgSend for InitDialog {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -744,7 +780,9 @@ pub struct InitMenuPopup {
 impl MsgSend for InitMenuPopup {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -784,7 +822,9 @@ pub struct KillFocus {
 impl MsgSend for KillFocus {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -842,7 +882,9 @@ pub struct MenuCommand {
 impl MsgSend for MenuCommand {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -908,7 +950,9 @@ pub struct MenuRButtonUp {
 impl MsgSend for MenuRButtonUp {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -947,7 +991,9 @@ pub struct Move {
 impl MsgSend for Move {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -977,7 +1023,9 @@ pub struct Moving<'a> {
 impl<'a> MsgSend for Moving<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1048,7 +1096,9 @@ pub struct NcCreate<'a, 'b, 'c> {
 impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1114,7 +1164,9 @@ pub struct NcPaint {
 impl MsgSend for NcPaint {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1144,7 +1196,9 @@ pub struct NextDlgCtl {
 impl MsgSend for NextDlgCtl {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1244,7 +1298,9 @@ pub struct ParentNotify {
 impl MsgSend for ParentNotify {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1279,7 +1335,9 @@ pub struct QueryOpen {}
 impl MsgSend for QueryOpen {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1321,7 +1379,9 @@ pub struct SetCursor {
 impl MsgSend for SetCursor {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1353,7 +1413,9 @@ pub struct SetFocus {
 impl MsgSend for SetFocus {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1384,7 +1446,9 @@ pub struct SetFont {
 impl MsgSend for SetFont {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1416,7 +1480,9 @@ pub struct SetIcon {
 impl MsgSend for SetIcon {
 	type RetType = Option<HICON>;
 
-	fn_convert_ret_option_handle!(HICON);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HICON { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1448,7 +1514,9 @@ pub struct ShowWindow {
 impl MsgSend for ShowWindow {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1480,7 +1548,9 @@ pub struct Size {
 impl MsgSend for Size {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1518,7 +1588,9 @@ pub struct Sizing<'a> {
 impl<'a> MsgSend for Sizing<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1550,7 +1622,9 @@ pub struct StyleChanged<'a> {
 impl<'a> MsgSend for StyleChanged<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1583,7 +1657,9 @@ pub struct StyleChanging<'a> {
 impl<'a> MsgSend for StyleChanging<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1620,7 +1696,9 @@ pub struct SysCommand {
 impl MsgSend for SysCommand {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1668,7 +1746,9 @@ pub struct Timer {
 impl MsgSend for Timer {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1706,7 +1786,9 @@ pub struct UninitMenuPopup {
 impl MsgSend for UninitMenuPopup {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1739,7 +1821,9 @@ pub struct VScroll {
 impl MsgSend for VScroll {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1774,7 +1858,9 @@ pub struct WindowPosChanged<'a> {
 impl<'a> MsgSend for WindowPosChanged<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1804,7 +1890,9 @@ pub struct WindowPosChanging<'a> {
 impl<'a> MsgSend for WindowPosChanging<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

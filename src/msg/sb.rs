@@ -7,6 +7,7 @@ use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::HICON;
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_err;
 use crate::WString;
 
 /// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
@@ -20,7 +21,9 @@ pub struct GetIcon {
 impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
-	fn_convert_ret_winresult_handle!(HICON);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HICON { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -116,7 +119,9 @@ pub struct GetTipText<'a> {
 impl<'a> MsgSend for GetTipText<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -139,7 +144,9 @@ pub struct SetIcon {
 impl MsgSend for SetIcon {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -161,7 +168,9 @@ pub struct SetParts<'a> {
 impl<'a> MsgSend for SetParts<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -185,7 +194,9 @@ pub struct SetText<'a> {
 impl<'a> MsgSend for SetText<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -206,7 +217,9 @@ pub struct SetTipText<'a> {
 impl<'a> MsgSend for SetTipText<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -226,7 +239,9 @@ pub struct Simple {
 impl MsgSend for Simple {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

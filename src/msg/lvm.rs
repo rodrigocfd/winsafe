@@ -7,6 +7,7 @@ use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::{HIMAGELIST, HWND};
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::{zero_as_err, zero_as_none};
 use crate::structs::{
 	COLORREF,
 	LVCOLUMN,
@@ -69,7 +70,9 @@ pub struct Arrange {
 impl MsgSend for Arrange {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -93,7 +96,9 @@ pub struct DeleteAllItems {}
 impl MsgSend for DeleteAllItems {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -115,7 +120,9 @@ pub struct DeleteItem {
 impl MsgSend for DeleteItem {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -138,7 +145,9 @@ pub struct EnsureVisible {
 impl MsgSend for EnsureVisible {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -211,13 +220,39 @@ pub struct GetColumn<'a, 'b> {
 impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETCOLUMN.into(),
 			wparam: self.index as _,
 			lparam: self.lvcolumn as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_GETCOLUMNORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnorderarray)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetColumnOrderArray<'a> {
+	pub indexes: &'a mut Vec<u32>,
+}
+
+impl<'a> MsgSend for GetColumnOrderArray<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETCOLUMNORDERARRAY.into(),
+			wparam: self.indexes.len() as _,
+			lparam: self.indexes.as_ptr() as _,
 		}
 	}
 }
@@ -244,6 +279,28 @@ impl MsgSend for GetColumnWidth {
 		WndMsg {
 			msg_id: co::LVM::GETCOLUMNWIDTH.into(),
 			wparam: self.index as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_GETCOUNTPERPAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcountperpage)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetCountPerPage {}
+
+impl MsgSend for GetCountPerPage {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETCOUNTPERPAGE.into(),
+			wparam: 0,
 			lparam: 0,
 		}
 	}
@@ -280,7 +337,9 @@ pub struct GetHeader {}
 impl MsgSend for GetHeader {
 	type RetType = WinResult<HWND>;
 
-	fn_convert_ret_winresult_handle!(HWND);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HWND { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -302,7 +361,9 @@ pub struct GetImageList {
 impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn_convert_ret_option_handle!(HIMAGELIST);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -398,7 +459,9 @@ pub struct GetItemRect<'a> {
 impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		let ptr_rect = self.rect as *const _ as *mut RECT;
@@ -452,7 +515,9 @@ pub struct GetNextItemIndex<'a> {
 impl<'a> MsgSend for GetNextItemIndex<'a> {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -474,7 +539,9 @@ pub struct GetNumberOfWorkAreas<'a> {
 impl<'a> MsgSend for GetNumberOfWorkAreas<'a> {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -496,7 +563,9 @@ pub struct GetOrigin<'a> {
 impl<'a> MsgSend for GetOrigin<'a> {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -730,7 +799,9 @@ pub struct GetViewRect<'a> {
 impl<'a> MsgSend for GetViewRect<'a> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -832,7 +903,9 @@ pub struct IsGroupViewEnabled {}
 impl MsgSend for IsGroupViewEnabled {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -854,7 +927,9 @@ pub struct IsItemVisible {
 impl MsgSend for IsItemVisible {
 	type RetType = bool;
 
-	fn_convert_ret_bool!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -931,7 +1006,9 @@ pub struct RedrawItems {
 impl MsgSend for RedrawItems {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -954,7 +1031,9 @@ pub struct Scroll {
 impl MsgSend for Scroll {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -977,7 +1056,9 @@ pub struct SetColumn<'a, 'b> {
 impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1000,7 +1081,9 @@ pub struct SetColumnWidth {
 impl MsgSend for SetColumnWidth {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1048,7 +1131,9 @@ pub struct SetImageList {
 impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn_convert_ret_option_handle!(HIMAGELIST);
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1070,7 +1155,9 @@ pub struct SetItem<'a, 'b> {
 impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1093,7 +1180,9 @@ pub struct SetItemState<'a, 'b> {
 impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1116,7 +1205,9 @@ pub struct SetItemText<'a, 'b> {
 impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1138,7 +1229,9 @@ pub struct SetSelectedColumn {
 impl MsgSend for SetSelectedColumn {
 	type RetType = ();
 
-	fn_convert_ret_void!();
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
@@ -1187,7 +1280,9 @@ pub struct Update {
 impl MsgSend for Update {
 	type RetType = WinResult<()>;
 
-	fn_convert_ret_winresult_void!();
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {

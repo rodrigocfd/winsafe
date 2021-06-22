@@ -1,64 +1,8 @@
+use crate::aliases::WinResult;
+use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::WndMsg;
 use crate::structs::POINT;
-
-/// Implements the `convert_ret` method for message structs that returns a `()`.
-macro_rules! fn_convert_ret_void {
-	() => {
-		fn convert_ret(&self, _: isize) -> Self::RetType {
-			()
-		}
-	};
-}
-
-/// Implements the `convert_ret` method for message structs that returns a
-/// `bool`.
-macro_rules! fn_convert_ret_bool {
-	() => {
-		fn convert_ret(&self, v: isize) -> Self::RetType {
-			v != 0
-		}
-	};
-}
-
-/// Implements the `convert_ret` method for message structs that returns a
-/// `WinResult<()>`.
-macro_rules! fn_convert_ret_winresult_void {
-	() => {
-		fn convert_ret(&self, v: isize) -> Self::RetType {
-			match v {
-				0 => Err(co::ERROR::BAD_ARGUMENTS),
-				_ => Ok(()),
-			}
-		}
-	};
-}
-
-/// Implements the `convert_ret` method for message structs that returns a
-/// `WinResult<HANDLE>`.
-macro_rules! fn_convert_ret_winresult_handle {
-	($handle:ident) => {
-		fn convert_ret(&self, v: isize) -> Self::RetType {
-			match v {
-				0 => Err(co::ERROR::BAD_ARGUMENTS),
-				p => Ok($handle { ptr: p as _ }),
-			}
-		}
-	};
-}
-
-/// Implements the `convert_ret` method for message structs that returns an
-/// `Option<HANDLE>`.
-macro_rules! fn_convert_ret_option_handle {
-	($handle:ident) => {
-		fn convert_ret(&self, v: isize) -> Self::RetType {
-			match v {
-				0 => None,
-				ptr => Some($handle { ptr: ptr as _ }),
-			}
-		}
-	};
-}
 
 /// Struct for a message that has no parameters and no meaningful return value.
 macro_rules! pub_struct_msg_empty {
@@ -75,7 +19,9 @@ macro_rules! pub_struct_msg_empty {
 		impl MsgSend for $name {
 			type RetType = ();
 
-			fn_convert_ret_void!();
+			fn convert_ret(&self, _: isize) -> Self::RetType {
+				()
+			}
 
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
@@ -131,7 +77,9 @@ macro_rules! pub_struct_msg_char {
 		impl MsgSend for $name {
 			type RetType = ();
 
-			fn_convert_ret_void!();
+			fn convert_ret(&self, _: isize) -> Self::RetType {
+				()
+			}
 
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
@@ -227,7 +175,9 @@ macro_rules! pub_struct_msg_button {
 		impl MsgSend for $name {
 			type RetType = ();
 
-			fn_convert_ret_void!();
+			fn convert_ret(&self, _: isize) -> Self::RetType {
+				()
+			}
 
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
@@ -252,13 +202,29 @@ macro_rules! pub_struct_msg_button {
 	};
 }
 
+/// Takes an `isize` and returns `Err` if zero.
+pub(crate) fn zero_as_err(v: isize) -> WinResult<isize> {
+	match v {
+		0 => Err(co::ERROR::BAD_ARGUMENTS), // all message errors will return this code
+		v => Ok(v),
+	}
+}
+
+/// Takes an `isize` and returns `None` if zero.
+pub(crate) fn zero_as_none(v: isize) -> Option<isize> {
+	match v {
+		0 => None,
+		v => Some(v),
+	}
+}
+
 /// Converts a `POINT` to a an `LPARAM` field.
-pub fn point_to_lp(p: POINT) -> isize {
-	MAKEDWORD(p.x as u16, p.y as u16) as isize
+pub(crate) fn point_to_lp(p: POINT) -> isize {
+	MAKEDWORD(p.x as u16, p.y as u16) as _
 }
 
 /// Converts the `LPARAM` field to a `POINT`.
-pub fn lp_to_point(p: WndMsg) -> POINT {
+pub(crate) fn lp_to_point(p: WndMsg) -> POINT {
 	POINT::new(
 		LOWORD(p.lparam as _) as _,
 		HIWORD(p.lparam as _) as _,
