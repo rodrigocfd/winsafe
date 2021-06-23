@@ -19,9 +19,7 @@ pub struct ListViewItems {
 impl ListViewItems {
 	pub(in crate::gui::native_controls) fn new() -> ListViewItems {
 		Self {
-			hwnd_ptr: Cell::new(
-				unsafe { NonNull::new_unchecked(std::ptr::null_mut()) },
-			),
+			hwnd_ptr: Cell::new(NonNull::from(&HWND::NULL)), // initially invalid
 		}
 	}
 
