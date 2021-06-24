@@ -17,7 +17,7 @@ pub fn create_ui_font() -> WinResult<()> {
 	unsafe {
 		SystemParametersInfo(
 			co::SPI::GETNONCLIENTMETRICS,
-			std::mem::size_of::<NONCLIENTMETRICS>() as u32,
+			std::mem::size_of::<NONCLIENTMETRICS>() as _,
 			&mut ncm, co::SPIF::ZERO,
 		)?;
 		UI_HFONT = Some(HFONT::CreateFontIndirect(&ncm.lfMenuFont)?);
@@ -151,7 +151,7 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 pub fn paint_control_borders(hwnd: HWND, wm_ncp: wm::NcPaint) -> WinResult<()> {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
-	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as u32);
+	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as _);
 	if !ex_style.has(co::WS_EX::CLIENTEDGE) // no border
 		|| !HTHEME::IsThemeActive()
 		|| !HTHEME::IsAppThemed()

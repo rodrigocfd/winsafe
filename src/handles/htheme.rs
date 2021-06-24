@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::uxtheme;
 use crate::handles::{HDC, HRGN};
-use crate::structs::RECT;
+use crate::structs::{COLORREF, RECT};
 use crate::privs::hr_to_winresult;
 
 pub_struct_handle! {
@@ -115,6 +115,27 @@ impl HTHEME {
 		).map(|_| pRegion)
 	}
 
+	/// [`GetThemeColor`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
+	/// method.
+	pub fn GetThemeColor(self,
+		iPartId: co::VS_PART, iStateId: co::VS_STATE,
+		iPropId: co::TMT) -> WinResult<COLORREF>
+	{
+		let mut pColor = COLORREF(0);
+
+		hr_to_winresult(
+			unsafe {
+				uxtheme::GetThemeColor(
+					self.ptr,
+					iPartId.0,
+					iStateId.0,
+					iPropId.0,
+					&mut pColor as *mut _ as _,
+				)
+			},
+		).map(|_| pColor)
+	}
+
 	/// [`IsAppThemed`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isappthemed)
 	/// static method.
 	pub fn IsAppThemed() -> bool {
@@ -133,9 +154,30 @@ impl HTHEME {
 		unsafe { uxtheme::IsThemeActive() != 0 }
 	}
 
+	/// [`IsThemeBackgroundPartiallyTransparent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
+	/// method.
+	pub fn IsThemeBackgroundPartiallyTransparent(self,
+		iPartId: co::VS_PART, iStateId: co::VS_STATE) -> bool
+	{
+		unsafe {
+			uxtheme::IsThemeBackgroundPartiallyTransparent(
+				self.ptr, iPartId.0, iStateId.0) != 0
+		}
+	}
+
 	/// [`IsThemeDialogTextureEnabled`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemedialogtextureenabled)
 	/// static method.
 	pub fn IsThemeDialogTextureEnabled() -> bool {
 		unsafe { uxtheme::IsThemeDialogTextureEnabled() != 0 }
+	}
+
+	/// [`IsThemePartDefined`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
+	/// method.
+	pub fn IsThemePartDefined(self,
+		iPartId: co::VS_PART, iStateId: co::VS_STATE) -> bool
+	{
+		unsafe {
+			uxtheme::IsThemePartDefined(self.ptr, iPartId.0, iStateId.0) != 0
+		}
 	}
 }
