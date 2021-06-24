@@ -1,6 +1,7 @@
 //! [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow)
-//! COM interfaces.
+//! COM interfaces, structs and constants.
 
+pub mod co;
 pub mod clsid;
 pub mod guid;
 pub mod vt;

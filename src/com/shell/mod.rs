@@ -1,6 +1,7 @@
 //! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
-//! COM interfaces.
+//! COM interfaces, structs and constants.
 
+pub mod co;
 pub mod clsid;
 pub mod guid;
 pub mod vt;

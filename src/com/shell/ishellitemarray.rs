@@ -5,7 +5,7 @@ macro_rules! pub_struct_IShellItemArray {
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
 	) => {
-		use crate::co;
+		use crate::com::shell::co as shellco;
 		use crate::com::shell::IShellItem;
 		use crate::com::shell::vt::{IShellItemVT, IShellItemArrayVT};
 
@@ -38,7 +38,7 @@ macro_rules! pub_struct_IShellItemArray {
 			/// [`GetDisplayName`](crate::shell::IShellItem::GetDisplayName) on
 			/// each one of them.
 			pub fn GetDisplayNames(&self,
-				sigdnName: co::SIGDN) -> WinResult<Vec<String>>
+				sigdnName: shellco::SIGDN) -> WinResult<Vec<String>>
 			{
 				let mut names = Vec::default();
 				for i in 0..self.GetCount()? {

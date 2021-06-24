@@ -6,6 +6,7 @@ macro_rules! pub_struct_IMediaSeeking {
 		$name:ident, $vt:ty
 	) => {
 		use crate::co;
+		use crate::com::dshow::co as dshowco;
 		use crate::com::dshow::guid;
 		use crate::com::dshow::vt::IMediaSeekingVT;
 		use crate::structs::GUID;
@@ -132,8 +133,8 @@ macro_rules! pub_struct_IMediaSeeking {
 			/// [`IMediaSeeking::SetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 			/// method.
 			pub fn SetPositions(&self,
-				mut current: i64, currentFlags: co::SEEKING_FLAGS,
-				mut stop: i64, stopFlags: co::SEEKING_FLAGS) -> WinResult<()>
+				mut current: i64, currentFlags: dshowco::SEEKING_FLAGS,
+				mut stop: i64, stopFlags: dshowco::SEEKING_FLAGS) -> WinResult<()>
 			{
 				match co::ERROR(
 					(self.imediaseeking_vt().SetPositions)(

@@ -5,7 +5,7 @@ macro_rules! pub_struct_ITaskbarList3 {
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
 	) => {
-		use crate::co;
+		use crate::com::shell::co as shellco;
 		use crate::com::shell::vt::ITaskbarList3VT;
 
 		pub_struct_ITaskbarList2!{
@@ -35,7 +35,7 @@ macro_rules! pub_struct_ITaskbarList3 {
 			/// [`ITaskbarList3::SetProgressState`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
 			/// method.
 			pub fn SetProgressState(&self,
-				hwnd: HWND, tbpfFlags: co::TBPF) -> WinResult<()>
+				hwnd: HWND, tbpfFlags: shellco::TBPF) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist3_vt().SetProgressState)(

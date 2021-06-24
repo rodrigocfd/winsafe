@@ -5,7 +5,7 @@ macro_rules! pub_struct_IMediaControl {
 		$(#[$doc:meta])*
 		$name:ident, $vt:ty
 	) => {
-		use crate::co;
+		use crate::com::dshow::co as dshowco;
 		use crate::com::dshow::vt::IMediaControlVT;
 		use crate::com::IDispatch;
 		use crate::privs::{hr_to_winresult_bool, INFINITE};
@@ -37,9 +37,9 @@ macro_rules! pub_struct_IMediaControl {
 			/// [`IMediaControl::GetState`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
 			/// method.
 			pub fn GetState(&self,
-				msTimeout: Option<i32>) -> WinResult<co::FILTER_STATE>
+				msTimeout: Option<i32>) -> WinResult<dshowco::FILTER_STATE>
 			{
-				let mut state = co::FILTER_STATE::Stopped;
+				let mut state = dshowco::FILTER_STATE::Stopped;
 				hr_to_winresult(
 					(self.imediacontrol_vt().GetState)(
 						self.ppvt,

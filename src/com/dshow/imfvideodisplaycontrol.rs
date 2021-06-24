@@ -6,6 +6,7 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 		$name:ident, $vt:ty
 	) => {
 		use crate::co;
+		use crate::com::dshow::co as dshowco;
 		use crate::com::dshow::MFVideoNormalizedRect;
 		use crate::com::dshow::vt::IMFVideoDisplayControlVT;
 		use crate::com::funcs::CoTaskMemFree;
@@ -24,8 +25,8 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 
 			/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 			/// method.
-			pub fn GetAspectRatioMode(&self) -> WinResult<co::MFVideoARMode> {
-				let mut mode = co::MFVideoARMode::None;
+			pub fn GetAspectRatioMode(&self) -> WinResult<dshowco::MFVideoARMode> {
+				let mut mode = dshowco::MFVideoARMode::None;
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetAspectRatioMode)(
 						self.ppvt,
@@ -157,7 +158,9 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 
 			/// [`IMFVideoDisplayControl::SetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setaspectratiomode)
 			/// method.
-			pub fn SetAspectRatioMode(&self, mode: co::MFVideoARMode) -> WinResult<()> {
+			pub fn SetAspectRatioMode(&self,
+				mode: dshowco::MFVideoARMode) -> WinResult<()>
+			{
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().SetAspectRatioMode)(
 						self.ppvt,

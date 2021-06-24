@@ -7,6 +7,7 @@ macro_rules! pub_struct_IFileDialog {
 	) => {
 		use crate::com::funcs::CoTaskMemFree;
 		use crate::com::shell::{COMDLG_FILTERSPEC, IShellItem};
+		use crate::com::shell::co as shellco;
 		use crate::com::shell::vt::{IFileDialogVT, IShellItemVT};
 		use crate::structs::GUID;
 		use crate::WString;
@@ -23,7 +24,9 @@ macro_rules! pub_struct_IFileDialog {
 
 			/// [`IFileDialog::AddPlace`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-addplace)
 			/// method.
-			pub fn AddPlace(&self, si: &IShellItem, fdap: co::FDAP) -> WinResult<()> {
+			pub fn AddPlace(&self,
+				si: &IShellItem, fdap: shellco::FDAP) -> WinResult<()>
+			{
 				hr_to_winresult(
 					(self.ifiledialog_vt().AddPlace)(self.ppvt, si.ppvt, fdap.0)
 				)
@@ -91,11 +94,11 @@ macro_rules! pub_struct_IFileDialog {
 
 			/// [`IFileDialog::GetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
 			/// method.
-			pub fn GetOptions(&self) -> WinResult<co::FOS> {
+			pub fn GetOptions(&self) -> WinResult<shellco::FOS> {
 				let mut opts: u32 = 0;
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetOptions)(self.ppvt, &mut opts),
-				).map(|_| co::FOS(opts))
+				).map(|_| shellco::FOS(opts))
 			}
 
 			/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
@@ -234,7 +237,7 @@ macro_rules! pub_struct_IFileDialog {
 
 			/// [`IFileDialog::SetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setoptions)
 			/// method.
-			pub fn SetOptions(&self, opts: co::FOS) -> WinResult<()> {
+			pub fn SetOptions(&self, opts: shellco::FOS) -> WinResult<()> {
 				hr_to_winresult(
 					(self.ifiledialog_vt().SetOptions)(self.ppvt, opts.0),
 				)

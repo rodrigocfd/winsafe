@@ -7,6 +7,7 @@ macro_rules! pub_struct_IShellItem {
 	) => {
 		use crate::co;
 		use crate::com::CoTaskMemFree;
+		use crate::com::shell::co as shellco;
 		use crate::com::shell::vt::IShellItemVT;
 		use crate::ffi::shell32;
 		use crate::WString;
@@ -49,7 +50,7 @@ macro_rules! pub_struct_IShellItem {
 			/// [`IShellItem::GetAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
 			/// method.
 			pub fn GetAttributes(&self,
-				sfgaoMask: co::SFGAO) -> WinResult<co::SFGAO>
+				sfgaoMask: shellco::SFGAO) -> WinResult<shellco::SFGAO>
 			{
 				let mut attrs: u32 = 0;
 				match co::ERROR(
@@ -59,7 +60,7 @@ macro_rules! pub_struct_IShellItem {
 						&mut attrs,
 					) as _,
 				) {
-					co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(co::SFGAO(attrs)),
+					co::ERROR::S_OK | co::ERROR::S_FALSE => Ok(shellco::SFGAO(attrs)),
 					err => Err(err),
 				}
 			}
@@ -76,7 +77,9 @@ macro_rules! pub_struct_IShellItem {
 			/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH).unwrap();
 			/// println!("{}", full_path);
 			/// ```
-			pub fn GetDisplayName(&self, sigdnName: co::SIGDN) -> WinResult<String> {
+			pub fn GetDisplayName(&self,
+				sigdnName: shellco::SIGDN) -> WinResult<String>
+			{
 				let mut pstr: *mut u16 = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitem_vt().GetDisplayName)(
