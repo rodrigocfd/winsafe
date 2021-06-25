@@ -168,16 +168,16 @@ pub fn paint_control_borders(hwnd: HWND, wm_ncp: wm::NcPaint) -> WinResult<()> {
 	if let Some(htheme) = hwnd.OpenThemeData("LISTVIEW") {
 		// Draw only the borders to avoid flickering.
 		htheme.DrawThemeBackground(hdc,
-			co::VS_PART::LVP_LISTGROUP, co::VS_STATE::NONE, rc,
+			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.left, top: rc.top, right: rc.left + 2, bottom: rc.bottom })?;
 		htheme.DrawThemeBackground(hdc,
-			co::VS_PART::LVP_LISTGROUP, co::VS_STATE::NONE, rc,
+			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.left, top: rc.top, right: rc.right, bottom: rc.top + 2 })?;
 		htheme.DrawThemeBackground(hdc,
-			co::VS_PART::LVP_LISTGROUP, co::VS_STATE::NONE, rc,
+			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.right - 2, top: rc.top, right: rc.right, bottom: rc.bottom })?;
 		htheme.DrawThemeBackground(hdc,
-			co::VS_PART::LVP_LISTGROUP, co::VS_STATE::NONE, rc,
+			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom })?;
 
 		htheme.CloseThemeData()?;
