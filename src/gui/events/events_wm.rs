@@ -337,6 +337,12 @@ impl WindowEvents {
 		/// message when disabling the specified window.
 	}
 
+	pub_fn_wm_ret0_param! { wm_capture_changed, co::WM::CAPTURECHANGED, wm::CaptureChanged,
+		/// [`WM_CAPTURECHANGED`](crate::msg::wm::CaptureChanged) message.
+		///
+		/// Sent to the window that is losing the mouse capture.
+	}
+
 	pub_fn_wm_ret0_param! { wm_char, co::WM::CHAR, wm::Char,
 		/// [`WM_CHAR`](crate::msg::wm::Char) message.
 		///

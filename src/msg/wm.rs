@@ -19,6 +19,7 @@ use crate::msg::macros::{lp_to_point, point_to_lp, zero_as_none};
 use crate::privs::FAPPCOMMAND_MASK;
 use crate::structs::{
 	CREATESTRUCT,
+	DELETEITEMSTRUCT,
 	HELPINFO,
 	MINMAXINFO,
 	NMHDR,
@@ -140,6 +141,38 @@ impl MsgSendRecv for AppCommand {
 
 pub_struct_msg_empty_handleable! { CancelMode, co::WM::CANCELMODE,
 	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
+}
+
+/// [`WM_CAPTURECHANGED`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-capturechanged)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct CaptureChanged {
+	pub hwnd_gaining_mouse: HWND,
+}
+
+impl MsgSend for CaptureChanged {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::CAPTURECHANGED,
+			wparam: self.hwnd_gaining_mouse.ptr as _,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for CaptureChanged {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			hwnd_gaining_mouse: HWND { ptr: p.wparam as _ },
+		}
+	}
 }
 
 pub_struct_msg_empty_handleable! { ChildActivate, co::WM::CHILDACTIVATE,
@@ -296,6 +329,40 @@ pub_struct_msg_ctlcolor! { CtlColorStatic, co::WM::CTLCOLORSTATIC,
 
 pub_struct_msg_char! { DeadChar, co::WM::DEADCHAR,
 	/// [`WM_DEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
+}
+
+/// [`WM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-deleteitem)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct DeleteItem<'a> {
+	pub control_id: u16,
+	pub deleteitemstruct: &'a DELETEITEMSTRUCT,
+}
+
+impl<'a> MsgSend for DeleteItem<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::DELETEITEM,
+			wparam: self.control_id as _,
+			lparam: self.deleteitemstruct as *const _ as _,
+		}
+	}
+}
+
+impl<'a> MsgSendRecv for DeleteItem<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			control_id: p.wparam as _,
+			deleteitemstruct: unsafe { &mut *(p.lparam as *mut _) },
+		}
+	}
 }
 
 pub_struct_msg_empty_handleable! { Destroy, co::WM::DESTROY,

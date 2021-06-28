@@ -32,7 +32,7 @@ use crate::handles::{
 	HWND,
 };
 use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH, parse_multi_z_str};
-use crate::structs::{ATOM, COLORREF, GUID};
+use crate::structs::{ATOM, COLORREF, GUID, LCID};
 use crate::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
@@ -165,6 +165,22 @@ impl<'a> CHOOSECOLOR<'a> {
 	pub_fn_resource_id_get_set!(lpTemplateName, set_lpTemplateName);
 }
 
+/// [`COMPAREITEMSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-compareitemstruct)
+/// struct.
+#[repr(C)]
+pub struct COMPAREITEMSTRUCT {
+	pub CtlType: co::ODT_C,
+	pub CtlID: u32,
+	pub hwndItem: HWND,
+	pub itemID1: u32,
+	pub itemData1: usize,
+	pub itemID2: u32,
+	pub itemData2: usize,
+	pub dwLocaleId: LCID,
+}
+
+impl_default_zero!(COMPAREITEMSTRUCT);
+
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
 /// struct.
 #[repr(C)]
@@ -191,6 +207,36 @@ impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, lpszName, set_lpszName);
 	pub_fn_string_ptr_get_set!('b, lpszClass, set_lpszClass);
 }
+
+/// [`DELETEITEMSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-deleteitemstruct)
+/// struct.
+#[repr(C)]
+pub struct DELETEITEMSTRUCT {
+	pub CtlType: co::ODT_C,
+	pub CtlID: u32,
+	pub itemID: u32,
+	pub hwndItem: HWND,
+	pub itemData: usize,
+}
+
+impl_default_zero!(DELETEITEMSTRUCT);
+
+/// [`DRAWITEMSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawitemstruct)
+/// struct.
+#[repr(C)]
+pub struct DRAWITEMSTRUCT {
+	pub CtlType: co::ODT,
+	pub CtlID: u32,
+	pub itemID: u32,
+	pub itemAction: co::ODA,
+	pub itemState: co::ODS,
+	pub hwndItem: HWND,
+	pub hDC: HDC,
+	pub rcItem: RECT,
+	pub itemData: usize,
+}
+
+impl_default_zero!(DRAWITEMSTRUCT);
 
 /// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.

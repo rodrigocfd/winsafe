@@ -21,6 +21,51 @@ pub_struct_const! { OCR, u32,
 	WAIT, 32514
 }
 
+pub_struct_const! { ODA, u32,
+	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemAction` (`u32`).
+	=>
+	DRAWENTIRE, 0x0001
+	SELECT, 0x0002
+	FOCUS, 0x0004
+}
+
+pub_struct_const! { ODS, u32,
+	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemState` (`u32`).
+	=>
+	SELECTED, 0x0001
+	GRAYED, 0x0002
+	DISABLED, 0x0004
+	CHECKED, 0x0008
+	FOCUS, 0x0010
+	DEFAULT, 0x0020
+	COMBOBOXEDIT, 0x1000
+	HOTLIGHT, 0x0040
+	INACTIVE, 0x0080
+	NOACCEL, 0x0100
+	NOFOCUSRECT, 0x0200
+}
+
+pub_struct_const! { ODT, u32,
+	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `CtlType` (`u32`).
+	=>
+	MENU, 1
+	LISTBOX, 2
+	COMBOBOX, 3
+	BUTTON, 4
+	STATIC, 5
+	TAB, 101
+	LISTVIEW, 102
+}
+
+pub_struct_const! { ODT_C, u32,
+	/// [`COMPAREITEMSTRUCT`](crate::COMPAREITEMSTRUCT) and
+	/// [`DELETEITEMSTRUCT`](crate::DELETEITEMSTRUCT) `CtlType` (`u32`).
+	/// Originally has `ODT` prefix.
+	=>
+	LISTBOX, ODT::LISTBOX.0
+	COMBOBOX, ODT::COMBOBOX.0
+}
+
 pub_struct_const! { OUT_PRECIS, u8,
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	=>
