@@ -406,7 +406,7 @@ pub_struct_const! { IDI, isize,
 }
 
 pub_struct_const! { ILC, u32,
-	/// [`ImageList_Create`](crate::HIMAGELIST::ImageList_Create) `flags` (`u32`).
+	/// [`ImageList_Create`](crate::HIMAGELIST::Create) `flags` (`u32`).
 	=>
 	MASK, 0x0000_0001
 	COLOR, 0x0000_0000

@@ -37,15 +37,15 @@ pub_struct_const! { FOS, u32,
 	/// files.
 	PICKFOLDERS, 0x20
 	/// Ensures that returned items are file system items
-	/// ([`SFGAO::FILESYSTEM`](crate::co::SFGAO::FILESYSTEM)). Note that this
-	/// does not apply to items returned by
+	/// ([`SFGAO::FILESYSTEM`](crate::shell::co::SFGAO::FILESYSTEM)). Note that
+	/// this does not apply to items returned by
 	/// [`IFileDialog::GetCurrentSelection`](crate::shell::IFileDialog::GetCurrentSelection).
 	FORCEFILESYSTEM, 0x40
 	/// Enables the user to choose any item in the Shell namespace, not just
-	/// those with [`SFGAO::STREAM`](crate::co::SFGAO::STREAM) or
-	/// [`SFAGO::FILESYSTEM`](crate::co::SFGAO::FILESYSTEM) attributes. This
-	/// flag cannot be combined with
-	/// [`FOS::FORCEFILESYSTEM`](crate::co::FOS::FORCEFILESYSTEM).
+	/// those with [`SFGAO::STREAM`](crate::shell::co::SFGAO::STREAM) or
+	/// [`SFAGO::FILESYSTEM`](crate::shell::co::SFGAO::FILESYSTEM) attributes.
+	/// This flag cannot be combined with
+	/// [`FOS::FORCEFILESYSTEM`](crate::shell::co::FOS::FORCEFILESYSTEM).
 	ALLNONSTORAGEITEMS, 0x80
 	/// Do not check for situations that would prevent an application from
 	/// opening the selected file, such as sharing violations or access denied
@@ -69,7 +69,7 @@ pub_struct_const! { FOS, u32,
 	/// file, call the application back through
 	/// [`OnShareViolation`](crate::shell::IFileDialogEvents::OnShareViolation)
 	/// for guidance. This flag is overridden by
-	/// [`FOS::NOVALIDATE`](crate::co::FOS::NOVALIDATE).
+	/// [`FOS::NOVALIDATE`](crate::shell::co::FOS::NOVALIDATE).
 	SHAREAWARE, 0x4000
 	/// Do not return read-only items. This is a default value for the Save
 	/// dialog.
@@ -181,8 +181,9 @@ pub_struct_const! { SIGDN, u32,
 	/// suitable for display to the user.
 	DESKTOPABSOLUTEEDITING, 0x8004_c000
 	/// Returns the item's file system path, if it has one. Only items that
-	/// report [`SFGAO::FILESYSTEM`](crate::co::SFGAO::FILESYSTEM) have a file
-	/// system path. When an item does not have a file system path, a call to
+	/// report [`SFGAO::FILESYSTEM`](crate::shell::co::SFGAO::FILESYSTEM) have a
+	/// file system path. When an item does not have a file system path, a call
+	/// to
 	/// [`IShellItem::GetDisplayName`](crate::shell::IShellItem::GetDisplayName)
 	/// on that item will fail. In UI this name is suitable for display to the
 	/// user in some cases, but note that it might not be specified for all

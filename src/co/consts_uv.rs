@@ -117,7 +117,7 @@ pub_struct_const! { VER_SUITE, u16,
 }
 
 pub_struct_const! { VFT, u32,
-	/// [`VS_FIXEDFILEINFO`](crate:VS_FIXEDFILEINFO) `dwFileType` (`u32`).
+	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileType` (`u32`).
 	=>
 	UNKNOWN, 0x0000_0000
 	APP, 0x0000_0001
@@ -129,7 +129,7 @@ pub_struct_const! { VFT, u32,
 }
 
 pub_struct_const! { VFT2, u32,
-	/// [`VS_FIXEDFILEINFO`](crate:VS_FIXEDFILEINFO) `dwFileSubType` (`u32`).
+	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileSubType` (`u32`).
 	=>
 	UNKNOWN, 0x0000_0000
 	DRV_PRINTER, 0x0000_0001
@@ -475,7 +475,7 @@ pub_struct_const! { VK_DIR, u16,
 }
 
 pub_struct_const! { VOS, u32,
-	/// [`VS_FIXEDFILEINFO`](crate:VS_FIXEDFILEINFO) `dwFileOS` (`u32`).
+	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileOS` (`u32`).
 	=>
 	UNKNOWN, 0x0000_0000
 	DOS, 0x0001_0000
@@ -498,7 +498,7 @@ pub_struct_const! { VOS, u32,
 }
 
 pub_struct_const! { VS_FF, u32,
-	/// [`VS_FIXEDFILEINFO`](crate:VS_FIXEDFILEINFO) `dwFileFlags` (`u32`).
+	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileFlags` (`u32`).
 	=>
 	DEBUG, 0x0000_0001
 	PRERELEASE, 0x0000_0002

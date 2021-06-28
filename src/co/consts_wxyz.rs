@@ -8,7 +8,7 @@ pub_struct_const! { WA, u16,
 }
 
 pub_struct_const! { WAIT, u32,
-	/// [`WaitForSingleObject`](co::HPROCESS::WaitForSingleObject) return value
+	/// [`WaitForSingleObject`](crate::HPROCESS::WaitForSingleObject) return value
 	/// (`u32`).
 	=>
 	ABANDONED, 0x0000_0080
