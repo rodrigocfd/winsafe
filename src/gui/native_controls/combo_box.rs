@@ -99,6 +99,9 @@ impl ComboBox {
 					)?;
 
 					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+
+					self.items().add(&opts.items)?;
+					self.items().set_selected(opts.selected_item);
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -162,6 +165,15 @@ pub struct ComboBoxOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+
+	/// Items to be added right away to the control.
+	///
+	/// Defaults to none.
+	pub items: Vec<String>,
+	/// Index of the item initially selected. The item must exist.
+	///
+	/// Defaults to `None`.
+	pub selected_item: Option<u32>,
 }
 
 impl Default for ComboBoxOpts {
@@ -174,6 +186,8 @@ impl Default for ComboBoxOpts {
 			combo_box_style: co::CBS::DROPDOWNLIST,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT,
+			items: Vec::default(),
+			selected_item: None,
 		}
 	}
 }

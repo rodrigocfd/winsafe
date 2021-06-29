@@ -122,6 +122,8 @@ impl ListView {
 					if opts.list_view_ex_style != co::LVS_EX::NONE {
 						self.toggle_extended_style(true, opts.list_view_ex_style);
 					}
+
+					self.columns().add(&opts.columns)?;
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -314,6 +316,7 @@ pub struct ListViewOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+
 	/// Context popup menu.
 	///
 	/// This menu is shared: it must be destroyed manually after the control is
@@ -322,6 +325,11 @@ pub struct ListViewOpts {
 	///
 	/// Defaults to `None`.
 	pub context_menu: Option<HMENU>,
+	/// Text and width of columns to be added right away. The columns only show
+	/// in report mode.
+	///
+	/// Defaults to none.
+	pub columns: Vec<(String, u32)>,
 }
 
 impl Default for ListViewOpts {
@@ -335,6 +343,7 @@ impl Default for ListViewOpts {
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 			context_menu: None,
+			columns: Vec::default(),
 		}
 	}
 }

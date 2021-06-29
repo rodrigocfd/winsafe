@@ -76,6 +76,7 @@ impl RadioButton {
 				)?;
 
 				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+				if opts.checked { self.set_check(true); }
 			},
 			OptsId::Dlg(ctrl_id) => {
 				self.0.base.create_dlg(*ctrl_id)?; // may panic
@@ -163,6 +164,11 @@ pub struct RadioButtonOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+
+	/// Checks the radio button right away.
+	///
+	/// Defaults to `false`.
+	pub checked: bool,
 }
 
 impl Default for RadioButtonOpts {
@@ -176,6 +182,7 @@ impl Default for RadioButtonOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
+			checked: false,
 		}
 	}
 }
@@ -198,6 +205,7 @@ impl RadioButtonOpts {
 			window_style: self.window_style,
 			window_ex_style: self.window_ex_style,
 			ctrl_id: self.ctrl_id,
+			checked: self.checked,
 		}
 	}
 }

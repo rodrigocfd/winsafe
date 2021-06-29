@@ -50,7 +50,9 @@ impl ListViewColumns {
 	///     ("Address", 500),
 	/// ]).unwrap();
 	/// ```
-	pub fn add(&self, texts_and_widths: &[(&str, u32)]) -> WinResult<()> {
+	pub fn add<S: AsRef<str>>(&self,
+		texts_and_widths: &[(S, u32)]) -> WinResult<()>
+	{
 		for (text, width) in texts_and_widths.iter() {
 			let mut col_cx = SIZE::new(*width as _, 0);
 			multiply_dpi(None, Some(&mut col_cx))?;
@@ -59,7 +61,7 @@ impl ListViewColumns {
 			lvc.mask = co::LVCF::TEXT | co::LVCF::WIDTH;
 			lvc.cx = col_cx.cx;
 
-			let mut wtext = WString::from_str(text);
+			let mut wtext = WString::from_str(text.as_ref());
 			lvc.set_pszText(Some(&mut wtext));
 
 			self.hwnd().SendMessage(lvm::InsertColumn {
@@ -115,7 +117,8 @@ impl ListViewColumns {
 				relationship: co::LVNI::SELECTED,
 			}) {
 				Some(idx) => {
-					ListViewItems::text_retrieve(self.hwnd(), idx, column_index, &mut buf);
+					ListViewItems::text_retrieve(
+						self.hwnd(), idx, column_index, &mut buf);
 					texts.push(buf.to_string());
 					Some(idx)
 				},

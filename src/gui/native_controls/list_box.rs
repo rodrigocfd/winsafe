@@ -99,6 +99,7 @@ impl ListBox {
 					)?;
 
 					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+					self.items().add(&opts.items)?;
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -153,6 +154,11 @@ pub struct ListBoxOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+
+	/// Items to be added right away to the control.
+	///
+	/// Defaults to none.
+	pub items: Vec<String>,
 }
 
 impl Default for ListBoxOpts {
@@ -164,6 +170,7 @@ impl Default for ListBoxOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
+			items: Vec::default(),
 		}
 	}
 }

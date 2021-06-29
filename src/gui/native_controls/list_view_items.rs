@@ -34,7 +34,36 @@ impl ListViewItems {
 	/// Appends a new item by sending an
 	/// [`LVM_INSERTITEM`](crate::msg::lvm::InsertItem) message, and returns its
 	/// index.
-	pub fn add(&self, text: &str, icon_index: Option<u32>) -> WinResult<u32> {
+	///
+	/// The texts are relative to each column.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_list: gui::ListView; // initialized somewhere
+	///
+	/// my_list.items().add(
+	///     &[
+	///         "First column text",
+	///         "Second column text",
+	///     ],
+	///     None, // no icon; requires set_image_list() before
+	/// ).unwrap();
+	/// ```
+	///
+	/// # Panics
+	///
+	/// Panics if `texts` is empty, or if the number of texts is greater than
+	/// the number of columns.
+	pub fn add<S: AsRef<str>>(&self,
+		texts: &[S], icon_index: Option<u32>) -> WinResult<u32>
+	{
+		if texts.is_empty() {
+			panic!("No texts passed when adding a ListView item.");
+		}
+
 		let mut lvi = LVITEM::default();
 		lvi.mask = co::LVIF::TEXT | co::LVIF::IMAGE;
 		lvi.iItem = 0x0fff_ffff; // insert as the last one
@@ -44,10 +73,16 @@ impl ListViewItems {
 			None => -1,
 		};
 
-		let mut wtext = WString::from_str(text);
+		let mut wtext = WString::from_str(texts[0].as_ref());
 		lvi.set_pszText(Some(&mut wtext));
 
-		self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })
+		let new_idx = self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })?;
+
+		for (idx, text) in texts.iter().skip(1).enumerate() {
+			self.set_text(new_idx, idx as u32 + 1, text.as_ref())?;
+		}
+
+		Ok(new_idx)
 	}
 
 	/// Retrieves the total number of items by sending an
@@ -74,6 +109,21 @@ impl ListViewItems {
 	/// [`LVM_DELETEALLITEMS`](crate::msg::lvm::DeleteAllItems) message.
 	pub fn delete_all(&self) -> WinResult<()> {
 		self.hwnd().SendMessage(lvm::DeleteAllItems {})
+	}
+
+	/// Deletes the selected items by sending
+	/// [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) messages.
+	pub fn delete_selected(&self) -> WinResult<()> {
+		loop {
+			match self.hwnd().SendMessage(lvm::GetNextItem {
+				initial_index: None,
+				relationship: co::LVNI::SELECTED,
+			}) {
+				Some(index) => self.hwnd().SendMessage(lvm::DeleteItem { index })?,
+				None => break,
+			};
+		}
+		Ok(())
 	}
 
 	/// Scrolls the list by sending an

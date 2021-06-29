@@ -108,15 +108,15 @@ impl MonthCalendar {
 
 	pub_fn_ctrlid_hwnd_on_onsubclass!(MonthCalendarEvents);
 
-	/// Retrieves the currently selected date by sending an
+	/// Retrieves the currently selected date by sending a
 	/// [`MCM_GETCURSEL`](crate::msg::mcm::GetCurSel) message.
-	pub fn selected(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
+	pub fn date(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
 		self.hwnd().SendMessage(mcm::GetCurSel { info: st })
 	}
 
-	/// Sets the currently selected date by sending an
+	/// Sets the currently selected date by sending a
 	/// [`MCM_SETCURSEL`](crate::msg::mcm::SetCurSel) message.
-	pub fn set_selected(&self, st: &SYSTEMTIME) -> WinResult<()> {
+	pub fn set_date(&self, st: &SYSTEMTIME) -> WinResult<()> {
 		self.hwnd().SendMessage(mcm::SetCurSel { info: st })
 	}
 }

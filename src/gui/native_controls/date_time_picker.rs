@@ -10,7 +10,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::{dtm, wm};
-use crate::structs::{POINT, SIZE};
+use crate::structs::{POINT, SIZE, SYSTEMTIME};
 
 /// Native
 /// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
@@ -110,6 +110,18 @@ impl DateTimePicker {
 	}
 
 	pub_fn_ctrlid_hwnd_on_onsubclass!(DateTimePickerEvents);
+
+	/// Retrieves the currently selected date by sending a
+	/// [`DTM_GETSYSTEMTIME`](crate::msg::dtm::GetSystemTime) message.
+	pub fn date(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
+		self.hwnd().SendMessage(dtm::GetSystemTime { system_time: st })
+	}
+
+	/// Sets the currently selected date by sending a
+	/// [`DTM_SETSYSTEMTIME`](crate::msg::dtm::SetSystemTime) message.
+	pub fn set_date(&self, st: &SYSTEMTIME) -> WinResult<()> {
+		self.hwnd().SendMessage(dtm::SetSystemTime { system_time: Some(st) })
+	}
 }
 
 //------------------------------------------------------------------------------

@@ -101,6 +101,7 @@ impl CheckBox {
 					)?;
 
 					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+					if opts.checked { self.set_check(true); }
 					Ok(())
 				},
 				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -214,6 +215,11 @@ pub struct CheckBoxOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+
+	/// Checks the check box right away.
+	///
+	/// Defaults to `false`.
+	pub checked: bool,
 }
 
 impl Default for CheckBoxOpts {
@@ -227,6 +233,7 @@ impl Default for CheckBoxOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
+			checked: false,
 		}
 	}
 }

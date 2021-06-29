@@ -30,9 +30,19 @@ impl ListBoxItems {
 
 	/// Adds new texts by sending [`LB_ADDSTRING`](crate::msg::lb::AddString)
 	/// messages.
-	pub fn add(&self, items: &[&str]) -> WinResult<()> {
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::ListBox;
+	///
+	/// let lst_names: ListBox; // initialized somewhere
+	///
+	/// lst_names.items().add(&["John", "Mary"]);
+	/// ```
+	pub fn add<S: AsRef<str>>(&self, items: &[S]) -> WinResult<()> {
 		for text in items.iter() {
-			self.hwnd().SendMessage(lb::AddString { text })?;
+			self.hwnd().SendMessage(lb::AddString { text: text.as_ref() })?;
 		}
 		Ok(())
 	}

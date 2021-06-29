@@ -42,9 +42,9 @@ impl ComboBoxItems {
 	///
 	/// cmb_names.items().add(&["John", "Mary"]);
 	/// ```
-	pub fn add(&self, items: &[&str]) -> WinResult<()> {
+	pub fn add<S: AsRef<str>>(&self, items: &[S]) -> WinResult<()> {
 		for text in items.iter() {
-			self.hwnd().SendMessage(cb::AddString { text })?;
+			self.hwnd().SendMessage(cb::AddString { text: text.as_ref() })?;
 		}
 		Ok(())
 	}
