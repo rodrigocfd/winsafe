@@ -556,6 +556,20 @@ impl WindowEvents {
 		///
 		/// Sent when the user drops a file on the window of an application that
 		/// has registered itself as a recipient of dropped files.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::{gui, msg};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		///
+		/// wnd.on().wm_drop_files(|p: msg::wm::DropFiles| {
+		///     for dropped_file in p.hdrop.DragQueryFiles().unwrap().iter() {
+		///         println!("Dropped: {}", dropped_file);
+		///     }
+		/// });
+		/// ```
 	}
 
 	pub_fn_wm_ret0_param! { wm_enable, co::WM::ENABLE, wm::Enable,

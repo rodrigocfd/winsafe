@@ -93,6 +93,18 @@ impl ListViewEvents {
 		/// notification.
 		///
 		/// Notifies that an item is about to be deleted.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::{gui, NMLISTVIEW};
+		///
+		/// let list: gui::ListView; // initialized somewhere
+		///
+		/// list.on().lvn_delete_item(|p: &NMLISTVIEW| {
+		///     println!("Item: {}", p.iItem);
+		/// });
+		/// ```
 	}
 
 	pub_fn_nfy_retbool_param! { lvn_end_label_edit, co::LVN::ENDLABELEDIT.into(), NMLVDISPINFO,
@@ -172,6 +184,18 @@ impl ListViewEvents {
 		/// notification.
 		///
 		/// Notifies that an item has changed.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::{gui, NMLISTVIEW};
+		///
+		/// let list: gui::ListView; // initialized somewhere
+		///
+		/// list.on().lvn_item_changed(|p: &NMLISTVIEW| {
+		///     println!("Item: {}", p.iItem);
+		/// });
+		/// ```
 	}
 
 	pub_fn_nfy_retbool_param! { lvn_item_changing, co::LVN::ITEMCHANGING.into(), NMLISTVIEW,
@@ -186,6 +210,20 @@ impl ListViewEvents {
 		/// notification.
 		///
 		/// Notifies that a key has been pressed.
+		///
+		/// # Examples
+		///
+		/// ```rust,ignore
+		/// use winsafe::{gui, NMLVKEYDOWN};
+		///
+		/// let list: gui::ListView; // initialized somewhere
+		///
+		/// list.on().lvn_delete_item(|p: &NMLVKEYDOWN| {
+		///     if p.wVKey == co::VK::DELETE {
+		///         println!("DEL key was pressed.");
+		///     }
+		/// });
+		/// ```
 	}
 
 	pub_fn_nfy_ret0_param! { lvn_link_click, co::LVN::LINKCLICK.into(), NMLVLINK,
