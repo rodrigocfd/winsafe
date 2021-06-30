@@ -4,9 +4,9 @@
 
 use std::marker::PhantomData;
 
-use crate::aliases::{CCHOOKPROC, WNDPROC};
+use crate::aliases::{CCHOOKPROC, PFTASKDIALOGCALLBACK, WNDPROC};
 use crate::co;
-use crate::enums::{HwndHmenu, HwndPlace};
+use crate::enums::{HiconIdTdicon, HwndHmenu, HwndPlace};
 use crate::ffi::BOOL;
 use crate::funcs::{
 	HIDWORD,
@@ -87,7 +87,7 @@ pub struct BITMAP {
 	pub bmBits: *mut u8,
 }
 
-impl_default_zero!(BITMAP);
+impl_default!(BITMAP);
 
 /// [`BITMAPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 /// struct.
@@ -153,13 +153,13 @@ impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a);
 
 impl<'a> CHOOSECOLOR<'a> {
 	/// Returns the `lpCustColors` field.
-	pub fn lpCustColors(&self) -> Option<&mut [COLORREF; 16]> {
+	pub fn lpCustColors(&self) -> Option<&'a mut [COLORREF; 16]> {
 		unsafe { self.lpCustColors.as_mut() }
 	}
 
 	/// Sets the `lpCustColors` field.
-	pub fn set_lpCustColors(&mut self, buf: &'a mut [COLORREF; 16]) {
-		self.lpCustColors = buf;
+	pub fn set_lpCustColors(&mut self, buf: Option<&'a mut [COLORREF; 16]>) {
+		self.lpCustColors = buf.map_or(std::ptr::null_mut(), |buf| buf);
 	}
 
 	pub_fn_resource_id_get_set!(lpTemplateName, set_lpTemplateName);
@@ -179,7 +179,7 @@ pub struct COMPAREITEMSTRUCT {
 	pub dwLocaleId: LCID,
 }
 
-impl_default_zero!(COMPAREITEMSTRUCT);
+impl_default!(COMPAREITEMSTRUCT);
 
 /// [`CREATESTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
 /// struct.
@@ -201,7 +201,7 @@ pub struct CREATESTRUCT<'a, 'b> {
 	pub dwExStyle: co::WS_EX,
 }
 
-impl_default_zero!(CREATESTRUCT, 'a, 'b);
+impl_default!(CREATESTRUCT, 'a, 'b);
 
 impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, lpszName, set_lpszName);
@@ -219,7 +219,7 @@ pub struct DELETEITEMSTRUCT {
 	pub itemData: usize,
 }
 
-impl_default_zero!(DELETEITEMSTRUCT);
+impl_default!(DELETEITEMSTRUCT);
 
 /// [`DRAWITEMSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawitemstruct)
 /// struct.
@@ -236,7 +236,7 @@ pub struct DRAWITEMSTRUCT {
 	pub itemData: usize,
 }
 
-impl_default_zero!(DRAWITEMSTRUCT);
+impl_default!(DRAWITEMSTRUCT);
 
 /// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
@@ -296,7 +296,7 @@ pub struct LOGPEN {
 	pub lopnColor: COLORREF,
 }
 
-impl_default_zero!(LOGPEN);
+impl_default!(LOGPEN);
 
 /// [`LOGBRUSH`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)
 /// struct.
@@ -307,7 +307,7 @@ pub struct LOGBRUSH {
 	pub lbHatch: usize, // weird field
 }
 
-impl_default_zero!(LOGBRUSH);
+impl_default!(LOGBRUSH);
 
 /// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
@@ -412,7 +412,7 @@ pub struct MSG {
 	lPrivate: u32,
 }
 
-impl_default_zero!(MSG);
+impl_default!(MSG);
 
 /// [`MSLLHOOKSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msllhookstruct)
 /// struct.
@@ -428,8 +428,6 @@ pub struct MSLLHOOKSTRUCT {
 
 /// [`NCCALCSIZE_PARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
 pub struct NCCALCSIZE_PARAMS<'a> {
 	pub rgrc: [RECT; 3],
@@ -438,16 +436,10 @@ pub struct NCCALCSIZE_PARAMS<'a> {
 }
 
 impl<'a> NCCALCSIZE_PARAMS<'a> {
-	/// Returns the `lppos` field.
-	pub fn lppos(&self) -> Option<&mut WINDOWPOS> {
-		unsafe { self.lppos.as_mut() }
-	}
-
-	/// Sets the `lppos` field.
-	pub fn set_lppos(&mut self, lppos: &'a mut WINDOWPOS) {
-		self.lppos = lppos;
-	}
+	pub_fn_ptr_get_set!('a, lppos, set_lppos, WINDOWPOS);
 }
+
+impl_default!(NCCALCSIZE_PARAMS, 'a);
 
 /// [`NMHDR`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.
@@ -462,7 +454,7 @@ pub struct NMHDR {
 	pub code: co::NM,
 }
 
-impl_default_zero!(NMHDR);
+impl_default!(NMHDR);
 
 impl NMHDR {
 	/// `Returns the `idFrom` field, the ID of the control sending the message.
@@ -575,7 +567,7 @@ pub struct OVERLAPPED {
 	pub hEvent: HEVENT,
 }
 
-impl_default_zero!(OVERLAPPED);
+impl_default!(OVERLAPPED);
 
 /// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
 /// struct.
@@ -589,7 +581,7 @@ pub struct PAINTSTRUCT {
 	rgbReserved: [u8; 32],
 }
 
-impl_default_zero!(PAINTSTRUCT);
+impl_default!(PAINTSTRUCT);
 
 /// [`POINT`](https://docs.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point)
 /// struct.
@@ -623,7 +615,7 @@ pub struct PROCESS_INFORMATION {
 	pub dwThreadId: u32,
 }
 
-impl_default_zero!(PROCESS_INFORMATION);
+impl_default!(PROCESS_INFORMATION);
 
 /// [`PROCESSENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)
 /// struct.
@@ -713,15 +705,7 @@ pub struct SECURITY_ATTRIBUTES<'a> {
 impl_default_with_size!(SECURITY_ATTRIBUTES, nLength, 'a);
 
 impl<'a> SECURITY_ATTRIBUTES<'a> {
-	/// Returns the `lpSecurityDescriptor` field.
-	pub fn lpSecurityDescriptor(&self) -> Option<&mut SECURITY_DESCRIPTOR> {
-		unsafe { self.lpSecurityDescriptor.as_mut() }
-	}
-
-	/// Sets the `lppos` field.
-	pub fn set_lpSecurityDescriptor(&mut self, sd: &'a mut SECURITY_DESCRIPTOR) {
-		self.lpSecurityDescriptor = sd;
-	}
+	pub_fn_ptr_get_set!('a, lpSecurityDescriptor, set_lpSecurityDescriptor, SECURITY_DESCRIPTOR);
 }
 
 /// [`SECURITY_DESCRIPTOR`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
@@ -748,7 +732,7 @@ pub struct SHFILEINFO {
 	szTypeName: [u16; 80],
 }
 
-impl_default_zero!(SHFILEINFO);
+impl_default!(SHFILEINFO);
 
 impl SHFILEINFO {
 	pub_fn_string_arr_get_set!(szDisplayName, set_szDisplayName);
@@ -772,7 +756,7 @@ pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
 	lpszProgressTitle_: PhantomData<&'c mut usize>,
 }
 
-impl_default_zero!(SHFILEOPSTRUCT, 'a, 'b, 'c);
+impl_default!(SHFILEOPSTRUCT, 'a, 'b, 'c);
 
 impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub_fn_bool_get_set!(fAnyOperationsAborted, set_fAnyOperationsAborted);
@@ -923,7 +907,7 @@ pub struct SYSTEM_INFO {
 	pub wProcessorRevision: u16,
 }
 
-impl_default_zero!(SYSTEM_INFO);
+impl_default!(SYSTEM_INFO);
 
 /// [`SYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
 /// struct.
@@ -938,6 +922,89 @@ pub struct SYSTEMTIME {
 	pub wMinute: u16,
 	pub wSecond: u16,
 	pub wMilliseconds: u16,
+}
+
+/// [`TASKDIALOG_BUTTON`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
+/// struct.
+#[repr(C)]
+pub struct TASKDIALOG_BUTTON<'a> {
+	pub nButtonID: i32,
+	pszButtonText: *mut u16,
+	pszButtonText_: PhantomData<&'a mut u16>,
+}
+
+impl_default!(TASKDIALOG_BUTTON, 'a);
+
+impl<'a> TASKDIALOG_BUTTON<'a> {
+	pub_fn_string_ptr_get_set!('a, pszButtonText, set_pszButtonText);
+}
+
+/// [`TASKDIALOGCONFIG`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
+/// struct.
+#[repr(C, packed)]
+pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
+	cbSize: u32,
+	pub hwndParent: HWND,
+	pub hInstance: HINSTANCE,
+	pub dwFlags: co::TDF,
+	pub dwCommonButtons: co::TDCBF,
+	pszWindowTitle: *mut u16,
+	pszWindowTitle_: PhantomData<&'a mut u16>,
+	hMainIcon: *const u16, // union: HICON, PCWSTR
+	pszMainInstruction: *mut u16,
+	pszMainInstruction_: PhantomData<&'b mut u16>,
+	pszContent: *mut u16,
+	pszContent_: PhantomData<&'c mut u16>,
+	cButtons: u32,
+	pButtons: *mut TASKDIALOG_BUTTON<'d>,
+	pButtons_: PhantomData<&'d mut TASKDIALOG_BUTTON<'d>>,
+	pub nDefaultButton: i32,
+	cRadioButtons: u32,
+	pRadioButtons: *mut TASKDIALOG_BUTTON<'e>,
+	pRadioButtons_: PhantomData<&'e mut TASKDIALOG_BUTTON<'e>>,
+	pub nDefaultRadioButton: i32,
+	pszVerificationText: *mut u16,
+	pszVerificationText_: PhantomData<&'f mut u16>,
+	pszExpandedInformation: *mut u16,
+	pszExpandedInformation_: PhantomData<&'g mut u16>,
+	pszExpandedControlText: *mut u16,
+	pszExpandedControlText_: PhantomData<&'h mut u16>,
+	pszCollapsedControlText: *mut u16,
+	pszCollapsedControlText_: PhantomData<&'i mut u16>,
+	hFooterIcon: *const u16, // union: HICON, PCWSTR
+	pszFooter: *mut u16,
+	pszFooter_: PhantomData<&'j mut u16>,
+	pub pfCallback: Option<PFTASKDIALOGCALLBACK>,
+	pub lpCallbackData: isize,
+	pub cxWidth: u32,
+}
+
+impl_default_with_size!(TASKDIALOGCONFIG, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j);
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
+	TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
+{
+	pub_fn_string_ptr_get_set!('a, pszWindowTitle, set_pszWindowTitle);
+
+	/// Sets the `hMainIcon` field.
+	pub fn set_hMainIcon(&mut self, val: HiconIdTdicon) {
+		self.hMainIcon = val.as_ptr();
+	}
+
+	/// Sets the `hFooterIcon` field.
+	pub fn set_hMFooterIcon(&mut self, val: HiconIdTdicon) {
+		self.hFooterIcon = val.as_ptr();
+	}
+
+	pub_fn_string_ptr_get_set!('b, pszMainInstruction, set_pszMainInstruction);
+	pub_fn_string_ptr_get_set!('c, pszContent, set_pszContent);
+	pub_fn_array_buf_get_set!('d, pButtons, set_pButtons, cButtons, TASKDIALOG_BUTTON);
+	pub_fn_array_buf_get_set!('e, pRadioButtons, set_pRadioButtons, cRadioButtons, TASKDIALOG_BUTTON);
+	pub_fn_string_ptr_get_set!('f, pszVerificationText, set_pszVerificationText);
+	pub_fn_string_ptr_get_set!('g, pszExpandedInformation, set_pszExpandedInformation);
+	pub_fn_string_ptr_get_set!('h, pszExpandedControlText, set_pszExpandedControlText);
+	pub_fn_string_ptr_get_set!('i, pszCollapsedControlText, set_pszCollapsedControlText);
+	pub_fn_string_ptr_get_set!('j, pszFooter, set_pszFooter);
 }
 
 /// [`TEXTMETRIC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw)
@@ -1090,7 +1157,7 @@ pub struct WIN32_FIND_DATA {
 	cAlternateFileName: [u16; 14],
 }
 
-impl_default_zero!(WIN32_FIND_DATA);
+impl_default!(WIN32_FIND_DATA);
 
 impl WIN32_FIND_DATA {
 	pub_fn_string_arr_get_set!(cFileName, set_cFileName);
@@ -1148,7 +1215,7 @@ pub struct WINDOWPOS {
 	pub flags: co::SWP,
 }
 
-impl_default_zero!(WINDOWPOS);
+impl_default!(WINDOWPOS);
 
 impl WINDOWPOS {
 	/// Returns the `hwndInsertAfter` field.

@@ -191,21 +191,24 @@ macro_rules! pub_struct_IFileDialog {
 			///     ("All files", "*.*"),
 			/// ]).unwrap();
 			/// ```
-			pub fn SetFileTypes(&self, filterSpec: &[(&str, &str)]) -> WinResult<()> {
+			pub fn SetFileTypes<S: AsRef<str>>(&self,
+				filterSpec: &[(S, S)]) -> WinResult<()>
+			{
 				let mut namesBuf = Vec::with_capacity(filterSpec.len());
 				let mut specsBuf = Vec::with_capacity(filterSpec.len());
 				let mut comDlgs = Vec::with_capacity(filterSpec.len());
 
 				for (name, spec) in filterSpec.iter() {
-					namesBuf.push(WString::from_str(name));
-					specsBuf.push(WString::from_str(spec));
+					namesBuf.push(WString::from_str(name.as_ref()));
+					specsBuf.push(WString::from_str(spec.as_ref()));
 					comDlgs.push(COMDLG_FILTERSPEC::default());
 				}
 
-				for i in 0..filterSpec.len() {
-					comDlgs[i].set_pszName(&namesBuf[i]);
-					comDlgs[i].set_pszSpec(&specsBuf[i]);
-				}
+				namesBuf.iter_mut().enumerate()
+					.for_each(|(i, el)| comDlgs[i].set_pszName(Some(el)));
+
+				specsBuf.iter_mut().enumerate()
+					.for_each(|(i, el)| comDlgs[i].set_pszSpec(Some(el)));
 
 				hr_to_winresult(
 					(self.ifiledialog_vt().SetFileTypes)(

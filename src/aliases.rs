@@ -41,6 +41,18 @@ pub type HOOKPROC =
 	) -> isize;
 
 /// Type alias to
+/// [`PFTASKDIALOGCALLBACK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-pftaskdialogcallback)
+/// calback function.
+pub type PFTASKDIALOGCALLBACK =
+	extern "system" fn(
+		hWnd: HWND,
+		msg: co::WM,
+		wParam: usize,
+		lParam: isize,
+		lpRefData: isize,
+	);
+
+/// Type alias to
 /// [`TIMERPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-timerproc)
 /// callback function.
 pub type TIMERPROC =

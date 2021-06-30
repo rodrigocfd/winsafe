@@ -120,6 +120,33 @@ pub enum EntrySeparatorSubmenu<'a> {
 
 /// Variant parameter for:
 ///
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hMainIcon`;
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hFooterIcon`.
+pub enum HiconIdTdicon {
+	/// No icon.
+	None,
+	/// An icon handle.
+	Hicon(HICON),
+	/// A resource ID.
+	Id(u16),
+	/// A predefined icon.
+	Tdicon(co::TD_ICON),
+}
+
+impl HiconIdTdicon {
+	/// Converts the internal value to a `*const u16`.
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::None => std::ptr::null(),
+			Self::Hicon(hicon) => hicon.ptr as _,
+			Self::Id(id) => *id as _,
+			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0),
+		}
+	}
+}
+
+/// Variant parameter for:
+///
 /// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
 pub enum HtreeitemTvi {
 	/// Handle to a tree view item.

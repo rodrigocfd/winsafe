@@ -83,7 +83,7 @@ pub struct LITEM {
 	szUrl: [u16; L_MAX_URL_LENGTH],
 }
 
-impl_default_zero!(LITEM);
+impl_default!(LITEM);
 
 impl LITEM {
 	pub_fn_string_arr_get_set!(szID, set_szID);
@@ -108,7 +108,7 @@ pub struct LVCOLUMN<'a> {
 	pub cxIdeal: i32,
 }
 
-impl_default_zero!(LVCOLUMN, 'a);
+impl_default!(LVCOLUMN, 'a);
 
 impl<'a> LVCOLUMN<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
@@ -126,7 +126,7 @@ pub struct LVFINDINFO<'a> {
 	pub vkDirection: co::VK_DIR,
 }
 
-impl_default_zero!(LVFINDINFO, 'a);
+impl_default!(LVFINDINFO, 'a);
 
 impl<'a> LVFINDINFO<'a> {
 	pub_fn_string_ptr_get_set!('a, psz, set_psz);
@@ -166,7 +166,7 @@ pub struct LVITEM<'a> {
 	pub iGroup: i32,
 }
 
-impl_default_zero!(LVITEM, 'a);
+impl_default!(LVITEM, 'a);
 
 impl<'a> LVITEM<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
@@ -241,7 +241,7 @@ pub struct NMDATETIMEFORMAT<'a> {
 	szDisplay: [u16; 64], // used as a buffer to pszDisplay
 }
 
-impl_default_zero!(NMDATETIMEFORMAT, 'a);
+impl_default!(NMDATETIMEFORMAT, 'a);
 
 impl<'a> NMDATETIMEFORMAT<'a> {
 	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
@@ -267,7 +267,7 @@ pub struct NMDATETIMEFORMATQUERY<'a> {
 	pub szMax: SIZE,
 }
 
-impl_default_zero!(NMDATETIMEFORMATQUERY, 'a);
+impl_default!(NMDATETIMEFORMATQUERY, 'a);
 
 impl<'a> NMDATETIMEFORMATQUERY<'a> {
 	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
@@ -275,8 +275,6 @@ impl<'a> NMDATETIMEFORMATQUERY<'a> {
 
 /// [`NMDATETIMESTRING`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimestringw)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
 pub struct NMDATETIMESTRING<'a> {
 	pub nmhdr: NMHDR,
@@ -286,7 +284,7 @@ pub struct NMDATETIMESTRING<'a> {
 	pub dwFlags: co::GDT,
 }
 
-impl_default_zero!(NMDATETIMESTRING, 'a);
+impl_default!(NMDATETIMESTRING, 'a);
 
 impl<'a> NMDATETIMESTRING<'a> {
 	pub_fn_string_ptr_get_set!('a, pszUserString, set_pszUserString);
@@ -303,7 +301,7 @@ pub struct NMDATETIMEWMKEYDOWN<'a> {
 	pub st: SYSTEMTIME,
 }
 
-impl_default_zero!(NMDATETIMEWMKEYDOWN, 'a);
+impl_default!(NMDATETIMEWMKEYDOWN, 'a);
 
 impl<'a> NMDATETIMEWMKEYDOWN<'a> {
 	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
@@ -311,26 +309,19 @@ impl<'a> NMDATETIMEWMKEYDOWN<'a> {
 
 /// [`NMDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct NMDAYSTATE {
+pub struct NMDAYSTATE<'a> {
 	pub nmhdr: NMHDR,
 	pub stStart: SYSTEMTIME,
 	cDayState: i32,
 	prgDayState: *mut u32,
+	prgDayState_: PhantomData<&'a mut u32>,
 }
 
-impl NMDAYSTATE {
-	/// Returns the `prgDayState` field.
-	pub fn prgDayState(&mut self) -> &mut [u32] {
-		unsafe {
-			std::slice::from_raw_parts_mut(
-				self.prgDayState,
-				self.cDayState as _,
-			)
-		}
-	}
+impl_default!(NMDAYSTATE, 'a);
+
+impl<'a> NMDAYSTATE<'a> {
+	pub_fn_array_buf_get_set!('a, prgDayState, set_prgDayState, cDayState, u32);
 }
 
 /// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
@@ -416,14 +407,14 @@ pub struct NMLVDISPINFO<'a> {
 
 /// [`NMLVEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvemptymarkup)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
 pub struct NMLVEMPTYMARKUP {
 	pub hdr: NMHDR,
 	pub dwFlags: co::EMF,
 	szMarkup: [u16; L_MAX_URL_LENGTH],
 }
+
+impl_default!(NMLVEMPTYMARKUP);
 
 impl NMLVEMPTYMARKUP {
 	pub_fn_string_arr_get_set!(szMarkup, set_szMarkup);
@@ -452,7 +443,7 @@ pub struct NMLVGETINFOTIP<'a> {
 	pub lParam: isize,
 }
 
-impl_default_zero!(NMLVGETINFOTIP, 'a);
+impl_default!(NMLVGETINFOTIP, 'a);
 
 impl<'a> NMLVGETINFOTIP<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
@@ -460,14 +451,14 @@ impl<'a> NMLVGETINFOTIP<'a> {
 
 /// [`NMLVKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
 pub struct NMLVKEYDOWN {
 	pub hdr: NMHDR,
 	pub wVKey: co::VK,
 	flags: u32,
 }
+
+impl_default!(NMLVKEYDOWN);
 
 /// [`NMLVLINK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvlink)
 /// struct.
@@ -541,12 +532,11 @@ pub struct NMTREEVIEW<'a, 'b> {
 
 /// [`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 /// struct.
-///
-/// You cannot directly instantiate this object.
 #[repr(C)]
-pub struct NMTVASYNCDRAW {
+pub struct NMTVASYNCDRAW<'a> {
 	pub hdr: NMHDR,
-	pimldp: *const IMAGELISTDRAWPARAMS,
+	pimldp: *mut IMAGELISTDRAWPARAMS,
+	pimldp_: PhantomData<&'a mut IMAGELISTDRAWPARAMS>,
 	pub hr: co::ERROR,
 	pub hItem: HTREEITEM,
 	pub lParam: isize,
@@ -554,11 +544,10 @@ pub struct NMTVASYNCDRAW {
 	pub iRetImageIndex: i32,
 }
 
-impl NMTVASYNCDRAW {
-	/// Returns the `pimldp` field.
-	pub fn pimldp(&self) -> &IMAGELISTDRAWPARAMS {
-		unsafe { &*self.pimldp }
-	}
+impl_default!(NMTVASYNCDRAW, 'a);
+
+impl<'a> NMTVASYNCDRAW<'a> {
+	pub_fn_ptr_get_set!('a, pimldp, set_pimldp, IMAGELISTDRAWPARAMS);
 }
 
 /// [`NMTVCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvcustomdraw)
@@ -610,7 +599,7 @@ pub struct TVINSERTSTRUCT<'a> {
 	pub itemex: TVITEMEX<'a>,
 }
 
-impl_default_zero!(TVINSERTSTRUCT, 'a);
+impl_default!(TVINSERTSTRUCT, 'a);
 
 impl<'a> TVINSERTSTRUCT<'a> {
 	/// Returns the `hInsertAfter` field.
@@ -641,7 +630,7 @@ pub struct TVITEM<'a> {
 	pub lParam: isize,
 }
 
-impl_default_zero!(TVITEM, 'a);
+impl_default!(TVITEM, 'a);
 
 impl<'a> TVITEM<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
@@ -669,7 +658,7 @@ pub struct TVITEMEX<'a> {
 	iReserved: i32,
 }
 
-impl_default_zero!(TVITEMEX, 'a);
+impl_default!(TVITEMEX, 'a);
 
 impl<'a> TVITEMEX<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);

@@ -1,5 +1,5 @@
 /// Implements `Default` trait by zeroing all members.
-macro_rules! impl_default_zero {
+macro_rules! impl_default {
 	($name:ident $(, $life:lifetime)*) => {
 		impl<$($life),*> Default for $name<$($life),*> {
 			fn default() -> Self {
@@ -34,6 +34,22 @@ macro_rules! pub_fn_bool_get_set {
 		/// Sets the bool field.
 		pub fn $setter(&mut self, val: bool) {
 			self.$field = val as _
+		}
+	};
+}
+
+/// Implements getter and setter methods for the given resource ID field, stored
+/// as `*mut u16`.
+macro_rules! pub_fn_resource_id_get_set {
+	($field:ident, $setter:ident) => {
+		/// Returns the resource ID field.
+		pub fn $field(&self) -> u16 {
+			self.$field as _
+		}
+
+		/// Sets the resource ID field.
+		pub fn $setter(&mut self, val: u16) {
+			self.$field = val as _;
 		}
 	};
 }
@@ -87,18 +103,45 @@ macro_rules! pub_fn_string_buf_get_set {
 	};
 }
 
-/// Implements getter and setter methods for the given resource ID field, stored
-/// as `*mut u16`.
-macro_rules! pub_fn_resource_id_get_set {
-	($field:ident, $setter:ident) => {
-		/// Returns the resource ID field.
-		pub fn $field(&self) -> u16 {
-			self.$field as _
+/// Implements getter and setter methods for the given pointer member.
+macro_rules! pub_fn_ptr_get_set {
+	($life:lifetime, $field:ident, $setter:ident, $ty:ty) => {
+		/// Returns the pointer field.
+		pub fn $field(&self) -> Option<&$life mut $ty> {
+			unsafe { self.$field.as_mut() }
 		}
 
-		/// Sets the resource ID field.
-		pub fn $setter(&mut self, val: u16) {
-			self.$field = val as _;
+		/// Sets the pointer field.
+		pub fn $setter(&mut self, obj: Option<&$life mut $ty>) {
+			self.$field = obj.map_or(std::ptr::null_mut(), |obj| obj);
+		}
+	};
+}
+
+/// Implements getter and setter methods for the given array + size members,
+/// setting buffer and its size.
+macro_rules! pub_fn_array_buf_get_set {
+	($life:lifetime, $field:ident, $setter:ident, $cch:ident, $ty:ty) => {
+		/// Returns the array field.
+		pub fn $field(&self) -> Option<&$life mut [$ty]> {
+			unsafe {
+				self.$field.as_mut()
+					.map(|p| std::slice::from_raw_parts_mut(p, self.$cch as _))
+			}
+		}
+
+		/// Sets the array field.
+		pub fn $setter(&mut self, buf: Option<&$life mut [$ty]>) {
+			match buf {
+				Some(buf) => {
+					self.$field = buf as *mut _ as _;
+					self.$cch = buf.len() as _;
+				},
+				None => {
+					self.$field = std::ptr::null_mut();
+					self.$cch = 0;
+				},
+			}
 		}
 	};
 }

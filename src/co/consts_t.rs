@@ -312,7 +312,7 @@ pub_struct_const! { TDCBF, i32,
 	CLOSE, 0x0020
 }
 
-pub_struct_const! { TDF, u32,
+pub_struct_const! { TDF, i32,
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwFlags` (`i32`).
 	=>
 	ENABLE_HYPERLINKS, 0x0001

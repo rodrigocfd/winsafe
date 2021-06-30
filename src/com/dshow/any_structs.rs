@@ -21,7 +21,7 @@ pub struct AM_MEDIA_TYPE<'a> {
 	pbFormat_: PhantomData<&'a mut usize>,
 }
 
-impl_default_zero!(AM_MEDIA_TYPE, 'a);
+impl_default!(AM_MEDIA_TYPE, 'a);
 
 impl<'a> AM_MEDIA_TYPE<'a> {
 	pub_fn_bool_get_set!(bFixedSizeSamples, set_bFixedSizeSamples);

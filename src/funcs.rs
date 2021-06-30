@@ -20,6 +20,7 @@ use crate::ffi::{
 use crate::handles::{HINSTANCE, HWND};
 use crate::privs::{
 	bool_to_winresult,
+	hr_to_winresult,
 	INVALID_FILE_ATTRIBUTES,
 	MAX_PATH,
 	parse_multi_z_str,
@@ -41,6 +42,7 @@ use crate::structs::{
 	STARTUPINFO,
 	SYSTEM_INFO,
 	SYSTEMTIME,
+	TASKDIALOGCONFIG,
 	TIME_ZONE_INFORMATION,
 	TRACKMOUSEEVENT,
 	WNDCLASSEX,
@@ -1061,6 +1063,21 @@ pub fn SystemTimeToTzSpecificLocalTime(
 				lpTimeZoneInformation.map_or(std::ptr::null(), |lp| lp as *const _ as _),
 				lpUniversalTime as *const _ as _,
 				lpLocalTime as *mut _ as _,
+			)
+		},
+	)
+}
+
+/// [`TaskDialogIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
+/// function.
+pub fn TaskDialogIndirect(pTaskConfig: &TASKDIALOGCONFIG) -> WinResult<()> {
+	hr_to_winresult(
+		unsafe {
+			comctl32::TaskDialogIndirect(
+				pTaskConfig as *const _ as _,
+				std::ptr::null_mut(),
+				std::ptr::null_mut(),
+				std::ptr::null_mut(),
 			)
 		},
 	)
