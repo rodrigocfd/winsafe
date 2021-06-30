@@ -951,6 +951,15 @@ pub fn SetProcessDPIAware() -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::SetProcessDPIAware() })
 }
 
+/// [`SHAddToRecentDocs`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)
+/// function.
+///
+/// **Note:** The `pv` type varies according to `uFlags`. If you set it wrong,
+/// you're likely to cause a buffer overrun.
+pub unsafe fn SHAddToRecentDocs<T>(uFlags: co::SHARD, pv: &T) {
+	shell32::SHAddToRecentDocs(uFlags.0, pv as *const _ as _);
+}
+
 /// [`Shell_NotifyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
 pub fn Shell_NotifyIcon(
@@ -1017,8 +1026,8 @@ pub fn SoundSentry() -> bool {
 /// [`SystemParametersInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)
 /// function.
 ///
-/// The `pvParam` type varies according to the `uiAction`. If you set it wrong,
-/// you're likely to cause a buffer overrun.
+/// **Note:** The `pvParam` type varies according to `uiAction`. If you set it
+/// wrong, you're likely to cause a buffer overrun.
 pub unsafe fn SystemParametersInfo<T>(
 	uiAction: co::SPI,
 	uiParam: u32,

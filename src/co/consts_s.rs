@@ -159,6 +159,20 @@ pub_struct_const! { SECTION, u32,
 	ALL_ACCESS, STANDARD_RIGHTS::REQUIRED.0 | Self::QUERY.0 | Self::MAP_WRITE.0 | Self::MAP_EXECUTE.0 | Self::EXTEND_SIZE.0
 }
 
+pub_struct_const! { SHARD, u32,
+	/// [`SHARD`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-shard)
+	/// enumeration (`u32`).
+	=>
+	PIDL, 0x0000_0001
+	PATHA, 0x0000_0002
+	PATHW, 0x0000_0003
+	APPIDINFO, 0x0000_0004
+	APPIDINFOIDLIST, 0x0000_0005
+	LINK, 0x0000_0006
+	APPIDINFOLINK, 0x0000_0007
+	SHELLITEM, 0x0000_0008
+}
+
 pub_struct_const! { SHGFI, u32,
 	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `uFlags` (`u32`).
 	=>

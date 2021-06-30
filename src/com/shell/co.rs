@@ -102,7 +102,7 @@ pub_struct_const! { FOS, u32,
 	/// (This constant has no official documentation.)
 	OKBUTTONNEEDSINTERACTION, 0x20_0000
 	/// Do not add the item being opened or saved to the recent documents list
-	/// ([`SHAddToRecentDocs`](crate::shell::SHAddToRecentDocs)).
+	/// ([`SHAddToRecentDocs`](crate::SHAddToRecentDocs)).
 	DONTADDTORECENT, 0x200_0000
 	/// Include hidden and system items.
 	FORCESHOWHIDDEN, 0x1000_0000
