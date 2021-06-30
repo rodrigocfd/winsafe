@@ -1234,6 +1234,9 @@ impl HWND {
 	/// [`TaskDialog`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
 	/// method.
 	///
+	/// If you need more customization, consider the
+	/// [`TaskDialogIndirect`](crate::TaskDialogIndirect) function.
+	///
 	/// # Examples
 	///
 	/// An information message with just an OK button:

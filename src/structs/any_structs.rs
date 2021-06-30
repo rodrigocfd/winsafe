@@ -926,9 +926,9 @@ pub struct SYSTEMTIME {
 
 /// [`TASKDIALOG_BUTTON`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
-#[repr(C)]
+#[repr(C, packed)]
 pub struct TASKDIALOG_BUTTON<'a> {
-	pub nButtonID: i32,
+	nButtonID: i32,
 	pszButtonText: *mut u16,
 	pszButtonText_: PhantomData<&'a mut u16>,
 }
@@ -936,6 +936,7 @@ pub struct TASKDIALOG_BUTTON<'a> {
 impl_default!(TASKDIALOG_BUTTON, 'a);
 
 impl<'a> TASKDIALOG_BUTTON<'a> {
+	pub_fn_resource_id_get_set!(nButtonID, set_nButtonID);
 	pub_fn_string_ptr_get_set!('a, pszButtonText, set_pszButtonText);
 }
 

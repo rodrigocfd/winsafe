@@ -1070,17 +1070,73 @@ pub fn SystemTimeToTzSpecificLocalTime(
 
 /// [`TaskDialogIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
 /// function.
-pub fn TaskDialogIndirect(pTaskConfig: &TASKDIALOGCONFIG) -> WinResult<()> {
+///
+/// Returns:
+/// * the selected `co::DLGID` button;
+/// * if `pRadioButtons` of [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) struct
+/// was set, the `u16` control ID of one of the specified radio buttons;
+/// otherwise zero.
+///
+/// If you don't need all customizations, consider the
+/// [`TaskDialog`](crate::HWND::TaskDialog) method.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{co, gui, HiconIdTdicon,
+///     TASKDIALOG_BUTTON TASKDIALOGCONFIG, TaskDialogIndirect,
+///     WString};
+///
+/// let wnd: gui::WindowMain; // initialized somewhere
+///
+/// let mut tdc = TASKDIALOGCONFIG::default();
+/// tdc.hwndParent = wnd.hwnd();
+/// tdc.dwCommonButtons = co::TDCBF::YES | co::TDCBF::NO;
+/// tdc.set_hMainIcon(w::HiconIdTdicon::Tdicon(co::TD_ICON::INFORMATION));
+///
+/// let mut title = WString::from_str("Title");
+/// tdc.set_pszWindowTitle(Some(&mut title));
+///
+/// let mut header = WString::from_str("Header");
+/// tdc.set_pszMainInstruction(Some(&mut header));
+///
+/// let mut body = WString::from_str("Body");
+/// tdc.set_pszContent(Some(&mut body));
+///
+/// // A custom button to appear before Yes and No.
+/// let mut btn1 = TASKDIALOG_BUTTON::default();
+/// let mut btn1_text = WString::from_str("Hello");
+/// btn1.set_pszButtonText(Some(&mut btn1_text));
+/// btn1.set_nButtonID(333); // this ID is returned if user clicks this button
+/// let btns_slice = &mut [btn1];
+/// tdc.set_pButtons(Some(btns_slice));
+///
+/// TaskDialogIndirect(&tdc, None).unwrap();
+/// ```
+pub fn TaskDialogIndirect(
+	pTaskConfig: &TASKDIALOGCONFIG,
+	pfVerificationFlagChecked: Option<&mut bool>) -> WinResult<(co::DLGID, u16)>
+{
+	let mut pnButton: i32 = 0;
+	let mut pnRadioButton: i32 = 0;
+	let mut pfBool: BOOL = 0;
+
 	hr_to_winresult(
 		unsafe {
 			comctl32::TaskDialogIndirect(
 				pTaskConfig as *const _ as _,
-				std::ptr::null_mut(),
-				std::ptr::null_mut(),
-				std::ptr::null_mut(),
+				&mut pnButton,
+				&mut pnRadioButton,
+				pfVerificationFlagChecked.as_ref()
+					.map_or(std::ptr::null_mut(), |_| &mut pfBool),
 			)
 		},
-	)
+	)?;
+
+	if let Some(pf) = pfVerificationFlagChecked {
+		*pf = pfBool != 0;
+	}
+	Ok((co::DLGID(pnButton as _), pnRadioButton as _))
 }
 
 /// [`TrackMouseEvent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
