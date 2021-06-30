@@ -54,7 +54,7 @@ macro_rules! pub_struct_IUnknown {
 				hr_to_winresult(
 					(unsafe { (**self.ppvt).QueryInterface })(
 						self.ppvt,
-						&VT::IID() as *const _ as _,
+						&VT::IID as *const _ as _,
 						&mut ppvQueried as *mut _ as _,
 					),
 				).map(|_| RetInterf::from(ppvQueried))

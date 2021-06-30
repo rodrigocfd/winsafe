@@ -16,9 +16,8 @@ macro_rules! pub_struct_vtable {
 		}
 
 		impl crate::com::ComVT for $name {
-			fn IID() -> crate::structs::IID {
-				crate::structs::IID::new($iid1, $iid2, $iid3, $iid4, $iid5)
-			}
+			const IID: crate::structs::IID =
+				crate::structs::IID::new($iid1, $iid2, $iid3, $iid4, $iid5);
 		}
 	};
 }

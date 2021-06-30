@@ -42,7 +42,7 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 				pUnkOuter.as_ref()
 					.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as _),
 				dwClsContext.0,
-				&VT::IID() as *const _ as _,
+				&VT::IID as *const _ as _,
 				&mut ppv as *mut _ as _,
 			)
 		},

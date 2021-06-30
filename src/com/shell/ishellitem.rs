@@ -40,7 +40,7 @@ macro_rules! pub_struct_IShellItem {
 						shell32::SHCreateItemFromParsingName(
 							WString::from_str(file_or_folder_path).as_ptr(),
 							std::ptr::null_mut(),
-							&IShellItemVT::IID() as *const _ as _,
+							&IShellItemVT::IID as *const _ as _,
 							&mut ppvQueried as *mut _ as _,
 						)
 					},

@@ -30,7 +30,7 @@ macro_rules! pub_struct_ITypeInfo {
 						self.ppvt,
 						pUnkOuter.as_ref()
 							.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as _),
-						&VT::IID() as *const _ as _,
+						&VT::IID as *const _ as _,
 						&mut ppvQueried as *mut _ as _,
 					),
 				).map(|_| RetInterf::from(ppvQueried))
