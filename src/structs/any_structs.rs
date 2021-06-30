@@ -142,11 +142,11 @@ pub struct CHOOSECOLOR<'a> {
 	pub hInstance: HWND,
 	pub rgbResult: COLORREF,
 	lpCustColors: *mut [COLORREF; 16],
+	lpCustColors_: PhantomData<&'a mut COLORREF>,
 	pub Flags: co::CC,
 	pub lCustData: isize,
 	pub lpfnHook: Option<CCHOOKPROC>,
 	lpTemplateName: *mut u16, // u16 resource ID
-	m_lpCustColors: PhantomData<&'a COLORREF>,
 }
 
 impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a);
@@ -195,10 +195,10 @@ pub struct CREATESTRUCT<'a, 'b> {
 	pub x: i32,
 	pub style: co::WS,
 	lpszName: *mut u16,
+	lpszName_: PhantomData<&'a mut u16>,
 	lpszClass: *mut u16,
+	lpszClass_: PhantomData<&'b mut u16>,
 	pub dwExStyle: co::WS_EX,
-	m_lpszName: PhantomData<&'a u16>,
-	m_lpszClass: PhantomData<&'b u16>,
 }
 
 impl_default_zero!(CREATESTRUCT, 'a, 'b);
@@ -434,7 +434,7 @@ pub struct MSLLHOOKSTRUCT {
 pub struct NCCALCSIZE_PARAMS<'a> {
 	pub rgrc: [RECT; 3],
 	lppos: *mut WINDOWPOS,
-	m_lppos: PhantomData<&'a WINDOWPOS>,
+	lppos_: PhantomData<&'a mut WINDOWPOS>,
 }
 
 impl<'a> NCCALCSIZE_PARAMS<'a> {
@@ -706,8 +706,8 @@ impl_default_with_size!(SCROLLINFO, cbSize);
 pub struct SECURITY_ATTRIBUTES<'a> {
 	nLength: u32,
 	lpSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
+	lpSecurityDescriptor_: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
 	pub bInheritHandle: i32,
-	m_lpSecurityDescriptor: PhantomData<&'a SECURITY_DESCRIPTOR>,
 }
 
 impl_default_with_size!(SECURITY_ATTRIBUTES, nLength, 'a);
@@ -762,14 +762,14 @@ pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub hwnd: HWND,
 	pub wFunc: co::FO,
 	pFrom: *mut u16, // double-null terminated
+	pFrom_: PhantomData<&'a mut usize>,
 	pTo: *mut u16, // double-null terminated
+	pTo_: PhantomData<&'b mut usize>,
 	pub fFlags: co::FOF,
 	fAnyOperationsAborted: BOOL,
 	hNameMappings: *mut std::ffi::c_void, // lots of stuff going here...
 	lpszProgressTitle: *mut u16,
-	m_pFrom: PhantomData<&'a usize>,
-	m_pTo: PhantomData<&'b usize>,
-	m_lpszProgressTitle: PhantomData<&'c usize>,
+	lpszProgressTitle_: PhantomData<&'c mut usize>,
 }
 
 impl_default_zero!(SHFILEOPSTRUCT, 'a, 'b, 'c);
@@ -837,7 +837,9 @@ pub struct STARTUPINFO<'a, 'b> {
 	cb: u32,
 	lpReserved: *mut u16,
 	lpDesktop: *mut u16,
+	lpDesktop_: PhantomData<&'a mut u16>,
 	lpTitle: *mut u16,
+	lpTitle_: PhantomData<&'b mut u16>,
 	pub dwX: u32,
 	pub dwY: u32,
 	pub dwXSize: u32,
@@ -852,8 +854,6 @@ pub struct STARTUPINFO<'a, 'b> {
 	pub hStdInput: HPIPE,
 	pub hStdOutput: HPIPE,
 	pub hStdError: HPIPE,
-	m_lpDesktop: PhantomData<&'a u16>,
-	m_lpTitle: PhantomData<&'b u16>,
 }
 
 impl_default_with_size!(STARTUPINFO, cb, 'a, 'b);
@@ -1184,8 +1184,8 @@ pub struct WNDCLASSEX<'a> {
 	pub hbrBackground: HBRUSH,
 	lpszMenuName: *mut u16, // u16 resource ID
 	lpszClassName: *mut u16,
+	lpszClassName_: PhantomData<&'a mut u16>,
 	pub hIconSm: HICON,
-	m_lpszClassName: PhantomData<&'a u16>,
 }
 
 impl_default_with_size!(WNDCLASSEX, cbSize, 'a);

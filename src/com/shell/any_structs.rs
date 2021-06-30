@@ -9,9 +9,9 @@ use crate::WString;
 #[repr(C)]
 pub struct COMDLG_FILTERSPEC<'a, 'b> {
 	pszName: *const u16,
+	pszName_: PhantomData<&'a mut u16>,
 	pszSpec: *const u16,
-	m_pszName: PhantomData<&'a u16>,
-	m_pszSpec: PhantomData<&'b u16>,
+	pszSpec_: PhantomData<&'b mut u16>,
 }
 
 impl_default_zero!(COMDLG_FILTERSPEC, 'a, 'b);
