@@ -98,7 +98,6 @@ pub struct LVCOLUMN<'a> {
 	pub fmt: co::LVCFMT_C,
 	pub cx: i32,
 	pszText: *mut u16,
-	pszText_: PhantomData<&'a mut u16>,
 	cchTextMax: i32,
 	pub iSubItem: i32,
 	pub iImage: i32,
@@ -106,6 +105,8 @@ pub struct LVCOLUMN<'a> {
 	pub cxMin: i32,
 	pub cxDefault: i32,
 	pub cxIdeal: i32,
+
+	pszText_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVCOLUMN, 'a);
@@ -120,10 +121,11 @@ impl<'a> LVCOLUMN<'a> {
 pub struct LVFINDINFO<'a> {
 	pub flags: co::LVFI,
 	psz: *mut u16,
-	psz_: PhantomData<&'a mut u16>,
 	pub lParam: isize,
 	pub pt: POINT,
 	pub vkDirection: co::VK_DIR,
+
+	psz_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVFINDINFO, 'a);
@@ -154,7 +156,6 @@ pub struct LVITEM<'a> {
 	pub state: co::LVIS,
 	pub stateMask: co::LVIS,
 	pszText: *mut u16,
-	pszText_: PhantomData<&'a mut u16>,
 	cchTextMax: i32,
 	pub iImage: i32,
 	pub lParam: isize,
@@ -164,6 +165,8 @@ pub struct LVITEM<'a> {
 	pub puColumns: *mut i32,
 	pub piColFmt: *mut co::LVCFMT_I,
 	pub iGroup: i32,
+
+	pszText_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVITEM, 'a);
@@ -235,10 +238,11 @@ pub struct NMDATETIMECHANGE {
 pub struct NMDATETIMEFORMAT<'a> {
 	pub nmhdr: NMHDR,
 	pszFormat: *mut u16,
-	pszFormat_: PhantomData<&'a mut u16>,
 	pub st: SYSTEMTIME,
 	pszDisplay: *mut u16,
 	szDisplay: [u16; 64], // used as a buffer to pszDisplay
+
+	pszFormat_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMEFORMAT, 'a);
@@ -263,8 +267,9 @@ impl<'a> NMDATETIMEFORMAT<'a> {
 pub struct NMDATETIMEFORMATQUERY<'a> {
 	pub nmhdr: NMHDR,
 	pszFormat: *mut u16,
-	pszFormat_: PhantomData<&'a mut u16>,
 	pub szMax: SIZE,
+
+	pszFormat_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMEFORMATQUERY, 'a);
@@ -279,9 +284,10 @@ impl<'a> NMDATETIMEFORMATQUERY<'a> {
 pub struct NMDATETIMESTRING<'a> {
 	pub nmhdr: NMHDR,
 	pszUserString: *mut u16,
-	pszUserString_: PhantomData<&'a mut u16>,
 	pub st: SYSTEMTIME,
 	pub dwFlags: co::GDT,
+
+	pszUserString_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMESTRING, 'a);
@@ -297,8 +303,9 @@ pub struct NMDATETIMEWMKEYDOWN<'a> {
 	pub nmhdr: NMHDR,
 	pub nVirtKey: i32,
 	pszFormat: *mut u16,
-	pszFormat_: PhantomData<&'a mut u16>,
 	pub st: SYSTEMTIME,
+
+	pszFormat_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMEWMKEYDOWN, 'a);
@@ -315,6 +322,7 @@ pub struct NMDAYSTATE<'a> {
 	pub stStart: SYSTEMTIME,
 	cDayState: i32,
 	prgDayState: *mut u32,
+
 	prgDayState_: PhantomData<&'a mut u32>,
 }
 
@@ -436,11 +444,12 @@ pub struct NMLVGETINFOTIP<'a> {
 	pub hdr: NMHDR,
 	pub dwFlags: co::LVGIT,
 	pszText: *mut u16,
-	pszText_: PhantomData<&'a mut u16>,
 	cchTextMax: i32,
 	pub iItem: i32,
 	pub iSubItem: i32,
 	pub lParam: isize,
+
+	pszText_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMLVGETINFOTIP, 'a);
@@ -536,12 +545,13 @@ pub struct NMTREEVIEW<'a, 'b> {
 pub struct NMTVASYNCDRAW<'a> {
 	pub hdr: NMHDR,
 	pimldp: *mut IMAGELISTDRAWPARAMS,
-	pimldp_: PhantomData<&'a mut IMAGELISTDRAWPARAMS>,
 	pub hr: co::ERROR,
 	pub hItem: HTREEITEM,
 	pub lParam: isize,
 	pub dwRetFlags: co::ADRF,
 	pub iRetImageIndex: i32,
+
+	pimldp_: PhantomData<&'a mut IMAGELISTDRAWPARAMS>,
 }
 
 impl_default!(NMTVASYNCDRAW, 'a);
@@ -622,12 +632,13 @@ pub struct TVITEM<'a> {
 	pub state: co::TVIS,
 	pub stateMask: co::TVIS,
 	pszText: *mut u16,
-	pszText_: PhantomData<&'a mut u16>,
 	cchTextMax: i32,
 	pub iImage: i32,
 	pub iSelectedImage: i32,
 	pub cChildren: i32,
 	pub lParam: isize,
+
+	pszText_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(TVITEM, 'a);
@@ -645,7 +656,6 @@ pub struct TVITEMEX<'a> {
 	pub state: co::TVIS,
 	pub stateMask: co::TVIS,
 	pszText: *mut u16,
-	pszText_: PhantomData<&'a mut u16>,
 	cchTextMax: i32,
 	pub iImage: i32,
 	pub iSelectedImage: i32,
@@ -656,6 +666,8 @@ pub struct TVITEMEX<'a> {
 	hwnd: HWND,
 	pub iExpandedImage: i32,
 	iReserved: i32,
+
+	pszText_: PhantomData<&'a mut u16>,
 }
 
 impl_default!(TVITEMEX, 'a);

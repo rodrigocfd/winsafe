@@ -18,6 +18,7 @@ pub struct AM_MEDIA_TYPE<'a> {
 	pUnk: usize,
 	cbFormat: u32,
 	pbFormat: *mut std::ffi::c_void,
+
 	pbFormat_: PhantomData<&'a mut usize>,
 }
 

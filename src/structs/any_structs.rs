@@ -142,11 +142,12 @@ pub struct CHOOSECOLOR<'a> {
 	pub hInstance: HWND,
 	pub rgbResult: COLORREF,
 	lpCustColors: *mut [COLORREF; 16],
-	lpCustColors_: PhantomData<&'a mut COLORREF>,
 	pub Flags: co::CC,
 	pub lCustData: isize,
 	pub lpfnHook: Option<CCHOOKPROC>,
 	lpTemplateName: *mut u16, // u16 resource ID
+
+	lpCustColors_: PhantomData<&'a mut COLORREF>,
 }
 
 impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a);
@@ -195,10 +196,11 @@ pub struct CREATESTRUCT<'a, 'b> {
 	pub x: i32,
 	pub style: co::WS,
 	lpszName: *mut u16,
-	lpszName_: PhantomData<&'a mut u16>,
 	lpszClass: *mut u16,
-	lpszClass_: PhantomData<&'b mut u16>,
 	pub dwExStyle: co::WS_EX,
+
+	lpszName_: PhantomData<&'a mut u16>,
+	lpszClass_: PhantomData<&'b mut u16>,
 }
 
 impl_default!(CREATESTRUCT, 'a, 'b);
@@ -432,6 +434,7 @@ pub struct MSLLHOOKSTRUCT {
 pub struct NCCALCSIZE_PARAMS<'a> {
 	pub rgrc: [RECT; 3],
 	lppos: *mut WINDOWPOS,
+
 	lppos_: PhantomData<&'a mut WINDOWPOS>,
 }
 
@@ -698,8 +701,9 @@ impl_default_with_size!(SCROLLINFO, cbSize);
 pub struct SECURITY_ATTRIBUTES<'a> {
 	nLength: u32,
 	lpSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
-	lpSecurityDescriptor_: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
 	pub bInheritHandle: i32,
+
+	lpSecurityDescriptor_: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
 }
 
 impl_default_with_size!(SECURITY_ATTRIBUTES, nLength, 'a);
@@ -746,13 +750,14 @@ pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub hwnd: HWND,
 	pub wFunc: co::FO,
 	pFrom: *mut u16, // double-null terminated
-	pFrom_: PhantomData<&'a mut usize>,
 	pTo: *mut u16, // double-null terminated
-	pTo_: PhantomData<&'b mut usize>,
 	pub fFlags: co::FOF,
 	fAnyOperationsAborted: BOOL,
 	hNameMappings: *mut std::ffi::c_void, // lots of stuff going here...
 	lpszProgressTitle: *mut u16,
+
+	pFrom_: PhantomData<&'a mut usize>,
+	pTo_: PhantomData<&'b mut usize>,
 	lpszProgressTitle_: PhantomData<&'c mut usize>,
 }
 
@@ -821,9 +826,7 @@ pub struct STARTUPINFO<'a, 'b> {
 	cb: u32,
 	lpReserved: *mut u16,
 	lpDesktop: *mut u16,
-	lpDesktop_: PhantomData<&'a mut u16>,
 	lpTitle: *mut u16,
-	lpTitle_: PhantomData<&'b mut u16>,
 	pub dwX: u32,
 	pub dwY: u32,
 	pub dwXSize: u32,
@@ -838,6 +841,9 @@ pub struct STARTUPINFO<'a, 'b> {
 	pub hStdInput: HPIPE,
 	pub hStdOutput: HPIPE,
 	pub hStdError: HPIPE,
+
+	lpDesktop_: PhantomData<&'a mut u16>,
+	lpTitle_: PhantomData<&'b mut u16>,
 }
 
 impl_default_with_size!(STARTUPINFO, cb, 'a, 'b);
@@ -930,6 +936,7 @@ pub struct SYSTEMTIME {
 pub struct TASKDIALOG_BUTTON<'a> {
 	nButtonID: i32,
 	pszButtonText: *mut u16,
+
 	pszButtonText_: PhantomData<&'a mut u16>,
 }
 
@@ -950,34 +957,35 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pub dwFlags: co::TDF,
 	pub dwCommonButtons: co::TDCBF,
 	pszWindowTitle: *mut u16,
-	pszWindowTitle_: PhantomData<&'a mut u16>,
 	hMainIcon: *const u16, // union: HICON, PCWSTR
 	pszMainInstruction: *mut u16,
-	pszMainInstruction_: PhantomData<&'b mut u16>,
 	pszContent: *mut u16,
-	pszContent_: PhantomData<&'c mut u16>,
 	cButtons: u32,
 	pButtons: *mut TASKDIALOG_BUTTON<'d>,
-	pButtons_: PhantomData<&'d mut TASKDIALOG_BUTTON<'d>>,
 	pub nDefaultButton: i32,
 	cRadioButtons: u32,
 	pRadioButtons: *mut TASKDIALOG_BUTTON<'e>,
-	pRadioButtons_: PhantomData<&'e mut TASKDIALOG_BUTTON<'e>>,
 	pub nDefaultRadioButton: i32,
 	pszVerificationText: *mut u16,
-	pszVerificationText_: PhantomData<&'f mut u16>,
 	pszExpandedInformation: *mut u16,
-	pszExpandedInformation_: PhantomData<&'g mut u16>,
 	pszExpandedControlText: *mut u16,
-	pszExpandedControlText_: PhantomData<&'h mut u16>,
 	pszCollapsedControlText: *mut u16,
-	pszCollapsedControlText_: PhantomData<&'i mut u16>,
 	hFooterIcon: *const u16, // union: HICON, PCWSTR
 	pszFooter: *mut u16,
-	pszFooter_: PhantomData<&'j mut u16>,
 	pub pfCallback: Option<PFTASKDIALOGCALLBACK>,
 	pub lpCallbackData: isize,
 	pub cxWidth: u32,
+
+	pszWindowTitle_: PhantomData<&'a mut u16>,
+	pszMainInstruction_: PhantomData<&'b mut u16>,
+	pszContent_: PhantomData<&'c mut u16>,
+	pButtons_: PhantomData<&'d mut TASKDIALOG_BUTTON<'d>>,
+	pRadioButtons_: PhantomData<&'e mut TASKDIALOG_BUTTON<'e>>,
+	pszVerificationText_: PhantomData<&'f mut u16>,
+	pszExpandedInformation_: PhantomData<&'g mut u16>,
+	pszExpandedControlText_: PhantomData<&'h mut u16>,
+	pszCollapsedControlText_: PhantomData<&'i mut u16>,
+	pszFooter_: PhantomData<&'j mut u16>,
 }
 
 impl_default_with_size!(TASKDIALOGCONFIG, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j);
@@ -1252,8 +1260,9 @@ pub struct WNDCLASSEX<'a> {
 	pub hbrBackground: HBRUSH,
 	lpszMenuName: *mut u16, // u16 resource ID
 	lpszClassName: *mut u16,
-	lpszClassName_: PhantomData<&'a mut u16>,
 	pub hIconSm: HICON,
+
+	lpszClassName_: PhantomData<&'a mut u16>,
 }
 
 impl_default_with_size!(WNDCLASSEX, cbSize, 'a);
