@@ -78,10 +78,10 @@ pub_struct_const! { FOS, u32,
 	/// will be successful. If this flag is not set, the calling application
 	/// must handle errors, such as denial of access, discovered when the item
 	/// is created.
-	NOTESTFILECREATE, 0x10000
+	NOTESTFILECREATE, 0x1_0000
 	/// Hide the list of places from which the user has recently opened or saved
 	/// items. This value is not supported as of Windows 7.
-	HIDEMRUPLACES, 0x20000
+	HIDEMRUPLACES, 0x2_0000
 	/// Hide items shown by default in the view's navigation pane. This flag is
 	/// often used in conjunction with the
 	/// [`IFileDialog::AddPlace`](crate::shell::IFileDialog::AddPlace) method,
@@ -203,6 +203,17 @@ pub_struct_const! { SIGDN, u32,
 	PARENTRELATIVE, 0x8008_0001
 	/// Introduced in Windows 8.
 	PARENTRELATIVEFORUI, 0x8009_4001
+}
+
+pub_struct_const! { STPFLAG, u32,
+	/// [`STPFLAG`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
+	/// enumeration (`u32`).
+	=>
+	NONE, 0
+	USEAPPTHUMBNAILALWAYS, 0x1
+	USEAPPTHUMBNAILWHENACTIVE, 0x2
+	USEAPPPEEKALWAYS, 0x4
+	USEAPPPEEKWHENACTIVE, 0x8
 }
 
 pub_struct_const! { TBPF, u32,

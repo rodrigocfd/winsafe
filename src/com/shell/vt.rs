@@ -145,3 +145,12 @@ pub_struct_vtable! { ITaskbarList3VT,
 	SetThumbnailTooltip, fn(IUnkPP, HANDLE, PCSTR) -> HRESULT
 	SetThumbnailClip, fn(IUnkPP, HANDLE, PVOID) -> HRESULT
 }
+
+pub_struct_vtable! { ITaskbarList4VT,
+	/// [`ITaskbarList4`](crate::shell::ITaskbarList4) virtual table.
+	=>
+	0xc43dc798, 0x95d1, 0x4bea, 0x9030, 0xbb99e2983a1a,
+	ITaskbarList3VT, ITaskbarList3VT
+
+	SetTabProperties, fn(IUnkPP, HANDLE, u32) -> HRESULT
+}

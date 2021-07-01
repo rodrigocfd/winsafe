@@ -18,6 +18,8 @@ pub mod vt;
 #[macro_use] mod ifilesavedialog;
 #[macro_use] mod itaskbarlist3;
 
+#[macro_use] mod itaskbarlist4;
+
 mod any_structs;
 
 pub use any_structs::*;
@@ -30,3 +32,4 @@ pub use ishellitemarray::IShellItemArray;
 pub use itaskbarlist::ITaskbarList;
 pub use itaskbarlist2::ITaskbarList2;
 pub use itaskbarlist3::ITaskbarList3;
+pub use itaskbarlist4::ITaskbarList4;
