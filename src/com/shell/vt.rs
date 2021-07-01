@@ -6,6 +6,11 @@
 use crate::com::{IUnknownVT, PPComVT};
 use crate::ffi::{BOOL, HANDLE, HRESULT, PCSTR, PCVOID, PSTR, PVOID};
 
+#[link(name = "shell32")]
+extern "system" {
+	pub fn SHCreateItemFromParsingName(_: PCSTR, _: PVOID, _: PCVOID, _: *mut PVOID) -> HRESULT;
+}
+
 type IUnkPP = PPComVT<IUnknownVT>;
 
 pub_struct_vtable! { IFileDialogVT,

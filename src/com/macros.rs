@@ -23,6 +23,7 @@ macro_rules! pub_struct_vtable {
 }
 
 /// Creates multiple `GUID`-derived pub const values.
+#[allow(unused_macros)]
 macro_rules! pub_const_guid {
 	(
 		$type:ident,

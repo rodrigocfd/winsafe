@@ -8,7 +8,9 @@
 #[macro_use] mod ipersist;
 #[macro_use] mod itypeinfo;
 
+#[cfg(feature = "dshow")]
 pub mod dshow;
+#[cfg(feature = "shell")]
 pub mod shell;
 
 mod funcs;

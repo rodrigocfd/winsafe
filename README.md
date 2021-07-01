@@ -29,21 +29,37 @@ This crate is still in alpha stage. Below is an estimated progress of feature gr
 | Window messages | ![Progress](https://progress-bar.dev/55/) |
 | Overall Win32 APIs | ![Progress](https://progress-bar.dev/25/) | |
 
+## Usage
+
+Add the dependency in your `Cargo.toml`:
+
+```toml
+[dependencies]
+winsafe = "0.0.4"
+```
+
+To enable the DirectShow COM module, use:
+
+```toml
+[dependencies]
+winsafe = { version = "0.0.4", features = ["dshow"] }
+```
+
+To enable the Shell COM module, use:
+
+```toml
+[dependencies]
+winsafe = { version = "0.0.4", features = ["shell"] }
+```
+
 ## Example
 
 **Note:** You can find several examples in the dedicated repo: [github.com/rodrigocfd/winsafe-examples](https://github.com/rodrigocfd/winsafe-examples)
 
-First, put this in your `Cargo.toml`:
-
-```toml
-[dependencies]
-winsafe = "0.0.3"
-```
-
 WinSafe allows you to create windows in two ways:
 
 * programmatically defining parameters; or
-* loading dialogs from a `.res` file (created with a [resource editor](https://en.wikipedia.org/wiki/Resource_(Windows)#Resource_software)).
+* [loading dialogs](https://github.com/rodrigocfd/winsafe-examples/tree/master/03_dialog_resources) from a `.res` file created with a WYSIWYG resource editor.
 
 The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/01_button_click/) creates a window  with a button programmatically. Note how the click event is handled with a closure:
 

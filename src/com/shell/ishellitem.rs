@@ -8,8 +8,7 @@ macro_rules! pub_struct_IShellItem {
 		use crate::co;
 		use crate::com::CoTaskMemFree;
 		use crate::com::shell::co as shellco;
-		use crate::com::shell::vt::IShellItemVT;
-		use crate::ffi::shell32;
+		use crate::com::shell::vt::{IShellItemVT, SHCreateItemFromParsingName};
 		use crate::WString;
 
 		pub_struct_IUnknown! {
@@ -37,7 +36,7 @@ macro_rules! pub_struct_IShellItem {
 				let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					unsafe {
-						shell32::SHCreateItemFromParsingName(
+						SHCreateItemFromParsingName(
 							WString::from_str(file_or_folder_path).as_ptr(),
 							std::ptr::null_mut(),
 							&IShellItemVT::IID as *const _ as _,

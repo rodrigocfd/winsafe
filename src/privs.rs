@@ -51,6 +51,7 @@ pub(crate) fn hr_to_winresult(hresult: HRESULT) -> WinResult<()> {
 
 /// If value is `S_OK` yields `Ok(true)`, if `S_FALSE` yields `Ok(false)`
 /// othersize `Err(hresult)`.
+#[allow(dead_code)]
 pub(crate) fn hr_to_winresult_bool(hresult: HRESULT) -> WinResult<bool> {
 	match co::ERROR(hresult as _) {
 		co::ERROR::S_OK => Ok(true),

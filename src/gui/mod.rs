@@ -1,5 +1,7 @@
 //! High-level GUI abstractions for user windows and native controls. They can
 //! be created programmatically or by loading resources from a `.res` file.
+//! These files can be created with a WYSIWYG
+//! [resource editor](https://en.wikipedia.org/wiki/Resource_(Windows)#Resource_software).
 //!
 //! You'll probably want to start your GUI application using the
 //! [`WindowMain`](crate::gui::WindowMain).

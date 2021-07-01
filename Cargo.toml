@@ -1,6 +1,6 @@
 [package]
 name = "winsafe"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["Rodrigo Cesar de Freitas Dias <rcesar@gmail.com>"]
 description = "Win32 GUI and related APIs in safe, idiomatic Rust."
 categories = ["api-bindings", "gui", "os::windows-apis"]
@@ -14,3 +14,8 @@ edition = "2018"
 [package.metadata.docs.rs]
 default-target = "x86_64-pc-windows-msvc"
 targets = ["aarch64-pc-windows-msvc", "i686-pc-windows-msvc", "x86_64-pc-windows-msvc"]
+all-features = true
+
+[features]
+dshow = []
+shell = []

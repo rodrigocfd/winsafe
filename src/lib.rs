@@ -10,17 +10,33 @@
 //! [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but
 //! have everything.
 //!
-//! To use this crate, put this in your `Cargo.toml`:
-//!
-//! ```toml
-//! [dependencies]
-//! winsafe = "0.0.3"
-//! ```
-//!
 //! Links:
 //! * Crate – [crates.io/crates/winsafe](https://crates.io/crates/winsafe);
 //! * GitHub – [github.com/rodrigocfd/winsafe](https://github.com/rodrigocfd/winsafe);
 //! * examples – [github.com/rodrigocfd/winsafe-examples](https://github.com/rodrigocfd/winsafe-examples).
+//!
+//! # Usage
+//!
+//! Add the dependency in your `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! winsafe = "0.0.4"
+//! ```
+//!
+//! To enable the DirectShow COM module, use:
+//!
+//! ```toml
+//! [dependencies]
+//! winsafe = { version = "0.0.4", features = ["dshow"] }
+//! ```
+//!
+//! To enable the Shell COM module, use:
+//!
+//! ```toml
+//! [dependencies]
+//! winsafe = { version = "0.0.4", features = ["shell"] }
+//! ```
 //!
 //! # Modules overview
 //!
@@ -40,9 +56,14 @@
 //!
 //! WinSafe features idiomatic bindings for the Win32 API, but on top of that,
 //! it features a set of high-level GUI structs, which scaffolds the boilerplate
-//! needed to build native Win32 GUI applications. Unless you're doing something
-//! really specific, these high-level wrappers are highly recommended – you'll
-//! usually start with the [`WindowMain`](crate::gui::WindowMain).
+//! needed to build native Win32 GUI applications, event-oriented. Unless you're
+//! doing something really specific, these high-level wrappers are highly
+//! recommended – you'll usually start with the
+//! [`WindowMain`](crate::gui::WindowMain).
+//!
+//! One of the greatest strenghts of the GUI API is supporting the use of
+//! resource files, which can be created with a WYSIWYG
+//! [resource editor](https://en.wikipedia.org/wiki/Resource_(Windows)#Resource_software).
 //!
 //! GUI structs can be found in module [`gui`](crate::gui).
 //!
