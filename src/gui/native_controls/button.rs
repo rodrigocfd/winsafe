@@ -102,11 +102,11 @@ impl Button {
 
 	pub_fn_ctrlid_hwnd_on_onsubclass!(ButtonEvents);
 
-	/// Fires the click event for the button by posting a
+	/// Fires the click event for the button by sending a
 	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
 	/// the method returns immediately.
-	pub fn trigger_click(&self) -> WinResult<()> {
-		self.hwnd().PostMessage(bm::Click {})
+	pub fn trigger_click(&self) {
+		self.hwnd().SendMessage(bm::Click {});
 	}
 }
 

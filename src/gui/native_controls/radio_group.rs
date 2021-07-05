@@ -159,9 +159,15 @@ impl RadioGroup {
 	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton) of
 	/// this group, if any.
 	pub fn checked(&self) -> Option<&RadioButton> {
-		for radio in self.0.radios.iter() {
+		self.checked_index().map(|idx| &self.0.radios[idx])
+	}
+
+	/// Returns the index of the currently checked
+	/// [`RadioButton`](crate::gui::RadioButton) of this group, if any.
+	pub fn checked_index(&self) -> Option<usize> {
+		for (idx, radio) in self.0.radios.iter().enumerate() {
 			if radio.is_checked() {
-				return Some(radio);
+				return Some(idx);
 			}
 		}
 		None

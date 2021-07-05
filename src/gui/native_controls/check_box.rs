@@ -148,11 +148,11 @@ impl CheckBox {
 		self.hwnd().GetWindowTextStr()
 	}
 
-	/// Fires the click event for the check box by posting a
+	/// Fires the click event for the check box by sending a
 	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
 	/// the method returns immediately.
-	pub fn trigger_click(&self) -> WinResult<()> {
-		self.hwnd().PostMessage(bm::Click {})
+	pub fn trigger_click(&self) {
+		self.hwnd().SendMessage(bm::Click {});
 	}
 
 	fn resize_to_given_text(&self, text: &str) -> WinResult<()> {

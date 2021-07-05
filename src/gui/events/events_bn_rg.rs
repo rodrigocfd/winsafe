@@ -52,7 +52,9 @@ impl RadioGroupEvents {
 	///     let radios = radios.clone();
 	///     move || {
 	///         println!("Selected {}",
-	///             rads.checked().unwrap().hwnd().GetWindowTextStr().unwrap());
+	///             rads.checked().unwrap()
+	///                 .hwnd().GetWindowTextStr().unwrap(),
+	///         );
 	///     }
 	/// });
 	/// ```

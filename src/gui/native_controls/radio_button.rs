@@ -103,11 +103,11 @@ impl RadioButton {
 		});
 	}
 
-	/// Fires the click event for the radio button by posting a
+	/// Fires the click event for the radio button by sending a
 	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
 	/// the method returns immediately.
-	pub fn trigger_click(&self) -> WinResult<()> {
-		self.hwnd().PostMessage(bm::Click {})
+	pub fn trigger_click(&self) {
+		self.hwnd().SendMessage(bm::Click {});
 	}
 }
 
