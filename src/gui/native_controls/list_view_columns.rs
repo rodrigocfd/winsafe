@@ -196,12 +196,13 @@ impl ListViewColumns {
 	/// inconvenient of the manual conversion from [`WString`](crate::WString)
 	/// to `String`.
 	pub fn title(&self,
-		column_index: u32, mut buf: &mut WString) -> WinResult<String>
+		column_index: u32, buf: &mut WString) -> WinResult<String>
 	{
 		let mut lvc = LVCOLUMN::default();
 		lvc.iSubItem = column_index as _;
 		lvc.mask = co::LVCF::TEXT;
 
+		let mut buf = buf;
 		buf.realloc_buffer(128); // arbitrary
 		lvc.set_pszText(Some(&mut buf));
 

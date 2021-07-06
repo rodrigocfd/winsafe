@@ -119,8 +119,8 @@ impl HMENU {
 	/// [`CreateMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createmenu)
 	/// static method.
 	///
-	/// **Note:** If not attached to a window, must be paired with a
-	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
+	/// **Note:** If not attached to a window, must be paired with an
+	/// [`HMENU::DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreateMenu() -> WinResult<HMENU> {
 		unsafe { user32::CreateMenu().as_mut() }
 			.map(|ptr| Self { ptr })
@@ -130,8 +130,8 @@ impl HMENU {
 	/// [`CreatePopupMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu)
 	/// static method.
 	///
-	/// **Note:** If not attached to a window, must be paired with a
-	/// [`DestroyMenu`](crate::HMENU::DestroyMenu) call.
+	/// **Note:** If not attached to a window, must be paired with an
+	/// [`HMENU::DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	pub fn CreatePopupMenu() -> WinResult<HMENU> {
 		unsafe { user32::CreatePopupMenu().as_mut() }
 			.map(|ptr| Self { ptr })

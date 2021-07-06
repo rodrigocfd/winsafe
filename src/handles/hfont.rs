@@ -17,8 +17,8 @@ impl HFONT {
 	/// [`CreateFont`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HFONT::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HFONT::DeleteObject`](crate::HFONT::DeleteObject) call.
 	pub fn CreateFont(
 		cHeight: i32, cWidth: i32, cEscapement: i32, cOrientation: i32,
 		cWeight: co::FW, bItalic: bool, bUnderline: bool, bStrikeOut: bool,
@@ -44,8 +44,8 @@ impl HFONT {
 	/// [`CreateFontIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HFONT::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HFONT::DeleteObject`](crate::HFONT::DeleteObject) call.
 	pub fn CreateFontIndirect(lplf: &LOGFONT) -> WinResult<HFONT> {
 		unsafe { gdi32::CreateFontIndirectW(lplf as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })

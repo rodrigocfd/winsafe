@@ -91,8 +91,8 @@ impl HTHEME {
 	/// [`GetThemeBackgroundRegion`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
 	/// method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn GetThemeBackgroundRegion(self,
 		hdc: HDC, iPartStateId: co::VS, pRect: RECT) -> WinResult<HRGN>
 	{

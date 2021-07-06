@@ -92,8 +92,8 @@ impl HIMAGELIST {
 	/// [`ImageList_BeginDrag`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_begindrag)
 	/// method.
 	///
-	/// **Note:** Must be paired with an [`EndDrag`](crate::HIMAGELIST::EndDrag)
-	/// call.
+	/// **Note:** Must be paired with an
+	/// [`HIMAGELIST::EndDrag`](crate::HIMAGELIST::EndDrag) call.
 	pub fn BeginDrag(self,
 		iTrack: u32, dxHotspot: i32, dyHotspot: i32) -> WinResult<()>
 	{
@@ -112,8 +112,8 @@ impl HIMAGELIST {
 	/// [`ImageList_Create`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a [`Destroy`](crate::HIMAGELIST::Destroy)
-	/// call.
+	/// **Note:** Must be paired with an
+	/// [`HIMAGELIST::Destroy`](crate::HIMAGELIST::Destroy) call.
 	///
 	/// # Examples
 	///

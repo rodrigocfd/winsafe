@@ -69,8 +69,10 @@ impl StatusBarParts {
 	///
 	/// println!("Text: {}", buf.to_string());
 	/// ```
-	pub fn text(&self, part_index: u8, mut buf: &mut WString) {
+	pub fn text(&self, part_index: u8, buf: &mut WString) {
 		let (len, _) = self.hwnd().SendMessage(sb::GetTextLength { part_index });
+
+		let mut buf = buf;
 		buf.realloc_buffer(len as usize + 1);
 
 		self.hwnd().SendMessage(sb::GetText {

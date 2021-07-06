@@ -135,6 +135,7 @@ pub_struct_const! { MBC, u32,
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `dwFlags` (`u32`).
 	/// Originally has `MB` prefix.
 	=>
+	NONE, 0
 	COMPOSITE, 0x0000_0002
 	ERR_INVALID_CHARS, 0x0000_0008
 	PRECOMPOSED, 0x0000_0001

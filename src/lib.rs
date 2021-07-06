@@ -237,4 +237,4 @@ pub use enums::*;
 pub use funcs::*;
 pub use handles::*;
 pub use structs::*;
-pub use w_string::WString;
+pub use w_string::*;

@@ -48,8 +48,8 @@ impl HWND {
 	/// [`BeginPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
 	/// method.
 	///
-	/// **Note:** Must be paired with an [`EndPaint`](crate::HWND::EndPaint)
-	/// call.
+	/// **Note:** Must be paired with an
+	/// [`HWND::EndPaint`](crate::HWND::EndPaint) call.
 	///
 	/// # Examples
 	///
@@ -235,9 +235,10 @@ impl HWND {
 	///     true
 	/// });
 	/// ```
-	pub fn EnumChildWindows<F>(self, mut func: F)
+	pub fn EnumChildWindows<F>(self, func: F)
 		where F: FnMut(HWND) -> bool + 'static,
 	{
+		let mut func = func;
 		unsafe {
 			user32::EnumChildWindows(
 				self.ptr,
@@ -357,8 +358,8 @@ impl HWND {
 	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
 	///
-	/// **Note:** Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC)
-	/// call.
+	/// **Note:** Must be paired with an
+	/// [`HWND::ReleaseDC`](crate::HWND::ReleaseDC) call.
 	pub fn GetDC(self) -> WinResult<HDC> {
 		unsafe { user32::GetDC(self.ptr).as_mut() }
 			.map(|ptr| HDC { ptr })
@@ -482,8 +483,8 @@ impl HWND {
 	/// [`GetWindowDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
 	///
-	/// **Note:** Must be paired with a [`ReleaseDC`](crate::HWND::ReleaseDC)
-	/// call.
+	/// **Note:** Must be paired with an
+	/// [`HWND::ReleaseDC`](crate::HWND::ReleaseDC) call.
 	pub fn GetWindowDC(self) -> WinResult<HDC> {
 		unsafe { user32::GetWindowDC(self.ptr).as_mut() }
 			.map(|ptr| HDC { ptr })
@@ -833,8 +834,8 @@ impl HWND {
 	/// [`OpenThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`CloseThemeData`](crate::HTHEME::CloseThemeData) call.
+	/// **Note:** Must be paired with an
+	/// [`HTHEME::CloseThemeData`](crate::HTHEME::CloseThemeData) call.
 	pub fn OpenThemeData(self, pszClassList: &str) -> Option<HTHEME> {
 		unsafe {
 			uxtheme::OpenThemeData(

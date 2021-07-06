@@ -18,7 +18,8 @@ impl HFILEMAP {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`UnmapViewOfFile`](crate::HFILEMAPVIEW::UnmapViewOfFile) call.
+	/// [`HFILEMAPVIEW::UnmapViewOfFile`](crate::HFILEMAPVIEW::UnmapViewOfFile)
+	/// call.
 	pub fn MapViewOfFile(self,
 		desiredAccess: co::FILE_MAP,
 		offset: u64,

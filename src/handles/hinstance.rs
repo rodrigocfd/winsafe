@@ -244,8 +244,8 @@ impl HINSTANCE {
 	/// [`LoadLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`FreeLibrary`](crate::HINSTANCE::FreeLibrary) call.
+	/// **Note:** Must be paired with an
+	/// [`HINSTANCE::FreeLibrary`](crate::HINSTANCE::FreeLibrary) call.
 	pub fn LoadLibrary(lpLibFileName: &str) -> WinResult<HINSTANCE> {
 		unsafe {
 			kernel32::LoadLibraryW(WString::from_str(lpLibFileName).as_ptr())

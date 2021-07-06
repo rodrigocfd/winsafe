@@ -24,8 +24,8 @@ impl HFILE {
 	/// [`CreateFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`CloseHandle`](crate::HFILE::CloseHandle) call.
+	/// **Note:** Must be paired with an
+	/// [`HFILE::CloseHandle`](crate::HFILE::CloseHandle) call.
 	///
 	/// # Examples
 	///
@@ -92,8 +92,8 @@ impl HFILE {
 	/// [`CreateFileMapping`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
 	/// method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`CloseHandle`](crate::HFILEMAP::CloseHandle) call.
+	/// **Note:** Must be paired with an
+	/// [`HFILEMAP::CloseHandle`](crate::HFILEMAP::CloseHandle) call.
 	pub fn CreateFileMapping(self,
 		lpFileMappingAttributes: Option<&mut SECURITY_ATTRIBUTES>,
 		flProtect: co::PAGE,
@@ -154,7 +154,7 @@ impl HFILE {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`UnlockFile`](crate::HFILE::UnlockFile) call.
+	/// [`HFILE::UnlockFile`](crate::HFILE::UnlockFile) call.
 	pub fn LockFile(self, offset: u64, numBytesToLock: u64) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {

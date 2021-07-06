@@ -57,11 +57,12 @@ impl ButtonEvents {
 		/// command notification.
 		///
 		/// Sent when the user double-clicks a button. This notification code is
-		/// sent automatically for [`BS_USERBUTTON`](crate::co::BS::USERBUTTON),
-		/// [`BS_RADIOBUTTON`](crate::co::BS::RADIOBUTTON), and
-		/// [`BS_OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button
+		/// sent automatically for
+		/// [`BS::USERBUTTON`](crate::co::BS::USERBUTTON),
+		/// [`BS::RADIOBUTTON`](crate::co::BS::RADIOBUTTON), and
+		/// [`BS::OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button
 		/// types send only if they have the
-		/// [`BS_NOTIFY`](crate::co::BS::NOTIFY) style.
+		/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style.
 	}
 
 	pub_fn_cmd_ret0! { bn_kill_focus, co::BN::KILLFOCUS.into(),
@@ -69,7 +70,7 @@ impl ButtonEvents {
 		/// command notification.
 		///
 		/// Sent when a button loses the keyboard focus. The button must have
-		/// the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this
+		/// the [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this
 		/// notification code.
 	}
 
@@ -78,7 +79,7 @@ impl ButtonEvents {
 		/// command notification.
 		///
 		/// Sent when a button receives the keyboard focus. The button must have
-		/// the [`BS_NOTIFY`](crate::co::BS::NOTIFY) style to send this
+		/// the [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this
 		/// notification code.
 	}
 

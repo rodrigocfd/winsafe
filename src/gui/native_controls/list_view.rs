@@ -68,7 +68,7 @@ impl ListView {
 	}
 
 	/// Instantiates a new `ListView` object, to be loaded from a dialog
-	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// **Note:** The optional `context_menu` is shared: it must be destroyed
 	/// manually after the control is destroyed. But note that menus loaded from
@@ -172,8 +172,8 @@ impl ListView {
 	/// Returns the context menu attached to this list view, if any.
 	///
 	/// The context menu is attached when the list view is created, either by
-	/// calling [`new`](crate::gui::ListView::new) or
-	/// [`new_dlg`](crate::gui::ListView::new_dlg).
+	/// calling [`ListView::new`](crate::gui::ListView::new) or
+	/// [`ListView::new_dlg`](crate::gui::ListView::new_dlg).
 	pub fn context_menu(&self) -> Option<HMENU> {
 		self.0.context_menu
 	}

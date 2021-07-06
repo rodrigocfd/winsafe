@@ -17,8 +17,8 @@ impl HRGN {
 	/// [`CreateRectRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn CreateRectRgn(x1: i32, y1: i32, x2: i32, y2: i32) -> WinResult<HRGN> {
 		unsafe { gdi32::CreateRectRgn(x1, y1, x2, y2).as_mut() }
 			.map(|ptr| Self { ptr })
@@ -28,8 +28,8 @@ impl HRGN {
 	/// [`CreateRectRgnIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgnindirect)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn CreateRectRgnIndirect(lprect: &RECT) -> WinResult<HRGN> {
 		unsafe { gdi32::CreateRectRgnIndirect(lprect as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
@@ -39,8 +39,8 @@ impl HRGN {
 	/// [`CreateRoundRectRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn CreateRoundRectRgn(
 		x1: i32, y1: i32, x2: i32, y2: i32, w: i32, h: i32) -> WinResult<HRGN>
 	{

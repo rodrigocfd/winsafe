@@ -41,8 +41,8 @@ impl HPROCESSLIST {
 	/// [`CreateToolhelp32Snapshot`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`CloseHandle`](crate::HPROCESSLIST::CloseHandle) call.
+	/// **Note:** Must be paired with an
+	/// [`HPROCESSLIST::CloseHandle`](crate::HPROCESSLIST::CloseHandle) call.
 	pub fn CreateToolhelp32Snapshot(
 		dwFlags: co::TH32CS,
 		th32ProcessID: Option<u32>) -> WinResult<HPROCESSLIST>

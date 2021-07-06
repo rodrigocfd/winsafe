@@ -15,8 +15,8 @@ impl HICON {
 	/// [`CopyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copyicon)
 	/// method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DestroyIcon`](crate::HICON::DestroyIcon) call.
+	/// **Note:** Must be paired with an
+	/// [`HICON::DestroyIcon`](crate::HICON::DestroyIcon) call.
 	pub fn CopyIcon(self) -> WinResult<HICON> {
 		unsafe { user32::CopyIcon(self.ptr).as_mut() }
 			.map(|ptr| Self { ptr })

@@ -797,6 +797,8 @@ pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32 {
 
 /// [`MultiByteToWideChar`](https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar)
 /// function.
+///
+/// The resulting `Vec<u16>` includes a terminating null.
 pub fn MultiByteToWideChar(
 	CodePage: co::CP, dwFlags: co::MBC,
 	lpMultiByteStr: &[u8]) -> WinResult<Vec<u16>> {
@@ -813,7 +815,8 @@ pub fn MultiByteToWideChar(
 	} {
 		0 => Err(GetLastError()),
 		numBytes => {
-			let mut destBuf: Vec<u16> = vec![0, numBytes as _];
+			let numBytes = numBytes as usize + 1; // add room for terminating null
+			let mut destBuf: Vec<u16> = vec![0x0000; numBytes as _];
 
 			match unsafe {
 				kernel32::MultiByteToWideChar(
@@ -826,7 +829,10 @@ pub fn MultiByteToWideChar(
 				)
 			} {
 				0 => Err(GetLastError()),
-				_ => Ok(destBuf),
+				_ => {
+					unsafe { *destBuf.get_unchecked_mut(numBytes - 1) = 0x0000; } // terminating null
+					Ok(destBuf)
+				},
 			}
 		},
 	}
@@ -974,8 +980,8 @@ pub fn Shell_NotifyIcon(
 /// function.
 ///
 /// **Note:** If you are returning an icon in the `hIcon` member of
-/// [`SHFILEINFO`](crate::SHFILEINFO), it must be paired with a
-/// [`DestroyIcon`](crate::HICON::DestroyIcon) call.
+/// [`SHFILEINFO`](crate::SHFILEINFO), it must be paired with an
+/// [`HICON::DestroyIcon`](crate::HICON::DestroyIcon) call.
 pub fn SHGetFileInfo(
 	pszPath: &str, dwFileAttributes: co::FILE_ATTRIBUTE,
 	psfi: &mut SHFILEINFO, uFlags: co::SHGFI) -> WinResult<u32>
@@ -1236,6 +1242,8 @@ pub fn WaitMessage() -> WinResult<()> {
 
 /// [`WideCharToMultiByte`](https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte)
 /// function.
+///
+/// The resulting `Vec<u16>` includes a terminating null.
 pub fn WideCharToMultiByte(
 	CodePage: co::CP, dwFlags: co::WC,
 	lpWideCharStr: &[u16], lpDefaultChar: Option<u8>,
@@ -1257,7 +1265,8 @@ pub fn WideCharToMultiByte(
 	} {
 		0 => Err(GetLastError()),
 		numBytes => {
-			let mut destBuf: Vec<u8> = vec![0; numBytes as _];
+			let numBytes = numBytes as usize + 1; // add room for terminating null
+			let mut destBuf: Vec<u8> = vec![0x00; numBytes as _];
 			let mut boolBuf: BOOL = 0;
 
 			match unsafe {
@@ -1267,7 +1276,7 @@ pub fn WideCharToMultiByte(
 					lpWideCharStr.as_ptr(),
 					lpWideCharStr.len() as _,
 					destBuf.as_mut_ptr() as _,
-					numBytes,
+					numBytes as _,
 					&mut lpDefaulCharBuf,
 					&mut boolBuf,
 				)
@@ -1277,6 +1286,7 @@ pub fn WideCharToMultiByte(
 					if let Some(lp) = lpUsedDefaultChar {
 						*lp = boolBuf != 0;
 					}
+					unsafe { *destBuf.get_unchecked_mut(numBytes - 1) = 0x00; } // terminating null
 					Ok(destBuf)
 				},
 			}

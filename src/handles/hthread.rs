@@ -20,8 +20,8 @@ impl HTHREAD {
 	///
 	/// Returns the thread handle and ID.
 	///
-	/// **Note:** Must be paired with a
-	/// [`CloseHandle`](crate::HTHREAD::CloseHandle) call.
+	/// **Note:** Must be paired with an
+	/// [`HTHREAD::CloseHandle`](crate::HTHREAD::CloseHandle) call.
 	pub fn CreateThread(
 		lpThreadAttributes: Option<&mut SECURITY_ATTRIBUTES>,
 		dwStackSize: u64,

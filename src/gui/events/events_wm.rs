@@ -227,7 +227,7 @@ impl WindowEvents {
 	}
 
 	/// [`WM_COMMAND`](crate::msg::wm::Command) message, handling both
-	/// `co::CMD::Accelerator` and `co::CMD::Menu`, for a specific command ID.
+	/// `CMD::Accelerator` and `CMD::Menu`, for a specific command ID.
 	///
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators.
@@ -333,8 +333,8 @@ impl WindowEvents {
 		/// or message box is displayed. Certain functions also send this
 		/// message explicitly to the specified window regardless of whether it
 		/// is the active window. For example, the
-		/// [`EnableWindow`](crate::HWND::EnableWindow) function sends this
-		/// message when disabling the specified window.
+		/// [`HWND::EnableWindow`](crate::HWND::EnableWindow) function sends
+		/// this message when disabling the specified window.
 	}
 
 	pub_fn_wm_ret0_param! { wm_capture_changed, co::WM::CAPTURECHANGED, wm::CaptureChanged,
@@ -389,7 +389,7 @@ impl WindowEvents {
 	/// instead.
 	///
 	/// Sent when an application requests that a window be created by calling
-	/// the [`CreateWindowEx`](crate::HWND::CreateWindowEx) function. The
+	/// the [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx) function. The
 	/// message is sent before the function returns. The window procedure of the
 	/// new window receives this message after the window is created, but before
 	/// the window becomes visible.
@@ -577,9 +577,9 @@ impl WindowEvents {
 		///
 		/// Sent when an application changes the enabled state of a window. It
 		/// is sent to the window whose enabled state is changing. This message
-		/// is sent before the [`EnableWindow`](crate::HWND::EnableWindow)
+		/// is sent before the [`HWND::EnableWindow`](crate::HWND::EnableWindow)
 		/// function returns, but after the enabled state
-		/// ([`WS_DISABLED`](crate::co::WS::DISABLED) style bit) of the window
+		/// ([`WS::DISABLED`](crate::co::WS::DISABLED) style bit) of the window
 		/// has changed.
 	}
 
@@ -929,8 +929,8 @@ impl WindowEvents {
 		/// [`WM_NCDESTROY`](crate::msg::wm::NcDestroy) message.
 		///
 		/// Notifies a window that its nonclient area is being destroyed. The
-		/// [`DestroyWindow`](crate::HWND::DestroyWindow) function sends the
-		/// message to the window following the
+		/// [`HWND::DestroyWindow`](crate::HWND::DestroyWindow) function sends
+		/// the message to the window following the
 		/// [`WM_DESTROY`](crate::gui::events::WindowEvents::wm_destroy)
 		/// message. `WM_DESTROY` is used to free the allocated memory object
 		/// associated with the window.
@@ -953,8 +953,8 @@ impl WindowEvents {
 	/// corresponds to a particular screen coordinate. This can happen, for
 	/// example, when the cursor moves, when a mouse button is pressed or
 	/// released, or in response to a call to a function such as
-	/// [`WindowFromPoint`](crate::HWND::WindowFromPoint). If the mouse is not
-	/// captured, the message is sent to the window beneath the cursor.
+	/// [`HWND::WindowFromPoint`](crate::HWND::WindowFromPoint). If the mouse is
+	/// not captured, the message is sent to the window beneath the cursor.
 	/// Otherwise, the message is sent to the window that has captured the
 	/// mouse.
 	pub fn wm_nc_hit_test<F>(&self, func: F)
@@ -998,11 +998,11 @@ impl WindowEvents {
 		///
 		/// Sent when the system or another application makes a request to paint
 		/// a portion of an application's window. The message is sent when the
-		/// [`UpdateWindow`](crate::HWND::UpdateWindow) or
-		/// [`RedrawWindow`](crate::HWND::RedrawWindow) function is called, or
-		/// by the [`DispatchMessage`](crate::DispatchMessage) function when the
-		/// application obtains a `WM_PAINT` message by using the
-		/// [`GetMessage`](crate::GetMessage) or
+		/// [`HWND::UpdateWindow`](crate::HWND::UpdateWindow) or
+		/// [`HWND::RedrawWindow`](crate::HWND::RedrawWindow) function is
+		/// called, or by the [`DispatchMessage`](crate::DispatchMessage)
+		/// function when the application obtains a `WM_PAINT` message by using
+		/// the [`GetMessage`](crate::GetMessage) or
 		/// [`PeekMessage`](crate::PeekMessage) function.
 	}
 
@@ -1058,8 +1058,8 @@ impl WindowEvents {
 	pub_fn_wm_retbool_param! { wm_set_cursor, co::WM::SETCURSOR, wm::SetCursor,
 		/// [`WM_SETCURSOR`](crate::msg::wm::SetCursor) message.
 		///
-		/// Sent to a window if the mouse causes the cursor to move within a window
-		/// and mouse input is not captured.
+		/// Sent to a window if the mouse causes the cursor to move within a
+		/// window and mouse input is not captured.
 	}
 
 	pub_fn_wm_ret0_param! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus,
@@ -1141,16 +1141,16 @@ impl WindowEvents {
 		/// [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) message.
 		///
 		/// Sent to a window after the
-		/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function has
-		/// changed one or more of the window's styles.
+		/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function
+		/// has changed one or more of the window's styles.
 	}
 
 	pub_fn_wm_ret0_param! { wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging,
 		/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) message.
 		///
 		/// Sent to a window when the
-		/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function is
-		/// about to change one or more of the window's styles.
+		/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function
+		/// is about to change one or more of the window's styles.
 	}
 
 	pub_fn_wm_ret0_param! { wm_sys_char, co::WM::SYSCHAR, wm::SysChar,
@@ -1233,8 +1233,8 @@ impl WindowEvents {
 		///
 		/// Sent to a window whose size, position, or place in the Z order has
 		/// changed as a result of a call to the
-		/// [`SetWindowPos`](crate::HWND::SetWindowPos) function or another
-		/// window-management function.
+		/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) function or
+		/// another window-management function.
 	}
 
 	pub_fn_wm_ret0_param! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging,
@@ -1242,8 +1242,8 @@ impl WindowEvents {
 		///
 		/// Sent to a window whose size, position, or place in the Z order is
 		/// about to change as a result of a call to the
-		/// [`SetWindowPos`](crate::HWND::SetWindowPos) function or another
-		/// window-management function.
+		/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) function or
+		/// another window-management function.
 	}
 
 	pub_fn_wm_ret0_param! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk,

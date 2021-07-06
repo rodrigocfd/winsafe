@@ -329,13 +329,15 @@ impl ListViewItems {
 	}
 
 	pub(in crate::gui::native_controls) fn text_retrieve(
-		hwnd: HWND, item_index: u32, column_index: u32, mut buf: &mut WString)
+		hwnd: HWND, item_index: u32, column_index: u32, buf: &mut WString)
 	{
 		// Static method because it's also used by ListViewColumns.
 
 		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
 		const BLOCK: usize = 64; // arbitrary
 		let mut buf_sz = BLOCK;
+
+		let mut buf = buf;
 
 		loop {
 			let mut lvi = LVITEM::default();

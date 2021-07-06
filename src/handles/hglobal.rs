@@ -17,8 +17,8 @@ impl HGLOBAL {
 	/// [`GlobalAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`GlobalFree`](crate::HGLOBAL::GlobalFree) call.
+	/// **Note:** Must be paired with an
+	/// [`HGLOBAL::GlobalFree`](crate::HGLOBAL::GlobalFree) call.
 	pub fn GlobalAlloc(uFlags: co::GMEM, dwBytes: u64) -> WinResult<HGLOBAL> {
 		unsafe { kernel32::GlobalAlloc(uFlags.0, dwBytes).as_mut() }
 			.map(|ptr| Self { ptr })
@@ -49,8 +49,8 @@ impl HGLOBAL {
 	/// Calls [`GlobalSize`](crate::HGLOBAL::GlobalSize) to retrieve the size of
 	/// the memory block.
 	///
-	/// **Note:** Must be paired with a
-	/// [`GlobalUnlock`](crate::HGLOBAL::GlobalUnlock) call.
+	/// **Note:** Must be paired with an
+	/// [`HGLOBAL::GlobalUnlock`](crate::HGLOBAL::GlobalUnlock) call.
 	pub fn GlobalLock<'a>(self) -> WinResult<&'a mut [u8]> {
 		let memSz = self.GlobalSize()?;
 		unsafe { kernel32::GlobalLock(self.ptr).as_mut() }
@@ -63,8 +63,8 @@ impl HGLOBAL {
 	/// [`GlobalReAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalrealloc)
 	/// method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`GlobalFree`](crate::HGLOBAL::GlobalFree) call.
+	/// **Note:** Must be paired with an
+	/// [`HGLOBAL::GlobalFree`](crate::HGLOBAL::GlobalFree) call.
 	pub fn GlobalReAlloc(self,
 		dwBytes: u64, uFlags: co::GMEM) -> WinResult<HGLOBAL>
 	{

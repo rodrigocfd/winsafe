@@ -26,8 +26,8 @@ impl HFINDFILE {
 	/// [`FindFirstFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`FindClose`](crate::HFINDFILE::FindClose) call.
+	/// **Note:** Must be paired with an
+	/// [`HFINDFILE::FindClose`](crate::HFINDFILE::FindClose) call.
 	///
 	/// # Examples
 	///

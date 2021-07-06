@@ -238,8 +238,9 @@ impl TreeViewItems {
 	/// println!("Text: {}", buf.to_string());
 	/// ```
 	pub fn text(&self,
-		hitem: HTREEITEM, mut buf: &mut WString) -> WinResult<()>
+		hitem: HTREEITEM, buf: &mut WString) -> WinResult<()>
 	{
+		let mut buf = buf;
 		buf.realloc_buffer(MAX_PATH + 1); // arbitrary
 
 		let mut tvi = TVITEMEX::default();

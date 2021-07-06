@@ -82,7 +82,8 @@ impl HDC {
 	/// [`CreateCompatibleDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
 	/// method.
 	///
-	/// **Note:** Must be paired with a [`DeleteDC`](crate::HDC::DeleteDC) call.
+	/// **Note:** Must be paired with an [`HDC::DeleteDC`](crate::HDC::DeleteDC)
+	/// call.
 	pub fn CreateCompatibleDC(self) -> WinResult<HDC> {
 		unsafe { gdi32::CreateCompatibleDC(self.ptr).as_mut() }
 			.map(|ptr| Self { ptr })
@@ -191,8 +192,8 @@ impl HDC {
 	/// [`PathToRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pathtoregion)
 	/// method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn PathToRegion(self) -> WinResult<HRGN> {
 		unsafe { gdi32::PathToRegion(self.ptr).as_mut() }
 			.map(|ptr| HRGN { ptr })

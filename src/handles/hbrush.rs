@@ -26,8 +26,8 @@ impl HBRUSH {
 	/// [`CreateBrushIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
 	pub fn CreateBrushIndirect(plbrush: &LOGBRUSH) -> WinResult<HBRUSH> {
 		unsafe { gdi32::CreateBrushIndirect(plbrush as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
@@ -37,8 +37,8 @@ impl HBRUSH {
 	/// [`CreateHatchBrush`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
 	pub fn CreateHatchBrush(
 		iHatch: co::HS, color: COLORREF) -> WinResult<HBRUSH>
 	{
@@ -50,8 +50,8 @@ impl HBRUSH {
 	/// [`CreatePatternBrush`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
 	pub fn CreatePatternBrush(hbm: HBITMAP) -> WinResult<HBRUSH> {
 		unsafe { gdi32::CreatePatternBrush(hbm.ptr).as_mut() }
 			.map(|ptr| Self { ptr })
@@ -61,8 +61,8 @@ impl HBRUSH {
 	/// [`CreateSolidBrush`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// static method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// **Note:** Must be paired with an
+	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
 	pub fn CreateSolidBrush(color: COLORREF) -> WinResult<HBRUSH> {
 		unsafe { gdi32::CreateSolidBrush(color.0).as_mut() }
 			.map(|ptr| Self { ptr })

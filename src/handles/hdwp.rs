@@ -19,7 +19,7 @@ impl HDWP {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`EndDeferWindowPos`](crate::HDWP::EndDeferWindowPos) call.
+	/// [`HDWP::EndDeferWindowPos`](crate::HDWP::EndDeferWindowPos) call.
 	pub fn BeginDeferWindowPos(nNumWindows: u32) -> WinResult<HDWP> {
 		unsafe { user32::BeginDeferWindowPos(nNumWindows as _).as_mut() }
 			.map(|ptr| Self { ptr })

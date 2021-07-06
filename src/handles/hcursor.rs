@@ -16,8 +16,8 @@ impl HCURSOR {
 	/// [`CopyCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copycursor)
 	/// method. Originally a macro.
 	///
-	/// **Note:** Must be paired with a
-	/// [`DestroyCursor`](crate::HCURSOR::DestroyCursor) call.
+	/// **Note:** Must be paired with an
+	/// [`HCURSOR::DestroyCursor`](crate::HCURSOR::DestroyCursor) call.
 	pub fn CopyCursor(self) -> WinResult<HCURSOR> {
 		unsafe { user32::CopyIcon(self.ptr).as_mut() }
 			.map(|ptr| Self { ptr })

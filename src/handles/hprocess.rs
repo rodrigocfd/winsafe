@@ -27,8 +27,8 @@ impl HPROCESS {
 	/// Process and thread handles are returned in the
 	/// [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION) struct, and they
 	/// must be paired with their respective
-	/// [`CloseHandle`](crate::HPROCESS::CloseHandle) and
-	/// [`CloseHandle`](crate::HTHREAD::CloseHandle) calls.
+	/// [`HPROCESS::CloseHandle`](crate::HPROCESS::CloseHandle) and
+	/// [`HTHREAD::CloseHandle`](crate::HTHREAD::CloseHandle) calls.
 	pub fn CreateProcess(
 		lpApplicationName: Option<&str>,
 		lpCommandLine: Option<&str>,

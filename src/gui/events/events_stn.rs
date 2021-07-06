@@ -19,7 +19,7 @@ impl LabelEvents {
 		/// notification.
 		///
 		/// Sent when the user clicks a static control that has the
-		/// [`SS_NOTIFY`](crate::co::SS::NOTIFY) style.
+		/// [`SS::NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
 	pub_fn_cmd_ret0! { stn_dbl_clk, co::STN::DBLCLK.into(),
@@ -27,7 +27,7 @@ impl LabelEvents {
 		/// notification.
 		///
 		/// Sent when the user double-clicks a static control that has the
-		/// [`SS_NOTIFY`](crate::co::SS::NOTIFY) style.
+		/// [`SS::NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
 	pub_fn_cmd_ret0! { stn_disable, co::STN::DISABLE.into(),
@@ -35,7 +35,7 @@ impl LabelEvents {
 		/// notification.
 		///
 		/// Sent when a static control is disabled. The static control must have
-		/// the [`SS_NOTIFY`](crate::co::SS::NOTIFY) style to receive this
+		/// the [`SS::NOTIFY`](crate::co::SS::NOTIFY) style to receive this
 		/// notification code.
 	}
 
@@ -44,7 +44,7 @@ impl LabelEvents {
 		/// notification.
 		///
 		/// Sent when a static control is enabled. The static control must have
-		/// the [`SS_NOTIFY`](crate::co::SS::NOTIFY) style to receive this
+		/// the [`SS::NOTIFY`](crate::co::SS::NOTIFY) style to receive this
 		/// notification code.
 	}
 }

@@ -435,7 +435,9 @@ pub_struct_const! { COLOR, i32,
 
 pub_struct_const! { CP, u32,
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
-	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `CodePage` (`u32`).
+	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `CodePage`
+	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
+	/// (`u32`).
 	=>
 	/// The system default Windows ANSI code page.
 	ACP, 0
@@ -454,6 +456,25 @@ pub_struct_const! { CP, u32,
 	/// UTF-8. With this value set, `lpDefaultChar` and `lpUsedDefaultChar` must
 	/// be set to null.
 	UTF8, 65001
+
+	/// ANSI Central European; Central European (Windows).
+	WINDOWS_1250, 1250
+	/// ANSI Cyrillic; Cyrillic (Windows).
+	WINDOWS_1251, 1251
+	/// ANSI Latin 1; Western European (Windows).
+	WINDOWS_1252, 1252
+	/// ANSI Greek; Greek (Windows).
+	WINDOWS_1253, 1253
+	/// ANSI Turkish; Turkish (Windows).
+	WINDOWS_1254, 1254
+	/// ANSI Hebrew; Hebrew (Windows).
+	WINDOWS_1255, 1255
+	/// ANSI Arabic; Arabic (Windows).
+	WINDOWS_1256, 1256
+	/// ANSI Baltic; Baltic (Windows).
+	WINDOWS_1257, 1257
+	/// ANSI/OEM Vietnamese; Vietnamese (Windows).
+	WINDOWS_1258, 1258
 }
 
 pub_struct_const! { CREATE, u32,

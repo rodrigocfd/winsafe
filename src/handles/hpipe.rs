@@ -20,7 +20,7 @@ impl HPIPE {
 	/// Returns handles to the read and write pipes.
 	///
 	/// **Note:** Must be paired with
-	/// [`CloseHandle`](crate::HPIPE::CloseHandle) calls.
+	/// [`HPIPE::CloseHandle`](crate::HPIPE::CloseHandle) calls.
 	pub fn CreatePipe(
 		lpPipeAttributes: Option<&mut SECURITY_ATTRIBUTES>,
 		nSize: u32) -> WinResult<(HPIPE, HPIPE)>
