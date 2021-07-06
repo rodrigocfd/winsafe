@@ -7,7 +7,7 @@ use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::bool_to_winresult;
 use crate::structs::WIN32_FIND_DATA;
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to a

@@ -19,7 +19,7 @@ use crate::structs::{
 	RECT,
 	SIZE,
 };
-use crate::WString;
+use crate::various::WString;
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.

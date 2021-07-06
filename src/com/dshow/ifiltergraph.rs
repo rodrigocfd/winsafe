@@ -7,7 +7,7 @@ macro_rules! pub_struct_IFilterGraph {
 	) => {
 		use crate::com::dshow::{IBaseFilter, IEnumFilters};
 		use crate::com::dshow::vt::{IBaseFilterVT, IEnumFiltersVT, IFilterGraphVT};
-		use crate::WString;
+		use crate::various::WString;
 
 		pub_struct_IUnknown! {
 			$(#[$doc])*

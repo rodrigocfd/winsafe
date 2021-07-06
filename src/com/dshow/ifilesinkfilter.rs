@@ -8,7 +8,7 @@ macro_rules! pub_struct_IFileSinkFilter {
 		use crate::com::dshow::AM_MEDIA_TYPE;
 		use crate::com::dshow::vt::IFileSinkFilterVT;
 		use crate::com::funcs::CoTaskMemFree;
-		use crate::WString;
+		use crate::various::WString;
 
 		pub_struct_IUnknown! {
 			$(#[$doc])*

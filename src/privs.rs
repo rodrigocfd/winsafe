@@ -6,7 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, HRESULT};
 use crate::funcs::GetLastError;
-use crate::WString;
+use crate::various::WString;
 
 pub(crate) const CB_ERR: i32 = -1;
 pub(crate) const CB_ERRSPACE: i32 = -2;

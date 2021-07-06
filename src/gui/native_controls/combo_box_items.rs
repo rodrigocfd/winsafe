@@ -5,7 +5,7 @@ use crate::aliases::WinResult;
 use crate::funcs::PostQuitMessage;
 use crate::handles::HWND;
 use crate::msg::cb;
-use crate::WString;
+use crate::various::WString;
 
 /// Exposes item methods of a [`ComboBox`](crate::gui::ComboBox) control.
 ///

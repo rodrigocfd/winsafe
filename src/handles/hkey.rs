@@ -6,7 +6,7 @@ use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
 use crate::privs::bool_to_winresult;
 use crate::structs::FILETIME;
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to a

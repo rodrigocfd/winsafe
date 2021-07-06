@@ -47,7 +47,7 @@ use crate::structs::{
 	TRACKMOUSEEVENT,
 	WNDCLASSEX,
 };
-use crate::WString;
+use crate::various::WString;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.

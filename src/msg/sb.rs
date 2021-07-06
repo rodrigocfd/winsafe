@@ -8,7 +8,7 @@ use crate::funcs::{HIWORD, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::HICON;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
-use crate::WString;
+use crate::various::WString;
 
 /// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
 /// message parameters.

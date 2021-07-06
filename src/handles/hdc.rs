@@ -7,7 +7,7 @@ use crate::funcs::GetLastError;
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
 use crate::privs::{bool_to_winresult, CLR_INVALID, GDI_ERROR};
 use crate::structs::{COLORREF, POINT, RECT, SIZE, TEXTMETRIC};
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to a

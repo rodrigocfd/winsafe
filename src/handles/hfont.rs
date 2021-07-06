@@ -5,7 +5,7 @@ use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
 use crate::structs::LOGFONT;
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle_gdi! {
 	/// Handle to a

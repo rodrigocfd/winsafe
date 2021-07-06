@@ -9,7 +9,7 @@ macro_rules! pub_struct_IShellItem {
 		use crate::com::CoTaskMemFree;
 		use crate::com::shell::co as shellco;
 		use crate::com::shell::vt::{IShellItemVT, SHCreateItemFromParsingName};
-		use crate::WString;
+		use crate::various::WString;
 
 		pub_struct_IUnknown! {
 			$(#[$doc])*

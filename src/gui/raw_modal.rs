@@ -10,7 +10,7 @@ use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
-use crate::WString;
+use crate::various::WString;
 
 #[derive(Clone)]
 pub(in crate::gui) struct RawModal(Arc<VeryUnsafeCell<Obj>>);

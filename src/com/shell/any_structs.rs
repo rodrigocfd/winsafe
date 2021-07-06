@@ -2,7 +2,7 @@
 
 use std::marker::PhantomData;
 
-use crate::WString;
+use crate::various::WString;
 
 /// [`COMDLG_FILTERSPEC`](https://docs.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
 /// struct.

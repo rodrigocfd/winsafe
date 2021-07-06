@@ -9,7 +9,7 @@ use crate::enums::HtreeitemTvi;
 use crate::handles::{HDC, HIMAGELIST, HTREEITEM, HWND};
 use crate::privs::{L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
-use crate::WString;
+use crate::various::WString;
 
 /// [`BUTTON_IMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
 /// struct.

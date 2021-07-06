@@ -11,7 +11,7 @@ use crate::structs::{
 	SECURITY_ATTRIBUTES,
 	STARTUPINFO,
 };
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle_closeable! {
 	/// Handle to a

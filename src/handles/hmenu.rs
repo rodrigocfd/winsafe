@@ -9,7 +9,7 @@ use crate::handles::HWND;
 use crate::msg;
 use crate::privs::bool_to_winresult;
 use crate::structs::{MENUINFO, MENUITEMINFO, POINT};
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to a

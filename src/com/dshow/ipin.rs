@@ -7,7 +7,7 @@ macro_rules! pub_struct_IPin {
 	) => {
 		use crate::com::dshow::vt::IPinVT;
 		use crate::com::funcs::CoTaskMemFree;
-		use crate::WString;
+		use crate::various::WString;
 
 		pub_struct_IUnknown! {
 			$(#[$doc])*

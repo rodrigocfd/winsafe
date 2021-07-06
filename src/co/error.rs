@@ -5,7 +5,7 @@ use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::handles::HLOCAL;
 use crate::structs::LANGID;
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_const_no_debug_display! { ERROR, u32,
 	/// A Windows

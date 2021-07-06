@@ -8,7 +8,7 @@ use crate::gui::privs::multiply_dpi;
 use crate::handles::HWND;
 use crate::msg::{hdm, lvm};
 use crate::structs::{LVCOLUMN, SIZE};
-use crate::WString;
+use crate::various::WString;
 
 /// Exposes column methods of a [`ListView`](crate::gui::ListView) control.
 ///

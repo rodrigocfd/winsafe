@@ -6,7 +6,7 @@ use crate::co;
 use crate::handles::HWND;
 use crate::msg::lvm;
 use crate::structs::{LVFINDINFO, LVHITTESTINFO, LVITEM, RECT};
-use crate::WString;
+use crate::various::WString;
 
 /// Exposes item methods of a [`ListView`](crate::gui::ListView) control.
 ///

@@ -8,7 +8,7 @@ macro_rules! pub_struct_IBaseFilter {
 		use crate::com::dshow::IFilterGraph;
 		use crate::com::dshow::vt::IBaseFilterVT;
 		use crate::com::funcs::CoTaskMemFree;
-		use crate::WString;
+		use crate::various::WString;
 
 		pub_struct_IMediaFilter! {
 			$(#[$doc])*

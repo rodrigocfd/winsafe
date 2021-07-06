@@ -18,7 +18,7 @@ use crate::structs::{
 	WINDOWINFO,
 	WINDOWPLACEMENT,
 };
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to a

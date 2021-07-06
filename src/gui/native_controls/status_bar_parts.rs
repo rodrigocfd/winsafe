@@ -5,7 +5,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HWND;
 use crate::msg::sb;
-use crate::WString;
+use crate::various::WString;
 
 /// Exposes the part methods of a [`StatusBar`](crate::gui::StatusBar) control.
 ///

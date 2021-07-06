@@ -8,7 +8,7 @@ use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
 use crate::privs::{bool_to_winresult, MAX_PATH, str_to_iso88591};
 use crate::structs::{ATOM, WNDCLASSEX};
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to an

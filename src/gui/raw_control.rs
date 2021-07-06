@@ -9,7 +9,7 @@ use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
-use crate::WString;
+use crate::various::WString;
 
 #[derive(Clone)]
 pub(in crate::gui) struct RawControl(Arc<Obj>);

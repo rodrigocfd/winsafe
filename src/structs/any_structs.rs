@@ -33,7 +33,7 @@ use crate::handles::{
 };
 use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH, parse_multi_z_str};
 use crate::structs::{ATOM, COLORREF, GUID, LCID};
-use crate::WString;
+use crate::various::WString;
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.

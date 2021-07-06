@@ -9,7 +9,7 @@ use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{point_to_lp, zero_as_err};
 use crate::privs::{LB_ERR, LB_ERRSPACE};
 use crate::structs::{POINT, RECT};
-use crate::WString;
+use crate::various::WString;
 
 /// [`LB_ADDFILE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-addfile)
 /// message parameters.

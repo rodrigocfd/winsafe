@@ -229,7 +229,7 @@ mod com;
 mod enums;
 mod funcs;
 mod handles;
-mod w_string;
+mod various;
 
 pub use aliases::*;
 pub use com::*;
@@ -237,4 +237,4 @@ pub use enums::*;
 pub use funcs::*;
 pub use handles::*;
 pub use structs::*;
-pub use w_string::*;
+pub use various::*;

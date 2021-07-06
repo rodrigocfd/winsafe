@@ -9,7 +9,7 @@ use crate::handles::{HBITMAP, HICON};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
 use crate::structs::{BUTTON_IMAGELIST, BUTTON_SPLITINFO, RECT, SIZE};
-use crate::WString;
+use crate::various::WString;
 
 /// [`BCM_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getidealsize)
 /// message parameters.

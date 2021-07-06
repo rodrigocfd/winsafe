@@ -9,7 +9,7 @@ use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
 use crate::privs::GDT_ERROR;
 use crate::structs::{COLORREF, DATETIMEPICKERINFO, SIZE, SYSTEMTIME};
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_msg_empty! { CloseMonthCal, co::DTM::CLOSEMONTHCAL.into(),
 	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)

@@ -7,7 +7,7 @@ use crate::co;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
 use crate::privs::{CB_ERR, CB_ERRSPACE};
-use crate::WString;
+use crate::various::WString;
 
 /// [`CB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-addstring)
 /// message parameters.

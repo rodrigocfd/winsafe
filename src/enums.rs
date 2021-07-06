@@ -5,7 +5,7 @@ use crate::funcs::MAKEDWORD;
 use crate::handles::{HBITMAP, HICON, HMENU, HTREEITEM, HWND};
 use crate::privs::MAKEINTRESOURCE;
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
-use crate::WString;
+use crate::various::WString;
 
 /// Variant parameters of a [`WM_COMMAND`](crate::msg::wm::Command) message.
 #[derive(Copy, Clone)]

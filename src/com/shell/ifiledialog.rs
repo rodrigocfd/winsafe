@@ -10,7 +10,7 @@ macro_rules! pub_struct_IFileDialog {
 		use crate::com::shell::co as shellco;
 		use crate::com::shell::vt::{IFileDialogVT, IShellItemVT};
 		use crate::structs::GUID;
-		use crate::WString;
+		use crate::various::WString;
 
 		pub_struct_IModalWindow! {
 			$(#[$doc])*

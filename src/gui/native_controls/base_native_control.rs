@@ -12,7 +12,7 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
 use crate::structs::{POINT, SIZE};
-use crate::WString;
+use crate::various::WString;
 
 static mut BASE_SUBCLASS_ID: usize = 0;
 

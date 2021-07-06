@@ -9,7 +9,7 @@ macro_rules! pub_struct_IMediaControl {
 		use crate::com::dshow::vt::IMediaControlVT;
 		use crate::com::IDispatch;
 		use crate::privs::{hr_to_winresult_bool, INFINITE};
-		use crate::WString;
+		use crate::various::WString;
 
 		pub_struct_IDispatch! {
 			$(#[$doc])*

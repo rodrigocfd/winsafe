@@ -8,7 +8,7 @@ use crate::handles::{HTREEITEM, HWND};
 use crate::msg::tvm;
 use crate::privs::MAX_PATH;
 use crate::structs::{TVINSERTSTRUCT, TVITEMEX};
-use crate::WString;
+use crate::various::WString;
 
 /// Exposes item methods of a [`TreeView`](crate::gui::TreeView) control.
 ///

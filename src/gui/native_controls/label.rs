@@ -11,7 +11,7 @@ use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
-use crate::WString;
+use crate::various::WString;
 
 /// Native
 /// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)

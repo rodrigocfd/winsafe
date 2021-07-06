@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::ffi::shell32;
 use crate::funcs::GetLastError;
 use crate::structs::POINT;
-use crate::WString;
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to an

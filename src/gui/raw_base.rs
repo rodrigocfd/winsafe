@@ -7,7 +7,7 @@ use crate::gui::events::ProcessResult;
 use crate::handles::HWND;
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
-use crate::WString;
+use crate::various::WString;
 
 /// Base to all ordinary windows.
 pub(in crate::gui) struct RawBase {
