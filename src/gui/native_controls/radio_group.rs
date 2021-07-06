@@ -5,7 +5,7 @@ use crate::co;
 use crate::funcs::PostQuitMessage;
 use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
-use crate::gui::traits::{baseref_from_parent, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
@@ -154,6 +154,14 @@ impl RadioGroup {
 	/// ```
 	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {
 		self.0.radios.iter()
+	}
+
+	/// Returns the [`RadioButton`](crate::gui::RadioButton) controls as a `Vec`
+	/// of [`Child`](crate::gui::Child).
+	pub fn as_child_vec(&self) -> Vec<&dyn Child> {
+		self.0.radios.iter()
+			.map(|rb| { let c: &dyn Child = rb; c })
+			.collect::<Vec<_>>()
 	}
 
 	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton) of
