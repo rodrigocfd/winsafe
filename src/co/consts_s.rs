@@ -256,13 +256,25 @@ pub_struct_const! { SM, i32,
 	RESERVED2, 25
 	RESERVED3, 26
 	RESERVED4, 27
+	/// The minimum width of a window, in pixels.
 	CXMIN, 28
+	/// The minimum height of a window, in pixels.
 	CYMIN, 29
+	/// The width of a button in a window caption or title bar, in pixels.
 	CXSIZE, 30
+	/// The height of a button in a window caption or title bar, in pixels.
 	CYSIZE, 31
 	CXFRAME, 32
 	CYFRAME, 33
+	/// The minimum tracking width of a window, in pixels. The user cannot drag
+	/// the window frame to a size smaller than these dimensions. A window can
+	/// override this value by processing the
+	/// [`WM_GETMINMAXINFO`](crate::msg::wm::GetMinMaxInfo) message.
 	CXMINTRACK, 34
+	/// The minimum tracking height of a window, in pixels. The user cannot drag
+	/// the window frame to a size smaller than these dimensions. A window can
+	/// override this value by processing the
+	/// [`WM_GETMINMAXINFO`](crate::msg::wm::GetMinMaxInfo) message.
 	CYMINTRACK, 35
 	CXDOUBLECLK, 36
 	CYDOUBLECLK, 37

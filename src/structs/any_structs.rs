@@ -394,9 +394,26 @@ impl_default_with_size!(MENUITEMINFO, cbSize);
 #[derive(Default, Clone, Eq, PartialEq)]
 pub struct MINMAXINFO {
 	ptReserved: POINT,
+	/// The maximized width (x member) and the maximized height (y member) of
+	/// the window. For top-level windows, this value is based on the width of
+	/// the primary monitor.
 	pub ptMaxSize: POINT,
+	/// The position of the left side of the maximized window (x member) and the
+	/// position of the top of the maximized window (y member). For top-level
+	/// windows, this value is based on the position of the primary monitor.
 	pub ptMaxPosition: POINT,
+	/// The minimum tracking width (x member) and the minimum tracking height (y
+	/// member) of the window. This value can be obtained programmatically from
+	/// the system metrics [`SM::CXMINTRACK`](crate::co::SM::CXMINTRACK) and
+	/// [`SM::CYMINTRACK`](crate::co::SM::CYMINTRACK) (see the
+	/// [`GetSystemMetrics`](crate::GetSystemMetrics) function).
 	pub ptMinTrackSize: POINT,
+	/// The maximum tracking width (x member) and the maximum tracking height (y
+	/// member) of the window. This value is based on the size of the virtual
+	/// screen and can be obtained programmatically from the system metrics
+	/// [`SM::CXMAXTRACK`](crate::co::SM::CXMAXTRACK) and
+	/// [`SM::CYMAXTRACK`](crate::co::SM::CYMAXTRACK) (see the
+	/// [`GetSystemMetrics`](crate::GetSystemMetrics) function).
 	pub ptMaxTrackSize: POINT,
 }
 
