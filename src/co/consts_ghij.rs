@@ -413,18 +413,36 @@ pub_struct_const! { IDI, isize,
 pub_struct_const! { ILC, u32,
 	/// [`HIMAGELIST::Create`](crate::HIMAGELIST::Create) `flags` (`u32`).
 	=>
+	/// Use a mask. The image list contains two bitmaps, one of which is a
+	/// monochrome bitmap used as a mask. If this value is not included, the
+	/// image list contains only one bitmap.
 	MASK, 0x0000_0001
+	/// Use the default behavior if none of the other `ILC::COLORx` flags is
+	/// specified. Typically, the default is `ILC::COLOR4`, but for older
+	/// display drivers, the default is `ILC::COLORDDB`.
 	COLOR, 0x0000_0000
+	/// Use a device-dependent bitmap.
 	COLORDDB, 0x0000_00fe
+	/// Use a 4-bit (16-color) device-independent bitmap (DIB) section as the
+	/// bitmap for the image list.
 	COLOR4, 0x0000_0004
+	/// Use an 8-bit DIB section. The colors used for the color table are the
+	/// same colors as the halftone palette.
 	COLOR8, 0x0000_0008
+	/// Use a 16-bit (32/64k-color) DIB section.
 	COLOR16, 0x0000_0010
+	/// Use a 24-bit DIB section.
 	COLOR24, 0x0000_0018
+	/// Use a 32-bit DIB section.
 	COLOR32, 0x0000_0020
+	/// Mirror the icons contained, if the process is mirrored.
 	MIRROR, 0x0000_2000
+	/// Causes the mirroring code to mirror each item when inserting a set of
+	/// images, versus the whole strip.
 	PERITEMMIRROR, 0x0000_8000
+	/// Windows Vista and later. Imagelist should accept smaller than set images
+	/// and apply original size based on image added.
 	ORIGINALSIZE, 0x0001_0000
-	HIGHQUALITYSCALE, 0x0002_0000
 }
 
 pub_struct_const! { ILD, u32,

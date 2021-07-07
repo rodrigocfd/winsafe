@@ -169,6 +169,8 @@ macro_rules! pub_struct_IFileDialog {
 
 			/// [`IFileDialog::SetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypeindex)
 			/// method.
+			///
+			/// **Note:** The index is one-based.
 			pub fn SetFileTypeIndex(&self, iFileType: u32) -> WinResult<()> {
 				hr_to_winresult(
 					(self.ifiledialog_vt().SetFileTypeIndex)(self.ppvt, iFileType),

@@ -620,7 +620,7 @@ impl std::fmt::Display for POINT {
 
 impl POINT {
 	/// Creates a new `POINT`.
-	pub fn new(x: i32, y: i32) -> POINT {
+	pub const fn new(x: i32, y: i32) -> POINT {
 		Self { x, y }
 	}
 }
@@ -680,7 +680,7 @@ impl std::fmt::Display for RECT {
 
 impl RECT {
 	/// Creates a new `RECT`.
-	pub fn new(left: i32, top: i32, right: i32, bottom: i32) -> RECT {
+	pub const fn new(left: i32, top: i32, right: i32, bottom: i32) -> RECT {
 		Self { left, top, right, bottom }
 	}
 }
@@ -831,7 +831,7 @@ impl std::fmt::Display for SIZE {
 
 impl SIZE {
 	/// Creates a new `SIZE`.
-	pub fn new(cx: i32, cy: i32) -> SIZE {
+	pub const fn new(cx: i32, cy: i32) -> SIZE {
 		Self { cx, cy }
 	}
 }

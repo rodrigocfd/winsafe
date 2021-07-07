@@ -5,7 +5,7 @@ use crate::handles::HWND;
 
 /// A specialized
 /// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) for Win32
-/// operations, which return a [`ERROR`](crate::co::ERROR) on failure.
+/// operations, which return an [`ERROR`](crate::co::ERROR) on failure.
 pub type WinResult<T> = Result<T, co::ERROR>;
 
 /// Type alias to
