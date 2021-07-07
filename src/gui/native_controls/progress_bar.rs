@@ -27,7 +27,7 @@ impl_send_sync_child!(ProgressBar);
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
-	/// window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ProgressBarOpts) -> ProgressBar {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
@@ -50,7 +50,7 @@ impl ProgressBar {
 	}
 
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
-	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ProgressBar {
 		let parent_base_ref = baseref_from_parent(parent);
 

@@ -22,8 +22,8 @@ pub_struct_const_no_debug_display! { ERROR, u32,
 	/// [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
 	/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) traits
 	/// to show the error code along with the error description, taken from
-	/// [`FormatMessage`](crate::co::ERROR::FormatMessage). For example, the code
-	/// below:
+	/// [`ERROR::FormatMessage`](crate::co::ERROR::FormatMessage). For example,
+	/// the code below:
 	///
 	/// ```rust,ignore
 	/// use winsafe::co::ERROR;

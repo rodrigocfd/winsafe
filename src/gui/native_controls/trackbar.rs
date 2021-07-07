@@ -29,7 +29,7 @@ impl_send_sync_child!(Trackbar);
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window
-	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: TrackbarOpts) -> Trackbar {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = TrackbarOpts::define_ctrl_id(opts);
@@ -54,7 +54,7 @@ impl Trackbar {
 	}
 
 	/// Instantiates a new `Trackbar` object, to be loaded from a dialog
-	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Trackbar {
 		let parent_base_ref = baseref_from_parent(parent);
 

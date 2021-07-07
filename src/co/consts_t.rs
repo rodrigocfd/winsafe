@@ -1,8 +1,8 @@
 use crate::co::{CCM, WM};
 
 pub_struct_const! { TA, u32,
-	/// [`SetTextAlign`](crate::HDC::SetTextAlign) `align` (`u32`). Also includes
-	/// constants with `VTA` prefix.
+	/// [`HDC::SetTextAlign`](crate::HDC::SetTextAlign) `align` (`u32`). Also
+	/// includes constants with `VTA` prefix.
 	=>
 	NOUPDATECP, 0
 	UPDATECP, 1
@@ -289,7 +289,7 @@ pub_struct_const_wsex! { TCS_EX,
 }
 
 pub_struct_const! { TD_ICON, isize,
-	/// [`TaskDialog`](crate::HWND::TaskDialog) `pszIcon` and
+	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog) `pszIcon` and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `pszMainIcon` (`isize`).
 	/// Originally has `TD` prefix and `ICON` suffix.
 	=>
@@ -300,7 +300,7 @@ pub_struct_const! { TD_ICON, isize,
 }
 
 pub_struct_const! { TDCBF, i32,
-	/// [`TaskDialog`](crate::HWND::TaskDialog) and
+	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog) and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
 	/// Originally has `TDCBF` prefix and `BUTTON` suffix.
 	=>
@@ -336,7 +336,8 @@ pub_struct_const! { TDF, i32,
 }
 
 pub_struct_const! { TH32CS, u32,
-	/// [`CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `dwFlags` (`u32`).
+	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST)
+	/// `dwFlags` (`u32`).
 	=>
 	SNAPHEAPLIST, 0x0000_0001
 	SNAPPROCESS, 0x0000_0002
@@ -348,8 +349,8 @@ pub_struct_const! { TH32CS, u32,
 }
 
 pub_struct_const! { THREAD_CREATE, u32,
-	/// [`CreateThread`](crate::HTHREAD::CreateThread) `dwFlags` (`u32`).
-	/// Originally has no prefix.
+	/// [`HTHREAD::CreateThread`](crate::HTHREAD::CreateThread) `dwFlags`
+	/// (`u32`). Originally has no prefix.
 	=>
 	/// Originally just a zero.
 	RUN_IMMEDIATELY, 0

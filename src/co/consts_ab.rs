@@ -25,7 +25,7 @@ pub_struct_const! { ACCESS_RIGHTS, u32,
 }
 
 pub_struct_const! { AD, i32,
-	/// [`SetArcDirection`](crate::HDC::SetArcDirection) `dir` (`i32`).
+	/// [`HDC::SetArcDirection`](crate::HDC::SetArcDirection) `dir` (`i32`).
 	=>
 	COUNTERCLOCKWISE, 1
 	CLOCKWISE, 2
@@ -152,7 +152,7 @@ pub_struct_const! { BIA, u32,
 }
 
 pub_struct_const! { BKMODE, i32,
-	/// [`SetBkMode`](crate::HDC::SetBkMode) `mode` (`i32`).
+	/// [`HDC::SetBkMode`](crate::HDC::SetBkMode) `mode` (`i32`).
 	=>
 	TRANSPARENT, 1
 	OPAQUE, 2

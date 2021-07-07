@@ -66,6 +66,7 @@ impl Resizer {
 	/// let txt_surname: Edit;
 	/// let txt_another: Edit;
 	/// let btn_click: Button;
+	/// let rads_countries: gui::RadioGroup,
 	///
 	/// let layout_resizer = Resizer::new(&wnd, &[
 	///
@@ -84,6 +85,9 @@ impl Resizer {
 	///     // Horizontally: move left or right.
 	///     // Vertically: move up or down.
 	///     (Resz::Repos, Resz::Repos, &[&btn_click]),
+	///
+	///     // Add all radio buttons of the radio group at once.
+	///     (Resz::Repos, Resz::Repos, &rads_countries.as_child_vec()),
 	/// ]);
 	/// ```
 	///

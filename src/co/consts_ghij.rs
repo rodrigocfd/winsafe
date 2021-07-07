@@ -1,7 +1,7 @@
 use crate::co::{CCM, WM};
 
 pub_struct_const! { GA, u32,
-	/// [`GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
+	/// [`HWND::GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
 	=>
 	PARENT, 1
 	ROOT, 2
@@ -9,8 +9,8 @@ pub_struct_const! { GA, u32,
 }
 
 pub_struct_const! { GCLP, i32,
-	/// [`GetClassLongPtr`](crate::HWND::GetClassLongPtr) `nIndex` (`i32`).
-	/// Originally has prefixes `GCW` and `GCL` also.
+	/// [`HWND::GetClassLongPtr`](crate::HWND::GetClassLongPtr) `nIndex`
+	/// (`i32`). Originally has prefixes `GCW` and `GCL` also.
 	=>
 	ATOM, -32
 	CBWNDEXTRA, -18
@@ -25,8 +25,8 @@ pub_struct_const! { GCLP, i32,
 }
 
 pub_struct_const! { GDC, i32,
-	/// [`GetDeviceCaps`](crate::HDC::GetDeviceCaps) `index` (`i32`). Originally
-	/// has no prefix.
+	/// [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps) `index` (`i32`).
+	/// Originally has no prefix.
 	=>
 	DRIVERVERSION, 0
 	TECHNOLOGY, 2
@@ -101,14 +101,14 @@ pub_struct_const! { GENERIC, u32,
 }
 
 pub_struct_const! { GM, i32,
-	/// [`SetGraphicsMode`](crate::HDC::SetGraphicsMode) `iMode` (`i32`).
+	/// [`HDC::SetGraphicsMode`](crate::HDC::SetGraphicsMode) `iMode` (`i32`).
 	=>
 	COMPATIBLE, 1
 	ADVANCED, 2
 }
 
 pub_struct_const! { GMEM, u32,
-	/// [`GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) `uFlags` (`u32`).
+	/// [`HGLOBAL::GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) `uFlags` (`u32`).
 	=>
 	FIXED, 0x0000
 	MOVEABLE, 0x0002
@@ -118,7 +118,8 @@ pub_struct_const! { GMEM, u32,
 }
 
 pub_struct_const! { GR, u32,
-	/// [`GetGuiResources`](crate::HPROCESS::GetGuiResources) `uiFlags` (`u32`).
+	/// [`HPROCESS::GetGuiResources`](crate::HPROCESS::GetGuiResources)
+	/// `uiFlags` (`u32`).
 	=>
 	GDIOBJECTS, 0
 	GDIOBJECTS_PEAK, 2
@@ -137,7 +138,7 @@ pub_struct_const! { GUI, u32,
 }
 
 pub_struct_const! { GW, u32,
-	/// [`GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
+	/// [`HWND::GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
 	=>
 	HWNDFIRST, 0
 	HWNDLAST, 1
@@ -159,9 +160,9 @@ pub_struct_const! { GWL_C, i8,
 }
 
 pub_struct_const! { GWLP, i32,
-	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
-	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) `nIndex` (`i32`).
-	/// Originally has prefix `GWL` also.
+	/// [`HWND::GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
+	/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) `nIndex`
+	/// (`i32`). Originally has prefix `GWL` also.
 	=>
 	STYLE, -16
 	EXSTYLE, -20
@@ -264,7 +265,7 @@ pub_struct_const! { HELPINFO, i32,
 }
 
 pub_struct_const! { HELPW, u32,
-	/// [`WinHelp`](crate::HWND::WinHelp) `uCommand` (`u32`).
+	/// [`HWND::WinHelp`](crate::HWND::WinHelp) `uCommand` (`u32`).
 	=>
 	CONTEXT, 0x0001
 	QUIT, 0x0002
@@ -304,7 +305,8 @@ pub_struct_const! { HICF, u32,
 }
 
 pub_struct_const! { HWND_PLACE, isize,
-	/// [`SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter` (`isize`).
+	/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`
+	/// (`isize`).
 	=>
 	TOP, 0
 	BOTTOM, 1
@@ -313,7 +315,8 @@ pub_struct_const! { HWND_PLACE, isize,
 }
 
 pub_struct_const! { HS, i32,
-	/// [`CreateHatchBrush`](crate::HBRUSH::CreateHatchBrush) `ìHatch` (`i32`).
+	/// [`HBRUSH::CreateHatchBrush`](crate::HBRUSH::CreateHatchBrush) `iHatch`
+	/// (`i32`).
 	=>
 	/// Horizontal hatch: `-----`.
 	HORIZONTAL, 0
@@ -370,7 +373,8 @@ pub_struct_const! { ICON_SZ, u8,
 }
 
 pub_struct_const! { IDC, isize,
-	/// [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName` (`isize`).
+	/// [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`
+	/// (`isize`).
 	=>
 	ARROW, 32512
 	IBEAM, 32513
@@ -391,7 +395,8 @@ pub_struct_const! { IDC, isize,
 }
 
 pub_struct_const! { IDI, isize,
-	/// [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName` (`isize`).
+	/// [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`
+	/// (`isize`).
 	=>
 	APPLICATION, 32512
 	HAND, 32513
@@ -406,7 +411,7 @@ pub_struct_const! { IDI, isize,
 }
 
 pub_struct_const! { ILC, u32,
-	/// [`ImageList_Create`](crate::HIMAGELIST::Create) `flags` (`u32`).
+	/// [`HIMAGELIST::Create`](crate::HIMAGELIST::Create) `flags` (`u32`).
 	=>
 	MASK, 0x0000_0001
 	COLOR, 0x0000_0000

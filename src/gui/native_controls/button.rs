@@ -29,7 +29,7 @@ impl_send_sync_child!(Button);
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
-	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ButtonOpts) -> Button {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ButtonOpts::define_ctrl_id(opts);
@@ -54,7 +54,7 @@ impl Button {
 	}
 
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
-	/// with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Button {
 		let parent_base_ref = baseref_from_parent(parent);
 

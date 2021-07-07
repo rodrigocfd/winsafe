@@ -34,7 +34,7 @@ impl_send_sync_child!(StatusBar);
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
-	/// window with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Examples
 	///

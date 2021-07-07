@@ -3,7 +3,8 @@
 use crate::co::{CCM, FF, WM};
 
 pub_struct_const! { OCR, u32,
-	/// [`SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id` (`u32`).
+	/// [`HCURSOR::SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id`
+	/// (`u32`).
 	=>
 	APPSTARTING, 32650
 	NORMAL, 32512
@@ -83,8 +84,8 @@ pub_struct_const! { OUT_PRECIS, u8,
 }
 
 pub_struct_const! { PAGE, u32,
-	/// [`CreateFileMapping`](crate::HFILE::CreateFileMapping) `flProtect`
-	/// (`u32`).
+	/// [`HFILE::CreateFileMapping`](crate::HFILE::CreateFileMapping)
+	/// `flProtect` (`u32`).
 	=>
 	/// Allows views to be mapped for read-only, copy-on-write, or execute
 	/// access.
@@ -261,7 +262,7 @@ pub_struct_const! { PROCESSOR_ARCHITECTURE, u16,
 }
 
 pub_struct_const! { PS, i32,
-	/// [`CreatePen`](crate::HPEN::CreatePen) `iStyle` (`i32`).
+	/// [`HPEN::CreatePen`](crate::HPEN::CreatePen) `iStyle` (`i32`).
 	=>
 	SOLID, 0
 	DASH, 1
@@ -392,7 +393,7 @@ pub_struct_const_ws! { RBS,
 }
 
 pub_struct_const! { RDW, u32,
-	/// [`RedrawWindow`](crate::HWND::RedrawWindow) `flags` (`u32`).
+	/// [`HWND::RedrawWindow`](crate::HWND::RedrawWindow) `flags` (`u32`).
 	=>
 	INVALIDATE, 0x0001
 	INTERNALPAINT, 0x0002
@@ -430,7 +431,7 @@ pub_struct_const! { REG, u32,
 }
 
 pub_struct_const! { REG_OPTION, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `uOptions` (`u32`).
+	/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `uOptions` (`u32`).
 	=>
 	RESERVED, 0x0000_0000
 	NON_VOLATILE, 0x0000_0000
@@ -441,9 +442,10 @@ pub_struct_const! { REG_OPTION, u32,
 }
 
 pub_struct_const! { REGION, i32,
-	/// [`GetUpdateRgn`](crate::HWND::GetUpdateRgn),
-	/// [`GetWindowRgn`](crate::HWND::GetWindowRgn) and
-	/// [`SelectObjectRgn`](crate::HDC::SelectObjectRgn) return value (`i32`).
+	/// [`HWND::GetUpdateRgn`](crate::HWND::GetUpdateRgn),
+	/// [`HWND::GetWindowRgn`](crate::HWND::GetWindowRgn) and
+	/// [`HDC::SelectObjectRgn`](crate::HDC::SelectObjectRgn) return value
+	/// (`i32`).
 	=>
 	NULL, 1
 	SIMPLE, 2
@@ -452,8 +454,8 @@ pub_struct_const! { REGION, i32,
 
 pub_struct_const! { ROP, u32,
 	/// Raster operation code (`u32`).
-	/// [`BitBlt`](crate::HDC::BitBlt) `rop`,
-	/// [`PatBlt`](crate::HDC::PatBlt) `rop` and
+	/// [`HDC::BitBlt`](crate::HDC::BitBlt) `rop`,
+	/// [`HDC::PatBlt`](crate::HDC::PatBlt) `rop` and
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop`.
 	/// Originally has no prefix.
 	=>
@@ -477,7 +479,7 @@ pub_struct_const! { ROP, u32,
 }
 
 pub_struct_const! { RRF, u32,
-	/// [`RegGetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
+	/// [`HKEY::RegGetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
 	=>
 	RT_REG_NONE, 0x0000_0001
 	RT_REG_SZ, 0x0000_0002

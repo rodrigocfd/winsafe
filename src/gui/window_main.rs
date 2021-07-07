@@ -139,7 +139,7 @@ impl Parent for WindowMain {
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with
-	/// [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
 		Self {
 			raw_dlg: RawDlg::Raw(
@@ -149,7 +149,7 @@ impl WindowMain {
 	}
 
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
-	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
 		dialog_id: u16,
 		icon_id: Option<u16>,

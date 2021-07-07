@@ -42,8 +42,8 @@ pub struct AccelMenuCtrlData {
 /// [window class](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-classes)
 /// functions:
 ///
-/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
-/// * [`FindWindowEx`](crate::HWND::FindWindowEx) `lpszClass`;
+/// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
+/// * [`HWND::FindWindowEx`](crate::HWND::FindWindowEx) `lpszClass`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
 pub enum AtomStr {
 	/// An [`ATOM`](crate::ATOM) returned by
@@ -287,8 +287,8 @@ impl IdIdi {
 
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
-/// * [`AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
-/// * [`CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`.
+/// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
+/// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`.
 pub enum IdMenu {
 	/// A command ID.
 	Id(u16),

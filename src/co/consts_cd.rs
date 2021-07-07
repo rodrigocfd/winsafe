@@ -332,17 +332,16 @@ pub_struct_const! { CLSCTX, u32,
 	REMOTE_SERVER, 0x10
 	/// Disables the downloading of code from the directory service or the
 	/// Internet. This flag cannot be set at the same time as
-	/// `CLSCTX_ENABLE_CODE_DOWNLOAD`.
+	/// `CLSCTX::ENABLE_CODE_DOWNLOAD`.
 	NO_CODE_DOWNLOAD, 0x400
 	/// Specify if you want the activation to fail if it uses custom marshalling.
 	NO_CUSTOM_MARSHAL, 0x1000
 	/// Enables the downloading of code from the directory service or the
 	/// Internet. This flag cannot be set at the same time as
-	/// `CLSCTX_NO_CODE_DOWNLOAD`.
+	/// `CLSCTX::NO_CODE_DOWNLOAD`.
 	ENABLE_CODE_DOWNLOAD, 0x2000
-	/// The `CLSCTX_NO_FAILURE_LOG` can be used to override the logging of
-	/// failures in
-	/// [`CoCreateInstanceEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstanceex).
+	/// The `CLSCTX::NO_FAILURE_LOG` can be used to override the logging of
+	/// failures in [`CoCreateInstanceEx`](crate::CoCreateInstanceEx).
 	NO_FAILURE_LOG, 0x4000
 	/// Disables activate-as-activator (AAA) activations for this activation only.
 	DISABLE_AAA, 0x8000
@@ -552,8 +551,8 @@ pub_struct_const! { DIB, u32,
 }
 
 pub_struct_const! { DISPOSITION, u32,
-	/// [`CreateFile`](crate::HFILE::CreateFile) `dwCreationDisposition` (`u32`).
-	/// Originally has no prefix.
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `dwCreationDisposition`
+	/// (`u32`). Originally has no prefix.
 	=>
 	/// Creates a new file, only if it does not already exist.
 	///
@@ -604,8 +603,8 @@ pub_struct_const! { DISPOSITION, u32,
 
 pub_struct_const! { DLGID, u16,
 	/// Dialog built-in IDs (`u16`). These are also returned from
-	/// [`MessageBox`](crate::HWND::MessageBox) and
-	/// [`TaskDialog`](crate::HWND::TaskDialog).
+	/// [`HWND::MessageBox`](crate::HWND::MessageBox) and
+	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog).
 	=>
 	OK, 1
 	CANCEL, 2

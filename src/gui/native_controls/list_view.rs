@@ -36,7 +36,7 @@ impl_send_sync_child!(ListView);
 
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
-	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: ListViewOpts) -> ListView {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ListViewOpts::define_ctrl_id(opts);

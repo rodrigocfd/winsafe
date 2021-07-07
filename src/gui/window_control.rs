@@ -38,7 +38,7 @@ impl Child for WindowControl {
 
 impl WindowControl {
 	/// Instantiates a new `Button` object, to be created on the parent window
-	/// with [`CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &dyn Parent, opts: WindowControlOpts) -> WindowControl {
 		Self {
 			raw_dlg: RawDlg::Raw(
@@ -48,7 +48,7 @@ impl WindowControl {
 	}
 
 	/// Instantiates a new `WindowControl` object, to be loaded from a dialog
-	/// resource with [`GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// Position will be adjusted to match current system DPI.
 	pub fn new_dlg(

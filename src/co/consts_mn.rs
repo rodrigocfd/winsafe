@@ -1,7 +1,7 @@
 use crate::co::CCM;
 
 pub_struct_const! { MB, u32,
-	/// [`MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
+	/// [`HWND::MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
 	=>
 	/// The message box contains three push buttons: Abort, Retry, and Ignore.
 	ABORTRETRYIGNORE, 0x0000_0002
@@ -95,8 +95,8 @@ pub_struct_const! { MB, u32,
 	/// [Window Stations](https://docs.microsoft.com/en-us/windows/win32/winstation/window-stations).
 	///
 	/// If the current input desktop is not the default desktop,
-	/// [`MessageBox`](crate::HWND::MessageBox) does not return until the user
-	/// switches to the default desktop.
+	/// [`HWND::MessageBox`](crate::HWND::MessageBox) does not return until the
+	/// user switches to the default desktop.
 	DEFAULT_DESKTOP_ONLY, 0x0002_0000
 	/// The text is right-justified.
 	RIGHT, 0x0008_0000
@@ -104,8 +104,9 @@ pub_struct_const! { MB, u32,
 	/// Hebrew and Arabic systems.
 	RTLREADING, 0x0010_0000
 	/// The message box becomes the foreground window. Internally, the system
-	/// calls the [`SetForegroundWindow`](crate::HWND::SetForegroundWindow)
-	/// function for the message box.
+	/// calls the
+	/// [`HWND::SetForegroundWindow`](crate::HWND::SetForegroundWindow) function
+	/// for the message box.
 	SETFOREGROUND, 0x0001_0000
 	/// The message box is created with the
 	/// [`WS_EX::TOPMOST`](crate::co::WS_EX::TOPMOST) window style.
@@ -233,7 +234,7 @@ pub_struct_const_ws! { MCS,
 }
 
 pub_struct_const! { MF, u32,
-	/// [`AppendMenu`](crate::HMENU::AppendMenu) `uFlags` (`u32`).
+	/// [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `uFlags` (`u32`).
 	=>
 	INSERT, 0x0000_0000
 	CHANGE, 0x0000_0080

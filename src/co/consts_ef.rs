@@ -127,7 +127,7 @@ pub_struct_const! { FF, u8,
 pub_struct_const! { FILE_ATTRIBUTE, u32,
 	/// File attribute
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
-	/// also other flags from [`CreateFile`](crate::HFILE::CreateFile)
+	/// also other flags from [`HFILE::CreateFile`](crate::HFILE::CreateFile)
 	/// `dwFlagsAndAttributes` (`u32`).
 	=>
 	READONLY, 0x0000_0001
@@ -175,8 +175,8 @@ pub_struct_const! { FILE_ATTRIBUTE, u32,
 }
 
 pub_struct_const! { FILE_MAP, u32,
-	/// [`MapViewOfFile`](crate::HFILEMAP::MapViewOfFile) `dwDesiredAccess`
-	/// (`u32`).
+	/// [`HFILEMAP::MapViewOfFile`](crate::HFILEMAP::MapViewOfFile)
+	/// `dwDesiredAccess` (`u32`).
 	=>
 	ALL_ACCESS, SECTION::ALL_ACCESS.0
 	READ, SECTION::MAP_READ.0
@@ -210,7 +210,7 @@ pub_struct_const! { FILE_RIGHT, u32,
 }
 
 pub_struct_const! { FILE_SHARE, u32,
-	/// [`CreateFile`](crate::HFILE::CreateFile) `dwShareMode` (`u32`).
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `dwShareMode` (`u32`).
 	=>
 	NONE, 0
 	READ, 0x0000_0001
@@ -219,8 +219,8 @@ pub_struct_const! { FILE_SHARE, u32,
 }
 
 pub_struct_const! { FILE_STARTING_POINT, u32,
-	/// [`SetFilePointerEx`](crate::HFILE::SetFilePointerEx) `dwMoveMethod`
-	/// (`u32`). Originally has `FILE` prefix.
+	/// [`HFILE::SetFilePointerEx`](crate::HFILE::SetFilePointerEx)
+	/// `dwMoveMethod` (`u32`). Originally has `FILE` prefix.
 	=>
 	/// The starting point is zero or the beginning of the file. If this flag is
 	/// specified, then the `liDistanceToMove` parameter is interpreted as an
@@ -233,7 +233,7 @@ pub_struct_const! { FILE_STARTING_POINT, u32,
 }
 
 pub_struct_const! { FILE_TYPE, u32,
-	/// [`GetFileType`](crate::HFILE::GetFileType) return value (`u32`).
+	/// [`HFILE::GetFileType`](crate::HFILE::GetFileType) return value (`u32`).
 	=>
 	/// The specified file is a character file, typically an LPT device or a
 	/// console.

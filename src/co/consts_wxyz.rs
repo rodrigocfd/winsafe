@@ -8,8 +8,8 @@ pub_struct_const! { WA, u16,
 }
 
 pub_struct_const! { WAIT, u32,
-	/// [`WaitForSingleObject`](crate::HPROCESS::WaitForSingleObject) return value
-	/// (`u32`).
+	/// [`HPROCESS::WaitForSingleObject`](crate::HPROCESS::WaitForSingleObject)
+	/// return value (`u32`).
 	=>
 	ABANDONED, 0x0000_0080
 	OBJECT_0, 0x0000_0000
@@ -29,8 +29,8 @@ pub_struct_const! { WC, u32,
 }
 
 pub_struct_const! { WDA, u32,
-	/// [`GetWindowDisplayAffinity`](crate::HWND::GetWindowDisplayAffinity) and
-	/// [`SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)
+	/// [`HWND::GetWindowDisplayAffinity`](crate::HWND::GetWindowDisplayAffinity) and
+	/// [`HWND::SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)
 	/// `dwAffinity` (`u32`).
 	=>
 	NONE, 0x0000_0000
@@ -39,7 +39,8 @@ pub_struct_const! { WDA, u32,
 }
 
 pub_struct_const! { WH, i32,
-	/// [`SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook` (`i32`).
+	/// [`HHOOK::SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook`
+	/// (`i32`).
 	=>
 	MSGFILTER, -1
 	JOURNALRECORD, 0

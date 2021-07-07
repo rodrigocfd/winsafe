@@ -3,7 +3,7 @@
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, WM, WS};
 
 pub_struct_const! { KEY, u32,
-	/// [`RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
+	/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `samDesired` (`u32`).
 	=>
 	QUERY_VALUE, 0x0001
 	SET_VALUE, 0x0002
@@ -294,9 +294,9 @@ pub_struct_const_wm! { LM,
 }
 
 pub_struct_const! { LR, u32,
-	/// [`LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
-	/// [`LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and
-	/// [`LoadImageIcon`](crate::HINSTANCE::LoadImageIcon) `fuLoad`.
+	/// [`HINSTANCE::LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
+	/// [`HINSTANCE::LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and
+	/// [`HINSTANCE::LoadImageIcon`](crate::HINSTANCE::LoadImageIcon) `fuLoad`.
 	=>
 	DEFAULTCOLOR, 0x0000_0000
 	MONOCHROME, 0x0000_0001

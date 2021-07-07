@@ -36,10 +36,10 @@ pub_struct_const_ws! { SBARS,
 }
 
 pub_struct_const! { SBB, i32,
-	/// [`GetScrollInfo`](crate::HWND::GetScrollInfo),
-	/// [`SetScrollInfo`](crate::HWND::SetScrollInfo) and
-	/// [`SetScrollRange`](crate::HWND::SetScrollRange) `nBar` (`i32`). Originally
-	/// has `SB` prefix.
+	/// [`HWND::GetScrollInfo`](crate::HWND::GetScrollInfo),
+	/// [`HWND::SetScrollInfo`](crate::HWND::SetScrollInfo) and
+	/// [`HWND::SetScrollRange`](crate::HWND::SetScrollRange) `nBar` (`i32`).
+	/// Originally has `SB` prefix.
 	=>
 	HORZ, 0
 	VERT, 1
@@ -129,7 +129,7 @@ pub_struct_const! { SCS, u32,
 }
 
 pub_struct_const! { SE_ERR, u32,
-	/// [`ShellExecute`](crate::HWND::ShellExecute) return value (`u32`).
+	/// [`HWND::ShellExecute`](crate::HWND::ShellExecute) return value (`u32`).
 	=>
 	FILE_NOT_FOUND, 2
 	PATH_NOT_FOUND, 3
@@ -574,8 +574,8 @@ pub_struct_const! { STANDARD_RIGHTS, u32,
 }
 
 pub_struct_const! { STAP, u32,
-	/// [`GetThemeAppProperties`](crate::HTHEME::GetThemeAppProperties) return
-	/// value (`u32`).
+	/// [`HTHEME::GetThemeAppProperties`](crate::HTHEME::GetThemeAppProperties)
+	/// return value (`u32`).
 	=>
 	ALLOW_NONCLIENT, 1 << 0
 	ALLOW_CONTROLS, 1 << 1
@@ -584,7 +584,8 @@ pub_struct_const! { STAP, u32,
 }
 
 pub_struct_const! { STARTF, u32,
-	/// [`CreateProcess`](crate::HPROCESS::CreateProcess) `dwFlags` (`u32`).
+	/// [`HPROCESS::CreateProcess`](crate::HPROCESS::CreateProcess) `dwFlags`
+	/// (`u32`).
 	=>
 	FORCEONFEEDBACK, 0x0000_0040
 	FORCEOFFFEEDBACK, 0x0000_0080
@@ -916,7 +917,7 @@ pub_struct_const! { SUBLANG, u16,
 }
 
 pub_struct_const! { SW, i32,
-	/// [`ShowWindow`](crate::HWND::ShowWindow) `nCmdShow` (`i32`).
+	/// [`HWND::ShowWindow`](crate::HWND::ShowWindow) `nCmdShow` (`i32`).
 	=>
 	/// Hides the window and activates another window.
 	HIDE, 0
@@ -949,8 +950,8 @@ pub_struct_const! { SW, i32,
 	RESTORE, 9
 	/// Sets the show state based on the SW value specified in the
 	/// [`STARTUPINFO`](crate::STARTUPINFO) structure passed to the
-	/// [`CreateProcess`](crate::HPROCESS::CreateProcess) function by the
-	/// program that started the application.
+	/// [`HPROCESS::CreateProcess`](crate::HPROCESS::CreateProcess) function by
+	/// the program that started the application.
 	SHOWDEFAULT, 10
 	/// Minimizes a window, even if the thread that owns the window is not
 	/// responding. This flag should only be used when minimizing windows from a
@@ -969,7 +970,7 @@ pub_struct_const! { SW_S, u8,
 }
 
 pub_struct_const! { SWP, u32,
-	/// [`SetWindowPos`](crate::HWND::SetWindowPos) `uFlags` (`u32`).
+	/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `uFlags` (`u32`).
 	=>
 	NOSIZE, 0x0001
 	NOMOVE, 0x0002
