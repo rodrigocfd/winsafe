@@ -28,19 +28,19 @@ pub struct WindowEvents(VeryUnsafeCell<Obj>);
 struct Obj { // actual fields of WindowEvents
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
-		Box<dyn FnMut(WndMsg) -> Option<isize>>, // return value may be meaningful
+		Box<dyn Fn(WndMsg) -> Option<isize>>, // return value may be meaningful
 	>,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
-		Box<dyn FnMut()>, // return value is never meaningful
+		Box<dyn Fn()>, // return value is never meaningful
 	>,
 	cmds: FuncStore< // WM_COMMAND notifications
 		(co::CMD, u16), // notif code, control ID
-		Box<dyn FnMut()>, // return value is never meaningful
+		Box<dyn Fn()>, // return value is never meaningful
 	>,
 	nfys: FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
-		Box<dyn FnMut(wm::Notify) -> Option<isize>>, // return value may be meaningful
+		Box<dyn Fn(wm::Notify) -> Option<isize>>, // return value may be meaningful
 	>,
 }
 
@@ -73,7 +73,7 @@ impl WindowEvents {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				match self.0.as_mut().nfys.find(key) {
+				match self.0.nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -86,7 +86,7 @@ impl WindowEvents {
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = wm_cmd.event.code_id();
-				match self.0.as_mut().cmds.find(key) {
+				match self.0.cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -96,7 +96,7 @@ impl WindowEvents {
 			},
 			co::WM::TIMER => {
 				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				match self.0.as_mut().tmrs.find(wm_tmr.timer_id) {
+				match self.0.tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func(); // execute user function
 						ProcessResult::HandledWithoutRet
@@ -105,7 +105,7 @@ impl WindowEvents {
 				}
 			}
 			_ => { // any other message
-				match self.0.as_mut().msgs.find(wm_any.msg_id) {
+				match self.0.msgs.find(wm_any.msg_id) {
 					Some(func) => { // we have a stored function to handle this message
 						match func(wm_any) { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -125,25 +125,25 @@ impl WindowEvents {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				self.0.as_mut().nfys.find_all(key, |func| {
+				self.0.nfys.find_all(key, |func| {
 					func(wm_nfy);
 				});
 			},
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = wm_cmd.event.code_id();
-				self.0.as_mut().cmds.find_all(key, |func| {
+				self.0.cmds.find_all(key, |func| {
 					func();
 				});
 			},
 			co::WM::TIMER => {
 				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				self.0.as_mut().tmrs.find_all(wm_tmr.timer_id, |func| {
+				self.0.tmrs.find_all(wm_tmr.timer_id, |func| {
 					func();
 				});
 			},
 			_ => { // any other message
-				self.0.as_mut().msgs.find_all(wm_any.msg_id, |func| {
+				self.0.msgs.find_all(wm_any.msg_id, |func| {
 					func(wm_any);
 				});
 			},
@@ -152,14 +152,14 @@ impl WindowEvents {
 
 	/// Raw add message.
 	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(WndMsg) -> Option<isize> + 'static,
+		where F: Fn(WndMsg) -> Option<isize> + 'static,
 	{
 		self.0.as_mut().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
 	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
-		where F: FnMut(wm::Notify) -> Option<isize> + 'static,
+		where F: Fn(wm::Notify) -> Option<isize> + 'static,
 	{
 		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));
 	}
@@ -191,12 +191,9 @@ impl WindowEvents {
 	/// });
 	/// ```
 	pub fn wm<F>(&self, ident: co::WM, func: F)
-		where F: FnMut(WndMsg) -> isize + 'static,
+		where F: Fn(WndMsg) -> isize + 'static,
 	{
-		self.add_msg(ident, {
-			let mut func = func;
-			move |p| Some(func(p)) // return value is meaningful
-		});
+		self.add_msg(ident, move |p| Some(func(p))); // return value is meaningful
 	}
 
 	/// [`WM_TIMER`](crate::msg::wm::Timer) message, narrowed to a specific
@@ -204,7 +201,7 @@ impl WindowEvents {
 	///
 	/// Posted to the installing thread's message queue when a timer expires.
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
-		where F: FnMut() + 'static,
+		where F: Fn() + 'static,
 	{
 		self.0.as_mut().tmrs.insert(timer_id, Box::new(func));
 	}
@@ -221,7 +218,7 @@ impl WindowEvents {
 	/// parameters. This generic method should be used when you have a custom,
 	/// non-standard window notification.
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
-		where F: FnMut() + 'static,
+		where F: Fn() + 'static,
 	{
 		self.0.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
 	}
@@ -249,7 +246,7 @@ impl WindowEvents {
 	/// });
 	/// ```
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
-		where F: FnMut() + 'static,
+		where F: Fn() + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -276,12 +273,9 @@ impl WindowEvents {
 	/// struct. This generic method should be used when you have a custom,
 	/// non-standard window notification.
 	pub fn wm_notify<F>(&self, id_from: i32, code: co::NM, func: F)
-		where F: FnMut(wm::Notify) -> isize + 'static,
+		where F: Fn(wm::Notify) -> isize + 'static,
 	{
-		self.add_nfy(id_from as _, code, {
-			let mut func = func;
-			move |p| Some(func(p)) // return value is meaningful
-		});
+		self.add_nfy(id_from as _, code, move |p| Some(func(p))); // return value is meaningful
 	}
 
 	pub_fn_wm_ret0_param! { wm_activate, co::WM::ACTIVATE, wm::Activate,
@@ -317,12 +311,10 @@ impl WindowEvents {
 	/// for example, by clicking an application command button using the mouse
 	/// or typing an application command key on the keyboard.
 	pub fn wm_app_command<F>(&self, func: F)
-		where F: FnMut(wm::AppCommand) + 'static,
+		where F: Fn(wm::AppCommand) + 'static,
 	{
-		self.add_msg(co::WM::APPCOMMAND, {
-			let mut func = func;
-			move |p| { func(wm::AppCommand::from_generic_wm(p)); Some(true as _) }
-		});
+		self.add_msg(co::WM::APPCOMMAND,
+			move |p| { func(wm::AppCommand::from_generic_wm(p)); Some(true as _) });
 	}
 
 	pub_fn_wm_ret0! { wm_cancel_mode, co::WM::CANCELMODE,
@@ -414,12 +406,10 @@ impl WindowEvents {
 	/// });
 	/// ```
 	pub fn wm_create<F>(&self, func: F)
-		where F: FnMut(wm::Create) -> i32 + 'static,
+		where F: Fn(wm::Create) -> i32 + 'static,
 	{
-		self.add_msg(co::WM::CREATE, {
-			let mut func = func;
-			move |p| Some(func(wm::Create::from_generic_wm(p)) as _)
-		});
+		self.add_msg(co::WM::CREATE,
+			move |p| Some(func(wm::Create::from_generic_wm(p)) as _));
 	}
 
 	/// [`WM_CTLCOLORBTN`](crate::msg::wm::CtlColorBtn) message.
@@ -429,12 +419,10 @@ impl WindowEvents {
 	/// However, only owner-drawn buttons respond to the parent window
 	/// processing this message.
 	pub fn wm_ctl_color_btn<F>(&self, func: F)
-		where F: FnMut(wm::CtlColorBtn) -> HDC + 'static,
+		where F: Fn(wm::CtlColorBtn) -> HDC + 'static,
 	{
-		self.add_msg(co::WM::CTLCOLORBTN, {
-			let mut func = func;
-			move |p| Some(func(wm::CtlColorBtn::from_generic_wm(p)).ptr as _)
-		});
+		self.add_msg(co::WM::CTLCOLORBTN,
+			move |p| Some(func(wm::CtlColorBtn::from_generic_wm(p)).ptr as _));
 	}
 
 	/// [`WM_CTLCOLORDLG`](crate::msg::wm::CtlColorDlg) message.
@@ -443,12 +431,10 @@ impl WindowEvents {
 	/// responding to this message, the dialog box can set its text and
 	/// background colors using the specified display device context handle.
 	pub fn wm_ctl_color_dlg<F>(&self, func: F)
-		where F: FnMut(wm::CtlColorDlg) -> HDC + 'static,
+		where F: Fn(wm::CtlColorDlg) -> HDC + 'static,
 	{
-		self.add_msg(co::WM::CTLCOLORDLG, {
-			let mut func = func;
-			move |p| Some(func(wm::CtlColorDlg::from_generic_wm(p)).ptr as _)
-		});
+		self.add_msg(co::WM::CTLCOLORDLG,
+			move |p| Some(func(wm::CtlColorDlg::from_generic_wm(p)).ptr as _));
 	}
 
 	/// [`WM_CTLCOLOREDIT`](crate::msg::wm::CtlColorEdit) message.
@@ -458,12 +444,10 @@ impl WindowEvents {
 	/// to this message, the parent window can use the specified device context
 	/// handle to set the text and background colors of the edit control.
 	pub fn wm_ctl_color_edit<F>(&self, func: F)
-		where F: FnMut(wm::CtlColorEdit) -> HDC + 'static,
+		where F: Fn(wm::CtlColorEdit) -> HDC + 'static,
 	{
-		self.add_msg(co::WM::CTLCOLOREDIT, {
-			let mut func = func;
-			move |p| Some(func(wm::CtlColorEdit::from_generic_wm(p)).ptr as _)
-		});
+		self.add_msg(co::WM::CTLCOLOREDIT,
+			move |p| Some(func(wm::CtlColorEdit::from_generic_wm(p)).ptr as _));
 	}
 
 	/// [`WM_CTLCOLORLISTBOX`](crate::msg::wm::CtlColorListBox) message.
@@ -473,12 +457,10 @@ impl WindowEvents {
 	/// and background colors of the list box by using the specified display
 	/// device context handle.
 	pub fn wm_ctl_color_list_box<F>(&self, func: F)
-		where F: FnMut(wm::CtlColorListBox) -> HDC + 'static,
+		where F: Fn(wm::CtlColorListBox) -> HDC + 'static,
 	{
-		self.add_msg(co::WM::CTLCOLORLISTBOX, {
-			let mut func = func;
-			move |p| Some(func(wm::CtlColorListBox::from_generic_wm(p)).ptr as _)
-		});
+		self.add_msg(co::WM::CTLCOLORLISTBOX,
+			move |p| Some(func(wm::CtlColorListBox::from_generic_wm(p)).ptr as _));
 	}
 
 	/// [`WM_CTLCOLORSCROLLBAR`](crate::msg::wm::CtlColorScrollBar) message.
@@ -488,12 +470,10 @@ impl WindowEvents {
 	/// use the display context handle to set the background color of the scroll
 	/// bar control.
 	pub fn wm_ctl_color_scroll_bar<F>(&self, func: F)
-		where F: FnMut(wm::CtlColorScrollBar) -> HDC + 'static,
+		where F: Fn(wm::CtlColorScrollBar) -> HDC + 'static,
 	{
-		self.add_msg(co::WM::CTLCOLORSCROLLBAR, {
-			let mut func = func;
-			move |p| Some(func(wm::CtlColorScrollBar::from_generic_wm(p)).ptr as _)
-		});
+		self.add_msg(co::WM::CTLCOLORSCROLLBAR,
+			move |p| Some(func(wm::CtlColorScrollBar::from_generic_wm(p)).ptr as _));
 	}
 
 	/// [`WM_CTLCOLORSTATIC`](crate::msg::wm::CtlColorStatic) message.
@@ -504,12 +484,10 @@ impl WindowEvents {
 	/// specified device context handle to set the text foreground and
 	/// background colors of the static control.
 	pub fn wm_ctl_color_static<F>(&self, func: F)
-		where F: FnMut(wm::CtlColorStatic) -> HDC + 'static,
+		where F: Fn(wm::CtlColorStatic) -> HDC + 'static,
 	{
-		self.add_msg(co::WM::CTLCOLORSTATIC, {
-			let mut func = func;
-			move |p| Some(func(wm::CtlColorStatic::from_generic_wm(p)).ptr as _)
-		});
+		self.add_msg(co::WM::CTLCOLORSTATIC,
+			move |p| Some(func(wm::CtlColorStatic::from_generic_wm(p)).ptr as _));
 	}
 
 	pub_fn_wm_ret0_param! { wm_dead_char, co::WM::DEADCHAR, wm::DeadChar,
@@ -631,12 +609,10 @@ impl WindowEvents {
 	/// window is resized). The message is sent to prepare an invalidated
 	/// portion of a window for painting.
 	pub fn wm_erase_bkgnd<F>(&self, func: F)
-		where F: FnMut(wm::EraseBkgnd) -> i32 + 'static,
+		where F: Fn(wm::EraseBkgnd) -> i32 + 'static,
 	{
-		self.add_msg(co::WM::ERASEBKGND, {
-			let mut func = func;
-			move |p| Some(func(wm::EraseBkgnd::from_generic_wm(p)) as _)
-		});
+		self.add_msg(co::WM::ERASEBKGND,
+			move |p| Some(func(wm::EraseBkgnd::from_generic_wm(p)) as _));
 	}
 
 	pub_fn_wm_ret0_param! { wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop,
@@ -664,24 +640,20 @@ impl WindowEvents {
 	///
 	/// Retrieves the font with which the control is currently drawing its text.
 	pub fn wm_get_font<F>(&self, func: F)
-		where F: FnMut() -> Option<HFONT> + 'static,
+		where F: Fn() -> Option<HFONT> + 'static,
 	{
-		self.add_msg(co::WM::GETFONT, {
-			let mut func = func;
-			move |_| Some(func().map(|h| h.ptr as _).unwrap_or_default())
-		});
+		self.add_msg(co::WM::GETFONT,
+			move |_| Some(func().map(|h| h.ptr as _).unwrap_or_default()));
 	}
 
 	/// [`MN_GETHMENU`](crate::msg::wm::GetHMenu) message.
 	///
 	/// Retrieves the menu handle for the current window.
 	pub fn wm_get_h_menu<F>(&self, func: F)
-		where F: FnMut() -> Option<HMENU> + 'static
+		where F: Fn() -> Option<HMENU> + 'static
 	{
-		self.add_msg(co::WM::MN_GETHMENU, {
-			let mut func = func;
-			move |_| Some(func().map(|h| h.ptr as _).unwrap_or_default())
-		});
+		self.add_msg(co::WM::MN_GETHMENU,
+			move |_| Some(func().map(|h| h.ptr as _).unwrap_or_default()));
 	}
 
 	pub_fn_wm_ret0_param! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo,
@@ -856,12 +828,10 @@ impl WindowEvents {
 	/// Sent to the owner of a drag-and-drop menu when the user drags a menu
 	/// item.
 	pub fn wm_menu_drag<F>(&self, func: F)
-		where F: FnMut(wm::MenuDrag) -> co::MND + 'static,
+		where F: Fn(wm::MenuDrag) -> co::MND + 'static,
 	{
-		self.add_msg(co::WM::MENUDRAG, {
-			let mut func = func;
-			move |p| Some(func(wm::MenuDrag::from_generic_wm(p)).0 as _)
-		});
+		self.add_msg(co::WM::MENUDRAG,
+			move |p| Some(func(wm::MenuDrag::from_generic_wm(p)).0 as _));
 	}
 
 	pub_fn_wm_ret0_param! { wm_menu_r_button_up, co::WM::MENURBUTTONUP, wm::MenuRButtonUp,
@@ -909,12 +879,10 @@ impl WindowEvents {
 	/// content of the window's client area when the size or position of the
 	/// window changes.
 	pub fn wm_nc_calc_size<F>(&self, func: F)
-		where F: FnMut(wm::NcCalcSize) -> co::WVR + 'static
+		where F: Fn(wm::NcCalcSize) -> co::WVR + 'static
 	{
-		self.add_msg(co::WM::NCCALCSIZE, {
-			let mut func = func;
-			move |p| Some(func(wm::NcCalcSize::from_generic_wm(p)).0 as _)
-		});
+		self.add_msg(co::WM::NCCALCSIZE,
+			move |p| Some(func(wm::NcCalcSize::from_generic_wm(p)).0 as _));
 	}
 
 	pub_fn_wm_retbool_param! { wm_nc_create, co::WM::NCCREATE, wm::NcCreate,
@@ -958,12 +926,10 @@ impl WindowEvents {
 	/// Otherwise, the message is sent to the window that has captured the
 	/// mouse.
 	pub fn wm_nc_hit_test<F>(&self, func: F)
-		where F: FnMut(wm::NcHitTest) -> co::HT + 'static
+		where F: Fn(wm::NcHitTest) -> co::HT + 'static
 	{
-		self.add_msg(co::WM::NCHITTEST, {
-			let mut func = func;
-			move |p| Some(func(wm::NcHitTest::from_generic_wm(p)).0 as _)
-		});
+		self.add_msg(co::WM::NCHITTEST,
+			move |p| Some(func(wm::NcHitTest::from_generic_wm(p)).0 as _));
 	}
 
 	pub_fn_wm_ret0_param! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint,
@@ -1018,12 +984,9 @@ impl WindowEvents {
 	/// Sent to an icon when the user requests that the window be restored to
 	/// its previous size and position.
 	pub fn wm_query_open<F>(&self, func: F)
-		where F: FnMut() -> bool + 'static,
+		where F: Fn() -> bool + 'static,
 	{
-		self.add_msg(co::WM::QUERYOPEN, {
-			let mut func = func;
-			move |_| Some(func() as _)
-		});
+		self.add_msg(co::WM::QUERYOPEN, move |_| Some(func() as _));
 	}
 
 	pub_fn_wm_ret0_param! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk,
@@ -1087,15 +1050,14 @@ impl WindowEvents {
 	/// the large icon in the Alt+TAB dialog box, and the small icon in the
 	/// window caption.
 	pub fn wm_set_icon<F>(&self, func: F)
-		where F: FnMut(wm::SetIcon) -> Option<HICON> + 'static,
+		where F: Fn(wm::SetIcon) -> Option<HICON> + 'static,
 	{
-		self.add_msg(co::WM::SETICON, {
-			let mut func = func;
-			move |p| Some(
+		self.add_msg(co::WM::SETICON, move |p|
+			Some(
 				func(wm::SetIcon::from_generic_wm(p))
 					.map(|h| h.ptr as _).unwrap_or_default(),
 			)
-		});
+		);
 	}
 
 	pub_fn_wm_ret0_param! { wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow,

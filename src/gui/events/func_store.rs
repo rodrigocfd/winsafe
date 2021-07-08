@@ -22,12 +22,12 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 
 	/// Finds the last added function associated to the given identifier, if
 	/// any.
-	pub fn find(&mut self, id: K) -> Option<&mut F> {
+	pub fn find(&self, id: K) -> Option<&F> {
 		// Linear search, more performant for small collections.
 		// Searches backwards, so the function added last will overwrite the first.
-		for elem in self.elems.iter_mut().rev() {
+		for elem in self.elems.iter().rev() {
 			if elem.0 == id {
-				return Some(&mut elem.1);
+				return Some(&elem.1);
 			}
 		}
 		None
@@ -35,10 +35,10 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 
 	/// Finds all the functions associated to the given identifier, if any, and
 	/// passes each one of them, first to last, to the supplied callback.
-	pub fn find_all<C: Fn(&mut F)>(&mut self, id: K, callback: C) {
-		for elem in self.elems.iter_mut() {
+	pub fn find_all<C: Fn(&F)>(&self, id: K, callback: C) {
+		for elem in self.elems.iter() {
 			if elem.0 == id {
-				callback(&mut elem.1);
+				callback(&elem.1);
 			}
 		}
 	}

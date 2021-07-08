@@ -59,14 +59,14 @@ impl RadioGroupEvents {
 	/// });
 	/// ```
 	pub fn bn_clicked<F>(&self, func: F)
-		where F: FnMut() + 'static,
+		where F: Fn() + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::CLICKED.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
-				move || shared_func.as_mut()()
+				move || shared_func()
 			});
 		}
 	}
@@ -80,14 +80,14 @@ impl RadioGroupEvents {
 	/// [`BS::OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
 	/// send only if they have the [`BS::NOTIFY`](crate::co::BS::NOTIFY) style.
 	pub fn bn_dbl_clk<F>(&self, func: F)
-		where F: FnMut() + 'static,
+		where F: Fn() + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::DBLCLK.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
-				move || shared_func.as_mut()()
+				move || shared_func()
 			});
 		}
 	}
@@ -99,14 +99,14 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_kill_focus<F>(&self, func: F)
-		where F: FnMut() + 'static,
+		where F: Fn() + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::KILLFOCUS.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
-				move || shared_func.as_mut()()
+				move || shared_func()
 			});
 		}
 	}
@@ -118,14 +118,14 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_set_focus<F>(&self, func: F)
-		where F: FnMut() + 'static,
+		where F: Fn() + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::SETFOCUS.into(), *ctrl_id as _, {
 				let shared_func = shared_func.clone();
-				move || shared_func.as_mut()()
+				move || shared_func()
 			});
 		}
 	}

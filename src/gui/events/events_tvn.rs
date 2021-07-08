@@ -84,12 +84,10 @@ impl TreeViewEvents {
 	///
 	/// Sent by a tree-view control to notify its parent window about drawing operations.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: FnMut(&NMTVCUSTOMDRAW) -> co::CDRF + 'static,
+		where F: Fn(&NMTVCUSTOMDRAW) -> co::CDRF + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW, {
-			let mut func = func;
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() }).into())
-		});
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
+			move |p| Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() }).into()));
 	}
 
 	pub_fn_nfy_reti32! { nm_dbl_clk, co::NM::DBLCLK,

@@ -1185,21 +1185,42 @@ pub fn UnregisterClass(
 
 /// [`VarQueryValue`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
 /// function.
-pub fn VarQueryValue<'a>(
-	pBlock: &'a [u8], lpSubBlock: &str) -> WinResult<&'a [u8]>
+///
+/// **Note:** The returned reference type varies according to `lpSubBlock`. If
+/// you set it wrong, you're likely to cause a buffer overrun.
+///
+/// # Examples
+///
+/// Reading version information from resource:
+///
+/// ```rust,ignore
+/// use winsafe::{HINSTANCE, VS_FIXEDFILEINFO};
+/// use winsafe::{GetFileVersionInfo, VarQueryValue};
+///
+/// let exe_name = HINSTANCE::NULL.GetModuleFileName().unwrap();
+/// let mut res_buf = Vec::default();
+/// GetFileVersionInfo(&exe_name, &mut res_buf).unwrap();
+///
+/// let vsffi = unsafe {
+///     VarQueryValue::<VS_FIXEDFILEINFO>(&res_buf, "\\").unwrap()
+/// };
+/// let ver = vsffi.dwFileVersion();
+/// println!("Version {}.{}.{}.{}",
+///     ver[0], ver[1], ver[2], ver[3]);
+/// ```
+pub unsafe fn VarQueryValue<'a, T>(
+	pBlock: &'a [u8], lpSubBlock: &str) -> WinResult<&'a T>
 {
 	let mut lplpBuffer = std::ptr::null();
 	let mut puLen = 0;
 	bool_to_winresult(
-		unsafe {
-			version::VerQueryValueW(
-				pBlock.as_ptr() as _,
-				WString::from_str(lpSubBlock).as_ptr(),
-				&mut lplpBuffer as *mut _ as _,
-				&mut puLen,
-			)
-		},
-	).map(|_| unsafe { std::slice::from_raw_parts(lplpBuffer, puLen as _) })
+		version::VerQueryValueW(
+			pBlock.as_ptr() as _,
+			WString::from_str(lpSubBlock).as_ptr(),
+			&mut lplpBuffer as *mut _ as _,
+			&mut puLen,
+		),
+	).map(|_| &*(lplpBuffer as *const T))
 }
 
 /// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)

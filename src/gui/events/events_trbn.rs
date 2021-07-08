@@ -28,12 +28,10 @@ impl TrackbarEvents {
 	/// Sent by a trackbar control to notify its parent windows about drawing
 	/// operations.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
+		where F: Fn(&NMCUSTOMDRAW) -> co::CDRF + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW, {
-			let mut func = func;
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into())
-		});
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
+			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into()));
 	}
 
 	pub_fn_nfy_ret0! { nm_released_capture, co::NM::RELEASEDCAPTURE,

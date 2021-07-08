@@ -88,11 +88,9 @@ impl ButtonEvents {
 	///
 	/// Notifies about custom draw operations on the button.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: FnMut(&NMCUSTOMDRAW) -> co::CDRF + 'static,
+		where F: Fn(&NMCUSTOMDRAW) -> co::CDRF + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW, {
-			let mut func = func;
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into())
-		});
+		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
+			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into()));
 	}
 }

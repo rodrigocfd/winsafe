@@ -7,12 +7,9 @@ macro_rules! pub_fn_wm_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut() + 'static,
+			where F: Fn() + 'static,
 		{
-			self.add_msg($wmconst, {
-				let mut func = func;
-				move |_| { func(); None } // return value is never meaningful
-			});
+			self.add_msg($wmconst, move |_| { func(); None }); // return value is never meaningful
 		}
 	};
 }
@@ -26,12 +23,10 @@ macro_rules! pub_fn_wm_ret0_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut($parm) + 'static,
+			where F: Fn($parm) + 'static,
 		{
-			self.add_msg($wmconst, {
-				let mut func = func;
-				move |p| { func(<$parm>::from_generic_wm(p)); None } // return value is never meaningful
-			});
+			self.add_msg($wmconst,
+				move |p| { func(<$parm>::from_generic_wm(p)); None }); // return value is never meaningful
 		}
 	};
 }
@@ -45,12 +40,10 @@ macro_rules! pub_fn_wm_retbool_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut($parm) -> bool + 'static,
+			where F: Fn($parm) -> bool + 'static,
 		{
-			self.add_msg($wmconst, {
-				let mut func = func;
-				move |p| Some(func(<$parm>::from_generic_wm(p)) as _)
-			});
+			self.add_msg($wmconst,
+				move |p| Some(func(<$parm>::from_generic_wm(p)) as _));
 		}
 	};
 }
@@ -92,12 +85,10 @@ macro_rules! pub_fn_cmd_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut() + 'static,
+			where F: Fn() + 'static,
 		{
-			self.parent_user_events().wm_command($cmd, self.ctrl_id as _, {
-				let mut func = func;
-				move || func()
-			});
+			self.parent_user_events().wm_command($cmd, self.ctrl_id as _,
+				move || func());
 		}
 	};
 }
@@ -112,12 +103,10 @@ macro_rules! pub_fn_nfy_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut() + 'static,
+			where F: Fn() + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
-				let mut func = func;
-				move |_| { func(); None }
-			});
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+				move |_| { func(); None });
 		}
 	};
 }
@@ -131,12 +120,10 @@ macro_rules! pub_fn_nfy_ret0_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&$param) + 'static,
+			where F: Fn(&$param) + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
-				let mut func = func;
-				move |p| { func(unsafe { p.cast_nmhdr::<$param>() }); None }
-			});
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+				move |p| { func(unsafe { p.cast_nmhdr::<$param>() }); None });
 		}
 	};
 }
@@ -150,12 +137,10 @@ macro_rules! pub_fn_nfy_ret0_mutparam {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&mut $param) + 'static,
+			where F: Fn(&mut $param) + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
-				let mut func = func;
-				move |p| { func(unsafe { p.cast_nmhdr_mut::<$param>() }); None }
-			});
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+				move |p| { func(unsafe { p.cast_nmhdr_mut::<$param>() }); None });
 		}
 	};
 }
@@ -169,12 +154,10 @@ macro_rules! pub_fn_nfy_retbool_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&$param) -> bool + 'static,
+			where F: Fn(&$param) -> bool + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
-				let mut func = func;
-				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as _)
-			});
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as _));
 		}
 	};
 }
@@ -188,12 +171,10 @@ macro_rules! pub_fn_nfy_retbool_mutparam {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&mut $param) -> bool + 'static,
+			where F: Fn(&mut $param) -> bool + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
-				let mut func = func;
-				move |p| Some(func(unsafe { p.cast_nmhdr_mut::<$param>() }) as _)
-			});
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+				move |p| Some(func(unsafe { p.cast_nmhdr_mut::<$param>() }) as _));
 		}
 	};
 }
@@ -208,12 +189,10 @@ macro_rules! pub_fn_nfy_reti32 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut() -> i32 + 'static,
+			where F: Fn() -> i32 + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
-				let mut func = func;
-				move |_| Some(func() as _)
-			});
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+				move |_| Some(func() as _));
 		}
 	};
 }
@@ -227,12 +206,10 @@ macro_rules! pub_fn_nfy_reti32_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: FnMut(&$param) -> i32 + 'static,
+			where F: Fn(&$param) -> i32 + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy, {
-				let mut func = func;
-				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as _)
-			});
+			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+				move |p| Some(func(unsafe { p.cast_nmhdr::<$param>() }) as _));
 		}
 	};
 }
