@@ -4,16 +4,28 @@ use crate::gui::base::Base;
 use crate::gui::{WindowControl, WindowMain, WindowModal};
 use crate::handles::HWND;
 
-/// Trait to any window which can host child controls.
-pub trait Parent {
-	/// Returns a reference to the `Any` trait, allowing downcasting.
-	fn as_any(&self) -> &dyn Any;
-}
-
 /// Trait to any child control.
 pub trait Child {
 	/// Returns a reference to the [`HWND`](crate::HWND) of the child control.
 	fn hwnd_ref(&self) -> &HWND;
+}
+
+/// Trait to any window which can host child controls.
+///
+/// **Note:** This is a
+/// [sealed trait](https://rust-lang.github.io/api-guidelines/future-proofing.html#c-sealed)
+/// which cannot be implemented outside the library.
+pub trait Parent: private::Sealed {
+	/// Returns a reference to the `Any` trait, allowing downcasting.
+	fn as_any(&self) -> &dyn Any;
+}
+
+pub(in crate::gui) mod private {
+	pub trait Sealed {}
+
+	impl Sealed for crate::gui::WindowControl {}
+	impl Sealed for crate::gui::WindowMain {}
+	impl Sealed for crate::gui::WindowModal {}
 }
 
 pub(in crate::gui) fn baseref_from_parent(parent: &dyn Parent) -> &Base {
