@@ -3,7 +3,7 @@ use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::ListViewItems;
+use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::privs::multiply_dpi;
 use crate::handles::HWND;
 use crate::msg::{hdm, lvm};
