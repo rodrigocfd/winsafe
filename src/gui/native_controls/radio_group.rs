@@ -130,7 +130,7 @@ impl RadioGroup {
 
 		if !first_radio.hwnd().is_null() {
 			panic!("Cannot add events after the control is created.");
-		} else if !first_radio.base_ref().parent_base_ref().hwnd_ref().is_null() {
+		} else if !first_radio.parent_hwnd_ref().is_null() {
 			panic!("Cannot add events after the parent window is created.");
 		}
 		&self.0.parent_events

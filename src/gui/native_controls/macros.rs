@@ -5,25 +5,18 @@ macro_rules! impl_send_sync_child {
 		unsafe impl Sync for $name {}
 
 		impl crate::gui::traits::Child for $name {
-			fn as_any(&self) -> &dyn std::any::Any {
-				self
+			fn hwnd_ref(&self) -> &crate::HWND {
+				self.0.base.hwnd_ref()
 			}
 		}
 	};
 }
 
 /// Implements methods common to controls:
-/// * base_ref;
 /// * hwnd;
 /// * on_subclass.
 macro_rules! pub_fn_hwnd_onsubclass {
 	() => {
-		/// Returns a reference to the underlying `BaseNativeControl`, used in
-		/// `hwndref_from_child` downcasting function.
-		pub(in crate::gui) fn base_ref(&self) -> &BaseNativeControl {
-			&self.0.base
-		}
-
 		/// Returns the underlying handle for this control.
 		///
 		/// **Note:** the handle is initially null, receiving an actual value

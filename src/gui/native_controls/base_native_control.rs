@@ -1,4 +1,3 @@
-use std::any::Any;
 use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
@@ -7,7 +6,6 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::traits::Child;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
@@ -35,12 +33,6 @@ struct Obj { // actual fields of BaseNativeControl
 	hwnd: HWND,
 	ptr_parent: NonNull<Base>,
 	subclass_events: WindowEvents, // for control subclassing
-}
-
-impl Child for BaseNativeControl {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
 }
 
 impl BaseNativeControl {

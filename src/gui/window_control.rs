@@ -31,8 +31,11 @@ impl Parent for WindowControl {
 }
 
 impl Child for WindowControl {
-	fn as_any(&self) -> &dyn Any {
-		self
+	fn hwnd_ref(&self) -> &HWND {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.base_ref().hwnd_ref(),
+			RawDlg::Dlg(d) => d.base_ref().hwnd_ref(),
+		}
 	}
 }
 

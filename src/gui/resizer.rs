@@ -7,7 +7,7 @@ use crate::co;
 use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
-use crate::gui::traits::{baseref_from_parent, Child, hwndref_from_child, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDWP, HWND};
 use crate::msg::wm;
@@ -119,7 +119,7 @@ impl Resizer {
 					horz: c.0,
 					vert: c.1,
 					children: c.2.iter()
-						.map(|dyn_child| NonNull::from(hwndref_from_child(*dyn_child)))
+						.map(|dyn_child| NonNull::from(dyn_child.hwnd_ref()))
 						.collect(),
 				},
 			).collect::<Vec<_>>()

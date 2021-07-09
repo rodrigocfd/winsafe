@@ -87,6 +87,10 @@ impl RadioButton {
 		Ok(())
 	}
 
+	pub(in crate::gui) fn parent_hwnd_ref(&self) -> &HWND {
+		self.0.base.parent_base_ref().hwnd_ref() // used by RadioGroup
+	}
+
 	pub_fn_ctrlid_hwnd_on_onsubclass!(ButtonEvents);
 
 	/// Tells if this radio button is currently checked by sending a
