@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use crate::gui::base::Base;
 use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEvents;
@@ -21,14 +19,7 @@ pub struct WindowControl {
 	raw_dlg: RawDlg,
 }
 
-unsafe impl Send for WindowControl {}
-unsafe impl Sync for WindowControl {}
-
-impl Parent for WindowControl {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_parent!(WindowControl);
 
 impl Child for WindowControl {
 	fn hwnd_ref(&self) -> &HWND {

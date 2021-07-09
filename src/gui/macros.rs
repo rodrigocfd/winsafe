@@ -1,3 +1,17 @@
+/// Implements `Send`, `Sync` and `Parent` traits for a window.
+macro_rules! impl_send_sync_parent {
+	($name:ident) => {
+		unsafe impl Send for $name {}
+		unsafe impl Sync for $name {}
+
+		impl crate::gui::traits::Parent for $name {
+			fn as_any(&self) -> &dyn std::any::Any {
+				self
+			}
+		}
+	};
+}
+
 /// Declares the common methods to `WindowControl`, `WindowMain` and
 /// `WindowModal`.
 macro_rules! pub_fn_baseref_hwnd_on_runuithread {

@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
@@ -8,7 +6,6 @@ use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEvents;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{WindowMainOpts, RawMain};
-use crate::gui::traits::Parent;
 use crate::handles::HWND;
 
 #[derive(Clone)]
@@ -128,14 +125,7 @@ pub struct WindowMain {
 	raw_dlg: RawDlg,
 }
 
-unsafe impl Send for WindowMain {}
-unsafe impl Sync for WindowMain {}
-
-impl Parent for WindowMain {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_parent!(WindowMain);
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with

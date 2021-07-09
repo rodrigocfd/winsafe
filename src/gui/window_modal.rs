@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use crate::aliases::WinResult;
 use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
@@ -20,14 +18,7 @@ pub struct WindowModal {
 	raw_dlg: RawDlg,
 }
 
-unsafe impl Send for WindowModal {}
-unsafe impl Sync for WindowModal {}
-
-impl Parent for WindowModal {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
+impl_send_sync_parent!(WindowModal);
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with
