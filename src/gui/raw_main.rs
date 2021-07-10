@@ -133,9 +133,8 @@ impl RawMain {
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_nc_destroy(|| {
-			PostQuitMessage(co::ERROR::SUCCESS);
-		});
+		self.base_ref().user_events_ref().wm_nc_destroy(
+			|| PostQuitMessage(co::ERROR::SUCCESS));
 	}
 }
 

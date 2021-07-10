@@ -1,5 +1,5 @@
 /// Stores closures, associating them with an identifier.
-pub(crate) struct FuncStore<K, F> {
+pub(in crate::gui) struct FuncStore<K, F> {
 	elems: Vec<(K, F)>,
 }
 
