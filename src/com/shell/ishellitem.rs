@@ -1,20 +1,49 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IShellItem {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
+use crate::structs::IID;
+
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IShellItem`](crate::shell::IShellItem) virtual table.
+pub struct IShellItemVT {
+	pub IUnknownVT: IUnknownVT,
+	pub BindToHandler: fn(PP, PVOID, PCVOID, PCVOID, *mut PP) -> HRESULT,
+	pub GetParent: fn(PP, *mut PP) -> HRESULT,
+	pub GetDisplayName: fn(PP, u32, *mut PSTR) -> HRESULT,
+	pub GetAttributes: fn(PP, u32, *mut u32) -> HRESULT,
+	pub Compare: fn(PP, PVOID, u32, *mut i32) -> HRESULT,
+}
+
+#[link(name = "shell32")]
+extern "system" {
+	pub(crate) fn SHCreateItemFromParsingName(_: PCSTR, _: PVOID, _: PCVOID, _: *mut PVOID) -> HRESULT;
+}
+
+/// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
+/// COM interface over [`IShellItemVT`](crate::shell::vt::IShellItemVT).
+/// Inherits from [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IShellItem {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IShellItem);
+
+impl ComInterface for IShellItem {
+	const IID: IID = IID::new(0x43826d1e, 0xe718, 0x42ee, 0xbc55, 0xa1e261c37bfe);
+}
+macro_rules! impl_IShellItem {
+	($name:ty, $vt:ty) => {
 		use crate::co;
 		use crate::com::CoTaskMemFree;
 		use crate::com::shell::co as shellco;
-		use crate::com::shell::vt::{IShellItemVT, SHCreateItemFromParsingName};
 		use crate::various::WString;
-
-		pub_struct_IUnknown! {
-			$(#[$doc])*
-			$name, $vt
-		}
 
 		impl $name {
 			fn ishellitem_vt(&self) -> &IShellItemVT {
@@ -33,13 +62,13 @@ macro_rules! pub_struct_IShellItem {
 			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt").unwrap();
 			/// ```
 			pub fn from_path(file_or_folder_path: &str) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					unsafe {
 						SHCreateItemFromParsingName(
 							WString::from_str(file_or_folder_path).as_ptr(),
 							std::ptr::null_mut(),
-							&IShellItemVT::IID as *const _ as _,
+							&IShellItem::IID as *const _ as _,
 							&mut ppvQueried as *mut _ as _,
 						)
 					},
@@ -107,7 +136,7 @@ macro_rules! pub_struct_IShellItem {
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetParent(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitem_vt().GetParent)(
 						self.ppvt,
@@ -119,13 +148,5 @@ macro_rules! pub_struct_IShellItem {
 	};
 }
 
-pub_struct_IShellItem! {
-	/// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
-	/// COM interface over [`IShellItemVT`](crate::shell::vt::IShellItemVT).
-	/// Inherits from [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IShellItem, crate::com::shell::vt::IShellItemVT
-}
+impl_IUnknown!(IShellItem, IShellItemVT);
+impl_IShellItem!(IShellItem, IShellItemVT);

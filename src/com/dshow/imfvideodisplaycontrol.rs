@@ -1,22 +1,60 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IMFVideoDisplayControl {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{BOOL, HANDLE, HRESULT, PCVOID, PVOID};
+use crate::structs::IID;
+
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IMFVideoDisplayControl`](crate::dshow::IMFVideoDisplayControl) virtual
+/// table.
+pub struct IMFVideoDisplayControlVT {
+	pub IUnknownVT: IUnknownVT,
+	pub GetNativeVideoSize: fn(PP, PVOID, PVOID) -> HRESULT,
+	pub GetIdealVideoSize: fn(PP, PVOID, PVOID) -> HRESULT,
+	pub SetVideoPosition: fn(PP, PCVOID, PCVOID) -> HRESULT,
+	pub GetVideoPosition: fn(PP, PVOID, PCVOID) -> HRESULT,
+	pub SetAspectRatioMode: fn(PP, u32) -> HRESULT,
+	pub GetAspectRatioMode: fn(PP, *mut u32) -> HRESULT,
+	pub SetVideoWindow: fn(PP, HANDLE) -> HRESULT,
+	pub GetVideoWindow: fn(PP, *mut HANDLE) -> HRESULT,
+	pub RepaintVideo: fn(PP) -> HRESULT,
+	pub GetCurrentImage: fn(PP, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRESULT,
+	pub SetBorderColor: fn(PP, u32) -> HRESULT,
+	pub GetBorderColor: fn(PP, *mut u32) -> HRESULT,
+	pub SetRenderingPrefs: fn(PP, u32) -> HRESULT,
+	pub GetRenderingPrefs: fn(PP, *mut u32) -> HRESULT,
+	pub SetFullscreen: fn(PP, BOOL) -> HRESULT,
+	pub GetFullscreen: fn(PP, *mut BOOL) -> HRESULT,
+}
+
+/// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
+/// COM interface over
+/// [`IMFVideoDisplayControlVT`](crate::dshow::vt::IMFVideoDisplayControlVT).
+/// Inherits from [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IMFVideoDisplayControl {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IMFVideoDisplayControl);
+
+impl ComInterface for IMFVideoDisplayControl {
+	const IID: IID = IID::new(0xa490b1e4, 0xab84, 0x4d31, 0xa1b2, 0x181e03b1077a);
+}
+
+macro_rules! impl_IMFVideoDisplayControl {
+	($name:ty, $vt:ty) => {
 		use crate::co;
 		use crate::com::dshow::co as dshowco;
 		use crate::com::dshow::MFVideoNormalizedRect;
-		use crate::com::dshow::vt::IMFVideoDisplayControlVT;
 		use crate::com::funcs::CoTaskMemFree;
 		use crate::handles::HWND;
 		use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
-
-		pub_struct_IUnknown! {
-			$(#[$doc])*
-			$name, $vt
-		}
 
 		impl $name {
 			fn imfvideodisplaycontrol_vt(&self) -> &IMFVideoDisplayControlVT {
@@ -221,14 +259,5 @@ macro_rules! pub_struct_IMFVideoDisplayControl {
 	};
 }
 
-pub_struct_IMFVideoDisplayControl! {
-	/// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
-	/// COM interface over
-	/// [`IMFVideoDisplayControlVT`](crate::dshow::vt::IMFVideoDisplayControlVT).
-	/// Inherits from [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IMFVideoDisplayControl, crate::com::dshow::vt::IMFVideoDisplayControlVT
-}
+impl_IUnknown!(IMFVideoDisplayControl, IMFVideoDisplayControlVT);
+impl_IMFVideoDisplayControl!(IMFVideoDisplayControl, IMFVideoDisplayControlVT);

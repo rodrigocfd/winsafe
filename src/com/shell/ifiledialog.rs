@@ -1,21 +1,66 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IFileDialog {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
+use crate::com::iunknown::IUnknownVT;
+use crate::com::shell::vt::IModalWindowVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
+use crate::structs::IID;
+
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IFileDialog`](crate::shell::IFileDialog) virtual table.
+pub struct IFileDialogVT {
+	pub IModalWindowVT: IModalWindowVT,
+	pub SetFileTypes: fn(PP, u32, PCVOID) -> HRESULT,
+	pub SetFileTypeIndex: fn(PP, u32) -> HRESULT,
+	pub GetFileTypeIndex: fn(PP, *mut u32) -> HRESULT,
+	pub Advise: fn(PP, PVOID, *mut u32) -> HRESULT,
+	pub Unadvise: fn(PP, u32) -> HRESULT,
+	pub SetOptions: fn(PP, u32) -> HRESULT,
+	pub GetOptions: fn(PP, *mut u32) -> HRESULT,
+	pub SetDefaultFolder: fn(PP, PP) -> HRESULT,
+	pub SetFolder: fn(PP, PP) -> HRESULT,
+	pub GetFolder: fn(PP, *mut PVOID) -> HRESULT,
+	pub GetCurrentSelection: fn(PP, *mut PP) -> HRESULT,
+	pub SetFileName: fn(PP, PCSTR) -> HRESULT,
+	pub GetFileName: fn(PP, *mut PSTR) -> HRESULT,
+	pub SetTitle: fn(PP, PCSTR) -> HRESULT,
+	pub SetOkButtonLabel: fn(PP, PCSTR) -> HRESULT,
+	pub SetFileNameLabel: fn(PP, PCSTR) -> HRESULT,
+	pub GetResult: fn(PP, *mut PP) -> HRESULT,
+	pub AddPlace: fn(PP, PP, u32) -> HRESULT,
+	pub SetDefaultExtension: fn(PP, PCSTR) -> HRESULT,
+	pub Close: fn(PP, HRESULT) -> HRESULT,
+	pub SetClientGuid: fn(PP, PCVOID) -> HRESULT,
+	pub ClearClientData: fn(PP) -> HRESULT,
+	pub SetFilter: fn(PP, PVOID) -> HRESULT,
+}
+
+/// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
+/// COM interface over [`IFileDialogVT`](crate::shell::vt::IFileDialogVT).
+/// Inherits from [`IModalWindow`](crate::shell::IModalWindow),
+/// [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IFileDialog {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IFileDialog);
+
+impl ComInterface for IFileDialog {
+	const IID: IID = IID::new(0x42f85136, 0xdb7e, 0x439c, 0x85f1, 0xe4075d135fc8);
+}
+
+macro_rules! impl_IFileDialog {
+	($name:ty, $vt:ty) => {
 		use crate::com::funcs::CoTaskMemFree;
 		use crate::com::shell::{COMDLG_FILTERSPEC, IShellItem};
 		use crate::com::shell::co as shellco;
-		use crate::com::shell::vt::{IFileDialogVT, IShellItemVT};
 		use crate::structs::GUID;
 		use crate::various::WString;
-
-		pub_struct_IModalWindow! {
-			$(#[$doc])*
-			$name, $vt
-		}
 
 		impl $name {
 			fn ifiledialog_vt(&self) -> &IFileDialogVT {
@@ -49,7 +94,7 @@ macro_rules! pub_struct_IFileDialog {
 			/// [`IFileDialog::GetCurrentSelection`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
 			/// method.
 			pub fn GetCurrentSelection(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetCurrentSelection)(
 						self.ppvt,
@@ -83,7 +128,7 @@ macro_rules! pub_struct_IFileDialog {
 			/// [`IFileDialog::GetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
 			/// method.
 			pub fn GetFolder(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetFolder)(
 						self.ppvt,
@@ -104,7 +149,7 @@ macro_rules! pub_struct_IFileDialog {
 			/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
 			/// method.
 			pub fn GetResult(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPComVT<IShellItemVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetResult)(
 						self.ppvt,
@@ -262,14 +307,6 @@ macro_rules! pub_struct_IFileDialog {
 	};
 }
 
-pub_struct_IFileDialog! {
-	/// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
-	/// COM interface over [`IFileDialogVT`](crate::shell::vt::IFileDialogVT).
-	/// Inherits from [`IModalWindow`](crate::shell::IModalWindow),
-	/// [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IFileDialog, crate::com::shell::vt::IFileDialogVT
-}
+impl_IUnknown!(IFileDialog, IFileDialogVT);
+impl_IModalWindow!(IFileDialog, IFileDialogVT);
+impl_IFileDialog!(IFileDialog, IFileDialogVT);

@@ -1,19 +1,42 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IFileSinkFilter {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
+use crate::structs::IID;
+
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IFileSinkFilter`](crate::dshow::IFileSinkFilter) virtual table.
+pub struct IFileSinkFilterVT {
+	pub IUnknownVT: IUnknownVT,
+	pub SetFileName: fn(PP, PCSTR, PCVOID) -> HRESULT,
+	pub GetCurFile: fn(PP, *mut PSTR, PVOID) -> HRESULT,
+}
+
+/// [`IFileSinkFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
+/// COM interface over
+/// [`IFileSinkFilterVT`](crate::dshow::vt::IFileSinkFilterVT). Inherits
+/// from [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IFileSinkFilter {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IFileSinkFilter);
+
+impl ComInterface for IFileSinkFilter {
+	const IID: IID = IID::new(0xa2104830, 0x7c70, 0x11cf, 0x8bce, 0x00aa00a3f1a6);
+}
+
+macro_rules! impl_IFileSinkFilter {
+	($name:ty, $vt:ty) => {
 		use crate::com::dshow::AM_MEDIA_TYPE;
-		use crate::com::dshow::vt::IFileSinkFilterVT;
 		use crate::com::funcs::CoTaskMemFree;
 		use crate::various::WString;
-
-		pub_struct_IUnknown! {
-			$(#[$doc])*
-			$name, $vt
-		}
 
 		impl $name {
 			fn ifilesinkfilter_vt(&self) -> &IFileSinkFilterVT {
@@ -78,14 +101,5 @@ macro_rules! pub_struct_IFileSinkFilter {
 	};
 }
 
-pub_struct_IFileSinkFilter! {
-	/// [`IFileSinkFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
-	/// COM interface over
-	/// [`IFileSinkFilterVT`](crate::dshow::vt::IFileSinkFilterVT). Inherits
-	/// from [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IFileSinkFilter, crate::com::dshow::vt::IFileSinkFilterVT
-}
+impl_IUnknown!(IFileSinkFilter, IFileSinkFilterVT);
+impl_IFileSinkFilter!(IFileSinkFilter, IFileSinkFilterVT);

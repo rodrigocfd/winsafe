@@ -1,17 +1,45 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IMediaFilter {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
-		use crate::com::dshow::vt::IMediaFilterVT;
-		use crate::privs::hr_to_winresult_bool;
+use crate::com::ipersist::IPersistVT;
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HRESULT, PVOID};
+use crate::structs::IID;
 
-		pub_struct_IPersist! {
-			$(#[$doc])*
-			$name, $vt
-		}
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IMediaFilter`](crate::dshow::IMediaFilter) virtual table.
+pub struct IMediaFilterVT {
+	pub IPersistVT: IPersistVT,
+	pub Stop: fn(PP) -> HRESULT,
+	pub Pause: fn(PP) -> HRESULT,
+   pub Run: fn(PP, i64) -> HRESULT,
+	pub GetState: fn(PP, i64, PVOID, *mut u32) -> HRESULT,
+	pub SetSyncSource: fn(PP, PP) -> HRESULT,
+	pub GetSyncSource: fn(PP, *mut PP) -> HRESULT,
+}
+
+/// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
+/// COM interface over [`IMediaFilterVT`](crate::dshow::vt::IMediaFilterVT).
+/// Inherits from [`IPersist`](crate::IPersist),
+/// [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IMediaFilter {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IMediaFilter);
+
+impl ComInterface for IMediaFilter {
+	const IID: IID = IID::new(0x56a86899, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+}
+
+macro_rules! impl_IMediaFilter {
+	($name:ty, $vt:ty) => {
+		use crate::privs::hr_to_winresult_bool;
 
 		impl $name {
 			fn imediafilter_vt(&self) -> &IMediaFilterVT {
@@ -41,14 +69,6 @@ macro_rules! pub_struct_IMediaFilter {
 	};
 }
 
-pub_struct_IMediaFilter! {
-	/// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
-	/// COM interface over [`IMediaFilterVT`](crate::dshow::vt::IMediaFilterVT).
-	/// Inherits from [`IPersist`](crate::IPersist),
-	/// [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IMediaFilter, crate::com::dshow::vt::IMediaFilterVT
-}
+impl_IUnknown!(IMediaFilter, IMediaFilterVT);
+impl_IPersist!(IMediaFilter, IMediaFilterVT);
+impl_IMediaFilter!(IMediaFilter, IMediaFilterVT);

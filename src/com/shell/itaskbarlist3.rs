@@ -1,17 +1,64 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_ITaskbarList3 {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
-		use crate::com::shell::co as shellco;
-		use crate::com::shell::vt::ITaskbarList3VT;
+use crate::com::iunknown::IUnknownVT;
+use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HANDLE, HRESULT, PCSTR, PVOID};
+use crate::structs::IID;
 
-		pub_struct_ITaskbarList2!{
-			$(#[$doc])*
-			$name, $vt
-		}
+type PP = PPComVT<IUnknownVT>;
+
+/// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
+pub struct ITaskbarList3VT {
+	pub ITaskbarList2VT: ITaskbarList2VT,
+	pub SetProgressValue: fn(PP, HANDLE, u64, u64) -> HRESULT,
+	pub SetProgressState: fn(PP, HANDLE, u32) -> HRESULT,
+	pub RegisterTab: fn(PP, HANDLE, HANDLE) -> HRESULT,
+	pub UnregisterTab: fn(PP, HANDLE) -> HRESULT,
+	pub SetTabOrder: fn(PP, HANDLE, HANDLE) -> HRESULT,
+	pub SetTabActive: fn(PP, HANDLE, HANDLE, u32) -> HRESULT,
+	pub ThumbBarAddButtons: fn(PP, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarUpdateButtons: fn(PP, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarSetImageList: fn(PP, HANDLE, HANDLE) -> HRESULT,
+	pub SetOverlayIcon: fn(PP, HANDLE, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailTooltip: fn(PP, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailClip: fn(PP, HANDLE, PVOID) -> HRESULT,
+}
+
+/// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
+/// COM interface over [`ITaskbarList3VT`](crate::shell::vt::ITaskbarList3VT).
+/// Inherits from [`ITaskbarList2`](crate::shell::ITaskbarList2),
+/// [`ITaskbarList`](crate::shell::ITaskbarList),
+/// [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{co, CoCreateInstance, shell};
+///
+/// let obj = CoCreateInstance::<shell::ITaskbarList3>(
+///     &shell::clsid::TaskbarList,
+///     None,
+///     co::CLSCTX::INPROC_SERVER,
+/// ).unwrap();
+/// ```
+pub struct ITaskbarList3 {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(ITaskbarList3);
+
+impl ComInterface for ITaskbarList3 {
+	const IID: IID = IID::new(0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf);
+}
+
+macro_rules! impl_ITaskbarList3 {
+	($name:ty, $vt:ty) => {
+		use crate::com::shell::co as shellco;
 
 		impl $name {
 			fn itaskbarlist3_vt(&self) -> &ITaskbarList3VT {
@@ -48,6 +95,19 @@ macro_rules! pub_struct_ITaskbarList3 {
 
 			/// [`ITaskbarList3::SetProgressValue`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
 			/// method.
+			///
+			/// # Examples
+			///
+			/// Setting progress to 50%:
+			///
+			/// ```rust,ignore
+			/// use winsafe::{HWND, shell};
+			///
+			/// let obj: shell::ITaskbarList3; // initialized somewhere
+			/// let hwnd: HWND;
+			///
+			/// obj.SetProgressValue(hwnd, 50, 100).unwrap();
+			/// ```
 			pub fn SetProgressValue(&self,
 				hwnd: HWND, ullCompleted: u64, ullTotal: u64) -> WinResult<()>
 			{
@@ -93,28 +153,7 @@ macro_rules! pub_struct_ITaskbarList3 {
 	};
 }
 
-pub_struct_ITaskbarList3! {
-	/// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
-	/// COM interface over
-	/// [`ITaskbarList3VT`](crate::shell::vt::ITaskbarList3VT). Inherits from
-	/// [`ITaskbarList2`](crate::shell::ITaskbarList2),
-	/// [`ITaskbarList`](crate::shell::ITaskbarList),
-	/// [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::{co, CoCreateInstance, shell};
-	///
-	/// let obj: shell::ITaskbarList3 = CoCreateInstance(
-	///     &shell::clsid::TaskbarList,
-	///     None,
-	///     co::CLSCTX::INPROC_SERVER,
-	/// ).unwrap();
-	/// ```
-	ITaskbarList3, crate::com::shell::vt::ITaskbarList3VT
-}
+impl_IUnknown!(ITaskbarList3, ITaskbarList3VT);
+impl_ITaskbarList!(ITaskbarList3, ITaskbarList3VT);
+impl_ITaskbarList2!(ITaskbarList3, ITaskbarList3VT);
+impl_ITaskbarList3!(ITaskbarList3, ITaskbarList3VT);

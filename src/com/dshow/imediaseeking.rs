@@ -1,20 +1,58 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IMediaSeeking {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HRESULT, PCVOID, PVOID};
+use crate::structs::IID;
+
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IMediaSeeking`](crate::dshow::IMediaSeeking) virtual table.
+pub struct IMediaSeekingVT {
+	pub IUnknownVT: IUnknownVT,
+	pub GetCapabilities: fn(PP, *mut u32) -> HRESULT,
+	pub CheckCapabilities: fn(PP, *mut u32) -> HRESULT,
+	pub IsFormatSupported: fn(PP, PCVOID) -> HRESULT,
+	pub QueryPreferredFormat: fn(PP, PVOID) -> HRESULT,
+	pub GetTimeFormat: fn(PP, PVOID) -> HRESULT,
+	pub IsUsingTimeFormat: fn(PP, PCVOID) -> HRESULT,
+	pub SetTimeFormat: fn(PP, PCVOID) -> HRESULT,
+	pub GetDuration: fn(PP, *mut i64) -> HRESULT,
+	pub GetStopPosition: fn(PP, *mut i64) -> HRESULT,
+	pub GetCurrentPosition: fn(PP, *mut i64) -> HRESULT,
+	pub ConvertTimeFormat: fn(PP, *mut i64, PCVOID, i64, PCVOID) -> HRESULT,
+	pub SetPositions: fn(PP, *mut i64, u32, *mut i64, u32) -> HRESULT,
+	pub GetPositions: fn(PP, *mut i64, *mut i64) -> HRESULT,
+	pub GetAvailable: fn(PP, *mut i64, *mut i64) -> HRESULT,
+	pub SetRate: fn(PP, f64) -> HRESULT,
+	pub GetRate: fn(PP, *mut f64) -> HRESULT,
+	pub GetPreroll: fn(PP, *mut i64) -> HRESULT,
+}
+
+/// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
+/// COM interface over
+/// [`IMediaSeekingVT`](crate::dshow::vt::IMediaSeekingVT). Inherits from
+/// [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IMediaSeeking {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IMediaSeeking);
+
+impl ComInterface for IMediaSeeking {
+	const IID: IID = IID::new(0x36b73880, 0xc2c8, 0x11cf, 0x8b46, 0x00805f6cef60);
+}
+
+macro_rules! impl_IMediaSeeking {
+	($name:ty, $vt:ty) => {
 		use crate::co;
 		use crate::com::dshow::co as dshowco;
 		use crate::com::dshow::guid;
-		use crate::com::dshow::vt::IMediaSeekingVT;
 		use crate::structs::GUID;
-
-		pub_struct_IUnknown! {
-			$(#[$doc])*
-			$name, $vt
-		}
 
 		impl $name {
 			fn imediaseeking_vt(&self) -> &IMediaSeekingVT {
@@ -172,14 +210,5 @@ macro_rules! pub_struct_IMediaSeeking {
 	};
 }
 
-pub_struct_IMediaSeeking! {
-	/// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
-	/// COM interface over
-	/// [`IMediaSeekingVT`](crate::dshow::vt::IMediaSeekingVT). Inherits from
-	/// [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IMediaSeeking, crate::com::dshow::vt::IMediaSeekingVT
-}
+impl_IUnknown!(IMediaSeeking, IMediaSeekingVT);
+impl_IMediaSeeking!(IMediaSeeking, IMediaSeekingVT);

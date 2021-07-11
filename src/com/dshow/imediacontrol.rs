@@ -1,20 +1,52 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IMediaControl {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
+use crate::com::idispatch::IDispatchVT;
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HRESULT, PSTR};
+use crate::structs::IID;
+
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IMediaControl`](crate::dshow::IMediaControl) virtual table.
+pub struct IMediaControlVT {
+	pub IDispatchVT: IDispatchVT,
+	pub Run: fn(PP) -> HRESULT,
+	pub Pause: fn(PP) -> HRESULT,
+	pub Stop: fn(PP) -> HRESULT,
+	pub GetState: fn(PP, i32, *mut u32) -> HRESULT,
+	pub RenderFile: fn(PP, PSTR) -> HRESULT,
+	pub AddSourceFilter: fn(PP, PSTR, *mut PP) -> HRESULT,
+	pub GetFilterCollection: fn(PP, *mut PP) -> HRESULT,
+	pub GetRegFilterCollection: fn(PP, *mut PP) -> HRESULT,
+	pub StopWhenReady: fn(PP) -> HRESULT,
+}
+
+/// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
+/// COM interface over
+/// [`IMediaControlVT`](crate::dshow::vt::IMediaControlVT). Inherits from
+/// [`IDispatch`](crate::IDispatch),
+/// [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IMediaControl {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IMediaControl);
+
+impl ComInterface for IMediaControl {
+	const IID: IID = IID::new(0x56a868b1, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+}
+
+macro_rules! impl_IMediaControl {
+	($name:ty, $vt:ty) => {
 		use crate::com::dshow::co as dshowco;
-		use crate::com::dshow::vt::IMediaControlVT;
 		use crate::com::IDispatch;
 		use crate::privs::{hr_to_winresult_bool, INFINITE};
 		use crate::various::WString;
-
-		pub_struct_IDispatch! {
-			$(#[$doc])*
-			$name, $vt
-		}
 
 		impl $name {
 			fn imediacontrol_vt(&self) -> &IMediaControlVT {
@@ -24,7 +56,7 @@ macro_rules! pub_struct_IMediaControl {
 			/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 			/// method.
 			pub fn AddSourceFilter(&self, fileName: &str) -> WinResult<IDispatch> {
-				let mut ppvQueried: PPComVT<IDispatchVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.imediacontrol_vt().AddSourceFilter)(
 						self.ppvt,
@@ -89,14 +121,6 @@ macro_rules! pub_struct_IMediaControl {
 	};
 }
 
-pub_struct_IMediaControl! {
-	/// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
-	/// COM interface over
-	/// [`IMediaControlVT`](crate::dshow::vt::IMediaControlVT). Inherits from
-	/// [`IDispatch`](crate::IDispatch) [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IMediaControl, crate::com::dshow::vt::IMediaControlVT
-}
+impl_IUnknown!(IMediaControl, IMediaControlVT);
+impl_IDispatch!(IMediaControl, IMediaControlVT);
+impl_IMediaControl!(IMediaControl, IMediaControlVT);

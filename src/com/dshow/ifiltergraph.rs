@@ -1,18 +1,46 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_IFilterGraph {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
-		use crate::com::dshow::{IBaseFilter, IEnumFilters};
-		use crate::com::dshow::vt::{IBaseFilterVT, IEnumFiltersVT, IFilterGraphVT};
-		use crate::various::WString;
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HRESULT, PCSTR, PCVOID};
+use crate::structs::IID;
 
-		pub_struct_IUnknown! {
-			$(#[$doc])*
-			$name, $vt
-		}
+type PP = PPComVT<IUnknownVT>;
+
+/// [`IFilterGraph`](crate::dshow::IFilterGraph) virtual table.
+pub struct IFilterGraphVT {
+	pub IUnknownVT: IUnknownVT,
+	pub AddFilter: fn(PP, PP, PCSTR) -> HRESULT,
+	pub RemoveFilter: fn(PP, PP) -> HRESULT,
+	pub EnumFilters: fn(PP, *mut PP) -> HRESULT,
+	pub FindFilterByName: fn(PP, PCSTR, *mut PP) -> HRESULT,
+	pub ConnectDirect: fn(PP, PP, PP, PCVOID) -> HRESULT,
+	pub Reconnect: fn(PP, PP) -> HRESULT,
+	pub Disconnect: fn(PP, PP) -> HRESULT,
+	pub SetDefaultSyncSource: fn(PP) -> HRESULT,
+}
+
+/// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
+/// COM interface over [`IFilterGraphVT`](crate::dshow::vt::IFilterGraphVT).
+/// Inherits from [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+pub struct IFilterGraph {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(IFilterGraph);
+
+impl ComInterface for IFilterGraph {
+	const IID: IID = IID::new(0x56a8689f, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+}
+
+macro_rules! impl_IFilterGraph {
+	($name:ty, $vt:ty) => {
+		use crate::com::dshow::{IBaseFilter, IEnumFilters};
+		use crate::various::WString;
 
 		impl $name {
 			fn ifiltergraph_vt(&self) -> &IFilterGraphVT {
@@ -36,7 +64,7 @@ macro_rules! pub_struct_IFilterGraph {
 			/// [`IFilterGraph::EnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 			/// method.
 			pub fn EnumFilters(&self) -> WinResult<IEnumFilters> {
-				let mut ppvQueried: PPComVT<IEnumFiltersVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiltergraph_vt().EnumFilters)(
 						self.ppvt,
@@ -48,7 +76,7 @@ macro_rules! pub_struct_IFilterGraph {
 			/// [`IFilterGraph::FindFilterByName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
 			/// method.
 			pub fn FindFilterByName(&self, name: &str) -> WinResult<IBaseFilter> {
-				let mut ppvQueried: PPComVT<IBaseFilterVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiltergraph_vt().FindFilterByName)(
 						self.ppvt,
@@ -77,13 +105,5 @@ macro_rules! pub_struct_IFilterGraph {
 	};
 }
 
-pub_struct_IFilterGraph! {
-	/// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
-	/// COM interface over [`IFilterGraphVT`](crate::dshow::vt::IFilterGraphVT).
-	/// Inherits from [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	IFilterGraph, crate::com::dshow::vt::IFilterGraphVT
-}
+impl_IUnknown!(IFilterGraph, IFilterGraphVT);
+impl_IFilterGraph!(IFilterGraph, IFilterGraphVT);

@@ -1,17 +1,54 @@
 #![allow(non_snake_case)]
 
-macro_rules! pub_struct_ITaskbarList {
-	(
-		$(#[$doc:meta])*
-		$name:ident, $vt:ty
-	) => {
-		use crate::com::shell::vt::ITaskbarListVT;
-		use crate::handles::HWND;
+use crate::com::iunknown::IUnknownVT;
+use crate::com::traits::{ComInterface, PPComVT};
+use crate::ffi::{HANDLE, HRESULT};
+use crate::structs::IID;
 
-		pub_struct_IUnknown! {
-			$(#[$doc])*
-			$name, $vt
-		}
+type PP = PPComVT<IUnknownVT>;
+
+/// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
+pub struct ITaskbarListVT {
+	pub IUnknownVT: IUnknownVT,
+	pub HrInit: fn(PP) -> HRESULT,
+	pub AddTab: fn(PP, HANDLE) -> HRESULT,
+	pub DeleteTab: fn(PP, HANDLE) -> HRESULT,
+	pub ActivateTab: fn(PP, HANDLE) -> HRESULT,
+	pub SetActiveAlt: fn(PP, HANDLE) -> HRESULT,
+}
+
+/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
+/// COM interface over [`ITaskbarListVT`](crate::shell::vt::ITaskbarListVT).
+/// Inherits from [`IUnknown`](crate::IUnknown).
+///
+/// Automatically calls
+/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+/// when the object goes out of scope.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{co, CoCreateInstance, shell};
+///
+/// let obj = CoCreateInstance::<shell::ITaskbarList>(
+///     &shell::clsid::TaskbarList,
+///     None,
+///     co::CLSCTX::INPROC_SERVER,
+/// ).unwrap();
+/// ```
+pub struct ITaskbarList {
+	pub(crate) ppvt: PPComVT<IUnknownVT>,
+}
+
+impl_send_sync_fromppvt!(ITaskbarList);
+
+impl ComInterface for ITaskbarList {
+	const IID: IID = IID::new(0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090);
+}
+
+macro_rules! impl_ITaskbarList {
+	($name:ty, $vt:ty) => {
+		use crate::handles::HWND;
 
 		impl $name {
 			fn itaskbarlist_vt(&self) -> &ITaskbarListVT {
@@ -59,25 +96,5 @@ macro_rules! pub_struct_ITaskbarList {
 	};
 }
 
-pub_struct_ITaskbarList! {
-	/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-	/// COM interface over [`ITaskbarListVT`](crate::shell::vt::ITaskbarListVT).
-	/// Inherits from [`IUnknown`](crate::IUnknown).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::{co, CoCreateInstance, shell};
-	///
-	/// let obj: shell::ITaskbarList = CoCreateInstance(
-	///     &shell::clsid::TaskbarList,
-	///     None,
-	///     co::CLSCTX::INPROC_SERVER,
-	/// ).unwrap();
-	/// ```
-	ITaskbarList, crate::com::shell::vt::ITaskbarListVT
-}
+impl_IUnknown!(ITaskbarList, ITaskbarListVT);
+impl_ITaskbarList!(ITaskbarList, ITaskbarListVT);

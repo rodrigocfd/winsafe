@@ -4,7 +4,8 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::{ComVT, IUnknown, IUnknownVT, PPComVT};
+use crate::com::iunknown::{IUnknown, IUnknownVT};
+use crate::com::traits::{ComInterface, PPComVT};
 use crate::ffi::ole32;
 use crate::privs::hr_to_winresult;
 use crate::structs::CLSID;
@@ -21,18 +22,18 @@ use crate::structs::CLSID;
 /// ```rust,ignore
 /// use winsafe::{co, CoCreateInstance, shell};
 ///
-/// let obj: shell::ITaskbarList = CoCreateInstance(
+/// let obj = CoCreateInstance::<shell::ITaskbarList>(
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// ).unwrap();
 /// ```
-pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
+pub fn CoCreateInstance<T: ComInterface>(
 	rclsid: &CLSID,
 	pUnkOuter: Option<&mut IUnknown>,
-	dwClsContext: co::CLSCTX) -> WinResult<RetInterf>
+	dwClsContext: co::CLSCTX) -> WinResult<T>
 {
-	let mut ppv: PPComVT<VT> = std::ptr::null_mut();
+	let mut ppv: PPComVT<IUnknownVT> = std::ptr::null_mut();
 	let mut ppvOuter: PPComVT<IUnknownVT> = std::ptr::null_mut();
 
 	hr_to_winresult(
@@ -42,7 +43,7 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 				pUnkOuter.as_ref()
 					.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as _),
 				dwClsContext.0,
-				&VT::IID as *const _ as _,
+				&T::IID as *const _ as _,
 				&mut ppv as *mut _ as _,
 			)
 		},
@@ -50,7 +51,7 @@ pub fn CoCreateInstance<VT: ComVT, RetInterf: From<PPComVT<VT>>>(
 		if let Some(iunkOuter) = pUnkOuter {
 			*iunkOuter = IUnknown::from(ppvOuter);
 		}
-		RetInterf::from(ppv)
+		T::from(ppv)
 	})
 }
 
