@@ -3,21 +3,18 @@
 use crate::com::dshow::ifiltergraph::IFilterGraph;
 use crate::com::dshow::imediafilter::IMediaFilterVT;
 use crate::com::ipersist::IPersistVT;
-use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCSTR, PSTR, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IBaseFilter`](crate::dshow::IBaseFilter) virtual table.
 pub struct IBaseFilterVT {
 	pub IMediaFilterVT: IMediaFilterVT,
-	pub EnumPins: fn(PP, *mut PP) -> HRESULT,
-	pub FindPin: fn(PP, PCSTR, *mut PP) -> HRESULT,
-	pub QueryFilterInfo: fn(PP, PVOID) -> HRESULT,
-	pub JoinFilterGraph: fn(PP, PP, PCSTR) -> HRESULT,
-	pub QueryVendorInfo: fn(PP, *mut PSTR) -> HRESULT,
+	pub EnumPins: fn(PPI, *mut PPI) -> HRESULT,
+	pub FindPin: fn(PPI, PCSTR, *mut PPI) -> HRESULT,
+	pub QueryFilterInfo: fn(PPI, PVOID) -> HRESULT,
+	pub JoinFilterGraph: fn(PPI, PPI, PCSTR) -> HRESULT,
+	pub QueryVendorInfo: fn(PPI, *mut PSTR) -> HRESULT,
 }
 
 /// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
@@ -30,7 +27,7 @@ pub struct IBaseFilterVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IBaseFilter {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IBaseFilter);
@@ -46,7 +43,7 @@ macro_rules! impl_IBaseFilter {
 
 		impl $name {
 			fn ibasefilter_vt(&self) -> &IBaseFilterVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IBaseFilter::JoinFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)

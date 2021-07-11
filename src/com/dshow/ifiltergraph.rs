@@ -1,23 +1,21 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCSTR, PCVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IFilterGraph`](crate::dshow::IFilterGraph) virtual table.
 pub struct IFilterGraphVT {
 	pub IUnknownVT: IUnknownVT,
-	pub AddFilter: fn(PP, PP, PCSTR) -> HRESULT,
-	pub RemoveFilter: fn(PP, PP) -> HRESULT,
-	pub EnumFilters: fn(PP, *mut PP) -> HRESULT,
-	pub FindFilterByName: fn(PP, PCSTR, *mut PP) -> HRESULT,
-	pub ConnectDirect: fn(PP, PP, PP, PCVOID) -> HRESULT,
-	pub Reconnect: fn(PP, PP) -> HRESULT,
-	pub Disconnect: fn(PP, PP) -> HRESULT,
-	pub SetDefaultSyncSource: fn(PP) -> HRESULT,
+	pub AddFilter: fn(PPI, PPI, PCSTR) -> HRESULT,
+	pub RemoveFilter: fn(PPI, PPI) -> HRESULT,
+	pub EnumFilters: fn(PPI, *mut PPI) -> HRESULT,
+	pub FindFilterByName: fn(PPI, PCSTR, *mut PPI) -> HRESULT,
+	pub ConnectDirect: fn(PPI, PPI, PPI, PCVOID) -> HRESULT,
+	pub Reconnect: fn(PPI, PPI) -> HRESULT,
+	pub Disconnect: fn(PPI, PPI) -> HRESULT,
+	pub SetDefaultSyncSource: fn(PPI) -> HRESULT,
 }
 
 /// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
@@ -28,7 +26,7 @@ pub struct IFilterGraphVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IFilterGraph {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IFilterGraph);
@@ -44,7 +42,7 @@ macro_rules! impl_IFilterGraph {
 
 		impl $name {
 			fn ifiltergraph_vt(&self) -> &IFilterGraphVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IFilterGraph::AddFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
@@ -64,7 +62,7 @@ macro_rules! impl_IFilterGraph {
 			/// [`IFilterGraph::EnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 			/// method.
 			pub fn EnumFilters(&self) -> WinResult<IEnumFilters> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiltergraph_vt().EnumFilters)(
 						self.ppvt,
@@ -76,7 +74,7 @@ macro_rules! impl_IFilterGraph {
 			/// [`IFilterGraph::FindFilterByName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
 			/// method.
 			pub fn FindFilterByName(&self, name: &str) -> WinResult<IBaseFilter> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiltergraph_vt().FindFilterByName)(
 						self.ppvt,

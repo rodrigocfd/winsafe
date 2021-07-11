@@ -1,22 +1,19 @@
 #![allow(non_snake_case)]
 
 use crate::com::ipersist::IPersistVT;
-use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IMediaFilter`](crate::dshow::IMediaFilter) virtual table.
 pub struct IMediaFilterVT {
 	pub IPersistVT: IPersistVT,
-	pub Stop: fn(PP) -> HRESULT,
-	pub Pause: fn(PP) -> HRESULT,
-   pub Run: fn(PP, i64) -> HRESULT,
-	pub GetState: fn(PP, i64, PVOID, *mut u32) -> HRESULT,
-	pub SetSyncSource: fn(PP, PP) -> HRESULT,
-	pub GetSyncSource: fn(PP, *mut PP) -> HRESULT,
+	pub Stop: fn(PPI) -> HRESULT,
+	pub Pause: fn(PPI) -> HRESULT,
+   pub Run: fn(PPI, i64) -> HRESULT,
+	pub GetState: fn(PPI, i64, PVOID, *mut u32) -> HRESULT,
+	pub SetSyncSource: fn(PPI, PPI) -> HRESULT,
+	pub GetSyncSource: fn(PPI, *mut PPI) -> HRESULT,
 }
 
 /// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
@@ -28,7 +25,7 @@ pub struct IMediaFilterVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IMediaFilter {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IMediaFilter);
@@ -43,7 +40,7 @@ macro_rules! impl_IMediaFilter {
 
 		impl $name {
 			fn imediafilter_vt(&self) -> &IMediaFilterVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IMediaFilter::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)

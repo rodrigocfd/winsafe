@@ -1,32 +1,30 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCVOID, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IMediaSeeking`](crate::dshow::IMediaSeeking) virtual table.
 pub struct IMediaSeekingVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetCapabilities: fn(PP, *mut u32) -> HRESULT,
-	pub CheckCapabilities: fn(PP, *mut u32) -> HRESULT,
-	pub IsFormatSupported: fn(PP, PCVOID) -> HRESULT,
-	pub QueryPreferredFormat: fn(PP, PVOID) -> HRESULT,
-	pub GetTimeFormat: fn(PP, PVOID) -> HRESULT,
-	pub IsUsingTimeFormat: fn(PP, PCVOID) -> HRESULT,
-	pub SetTimeFormat: fn(PP, PCVOID) -> HRESULT,
-	pub GetDuration: fn(PP, *mut i64) -> HRESULT,
-	pub GetStopPosition: fn(PP, *mut i64) -> HRESULT,
-	pub GetCurrentPosition: fn(PP, *mut i64) -> HRESULT,
-	pub ConvertTimeFormat: fn(PP, *mut i64, PCVOID, i64, PCVOID) -> HRESULT,
-	pub SetPositions: fn(PP, *mut i64, u32, *mut i64, u32) -> HRESULT,
-	pub GetPositions: fn(PP, *mut i64, *mut i64) -> HRESULT,
-	pub GetAvailable: fn(PP, *mut i64, *mut i64) -> HRESULT,
-	pub SetRate: fn(PP, f64) -> HRESULT,
-	pub GetRate: fn(PP, *mut f64) -> HRESULT,
-	pub GetPreroll: fn(PP, *mut i64) -> HRESULT,
+	pub GetCapabilities: fn(PPI, *mut u32) -> HRESULT,
+	pub CheckCapabilities: fn(PPI, *mut u32) -> HRESULT,
+	pub IsFormatSupported: fn(PPI, PCVOID) -> HRESULT,
+	pub QueryPreferredFormat: fn(PPI, PVOID) -> HRESULT,
+	pub GetTimeFormat: fn(PPI, PVOID) -> HRESULT,
+	pub IsUsingTimeFormat: fn(PPI, PCVOID) -> HRESULT,
+	pub SetTimeFormat: fn(PPI, PCVOID) -> HRESULT,
+	pub GetDuration: fn(PPI, *mut i64) -> HRESULT,
+	pub GetStopPosition: fn(PPI, *mut i64) -> HRESULT,
+	pub GetCurrentPosition: fn(PPI, *mut i64) -> HRESULT,
+	pub ConvertTimeFormat: fn(PPI, *mut i64, PCVOID, i64, PCVOID) -> HRESULT,
+	pub SetPositions: fn(PPI, *mut i64, u32, *mut i64, u32) -> HRESULT,
+	pub GetPositions: fn(PPI, *mut i64, *mut i64) -> HRESULT,
+	pub GetAvailable: fn(PPI, *mut i64, *mut i64) -> HRESULT,
+	pub SetRate: fn(PPI, f64) -> HRESULT,
+	pub GetRate: fn(PPI, *mut f64) -> HRESULT,
+	pub GetPreroll: fn(PPI, *mut i64) -> HRESULT,
 }
 
 /// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
@@ -38,7 +36,7 @@ pub struct IMediaSeekingVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IMediaSeeking {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IMediaSeeking);
@@ -56,7 +54,7 @@ macro_rules! impl_IMediaSeeking {
 
 		impl $name {
 			fn imediaseeking_vt(&self) -> &IMediaSeekingVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)

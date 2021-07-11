@@ -1,25 +1,22 @@
 #![allow(non_snake_case)]
 
 use crate::com::idispatch::IDispatchVT;
-use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PSTR};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IMediaControl`](crate::dshow::IMediaControl) virtual table.
 pub struct IMediaControlVT {
 	pub IDispatchVT: IDispatchVT,
-	pub Run: fn(PP) -> HRESULT,
-	pub Pause: fn(PP) -> HRESULT,
-	pub Stop: fn(PP) -> HRESULT,
-	pub GetState: fn(PP, i32, *mut u32) -> HRESULT,
-	pub RenderFile: fn(PP, PSTR) -> HRESULT,
-	pub AddSourceFilter: fn(PP, PSTR, *mut PP) -> HRESULT,
-	pub GetFilterCollection: fn(PP, *mut PP) -> HRESULT,
-	pub GetRegFilterCollection: fn(PP, *mut PP) -> HRESULT,
-	pub StopWhenReady: fn(PP) -> HRESULT,
+	pub Run: fn(PPI) -> HRESULT,
+	pub Pause: fn(PPI) -> HRESULT,
+	pub Stop: fn(PPI) -> HRESULT,
+	pub GetState: fn(PPI, i32, *mut u32) -> HRESULT,
+	pub RenderFile: fn(PPI, PSTR) -> HRESULT,
+	pub AddSourceFilter: fn(PPI, PSTR, *mut PPI) -> HRESULT,
+	pub GetFilterCollection: fn(PPI, *mut PPI) -> HRESULT,
+	pub GetRegFilterCollection: fn(PPI, *mut PPI) -> HRESULT,
+	pub StopWhenReady: fn(PPI) -> HRESULT,
 }
 
 /// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
@@ -32,7 +29,7 @@ pub struct IMediaControlVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IMediaControl {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IMediaControl);
@@ -50,13 +47,13 @@ macro_rules! impl_IMediaControl {
 
 		impl $name {
 			fn imediacontrol_vt(&self) -> &IMediaControlVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 			/// method.
 			pub fn AddSourceFilter(&self, fileName: &str) -> WinResult<IDispatch> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.imediacontrol_vt().AddSourceFilter)(
 						self.ppvt,

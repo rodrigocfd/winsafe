@@ -4,8 +4,8 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::iunknown::{IUnknown, IUnknownVT};
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::iunknown::IUnknown;
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::ole32;
 use crate::privs::hr_to_winresult;
 use crate::structs::CLSID;
@@ -33,8 +33,8 @@ pub fn CoCreateInstance<T: ComInterface>(
 	pUnkOuter: Option<&mut IUnknown>,
 	dwClsContext: co::CLSCTX) -> WinResult<T>
 {
-	let mut ppv: PPComVT<IUnknownVT> = std::ptr::null_mut();
-	let mut ppvOuter: PPComVT<IUnknownVT> = std::ptr::null_mut();
+	let mut ppv: PPI = std::ptr::null_mut();
+	let mut ppvOuter: PPI = std::ptr::null_mut();
 
 	hr_to_winresult(
 		unsafe {

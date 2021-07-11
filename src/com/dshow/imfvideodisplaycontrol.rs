@@ -1,32 +1,30 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{BOOL, HANDLE, HRESULT, PCVOID, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IMFVideoDisplayControl`](crate::dshow::IMFVideoDisplayControl) virtual
 /// table.
 pub struct IMFVideoDisplayControlVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetNativeVideoSize: fn(PP, PVOID, PVOID) -> HRESULT,
-	pub GetIdealVideoSize: fn(PP, PVOID, PVOID) -> HRESULT,
-	pub SetVideoPosition: fn(PP, PCVOID, PCVOID) -> HRESULT,
-	pub GetVideoPosition: fn(PP, PVOID, PCVOID) -> HRESULT,
-	pub SetAspectRatioMode: fn(PP, u32) -> HRESULT,
-	pub GetAspectRatioMode: fn(PP, *mut u32) -> HRESULT,
-	pub SetVideoWindow: fn(PP, HANDLE) -> HRESULT,
-	pub GetVideoWindow: fn(PP, *mut HANDLE) -> HRESULT,
-	pub RepaintVideo: fn(PP) -> HRESULT,
-	pub GetCurrentImage: fn(PP, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRESULT,
-	pub SetBorderColor: fn(PP, u32) -> HRESULT,
-	pub GetBorderColor: fn(PP, *mut u32) -> HRESULT,
-	pub SetRenderingPrefs: fn(PP, u32) -> HRESULT,
-	pub GetRenderingPrefs: fn(PP, *mut u32) -> HRESULT,
-	pub SetFullscreen: fn(PP, BOOL) -> HRESULT,
-	pub GetFullscreen: fn(PP, *mut BOOL) -> HRESULT,
+	pub GetNativeVideoSize: fn(PPI, PVOID, PVOID) -> HRESULT,
+	pub GetIdealVideoSize: fn(PPI, PVOID, PVOID) -> HRESULT,
+	pub SetVideoPosition: fn(PPI, PCVOID, PCVOID) -> HRESULT,
+	pub GetVideoPosition: fn(PPI, PVOID, PCVOID) -> HRESULT,
+	pub SetAspectRatioMode: fn(PPI, u32) -> HRESULT,
+	pub GetAspectRatioMode: fn(PPI, *mut u32) -> HRESULT,
+	pub SetVideoWindow: fn(PPI, HANDLE) -> HRESULT,
+	pub GetVideoWindow: fn(PPI, *mut HANDLE) -> HRESULT,
+	pub RepaintVideo: fn(PPI) -> HRESULT,
+	pub GetCurrentImage: fn(PPI, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRESULT,
+	pub SetBorderColor: fn(PPI, u32) -> HRESULT,
+	pub GetBorderColor: fn(PPI, *mut u32) -> HRESULT,
+	pub SetRenderingPrefs: fn(PPI, u32) -> HRESULT,
+	pub GetRenderingPrefs: fn(PPI, *mut u32) -> HRESULT,
+	pub SetFullscreen: fn(PPI, BOOL) -> HRESULT,
+	pub GetFullscreen: fn(PPI, *mut BOOL) -> HRESULT,
 }
 
 /// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
@@ -38,7 +36,7 @@ pub struct IMFVideoDisplayControlVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IMFVideoDisplayControl {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IMFVideoDisplayControl);
@@ -58,7 +56,7 @@ macro_rules! impl_IMFVideoDisplayControl {
 
 		impl $name {
 			fn imfvideodisplaycontrol_vt(&self) -> &IMFVideoDisplayControlVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)

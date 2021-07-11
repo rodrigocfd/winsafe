@@ -3,8 +3,24 @@ use crate::co::{CCM, WM};
 pub_struct_const! { GA, u32,
 	/// [`HWND::GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
 	=>
+	/// Retrieves the parent window. This does not include the owner, as it does
+	/// with the [`HWND::GetParent`](crate::HWND::GetParent) function.
 	PARENT, 1
+	/// Retrieves the root window by walking the chain of parent windows.
+	///
+	/// Returns the
+	/// [closest](https://groups.google.com/a/chromium.org/g/chromium-dev/c/Hirr_DkuZdw/m/N0pSoJBhAAAJ)
+	/// parent with [`WS::OVERLAPPED`](crate::co::WS::OVERLAPPED) or
+	/// [`WS::POPUP`](crate::co::WS::POPUP).
 	ROOT, 2
+	/// Retrieves the owned root window by walking the chain of parent and owner
+	/// windows returned by [`HWND::GetParent`](crate::HWND::GetParent).
+	///
+	/// Returns the
+	/// [furthest](https://groups.google.com/a/chromium.org/g/chromium-dev/c/Hirr_DkuZdw/m/N0pSoJBhAAAJ)
+	/// parent with [`WS::OVERLAPPED`](crate::co::WS::OVERLAPPED) or
+	/// [`WS::POPUP`](crate::co::WS::POPUP), which usually is the main
+	/// application window.
 	ROOTOWNER, 3
 }
 

@@ -1,11 +1,11 @@
-/// Implements the conversion from `PPComVT<>` to the COM type itself.
+/// Implements the conversion from `PPI` to the COM type itself.
 macro_rules! impl_send_sync_fromppvt {
 	($name:ty) => {
 		unsafe impl Send for $name {}
 		unsafe impl Sync for $name {}
 
-		impl From<PPComVT<IUnknownVT>> for $name {
-			fn from(ppvt: PPComVT<IUnknownVT>) -> Self {
+		impl From<PPI> for $name {
+			fn from(ppvt: PPI) -> Self {
 				Self { ppvt }
 			}
 		}

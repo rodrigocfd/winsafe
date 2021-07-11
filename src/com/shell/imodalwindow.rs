@@ -1,16 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HANDLE, HRESULT};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IModalWindow`](crate::shell::IModalWindow) virtual table.
 pub struct IModalWindowVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Show: fn(PP, HANDLE) -> HRESULT,
+	pub Show: fn(PPI, HANDLE) -> HRESULT,
 }
 
 /// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
@@ -21,7 +19,7 @@ pub struct IModalWindowVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IModalWindow {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IModalWindow);
@@ -38,7 +36,7 @@ macro_rules! impl_IModalWindow {
 
 		impl $name {
 			fn imodalwindow_vt(&self) -> &IModalWindowVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IModalWindow::Show`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-imodalwindow-show)

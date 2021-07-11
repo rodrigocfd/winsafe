@@ -1,20 +1,18 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HANDLE, HRESULT};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
 pub struct ITaskbarListVT {
 	pub IUnknownVT: IUnknownVT,
-	pub HrInit: fn(PP) -> HRESULT,
-	pub AddTab: fn(PP, HANDLE) -> HRESULT,
-	pub DeleteTab: fn(PP, HANDLE) -> HRESULT,
-	pub ActivateTab: fn(PP, HANDLE) -> HRESULT,
-	pub SetActiveAlt: fn(PP, HANDLE) -> HRESULT,
+	pub HrInit: fn(PPI) -> HRESULT,
+	pub AddTab: fn(PPI, HANDLE) -> HRESULT,
+	pub DeleteTab: fn(PPI, HANDLE) -> HRESULT,
+	pub ActivateTab: fn(PPI, HANDLE) -> HRESULT,
+	pub SetActiveAlt: fn(PPI, HANDLE) -> HRESULT,
 }
 
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
@@ -37,7 +35,7 @@ pub struct ITaskbarListVT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(ITaskbarList);
@@ -52,7 +50,7 @@ macro_rules! impl_ITaskbarList {
 
 		impl $name {
 			fn itaskbarlist_vt(&self) -> &ITaskbarListVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`ITaskbarList::ActivateTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)

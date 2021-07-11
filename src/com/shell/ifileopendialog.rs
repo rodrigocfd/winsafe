@@ -1,18 +1,15 @@
 #![allow(non_snake_case)]
 
-use crate::com::iunknown::IUnknownVT;
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::HRESULT;
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) virtual table.
 pub struct IFileOpenDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub GetResults: fn(PP, *mut PP) -> HRESULT,
-	pub GetSelectedItems: fn(PP, *mut PP) -> HRESULT,
+	pub GetResults: fn(PPI, *mut PPI) -> HRESULT,
+	pub GetSelectedItems: fn(PPI, *mut PPI) -> HRESULT,
 }
 
 /// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
@@ -37,7 +34,7 @@ pub struct IFileOpenDialogVT {
 /// ).unwrap();
 /// ```
 pub struct IFileOpenDialog  {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IFileOpenDialog);
@@ -52,13 +49,13 @@ macro_rules! impl_IFileOpenDialog {
 
 		impl $name {
 			fn ifileopendialog_vt(&self) -> &IFileOpenDialogVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 			/// method.
 			pub fn GetResults(&self) -> WinResult<IShellItemArray> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifileopendialog_vt().GetResults)(
 						self.ppvt,
@@ -70,7 +67,7 @@ macro_rules! impl_IFileOpenDialog {
 			/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 			/// method.
 			pub fn GetSelectedItems(&self) -> WinResult<IShellItemArray> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifileopendialog_vt().GetSelectedItems)(
 						self.ppvt,

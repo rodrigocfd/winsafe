@@ -1,20 +1,18 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IShellItem`](crate::shell::IShellItem) virtual table.
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(PP, PVOID, PCVOID, PCVOID, *mut PP) -> HRESULT,
-	pub GetParent: fn(PP, *mut PP) -> HRESULT,
-	pub GetDisplayName: fn(PP, u32, *mut PSTR) -> HRESULT,
-	pub GetAttributes: fn(PP, u32, *mut u32) -> HRESULT,
-	pub Compare: fn(PP, PVOID, u32, *mut i32) -> HRESULT,
+	pub BindToHandler: fn(PPI, PVOID, PCVOID, PCVOID, *mut PPI) -> HRESULT,
+	pub GetParent: fn(PPI, *mut PPI) -> HRESULT,
+	pub GetDisplayName: fn(PPI, u32, *mut PSTR) -> HRESULT,
+	pub GetAttributes: fn(PPI, u32, *mut u32) -> HRESULT,
+	pub Compare: fn(PPI, PVOID, u32, *mut i32) -> HRESULT,
 }
 
 #[link(name = "shell32")]
@@ -30,7 +28,7 @@ extern "system" {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IShellItem {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IShellItem);
@@ -47,7 +45,7 @@ macro_rules! impl_IShellItem {
 
 		impl $name {
 			fn ishellitem_vt(&self) -> &IShellItemVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// Calls
@@ -62,7 +60,7 @@ macro_rules! impl_IShellItem {
 			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt").unwrap();
 			/// ```
 			pub fn from_path(file_or_folder_path: &str) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					unsafe {
 						SHCreateItemFromParsingName(
@@ -136,7 +134,7 @@ macro_rules! impl_IShellItem {
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetParent(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitem_vt().GetParent)(
 						self.ppvt,

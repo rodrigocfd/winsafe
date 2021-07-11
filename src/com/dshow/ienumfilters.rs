@@ -1,19 +1,17 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::HRESULT;
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IEnumFilters`](crate::dshow::IEnumFilters) virtual table.
 pub struct IEnumFiltersVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(PP, u32, *mut PP, *mut u32) -> HRESULT,
-	pub Skip: fn(PP, u32) -> HRESULT,
-	pub Reset: fn(PP) -> HRESULT,
-	pub Clone: fn(PP, *mut PP) -> HRESULT,
+	pub Next: fn(PPI, u32, *mut PPI, *mut u32) -> HRESULT,
+	pub Skip: fn(PPI, u32) -> HRESULT,
+	pub Reset: fn(PPI) -> HRESULT,
+	pub Clone: fn(PPI, *mut PPI) -> HRESULT,
 }
 
 /// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
@@ -24,7 +22,7 @@ pub struct IEnumFiltersVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IEnumFilters {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IEnumFilters);
@@ -39,7 +37,7 @@ macro_rules! impl_IEnumFilters {
 
 		impl $name {
 			fn ienumfilters_vt(&self) -> &IEnumFiltersVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IEnumFilters::Reset`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-reset)

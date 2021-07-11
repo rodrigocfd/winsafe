@@ -1,28 +1,25 @@
 #![allow(non_snake_case)]
 
-use crate::com::iunknown::IUnknownVT;
 use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HANDLE, HRESULT, PCSTR, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 pub struct ITaskbarList3VT {
 	pub ITaskbarList2VT: ITaskbarList2VT,
-	pub SetProgressValue: fn(PP, HANDLE, u64, u64) -> HRESULT,
-	pub SetProgressState: fn(PP, HANDLE, u32) -> HRESULT,
-	pub RegisterTab: fn(PP, HANDLE, HANDLE) -> HRESULT,
-	pub UnregisterTab: fn(PP, HANDLE) -> HRESULT,
-	pub SetTabOrder: fn(PP, HANDLE, HANDLE) -> HRESULT,
-	pub SetTabActive: fn(PP, HANDLE, HANDLE, u32) -> HRESULT,
-	pub ThumbBarAddButtons: fn(PP, HANDLE, u32, PVOID) -> HRESULT,
-	pub ThumbBarUpdateButtons: fn(PP, HANDLE, u32, PVOID) -> HRESULT,
-	pub ThumbBarSetImageList: fn(PP, HANDLE, HANDLE) -> HRESULT,
-	pub SetOverlayIcon: fn(PP, HANDLE, HANDLE, PCSTR) -> HRESULT,
-	pub SetThumbnailTooltip: fn(PP, HANDLE, PCSTR) -> HRESULT,
-	pub SetThumbnailClip: fn(PP, HANDLE, PVOID) -> HRESULT,
+	pub SetProgressValue: fn(PPI, HANDLE, u64, u64) -> HRESULT,
+	pub SetProgressState: fn(PPI, HANDLE, u32) -> HRESULT,
+	pub RegisterTab: fn(PPI, HANDLE, HANDLE) -> HRESULT,
+	pub UnregisterTab: fn(PPI, HANDLE) -> HRESULT,
+	pub SetTabOrder: fn(PPI, HANDLE, HANDLE) -> HRESULT,
+	pub SetTabActive: fn(PPI, HANDLE, HANDLE, u32) -> HRESULT,
+	pub ThumbBarAddButtons: fn(PPI, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarUpdateButtons: fn(PPI, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarSetImageList: fn(PPI, HANDLE, HANDLE) -> HRESULT,
+	pub SetOverlayIcon: fn(PPI, HANDLE, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailTooltip: fn(PPI, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailClip: fn(PPI, HANDLE, PVOID) -> HRESULT,
 }
 
 /// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
@@ -47,7 +44,7 @@ pub struct ITaskbarList3VT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList3 {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(ITaskbarList3);
@@ -62,7 +59,7 @@ macro_rules! impl_ITaskbarList3 {
 
 		impl $name {
 			fn itaskbarlist3_vt(&self) -> &ITaskbarList3VT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)

@@ -1,28 +1,26 @@
 #![allow(non_snake_case)]
 
-use crate::com::iunknown::IUnknownVT;
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{BOOL, HANDLE, HRESULT};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IFileSaveDialog`](crate::shell::IFileSaveDialog) virtual table.
 pub struct IFileSaveDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub SetSaveAsItem: fn(PP, PP) -> HRESULT,
-	pub SetProperties: fn(PP, PP) -> HRESULT,
-	pub SetCollectedProperties: fn(PP, PP, BOOL) -> HRESULT,
-	pub GetProperties: fn(PP, *mut PP) -> HRESULT,
-	pub ApplyProperties: fn(PP, PP, PP, HANDLE, PP) -> HRESULT,
+	pub SetSaveAsItem: fn(PPI, PPI) -> HRESULT,
+	pub SetProperties: fn(PPI, PPI) -> HRESULT,
+	pub SetCollectedProperties: fn(PPI, PPI, BOOL) -> HRESULT,
+	pub GetProperties: fn(PPI, *mut PPI) -> HRESULT,
+	pub ApplyProperties: fn(PPI, PPI, PPI, HANDLE, PPI) -> HRESULT,
 }
 
 /// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
 /// COM interface over
 /// [`IFileSaveDialogVT`](crate::shell::vt::IFileSaveDialogVT). Inherits from
 /// [`IFileDialog`](crate::shell::IFileDialog),
-/// [`IModalWindow`](crate::shell::IModalWindow), [`IUnknown`](crate::IUnknown).
+/// [`IModalWindow`](crate::shell::IModalWindow),
+/// [`IUnknown`](crate::IUnknown).
 ///
 /// Automatically calls
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -40,7 +38,7 @@ pub struct IFileSaveDialogVT {
 /// ).unwrap();
 /// ```
 pub struct IFileSaveDialog  {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IFileSaveDialog);
@@ -53,7 +51,7 @@ macro_rules! impl_IFileSaveDialog {
 	($name:ty, $vt:ty) => {
 		impl $name {
 			fn ifilesavedialog_vt(&self) -> &IFileSaveDialogVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IFileSaveDialog::SetSaveAsItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)

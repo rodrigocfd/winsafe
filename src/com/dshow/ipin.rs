@@ -1,30 +1,28 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCVOID, PSTR, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IPin`](crate::dshow::IPin) virtual table.
 pub struct IPinVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Connect: fn(PP, PP, PP, PCVOID) -> HRESULT,
-	pub ReceiveConnection: fn(PP, PP, PCVOID) -> HRESULT,
-	pub Disconnect: fn(PP) -> HRESULT,
-	pub ConnectedTo: fn(PP, *mut PP) -> HRESULT,
-	pub ConnectionMediaType: fn(PP, PVOID) -> HRESULT,
-	pub QueryPinInfo: fn(PP, PVOID) -> HRESULT,
-	pub QueryDirection: fn(PP, PVOID) -> HRESULT,
-	pub QueryId: fn(PP, *mut PSTR) -> HRESULT,
-	pub QueryAccept: fn(PP, PCVOID) -> HRESULT,
-	pub EnumMediaTypes: fn(PP, *mut PP) -> HRESULT,
-	pub QueryInternalConnections: fn(PP, *mut PP, *mut u32) -> HRESULT,
-	pub EndOfStream: fn(PP) -> HRESULT,
-	pub BeginFlush: fn(PP) -> HRESULT,
-	pub EndFlush: fn(PP) -> HRESULT,
-	pub NewSegment: fn(PP, i64, i64, f64) -> HRESULT,
+	pub Connect: fn(PPI, PPI, PPI, PCVOID) -> HRESULT,
+	pub ReceiveConnection: fn(PPI, PPI, PCVOID) -> HRESULT,
+	pub Disconnect: fn(PPI) -> HRESULT,
+	pub ConnectedTo: fn(PPI, *mut PPI) -> HRESULT,
+	pub ConnectionMediaType: fn(PPI, PVOID) -> HRESULT,
+	pub QueryPinInfo: fn(PPI, PVOID) -> HRESULT,
+	pub QueryDirection: fn(PPI, PVOID) -> HRESULT,
+	pub QueryId: fn(PPI, *mut PSTR) -> HRESULT,
+	pub QueryAccept: fn(PPI, PCVOID) -> HRESULT,
+	pub EnumMediaTypes: fn(PPI, *mut PPI) -> HRESULT,
+	pub QueryInternalConnections: fn(PPI, *mut PPI, *mut u32) -> HRESULT,
+	pub EndOfStream: fn(PPI) -> HRESULT,
+	pub BeginFlush: fn(PPI) -> HRESULT,
+	pub EndFlush: fn(PPI) -> HRESULT,
+	pub NewSegment: fn(PPI, i64, i64, f64) -> HRESULT,
 }
 
 /// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
@@ -35,7 +33,7 @@ pub struct IPinVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IPin {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IPin);
@@ -51,7 +49,7 @@ macro_rules! impl_IPin {
 
 		impl $name {
 			fn ipin_vt(&self) -> &IPinVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IPin::BeginFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
@@ -63,7 +61,7 @@ macro_rules! impl_IPin {
 			/// [`IPin::ConnectedTo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
 			/// method.
 			pub fn ConnectedTo(&self) -> WinResult<IPin> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ipin_vt().ConnectedTo)(
 						self.ppvt,

@@ -1,16 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IMFGetService`](crate::dshow::IMFGetService) virtual table.
 pub struct IMFGetServiceVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetService: fn(PP, PCVOID, PCVOID, *mut PP) -> HRESULT,
+	pub GetService: fn(PPI, PCVOID, PCVOID, *mut PPI) -> HRESULT,
 }
 
 /// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
@@ -22,7 +20,7 @@ pub struct IMFGetServiceVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object g
 pub struct IMFGetService {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IMFGetService);
@@ -37,7 +35,7 @@ macro_rules! impl_IMFGetService {
 
 		impl $name {
 			fn imfgetservice_vt(&self) -> &IMFGetServiceVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IMFGetService::GetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
@@ -45,7 +43,7 @@ macro_rules! impl_IMFGetService {
 			pub fn GetService<T: ComInterface>(&self,
 				guidService: &GUID) -> WinResult<T>
 			{
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.imfgetservice_vt().GetService)(
 						self.ppvt,

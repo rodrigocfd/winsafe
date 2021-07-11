@@ -1,17 +1,14 @@
 #![allow(non_snake_case)]
 
-use crate::com::iunknown::IUnknownVT;
 use crate::com::shell::vt::ITaskbarListVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{BOOL, HANDLE, HRESULT};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
 pub struct ITaskbarList2VT {
 	pub ITaskbarListVT: ITaskbarListVT,
-	pub MarkFullscreenWindow: fn(PP, HANDLE, BOOL) -> HRESULT,
+	pub MarkFullscreenWindow: fn(PPI, HANDLE, BOOL) -> HRESULT,
 }
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
@@ -36,7 +33,7 @@ pub struct ITaskbarList2VT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList2 {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(ITaskbarList2);
@@ -49,7 +46,7 @@ macro_rules! impl_ITaskbarList2 {
 	($name:ty, $vt:ty) => {
 		impl $name {
 			fn itaskbarlist2_vt(&self) -> &ITaskbarList2VT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)

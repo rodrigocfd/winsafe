@@ -1,16 +1,14 @@
 #![allow(non_snake_case)]
 
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCVOID};
 use crate::structs::IID;
 
-type PP = PPComVT<IUnknownVT>;
-
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
 pub struct IUnknownVT {
-	pub QueryInterface: fn(PP, PCVOID, *mut PP) -> HRESULT,
-	pub AddRef: fn(PP) -> u32,
-	pub Release: fn(PP) -> u32,
+	pub QueryInterface: fn(PPI, PCVOID, *mut PPI) -> HRESULT,
+	pub AddRef: fn(PPI) -> u32,
+	pub Release: fn(PPI) -> u32,
 }
 
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
@@ -25,7 +23,7 @@ pub struct IUnknownVT {
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IUnknown {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IUnknown);
@@ -58,19 +56,19 @@ macro_rules! impl_IUnknown {
 		}
 
 		impl $name {
-			fn iunknown_vt(&self) -> &IUnknownVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+			fn iunknown_vt(&self) -> &crate::com::IUnknownVT {
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// Returns the raw pointer to pointer to the COM virtual table.
-			pub unsafe fn as_ptr(&self) -> PPComVT<$vt> {
+			pub unsafe fn as_ptr(&self) -> *mut *mut $vt {
 				self.ppvt as _
 			}
 
 			/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
 			/// method.
 			pub fn QueryInterface<T: ComInterface>(&self) -> WinResult<T> {
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.iunknown_vt().QueryInterface)(
 						self.ppvt,

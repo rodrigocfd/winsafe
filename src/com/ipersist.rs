@@ -1,16 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IPersist`](crate::IPersist) virtual table.
 pub struct IPersistVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetClassID: fn(PP, PVOID) -> HRESULT,
+	pub GetClassID: fn(PPI, PVOID) -> HRESULT,
 }
 
 /// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
@@ -21,7 +19,7 @@ pub struct IPersistVT {
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IPersist {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IPersist);
@@ -36,7 +34,7 @@ macro_rules! impl_IPersist {
 
 		impl $name {
 			fn ipersist_vt(&self) -> &IPersistVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)

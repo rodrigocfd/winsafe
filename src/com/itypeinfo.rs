@@ -1,34 +1,32 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HRESULT, PCVOID, PSTR, PVOID};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`ITypeInfo`](crate::ITypeInfo) virtual table.
 pub struct ITypeInfoVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetTypeAttr: fn(PP, *mut PVOID) -> HRESULT,
-	pub GetTypeComp: fn(PP, *mut PP) -> HRESULT,
-	pub GetFuncDesc: fn(PP, u32, *mut PVOID) -> HRESULT,
-	pub GetVarDesc: fn(PP, u32, *mut PVOID) -> HRESULT,
-	pub GetNames: fn(PP, i32, *mut PSTR, u32, *mut u32) -> HRESULT,
-	pub GetRefTypeOfImplType: fn(PP, u32, *mut u32) -> HRESULT,
-	pub GetImplTypeFlags: fn(PP, u32, *mut i32) -> HRESULT,
-	pub GetIDsOfNames: fn(PP, *mut PSTR, u32, *mut i32) -> HRESULT,
-	pub Invoke: fn(PP, PVOID, i32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRESULT,
-	pub GetDocumentation: fn(PP, i32, *mut PSTR, *mut PSTR, *mut u32, PSTR) -> HRESULT,
-	pub GetDllEntry: fn(PP, i32, u32, *mut PSTR, *mut PSTR, *mut u16) -> HRESULT,
-	pub GetRefTypeInfo: fn(PP, u32, *mut PP) -> HRESULT,
-	pub AddressOfMember: fn(PP, i32, u32, *mut PVOID) -> HRESULT,
-	pub CreateInstance: fn(PP, *mut PP, PCVOID, *mut PVOID) -> HRESULT,
-	pub GetMops: fn(PP, i32, *mut PSTR) -> HRESULT,
-	pub GetContainingTypeLib: fn(PP, *mut PP, *mut u32) -> HRESULT,
-	pub ReleaseTypeAttr: fn(PP, PVOID) -> HRESULT,
-	pub ReleaseFuncDesc: fn(PP, PVOID) -> HRESULT,
-	pub ReleaseVarDesc: fn(PP, PVOID) -> HRESULT,
+	pub GetTypeAttr: fn(PPI, *mut PVOID) -> HRESULT,
+	pub GetTypeComp: fn(PPI, *mut PPI) -> HRESULT,
+	pub GetFuncDesc: fn(PPI, u32, *mut PVOID) -> HRESULT,
+	pub GetVarDesc: fn(PPI, u32, *mut PVOID) -> HRESULT,
+	pub GetNames: fn(PPI, i32, *mut PSTR, u32, *mut u32) -> HRESULT,
+	pub GetRefTypeOfImplType: fn(PPI, u32, *mut u32) -> HRESULT,
+	pub GetImplTypeFlags: fn(PPI, u32, *mut i32) -> HRESULT,
+	pub GetIDsOfNames: fn(PPI, *mut PSTR, u32, *mut i32) -> HRESULT,
+	pub Invoke: fn(PPI, PVOID, i32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRESULT,
+	pub GetDocumentation: fn(PPI, i32, *mut PSTR, *mut PSTR, *mut u32, PSTR) -> HRESULT,
+	pub GetDllEntry: fn(PPI, i32, u32, *mut PSTR, *mut PSTR, *mut u16) -> HRESULT,
+	pub GetRefTypeInfo: fn(PPI, u32, *mut PPI) -> HRESULT,
+	pub AddressOfMember: fn(PPI, i32, u32, *mut PVOID) -> HRESULT,
+	pub CreateInstance: fn(PPI, *mut PPI, PCVOID, *mut PVOID) -> HRESULT,
+	pub GetMops: fn(PPI, i32, *mut PSTR) -> HRESULT,
+	pub GetContainingTypeLib: fn(PPI, *mut PPI, *mut u32) -> HRESULT,
+	pub ReleaseTypeAttr: fn(PPI, PVOID) -> HRESULT,
+	pub ReleaseFuncDesc: fn(PPI, PVOID) -> HRESULT,
+	pub ReleaseVarDesc: fn(PPI, PVOID) -> HRESULT,
 }
 
 /// [`ITypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
@@ -39,7 +37,7 @@ pub struct ITypeInfoVT {
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct ITypeInfo {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(ITypeInfo);
@@ -54,7 +52,7 @@ macro_rules! impl_ITypeInfo {
 
 		impl $name {
 			fn itypeinfo_vt(&self) -> &ITypeInfoVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`ITypeInfo::CreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
@@ -62,8 +60,8 @@ macro_rules! impl_ITypeInfo {
 			pub fn CreateInstance<T: ComInterface>(&self,
 				pUnkOuter: Option<&mut IUnknown>) -> WinResult<T>
 			{
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
-				let mut ppvOuter: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvOuter: PPI = std::ptr::null_mut();
 
 				hr_to_winresult(
 					(self.itypeinfo_vt().CreateInstance)(

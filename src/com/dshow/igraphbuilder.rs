@@ -1,23 +1,20 @@
 #![allow(non_snake_case)]
 
 use crate::com::dshow::vt::IFilterGraphVT;
-use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HANDLE, HRESULT, PCSTR};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`IGraphBuilder`](crate::dshow::IGraphBuilder) virtual table.
 pub struct IGraphBuilderVT {
 	pub IFilterGraphVT: IFilterGraphVT,
-	pub Connect: fn(PP, PP, PP) -> HRESULT,
-	pub Render: fn(PP, PP) -> HRESULT,
-	pub RenderFile: fn(PP, PCSTR, PCSTR) -> HRESULT,
-	pub AddSourceFilter: fn(PP, PCSTR, PCSTR, *mut PP) -> HRESULT,
-	pub SetLogFile: fn(PP, HANDLE) -> HRESULT,
-	pub Abort: fn(PP) -> HRESULT,
-	pub ShouldOperationContinue: fn(PP) -> HRESULT,
+	pub Connect: fn(PPI, PPI, PPI) -> HRESULT,
+	pub Render: fn(PPI, PPI) -> HRESULT,
+	pub RenderFile: fn(PPI, PCSTR, PCSTR) -> HRESULT,
+	pub AddSourceFilter: fn(PPI, PCSTR, PCSTR, *mut PPI) -> HRESULT,
+	pub SetLogFile: fn(PPI, HANDLE) -> HRESULT,
+	pub Abort: fn(PPI) -> HRESULT,
+	pub ShouldOperationContinue: fn(PPI) -> HRESULT,
 }
 
 /// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
@@ -42,7 +39,7 @@ pub struct IGraphBuilderVT {
 /// ).unwrap();
 /// ```
 pub struct IGraphBuilder {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(IGraphBuilder);
@@ -59,7 +56,7 @@ macro_rules! impl_IGraphBuilder {
 
 		impl $name {
 			fn igraphbuilder_vt(&self) -> &IGraphBuilderVT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`IGraphBuilder::Abort`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
@@ -73,7 +70,7 @@ macro_rules! impl_IGraphBuilder {
 			pub fn AddSourceFilter(&self,
 				fileName: &str, filterName: &str) -> WinResult<IBaseFilter>
 			{
-				let mut ppvQueried: PPComVT<IUnknownVT> = std::ptr::null_mut();
+				let mut ppvQueried: PPI = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.igraphbuilder_vt().AddSourceFilter)(
 						self.ppvt,

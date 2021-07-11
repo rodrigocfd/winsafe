@@ -1,17 +1,14 @@
 #![allow(non_snake_case)]
 
-use crate::com::iunknown::IUnknownVT;
 use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT, ITaskbarList3VT};
-use crate::com::traits::{ComInterface, PPComVT};
+use crate::com::traits::{ComInterface, PPI};
 use crate::ffi::{HANDLE, HRESULT};
 use crate::structs::IID;
-
-type PP = PPComVT<IUnknownVT>;
 
 /// [`ITaskbarList4`](crate::shell::ITaskbarList4) virtual table.
 pub struct ITaskbarList4VT {
 	pub ITaskbarList3VT: ITaskbarList3VT,
-	pub SetTabProperties: fn(PP, HANDLE, u32) -> HRESULT,
+	pub SetTabProperties: fn(PPI, HANDLE, u32) -> HRESULT,
 }
 
 /// [`ITaskbarList4`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist4)
@@ -38,7 +35,7 @@ pub struct ITaskbarList4VT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList4 {
-	pub(crate) ppvt: PPComVT<IUnknownVT>,
+	pub(crate) ppvt: PPI,
 }
 
 impl_send_sync_fromppvt!(ITaskbarList4);
@@ -51,7 +48,7 @@ macro_rules! impl_ITaskbarList4 {
 	($name:ty, $vt:ty) => {
 		impl $name {
 			fn itaskbarlist4_vt(&self) -> &ITaskbarList4VT {
-				unsafe { &**(self.ppvt as PPComVT<_>) }
+				unsafe { &**(self.ppvt as *mut *mut _) }
 			}
 
 			/// [`ITaskbarList4::SetTabProperties`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
