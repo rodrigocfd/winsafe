@@ -87,6 +87,14 @@ impl HBRUSH {
 		}
 	}
 
+	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
+	/// static method.
+	pub fn GetStockObject(i: co::STOCK_BRUSH) -> WinResult<HBRUSH> {
+		unsafe { gdi32::GetStockObject(i.0).as_mut() }
+			.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
 	/// [`GetSysColorBrush`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
 	pub fn GetSysColorBrush(nIndex: co::COLOR) -> WinResult<HBRUSH> {

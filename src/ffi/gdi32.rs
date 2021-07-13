@@ -27,8 +27,11 @@ extern "system" {
 	pub fn EndPath(_: HANDLE) -> BOOL;
 	pub fn FillPath(_: HANDLE) -> BOOL;
 	pub fn FillRect(_: HANDLE, _: PCVOID, _: HANDLE) -> i32;
+	pub fn GetDCBrushColor(_: HANDLE) -> u32;
+	pub fn GetDCPenColor(_: HANDLE) -> u32;
 	pub fn GetDeviceCaps(_: HANDLE, _: i32) -> i32;
 	pub fn GetObjectW(_: HANDLE, _: i32, _: PVOID) -> i32;
+	pub fn GetStockObject(_: i32) -> HANDLE;
 	pub fn GetSysColorBrush(_: i32) -> HANDLE;
 	pub fn GetTextColor(_: HANDLE) -> u32;
 	pub fn GetTextExtentPoint32W(_: HANDLE, _: PCSTR, _: i32, _: PVOID) -> BOOL;
@@ -54,6 +57,7 @@ extern "system" {
 	pub fn SelectObject(_: HANDLE, _: HANDLE) -> HANDLE;
 	pub fn SetArcDirection(_: HANDLE, _: i32) -> i32;
 	pub fn SetBkMode(_: HANDLE, _: i32) -> i32;
+	pub fn SetDCBrushColor(_: HANDLE, _: u32) -> u32;
 	pub fn SetDCPenColor(_: HANDLE, _: u32) -> u32;
 	pub fn SetGraphicsMode(_: HANDLE, _: i32) -> i32;
 	pub fn SetTextAlign(_: HANDLE, _: u32) -> u32;

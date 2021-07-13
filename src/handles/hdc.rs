@@ -119,6 +119,24 @@ impl HDC {
 		}
 	}
 
+	/// [`GetDCBrushColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcbrushcolor)
+	/// method.
+	pub fn GetDCBrushColor(self) -> WinResult<COLORREF> {
+		match unsafe { gdi32::GetDCBrushColor(self.ptr) } {
+			CLR_INVALID => Err(GetLastError()),
+			color => Ok(COLORREF(color)),
+		}
+	}
+
+	/// [`GetDCPenColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcpencolor)
+	/// method.
+	pub fn GetDCPenColor(self) -> WinResult<COLORREF> {
+		match unsafe { gdi32::GetDCPenColor(self.ptr) } {
+			CLR_INVALID => Err(GetLastError()),
+			color => Ok(COLORREF(color)),
+		}
+	}
+
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
 	/// method.
 	pub fn GetDeviceCaps(self, index: co::GDC) -> i32 {
@@ -372,6 +390,14 @@ impl HDC {
 		match unsafe { gdi32::SetBkMode(self.ptr, mode.0) } {
 			0 => Err(GetLastError()),
 			v => Ok(co::BKMODE(v)),
+		}
+	}
+
+	/// [`SetDCBrushColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcbrushcolor)
+	pub fn SetDCBrushColor(self, color: COLORREF) -> WinResult<COLORREF> {
+		match unsafe { gdi32::SetDCBrushColor(self.ptr, color.0) } {
+			CLR_INVALID => Err(GetLastError()),
+			old => Ok(COLORREF(old)),
 		}
 	}
 

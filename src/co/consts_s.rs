@@ -665,6 +665,40 @@ pub_struct_const_cmd! { STN,
 	DISABLE, 3
 }
 
+pub_struct_const! { STOCK_BRUSH, i32,
+	/// [`HBRUSH::GetStockBrush`](crate::HBRUSH::GetStockBrush) `i` (`i32`).
+	=>
+	BLACK, 4
+	DKGRAY, 3
+	DC, 18
+	GRAY, 2
+	HOLLOW, Self::NULL.0
+	LTGRAY, 1
+	NULL, 5
+	WHITE, 0
+}
+
+pub_struct_const! { STOCK_PEN, i32,
+	/// [`HPEN::GetStockBrush`](crate::HPEN::GetStockBrush) `i` (`i32`).
+	=>
+	BLACK, 7
+	DC, 19
+	NULL, 8
+	WHITE, 6
+}
+
+pub_struct_const! { STOCK_FONT, i32,
+	/// [`HFONT::GetStockBrush`](crate::HFONT::GetStockBrush) `i` (`i32`).
+	=>
+	ANSI_FIXED, 11
+	ANSI_VAR, 12
+	DEVICE_DEFAULT, 14
+	DEFAULT_GUI, 17
+	OEM_FIXED, 10
+	SYSTEM, 13
+	SYSTEM_FIXED, 16
+}
+
 pub_struct_const! { SUBLANG, u16,
 	/// Sublanguage
 	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
