@@ -718,7 +718,7 @@ impl_default_with_size!(SCROLLINFO, cbSize);
 pub struct SECURITY_ATTRIBUTES<'a> {
 	nLength: u32,
 	lpSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
-	pub bInheritHandle: i32,
+	bInheritHandle: i32,
 
 	lpSecurityDescriptor_: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
 }
@@ -727,6 +727,7 @@ impl_default_with_size!(SECURITY_ATTRIBUTES, nLength, 'a);
 
 impl<'a> SECURITY_ATTRIBUTES<'a> {
 	pub_fn_ptr_get_set!('a, lpSecurityDescriptor, set_lpSecurityDescriptor, SECURITY_DESCRIPTOR);
+	pub_fn_bool_get_set!(bInheritHandle, set_bInheritHandle);
 }
 
 /// [`SECURITY_DESCRIPTOR`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)

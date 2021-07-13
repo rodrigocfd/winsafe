@@ -24,7 +24,7 @@ impl HPROCESS {
 	/// [`CreateProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
 	/// static method.
 	///
-	/// Process and thread handles are returned in the
+	/// **Note:** Process and thread handles are returned in the
 	/// [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION) struct, and they
 	/// must be paired with their respective
 	/// [`HPROCESS::CloseHandle`](crate::HPROCESS::CloseHandle) and
@@ -36,7 +36,7 @@ impl HPROCESS {
 		lpThreadAttributes: Option<&mut SECURITY_ATTRIBUTES>,
 		nInheritHandles: bool,
 		dwCreationFlags: co::CREATE,
-		lpEnvironment: *mut u8,
+		lpEnvironment: Option<Vec<String>>,
 		lpCurrentDirectory: Option<&str>,
 		lpStartupInfo: &mut STARTUPINFO) -> WinResult<PROCESS_INFORMATION>
 	{
@@ -51,7 +51,8 @@ impl HPROCESS {
 					lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					nInheritHandles as _,
 					dwCreationFlags.0,
-					lpEnvironment as _,
+					lpEnvironment.as_ref()
+						.map_or(std::ptr::null_mut(), |lp| WString::from_str_vec(lp).as_ptr() as _),
 					WString::from_opt_str(lpCurrentDirectory).as_ptr(),
 					lpStartupInfo as *mut _ as _,
 					&mut lpProcessInformation as *mut _ as _,

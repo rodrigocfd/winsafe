@@ -1,5 +1,12 @@
 //! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
 //! COM interfaces, structs and constants.
+//!
+//! To enable the Shell COM module, use:
+//!
+//! ```toml
+//! [dependencies]
+//! winsafe = { version = "0.0.4", features = ["shell"] }
+//! ```
 
 pub mod co;
 pub mod clsid;

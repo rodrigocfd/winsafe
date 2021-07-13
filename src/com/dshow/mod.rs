@@ -1,5 +1,12 @@
 //! [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow)
 //! COM interfaces, structs and constants.
+//!
+//! To enable the DirectShow COM module, use:
+//!
+//! ```toml
+//! [dependencies]
+//! winsafe = { version = "0.0.4", features = ["dshow"] }
+//! ```
 
 pub mod co;
 pub mod clsid;
