@@ -21,19 +21,24 @@ use crate::various::{MappedFile, MappedFileAccess, WString};
 /// }
 /// ```
 pub struct Ini {
+	/// All the sections of the file.
 	pub sections: Vec<IniSection>,
 }
 
 /// A single section of an [`Ini`](crate::Ini).
 pub struct IniSection {
+	/// The name of this section.
 	pub name: String,
+	/// All key/value pairs of this section.
 	pub entries: Vec<IniEntry>,
 }
 
 /// A single key/value pair of an [`IniSection`](crate::IniSection) of an
 /// [`Ini`](crate::Ini).
 pub struct IniEntry {
+	/// Key of this entry.
 	pub key: String,
+	/// Value of this entry.
 	pub val: String,
 }
 
@@ -134,5 +139,25 @@ impl Ini {
 		fout.WriteFile(&self.serialize_to_bytes(), None)?;
 		fout.CloseHandle()?;
 		Ok(())
+	}
+
+	/// Returns a reference to the specified value, if any.
+	pub fn value(&self, section: &str, key: &str) -> Option<&str> {
+		self.sections.iter()
+			.find(|s| s.name == section)
+			.map(|s| s.entries.iter()
+				.find(|e| e.key == key)
+				.map(|e| e.val.as_ref())
+			).flatten()
+	}
+
+	/// Returns a mutable reference to the specified value, if any.
+	pub fn value_mut(&mut self, section: &str, key: &str) -> Option<&mut str> {
+		self.sections.iter_mut()
+			.find(|s| s.name == section)
+			.map(|s| s.entries.iter_mut()
+				.find(|e| e.key == key)
+				.map(|e| e.val.as_mut())
+			).flatten()
 	}
 }
