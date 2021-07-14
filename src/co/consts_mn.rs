@@ -1,3 +1,5 @@
+#![allow(non_upper_case_globals)]
+
 use crate::co::CCM;
 
 pub_struct_const! { MB, u32,
@@ -136,7 +138,8 @@ pub_struct_const! { MBC, u32,
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `dwFlags` (`u32`).
 	/// Originally has `MB` prefix.
 	=>
-	NONE, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	COMPOSITE, 0x0000_0002
 	ERR_INVALID_CHARS, 0x0000_0008
 	PRECOMPOSED, 0x0000_0001
@@ -222,7 +225,8 @@ pub_struct_const_ws! { MCS,
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
 	=>
-	NONE, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	DAYSTATE, 0x0001
 	MULTISELECT, 0x0002
 	WEEKNUMBERS, 0x0004

@@ -1,3 +1,5 @@
+#![allow(non_upper_case_globals)]
+
 use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS};
 
 pub_struct_const_wm! { EM,
@@ -212,7 +214,8 @@ pub_struct_const! { FILE_RIGHT, u32,
 pub_struct_const! { FILE_SHARE, u32,
 	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `dwShareMode` (`u32`).
 	=>
-	NONE, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	READ, 0x0000_0001
 	WRITE, 0x0000_0002
 	DELETE, 0x0000_0004

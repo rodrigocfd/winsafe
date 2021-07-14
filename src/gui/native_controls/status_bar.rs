@@ -105,7 +105,7 @@ impl StatusBar {
 					if is_parent_resizable {
 						co::SBARS::SIZEGRIP
 					} else {
-						co::SBARS::NONE
+						co::SBARS::NoValue
 					}.into(),
 			)?;
 

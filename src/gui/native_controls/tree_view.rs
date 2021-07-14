@@ -97,7 +97,7 @@ impl TreeView {
 						opts.window_style | opts.tree_view_style.into(),
 					)?;
 
-					if opts.tree_view_ex_style != co::TVS_EX::NONE {
+					if opts.tree_view_ex_style != co::TVS_EX::NoValue {
 						self.toggle_extended_style(true, opts.tree_view_ex_style)?;
 					}
 					Ok(())
@@ -122,7 +122,7 @@ impl TreeView {
 	{
 		self.hwnd().SendMessage(tvm::SetExtendedStyle {
 			mask: ex_style,
-			style: if set { ex_style } else { co::TVS_EX::NONE },
+			style: if set { ex_style } else { co::TVS_EX::NoValue },
 		})
 	}
 }
@@ -154,7 +154,7 @@ pub struct TreeViewOpts {
 	/// Extended tree view styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `TVS_EX::NONE`.
+	/// Defaults to `TVS_EX::NoValue`.
 	pub tree_view_ex_style: co::TVS_EX,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -179,7 +179,7 @@ impl Default for TreeViewOpts {
 			position: POINT::new(0, 0),
 			size: SIZE::new(50, 50),
 			tree_view_style: co::TVS::HASLINES | co::TVS::LINESATROOT | co::TVS::SHOWSELALWAYS | co::TVS::HASBUTTONS,
-			tree_view_ex_style: co::TVS_EX::NONE,
+			tree_view_ex_style: co::TVS_EX::NoValue,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,

@@ -1,3 +1,5 @@
+#![allow(non_upper_case_globals)]
+
 use crate::co::{ACCESS_RIGHTS, CCM, WM};
 
 pub_struct_const_wm! { SB,
@@ -30,7 +32,8 @@ pub_struct_const_ws! { SBARS,
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
 	=>
-	NONE, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	SIZEGRIP, 0x0100
 	TOOLTIPS, 0x0800
 }
@@ -61,7 +64,7 @@ pub_struct_const! { SBT, u16,
 	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
 	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
 	=>
-	NONE, 0
+	BORDER, 0
 	OWNERDRAW, 0x1000
 	NOBORDERS, 0x0100
 	POPOUT, 0x0200
@@ -517,7 +520,8 @@ pub_struct_const! { SPI, u32,
 pub_struct_const! { SPIF, u32,
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `fWinIni` (`u32`).
 	=>
-	ZERO, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	UPDATEINIFILE, 0x0001
 	SENDWININICHANGE, 0x0002
 	SENDCHANGE, Self::SENDWININICHANGE.0

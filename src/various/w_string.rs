@@ -391,8 +391,8 @@ impl WString {
 		Ok(Self {
 			vec_u16: Some(match encoding {
 				Encoding::Ansi => Self::parse_ansi_str(data),
-				Encoding::Win1252 => MultiByteToWideChar(co::CP::WINDOWS_1252, co::MBC::NONE, data)?,
-				Encoding::Utf8 => MultiByteToWideChar(co::CP::UTF8, co::MBC::NONE, data)?,
+				Encoding::Win1252 => MultiByteToWideChar(co::CP::WINDOWS_1252, co::MBC::NoValue, data)?,
+				Encoding::Utf8 => MultiByteToWideChar(co::CP::UTF8, co::MBC::NoValue, data)?,
 				Encoding::Utf16be => Self::parse_utf16_str(data, true),
 				Encoding::Utf16le => Self::parse_utf16_str(data, false),
 				Encoding::Utf32be

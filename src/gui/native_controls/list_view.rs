@@ -119,7 +119,7 @@ impl ListView {
 						opts.window_style | opts.list_view_style.into(),
 					)?;
 
-					if opts.list_view_ex_style != co::LVS_EX::NONE {
+					if opts.list_view_ex_style != co::LVS_EX::NoValue {
 						self.toggle_extended_style(true, opts.list_view_ex_style);
 					}
 
@@ -217,7 +217,7 @@ impl ListView {
 	pub fn toggle_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
 		self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
 			mask: ex_style,
-			style: if set { ex_style } else { co::LVS_EX::NONE },
+			style: if set { ex_style } else { co::LVS_EX::NoValue },
 		});
 	}
 
@@ -299,7 +299,7 @@ pub struct ListViewOpts {
 	/// Extended list view styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `LVS_EX::NONE`.
+	/// Defaults to `LVS_EX::NoValue`.
 	pub list_view_ex_style: co::LVS_EX,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -338,7 +338,7 @@ impl Default for ListViewOpts {
 			position: POINT::new(0, 0),
 			size: SIZE::new(50, 50),
 			list_view_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS | co::LVS::SHAREIMAGELISTS,
-			list_view_ex_style: co::LVS_EX::NONE,
+			list_view_ex_style: co::LVS_EX::NoValue,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,

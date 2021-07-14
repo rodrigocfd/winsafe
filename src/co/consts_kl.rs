@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_upper_case_globals, non_snake_case)]
 
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, WM, WS};
 
@@ -452,7 +452,8 @@ pub_struct_const! { LVIS, u32,
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
 	/// (`u32`).
 	=>
-	NONE, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	FOCUSED, 0x0001
 	SELECTED, 0x0002
 	CUT, 0x0004
@@ -713,7 +714,8 @@ pub_struct_const_wsex! { LVS_EX,
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
 	/// (`u32`), convertible to [`WS_EX`](crate::co::WS_EX).
 	=>
-	NONE, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	AUTOAUTOARRANGE, 0x0100_0000
 	AUTOCHECKSELECT, 0x0800_0000
 	AUTOSIZECOLUMNS, 0x1000_0000

@@ -133,7 +133,7 @@ impl Ini {
 	/// Serializes the data directly to a file.
 	pub fn serialize_to_file(&self, ini_path: &str) -> WinResult<()> {
 		let (fout, _) = HFILE::CreateFile(ini_path, co::GENERIC::WRITE,
-			co::FILE_SHARE::NONE, None, co::DISPOSITION::CREATE_ALWAYS,
+			co::FILE_SHARE::NoValue, None, co::DISPOSITION::CREATE_ALWAYS,
 			co::FILE_ATTRIBUTE::NORMAL, None)?;
 
 		fout.WriteFile(&self.serialize_to_bytes(), None)?;

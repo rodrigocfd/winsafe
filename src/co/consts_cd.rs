@@ -481,7 +481,8 @@ pub_struct_const! { CREATE, u32,
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
 	=>
-	NONE, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	BREAKAWAY_FROM_JOB, 0x0100_0000
 	DEFAULT_ERROR_MODE, 0x0400_0000
 	NEW_CONSOLE, 0x0000_0010

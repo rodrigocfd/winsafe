@@ -38,7 +38,7 @@ impl MappedFile {
 			},
 			match access {
 				MappedFileAccess::Read => co::FILE_SHARE::READ,
-				MappedFileAccess::ReadWrite => co::FILE_SHARE::NONE,
+				MappedFileAccess::ReadWrite => co::FILE_SHARE::NoValue,
 			},
 			None,
 			match access {

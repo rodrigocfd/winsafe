@@ -1,3 +1,5 @@
+#![allow(non_upper_case_globals)]
+
 pub_struct_const! { WA, u16,
 	/// [`WM_ACTIVATE`](crate::msg::wm::Activate)
 	/// activation state (`u16`).
@@ -672,7 +674,8 @@ pub_struct_const! { WVR, u32,
 	/// [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize)
 	/// return flags (`u32`).
 	=>
-	ZERO, 0
+	/// None of the actual values (zero).
+	NoValue, 0
 	ALIGNTOP, 0x0010
 	ALIGNLEFT, 0x0020
 	ALIGNBOTTOM, 0x0040

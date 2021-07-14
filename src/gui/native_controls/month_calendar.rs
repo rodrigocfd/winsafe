@@ -137,7 +137,7 @@ pub struct MonthCalendarOpts {
 	/// Month calendar styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `MCS::NONE`.
+	/// Defaults to `MCS::NoValue`.
 	pub month_calendar_style: co::MCS,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -161,7 +161,7 @@ impl Default for MonthCalendarOpts {
 		Self {
 			position: POINT::new(0, 0),
 			ctrl_id: 0,
-			month_calendar_style: co::MCS::NONE,
+			month_calendar_style: co::MCS::NoValue,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT,
 		}

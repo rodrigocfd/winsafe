@@ -18,7 +18,7 @@ pub fn create_ui_font() -> WinResult<()> {
 		SystemParametersInfo(
 			co::SPI::GETNONCLIENTMETRICS,
 			std::mem::size_of::<NONCLIENTMETRICS>() as _,
-			&mut ncm, co::SPIF::ZERO,
+			&mut ncm, co::SPIF::NoValue,
 		)?;
 		UI_HFONT = Some(HFONT::CreateFontIndirect(&ncm.lfMenuFont)?);
 	}
