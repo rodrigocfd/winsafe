@@ -8,7 +8,7 @@ use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
-use crate::msg::wm;
+use crate::msg::{em, wm};
 use crate::structs::{POINT, SIZE};
 use crate::various::WString;
 
@@ -101,6 +101,34 @@ impl Edit {
 	}
 
 	pub_fn_ctrlid_hwnd_on_onsubclass!(EditEvents);
+
+	/// Sets the selection range of the text by sending an
+	/// [`EM_SETSEL`](crate::msg::em::SetSel) message.
+	///
+	/// # Examples
+	///
+	/// Selecting all text in the control:
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	///
+	/// my_edit.set_selection(Some(0), None);
+	/// ```
+	///
+	/// Clearing the selection:
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	///
+	/// my_edit.set_selection(None, None);
+	/// ```
+	pub fn set_selection(&self, start: Option<u32>, end: Option<u32>) {
+		self.hwnd().SendMessage(em::SetSel { start, end });
+	}
 
 	/// Sets the text in the control by calling
 	/// [`SetWindowText`](crate::HWND::SetWindowText).

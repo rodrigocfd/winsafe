@@ -7,6 +7,7 @@ use crate::co;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
 use crate::structs::RECT;
+use crate::various::WString;
 
 /// [`EN_CANUNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-canundo)
 /// message, which has no parameters.
@@ -141,6 +142,80 @@ impl MsgSend for GetThumb {
 			msg_id: co::EM::GETTHUMB.into(),
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_REPLACESEL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-replacesel)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct ReplaceSel<'a> {
+	pub can_be_undone: bool,
+	pub replacement_text: &'a str,
+}
+
+impl<'a> MsgSend for ReplaceSel<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::REPLACESEL.into(),
+			wparam: self.can_be_undone as _,
+			lparam: unsafe { WString::from_str(self.replacement_text).as_ptr() } as _,
+		}
+	}
+}
+
+/// [`EM_SETLIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setlimittext)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetLimitText {
+	pub max_chars: u32,
+}
+
+impl MsgSend for SetLimitText {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETLIMITTEXT.into(),
+			wparam: self.max_chars as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_SETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setsel)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetSel {
+	pub start: Option<u32>,
+	pub end: Option<u32>,
+}
+
+impl MsgSend for SetSel {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETSEL.into(),
+			wparam: self.start.map(|n| n as i32).unwrap_or(-1) as _,
+			lparam: self.end.map(|n| n as i32).unwrap_or(-1) as _,
 		}
 	}
 }
