@@ -233,6 +233,20 @@ impl From<CDRF> for isize {
 	}
 }
 
+pub_struct_const! { CDS, u32,
+	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `dwFlags`
+	/// (`u32`).
+	=>
+	DYNAMICALLY, 0
+	FULLSCREEN, 0x0000_0004
+	GLOBAL, 0x0000_0008
+	NORESET, 0x1000_0000
+	RESET, 0x40000_000
+	SET_PRIMARY, 0x0000_0010
+	TEST, 0x0000_0002
+	UPDATEREGISTRY, 0x0000_0001
+}
+
 pub_struct_const! { CF, u32,
 	/// Standard clipboard
 	/// [formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
@@ -525,152 +539,4 @@ pub_struct_const! { CS, u32,
 	GLOBALCLASS, 0x4000
 	IME, 0x00010000
 	DROPSHADOW, 0x00020000
-}
-
-pub_struct_const! { DDL, u16,
-	/// [`CB_DIR`](crate::msg::cb::Dir) and [`LB_DIR`](crate::msg::lb::Dir)
-	/// attributes (`u16`).
-	=>
-	READWRITE, 0x0000
-	READONLY, 0x0001
-	HIDDEN, 0x0002
-	SYSTEM, 0x0004
-	DIRECTORY, 0x0010
-	ARCHIVE, 0x0020
-	POSTMSGS, 0x2000
-	DRIVES, 0x4000
-	EXCLUSIVE, 0x8000
-}
-
-pub_struct_const! { DIB, u32,
-	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
-	=>
-	/// The color table consists of an array of 16-bit indexes into the
-	/// currently realized logical palette.
-	RGB_COLORS, 0
-	/// The color table contains literal RGB values.
-	PAL_COLORS, 1
-}
-
-pub_struct_const! { DISPOSITION, u32,
-	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `dwCreationDisposition`
-	/// (`u32`). Originally has no prefix.
-	=>
-	/// Creates a new file, only if it does not already exist.
-	///
-	/// If the specified file exists, the function fails and the last-error code
-	/// is set to [`ERROR::FILE_EXISTS`](crate::co::ERROR::FILE_EXISTS).
-	///
-	/// If the specified file does not exist and is a valid path to a writable
-	/// location, a new file is created.
-	CREATE_NEW, 1
-	/// Creates a new file, always.
-	///
-	/// If the specified file exists and is writable, the function overwrites
-	/// the file, the function succeeds, and last-error code is set to
-	/// [`ERROR::ALREADY_EXISTS`](crate::co::ERROR::ALREADY_EXISTS).
-	///
-	/// If the specified file does not exist and is a valid path, a new file is
-	/// created, the function succeeds, and the last-error code is set to
-	/// [`ERROR::SUCCESS`](crate::co::ERROR::SUCCESS).
-	CREATE_ALWAYS, 2
-	/// Opens a file or device, only if it exists.
-	///
-	/// If the specified file or device does not exist, the function fails and
-	/// the last-error code is set to
-	/// [`ERROR::FILE_NOT_FOUND`](crate::co::ERROR::FILE_NOT_FOUND).
-	OPEN_EXISTING, 3
-	/// Opens a file, always.
-	///
-	/// If the specified file exists, the function succeeds and the last-error
-	/// code is set to
-	/// [`ERROR::ALREADY_EXISTS`](crate::co::ERROR::ALREADY_EXISTS).
-	///
-	/// If the specified file does not exist and is a valid path to a writable
-	/// location, the function creates a file and the last-error code is set to
-	/// [`ERROR::SUCCESS`](crate::co::ERROR::SUCCESS).
-	OPEN_ALWAYS, 4
-	/// Opens a file and truncates it so that its size is zero bytes, only if it
-	/// exists.
-	///
-	/// If the specified file does not exist, the function fails and the
-	/// last-error code is set to
-	/// [`ERROR::FILE_NOT_FOUND`](crate::co::ERROR::FILE_NOT_FOUND).
-	///
-	/// The calling process must open the file with the
-	/// [`GENERIC::WRITE`](crate::co::GENERIC::WRITE) bit set as part of the
-	/// `dwDesiredAccess` parameter.
-	TRUNCATE_EXISTING, 5
-}
-
-pub_struct_const! { DLGID, u16,
-	/// Dialog built-in IDs (`u16`). These are also returned from
-	/// [`HWND::MessageBox`](crate::HWND::MessageBox) and
-	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog).
-	=>
-	OK, 1
-	CANCEL, 2
-	ABORT, 3
-	RETRY, 4
-	IGNORE, 5
-	YES, 6
-	NO, 7
-	TRYAGAIN, 10
-	CONTINUE, 11
-}
-
-pub_struct_const_wm! { DTM,
-	/// Date and time picker control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
-	/// (`u32`), convertible to [`WM`](crate::co::WM).
-	=>
-	FIRST, 0x1000
-	=>
-	GETSYSTEMTIME, Self::FIRST.0 + 1
-	SETSYSTEMTIME, Self::FIRST.0 + 2
-	GETRANGE, Self::FIRST.0 + 3
-	SETRANGE, Self::FIRST.0 + 4
-	SETFORMAT, Self::FIRST.0 + 50
-	SETMCCOLOR, Self::FIRST.0 + 6
-	GETMCCOLOR, Self::FIRST.0 + 7
-	GETMONTHCAL, Self::FIRST.0 + 8
-	SETMCFONT, Self::FIRST.0 + 9
-	GETMCFONT, Self::FIRST.0 + 10
-	SETMCSTYLE, Self::FIRST.0 + 11
-	GETMCSTYLE, Self::FIRST.0 + 12
-	CLOSEMONTHCAL, Self::FIRST.0 + 13
-	GETDATETIMEPICKERINFO, Self::FIRST.0 + 14
-	GETIDEALSIZE, Self::FIRST.0 + 15
-}
-
-pub_struct_const_nm! { DTN,
-	/// Date and time picker control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
-	/// (`i32`), convertible to [`NM`](crate::co::NM).
-	=>
-	FIRST, -740
-	FIRST2, -753
-	=>
-	CLOSEUP, Self::FIRST2.0
-	DATETIMECHANGE, Self::FIRST2.0 - 6
-	DROPDOWN, Self::FIRST2.0 - 1
-	FORMAT, Self::FIRST2.0 - 3
-	FORMATQUERY, Self::FIRST.0 - 3
-	USERSTRING, Self::FIRST.0 - 5
-	WMKEYDOWN, Self::FIRST.0 - 4
-}
-
-pub_struct_const_ws! { DTS,
-	/// Date and time picker control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
-	/// (`u32`), convertible to [`WS`](crate::co::WS).
-	=>
-	UPDOWN, 0x0001
-	SHOWNONE, 0x0002
-	SHORTDATEFORMAT, 0x0000
-	LONGDATEFORMAT, 0x0004
-	SHORTDATECENTURYFORMAT, 0x000c
-	TIMEFORMAT, 0x0009
-	APPCANPARSE, 0x0010
-	RIGHTALIGN, 0x0020
 }

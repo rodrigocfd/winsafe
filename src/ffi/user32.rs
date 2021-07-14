@@ -11,6 +11,7 @@ extern "system" {
 	pub fn BeginPaint(_: HANDLE, _: PVOID) -> HANDLE;
 	pub fn BringWindowToTop(_: HANDLE) -> BOOL;
 	pub fn CallNextHookEx(_: HANDLE, _: i32, _: usize, _: isize) -> isize;
+	pub fn ChangeDisplaySettingsW(_: PVOID, _: u32) -> i32;
 	pub fn CheckMenuItem(_: HANDLE, _: u32, _: u32) -> i32;
 	pub fn ChildWindowFromPoint(_: HANDLE, _: i32, _: i32) -> HANDLE;
 	pub fn ClientToScreen(_: HANDLE, _: PVOID) -> BOOL;
@@ -40,6 +41,7 @@ extern "system" {
 	pub fn EndDialog(_: HANDLE, _: isize) -> BOOL;
 	pub fn EndPaint(_: HANDLE, _: PCVOID) -> BOOL;
 	pub fn EnumChildWindows(_: HANDLE, _: PFUNC, _: isize) -> BOOL;
+	pub fn EnumDisplaySettingsExW(_: PCSTR, _: u32, _: PVOID, _: u32) -> BOOL;
 	pub fn FindWindowExW(_: HANDLE, _: HANDLE, _: PCSTR, _: PCSTR) -> HANDLE;
 	pub fn FindWindowW(_: PCSTR, _: PCSTR) -> HANDLE;
 	pub fn GetActiveWindow() -> HANDLE;

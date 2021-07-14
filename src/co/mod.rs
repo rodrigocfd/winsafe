@@ -7,7 +7,8 @@
 mod macros;
 
 mod consts_ab;
-mod consts_cd;
+mod consts_c;
+mod consts_d;
 mod consts_ef;
 mod consts_ghij;
 mod consts_kl;
@@ -21,7 +22,8 @@ mod error;
 mod vs;
 
 pub use consts_ab::*;
-pub use consts_cd::*;
+pub use consts_c::*;
+pub use consts_d::*;
 pub use consts_ef::*;
 pub use consts_ghij::*;
 pub use consts_kl::*;

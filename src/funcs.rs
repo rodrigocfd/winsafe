@@ -29,6 +29,7 @@ use crate::structs::{
 	ATOM,
 	CHOOSECOLOR,
 	COLORREF,
+	DEVMODE,
 	FILETIME,
 	GUITHREADINFO,
 	MEMORYSTATUSEX,
@@ -65,6 +66,22 @@ pub fn AdjustWindowRectEx(
 			)
 		},
 	)
+}
+
+/// [`ChangeDisplaySettings`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changedisplaysettingsw)
+/// function.
+pub fn ChangeDisplaySettings(
+	lpDevMode: &mut DEVMODE,
+	dwFlags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
+{
+	let ret = unsafe {
+		user32::ChangeDisplaySettingsW(lpDevMode as *mut _ as _, dwFlags.0)
+	};
+	if ret < 0 {
+		Err(co::DISP_CHANGE(ret))
+	} else {
+		Ok(co::DISP_CHANGE(ret))
+	}
 }
 
 /// [`ChooseColor`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms646912(v=vs.85))
@@ -201,6 +218,26 @@ pub fn EncryptionDisable(DirPath: &str, Disable: bool) -> WinResult<()> {
 			advapi32::EncryptionDisable(
 				WString::from_str(DirPath).as_ptr(),
 				Disable as _,
+			)
+		},
+	)
+}
+
+/// [`EnumDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw)
+/// function
+pub fn EnumDisplaySettingsEx(
+	lpszDeviceName: Option<&str>,
+	iModeNum: co::ENUM_SETTINGS,
+	lpDevMode: &mut DEVMODE,
+	dwFlags: co::EDS) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			user32::EnumDisplaySettingsExW(
+				lpszDeviceName.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				iModeNum.0,
+				lpDevMode as *mut _ as _,
+				dwFlags.0
 			)
 		},
 	)

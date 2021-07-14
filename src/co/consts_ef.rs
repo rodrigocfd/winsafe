@@ -2,6 +2,14 @@
 
 use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS};
 
+pub_struct_const! { EDS, u32,
+	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `iModeNum`
+	/// (`u32`).
+	=>
+	RAWMODE, 0x0000_0002
+	ROTATEDMODE, 0x0000_0004
+}
+
 pub_struct_const_wm! { EM,
 	/// Edit control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
@@ -83,6 +91,14 @@ pub_struct_const! { ENDSESSION, u32,
 	CLOSEAPP, 0x0000_0001
 	CRITICAL, 0x4000_0000
 	LOGOFF, 0x8000_0000
+}
+
+pub_struct_const! { ENUM_SETTINGS, u32,
+	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `dwFlags`
+	/// (`u32`). Originally with `ENUM` prefix and `SETTINGS` suffix.
+	=>
+	CURRENT, (0 - 1) as u32
+	REGISTRY, (0 - 2) as u32
 }
 
 pub_struct_const_ws! { ES,

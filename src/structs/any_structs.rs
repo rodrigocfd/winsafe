@@ -6,7 +6,7 @@ use std::marker::PhantomData;
 
 use crate::aliases::{CCHOOKPROC, PFTASKDIALOGCALLBACK, WNDPROC};
 use crate::co;
-use crate::enums::{HiconIdTdicon, HwndHmenu, HwndPlace};
+use crate::enums::{DispfNup, HiconIdTdicon, HwndHmenu, HwndPlace};
 use crate::ffi::BOOL;
 use crate::funcs::{
 	HIDWORD,
@@ -31,7 +31,16 @@ use crate::handles::{
 	HTHREAD,
 	HWND,
 };
-use crate::privs::{CCHILDREN_TITLEBAR, LF_FACESIZE, MAX_PATH, parse_multi_z_str};
+use crate::privs::{
+	CCHDEVICENAME,
+	CCHFORMNAME,
+	CCHILDREN_TITLEBAR,
+	DM_SPECVERSION,
+	LF_FACESIZE,
+	MAKEINTRESOURCE,
+	MAX_PATH,
+	parse_multi_z_str,
+};
 use crate::structs::{ATOM, COLORREF, GUID, LCID};
 use crate::various::WString;
 
@@ -222,6 +231,208 @@ pub struct DELETEITEMSTRUCT {
 }
 
 impl_default!(DELETEITEMSTRUCT);
+
+/// [`DEVMODE`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-devmodew)
+/// struct.
+#[repr(C)]
+pub struct DEVMODE {
+	dmDeviceName: [u16; CCHDEVICENAME],
+	dmSpecVersion: u16,
+	pub dmDriverVersion: u16,
+	dmSize: u16,
+	pub dmDriverExtra: u16,
+	pub dmFields: co::DM,
+	union0: DEVMODE_union0,
+	pub dmColor: co::DMCOLOR,
+	pub dmDuplex: co::DMDUP,
+	pub dmYResolution: u16,
+	pub dmTTOption: co::DMTT,
+	dmCollate: i16,
+	dmFormName: [u16; CCHFORMNAME],
+	pub dmLogPixels: u16,
+	pub dmBitsPerPel: u32,
+	pub dmPelsWidth: u32,
+	pub dmPelsHeight: u32,
+	union1: DEVMODE_union1,
+	pub dmDisplayFrequency: u32,
+	pub dmICMMethod: co::DMICMMETHOD,
+	pub dmICMIntent: co::DMICM,
+	pub dmMediaType: co::DMMEDIA,
+	pub dmDitherType: co::DMDITHER,
+	dmReserved1: u32,
+	dmReserved2: u32,
+	dmPanningWidth: u32,
+	dmPanningHeight: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct DEVMODE_printer {
+	dmOrientation: co::DMORIENT,
+	dmPaperSize: co::DMPAPER,
+	dmPaperLength: i16,
+	dmPaperWidth: i16,
+	dmScale: i16,
+	dmCopies: i16,
+	dmDefaultSource: co::DMBIN,
+	dmPrintQuality: co::DMRES,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct DEVMODE_display {
+	dmPosition: POINT,
+	dmDisplayOrientation: co::DMDO,
+	dmDisplayFixedOutput: co::DMDFO,
+}
+
+#[repr(C)]
+union DEVMODE_union0 {
+	printer: DEVMODE_printer,
+	display: DEVMODE_display,
+}
+
+#[repr(C)]
+union DEVMODE_union1 {
+	dmDisplayFlags: co::DMDISPLAYFLAGS,
+	dnNup: co::DMNUP,
+}
+
+impl Default for DEVMODE {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.dmSpecVersion = DM_SPECVERSION;
+		obj.dmDriverVersion = DM_SPECVERSION;
+		obj.dmSize = std::mem::size_of::<Self>() as _;
+		obj
+	}
+}
+
+impl DEVMODE {
+	pub_fn_string_arr_get_set!(dmDeviceName, set_dmDeviceName);
+	pub_fn_bool_get_set!(dmCollate, set_dmCollate);
+	pub_fn_string_arr_get_set!(dmFormName, set_dmFormName);
+
+	/// Sets the `dmDisplayFlags` or the `dmNup` field.
+	pub fn set_dmDisplayFlags_dmNup(&mut self, val: DispfNup) {
+		match val {
+			DispfNup::Dispf(val) => self.union1.dmDisplayFlags = val,
+			DispfNup::Nup(val) => self.union1.dnNup = val,
+		}
+	}
+
+	/// Returns the `dmOrientation` printer field, which is part of an union.
+	pub fn dmOrientation(&self) -> co::DMORIENT {
+		unsafe { self.union0.printer.dmOrientation }
+	}
+
+	/// Sets the `dmOrientation` printer field, which is part of an union.
+	pub fn set_dmOrientation(&mut self, val: co::DMORIENT) {
+		self.union0.printer.dmOrientation = val;
+	}
+
+	/// Returns the `dmPaperSize` printer field, which is part of an union.
+	pub fn dmPaperSize(&self) -> co::DMPAPER {
+		unsafe { self.union0.printer.dmPaperSize }
+	}
+
+	/// Sets the `dmPaperSize` printer field, which is part of an union.
+	pub fn set_dmPaperSize(&mut self, val: co::DMPAPER) {
+		self.union0.printer.dmPaperSize = val;
+	}
+
+	/// Returns the `dmPaperLength` printer field, which is part of an union.
+	pub fn dmPaperLength(&self) -> i16 {
+		unsafe { self.union0.printer.dmPaperLength }
+	}
+
+	/// Sets the `dmPaperLength` printer field, which is part of an union.
+	pub fn set_dmPaperLength(&mut self, val: i16) {
+		self.union0.printer.dmPaperLength = val;
+	}
+
+	/// Returns the `dmPaperWidth` printer field, which is part of an union.
+	pub fn dmPaperWidth(&self) -> i16 {
+		unsafe { self.union0.printer.dmPaperWidth }
+	}
+
+	/// Sets the `dmPaperWidth` printer field, which is part of an union.
+	pub fn set_dmPaperWidth(&mut self, val: i16) {
+		self.union0.printer.dmPaperWidth = val;
+	}
+
+	/// Returns the `dmScale` printer field, which is part of an union.
+	pub fn dmScale(&self) -> i16 {
+		unsafe { self.union0.printer.dmScale }
+	}
+
+	/// Sets the `dmScale` printer field, which is part of an union.
+	pub fn set_dmScale(&mut self, val: i16) {
+		self.union0.printer.dmScale = val;
+	}
+
+	/// Returns the `dmCopies` printer field, which is part of an union.
+	pub fn dmCopies(&self) -> i16 {
+		unsafe { self.union0.printer.dmCopies }
+	}
+
+	/// Sets the `dmCopies` printer field, which is part of an union.
+	pub fn set_dmCopies(&mut self, val: i16) {
+		self.union0.printer.dmCopies = val;
+	}
+
+	/// Returns the `dmDefaultSource` printer field, which is part of an union.
+	pub fn dmDefaultSource(&self) -> co::DMBIN {
+		unsafe { self.union0.printer.dmDefaultSource }
+	}
+
+	/// Sets the `dmDefaultSource` printer field, which is part of an union.
+	pub fn set_dmDefaultSource(&mut self, val: co::DMBIN) {
+		self.union0.printer.dmDefaultSource = val;
+	}
+
+	/// Returns the `dmPrintQuality` printer field, which is part of an union.
+	pub fn dmPrintQuality(&self) -> co::DMRES {
+		unsafe { self.union0.printer.dmPrintQuality }
+	}
+
+	/// Sets the `dmPrintQuality` printer field, which is part of an union.
+	pub fn set_dmPrintQuality(&mut self, val: co::DMRES) {
+		self.union0.printer.dmPrintQuality = val;
+	}
+
+	/// Returns the `dmPosition` display field, which is part of an union.
+	pub fn dmPosition(&self) -> POINT {
+		unsafe { self.union0.display.dmPosition }
+	}
+
+	/// Sets the `dmPosition` display field, which is part of an union.
+	pub fn set_dmPosition(&mut self, val: POINT) {
+		self.union0.display.dmPosition = val;
+	}
+
+	/// Returns the `dmDisplayOrientation` display field, which is part of an
+	/// union.
+	pub fn dmDisplayOrientation(&self) -> co::DMDO {
+		unsafe { self.union0.display.dmDisplayOrientation }
+	}
+
+	/// Sets the `dmDisplayOrientation` display field, which is part of an union.
+	pub fn set_dmDisplayOrientation(&mut self, val: co::DMDO) {
+		self.union0.display.dmDisplayOrientation = val;
+	}
+
+	/// Returns the `dmDisplayFixedOutput` display field, which is part of an
+	/// union.
+	pub fn dmDisplayFixedOutput(&self) -> co::DMDFO {
+		unsafe { self.union0.display.dmDisplayFixedOutput }
+	}
+
+	/// Sets the `dmDisplayFixedOutput` display field, which is part of an union.
+	pub fn set_dmDisplayFixedOutput(&mut self, val: co::DMDFO) {
+		self.union0.display.dmDisplayFixedOutput = val;
+	}
+}
 
 /// [`DRAWITEMSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawitemstruct)
 /// struct.
@@ -539,7 +750,7 @@ pub struct NOTIFYICONDATA {
 	pub dwState: co::NIS,
 	pub dwStateMask: co::NIS,
 	szInfo: [u16; 256],
-	pub uTimeoutVersion: u32, // union
+	pub uVersion: u32, // union with uTimeout, which is deprecated
 	szInfoTitle: [u16; 64],
 	pub dwInfoFlags: co::NIIF,
 	pub guidItem: GUID,
@@ -975,7 +1186,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pub dwFlags: co::TDF,
 	pub dwCommonButtons: co::TDCBF,
 	pszWindowTitle: *mut u16,
-	hMainIcon: *const u16, // union: HICON, PCWSTR
+	union0: TASKDIALOGCONFIG_union0,
 	pszMainInstruction: *mut u16,
 	pszContent: *mut u16,
 	cButtons: u32,
@@ -988,7 +1199,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pszExpandedInformation: *mut u16,
 	pszExpandedControlText: *mut u16,
 	pszCollapsedControlText: *mut u16,
-	hFooterIcon: *const u16, // union: HICON, PCWSTR
+	union1: TASKDIALOGCONFIG_union1,
 	pszFooter: *mut u16,
 	pub pfCallback: Option<PFTASKDIALOGCALLBACK>,
 	pub lpCallbackData: isize,
@@ -1006,6 +1217,18 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pszFooter_: PhantomData<&'j mut u16>,
 }
 
+#[repr(C, packed)]
+union TASKDIALOGCONFIG_union0 {
+	hMainIcon: HICON,
+	pszMainIcon: *const u16,
+}
+
+#[repr(C, packed)]
+union TASKDIALOGCONFIG_union1 {
+	hFooterIcon: HICON,
+	pszFooterIcon: *const u16,
+}
+
 impl_default_with_size!(TASKDIALOGCONFIG, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j);
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
@@ -1015,12 +1238,12 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 
 	/// Sets the `hMainIcon` field.
 	pub fn set_hMainIcon(&mut self, val: HiconIdTdicon) {
-		self.hMainIcon = val.as_ptr();
-	}
-
-	/// Sets the `hFooterIcon` field.
-	pub fn set_hMFooterIcon(&mut self, val: HiconIdTdicon) {
-		self.hFooterIcon = val.as_ptr();
+		match val {
+			HiconIdTdicon::None => self.union0.pszMainIcon = std::ptr::null_mut(),
+			HiconIdTdicon::Hicon(hicon) => self.union0.hMainIcon = hicon,
+			HiconIdTdicon::Id(id) => self.union0.pszMainIcon = MAKEINTRESOURCE(id as _),
+			HiconIdTdicon::Tdicon(tdi) => self.union0.pszMainIcon = MAKEINTRESOURCE(tdi.0),
+		}
 	}
 
 	pub_fn_string_ptr_get_set!('b, pszMainInstruction, set_pszMainInstruction);
@@ -1031,6 +1254,17 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub_fn_string_ptr_get_set!('g, pszExpandedInformation, set_pszExpandedInformation);
 	pub_fn_string_ptr_get_set!('h, pszExpandedControlText, set_pszExpandedControlText);
 	pub_fn_string_ptr_get_set!('i, pszCollapsedControlText, set_pszCollapsedControlText);
+
+	/// Sets the `hFooterIcon` field.
+	pub fn set_hFooterIcon(&mut self, val: HiconIdTdicon) {
+		match val {
+			HiconIdTdicon::None => self.union1.pszFooterIcon = std::ptr::null_mut(),
+			HiconIdTdicon::Hicon(hicon) => self.union1.hFooterIcon = hicon,
+			HiconIdTdicon::Id(id) => self.union1.pszFooterIcon = MAKEINTRESOURCE(id as _),
+			HiconIdTdicon::Tdicon(tdi) => self.union1.pszFooterIcon = MAKEINTRESOURCE(tdi.0),
+		}
+	}
+
 	pub_fn_string_ptr_get_set!('j, pszFooter, set_pszFooter);
 }
 

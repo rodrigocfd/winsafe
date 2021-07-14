@@ -108,6 +108,17 @@ impl BitmapPtrStr {
 
 /// Variant parameter for:
 ///
+/// * [`DEVMODE`](crate::DEVMODE) `dmDisplayFlags`;
+/// * [`DEVMODE`](crate::DEVMODE) `dmNup`.
+pub enum DispfNup {
+	/// Used for displays.
+	Dispf(co::DMDISPLAYFLAGS),
+	/// Used for printers.
+	Nup(co::DMNUP),
+}
+
+/// Variant parameter for:
+///
 /// * [`AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
 pub enum EntrySeparatorSubmenu<'a> {
 	/// A selectable entry item, with command ID and text.
@@ -131,18 +142,6 @@ pub enum HiconIdTdicon {
 	Id(u16),
 	/// A predefined icon.
 	Tdicon(co::TD_ICON),
-}
-
-impl HiconIdTdicon {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
-		match self {
-			Self::None => std::ptr::null(),
-			Self::Hicon(hicon) => hicon.ptr as _,
-			Self::Id(id) => *id as _,
-			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0),
-		}
-	}
 }
 
 /// Variant parameter for:
