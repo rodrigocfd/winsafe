@@ -103,6 +103,12 @@ impl COLORREF {
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct LANGID(pub(crate) u16);
 
+impl From<LANGID> for u16 {
+	fn from(v: LANGID) -> Self {
+		v.0
+	}
+}
+
 impl LANGID {
 	pub const SYSTEM_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::SYS_DEFAULT);
 	pub const USER_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::DEFAULT);

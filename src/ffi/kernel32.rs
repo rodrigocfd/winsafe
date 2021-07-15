@@ -10,9 +10,10 @@ extern "system" {
 	pub fn CreateFileW(_: PCSTR, _: u32, _: u32, _: PVOID, _: u32, _: u32, _: HANDLE) -> HANDLE;
 	pub fn CreatePipe(_: *mut HANDLE, _: *mut HANDLE, _: PVOID, _: u32) -> BOOL;
 	pub fn CreateProcessW(_: PCSTR, _: PSTR, _: PVOID, _: PVOID, _: BOOL, _: u32, _: PVOID, _: PCSTR, _: PVOID, _: PVOID) -> BOOL;
-	pub fn CreateThread(_: PVOID, _: u64, _: PVOID, _: PVOID, _: u32, _: &mut u32) -> HANDLE;
+	pub fn CreateThread(_: PVOID, _: u64, _: PVOID, _: PVOID, _: u32, _: *mut u32) -> HANDLE;
 	pub fn CreateToolhelp32Snapshot(_: u32, _: u32) -> HANDLE;
 	pub fn DeleteFileW(_: PCSTR) -> BOOL;
+	pub fn EnumResourceLanguagesW(_: HANDLE, _: PCSTR, _: PCSTR, _: PFUNC, _: isize) -> BOOL;
 	pub fn EnumResourceNamesW(_: HANDLE, _: PCSTR, _: PFUNC, _: isize) -> BOOL;
 	pub fn EnumResourceTypesW(_: HANDLE, _: PFUNC, _: isize) -> BOOL;
 	pub fn ExitProcess(_: u32);
@@ -27,7 +28,7 @@ extern "system" {
 	pub fn FormatMessageW(_: u32, _: PCVOID, _: u32, _: u32, _: PSTR, _: u32, _: PVOID) -> u32;
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
 	pub fn FreeLibrary(_: HANDLE) -> BOOL;
-	pub fn GetBinaryTypeW(_: PCSTR, _: &mut u32) -> BOOL;
+	pub fn GetBinaryTypeW(_: PCSTR, _: *mut u32) -> BOOL;
 	pub fn GetCurrentProcess() -> HANDLE;
 	pub fn GetCurrentProcessId() -> u32;
 	pub fn GetCurrentThread() -> HANDLE;

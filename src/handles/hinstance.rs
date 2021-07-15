@@ -7,7 +7,7 @@ use crate::ffi::{BOOL, kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
 use crate::privs::{bool_to_winresult, IS_INTRESOURCE, MAX_PATH, str_to_iso88591};
-use crate::structs::{ATOM, WNDCLASSEX};
+use crate::structs::{ATOM, LANGID, WNDCLASSEX};
 use crate::various::WString;
 
 pub_struct_handle! {
@@ -60,6 +60,33 @@ impl HINSTANCE {
 			-1 => Err(GetLastError()),
 			res => Ok(res), // assumes hWndParent as valid, so no check for zero
 		}
+	}
+
+	/// [`EnumResourceLanguages`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
+	/// method.
+	pub fn EnumResourceLanguages<F>(self,
+		lpType: RtStr, lpName: IdStr, func: F) -> WinResult<()>
+		where F: Fn(LANGID) -> bool
+	{
+		bool_to_winresult(
+			unsafe {
+				kernel32::EnumResourceLanguagesW(
+					self.ptr,
+					lpType.as_ptr(),
+					lpName.as_ptr(),
+					Self::EnumResLangProc::<F> as _,
+					&func as *const _ as _,
+				)
+			},
+		)
+	}
+	extern "system" fn EnumResLangProc<F>(
+		_: HINSTANCE, _: *const u16, _: *const u16,
+		wIDLanguage: u16, lParam: isize) -> BOOL
+		where F: Fn(LANGID) -> bool
+	{
+		let func = unsafe { &*(lParam as *const F) };
+		func(LANGID(wIDLanguage)) as _
 	}
 
 	/// [`EnumResourceNames`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
