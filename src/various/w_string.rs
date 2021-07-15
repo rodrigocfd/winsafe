@@ -7,6 +7,7 @@ use crate::funcs::MultiByteToWideChar;
 
 /// String encodings that can be guessed by
 /// [`WString::guess_encoding`](crate::WString::guess_encoding).
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Encoding {
 	Unknown,
 	Ansi,
@@ -45,6 +46,7 @@ impl std::fmt::Display for Encoding {
 /// functions.
 ///
 /// See an example in [`HWND::GetWindowText`](crate::HWND::GetWindowText).
+#[derive(Clone)]
 pub struct WString {
 	vec_u16: Option<Vec<u16>>,
 }

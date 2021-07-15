@@ -45,19 +45,20 @@ pub struct AccelMenuCtrlData {
 /// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx) `lpClassName`;
 /// * [`HWND::FindWindowEx`](crate::HWND::FindWindowEx) `lpszClass`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
+#[derive(Clone)]
 pub enum AtomStr {
 	/// An [`ATOM`](crate::ATOM) returned by
 	/// [`RegisterClassEx`](crate::RegisterClassEx).
 	Atom(ATOM),
 	/// A string.
-	Str(WString),
+	Str(String),
 }
 
 impl AtomStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Str(u16) => unsafe { u16.as_ptr() },
+			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
 			Self::Atom(atom) => atom.as_ptr(),
 		}
 	}
@@ -66,6 +67,7 @@ impl AtomStr {
 /// Variant parameter for:
 ///
 /// * [`BM_GETIMAGE`](crate::msg::bm::GetImage) `image`.
+#[derive(Copy, Clone)]
 pub enum BitmapIcon {
 	Bitmap(HBITMAP),
 	Icon(HICON),
@@ -83,13 +85,14 @@ impl BitmapIcon {
 /// Variant parameter for:
 ///
 /// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`.
+#[derive(Clone)]
 pub enum BitmapPtrStr {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bitmap(HBITMAP),
-	/// A string.
-	Str(WString),
 	/// A pointer to anything.
-	Param(*const std::ffi::c_void),
+	Ptr(*const std::ffi::c_void),
+	/// A string.
+	Str(String),
 	/// Nothing.
 	None,
 }
@@ -99,8 +102,8 @@ impl BitmapPtrStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Bitmap(hbmp) => hbmp.ptr as _,
-			Self::Str(u16) => unsafe { u16.as_ptr() },
-			Self::Param(lp) => *lp as _,
+			Self::Ptr(lp) => *lp as _,
+			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -110,6 +113,7 @@ impl BitmapPtrStr {
 ///
 /// * [`DEVMODE`](crate::DEVMODE) `dmDisplayFlags`;
 /// * [`DEVMODE`](crate::DEVMODE) `dmNup`.
+#[derive(Copy, Clone)]
 pub enum DispfNup {
 	/// Used for displays.
 	Dispf(co::DMDISPLAYFLAGS),
@@ -133,6 +137,7 @@ pub enum EntrySeparatorSubmenu<'a> {
 ///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hMainIcon`;
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hFooterIcon`.
+#[derive(Copy, Clone)]
 pub enum HiconIdTdicon {
 	/// No icon.
 	None,
@@ -147,6 +152,7 @@ pub enum HiconIdTdicon {
 /// Variant parameter for:
 ///
 /// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
+#[derive(Copy, Clone)]
 pub enum HtreeitemTvi {
 	/// Handle to a tree view item.
 	Htreeitem(HTREEITEM),
@@ -176,6 +182,7 @@ impl HtreeitemTvi {
 /// Variant parameter for:
 ///
 /// * [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
+#[derive(Copy, Clone)]
 pub enum HwndFocus {
 	Hwnd(HWND),
 	FocusPrev(bool),
@@ -185,6 +192,7 @@ pub enum HwndFocus {
 ///
 /// * [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason.
 /// * [`HELPINFO`](crate::HELPINFO) `hItemHandle`.
+#[derive(Copy, Clone)]
 pub enum HwndHmenu {
 	Hwnd(HWND),
 	Hmenu(HMENU),
@@ -202,6 +210,7 @@ impl HwndHmenu {
 /// Variant parameter for:
 ///
 /// * [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`.
+#[derive(Copy, Clone)]
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.
 	Hwnd(HWND),
@@ -225,6 +234,7 @@ impl HwndPlace {
 /// Variant parameter for:
 ///
 /// * [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) `data32`.
+#[derive(Copy, Clone)]
 pub enum HwndPointId {
 	/// Handle to the child window.
 	Hwnd(HWND),
@@ -247,6 +257,7 @@ impl HwndPointId {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
+#[derive(Clone)]
 pub enum IdIdcStr {
 	/// A resource ID.
 	Id(u16),
@@ -270,6 +281,7 @@ impl IdIdcStr {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
+#[derive(Clone)]
 pub enum IdIdiStr {
 	/// A resource ID.
 	Id(u16),
@@ -294,6 +306,7 @@ impl IdIdiStr {
 ///
 /// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `uIDNewItem`;
 /// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx) `hMenu`.
+#[derive(Copy, Clone)]
 pub enum IdMenu {
 	/// A command ID.
 	Id(u16),
@@ -372,6 +385,7 @@ impl IdPos {
 ///
 /// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames) `func`;
 /// * [`HINSTANCE::LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
+#[derive(Clone)]
 pub enum IdStr {
 	/// A resource ID.
 	Id(u16),
@@ -391,6 +405,7 @@ impl IdStr {
 /// Variant parameter for:
 ///
 /// * [`HWND::TaskDialog`](crate::HWND::TaskDialog) `pszIcon`.
+#[derive(Clone)]
 pub enum IdTdiconStr {
 	/// No icon.
 	None,
@@ -425,6 +440,7 @@ pub enum NccspRect<'a, 'b> {
 }
 
 /// Variant value returned by [`RegQueryValueEx`](crate::HKEY::RegQueryValueEx).
+#[derive(Clone)]
 pub enum RegistryValue {
 	/// Binary value, defined as [`REG::BINARY`](crate::co::REG::BINARY).
 	Binary(Vec<u8>),
@@ -433,7 +449,7 @@ pub enum RegistryValue {
 	/// An `u64` integer value, defined as [`REG::QWORD`](crate::co::REG::QWORD).
 	Qword(u64),
 	/// String value, defined as [`REG::SZ`](crate::co::REG::SZ).
-	Sz(WString),
+	Sz(String),
 	/// No value, defined as [`REG::NONE`](crate::co::REG::NONE). Also used for
 	/// non-implemented value types.
 	None,
@@ -446,7 +462,7 @@ impl RegistryValue {
 			Self::Binary(b) => b.as_ptr() as _,
 			Self::Dword(n) => *n as _,
 			Self::Qword(n) => *n as _,
-			Self::Sz(u16) => unsafe { u16.as_ptr() as _ },
+			Self::Sz(s) => unsafe { WString::from_str(s).as_ptr() as _ },
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -477,6 +493,7 @@ impl RegistryValue {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::EnumResourceTypes`](crate::HINSTANCE::EnumResourceTypes) `func`.
+#[derive(Clone)]
 pub enum RtStr {
 	/// A predefined resource ID.
 	Rt(co::RT),

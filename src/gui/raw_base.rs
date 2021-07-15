@@ -79,7 +79,7 @@ impl RawBase {
 		// CreateWindowEx returns.
 		HWND::CreateWindowEx(
 			ex_styles,
-			AtomStr::Str(WString::from_str(class_name)),
+			AtomStr::Str(class_name.to_owned()),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
 			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),

@@ -9,7 +9,6 @@ use crate::handles::HWND;
 use crate::msg;
 use crate::privs::bool_to_winresult;
 use crate::structs::{MENUINFO, MENUITEMINFO, POINT};
-use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to a
@@ -80,7 +79,7 @@ impl HMENU {
 			EntrySeparatorSubmenu::Entry(cmd_id, text) => self.AppendMenu(
 				co::MF::STRING,
 				IdMenu::Id(*cmd_id),
-				BitmapPtrStr::Str(WString::from_str(text)),
+				BitmapPtrStr::Str((*text).to_owned()),
 			),
 			EntrySeparatorSubmenu::Separator => self.AppendMenu(
 				co::MF::SEPARATOR,
@@ -90,7 +89,7 @@ impl HMENU {
 			EntrySeparatorSubmenu::Submenu(hmenu, text) => self.AppendMenu(
 				co::MF::POPUP,
 				IdMenu::Menu(*hmenu),
-				BitmapPtrStr::Str(WString::from_str(text)),
+				BitmapPtrStr::Str((*text).to_owned()),
 			),
 		}
 	}

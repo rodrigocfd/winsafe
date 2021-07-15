@@ -280,7 +280,7 @@ impl HKEY {
 					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(
-						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
+						RegistryValue::Sz(WString::from_wchars_slice(&szBuf).to_string()),
 					),
 					err => Err(err),
 				}
@@ -529,7 +529,7 @@ impl HKEY {
 					} as _
 				) {
 					co::ERROR::SUCCESS => Ok(
-						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
+						RegistryValue::Sz(WString::from_wchars_slice(&szBuf).to_string()),
 					),
 					err => Err(err),
 				}
