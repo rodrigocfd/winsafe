@@ -30,6 +30,12 @@ pub(crate) const LF_FACESIZE: usize = 32;
 pub(crate) const MAX_LINKID_TEXT: usize = 48;
 pub(crate) const MAX_PATH: usize = 260;
 
+/// [`IS_INTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
+/// macro.
+pub(crate) fn IS_INTRESOURCE(val: *const u16) -> bool {
+	(val as usize >> 16) == 0
+}
+
 /// [`MAKEINTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
 /// macro.
 pub(crate) fn MAKEINTRESOURCE(val: isize) -> *const u16 {

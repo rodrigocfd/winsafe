@@ -2,7 +2,7 @@
 
 use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult};
 use crate::co;
-use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos, IdTdicon};
+use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos, IdTdiconStr};
 use crate::ffi::{BOOL, comctl32, shell32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
@@ -236,21 +236,20 @@ impl HWND {
 	/// });
 	/// ```
 	pub fn EnumChildWindows<F>(self, func: F)
-		where F: FnMut(HWND) -> bool + 'static,
+		where F: Fn(HWND) -> bool,
 	{
-		let mut func = func;
 		unsafe {
 			user32::EnumChildWindows(
 				self.ptr,
 				Self::EnumChildProc::<F> as _, // https://redd.it/npehj9
-				&mut func as *mut _ as _,
+				&func as *const _ as _,
 			);
 		}
 	}
 	extern "system" fn EnumChildProc<F>(hwnd: HWND, lParam: isize) -> BOOL
-		where F: FnMut(HWND) -> bool,
+		where F: Fn(HWND) -> bool,
 	{
-		let func = unsafe { &mut *(lParam as *mut F) };
+		let func = unsafe { &*(lParam as *const F) };
 		func(hwnd) as _
 	}
 
@@ -1283,7 +1282,7 @@ impl HWND {
 		pszMainInstruction: Option<&str>,
 		pszContent: Option<&str>,
 		dwCommonButtons: co::TDCBF,
-		pszIcon: IdTdicon) -> WinResult<co::DLGID>
+		pszIcon: IdTdiconStr) -> WinResult<co::DLGID>
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
 		let mut pnButton: i32 = 0;

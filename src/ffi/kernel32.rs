@@ -1,6 +1,6 @@
 //! Raw bindings to kernel32.lib functions.
 
-use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
+use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 #[link(name = "kernel32")]
 extern "system" {
@@ -13,6 +13,8 @@ extern "system" {
 	pub fn CreateThread(_: PVOID, _: u64, _: PVOID, _: PVOID, _: u32, _: &mut u32) -> HANDLE;
 	pub fn CreateToolhelp32Snapshot(_: u32, _: u32) -> HANDLE;
 	pub fn DeleteFileW(_: PCSTR) -> BOOL;
+	pub fn EnumResourceNamesW(_: HANDLE, _: PCSTR, _: PFUNC, _: isize) -> BOOL;
+	pub fn EnumResourceTypesW(_: HANDLE, _: PFUNC, _: isize) -> BOOL;
 	pub fn ExitProcess(_: u32);
 	pub fn ExitThread(_: u32);
 	pub fn ExpandEnvironmentStringsW(_: PCSTR, _: PSTR, _: u32) -> u32;

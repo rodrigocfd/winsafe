@@ -499,3 +499,31 @@ pub_struct_const! { RRF, u32,
 	NOEXPAND, 0x1000_0000
 	ZEROONFAILURE, 0x2000_0000
 }
+
+pub_struct_const! { RT, u16,
+	/// Predefined resource
+	/// [types](https://docs.microsoft.com/en-us/windows/win32/menurc/resource-types)
+	/// (`u16`).
+	=>
+	ACCELERATOR, 9
+	ANICURSOR, 21
+	ANIICON, 22
+	BITMAP, 2
+	CURSOR, 1
+	DIALOG, 5
+	DLGINCLUDE, 17
+	FONT, 8
+	FONTDIR, 7
+	GROUP_CURSOR, 12
+	GROUP_ICON, 14
+	HTML, 23
+	ICON, 3
+	MANIFEST, 24
+	MENU, 4
+	MESSAGETABLE, 11
+	PLUGPLAY, 19
+	RCDATA, 10
+	STRING, 6
+	VERSION, 16
+	VXD, 20
+}

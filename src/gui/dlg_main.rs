@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
@@ -51,7 +52,7 @@ impl DlgMain {
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.base_ref().parent_hinstance()?;
 		let haccel = self.0.accel_table_id
-			.map(|id| hinst.LoadAccelerators(id)) // resources are automatically freed
+			.map(|id| hinst.LoadAccelerators(IdStr::Id(id))) // resources are automatically freed
 			.transpose()?;
 
 		self.set_icon_if_any(hinst)?;

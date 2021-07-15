@@ -2,11 +2,11 @@
 
 use crate::aliases::{DLGPROC, WinResult};
 use crate::co;
-use crate::enums::{IdIdc, IdIdi};
-use crate::ffi::{kernel32, user32};
+use crate::enums::{IdIdcStr, IdIdiStr, IdStr, RtStr};
+use crate::ffi::{BOOL, kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
-use crate::privs::{bool_to_winresult, MAX_PATH, str_to_iso88591};
+use crate::privs::{bool_to_winresult, IS_INTRESOURCE, MAX_PATH, str_to_iso88591};
 use crate::structs::{ATOM, WNDCLASSEX};
 use crate::various::WString;
 
@@ -60,6 +60,61 @@ impl HINSTANCE {
 			-1 => Err(GetLastError()),
 			res => Ok(res), // assumes hWndParent as valid, so no check for zero
 		}
+	}
+
+	/// [`EnumResourceNames`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
+	/// method.
+	pub fn EnumResourceNames<F>(self, lpType: RtStr, func: F) -> WinResult<()>
+		where F: Fn(IdStr) -> bool
+	{
+		bool_to_winresult(
+			unsafe {
+				kernel32::EnumResourceNamesW(
+					self.ptr,
+					lpType.as_ptr(),
+					Self::EnumResNameProc::<F> as _,
+					&func as *const _ as _,
+				)
+			},
+		)
+	}
+	extern "system" fn EnumResNameProc<F>(
+		_: HINSTANCE, _: *const u16, lpName: *mut u16, lParam: isize) -> BOOL
+		where F: Fn(IdStr) -> bool
+	{
+		let func = unsafe { &*(lParam as *const F) };
+		func(if IS_INTRESOURCE(lpName) {
+			IdStr::Id(lpName as _)
+		} else {
+			IdStr::Str(WString::from_wchars_nullt(lpName).to_string())
+		}) as _
+	}
+
+	/// [`EnumResourceTypes`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
+	/// method.
+	pub fn EnumResourceTypes<F>(self, func: F) -> WinResult<()>
+		where F: Fn(RtStr) -> bool
+	{
+		bool_to_winresult(
+			unsafe {
+				kernel32::EnumResourceTypesW(
+					self.ptr,
+					Self::EnumResTypeProc::<F> as _,
+					&func as *const _ as _,
+				)
+			},
+		)
+	}
+	extern "system" fn EnumResTypeProc<F>(
+		_: HINSTANCE, lpszType: *const u16, lParam: isize) -> BOOL
+		where F: Fn(RtStr) -> bool
+	{
+		let func = unsafe { &*(lParam as *const F) };
+		func(if IS_INTRESOURCE(lpszType) {
+			RtStr::Rt(co::RT(lpszType as _))
+		} else {
+			RtStr::Str(WString::from_wchars_nullt(lpszType).to_string())
+		}) as _
 	}
 
 	/// [`FreeLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
@@ -160,9 +215,9 @@ impl HINSTANCE {
 
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
-	pub fn LoadAccelerators(self, lpTableName: u16) -> WinResult<HACCEL> {
+	pub fn LoadAccelerators(self, lpTableName: IdStr) -> WinResult<HACCEL> {
 		unsafe {
-			user32::LoadAcceleratorsW(self.ptr, lpTableName as _).as_mut()
+			user32::LoadAcceleratorsW(self.ptr, lpTableName.as_ptr()).as_mut()
 		}.map(|ptr| HACCEL { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -180,7 +235,7 @@ impl HINSTANCE {
 	///     .LoadCursor(IdIdc::Idc(co::IDC::ARROW))
 	///     .unwrap();
 	/// ```
-	pub fn LoadCursor(self, lpCursorName: IdIdc) -> WinResult<HCURSOR> {
+	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
 		unsafe { user32::LoadCursorW(self.ptr, lpCursorName.as_ptr()).as_mut() }
 			.map(|ptr| HCURSOR { ptr })
 			.ok_or_else(|| GetLastError())
@@ -199,7 +254,7 @@ impl HINSTANCE {
 	///     .LoadIcon(IdIdi::Idi(co::IDI::INFORMATION))
 	///     .unwrap();
 	/// ```
-	pub fn LoadIcon(self, lpIconName: IdIdi) -> WinResult<HICON> {
+	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
 		unsafe { user32::LoadIconW(self.ptr, lpIconName.as_ptr()).as_mut() }
 			.map(|ptr| HICON { ptr })
 			.ok_or_else(|| GetLastError())

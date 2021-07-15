@@ -82,7 +82,7 @@ impl BitmapIcon {
 
 /// Variant parameter for:
 ///
-/// * [`AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`.
+/// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`.
 pub enum BitmapPtrStr {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bitmap(HBITMAP),
@@ -119,7 +119,7 @@ pub enum DispfNup {
 
 /// Variant parameter for:
 ///
-/// * [`AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
+/// * [`HMENU::AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
 pub enum EntrySeparatorSubmenu<'a> {
 	/// A selectable entry item, with command ID and text.
 	Entry(u16, &'a str),
@@ -201,7 +201,7 @@ impl HwndHmenu {
 
 /// Variant parameter for:
 ///
-/// * [`SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`.
+/// * [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`.
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.
 	Hwnd(HWND),
@@ -246,40 +246,46 @@ impl HwndPointId {
 
 /// Variant parameter for:
 ///
-/// * [`LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
-pub enum IdIdc {
+/// * [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
+pub enum IdIdcStr {
 	/// A resource ID.
 	Id(u16),
 	/// A [`co::IDC`](crate::co::IDC) constant for a stock system cursor.
 	Idc(co::IDC),
+	/// A string identifier.
+	Str(String),
 }
 
-impl IdIdc {
+impl IdIdcStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Id(id) => *id as _,
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idc(idc) => MAKEINTRESOURCE(idc.0),
+			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
 		}
 	}
 }
 
 /// Variant parameter for:
 ///
-/// * [`LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
-pub enum IdIdi {
+/// * [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
+pub enum IdIdiStr {
 	/// A resource ID.
 	Id(u16),
 	/// A [`co::IDI`](crate::co::IDI) constant for a stock system icon.
 	Idi(co::IDI),
+	/// A string identifier.
+	Str(String),
 }
 
-impl IdIdi {
+impl IdIdiStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Id(id) => *id as _,
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idi(idi) => MAKEINTRESOURCE(idi.0),
+			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
 		}
 	}
 }
@@ -320,13 +326,13 @@ impl IdMenu {
 
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
-/// * [`CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
-/// * [`DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;
-/// * [`EnableMenuItem`](crate::HMENU::EnableMenuItem) `uIDEnableItem`;
-/// * [`HiliteMenuItem`](crate::HWND::HiliteMenuItem) `uIDHiliteItem`;
-/// * [`InsertMenuItem`](crate::HMENU::InsertMenuItem) `item`;
-/// * [`RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
-/// * [`SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
+/// * [`HMENU::CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
+/// * [`HMENU::DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;
+/// * [`HMENU::EnableMenuItem`](crate::HMENU::EnableMenuItem) `uIDEnableItem`;
+/// * [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem) `uIDHiliteItem`;
+/// * [`HMENU::InsertMenuItem`](crate::HMENU::InsertMenuItem) `item`;
+/// * [`HMENU::RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
+/// * [`HMENU::SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
 #[derive(Copy, Clone)]
 pub enum IdPos {
 	/// A command ID.
@@ -364,23 +370,46 @@ impl IdPos {
 
 /// Variant parameter for:
 ///
-/// * [`TaskDialog`](crate::HWND::TaskDialog) `pszIcon`.
-pub enum IdTdicon {
+/// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames) `func`;
+/// * [`HINSTANCE::LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
+pub enum IdStr {
+	/// A resource ID.
+	Id(u16),
+	/// A string identifier.
+	Str(String),
+}
+
+impl IdStr {
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
+			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`HWND::TaskDialog`](crate::HWND::TaskDialog) `pszIcon`.
+pub enum IdTdiconStr {
 	/// No icon.
 	None,
 	/// A resource ID.
 	Id(u16),
 	/// A predefined icon.
 	Tdicon(co::TD_ICON),
+	/// A string identifier.
+	Str(String),
 }
 
-impl IdTdicon {
+impl IdTdiconStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::None => std::ptr::null(),
-			Self::Id(id) => *id as _,
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0),
+			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
 		}
 	}
 }
@@ -441,6 +470,25 @@ impl RegistryValue {
 			Self::Qword(_) => std::mem::size_of::<u64>(),
 			Self::Sz(u16) => (u16.len() + 1) * std::mem::size_of::<u16>(), // including terminating null
 			Self::None => 0,
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`HINSTANCE::EnumResourceTypes`](crate::HINSTANCE::EnumResourceTypes) `func`.
+pub enum RtStr {
+	/// A predefined resource ID.
+	Rt(co::RT),
+	/// A string identifier.
+	Str(String),
+}
+
+impl RtStr {
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::Rt(id) => MAKEINTRESOURCE(id.0 as _),
+			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
 		}
 	}
 }
