@@ -143,9 +143,9 @@ impl CheckBox {
 	}
 
 	/// Retrieves the text by calling
-	/// [`GetWindowTextStr`](crate::HWND::GetWindowText).
+	/// [`HWND::GetWindowText`](crate::HWND::GetWindowText).
 	pub fn text(&self) -> WinResult<String> {
-		self.hwnd().GetWindowTextStr()
+		self.hwnd().GetWindowText()
 	}
 
 	/// Fires the click event for the check box by sending a

@@ -187,34 +187,15 @@ impl ListViewColumns {
 
 	/// Retrieves the title of the column by calling
 	/// [`info`](crate::gui::ListViewColumns::info).
-	///
-	/// The passed buffer will be automatically allocated.
-	///
-	/// This method can be more performant than
-	/// [`title_str`](crate::gui::ListViewColumns::title_str) because the buffer
-	/// can be reused, avoiding multiple allocations. However, it has the
-	/// inconvenient of the manual conversion from [`WString`](crate::WString)
-	/// to `String`.
-	pub fn title(&self,
-		column_index: u32, buf: &mut WString) -> WinResult<String>
-	{
+	pub fn title(&self, column_index: u32) -> WinResult<String> {
 		let mut lvc = LVCOLUMN::default();
 		lvc.iSubItem = column_index as _;
 		lvc.mask = co::LVCF::TEXT;
 
-		let mut buf = buf;
-		buf.realloc_buffer(128); // arbitrary
+		let mut buf = WString::new_alloc_buffer(128); // arbitrary
 		lvc.set_pszText(Some(&mut buf));
 
 		self.info(column_index, &mut lvc)?;
-		Ok(buf.to_string())
-	}
-
-	/// A more convenient [`text`](crate::gui::ListViewColumns::title), which
-	/// directly returns a `String` instead of requiring an external buffer.
-	pub fn title_str(&self, column_index: u32) -> WinResult<String> {
-		let mut buf = WString::default();
-		self.title(column_index, &mut buf)?;
 		Ok(buf.to_string())
 	}
 

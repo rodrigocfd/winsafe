@@ -53,7 +53,7 @@ impl RadioGroupEvents {
 	///     move || {
 	///         println!("Selected {}",
 	///             rads.checked().unwrap()
-	///                 .hwnd().GetWindowTextStr().unwrap(),
+	///                 .hwnd().GetWindowText().unwrap(),
 	///         );
 	///     }
 	/// });

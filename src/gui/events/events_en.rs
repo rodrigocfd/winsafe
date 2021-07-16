@@ -51,7 +51,7 @@ impl EditEvents {
 		///     let txt = txt.clone(); // pass into the closure
 		///     move || {
 		///         println!("Text: {}",
-		///             btn.hwnd().GetWindowTextStr().unwrap());
+		///             btn.hwnd().GetWindowText().unwrap());
 		///     }
 		/// });
 		/// ```

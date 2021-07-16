@@ -566,46 +566,27 @@ impl HWND {
 	/// [`GetWindowText`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw)
 	/// method.
 	///
-	/// The passed buffer will be automatically allocated with
-	/// [`GetWindowTextLength`](crate::HWND::GetWindowTextLength).
-	///
-	/// This method can be more performant than
-	/// [`GetWindowTextStr`](crate::HWND::GetWindowTextStr) because the buffer
-	/// can be reused, avoiding multiple allocations. However, it has the
-	/// inconvenient of the manual conversion from [`WString`](crate::WString)
-	/// to `String`.
-	///
-	/// # Examples
-	///
 	/// ```rust,ignore
-	/// use winsafe::{HWND, WString};
+	/// use winsafe::HWND;
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
 	///
-	/// let mut buf = WString::new();
-	/// my_hwnd.GetWindowText(&mut buf).unwrap();
-	/// println!("Text: {}", buf.to_string());
+	/// let text = my_hwnd.GetWindowText().unwrap();
+	/// println!("Text: {}", text);
 	/// ```
-	pub fn GetWindowText(self, buf: &mut WString) -> WinResult<i32> {
+	pub fn GetWindowText(self) -> WinResult<String> {
 		match self.GetWindowTextLength()? {
-			0 => { // window has no text, simply clear buffer
-				buf.realloc_buffer(0);
-				Ok(0)
-			},
+			0 => Ok(String::default()), // window has no text, simply clear buffer
 			len => {
-				buf.realloc_buffer(len as usize + 1); // plus terminating null
-
+				let mut buf = WString::new_alloc_buffer(len as usize + 1); // plus terminating null
 				match unsafe {
 					user32::GetWindowTextW(self.ptr, buf.as_mut_ptr(), len + 1)
 				} {
 					0 => match GetLastError() {
-						co::ERROR::SUCCESS => {
-							buf.realloc_buffer(0); // no chars copied for some reason
-							Ok(0)
-						},
+						co::ERROR::SUCCESS => Ok(String::default()), // no chars copied for some reason
 						err => Err(err),
 					},
-					nCopied => Ok(nCopied), // return number of copied chars without terminating null
+					_ => Ok(buf.to_string()),
 				}
 			},
 		}
@@ -622,25 +603,6 @@ impl HWND {
 			},
 			len => Ok(len),
 		}
-	}
-
-	/// A more convenient [`GetWindowText`](crate::HWND::GetWindowText), which
-	/// directly returns a `String` instead of requiring an external buffer.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::HWND;
-	///
-	/// let my_hwnd: HWND; // initialized somewhere
-	///
-	/// let text = my_hwnd.GetWindowTextStr().unwrap();
-	/// println!("Text: {}", text);
-	/// ```
-	pub fn GetWindowTextStr(self) -> WinResult<String> {
-		let mut buf = WString::default();
-		self.GetWindowText(&mut buf)?;
-		Ok(buf.to_string())
 	}
 
 	/// [`GetWindowThreadProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid)

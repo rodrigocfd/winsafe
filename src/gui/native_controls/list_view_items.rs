@@ -305,27 +305,19 @@ impl ListViewItems {
 	/// Retrieves the text of an item under a column by sending an
 	/// [`LVM_GETITEMTEXT`](crate::msg::lvm::GetItemText) message.
 	///
-	/// The passed buffer will be automatically allocated.
-	///
-	/// This method can be more performant than
-	/// [`text_str`](crate::gui::ListViewItems::text_str) because the buffer can be
-	/// reused, avoiding multiple allocations. However, it has the inconvenient
-	/// of the manual conversion from [`WString`](crate::WString) to `String`.
-	///
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::{gui, WString};
+	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	///
-	/// let mut buf = WString::default();
-	/// my_list.items().text(0, 2, &mut buf); // 1st item, 3rd column
-	///
-	/// println!("Text: {}", buf.to_string());
+	/// println!("Text: {}", my_list.items().text(0, 2)); // 1st item, 3rd column
 	/// ```
-	pub fn text(&self, item_index: u32, column_index: u32, buf: &mut WString) {
-		Self::text_retrieve(self.hwnd(), item_index, column_index, buf)
+	pub fn text(&self, item_index: u32, column_index: u32) -> String {
+		let mut buf = WString::default();
+		Self::text_retrieve(self.hwnd(), item_index, column_index, &mut buf);
+		buf.to_string()
 	}
 
 	pub(in crate::gui::native_controls) fn text_retrieve(
@@ -357,23 +349,5 @@ impl ListViewItems {
 
 			buf_sz += BLOCK; // increase buffer size to try again
 		}
-	}
-
-	/// A more convenient [`text`](crate::gui::ListViewItems::text), which
-	/// directly returns a `String` instead of requiring an external buffer.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::gui;
-	///
-	/// let my_list: gui::ListView; // initialized somewhere
-	///
-	/// println!("Text: {}", my_list.items().text(0, 2)); // 1st item, 3rd column
-	/// ```
-	pub fn text_str(&self, item_index: u32, column_index: u32) -> String {
-		let mut buf = WString::default();
-		self.text(item_index, column_index, &mut buf);
-		buf.to_string()
 	}
 }

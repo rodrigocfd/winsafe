@@ -217,43 +217,6 @@ impl TreeViewItems {
 	/// Retrieves the text of the item by sending a
 	/// [`TVN_GETITEM`](crate::msg::tvm::GetItem) message.
 	///
-	/// The passed buffer will be automatically allocated.
-	///
-	/// This method can be more performant than
-	/// [`text_str`](crate::gui::TreeViewItems::text_str) because the buffer can be
-	/// reused, avoiding multiple allocations. However, it has the inconvenient
-	/// of the manual conversion from [`WString`](crate::WString) to `String`.
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::{gui, HTREEITEM, WString};
-	///
-	/// let my_tree: gui::ListView; // initialized somewhere
-	/// let my_item: HTREEITEM;
-	///
-	/// let mut buf = WString::default();
-	/// my_tree.items().text(my_item, &mut buf).unwrap();
-	///
-	/// println!("Text: {}", buf.to_string());
-	/// ```
-	pub fn text(&self,
-		hitem: HTREEITEM, buf: &mut WString) -> WinResult<()>
-	{
-		let mut buf = buf;
-		buf.realloc_buffer(MAX_PATH + 1); // arbitrary
-
-		let mut tvi = TVITEMEX::default();
-		tvi.hItem = hitem;
-		tvi.mask = co::TVIF::TEXT;
-		tvi.set_pszText(Some(&mut buf));
-
-		self.hwnd().SendMessage(tvm::GetItem { tvitem: &mut tvi })
-	}
-
-	/// A more convenient [`text`](crate::gui::TreeViewItems::text), which
-	/// directly returns a `String` instead of requiring an external buffer.
-	///
 	/// # Examples
 	///
 	/// ```rust,ignore
@@ -264,9 +227,15 @@ impl TreeViewItems {
 	///
 	/// println!("Text: {}", my_tree.items().text(my_item).unwrap());
 	/// ```
-	pub fn text_str(&self, hitem: HTREEITEM) -> WinResult<String> {
-		let mut buf = WString::default();
-		self.text(hitem, &mut buf)?;
+	pub fn text(&self, hitem: HTREEITEM) -> WinResult<String> {
+		let mut tvi = TVITEMEX::default();
+		tvi.hItem = hitem;
+		tvi.mask = co::TVIF::TEXT;
+
+		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1); // arbitrary
+		tvi.set_pszText(Some(&mut buf));
+
+		self.hwnd().SendMessage(tvm::GetItem { tvitem: &mut tvi })?;
 		Ok(buf.to_string())
 	}
 }
