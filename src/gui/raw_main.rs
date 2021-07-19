@@ -2,13 +2,13 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{IdIdcStr, IdMenu};
+use crate::enums::IdMenu;
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::base::Base;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
+use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
@@ -52,9 +52,10 @@ impl RawMain {
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
-		opts.generate_wndclassex(
-			self.base_ref().parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
-		self.0.base.register_class(&mut wcx)?;
+		RawBase::fill_wndclassex(self.base_ref().parent_hinstance()?,
+			opts.class_style, opts.class_icon, opts.class_icon,
+			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
+		let atom = self.0.base.register_class(&mut wcx)?;
 
 		let mut wnd_sz = opts.size;
 		multiply_dpi(None, Some(&mut wnd_sz))?;
@@ -81,7 +82,7 @@ impl RawMain {
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
 		self.0.base.create_window( // may panic
-			&class_name_buf.to_string(),
+			atom,
 			Some(&opts.title),
 			if opts.menu.is_null() {
 				IdMenu::None
@@ -230,32 +231,5 @@ impl Default for WindowMainOpts {
 			menu: HMENU::NULL,
 			accel_table: HACCEL::NULL,
 		}
-	}
-}
-
-impl WindowMainOpts {
-	fn generate_wndclassex<'a>(
-		&self,
-		hinst: HINSTANCE,
-		wcx: &mut WNDCLASSEX<'a>,
-		class_name_buf: &'a mut WString) -> WinResult<()>
-	{
-		wcx.hInstance = hinst;
-		wcx.style = self.class_style;
-		wcx.hIcon = self.class_icon;
-		wcx.hIconSm = self.class_icon;
-		wcx.hbrBackground = self.class_bg_brush;
-
-		wcx.hCursor = match self.class_cursor.as_opt() {
-			Some(h) => h,
-			None => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
-		};
-
-		if wcx.lpszClassName().is_none() {
-			*class_name_buf = RawBase::generate_wcx_class_name_hash(&wcx);
-			wcx.set_lpszClassName(Some(class_name_buf));
-		}
-
-		Ok(())
 	}
 }

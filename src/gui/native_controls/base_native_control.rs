@@ -10,6 +10,7 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
 use crate::structs::{POINT, SIZE};
+use crate::various::WString;
 
 static mut BASE_SUBCLASS_ID: usize = 0;
 
@@ -84,7 +85,7 @@ impl BaseNativeControl {
 
 		self.0.as_mut().hwnd = HWND::CreateWindowEx(
 			ex_styles,
-			AtomStr::Str(class_name.to_owned()),
+			AtomStr::Str(WString::from_str(class_name)),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
 			Some(hparent),

@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{IdIdcStr, IdMenu};
+use crate::enums::IdMenu;
 use crate::funcs::{
 	AdjustWindowRectEx,
 	DispatchMessage,
@@ -14,7 +14,7 @@ use crate::gui::base::Base;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
+use crate::handles::{HBRUSH, HCURSOR, HICON, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
@@ -59,9 +59,10 @@ impl RawModal {
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
-		opts.generate_wndclassex(
-			self.base_ref().parent_hinstance()?, &mut wcx, &mut class_name_buf)?;
-		self.0.base.register_class(&mut wcx)?;
+		RawBase::fill_wndclassex(self.base_ref().parent_hinstance()?,
+			opts.class_style, opts.class_icon, opts.class_icon,
+			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
+		let atom = self.0.base.register_class(&mut wcx)?;
 
 		self.0.as_mut().hchild_prev_focus_parent = HWND::GetFocus();
 		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
@@ -86,7 +87,7 @@ impl RawModal {
 		};
 
 		self.0.base.create_window( // may panic
-			&class_name_buf.to_string(),
+			atom,
 			Some(&opts.title),
 			IdMenu::None,
 			wnd_pos, wnd_sz,
@@ -232,32 +233,5 @@ impl Default for WindowModalOpts {
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT | co::WS_EX::DLGMODALFRAME,
 		}
-	}
-}
-
-impl WindowModalOpts {
-	fn generate_wndclassex<'a>(
-		&self,
-		hinst: HINSTANCE,
-		wcx: &mut WNDCLASSEX<'a>,
-		class_name_buf: &'a mut WString) -> WinResult<()>
-	{
-		wcx.hInstance = hinst;
-		wcx.style = self.class_style;
-		wcx.hIcon = self.class_icon;
-		wcx.hIconSm = self.class_icon;
-		wcx.hbrBackground = self.class_bg_brush;
-
-		wcx.hCursor = match self.class_cursor.as_opt() {
-			Some(h) => h,
-			None => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
-		};
-
-		if wcx.lpszClassName().is_none() {
-			*class_name_buf = RawBase::generate_wcx_class_name_hash(&wcx);
-			wcx.set_lpszClassName(Some(class_name_buf));
-		}
-
-		Ok(())
 	}
 }

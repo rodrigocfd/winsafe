@@ -15,13 +15,6 @@ impl std::fmt::Display for ATOM {
 	}
 }
 
-impl ATOM {
-	/// Useful to pass the atom as class name.
-	pub const fn as_ptr(self) -> *const u16 {
-		self.0 as _
-	}
-}
-
 /// [`COLORREF`](https://docs.microsoft.com/en-us/windows/win32/gdi/colorref)
 /// struct.
 #[repr(C)]

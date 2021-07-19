@@ -57,6 +57,12 @@ impl Default for WString {
 	}
 }
 
+impl std::fmt::Display for WString {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "{}", self.to_string())
+	}
+}
+
 impl WString {
 	/// Creates and stores a new UTF-16 string from an optional `&str`.
 	///

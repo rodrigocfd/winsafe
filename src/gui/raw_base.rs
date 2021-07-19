@@ -1,10 +1,10 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{AtomStr, IdMenu};
+use crate::enums::{AtomStr, IdIdcStr, IdMenu};
 use crate::funcs::{PostQuitMessage, RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
-use crate::handles::HWND;
+use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
@@ -40,10 +40,46 @@ impl RawBase {
 		}
 	}
 
+	/// Fills `WNDCLASSEX` with the given values, and generates the class name.
+	pub(in crate::gui) fn fill_wndclassex<'a>(
+		hinst: HINSTANCE, class_style: co::CS,
+		class_icon: HICON, class_icon_sm: HICON,
+		class_bg_brush: HBRUSH, class_cursor: HCURSOR,
+		wcx: &mut WNDCLASSEX<'a>, class_name_buf: &'a mut WString) -> WinResult<()>
+	{
+		wcx.lpfnWndProc = Some(Self::window_proc);
+		wcx.hInstance = hinst;
+		wcx.style = class_style;
+		wcx.hIcon = class_icon;
+		wcx.hIconSm = class_icon_sm;
+		wcx.hbrBackground = class_bg_brush;
+
+		wcx.hCursor = match class_cursor.as_opt() {
+			Some(h) => h,
+			None => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
+		};
+
+		if wcx.lpszClassName().is_none() {
+			*class_name_buf = WString::from_str(
+				&format!(
+					"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
+					wcx.style,
+					wcx.lpfnWndProc.map_or(0, |p| p as usize),
+					wcx.cbClsExtra, wcx.cbWndExtra,
+					wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
+					wcx.lpszMenuName(),
+					wcx.hIconSm,
+				),
+			);
+			wcx.set_lpszClassName(Some(class_name_buf));
+		}
+
+		Ok(())
+	}
+
 	pub(in crate::gui) fn register_class(&self,
 		wcx: &mut WNDCLASSEX) -> WinResult<ATOM>
 	{
-		wcx.lpfnWndProc = Some(Self::window_proc);
 		SetLastError(co::ERROR::SUCCESS);
 
 		RegisterClassEx(&wcx)
@@ -63,7 +99,7 @@ impl RawBase {
 
 	pub(in crate::gui) fn create_window(
 		&self,
-		class_name: &str,
+		class_name: ATOM,
 		title: Option<&str>,
 		hmenu: IdMenu,
 		pos: POINT,
@@ -79,7 +115,7 @@ impl RawBase {
 		// CreateWindowEx returns.
 		HWND::CreateWindowEx(
 			ex_styles,
-			AtomStr::Str(class_name.to_owned()),
+			AtomStr::Atom(class_name),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
 			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
@@ -87,24 +123,6 @@ impl RawBase {
 			self.base.parent_hinstance()?,
 			Some(self as *const _ as _), // pass pointer to self
 		).map(|_| ())
-	}
-
-	/// Generates a hash string from current fields, so it must called after all
-	/// the fields are set.
-	pub(in crate::gui) fn generate_wcx_class_name_hash(
-		wcx: &WNDCLASSEX) -> WString
-	{
-		WString::from_str(
-			&format!(
-				"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
-				wcx.style,
-				wcx.lpfnWndProc.map_or(0, |p| p as usize),
-				wcx.cbClsExtra, wcx.cbWndExtra,
-				wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
-				wcx.lpszMenuName(),
-				wcx.hIconSm,
-			),
-		)
 	}
 
 	pub(in crate::gui) fn ui_thread_message_handler(&self) {

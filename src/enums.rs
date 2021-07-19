@@ -51,15 +51,15 @@ pub enum AtomStr {
 	/// [`RegisterClassEx`](crate::RegisterClassEx).
 	Atom(ATOM),
 	/// A string.
-	Str(String),
+	Str(WString),
 }
 
 impl AtomStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
-			Self::Atom(atom) => atom.as_ptr(),
+			Self::Str(s) => unsafe { s.as_ptr() },
+			Self::Atom(atom) => atom.0 as _,
 		}
 	}
 }

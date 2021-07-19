@@ -2,12 +2,12 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{IdIdcStr, IdMenu};
+use crate::enums::IdMenu;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
-use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE};
+use crate::handles::{HBRUSH, HCURSOR, HICON};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
@@ -53,16 +53,17 @@ impl RawControl {
 
 					let mut wcx = WNDCLASSEX::default();
 					let mut class_name_buf = WString::default();
-					opts.generate_wndclassex(self2.base_ref().parent_hinstance()?,
-						&mut wcx, &mut class_name_buf)?;
-					self2.0.base.register_class(&mut wcx)?;
+					RawBase::fill_wndclassex(self2.base_ref().parent_hinstance()?,
+						opts.class_style, opts.class_icon, opts.class_icon,
+						opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
+					let atom = self2.0.base.register_class(&mut wcx)?;
 
 					let mut wnd_pos = opts.position;
 					let mut wnd_sz = opts.size;
 					multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
 					self2.0.base.create_window( // may panic
-						&class_name_buf.to_string(),
+						atom,
 						None,
 						IdMenu::Id(opts.ctrl_id),
 						wnd_pos, wnd_sz,
@@ -161,32 +162,5 @@ impl Default for WindowControlOpts {
 			ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 		}
-	}
-}
-
-impl WindowControlOpts {
-	fn generate_wndclassex<'a>(
-		&self,
-		hinst: HINSTANCE,
-		wcx: &mut WNDCLASSEX<'a>,
-		class_name_buf: &'a mut WString) -> WinResult<()>
-	{
-		wcx.hInstance = hinst;
-		wcx.style = self.class_style;
-		wcx.hIcon = self.class_icon;
-		wcx.hIconSm = self.class_icon;
-		wcx.hbrBackground = self.class_bg_brush;
-
-		wcx.hCursor = match self.class_cursor.as_opt() {
-			Some(h) => h,
-			None => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?,
-		};
-
-		if wcx.lpszClassName().is_none() {
-			*class_name_buf = RawBase::generate_wcx_class_name_hash(&wcx);
-			wcx.set_lpszClassName(Some(class_name_buf));
-		}
-
-		Ok(())
 	}
 }
