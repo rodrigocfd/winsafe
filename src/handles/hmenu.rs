@@ -9,6 +9,7 @@ use crate::handles::HWND;
 use crate::msg;
 use crate::privs::bool_to_winresult;
 use crate::structs::{MENUINFO, MENUITEMINFO, POINT};
+use crate::various::WString;
 
 pub_struct_handle! {
 	/// Handle to a
@@ -25,13 +26,14 @@ impl HMENU {
 	pub fn AppendMenu(self, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> WinResult<()>
 	{
+		let mut buf_lpNewItem = WString::default();
 		bool_to_winresult(
 			unsafe {
 				user32::AppendMenuW(
 					self.ptr,
 					uFlags.0,
 					uIDNewItem.into(),
-					lpNewItem.as_ptr(),
+					lpNewItem.as_ptr(&mut buf_lpNewItem),
 				)
 			},
 		)

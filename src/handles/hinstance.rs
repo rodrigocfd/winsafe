@@ -68,12 +68,14 @@ impl HINSTANCE {
 		lpType: RtStr, lpName: IdStr, func: F) -> WinResult<()>
 		where F: Fn(LANGID) -> bool
 	{
+		let mut buf_lpType = WString::default();
+		let mut buf_lpName = WString::default();
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceLanguagesW(
 					self.ptr,
-					lpType.as_ptr(),
-					lpName.as_ptr(),
+					lpType.as_ptr(&mut buf_lpType),
+					lpName.as_ptr(&mut buf_lpName),
 					Self::EnumResLangProc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -94,11 +96,12 @@ impl HINSTANCE {
 	pub fn EnumResourceNames<F>(self, lpType: RtStr, func: F) -> WinResult<()>
 		where F: Fn(IdStr) -> bool
 	{
+		let mut buf_lpType = WString::default();
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceNamesW(
 					self.ptr,
-					lpType.as_ptr(),
+					lpType.as_ptr(&mut buf_lpType),
 					Self::EnumResNameProc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -243,8 +246,12 @@ impl HINSTANCE {
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
 	pub fn LoadAccelerators(self, lpTableName: IdStr) -> WinResult<HACCEL> {
+		let mut buf_lpTableName = WString::default();
 		unsafe {
-			user32::LoadAcceleratorsW(self.ptr, lpTableName.as_ptr()).as_mut()
+			user32::LoadAcceleratorsW(
+				self.ptr,
+				lpTableName.as_ptr(&mut buf_lpTableName),
+			).as_mut()
 		}.map(|ptr| HACCEL { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -263,7 +270,11 @@ impl HINSTANCE {
 	///     .unwrap();
 	/// ```
 	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
-		unsafe { user32::LoadCursorW(self.ptr, lpCursorName.as_ptr()).as_mut() }
+		let mut buf_lpCursorName = WString::default();
+		unsafe { user32::LoadCursorW(
+			self.ptr,
+			lpCursorName.as_ptr(&mut buf_lpCursorName),
+		).as_mut() }
 			.map(|ptr| HCURSOR { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -282,7 +293,11 @@ impl HINSTANCE {
 	///     .unwrap();
 	/// ```
 	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
-		unsafe { user32::LoadIconW(self.ptr, lpIconName.as_ptr()).as_mut() }
+		let mut buf_lpIconName = WString::default();
+		unsafe { user32::LoadIconW(
+			self.ptr,
+			lpIconName.as_ptr(&mut buf_lpIconName),
+		).as_mut() }
 			.map(|ptr| HICON { ptr })
 			.ok_or_else(|| GetLastError())
 	}

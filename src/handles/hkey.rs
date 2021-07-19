@@ -577,6 +577,7 @@ impl HKEY {
 	pub fn RegSetKeyValue(self, lpSubKey: &str,
 		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
 	{
+		let mut buf_lpData = WString::default();
 		match co::ERROR(
 			unsafe {
 				advapi32::RegSetKeyValueW(
@@ -584,7 +585,7 @@ impl HKEY {
 					WString::from_str(lpSubKey).as_ptr(),
 					WString::from_str(lpValueName).as_ptr(),
 					lpData.reg_type().0,
-					lpData.as_ptr(),
+					lpData.as_ptr(&mut buf_lpData),
 					lpData.len() as _,
 				)
 			} as _
@@ -621,6 +622,7 @@ impl HKEY {
 	pub fn RegSetValueEx(self,
 		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
 	{
+		let mut buf_lpData = WString::default();
 		match co::ERROR(
 			unsafe {
 				advapi32::RegSetValueExW(
@@ -628,7 +630,7 @@ impl HKEY {
 					WString::from_str(lpValueName).as_ptr(),
 					0,
 					lpData.reg_type().0,
-					lpData.as_ptr() as _,
+					lpData.as_ptr(&mut buf_lpData) as _,
 					lpData.len() as _,
 				)
 			} as _

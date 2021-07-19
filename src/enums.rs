@@ -51,15 +51,18 @@ pub enum AtomStr {
 	/// [`RegisterClassEx`](crate::RegisterClassEx).
 	Atom(ATOM),
 	/// A string.
-	Str(WString),
+	Str(String),
 }
 
 impl AtomStr {
 	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
-			Self::Str(s) => unsafe { s.as_ptr() },
-			Self::Atom(atom) => atom.0 as _,
+			Self::Atom(atom) => MAKEINTRESOURCE(atom.0 as _),
+			Self::Str(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() }
+			},
 		}
 	}
 }
@@ -99,11 +102,14 @@ pub enum BitmapPtrStr {
 
 impl BitmapPtrStr {
 	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::Bitmap(hbmp) => hbmp.ptr as _,
 			Self::Ptr(lp) => *lp as _,
-			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
+			Self::Str(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() }
+			},
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -269,11 +275,14 @@ pub enum IdIdcStr {
 
 impl IdIdcStr {
 	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idc(idc) => MAKEINTRESOURCE(idc.0),
-			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
+			Self::Str(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() }
+			},
 		}
 	}
 }
@@ -293,11 +302,14 @@ pub enum IdIdiStr {
 
 impl IdIdiStr {
 	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idi(idi) => MAKEINTRESOURCE(idi.0),
-			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
+			Self::Str(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() }
+			},
 		}
 	}
 }
@@ -394,10 +406,13 @@ pub enum IdStr {
 }
 
 impl IdStr {
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
+			Self::Str(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() }
+			},
 		}
 	}
 }
@@ -419,12 +434,15 @@ pub enum IdTdiconStr {
 
 impl IdTdiconStr {
 	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::None => std::ptr::null(),
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0),
-			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
+			Self::Str(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() }
+			},
 		}
 	}
 }
@@ -457,12 +475,15 @@ pub enum RegistryValue {
 
 impl RegistryValue {
 	/// Converts the internal value to a `*const c_void`.
-	pub fn as_ptr(&self) -> *const std::ffi::c_void {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const std::ffi::c_void {
 		match self {
 			Self::Binary(b) => b.as_ptr() as _,
 			Self::Dword(n) => *n as _,
 			Self::Qword(n) => *n as _,
-			Self::Sz(s) => unsafe { WString::from_str(s).as_ptr() as _ },
+			Self::Sz(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() as _ }
+			},
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -484,7 +505,7 @@ impl RegistryValue {
 			Self::Binary(b) => b.len(),
 			Self::Dword(_) => std::mem::size_of::<u32>(),
 			Self::Qword(_) => std::mem::size_of::<u64>(),
-			Self::Sz(u16) => (u16.len() + 1) * std::mem::size_of::<u16>(), // including terminating null
+			Self::Sz(s) => (s.len() + 1) * std::mem::size_of::<u16>(), // including terminating null
 			Self::None => 0,
 		}
 	}
@@ -502,10 +523,13 @@ pub enum RtStr {
 }
 
 impl RtStr {
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::Rt(id) => MAKEINTRESOURCE(id.0 as _),
-			Self::Str(s) => unsafe { WString::from_str(s).as_ptr() },
+			Self::Str(s) => {
+				*buf = WString::from_str(s);
+				unsafe { buf.as_ptr() }
+			},
 		}
 	}
 }
