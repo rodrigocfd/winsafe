@@ -4,6 +4,7 @@ use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 #[link(name = "kernel32")]
 extern "system" {
+	pub fn BeginUpdateResourceW(_: PCSTR, _: BOOL) -> HANDLE;
 	pub fn CloseHandle(_: HANDLE) -> BOOL;
 	pub fn CopyFileW(_: PCSTR, _: PCSTR, _: BOOL) -> BOOL;
 	pub fn CreateFileMappingW(_: HANDLE, _: PVOID, _: u32, _: u32, _: u32, _: PCSTR) -> HANDLE;
@@ -13,6 +14,7 @@ extern "system" {
 	pub fn CreateThread(_: PVOID, _: u64, _: PVOID, _: PVOID, _: u32, _: *mut u32) -> HANDLE;
 	pub fn CreateToolhelp32Snapshot(_: u32, _: u32) -> HANDLE;
 	pub fn DeleteFileW(_: PCSTR) -> BOOL;
+	pub fn EndUpdateResourceW(_: HANDLE, _: BOOL) -> BOOL;
 	pub fn EnumResourceLanguagesW(_: HANDLE, _: PCSTR, _: PCSTR, _: PFUNC, _: isize) -> BOOL;
 	pub fn EnumResourceNamesW(_: HANDLE, _: PCSTR, _: PFUNC, _: isize) -> BOOL;
 	pub fn EnumResourceTypesW(_: HANDLE, _: PFUNC, _: isize) -> BOOL;
@@ -92,6 +94,7 @@ extern "system" {
 	pub fn SystemTimeToTzSpecificLocalTime(_: PCVOID, _: PCVOID, _: PVOID) -> BOOL;
 	pub fn UnlockFile(_: HANDLE, _: u32, _: u32, _: u32, _: u32) -> BOOL;
 	pub fn UnmapViewOfFile(_: PCVOID) -> BOOL;
+	pub fn UpdateResourceW(_: HANDLE, _: PCSTR, _: PCSTR, _: u16, _: PVOID, _: u32) -> BOOL;
 	pub fn VerifyVersionInfoW(_: PVOID, _: u32, _: u64) -> BOOL;
 	pub fn VerSetConditionMask(_: u64, _: u32, _: u8) -> u64;
 	pub fn WaitForSingleObject(_: HANDLE, _: u32) -> u32;
