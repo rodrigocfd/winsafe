@@ -12,18 +12,18 @@ pub_struct_handle! {
 	/// Handle to an
 	/// [updateable resource](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew).
 	/// Originally just a `HANDLE`.
-	HUPDATERES
+	HUPDATERSRC
 }
 
-impl HUPDATERES {
+impl HUPDATERSRC {
 	/// [`BeginUpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HUPDATERES::EndUpdateResource`](crate::HUPDATERES::EndUpdateResource)
+	/// [`HUPDATERSRC::EndUpdateResource`](crate::HUPDATERSRC::EndUpdateResource)
 	/// call.
 	pub fn BeginUpdateResource(
-		pFileName: &str, bDeleteExistingResources: bool) -> WinResult<HUPDATERES>
+		pFileName: &str, bDeleteExistingResources: bool) -> WinResult<HUPDATERSRC>
 	{
 		unsafe {
 			kernel32::BeginUpdateResourceW(

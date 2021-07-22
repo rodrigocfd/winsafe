@@ -25,6 +25,8 @@ extern "system" {
 	pub fn FindClose(_: HANDLE) -> BOOL;
 	pub fn FindFirstFileW(_: PCSTR, _: PVOID) -> HANDLE;
 	pub fn FindNextFileW(_: HANDLE, _: PVOID) -> BOOL;
+	pub fn FindResourceExW(_: HANDLE, _: PCSTR, _: PCSTR, _: u16) -> HANDLE;
+	pub fn FindResourceW(_: HANDLE, _: PCSTR, _: PCSTR) -> HANDLE;
 	pub fn FlushInstructionCache(_: HANDLE, _: PCVOID, _: u64) -> BOOL;
 	pub fn FlushProcessWriteBuffers();
 	pub fn FormatMessageW(_: u32, _: PCVOID, _: u32, _: u32, _: PSTR, _: u32, _: PVOID) -> u32;
@@ -72,9 +74,11 @@ extern "system" {
 	pub fn GlobalSize(_: HANDLE) -> u64;
 	pub fn GlobalUnlock(_: HANDLE) -> BOOL;
 	pub fn LoadLibraryW(_: PCSTR) -> HANDLE;
+	pub fn LoadResource(_: HANDLE, _: HANDLE) -> HANDLE;
 	pub fn LocalFree(_: HANDLE) -> HANDLE;
 	pub fn LocalSize(_: HANDLE) -> u64;
 	pub fn LockFile(_: HANDLE, _: u32, _: u32, _: u32, _: u32) -> BOOL;
+	pub fn LockResource(_: HANDLE) -> PVOID;
 	pub fn lstrlenW(_: PCSTR) -> i32;
 	pub fn MapViewOfFile(_: HANDLE, _: u32, _: u32, _: u32, _: i64) -> PVOID;
 	pub fn MoveFileW(_: PCSTR, _: PCSTR) -> BOOL;
@@ -89,6 +93,7 @@ extern "system" {
 	pub fn SetEndOfFile(_: HANDLE) -> BOOL;
 	pub fn SetFilePointerEx(_: HANDLE, _: i64, _: *mut i64, _: u32) -> BOOL;
 	pub fn SetLastError(_: u32);
+	pub fn SizeofResource(_: HANDLE, _: HANDLE) -> u32;
 	pub fn Sleep(_: u32);
 	pub fn SystemTimeToFileTime(_: PCVOID, _: PVOID) -> BOOL;
 	pub fn SystemTimeToTzSpecificLocalTime(_: PCVOID, _: PCVOID, _: PVOID) -> BOOL;

@@ -5,7 +5,16 @@ use crate::co;
 use crate::enums::{IdIdcStr, IdIdiStr, IdStr, RtStr};
 use crate::ffi::{BOOL, kernel32, user32};
 use crate::funcs::GetLastError;
-use crate::handles::{HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND};
+use crate::handles::{
+	HACCEL,
+	HBITMAP,
+	HCURSOR,
+	HICON,
+	HMENU,
+	HRSRC,
+	HRSRCMEM,
+	HWND,
+};
 use crate::privs::{bool_to_winresult, IS_INTRESOURCE, MAX_PATH, str_to_iso88591};
 use crate::structs::{ATOM, LANGID, WNDCLASSEX};
 use crate::various::WString;
@@ -145,6 +154,46 @@ impl HINSTANCE {
 		} else {
 			RtStr::Str(WString::from_wchars_nullt(lpszType).to_string())
 		}) as _
+	}
+
+	/// [`FindResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew)
+	/// method.
+	///
+	/// For an example, see
+	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
+	pub fn FindResource(self, lpName: IdStr, lpType: RtStr) -> WinResult<HRSRC> {
+		let mut buf_lpName = WString::default();
+		let mut buf_lpType = WString::default();
+		unsafe {
+			kernel32::FindResourceW(
+				self.ptr,
+				lpName.as_ptr(&mut buf_lpName),
+				lpType.as_ptr(&mut buf_lpType),
+			).as_mut()
+		}.map(|ptr| HRSRC { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`FindResourceEx`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourceexw)
+	/// method.
+	///
+	/// For an example, see
+	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
+	pub fn FindResourceEx(self,
+		lpName: IdStr, lpType: RtStr,
+		wLanguage: Option<LANGID>) -> WinResult<HRSRC>
+	{
+		let mut buf_lpName = WString::default();
+		let mut buf_lpType = WString::default();
+		unsafe {
+			kernel32::FindResourceExW(
+				self.ptr,
+				lpName.as_ptr(&mut buf_lpName),
+				lpType.as_ptr(&mut buf_lpType),
+				wLanguage.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
+			).as_mut()
+		}.map(|ptr| HRSRC { ptr })
+			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`FreeLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
@@ -354,9 +403,19 @@ impl HINSTANCE {
 	/// [`LoadMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// method.
 	pub fn LoadMenu(self, lpMenuName: u16) -> WinResult<HMENU> {
-		unsafe {
-			user32::LoadMenuW(self.ptr, lpMenuName as _).as_mut()
-		}.map(|ptr| HMENU { ptr })
+		unsafe { user32::LoadMenuW(self.ptr, lpMenuName as _).as_mut() }
+			.map(|ptr| HMENU { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`LoadResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)
+	/// method.
+	///
+	/// For an example, see
+	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
+	pub fn LoadResource(self, hResInfo: HRSRC) -> WinResult<HRSRCMEM> {
+		unsafe { kernel32::LoadResource(self.ptr, hResInfo.ptr).as_mut() }
+			.map(|ptr| HRSRCMEM { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -373,6 +432,75 @@ impl HINSTANCE {
 		} {
 			0 => Err(GetLastError()),
 			len => Ok(WString::from_wchars_count(pData, len as _).to_string())
+		}
+	}
+
+	/// [`LockResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
+	/// method.
+	///
+	/// This method should belong to [`HRSRCMEM`](crate::HRSRCMEM), but in order
+	/// to make it safe, we automatically call
+	/// [`HINSTANCE::SizeofResource`](crate::HINSTANCE::SizeofResource), so it's
+	/// implemented here.
+	///
+	/// # Examples
+	///
+	/// The
+	/// [Updating Resources](https://docs.microsoft.com/en-us/windows/win32/menurc/using-resources#updating-resources)
+	/// example:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{HINSTANCE, HUPDATERSRC, LANGID};
+	/// use winsafe::{co, IdStr, RtStr};
+	///
+	/// const IDD_HAND_ABOUTBOX: u16 = 103;
+	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
+	///
+	/// let hExe = HINSTANCE::LoadLibrary("hand.exe").unwrap();
+	///
+	/// let hRes = hExe.FindResource(
+	///     IdStr::Id(IDD_HAND_ABOUTBOX),
+	///     RtStr::Rt(co::RT::DIALOG),
+	/// ).unwrap();
+	///
+	/// let hResLoad = hExe.LoadResource(hRes).unwrap();
+	///
+	/// let lpResLock = hExe.LockResource(hRes, hResLoad).unwrap();
+	///
+	/// let hUpdateRes = HUPDATERSRC::BeginUpdateResource("foot.exe", false)
+	///     .unwrap();
+	///
+	/// hUpdateRes.UpdateResource(
+	///     RtStr::Rt(co::RT::DIALOG),
+	///     IdStr::Id(IDD_FOOT_ABOUTBOX),
+	///     LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
+	///     lpResLock,
+	/// ).unwrap();
+	///
+	/// hUpdateRes.EndUpdateResource(false).unwrap();
+	///
+	/// hExe.FreeLibrary().unwrap();
+	/// ```
+	pub fn LockResource<'a>(self,
+		hResInfo: HRSRC, hResLoaded: HRSRCMEM) -> WinResult<&'a [u8]>
+	{
+		let sz = self.SizeofResource(hResInfo)?;
+		unsafe { kernel32::LockResource(hResLoaded.ptr).as_mut() }
+			.map(|ptr| unsafe {
+				std::slice::from_raw_parts(ptr as *const _ as _, sz as _, )
+			})
+			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`SizeofResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)
+	/// method.
+	///
+	/// For an example, see
+	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
+	pub fn SizeofResource(self, hResInfo: HRSRC) -> WinResult<u32> {
+		match unsafe { kernel32::SizeofResource(self.ptr, hResInfo.ptr) } {
+			0 => Err(GetLastError()),
+			sz => Ok(sz)
 		}
 	}
 }

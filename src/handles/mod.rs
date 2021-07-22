@@ -29,7 +29,7 @@ mod hprocesslist;
 mod hrgn;
 mod htheme;
 mod hthread;
-mod hupdateres;
+mod hupdatersrc;
 mod hwnd;
 
 pub use any_handles::*;
@@ -58,5 +58,5 @@ pub use hprocesslist::HPROCESSLIST;
 pub use hrgn::HRGN;
 pub use htheme::HTHEME;
 pub use hthread::HTHREAD;
-pub use hupdateres::HUPDATERES;
+pub use hupdatersrc::HUPDATERSRC;
 pub use hwnd::HWND;
