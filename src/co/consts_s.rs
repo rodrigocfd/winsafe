@@ -670,7 +670,7 @@ pub_struct_const_cmd! { STN,
 }
 
 pub_struct_const! { STOCK_BRUSH, i32,
-	/// [`HBRUSH::GetStockBrush`](crate::HBRUSH::GetStockBrush) `i` (`i32`).
+	/// [`HBRUSH::GetStockObject`](crate::HBRUSH::GetStockObject) `i` (`i32`).
 	=>
 	BLACK, 4
 	DKGRAY, 3
@@ -683,7 +683,7 @@ pub_struct_const! { STOCK_BRUSH, i32,
 }
 
 pub_struct_const! { STOCK_PEN, i32,
-	/// [`HPEN::GetStockBrush`](crate::HPEN::GetStockBrush) `i` (`i32`).
+	/// [`HPEN::GetStockObject`](crate::HPEN::GetStockObject) `i` (`i32`).
 	=>
 	BLACK, 7
 	DC, 19
@@ -692,7 +692,7 @@ pub_struct_const! { STOCK_PEN, i32,
 }
 
 pub_struct_const! { STOCK_FONT, i32,
-	/// [`HFONT::GetStockBrush`](crate::HFONT::GetStockBrush) `i` (`i32`).
+	/// [`HFONT::GetStockObject`](crate::HFONT::GetStockObject) `i` (`i32`).
 	=>
 	ANSI_FIXED, 11
 	ANSI_VAR, 12

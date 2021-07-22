@@ -75,8 +75,8 @@ impl ComboBoxItems {
 	}
 
 	/// Retrieves the currently selected text, if any, by calling
-	/// [`selected_index`](crate::gui::ComboBoxItems::selected_index) and
-	/// [`text`](crate::gui::ComboBoxItems::text) methods.
+	/// [`selected_index`](crate::gui::spec::ComboBoxItems::selected_index) and
+	/// [`text`](crate::gui::spec::ComboBoxItems::text) methods.
 	pub fn selected_text(&self) -> Option<String> {
 		self.selected_index()
 			.and_then(|idx| self.text(idx))

@@ -139,7 +139,7 @@ impl ListViewColumns {
 	}
 
 	/// Sets the title of the column by calling
-	/// [`set_info`](crate::gui::ListViewColumns::set_info).
+	/// [`set_info`](crate::gui::spec::ListViewColumns::set_info).
 	pub fn set_title(&self, column_index: u32, text: &str) -> WinResult<()> {
 		let mut lvc = LVCOLUMN::default();
 		lvc.iSubItem = column_index as _;
@@ -186,7 +186,7 @@ impl ListViewColumns {
 	}
 
 	/// Retrieves the title of the column by calling
-	/// [`info`](crate::gui::ListViewColumns::info).
+	/// [`info`](crate::gui::spec::ListViewColumns::info).
 	pub fn title(&self, column_index: u32) -> WinResult<String> {
 		let mut lvc = LVCOLUMN::default();
 		lvc.iSubItem = column_index as _;
