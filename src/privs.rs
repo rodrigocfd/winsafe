@@ -27,6 +27,7 @@ pub(crate) const L_MAX_URL_LENGTH: usize = 2048 + 32 + 4;
 pub(crate) const LB_ERR: i32 = -1;
 pub(crate) const LB_ERRSPACE: i32 = -2;
 pub(crate) const LF_FACESIZE: usize = 32;
+pub(crate) const MAX_COMPUTERNAME_LENGTH: usize = 15;
 pub(crate) const MAX_LINKID_TEXT: usize = 48;
 pub(crate) const MAX_PATH: usize = 260;
 

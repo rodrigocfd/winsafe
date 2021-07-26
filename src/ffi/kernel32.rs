@@ -33,6 +33,7 @@ extern "system" {
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
 	pub fn FreeLibrary(_: HANDLE) -> BOOL;
 	pub fn GetBinaryTypeW(_: PCSTR, _: *mut u32) -> BOOL;
+	pub fn GetComputerNameW(_: PSTR, _: *mut u32) -> BOOL;
 	pub fn GetCurrentProcess() -> HANDLE;
 	pub fn GetCurrentProcessId() -> u32;
 	pub fn GetCurrentThread() -> HANDLE;
@@ -44,6 +45,7 @@ extern "system" {
 	pub fn GetFileInformationByHandle(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn GetFileSizeEx(_: HANDLE, _: *mut i64) -> BOOL;
 	pub fn GetFileType(_: HANDLE) -> u32;
+	pub fn GetFirmwareType(_: *mut u32) -> BOOL;
 	pub fn GetGuiResources(_: HANDLE, _: u32) -> u32;
 	pub fn GetLargePageMinimum() -> u64;
 	pub fn GetLastError() -> u32;

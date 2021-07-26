@@ -22,6 +22,7 @@ use crate::privs::{
 	bool_to_winresult,
 	hr_to_winresult,
 	INVALID_FILE_ATTRIBUTES,
+	MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH,
 	parse_multi_z_str,
 };
@@ -245,6 +246,16 @@ pub fn EnumDisplaySettingsEx(
 
 /// [`ExpandEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw)
 /// function.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::ExpandEnvironmentStrings;
+///
+/// println("{}", ExpandEnvironmentStrings(
+///     "Os %OS%, home %HOMEPATH%, temp %TEMP%",
+/// ).unwrap());
+/// ```
 pub fn ExpandEnvironmentStrings(lpSrc: &str) -> WinResult<String> {
 	let wsrc = WString::from_str(lpSrc);
 	let len = unsafe {
@@ -320,6 +331,16 @@ pub fn GetCurrentThreadId() -> u32 {
 /// method.
 pub fn GetClipCursor(lpRect: &mut RECT) -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::GetClipCursor(lpRect as *mut _ as _) })
+}
+
+/// [`GetComputerName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamew)
+/// function.
+pub fn GetComputerName() -> WinResult<String> {
+	let mut buf = WString::new_alloc_buffer(MAX_COMPUTERNAME_LENGTH + 1);
+	let mut sz = buf.buffer_size() as u32;
+	bool_to_winresult(
+		unsafe { kernel32::GetComputerNameW(buf.as_mut_ptr(), &mut sz) },
+	).map(|_| buf.to_string())
 }
 
 /// [`GetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
@@ -448,6 +469,14 @@ pub fn GetFileVersionInfoSize(lptstrFilename: &str) -> WinResult<u32> {
 		0 => Err(GetLastError()),
 		sz => Ok(sz)
 	}
+}
+
+/// [`GetFirmwareType`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
+/// function.
+pub fn GetFirmwareType() -> WinResult<co::FIRMWARE_TYPE> {
+	let mut ft: u32 = 0;
+	bool_to_winresult(unsafe { kernel32::GetFirmwareType(&mut ft) })
+		.map(|_| co::FIRMWARE_TYPE(ft))
 }
 
 /// [`GetGUIThreadInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguithreadinfo)

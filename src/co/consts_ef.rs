@@ -268,6 +268,15 @@ pub_struct_const! { FILE_TYPE, u32,
 	UNKNOWN, 0x0000
 }
 
+pub_struct_const! { FIRMWARE_TYPE, u32,
+	/// [`FIRMWARE_TYPE`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
+	/// enumeration (`u32`).
+	=>
+	Unknown, 0
+	Bios, 1
+	Uefi, 2
+}
+
 pub_struct_const! { FO, u32,
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).
 	=>
