@@ -45,7 +45,8 @@ impl std::fmt::Display for Encoding {
 /// Performs UTF-8 conversions and can be used as a buffer to low-level Win32
 /// functions.
 ///
-/// See an example in [`HWND::GetWindowText`](crate::HWND::GetWindowText).
+/// This is struct is mostly used internally by the library, as a bridge between
+/// Windows and Rust strings.
 #[derive(Clone)]
 pub struct WString {
 	vec_u16: Option<Vec<u16>>,
