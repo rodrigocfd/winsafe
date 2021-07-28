@@ -33,6 +33,7 @@ extern "system" {
 	pub fn FreeEnvironmentStringsW(_: HANDLE) -> BOOL;
 	pub fn FreeLibrary(_: HANDLE) -> BOOL;
 	pub fn GetBinaryTypeW(_: PCSTR, _: *mut u32) -> BOOL;
+	pub fn GetCommandLineW() -> PCSTR;
 	pub fn GetComputerNameW(_: PSTR, _: *mut u32) -> BOOL;
 	pub fn GetCurrentProcess() -> HANDLE;
 	pub fn GetCurrentProcessId() -> u32;

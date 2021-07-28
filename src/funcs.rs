@@ -17,7 +17,7 @@ use crate::ffi::{
 	user32,
 	version,
 };
-use crate::handles::{HINSTANCE, HWND};
+use crate::handles::{HINSTANCE, HLOCAL, HWND};
 use crate::privs::{
 	bool_to_winresult,
 	hr_to_winresult,
@@ -122,7 +122,7 @@ pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> WinResult<bool> {
 }
 
 /// [`ClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor)
-/// method.
+/// function.
 pub fn ClipCursor(lpRect: Option<&RECT>) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
@@ -137,6 +137,41 @@ pub fn ClipCursor(lpRect: Option<&RECT>) -> WinResult<()> {
 /// function.
 pub fn CloseClipboard() -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::CloseClipboard() })
+}
+
+/// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{CommandLineToArgv, GetCommandLine};
+///
+/// let args = CommandLineToArgv(&GetCommandLine()).unwrap();
+/// for arg in args.iter() {
+///     println!("{}", arg);
+/// }
+/// ```
+pub fn CommandLineToArgv(lpCmdLine: &str) -> WinResult<Vec<String>> {
+	let mut pNumArgs: i32 = 0;
+	let lpArr = unsafe {
+		shell32::CommandLineToArgvW(
+			WString::from_str(lpCmdLine).as_ptr(),
+			&mut pNumArgs,
+		)
+	};
+	if lpArr.is_null() {
+		return Err(GetLastError());
+	}
+
+	let mut strs = Vec::with_capacity(pNumArgs as _);
+	for lp in unsafe { std::slice::from_raw_parts(lpArr, pNumArgs as _) }.iter() {
+		strs.push(WString::from_wchars_nullt(*lp).to_string());
+	}
+
+	(HLOCAL { ptr: lpArr as _ })
+		.LocalFree()
+		.map(|_| strs)
 }
 
 /// [`CommDlgExtendedError`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
@@ -314,6 +349,29 @@ pub fn GetBinaryType(lpApplicationName: &str) -> WinResult<co::SCS> {
 	).map(|_| lpBinaryType)
 }
 
+/// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
+/// function.
+pub fn GetClipCursor(lpRect: &mut RECT) -> WinResult<()> {
+	bool_to_winresult(unsafe { user32::GetClipCursor(lpRect as *mut _ as _) })
+}
+
+/// [`GetCommandLine`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinew)
+/// function.
+///
+/// For an example, see [`CommandLineToArgv`](crate::CommandLineToArgv).
+pub fn GetCommandLine() -> String {
+	WString::from_wchars_nullt(unsafe { kernel32::GetCommandLineW() }).to_string()
+}
+
+/// [`GetComputerName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamew)
+/// function.
+pub fn GetComputerName() -> WinResult<String> {
+	let mut buf = WString::new_alloc_buffer(MAX_COMPUTERNAME_LENGTH + 1);
+	let mut sz = buf.buffer_size() as u32;
+	bool_to_winresult(
+		unsafe { kernel32::GetComputerNameW(buf.as_mut_ptr(), &mut sz) },
+	).map(|_| buf.to_string())
+}
 
 /// [`GetCurrentProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
 /// function.
@@ -325,22 +383,6 @@ pub fn GetCurrentProcessId() -> u32 {
 /// function.
 pub fn GetCurrentThreadId() -> u32 {
 	unsafe { kernel32::GetCurrentThreadId() }
-}
-
-/// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
-/// method.
-pub fn GetClipCursor(lpRect: &mut RECT) -> WinResult<()> {
-	bool_to_winresult(unsafe { user32::GetClipCursor(lpRect as *mut _ as _) })
-}
-
-/// [`GetComputerName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamew)
-/// function.
-pub fn GetComputerName() -> WinResult<String> {
-	let mut buf = WString::new_alloc_buffer(MAX_COMPUTERNAME_LENGTH + 1);
-	let mut sz = buf.buffer_size() as u32;
-	bool_to_winresult(
-		unsafe { kernel32::GetComputerNameW(buf.as_mut_ptr(), &mut sz) },
-	).map(|_| buf.to_string())
 }
 
 /// [`GetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
@@ -400,7 +442,7 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 }
 
 /// [`GetFileAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
-/// method.
+/// function.
 ///
 /// # Examples
 ///

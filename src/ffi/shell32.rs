@@ -4,6 +4,7 @@ use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
 #[link(name = "shell32")]
 extern "system" {
+	pub fn CommandLineToArgvW(_: PCSTR, _: *mut i32) -> *mut PSTR;
 	pub fn DragFinish(_: HANDLE);
 	pub fn DragQueryFileW(_: HANDLE, _: u32, _: PSTR, _: u32) -> u32;
 	pub fn DragQueryPoint(_: HANDLE, _: PVOID) -> BOOL;
