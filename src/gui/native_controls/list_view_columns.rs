@@ -65,7 +65,7 @@ impl ListViewColumns {
 			lvc.set_pszText(Some(&mut wtext));
 
 			self.hwnd().SendMessage(lvm::InsertColumn {
-				index: 0xffff,
+				index: 0xffff, // insert as the last columns
 				lvcolumn: &lvc,
 			})?;
 		}
@@ -110,7 +110,7 @@ impl ListViewColumns {
 		let mut texts = Vec::with_capacity(sel_count as _);
 		let mut buf = WString::default();
 
-		let mut idx = None;
+		let mut idx = None; // will start at first item
 		loop {
 			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
 				initial_index: idx,
@@ -120,7 +120,7 @@ impl ListViewColumns {
 					ListViewItems::text_retrieve(
 						self.hwnd(), idx, column_index, &mut buf);
 					texts.push(buf.to_string());
-					Some(idx)
+					Some(idx) // update start item
 				},
 				None => break,
 			};

@@ -52,7 +52,7 @@ impl HFILE {
 	/// ```rust,ignore
 	/// use winsafe::{co, HFILE};
 	///
-	/// let (hfile, status) = w::HFILE::CreateFile(
+	/// let (hfile, status) = HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ | co::GENERIC::WRITE,
 	///     co::FILE_SHARE::NONE,

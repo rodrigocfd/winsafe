@@ -577,20 +577,20 @@ impl HWND {
 	/// println!("Text: {}", text);
 	/// ```
 	pub fn GetWindowText(self) -> WinResult<String> {
-		match self.GetWindowTextLength()? {
-			0 => Ok(String::default()), // window has no text, simply clear buffer
-			len => {
-				let mut buf = WString::new_alloc_buffer(len as usize + 1); // plus terminating null
-				match unsafe {
-					user32::GetWindowTextW(self.ptr, buf.as_mut_ptr(), len + 1)
-				} {
-					0 => match GetLastError() {
-						co::ERROR::SUCCESS => Ok(String::default()), // no chars copied for some reason
-						err => Err(err),
-					},
-					_ => Ok(buf.to_string()),
-				}
+		let len = self.GetWindowTextLength()?;
+		if len == 0 {
+			return Ok(String::default()); // window has no text
+		}
+
+		let mut buf = WString::new_alloc_buffer(len as usize + 1); // plus terminating null
+		match unsafe {
+			user32::GetWindowTextW(self.ptr, buf.as_mut_ptr(), len + 1)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(String::default()), // no chars copied for some reason
+				err => Err(err),
 			},
+			_ => Ok(buf.to_string()),
 		}
 	}
 

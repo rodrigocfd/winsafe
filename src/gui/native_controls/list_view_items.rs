@@ -66,7 +66,7 @@ impl ListViewItems {
 
 		let mut lvi = LVITEM::default();
 		lvi.mask = co::LVIF::TEXT | co::LVIF::IMAGE;
-		lvi.iItem = 0x0fff_ffff; // insert as the last one
+		lvi.iItem = 0x0fff_ffff; // insert as the last item
 
 		lvi.iImage = match icon_index {
 			Some(idx) => idx as _,
@@ -78,7 +78,7 @@ impl ListViewItems {
 
 		let new_idx = self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })?;
 
-		for (idx, text) in texts.iter().skip(1).enumerate() {
+		for (idx, text) in texts.iter().skip(1).enumerate() { // subsequent columns
 			self.set_text(new_idx, idx as u32 + 1, text.as_ref())?;
 		}
 
@@ -218,7 +218,7 @@ impl ListViewItems {
 	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) messages.
 	pub fn selected(&self) -> Vec<u32> {
 		let mut items = Vec::with_capacity(self.selected_count() as _);
-		let mut idx = None;
+		let mut idx = None; // will start at first item
 
 		loop {
 			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
@@ -227,7 +227,7 @@ impl ListViewItems {
 			}) {
 				Some(idx) => {
 					items.push(idx);
-					Some(idx)
+					Some(idx) // update start item
 				},
 				None => break,
 			};

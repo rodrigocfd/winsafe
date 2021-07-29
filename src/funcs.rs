@@ -1215,7 +1215,7 @@ pub fn SystemTimeToTzSpecificLocalTime(
 /// let mut tdc = TASKDIALOGCONFIG::default();
 /// tdc.hwndParent = wnd.hwnd();
 /// tdc.dwCommonButtons = co::TDCBF::YES | co::TDCBF::NO;
-/// tdc.set_hMainIcon(w::HiconIdTdicon::Tdicon(co::TD_ICON::INFORMATION));
+/// tdc.set_hMainIcon(HiconIdTdicon::Tdicon(co::TD_ICON::INFORMATION));
 ///
 /// let mut title = WString::from_str("Title");
 /// tdc.set_pszWindowTitle(Some(&mut title));
