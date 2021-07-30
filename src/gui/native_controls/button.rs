@@ -25,7 +25,7 @@ struct Obj { // actual fields of Button
 	events: ButtonEvents,
 }
 
-impl_send_sync_child!(Button);
+impl_send_sync_debug_child!(Button);
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
@@ -100,7 +100,10 @@ impl Button {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(ButtonEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(ButtonEvents);
 
 	/// Fires the click event for the button by sending a
 	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,

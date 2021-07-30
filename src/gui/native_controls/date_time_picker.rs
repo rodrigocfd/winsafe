@@ -26,7 +26,7 @@ struct Obj { // actual fields of DateTimePicker
 	events: DateTimePickerEvents,
 }
 
-impl_send_sync_child!(DateTimePicker);
+impl_send_sync_debug_child!(DateTimePicker);
 
 impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent
@@ -109,7 +109,10 @@ impl DateTimePicker {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(DateTimePickerEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(DateTimePickerEvents);
 
 	/// Retrieves the currently selected date by sending a
 	/// [`DTM_GETSYSTEMTIME`](crate::msg::dtm::GetSystemTime) message.

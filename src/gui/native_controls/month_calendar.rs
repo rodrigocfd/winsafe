@@ -26,7 +26,7 @@ struct Obj { // actual fields of MonthCalendar
 	events: MonthCalendarEvents,
 }
 
-impl_send_sync_child!(MonthCalendar);
+impl_send_sync_debug_child!(MonthCalendar);
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent
@@ -106,7 +106,10 @@ impl MonthCalendar {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(MonthCalendarEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(MonthCalendarEvents);
 
 	/// Retrieves the currently selected date by sending a
 	/// [`MCM_GETCURSEL`](crate::msg::mcm::GetCurSel) message.

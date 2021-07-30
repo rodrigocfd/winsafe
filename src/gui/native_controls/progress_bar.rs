@@ -23,7 +23,7 @@ struct Obj { // actual fields of ProgressBar
 	opts_id: OptsId<ProgressBarOpts>,
 }
 
-impl_send_sync_child!(ProgressBar);
+impl_send_sync_debug_child!(ProgressBar);
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
@@ -93,7 +93,9 @@ impl ProgressBar {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_hwnd_onsubclass!();
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
 
 	/// Retrieves the current position by sending a
 	/// [`PBM_GETPOS`](crate::msg::pbm::GetPos) message.

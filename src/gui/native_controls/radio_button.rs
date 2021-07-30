@@ -25,7 +25,7 @@ struct Obj { // actual fields of RadioButton
 	events: ButtonEvents,
 }
 
-impl_send_sync_child!(RadioButton);
+impl_send_sync_debug_child!(RadioButton);
 
 impl RadioButton {
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
@@ -91,7 +91,10 @@ impl RadioButton {
 		self.0.base.parent_base_ref().hwnd_ref() // used by RadioGroup
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(ButtonEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(ButtonEvents);
 
 	/// Tells if this radio button is currently checked by sending a
 	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) message.

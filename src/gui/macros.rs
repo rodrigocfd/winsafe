@@ -1,8 +1,20 @@
 /// Implements `Send`, `Sync` and `Parent` traits for a window.
-macro_rules! impl_send_sync_parent {
+macro_rules! impl_send_sync_debug_parent {
 	($name:ident) => {
 		unsafe impl Send for $name {}
 		unsafe impl Sync for $name {}
+
+		impl std::fmt::Debug for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "HWND {}, {}",
+					self.hwnd(),
+					match self.raw_dlg {
+						RawDlg::Raw(_) => "non-dialog",
+						RawDlg::Dlg(_) => "dialog",
+					},
+				)
+			}
+		}
 
 		impl crate::gui::traits::Parent for $name {
 			fn as_any(&self) -> &dyn std::any::Any {

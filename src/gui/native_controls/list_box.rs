@@ -28,7 +28,7 @@ struct Obj { // actual fields of ListBox
 	items: ListBoxItems,
 }
 
-impl_send_sync_child!(ListBox);
+impl_send_sync_debug_child!(ListBox);
 
 impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window
@@ -107,7 +107,10 @@ impl ListBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(ListBoxEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(ListBoxEvents);
 
 	/// Item methods.
 	pub fn items(&self) -> &ListBoxItems {

@@ -30,7 +30,7 @@ struct Obj { // actual fields of StatusBar
 	right_edges: Vec<i32>, // buffer to speed up resize calls
 }
 
-impl_send_sync_child!(StatusBar);
+impl_send_sync_debug_child!(StatusBar);
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
@@ -156,7 +156,14 @@ impl StatusBar {
 		(p).unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_hwnd_on_onsubclass!(StatusBarEvents);
+	pub_fn_hwnd!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(StatusBarEvents);
+
+	/// Returns the control ID.
+	pub fn ctrl_id(&self) -> u16 {
+		self.hwnd().GetDlgCtrlID().unwrap_or_default()
+	}
 
 	/// Exposes the part methods.
 	pub fn parts(&self) -> &StatusBarParts {

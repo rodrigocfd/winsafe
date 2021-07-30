@@ -25,7 +25,7 @@ struct Obj { // actual fields of Trackbar
 	events: TrackbarEvents,
 }
 
-impl_send_sync_child!(Trackbar);
+impl_send_sync_debug_child!(Trackbar);
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window
@@ -102,7 +102,10 @@ impl Trackbar {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(TrackbarEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(TrackbarEvents);
 
 	/// Retrieves the current position by sending a
 	/// [`TBM_GETPOS`](crate::msg::trbm::GetPos) message.

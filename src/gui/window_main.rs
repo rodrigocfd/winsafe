@@ -125,7 +125,7 @@ pub struct WindowMain {
 	raw_dlg: RawDlg,
 }
 
-impl_send_sync_parent!(WindowMain);
+impl_send_sync_debug_parent!(WindowMain);
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with

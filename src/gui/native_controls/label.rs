@@ -26,7 +26,7 @@ struct Obj { // actual fields of Label
 	events: LabelEvents,
 }
 
-impl_send_sync_child!(Label);
+impl_send_sync_debug_child!(Label);
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window
@@ -107,7 +107,10 @@ impl Label {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(LabelEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(LabelEvents);
 
 	/// Resizes the control to exactly fit current text.
 	pub fn resize_to_text(&self) -> WinResult<()> {

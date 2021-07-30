@@ -27,7 +27,7 @@ struct Obj { // actual fields of ComboBox
 	items: ComboBoxItems,
 }
 
-impl_send_sync_child!(ComboBox);
+impl_send_sync_debug_child!(ComboBox);
 
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
@@ -109,7 +109,10 @@ impl ComboBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(ComboBoxEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(ComboBoxEvents);
 
 	/// Item methods.
 	pub fn items(&self) -> &ComboBoxItems {

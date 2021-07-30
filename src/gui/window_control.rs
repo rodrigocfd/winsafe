@@ -19,7 +19,7 @@ pub struct WindowControl {
 	raw_dlg: RawDlg,
 }
 
-impl_send_sync_parent!(WindowControl);
+impl_send_sync_debug_parent!(WindowControl);
 
 impl Child for WindowControl {
 	fn hwnd_ref(&self) -> &HWND {

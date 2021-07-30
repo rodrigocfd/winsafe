@@ -32,7 +32,7 @@ struct Obj { // actual fields of ListView
 	context_menu: Option<HMENU>,
 }
 
-impl_send_sync_child!(ListView);
+impl_send_sync_debug_child!(ListView);
 
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
@@ -162,7 +162,10 @@ impl ListView {
 		});
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(ListViewEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(ListViewEvents);
 
 	/// Exposes the column methods.
 	pub fn columns(&self) -> &ListViewColumns {

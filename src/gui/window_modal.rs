@@ -18,7 +18,7 @@ pub struct WindowModal {
 	raw_dlg: RawDlg,
 }
 
-impl_send_sync_parent!(WindowModal);
+impl_send_sync_debug_parent!(WindowModal);
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with

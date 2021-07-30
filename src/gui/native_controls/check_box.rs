@@ -27,7 +27,7 @@ struct Obj { // actual fields of CheckBox
 	events: ButtonEvents,
 }
 
-impl_send_sync_child!(CheckBox);
+impl_send_sync_debug_child!(CheckBox);
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
@@ -109,7 +109,10 @@ impl CheckBox {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(ButtonEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(ButtonEvents);
 
 	/// Tells if this check box is currently checked by sending a
 	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) message.

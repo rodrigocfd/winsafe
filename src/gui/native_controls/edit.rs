@@ -25,7 +25,7 @@ struct Obj { // actual fields of Edit
 	events: EditEvents,
 }
 
-impl_send_sync_child!(Edit);
+impl_send_sync_debug_child!(Edit);
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window
@@ -99,7 +99,10 @@ impl Edit {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(EditEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(EditEvents);
 
 	/// Sets the selection range of the text by sending an
 	/// [`EM_SETSEL`](crate::msg::em::SetSel) message.

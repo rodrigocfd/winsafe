@@ -27,7 +27,7 @@ struct Obj { // actual fields of TreeView
 	items: TreeViewItems,
 }
 
-impl_send_sync_child!(TreeView);
+impl_send_sync_debug_child!(TreeView);
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window
@@ -107,7 +107,10 @@ impl TreeView {
 		}().unwrap_or_else(|err| PostQuitMessage(err))
 	}
 
-	pub_fn_ctrlid_hwnd_on_onsubclass!(TreeViewEvents);
+	pub_fn_hwnd!();
+	pub_fn_ctrlid!();
+	pub_fn_onsubclass!();
+	pub_fn_on!(TreeViewEvents);
 
 	/// Exposes the item methods.
 	pub fn items(&self) -> &TreeViewItems {
