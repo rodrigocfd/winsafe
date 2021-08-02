@@ -1,25 +1,25 @@
 #![allow(non_snake_case)]
 
 use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HANDLE, HRESULT, PCSTR, PVOID};
 use crate::structs::IID;
 
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 pub struct ITaskbarList3VT {
 	pub ITaskbarList2VT: ITaskbarList2VT,
-	pub SetProgressValue: fn(PPI, HANDLE, u64, u64) -> HRESULT,
-	pub SetProgressState: fn(PPI, HANDLE, u32) -> HRESULT,
-	pub RegisterTab: fn(PPI, HANDLE, HANDLE) -> HRESULT,
-	pub UnregisterTab: fn(PPI, HANDLE) -> HRESULT,
-	pub SetTabOrder: fn(PPI, HANDLE, HANDLE) -> HRESULT,
-	pub SetTabActive: fn(PPI, HANDLE, HANDLE, u32) -> HRESULT,
-	pub ThumbBarAddButtons: fn(PPI, HANDLE, u32, PVOID) -> HRESULT,
-	pub ThumbBarUpdateButtons: fn(PPI, HANDLE, u32, PVOID) -> HRESULT,
-	pub ThumbBarSetImageList: fn(PPI, HANDLE, HANDLE) -> HRESULT,
-	pub SetOverlayIcon: fn(PPI, HANDLE, HANDLE, PCSTR) -> HRESULT,
-	pub SetThumbnailTooltip: fn(PPI, HANDLE, PCSTR) -> HRESULT,
-	pub SetThumbnailClip: fn(PPI, HANDLE, PVOID) -> HRESULT,
+	pub SetProgressValue: fn(PPVT, HANDLE, u64, u64) -> HRESULT,
+	pub SetProgressState: fn(PPVT, HANDLE, u32) -> HRESULT,
+	pub RegisterTab: fn(PPVT, HANDLE, HANDLE) -> HRESULT,
+	pub UnregisterTab: fn(PPVT, HANDLE) -> HRESULT,
+	pub SetTabOrder: fn(PPVT, HANDLE, HANDLE) -> HRESULT,
+	pub SetTabActive: fn(PPVT, HANDLE, HANDLE, u32) -> HRESULT,
+	pub ThumbBarAddButtons: fn(PPVT, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarUpdateButtons: fn(PPVT, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarSetImageList: fn(PPVT, HANDLE, HANDLE) -> HRESULT,
+	pub SetOverlayIcon: fn(PPVT, HANDLE, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailTooltip: fn(PPVT, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailClip: fn(PPVT, HANDLE, PVOID) -> HRESULT,
 }
 
 /// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
@@ -44,10 +44,8 @@ pub struct ITaskbarList3VT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList3 {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(ITaskbarList3);
 
 impl ComInterface for ITaskbarList3 {
 	const IID: IID = IID::new(0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf);

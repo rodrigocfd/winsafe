@@ -1,18 +1,18 @@
 #![allow(non_snake_case)]
 
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{BOOL, HANDLE, HRESULT};
 use crate::structs::IID;
 
 /// [`IFileSaveDialog`](crate::shell::IFileSaveDialog) virtual table.
 pub struct IFileSaveDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub SetSaveAsItem: fn(PPI, PPI) -> HRESULT,
-	pub SetProperties: fn(PPI, PPI) -> HRESULT,
-	pub SetCollectedProperties: fn(PPI, PPI, BOOL) -> HRESULT,
-	pub GetProperties: fn(PPI, *mut PPI) -> HRESULT,
-	pub ApplyProperties: fn(PPI, PPI, PPI, HANDLE, PPI) -> HRESULT,
+	pub SetSaveAsItem: fn(PPVT, PPVT) -> HRESULT,
+	pub SetProperties: fn(PPVT, PPVT) -> HRESULT,
+	pub SetCollectedProperties: fn(PPVT, PPVT, BOOL) -> HRESULT,
+	pub GetProperties: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub ApplyProperties: fn(PPVT, PPVT, PPVT, HANDLE, PPVT) -> HRESULT,
 }
 
 /// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
@@ -38,10 +38,8 @@ pub struct IFileSaveDialogVT {
 /// ).unwrap();
 /// ```
 pub struct IFileSaveDialog  {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IFileSaveDialog);
 
 impl ComInterface for IFileSaveDialog {
 	const IID: IID = IID::new(0x84bccd23, 0x5fde, 0x4cdb, 0xaea4, 0xaf64b83d78ab);

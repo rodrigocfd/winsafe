@@ -1,18 +1,18 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HANDLE, HRESULT};
 use crate::structs::IID;
 
 /// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
 pub struct ITaskbarListVT {
 	pub IUnknownVT: IUnknownVT,
-	pub HrInit: fn(PPI) -> HRESULT,
-	pub AddTab: fn(PPI, HANDLE) -> HRESULT,
-	pub DeleteTab: fn(PPI, HANDLE) -> HRESULT,
-	pub ActivateTab: fn(PPI, HANDLE) -> HRESULT,
-	pub SetActiveAlt: fn(PPI, HANDLE) -> HRESULT,
+	pub HrInit: fn(PPVT) -> HRESULT,
+	pub AddTab: fn(PPVT, HANDLE) -> HRESULT,
+	pub DeleteTab: fn(PPVT, HANDLE) -> HRESULT,
+	pub ActivateTab: fn(PPVT, HANDLE) -> HRESULT,
+	pub SetActiveAlt: fn(PPVT, HANDLE) -> HRESULT,
 }
 
 /// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
@@ -35,10 +35,8 @@ pub struct ITaskbarListVT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(ITaskbarList);
 
 impl ComInterface for ITaskbarList {
 	const IID: IID = IID::new(0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090);

@@ -1,15 +1,15 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
 use crate::structs::IID;
 
 /// [`IFileSinkFilter`](crate::dshow::IFileSinkFilter) virtual table.
 pub struct IFileSinkFilterVT {
 	pub IUnknownVT: IUnknownVT,
-	pub SetFileName: fn(PPI, PCSTR, PCVOID) -> HRESULT,
-	pub GetCurFile: fn(PPI, *mut PSTR, PVOID) -> HRESULT,
+	pub SetFileName: fn(PPVT, PCSTR, PCVOID) -> HRESULT,
+	pub GetCurFile: fn(PPVT, *mut PSTR, PVOID) -> HRESULT,
 }
 
 /// [`IFileSinkFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
@@ -21,10 +21,8 @@ pub struct IFileSinkFilterVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IFileSinkFilter {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IFileSinkFilter);
 
 impl ComInterface for IFileSinkFilter {
 	const IID: IID = IID::new(0xa2104830, 0x7c70, 0x11cf, 0x8bce, 0x00aa00a3f1a6);

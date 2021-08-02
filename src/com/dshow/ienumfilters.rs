@@ -1,17 +1,17 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::HRESULT;
 use crate::structs::IID;
 
 /// [`IEnumFilters`](crate::dshow::IEnumFilters) virtual table.
 pub struct IEnumFiltersVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(PPI, u32, *mut PPI, *mut u32) -> HRESULT,
-	pub Skip: fn(PPI, u32) -> HRESULT,
-	pub Reset: fn(PPI) -> HRESULT,
-	pub Clone: fn(PPI, *mut PPI) -> HRESULT,
+	pub Next: fn(PPVT, u32, *mut PPVT, *mut u32) -> HRESULT,
+	pub Skip: fn(PPVT, u32) -> HRESULT,
+	pub Reset: fn(PPVT) -> HRESULT,
+	pub Clone: fn(PPVT, *mut PPVT) -> HRESULT,
 }
 
 /// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
@@ -22,10 +22,8 @@ pub struct IEnumFiltersVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IEnumFilters {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IEnumFilters);
 
 impl ComInterface for IEnumFilters {
 	const IID: IID = IID::new(0x56a86893, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);

@@ -1,14 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT, ITaskbarList3VT};
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HANDLE, HRESULT};
 use crate::structs::IID;
 
 /// [`ITaskbarList4`](crate::shell::ITaskbarList4) virtual table.
 pub struct ITaskbarList4VT {
 	pub ITaskbarList3VT: ITaskbarList3VT,
-	pub SetTabProperties: fn(PPI, HANDLE, u32) -> HRESULT,
+	pub SetTabProperties: fn(PPVT, HANDLE, u32) -> HRESULT,
 }
 
 /// [`ITaskbarList4`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist4)
@@ -35,10 +35,8 @@ pub struct ITaskbarList4VT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList4 {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(ITaskbarList4);
 
 impl ComInterface for ITaskbarList4 {
 	const IID: IID = IID::new(0xc43dc798, 0x95d1, 0x4bea, 0x9030, 0xbb99e2983a1a);

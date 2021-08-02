@@ -1,14 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::com::shell::vt::ITaskbarListVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{BOOL, HANDLE, HRESULT};
 use crate::structs::IID;
 
 /// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
 pub struct ITaskbarList2VT {
 	pub ITaskbarListVT: ITaskbarListVT,
-	pub MarkFullscreenWindow: fn(PPI, HANDLE, BOOL) -> HRESULT,
+	pub MarkFullscreenWindow: fn(PPVT, HANDLE, BOOL) -> HRESULT,
 }
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
@@ -33,10 +33,8 @@ pub struct ITaskbarList2VT {
 /// ).unwrap();
 /// ```
 pub struct ITaskbarList2 {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(ITaskbarList2);
 
 impl ComInterface for ITaskbarList2 {
 	const IID: IID = IID::new(0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317);

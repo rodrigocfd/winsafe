@@ -1,14 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HRESULT, PVOID};
 use crate::structs::IID;
 
 /// [`IPersist`](crate::IPersist) virtual table.
 pub struct IPersistVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetClassID: fn(PPI, PVOID) -> HRESULT,
+	pub GetClassID: fn(PPVT, PVOID) -> HRESULT,
 }
 
 /// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
@@ -19,10 +19,8 @@ pub struct IPersistVT {
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IPersist {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IPersist);
 
 impl ComInterface for IPersist {
 	const IID: IID = IID::new(0x0000010c, 0x0000, 0x0000, 0xc000, 0x000000000046);

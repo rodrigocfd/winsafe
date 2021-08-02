@@ -1,22 +1,22 @@
 #![allow(non_snake_case)]
 
 use crate::com::idispatch::IDispatchVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HRESULT, PSTR};
 use crate::structs::IID;
 
 /// [`IMediaControl`](crate::dshow::IMediaControl) virtual table.
 pub struct IMediaControlVT {
 	pub IDispatchVT: IDispatchVT,
-	pub Run: fn(PPI) -> HRESULT,
-	pub Pause: fn(PPI) -> HRESULT,
-	pub Stop: fn(PPI) -> HRESULT,
-	pub GetState: fn(PPI, i32, *mut u32) -> HRESULT,
-	pub RenderFile: fn(PPI, PSTR) -> HRESULT,
-	pub AddSourceFilter: fn(PPI, PSTR, *mut PPI) -> HRESULT,
-	pub GetFilterCollection: fn(PPI, *mut PPI) -> HRESULT,
-	pub GetRegFilterCollection: fn(PPI, *mut PPI) -> HRESULT,
-	pub StopWhenReady: fn(PPI) -> HRESULT,
+	pub Run: fn(PPVT) -> HRESULT,
+	pub Pause: fn(PPVT) -> HRESULT,
+	pub Stop: fn(PPVT) -> HRESULT,
+	pub GetState: fn(PPVT, i32, *mut u32) -> HRESULT,
+	pub RenderFile: fn(PPVT, PSTR) -> HRESULT,
+	pub AddSourceFilter: fn(PPVT, PSTR, *mut PPVT) -> HRESULT,
+	pub GetFilterCollection: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub GetRegFilterCollection: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub StopWhenReady: fn(PPVT) -> HRESULT,
 }
 
 /// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
@@ -29,10 +29,8 @@ pub struct IMediaControlVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IMediaControl {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IMediaControl);
 
 impl ComInterface for IMediaControl {
 	const IID: IID = IID::new(0x56a868b1, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
@@ -53,7 +51,7 @@ macro_rules! impl_IMediaControl {
 			/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 			/// method.
 			pub fn AddSourceFilter(&self, fileName: &str) -> WinResult<IDispatch> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.imediacontrol_vt().AddSourceFilter)(
 						self.ppvt,

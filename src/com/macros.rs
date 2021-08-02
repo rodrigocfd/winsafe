@@ -1,17 +1,3 @@
-/// Implements the conversion from `PPI` to the COM type itself.
-macro_rules! impl_send_sync_fromppvt {
-	($name:ty) => {
-		unsafe impl Send for $name {}
-		unsafe impl Sync for $name {}
-
-		impl From<PPI> for $name {
-			fn from(ppvt: PPI) -> Self {
-				Self { ppvt }
-			}
-		}
-	};
-}
-
 /// Creates multiple `GUID`-derived pub const values.
 #[allow(unused_macros)]
 macro_rules! pub_const_guid {

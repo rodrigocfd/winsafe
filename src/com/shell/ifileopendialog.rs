@@ -1,15 +1,15 @@
 #![allow(non_snake_case)]
 
 use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::HRESULT;
 use crate::structs::IID;
 
 /// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) virtual table.
 pub struct IFileOpenDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub GetResults: fn(PPI, *mut PPI) -> HRESULT,
-	pub GetSelectedItems: fn(PPI, *mut PPI) -> HRESULT,
+	pub GetResults: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub GetSelectedItems: fn(PPVT, *mut PPVT) -> HRESULT,
 }
 
 /// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
@@ -34,10 +34,8 @@ pub struct IFileOpenDialogVT {
 /// ).unwrap();
 /// ```
 pub struct IFileOpenDialog  {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IFileOpenDialog);
 
 impl ComInterface for IFileOpenDialog {
 	const IID: IID = IID::new(0xd57c7288, 0xd4ad, 0x4768, 0xbe02, 0x9d969532d960);
@@ -55,7 +53,7 @@ macro_rules! impl_IFileOpenDialog {
 			/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 			/// method.
 			pub fn GetResults(&self) -> WinResult<IShellItemArray> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifileopendialog_vt().GetResults)(
 						self.ppvt,
@@ -67,7 +65,7 @@ macro_rules! impl_IFileOpenDialog {
 			/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 			/// method.
 			pub fn GetSelectedItems(&self) -> WinResult<IShellItemArray> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifileopendialog_vt().GetSelectedItems)(
 						self.ppvt,

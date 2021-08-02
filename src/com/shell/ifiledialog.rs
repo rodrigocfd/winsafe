@@ -1,36 +1,36 @@
 #![allow(non_snake_case)]
 
 use crate::com::shell::vt::IModalWindowVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
 use crate::structs::IID;
 
 /// [`IFileDialog`](crate::shell::IFileDialog) virtual table.
 pub struct IFileDialogVT {
 	pub IModalWindowVT: IModalWindowVT,
-	pub SetFileTypes: fn(PPI, u32, PCVOID) -> HRESULT,
-	pub SetFileTypeIndex: fn(PPI, u32) -> HRESULT,
-	pub GetFileTypeIndex: fn(PPI, *mut u32) -> HRESULT,
-	pub Advise: fn(PPI, PVOID, *mut u32) -> HRESULT,
-	pub Unadvise: fn(PPI, u32) -> HRESULT,
-	pub SetOptions: fn(PPI, u32) -> HRESULT,
-	pub GetOptions: fn(PPI, *mut u32) -> HRESULT,
-	pub SetDefaultFolder: fn(PPI, PPI) -> HRESULT,
-	pub SetFolder: fn(PPI, PPI) -> HRESULT,
-	pub GetFolder: fn(PPI, *mut PVOID) -> HRESULT,
-	pub GetCurrentSelection: fn(PPI, *mut PPI) -> HRESULT,
-	pub SetFileName: fn(PPI, PCSTR) -> HRESULT,
-	pub GetFileName: fn(PPI, *mut PSTR) -> HRESULT,
-	pub SetTitle: fn(PPI, PCSTR) -> HRESULT,
-	pub SetOkButtonLabel: fn(PPI, PCSTR) -> HRESULT,
-	pub SetFileNameLabel: fn(PPI, PCSTR) -> HRESULT,
-	pub GetResult: fn(PPI, *mut PPI) -> HRESULT,
-	pub AddPlace: fn(PPI, PPI, u32) -> HRESULT,
-	pub SetDefaultExtension: fn(PPI, PCSTR) -> HRESULT,
-	pub Close: fn(PPI, HRESULT) -> HRESULT,
-	pub SetClientGuid: fn(PPI, PCVOID) -> HRESULT,
-	pub ClearClientData: fn(PPI) -> HRESULT,
-	pub SetFilter: fn(PPI, PVOID) -> HRESULT,
+	pub SetFileTypes: fn(PPVT, u32, PCVOID) -> HRESULT,
+	pub SetFileTypeIndex: fn(PPVT, u32) -> HRESULT,
+	pub GetFileTypeIndex: fn(PPVT, *mut u32) -> HRESULT,
+	pub Advise: fn(PPVT, PVOID, *mut u32) -> HRESULT,
+	pub Unadvise: fn(PPVT, u32) -> HRESULT,
+	pub SetOptions: fn(PPVT, u32) -> HRESULT,
+	pub GetOptions: fn(PPVT, *mut u32) -> HRESULT,
+	pub SetDefaultFolder: fn(PPVT, PPVT) -> HRESULT,
+	pub SetFolder: fn(PPVT, PPVT) -> HRESULT,
+	pub GetFolder: fn(PPVT, *mut PVOID) -> HRESULT,
+	pub GetCurrentSelection: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub SetFileName: fn(PPVT, PCSTR) -> HRESULT,
+	pub GetFileName: fn(PPVT, *mut PSTR) -> HRESULT,
+	pub SetTitle: fn(PPVT, PCSTR) -> HRESULT,
+	pub SetOkButtonLabel: fn(PPVT, PCSTR) -> HRESULT,
+	pub SetFileNameLabel: fn(PPVT, PCSTR) -> HRESULT,
+	pub GetResult: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub AddPlace: fn(PPVT, PPVT, u32) -> HRESULT,
+	pub SetDefaultExtension: fn(PPVT, PCSTR) -> HRESULT,
+	pub Close: fn(PPVT, HRESULT) -> HRESULT,
+	pub SetClientGuid: fn(PPVT, PCVOID) -> HRESULT,
+	pub ClearClientData: fn(PPVT) -> HRESULT,
+	pub SetFilter: fn(PPVT, PVOID) -> HRESULT,
 }
 
 /// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
@@ -42,10 +42,8 @@ pub struct IFileDialogVT {
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IFileDialog {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IFileDialog);
 
 impl ComInterface for IFileDialog {
 	const IID: IID = IID::new(0x42f85136, 0xdb7e, 0x439c, 0x85f1, 0xe4075d135fc8);
@@ -91,7 +89,7 @@ macro_rules! impl_IFileDialog {
 			/// [`IFileDialog::GetCurrentSelection`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
 			/// method.
 			pub fn GetCurrentSelection(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetCurrentSelection)(
 						self.ppvt,
@@ -125,7 +123,7 @@ macro_rules! impl_IFileDialog {
 			/// [`IFileDialog::GetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
 			/// method.
 			pub fn GetFolder(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetFolder)(
 						self.ppvt,
@@ -146,7 +144,7 @@ macro_rules! impl_IFileDialog {
 			/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
 			/// method.
 			pub fn GetResult(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetResult)(
 						self.ppvt,

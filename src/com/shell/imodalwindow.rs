@@ -1,14 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HANDLE, HRESULT};
 use crate::structs::IID;
 
 /// [`IModalWindow`](crate::shell::IModalWindow) virtual table.
 pub struct IModalWindowVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Show: fn(PPI, HANDLE) -> HRESULT,
+	pub Show: fn(PPVT, HANDLE) -> HRESULT,
 }
 
 /// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
@@ -19,10 +19,8 @@ pub struct IModalWindowVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IModalWindow {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IModalWindow);
 
 impl ComInterface for IModalWindow {
 	const IID: IID = IID::new(0xb4db1657, 0x70d7, 0x485e, 0x8e3e, 0x6fcb5a5c1802);

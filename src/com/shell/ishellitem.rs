@@ -1,18 +1,18 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
 use crate::structs::IID;
 
 /// [`IShellItem`](crate::shell::IShellItem) virtual table.
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(PPI, PVOID, PCVOID, PCVOID, *mut PPI) -> HRESULT,
-	pub GetParent: fn(PPI, *mut PPI) -> HRESULT,
-	pub GetDisplayName: fn(PPI, u32, *mut PSTR) -> HRESULT,
-	pub GetAttributes: fn(PPI, u32, *mut u32) -> HRESULT,
-	pub Compare: fn(PPI, PVOID, u32, *mut i32) -> HRESULT,
+	pub BindToHandler: fn(PPVT, PVOID, PCVOID, PCVOID, *mut PPVT) -> HRESULT,
+	pub GetParent: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub GetDisplayName: fn(PPVT, u32, *mut PSTR) -> HRESULT,
+	pub GetAttributes: fn(PPVT, u32, *mut u32) -> HRESULT,
+	pub Compare: fn(PPVT, PVOID, u32, *mut i32) -> HRESULT,
 }
 
 #[link(name = "shell32")]
@@ -28,10 +28,8 @@ extern "system" {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IShellItem {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IShellItem);
 
 impl ComInterface for IShellItem {
 	const IID: IID = IID::new(0x43826d1e, 0xe718, 0x42ee, 0xbc55, 0xa1e261c37bfe);
@@ -60,7 +58,7 @@ macro_rules! impl_IShellItem {
 			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt").unwrap();
 			/// ```
 			pub fn from_path(file_or_folder_path: &str) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					unsafe {
 						SHCreateItemFromParsingName(
@@ -134,7 +132,7 @@ macro_rules! impl_IShellItem {
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetParent(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitem_vt().GetParent)(
 						self.ppvt,

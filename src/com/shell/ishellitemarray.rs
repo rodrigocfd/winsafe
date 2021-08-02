@@ -1,20 +1,20 @@
 #![allow(non_snake_case)]
 
 use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPI};
+use crate::com::traits::{ComInterface, PPVT};
 use crate::ffi::{HRESULT, PCVOID, PVOID};
 use crate::structs::IID;
 
 /// [`IShellItemArray`](crate::shell::IShellItemArray) virtual table.
 pub struct IShellItemArrayVT {
 	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(PPI, PVOID, PCVOID, PCVOID, *mut PPI) -> HRESULT,
-	pub GetPropertyStore: fn(PPI, u32, PCVOID, *mut PPI) -> HRESULT,
-	pub GetPropertyDescriptionList: fn(PPI, PVOID, PCVOID, *mut PPI) -> HRESULT,
-	pub GetAttributes: fn(PPI, u32, u32, PVOID) -> HRESULT,
-	pub GetCount: fn(PPI, *mut u32) -> HRESULT,
-	pub GetItemAt: fn(PPI, u32, *mut PPI) -> HRESULT,
-	pub EnumItems: fn(PPI, *mut PVOID) -> HRESULT,
+	pub BindToHandler: fn(PPVT, PVOID, PCVOID, PCVOID, *mut PPVT) -> HRESULT,
+	pub GetPropertyStore: fn(PPVT, u32, PCVOID, *mut PPVT) -> HRESULT,
+	pub GetPropertyDescriptionList: fn(PPVT, PVOID, PCVOID, *mut PPVT) -> HRESULT,
+	pub GetAttributes: fn(PPVT, u32, u32, PVOID) -> HRESULT,
+	pub GetCount: fn(PPVT, *mut u32) -> HRESULT,
+	pub GetItemAt: fn(PPVT, u32, *mut PPVT) -> HRESULT,
+	pub EnumItems: fn(PPVT, *mut PVOID) -> HRESULT,
 }
 
 /// [`IShellItemArray`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
@@ -26,10 +26,8 @@ pub struct IShellItemArrayVT {
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
 pub struct IShellItemArray {
-	pub(crate) ppvt: PPI,
+	pub(crate) ppvt: PPVT,
 }
-
-impl_send_sync_fromppvt!(IShellItemArray);
 
 impl ComInterface for IShellItemArray {
 	const IID: IID = IID::new(0xb63ea76d, 0x1f85, 0x456f, 0xa19c, 0x48159efa858b);
@@ -77,7 +75,7 @@ macro_rules! impl_IShellItemArray {
 			/// [`IShellItemArray::GetItemAt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
 			/// method.
 			pub fn GetItemAt(&self, dwIndex: u32) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPI = std::ptr::null_mut();
+				let mut ppvQueried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitemarray_vt().GetItemAt)(
 						self.ppvt,
