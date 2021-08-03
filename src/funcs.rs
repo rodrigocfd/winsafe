@@ -111,10 +111,10 @@ pub fn ChangeDisplaySettings(
 ///     );
 /// }
 /// ```
-pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> WinResult<bool> {
+pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 	match unsafe { comdlg32::ChooseColorW(lpcc as *mut _ as _) } {
 		0 => match CommDlgExtendedError() {
-			co::ERROR::SUCCESS => Ok(false),
+			co::CDERR::NoValue => Ok(false),
 			err => Err(err),
 		},
 		_ => Ok(true),
@@ -176,17 +176,8 @@ pub fn CommandLineToArgv(lpCmdLine: &str) -> WinResult<Vec<String>> {
 
 /// [`CommDlgExtendedError`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
-///
-/// **Note:** The [`co::ERROR`](crate::co::ERROR) returned by this function
-/// cannot be properly formatted by
-/// [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
-/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) traits,
-/// thus showing a wrong description. The formatted text actually will belong to
-/// the
-/// [standard error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
-/// of the same value. Do not rely on these descriptions.
-pub fn CommDlgExtendedError() -> co::ERROR {
-	co::ERROR(unsafe { comdlg32::CommDlgExtendedError() })
+pub fn CommDlgExtendedError() -> co::CDERR {
+	co::CDERR(unsafe { comdlg32::CommDlgExtendedError() })
 }
 
 /// [`CopyFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
