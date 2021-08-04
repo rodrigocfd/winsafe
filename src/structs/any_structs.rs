@@ -146,7 +146,7 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 /// struct.
 #[repr(C)]
 pub struct CHOOSECOLOR<'a> {
-	pub lStructSize: u32,
+	lStructSize: u32,
 	pub hwndOwner: HWND,
 	pub hInstance: HWND,
 	pub rgbResult: COLORREF,

@@ -464,6 +464,13 @@ impl HWND {
 		}
 	}
 
+	/// [`GetShellWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getshellwindow)
+	/// static method.
+	pub fn GetShellWindow() -> Option<HWND> {
+		unsafe { user32::GetShellWindow().as_mut() }
+			.map(|ptr| Self { ptr })
+	}
+
 	/// [`GetUpdateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdatergn)
 	/// method.
 	pub fn GetUpdateRgn(self, hRgn: HRGN, bErase: bool) -> WinResult<co::REGION> {
@@ -714,6 +721,14 @@ impl HWND {
 	/// method.
 	pub fn KillTimer(self, uIDEvent: usize) -> WinResult<()> {
 		bool_to_winresult(unsafe { user32::KillTimer(self.ptr, uIDEvent) })
+	}
+
+	/// [`LogicalToPhysicalPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-logicaltophysicalpoint)
+	/// method.
+	pub fn LogicalToPhysicalPoint(self, lpPoint: *mut POINT) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe { user32::LogicalToPhysicalPoint(self.ptr, lpPoint as _) },
+		)
 	}
 
 	/// [`MapDialogRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)

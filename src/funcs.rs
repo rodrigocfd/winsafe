@@ -592,6 +592,13 @@ pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
 	}
 }
 
+/// [`GetMessagePos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagepos)
+/// function.
+pub fn GetMessagePos() -> POINT {
+	let xy = unsafe { user32::GetMessagePos() };
+	POINT::new(LOWORD(xy) as _, HIWORD(xy) as _)
+}
+
 /// [`GetNativeSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
 /// function.
 pub fn GetNativeSystemInfo(lpSystemInfo: &mut SYSTEM_INFO) {

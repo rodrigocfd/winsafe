@@ -66,6 +66,7 @@ extern "system" {
 	pub fn GetMenuInfo(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn GetMenuItemCount(_: HANDLE) -> i32;
 	pub fn GetMenuItemID(_: HANDLE, _: i32) -> i32;
+	pub fn GetMessagePos() -> u32;
 	pub fn GetMessageW(_: PVOID, _: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn GetNextDlgGroupItem(_: HANDLE, _: HANDLE, _: BOOL) -> HANDLE;
 	pub fn GetNextDlgTabItem(_: HANDLE, _: HANDLE, _: BOOL) -> HANDLE;
@@ -73,6 +74,7 @@ extern "system" {
 	pub fn GetQueueStatus(_: u32) -> u32;
 	pub fn GetScrollInfo(_: HANDLE, _: i32, _: PVOID) -> BOOL;
 	pub fn GetScrollPos(_: HANDLE, _: i32) -> i32;
+	pub fn GetShellWindow() -> HANDLE;
 	pub fn GetSubMenu(_: HANDLE, _: i32) -> HANDLE;
 	pub fn GetSysColor(_: i32) -> u32;
 	pub fn GetSystemMetrics(_: i32) -> i32;
@@ -111,6 +113,7 @@ extern "system" {
 	pub fn LoadMenuW(_: HANDLE, _: PCSTR) -> HANDLE;
 	pub fn LoadStringW(_: HANDLE, _: u32, _: PSTR, _: i32) -> i32;
 	pub fn LockSetForegroundWindow(_: u32) -> BOOL;
+	pub fn LogicalToPhysicalPoint(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn MapDialogRect(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn MessageBoxW(_: HANDLE, _: PCSTR, _: PCSTR, _: u32) -> i32;
 	pub fn MoveWindow(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: BOOL) -> BOOL;
