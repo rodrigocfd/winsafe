@@ -320,11 +320,12 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
 		let mut buf_lpCursorName = WString::default();
-		unsafe { user32::LoadCursorW(
-			self.ptr,
-			lpCursorName.as_ptr(&mut buf_lpCursorName),
-		).as_mut() }
-			.map(|ptr| HCURSOR { ptr })
+		unsafe {
+				user32::LoadCursorW(
+				self.ptr,
+				lpCursorName.as_ptr(&mut buf_lpCursorName),
+			).as_mut()
+		}.map(|ptr| HCURSOR { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -343,11 +344,12 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
 		let mut buf_lpIconName = WString::default();
-		unsafe { user32::LoadIconW(
-			self.ptr,
-			lpIconName.as_ptr(&mut buf_lpIconName),
-		).as_mut() }
-			.map(|ptr| HICON { ptr })
+		unsafe {
+			user32::LoadIconW(
+				self.ptr,
+				lpIconName.as_ptr(&mut buf_lpIconName),
+			).as_mut()
+		}.map(|ptr| HICON { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 

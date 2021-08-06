@@ -27,16 +27,16 @@ macro_rules! predef_key {
 }
 
 impl HKEY {
-	predef_key!(CLASSES_ROOT, 0x80000000);
-	predef_key!(CURRENT_USER, 0x80000001);
-	predef_key!(LOCAL_MACHINE, 0x80000002);
-	predef_key!(USERS, 0x80000003);
-	predef_key!(PERFORMANCE_DATA, 0x80000004);
-	predef_key!(PERFORMANCE_TEXT, 0x80000050);
-	predef_key!(PERFORMANCE_NLSTEXT, 0x80000060);
-	predef_key!(CURRENT_CONFIG, 0x80000005);
-	predef_key!(DYN_DATA, 0x80000006);
-	predef_key!(CURRENT_USER_LOCAL_SETTINGS, 0x80000007);
+	predef_key!(CLASSES_ROOT, 0x8000_0000);
+	predef_key!(CURRENT_USER, 0x8000_0001);
+	predef_key!(LOCAL_MACHINE, 0x8000_0002);
+	predef_key!(USERS, 0x8000_0003);
+	predef_key!(PERFORMANCE_DATA, 0x8000_0004);
+	predef_key!(PERFORMANCE_TEXT, 0x8000_0050);
+	predef_key!(PERFORMANCE_NLSTEXT, 0x8000_0060);
+	predef_key!(CURRENT_CONFIG, 0x8000_0005);
+	predef_key!(DYN_DATA, 0x8000_0006);
+	predef_key!(CURRENT_USER_LOCAL_SETTINGS, 0x8000_0007);
 
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
@@ -91,7 +91,7 @@ impl HKEY {
 						std::ptr::null_mut(),
 						std::ptr::null_mut(),
 					)
-				} as _
+				} as _,
 			);
 
 			if err != co::ERROR::SUCCESS {
