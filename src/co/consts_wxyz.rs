@@ -1,4 +1,4 @@
-#![allow(non_upper_case_globals)]
+#![allow(non_camel_case_types, non_upper_case_globals)]
 
 pub_struct_const! { WA, u16,
 	/// [`WM_ACTIVATE`](crate::msg::wm::Activate)

@@ -43,7 +43,7 @@ impl GUID {
 }
 
 /// COM class ID. Just a safe abstraction over a [`GUID`](crate::GUID).
-#[repr(C)]
+#[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash)]
 pub struct CLSID(GUID);
 
@@ -82,7 +82,7 @@ impl CLSID {
 }
 
 /// COM interface ID. Just a safe abstraction over a [`GUID`](crate::GUID).
-#[repr(C)]
+#[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash)]
 pub struct IID(GUID);
 

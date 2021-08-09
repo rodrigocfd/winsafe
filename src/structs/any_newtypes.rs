@@ -5,7 +5,7 @@ use crate::funcs::{LOBYTE, LOWORD};
 
 /// [`ATOM`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by [`RegisterClassEx`](crate::RegisterClassEx).
-#[repr(C)]
+#[repr(transparent)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct ATOM(pub(crate) u16);
 
@@ -17,7 +17,7 @@ impl std::fmt::Display for ATOM {
 
 /// [`COLORREF`](https://docs.microsoft.com/en-us/windows/win32/gdi/colorref)
 /// struct.
-#[repr(C)]
+#[repr(transparent)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct COLORREF(pub(crate) u32);
 
@@ -92,7 +92,7 @@ impl COLORREF {
 
 /// [`LANGID`](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifiers)
 /// language identifier.
-#[repr(C)]
+#[repr(transparent)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct LANGID(pub(crate) u16);
 
@@ -130,7 +130,7 @@ impl LANGID {
 
 /// [`LCID`](https://docs.microsoft.com/en-us/windows/win32/intl/locale-identifiers)
 /// locale identifier.
-#[repr(C)]
+#[repr(transparent)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub struct LCID(pub(crate) u32);
 

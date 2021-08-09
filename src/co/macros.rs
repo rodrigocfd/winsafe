@@ -5,7 +5,7 @@ macro_rules! pub_struct_const_base {
 		$(#[$doc:meta])*
 	) => {
 		$(#[$doc])*
-		#[repr(C)]
+		#[repr(transparent)]
 		#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
 		pub struct $name(pub(crate) $ntype);
 

@@ -1,3 +1,5 @@
+#![allow(non_camel_case_types)]
+
 pub_struct_const! { ACCELF, u8,
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`). Originally has `F` prefix.
 	=>

@@ -1,7 +1,7 @@
 //! [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow)
 //! constants.
 
-#![allow(non_upper_case_globals)]
+#![allow(non_camel_case_types, non_upper_case_globals)]
 
 pub_struct_const! { FILTER_STATE, u32,
 	/// [`FILTER_STATE`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ne-strmif-filter_state)

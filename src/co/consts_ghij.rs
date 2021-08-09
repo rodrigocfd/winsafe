@@ -1,3 +1,5 @@
+#![allow(non_camel_case_types)]
+
 use crate::co::{CCM, WM};
 
 pub_struct_const! { GA, u32,
