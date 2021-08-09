@@ -3,7 +3,7 @@ use std::rc::Rc;
 use crate::co;
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{HDC, HFONT, HICON, HMENU};
+use crate::handles::{HBRUSH, HFONT, HICON, HMENU};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// The result of processing a message.
@@ -419,7 +419,7 @@ impl WindowEvents {
 	/// However, only owner-drawn buttons respond to the parent window
 	/// processing this message.
 	pub fn wm_ctl_color_btn<F>(&self, func: F)
-		where F: Fn(wm::CtlColorBtn) -> HDC + 'static,
+		where F: Fn(wm::CtlColorBtn) -> HBRUSH + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORBTN,
 			move |p| Some(func(wm::CtlColorBtn::from_generic_wm(p)).ptr as _));
@@ -431,7 +431,7 @@ impl WindowEvents {
 	/// responding to this message, the dialog box can set its text and
 	/// background colors using the specified display device context handle.
 	pub fn wm_ctl_color_dlg<F>(&self, func: F)
-		where F: Fn(wm::CtlColorDlg) -> HDC + 'static,
+		where F: Fn(wm::CtlColorDlg) -> HBRUSH + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORDLG,
 			move |p| Some(func(wm::CtlColorDlg::from_generic_wm(p)).ptr as _));
@@ -444,7 +444,7 @@ impl WindowEvents {
 	/// to this message, the parent window can use the specified device context
 	/// handle to set the text and background colors of the edit control.
 	pub fn wm_ctl_color_edit<F>(&self, func: F)
-		where F: Fn(wm::CtlColorEdit) -> HDC + 'static,
+		where F: Fn(wm::CtlColorEdit) -> HBRUSH + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLOREDIT,
 			move |p| Some(func(wm::CtlColorEdit::from_generic_wm(p)).ptr as _));
@@ -457,7 +457,7 @@ impl WindowEvents {
 	/// and background colors of the list box by using the specified display
 	/// device context handle.
 	pub fn wm_ctl_color_list_box<F>(&self, func: F)
-		where F: Fn(wm::CtlColorListBox) -> HDC + 'static,
+		where F: Fn(wm::CtlColorListBox) -> HBRUSH + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORLISTBOX,
 			move |p| Some(func(wm::CtlColorListBox::from_generic_wm(p)).ptr as _));
@@ -470,7 +470,7 @@ impl WindowEvents {
 	/// use the display context handle to set the background color of the scroll
 	/// bar control.
 	pub fn wm_ctl_color_scroll_bar<F>(&self, func: F)
-		where F: Fn(wm::CtlColorScrollBar) -> HDC + 'static,
+		where F: Fn(wm::CtlColorScrollBar) -> HBRUSH + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSCROLLBAR,
 			move |p| Some(func(wm::CtlColorScrollBar::from_generic_wm(p)).ptr as _));
@@ -484,7 +484,7 @@ impl WindowEvents {
 	/// specified device context handle to set the text foreground and
 	/// background colors of the static control.
 	pub fn wm_ctl_color_static<F>(&self, func: F)
-		where F: Fn(wm::CtlColorStatic) -> HDC + 'static,
+		where F: Fn(wm::CtlColorStatic) -> HBRUSH + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORSTATIC,
 			move |p| Some(func(wm::CtlColorStatic::from_generic_wm(p)).ptr as _));
