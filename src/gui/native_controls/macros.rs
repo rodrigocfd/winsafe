@@ -51,6 +51,20 @@ macro_rules! pub_fn_ctrlid {
 	};
 }
 
+/// Implements focus() method to control.
+macro_rules! pub_fn_focus {
+	() => {
+		/// Focuses the control by sending a
+		/// [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) message.
+		pub fn focus(&self) -> WinResult<()> {
+			self.hwnd().GetParent()?.SendMessage(crate::msg::wm::NextDlgCtl {
+				hwnd_focus: crate::enums::HwndFocus::Hwnd(self.hwnd()),
+			});
+			Ok(())
+		}
+	};
+}
+
 /// Implements on_subclass() method to control.
 macro_rules! pub_fn_onsubclass {
 	() => {

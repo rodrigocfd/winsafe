@@ -164,6 +164,7 @@ impl ListView {
 
 	pub_fn_hwnd!();
 	pub_fn_ctrlid!();
+	pub_fn_focus!();
 	pub_fn_onsubclass!();
 	pub_fn_on!(ListViewEvents);
 
