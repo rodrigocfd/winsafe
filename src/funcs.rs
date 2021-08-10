@@ -41,6 +41,7 @@ use crate::structs::{
 	RECT,
 	SHFILEINFO,
 	SHFILEOPSTRUCT,
+	SIZE,
 	STARTUPINFO,
 	SYSTEM_INFO,
 	SYSTEMTIME,
@@ -248,6 +249,12 @@ pub fn EncryptionDisable(DirPath: &str, Disable: bool) -> WinResult<()> {
 			)
 		},
 	)
+}
+
+/// [`EndMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endmenu)
+/// function.
+pub fn EndMenu() -> WinResult<()> {
+	bool_to_winresult(unsafe { user32::EndMenu() })
 }
 
 /// [`EnumDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw)
@@ -572,6 +579,13 @@ pub fn GetLogicalDriveStrings() -> WinResult<Vec<String>> {
 			}
 		},
 	}
+}
+
+/// [`GetMenuCheckMarkDimensions`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenucheckmarkdimensions)
+/// function.
+pub fn GetMenuCheckMarkDimensions() -> SIZE {
+	let dims = unsafe { user32::GetMenuCheckMarkDimensions() };
+	SIZE::new(LOWORD(dims as _) as _, HIWORD(dims as _) as _)
 }
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)

@@ -564,6 +564,25 @@ pub struct MEMORYSTATUSEX {
 
 impl_default_with_size!(MEMORYSTATUSEX, dwLength);
 
+/// [`MENUBARINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menubarinfo)
+/// struct.
+#[repr(C)]
+pub struct MENUBARINFO {
+	cbSize: u32,
+	pub rcBar: RECT,
+	pub hMenu: HMENU,
+	pub hwndMenu: HWND,
+	fBarFocused: BOOL,
+	fFocused: BOOL,
+}
+
+impl_default_with_size!(MENUBARINFO, cbSize);
+
+impl MENUBARINFO {
+	pub_fn_bool_get_set!(fBarFocused, set_fBarFocused);
+	pub_fn_bool_get_set!(fFocused, set_fFocused);
+}
+
 /// [`MENUINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuinfo)
 /// struct.
 #[repr(C)]

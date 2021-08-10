@@ -238,7 +238,9 @@ pub_struct_const_ws! { MCS,
 }
 
 pub_struct_const! { MF, u32,
-	/// [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `uFlags` (`u32`).
+	/// [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `uFlags`,
+	/// [`HMENU::GetMenuState`](crate::HMENU::GetMenuState) return value
+	/// (`u32`).
 	=>
 	INSERT, 0x0000_0000
 	CHANGE, 0x0000_0080

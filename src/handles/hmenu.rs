@@ -2,10 +2,10 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{BmpPtrStr, EntrySeparatorSubmenu, IdMenu, IdPos};
+use crate::enums::{BmpPtrStr, IdMenu, IdPos, MenuEnum};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
-use crate::handles::HWND;
+use crate::handles::{HBITMAP, HWND};
 use crate::msg;
 use crate::privs::bool_to_winresult;
 use crate::structs::{MENUINFO, MENUITEMINFO, POINT};
@@ -46,21 +46,21 @@ impl HMENU {
 	/// Adding a new menu entry, with its command ID:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{EntrySeparatorSubmenu, HMENU};
+	/// use winsafe::{HMENU, MenuEnum};
 	///
 	/// let my_hmenu: HMENU; // initialized somewhere
 	///
 	/// const ID_FILE_OPEN: i32 = 2001;
 	///
 	/// my_hmenu.AppendMenuEnum(
-	///    &EntrySeparatorSubmenu::Entry(ID_FILE_OPEN, "&Open"),
+	///    &MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
 	/// ).unwrap();
 	/// ```
 	///
 	/// Adding multiple entries at once:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{EntrySeparatorSubmenu, HMENU};
+	/// use winsafe::{HMENU, MenuEnum};
 	///
 	/// let my_hmenu: HMENU; // initialized somewhere
 	///
@@ -69,26 +69,26 @@ impl HMENU {
 	/// const ID_FILE_EXIT: i32 = 2003;
 	///
 	/// [
-	///     EntrySeparatorSubmenu::Entry(ID_FILE_OPEN, "&Open"),
-	///     EntrySeparatorSubmenu::Entry(ID_FILE_OPEN, "&Save"),
-	///     EntrySeparatorSubmenu::Separator,
-	///     EntrySeparatorSubmenu::Entry(ID_FILE_EXIT, "E&xit"),
+	///     MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
+	///     MenuEnum::Entry(ID_FILE_OPEN, "&Save"),
+	///     MenuEnum::Separator,
+	///     MenuEnum::Entry(ID_FILE_EXIT, "E&xit"),
 	/// ].iter()
 	///     .for_each(|e| file_menu.AppendMenuEnum(e).unwrap());
 	/// ```
-	pub fn AppendMenuEnum(self, item: &EntrySeparatorSubmenu) -> WinResult<()> {
+	pub fn AppendMenuEnum(self, item: &MenuEnum) -> WinResult<()> {
 		match item {
-			EntrySeparatorSubmenu::Entry(cmd_id, text) => self.AppendMenu(
+			MenuEnum::Entry(cmd_id, text) => self.AppendMenu(
 				co::MF::STRING,
 				IdMenu::Id(*cmd_id),
 				BmpPtrStr::Str((*text).to_owned()),
 			),
-			EntrySeparatorSubmenu::Separator => self.AppendMenu(
+			MenuEnum::Separator => self.AppendMenu(
 				co::MF::SEPARATOR,
 				IdMenu::None,
 				BmpPtrStr::None,
 			),
-			EntrySeparatorSubmenu::Submenu(hmenu, text) => self.AppendMenu(
+			MenuEnum::Submenu(hmenu, text) => self.AppendMenu(
 				co::MF::POPUP,
 				IdMenu::Menu(*hmenu),
 				BmpPtrStr::Str((*text).to_owned()),
@@ -115,6 +115,32 @@ impl HMENU {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
 			ret => Ok(co::MF(ret as _)),
 		}
+	}
+
+	/// [`CheckMenuRadioItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuradioitem)
+	/// method.
+	///
+	/// # Panics
+	///
+	/// Panics if `first`, `last` and `check` don't use the same enum field.
+	pub fn CheckMenuRadioItem(self, first: IdPos, last: IdPos, check: IdPos) -> WinResult<()> {
+		if !(first.is_by_pos() == last.is_by_pos()
+			&& last.is_by_pos() == check.is_by_pos())
+		{
+			panic!("Different enum fields.");
+		}
+
+		bool_to_winresult(
+			unsafe {
+				user32::CheckMenuRadioItem(
+					self.ptr,
+					first.id_or_pos_u32(),
+					last.id_or_pos_u32(),
+					check.id_or_pos_u32(),
+					check.mf_flag().0,
+				)
+			},
+		)
 	}
 
 	/// [`CreateMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createmenu)
@@ -214,6 +240,19 @@ impl HMENU {
 		}
 	}
 
+	/// [`GetMenuDefaultItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenudefaultitem)
+	/// method.
+	pub fn GetMenuDefaultItem(self,
+		fByPos: bool, gmdiFlags: co::GMDI) -> WinResult<IdPos>
+	{
+		match unsafe {
+			user32::GetMenuDefaultItem(self.ptr, fByPos as _, gmdiFlags.0) as i32
+		} {
+			-1 => Err(GetLastError()),
+			n => Ok(if fByPos { IdPos::Pos(n as _) } else { IdPos::Id(n as _) }),
+		}
+	}
+
 	/// [`GetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 	/// method.
 	pub fn GetMenuInfo(self, lpmi: &mut MENUINFO) -> WinResult<()> {
@@ -231,6 +270,23 @@ impl HMENU {
 		}
 	}
 
+	/// [`GetMenuItemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuiteminfow)
+	/// method.
+	pub fn GetMenuItemInfo(self,
+		item: IdPos, lpmii: &mut MENUITEMINFO) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::GetMenuItemInfoW(
+					self.ptr,
+					item.id_or_pos_u32(),
+					item.is_by_pos() as _,
+					lpmii as *mut _ as _,
+				)
+			},
+		)
+	}
+
 	/// [`GetMenuItemID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemid)
 	/// method.
 	pub fn GetMenuItemID(self, nPos: i32) -> Option<i32> {
@@ -238,6 +294,55 @@ impl HMENU {
 			-1 => None,
 			id => Some(id),
 		}
+	}
+
+	/// [`GetMenuState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustate)
+	/// method.
+	pub fn GetMenuState(self, uId: IdPos) -> WinResult<co::MF> {
+		match unsafe {
+			user32::GetMenuState(
+				self.ptr,
+				uId.id_or_pos_u32(),
+				uId.is_by_pos() as _,
+			) as i32
+		} {
+			-1 => Err(GetLastError()),
+			mf => Ok(co::MF(mf as _)),
+		}
+	}
+
+	/// [`GetMenuString`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustringw)
+	/// method.
+	pub fn GetMenuString(self, uIDItem: IdPos) -> WinResult<String> {
+		const BLOCK: usize = 64; // arbitrary
+		let mut buf_sz = BLOCK;
+
+		let mut buf = WString::default();
+
+		loop {
+			buf.realloc_buffer(buf_sz);
+
+			let nchars = match unsafe {
+				user32::GetMenuStringW(
+					self.ptr,
+					uIDItem.id_or_pos_u32(),
+					buf.as_mut_ptr(),
+					buf.buffer_size() as _,
+					uIDItem.mf_flag().0,
+				)
+			} {
+				0 => return Err(GetLastError()),
+				n => n,
+			};
+
+			if (nchars as usize) + 1 < buf_sz { // to break, must have at least 1 char gap
+				break;
+			}
+
+			buf_sz += BLOCK; // increase buffer size to try again
+		}
+
+		Ok(buf.to_string())
 	}
 
 	/// [`GetSubMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu)
@@ -306,6 +411,26 @@ impl HMENU {
 		)
 	}
 
+	/// [`SetMenuItemBitmaps`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuitembitmaps)
+	/// method.
+	pub fn SetMenuItemBitmaps(self,
+		uPosition: IdPos,
+		hBitmapUnchecked: Option<HBITMAP>,
+		hBitmapChecked: Option<HBITMAP>) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::SetMenuItemBitmaps(
+					self.ptr,
+					uPosition.id_or_pos_u32(),
+					uPosition.mf_flag().0,
+					hBitmapUnchecked.map_or(std::ptr::null_mut(), |h| h.ptr),
+					hBitmapChecked.map_or(std::ptr::null_mut(), |h| h.ptr),
+				)
+			},
+		)
+	}
+
 	/// [`SetMenuItemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuiteminfow)
 	/// method.
 	pub fn SetMenuItemInfo(self,
@@ -328,8 +453,8 @@ impl HMENU {
 	///
 	/// **Note:** If you just want to display a popup menu, consider the simpler
 	/// [`TrackPopupMenuAtPoint`](crate::HMENU::TrackPopupMenuAtPoint).
-	pub fn TrackPopupMenu(self, uFlags: co::TPM,
-		x: i32, y: i32, hWnd: HWND) -> WinResult<Option<i32>>
+	pub fn TrackPopupMenu(self,
+		uFlags: co::TPM, x: i32, y: i32, hWnd: HWND) -> WinResult<Option<i32>>
 	{
 		let ret = unsafe {
 			user32::TrackPopupMenu(

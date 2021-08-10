@@ -2,6 +2,14 @@
 
 use crate::co::{CCM, FF, WM};
 
+pub_struct_const! { OBJID, u32,
+	/// [`HWND::GetMenuBarInfo`](crate::HWND::GetMenuBarInfo) `idObject` (`i32`).
+	=>
+	CLIENT, 0xffff_fffc
+	MENU, 0xffff_fffd
+	SYSMENU, 0xffff_ffff
+}
+
 pub_struct_const! { OCR, u32,
 	/// [`HCURSOR::SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id`
 	/// (`u32`).

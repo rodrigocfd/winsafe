@@ -10,6 +10,7 @@ use crate::msg::MsgSend;
 use crate::privs::{bool_to_winresult, hr_to_winresult};
 use crate::structs::{
 	ALTTABINFO,
+	MENUBARINFO,
 	MSG,
 	PAINTSTRUCT,
 	POINT,
@@ -203,6 +204,12 @@ impl HWND {
 	/// method.
 	pub fn DestroyWindow(self) {
 		unsafe { user32::DestroyWindow(self.ptr); }
+	}
+
+	/// [`DrawMenuBar`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawmenubar)
+	/// method.
+	pub fn DrawMenuBar(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { user32::DrawMenuBar(self.ptr) })
 	}
 
 	/// [`EnableWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablewindow)
@@ -411,6 +418,47 @@ impl HWND {
 			.map(|ptr| Self { ptr })
 	}
 
+	/// [`GetMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenu)
+	/// method.
+	pub fn GetMenu(self) -> Option<HMENU> {
+		unsafe { user32::GetMenu(self.ptr).as_mut() }
+			.map(|ptr| HMENU { ptr })
+	}
+
+	/// [`GetMenuBarInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenubarinfo)
+	/// method.
+	pub fn GetMenuBarInfo(self,
+		idObject: co::OBJID, idItem: u32, pmbi: &mut MENUBARINFO) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::GetMenuBarInfo(
+					self.ptr,
+					idObject.0 as _,
+					idItem as _,
+					pmbi as *mut _ as _,
+				)
+			},
+		)
+	}
+
+	/// [`GetMenuItemRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemrect)
+	/// method.
+	pub fn GetMenuItemRect(self,
+		hMenu: HMENU, uItemPos: u32, lprcItem: &mut RECT) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::GetMenuItemRect(
+					self.ptr,
+					hMenu.ptr,
+					uItemPos,
+					lprcItem as *mut _ as _,
+				)
+			},
+		)
+	}
+
 	/// [`GetNextDlgGroupItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlggroupitem)
 	/// method.
 	pub fn GetNextDlgGroupItem(self,
@@ -471,6 +519,13 @@ impl HWND {
 	pub fn GetShellWindow() -> Option<HWND> {
 		unsafe { user32::GetShellWindow().as_mut() }
 			.map(|ptr| Self { ptr })
+	}
+
+	/// [`GetSystemMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmenu)
+	/// method.
+	pub fn GetSystemMenu(self, bRevert: bool) -> Option<HMENU> {
+		unsafe { user32::GetSystemMenu(self.ptr, bRevert as _).as_mut() }
+			.map(|ptr| HMENU { ptr })
 	}
 
 	/// [`GetUpdateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdatergn)

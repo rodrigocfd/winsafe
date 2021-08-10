@@ -13,6 +13,7 @@ extern "system" {
 	pub fn CallNextHookEx(_: HANDLE, _: i32, _: usize, _: isize) -> isize;
 	pub fn ChangeDisplaySettingsW(_: PVOID, _: u32) -> i32;
 	pub fn CheckMenuItem(_: HANDLE, _: u32, _: u32) -> i32;
+	pub fn CheckMenuRadioItem(_: HANDLE, _: u32, _: u32, _: u32, _: u32) -> BOOL;
 	pub fn ChildWindowFromPoint(_: HANDLE, _: i32, _: i32) -> HANDLE;
 	pub fn ClientToScreen(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn ClipCursor(_: PCVOID) -> BOOL;
@@ -34,11 +35,13 @@ extern "system" {
 	pub fn DestroyWindow(_: HANDLE) -> BOOL;
 	pub fn DialogBoxParamW(_: HANDLE, _: PCSTR, _: HANDLE, _: PFUNC, _: isize) -> isize;
 	pub fn DispatchMessageW(_: PCVOID) -> isize;
+	pub fn DrawMenuBar(_: HANDLE) -> BOOL;
 	pub fn EmptyClipboard() -> BOOL;
 	pub fn EnableMenuItem(_: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn EnableWindow(_: HANDLE, _: BOOL) -> BOOL;
 	pub fn EndDeferWindowPos(_: HANDLE) -> BOOL;
 	pub fn EndDialog(_: HANDLE, _: isize) -> BOOL;
+	pub fn EndMenu() -> BOOL;
 	pub fn EndPaint(_: HANDLE, _: PCVOID) -> BOOL;
 	pub fn EnumChildWindows(_: HANDLE, _: PFUNC, _: isize) -> BOOL;
 	pub fn EnumDisplaySettingsExW(_: PCSTR, _: u32, _: PVOID, _: u32) -> BOOL;
@@ -63,9 +66,17 @@ extern "system" {
 	pub fn GetFocus() -> HANDLE;
 	pub fn GetForegroundWindow() -> HANDLE;
 	pub fn GetGUIThreadInfo(_: u32, _: PVOID) -> BOOL;
+	pub fn GetMenu(_: HANDLE) -> HANDLE;
+	pub fn GetMenuBarInfo(_: HANDLE, _: i32, _: i32, _: PVOID) -> BOOL;
+	pub fn GetMenuCheckMarkDimensions() -> i32;
+	pub fn GetMenuDefaultItem(_: HANDLE, _: u32, _: u32) -> u32;
 	pub fn GetMenuInfo(_: HANDLE, _: PVOID) -> BOOL;
 	pub fn GetMenuItemCount(_: HANDLE) -> i32;
 	pub fn GetMenuItemID(_: HANDLE, _: i32) -> i32;
+	pub fn GetMenuItemInfoW(_: HANDLE, _: u32, _: BOOL, _: PVOID) -> BOOL;
+	pub fn GetMenuItemRect(_: HANDLE, _: HANDLE, _: u32, _: PVOID) -> BOOL;
+	pub fn GetMenuState(_: HANDLE, _: u32, _: u32) -> u32;
+	pub fn GetMenuStringW(_: HANDLE, _: u32, _: PSTR, _: i32, _: u32) -> i32;
 	pub fn GetMessagePos() -> u32;
 	pub fn GetMessageW(_: PVOID, _: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn GetNextDlgGroupItem(_: HANDLE, _: HANDLE, _: BOOL) -> HANDLE;
@@ -77,6 +88,7 @@ extern "system" {
 	pub fn GetShellWindow() -> HANDLE;
 	pub fn GetSubMenu(_: HANDLE, _: i32) -> HANDLE;
 	pub fn GetSysColor(_: i32) -> u32;
+	pub fn GetSystemMenu(_: HANDLE, _: BOOL) -> HANDLE;
 	pub fn GetSystemMetrics(_: i32) -> i32;
 	pub fn GetUpdateRgn(_: HANDLE, _: HANDLE, _: BOOL) -> i32;
 	pub fn GetWindow(_: HANDLE, _: u32) -> HANDLE;
@@ -139,6 +151,7 @@ extern "system" {
 	pub fn SetMenu(_: HANDLE, _: HANDLE) -> BOOL;
 	pub fn SetMenuDefaultItem(_: HANDLE, _: u32, _: u32) -> BOOL;
 	pub fn SetMenuInfo(_: HANDLE, _: PCVOID) -> BOOL;
+	pub fn SetMenuItemBitmaps(_: HANDLE, _: u32, _: u32, _: HANDLE, _: HANDLE) -> BOOL;
 	pub fn SetMenuItemInfoW(_: HANDLE, _: u32, _: BOOL, _: PCVOID) -> BOOL;
 	pub fn SetParent(_: HANDLE, _: HANDLE) -> HANDLE;
 	pub fn SetProcessDPIAware() -> BOOL;

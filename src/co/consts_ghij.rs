@@ -125,6 +125,14 @@ pub_struct_const! { GM, i32,
 	ADVANCED, 2
 }
 
+pub_struct_const! { GMDI, u32,
+	/// [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem)
+	/// `gmdiFlags` (`u32`).
+	=>
+	USEDISABLED, 0x0001
+	GOINTOPOPUPS, 0x0002
+}
+
 pub_struct_const! { GMEM, u32,
 	/// [`HGLOBAL::GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) `uFlags` (`u32`).
 	=>

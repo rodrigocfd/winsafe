@@ -131,7 +131,7 @@ pub enum DispfNup {
 /// Variant parameter for:
 ///
 /// * [`HMENU::AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
-pub enum EntrySeparatorSubmenu<'a> {
+pub enum MenuEnum<'a> {
 	/// A selectable entry item, with command ID and text.
 	Entry(u16, &'a str),
 	/// A separator.
@@ -323,15 +323,21 @@ impl IdMenu {
 	}
 }
 
-/// Variant parameter used in [menu](crate::HMENU) methods:
+/// Variant parameter for:
 ///
 /// * [`HMENU::CheckMenuItem`](crate::HMENU::CheckMenuItem) `uIDCheckItem`;
+/// * [`HMENU::CheckMenuRadioItem`](crate::HMENU::CheckMenuRadioItem) `first`, `last`, `check`;
 /// * [`HMENU::DeleteMenu`](crate::HMENU::DeleteMenu) `uPosition`;
 /// * [`HMENU::EnableMenuItem`](crate::HMENU::EnableMenuItem) `uIDEnableItem`;
-/// * [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem) `uIDHiliteItem`;
+/// * [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem) return value;
+/// * [`HMENU::GetMenuItemInfo`](crate::HMENU::GetMenuItemInfo) `item`;
+/// * [`HMENU::GetMenuState`](crate::HMENU::GetMenuState) `uId`;
+/// * [`HMENU::GetMenuString`](crate::HMENU::GetMenuString) `uIDItem`;
 /// * [`HMENU::InsertMenuItem`](crate::HMENU::InsertMenuItem) `item`;
 /// * [`HMENU::RemoveMenu`](crate::HMENU::RemoveMenu) `uPosition`;
-/// * [`HMENU::SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`.
+/// * [`HMENU::SetMenuItemBitmaps`](crate::HMENU::SetMenuItemBitmaps) `uPosition`;
+/// * [`HMENU::SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo) `item`;
+/// * [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem) `uIDHiliteItem`.
 #[derive(Copy, Clone)]
 pub enum IdPos {
 	/// A command ID.
