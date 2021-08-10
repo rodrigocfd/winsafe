@@ -27,8 +27,10 @@ pub_struct_handle! {
 }
 
 impl HWND {
-	/// For some specific functions, represents all top-level windows.
-	pub const BROADCAST: Self = Self { ptr: std::ptr::null_mut() };
+	/// Represents all top-level windows in
+	/// [`HWND::PostMessage`](crate::HWND::PostMessage) and
+	/// [`HWND::SendMessage`](crate::HWND::SendMessage).
+	pub const BROADCAST: Self = Self { ptr: 0xffff as _ };
 
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) wrapper to retrieve
 	/// the window [`HINSTANCE`](crate::HINSTANCE).
