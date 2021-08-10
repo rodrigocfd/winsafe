@@ -3,7 +3,7 @@ use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::HtreeitemTvi;
+use crate::enums::TreeitemTvi;
 use crate::handles::{HTREEITEM, HWND};
 use crate::msg::tvm;
 use crate::privs::MAX_PATH;
@@ -52,7 +52,7 @@ impl TreeViewItems {
 
 		let mut tvis = TVINSERTSTRUCT::default();
 		tvis.hParent = hparent;
-		tvis.set_hInsertAfter(HtreeitemTvi::Tvi(co::TVI::LAST));
+		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
 		tvis.itemex = tvix;
 
 		self.hwnd().SendMessage(tvm::InsertItem { tvinsertstruct: &mut tvis })
@@ -74,7 +74,7 @@ impl TreeViewItems {
 		tvix.set_pszText(Some(&mut buf));
 
 		let mut tvis = TVINSERTSTRUCT::default();
-		tvis.set_hInsertAfter(HtreeitemTvi::Tvi(co::TVI::LAST));
+		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
 		tvis.itemex = tvix;
 
 		self.hwnd().SendMessage(tvm::InsertItem { tvinsertstruct: &mut tvis })

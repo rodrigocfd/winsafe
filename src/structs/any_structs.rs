@@ -6,7 +6,7 @@ use std::marker::PhantomData;
 
 use crate::aliases::{CCHOOKPROC, PFTASKDIALOGCALLBACK, WNDPROC};
 use crate::co;
-use crate::enums::{DispfNup, HiconIdTdicon, HwndHmenu, HwndPlace};
+use crate::enums::{DispfNup, IconIdTdicon, HwndHmenu, HwndPlace};
 use crate::ffi::BOOL;
 use crate::funcs::{
 	HIDWORD,
@@ -1237,12 +1237,12 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub_fn_string_ptr_get_set!('a, pszWindowTitle, set_pszWindowTitle);
 
 	/// Sets the `hMainIcon` field.
-	pub fn set_hMainIcon(&mut self, val: HiconIdTdicon) {
+	pub fn set_hMainIcon(&mut self, val: IconIdTdicon) {
 		match val {
-			HiconIdTdicon::None => self.union0.pszMainIcon = std::ptr::null_mut(),
-			HiconIdTdicon::Hicon(hicon) => self.union0.hMainIcon = hicon,
-			HiconIdTdicon::Id(id) => self.union0.pszMainIcon = MAKEINTRESOURCE(id as _),
-			HiconIdTdicon::Tdicon(tdi) => self.union0.pszMainIcon = MAKEINTRESOURCE(tdi.0),
+			IconIdTdicon::None => self.union0.pszMainIcon = std::ptr::null_mut(),
+			IconIdTdicon::Icon(hicon) => self.union0.hMainIcon = hicon,
+			IconIdTdicon::Id(id) => self.union0.pszMainIcon = MAKEINTRESOURCE(id as _),
+			IconIdTdicon::Tdicon(tdi) => self.union0.pszMainIcon = MAKEINTRESOURCE(tdi.0),
 		}
 	}
 
@@ -1256,12 +1256,12 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub_fn_string_ptr_get_set!('i, pszCollapsedControlText, set_pszCollapsedControlText);
 
 	/// Sets the `hFooterIcon` field.
-	pub fn set_hFooterIcon(&mut self, val: HiconIdTdicon) {
+	pub fn set_hFooterIcon(&mut self, val: IconIdTdicon) {
 		match val {
-			HiconIdTdicon::None => self.union1.pszFooterIcon = std::ptr::null_mut(),
-			HiconIdTdicon::Hicon(hicon) => self.union1.hFooterIcon = hicon,
-			HiconIdTdicon::Id(id) => self.union1.pszFooterIcon = MAKEINTRESOURCE(id as _),
-			HiconIdTdicon::Tdicon(tdi) => self.union1.pszFooterIcon = MAKEINTRESOURCE(tdi.0),
+			IconIdTdicon::None => self.union1.pszFooterIcon = std::ptr::null_mut(),
+			IconIdTdicon::Icon(hicon) => self.union1.hFooterIcon = hicon,
+			IconIdTdicon::Id(id) => self.union1.pszFooterIcon = MAKEINTRESOURCE(id as _),
+			IconIdTdicon::Tdicon(tdi) => self.union1.pszFooterIcon = MAKEINTRESOURCE(tdi.0),
 		}
 	}
 

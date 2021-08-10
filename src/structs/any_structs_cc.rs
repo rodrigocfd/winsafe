@@ -5,7 +5,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::enums::HtreeitemTvi;
+use crate::enums::TreeitemTvi;
 use crate::handles::{HDC, HIMAGELIST, HTREEITEM, HWND};
 use crate::privs::{L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
@@ -613,12 +613,12 @@ impl_default!(TVINSERTSTRUCT, 'a);
 
 impl<'a> TVINSERTSTRUCT<'a> {
 	/// Returns the `hInsertAfter` field.
-	pub fn hInsertAfter(&self) -> HtreeitemTvi {
-		HtreeitemTvi::from_isize(self.hInsertAfter)
+	pub fn hInsertAfter(&self) -> TreeitemTvi {
+		TreeitemTvi::from_isize(self.hInsertAfter)
 	}
 
 	/// Sets the `hInsertAfter` field.
-	pub fn set_hInsertAfter(&mut self, val: HtreeitemTvi) {
+	pub fn set_hInsertAfter(&mut self, val: TreeitemTvi) {
 		self.hInsertAfter = val.as_isize();
 	}
 }

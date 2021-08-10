@@ -69,17 +69,18 @@ impl AtomStr {
 
 /// Variant parameter for:
 ///
-/// * [`BM_GETIMAGE`](crate::msg::bm::GetImage) `image`.
+/// * [`BM_GETIMAGE`](crate::msg::bm::GetImage) `image`;
+/// * [`BM_SETIMAGE`](crate::msg::bm::SetImage) `image`.
 #[derive(Copy, Clone)]
-pub enum BitmapIcon {
-	Bitmap(HBITMAP),
+pub enum BmpIcon {
+	Bmp(HBITMAP),
 	Icon(HICON),
 }
 
-impl BitmapIcon {
+impl BmpIcon {
 	pub fn as_isize(&self) -> isize {
 		(match self {
-			Self::Bitmap(hbmp) => hbmp.ptr,
+			Self::Bmp(hbmp) => hbmp.ptr,
 			Self::Icon(hicon) => hicon.ptr,
 		}) as isize
 	}
@@ -89,9 +90,9 @@ impl BitmapIcon {
 ///
 /// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `lpNewItem`.
 #[derive(Clone)]
-pub enum BitmapPtrStr {
+pub enum BmpPtrStr {
 	/// An [`HBITMAP`](crate::HBITMAP).
-	Bitmap(HBITMAP),
+	Bmp(HBITMAP),
 	/// A pointer to anything.
 	Ptr(*const std::ffi::c_void),
 	/// A string.
@@ -100,11 +101,11 @@ pub enum BitmapPtrStr {
 	None,
 }
 
-impl BitmapPtrStr {
+impl BmpPtrStr {
 	/// Converts the internal value to a `*const u16`.
 	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
-			Self::Bitmap(hbmp) => hbmp.ptr as _,
+			Self::Bmp(hbmp) => hbmp.ptr as _,
 			Self::Ptr(lp) => *lp as _,
 			Self::Str(s) => {
 				*buf = WString::from_str(s);
@@ -137,52 +138,6 @@ pub enum EntrySeparatorSubmenu<'a> {
 	Separator,
 	/// A submenu, with its entry text.
 	Submenu(HMENU, &'a str),
-}
-
-/// Variant parameter for:
-///
-/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hMainIcon`;
-/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hFooterIcon`.
-#[derive(Copy, Clone)]
-pub enum HiconIdTdicon {
-	/// No icon.
-	None,
-	/// An icon handle.
-	Hicon(HICON),
-	/// A resource ID.
-	Id(u16),
-	/// A predefined icon.
-	Tdicon(co::TD_ICON),
-}
-
-/// Variant parameter for:
-///
-/// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
-#[derive(Copy, Clone)]
-pub enum HtreeitemTvi {
-	/// Handle to a tree view item.
-	Htreeitem(HTREEITEM),
-	/// One of the predefined values.
-	Tvi(co::TVI),
-}
-
-impl HtreeitemTvi {
-	pub fn from_isize(val: isize) -> HtreeitemTvi {
-		match co::TVI(val) {
-			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
-			co::TVI::LAST => Self::Tvi(co::TVI::LAST),
-			co::TVI::ROOT => Self::Tvi(co::TVI::ROOT),
-			co::TVI::SORT => Self::Tvi(co::TVI::SORT),
-			val => Self::Htreeitem(HTREEITEM { ptr: val.0 as _ }),
-		}
-	}
-
-	pub fn as_isize(&self) -> isize {
-		match self {
-			Self::Htreeitem(htreeitem) => htreeitem.ptr as _,
-			Self::Tvi(tvi) => tvi.0 as _,
-		}
-	}
 }
 
 /// Variant parameter for:
@@ -258,6 +213,22 @@ impl HwndPointId {
 			Self::Id(id) => *id as _,
 		}
 	}
+}
+
+/// Variant parameter for:
+///
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hMainIcon`;
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hFooterIcon`.
+#[derive(Copy, Clone)]
+pub enum IconIdTdicon {
+	/// No icon.
+	None,
+	/// An icon handle.
+	Icon(HICON),
+	/// A resource ID.
+	Id(u16),
+	/// A predefined icon.
+	Tdicon(co::TD_ICON),
 }
 
 /// Variant parameter for:
@@ -530,6 +501,36 @@ impl RtStr {
 				*buf = WString::from_str(s);
 				unsafe { buf.as_ptr() }
 			},
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
+#[derive(Copy, Clone)]
+pub enum TreeitemTvi {
+	/// Handle to a tree view item.
+	Treeitem(HTREEITEM),
+	/// One of the predefined values.
+	Tvi(co::TVI),
+}
+
+impl TreeitemTvi {
+	pub fn from_isize(val: isize) -> TreeitemTvi {
+		match co::TVI(val) {
+			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
+			co::TVI::LAST => Self::Tvi(co::TVI::LAST),
+			co::TVI::ROOT => Self::Tvi(co::TVI::ROOT),
+			co::TVI::SORT => Self::Tvi(co::TVI::SORT),
+			val => Self::Treeitem(HTREEITEM { ptr: val.0 as _ }),
+		}
+	}
+
+	pub fn as_isize(&self) -> isize {
+		match self {
+			Self::Treeitem(htreeitem) => htreeitem.ptr as _,
+			Self::Tvi(tvi) => tvi.0 as _,
 		}
 	}
 }

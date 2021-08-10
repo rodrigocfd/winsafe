@@ -4,7 +4,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::BitmapIcon;
+use crate::enums::BmpIcon;
 use crate::handles::{HBITMAP, HICON};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
@@ -326,18 +326,18 @@ impl MsgSend for GetCheck {
 /// [`BM_GETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<BitmapIcon>`.
+/// Return type: `WinResult<BmpIcon>`.
 pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
 
 impl MsgSend for GetImage {
-	type RetType = WinResult<BitmapIcon>;
+	type RetType = WinResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.img_type {
-			co::IMAGE_TYPE::BITMAP => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as _ })),
-			co::IMAGE_TYPE::ICON => Ok(BitmapIcon::Icon(HICON { ptr: v as _ })),
+			co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP { ptr: v as _ })),
+			co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON { ptr: v as _ })),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
 		}
 	}
@@ -424,18 +424,18 @@ impl MsgSend for SetDontClick {
 /// [`BM_SETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<BitmapIcon>`.
+/// Return type: `WinResult<BmpIcon>`.
 pub struct SetImage {
-	pub image: BitmapIcon,
+	pub image: BmpIcon,
 }
 
 impl MsgSend for SetImage {
-	type RetType = WinResult<BitmapIcon>;
+	type RetType = WinResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.image {
-			BitmapIcon::Bitmap(_) => Ok(BitmapIcon::Bitmap(HBITMAP { ptr: v as _ })),
-			BitmapIcon::Icon(_) => Ok(BitmapIcon::Icon(HICON { ptr: v as _ })),
+			BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP { ptr: v as _ })),
+			BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON { ptr: v as _ })),
 		}
 	}
 
@@ -443,8 +443,8 @@ impl MsgSend for SetImage {
 		WndMsg {
 			msg_id: co::BM::SETIMAGE.into(),
 			wparam: match self.image {
-				BitmapIcon::Bitmap(_) => co::IMAGE_TYPE::BITMAP.0,
-				BitmapIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
+				BmpIcon::Bmp(_) => co::IMAGE_TYPE::BITMAP.0,
+				BmpIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
 			} as _,
 			lparam: self.image.as_isize(),
 		}

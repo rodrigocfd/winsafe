@@ -2,7 +2,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{BitmapPtrStr, EntrySeparatorSubmenu, IdMenu, IdPos};
+use crate::enums::{BmpPtrStr, EntrySeparatorSubmenu, IdMenu, IdPos};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;
 use crate::handles::HWND;
@@ -24,7 +24,7 @@ impl HMENU {
 	/// This method is rather tricky, consider using
 	/// [`AppendMenuEnum`](crate::HMENU::AppendMenuEnum).
 	pub fn AppendMenu(self, uFlags: co::MF,
-		uIDNewItem: IdMenu, lpNewItem: BitmapPtrStr) -> WinResult<()>
+		uIDNewItem: IdMenu, lpNewItem: BmpPtrStr) -> WinResult<()>
 	{
 		let mut buf_lpNewItem = WString::default();
 		bool_to_winresult(
@@ -81,17 +81,17 @@ impl HMENU {
 			EntrySeparatorSubmenu::Entry(cmd_id, text) => self.AppendMenu(
 				co::MF::STRING,
 				IdMenu::Id(*cmd_id),
-				BitmapPtrStr::Str((*text).to_owned()),
+				BmpPtrStr::Str((*text).to_owned()),
 			),
 			EntrySeparatorSubmenu::Separator => self.AppendMenu(
 				co::MF::SEPARATOR,
 				IdMenu::None,
-				BitmapPtrStr::None,
+				BmpPtrStr::None,
 			),
 			EntrySeparatorSubmenu::Submenu(hmenu, text) => self.AppendMenu(
 				co::MF::POPUP,
 				IdMenu::Menu(*hmenu),
-				BitmapPtrStr::Str((*text).to_owned()),
+				BmpPtrStr::Str((*text).to_owned()),
 			),
 		}
 	}
