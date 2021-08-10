@@ -1310,11 +1310,11 @@ impl MsgSend for NextDlgCtl {
 			msg_id: co::WM::NEXTDLGCTL,
 			wparam: match self.hwnd_focus {
 				HwndFocus::Hwnd(hctl) => hctl.ptr as _,
-				HwndFocus::FocusPrev(prev) => prev as _,
+				HwndFocus::FocusNext(next) => if next { 0 } else { 1 },
 			},
 			lparam: MAKEDWORD(match self.hwnd_focus {
 				HwndFocus::Hwnd(_) => 1,
-				HwndFocus::FocusPrev(_) => 0,
+				HwndFocus::FocusNext(_) => 0,
 			}, 0) as _,
 		}
 	}
@@ -1325,7 +1325,7 @@ impl MsgSendRecv for NextDlgCtl {
 		Self {
 			hwnd_focus: match p.wparam {
 				1 => HwndFocus::Hwnd(HWND { ptr: p.wparam as _ }),
-				_ => HwndFocus::FocusPrev(p.wparam != 0),
+				_ => HwndFocus::FocusNext(p.wparam == 0),
 			},
 		}
 	}

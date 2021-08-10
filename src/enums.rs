@@ -145,8 +145,11 @@ pub enum EntrySeparatorSubmenu<'a> {
 /// * [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
 #[derive(Copy, Clone)]
 pub enum HwndFocus {
+	/// Handle to the control to receive the focus.
 	Hwnd(HWND),
-	FocusPrev(bool),
+	/// If `true`, the next control with [`WS::TABSTOP`](crate::co::WS::TABSTOP)
+	/// receives the focus; if `false`, the previous.
+	FocusNext(bool),
 }
 
 /// Variant parameter for:
