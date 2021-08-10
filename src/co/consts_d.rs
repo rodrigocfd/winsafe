@@ -90,6 +90,23 @@ pub_struct_const! { DISPOSITION, u32,
 	TRUNCATE_EXISTING, 5
 }
 
+pub_struct_const! { DLGC, u16,
+	/// [`WM_GETDLGCODE`](crate::msg::wm::GetDlgCode) return value (`u16`).
+	=>
+	NoValue, 0
+	BUTTON, 0x2000
+	DEFPUSHBUTTON, 0x0010
+	HASSETSEL, 0x0008
+	RADIOBUTTON, 0x0040
+	STATIC, 0x0100
+	UNDEFPUSHBUTTON, 0x0020
+	WANTALLKEYS, 0x0004
+	WANTARROWS, 0x0001
+	WANTCHARS, 0x0080
+	WANTMESSAGE, 0x0004
+	WANTTAB, 0x0002
+}
+
 pub_struct_const! { DLGID, u16,
 	/// Dialog built-in IDs (`u16`). These are also returned from
 	/// [`HWND::MessageBox`](crate::HWND::MessageBox) and

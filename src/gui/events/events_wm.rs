@@ -636,6 +636,20 @@ impl WindowEvents {
 		/// when `DefWindowProc` returns.
 	}
 
+	/// [`WM_GETDLGCODE`](crate::msg::wm::GetDlgCode) message.
+	///
+	/// By default, the system handles all keyboard input to the control; the
+	/// system interprets certain types of keyboard input as dialog box
+	/// navigation keys. To override this default behavior, the control can
+	/// respond to the `WM_GETDLGCODE` message to indicate the types of input it
+	/// wants to process itself.
+	pub fn wm_get_dlg_code<F>(&self, func: F)
+		where F: Fn(wm::GetDlgCode) -> co::DLGC + 'static,
+	{
+		self.add_msg(co::WM::GETDLGCODE,
+			move |p| Some(func(wm::GetDlgCode::from_generic_wm(p)).0 as _));
+	}
+
 	/// [`WM_GETFONT`](crate::msg::wm::GetFont) message.
 	///
 	/// Retrieves the font with which the control is currently drawing its text.

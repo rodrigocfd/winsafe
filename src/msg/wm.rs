@@ -22,6 +22,7 @@ use crate::structs::{
 	DELETEITEMSTRUCT,
 	HELPINFO,
 	MINMAXINFO,
+	MSG,
 	NMHDR,
 	POINT,
 	RECT,
@@ -607,6 +608,43 @@ impl MsgSendRecv for ExitMenuLoop {
 
 pub_struct_msg_empty_handleable! { ExitSizeMove, co::WM::EXITSIZEMOVE,
 	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
+}
+
+/// [`WM_GETDLGCODE`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-getdlgcode)
+/// message parameters.
+///
+/// Return type: `co::DLGC`.
+pub struct GetDlgCode<'a> {
+	pub vkey_code: co::VK,
+	pub msg: Option<&'a mut MSG>,
+}
+
+impl<'a> MsgSend for GetDlgCode<'a> {
+	type RetType = co::DLGC;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::DLGC(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::GETDLGCODE,
+			wparam: self.vkey_code.0 as _,
+			lparam: self.msg.as_ref().map_or(0, |m| m as *const _ as _),
+		}
+	}
+}
+
+impl<'a> MsgSendRecv for GetDlgCode<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			vkey_code: co::VK(p.wparam as _),
+			msg: match p.lparam {
+				0 => None,
+				ptr => Some(unsafe { &mut *(ptr as *mut _) })
+			},
+		}
+	}
 }
 
 /// [`WM_GETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)

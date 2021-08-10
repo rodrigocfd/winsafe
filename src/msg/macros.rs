@@ -168,7 +168,7 @@ macro_rules! pub_struct_msg_button {
 		///
 		/// Return type: `()`.
 		pub struct $name {
-			pub vkeys: co::VK,
+			pub vkey_code: co::VK,
 			pub coords: POINT,
 		}
 
@@ -182,7 +182,7 @@ macro_rules! pub_struct_msg_button {
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
-					wparam: self.vkeys.0 as usize,
+					wparam: self.vkey_code.0 as usize,
 					lparam: MAKEDWORD(self.coords.x as _, self.coords.y as _) as _,
 				}
 			}
@@ -191,7 +191,7 @@ macro_rules! pub_struct_msg_button {
 		impl MsgSendRecv for $name {
 			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
-					vkeys: co::VK(p.wparam as _),
+					vkey_code: co::VK(p.wparam as _),
 					coords: POINT {
 						x: LOWORD(p.lparam as _) as _,
 						y: HIWORD(p.lparam as _) as _,
