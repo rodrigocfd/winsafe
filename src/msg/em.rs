@@ -150,12 +150,12 @@ impl MsgSend for GetThumb {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct ReplaceSel<'a> {
+pub struct ReplaceSel {
 	pub can_be_undone: bool,
-	pub replacement_text: &'a str,
+	pub replacement_text: WString,
 }
 
-impl<'a> MsgSend for ReplaceSel<'a> {
+impl MsgSend for ReplaceSel {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -166,7 +166,7 @@ impl<'a> MsgSend for ReplaceSel<'a> {
 		WndMsg {
 			msg_id: co::EM::REPLACESEL.into(),
 			wparam: self.can_be_undone as _,
-			lparam: unsafe { WString::from_str(self.replacement_text).as_ptr() } as _,
+			lparam: unsafe { self.replacement_text.as_ptr() } as _,
 		}
 	}
 }

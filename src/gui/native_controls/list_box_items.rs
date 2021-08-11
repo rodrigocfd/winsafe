@@ -4,6 +4,7 @@ use std::ptr::NonNull;
 use crate::aliases::WinResult;
 use crate::handles::HWND;
 use crate::msg::lb;
+use crate::various::WString;
 
 /// Exposes item methods of a [`ListBox`](crate::gui::ListBox) control.
 ///
@@ -42,7 +43,9 @@ impl ListBoxItems {
 	/// ```
 	pub fn add<S: AsRef<str>>(&self, items: &[S]) -> WinResult<()> {
 		for text in items.iter() {
-			self.hwnd().SendMessage(lb::AddString { text: text.as_ref() })?;
+			self.hwnd().SendMessage(lb::AddString {
+				text: WString::from_str(text.as_ref()),
+			})?;
 		}
 		Ok(())
 	}

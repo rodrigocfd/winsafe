@@ -41,8 +41,8 @@ impl StatusBarParts {
 	pub fn set_text(&self, part_index: u8, text: &str) -> WinResult<()> {
 		self.hwnd().SendMessage(sb::SetText {
 			part_index,
-			drawing_operation: co::SBT::BORDER,
-			text,
+			draw_operation: co::SBT::BORDER,
+			text: WString::from_str(text),
 		})
 	}
 

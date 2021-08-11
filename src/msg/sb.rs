@@ -185,13 +185,13 @@ impl<'a> MsgSend for SetParts<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct SetText<'a> {
+pub struct SetText {
 	pub part_index: u8,
-	pub drawing_operation: co::SBT,
-	pub text: &'a str,
+	pub draw_operation: co::SBT,
+	pub text: WString,
 }
 
-impl<'a> MsgSend for SetText<'a> {
+impl MsgSend for SetText {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -201,20 +201,20 @@ impl<'a> MsgSend for SetText<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETTEXT.into(),
-			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.drawing_operation.into()) as _,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.draw_operation.0) as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
 
 /// [`SB_SETTIPTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-settiptext)
 /// message parameters.
-pub struct SetTipText<'a> {
+pub struct SetTipText {
 	pub part_index: u8,
-	pub text: &'a str,
+	pub text: WString,
 }
 
-impl<'a> MsgSend for SetTipText<'a> {
+impl MsgSend for SetTipText {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -225,7 +225,7 @@ impl<'a> MsgSend for SetTipText<'a> {
 		WndMsg {
 			msg_id: co::SB::SETTIPTEXT.into(),
 			wparam: self.part_index as _,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }

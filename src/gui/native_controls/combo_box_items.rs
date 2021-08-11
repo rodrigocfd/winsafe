@@ -44,7 +44,9 @@ impl ComboBoxItems {
 	/// ```
 	pub fn add<S: AsRef<str>>(&self, items: &[S]) -> WinResult<()> {
 		for text in items.iter() {
-			self.hwnd().SendMessage(cb::AddString { text: text.as_ref() })?;
+			self.hwnd().SendMessage(cb::AddString {
+				text: WString::from_str(text.as_ref()),
+			})?;
 		}
 		Ok(())
 	}

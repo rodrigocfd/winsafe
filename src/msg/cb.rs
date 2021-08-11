@@ -13,11 +13,11 @@ use crate::various::WString;
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct AddString<'a> {
-	pub text: &'a str,
+pub struct AddString {
+	pub text: WString,
 }
 
-impl<'a> MsgSend for AddString<'a> {
+impl MsgSend for AddString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -31,7 +31,7 @@ impl<'a> MsgSend for AddString<'a> {
 		WndMsg {
 			msg_id: co::CB::ADDSTRING.into(),
 			wparam: 0,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -67,12 +67,12 @@ impl MsgSend for DeleteString {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct Dir<'a> {
+pub struct Dir {
 	pub attributes: co::DDL,
-	pub path: &'a str,
+	pub path: WString,
 }
 
-impl<'a> MsgSend for Dir<'a> {
+impl MsgSend for Dir {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -87,7 +87,7 @@ impl<'a> MsgSend for Dir<'a> {
 		WndMsg {
 			msg_id: co::CB::DELETESTRING.into(),
 			wparam: self.attributes.0 as _,
-			lparam: unsafe { WString::from_str(self.path).as_ptr() } as _,
+			lparam: unsafe { self.path.as_ptr() } as _,
 		}
 	}
 }
@@ -96,12 +96,12 @@ impl<'a> MsgSend for Dir<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct FindString<'a> {
+pub struct FindString {
 	pub preceding_index: Option<u32>,
-	pub text: &'a str,
+	pub text: WString,
 }
 
-impl<'a> MsgSend for FindString<'a> {
+impl MsgSend for FindString {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -114,8 +114,8 @@ impl<'a> MsgSend for FindString<'a> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::FINDSTRING.into(),
-			wparam: self.preceding_index.map(|i| i as i32).unwrap_or(-1) as _,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			wparam: self.preceding_index.map(|i| i as _).unwrap_or(-1) as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }

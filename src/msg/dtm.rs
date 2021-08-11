@@ -216,11 +216,11 @@ impl<'a> MsgSend for GetSystemTime<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct SetFormat<'a> {
-	pub format_string: Option<&'a str>,
+pub struct SetFormat {
+	pub format_string: Option<WString>,
 }
 
-impl<'a> MsgSend for SetFormat<'a> {
+impl MsgSend for SetFormat {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -231,9 +231,9 @@ impl<'a> MsgSend for SetFormat<'a> {
 		WndMsg {
 			msg_id: co::DTM::SETFORMAT.into(),
 			wparam: 0,
-			lparam: match self.format_string {
+			lparam: match &self.format_string {
 				None => 0,
-				Some(fmtstr) => (unsafe { WString::from_str(fmtstr).as_ptr() }) as _,
+				Some(fmtstr) => unsafe { fmtstr.as_ptr() as _ },
 			},
 		}
 	}

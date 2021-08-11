@@ -674,11 +674,11 @@ impl MsgSend for GetSelectionMark {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct GetStringWidth<'a> {
-	pub text: &'a str,
+pub struct GetStringWidth {
+	pub text: WString,
 }
 
-impl<'a> MsgSend for GetStringWidth<'a> {
+impl MsgSend for GetStringWidth {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -692,7 +692,7 @@ impl<'a> MsgSend for GetStringWidth<'a> {
 		WndMsg {
 			msg_id: co::LVM::GETSTRINGWIDTH.into(),
 			wparam: 0,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }

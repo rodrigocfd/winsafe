@@ -15,11 +15,11 @@ use crate::various::WString;
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct AddFile<'a> {
-	pub text: &'a str,
+pub struct AddFile {
+	pub text: WString,
 }
 
-impl<'a> MsgSend for AddFile<'a> {
+impl MsgSend for AddFile {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -33,7 +33,7 @@ impl<'a> MsgSend for AddFile<'a> {
 		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -42,11 +42,11 @@ impl<'a> MsgSend for AddFile<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct AddString<'a> {
-	pub text: &'a str,
+pub struct AddString {
+	pub text: WString,
 }
 
-impl<'a> MsgSend for AddString<'a> {
+impl MsgSend for AddString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -60,7 +60,7 @@ impl<'a> MsgSend for AddString<'a> {
 		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -96,12 +96,12 @@ impl MsgSend for DeleteString {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct Dir<'a> {
+pub struct Dir {
 	pub attributes: co::DDL,
-	pub path: &'a str,
+	pub path: WString,
 }
 
-impl<'a> MsgSend for Dir<'a> {
+impl MsgSend for Dir {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -116,7 +116,7 @@ impl<'a> MsgSend for Dir<'a> {
 		WndMsg {
 			msg_id: co::LB::DELETESTRING.into(),
 			wparam: self.attributes.0 as _,
-			lparam: unsafe { WString::from_str(self.path).as_ptr() } as _,
+			lparam: unsafe { self.path.as_ptr() } as _,
 		}
 	}
 }
@@ -125,12 +125,12 @@ impl<'a> MsgSend for Dir<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct FindString<'a> {
+pub struct FindString {
 	pub preceding_index: Option<u32>,
-	pub text: &'a str,
+	pub text: WString,
 }
 
-impl<'a> MsgSend for FindString<'a> {
+impl MsgSend for FindString {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -147,7 +147,7 @@ impl<'a> MsgSend for FindString<'a> {
 				None => -1,
 				Some(idx) => idx as i32,
 			} as _,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -156,12 +156,12 @@ impl<'a> MsgSend for FindString<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct FindStringExact<'a> {
+pub struct FindStringExact {
 	pub preceding_index: Option<u32>,
-	pub text: &'a str,
+	pub text: WString,
 }
 
-impl<'a> MsgSend for FindStringExact<'a> {
+impl MsgSend for FindStringExact {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -178,7 +178,7 @@ impl<'a> MsgSend for FindStringExact<'a> {
 				None => -1,
 				Some(idx) => idx as i32,
 			} as _,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -595,12 +595,12 @@ impl MsgSend for InitStorage {
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct InsertString<'a> {
+pub struct InsertString {
 	pub insertion_index: Option<u32>,
-	pub text: &'a str,
+	pub text: WString,
 }
 
-impl<'a> MsgSend for InsertString<'a> {
+impl MsgSend for InsertString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -614,7 +614,7 @@ impl<'a> MsgSend for InsertString<'a> {
 		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
 			wparam: self.insertion_index.map(|i| i as i32).unwrap_or(-1) as _,
-			lparam: unsafe { WString::from_str(self.text).as_ptr() } as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -651,12 +651,12 @@ pub_struct_msg_empty! { ResetContent, co::LB::RESETCONTENT.into(),
 /// message parameters.
 ///
 /// Return type: `WinResult<u32>`.
-pub struct SelectString<'a> {
+pub struct SelectString {
 	pub index: Option<u32>,
-	pub prefix: &'a str,
+	pub prefix: WString,
 }
 
-impl<'a> MsgSend for SelectString<'a> {
+impl MsgSend for SelectString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -673,7 +673,7 @@ impl<'a> MsgSend for SelectString<'a> {
 				None => -1,
 				Some(idx) => idx as i32,
 			} as _,
-			lparam: unsafe { WString::from_str(self.prefix).as_ptr() } as _,
+			lparam: unsafe { self.prefix.as_ptr() } as _,
 		}
 	}
 }
