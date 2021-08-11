@@ -6,6 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, HRESULT};
 use crate::funcs::GetLastError;
+use crate::handles::HINSTANCE;
 use crate::various::WString;
 
 pub(crate) const CB_ERR: i32 = -1;
@@ -20,6 +21,7 @@ pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub(crate) const GDI_ERROR: u32 = 0xffff_ffff;
 pub(crate) const GDT_ERROR: i32 = -1;
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
+pub(crate) const HINST_COMMCTRL: HINSTANCE = HINSTANCE { ptr: -1 as _ };
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
 pub(crate) const INVALID_FILE_ATTRIBUTES: i32 = -1;
 pub(crate) const INVALID_HANDLE_VALUE: isize = -1;

@@ -2,8 +2,8 @@
 
 use crate::co;
 use crate::funcs::MAKEDWORD;
-use crate::handles::{HBITMAP, HICON, HMENU, HTREEITEM, HWND};
-use crate::privs::MAKEINTRESOURCE;
+use crate::handles::{HBITMAP, HICON, HINSTANCE, HMENU, HTREEITEM, HWND};
+use crate::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
 use crate::various::WString;
 
@@ -114,6 +114,19 @@ impl BmpPtrStr {
 			Self::None => std::ptr::null(),
 		}
 	}
+}
+
+/// Variant parameter for:
+///
+/// * [`TBADDBITMAP`](crate::TBADDBITMAP) `nID`.
+#[derive(Clone)]
+pub enum BmpIdbRes {
+	/// An [`HBITMAP`](crate::HBITMAP).
+	Bmp(HBITMAP),
+	/// A system-defined [`co::IDB`](crate::co::IDB) bitmap.
+	Idb(co::IDB),
+	/// A bitmap resource.
+	Res(IdStr, HINSTANCE),
 }
 
 /// Variant parameter for:
@@ -386,6 +399,14 @@ pub enum IdStr {
 }
 
 impl IdStr {
+	pub fn from_ptr(ptr: *const u16) -> IdStr {
+		if IS_INTRESOURCE(ptr) {
+			Self::Id(ptr as _)
+		} else {
+			Self::Str(WString::from_wchars_nullt(ptr).to_string())
+		}
+	}
+
 	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
@@ -503,6 +524,14 @@ pub enum RtStr {
 }
 
 impl RtStr {
+	pub fn from_ptr(ptr: *const u16) -> RtStr {
+		if IS_INTRESOURCE(ptr) {
+			Self::Rt(co::RT(ptr as _))
+		} else {
+			Self::Str(WString::from_wchars_nullt(ptr).to_string())
+		}
+	}
+
 	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
 		match self {
 			Self::Rt(id) => MAKEINTRESOURCE(id.0 as _),

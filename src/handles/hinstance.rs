@@ -15,7 +15,7 @@ use crate::handles::{
 	HRSRCMEM,
 	HWND,
 };
-use crate::privs::{bool_to_winresult, IS_INTRESOURCE, MAX_PATH, str_to_iso88591};
+use crate::privs::{bool_to_winresult, MAX_PATH, str_to_iso88591};
 use crate::structs::{ATOM, LANGID, WNDCLASSEX};
 use crate::various::WString;
 
@@ -122,11 +122,7 @@ impl HINSTANCE {
 		where F: Fn(IdStr) -> bool
 	{
 		let func = unsafe { &*(lParam as *const F) };
-		func(if IS_INTRESOURCE(lpName) {
-			IdStr::Id(lpName as _)
-		} else {
-			IdStr::Str(WString::from_wchars_nullt(lpName).to_string())
-		}) as _
+		func(IdStr::from_ptr(lpName)) as _
 	}
 
 	/// [`EnumResourceTypes`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
@@ -149,11 +145,7 @@ impl HINSTANCE {
 		where F: Fn(RtStr) -> bool
 	{
 		let func = unsafe { &*(lParam as *const F) };
-		func(if IS_INTRESOURCE(lpszType) {
-			RtStr::Rt(co::RT(lpszType as _))
-		} else {
-			RtStr::Str(WString::from_wchars_nullt(lpszType).to_string())
-		}) as _
+		func(RtStr::from_ptr(lpszType)) as _
 	}
 
 	/// [`FindResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew)

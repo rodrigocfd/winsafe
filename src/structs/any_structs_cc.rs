@@ -5,9 +5,9 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::enums::TreeitemTvi;
-use crate::handles::{HDC, HIMAGELIST, HTREEITEM, HWND};
-use crate::privs::{L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
+use crate::enums::{BmpIdbRes, IdStr, TreeitemTvi};
+use crate::handles::{HBITMAP, HDC, HIMAGELIST, HINSTANCE, HTREEITEM, HWND};
+use crate::privs::{HINST_COMMCTRL, L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
 use crate::various::WString;
 
@@ -598,6 +598,38 @@ pub struct NMVIEWCHANGE {
 pub struct PBRANGE {
 	pub iLow: i32,
 	pub iHigh: i32,
+}
+
+/// [`TBADDBITMAP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbaddbitmap)
+/// struct.
+#[repr(C)]
+#[derive(Clone)]
+pub struct TBADDBITMAP {
+	hInst: HINSTANCE,
+	nID: usize,
+}
+
+impl_default!(TBADDBITMAP);
+
+impl TBADDBITMAP {
+	/// Returns the `hInst` and `nID` fields.
+	pub fn nID(&self) -> BmpIdbRes {
+		match self.hInst {
+			HINST_COMMCTRL => BmpIdbRes::Idb(co::IDB(self.nID)),
+			HINSTANCE::NULL => BmpIdbRes::Bmp(HBITMAP { ptr: self.nID as _ }),
+			hInst => BmpIdbRes::Res(IdStr::from_ptr(self.nID as _), hInst),
+		}
+	}
+
+	/// Sets the `hInst` and `nID` fields.
+	pub fn set_nID(&mut self, val: BmpIdbRes) {
+		let mut buf = WString::default();
+		*self = match val {
+			BmpIdbRes::Idb(idb) => Self { hInst: HINST_COMMCTRL, nID: idb.0 },
+			BmpIdbRes::Bmp(bmp) => Self { hInst: HINSTANCE::NULL, nID: bmp.ptr as _ },
+			BmpIdbRes::Res(res, hInst) => Self { hInst, nID: res.as_ptr(&mut buf) as _ },
+		}
+	}
 }
 
 /// [`TVINSERTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)

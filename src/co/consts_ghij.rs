@@ -390,6 +390,21 @@ pub_struct_const! { HT, u16,
 	ZOOM, 9
 }
 
+pub_struct_const! { IDB, usize,
+	/// [`TBADDBITMAP`](crate::TBADDBITMAP) `nID` (`usize`).
+	=>
+	STD_SMALL_COLOR, 0
+	STD_LARGE_COLOR, 1
+	VIEW_SMALL_COLOR, 4
+	VIEW_LARGE_COLOR, 5
+	HIST_SMALL_COLOR, 8
+	HIST_LARGE_COLOR, 9
+	HIST_NORMAL, 12
+	HIST_HOT, 13
+	HIST_DISABLED, 14
+	HIST_PRESSED, 15
+}
+
 pub_struct_const! { ICON_SZ, u8,
 	/// [`WM_SETICON`](crate::msg::wm::SetIcon) icon size (`u8`). Originally has
 	/// `ICON` prefix.
