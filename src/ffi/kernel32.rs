@@ -59,6 +59,7 @@ extern "system" {
 	pub fn GetProcessIdOfThread(_: HANDLE) -> u32;
 	pub fn GetProcessTimes(_: HANDLE, _: PVOID, _: PVOID, _: PVOID, _: PVOID) -> BOOL;
 	pub fn GetStartupInfoW(_: PVOID);
+	pub fn GetSystemDirectoryW(_: PSTR, _: u32) -> u32;
 	pub fn GetSystemInfo(_: PVOID);
 	pub fn GetSystemTime(_: PVOID);
 	pub fn GetSystemTimeAsFileTime(_: PVOID);
@@ -76,6 +77,8 @@ extern "system" {
 	pub fn GlobalReAlloc(_: HANDLE, _: u64, _: u32) -> HANDLE;
 	pub fn GlobalSize(_: HANDLE) -> u64;
 	pub fn GlobalUnlock(_: HANDLE) -> BOOL;
+	pub fn IsNativeVhdBoot(_: *mut BOOL) -> BOOL;
+	pub fn IsWow64Process(_: HANDLE, _: *mut BOOL) -> BOOL;
 	pub fn LoadLibraryW(_: PCSTR) -> HANDLE;
 	pub fn LoadResource(_: HANDLE, _: HANDLE) -> HANDLE;
 	pub fn LocalFree(_: HANDLE) -> HANDLE;

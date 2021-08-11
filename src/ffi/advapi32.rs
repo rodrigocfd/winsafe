@@ -7,6 +7,7 @@ extern "system" {
 	pub fn DecryptFileW(_: PCSTR, _: u32) -> BOOL;
 	pub fn EncryptFileW(_: PCSTR) -> BOOL;
 	pub fn EncryptionDisable(_: PCSTR, _: BOOL) -> BOOL;
+	pub fn GetUserNameW(_: PSTR, _: *mut u32) -> BOOL;
 	pub fn RegCloseKey(_: HANDLE) -> BOOL;
 	pub fn RegEnumKeyExW(_: HANDLE, _: u32, _: PSTR, _: *mut u32, _: *mut u32, _: PSTR, _: *mut u32, _: PVOID) -> BOOL;
 	pub fn RegEnumValueW(_: HANDLE, _: u32, _: PSTR, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u8, _: *mut u32) -> BOOL;

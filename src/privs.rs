@@ -32,6 +32,7 @@ pub(crate) const LF_FACESIZE: usize = 32;
 pub(crate) const MAX_COMPUTERNAME_LENGTH: usize = 15;
 pub(crate) const MAX_LINKID_TEXT: usize = 48;
 pub(crate) const MAX_PATH: usize = 260;
+pub(crate) const UNLEN: usize = 256;
 
 /// [`IS_INTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.

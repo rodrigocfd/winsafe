@@ -2,7 +2,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::ffi::kernel32;
+use crate::ffi::{BOOL, kernel32};
 use crate::funcs::GetLastError;
 use crate::privs::{bool_to_winresult, INFINITE};
 use crate::structs::{
@@ -137,6 +137,16 @@ impl HPROCESS {
 				)
 			},
 		)
+	}
+
+	/// [`IsWow64Process`](https://docs.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
+	/// method.
+	pub fn IsWow64Process(self) -> WinResult<bool> {
+		let mut wow64: BOOL = 0;
+		match unsafe { kernel32::IsWow64Process(self.ptr, &mut wow64) } {
+			0 => Err(GetLastError()),
+			_ => Ok(wow64 != 0),
+		}
 	}
 
 	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)

@@ -116,6 +116,7 @@ extern "system" {
 	pub fn IsWindowEnabled(_: HANDLE) -> BOOL;
 	pub fn IsWindowUnicode(_: HANDLE) -> BOOL;
 	pub fn IsWindowVisible(_: HANDLE) -> BOOL;
+	pub fn IsWow64Message() -> BOOL;
 	pub fn IsZoomed(_: HANDLE) -> BOOL;
 	pub fn KillTimer(_: HANDLE, _: usize) -> BOOL;
 	pub fn LoadAcceleratorsW(_: HANDLE, _: PCSTR) -> HANDLE;

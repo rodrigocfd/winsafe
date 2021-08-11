@@ -25,6 +25,7 @@ use crate::privs::{
 	MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH,
 	parse_multi_z_str,
+	UNLEN,
 };
 use crate::structs::{
 	ATOM,
@@ -637,6 +638,18 @@ pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
 	COLORREF(unsafe { user32::GetSysColor(nIndex.0) })
 }
 
+/// [`GetSystemDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectoryw)
+/// function.
+pub fn GetSystemDirectory() -> WinResult<String> {
+	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+	match unsafe {
+		kernel32::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buffer_size() as _)
+	} {
+		0 => Err(GetLastError()),
+		_ => Ok(buf.to_string()),
+	}
+}
+
 /// [`GetSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
 pub fn GetSystemInfo(lpSystemInfo: &mut SYSTEM_INFO) {
@@ -703,6 +716,17 @@ pub fn GetTempPath() -> WinResult<String> {
 	}
 }
 
+/// [`GetUserNameW`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
+/// function.
+pub fn GetUserName() -> WinResult<String> {
+	let mut buf = WString::new_alloc_buffer(UNLEN + 1);
+	let mut sz = buf.buffer_size() as u32;
+	match unsafe { advapi32::GetUserNameW(buf.as_mut_ptr(), &mut sz) } {
+		0 => Err(GetLastError()),
+		_ => Ok(buf.to_string()),
+	}
+}
+
 /// [`GetTickCount64`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64)
 /// function.
 pub fn GetTickCount64() -> u64 {
@@ -758,6 +782,16 @@ pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
 		}
 	} else {
 		Ok(r != 0)
+	}
+}
+
+/// [`IsNativeVhdBoot`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-isnativevhdboot)
+/// function.
+pub fn IsNativeVhdBoot() -> WinResult<bool> {
+	let mut nativeVhdBoot: BOOL = 0;
+	match unsafe { kernel32::IsNativeVhdBoot(&mut nativeVhdBoot) } {
+		0 => Err(GetLastError()),
+		_ => Ok(nativeVhdBoot != 0),
 	}
 }
 
@@ -846,6 +880,12 @@ pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
 		LOBYTE(co::WIN32::WINNT_VISTA.0) as _,
 		0,
 	)
+}
+
+/// [`IsWow64Message`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswow64message)
+/// function.
+pub fn IsWow64Message() -> bool {
+	return unsafe { user32::IsWow64Message() != 0}
 }
 
 /// [`LOBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
