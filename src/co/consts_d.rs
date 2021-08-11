@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
 pub_struct_const! { DDL, u16,
-	/// [`CB_DIR`](crate::msg::cb::Dir) and [`LB_DIR`](crate::msg::lb::Dir)
+	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
 	=>
 	READWRITE, 0x0000
@@ -91,7 +91,7 @@ pub_struct_const! { DISPOSITION, u32,
 }
 
 pub_struct_const! { DLGC, u16,
-	/// [`WM_GETDLGCODE`](crate::msg::wm::GetDlgCode) return value (`u16`).
+	/// [`wm::GetDlgCode`](crate::msg::wm::GetDlgCode) return value (`u16`).
 	=>
 	/// None of the actual values (zero).
 	NoValue, 0

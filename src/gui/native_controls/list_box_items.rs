@@ -28,7 +28,7 @@ impl ListBoxItems {
 		unsafe { *self.hwnd_ptr.get().as_ref() }
 	}
 
-	/// Adds new texts by sending [`LB_ADDSTRING`](crate::msg::lb::AddString)
+	/// Adds new texts by sending [`lb::AddString`](crate::msg::lb::AddString)
 	/// messages.
 	///
 	/// # Examples
@@ -48,20 +48,20 @@ impl ListBoxItems {
 	}
 
 	/// Retrieves the number of items by sending an
-	/// [`LB_GETCOUNT`](crate::msg::lb::GetCount) message.
+	/// [`lb::GetCount`](crate::msg::lb::GetCount) message.
 	pub fn count(&self) -> WinResult<u32> {
 		self.hwnd().SendMessage(lb::GetCount {})
 	}
 
 	/// Deletes the item at the given index by sending an
-	/// [`LB_DELETESTRING`](crate::msg::lb::DeleteString) message.
+	/// [`lb::DeleteString`](crate::msg::lb::DeleteString) message.
 	pub fn delete(&self, index: u32) -> WinResult<()> {
 		self.hwnd().SendMessage(lb::DeleteString { index })
 			.map(|_| ())
 	}
 
 	/// Deletes all items by sending an
-	/// [`LB_RESETCONTENT`](crate::msg::lb::ResetContent) message.
+	/// [`lb::ResetContent`](crate::msg::lb::ResetContent) message.
 	pub fn delete_all(&self) {
 		self.hwnd().SendMessage(lb::ResetContent {})
 	}

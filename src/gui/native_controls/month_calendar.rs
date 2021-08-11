@@ -113,13 +113,13 @@ impl MonthCalendar {
 	pub_fn_on!(MonthCalendarEvents);
 
 	/// Retrieves the currently selected date by sending a
-	/// [`MCM_GETCURSEL`](crate::msg::mcm::GetCurSel) message.
+	/// [`mcm::GetCurSel`](crate::msg::mcm::GetCurSel) message.
 	pub fn date(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
 		self.hwnd().SendMessage(mcm::GetCurSel { info: st })
 	}
 
 	/// Sets the currently selected date by sending a
-	/// [`MCM_SETCURSEL`](crate::msg::mcm::SetCurSel) message.
+	/// [`mcm::SetCurSel`](crate::msg::mcm::SetCurSel) message.
 	pub fn set_date(&self, st: &SYSTEMTIME) -> WinResult<()> {
 		self.hwnd().SendMessage(mcm::SetCurSel { info: st })
 	}

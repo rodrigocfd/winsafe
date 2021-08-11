@@ -85,7 +85,7 @@ pub_struct_const_cmd! { EN,
 }
 
 pub_struct_const! { ENDSESSION, u32,
-	/// [`WM_ENDSESSION`](crate::msg::wm::EndSession) event (`u32`).
+	/// [`wm::EndSession`](crate::msg::wm::EndSession) event (`u32`).
 	=>
 	RESTARTORSHUTDOWN, 0
 	CLOSEAPP, 0x0000_0001
@@ -123,7 +123,7 @@ pub_struct_const_ws! { ES, u32,
 }
 
 pub_struct_const! { FAPPCOMMAND, u16,
-	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) input event (`u16`).
+	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) input event (`u16`).
 	=>
 	MOUSE, 0x8000
 	KEY, 0

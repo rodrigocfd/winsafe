@@ -97,7 +97,7 @@ pub_struct_const! { GDT, u32,
 }
 
 pub_struct_const! { GDTR, u32,
-	/// [`DTM_GETRANGE`](crate::msg::dtm::GetRange) return value (`u32`).
+	/// [`dtm::GetRange`](crate::msg::dtm::GetRange) return value (`u32`).
 	=>
 	MIN, 0x0001
 	MAX, 0x0002
@@ -177,8 +177,8 @@ pub_struct_const! { GW, u32,
 }
 
 pub_struct_const! { GWL_C, i8,
-	/// [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) and
-	/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) change (`i8`).
+	/// [`wm::StyleChanged`](crate::msg::wm::StyleChanged) and
+	/// [`wm::StyleChanging`](crate::msg::wm::StyleChanging) change (`i8`).
 	/// Originally has `GWL` prefix.
 	=>
 	EXSTYLE, -20
@@ -359,8 +359,8 @@ pub_struct_const! { HS, i32,
 }
 
 pub_struct_const! { HT, u16,
-	/// [`WM_NCHITTEST`](crate::msg::wm::NcHitTest),
-	/// [`WM_SETCURSOR`](crate::msg::wm::SetCursor) `hit_test` (`u16`).
+	/// [`wm::NcHitTest`](crate::msg::wm::NcHitTest),
+	/// [`wm::SetCursor`](crate::msg::wm::SetCursor) `hit_test` (`u16`).
 	=>
 	BORDER, 18
 	BOTTOM, 15
@@ -406,8 +406,8 @@ pub_struct_const! { IDB, usize,
 }
 
 pub_struct_const! { ICON_SZ, u8,
-	/// [`WM_SETICON`](crate::msg::wm::SetIcon) icon size (`u8`). Originally has
-	/// `ICON` prefix.
+	/// [`wm::SetIcon`](crate::msg::wm::SetIcon) icon size (`u8`). Originally
+	/// has `ICON` prefix.
 	=>
 	SMALL, 0
 	BIG, 1
@@ -519,7 +519,7 @@ pub_struct_const! { ILS, u32,
 }
 
 pub_struct_const! { IMAGE_TYPE, u8,
-	/// [`BM_GETIMAGE`](crate::msg::bm::GetImage) `img_type` (`u8`). Originally
+	/// [`bm::GetImage`](crate::msg::bm::GetImage) `img_type` (`u8`). Originally
 	/// has `IMAGE` prefix.
 	=>
 	BITMAP, 0

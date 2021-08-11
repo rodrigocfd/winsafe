@@ -98,13 +98,13 @@ impl ProgressBar {
 	pub_fn_onsubclass!();
 
 	/// Retrieves the current position by sending a
-	/// [`PBM_GETPOS`](crate::msg::pbm::GetPos) message.
+	/// [`pbm::GetPos`](crate::msg::pbm::GetPos) message.
 	pub fn position(&self) -> u32 {
 		self.hwnd().SendMessage(pbm::GetPos {})
 	}
 
 	/// Retrieves the current minimum and maximum values by sending a
-	/// [`PBM_GETRANGE`](crate::msg::pbm::GetRange) message. Default values are
+	/// [`pbm::GetRange`](crate::msg::pbm::GetRange) message. Default values are
 	/// 0 and 100.
 	pub fn range(&self) -> (u32, u32) {
 		let mut ranges = PBRANGE::default();
@@ -116,7 +116,7 @@ impl ProgressBar {
 	}
 
 	/// Sets or unsets the marquee mode by sending a
-	/// [`PBM_SETMARQUEE`](crate::msg::pbm::SetMarquee) message combined with a
+	/// [`pbm::SetMarquee`](crate::msg::pbm::SetMarquee) message combined with a
 	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) call for a style
 	/// change.
 	pub fn set_marquee(&self, marquee: bool) {
@@ -141,7 +141,7 @@ impl ProgressBar {
 	}
 
 	/// Sets the current position by sending a
-	/// [`PBM_SETPOS`](crate::msg::pbm::SetPos) message, returning the previous
+	/// [`pbm::SetPos`](crate::msg::pbm::SetPos) message, returning the previous
 	/// position.
 	pub fn set_position(&self, position: u32) -> u32 {
 		if self.cur_style().has(co::PBS::MARQUEE) {
@@ -152,21 +152,21 @@ impl ProgressBar {
 	}
 
 	/// Sets the minimum and maximum values by sending a
-	/// [`PBM_SETRANGE32`](crate::msg::pbm::SetRange32) message. Default values
+	/// [`pbm::SetRange32`](crate::msg::pbm::SetRange32) message. Default values
 	/// are 0 and 100.
 	pub fn set_range(&self, min: u32, max: u32) {
 		self.hwnd().SendMessage(pbm::SetRange32 { min, max })
 	}
 
 	/// Sets the current state by sending a
-	/// [`PBM_SETSTATE`](crate::msg::pbm::SetState) message, retuning the
+	/// [`pbm::SetState`](crate::msg::pbm::SetState) message, retuning the
 	/// previous state.
 	pub fn set_state(&self, state: co::PBST) -> co::PBST {
 		self.hwnd().SendMessage(pbm::SetState { state })
 	}
 
 	/// Retrieves the current state by sending a
-	/// [`PBM_GETSTATE`](crate::msg::pbm::GetState) message.
+	/// [`pbm::GetState`](crate::msg::pbm::GetState) message.
 	pub fn state(&self) -> co::PBST {
 		self.hwnd().SendMessage(pbm::GetState {})
 	}

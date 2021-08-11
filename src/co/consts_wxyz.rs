@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
 pub_struct_const! { WA, u16,
-	/// [`WM_ACTIVATE`](crate::msg::wm::Activate)
+	/// [`wm::Activate`](crate::msg::wm::Activate)
 	/// activation state (`u16`).
 	=>
 	INACTIVE, 0
@@ -391,7 +391,7 @@ pub_struct_const! { WM, u32,
 }
 
 pub_struct_const! { WMPN, u16,
-	/// [`WM_PARENTNOFITY`](crate::msg::wm::ParentNotify) event (`u16`).
+	/// [`wm::ParentNotify`](crate::msg::wm::ParentNotify) event (`u16`).
 	=>
 	CREATE, WM::CREATE.0 as u16
 	DESTROY, WM::DESTROY.0 as u16
@@ -403,7 +403,7 @@ pub_struct_const! { WMPN, u16,
 }
 
 pub_struct_const! { WMSZ, u8,
-	/// [`WM_SIZING`](crate::msg::wm::Sizing) window edge (`u8`).
+	/// [`wm::Sizing`](crate::msg::wm::Sizing) window edge (`u8`).
 	=>
 	LEFT, 1
 	RIGHT, 2
@@ -448,12 +448,12 @@ pub_struct_const! { WS, u32,
 	/// [`HWND::EnableWindow`](crate::HWND::EnableWindow) function.
 	DISABLED, 0x0800_0000
 	/// Clips child windows relative to each other; that is, when a particular
-	/// child window receives a [`WM_PAINT`](crate::msg::wm::Paint) message, the
-	/// `WS::CLIPSIBLINGS` style clips all other overlapping child windows out
-	/// of the region of the child window to be updated. If `WS::CLIPSIBLINGS`
-	/// is not specified and child windows overlap, it is possible, when drawing
-	/// within the client area of a child window, to draw within the client area
-	/// of a neighboring child window.
+	/// child window receives a [`wm::Paint`](crate::msg::wm::Paint) message,
+	/// the `WS::CLIPSIBLINGS` style clips all other overlapping child windows
+	/// out of the region of the child window to be updated. If
+	/// `WS::CLIPSIBLINGS` is not specified and child windows overlap, it is
+	/// possible, when drawing within the client area of a child window, to draw
+	/// within the client area of a neighboring child window.
 	CLIPSIBLINGS, 0x0400_0000
 	/// Excludes the area occupied by child windows when drawing occurs within
 	/// the parent window. This style is used when creating the parent window.
@@ -536,7 +536,7 @@ pub_struct_const! { WS_EX, u32,
 	/// [`WS::CAPTION`](crate::co::WS::CAPTION) style in the dwStyle parameter.
 	DLGMODALFRAME, 0x0000_0001
 	/// The child window created with this style does not send the
-	/// [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) message to its parent
+	/// [`wm::ParentNotify`](crate::msg::wm::ParentNotify) message to its parent
 	/// window when it is created or destroyed.
 	NOPARENTNOTIFY, 0x0000_0004
 	/// The window should be placed above all non-topmost windows and should
@@ -571,7 +571,7 @@ pub_struct_const! { WS_EX, u32,
 	/// The title bar of the window includes a question mark. When the user
 	/// clicks the question mark, the cursor changes to a question mark with a
 	/// pointer. If the user then clicks a child window, the child receives a
-	/// [`WM_HELP`](crate::msg::wm::Help) message. The child window should pass
+	/// [`wm::Help`](crate::msg::wm::Help) message. The child window should pass
 	/// the message to the parent window procedure, which should call the
 	/// [`WinHelp`](crate::HWND::WinHelp) function using the `HELP_WM_HELP`
 	/// command. The Help application displays a pop-up window that typically
@@ -671,8 +671,7 @@ pub_struct_const! { WS_EX, u32,
 }
 
 pub_struct_const! { WVR, u32,
-	/// [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize)
-	/// return flags (`u32`).
+	/// [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize) return flags (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue, 0

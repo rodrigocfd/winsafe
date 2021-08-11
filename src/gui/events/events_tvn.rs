@@ -136,7 +136,7 @@ impl TreeViewEvents {
 		///
 		/// Notifies a tree-view control's parent window that the control is
 		/// setting the cursor in response to a
-		/// [WM_SETCURSOR](crate::msg::wm::SetCursor) message.
+		/// [wm::SetCursor](crate::msg::wm::SetCursor) message.
 	}
 
 	pub_fn_nfy_ret0! { nm_set_focus, co::NM::SETFOCUS,

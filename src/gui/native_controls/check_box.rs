@@ -116,7 +116,7 @@ impl CheckBox {
 	pub_fn_on!(ButtonEvents);
 
 	/// Tells if this check box is currently checked by sending a
-	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) message.
+	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
 	pub fn is_checked(&self) -> bool {
 		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
 	}
@@ -127,7 +127,7 @@ impl CheckBox {
 	}
 
 	/// Sets the current check state by sending a
-	/// [`BM_SETCHECK`](crate::msg::bm::SetCheck) message.
+	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
 	pub fn set_check(&self, checked: bool) {
 		self.hwnd().SendMessage(bm::SetCheck {
 			state: if checked { co::BST::CHECKED } else { co::BST::UNCHECKED },
@@ -153,8 +153,7 @@ impl CheckBox {
 	}
 
 	/// Fires the click event for the check box by sending a
-	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
-	/// the method returns immediately.
+	/// [`bm::Click`](crate::msg::bm::Click) message.
 	pub fn trigger_click(&self) {
 		self.hwnd().SendMessage(bm::Click {});
 	}

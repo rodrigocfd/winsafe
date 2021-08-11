@@ -116,13 +116,13 @@ impl DateTimePicker {
 	pub_fn_on!(DateTimePickerEvents);
 
 	/// Retrieves the currently selected date by sending a
-	/// [`DTM_GETSYSTEMTIME`](crate::msg::dtm::GetSystemTime) message.
+	/// [`dtm::GetSystemTime`](crate::msg::dtm::GetSystemTime) message.
 	pub fn date(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
 		self.hwnd().SendMessage(dtm::GetSystemTime { system_time: st })
 	}
 
 	/// Sets the currently selected date by sending a
-	/// [`DTM_SETSYSTEMTIME`](crate::msg::dtm::SetSystemTime) message.
+	/// [`dtm::SetSystemTime`](crate::msg::dtm::SetSystemTime) message.
 	pub fn set_date(&self, st: &SYSTEMTIME) -> WinResult<()> {
 		self.hwnd().SendMessage(dtm::SetSystemTime { system_time: Some(st) })
 	}
@@ -147,7 +147,8 @@ pub struct DateTimePickerOpts {
 	/// Will be adjusted to match current system DPI.
 	///
 	/// Defaults to ideal width retrieved with
-	/// [`DtmGetIdealSize`](crate::msg::dtm::GetIdealSize), usually around 250.
+	/// [`dtm::GetIdealSize`](crate::msg::dtm::GetIdealSize) message, usually
+	/// around 250.
 	pub width: u32,
 	/// Date and time picker styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

@@ -183,7 +183,7 @@ impl ListView {
 	}
 
 	/// Retrieves one of the associated image lists by sending an
-	/// [`LVM_GETIMAGELIST`](crate::msg::lvm::GetImageList) message.
+	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
 	pub fn image_list(&self, kind: co::LVSIL) -> Option<HIMAGELIST> {
 		self.hwnd().SendMessage(lvm::GetImageList { kind })
 	}
@@ -194,19 +194,19 @@ impl ListView {
 	}
 
 	/// Retrieves the current view by sending an
-	/// [`LVM_GETVIEW`](crate::msg::lvm::GetView) message.
+	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
 	pub fn current_view(&self) -> co::LV_VIEW {
 		self.hwnd().SendMessage(lvm::GetView {})
 	}
 
 	/// Sets the current view by sending an
-	/// [`LVM_SETVIEW`](crate::msg::lvm::SetView) message.
+	/// [`lvm::SetView`](crate::msg::lvm::SetView) message.
 	pub fn set_current_view(&self, view: co::LV_VIEW) -> WinResult<()> {
 		self.hwnd().SendMessage(lvm::SetView { view })
 	}
 
 	/// Sets the one of the associated image lists by sending an
-	/// [`LVM_SETIMAGELIST`](crate::msg::lvm::SetImageList) message.
+	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList) message.
 	///
 	/// Returns the previous image list, if any.
 	pub fn set_image_list(&self,
@@ -216,7 +216,7 @@ impl ListView {
 	}
 
 	/// Toggles the given extended list view styles by sending an
-	/// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](crate::msg::lvm::SetExtendedListViewStyle)
+	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
 	/// message.
 	pub fn toggle_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
 		self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {

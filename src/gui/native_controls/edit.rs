@@ -106,7 +106,7 @@ impl Edit {
 	pub_fn_on!(EditEvents);
 
 	/// Sets the selection range of the text by sending an
-	/// [`EM_SETSEL`](crate::msg::em::SetSel) message.
+	/// [`em::SetSel`](crate::msg::em::SetSel) message.
 	///
 	/// # Examples
 	///

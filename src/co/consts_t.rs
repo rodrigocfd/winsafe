@@ -732,7 +732,7 @@ pub_struct_const_nm! { TRBN,
 }
 
 pub_struct_const! { TVE, u32,
-	/// [`TVM_EXPAND`](crate::msg::tvm::Expand) `action` (`u32`).
+	/// [`tvm::Expand`](crate::msg::tvm::Expand) `action` (`u32`).
 	=>
 	COLLAPSE, 0x0001
 	EXPAND, 0x0002
@@ -742,7 +742,7 @@ pub_struct_const! { TVE, u32,
 }
 
 pub_struct_const! { TVGN, u32,
-	/// [`TVM_GETNEXTITEM`](crate::msg::tvm::GetNextItem) `which` (`u32`).
+	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) `which` (`u32`).
 	=>
 	ROOT, 0x0000
 	NEXT, 0x0001
@@ -942,8 +942,8 @@ pub_struct_const_wsex! { TVS_EX,
 }
 
 pub_struct_const! { TVSIL, u8,
-	/// [`TVM_GETIMAGELIST`](crate::msg::tvm::GetImageList) and
-	/// [`TVM_SETIMAGELIST`](crate::msg::tvm::SetImageList) `kind`.
+	/// [`tvm::GetImageList`](crate::msg::tvm::GetImageList) and
+	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList) `kind`.
 	=>
 	NORMAL, 0
 	STATE, 2

@@ -1009,7 +1009,7 @@ impl HWND {
 	///
 	/// # Examples
 	///
-	/// Sending a [`LVM_SETITEM`](crate::msg::lvm::SetItem) list view message,
+	/// Sending a [`lvm::SetItem`](crate::msg::lvm::SetItem) list view message,
 	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
 	///
 	/// ```rust,ignore

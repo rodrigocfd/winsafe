@@ -34,7 +34,7 @@ impl ListViewColumns {
 	}
 
 	/// Adds many columns at once by sending an
-	/// [`LVM_INSERTCOLUMN`](crate::msg::lvm::InsertColumn) message.
+	/// [`lvm::InsertColumn`](crate::msg::lvm::InsertColumn) message.
 	///
 	/// Widths will be adjusted to match current system DPI.
 	///
@@ -88,15 +88,15 @@ impl ListViewColumns {
 	}
 
 	/// Retrieves the number of columns by sending an
-	/// [`HDM_GETITEMCOUNT`](crate::msg::hdm::GetItemCount) message to the
-	/// handle returned by [`LVM_GETHEADER`](crate::msg::lvm::GetHeader).
+	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message to the
+	/// handle returned by [`lvm::GetHeader`](crate::msg::lvm::GetHeader).
 	pub fn count(&self) -> WinResult<u32> {
 		self.hwnd().SendMessage(lvm::GetHeader {})?
 			.SendMessage(hdm::GetItemCount {})
 	}
 
 	/// Retrieves information about the column by sending an
-	/// [`LVM_GETCOLUMN`](crate::msg::lvm::GetColumn) message.
+	/// [`lvm::GetColumn`](crate::msg::lvm::GetColumn) message.
 	pub fn info(&self, column_index: u32, lvc: &mut LVCOLUMN) -> WinResult<()> {
 		self.hwnd().SendMessage(lvm::GetColumn {
 			index: column_index,
@@ -130,7 +130,7 @@ impl ListViewColumns {
 	}
 
 	/// Sets information of the column by sending an
-	/// [`LVM_SETCOLUMN`](crate::msg::lvm::SetColumn) message.
+	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
 	pub fn set_info(&self, column_index: u32, lvc: &LVCOLUMN) -> WinResult<()> {
 		self.hwnd().SendMessage(lvm::SetColumn {
 			index: column_index,
@@ -152,7 +152,7 @@ impl ListViewColumns {
 	}
 
 	/// Sets the width of the column by sending an
-	/// [`LVM_SETCOLUMNWIDTH`](crate::msg::lvm::SetColumnWidth) message.
+	/// [`lvm::SetColumnWidth`](crate::msg::lvm::SetColumnWidth) message.
 	///
 	/// Width will be adjusted to match current system DPI.
 	pub fn set_width(&self, column_index: u32, width: u32) -> WinResult<()> {
@@ -166,7 +166,7 @@ impl ListViewColumns {
 	}
 
 	/// Sets the width of the column by sending an
-	/// [`LVM_SETCOLUMNWIDTH`](crate::msg::lvm::SetColumnWidth) message. The
+	/// [`lvm::SetColumnWidth`](crate::msg::lvm::SetColumnWidth) message. The
 	/// width will be calculated to fill the remaining space.
 	pub fn set_width_to_fill(&self, column_index: u32) -> WinResult<()> {
 		let num_cols = self.count()?;
@@ -200,7 +200,7 @@ impl ListViewColumns {
 	}
 
 	/// Retrieves the width of the column by sending an
-	/// [`LVM_GETCOLUMNWIDTH`](crate::msg::lvm::GetColumnWidth) message.
+	/// [`lvm::GetColumnWidth`](crate::msg::lvm::GetColumnWidth) message.
 	pub fn width(&self, column_index: u32) -> WinResult<u32> {
 		self.hwnd().SendMessage(lvm::GetColumnWidth { index: column_index })
 	}

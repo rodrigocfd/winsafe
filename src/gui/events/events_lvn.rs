@@ -255,7 +255,7 @@ impl ListViewEvents {
 	/// Sent by a virtual list-view control when it needs the owner to find a
 	/// particular callback item. For example, the control will send this
 	/// notification code when it receives shortcut keyboard input or when it
-	/// receives an [`LVM_FINDITEM`](crate::msg::lvm::FindItem) message.
+	/// receives an [`lvm::FindItem`](crate::msg::lvm::FindItem) message.
 	pub fn lvn_od_find_item<F>(&self, func: F)
 		where F: Fn(&mut NMLVFINDITEM) -> Option<u32> + 'static,
 	{

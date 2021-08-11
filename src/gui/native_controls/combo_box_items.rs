@@ -30,7 +30,7 @@ impl ComboBoxItems {
 		unsafe { *self.hwnd_ptr.get().as_ref() }
 	}
 
-	/// Adds new texts by sending [`CB_ADDSTRING`](crate::msg::cb::AddString)
+	/// Adds new texts by sending [`cb::AddString`](crate::msg::cb::AddString)
 	/// messages.
 	///
 	/// # Examples
@@ -50,26 +50,26 @@ impl ComboBoxItems {
 	}
 
 	/// Retrieves the number of items by sending a
-	/// [`CB_GETCOUNT`](crate::msg::cb::GetCount) message.
+	/// [`cb::GetCount`](crate::msg::cb::GetCount) message.
 	pub fn count(&self) -> WinResult<u32> {
 		self.hwnd().SendMessage(cb::GetCount {})
 	}
 
 	/// Deletes the item at the given index by sending a
-	/// [`CB_DELETESTRING`](crate::msg::cb::DeleteString) message.
+	/// [`cb::DeleteString`](crate::msg::cb::DeleteString) message.
 	pub fn delete(&self, index: u32) -> WinResult<()> {
 		self.hwnd().SendMessage(cb::DeleteString { index })
 			.map(|_| ())
 	}
 
 	/// Deletes all items by sending a
-	/// [`CB_RESETCONTENT`](crate::msg::cb::ResetContent) message.
+	/// [`cb::ResetContent`](crate::msg::cb::ResetContent) message.
 	pub fn delete_all(&self) {
 		self.hwnd().SendMessage(cb::ResetContent {})
 	}
 
 	/// Retrieves the index of the currently selected item, if any, by sending a
-	/// [`CB_GETCURSEL`](crate::msg::cb::GetCurSel) message.
+	/// [`cb::GetCurSel`](crate::msg::cb::GetCurSel) message.
 	pub fn selected_index(&self) -> Option<u32> {
 		self.hwnd().SendMessage(cb::GetCurSel {})
 	}
@@ -83,13 +83,13 @@ impl ComboBoxItems {
 	}
 
 	/// Sets the currently selected index, or clears it, by sending a
-	/// [`CB_SETCURSEL`](crate::msg::cb::SetCurSel) message.
+	/// [`cb::SetCurSel`](crate::msg::cb::SetCurSel) message.
 	pub fn set_selected(&self, index: Option<u32>) {
 		self.hwnd().SendMessage(cb::SetCurSel { index });
 	}
 
 	/// Retrieves the text at the given position, if any, by sending a
-	/// [`CB_GETLBTEXT`](crate::msg::cb::GetLbText) message.
+	/// [`cb::GetLbText`](crate::msg::cb::GetLbText) message.
 	pub fn text(&self, index: u32) -> Option<String> {
 		match self.hwnd().SendMessage(cb::GetLbTextLen { index }) {
 			Err(err) => {

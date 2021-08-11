@@ -334,7 +334,7 @@ pub_struct_const! { LV_VIEW, u32,
 }
 
 pub_struct_const! { LVA, u16,
-	/// [`LVM_ARRANGE`](crate::msg::lvm::Arrange) arrangement (`u16`).
+	/// [`lvm::Arrange`](crate::msg::lvm::Arrange) arrangement (`u16`).
 	=>
 	DEFAULT, 0x0000
 	SNAPTOGRID, 0x0005
@@ -439,7 +439,7 @@ pub_struct_const! { LVHT, u32,
 }
 
 pub_struct_const! { LVIR, u8,
-	/// [`LVM_GETITEMRECT`](crate::msg::lvm::GetItemRect) `portion` (`u8`).
+	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) `portion` (`u8`).
 	=>
 	BOUNDS, 0
 	ICON, 1
@@ -663,7 +663,7 @@ pub_struct_const_nm! { LVN,
 }
 
 pub_struct_const! { LVNI, u32,
-	/// [`LVM_GETNEXTITEM`](crate::msg::lvm::GetNextItem) relationship (`u32`).
+	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) relationship (`u32`).
 	=>
 	ALL, 0x0000
 	FOCUSED, 0x0001
@@ -749,7 +749,7 @@ pub_struct_const_wsex! { LVS_EX,
 }
 
 pub_struct_const! { LVSIL, u8,
-	/// [`LVM_GETIMAGELIST`](crate::msg::lvm::GetImageList) `kind` (`u8`).
+	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) `kind` (`u8`).
 	=>
 	NORMAL, 0
 	SMALL, 1

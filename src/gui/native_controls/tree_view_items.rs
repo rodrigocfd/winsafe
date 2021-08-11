@@ -34,7 +34,7 @@ impl TreeViewItems {
 	}
 
 	/// Adds a new child item by sending a
-	/// [`TVN_INSERTITEM`](crate::msg::tvm::InsertItem) message.
+	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message.
 	pub fn add_child(&self,
 		hparent: HTREEITEM,
 		text: &str,
@@ -59,7 +59,7 @@ impl TreeViewItems {
 	}
 
 	/// Adds a new root item by sending a
-	/// [`TVN_INSERTITEM`](crate::msg::tvm::InsertItem) message.
+	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message.
 	pub fn add_root(&self,
 		text: &str, icon_index: Option<u32>) -> WinResult<HTREEITEM>
 	{
@@ -81,7 +81,7 @@ impl TreeViewItems {
 	}
 
 	/// Retrieves the children of the given item by sending
-	/// [`TVN_GETNEXTITEM`](crate::msg::tvm::GetNextItem) messages.
+	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) messages.
 	///
 	/// To retrieve the root nodes, pass `None` as `hparent`.
 	pub fn children(&self, hparent: Option<HTREEITEM>) -> Vec<HTREEITEM> {
@@ -101,25 +101,25 @@ impl TreeViewItems {
 	}
 
 	/// Deletes an item by sending a
-	/// [`TVN_DELETEITEM`](crate::msg::tvm::DeleteItem) message.
+	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete(&self, hitem: HTREEITEM) -> WinResult<()> {
 		self.hwnd().SendMessage(tvm::DeleteItem { hitem })
 	}
 
 	/// Deletes all items by sending a
-	/// [`TVN_DELETEITEM`](crate::msg::tvm::DeleteItem) message.
+	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete_all(&self) -> WinResult<()> {
 		self.hwnd().SendMessage(tvm::DeleteItem { hitem: HTREEITEM::NULL })
 	}
 
 	/// Retrieves the total number of items by sending a
-	/// [`TVN_GETCOUNT`](crate::msg::tvm::GetCount) message.
+	/// [`tvm::GetCount`](crate::msg::tvm::GetCount) message.
 	pub fn count(&self) -> u32 {
 		self.hwnd().SendMessage(tvm::GetCount {})
 	}
 
 	/// Begins in-place editing of the item's text by sending a
-	/// [`TVN_EDITLABEL`](crate::msg::tvm::EditLabel) message.
+	/// [`tvm::EditLabel`](crate::msg::tvm::EditLabel) message.
 	///
 	/// Returns a handle to the edit control.
 	pub fn edit_label(&self, hitem: HTREEITEM) -> WinResult<HWND> {
@@ -127,14 +127,14 @@ impl TreeViewItems {
 	}
 
 	/// Ends the editing of the item's text by sending a
-	/// [`TVN_ENDEDITLABELNOW`](crate::msg::tvm::EndEditLabelNow) message.
+	/// [`tvm::EndEditLabelNow`](crate::msg::tvm::EndEditLabelNow) message.
 	pub fn end_edit_label_now(&self, save: bool) -> WinResult<()> {
 		self.hwnd().SendMessage(tvm::EndEditLabelNow { save })
 	}
 
 	/// Ensures that a tree-view item is visible, expanding the parent item or
 	/// scrolling the tree-view control, if necessary, by sending a
-	/// [`TVN_ENSUREVISIBLE`](crate::msg::tvm::EnsureVisible) message.
+	/// [`tvm::EnsureVisible`](crate::msg::tvm::EnsureVisible) message.
 	///
 	/// Returns whether a scroll occurred and no items were expanded.
 	pub fn ensure_visible(&self, hitem: HTREEITEM) -> bool {
@@ -142,7 +142,7 @@ impl TreeViewItems {
 	}
 
 	/// Expands or collapse an item by sending a
-	/// [`TVM_EXPAND`](crate::msg::tvm::Expand) message.
+	/// [`tvm::Expand`](crate::msg::tvm::Expand) message.
 	pub fn expand(&self, hitem: HTREEITEM, expand: bool) -> WinResult<()> {
 		self.hwnd().SendMessage(tvm::Expand {
 			hitem,
@@ -151,7 +151,7 @@ impl TreeViewItems {
 	}
 
 	/// Tells if the item is expanded by sending a
-	/// [`TVN_GETITEMSTATE`](crate::msg::tvm::GetItemState) message.
+	/// [`tvm::GetItemState`](crate::msg::tvm::GetItemState) message.
 	pub fn is_expanded(&self, hitem: HTREEITEM) -> bool {
 		self.hwnd().SendMessage(tvm::GetItemState {
 			hitem,
@@ -160,13 +160,13 @@ impl TreeViewItems {
 	}
 
 	/// Tells if the item is a root by sending a
-	/// [`TVN_GETNEXTITEM`](crate::msg::tvm::GetNextItem) message.
+	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	pub fn is_root(&self, hitem: HTREEITEM) -> bool {
 		self.parent(hitem).is_none()
 	}
 
 	/// Retrieves the next sibling of the item by sending a
-	/// [`TVN_GETNEXTITEM`](crate::msg::tvm::GetNextItem) message.
+	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	pub fn next_sibling(&self, hitem: HTREEITEM) -> Option<HTREEITEM> {
 		self.hwnd().SendMessage(tvm::GetNextItem {
 			which: co::TVGN::NEXT,
@@ -175,7 +175,7 @@ impl TreeViewItems {
 	}
 
 	/// Retrieves the parent of the item by sending a
-	/// [`TVN_GETNEXTITEM`](crate::msg::tvm::GetNextItem) message.
+	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	pub fn parent(&self, hitem: HTREEITEM) -> Option<HTREEITEM> {
 		self.hwnd().SendMessage(tvm::GetNextItem {
 			which: co::TVGN::PARENT,
@@ -184,7 +184,7 @@ impl TreeViewItems {
 	}
 
 	/// Retrieves the previous sibling of the item by sending a
-	/// [`TVN_GETNEXTITEM`](crate::msg::tvm::GetNextItem) message.
+	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	pub fn prev_sibling(&self, hitem: HTREEITEM) -> Option<HTREEITEM> {
 		self.hwnd().SendMessage(tvm::GetNextItem {
 			which: co::TVGN::PREVIOUS,
@@ -193,7 +193,7 @@ impl TreeViewItems {
 	}
 
 	/// Retrieves the selected item by sending a
-	/// [`TVN_GETNEXTITEM`](crate::msg::tvm::GetNextItem) message.
+	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	pub fn selected(&self, hitem: HTREEITEM) -> Option<HTREEITEM> {
 		self.hwnd().SendMessage(tvm::GetNextItem {
 			which: co::TVGN::CARET,
@@ -202,7 +202,7 @@ impl TreeViewItems {
 	}
 
 	/// Sets the text of the item by sending a
-	/// [`TVN_SETITEM`](crate::msg::tvm::SetItem) message.
+	/// [`tvm::SetItem`](crate::msg::tvm::SetItem) message.
 	pub fn set_text(&self, hitem: HTREEITEM, text: &str) -> WinResult<()> {
 		let mut buf = WString::from_str(text);
 
@@ -215,7 +215,7 @@ impl TreeViewItems {
 	}
 
 	/// Retrieves the text of the item by sending a
-	/// [`TVN_GETITEM`](crate::msg::tvm::GetItem) message.
+	/// [`tvm::GetItem`](crate::msg::tvm::GetItem) message.
 	///
 	/// # Examples
 	///

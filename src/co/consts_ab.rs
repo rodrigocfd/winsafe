@@ -44,7 +44,7 @@ pub_struct_const! { ADRF, u32,
 }
 
 pub_struct_const! { APPCOMMAND, u16,
-	/// [`WM_APPCOMMAND`](crate::msg::wm::AppCommand) commands (`u16`).
+	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) commands (`u16`).
 	=>
 	BROWSER_BACKWARD, 1
 	BROWSER_FORWARD, 2
@@ -276,7 +276,7 @@ pub_struct_const! { BSS, u32,
 }
 
 pub_struct_const! { BST, u32,
-	/// [`BM_GETCHECK`](crate::msg::bm::GetCheck) return value (`u32`).
+	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) return value (`u32`).
 	=>
 	UNCHECKED, 0x0000
 	CHECKED, 0x0001

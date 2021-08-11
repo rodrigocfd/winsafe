@@ -7,7 +7,7 @@ use crate::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
 use crate::various::WString;
 
-/// Variant parameters of a [`WM_COMMAND`](crate::msg::wm::Command) message.
+/// Variant parameters of a [`wm::Command`](crate::msg::wm::Command) message.
 #[derive(Copy, Clone)]
 pub enum AccelMenuCtrl {
 	/// Accelerator event. Contains the accelerator command ID.
@@ -69,8 +69,8 @@ impl AtomStr {
 
 /// Variant parameter for:
 ///
-/// * [`BM_GETIMAGE`](crate::msg::bm::GetImage) `image`;
-/// * [`BM_SETIMAGE`](crate::msg::bm::SetImage) `image`.
+/// * [`bm::GetImage`](crate::msg::bm::GetImage) `image`;
+/// * [`bm::GetImage`](crate::msg::bm::SetImage) `image`.
 #[derive(Copy, Clone)]
 pub enum BmpIcon {
 	Bmp(HBITMAP),
@@ -155,7 +155,7 @@ pub enum MenuEnum<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`WM_NEXTDLGCTL`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
+/// * [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
 #[derive(Copy, Clone)]
 pub enum HwndFocus {
 	/// Handle to the control to receive the focus.
@@ -167,7 +167,7 @@ pub enum HwndFocus {
 
 /// Variant parameter for:
 ///
-/// * [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason.
+/// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason;
 /// * [`HELPINFO`](crate::HELPINFO) `hItemHandle`.
 #[derive(Copy, Clone)]
 pub enum HwndHmenu {
@@ -210,7 +210,7 @@ impl HwndPlace {
 
 /// Variant parameter for:
 ///
-/// * [`WM_PARENTNOTIFY`](crate::msg::wm::ParentNotify) `data32`.
+/// * [`wm::ParentNotify`](crate::msg::wm::ParentNotify) `data32`.
 #[derive(Copy, Clone)]
 pub enum HwndPointId {
 	/// Handle to the child window.
@@ -459,7 +459,7 @@ pub enum IndexStr {
 
 /// Variant parameter for:
 ///
-/// * [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize) `data`.
+/// * [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize) `data`.
 pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).
 	Nccsp(&'b mut NCCALCSIZE_PARAMS<'a>),

@@ -31,13 +31,13 @@ impl StatusBarParts {
 	}
 
 	/// Retrieves the number of parts by sending an
-	/// [`SB_GETPARTS`](crate::msg::sb::GetParts) message.
+	/// [`sb::GetParts`](crate::msg::sb::GetParts) message.
 	pub fn count(&self) -> u8 {
 		self.hwnd().SendMessage(sb::GetParts { right_edges: None })
 	}
 
 	/// Sets the text of a part by sending an
-	/// [`SB_SETTEXT`](crate::msg::sb::SetText) message.
+	/// [`sb::SetText`](crate::msg::sb::SetText) message.
 	pub fn set_text(&self, part_index: u8, text: &str) -> WinResult<()> {
 		self.hwnd().SendMessage(sb::SetText {
 			part_index,
@@ -47,7 +47,7 @@ impl StatusBarParts {
 	}
 
 	/// Retrieves the text of the item by sending a
-	/// [`SB_GETTEXT`](crate::msg::sb::GetText) message.
+	/// [`sb::GetText`](crate::msg::sb::GetText) message.
 	///
 	/// # Examples
 	///

@@ -107,8 +107,7 @@ impl Button {
 	pub_fn_on!(ButtonEvents);
 
 	/// Fires the click event for the button by sending a
-	/// [`BM_CLICK`](crate::msg::bm::Click) message. The event is asynchronous,
-	/// the method returns immediately.
+	/// [`bm::Click`](crate::msg::bm::Click) message.
 	pub fn trigger_click(&self) {
 		self.hwnd().SendMessage(bm::Click {});
 	}

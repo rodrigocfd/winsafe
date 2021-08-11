@@ -118,9 +118,8 @@ impl TreeView {
 		&self.0.items
 	}
 
-	/// Toggles the given extended list view styles by sending an
-	/// [`TVM_SETEXTENDEDSTYLE`](crate::msg::tvm::SetExtendedStyle)
-	/// message.
+	/// Toggles the given extended list view styles by sending a
+	/// [`tvm::SetExtendedStyle`](crate::msg::tvm::SetExtendedStyle) message.
 	pub fn toggle_extended_style(&self,
 		set: bool, ex_style: co::TVS_EX) -> WinResult<()>
 	{

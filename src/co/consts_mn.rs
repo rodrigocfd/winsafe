@@ -13,7 +13,7 @@ pub_struct_const! { MB, u32,
 	CANCELTRYCONTINUE, 0x0000_0006
 	/// Adds a Help button to the message box. When the user clicks the Help
 	/// button or presses F1, the system sends a
-	/// [`WM_HELP`](crate::msg::wm::Help) message to the owner.
+	/// [`wm::Help`](crate::msg::wm::Help) message to the owner.
 	HELP, 0x0000_4000
 	/// The message box contains one push button: OK. This is the default.
 	OK, 0x0000_0000
@@ -210,7 +210,7 @@ pub_struct_const_nm! { MCN,
 }
 
 pub_struct_const! { MCSC, u8,
-	/// [`DTM_GETMCCOLOR`](crate::msg::dtm::GetMcColor) color (`u8`).
+	/// [`dtm::GetMcColor`](crate::msg::dtm::GetMcColor) color (`u8`).
 	=>
 	BACKGROUND, 0
 	TEXT, 1
@@ -321,7 +321,7 @@ pub_struct_const! { MIIM, u32,
 }
 
 pub_struct_const! { MK, u16,
-	/// [`WM_LBUTTONDOWN`](crate::msg::wm::LButtonDown) (and similar) virtual
+	/// [`wm::LButtonDown`](crate::msg::wm::LButtonDown) (and similar) virtual
 	/// keys (`u16`).
 	=>
 	LBUTTON, 0x0001
@@ -334,7 +334,7 @@ pub_struct_const! { MK, u16,
 }
 
 pub_struct_const! { MND, u8,
-	/// [`WM_MENUDRAG`](crate::msg::wm::MenuDrag) return value.
+	/// [`wm::MenuDrag`](crate::msg::wm::MenuDrag) return value.
 	=>
 	CONTINUE, 0
 	ENDMENU, 1
@@ -352,7 +352,7 @@ pub_struct_const! { MNS, u32,
 }
 
 pub_struct_const! { MSGF, u8,
-	/// [`WM_ENTERIDLE`](crate::msg::wm::EnterIdle) reason (`u8`).
+	/// [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason (`u8`).
 	=>
 	DIALOGBOX, 0
 	MENU, 2
@@ -403,7 +403,7 @@ pub_struct_const! { NIS, u32,
 }
 
 pub_struct_const! { NM, i32,
-	/// [`WM_NOTIFY`](crate::msg::wm::Notify) notification codes (`i32`).
+	/// [`wm::Notify`](crate::msg::wm::Notify) notification codes (`i32`).
 	///
 	/// Control-specific notification codes have their own types, which are
 	/// convertible to `NM`.

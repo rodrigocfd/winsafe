@@ -60,9 +60,9 @@ pub_struct_const_nm! { SBN,
 }
 
 pub_struct_const! { SBT, u16,
-	/// [`SB_GETTEXT`](crate::msg::sb::GetText),
-	/// [`SB_GETTEXTLENGTH`](crate::msg::sb::GetTextLength) and
-	/// [`SB_SETTEXT`](crate::msg::sb::SetText) drawing operation (`u16`).
+	/// [`sb::GetText`](crate::msg::sb::GetText),
+	/// [`sb::GetTextLength`](crate::msg::sb::GetTextLength) and
+	/// [`sb::SetText`](crate::msg::sb::SetText) drawing operation (`u16`).
 	=>
 	BORDER, 0
 	OWNERDRAW, 0x1000
@@ -73,8 +73,8 @@ pub_struct_const! { SBT, u16,
 }
 
 pub_struct_const! { SB_REQ, u16,
-	/// [`WM_HSCROLL`](crate::msg::wm::HScroll) and
-	/// [`WM_VSCROLL`](crate::msg::wm::VScroll) request (`u16`). Originally has
+	/// [`wm::HScroll`](crate::msg::wm::HScroll) and
+	/// [`wm::VScroll`](crate::msg::wm::VScroll) request (`u16`). Originally has
 	/// `SB` prefix.
 	=>
 	LINEUP, 0
@@ -95,7 +95,7 @@ pub_struct_const! { SB_REQ, u16,
 }
 
 pub_struct_const! { SC, u32,
-	/// [`WM_SYSCOMMAND`](crate::msg::wm::SysCommand) type of system command
+	/// [`wm::SysCommand`](crate::msg::wm::SysCommand) type of system command
 	/// requested (`u32`).
 	=>
 	CLOSE, 0xf060
@@ -211,7 +211,7 @@ pub_struct_const! { SIF, u32,
 }
 
 pub_struct_const! { SIZE_R, u8,
-	/// [`WM_SIZE`](crate::msg::wm::Size) request (`u8`).
+	/// [`wm::Size`](crate::msg::wm::Size) request (`u8`).
 	=>
 	/// The window has been resized, but neither the `SIZE_R::MINIMIZED` nor
 	/// `SIZE_R::MAXIMIZED` value applies.
@@ -272,12 +272,12 @@ pub_struct_const! { SM, i32,
 	/// The minimum tracking width of a window, in pixels. The user cannot drag
 	/// the window frame to a size smaller than these dimensions. A window can
 	/// override this value by processing the
-	/// [`WM_GETMINMAXINFO`](crate::msg::wm::GetMinMaxInfo) message.
+	/// [`wm::GetMinMaxInfo`](crate::msg::wm::GetMinMaxInfo) message.
 	CXMINTRACK, 34
 	/// The minimum tracking height of a window, in pixels. The user cannot drag
 	/// the window frame to a size smaller than these dimensions. A window can
 	/// override this value by processing the
-	/// [`WM_GETMINMAXINFO`](crate::msg::wm::GetMinMaxInfo) message.
+	/// [`wm::GetMinMaxInfo`](crate::msg::wm::GetMinMaxInfo) message.
 	CYMINTRACK, 35
 	CXDOUBLECLK, 36
 	CYDOUBLECLK, 37
@@ -998,7 +998,7 @@ pub_struct_const! { SW, i32,
 }
 
 pub_struct_const! { SW_S, u8,
-	/// [`WM_SHOWWINDOW`](crate::msg::wm::ShowWindow) status (`u8`). Originally
+	/// [`wm::ShowWindow`](crate::msg::wm::ShowWindow) status (`u8`). Originally
 	/// has `SW` prefix.
 	=>
 	PARENTCLOSING, 1
