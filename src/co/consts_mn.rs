@@ -220,7 +220,7 @@ pub_struct_const! { MCSC, u8,
 	TRAILINGTEXT, 5
 }
 
-pub_struct_const_ws! { MCS,
+pub_struct_const_ws! { MCS, u32,
 	/// Month calendar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

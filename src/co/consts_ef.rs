@@ -101,7 +101,7 @@ pub_struct_const! { ENUM_SETTINGS, u32,
 	REGISTRY, (0 - 2) as u32
 }
 
-pub_struct_const_ws! { ES,
+pub_struct_const_ws! { ES, u32,
 	/// Edit control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

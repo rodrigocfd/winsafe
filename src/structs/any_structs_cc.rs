@@ -5,9 +5,14 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::enums::{BmpIdbRes, IdStr, TreeitemTvi};
+use crate::enums::{BmpIdbRes, IdStr, IndexStr, TreeitemTvi};
 use crate::handles::{HBITMAP, HDC, HIMAGELIST, HINSTANCE, HTREEITEM, HWND};
-use crate::privs::{HINST_COMMCTRL, L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
+use crate::privs::{
+	HINST_COMMCTRL,
+	IS_INTRESOURCE,
+	L_MAX_URL_LENGTH,
+	MAX_LINKID_TEXT,
+};
 use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
 use crate::various::WString;
 
@@ -629,6 +634,42 @@ impl TBADDBITMAP {
 			BmpIdbRes::Bmp(bmp) => Self { hInst: HINSTANCE::NULL, nID: bmp.ptr as _ },
 			BmpIdbRes::Res(res, hInst) => Self { hInst, nID: res.as_ptr(&mut buf) as _ },
 		}
+	}
+}
+
+/// [`TBBUTTON`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbutton)
+/// struct.
+#[repr(C)]
+pub struct TBBUTTON<'a> {
+	pub iBitmap: i32,
+	pub idCommand: i32,
+	pub fsState: co::TBSTATE,
+	pub fsStyle: co::BTNS,
+	bReserved: [u8; 6], // assumes 64-bit architecture
+	pub dwData: usize,
+	iString: isize,
+
+	iString_: PhantomData<&'a mut u16>,
+}
+
+impl_default!(TBBUTTON, 'a);
+
+impl<'a> TBBUTTON<'a> {
+	/// Returns the `iString` field.
+	pub fn iString(&self) -> IndexStr {
+		if IS_INTRESOURCE(self.iString as _) {
+			IndexStr::Index(self.iString as _)
+		} else {
+			IndexStr::Str(WString::from_wchars_nullt(self.iString as _))
+		}
+	}
+
+	/// Sets the `iString` field.
+	pub fn set_iString(&mut self, val: &'a mut IndexStr) {
+		self.iString = match val {
+			IndexStr::Index(i) => *i as _,
+			IndexStr::Str(s) => unsafe { s.as_mut_ptr() as _ },
+		};
 	}
 }
 

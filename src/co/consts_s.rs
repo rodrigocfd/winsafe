@@ -27,7 +27,7 @@ pub_struct_const_wm! { SB,
 	SETBKCOLOR, CCM::SETBKCOLOR.0
 }
 
-pub_struct_const_ws! { SBARS,
+pub_struct_const_ws! { SBARS, u32,
 	/// Status bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -527,7 +527,7 @@ pub_struct_const! { SPIF, u32,
 	SENDCHANGE, Self::SENDWININICHANGE.0
 }
 
-pub_struct_const_ws! { SS,
+pub_struct_const_ws! { SS, u32,
 	/// Label control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/static-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

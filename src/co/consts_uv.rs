@@ -36,7 +36,7 @@ pub_struct_const_nm! { UDN,
 	DELTAPOS, Self::FIRST.0 - 1
 }
 
-pub_struct_const_ws! { UDS,
+pub_struct_const_ws! { UDS, u32,
 	/// Up-down control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

@@ -169,7 +169,7 @@ pub_struct_const_nm! { TBN,
 	WRAPHOTITEM, Self::FIRST.0 - 24
 }
 
-pub_struct_const_ws! { TBS,
+pub_struct_const_ws! { TBS, u32,
 	/// Trackbar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -193,11 +193,30 @@ pub_struct_const_ws! { TBS,
 	TRANSPARENTBKGND, 0x1000
 }
 
+pub_struct_const! { TBSTATE, u8,
+	/// Toolbar button
+	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-button-states)
+	/// (`u8`).
+	=>
+	/// None of the actual values (zero).
+	NoValue, 0
+	CHECKED, 0x01
+	PRESSED, 0x02
+	ENABLED, 0x04
+	HIDDEN, 0x08
+	INDETERMINATE, 0x10
+	WRAP, 0x20
+	ELLIPSES, 0x40
+	MARKED, 0x80
+}
+
 pub_struct_const! { TCIS, u32,
 	/// Tab control item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
 	/// (`u32`).
 	=>
+	/// None of the actual values (zero).
+	NoValue, 0
 	BUTTONPRESSED, 0x0001
 	HIGHLIGHTED, 0x0002
 }
@@ -254,7 +273,7 @@ pub_struct_const_nm! { TCN,
 	SELCHANGING, Self::FIRST.0 - 2
 }
 
-pub_struct_const_ws! { TCS,
+pub_struct_const_ws! { TCS, u32,
 	/// Tab control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -770,6 +789,8 @@ pub_struct_const! { TVIS, u32,
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
 	/// (`u32`)
 	=>
+	/// None of the actual values (zero).
+	NoValue, 0
 	SELECTED, 0x0002
 	CUT, 0x0004
 	DROPHILITED, 0x0008
@@ -877,7 +898,7 @@ pub_struct_const_nm! { TVN,
 	ASYNCDRAW, Self::FIRST.0 - 20
 }
 
-pub_struct_const_ws! { TVS,
+pub_struct_const_ws! { TVS, u32,
 	/// Tree view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

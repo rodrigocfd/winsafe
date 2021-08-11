@@ -450,6 +450,15 @@ impl IdTdiconStr {
 
 /// Variant parameter for:
 ///
+/// * [`TBBUTTON`](crate::TBBUTTON) `iString`.
+#[derive(Clone)]
+pub enum IndexStr {
+	Index(u16),
+	Str(WString),
+}
+
+/// Variant parameter for:
+///
 /// * [`WM_NCCALCSIZE`](crate::msg::wm::NcCalcSize) `data`.
 pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).

@@ -229,7 +229,7 @@ pub_struct_const_cmd! { LBN,
 	KILLFOCUS, 5
 }
 
-pub_struct_const_ws! { LBS,
+pub_struct_const_ws! { LBS, u32,
 	/// List box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-box-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -680,7 +680,7 @@ pub_struct_const! { LVNI, u32,
 	TORIGHT, 0x0800
 }
 
-pub_struct_const_ws! { LVS,
+pub_struct_const_ws! { LVS, u32,
 	/// List view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -757,7 +757,7 @@ pub_struct_const! { LVSIL, u8,
 	GROUPHEADER, 3
 }
 
-pub_struct_const_ws! { LWS,
+pub_struct_const_ws! { LWS, u32,
 	/// SysLink control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

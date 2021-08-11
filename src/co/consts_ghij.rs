@@ -265,7 +265,7 @@ pub_struct_const_nm! { HDN,
 	OVERFLOWCLICK, Self::FIRST.0 - 19
 }
 
-pub_struct_const_ws! { HDS,
+pub_struct_const_ws! { HDS, u32,
 	/// Header control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/header-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

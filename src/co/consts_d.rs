@@ -93,6 +93,7 @@ pub_struct_const! { DISPOSITION, u32,
 pub_struct_const! { DLGC, u16,
 	/// [`WM_GETDLGCODE`](crate::msg::wm::GetDlgCode) return value (`u16`).
 	=>
+	/// None of the actual values (zero).
 	NoValue, 0
 	BUTTON, 0x2000
 	DEFPUSHBUTTON, 0x0010
@@ -631,7 +632,7 @@ pub_struct_const_nm! { DTN,
 	WMKEYDOWN, Self::FIRST.0 - 4
 }
 
-pub_struct_const_ws! { DTS,
+pub_struct_const_ws! { DTS, u32,
 	/// Date and time picker control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

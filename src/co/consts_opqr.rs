@@ -170,7 +170,7 @@ pub_struct_const_wm! { PBM,
 	GETSTATE, WM::USER.0 + 17
 }
 
-pub_struct_const_ws! { PBS,
+pub_struct_const_ws! { PBS, u32,
 	/// Progress bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -186,6 +186,8 @@ pub_struct_const! { PBST, u32,
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 	/// (`u32`).
 	=>
+	/// None of the actual values (zero).
+	NoValue, 0
 	NORMAL, 0x0001
 	ERROR, 0x0002
 	PAUSED, 0x0003
@@ -385,7 +387,7 @@ pub_struct_const_nm! { RBN,
 	AUTOBREAK, Self::FIRST.0 - 22
 }
 
-pub_struct_const_ws! { RBS,
+pub_struct_const_ws! { RBS, u32,
 	/// Rebar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

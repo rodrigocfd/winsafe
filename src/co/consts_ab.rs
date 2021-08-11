@@ -223,7 +223,7 @@ pub_struct_const_cmd! { BN,
 	KILLFOCUS, 7
 }
 
-pub_struct_const_ws! { BS,
+pub_struct_const_ws! { BS, u32,
 	/// Button control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).
@@ -283,4 +283,21 @@ pub_struct_const! { BST, u32,
 	INDETERMINATE, 0x0002
 	PUSHED, 0x0004
 	FOCUS, 0x0008
+}
+
+pub_struct_const_ws! { BTNS, u8,
+	/// Toolbar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-control-and-button-styles)
+	/// (`u8`), convertible to [`WS`](crate::co::WS).
+	=>
+	BUTTON, 0x00
+	SEP, 0x01
+	CHECK, 0x02
+	GROUP, 0x04
+	CHECKGROUP, Self::GROUP.0 | Self::CHECK.0
+	DROPDOWN, 0x08
+	AUTOSIZE, 0x10
+	NOPREFIX, 0x20
+	SHOWTEXT, 0x40
+	WHOLEDROPDOWN, 0x80
 }

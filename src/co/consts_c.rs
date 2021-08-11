@@ -103,7 +103,7 @@ pub_struct_const_cmd! { CBN,
 	SELENDCANCEL, 10
 }
 
-pub_struct_const_ws! { CBS,
+pub_struct_const_ws! { CBS, u32,
 	/// Combo box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`), convertible to [`WS`](crate::co::WS).

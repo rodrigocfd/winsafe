@@ -314,7 +314,7 @@ macro_rules! pub_struct_const_nm {
 /// [`WS`](crate::co::WS) constant type, along with public values.
 macro_rules! pub_struct_const_ws {
 	(
-		$name:ident,
+		$name:ident, $ntype:ty,
 		$(#[$doc:meta])*
 		=>
 		$(
@@ -323,7 +323,7 @@ macro_rules! pub_struct_const_ws {
 		)*
 	) => {
 		pub_struct_const! {
-			$name, u32,
+			$name, $ntype,
 			$(#[$doc])*
 			=>
 			$(
@@ -334,7 +334,7 @@ macro_rules! pub_struct_const_ws {
 
 		impl From<$name> for crate::co::WS {
 			fn from(v: $name) -> Self {
-				Self(v.0)
+				Self(v.0 as _)
 			}
 		}
 	};
