@@ -1081,6 +1081,10 @@ pub_struct_msg_button! { MouseHover, co::WM::MOUSEHOVER,
 	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 }
 
+pub_struct_msg_empty_handleable! { MouseLeave, co::WM::MOUSELEAVE,
+	/// [`WM_MOUSELEAVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mouseleave)
+}
+
 pub_struct_msg_button! { MouseMove, co::WM::MOUSEMOVE,
 	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 }

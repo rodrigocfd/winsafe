@@ -863,6 +863,14 @@ impl WindowEvents {
 		/// [`TrackMouseEvent`](crate::TrackMouseEvent).
 	}
 
+	pub_fn_wm_ret0! { wm_mouse_leave, co::WM::MOUSELEAVE,
+		/// [`WM_MOUSELEAVE`](crate::msg::wm::MouseLeave) message.
+		///
+		/// Posted to a window when the cursor leaves the client area of the
+		/// window specified in a prior call to
+		/// [`TrackMouseEvent`](crate::TrackMouseEvent).
+	}
+
 	pub_fn_wm_ret0_param! { wm_mouse_move, co::WM::MOUSEMOVE, wm::MouseMove,
 		/// [`WM_MOUSEMOVE`](crate::msg::wm::MouseMove) message.
 		///
