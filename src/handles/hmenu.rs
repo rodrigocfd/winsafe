@@ -26,14 +26,13 @@ impl HMENU {
 	pub fn AppendMenu(self, uFlags: co::MF,
 		uIDNewItem: IdMenu, lpNewItem: BmpPtrStr) -> WinResult<()>
 	{
-		let mut buf_lpNewItem = WString::default();
 		bool_to_winresult(
 			unsafe {
 				user32::AppendMenuW(
 					self.ptr,
 					uFlags.0,
-					uIDNewItem.into(),
-					lpNewItem.as_ptr(&mut buf_lpNewItem),
+					uIDNewItem.as_usize(),
+					lpNewItem.as_ptr(),
 				)
 			},
 		)
@@ -81,7 +80,7 @@ impl HMENU {
 			MenuEnum::Entry(cmd_id, text) => self.AppendMenu(
 				co::MF::STRING,
 				IdMenu::Id(*cmd_id),
-				BmpPtrStr::Str((*text).to_owned()),
+				BmpPtrStr::from_str(*text),
 			),
 			MenuEnum::Separator => self.AppendMenu(
 				co::MF::SEPARATOR,
@@ -91,7 +90,7 @@ impl HMENU {
 			MenuEnum::Submenu(hmenu, text) => self.AppendMenu(
 				co::MF::POPUP,
 				IdMenu::Menu(*hmenu),
-				BmpPtrStr::Str((*text).to_owned()),
+				BmpPtrStr::from_str(*text),
 			),
 		}
 	}

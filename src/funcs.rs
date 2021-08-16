@@ -716,7 +716,7 @@ pub fn GetTempPath() -> WinResult<String> {
 	}
 }
 
-/// [`GetUserNameW`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
+/// [`GetUserName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
 /// function.
 pub fn GetUserName() -> WinResult<String> {
 	let mut buf = WString::new_alloc_buffer(UNLEN + 1);

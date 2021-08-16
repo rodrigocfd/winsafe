@@ -84,7 +84,7 @@ impl BaseNativeControl {
 
 		self.0.as_mut().hwnd = HWND::CreateWindowEx(
 			ex_styles,
-			AtomStr::Str(class_name.to_owned()),
+			AtomStr::from_str(class_name),
 			title, styles,
 			pos.x, pos.y, sz.cx, sz.cy,
 			Some(hparent),

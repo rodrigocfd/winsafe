@@ -149,11 +149,10 @@ impl HWND {
 		hInstance: HINSTANCE,
 		lpParam: Option<isize>) -> WinResult<HWND>
 	{
-		let mut buf_lpClassName = WString::default();
 		unsafe {
 			user32::CreateWindowExW(
 				dwExStyle.0,
-				lpClassName.as_ptr(&mut buf_lpClassName),
+				lpClassName.as_ptr(),
 				WString::from_opt_str(lpWindowName).as_ptr(),
 				dwStyle.0,
 				X, Y, nWidth, nHeight,
@@ -284,12 +283,11 @@ impl HWND {
 		lpszClass: AtomStr,
 		lpszWindow: Option<&str>) -> WinResult<HWND>
 	{
-		let mut buf_lpszClass = WString::default();
 		unsafe {
 			user32::FindWindowExW(
 				self.ptr,
 				hWndChildAfter.map_or(std::ptr::null_mut(), |h| h.ptr),
-				lpszClass.as_ptr(&mut buf_lpszClass),
+				lpszClass.as_ptr(),
 				WString::from_opt_str(lpszWindow).as_ptr(),
 			).as_mut()
 		}.map(|ptr| Self { ptr })
@@ -1322,7 +1320,6 @@ impl HWND {
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
 		let mut pnButton: i32 = 0;
-		let mut buf_pszIcon = WString::default();
 		hr_to_winresult(
 			unsafe {
 				comctl32::TaskDialog(
@@ -1332,7 +1329,7 @@ impl HWND {
 					WString::from_opt_str(pszMainInstruction).as_ptr(),
 					WString::from_opt_str(pszContent).as_ptr(),
 					dwCommonButtons.0,
-					pszIcon.as_ptr(&mut buf_pszIcon),
+					pszIcon.as_ptr(),
 					&mut pnButton,
 				)
 			},

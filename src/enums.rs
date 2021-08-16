@@ -7,6 +7,15 @@ use crate::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
 use crate::various::WString;
 
+/// Implements the `from_str` constructor method.
+macro_rules! pub_fn_fromstr {
+	() => {
+		pub fn from_str(v: &str) -> Self {
+			Self::Str(WString::from_str(v))
+		}
+	};
+}
+
 /// Variant parameters of a [`wm::Command`](crate::msg::wm::Command) message.
 #[derive(Copy, Clone)]
 pub enum AccelMenuCtrl {
@@ -51,18 +60,16 @@ pub enum AtomStr {
 	/// [`RegisterClassEx`](crate::RegisterClassEx).
 	Atom(ATOM),
 	/// A string.
-	Str(String),
+	Str(WString),
 }
 
 impl AtomStr {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
+	pub_fn_fromstr!();
+
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Atom(atom) => MAKEINTRESOURCE(atom.0 as _),
-			Self::Str(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() }
-			},
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
 }
@@ -96,21 +103,19 @@ pub enum BmpPtrStr {
 	/// A pointer to anything.
 	Ptr(*const std::ffi::c_void),
 	/// A string.
-	Str(String),
+	Str(WString),
 	/// Nothing.
 	None,
 }
 
 impl BmpPtrStr {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
+	pub_fn_fromstr!();
+
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Bmp(hbmp) => hbmp.ptr as _,
 			Self::Ptr(lp) => *lp as _,
-			Self::Str(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() }
-			},
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -139,18 +144,6 @@ pub enum DispfNup {
 	Dispf(co::DMDISPLAYFLAGS),
 	/// Used for printers.
 	Nup(co::DMNUP),
-}
-
-/// Variant parameter for:
-///
-/// * [`HMENU::AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
-pub enum MenuEnum<'a> {
-	/// A selectable entry item, with command ID and text.
-	Entry(u16, &'a str),
-	/// A separator.
-	Separator,
-	/// A submenu, with its entry text.
-	Submenu(HMENU, &'a str),
 }
 
 /// Variant parameter for:
@@ -198,7 +191,6 @@ pub enum HwndPlace {
 }
 
 impl HwndPlace {
-	/// Converts the internal value to a `*mut c_void`.
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.ptr,
@@ -256,20 +248,18 @@ pub enum IdIdcStr {
 	Id(u16),
 	/// A [`co::IDC`](crate::co::IDC) constant for a stock system cursor.
 	Idc(co::IDC),
-	/// A string identifier.
-	Str(String),
+	/// A resource string identifier.
+	Str(WString),
 }
 
 impl IdIdcStr {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
+	pub_fn_fromstr!();
+
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idc(idc) => MAKEINTRESOURCE(idc.0),
-			Self::Str(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() }
-			},
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
 }
@@ -283,20 +273,18 @@ pub enum IdIdiStr {
 	Id(u16),
 	/// A [`co::IDI`](crate::co::IDI) constant for a stock system icon.
 	Idi(co::IDI),
-	/// A string identifier.
-	Str(String),
+	/// A resource string identifier.
+	Str(WString),
 }
 
 impl IdIdiStr {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
+	pub_fn_fromstr!();
+
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idi(idi) => MAKEINTRESOURCE(idi.0),
-			Self::Str(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() }
-			},
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
 }
@@ -315,23 +303,20 @@ pub enum IdMenu {
 	None,
 }
 
-impl From<IdMenu> for usize {
-	fn from(v: IdMenu) -> Self {
-		match v {
-			IdMenu::Id(id) => id as _,
-			IdMenu::Menu(hMenu) => hMenu.ptr as _,
-			IdMenu::None => 0,
-		}
-	}
-}
-
 impl IdMenu {
-	/// Converts the internal value to a `*mut c_void`.
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
 			Self::Menu(hMenu) => hMenu.ptr,
 			Self::None => std::ptr::null_mut(),
+		}
+	}
+
+	pub fn as_usize(&self) -> usize {
+		match self {
+			IdMenu::Id(id) => *id as _,
+			IdMenu::Menu(hMenu) => hMenu.ptr as _,
+			IdMenu::None => 0,
 		}
 	}
 }
@@ -394,26 +379,25 @@ impl IdPos {
 pub enum IdStr {
 	/// A resource ID.
 	Id(u16),
-	/// A string identifier.
-	Str(String),
+	/// A resource string identifier.
+	Str(WString),
 }
 
 impl IdStr {
+	pub_fn_fromstr!();
+
 	pub fn from_ptr(ptr: *const u16) -> IdStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Id(ptr as _)
 		} else {
-			Self::Str(WString::from_wchars_nullt(ptr).to_string())
+			Self::Str(WString::from_wchars_nullt(ptr))
 		}
 	}
 
-	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Str(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() }
-			},
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
 }
@@ -429,21 +413,19 @@ pub enum IdTdiconStr {
 	Id(u16),
 	/// A predefined icon.
 	Tdicon(co::TD_ICON),
-	/// A string identifier.
-	Str(String),
+	/// A resource string identifier.
+	Str(WString),
 }
 
 impl IdTdiconStr {
-	/// Converts the internal value to a `*const u16`.
-	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
+	pub_fn_fromstr!();
+
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::None => std::ptr::null(),
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0),
-			Self::Str(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() }
-			},
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
 }
@@ -455,6 +437,36 @@ impl IdTdiconStr {
 pub enum IndexStr {
 	Index(u16),
 	Str(WString),
+}
+
+/// Variant parameter for:
+///
+/// * [`HMENU::AppendMenuEnum`](crate::HMENU::AppendMenuEnum) `entry`.
+pub enum MenuEnum<'a> {
+	/// A selectable entry item, with command ID and text.
+	Entry(u16, &'a str),
+	/// A separator.
+	Separator,
+	/// A submenu, with its entry text.
+	Submenu(HMENU, &'a str),
+}
+
+/// Variant parameter for:
+///
+/// * [`tbm::AddString`](crate::msg::tbm::AddString) `texts`.
+pub enum ResStrs {
+	/// A resource string resource.
+	Res(IdStr, HINSTANCE),
+	/// A multi-string composed of null-separated strings. To use this field,
+	/// prefer the [`ResStrs::from_strs`](crate::ResStrs::from_strs) static
+	/// method.
+	Strs(WString),
+}
+
+impl ResStrs {
+	pub fn from_strs<S: AsRef<str>>(texts: &[S]) -> ResStrs {
+		Self::Strs(WString::from_str_vec(texts))
+	}
 }
 
 /// Variant parameter for:
@@ -477,23 +489,24 @@ pub enum RegistryValue {
 	/// An `u64` integer value, defined as [`REG::QWORD`](crate::co::REG::QWORD).
 	Qword(u64),
 	/// String value, defined as [`REG::SZ`](crate::co::REG::SZ).
-	Sz(String),
+	Sz(WString),
 	/// No value, defined as [`REG::NONE`](crate::co::REG::NONE). Also used for
 	/// non-implemented value types.
 	None,
 }
 
 impl RegistryValue {
-	/// Converts the internal value to a `*const c_void`.
-	pub fn as_ptr(&self, buf: &mut WString) -> *const std::ffi::c_void {
+	/// Creates a new `RegistryValue::Sz` value from a `&str`.
+	pub fn new_sz(s: &str) -> RegistryValue {
+		Self::Sz(WString::from_str(s))
+	}
+
+	pub fn as_ptr(&self) -> *const std::ffi::c_void {
 		match self {
 			Self::Binary(b) => b.as_ptr() as _,
 			Self::Dword(n) => *n as _,
 			Self::Qword(n) => *n as _,
-			Self::Sz(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() as _ }
-			},
+			Self::Sz(ws) => unsafe { ws.as_ptr() as _ },
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -515,7 +528,7 @@ impl RegistryValue {
 			Self::Binary(b) => b.len(),
 			Self::Dword(_) => std::mem::size_of::<u32>(),
 			Self::Qword(_) => std::mem::size_of::<u64>(),
-			Self::Sz(s) => (s.len() + 1) * std::mem::size_of::<u16>(), // including terminating null
+			Self::Sz(ws) => (ws.len() + 1) * std::mem::size_of::<u16>(), // including terminating null
 			Self::None => 0,
 		}
 	}
@@ -528,26 +541,25 @@ impl RegistryValue {
 pub enum RtStr {
 	/// A predefined resource ID.
 	Rt(co::RT),
-	/// A string identifier.
-	Str(String),
+	/// A resource string identifier.
+	Str(WString),
 }
 
 impl RtStr {
+	pub_fn_fromstr!();
+
 	pub fn from_ptr(ptr: *const u16) -> RtStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Rt(co::RT(ptr as _))
 		} else {
-			Self::Str(WString::from_wchars_nullt(ptr).to_string())
+			Self::Str(WString::from_wchars_nullt(ptr))
 		}
 	}
 
-	pub fn as_ptr(&self, buf: &mut WString) -> *const u16 {
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Rt(id) => MAKEINTRESOURCE(id.0 as _),
-			Self::Str(s) => {
-				*buf = WString::from_str(s);
-				unsafe { buf.as_ptr() }
-			},
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
 }

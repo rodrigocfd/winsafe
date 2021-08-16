@@ -77,14 +77,12 @@ impl HINSTANCE {
 		lpType: RtStr, lpName: IdStr, func: F) -> WinResult<()>
 		where F: Fn(LANGID) -> bool
 	{
-		let mut buf_lpType = WString::default();
-		let mut buf_lpName = WString::default();
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceLanguagesW(
 					self.ptr,
-					lpType.as_ptr(&mut buf_lpType),
-					lpName.as_ptr(&mut buf_lpName),
+					lpType.as_ptr(),
+					lpName.as_ptr(),
 					Self::EnumResLangProc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -105,12 +103,11 @@ impl HINSTANCE {
 	pub fn EnumResourceNames<F>(self, lpType: RtStr, func: F) -> WinResult<()>
 		where F: Fn(IdStr) -> bool
 	{
-		let mut buf_lpType = WString::default();
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceNamesW(
 					self.ptr,
-					lpType.as_ptr(&mut buf_lpType),
+					lpType.as_ptr(),
 					Self::EnumResNameProc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -154,13 +151,11 @@ impl HINSTANCE {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	pub fn FindResource(self, lpName: IdStr, lpType: RtStr) -> WinResult<HRSRC> {
-		let mut buf_lpName = WString::default();
-		let mut buf_lpType = WString::default();
 		unsafe {
 			kernel32::FindResourceW(
 				self.ptr,
-				lpName.as_ptr(&mut buf_lpName),
-				lpType.as_ptr(&mut buf_lpType),
+				lpName.as_ptr(),
+				lpType.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HRSRC { ptr })
 			.ok_or_else(|| GetLastError())
@@ -175,13 +170,11 @@ impl HINSTANCE {
 		lpName: IdStr, lpType: RtStr,
 		wLanguage: Option<LANGID>) -> WinResult<HRSRC>
 	{
-		let mut buf_lpName = WString::default();
-		let mut buf_lpType = WString::default();
 		unsafe {
 			kernel32::FindResourceExW(
 				self.ptr,
-				lpName.as_ptr(&mut buf_lpName),
-				lpType.as_ptr(&mut buf_lpType),
+				lpName.as_ptr(),
+				lpType.as_ptr(),
 				wLanguage.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
 			).as_mut()
 		}.map(|ptr| HRSRC { ptr })
@@ -287,11 +280,10 @@ impl HINSTANCE {
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
 	pub fn LoadAccelerators(self, lpTableName: IdStr) -> WinResult<HACCEL> {
-		let mut buf_lpTableName = WString::default();
 		unsafe {
 			user32::LoadAcceleratorsW(
 				self.ptr,
-				lpTableName.as_ptr(&mut buf_lpTableName),
+				lpTableName.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HACCEL { ptr })
 			.ok_or_else(|| GetLastError())
@@ -311,11 +303,10 @@ impl HINSTANCE {
 	///     .unwrap();
 	/// ```
 	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
-		let mut buf_lpCursorName = WString::default();
 		unsafe {
 				user32::LoadCursorW(
 				self.ptr,
-				lpCursorName.as_ptr(&mut buf_lpCursorName),
+				lpCursorName.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HCURSOR { ptr })
 			.ok_or_else(|| GetLastError())
@@ -335,11 +326,10 @@ impl HINSTANCE {
 	///     .unwrap();
 	/// ```
 	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
-		let mut buf_lpIconName = WString::default();
 		unsafe {
 			user32::LoadIconW(
 				self.ptr,
-				lpIconName.as_ptr(&mut buf_lpIconName),
+				lpIconName.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HICON { ptr })
 			.ok_or_else(|| GetLastError())

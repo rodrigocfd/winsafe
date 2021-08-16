@@ -48,14 +48,12 @@ impl HUPDATERSRC {
 		lpType: RtStr, lpName: IdStr,
 		wLanguage: LANGID, lpData: &[u8]) -> WinResult<()>
 	{
-		let mut buf_lpType = WString::default();
-		let mut buf_lpName = WString::default();
 		bool_to_winresult(
 			unsafe {
 				kernel32::UpdateResourceW(
 					self.ptr,
-					lpType.as_ptr(&mut buf_lpType),
-					lpName.as_ptr(&mut buf_lpName),
+					lpType.as_ptr(),
+					lpName.as_ptr(),
 					wLanguage.0,
 					lpData.as_ptr() as _,
 					lpData.len() as _,

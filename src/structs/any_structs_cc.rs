@@ -627,12 +627,11 @@ impl TBADDBITMAP {
 	}
 
 	/// Sets the `hInst` and `nID` fields.
-	pub fn set_nID(&mut self, val: BmpIdbRes) {
-		let mut buf = WString::default();
+	pub fn set_nID(&mut self, val: &BmpIdbRes) {
 		*self = match val {
 			BmpIdbRes::Idb(idb) => Self { hInst: HINST_COMMCTRL, nID: idb.0 },
 			BmpIdbRes::Bmp(bmp) => Self { hInst: HINSTANCE::NULL, nID: bmp.ptr as _ },
-			BmpIdbRes::Res(res, hInst) => Self { hInst, nID: res.as_ptr(&mut buf) as _ },
+			BmpIdbRes::Res(res, hInst) => Self { hInst: *hInst, nID: res.as_ptr() as _ },
 		}
 	}
 }

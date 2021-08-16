@@ -4,6 +4,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::ResStrs;
 use crate::msg::{MsgSend, WndMsg};
 use crate::structs::{TBADDBITMAP, TBBUTTON};
 
@@ -58,6 +59,83 @@ impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 			msg_id: co::TBM::ADDBUTTONS.into(),
 			wparam: self.buttons.len() as _,
 			lparam: self.buttons.as_ptr() as _,
+		}
+	}
+}
+
+/// [`TB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addstring)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct AddString {
+	pub texts: ResStrs,
+}
+
+impl MsgSend for AddString {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			idx => Ok(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::ADDSTRING.into(),
+			wparam: match &self.texts {
+				ResStrs::Res(_, hinst) => hinst.ptr as _,
+				ResStrs::Strs(_) => 0,
+			},
+			lparam: match &self.texts {
+				ResStrs::Res(res, _) => res.as_ptr() as _,
+				ResStrs::Strs(strs) => unsafe { strs.as_ptr() as _ },
+			},
+		}
+	}
+}
+
+/// [`TB_AUTOSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-autosize)
+/// message, which has no parameters.
+///
+/// Return type: `()`.
+pub struct AutoSize {}
+
+impl MsgSend for AutoSize {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::AUTOSIZE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_BUTTONCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-buttoncount)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct ButtonCount {}
+
+impl MsgSend for ButtonCount {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::BUTTONCOUNT.into(),
+			wparam: 0,
+			lparam: 0,
 		}
 	}
 }
