@@ -4,9 +4,11 @@
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::funcs::{HIWORD, LOWORD};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
 use crate::privs::{CB_ERR, CB_ERRSPACE};
+use crate::structs::{COMBOBOXINFO, RECT};
 use crate::various::WString;
 
 /// [`CB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-addstring)
@@ -120,6 +122,61 @@ impl MsgSend for FindString {
 	}
 }
 
+/// [`CB_FINDSTRINGEXACT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-findstringexact)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct FindStringExact {
+	pub preceding_index: Option<u32>,
+	pub text: WString,
+}
+
+impl MsgSend for FindStringExact {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::FINDSTRINGEXACT.into(),
+			wparam: self.preceding_index.map(|i| i as _).unwrap_or(-1) as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
+		}
+	}
+}
+
+/// [`CB_GETCOMBOBOXINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcomboboxinfo)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetComboBoxInfo<'a> {
+	pub data: &'a mut COMBOBOXINFO,
+}
+
+impl<'a> MsgSend for GetComboBoxInfo<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETCOMBOBOXINFO.into(),
+			wparam: 0,
+			lparam: self.data as *const _ as _,
+		}
+	}
+}
+
 /// [`CB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcount)
 /// message, which has no parameters.
 ///
@@ -145,6 +202,33 @@ impl MsgSend for GetCount {
 	}
 }
 
+/// [`CB_GETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcuebanner)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetCueBanner<'a> {
+	pub buffer: &'a mut WString,
+}
+
+impl<'a> MsgSend for GetCueBanner<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 | 1 => Ok(()),
+			_ => Err(co::ERROR::BAD_ARGUMENTS),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETCUEBANNER.into(),
+			wparam: unsafe { self.buffer.as_ptr() } as _,
+			lparam: self.buffer.buffer_size() as _,
+		}
+	}
+}
+
 /// [`CB_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcursel)
 /// message, which has no parameters.
 ///
@@ -165,6 +249,173 @@ impl MsgSend for GetCurSel {
 		WndMsg {
 			msg_id: co::CB::GETCURSEL.into(),
 			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_GETDROPPEDCONTROLRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedcontrolrect)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetDroppedControlRect<'a> {
+	pub rect: &'a mut RECT,
+}
+
+impl<'a> MsgSend for GetDroppedControlRect<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETDROPPEDCONTROLRECT.into(),
+			wparam: 0,
+			lparam: self.rect as *const _ as _,
+		}
+	}
+}
+
+/// [`CB_GETDROPPEDSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedstate)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+pub struct GetDroppedState {}
+
+impl MsgSend for GetDroppedState {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETDROPPEDSTATE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_GETDROPPEDWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedwidth)
+/// message, which has no parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetDroppedWidth {}
+
+impl MsgSend for GetDroppedWidth {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			cx => Ok(cx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETDROPPEDWIDTH.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_GETEDITSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-geteditsel)
+/// message, which has no parameters.
+///
+/// Return type: `(i32, i32)`.
+pub struct GetEditSel {}
+
+impl MsgSend for GetEditSel {
+	type RetType = (i32, i32);
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as _) as _, HIWORD(v as _) as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETEDITSEL.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_GETEXTENDEDUI`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getextendedui)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+pub struct GetExtendedUi {}
+
+impl MsgSend for GetExtendedUi {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETEXTENDEDUI.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_GETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gethorizontalextent)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetHorizontalExtent {}
+
+impl MsgSend for GetHorizontalExtent {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETHORIZONTALEXTENT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_GETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getitemdata)
+/// message parameters.
+///
+/// Return type: `WinResult<isize>`.
+pub struct GetItemData {
+	pub index: u32,
+}
+
+impl MsgSend for GetItemData {
+	type RetType = WinResult<isize>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(v),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETITEMDATA.into(),
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}

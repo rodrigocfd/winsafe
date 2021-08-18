@@ -608,10 +608,13 @@ pub_struct_const! { STARTF, u32,
 }
 
 pub_struct_const! { STATE_SYSTEM, u32,
-	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and
-	/// `stateButton`, [`TITLEBARINFOEX`](crate::TITLEBARINFOEX) `rgstate`
+	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and `stateButton`,
+	/// [`TITLEBARINFOEX`](crate::TITLEBARINFOEX) `rgstate`,
+	/// [`COMBOBOXINFO`](crate::COMBOBOXINFO) `stateButton`
 	/// (`u32`).
 	=>
+	/// None of the actual values (zero).
+	NoValue, 0
 	UNAVAILABLE, 0x0000_0001
 	SELECTED, 0x0000_0002
 	FOCUSED, 0x0000_0004

@@ -96,26 +96,8 @@ impl MsgSend for AddString {
 	}
 }
 
-/// [`TB_AUTOSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-autosize)
-/// message, which has no parameters.
-///
-/// Return type: `()`.
-pub struct AutoSize {}
-
-impl MsgSend for AutoSize {
-	type RetType = ();
-
-	fn convert_ret(&self, _: isize) -> Self::RetType {
-		()
-	}
-
-	fn as_generic_wm(&self) -> WndMsg {
-		WndMsg {
-			msg_id: co::TBM::AUTOSIZE.into(),
-			wparam: 0,
-			lparam: 0,
-		}
-	}
+pub_struct_msg_empty! { AutoSize, co::TBM::AUTOSIZE.into(),
+	/// [`TB_AUTOSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-autosize)
 }
 
 /// [`TB_BUTTONCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-buttoncount)
@@ -135,6 +117,30 @@ impl MsgSend for ButtonCount {
 		WndMsg {
 			msg_id: co::TBM::BUTTONCOUNT.into(),
 			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_BUTTONSTRUCTSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-buttonstructsize)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct ButtonStructSize {
+	pub size: u32,
+}
+
+impl MsgSend for ButtonStructSize {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::BUTTONSTRUCTSIZE.into(),
+			wparam: self.size as _,
 			lparam: 0,
 		}
 	}

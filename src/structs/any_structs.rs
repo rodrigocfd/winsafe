@@ -175,6 +175,21 @@ impl<'a> CHOOSECOLOR<'a> {
 	pub_fn_resource_id_get_set!(lpTemplateName, set_lpTemplateName);
 }
 
+/// [`COMBOBOXINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-comboboxinfo)
+/// struct.
+#[repr(C)]
+pub struct COMBOBOXINFO {
+	cbSize: u32,
+	pub rcItem: RECT,
+	pub rcButton: RECT,
+	pub stateButton: co::STATE_SYSTEM,
+	pub hwndCombo: HWND,
+	pub hwndItem: HWND,
+	pub hwndList: HWND,
+}
+
+impl_default_with_size!(COMBOBOXINFO, cbSize);
+
 /// [`COMPAREITEMSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-compareitemstruct)
 /// struct.
 #[repr(C)]
