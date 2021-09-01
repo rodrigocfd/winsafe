@@ -35,21 +35,21 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = "0.0.4"
+winsafe = "0.0.5"
 ```
 
 To enable the DirectShow COM module, use:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.4", features = ["dshow"] }
+winsafe = { version = "0.0.5", features = ["dshow"] }
 ```
 
 To enable the Shell COM module, use:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.4", features = ["shell"] }
+winsafe = { version = "0.0.5", features = ["shell"] }
 ```
 
 ## Example
