@@ -6,7 +6,7 @@ use std::marker::PhantomData;
 
 use crate::aliases::{CCHOOKPROC, PFTASKDIALOGCALLBACK, WNDPROC};
 use crate::co;
-use crate::enums::{DispfNup, IconIdTdicon, HwndHmenu, HwndPlace};
+use crate::enums::{DispfNup, IconId, IconIdTdicon, HwndHmenu, HwndPlace};
 use crate::ffi::BOOL;
 use crate::funcs::{
 	HIDWORD,
@@ -36,6 +36,7 @@ use crate::privs::{
 	CCHFORMNAME,
 	CCHILDREN_TITLEBAR,
 	DM_SPECVERSION,
+	IS_INTRESOURCE,
 	LF_FACESIZE,
 	MAKEINTRESOURCE,
 	MAX_PATH,
@@ -1220,7 +1221,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pub dwFlags: co::TDF,
 	pub dwCommonButtons: co::TDCBF,
 	pszWindowTitle: *mut u16,
-	union0: TASKDIALOGCONFIG_union0,
+	pszMainIcon: *const u16, // union with HICON
 	pszMainInstruction: *mut u16,
 	pszContent: *mut u16,
 	cButtons: u32,
@@ -1233,7 +1234,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pszExpandedInformation: *mut u16,
 	pszExpandedControlText: *mut u16,
 	pszCollapsedControlText: *mut u16,
-	union1: TASKDIALOGCONFIG_union1,
+	pszFooterIcon: *const u16, // union with HICON
 	pszFooter: *mut u16,
 	pub pfCallback: Option<PFTASKDIALOGCALLBACK>,
 	pub lpCallbackData: isize,
@@ -1251,18 +1252,6 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pszFooter_: PhantomData<&'j mut u16>,
 }
 
-#[repr(C, packed)]
-union TASKDIALOGCONFIG_union0 {
-	hMainIcon: HICON,
-	pszMainIcon: *const u16,
-}
-
-#[repr(C, packed)]
-union TASKDIALOGCONFIG_union1 {
-	hFooterIcon: HICON,
-	pszFooterIcon: *const u16,
-}
-
 impl_default_with_size!(TASKDIALOGCONFIG, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j);
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
@@ -1270,13 +1259,26 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 {
 	pub_fn_string_ptr_get_set!('a, pszWindowTitle, set_pszWindowTitle);
 
-	/// Sets the `hMainIcon` field.
-	pub fn set_hMainIcon(&mut self, val: IconIdTdicon) {
+	/// Returns the `pszMainIcon` field.
+	pub fn pszMainIcon(&self) -> IconIdTdicon {
+		if IS_INTRESOURCE(self.pszMainIcon) {
+			if self.pszMainIcon as u16 >= 0xfffc {
+				IconIdTdicon::Tdicon(co::TD_ICON(self.pszMainIcon as _))
+			} else {
+				IconIdTdicon::Id(self.pszMainIcon as _)
+			}
+		} else {
+			IconIdTdicon::Icon(HICON { ptr: self.pszMainIcon as _ })
+		}
+	}
+
+	/// Sets the `pszMainIcon` field.
+	pub fn set_pszMainIcon(&mut self, val: IconIdTdicon) {
 		match val {
-			IconIdTdicon::None => self.union0.pszMainIcon = std::ptr::null_mut(),
-			IconIdTdicon::Icon(hicon) => self.union0.hMainIcon = hicon,
-			IconIdTdicon::Id(id) => self.union0.pszMainIcon = MAKEINTRESOURCE(id as _),
-			IconIdTdicon::Tdicon(tdi) => self.union0.pszMainIcon = MAKEINTRESOURCE(tdi.0),
+			IconIdTdicon::None => self.pszMainIcon = std::ptr::null_mut(),
+			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.ptr as _,
+			IconIdTdicon::Id(id) => self.pszMainIcon = MAKEINTRESOURCE(id as _),
+			IconIdTdicon::Tdicon(tdi) => self.pszMainIcon = MAKEINTRESOURCE(tdi.0 as _),
 		}
 	}
 
@@ -1289,13 +1291,21 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub_fn_string_ptr_get_set!('h, pszExpandedControlText, set_pszExpandedControlText);
 	pub_fn_string_ptr_get_set!('i, pszCollapsedControlText, set_pszCollapsedControlText);
 
-	/// Sets the `hFooterIcon` field.
-	pub fn set_hFooterIcon(&mut self, val: IconIdTdicon) {
+	/// Returns the `pszFooterIcon` field.
+	pub fn pszFooterIcon(&self) -> IconId {
+		if IS_INTRESOURCE(self.pszFooterIcon) {
+			IconId::Id(self.pszFooterIcon as _)
+		} else {
+			IconId::Icon(HICON { ptr: self.pszFooterIcon as _ })
+		}
+	}
+
+	/// Sets the `pszFooterIcon` field.
+	pub fn set_pszFooterIcon(&mut self, val: IconId) {
 		match val {
-			IconIdTdicon::None => self.union1.pszFooterIcon = std::ptr::null_mut(),
-			IconIdTdicon::Icon(hicon) => self.union1.hFooterIcon = hicon,
-			IconIdTdicon::Id(id) => self.union1.pszFooterIcon = MAKEINTRESOURCE(id as _),
-			IconIdTdicon::Tdicon(tdi) => self.union1.pszFooterIcon = MAKEINTRESOURCE(tdi.0),
+			IconId::None => self.pszFooterIcon = std::ptr::null_mut(),
+			IconId::Icon(hicon) => self.pszFooterIcon = hicon.ptr as _,
+			IconId::Id(id) => self.pszFooterIcon = MAKEINTRESOURCE(id as _),
 		}
 	}
 

@@ -225,9 +225,21 @@ impl HwndPointId {
 
 /// Variant parameter for:
 ///
-/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hMainIcon`;
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hFooterIcon`.
-#[derive(Copy, Clone)]
+#[derive(Clone)]
+pub enum IconId {
+	/// No icon.
+	None,
+	/// An icon handle.
+	Icon(HICON),
+	/// A resource ID.
+	Id(u16),
+}
+
+/// Variant parameter for:
+///
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hMainIcon`.
+#[derive(Clone)]
 pub enum IconIdTdicon {
 	/// No icon.
 	None,
@@ -424,7 +436,7 @@ impl IdTdiconStr {
 		match self {
 			Self::None => std::ptr::null(),
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0),
+			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0 as _),
 			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}

@@ -309,15 +309,15 @@ pub_struct_const_wsex! { TCS_EX,
 	REGISTERDROP, 0x0000_0002
 }
 
-pub_struct_const! { TD_ICON, isize,
+pub_struct_const! { TD_ICON, u16,
 	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog) `pszIcon` and
-	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `pszMainIcon` (`isize`).
+	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `pszMainIcon` (`u16`).
 	/// Originally has `TD` prefix and `ICON` suffix.
 	=>
-	WARNING, -1
-	ERROR, -2
-	INFORMATION, -3
-	SHIELD, -4
+	WARNING, 0xffff
+	ERROR, 0xfffe
+	INFORMATION, 0xfffd
+	SHIELD, 0xfffc
 }
 
 pub_struct_const! { TDCBF, i32,
