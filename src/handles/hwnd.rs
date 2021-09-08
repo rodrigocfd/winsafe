@@ -265,12 +265,13 @@ impl HWND {
 	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)
 	/// static method.
 	pub fn FindWindow(
-		lpClassName: &str, lpWindowName: &str) -> WinResult<HWND>
+		lpClassName: Option<AtomStr>,
+		lpWindowName: Option<&str>) -> WinResult<HWND>
 	{
 		unsafe {
 			user32::FindWindowW(
-				WString::from_str(lpClassName).as_ptr(),
-				WString::from_str(lpWindowName).as_ptr(),
+				lpClassName.map_or(std::ptr::null_mut(), |p| p.as_ptr()),
+				WString::from_opt_str(lpWindowName).as_ptr(),
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
