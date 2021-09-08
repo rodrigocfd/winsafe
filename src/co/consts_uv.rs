@@ -154,6 +154,8 @@ pub_struct_const! { VK, u16,
 	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
 	=>
+	/// None of the actual values (zero).
+	NoValue, 0
 	/// Left mouse button.
 	LBUTTON, 0x01
 	/// Right mouse button.
