@@ -5,6 +5,7 @@ mod macros;
 
 mod any_handles;
 mod haccel;
+mod hbitmap;
 mod hbrush;
 mod hcursor;
 mod hdc;
@@ -34,6 +35,7 @@ mod hwnd;
 
 pub use any_handles::*;
 pub use haccel::HACCEL;
+pub use hbitmap::HBITMAP;
 pub use hbrush::HBRUSH;
 pub use hcursor::HCURSOR;
 pub use hdc::HDC;

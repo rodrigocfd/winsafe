@@ -10,7 +10,9 @@ extern "system" {
 	pub fn BitBlt(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: HANDLE, _: i32, _: i32, _: u32) -> BOOL;
 	pub fn CancelDC(_:HANDLE) -> BOOL;
 	pub fn Chord(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32) -> BOOL;
+	pub fn CreateBitmap(_: i32, _: i32, _: u32, _: u32, _: PVOID) -> HANDLE;
 	pub fn CreateBrushIndirect(_: PCVOID) -> HANDLE;
+	pub fn CreateCompatibleBitmap(_: HANDLE, _: i32, _: i32) -> HANDLE;
 	pub fn CreateCompatibleDC(_: HANDLE) -> HANDLE;
 	pub fn CreateFontIndirectW(_: PCVOID) -> HANDLE;
 	pub fn CreateFontW(_: i32, _: i32, _: i32, _: i32, _: i32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: PCSTR) -> HANDLE;

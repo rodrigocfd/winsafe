@@ -1,11 +1,5 @@
 #![allow(non_snake_case)]
 
-pub_struct_handle_gdi! {
-	/// Handle to a
-	/// [bitmap](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbitmap).
-	HBITMAP
-}
-
 pub_struct_handle_closeable! {
 	/// Handle to an
 	/// [event](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).

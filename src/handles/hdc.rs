@@ -79,6 +79,17 @@ impl HDC {
 		)
 	}
 
+	/// [`CreateCompatibleBitmap`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap)
+	/// method.
+	///
+	/// **Note:** Must be paired with an
+	/// [`HBITMAP::DeleteObject`](crate::HBITMAP::DeleteObject) call.
+	pub fn CreateCompatibleBitmap(self, cx: i32, cy: i32) -> WinResult<HBITMAP> {
+		unsafe { gdi32::CreateCompatibleBitmap(self.ptr, cx, cy).as_mut() }
+			.map(|ptr| HBITMAP { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
 	/// [`CreateCompatibleDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
 	/// method.
 	///
