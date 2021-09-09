@@ -25,11 +25,17 @@ impl HDC {
 	/// [`AngleArc`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-anglearc)
 	/// method.
 	pub fn AngleArc(self,
-		x: i32, y: i32,
-		r: u32, StartAngle: f32, SweepAngle: f32) -> WinResult<()>
+		center: POINT, radius: u32,
+		startAngle: f32, sweepAngle: f32) -> WinResult<()>
 	{
 		bool_to_winresult(
-			unsafe { gdi32::AngleArc(self.ptr, x, y, r, StartAngle, SweepAngle) },
+			unsafe {
+				gdi32::AngleArc(
+					self.ptr,
+					center.x, center.y,
+					radius, startAngle, sweepAngle,
+				)
+			},
 		)
 	}
 
@@ -42,18 +48,17 @@ impl HDC {
 	/// [`BitBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt)
 	/// method.
 	pub fn BitBlt(self,
-		x: i32, y: i32, cx: i32, cy: i32,
-		hdcSrc: HDC,
-		x1: i32, y1: i32,
-		rop: co::ROP) -> WinResult<()>
+		destTopLeft: POINT, sz: SIZE,
+		hdcSrc: HDC, srcTopLeft: POINT, rop: co::ROP) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				gdi32::BitBlt(
 					self.ptr,
-					x, y, cx, cy,
+					destTopLeft.x, destTopLeft.y,
+					sz.cx, sz.cy,
 					hdcSrc.ptr,
-					x1, y1,
+					srcTopLeft.x, srcTopLeft.y,
 					rop.0,
 				)
 			},
@@ -69,13 +74,17 @@ impl HDC {
 	/// [`Chord`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-chord)
 	/// method.
 	pub fn Chord(self,
-		x1: i32, y1: i32,
-		x2: i32, y2: i32,
-		x3: i32, y3: i32,
-		x4: i32, y4: i32) -> WinResult<()>
+		bound: RECT, startRadial: POINT, endRadial: POINT) -> WinResult<()>
 	{
 		bool_to_winresult(
-			unsafe { gdi32::Chord(self.ptr, x1, y1, x2, y2, x3, y3, x4, y4) },
+			unsafe {
+				gdi32::Chord(
+					self.ptr,
+					bound.left, bound.top, bound.right, bound.bottom,
+					startRadial.x, startRadial.y,
+					endRadial.x, endRadial.y,
+				)
+			},
 		)
 	}
 
@@ -202,8 +211,7 @@ impl HDC {
 			unsafe {
 				gdi32::MoveToEx(
 					self.ptr,
-					x,
-					y,
+					x, y,
 					lppt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
@@ -212,10 +220,14 @@ impl HDC {
 
 	/// [`PatBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-patblt)
 	/// method.
-	pub fn PatBlt(self, x: i32, y: i32,
-		w: i32, h: i32, rop: co::ROP) -> WinResult<()>
+	pub fn PatBlt(self,
+		topLeft: POINT, sz: SIZE, rop: co::ROP) -> WinResult<()>
 	{
-		bool_to_winresult(unsafe { gdi32::PatBlt(self.ptr, x, y, w, h, rop.0) })
+		bool_to_winresult(
+			unsafe {
+				gdi32::PatBlt(self.ptr, topLeft.x, topLeft.y, sz.cx, sz.cy, rop.0)
+			},
+		)
 	}
 
 	/// [`PathToRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pathtoregion)
@@ -232,12 +244,16 @@ impl HDC {
 	/// [`Pie`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
 	/// method.
 	pub fn Pie(self,
-		left: i32, top: i32, right: i32, bottom: i32,
-		xr1: i32, yr1: i32, xr2: i32, yr2: i32) -> WinResult<()>
+		bound: RECT, radial1: POINT, radial2: POINT) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
-				gdi32::Pie(self.ptr, left, top, right, bottom, xr1, yr1, xr2, yr2)
+				gdi32::Pie(
+					self.ptr,
+					bound.left, bound.top, bound.right, bound.bottom,
+					radial1.x, radial1.y,
+					radial2.y, radial2.y,
+				)
 			},
 		)
 	}
@@ -310,11 +326,12 @@ impl HDC {
 
 	/// [`Rectangle`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectangle)
 	/// method.
-	pub fn Rectangle(self,
-		left: i32, top: i32, right: i32, bottom: i32) -> WinResult<()>
-	{
+	pub fn Rectangle(self, bound: RECT) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { gdi32::Rectangle(self.ptr, left, top, right, bottom) },
+			unsafe {
+				gdi32::Rectangle(self.ptr,
+					bound.left, bound.top, bound.right, bound.bottom)
+			},
 		)
 	}
 
@@ -326,13 +343,14 @@ impl HDC {
 
 	/// [`RoundRect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
 	/// method.
-	pub fn RoundRect(self,
-		left: i32, top: i32, right: i32, bottom: i32,
-		width: i32, height: i32) -> WinResult<()>
-	{
+	pub fn RoundRect(self, bound: RECT, sz: SIZE) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
-				gdi32::RoundRect(self.ptr, left, top, right, bottom, width, height)
+				gdi32::RoundRect(
+					self.ptr,
+					bound.left, bound.top, bound.right, bound.bottom,
+					sz.cx, sz.cy,
+				)
 			},
 		)
 	}
@@ -529,18 +547,20 @@ impl HDC {
 	/// [`TransparentBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
 	/// method.
 	pub fn TransparentBlt(self,
-		xoriginDest: i32, yoriginDest: i32, wDest: i32, hDest: i32,
+		destTopLeft: POINT, destSz: SIZE,
 		hdcSrc: HDC,
-		xoriginSrc: i32, yoriginSrc: i32, wSrc: i32, hSrc: i32,
+		srcTopLeft: POINT, srcSz: SIZE,
 		crTransparent: COLORREF) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				msimg32::TransparentBlt(
 					self.ptr,
-					xoriginDest, yoriginDest, wDest, hDest,
+					destTopLeft.x, destTopLeft.y,
+					destSz.cx, destSz.cy,
 					hdcSrc.ptr,
-					xoriginSrc, yoriginSrc, wSrc, hSrc,
+					srcTopLeft.x, srcTopLeft.y,
+					srcSz.cx, srcSz.cy,
 					crTransparent.0,
 				)
 			},
