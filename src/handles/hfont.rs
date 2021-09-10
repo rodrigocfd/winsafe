@@ -62,10 +62,7 @@ impl HFONT {
 				pv as *mut _ as _,
 			)
 		} {
-			0 => match GetLastError() {
-				co::ERROR::SUCCESS => Ok(()), // not really an error
-				err => Err(err),
-			},
+			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
 	}
