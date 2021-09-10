@@ -462,6 +462,14 @@ pub_struct_const! { REGION, i32,
 	COMPLEX, 3
 }
 
+pub_struct_const! { REPLACEFILE, u32,
+	/// [`ReplaceFile`](crate::ReplaceFile) `flags` (`u32`).
+	=>
+	WRITE_THROUGH, 0x0000_0001
+	IGNORE_MERGE_ERRORS, 0x0000_0002
+	IGNORE_ACL_ERRORS, 0x0000_0004
+}
+
 pub_struct_const! { ROP, u32,
 	/// Raster operation code (`u32`).
 	/// [`HDC::BitBlt`](crate::HDC::BitBlt) `rop`,

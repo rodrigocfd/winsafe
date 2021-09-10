@@ -372,6 +372,18 @@ pub fn GetComputerName() -> WinResult<String> {
 	).map(|_| buf.to_string())
 }
 
+/// [`GetCurrentDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory)
+/// function.
+pub fn GetCurrentDirectory() -> WinResult<String> {
+	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+	match unsafe {
+		kernel32::GetCurrentDirectoryW(buf.buffer_size() as _, buf.as_mut_ptr())
+	} {
+		0 => Err(GetLastError()),
+		_ => Ok(buf.to_string()),
+	}
+}
+
 /// [`GetCurrentProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
 /// function.
 pub fn GetCurrentProcessId() -> u32 {
@@ -1077,6 +1089,25 @@ pub fn ReleaseCapture() -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::ReleaseCapture() })
 }
 
+/// [`ReplaceFileW`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
+/// function.
+pub fn ReplaceFile(replaced: &str, replacement: &str,
+	backup: Option<&str>, flags: co::REPLACEFILE) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			kernel32::ReplaceFileW(
+				WString::from_str(replaced).as_ptr(),
+				WString::from_str(replacement).as_ptr(),
+				WString::from_opt_str(backup).as_ptr(),
+				flags.0,
+				std::ptr::null_mut(),
+				std::ptr::null_mut(),
+			)
+		},
+	)
+}
+
 /// [`SetCaretBlinkTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)
 /// function.
 pub fn SetCaretBlinkTime(uMSeconds: u32) -> WinResult<()> {
@@ -1097,6 +1128,16 @@ pub fn SetClipboardData(uFormat: co::CF, hMem: *mut u8) -> WinResult<*mut u8> {
 	unsafe { user32::SetClipboardData(uFormat.0, hMem as _).as_mut() }
 		.map(|hMem| hMem as *mut _ as _)
 		.ok_or_else(|| GetLastError())
+}
+
+/// [`SetCurrentDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory)
+/// function.
+pub fn SetCurrentDirectory(pathName: &str) -> WinResult<()> {
+	bool_to_winresult(
+		unsafe {
+			kernel32::SetCurrentDirectoryW(WString::from_str(pathName).as_ptr())
+		},
+	)
 }
 
 /// [`SetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)

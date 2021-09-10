@@ -35,6 +35,7 @@ extern "system" {
 	pub fn GetBinaryTypeW(_: PCSTR, _: *mut u32) -> BOOL;
 	pub fn GetCommandLineW() -> PCSTR;
 	pub fn GetComputerNameW(_: PSTR, _: *mut u32) -> BOOL;
+	pub fn GetCurrentDirectoryW(_: u32, _: PSTR) -> u32;
 	pub fn GetCurrentProcess() -> HANDLE;
 	pub fn GetCurrentProcessId() -> u32;
 	pub fn GetCurrentThread() -> HANDLE;
@@ -96,6 +97,8 @@ extern "system" {
 	pub fn QueryPerformanceCounter(_: *mut i64) -> BOOL;
 	pub fn QueryPerformanceFrequency(_: *mut i64) -> BOOL;
 	pub fn ReadFile(_: HANDLE, _: PVOID, _: u32, _: *mut u32, _: PVOID) -> BOOL;
+	pub fn ReplaceFileW(_: PCSTR, _: PCSTR, _: PCSTR, _: u32, _: PVOID, _: PVOID) -> BOOL;
+	pub fn SetCurrentDirectoryW(_: PCSTR) -> BOOL;
 	pub fn SetEndOfFile(_: HANDLE) -> BOOL;
 	pub fn SetFilePointerEx(_: HANDLE, _: i64, _: *mut i64, _: u32) -> BOOL;
 	pub fn SetLastError(_: u32);
