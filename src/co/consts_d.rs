@@ -40,7 +40,7 @@ pub_struct_const! { DISP_CHANGE, i32,
 }
 
 pub_struct_const! { DISPOSITION, u32,
-	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `dwCreationDisposition`
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `creation_disposition`
 	/// (`u32`). Originally has no prefix.
 	=>
 	/// Creates a new file, only if it does not already exist.

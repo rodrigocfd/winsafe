@@ -19,8 +19,8 @@ impl HGLOBAL {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HGLOBAL::GlobalFree`](crate::HGLOBAL::GlobalFree) call.
-	pub fn GlobalAlloc(uFlags: co::GMEM, dwBytes: u64) -> WinResult<HGLOBAL> {
-		unsafe { kernel32::GlobalAlloc(uFlags.0, dwBytes).as_mut() }
+	pub fn GlobalAlloc(flags: co::GMEM, num_bytes: u64) -> WinResult<HGLOBAL> {
+		unsafe { kernel32::GlobalAlloc(flags.0, num_bytes).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -52,10 +52,10 @@ impl HGLOBAL {
 	/// **Note:** Must be paired with an
 	/// [`HGLOBAL::GlobalUnlock`](crate::HGLOBAL::GlobalUnlock) call.
 	pub fn GlobalLock<'a>(self) -> WinResult<&'a mut [u8]> {
-		let memSz = self.GlobalSize()?;
+		let mem_sz = self.GlobalSize()?;
 		unsafe { kernel32::GlobalLock(self.ptr).as_mut() }
 			.map(|ptr| unsafe {
-				std::slice::from_raw_parts_mut(ptr as *mut _ as *mut _, memSz as _)
+				std::slice::from_raw_parts_mut(ptr as *mut _ as *mut _, mem_sz as _)
 			})
 			.ok_or_else(|| GetLastError())
 	}
@@ -66,9 +66,9 @@ impl HGLOBAL {
 	/// **Note:** Must be paired with an
 	/// [`HGLOBAL::GlobalFree`](crate::HGLOBAL::GlobalFree) call.
 	pub fn GlobalReAlloc(self,
-		dwBytes: u64, uFlags: co::GMEM) -> WinResult<HGLOBAL>
+		num_bytes: u64, flags: co::GMEM) -> WinResult<HGLOBAL>
 	{
-		unsafe { kernel32::GlobalReAlloc(self.ptr, dwBytes, uFlags.0).as_mut() }
+		unsafe { kernel32::GlobalReAlloc(self.ptr, num_bytes, flags.0).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}

@@ -7,7 +7,7 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
-use crate::structs::POINT;
+use crate::structs::{POINT, SIZE};
 
 #[derive(Clone)]
 pub(in crate::gui) struct DlgControl(Arc<Obj>);
@@ -60,7 +60,7 @@ impl DlgControl {
 					multiply_dpi(Some(&mut dlg_pos), None)?;
 					self2.base_ref().hwnd_ref().SetWindowPos(
 						HwndPlace::None,
-						dlg_pos.x, dlg_pos.y, 0, 0,
+						dlg_pos, SIZE::default(),
 						co::SWP::NOZORDER | co::SWP::NOSIZE,
 					)?;
 

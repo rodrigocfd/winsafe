@@ -1,10 +1,11 @@
 #![allow(non_snake_case)]
 
+use std::convert::TryInto;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
-use crate::privs::bool_to_winresult;
 use crate::structs::FILETIME;
 use crate::various::WString;
 
@@ -40,8 +41,11 @@ impl HKEY {
 
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
-	pub fn RegCloseKey(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { advapi32::RegCloseKey(self.ptr) })
+	pub fn CloseKey(self) -> WinResult<()> {
+		match co::ERROR(unsafe { advapi32::RegCloseKey(self.ptr) as _ }) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
 	}
 
 	/// This method calls
@@ -53,39 +57,39 @@ impl HKEY {
 	/// ```rust,ignore
 	/// use winsafe::{co, HKEY};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
 	///     "Control Panel",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// ).unwrap();
 	///
-	/// for key_name in hkey.RegEnumKeyEx().unwrap() {
+	/// for key_name in hkey.EnumKeyEx().unwrap() {
 	///     println!("{}", key_name);
 	/// }
 	///
-	/// hkey.RegCloseKey().unwrap();
+	/// hkey.CloseKey().unwrap();
 	/// ```
-	pub fn RegEnumKeyEx(self) -> WinResult<Vec<String>> {
-		let mut nKeys: u32 = 0;
-		let mut maxKeyLen: u32 = 0; // length of longest subkey name
-		self.RegQueryInfoKey(
-			None, Some(&mut nKeys), Some(&mut maxKeyLen),
+	pub fn EnumKeyEx(self) -> WinResult<Vec<String>> {
+		let mut num_keys = u32::default();
+		let mut max_key_name_len = u32::default();
+		self.QueryInfoKey(
+			None, Some(&mut num_keys), Some(&mut max_key_name_len),
 			None, None, None, None, None, None)?;
 
-		let mut namesVec = Vec::with_capacity(nKeys as _);
-		let mut nameBuf = WString::new_alloc_buffer(maxKeyLen as usize + 1);
-		let mut lenBuf;
+		let mut names_vec = Vec::with_capacity(num_keys as _);
+		let mut name_buf = WString::new_alloc_buffer(max_key_name_len as usize + 1);
+		let mut len_buf;
 
-		for index in 0..nKeys {
-			lenBuf = nameBuf.buffer_size() as u32;
+		for index in 0..num_keys {
+			len_buf = name_buf.buffer_size() as _;
 
 			let err = co::ERROR(
 				unsafe {
 					advapi32::RegEnumKeyExW(
 						self.ptr,
 						index,
-						nameBuf.as_mut_ptr(),
-						&mut lenBuf,
+						name_buf.as_mut_ptr(),
+						&mut len_buf,
 						std::ptr::null_mut(),
 						std::ptr::null_mut(),
 						std::ptr::null_mut(),
@@ -97,11 +101,11 @@ impl HKEY {
 			if err != co::ERROR::SUCCESS {
 				return Err(err);
 			}
-			namesVec.push(nameBuf.to_string());
+			names_vec.push(name_buf.to_string());
 		}
 
-		namesVec.sort_by(|a, b| a.to_uppercase().cmp(&b.to_uppercase()));
-		Ok(namesVec)
+		names_vec.sort_by(|a, b| a.to_uppercase().cmp(&b.to_uppercase()));
+		Ok(names_vec)
 	}
 
 	/// This method calls
@@ -113,42 +117,41 @@ impl HKEY {
 	/// ```rust,ignore
 	/// use winsafe::{co, HKEY};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
 	///     "Control Panel\\Appearance",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// ).unwrap();
 	///
-	/// for (value, reg_type) in hkey.RegEnumValue().unwrap() {
+	/// for (value, reg_type) in hkey.EnumValue().unwrap() {
 	///     println!("{}, {}", value, reg_type);
 	/// }
 	///
-	/// hkey.RegCloseKey().unwrap();
+	/// hkey.CloseKey().unwrap();
 	/// ```
-	pub fn RegEnumValue(self) -> WinResult<Vec<(String, co::REG)>> {
-		let mut nVals: u32 = 0;
-		let mut maxValLen: u32 = 0; // length of longest value name
-		self.RegQueryInfoKey(
-			None, None, None, None, Some(&mut nVals), Some(&mut maxValLen),
+	pub fn EnumValue(self) -> WinResult<Vec<(String, co::REG)>> {
+		let mut num_vals = u32::default();
+		let mut max_val_name_len = u32::default();
+		self.QueryInfoKey(
+			None, None, None, None, Some(&mut num_vals), Some(&mut max_val_name_len),
 			None, None, None)?;
 
-		let mut namesTypesVec = Vec::with_capacity(nVals as _);
-		let mut nameBuf = WString::new_alloc_buffer(maxValLen as usize + 1);
-		let mut lenBuf;
-		let mut rawDataType: u32 = 0;
+		let mut names_types_vec = Vec::with_capacity(num_vals as _);
+		let mut name_buf = WString::new_alloc_buffer(max_val_name_len as usize + 1);
+		let mut raw_data_type = u32::default();
 
-		for index in 0..nVals {
-			lenBuf = nameBuf.buffer_size() as u32;
+		for index in 0..num_vals {
+			let mut len_buf = name_buf.buffer_size() as _;
 
 			let err = co::ERROR(
 				unsafe {
 					advapi32::RegEnumValueW(
 						self.ptr,
 						index,
-						nameBuf.as_mut_ptr(),
-						&mut lenBuf,
+						name_buf.as_mut_ptr(),
+						&mut len_buf,
 						std::ptr::null_mut(),
-						&mut rawDataType,
+						&mut raw_data_type,
 						std::ptr::null_mut(),
 						std::ptr::null_mut(),
 					)
@@ -158,24 +161,25 @@ impl HKEY {
 			if err != co::ERROR::SUCCESS {
 				return Err(err);
 			}
-			namesTypesVec.push((nameBuf.to_string(), co::REG(rawDataType)));
+			names_types_vec.push((name_buf.to_string(), co::REG(raw_data_type)));
 		}
 
-		namesTypesVec.sort_by(|a, b| a.0.to_uppercase().cmp(&b.0.to_uppercase()));
-		Ok(namesTypesVec)
+		names_types_vec.sort_by(|a, b| a.0.to_uppercase().cmp(&b.0.to_uppercase()));
+		Ok(names_types_vec)
 	}
 
 	/// [`RegGetValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
 	/// method.
 	///
-	/// The data type will be automatically queried with a first call to `RegGetValue`.
+	/// The data type will be automatically queried with a first call to
+	/// `RegGetValue`.
 	///
 	/// # Examples
 	///
 	/// ```rust,ignore
 	/// use winsafe::{HKEY, RegistryValue};
 	///
-	/// let val = HKEY::CURRENT_USER.RegGetValue(
+	/// let val = HKEY::CURRENT_USER.GetValue(
 	///     "Control Panel\\Mouse",
 	///     "Beep",
 	/// ).unwrap();
@@ -194,25 +198,25 @@ impl HKEY {
 	///     RegistryValue::None => println!("No value"),
 	/// }
 	/// ```
-	pub fn RegGetValue(self,
-		lpSubKey: &str, lpValue: &str) -> WinResult<RegistryValue>
+	pub fn GetValue(self,
+		sub_key: &str, value: &str) -> WinResult<RegistryValue>
 	{
-		let wSubKey = WString::from_str(lpSubKey);
-		let wValueName = WString::from_str(lpValue);
-		let mut rawDataType: u32 = 0;
-		let mut dataLen: u32 = 0;
+		let sub_key_w = WString::from_str(sub_key);
+		let value_w = WString::from_str(value);
+		let mut raw_data_type = u32::default();
+		let mut data_len = u32::default();
 
 		// Query data type and length.
 		match co::ERROR(
 			unsafe {
 				advapi32::RegGetValueW(
 					self.ptr,
-					wSubKey.as_ptr(),
-					wValueName.as_ptr(),
+					sub_key_w.as_ptr(),
+					value_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
-					&mut rawDataType,
+					&mut raw_data_type,
 					std::ptr::null_mut(),
-					&mut dataLen,
+					&mut data_len,
 				)
 			} as _
 		) {
@@ -220,91 +224,40 @@ impl HKEY {
 			err => return Err(err),
 		}
 
-		// Retrieve value according to informed data type.
-		match co::REG(rawDataType) {
-			co::REG::NONE => Ok(RegistryValue::None), // no value to query
-			co::REG::DWORD => {
-				let mut dwordBuf: u32 = 0;
+		// Retrieve value.
+		let mut buf: Vec<u8> = vec![0x00; data_len as _];
 
-				match co::ERROR(
-					unsafe {
-						advapi32::RegGetValueW( // query DWORD value
-							self.ptr,
-							wSubKey.as_ptr(),
-							wValueName.as_ptr(),
-							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
-							std::ptr::null_mut(),
-							&mut dwordBuf as *mut _ as _,
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
-					err => Err(err),
-				}
-			},
-			co::REG::QWORD => {
-				let mut qwordBuf: u64 = 0;
+		match co::ERROR(
+			unsafe {
+				advapi32::RegGetValueW(
+					self.ptr,
+					sub_key_w.as_ptr(),
+					value_w.as_ptr(),
+					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
+					std::ptr::null_mut(),
+					buf.as_mut_ptr() as _,
+					&mut data_len,
+				)
+			} as _
+		) {
+			co::ERROR::SUCCESS => {},
+			err => return Err(err),
+		}
 
-				match co::ERROR(
-					unsafe {
-						advapi32::RegGetValueW( // query QWORD value
-							self.ptr,
-							wSubKey.as_ptr(),
-							wValueName.as_ptr(),
-							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
-							std::ptr::null_mut(),
-							&mut qwordBuf as *mut _ as _,
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
-					err => Err(err),
-				}
-			},
+		// Return the value according to type.
+		match co::REG(raw_data_type) {
+			co::REG::NONE => Ok(RegistryValue::None),
+			co::REG::DWORD => Ok(RegistryValue::Dword(
+				u32::from_ne_bytes(buf.try_into().unwrap())),
+			),
+			co::REG::QWORD => Ok(RegistryValue::Qword(
+				u64::from_ne_bytes(buf.try_into().unwrap())),
+			),
 			co::REG::SZ => {
-				let mut szBuf: Vec<u16> = vec![0; dataLen as usize]; // alloc wchar buffer
-
-				match co::ERROR(
-					unsafe {
-						advapi32::RegGetValueW( // query string value
-							self.ptr,
-							wSubKey.as_ptr(),
-							wValueName.as_ptr(),
-							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
-							std::ptr::null_mut(),
-							szBuf.as_mut_ptr() as _,
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(
-						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
-					),
-					err => Err(err),
-				}
+				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
+				Ok(RegistryValue::Sz(WString::from_wchars_slice(&vec16)))
 			},
-			co::REG::BINARY => {
-				let mut byteBuf: Vec<u8> = vec![0; dataLen as usize]; // alloc byte buffer
-
-				match co::ERROR(
-					unsafe {
-						advapi32::RegGetValueW( // query binary value
-							self.ptr,
-							wSubKey.as_ptr(),
-							wValueName.as_ptr(),
-							(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
-							std::ptr::null_mut(),
-							byteBuf.as_mut_ptr() as _,
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
-					err => Err(err),
-				}
-			},
+			co::REG::BINARY => Ok(RegistryValue::Binary(buf)),
 			_ => Ok(RegistryValue::None), // other types not implemented yet
 		}
 	}
@@ -313,23 +266,23 @@ impl HKEY {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HKEY::RegCloseKey`](crate::HKEY::RegCloseKey) call.
+	/// [`HKEY::CloseKey`](crate::HKEY::CloseKey) call.
 	///
 	/// # Examples
 	///
 	/// ```rust,ignore
 	/// use winsafe::{co, HKEY};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
 	///     "Control Panel\\Mouse",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// ).unwrap();
 	///
-	/// hkey.RegCloseKey().unwrap();
+	/// hkey.CloseKey().unwrap();
 	/// ```
-	pub fn RegOpenKeyEx(self, lpSubKey: &str,
-		ulOptions: co::REG_OPTION, samDesired: co::KEY) -> WinResult<HKEY>
+	pub fn OpenKeyEx(self, sub_key: &str,
+		options: co::REG_OPTION, access_rights: co::KEY) -> WinResult<HKEY>
 	{
 		let mut hKey = Self::NULL;
 
@@ -337,9 +290,9 @@ impl HKEY {
 			unsafe {
 				advapi32::RegOpenKeyExW(
 					self.ptr,
-					WString::from_str(lpSubKey).as_ptr(),
-					ulOptions.0,
-					samDesired.0,
+					WString::from_str(sub_key).as_ptr(),
+					options.0,
+					access_rights.0,
 					&mut hKey.ptr,
 				)
 			} as _
@@ -351,60 +304,62 @@ impl HKEY {
 
 	/// [`RegQueryInfoKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
 	/// method.
-	pub fn RegQueryInfoKey(self,
-		mut lpClass: Option<&mut WString>,
-		lpcSubKeys: Option<&mut u32>,
-		lpcbMaxSubKeyLen: Option<&mut u32>,
-		lpcbMaxClassLen: Option<&mut u32>,
-		lpcValues: Option<&mut u32>,
-		lpcbMaxValueNameLen: Option<&mut u32>,
-		lpcbMaxValueLen: Option<&mut u32>,
-		lpcbSecurityDescriptor: Option<&mut u32>,
-		lpftLastWriteTime: Option<&mut FILETIME>) -> WinResult<()>
+	pub fn QueryInfoKey(self,
+		mut class: Option<&mut WString>,
+		num_sub_keys: Option<&mut u32>,
+		max_sub_key_name_len: Option<&mut u32>,
+		max_class_len: Option<&mut u32>,
+		num_values: Option<&mut u32>,
+		max_value_name_len: Option<&mut u32>,
+		max_value_len: Option<&mut u32>,
+		security_descr_len: Option<&mut u32>,
+		last_write_time: Option<&mut FILETIME>) -> WinResult<()>
 	{
-		let (mut lpClass2, mut lpcchClass) = match &mut lpClass {
-			Some(lpClass) => {
-				if lpClass.buffer_size() < 32 {
-					lpClass.realloc_buffer(32); // arbitrary
+		const BLOCK: usize = 32; // arbitrary
+
+		let (mut class_ptr, mut class_len) = match &mut class {
+			Some(class) => {
+				if class.buffer_size() < BLOCK {
+					class.realloc_buffer(BLOCK); // make it at least BLOCK_SZ
 				}
-				(unsafe { lpClass.as_mut_ptr() }, lpClass.buffer_size() as u32)
+				(unsafe { class.as_mut_ptr() }, class.buffer_size() as u32)
 			},
 			None => (std::ptr::null_mut(), 0),
 		};
 
-		let lpcSubKeys2 = lpcSubKeys.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpcbMaxSubKeyLen2 = lpcbMaxSubKeyLen.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpcbMaxClassLen2 = lpcbMaxClassLen.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpcValues2 = lpcValues.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpcbMaxValueNameLen2 = lpcbMaxValueNameLen.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpcbMaxValueLen2 = lpcbMaxValueLen.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpcbSecurityDescriptor2 = lpcbSecurityDescriptor.map_or(std::ptr::null_mut(), |re| re as _);
-		let lpftLastWriteTime2 = lpftLastWriteTime.map_or(std::ptr::null_mut(), |re| re as *mut _ as _);
+		let num_sub_keys = num_sub_keys.map_or(std::ptr::null_mut(), |re| re as _);
+		let max_sub_key_name_len = max_sub_key_name_len.map_or(std::ptr::null_mut(), |re| re as _);
+		let max_class_len = max_class_len.map_or(std::ptr::null_mut(), |re| re as _);
+		let num_values = num_values.map_or(std::ptr::null_mut(), |re| re as _);
+		let max_value_name_len = max_value_name_len.map_or(std::ptr::null_mut(), |re| re as _);
+		let max_value_len = max_value_len.map_or(std::ptr::null_mut(), |re| re as _);
+		let security_descr_len = security_descr_len.map_or(std::ptr::null_mut(), |re| re as _);
+		let last_write_time = last_write_time.map_or(std::ptr::null_mut(), |re| re as *mut _ as _);
 
-		loop { // until lpClass is large enough
+		loop { // until class is large enough
 			match co::ERROR(
 				unsafe {
 					advapi32::RegQueryInfoKeyW(
 						self.ptr,
-						lpClass2,
-						&mut lpcchClass,
+						class_ptr,
+						&mut class_len,
 						std::ptr::null_mut(),
-						lpcSubKeys2,
-						lpcbMaxSubKeyLen2,
-						lpcbMaxClassLen2,
-						lpcValues2,
-						lpcbMaxValueNameLen2,
-						lpcbMaxValueLen2,
-						lpcbSecurityDescriptor2,
-						lpftLastWriteTime2,
+						num_sub_keys,
+						max_sub_key_name_len,
+						max_class_len,
+						num_values,
+						max_value_name_len,
+						max_value_len,
+						security_descr_len,
+						last_write_time,
 					)
 				} as _
 			) {
-				co::ERROR::MORE_DATA => match &mut lpClass {
-					Some(lpClass) => {
-						lpClass.realloc_buffer(lpClass.buffer_size() + 32); // arbitrary
-						lpClass2 = unsafe { lpClass.as_mut_ptr() };
-						lpcchClass = lpClass.buffer_size() as _;
+				co::ERROR::MORE_DATA => match &mut class {
+					Some(class) => {
+						class.realloc_buffer(class.buffer_size() + BLOCK);
+						class_ptr = unsafe { class.as_mut_ptr() };
+						class_len = class.buffer_size() as _;
 					},
 					None => return Err(co::ERROR::MORE_DATA),
 				},
@@ -425,13 +380,13 @@ impl HKEY {
 	/// ```rust,ignore
 	/// use winsafe::{co, HKEY, RegistryValue};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
 	///     "Control Panel\\Mouse",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// ).unwrap();
 	///
-	/// let val = hkey.RegQueryValueEx("Beep")
+	/// let val = hkey.QueryValueEx("Beep")
 	///   .unwrap();
 	///
 	/// match val {
@@ -448,23 +403,23 @@ impl HKEY {
 	///     RegistryValue::None => println!("No value"),
 	/// }
 	///
-	/// hkey.RegCloseKey().unwrap();
+	/// hkey.CloseKey().unwrap();
 	/// ```
-	pub fn RegQueryValueEx(self, lpValueName: &str) -> WinResult<RegistryValue> {
-		let wValueName = WString::from_str(lpValueName);
-		let mut rawDataType: u32 = 0;
-		let mut dataLen: u32 = 0;
+	pub fn QueryValueEx(self, value: &str) -> WinResult<RegistryValue> {
+		let value_w = WString::from_str(value);
+		let mut raw_data_type = u32::default();
+		let mut data_len = u32::default();
 
 		// Query data type and length.
 		match co::ERROR(
 			unsafe {
 				advapi32::RegQueryValueExW(
 					self.ptr,
-					wValueName.as_ptr(),
+					value_w.as_ptr(),
 					std::ptr::null_mut(),
-					&mut rawDataType,
+					&mut raw_data_type,
 					std::ptr::null_mut(),
-					&mut dataLen,
+					&mut data_len,
 				)
 			} as _
 		) {
@@ -472,87 +427,39 @@ impl HKEY {
 			err => return Err(err),
 		}
 
-		// Retrieve value according to informed data type.
-		match co::REG(rawDataType) {
-			co::REG::NONE => Ok(RegistryValue::None), // no value to query
-			co::REG::DWORD => {
-				let mut dwordBuf: u32 = 0;
+		// Retrieve value.
+		let mut buf: Vec<u8> = vec![0x00; data_len as _];
 
-				match co::ERROR(
-					unsafe {
-						advapi32::RegQueryValueExW( // query DWORD value
-							self.ptr,
-							wValueName.as_ptr(),
-							std::ptr::null_mut(),
-							std::ptr::null_mut(),
-							&mut dwordBuf as *mut _ as _,
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(RegistryValue::Dword(dwordBuf)),
-					err => Err(err),
-				}
-			},
-			co::REG::QWORD => {
-				let mut qwordBuf: u64 = 0;
+		match co::ERROR(
+			unsafe {
+				advapi32::RegQueryValueExW(
+					self.ptr,
+					value_w.as_ptr(),
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+					buf.as_mut_ptr() as _,
+					&mut data_len,
+				)
+			} as _
+		) {
+			co::ERROR::SUCCESS => {},
+			err => return Err(err),
+		}
 
-				match co::ERROR(
-					unsafe {
-						advapi32::RegQueryValueExW( // query QWORD value
-							self.ptr,
-							wValueName.as_ptr(),
-							std::ptr::null_mut(),
-							std::ptr::null_mut(),
-							&mut qwordBuf as *mut _ as _,
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(RegistryValue::Qword(qwordBuf)),
-					err => Err(err),
-				}
-			},
+		// Return the value according to type.
+		match co::REG(raw_data_type) {
+			co::REG::NONE => Ok(RegistryValue::None),
+			co::REG::DWORD => Ok(RegistryValue::Dword(
+				u32::from_ne_bytes(buf.try_into().unwrap())),
+			),
+			co::REG::QWORD => Ok(RegistryValue::Qword(
+				u64::from_ne_bytes(buf.try_into().unwrap())),
+			),
 			co::REG::SZ => {
-				let mut szBuf: Vec<u16> = vec![0; dataLen as usize]; // alloc wchar buffer
-
-				match co::ERROR(
-					unsafe {
-						advapi32::RegQueryValueExW( // query string value
-							self.ptr,
-							wValueName.as_ptr(),
-							std::ptr::null_mut(),
-							std::ptr::null_mut(),
-							szBuf.as_mut_ptr() as _,
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(
-						RegistryValue::Sz(WString::from_wchars_slice(&szBuf)),
-					),
-					err => Err(err),
-				}
+				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
+				Ok(RegistryValue::Sz(WString::from_wchars_slice(&vec16)))
 			},
-			co::REG::BINARY => {
-				let mut byteBuf: Vec<u8> = vec![0; dataLen as usize]; // alloc byte buffer
-
-				match co::ERROR(
-					unsafe {
-						advapi32::RegQueryValueExW( // query binary value
-							self.ptr,
-							wValueName.as_ptr(),
-							std::ptr::null_mut(),
-							std::ptr::null_mut(),
-							byteBuf.as_mut_ptr(),
-							&mut dataLen,
-						)
-					} as _
-				) {
-					co::ERROR::SUCCESS => Ok(RegistryValue::Binary(byteBuf)),
-					err => Err(err),
-				}
-			},
+			co::REG::BINARY => Ok(RegistryValue::Binary(buf)),
 			_ => Ok(RegistryValue::None), // other types not implemented yet
 		}
 	}
@@ -561,31 +468,31 @@ impl HKEY {
 	/// method.
 	///
 	/// If the value doesn't exist, if will be created. If new type is different
-	/// from current type, new type will prevail.
+	/// from current type, new type will take over.
 	///
 	/// # Examples
 	///
 	/// ```rust,ignore
 	/// use winsafe::{HKEY, RegistryValue};
 	///
-	/// HKEY::CURRENT_USER.RegSetKeyValue(
+	/// HKEY::CURRENT_USER.SetKeyValue(
 	///     "Software\\My Company",
 	///     "Color",
 	///     RegistryValue::Sz("blue".to_owned()),
 	/// ).unwrap();
 	/// ```
-	pub fn RegSetKeyValue(self, lpSubKey: &str,
-		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
+	pub fn SetKeyValue(self,
+		sub_key: &str, value: &str, data: RegistryValue) -> WinResult<()>
 	{
 		match co::ERROR(
 			unsafe {
 				advapi32::RegSetKeyValueW(
 					self.ptr,
-					WString::from_str(lpSubKey).as_ptr(),
-					WString::from_str(lpValueName).as_ptr(),
-					lpData.reg_type().0,
-					lpData.as_ptr(),
-					lpData.len() as _,
+					WString::from_str(sub_key).as_ptr(),
+					WString::from_str(value).as_ptr(),
+					data.reg_type().0,
+					data.as_ptr(),
+					data.len() as _,
 				)
 			} as _
 		) {
@@ -605,31 +512,31 @@ impl HKEY {
 	/// ```rust,ignore
 	/// use winsafe::{co, HKEY, RegistryValue};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
 	///     "Console\\Git Bash",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::ALL_ACCESS,
 	/// ).unwrap();
 	///
-	/// hkey.RegSetValueEx(
+	/// hkey.SetValueEx(
 	///     "Color",
 	///     RegistryValue::Sz("blue".to_owned()),
 	/// ).unwrap();
 	///
-	/// hkey.RegCloseKey().unwrap();
+	/// hkey.CloseKey().unwrap();
 	/// ```
-	pub fn RegSetValueEx(self,
-		lpValueName: &str, lpData: RegistryValue) -> WinResult<()>
+	pub fn SetValueEx(self,
+		value: &str, data: RegistryValue) -> WinResult<()>
 	{
 		match co::ERROR(
 			unsafe {
 				advapi32::RegSetValueExW(
 					self.ptr,
-					WString::from_str(lpValueName).as_ptr(),
+					WString::from_str(value).as_ptr(),
 					0,
-					lpData.reg_type().0,
-					lpData.as_ptr() as _,
-					lpData.len() as _,
+					data.reg_type().0,
+					data.as_ptr() as _,
+					data.len() as _,
 				)
 			} as _
 		) {

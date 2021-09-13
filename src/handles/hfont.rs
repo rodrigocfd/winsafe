@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::structs::LOGFONT;
+use crate::structs::{LOGFONT, SIZE};
 use crate::various::WString;
 
 pub_struct_handle_gdi! {
@@ -20,22 +20,22 @@ impl HFONT {
 	/// **Note:** Must be paired with an
 	/// [`HFONT::DeleteObject`](crate::HFONT::DeleteObject) call.
 	pub fn CreateFont(
-		cHeight: i32, cWidth: i32, cEscapement: i32, cOrientation: i32,
-		cWeight: co::FW, bItalic: bool, bUnderline: bool, bStrikeOut: bool,
-		iCharSet: co::CHARSET,
-		iOutPrecision: co::OUT_PRECIS, iClipPrecision: co::CLIP,
-		iQuality: co::QUALITY, iPitchAndFamily: co::PITCH,
-		pszFaceName: &str) -> WinResult<HFONT>
+		sz: SIZE, escapement: i32, orientation: i32,
+		weight: co::FW, italic: bool, underline: bool, strike_out: bool,
+		char_set: co::CHARSET,
+		out_precision: co::OUT_PRECIS, clip_precision: co::CLIP,
+		quality: co::QUALITY, pitch_and_family: co::PITCH,
+		face_name: &str) -> WinResult<HFONT>
 	{
 		unsafe {
 			gdi32::CreateFontW(
-				cHeight, cWidth, cEscapement, cOrientation,
-				cWeight.0 as _,
-				bItalic as _, bUnderline as _, bStrikeOut as _,
-				iCharSet.0 as _,
-				iOutPrecision.0 as _, iClipPrecision.0 as _,
-				iQuality.0 as _, iPitchAndFamily.0 as _,
-				WString::from_str(pszFaceName).as_ptr(),
+				sz.cy, sz.cx, escapement, orientation,
+				weight.0 as _,
+				italic as _, underline as _, strike_out as _,
+				char_set.0 as _,
+				out_precision.0 as _, clip_precision.0 as _,
+				quality.0 as _, pitch_and_family.0 as _,
+				WString::from_str(face_name).as_ptr(),
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
@@ -46,20 +46,20 @@ impl HFONT {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HFONT::DeleteObject`](crate::HFONT::DeleteObject) call.
-	pub fn CreateFontIndirect(lplf: &LOGFONT) -> WinResult<HFONT> {
-		unsafe { gdi32::CreateFontIndirectW(lplf as *const _ as _).as_mut() }
+	pub fn CreateFontIndirect(lf: &LOGFONT) -> WinResult<HFONT> {
+		unsafe { gdi32::CreateFontIndirectW(lf as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
-	pub fn GetObject(self, pv: &mut LOGFONT) -> WinResult<()> {
+	pub fn GetObject(self, lf: &mut LOGFONT) -> WinResult<()> {
 		match unsafe {
 			gdi32::GetObjectW(
 				self.ptr,
 				std::mem::size_of::<LOGFONT>() as _,
-				pv as *mut _ as _,
+				lf as *mut _ as _,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -69,8 +69,8 @@ impl HFONT {
 
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
-	pub fn GetStockObject(i: co::STOCK_FONT) -> WinResult<HFONT> {
-		unsafe { gdi32::GetStockObject(i.0).as_mut() }
+	pub fn GetStockObject(sf: co::STOCK_FONT) -> WinResult<HFONT> {
+		unsafe { gdi32::GetStockObject(sf.0).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}

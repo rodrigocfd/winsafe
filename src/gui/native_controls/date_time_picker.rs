@@ -97,7 +97,7 @@ impl DateTimePicker {
 						our_hwnd.SendMessage(dtm::GetIdealSize { size: &mut sz_ideal });
 						sz.cx = sz_ideal.cx; // already adjusted for DPI
 
-						our_hwnd.SetWindowPos(HwndPlace::None, 0, 0, sz.cx, sz.cy,
+						our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(), sz,
 							co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 					}
 

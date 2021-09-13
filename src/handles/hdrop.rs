@@ -70,9 +70,9 @@ impl HDROP {
 	/// area of the window
 	pub fn DragQueryPoint(self) -> (POINT, bool) {
 		let mut pt = POINT::default();
-		let clientArea = unsafe {
+		let client_area = unsafe {
 			shell32::DragQueryPoint(self.ptr, &mut pt as *mut _ as _)
 		};
-		(pt, clientArea != 0)
+		(pt, client_area != 0)
 	}
 }

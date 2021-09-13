@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::structs::RECT;
+use crate::structs::{RECT, SIZE};
 
 pub_struct_handle_gdi! {
 	/// Handle to a
@@ -19,8 +19,12 @@ impl HRGN {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
-	pub fn CreateRectRgn(x1: i32, y1: i32, x2: i32, y2: i32) -> WinResult<HRGN> {
-		unsafe { gdi32::CreateRectRgn(x1, y1, x2, y2).as_mut() }
+	pub fn CreateRectRgn(bounds: RECT) -> WinResult<HRGN> {
+		unsafe {
+			gdi32::CreateRectRgn(
+				bounds.left, bounds.top, bounds.right, bounds.bottom,
+			).as_mut()
+		}
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -30,8 +34,8 @@ impl HRGN {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
-	pub fn CreateRectRgnIndirect(lprect: &RECT) -> WinResult<HRGN> {
-		unsafe { gdi32::CreateRectRgnIndirect(lprect as *const _ as _).as_mut() }
+	pub fn CreateRectRgnIndirect(rc: &RECT) -> WinResult<HRGN> {
+		unsafe { gdi32::CreateRectRgnIndirect(rc as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -42,10 +46,14 @@ impl HRGN {
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn CreateRoundRectRgn(
-		x1: i32, y1: i32, x2: i32, y2: i32, w: i32, h: i32) -> WinResult<HRGN>
+		bounds: RECT, size: SIZE) -> WinResult<HRGN>
 	{
-		unsafe { gdi32::CreateRoundRectRgn(x1, y1, x2, y2, w, h).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe {
+			gdi32::CreateRoundRectRgn(
+				bounds.left, bounds.top, bounds.right, bounds.top,
+				size.cx, size.cy,
+			).as_mut()
+		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -75,9 +83,9 @@ impl HRGN {
 
 	/// [`RectInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// method.
-	pub fn RectInRegion(self, lprect: &RECT) -> bool {
+	pub fn RectInRegion(self, rc: &RECT) -> bool {
 		unsafe {
-			gdi32::RectInRegion(self.ptr, lprect as *const _ as _) != 0
+			gdi32::RectInRegion(self.ptr, rc as *const _ as _) != 0
 		}
 	}
 }

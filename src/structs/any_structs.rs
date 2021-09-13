@@ -869,6 +869,11 @@ impl POINT {
 	pub const fn new(x: i32, y: i32) -> POINT {
 		Self { x, y }
 	}
+
+	/// Tells whether the struct contains exactly the given values.
+	pub fn is(&self, x: i32, y: i32) -> bool {
+		self.x == x && self.y == y
+	}
 }
 
 /// [`PROCESS_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information)
@@ -928,6 +933,11 @@ impl RECT {
 	/// Creates a new `RECT`.
 	pub const fn new(left: i32, top: i32, right: i32, bottom: i32) -> RECT {
 		Self { left, top, right, bottom }
+	}
+
+	/// Tells whether the struct contains exactly the given values.
+	pub fn is(&self, left: i32, top: i32, right: i32, bottom: i32) -> bool {
+		self.left == left && self.top == top && self.right == right && self.bottom == bottom
 	}
 }
 
@@ -1080,6 +1090,11 @@ impl SIZE {
 	/// Creates a new `SIZE`.
 	pub const fn new(cx: i32, cy: i32) -> SIZE {
 		Self { cx, cy }
+	}
+
+	/// Tells whether the struct contains exactly the given values.
+	pub fn is(&self, cx: i32, cy: i32) -> bool {
+		self.cx == cx && self.cy == cy
 	}
 }
 

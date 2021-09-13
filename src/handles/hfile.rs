@@ -65,23 +65,23 @@ impl HFILE {
 	/// hfile.CloseHandle().unwrap();
 	/// ```
 	pub fn CreateFile(
-		lpFileName: &str,
-		dwDesiredAccess: co::GENERIC,
-		dwShareMode: co::FILE_SHARE,
-		lpSecurityAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-		dwCreationDisposition: co::DISPOSITION,
-		dwFlagsAndAttributes: co::FILE_ATTRIBUTE,
-		hTemplateFile: Option<HFILE>) -> WinResult<(HFILE, co::ERROR)>
+		file_name: &str,
+		desired_access: co::GENERIC,
+		share_mode: co::FILE_SHARE,
+		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		creation_disposition: co::DISPOSITION,
+		flags_and_attrs: co::FILE_ATTRIBUTE,
+		hfile_template: Option<HFILE>) -> WinResult<(HFILE, co::ERROR)>
 	{
 		match unsafe {
 			kernel32::CreateFileW(
-				WString::from_str(lpFileName).as_ptr(),
-				dwDesiredAccess.0,
-				dwShareMode.0,
-				lpSecurityAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-				dwCreationDisposition.0,
-				dwFlagsAndAttributes.0,
-				hTemplateFile.map_or(std::ptr::null_mut(), |h| h.ptr),
+				WString::from_str(file_name).as_ptr(),
+				desired_access.0,
+				share_mode.0,
+				security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				creation_disposition.0,
+				flags_and_attrs.0,
+				hfile_template.map_or(std::ptr::null_mut(), |h| h.ptr),
 			) as _
 		} {
 			INVALID_HANDLE_VALUE => Err(GetLastError()),
@@ -95,19 +95,19 @@ impl HFILE {
 	/// **Note:** Must be paired with an
 	/// [`HFILEMAP::CloseHandle`](crate::HFILEMAP::CloseHandle) call.
 	pub fn CreateFileMapping(self,
-		lpFileMappingAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-		flProtect: co::PAGE,
-		maximumSize: Option<u64>,
-		lpName: Option<&str>) -> WinResult<HFILEMAP>
+		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		protect: co::PAGE,
+		max_size: Option<u64>,
+		mapping_name: Option<&str>) -> WinResult<HFILEMAP>
 	{
 		unsafe {
 			kernel32::CreateFileMappingW(
 				self.ptr,
-				lpFileMappingAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-				flProtect.0,
-				maximumSize.map_or(0, |n| HIDWORD(n)),
-				maximumSize.map_or(0, |n| LODWORD(n)),
-				lpName.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				protect.0,
+				max_size.map_or(0, |n| HIDWORD(n)),
+				max_size.map_or(0, |n| LODWORD(n)),
+				mapping_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
 			).as_mut()
 		}.map(|ptr| HFILEMAP { ptr })
 			.ok_or_else(|| GetLastError())
@@ -116,13 +116,13 @@ impl HFILE {
 	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 	/// method.
 	pub fn GetFileInformationByHandle(self,
-		lpFileInformation: &mut BY_HANDLE_FILE_INFORMATION) -> WinResult<()>
+		fi: &mut BY_HANDLE_FILE_INFORMATION) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				kernel32::GetFileInformationByHandle(
 					self.ptr,
-					lpFileInformation as *mut _ as _,
+					fi as *mut _ as _,
 				)
 			},
 		)
@@ -131,10 +131,10 @@ impl HFILE {
 	/// [`GetFileSizeEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// method.
 	pub fn GetFileSizeEx(self) -> WinResult<usize> {
-		let mut szBuf = 0;
-		match unsafe { kernel32::GetFileSizeEx(self.ptr, &mut szBuf) } {
+		let mut sz_buf = 0;
+		match unsafe { kernel32::GetFileSizeEx(self.ptr, &mut sz_buf) } {
 			0 => Err(GetLastError()),
-			_ => Ok(szBuf as _),
+			_ => Ok(sz_buf as _),
 		}
 	}
 
@@ -155,15 +155,15 @@ impl HFILE {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HFILE::UnlockFile`](crate::HFILE::UnlockFile) call.
-	pub fn LockFile(self, offset: u64, numBytesToLock: u64) -> WinResult<()> {
+	pub fn LockFile(self, offset: u64, num_bytes_to_lock: u64) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				kernel32::LockFile(
 					self.ptr,
 					LODWORD(offset),
 					HIDWORD(offset),
-					LODWORD(numBytesToLock),
-					HIDWORD(numBytesToLock),
+					LODWORD(num_bytes_to_lock),
+					HIDWORD(num_bytes_to_lock),
 				)
 			},
 		)
@@ -172,20 +172,20 @@ impl HFILE {
 	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// method.
 	pub fn ReadFile(self,
-		numBytesToRead: u32,
-		lpOverlapped: Option<&mut OVERLAPPED>) -> WinResult<Vec<u8>>
+		num_bytes_to_read: u32,
+		overlapped: Option<&mut OVERLAPPED>) -> WinResult<Vec<u8>>
 	{
-		let mut buf = vec![0; numBytesToRead as _];
-		let mut bytesRead: u32 = 0;
+		let mut buf = vec![0; num_bytes_to_read as _];
+		let mut bytes_read: u32 = 0;
 
 		bool_to_winresult(
 			unsafe {
 				kernel32::ReadFile(
 					self.ptr,
 					buf.as_mut_ptr() as _,
-					numBytesToRead,
-					&mut bytesRead,
-					lpOverlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					num_bytes_to_read,
+					&mut bytes_read,
+					overlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
 		).map(|_| buf)
@@ -200,34 +200,36 @@ impl HFILE {
 	/// [`SetFilePointerEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
 	/// method.
 	pub fn SetFilePointerEx(self,
-		liDistanceToMove: i64,
-		dwMoveMethod: co::FILE_STARTING_POINT) -> WinResult<i64>
+		distance_to_move: i64,
+		move_method: co::FILE_STARTING_POINT) -> WinResult<i64>
 	{
-		let mut newOffset: i64 = 0;
+		let mut new_offset: i64 = 0;
 
 		bool_to_winresult(
 			unsafe {
 				kernel32::SetFilePointerEx(
 					self.ptr,
-					liDistanceToMove,
-					&mut newOffset,
-					dwMoveMethod.0,
+					distance_to_move,
+					&mut new_offset,
+					move_method.0,
 				)
 			},
-		).map(|_| newOffset)
+		).map(|_| new_offset)
 	}
 
 	/// [`UnlockFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// method.
-	pub fn UnlockFile(self, offset: u64, numBytesToLock: u64) -> WinResult<()> {
+	pub fn UnlockFile(self,
+		offset: u64, num_bytes_to_lock: u64) -> WinResult<()>
+	{
 		bool_to_winresult(
 			unsafe {
 				kernel32::UnlockFile(
 					self.ptr,
 					LODWORD(offset),
 					HIDWORD(offset),
-					LODWORD(numBytesToLock),
-					HIDWORD(numBytesToLock),
+					LODWORD(num_bytes_to_lock),
+					HIDWORD(num_bytes_to_lock),
 				)
 			},
 		)
@@ -238,10 +240,9 @@ impl HFILE {
 	///
 	/// Returns the number of bytes written.
 	pub fn WriteFile(self,
-		buffer: &[u8],
-		lpOverlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+		buffer: &[u8], overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
 	{
-		let mut bytesWritten: u32 = 0;
+		let mut bytes_written: u32 = 0;
 
 		bool_to_winresult(
 			unsafe {
@@ -249,10 +250,10 @@ impl HFILE {
 					self.ptr,
 					buffer.as_ptr() as _,
 					buffer.len() as _,
-					&mut bytesWritten,
-					lpOverlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					&mut bytes_written,
+					overlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
-		).map(|_| bytesWritten)
+		).map(|_| bytes_written)
 	}
 }

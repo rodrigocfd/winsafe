@@ -17,25 +17,25 @@ impl HPEN {
 	/// [`CreatePen`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// static method.
 	pub fn CreatePen(
-		iStyle: co::PS, cWidth: i32, color: COLORREF) -> WinResult<HPEN>
+		style: co::PS, width: i32, color: COLORREF) -> WinResult<HPEN>
 	{
-		unsafe { gdi32::CreatePen(iStyle.0, cWidth, color.0).as_mut() }
+		unsafe { gdi32::CreatePen(style.0, width, color.0).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreatePenIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
 	/// static method.
-	pub fn CreatePenIndirect(plpen: &mut LOGPEN) -> WinResult<HPEN> {
-		unsafe { gdi32::CreatePenIndirect(plpen as *const _ as _).as_mut() }
+	pub fn CreatePenIndirect(lp: &mut LOGPEN) -> WinResult<HPEN> {
+		unsafe { gdi32::CreatePenIndirect(lp as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
-	pub fn GetStockObject(i: co::STOCK_PEN) -> WinResult<HPEN> {
-		unsafe { gdi32::GetStockObject(i.0).as_mut() }
+	pub fn GetStockObject(sp: co::STOCK_PEN) -> WinResult<HPEN> {
+		unsafe { gdi32::GetStockObject(sp.0).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}

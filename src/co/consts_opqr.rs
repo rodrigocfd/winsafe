@@ -76,6 +76,7 @@ pub_struct_const! { ODT_C, u32,
 }
 
 pub_struct_const! { OUT_PRECIS, u8,
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `out_precision` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	=>
 	DEFAULT, 0
@@ -92,8 +93,8 @@ pub_struct_const! { OUT_PRECIS, u8,
 }
 
 pub_struct_const! { PAGE, u32,
-	/// [`HFILE::CreateFileMapping`](crate::HFILE::CreateFileMapping)
-	/// `flProtect` (`u32`).
+	/// [`HFILE::CreateFileMapping`](crate::HFILE::CreateFileMapping) `protect`
+	/// (`u32`).
 	=>
 	/// Allows views to be mapped for read-only, copy-on-write, or execute
 	/// access.
@@ -194,6 +195,7 @@ pub_struct_const! { PBST, u32,
 }
 
 pub_struct_const! { PITCH, u8,
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `pitch_and_family` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`), used with
 	/// [`FF`](crate::co::FF).
 	=>
@@ -210,7 +212,7 @@ impl PITCH {
 }
 
 pub_struct_const! { PM, u32,
-	/// [`PeekMessage`](crate::PeekMessage) `wRemoveMsg` (`u32`).
+	/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
 	=>
 	NOREMOVE, 0x0000
 	REMOVE, 0x0001
@@ -272,7 +274,7 @@ pub_struct_const! { PROCESSOR_ARCHITECTURE, u16,
 }
 
 pub_struct_const! { PS, i32,
-	/// [`HPEN::CreatePen`](crate::HPEN::CreatePen) `iStyle` (`i32`).
+	/// [`HPEN::CreatePen`](crate::HPEN::CreatePen) `style` (`i32`).
 	=>
 	SOLID, 0
 	DASH, 1
@@ -284,6 +286,7 @@ pub_struct_const! { PS, i32,
 }
 
 pub_struct_const! { QUALITY, u8,
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `quality` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	=>
 	DEFAULT, 0
@@ -441,8 +444,10 @@ pub_struct_const! { REG, u32,
 }
 
 pub_struct_const! { REG_OPTION, u32,
-	/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `uOptions` (`u32`).
+	/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `options` (`u32`).
 	=>
+	/// None of the actual values (zero).
+	NoValue, 0
 	RESERVED, 0x0000_0000
 	NON_VOLATILE, 0x0000_0000
 	VOLATILE, 0x0000_0001

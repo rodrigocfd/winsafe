@@ -23,18 +23,18 @@ impl HTHEME {
 	/// [`DrawThemeBackground`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// method.
 	pub fn DrawThemeBackground(self,
-		hdc: HDC, iPartStateId: co::VS,
-		pRect: RECT, pClipRect: RECT) -> WinResult<()>
+		hdc: HDC, part_state: co::VS,
+		rc: RECT, rc_clip: RECT) -> WinResult<()>
 	{
 		hr_to_winresult(
 			unsafe {
 				uxtheme::DrawThemeBackground(
 					self.ptr,
 					hdc.ptr,
-					iPartStateId.part,
-					iPartStateId.state,
-					&pRect as *const _ as _,
-					&pClipRect as *const _ as _,
+					part_state.part,
+					part_state.state,
+					&rc as *const _ as _,
+					&rc_clip as *const _ as _,
 				)
 			},
 		)
@@ -49,43 +49,43 @@ impl HTHEME {
 	/// [`GetThemeBackgroundContentRect`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
 	/// method.
 	pub fn GetThemeBackgroundContentRect(self,
-		hdc: HDC, iPartStateId: co::VS, pBoundingRect: RECT) -> WinResult<RECT>
+		hdc: HDC, part_state: co::VS, bounds: RECT) -> WinResult<RECT>
 	{
-		let mut pContentRect = RECT::default();
+		let mut rc_content = RECT::default();
 
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundContentRect(
 					self.ptr,
 					hdc.ptr,
-					iPartStateId.part,
-					iPartStateId.state,
-					&pBoundingRect as *const _ as _,
-					&mut pContentRect as *mut _ as _,
+					part_state.part,
+					part_state.state,
+					&bounds as *const _ as _,
+					&mut rc_content as *mut _ as _,
 				)
 			},
-		).map(|_| pContentRect)
+		).map(|_| rc_content)
 	}
 
 	/// [`GetThemeBackgroundExtent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
 	/// method.
 	pub fn GetThemeBackgroundExtent(self,
-		hdc: HDC, iPartStateId: co::VS, pContentRect: RECT) -> WinResult<RECT>
+		hdc: HDC, part_state: co::VS, rc_content: RECT) -> WinResult<RECT>
 	{
-		let mut pExtentRect = RECT::default();
+		let mut rc_extent = RECT::default();
 
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundExtent(
 					self.ptr,
 					hdc.ptr,
-					iPartStateId.part,
-					iPartStateId.state,
-					&pContentRect as *const _ as _,
-					&mut pExtentRect as *mut _ as _,
+					part_state.part,
+					part_state.state,
+					&rc_content as *const _ as _,
+					&mut rc_extent as *mut _ as _,
 				)
 			},
-		 ).map(|_| pExtentRect)
+		 ).map(|_| rc_extent)
 	}
 
 	/// [`GetThemeBackgroundRegion`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
@@ -94,42 +94,42 @@ impl HTHEME {
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn GetThemeBackgroundRegion(self,
-		hdc: HDC, iPartStateId: co::VS, pRect: RECT) -> WinResult<HRGN>
+		hdc: HDC, part_state: co::VS, rc: RECT) -> WinResult<HRGN>
 	{
-		let mut pRegion = HRGN::NULL;
+		let mut hrgn = HRGN::NULL;
 
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundRegion(
 					self.ptr,
 					hdc.ptr,
-					iPartStateId.part,
-					iPartStateId.state,
-					&pRect as *const _ as _,
-					&mut pRegion as *mut _ as _,
+					part_state.part,
+					part_state.state,
+					&rc as *const _ as _,
+					&mut hrgn as *mut _ as _,
 				)
 			},
-		).map(|_| pRegion)
+		).map(|_| hrgn)
 	}
 
 	/// [`GetThemeColor`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
 	/// method.
 	pub fn GetThemeColor(self,
-		iPartStateId: co::VS, iPropId: co::TMT) -> WinResult<COLORREF>
+		part_state: co::VS, prop: co::TMT) -> WinResult<COLORREF>
 	{
-		let mut pColor = COLORREF(0);
+		let mut color = COLORREF(0);
 
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeColor(
 					self.ptr,
-					iPartStateId.part,
-					iPartStateId.state,
-					iPropId.0,
-					&mut pColor as *mut _ as _,
+					part_state.part,
+					part_state.state,
+					prop.0,
+					&mut color as *mut _ as _,
 				)
 			},
-		).map(|_| pColor)
+		).map(|_| color)
 	}
 
 	/// [`IsAppThemed`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isappthemed)
@@ -153,11 +153,11 @@ impl HTHEME {
 	/// [`IsThemeBackgroundPartiallyTransparent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
 	/// method.
 	pub fn IsThemeBackgroundPartiallyTransparent(self,
-		iPartStateId: co::VS) -> bool
+		part_state: co::VS) -> bool
 	{
 		unsafe {
 			uxtheme::IsThemeBackgroundPartiallyTransparent(
-				self.ptr, iPartStateId.part, iPartStateId.state) != 0
+				self.ptr, part_state.part, part_state.state) != 0
 		}
 	}
 
@@ -169,10 +169,10 @@ impl HTHEME {
 
 	/// [`IsThemePartDefined`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
 	/// method.
-	pub fn IsThemePartDefined(self, iPartStateId: co::VS) -> bool {
+	pub fn IsThemePartDefined(self, part_state: co::VS) -> bool {
 		unsafe {
 			uxtheme::IsThemePartDefined(
-				self.ptr, iPartStateId.part, iPartStateId.state) != 0
+				self.ptr, part_state.part, part_state.state) != 0
 		}
 	}
 }

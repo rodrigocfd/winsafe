@@ -26,14 +26,14 @@ impl HDC {
 	/// method.
 	pub fn AngleArc(self,
 		center: POINT, radius: u32,
-		startAngle: f32, sweepAngle: f32) -> WinResult<()>
+		start_angle: f32, sweep_angle: f32) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				gdi32::AngleArc(
 					self.ptr,
 					center.x, center.y,
-					radius, startAngle, sweepAngle,
+					radius, start_angle, sweep_angle,
 				)
 			},
 		)
@@ -48,17 +48,17 @@ impl HDC {
 	/// [`BitBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt)
 	/// method.
 	pub fn BitBlt(self,
-		destTopLeft: POINT, sz: SIZE,
-		hdcSrc: HDC, srcTopLeft: POINT, rop: co::ROP) -> WinResult<()>
+		dest_top_left: POINT, sz: SIZE,
+		hdc_src: HDC, src_top_left: POINT, rop: co::ROP) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				gdi32::BitBlt(
 					self.ptr,
-					destTopLeft.x, destTopLeft.y,
+					dest_top_left.x, dest_top_left.y,
 					sz.cx, sz.cy,
-					hdcSrc.ptr,
-					srcTopLeft.x, srcTopLeft.y,
+					hdc_src.ptr,
+					src_top_left.x, src_top_left.y,
 					rop.0,
 				)
 			},
@@ -74,15 +74,15 @@ impl HDC {
 	/// [`Chord`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-chord)
 	/// method.
 	pub fn Chord(self,
-		bound: RECT, startRadial: POINT, endRadial: POINT) -> WinResult<()>
+		bounds: RECT, start_radial: POINT, end_radial: POINT) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				gdi32::Chord(
 					self.ptr,
-					bound.left, bound.top, bound.right, bound.bottom,
-					startRadial.x, startRadial.y,
-					endRadial.x, endRadial.y,
+					bounds.left, bounds.top, bounds.right, bounds.bottom,
+					start_radial.x, start_radial.y,
+					end_radial.x, end_radial.y,
 				)
 			},
 		)
@@ -130,9 +130,9 @@ impl HDC {
 
 	/// [`FillRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
 	/// method.
-	pub fn FillRect(self, lprc: RECT, hbr: HBRUSH) -> WinResult<()> {
+	pub fn FillRect(self, rc: RECT, hbr: HBRUSH) -> WinResult<()> {
 		match unsafe {
-			gdi32::FillRect(self.ptr, &lprc as *const _ as _, hbr.ptr)
+			gdi32::FillRect(self.ptr, &rc as *const _ as _, hbr.ptr)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -174,14 +174,14 @@ impl HDC {
 
 	/// [`GetTextExtentPoint32`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextextentpoint32w)
 	/// method.
-	pub fn GetTextExtentPoint32(self, lpString: &str) -> WinResult<SIZE> {
+	pub fn GetTextExtentPoint32(self, text: &str) -> WinResult<SIZE> {
 		let mut sz = SIZE::default();
 		bool_to_winresult(
 			unsafe {
 				gdi32::GetTextExtentPoint32W(
 					self.ptr,
-					WString::from_str(lpString).as_ptr(),
-					lpString.chars().count() as _,
+					WString::from_str(text).as_ptr(),
+					text.chars().count() as _,
 					&mut sz as *mut _ as _,
 				)
 			},
@@ -190,9 +190,9 @@ impl HDC {
 
 	/// [`GetTextMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextmetricsw)
 	/// method.
-	pub fn GetTextMetrics(self, lptm: &mut TEXTMETRIC) -> WinResult<()> {
+	pub fn GetTextMetrics(self, tm: &mut TEXTMETRIC) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { gdi32::GetTextMetricsW(self.ptr, lptm as *mut _ as _) },
+			unsafe { gdi32::GetTextMetricsW(self.ptr, tm as *mut _ as _) },
 		)
 	}
 
@@ -205,14 +205,14 @@ impl HDC {
 	/// [`MoveToEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
 	/// method.
 	pub fn MoveToEx(self,
-		x: i32, y: i32, lppt: Option<&mut POINT>) -> WinResult<()>
+		x: i32, y: i32, pt: Option<&mut POINT>) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				gdi32::MoveToEx(
 					self.ptr,
 					x, y,
-					lppt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					pt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
 		)
@@ -221,11 +221,11 @@ impl HDC {
 	/// [`PatBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-patblt)
 	/// method.
 	pub fn PatBlt(self,
-		topLeft: POINT, sz: SIZE, rop: co::ROP) -> WinResult<()>
+		top_left: POINT, sz: SIZE, rop: co::ROP) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
-				gdi32::PatBlt(self.ptr, topLeft.x, topLeft.y, sz.cx, sz.cy, rop.0)
+				gdi32::PatBlt(self.ptr, top_left.x, top_left.y, sz.cx, sz.cy, rop.0)
 			},
 		)
 	}
@@ -244,15 +244,15 @@ impl HDC {
 	/// [`Pie`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
 	/// method.
 	pub fn Pie(self,
-		bound: RECT, radial1: POINT, radial2: POINT) -> WinResult<()>
+		bounds: RECT, radial_1: POINT, radial_2: POINT) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				gdi32::Pie(
 					self.ptr,
-					bound.left, bound.top, bound.right, bound.bottom,
-					radial1.x, radial1.y,
-					radial2.y, radial2.y,
+					bounds.left, bounds.top, bounds.right, bounds.bottom,
+					radial_1.x, radial_1.y,
+					radial_2.y, radial_2.y,
 				)
 			},
 		)
@@ -260,13 +260,13 @@ impl HDC {
 
 	/// [`PolyBezier`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezier)
 	/// method.
-	pub fn PolyBezier(self, apt: &[POINT]) -> WinResult<()> {
+	pub fn PolyBezier(self, pts: &[POINT]) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				gdi32::PolyBezier(
 					self.ptr,
-					apt.as_ptr() as _,
-					apt.len() as _,
+					pts.as_ptr() as _,
+					pts.len() as _,
 				)
 			},
 		)
@@ -274,13 +274,13 @@ impl HDC {
 
 	/// [`PolyBezierTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezierto)
 	/// method.
-	pub fn PolyBezierTo(self, apt: &[POINT]) -> WinResult<()> {
+	pub fn PolyBezierTo(self, pts: &[POINT]) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				gdi32::PolyBezierTo(
 					self.ptr,
-					apt.as_ptr() as _,
-					apt.len() as _,
+					pts.as_ptr() as _,
+					pts.len() as _,
 				)
 			},
 		)
@@ -288,13 +288,13 @@ impl HDC {
 
 	/// [`Polyline`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polyline)
 	/// method.
-	pub fn Polyline(self, apt: &[POINT]) -> WinResult<()> {
+	pub fn Polyline(self, pts: &[POINT]) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				gdi32::Polyline(
 					self.ptr,
-					apt.as_ptr() as _,
-					apt.len() as _,
+					pts.as_ptr() as _,
+					pts.len() as _,
 				)
 			},
 		)
@@ -302,13 +302,13 @@ impl HDC {
 
 	/// [`PolylineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polylineto)
 	/// method.
-	pub fn PolylineTo(self, apt: &[POINT]) -> WinResult<()> {
+	pub fn PolylineTo(self, pts: &[POINT]) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				gdi32::PolylineTo(
 					self.ptr,
-					apt.as_ptr() as _,
-					apt.len() as _,
+					pts.as_ptr() as _,
+					pts.len() as _,
 				)
 			},
 		)
@@ -326,29 +326,29 @@ impl HDC {
 
 	/// [`Rectangle`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectangle)
 	/// method.
-	pub fn Rectangle(self, bound: RECT) -> WinResult<()> {
+	pub fn Rectangle(self, bounds: RECT) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				gdi32::Rectangle(self.ptr,
-					bound.left, bound.top, bound.right, bound.bottom)
+					bounds.left, bounds.top, bounds.right, bounds.bottom)
 			},
 		)
 	}
 
 	/// [`RestoreDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-restoredc)
 	/// method.
-	pub fn RestoreDC(self, nSavedDC: i32) -> WinResult<()> {
-		bool_to_winresult(unsafe { gdi32::RestoreDC(self.ptr, nSavedDC) })
+	pub fn RestoreDC(self, saved_dc: i32) -> WinResult<()> {
+		bool_to_winresult(unsafe { gdi32::RestoreDC(self.ptr, saved_dc) })
 	}
 
 	/// [`RoundRect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
 	/// method.
-	pub fn RoundRect(self, bound: RECT, sz: SIZE) -> WinResult<()> {
+	pub fn RoundRect(self, bounds: RECT, sz: SIZE) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				gdi32::RoundRect(
 					self.ptr,
-					bound.left, bound.top, bound.right, bound.bottom,
+					bounds.left, bounds.top, bounds.right, bounds.bottom,
 					sz.cx, sz.cy,
 				)
 			},
@@ -366,40 +366,40 @@ impl HDC {
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBITMAP`](crate::HBITMAP).
-	pub fn SelectObjectBitmap(self, h: HBITMAP) -> WinResult<HBITMAP> {
-		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
+	pub fn SelectObjectBitmap(self, hbmp: HBITMAP) -> WinResult<HBITMAP> {
+		unsafe { gdi32::SelectObject(self.ptr, hbmp.ptr).as_mut() }
 			.map(|ptr| HBITMAP { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBRUSH`](crate::HBRUSH).
-	pub fn SelectObjectBrush(self, h: HBRUSH) -> WinResult<HBRUSH> {
-		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
+	pub fn SelectObjectBrush(self, hbr: HBRUSH) -> WinResult<HBRUSH> {
+		unsafe { gdi32::SelectObject(self.ptr, hbr.ptr).as_mut() }
 			.map(|ptr| HBRUSH { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HFONT`](crate::HFONT).
-	pub fn SelectObjectFont(self, h: HFONT) -> WinResult<HFONT> {
-		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
+	pub fn SelectObjectFont(self, hfont: HFONT) -> WinResult<HFONT> {
+		unsafe { gdi32::SelectObject(self.ptr, hfont.ptr).as_mut() }
 			.map(|ptr| HFONT { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HPEN`](crate::HPEN).
-	pub fn SelectObjectPen(self, h: HPEN) -> WinResult<HPEN> {
-		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
+	pub fn SelectObjectPen(self, hpen: HPEN) -> WinResult<HPEN> {
+		unsafe { gdi32::SelectObject(self.ptr, hpen.ptr).as_mut() }
 			.map(|ptr| HPEN { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HRGN`](crate::HRGN).
-	pub fn SelectObjectRgn(self, h: HRGN) -> WinResult<co::REGION> {
-		unsafe { gdi32::SelectObject(self.ptr, h.ptr).as_mut() }
+	pub fn SelectObjectRgn(self, hrgn: HRGN) -> WinResult<co::REGION> {
+		unsafe { gdi32::SelectObject(self.ptr, hrgn.ptr).as_mut() }
 			.map(|ptr| co::REGION(ptr as *mut _ as _))
 			.ok_or_else(|| GetLastError())
 	}
@@ -440,8 +440,8 @@ impl HDC {
 
 	/// [`SetGraphicsMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode)
 	/// method.
-	pub fn SetGraphicsMode(self, iMode: co::GM) -> WinResult<co::GM> {
-		match unsafe { gdi32::SetGraphicsMode(self.ptr, iMode.0) } {
+	pub fn SetGraphicsMode(self, mode: co::GM) -> WinResult<co::GM> {
+		match unsafe { gdi32::SetGraphicsMode(self.ptr, mode.0) } {
 			0 => Err(GetLastError()),
 			v => Ok(co::GM(v))
 		}
@@ -476,45 +476,45 @@ impl HDC {
 	/// [`SetViewportExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportextex)
 	/// method.
 	pub fn SetViewportExtEx(self, x: i32, y: i32) -> WinResult<SIZE> {
-		let mut lpsz = SIZE::default();
+		let mut sz = SIZE::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetViewportExtEx(self.ptr, x, y, &mut lpsz as *mut _ as _)
+				gdi32::SetViewportExtEx(self.ptr, x, y, &mut sz as *mut _ as _)
 			}
-		).map(|_| lpsz)
+		).map(|_| sz)
 	}
 
 	/// [`SetViewportOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportorgex)
 	/// method.
 	pub fn SetViewportOrgEx(self, x: i32, y: i32) -> WinResult<POINT> {
-		let mut lppt = POINT::default();
+		let mut pt = POINT::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetViewportOrgEx(self.ptr, x, y, &mut lppt as *mut _ as _)
+				gdi32::SetViewportOrgEx(self.ptr, x, y, &mut pt as *mut _ as _)
 			}
-		).map(|_| lppt)
+		).map(|_| pt)
 	}
 
 	/// [`SetWindowExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindowextex)
 	/// method.
 	pub fn SetWindowExtEx(self, x: i32, y: i32) -> WinResult<SIZE> {
-		let mut lpsz = SIZE::default();
+		let mut sz = SIZE::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetWindowExtEx(self.ptr, x, y, &mut lpsz as *mut _ as _)
+				gdi32::SetWindowExtEx(self.ptr, x, y, &mut sz as *mut _ as _)
 			}
-		).map(|_| lpsz)
+		).map(|_| sz)
 	}
 
 	/// [`SetWindowOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindoworgex)
 	/// method.
 	pub fn SetWindowOrgEx(self, x: i32, y: i32) -> WinResult<POINT> {
-		let mut lppt = POINT::default();
+		let mut pt = POINT::default();
 		bool_to_winresult(
 			unsafe {
-				gdi32::SetWindowOrgEx(self.ptr, x, y, &mut lppt as *mut _ as _)
+				gdi32::SetWindowOrgEx(self.ptr, x, y, &mut pt as *mut _ as _)
 			}
-		).map(|_| lppt)
+		).map(|_| pt)
 	}
 
 	/// [`StrokeAndFillPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokeandfillpath)
@@ -531,14 +531,14 @@ impl HDC {
 
 	/// [`TextOut`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textoutw)
 	/// method.
-	pub fn TextOut(self, x: i32, y: i32, lpString: &str) -> WinResult<()> {
+	pub fn TextOut(self, x: i32, y: i32, text: &str) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
 				gdi32::TextOutW(
 					self.ptr,
 					x, y,
-					WString::from_str(lpString).as_ptr(),
-					lpString.len() as _,
+					WString::from_str(text).as_ptr(),
+					text.len() as _,
 				)
 			},
 		)
@@ -547,21 +547,21 @@ impl HDC {
 	/// [`TransparentBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
 	/// method.
 	pub fn TransparentBlt(self,
-		destTopLeft: POINT, destSz: SIZE,
-		hdcSrc: HDC,
-		srcTopLeft: POINT, srcSz: SIZE,
-		crTransparent: COLORREF) -> WinResult<()>
+		dest_top_left: POINT, dest_sz: SIZE,
+		hdc_src: HDC,
+		src_top_left: POINT, src_sz: SIZE,
+		color_transparent: COLORREF) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				msimg32::TransparentBlt(
 					self.ptr,
-					destTopLeft.x, destTopLeft.y,
-					destSz.cx, destSz.cy,
-					hdcSrc.ptr,
-					srcTopLeft.x, srcTopLeft.y,
-					srcSz.cx, srcSz.cy,
-					crTransparent.0,
+					dest_top_left.x, dest_top_left.y,
+					dest_sz.cx, dest_sz.cy,
+					hdc_src.ptr,
+					src_top_left.x, src_top_left.y,
+					src_sz.cx, src_sz.cy,
+					color_transparent.0,
 				)
 			},
 		)

@@ -117,7 +117,7 @@ impl RawBase {
 			ex_styles,
 			AtomStr::Atom(class_name),
 			title, styles,
-			pos.x, pos.y, sz.cx, sz.cy,
+			pos, sz,
 			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			hmenu,
 			self.base.parent_hinstance()?,

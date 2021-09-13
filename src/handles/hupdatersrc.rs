@@ -23,12 +23,12 @@ impl HUPDATERSRC {
 	/// [`HUPDATERSRC::EndUpdateResource`](crate::HUPDATERSRC::EndUpdateResource)
 	/// call.
 	pub fn BeginUpdateResource(
-		pFileName: &str, bDeleteExistingResources: bool) -> WinResult<HUPDATERSRC>
+		file_name: &str, delete_existing_resources: bool) -> WinResult<HUPDATERSRC>
 	{
 		unsafe {
 			kernel32::BeginUpdateResourceW(
-				WString::from_str(pFileName).as_ptr(),
-				bDeleteExistingResources as _,
+				WString::from_str(file_name).as_ptr(),
+				delete_existing_resources as _,
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
@@ -36,27 +36,27 @@ impl HUPDATERSRC {
 
 	/// [`EndUpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
 	/// method.
-	pub fn EndUpdateResource(self, fDiscard: bool) -> WinResult<()> {
+	pub fn EndUpdateResource(self, discard: bool) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { kernel32::EndUpdateResourceW(self.ptr, fDiscard as _) },
+			unsafe { kernel32::EndUpdateResourceW(self.ptr, discard as _) },
 		)
 	}
 
 	/// [`UpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)
 	/// method.
 	pub fn UpdateResource(self,
-		lpType: RtStr, lpName: IdStr,
-		wLanguage: LANGID, lpData: &[u8]) -> WinResult<()>
+		resource_type: RtStr, resource_id: IdStr,
+		language: LANGID, data: &[u8]) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				kernel32::UpdateResourceW(
 					self.ptr,
-					lpType.as_ptr(),
-					lpName.as_ptr(),
-					wLanguage.0,
-					lpData.as_ptr() as _,
-					lpData.len() as _,
+					resource_type.as_ptr(),
+					resource_id.as_ptr(),
+					language.0,
+					data.as_ptr() as _,
+					data.len() as _,
 				)
 			},
 		)

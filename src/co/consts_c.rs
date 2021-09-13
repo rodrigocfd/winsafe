@@ -274,8 +274,7 @@ impl From<CDRF> for isize {
 }
 
 pub_struct_const! { CDS, u32,
-	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `dwFlags`
-	/// (`u32`).
+	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `flags` (`u32`).
 	=>
 	DYNAMICALLY, 0
 	FULLSCREEN, 0x0000_0004
@@ -321,6 +320,7 @@ pub_struct_const! { CF, u32,
 }
 
 pub_struct_const! { CHARSET, u8,
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `char_set` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 	=>
 	ANSI, 0
@@ -346,6 +346,7 @@ pub_struct_const! { CHARSET, u8,
 }
 
 pub_struct_const! { CLIP, u8,
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `clip_precision` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision` (`u8`).
 	=>
 	DEFAULT_PRECIS, 0
@@ -488,7 +489,7 @@ pub_struct_const! { COLOR, i32,
 
 pub_struct_const! { CP, u32,
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
-	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `CodePage`
+	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `code_page`
 	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
 	/// (`u32`).
 	=>

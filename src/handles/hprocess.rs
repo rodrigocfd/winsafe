@@ -30,51 +30,51 @@ impl HPROCESS {
 	/// [`HPROCESS::CloseHandle`](crate::HPROCESS::CloseHandle) and
 	/// [`HTHREAD::CloseHandle`](crate::HTHREAD::CloseHandle) calls.
 	pub fn CreateProcess(
-		lpApplicationName: Option<&str>,
-		lpCommandLine: Option<&str>,
-		lpProcessAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-		lpThreadAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-		nInheritHandles: bool,
-		dwCreationFlags: co::CREATE,
-		lpEnvironment: Option<Vec<String>>,
-		lpCurrentDirectory: Option<&str>,
-		lpStartupInfo: &mut STARTUPINFO) -> WinResult<PROCESS_INFORMATION>
+		application_name: Option<&str>,
+		command_line: Option<&str>,
+		process_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		inherit_handles: bool,
+		creation_flags: co::CREATE,
+		environment: Option<Vec<String>>,
+		current_dir: Option<&str>,
+		si: &mut STARTUPINFO) -> WinResult<PROCESS_INFORMATION>
 	{
-		let mut bufCommandLine = lpCommandLine.map_or(WString::default(), |lp| WString::from_str(lp));
-		let mut lpProcessInformation = PROCESS_INFORMATION::default();
+		let mut buf_cmd_line = command_line.map_or(WString::default(), |lp| WString::from_str(lp));
+		let mut pi = PROCESS_INFORMATION::default();
 		bool_to_winresult(
 			unsafe {
 				kernel32::CreateProcessW(
-					WString::from_opt_str(lpApplicationName).as_ptr(),
-					bufCommandLine.as_mut_ptr(),
-					lpProcessAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					nInheritHandles as _,
-					dwCreationFlags.0,
-					lpEnvironment.as_ref()
+					WString::from_opt_str(application_name).as_ptr(),
+					buf_cmd_line.as_mut_ptr(),
+					process_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					inherit_handles as _,
+					creation_flags.0,
+					environment.as_ref()
 						.map_or(std::ptr::null_mut(), |lp| WString::from_str_vec(lp).as_ptr() as _),
-					WString::from_opt_str(lpCurrentDirectory).as_ptr(),
-					lpStartupInfo as *mut _ as _,
-					&mut lpProcessInformation as *mut _ as _,
+					WString::from_opt_str(current_dir).as_ptr(),
+					si as *mut _ as _,
+					&mut pi as *mut _ as _,
 				)
 			},
-		).map(|_| lpProcessInformation)
+		).map(|_| pi)
 	}
 
 	/// [`ExitProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
 	/// static method.
-	pub fn ExitProcess(dwExitCode: u32) {
-		unsafe { kernel32::ExitProcess(dwExitCode) }
+	pub fn ExitProcess(exit_code: u32) {
+		unsafe { kernel32::ExitProcess(exit_code) }
 	}
 
 	/// [`FlushInstructionCache`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// method.
 	pub fn FlushInstructionCache(self,
-		lpBaseAddress: *mut std::ffi::c_void, dwSize: u64) -> WinResult<()>
+		base_address: *mut std::ffi::c_void, size: u64) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
-				kernel32::FlushInstructionCache(self.ptr, lpBaseAddress, dwSize)
+				kernel32::FlushInstructionCache(self.ptr, base_address, size)
 			},
 		)
 	}
@@ -94,16 +94,16 @@ impl HPROCESS {
 	/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
 	/// method.
 	pub fn GetExitCodeProcess(self) -> WinResult<u32> {
-		let mut lpExitCode: u32 = 0;
+		let mut exit_code = u32::default();
 		bool_to_winresult(
-			unsafe { kernel32::GetExitCodeProcess(self.ptr, &mut lpExitCode) },
-		).map(|_| lpExitCode)
+			unsafe { kernel32::GetExitCodeProcess(self.ptr, &mut exit_code) },
+		).map(|_| exit_code)
 	}
 
 	/// [`GetGuiResources`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
 	/// method.
-	pub fn GetGuiResources(self, uiFlags: co::GR) -> WinResult<u32> {
-		match unsafe { kernel32::GetGuiResources(self.ptr, uiFlags.0) } {
+	pub fn GetGuiResources(self, flags: co::GR) -> WinResult<u32> {
+		match unsafe { kernel32::GetGuiResources(self.ptr, flags.0) } {
 			0 => Err(GetLastError()),
 			count => Ok(count),
 		}
@@ -121,19 +121,19 @@ impl HPROCESS {
 	/// [`GetProcessTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
 	/// method.
 	pub fn GetProcessTimes(self,
-		lpCreationTime: &mut FILETIME,
-		lpExitTime: &mut FILETIME,
-		lpKernelTime: &mut FILETIME,
-		lpUserTime: &mut FILETIME) -> WinResult<()>
+		creation: &mut FILETIME,
+		exit: &mut FILETIME,
+		kernel: &mut FILETIME,
+		user: &mut FILETIME) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				kernel32::GetProcessTimes(
 					self.ptr,
-					lpCreationTime as *mut _ as _,
-					lpExitTime as *mut _ as _,
-					lpKernelTime as *mut _ as _,
-					lpUserTime as *mut _ as _,
+					creation as *mut _ as _,
+					exit as *mut _ as _,
+					kernel as *mut _ as _,
+					user as *mut _ as _,
 				)
 			},
 		)
@@ -152,13 +152,13 @@ impl HPROCESS {
 	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// method.
 	pub fn WaitForSingleObject(self,
-		dwMilliseconds: Option<u32>) -> WinResult<co::WAIT>
+		milliseconds: Option<u32>) -> WinResult<co::WAIT>
 	{
 		match unsafe {
 			co::WAIT(
 				kernel32::WaitForSingleObject(
 					self.ptr,
-					dwMilliseconds.unwrap_or(INFINITE),
+					milliseconds.unwrap_or(INFINITE),
 				),
 			)
 		} {

@@ -6,6 +6,7 @@ use crate::enums::HwndPlace;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
+use crate::structs::{POINT, SIZE};
 
 #[derive(Clone)]
 pub(in crate::gui) struct DlgModal(Arc<Obj>);
@@ -53,9 +54,11 @@ impl DlgModal {
 					let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 					hwnd.SetWindowPos(
 						HwndPlace::None,
-						rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
-						rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
-						0, 0,
+						POINT::new(
+							rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
+							rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
+						),
+						SIZE::default(),
 						co::SWP::NOSIZE | co::SWP::NOZORDER,
 					)?;
 					Ok(true)

@@ -95,8 +95,8 @@ impl MonthCalendar {
 					our_hwnd.SendMessage(mcm::GetMinReqRect {
 						bounding_rect: &mut bounding_rect,
 					})?;
-					our_hwnd.SetWindowPos(HwndPlace::None, 0, 0,
-						bounding_rect.right, bounding_rect.bottom,
+					our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(),
+						SIZE::new(bounding_rect.right, bounding_rect.bottom),
 						co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 
 					Ok(())

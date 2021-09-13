@@ -53,7 +53,7 @@ pub_struct_const_ws! { UDS, u32,
 }
 
 pub_struct_const! { VER_COND, u8,
-	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `Condition` (`u8`).
+	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
 	=>
 	EQUAL, 1
 	GREATER, 2
@@ -66,7 +66,8 @@ pub_struct_const! { VER_COND, u8,
 }
 
 pub_struct_const! { VER_MASK, u32,
-	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `TypeMask` (`u32`).
+	/// [`VerifyVersionInfo`](crate::VerifyVersionInfo) and
+	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `type_mask` (`u32`).
 	=>
 	MINORVERSION, 0x000_0001
 	MAJORVERSION, 0x000_0002

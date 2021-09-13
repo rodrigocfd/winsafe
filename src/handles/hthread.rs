@@ -23,30 +23,30 @@ impl HTHREAD {
 	/// **Note:** Must be paired with an
 	/// [`HTHREAD::CloseHandle`](crate::HTHREAD::CloseHandle) call.
 	pub fn CreateThread(
-		lpThreadAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-		dwStackSize: u64,
-		lpStartAddress: *mut std::ffi::c_void,
-		lpParameter: *mut std::ffi::c_void,
-		dwCreationFlags: co::THREAD_CREATE) -> WinResult<(HTHREAD, u32)>
+		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		stack_size: u64,
+		start_addr: *mut std::ffi::c_void,
+		parameter: *mut std::ffi::c_void,
+		flags: co::THREAD_CREATE) -> WinResult<(HTHREAD, u32)>
 	{
-		let mut lpThreadId: u32 = 0;
+		let mut thread_id = u32::default();
 		unsafe {
 			kernel32::CreateThread(
-				lpThreadAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-				dwStackSize,
-				lpStartAddress,
-				lpParameter,
-				dwCreationFlags.0,
-				&mut lpThreadId,
+				thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				stack_size,
+				start_addr,
+				parameter,
+				flags.0,
+				&mut thread_id,
 			).as_mut()
-		}.map(|ptr| (Self { ptr }, lpThreadId))
+		}.map(|ptr| (Self { ptr }, thread_id))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`ExitThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread)
 	/// static method.
-	pub fn ExitThread(dwExitCode: u32) {
-		unsafe { kernel32::ExitThread(dwExitCode) }
+	pub fn ExitThread(exit_code: u32) {
+		unsafe { kernel32::ExitThread(exit_code) }
 	}
 
 	/// [`GetCurrentThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
@@ -58,10 +58,10 @@ impl HTHREAD {
 	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
 	/// method.
 	pub fn GetExitCodeThread(self) -> WinResult<u32> {
-		let mut lpExitCode: u32 = 0;
+		let mut exit_code: u32 = 0;
 		bool_to_winresult(
-			unsafe { kernel32::GetExitCodeThread(self.ptr, &mut lpExitCode) },
-		).map(|_| lpExitCode)
+			unsafe { kernel32::GetExitCodeThread(self.ptr, &mut exit_code) },
+		).map(|_| exit_code)
 	}
 
 	/// [`GetProcessIdOfThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessidofthread)
@@ -85,19 +85,19 @@ impl HTHREAD {
 	/// [`GetThreadTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes)
 	/// method.
 	pub fn GetThreadTimes(self,
-		lpCreationTime: &mut FILETIME,
-		lpExitTime: &mut FILETIME,
-		lpKernelTime: &mut FILETIME,
-		lpUserTime: &mut FILETIME) -> WinResult<()>
+		creation: &mut FILETIME,
+		exit: &mut FILETIME,
+		kernel: &mut FILETIME,
+		user: &mut FILETIME) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				kernel32::GetThreadTimes(
 					self.ptr,
-					lpCreationTime as *mut _ as _,
-					lpExitTime as *mut _ as _,
-					lpKernelTime as *mut _ as _,
-					lpUserTime as *mut _ as _,
+					creation as *mut _ as _,
+					exit as *mut _ as _,
+					kernel as *mut _ as _,
+					user as *mut _ as _,
 				)
 			},
 		)

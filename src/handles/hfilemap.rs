@@ -21,17 +21,17 @@ impl HFILEMAP {
 	/// [`HFILEMAPVIEW::UnmapViewOfFile`](crate::HFILEMAPVIEW::UnmapViewOfFile)
 	/// call.
 	pub fn MapViewOfFile(self,
-		desiredAccess: co::FILE_MAP,
+		desired_access: co::FILE_MAP,
 		offset: u64,
-		numberOfBytesToMap: Option<i64>) -> WinResult<HFILEMAPVIEW>
+		number_of_bytes_to_map: Option<i64>) -> WinResult<HFILEMAPVIEW>
 	{
 		unsafe {
 			kernel32::MapViewOfFile(
 				self.ptr,
-				desiredAccess.0,
+				desired_access.0,
 				HIDWORD(offset),
 				LODWORD(offset),
-				numberOfBytesToMap.unwrap_or_default(),
+				number_of_bytes_to_map.unwrap_or_default(),
 			).as_mut()
 		}.map(|ptr| HFILEMAPVIEW { ptr })
 			.ok_or_else(|| GetLastError())

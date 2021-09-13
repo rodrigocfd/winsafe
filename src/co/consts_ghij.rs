@@ -3,7 +3,7 @@
 use crate::co::{CCM, WM};
 
 pub_struct_const! { GA, u32,
-	/// [`HWND::GetAncestor`](crate::HWND::GetAncestor) `gaFlags` (`u32`).
+	/// [`HWND::GetAncestor`](crate::HWND::GetAncestor) `flags` (`u32`).
 	=>
 	/// Retrieves the parent window. This does not include the owner, as it does
 	/// with the [`HWND::GetParent`](crate::HWND::GetParent) function.
@@ -27,8 +27,8 @@ pub_struct_const! { GA, u32,
 }
 
 pub_struct_const! { GCLP, i32,
-	/// [`HWND::GetClassLongPtr`](crate::HWND::GetClassLongPtr) `nIndex`
-	/// (`i32`). Originally has prefixes `GCW` and `GCL` also.
+	/// [`HWND::GetClassLongPtr`](crate::HWND::GetClassLongPtr) `index` (`i32`).
+	/// Originally has prefixes `GCW` and `GCL` also.
 	=>
 	ATOM, -32
 	CBWNDEXTRA, -18
@@ -119,22 +119,24 @@ pub_struct_const! { GENERIC, u32,
 }
 
 pub_struct_const! { GM, i32,
-	/// [`HDC::SetGraphicsMode`](crate::HDC::SetGraphicsMode) `iMode` (`i32`).
+	/// [`HDC::SetGraphicsMode`](crate::HDC::SetGraphicsMode) `mode` (`i32`).
 	=>
 	COMPATIBLE, 1
 	ADVANCED, 2
 }
 
 pub_struct_const! { GMDI, u32,
-	/// [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem)
-	/// `gmdiFlags` (`u32`).
+	/// [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem) `flags`
+	/// (`u32`).
 	=>
 	USEDISABLED, 0x0001
 	GOINTOPOPUPS, 0x0002
 }
 
 pub_struct_const! { GMEM, u32,
-	/// [`HGLOBAL::GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) `uFlags` (`u32`).
+	/// [`HGLOBAL::GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) and
+	/// [`HGLOBAL::GlobalReAlloc`](crate::HGLOBAL::GlobalReAlloc) `flags`
+	/// (`u32`).
 	=>
 	FIXED, 0x0000
 	MOVEABLE, 0x0002
@@ -144,8 +146,8 @@ pub_struct_const! { GMEM, u32,
 }
 
 pub_struct_const! { GR, u32,
-	/// [`HPROCESS::GetGuiResources`](crate::HPROCESS::GetGuiResources)
-	/// `uiFlags` (`u32`).
+	/// [`HPROCESS::GetGuiResources`](crate::HPROCESS::GetGuiResources) `flags`
+	/// (`u32`).
 	=>
 	GDIOBJECTS, 0
 	GDIOBJECTS_PEAK, 2
@@ -164,7 +166,7 @@ pub_struct_const! { GUI, u32,
 }
 
 pub_struct_const! { GW, u32,
-	/// [`HWND::GetWindow`](crate::HWND::GetWindow) `uCmd` (`u32`).
+	/// [`HWND::GetWindow`](crate::HWND::GetWindow) `cmd` (`u32`).
 	=>
 	HWNDFIRST, 0
 	HWNDLAST, 1
@@ -187,7 +189,7 @@ pub_struct_const! { GWL_C, i8,
 
 pub_struct_const! { GWLP, i32,
 	/// [`HWND::GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
-	/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) `nIndex`
+	/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) `index`
 	/// (`i32`). Originally has prefix `GWL` also.
 	=>
 	STYLE, -16
@@ -341,7 +343,7 @@ pub_struct_const! { HWND_PLACE, isize,
 }
 
 pub_struct_const! { HS, i32,
-	/// [`HBRUSH::CreateHatchBrush`](crate::HBRUSH::CreateHatchBrush) `iHatch`
+	/// [`HBRUSH::CreateHatchBrush`](crate::HBRUSH::CreateHatchBrush) `hatch`
 	/// (`i32`).
 	=>
 	/// Horizontal hatch: `-----`.

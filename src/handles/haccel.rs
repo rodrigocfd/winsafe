@@ -14,11 +14,11 @@ pub_struct_handle! {
 impl HACCEL {
 	/// [`CreateAcceleratorTable`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
 	/// static method.
-	pub fn CreateAcceleratorTable(paccel: &mut [ACCEL]) -> WinResult<HACCEL> {
+	pub fn CreateAcceleratorTable(accel: &mut [ACCEL]) -> WinResult<HACCEL> {
 		unsafe {
 			user32::CreateAcceleratorTableW(
-				paccel.as_mut_ptr() as _,
-				paccel.len() as _,
+				accel.as_mut_ptr() as _,
+				accel.len() as _,
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())

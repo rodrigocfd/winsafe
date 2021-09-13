@@ -3,7 +3,7 @@
 use crate::co::CCM;
 
 pub_struct_const! { MB, u32,
-	/// [`HWND::MessageBox`](crate::HWND::MessageBox) `uType` (`u32`).
+	/// [`HWND::MessageBox`](crate::HWND::MessageBox) `flags` (`u32`).
 	=>
 	/// The message box contains three push buttons: Abort, Retry, and Ignore.
 	ABORTRETRYIGNORE, 0x0000_0002
@@ -135,7 +135,7 @@ pub_struct_const! { MB, u32,
 }
 
 pub_struct_const! { MBC, u32,
-	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `dwFlags` (`u32`).
+	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `flags` (`u32`).
 	/// Originally has `MB` prefix.
 	=>
 	/// None of the actual values (zero).
@@ -238,8 +238,9 @@ pub_struct_const_ws! { MCS, u32,
 }
 
 pub_struct_const! { MF, u32,
-	/// [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `uFlags`,
-	/// [`HMENU::GetMenuState`](crate::HMENU::GetMenuState) return value
+	/// [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `flags`,
+	/// [`HMENU::GetMenuState`](crate::HMENU::GetMenuState) return value,
+	/// [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem) `hilite`
 	/// (`u32`).
 	=>
 	INSERT, 0x0000_0000
@@ -385,7 +386,7 @@ pub_struct_const! { NIIF, u32,
 }
 
 pub_struct_const! { NIM, u32,
-	/// [`Shell_NotifyIcon`](crate::Shell_NotifyIcon) `dwMessage` (`u32`).
+	/// [`Shell_NotifyIcon`](crate::Shell_NotifyIcon) `message` (`u32`).
 	=>
 	ADD, 0x0000_0000
 	MODIFY, 0x0000_0001

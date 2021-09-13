@@ -53,13 +53,13 @@ impl HFINDFILE {
 	/// }
 	/// ```
 	pub fn FindFirstFile(
-		lpFileName: &str,
-		lpFindFileData: &mut WIN32_FIND_DATA) -> WinResult<(HFINDFILE, bool)>
+		file_name: &str,
+		wfd: &mut WIN32_FIND_DATA) -> WinResult<(HFINDFILE, bool)>
 	{
 		match unsafe {
 			kernel32::FindFirstFileW(
-				WString::from_str(lpFileName).as_ptr(),
-				lpFindFileData as *mut _ as _,
+				WString::from_str(file_name).as_ptr(),
+				wfd as *mut _ as _,
 			).as_mut()
 		} {
 			Some(ptr) => Ok((Self { ptr }, true)), // first file found
@@ -72,11 +72,9 @@ impl HFINDFILE {
 
 	/// [`FindNextFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextfilew)
 	/// method.
-	pub fn FindNextFile(self,
-		lpFindFileData: &mut WIN32_FIND_DATA) -> WinResult<bool>
-	{
+	pub fn FindNextFile(self, wfd: &mut WIN32_FIND_DATA) -> WinResult<bool> {
 		match unsafe {
-			kernel32::FindNextFileW(self.ptr, lpFindFileData as *mut _ as _)
+			kernel32::FindNextFileW(self.ptr, wfd as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false), // not an error, no further files found
@@ -104,14 +102,14 @@ impl HFINDFILE {
 	///    println!("File: {}", file);
 	/// }
 	/// ```
-	pub fn ListAll(pathAndPattern: &str) -> WinResult<Vec<String>> {
+	pub fn ListAll(path_and_pattern: &str) -> WinResult<Vec<String>> {
 		let mut files = Vec::default();
 		let mut wfd = WIN32_FIND_DATA::default();
-		let (hfind, mut found) = Self::FindFirstFile(pathAndPattern, &mut wfd)?;
+		let (hfind, mut found) = Self::FindFirstFile(path_and_pattern, &mut wfd)?;
 
-		let the_path = pathAndPattern.rfind('\\').map_or(
+		let the_path = path_and_pattern.rfind('\\').map_or(
 			String::default(),
-			|idx| pathAndPattern.chars().take(idx).collect(),
+			|idx| path_and_pattern.chars().take(idx).collect(),
 		);
 
 		if found {

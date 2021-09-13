@@ -56,16 +56,16 @@ use crate::various::WString;
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
 pub fn AdjustWindowRectEx(
-	lpRect: &mut RECT, dwStyle: co::WS,
-	bMenu: bool, dwExStyle: co::WS_EX) -> WinResult<()>
+	rc: &mut RECT, style: co::WS,
+	has_menu: bool, ex_style: co::WS_EX) -> WinResult<()>
 {
 	bool_to_winresult(
 		unsafe {
 			user32::AdjustWindowRectEx(
-				lpRect as *mut _ as _,
-				dwStyle.0,
-				bMenu as _,
-				dwExStyle.0,
+				rc as *mut _ as _,
+				style.0,
+				has_menu as _,
+				ex_style.0,
 			)
 		},
 	)
@@ -74,11 +74,11 @@ pub fn AdjustWindowRectEx(
 /// [`ChangeDisplaySettings`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changedisplaysettingsw)
 /// function.
 pub fn ChangeDisplaySettings(
-	lpDevMode: &mut DEVMODE,
-	dwFlags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
+	dev_mode: &mut DEVMODE,
+	flags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
 {
 	let ret = unsafe {
-		user32::ChangeDisplaySettingsW(lpDevMode as *mut _ as _, dwFlags.0)
+		user32::ChangeDisplaySettingsW(dev_mode as *mut _ as _, flags.0)
 	};
 	if ret < 0 {
 		Err(co::DISP_CHANGE(ret))
@@ -113,8 +113,8 @@ pub fn ChangeDisplaySettings(
 ///     );
 /// }
 /// ```
-pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
-	match unsafe { comdlg32::ChooseColorW(lpcc as *mut _ as _) } {
+pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
+	match unsafe { comdlg32::ChooseColorW(cc as *mut _ as _) } {
 		0 => match CommDlgExtendedError() {
 			co::CDERR::NoValue => Ok(false),
 			err => Err(err),
@@ -125,11 +125,11 @@ pub fn ChooseColor(lpcc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 
 /// [`ClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor)
 /// function.
-pub fn ClipCursor(lpRect: Option<&RECT>) -> WinResult<()> {
+pub fn ClipCursor(rc: Option<&RECT>) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
 			user32::ClipCursor(
-				lpRect.map_or(std::ptr::null(), |lp| lp as *const _ as _),
+				rc.map_or(std::ptr::null(), |lp| lp as *const _ as _),
 			)
 		},
 	)
@@ -154,24 +154,24 @@ pub fn CloseClipboard() -> WinResult<()> {
 ///     println!("{}", arg);
 /// }
 /// ```
-pub fn CommandLineToArgv(lpCmdLine: &str) -> WinResult<Vec<String>> {
-	let mut pNumArgs: i32 = 0;
-	let lpArr = unsafe {
+pub fn CommandLineToArgv(cmd_line: &str) -> WinResult<Vec<String>> {
+	let mut num_args: i32 = 0;
+	let lp_arr = unsafe {
 		shell32::CommandLineToArgvW(
-			WString::from_str(lpCmdLine).as_ptr(),
-			&mut pNumArgs,
+			WString::from_str(cmd_line).as_ptr(),
+			&mut num_args,
 		)
 	};
-	if lpArr.is_null() {
+	if lp_arr.is_null() {
 		return Err(GetLastError());
 	}
 
-	let mut strs = Vec::with_capacity(pNumArgs as _);
-	for lp in unsafe { std::slice::from_raw_parts(lpArr, pNumArgs as _) }.iter() {
+	let mut strs = Vec::with_capacity(num_args as _);
+	for lp in unsafe { std::slice::from_raw_parts(lp_arr, num_args as _) }.iter() {
 		strs.push(WString::from_wchars_nullt(*lp).to_string());
 	}
 
-	(HLOCAL { ptr: lpArr as _ })
+	(HLOCAL { ptr: lp_arr as _ })
 		.LocalFree()
 		.map(|_| strs)
 }
@@ -185,15 +185,15 @@ pub fn CommDlgExtendedError() -> co::CDERR {
 /// [`CopyFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
 pub fn CopyFile(
-	lpExistingFileName: &str, lpNewFileName: &str,
-	bFailIfExists: bool) -> WinResult<()>
+	existing_file: &str, new_file: &str,
+	fail_if_exists: bool) -> WinResult<()>
 {
 	bool_to_winresult(
 		unsafe {
 			kernel32::CopyFileW(
-				WString::from_str(lpExistingFileName).as_ptr(),
-				WString::from_str(lpNewFileName).as_ptr(),
-				bFailIfExists as _,
+				WString::from_str(existing_file).as_ptr(),
+				WString::from_str(new_file).as_ptr(),
+				fail_if_exists as _,
 			)
 		},
 	)
@@ -201,26 +201,26 @@ pub fn CopyFile(
 
 /// [`DecryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
 /// function.
-pub fn DecryptFile(lpFileName: &str) -> WinResult<()> {
+pub fn DecryptFile(file_name: &str) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
-			advapi32::DecryptFileW(WString::from_str(lpFileName).as_ptr(), 0)
+			advapi32::DecryptFileW(WString::from_str(file_name).as_ptr(), 0)
 		},
 	)
 }
 
 /// [`DeleteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
 /// function.
-pub fn DeleteFile(lpFileName: &str) -> WinResult<()> {
+pub fn DeleteFile(file_name: &str) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { kernel32::DeleteFileW(WString::from_str(lpFileName).as_ptr()) },
+		unsafe { kernel32::DeleteFileW(WString::from_str(file_name).as_ptr()) },
 	)
 }
 
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
-pub fn DispatchMessage(lpMsg: &MSG) -> isize {
-	unsafe { user32::DispatchMessageW(lpMsg as *const _ as _) }
+pub fn DispatchMessage(msg: &MSG) -> isize {
+	unsafe { user32::DispatchMessageW(msg as *const _ as _) }
 }
 
 /// [`EmptyClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
@@ -231,22 +231,22 @@ pub fn EmptyClipboard() -> WinResult<()> {
 
 /// [`EncryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
 /// function.
-pub fn EncryptFile(lpFileName: &str) -> WinResult<()> {
+pub fn EncryptFile(file_name: &str) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
-			advapi32::EncryptFileW(WString::from_str(lpFileName).as_ptr())
+			advapi32::EncryptFileW(WString::from_str(file_name).as_ptr())
 		},
 	)
 }
 
 /// [`EncryptionDisable`](https://docs.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
 /// function.
-pub fn EncryptionDisable(DirPath: &str, Disable: bool) -> WinResult<()> {
+pub fn EncryptionDisable(dir_path: &str, disable: bool) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
 			advapi32::EncryptionDisable(
-				WString::from_str(DirPath).as_ptr(),
-				Disable as _,
+				WString::from_str(dir_path).as_ptr(),
+				disable as _,
 			)
 		},
 	)
@@ -261,18 +261,18 @@ pub fn EndMenu() -> WinResult<()> {
 /// [`EnumDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw)
 /// function
 pub fn EnumDisplaySettingsEx(
-	lpszDeviceName: Option<&str>,
-	iModeNum: co::ENUM_SETTINGS,
-	lpDevMode: &mut DEVMODE,
-	dwFlags: co::EDS) -> WinResult<()>
+	device_name: Option<&str>,
+	mode_num: co::ENUM_SETTINGS,
+	dev_mode: &mut DEVMODE,
+	flags: co::EDS) -> WinResult<()>
 {
 	bool_to_winresult(
 		unsafe {
 			user32::EnumDisplaySettingsExW(
-				lpszDeviceName.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
-				iModeNum.0,
-				lpDevMode as *mut _ as _,
-				dwFlags.0
+				device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				mode_num.0,
+				dev_mode as *mut _ as _,
+				flags.0
 			)
 		},
 	)
@@ -290,8 +290,8 @@ pub fn EnumDisplaySettingsEx(
 ///     "Os %OS%, home %HOMEPATH%, temp %TEMP%",
 /// ).unwrap());
 /// ```
-pub fn ExpandEnvironmentStrings(lpSrc: &str) -> WinResult<String> {
-	let wsrc = WString::from_str(lpSrc);
+pub fn ExpandEnvironmentStrings(src: &str) -> WinResult<String> {
+	let wsrc = WString::from_str(src);
 	let len = unsafe {
 		kernel32::ExpandEnvironmentStringsW(
 			wsrc.as_ptr(),
@@ -316,13 +316,13 @@ pub fn ExpandEnvironmentStrings(lpSrc: &str) -> WinResult<String> {
 /// [`FileTimeToSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
 /// function.
 pub fn FileTimeToSystemTime(
-	lpFileTime: &FILETIME, lpSystemTime: &mut SYSTEMTIME) -> WinResult<()>
+	file_time: &FILETIME, system_time: &mut SYSTEMTIME) -> WinResult<()>
 {
 	bool_to_winresult(
 		unsafe {
 			kernel32::FileTimeToSystemTime(
-				lpFileTime as *const _ as _,
-				lpSystemTime as *mut _ as _,
+				file_time as *const _ as _,
+				system_time as *mut _ as _,
 			)
 		},
 	)
@@ -330,28 +330,30 @@ pub fn FileTimeToSystemTime(
 
 /// [`GetAsyncKeyState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
 /// function.
-pub fn GetAsyncKeyState(vKey: co::VK) -> bool {
-	unsafe { user32::GetAsyncKeyState(vKey.0 as _) != 0 }
+pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
+	unsafe { user32::GetAsyncKeyState(virt_key.0 as _) != 0 }
 }
 
 /// [`GetBinaryType`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getbinarytypew)
 /// function.
-pub fn GetBinaryType(lpApplicationName: &str) -> WinResult<co::SCS> {
-	let mut lpBinaryType = co::SCS::W_32BIT_BINARY;
+pub fn GetBinaryType(application_name: &str) -> WinResult<co::SCS> {
+	let mut binary_type = co::SCS::W_32BIT_BINARY;
 	bool_to_winresult(
 		unsafe {
 			kernel32::GetBinaryTypeW(
-				WString::from_str(lpApplicationName).as_ptr(),
-				&mut lpBinaryType.0,
+				WString::from_str(application_name).as_ptr(),
+				&mut binary_type.0,
 			)
 		},
-	).map(|_| lpBinaryType)
+	).map(|_| binary_type)
 }
 
 /// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
 /// function.
-pub fn GetClipCursor(lpRect: &mut RECT) -> WinResult<()> {
-	bool_to_winresult(unsafe { user32::GetClipCursor(lpRect as *mut _ as _) })
+pub fn GetClipCursor() -> WinResult<RECT> {
+	let mut rc = RECT::default();
+	bool_to_winresult(unsafe { user32::GetClipCursor(&mut rc as *mut _ as _) })
+		.map(|_| rc)
 }
 
 /// [`GetCommandLine`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinew)
@@ -399,10 +401,10 @@ pub fn GetCurrentThreadId() -> u32 {
 /// [`GetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
 /// function.
 pub fn GetCursorPos() -> WinResult<POINT> {
-	let mut lpPoint = POINT::default();
+	let mut pt = POINT::default();
 	bool_to_winresult(
-		unsafe { user32::GetCursorPos(&mut lpPoint as *mut _ as _) },
-	).map(|_| lpPoint)
+		unsafe { user32::GetCursorPos(&mut pt as *mut _ as _) },
+	).map(|_| pt)
 }
 
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
@@ -439,12 +441,12 @@ pub fn GetDoubleClickTime() -> u32 {
 pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 	unsafe { kernel32::GetEnvironmentStringsW().as_mut() }
 		.map(|ptr| {
-			let vecEnvStrs = parse_multi_z_str(ptr as *mut _ as _);
+			let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);
 			unsafe { kernel32::FreeEnvironmentStringsW(ptr); }
 
-			let mut map = HashMap::with_capacity(vecEnvStrs.len());
-			for envStr in vecEnvStrs {
-				let pair: Vec<&str> = envStr.split("=").collect();
+			let mut map = HashMap::with_capacity(vec_env_strs.len());
+			for env_str in vec_env_strs {
+				let pair: Vec<&str> = env_str.split("=").collect();
 				map.insert(pair[0].to_owned(), pair[1].to_owned());
 			}
 			map
@@ -478,10 +480,10 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 /// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
 /// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
 /// ```
-pub fn GetFileAttributes(lpFileName: &str) -> WinResult<co::FILE_ATTRIBUTE> {
+pub fn GetFileAttributes(file_name: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 	const INVALID: u32 = INVALID_FILE_ATTRIBUTES as u32;
 	match unsafe {
-		kernel32::GetFileAttributesW(WString::from_str(lpFileName).as_ptr())
+		kernel32::GetFileAttributesW(WString::from_str(file_name).as_ptr())
 	} {
 		INVALID => Err(GetLastError()),
 		flags => Ok(co::FILE_ATTRIBUTE(flags)),
@@ -494,16 +496,16 @@ pub fn GetFileAttributes(lpFileName: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 /// The passed buffer will be automatically allocated with
 /// [`GetFileVersionInfoSize`](crate::GetFileVersionInfoSize).
 pub fn GetFileVersionInfo(
-	lptstrFilename: &str, lpData: &mut Vec<u8>) -> WinResult<()>
+	file_name: &str, data: &mut Vec<u8>) -> WinResult<()>
 {
-	lpData.resize(GetFileVersionInfoSize(lptstrFilename).unwrap() as _, 0);
+	data.resize(GetFileVersionInfoSize(file_name).unwrap() as _, 0);
 	bool_to_winresult(
 		unsafe {
 			version::GetFileVersionInfoW(
-				WString::from_str(lptstrFilename).as_ptr(),
+				WString::from_str(file_name).as_ptr(),
 				0,
-				lpData.len() as _,
-				lpData.as_mut_ptr() as _,
+				data.len() as _,
+				data.as_mut_ptr() as _,
 			)
 		},
 	)
@@ -511,12 +513,12 @@ pub fn GetFileVersionInfo(
 
 /// [`GetFileVersionInfoSize`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
 /// function.
-pub fn GetFileVersionInfoSize(lptstrFilename: &str) -> WinResult<u32> {
-	let mut lpdwHandle = 0;
+pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
+	let mut dw_handle: u32 = 0;
 	match unsafe {
 		version::GetFileVersionInfoSizeW(
-			WString::from_str(lptstrFilename).as_ptr(),
-			&mut lpdwHandle,
+			WString::from_str(file_name).as_ptr(),
+			&mut dw_handle,
 		)
 	} {
 		0 => Err(GetLastError()),
@@ -551,10 +553,10 @@ pub fn GetFirmwareType() -> WinResult<co::FIRMWARE_TYPE> {
 /// println!("Caret rect: {}", gti.rcCaret);
 /// ```
 pub fn GetGUIThreadInfo(
-	idThread: u32, pgui: &mut GUITHREADINFO) -> WinResult<()>
+	thread_id: u32, gti: &mut GUITHREADINFO) -> WinResult<()>
 {
 	bool_to_winresult(
-		unsafe { user32::GetGUIThreadInfo(idThread, pgui as *mut _ as _) }
+		unsafe { user32::GetGUIThreadInfo(thread_id, gti as *mut _ as _) }
 	)
 }
 
@@ -603,14 +605,15 @@ pub fn GetMenuCheckMarkDimensions() -> SIZE {
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
-pub fn GetMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
-	wMsgFilterMin: u32, wMsgFilterMax: u32) -> WinResult<bool>
+pub fn GetMessage(
+	msg: &mut MSG, hwnd: Option<HWND>,
+	msg_filter_min: u32, msg_filter_max: u32) -> WinResult<bool>
 {
 	match unsafe {
 		user32::GetMessageW(
-			lpMsg as *mut _ as _,
-			hWnd.map_or(std::ptr::null_mut(), |h| h.ptr),
-			wMsgFilterMin, wMsgFilterMax,
+			msg as *mut _ as _,
+			hwnd.map_or(std::ptr::null_mut(), |h| h.ptr),
+			msg_filter_min, msg_filter_max,
 		)
 	} {
 		-1 => Err(GetLastError()),
@@ -628,8 +631,8 @@ pub fn GetMessagePos() -> POINT {
 
 /// [`GetNativeSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
 /// function.
-pub fn GetNativeSystemInfo(lpSystemInfo: &mut SYSTEM_INFO) {
-	unsafe { kernel32::GetNativeSystemInfo(lpSystemInfo as *mut _ as _) }
+pub fn GetNativeSystemInfo(si: &mut SYSTEM_INFO) {
+	unsafe { kernel32::GetNativeSystemInfo(si as *mut _ as _) }
 }
 
 /// [`GetQueueStatus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
@@ -640,14 +643,14 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 
 /// [`GetStartupInfo`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
 /// function.
-pub fn GetStartupInfo(lpStartupInfo: &mut STARTUPINFO) {
-	unsafe { kernel32::GetStartupInfoW(lpStartupInfo as *mut _ as _) }
+pub fn GetStartupInfo(si: &mut STARTUPINFO) {
+	unsafe { kernel32::GetStartupInfoW(si as *mut _ as _) }
 }
 
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
-pub fn GetSysColor(nIndex: co::COLOR) -> COLORREF {
-	COLORREF(unsafe { user32::GetSysColor(nIndex.0) })
+pub fn GetSysColor(index: co::COLOR) -> COLORREF {
+	COLORREF(unsafe { user32::GetSysColor(index.0) })
 }
 
 /// [`GetSystemDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectoryw)
@@ -664,53 +667,47 @@ pub fn GetSystemDirectory() -> WinResult<String> {
 
 /// [`GetSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
-pub fn GetSystemInfo(lpSystemInfo: &mut SYSTEM_INFO) {
-	unsafe { kernel32::GetSystemInfo(lpSystemInfo as *mut _ as _) }
+pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
+	unsafe { kernel32::GetSystemInfo(si as *mut _ as _) }
 }
 
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
 /// function.
-pub fn GetSystemMetrics(nIndex: co::SM) -> i32 {
-	unsafe { user32::GetSystemMetrics(nIndex.0) }
+pub fn GetSystemMetrics(index: co::SM) -> i32 {
+	unsafe { user32::GetSystemMetrics(index.0) }
 }
 
 /// [`GetSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
 /// function.
-pub fn GetSystemTime(lpSystemTime: &mut SYSTEMTIME) {
-	unsafe { kernel32::GetSystemTime(lpSystemTime as *mut _ as _) }
+pub fn GetSystemTime(st: &mut SYSTEMTIME) {
+	unsafe { kernel32::GetSystemTime(st as *mut _ as _) }
 }
 
 /// [`GetSystemTimeAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
-pub fn GetSystemTimeAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
-	unsafe {
-		kernel32::GetSystemTimeAsFileTime(lpSystemTimeAsFileTime as *mut _ as _)
-	}
+pub fn GetSystemTimeAsFileTime(ft: &mut FILETIME) {
+	unsafe { kernel32::GetSystemTimeAsFileTime(ft as *mut _ as _) }
 }
 
 /// [`GetSystemTimePreciseAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimepreciseasfiletime)
 /// function.
-pub fn GetSystemTimePreciseAsFileTime(lpSystemTimeAsFileTime: &mut FILETIME) {
-	unsafe {
-		kernel32::GetSystemTimePreciseAsFileTime(
-			lpSystemTimeAsFileTime as *mut _ as _,
-		)
-	}
+pub fn GetSystemTimePreciseAsFileTime(ft: &mut FILETIME) {
+	unsafe { kernel32::GetSystemTimePreciseAsFileTime(ft as *mut _ as _) }
 }
 
 /// [`GetSystemTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes)
 /// function.
 pub fn GetSystemTimes(
-	lpIdleTime: &mut FILETIME,
-	lpKernelTime: &mut FILETIME,
-	lpUserTime: &mut FILETIME) -> WinResult<()>
+	idle_time: &mut FILETIME,
+	kernel_time: &mut FILETIME,
+	user_time: &mut FILETIME) -> WinResult<()>
 {
 	bool_to_winresult(
 		unsafe {
 			kernel32::GetSystemTimes(
-				lpIdleTime as *mut _ as _,
-				lpKernelTime as *mut _ as _,
-				lpUserTime as *mut _ as _,
+				idle_time as *mut _ as _,
+				kernel_time as *mut _ as _,
+				user_time as *mut _ as _,
 			)
 		},
 	)
@@ -747,9 +744,9 @@ pub fn GetTickCount64() -> u64 {
 
 /// [`GlobalMemoryStatusEx`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
 /// function.
-pub fn GlobalMemoryStatusEx(lpBuffer: &mut MEMORYSTATUSEX) -> WinResult<()> {
+pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { kernel32::GlobalMemoryStatusEx(lpBuffer as *mut _ as _) },
+		unsafe { kernel32::GlobalMemoryStatusEx(msx as *mut _ as _) },
 	)
 }
 
@@ -772,8 +769,8 @@ pub const fn HIWORD(v: u32) -> u16 {
 
 /// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 /// function. Originally a macro.
-pub const fn HRESULT_FROM_WIN32(hresult: HRESULT) -> co::ERROR {
-	co::ERROR((hresult as u32) & 0xffff)
+pub const fn HRESULT_FROM_WIN32(hr: HRESULT) -> co::ERROR {
+	co::ERROR((hr as u32) & 0xffff)
 }
 
 /// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
@@ -784,9 +781,9 @@ pub fn InitCommonControls() {
 
 /// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
 /// function.
-pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
-	let r = unsafe { user32::IsGUIThread(bConvert as _) };
-	if bConvert {
+pub fn IsGUIThread(convert_to_gui_thread: bool) -> WinResult<bool> {
+	let r = unsafe { user32::IsGUIThread(convert_to_gui_thread as _) };
+	if convert_to_gui_thread {
 		match r {
 			0 => Ok(false),
 			1 => Ok(true),
@@ -800,10 +797,10 @@ pub fn IsGUIThread(bConvert: bool) -> WinResult<bool> {
 /// [`IsNativeVhdBoot`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-isnativevhdboot)
 /// function.
 pub fn IsNativeVhdBoot() -> WinResult<bool> {
-	let mut nativeVhdBoot: BOOL = 0;
-	match unsafe { kernel32::IsNativeVhdBoot(&mut nativeVhdBoot) } {
+	let mut is_native: BOOL = 0;
+	match unsafe { kernel32::IsNativeVhdBoot(&mut is_native) } {
 		0 => Err(GetLastError()),
-		_ => Ok(nativeVhdBoot != 0),
+		_ => Ok(is_native != 0),
 	}
 }
 
@@ -852,20 +849,20 @@ pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
 pub fn IsWindowsServer() -> WinResult<bool> {
 	let mut osvi = OSVERSIONINFOEX::default();
 	osvi.wProductType = co::VER_NT::WORKSTATION;
-	let dwlConditionMask = VerSetConditionMask(
+	let cond_mask = VerSetConditionMask(
 		0, co::VER_MASK::PRODUCT_TYPE, co::VER_COND::EQUAL);
-	VerifyVersionInfo(&mut osvi, co::VER_MASK::PRODUCT_TYPE, dwlConditionMask)
+	VerifyVersionInfo(&mut osvi, co::VER_MASK::PRODUCT_TYPE, cond_mask)
 		.map(|b| !b) // not workstation
 }
 
 /// [`IsWindowsVersionOrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsversionorgreater)
 /// function.
 pub fn IsWindowsVersionOrGreater(
-	wMajorVersion: u16, wMinorVersion: u16,
-	wServicePackMajor: u16) -> WinResult<bool>
+	major_version: u16, minor_version: u16,
+	service_pack_major: u16) -> WinResult<bool>
 {
 	let mut osvi = OSVERSIONINFOEX::default();
-	let dwlConditionMask = VerSetConditionMask(
+	let cond_mask = VerSetConditionMask(
 		VerSetConditionMask(
 			VerSetConditionMask(0, co::VER_MASK::MAJORVERSION, co::VER_COND::GREATER_EQUAL),
 			co::VER_MASK::MINORVERSION, co::VER_COND::GREATER_EQUAL,
@@ -873,14 +870,14 @@ pub fn IsWindowsVersionOrGreater(
 		co::VER_MASK::SERVICEPACKMAJOR, co::VER_COND::GREATER_EQUAL
 	);
 
-	osvi.dwMajorVersion = wMajorVersion as _;
-	osvi.dwMinorVersion = wMinorVersion as _;
-	osvi.wServicePackMajor = wServicePackMajor;
+	osvi.dwMajorVersion = major_version as _;
+	osvi.dwMinorVersion = minor_version as _;
+	osvi.wServicePackMajor = service_pack_major;
 
 	VerifyVersionInfo(
 		&mut osvi,
 		co::VER_MASK::MAJORVERSION | co::VER_MASK::MINORVERSION | co::VER_MASK::SERVICEPACKMAJOR,
-		dwlConditionMask,
+		cond_mask,
 	)
 }
 
@@ -908,9 +905,9 @@ pub const fn LOBYTE(v: u16) -> u8 {
 
 /// [`LockSetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow)
 /// function.
-pub fn LockSetForegroundWindow(uLockCode: co::LSFW) -> WinResult<()> {
+pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { user32::LockSetForegroundWindow(uLockCode.0) },
+		unsafe { user32::LockSetForegroundWindow(lock_code.0) },
 	)
 }
 
@@ -948,14 +945,12 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 
 /// [`MoveFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefilew)
 /// function.
-pub fn MoveFile(
-	lpExistingFileName: &str, lpNewFileName: &str) -> WinResult<()>
-{
+pub fn MoveFile(existing_file: &str, new_file: &str) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
 			kernel32::MoveFileW(
-				WString::from_str(lpExistingFileName).as_ptr(),
-				WString::from_str(lpNewFileName).as_ptr(),
+				WString::from_str(existing_file).as_ptr(),
+				WString::from_str(new_file).as_ptr(),
 			)
 		},
 	)
@@ -963,8 +958,8 @@ pub fn MoveFile(
 
 /// [`MulDiv`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-muldiv)
 /// function.
-pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32 {
-	unsafe { kernel32::MulDiv(nNumber, nNumerator, nDenominator) }
+pub fn MulDiv(number: i32, numerator: i32, denominator: i32) -> i32 {
+	unsafe { kernel32::MulDiv(number, numerator, denominator) }
 }
 
 /// [`MultiByteToWideChar`](https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar)
@@ -972,38 +967,38 @@ pub fn MulDiv(nNumber: i32, nNumerator: i32, nDenominator: i32) -> i32 {
 ///
 /// The resulting `Vec<u16>` includes a terminating null.
 pub fn MultiByteToWideChar(
-	CodePage: co::CP, dwFlags: co::MBC,
-	lpMultiByteStr: &[u8]) -> WinResult<Vec<u16>> {
-
+	code_page: co::CP, flags: co::MBC,
+	multi_byte_str: &[u8]) -> WinResult<Vec<u16>>
+{
 	match unsafe {
 		kernel32::MultiByteToWideChar(
-			CodePage.0,
-			dwFlags.0,
-			lpMultiByteStr.as_ptr(),
-			lpMultiByteStr.len() as _,
+			code_page.0,
+			flags.0,
+			multi_byte_str.as_ptr(),
+			multi_byte_str.len() as _,
 			std::ptr::null_mut(),
 			0,
 		)
 	} {
 		0 => Err(GetLastError()),
-		numBytes => {
-			let numBytes = numBytes as usize + 1; // add room for terminating null
-			let mut destBuf: Vec<u16> = vec![0x0000; numBytes as _];
+		num_bytes => {
+			let num_bytes = num_bytes as usize + 1; // add room for terminating null
+			let mut dest_buf: Vec<u16> = vec![0x0000; num_bytes as _];
 
 			match unsafe {
 				kernel32::MultiByteToWideChar(
-					CodePage.0,
-					dwFlags.0,
-					lpMultiByteStr.as_ptr(),
-					lpMultiByteStr.len() as _,
-					destBuf.as_mut_ptr(),
-					numBytes as _,
+					code_page.0,
+					flags.0,
+					multi_byte_str.as_ptr(),
+					multi_byte_str.len() as _,
+					dest_buf.as_mut_ptr(),
+					num_bytes as _,
 				)
 			} {
 				0 => Err(GetLastError()),
 				_ => {
-					unsafe { *destBuf.get_unchecked_mut(numBytes - 1) = 0x0000; } // terminating null
-					Ok(destBuf)
+					unsafe { *dest_buf.get_unchecked_mut(num_bytes - 1) = 0x0000; } // terminating null
+					Ok(dest_buf)
 				},
 			}
 		},
@@ -1012,32 +1007,33 @@ pub fn MultiByteToWideChar(
 
 /// [`OutputDebugString`](https://docs.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
 /// function.
-pub fn OutputDebugString(lpOutputString: &str) {
+pub fn OutputDebugString(output_string: &str) {
 	unsafe {
-		kernel32::OutputDebugStringW(WString::from_str(lpOutputString).as_ptr())
+		kernel32::OutputDebugStringW(WString::from_str(output_string).as_ptr())
 	}
 }
 
 /// [`PeekMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
 /// function.
-pub fn PeekMessage(lpMsg: &mut MSG, hWnd: Option<HWND>,
-	wMsgFilterMin: u32, wMsgFilterMax: u32, wRemoveMsg: co::PM) -> bool
+pub fn PeekMessage(
+	msg: &mut MSG, hwnd: Option<HWND>,
+	msg_filter_min: u32, msg_filter_max: u32, remove_msg: co::PM) -> bool
 {
 	unsafe {
 		user32::PeekMessageW(
-			lpMsg as *mut _ as _,
-			hWnd.map_or(std::ptr::null_mut(), |h| h.ptr),
-			wMsgFilterMin,
-			wMsgFilterMax,
-			wRemoveMsg.0,
+			msg as *mut _ as _,
+			hwnd.map_or(std::ptr::null_mut(), |h| h.ptr),
+			msg_filter_min,
+			msg_filter_max,
+			remove_msg.0,
 		) != 0
 	}
 }
 
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
 /// function.
-pub fn PostQuitMessage(nExitCode: co::ERROR) {
-	unsafe { user32::PostQuitMessage(nExitCode.0 as _) }
+pub fn PostQuitMessage(exit_code: co::ERROR) {
+	unsafe { user32::PostQuitMessage(exit_code.0 as _) }
 }
 
 /// [`QueryPerformanceCounter`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
@@ -1059,25 +1055,25 @@ pub fn PostQuitMessage(nExitCode: co::ERROR) {
 /// println!("Operation lasted {:.2} ms", duration_ms);
 /// ```
 pub fn QueryPerformanceCounter() -> WinResult<i64> {
-	let mut lpPerformanceCount: i64 = 0;
+	let mut perf_count: i64 = 0;
 	bool_to_winresult(
-		unsafe { kernel32::QueryPerformanceCounter(&mut lpPerformanceCount) },
-	).map(|_| lpPerformanceCount)
+		unsafe { kernel32::QueryPerformanceCounter(&mut perf_count) },
+	).map(|_| perf_count)
 }
 
 /// [`QueryPerformanceFrequency`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
 /// function.
 pub fn QueryPerformanceFrequency() -> WinResult<i64> {
-	let mut lpFrequency: i64 = 0;
+	let mut freq: i64 = 0;
 	bool_to_winresult(
-		unsafe { kernel32::QueryPerformanceFrequency(&mut lpFrequency) },
-	).map(|_| lpFrequency)
+		unsafe { kernel32::QueryPerformanceFrequency(&mut freq) },
+	).map(|_| freq)
 }
 
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
-pub fn RegisterClassEx(lpwcx: &WNDCLASSEX) -> WinResult<ATOM> {
-	match unsafe { user32::RegisterClassExW(lpwcx as *const _ as _) } {
+pub fn RegisterClassEx(wcx: &WNDCLASSEX) -> WinResult<ATOM> {
+	match unsafe { user32::RegisterClassExW(wcx as *const _ as _) } {
 		0 => Err(GetLastError()),
 		atom => Ok(ATOM(atom)),
 	}
@@ -1091,7 +1087,8 @@ pub fn ReleaseCapture() -> WinResult<()> {
 
 /// [`ReplaceFileW`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
-pub fn ReplaceFile(replaced: &str, replacement: &str,
+pub fn ReplaceFile(
+	replaced: &str, replacement: &str,
 	backup: Option<&str>, flags: co::REPLACEFILE) -> WinResult<()>
 {
 	bool_to_winresult(
@@ -1110,9 +1107,9 @@ pub fn ReplaceFile(replaced: &str, replacement: &str,
 
 /// [`SetCaretBlinkTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)
 /// function.
-pub fn SetCaretBlinkTime(uMSeconds: u32) -> WinResult<()> {
+pub fn SetCaretBlinkTime(milliseconds: u32) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { user32::SetCaretBlinkTime(uMSeconds) },
+		unsafe { user32::SetCaretBlinkTime(milliseconds) },
 	)
 }
 
@@ -1124,18 +1121,18 @@ pub fn SetCaretPos(x: i32, y: i32) -> WinResult<()> {
 
 /// [`SetClipboardData`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
 /// function.
-pub fn SetClipboardData(uFormat: co::CF, hMem: *mut u8) -> WinResult<*mut u8> {
-	unsafe { user32::SetClipboardData(uFormat.0, hMem as _).as_mut() }
-		.map(|hMem| hMem as *mut _ as _)
+pub fn SetClipboardData(format: co::CF, hmem: *mut u8) -> WinResult<*mut u8> {
+	unsafe { user32::SetClipboardData(format.0, hmem as _).as_mut() }
+		.map(|hmem| hmem as *mut _ as _)
 		.ok_or_else(|| GetLastError())
 }
 
 /// [`SetCurrentDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory)
 /// function.
-pub fn SetCurrentDirectory(pathName: &str) -> WinResult<()> {
+pub fn SetCurrentDirectory(path_name: &str) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
-			kernel32::SetCurrentDirectoryW(WString::from_str(pathName).as_ptr())
+			kernel32::SetCurrentDirectoryW(WString::from_str(path_name).as_ptr())
 		},
 	)
 }
@@ -1148,8 +1145,8 @@ pub fn SetCursorPos(x: i32, y: i32) -> WinResult<()> {
 
 /// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
 /// function.
-pub fn SetLastError(dwErrCode: co::ERROR) {
-	unsafe { kernel32::SetLastError(dwErrCode.0) }
+pub fn SetLastError(err_code: co::ERROR) {
+	unsafe { kernel32::SetLastError(err_code.0) }
 }
 
 /// [`SetProcessDPIAware`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
@@ -1163,17 +1160,17 @@ pub fn SetProcessDPIAware() -> WinResult<()> {
 ///
 /// **Note:** The `pv` type varies according to `uFlags`. If you set it wrong,
 /// you're likely to cause a buffer overrun.
-pub unsafe fn SHAddToRecentDocs<T>(uFlags: co::SHARD, pv: &T) {
-	shell32::SHAddToRecentDocs(uFlags.0, pv as *const _ as _);
+pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
+	shell32::SHAddToRecentDocs(flags.0, pv as *const _ as _);
 }
 
 /// [`Shell_NotifyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
 pub fn Shell_NotifyIcon(
-	dwMessage: co::NIM, lpData: &mut NOTIFYICONDATA) -> WinResult<()>
+	message: co::NIM, data: &mut NOTIFYICONDATA) -> WinResult<()>
 {
 	bool_to_winresult(
-		unsafe { shell32::Shell_NotifyIconW(dwMessage.0, lpData as *mut _ as _) },
+		unsafe { shell32::Shell_NotifyIconW(message.0, data as *mut _ as _) },
 	)
 }
 
@@ -1184,16 +1181,16 @@ pub fn Shell_NotifyIcon(
 /// [`SHFILEINFO`](crate::SHFILEINFO), it must be paired with an
 /// [`HICON::DestroyIcon`](crate::HICON::DestroyIcon) call.
 pub fn SHGetFileInfo(
-	pszPath: &str, dwFileAttributes: co::FILE_ATTRIBUTE,
-	psfi: &mut SHFILEINFO, uFlags: co::SHGFI) -> WinResult<u32>
+	path: &str, file_attrs: co::FILE_ATTRIBUTE,
+	shfi: &mut SHFILEINFO, flags: co::SHGFI) -> WinResult<u32>
 {
 	match unsafe {
 		shell32::SHGetFileInfoW(
-			WString::from_str(pszPath).as_ptr(),
-			dwFileAttributes.0,
-			psfi as *mut _ as _,
+			WString::from_str(path).as_ptr(),
+			file_attrs.0,
+			shfi as *mut _ as _,
 			std::mem::size_of::<SHFILEINFO>() as _,
-			uFlags.0,
+			flags.0,
 		)
 	} {
 		0 => Err(GetLastError()),
@@ -1203,9 +1200,9 @@ pub fn SHGetFileInfo(
 
 /// [`SHFileOperation`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
-pub fn SHFileOperation(lpFileOp: &mut SHFILEOPSTRUCT) -> WinResult<()> {
+pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> WinResult<()> {
 	match unsafe {
-		shell32::SHFileOperationW(lpFileOp as *mut _ as _)
+		shell32::SHFileOperationW(file_op as *mut _ as _)
 	} {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
@@ -1214,14 +1211,14 @@ pub fn SHFileOperation(lpFileOp: &mut SHFILEOPSTRUCT) -> WinResult<()> {
 
 /// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)
 /// function.
-pub fn ShowCursor(bShow: bool) -> i32 {
-	unsafe { user32::ShowCursor(bShow as _) }
+pub fn ShowCursor(show: bool) -> i32 {
+	unsafe { user32::ShowCursor(show as _) }
 }
 
 /// [`Sleep`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
 /// function.
-pub fn Sleep(dwMilliseconds: u32) {
-	unsafe { kernel32::Sleep(dwMilliseconds) }
+pub fn Sleep(milliseconds: u32) {
+	unsafe { kernel32::Sleep(milliseconds) }
 }
 
 /// [`SoundSentry`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-soundsentry)
@@ -1236,17 +1233,17 @@ pub fn SoundSentry() -> bool {
 /// **Note:** The `pvParam` type varies according to `uiAction`. If you set it
 /// wrong, you're likely to cause a buffer overrun.
 pub unsafe fn SystemParametersInfo<T>(
-	uiAction: co::SPI,
-	uiParam: u32,
-	pvParam: &mut T,
-	fWinIni: co::SPIF) -> WinResult<()>
+	action: co::SPI,
+	ui_param: u32,
+	pv_param: &mut T,
+	win_ini: co::SPIF) -> WinResult<()>
 {
 	bool_to_winresult(
 		user32::SystemParametersInfoW(
-			uiAction.0,
-			uiParam,
-			pvParam as *mut _ as _,
-			fWinIni.0,
+			action.0,
+			ui_param,
+			pv_param as *mut _ as _,
+			win_ini.0,
 		),
 	)
 }
@@ -1254,13 +1251,13 @@ pub unsafe fn SystemParametersInfo<T>(
 /// [`SystemTimeToFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetofiletime)
 /// function.
 pub fn SystemTimeToFileTime(
-	lpSystemTime: &SYSTEMTIME, lpFileTime: &mut FILETIME) -> WinResult<()>
+	st: &SYSTEMTIME, ft: &mut FILETIME) -> WinResult<()>
 {
 	bool_to_winresult(
 		unsafe {
 			kernel32::SystemTimeToFileTime(
-				lpSystemTime as *const _ as _,
-				lpFileTime as *mut _ as _,
+				st as *const _ as _,
+				ft as *mut _ as _,
 			)
 		},
 	)
@@ -1269,16 +1266,16 @@ pub fn SystemTimeToFileTime(
 /// [`SystemTimeToTzSpecificLocalTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
 /// function.
 pub fn SystemTimeToTzSpecificLocalTime(
-	lpTimeZoneInformation: Option<&TIME_ZONE_INFORMATION>,
-	lpUniversalTime: &SYSTEMTIME,
-	lpLocalTime: &mut SYSTEMTIME) -> WinResult<()>
+	time_zone: Option<&TIME_ZONE_INFORMATION>,
+	universal_time: &SYSTEMTIME,
+	local_time: &mut SYSTEMTIME) -> WinResult<()>
 {
 	bool_to_winresult(
 		unsafe {
 			kernel32::SystemTimeToTzSpecificLocalTime(
-				lpTimeZoneInformation.map_or(std::ptr::null(), |lp| lp as *const _ as _),
-				lpUniversalTime as *const _ as _,
-				lpLocalTime as *mut _ as _,
+				time_zone.map_or(std::ptr::null(), |lp| lp as *const _ as _),
+				universal_time as *const _ as _,
+				local_time as *mut _ as _,
 			)
 		},
 	)
@@ -1330,55 +1327,53 @@ pub fn SystemTimeToTzSpecificLocalTime(
 /// TaskDialogIndirect(&tdc, None).unwrap();
 /// ```
 pub fn TaskDialogIndirect(
-	pTaskConfig: &TASKDIALOGCONFIG,
-	pfVerificationFlagChecked: Option<&mut bool>) -> WinResult<(co::DLGID, u16)>
+	task_config: &TASKDIALOGCONFIG,
+	verification_flag_checked: Option<&mut bool>) -> WinResult<(co::DLGID, u16)>
 {
-	let mut pnButton: i32 = 0;
-	let mut pnRadioButton: i32 = 0;
-	let mut pfBool: BOOL = 0;
+	let mut pn_button: i32 = 0;
+	let mut pn_radio_button: i32 = 0;
+	let mut pf_bool: BOOL = 0;
 
 	hr_to_winresult(
 		unsafe {
 			comctl32::TaskDialogIndirect(
-				pTaskConfig as *const _ as _,
-				&mut pnButton,
-				&mut pnRadioButton,
-				pfVerificationFlagChecked.as_ref()
-					.map_or(std::ptr::null_mut(), |_| &mut pfBool),
+				task_config as *const _ as _,
+				&mut pn_button,
+				&mut pn_radio_button,
+				verification_flag_checked.as_ref()
+					.map_or(std::ptr::null_mut(), |_| &mut pf_bool),
 			)
 		},
 	)?;
 
-	if let Some(pf) = pfVerificationFlagChecked {
-		*pf = pfBool != 0;
+	if let Some(pf) = verification_flag_checked {
+		*pf = pf_bool != 0;
 	}
-	Ok((co::DLGID(pnButton as _), pnRadioButton as _))
+	Ok((co::DLGID(pn_button as _), pn_radio_button as _))
 }
 
 /// [`TrackMouseEvent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
 /// function.
-pub fn TrackMouseEvent(lpEventTrack: &mut TRACKMOUSEEVENT) -> WinResult<()> {
+pub fn TrackMouseEvent(tme: &mut TRACKMOUSEEVENT) -> WinResult<()> {
 	bool_to_winresult(
-		unsafe { user32::TrackMouseEvent(lpEventTrack as *mut _ as _) },
+		unsafe { user32::TrackMouseEvent(tme as *mut _ as _) },
 	)
 }
 
 /// [`TranslateMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
 /// function.
-pub fn TranslateMessage(lpMsg: &MSG) -> bool {
-	unsafe { user32::TranslateMessage(lpMsg as *const _ as _) != 0 }
+pub fn TranslateMessage(msg: &MSG) -> bool {
+	unsafe { user32::TranslateMessage(msg as *const _ as _) != 0 }
 }
 
 /// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
-pub fn UnregisterClass(
-	lpClassName: &str, hInstance: HINSTANCE) -> WinResult<()>
-{
+pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 	bool_to_winresult(
 		unsafe {
 			user32::UnregisterClassW(
-				WString::from_str(lpClassName).as_ptr(),
-				hInstance.ptr,
+				WString::from_str(class_name).as_ptr(),
+				hinst.ptr,
 			)
 		},
 	)
@@ -1410,32 +1405,32 @@ pub fn UnregisterClass(
 ///     ver[0], ver[1], ver[2], ver[3]);
 /// ```
 pub unsafe fn VarQueryValue<'a, T>(
-	pBlock: &'a [u8], lpSubBlock: &str) -> WinResult<&'a T>
+	block: &'a [u8], sub_block: &str) -> WinResult<&'a T>
 {
-	let mut lplpBuffer = std::ptr::null();
-	let mut puLen = 0;
+	let mut lp_lp_buffer = std::ptr::null();
+	let mut pu_len = 0;
 	bool_to_winresult(
 		version::VerQueryValueW(
-			pBlock.as_ptr() as _,
-			WString::from_str(lpSubBlock).as_ptr(),
-			&mut lplpBuffer as *mut _ as _,
-			&mut puLen,
+			block.as_ptr() as _,
+			WString::from_str(sub_block).as_ptr(),
+			&mut lp_lp_buffer as *mut _ as _,
+			&mut pu_len,
 		),
-	).map(|_| &*(lplpBuffer as *const T))
+	).map(|_| &*(lp_lp_buffer as *const T))
 }
 
 /// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
 /// function.
 pub fn VerifyVersionInfo(
-	lpVersionInformation: &mut OSVERSIONINFOEX,
-	dwTypeMask: co::VER_MASK,
-	dwlConditionMask: u64) -> WinResult<bool>
+	osvix: &mut OSVERSIONINFOEX,
+	type_mask: co::VER_MASK,
+	condition_mask: u64) -> WinResult<bool>
 {
 	match unsafe {
 		kernel32::VerifyVersionInfoW(
-			lpVersionInformation as *mut _ as _,
-			dwTypeMask.0,
-			dwlConditionMask,
+			osvix as *mut _ as _,
+			type_mask.0,
+			condition_mask,
 		)
 	} {
 		0 => match GetLastError() {
@@ -1449,10 +1444,10 @@ pub fn VerifyVersionInfo(
 /// [`VerSetConditionMask`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-versetconditionmask)
 /// function.
 pub fn VerSetConditionMask(
-	ConditionMask: u64, TypeMask: co::VER_MASK, Condition: co::VER_COND) -> u64
+	condition_mask: u64, type_mask: co::VER_MASK, condition: co::VER_COND) -> u64
 {
 	unsafe {
-		kernel32::VerSetConditionMask(ConditionMask, TypeMask.0, Condition.0)
+		kernel32::VerSetConditionMask(condition_mask, type_mask.0, condition.0)
 	}
 }
 
@@ -1467,49 +1462,49 @@ pub fn WaitMessage() -> WinResult<()> {
 ///
 /// The resulting `Vec<u16>` includes a terminating null.
 pub fn WideCharToMultiByte(
-	CodePage: co::CP, dwFlags: co::WC,
-	lpWideCharStr: &[u16], lpDefaultChar: Option<u8>,
-	lpUsedDefaultChar: Option<&mut bool>) -> WinResult<Vec<u8>> {
+	code_page: co::CP, flags: co::WC,
+	wide_char_str: &[u16], default_char: Option<u8>,
+	used_default_char: Option<&mut bool>) -> WinResult<Vec<u8>> {
 
-	let mut lpDefaulCharBuf = lpDefaultChar.unwrap_or_default();
+	let mut default_char_buf = default_char.unwrap_or_default();
 
 	match unsafe {
 		kernel32::WideCharToMultiByte(
-			CodePage.0,
-			dwFlags.0,
-			lpWideCharStr.as_ptr(),
-			lpWideCharStr.len() as _,
+			code_page.0,
+			flags.0,
+			wide_char_str.as_ptr(),
+			wide_char_str.len() as _,
 			std::ptr::null_mut(),
 			0,
-			&mut lpDefaulCharBuf,
+			&mut default_char_buf,
 			std::ptr::null_mut(),
 		)
 	} {
 		0 => Err(GetLastError()),
-		numBytes => {
-			let numBytes = numBytes as usize + 1; // add room for terminating null
-			let mut destBuf: Vec<u8> = vec![0x00; numBytes as _];
-			let mut boolBuf: BOOL = 0;
+		num_bytes => {
+			let num_bytes = num_bytes as usize + 1; // add room for terminating null
+			let mut dest_buf: Vec<u8> = vec![0x00; num_bytes as _];
+			let mut bool_buf: BOOL = 0;
 
 			match unsafe {
 				kernel32::WideCharToMultiByte(
-					CodePage.0,
-					dwFlags.0,
-					lpWideCharStr.as_ptr(),
-					lpWideCharStr.len() as _,
-					destBuf.as_mut_ptr() as _,
-					numBytes as _,
-					&mut lpDefaulCharBuf,
-					&mut boolBuf,
+					code_page.0,
+					flags.0,
+					wide_char_str.as_ptr(),
+					wide_char_str.len() as _,
+					dest_buf.as_mut_ptr() as _,
+					num_bytes as _,
+					&mut default_char_buf,
+					&mut bool_buf,
 				)
 			} {
 				0 => Err(GetLastError()),
 				_ => {
-					if let Some(lp) = lpUsedDefaultChar {
-						*lp = boolBuf != 0;
+					if let Some(lp) = used_default_char {
+						*lp = bool_buf != 0;
 					}
-					unsafe { *destBuf.get_unchecked_mut(numBytes - 1) = 0x00; } // terminating null
-					Ok(destBuf)
+					unsafe { *dest_buf.get_unchecked_mut(num_bytes - 1) = 0x00; } // terminating null
+					Ok(dest_buf)
 				},
 			}
 		},

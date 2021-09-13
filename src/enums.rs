@@ -179,7 +179,7 @@ impl HwndHmenu {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`.
+/// * [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `hwnd_insert_after`.
 #[derive(Copy, Clone)]
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.
@@ -253,7 +253,7 @@ pub enum IconIdTdicon {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`.
+/// * [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor) `resource_id`.
 #[derive(Clone)]
 pub enum IdIdcStr {
 	/// A resource ID.
@@ -278,7 +278,7 @@ impl IdIdcStr {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`.
+/// * [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon) `icon_id`.
 #[derive(Clone)]
 pub enum IdIdiStr {
 	/// A resource ID.
@@ -385,8 +385,13 @@ impl IdPos {
 
 /// Variant parameter for:
 ///
+/// * [`HINSTANCE::CreateDialogParam`](crate::HINSTANCE::CreateDialogParam) `resource_id`;
+/// * [`HINSTANCE::DialogBoxParam`](crate::HINSTANCE::DialogBoxParam) `resource_id`;
 /// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames) `func`;
-/// * [`HINSTANCE::LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `lpTableName`.
+/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource) `resource_id`;
+/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx) `resource_id`;
+/// * [`HINSTANCE::LoadAccelerators`](crate::HINSTANCE::LoadAccelerators) `table_name`;
+/// * [`HINSTANCE::LoadMenu`](crate::HINSTANCE::LoadMenu) `resource_id`;
 #[derive(Clone)]
 pub enum IdStr {
 	/// A resource ID.
@@ -491,7 +496,7 @@ pub enum NccspRect<'a, 'b> {
 	Rect(&'b mut RECT),
 }
 
-/// Variant value returned by [`RegQueryValueEx`](crate::HKEY::RegQueryValueEx).
+/// Registry value types.
 #[derive(Clone)]
 pub enum RegistryValue {
 	/// Binary value, defined as [`REG::BINARY`](crate::co::REG::BINARY).
@@ -548,7 +553,10 @@ impl RegistryValue {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::EnumResourceTypes`](crate::HINSTANCE::EnumResourceTypes) `func`.
+/// * [`HINSTANCE::EnumResourceLanguages`](crate::HINSTANCE::EnumResourceLanguages) `resource_type`;
+/// * [`HINSTANCE::EnumResourceTypes`](crate::HINSTANCE::EnumResourceTypes) `resource_type`;
+/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource) `resource_type`;
+/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx) `resource_type`.
 #[derive(Clone)]
 pub enum RtStr {
 	/// A predefined resource ID.

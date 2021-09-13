@@ -357,8 +357,8 @@ pub_struct_const! { TDF, i32,
 }
 
 pub_struct_const! { TH32CS, u32,
-	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST)
-	/// `dwFlags` (`u32`).
+	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
+	/// (`u32`).
 	=>
 	SNAPHEAPLIST, 0x0000_0001
 	SNAPPROCESS, 0x0000_0002
@@ -370,8 +370,8 @@ pub_struct_const! { TH32CS, u32,
 }
 
 pub_struct_const! { THREAD_CREATE, u32,
-	/// [`HTHREAD::CreateThread`](crate::HTHREAD::CreateThread) `dwFlags`
-	/// (`u32`). Originally has no prefix.
+	/// [`HTHREAD::CreateThread`](crate::HTHREAD::CreateThread) `flags` (`u32`).
+	/// Originally has no prefix.
 	=>
 	/// Originally just a zero.
 	RUN_IMMEDIATELY, 0
@@ -652,7 +652,7 @@ pub_struct_const! { TMT, i32,
 }
 
 pub_struct_const! { TPM, u32,
-	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `uFlags` (`u32`).
+	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `flags` (`u32`).
 	=>
 	LEFTBUTTON, 0x0000
 	RIGHTBUTTON, 0x0002

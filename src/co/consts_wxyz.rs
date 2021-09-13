@@ -20,7 +20,7 @@ pub_struct_const! { WAIT, u32,
 }
 
 pub_struct_const! { WC, u32,
-	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `dwFlags` (`u32`).
+	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
 	=>
 	COMPOSITECHECK, 0x0000_0200
 	ERR_INVALID_CHARS, 0x0000_0080
@@ -41,7 +41,8 @@ pub_struct_const! { WDA, u32,
 }
 
 pub_struct_const! { WH, i32,
-	/// [`HHOOK::SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `idHook`
+	/// [`HHOOK::CallNextHookEx`](crate::HHOOK::CallNextHookEx) `code` and
+	/// [`HHOOK::SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `hook_id`
 	/// (`i32`).
 	=>
 	MSGFILTER, -1

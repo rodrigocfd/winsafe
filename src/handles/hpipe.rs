@@ -22,8 +22,8 @@ impl HPIPE {
 	/// **Note:** Must be paired with
 	/// [`HPIPE::CloseHandle`](crate::HPIPE::CloseHandle) calls.
 	pub fn CreatePipe(
-		lpPipeAttributes: Option<&mut SECURITY_ATTRIBUTES>,
-		nSize: u32) -> WinResult<(HPIPE, HPIPE)>
+		attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		size: u32) -> WinResult<(HPIPE, HPIPE)>
 	{
 		let (mut hread, mut hwrite) = (Self::NULL, Self::NULL);
 		bool_to_winresult(
@@ -31,8 +31,8 @@ impl HPIPE {
 				kernel32::CreatePipe(
 					&mut hread.ptr,
 					&mut hwrite.ptr,
-					lpPipeAttributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					nSize,
+					attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					size,
 				)
 			},
 		).map(|_| (hread, hwrite))
@@ -41,18 +41,18 @@ impl HPIPE {
 	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// method.
 	pub fn ReadFile(self,
-		numBytesToRead: u32,
-		lpOverlapped: Option<&mut OVERLAPPED>) -> WinResult<Vec<u8>>
+		num_bytes_to_read: u32,
+		overlapped: Option<&mut OVERLAPPED>) -> WinResult<Vec<u8>>
 	{
-		HFILE { ptr: self.ptr }.ReadFile(numBytesToRead, lpOverlapped)
+		HFILE { ptr: self.ptr }.ReadFile(num_bytes_to_read, overlapped)
 	}
 
 	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// method.
 	pub fn WriteFile(self,
-		buffer: &[u8],
-		lpOverlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+		data: &[u8],
+		overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
 	{
-		HFILE { ptr: self.ptr }.WriteFile(buffer, lpOverlapped)
+		HFILE { ptr: self.ptr }.WriteFile(data, overlapped)
 	}
 }

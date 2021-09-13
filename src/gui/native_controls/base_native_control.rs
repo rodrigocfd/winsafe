@@ -86,7 +86,7 @@ impl BaseNativeControl {
 			ex_styles,
 			AtomStr::from_str(class_name),
 			title, styles,
-			pos.x, pos.y, sz.cx, sz.cy,
+			pos, sz,
 			Some(hparent),
 			IdMenu::Id(ctrl_id),
 			hparent.hinstance(),

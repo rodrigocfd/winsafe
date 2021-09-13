@@ -3,8 +3,7 @@
 use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS};
 
 pub_struct_const! { EDS, u32,
-	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `iModeNum`
-	/// (`u32`).
+	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `flags` (`u32`).
 	=>
 	RAWMODE, 0x0000_0002
 	ROTATEDMODE, 0x0000_0004
@@ -94,7 +93,7 @@ pub_struct_const! { ENDSESSION, u32,
 }
 
 pub_struct_const! { ENUM_SETTINGS, u32,
-	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `dwFlags`
+	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `mode_num`
 	/// (`u32`). Originally with `ENUM` prefix and `SETTINGS` suffix.
 	=>
 	CURRENT, (0 - 1) as u32
@@ -146,7 +145,7 @@ pub_struct_const! { FILE_ATTRIBUTE, u32,
 	/// File attribute
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
 	/// also other flags from [`HFILE::CreateFile`](crate::HFILE::CreateFile)
-	/// `dwFlagsAndAttributes` (`u32`).
+	/// `flags_and_attrs` (`u32`).
 	=>
 	READONLY, 0x0000_0001
 	HIDDEN, 0x0000_0002
@@ -194,7 +193,7 @@ pub_struct_const! { FILE_ATTRIBUTE, u32,
 
 pub_struct_const! { FILE_MAP, u32,
 	/// [`HFILEMAP::MapViewOfFile`](crate::HFILEMAP::MapViewOfFile)
-	/// `dwDesiredAccess` (`u32`).
+	/// `desired_access` (`u32`).
 	=>
 	ALL_ACCESS, SECTION::ALL_ACCESS.0
 	READ, SECTION::MAP_READ.0
@@ -228,7 +227,7 @@ pub_struct_const! { FILE_RIGHT, u32,
 }
 
 pub_struct_const! { FILE_SHARE, u32,
-	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `dwShareMode` (`u32`).
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `share_mode` (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue, 0
@@ -239,7 +238,7 @@ pub_struct_const! { FILE_SHARE, u32,
 
 pub_struct_const! { FILE_STARTING_POINT, u32,
 	/// [`HFILE::SetFilePointerEx`](crate::HFILE::SetFilePointerEx)
-	/// `dwMoveMethod` (`u32`). Originally has `FILE` prefix.
+	/// `move_method` (`u32`). Originally has `FILE` prefix.
 	=>
 	/// The starting point is zero or the beginning of the file. If this flag is
 	/// specified, then the `liDistanceToMove` parameter is interpreted as an
@@ -321,6 +320,7 @@ pub_struct_const! { FORMAT_MESSAGE, u32,
 }
 
 pub_struct_const! { FW, u32,
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `weight` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
 	=>
 	DONTCARE, 0

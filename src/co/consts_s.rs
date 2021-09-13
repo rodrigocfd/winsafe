@@ -41,7 +41,7 @@ pub_struct_const_ws! { SBARS, u32,
 pub_struct_const! { SBB, i32,
 	/// [`HWND::GetScrollInfo`](crate::HWND::GetScrollInfo),
 	/// [`HWND::SetScrollInfo`](crate::HWND::SetScrollInfo) and
-	/// [`HWND::SetScrollRange`](crate::HWND::SetScrollRange) `nBar` (`i32`).
+	/// [`HWND::SetScrollRange`](crate::HWND::SetScrollRange) `bar` (`i32`).
 	/// Originally has `SB` prefix.
 	=>
 	HORZ, 0
@@ -177,7 +177,7 @@ pub_struct_const! { SHARD, u32,
 }
 
 pub_struct_const! { SHGFI, u32,
-	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `uFlags` (`u32`).
+	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `flags` (`u32`).
 	=>
 	ICON, 0x0000_0100
 	DISPLAYNAME, 0x0000_0200
@@ -229,7 +229,7 @@ pub_struct_const! { SIZE_R, u8,
 }
 
 pub_struct_const! { SM, i32,
-	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `nIndex` (`i32`).
+	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `index` (`i32`).
 	=>
 	CXSCREEN, 0
 	CYSCREEN, 1
@@ -372,7 +372,7 @@ pub_struct_const! { SORT, u16,
 }
 
 pub_struct_const! { SPI, u32,
-	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `uiAction` (`u32`).
+	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `action` (`u32`).
 	=>
 	GETBEEP, 0x0001
 	SETBEEP, 0x0002
@@ -518,7 +518,7 @@ pub_struct_const! { SPI, u32,
 }
 
 pub_struct_const! { SPIF, u32,
-	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `fWinIni` (`u32`).
+	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `win_ini` (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue, 0
@@ -958,7 +958,7 @@ pub_struct_const! { SUBLANG, u16,
 }
 
 pub_struct_const! { SW, i32,
-	/// [`HWND::ShowWindow`](crate::HWND::ShowWindow) `nCmdShow` (`i32`).
+	/// [`HWND::ShowWindow`](crate::HWND::ShowWindow) `show_cmd` (`i32`).
 	=>
 	/// Hides the window and activates another window.
 	HIDE, 0
@@ -1011,7 +1011,7 @@ pub_struct_const! { SW_S, u8,
 }
 
 pub_struct_const! { SWP, u32,
-	/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `uFlags` (`u32`).
+	/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `flags` (`u32`).
 	=>
 	NOSIZE, 0x0001
 	NOMOVE, 0x0002

@@ -28,8 +28,8 @@ impl HBRUSH {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
-	pub fn CreateBrushIndirect(plbrush: &LOGBRUSH) -> WinResult<HBRUSH> {
-		unsafe { gdi32::CreateBrushIndirect(plbrush as *const _ as _).as_mut() }
+	pub fn CreateBrushIndirect(lb: &LOGBRUSH) -> WinResult<HBRUSH> {
+		unsafe { gdi32::CreateBrushIndirect(lb as *const _ as _).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -40,9 +40,9 @@ impl HBRUSH {
 	/// **Note:** Must be paired with an
 	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
 	pub fn CreateHatchBrush(
-		iHatch: co::HS, color: COLORREF) -> WinResult<HBRUSH>
+		hatch: co::HS, color: COLORREF) -> WinResult<HBRUSH>
 	{
-		unsafe { gdi32::CreateHatchBrush(iHatch.0, color.0).as_mut() }
+		unsafe { gdi32::CreateHatchBrush(hatch.0, color.0).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -52,8 +52,8 @@ impl HBRUSH {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
-	pub fn CreatePatternBrush(hbm: HBITMAP) -> WinResult<HBRUSH> {
-		unsafe { gdi32::CreatePatternBrush(hbm.ptr).as_mut() }
+	pub fn CreatePatternBrush(hbmp: HBITMAP) -> WinResult<HBRUSH> {
+		unsafe { gdi32::CreatePatternBrush(hbmp.ptr).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -86,16 +86,16 @@ impl HBRUSH {
 
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
-	pub fn GetStockObject(i: co::STOCK_BRUSH) -> WinResult<HBRUSH> {
-		unsafe { gdi32::GetStockObject(i.0).as_mut() }
+	pub fn GetStockObject(sb: co::STOCK_BRUSH) -> WinResult<HBRUSH> {
+		unsafe { gdi32::GetStockObject(sb.0).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetSysColorBrush`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
-	pub fn GetSysColorBrush(nIndex: co::COLOR) -> WinResult<HBRUSH> {
-		unsafe { gdi32::GetSysColorBrush(nIndex.0).as_mut() }
+	pub fn GetSysColorBrush(index: co::COLOR) -> WinResult<HBRUSH> {
+		unsafe { gdi32::GetSysColorBrush(index.0).as_mut() }
 			.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
 	}

@@ -11,7 +11,7 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDWP, HWND};
 use crate::msg::wm;
-use crate::structs::{RECT, SIZE};
+use crate::structs::{POINT, RECT, SIZE};
 
 /// In [`Resizer::new`](crate::gui::Resizer::new), determines how the child
 /// controls will be adjusted automatically when the parent window is resized.
@@ -191,22 +191,26 @@ impl Resizer {
 			hdwp.DeferWindowPos(
 				unsafe { *ctrl.hwnd_ptr.as_ref() },
 				HwndPlace::None,
-				match ctrl.horz {
-					Resz::Repos => parent_cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.left,
-					_ => ctrl.rc_orig.left // keep original x pos
-				},
-				match ctrl.vert {
-					Resz::Repos => parent_cy - self.0.sz_parent_orig.cy + ctrl.rc_orig.top,
-					_ => ctrl.rc_orig.top // keep original y pos
-				},
-				match ctrl.horz {
-					Resz::Resize => parent_cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.right - ctrl.rc_orig.left,
-					_ => ctrl.rc_orig.right - ctrl.rc_orig.left // keep original width
-				},
-				match ctrl.vert {
-					Resz::Resize => parent_cy - self.0.sz_parent_orig.cy + ctrl.rc_orig.bottom - ctrl.rc_orig.top,
-					_ =>ctrl.rc_orig.bottom - ctrl.rc_orig.top // keep original height
-				},
+				POINT::new(
+					match ctrl.horz {
+						Resz::Repos => parent_cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.left,
+						_ => ctrl.rc_orig.left // keep original x pos
+					},
+					match ctrl.vert {
+						Resz::Repos => parent_cy - self.0.sz_parent_orig.cy + ctrl.rc_orig.top,
+						_ => ctrl.rc_orig.top // keep original y pos
+					},
+				),
+				SIZE::new(
+					match ctrl.horz {
+						Resz::Resize => parent_cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.right - ctrl.rc_orig.left,
+						_ => ctrl.rc_orig.right - ctrl.rc_orig.left // keep original width
+					},
+					match ctrl.vert {
+						Resz::Resize => parent_cy - self.0.sz_parent_orig.cy + ctrl.rc_orig.bottom - ctrl.rc_orig.top,
+						_ =>ctrl.rc_orig.bottom - ctrl.rc_orig.top // keep original height
+					},
+				),
 				uflags,
 			)?;
 		}

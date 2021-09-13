@@ -17,22 +17,23 @@ impl HHOOK {
 	/// [`CallNextHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
 	/// method.
 	pub fn CallNextHookEx(self,
-		nCode: co::WH, wParam: usize, lParam: isize) -> isize
+		code: co::WH, wparam: usize, lparam: isize) -> isize
 	{
-		unsafe { user32::CallNextHookEx(self.ptr, nCode.0, wParam, lParam) }
+		unsafe { user32::CallNextHookEx(self.ptr, code.0, wparam, lparam) }
 	}
 
 	/// [`SetWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
 	/// static method.
-	pub fn SetWindowsHookEx(idHook: co::WH, lpfn: HOOKPROC,
-		hmod: Option<HINSTANCE>, dwThreadId: Option<u32>) -> WinResult<HHOOK>
+	pub fn SetWindowsHookEx(
+		hook_id: co::WH, proc: HOOKPROC,
+		module: Option<HINSTANCE>, thread_id: Option<u32>) -> WinResult<HHOOK>
 	{
 		unsafe {
 			user32::SetWindowsHookExW(
-				idHook.0,
-				lpfn as _,
-				hmod.map_or(std::ptr::null_mut(), |h| h.ptr),
-				dwThreadId.unwrap_or_default(),
+				hook_id.0,
+				proc as _,
+				module.map_or(std::ptr::null_mut(), |h| h.ptr),
+				thread_id.unwrap_or_default(),
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())

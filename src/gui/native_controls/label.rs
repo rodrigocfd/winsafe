@@ -168,7 +168,7 @@ impl Label {
 	fn resize_to_given_text(&self, text: &str) -> WinResult<()> {
 		let bound_box = calc_text_bound_box(text)?;
 		self.hwnd().SetWindowPos(
-			HwndPlace::None, 0, 0, bound_box.cx, bound_box.cy,
+			HwndPlace::None, POINT::default(), bound_box,
 			co::SWP::NOZORDER | co::SWP::NOMOVE)
 	}
 }

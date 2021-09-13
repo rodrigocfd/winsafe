@@ -44,13 +44,13 @@ impl HPROCESSLIST {
 	/// **Note:** Must be paired with an
 	/// [`HPROCESSLIST::CloseHandle`](crate::HPROCESSLIST::CloseHandle) call.
 	pub fn CreateToolhelp32Snapshot(
-		dwFlags: co::TH32CS,
-		th32ProcessID: Option<u32>) -> WinResult<HPROCESSLIST>
+		flags: co::TH32CS,
+		th32_process_id: Option<u32>) -> WinResult<HPROCESSLIST>
 	{
 		unsafe {
 			kernel32::CreateToolhelp32Snapshot(
-				dwFlags.0,
-				th32ProcessID.unwrap_or_default(),
+				flags.0,
+				th32_process_id.unwrap_or_default(),
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
@@ -58,9 +58,9 @@ impl HPROCESSLIST {
 
 	/// [`Process32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw)
 	/// method.
-	pub fn Process32First(self, lppe: &mut PROCESSENTRY32) -> WinResult<bool> {
+	pub fn Process32First(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {
-			kernel32::Process32FirstW(self.ptr, lppe as *mut _ as _)
+			kernel32::Process32FirstW(self.ptr, pe as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false),
@@ -72,9 +72,9 @@ impl HPROCESSLIST {
 
 	/// [`Process32Next`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw)
 	/// method.
-	pub fn Process32Next(self, lppe: &mut PROCESSENTRY32) -> WinResult<bool> {
+	pub fn Process32Next(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {
-			kernel32::Process32NextW(self.ptr, lppe as *mut _ as _)
+			kernel32::Process32NextW(self.ptr, pe as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false),

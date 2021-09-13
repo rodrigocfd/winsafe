@@ -16,7 +16,7 @@ use crate::handles::{
 	HWND,
 };
 use crate::privs::{bool_to_winresult, MAX_PATH, str_to_iso88591};
-use crate::structs::{ATOM, LANGID, WNDCLASSEX};
+use crate::structs::{ATOM, LANGID, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
 pub_struct_handle! {
@@ -31,18 +31,18 @@ impl HINSTANCE {
 	/// method.
 	pub fn CreateDialogParam(
 		self,
-		lpTemplateName: u16,
-		hWndParent: Option<HWND>,
-		lpDialogFunc: DLGPROC,
-		dwInitParam: Option<isize>) -> WinResult<HWND>
+		resource_id: IdStr,
+		hwnd_parent: Option<HWND>,
+		dialog_proc: DLGPROC,
+		init_param: Option<isize>) -> WinResult<HWND>
 	{
 		unsafe {
 			user32::CreateDialogParamW(
 				self.ptr,
-				lpTemplateName as _,
-				hWndParent.map_or(std::ptr::null_mut(), |h| h.ptr),
-				lpDialogFunc as _,
-				dwInitParam.unwrap_or_default(),
+				resource_id.as_ptr(),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr),
+				dialog_proc as _,
+				init_param.unwrap_or_default(),
 			).as_mut()
 		}.map(|ptr| HWND { ptr })
 			.ok_or_else(|| GetLastError())
@@ -52,18 +52,18 @@ impl HINSTANCE {
 	/// method.
 	pub fn DialogBoxParam(
 		self,
-		lpTemplateName: u16,
-		hWndParent: Option<HWND>,
-		lpDialogFunc: DLGPROC,
-		dwInitParam: Option<isize>) -> WinResult<isize>
+		resource_id: IdStr,
+		hwnd_parent: Option<HWND>,
+		dialog_proc: DLGPROC,
+		init_param: Option<isize>) -> WinResult<isize>
 	{
 		match unsafe {
 			user32::DialogBoxParamW(
 				self.ptr,
-				lpTemplateName as _,
-				hWndParent.map_or(std::ptr::null_mut(), |h| h.ptr),
-				lpDialogFunc as _,
-				dwInitParam.unwrap_or_default(),
+				resource_id.as_ptr(),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr),
+				dialog_proc as _,
+				init_param.unwrap_or_default(),
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -74,15 +74,15 @@ impl HINSTANCE {
 	/// [`EnumResourceLanguages`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
 	/// method.
 	pub fn EnumResourceLanguages<F>(self,
-		lpType: RtStr, lpName: IdStr, func: F) -> WinResult<()>
+		resource_type: RtStr, resource_id: IdStr, func: F) -> WinResult<()>
 		where F: Fn(LANGID) -> bool
 	{
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceLanguagesW(
 					self.ptr,
-					lpType.as_ptr(),
-					lpName.as_ptr(),
+					resource_type.as_ptr(),
+					resource_id.as_ptr(),
 					Self::EnumResLangProc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -91,23 +91,24 @@ impl HINSTANCE {
 	}
 	extern "system" fn EnumResLangProc<F>(
 		_: HINSTANCE, _: *const u16, _: *const u16,
-		wIDLanguage: u16, lParam: isize) -> BOOL
+		language_id: u16, lparam: isize) -> BOOL
 		where F: Fn(LANGID) -> bool
 	{
-		let func = unsafe { &*(lParam as *const F) };
-		func(LANGID(wIDLanguage)) as _
+		let func = unsafe { &*(lparam as *const F) };
+		func(LANGID(language_id)) as _
 	}
 
 	/// [`EnumResourceNames`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
 	/// method.
-	pub fn EnumResourceNames<F>(self, lpType: RtStr, func: F) -> WinResult<()>
+	pub fn EnumResourceNames<F>(self,
+		resource_type: RtStr, func: F) -> WinResult<()>
 		where F: Fn(IdStr) -> bool
 	{
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceNamesW(
 					self.ptr,
-					lpType.as_ptr(),
+					resource_type.as_ptr(),
 					Self::EnumResNameProc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -115,11 +116,11 @@ impl HINSTANCE {
 		)
 	}
 	extern "system" fn EnumResNameProc<F>(
-		_: HINSTANCE, _: *const u16, lpName: *mut u16, lParam: isize) -> BOOL
+		_: HINSTANCE, _: *const u16, resource_id: *mut u16, lparam: isize) -> BOOL
 		where F: Fn(IdStr) -> bool
 	{
-		let func = unsafe { &*(lParam as *const F) };
-		func(IdStr::from_ptr(lpName)) as _
+		let func = unsafe { &*(lparam as *const F) };
+		func(IdStr::from_ptr(resource_id)) as _
 	}
 
 	/// [`EnumResourceTypes`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
@@ -138,11 +139,11 @@ impl HINSTANCE {
 		)
 	}
 	extern "system" fn EnumResTypeProc<F>(
-		_: HINSTANCE, lpszType: *const u16, lParam: isize) -> BOOL
+		_: HINSTANCE, resource_type: *const u16, lparam: isize) -> BOOL
 		where F: Fn(RtStr) -> bool
 	{
-		let func = unsafe { &*(lParam as *const F) };
-		func(RtStr::from_ptr(lpszType)) as _
+		let func = unsafe { &*(lparam as *const F) };
+		func(RtStr::from_ptr(resource_type)) as _
 	}
 
 	/// [`FindResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew)
@@ -150,12 +151,14 @@ impl HINSTANCE {
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
-	pub fn FindResource(self, lpName: IdStr, lpType: RtStr) -> WinResult<HRSRC> {
+	pub fn FindResource(self,
+		resource_id: IdStr, resource_type: RtStr) -> WinResult<HRSRC>
+	{
 		unsafe {
 			kernel32::FindResourceW(
 				self.ptr,
-				lpName.as_ptr(),
-				lpType.as_ptr(),
+				resource_id.as_ptr(),
+				resource_type.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HRSRC { ptr })
 			.ok_or_else(|| GetLastError())
@@ -167,15 +170,15 @@ impl HINSTANCE {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	pub fn FindResourceEx(self,
-		lpName: IdStr, lpType: RtStr,
-		wLanguage: Option<LANGID>) -> WinResult<HRSRC>
+		resource_id: IdStr, resource_type: RtStr,
+		language: Option<LANGID>) -> WinResult<HRSRC>
 	{
 		unsafe {
 			kernel32::FindResourceExW(
 				self.ptr,
-				lpName.as_ptr(),
-				lpType.as_ptr(),
-				wLanguage.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
+				resource_id.as_ptr(),
+				resource_type.as_ptr(),
+				language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
 			).as_mut()
 		}.map(|ptr| HRSRC { ptr })
 			.ok_or_else(|| GetLastError())
@@ -201,13 +204,13 @@ impl HINSTANCE {
 	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
 	/// ```
 	pub fn GetClassInfoEx(self,
-		lpszClass: &str, lpwcx: &mut WNDCLASSEX) -> WinResult<ATOM>
+		class_name: &str, wcx: &mut WNDCLASSEX) -> WinResult<ATOM>
 	{
 		match unsafe {
 			user32::GetClassInfoExW(
 				self.ptr,
-				WString::from_str(lpszClass).as_ptr(),
-				lpwcx as *mut _ as _,
+				WString::from_str(class_name).as_ptr(),
+				wcx as *mut _ as _,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -252,12 +255,10 @@ impl HINSTANCE {
 	///
 	/// let hinstance = HINSTANCE::GetModuleHandle(None).unwrap();
 	/// ```
-	pub fn GetModuleHandle(
-		lpModuleName: Option<&str>) -> WinResult<HINSTANCE>
-	{
+	pub fn GetModuleHandle(module_name: Option<&str>) -> WinResult<HINSTANCE> {
 		unsafe {
 			kernel32::GetModuleHandleW(
-				WString::from_opt_str(lpModuleName).as_ptr()
+				WString::from_opt_str(module_name).as_ptr()
 			).as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
@@ -266,12 +267,12 @@ impl HINSTANCE {
 	/// [`GetProcAddress`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
 	/// method.
 	pub fn GetProcAddress(self,
-		lpProcName: &str) -> WinResult<*const std::ffi::c_void>
+		proc_name: &str) -> WinResult<*const std::ffi::c_void>
 	{
 		unsafe {
 			kernel32::GetProcAddress(
 				self.ptr,
-				str_to_iso88591(lpProcName).as_ptr(),
+				str_to_iso88591(proc_name).as_ptr(),
 			).as_ref()
 		}.map(|ptr| ptr as _)
 			.ok_or_else(|| GetLastError())
@@ -279,11 +280,11 @@ impl HINSTANCE {
 
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
-	pub fn LoadAccelerators(self, lpTableName: IdStr) -> WinResult<HACCEL> {
+	pub fn LoadAccelerators(self, table_name: IdStr) -> WinResult<HACCEL> {
 		unsafe {
 			user32::LoadAcceleratorsW(
 				self.ptr,
-				lpTableName.as_ptr(),
+				table_name.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HACCEL { ptr })
 			.ok_or_else(|| GetLastError())
@@ -302,11 +303,11 @@ impl HINSTANCE {
 	///     .LoadCursor(IdIdc::Idc(co::IDC::ARROW))
 	///     .unwrap();
 	/// ```
-	pub fn LoadCursor(self, lpCursorName: IdIdcStr) -> WinResult<HCURSOR> {
+	pub fn LoadCursor(self, resource_id: IdIdcStr) -> WinResult<HCURSOR> {
 		unsafe {
 				user32::LoadCursorW(
 				self.ptr,
-				lpCursorName.as_ptr(),
+				resource_id.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HCURSOR { ptr })
 			.ok_or_else(|| GetLastError())
@@ -325,11 +326,11 @@ impl HINSTANCE {
 	///     .LoadIcon(IdIdi::Idi(co::IDI::INFORMATION))
 	///     .unwrap();
 	/// ```
-	pub fn LoadIcon(self, lpIconName: IdIdiStr) -> WinResult<HICON> {
+	pub fn LoadIcon(self, icon_id: IdIdiStr) -> WinResult<HICON> {
 		unsafe {
 			user32::LoadIconW(
 				self.ptr,
-				lpIconName.as_ptr(),
+				icon_id.as_ptr(),
 			).as_mut()
 		}.map(|ptr| HICON { ptr })
 			.ok_or_else(|| GetLastError())
@@ -338,10 +339,10 @@ impl HINSTANCE {
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	pub fn LoadImageBitmap(self,
-		name: u16, cx: i32, cy: i32, fuLoad: co::LR) -> WinResult<HBITMAP>
+		name: u16, sz: SIZE, load: co::LR) -> WinResult<HBITMAP>
 	{
 		unsafe {
-			user32::LoadImageW(self.ptr, name as _, 0, cx, cy, fuLoad.0)
+			user32::LoadImageW(self.ptr, name as _, 0, sz.cx, sz.cy, load.0)
 				.as_mut()
 		}.map(|ptr| HBITMAP { ptr })
 			.ok_or_else(|| GetLastError())
@@ -350,10 +351,10 @@ impl HINSTANCE {
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
 	pub fn LoadImageCursor(self,
-		name: u16, cx: i32, cy: i32, fuLoad: co::LR) -> WinResult<HCURSOR>
+		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HCURSOR>
 	{
 		unsafe {
-			user32::LoadImageW(self.ptr, name as _, 2, cx, cy, fuLoad.0)
+			user32::LoadImageW(self.ptr, name as _, 2, cx, cy, load.0)
 				.as_mut()
 		}.map(|ptr| HCURSOR { ptr })
 			.ok_or_else(|| GetLastError())
@@ -362,10 +363,10 @@ impl HINSTANCE {
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
 	pub fn LoadImageIcon(self,
-		name: u16, cx: i32, cy: i32, fuLoad: co::LR) -> WinResult<HICON>
+		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HICON>
 	{
 		unsafe {
-			user32::LoadImageW(self.ptr, name as _, 1, cx, cy, fuLoad.0)
+			user32::LoadImageW(self.ptr, name as _, 1, cx, cy, load.0)
 				.as_mut()
 		}.map(|ptr| HICON { ptr })
 			.ok_or_else(|| GetLastError())
@@ -376,9 +377,9 @@ impl HINSTANCE {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HINSTANCE::FreeLibrary`](crate::HINSTANCE::FreeLibrary) call.
-	pub fn LoadLibrary(lpLibFileName: &str) -> WinResult<HINSTANCE> {
+	pub fn LoadLibrary(lib_file_name: &str) -> WinResult<HINSTANCE> {
 		unsafe {
-			kernel32::LoadLibraryW(WString::from_str(lpLibFileName).as_ptr())
+			kernel32::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
 				.as_mut()
 		}.map(|ptr| Self { ptr })
 			.ok_or_else(|| GetLastError())
@@ -386,8 +387,8 @@ impl HINSTANCE {
 
 	/// [`LoadMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// method.
-	pub fn LoadMenu(self, lpMenuName: u16) -> WinResult<HMENU> {
-		unsafe { user32::LoadMenuW(self.ptr, lpMenuName as _).as_mut() }
+	pub fn LoadMenu(self, resource_id: IdStr) -> WinResult<HMENU> {
+		unsafe { user32::LoadMenuW(self.ptr, resource_id.as_ptr()).as_mut() }
 			.map(|ptr| HMENU { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -397,20 +398,20 @@ impl HINSTANCE {
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
-	pub fn LoadResource(self, hResInfo: HRSRC) -> WinResult<HRSRCMEM> {
-		unsafe { kernel32::LoadResource(self.ptr, hResInfo.ptr).as_mut() }
+	pub fn LoadResource(self, res_info: HRSRC) -> WinResult<HRSRCMEM> {
+		unsafe { kernel32::LoadResource(self.ptr, res_info.ptr).as_mut() }
 			.map(|ptr| HRSRCMEM { ptr })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadString`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
 	/// method.
-	pub fn LoadString(self, uID: u16) -> WinResult<String> {
+	pub fn LoadString(self, id: u16) -> WinResult<String> {
 		let mut pData: *const u16 = std::ptr::null_mut();
 		match unsafe {
 			user32::LoadStringW(
 				self.ptr,
-				uID as _,
+				id as _,
 				&mut pData as *mut _ as  _, 0,
 			)
 		} {
@@ -466,10 +467,10 @@ impl HINSTANCE {
 	/// hExe.FreeLibrary().unwrap();
 	/// ```
 	pub fn LockResource<'a>(self,
-		hResInfo: HRSRC, hResLoaded: HRSRCMEM) -> WinResult<&'a [u8]>
+		res_info: HRSRC, hres_loaded: HRSRCMEM) -> WinResult<&'a [u8]>
 	{
-		let sz = self.SizeofResource(hResInfo)?;
-		unsafe { kernel32::LockResource(hResLoaded.ptr).as_mut() }
+		let sz = self.SizeofResource(res_info)?;
+		unsafe { kernel32::LockResource(hres_loaded.ptr).as_mut() }
 			.map(|ptr| unsafe {
 				std::slice::from_raw_parts(ptr as *const _ as _, sz as _, )
 			})
@@ -481,8 +482,8 @@ impl HINSTANCE {
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
-	pub fn SizeofResource(self, hResInfo: HRSRC) -> WinResult<u32> {
-		match unsafe { kernel32::SizeofResource(self.ptr, hResInfo.ptr) } {
+	pub fn SizeofResource(self, res_info: HRSRC) -> WinResult<u32> {
+		match unsafe { kernel32::SizeofResource(self.ptr, res_info.ptr) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz)
 		}

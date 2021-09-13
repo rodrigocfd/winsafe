@@ -1,5 +1,6 @@
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
@@ -43,7 +44,7 @@ impl DlgBase {
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when CreateDialogParam returns.
 		self.base.parent_hinstance()?.CreateDialogParam(
-			self.dialog_id,
+			IdStr::Id(self.dialog_id),
 			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
 			Some(self as *const _ as _), // pass pointer to self
@@ -58,7 +59,7 @@ impl DlgBase {
 		// Our hwnd member is set during WM_INITDIALOG processing, already set
 		// when DialogBoxParam returns.
 		self.base.parent_hinstance()?.DialogBoxParam(
-			self.dialog_id,
+			IdStr::Id(self.dialog_id),
 			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
 			Self::dialog_proc,
 			Some(self as *const _ as _), // pass pointer to self
