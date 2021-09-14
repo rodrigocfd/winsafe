@@ -930,11 +930,6 @@ impl std::fmt::Display for RECT {
 }
 
 impl RECT {
-	/// Creates a new `RECT`.
-	pub const fn new(left: i32, top: i32, right: i32, bottom: i32) -> RECT {
-		Self { left, top, right, bottom }
-	}
-
 	/// Tells whether the struct contains exactly the given values.
 	pub fn is(&self, left: i32, top: i32, right: i32, bottom: i32) -> bool {
 		self.left == left && self.top == top && self.right == right && self.bottom == bottom
