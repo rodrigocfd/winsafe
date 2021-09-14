@@ -53,25 +53,25 @@ macro_rules! impl_IFileOpenDialog {
 			/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 			/// method.
 			pub fn GetResults(&self) -> WinResult<IShellItemArray> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifileopendialog_vt().GetResults)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IShellItemArray::from(ppvQueried))
+				).map(|_| IShellItemArray::from(ppv_queried))
 			}
 
 			/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 			/// method.
 			pub fn GetSelectedItems(&self) -> WinResult<IShellItemArray> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifileopendialog_vt().GetSelectedItems)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IShellItemArray::from(ppvQueried))
+				).map(|_| IShellItemArray::from(ppv_queried))
 			}
 		}
 	};

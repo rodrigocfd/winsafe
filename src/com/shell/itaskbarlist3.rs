@@ -63,13 +63,13 @@ macro_rules! impl_ITaskbarList3 {
 			/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 			/// method.
 			pub fn RegisterTab(&self,
-				hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
+				hwnd_tab: HWND, hwnd_mdi: HWND) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist3_vt().RegisterTab)(
 						self.ppvt,
-						hwndTab.ptr,
-						hwndMDI.ptr,
+						hwnd_tab.ptr,
+						hwnd_mdi.ptr,
 					),
 				)
 			}
@@ -77,13 +77,13 @@ macro_rules! impl_ITaskbarList3 {
 			/// [`ITaskbarList3::SetProgressState`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
 			/// method.
 			pub fn SetProgressState(&self,
-				hwnd: HWND, tbpfFlags: shellco::TBPF) -> WinResult<()>
+				hwnd: HWND, tbpf_flags: shellco::TBPF) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist3_vt().SetProgressState)(
 						self.ppvt,
 						hwnd.ptr,
-						tbpfFlags.0,
+						tbpf_flags.0,
 					),
 				)
 			}
@@ -104,14 +104,14 @@ macro_rules! impl_ITaskbarList3 {
 			/// obj.SetProgressValue(hwnd, 50, 100).unwrap();
 			/// ```
 			pub fn SetProgressValue(&self,
-				hwnd: HWND, ullCompleted: u64, ullTotal: u64) -> WinResult<()>
+				hwnd: HWND, completed: u64, total: u64) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist3_vt().SetProgressValue)(
 						self.ppvt,
 						hwnd.ptr,
-						ullCompleted,
-						ullTotal,
+						completed,
+						total,
 					),
 				)
 			}
@@ -119,13 +119,13 @@ macro_rules! impl_ITaskbarList3 {
 			/// [`ITaskbarList3::SetTabActive`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
 			/// method.
 			pub fn SetTabActive(&self,
-				hwndTab: HWND, hwndMDI: HWND) -> WinResult<()>
+				hwnd_tab: HWND, hwnd_mdi: HWND) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist3_vt().SetTabActive)(
 						self.ppvt,
-						hwndTab.ptr,
-						hwndMDI.ptr,
+						hwnd_tab.ptr,
+						hwnd_mdi.ptr,
 						0,
 					),
 				)
@@ -134,13 +134,13 @@ macro_rules! impl_ITaskbarList3 {
 			/// [`ITaskbarList3::SetTabOrder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
 			/// method.
 			pub fn SetTabOrder(&self,
-				hwndTab: HWND, hwndInsertBefore: HWND) -> WinResult<()>
+				hwnd_tab: HWND, hwnd_insert_before: HWND) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist3_vt().SetTabOrder)(
 						self.ppvt,
-						hwndTab.ptr,
-						hwndInsertBefore.ptr,
+						hwnd_tab.ptr,
+						hwnd_insert_before.ptr,
 					),
 				)
 			}

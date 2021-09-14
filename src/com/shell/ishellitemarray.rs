@@ -62,27 +62,27 @@ macro_rules! impl_IShellItemArray {
 			/// [`GetDisplayName`](crate::shell::IShellItem::GetDisplayName) on
 			/// each one of them.
 			pub fn GetDisplayNames(&self,
-				sigdnName: shellco::SIGDN) -> WinResult<Vec<String>>
+				sigdn_name: shellco::SIGDN) -> WinResult<Vec<String>>
 			{
 				let mut names = Vec::default();
 				for i in 0..self.GetCount()? {
-					let shellItem = self.GetItemAt(i)?;
-					names.push(shellItem.GetDisplayName(sigdnName)?);
+					let shell_item = self.GetItemAt(i)?;
+					names.push(shell_item.GetDisplayName(sigdn_name)?);
 				}
 				Ok(names)
 			}
 
 			/// [`IShellItemArray::GetItemAt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
 			/// method.
-			pub fn GetItemAt(&self, dwIndex: u32) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+			pub fn GetItemAt(&self, index: u32) -> WinResult<IShellItem> {
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitemarray_vt().GetItemAt)(
 						self.ppvt,
-						dwIndex,
-						&mut ppvQueried as *mut _ as _,
+						index,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IShellItem::from(ppvQueried))
+				).map(|_| IShellItem::from(ppv_queried))
 			}
 		}
 	};

@@ -29,29 +29,29 @@ use crate::structs::CLSID;
 /// ).unwrap();
 /// ```
 pub fn CoCreateInstance<T: ComInterface>(
-	rclsid: &CLSID,
-	pUnkOuter: Option<&mut IUnknown>,
-	dwClsContext: co::CLSCTX) -> WinResult<T>
+	clsid: &CLSID,
+	iunk_outer: Option<&mut IUnknown>,
+	cls_context: co::CLSCTX) -> WinResult<T>
 {
 	let mut ppv: PPVT = std::ptr::null_mut();
-	let mut ppvOuter: PPVT = std::ptr::null_mut();
+	let mut ppv_outer: PPVT = std::ptr::null_mut();
 
 	hr_to_winresult(
 		unsafe {
 			ole32::CoCreateInstance(
-				rclsid as *const _ as _,
-				pUnkOuter.as_ref()
-					.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as _),
-				dwClsContext.0,
+				clsid as *const _ as _,
+				iunk_outer.as_ref()
+					.map_or(std::ptr::null_mut(), |_| &mut ppv_outer as *mut _ as _),
+				cls_context.0,
 				&T::IID as *const _ as _,
 				&mut ppv as *mut _ as _,
 			)
 		},
 	).map(|_| {
-		if let Some(iunkOuter) = pUnkOuter {
-			*iunkOuter = IUnknown::from(ppvOuter);
+		if let Some(iunk_outer) = iunk_outer {
+			*iunk_outer = IUnknown::from(ppv_outer); // create outer IUnknown if due
 		}
-		T::from(ppv)
+		T::from(ppv) // return new IUnknown-derived object
 	})
 }
 
@@ -72,9 +72,9 @@ pub fn CoCreateInstance<T: ComInterface>(
 ///
 /// CoUninitialize().
 /// ```
-pub fn CoInitializeEx(dwCoInit: co::COINIT) -> WinResult<co::ERROR> {
+pub fn CoInitializeEx(coinit: co::COINIT) -> WinResult<co::ERROR> {
 	let code = co::ERROR(
-		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), dwCoInit.0) } as _
+		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), coinit.0) } as _
 	);
 	match code {
 		co::ERROR::S_OK

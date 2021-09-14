@@ -59,13 +59,13 @@ macro_rules! impl_IPin {
 			/// [`IPin::ConnectedTo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
 			/// method.
 			pub fn ConnectedTo(&self) -> WinResult<IPin> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ipin_vt().ConnectedTo)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IPin::from(ppvQueried))
+				).map(|_| IPin::from(ppv_queried))
 			}
 
 			/// [`IPin::Disconnect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)

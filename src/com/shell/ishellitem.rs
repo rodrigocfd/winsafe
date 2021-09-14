@@ -58,29 +58,29 @@ macro_rules! impl_IShellItem {
 			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt").unwrap();
 			/// ```
 			pub fn from_path(file_or_folder_path: &str) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					unsafe {
 						SHCreateItemFromParsingName(
 							WString::from_str(file_or_folder_path).as_ptr(),
 							std::ptr::null_mut(),
 							&IShellItem::IID as *const _ as _,
-							&mut ppvQueried as *mut _ as _,
+							&mut ppv_queried as *mut _ as _,
 						)
 					},
-				).map(|_| IShellItem::from(ppvQueried))
+				).map(|_| IShellItem::from(ppv_queried))
 			}
 
 			/// [`IShellItem::GetAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
 			/// method.
 			pub fn GetAttributes(&self,
-				sfgaoMask: shellco::SFGAO) -> WinResult<shellco::SFGAO>
+				sfgao_mask: shellco::SFGAO) -> WinResult<shellco::SFGAO>
 			{
 				let mut attrs: u32 = 0;
 				match co::ERROR(
 					(self.ishellitem_vt().GetAttributes)(
 						self.ppvt,
-						sfgaoMask.0,
+						sfgao_mask.0,
 						&mut attrs,
 					) as _,
 				) {
@@ -102,13 +102,13 @@ macro_rules! impl_IShellItem {
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetDisplayName(&self,
-				sigdnName: shellco::SIGDN) -> WinResult<String>
+				sigdn_name: shellco::SIGDN) -> WinResult<String>
 			{
 				let mut pstr: *mut u16 = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitem_vt().GetDisplayName)(
 						self.ppvt,
-						sigdnName.0,
+						sigdn_name.0,
 						&mut pstr,
 					),
 				).map(|_| {
@@ -132,13 +132,13 @@ macro_rules! impl_IShellItem {
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetParent(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ishellitem_vt().GetParent)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IShellItem::from(ppvQueried))
+				).map(|_| IShellItem::from(ppv_queried))
 			}
 		}
 	};

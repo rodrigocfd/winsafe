@@ -60,26 +60,26 @@ macro_rules! impl_IFilterGraph {
 			/// [`IFilterGraph::EnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 			/// method.
 			pub fn EnumFilters(&self) -> WinResult<IEnumFilters> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiltergraph_vt().EnumFilters)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IEnumFilters::from(ppvQueried))
+				).map(|_| IEnumFilters::from(ppv_queried))
 			}
 
 			/// [`IFilterGraph::FindFilterByName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
 			/// method.
 			pub fn FindFilterByName(&self, name: &str) -> WinResult<IBaseFilter> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiltergraph_vt().FindFilterByName)(
 						self.ppvt,
 						unsafe { WString::from_str(name).as_ptr() },
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IBaseFilter::from(ppvQueried))
+				).map(|_| IBaseFilter::from(ppv_queried))
 			}
 
 			/// [`IFilterGraph::RemoveFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-removefilter)

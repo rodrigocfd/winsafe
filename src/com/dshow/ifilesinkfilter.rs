@@ -64,14 +64,14 @@ macro_rules! impl_IFileSinkFilter {
 			/// }
 			/// ```
 			pub unsafe fn GetCurFile(&self,
-				pmt: Option<&mut AM_MEDIA_TYPE>) -> WinResult<String>
+				mt: Option<&mut AM_MEDIA_TYPE>) -> WinResult<String>
 			{
 				let mut pstr: *mut u16 = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifilesinkfilter_vt().GetCurFile)(
 						self.ppvt,
 						&mut pstr,
-						pmt.map_or(std::ptr::null_mut(), |p| p as *mut _ as _),
+						mt.map_or(std::ptr::null_mut(), |p| p as *mut _ as _),
 					),
 				).map(|_| {
 					let name = WString::from_wchars_nullt(pstr);
@@ -83,13 +83,13 @@ macro_rules! impl_IFileSinkFilter {
 			/// [`IFileSinkFilter::SetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
 			/// method.
 			pub fn SetFileName(&self,
-				pszFileName: &str, pmt: Option<&AM_MEDIA_TYPE>) -> WinResult<()>
+				file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.ifilesinkfilter_vt().SetFileName)(
 						self.ppvt,
-						unsafe { WString::from_str(pszFileName).as_ptr() },
-						pmt.map_or(std::ptr::null(), |p| p as *const _ as _),
+						unsafe { WString::from_str(file_name).as_ptr() },
+						mt.map_or(std::ptr::null(), |p| p as *const _ as _),
 					),
 				)
 			}

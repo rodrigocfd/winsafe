@@ -66,27 +66,27 @@ macro_rules! impl_IGraphBuilder {
 			/// [`IGraphBuilder::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)
 			/// method.
 			pub fn AddSourceFilter(&self,
-				fileName: &str, filterName: &str) -> WinResult<IBaseFilter>
+				file_name: &str, filter_name: &str) -> WinResult<IBaseFilter>
 			{
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.igraphbuilder_vt().AddSourceFilter)(
 						self.ppvt,
-						unsafe { WString::from_str(fileName).as_ptr() },
-						unsafe { WString::from_str(filterName).as_ptr() },
-						&mut ppvQueried as *mut _ as _,
+						unsafe { WString::from_str(file_name).as_ptr() },
+						unsafe { WString::from_str(filter_name).as_ptr() },
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IBaseFilter::from(ppvQueried))
+				).map(|_| IBaseFilter::from(ppv_queried))
 			}
 
 			/// [`IGraphBuilder::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 			/// method.
-			pub fn Connect(&self, pinOut: &IPin, pinIn: &IPin) -> WinResult<()> {
+			pub fn Connect(&self, pin_out: &IPin, pin_in: &IPin) -> WinResult<()> {
 				hr_to_winresult(
 					(self.igraphbuilder_vt().Connect)(
 						self.ppvt,
-						pinOut.ppvt,
-						pinIn.ppvt,
+						pin_out.ppvt,
+						pin_in.ppvt,
 					),
 				)
 			}
@@ -105,11 +105,11 @@ macro_rules! impl_IGraphBuilder {
 
 			/// [`IGraphBuilder::SetLogFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
 			/// method.
-			pub fn SetLogFile(&self, hFile: Option<HFILE>) -> WinResult<()> {
+			pub fn SetLogFile(&self, hfile: Option<HFILE>) -> WinResult<()> {
 				hr_to_winresult(
 					(self.igraphbuilder_vt().SetLogFile)(
 						self.ppvt,
-						hFile.map_or(std::ptr::null_mut(), |h| h.ptr),
+						hfile.map_or(std::ptr::null_mut(), |h| h.ptr),
 					),
 				)
 			}

@@ -41,8 +41,8 @@ macro_rules! impl_IModalWindow {
 			/// method.
 			///
 			/// Returns false if user clicked Cancel.
-			pub fn Show(&self, hwndOwner: HWND) -> WinResult<bool> {
-				let hr = (self.imodalwindow_vt().Show)(self.ppvt, hwndOwner.ptr);
+			pub fn Show(&self, hwnd_owner: HWND) -> WinResult<bool> {
+				let hr = (self.imodalwindow_vt().Show)(self.ppvt, hwnd_owner.ptr);
 				match HRESULT_FROM_WIN32(hr) {
 					co::ERROR::S_OK => Ok(true),
 					co::ERROR::CANCELLED => Ok(false), // ordinary error, not a COM error

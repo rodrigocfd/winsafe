@@ -39,17 +39,17 @@ macro_rules! impl_IMFGetService {
 			/// [`IMFGetService::GetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
 			/// method.
 			pub fn GetService<T: ComInterface>(&self,
-				guidService: &GUID) -> WinResult<T>
+				service_guid: &GUID) -> WinResult<T>
 			{
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.imfgetservice_vt().GetService)(
 						self.ppvt,
-						guidService as *const _ as _,
+						service_guid as *const _ as _,
 						&T::IID as *const _ as _,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| T::from(ppvQueried))
+				).map(|_| T::from(ppv_queried))
 			}
 		}
 	};

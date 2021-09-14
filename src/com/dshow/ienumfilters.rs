@@ -46,9 +46,9 @@ macro_rules! impl_IEnumFilters {
 
 			/// [`IEnumFilters::Skip`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-skip)
 			/// method.
-			pub fn Skip(&self, cFilters: u32) -> WinResult<bool> {
+			pub fn Skip(&self, num_filters: u32) -> WinResult<bool> {
 				hr_to_winresult_bool(
-					(self.ienumfilters_vt().Skip)(self.ppvt, cFilters),
+					(self.ienumfilters_vt().Skip)(self.ppvt, num_filters),
 				)
 			}
 		}

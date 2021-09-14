@@ -49,9 +49,9 @@ macro_rules! impl_IMediaFilter {
 
 			/// [`IMediaFilter::Run`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-run)
 			/// method.
-			pub fn Run(&self, tStart: i64) -> WinResult<bool> {
+			pub fn Run(&self, start: i64) -> WinResult<bool> {
 				hr_to_winresult_bool(
-					(self.imediafilter_vt().Run)(self.ppvt, tStart),
+					(self.imediafilter_vt().Run)(self.ppvt, start),
 				)
 			}
 

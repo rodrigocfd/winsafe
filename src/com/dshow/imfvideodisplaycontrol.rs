@@ -89,21 +89,21 @@ macro_rules! impl_IMFVideoDisplayControl {
 				-> WinResult<(BITMAPINFOHEADER, Vec<u8>, i64)>
 			{
 				let mut bih = BITMAPINFOHEADER::default();
-				let mut pDib: *mut u8 = std::ptr::null_mut();
-				let mut cbDib: u32 = 0;
-				let mut timeStamp: i64 = 0;
+				let mut dib_ptr: *mut u8 = std::ptr::null_mut();
+				let mut dib_sz = u32::default();
+				let mut time_stamp = i64::default();
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetCurrentImage)(
 						self.ppvt,
 						&mut bih as *mut _ as _,
-						&mut pDib,
-						&mut cbDib,
-						&mut timeStamp,
+						&mut dib_ptr,
+						&mut dib_sz,
+						&mut time_stamp,
 					),
 				).map(|_| {
-					let vecDib = unsafe { std::slice::from_raw_parts(pDib, cbDib as _) }.to_vec();
-					CoTaskMemFree(pDib);
-					(bih, vecDib, timeStamp)
+					let dib_vec = unsafe { std::slice::from_raw_parts(dib_ptr, dib_sz as _) }.to_vec();
+					CoTaskMemFree(dib_ptr);
+					(bih, dib_vec, time_stamp)
 				})
 			}
 
@@ -124,8 +124,7 @@ macro_rules! impl_IMFVideoDisplayControl {
 			///
 			/// Returns minimum and maximum ideal sizes.
 			pub fn GetIdealVideoSize(&self) -> WinResult<(SIZE, SIZE)> {
-				let mut min = SIZE::default();
-				let mut max = SIZE::default();
+				let (mut min, mut max) = (SIZE::default(), SIZE::default());
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetIdealVideoSize)(
 						self.ppvt,
@@ -140,8 +139,7 @@ macro_rules! impl_IMFVideoDisplayControl {
 			///
 			/// Returns native and aspect ratio sizes.
 			pub fn GetNativeVideoSize(&self) -> WinResult<(SIZE, SIZE)> {
-				let mut native = SIZE::default();
-				let mut aspec = SIZE::default();
+				let (mut native, mut aspec) = (SIZE::default(), SIZE::default());
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetNativeVideoSize)(
 						self.ppvt,
@@ -156,15 +154,15 @@ macro_rules! impl_IMFVideoDisplayControl {
 			pub fn GetVideoPosition(&self)
 				-> WinResult<(MFVideoNormalizedRect, RECT)>
 			{
-				let mut pnrc = MFVideoNormalizedRect::default();
+				let mut norm_rc = MFVideoNormalizedRect::default();
 				let mut rc = RECT::default();
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().GetVideoPosition)(
 						self.ppvt,
-						&mut pnrc as *mut _ as _,
+						&mut norm_rc as *mut _ as _,
 						&mut rc as *mut _ as _,
 					),
-				).map(|_| (pnrc, rc))
+				).map(|_| (norm_rc, rc))
 			}
 
 			/// [`IMFVideoDisplayControl::GetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideowindow)
@@ -216,11 +214,11 @@ macro_rules! impl_IMFVideoDisplayControl {
 
 			/// [`IMFVideoDisplayControl::SetFullscreen`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setfullscreen)
 			/// method.
-			pub fn SetFullscreen(&self, fullScreen: bool) -> WinResult<()> {
+			pub fn SetFullscreen(&self, full_screen: bool) -> WinResult<()> {
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().SetFullscreen)(
 						self.ppvt,
-						fullScreen as _,
+						full_screen as _,
 					),
 				)
 			}
@@ -230,7 +228,8 @@ macro_rules! impl_IMFVideoDisplayControl {
 			///
 			/// At least one parameter must be passed.
 			pub fn SetVideoPosition(&self,
-				src: Option<MFVideoNormalizedRect>, dest: Option<RECT>) -> WinResult<()>
+				src: Option<MFVideoNormalizedRect>,
+				dest: Option<RECT>) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().SetVideoPosition)(
@@ -243,11 +242,11 @@ macro_rules! impl_IMFVideoDisplayControl {
 
 			/// [`IMFVideoDisplayControl::SetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideowindow)
 			/// method.
-			pub fn SetVideoWindow(&self, hwndVideo: HWND) -> WinResult<()> {
+			pub fn SetVideoWindow(&self, hwnd_video: HWND) -> WinResult<()> {
 				hr_to_winresult(
 					(self.imfvideodisplaycontrol_vt().SetVideoWindow)(
 						self.ppvt,
-						hwndVideo.ptr,
+						hwnd_video.ptr,
 					),
 				)
 			}

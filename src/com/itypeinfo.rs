@@ -56,20 +56,20 @@ macro_rules! impl_ITypeInfo {
 			/// [`ITypeInfo::CreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 			/// method.
 			pub fn CreateInstance<T: ComInterface>(&self,
-				pUnkOuter: Option<&mut IUnknown>) -> WinResult<T>
+				iunk_outer: Option<&mut IUnknown>) -> WinResult<T>
 			{
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
-				let mut ppvOuter: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
+				let mut ppv_outer: PPVT = std::ptr::null_mut();
 
 				hr_to_winresult(
 					(self.itypeinfo_vt().CreateInstance)(
 						self.ppvt,
-						pUnkOuter.as_ref()
-							.map_or(std::ptr::null_mut(), |_| &mut ppvOuter as *mut _ as _),
+						iunk_outer.as_ref()
+							.map_or(std::ptr::null_mut(), |_| &mut ppv_outer as *mut _ as _),
 						&T::IID as *const _ as _,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| T::from(ppvQueried))
+				).map(|_| T::from(ppv_queried))
 			}
 		}
 	};

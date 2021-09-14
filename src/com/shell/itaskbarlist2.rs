@@ -50,13 +50,13 @@ macro_rules! impl_ITaskbarList2 {
 			/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 			/// method.
 			pub fn MarkFullscreenWindow(&self,
-				hwnd: HWND, fFullscreen: bool) -> WinResult<()>
+				hwnd: HWND, full_screen: bool) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist2_vt().MarkFullscreenWindow)(
 						self.ppvt,
 						hwnd.ptr,
-						fFullscreen as _,
+						full_screen as _,
 					),
 				)
 			}

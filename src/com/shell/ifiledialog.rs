@@ -89,13 +89,13 @@ macro_rules! impl_IFileDialog {
 			/// [`IFileDialog::GetCurrentSelection`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
 			/// method.
 			pub fn GetCurrentSelection(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetCurrentSelection)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IShellItem::from(ppvQueried))
+				).map(|_| IShellItem::from(ppv_queried))
 			}
 
 			/// [`IFileDialog::GetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfilename)
@@ -123,19 +123,19 @@ macro_rules! impl_IFileDialog {
 			/// [`IFileDialog::GetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
 			/// method.
 			pub fn GetFolder(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetFolder)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IShellItem::from(ppvQueried))
+				).map(|_| IShellItem::from(ppv_queried))
 			}
 
 			/// [`IFileDialog::GetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
 			/// method.
 			pub fn GetOptions(&self) -> WinResult<shellco::FOS> {
-				let mut opts: u32 = 0;
+				let mut opts = u32::default();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetOptions)(self.ppvt, &mut opts),
 				).map(|_| shellco::FOS(opts))
@@ -144,13 +144,13 @@ macro_rules! impl_IFileDialog {
 			/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
 			/// method.
 			pub fn GetResult(&self) -> WinResult<IShellItem> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.ifiledialog_vt().GetResult)(
 						self.ppvt,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IShellItem::from(ppvQueried))
+				).map(|_| IShellItem::from(ppv_queried))
 			}
 
 			/// [`IFileDialog::SetClientGuid`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setclientguid)
@@ -167,12 +167,12 @@ macro_rules! impl_IFileDialog {
 			/// [`IFileDialog::SetDefaultExtension`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultextension)
 			/// method.
 			pub fn SetDefaultExtension(&self,
-				defaultExtension: &str) -> WinResult<()>
+				default_extension: &str) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.ifiledialog_vt().SetDefaultExtension)(
 						self.ppvt,
-						unsafe { WString::from_str(defaultExtension).as_ptr() },
+						unsafe { WString::from_str(default_extension).as_ptr() },
 					),
 				)
 			}
@@ -211,9 +211,9 @@ macro_rules! impl_IFileDialog {
 			/// method.
 			///
 			/// **Note:** The index is one-based.
-			pub fn SetFileTypeIndex(&self, iFileType: u32) -> WinResult<()> {
+			pub fn SetFileTypeIndex(&self, index: u32) -> WinResult<()> {
 				hr_to_winresult(
-					(self.ifiledialog_vt().SetFileTypeIndex)(self.ppvt, iFileType),
+					(self.ifiledialog_vt().SetFileTypeIndex)(self.ppvt, index),
 				)
 			}
 
@@ -234,29 +234,29 @@ macro_rules! impl_IFileDialog {
 			/// ]).unwrap();
 			/// ```
 			pub fn SetFileTypes<S: AsRef<str>>(&self,
-				filterSpec: &[(S, S)]) -> WinResult<()>
+				filter_spec: &[(S, S)]) -> WinResult<()>
 			{
-				let mut namesBuf = Vec::with_capacity(filterSpec.len());
-				let mut specsBuf = Vec::with_capacity(filterSpec.len());
-				let mut comDlgs = Vec::with_capacity(filterSpec.len());
+				let mut names_buf = Vec::with_capacity(filter_spec.len());
+				let mut specs_buf = Vec::with_capacity(filter_spec.len());
+				let mut com_dlgs = Vec::with_capacity(filter_spec.len());
 
-				for (name, spec) in filterSpec.iter() {
-					namesBuf.push(WString::from_str(name.as_ref()));
-					specsBuf.push(WString::from_str(spec.as_ref()));
-					comDlgs.push(COMDLG_FILTERSPEC::default());
+				for (name, spec) in filter_spec.iter() {
+					names_buf.push(WString::from_str(name.as_ref()));
+					specs_buf.push(WString::from_str(spec.as_ref()));
+					com_dlgs.push(COMDLG_FILTERSPEC::default());
 				}
 
-				namesBuf.iter_mut().enumerate()
-					.for_each(|(i, el)| comDlgs[i].set_pszName(Some(el)));
+				names_buf.iter_mut().enumerate()
+					.for_each(|(i, el)| com_dlgs[i].set_pszName(Some(el)));
 
-				specsBuf.iter_mut().enumerate()
-					.for_each(|(i, el)| comDlgs[i].set_pszSpec(Some(el)));
+				specs_buf.iter_mut().enumerate()
+					.for_each(|(i, el)| com_dlgs[i].set_pszSpec(Some(el)));
 
 				hr_to_winresult(
 					(self.ifiledialog_vt().SetFileTypes)(
 						self.ppvt,
-						filterSpec.len() as _,
-						comDlgs.as_ptr() as _,
+						filter_spec.len() as _,
+						com_dlgs.as_ptr() as _,
 					),
 				)
 			}

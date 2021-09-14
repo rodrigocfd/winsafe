@@ -75,14 +75,14 @@ macro_rules! impl_IUnknown {
 			/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
 			/// method.
 			pub fn QueryInterface<T: ComInterface>(&self) -> WinResult<T> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.iunknown_vt().QueryInterface)(
 						self.ppvt,
 						&T::IID as *const _ as _,
-						&mut ppvQueried as *mut _ as _,
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| T::from(ppvQueried))
+				).map(|_| T::from(ppv_queried))
 			}
 		}
 	};

@@ -52,13 +52,13 @@ macro_rules! impl_ITaskbarList4 {
 			/// [`ITaskbarList4::SetTabProperties`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
 			/// method.
 			pub fn SetTabProperties(&self,
-				hwndTab: HWND, stpFlags: shellco::STPFLAG) -> WinResult<()>
+				hwnd_tab: HWND, stp_flags: shellco::STPFLAG) -> WinResult<()>
 			{
 				hr_to_winresult(
 					(self.itaskbarlist4_vt().SetTabProperties)(
 						self.ppvt,
-						hwndTab.ptr,
-						stpFlags.0,
+						hwnd_tab.ptr,
+						stp_flags.0,
 					),
 				)
 			}

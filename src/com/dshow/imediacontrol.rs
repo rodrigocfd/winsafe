@@ -50,27 +50,27 @@ macro_rules! impl_IMediaControl {
 
 			/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 			/// method.
-			pub fn AddSourceFilter(&self, fileName: &str) -> WinResult<IDispatch> {
-				let mut ppvQueried: PPVT = std::ptr::null_mut();
+			pub fn AddSourceFilter(&self, file_name: &str) -> WinResult<IDispatch> {
+				let mut ppv_queried: PPVT = std::ptr::null_mut();
 				hr_to_winresult(
 					(self.imediacontrol_vt().AddSourceFilter)(
 						self.ppvt,
-						unsafe { WString::from_str(fileName).as_mut_ptr() }, // BSTR
-						&mut ppvQueried as *mut _ as _,
+						unsafe { WString::from_str(file_name).as_mut_ptr() }, // BSTR
+						&mut ppv_queried as *mut _ as _,
 					),
-				).map(|_| IDispatch::from(ppvQueried))
+				).map(|_| IDispatch::from(ppv_queried))
 			}
 
 			/// [`IMediaControl::GetState`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
 			/// method.
 			pub fn GetState(&self,
-				msTimeout: Option<i32>) -> WinResult<dshowco::FILTER_STATE>
+				ms_timeout: Option<i32>) -> WinResult<dshowco::FILTER_STATE>
 			{
 				let mut state = dshowco::FILTER_STATE::Stopped;
 				hr_to_winresult(
 					(self.imediacontrol_vt().GetState)(
 						self.ppvt,
-						msTimeout.unwrap_or(INFINITE as _),
+						ms_timeout.unwrap_or(INFINITE as _),
 						&mut state.0,
 					),
 				).map(|_| state)
@@ -84,11 +84,11 @@ macro_rules! impl_IMediaControl {
 
 			/// [`IMediaControl::RenderFile`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-renderfile)
 			/// method.
-			pub fn RenderFile(&self, fileName: &str) -> WinResult<()> {
+			pub fn RenderFile(&self, file_name: &str) -> WinResult<()> {
 				hr_to_winresult(
 					(self.imediacontrol_vt().RenderFile)(
 						self.ppvt,
-						unsafe { WString::from_str(fileName).as_mut_ptr() }, // BSTR
+						unsafe { WString::from_str(file_name).as_mut_ptr() }, // BSTR
 					),
 				)
 			}
