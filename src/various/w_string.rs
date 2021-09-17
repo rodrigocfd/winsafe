@@ -9,15 +9,25 @@ use crate::funcs::MultiByteToWideChar;
 /// [`WString::guess_encoding`](crate::WString::guess_encoding).
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Encoding {
+	/// Unknown encoding.
 	Unknown,
+	/// Common [US_ASCII](https://en.wikipedia.org/wiki/ASCII) encoding.
 	Ansi,
+	/// [Windows-1252](https://en.wikipedia.org/wiki/Windows-1252) encoding.
 	Win1252,
+	/// [UTF-8](https://en.wikipedia.org/wiki/UTF-8) encoding.
 	Utf8,
+	/// [UTF-16](https://en.wikipedia.org/wiki/UTF-16) encoding, big-endian.
 	Utf16be,
+	/// [UTF-16](https://en.wikipedia.org/wiki/UTF-16) encoding, little-endian.
 	Utf16le,
+	/// [UTF-32](https://en.wikipedia.org/wiki/UTF-32) encoding, big-endian.
 	Utf32be,
+	/// [UTF-32](https://en.wikipedia.org/wiki/UTF-32) encoding, little-endian.
 	Utf32le,
+	/// [Standard Compression Scheme for Unicode](https://en.wikipedia.org/wiki/Standard_Compression_Scheme_for_Unicode).
 	Scsu,
+	/// [Binary Ordered Compression for Unicode](https://en.wikipedia.org/wiki/Binary_Ordered_Compression_for_Unicode).
 	Bocu1,
 }
 
@@ -65,9 +75,12 @@ impl std::fmt::Display for WString {
 }
 
 impl WString {
-	/// Creates and stores a new UTF-16 string from an optional `&str`.
+	/// Creates and stores a new UTF-16 string from an optional
+	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
 	///
 	/// The string will be stored with a terminating null.
+	///
+	/// If `s` is `None`, the internal buffer is not allocated.
 	pub fn from_opt_str(s: Option<&str>) -> WString {
 		Self {
 			vec_u16: s.map(
@@ -78,17 +91,19 @@ impl WString {
 		}
 	}
 
-	/// Creates and stores a new UTF-16 string from an ordinary `&str`.
+	/// Creates and stores a new UTF-16 string from an ordinary
+	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
 	///
 	/// The string will be stored with a terminating null.
 	pub fn from_str(s: &str) -> WString {
 		Self::from_opt_str(Some(s))
 	}
 
-	/// Creates and stores a new UTF-16 string from a `Vec` of ordinary strings.
-	/// This new string will be stored as sequential null-separated strings,
-	/// terminated with two nulls. That means that further retrieval operations
-	/// will "see" only the first string.
+	/// Creates and stores a new UTF-16 string from a
+	/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) of ordinary
+	/// strings. This new string will be stored as sequential null-separated
+	/// strings, terminated with two nulls. That means that further retrieval
+	/// operations will "see" only the first string.
 	///
 	/// This method is intended to pass multi-strings to native APIs, not to
 	/// retrieve them.
@@ -156,8 +171,10 @@ impl WString {
 		me
 	}
 
-	/// Returns a `LPWSTR` mut pointer to the internal UTF-16 string buffer, to
-	/// be passed to native Win32 functions. This is useful to receive strings.
+	/// Returns a
+	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// mut pointer to the internal UTF-16 string buffer, to be passed to native
+	/// Win32 functions. This is useful to receive strings.
 	///
 	/// # Panics
 	///
@@ -171,8 +188,10 @@ impl WString {
 			)
 	}
 
-	/// Returns a `LPCWSTR` const pointer to the internal UTF-16 string buffer,
-	/// to be passed to native Win32 functions.
+	/// Returns a
+	/// [`LPCWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// const pointer to the internal UTF-16 string buffer, to be passed to
+	/// native Win32 functions.
 	///
 	/// **Note:** Returns a null pointer if the buffer wasn't previously
 	/// allocated. Make sure the `WString` object outlives the function call,
@@ -182,8 +201,9 @@ impl WString {
 			.map_or(std::ptr::null(), |v| v.as_ptr())
 	}
 
-	/// Returns a slice to the internal `u16` buffer. This is useful to receive
-	/// strings.
+	/// Returns a slice to the internal
+	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) buffer. This
+	/// is useful to receive strings.
 	///
 	/// # Panics
 	///
@@ -271,8 +291,9 @@ impl WString {
 	/// Wrapper to
 	/// [`lstrlen`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
 	///
-	/// Returns the number of `u16` characters stored in the internal buffer,
-	/// not counting the terminating null.
+	/// Returns the number of
+	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) characters
+	/// stored in the internal buffer, not counting the terminating null.
 	pub fn len(&self) -> usize {
 		self.vec_u16.as_ref()
 			.map_or(0, |v| unsafe { kernel32::lstrlenW(v.as_ptr())} as _ )
@@ -284,8 +305,13 @@ impl WString {
 	/// If the new size is zero, the internal buffer is deallocated.
 	///
 	/// **Note:** The internal memory can move after a realloc, so if you're
-	/// using the internal buffer somewhere, update it by calling `as_const_ptr`
-	/// or `as_mut_buffer` again.
+	/// using a pointer or reference to the internal buffer, they may then point
+	/// to an invalid memory location. After a realloc, the following methods
+	/// must be called again:
+	/// * [`as_mut_ptr`](crate::WString::as_mut_ptr);
+	/// * [`as_ptr`](crate::WString::as_ptr);
+	/// * [`as_mut_slice`](crate::WString::as_mut_slice);
+	/// * [`as_slice`](crate::WString::as_slice).
 	pub fn realloc_buffer(&mut self, new_size: usize) {
 		if new_size == 0 {
 			self.vec_u16 = None; // dealloc
@@ -297,8 +323,9 @@ impl WString {
 		}
 	}
 
-	/// Converts into `String`. An internal null pointer will simply be converted
-	/// into an empty string.
+	/// Converts into
+	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html). An
+	/// internal null pointer will simply be converted into an empty string.
 	///
 	/// # Panics
 	///
@@ -310,8 +337,11 @@ impl WString {
 		self.to_string_checked().unwrap()
 	}
 
-	/// Converts into `String` by calling `String::from_utf16`. An internal null
-	/// pointer will simply be converted into an empty string.
+	/// Converts into
+	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html) by
+	/// calling
+	/// [`String::from_utf16`](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf16).
+	/// An internal null pointer will simply be converted into an empty string.
 	///
 	/// This method is useful if you're parsing raw data which may contain
 	/// invalid characters. If you're dealing with a string known to be valid,
@@ -325,7 +355,8 @@ impl WString {
 	}
 
 	/// Guesses the [`Encoding`](crate::Encoding) of the given data, also
-	/// returning the size of its BOM, if any.
+	/// returning the size of its
+	/// [BOM](https://en.wikipedia.org/wiki/Byte_order_mark), if any.
 	pub fn guess_encoding(data: &[u8]) -> (Encoding, usize) {
 		let has_bom = |bom_bytes: &[u8]| -> bool {
 			data.len() >= bom_bytes.len()
