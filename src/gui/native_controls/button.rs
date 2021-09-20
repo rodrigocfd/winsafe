@@ -82,7 +82,6 @@ impl Button {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
 					let mut sz = SIZE::new(opts.width as _, opts.height as _);
-					if opts.baseline_text_align { pos.y -= 1; }
 					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
 					let our_hwnd = self.0.base.create_window( // may panic
@@ -130,11 +129,6 @@ pub struct ButtonOpts {
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Will adjust `position.cy` so that, if the control is placed side-by-side
-	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
-	///
-	/// Defaults to false.
-	pub baseline_text_align: bool,
 	/// Control width, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -180,7 +174,6 @@ impl Default for ButtonOpts {
 		Self {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
-			baseline_text_align: false,
 			width: 80,
 			height: 23,
 			button_style: co::BS::PUSHBUTTON,

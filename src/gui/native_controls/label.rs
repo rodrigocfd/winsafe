@@ -82,7 +82,6 @@ impl Label {
 			match &self.0.opts_id {
 				OptsId::Wnd(opts) => {
 					let mut pos = opts.position;
-					if opts.baseline_text_align { pos.y += 3; }
 					multiply_dpi(Some(&mut pos), None)?;
 
 					let mut sz = opts.size;
@@ -197,11 +196,6 @@ pub struct LabelOpts {
 	///
 	/// Defaults to the size needed to fit the text.
 	pub size: SIZE,
-	/// Will adjust `position.cy` so that, if the control is placed side-by-side
-	/// with an [`Edit`](crate::gui::Edit) control, their texts will be aligned.
-	///
-	/// Defaults to false.
-	pub baseline_text_align: bool,
 	/// label styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -230,7 +224,6 @@ impl Default for LabelOpts {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
 			size: SIZE::new(-1, -1), // will resize to fit the text
-			baseline_text_align: false,
 			label_style: co::SS::LEFT | co::SS::NOTIFY,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
