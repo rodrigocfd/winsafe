@@ -163,7 +163,7 @@ impl RawBase {
 			ref_self.base.process_privileged_messages(wm_any);
 
 			// Execute user closure, if any.
-			let process_result = ref_self.base.process_effective_message(wm_any);
+			let process_result = ref_self.base.process_one_message(wm_any);
 
 			if msg == co::WM::NCDESTROY { // always check
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer

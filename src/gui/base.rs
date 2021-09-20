@@ -69,10 +69,10 @@ impl Base {
 		&self.privileged_events
 	}
 
-	pub(in crate::gui) fn process_effective_message(&mut self,
+	pub(in crate::gui) fn process_one_message(&mut self,
 		wm_any: WndMsg) -> ProcessResult
 	{
-		self.user_events.process_effective_message(wm_any)
+		self.user_events.process_one_message(wm_any)
 	}
 
 	pub(in crate::gui) fn process_privileged_messages(&mut self,

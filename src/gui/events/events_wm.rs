@@ -68,7 +68,7 @@ impl WindowEvents {
 
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
-	pub(crate) fn process_effective_message(&self, wm_any: WndMsg) -> ProcessResult {
+	pub(crate) fn process_one_message(&self, wm_any: WndMsg) -> ProcessResult {
 		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);

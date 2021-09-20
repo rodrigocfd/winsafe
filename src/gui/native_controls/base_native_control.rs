@@ -144,7 +144,7 @@ impl BaseNativeControl {
 			if !ptr_self.is_null() {
 				let ref_self = unsafe { &mut *ptr_self };
 				if !ref_self.0.hwnd.is_null() {
-					process_result = ref_self.0.subclass_events.process_effective_message(wm_any);
+					process_result = ref_self.0.subclass_events.process_one_message(wm_any);
 				}
 			}
 
