@@ -25,7 +25,11 @@ struct Obj { // actual fields of Trackbar
 	events: TrackbarEvents,
 }
 
-impl_send_sync_debug_child!(Trackbar);
+unsafe impl Send for Trackbar {}
+unsafe impl Sync for Trackbar {}
+
+impl_debug!(Trackbar);
+impl_child!(Trackbar);
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window

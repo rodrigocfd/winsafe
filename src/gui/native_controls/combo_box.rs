@@ -27,7 +27,11 @@ struct Obj { // actual fields of ComboBox
 	items: ComboBoxItems,
 }
 
-impl_send_sync_debug_child!(ComboBox);
+unsafe impl Send for ComboBox {}
+unsafe impl Sync for ComboBox {}
+
+impl_debug!(ComboBox);
+impl_child!(ComboBox);
 
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window

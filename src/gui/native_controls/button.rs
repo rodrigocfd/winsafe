@@ -25,7 +25,11 @@ struct Obj { // actual fields of Button
 	events: ButtonEvents,
 }
 
-impl_send_sync_debug_child!(Button);
+unsafe impl Send for Button {}
+unsafe impl Sync for Button {}
+
+impl_debug!(Button);
+impl_child!(Button);
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window

@@ -28,7 +28,11 @@ struct Obj { // actual fields of ListBox
 	items: ListBoxItems,
 }
 
-impl_send_sync_debug_child!(ListBox);
+unsafe impl Send for ListBox {}
+unsafe impl Sync for ListBox {}
+
+impl_debug!(ListBox);
+impl_child!(ListBox);
 
 impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window

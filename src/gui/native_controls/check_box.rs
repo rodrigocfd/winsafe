@@ -27,7 +27,11 @@ struct Obj { // actual fields of CheckBox
 	events: ButtonEvents,
 }
 
-impl_send_sync_debug_child!(CheckBox);
+unsafe impl Send for CheckBox {}
+unsafe impl Sync for CheckBox {}
+
+impl_debug!(CheckBox);
+impl_child!(CheckBox);
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window

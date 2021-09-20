@@ -19,7 +19,11 @@ pub struct WindowControl {
 	raw_dlg: RawDlg,
 }
 
-impl_send_sync_debug_parent!(WindowControl);
+unsafe impl Send for WindowControl {}
+unsafe impl Sync for WindowControl {}
+
+impl_debug!(WindowControl);
+impl_parent!(WindowControl);
 
 impl Child for WindowControl {
 	fn hwnd_ref(&self) -> &HWND {
@@ -60,5 +64,8 @@ impl WindowControl {
 		}
 	}
 
-	pub_fn_baseref_hwnd_on_runuithread!();
+	fn_base_ref!();
+	pub_fn_hwnd!();
+	pub_fn_on!();
+	pub_fn_run_ui_thread!();
 }

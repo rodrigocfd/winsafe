@@ -32,7 +32,11 @@ struct Obj { // actual fields of ListView
 	context_menu: Option<HMENU>,
 }
 
-impl_send_sync_debug_child!(ListView);
+unsafe impl Send for ListView {}
+unsafe impl Sync for ListView {}
+
+impl_debug!(ListView);
+impl_child!(ListView);
 
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window

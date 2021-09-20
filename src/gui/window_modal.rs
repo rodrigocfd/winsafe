@@ -18,7 +18,11 @@ pub struct WindowModal {
 	raw_dlg: RawDlg,
 }
 
-impl_send_sync_debug_parent!(WindowModal);
+unsafe impl Send for WindowModal {}
+unsafe impl Sync for WindowModal {}
+
+impl_debug!(WindowModal);
+impl_parent!(WindowModal);
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with
@@ -41,7 +45,10 @@ impl WindowModal {
 		}
 	}
 
-	pub_fn_baseref_hwnd_on_runuithread!();
+	fn_base_ref!();
+	pub_fn_hwnd!();
+	pub_fn_on!();
+	pub_fn_run_ui_thread!();
 
 	/// Physically creates the window, then runs the modal loop. This method
 	/// will block until the window is closed.

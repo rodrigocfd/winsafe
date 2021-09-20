@@ -25,7 +25,11 @@ struct Obj { // actual fields of Edit
 	events: EditEvents,
 }
 
-impl_send_sync_debug_child!(Edit);
+unsafe impl Send for Edit {}
+unsafe impl Sync for Edit {}
+
+impl_debug!(Edit);
+impl_child!(Edit);
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window

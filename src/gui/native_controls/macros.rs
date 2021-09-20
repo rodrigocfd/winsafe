@@ -1,9 +1,6 @@
-/// Implements `Send`, `Sync` and `Child` traits for a control.
-macro_rules! impl_send_sync_debug_child {
+/// Implements Debug trait to control.
+macro_rules! impl_debug {
 	($name:ident) => {
-		unsafe impl Send for $name {}
-		unsafe impl Sync for $name {}
-
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				write!(f, "HWND {}, ID {}",
@@ -12,7 +9,12 @@ macro_rules! impl_send_sync_debug_child {
 				)
 			}
 		}
+	};
+}
 
+/// Implements Child trait to control.
+macro_rules! impl_child {
+	($name:ident) => {
 		impl crate::gui::traits::Child for $name {
 			fn hwnd_ref(&self) -> &crate::HWND {
 				self.0.base.hwnd_ref()

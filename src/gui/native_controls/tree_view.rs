@@ -27,7 +27,11 @@ struct Obj { // actual fields of TreeView
 	items: TreeViewItems,
 }
 
-impl_send_sync_debug_child!(TreeView);
+unsafe impl Send for TreeView {}
+unsafe impl Sync for TreeView {}
+
+impl_debug!(TreeView);
+impl_child!(TreeView);
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window

@@ -23,7 +23,11 @@ struct Obj { // actual fields of ProgressBar
 	opts_id: OptsId<ProgressBarOpts>,
 }
 
-impl_send_sync_debug_child!(ProgressBar);
+unsafe impl Send for ProgressBar {}
+unsafe impl Sync for ProgressBar {}
+
+impl_debug!(ProgressBar);
+impl_child!(ProgressBar);
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent

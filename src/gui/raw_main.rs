@@ -84,11 +84,7 @@ impl RawMain {
 		self.0.base.create_window( // may panic
 			atom,
 			Some(&opts.title),
-			if opts.menu.is_null() {
-				IdMenu::None
-			} else {
-				IdMenu::Menu(opts.menu)
-			},
+			if opts.menu.is_null() { IdMenu::None } else { IdMenu::Menu(opts.menu) },
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
 		)?;

@@ -26,7 +26,11 @@ struct Obj { // actual fields of MonthCalendar
 	events: MonthCalendarEvents,
 }
 
-impl_send_sync_debug_child!(MonthCalendar);
+unsafe impl Send for MonthCalendar {}
+unsafe impl Sync for MonthCalendar {}
+
+impl_debug!(MonthCalendar);
+impl_child!(MonthCalendar);
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent

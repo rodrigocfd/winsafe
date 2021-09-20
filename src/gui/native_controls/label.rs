@@ -26,7 +26,11 @@ struct Obj { // actual fields of Label
 	events: LabelEvents,
 }
 
-impl_send_sync_debug_child!(Label);
+unsafe impl Send for Label {}
+unsafe impl Sync for Label {}
+
+impl_debug!(Label);
+impl_child!(Label);
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window

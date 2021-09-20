@@ -1,9 +1,6 @@
-/// Implements `Send`, `Sync` and `Parent` traits for a window.
-macro_rules! impl_send_sync_debug_parent {
+/// Implements Debug trait to leaf window.
+macro_rules! impl_debug {
 	($name:ident) => {
-		unsafe impl Send for $name {}
-		unsafe impl Sync for $name {}
-
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				write!(f, "HWND {}, {}",
@@ -15,7 +12,12 @@ macro_rules! impl_send_sync_debug_parent {
 				)
 			}
 		}
+	};
+}
 
+/// Implements Parent trait to leaf window.
+macro_rules! impl_parent {
+	($name:ident) => {
 		impl crate::gui::traits::Parent for $name {
 			fn as_any(&self) -> &dyn std::any::Any {
 				self
@@ -24,9 +26,8 @@ macro_rules! impl_send_sync_debug_parent {
 	};
 }
 
-/// Declares the common methods to `WindowControl`, `WindowMain` and
-/// `WindowModal`.
-macro_rules! pub_fn_baseref_hwnd_on_runuithread {
+/// Implements base_ref() method to leaf window.
+macro_rules! fn_base_ref {
 	() => {
 		pub(in crate::gui) fn base_ref(&self) -> &Base {
 			match &self.raw_dlg {
@@ -34,15 +35,25 @@ macro_rules! pub_fn_baseref_hwnd_on_runuithread {
 				RawDlg::Dlg(d) => d.base_ref(),
 			}
 		}
+	};
+}
 
+/// Implements hwnd() method to leaf window.
+macro_rules! pub_fn_hwnd {
+	() => {
 		/// Returns the underlying handle for this control.
 		///
-		/// Note that the handle is initially null, receiving an actual value only
-		/// after the control is created.
+		/// Note that the handle is initially null, receiving an actual value
+		/// only after the control is created.
 		pub fn hwnd(&self) -> HWND {
 			*self.base_ref().hwnd_ref()
 		}
+	};
+}
 
+/// Implements on() method to leaf window.
+macro_rules! pub_fn_on {
+	() => {
 		/// Exposes the window events.
 		///
 		/// # Panics
@@ -52,7 +63,12 @@ macro_rules! pub_fn_baseref_hwnd_on_runuithread {
 		pub fn on(&self) -> &WindowEvents {
 			self.base_ref().user_events_ref()
 		}
+	};
+}
 
+/// Implements run_ui_thread() method to leaf window.
+macro_rules! pub_fn_run_ui_thread {
+	() => {
 		/// If you perform a very long task in the UI thread, the UI freezes until
 		/// the task is complete – this may cause the impression that your
 		/// application crashed. That's why long tasks are performed in parallel

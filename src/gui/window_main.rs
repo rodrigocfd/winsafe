@@ -125,7 +125,11 @@ pub struct WindowMain {
 	raw_dlg: RawDlg,
 }
 
-impl_send_sync_debug_parent!(WindowMain);
+unsafe impl Send for WindowMain {}
+unsafe impl Sync for WindowMain {}
+
+impl_debug!(WindowMain);
+impl_parent!(WindowMain);
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with
@@ -152,7 +156,10 @@ impl WindowMain {
 		}
 	}
 
-	pub_fn_baseref_hwnd_on_runuithread!();
+	fn_base_ref!();
+	pub_fn_hwnd!();
+	pub_fn_on!();
+	pub_fn_run_ui_thread!();
 
 	/// Physically creates the window, then runs the main application loop. This
 	/// method will block until the window is closed.

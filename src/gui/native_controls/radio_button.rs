@@ -25,7 +25,11 @@ struct Obj { // actual fields of RadioButton
 	events: ButtonEvents,
 }
 
-impl_send_sync_debug_child!(RadioButton);
+unsafe impl Send for RadioButton {}
+unsafe impl Sync for RadioButton {}
+
+impl_debug!(RadioButton);
+impl_child!(RadioButton);
 
 impl RadioButton {
 	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
