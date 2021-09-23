@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::enums::IdMenu;
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
@@ -46,7 +46,7 @@ impl RawMain {
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> WinResult<()>
+		cmd_show: Option<co::SW>) -> ErrResult<i32>
 	{
 		let opts = &self.0.opts;
 
@@ -93,12 +93,13 @@ impl RawMain {
 		hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		hwnd.UpdateWindow()?;
 
-		let res = Base::run_main_loop(opts.accel_table.as_opt()); // blocks until window is closed
+		let loop_ret = Base::run_main_loop(opts.accel_table.as_opt()); // blocks until window is closed
 
 		if let Some(haccel) = opts.accel_table.as_opt() {
 			haccel.DestroyAcceleratorTable();
 		}
-		res
+
+		loop_ret
 	}
 
 	fn default_message_handlers(&self) {
@@ -116,6 +117,7 @@ impl RawMain {
 						hwnd_prev_focus.SetFocus(); // put focus back
 					}
 				}
+				Ok(())
 			}
 		});
 
@@ -127,11 +129,14 @@ impl RawMain {
 						self2.0.base.focus_first_child(); // if window receives focus, delegate to first child
 					}
 				}
+				Ok(())
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_nc_destroy(
-			|| PostQuitMessage(co::ERROR::SUCCESS));
+		self.base_ref().user_events_ref().wm_nc_destroy(|| {
+			PostQuitMessage(0);
+			Ok(())
+		});
 	}
 }
 

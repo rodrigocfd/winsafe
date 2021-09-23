@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
+use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
@@ -47,7 +47,7 @@ impl DlgMain {
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> WinResult<()>
+		cmd_show: Option<co::SW>) -> ErrResult<i32>
 	{
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.base_ref().parent_hinstance()?;
@@ -56,7 +56,9 @@ impl DlgMain {
 			.transpose()?;
 
 		self.set_icon_if_any(hinst)?;
-		self.base_ref().hwnd_ref().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+
+		let hwnd = *self.base_ref().hwnd_ref();
+		hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
 		Base::run_main_loop(haccel) // blocks until window is closed
 	}
@@ -64,11 +66,13 @@ impl DlgMain {
 	fn default_message_handlers(&self) {
 		self.base_ref().user_events_ref().wm_close({
 			let self2 = self.clone();
-			move || self2.base_ref().hwnd_ref().DestroyWindow()
+			move || { self2.base_ref().hwnd_ref().DestroyWindow()?; Ok(()) }
 		});
 
-		self.base_ref().user_events_ref().wm_nc_destroy(
-			|| PostQuitMessage(co::ERROR::SUCCESS));
+		self.base_ref().user_events_ref().wm_nc_destroy(|| {
+			PostQuitMessage(0);
+			Ok(())
+		});
 	}
 
 	fn set_icon_if_any(&self, hinst: HINSTANCE) -> WinResult<()> {

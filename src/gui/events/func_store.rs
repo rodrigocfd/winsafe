@@ -24,23 +24,19 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 	/// any.
 	pub fn find(&self, id: K) -> Option<&F> {
 		// Linear search, more performant for small collections.
-		// Searches backwards, so the function added last will overwrite the first.
-		for elem in self.elems.iter().rev() {
-			if elem.0 == id {
-				return Some(&elem.1);
-			}
-		}
-		None
+		// Searches backwards, so the function added last will be chosen.
+		self.elems.iter().rev()
+			.find(move |elem| elem.0 == id)
+			.map(|elem| &elem.1)
 	}
 
 	/// Finds all the functions associated to the given identifier, if any, and
-	/// passes each one of them, first to last, to the supplied callback.
-	pub fn find_all<C: Fn(&F)>(&self, id: K, callback: C) {
-		for elem in self.elems.iter() {
-			if elem.0 == id {
-				callback(&elem.1);
-			}
-		}
+	/// returns an iterator to t
+	pub fn find_all(&self, id: K) -> impl Iterator<Item = &F> + '_ {
+		// https://depth-first.com/articles/2020/06/22/returning-rust-iterators
+		self.elems.iter()
+			.filter(move |elem| elem.0 == id)
+			.map(|elem| &elem.1)
 	}
 
 	/// Tells whether no functions have been added.

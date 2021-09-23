@@ -2,7 +2,6 @@ use std::cell::Cell;
 use std::ptr::NonNull;
 
 use crate::aliases::WinResult;
-use crate::funcs::PostQuitMessage;
 use crate::handles::HWND;
 use crate::msg::cb;
 use crate::various::WString;
@@ -93,18 +92,13 @@ impl ComboBoxItems {
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`cb::GetLbText`](crate::msg::cb::GetLbText) message.
 	pub fn text(&self, index: u32) -> Option<String> {
-		match self.hwnd().SendMessage(cb::GetLbTextLen { index }) {
-			Err(err) => {
-				PostQuitMessage(err);
-				None
-			},
-			Ok(len) => {
+		self.hwnd().SendMessage(cb::GetLbTextLen { index })
+			.ok().map(|len| {
 				let mut buf = WString::new_alloc_buffer(len as usize + 1);
 				self.hwnd().SendMessage(cb::GetLbText{
 					index,
 					text: &mut buf,
 				}).ok().map(|_| buf.to_string())
-			},
-		}
+			}).flatten()
 	}
 }

@@ -1,3 +1,4 @@
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
@@ -88,9 +89,9 @@ impl ButtonEvents {
 	///
 	/// Notifies about custom draw operations on the button.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMCUSTOMDRAW) -> co::CDRF + 'static,
+		where F: Fn(&NMCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
 	{
 		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() }).into()));
+			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.into())));
 	}
 }

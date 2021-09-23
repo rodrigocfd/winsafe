@@ -1,3 +1,4 @@
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::structs::{
 	NMITEMACTIVATE,
@@ -257,13 +258,13 @@ impl ListViewEvents {
 	/// notification code when it receives shortcut keyboard input or when it
 	/// receives an [`lvm::FindItem`](crate::msg::lvm::FindItem) message.
 	pub fn lvn_od_find_item<F>(&self, func: F)
-		where F: Fn(&mut NMLVFINDITEM) -> Option<u32> + 'static,
+		where F: Fn(&mut NMLVFINDITEM) -> ErrResult<Option<u32>> + 'static,
 	{
 		self.parent_user_events().add_nfy(self.ctrl_id as _, co::LVN::ODFINDITEM.into(), move |p| {
-			Some(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() }) {
+			Ok(Some(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
 				Some(idx) => idx as _,
 				None => -1,
-			})
+			}))
 		});
 	}
 
@@ -296,10 +297,10 @@ impl ListViewEvents {
 	///
 	/// Sent by a list-view control to notify about drawing operations.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMLVCUSTOMDRAW) -> co::CDRF + 'static,
+		where F: Fn(&NMLVCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
 	{
 		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMLVCUSTOMDRAW>() }).into()));
+			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMLVCUSTOMDRAW>() })?.into())));
 	}
 
 	pub_fn_nfy_ret0_param! { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE,

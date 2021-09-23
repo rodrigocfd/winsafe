@@ -3,7 +3,6 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::funcs::PostQuitMessage;
 use crate::gui::events::DateTimePickerEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
@@ -52,7 +51,7 @@ impl DateTimePicker {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.create(); 0 }
+			move |_| { me.create()?; Ok(0) }
 		});
 
 		new_self
@@ -75,42 +74,40 @@ impl DateTimePicker {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create(); true }
+			move |_| { me.create()?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) {
-		|| -> WinResult<()> {
-			match &self.0.opts_id {
-				OptsId::Wnd(opts) => {
-					let mut pos = opts.position;
-					let mut sz = SIZE::new(opts.width as _, 21); // default height
-					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+	fn create(&self) -> WinResult<()> {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => {
+				let mut pos = opts.position;
+				let mut sz = SIZE::new(opts.width as _, 21); // default height
+				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					let our_hwnd = self.0.base.create_window( // may panic
-						"SysDateTimePick32", None, pos, sz,
-						opts.ctrl_id,
-						opts.window_ex_style,
-						opts.window_style | opts.date_time_picker_style.into(),
-					)?;
+				let our_hwnd = self.0.base.create_window( // may panic
+					"SysDateTimePick32", None, pos, sz,
+					opts.ctrl_id,
+					opts.window_ex_style,
+					opts.window_style | opts.date_time_picker_style.into(),
+				)?;
 
-					if sz.cx == 0 { // use ideal width?
-						let mut sz_ideal = SIZE::default();
-						our_hwnd.SendMessage(dtm::GetIdealSize { size: &mut sz_ideal });
-						sz.cx = sz_ideal.cx; // already adjusted for DPI
+				if sz.cx == 0 { // use ideal width?
+					let mut sz_ideal = SIZE::default();
+					our_hwnd.SendMessage(dtm::GetIdealSize { size: &mut sz_ideal });
+					sz.cx = sz_ideal.cx; // already adjusted for DPI
 
-						our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(), sz,
-							co::SWP::NOZORDER | co::SWP::NOMOVE)?;
-					}
+					our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(), sz,
+						co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+				}
 
-					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
-					Ok(())
-				},
-				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-			}
-		}().unwrap_or_else(|err| PostQuitMessage(err))
+				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+				Ok(())
+			},
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+		}
 	}
 
 	pub_fn_hwnd!();

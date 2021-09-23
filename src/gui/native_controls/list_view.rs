@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::{GetAsyncKeyState, GetCursorPos, PostQuitMessage};
+use crate::funcs::{GetAsyncKeyState, GetCursorPos};
 use crate::gui::base::Base;
 use crate::gui::events::ListViewEvents;
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
@@ -64,7 +64,7 @@ impl ListView {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.create(); 0 }
+			move |_| { me.create()?; Ok(0) }
 		});
 
 		new_self.handled_events(parent_base_ref, ctrl_id);
@@ -101,38 +101,36 @@ impl ListView {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create(); true }
+			move |_| { me.create()?; Ok(true) }
 		});
 
 		new_self.handled_events(parent_base_ref, ctrl_id);
 		new_self
 	}
 
-	fn create(&self) {
-		|| -> WinResult<()> {
-			match &self.0.opts_id {
-				OptsId::Wnd(opts) => {
-					let mut pos = opts.position;
-					let mut sz = opts.size;
-					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+	fn create(&self) -> WinResult<()> {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => {
+				let mut pos = opts.position;
+				let mut sz = opts.size;
+				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					self.0.base.create_window( // may panic
-						"SysListView32", None, pos, sz,
-						opts.ctrl_id,
-						opts.window_ex_style,
-						opts.window_style | opts.list_view_style.into(),
-					)?;
+				self.0.base.create_window( // may panic
+					"SysListView32", None, pos, sz,
+					opts.ctrl_id,
+					opts.window_ex_style,
+					opts.window_style | opts.list_view_style.into(),
+				)?;
 
-					if opts.list_view_ex_style != co::LVS_EX::NoValue {
-						self.toggle_extended_style(true, opts.list_view_ex_style);
-					}
+				if opts.list_view_ex_style != co::LVS_EX::NoValue {
+					self.toggle_extended_style(true, opts.list_view_ex_style);
+				}
 
-					self.columns().add(&opts.columns)?;
-					Ok(())
-				},
-				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-			}
-		}().unwrap_or_else(|err| PostQuitMessage(err))
+				self.columns().add(&opts.columns)?;
+				Ok(())
+			},
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+		}
 	}
 
 	fn handled_events(&self, parent_base_ref: &Base, ctrl_id: u16) {
@@ -144,12 +142,11 @@ impl ListView {
 				let has_shift = GetAsyncKeyState(co::VK::SHIFT);
 
 				if has_ctrl && lvnk.wVKey == co::VK('A' as _) { // Ctrl+A
-					me.items().set_selected_all(true)
-						.unwrap_or_else(|err| PostQuitMessage(err));
+					me.items().set_selected_all(true)?;
 				} else if lvnk.wVKey == co::VK::APPS { // context menu key
-					me.show_context_menu(false, has_ctrl, has_shift).unwrap();
+					me.show_context_menu(false, has_ctrl, has_shift)?;
 				}
-				None
+				Ok(None)
 			}
 		});
 
@@ -160,8 +157,8 @@ impl ListView {
 				let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 				let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
-				me.show_context_menu(true, has_ctrl, has_shift).unwrap();
-				None
+				me.show_context_menu(true, has_ctrl, has_shift)?;
+				Ok(None)
 			}
 		});
 	}

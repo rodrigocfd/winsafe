@@ -1032,8 +1032,8 @@ pub fn PeekMessage(
 
 /// [`PostQuitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postquitmessage)
 /// function.
-pub fn PostQuitMessage(exit_code: co::ERROR) {
-	unsafe { user32::PostQuitMessage(exit_code.0 as _) }
+pub fn PostQuitMessage(exit_code: i32) {
+	unsafe { user32::PostQuitMessage(exit_code) }
 }
 
 /// [`QueryPerformanceCounter`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)

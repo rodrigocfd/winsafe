@@ -1,3 +1,4 @@
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::structs::{NMMOUSE, NMTREEVIEW, NMTVCUSTOMDRAW};
 
@@ -84,10 +85,10 @@ impl TreeViewEvents {
 	///
 	/// Sent by a tree-view control to notify its parent window about drawing operations.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMTVCUSTOMDRAW) -> co::CDRF + 'static,
+		where F: Fn(&NMTVCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
 	{
 		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
-			move |p| Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() }).into()));
+			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() })?.into())));
 	}
 
 	pub_fn_nfy_reti32! { nm_dbl_clk, co::NM::DBLCLK,

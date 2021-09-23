@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::PostQuitMessage;
 use crate::gui::events::EditEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
@@ -51,7 +50,7 @@ impl Edit {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.create(); 0 }
+			move |_| { me.create()?; Ok(0) }
 		});
 
 		new_self
@@ -74,33 +73,31 @@ impl Edit {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create(); true }
+			move |_| { me.create()?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) {
-		|| -> WinResult<()> {
-			match &self.0.opts_id {
-				OptsId::Wnd(opts) => {
-					let mut pos = opts.position;
-					let mut sz = SIZE::new(opts.width as _, opts.height as _);
-					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+	fn create(&self) -> WinResult<()> {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => {
+				let mut pos = opts.position;
+				let mut sz = SIZE::new(opts.width as _, opts.height as _);
+				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					let our_hwnd = self.0.base.create_window( // may panic
-						"EDIT", Some(&opts.text), pos, sz,
-						opts.ctrl_id,
-						opts.window_ex_style,
-						opts.window_style | opts.edit_style.into(),
-					)?;
+				let our_hwnd = self.0.base.create_window( // may panic
+					"EDIT", Some(&opts.text), pos, sz,
+					opts.ctrl_id,
+					opts.window_ex_style,
+					opts.window_style | opts.edit_style.into(),
+				)?;
 
-					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
-					Ok(())
-				},
-				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-			}
-		}().unwrap_or_else(|err| PostQuitMessage(err))
+				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+				Ok(())
+			},
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+		}
 	}
 
 	pub_fn_hwnd!();

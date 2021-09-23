@@ -3,7 +3,6 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::funcs::PostQuitMessage;
 use crate::gui::events::MonthCalendarEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
@@ -52,7 +51,7 @@ impl MonthCalendar {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.create(); 0 }
+			move |_| { me.create()?; Ok(0) }
 		});
 
 		new_self
@@ -75,39 +74,37 @@ impl MonthCalendar {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create(); true }
+			move |_| { me.create()?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) {
-		|| -> WinResult<()> {
-			match &self.0.opts_id {
-				OptsId::Wnd(opts) => {
-					let mut pos = opts.position;
-					multiply_dpi(Some(&mut pos), None)?;
+	fn create(&self) -> WinResult<()> {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => {
+				let mut pos = opts.position;
+				multiply_dpi(Some(&mut pos), None)?;
 
-					let our_hwnd = self.0.base.create_window( // may panic
-						"SysMonthCal32", None, pos, SIZE::new(0, 0),
-						opts.ctrl_id,
-						opts.window_ex_style,
-						opts.window_style | opts.month_calendar_style.into(),
-					)?;
+				let our_hwnd = self.0.base.create_window( // may panic
+					"SysMonthCal32", None, pos, SIZE::new(0, 0),
+					opts.ctrl_id,
+					opts.window_ex_style,
+					opts.window_style | opts.month_calendar_style.into(),
+				)?;
 
-					let mut bounding_rect = RECT::default();
-					our_hwnd.SendMessage(mcm::GetMinReqRect {
-						bounding_rect: &mut bounding_rect,
-					})?;
-					our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(),
-						SIZE::new(bounding_rect.right, bounding_rect.bottom),
-						co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+				let mut bounding_rect = RECT::default();
+				our_hwnd.SendMessage(mcm::GetMinReqRect {
+					bounding_rect: &mut bounding_rect,
+				})?;
+				our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(),
+					SIZE::new(bounding_rect.right, bounding_rect.bottom),
+					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 
-					Ok(())
-				},
-				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-			}
-		}().unwrap_or_else(|err| PostQuitMessage(err))
+				Ok(())
+			},
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+		}
 	}
 
 	pub_fn_hwnd!();

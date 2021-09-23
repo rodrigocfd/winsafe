@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::PostQuitMessage;
 use crate::gui::events::StatusBarEvents;
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
@@ -73,91 +72,85 @@ impl StatusBar {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.create(); 0 }
+			move |_| { me.create()?; Ok(0) }
 		});
 		parent_base_ref.privileged_events_ref().wm_size({
 			let me = new_self.clone();
-			move |p| me.resize(&p)
+			move |p| { me.resize(&p)?; Ok(()) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) {
-		|| -> WinResult<()> {
-			for part in self.0.as_mut().parts_info.iter_mut() {
-				if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
-					let mut col_cx = SIZE::new(*width as _, 0);
-					multiply_dpi(None, Some(&mut col_cx))?;
-					*width = col_cx.cx as _;
-				}
+	fn create(&self) -> WinResult<()> {
+		for part in self.0.as_mut().parts_info.iter_mut() {
+			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
+				let mut col_cx = SIZE::new(*width as _, 0);
+				multiply_dpi(None, Some(&mut col_cx))?;
+				*width = col_cx.cx as _;
 			}
-
-			let hparent = *self.0.base.parent_base_ref().hwnd_ref();
-			let parent_style = co::WS(
-				hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
-			);
-			let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
-				|| parent_style.has(co::WS::SIZEBOX);
-
-			self.0.base.create_window( // may panic
-				"msctls_statusbar32", None,
-				POINT::default(), SIZE::default(),
-				self.0.ctrl_id,
-				co::WS_EX::LEFT,
-				co::WS::CHILD | co::WS::VISIBLE | co::SBARS::TOOLTIPS.into() |
-					if is_parent_resizable {
-						co::SBARS::SIZEGRIP
-					} else {
-						co::SBARS::NoValue
-					}.into(),
-			)?;
-
-			// Force first resizing, so the panels are created.
-			let parent_rc = hparent.GetClientRect()?;
-			self.resize(&wm::Size {
-				client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
-				request: co::SIZE_R::RESTORED,
-			});
-
-			Ok(())
 		}
-		().unwrap_or_else(|err| PostQuitMessage(err))
+
+		let hparent = *self.0.base.parent_base_ref().hwnd_ref();
+		let parent_style = co::WS(
+			hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
+		);
+		let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
+			|| parent_style.has(co::WS::SIZEBOX);
+
+		self.0.base.create_window( // may panic
+			"msctls_statusbar32", None,
+			POINT::default(), SIZE::default(),
+			self.0.ctrl_id,
+			co::WS_EX::LEFT,
+			co::WS::CHILD | co::WS::VISIBLE | co::SBARS::TOOLTIPS.into() |
+				if is_parent_resizable {
+					co::SBARS::SIZEGRIP
+				} else {
+					co::SBARS::NoValue
+				}.into(),
+		)?;
+
+		// Force first resizing, so the panels are created.
+		let parent_rc = hparent.GetClientRect()?;
+		self.resize(&wm::Size {
+			client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
+			request: co::SIZE_R::RESTORED,
+		})?;
+
+		Ok(())
 	}
 
-	fn resize(&self, p: &wm::Size) {
-		|p: &wm::Size| -> WinResult<()> {
-			if p.request == co::SIZE_R::MINIMIZED || self.hwnd().is_null() {
-				return Ok(()); // nothing to do
-			}
-
-			self.hwnd().SendMessage(p.as_generic_wm()); // send WM_SIZE to status bar, so it resizes itself to fit parent
-
-			let mut total_proportions: u8 = 0;
-			let mut cx_available = p.client_area.cx as u32;
-
-			for part_info in self.0.parts_info.iter() {
-				match part_info {
-					StatusBarPart::Fixed(pixels) => cx_available -= pixels,
-					StatusBarPart::Proportional(prop) => total_proportions += prop,
-				}
-			}
-
-			let right_edges = &mut self.0.as_mut().right_edges;
-			let mut total_cx = p.client_area.cx as u32;
-
-			for (idx, part_info) in self.0.parts_info.iter().rev().enumerate() {
-				right_edges[self.0.parts_info.len() - idx - 1] = total_cx as _;
-				total_cx -= match part_info {
-					StatusBarPart::Fixed(pixels) => *pixels,
-					StatusBarPart::Proportional(pp) => (cx_available / total_proportions as u32) * (*pp as u32),
-				};
-			}
-			*right_edges.last_mut().unwrap() = -1;
-
-			self.hwnd().SendMessage(sb::SetParts { right_edges: &right_edges })
+	fn resize(&self, p: &wm::Size) -> WinResult<()> {
+		if p.request == co::SIZE_R::MINIMIZED || self.hwnd().is_null() {
+			return Ok(()); // nothing to do
 		}
-		(p).unwrap_or_else(|err| PostQuitMessage(err))
+
+		self.hwnd().SendMessage(p.as_generic_wm()); // send WM_SIZE to status bar, so it resizes itself to fit parent
+
+		let mut total_proportions: u8 = 0;
+		let mut cx_available = p.client_area.cx as u32;
+
+		for part_info in self.0.parts_info.iter() {
+			match part_info {
+				StatusBarPart::Fixed(pixels) => cx_available -= pixels,
+				StatusBarPart::Proportional(prop) => total_proportions += prop,
+			}
+		}
+
+		let right_edges = &mut self.0.as_mut().right_edges;
+		let mut total_cx = p.client_area.cx as u32;
+
+		for (idx, part_info) in self.0.parts_info.iter().rev().enumerate() {
+			right_edges[self.0.parts_info.len() - idx - 1] = total_cx as _;
+			total_cx -= match part_info {
+				StatusBarPart::Fixed(pixels) => *pixels,
+				StatusBarPart::Proportional(pp) => (cx_available / total_proportions as u32) * (*pp as u32),
+			};
+		}
+		*right_edges.last_mut().unwrap() = -1;
+
+		self.hwnd().SendMessage(sb::SetParts { right_edges: &right_edges })
 	}
 
 	pub_fn_hwnd!();

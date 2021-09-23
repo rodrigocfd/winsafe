@@ -5,7 +5,6 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
@@ -127,46 +126,43 @@ impl Resizer {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.add_children(ptr_parent, rc_children.clone()); 0 }
+			move |_| { me.add_children(ptr_parent, rc_children.clone())?; Ok(0) }
 		});
 		parent_base_ref.privileged_events_ref().wm_size({
 			let me = new_self.clone();
-			move |p| me.resize(&p).unwrap_or_else(|err| PostQuitMessage(err))
+			move |p| { me.resize(&p)?; Ok(()) }
 		});
 
 		new_self
 	}
 
 	fn add_children(&self,
-		ptr_parent: NonNull<Base>, rc_children: Rc<Vec<ChildEntry>>)
+		ptr_parent: NonNull<Base>,
+		rc_children: Rc<Vec<ChildEntry>>) -> WinResult<()>
 	{
 		let ctrls = &mut self.0.as_mut().ctrls;
 		ctrls.reserve(rc_children.len());
 
-		|ptr_parent: NonNull<Base>, rc_children: Rc<Vec<ChildEntry>>| -> WinResult<()> {
-			let parent_base_ref = unsafe { ptr_parent.as_ref() };
-			let rc_parent = parent_base_ref.hwnd_ref().GetClientRect()?;
-			self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
+		let parent_base_ref = unsafe { ptr_parent.as_ref() };
+		let rc_parent = parent_base_ref.hwnd_ref().GetClientRect()?;
+		self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
 
-			for entry in rc_children.iter() {
-				for child_hwnd_ptr in entry.children.iter() {
-					let child_hwnd_ref = unsafe { child_hwnd_ptr.as_ref() };
-					let mut rc_orig = child_hwnd_ref.GetWindowRect()?;
-					parent_base_ref.hwnd_ref().ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
+		for entry in rc_children.iter() {
+			for child_hwnd_ptr in entry.children.iter() {
+				let child_hwnd_ref = unsafe { child_hwnd_ptr.as_ref() };
+				let mut rc_orig = child_hwnd_ref.GetWindowRect()?;
+				parent_base_ref.hwnd_ref().ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
 
-					ctrls.push(Ctrl {
-						hwnd_ptr: *child_hwnd_ptr,
-						rc_orig,
-						horz: entry.horz,
-						vert: entry.vert,
-					});
-				}
+				ctrls.push(Ctrl {
+					hwnd_ptr: *child_hwnd_ptr,
+					rc_orig,
+					horz: entry.horz,
+					vert: entry.vert,
+				});
 			}
-
-			Ok(())
 		}
-		(ptr_parent, rc_children)
-			.unwrap_or_else(|err| { PostQuitMessage(err); });
+
+		Ok(())
 	}
 
 	/// Resizes all registered children according to the defined rules.

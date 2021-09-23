@@ -1,9 +1,10 @@
 use std::ptr::NonNull;
 
-use crate::aliases::WinResult;
+use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{ProcessResult, WindowEvents};
+use crate::gui::privs::QUIT_ERROR;
 use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
@@ -70,15 +71,15 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn process_one_message(&mut self,
-		wm_any: WndMsg) -> ProcessResult
+		wm_any: WndMsg) -> ErrResult<ProcessResult>
 	{
 		self.user_events.process_one_message(wm_any)
 	}
 
 	pub(in crate::gui) fn process_privileged_messages(&mut self,
-		wm_any: WndMsg)
+		wm_any: WndMsg) -> ErrResult<()>
 	{
-		self.privileged_events.process_all_messages(wm_any);
+		self.privileged_events.process_all_messages(wm_any)
 	}
 
 	pub(in crate::gui) fn ui_thread_message_handler(&self) {
@@ -88,7 +89,7 @@ impl Base {
 				let pack: Box<Box<dyn FnOnce()>> = unsafe { Box::from_raw(ptr_pack) };
 				pack();
 			}
-			0
+			Ok(0)
 		});
 	}
 
@@ -110,7 +111,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_main_loop(
-		haccel: Option<HACCEL>) -> WinResult<()>
+		haccel: Option<HACCEL>) -> ErrResult<i32>
 	{
 		loop {
 			let mut msg = MSG::default();
@@ -118,9 +119,9 @@ impl Base {
 				// WM_QUIT was sent, gracefully terminate the program.
 				// wParam has the program exit code.
 				// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
-				return match co::ERROR(msg.wParam as _) {
-					co::ERROR::SUCCESS => Ok(()),
-					err => Err(err),
+				return match unsafe { QUIT_ERROR.take() } {
+					Some(err) => Err(err),
+					None => Ok(msg.wParam as _),
 				};
 			}
 

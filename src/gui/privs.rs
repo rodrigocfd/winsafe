@@ -1,18 +1,31 @@
 //! Global objects used within `gui` module.
 
+use std::error::Error;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
-use crate::funcs::{GetSystemMetrics, SystemParametersInfo};
+use crate::funcs::{GetSystemMetrics, PostQuitMessage, SystemParametersInfo};
 use crate::handles::{HFONT, HTHEME, HWND};
 use crate::msg::wm;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
+
+/// Global return error, will be taken in main loop.
+pub(in crate::gui) static mut QUIT_ERROR: Option<Box<dyn Error>> = None;
+
+/// Terminates the program with the given error.
+pub(in crate::gui) fn post_quit_error(err: Box<dyn Error>) {
+	unsafe { QUIT_ERROR = Some(err); } // store the error, so the main window/dialog can grab it
+	PostQuitMessage(-1); // this -1 will be discarded in the main loop, anyway
+}
+
+//------------------------------------------------------------------------------
 
 /// Global UI font object.
 static mut UI_HFONT: Option<HFONT> = None;
 
 /// Creates the global UI font object.
-pub fn create_ui_font() -> WinResult<()> {
+pub(in crate::gui) fn create_ui_font() -> WinResult<()> {
 	let mut ncm = NONCLIENTMETRICS::default();
 	unsafe {
 		SystemParametersInfo(
@@ -26,7 +39,7 @@ pub fn create_ui_font() -> WinResult<()> {
 }
 
 /// Frees the global UI font object.
-pub fn delete_ui_font() -> WinResult<()> {
+pub(in crate::gui) fn delete_ui_font() -> WinResult<()> {
 	unsafe {
 		if let Some(hfont) = UI_HFONT {
 			hfont.DeleteObject()?;
@@ -37,7 +50,7 @@ pub fn delete_ui_font() -> WinResult<()> {
 }
 
 /// Retrieves the global UI font object, or panics if not created yet.
-pub fn ui_font() -> HFONT {
+pub(in crate::gui) fn ui_font() -> HFONT {
 	unsafe {
 		match UI_HFONT {
 			Some(hfont) => hfont,
@@ -51,7 +64,7 @@ pub fn ui_font() -> HFONT {
 static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
 
 /// Returns the next sequential control ID.
-pub fn auto_ctrl_id() -> u16 {
+pub(in crate::gui) fn auto_ctrl_id() -> u16 {
 	unsafe {
 		let new_id = BASE_CTRL_ID;
 		BASE_CTRL_ID += 1;
@@ -64,7 +77,7 @@ pub fn auto_ctrl_id() -> u16 {
 static mut DPI: POINT = POINT { x: 0, y: 0 };
 
 /// Multiplies the given coordinates by current system DPI.
-pub fn multiply_dpi(
+pub(in crate::gui) fn multiply_dpi(
 	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> WinResult<()>
 {
 	unsafe {
@@ -90,7 +103,7 @@ pub fn multiply_dpi(
 //------------------------------------------------------------------------------
 
 /// Calculates the bound rectangle to fit the text with current system font.
-pub fn calc_text_bound_box(text: &str) -> WinResult<SIZE> {
+pub(in crate::gui) fn calc_text_bound_box(text: &str) -> WinResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC()?;
 	let clone_dc = desktop_hdc.CreateCompatibleDC()?;
@@ -114,7 +127,7 @@ pub fn calc_text_bound_box(text: &str) -> WinResult<SIZE> {
 
 /// Calculates the bound rectangle to fit the text with current system font,
 /// adding a check box.
-pub fn calc_text_bound_box_check(text: &str) -> WinResult<SIZE> {
+pub(in crate::gui) fn calc_text_bound_box_check(text: &str) -> WinResult<SIZE> {
 	let mut bound_box = calc_text_bound_box(text)?;
 	bound_box.cx += GetSystemMetrics(co::SM::CXMENUCHECK) // https://stackoverflow.com/a/1165052/6923555
 		+ GetSystemMetrics(co::SM::CXEDGE);
@@ -148,7 +161,9 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 //------------------------------------------------------------------------------
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub fn paint_control_borders(hwnd: HWND, wm_ncp: wm::NcPaint) -> WinResult<()> {
+pub(in crate::gui) fn paint_control_borders(
+	hwnd: HWND, wm_ncp: wm::NcPaint) -> WinResult<()>
+{
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
 	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as _);

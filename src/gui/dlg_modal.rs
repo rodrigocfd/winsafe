@@ -3,7 +3,6 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::structs::{POINT, SIZE};
@@ -46,32 +45,31 @@ impl DlgModal {
 	fn default_message_handlers(&self) {
 		self.base_ref().privileged_events_ref().wm_init_dialog({
 			let self2 = self.clone();
-			move |p| {
-				|_| -> WinResult<bool> {
-					// Center modal on parent.
-					let hwnd = *self2.base_ref().hwnd_ref();
-					let rc = hwnd.GetWindowRect()?;
-					let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
-					hwnd.SetWindowPos(
-						HwndPlace::None,
-						POINT::new(
-							rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
-							rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
-						),
-						SIZE::default(),
-						co::SWP::NOSIZE | co::SWP::NOZORDER,
-					)?;
-					Ok(true)
-				}
-				(p).unwrap_or_else(|err| { PostQuitMessage(err);  true })
+			move |_| {
+				// Center modal on parent.
+				let hwnd = *self2.base_ref().hwnd_ref();
+				let rc = hwnd.GetWindowRect()?;
+				let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
+				hwnd.SetWindowPos(
+					HwndPlace::None,
+					POINT::new(
+						rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
+						rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
+					),
+					SIZE::default(),
+					co::SWP::NOSIZE | co::SWP::NOZORDER,
+				)?;
+				Ok(true)
 			}
 		});
 
 		self.base_ref().user_events_ref().wm_close({
 			let self2 = self.clone();
-			move || self2.base_ref().hwnd_ref()
-				.EndDialog(co::DLGID::CANCEL.0 as _)
-				.unwrap_or_else(|err| PostQuitMessage(err))
+			move || {
+				self2.base_ref().hwnd_ref()
+					.EndDialog(co::DLGID::CANCEL.0 as _)?;
+				Ok(())
+			}
 		});
 	}
 }

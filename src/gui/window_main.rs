@@ -1,4 +1,4 @@
-use crate::aliases::WinResult;
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
 use crate::gui::base::Base;
@@ -170,7 +170,7 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> WinResult<()> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32> {
 		if IsWindowsVistaOrGreater()? {
 			SetProcessDPIAware()?;
 		}
@@ -178,11 +178,12 @@ impl WindowMain {
 		InitCommonControls();
 		create_ui_font()?;
 
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.run_main(cmd_show)?,
-			RawDlg::Dlg(d) => d.run_main(cmd_show)?,
-		}
+		let res = match &self.raw_dlg {
+			RawDlg::Raw(r) => r.run_main(cmd_show),
+			RawDlg::Dlg(d) => d.run_main(cmd_show),
+		};
 
-		delete_ui_font() // cleanup
+		delete_ui_font()?; // cleanup
+		res
 	}
 }

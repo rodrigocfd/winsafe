@@ -1,12 +1,19 @@
 //! Aliases to Win32 types.
 
+use std::error::Error;
+
 use crate::co;
 use crate::handles::HWND;
 
 /// A specialized
 /// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) for Win32
-/// operations, which return an [`ERROR`](crate::co::ERROR) on failure.
+/// operations, which returns an [`ERROR`](crate::co::ERROR) on failure.
 pub type WinResult<T> = Result<T, co::ERROR>;
+
+/// A specialized
+/// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) which
+/// returns a `Box<dyn Error>` on failure.
+pub type ErrResult<T> = Result<T, Box<dyn Error>>;
 
 /// Type alias to
 /// [`CCHOOKPROC`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nc-commdlg-lpcchookproc)

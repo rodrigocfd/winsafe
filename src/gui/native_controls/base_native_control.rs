@@ -1,11 +1,11 @@
 use std::ptr::NonNull;
 
-use crate::aliases::WinResult;
+use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
-use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
+use crate::gui::privs::post_quit_error;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
@@ -135,30 +135,33 @@ impl BaseNativeControl {
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
 		subclass_id: usize, ref_data: usize) -> isize
 	{
-		|hwnd: HWND, msg, wparam, lparam| -> WinResult<isize>
-		{
-			let ptr_self = ref_data as *mut Self; // retrieve
-			let wm_any = WndMsg { msg_id: msg, wparam, lparam };
-			let mut process_result = ProcessResult::NotHandled;
+		Self::subclass_proc_proc(hwnd, msg, wparam, lparam, subclass_id, ref_data)
+			.unwrap_or_else(|err| { post_quit_error(err); 0 })
+	}
 
-			if !ptr_self.is_null() {
-				let ref_self = unsafe { &mut *ptr_self };
-				if !ref_self.0.hwnd.is_null() {
-					process_result = ref_self.0.subclass_events.process_one_message(wm_any);
-				}
+	fn subclass_proc_proc(
+		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
+		subclass_id: usize, ref_data: usize) -> ErrResult<isize>
+	{
+		let ptr_self = ref_data as *mut Self; // retrieve
+		let wm_any = WndMsg { msg_id: msg, wparam, lparam };
+		let mut process_result = ProcessResult::NotHandled;
+
+		if !ptr_self.is_null() {
+			let ref_self = unsafe { &mut *ptr_self };
+			if !ref_self.0.hwnd.is_null() {
+				process_result = ref_self.0.subclass_events.process_one_message(wm_any)?;
 			}
-
-			if msg == co::WM::NCDESTROY { // always check
-				hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
-			}
-
-			Ok(match process_result {
-				ProcessResult::HandledWithRet(res) => res,
-				ProcessResult::HandledWithoutRet => 0,
-				ProcessResult::NotHandled => hwnd.DefSubclassProc(wm_any).into(),
-			})
 		}
-		(hwnd, msg, wparam, lparam)
-			.unwrap_or_else(|err| { PostQuitMessage(err); 0 })
+
+		if msg == co::WM::NCDESTROY { // always check
+			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
+		}
+
+		Ok(match process_result {
+			ProcessResult::HandledWithRet(res) => res,
+			ProcessResult::HandledWithoutRet => 0,
+			ProcessResult::NotHandled => hwnd.DefSubclassProc(wm_any).into(),
+		})
 	}
 }

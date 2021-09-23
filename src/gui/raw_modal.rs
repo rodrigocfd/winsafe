@@ -104,8 +104,8 @@ impl RawModal {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.
 				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
-				PostQuitMessage(co::ERROR(msg.wParam as u32));
-				return Ok(msg.wParam as i32);
+				PostQuitMessage(msg.wParam as _);
+				return Ok(msg.wParam as _);
 			}
 
 			// If a child window, will retrieve its top-level parent.
@@ -141,6 +141,7 @@ impl RawModal {
 						self2.0.base.focus_first_child(); // if window receives focus, delegate to first child
 					}
 				}
+				Ok(())
 			}
 		});
 
@@ -150,11 +151,12 @@ impl RawModal {
 				let hwnd = *self2.base_ref().hwnd_ref();
 				if let Ok(hparent) = hwnd.GetWindow(co::GW::OWNER) {
 					hparent.EnableWindow(true); // re-enable parent
-					hwnd.DestroyWindow(); // then destroy modal
+					hwnd.DestroyWindow()?; // then destroy modal
 					if let Some(hprev) = self2.0.hchild_prev_focus_parent {
 						hprev.SetFocus(); // this focus could be set on WM_DESTROY as well
 					}
 				}
+				Ok(())
 			}
 		});
 	}

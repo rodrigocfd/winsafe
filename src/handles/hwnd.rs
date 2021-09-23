@@ -200,8 +200,8 @@ impl HWND {
 
 	/// [`DestroyWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
 	/// method.
-	pub fn DestroyWindow(self) {
-		unsafe { user32::DestroyWindow(self.ptr); }
+	pub fn DestroyWindow(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { user32::DestroyWindow(self.ptr) })
 	}
 
 	/// [`DrawMenuBar`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawmenubar)

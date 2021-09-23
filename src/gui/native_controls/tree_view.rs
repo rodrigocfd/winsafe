@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::PostQuitMessage;
 use crate::gui::events::TreeViewEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::native_controls::tree_view_items::TreeViewItems;
@@ -55,7 +54,7 @@ impl TreeView {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.create(); 0 }
+			move |_| { me.create()?; Ok(0) }
 		});
 
 		new_self
@@ -80,35 +79,33 @@ impl TreeView {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create(); true }
+			move |_| { me.create()?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) {
-		|| -> WinResult<()> {
-			match &self.0.opts_id {
-				OptsId::Wnd(opts) => {
-					let mut pos = opts.position;
-					let mut sz = opts.size;
-					multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+	fn create(&self) -> WinResult<()> {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => {
+				let mut pos = opts.position;
+				let mut sz = opts.size;
+				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-					self.0.base.create_window( // may panic
-						"SysTreeView32", None, pos, sz,
-						opts.ctrl_id,
-						opts.window_ex_style,
-						opts.window_style | opts.tree_view_style.into(),
-					)?;
+				self.0.base.create_window( // may panic
+					"SysTreeView32", None, pos, sz,
+					opts.ctrl_id,
+					opts.window_ex_style,
+					opts.window_style | opts.tree_view_style.into(),
+				)?;
 
-					if opts.tree_view_ex_style != co::TVS_EX::NoValue {
-						self.toggle_extended_style(true, opts.tree_view_ex_style)?;
-					}
-					Ok(())
-				},
-				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-			}
-		}().unwrap_or_else(|err| PostQuitMessage(err))
+				if opts.tree_view_ex_style != co::TVS_EX::NoValue {
+					self.toggle_extended_style(true, opts.tree_view_ex_style)?;
+				}
+				Ok(())
+			},
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+		}
 	}
 
 	pub_fn_hwnd!();

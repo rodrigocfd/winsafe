@@ -3,7 +3,6 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::funcs::PostQuitMessage;
 use crate::gui::events::LabelEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
@@ -52,7 +51,7 @@ impl Label {
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
-			move |_| { me.create(); 0 }
+			move |_| { me.create()?; Ok(0) }
 		});
 
 		new_self
@@ -75,39 +74,37 @@ impl Label {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create(); true }
+			move |_| { me.create()?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) {
-		|| -> WinResult<()> {
-			match &self.0.opts_id {
-				OptsId::Wnd(opts) => {
-					let mut pos = opts.position;
-					multiply_dpi(Some(&mut pos), None)?;
+	fn create(&self) -> WinResult<()> {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => {
+				let mut pos = opts.position;
+				multiply_dpi(Some(&mut pos), None)?;
 
-					let mut sz = opts.size;
-					if sz.cx == -1 && sz.cy == -1 {
-						sz = calc_text_bound_box(&opts.text)?; // resize to fit text
-					} else {
-						multiply_dpi(None, Some(&mut sz))?; // user-defined size
-					}
+				let mut sz = opts.size;
+				if sz.cx == -1 && sz.cy == -1 {
+					sz = calc_text_bound_box(&opts.text)?; // resize to fit text
+				} else {
+					multiply_dpi(None, Some(&mut sz))?; // user-defined size
+				}
 
-					let our_hwnd = self.0.base.create_window( // may panic
-						"STATIC", Some(&opts.text), pos, sz,
-						opts.ctrl_id,
-						opts.window_ex_style,
-						opts.window_style | opts.label_style.into(),
-					)?;
+				let our_hwnd = self.0.base.create_window( // may panic
+					"STATIC", Some(&opts.text), pos, sz,
+					opts.ctrl_id,
+					opts.window_ex_style,
+					opts.window_style | opts.label_style.into(),
+				)?;
 
-					our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
-					Ok(())
-				},
-				OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
-			}
-		}().unwrap_or_else(|err| PostQuitMessage(err))
+				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+				Ok(())
+			},
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+		}
 	}
 
 	pub_fn_hwnd!();

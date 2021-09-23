@@ -1,9 +1,7 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::IdMenu;
-use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
@@ -47,38 +45,37 @@ impl RawControl {
 	fn default_message_handlers(&self, parent_base_ref: &Base) {
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let self2 = self.clone();
-			move |p| {
-				|_| -> WinResult<isize> {
-					let opts = &self2.0.opts;
+			move |_| {
+				let opts = &self2.0.opts;
 
-					let mut wcx = WNDCLASSEX::default();
-					let mut class_name_buf = WString::default();
-					RawBase::fill_wndclassex(self2.base_ref().parent_hinstance()?,
-						opts.class_style, opts.class_icon, opts.class_icon,
-						opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
-					let atom = self2.0.base.register_class(&mut wcx)?;
+				let mut wcx = WNDCLASSEX::default();
+				let mut class_name_buf = WString::default();
+				RawBase::fill_wndclassex(self2.base_ref().parent_hinstance()?,
+					opts.class_style, opts.class_icon, opts.class_icon,
+					opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
+				let atom = self2.0.base.register_class(&mut wcx)?;
 
-					let mut wnd_pos = opts.position;
-					let mut wnd_sz = opts.size;
-					multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
+				let mut wnd_pos = opts.position;
+				let mut wnd_sz = opts.size;
+				multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
-					self2.0.base.create_window( // may panic
-						atom,
-						None,
-						IdMenu::Id(opts.ctrl_id),
-						wnd_pos, wnd_sz,
-						opts.ex_style, opts.style,
-					)?;
-					Ok(0)
-				}
-				(p).unwrap_or_else(|err| { PostQuitMessage(err); 0 })
+				self2.0.base.create_window( // may panic
+					atom,
+					None,
+					IdMenu::Id(opts.ctrl_id),
+					wnd_pos, wnd_sz,
+					opts.ex_style, opts.style,
+				)?;
+				Ok(0)
 			}
 		});
 
 		self.base_ref().user_events_ref().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| paint_control_borders(*self2.base_ref().hwnd_ref(), p)
-				.unwrap_or_else(|err| PostQuitMessage(err))
+			move |p| {
+				paint_control_borders(*self2.base_ref().hwnd_ref(), p)?;
+				Ok(())
+			}
 		});
 	}
 }
