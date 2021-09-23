@@ -1,3 +1,4 @@
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::structs::{NMDAYSTATE, NMSELCHANGE, NMVIEWCHANGE};
 

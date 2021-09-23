@@ -1,3 +1,4 @@
+use crate::aliases::ErrResult;
 use crate::gui::base::Base;
 use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEvents;

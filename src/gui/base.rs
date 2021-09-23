@@ -4,7 +4,7 @@ use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::privs::QUIT_ERROR;
+use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
@@ -85,15 +85,15 @@ impl Base {
 	pub(in crate::gui) fn ui_thread_message_handler(&self) {
 		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
 			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
-				let ptr_pack = p.lparam as *mut Box<dyn FnOnce()>;
-				let pack: Box<Box<dyn FnOnce()>> = unsafe { Box::from_raw(ptr_pack) };
-				pack();
+				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
+				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
+				pack().unwrap_or_else(|err| post_quit_error(err));
 			}
 			Ok(0)
 		});
 	}
 
-	pub(in crate::gui) fn run_ui_thread<F: FnOnce()>(&self, func: F) {
+	pub(in crate::gui) fn run_ui_thread<F: FnOnce() -> ErrResult<()>>(&self, func: F) {
 		// This method is analog to SendMessage (synchronous), but intended to
 		// be called from another thread, so a callback function can, tunelled
 		// by wndproc, run in the original thread of the window, thus allowing
@@ -101,7 +101,7 @@ impl Base {
 		// WM_ message.
 
 		// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
-		let pack: Box<Box<dyn FnOnce()>> = Box::new(Box::new(func));
+		let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = Box::new(Box::new(func));
 		let ptr_pack = Box::into_raw(pack);
 		self.hwnd.SendMessage(WndMsg {
 			msg_id: Self::WM_UI_THREAD,

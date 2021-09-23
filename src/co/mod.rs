@@ -33,5 +33,5 @@ pub use consts_s::*;
 pub use consts_t::*;
 pub use consts_uv::*;
 pub use consts_wxyz::*;
-pub use error::ERROR;
+pub use error::{CDERR, ERROR};
 pub use vs::VS;
