@@ -42,9 +42,9 @@ impl HFILE {
 	///     co::DISPOSITION::OPEN_EXISTING,
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// hfile.CloseHandle().unwrap();
+	/// hfile.CloseHandle()?;
 	/// ```
 	///
 	/// Opening a file for read and write. If the file doesn't exist, create it:
@@ -60,9 +60,9 @@ impl HFILE {
 	///     co::DISPOSITION::OPEN_ALWAYS,
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// hfile.CloseHandle().unwrap();
+	/// hfile.CloseHandle()?;
 	/// ```
 	pub fn CreateFile(
 		file_name: &str,

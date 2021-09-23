@@ -126,7 +126,7 @@ impl Label {
 	///
 	/// let my_label: gui::Label; // initialized somewhere
 	///
-	/// my_label.set_text("This my text").unwrap();
+	/// my_label.set_text("This my text")?;
 	/// ```
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
 		self.hwnd().SetWindowText(text)
@@ -142,7 +142,7 @@ impl Label {
 	///
 	/// let my_label: gui::Label; // initialized somewhere
 	///
-	/// my_label.set_text_and_resize("This my text").unwrap();
+	/// my_label.set_text_and_resize("This my text")?;
 	/// ```
 	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
 		self.set_text(text)?;
@@ -159,7 +159,7 @@ impl Label {
 	///
 	/// let my_label: gui::Label; // initialized somewhere
 	///
-	/// println!("The text is: {}", my_label.text().unwrap());
+	/// println!("The text is: {}", my_label.text()?);
 	/// ```
 	pub fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowText()

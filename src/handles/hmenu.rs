@@ -53,7 +53,7 @@ impl HMENU {
 	///
 	/// my_hmenu.AppendMenuEnum(
 	///    &MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
-	/// ).unwrap();
+	/// )?;
 	/// ```
 	///
 	/// Adding multiple entries at once:
@@ -73,7 +73,7 @@ impl HMENU {
 	///     MenuEnum::Separator,
 	///     MenuEnum::Entry(ID_FILE_EXIT, "E&xit"),
 	/// ].iter()
-	///     .for_each(|e| file_menu.AppendMenuEnum(e).unwrap());
+	///     .for_each(|e| file_menu.AppendMenuEnum(e)?);
 	/// ```
 	pub fn AppendMenuEnum(self, item: &MenuEnum) -> WinResult<()> {
 		match item {
@@ -203,7 +203,7 @@ impl HMENU {
 	/// hmenu.EnableMenuItem(
 	///     IdPos::Id(ID_FILE_OPEN),
 	///     false,
-	/// ).unwrap();
+	/// )?;
 	/// ```
 	///
 	/// Disabling multiple menu items at once:
@@ -220,10 +220,11 @@ impl HMENU {
 	///     (ID_FILE_OPEN, "Open\tCtrl+O"),
 	///     (ID_FILE_SAVE, "&Save"),
 	/// ].iter()
-	///     .for_each(|(id, txt)| hmenu.EnableMenuItem(
+	///     .map(|(id, txt)| hmenu.EnableMenuItem(
 	///         IdPos::Id(*id),
 	///         false,
-	///     ).unwrap());
+	///     ))
+	///     .collect::<Result<Vec<co::MF>, _>>()?;
 	/// ```
 	pub fn EnableMenuItem(self,
 		id_or_pos: IdPos, enable: bool) -> WinResult<co::MF>

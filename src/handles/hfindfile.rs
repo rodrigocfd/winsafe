@@ -41,15 +41,15 @@ impl HFINDFILE {
 	/// let (hfind, mut found) = HFINDFILE::FindFirstFile(
 	///     "C:\\Temp\\*.txt",
 	///     &mut wfd,
-	/// ).unwrap();
+	/// )?;
 	///
 	/// if found {
 	///     while found {
 	///         println!("File: {}", wfd.cFileName());
-	///         found = hfind.FindNextFile(&mut wfd).unwrap();
+	///         found = hfind.FindNextFile(&mut wfd)?;
 	///     }
 	///
-	///     hfind.FindClose().unwrap();
+	///     hfind.FindClose()?;
 	/// }
 	/// ```
 	pub fn FindFirstFile(
@@ -96,7 +96,7 @@ impl HFINDFILE {
 	/// ```rust,ignore
 	/// use winsafe::HFINDFILE;
 	///
-	/// let files = HFINDFILE::ListAll("C:\\Temp\\*.txt").unwrap();
+	/// let files = HFINDFILE::ListAll("C:\\Temp\\*.txt")?;
 	///
 	/// for file in files.iter() {
 	///    println!("File: {}", file);

@@ -20,19 +20,18 @@ pub_struct_handle_closeable! {
 	/// use winsafe::{co, HPROCESSLIST, PROCESSENTRY32};
 	///
 	/// let mut pe = PROCESSENTRY32::default();
-	/// let hpl = HPROCESSLIST::CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)
-	///     .unwrap();
+	/// let hpl = HPROCESSLIST::CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)?;
 	///
-	/// if hpl.Process32First(&mut pe).unwrap() {
+	/// if hpl.Process32First(&mut pe)? {
 	///     loop {
 	///         println!("{} {} {}", pe.szExeFile(), pe.th32ProcessID, pe.cntThreads);
-	///         if !hpl.Process32Next(&mut pe).unwrap() {
+	///         if !hpl.Process32Next(&mut pe)? {
 	///             break;
 	///         }
 	///     }
 	/// }
 	///
-	/// hpl.CloseHandle().unwrap();
+	/// hpl.CloseHandle()?;
 	/// ```
 	HPROCESSLIST
 }

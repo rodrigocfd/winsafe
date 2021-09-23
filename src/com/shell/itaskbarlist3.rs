@@ -41,7 +41,7 @@ pub struct ITaskbarList3VT {
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-/// ).unwrap();
+/// )?;
 /// ```
 pub struct ITaskbarList3 {
 	pub(crate) ppvt: PPVT,
@@ -101,7 +101,7 @@ macro_rules! impl_ITaskbarList3 {
 			/// let obj: shell::ITaskbarList3; // initialized somewhere
 			/// let hwnd: HWND;
 			///
-			/// obj.SetProgressValue(hwnd, 50, 100).unwrap();
+			/// obj.SetProgressValue(hwnd, 50, 100)?;
 			/// ```
 			pub fn SetProgressValue(&self,
 				hwnd: HWND, completed: u64, total: u64) -> WinResult<()>

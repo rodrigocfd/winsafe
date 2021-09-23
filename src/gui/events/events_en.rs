@@ -44,15 +44,15 @@ impl EditEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::gui::Edit;
+		/// use winsafe::{gui, ErrResult};
 		///
-		/// let txt: Edit; // initialized somewhere
+		/// let txt: gui::Edit; // initialized somewhere
 		///
 		/// txt.on().en_change({
 		///     let txt = txt.clone(); // pass into the closure
-		///     move || {
-		///         println!("Text: {}",
-		///             btn.hwnd().GetWindowText().unwrap());
+		///     move || -> ErrResult<()> {
+		///         println!("Text: {}", btn.hwnd().GetWindowText()?);
+		///         Ok(())
 		///     }
 		/// });
 		/// ```

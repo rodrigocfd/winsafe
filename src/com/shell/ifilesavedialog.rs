@@ -35,7 +35,7 @@ pub struct IFileSaveDialogVT {
 ///     &shell::clsid::FileSaveDialog,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-/// ).unwrap();
+/// )?;
 /// ```
 pub struct IFileSaveDialog  {
 	pub(crate) ppvt: PPVT,

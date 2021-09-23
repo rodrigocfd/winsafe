@@ -85,23 +85,23 @@ impl HFILEMAPVIEW {
 	///     co::DISPOSITION::OPEN_EXISTING,
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
-	/// ).unwrap();
+	/// )?;
 	///
 	/// let hmap = hfile.CreateFileMapping(
 	///     None,
 	///     co::PAGE::READONLY,
 	///     None,
 	///     None,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// let view = hmap.MapViewOfFile(co::FILE_MAP::READ, 0, None).unwrap();
+	/// let view = hmap.MapViewOfFile(co::FILE_MAP::READ, 0, None)?;
 	///
-	/// let slice = view.as_slice(hfile.GetFileSizeEx().unwrap());
-	/// let text = std::str::from_utf8(slice).unwrap();
+	/// let slice = view.as_slice(hfile.GetFileSizeEx()?);
+	/// let text = std::str::from_utf8(slice)?;
 	///
-	/// view.UnmapViewOfFile().unwrap();
-	/// hmap.CloseHandle().unwrap();
-	/// hfile.CloseHandle().unwrap();
+	/// view.UnmapViewOfFile()?;
+	/// hmap.CloseHandle()?;
+	/// hfile.CloseHandle()?;
 	///
 	/// println!("{}", text);
 	/// ```

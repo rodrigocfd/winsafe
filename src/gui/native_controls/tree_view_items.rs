@@ -225,7 +225,7 @@ impl TreeViewItems {
 	/// let my_tree: gui::TreeView; // initialized somewhere
 	/// let my_item: HTREEITEM;
 	///
-	/// println!("Text: {}", my_tree.items().text(my_item).unwrap());
+	/// println!("Text: {}", my_tree.items().text(my_item)?);
 	/// ```
 	pub fn text(&self, hitem: HTREEITEM) -> WinResult<String> {
 		let mut tvi = TVITEMEX::default();

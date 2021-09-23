@@ -50,7 +50,7 @@ impl ListViewItems {
 	///         "Second column text",
 	///     ],
 	///     None, // no icon; requires set_image_list() before
-	/// ).unwrap();
+	/// )?;
 	/// ```
 	///
 	/// # Panics

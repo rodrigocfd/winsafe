@@ -23,9 +23,9 @@ impl HDROP {
 	/// Retrieve all files at once:
 	///
 	/// ```rust.ignore
-	/// let files = hdrop.DragQueryFile().unwrap();
+	/// let files = hdrop.DragQueryFiles()?;
 	/// for f in files.iter() {
-	///   println!("File path: {}", f);
+	///     println!("File path: {}", f);
 	/// }
 	/// ```
 	pub fn DragQueryFiles(self) -> WinResult<Vec<String>> {

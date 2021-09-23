@@ -145,8 +145,7 @@
 //! use winsafe::{co::MB, HWND};
 //!
 //! let hwnd = HWND::GetDesktopWindow();
-//! hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)
-//!     .unwrap();
+//! hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)?;
 //! ```
 //!
 //! The method [`MessageBox`](crate::HWND::MessageBox), like all native

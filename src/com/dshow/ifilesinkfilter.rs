@@ -57,7 +57,7 @@ macro_rules! impl_IFileSinkFilter {
 			///
 			/// let mut ammt = dshow::AM_MEDIA_TYPE::default();
 			/// unsafe {
-			///     isink.GetCurFile(Some(&mut ammt)).unwrap();
+			///     isink.GetCurFile(Some(&mut ammt))?;
 			///     if let Some(pb_format) = ammt.pbFormat::<dshow::DVINFO>() {
 			///         CoTaskMemFree(pb_format);
 			///     }

@@ -73,7 +73,8 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///             let wnd = self.wnd.clone(); // clone to pass it to the closure
 ///             move |p: msg::wm::LButtonDown| {
 ///                 let txt = &format!("Coords {} x {}", p.coords.x, p.coords.y);
-///                 wnd.hwnd().SetWindowText(txt).unwrap();
+///                 wnd.hwnd().SetWindowText(txt)?;
+///                 Ok(())
 ///             }
 ///         });
 ///     }

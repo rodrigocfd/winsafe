@@ -11,7 +11,7 @@ use crate::various::{MappedFile, MappedFileAccess, WString};
 /// ```rust,ignore
 /// use winsafe::Ini;
 ///
-/// let fini = Ini::parse_from_file("C:\\Temp\\my_file.ini").unwrap();
+/// let fini = Ini::parse_from_file("C:\\Temp\\my_file.ini")?;
 ///
 /// for section in fini.sections.iter() {
 ///     println!("Section: {}", section.name);

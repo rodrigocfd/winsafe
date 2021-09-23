@@ -44,18 +44,19 @@ impl RadioGroupEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::gui::{RadioGroup, WindowMain};
+	/// use winsafe::{gui, ErrResult};
 	///
-	/// let wnd: WindowMain; // initialized somewhere
-	/// let radios: RadioGroup;
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// let radios: gui::RadioGroup;
 	///
 	/// radios.on().bn_clicked({
 	///     let radios = radios.clone();
-	///     move || {
+	///     move || -> ErrResult<()> {
 	///         println!("Selected {}",
 	///             rads.checked().unwrap()
-	///                 .hwnd().GetWindowText().unwrap(),
+	///                 .hwnd().GetWindowText()?,
 	///         );
+	///         Ok(())
 	///     }
 	/// });
 	/// ```

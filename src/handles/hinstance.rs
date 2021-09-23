@@ -200,8 +200,8 @@ impl HINSTANCE {
 	/// use winsafe::{HINSTANCE, WNDCLASSEX};
 	///
 	/// let mut wcx = WNDCLASSEX::default();
-	/// HINSTANCE::GetModuleHandle(None).unwrap()
-	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx).unwrap();
+	/// HINSTANCE::GetModuleHandle(None)?
+	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx)?;
 	/// ```
 	pub fn GetClassInfoEx(self,
 		class_name: &str, wcx: &mut WNDCLASSEX) -> WinResult<ATOM>
@@ -228,7 +228,7 @@ impl HINSTANCE {
 	/// ```rust,ignore
 	/// use winsafe::HINSTANCE;
 	///
-	/// println!("EXE: {}", HINSTANCE::NULL.GetModuleFileName().unwrap());
+	/// println!("EXE: {}", HINSTANCE::NULL.GetModuleFileName()?);
 	/// ```
 	pub fn GetModuleFileName(self) -> WinResult<String> {
 		let mut buf = [0; MAX_PATH];
@@ -253,7 +253,7 @@ impl HINSTANCE {
 	/// ```rust,ignore
 	/// use winsafe::HINSTANCE;
 	///
-	/// let hinstance = HINSTANCE::GetModuleHandle(None).unwrap();
+	/// let hinstance = HINSTANCE::GetModuleHandle(None)?;
 	/// ```
 	pub fn GetModuleHandle(module_name: Option<&str>) -> WinResult<HINSTANCE> {
 		unsafe {
@@ -300,8 +300,7 @@ impl HINSTANCE {
 	/// use winsafe::{co, HINSTANCE, IdIdc};
 	///
 	/// let sys_cursor = HINSTANCE::default()
-	///     .LoadCursor(IdIdc::Idc(co::IDC::ARROW))
-	///     .unwrap();
+	///     .LoadCursor(IdIdc::Idc(co::IDC::ARROW))?;
 	/// ```
 	pub fn LoadCursor(self, resource_id: IdIdcStr) -> WinResult<HCURSOR> {
 		unsafe {
@@ -323,8 +322,7 @@ impl HINSTANCE {
 	/// use winsafe::{co, IdIdi, HINSTANCE};
 	///
 	/// let sys_icon = HINSTANCE::default()
-	///     .LoadIcon(IdIdi::Idi(co::IDI::INFORMATION))
-	///     .unwrap();
+	///     .LoadIcon(IdIdi::Idi(co::IDI::INFORMATION))?;
 	/// ```
 	pub fn LoadIcon(self, icon_id: IdIdiStr) -> WinResult<HICON> {
 		unsafe {
@@ -441,30 +439,27 @@ impl HINSTANCE {
 	/// const IDD_HAND_ABOUTBOX: u16 = 103;
 	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
 	///
-	/// let hExe = HINSTANCE::LoadLibrary("hand.exe").unwrap();
+	/// let hExe = HINSTANCE::LoadLibrary("hand.exe")?;
 	///
 	/// let hRes = hExe.FindResource(
 	///     IdStr::Id(IDD_HAND_ABOUTBOX),
 	///     RtStr::Rt(co::RT::DIALOG),
-	/// ).unwrap();
+	/// )?;
 	///
-	/// let hResLoad = hExe.LoadResource(hRes).unwrap();
-	///
-	/// let lpResLock = hExe.LockResource(hRes, hResLoad).unwrap();
-	///
-	/// let hUpdateRes = HUPDATERSRC::BeginUpdateResource("foot.exe", false)
-	///     .unwrap();
+	/// let hResLoad = hExe.LoadResource(hRes)?;
+	/// let lpResLock = hExe.LockResource(hRes, hResLoad)?;
+	/// let hUpdateRes = HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
 	///
 	/// hUpdateRes.UpdateResource(
 	///     RtStr::Rt(co::RT::DIALOG),
 	///     IdStr::Id(IDD_FOOT_ABOUTBOX),
 	///     LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
 	///     lpResLock,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// hUpdateRes.EndUpdateResource(false).unwrap();
+	/// hUpdateRes.EndUpdateResource(false)?;
 	///
-	/// hExe.FreeLibrary().unwrap();
+	/// hExe.FreeLibrary()?;
 	/// ```
 	pub fn LockResource<'a>(self,
 		res_info: HRSRC, hres_loaded: HRSRCMEM) -> WinResult<&'a [u8]>

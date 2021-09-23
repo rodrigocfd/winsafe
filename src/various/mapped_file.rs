@@ -19,9 +19,9 @@ pub struct MappedFile {
 
 impl Drop for MappedFile {
 	fn drop(&mut self) {
-		if !self.hview.is_null() { self.hview.UnmapViewOfFile().unwrap(); }
-		if !self.hmap.is_null() { self.hmap.CloseHandle().unwrap(); }
-		if !self.hfile.is_null() { self.hfile.CloseHandle().unwrap(); }
+		if !self.hview.is_null() { let _ = self.hview.UnmapViewOfFile(); }
+		if !self.hmap.is_null() { let _ = self.hmap.CloseHandle(); }
+		if !self.hfile.is_null() { let _ = self.hfile.CloseHandle(); }
 	}
 }
 

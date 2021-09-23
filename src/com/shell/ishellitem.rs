@@ -55,7 +55,7 @@ macro_rules! impl_IShellItem {
 			/// ```rust,ignore
 			/// use winsafe::shell;
 			///
-			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt").unwrap();
+			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt")?;
 			/// ```
 			pub fn from_path(file_or_folder_path: &str) -> WinResult<IShellItem> {
 				let mut ppv_queried: PPVT = std::ptr::null_mut();
@@ -97,8 +97,8 @@ macro_rules! impl_IShellItem {
 			/// ```rust,ignore
 			/// use winsafe::{co, shell};
 			///
-			/// let shi = shell::IShellItem::new("C:\\Temp\\test.txt").unwrap();
-			/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH).unwrap();
+			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt")?;
+			/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetDisplayName(&self,
@@ -126,9 +126,9 @@ macro_rules! impl_IShellItem {
 			/// ```rust,ignore
 			/// use winsafe::{co, shell};
 			///
-			/// let shi = shell::IShellItem::new("C:\\Temp\\test.txt").unwrap();
-			/// let parent_shi = shi.GetParent().unwrap();
-			/// let full_path = parent_shi.GetDisplayName(co::SIGDN::FILESYSPATH).unwrap();
+			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt")?;
+			/// let parent_shi = shi.GetParent()?;
+			/// let full_path = parent_shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
 			/// println!("{}", full_path);
 			/// ```
 			pub fn GetParent(&self) -> WinResult<IShellItem> {

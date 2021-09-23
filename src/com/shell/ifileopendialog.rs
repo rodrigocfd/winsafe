@@ -31,7 +31,7 @@ pub struct IFileOpenDialogVT {
 ///     &shell::clsid::FileOpenDialog,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-/// ).unwrap();
+/// )?;
 /// ```
 pub struct IFileOpenDialog  {
 	pub(crate) ppvt: PPVT,

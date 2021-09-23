@@ -179,17 +179,17 @@ impl WindowEvents {
 	/// Handling a custom, user-defined message:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, gui::WindowMain, msg};
+	/// use winsafe::{co, gui, msg, ErrResult};
 	///
-	/// let wnd: WindowMain; // initialized somewhere
+	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
 	/// let CUSTOM_MSG = co::WM::from(0x1234);
 	///
 	/// wnd.on().wm(CUSTOM_MSG, {
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move |p: msg::WndMsg| -> isize {
+	///     move |p: msg::WndMsg| -> ErrResult<isize> {
 	///         println!("HWND: {}, msg ID: {}", wnd.hwnd(), p.msg_id);
-	///         0
+	///         Ok(0)
 	///     }
 	/// });
 	/// ```
@@ -237,14 +237,15 @@ impl WindowEvents {
 	/// Closing the window on ESC key:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, gui, msg};
+	/// use winsafe::{co, gui, msg, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move || {
-	///         wnd.hwnd().PostMessage(msg::wm::Close {}).unwrap();
+	///     move || -> ErrResult<()> {
+	///         wnd.hwnd().SendMessage(msg::wm::Close {});
+	///         Ok(())
 	///     }
 	/// });
 	/// ```
@@ -392,19 +393,19 @@ impl WindowEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::{gui, msg};
+	/// use winsafe::{gui, msg, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
 	/// wnd.on().wm_create({
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move |p: msg::wm::Create| -> i32 {
+	///     move |p: msg::wm::Create| -> ErrResult<i32> {
 	///         println!("HWND: {}, client area: {}x{}",
 	///             wnd.hwnd(),
 	///             p.createstruct.cx,
 	///             p.createstruct.cy,
 	///         );
-	///         0
+	///         Ok(0)
 	///     }
 	/// });
 	/// ```
@@ -503,12 +504,13 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::gui;
+		/// use winsafe::{gui, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
-		/// wnd.on().wm_destroy(|| {
+		/// wnd.on().wm_destroy(|| -> ErrResult<()> {
 		///     println!("Window is gone, goodbye!");
+		///     Ok(())
 		/// });
 		/// ```
 	}
@@ -522,14 +524,15 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg};
+		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
-		/// wnd.on().wm_drop_files(|p: msg::wm::DropFiles| {
-		///     for dropped_file in p.hdrop.DragQueryFiles().unwrap().iter() {
+		/// wnd.on().wm_drop_files(|p: msg::wm::DropFiles| -> ErrResult<()> {
+		///     for dropped_file in p.hdrop.DragQueryFiles()?.iter() {
 		///         println!("Dropped: {}", dropped_file);
 		///     }
+		///     Ok(())
 		/// });
 		/// ```
 	}
@@ -693,15 +696,15 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg};
+		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_init_dialog({
 		///     let wnd = wnd.clone(); // pass into the closure
-		///     move |p: msg::wm::InitDialog| -> bool {
+		///     move |p: msg::wm::InitDialog| -> ErrResult<bool> {
 		///         println!("Focused HWND: {}", p.hwnd_focus);
-		///         true
+		///         Ok(true)
 		///     }
 		/// });
 		/// ```
@@ -759,14 +762,15 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg};
+		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_l_button_down({
 		///     let wnd = wnd.clone(); // pass into the closure
-		///     move |p: msg::wm::LButtonDown| {
+		///     move |p: msg::wm::LButtonDown| -> ErrResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
+		///         Ok(())
 		///     }
 		/// });
 		/// ```
@@ -1064,18 +1068,19 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg};
+		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_size({
 		///     let wnd = wnd.clone(); // pass into the closure
-		///     move |p: msg::wm::Size| {
+		///     move |p: msg::wm::Size| -> ErrResult<()> {
 		///         println!("HWND: {}, client area: {}x{}",
 		///             wnd.hwnd(),
 		///             p.width,
 		///             p.height,
 		///         );
+		///         Ok(())
 		///     }
 		/// });
 		/// ```

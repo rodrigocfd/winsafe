@@ -56,7 +56,7 @@ impl StatusBarParts {
 	///
 	/// let my_sb: gui::StatusBar; // initialized somewhere
 	///
-	/// println!("Text: {}", my_sb.parts().text(0).unwrap());
+	/// println!("Text: {}", my_sb.parts().text(0));
 	/// ```
 	pub fn text(&self, part_index: u8) -> String {
 		let (len, _) = self.hwnd().SendMessage(sb::GetTextLength { part_index });

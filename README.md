@@ -112,7 +112,8 @@ impl MyWindow {
         self.btn_hello.on().bn_clicked({
             let wnd = self.wnd.clone(); // clone so it can be passed into the closure
             move || {
-                wnd.hwnd().SetWindowText("Hello, world!").unwrap();
+                wnd.hwnd().SetWindowText("Hello, world!")?;
+                Ok(())
             }
         });
     }

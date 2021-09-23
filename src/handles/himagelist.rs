@@ -51,11 +51,11 @@ impl HIMAGELIST {
 	/// use winsafe::{co, HIMAGELIST, SIZE};
 	///
 	/// let himgl = HIMAGELIST::Create(
-	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1).unwrap();
+	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?;
 	///
-	/// himgl.AddIconFromShell(&["mp3", "wav"]).unwrap();
+	/// himgl.AddIconFromShell(&["mp3", "wav"])?;
 	///
-	/// himgl.Destroy().unwrap();
+	/// himgl.Destroy()?;
 	/// ```
 	pub fn AddIconFromShell(self, file_extensions: &[&str]) -> WinResult<()> {
 		let sz = self.GetIconSize()?;
@@ -116,9 +116,9 @@ impl HIMAGELIST {
 	/// use winsafe::{co, HIMAGELIST, SIZE};
 	///
 	/// let himgl = HIMAGELIST::Create(
-	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1).unwrap();
+	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?;
 	///
-	/// himgl.Destroy().unwrap();
+	/// himgl.Destroy()?;
 	/// ```
 	pub fn Create(
 		image_sz: SIZE, flags: co::ILC,

@@ -61,13 +61,14 @@ impl HKEY {
 	///     "Control Panel",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// for key_name in hkey.EnumKeyEx().unwrap() {
+	/// let key_names = hkey.EnumKeyEx()?;
+	/// for key_name in key_names.iter() {
 	///     println!("{}", key_name);
 	/// }
 	///
-	/// hkey.CloseKey().unwrap();
+	/// hkey.CloseKey()?;
 	/// ```
 	pub fn EnumKeyEx(self) -> WinResult<Vec<String>> {
 		let mut num_keys = u32::default();
@@ -121,13 +122,14 @@ impl HKEY {
 	///     "Control Panel\\Appearance",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// for (value, reg_type) in hkey.EnumValue().unwrap() {
+	/// let values_and_types = hkey.EnumValue()?;
+	/// for (value, reg_type) in values_and_types.iter() {
 	///     println!("{}, {}", value, reg_type);
 	/// }
 	///
-	/// hkey.CloseKey().unwrap();
+	/// hkey.CloseKey()?;
 	/// ```
 	pub fn EnumValue(self) -> WinResult<Vec<(String, co::REG)>> {
 		let mut num_vals = u32::default();
@@ -182,7 +184,7 @@ impl HKEY {
 	/// let val = HKEY::CURRENT_USER.GetValue(
 	///     "Control Panel\\Mouse",
 	///     "Beep",
-	/// ).unwrap();
+	/// )?;
 	///
 	/// match val {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
@@ -277,9 +279,9 @@ impl HKEY {
 	///     "Control Panel\\Mouse",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// hkey.CloseKey().unwrap();
+	/// hkey.CloseKey()?;
 	/// ```
 	pub fn OpenKeyEx(self, sub_key: &str,
 		options: co::REG_OPTION, access_rights: co::KEY) -> WinResult<HKEY>
@@ -384,10 +386,9 @@ impl HKEY {
 	///     "Control Panel\\Mouse",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
-	/// ).unwrap();
+	/// )?;
 	///
-	/// let val = hkey.QueryValueEx("Beep")
-	///   .unwrap();
+	/// let val = hkey.QueryValueEx("Beep")?;
 	///
 	/// match val {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
@@ -403,7 +404,7 @@ impl HKEY {
 	///     RegistryValue::None => println!("No value"),
 	/// }
 	///
-	/// hkey.CloseKey().unwrap();
+	/// hkey.CloseKey()?;
 	/// ```
 	pub fn QueryValueEx(self, value: &str) -> WinResult<RegistryValue> {
 		let value_w = WString::from_str(value);
@@ -479,7 +480,7 @@ impl HKEY {
 	///     "Software\\My Company",
 	///     "Color",
 	///     RegistryValue::Sz("blue".to_owned()),
-	/// ).unwrap();
+	/// )?;
 	/// ```
 	pub fn SetKeyValue(self,
 		sub_key: &str, value: &str, data: RegistryValue) -> WinResult<()>
@@ -516,14 +517,14 @@ impl HKEY {
 	///     "Console\\Git Bash",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::ALL_ACCESS,
-	/// ).unwrap();
+	/// )?;
 	///
 	/// hkey.SetValueEx(
 	///     "Color",
 	///     RegistryValue::Sz("blue".to_owned()),
-	/// ).unwrap();
+	/// )?;
 	///
-	/// hkey.CloseKey().unwrap();
+	/// hkey.CloseKey()?;
 	/// ```
 	pub fn SetValueEx(self,
 		value: &str, data: RegistryValue) -> WinResult<()>

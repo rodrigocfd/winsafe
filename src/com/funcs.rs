@@ -26,7 +26,7 @@ use crate::structs::CLSID;
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-/// ).unwrap();
+/// )?;
 /// ```
 pub fn CoCreateInstance<T: ComInterface>(
 	clsid: &CLSID,
@@ -66,7 +66,7 @@ pub fn CoCreateInstance<T: ComInterface>(
 /// ```rust,ignore
 /// use winsafe::{co, CoInitializeEx, CoUninitialize};
 ///
-/// CoInitializeEx(co::COINIT::MULTITHREADED).unwrap();
+/// CoInitializeEx(co::COINIT::MULTITHREADED)?;
 ///
 /// // program runs...
 ///

@@ -32,7 +32,7 @@ pub struct ITaskbarListVT {
 ///     &shell::clsid::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-/// ).unwrap();
+/// )?;
 /// ```
 pub struct ITaskbarList {
 	pub(crate) ppvt: PPVT,

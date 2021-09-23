@@ -231,7 +231,7 @@ macro_rules! impl_IFileDialog {
 			///     ("Documents", "*.docx;*.txt"),
 			///     ("Images", "*.jpg;*.png;*.bmp"),
 			///     ("All files", "*.*"),
-			/// ]).unwrap();
+			/// ])?;
 			/// ```
 			pub fn SetFileTypes<S: AsRef<str>>(&self,
 				filter_spec: &[(S, S)]) -> WinResult<()>

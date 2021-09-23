@@ -70,11 +70,12 @@ impl HWND {
 	///     let my_main = my_main.clone();
 	///     move || {
 	///         let mut ps = PAINTSTRUCT::default();
-	///         let hdc = my_main.hwnd().BeginPaint(&mut ps).unwrap();
+	///         let hdc = my_main.hwnd().BeginPaint(&mut ps)?;
 	///
 	///         // paint the HDC...
 	///
 	///         my_main.hwnd().EndPaint(&ps);
+	///         Ok(())
 	///     }
 	/// });
 	/// ```
@@ -632,7 +633,7 @@ impl HWND {
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
 	///
-	/// let text = my_hwnd.GetWindowText().unwrap();
+	/// let text = my_hwnd.GetWindowText()?;
 	/// println!("Text: {}", text);
 	/// ```
 	pub fn GetWindowText(self) -> WinResult<String> {
@@ -696,8 +697,7 @@ impl HWND {
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
 	///
-	/// my_hwnd.InvalidateRect(None, true)
-	///     .unwrap();
+	/// my_hwnd.InvalidateRect(None, true)?;
 	/// ```
 	pub fn InvalidateRect(self,
 		rc: Option<&RECT>, erase: bool) -> WinResult<()>
@@ -806,8 +806,8 @@ impl HWND {
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
 	///
-	/// my_hwnd.MessageBox("Hello, world", "title", co::MB::OKCANCEL | co::MB::ICONINFORMATION)
-	///     .unwrap();
+	/// my_hwnd.MessageBox("Hello, world", "title",
+	///     co::MB::OKCANCEL | co::MB::ICONINFORMATION)?
 	/// ```
 	///
 	/// Usually the message box has a valid parent window, however, if for some
@@ -816,8 +816,7 @@ impl HWND {
 	///
 	/// ```rust,ignore
 	/// HWND::GetDesktopWindow()
-	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)
-	///     .unwrap();
+	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)?;
 	/// ```
 	pub fn MessageBox(self,
 		text: &str, caption: &str, flags: co::MB) -> WinResult<co::DLGID>
@@ -887,7 +886,7 @@ impl HWND {
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
 	///
-	/// my_hwnd.PostMessage(wm::Close {}).unwrap();
+	/// my_hwnd.PostMessage(wm::Close {})?;
 	/// ```
 	///
 	/// Sending a message to all top-level windows:
@@ -897,7 +896,7 @@ impl HWND {
 	///
 	/// HWND::BROADCAST.PostMessage(
 	///     wm::ExitMenuLoop { is_shortcut: false },
-	/// ).unwrap();
+	/// )?;
 	/// ```
 	pub fn PostMessage<M: MsgSend>(self, msg: M) -> WinResult<()> {
 		let wm_any = msg.as_generic_wm();
@@ -1283,7 +1282,7 @@ impl HWND {
 	///     Some("The operation completed successfully."),
 	///     co::TDCBF::OK
 	///     IdTdicon::Tdicon(co::TD_ICON::INFORMATION),
-	/// ).unwrap();
+	/// )?;
 	/// ```
 	///
 	/// Prompt the user to click OK or Cancel upon a question:
@@ -1300,7 +1299,7 @@ impl HWND {
 	///     Some("The file has been modified.\nProceed closing the application?"),
 	///     co::TDCBF::OK | co::TDCBF::CANCEL,
 	///     IdTdicon::Tdicon(co::TD_ICON::WARNING),
-	/// ).unwrap();
+	/// )?;
 	///
 	/// if answer == co::DLGID::OK {
 	///     println!("User clicked OK.");

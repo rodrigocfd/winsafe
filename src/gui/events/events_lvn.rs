@@ -98,12 +98,13 @@ impl ListViewEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, NMLISTVIEW};
+		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
 		///
-		/// list.on().lvn_delete_item(|p: &NMLISTVIEW| {
+		/// list.on().lvn_delete_item(|p: &NMLISTVIEW| -> ErrResult<()> {
 		///     println!("Item: {}", p.iItem);
+		///     Ok(())
 		/// });
 		/// ```
 	}
@@ -189,12 +190,13 @@ impl ListViewEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, NMLISTVIEW};
+		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
 		///
-		/// list.on().lvn_item_changed(|p: &NMLISTVIEW| {
+		/// list.on().lvn_item_changed(|p: &NMLISTVIEW| -> ErrResult<()> {
 		///     println!("Item: {}", p.iItem);
+		///     Ok(())
 		/// });
 		/// ```
 	}
@@ -215,14 +217,15 @@ impl ListViewEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, NMLVKEYDOWN};
+		/// use winsafe::{gui, ErrResult, NMLVKEYDOWN};
 		///
 		/// let list: gui::ListView; // initialized somewhere
 		///
-		/// list.on().lvn_delete_item(|p: &NMLVKEYDOWN| {
+		/// list.on().lvn_delete_item(|p: &NMLVKEYDOWN| -> ErrResult<()> {
 		///     if p.wVKey == co::VK::DELETE {
 		///         println!("DEL key was pressed.");
 		///     }
+		///     Ok(())
 		/// });
 		/// ```
 	}

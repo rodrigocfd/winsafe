@@ -36,7 +36,7 @@ pub struct IGraphBuilderVT {
 ///     &dshow::clsid::FilterGraph,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
-/// ).unwrap();
+/// )?;
 /// ```
 pub struct IGraphBuilder {
 	pub(crate) ppvt: PPVT,

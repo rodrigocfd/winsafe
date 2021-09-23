@@ -48,7 +48,7 @@ impl ListViewColumns {
 	/// my_list.columns().add(&[
 	///     ("Name", 300),
 	///     ("Address", 500),
-	/// ]).unwrap();
+	/// ])?;
 	/// ```
 	pub fn add<S: AsRef<str>>(&self,
 		texts_and_widths: &[(S, u32)]) -> WinResult<()>

@@ -40,14 +40,15 @@ impl ButtonEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::gui::Button;
+		/// use winsafe::{gui, ErrResult};
 		///
-		/// let btn: Button; // initialized somewhere
+		/// let btn: gui::Button; // initialized somewhere
 		///
 		/// btn.on().bn_clicked({
 		///     let btn = btn.clone(); // pass into the closure
-		///     move || {
+		///     move || -> ErrResult<()> {
 		///         println!("HWND: {}", btn.hwnd());
+		///         Ok(())
 		///     }
 		/// });
 		/// ```

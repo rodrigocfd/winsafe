@@ -144,7 +144,7 @@ impl Edit {
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere
 	///
-	/// my_edit.set_text("This my text").unwrap();
+	/// my_edit.set_text("This my text")?;
 	/// ```
 	pub fn set_text(&self, text: &str) -> WinResult<()> {
 		self.hwnd().SetWindowText(text)
@@ -158,7 +158,7 @@ impl Edit {
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere
 	///
-	/// println!("The text is: {}", my_edit.text().unwrap());
+	/// println!("The text is: {}", my_edit.text()?);
 	/// ```
 	pub fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowText()

@@ -93,7 +93,9 @@ impl Base {
 		});
 	}
 
-	pub(in crate::gui) fn run_ui_thread<F: FnOnce() -> ErrResult<()>>(&self, func: F) {
+	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>
+	{
 		// This method is analog to SendMessage (synchronous), but intended to
 		// be called from another thread, so a callback function can, tunelled
 		// by wndproc, run in the original thread of the window, thus allowing

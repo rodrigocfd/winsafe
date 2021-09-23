@@ -105,7 +105,7 @@ pub fn ChangeDisplaySettings(
 /// cc.rgbResult = COLORREF::new(255, 0, 0); // color initially chosen
 /// cc.set_lpCustColors(&mut custom_colors);
 ///
-/// if ChooseColor(&mut cc).unwrap() {
+/// if ChooseColor(&mut cc)? {
 ///     println!("The color: {} {} {}",
 ///         cc.rgbResult.GetRValue(),
 ///         cc.rgbResult.GetGValue(),
@@ -149,7 +149,7 @@ pub fn CloseClipboard() -> WinResult<()> {
 /// ```rust,ignore
 /// use winsafe::{CommandLineToArgv, GetCommandLine};
 ///
-/// let args = CommandLineToArgv(&GetCommandLine()).unwrap();
+/// let args = CommandLineToArgv(&GetCommandLine())?;
 /// for arg in args.iter() {
 ///     println!("{}", arg);
 /// }
@@ -288,7 +288,7 @@ pub fn EnumDisplaySettingsEx(
 ///
 /// println("{}", ExpandEnvironmentStrings(
 ///     "Os %OS%, home %HOMEPATH%, temp %TEMP%",
-/// ).unwrap());
+/// )?;
 /// ```
 pub fn ExpandEnvironmentStrings(src: &str) -> WinResult<String> {
 	let wsrc = WString::from_str(src);
@@ -433,7 +433,7 @@ pub fn GetDoubleClickTime() -> u32 {
 /// ```rust,ignore
 /// use winsafe::GetEnvironmentStrings;
 ///
-/// let env_vars = GetEnvironmentStrings().unwrap();
+/// let env_vars = GetEnvironmentStrings()?;
 /// for (k, v) in env_vars.iter() {
 ///     println!("{} = {}", k, v);
 /// }
@@ -472,7 +472,7 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 /// ```rust,ignore
 /// use winsafe::{co, GetFileAttributes};
 ///
-/// let flags = GetFileAttributes("C:\\Temp\\test.txt").unwrap();
+/// let flags = GetFileAttributes("C:\\Temp\\test.txt")?;
 ///
 /// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
 /// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
@@ -498,7 +498,7 @@ pub fn GetFileAttributes(file_name: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 pub fn GetFileVersionInfo(
 	file_name: &str, data: &mut Vec<u8>) -> WinResult<()>
 {
-	data.resize(GetFileVersionInfoSize(file_name).unwrap() as _, 0);
+	data.resize(GetFileVersionInfoSize(file_name)? as _, 0);
 	bool_to_winresult(
 		unsafe {
 			version::GetFileVersionInfoW(
@@ -548,7 +548,7 @@ pub fn GetFirmwareType() -> WinResult<co::FIRMWARE_TYPE> {
 /// GetGUIThreadInfo(
 ///     hwnd.GetWindowThreadProcessId(),
 ///     &mut gti,
-/// ).unwrap();
+/// )?;
 ///
 /// println!("Caret rect: {}", gti.rcCaret);
 /// ```
@@ -1044,13 +1044,13 @@ pub fn PostQuitMessage(exit_code: i32) {
 /// ```rust,ignore
 /// use winsafe::{QueryPerformanceCounter, QueryPerformanceFrequency};
 ///
-/// let freq = QueryPerformanceFrequency().unwrap();
-/// let start = QueryPerformanceCounter().unwrap();
+/// let freq = QueryPerformanceFrequency()?;
+/// let start = QueryPerformanceCounter()?;
 ///
 /// // perform some operation...
 ///
 /// let duration_ms =
-///     ((QueryPerformanceCounter().unwrap() - t0) as f64 / freq as f64) * 1000.0;
+///     ((QueryPerformanceCounter()? - t0) as f64 / freq as f64) * 1000.0;
 ///
 /// println!("Operation lasted {:.2} ms", duration_ms);
 /// ```
@@ -1324,7 +1324,7 @@ pub fn SystemTimeToTzSpecificLocalTime(
 /// let btns_slice = &mut [btn1];
 /// tdc.set_pButtons(Some(btns_slice));
 ///
-/// TaskDialogIndirect(&tdc, None).unwrap();
+/// TaskDialogIndirect(&tdc, None)?;
 /// ```
 pub fn TaskDialogIndirect(
 	task_config: &TASKDIALOGCONFIG,
@@ -1393,12 +1393,12 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 /// use winsafe::{HINSTANCE, VS_FIXEDFILEINFO};
 /// use winsafe::{GetFileVersionInfo, VarQueryValue};
 ///
-/// let exe_name = HINSTANCE::NULL.GetModuleFileName().unwrap();
+/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
 /// let mut res_buf = Vec::default();
-/// GetFileVersionInfo(&exe_name, &mut res_buf).unwrap();
+/// GetFileVersionInfo(&exe_name, &mut res_buf)?;
 ///
 /// let vsffi = unsafe {
-///     VarQueryValue::<VS_FIXEDFILEINFO>(&res_buf, "\\").unwrap()
+///     VarQueryValue::<VS_FIXEDFILEINFO>(&res_buf, "\\")?
 /// };
 /// let ver = vsffi.dwFileVersion();
 /// println!("Version {}.{}.{}.{}",
