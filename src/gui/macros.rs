@@ -98,14 +98,14 @@ macro_rules! pub_fn_run_ui_thread {
 		/// printed at the windows's titlebar.
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, ErrResult, GetCurrentThreadId, Sleep};
+		/// use winsafe::{gui, BoxResult, GetCurrentThreadId, Sleep};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let btn: gui::Button;
 		///
 		/// btn.on().bn_clicked({
 		///     let wnd = wnd.clone();
-		///     move || -> ErrResult<()> {
+		///     move || -> BoxResult<()> {
 		///         println!("Click event at {:#x}", GetCurrentThreadId());
 		///
 		///         std::thread::spawn({
@@ -116,7 +116,7 @@ macro_rules! pub_fn_run_ui_thread {
 		///
 		///                 wnd.run_ui_thread({
 		///                     let wnd = wnd.clone();
-		///                     move || -> ErrResult<()> {
+		///                     move || -> BoxResult<()> {
 		///                         println!("Updating UI at {:#x}", GetCurrentThreadId());
 		///                         wnd.hwnd().SetWindowText("Status... 50%")?;
 		///                         Ok(())
@@ -128,7 +128,7 @@ macro_rules! pub_fn_run_ui_thread {
 		///
 		///                 wnd.run_ui_thread({
 		///                     let wnd = wnd.clone();
-		///                     move || -> ErrResult<()> {
+		///                     move || -> BoxResult<()> {
 		///                         println!("Updating UI at {:#x}", GetCurrentThreadId());
 		///                         wnd.hwnd().SetWindowText("Status... 100%")?;
 		///                         Ok(())
@@ -142,7 +142,7 @@ macro_rules! pub_fn_run_ui_thread {
 		/// });
 		/// ```
 		pub fn run_ui_thread<F>(&self, func: F)
-			where F: FnOnce() -> ErrResult<()>
+			where F: FnOnce() -> BoxResult<()>
 		{
 			match &self.raw_dlg {
 				RawDlg::Raw(r) => r.run_ui_thread(func),

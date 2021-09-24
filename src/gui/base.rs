@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::aliases::{ErrResult, WinResult};
+use crate::aliases::{BoxResult, WinResult};
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{ProcessResult, WindowEvents};
@@ -71,13 +71,13 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn process_one_message(&mut self,
-		wm_any: WndMsg) -> ErrResult<ProcessResult>
+		wm_any: WndMsg) -> BoxResult<ProcessResult>
 	{
 		self.user_events.process_one_message(wm_any)
 	}
 
 	pub(in crate::gui) fn process_privileged_messages(&mut self,
-		wm_any: WndMsg) -> ErrResult<()>
+		wm_any: WndMsg) -> BoxResult<()>
 	{
 		self.privileged_events.process_all_messages(wm_any)
 	}
@@ -85,8 +85,8 @@ impl Base {
 	pub(in crate::gui) fn ui_thread_message_handler(&self) {
 		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
 			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
-				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
-				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
+				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> BoxResult<()>>;
+				let pack: Box<Box<dyn FnOnce() -> BoxResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
 				pack().unwrap_or_else(|err| post_quit_error(err));
 			}
 			Ok(0)
@@ -94,7 +94,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>
+		where F: FnOnce() -> BoxResult<()>
 	{
 		// This method is analog to SendMessage (synchronous), but intended to
 		// be called from another thread, so a callback function can, tunelled
@@ -103,7 +103,7 @@ impl Base {
 		// WM_ message.
 
 		// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
-		let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = Box::new(Box::new(func));
+		let pack: Box<Box<dyn FnOnce() -> BoxResult<()>>> = Box::new(Box::new(func));
 		let ptr_pack = Box::into_raw(pack);
 		self.hwnd.SendMessage(WndMsg {
 			msg_id: Self::WM_UI_THREAD,
@@ -113,7 +113,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_main_loop(
-		haccel: Option<HACCEL>) -> ErrResult<i32>
+		haccel: Option<HACCEL>) -> BoxResult<i32>
 	{
 		loop {
 			let mut msg = MSG::default();

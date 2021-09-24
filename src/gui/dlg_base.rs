@@ -1,4 +1,4 @@
-use crate::aliases::{ErrResult, WinResult};
+use crate::aliases::{BoxResult, WinResult};
 use crate::co;
 use crate::enums::IdStr;
 use crate::gui::base::Base;
@@ -70,7 +70,7 @@ impl DlgBase {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>
+		where F: FnOnce() -> BoxResult<()>
 	{
 		self.base.run_ui_thread(func);
 	}
@@ -83,7 +83,7 @@ impl DlgBase {
 	}
 
 	fn dialog_proc_proc(
-		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> ErrResult<isize>
+		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> BoxResult<isize>
 	{
 		let wm_any = WndMsg { msg_id: msg, wparam, lparam };
 

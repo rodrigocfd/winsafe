@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::aliases::ErrResult;
+use crate::aliases::BoxResult;
 use crate::co;
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
@@ -29,19 +29,19 @@ pub struct WindowEvents(VeryUnsafeCell<Obj>);
 struct Obj { // actual fields of WindowEvents
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
-		Box<dyn Fn(WndMsg) -> ErrResult<Option<isize>>>, // return value may be meaningful
+		Box<dyn Fn(WndMsg) -> BoxResult<Option<isize>>>, // return value may be meaningful
 	>,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
-		Box<dyn Fn() -> ErrResult<()>>, // return value is never meaningful
+		Box<dyn Fn() -> BoxResult<()>>, // return value is never meaningful
 	>,
 	cmds: FuncStore< // WM_COMMAND notifications
 		(co::CMD, u16), // notif code, control ID
-		Box<dyn Fn() -> ErrResult<()>>, // return value is never meaningful
+		Box<dyn Fn() -> BoxResult<()>>, // return value is never meaningful
 	>,
 	nfys: FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
-		Box<dyn Fn(wm::Notify) -> ErrResult<Option<isize>>>, // return value may be meaningful
+		Box<dyn Fn(wm::Notify) -> BoxResult<Option<isize>>>, // return value may be meaningful
 	>,
 }
 
@@ -70,7 +70,7 @@ impl WindowEvents {
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
 	pub(crate) fn process_one_message(&self,
-		wm_any: WndMsg) -> ErrResult<ProcessResult>
+		wm_any: WndMsg) -> BoxResult<ProcessResult>
 	{
 		Ok(match wm_any.msg_id {
 			co::WM::NOTIFY => {
@@ -123,7 +123,7 @@ impl WindowEvents {
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
-	pub(crate) fn process_all_messages(&self, wm_any: WndMsg) -> ErrResult<()> {
+	pub(crate) fn process_all_messages(&self, wm_any: WndMsg) -> BoxResult<()> {
 		Ok(match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
@@ -155,14 +155,14 @@ impl WindowEvents {
 
 	/// Raw add message.
 	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
+		where F: Fn(WndMsg) -> BoxResult<Option<isize>> + 'static,
 	{
 		self.0.as_mut().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
 	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
+		where F: Fn(wm::Notify) -> BoxResult<Option<isize>> + 'static,
 	{
 		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));
 	}
@@ -179,7 +179,7 @@ impl WindowEvents {
 	/// Handling a custom, user-defined message:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, gui, msg, ErrResult};
+	/// use winsafe::{co, gui, msg, BoxResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
@@ -187,14 +187,14 @@ impl WindowEvents {
 	///
 	/// wnd.on().wm(CUSTOM_MSG, {
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move |p: msg::WndMsg| -> ErrResult<isize> {
+	///     move |p: msg::WndMsg| -> BoxResult<isize> {
 	///         println!("HWND: {}, msg ID: {}", wnd.hwnd(), p.msg_id);
 	///         Ok(0)
 	///     }
 	/// });
 	/// ```
 	pub fn wm<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> ErrResult<isize> + 'static,
+		where F: Fn(WndMsg) -> BoxResult<isize> + 'static,
 	{
 		self.add_msg(ident, move |p| Ok(Some(func(p)?))); // return value is meaningful
 	}
@@ -204,7 +204,7 @@ impl WindowEvents {
 	///
 	/// Posted to the installing thread's message queue when a timer expires.
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> BoxResult<()> + 'static,
 	{
 		self.0.as_mut().tmrs.insert(timer_id, Box::new(func));
 	}
@@ -221,7 +221,7 @@ impl WindowEvents {
 	/// parameters. This generic method should be used when you have a custom,
 	/// non-standard window notification.
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> BoxResult<()> + 'static,
 	{
 		self.0.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
 	}
@@ -237,20 +237,20 @@ impl WindowEvents {
 	/// Closing the window on ESC key:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{co, gui, msg, ErrResult};
+	/// use winsafe::{co, gui, msg, BoxResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move || -> ErrResult<()> {
+	///     move || -> BoxResult<()> {
 	///         wnd.hwnd().SendMessage(msg::wm::Close {});
 	///         Ok(())
 	///     }
 	/// });
 	/// ```
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> BoxResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -277,7 +277,7 @@ impl WindowEvents {
 	/// struct. This generic method should be used when you have a custom,
 	/// non-standard window notification.
 	pub fn wm_notify<F>(&self, id_from: i32, code: co::NM, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<isize> + 'static,
+		where F: Fn(wm::Notify) -> BoxResult<isize> + 'static,
 	{
 		self.add_nfy(id_from as _, code, move |p| Ok(Some(func(p)?))); // return value is meaningful
 	}
@@ -315,7 +315,7 @@ impl WindowEvents {
 	/// for example, by clicking an application command button using the mouse
 	/// or typing an application command key on the keyboard.
 	pub fn wm_app_command<F>(&self, func: F)
-		where F: Fn(wm::AppCommand) -> ErrResult<()> + 'static,
+		where F: Fn(wm::AppCommand) -> BoxResult<()> + 'static,
 	{
 		self.add_msg(co::WM::APPCOMMAND,
 			move |p| { func(wm::AppCommand::from_generic_wm(p))?; Ok(Some(true as _)) });
@@ -393,13 +393,13 @@ impl WindowEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::{gui, msg, ErrResult};
+	/// use winsafe::{gui, msg, BoxResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	///
 	/// wnd.on().wm_create({
 	///     let wnd = wnd.clone(); // pass into the closure
-	///     move |p: msg::wm::Create| -> ErrResult<i32> {
+	///     move |p: msg::wm::Create| -> BoxResult<i32> {
 	///         println!("HWND: {}, client area: {}x{}",
 	///             wnd.hwnd(),
 	///             p.createstruct.cx,
@@ -410,7 +410,7 @@ impl WindowEvents {
 	/// });
 	/// ```
 	pub fn wm_create<F>(&self, func: F)
-		where F: Fn(wm::Create) -> ErrResult<i32> + 'static,
+		where F: Fn(wm::Create) -> BoxResult<i32> + 'static,
 	{
 		self.add_msg(co::WM::CREATE,
 			move |p| Ok(Some(func(wm::Create::from_generic_wm(p))? as _)));
@@ -423,7 +423,7 @@ impl WindowEvents {
 	/// However, only owner-drawn buttons respond to the parent window
 	/// processing this message.
 	pub fn wm_ctl_color_btn<F>(&self, func: F)
-		where F: Fn(wm::CtlColorBtn) -> ErrResult<HBRUSH> + 'static,
+		where F: Fn(wm::CtlColorBtn) -> BoxResult<HBRUSH> + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORBTN,
 			move |p| Ok(Some(func(wm::CtlColorBtn::from_generic_wm(p))?.ptr as _)));
@@ -504,11 +504,11 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, ErrResult};
+		/// use winsafe::{gui, BoxResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
-		/// wnd.on().wm_destroy(|| -> ErrResult<()> {
+		/// wnd.on().wm_destroy(|| -> BoxResult<()> {
 		///     println!("Window is gone, goodbye!");
 		///     Ok(())
 		/// });
@@ -524,11 +524,11 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, BoxResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
-		/// wnd.on().wm_drop_files(|p: msg::wm::DropFiles| -> ErrResult<()> {
+		/// wnd.on().wm_drop_files(|p: msg::wm::DropFiles| -> BoxResult<()> {
 		///     for dropped_file in p.hdrop.DragQueryFiles()?.iter() {
 		///         println!("Dropped: {}", dropped_file);
 		///     }
@@ -596,7 +596,7 @@ impl WindowEvents {
 	/// window is resized). The message is sent to prepare an invalidated
 	/// portion of a window for painting.
 	pub fn wm_erase_bkgnd<F>(&self, func: F)
-		where F: Fn(wm::EraseBkgnd) -> ErrResult<i32> + 'static,
+		where F: Fn(wm::EraseBkgnd) -> BoxResult<i32> + 'static,
 	{
 		self.add_msg(co::WM::ERASEBKGND,
 			move |p| Ok(Some(func(wm::EraseBkgnd::from_generic_wm(p))? as _)));
@@ -637,7 +637,7 @@ impl WindowEvents {
 	///
 	/// Retrieves the font with which the control is currently drawing its text.
 	pub fn wm_get_font<F>(&self, func: F)
-		where F: Fn() -> ErrResult<Option<HFONT>> + 'static,
+		where F: Fn() -> BoxResult<Option<HFONT>> + 'static,
 	{
 		self.add_msg(co::WM::GETFONT,
 			move |_| Ok(Some(func()?.map(|h| h.ptr as _).unwrap_or_default())));
@@ -647,7 +647,7 @@ impl WindowEvents {
 	///
 	/// Retrieves the menu handle for the current window.
 	pub fn wm_get_h_menu<F>(&self, func: F)
-		where F: Fn() -> ErrResult<Option<HMENU>> + 'static
+		where F: Fn() -> BoxResult<Option<HMENU>> + 'static
 	{
 		self.add_msg(co::WM::MN_GETHMENU,
 			move |_| Ok(Some(func()?.map(|h| h.ptr as _).unwrap_or_default())));
@@ -696,13 +696,13 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, BoxResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_init_dialog({
 		///     let wnd = wnd.clone(); // pass into the closure
-		///     move |p: msg::wm::InitDialog| -> ErrResult<bool> {
+		///     move |p: msg::wm::InitDialog| -> BoxResult<bool> {
 		///         println!("Focused HWND: {}", p.hwnd_focus);
 		///         Ok(true)
 		///     }
@@ -762,13 +762,13 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, BoxResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_l_button_down({
 		///     let wnd = wnd.clone(); // pass into the closure
-		///     move |p: msg::wm::LButtonDown| -> ErrResult<()> {
+		///     move |p: msg::wm::LButtonDown| -> BoxResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     }
@@ -978,7 +978,7 @@ impl WindowEvents {
 	/// Sent to an icon when the user requests that the window be restored to
 	/// its previous size and position.
 	pub fn wm_query_open<F>(&self, func: F)
-		where F: Fn() -> ErrResult<bool> + 'static,
+		where F: Fn() -> BoxResult<bool> + 'static,
 	{
 		self.add_msg(co::WM::QUERYOPEN, move |_| Ok(Some(func()? as _)));
 	}
@@ -1044,7 +1044,7 @@ impl WindowEvents {
 	/// the large icon in the Alt+TAB dialog box, and the small icon in the
 	/// window caption.
 	pub fn wm_set_icon<F>(&self, func: F)
-		where F: Fn(wm::SetIcon) -> ErrResult<Option<HICON>> + 'static,
+		where F: Fn(wm::SetIcon) -> BoxResult<Option<HICON>> + 'static,
 	{
 		self.add_msg(co::WM::SETICON, move |p|
 			Ok(Some(
@@ -1068,13 +1068,13 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, BoxResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_size({
 		///     let wnd = wnd.clone(); // pass into the closure
-		///     move |p: msg::wm::Size| -> ErrResult<()> {
+		///     move |p: msg::wm::Size| -> BoxResult<()> {
 		///         println!("HWND: {}, client area: {}x{}",
 		///             wnd.hwnd(),
 		///             p.width,

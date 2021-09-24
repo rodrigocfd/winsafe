@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::aliases::{ErrResult, WinResult};
+use crate::aliases::{BoxResult, WinResult};
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::base::Base;
@@ -35,7 +35,7 @@ impl DlgModal {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>
+		where F: FnOnce() -> BoxResult<()>
 	{
 		self.0.base.run_ui_thread(func);
 	}

@@ -1,4 +1,4 @@
-use crate::aliases::ErrResult;
+use crate::aliases::BoxResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
 use crate::gui::base::Base;
@@ -171,7 +171,7 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> BoxResult<i32> {
 		if IsWindowsVistaOrGreater()? {
 			SetProcessDPIAware()?;
 		}

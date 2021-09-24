@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::aliases::{ErrResult, WinResult};
+use crate::aliases::{BoxResult, WinResult};
 use crate::co;
 use crate::enums::{AtomStr, IdMenu};
 use crate::gui::base::Base;
@@ -141,7 +141,7 @@ impl BaseNativeControl {
 
 	fn subclass_proc_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
-		subclass_id: usize, ref_data: usize) -> ErrResult<isize>
+		subclass_id: usize, ref_data: usize) -> BoxResult<isize>
 	{
 		let ptr_self = ref_data as *mut Self; // retrieve
 		let wm_any = WndMsg { msg_id: msg, wparam, lparam };

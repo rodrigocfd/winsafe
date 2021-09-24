@@ -1,4 +1,4 @@
-use crate::aliases::ErrResult;
+use crate::aliases::BoxResult;
 use crate::co;
 
 pub_struct_ctrl_events_proxy! {

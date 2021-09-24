@@ -1,4 +1,4 @@
-use crate::aliases::{ErrResult, WinResult};
+use crate::aliases::{BoxResult, WinResult};
 use crate::co;
 use crate::enums::{AtomStr, IdIdcStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
@@ -131,7 +131,7 @@ impl RawBase {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>
+		where F: FnOnce() -> BoxResult<()>
 	{
 		self.base.run_ui_thread(func);
 	}
@@ -144,7 +144,7 @@ impl RawBase {
 	}
 
 	fn window_proc_proc(
-		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> ErrResult<isize>
+		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> BoxResult<isize>
 	{
 		let wm_any = WndMsg { msg_id: msg, wparam, lparam };
 

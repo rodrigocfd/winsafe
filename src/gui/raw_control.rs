@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::aliases::ErrResult;
+use crate::aliases::BoxResult;
 use crate::co;
 use crate::enums::IdMenu;
 use crate::gui::base::Base;
@@ -40,7 +40,7 @@ impl RawControl {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>
+		where F: FnOnce() -> BoxResult<()>
 	{
 		self.0.base.run_ui_thread(func);
 	}
