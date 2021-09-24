@@ -2,15 +2,14 @@
 
 use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
-#[link(name = "shell32")]
-extern "system" {
-	pub fn CommandLineToArgvW(_: PCSTR, _: *mut i32) -> *mut PSTR;
-	pub fn DragFinish(_: HANDLE);
-	pub fn DragQueryFileW(_: HANDLE, _: u32, _: PSTR, _: u32) -> u32;
-	pub fn DragQueryPoint(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn SHAddToRecentDocs(_: u32, _: PCVOID);
-	pub fn Shell_NotifyIconW(_: u32, _: PVOID) -> BOOL;
-	pub fn ShellExecuteW(_: HANDLE, _: PCSTR, _: PCSTR, _: PCSTR, _: PCSTR, _: i32) -> HANDLE;
-	pub fn SHFileOperationW(_: PVOID) -> i32;
-	pub fn SHGetFileInfoW(_: PCSTR, _: u32, _: PVOID, _: u32, _: u32) -> usize;
+extern_sys! { "shell32",
+	CommandLineToArgvW, PCSTR, *mut i32, => *mut PSTR
+	DragFinish, HANDLE, => ()
+	DragQueryFileW, HANDLE, u32, PSTR, u32, => u32
+	DragQueryPoint, HANDLE, PVOID, => BOOL
+	SHAddToRecentDocs, u32, PCVOID, => ()
+	Shell_NotifyIconW, u32, PVOID, => BOOL
+	ShellExecuteW, HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32, => HANDLE
+	SHFileOperationW, PVOID, => i32
+	SHGetFileInfoW, PCSTR, u32, PVOID, u32, u32, => usize
 }

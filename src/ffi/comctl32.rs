@@ -2,25 +2,24 @@
 
 use crate::ffi::{BOOL, HANDLE, HRESULT, PCSTR, PCVOID, PFUNC};
 
-#[link(name = "comctl32")]
-extern "system" {
-	pub fn DefSubclassProc(_: HANDLE, _: u32, _: usize, _: isize) -> isize;
-	pub fn ImageList_Add(_: HANDLE, _: HANDLE, _: HANDLE) -> i32;
-	pub fn ImageList_AddMasked(_: HANDLE, _: HANDLE, _: u32) -> i32;
-	pub fn ImageList_BeginDrag(_: HANDLE, _: i32, _: i32, _: i32) -> BOOL;
-	pub fn ImageList_Create(_: i32, _: i32, _: u32, _: i32, _: i32) -> HANDLE;
-	pub fn ImageList_Destroy(_: HANDLE) -> BOOL;
-	pub fn ImageList_DragMove(_: HANDLE, _: i32, _: i32) -> BOOL;
-	pub fn ImageList_DragShowNolock(_: BOOL) -> BOOL;
-	pub fn ImageList_EndDrag();
-	pub fn ImageList_GetIconSize(_: HANDLE, _: *mut i32, _: *mut i32) -> BOOL;
-	pub fn ImageList_GetImageCount(_: HANDLE) -> i32;
-	pub fn ImageList_Remove(_: HANDLE, _: i32) -> BOOL;
-	pub fn ImageList_ReplaceIcon(_: HANDLE, _: i32, _: HANDLE) -> i32;
-	pub fn ImageList_SetImageCount(_: HANDLE, _: u32) -> BOOL;
-	pub fn InitCommonControls();
-	pub fn RemoveWindowSubclass(_: HANDLE, _: PFUNC, _: usize) -> BOOL;
-	pub fn SetWindowSubclass(_: HANDLE, _: PFUNC, _: usize, _: usize) -> BOOL;
-	pub fn TaskDialog(_: HANDLE, _: HANDLE, _: PCSTR, _: PCSTR, _: PCSTR, _: i32, _: PCSTR, _: *mut i32) -> HRESULT;
-	pub fn TaskDialogIndirect(_: PCVOID, _: *mut i32, _: *mut i32, _: *mut BOOL) -> HRESULT;
+extern_sys! { "comctl32",
+	DefSubclassProc, HANDLE, u32, usize, isize, => isize
+	ImageList_Add, HANDLE, HANDLE, HANDLE, => i32
+	ImageList_AddMasked, HANDLE, HANDLE, u32, => i32
+	ImageList_BeginDrag, HANDLE, i32, i32, i32, => BOOL
+	ImageList_Create, i32, i32, u32, i32, i32, => HANDLE
+	ImageList_Destroy, HANDLE, => BOOL
+	ImageList_DragMove, HANDLE, i32, i32, => BOOL
+	ImageList_DragShowNolock, BOOL, => BOOL
+	ImageList_EndDrag, => ()
+	ImageList_GetIconSize, HANDLE, *mut i32, *mut i32, => BOOL
+	ImageList_GetImageCount, HANDLE, => i32
+	ImageList_Remove, HANDLE, i32, => BOOL
+	ImageList_ReplaceIcon, HANDLE, i32, HANDLE, => i32
+	ImageList_SetImageCount, HANDLE, u32, => BOOL
+	InitCommonControls, => ()
+	RemoveWindowSubclass, HANDLE, PFUNC, usize, => BOOL
+	SetWindowSubclass, HANDLE, PFUNC, usize, usize, => BOOL
+	TaskDialog, HANDLE, HANDLE, PCSTR, PCSTR, PCSTR, i32, PCSTR, *mut i32, => HRESULT
+	TaskDialogIndirect, PCVOID, *mut i32, *mut i32, *mut BOOL, => HRESULT
 }

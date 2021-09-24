@@ -2,10 +2,9 @@
 
 use crate::ffi::{HRESULT, PCVOID, PVOID};
 
-#[link(name = "ole32")]
-extern "system" {
-	pub fn CoCreateInstance(_: PCVOID, _: PVOID, _: u32, _: PCVOID, _: *mut PVOID) -> HRESULT;
-	pub fn CoInitializeEx(_: PVOID, _: u32) -> HRESULT;
-	pub fn CoTaskMemFree(_: PVOID);
-	pub fn CoUninitialize();
+extern_sys! { "ole32",
+	CoCreateInstance, PCVOID, PVOID, u32, PCVOID, *mut PVOID, => HRESULT
+	CoInitializeEx, PVOID, u32, => HRESULT
+	CoTaskMemFree, PVOID, => ()
+	CoUninitialize, => ()
 }

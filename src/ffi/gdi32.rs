@@ -2,75 +2,74 @@
 
 use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PVOID};
 
-#[link(name = "gdi32")]
-extern "system" {
-	pub fn AbortPath(_: HANDLE) -> BOOL;
-	pub fn AngleArc(_: HANDLE, _: i32, _: i32, _: u32, _: f32, _: f32) -> BOOL;
-	pub fn BeginPath(_: HANDLE) -> BOOL;
-	pub fn BitBlt(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: HANDLE, _: i32, _: i32, _: u32) -> BOOL;
-	pub fn CancelDC(_:HANDLE) -> BOOL;
-	pub fn Chord(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32) -> BOOL;
-	pub fn CreateBitmap(_: i32, _: i32, _: u32, _: u32, _: PVOID) -> HANDLE;
-	pub fn CreateBrushIndirect(_: PCVOID) -> HANDLE;
-	pub fn CreateCompatibleBitmap(_: HANDLE, _: i32, _: i32) -> HANDLE;
-	pub fn CreateCompatibleDC(_: HANDLE) -> HANDLE;
-	pub fn CreateFontIndirectW(_: PCVOID) -> HANDLE;
-	pub fn CreateFontW(_: i32, _: i32, _: i32, _: i32, _: i32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: u32, _: PCSTR) -> HANDLE;
-	pub fn CreateHatchBrush(_: i32, _: u32) -> HANDLE;
-	pub fn CreatePatternBrush(_: HANDLE) -> HANDLE;
-	pub fn CreatePen(_: i32, _: i32, _: u32) -> HANDLE;
-	pub fn CreatePenIndirect(_: PCVOID) -> HANDLE;
-	pub fn CreateRectRgn(_: i32, _: i32, _: i32, _: i32) -> HANDLE;
-	pub fn CreateRectRgnIndirect(_: PCVOID) -> HANDLE;
-	pub fn CreateRoundRectRgn(_: i32, _: i32, _: i32, _: i32, _: i32, _: i32) -> HANDLE;
-	pub fn CreateSolidBrush(_: u32) -> HANDLE;
-	pub fn DeleteDC(_: HANDLE) -> BOOL;
-	pub fn DeleteObject(_: HANDLE) -> BOOL;
-	pub fn EndPath(_: HANDLE) -> BOOL;
-	pub fn FillPath(_: HANDLE) -> BOOL;
-	pub fn FillRect(_: HANDLE, _: PCVOID, _: HANDLE) -> i32;
-	pub fn GetDCBrushColor(_: HANDLE) -> u32;
-	pub fn GetDCPenColor(_: HANDLE) -> u32;
-	pub fn GetDeviceCaps(_: HANDLE, _: i32) -> i32;
-	pub fn GetObjectW(_: HANDLE, _: i32, _: PVOID) -> i32;
-	pub fn GetStockObject(_: i32) -> HANDLE;
-	pub fn GetSysColorBrush(_: i32) -> HANDLE;
-	pub fn GetTextColor(_: HANDLE) -> u32;
-	pub fn GetTextExtentPoint32W(_: HANDLE, _: PCSTR, _: i32, _: PVOID) -> BOOL;
-	pub fn GetTextMetricsW(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn LineTo(_: HANDLE, _: i32, _: i32) -> BOOL;
-	pub fn MoveToEx(_: HANDLE, _: i32, _: i32, _: PVOID) -> BOOL;
-	pub fn OffsetClipRgn(_: HANDLE, _: i32, _: i32) -> i32;
-	pub fn OffsetRgn(_: HANDLE, _: i32, _: i32) -> i32;
-	pub fn PatBlt(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: u32) -> BOOL;
-	pub fn PathToRegion(_: HANDLE) -> HANDLE;
-	pub fn Pie(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32) -> BOOL;
-	pub fn PolyBezier(_: HANDLE, _: PCVOID, _: u32) -> BOOL;
-	pub fn PolyBezierTo(_: HANDLE, _: PCVOID, _: u32) -> BOOL;
-	pub fn Polyline(_: HANDLE, _: PCVOID, _: u32) -> BOOL;
-	pub fn PolylineTo(_: HANDLE, _: PCVOID, _: u32) -> BOOL;
-	pub fn PtInRegion(_: HANDLE, _: i32, _: i32) -> BOOL;
-	pub fn PtVisible(_: HANDLE, _: i32, _: i32) -> BOOL;
-	pub fn Rectangle(_: HANDLE, _: i32, _: i32, _: i32, _: i32) -> BOOL;
-	pub fn RectInRegion(_: HANDLE, _: PCVOID) -> BOOL;
-	pub fn RestoreDC(_: HANDLE, _: i32) -> BOOL;
-	pub fn RoundRect(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: i32, _: i32) -> BOOL;
-	pub fn SaveDC(_: HANDLE) -> i32;
-	pub fn SelectObject(_: HANDLE, _: HANDLE) -> HANDLE;
-	pub fn SetArcDirection(_: HANDLE, _: i32) -> i32;
-	pub fn SetBkMode(_: HANDLE, _: i32) -> i32;
-	pub fn SetDCBrushColor(_: HANDLE, _: u32) -> u32;
-	pub fn SetDCPenColor(_: HANDLE, _: u32) -> u32;
-	pub fn SetGraphicsMode(_: HANDLE, _: i32) -> i32;
-	pub fn SetTextAlign(_: HANDLE, _: u32) -> u32;
-	pub fn SetTextColor(_: HANDLE, _: u32) -> u32;
-	pub fn SetTextJustification(_: HANDLE, _: i32, _: i32) -> BOOL;
-	pub fn SetViewportExtEx(_: HANDLE, _: i32, _: i32, _: PVOID) -> BOOL;
-	pub fn SetViewportOrgEx(_: HANDLE, _: i32, _: i32, _: PVOID) -> BOOL;
-	pub fn SetWindowExtEx(_: HANDLE, _: i32, _: i32, _: PVOID) -> BOOL;
-	pub fn SetWindowOrgEx(_: HANDLE, _: i32, _: i32, _: PVOID) -> BOOL;
-	pub fn StrokeAndFillPath(_: HANDLE) -> BOOL;
-	pub fn StrokePath(_: HANDLE) -> BOOL;
-	pub fn TextOutW(_: HANDLE, _: i32, _: i32, _: PCSTR, _: i32) -> BOOL;
-	pub fn WidenPath(_: HANDLE) -> BOOL;
+extern_sys! { "gdi32",
+	AbortPath, HANDLE, => BOOL
+	AngleArc, HANDLE, i32, i32, u32, f32, f32, => BOOL
+	BeginPath, HANDLE, => BOOL
+	BitBlt, HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, u32, => BOOL
+	CancelDC,HANDLE, => BOOL
+	Chord, HANDLE, i32, i32, i32, i32, i32, i32, i32, i32, => BOOL
+	CreateBitmap, i32, i32, u32, u32, PVOID, => HANDLE
+	CreateBrushIndirect, PCVOID, => HANDLE
+	CreateCompatibleBitmap, HANDLE, i32, i32, => HANDLE
+	CreateCompatibleDC, HANDLE, => HANDLE
+	CreateFontIndirectW, PCVOID, => HANDLE
+	CreateFontW, i32, i32, i32, i32, i32, u32, u32, u32, u32, u32, u32, u32, u32, PCSTR, => HANDLE
+	CreateHatchBrush, i32, u32, => HANDLE
+	CreatePatternBrush, HANDLE, => HANDLE
+	CreatePen, i32, i32, u32, => HANDLE
+	CreatePenIndirect, PCVOID, => HANDLE
+	CreateRectRgn, i32, i32, i32, i32, => HANDLE
+	CreateRectRgnIndirect, PCVOID, => HANDLE
+	CreateRoundRectRgn, i32, i32, i32, i32, i32, i32, => HANDLE
+	CreateSolidBrush, u32, => HANDLE
+	DeleteDC, HANDLE, => BOOL
+	DeleteObject, HANDLE, => BOOL
+	EndPath, HANDLE, => BOOL
+	FillPath, HANDLE, => BOOL
+	FillRect, HANDLE, PCVOID, HANDLE, => i32
+	GetDCBrushColor, HANDLE, => u32
+	GetDCPenColor, HANDLE, => u32
+	GetDeviceCaps, HANDLE, i32, => i32
+	GetObjectW, HANDLE, i32, PVOID, => i32
+	GetStockObject, i32, => HANDLE
+	GetSysColorBrush, i32, => HANDLE
+	GetTextColor, HANDLE, => u32
+	GetTextExtentPoint32W, HANDLE, PCSTR, i32, PVOID, => BOOL
+	GetTextMetricsW, HANDLE, PVOID, => BOOL
+	LineTo, HANDLE, i32, i32, => BOOL
+	MoveToEx, HANDLE, i32, i32, PVOID, => BOOL
+	OffsetClipRgn, HANDLE, i32, i32, => i32
+	OffsetRgn, HANDLE, i32, i32, => i32
+	PatBlt, HANDLE, i32, i32, i32, i32, u32, => BOOL
+	PathToRegion, HANDLE, => HANDLE
+	Pie, HANDLE, i32, i32, i32, i32, i32, i32, i32, i32, => BOOL
+	PolyBezier, HANDLE, PCVOID, u32, => BOOL
+	PolyBezierTo, HANDLE, PCVOID, u32, => BOOL
+	Polyline, HANDLE, PCVOID, u32, => BOOL
+	PolylineTo, HANDLE, PCVOID, u32, => BOOL
+	PtInRegion, HANDLE, i32, i32, => BOOL
+	PtVisible, HANDLE, i32, i32, => BOOL
+	Rectangle, HANDLE, i32, i32, i32, i32, => BOOL
+	RectInRegion, HANDLE, PCVOID, => BOOL
+	RestoreDC, HANDLE, i32, => BOOL
+	RoundRect, HANDLE, i32, i32, i32, i32, i32, i32, => BOOL
+	SaveDC, HANDLE, => i32
+	SelectObject, HANDLE, HANDLE, => HANDLE
+	SetArcDirection, HANDLE, i32, => i32
+	SetBkMode, HANDLE, i32, => i32
+	SetDCBrushColor, HANDLE, u32, => u32
+	SetDCPenColor, HANDLE, u32, => u32
+	SetGraphicsMode, HANDLE, i32, => i32
+	SetTextAlign, HANDLE, u32, => u32
+	SetTextColor, HANDLE, u32, => u32
+	SetTextJustification, HANDLE, i32, i32, => BOOL
+	SetViewportExtEx, HANDLE, i32, i32, PVOID, => BOOL
+	SetViewportOrgEx, HANDLE, i32, i32, PVOID, => BOOL
+	SetWindowExtEx, HANDLE, i32, i32, PVOID, => BOOL
+	SetWindowOrgEx, HANDLE, i32, i32, PVOID, => BOOL
+	StrokeAndFillPath, HANDLE, => BOOL
+	StrokePath, HANDLE, => BOOL
+	TextOutW, HANDLE, i32, i32, PCSTR, i32, => BOOL
+	WidenPath, HANDLE, => BOOL
 }

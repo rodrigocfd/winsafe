@@ -2,19 +2,18 @@
 
 use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
-#[link(name = "advapi32")]
-extern "system" {
-	pub fn DecryptFileW(_: PCSTR, _: u32) -> BOOL;
-	pub fn EncryptFileW(_: PCSTR) -> BOOL;
-	pub fn EncryptionDisable(_: PCSTR, _: BOOL) -> BOOL;
-	pub fn GetUserNameW(_: PSTR, _: *mut u32) -> BOOL;
-	pub fn RegCloseKey(_: HANDLE) -> i32;
-	pub fn RegEnumKeyExW(_: HANDLE, _: u32, _: PSTR, _: *mut u32, _: *mut u32, _: PSTR, _: *mut u32, _: PVOID) -> i32;
-	pub fn RegEnumValueW(_: HANDLE, _: u32, _: PSTR, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u8, _: *mut u32) -> i32;
-	pub fn RegGetValueW(_: HANDLE, _: PCSTR, _: PCSTR, _: u32, _: *mut u32, _: PVOID, _: *mut u32) -> i32;
-	pub fn RegOpenKeyExW(_: HANDLE, _: PCSTR, _: u32, _: u32, _: *mut HANDLE) -> i32;
-	pub fn RegQueryInfoKeyW(_: HANDLE, _: PSTR, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u32, _: *mut u32, _: PVOID) -> i32;
-	pub fn RegQueryValueExW(_: HANDLE, _: PCSTR, _: *mut u32, _: *mut u32, _: *mut u8, _: *mut u32) -> i32;
-	pub fn RegSetKeyValueW(_: HANDLE, _: PCSTR, _: PCSTR, _: u32, _: PCVOID, _: u32) -> i32;
-	pub fn RegSetValueExW(_: HANDLE, _: PCSTR, _: u32, _: u32, _: *const u8, _: u32) -> i32;
+extern_sys! { "advapi32",
+	DecryptFileW, PCSTR, u32, => BOOL
+	EncryptFileW, PCSTR, => BOOL
+	EncryptionDisable, PCSTR, BOOL, => BOOL
+	GetUserNameW, PSTR, *mut u32, => BOOL
+	RegCloseKey, HANDLE, => i32
+	RegEnumKeyExW, HANDLE, u32, PSTR, *mut u32, *mut u32, PSTR, *mut u32, PVOID, => i32
+	RegEnumValueW, HANDLE, u32, PSTR, *mut u32, *mut u32, *mut u32, *mut u8, *mut u32, => i32
+	RegGetValueW, HANDLE, PCSTR, PCSTR, u32, *mut u32, PVOID, *mut u32, => i32
+	RegOpenKeyExW, HANDLE, PCSTR, u32, u32, *mut HANDLE, => i32
+	RegQueryInfoKeyW, HANDLE, PSTR, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, PVOID, => i32
+	RegQueryValueExW, HANDLE, PCSTR, *mut u32, *mut u32, *mut u8, *mut u32, => i32
+	RegSetKeyValueW, HANDLE, PCSTR, PCSTR, u32, PCVOID, u32, => i32
+	RegSetValueExW, HANDLE, PCSTR, u32, u32, *const u8, u32, => i32
 }

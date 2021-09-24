@@ -2,188 +2,187 @@
 
 use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
-#[link(name = "user32")]
-extern "system" {
-	pub fn AdjustWindowRectEx(_: PVOID, _: u32, _: BOOL, _: u32) -> BOOL;
-	pub fn AppendMenuW(_: HANDLE, _: u32, _: usize, _: PCSTR) -> BOOL;
-	pub fn ArrangeIconicWindows(_: HANDLE) -> u32;
-	pub fn BeginDeferWindowPos(_: i32) -> HANDLE;
-	pub fn BeginPaint(_: HANDLE, _: PVOID) -> HANDLE;
-	pub fn BringWindowToTop(_: HANDLE) -> BOOL;
-	pub fn CallNextHookEx(_: HANDLE, _: i32, _: usize, _: isize) -> isize;
-	pub fn ChangeDisplaySettingsW(_: PVOID, _: u32) -> i32;
-	pub fn CheckMenuItem(_: HANDLE, _: u32, _: u32) -> i32;
-	pub fn CheckMenuRadioItem(_: HANDLE, _: u32, _: u32, _: u32, _: u32) -> BOOL;
-	pub fn ChildWindowFromPoint(_: HANDLE, _: i32, _: i32) -> HANDLE;
-	pub fn ClientToScreen(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn ClipCursor(_: PCVOID) -> BOOL;
-	pub fn CloseClipboard() -> BOOL;
-	pub fn CloseWindow(_: HANDLE) -> BOOL;
-	pub fn CopyIcon(_: HANDLE) -> HANDLE;
-	pub fn CreateAcceleratorTableW(_: PVOID, _: i32) -> HANDLE;
-	pub fn CreateDialogParamW(_: HANDLE, _: PCSTR, _: HANDLE, _: PFUNC, _: isize) -> HANDLE;
-	pub fn CreateMenu() -> HANDLE;
-	pub fn CreatePopupMenu() -> HANDLE;
-	pub fn CreateWindowExW(_: u32, _: PCSTR, _: PCSTR, _: u32, _: i32, _: i32, _: i32, _: i32, _: HANDLE, _: HANDLE, _: HANDLE, _: PVOID) -> HANDLE;
-	pub fn DeferWindowPos(_: HANDLE, _: HANDLE, _: HANDLE, _: i32, _: i32, _: i32, _: i32, _: u32) -> HANDLE;
-	pub fn DefWindowProcW(_: HANDLE, _: u32, _: usize, _: isize) -> isize;
-	pub fn DeleteMenu(_: HANDLE, _: u32, _: u32) -> BOOL;
-	pub fn DestroyAcceleratorTable(_: HANDLE) -> BOOL;
-	pub fn DestroyCursor(_: HANDLE) -> BOOL;
-	pub fn DestroyIcon(_: HANDLE) -> BOOL;
-	pub fn DestroyMenu(_: HANDLE) -> BOOL;
-	pub fn DestroyWindow(_: HANDLE) -> BOOL;
-	pub fn DialogBoxParamW(_: HANDLE, _: PCSTR, _: HANDLE, _: PFUNC, _: isize) -> isize;
-	pub fn DispatchMessageW(_: PCVOID) -> isize;
-	pub fn DrawMenuBar(_: HANDLE) -> BOOL;
-	pub fn EmptyClipboard() -> BOOL;
-	pub fn EnableMenuItem(_: HANDLE, _: u32, _: u32) -> BOOL;
-	pub fn EnableWindow(_: HANDLE, _: BOOL) -> BOOL;
-	pub fn EndDeferWindowPos(_: HANDLE) -> BOOL;
-	pub fn EndDialog(_: HANDLE, _: isize) -> BOOL;
-	pub fn EndMenu() -> BOOL;
-	pub fn EndPaint(_: HANDLE, _: PCVOID) -> BOOL;
-	pub fn EnumChildWindows(_: HANDLE, _: PFUNC, _: isize) -> BOOL;
-	pub fn EnumDisplaySettingsExW(_: PCSTR, _: u32, _: PVOID, _: u32) -> BOOL;
-	pub fn FindWindowExW(_: HANDLE, _: HANDLE, _: PCSTR, _: PCSTR) -> HANDLE;
-	pub fn FindWindowW(_: PCSTR, _: PCSTR) -> HANDLE;
-	pub fn GetActiveWindow() -> HANDLE;
-	pub fn GetAltTabInfoW(_: HANDLE, _: i32, _: PVOID, _: PSTR, _: u32) -> BOOL;
-	pub fn GetAncestor(_: HANDLE, _: u32) -> HANDLE;
-	pub fn GetAsyncKeyState(_: i32) -> i16;
-	pub fn GetCapture() -> HANDLE;
-	pub fn GetClassInfoExW(_: HANDLE, _: PCSTR, _: PVOID) -> BOOL;
-	pub fn GetClassLongPtrW(_: HANDLE, _: i32) -> usize;
-	pub fn GetClientRect(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn GetClipCursor(_: PVOID) -> BOOL;
-	pub fn GetCursorPos(_: PVOID) -> BOOL;
-	pub fn GetDC(_: HANDLE) -> HANDLE;
-	pub fn GetDesktopWindow() -> HANDLE;
-	pub fn GetDialogBaseUnits() -> i32;
-	pub fn GetDlgCtrlID(_: HANDLE) -> i32;
-	pub fn GetDlgItem(_: HANDLE, _: i32) -> HANDLE;
-	pub fn GetDoubleClickTime() -> u32;
-	pub fn GetFocus() -> HANDLE;
-	pub fn GetForegroundWindow() -> HANDLE;
-	pub fn GetGUIThreadInfo(_: u32, _: PVOID) -> BOOL;
-	pub fn GetMenu(_: HANDLE) -> HANDLE;
-	pub fn GetMenuBarInfo(_: HANDLE, _: i32, _: i32, _: PVOID) -> BOOL;
-	pub fn GetMenuCheckMarkDimensions() -> i32;
-	pub fn GetMenuDefaultItem(_: HANDLE, _: u32, _: u32) -> u32;
-	pub fn GetMenuInfo(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn GetMenuItemCount(_: HANDLE) -> i32;
-	pub fn GetMenuItemID(_: HANDLE, _: i32) -> i32;
-	pub fn GetMenuItemInfoW(_: HANDLE, _: u32, _: BOOL, _: PVOID) -> BOOL;
-	pub fn GetMenuItemRect(_: HANDLE, _: HANDLE, _: u32, _: PVOID) -> BOOL;
-	pub fn GetMenuState(_: HANDLE, _: u32, _: u32) -> u32;
-	pub fn GetMenuStringW(_: HANDLE, _: u32, _: PSTR, _: i32, _: u32) -> i32;
-	pub fn GetMessagePos() -> u32;
-	pub fn GetMessageW(_: PVOID, _: HANDLE, _: u32, _: u32) -> BOOL;
-	pub fn GetNextDlgGroupItem(_: HANDLE, _: HANDLE, _: BOOL) -> HANDLE;
-	pub fn GetNextDlgTabItem(_: HANDLE, _: HANDLE, _: BOOL) -> HANDLE;
-	pub fn GetParent(_: HANDLE) -> HANDLE;
-	pub fn GetQueueStatus(_: u32) -> u32;
-	pub fn GetScrollInfo(_: HANDLE, _: i32, _: PVOID) -> BOOL;
-	pub fn GetScrollPos(_: HANDLE, _: i32) -> i32;
-	pub fn GetShellWindow() -> HANDLE;
-	pub fn GetSubMenu(_: HANDLE, _: i32) -> HANDLE;
-	pub fn GetSysColor(_: i32) -> u32;
-	pub fn GetSystemMenu(_: HANDLE, _: BOOL) -> HANDLE;
-	pub fn GetSystemMetrics(_: i32) -> i32;
-	pub fn GetUpdateRgn(_: HANDLE, _: HANDLE, _: BOOL) -> i32;
-	pub fn GetWindow(_: HANDLE, _: u32) -> HANDLE;
-	pub fn GetWindowDC(_: HANDLE) -> HANDLE;
-	pub fn GetWindowDisplayAffinity(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn GetWindowInfo(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn GetWindowLongPtrW(_: HANDLE, _: i32) -> isize;
-	pub fn GetWindowPlacement(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn GetWindowRect(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn GetWindowRgn(_: HANDLE, _: HANDLE) -> i32;
-	pub fn GetWindowRgnBox(_: HANDLE, _: PVOID) -> i32;
-	pub fn GetWindowTextLengthW(_: HANDLE) -> i32;
-	pub fn GetWindowTextW(_: HANDLE, _: PSTR, _: i32) -> i32;
-	pub fn GetWindowThreadProcessId(_: HANDLE, _: *mut u32) -> u32;
-	pub fn HiliteMenuItem(_: HANDLE, _: HANDLE, _: u32, _: u32) -> BOOL;
-	pub fn InsertMenuItemW(_: HANDLE, _: u32, _: BOOL, _: PCVOID) -> BOOL;
-	pub fn InvalidateRect(_: HANDLE, _: PCVOID, _: BOOL) -> BOOL;
-	pub fn InvalidateRgn(_: HANDLE, _: HANDLE, _: BOOL) -> BOOL;
-	pub fn IsChild(_: HANDLE, _: HANDLE) -> BOOL;
-	pub fn IsDialogMessageW(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn IsGUIThread(_: BOOL) -> BOOL;
-	pub fn IsIconic(_: HANDLE) -> BOOL;
-	pub fn IsMenu(_: HANDLE) -> BOOL;
-	pub fn IsWindow(_: HANDLE) -> BOOL;
-	pub fn IsWindowEnabled(_: HANDLE) -> BOOL;
-	pub fn IsWindowUnicode(_: HANDLE) -> BOOL;
-	pub fn IsWindowVisible(_: HANDLE) -> BOOL;
-	pub fn IsWow64Message() -> BOOL;
-	pub fn IsZoomed(_: HANDLE) -> BOOL;
-	pub fn KillTimer(_: HANDLE, _: usize) -> BOOL;
-	pub fn LoadAcceleratorsW(_: HANDLE, _: PCSTR) -> HANDLE;
-	pub fn LoadCursorW(_: HANDLE, _: PCSTR) -> HANDLE;
-	pub fn LoadIconW(_: HANDLE, _: PCSTR) -> HANDLE;
-	pub fn LoadImageW(_: HANDLE, _: PCSTR, _: u32, _: i32, _: i32, _: u32) -> HANDLE;
-	pub fn LoadMenuW(_: HANDLE, _: PCSTR) -> HANDLE;
-	pub fn LoadStringW(_: HANDLE, _: u32, _: PSTR, _: i32) -> i32;
-	pub fn LockSetForegroundWindow(_: u32) -> BOOL;
-	pub fn LogicalToPhysicalPoint(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn MapDialogRect(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn MessageBoxW(_: HANDLE, _: PCSTR, _: PCSTR, _: u32) -> i32;
-	pub fn MoveWindow(_: HANDLE, _: i32, _: i32, _: i32, _: i32, _: BOOL) -> BOOL;
-	pub fn OpenClipboard(_: HANDLE) -> BOOL;
-	pub fn PeekMessageW(_: PVOID, _: HANDLE, _: u32, _: u32, _: u32) -> BOOL;
-	pub fn PostMessageW(_: HANDLE, _: u32, _: usize, _: isize) -> BOOL;
-	pub fn PostQuitMessage(_: i32);
-	pub fn RealChildWindowFromPoint(_: HANDLE, _: i32, _: i32) -> HANDLE;
-	pub fn RedrawWindow(_: HANDLE, _: PCVOID, _: HANDLE, _: u32) -> BOOL;
-	pub fn RegisterClassExW(_: PCVOID) -> u16;
-	pub fn ReleaseCapture() -> BOOL;
-	pub fn ReleaseDC(_: HANDLE, _: HANDLE) -> i32;
-	pub fn RemoveMenu(_: HANDLE, _: u32, _: u32) -> BOOL;
-	pub fn ScreenToClient(_: HANDLE, _: PVOID) -> BOOL;
-	pub fn SendMessageW(_: HANDLE, _: u32, _: usize, _: isize) -> isize;
-	pub fn SetCapture(_: HANDLE) -> HANDLE;
-	pub fn SetCaretBlinkTime(_: u32) -> BOOL;
-	pub fn SetCaretPos(_: i32, _: i32) -> BOOL;
-	pub fn SetClipboardData(_: u32, _: HANDLE) -> HANDLE;
-	pub fn SetCursorPos(_: i32, _: i32) -> BOOL;
-	pub fn SetFocus(_: HANDLE) -> HANDLE;
-	pub fn SetForegroundWindow(_: HANDLE) -> BOOL;
-	pub fn SetMenu(_: HANDLE, _: HANDLE) -> BOOL;
-	pub fn SetMenuDefaultItem(_: HANDLE, _: u32, _: u32) -> BOOL;
-	pub fn SetMenuInfo(_: HANDLE, _: PCVOID) -> BOOL;
-	pub fn SetMenuItemBitmaps(_: HANDLE, _: u32, _: u32, _: HANDLE, _: HANDLE) -> BOOL;
-	pub fn SetMenuItemInfoW(_: HANDLE, _: u32, _: BOOL, _: PCVOID) -> BOOL;
-	pub fn SetParent(_: HANDLE, _: HANDLE) -> HANDLE;
-	pub fn SetProcessDPIAware() -> BOOL;
-	pub fn SetScrollInfo(_: HANDLE, _: i32, _: PCVOID, _: BOOL) -> i32;
-	pub fn SetScrollPos(_: HANDLE, _: i32, _: i32, _: BOOL) -> i32;
-	pub fn SetScrollRange(_: HANDLE, _: i32, _: i32, _: i32, _: BOOL) -> BOOL;
-	pub fn SetSystemCursor(_: HANDLE, _: u32) -> BOOL;
-	pub fn SetTimer(_: HANDLE, _: usize, _: u32, _: PFUNC) -> usize;
-	pub fn SetWindowDisplayAffinity(_: HANDLE, _: u32) -> BOOL;
-	pub fn SetWindowLongPtrW(_: HANDLE, _: i32, _: isize) -> isize;
-	pub fn SetWindowPlacement(_: HANDLE, _: PCVOID) -> BOOL;
-	pub fn SetWindowPos(_: HANDLE, _: HANDLE, _: i32, _: i32, _: i32, _: i32, _: u32) -> BOOL;
-	pub fn SetWindowRgn(_: HANDLE, _: HANDLE, _: BOOL) -> i32;
-	pub fn SetWindowsHookExW(_: i32, _: PFUNC, _: HANDLE, _: u32) -> HANDLE;
-	pub fn SetWindowTextW(_: HANDLE, _: PCSTR) -> BOOL;
-	pub fn ShowCaret(_: HANDLE) -> BOOL;
-	pub fn ShowCursor(_: BOOL) -> i32;
-	pub fn ShowWindow(_: HANDLE, _: i32) -> BOOL;
-	pub fn SoundSentry() -> BOOL;
-	pub fn SystemParametersInfoW(_: u32, _: u32, _: PVOID, _: u32) -> BOOL;
-	pub fn TrackMouseEvent(_: PVOID) -> BOOL;
-	pub fn TrackPopupMenu(_: HANDLE, _: u32, _: i32, _: i32, _: i32, _: HANDLE, _: PCVOID) -> BOOL;
-	pub fn TranslateAcceleratorW(_: HANDLE, _: HANDLE, _: PVOID) -> i32;
-	pub fn TranslateMessage(_: PCVOID) -> BOOL;
-	pub fn UnhookWindowsHookEx(_: HANDLE) -> BOOL;
-	pub fn UnregisterClassW(_: PCSTR, _: HANDLE) -> BOOL;
-	pub fn UpdateWindow(_: HANDLE) -> BOOL;
-	pub fn ValidateRect(_: HANDLE, _: PCVOID) -> BOOL;
-	pub fn ValidateRgn(_: HANDLE, _: HANDLE) -> BOOL;
-	pub fn WaitMessage() -> BOOL;
-	pub fn WindowFromPhysicalPoint(_: i32, _: i32) -> HANDLE;
-	pub fn WindowFromPoint(_: i32, _: i32) -> HANDLE;
-	pub fn WinHelpW(_: HANDLE, _: PCSTR, _: u32, _: usize) -> BOOL;
+extern_sys! { "user32",
+	AdjustWindowRectEx, PVOID, u32, BOOL, u32, => BOOL
+	AppendMenuW, HANDLE, u32, usize, PCSTR, => BOOL
+	ArrangeIconicWindows, HANDLE, => u32
+	BeginDeferWindowPos, i32, => HANDLE
+	BeginPaint, HANDLE, PVOID, => HANDLE
+	BringWindowToTop, HANDLE, => BOOL
+	CallNextHookEx, HANDLE, i32, usize, isize, => isize
+	ChangeDisplaySettingsW, PVOID, u32, => i32
+	CheckMenuItem, HANDLE, u32, u32, => i32
+	CheckMenuRadioItem, HANDLE, u32, u32, u32, u32, => BOOL
+	ChildWindowFromPoint, HANDLE, i32, i32, => HANDLE
+	ClientToScreen, HANDLE, PVOID, => BOOL
+	ClipCursor, PCVOID, => BOOL
+	CloseClipboard, => BOOL
+	CloseWindow, HANDLE, => BOOL
+	CopyIcon, HANDLE, => HANDLE
+	CreateAcceleratorTableW, PVOID, i32, => HANDLE
+	CreateDialogParamW, HANDLE, PCSTR, HANDLE, PFUNC, isize, => HANDLE
+	CreateMenu, => HANDLE
+	CreatePopupMenu, => HANDLE
+	CreateWindowExW, u32, PCSTR, PCSTR, u32, i32, i32, i32, i32, HANDLE, HANDLE, HANDLE, PVOID, => HANDLE
+	DeferWindowPos, HANDLE, HANDLE, HANDLE, i32, i32, i32, i32, u32, => HANDLE
+	DefWindowProcW, HANDLE, u32, usize, isize, => isize
+	DeleteMenu, HANDLE, u32, u32, => BOOL
+	DestroyAcceleratorTable, HANDLE, => BOOL
+	DestroyCursor, HANDLE, => BOOL
+	DestroyIcon, HANDLE, => BOOL
+	DestroyMenu, HANDLE, => BOOL
+	DestroyWindow, HANDLE, => BOOL
+	DialogBoxParamW, HANDLE, PCSTR, HANDLE, PFUNC, isize, => isize
+	DispatchMessageW, PCVOID, => isize
+	DrawMenuBar, HANDLE, => BOOL
+	EmptyClipboard, => BOOL
+	EnableMenuItem, HANDLE, u32, u32, => BOOL
+	EnableWindow, HANDLE, BOOL, => BOOL
+	EndDeferWindowPos, HANDLE, => BOOL
+	EndDialog, HANDLE, isize, => BOOL
+	EndMenu, => BOOL
+	EndPaint, HANDLE, PCVOID, => BOOL
+	EnumChildWindows, HANDLE, PFUNC, isize, => BOOL
+	EnumDisplaySettingsExW, PCSTR, u32, PVOID, u32, => BOOL
+	FindWindowExW, HANDLE, HANDLE, PCSTR, PCSTR, => HANDLE
+	FindWindowW, PCSTR, PCSTR, => HANDLE
+	GetActiveWindow, => HANDLE
+	GetAltTabInfoW, HANDLE, i32, PVOID, PSTR, u32, => BOOL
+	GetAncestor, HANDLE, u32, => HANDLE
+	GetAsyncKeyState, i32, => i16
+	GetCapture, => HANDLE
+	GetClassInfoExW, HANDLE, PCSTR, PVOID, => BOOL
+	GetClassLongPtrW, HANDLE, i32, => usize
+	GetClientRect, HANDLE, PVOID, => BOOL
+	GetClipCursor, PVOID, => BOOL
+	GetCursorPos, PVOID, => BOOL
+	GetDC, HANDLE, => HANDLE
+	GetDesktopWindow, => HANDLE
+	GetDialogBaseUnits, => i32
+	GetDlgCtrlID, HANDLE, => i32
+	GetDlgItem, HANDLE, i32, => HANDLE
+	GetDoubleClickTime, => u32
+	GetFocus, => HANDLE
+	GetForegroundWindow, => HANDLE
+	GetGUIThreadInfo, u32, PVOID, => BOOL
+	GetMenu, HANDLE, => HANDLE
+	GetMenuBarInfo, HANDLE, i32, i32, PVOID, => BOOL
+	GetMenuCheckMarkDimensions, => i32
+	GetMenuDefaultItem, HANDLE, u32, u32, => u32
+	GetMenuInfo, HANDLE, PVOID, => BOOL
+	GetMenuItemCount, HANDLE, => i32
+	GetMenuItemID, HANDLE, i32, => i32
+	GetMenuItemInfoW, HANDLE, u32, BOOL, PVOID, => BOOL
+	GetMenuItemRect, HANDLE, HANDLE, u32, PVOID, => BOOL
+	GetMenuState, HANDLE, u32, u32, => u32
+	GetMenuStringW, HANDLE, u32, PSTR, i32, u32, => i32
+	GetMessagePos, => u32
+	GetMessageW, PVOID, HANDLE, u32, u32, => BOOL
+	GetNextDlgGroupItem, HANDLE, HANDLE, BOOL, => HANDLE
+	GetNextDlgTabItem, HANDLE, HANDLE, BOOL, => HANDLE
+	GetParent, HANDLE, => HANDLE
+	GetQueueStatus, u32, => u32
+	GetScrollInfo, HANDLE, i32, PVOID, => BOOL
+	GetScrollPos, HANDLE, i32, => i32
+	GetShellWindow, => HANDLE
+	GetSubMenu, HANDLE, i32, => HANDLE
+	GetSysColor, i32, => u32
+	GetSystemMenu, HANDLE, BOOL, => HANDLE
+	GetSystemMetrics, i32, => i32
+	GetUpdateRgn, HANDLE, HANDLE, BOOL, => i32
+	GetWindow, HANDLE, u32, => HANDLE
+	GetWindowDC, HANDLE, => HANDLE
+	GetWindowDisplayAffinity, HANDLE, PVOID, => BOOL
+	GetWindowInfo, HANDLE, PVOID, => BOOL
+	GetWindowLongPtrW, HANDLE, i32, => isize
+	GetWindowPlacement, HANDLE, PVOID, => BOOL
+	GetWindowRect, HANDLE, PVOID, => BOOL
+	GetWindowRgn, HANDLE, HANDLE, => i32
+	GetWindowRgnBox, HANDLE, PVOID, => i32
+	GetWindowTextLengthW, HANDLE, => i32
+	GetWindowTextW, HANDLE, PSTR, i32, => i32
+	GetWindowThreadProcessId, HANDLE, *mut u32, => u32
+	HiliteMenuItem, HANDLE, HANDLE, u32, u32, => BOOL
+	InsertMenuItemW, HANDLE, u32, BOOL, PCVOID, => BOOL
+	InvalidateRect, HANDLE, PCVOID, BOOL, => BOOL
+	InvalidateRgn, HANDLE, HANDLE, BOOL, => BOOL
+	IsChild, HANDLE, HANDLE, => BOOL
+	IsDialogMessageW, HANDLE, PVOID, => BOOL
+	IsGUIThread, BOOL, => BOOL
+	IsIconic, HANDLE, => BOOL
+	IsMenu, HANDLE, => BOOL
+	IsWindow, HANDLE, => BOOL
+	IsWindowEnabled, HANDLE, => BOOL
+	IsWindowUnicode, HANDLE, => BOOL
+	IsWindowVisible, HANDLE, => BOOL
+	IsWow64Message, => BOOL
+	IsZoomed, HANDLE, => BOOL
+	KillTimer, HANDLE, usize, => BOOL
+	LoadAcceleratorsW, HANDLE, PCSTR, => HANDLE
+	LoadCursorW, HANDLE, PCSTR, => HANDLE
+	LoadIconW, HANDLE, PCSTR, => HANDLE
+	LoadImageW, HANDLE, PCSTR, u32, i32, i32, u32, => HANDLE
+	LoadMenuW, HANDLE, PCSTR, => HANDLE
+	LoadStringW, HANDLE, u32, PSTR, i32, => i32
+	LockSetForegroundWindow, u32, => BOOL
+	LogicalToPhysicalPoint, HANDLE, PVOID, => BOOL
+	MapDialogRect, HANDLE, PVOID, => BOOL
+	MessageBoxW, HANDLE, PCSTR, PCSTR, u32, => i32
+	MoveWindow, HANDLE, i32, i32, i32, i32, BOOL, => BOOL
+	OpenClipboard, HANDLE, => BOOL
+	PeekMessageW, PVOID, HANDLE, u32, u32, u32, => BOOL
+	PostMessageW, HANDLE, u32, usize, isize, => BOOL
+	PostQuitMessage, i32, => ()
+	RealChildWindowFromPoint, HANDLE, i32, i32, => HANDLE
+	RedrawWindow, HANDLE, PCVOID, HANDLE, u32, => BOOL
+	RegisterClassExW, PCVOID, => u16
+	ReleaseCapture, => BOOL
+	ReleaseDC, HANDLE, HANDLE, => i32
+	RemoveMenu, HANDLE, u32, u32, => BOOL
+	ScreenToClient, HANDLE, PVOID, => BOOL
+	SendMessageW, HANDLE, u32, usize, isize, => isize
+	SetCapture, HANDLE, => HANDLE
+	SetCaretBlinkTime, u32, => BOOL
+	SetCaretPos, i32, i32, => BOOL
+	SetClipboardData, u32, HANDLE, => HANDLE
+	SetCursorPos, i32, i32, => BOOL
+	SetFocus, HANDLE, => HANDLE
+	SetForegroundWindow, HANDLE, => BOOL
+	SetMenu, HANDLE, HANDLE, => BOOL
+	SetMenuDefaultItem, HANDLE, u32, u32, => BOOL
+	SetMenuInfo, HANDLE, PCVOID, => BOOL
+	SetMenuItemBitmaps, HANDLE, u32, u32, HANDLE, HANDLE, => BOOL
+	SetMenuItemInfoW, HANDLE, u32, BOOL, PCVOID, => BOOL
+	SetParent, HANDLE, HANDLE, => HANDLE
+	SetProcessDPIAware, => BOOL
+	SetScrollInfo, HANDLE, i32, PCVOID, BOOL, => i32
+	SetScrollPos, HANDLE, i32, i32, BOOL, => i32
+	SetScrollRange, HANDLE, i32, i32, i32, BOOL, => BOOL
+	SetSystemCursor, HANDLE, u32, => BOOL
+	SetTimer, HANDLE, usize, u32, PFUNC, => usize
+	SetWindowDisplayAffinity, HANDLE, u32, => BOOL
+	SetWindowLongPtrW, HANDLE, i32, isize, => isize
+	SetWindowPlacement, HANDLE, PCVOID, => BOOL
+	SetWindowPos, HANDLE, HANDLE, i32, i32, i32, i32, u32, => BOOL
+	SetWindowRgn, HANDLE, HANDLE, BOOL, => i32
+	SetWindowsHookExW, i32, PFUNC, HANDLE, u32, => HANDLE
+	SetWindowTextW, HANDLE, PCSTR, => BOOL
+	ShowCaret, HANDLE, => BOOL
+	ShowCursor, BOOL, => i32
+	ShowWindow, HANDLE, i32, => BOOL
+	SoundSentry, => BOOL
+	SystemParametersInfoW, u32, u32, PVOID, u32, => BOOL
+	TrackMouseEvent, PVOID, => BOOL
+	TrackPopupMenu, HANDLE, u32, i32, i32, i32, HANDLE, PCVOID, => BOOL
+	TranslateAcceleratorW, HANDLE, HANDLE, PVOID, => i32
+	TranslateMessage, PCVOID, => BOOL
+	UnhookWindowsHookEx, HANDLE, => BOOL
+	UnregisterClassW, PCSTR, HANDLE, => BOOL
+	UpdateWindow, HANDLE, => BOOL
+	ValidateRect, HANDLE, PCVOID, => BOOL
+	ValidateRgn, HANDLE, HANDLE, => BOOL
+	WaitMessage, => BOOL
+	WindowFromPhysicalPoint, i32, i32, => HANDLE
+	WindowFromPoint, i32, i32, => HANDLE
+	WinHelpW, HANDLE, PCSTR, u32, usize, => BOOL
 }

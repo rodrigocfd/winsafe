@@ -2,8 +2,7 @@
 
 use crate::ffi::{BOOL, PVOID};
 
-#[link(name = "comdlg32")]
-extern "system" {
-	pub fn ChooseColorW(_: PVOID) -> BOOL;
-	pub fn CommDlgExtendedError() -> u32;
+extern_sys! { "comdlg32",
+	ChooseColorW, PVOID, => BOOL
+	CommDlgExtendedError, => u32
 }

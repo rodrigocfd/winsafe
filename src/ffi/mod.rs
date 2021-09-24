@@ -3,6 +3,9 @@
 // The aliases below are simplified versions of Win32 types.
 // They are supposed to be used only as syntactic sugar in the FFI calls.
 
+#[macro_use]
+mod macros;
+
 pub(crate) type BOOL = i32;
 pub(crate) type HANDLE = *mut std::ffi::c_void;
 pub(crate) type HRESULT = i32;
