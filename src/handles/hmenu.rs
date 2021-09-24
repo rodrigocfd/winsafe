@@ -42,21 +42,7 @@ impl HMENU {
 	///
 	/// # Examples
 	///
-	/// Adding a new menu entry, with its command ID:
-	///
-	/// ```rust,ignore
-	/// use winsafe::{HMENU, MenuEnum};
-	///
-	/// let my_hmenu: HMENU; // initialized somewhere
-	///
-	/// const ID_FILE_OPEN: i32 = 2001;
-	///
-	/// my_hmenu.AppendMenuEnum(
-	///    &MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
-	/// )?;
-	/// ```
-	///
-	/// Adding multiple entries at once:
+	/// Adding multiple entries at once, with their command IDs:
 	///
 	/// ```rust,ignore
 	/// use winsafe::{HMENU, MenuEnum};
@@ -67,32 +53,35 @@ impl HMENU {
 	/// const ID_FILE_SAVE: i32 = 2002;
 	/// const ID_FILE_EXIT: i32 = 2003;
 	///
-	/// [
+	/// my_hmenu.AppendMenuEnum(&[
 	///     MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
 	///     MenuEnum::Entry(ID_FILE_OPEN, "&Save"),
 	///     MenuEnum::Separator,
 	///     MenuEnum::Entry(ID_FILE_EXIT, "E&xit"),
-	/// ].iter()
-	///     .for_each(|e| file_menu.AppendMenuEnum(e)?);
+	/// ])?;
 	/// ```
-	pub fn AppendMenuEnum(self, item: &MenuEnum) -> WinResult<()> {
-		match item {
-			MenuEnum::Entry(cmd_id, text) => self.AppendMenu(
-				co::MF::STRING,
-				IdMenu::Id(*cmd_id),
-				BmpPtrStr::from_str(*text),
-			),
-			MenuEnum::Separator => self.AppendMenu(
-				co::MF::SEPARATOR,
-				IdMenu::None,
-				BmpPtrStr::None,
-			),
-			MenuEnum::Submenu(hmenu, text) => self.AppendMenu(
-				co::MF::POPUP,
-				IdMenu::Menu(*hmenu),
-				BmpPtrStr::from_str(*text),
-			),
-		}
+	pub fn AppendMenuEnum(self, items: &[MenuEnum]) -> WinResult<()> {
+		items.iter().map(|item| {
+			match item {
+				MenuEnum::Entry(cmd_id, text) => self.AppendMenu(
+					co::MF::STRING,
+					IdMenu::Id(*cmd_id),
+					BmpPtrStr::from_str(*text),
+				),
+				MenuEnum::Separator => self.AppendMenu(
+					co::MF::SEPARATOR,
+					IdMenu::None,
+					BmpPtrStr::None,
+				),
+				MenuEnum::Submenu(hmenu, text) => self.AppendMenu(
+					co::MF::POPUP,
+					IdMenu::Menu(*hmenu),
+					BmpPtrStr::from_str(*text),
+				),
+			}
+		}).collect::<Result<Vec<_>, _>>()?;
+
+		Ok(())
 	}
 
 	/// [`CheckMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem)
@@ -224,7 +213,7 @@ impl HMENU {
 	///         IdPos::Id(*id),
 	///         false,
 	///     ))
-	///     .collect::<Result<Vec<co::MF>, _>>()?;
+	///     .collect::<Result<Vec<_>, _>>()?;
 	/// ```
 	pub fn EnableMenuItem(self,
 		id_or_pos: IdPos, enable: bool) -> WinResult<co::MF>
@@ -318,7 +307,6 @@ impl HMENU {
 	pub fn GetMenuString(self, id_or_pos: IdPos) -> WinResult<String> {
 		const BLOCK: usize = 64; // arbitrary
 		let mut buf_sz = BLOCK;
-
 		let mut buf = WString::default();
 
 		loop {
