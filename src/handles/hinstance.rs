@@ -83,13 +83,13 @@ impl HINSTANCE {
 					self.ptr,
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
-					Self::EnumResLangProc::<F> as _,
+					Self::enum_resource_languages_proc::<F> as _,
 					&func as *const _ as _,
 				)
 			},
 		)
 	}
-	extern "system" fn EnumResLangProc<F>(
+	extern "system" fn enum_resource_languages_proc<F>(
 		_: HINSTANCE, _: *const u16, _: *const u16,
 		language_id: u16, lparam: isize) -> BOOL
 		where F: Fn(LANGID) -> bool
@@ -109,13 +109,13 @@ impl HINSTANCE {
 				kernel32::EnumResourceNamesW(
 					self.ptr,
 					resource_type.as_ptr(),
-					Self::EnumResNameProc::<F> as _,
+					Self::enum_resource_names_proc::<F> as _,
 					&func as *const _ as _,
 				)
 			},
 		)
 	}
-	extern "system" fn EnumResNameProc<F>(
+	extern "system" fn enum_resource_names_proc<F>(
 		_: HINSTANCE, _: *const u16, resource_id: *mut u16, lparam: isize) -> BOOL
 		where F: Fn(IdStr) -> bool
 	{
@@ -132,13 +132,13 @@ impl HINSTANCE {
 			unsafe {
 				kernel32::EnumResourceTypesW(
 					self.ptr,
-					Self::EnumResTypeProc::<F> as _,
+					Self::enum_resource_types_proc::<F> as _,
 					&func as *const _ as _,
 				)
 			},
 		)
 	}
-	extern "system" fn EnumResTypeProc<F>(
+	extern "system" fn enum_resource_types_proc<F>(
 		_: HINSTANCE, resource_type: *const u16, lparam: isize) -> BOOL
 		where F: Fn(RtStr) -> bool
 	{

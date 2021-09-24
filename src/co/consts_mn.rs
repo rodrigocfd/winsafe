@@ -352,6 +352,17 @@ pub_struct_const! { MNS, u32,
 	CHECKORBMP, 0x0400_0000
 }
 
+pub_struct_const! { MONITOR, u32,
+	/// [`HMONITOR::MonitorFromPoint`](crate::HMONITOR::MonitorFromPoint),
+	/// [`HMONITOR::MonitorFromRect`](crate::HMONITOR::MonitorFromRect),
+	/// [`HWND::MonitorFromWindow`](crate::HWND::MonitorFromWindow) flags
+	/// (`u32`).
+	=>
+	DEFAULTTONULL, 0x0000_0000
+	DEFAULTTOPRIMARY, 0x0000_0001
+	DEFAULTTONEAREST, 0x0000_0002
+}
+
 pub_struct_const! { MSGF, u8,
 	/// [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason (`u8`).
 	=>

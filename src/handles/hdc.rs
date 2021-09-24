@@ -2,9 +2,9 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::ffi::{gdi32, msimg32};
+use crate::ffi::{BOOL, gdi32, msimg32, user32};
 use crate::funcs::GetLastError;
-use crate::handles::{HBITMAP, HBRUSH, HFONT, HPEN, HRGN};
+use crate::handles::{HBITMAP, HBRUSH, HFONT, HMONITOR, HPEN, HRGN};
 use crate::privs::{bool_to_winresult, CLR_INVALID, GDI_ERROR};
 use crate::structs::{COLORREF, POINT, RECT, SIZE, TEXTMETRIC};
 use crate::various::WString;
@@ -120,6 +120,44 @@ impl HDC {
 	/// method.
 	pub fn EndPath(self) -> WinResult<()> {
 		bool_to_winresult(unsafe { gdi32::EndPath(self.ptr) })
+	}
+
+	/// [`EnumDisplayMonitors`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{HDC, HMONITOR, RECT};
+	///
+	/// let my_hdc: HDC; // initialized somewhere
+	///
+	/// my_hdc.EnumDisplayMonitors(|hmon: HMONITOR, hdc: HDC, rc: &RECT| -> bool {
+	///     println!("HMONITOR: {}, ", hmon);
+	///     true
+	/// })?;
+	/// ```
+	pub fn EnumDisplayMonitors<F>(self,
+		rc_clip: Option<RECT>, func: F) -> WinResult<()>
+		where F: Fn(HMONITOR, HDC, &RECT) -> bool
+	{
+		bool_to_winresult(
+			unsafe {
+				user32::EnumDisplayMonitors(
+					self.ptr,
+					rc_clip.map_or(std::ptr::null_mut(), |rc| &rc as *const _ as _),
+					Self::enum_display_monitors_proc::<F> as _,
+					&func as *const _ as _,
+				)
+			},
+		)
+	}
+	extern "system" fn enum_display_monitors_proc<F>(
+		hmon: HMONITOR, hdc: HDC, rc: *const RECT, lparam: isize) -> BOOL
+		where F: Fn(HMONITOR, HDC, &RECT) -> bool
+	{
+		let func = unsafe { &*(lparam as *const F) };
+		func(hmon, hdc, unsafe { &*rc }) as _
 	}
 
 	/// [`FillPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillpath)

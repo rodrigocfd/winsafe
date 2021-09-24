@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+use crate::aliases::WinResult;
+
 pub_struct_handle_closeable! {
 	/// Handle to an
 	/// [event](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).

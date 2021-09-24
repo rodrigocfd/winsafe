@@ -97,7 +97,7 @@ macro_rules! pub_struct_handle_closeable {
 		impl $name {
 			/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 			/// method.
-			pub fn CloseHandle(self) -> crate::aliases::WinResult<()> {
+			pub fn CloseHandle(self) -> WinResult<()> {
 				crate::privs::bool_to_winresult(
 					unsafe { crate::ffi::kernel32::CloseHandle(self.ptr) },
 				)
@@ -122,7 +122,7 @@ macro_rules! pub_struct_handle_gdi {
 			/// method.
 			///
 			/// This method is common to all GDI handle types.
-			pub fn DeleteObject(self) -> crate::aliases::WinResult<()> {
+			pub fn DeleteObject(self) -> WinResult<()> {
 				match unsafe { crate::ffi::gdi32::DeleteObject(self.ptr) } {
 					0 => match crate::funcs::GetLastError() {
 						crate::co::ERROR::SUCCESS => Ok(()), // not really an error

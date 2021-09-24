@@ -6,6 +6,7 @@ extern_sys! { "user32",
 	AdjustWindowRectEx, PVOID, u32, BOOL, u32, => BOOL
 	AppendMenuW, HANDLE, u32, usize, PCSTR, => BOOL
 	ArrangeIconicWindows, HANDLE, => u32
+	AttachThreadInput, u32, u32, BOOL, => BOOL
 	BeginDeferWindowPos, i32, => HANDLE
 	BeginPaint, HANDLE, PVOID, => HANDLE
 	BringWindowToTop, HANDLE, => BOOL
@@ -43,6 +44,7 @@ extern_sys! { "user32",
 	EndMenu, => BOOL
 	EndPaint, HANDLE, PCVOID, => BOOL
 	EnumChildWindows, HANDLE, PFUNC, isize, => BOOL
+	EnumDisplayMonitors, HANDLE, PCVOID, PFUNC, isize, => BOOL
 	EnumDisplaySettingsExW, PCSTR, u32, PVOID, u32, => BOOL
 	FindWindowExW, HANDLE, HANDLE, PCSTR, PCSTR, => HANDLE
 	FindWindowW, PCSTR, PCSTR, => HANDLE
@@ -89,6 +91,7 @@ extern_sys! { "user32",
 	GetSysColor, i32, => u32
 	GetSystemMenu, HANDLE, BOOL, => HANDLE
 	GetSystemMetrics, i32, => i32
+	GetTopWindow, HANDLE, => HANDLE
 	GetUpdateRgn, HANDLE, HANDLE, BOOL, => i32
 	GetWindow, HANDLE, u32, => HANDLE
 	GetWindowDC, HANDLE, => HANDLE
@@ -128,6 +131,9 @@ extern_sys! { "user32",
 	LogicalToPhysicalPoint, HANDLE, PVOID, => BOOL
 	MapDialogRect, HANDLE, PVOID, => BOOL
 	MessageBoxW, HANDLE, PCSTR, PCSTR, u32, => i32
+	MonitorFromPoint, i32, i32, u32, => HANDLE
+	MonitorFromRect, PCVOID, u32, => HANDLE
+	MonitorFromWindow, HANDLE, u32, => HANDLE
 	MoveWindow, HANDLE, i32, i32, i32, i32, BOOL, => BOOL
 	OpenClipboard, HANDLE, => BOOL
 	PeekMessageW, PVOID, HANDLE, u32, u32, u32, => BOOL

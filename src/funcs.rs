@@ -71,6 +71,19 @@ pub fn AdjustWindowRectEx(
 	)
 }
 
+
+/// [`AttachThreadInput`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-attachthreadinput)
+/// function.
+pub fn AttachThreadInput(
+	attach_id: u32, attach_to_id: u32, do_attach: bool) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			user32::AttachThreadInput(attach_id, attach_to_id, do_attach as _)
+		},
+	)
+}
+
 /// [`ChangeDisplaySettings`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changedisplaysettingsw)
 /// function.
 pub fn ChangeDisplaySettings(

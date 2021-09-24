@@ -5,7 +5,7 @@ use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos, IdTdiconStr};
 use crate::ffi::{BOOL, comctl32, shell32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
-use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HRGN, HTHEME};
+use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HMONITOR, HRGN, HTHEME};
 use crate::msg::MsgSend;
 use crate::privs::{bool_to_winresult, hr_to_winresult};
 use crate::structs::{
@@ -250,12 +250,13 @@ impl HWND {
 		unsafe {
 			user32::EnumChildWindows(
 				self.ptr,
-				Self::EnumChildProc::<F> as _, // https://redd.it/npehj9
+				Self::enum_child_windows_proc::<F> as _, // https://redd.it/npehj9
 				&func as *const _ as _,
 			);
 		}
 	}
-	extern "system" fn EnumChildProc<F>(hwnd: HWND, lparam: isize) -> BOOL
+	extern "system" fn enum_child_windows_proc<F>(
+		hwnd: HWND, lparam: isize) -> BOOL
 		where F: Fn(HWND) -> bool,
 	{
 		let func = unsafe { &*(lparam as *const F) };
@@ -526,6 +527,18 @@ impl HWND {
 	pub fn GetSystemMenu(self, revert: bool) -> Option<HMENU> {
 		unsafe { user32::GetSystemMenu(self.ptr, revert as _).as_mut() }
 			.map(|ptr| HMENU { ptr })
+	}
+
+	/// [`GetTopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-gettopwindow)
+	/// method.
+	pub fn GetTopWindow(self) -> WinResult<Option<HWND>> {
+		match unsafe { user32::GetTopWindow(self.ptr).as_mut() } {
+			Some(h) => Ok(Some(Self { ptr: h })),
+			None => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(None), // no child window
+				err => Err(err),
+			},
+		}
 	}
 
 	/// [`GetUpdateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdatergn)
@@ -831,6 +844,14 @@ impl HWND {
 		} {
 			0 => Err(GetLastError()),
 			ret => Ok(co::DLGID(ret as _)),
+		}
+	}
+
+	/// [`MonitorFromWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromwindow)
+	/// method.
+	pub fn MonitorFromWindow(self, flags: co::MONITOR) -> HMONITOR {
+		HMONITOR {
+			ptr: unsafe { user32::MonitorFromWindow(self.ptr, flags.0) },
 		}
 	}
 
