@@ -93,6 +93,7 @@ pub fn ChangeDisplaySettings(
 	let ret = unsafe {
 		user32::ChangeDisplaySettingsW(dev_mode as *mut _ as _, flags.0)
 	};
+
 	if ret < 0 {
 		Err(co::DISP_CHANGE(ret))
 	} else {
@@ -382,6 +383,7 @@ pub fn GetCommandLine() -> String {
 pub fn GetComputerName() -> WinResult<String> {
 	let mut buf = WString::new_alloc_buffer(MAX_COMPUTERNAME_LENGTH + 1);
 	let mut sz = buf.buffer_size() as u32;
+
 	bool_to_winresult(
 		unsafe { kernel32::GetComputerNameW(buf.as_mut_ptr(), &mut sz) },
 	).map(|_| buf.to_string())
@@ -743,6 +745,7 @@ pub fn GetTempPath() -> WinResult<String> {
 pub fn GetUserName() -> WinResult<String> {
 	let mut buf = WString::new_alloc_buffer(UNLEN + 1);
 	let mut sz = buf.buffer_size() as u32;
+
 	match unsafe { advapi32::GetUserNameW(buf.as_mut_ptr(), &mut sz) } {
 		0 => Err(GetLastError()),
 		_ => Ok(buf.to_string()),
@@ -1098,7 +1101,7 @@ pub fn ReleaseCapture() -> WinResult<()> {
 	bool_to_winresult(unsafe { user32::ReleaseCapture() })
 }
 
-/// [`ReplaceFileW`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
+/// [`ReplaceFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
 pub fn ReplaceFile(
 	replaced: &str, replacement: &str,
@@ -1422,6 +1425,7 @@ pub unsafe fn VarQueryValue<'a, T>(
 {
 	let mut lp_lp_buffer = std::ptr::null();
 	let mut pu_len = 0;
+
 	bool_to_winresult(
 		version::VerQueryValueW(
 			block.as_ptr() as _,

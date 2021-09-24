@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-use crate::co::{CCM, FF, WM};
+use crate::co::{ACCESS_RIGHTS, CCM, FF, STANDARD_RIGHTS, WM};
 
 pub_struct_const! { OBJID, u32,
 	/// [`HWND::GetMenuBarInfo`](crate::HWND::GetMenuBarInfo) `idObject` (`i32`).
@@ -222,6 +222,42 @@ pub_struct_const! { PM, u32,
 	QS_POSTMESSAGE, (QS::POSTMESSAGE.0 | QS::HOTKEY.0 | QS::TIMER.0) << 16
 	QS_PAINT, QS::PAINT.0 << 16
 	QS_SENDMESSAGE, QS::SENDMESSAGE.0 << 16
+}
+
+pub_struct_const! { PROCESS, u32,
+	/// Process
+	/// [security and access rights](https://docs.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
+	/// (`u32`).
+	=>
+	DELETE, ACCESS_RIGHTS::DELETE.0
+	READ_CONTROL, ACCESS_RIGHTS::READ_CONTROL.0
+	SYNCHRONIZE, ACCESS_RIGHTS::SYNCHRONIZE.0
+	WRITE_DAC, ACCESS_RIGHTS::WRITE_DAC.0
+	WRITE_OWNER, ACCESS_RIGHTS::WRITE_OWNER.0
+
+	ALL_ACCESS, STANDARD_RIGHTS::REQUIRED.0 | ACCESS_RIGHTS::SYNCHRONIZE.0 | 0xffff
+	CREATE_PROCESS, 0x0080
+	CREATE_THREAD, 0x0002
+	DUP_HANDLE, 0x0040
+	QUERY_INFORMATION, 0x0400
+	QUERY_LIMITED_INFORMATION, 0x1000
+	SET_INFORMATION, 0x0200
+	SET_QUOTA, 0x0100
+	SUSPEND_RESUME, 0x0800
+	TERMINATE, 0x0001
+	WM_OPERATION, 0x0008
+	VM_READ, 0x0010
+	VM_WRITE, 0x0020
+}
+
+pub_struct_const! { PROCESS_NAME, u32,
+	/// [`QueryFullProcessImageName`](crate::HPROCESS::QueryFullProcessImageName)
+	/// flags (`u32`).
+	=>
+	/// The name should use the Win32 path format.
+	WIN32, 0
+	/// The name should use the native system path format.
+	NATIVE, 0x0000_0001
 }
 
 pub_struct_const! { PROCESSOR, u32,

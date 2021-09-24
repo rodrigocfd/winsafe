@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, kernel32};
 use crate::funcs::GetLastError;
-use crate::privs::{bool_to_winresult, INFINITE};
+use crate::privs::{bool_to_winresult, INFINITE, MAX_PATH};
 use crate::structs::{
 	FILETIME,
 	PROCESS_INFORMATION,
@@ -42,6 +42,7 @@ impl HPROCESS {
 	{
 		let mut buf_cmd_line = command_line.map_or(WString::default(), |lp| WString::from_str(lp));
 		let mut pi = PROCESS_INFORMATION::default();
+
 		bool_to_winresult(
 			unsafe {
 				kernel32::CreateProcessW(
@@ -147,6 +148,45 @@ impl HPROCESS {
 			0 => Err(GetLastError()),
 			_ => Ok(wow64 != 0),
 		}
+	}
+
+	/// [`OpenProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)
+	/// static method.
+	///
+	/// **Note:** Must be paired with an
+	/// [`HPROCESS::CloseHandle`](crate::HPROCESS::CloseHandle) call.
+	pub fn OpenProcess(
+		desired_access: co::PROCESS,
+		inherit_handle: bool, process_id: u32) -> WinResult<HPROCESS>
+	{
+		unsafe {
+			kernel32::OpenProcess(
+				desired_access.0,
+				inherit_handle as _,
+				process_id,
+			).as_mut()
+		}.map(|ptr| Self { ptr })
+			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`QueryFullProcessImageName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
+	/// method.
+	pub fn QueryFullProcessImageName(self,
+		flags: co::PROCESS_NAME) -> WinResult<String>
+	{
+		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+		let mut sz = buf.buffer_size() as u32;
+
+		bool_to_winresult(
+			unsafe {
+				kernel32::QueryFullProcessImageNameW(
+					self.ptr,
+					flags.0,
+					buf.as_mut_ptr(),
+					&mut sz,
+				)
+			},
+		).map(|_| buf.to_string())
 	}
 
 	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)

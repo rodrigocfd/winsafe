@@ -354,6 +354,22 @@ impl HWND {
 		unsafe { user32::GetClassLongPtrW(self.ptr, index.0) }
 	}
 
+	/// [`GetClassName`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassnamew)
+	/// method.
+	pub fn GetClassName(self) -> WinResult<String> {
+		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
+		match unsafe {
+			user32::GetClassNameW(
+				self.ptr,
+				buf.as_mut_ptr(),
+				buf.buffer_size() as _,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(buf.to_string()),
+		}
+	}
+
 	/// [`GetClientRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect)
 	/// method.
 	pub fn GetClientRect(self) -> WinResult<RECT> {
@@ -942,6 +958,22 @@ impl HWND {
 				pt_parent_client_coords.y,
 			).as_mut()
 		}.map(|ptr| Self { ptr })
+	}
+
+	/// [`RealGetWindowClassW`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realgetwindowclassw)
+	/// method.
+	pub fn RealGetWindowClass(self) -> WinResult<String> {
+		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
+		match unsafe {
+			user32::RealGetWindowClassW(
+				self.ptr,
+				buf.as_mut_ptr(),
+				buf.buffer_size() as _,
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(buf.to_string()),
+		}
 	}
 
 	/// [`RedrawWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow)

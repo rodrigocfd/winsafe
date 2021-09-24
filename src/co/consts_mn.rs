@@ -363,6 +363,14 @@ pub_struct_const! { MONITOR, u32,
 	DEFAULTTONEAREST, 0x0000_0002
 }
 
+pub_struct_const! { MONITORINFOF, u32,
+	/// [`MONITORINFO`](crate::MONITORINFO) `dwFlags` (`u32`).
+	=>
+	/// None of the actual values (zero).
+	NoValue, 0
+	PRIMARY, 0x0000_0001
+}
+
 pub_struct_const! { MSGF, u8,
 	/// [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason (`u8`).
 	=>

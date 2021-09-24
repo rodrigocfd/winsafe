@@ -663,6 +663,19 @@ pub struct MINMAXINFO {
 	pub ptMaxTrackSize: POINT,
 }
 
+/// [`MONITORINFO`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfo)
+/// struct.
+#[repr(C)]
+#[derive(Clone)]
+pub struct MONITORINFO {
+	cbSize: u32,
+	pub rcMonitor: RECT,
+	pub rcWork: RECT,
+	pub dwFlags: co::MONITORINFOF,
+}
+
+impl_default_with_size!(MONITORINFO, cbSize);
+
 /// [`MSG`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
 /// struct.
 #[repr(C)]

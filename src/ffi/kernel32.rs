@@ -90,9 +90,11 @@ extern_sys! { "kernel32",
 	MoveFileW, PCSTR, PCSTR, => BOOL
 	MulDiv, i32, i32, i32, => i32
 	MultiByteToWideChar, u32, u32, *const u8, i32, PSTR, i32, => i32
+	OpenProcess, u32, BOOL, u32, => HANDLE
 	OutputDebugStringW, PCSTR, => ()
 	Process32FirstW, HANDLE, PVOID, => BOOL
 	Process32NextW, HANDLE, PVOID, => BOOL
+	QueryFullProcessImageNameW, HANDLE, u32, PSTR, *mut u32, => BOOL
 	QueryPerformanceCounter, *mut i64, => BOOL
 	QueryPerformanceFrequency, *mut i64, => BOOL
 	ReadFile, HANDLE, PVOID, u32, *mut u32, PVOID, => BOOL

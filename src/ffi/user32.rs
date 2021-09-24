@@ -55,6 +55,7 @@ extern_sys! { "user32",
 	GetCapture, => HANDLE
 	GetClassInfoExW, HANDLE, PCSTR, PVOID, => BOOL
 	GetClassLongPtrW, HANDLE, i32, => usize
+	GetClassNameW, HANDLE, PSTR, i32, => i32
 	GetClientRect, HANDLE, PVOID, => BOOL
 	GetClipCursor, PVOID, => BOOL
 	GetCursorPos, PVOID, => BOOL
@@ -80,6 +81,7 @@ extern_sys! { "user32",
 	GetMenuStringW, HANDLE, u32, PSTR, i32, u32, => i32
 	GetMessagePos, => u32
 	GetMessageW, PVOID, HANDLE, u32, u32, => BOOL
+	GetMonitorInfoW, HANDLE, PVOID, => BOOL
 	GetNextDlgGroupItem, HANDLE, HANDLE, BOOL, => HANDLE
 	GetNextDlgTabItem, HANDLE, HANDLE, BOOL, => HANDLE
 	GetParent, HANDLE, => HANDLE
@@ -140,6 +142,7 @@ extern_sys! { "user32",
 	PostMessageW, HANDLE, u32, usize, isize, => BOOL
 	PostQuitMessage, i32, => ()
 	RealChildWindowFromPoint, HANDLE, i32, i32, => HANDLE
+	RealGetWindowClassW, HANDLE, PSTR, i32, => u32
 	RedrawWindow, HANDLE, PCVOID, HANDLE, u32, => BOOL
 	RegisterClassExW, PCVOID, => u16
 	ReleaseCapture, => BOOL
