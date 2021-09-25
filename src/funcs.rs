@@ -71,6 +71,11 @@ pub fn AdjustWindowRectEx(
 	)
 }
 
+/// [`AnyPopup`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-anypopup)
+/// function.
+pub fn AnyPopup() -> bool {
+	unsafe { user32::AnyPopup() != 0 }
+}
 
 /// [`AttachThreadInput`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-attachthreadinput)
 /// function.
@@ -290,6 +295,38 @@ pub fn EnumDisplaySettingsEx(
 			)
 		},
 	)
+}
+
+/// [`EnumWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumwindows)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{EnumWindows, HWND};
+///
+/// EnumWindows(|hwnd: HWND| -> bool {
+///     println!("HWND: {}", hwnd);
+///     true
+/// })?;
+/// ```
+pub fn EnumWindows<F>(func: F) -> WinResult<()>
+	where F: Fn(HWND) -> bool
+{
+	bool_to_winresult(
+		unsafe {
+			user32::EnumWindows(
+				enum_windows_proc::<F> as _,
+				&func as *const _ as _,
+			)
+		},
+	)
+}
+extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
+	where F: Fn(HWND) -> bool
+{
+	let func = unsafe { &*(lparam as *const F) };
+	func(hwnd) as _
 }
 
 /// [`ExpandEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw)

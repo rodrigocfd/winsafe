@@ -435,6 +435,13 @@ impl HWND {
 			.map(|ptr| Self { ptr })
 	}
 
+	/// [`GetLastActivePopup`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastactivepopup)
+	/// method.
+	pub fn GetLastActivePopup(self) -> Option<HWND> {
+		unsafe { user32::GetLastActivePopup(self.ptr).as_mut() }
+			.map(|ptr| Self { ptr })
+	}
+
 	/// [`GetMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenu)
 	/// method.
 	pub fn GetMenu(self) -> Option<HMENU> {

@@ -4,6 +4,7 @@ use crate::ffi::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 extern_sys! { "user32",
 	AdjustWindowRectEx, PVOID, u32, BOOL, u32, => BOOL
+	AnyPopup, => BOOL
 	AppendMenuW, HANDLE, u32, usize, PCSTR, => BOOL
 	ArrangeIconicWindows, HANDLE, => u32
 	AttachThreadInput, u32, u32, BOOL, => BOOL
@@ -44,6 +45,7 @@ extern_sys! { "user32",
 	EndMenu, => BOOL
 	EndPaint, HANDLE, PCVOID, => BOOL
 	EnumChildWindows, HANDLE, PFUNC, isize, => BOOL
+	EnumWindows, PFUNC, isize, => BOOL
 	EnumDisplayMonitors, HANDLE, PCVOID, PFUNC, isize, => BOOL
 	EnumDisplaySettingsExW, PCSTR, u32, PVOID, u32, => BOOL
 	FindWindowExW, HANDLE, HANDLE, PCSTR, PCSTR, => HANDLE
@@ -68,6 +70,7 @@ extern_sys! { "user32",
 	GetFocus, => HANDLE
 	GetForegroundWindow, => HANDLE
 	GetGUIThreadInfo, u32, PVOID, => BOOL
+	GetLastActivePopup, HANDLE, => HANDLE
 	GetMenu, HANDLE, => HANDLE
 	GetMenuBarInfo, HANDLE, i32, i32, PVOID, => BOOL
 	GetMenuCheckMarkDimensions, => i32
