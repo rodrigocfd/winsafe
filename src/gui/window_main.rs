@@ -41,7 +41,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
-/// use winsafe::{gui, msg, WinResult};
+/// use winsafe::{gui, msg, BoxResult};
 ///
 /// fn main() {
 ///     let my_main = MyMain::new();
@@ -71,7 +71,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///     fn events(&self) {
 ///         self.wnd.on().wm_l_button_down({
 ///             let wnd = self.wnd.clone(); // clone to pass it to the closure
-///             move |p: msg::wm::LButtonDown| {
+///             move |p: msg::wm::LButtonDown| -> BoxResult<()> {
 ///                 let txt = &format!("Coords {} x {}", p.coords.x, p.coords.y);
 ///                 wnd.hwnd().SetWindowText(txt)?;
 ///                 Ok(())
@@ -92,7 +92,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
-/// use winsafe::{gui, WinResult};
+/// use winsafe::gui;
 ///
 /// const ID_DLG_MAIN: i32 = 101; // in our .res file, this is the dialog ID
 ///

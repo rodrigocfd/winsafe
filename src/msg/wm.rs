@@ -370,6 +370,42 @@ pub_struct_msg_empty_handleable! { Destroy, co::WM::DESTROY,
 	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 }
 
+/// [`WM_DISPLAYCHANGE`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-displaychange)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct DisplayChange {
+	pub depth_bpp: u32,
+	pub horz_res: u16,
+	pub vert_res: u16,
+}
+
+impl MsgSend for DisplayChange {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::DISPLAYCHANGE,
+			wparam: self.depth_bpp as _,
+			lparam: MAKEDWORD(self.horz_res, self.vert_res) as _,
+		}
+	}
+}
+
+impl MsgSendRecv for DisplayChange {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			depth_bpp: p.wparam as _,
+			horz_res: LOWORD(p.lparam as _),
+			vert_res: HIWORD(p.lparam as _),
+		}
+	}
+}
+
 /// [`WM_DROPFILES`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 /// message parameters.
 ///
@@ -1611,6 +1647,38 @@ impl MsgSendRecv for SetIcon {
 	}
 }
 
+/// [`WM_SETREDRAW`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-setredraw)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetRedraw {
+	pub can_redraw: bool,
+}
+
+impl MsgSend for SetRedraw {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::SETREDRAW,
+			wparam: self.can_redraw as _,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for SetRedraw {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			can_redraw: p.wparam != 0,
+		}
+	}
+}
+
 /// [`WM_SHOWWINDOW`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
 /// message parameters.
 ///
@@ -1787,6 +1855,10 @@ impl<'a> MsgSendRecv for StyleChanging<'a> {
 			stylestruct: unsafe { &*(p.lparam as *const _) },
 		}
 	}
+}
+
+pub_struct_msg_empty_handleable! { SyncPaint, co::WM::SYNCPAINT,
+	/// [`WM_SYNCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-syncpaint)
 }
 
 pub_struct_msg_char! { SysChar, co::WM::SYSCHAR,

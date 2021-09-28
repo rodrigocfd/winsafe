@@ -100,7 +100,7 @@ impl TreeView {
 				)?;
 
 				if opts.tree_view_ex_style != co::TVS_EX::NoValue {
-					self.toggle_extended_style(true, opts.tree_view_ex_style)?;
+					self.set_extended_style(true, opts.tree_view_ex_style)?;
 				}
 				Ok(())
 			},
@@ -119,9 +119,9 @@ impl TreeView {
 		&self.0.items
 	}
 
-	/// Toggles the given extended list view styles by sending a
+	/// Sets or unsets the given extended list view styles by sending a
 	/// [`tvm::SetExtendedStyle`](crate::msg::tvm::SetExtendedStyle) message.
-	pub fn toggle_extended_style(&self,
+	pub fn set_extended_style(&self,
 		set: bool, ex_style: co::TVS_EX) -> WinResult<()>
 	{
 		self.hwnd().SendMessage(tvm::SetExtendedStyle {

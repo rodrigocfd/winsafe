@@ -11,7 +11,7 @@ use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::{HIMAGELIST, HMENU, HWND};
-use crate::msg::lvm;
+use crate::msg::{lvm, wm};
 use crate::structs::{LVHITTESTINFO, NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 
 /// Native
@@ -123,7 +123,7 @@ impl ListView {
 				)?;
 
 				if opts.list_view_ex_style != co::LVS_EX::NoValue {
-					self.toggle_extended_style(true, opts.list_view_ex_style);
+					self.set_extended_style(true, opts.list_view_ex_style);
 				}
 
 				self.columns().add(&opts.columns)?;
@@ -206,6 +206,16 @@ impl ListView {
 		self.hwnd().SendMessage(lvm::SetView { view })
 	}
 
+	/// Sets or unsets the given extended list view styles by sending an
+	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
+	/// message.
+	pub fn set_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
+		self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
+			mask: ex_style,
+			style: if set { ex_style } else { co::LVS_EX::NoValue },
+		});
+	}
+
 	/// Sets the one of the associated image lists by sending an
 	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList) message.
 	///
@@ -216,14 +226,10 @@ impl ListView {
 		self.hwnd().SendMessage(lvm::SetImageList { kind, himagelist })
 	}
 
-	/// Toggles the given extended list view styles by sending an
-	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
-	/// message.
-	pub fn toggle_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
-		self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
-			mask: ex_style,
-			style: if set { ex_style } else { co::LVS_EX::NoValue },
-		});
+	/// Allows or disallows the redrawing of the control by sending a
+	/// [`wm::SetRedraw`](crate::msg::wm::SetRedraw) message.
+	pub fn set_redraw(&self, can_redraw: bool) {
+		self.hwnd().SendMessage(wm::SetRedraw { can_redraw });
 	}
 
 	fn show_context_menu(&self,

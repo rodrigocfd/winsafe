@@ -489,6 +489,13 @@ impl WindowEvents {
 		/// typing the O key.
 	}
 
+	pub_fn_wm_retbool_param! { wm_delete_item, co::WM::DELETEITEM, wm::DeleteItem,
+		/// [`WM_DELETEITEM`](crate::msg::wm::DeleteItem) message.
+		///
+		/// Sent to the owner of a list box or combo box when the list box or
+		/// combo box is destroyed or when items are removed.
+	}
+
 	pub_fn_wm_ret0! { wm_destroy, co::WM::DESTROY,
 		/// [`WM_DESTROY`](crate::msg::wm::Destroy) message.
 		///
@@ -513,6 +520,12 @@ impl WindowEvents {
 		///     Ok(())
 		/// });
 		/// ```
+	}
+
+	pub_fn_wm_ret0_param! { wm_display_change, co::WM::DISPLAYCHANGE, wm::DisplayChange,
+		/// [`WM_DISPLAYCHANGE`](crate::msg::wm::DisplayChange) message.
+		///
+		/// Sent to all windows when the display resolution has changed.
 	}
 
 	pub_fn_wm_ret0_param! { wm_drop_files, co::WM::DROPFILES, wm::DropFiles,
@@ -646,7 +659,7 @@ impl WindowEvents {
 	/// [`MN_GETHMENU`](crate::msg::wm::GetHMenu) message.
 	///
 	/// Retrieves the menu handle for the current window.
-	pub fn wm_get_h_menu<F>(&self, func: F)
+	pub fn wm_get_hmenu<F>(&self, func: F)
 		where F: Fn() -> BoxResult<Option<HMENU>> + 'static
 	{
 		self.add_msg(co::WM::MN_GETHMENU,
@@ -1054,6 +1067,13 @@ impl WindowEvents {
 		);
 	}
 
+	pub_fn_wm_ret0_param! { wm_set_redraw, co::WM::SETREDRAW, wm::SetRedraw,
+		/// [`WM_SETRDRAW`](crate::msg::wm::SetRedraw) message.
+		///
+		/// Sent to a window to allow changes in that window to be redrawn, or
+		/// to prevent changes in that window from being redrawn.
+	}
+
 	pub_fn_wm_ret0_param! { wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow,
 		/// [`WM_SHOWWINDOW`](crate::msg::wm::ShowWindow) message.
 		///
@@ -1108,6 +1128,13 @@ impl WindowEvents {
 		/// Sent to a window when the
 		/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function
 		/// is about to change one or more of the window's styles.
+	}
+
+	pub_fn_wm_ret0! { wm_sync_paint, co::WM::SYNCPAINT,
+		/// [`WM_SYNCPAINT`](crate::msg::wm::SyncPaint) message.
+		///
+		/// Used to synchronize painting while avoiding linking independent GUI
+		/// threads.
 	}
 
 	pub_fn_wm_ret0_param! { wm_sys_char, co::WM::SYSCHAR, wm::SysChar,
