@@ -337,9 +337,11 @@ extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 /// ```rust,ignore
 /// use winsafe::ExpandEnvironmentStrings;
 ///
-/// println("{}", ExpandEnvironmentStrings(
-///     "Os %OS%, home %HOMEPATH%, temp %TEMP%",
+/// let expanded = ExpandEnvironmentStrings(
+///     "Os %OS%, home %HOMEPATH% and temp %TEMP%",
 /// )?;
+///
+/// println!("{}", expanded);
 /// ```
 pub fn ExpandEnvironmentStrings(src: &str) -> WinResult<String> {
 	let wsrc = WString::from_str(src);

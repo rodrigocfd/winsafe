@@ -3,7 +3,7 @@
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, WM, WS};
 
 pub_struct_const! { KEY, u32,
-	/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `access_rights`
+	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `access_rights`
 	/// (`u32`).
 	=>
 	QUERY_VALUE, 0x0001

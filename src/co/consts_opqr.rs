@@ -480,7 +480,7 @@ pub_struct_const! { REG, u32,
 }
 
 pub_struct_const! { REG_OPTION, u32,
-	/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `options` (`u32`).
+	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `options` (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue, 0
@@ -538,7 +538,7 @@ pub_struct_const! { ROP, u32,
 }
 
 pub_struct_const! { RRF, u32,
-	/// [`HKEY::RegGetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
+	/// [`HKEY::GetValue`](crate::HKEY::GetValue) `dwFlags` (`u32`).
 	=>
 	RT_REG_NONE, 0x0000_0001
 	RT_REG_SZ, 0x0000_0002
