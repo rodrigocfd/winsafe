@@ -8,7 +8,7 @@ use crate::funcs::{HIWORD, LOWORD};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
 use crate::privs::{CB_ERR, CB_ERRSPACE};
-use crate::structs::{COMBOBOXINFO, RECT};
+use crate::structs::{COMBOBOXINFO, LANGID, RECT};
 use crate::various::WString;
 
 /// [`CB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-addstring)
@@ -421,6 +421,33 @@ impl MsgSend for GetItemData {
 	}
 }
 
+/// [`CB_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getitemheight)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetItemHeight {
+	pub component: i32,
+}
+
+impl MsgSend for GetItemHeight {
+	type RetType = WinResult<i32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			cy => Ok(cy),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETITEMHEIGHT.into(),
+			wparam: self.component as _,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`CB_GETLBTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtext)
 /// message parameters.
 ///
@@ -436,7 +463,7 @@ impl<'a> MsgSend for GetLbText<'a> {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			nchars => Ok(nchars as _),
+			n => Ok(n as _),
 		}
 	}
 
@@ -463,7 +490,7 @@ impl MsgSend for GetLbTextLen {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			nchars => Ok(nchars as _),
+			n => Ok(n as _),
 		}
 	}
 
@@ -471,6 +498,28 @@ impl MsgSend for GetLbTextLen {
 		WndMsg {
 			msg_id: co::CB::GETLBTEXTLEN.into(),
 			wparam: self.index as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_GETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlocale)
+/// message, which has no parameters.
+///
+/// Return type: `LANGID`.
+pub struct GetLocale {}
+
+impl MsgSend for GetLocale {
+	type RetType = LANGID;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		LANGID(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::GETLOCALE.into(),
+			wparam: 0,
 			lparam: 0,
 		}
 	}
@@ -499,7 +548,7 @@ impl MsgSend for GetMinVisible {
 }
 
 /// [`CB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gettopindex)
-/// message parameters.
+/// message, which has no parameters.
 ///
 /// Return type: `WinResult<u32>`.
 pub struct GetTopIndex {}
@@ -538,7 +587,7 @@ impl MsgSend for InitStorage {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
-			n_items => Ok(n_items as _),
+			n => Ok(n as _),
 		}
 	}
 
@@ -551,8 +600,87 @@ impl MsgSend for InitStorage {
 	}
 }
 
+/// [`CB_LIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-limittext)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct LimitText {
+	pub max_chars: Option<u32>,
+}
+
+impl MsgSend for LimitText {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::LIMITTEXT.into(),
+			wparam: self.max_chars.unwrap_or(0) as _,
+			lparam: 0,
+		}
+	}
+}
+
 pub_struct_msg_empty! { ResetContent, co::CB::RESETCONTENT.into(),
 	/// [`CB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
+}
+
+/// [`CB_SELECTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-selectstring)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct SelectString {
+	pub preceding_index: Option<u32>,
+	pub search_text: WString,
+}
+
+impl MsgSend for SelectString {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETCURSEL.into(),
+			wparam: self.preceding_index.map(|i| i as i32).unwrap_or(-1) as _,
+			lparam: unsafe { self.search_text.as_ptr() } as _,
+		}
+	}
+}
+
+/// [`CB_SETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setcuebanner)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetCueBanner {
+	pub text: WString,
+}
+
+impl MsgSend for SetCueBanner {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			1 => Ok(()),
+			_ => Err(co::ERROR::BAD_ARGUMENTS),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETCUEBANNER.into(),
+			wparam: 0,
+			lparam: unsafe { self.text.as_ptr() } as _,
+		}
+	}
 }
 
 /// [`CB_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setcursel)
@@ -577,6 +705,33 @@ impl MsgSend for SetCurSel {
 				Some(index) => index as i32,
 				None => -1,
 			} as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_SETDROPPEDWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setdroppedwidth)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct SetDroppedWidth {
+	pub min_width: u32,
+}
+
+impl MsgSend for SetDroppedWidth {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			cx => Ok(cx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETDROPPEDWIDTH.into(),
+			wparam: self.min_width as _,
 			lparam: 0,
 		}
 	}
