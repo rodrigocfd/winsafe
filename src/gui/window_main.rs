@@ -88,7 +88,6 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// instead of creating the window programmatically. Note how
 /// `WindowMain::new_dlg` instead of `WindowMain::new`.
 ///
-///
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///

@@ -6,12 +6,55 @@ use crate::various::WString;
 
 /// Retrieves data from an embedded resource, which can be read from an
 /// executable file or a DLL.
+///
+/// # Examples
+///
+/// Reading version information:
+///
+/// ```rust,ignore
+/// use winsafe::{HINSTANCE, ResourceInfo};
+///
+/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
+/// let ri = ResourceInfo::read_from(&exe_name)?;
+///
+/// if let Some(ffi) = ri.fixed_file_info() {
+///     let ver = ffi.dwFileVersion();
+///     println!("Version: {}.{}.{}.{}",
+///         ver[0], ver[1], ver[2], ver[3]);
+/// }
+/// ```
+///
+/// Reading information strings. An embedded resource can have multiple string
+/// blocks, and each block is identified by a language/code page pair. Each
+/// block can have their own information strings:
+///
+/// ```rust,ignore
+/// use winsafe::{HINSTANCE, ResourceInfo};
+///
+/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
+/// let ri = ResourceInfo::read_from(&exe_name)?;
+///
+/// if let Some(langs_cps) = ri.langs_and_code_pages() {
+///     for (lang, code_page) in langs_cps.iter() {
+///
+///         if let Some(product_name) = ri.product_name(*lang, *code_page) {
+///             println!("Product name: {}", product_name);
+///         }
+///
+///         if let Some(copyright) = ri.legal_copyright(*lang, *code_page) {
+///             println!("Copyright: {}", copyright);
+///         }
+///
+///     }
+/// }
+/// ```
 pub struct ResourceInfo {
 	res_buf: Vec<u8>,
 }
 
 macro_rules! pub_fn_string_info {
 	($fun:ident, $name:expr) => {
+		/// Retrieves the version information string, if any.
 		pub fn $fun(&self, lang: LANGID, code_page: co::CP) -> Option<String> {
 			self.generic_string_info(lang, code_page, $name)
 		}
@@ -24,7 +67,7 @@ impl ResourceInfo {
 		Ok(Self { res_buf: GetFileVersionInfo(exe_file)? })
 	}
 
-	/// Returns the version information.
+	/// Returns the version information, if any.
 	pub fn fixed_file_info(&self) -> Option<&VS_FIXEDFILEINFO> {
 		unsafe {
 			VarQueryValue::<VS_FIXEDFILEINFO>(&self.res_buf, "\\")

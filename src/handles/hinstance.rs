@@ -228,7 +228,9 @@ impl HINSTANCE {
 	/// ```rust,ignore
 	/// use winsafe::HINSTANCE;
 	///
-	/// println!("EXE: {}", HINSTANCE::NULL.GetModuleFileName()?);
+	/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
+	///
+	/// println!("EXE: {}", exe_name);
 	/// ```
 	pub fn GetModuleFileName(self) -> WinResult<String> {
 		let mut buf = [0; MAX_PATH];

@@ -1440,6 +1440,9 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 /// **Note:** The returned pointer and size vary according to `lpSubBlock`. If
 /// you set it wrong, you're likely to cause a buffer overrun.
 ///
+/// This function is rather tricky, consider using
+/// [`ResourceInfo`](crate::ResourceInfo).
+///
 /// # Examples
 ///
 /// Reading version information from resource:
@@ -1451,11 +1454,11 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 /// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
 /// let res_buf = GetFileVersionInfo(&exe_name)?;
 ///
-/// let (vsffi, sz_data) = unsafe {
+/// let (pvsf, sz_data) = unsafe {
 ///     VarQueryValue::<VS_FIXEDFILEINFO>(&res_buf, "\\")?
 /// };
 ///
-/// let ver = unsafe { &*vsffi }.dwFileVersion();
+/// let ver = unsafe { &*pvsf }.dwFileVersion();
 /// println!("Version {}.{}.{}.{}",
 ///     ver[0], ver[1], ver[2], ver[3]);
 /// ```
