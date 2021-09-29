@@ -447,11 +447,14 @@ pub_struct_const! { COLOR, i32,
 	BTNHILIGHT, Self::BTNHIGHLIGHT.0
 }
 
-pub_struct_const! { CP, u32,
+pub_struct_const! { CP, u16,
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `code_page`
 	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
-	/// (`u32`).
+	/// (`u16`).
+	///
+	/// Originally these functions receive an `u32` parameter, but these are in
+	/// fact `u16` constants.
 	=>
 	/// The system default Windows ANSI code page.
 	ACP, 0
@@ -463,14 +466,13 @@ pub_struct_const! { CP, u32,
 	THREAD_ACP, 3
 	/// Symbol code page (42).
 	SYMBOL, 42
-	/// UTF-7. Use this value only when forced by a 7-bit transport mechanism.
-	/// Use of UTF-8 is preferred. With this value set, `lpDefaultChar` and
-	/// `lpUsedDefaultChar` must be set to null.
-	UTF7, 65000
-	/// UTF-8. With this value set, `lpDefaultChar` and `lpUsedDefaultChar` must
-	/// be set to null.
-	UTF8, 65001
 
+	/// Unicode UTF-16, little endian byte order (BMP of ISO 10646); available
+	/// only to managed applications.
+	UTF16, 1200
+	/// Unicode UTF-16, big endian byte order; available only to managed
+	/// applications.
+	UNICODE_FFFE, 1201
 	/// ANSI Central European; Central European (Windows).
 	WINDOWS_1250, 1250
 	/// ANSI Cyrillic; Cyrillic (Windows).
@@ -489,6 +491,22 @@ pub_struct_const! { CP, u32,
 	WINDOWS_1257, 1257
 	/// ANSI/OEM Vietnamese; Vietnamese (Windows).
 	WINDOWS_1258, 1258
+	/// Korean (Johab).
+	JOHAB, 1361
+	/// MAC Roman; Western European (Mac).
+	MACINTOSH, 10000
+
+	/// Unicode (UTF-7).
+	///
+	/// Conversion functions: use this value only when forced by a 7-bit
+	/// transport mechanism. Use of UTF-8 is preferred. With this value set,
+	/// `lpDefaultChar` and `lpUsedDefaultChar` must be set to null.
+	UTF7, 65000
+	/// Unicode (UTF-8).
+	///
+	/// Conversion functions: with this value set, `lpDefaultChar` and
+	/// `lpUsedDefaultChar` must be set to null.
+	UTF8, 65001
 }
 
 pub_struct_const! { CREATE, u32,

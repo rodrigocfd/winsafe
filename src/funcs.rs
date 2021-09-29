@@ -547,22 +547,22 @@ pub fn GetFileAttributes(file_name: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 /// [`GetFileVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
 /// function.
 ///
-/// The passed buffer will be automatically allocated with
+/// The buffer will be automatically allocated with
 /// [`GetFileVersionInfoSize`](crate::GetFileVersionInfoSize).
-pub fn GetFileVersionInfo(
-	file_name: &str, data: &mut Vec<u8>) -> WinResult<()>
-{
-	data.resize(GetFileVersionInfoSize(file_name)? as _, 0);
+pub fn GetFileVersionInfo(file_name: &str) -> WinResult<Vec<u8>> {
+	let block_sz = GetFileVersionInfoSize(file_name)?;
+	let mut buf: Vec<u8> = vec![0x00; block_sz as _];
+
 	bool_to_winresult(
 		unsafe {
 			version::GetFileVersionInfoW(
 				WString::from_str(file_name).as_ptr(),
 				0,
-				data.len() as _,
-				data.as_mut_ptr() as _,
+				buf.len() as _,
+				buf.as_mut_ptr() as _,
 			)
 		},
-	)
+	).map(|_| buf)
 }
 
 /// [`GetFileVersionInfoSize`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
@@ -1027,7 +1027,7 @@ pub fn MultiByteToWideChar(
 {
 	match unsafe {
 		kernel32::MultiByteToWideChar(
-			code_page.0,
+			code_page.0 as _,
 			flags.0,
 			multi_byte_str.as_ptr(),
 			multi_byte_str.len() as _,
@@ -1042,7 +1042,7 @@ pub fn MultiByteToWideChar(
 
 			match unsafe {
 				kernel32::MultiByteToWideChar(
-					code_page.0,
+					code_page.0 as _,
 					flags.0,
 					multi_byte_str.as_ptr(),
 					multi_byte_str.len() as _,
@@ -1437,7 +1437,7 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 /// [`VarQueryValue`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
 /// function.
 ///
-/// **Note:** The returned reference type varies according to `lpSubBlock`. If
+/// **Note:** The returned pointer and size vary according to `lpSubBlock`. If
 /// you set it wrong, you're likely to cause a buffer overrun.
 ///
 /// # Examples
@@ -1449,18 +1449,18 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 /// use winsafe::{GetFileVersionInfo, VarQueryValue};
 ///
 /// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
-/// let mut res_buf = Vec::default();
-/// GetFileVersionInfo(&exe_name, &mut res_buf)?;
+/// let res_buf = GetFileVersionInfo(&exe_name)?;
 ///
-/// let vsffi = unsafe {
+/// let (vsffi, sz_data) = unsafe {
 ///     VarQueryValue::<VS_FIXEDFILEINFO>(&res_buf, "\\")?
 /// };
-/// let ver = vsffi.dwFileVersion();
+///
+/// let ver = unsafe { &*vsffi }.dwFileVersion();
 /// println!("Version {}.{}.{}.{}",
 ///     ver[0], ver[1], ver[2], ver[3]);
 /// ```
-pub unsafe fn VarQueryValue<'a, T>(
-	block: &'a [u8], sub_block: &str) -> WinResult<&'a T>
+pub unsafe fn VarQueryValue<T>(
+	block: &[u8], sub_block: &str) -> WinResult<(*const T, u32)>
 {
 	let mut lp_lp_buffer = std::ptr::null();
 	let mut pu_len = 0;
@@ -1472,7 +1472,7 @@ pub unsafe fn VarQueryValue<'a, T>(
 			&mut lp_lp_buffer as *mut _ as _,
 			&mut pu_len,
 		),
-	).map(|_| &*(lp_lp_buffer as *const T))
+	).map(|_| (lp_lp_buffer as *const T, pu_len))
 }
 
 /// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
@@ -1526,7 +1526,7 @@ pub fn WideCharToMultiByte(
 
 	match unsafe {
 		kernel32::WideCharToMultiByte(
-			code_page.0,
+			code_page.0 as _,
 			flags.0,
 			wide_char_str.as_ptr(),
 			wide_char_str.len() as _,
@@ -1544,7 +1544,7 @@ pub fn WideCharToMultiByte(
 
 			match unsafe {
 				kernel32::WideCharToMultiByte(
-					code_page.0,
+					code_page.0 as _,
 					flags.0,
 					wide_char_str.as_ptr(),
 					wide_char_str.len() as _,
