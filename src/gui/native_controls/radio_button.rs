@@ -1,5 +1,6 @@
 use crate::aliases::WinResult;
 use crate::co;
+use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData};
 use crate::gui::events::ButtonEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
@@ -79,7 +80,7 @@ impl RadioButton {
 				)?;
 
 				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
-				if opts.checked { self.set_check(true); }
+				if opts.selected { self.set_selected(true); }
 			},
 			OptsId::Dlg(ctrl_id) => {
 				self.0.base.create_dlg(*ctrl_id)?; // may panic
@@ -100,24 +101,41 @@ impl RadioButton {
 	pub_fn_onsubclass!();
 	pub_fn_on!(ButtonEvents);
 
-	/// Tells if this radio button is currently checked by sending a
+	/// Emulates the click event for the radio button by sending a
+	/// [`bm::Click`](crate::msg::bm::Click) message.
+	pub fn emulate_click(&self) {
+		self.hwnd().SendMessage(bm::Click {});
+	}
+
+	/// Tells if this radio button is the currently selected one by sending a
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
-	pub fn is_checked(&self) -> bool {
+	pub fn is_selected(&self) -> bool {
 		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
 	}
 
-	/// Sets the current check state by sending a
+	/// Sets the this radio button as the currently selected one by sending a
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
-	pub fn set_check(&self, checked: bool) {
+	pub fn set_selected(&self, selected: bool) {
 		self.hwnd().SendMessage(bm::SetCheck {
-			state: if checked { co::BST::CHECKED } else { co::BST::UNCHECKED },
+			state: if selected { co::BST::CHECKED } else { co::BST::UNCHECKED },
 		});
 	}
 
-	/// Fires the click event for the radio button by sending a
-	/// [`bm::Click`](crate::msg::bm::Click) message.
-	pub fn trigger_click(&self) {
-		self.hwnd().SendMessage(bm::Click {});
+	/// Sets the this radio button as the currently selected one by sending a
+	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
+	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
+	/// can handle the event.
+	pub fn set_selected_and_trigger(&self, selected: bool) {
+		self.set_selected(selected);
+		self.hwnd().SendMessage(wm::Command {
+			event: AccelMenuCtrl::Ctrl(
+				AccelMenuCtrlData {
+					notif_code: co::BN::CLICKED.into(),
+					ctrl_id: self.ctrl_id(),
+					ctrl_hwnd: self.hwnd(),
+				},
+			),
+		});
 	}
 }
 
@@ -170,10 +188,10 @@ pub struct RadioButtonOpts {
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
 
-	/// Checks the radio button right away.
+	/// Initial selection state.
 	///
 	/// Defaults to `false`.
-	pub checked: bool,
+	pub selected: bool,
 }
 
 impl Default for RadioButtonOpts {
@@ -186,7 +204,7 @@ impl Default for RadioButtonOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
-			checked: false,
+			selected: false,
 		}
 	}
 }
@@ -199,7 +217,7 @@ impl RadioButtonOpts {
 		self
 	}
 
-	pub(crate) fn manual_clone(&self) -> RadioButtonOpts { // avoids a public clone method
+	pub(in crate::gui) fn manual_clone(&self) -> RadioButtonOpts { // avoids a public clone method
 		Self {
 			text: self.text.clone(),
 			position: self.position,
@@ -208,7 +226,7 @@ impl RadioButtonOpts {
 			window_style: self.window_style,
 			window_ex_style: self.window_ex_style,
 			ctrl_id: self.ctrl_id,
-			checked: self.checked,
+			selected: self.selected,
 		}
 	}
 }

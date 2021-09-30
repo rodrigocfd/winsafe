@@ -170,11 +170,11 @@ impl RadioGroup {
 		self.checked_index().map(|idx| &self.0.radios[idx])
 	}
 
-	/// Returns the index of the currently checked
+	/// Returns the index of the currently selected
 	/// [`RadioButton`](crate::gui::RadioButton) of this group, if any.
 	pub fn checked_index(&self) -> Option<usize> {
 		for (idx, radio) in self.0.radios.iter().enumerate() {
-			if radio.is_checked() {
+			if radio.is_selected() {
 				return Some(idx);
 			}
 		}

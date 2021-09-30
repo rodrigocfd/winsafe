@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::HwndPlace;
+use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData, HwndPlace};
 use crate::gui::events::ButtonEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
@@ -10,6 +10,21 @@ use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
+
+/// Possible states of a [`CheckBox`](crate::gui::CheckBox) control.
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum CheckState {
+	/// CheckBox is checked.
+	Checked,
+	/// CheckBox is grayed, indicating an indeterminate state. Applicable only
+	/// if the CheckBox was created with [`BS::R3STATE`](crate::co::BS::R3STATE)
+	/// or [`BS::AUTO3STATE`](crate::co::BS::AUTO3STATE) styles.
+	Indeterminate,
+	/// CheckBox is cleared.
+	Unchecked,
+}
+
+//------------------------------------------------------------------------------
 
 /// Native
 /// [check box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
@@ -102,7 +117,9 @@ impl CheckBox {
 				)?;
 
 				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
-				if opts.checked { self.set_check(true); }
+				if opts.check_state != CheckState::Unchecked {
+					self.set_check_state(opts.check_state);
+				}
 				Ok(())
 			},
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
@@ -115,10 +132,27 @@ impl CheckBox {
 	pub_fn_onsubclass!();
 	pub_fn_on!(ButtonEvents);
 
-	/// Tells if this check box is currently checked by sending a
+	/// Retrieves the current check state by sending a
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
+	pub fn check_state(&self) -> CheckState {
+		match self.hwnd().SendMessage(bm::GetCheck {}) {
+			co::BST::CHECKED => CheckState::Checked,
+			co::BST::INDETERMINATE => CheckState::Indeterminate,
+			_ => CheckState::Unchecked,
+		}
+	}
+
+	/// Emulates the click event for the check box by sending a
+	/// [`bm::Click`](crate::msg::bm::Click) message.
+	pub fn emulate_click(&self) {
+		self.hwnd().SendMessage(bm::Click {});
+	}
+
+	/// Calls [`check_state`](crate::gui::CheckBox::check_state) and compares
+	/// the result with
+	/// [`CheckState::Checked`](crate::gui::CheckState::Checked).
 	pub fn is_checked(&self) -> bool {
-		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
+		self.check_state() == CheckState::Checked
 	}
 
 	/// Resizes the control to exactly fit current text.
@@ -128,9 +162,30 @@ impl CheckBox {
 
 	/// Sets the current check state by sending a
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
-	pub fn set_check(&self, checked: bool) {
+	pub fn set_check_state(&self, state: CheckState) {
 		self.hwnd().SendMessage(bm::SetCheck {
-			state: if checked { co::BST::CHECKED } else { co::BST::UNCHECKED },
+			state: match state {
+				CheckState::Checked => co::BST::CHECKED,
+				CheckState::Indeterminate => co::BST::INDETERMINATE,
+				CheckState::Unchecked => co::BST::UNCHECKED,
+			},
+		});
+	}
+
+	/// Sets the current check state by sending a
+	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
+	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
+	/// can handle the event.
+	pub fn set_check_state_and_trigger(&self, state: CheckState) {
+		self.set_check_state(state);
+		self.hwnd().SendMessage(wm::Command {
+			event: AccelMenuCtrl::Ctrl(
+				AccelMenuCtrlData {
+					notif_code: co::BN::CLICKED.into(),
+					ctrl_id: self.ctrl_id(),
+					ctrl_hwnd: self.hwnd(),
+				},
+			),
 		});
 	}
 
@@ -150,12 +205,6 @@ impl CheckBox {
 	/// [`HWND::GetWindowText`](crate::HWND::GetWindowText).
 	pub fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowText()
-	}
-
-	/// Fires the click event for the check box by sending a
-	/// [`bm::Click`](crate::msg::bm::Click) message.
-	pub fn trigger_click(&self) {
-		self.hwnd().SendMessage(bm::Click {});
 	}
 
 	fn resize_to_given_text(&self, text: &str) -> WinResult<()> {
@@ -214,10 +263,10 @@ pub struct CheckBoxOpts {
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
 
-	/// Checks the check box right away.
+	/// Initial check state.
 	///
-	/// Defaults to `false`.
-	pub checked: bool,
+	/// Defaults to `CheckState::Unchecked`.
+	pub check_state: CheckState,
 }
 
 impl Default for CheckBoxOpts {
@@ -230,7 +279,7 @@ impl Default for CheckBoxOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
-			checked: false,
+			check_state: CheckState::Unchecked,
 		}
 	}
 }

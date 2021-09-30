@@ -27,7 +27,7 @@ mod tree_view_items;
 mod tree_view;
 
 pub use button::{Button, ButtonOpts};
-pub use check_box::{CheckBox, CheckBoxOpts};
+pub use check_box::{CheckBox, CheckBoxOpts, CheckState};
 pub use combo_box::{ComboBox, ComboBoxOpts};
 pub use date_time_picker::{DateTimePicker, DateTimePickerOpts};
 pub use edit::{Edit, EditOpts};
