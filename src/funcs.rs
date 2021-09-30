@@ -311,7 +311,7 @@ pub fn EnumDisplaySettingsEx(
 /// })?;
 /// ```
 pub fn EnumWindows<F>(func: F) -> WinResult<()>
-	where F: Fn(HWND) -> bool
+	where F: Fn(HWND) -> bool,
 {
 	bool_to_winresult(
 		unsafe {
@@ -323,7 +323,7 @@ pub fn EnumWindows<F>(func: F) -> WinResult<()>
 	)
 }
 extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
-	where F: Fn(HWND) -> bool
+	where F: Fn(HWND) -> bool,
 {
 	let func = unsafe { &*(lparam as *const F) };
 	func(hwnd) as _

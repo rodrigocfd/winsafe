@@ -75,7 +75,7 @@ impl HINSTANCE {
 	/// method.
 	pub fn EnumResourceLanguages<F>(self,
 		resource_type: RtStr, resource_id: IdStr, func: F) -> WinResult<()>
-		where F: Fn(LANGID) -> bool
+		where F: Fn(LANGID) -> bool,
 	{
 		bool_to_winresult(
 			unsafe {
@@ -92,7 +92,7 @@ impl HINSTANCE {
 	extern "system" fn enum_resource_languages_proc<F>(
 		_: HINSTANCE, _: *const u16, _: *const u16,
 		language_id: u16, lparam: isize) -> BOOL
-		where F: Fn(LANGID) -> bool
+		where F: Fn(LANGID) -> bool,
 	{
 		let func = unsafe { &*(lparam as *const F) };
 		func(LANGID(language_id)) as _
@@ -102,7 +102,7 @@ impl HINSTANCE {
 	/// method.
 	pub fn EnumResourceNames<F>(self,
 		resource_type: RtStr, func: F) -> WinResult<()>
-		where F: Fn(IdStr) -> bool
+		where F: Fn(IdStr) -> bool,
 	{
 		bool_to_winresult(
 			unsafe {
@@ -117,7 +117,7 @@ impl HINSTANCE {
 	}
 	extern "system" fn enum_resource_names_proc<F>(
 		_: HINSTANCE, _: *const u16, resource_id: *mut u16, lparam: isize) -> BOOL
-		where F: Fn(IdStr) -> bool
+		where F: Fn(IdStr) -> bool,
 	{
 		let func = unsafe { &*(lparam as *const F) };
 		func(IdStr::from_ptr(resource_id)) as _
@@ -126,7 +126,7 @@ impl HINSTANCE {
 	/// [`EnumResourceTypes`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
 	/// method.
 	pub fn EnumResourceTypes<F>(self, func: F) -> WinResult<()>
-		where F: Fn(RtStr) -> bool
+		where F: Fn(RtStr) -> bool,
 	{
 		bool_to_winresult(
 			unsafe {
@@ -140,7 +140,7 @@ impl HINSTANCE {
 	}
 	extern "system" fn enum_resource_types_proc<F>(
 		_: HINSTANCE, resource_type: *const u16, lparam: isize) -> BOOL
-		where F: Fn(RtStr) -> bool
+		where F: Fn(RtStr) -> bool,
 	{
 		let func = unsafe { &*(lparam as *const F) };
 		func(RtStr::from_ptr(resource_type)) as _

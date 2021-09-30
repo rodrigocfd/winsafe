@@ -142,7 +142,7 @@ macro_rules! pub_fn_run_ui_thread {
 		/// });
 		/// ```
 		pub fn run_ui_thread<F>(&self, func: F)
-			where F: FnOnce() -> BoxResult<()>
+			where F: FnOnce() -> BoxResult<()>,
 		{
 			match &self.raw_dlg {
 				RawDlg::Raw(r) => r.run_ui_thread(func),

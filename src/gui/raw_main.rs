@@ -42,7 +42,7 @@ impl RawMain {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> BoxResult<()>
+		where F: FnOnce() -> BoxResult<()>,
 	{
 		self.0.base.run_ui_thread(func);
 	}

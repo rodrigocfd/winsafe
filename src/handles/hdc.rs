@@ -139,7 +139,7 @@ impl HDC {
 	/// ```
 	pub fn EnumDisplayMonitors<F>(self,
 		rc_clip: Option<RECT>, func: F) -> WinResult<()>
-		where F: Fn(HMONITOR, HDC, &RECT) -> bool
+		where F: Fn(HMONITOR, HDC, &RECT) -> bool,
 	{
 		bool_to_winresult(
 			unsafe {
@@ -154,7 +154,7 @@ impl HDC {
 	}
 	extern "system" fn enum_display_monitors_proc<F>(
 		hmon: HMONITOR, hdc: HDC, rc: *const RECT, lparam: isize) -> BOOL
-		where F: Fn(HMONITOR, HDC, &RECT) -> bool
+		where F: Fn(HMONITOR, HDC, &RECT) -> bool,
 	{
 		let func = unsafe { &*(lparam as *const F) };
 		func(hmon, hdc, unsafe { &*rc }) as _
