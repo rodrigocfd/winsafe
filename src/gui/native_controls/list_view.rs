@@ -13,7 +13,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::{HIMAGELIST, HMENU, HWND};
 use crate::msg::{lvm, wm};
-use crate::structs::{LVHITTESTINFO, NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
+use crate::structs::{NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 
 /// Native
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
@@ -241,32 +241,27 @@ impl ListView {
 			let mut menu_pos = GetCursorPos()?; // relative to screen
 			self.hwnd().ScreenToClient(&mut menu_pos)?; // now relative to list view
 
-			let mut lvhti = LVHITTESTINFO::default(); // find item below cursor, if any
-			lvhti.pt = menu_pos;
-
-			match self.items().hit_test(&mut lvhti) {
-				Some(idx) => { // an item was right-clicked
+			match self.items().hit_test(menu_pos) {
+				Some(item_over) => {
 					if !has_ctrl && !has_shift {
-						if !self.items().is_selected(idx) {
-							self.items().set_selected_all(false)?;
-							self.items().set_selected(true, &[idx])?;
-						}
-						self.items().set_focused(idx)?;
+						item_over.set_selected(true)?; // if not yet
+						item_over.set_focused()?;
 					}
 				},
 				None => { // no item was right-clicked
 					self.items().set_selected_all(false)?;
 				},
 			}
+
 			self.hwnd().SetFocus(); // because a right-click won't set the focus by itself
 			menu_pos
 
 		} else { // usually fired by the context meny key
-			let focused_idx_opt = self.items().focused();
+			let focused_opt = self.items().focused();
 
-			if focused_idx_opt.is_some() && self.items().is_visible(focused_idx_opt.unwrap()) {
-				let focused_idx = focused_idx_opt.unwrap();
-				let rc_item = self.items().rect(focused_idx, co::LVIR::BOUNDS)?;
+			if focused_opt.is_some() && focused_opt.unwrap().is_visible() {
+				let focused = focused_opt.unwrap();
+				let rc_item = focused.rect(co::LVIR::BOUNDS)?;
 				POINT::new(rc_item.left + 16,
 					rc_item.top + (rc_item.bottom - rc_item.top) / 2)
 

@@ -47,7 +47,7 @@ pub mod spec {
 	pub use super::combo_box_items::ComboBoxItems;
 	pub use super::list_box_items::ListBoxItems;
 	pub use super::list_view_columns::ListViewColumns;
-	pub use super::list_view_items::ListViewItems;
+	pub use super::list_view_items::{ListViewItem, ListViewItems};
 	pub use super::status_bar_parts::StatusBarParts;
 	pub use super::tree_view_items::TreeViewItems;
 }

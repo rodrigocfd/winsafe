@@ -2,7 +2,6 @@ use std::marker::PhantomData;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::privs::multiply_dpi;
 use crate::handles::HWND;
 use crate::msg::{hdm, lvm};
@@ -59,20 +58,6 @@ impl<'a> ListViewColumns<'a> {
 		Ok(())
 	}
 
-	/// Retrieves the texts of all items at the given column.
-	pub fn all_texts(&self, column_index: u32) -> Vec<String> {
-		let count = self.hwnd.SendMessage(lvm::GetItemCount {});
-		let mut texts = Vec::with_capacity(count as _);
-		let mut buf = WString::default();
-
-		for idx in 0..count {
-			ListViewItems::text_retrieve(self.hwnd, idx, column_index, &mut buf);
-			texts.push(buf.to_string());
-		}
-
-		texts
-	}
-
 	/// Retrieves the number of columns by sending an
 	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message to the
 	/// handle returned by [`lvm::GetHeader`](crate::msg::lvm::GetHeader).
@@ -88,31 +73,6 @@ impl<'a> ListViewColumns<'a> {
 			index: column_index,
 			lvcolumn: lvc,
 		})
-	}
-
-	/// Retrieves the texts of the selected items at the given column.
-	pub fn selected_texts(&self, column_index: u32) -> Vec<String> {
-		let sel_count = self.hwnd.SendMessage(lvm::GetSelectedCount {});
-		let mut texts = Vec::with_capacity(sel_count as _);
-		let mut buf = WString::default();
-
-		let mut idx = None; // will start at first item
-		loop {
-			idx = match self.hwnd.SendMessage(lvm::GetNextItem {
-				initial_index: idx,
-				relationship: co::LVNI::SELECTED,
-			}) {
-				Some(idx) => {
-					ListViewItems::text_retrieve(
-						self.hwnd, idx, column_index, &mut buf);
-					texts.push(buf.to_string());
-					Some(idx) // update start item
-				},
-				None => break,
-			};
-		}
-
-		texts
 	}
 
 	/// Sets information of the column by sending an

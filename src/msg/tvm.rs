@@ -419,8 +419,8 @@ impl MsgSend for GetLineColor {
 ///
 /// Return type: `Option<HTREEITEM>`.
 pub struct GetNextItem {
-	pub which: co::TVGN,
-	pub hitem: HTREEITEM,
+	pub relationship: co::TVGN,
+	pub hitem: Option<HTREEITEM>,
 }
 
 impl MsgSend for GetNextItem {
@@ -433,8 +433,8 @@ impl MsgSend for GetNextItem {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
-			wparam: self.which.0 as _,
-			lparam: self.hitem.ptr as _,
+			wparam: self.relationship.0 as _,
+			lparam: self.hitem.unwrap_or(HTREEITEM::NULL).ptr as _,
 		}
 	}
 }
