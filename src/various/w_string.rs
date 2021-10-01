@@ -370,7 +370,7 @@ impl WString {
 
 		const UTF16BE: [u8; 2] = [0xfe, 0xff];
 		if has_bom(&UTF16BE) {
-			return (Encoding::Utf32be, UTF16BE.len());
+			return (Encoding::Utf16be, UTF16BE.len());
 		}
 
 		const UTF16LE: [u8; 2] = [0xff, 0xfe];
