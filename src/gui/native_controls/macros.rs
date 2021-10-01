@@ -59,9 +59,10 @@ macro_rules! pub_fn_focus {
 		/// Focuses the control by sending a
 		/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message.
 		pub fn focus(&self) -> WinResult<()> {
-			self.hwnd().GetParent()?.SendMessage(crate::msg::wm::NextDlgCtl {
-				hwnd_focus: crate::enums::HwndFocus::Hwnd(self.hwnd()),
-			});
+			self.hwnd().GetParent()?
+				.SendMessage(crate::msg::wm::NextDlgCtl {
+					hwnd_focus: crate::enums::HwndFocus::Hwnd(self.hwnd()),
+				});
 			Ok(())
 		}
 	};

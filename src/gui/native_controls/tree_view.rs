@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -23,7 +24,6 @@ struct Obj { // actual fields of TreeView
 	base: BaseNativeControl,
 	opts_id: OptsId<TreeViewOpts>,
 	events: TreeViewEvents,
-	items: TreeViewItems,
 }
 
 unsafe impl Send for TreeView {}
@@ -46,11 +46,9 @@ impl TreeView {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
-					items: TreeViewItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -71,11 +69,9 @@ impl TreeView {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
-					items: TreeViewItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -115,8 +111,11 @@ impl TreeView {
 	pub_fn_on!(TreeViewEvents);
 
 	/// Exposes the item methods.
-	pub fn items(&self) -> &TreeViewItems {
-		&self.0.items
+	pub fn items<'a>(&'a self) -> TreeViewItems<'a> {
+		TreeViewItems {
+			hwnd: self.hwnd(),
+			owner: PhantomData,
+		}
 	}
 
 	/// Sets or unsets the given extended list view styles by sending a

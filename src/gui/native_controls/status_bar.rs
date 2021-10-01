@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -47,7 +48,6 @@ struct Obj { // actual fields of StatusBar
 	base: BaseNativeControl,
 	ctrl_id: u16,
 	events: StatusBarEvents,
-	parts: StatusBarParts,
 	parts_info: Vec<StatusBarPart>,
 	right_edges: Vec<i32>, // buffer to speed up resize calls
 }
@@ -85,13 +85,11 @@ impl StatusBar {
 					base: BaseNativeControl::new(parent_base_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
-					parts: StatusBarParts::new(),
 					parts_info: parts.to_vec(),
 					right_edges: vec![0; parts.len()],
 				},
 			)),
 		);
-		new_self.0.parts.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -186,7 +184,10 @@ impl StatusBar {
 	}
 
 	/// Exposes the part methods.
-	pub fn parts(&self) -> &StatusBarParts {
-		&self.0.parts
+	pub fn parts<'a>(&'a self) -> StatusBarParts<'a> {
+		StatusBarParts {
+			hwnd: self.hwnd(),
+			owner: PhantomData,
+		}
 	}
 }

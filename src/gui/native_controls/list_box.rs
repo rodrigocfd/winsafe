@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -24,7 +25,6 @@ struct Obj { // actual fields of ListBox
 	base: BaseNativeControl,
 	opts_id: OptsId<ListBoxOpts>,
 	events: ListBoxEvents,
-	items: ListBoxItems,
 }
 
 unsafe impl Send for ListBox {}
@@ -47,11 +47,9 @@ impl ListBox {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ListBoxItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -72,11 +70,9 @@ impl ListBox {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ListBoxItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -115,8 +111,11 @@ impl ListBox {
 	pub_fn_on!(ListBoxEvents);
 
 	/// Item methods.
-	pub fn items(&self) -> &ListBoxItems {
-		&self.0.items
+	pub fn items<'a>(&'a self) -> ListBoxItems<'a> {
+		ListBoxItems {
+			hwnd: self.hwnd(),
+			owner: PhantomData,
+		}
 	}
 }
 

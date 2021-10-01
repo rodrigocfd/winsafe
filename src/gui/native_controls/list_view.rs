@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -27,8 +28,6 @@ struct Obj { // actual fields of ListView
 	base: BaseNativeControl,
 	opts_id: OptsId<ListViewOpts>,
 	events: ListViewEvents,
-	columns: ListViewColumns,
-	items: ListViewItems,
 	context_menu: Option<HMENU>,
 }
 
@@ -53,14 +52,10 @@ impl ListView {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
-					columns: ListViewColumns::new(),
-					items: ListViewItems::new(),
 					context_menu,
 				},
 			),
 		);
-		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref());
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -90,14 +85,10 @@ impl ListView {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
-					columns: ListViewColumns::new(),
-					items: ListViewItems::new(),
 					context_menu,
 				},
 			),
 		);
-		new_self.0.columns.set_hwnd_ref(new_self.0.base.hwnd_ref());
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -170,8 +161,11 @@ impl ListView {
 	pub_fn_on!(ListViewEvents);
 
 	/// Exposes the column methods.
-	pub fn columns(&self) -> &ListViewColumns {
-		&self.0.columns
+	pub fn columns<'a>(&'a self) -> ListViewColumns<'a> {
+		ListViewColumns {
+			hwnd: self.hwnd(),
+			owner: PhantomData,
+		}
 	}
 
 	/// Returns the context menu attached to this list view, if any.
@@ -190,8 +184,11 @@ impl ListView {
 	}
 
 	/// Exposes the item methods.
-	pub fn items(&self) -> &ListViewItems {
-		&self.0.items
+	pub fn items<'a>(&'a self) -> ListViewItems<'a> {
+		ListViewItems {
+			hwnd: self.hwnd(),
+			owner: PhantomData,
+		}
 	}
 
 	/// Retrieves the current view by sending an

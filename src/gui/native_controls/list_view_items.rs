@@ -1,5 +1,4 @@
-use std::cell::Cell;
-use std::ptr::NonNull;
+use std::marker::PhantomData;
 
 use crate::aliases::WinResult;
 use crate::co;
@@ -12,25 +11,12 @@ use crate::various::WString;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct ListViewItems {
-	hwnd_ptr: Cell<NonNull<HWND>>,
+pub struct ListViewItems<'a> {
+	pub(in crate::gui::native_controls) hwnd: HWND,
+	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
 }
 
-impl ListViewItems {
-	pub(in crate::gui::native_controls) fn new() -> ListViewItems {
-		Self {
-			hwnd_ptr: Cell::new(NonNull::from(&HWND::NULL)), // initially invalid
-		}
-	}
-
-	pub(in crate::gui::native_controls) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
-		self.hwnd_ptr.replace(NonNull::from(hwnd_ref));
-	}
-
-	pub(in crate::gui::native_controls) fn hwnd(&self) -> HWND {
-		unsafe { *self.hwnd_ptr.get().as_ref() }
-	}
-
+impl<'a> ListViewItems<'a> {
 	/// Appends a new item by sending an
 	/// [`lvm::InsertItem`](crate::msg::lvm::InsertItem) message, and returns
 	/// its index.
@@ -76,7 +62,7 @@ impl ListViewItems {
 		let mut wtext = WString::from_str(texts[0].as_ref());
 		lvi.set_pszText(Some(&mut wtext));
 
-		let new_idx = self.hwnd().SendMessage(lvm::InsertItem { lvitem: &lvi })?;
+		let new_idx = self.hwnd.SendMessage(lvm::InsertItem { lvitem: &lvi })?;
 
 		for (idx, text) in texts.iter().skip(1).enumerate() { // subsequent columns
 			self.set_text(new_idx, idx as u32 + 1, text.as_ref())?;
@@ -88,7 +74,7 @@ impl ListViewItems {
 	/// Retrieves the total number of items by sending an
 	/// [`lvm::GetItemCount`](crate::msg::lvm::GetItemCount) message.
 	pub fn count(&self) -> u32 {
-		self.hwnd().SendMessage(lvm::GetItemCount {})
+		self.hwnd.SendMessage(lvm::GetItemCount {})
 	}
 
 	/// Deletes the items at the given indexes by sending an
@@ -98,7 +84,7 @@ impl ListViewItems {
 	/// first.
 	pub fn delete(&self, item_indexes: &[u32]) -> WinResult<()> {
 		for idx in item_indexes.iter().rev() {
-			self.hwnd().SendMessage(lvm::DeleteItem {
+			self.hwnd.SendMessage(lvm::DeleteItem {
 				index: *idx,
 			})?;
 		}
@@ -108,18 +94,18 @@ impl ListViewItems {
 	/// Deletes all items by sending an
 	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) message.
 	pub fn delete_all(&self) -> WinResult<()> {
-		self.hwnd().SendMessage(lvm::DeleteAllItems {})
+		self.hwnd.SendMessage(lvm::DeleteAllItems {})
 	}
 
 	/// Deletes the selected items by sending
 	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) messages.
 	pub fn delete_selected(&self) -> WinResult<()> {
 		loop {
-			match self.hwnd().SendMessage(lvm::GetNextItem {
+			match self.hwnd.SendMessage(lvm::GetNextItem {
 				initial_index: None,
 				relationship: co::LVNI::SELECTED,
 			}) {
-				Some(index) => self.hwnd().SendMessage(lvm::DeleteItem { index })?,
+				Some(index) => self.hwnd.SendMessage(lvm::DeleteItem { index })?,
 				None => break,
 			};
 		}
@@ -130,7 +116,7 @@ impl ListViewItems {
 	/// [`lvm::EnsureVisible`](crate::msg::lvm::EnsureVisible) message so that
 	/// an item is visible in the list.
 	pub fn ensure_visible(&self, item_index: u32) -> WinResult<()> {
-		self.hwnd().SendMessage(lvm::EnsureVisible {
+		self.hwnd.SendMessage(lvm::EnsureVisible {
 			index: item_index,
 			entirely_visible: true,
 		})
@@ -145,7 +131,7 @@ impl ListViewItems {
 		lvfi.flags = co::LVFI::STRING;
 		lvfi.set_psz(Some(&mut buf));
 
-		self.hwnd().SendMessage(lvm::FindItem {
+		self.hwnd.SendMessage(lvm::FindItem {
 			start_index: None,
 			lvfindinfo: &mut lvfi,
 		})
@@ -154,7 +140,7 @@ impl ListViewItems {
 	/// Retrieves the index of the focused item by sending an
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
 	pub fn focused(&self) -> Option<u32> {
-		self.hwnd().SendMessage(lvm::GetNextItem {
+		self.hwnd.SendMessage(lvm::GetNextItem {
 			initial_index: None,
 			relationship: co::LVNI::FOCUSED,
 		})
@@ -163,13 +149,13 @@ impl ListViewItems {
 	/// Retrieves the item at the specified position by sending an
 	/// [`lvm::HitTest`](crate::msg::lvm::HitTest) message
 	pub fn hit_test(&self, info: &mut LVHITTESTINFO) -> Option<u32> {
-		self.hwnd().SendMessage(lvm::HitTest { info })
+		self.hwnd.SendMessage(lvm::HitTest { info })
 	}
 
 	/// Tells if the item is the focused one by sending an
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
 	pub fn is_focused(&self, item_index: u32) -> bool {
-		self.hwnd().SendMessage(lvm::GetItemState {
+		self.hwnd.SendMessage(lvm::GetItemState {
 			index: item_index,
 			mask: co::LVIS::FOCUSED,
 		}).has(co::LVIS::FOCUSED)
@@ -178,7 +164,7 @@ impl ListViewItems {
 	/// Tells if the item is selected by sending an
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
 	pub fn is_selected(&self, item_index: u32) -> bool {
-		self.hwnd().SendMessage(lvm::GetItemState {
+		self.hwnd.SendMessage(lvm::GetItemState {
 			index: item_index,
 			mask: co::LVIS::SELECTED,
 		}).has(co::LVIS::SELECTED)
@@ -187,26 +173,26 @@ impl ListViewItems {
 	/// Tells if the item is currently visible by sending an
 	/// [`lvm::IsItemVisible`](crate::msg::lvm::IsItemVisible) message.
 	pub fn is_visible(&self, item_index: u32) -> bool {
-		self.hwnd().SendMessage(lvm::IsItemVisible { index: item_index })
+		self.hwnd.SendMessage(lvm::IsItemVisible { index: item_index })
 	}
 
 	/// Retrieves the actual index of the unique ID by sending an
 	/// [`lvm::MapIdToIndex`](crate::msg::lvm::MapIdToIndex) message.
 	pub fn map_id_to_index(&self, item_id: u32) -> Option<u32> {
-		self.hwnd().SendMessage(lvm::MapIdToIndex { id: item_id })
+		self.hwnd.SendMessage(lvm::MapIdToIndex { id: item_id })
 	}
 
 	/// Retrieves an unique ID for the given index by sending an
 	/// [`lvm::MapIndexToId`](crate::msg::lvm::MapIndexToId) message.
 	pub fn map_index_to_id(&self, item_index: u32) -> Option<u32> {
-		self.hwnd().SendMessage(lvm::MapIndexToId { index: item_index })
+		self.hwnd.SendMessage(lvm::MapIndexToId { index: item_index })
 	}
 
 	/// Retrieves the bound rectangle of item by sending an
 	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) message.
 	pub fn rect(&self, item_index: u32, portion: co::LVIR) -> WinResult<RECT> {
 		let mut rc = RECT::default();
-		self.hwnd().SendMessage(lvm::GetItemRect {
+		self.hwnd.SendMessage(lvm::GetItemRect {
 			index: item_index,
 			rect: &mut rc,
 			portion,
@@ -221,7 +207,7 @@ impl ListViewItems {
 		let mut idx = None; // will start at first item
 
 		loop {
-			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
+			idx = match self.hwnd.SendMessage(lvm::GetNextItem {
 				initial_index: idx,
 				relationship: co::LVNI::SELECTED,
 			}) {
@@ -238,7 +224,7 @@ impl ListViewItems {
 	/// Retrieves the number of selected items by sending an
 	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
 	pub fn selected_count(&self) -> u32 {
-		self.hwnd().SendMessage(lvm::GetSelectedCount {})
+		self.hwnd.SendMessage(lvm::GetSelectedCount {})
 	}
 
 	/// Sets the focused item by sending an
@@ -248,7 +234,7 @@ impl ListViewItems {
 		lvi.stateMask = co::LVIS::FOCUSED;
 		lvi.state = co::LVIS::FOCUSED;
 
-		self.hwnd().SendMessage(lvm::SetItemState {
+		self.hwnd.SendMessage(lvm::SetItemState {
 			index: Some(item_index),
 			lvitem: &lvi,
 		})
@@ -264,7 +250,7 @@ impl ListViewItems {
 		if set { lvi.state = co::LVIS::SELECTED; }
 
 		for idx in item_indexes.iter() {
-			self.hwnd().SendMessage(lvm::SetItemState {
+			self.hwnd.SendMessage(lvm::SetItemState {
 				index: Some(*idx),
 				lvitem: &lvi,
 			})?;
@@ -279,7 +265,7 @@ impl ListViewItems {
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
 
-		self.hwnd().SendMessage(lvm::SetItemState {
+		self.hwnd.SendMessage(lvm::SetItemState {
 			index: None,
 			lvitem: &lvi,
 		})
@@ -296,7 +282,7 @@ impl ListViewItems {
 		let mut wtext = WString::from_str(text);
 		lvi.set_pszText(Some(&mut wtext));
 
-		self.hwnd().SendMessage(lvm::SetItemText {
+		self.hwnd.SendMessage(lvm::SetItemText {
 			index: item_index,
 			lvitem: &lvi,
 		})
@@ -316,7 +302,7 @@ impl ListViewItems {
 	/// ```
 	pub fn text(&self, item_index: u32, column_index: u32) -> String {
 		let mut buf = WString::default();
-		Self::text_retrieve(self.hwnd(), item_index, column_index, &mut buf);
+		Self::text_retrieve(self.hwnd, item_index, column_index, &mut buf);
 		buf.to_string()
 	}
 

@@ -1,5 +1,4 @@
-use std::cell::Cell;
-use std::ptr::NonNull;
+use std::marker::PhantomData;
 
 use crate::aliases::WinResult;
 use crate::co;
@@ -14,25 +13,12 @@ use crate::various::WString;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct ListViewColumns {
-	hwnd_ptr: Cell<NonNull<HWND>>,
+pub struct ListViewColumns<'a> {
+	pub(in crate::gui::native_controls) hwnd: HWND,
+	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
 }
 
-impl ListViewColumns {
-	pub(in crate::gui::native_controls) fn new() -> ListViewColumns {
-		Self {
-			hwnd_ptr: Cell::new(NonNull::from(&HWND::NULL)), // initially invalid
-		}
-	}
-
-	pub(in crate::gui::native_controls) fn set_hwnd_ref(&self, hwnd_ref: &HWND) {
-		self.hwnd_ptr.replace(NonNull::from(hwnd_ref));
-	}
-
-	pub(in crate::gui::native_controls) fn hwnd(&self) -> HWND {
-		unsafe { *self.hwnd_ptr.get().as_ref() }
-	}
-
+impl<'a> ListViewColumns<'a> {
 	/// Adds many columns at once by sending an
 	/// [`lvm::InsertColumn`](crate::msg::lvm::InsertColumn) message.
 	///
@@ -64,7 +50,7 @@ impl ListViewColumns {
 			let mut wtext = WString::from_str(text.as_ref());
 			lvc.set_pszText(Some(&mut wtext));
 
-			self.hwnd().SendMessage(lvm::InsertColumn {
+			self.hwnd.SendMessage(lvm::InsertColumn {
 				index: 0xffff, // insert as the last columns
 				lvcolumn: &lvc,
 			})?;
@@ -75,12 +61,12 @@ impl ListViewColumns {
 
 	/// Retrieves the texts of all items at the given column.
 	pub fn all_texts(&self, column_index: u32) -> Vec<String> {
-		let count = self.hwnd().SendMessage(lvm::GetItemCount {});
+		let count = self.hwnd.SendMessage(lvm::GetItemCount {});
 		let mut texts = Vec::with_capacity(count as _);
 		let mut buf = WString::default();
 
 		for idx in 0..count {
-			ListViewItems::text_retrieve(self.hwnd(), idx, column_index, &mut buf);
+			ListViewItems::text_retrieve(self.hwnd, idx, column_index, &mut buf);
 			texts.push(buf.to_string());
 		}
 
@@ -91,14 +77,14 @@ impl ListViewColumns {
 	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message to the
 	/// handle returned by [`lvm::GetHeader`](crate::msg::lvm::GetHeader).
 	pub fn count(&self) -> WinResult<u32> {
-		self.hwnd().SendMessage(lvm::GetHeader {})?
+		self.hwnd.SendMessage(lvm::GetHeader {})?
 			.SendMessage(hdm::GetItemCount {})
 	}
 
 	/// Retrieves information about the column by sending an
 	/// [`lvm::GetColumn`](crate::msg::lvm::GetColumn) message.
 	pub fn info(&self, column_index: u32, lvc: &mut LVCOLUMN) -> WinResult<()> {
-		self.hwnd().SendMessage(lvm::GetColumn {
+		self.hwnd.SendMessage(lvm::GetColumn {
 			index: column_index,
 			lvcolumn: lvc,
 		})
@@ -106,19 +92,19 @@ impl ListViewColumns {
 
 	/// Retrieves the texts of the selected items at the given column.
 	pub fn selected_texts(&self, column_index: u32) -> Vec<String> {
-		let sel_count = self.hwnd().SendMessage(lvm::GetSelectedCount {});
+		let sel_count = self.hwnd.SendMessage(lvm::GetSelectedCount {});
 		let mut texts = Vec::with_capacity(sel_count as _);
 		let mut buf = WString::default();
 
 		let mut idx = None; // will start at first item
 		loop {
-			idx = match self.hwnd().SendMessage(lvm::GetNextItem {
+			idx = match self.hwnd.SendMessage(lvm::GetNextItem {
 				initial_index: idx,
 				relationship: co::LVNI::SELECTED,
 			}) {
 				Some(idx) => {
 					ListViewItems::text_retrieve(
-						self.hwnd(), idx, column_index, &mut buf);
+						self.hwnd, idx, column_index, &mut buf);
 					texts.push(buf.to_string());
 					Some(idx) // update start item
 				},
@@ -132,7 +118,7 @@ impl ListViewColumns {
 	/// Sets information of the column by sending an
 	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
 	pub fn set_info(&self, column_index: u32, lvc: &LVCOLUMN) -> WinResult<()> {
-		self.hwnd().SendMessage(lvm::SetColumn {
+		self.hwnd.SendMessage(lvm::SetColumn {
 			index: column_index,
 			lvcolumn: lvc,
 		})
@@ -159,7 +145,7 @@ impl ListViewColumns {
 		let mut col_cx = SIZE::new(width as _, 0);
 		multiply_dpi(None, Some(&mut col_cx))?;
 
-		self.hwnd().SendMessage(lvm::SetColumnWidth {
+		self.hwnd.SendMessage(lvm::SetColumnWidth {
 			index: column_index,
 			width: col_cx.cx as _,
 		})
@@ -178,8 +164,8 @@ impl ListViewColumns {
 			}
 		}
 
-		let rc = self.hwnd().GetClientRect()?; // list view client area
-		self.hwnd().SendMessage(lvm::SetColumnWidth {
+		let rc = self.hwnd.GetClientRect()?; // list view client area
+		self.hwnd.SendMessage(lvm::SetColumnWidth {
 			index: column_index,
 			width: rc.right as u32 - cx_used,
 		})
@@ -202,6 +188,6 @@ impl ListViewColumns {
 	/// Retrieves the width of the column by sending an
 	/// [`lvm::GetColumnWidth`](crate::msg::lvm::GetColumnWidth) message.
 	pub fn width(&self, column_index: u32) -> WinResult<u32> {
-		self.hwnd().SendMessage(lvm::GetColumnWidth { index: column_index })
+		self.hwnd.SendMessage(lvm::GetColumnWidth { index: column_index })
 	}
 }

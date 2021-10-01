@@ -26,17 +26,11 @@ pub enum Resz {
 	Resize,
 }
 
-struct Ctrl {
+struct Ctrl { // each child control kept internally in the Resizer
 	hwnd_ptr: NonNull<HWND>,
 	rc_orig: RECT, // original coordinates relative to parent
 	horz: Resz,
 	vert: Resz,
-}
-
-struct ChildEntry { // parameters passed to constructor
-	horz: Resz,
-	vert: Resz,
-	children: Vec<NonNull<HWND>>,
 }
 
 //------------------------------------------------------------------------------
@@ -113,22 +107,24 @@ impl Resizer {
 
 		let ptr_parent = NonNull::from(parent_base_ref);
 		let rc_children = Rc::new(
-			children.iter().map(|c|
-				ChildEntry {
-					horz: c.0,
-					vert: c.1,
-					children: c.2.iter()
+			children.iter().map(|(horz, vert, children)|
+				(
+					*horz,
+					*vert,
+					children.iter()
 						.map(|dyn_child| NonNull::from(dyn_child.hwnd_ref()))
 						.collect(),
-				},
-			).collect::<Vec<_>>()
+				),
+			).collect::<Vec<_>>(),
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+			// Children are effectively added during WM_CREATE or WM_INITDIALOG.
 			let me = new_self.clone();
 			move |_| { me.add_children(ptr_parent, rc_children.clone())?; Ok(0) }
 		});
 		parent_base_ref.privileged_events_ref().wm_size({
+			// Children are resized/repositioned during WM_SIZE.
 			let me = new_self.clone();
 			move |p| { me.resize(&p)?; Ok(()) }
 		});
@@ -138,7 +134,7 @@ impl Resizer {
 
 	fn add_children(&self,
 		ptr_parent: NonNull<Base>,
-		rc_children: Rc<Vec<ChildEntry>>) -> WinResult<()>
+		rc_children: Rc<Vec<(Resz, Resz, Vec<NonNull<HWND>>)>>) -> WinResult<()>
 	{
 		let ctrls = &mut self.0.as_mut().ctrls;
 		ctrls.reserve(rc_children.len());
@@ -147,8 +143,8 @@ impl Resizer {
 		let rc_parent = parent_base_ref.hwnd_ref().GetClientRect()?;
 		self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
 
-		for entry in rc_children.iter() {
-			for child_hwnd_ptr in entry.children.iter() {
+		for (horz, vert, children) in rc_children.iter() {
+			for child_hwnd_ptr in children.iter() {
 				let child_hwnd_ref = unsafe { child_hwnd_ptr.as_ref() };
 				let mut rc_orig = child_hwnd_ref.GetWindowRect()?;
 				parent_base_ref.hwnd_ref().ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
@@ -156,8 +152,8 @@ impl Resizer {
 				ctrls.push(Ctrl {
 					hwnd_ptr: *child_hwnd_ptr,
 					rc_orig,
-					horz: entry.horz,
-					vert: entry.vert,
+					horz: *horz,
+					vert: *vert,
 				});
 			}
 		}

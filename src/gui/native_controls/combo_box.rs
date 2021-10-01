@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -23,7 +24,6 @@ struct Obj { // actual fields of ComboBox
 	base: BaseNativeControl,
 	opts_id: OptsId<ComboBoxOpts>,
 	events: ComboBoxEvents,
-	items: ComboBoxItems,
 }
 
 unsafe impl Send for ComboBox {}
@@ -46,11 +46,9 @@ impl ComboBox {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ComboBoxItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
 			let me = new_self.clone();
@@ -71,11 +69,9 @@ impl ComboBox {
 					base: BaseNativeControl::new(parent_base_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: ComboBoxEvents::new(parent_base_ref, ctrl_id),
-					items: ComboBoxItems::new(),
 				},
 			),
 		);
-		new_self.0.items.set_hwnd_ref(new_self.0.base.hwnd_ref());
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
@@ -116,8 +112,11 @@ impl ComboBox {
 	pub_fn_on!(ComboBoxEvents);
 
 	/// Item methods.
-	pub fn items(&self) -> &ComboBoxItems {
-		&self.0.items
+	pub fn items<'a>(&'a self) -> ComboBoxItems<'a> {
+		ComboBoxItems {
+			hwnd: self.hwnd(),
+			owner: PhantomData,
+		}
 	}
 }
 
