@@ -5,7 +5,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! winsafe = { version = "0.0.5", features = ["dshow"] }
+//! winsafe = { version = "0.0.6", features = ["dshow"] }
 //! ```
 
 pub mod co;
