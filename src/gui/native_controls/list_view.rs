@@ -133,7 +133,7 @@ impl ListView {
 				let has_shift = GetAsyncKeyState(co::VK::SHIFT);
 
 				if has_ctrl && lvnk.wVKey == co::VK('A' as _) { // Ctrl+A
-					me.items().set_selected_all(true)?;
+					me.items().select_all(true)?;
 				} else if lvnk.wVKey == co::VK::APPS { // context menu key
 					me.show_context_menu(false, has_ctrl, has_shift)?;
 				}
@@ -244,12 +244,12 @@ impl ListView {
 			match self.items().hit_test(menu_pos) {
 				Some(item_over) => {
 					if !has_ctrl && !has_shift {
-						item_over.set_selected(true)?; // if not yet
-						item_over.set_focused()?;
+						item_over.select(true)?; // if not yet
+						item_over.focus()?;
 					}
 				},
 				None => { // no item was right-clicked
-					self.items().set_selected_all(false)?;
+					self.items().select_all(false)?;
 				},
 			}
 

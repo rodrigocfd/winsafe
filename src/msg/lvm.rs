@@ -378,11 +378,11 @@ impl MsgSend for GetImageList {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct GetItem<'a> {
-	pub lvitem: &'a mut LVITEM,
+pub struct GetItem<'a, 'b> {
+	pub lvitem: &'b mut LVITEM<'a>,
 }
 
-impl<'a> MsgSend for GetItem<'a> {
+impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

@@ -71,7 +71,7 @@ impl<'a> ComboBoxItems<'a> {
 
 	/// Sets the currently selected index, or clears it, by sending a
 	/// [`cb::SetCurSel`](crate::msg::cb::SetCurSel) message.
-	pub fn set_selected(&self, index: Option<u32>) {
+	pub fn select(&self, index: Option<u32>) {
 		self.hwnd.SendMessage(cb::SetCurSel { index });
 	}
 

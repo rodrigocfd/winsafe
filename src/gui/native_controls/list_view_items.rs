@@ -180,15 +180,9 @@ impl<'a> ListViewItems<'a> {
 			.map(|idx| self.get(idx))
 	}
 
-	/// Retrieves the number of selected items by sending an
-	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
-	pub fn selected_count(&self) -> u32 {
-		self.hwnd.SendMessage(lvm::GetSelectedCount {})
-	}
-
 	/// Sets or remove the selection for all items by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
-	pub fn set_selected_all(&self, set: bool) -> WinResult<()> {
+	pub fn select_all(&self, set: bool) -> WinResult<()> {
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
@@ -197,6 +191,12 @@ impl<'a> ListViewItems<'a> {
 			index: None,
 			lvitem: &lvi,
 		})
+	}
+
+	/// Retrieves the number of selected items by sending an
+	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
+	pub fn selected_count(&self) -> u32 {
+		self.hwnd.SendMessage(lvm::GetSelectedCount {})
 	}
 }
 
@@ -236,12 +236,25 @@ impl<'a> ListViewItem<'a> {
 		})
 	}
 
+	/// Sets the item as the focused one sending an
+	/// [`lvm:SetItemState`](crate::msg::lvm::SetItemState) message.
+	pub fn focus(&self) -> WinResult<()> {
+		let mut lvi = LVITEM::default();
+		lvi.stateMask = co::LVIS::FOCUSED;
+		lvi.state = co::LVIS::FOCUSED;
+
+		self.hwnd.SendMessage(lvm::SetItemState {
+			index: Some(self.index),
+			lvitem: &lvi,
+		})
+	}
+
 	/// Retrieves the icon index of the item by sending an
 	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
 	pub fn icon_index(&self) -> WinResult<Option<u32>> {
 		let mut lvi = LVITEM::default();
-		lvi.iItem = self.index as _,
-		lvi.mask = co::LVIF::IMAGE,
+		lvi.iItem = self.index as _;
+		lvi.mask = co::LVIF::IMAGE;
 
 		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
 
@@ -284,11 +297,11 @@ impl<'a> ListViewItem<'a> {
 	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
 	pub fn lparam(&self) -> WinResult<isize> {
 		let mut lvi = LVITEM::default();
-		lvi.iItem = self.index as _,
-		lvi.mask = co::LVIF::PARAM,
+		lvi.iItem = self.index as _;
+		lvi.mask = co::LVIF::PARAM;
 
 		self.hwnd.SendMessage(lvm::GetItem { lvitem: &mut lvi })?;
-		lvi.lParam
+		Ok(lvi.lParam)
 	}
 
 	/// Retrieves the unique ID for the item index by sending an
@@ -310,45 +323,9 @@ impl<'a> ListViewItem<'a> {
 		}).map(|_| rc)
 	}
 
-	/// Sets the item as the focused one sending an
-	/// [`lvm:SetItemState`](crate::msg::lvm::SetItemState) message.
-	pub fn set_focused(&self) -> WinResult<()> {
-		let mut lvi = LVITEM::default();
-		lvi.stateMask = co::LVIS::FOCUSED;
-		lvi.state = co::LVIS::FOCUSED;
-
-		self.hwnd.SendMessage(lvm::SetItemState {
-			index: Some(self.index),
-			lvitem: &lvi,
-		})
-	}
-
-	/// Sets the icon index of the item by sending an
-	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
-	pub fn set_icon_index(&self, icon_index: Option<u32>) -> WinResult<()> {
-		let mut lvi = LVITEM::default();
-		lvi.iItem = self.index as _,
-		lvi.mask = co::LVIF::IMAGE,
-		lvi.iImage = icon_index.map_or(-1, |idx| idx as _);
-
-		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-	}
-
-	/// Sets the user-defined value by sending an
-	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
-	pub fn set_lparam(&self, lparam: isize) -> WinResult<()> {
-		let mut lvi = LVITEM::default();
-		lvi.iItem = self.index as _,
-		lvi.mask = co::LVIF::PARAM,
-		lvi.lParam = lparam;
-
-		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-	}
-
 	/// Sets or removes the selection from the item by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
-	pub fn set_selected(&self, set: bool) -> WinResult<()>
-	{
+	pub fn select(&self, set: bool) -> WinResult<()> {
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
@@ -359,6 +336,28 @@ impl<'a> ListViewItem<'a> {
 			})?;
 
 		Ok(())
+	}
+
+	/// Sets the icon index of the item by sending an
+	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
+	pub fn set_icon_index(&self, icon_index: Option<u32>) -> WinResult<()> {
+		let mut lvi = LVITEM::default();
+		lvi.iItem = self.index as _;
+		lvi.mask = co::LVIF::IMAGE;
+		lvi.iImage = icon_index.map_or(-1, |idx| idx as _);
+
+		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })
+	}
+
+	/// Sets the user-defined value by sending an
+	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
+	pub fn set_lparam(&self, lparam: isize) -> WinResult<()> {
+		let mut lvi = LVITEM::default();
+		lvi.iItem = self.index as _;
+		lvi.mask = co::LVIF::PARAM;
+		lvi.lParam = lparam;
+
+		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })
 	}
 
 	/// Sets the text of the item under a column by sending an

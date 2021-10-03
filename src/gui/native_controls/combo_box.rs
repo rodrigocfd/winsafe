@@ -98,7 +98,7 @@ impl ComboBox {
 				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
 
 				self.items().add(&opts.items)?;
-				self.items().set_selected(opts.selected_item);
+				self.items().select(opts.selected_item);
 				Ok(())
 			},
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic

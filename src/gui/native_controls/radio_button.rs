@@ -80,7 +80,7 @@ impl RadioButton {
 				)?;
 
 				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
-				if opts.selected { self.set_selected(true); }
+				if opts.selected { self.select(true); }
 			},
 			OptsId::Dlg(ctrl_id) => {
 				self.0.base.create_dlg(*ctrl_id)?; // may panic
@@ -115,7 +115,7 @@ impl RadioButton {
 
 	/// Sets the this radio button as the currently selected one by sending a
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
-	pub fn set_selected(&self, selected: bool) {
+	pub fn select(&self, selected: bool) {
 		self.hwnd().SendMessage(bm::SetCheck {
 			state: if selected { co::BST::CHECKED } else { co::BST::UNCHECKED },
 		});
@@ -125,8 +125,8 @@ impl RadioButton {
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
 	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
 	/// can handle the event.
-	pub fn set_selected_and_trigger(&self, selected: bool) {
-		self.set_selected(selected);
+	pub fn select_and_trigger(&self, selected: bool) {
+		self.select(selected);
 		self.hwnd().SendMessage(wm::Command {
 			event: AccelMenuCtrl::Ctrl(
 				AccelMenuCtrlData {
