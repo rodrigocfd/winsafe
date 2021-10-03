@@ -236,6 +236,21 @@ impl<'a> ListViewItem<'a> {
 		})
 	}
 
+	/// Retrieves the icon index of the item by sending an
+	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
+	pub fn icon_index(&self) -> WinResult<Option<u32>> {
+		let mut lvi = LVITEM::default();
+		lvi.iItem = self.index as _,
+		lvi.mask = co::LVIF::IMAGE,
+
+		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
+
+		Ok(match lvi.iImage {
+			-1 => None,
+			idx => Some(idx as _),
+		})
+	}
+
 	/// Returns the zero-based index of the item.
 	pub const fn index(&self) -> u32 {
 		self.index
@@ -263,6 +278,17 @@ impl<'a> ListViewItem<'a> {
 	/// [`lvm::IsItemVisible`](crate::msg::lvm::IsItemVisible) message.
 	pub fn is_visible(&self) -> bool {
 		self.hwnd.SendMessage(lvm::IsItemVisible { index: self.index })
+	}
+
+	/// Retrieves the user-defined value by sending an
+	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
+	pub fn lparam(&self) -> WinResult<isize> {
+		let mut lvi = LVITEM::default();
+		lvi.iItem = self.index as _,
+		lvi.mask = co::LVIF::PARAM,
+
+		self.hwnd.SendMessage(lvm::GetItem { lvitem: &mut lvi })?;
+		lvi.lParam
 	}
 
 	/// Retrieves the unique ID for the item index by sending an
@@ -295,6 +321,28 @@ impl<'a> ListViewItem<'a> {
 			index: Some(self.index),
 			lvitem: &lvi,
 		})
+	}
+
+	/// Sets the icon index of the item by sending an
+	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
+	pub fn set_icon_index(&self, icon_index: Option<u32>) -> WinResult<()> {
+		let mut lvi = LVITEM::default();
+		lvi.iItem = self.index as _,
+		lvi.mask = co::LVIF::IMAGE,
+		lvi.iImage = icon_index.map_or(-1, |idx| idx as _);
+
+		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })
+	}
+
+	/// Sets the user-defined value by sending an
+	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
+	pub fn set_lparam(&self, lparam: isize) -> WinResult<()> {
+		let mut lvi = LVITEM::default();
+		lvi.iItem = self.index as _,
+		lvi.mask = co::LVIF::PARAM,
+		lvi.lParam = lparam;
+
+		self.hwnd.SendMessage(lvm::SetItem { lvitem: &mut lvi })
 	}
 
 	/// Sets or removes the selection from the item by sending an

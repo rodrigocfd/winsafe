@@ -374,6 +374,30 @@ impl MsgSend for GetImageList {
 	}
 }
 
+/// [`LVM_GETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitem)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetItem<'a> {
+	pub lvitem: &'a mut LVITEM,
+}
+
+impl<'a> MsgSend for GetItem<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::GETITEM.into(),
+			wparam: 0,
+			lparam: self.lvitem as *const _ as _,
+		}
+	}
+}
+
 /// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
 /// message, which has no parameters.
 ///
