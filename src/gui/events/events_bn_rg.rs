@@ -1,7 +1,7 @@
 use std::ptr::NonNull;
 use std::rc::Rc;
 
-use crate::aliases::BoxResult;
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
@@ -44,14 +44,14 @@ impl RadioGroupEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::{gui, BoxResult};
+	/// use winsafe::{gui, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// let radios: gui::RadioGroup;
 	///
 	/// radios.on().bn_clicked({
 	///     let radios = radios.clone();
-	///     move || -> BoxResult<()> {
+	///     move || -> ErrResult<()> {
 	///         println!("Selected {}",
 	///             rads.checked().unwrap()
 	///                 .hwnd().GetWindowText()?,
@@ -61,7 +61,7 @@ impl RadioGroupEvents {
 	/// });
 	/// ```
 	pub fn bn_clicked<F>(&self, func: F)
-		where F: Fn() -> BoxResult<()> + 'static,
+		where F: Fn() -> ErrResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -82,7 +82,7 @@ impl RadioGroupEvents {
 	/// [`BS::OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
 	/// send only if they have the [`BS::NOTIFY`](crate::co::BS::NOTIFY) style.
 	pub fn bn_dbl_clk<F>(&self, func: F)
-		where F: Fn() -> BoxResult<()> + 'static,
+		where F: Fn() -> ErrResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -101,7 +101,7 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_kill_focus<F>(&self, func: F)
-		where F: Fn() -> BoxResult<()> + 'static,
+		where F: Fn() -> ErrResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -120,7 +120,7 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_set_focus<F>(&self, func: F)
-		where F: Fn() -> BoxResult<()> + 'static,
+		where F: Fn() -> ErrResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 

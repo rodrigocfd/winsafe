@@ -1,4 +1,4 @@
-use crate::aliases::BoxResult;
+use crate::aliases::ErrResult;
 use crate::co;
 
 pub_struct_ctrl_events_proxy! {
@@ -44,13 +44,13 @@ impl EditEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
-		/// use winsafe::{gui, BoxResult};
+		/// use winsafe::{gui, ErrResult};
 		///
 		/// let txt: gui::Edit; // initialized somewhere
 		///
 		/// txt.on().en_change({
 		///     let txt = txt.clone(); // pass into the closure
-		///     move || -> BoxResult<()> {
+		///     move || -> ErrResult<()> {
 		///         println!("Text: {}", btn.hwnd().GetWindowText()?);
 		///         Ok(())
 		///     }

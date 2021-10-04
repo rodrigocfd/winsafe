@@ -7,7 +7,7 @@ macro_rules! pub_fn_wm_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn() -> BoxResult<()> + 'static,
+			where F: Fn() -> ErrResult<()> + 'static,
 		{
 			self.add_msg($wmconst, move |_| { func()?; Ok(None) }); // return value is never meaningful
 		}
@@ -23,7 +23,7 @@ macro_rules! pub_fn_wm_ret0_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> BoxResult<()> + 'static,
+			where F: Fn($parm) -> ErrResult<()> + 'static,
 		{
 			self.add_msg($wmconst,
 				move |p| { func(<$parm>::from_generic_wm(p))?; Ok(None) }); // return value is never meaningful
@@ -40,7 +40,7 @@ macro_rules! pub_fn_wm_retbool_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> BoxResult<bool> + 'static,
+			where F: Fn($parm) -> ErrResult<bool> + 'static,
 		{
 			self.add_msg($wmconst,
 				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))? as _)));
@@ -57,7 +57,7 @@ macro_rules! pub_fn_wm_retco_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> BoxResult<$retco> + 'static,
+			where F: Fn($parm) -> ErrResult<$retco> + 'static,
 		{
 			self.add_msg($wmconst,
 				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.0 as _)));
@@ -73,7 +73,7 @@ macro_rules! pub_fn_wm_ctlcolor {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> BoxResult<HBRUSH> + 'static,
+			where F: Fn($parm) -> ErrResult<HBRUSH> + 'static,
 		{
 			self.add_msg($wmconst,
 				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.ptr as _)));
@@ -118,7 +118,7 @@ macro_rules! pub_fn_cmd_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn() -> BoxResult<()> + 'static,
+			where F: Fn() -> ErrResult<()> + 'static,
 		{
 			self.parent_user_events().wm_command($cmd, self.ctrl_id as _,
 				move || func());
@@ -136,7 +136,7 @@ macro_rules! pub_fn_nfy_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn() -> BoxResult<()> + 'static,
+			where F: Fn() -> ErrResult<()> + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
 				move |_| { func()?; Ok(None) });
@@ -153,7 +153,7 @@ macro_rules! pub_fn_nfy_ret0_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&$param) -> BoxResult<()> + 'static,
+			where F: Fn(&$param) -> ErrResult<()> + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
 				move |p| { func(unsafe { p.cast_nmhdr::<$param>() })?; Ok(None) });
@@ -170,7 +170,7 @@ macro_rules! pub_fn_nfy_ret0_mutparam {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&mut $param) -> BoxResult<()> + 'static,
+			where F: Fn(&mut $param) -> ErrResult<()> + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
 				move |p| { func(unsafe { p.cast_nmhdr_mut::<$param>() })?; Ok(None) });
@@ -187,7 +187,7 @@ macro_rules! pub_fn_nfy_retbool_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&$param) -> BoxResult<bool> + 'static,
+			where F: Fn(&$param) -> ErrResult<bool> + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));
@@ -204,7 +204,7 @@ macro_rules! pub_fn_nfy_retbool_mutparam {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&mut $param) -> BoxResult<bool> + 'static,
+			where F: Fn(&mut $param) -> ErrResult<bool> + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<$param>() })? as _)));
@@ -222,7 +222,7 @@ macro_rules! pub_fn_nfy_reti32 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn() -> BoxResult<i32> + 'static,
+			where F: Fn() -> ErrResult<i32> + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
 				move |_| Ok(Some(func()? as _)));
@@ -239,7 +239,7 @@ macro_rules! pub_fn_nfy_reti32_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&$param) -> BoxResult<i32> + 'static,
+			where F: Fn(&$param) -> ErrResult<i32> + 'static,
 		{
 			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));

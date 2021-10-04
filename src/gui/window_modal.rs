@@ -1,4 +1,4 @@
-use crate::aliases::{BoxResult, WinResult};
+use crate::aliases::{ErrResult, WinResult};
 use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEvents;

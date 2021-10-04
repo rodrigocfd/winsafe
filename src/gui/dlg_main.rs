@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::aliases::{BoxResult, WinResult};
+use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
@@ -43,13 +43,13 @@ impl DlgMain {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> BoxResult<()>,
+		where F: FnOnce() -> ErrResult<()>,
 	{
 		self.0.base.run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> BoxResult<i32>
+		cmd_show: Option<co::SW>) -> ErrResult<i32>
 	{
 		self.0.base.create_dialog_param()?; // may panic
 		let hinst = self.base_ref().parent_hinstance()?;

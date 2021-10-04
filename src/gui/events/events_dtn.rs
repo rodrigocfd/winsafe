@@ -1,4 +1,4 @@
-use crate::aliases::BoxResult;
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::structs::{
 	NMDATETIMECHANGE,

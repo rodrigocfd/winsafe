@@ -1,4 +1,4 @@
-use crate::aliases::BoxResult;
+use crate::aliases::ErrResult;
 use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
 use crate::gui::base::Base;
@@ -41,7 +41,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
-/// use winsafe::{gui, msg, BoxResult};
+/// use winsafe::{gui, msg, ErrResult};
 ///
 /// fn main() {
 ///     let my_main = MyMain::new();
@@ -71,7 +71,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///     fn events(&self) {
 ///         self.wnd.on().wm_l_button_down({
 ///             let wnd = self.wnd.clone(); // clone to pass it to the closure
-///             move |p: msg::wm::LButtonDown| -> BoxResult<()> {
+///             move |p: msg::wm::LButtonDown| -> ErrResult<()> {
 ///                 let txt = &format!("Coords {} x {}", p.coords.x, p.coords.y);
 ///                 wnd.hwnd().SetWindowText(txt)?;
 ///                 Ok(())
@@ -170,7 +170,7 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> BoxResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32> {
 		if IsWindowsVistaOrGreater()? {
 			SetProcessDPIAware()?;
 		}
