@@ -320,8 +320,7 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 
 		} else { // search for next siblings
 			self.current = self.current
-				.map(|item| item.iter_next_siblings().next())
-				.flatten();
+				.and_then(|item| item.iter_next_siblings().next())
 		}
 
 		self.current

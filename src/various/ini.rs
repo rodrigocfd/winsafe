@@ -145,19 +145,19 @@ impl Ini {
 	pub fn value(&self, section: &str, key: &str) -> Option<&str> {
 		self.sections.iter()
 			.find(|s| s.name == section)
-			.map(|s| s.entries.iter()
+			.and_then(|s| s.entries.iter()
 				.find(|e| e.key == key)
 				.map(|e| e.val.as_ref())
-			).flatten()
+			)
 	}
 
 	/// Returns a mutable reference to the specified value, if any.
 	pub fn value_mut(&mut self, section: &str, key: &str) -> Option<&mut str> {
 		self.sections.iter_mut()
 			.find(|s| s.name == section)
-			.map(|s| s.entries.iter_mut()
+			.and_then(|s| s.entries.iter_mut()
 				.find(|e| e.key == key)
 				.map(|e| e.val.as_mut())
-			).flatten()
+			)
 	}
 }

@@ -55,6 +55,12 @@ impl<'a> ComboBoxItems<'a> {
 		self.hwnd.SendMessage(cb::ResetContent {})
 	}
 
+	/// Sets the currently selected index, or clears it, by sending a
+	/// [`cb::SetCurSel`](crate::msg::cb::SetCurSel) message.
+	pub fn select(&self, index: Option<u32>) {
+		self.hwnd.SendMessage(cb::SetCurSel { index });
+	}
+
 	/// Retrieves the index of the currently selected item, if any, by sending a
 	/// [`cb::GetCurSel`](crate::msg::cb::GetCurSel) message.
 	pub fn selected_index(&self) -> Option<u32> {
@@ -69,22 +75,18 @@ impl<'a> ComboBoxItems<'a> {
 			.and_then(|idx| self.text(idx))
 	}
 
-	/// Sets the currently selected index, or clears it, by sending a
-	/// [`cb::SetCurSel`](crate::msg::cb::SetCurSel) message.
-	pub fn select(&self, index: Option<u32>) {
-		self.hwnd.SendMessage(cb::SetCurSel { index });
-	}
-
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`cb::GetLbText`](crate::msg::cb::GetLbText) message.
 	pub fn text(&self, index: u32) -> Option<String> {
 		self.hwnd.SendMessage(cb::GetLbTextLen { index })
-			.ok().map(|len| {
+			.ok()
+			.and_then(|len| {
 				let mut buf = WString::new_alloc_buffer(len as usize + 1);
 				self.hwnd.SendMessage(cb::GetLbText{
 					index,
 					text: &mut buf,
-				}).ok().map(|_| buf.to_string())
-			}).flatten()
+				}).ok()
+					.map(|_| buf.to_string())
+			})
 	}
 }
