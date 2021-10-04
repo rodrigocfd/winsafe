@@ -51,7 +51,7 @@ impl RawModal {
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()>,
 	{
-		self.0.base.run_ui_thread(func);
+		self.base_ref().run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {

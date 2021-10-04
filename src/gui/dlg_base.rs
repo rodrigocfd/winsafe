@@ -65,16 +65,6 @@ impl DlgBase {
 		).map(|res| res as _)
 	}
 
-	pub(in crate::gui) fn ui_thread_message_handler(&self) {
-		self.base.ui_thread_message_handler();
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base.run_ui_thread(func);
-	}
-
 	extern "system" fn dialog_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
