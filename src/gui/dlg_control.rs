@@ -1,3 +1,4 @@
+use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::aliases::ErrResult;
@@ -6,6 +7,7 @@ use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
+use crate::gui::resizer::{Horz, Vert};
 use crate::structs::{POINT, SIZE};
 
 #[derive(Clone)]
@@ -22,6 +24,7 @@ impl DlgControl {
 		parent_base_ref: &Base,
 		dialog_id: u16,
 		position: POINT,
+		horz_resize: Horz, vert_resize: Vert,
 		ctrl_id: Option<u16>) -> DlgControl
 	{
 		let dlg = Self(
@@ -33,7 +36,7 @@ impl DlgControl {
 				},
 			),
 		);
-		dlg.default_message_handlers(parent_base_ref);
+		dlg.default_message_handlers(parent_base_ref, horz_resize, vert_resize);
 		dlg
 	}
 
@@ -47,9 +50,14 @@ impl DlgControl {
 		self.base_ref().run_ui_thread(func);
 	}
 
-	fn default_message_handlers(&self, parent_base_ref: &Base) {
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+	fn default_message_handlers(&self,
+		parent_base_ref: &Base, horz: Horz, vert: Vert)
+	{
+		self.base_ref().default_message_handlers();
+
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
 			let self2 = self.clone();
+			let parent_base_ptr = NonNull::from(parent_base_ref);
 			move |_| {
 				// Create the control.
 				self2.0.base.create_dialog_param()?; // may panic
@@ -68,6 +76,12 @@ impl DlgControl {
 					co::GWLP::ID,
 					self2.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as _,
 				);
+
+				unsafe {
+					parent_base_ptr.as_ref().resizer_add(
+						parent_base_ptr.as_ref(), self2.base_ref().hwnd_ref(), horz, vert)?;
+				}
+
 				Ok(0)
 			}
 		});
@@ -79,7 +93,5 @@ impl DlgControl {
 				Ok(())
 			}
 		});
-
-		self.base_ref().ui_thread_message_handler();
 	}
 }

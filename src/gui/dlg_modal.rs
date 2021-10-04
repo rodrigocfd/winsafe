@@ -44,6 +44,8 @@ impl DlgModal {
 	}
 
 	fn default_message_handlers(&self) {
+		self.base_ref().default_message_handlers();
+
 		self.base_ref().privileged_events_ref().wm_init_dialog({
 			let self2 = self.clone();
 			move |_| {
@@ -72,7 +74,5 @@ impl DlgModal {
 				Ok(())
 			}
 		});
-
-		self.base_ref().ui_thread_message_handler();
 	}
 }

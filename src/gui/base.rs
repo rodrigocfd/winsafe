@@ -5,6 +5,7 @@ use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
+use crate::gui::resizer::{Horz, Resizer, Vert};
 use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
@@ -13,9 +14,10 @@ use crate::structs::MSG;
 pub(in crate::gui) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
-	ptr_parent: Option<NonNull<Base>>, // parent of this window
+	parent_ptr: Option<NonNull<Base>>, // parent of this window
 	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	privileged_events: WindowEvents, // inserted internally to automate tasks: all will be executed
+	resizer: Resizer,
 }
 
 impl Base {
@@ -27,9 +29,10 @@ impl Base {
 		Self {
 			hwnd: HWND::NULL,
 			is_dialog,
-			ptr_parent: parent_base_ref.map(|pb_ref| NonNull::from(pb_ref)),
+			parent_ptr: parent_base_ref.map(|pb_ref| NonNull::from(pb_ref)),
 			user_events: WindowEvents::new(),
 			privileged_events: WindowEvents::new(),
+			resizer: Resizer::new(),
 		}
 	}
 
@@ -41,12 +44,12 @@ impl Base {
 		self.hwnd = hwnd;
 	}
 
-	pub(in crate::gui) fn creation_wm(&self) -> co::WM {
+	pub(in crate::gui) const fn create_or_initdlg(&self) -> co::WM {
 		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
 	}
 
 	pub(in crate::gui) fn parent_base_ref(&self) -> Option<&Base> {
-		self.ptr_parent.as_ref().map(|ptr| unsafe { ptr.as_ref() })
+		self.parent_ptr.as_ref().map(|ptr| unsafe { ptr.as_ref() })
 	}
 
 	pub(in crate::gui) fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
@@ -82,15 +85,11 @@ impl Base {
 		self.privileged_events.process_all_messages(wm_any)
 	}
 
-	pub(in crate::gui) fn ui_thread_message_handler(&self) {
-		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
-			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
-				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
-				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
-				pack().unwrap_or_else(|err| post_quit_error(err));
-			}
-			Ok(0)
-		});
+	pub(in crate::gui) fn resizer_add(&self,
+		parent_base_ref: &Base, hwnd_ref: &HWND,
+		horz: Horz, vert: Vert) -> WinResult<()>
+	{
+		self.resizer.add(parent_base_ref, hwnd_ref, horz, vert)
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
@@ -109,6 +108,22 @@ impl Base {
 			msg_id: Self::WM_UI_THREAD,
 			wparam: Self::WM_UI_THREAD.0 as _,
 			lparam: ptr_pack as _,
+		});
+	}
+
+	pub(in crate::gui) fn default_message_handlers(&self) {
+		self.privileged_events.wm_size({
+			let resizer = self.resizer.clone();
+			move |p| { resizer.resize(&p)?; Ok(()) }
+		});
+
+		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
+			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
+				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
+				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
+				pack().unwrap_or_else(|err| post_quit_error(err));
+			}
+			Ok(0)
 		});
 	}
 

@@ -104,6 +104,8 @@ impl RawMain {
 	}
 
 	fn default_message_handlers(&self) {
+		self.base_ref().default_message_handlers();
+
 		self.base_ref().user_events_ref().wm_activate({
 			let self2 = self.clone();
 			move |p| {
@@ -138,8 +140,6 @@ impl RawMain {
 			PostQuitMessage(0);
 			Ok(())
 		});
-
-		self.base_ref().ui_thread_message_handler();
 	}
 }
 

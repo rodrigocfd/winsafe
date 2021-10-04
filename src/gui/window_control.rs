@@ -3,6 +3,7 @@ use crate::gui::base::Base;
 use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEvents;
 use crate::gui::raw_control::{WindowControlOpts, RawControl};
+use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::handles::HWND;
 use crate::structs::POINT;
@@ -54,12 +55,17 @@ impl WindowControl {
 		parent: &dyn Parent,
 		dialog_id: u16,
 		position: POINT,
+		horz_resize: Horz, vert_resize: Vert,
 		ctrl_id: Option<u16>) -> WindowControl
 	{
 		Self {
 			raw_dlg: RawDlg::Dlg(
 				DlgControl::new(
-					baseref_from_parent(parent), dialog_id, position, ctrl_id,
+					baseref_from_parent(parent),
+					dialog_id,
+					position,
+					horz_resize, vert_resize,
+					ctrl_id,
 				),
 			),
 		}

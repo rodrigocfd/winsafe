@@ -5,6 +5,7 @@ use crate::co;
 use crate::gui::events::TrackbarEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
+use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::trbm;
@@ -36,7 +37,7 @@ impl Trackbar {
 	pub fn new(parent: &dyn Parent, opts: TrackbarOpts) -> Trackbar {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = TrackbarOpts::define_ctrl_id(opts);
-		let ctrl_id = opts.ctrl_id;
+		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
 
 		let new_self = Self(
 			Arc::new(
@@ -48,9 +49,9 @@ impl Trackbar {
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
 			let me = new_self.clone();
-			move |_| { me.create()?; Ok(0) }
+			move |_| { me.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -58,7 +59,10 @@ impl Trackbar {
 
 	/// Instantiates a new `Trackbar` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> Trackbar {
+	pub fn new_dlg(
+		parent: &dyn Parent, ctrl_id: u16,
+		horz_resize: Horz, vert_resize: Vert) -> Trackbar
+	{
 		let parent_base_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
@@ -73,13 +77,13 @@ impl Trackbar {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create()?; Ok(true) }
+			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
@@ -96,11 +100,12 @@ impl Trackbar {
 				if opts.range != (0, 100) {
 					self.set_range(opts.range.0, opts.range.1);
 				}
-
-				Ok(())
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
 		}
+
+		self.0.base.parent_base_ref().resizer_add(
+			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
 
 	pub_fn_hwnd!();
@@ -179,6 +184,15 @@ pub struct TrackbarOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+	/// Horizontal behavior when the parent is resized.
+	///
+	/// Defaults to `Horz::None`.
+	pub horz_resize: Horz,
+	/// Vertical behavior when the parent is resized.
+	///
+	/// Defaults to `Vert::None`.
+	pub vert_resize: Vert,
+
 	/// The minimum and maximum position values.
 	///
 	/// Defaults to 0 and 100.
@@ -194,6 +208,8 @@ impl Default for TrackbarOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
+			horz_resize: Horz::None,
+			vert_resize: Vert::None,
 			range: (0, 100),
 		}
 	}

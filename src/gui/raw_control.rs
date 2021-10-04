@@ -1,3 +1,4 @@
+use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::aliases::ErrResult;
@@ -6,6 +7,7 @@ use crate::enums::IdMenu;
 use crate::gui::base::Base;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
+use crate::gui::resizer::{Horz, Vert};
 use crate::handles::{HBRUSH, HCURSOR, HICON};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
@@ -22,6 +24,8 @@ impl RawControl {
 	pub(in crate::gui) fn new(
 		parent_base_ref: &Base, opts: WindowControlOpts) -> RawControl
 	{
+		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
+
 		let wnd = Self(
 			Arc::new(
 				Obj {
@@ -30,7 +34,7 @@ impl RawControl {
 				},
 			),
 		);
-		wnd.default_message_handlers(parent_base_ref);
+		wnd.default_message_handlers(parent_base_ref, horz, vert);
 		wnd
 	}
 
@@ -44,9 +48,14 @@ impl RawControl {
 		self.base_ref().run_ui_thread(func);
 	}
 
-	fn default_message_handlers(&self, parent_base_ref: &Base) {
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+	fn default_message_handlers(&self,
+		parent_base_ref: &Base, horz: Horz, vert: Vert)
+	{
+		self.base_ref().default_message_handlers();
+
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
 			let self2 = self.clone();
+			let parent_base_ptr = NonNull::from(parent_base_ref);
 			move |_| {
 				let opts = &self2.0.opts;
 
@@ -68,6 +77,12 @@ impl RawControl {
 					wnd_pos, wnd_sz,
 					opts.ex_style, opts.style,
 				)?;
+
+				unsafe {
+					parent_base_ptr.as_ref().resizer_add(
+						parent_base_ptr.as_ref(), self2.base_ref().hwnd_ref(), horz, vert)?;
+				}
+
 				Ok(0)
 			}
 		});
@@ -79,8 +94,6 @@ impl RawControl {
 				Ok(())
 			}
 		});
-
-		self.base_ref().ui_thread_message_handler();
 	}
 }
 
@@ -147,6 +160,14 @@ pub struct WindowControlOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+	/// Horizontal behavior when the parent is resized.
+	///
+	/// Defaults to `Horz::None`.
+	pub horz_resize: Horz,
+	/// Vertical behavior when the parent is resized.
+	///
+	/// Defaults to `Vert::None`.
+	pub vert_resize: Vert,
 }
 
 impl Default for WindowControlOpts {
@@ -162,6 +183,8 @@ impl Default for WindowControlOpts {
 			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
 			ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
+			horz_resize: Horz::None,
+			vert_resize: Vert::None,
 		}
 	}
 }

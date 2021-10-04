@@ -4,6 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
+use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::pbm;
@@ -34,6 +35,7 @@ impl ProgressBar {
 	pub fn new(parent: &dyn Parent, opts: ProgressBarOpts) -> ProgressBar {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
+		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
 
 		let new_self = Self(
 			Arc::new(
@@ -44,9 +46,9 @@ impl ProgressBar {
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
 			let me = new_self.clone();
-			move |_| { me.create()?; Ok(0) }
+			move |_| { me.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -54,7 +56,10 @@ impl ProgressBar {
 
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> ProgressBar {
+	pub fn new_dlg(
+		parent: &dyn Parent, ctrl_id: u16,
+		horz_resize: Horz, vert_resize: Vert) -> ProgressBar
+	{
 		let parent_base_ref = baseref_from_parent(parent);
 
 		let new_self = Self(
@@ -68,13 +73,13 @@ impl ProgressBar {
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create()?; Ok(true) }
+			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
@@ -87,11 +92,12 @@ impl ProgressBar {
 					opts.window_ex_style,
 					opts.window_style | opts.progress_bar_style.into(),
 				)?;
-
-				Ok(())
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ()), // may panic
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
 		}
+
+		self.0.base.parent_base_ref().resizer_add(
+			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
 
 	pub_fn_hwnd!();
@@ -216,6 +222,14 @@ pub struct ProgressBarOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+	/// Horizontal behavior when the parent is resized.
+	///
+	/// Defaults to `Horz::None`.
+	pub horz_resize: Horz,
+	/// Vertical behavior when the parent is resized.
+	///
+	/// Defaults to `Vert::None`.
+	pub vert_resize: Vert,
 }
 
 impl Default for ProgressBarOpts {
@@ -227,6 +241,8 @@ impl Default for ProgressBarOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
+			horz_resize: Horz::None,
+			vert_resize: Vert::None,
 		}
 	}
 }

@@ -91,7 +91,7 @@ impl StatusBar {
 			)),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
 			let me = new_self.clone();
 			move |_| { me.create()?; Ok(0) }
 		});

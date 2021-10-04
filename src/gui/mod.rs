@@ -33,7 +33,7 @@ pub use native_controls::*;
 pub use raw_control::WindowControlOpts;
 pub use raw_main::WindowMainOpts;
 pub use raw_modal::WindowModalOpts;
-pub use resizer::{Resizer, Resz};
+pub use resizer::{Horz, Vert};
 pub use traits::{Child, Parent};
 pub use window_control::WindowControl;
 pub use window_main::WindowMain;

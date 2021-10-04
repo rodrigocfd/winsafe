@@ -30,7 +30,7 @@ pub(in crate::gui) struct BaseNativeControl(VeryUnsafeCell<Obj>);
 
 struct Obj { // actual fields of BaseNativeControl
 	hwnd: HWND,
-	ptr_parent: NonNull<Base>,
+	parent_ptr: NonNull<Base>,
 	subclass_events: WindowEvents, // for control subclassing
 }
 
@@ -40,7 +40,7 @@ impl BaseNativeControl {
 			VeryUnsafeCell::new(
 				Obj {
 					hwnd: HWND::NULL,
-					ptr_parent: NonNull::from(parent_base_ref),
+					parent_ptr: NonNull::from(parent_base_ref),
 					subclass_events: WindowEvents::new(),
 				},
 			),
@@ -52,7 +52,7 @@ impl BaseNativeControl {
 	}
 
 	pub(in crate::gui) fn parent_base_ref(&self) -> &Base {
-		unsafe { self.0.ptr_parent.as_ref() }
+		unsafe { self.0.parent_ptr.as_ref() }
 	}
 
 	pub(in crate::gui) fn on_subclass(&self) -> &WindowEvents {
@@ -98,7 +98,7 @@ impl BaseNativeControl {
 	}
 
 	pub(in crate::gui) fn create_dlg(&self, ctrl_id: u16) -> WinResult<HWND> {
-		if self.parent_base_ref().creation_wm() != co::WM::INITDIALOG {
+		if self.parent_base_ref().create_or_initdlg() != co::WM::INITDIALOG {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
 

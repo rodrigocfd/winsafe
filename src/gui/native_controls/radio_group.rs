@@ -1,10 +1,12 @@
 use std::ops::Index;
+use std::rc::Rc;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::{RadioButton, RadioButtonOpts};
 use crate::gui::events::RadioGroupEvents;
+use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{baseref_from_parent, Child, Parent};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
@@ -42,19 +44,17 @@ impl RadioGroup {
 		}
 
 		let parent_base_ref = baseref_from_parent(parent);
-		let mut ctrl_ids = Vec::with_capacity(opts.len());
-		let mut radios = Vec::with_capacity(opts.len());
 
-		for (idx, radio_opts) in opts.iter().enumerate() {
-			let mut radio_opts = radio_opts.manual_clone();
-			if idx == 0 { // first radio?
-				radio_opts.window_style |= co::WS::TABSTOP | co::WS::GROUP;
+		let radios = opts.iter().enumerate().map(|(i, opt)| {
+			let mut radio_opt = opt.manual_clone();
+			if i == 0 { // first radio?
+				radio_opt.window_style |= co::WS::TABSTOP | co::WS::GROUP;
 			}
+			RadioButton::new(parent, radio_opt)
+		}).collect::<Vec<_>>();
 
-			let new_radio = RadioButton::new(parent, radio_opts);
-			ctrl_ids.push(new_radio.ctrl_id());
-			radios.push(new_radio);
-		}
+		let ctrl_ids = opts.iter().map(|opt| opt.ctrl_id).collect::<Vec<_>>();
+		let horz_verts = Rc::new(opts.iter().map(|opt| (opt.horz_resize, opt.vert_resize)).collect::<Vec<_>>());
 
 		let new_self = Self(
 			Arc::new(VeryUnsafeCell::new(
@@ -65,9 +65,10 @@ impl RadioGroup {
 			)),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.creation_wm(), {
+		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
 			let me = new_self.clone();
-			move |_| { me.create()?; Ok(0) }
+			let horz_verts = horz_verts.clone();
+			move |_| { me.create(horz_verts.as_ref())?; Ok(0) }
 		});
 
 		new_self
@@ -79,38 +80,38 @@ impl RadioGroup {
 	/// # Panics
 	///
 	/// Panics if no control IDs are passed.
-	pub fn new_dlg(parent: &dyn Parent, ctrl_ids: &[u16]) -> RadioGroup {
-		if ctrl_ids.is_empty() {
+	pub fn new_dlg(parent: &dyn Parent, ctrls: &[(u16, Horz, Vert)]) -> RadioGroup {
+		if ctrls.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
 		let parent_base_ref = baseref_from_parent(parent);
-		let mut radios = Vec::with_capacity(ctrl_ids.len());
 
-		for ctrl_id in ctrl_ids.iter() {
-			radios.push(RadioButton::new_dlg(parent, *ctrl_id));
-		}
+		let radios = ctrls.iter().map(|(ctrl_id, _, _)| RadioButton::new_dlg(parent, *ctrl_id)).collect::<Vec<_>>();
+		let ctrl_ids = ctrls.iter().map(|(ctrl_id, _, _)| *ctrl_id).collect::<Vec<_>>();
+		let horz_verts = Rc::new(ctrls.iter().map(|(_, horz, vert)| (*horz, *vert)).collect::<Vec<_>>());
 
 		let new_self = Self(
 			Arc::new(VeryUnsafeCell::new(
 				Obj {
 					radios,
-					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids.to_vec()),
+					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
 				},
 			)),
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
 			let me = new_self.clone();
-			move |_| { me.create()?; Ok(true) }
+			let horz_verts = horz_verts.clone();
+			move |_| { me.create(horz_verts.as_ref())?; Ok(true) }
 		});
 
 		new_self
 	}
 
-	fn create(&self) -> WinResult<()> {
-		for radio in self.0.as_mut().radios.iter_mut() {
-			radio.create()?;
+	fn create(&self, horz_vert: &[(Horz, Vert)]) -> WinResult<()> {
+		for (i, radio) in self.0.as_mut().radios.iter_mut().enumerate() {
+			radio.create(horz_vert[i].0, horz_vert[i].1)?;
 		}
 		Ok(())
 	}

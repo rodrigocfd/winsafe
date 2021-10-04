@@ -65,6 +65,8 @@ impl DlgMain {
 	}
 
 	fn default_message_handlers(&self) {
+		self.base_ref().default_message_handlers();
+
 		self.base_ref().user_events_ref().wm_close({
 			let self2 = self.clone();
 			move || { self2.base_ref().hwnd_ref().DestroyWindow()?; Ok(()) }
@@ -74,8 +76,6 @@ impl DlgMain {
 			PostQuitMessage(0);
 			Ok(())
 		});
-
-		self.base_ref().ui_thread_message_handler();
 	}
 
 	fn set_icon_if_any(&self, hinst: HINSTANCE) -> WinResult<()> {

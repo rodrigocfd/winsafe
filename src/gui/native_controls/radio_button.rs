@@ -4,6 +4,7 @@ use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData};
 use crate::gui::events::ButtonEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
+use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
@@ -33,7 +34,7 @@ impl_debug!(RadioButton);
 impl_child!(RadioButton);
 
 impl RadioButton {
-	pub(crate) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
+	pub(in crate::gui) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
@@ -47,7 +48,7 @@ impl RadioButton {
 		)
 	}
 
-	pub(crate) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
+	pub(in crate::gui) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
 		let parent_base_ref = baseref_from_parent(parent);
 
 		Self(
@@ -59,7 +60,7 @@ impl RadioButton {
 		)
 	}
 
-	pub(crate) fn create(&self) -> WinResult<()> {
+	pub(in crate::gui) fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
@@ -79,13 +80,16 @@ impl RadioButton {
 					opts.window_style | opts.button_style.into(),
 				)?;
 
-				our_hwnd.SendMessage(wm::SetFont{ hfont: ui_font(), redraw: true });
+				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
 				if opts.selected { self.select(true); }
 			},
 			OptsId::Dlg(ctrl_id) => {
 				self.0.base.create_dlg(*ctrl_id)?; // may panic
 			},
 		}
+
+		self.0.base.parent_base_ref().resizer_add(
+			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)?;
 
 		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
 		Ok(())
@@ -187,6 +191,14 @@ pub struct RadioButtonOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
+	/// Horizontal behavior when the parent is resized.
+	///
+	/// Defaults to `Horz::None`.
+	pub horz_resize: Horz,
+	/// Vertical behavior when the parent is resized.
+	///
+	/// Defaults to `Vert::None`.
+	pub vert_resize: Vert,
 
 	/// Initial selection state.
 	///
@@ -204,6 +216,8 @@ impl Default for RadioButtonOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
+			horz_resize: Horz::None,
+			vert_resize: Vert::None,
 			selected: false,
 		}
 	}
@@ -226,6 +240,8 @@ impl RadioButtonOpts {
 			window_style: self.window_style,
 			window_ex_style: self.window_ex_style,
 			ctrl_id: self.ctrl_id,
+			horz_resize: self.horz_resize,
+			vert_resize: self.vert_resize,
 			selected: self.selected,
 		}
 	}
