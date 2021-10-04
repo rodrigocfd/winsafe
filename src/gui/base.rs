@@ -115,8 +115,9 @@ impl Base {
 	pub(in crate::gui) fn run_main_loop(
 		haccel: Option<HACCEL>) -> ErrResult<i32>
 	{
+		let mut msg = MSG::default();
+
 		loop {
-			let mut msg = MSG::default();
 			if !GetMessage(&mut msg, None, 0, 0)? {
 				// WM_QUIT was sent, gracefully terminate the program.
 				// wParam has the program exit code.
