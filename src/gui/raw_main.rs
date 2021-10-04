@@ -32,7 +32,6 @@ impl RawMain {
 				},
 			)),
 		);
-		wnd.0.base.ui_thread_message_handler();
 		wnd.default_message_handlers();
 		wnd
 	}
@@ -139,6 +138,8 @@ impl RawMain {
 			PostQuitMessage(0);
 			Ok(())
 		});
+
+		self.base_ref().ui_thread_message_handler();
 	}
 }
 

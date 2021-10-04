@@ -33,7 +33,6 @@ impl DlgControl {
 				},
 			),
 		);
-		dlg.0.base.ui_thread_message_handler();
 		dlg.default_message_handlers(parent_base_ref);
 		dlg
 	}
@@ -80,5 +79,7 @@ impl DlgControl {
 				Ok(())
 			}
 		});
+
+		self.base_ref().ui_thread_message_handler();
 	}
 }

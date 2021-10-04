@@ -25,7 +25,6 @@ impl DlgModal {
 				},
 			),
 		);
-		dlg.0.base.ui_thread_message_handler();
 		dlg.default_message_handlers();
 		dlg
 	}
@@ -73,5 +72,7 @@ impl DlgModal {
 				Ok(())
 			}
 		});
+
+		self.base_ref().ui_thread_message_handler();
 	}
 }

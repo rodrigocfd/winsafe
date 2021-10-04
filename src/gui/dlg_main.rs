@@ -33,7 +33,6 @@ impl DlgMain {
 				},
 			),
 		);
-		dlg.0.base.ui_thread_message_handler();
 		dlg.default_message_handlers();
 		dlg
 	}
@@ -75,6 +74,8 @@ impl DlgMain {
 			PostQuitMessage(0);
 			Ok(())
 		});
+
+		self.base_ref().ui_thread_message_handler();
 	}
 
 	fn set_icon_if_any(&self, hinst: HINSTANCE) -> WinResult<()> {

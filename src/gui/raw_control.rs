@@ -30,7 +30,6 @@ impl RawControl {
 				},
 			),
 		);
-		wnd.0.base.ui_thread_message_handler();
 		wnd.default_message_handlers(parent_base_ref);
 		wnd
 	}
@@ -80,6 +79,8 @@ impl RawControl {
 				Ok(())
 			}
 		});
+
+		self.base_ref().ui_thread_message_handler();
 	}
 }
 
