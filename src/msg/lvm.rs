@@ -180,7 +180,7 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::FINDITEM.into(),
-			wparam: self.start_index.map(|i| i as i32).unwrap_or(-1) as _,
+			wparam: self.start_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: self.lvfindinfo as *const _ as _,
 		}
 	}
@@ -521,7 +521,7 @@ impl MsgSend for GetNextItem {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETNEXTITEM.into(),
-			wparam: self.initial_index.map(|i| i as i32).unwrap_or(-1) as _,
+			wparam: self.initial_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: self.relationship.0 as _,
 		}
 	}
@@ -1211,7 +1211,7 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETITEMSTATE.into(),
-			wparam: self.index.map(|i| i as i32).unwrap_or(-1) as _,
+			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
 			lparam: self.lvitem as *const _ as _,
 		}
 	}

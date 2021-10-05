@@ -613,7 +613,7 @@ impl MsgSend for InsertString {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
-			wparam: self.insertion_index.map(|i| i as i32).unwrap_or(-1) as _,
+			wparam: self.insertion_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
@@ -757,7 +757,7 @@ impl MsgSend for SetSel {
 		WndMsg {
 			msg_id: co::LB::SETSEL.into(),
 			wparam: self.select as _,
-			lparam: self.index.map(|i| i as i32).unwrap_or(-1) as _,
+			lparam: self.index.map_or(-1, |idx| idx as i32) as _,
 		}
 	}
 }

@@ -4,7 +4,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::{HIWORD, LOWORD};
+use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
 use crate::privs::{CB_ERR, CB_ERRSPACE};
@@ -24,7 +24,8 @@ impl MsgSend for AddString {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERR | CB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
 			idx => Ok(idx as _),
 		}
 	}
@@ -116,7 +117,7 @@ impl MsgSend for FindString {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::FINDSTRING.into(),
-			wparam: self.preceding_index.map(|i| i as _).unwrap_or(-1) as _,
+			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
@@ -144,7 +145,7 @@ impl MsgSend for FindStringExact {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::FINDSTRINGEXACT.into(),
-			wparam: self.preceding_index.map(|i| i as _).unwrap_or(-1) as _,
+			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
@@ -430,12 +431,12 @@ pub struct GetItemHeight {
 }
 
 impl MsgSend for GetItemHeight {
-	type RetType = WinResult<i32>;
+	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			cy => Ok(cy),
+			cy => Ok(cy as _),
 		}
 	}
 
@@ -586,7 +587,7 @@ impl MsgSend for InitStorage {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			CB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
 			n => Ok(n as _),
 		}
 	}
@@ -596,6 +597,35 @@ impl MsgSend for InitStorage {
 			msg_id: co::CB::INITSTORAGE.into(),
 			wparam: self.num_items as _,
 			lparam: self.memory_bytes as _,
+		}
+	}
+}
+
+/// [`CB_INSERTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-insertstring)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct InsertString {
+	pub index: Option<u32>,
+	pub text: WString,
+}
+
+impl MsgSend for InsertString {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
+			idx => Ok(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::INSERTSTRING.into(),
+			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
 }
@@ -650,7 +680,7 @@ impl MsgSend for SelectString {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETCURSEL.into(),
-			wparam: self.preceding_index.map(|i| i as i32).unwrap_or(-1) as _,
+			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.search_text.as_ptr() } as _,
 		}
 	}
@@ -732,6 +762,171 @@ impl MsgSend for SetDroppedWidth {
 		WndMsg {
 			msg_id: co::CB::SETDROPPEDWIDTH.into(),
 			wparam: self.min_width as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_SETEDITSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-seteditsel)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetEditSel {
+	pub start_pos: Option<u32>,
+	pub end_pos: Option<u32>,
+}
+
+impl MsgSend for SetEditSel {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETEDITSEL.into(),
+			wparam: 0,
+			lparam: MAKEDWORD(
+				self.start_pos.map_or(-1, |pos| pos as i16) as _,
+				self.end_pos.map_or(-1, |pos| pos as i16) as _,
+			) as _,
+		}
+	}
+}
+
+/// [`CB_SETEXTENDEDUI`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setextendedui)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetExtendedUi {
+	pub use_extended_ui: bool,
+}
+
+impl MsgSend for SetExtendedUi {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETEXTENDEDUI.into(),
+			wparam: self.use_extended_ui as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_SETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-sethorizontalextent)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetHorizontalExtent {
+	pub scrollable_width: u32,
+}
+
+impl MsgSend for SetHorizontalExtent {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETHORIZONTALEXTENT.into(),
+			wparam: self.scrollable_width as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`CB_SETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setitemdata)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetItemData {
+	pub index: u32,
+	pub data: isize,
+}
+
+impl MsgSend for SetItemData {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETITEMDATA.into(),
+			wparam: self.index as _,
+			lparam: self.data,
+		}
+	}
+}
+
+/// [`CB_SETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setitemheight)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetItemHeight {
+	pub component: i32,
+	pub height: u32,
+}
+
+impl MsgSend for SetItemHeight {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETITEMHEIGHT.into(),
+			wparam: self.component as _,
+			lparam: self.height as _,
+		}
+	}
+}
+
+/// [`CB_SETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setlocale)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetLocale {
+	pub locale: LANGID,
+}
+
+impl MsgSend for SetLocale {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::CB::SETLOCALE.into(),
+			wparam: self.locale.0 as _,
 			lparam: 0,
 		}
 	}

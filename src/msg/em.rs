@@ -214,8 +214,8 @@ impl MsgSend for SetSel {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETSEL.into(),
-			wparam: self.start.map(|n| n as i32).unwrap_or(-1) as _,
-			lparam: self.end.map(|n| n as i32).unwrap_or(-1) as _,
+			wparam: self.start.map_or(-1, |n| n as i32) as _,
+			lparam: self.end.map_or(-1, |n| n as i32) as _,
 		}
 	}
 }

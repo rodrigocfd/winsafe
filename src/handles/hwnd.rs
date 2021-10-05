@@ -325,7 +325,7 @@ impl HWND {
 			unsafe {
 				user32::GetAltTabInfoW(
 					self.ptr,
-					item.map(|iItem| iItem as _).unwrap_or(-1),
+					item.map_or(-1, |item| item as i32),
 					ati as *mut _ as _,
 					item.map_or(std::ptr::null_mut(), |_| buf.as_mut_ptr()),
 					buf_sz,
