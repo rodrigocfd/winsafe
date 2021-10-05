@@ -24,7 +24,7 @@ use crate::handles::HWND;
 ///     }
 /// }
 /// ```
-pub trait Child: Clone {
+pub trait Child {
 	/// Returns a reference to the [`HWND`](crate::HWND) of the child control.
 	fn hwnd_ref(&self) -> &HWND;
 }
@@ -34,7 +34,7 @@ pub trait Child: Clone {
 /// **Note:** This is a
 /// [sealed trait](https://rust-lang.github.io/api-guidelines/future-proofing.html#c-sealed)
 /// which cannot be implemented outside the library.
-pub trait Parent: Clone + private::Sealed {
+pub trait Parent: private::Sealed {
 	/// Returns a reference to the `Any` trait, allowing downcasting.
 	fn as_any(&self) -> &dyn Any;
 }

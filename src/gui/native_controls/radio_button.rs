@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData};
@@ -21,8 +19,7 @@ use crate::structs::{POINT, SIZE};
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
-#[derive(Clone)]
-pub struct RadioButton(Arc<Obj>);
+pub struct RadioButton(Obj);
 
 struct Obj { // actual fields of RadioButton
 	base: BaseNativeControl,
@@ -43,13 +40,11 @@ impl RadioButton {
 		let ctrl_id = opts.ctrl_id;
 
 		Self(
-			Arc::new(
-				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
-					opts_id: OptsId::Wnd(opts),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
-				},
-			),
+			Obj {
+				base: BaseNativeControl::new(parent_base_ref),
+				opts_id: OptsId::Wnd(opts),
+				events: ButtonEvents::new(parent_base_ref, ctrl_id),
+			},
 		)
 	}
 
@@ -57,13 +52,11 @@ impl RadioButton {
 		let parent_base_ref = baseref_from_parent(parent);
 
 		Self(
-			Arc::new(
-				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
-					opts_id: OptsId::Dlg(ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
-				},
-			),
+			Obj {
+				base: BaseNativeControl::new(parent_base_ref),
+				opts_id: OptsId::Dlg(ctrl_id),
+				events: ButtonEvents::new(parent_base_ref, ctrl_id),
+			},
 		)
 	}
 
