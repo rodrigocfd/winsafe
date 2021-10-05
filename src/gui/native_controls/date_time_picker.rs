@@ -35,7 +35,7 @@ impl_child!(DateTimePicker);
 impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent
 	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &dyn Parent, opts: DateTimePickerOpts) -> DateTimePicker {
+	pub fn new(parent: &impl Parent, opts: DateTimePickerOpts) -> DateTimePicker {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = DateTimePickerOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -61,7 +61,7 @@ impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &dyn Parent, ctrl_id: u16,
+		parent: &impl Parent, ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> DateTimePicker
 	{
 		let parent_base_ref = baseref_from_parent(parent);

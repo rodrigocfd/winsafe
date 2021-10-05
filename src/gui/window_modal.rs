@@ -27,7 +27,7 @@ impl_parent!(WindowModal);
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with
 	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &dyn Parent, opts: WindowModalOpts) -> WindowModal {
+	pub fn new(parent: &impl Parent, opts: WindowModalOpts) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Raw(
 				RawModal::new(baseref_from_parent(parent), opts),
@@ -37,7 +37,7 @@ impl WindowModal {
 
 	/// Instantiates a new `WindowModal` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &dyn Parent, dialog_id: u16) -> WindowModal {
+	pub fn new_dlg(parent: &impl Parent, dialog_id: u16) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Dlg(
 				DlgModal::new(baseref_from_parent(parent), dialog_id),

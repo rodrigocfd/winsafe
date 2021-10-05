@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData};
@@ -19,7 +21,8 @@ use crate::structs::{POINT, SIZE};
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
-pub struct RadioButton(Obj);
+#[derive(Clone)]
+pub struct RadioButton(Arc<Obj>);
 
 struct Obj { // actual fields of RadioButton
 	base: BaseNativeControl,
@@ -34,29 +37,33 @@ impl_debug!(RadioButton);
 impl_child!(RadioButton);
 
 impl RadioButton {
-	pub(in crate::gui) fn new(parent: &dyn Parent, opts: RadioButtonOpts) -> RadioButton {
+	pub(in crate::gui) fn new(parent: &impl Parent, opts: RadioButtonOpts) -> RadioButton {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		Self(
-			Obj {
-				base: BaseNativeControl::new(parent_base_ref),
-				opts_id: OptsId::Wnd(opts),
-				events: ButtonEvents::new(parent_base_ref, ctrl_id),
-			},
+			Arc::new(
+				Obj {
+					base: BaseNativeControl::new(parent_base_ref),
+					opts_id: OptsId::Wnd(opts),
+					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+				},
+			),
 		)
 	}
 
-	pub(in crate::gui) fn new_dlg(parent: &dyn Parent, ctrl_id: u16) -> RadioButton {
+	pub(in crate::gui) fn new_dlg(parent: &impl Parent, ctrl_id: u16) -> RadioButton {
 		let parent_base_ref = baseref_from_parent(parent);
 
 		Self(
-			Obj {
-				base: BaseNativeControl::new(parent_base_ref),
-				opts_id: OptsId::Dlg(ctrl_id),
-				events: ButtonEvents::new(parent_base_ref, ctrl_id),
-			},
+			Arc::new(
+				Obj {
+					base: BaseNativeControl::new(parent_base_ref),
+					opts_id: OptsId::Dlg(ctrl_id),
+					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+				},
+			),
 		)
 	}
 
@@ -129,9 +136,9 @@ impl RadioButton {
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
 	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
 	/// can handle the event.
-	pub fn select_and_trigger(&self, selected: bool) {
+	pub fn select_and_trigger(&self, selected: bool) -> WinResult<()> {
 		self.select(selected);
-		self.hwnd().SendMessage(wm::Command {
+		self.hwnd().GetParent()?.SendMessage(wm::Command {
 			event: AccelMenuCtrl::Ctrl(
 				AccelMenuCtrlData {
 					notif_code: co::BN::CLICKED.into(),
@@ -140,6 +147,7 @@ impl RadioButton {
 				},
 			),
 		});
+		Ok(())
 	}
 }
 

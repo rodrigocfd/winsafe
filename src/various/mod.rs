@@ -1,3 +1,5 @@
+//! Assorted utilities which don't fit in any other module.
+
 mod ini;
 mod resource_info;
 mod mapped_file;

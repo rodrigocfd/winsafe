@@ -75,7 +75,7 @@ impl StatusBar {
 	///     gui::StatusBarPart::Proportional(1),
 	/// ]);
 	/// ```
-	pub fn new(parent: &dyn Parent, parts: &[StatusBarPart]) -> StatusBar {
+	pub fn new(parent: &impl Parent, parts: &[StatusBarPart]) -> StatusBar {
 		let parent_base_ref = baseref_from_parent(parent);
 		let ctrl_id = auto_ctrl_id();
 

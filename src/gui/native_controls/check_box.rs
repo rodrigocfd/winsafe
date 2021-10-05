@@ -51,7 +51,7 @@ impl_child!(CheckBox);
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &dyn Parent, opts: CheckBoxOpts) -> CheckBox {
+	pub fn new(parent: &impl Parent, opts: CheckBoxOpts) -> CheckBox {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -77,7 +77,7 @@ impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &dyn Parent, ctrl_id: u16,
+		parent: &impl Parent, ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> CheckBox
 	{
 		let parent_base_ref = baseref_from_parent(parent);
@@ -182,9 +182,9 @@ impl CheckBox {
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
 	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
 	/// can handle the event.
-	pub fn set_check_state_and_trigger(&self, state: CheckState) {
+	pub fn set_check_state_and_trigger(&self, state: CheckState) -> WinResult<()> {
 		self.set_check_state(state);
-		self.hwnd().SendMessage(wm::Command {
+		self.hwnd().GetParent()?.SendMessage(wm::Command {
 			event: AccelMenuCtrl::Ctrl(
 				AccelMenuCtrlData {
 					notif_code: co::BN::CLICKED.into(),
@@ -193,6 +193,7 @@ impl CheckBox {
 				},
 			),
 		});
+		Ok(())
 	}
 
 	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText).

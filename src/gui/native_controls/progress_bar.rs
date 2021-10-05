@@ -32,7 +32,7 @@ impl_child!(ProgressBar);
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
 	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &dyn Parent, opts: ProgressBarOpts) -> ProgressBar {
+	pub fn new(parent: &impl Parent, opts: ProgressBarOpts) -> ProgressBar {
 		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
@@ -57,7 +57,7 @@ impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &dyn Parent, ctrl_id: u16,
+		parent: &impl Parent, ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> ProgressBar
 	{
 		let parent_base_ref = baseref_from_parent(parent);
