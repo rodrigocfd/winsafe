@@ -22,6 +22,20 @@ struct Obj { // actual fields of RadioGroup
 unsafe impl Send for RadioGroup {}
 unsafe impl Sync for RadioGroup {}
 
+impl std::fmt::Debug for RadioGroup {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		let mut out = String::with_capacity(self.count() * 40); // arbitrary
+		for (idx, radio) in self.iter().enumerate() {
+			out += &format!("[{}] HWND {}, ID {} ",
+				idx,
+				radio.hwnd(),
+				radio.ctrl_id(),
+			);
+		}
+		write!(f, "{}", out)
+	}
+}
+
 impl Index<usize> for RadioGroup {
 	type Output = RadioButton;
 
@@ -37,7 +51,7 @@ impl RadioGroup {
 	///
 	/// # Panics
 	///
-	/// Panics if no options are passed.
+	/// Panics if `opts` is empty
 	pub fn new(parent: &impl Parent, opts: &[RadioButtonOpts]) -> RadioGroup {
 		if opts.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
@@ -79,7 +93,7 @@ impl RadioGroup {
 	///
 	/// # Panics
 	///
-	/// Panics if no control IDs are passed.
+	/// Panics if `ctrls` is empty.
 	pub fn new_dlg(parent: &impl Parent, ctrls: &[(u16, Horz, Vert)]) -> RadioGroup {
 		if ctrls.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
