@@ -675,6 +675,26 @@ impl WindowEvents {
 		/// maximum tracking size.
 	}
 
+	/// [`WM_GETTEXT`](crate::msg::wm::GetText) message.
+	///
+	/// Copies the text that corresponds to a window into a buffer provided by
+	/// the caller.
+	pub fn wm_get_text<F>(&self, func: F)
+		where F: Fn(wm::GetText) -> ErrResult<u32> + 'static,
+	{
+		self.add_msg(co::WM::GETTEXT, move |p| Ok(Some(func(wm::GetText::from_generic_wm(p))? as _)));
+	}
+
+	/// [`WM_GETTEXTLENGTH`](crate::msg::wm::GetTextLength) message.
+	///
+	/// Determines the length, in characters, of the text associated with a
+	/// window.
+	pub fn wm_get_text_length<F>(&self, func: F)
+		where F: Fn() -> ErrResult<u32> + 'static,
+	{
+		self.add_msg(co::WM::GETTEXTLENGTH, move |_| Ok(Some(func()? as _)));
+	}
+
 	pub_fn_wm_ret0_param! { wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, wm::GetTitleBarInfoEx,
 		/// [`WM_GETTITLEBARINFOEX`](crate::msg::wm::GetTitleBarInfoEx) message.
 		///
@@ -1187,6 +1207,12 @@ impl WindowEvents {
 		/// case, the `WM_SYSKEYUP` message is sent to the active window. The
 		/// window that receives the message can distinguish between these two
 		/// contexts by checking the context code in the lParam parameter.
+	}
+
+	pub_fn_wm_retbool_param! { wm_set_text, co::WM::SETTEXT, wm::SetText,
+		/// [`WM_SETTEXT`](crate::msg::wm::SetText) message.
+		///
+		/// Sets the text of a window.
 	}
 
 	pub_fn_wm_ret0! { wm_theme_changed, co::WM::THEMECHANGED,

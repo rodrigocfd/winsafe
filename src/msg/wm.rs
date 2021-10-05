@@ -16,7 +16,7 @@ use crate::funcs::{HIBYTE, HIWORD, LOBYTE, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
 use crate::msg::macros::{lp_to_point, point_to_lp, zero_as_none};
-use crate::privs::FAPPCOMMAND_MASK;
+use crate::privs::{CB_ERR, FAPPCOMMAND_MASK, LB_ERRSPACE};
 use crate::structs::{
 	CREATESTRUCT,
 	DELETEITEMSTRUCT,
@@ -712,7 +712,7 @@ impl MsgSendRecv for GetFont {
 }
 
 /// [`WM_GETHMENU`](https://docs.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
-/// message, which has no parameters.
+/// message, which has no parameters. Originally has `MN` prefix.
 ///
 /// Return type: `Option<HMENU>`.
 pub struct GetHMenu {}
@@ -768,6 +768,83 @@ impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 		Self {
 			info: unsafe { &mut *(p.lparam as *mut _) },
 		}
+	}
+}
+
+/// [`WM_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-gettext)
+/// message parameters.
+///
+/// Return type: `u32`.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{msg::wm, HWND, WString};
+///
+/// let hwnd: HWND; // initialized somewhere
+///
+/// let needed_len = hwnd.SendMessage(wm::GetTextLength {});
+/// let mut buf = WString::new_alloc_buffer(needed_len as _);
+///
+/// hwnd.SendMessage(wm::GetText {
+///     buffer: buf.as_mut_slice(),
+/// });
+///
+/// println!("Text: {}", buf.to_string());
+/// ```
+pub struct GetText<'a> {
+	pub buffer: &'a mut [u16],
+}
+
+impl<'a> MsgSend for GetText<'a> {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::GETTEXT,
+			wparam: self.buffer.len(),
+			lparam: self.buffer.as_ptr() as _,
+		}
+	}
+}
+
+impl<'a> MsgSendRecv for GetText<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			buffer: unsafe { std::slice::from_raw_parts_mut(p.lparam as _, p.wparam) },
+		}
+	}
+}
+
+/// [`WM_GETTEXTLENGTH`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-gettextlength)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetTextLength {}
+
+impl MsgSend for GetTextLength {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::GETTEXTLENGTH,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for GetTextLength {
+	fn from_generic_wm(_: WndMsg) -> Self {
+		Self {}
 	}
 }
 
@@ -1675,6 +1752,55 @@ impl MsgSendRecv for SetRedraw {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			can_redraw: p.wparam != 0,
+		}
+	}
+}
+
+/// [`WM_SETTEXT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-settext)
+/// message parameters.
+///
+/// Return type: `bool`.
+///
+/// # Examples
+///
+/// ```rust,ignore
+/// use winsafe::{msg::wm, HWND, WString};
+///
+/// let hwnd: HWND; // initialized somewhere
+///
+/// let new_text = WString::from_str("some text");
+///
+/// hwnd.SendMessage(wm::SetText {
+///     text: unsafe { new_text.as_ptr() },
+/// });
+/// ```
+pub struct SetText {
+	pub text: *const u16,
+}
+
+impl MsgSend for SetText {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			0 | LB_ERRSPACE | CB_ERR => false, // CB_ERRSPACE is equal to LB_ERRSPACE
+			_ => true,
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::SETTEXT,
+			wparam: 0,
+			lparam: self.text as _,
+		}
+	}
+}
+
+impl MsgSendRecv for SetText {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			text: p.lparam as _,
 		}
 	}
 }

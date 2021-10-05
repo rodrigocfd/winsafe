@@ -32,7 +32,7 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 
 	/// Finds all the functions associated to the given identifier, if any, and
 	/// returns an iterator to t
-	pub fn find_all(&self, id: K) -> impl Iterator<Item = &F> + '_ {
+	pub fn find_all(&self, id: K) -> impl Iterator<Item = &F> {
 		// https://depth-first.com/articles/2020/06/22/returning-rust-iterators
 		self.elems.iter()
 			.filter(move |elem| elem.0 == id)
