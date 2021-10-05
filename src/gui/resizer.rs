@@ -12,7 +12,7 @@ use crate::structs::{POINT, RECT, SIZE};
 
 /// Specifies the horizontal behavior of the control when the parent window is
 /// resized.
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Horz {
 	/// Nothing will be done when parent window is resized.
 	None,
@@ -26,7 +26,7 @@ pub enum Horz {
 
 /// Specifies the vertical behavior of the control when the parent window is
 /// resized.
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Vert {
 	/// Nothing will be done when parent window is resized.
 	None,

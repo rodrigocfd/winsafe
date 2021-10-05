@@ -1,7 +1,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::HFILE;
-use crate::various::{MappedFile, MappedFileAccess, WString};
+use crate::various::{FileAccess, FileMapped, WString};
 
 /// Keeps sections and key/value pairs of a `.ini` file, also doing parsing and
 /// serialization of the data.
@@ -88,7 +88,7 @@ impl Ini {
 
 	/// Parses an `Ini` directly from a file.
 	pub fn parse_from_file(ini_path: &str) -> WinResult<Ini> {
-		let fin = MappedFile::open(ini_path, MappedFileAccess::Read)?;
+		let fin = FileMapped::open(ini_path, FileAccess::ExistingReadOnly)?;
 		Self::parse_bytes(fin.as_slice())
 	}
 

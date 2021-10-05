@@ -40,11 +40,14 @@ impl HPIPE {
 
 	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// method.
+	///
+	/// `buffer` will be automatically resized to `num_bytes_to_read`.
 	pub fn ReadFile(self,
+		buffer: &mut Vec<u8>,
 		num_bytes_to_read: u32,
-		overlapped: Option<&mut OVERLAPPED>) -> WinResult<Vec<u8>>
+		overlapped: Option<&mut OVERLAPPED>) -> WinResult<()>
 	{
-		HFILE { ptr: self.ptr }.ReadFile(num_bytes_to_read, overlapped)
+		HFILE { ptr: self.ptr }.ReadFile(buffer, num_bytes_to_read, overlapped)
 	}
 
 	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)

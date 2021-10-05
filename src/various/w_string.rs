@@ -251,7 +251,7 @@ impl WString {
 	/// receive a single null char.
 	pub fn copy_to_slice(&self, dest: &mut [u16]) {
 		if dest.is_empty() {
-			panic!("Destination buffer cannot have zero length");
+			panic!("Destination buffer cannot have zero length.");
 		}
 
 		if let Some(vec_u16_ref) = self.vec_u16.as_ref() {

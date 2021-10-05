@@ -171,24 +171,27 @@ impl HFILE {
 
 	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// method.
+	///
+	/// `buffer` will be automatically resized to `num_bytes_to_read`.
 	pub fn ReadFile(self,
+		buffer: &mut Vec<u8>,
 		num_bytes_to_read: u32,
-		overlapped: Option<&mut OVERLAPPED>) -> WinResult<Vec<u8>>
+		overlapped: Option<&mut OVERLAPPED>) -> WinResult<()>
 	{
-		let mut buf = vec![0; num_bytes_to_read as _];
+		buffer.resize(num_bytes_to_read as _, 0x00);
 		let mut bytes_read: u32 = 0;
 
 		bool_to_winresult(
 			unsafe {
 				kernel32::ReadFile(
 					self.ptr,
-					buf.as_mut_ptr() as _,
+					buffer.as_mut_ptr() as _,
 					num_bytes_to_read,
 					&mut bytes_read,
 					overlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
 			},
-		).map(|_| buf)
+		)
 	}
 
 	/// [`SetEndOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
