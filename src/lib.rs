@@ -42,15 +42,19 @@
 //!
 //! The Win32 bindings are divided into a few modules:
 //!
-//! * root – the root of the crate has Win32 free functions and structs;
-//! * [`co`](crate::co) – types and values of Win32 constants;
-//! * [`msg`](crate::msg) – window messages;
-//! * [`gui`](crate::gui) – high-level GUI wrappers.
+//! | Module | Description |
+//! | - | - |
+//! | `winsafe` | The root of the crate has Win32 free functions and structs. |
+//! | [`winsafe::co`](crate::co) | Types and values of Win32 constants. |
+//! | [`winsafe::msg`](crate::msg) | Window messages. |
+//! | [`winsafe::gui`](crate::gui) | High-level GUI wrappers. |
 //!
 //! And additionally:
 //!
-//! * [`dshow`](crate::dshow) – Win32 DirectShow COM interfaces;
-//! * [`shell`](crate::shell) – Win32 Shell COM interfaces.
+//! | Module | Description |
+//! | - | - |
+//! | [`winsafe::dshow`](crate::dshow) | Win32 DirectShow COM interfaces. |
+//! | [`winsafe::shell`](crate::shell) | Win32 Shell COM interfaces. |
 //!
 //! # The GUI API
 //!
