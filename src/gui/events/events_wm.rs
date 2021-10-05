@@ -8,7 +8,7 @@ use crate::handles::{HBRUSH, HFONT, HICON, HMENU};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// The result of processing a message.
-pub(crate) enum ProcessResult {
+pub(in crate::gui) enum ProcessResult {
 	/// Message was not handled because no function was found.
 	NotHandled,
 	/// Message handled, and return value is meaningful.
@@ -46,7 +46,7 @@ struct Obj { // actual fields of WindowEvents
 }
 
 impl WindowEvents {
-	pub(crate) fn new() -> WindowEvents {
+	pub(in crate::gui) fn new() -> WindowEvents {
 		Self(
 			VeryUnsafeCell::new(
 				Obj {
@@ -60,7 +60,7 @@ impl WindowEvents {
 	}
 
 	/// Tells whether no functions have been added.
-	pub(crate) fn is_empty(&self) -> bool {
+	pub(in crate::gui) fn is_empty(&self) -> bool {
 		self.0.msgs.is_empty()
 			&& self.0.tmrs.is_empty()
 			&& self.0.cmds.is_empty()
@@ -69,7 +69,7 @@ impl WindowEvents {
 
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
-	pub(crate) fn process_one_message(&self,
+	pub(in crate::gui) fn process_one_message(&self,
 		wm_any: WndMsg) -> ErrResult<ProcessResult>
 	{
 		Ok(match wm_any.msg_id {
@@ -123,7 +123,7 @@ impl WindowEvents {
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
-	pub(crate) fn process_all_messages(&self, wm_any: WndMsg) -> ErrResult<()> {
+	pub(in crate::gui) fn process_all_messages(&self, wm_any: WndMsg) -> ErrResult<()> {
 		Ok(match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
@@ -154,14 +154,14 @@ impl WindowEvents {
 	}
 
 	/// Raw add message.
-	pub(crate) fn add_msg<F>(&self, ident: co::WM, func: F)
+	pub(in crate::gui) fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
 	{
 		self.0.as_mut().msgs.insert(ident, Box::new(func));
 	}
 
 	/// Raw add notification.
-	pub(crate) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
+	pub(in crate::gui) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
 	{
 		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));

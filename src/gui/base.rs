@@ -117,13 +117,13 @@ impl Base {
 			move |p| { resizer.resize(&p)?; Ok(()) }
 		});
 
-		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
+		self.privileged_events.add_msg(Self::WM_UI_THREAD, |p| {
 			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
 				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
 				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
 				pack().unwrap_or_else(|err| post_quit_error(err));
 			}
-			Ok(0)
+			Ok(None) // return value is not meaningful
 		});
 	}
 

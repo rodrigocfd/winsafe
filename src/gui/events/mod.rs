@@ -35,4 +35,4 @@ pub use events_stn::LabelEvents;
 pub use events_trbn::TrackbarEvents;
 pub use events_tvn::TreeViewEvents;
 pub use events_wm::WindowEvents;
-pub(crate) use events_wm::ProcessResult;
+pub(in crate::gui) use events_wm::ProcessResult;
