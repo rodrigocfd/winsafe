@@ -55,6 +55,29 @@ impl<'a> ComboBoxItems<'a> {
 		self.hwnd.SendMessage(cb::ResetContent {})
 	}
 
+	/// Returns an iterator over the texts.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_combo: gui::ComboBox; // initialized somewhere
+	///
+	/// for text in my_combo.items().iter() {
+	///     println!("Text {}", text);
+	/// }
+	/// ```
+	pub fn iter(&self) -> impl Iterator<Item = String> {
+		ComboBoxItemIter {
+			hwnd: self.hwnd,
+			current: Some(0),
+			total: self.count().unwrap_or(0),
+			buf: WString::default(),
+			owner: PhantomData,
+		}
+	}
+
 	/// Sets the currently selected index, or clears it, by sending a
 	/// [`cb::SetCurSel`](crate::msg::cb::SetCurSel) message.
 	pub fn select(&self, index: Option<u32>) {
@@ -78,15 +101,42 @@ impl<'a> ComboBoxItems<'a> {
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`cb::GetLbText`](crate::msg::cb::GetLbText) message.
 	pub fn text(&self, index: u32) -> Option<String> {
-		self.hwnd.SendMessage(cb::GetLbTextLen { index })
-			.ok()
-			.and_then(|len| {
-				let mut buf = WString::new_alloc_buffer(len as usize + 1);
-				self.hwnd.SendMessage(cb::GetLbText{
-					index,
-					text: &mut buf,
-				}).ok()
-					.map(|_| buf.to_string())
-			})
+		self.iter().nth(index as _)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct ComboBoxItemIter<'a> {
+	hwnd: HWND,
+	current: Option<u32>,
+	total: u32,
+	buf: WString,
+	owner: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for ComboBoxItemIter<'a> {
+	type Item = String;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		self.current.and_then(|index| {
+			self.hwnd.SendMessage(cb::GetLbTextLen { index })
+				.ok()
+				.and_then(|len| {
+					self.buf.realloc_buffer(len as usize + 1);
+					self.hwnd.SendMessage(cb::GetLbText{
+						index,
+						text: &mut self.buf,
+					}).ok()
+						.map(|_| {
+							self.current = if index + 1 == self.total {
+								None // iteration is over
+							} else {
+								Some(index + 1)
+							};
+							self.buf.to_string()
+						})
+				})
+		})
 	}
 }

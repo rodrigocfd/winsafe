@@ -151,6 +151,19 @@ impl<'a> ListViewItems<'a> {
 	}
 
 	/// Returns an iterator over all items.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui::ListView;
+	///
+	/// let my_list: ListView; // initialized somewhere
+	///
+	/// for item in my_list.items().iter() {
+	///     println!("Item {}, text of the first column: {}",
+	///         item.index(), item.text(0));
+	/// }
+	/// ```
 	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a>> {
 		ListViewItemIter {
 			hwnd: self.hwnd,
@@ -161,6 +174,19 @@ impl<'a> ListViewItems<'a> {
 	}
 
 	/// Returns an iterator over the selected items.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::gui;
+	///
+	/// let my_list: gui::ListView; // initialized somewhere
+	///
+	/// for item in my_list.items().iter_selected() {
+	///     println!("Selected item {}, text of the first column: {}",
+	///         item.index(), item.text(0));
+	/// }
+	/// ```
 	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a>> {
 		ListViewItemIter {
 			hwnd: self.hwnd,

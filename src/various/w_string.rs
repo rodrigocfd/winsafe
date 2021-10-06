@@ -302,6 +302,9 @@ impl WString {
 	/// Resizes the internal buffer, to be used as a buffer for native Win32
 	/// functions. All UTF-16 chars will be set to zero.
 	///
+	/// The underlying `Vec` will be resized with a call to
+	/// [`Vec::resize`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.resize).
+	///
 	/// If the new size is zero, the internal buffer is deallocated.
 	///
 	/// **Note:** The internal memory can move after a realloc, so if you're
