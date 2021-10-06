@@ -12,6 +12,7 @@ use crate::gui::traits::{baseref_from_parent, Parent};
 use crate::handles::HWND;
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
+use crate::various::WString;
 
 /// Native
 /// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
@@ -127,6 +128,23 @@ impl ComboBox {
 			hwnd: self.hwnd(),
 			owner: PhantomData,
 		}
+	}
+
+	/// Returns the text currently shown.
+	pub fn text(&self) -> String {
+		let num_chars = self.hwnd().SendMessage(wm::GetTextLength {}) as usize;
+		let mut buf = WString::new_alloc_buffer(num_chars + 1);
+		self.hwnd().SendMessage(wm::GetText { buffer: buf.as_mut_slice() });
+		buf.to_string()
+	}
+
+	/// Sets the text currently shown.
+	///
+	/// If the combo is a dropdown list, which has no built-in edit control,
+	/// this method has no effect.
+	pub fn set_text(&self, text: &str) {
+		let buf = WString::from_str(text);
+		self.hwnd().SendMessage(wm::SetText { text: unsafe { buf.as_ptr() } });
 	}
 }
 
