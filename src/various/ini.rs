@@ -21,7 +21,7 @@ use crate::various::{FileAccess, FileMapped, WString};
 /// }
 /// ```
 pub struct Ini {
-	/// All the sections of the file.
+	/// All the sections of the file. The values can be modified at will.
 	pub sections: Vec<IniSection>,
 }
 
@@ -79,7 +79,9 @@ impl Ini {
 		Self { sections }
 	}
 
-	/// Parses an `Ini` from raw bytes.
+	/// Parses an `Ini` from raw bytes. The [`Encoding`](crate::Encoding) will
+	/// be guessed with
+	/// [`WString::guess_encoding`](crate::WString::guess_encoding).
 	pub fn parse_bytes(bytes: &[u8]) -> WinResult<Ini> {
 		Ok(
 			Self::parse_str(&WString::parse_str(bytes)?.to_string()),
@@ -125,7 +127,8 @@ impl Ini {
 		buf
 	}
 
-	/// Serializes the data to raw bytes.
+	/// Serializes the data to raw bytes with
+	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
 	pub fn serialize_to_bytes(&self) -> Vec<u8> {
 		self.serialize_to_str().into_bytes()
 	}

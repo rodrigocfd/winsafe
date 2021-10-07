@@ -422,6 +422,13 @@ impl WString {
 	/// Guesses the encoding with
 	/// [`WString::guess_encoding`](crate::WString::guess_encoding) and parses
 	/// the data as string.
+	///
+	/// If you're sure the data has UTF-8 encoding, you can also use the
+	/// built-in
+	/// [`String::from_utf8`](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8).
+	///
+	/// To serialize the string back into UTF-8 bytes, use the built-in
+	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
 	pub fn parse_str(data: &[u8]) -> WinResult<WString> {
 		let mut data = data;
 		if data.is_empty() { // nothing to parse
