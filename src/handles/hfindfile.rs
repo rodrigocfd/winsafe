@@ -7,7 +7,7 @@ use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::bool_to_winresult;
 use crate::structs::WIN32_FIND_DATA;
-use crate::various::WString;
+use crate::various::{Path, WString};
 
 pub_struct_handle! {
 	/// Handle to a
@@ -29,29 +29,8 @@ impl HFINDFILE {
 	/// **Note:** Must be paired with an
 	/// [`HFINDFILE::FindClose`](crate::HFINDFILE::FindClose) call.
 	///
-	/// # Examples
-	///
-	/// Enumerating all TXT files in a directory:
-	///
-	/// ```rust,ignore
-	/// use winsafe::{HFINDFILE, WIN32_FIND_DATA};
-	///
-	/// let mut wfd = WIN32_FIND_DATA::default();
-	///
-	/// let (hfind, mut found) = HFINDFILE::FindFirstFile(
-	///     "C:\\Temp\\*.txt",
-	///     &mut wfd,
-	/// )?;
-	///
-	/// if found {
-	///     while found {
-	///         println!("File: {}", wfd.cFileName());
-	///         found = hfind.FindNextFile(&mut wfd)?;
-	///     }
-	///
-	///     hfind.FindClose()?;
-	/// }
-	/// ```
+	/// This method is rather tricky, consider using
+	/// [`HFINDFILE::iter`](crate::HFINDFILE::iter).
 	pub fn FindFirstFile(
 		file_name: &str,
 		wfd: &mut WIN32_FIND_DATA) -> WinResult<(HFINDFILE, bool)>
@@ -72,6 +51,9 @@ impl HFINDFILE {
 
 	/// [`FindNextFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextfilew)
 	/// method.
+	///
+	/// This method is rather tricky, consider using
+	/// [`HFINDFILE::iter`](crate::HFINDFILE::iter).
 	pub fn FindNextFile(self, wfd: &mut WIN32_FIND_DATA) -> WinResult<bool> {
 		match unsafe {
 			kernel32::FindNextFileW(self.ptr, wfd as *mut _ as _)
@@ -84,10 +66,10 @@ impl HFINDFILE {
 		}
 	}
 
-	/// Wrapper to [`FindFirstFile`](crate::HFINDFILE::FindFirstFile),
-	/// [`FindNextFile`](crate::HFINDFILE::FindNextFile) and
-	/// [`FindClose`](crate::HFINDFILE::FindClose), performing all needed
-	/// operations and returning the full paths of all found files.
+	/// Returns an iterator over the found items, by calling
+	/// [`FindFirstFile`](crate::HFINDFILE::FindFirstFile), then subsequent
+	/// [`FindNextFile`](crate::HFINDFILE::FindNextFile), and finally freeing
+	/// the resource by calling [`FindClose`](crate::HFINDFILE::FindClose).
 	///
 	/// # Examples
 	///
@@ -96,31 +78,82 @@ impl HFINDFILE {
 	/// ```rust,ignore
 	/// use winsafe::HFINDFILE;
 	///
-	/// let files = HFINDFILE::ListAll("C:\\Temp\\*.txt")?;
-	///
-	/// for file in files.iter() {
-	///    println!("File: {}", file);
+	/// for txt_file in HFINDFILE::iter("C:\\Temp\\*.txt") {
+	///     let file = txt_file?;
+	///     println!("File: {}", file);
 	/// }
 	/// ```
-	pub fn ListAll(path_and_pattern: &str) -> WinResult<Vec<String>> {
-		let mut files = Vec::default();
-		let mut wfd = WIN32_FIND_DATA::default();
-		let (hfind, mut found) = Self::FindFirstFile(path_and_pattern, &mut wfd)?;
+	pub fn iter<'a>(
+		path_and_pattern: &'a str) -> impl Iterator<Item = WinResult<String>> + 'a
+	{
+		HfindfileIter::new(path_and_pattern)
+	}
+}
 
-		let the_path = path_and_pattern.rfind('\\').map_or(
-			String::default(),
-			|idx| path_and_pattern.chars().take(idx).collect(),
-		);
+//------------------------------------------------------------------------------
 
-		if found {
-			while found {
-				files.push(format!("{}\\{}", the_path, wfd.cFileName()));
-				found = hfind.FindNextFile(&mut wfd)?;
-			}
+struct HfindfileIter<'a> {
+	hfind: HFINDFILE,
+	first_pass: bool,
+	wfd: WIN32_FIND_DATA,
+	path_and_pattern: &'a str,
+	no_more: bool,
+}
 
-			hfind.FindClose()?;
+impl<'a> Drop for HfindfileIter<'a> {
+	fn drop(&mut self) {
+		self.hfind.FindClose().ok(); // ignore error
+	}
+}
+
+impl<'a> Iterator for HfindfileIter<'a> {
+	type Item = WinResult<String>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.no_more {
+			return None;
 		}
 
-		Ok(files)
+		let found = if self.first_pass {
+			self.first_pass = false;
+			let (hfind, found) =
+				match HFINDFILE::FindFirstFile(self.path_and_pattern, &mut self.wfd) {
+					Err(e) => {
+						self.no_more = true; // prevent further iterations
+						return Some(Err(e))
+					},
+					Ok((hfind, found)) => (hfind, found),
+				};
+			self.hfind = hfind;
+			found
+		} else {
+			match self.hfind.FindNextFile(&mut self.wfd) {
+				Err(e) => {
+					self.no_more = true; // prevent further iterations
+					return Some(Err(e))
+				},
+				Ok(found) => found,
+			}
+		};
+
+		if found {
+			let path_only = Path::path_from(self.path_and_pattern)
+				.unwrap_or("");
+			Some(Ok(format!("{}\\{}", path_only, self.wfd.cFileName())))
+		} else {
+			None
+		}
+	}
+}
+
+impl<'a> HfindfileIter<'a> {
+	fn new(path_and_pattern: &'a str) -> Self {
+		Self {
+			hfind: HFINDFILE::NULL,
+			first_pass: true,
+			wfd: WIN32_FIND_DATA::default(),
+			path_and_pattern,
+			no_more: false,
+		}
 	}
 }

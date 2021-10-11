@@ -52,6 +52,15 @@ impl Path {
 
 	/// Tells whether the full path ends in one of the given extensions,
 	/// case-insensitive.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::Path;
+	///
+	/// println!("{}",
+	///     Path::has_extension("file.txt", &[".txt", ".bat"]));
+	/// ```
 	pub fn has_extension<S: AsRef<str>>(full_path: &str, extensions: &[S]) -> bool {
 		extensions.iter()
 			.find(|ext| full_path.ends_with(ext.as_ref()))
