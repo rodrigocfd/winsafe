@@ -542,8 +542,9 @@ impl WindowEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		///
 		/// wnd.on().wm_drop_files(|p: msg::wm::DropFiles| -> ErrResult<()> {
-		///     for dropped_file in p.hdrop.DragQueryFiles()?.iter() {
-		///         println!("Dropped: {}", dropped_file);
+		///     for dropped_file in p.hdrop.iter() {
+		///         let file = dropped_file?;
+		///         println!("Dropped: {}", file);
 		///     }
 		///     Ok(())
 		/// });
