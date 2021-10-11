@@ -69,13 +69,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// }
 	/// ```
 	pub fn iter(&self) -> impl Iterator<Item = String> {
-		ComboBoxItemIter {
-			hwnd: self.hwnd,
-			current: Some(0),
-			total: self.count().unwrap_or(0),
-			buf: WString::default(),
-			owner: PhantomData,
-		}
+		ComboBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))
 	}
 
 	/// Sets the currently selected index, or clears it, by sending a
@@ -138,5 +132,17 @@ impl<'a> Iterator for ComboBoxItemIter<'a> {
 						})
 				})
 		})
+	}
+}
+
+impl<'a> ComboBoxItemIter<'a> {
+	fn new(hwnd: HWND, total: u32) -> Self {
+		Self {
+			hwnd,
+			current: Some(0),
+			total,
+			buf: WString::default(),
+			owner: PhantomData,
+		}
 	}
 }

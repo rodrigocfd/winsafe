@@ -60,13 +60,7 @@ impl HDROP {
 	/// then frees the handle by calling
 	/// [`HDROP::DragFinish`](crate::HDROP::DragFinish).
 	pub fn iter(self) -> impl Iterator<Item = WinResult<String>> {
-		HdropIter {
-			hdrop: self,
-			first_pass: true,
-			cur_index: 0,
-			count: 0,
-			buf: WString::default(),
-		}
+		HdropIter::new(self)
 	}
 }
 
@@ -118,5 +112,17 @@ impl Iterator for HdropIter {
 
 		self.cur_index += 1;
 		Some(Ok(self.buf.to_string()))
+	}
+}
+
+impl HdropIter {
+	fn new(hdrop: HDROP) -> Self {
+		Self {
+			hdrop,
+			first_pass: true,
+			cur_index: 0,
+			count: 0,
+			buf: WString::default(),
+		}
 	}
 }

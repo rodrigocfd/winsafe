@@ -165,12 +165,7 @@ impl<'a> ListViewItems<'a> {
 	/// }
 	/// ```
 	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a>> {
-		ListViewItemIter {
-			hwnd: self.hwnd,
-			current: None,
-			relationship: co::LVNI::ALL,
-			owner: PhantomData,
-		}
+		ListViewItemIter::new(self.hwnd, co::LVNI::ALL)
 	}
 
 	/// Returns an iterator over the selected items.
@@ -188,12 +183,7 @@ impl<'a> ListViewItems<'a> {
 	/// }
 	/// ```
 	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a>> {
-		ListViewItemIter {
-			hwnd: self.hwnd,
-			current: None,
-			relationship: co::LVNI::ALL | co::LVNI::SELECTED,
-			owner: PhantomData,
-		}
+		ListViewItemIter::new(self.hwnd, co::LVNI::ALL | co::LVNI::SELECTED)
 	}
 
 	/// Retrieves the item of the unique ID by sending an
@@ -455,5 +445,16 @@ impl<'a> Iterator for ListViewItemIter<'a> {
 		});
 
 		self.current
+	}
+}
+
+impl<'a> ListViewItemIter<'a> {
+	fn new(hwnd: HWND, relationship: co::LVNI) -> Self {
+		Self {
+			hwnd,
+			current: None,
+			relationship,
+			owner: PhantomData,
+		}
 	}
 }

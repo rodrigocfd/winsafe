@@ -82,22 +82,12 @@ impl<'a> TreeViewItems<'a> {
 
 	/// Returns an iterator over the selected items.
 	pub fn iter_selected(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
-		TreeViewItemIter {
-			hwnd: self.hwnd,
-			current: None,
-			relationship: co::TVGN::CARET,
-			owner: PhantomData,
-		}
+		TreeViewItemIter::new(self.hwnd, None, co::TVGN::CARET)
 	}
 
 	/// Returns an iterator over the root items.
 	pub fn iter_root(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
-		TreeViewChildItemIter {
-			hwnd: self.hwnd,
-			current: None,
-			first_call: true,
-			owner: PhantomData,
-		}
+		TreeViewChildItemIter::new(self.hwnd, None)
 	}
 }
 
@@ -201,32 +191,17 @@ impl<'a> TreeViewItem<'a> {
 
 	/// Returns an iterator over the child items.
 	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
-		TreeViewChildItemIter {
-			hwnd: self.hwnd,
-			current: Some(*self),
-			first_call: true,
-			owner: PhantomData,
-		}
+		TreeViewChildItemIter::new(self.hwnd, Some(*self))
 	}
 
 	/// Returns an iterator over the next sibling items.
 	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
-		TreeViewItemIter {
-			hwnd: self.hwnd,
-			current: Some(*self),
-			relationship: co::TVGN::NEXT,
-			owner: PhantomData,
-		}
+		TreeViewItemIter::new(self.hwnd, Some(*self), co::TVGN::NEXT)
 	}
 
 	/// Returns an iterator over the previous sibling items.
 	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
-		TreeViewItemIter {
-			hwnd: self.hwnd,
-			current: Some(*self),
-			relationship: co::TVGN::PREVIOUS,
-			owner: PhantomData,
-		}
+		TreeViewItemIter::new(self.hwnd, Some(*self), co::TVGN::PREVIOUS)
 	}
 
 	/// Retrieves the parent of the item by sending a
@@ -296,6 +271,21 @@ impl<'a> Iterator for TreeViewItemIter<'a> {
 	}
 }
 
+impl<'a> TreeViewItemIter<'a> {
+	fn new(
+		hwnd: HWND,
+		current: Option<TreeViewItem<'a>>,
+		relationship: co::TVGN) -> Self
+	{
+		Self {
+			hwnd,
+			current,
+			relationship,
+			owner: PhantomData,
+		}
+	}
+}
+
 struct TreeViewChildItemIter<'a> {
 	hwnd: HWND,
 	current: Option<TreeViewItem<'a>>,
@@ -324,5 +314,16 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 		}
 
 		self.current
+	}
+}
+
+impl<'a> TreeViewChildItemIter<'a> {
+	fn new(hwnd: HWND, current: Option<TreeViewItem<'a>>) -> Self {
+		Self {
+			hwnd,
+			current,
+			first_call: true,
+			owner: PhantomData,
+		}
 	}
 }
