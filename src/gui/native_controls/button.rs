@@ -25,9 +25,7 @@ struct Obj { // actual fields of Button
 	events: ButtonEvents,
 }
 
-unsafe impl Send for Button {}
-unsafe impl Sync for Button {}
-
+impl_send_sync!(Button);
 impl_debug!(Button);
 impl_child!(Button);
 

@@ -27,9 +27,7 @@ struct Obj { // actual fields of RadioButton
 	events: ButtonEvents,
 }
 
-unsafe impl Send for RadioButton {}
-unsafe impl Sync for RadioButton {}
-
+impl_send_sync!(RadioButton);
 impl_debug!(RadioButton);
 impl_child!(RadioButton);
 

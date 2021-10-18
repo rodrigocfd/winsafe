@@ -19,8 +19,7 @@ struct Obj { // actual fields of RadioGroup
 	parent_events: RadioGroupEvents,
 }
 
-unsafe impl Send for RadioGroup {}
-unsafe impl Sync for RadioGroup {}
+impl_send_sync!(RadioGroup);
 
 impl std::fmt::Debug for RadioGroup {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

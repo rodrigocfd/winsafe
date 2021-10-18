@@ -52,9 +52,7 @@ struct Obj { // actual fields of StatusBar
 	right_edges: Vec<i32>, // buffer to speed up resize calls
 }
 
-unsafe impl Send for StatusBar {}
-unsafe impl Sync for StatusBar {}
-
+impl_send_sync!(StatusBar);
 impl_debug!(StatusBar);
 impl_child!(StatusBar);
 

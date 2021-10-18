@@ -32,9 +32,7 @@ struct Obj { // actual fields of ListView
 	context_menu: Option<HMENU>,
 }
 
-unsafe impl Send for ListView {}
-unsafe impl Sync for ListView {}
-
+impl_send_sync!(ListView);
 impl_debug!(ListView);
 impl_child!(ListView);
 

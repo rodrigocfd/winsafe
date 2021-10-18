@@ -26,9 +26,7 @@ struct Obj { // actual fields of DateTimePicker
 	events: DateTimePickerEvents,
 }
 
-unsafe impl Send for DateTimePicker {}
-unsafe impl Sync for DateTimePicker {}
-
+impl_send_sync!(DateTimePicker);
 impl_debug!(DateTimePicker);
 impl_child!(DateTimePicker);
 

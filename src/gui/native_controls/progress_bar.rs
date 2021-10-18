@@ -23,9 +23,7 @@ struct Obj { // actual fields of ProgressBar
 	opts_id: OptsId<ProgressBarOpts>,
 }
 
-unsafe impl Send for ProgressBar {}
-unsafe impl Sync for ProgressBar {}
-
+impl_send_sync!(ProgressBar);
 impl_debug!(ProgressBar);
 impl_child!(ProgressBar);
 

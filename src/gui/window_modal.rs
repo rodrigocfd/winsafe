@@ -18,9 +18,7 @@ pub struct WindowModal {
 	raw_dlg: RawDlg,
 }
 
-unsafe impl Send for WindowModal {}
-unsafe impl Sync for WindowModal {}
-
+impl_send_sync!(WindowModal);
 impl_debug!(WindowModal);
 impl_parent!(WindowModal);
 

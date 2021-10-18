@@ -28,9 +28,7 @@ struct Obj { // actual fields of ComboBox
 	events: ComboBoxEvents,
 }
 
-unsafe impl Send for ComboBox {}
-unsafe impl Sync for ComboBox {}
-
+impl_send_sync!(ComboBox);
 impl_debug!(ComboBox);
 impl_child!(ComboBox);
 

@@ -21,9 +21,7 @@ pub struct WindowControl {
 	raw_dlg: RawDlg,
 }
 
-unsafe impl Send for WindowControl {}
-unsafe impl Sync for WindowControl {}
-
+impl_send_sync!(WindowControl);
 impl_debug!(WindowControl);
 impl_parent!(WindowControl);
 

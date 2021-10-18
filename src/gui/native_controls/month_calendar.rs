@@ -26,9 +26,7 @@ struct Obj { // actual fields of MonthCalendar
 	events: MonthCalendarEvents,
 }
 
-unsafe impl Send for MonthCalendar {}
-unsafe impl Sync for MonthCalendar {}
-
+impl_send_sync!(MonthCalendar);
 impl_debug!(MonthCalendar);
 impl_child!(MonthCalendar);
 

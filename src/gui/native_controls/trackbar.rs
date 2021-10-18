@@ -25,9 +25,7 @@ struct Obj { // actual fields of Trackbar
 	events: TrackbarEvents,
 }
 
-unsafe impl Send for Trackbar {}
-unsafe impl Sync for Trackbar {}
-
+impl_send_sync!(Trackbar);
 impl_debug!(Trackbar);
 impl_child!(Trackbar);
 

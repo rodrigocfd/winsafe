@@ -1,3 +1,11 @@
+/// Implements Send and Sync traits to leaf window.
+macro_rules! impl_send_sync {
+	($name:ident) => {
+		unsafe impl Send for $name {}
+		unsafe impl Sync for $name {}
+	};
+}
+
 /// Implements Debug trait to leaf window.
 macro_rules! impl_debug {
 	($name:ident) => {

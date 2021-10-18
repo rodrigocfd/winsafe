@@ -28,9 +28,7 @@ struct Obj { // actual fields of ListBox
 	events: ListBoxEvents,
 }
 
-unsafe impl Send for ListBox {}
-unsafe impl Sync for ListBox {}
-
+impl_send_sync!(ListBox);
 impl_debug!(ListBox);
 impl_child!(ListBox);
 

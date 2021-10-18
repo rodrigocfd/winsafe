@@ -34,17 +34,17 @@ pub trait Child {
 /// **Note:** This is a
 /// [sealed trait](https://rust-lang.github.io/api-guidelines/future-proofing.html#c-sealed)
 /// which cannot be implemented outside the library.
-pub trait Parent: private::Sealed {
+pub trait Parent: private::SealedParent {
 	/// Returns a reference to the `Any` trait, allowing downcasting.
 	fn as_any(&self) -> &dyn Any;
 }
 
 pub(in crate::gui) mod private {
-	pub trait Sealed {}
+	pub trait SealedParent {}
 
-	impl Sealed for crate::gui::WindowControl {}
-	impl Sealed for crate::gui::WindowMain {}
-	impl Sealed for crate::gui::WindowModal {}
+	impl SealedParent for crate::gui::WindowControl {}
+	impl SealedParent for crate::gui::WindowMain {}
+	impl SealedParent for crate::gui::WindowModal {}
 }
 
 pub(in crate::gui) fn baseref_from_parent(parent: &impl Parent) -> &Base {

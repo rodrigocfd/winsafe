@@ -26,9 +26,7 @@ struct Obj { // actual fields of Label
 	events: LabelEvents,
 }
 
-unsafe impl Send for Label {}
-unsafe impl Sync for Label {}
-
+impl_send_sync!(Label);
 impl_debug!(Label);
 impl_child!(Label);
 

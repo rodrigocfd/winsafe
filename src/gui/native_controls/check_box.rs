@@ -42,9 +42,7 @@ struct Obj { // actual fields of CheckBox
 	events: ButtonEvents,
 }
 
-unsafe impl Send for CheckBox {}
-unsafe impl Sync for CheckBox {}
-
+impl_send_sync!(CheckBox);
 impl_debug!(CheckBox);
 impl_child!(CheckBox);
 

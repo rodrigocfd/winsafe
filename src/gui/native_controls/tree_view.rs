@@ -27,9 +27,7 @@ struct Obj { // actual fields of TreeView
 	events: TreeViewEvents,
 }
 
-unsafe impl Send for TreeView {}
-unsafe impl Sync for TreeView {}
-
+impl_send_sync!(TreeView);
 impl_debug!(TreeView);
 impl_child!(TreeView);
 

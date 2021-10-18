@@ -125,9 +125,7 @@ pub struct WindowMain {
 	raw_dlg: RawDlg,
 }
 
-unsafe impl Send for WindowMain {}
-unsafe impl Sync for WindowMain {}
-
+impl_send_sync!(WindowMain);
 impl_debug!(WindowMain);
 impl_parent!(WindowMain);
 

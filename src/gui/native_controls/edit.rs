@@ -25,9 +25,7 @@ struct Obj { // actual fields of Edit
 	events: EditEvents,
 }
 
-unsafe impl Send for Edit {}
-unsafe impl Sync for Edit {}
-
+impl_send_sync!(Edit);
 impl_debug!(Edit);
 impl_child!(Edit);
 
