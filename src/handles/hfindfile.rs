@@ -7,7 +7,7 @@ use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::bool_to_winresult;
 use crate::structs::WIN32_FIND_DATA;
-use crate::various::{Path, WString};
+use crate::various::{path, WString};
 
 pub_struct_handle! {
 	/// Handle to a
@@ -138,7 +138,7 @@ impl<'a> Iterator for HfindfileIter<'a> {
 		};
 
 		if found {
-			let path_only = Path::path_from(self.path_and_pattern)
+			let path_only = path::get_path(self.path_and_pattern)
 				.unwrap_or("");
 			Some(Ok(format!("{}\\{}", path_only, self.wfd.cFileName())))
 		} else {
