@@ -51,6 +51,7 @@ macro_rules! impl_IFileSinkFilter {
 			/// # Examples
 			///
 			/// ```rust,ignore
+			/// use winsafe::prelude::*;
 			/// use winsafe::{CoMemTaskFree, dshow};
 			///
 			/// let isink: dshow::IFileSinkFilter; // initialized somewhere

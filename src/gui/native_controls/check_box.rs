@@ -3,12 +3,11 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData, HwndPlace};
-use crate::gui::events::ButtonEvents;
+use crate::gui::events::{ButtonEvents, EventsView};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
 
@@ -31,8 +30,6 @@ pub enum CheckState {
 /// [check box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control, actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct CheckBox(Arc<Obj>);
 
@@ -44,7 +41,12 @@ struct Obj { // actual fields of CheckBox
 
 impl_send_sync!(CheckBox);
 impl_debug!(CheckBox);
+
+impl_window!(CheckBox);
 impl_child!(CheckBox);
+impl_nativecontrol!(CheckBox);
+impl_nativecontrolevents!(CheckBox, ButtonEvents);
+impl_focus!(CheckBox);
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
@@ -129,12 +131,6 @@ impl CheckBox {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(ButtonEvents);
 
 	/// Retrieves the current check state by sending a
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.

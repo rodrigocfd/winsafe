@@ -3,11 +3,11 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::StatusBarEvents;
+use crate::gui::events::{EventsView, StatusBarEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{baseref_from_parent, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::{MsgSend, sb, wm};
@@ -39,8 +39,6 @@ pub enum StatusBarPart {
 /// Native
 /// [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/status-bars)
 /// control, which has one or more parts.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct StatusBar(Arc<VeryUnsafeCell<Obj>>);
 
@@ -54,7 +52,21 @@ struct Obj { // actual fields of StatusBar
 
 impl_send_sync!(StatusBar);
 impl_debug!(StatusBar);
-impl_child!(StatusBar);
+
+impl Window for StatusBar {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for StatusBar {
+	fn ctrl_id(&self) -> u16 {
+		self.hwnd().GetDlgCtrlID().unwrap_or_default()
+	}
+}
+
+impl_nativecontrol!(StatusBar);
+impl_nativecontrolevents!(StatusBar, StatusBarEvents);
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
@@ -63,6 +75,7 @@ impl StatusBar {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
@@ -170,15 +183,6 @@ impl StatusBar {
 		*right_edges.last_mut().unwrap() = -1;
 
 		self.hwnd().SendMessage(sb::SetParts { right_edges: &right_edges })
-	}
-
-	pub_fn_hwnd!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(StatusBarEvents);
-
-	/// Returns the control ID.
-	pub fn ctrl_id(&self) -> u16 {
-		self.hwnd().GetDlgCtrlID().unwrap_or_default()
 	}
 
 	/// Exposes the part methods.

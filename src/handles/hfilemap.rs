@@ -75,6 +75,7 @@ impl HFILEMAPVIEW {
 	/// Reading the contents of a file into a string:
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HFILE};
 	///
 	/// let hfile = HFILE::CreateFile(

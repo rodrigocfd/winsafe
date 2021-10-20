@@ -21,6 +21,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::ComboBox;
 	///
 	/// let cmb_names: ComboBox; // initialized somewhere
@@ -60,6 +61,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_combo: gui::ComboBox; // initialized somewhere

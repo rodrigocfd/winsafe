@@ -50,8 +50,7 @@ struct Ctrl {
 #[derive(Clone)]
 pub(in crate::gui) struct Resizer(Arc<VeryUnsafeCell<Obj>>);
 
-unsafe impl Send for Resizer {}
-unsafe impl Sync for Resizer {}
+impl_send_sync!(Resizer);
 
 struct Obj { // actual fields of Resizer
 	ctrls: Vec<Ctrl>,
@@ -71,7 +70,8 @@ impl Resizer {
 	}
 
 	pub(in crate::gui) fn add(&self,
-		parent_base_ref: &Base, hwnd_ref: &HWND,
+		parent_base_ref: &Base,
+		hwnd_ref: &HWND,
 		horz: Horz, vert: Vert) -> WinResult<()>
 	{
 		// Note that, in order to have valid HWNDs, this method must be called

@@ -3,8 +3,9 @@ use crate::co;
 use crate::enums::{AtomStr, IdIdcStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
-use crate::gui::events::ProcessResult;
+use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::post_quit_error;
+use crate::gui::traits::{ParentEvents, UiThread, Window};
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
@@ -20,6 +21,26 @@ impl Drop for RawBase {
 		if !self.base.hwnd_ref().is_null() {
 			self.base.hwnd_ref().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 		}
+	}
+}
+
+impl Window for RawBase {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+impl UiThread for RawBase {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for RawBase {
+	fn on(&self) -> &WindowEventsAll {
+		self.base.on()
 	}
 }
 

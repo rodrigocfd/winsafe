@@ -68,6 +68,7 @@ The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/0
 ```rust
 #![windows_subsystem = "windows"]
 
+use winsafe::prelude::*;
 use winsafe::{gui, POINT, SIZE, WinResult};
 
 fn main() {

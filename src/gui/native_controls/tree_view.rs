@@ -3,21 +3,18 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::TreeViewEvents;
+use crate::gui::events::{EventsView, TreeViewEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::native_controls::tree_view_items::TreeViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::tvm;
 use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct TreeView(Arc<Obj>);
 
@@ -29,7 +26,12 @@ struct Obj { // actual fields of TreeView
 
 impl_send_sync!(TreeView);
 impl_debug!(TreeView);
+
+impl_window!(TreeView);
 impl_child!(TreeView);
+impl_nativecontrol!(TreeView);
+impl_nativecontrolevents!(TreeView, TreeViewEvents);
+impl_focus!(TreeView);
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window
@@ -107,12 +109,6 @@ impl TreeView {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(TreeViewEvents);
 
 	/// Exposes the item methods.
 	pub fn items<'a>(&'a self) -> TreeViewItems<'a> {

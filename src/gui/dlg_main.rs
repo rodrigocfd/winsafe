@@ -6,7 +6,9 @@ use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::handles::HINSTANCE;
+use crate::gui::events::{EventsView, WindowEventsAll};
+use crate::gui::traits::{ParentEvents, UiThread, Window};
+use crate::handles::{HINSTANCE, HWND};
 use crate::msg::wm;
 
 #[derive(Clone)]
@@ -16,6 +18,26 @@ struct Obj { // actual fields of DlgMain
 	base: DlgBase,
 	icon_id: Option<u16>,
 	accel_table_id: Option<u16>,
+}
+
+impl Window for DlgMain {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl UiThread for DlgMain {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.0.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for DlgMain {
+	fn on(&self) -> &WindowEventsAll {
+		self.0.base.on()
+	}
 }
 
 impl DlgMain {
@@ -41,12 +63,6 @@ impl DlgMain {
 		self.0.base.base_ref()
 	}
 
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base_ref().run_ui_thread(func);
-	}
-
 	pub(in crate::gui) fn run_main(&self,
 		cmd_show: Option<co::SW>) -> ErrResult<i32>
 	{
@@ -67,12 +83,12 @@ impl DlgMain {
 	fn default_message_handlers(&self) {
 		self.base_ref().default_message_handlers();
 
-		self.base_ref().user_events_ref().wm_close({
+		self.on().wm_close({
 			let self2 = self.clone();
 			move || { self2.base_ref().hwnd_ref().DestroyWindow()?; Ok(()) }
 		});
 
-		self.base_ref().user_events_ref().wm_nc_destroy(|| {
+		self.on().wm_nc_destroy(|| {
 			PostQuitMessage(0);
 			Ok(())
 		});

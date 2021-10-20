@@ -5,14 +5,18 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{GetAsyncKeyState, GetCursorPos};
 use crate::gui::base::Base;
-use crate::gui::events::ListViewEvents;
+use crate::gui::events::{
+	EventsView,
+	ListViewEvents,
+	sealed_events_wm_nfy::SealedEventsWmNfy,
+};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::{HIMAGELIST, HMENU, HWND};
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::handles::{HIMAGELIST, HMENU};
 use crate::msg::{lvm, wm};
 use crate::structs::{NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 
@@ -20,8 +24,6 @@ use crate::structs::{NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct ListView(Arc<Obj>);
 
@@ -34,7 +36,12 @@ struct Obj { // actual fields of ListView
 
 impl_send_sync!(ListView);
 impl_debug!(ListView);
+
+impl_window!(ListView);
 impl_child!(ListView);
+impl_nativecontrol!(ListView);
+impl_nativecontrolevents!(ListView, ListViewEvents);
+impl_focus!(ListView);
 
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
@@ -154,12 +161,6 @@ impl ListView {
 			}
 		});
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(ListViewEvents);
 
 	/// Exposes the column methods.
 	pub fn columns<'a>(&'a self) -> ListViewColumns<'a> {

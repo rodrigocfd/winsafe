@@ -5,6 +5,9 @@ use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
+use crate::gui::events::{EventsView, WindowEventsAll};
+use crate::gui::traits::{ParentEvents, UiThread, Window};
+use crate::handles::HWND;
 use crate::structs::{POINT, SIZE};
 
 #[derive(Clone)]
@@ -12,6 +15,26 @@ pub(in crate::gui) struct DlgModal(Arc<Obj>);
 
 struct Obj { // actual fields of DlgModal
 	base: DlgBase,
+}
+
+impl Window for DlgModal {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl UiThread for DlgModal {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.0.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for DlgModal {
+	fn on(&self) -> &WindowEventsAll {
+		self.0.base.on()
+	}
 }
 
 impl DlgModal {
@@ -31,12 +54,6 @@ impl DlgModal {
 
 	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base_ref().run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {
@@ -66,7 +83,7 @@ impl DlgModal {
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_close({
+		self.on().wm_close({
 			let self2 = self.clone();
 			move || {
 				self2.base_ref().hwnd_ref()

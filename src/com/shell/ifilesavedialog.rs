@@ -29,6 +29,7 @@ pub struct IFileSaveDialogVT {
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{co, CoCreateInstance, shell};
 ///
 /// let obj = CoCreateInstance::<shell::IFileSaveDialog>(

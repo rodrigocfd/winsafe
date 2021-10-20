@@ -2,8 +2,9 @@ use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::enums::IdStr;
 use crate::gui::base::Base;
-use crate::gui::events::ProcessResult;
+use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::{post_quit_error, ui_font};
+use crate::gui::traits::{ParentEvents, UiThread, Window};
 use crate::handles::HWND;
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
@@ -18,6 +19,26 @@ impl Drop for DlgBase {
 		if !self.base.hwnd_ref().is_null() {
 			self.base.hwnd_ref().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 		}
+	}
+}
+
+impl Window for DlgBase {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+impl UiThread for DlgBase {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for DlgBase {
+	fn on(&self) -> &WindowEventsAll {
+		self.base.on()
 	}
 }
 

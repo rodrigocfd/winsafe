@@ -2,20 +2,17 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::EditEvents;
+use crate::gui::events::{EditEvents, EventsView};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::{em, wm};
 use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct Edit(Arc<Obj>);
 
@@ -27,7 +24,12 @@ struct Obj { // actual fields of Edit
 
 impl_send_sync!(Edit);
 impl_debug!(Edit);
+
+impl_window!(Edit);
 impl_child!(Edit);
+impl_nativecontrol!(Edit);
+impl_nativecontrolevents!(Edit, EditEvents);
+impl_focus!(Edit);
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window
@@ -104,12 +106,6 @@ impl Edit {
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
 
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(EditEvents);
-
 	/// Sets the selection range of the text by sending an
 	/// [`em::SetSel`](crate::msg::em::SetSel) message.
 	///
@@ -118,6 +114,7 @@ impl Edit {
 	/// Selecting all text in the control:
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere
@@ -144,6 +141,7 @@ impl Edit {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere

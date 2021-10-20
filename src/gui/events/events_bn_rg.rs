@@ -4,7 +4,8 @@ use std::rc::Rc;
 use crate::aliases::ErrResult;
 use crate::co;
 use crate::gui::base::Base;
-use crate::gui::events::WindowEvents;
+use crate::gui::events::WindowEventsAll;
+use crate::gui::traits::ParentEvents;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// Exposes button control
@@ -32,8 +33,8 @@ impl RadioGroupEvents {
 		}
 	}
 
-	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_ptr.as_ref().user_events_ref() }
+	fn parent_user_events(&self) -> &WindowEventsAll {
+		unsafe { self.parent_ptr.as_ref().on() }
 	}
 
 	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
@@ -44,6 +45,7 @@ impl RadioGroupEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere

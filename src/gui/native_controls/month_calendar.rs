@@ -3,20 +3,17 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::gui::events::MonthCalendarEvents;
+use crate::gui::events::{EventsView, MonthCalendarEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::mcm;
 use crate::structs::{POINT, RECT, SIZE, SYSTEMTIME};
 
 /// Native
 /// [month calendar](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct MonthCalendar(Arc<Obj>);
 
@@ -28,7 +25,12 @@ struct Obj { // actual fields of MonthCalendar
 
 impl_send_sync!(MonthCalendar);
 impl_debug!(MonthCalendar);
+
+impl_window!(MonthCalendar);
 impl_child!(MonthCalendar);
+impl_nativecontrol!(MonthCalendar);
+impl_nativecontrolevents!(MonthCalendar, MonthCalendarEvents);
+impl_focus!(MonthCalendar);
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent
@@ -115,12 +117,6 @@ impl MonthCalendar {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(MonthCalendarEvents);
 
 	/// Retrieves the currently selected date by sending a
 	/// [`mcm::GetCurSel`](crate::msg::mcm::GetCurSel) message.

@@ -20,6 +20,7 @@ use crate::structs::CLSID;
 /// Instantiating an [`ITaskbarList`](crate::shell::ITaskbarList) object:
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{co, CoCreateInstance, shell};
 ///
 /// let obj = CoCreateInstance::<shell::ITaskbarList>(
@@ -64,6 +65,7 @@ pub fn CoCreateInstance<T: ComInterface>(
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{co, CoInitializeEx, CoUninitialize};
 ///
 /// CoInitializeEx(co::COINIT::MULTITHREADED)?;

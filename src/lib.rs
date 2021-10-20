@@ -241,3 +241,14 @@ pub use funcs::*;
 pub use handles::*;
 pub use structs::*;
 pub use various::*;
+
+/// Commonly imported traits.
+///
+/// Intended to be used as:
+///
+/// ```rust,ignore
+/// use winsafe::prelude::*;
+/// ```
+pub mod prelude {
+	pub use super::gui::prelude::*;
+}

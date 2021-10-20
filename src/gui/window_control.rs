@@ -1,10 +1,17 @@
 use crate::aliases::ErrResult;
 use crate::gui::base::Base;
 use crate::gui::dlg_control::DlgControl;
-use crate::gui::events::WindowEvents;
+use crate::gui::events::WindowEventsAll;
 use crate::gui::raw_control::{WindowControlOpts, RawControl};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent};
+use crate::gui::traits::{
+	baseref_from_parent,
+	Child,
+	Parent,
+	ParentEvents,
+	UiThread,
+	Window,
+};
 use crate::handles::HWND;
 use crate::structs::POINT;
 
@@ -13,9 +20,6 @@ enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
 
 /// An user child window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
-///
-/// Implements [`Parent`](crate::gui::Parent) and [`Child`](crate::gui::Child)
-/// traits.
 #[derive(Clone)]
 pub struct WindowControl {
 	raw_dlg: RawDlg,
@@ -25,11 +29,15 @@ impl_send_sync!(WindowControl);
 impl_debug!(WindowControl);
 impl_parent!(WindowControl);
 
+impl_window!(WindowControl);
+impl_uithread!(WindowControl);
+impl_parentevents!(WindowControl);
+
 impl Child for WindowControl {
-	fn hwnd_ref(&self) -> &HWND {
+	fn ctrl_id(&self) -> u16 {
 		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.base_ref().hwnd_ref(),
-			RawDlg::Dlg(d) => d.base_ref().hwnd_ref(),
+			RawDlg::Raw(r) => r.ctrl_id(),
+			RawDlg::Dlg(d) => d.ctrl_id(),
 		}
 	}
 }
@@ -70,7 +78,4 @@ impl WindowControl {
 	}
 
 	fn_base_ref!();
-	pub_fn_hwnd!();
-	pub_fn_on!();
-	pub_fn_run_ui_thread!();
 }

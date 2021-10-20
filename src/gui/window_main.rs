@@ -3,9 +3,10 @@ use crate::co;
 use crate::funcs::{InitCommonControls, IsWindowsVistaOrGreater, SetProcessDPIAware};
 use crate::gui::base::Base;
 use crate::gui::dlg_main::DlgMain;
-use crate::gui::events::WindowEvents;
+use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{WindowMainOpts, RawMain};
+use crate::gui::traits::{ParentEvents, UiThread, Window};
 use crate::handles::HWND;
 
 #[derive(Clone)]
@@ -14,8 +15,6 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// An user main window, which can handle events. Usually, this is the first
 /// window of your application, launched directly from the `main` function. Can
 /// be programmatically created or load a dialog resource from a `.res` file.
-///
-/// Implements [`Parent`](crate::gui::Parent) trait.
 ///
 /// # Examples
 ///
@@ -41,6 +40,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
+/// use winsafe::prelude::*;
 /// use winsafe::{gui, msg, ErrResult};
 ///
 /// fn main() {
@@ -91,6 +91,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// ```rust,ignore
 /// #![windows_subsystem = "windows"]
 ///
+/// use winsafe::prelude::*;
 /// use winsafe::gui;
 ///
 /// const ID_DLG_MAIN: i32 = 101; // in our .res file, this is the dialog ID
@@ -129,6 +130,10 @@ impl_send_sync!(WindowMain);
 impl_debug!(WindowMain);
 impl_parent!(WindowMain);
 
+impl_window!(WindowMain);
+impl_uithread!(WindowMain);
+impl_parentevents!(WindowMain);
+
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with
 	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
@@ -155,9 +160,6 @@ impl WindowMain {
 	}
 
 	fn_base_ref!();
-	pub_fn_hwnd!();
-	pub_fn_on!();
-	pub_fn_run_ui_thread!();
 
 	/// Physically creates the window, then runs the main application loop. This
 	/// method will block until the window is closed.

@@ -3,9 +3,15 @@ use std::ptr::NonNull;
 use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
-use crate::gui::events::{ProcessResult, WindowEvents};
+use crate::gui::events::{
+	EventsView,
+	ProcessResult,
+	sealed_events_wm::SealedEventsWm,
+	WindowEventsAll,
+};
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::gui::resizer::{Horz, Resizer, Vert};
+use crate::gui::traits::{ParentEvents, UiThread, Window};
 use crate::handles::{HACCEL, HINSTANCE, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
@@ -15,9 +21,45 @@ pub(in crate::gui) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
 	parent_ptr: Option<NonNull<Base>>, // parent of this window
-	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	privileged_events: WindowEvents, // inserted internally to automate tasks: all will be executed
+	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
+	privileged_events: WindowEventsAll, // inserted internally to automate tasks: all will be executed
 	resizer: Resizer,
+}
+
+impl Window for Base {
+	fn hwnd(&self) -> HWND {
+		self.hwnd
+	}
+}
+
+impl UiThread for Base {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		// This method is analog to SendMessage (synchronous), but intended to
+		// be called from another thread, so a callback function can, tunelled
+		// by wndproc, run in the original thread of the window, thus allowing
+		// GUI updates. With this, the user doesn't have to deal with a custom
+		// WM_ message.
+
+		// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
+		let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = Box::new(Box::new(func));
+		let ptr_pack = Box::into_raw(pack);
+		self.hwnd.SendMessage(WndMsg {
+			msg_id: Self::WM_UI_THREAD,
+			wparam: Self::WM_UI_THREAD.0 as _,
+			lparam: ptr_pack as _,
+		});
+	}
+}
+
+impl ParentEvents for Base {
+	fn on(&self) -> &WindowEventsAll {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add event after window is created.");
+		}
+		&self.user_events
+	}
 }
 
 impl Base {
@@ -30,8 +72,8 @@ impl Base {
 			hwnd: HWND::NULL,
 			is_dialog,
 			parent_ptr: parent_base_ref.map(|pb_ref| NonNull::from(pb_ref)),
-			user_events: WindowEvents::new(),
-			privileged_events: WindowEvents::new(),
+			user_events: WindowEventsAll::new(),
+			privileged_events: WindowEventsAll::new(),
 			resizer: Resizer::new(),
 		}
 	}
@@ -59,14 +101,7 @@ impl Base {
 		)
 	}
 
-	pub(in crate::gui) fn user_events_ref(&self) -> &WindowEvents {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add event after window is created.");
-		}
-		&self.user_events
-	}
-
-	pub(in crate::gui) fn privileged_events_ref(&self) -> &WindowEvents {
+	pub(in crate::gui) fn privileged_events_ref(&self) -> &WindowEventsAll {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add privileged event after window is created.");
 		}
@@ -90,25 +125,6 @@ impl Base {
 		horz: Horz, vert: Vert) -> WinResult<()>
 	{
 		self.resizer.add(parent_base_ref, hwnd_ref, horz, vert)
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		// This method is analog to SendMessage (synchronous), but intended to
-		// be called from another thread, so a callback function can, tunelled
-		// by wndproc, run in the original thread of the window, thus allowing
-		// GUI updates. With this, the user doesn't have to deal with a custom
-		// WM_ message.
-
-		// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
-		let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = Box::new(Box::new(func));
-		let ptr_pack = Box::into_raw(pack);
-		self.hwnd.SendMessage(WndMsg {
-			msg_id: Self::WM_UI_THREAD,
-			wparam: Self::WM_UI_THREAD.0 as _,
-			lparam: ptr_pack as _,
-		});
 	}
 
 	pub(in crate::gui) fn default_message_handlers(&self) {

@@ -26,6 +26,7 @@ impl<'a> ListViewColumns<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListView; // initialized somewhere

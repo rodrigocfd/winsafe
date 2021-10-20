@@ -128,6 +128,7 @@ impl HDC {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{HDC, HMONITOR, RECT};
 	///
 	/// let my_hdc: HDC; // initialized somewhere

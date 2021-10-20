@@ -12,6 +12,7 @@ use crate::various::WString;
 /// Reading version information:
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{HINSTANCE, ResourceInfo};
 ///
 /// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;

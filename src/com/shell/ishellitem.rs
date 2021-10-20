@@ -53,6 +53,7 @@ macro_rules! impl_IShellItem {
 			/// # Examples
 			///
 			/// ```rust,ignore
+			/// use winsafe::prelude::*;
 			/// use winsafe::shell;
 			///
 			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt")?;
@@ -95,6 +96,7 @@ macro_rules! impl_IShellItem {
 			/// # Examples
 			///
 			/// ```rust,ignore
+			/// use winsafe::prelude::*;
 			/// use winsafe::{co, shell};
 			///
 			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt")?;
@@ -124,6 +126,7 @@ macro_rules! impl_IShellItem {
 			/// # Examples
 			///
 			/// ```rust,ignore
+			/// use winsafe::prelude::*;
 			/// use winsafe::{co, shell};
 			///
 			/// let shi = shell::IShellItem::from_path("C:\\Temp\\test.txt")?;

@@ -30,6 +30,7 @@ pub struct IGraphBuilderVT {
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{co, CoCreateInstance, dshow};
 ///
 /// let obj = CoCreateInstance::<dshow::IGraphBuilder>(

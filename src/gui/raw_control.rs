@@ -5,10 +5,13 @@ use crate::aliases::ErrResult;
 use crate::co;
 use crate::enums::IdMenu;
 use crate::gui::base::Base;
+use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
+use crate::gui::traits::{Child, ParentEvents, UiThread, Window};
 use crate::handles::{HBRUSH, HCURSOR, HICON};
+use crate::handles::HWND;
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
@@ -18,6 +21,32 @@ pub(in crate::gui) struct RawControl(Arc<Obj>);
 struct Obj { // actual fields of RawControl
 	base: RawBase,
 	opts: WindowControlOpts,
+}
+
+impl Window for RawControl {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for RawControl {
+	fn ctrl_id(&self) -> u16 {
+		self.0.opts.ctrl_id
+	}
+}
+
+impl UiThread for RawControl {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.0.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for RawControl {
+	fn on(&self) -> &WindowEventsAll {
+		self.0.base.on()
+	}
 }
 
 impl RawControl {
@@ -40,12 +69,6 @@ impl RawControl {
 
 	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base_ref().run_ui_thread(func);
 	}
 
 	fn default_message_handlers(&self,
@@ -87,7 +110,7 @@ impl RawControl {
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_nc_paint({
+		self.on().wm_nc_paint({
 			let self2 = self.clone();
 			move |p| {
 				paint_control_borders(*self2.base_ref().hwnd_ref(), p)?;

@@ -196,7 +196,9 @@ impl HINSTANCE {
 	/// # Examples
 	///
 	/// Retrieving information of a window class created in our application:
+	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{HINSTANCE, WNDCLASSEX};
 	///
 	/// let mut wcx = WNDCLASSEX::default();
@@ -226,6 +228,7 @@ impl HINSTANCE {
 	/// Retrieving the full path of currently running .exe file:
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::HINSTANCE;
 	///
 	/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
@@ -252,7 +255,9 @@ impl HINSTANCE {
 	/// # Examples
 	///
 	/// Retrieving current module instance:
+	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::HINSTANCE;
 	///
 	/// let hinstance = HINSTANCE::GetModuleHandle(None)?;
@@ -298,7 +303,9 @@ impl HINSTANCE {
 	/// # Examples
 	///
 	/// Loading a system cursor:
+	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HINSTANCE, IdIdc};
 	///
 	/// let sys_cursor = HINSTANCE::default()
@@ -320,7 +327,9 @@ impl HINSTANCE {
 	/// # Examples
 	///
 	/// Loading a system icon:
+	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IdIdi, HINSTANCE};
 	///
 	/// let sys_icon = HINSTANCE::default()
@@ -435,6 +444,7 @@ impl HINSTANCE {
 	/// example:
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{HINSTANCE, HUPDATERSRC, LANGID};
 	/// use winsafe::{co, IdStr, RtStr};
 	///

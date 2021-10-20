@@ -56,6 +56,7 @@ impl Path {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::Path;
 	///
 	/// println!("{}",

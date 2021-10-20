@@ -1,5 +1,5 @@
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::gui::traits::ParentEvents;
 
 pub_struct_ctrl_events_proxy! {
 	/// Exposes label control

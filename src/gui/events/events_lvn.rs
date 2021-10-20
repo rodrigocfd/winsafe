@@ -1,5 +1,7 @@
 use crate::aliases::ErrResult;
 use crate::co;
+use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
+use crate::gui::traits::ParentEvents;
 use crate::structs::{
 	NMITEMACTIVATE,
 	NMLISTVIEW,
@@ -98,6 +100,7 @@ impl ListViewEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
@@ -190,6 +193,7 @@ impl ListViewEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
@@ -217,6 +221,7 @@ impl ListViewEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult, NMLVKEYDOWN};
 		///
 		/// let list: gui::ListView; // initialized somewhere

@@ -26,6 +26,7 @@ impl<'a> ListViewItems<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
@@ -155,6 +156,7 @@ impl<'a> ListViewItems<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui::ListView;
 	///
 	/// let my_list: ListView; // initialized somewhere
@@ -173,6 +175,7 @@ impl<'a> ListViewItems<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListView; // initialized somewhere

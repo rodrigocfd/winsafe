@@ -2,19 +2,17 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::gui::events::EventsView;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::pbm;
 use crate::structs::{PBRANGE, POINT, SIZE};
 
 /// Native
 /// [progress bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct ProgressBar(Arc<Obj>);
 
@@ -25,7 +23,10 @@ struct Obj { // actual fields of ProgressBar
 
 impl_send_sync!(ProgressBar);
 impl_debug!(ProgressBar);
+
+impl_window!(ProgressBar);
 impl_child!(ProgressBar);
+impl_nativecontrol!(ProgressBar);
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
@@ -97,10 +98,6 @@ impl ProgressBar {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_onsubclass!();
 
 	/// Retrieves the current position by sending a
 	/// [`pbm::GetPos`](crate::msg::pbm::GetPos) message.

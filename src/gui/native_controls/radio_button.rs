@@ -5,7 +5,7 @@ use crate::gui::events::ButtonEvents;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
@@ -14,8 +14,6 @@ use crate::structs::{POINT, SIZE};
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
 /// control, actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
@@ -29,7 +27,12 @@ struct Obj { // actual fields of RadioButton
 
 impl_send_sync!(RadioButton);
 impl_debug!(RadioButton);
+
+impl_window!(RadioButton);
 impl_child!(RadioButton);
+impl_nativecontrol!(RadioButton);
+impl_nativecontrolevents!(RadioButton, ButtonEvents);
+impl_focus!(RadioButton);
 
 impl RadioButton {
 	pub(in crate::gui) fn new(parent: &impl Parent, opts: RadioButtonOpts) -> RadioButton {
@@ -96,12 +99,6 @@ impl RadioButton {
 	pub(in crate::gui) fn parent_hwnd_ref(&self) -> &HWND {
 		self.0.base.parent_base_ref().hwnd_ref() // used by RadioGroup
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(ButtonEvents);
 
 	/// Emulates the click event for the radio button by sending a
 	/// [`bm::Click`](crate::msg::bm::Click) message.

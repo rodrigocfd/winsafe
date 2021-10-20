@@ -223,6 +223,7 @@ macro_rules! impl_IFileDialog {
 			/// # Examples
 			///
 			/// ```rust,ignore
+			/// use winsafe::prelude::*;
 			/// use winsafe::shell::IFileDialog;
 			///
 			/// let file_dlg: IFileDialog; // initialized somewhere

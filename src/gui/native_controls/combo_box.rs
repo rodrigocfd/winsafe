@@ -3,13 +3,12 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::ComboBoxEvents;
+use crate::gui::events::{ComboBoxEvents, EventsView};
 use crate::gui::native_controls::combo_box_items::ComboBoxItems;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 use crate::various::WString;
@@ -17,8 +16,6 @@ use crate::various::WString;
 /// Native
 /// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct ComboBox(Arc<Obj>);
 
@@ -30,7 +27,12 @@ struct Obj { // actual fields of ComboBox
 
 impl_send_sync!(ComboBox);
 impl_debug!(ComboBox);
+
+impl_window!(ComboBox);
 impl_child!(ComboBox);
+impl_nativecontrol!(ComboBox);
+impl_nativecontrolevents!(ComboBox, ComboBoxEvents);
+impl_focus!(ComboBox);
 
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
@@ -113,12 +115,6 @@ impl ComboBox {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(ComboBoxEvents);
 
 	/// Item methods.
 	pub fn items<'a>(&'a self) -> ComboBoxItems<'a> {

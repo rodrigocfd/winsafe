@@ -35,6 +35,7 @@ pub struct ITaskbarList3VT {
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{co, CoCreateInstance, shell};
 ///
 /// let obj = CoCreateInstance::<shell::ITaskbarList3>(
@@ -96,6 +97,7 @@ macro_rules! impl_ITaskbarList3 {
 			/// Setting progress to 50%:
 			///
 			/// ```rust,ignore
+			/// use winsafe::prelude::*;
 			/// use winsafe::{HWND, shell};
 			///
 			/// let obj: shell::ITaskbarList3; // initialized somewhere

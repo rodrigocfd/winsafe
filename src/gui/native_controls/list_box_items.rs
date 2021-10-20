@@ -21,6 +21,7 @@ impl<'a> ListBoxItems<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::ListBox;
 	///
 	/// let lst_names: ListBox; // initialized somewhere

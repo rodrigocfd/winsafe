@@ -6,8 +6,11 @@ use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
+use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
 use crate::gui::resizer::{Horz, Vert};
+use crate::gui::traits::{Child, ParentEvents, UiThread, Window};
+use crate::handles::HWND;
 use crate::structs::{POINT, SIZE};
 
 #[derive(Clone)]
@@ -16,7 +19,33 @@ pub(in crate::gui) struct DlgControl(Arc<Obj>);
 struct Obj { // actual fields of DlgControl
 	base: DlgBase,
 	position: POINT,
-	ctrl_id: Option<u16>,
+	ctrl_id: u16,
+}
+
+impl Window for DlgControl {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for DlgControl {
+	fn ctrl_id(&self) -> u16 {
+		self.0.ctrl_id
+	}
+}
+
+impl UiThread for DlgControl {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.0.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for DlgControl {
+	fn on(&self) -> &WindowEventsAll {
+		self.0.base.on()
+	}
 }
 
 impl DlgControl {
@@ -32,7 +61,7 @@ impl DlgControl {
 				Obj {
 					base: DlgBase::new(Some(parent_base_ref), dialog_id),
 					position,
-					ctrl_id,
+					ctrl_id: ctrl_id.unwrap_or_else(|| auto_ctrl_id()),
 				},
 			),
 		);
@@ -42,12 +71,6 @@ impl DlgControl {
 
 	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base_ref().run_ui_thread(func);
 	}
 
 	fn default_message_handlers(&self,
@@ -74,7 +97,7 @@ impl DlgControl {
 				// Give the control an ID.
 				self2.base_ref().hwnd_ref().SetWindowLongPtr(
 					co::GWLP::ID,
-					self2.0.ctrl_id.unwrap_or_else(|| auto_ctrl_id()) as _,
+					self2.0.ctrl_id as _,
 				);
 
 				unsafe {
@@ -86,7 +109,7 @@ impl DlgControl {
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_nc_paint({
+		self.on().wm_nc_paint({
 			let self2 = self.clone();
 			move |p| {
 				paint_control_borders(*self2.base_ref().hwnd_ref(), p)?;

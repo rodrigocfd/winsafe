@@ -3,13 +3,12 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::ListBoxEvents;
+use crate::gui::events::{EventsView, ListBoxEvents};
 use crate::gui::native_controls::list_box_items::ListBoxItems;
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 
@@ -17,8 +16,6 @@ use crate::structs::{POINT, SIZE};
 /// [list box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control. Not to be confused with the more complex
 /// [list view](crate::gui::ListView) control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct ListBox(Arc<Obj>);
 
@@ -30,7 +27,12 @@ struct Obj { // actual fields of ListBox
 
 impl_send_sync!(ListBox);
 impl_debug!(ListBox);
+
+impl_window!(ListBox);
 impl_child!(ListBox);
+impl_nativecontrol!(ListBox);
+impl_nativecontrolevents!(ListBox, ListBoxEvents);
+impl_focus!(ListBox);
 
 impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window
@@ -107,12 +109,6 @@ impl ListBox {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(ListBoxEvents);
 
 	/// Item methods.
 	pub fn items<'a>(&'a self) -> ListBoxItems<'a> {

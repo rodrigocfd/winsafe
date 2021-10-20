@@ -6,8 +6,6 @@
 #[macro_use]
 mod macros;
 
-mod func_store;
-
 mod events_bn_rg;
 mod events_bn;
 mod events_cbn;
@@ -21,6 +19,8 @@ mod events_stn;
 mod events_trbn;
 mod events_tvn;
 mod events_wm;
+mod events_wm_nfy;
+mod func_store;
 
 pub use events_bn_rg::RadioGroupEvents;
 pub use events_bn::ButtonEvents;
@@ -35,4 +35,12 @@ pub use events_stn::LabelEvents;
 pub use events_trbn::TrackbarEvents;
 pub use events_tvn::TreeViewEvents;
 pub use events_wm::WindowEvents;
-pub(in crate::gui) use events_wm::ProcessResult;
+pub use events_wm_nfy::WindowEventsAll;
+pub(in crate::gui) use events_wm::*;
+pub(in crate::gui) use events_wm_nfy::*;
+pub(in crate::gui) use func_store::FuncStore;
+
+pub mod prelude {
+	pub use super::events_wm::EventsView;
+	pub use super::events_wm_nfy::EventsViewAll;
+}

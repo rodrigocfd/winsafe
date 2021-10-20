@@ -5,9 +5,9 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::{RadioButton, RadioButtonOpts};
-use crate::gui::events::RadioGroupEvents;
+use crate::gui::events::{EventsView, RadioGroupEvents};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.

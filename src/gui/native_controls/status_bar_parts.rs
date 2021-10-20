@@ -38,6 +38,7 @@ impl<'a> StatusBarParts<'a> {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_sb: gui::StatusBar; // initialized somewhere

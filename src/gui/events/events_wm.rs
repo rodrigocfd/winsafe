@@ -1,8 +1,6 @@
-use std::rc::Rc;
-
 use crate::aliases::ErrResult;
 use crate::co;
-use crate::gui::events::func_store::FuncStore;
+use crate::gui::events::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HBRUSH, HFONT, HICON, HMENU};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
@@ -31,40 +29,21 @@ struct Obj { // actual fields of WindowEvents
 		co::WM,
 		Box<dyn Fn(WndMsg) -> ErrResult<Option<isize>>>, // return value may be meaningful
 	>,
-	tmrs: FuncStore< // WM_TIMER messages
-		u32,
-		Box<dyn Fn() -> ErrResult<()>>, // return value is never meaningful
-	>,
-	cmds: FuncStore< // WM_COMMAND notifications
-		(co::CMD, u16), // notif code, control ID
-		Box<dyn Fn() -> ErrResult<()>>, // return value is never meaningful
-	>,
-	nfys: FuncStore< // WM_NOTIFY notifications
-		(u16, co::NM), // idFrom, code
-		Box<dyn Fn(wm::Notify) -> ErrResult<Option<isize>>>, // return value may be meaningful
-	>,
 }
 
 impl WindowEvents {
-	pub(in crate::gui) fn new() -> WindowEvents {
+	pub(in crate::gui) fn new() -> Self {
 		Self(
 			VeryUnsafeCell::new(
 				Obj {
 					msgs: FuncStore::new(),
-					tmrs: FuncStore::new(),
-					cmds: FuncStore::new(),
-					nfys: FuncStore::new(),
 				},
 			),
 		)
 	}
 
-	/// Tells whether no functions have been added.
 	pub(in crate::gui) fn is_empty(&self) -> bool {
 		self.0.msgs.is_empty()
-			&& self.0.tmrs.is_empty()
-			&& self.0.cmds.is_empty()
-			&& self.0.nfys.is_empty()
 	}
 
 	/// Searches for the last added user function for the given message, and
@@ -72,101 +51,53 @@ impl WindowEvents {
 	pub(in crate::gui) fn process_one_message(&self,
 		wm_any: WndMsg) -> ErrResult<ProcessResult>
 	{
-		Ok(match wm_any.msg_id {
-			co::WM::NOTIFY => {
-				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
-				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				match self.0.nfys.find(key) {
-					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
-						match func(wm_nfy)? { // execute user function
-							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
-							None => ProcessResult::HandledWithoutRet,
-						}
-					},
-					None => ProcessResult::NotHandled, // no stored WM_NOTIFY notification
+		Ok(match self.0.msgs.find(wm_any.msg_id) {
+			Some(func) => { // we have a stored function to handle this message
+				match func(wm_any)? { // execute user function
+					Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
+					None => ProcessResult::HandledWithoutRet,
 				}
 			},
-			co::WM::COMMAND => {
-				let wm_cmd = wm::Command::from_generic_wm(wm_any);
-				let key = wm_cmd.event.code_id();
-				match self.0.cmds.find(key) {
-					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
-						func()?; // execute user function
-						ProcessResult::HandledWithoutRet
-					},
-					None => ProcessResult::NotHandled, // no stored WM_COMMAND notification
-				}
-			},
-			co::WM::TIMER => {
-				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				match self.0.tmrs.find(wm_tmr.timer_id) {
-					Some(func) => { // we have a stored function to handle this WM_TIMER message
-						func()?; // execute user function
-						ProcessResult::HandledWithoutRet
-					},
-					None => ProcessResult::NotHandled, // no stored WM_TIMER message
-				}
-			}
-			_ => { // any other message
-				match self.0.msgs.find(wm_any.msg_id) {
-					Some(func) => { // we have a stored function to handle this message
-						match func(wm_any)? { // execute user function
-							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
-							None => ProcessResult::HandledWithoutRet,
-						}
-					},
-					None => ProcessResult::NotHandled, // no stored function
-				}
-			},
+			None => ProcessResult::NotHandled, // no stored function
 		})
 	}
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
 	pub(in crate::gui) fn process_all_messages(&self, wm_any: WndMsg) -> ErrResult<()> {
-		Ok(match wm_any.msg_id {
-			co::WM::NOTIFY => {
-				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
-				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				for func in self.0.nfys.find_all(key) {
-					func(wm_nfy)?; // execute stored function
-				}
-			},
-			co::WM::COMMAND => {
-				let wm_cmd = wm::Command::from_generic_wm(wm_any);
-				let key = wm_cmd.event.code_id();
-				for func in self.0.cmds.find_all(key) {
-					func()?; // execute stored function
-				}
-			},
-			co::WM::TIMER => {
-				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				for func in self.0.tmrs.find_all(wm_tmr.timer_id) {
-					func()?; // execute stored function
-				}
-			},
-			_ => { // any other message
-				for func in self.0.msgs.find_all(wm_any.msg_id) {
-					func(wm_any)?; // execute stored function
-				}
-			},
-		})
+		for func in self.0.msgs.find_all(wm_any.msg_id) {
+			func(wm_any)?; // execute stored function
+		}
+		Ok(())
 	}
+}
 
-	/// Raw add message.
-	pub(in crate::gui) fn add_msg<F>(&self, ident: co::WM, func: F)
+//------------------------------------------------------------------------------
+
+impl sealed_events_wm::SealedEventsWm for WindowEvents {
+	fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
 	{
 		self.0.as_mut().msgs.insert(ident, Box::new(func));
 	}
+}
 
-	/// Raw add notification.
-	pub(in crate::gui) fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
-	{
-		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));
+impl EventsView for WindowEvents {}
+
+//------------------------------------------------------------------------------
+
+pub(in crate::gui) mod sealed_events_wm {
+	use super::{co, ErrResult, WndMsg};
+
+	pub trait SealedEventsWm {
+		/// Raw add message.
+		fn add_msg<F>(&self, ident: co::WM, func: F)
+			where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static;
 	}
+}
 
+/// Exposes the methods of [`WindowEvents`](crate::gui::events::WindowEvents).
+pub trait EventsView: sealed_events_wm::SealedEventsWm {
 	/// Event to any [window message](crate::co::WM).
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
@@ -179,6 +110,7 @@ impl WindowEvents {
 	/// Handling a custom, user-defined message:
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{co, gui, msg, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
@@ -193,93 +125,10 @@ impl WindowEvents {
 	///     }
 	/// });
 	/// ```
-	pub fn wm<F>(&self, ident: co::WM, func: F)
+	fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> ErrResult<isize> + 'static,
 	{
 		self.add_msg(ident, move |p| Ok(Some(func(p)?))); // return value is meaningful
-	}
-
-	/// [`WM_TIMER`](crate::msg::wm::Timer) message, narrowed to a specific
-	/// timer ID.
-	///
-	/// Posted to the installing thread's message queue when a timer expires.
-	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
-	{
-		self.0.as_mut().tmrs.insert(timer_id, Box::new(func));
-	}
-
-	/// [`WM_COMMAND`](crate::msg::wm::Command) message, for specific code and
-	/// control ID.
-	///
-	/// A command notification must be narrowed by the
-	/// [command code](crate::co::CMD) and the control ID, so the closure will
-	/// be fired for that specific control at that specific event.
-	///
-	/// **Note:** Instead of using this event, you should always prefer the
-	/// specific command notifications, which will give you the correct message
-	/// parameters. This generic method should be used when you have a custom,
-	/// non-standard window notification.
-	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
-	{
-		self.0.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
-	}
-
-	/// [`WM_COMMAND`](crate::msg::wm::Command) message, handling both
-	/// `CMD::Accelerator` and `CMD::Menu`, for a specific command ID.
-	///
-	/// Ideal to be used with menu commands whose IDs are shared with
-	/// accelerators.
-	///
-	/// # Examples
-	///
-	/// Closing the window on ESC key:
-	///
-	/// ```rust,ignore
-	/// use winsafe::{co, gui, msg, ErrResult};
-	///
-	/// let wnd: gui::WindowMain; // initialized somewhere
-	///
-	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
-	///     let wnd = wnd.clone(); // pass into the closure
-	///     move || -> ErrResult<()> {
-	///         wnd.hwnd().SendMessage(msg::wm::Close {});
-	///         Ok(())
-	///     }
-	/// });
-	/// ```
-	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
-	{
-		let shared_func = Rc::new(VeryUnsafeCell::new(func));
-
-		self.wm_command(co::CMD::Menu, ctrl_id, {
-			let shared_func = shared_func.clone();
-			move || shared_func.as_mut()()
-		});
-
-		self.wm_command(co::CMD::Accelerator, ctrl_id, {
-			let shared_func = shared_func.clone();
-			move || shared_func.as_mut()()
-		});
-	}
-
-	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
-	/// notification code.
-	///
-	/// A notification must be narrowed by the
-	/// [notification code](crate::co::NM) and the control ID, so the closure
-	/// will be fired for that specific control at the specific event.
-	///
-	/// **Note:** Instead of using this event, you should always prefer the
-	/// specific notifications, which will give you the correct notification
-	/// struct. This generic method should be used when you have a custom,
-	/// non-standard window notification.
-	pub fn wm_notify<F>(&self, id_from: i32, code: co::NM, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<isize> + 'static,
-	{
-		self.add_nfy(id_from as _, code, move |p| Ok(Some(func(p)?))); // return value is meaningful
 	}
 
 	pub_fn_wm_ret0_param! { wm_activate, co::WM::ACTIVATE, wm::Activate,
@@ -314,7 +163,7 @@ impl WindowEvents {
 	/// Notifies a window that the user generated an application command event,
 	/// for example, by clicking an application command button using the mouse
 	/// or typing an application command key on the keyboard.
-	pub fn wm_app_command<F>(&self, func: F)
+	fn wm_app_command<F>(&self, func: F)
 		where F: Fn(wm::AppCommand) -> ErrResult<()> + 'static,
 	{
 		self.add_msg(co::WM::APPCOMMAND,
@@ -381,7 +230,7 @@ impl WindowEvents {
 
 	/// [`WM_CREATE`](crate::msg::wm::Create) message, sent only to non-dialog
 	/// windows. Dialog windows receive
-	/// [`WM_INITDIALOG`](crate::gui::events::WindowEvents::wm_init_dialog)
+	/// [`WM_INITDIALOG`](crate::gui::events::prelude::EventsView::wm_init_dialog)
 	/// instead.
 	///
 	/// Sent when an application requests that a window be created by calling
@@ -393,6 +242,7 @@ impl WindowEvents {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, msg, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
@@ -409,7 +259,7 @@ impl WindowEvents {
 	///     }
 	/// });
 	/// ```
-	pub fn wm_create<F>(&self, func: F)
+	fn wm_create<F>(&self, func: F)
 		where F: Fn(wm::Create) -> ErrResult<i32> + 'static,
 	{
 		self.add_msg(co::WM::CREATE,
@@ -422,7 +272,7 @@ impl WindowEvents {
 	/// parent window can change the button's text and background colors.
 	/// However, only owner-drawn buttons respond to the parent window
 	/// processing this message.
-	pub fn wm_ctl_color_btn<F>(&self, func: F)
+	fn wm_ctl_color_btn<F>(&self, func: F)
 		where F: Fn(wm::CtlColorBtn) -> ErrResult<HBRUSH> + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORBTN,
@@ -511,6 +361,7 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
@@ -537,6 +388,7 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
@@ -594,7 +446,7 @@ impl WindowEvents {
 		/// loop. The window enters the moving or sizing modal loop when the
 		/// user clicks the window's title bar or sizing border, or when the
 		/// window passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::events::WindowEvents::wm_sys_command)
+		/// [`WM_SYSCOMMAND`](crate::gui::events::prelude::EventsView::wm_sys_command)
 		/// message to the `DefWindowProc` function and the `wParam` parameter
 		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
 		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
@@ -609,7 +461,7 @@ impl WindowEvents {
 	/// Sent when the window background must be erased (for example, when a
 	/// window is resized). The message is sent to prepare an invalidated
 	/// portion of a window for painting.
-	pub fn wm_erase_bkgnd<F>(&self, func: F)
+	fn wm_erase_bkgnd<F>(&self, func: F)
 		where F: Fn(wm::EraseBkgnd) -> ErrResult<i32> + 'static,
 	{
 		self.add_msg(co::WM::ERASEBKGND,
@@ -630,7 +482,7 @@ impl WindowEvents {
 		/// modal loop. The window enters the moving or sizing modal loop when
 		/// the user clicks the window's title bar or sizing border, or when the
 		/// window passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::events::WindowEvents::wm_sys_command)
+		/// [`WM_SYSCOMMAND`](crate::gui::events::prelude::EventsView::wm_sys_command)
 		/// message to the `DefWindowProc` function and the `wParam` parameter
 		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
 		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
@@ -650,7 +502,7 @@ impl WindowEvents {
 	/// [`WM_GETFONT`](crate::msg::wm::GetFont) message.
 	///
 	/// Retrieves the font with which the control is currently drawing its text.
-	pub fn wm_get_font<F>(&self, func: F)
+	fn wm_get_font<F>(&self, func: F)
 		where F: Fn() -> ErrResult<Option<HFONT>> + 'static,
 	{
 		self.add_msg(co::WM::GETFONT,
@@ -660,7 +512,7 @@ impl WindowEvents {
 	/// [`MN_GETHMENU`](crate::msg::wm::GetHMenu) message.
 	///
 	/// Retrieves the menu handle for the current window.
-	pub fn wm_get_hmenu<F>(&self, func: F)
+	fn wm_get_hmenu<F>(&self, func: F)
 		where F: Fn() -> ErrResult<Option<HMENU>> + 'static
 	{
 		self.add_msg(co::WM::MN_GETHMENU,
@@ -680,7 +532,7 @@ impl WindowEvents {
 	///
 	/// Copies the text that corresponds to a window into a buffer provided by
 	/// the caller.
-	pub fn wm_get_text<F>(&self, func: F)
+	fn wm_get_text<F>(&self, func: F)
 		where F: Fn(wm::GetText) -> ErrResult<u32> + 'static,
 	{
 		self.add_msg(co::WM::GETTEXT, move |p| Ok(Some(func(wm::GetText::from_generic_wm(p))? as _)));
@@ -690,7 +542,7 @@ impl WindowEvents {
 	///
 	/// Determines the length, in characters, of the text associated with a
 	/// window.
-	pub fn wm_get_text_length<F>(&self, func: F)
+	fn wm_get_text_length<F>(&self, func: F)
 		where F: Fn() -> ErrResult<u32> + 'static,
 	{
 		self.add_msg(co::WM::GETTEXTLENGTH, move |_| Ok(Some(func()? as _)));
@@ -720,16 +572,18 @@ impl WindowEvents {
 	pub_fn_wm_retbool_param! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog,
 		/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to
 		/// dialog windows. Non-dialog windows receive
-		/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) instead.
+		/// [`WM_CREATE`](crate::gui::events::prelude::EventsView::wm_create)
+		/// instead.
 		///
 		/// Sent to the dialog box procedure immediately before a dialog box is
 		/// displayed. Dialog box procedures typically use this message to
-		/// initialize controls and carry out any other initialization tasks that
-		/// affect the appearance of the dialog box.
+		/// initialize controls and carry out any other initialization tasks
+		/// that affect the appearance of the dialog box.
 		///
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
@@ -796,6 +650,7 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
@@ -921,8 +776,8 @@ impl WindowEvents {
 		/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
 		///
 		/// Sent prior to the
-		/// [`WM_CREATE`](crate::gui::events::WindowEvents::wm_create) message when
-		/// a window is first created.
+		/// [`WM_CREATE`](crate::gui::events::prelude::EventsView::wm_create)
+		/// message when a window is first created.
 	}
 
 	pub_fn_wm_ret0! { wm_nc_destroy, co::WM::NCDESTROY,
@@ -931,7 +786,7 @@ impl WindowEvents {
 		/// Notifies a window that its nonclient area is being destroyed. The
 		/// [`HWND::DestroyWindow`](crate::HWND::DestroyWindow) function sends
 		/// the message to the window following the
-		/// [`WM_DESTROY`](crate::gui::events::WindowEvents::wm_destroy)
+		/// [`WM_DESTROY`](crate::gui::events::prelude::EventsView::wm_destroy)
 		/// message. `WM_DESTROY` is used to free the allocated memory object
 		/// associated with the window.
 		///
@@ -1011,7 +866,7 @@ impl WindowEvents {
 	///
 	/// Sent to an icon when the user requests that the window be restored to
 	/// its previous size and position.
-	pub fn wm_query_open<F>(&self, func: F)
+	fn wm_query_open<F>(&self, func: F)
 		where F: Fn() -> ErrResult<bool> + 'static,
 	{
 		self.add_msg(co::WM::QUERYOPEN, move |_| Ok(Some(func()? as _)));
@@ -1077,7 +932,7 @@ impl WindowEvents {
 	/// Associates a new large or small icon with a window. The system displays
 	/// the large icon in the Alt+TAB dialog box, and the small icon in the
 	/// window caption.
-	pub fn wm_set_icon<F>(&self, func: F)
+	fn wm_set_icon<F>(&self, func: F)
 		where F: Fn(wm::SetIcon) -> ErrResult<Option<HICON>> + 'static,
 	{
 		self.add_msg(co::WM::SETICON, move |p|
@@ -1109,6 +964,7 @@ impl WindowEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere

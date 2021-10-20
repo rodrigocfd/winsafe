@@ -34,7 +34,20 @@ pub use raw_control::WindowControlOpts;
 pub use raw_main::WindowMainOpts;
 pub use raw_modal::WindowModalOpts;
 pub use resizer::{Horz, Vert};
-pub use traits::{Child, Parent};
 pub use window_control::WindowControl;
 pub use window_main::WindowMain;
 pub use window_modal::WindowModal;
+
+pub(crate) mod prelude {
+	pub use super::events::prelude::*;
+	pub use super::traits::{
+		Child,
+		Focus,
+		NativeControl,
+		NativeControlEvents,
+		Parent,
+		ParentEvents,
+		UiThread,
+		Window,
+	};
+}

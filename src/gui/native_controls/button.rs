@@ -2,20 +2,17 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::ButtonEvents;
+use crate::gui::events::{ButtonEvents, EventsView};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct Button(Arc<Obj>);
 
@@ -27,7 +24,12 @@ struct Obj { // actual fields of Button
 
 impl_send_sync!(Button);
 impl_debug!(Button);
+
+impl_window!(Button);
 impl_child!(Button);
+impl_nativecontrol!(Button);
+impl_nativecontrolevents!(Button, ButtonEvents);
+impl_focus!(Button);
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
@@ -103,12 +105,6 @@ impl Button {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(ButtonEvents);
 
 	/// Fires the click event for the button by sending a
 	/// [`bm::Click`](crate::msg::bm::Click) message.

@@ -1,9 +1,15 @@
 use crate::aliases::{ErrResult, WinResult};
 use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
-use crate::gui::events::WindowEvents;
+use crate::gui::events::WindowEventsAll;
 use crate::gui::raw_modal::{WindowModalOpts, RawModal};
-use crate::gui::traits::{baseref_from_parent, Parent};
+use crate::gui::traits::{
+	ParentEvents,
+	baseref_from_parent,
+	Parent,
+	UiThread,
+	Window,
+};
 use crate::handles::HWND;
 
 #[derive(Clone)]
@@ -11,8 +17,6 @@ enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
 
 /// An user modal window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
-///
-/// Implements [`Parent`](crate::gui::Parent) trait.
 #[derive(Clone)]
 pub struct WindowModal {
 	raw_dlg: RawDlg,
@@ -21,6 +25,10 @@ pub struct WindowModal {
 impl_send_sync!(WindowModal);
 impl_debug!(WindowModal);
 impl_parent!(WindowModal);
+
+impl_window!(WindowModal);
+impl_uithread!(WindowModal);
+impl_parentevents!(WindowModal);
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with
@@ -44,9 +52,6 @@ impl WindowModal {
 	}
 
 	fn_base_ref!();
-	pub_fn_hwnd!();
-	pub_fn_on!();
-	pub_fn_run_ui_thread!();
 
 	/// Physically creates the window, then runs the modal loop. This method
 	/// will block until the window is closed.

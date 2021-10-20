@@ -9,6 +9,7 @@ use crate::various::{FileAccess, FileMapped, WString};
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::Ini;
 ///
 /// let fini = Ini::parse_from_file("C:\\Temp\\my_file.ini")?;

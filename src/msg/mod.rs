@@ -18,6 +18,7 @@
 //! the example below, `LVM_DELETEITEM` returns `WinResult<()>`.
 //!
 //! ```rust,ignore
+//! use winsafe::prelude::*;
 //! use winsafe::{HWND, msg::lvm};
 //!
 //! let hlistview: HWND; // initialized somewhere

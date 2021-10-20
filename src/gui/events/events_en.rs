@@ -1,5 +1,5 @@
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::gui::traits::ParentEvents;
 
 pub_struct_ctrl_events_proxy! {
 	/// Exposes edit control
@@ -44,6 +44,7 @@ impl EditEvents {
 		/// # Examples
 		///
 		/// ```rust,ignore
+		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult};
 		///
 		/// let txt: gui::Edit; // initialized somewhere

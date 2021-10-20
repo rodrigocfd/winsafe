@@ -112,6 +112,7 @@ pub fn ChangeDisplaySettings(
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{co, ChooseColor, CHOOSECOLOR};
 ///
 /// let parent_hwnd: HWND; // initialized somewhere
@@ -166,6 +167,7 @@ pub fn CloseClipboard() -> WinResult<()> {
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{CommandLineToArgv, GetCommandLine};
 ///
 /// let args = CommandLineToArgv(&GetCommandLine())?;
@@ -303,6 +305,7 @@ pub fn EnumDisplaySettingsEx(
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{EnumWindows, HWND};
 ///
 /// EnumWindows(|hwnd: HWND| -> bool {
@@ -335,6 +338,7 @@ extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::ExpandEnvironmentStrings;
 ///
 /// let expanded = ExpandEnvironmentStrings(
@@ -485,6 +489,7 @@ pub fn GetDoubleClickTime() -> u32 {
 /// Retrieving and printing the key/value pairs of all environment strings:
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::GetEnvironmentStrings;
 ///
 /// let env_vars = GetEnvironmentStrings()?;
@@ -516,6 +521,7 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 /// Checking whether a file or folder exists:
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{co, GetFileAttributes};
 ///
 /// let file_exists = GetFileAttributes("C:\\Temp\\test.txt").is_ok();
@@ -594,6 +600,7 @@ pub fn GetFirmwareType() -> WinResult<co::FIRMWARE_TYPE> {
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{GetGUIThreadInfo, GUITHREADINFO, HWND};
 ///
 /// let hwnd: HWND; // initialized somewhere
@@ -1097,6 +1104,7 @@ pub fn PostQuitMessage(exit_code: i32) {
 /// # Examples
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{QueryPerformanceCounter, QueryPerformanceFrequency};
 ///
 /// let freq = QueryPerformanceFrequency()?;
@@ -1351,9 +1359,10 @@ pub fn SystemTimeToTzSpecificLocalTime(
 /// # Examples
 ///
 /// ```rust,ignore
-/// use winsafe::{co, gui, IconIdTdicon,
-///     TASKDIALOG_BUTTON TASKDIALOGCONFIG, TaskDialogIndirect,
-///     WString};
+/// use winsafe::prelude::*;
+/// use winsafe::{co, gui, IconIdTdicon};
+/// use winsafe::{TASKDIALOG_BUTTON TASKDIALOGCONFIG, TaskDialogIndirect};
+/// use winsafe::WString;
 ///
 /// let wnd: gui::WindowMain; // initialized somewhere
 ///
@@ -1448,6 +1457,7 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 /// Reading version information from resource:
 ///
 /// ```rust,ignore
+/// use winsafe::prelude::*;
 /// use winsafe::{HINSTANCE, VS_FIXEDFILEINFO};
 /// use winsafe::{GetFileVersionInfo, VarQueryValue};
 ///

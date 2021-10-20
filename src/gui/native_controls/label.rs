@@ -3,20 +3,17 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::gui::events::LabelEvents;
+use crate::gui::events::{EventsView, LabelEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 
 /// Native
 /// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct Label(Arc<Obj>);
 
@@ -28,7 +25,11 @@ struct Obj { // actual fields of Label
 
 impl_send_sync!(Label);
 impl_debug!(Label);
+
+impl_window!(Label);
 impl_child!(Label);
+impl_nativecontrol!(Label);
+impl_nativecontrolevents!(Label, LabelEvents);
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window
@@ -111,11 +112,6 @@ impl Label {
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
 	}
 
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(LabelEvents);
-
 	/// Resizes the control to exactly fit current text.
 	pub fn resize_to_text(&self) -> WinResult<()> {
 		self.resize_to_given_text(&self.text()?)
@@ -126,6 +122,7 @@ impl Label {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_label: gui::Label; // initialized somewhere
@@ -142,6 +139,7 @@ impl Label {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_label: gui::Label; // initialized somewhere
@@ -159,6 +157,7 @@ impl Label {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_label: gui::Label; // initialized somewhere

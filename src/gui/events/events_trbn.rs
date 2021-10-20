@@ -1,5 +1,7 @@
 use crate::aliases::ErrResult;
 use crate::co;
+use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
+use crate::gui::traits::ParentEvents;
 use crate::structs::{NMCUSTOMDRAW, NMTRBTHUMBPOSCHANGING};
 
 pub_struct_ctrl_events_proxy! {

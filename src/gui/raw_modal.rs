@@ -11,8 +11,10 @@ use crate::funcs::{
 	TranslateMessage,
 };
 use crate::gui::base::Base;
+use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
+use crate::gui::traits::{ParentEvents, UiThread, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
@@ -25,6 +27,26 @@ struct Obj { // actual fields of RawModal
 	base: RawBase,
 	opts: WindowModalOpts,
 	hchild_prev_focus_parent: Option<HWND>,
+}
+
+impl Window for RawModal {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl UiThread for RawModal {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.0.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for RawModal {
+	fn on(&self) -> &WindowEventsAll {
+		self.0.base.on()
+	}
 }
 
 impl RawModal {
@@ -46,12 +68,6 @@ impl RawModal {
 
 	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base_ref().run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {
@@ -136,7 +152,7 @@ impl RawModal {
 	fn default_message_handlers(&self) {
 		self.base_ref().default_message_handlers();
 
-		self.base_ref().user_events_ref().wm_set_focus({
+		self.on().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hfocus) = HWND::GetFocus() {
@@ -148,7 +164,7 @@ impl RawModal {
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_close({
+		self.on().wm_close({
 			let self2 = self.clone();
 			move || {
 				let hwnd = *self2.base_ref().hwnd_ref();

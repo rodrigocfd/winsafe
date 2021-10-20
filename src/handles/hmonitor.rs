@@ -19,6 +19,7 @@ impl HMONITOR {
 	/// # Examples
 	///
 	/// ```rust,ignore
+	/// use winsafe::prelude::*;
 	/// use winsafe::{HMONITOR, MONITORINFO};
 	///
 	/// let hmon: HMONITOR; // initialized somewhere

@@ -5,8 +5,10 @@ use crate::co;
 use crate::enums::IdMenu;
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::base::Base;
+use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
+use crate::gui::traits::{ParentEvents, UiThread, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
@@ -19,6 +21,26 @@ struct Obj { // actual fields of RawMain
 	base: RawBase,
 	opts: WindowMainOpts,
 	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
+}
+
+impl Window for RawMain {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl UiThread for RawMain {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.0.base.run_ui_thread(func);
+	}
+}
+
+impl ParentEvents for RawMain {
+	fn on(&self) -> &WindowEventsAll {
+		self.0.base.on()
+	}
 }
 
 impl RawMain {
@@ -38,12 +60,6 @@ impl RawMain {
 
 	pub(in crate::gui) fn base_ref(&self) -> &Base {
 		self.0.base.base_ref()
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base_ref().run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn run_main(&self,
@@ -106,7 +122,7 @@ impl RawMain {
 	fn default_message_handlers(&self) {
 		self.base_ref().default_message_handlers();
 
-		self.base_ref().user_events_ref().wm_activate({
+		self.on().wm_activate({
 			let self2 = self.clone();
 			move |p| {
 				if !p.is_minimized {
@@ -124,7 +140,7 @@ impl RawMain {
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_set_focus({
+		self.on().wm_set_focus({
 			let self2 = self.clone();
 			move |_| {
 				if let Some(hwnd_cur_focus) = HWND::GetFocus() {
@@ -136,7 +152,7 @@ impl RawMain {
 			}
 		});
 
-		self.base_ref().user_events_ref().wm_nc_destroy(|| {
+		self.on().wm_nc_destroy(|| {
 			PostQuitMessage(0);
 			Ok(())
 		});

@@ -6,6 +6,7 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
+use crate::gui::traits::Window;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
@@ -32,6 +33,12 @@ struct Obj { // actual fields of BaseNativeControl
 	hwnd: HWND,
 	parent_ptr: NonNull<Base>,
 	subclass_events: WindowEvents, // for control subclassing
+}
+
+impl Window for BaseNativeControl {
+	fn hwnd(&self) -> HWND {
+		self.0.hwnd
+	}
 }
 
 impl BaseNativeControl {

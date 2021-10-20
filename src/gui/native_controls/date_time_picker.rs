@@ -3,20 +3,17 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::gui::events::DateTimePickerEvents;
+use crate::gui::events::{DateTimePickerEvents, EventsView};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Parent};
-use crate::handles::HWND;
+use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::{dtm, wm};
 use crate::structs::{POINT, SIZE, SYSTEMTIME};
 
 /// Native
 /// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
 /// control.
-///
-/// Implements [`Child`](crate::gui::Child) trait.
 #[derive(Clone)]
 pub struct DateTimePicker(Arc<Obj>);
 
@@ -28,7 +25,12 @@ struct Obj { // actual fields of DateTimePicker
 
 impl_send_sync!(DateTimePicker);
 impl_debug!(DateTimePicker);
+
+impl_window!(DateTimePicker);
 impl_child!(DateTimePicker);
+impl_nativecontrol!(DateTimePicker);
+impl_nativecontrolevents!(DateTimePicker, DateTimePickerEvents);
+impl_focus!(DateTimePicker);
 
 impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent
@@ -117,12 +119,6 @@ impl DateTimePicker {
 		self.0.base.parent_base_ref().resizer_add(
 			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, Vert::None)
 	}
-
-	pub_fn_hwnd!();
-	pub_fn_ctrlid!();
-	pub_fn_focus!();
-	pub_fn_onsubclass!();
-	pub_fn_on!(DateTimePickerEvents);
 
 	/// Retrieves the currently selected date by sending a
 	/// [`dtm::GetSystemTime`](crate::msg::dtm::GetSystemTime) message.
