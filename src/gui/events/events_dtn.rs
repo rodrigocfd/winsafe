@@ -1,6 +1,6 @@
 use crate::co;
-use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
-use crate::gui::traits::ParentEvents;
+use crate::gui::base::Base;
+use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::structs::{
 	NMDATETIMECHANGE,
 	NMDATETIMEFORMAT,
@@ -9,20 +9,22 @@ use crate::structs::{
 	NMDATETIMEWMKEYDOWN,
 };
 
-pub_struct_ctrl_events_proxy! {
-	/// Exposes date and time picker control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
-	/// who is the real responsible for the child event handling.
-	///
-	/// You cannot directly instantiate this object, it is created internally by
-	/// the control.
-	DateTimePickerEvents
-}
+/// Exposes date and time picker control
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
+///
+/// These event methods are just proxies to the
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+/// is the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// control.
+pub struct DateTimePickerEvents(BaseEventsProxy);
 
 impl DateTimePickerEvents {
+	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	}
+
 	pub_fn_nfy_ret0! { dtn_close_up, co::DTN::CLOSEUP.into(),
 		/// [`DTN_CLOSEUP`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-closeup)
 		/// notification.

@@ -1,20 +1,23 @@
 use crate::co;
-use crate::gui::traits::ParentEvents;
+use crate::gui::base::Base;
+use crate::gui::events::base_events_proxy::BaseEventsProxy;
 
-pub_struct_ctrl_events_proxy! {
-	/// Exposes list box control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
-	/// who is the real responsible for the child event handling.
-	///
-	/// You cannot directly instantiate this object, it is created internally by
-	/// the control.
-	ListBoxEvents
-}
+/// Exposes list box control
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).
+///
+/// These event methods are just proxies to the
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+/// is the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// control.
+pub struct ListBoxEvents(BaseEventsProxy);
 
 impl ListBoxEvents {
+	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	}
+
 	pub_fn_cmd_ret0! { lbn_dbl_clk, co::LBN::DBLCLK.into(),
 		/// [`LBN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-dblclk)
 		/// notification.

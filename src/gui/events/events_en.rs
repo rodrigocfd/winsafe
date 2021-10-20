@@ -1,20 +1,23 @@
 use crate::co;
-use crate::gui::traits::ParentEvents;
+use crate::gui::base::Base;
+use crate::gui::events::base_events_proxy::BaseEventsProxy;
 
-pub_struct_ctrl_events_proxy! {
-	/// Exposes edit control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
-	/// who is the real responsible for the child event handling.
-	///
-	/// You cannot directly instantiate this object, it is created internally by
-	/// the control.
-	EditEvents
-}
+/// Exposes edit control
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
+///
+/// These event methods are just proxies to the
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+/// is the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// control.
+pub struct EditEvents(BaseEventsProxy);
 
 impl EditEvents {
+	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	}
+
 	pub_fn_cmd_ret0! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC.into(),
 		/// [`EN_ALIGN_LTR_EC`](https://docs.microsoft.com/en-us/windows/win32/controls/en-align-ltr-ec)
 		/// command notification.

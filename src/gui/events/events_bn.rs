@@ -1,23 +1,25 @@
 use crate::aliases::ErrResult;
 use crate::co;
-use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
-use crate::gui::traits::ParentEvents;
+use crate::gui::base::Base;
+use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 
-pub_struct_ctrl_events_proxy! {
-	/// Exposes button control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
-	/// who is the real responsible for the child event handling.
-	///
-	/// You cannot directly instantiate this object, it is created internally by
-	/// the control.
-	ButtonEvents
-}
+/// Exposes button control
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
+///
+/// These event methods are just proxies to the
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+/// is the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// control.
+pub struct ButtonEvents(BaseEventsProxy);
 
 impl ButtonEvents {
+	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	}
+
 	pub_fn_nfy_ret0_param! { bcn_drop_down, co::BCN::DROPDOWN.into(), NMBCDROPDOWN,
 		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.
@@ -95,7 +97,7 @@ impl ButtonEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.into())));
+		self.0.add_nfy(co::NM::CUSTOMDRAW,
+			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.0 as _)));
 	}
 }

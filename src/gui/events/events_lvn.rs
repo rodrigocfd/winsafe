@@ -1,7 +1,7 @@
 use crate::aliases::ErrResult;
 use crate::co;
-use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
-use crate::gui::traits::ParentEvents;
+use crate::gui::base::Base;
+use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::structs::{
 	NMITEMACTIVATE,
 	NMLISTVIEW,
@@ -17,20 +17,22 @@ use crate::structs::{
 	NMLVSCROLL,
 };
 
-pub_struct_ctrl_events_proxy! {
-	/// Exposes list view control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
-	/// who is the real responsible for the child event handling.
-	///
-	/// You cannot directly instantiate this object, it is created internally by
-	/// the control.
-	ListViewEvents
-}
+/// Exposes list view control
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
+///
+/// These event methods are just proxies to the
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
+/// is the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// control.
+pub struct ListViewEvents(BaseEventsProxy);
 
 impl ListViewEvents {
+	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	}
+
 	pub_fn_nfy_ret0_param! { lvn_begin_drag, co::LVN::BEGINDRAG.into(), NMLISTVIEW,
 		/// [`LVN_BEGINDRAG`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-begindrag)
 		/// notification.
@@ -268,7 +270,7 @@ impl ListViewEvents {
 	pub fn lvn_od_find_item<F>(&self, func: F)
 		where F: Fn(&mut NMLVFINDITEM) -> ErrResult<Option<u32>> + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::LVN::ODFINDITEM.into(), move |p| {
+		self.0.add_nfy(co::LVN::ODFINDITEM.into(), move |p| {
 			Ok(Some(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
 				Some(idx) => idx as _,
 				None => -1,
@@ -307,8 +309,8 @@ impl ListViewEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMLVCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
 	{
-		self.parent_user_events().add_nfy(self.ctrl_id as _, co::NM::CUSTOMDRAW,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMLVCUSTOMDRAW>() })?.into())));
+		self.0.add_nfy(co::NM::CUSTOMDRAW,
+			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMLVCUSTOMDRAW>() })?.0 as _)));
 	}
 
 	pub_fn_nfy_ret0_param! { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE,

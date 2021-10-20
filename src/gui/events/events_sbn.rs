@@ -1,22 +1,24 @@
 use crate::co;
-use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
-use crate::gui::traits::ParentEvents;
+use crate::gui::base::Base;
+use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::structs::NMMOUSE;
 
-pub_struct_ctrl_events_proxy! {
-	/// Exposes status bar control
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications).
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
-	/// who is the real responsible for the child event handling.
-	///
-	/// You cannot directly instantiate this object, it is created internally by
-	/// the control.
-	StatusBarEvents
-}
+/// Exposes status bar control
+/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications).
+///
+/// These event methods are just proxies to the
+/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
+/// who is the real responsible for the child event handling.
+///
+/// You cannot directly instantiate this object, it is created internally by
+/// the control.
+pub struct StatusBarEvents(BaseEventsProxy);
 
 impl StatusBarEvents {
+	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	}
+
 	pub_fn_nfy_retbool_param! { nm_click, co::NM::CLICK, NMMOUSE,
 		/// [`NM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-click-status-bar)
 		/// notification.

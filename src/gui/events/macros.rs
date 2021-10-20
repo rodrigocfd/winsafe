@@ -86,35 +86,6 @@ macro_rules! pub_fn_wm_ctlcolor {
 	};
 }
 
-/// Declares a struct of control events, which is just a proxy to parent events.
-macro_rules! pub_struct_ctrl_events_proxy {
-	(
-		$(#[$doc:meta])*
-		$name:ident
-	) => {
-		$(#[$doc])*
-		pub struct $name {
-			parent_ptr: std::ptr::NonNull<crate::gui::base::Base>,
-			ctrl_id: u16,
-		}
-
-		impl $name {
-			pub(in crate::gui) fn new(
-				parent_base_ref: &crate::gui::base::Base, ctrl_id: u16) -> $name
-			{
-				Self {
-					parent_ptr: std::ptr::NonNull::from(parent_base_ref),
-					ctrl_id,
-				}
-			}
-
-			fn parent_user_events(&self) -> &crate::gui::events::WindowEventsAll {
-				unsafe { self.parent_ptr.as_ref().on() }
-			}
-		}
-	}
-}
-
 /// Declares a method for a `WM_COMMAND` notification.
 macro_rules! pub_fn_cmd_ret0 {
 	(
@@ -125,8 +96,7 @@ macro_rules! pub_fn_cmd_ret0 {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> crate::aliases::ErrResult<()> + 'static,
 		{
-			self.parent_user_events().wm_command($cmd, self.ctrl_id as _,
-				move || func());
+			self.0.wm_command($cmd, move || func());
 		}
 	};
 }
@@ -143,8 +113,7 @@ macro_rules! pub_fn_nfy_ret0 {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> crate::aliases::ErrResult<()> + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
-				move |_| { func()?; Ok(None) });
+			self.0.add_nfy($nfy, move |_| { func()?; Ok(None) });
 		}
 	};
 }
@@ -160,7 +129,7 @@ macro_rules! pub_fn_nfy_ret0_param {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&$param) -> crate::aliases::ErrResult<()> + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+			self.0.add_nfy($nfy,
 				move |p| { func(unsafe { p.cast_nmhdr::<$param>() })?; Ok(None) });
 		}
 	};
@@ -177,7 +146,7 @@ macro_rules! pub_fn_nfy_ret0_mutparam {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&mut $param) -> crate::aliases::ErrResult<()> + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+			self.0.add_nfy($nfy,
 				move |p| { func(unsafe { p.cast_nmhdr_mut::<$param>() })?; Ok(None) });
 		}
 	};
@@ -194,7 +163,7 @@ macro_rules! pub_fn_nfy_retbool_param {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&$param) -> crate::aliases::ErrResult<bool> + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+			self.0.add_nfy($nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));
 		}
 	};
@@ -211,7 +180,7 @@ macro_rules! pub_fn_nfy_retbool_mutparam {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&mut $param) -> crate::aliases::ErrResult<bool> + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+			self.0.add_nfy($nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<$param>() })? as _)));
 		}
 	};
@@ -229,8 +198,7 @@ macro_rules! pub_fn_nfy_reti32 {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> crate::aliases::ErrResult<i32> + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
-				move |_| Ok(Some(func()? as _)));
+			self.0.add_nfy($nfy, move |_| Ok(Some(func()? as _)));
 		}
 	};
 }
@@ -246,7 +214,7 @@ macro_rules! pub_fn_nfy_reti32_param {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&$param) -> crate::aliases::ErrResult<i32> + 'static,
 		{
-			self.parent_user_events().add_nfy(self.ctrl_id as _, $nfy,
+			self.0.add_nfy($nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));
 		}
 	};

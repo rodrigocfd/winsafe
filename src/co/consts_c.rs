@@ -227,11 +227,6 @@ pub_struct_const! { CDRF, u32,
 	NOTIFYSUBITEMDRAW, 0x0000_0020
 	NOTIFYPOSTERASE, 0x0000_0040
 }
-impl From<CDRF> for isize {
-	fn from(v: CDRF) -> Self {
-		v.0 as isize
-	}
-}
 
 pub_struct_const! { CDS, u32,
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `flags` (`u32`).
