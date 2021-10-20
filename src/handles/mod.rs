@@ -1,7 +1,6 @@
 //! Win32 handles.
 
-#[macro_use]
-mod macros;
+#[macro_use] mod macros;
 
 mod any_handles;
 mod haccel;

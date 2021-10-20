@@ -1,7 +1,6 @@
 //! Native Win32 structs.
 
-#[macro_use]
-mod macros;
+#[macro_use] mod macros;
 
 mod any_newtypes;
 mod any_structs;

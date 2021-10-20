@@ -3,8 +3,7 @@
 //! All types implement bitflag operations, and can be converted to its
 //! underlying integer type.
 
-#[macro_use]
-mod macros;
+#[macro_use] mod macros;
 
 mod consts_ab;
 mod consts_c;

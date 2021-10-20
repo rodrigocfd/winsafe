@@ -34,8 +34,7 @@
 //! [`wm`](crate::msg::wm) (window messages), [`lvm`](crate::msg::lvm) (list
 //! view messages), and so on.
 
-#[macro_use]
-mod macros;
+#[macro_use] mod macros;
 
 mod message;
 pub use message::{MsgSend, MsgSendRecv, WndMsg};

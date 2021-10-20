@@ -6,10 +6,7 @@
 //! You'll probably want to start your GUI application using the
 //! [`WindowMain`](crate::gui::WindowMain).
 
-#[macro_use]
-mod macros;
-
-pub mod events;
+#[macro_use] mod macros;
 
 mod base;
 mod dlg_base;
@@ -28,6 +25,8 @@ mod very_unsafe_cell;
 mod window_control;
 mod window_main;
 mod window_modal;
+
+pub mod events;
 
 pub use native_controls::*;
 pub use raw_control::WindowControlOpts;

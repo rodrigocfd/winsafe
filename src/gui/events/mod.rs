@@ -3,8 +3,7 @@
 //! You cannot directly instantiate these objects, they are created internally
 //! by the controls.
 
-#[macro_use]
-mod macros;
+#[macro_use] mod macros;
 
 mod base_events_proxy;
 mod events_bn_rg;
