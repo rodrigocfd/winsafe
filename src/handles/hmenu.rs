@@ -45,7 +45,6 @@ impl HMENU {
 	/// Adding multiple entries at once, with their command IDs:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{HMENU, MenuEnum};
 	///
 	/// let my_hmenu: HMENU; // initialized somewhere
@@ -184,7 +183,6 @@ impl HMENU {
 	/// Disabling a menu item:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{HMENU, IdPos};
 	///
 	/// const ID_FILE_OPEN: i32 = 101;

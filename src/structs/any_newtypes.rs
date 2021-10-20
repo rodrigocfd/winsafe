@@ -40,7 +40,6 @@ impl COLORREF {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::COLORREF;
 	///
 	/// let color = COLORREF::new(0xff, 0x80, 0x00);
@@ -54,7 +53,6 @@ impl COLORREF {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::COLORREF;
 	///
 	/// let colors: [COLORREF; 2] = COLORREF::new_array(&[

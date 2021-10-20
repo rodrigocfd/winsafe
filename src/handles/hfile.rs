@@ -32,7 +32,6 @@ impl HFILE {
 	/// Opening an existing file as read-only:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HFILE};
 	///
 	/// let (hfile, status) = HFILE::CreateFile(

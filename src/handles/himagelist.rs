@@ -48,7 +48,6 @@ impl HIMAGELIST {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HIMAGELIST, SIZE};
 	///
 	/// let himgl = HIMAGELIST::Create(
@@ -114,7 +113,6 @@ impl HIMAGELIST {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HIMAGELIST, SIZE};
 	///
 	/// let himgl = HIMAGELIST::Create(

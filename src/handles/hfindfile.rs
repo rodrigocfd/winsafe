@@ -76,7 +76,6 @@ impl HFINDFILE {
 	/// Enumerating all TXT files in a directory:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::HFINDFILE;
 	///
 	/// for txt_file in HFINDFILE::iter("C:\\Temp\\*.txt") {

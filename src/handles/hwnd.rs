@@ -62,7 +62,6 @@ impl HWND {
 	/// paint the window client area:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, PAINTSTRUCT};
 	///
 	/// let my_main: gui::WindowMain; // initialized somewhere
@@ -236,7 +235,6 @@ impl HWND {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
@@ -731,7 +729,6 @@ impl HWND {
 	/// Most of the time you'll just want update the entire client area:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
@@ -841,7 +838,6 @@ impl HWND {
 	/// A modal message box, which blocks its parent:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND};
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
@@ -930,7 +926,6 @@ impl HWND {
 	/// Programatically closing a window:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{HWND, msg::wm};
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
@@ -1072,7 +1067,6 @@ impl HWND {
 	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND, LVITEM, msg::lvm};
 	///
 	/// let my_hwnd: HWND; // initialized somewhere
@@ -1337,7 +1331,6 @@ impl HWND {
 	/// An information message with just an OK button:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND, IdTdicon};
 	///
 	/// let my_hwnd: HWND; // initialized somewhere

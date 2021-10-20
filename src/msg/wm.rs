@@ -779,7 +779,6 @@ impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use winsafe::prelude::*;
 /// use winsafe::{msg::wm, HWND, WString};
 ///
 /// let hwnd: HWND; // initialized somewhere
@@ -1765,7 +1764,6 @@ impl MsgSendRecv for SetRedraw {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use winsafe::prelude::*;
 /// use winsafe::{msg::wm, HWND, WString};
 ///
 /// let hwnd: HWND; // initialized somewhere

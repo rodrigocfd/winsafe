@@ -17,7 +17,6 @@ pub_struct_handle_closeable! {
 	/// process ID and number of execution threads:
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HPROCESSLIST, PROCESSENTRY32};
 	///
 	/// let mut pe = PROCESSENTRY32::default();

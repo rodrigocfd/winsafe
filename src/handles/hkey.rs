@@ -55,7 +55,6 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY};
 	///
 	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
@@ -117,7 +116,6 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY};
 	///
 	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
@@ -181,7 +179,6 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{HKEY, RegistryValue};
 	///
 	/// let val = HKEY::CURRENT_USER.GetValue(
@@ -276,7 +273,6 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY};
 	///
 	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
@@ -384,7 +380,6 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
@@ -479,7 +474,6 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{HKEY, RegistryValue};
 	///
 	/// HKEY::CURRENT_USER.SetKeyValue(
@@ -517,7 +511,6 @@ impl HKEY {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(

@@ -26,7 +26,6 @@ impl GUID {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::GUID;
 	///
 	/// let g = GUID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
@@ -73,7 +72,6 @@ impl CLSID {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::CLSID;
 	///
 	/// let g = CLSID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
@@ -113,7 +111,6 @@ impl IID {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
 	/// use winsafe::IID;
 	///
 	/// let g = IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
