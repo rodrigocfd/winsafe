@@ -1,19 +1,41 @@
 #![allow(non_snake_case)]
 
-use crate::com::traits::{ComInterface, PPVT};
+use crate::aliases::WinResult;
 use crate::ffi::{HRESULT, PCVOID};
+use crate::privs::hr_to_winresult;
 use crate::structs::IID;
+
+/// A pointer to a COM virtual table.
+#[repr(transparent)]
+#[derive(Clone, Copy)]
+pub struct ComPtr(pub(in crate::com) *mut *mut IUnknownVT);
+
+impl ComPtr {
+	pub(in crate::com) fn null() -> Self {
+		ComPtr(std::ptr::null_mut())
+	}
+}
+
+/// Trait to any
+/// [COM](https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal)
+/// object, which encapsulates a COM interface pointer.
+pub trait ComInterface: From<ComPtr> {
+	/// The COM interface ID.
+	const IID: IID;
+}
+
+//------------------------------------------------------------------------------
 
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
 pub struct IUnknownVT {
-	pub QueryInterface: fn(PPVT, PCVOID, *mut PPVT) -> HRESULT,
-	pub AddRef: fn(PPVT) -> u32,
-	pub Release: fn(PPVT) -> u32,
+	pub QueryInterface: fn(ComPtr, PCVOID, *mut ComPtr) -> HRESULT,
+	pub AddRef: fn(ComPtr) -> u32,
+	pub Release: fn(ComPtr) -> u32,
 }
 
 /// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
-/// COM interface over [`IUnknownVT`](crate::IUnknownVT). It's the base to
-/// all COM interfaces.
+/// COM interface over [`IUnknownVT`](crate::IUnknownVT). It's the base to all
+/// COM interfaces.
 ///
 /// The `clone` method calls
 /// [`AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
@@ -22,70 +44,28 @@ pub struct IUnknownVT {
 /// Automatically calls
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
-pub struct IUnknown {
-	pub(crate) ppvt: PPVT,
+pub struct IUnknown(ComPtr);
+
+impl_iunknown!(IUnknown, 0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
+
+/// Exposes the [`IUnknown`](crate::IUnknown) methods.
+pub trait IUnknownT: ComInterface + Clone {
+	/// Returns the pointer to the underlying COM virtual table.
+	unsafe fn ptr(&self) -> ComPtr;
+
+	/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
+	/// method.
+	fn QueryInterface<T: ComInterface>(&self) -> WinResult<T> {
+		let mut ppv_queried = ComPtr::null();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IUnknownVT);
+			hr_to_winresult(
+				(vt.QueryInterface)(
+					self.ptr(),
+					&T::IID as *const _ as _,
+					&mut ppv_queried as *mut _ as _,
+				),
+			)
+		}.map(|_| T::from(ppv_queried))
+	}
 }
-
-impl ComInterface for IUnknown {
-	const IID: IID = IID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
-}
-
-macro_rules! impl_IUnknown {
-	($name:ty, $vt:ty) => {
-		use crate::aliases::WinResult;
-		use crate::privs::hr_to_winresult;
-
-		unsafe impl Send for $name {}
-		unsafe impl Sync for $name {}
-
-		impl From<PPVT> for $name {
-			fn from(ppvt: PPVT) -> Self {
-				Self { ppvt }
-			}
-		}
-
-		impl Drop for $name {
-			fn drop(&mut self) {
-				if !self.ppvt.is_null() {
-					let count = (self.iunknown_vt().Release)(self.ppvt); // call Release()
-					if count == 0 {
-						self.ppvt = std::ptr::null_mut();
-					}
-				}
-			}
-		}
-
-		impl Clone for $name {
-			fn clone(&self) -> Self {
-				(self.iunknown_vt().AddRef)(self.ppvt); // call AddRef()
-				Self { ppvt: self.ppvt }
-			}
-		}
-
-		impl $name {
-			fn iunknown_vt(&self) -> &crate::com::IUnknownVT {
-				unsafe { &**(self.ppvt as *mut *mut _) }
-			}
-
-			/// Returns the raw pointer to pointer to the COM virtual table.
-			pub unsafe fn as_ptr(&self) -> *mut *mut $vt {
-				self.ppvt as _
-			}
-
-			/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
-			/// method.
-			pub fn QueryInterface<T: ComInterface>(&self) -> WinResult<T> {
-				let mut ppv_queried: PPVT = std::ptr::null_mut();
-				hr_to_winresult(
-					(self.iunknown_vt().QueryInterface)(
-						self.ppvt,
-						&T::IID as *const _ as _,
-						&mut ppv_queried as *mut _ as _,
-					),
-				).map(|_| T::from(ppv_queried))
-			}
-		}
-	};
-}
-
-impl_IUnknown!(IUnknown, IUnknownVT);

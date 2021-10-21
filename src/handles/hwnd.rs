@@ -1374,7 +1374,7 @@ impl HWND {
 		icon: IdTdiconStr) -> WinResult<co::DLGID>
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
-		let mut pn_button: i32 = 0;
+		let mut pn_button = i32::default();
 		hr_to_winresult(
 			unsafe {
 				comctl32::TaskDialog(

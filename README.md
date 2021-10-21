@@ -38,19 +38,14 @@ Add the dependency in your `Cargo.toml`:
 winsafe = "0.0.6"
 ```
 
-To enable the DirectShow COM module, use:
+The COM modules are disabled by default, and can be enabled when needed:
 
-```toml
-[dependencies]
-winsafe = { version = "0.0.6", features = ["dshow"] }
-```
-
-To enable the Shell COM module, use:
-
-```toml
-[dependencies]
-winsafe = { version = "0.0.6", features = ["shell"] }
-```
+| Module | Cargo.toml `[dependencies]` |
+| - | - |
+| [Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) | `winsafe = { version = "0.0.6", features = ["autom"] }` |
+| [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) | `winsafe = { version = "0.0.6", features = ["dshow"] }` |
+| [IDL](https://docs.microsoft.com/en-us/windows/win32/api/objidl/) | `winsafe = { version = "0.0.6", features = ["idl"] }` |
+| [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/) | `winsafe = { version = "0.0.6", features = ["shell"] }` |
 
 ## Example
 

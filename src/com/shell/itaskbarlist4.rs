@@ -1,23 +1,23 @@
 #![allow(non_snake_case)]
 
-use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT, ITaskbarList3VT};
-use crate::com::traits::{ComInterface, PPVT};
+use crate::aliases::WinResult;
+use crate::com::iunknown::ComPtr;
+use crate::com::shell;
+use crate::com::shell::itaskbarlist::ITaskbarListT;
+use crate::com::shell::itaskbarlist2::ITaskbarList2T;
+use crate::com::shell::itaskbarlist3::{ITaskbarList3T, ITaskbarList3VT};
 use crate::ffi::{HANDLE, HRESULT};
-use crate::structs::IID;
+use crate::handles::HWND;
+use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList4`](crate::shell::ITaskbarList4) virtual table.
 pub struct ITaskbarList4VT {
 	pub ITaskbarList3VT: ITaskbarList3VT,
-	pub SetTabProperties: fn(PPVT, HANDLE, u32) -> HRESULT,
+	pub SetTabProperties: fn(ComPtr, HANDLE, u32) -> HRESULT,
 }
 
 /// [`ITaskbarList4`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist4)
-/// COM interface over
-/// [`ITaskbarList4VT`](crate::shell::vt::ITaskbarList4VT). Inherits from
-/// [`ITaskbarList3`](crate::shell::ITaskbarList3),
-/// [`ITaskbarList2`](crate::shell::ITaskbarList2),
-/// [`ITaskbarList`](crate::shell::ITaskbarList),
-/// [`IUnknown`](crate::IUnknown).
+/// COM interface over [`ITaskbarList4VT`](crate::shell::vt::ITaskbarList4VT).
 ///
 /// Automatically calls
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -35,40 +35,26 @@ pub struct ITaskbarList4VT {
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
 /// ```
-pub struct ITaskbarList4 {
-	pub(crate) ppvt: PPVT,
-}
+pub struct ITaskbarList4(ComPtr);
 
-impl ComInterface for ITaskbarList4 {
-	const IID: IID = IID::new(0xc43dc798, 0x95d1, 0x4bea, 0x9030, 0xbb99e2983a1a);
-}
+impl_iunknown!(ITaskbarList4, 0xc43dc798, 0x95d1, 0x4bea, 0x9030, 0xbb99e2983a1a);
+impl ITaskbarListT for ITaskbarList4 {}
+impl ITaskbarList2T for ITaskbarList4 {}
+impl ITaskbarList3T for ITaskbarList4 {}
+impl ITaskbarList4T for ITaskbarList4 {}
 
-macro_rules! impl_ITaskbarList4 {
-	($name:ty, $vt:ty) => {
-		impl $name {
-			fn itaskbarlist4_vt(&self) -> &ITaskbarList4VT {
-				unsafe { &**(self.ppvt as *mut *mut _) }
-			}
-
-			/// [`ITaskbarList4::SetTabProperties`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
-			/// method.
-			pub fn SetTabProperties(&self,
-				hwnd_tab: HWND, stp_flags: shellco::STPFLAG) -> WinResult<()>
-			{
-				hr_to_winresult(
-					(self.itaskbarlist4_vt().SetTabProperties)(
-						self.ppvt,
-						hwnd_tab.ptr,
-						stp_flags.0,
-					),
-				)
-			}
+/// Exposes the [`ITaskbarList4`](crate::shell::ITaskbarList4) methods.
+pub trait ITaskbarList4T: ITaskbarList3T {
+	/// [`ITaskbarList4::SetTabProperties`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
+	/// method.
+	fn SetTabProperties(&self,
+		hwnd_tab: HWND, stp_flags: shell::co::STPFLAG) -> WinResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList4VT);
+			hr_to_winresult(
+				(vt.SetTabProperties)(self.ptr(), hwnd_tab.ptr, stp_flags.0),
+			)
 		}
-	};
+	}
 }
-
-impl_IUnknown!(ITaskbarList4, ITaskbarList4VT);
-impl_ITaskbarList!(ITaskbarList4, ITaskbarList4VT);
-impl_ITaskbarList2!(ITaskbarList4, ITaskbarList4VT);
-impl_ITaskbarList3!(ITaskbarList4, ITaskbarList4VT);
-impl_ITaskbarList4!(ITaskbarList4, ITaskbarList4VT);

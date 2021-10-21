@@ -29,7 +29,7 @@ pub_struct_const! { FOS, u32,
 	OVERWRITEPROMPT, 0x2
 	/// In the Save dialog, only allow the user to choose a file that has one of
 	/// the file name extensions specified through
-	/// [`IFileDialog::SetFileTypes`](crate::shell::IFileDialog::SetFileTypes).
+	/// [`IFileDialog::SetFileTypes`](crate::prelude::IFileDialogT::SetFileTypes).
 	STRICTFILETYPES, 0x4
 	/// Don't change the current working directory.
 	NOCHANGEDIR, 0x8
@@ -39,7 +39,7 @@ pub_struct_const! { FOS, u32,
 	/// Ensures that returned items are file system items
 	/// ([`SFGAO::FILESYSTEM`](crate::shell::co::SFGAO::FILESYSTEM)). Note that
 	/// this does not apply to items returned by
-	/// [`IFileDialog::GetCurrentSelection`](crate::shell::IFileDialog::GetCurrentSelection).
+	/// [`IFileDialog::GetCurrentSelection`](crate::prelude::IFileDialogT::GetCurrentSelection).
 	FORCEFILESYSTEM, 0x40
 	/// Enables the user to choose any item in the Shell namespace, not just
 	/// those with [`SFGAO::STREAM`](crate::shell::co::SFGAO::STREAM) or
@@ -67,7 +67,7 @@ pub_struct_const! { FOS, u32,
 	CREATEPROMPT, 0x2000
 	/// In the case of a sharing violation when an application is opening a
 	/// file, call the application back through
-	/// [`OnShareViolation`](crate::shell::IFileDialogEvents::OnShareViolation)
+	/// [`OnShareViolation`](crate::prelude::IFileDialogEventsT::OnShareViolation)
 	/// for guidance. This flag is overridden by
 	/// [`FOS::NOVALIDATE`](crate::shell::co::FOS::NOVALIDATE).
 	SHAREAWARE, 0x4000
@@ -84,7 +84,7 @@ pub_struct_const! { FOS, u32,
 	HIDEMRUPLACES, 0x2_0000
 	/// Hide items shown by default in the view's navigation pane. This flag is
 	/// often used in conjunction with the
-	/// [`IFileDialog::AddPlace`](crate::shell::IFileDialog::AddPlace) method,
+	/// [`IFileDialog::AddPlace`](crate::prelude::IFileDialogT::AddPlace) method,
 	/// to hide standard locations and replace them with custom locations.
 	///
 	/// Windows 7 and later. Hide all of the standard namespace locations (such
@@ -116,8 +116,8 @@ pub_struct_const! { FOS, u32,
 	/// displayed.
 	FORCEPREVIEWPANEON, 0x4000_0000
 	/// Indicates that the caller is opening a file as a stream
-	/// ([`BHID_Stream`](crate::shell::IShellItem::BindToHandler)), so there is
-	/// no need to download that file.
+	/// ([`BHID_Stream`](crate::prelude::IShellItemT::BindToHandler)), so there
+	/// is no need to download that file.
 	SUPPORTSTREAMABLEITEMS, 0x8000_0000
 }
 
@@ -184,14 +184,14 @@ pub_struct_const! { SIGDN, u32,
 	/// report [`SFGAO::FILESYSTEM`](crate::shell::co::SFGAO::FILESYSTEM) have a
 	/// file system path. When an item does not have a file system path, a call
 	/// to
-	/// [`IShellItem::GetDisplayName`](crate::shell::IShellItem::GetDisplayName)
+	/// [`IShellItem::GetDisplayName`](crate::prelude::IShellItemT::GetDisplayName)
 	/// on that item will fail. In UI this name is suitable for display to the
 	/// user in some cases, but note that it might not be specified for all
 	/// items.
 	FILESYSPATH, 0x8005_8000
 	/// Returns the item's URL, if it has one. Some items do not have a URL, and
 	/// in those cases a call to
-	/// [`IShellItem::GetDisplayName`](crate::shell::IShellItem::GetDisplayName)
+	/// [`IShellItem::GetDisplayName`](crate::prelude::IShellItemT::GetDisplayName)
 	/// will fail. This name is suitable for display to the user in some cases,
 	/// but note that it might not be specified for all items.
 	URL, 0x8006_8000
@@ -217,7 +217,7 @@ pub_struct_const! { STPFLAG, u32,
 }
 
 pub_struct_const! { TBPF, u32,
-	/// [`ITaskbarList3::SetProgressState`](crate::shell::ITaskbarList3::SetProgressState)
+	/// [`ITaskbarList3::SetProgressState`](crate::prelude::ITaskbarList3T::SetProgressState)
 	/// `tbpFlags` (`u32`).
 	=>
 	/// Stops displaying progress and returns the button to its normal state.

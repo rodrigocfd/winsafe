@@ -179,7 +179,7 @@ impl HFILE {
 		overlapped: Option<&mut OVERLAPPED>) -> WinResult<()>
 	{
 		buffer.resize(num_bytes_to_read as _, 0x00);
-		let mut bytes_read: u32 = 0;
+		let mut bytes_read = u32::default();
 
 		bool_to_winresult(
 			unsafe {
@@ -206,7 +206,7 @@ impl HFILE {
 		distance_to_move: i64,
 		move_method: co::FILE_STARTING_POINT) -> WinResult<i64>
 	{
-		let mut new_offset: i64 = 0;
+		let mut new_offset = i64::default();
 
 		bool_to_winresult(
 			unsafe {
@@ -245,7 +245,7 @@ impl HFILE {
 	pub fn WriteFile(self,
 		buffer: &[u8], overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
 	{
-		let mut bytes_written: u32 = 0;
+		let mut bytes_written = u32::default();
 
 		bool_to_winresult(
 			unsafe {

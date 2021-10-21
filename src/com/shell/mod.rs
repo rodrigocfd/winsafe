@@ -8,25 +8,21 @@
 //! winsafe = { version = "0.0.6", features = ["shell"] }
 //! ```
 
-pub mod co;
 pub mod clsid;
+pub mod co;
 pub mod guid;
 
-#[macro_use] mod imodalwindow; // 2nd level interfaces
-#[macro_use] mod ishellitem;
-#[macro_use] mod ishellitemarray;
-#[macro_use] mod itaskbarlist;
-
-#[macro_use] mod ifiledialog; // 3rd level interfaces
-#[macro_use] mod itaskbarlist2;
-
-#[macro_use] mod ifileopendialog; // 4th level interfaces
-#[macro_use] mod ifilesavedialog;
-#[macro_use] mod itaskbarlist3;
-
-#[macro_use] mod itaskbarlist4; // 5th level interface
-
-mod any_structs;
+pub(in crate::com) mod any_structs;
+pub(in crate::com) mod ifiledialog;
+pub(in crate::com) mod ifileopendialog;
+pub(in crate::com) mod ifilesavedialog;
+pub(in crate::com) mod imodalwindow;
+pub(in crate::com) mod ishellitem;
+pub(in crate::com) mod ishellitemarray;
+pub(in crate::com) mod itaskbarlist;
+pub(in crate::com) mod itaskbarlist2;
+pub(in crate::com) mod itaskbarlist3;
+pub(in crate::com) mod itaskbarlist4;
 
 pub use any_structs::*;
 pub use ifiledialog::IFileDialog;
@@ -39,6 +35,19 @@ pub use itaskbarlist::ITaskbarList;
 pub use itaskbarlist2::ITaskbarList2;
 pub use itaskbarlist3::ITaskbarList3;
 pub use itaskbarlist4::ITaskbarList4;
+
+pub(crate) mod prelude {
+	pub use super::ifiledialog::IFileDialogT;
+	pub use super::ifileopendialog::IFileOpenDialogT;
+	pub use super::ifilesavedialog::IFileSaveDialogT;
+	pub use super::imodalwindow::IModalWindowT;
+	pub use super::ishellitem::IShellItemT;
+	pub use super::ishellitemarray::IShellItemArrayT;
+	pub use super::itaskbarlist::ITaskbarListT;
+	pub use super::itaskbarlist2::ITaskbarList2T;
+	pub use super::itaskbarlist3::ITaskbarList3T;
+	pub use super::itaskbarlist4::ITaskbarList4T;
+}
 
 /// [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/) COM
 /// virtual tables.

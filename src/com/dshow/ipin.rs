@@ -1,105 +1,104 @@
 #![allow(non_snake_case)]
 
-use crate::com::iunknown::IUnknownVT;
-use crate::com::traits::{ComInterface, PPVT};
+use crate::aliases::WinResult;
+use crate::com::funcs::CoTaskMemFree;
+use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{HRESULT, PCVOID, PSTR, PVOID};
-use crate::structs::IID;
+use crate::privs::hr_to_winresult;
+use crate::various::WString;
 
 /// [`IPin`](crate::dshow::IPin) virtual table.
 pub struct IPinVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Connect: fn(PPVT, PPVT, PPVT, PCVOID) -> HRESULT,
-	pub ReceiveConnection: fn(PPVT, PPVT, PCVOID) -> HRESULT,
-	pub Disconnect: fn(PPVT) -> HRESULT,
-	pub ConnectedTo: fn(PPVT, *mut PPVT) -> HRESULT,
-	pub ConnectionMediaType: fn(PPVT, PVOID) -> HRESULT,
-	pub QueryPinInfo: fn(PPVT, PVOID) -> HRESULT,
-	pub QueryDirection: fn(PPVT, PVOID) -> HRESULT,
-	pub QueryId: fn(PPVT, *mut PSTR) -> HRESULT,
-	pub QueryAccept: fn(PPVT, PCVOID) -> HRESULT,
-	pub EnumMediaTypes: fn(PPVT, *mut PPVT) -> HRESULT,
-	pub QueryInternalConnections: fn(PPVT, *mut PPVT, *mut u32) -> HRESULT,
-	pub EndOfStream: fn(PPVT) -> HRESULT,
-	pub BeginFlush: fn(PPVT) -> HRESULT,
-	pub EndFlush: fn(PPVT) -> HRESULT,
-	pub NewSegment: fn(PPVT, i64, i64, f64) -> HRESULT,
+	pub Connect: fn(ComPtr, ComPtr, ComPtr, PCVOID) -> HRESULT,
+	pub ReceiveConnection: fn(ComPtr, ComPtr, PCVOID) -> HRESULT,
+	pub Disconnect: fn(ComPtr) -> HRESULT,
+	pub ConnectedTo: fn(ComPtr, *mut ComPtr) -> HRESULT,
+	pub ConnectionMediaType: fn(ComPtr, PVOID) -> HRESULT,
+	pub QueryPinInfo: fn(ComPtr, PVOID) -> HRESULT,
+	pub QueryDirection: fn(ComPtr, PVOID) -> HRESULT,
+	pub QueryId: fn(ComPtr, *mut PSTR) -> HRESULT,
+	pub QueryAccept: fn(ComPtr, PCVOID) -> HRESULT,
+	pub EnumMediaTypes: fn(ComPtr, *mut ComPtr) -> HRESULT,
+	pub QueryInternalConnections: fn(ComPtr, *mut ComPtr, *mut u32) -> HRESULT,
+	pub EndOfStream: fn(ComPtr) -> HRESULT,
+	pub BeginFlush: fn(ComPtr) -> HRESULT,
+	pub EndFlush: fn(ComPtr) -> HRESULT,
+	pub NewSegment: fn(ComPtr, i64, i64, f64) -> HRESULT,
 }
 
 /// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
-/// COM interface over [`IPinVT`](crate::dshow::vt::IPinVT). Inherits from
-/// [`IUnknown`](crate::IUnknown).
+/// COM interface over [`IPinVT`](crate::dshow::vt::IPinVT).
 ///
 /// Automatically calls
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
-pub struct IPin {
-	pub(crate) ppvt: PPVT,
-}
+pub struct IPin(ComPtr);
 
-impl ComInterface for IPin {
-	const IID: IID = IID::new(0x56a86891, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
-}
+impl_iunknown!(IPin, 0x56a86891, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl IPinT for IPin {}
 
-macro_rules! impl_IPin {
-	($name:ty, $vt:ty) => {
-		use crate::com::funcs::CoTaskMemFree;
-		use crate::various::WString;
-
-		impl $name {
-			fn ipin_vt(&self) -> &IPinVT {
-				unsafe { &**(self.ppvt as *mut *mut _) }
-			}
-
-			/// [`IPin::BeginFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
-			/// method.
-			pub fn BeginFlush(&self) -> WinResult<()> {
-				hr_to_winresult((self.ipin_vt().BeginFlush)(self.ppvt))
-			}
-
-			/// [`IPin::ConnectedTo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
-			/// method.
-			pub fn ConnectedTo(&self) -> WinResult<IPin> {
-				let mut ppv_queried: PPVT = std::ptr::null_mut();
-				hr_to_winresult(
-					(self.ipin_vt().ConnectedTo)(
-						self.ppvt,
-						&mut ppv_queried as *mut _ as _,
-					),
-				).map(|_| IPin::from(ppv_queried))
-			}
-
-			/// [`IPin::Disconnect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)
-			/// method.
-			pub fn Disconnect(&self) -> WinResult<()> {
-				hr_to_winresult((self.ipin_vt().Disconnect)(self.ppvt))
-			}
-
-			/// [`IPin::EndFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endflush)
-			/// method.
-			pub fn EndFlush(&self) -> WinResult<()> {
-				hr_to_winresult((self.ipin_vt().EndFlush)(self.ppvt))
-			}
-
-			/// [`IPin::EndOfStream`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endofstream)
-			/// method.
-			pub fn EndOfStream(&self) -> WinResult<()> {
-				hr_to_winresult((self.ipin_vt().EndOfStream)(self.ppvt))
-			}
-
-			/// [`IPin::QueryId`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryid)
-			/// method.
-			pub fn QueryId(&self) -> WinResult<String> {
-				let mut pstr: *mut u16 = std::ptr::null_mut();
-				hr_to_winresult((self.ipin_vt().QueryId)(self.ppvt, &mut pstr))
-					.map(|_| {
-						let name = WString::from_wchars_nullt(pstr);
-						CoTaskMemFree(pstr);
-						name.to_string()
-					})
-			}
+/// Exposes the [`IPin`](crate::dshow::IPin) methods.
+pub trait IPinT: IUnknownT {
+	/// [`IPin::BeginFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
+	/// method.
+	fn BeginFlush(&self) -> WinResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			hr_to_winresult((vt.BeginFlush)(self.ptr()))
 		}
-	};
-}
+	}
 
-impl_IUnknown!(IPin, IPinVT);
-impl_IPin!(IPin, IPinVT);
+	/// [`IPin::ConnectedTo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
+	/// method.
+	fn ConnectedTo(&self) -> WinResult<IPin> {
+		let mut ppv_queried = ComPtr::null();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			hr_to_winresult(
+				(vt.ConnectedTo)(self.ptr(), &mut ppv_queried as *mut _ as _),
+			)
+		}.map(|_| IPin::from(ppv_queried))
+	}
+
+	/// [`IPin::Disconnect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)
+	/// method.
+	fn Disconnect(&self) -> WinResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			hr_to_winresult((vt.Disconnect)(self.ptr()))
+		}
+	}
+
+	/// [`IPin::EndFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endflush)
+	/// method.
+	fn EndFlush(&self) -> WinResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			hr_to_winresult((vt.EndFlush)(self.ptr()))
+		}
+	}
+
+	/// [`IPin::EndOfStream`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endofstream)
+	/// method.
+	fn EndOfStream(&self) -> WinResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			hr_to_winresult((vt.EndOfStream)(self.ptr()))
+		}
+	}
+
+	/// [`IPin::QueryId`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryid)
+	/// method.
+	fn QueryId(&self) -> WinResult<String> {
+		let mut pstr: *mut u16 = std::ptr::null_mut();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			hr_to_winresult((vt.QueryId)(self.ptr(), &mut pstr))
+		}.map(|_| {
+			let name = WString::from_wchars_nullt(pstr);
+			CoTaskMemFree(pstr);
+			name.to_string()
+		})
+	}
+}

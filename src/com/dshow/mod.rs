@@ -8,30 +8,27 @@
 //! winsafe = { version = "0.0.6", features = ["dshow"] }
 //! ```
 
-pub mod co;
 pub mod clsid;
+pub mod co;
 pub mod guid;
 
-#[macro_use] mod ienumfilters; // 2nd level interfaces
-#[macro_use] mod ifilesinkfilter;
-#[macro_use] mod ifiltergraph;
-#[macro_use] mod imediaseeking;
-#[macro_use] mod imfgetservice;
-#[macro_use] mod imfvideodisplaycontrol;
-#[macro_use] mod ipin;
-
-#[macro_use] mod igraphbuilder; // 3rd level interfaces
-#[macro_use] mod imediacontrol;
-#[macro_use] mod imediafilter;
-
-#[macro_use] mod ibasefilter; // 4th level interface
-
-mod any_structs;
+pub(in crate::com) mod any_structs;
+pub(in crate::com) mod ibasefilter;
+pub(in crate::com) mod ienumfilters;
+pub(in crate::com) mod ifilesinkfilter;
+pub(in crate::com) mod ifiltergraph;
+pub(in crate::com) mod igraphbuilder;
+pub(in crate::com) mod imediacontrol;
+pub(in crate::com) mod imediafilter;
+pub(in crate::com) mod imediaseeking;
+pub(in crate::com) mod imfgetservice;
+pub(in crate::com) mod imfvideodisplaycontrol;
+pub(in crate::com) mod ipin;
 
 pub use any_structs::*;
 pub use ibasefilter::IBaseFilter;
-pub use ifilesinkfilter::IFileSinkFilter;
 pub use ienumfilters::IEnumFilters;
+pub use ifilesinkfilter::IFileSinkFilter;
 pub use ifiltergraph::IFilterGraph;
 pub use igraphbuilder::IGraphBuilder;
 pub use imediacontrol::IMediaControl;
@@ -41,12 +38,26 @@ pub use imfgetservice::IMFGetService;
 pub use imfvideodisplaycontrol::IMFVideoDisplayControl;
 pub use ipin::IPin;
 
+pub(crate) mod prelude {
+	pub use super::ibasefilter::IBaseFilterT;
+	pub use super::ienumfilters::IEnumFiltersT;
+	pub use super::ifilesinkfilter::IFileSinkFilterT;
+	pub use super::ifiltergraph::IFilterGraphT;
+	pub use super::igraphbuilder::IGraphBuilderT;
+	pub use super::imediacontrol::IMediaControlT;
+	pub use super::imediafilter::IMediaFilterT;
+	pub use super::imediaseeking::IMediaSeekingT;
+	pub use super::imfgetservice::IMFGetServiceT;
+	pub use super::imfvideodisplaycontrol::IMFVideoDisplayControlT;
+	pub use super::ipin::IPinT;
+}
+
 /// [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow)
 /// COM virtual tables.
 pub mod vt {
 	pub use super::ibasefilter::IBaseFilterVT;
-	pub use super::ifilesinkfilter::IFileSinkFilterVT;
 	pub use super::ienumfilters::IEnumFiltersVT;
+	pub use super::ifilesinkfilter::IFileSinkFilterVT;
 	pub use super::ifiltergraph::IFilterGraphVT;
 	pub use super::igraphbuilder::IGraphBuilderVT;
 	pub use super::imediacontrol::IMediaControlVT;

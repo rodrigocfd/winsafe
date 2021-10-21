@@ -24,19 +24,14 @@
 //! winsafe = "0.0.6"
 //! ```
 //!
-//! To enable the DirectShow COM module, use:
+//! The COM modules are disabled by default, and can be enabled when needed:
 //!
-//! ```toml
-//! [dependencies]
-//! winsafe = { version = "0.0.6", features = ["dshow"] }
-//! ```
-//!
-//! To enable the Shell COM module, use:
-//!
-//! ```toml
-//! [dependencies]
-//! winsafe = { version = "0.0.6", features = ["shell"] }
-//! ```
+//! | Module | Cargo.toml `[dependencies]` |
+//! | - | - |
+//! | [Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) | `winsafe = { version = "0.0.6", features = ["autom"] }` |
+//! | [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) | `winsafe = { version = "0.0.6", features = ["dshow"] }` |
+//! | [IDL](https://docs.microsoft.com/en-us/windows/win32/api/objidl/) | `winsafe = { version = "0.0.6", features = ["idl"] }` |
+//! | [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/) | `winsafe = { version = "0.0.6", features = ["shell"] }` |
 //!
 //! # Modules overview
 //!
@@ -49,11 +44,13 @@
 //! | [`winsafe::msg`](crate::msg) | Window messages. |
 //! | [`winsafe::gui`](crate::gui) | High-level GUI wrappers. |
 //!
-//! And additionally:
+//! And the COM modules:
 //!
 //! | Module | Description |
 //! | - | - |
+//! | [`winsafe::autom`](crate::autom) | Win32 Automation COM interfaces. |
 //! | [`winsafe::dshow`](crate::dshow) | Win32 DirectShow COM interfaces. |
+//! | [`winsafe::idl`](crate::idl) | Win32 IDL COM interfaces. |
 //! | [`winsafe::shell`](crate::shell) | Win32 Shell COM interfaces. |
 //!
 //! # The GUI API
@@ -247,5 +244,6 @@ pub use various::*;
 /// use winsafe::prelude::*;
 /// ```
 pub mod prelude {
+	pub use super::com::prelude::*;
 	pub use super::gui::prelude::*;
 }

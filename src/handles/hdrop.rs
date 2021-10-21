@@ -15,6 +15,9 @@ pub_struct_handle! {
 impl HDROP {
 	/// [`DragFinish`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
 	/// method.
+	///
+	/// Prefer using [`HDROP::iter`](crate::HDROP::iter), which calls
+	/// `DragFinish` automatically.
 	pub fn DragFinish(self) {
 		unsafe { shell32::DragFinish(self.ptr) }
 	}
@@ -59,6 +62,19 @@ impl HDROP {
 	/// [`HDROP::DragQueryFile`](crate::HDROP::DragQueryFile) consecutively,
 	/// then frees the handle by calling
 	/// [`HDROP::DragFinish`](crate::HDROP::DragFinish).
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::HDROP;
+	///
+	/// let hdrop: HDROP; // initialized somewhere
+	///
+	/// for file_res in hdrop.iter() {
+	///     let file_path = file_res?;
+	///     println!("File: {}", file_path);
+	/// }
+	/// ```
 	pub fn iter(self) -> impl Iterator<Item = WinResult<String>> {
 		HdropIter::new(self)
 	}

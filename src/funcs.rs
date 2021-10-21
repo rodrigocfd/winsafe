@@ -174,7 +174,7 @@ pub fn CloseClipboard() -> WinResult<()> {
 /// }
 /// ```
 pub fn CommandLineToArgv(cmd_line: &str) -> WinResult<Vec<String>> {
-	let mut num_args: i32 = 0;
+	let mut num_args = i32::default();
 	let lp_arr = unsafe {
 		shell32::CommandLineToArgvW(
 			WString::from_str(cmd_line).as_ptr(),
@@ -568,7 +568,7 @@ pub fn GetFileVersionInfo(file_name: &str) -> WinResult<Vec<u8>> {
 /// [`GetFileVersionInfoSize`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
 /// function.
 pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
-	let mut dw_handle: u32 = 0;
+	let mut dw_handle = u32::default();
 	match unsafe {
 		version::GetFileVersionInfoSizeW(
 			WString::from_str(file_name).as_ptr(),
@@ -583,7 +583,7 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
 /// [`GetFirmwareType`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
 /// function.
 pub fn GetFirmwareType() -> WinResult<co::FIRMWARE_TYPE> {
-	let mut ft: u32 = 0;
+	let mut ft = u32::default();
 	bool_to_winresult(unsafe { kernel32::GetFirmwareType(&mut ft) })
 		.map(|_| co::FIRMWARE_TYPE(ft))
 }
@@ -1110,7 +1110,7 @@ pub fn PostQuitMessage(exit_code: i32) {
 /// println!("Operation lasted {:.2} ms", duration_ms);
 /// ```
 pub fn QueryPerformanceCounter() -> WinResult<i64> {
-	let mut perf_count: i64 = 0;
+	let mut perf_count = i64::default();
 	bool_to_winresult(
 		unsafe { kernel32::QueryPerformanceCounter(&mut perf_count) },
 	).map(|_| perf_count)
@@ -1119,7 +1119,7 @@ pub fn QueryPerformanceCounter() -> WinResult<i64> {
 /// [`QueryPerformanceFrequency`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
 /// function.
 pub fn QueryPerformanceFrequency() -> WinResult<i64> {
-	let mut freq: i64 = 0;
+	let mut freq = i64::default();
 	bool_to_winresult(
 		unsafe { kernel32::QueryPerformanceFrequency(&mut freq) },
 	).map(|_| freq)
@@ -1385,8 +1385,8 @@ pub fn TaskDialogIndirect(
 	task_config: &TASKDIALOGCONFIG,
 	verification_flag_checked: Option<&mut bool>) -> WinResult<(co::DLGID, u16)>
 {
-	let mut pn_button: i32 = 0;
-	let mut pn_radio_button: i32 = 0;
+	let mut pn_button = i32::default();
+	let mut pn_radio_button = i32::default();
 	let mut pf_bool: BOOL = 0;
 
 	hr_to_winresult(

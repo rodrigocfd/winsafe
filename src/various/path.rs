@@ -71,9 +71,9 @@ pub fn get_file_name(full_path: &str) -> Option<&str> {
 /// ```rust,ignore
 /// use winsafe::path;
 ///
-/// let p = path::get_path("C:\\Temp\\xx\\a.txt")); // C:\Temp\xx
-/// let q = path::get_path("C:\\Temp\\xx\\"));      // C:\Temp\xx
-/// let r = path::get_path("C:\\Temp\\xx"));        // C:\Temp"
+/// let p = path::get_path("C:\\Temp\\xx\\a.txt"); // C:\Temp\xx
+/// let q = path::get_path("C:\\Temp\\xx\\");      // C:\Temp\xx
+/// let r = path::get_path("C:\\Temp\\xx");        // C:\Temp"
 /// ```
 pub fn get_path(full_path: &str) -> Option<&str> {
 	full_path.rfind('\\') // if no backslash, the whole string is the file name, so no path

@@ -58,7 +58,7 @@ impl HTHREAD {
 	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
 	/// method.
 	pub fn GetExitCodeThread(self) -> WinResult<u32> {
-		let mut exit_code: u32 = 0;
+		let mut exit_code = u32::default();
 		bool_to_winresult(
 			unsafe { kernel32::GetExitCodeThread(self.ptr, &mut exit_code) },
 		).map(|_| exit_code)

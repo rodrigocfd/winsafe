@@ -1,26 +1,26 @@
 #![allow(non_snake_case)]
 
-use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
-use crate::com::traits::{ComInterface, PPVT};
+use crate::aliases::WinResult;
+use crate::com::iunknown::{ComPtr, IUnknownT};
+use crate::com::shell::ifiledialog::{IFileDialogT, IFileDialogVT};
+use crate::com::shell::imodalwindow::IModalWindowT;
+use crate::com::shell::ishellitem::IShellItem;
 use crate::ffi::{BOOL, HANDLE, HRESULT};
-use crate::structs::IID;
+use crate::privs::hr_to_winresult;
 
 /// [`IFileSaveDialog`](crate::shell::IFileSaveDialog) virtual table.
 pub struct IFileSaveDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub SetSaveAsItem: fn(PPVT, PPVT) -> HRESULT,
-	pub SetProperties: fn(PPVT, PPVT) -> HRESULT,
-	pub SetCollectedProperties: fn(PPVT, PPVT, BOOL) -> HRESULT,
-	pub GetProperties: fn(PPVT, *mut PPVT) -> HRESULT,
-	pub ApplyProperties: fn(PPVT, PPVT, PPVT, HANDLE, PPVT) -> HRESULT,
+	pub SetSaveAsItem: fn(ComPtr, ComPtr) -> HRESULT,
+	pub SetProperties: fn(ComPtr, ComPtr) -> HRESULT,
+	pub SetCollectedProperties: fn(ComPtr, ComPtr, BOOL) -> HRESULT,
+	pub GetProperties: fn(ComPtr, *mut ComPtr) -> HRESULT,
+	pub ApplyProperties: fn(ComPtr, ComPtr, ComPtr, HANDLE, ComPtr) -> HRESULT,
 }
 
 /// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
 /// COM interface over
-/// [`IFileSaveDialogVT`](crate::shell::vt::IFileSaveDialogVT). Inherits from
-/// [`IFileDialog`](crate::shell::IFileDialog),
-/// [`IModalWindow`](crate::shell::IModalWindow),
-/// [`IUnknown`](crate::IUnknown).
+/// [`IFileSaveDialogVT`](crate::shell::vt::IFileSaveDialogVT).
 ///
 /// Automatically calls
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -38,33 +38,21 @@ pub struct IFileSaveDialogVT {
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
 /// ```
-pub struct IFileSaveDialog  {
-	pub(crate) ppvt: PPVT,
-}
+pub struct IFileSaveDialog(ComPtr);
 
-impl ComInterface for IFileSaveDialog {
-	const IID: IID = IID::new(0x84bccd23, 0x5fde, 0x4cdb, 0xaea4, 0xaf64b83d78ab);
-}
+impl_iunknown!(IFileSaveDialog, 0x84bccd23, 0x5fde, 0x4cdb, 0xaea4, 0xaf64b83d78ab);
+impl IModalWindowT for IFileSaveDialog {}
+impl IFileDialogT for IFileSaveDialog {}
+impl IFileSaveDialogT for IFileSaveDialog {}
 
-macro_rules! impl_IFileSaveDialog {
-	($name:ty, $vt:ty) => {
-		impl $name {
-			fn ifilesavedialog_vt(&self) -> &IFileSaveDialogVT {
-				unsafe { &**(self.ppvt as *mut *mut _) }
-			}
-
-			/// [`IFileSaveDialog::SetSaveAsItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
-			/// method.
-			pub fn SetSaveAsItem(&self, psi: IShellItem) -> WinResult<()> {
-				hr_to_winresult(
-					(self.ifilesavedialog_vt().SetSaveAsItem)(self.ppvt, psi.ppvt),
-				)
-			}
+/// Exposes the [`IFileSaveDialog`](crate::shell::IFileSaveDialog) methods.
+pub trait IFileSaveDialogT: IFileDialogT {
+	/// [`IFileSaveDialog::SetSaveAsItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
+	/// method.
+	fn SetSaveAsItem(&self, psi: IShellItem) -> WinResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IFileSaveDialogVT);
+			hr_to_winresult((vt.SetSaveAsItem)(self.ptr(), psi.ptr()))
 		}
-	};
+	}
 }
-
-impl_IUnknown!(IFileSaveDialog, IFileSaveDialogVT);
-impl_IModalWindow!(IFileSaveDialog, IFileSaveDialogVT);
-impl_IFileDialog!(IFileSaveDialog, IFileSaveDialogVT);
-impl_IFileSaveDialog!(IFileSaveDialog, IFileSaveDialogVT);

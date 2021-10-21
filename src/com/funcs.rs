@@ -1,11 +1,8 @@
-//! Win32 COM free functions.
-
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::com::iunknown::IUnknown;
-use crate::com::traits::{ComInterface, PPVT};
+use crate::com::iunknown::{ComInterface, ComPtr, IUnknown};
 use crate::ffi::ole32;
 use crate::privs::hr_to_winresult;
 use crate::structs::CLSID;
@@ -34,8 +31,8 @@ pub fn CoCreateInstance<T: ComInterface>(
 	iunk_outer: Option<&mut IUnknown>,
 	cls_context: co::CLSCTX) -> WinResult<T>
 {
-	let mut ppv: PPVT = std::ptr::null_mut();
-	let mut ppv_outer: PPVT = std::ptr::null_mut();
+	let mut ppv = ComPtr::null();
+	let mut ppv_outer = ComPtr::null();
 
 	hr_to_winresult(
 		unsafe {
@@ -50,9 +47,9 @@ pub fn CoCreateInstance<T: ComInterface>(
 		},
 	).map(|_| {
 		if let Some(iunk_outer) = iunk_outer {
-			*iunk_outer = IUnknown::from(ppv_outer); // create outer IUnknown if due
+			*iunk_outer = IUnknown::from(ppv_outer); // create outer Unknown if due
 		}
-		T::from(ppv) // return new IUnknown-derived object
+		T::from(ppv) // return new Unknown-derived object
 	})
 }
 
@@ -72,7 +69,7 @@ pub fn CoCreateInstance<T: ComInterface>(
 ///
 /// // program runs...
 ///
-/// CoUninitialize().
+/// CoUninitialize();
 /// ```
 pub fn CoInitializeEx(coinit: co::COINIT) -> WinResult<co::ERROR> {
 	let code = co::ERROR(
@@ -85,6 +82,7 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> WinResult<co::ERROR> {
 		err => Err(err),
 	}
 }
+
 
 /// [`CoTaskMemFree`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.

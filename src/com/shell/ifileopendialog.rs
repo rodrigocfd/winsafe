@@ -1,22 +1,23 @@
 #![allow(non_snake_case)]
 
-use crate::com::shell::vt::{IFileDialogVT, IModalWindowVT};
-use crate::com::traits::{ComInterface, PPVT};
+use crate::aliases::WinResult;
+use crate::com::iunknown::ComPtr;
+use crate::com::shell::ifiledialog::{IFileDialogT, IFileDialogVT};
+use crate::com::shell::imodalwindow::IModalWindowT;
+use crate::com::shell::ishellitemarray::IShellItemArray;
 use crate::ffi::HRESULT;
-use crate::structs::IID;
+use crate::privs::hr_to_winresult;
 
 /// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) virtual table.
 pub struct IFileOpenDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub GetResults: fn(PPVT, *mut PPVT) -> HRESULT,
-	pub GetSelectedItems: fn(PPVT, *mut PPVT) -> HRESULT,
+	pub GetResults: fn(ComPtr, *mut ComPtr) -> HRESULT,
+	pub GetSelectedItems: fn(ComPtr, *mut ComPtr) -> HRESULT,
 }
 
 /// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
 /// COM interface over
-/// [`IFileOpenDialogVT`](crate::shell::vt::IFileOpenDialogVT). Inherits from
-/// [`IFileDialog`](crate::shell::IFileDialog),
-/// [`IModalWindow`](crate::shell::IModalWindow), [`IUnknown`](crate::IUnknown).
+/// [`IFileOpenDialogVT`](crate::shell::vt::IFileOpenDialogVT).
 ///
 /// Automatically calls
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -34,51 +35,36 @@ pub struct IFileOpenDialogVT {
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
 /// ```
-pub struct IFileOpenDialog  {
-	pub(crate) ppvt: PPVT,
+pub struct IFileOpenDialog(ComPtr);
+
+impl_iunknown!(IFileOpenDialog, 0xd57c7288, 0xd4ad, 0x4768, 0xbe02, 0x9d969532d960);
+impl IModalWindowT for IFileOpenDialog {}
+impl IFileDialogT for IFileOpenDialog {}
+impl IFileOpenDialogT for IFileOpenDialog {}
+
+/// Exposes the [`IFileOpenDialog`](crate::shell::IFileOpenDialog) methods.
+pub trait IFileOpenDialogT: IFileDialogT {
+	/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
+	/// method.
+	fn GetResults(&self) -> WinResult<IShellItemArray> {
+		let mut ppv_queried = ComPtr::null();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
+			hr_to_winresult(
+				(vt.GetResults)(self.ptr(), &mut ppv_queried as *mut _ as _),
+			)
+		}.map(|_| IShellItemArray::from(ppv_queried))
+	}
+
+	/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
+	/// method.
+	fn GetSelectedItems(&self) -> WinResult<IShellItemArray> {
+		let mut ppv_queried = ComPtr::null();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
+			hr_to_winresult(
+				(vt.GetSelectedItems)(self.ptr(), &mut ppv_queried as *mut _ as _),
+			)
+		}.map(|_| IShellItemArray::from(ppv_queried))
+	}
 }
-
-impl ComInterface for IFileOpenDialog {
-	const IID: IID = IID::new(0xd57c7288, 0xd4ad, 0x4768, 0xbe02, 0x9d969532d960);
-}
-
-macro_rules! impl_IFileOpenDialog {
-	($name:ty, $vt:ty) => {
-		use crate::com::shell::IShellItemArray;
-
-		impl $name {
-			fn ifileopendialog_vt(&self) -> &IFileOpenDialogVT {
-				unsafe { &**(self.ppvt as *mut *mut _) }
-			}
-
-			/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
-			/// method.
-			pub fn GetResults(&self) -> WinResult<IShellItemArray> {
-				let mut ppv_queried: PPVT = std::ptr::null_mut();
-				hr_to_winresult(
-					(self.ifileopendialog_vt().GetResults)(
-						self.ppvt,
-						&mut ppv_queried as *mut _ as _,
-					),
-				).map(|_| IShellItemArray::from(ppv_queried))
-			}
-
-			/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
-			/// method.
-			pub fn GetSelectedItems(&self) -> WinResult<IShellItemArray> {
-				let mut ppv_queried: PPVT = std::ptr::null_mut();
-				hr_to_winresult(
-					(self.ifileopendialog_vt().GetSelectedItems)(
-						self.ppvt,
-						&mut ppv_queried as *mut _ as _,
-					),
-				).map(|_| IShellItemArray::from(ppv_queried))
-			}
-		}
-	};
-}
-
-impl_IUnknown!(IFileOpenDialog, IFileOpenDialogVT);
-impl_IModalWindow!(IFileOpenDialog, IFileOpenDialogVT);
-impl_IFileDialog!(IFileOpenDialog, IFileOpenDialogVT);
-impl_IFileOpenDialog!(IFileOpenDialog, IFileOpenDialogVT);

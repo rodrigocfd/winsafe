@@ -1,32 +1,33 @@
 #![allow(non_snake_case)]
 
-use crate::com::shell::vt::{ITaskbarListVT, ITaskbarList2VT};
-use crate::com::traits::{ComInterface, PPVT};
+use crate::aliases::WinResult;
+use crate::com::iunknown::ComPtr;
+use crate::com::shell;
+use crate::com::shell::itaskbarlist::ITaskbarListT;
+use crate::com::shell::itaskbarlist2::{ITaskbarList2T, ITaskbarList2VT};
 use crate::ffi::{HANDLE, HRESULT, PCSTR, PVOID};
-use crate::structs::IID;
+use crate::handles::HWND;
+use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 pub struct ITaskbarList3VT {
 	pub ITaskbarList2VT: ITaskbarList2VT,
-	pub SetProgressValue: fn(PPVT, HANDLE, u64, u64) -> HRESULT,
-	pub SetProgressState: fn(PPVT, HANDLE, u32) -> HRESULT,
-	pub RegisterTab: fn(PPVT, HANDLE, HANDLE) -> HRESULT,
-	pub UnregisterTab: fn(PPVT, HANDLE) -> HRESULT,
-	pub SetTabOrder: fn(PPVT, HANDLE, HANDLE) -> HRESULT,
-	pub SetTabActive: fn(PPVT, HANDLE, HANDLE, u32) -> HRESULT,
-	pub ThumbBarAddButtons: fn(PPVT, HANDLE, u32, PVOID) -> HRESULT,
-	pub ThumbBarUpdateButtons: fn(PPVT, HANDLE, u32, PVOID) -> HRESULT,
-	pub ThumbBarSetImageList: fn(PPVT, HANDLE, HANDLE) -> HRESULT,
-	pub SetOverlayIcon: fn(PPVT, HANDLE, HANDLE, PCSTR) -> HRESULT,
-	pub SetThumbnailTooltip: fn(PPVT, HANDLE, PCSTR) -> HRESULT,
-	pub SetThumbnailClip: fn(PPVT, HANDLE, PVOID) -> HRESULT,
+	pub SetProgressValue: fn(ComPtr, HANDLE, u64, u64) -> HRESULT,
+	pub SetProgressState: fn(ComPtr, HANDLE, u32) -> HRESULT,
+	pub RegisterTab: fn(ComPtr, HANDLE, HANDLE) -> HRESULT,
+	pub UnregisterTab: fn(ComPtr, HANDLE) -> HRESULT,
+	pub SetTabOrder: fn(ComPtr, HANDLE, HANDLE) -> HRESULT,
+	pub SetTabActive: fn(ComPtr, HANDLE, HANDLE, u32) -> HRESULT,
+	pub ThumbBarAddButtons: fn(ComPtr, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarUpdateButtons: fn(ComPtr, HANDLE, u32, PVOID) -> HRESULT,
+	pub ThumbBarSetImageList: fn(ComPtr, HANDLE, HANDLE) -> HRESULT,
+	pub SetOverlayIcon: fn(ComPtr, HANDLE, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailTooltip: fn(ComPtr, HANDLE, PCSTR) -> HRESULT,
+	pub SetThumbnailClip: fn(ComPtr, HANDLE, PVOID) -> HRESULT,
 }
 
 /// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
 /// COM interface over [`ITaskbarList3VT`](crate::shell::vt::ITaskbarList3VT).
-/// Inherits from [`ITaskbarList2`](crate::shell::ITaskbarList2),
-/// [`ITaskbarList`](crate::shell::ITaskbarList),
-/// [`IUnknown`](crate::IUnknown).
 ///
 /// Automatically calls
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -44,113 +45,87 @@ pub struct ITaskbarList3VT {
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
 /// ```
-pub struct ITaskbarList3 {
-	pub(crate) ppvt: PPVT,
-}
+pub struct ITaskbarList3(ComPtr);
 
-impl ComInterface for ITaskbarList3 {
-	const IID: IID = IID::new(0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf);
-}
+impl_iunknown!(ITaskbarList3, 0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf);
+impl ITaskbarListT for ITaskbarList3 {}
+impl ITaskbarList2T for ITaskbarList3 {}
+impl ITaskbarList3T for ITaskbarList3 {}
 
-macro_rules! impl_ITaskbarList3 {
-	($name:ty, $vt:ty) => {
-		use crate::com::shell::co as shellco;
-
-		impl $name {
-			fn itaskbarlist3_vt(&self) -> &ITaskbarList3VT {
-				unsafe { &**(self.ppvt as *mut *mut _) }
-			}
-
-			/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
-			/// method.
-			pub fn RegisterTab(&self,
-				hwnd_tab: HWND, hwnd_mdi: HWND) -> WinResult<()>
-			{
-				hr_to_winresult(
-					(self.itaskbarlist3_vt().RegisterTab)(
-						self.ppvt,
-						hwnd_tab.ptr,
-						hwnd_mdi.ptr,
-					),
-				)
-			}
-
-			/// [`ITaskbarList3::SetProgressState`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
-			/// method.
-			pub fn SetProgressState(&self,
-				hwnd: HWND, tbpf_flags: shellco::TBPF) -> WinResult<()>
-			{
-				hr_to_winresult(
-					(self.itaskbarlist3_vt().SetProgressState)(
-						self.ppvt,
-						hwnd.ptr,
-						tbpf_flags.0,
-					),
-				)
-			}
-
-			/// [`ITaskbarList3::SetProgressValue`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
-			/// method.
-			///
-			/// # Examples
-			///
-			/// Setting progress to 50%:
-			///
-			/// ```rust,ignore
-			/// use winsafe::prelude::*;
-			/// use winsafe::{HWND, shell};
-			///
-			/// let obj: shell::ITaskbarList3; // initialized somewhere
-			/// let hwnd: HWND;
-			///
-			/// obj.SetProgressValue(hwnd, 50, 100)?;
-			/// ```
-			pub fn SetProgressValue(&self,
-				hwnd: HWND, completed: u64, total: u64) -> WinResult<()>
-			{
-				hr_to_winresult(
-					(self.itaskbarlist3_vt().SetProgressValue)(
-						self.ppvt,
-						hwnd.ptr,
-						completed,
-						total,
-					),
-				)
-			}
-
-			/// [`ITaskbarList3::SetTabActive`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
-			/// method.
-			pub fn SetTabActive(&self,
-				hwnd_tab: HWND, hwnd_mdi: HWND) -> WinResult<()>
-			{
-				hr_to_winresult(
-					(self.itaskbarlist3_vt().SetTabActive)(
-						self.ppvt,
-						hwnd_tab.ptr,
-						hwnd_mdi.ptr,
-						0,
-					),
-				)
-			}
-
-			/// [`ITaskbarList3::SetTabOrder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
-			/// method.
-			pub fn SetTabOrder(&self,
-				hwnd_tab: HWND, hwnd_insert_before: HWND) -> WinResult<()>
-			{
-				hr_to_winresult(
-					(self.itaskbarlist3_vt().SetTabOrder)(
-						self.ppvt,
-						hwnd_tab.ptr,
-						hwnd_insert_before.ptr,
-					),
-				)
-			}
+/// Exposes the [`ITaskbarList3`](crate::shell::ITaskbarList3) methods.
+pub trait ITaskbarList3T: ITaskbarList2T {
+	/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
+	/// method.
+	fn RegisterTab(&self, hwnd_tab: HWND, hwnd_mdi: HWND) -> WinResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			hr_to_winresult(
+				(vt.RegisterTab)(self.ptr(), hwnd_tab.ptr, hwnd_mdi.ptr),
+			)
 		}
-	};
-}
+	}
 
-impl_IUnknown!(ITaskbarList3, ITaskbarList3VT);
-impl_ITaskbarList!(ITaskbarList3, ITaskbarList3VT);
-impl_ITaskbarList2!(ITaskbarList3, ITaskbarList3VT);
-impl_ITaskbarList3!(ITaskbarList3, ITaskbarList3VT);
+	/// [`ITaskbarList3::SetProgressState`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
+	/// method.
+	fn SetProgressState(&self,
+		hwnd: HWND, tbpf_flags: shell::co::TBPF) -> WinResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			hr_to_winresult(
+				(vt.SetProgressState)(self.ptr(), hwnd.ptr, tbpf_flags.0),
+			)
+		}
+	}
+
+	/// [`ITaskbarList3::SetProgressValue`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// Setting progress to 50%:
+	///
+	/// ```rust,ignore
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HWND, shell};
+	///
+	/// let obj: shell::ITaskbarList3; // initialized somewhere
+	/// let hwnd: HWND;
+	///
+	/// obj.SetProgressValue(hwnd, 50, 100)?;
+	/// ```
+	fn SetProgressValue(&self,
+		hwnd: HWND, completed: u64, total: u64) -> WinResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			hr_to_winresult(
+				(vt.SetProgressValue)(self.ptr(), hwnd.ptr, completed, total),
+			)
+		}
+	}
+
+	/// [`ITaskbarList3::SetTabActive`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
+	/// method.
+	fn SetTabActive(&self, hwnd_tab: HWND, hwnd_mdi: HWND) -> WinResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			hr_to_winresult(
+				(vt.SetTabActive)(self.ptr(), hwnd_tab.ptr, hwnd_mdi.ptr, 0),
+			)
+		}
+	}
+
+	/// [`ITaskbarList3::SetTabOrder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
+	/// method.
+	fn SetTabOrder(&self,
+		hwnd_tab: HWND, hwnd_insert_before: HWND) -> WinResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			hr_to_winresult(
+				(vt.SetTabOrder)(self.ptr(), hwnd_tab.ptr, hwnd_insert_before.ptr),
+			)
+		}
+	}
+}

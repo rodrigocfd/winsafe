@@ -1,24 +1,20 @@
-//! COM interfaces.
-
 #[macro_use] mod macros;
 
-#[macro_use] mod iunknown; // 1st level interface
-
-#[macro_use] mod idispatch; // 2nd level interfaces
-#[macro_use] mod ipersist;
-#[macro_use] mod itypeinfo;
-
-#[cfg(feature = "dshow")]
-pub mod dshow;
-#[cfg(feature = "shell")]
-pub mod shell;
+#[cfg(feature = "autom")] pub mod autom;
+#[cfg(feature = "dshow")] pub mod dshow;
+#[cfg(feature = "idl")]   pub mod idl;
+#[cfg(feature = "shell")] pub mod shell;
 
 mod funcs;
-mod traits;
+mod iunknown;
 
 pub use funcs::*;
-pub use idispatch::{IDispatch, IDispatchVT};
-pub use ipersist::{IPersist, IPersistVT};
-pub use itypeinfo::{ITypeInfo, ITypeInfoVT};
-pub use iunknown::{IUnknown, IUnknownVT};
-pub use traits::*;
+pub use iunknown::{ComPtr, IUnknown, IUnknownVT};
+
+pub(crate) mod prelude {
+	pub use super::iunknown::{ComInterface, IUnknownT};
+	#[cfg(feature = "autom")] pub use super::autom::prelude::*;
+	#[cfg(feature = "dshow")] pub use super::dshow::prelude::*;
+	#[cfg(feature = "idl")]   pub use super::idl::prelude::*;
+	#[cfg(feature = "shell")] pub use super::shell::prelude::*;
+}
