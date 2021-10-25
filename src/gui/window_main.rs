@@ -131,6 +131,7 @@ impl_debug!(WindowMain);
 impl_parent!(WindowMain);
 
 impl_window!(WindowMain);
+impl_aswindow!(WindowMain);
 impl_uithread!(WindowMain);
 impl_parentevents!(WindowMain);
 

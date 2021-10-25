@@ -32,14 +32,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct ListBox(Arc<Obj>);
 
 impl_send_sync!(ListBox);
-impl_debug!(ListBox);
+impl_ctl_debug!(ListBox);
 
-impl_window!(ListBox);
-impl_child!(ListBox);
-impl_nativecontrol!(ListBox);
-impl_asnativecontrol!(ListBox);
-impl_nativecontrolevents!(ListBox, ListBoxEvents);
-impl_focus!(ListBox);
+impl_ctl_window!(ListBox);
+impl_ctl_aswindow!(ListBox);
+impl_ctl_child!(ListBox);
+impl_ctl_nativecontrol!(ListBox);
+impl_ctl_asnativecontrol!(ListBox);
+impl_ctl_nativecontrolevents!(ListBox, ListBoxEvents);
+impl_ctl_focus!(ListBox);
 
 impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window

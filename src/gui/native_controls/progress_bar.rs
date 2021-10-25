@@ -28,12 +28,13 @@ impl_obj_nativecontrol!(Obj);
 pub struct ProgressBar(Arc<Obj>);
 
 impl_send_sync!(ProgressBar);
-impl_debug!(ProgressBar);
+impl_ctl_debug!(ProgressBar);
 
-impl_window!(ProgressBar);
-impl_child!(ProgressBar);
-impl_nativecontrol!(ProgressBar);
-impl_asnativecontrol!(ProgressBar);
+impl_ctl_window!(ProgressBar);
+impl_ctl_aswindow!(ProgressBar);
+impl_ctl_child!(ProgressBar);
+impl_ctl_nativecontrol!(ProgressBar);
+impl_ctl_asnativecontrol!(ProgressBar);
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent

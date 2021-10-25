@@ -14,24 +14,38 @@ use crate::gui::base::Base;
 use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
-use crate::gui::traits::{ParentEvents, UiThread, Window};
+use crate::gui::traits::{AsWindow, ParentEvents, UiThread, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HBRUSH, HCURSOR, HICON, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
-#[derive(Clone)]
-pub(in crate::gui) struct RawModal(Arc<VeryUnsafeCell<Obj>>);
-
 struct Obj { // actual fields of RawModal
 	base: RawBase,
 	opts: WindowModalOpts,
-	hchild_prev_focus_parent: Option<HWND>,
+	hchild_prev_focus_parent: VeryUnsafeCell<Option<HWND>>,
 }
+
+impl Window for Obj {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+#[derive(Clone)]
+pub(in crate::gui) struct RawModal(Arc<Obj>);
 
 impl Window for RawModal {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+}
+
+impl AsWindow for RawModal {
+	fn as_window(&self) -> Arc<dyn Window> {
+		self.0.clone()
 	}
 }
 
@@ -54,13 +68,13 @@ impl RawModal {
 		parent_base_ref: &Base, opts: WindowModalOpts) -> RawModal
 	{
 		let wnd = Self(
-			Arc::new(VeryUnsafeCell::new(
+			Arc::new(
 				Obj {
 					base: RawBase::new(Some(parent_base_ref)),
 					opts,
-					hchild_prev_focus_parent: None,
+					hchild_prev_focus_parent: VeryUnsafeCell::new(None),
 				},
-			)),
+			),
 		);
 		wnd.default_message_handlers();
 		wnd
@@ -81,7 +95,7 @@ impl RawModal {
 			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
 		let atom = self.0.base.register_class(&mut wcx)?;
 
-		self.0.as_mut().hchild_prev_focus_parent = HWND::GetFocus();
+		*self.0.hchild_prev_focus_parent.as_mut() = HWND::GetFocus();
 		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
 
 		let mut wnd_sz = opts.size;
@@ -171,7 +185,7 @@ impl RawModal {
 				if let Ok(hparent) = hwnd.GetWindow(co::GW::OWNER) {
 					hparent.EnableWindow(true); // re-enable parent
 					hwnd.DestroyWindow()?; // then destroy modal
-					if let Some(hprev) = self2.0.hchild_prev_focus_parent {
+					if let Some(hprev) = *self2.0.hchild_prev_focus_parent {
 						hprev.SetFocus(); // this focus could be set on WM_DESTROY as well
 					}
 				}

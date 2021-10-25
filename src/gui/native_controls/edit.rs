@@ -29,14 +29,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct Edit(Arc<Obj>);
 
 impl_send_sync!(Edit);
-impl_debug!(Edit);
+impl_ctl_debug!(Edit);
 
-impl_window!(Edit);
-impl_child!(Edit);
-impl_nativecontrol!(Edit);
-impl_asnativecontrol!(Edit);
-impl_nativecontrolevents!(Edit, EditEvents);
-impl_focus!(Edit);
+impl_ctl_window!(Edit);
+impl_ctl_aswindow!(Edit);
+impl_ctl_child!(Edit);
+impl_ctl_nativecontrol!(Edit);
+impl_ctl_asnativecontrol!(Edit);
+impl_ctl_nativecontrolevents!(Edit, EditEvents);
+impl_ctl_focus!(Edit);
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window

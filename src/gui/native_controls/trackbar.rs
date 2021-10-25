@@ -29,14 +29,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct Trackbar(Arc<Obj>);
 
 impl_send_sync!(Trackbar);
-impl_debug!(Trackbar);
+impl_ctl_debug!(Trackbar);
 
-impl_window!(Trackbar);
-impl_child!(Trackbar);
-impl_nativecontrol!(Trackbar);
-impl_asnativecontrol!(Trackbar);
-impl_nativecontrolevents!(Trackbar, TrackbarEvents);
-impl_focus!(Trackbar);
+impl_ctl_window!(Trackbar);
+impl_ctl_aswindow!(Trackbar);
+impl_ctl_child!(Trackbar);
+impl_ctl_nativecontrol!(Trackbar);
+impl_ctl_asnativecontrol!(Trackbar);
+impl_ctl_nativecontrolevents!(Trackbar, TrackbarEvents);
+impl_ctl_focus!(Trackbar);
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window

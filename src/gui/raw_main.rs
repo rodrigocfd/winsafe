@@ -8,24 +8,38 @@ use crate::gui::base::Base;
 use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
-use crate::gui::traits::{ParentEvents, UiThread, Window};
+use crate::gui::traits::{AsWindow, ParentEvents, UiThread, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HMENU, HWND};
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
-#[derive(Clone)]
-pub(in crate::gui) struct RawMain(Arc<VeryUnsafeCell<Obj>>);
-
 struct Obj { // actual fields of RawMain
 	base: RawBase,
 	opts: WindowMainOpts,
-	hchild_prev_focus: Option<HWND>, // WM_ACTIVATE woes
+	hchild_prev_focus: VeryUnsafeCell<Option<HWND>>, // WM_ACTIVATE woes
 }
+
+impl Window for Obj {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+#[derive(Clone)]
+pub(in crate::gui) struct RawMain(Arc<Obj>);
 
 impl Window for RawMain {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+}
+
+impl AsWindow for RawMain {
+	fn as_window(&self) -> Arc<dyn Window> {
+		self.0.clone()
 	}
 }
 
@@ -46,13 +60,13 @@ impl ParentEvents for RawMain {
 impl RawMain {
 	pub(in crate::gui) fn new(opts: WindowMainOpts) -> RawMain {
 		let wnd = Self(
-			Arc::new(VeryUnsafeCell::new(
+			Arc::new(
 				Obj {
 					base: RawBase::new(None), // no parent
 					opts,
-					hchild_prev_focus: None,
+					hchild_prev_focus: VeryUnsafeCell::new(None),
 				},
-			)),
+			),
 		);
 		wnd.default_message_handlers();
 		wnd
@@ -129,10 +143,10 @@ impl RawMain {
 					if p.event == co::WA::INACTIVE {
 						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
 							if self2.base_ref().hwnd_ref().IsChild(hwnd_cur_focus) {
-								self2.0.as_mut().hchild_prev_focus = Some(hwnd_cur_focus); // save previously focused control
+								*self2.0.hchild_prev_focus.as_mut() = Some(hwnd_cur_focus); // save previously focused control
 							}
 						}
-					} else if let Some(hwnd_prev_focus) = self2.0.hchild_prev_focus {
+					} else if let Some(hwnd_prev_focus) = *self2.0.hchild_prev_focus {
 						hwnd_prev_focus.SetFocus(); // put focus back
 					}
 				}

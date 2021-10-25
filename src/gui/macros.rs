@@ -1,4 +1,4 @@
-/// Implements Send and Sync traits to leaf window.
+/// Implements Send and Sync traits to leaf window/control.
 macro_rules! impl_send_sync {
 	($name:ident) => {
 		unsafe impl Send for $name {}
@@ -42,6 +42,20 @@ macro_rules! impl_window {
 				match &self.raw_dlg {
 					RawDlg::Raw(r) => r.hwnd(),
 					RawDlg::Dlg(d) => d.hwnd(),
+				}
+			}
+		}
+	};
+}
+
+/// Implements AsWindow trait to leaf window.
+macro_rules! impl_aswindow {
+	($name:ident) => {
+		impl crate::gui::traits::AsWindow for $name {
+			fn as_window(&self) -> std::sync::Arc<dyn Window> {
+				match &self.raw_dlg {
+					RawDlg::Raw(r) => r.as_window(),
+					RawDlg::Dlg(d) => d.as_window(),
 				}
 			}
 		}

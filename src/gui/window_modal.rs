@@ -27,6 +27,7 @@ impl_debug!(WindowModal);
 impl_parent!(WindowModal);
 
 impl_window!(WindowModal);
+impl_aswindow!(WindowModal);
 impl_uithread!(WindowModal);
 impl_parentevents!(WindowModal);
 

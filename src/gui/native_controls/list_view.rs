@@ -41,14 +41,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct ListView(Arc<Obj>);
 
 impl_send_sync!(ListView);
-impl_debug!(ListView);
+impl_ctl_debug!(ListView);
 
-impl_window!(ListView);
-impl_child!(ListView);
-impl_nativecontrol!(ListView);
-impl_asnativecontrol!(ListView);
-impl_nativecontrolevents!(ListView, ListViewEvents);
-impl_focus!(ListView);
+impl_ctl_window!(ListView);
+impl_ctl_aswindow!(ListView);
+impl_ctl_child!(ListView);
+impl_ctl_nativecontrol!(ListView);
+impl_ctl_asnativecontrol!(ListView);
+impl_ctl_nativecontrolevents!(ListView, ListViewEvents);
+impl_ctl_focus!(ListView);
 
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window

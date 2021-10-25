@@ -30,14 +30,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct DateTimePicker(Arc<Obj>);
 
 impl_send_sync!(DateTimePicker);
-impl_debug!(DateTimePicker);
+impl_ctl_debug!(DateTimePicker);
 
-impl_window!(DateTimePicker);
-impl_child!(DateTimePicker);
-impl_nativecontrol!(DateTimePicker);
-impl_asnativecontrol!(DateTimePicker);
-impl_nativecontrolevents!(DateTimePicker, DateTimePickerEvents);
-impl_focus!(DateTimePicker);
+impl_ctl_window!(DateTimePicker);
+impl_ctl_aswindow!(DateTimePicker);
+impl_ctl_child!(DateTimePicker);
+impl_ctl_nativecontrol!(DateTimePicker);
+impl_ctl_asnativecontrol!(DateTimePicker);
+impl_ctl_nativecontrolevents!(DateTimePicker, DateTimePickerEvents);
+impl_ctl_focus!(DateTimePicker);
 
 impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent

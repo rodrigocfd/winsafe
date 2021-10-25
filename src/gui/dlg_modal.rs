@@ -6,20 +6,34 @@ use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::{EventsView, WindowEventsAll};
-use crate::gui::traits::{ParentEvents, UiThread, Window};
+use crate::gui::traits::{AsWindow, ParentEvents, UiThread, Window};
 use crate::handles::HWND;
 use crate::structs::{POINT, SIZE};
-
-#[derive(Clone)]
-pub(in crate::gui) struct DlgModal(Arc<Obj>);
 
 struct Obj { // actual fields of DlgModal
 	base: DlgBase,
 }
 
+impl Window for Obj {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+#[derive(Clone)]
+pub(in crate::gui) struct DlgModal(Arc<Obj>);
+
 impl Window for DlgModal {
 	fn hwnd(&self) -> HWND {
-		self.0.base.hwnd()
+		self.0.hwnd()
+	}
+}
+
+impl AsWindow for DlgModal {
+	fn as_window(&self) -> Arc<dyn Window> {
+		self.0.clone()
 	}
 }
 

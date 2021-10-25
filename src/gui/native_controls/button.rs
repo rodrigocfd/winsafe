@@ -29,14 +29,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct Button(Arc<Obj>);
 
 impl_send_sync!(Button);
-impl_debug!(Button);
+impl_ctl_debug!(Button);
 
-impl_window!(Button);
-impl_child!(Button);
-impl_nativecontrol!(Button);
-impl_asnativecontrol!(Button);
-impl_nativecontrolevents!(Button, ButtonEvents);
-impl_focus!(Button);
+impl_ctl_window!(Button);
+impl_ctl_aswindow!(Button);
+impl_ctl_child!(Button);
+impl_ctl_nativecontrol!(Button);
+impl_ctl_asnativecontrol!(Button);
+impl_ctl_nativecontrolevents!(Button, ButtonEvents);
+impl_ctl_focus!(Button);
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window

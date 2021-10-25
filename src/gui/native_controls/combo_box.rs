@@ -32,14 +32,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct ComboBox(Arc<Obj>);
 
 impl_send_sync!(ComboBox);
-impl_debug!(ComboBox);
+impl_ctl_debug!(ComboBox);
 
-impl_window!(ComboBox);
-impl_child!(ComboBox);
-impl_nativecontrol!(ComboBox);
-impl_asnativecontrol!(ComboBox);
-impl_nativecontrolevents!(ComboBox, ComboBoxEvents);
-impl_focus!(ComboBox);
+impl_ctl_window!(ComboBox);
+impl_ctl_aswindow!(ComboBox);
+impl_ctl_child!(ComboBox);
+impl_ctl_nativecontrol!(ComboBox);
+impl_ctl_asnativecontrol!(ComboBox);
+impl_ctl_nativecontrolevents!(ComboBox, ComboBoxEvents);
+impl_ctl_focus!(ComboBox);
 
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window

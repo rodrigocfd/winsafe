@@ -31,14 +31,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct TreeView(Arc<Obj>);
 
 impl_send_sync!(TreeView);
-impl_debug!(TreeView);
+impl_ctl_debug!(TreeView);
 
-impl_window!(TreeView);
-impl_child!(TreeView);
-impl_nativecontrol!(TreeView);
-impl_asnativecontrol!(TreeView);
-impl_nativecontrolevents!(TreeView, TreeViewEvents);
-impl_focus!(TreeView);
+impl_ctl_window!(TreeView);
+impl_ctl_aswindow!(TreeView);
+impl_ctl_child!(TreeView);
+impl_ctl_nativecontrol!(TreeView);
+impl_ctl_asnativecontrol!(TreeView);
+impl_ctl_nativecontrolevents!(TreeView, TreeViewEvents);
+impl_ctl_focus!(TreeView);
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window

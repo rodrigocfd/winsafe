@@ -35,7 +35,7 @@ macro_rules! impl_obj_nativecontrol {
 }
 
 /// Implements Debug trait to control.
-macro_rules! impl_debug {
+macro_rules! impl_ctl_debug {
 	($name:ident) => {
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -49,7 +49,7 @@ macro_rules! impl_debug {
 }
 
 /// Implements Window trait to control.
-macro_rules! impl_window {
+macro_rules! impl_ctl_window {
 	($name:ident) => {
 		impl crate::gui::traits::Window for $name {
 			fn hwnd(&self) -> crate::handles::HWND {
@@ -59,8 +59,19 @@ macro_rules! impl_window {
 	};
 }
 
+/// Implements AsWindow trait to control.
+macro_rules! impl_ctl_aswindow {
+	($name:ident) => {
+		impl crate::gui::traits::AsWindow for $name {
+			fn as_window(&self) -> Arc<dyn crate::gui::traits::Window> {
+				self.0.clone()
+			}
+		}
+	};
+}
+
 /// Implements Child trait to control.
-macro_rules! impl_child {
+macro_rules! impl_ctl_child {
 	($name:ident) => {
 		impl crate::gui::traits::Child for $name {
 			fn ctrl_id(&self) -> u16 {
@@ -71,7 +82,7 @@ macro_rules! impl_child {
 }
 
 /// Implements NativeControl trait to control.
-macro_rules! impl_nativecontrol {
+macro_rules! impl_ctl_nativecontrol {
 	($name:ident) => {
 		impl crate::gui::traits::NativeControl for $name {
 			fn on_subclass(&self) -> &crate::gui::events::WindowEvents {
@@ -82,7 +93,7 @@ macro_rules! impl_nativecontrol {
 }
 
 /// Implements AsNativeControl trait to control.
-macro_rules! impl_asnativecontrol {
+macro_rules! impl_ctl_asnativecontrol {
 	($name:ident) => {
 		impl crate::gui::traits::AsNativeControl for $name {
 			fn as_native_control(&self) -> std::sync::Arc<dyn crate::gui::traits::NativeControl> {
@@ -93,7 +104,7 @@ macro_rules! impl_asnativecontrol {
 }
 
 /// Implements NativeControlEvents trait to control.
-macro_rules! impl_nativecontrolevents {
+macro_rules! impl_ctl_nativecontrolevents {
 	($name:ident, $events:ty) => {
 		impl crate::gui::traits::NativeControlEvents<$events> for $name {
 			fn on(&self) -> &$events {
@@ -109,7 +120,7 @@ macro_rules! impl_nativecontrolevents {
 }
 
 /// Implements Focus trait to control.
-macro_rules! impl_focus {
+macro_rules! impl_ctl_focus {
 	($name:ident) => {
 		impl crate::gui::traits::Focus for $name {}
 	};

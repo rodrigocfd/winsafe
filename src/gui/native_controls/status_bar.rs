@@ -62,13 +62,14 @@ pub enum StatusBarPart {
 pub struct StatusBar(Arc<Obj>);
 
 impl_send_sync!(StatusBar);
-impl_debug!(StatusBar);
+impl_ctl_debug!(StatusBar);
 
-impl_window!(StatusBar);
-impl_child!(StatusBar);
-impl_nativecontrol!(StatusBar);
-impl_asnativecontrol!(StatusBar);
-impl_nativecontrolevents!(StatusBar, StatusBarEvents);
+impl_ctl_window!(StatusBar);
+impl_ctl_aswindow!(StatusBar);
+impl_ctl_child!(StatusBar);
+impl_ctl_nativecontrol!(StatusBar);
+impl_ctl_asnativecontrol!(StatusBar);
+impl_ctl_nativecontrolevents!(StatusBar, StatusBarEvents);
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent

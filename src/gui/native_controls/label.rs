@@ -30,13 +30,14 @@ impl_obj_nativecontrol!(Obj);
 pub struct Label(Arc<Obj>);
 
 impl_send_sync!(Label);
-impl_debug!(Label);
+impl_ctl_debug!(Label);
 
-impl_window!(Label);
-impl_child!(Label);
-impl_nativecontrol!(Label);
-impl_asnativecontrol!(Label);
-impl_nativecontrolevents!(Label, LabelEvents);
+impl_ctl_window!(Label);
+impl_ctl_aswindow!(Label);
+impl_ctl_child!(Label);
+impl_ctl_nativecontrol!(Label);
+impl_ctl_asnativecontrol!(Label);
+impl_ctl_nativecontrolevents!(Label, LabelEvents);
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window

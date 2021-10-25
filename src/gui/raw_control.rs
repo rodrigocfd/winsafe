@@ -9,19 +9,27 @@ use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{Child, ParentEvents, UiThread, Window};
+use crate::gui::traits::{AsWindow, Child, ParentEvents, UiThread, Window};
 use crate::handles::{HBRUSH, HCURSOR, HICON};
 use crate::handles::HWND;
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
-#[derive(Clone)]
-pub(in crate::gui) struct RawControl(Arc<Obj>);
-
 struct Obj { // actual fields of RawControl
 	base: RawBase,
 	opts: WindowControlOpts,
 }
+
+impl Window for Obj {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+#[derive(Clone)]
+pub(in crate::gui) struct RawControl(Arc<Obj>);
 
 impl Window for RawControl {
 	fn hwnd(&self) -> HWND {
@@ -29,9 +37,9 @@ impl Window for RawControl {
 	}
 }
 
-impl Child for RawControl {
-	fn ctrl_id(&self) -> u16 {
-		self.0.opts.ctrl_id
+impl AsWindow for RawControl {
+	fn as_window(&self) -> Arc<dyn Window> {
+		self.0.clone()
 	}
 }
 
@@ -46,6 +54,12 @@ impl UiThread for RawControl {
 impl ParentEvents for RawControl {
 	fn on(&self) -> &WindowEventsAll {
 		self.0.base.on()
+	}
+}
+
+impl Child for RawControl {
+	fn ctrl_id(&self) -> u16 {
+		self.0.opts.ctrl_id
 	}
 }
 

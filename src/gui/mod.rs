@@ -41,6 +41,7 @@ pub(crate) mod prelude {
 	pub use super::events::prelude::*;
 	pub use super::traits::{
 		AsNativeControl,
+		AsWindow,
 		Child,
 		Focus,
 		NativeControl,
@@ -51,3 +52,5 @@ pub(crate) mod prelude {
 		Window,
 	};
 }
+
+pub use prelude::*;

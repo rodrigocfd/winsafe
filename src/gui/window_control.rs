@@ -30,6 +30,7 @@ impl_debug!(WindowControl);
 impl_parent!(WindowControl);
 
 impl_window!(WindowControl);
+impl_aswindow!(WindowControl);
 impl_uithread!(WindowControl);
 impl_parentevents!(WindowControl);
 

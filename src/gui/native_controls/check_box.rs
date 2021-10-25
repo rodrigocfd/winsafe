@@ -46,14 +46,15 @@ pub enum CheckState {
 pub struct CheckBox(Arc<Obj>);
 
 impl_send_sync!(CheckBox);
-impl_debug!(CheckBox);
+impl_ctl_debug!(CheckBox);
 
-impl_window!(CheckBox);
-impl_child!(CheckBox);
-impl_nativecontrol!(CheckBox);
-impl_asnativecontrol!(CheckBox);
-impl_nativecontrolevents!(CheckBox, ButtonEvents);
-impl_focus!(CheckBox);
+impl_ctl_window!(CheckBox);
+impl_ctl_aswindow!(CheckBox);
+impl_ctl_child!(CheckBox);
+impl_ctl_nativecontrol!(CheckBox);
+impl_ctl_asnativecontrol!(CheckBox);
+impl_ctl_nativecontrolevents!(CheckBox, ButtonEvents);
+impl_ctl_focus!(CheckBox);
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window

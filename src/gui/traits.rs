@@ -41,6 +41,8 @@ pub(in crate::gui) fn baseref_from_parent(parent: &impl Parent) -> &Base {
 	}
 }
 
+//------------------------------------------------------------------------------
+
 /// Any window. Exposes the underlying window handle.
 pub trait Window {
 	/// Returns the underlying handle for this control.
@@ -52,6 +54,11 @@ pub trait Window {
 	/// [`WM_INITDIALOG`](crate::gui::events::prelude::EventsView::wm_init_dialog)
 	/// events.
 	fn hwnd(&self) -> HWND;
+}
+
+/// Converts a concrete window into an upcasted reference.
+pub trait AsWindow: Window {
+	fn as_window(&self) -> Arc<dyn Window>;
 }
 
 /// Allows running code in the original UI thread.
@@ -166,7 +173,7 @@ pub trait NativeControl: Child {
 	fn on_subclass(&self) -> &WindowEvents;
 }
 
-/// Retrieves a concrete native control as a trait.
+/// Converts a concrete native control into an upcasted reference.
 pub trait AsNativeControl: NativeControl {
 	fn as_native_control(&self) -> Arc<dyn NativeControl>;
 }

@@ -32,13 +32,13 @@ impl_obj_nativecontrol!(Obj);
 pub struct RadioButton(Obj);
 
 impl_send_sync!(RadioButton);
-impl_debug!(RadioButton);
+impl_ctl_debug!(RadioButton);
 
-impl_window!(RadioButton);
-impl_child!(RadioButton);
-impl_nativecontrol!(RadioButton);
-impl_nativecontrolevents!(RadioButton, ButtonEvents);
-impl_focus!(RadioButton);
+impl_ctl_window!(RadioButton);
+impl_ctl_child!(RadioButton);
+impl_ctl_nativecontrol!(RadioButton);
+impl_ctl_nativecontrolevents!(RadioButton, ButtonEvents);
+impl_ctl_focus!(RadioButton);
 
 impl RadioButton {
 	pub(in crate::gui) fn new(parent: &impl Parent, opts: RadioButtonOpts) -> RadioButton {

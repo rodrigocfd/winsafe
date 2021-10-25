@@ -30,14 +30,15 @@ impl_obj_nativecontrol!(Obj);
 pub struct MonthCalendar(Arc<Obj>);
 
 impl_send_sync!(MonthCalendar);
-impl_debug!(MonthCalendar);
+impl_ctl_debug!(MonthCalendar);
 
-impl_window!(MonthCalendar);
-impl_child!(MonthCalendar);
-impl_nativecontrol!(MonthCalendar);
-impl_asnativecontrol!(MonthCalendar);
-impl_nativecontrolevents!(MonthCalendar, MonthCalendarEvents);
-impl_focus!(MonthCalendar);
+impl_ctl_window!(MonthCalendar);
+impl_ctl_aswindow!(MonthCalendar);
+impl_ctl_child!(MonthCalendar);
+impl_ctl_nativecontrol!(MonthCalendar);
+impl_ctl_asnativecontrol!(MonthCalendar);
+impl_ctl_nativecontrolevents!(MonthCalendar, MonthCalendarEvents);
+impl_ctl_focus!(MonthCalendar);
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent

@@ -7,12 +7,9 @@ use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::{EventsView, WindowEventsAll};
-use crate::gui::traits::{ParentEvents, UiThread, Window};
+use crate::gui::traits::{AsWindow, ParentEvents, UiThread, Window};
 use crate::handles::{HINSTANCE, HWND};
 use crate::msg::wm;
-
-#[derive(Clone)]
-pub(in crate::gui) struct DlgMain(Arc<Obj>);
 
 struct Obj { // actual fields of DlgMain
 	base: DlgBase,
@@ -20,9 +17,26 @@ struct Obj { // actual fields of DlgMain
 	accel_table_id: Option<u16>,
 }
 
+impl Window for Obj {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+#[derive(Clone)]
+pub(in crate::gui) struct DlgMain(Arc<Obj>);
+
 impl Window for DlgMain {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+}
+
+impl AsWindow for DlgMain {
+	fn as_window(&self) -> Arc<dyn Window> {
+		self.0.clone()
 	}
 }
 

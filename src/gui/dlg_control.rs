@@ -9,12 +9,9 @@ use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::{EventsView, WindowEventsAll};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{Child, ParentEvents, UiThread, Window};
+use crate::gui::traits::{AsWindow, Child, ParentEvents, UiThread, Window};
 use crate::handles::HWND;
 use crate::structs::{POINT, SIZE};
-
-#[derive(Clone)]
-pub(in crate::gui) struct DlgControl(Arc<Obj>);
 
 struct Obj { // actual fields of DlgControl
 	base: DlgBase,
@@ -22,15 +19,26 @@ struct Obj { // actual fields of DlgControl
 	ctrl_id: u16,
 }
 
+impl Window for Obj {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+#[derive(Clone)]
+pub(in crate::gui) struct DlgControl(Arc<Obj>);
+
 impl Window for DlgControl {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for DlgControl {
-	fn ctrl_id(&self) -> u16 {
-		self.0.ctrl_id
+impl AsWindow for DlgControl {
+	fn as_window(&self) -> Arc<dyn Window> {
+		self.0.clone()
 	}
 }
 
@@ -45,6 +53,12 @@ impl UiThread for DlgControl {
 impl ParentEvents for DlgControl {
 	fn on(&self) -> &WindowEventsAll {
 		self.0.base.on()
+	}
+}
+
+impl Child for DlgControl {
+	fn ctrl_id(&self) -> u16 {
+		self.0.ctrl_id
 	}
 }
 
