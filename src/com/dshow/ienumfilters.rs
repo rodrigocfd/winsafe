@@ -38,10 +38,10 @@ pub trait IEnumFiltersT: IUnknownT {
 
 	/// [`IEnumFilters::Skip`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-skip)
 	/// method.
-	fn Skip(&self, num_filters: u32) -> WinResult<bool> {
+	fn Skip(&self, count: u32) -> WinResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IEnumFiltersVT);
-			hr_to_winresult_bool((vt.Skip)(self.ptr(), num_filters))
+			hr_to_winresult_bool((vt.Skip)(self.ptr(), count))
 		}
 	}
 }
