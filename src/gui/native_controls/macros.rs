@@ -1,3 +1,39 @@
+/// Implements Window trait to control inner object.
+macro_rules! impl_obj_window {
+	($name:ident) => {
+		impl crate::gui::traits::Window for $name {
+			fn hwnd(&self) -> crate::handles::HWND {
+				self.base.hwnd()
+			}
+		}
+	};
+}
+
+/// Implements Child trait to control inner object.
+macro_rules! impl_obj_child {
+	($name:ident) => {
+		impl crate::gui::traits::Child for $name {
+			fn ctrl_id(&self) -> u16 {
+				match &self.opts_id {
+					OptsId::Wnd(opts) => opts.ctrl_id,
+					OptsId::Dlg(ctrl_id) => *ctrl_id,
+				}
+			}
+		}
+	}
+}
+
+/// Implements NativeControl trait to control inner object.
+macro_rules! impl_obj_nativecontrol {
+	($name:ident) => {
+		impl crate::gui::traits::NativeControl for $name {
+			fn on_subclass(&self) -> &crate::gui::events::WindowEvents {
+				self.base.on_subclass()
+			}
+		}
+	}
+}
+
 /// Implements Debug trait to control.
 macro_rules! impl_debug {
 	($name:ident) => {
@@ -17,7 +53,7 @@ macro_rules! impl_window {
 	($name:ident) => {
 		impl crate::gui::traits::Window for $name {
 			fn hwnd(&self) -> crate::handles::HWND {
-				self.0.base.hwnd()
+				self.0.hwnd()
 			}
 		}
 	};
@@ -28,10 +64,7 @@ macro_rules! impl_child {
 	($name:ident) => {
 		impl crate::gui::traits::Child for $name {
 			fn ctrl_id(&self) -> u16 {
-				match &self.0.opts_id {
-					OptsId::Wnd(opts) => opts.ctrl_id,
-					OptsId::Dlg(ctrl_id) => *ctrl_id,
-				}
+				self.0.ctrl_id()
 			}
 		}
 	};
@@ -42,7 +75,18 @@ macro_rules! impl_nativecontrol {
 	($name:ident) => {
 		impl crate::gui::traits::NativeControl for $name {
 			fn on_subclass(&self) -> &crate::gui::events::WindowEvents {
-				self.0.base.on_subclass()
+				self.0.on_subclass()
+			}
+		}
+	};
+}
+
+/// Implements AsNativeControl trait to control.
+macro_rules! impl_asnativecontrol {
+	($name:ident) => {
+		impl crate::gui::traits::AsNativeControl for $name {
+			fn as_native_control(&self) -> std::sync::Arc<dyn crate::gui::traits::NativeControl> {
+				self.0.clone()
 			}
 		}
 	};

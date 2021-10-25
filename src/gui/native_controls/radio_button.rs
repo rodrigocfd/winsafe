@@ -10,6 +10,18 @@ use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
 
+struct Obj { // actual fields of RadioButton
+	base: BaseNativeControl,
+	opts_id: OptsId<RadioButtonOpts>,
+	events: ButtonEvents,
+}
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
 /// Native
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
 /// control, actually a variation of the ordinary
@@ -18,12 +30,6 @@ use crate::structs::{POINT, SIZE};
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton(Obj);
-
-struct Obj { // actual fields of RadioButton
-	base: BaseNativeControl,
-	opts_id: OptsId<RadioButtonOpts>,
-	events: ButtonEvents,
-}
 
 impl_send_sync!(RadioButton);
 impl_debug!(RadioButton);

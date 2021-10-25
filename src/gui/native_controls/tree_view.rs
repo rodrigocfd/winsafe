@@ -12,17 +12,23 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::tvm;
 use crate::structs::{POINT, SIZE};
 
-/// Native
-/// [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
-/// control.
-#[derive(Clone)]
-pub struct TreeView(Arc<Obj>);
-
 struct Obj { // actual fields of TreeView
 	base: BaseNativeControl,
 	opts_id: OptsId<TreeViewOpts>,
 	events: TreeViewEvents,
 }
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
+/// Native
+/// [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
+/// control.
+#[derive(Clone)]
+pub struct TreeView(Arc<Obj>);
 
 impl_send_sync!(TreeView);
 impl_debug!(TreeView);
@@ -30,6 +36,7 @@ impl_debug!(TreeView);
 impl_window!(TreeView);
 impl_child!(TreeView);
 impl_nativecontrol!(TreeView);
+impl_asnativecontrol!(TreeView);
 impl_nativecontrolevents!(TreeView, TreeViewEvents);
 impl_focus!(TreeView);
 
@@ -52,8 +59,8 @@ impl TreeView {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -78,8 +85,8 @@ impl TreeView {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self

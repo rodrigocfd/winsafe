@@ -10,16 +10,22 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::pbm;
 use crate::structs::{PBRANGE, POINT, SIZE};
 
+struct Obj { // actual fields of ProgressBar
+	base: BaseNativeControl,
+	opts_id: OptsId<ProgressBarOpts>,
+}
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
 /// Native
 /// [progress bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
 /// control.
 #[derive(Clone)]
 pub struct ProgressBar(Arc<Obj>);
-
-struct Obj { // actual fields of ProgressBar
-	base: BaseNativeControl,
-	opts_id: OptsId<ProgressBarOpts>,
-}
 
 impl_send_sync!(ProgressBar);
 impl_debug!(ProgressBar);
@@ -27,6 +33,7 @@ impl_debug!(ProgressBar);
 impl_window!(ProgressBar);
 impl_child!(ProgressBar);
 impl_nativecontrol!(ProgressBar);
+impl_asnativecontrol!(ProgressBar);
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
@@ -46,8 +53,8 @@ impl ProgressBar {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -71,8 +78,8 @@ impl ProgressBar {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self

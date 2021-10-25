@@ -12,6 +12,18 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 
+struct Obj { // actual fields of ListBox
+	base: BaseNativeControl,
+	opts_id: OptsId<ListBoxOpts>,
+	events: ListBoxEvents,
+}
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
 /// Native
 /// [list box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control. Not to be confused with the more complex
@@ -19,18 +31,13 @@ use crate::structs::{POINT, SIZE};
 #[derive(Clone)]
 pub struct ListBox(Arc<Obj>);
 
-struct Obj { // actual fields of ListBox
-	base: BaseNativeControl,
-	opts_id: OptsId<ListBoxOpts>,
-	events: ListBoxEvents,
-}
-
 impl_send_sync!(ListBox);
 impl_debug!(ListBox);
 
 impl_window!(ListBox);
 impl_child!(ListBox);
 impl_nativecontrol!(ListBox);
+impl_asnativecontrol!(ListBox);
 impl_nativecontrolevents!(ListBox, ListBoxEvents);
 impl_focus!(ListBox);
 
@@ -53,8 +60,8 @@ impl ListBox {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -79,8 +86,8 @@ impl ListBox {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self

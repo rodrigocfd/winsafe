@@ -11,6 +11,18 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
 
+struct Obj { // actual fields of CheckBox
+	base: BaseNativeControl,
+	opts_id: OptsId<CheckBoxOpts>,
+	events: ButtonEvents,
+}
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
 /// Possible states of a [`CheckBox`](crate::gui::CheckBox) control.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum CheckState {
@@ -33,18 +45,13 @@ pub enum CheckState {
 #[derive(Clone)]
 pub struct CheckBox(Arc<Obj>);
 
-struct Obj { // actual fields of CheckBox
-	base: BaseNativeControl,
-	opts_id: OptsId<CheckBoxOpts>,
-	events: ButtonEvents,
-}
-
 impl_send_sync!(CheckBox);
 impl_debug!(CheckBox);
 
 impl_window!(CheckBox);
 impl_child!(CheckBox);
 impl_nativecontrol!(CheckBox);
+impl_asnativecontrol!(CheckBox);
 impl_nativecontrolevents!(CheckBox, ButtonEvents);
 impl_focus!(CheckBox);
 
@@ -67,8 +74,8 @@ impl CheckBox {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -93,8 +100,8 @@ impl CheckBox {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self

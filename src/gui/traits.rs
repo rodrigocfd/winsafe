@@ -1,4 +1,5 @@
 use std::any::Any;
+use std::sync::Arc;
 
 use crate::aliases::{ErrResult, WinResult};
 use crate::enums::HwndFocus;
@@ -163,6 +164,11 @@ pub trait NativeControl: Child {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	fn on_subclass(&self) -> &WindowEvents;
+}
+
+/// Retrieves a concrete native control as a trait.
+pub trait AsNativeControl: NativeControl {
+	fn as_native_control(&self) -> Arc<dyn NativeControl>;
 }
 
 /// Exposes the native control events.

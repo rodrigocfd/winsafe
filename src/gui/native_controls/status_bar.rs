@@ -9,9 +9,28 @@ use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::HWND;
 use crate::msg::{MsgSend, sb, wm};
 use crate::structs::{POINT, SIZE};
+
+struct Obj { // actual fields of StatusBar
+	base: BaseNativeControl,
+	ctrl_id: u16,
+	events: StatusBarEvents,
+	parts_info: VeryUnsafeCell<Vec<StatusBarPart>>,
+	right_edges: VeryUnsafeCell<Vec<i32>>, // buffer to speed up resize calls
+}
+
+impl_obj_window!(Obj);
+
+impl Child for Obj {
+	fn ctrl_id(&self) -> u16 {
+		self.ctrl_id
+	}
+}
+
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
 
 /// Used when adding the parts in
 /// [`StatusBar::new`](crate::gui::StatusBar::new).
@@ -40,32 +59,15 @@ pub enum StatusBarPart {
 /// [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/status-bars)
 /// control, which has one or more parts.
 #[derive(Clone)]
-pub struct StatusBar(Arc<VeryUnsafeCell<Obj>>);
-
-struct Obj { // actual fields of StatusBar
-	base: BaseNativeControl,
-	ctrl_id: u16,
-	events: StatusBarEvents,
-	parts_info: Vec<StatusBarPart>,
-	right_edges: Vec<i32>, // buffer to speed up resize calls
-}
+pub struct StatusBar(Arc<Obj>);
 
 impl_send_sync!(StatusBar);
 impl_debug!(StatusBar);
 
-impl Window for StatusBar {
-	fn hwnd(&self) -> HWND {
-		self.0.base.hwnd()
-	}
-}
-
-impl Child for StatusBar {
-	fn ctrl_id(&self) -> u16 {
-		self.hwnd().GetDlgCtrlID().unwrap_or_default()
-	}
-}
-
+impl_window!(StatusBar);
+impl_child!(StatusBar);
 impl_nativecontrol!(StatusBar);
+impl_asnativecontrol!(StatusBar);
 impl_nativecontrolevents!(StatusBar, StatusBarEvents);
 
 impl StatusBar {
@@ -91,31 +93,31 @@ impl StatusBar {
 		let ctrl_id = auto_ctrl_id();
 
 		let new_self = Self(
-			Arc::new(VeryUnsafeCell::new(
+			Arc::new(
 				Obj {
 					base: BaseNativeControl::new(parent_base_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
-					parts_info: parts.to_vec(),
-					right_edges: vec![0; parts.len()],
+					parts_info: VeryUnsafeCell::new(parts.to_vec()),
+					right_edges: VeryUnsafeCell::new(vec![0; parts.len()]),
 				},
-			)),
+			),
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create()?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create()?; Ok(0) }
 		});
 		parent_base_ref.privileged_events_ref().wm_size({
-			let me = new_self.clone();
-			move |p| { me.resize(&p)?; Ok(()) }
+			let self2 = new_self.clone();
+			move |p| { self2.resize(&p)?; Ok(()) }
 		});
 
 		new_self
 	}
 
 	fn create(&self) -> WinResult<()> {
-		for part in self.0.as_mut().parts_info.iter_mut() {
+		for part in self.0.parts_info.as_mut().iter_mut() {
 			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 				let mut col_cx = SIZE::new(*width as _, 0);
 				multiply_dpi(None, Some(&mut col_cx))?;
@@ -170,7 +172,7 @@ impl StatusBar {
 			}
 		}
 
-		let right_edges = &mut self.0.as_mut().right_edges;
+		let right_edges = &mut self.0.right_edges.as_mut();
 		let mut total_cx = p.client_area.cx as u32;
 
 		for (idx, part_info) in self.0.parts_info.iter().rev().enumerate() {

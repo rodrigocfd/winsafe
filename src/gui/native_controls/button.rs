@@ -10,17 +10,23 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
 
-/// Native
-/// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
-/// control.
-#[derive(Clone)]
-pub struct Button(Arc<Obj>);
-
 struct Obj { // actual fields of Button
 	base: BaseNativeControl,
 	opts_id: OptsId<ButtonOpts>,
 	events: ButtonEvents,
 }
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
+/// Native
+/// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
+/// control.
+#[derive(Clone)]
+pub struct Button(Arc<Obj>);
 
 impl_send_sync!(Button);
 impl_debug!(Button);
@@ -28,6 +34,7 @@ impl_debug!(Button);
 impl_window!(Button);
 impl_child!(Button);
 impl_nativecontrol!(Button);
+impl_asnativecontrol!(Button);
 impl_nativecontrolevents!(Button, ButtonEvents);
 impl_focus!(Button);
 
@@ -50,8 +57,8 @@ impl Button {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -76,8 +83,8 @@ impl Button {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self

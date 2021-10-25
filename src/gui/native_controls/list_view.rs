@@ -20,13 +20,6 @@ use crate::handles::{HIMAGELIST, HMENU};
 use crate::msg::{lvm, wm};
 use crate::structs::{NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 
-/// Native
-/// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
-/// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
-/// control.
-#[derive(Clone)]
-pub struct ListView(Arc<Obj>);
-
 struct Obj { // actual fields of ListView
 	base: BaseNativeControl,
 	opts_id: OptsId<ListViewOpts>,
@@ -34,12 +27,26 @@ struct Obj { // actual fields of ListView
 	context_menu: Option<HMENU>,
 }
 
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
+/// Native
+/// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
+/// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
+/// control.
+#[derive(Clone)]
+pub struct ListView(Arc<Obj>);
+
 impl_send_sync!(ListView);
 impl_debug!(ListView);
 
 impl_window!(ListView);
 impl_child!(ListView);
 impl_nativecontrol!(ListView);
+impl_asnativecontrol!(ListView);
 impl_nativecontrolevents!(ListView, ListViewEvents);
 impl_focus!(ListView);
 
@@ -64,8 +71,8 @@ impl ListView {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self.handled_events(parent_base_ref, ctrl_id);
@@ -97,8 +104,8 @@ impl ListView {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self.handled_events(parent_base_ref, ctrl_id);
@@ -134,29 +141,29 @@ impl ListView {
 
 	fn handled_events(&self, parent_base_ref: &Base, ctrl_id: u16) {
 		parent_base_ref.privileged_events_ref().add_nfy(ctrl_id, co::LVN::KEYDOWN.into(), {
-			let me = self.clone();
+			let self2 = self.clone();
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
 				let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
 				let has_shift = GetAsyncKeyState(co::VK::SHIFT);
 
 				if has_ctrl && lvnk.wVKey == co::VK('A' as _) { // Ctrl+A
-					me.items().select_all(true)?;
+					self2.items().select_all(true)?;
 				} else if lvnk.wVKey == co::VK::APPS { // context menu key
-					me.show_context_menu(false, has_ctrl, has_shift)?;
+					self2.show_context_menu(false, has_ctrl, has_shift)?;
 				}
 				Ok(None)
 			}
 		});
 
 		parent_base_ref.privileged_events_ref().add_nfy(ctrl_id, co::NM::RCLICK.into(), {
-			let me = self.clone();
+			let self2 = self.clone();
 			move |p| {
 				let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
 				let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 				let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
-				me.show_context_menu(true, has_ctrl, has_shift)?;
+				self2.show_context_menu(true, has_ctrl, has_shift)?;
 				Ok(None)
 			}
 		});

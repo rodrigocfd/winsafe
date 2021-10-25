@@ -13,17 +13,23 @@ use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 use crate::various::WString;
 
-/// Native
-/// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
-/// control.
-#[derive(Clone)]
-pub struct ComboBox(Arc<Obj>);
-
 struct Obj { // actual fields of ComboBox
 	base: BaseNativeControl,
 	opts_id: OptsId<ComboBoxOpts>,
 	events: ComboBoxEvents,
 }
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
+/// Native
+/// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
+/// control.
+#[derive(Clone)]
+pub struct ComboBox(Arc<Obj>);
 
 impl_send_sync!(ComboBox);
 impl_debug!(ComboBox);
@@ -31,6 +37,7 @@ impl_debug!(ComboBox);
 impl_window!(ComboBox);
 impl_child!(ComboBox);
 impl_nativecontrol!(ComboBox);
+impl_asnativecontrol!(ComboBox);
 impl_nativecontrolevents!(ComboBox, ComboBoxEvents);
 impl_focus!(ComboBox);
 
@@ -53,8 +60,8 @@ impl ComboBox {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -79,8 +86,8 @@ impl ComboBox {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self

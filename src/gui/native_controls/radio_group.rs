@@ -12,10 +12,10 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
 #[derive(Clone)]
-pub struct RadioGroup(Arc<VeryUnsafeCell<Obj>>);
+pub struct RadioGroup(Arc<Obj>);
 
 struct Obj { // actual fields of RadioGroup
-	radios: Vec<RadioButton>,
+	radios: VeryUnsafeCell<Vec<RadioButton>>,
 	parent_events: RadioGroupEvents,
 }
 
@@ -70,12 +70,12 @@ impl RadioGroup {
 		let horz_verts = Rc::new(opts.iter().map(|opt| (opt.horz_resize, opt.vert_resize)).collect::<Vec<_>>());
 
 		let new_self = Self(
-			Arc::new(VeryUnsafeCell::new(
+			Arc::new(
 				Obj {
-					radios,
+					radios: VeryUnsafeCell::new(radios),
 					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
 				},
-			)),
+			),
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
@@ -105,12 +105,12 @@ impl RadioGroup {
 		let horz_verts = Rc::new(ctrls.iter().map(|(_, horz, vert)| (*horz, *vert)).collect::<Vec<_>>());
 
 		let new_self = Self(
-			Arc::new(VeryUnsafeCell::new(
+			Arc::new(
 				Obj {
-					radios,
+					radios: VeryUnsafeCell::new(radios),
 					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
 				},
-			)),
+			),
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
@@ -123,7 +123,7 @@ impl RadioGroup {
 	}
 
 	fn create(&self, horz_vert: &[(Horz, Vert)]) -> WinResult<()> {
-		for (i, radio) in self.0.as_mut().radios.iter_mut().enumerate() {
+		for (i, radio) in self.0.radios.as_mut().iter_mut().enumerate() {
 			radio.create(horz_vert[i].0, horz_vert[i].1)?;
 		}
 		Ok(())

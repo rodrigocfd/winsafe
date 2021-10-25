@@ -40,6 +40,7 @@ pub use window_modal::WindowModal;
 pub(crate) mod prelude {
 	pub use super::events::prelude::*;
 	pub use super::traits::{
+		AsNativeControl,
 		Child,
 		Focus,
 		NativeControl,

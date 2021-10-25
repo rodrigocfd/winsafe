@@ -11,17 +11,23 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 
-/// Native
-/// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)
-/// control.
-#[derive(Clone)]
-pub struct Label(Arc<Obj>);
-
 struct Obj { // actual fields of Label
 	base: BaseNativeControl,
 	opts_id: OptsId<LabelOpts>,
 	events: LabelEvents,
 }
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
+/// Native
+/// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)
+/// control.
+#[derive(Clone)]
+pub struct Label(Arc<Obj>);
 
 impl_send_sync!(Label);
 impl_debug!(Label);
@@ -29,6 +35,7 @@ impl_debug!(Label);
 impl_window!(Label);
 impl_child!(Label);
 impl_nativecontrol!(Label);
+impl_asnativecontrol!(Label);
 impl_nativecontrolevents!(Label, LabelEvents);
 
 impl Label {
@@ -50,8 +57,8 @@ impl Label {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -76,8 +83,8 @@ impl Label {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self

@@ -11,17 +11,23 @@ use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
 use crate::msg::{dtm, wm};
 use crate::structs::{POINT, SIZE, SYSTEMTIME};
 
-/// Native
-/// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
-/// control.
-#[derive(Clone)]
-pub struct DateTimePicker(Arc<Obj>);
-
 struct Obj { // actual fields of DateTimePicker
 	base: BaseNativeControl,
 	opts_id: OptsId<DateTimePickerOpts>,
 	events: DateTimePickerEvents,
 }
+
+impl_obj_window!(Obj);
+impl_obj_child!(Obj);
+impl_obj_nativecontrol!(Obj);
+
+//------------------------------------------------------------------------------
+
+/// Native
+/// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
+/// control.
+#[derive(Clone)]
+pub struct DateTimePicker(Arc<Obj>);
 
 impl_send_sync!(DateTimePicker);
 impl_debug!(DateTimePicker);
@@ -29,6 +35,7 @@ impl_debug!(DateTimePicker);
 impl_window!(DateTimePicker);
 impl_child!(DateTimePicker);
 impl_nativecontrol!(DateTimePicker);
+impl_asnativecontrol!(DateTimePicker);
 impl_nativecontrolevents!(DateTimePicker, DateTimePickerEvents);
 impl_focus!(DateTimePicker);
 
@@ -51,8 +58,8 @@ impl DateTimePicker {
 		);
 
 		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
-			let me = new_self.clone();
-			move |_| { me.create(horz, vert)?; Ok(0) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
 
 		new_self
@@ -77,8 +84,8 @@ impl DateTimePicker {
 		);
 
 		parent_base_ref.privileged_events_ref().wm_init_dialog({
-			let me = new_self.clone();
-			move |_| { me.create(horz_resize, vert_resize)?; Ok(true) }
+			let self2 = new_self.clone();
+			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
 
 		new_self
