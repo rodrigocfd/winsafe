@@ -10,6 +10,7 @@ use crate::handles::HWND;
 use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
+#[repr(C)]
 pub struct ITaskbarList3VT {
 	pub ITaskbarList2VT: ITaskbarList2VT,
 	pub SetProgressValue: fn(ComPtr, HANDLE, u64, u64) -> HRESULT,

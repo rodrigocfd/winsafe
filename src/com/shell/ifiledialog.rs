@@ -14,6 +14,7 @@ use crate::structs::GUID;
 use crate::various::WString;
 
 /// [`IFileDialog`](crate::shell::IFileDialog) virtual table.
+#[repr(C)]
 pub struct IFileDialogVT {
 	pub IModalWindowVT: IModalWindowVT,
 	pub SetFileTypes: fn(ComPtr, u32, PCVOID) -> HRESULT,
@@ -25,7 +26,7 @@ pub struct IFileDialogVT {
 	pub GetOptions: fn(ComPtr, *mut u32) -> HRESULT,
 	pub SetDefaultFolder: fn(ComPtr, ComPtr) -> HRESULT,
 	pub SetFolder: fn(ComPtr, ComPtr) -> HRESULT,
-	pub GetFolder: fn(ComPtr, *mut PVOID) -> HRESULT,
+	pub GetFolder: fn(ComPtr, *mut ComPtr) -> HRESULT,
 	pub GetCurrentSelection: fn(ComPtr, *mut ComPtr) -> HRESULT,
 	pub SetFileName: fn(ComPtr, PCSTR) -> HRESULT,
 	pub GetFileName: fn(ComPtr, *mut PSTR) -> HRESULT,
@@ -88,12 +89,7 @@ pub trait IFileDialogT: IModalWindowT {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
-			hr_to_winresult(
-				(vt.GetCurrentSelection)(
-					self.ptr(),
-					&mut ppv_queried as *mut _ as _,
-				),
-			)
+			hr_to_winresult((vt.GetCurrentSelection)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItem::from(ppv_queried))
 	}
 
@@ -127,9 +123,7 @@ pub trait IFileDialogT: IModalWindowT {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
-			hr_to_winresult(
-				(vt.GetFolder)(self.ptr(), &mut ppv_queried as *mut _ as _),
-			)
+			hr_to_winresult((vt.GetFolder)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItem::from(ppv_queried))
 	}
 
@@ -149,9 +143,7 @@ pub trait IFileDialogT: IModalWindowT {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
-			hr_to_winresult(
-				(vt.GetResult)(self.ptr(), &mut ppv_queried as *mut _ as _),
-			)
+			hr_to_winresult((vt.GetResult)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItem::from(ppv_queried))
 	}
 

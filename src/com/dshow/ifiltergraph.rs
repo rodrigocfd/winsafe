@@ -9,6 +9,7 @@ use crate::privs::hr_to_winresult;
 use crate::various::WString;
 
 /// [`IFilterGraph`](crate::dshow::IFilterGraph) virtual table.
+#[repr(C)]
 pub struct IFilterGraphVT {
 	pub IUnknownVT: IUnknownVT,
 	pub AddFilter: fn(ComPtr, ComPtr, PCSTR) -> HRESULT,
@@ -56,7 +57,7 @@ pub trait IFilterGraphT: IUnknownT {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
 			hr_to_winresult(
-				(vt.EnumFilters)(self.ptr(), &mut ppv_queried as *mut _ as _),
+				(vt.EnumFilters)(self.ptr(), &mut ppv_queried),
 			)
 		}.map(|_| IEnumFilters::from(ppv_queried))
 	}
@@ -71,7 +72,7 @@ pub trait IFilterGraphT: IUnknownT {
 				(vt.FindFilterByName)(
 					self.ptr(),
 					WString::from_str(name).as_ptr(),
-					&mut ppv_queried as *mut _ as _,
+					&mut ppv_queried,
 				),
 			)
 		}.map(|_| IBaseFilter::from(ppv_queried))

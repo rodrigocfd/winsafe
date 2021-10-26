@@ -11,6 +11,7 @@ use crate::handles::HWND;
 use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList4`](crate::shell::ITaskbarList4) virtual table.
+#[repr(C)]
 pub struct ITaskbarList4VT {
 	pub ITaskbarList3VT: ITaskbarList3VT,
 	pub SetTabProperties: fn(ComPtr, HANDLE, u32) -> HRESULT,

@@ -7,6 +7,7 @@ use crate::handles::HWND;
 use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList`](crate::shell::ITaskbarList) virtual table.
+#[repr(C)]
 pub struct ITaskbarListVT {
 	pub IUnknownVT: IUnknownVT,
 	pub HrInit: fn(ComPtr) -> HRESULT,

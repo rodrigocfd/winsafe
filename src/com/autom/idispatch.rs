@@ -8,6 +8,7 @@ use crate::privs::hr_to_winresult;
 use crate::structs::LCID;
 
 /// [`IDispatch`](crate::autom::IDispatch) virtual table.
+#[repr(C)]
 pub struct IDispatchVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetTypeInfoCount: fn(ComPtr, *mut u32) -> HRESULT,
@@ -51,7 +52,7 @@ pub trait IDispatchT: IUnknownT {
 					self.ptr(),
 					info_type,
 					lcid.0,
-					&mut ppv_queried as *mut _ as _,
+					&mut ppv_queried,
 				),
 			)
 		}.map(|_| ITypeInfo::from(ppv_queried))

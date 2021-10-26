@@ -27,6 +27,7 @@ pub trait ComInterface: From<ComPtr> {
 //------------------------------------------------------------------------------
 
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
+#[repr(C)]
 pub struct IUnknownVT {
 	pub QueryInterface: fn(ComPtr, PCVOID, *mut ComPtr) -> HRESULT,
 	pub AddRef: fn(ComPtr) -> u32,
@@ -63,7 +64,7 @@ pub trait IUnknownT: ComInterface + Clone {
 				(vt.QueryInterface)(
 					self.ptr(),
 					&T::IID as *const _ as _,
-					&mut ppv_queried as *mut _ as _,
+					&mut ppv_queried,
 				),
 			)
 		}.map(|_| T::from(ppv_queried))

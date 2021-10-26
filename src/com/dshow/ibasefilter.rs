@@ -11,6 +11,7 @@ use crate::privs::hr_to_winresult;
 use crate::various::WString;
 
 /// [`IBaseFilter`](crate::dshow::IBaseFilter) virtual table.
+#[repr(C)]
 pub struct IBaseFilterVT {
 	pub IMediaFilterVT: IMediaFilterVT,
 	pub EnumPins: fn(ComPtr, *mut ComPtr) -> HRESULT,

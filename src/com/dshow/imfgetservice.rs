@@ -7,6 +7,7 @@ use crate::privs::hr_to_winresult;
 use crate::structs::GUID;
 
 /// [`IMFGetService`](crate::dshow::IMFGetService) virtual table.
+#[repr(C)]
 pub struct IMFGetServiceVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetService: fn(ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRESULT,
@@ -61,7 +62,7 @@ pub trait IMFGetServiceT: IUnknownT {
 					self.ptr(),
 					service_guid as *const _ as _,
 					&T::IID as *const _ as _,
-					&mut ppv_queried as *mut _ as _,
+					&mut ppv_queried,
 				),
 			)
 		}.map(|_| T::from(ppv_queried))

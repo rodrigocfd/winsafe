@@ -10,6 +10,7 @@ use crate::privs::hr_to_winresult;
 use crate::structs::GUID;
 
 /// [`IMediaSeeking`](crate::dshow::IMediaSeeking) virtual table.
+#[repr(C)]
 pub struct IMediaSeekingVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetCapabilities: fn(ComPtr, *mut u32) -> HRESULT,

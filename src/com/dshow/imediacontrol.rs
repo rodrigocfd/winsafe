@@ -9,6 +9,7 @@ use crate::privs::{hr_to_winresult, hr_to_winresult_bool, INFINITE};
 use crate::various::WString;
 
 /// [`IMediaControl`](crate::dshow::IMediaControl) virtual table.
+#[repr(C)]
 pub struct IMediaControlVT {
 	pub IDispatchVT: IDispatchVT,
 	pub Run: fn(ComPtr) -> HRESULT,
@@ -58,7 +59,7 @@ pub trait IMediaControlT: IDispatchT {
 				(vt.AddSourceFilter)(
 					self.ptr(),
 					WString::from_str(file_name).as_mut_ptr(), // BSTR
-					&mut ppv_queried as *mut _ as _,
+					&mut ppv_queried,
 				),
 			)
 		}.map(|_| IDispatch::from(ppv_queried))

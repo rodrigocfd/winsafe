@@ -11,6 +11,7 @@ use crate::privs::{hr_to_winresult, hr_to_winresult_bool};
 use crate::various::WString;
 
 /// [`IGraphBuilder`](crate::dshow::IGraphBuilder) virtual table.
+#[repr(C)]
 pub struct IGraphBuilderVT {
 	pub IFilterGraphVT: IFilterGraphVT,
 	pub Connect: fn(ComPtr, ComPtr, ComPtr) -> HRESULT,
@@ -71,7 +72,7 @@ pub trait IGraphBuilderT: IFilterGraphT {
 					self.ptr(),
 					WString::from_str(file_name).as_ptr(),
 					WString::from_str(filter_name).as_ptr(),
-					&mut ppv_queried as *mut _ as _,
+					&mut ppv_queried,
 				),
 			)
 		}.map(|_| IBaseFilter::from(ppv_queried))

@@ -8,6 +8,7 @@ use crate::funcs::HRESULT_FROM_WIN32;
 use crate::handles::HWND;
 
 /// [`IModalWindow`](crate::shell::IModalWindow) virtual table.
+#[repr(C)]
 pub struct IModalWindowVT {
 	pub IUnknownVT: IUnknownVT,
 	pub Show: fn(ComPtr, HANDLE) -> HRESULT,

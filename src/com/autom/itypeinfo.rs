@@ -12,6 +12,7 @@ use crate::ffi::{HRESULT, PCVOID, PSTR, PVOID};
 use crate::privs::hr_to_winresult;
 
 /// [`ITypeInfo`](crate::autom::ITypeInfo) virtual table.
+#[repr(C)]
 pub struct ITypeInfoVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetTypeAttr: fn(ComPtr, *mut PVOID) -> HRESULT,
@@ -27,7 +28,7 @@ pub struct ITypeInfoVT {
 	pub GetDllEntry: fn(ComPtr, i32, u32, *mut PSTR, *mut PSTR, *mut u16) -> HRESULT,
 	pub GetRefTypeInfo: fn(ComPtr, u32, *mut ComPtr) -> HRESULT,
 	pub AddressOfMember: fn(ComPtr, i32, u32, *mut PVOID) -> HRESULT,
-	pub CreateInstance: fn(ComPtr, *mut ComPtr, PCVOID, *mut PVOID) -> HRESULT,
+	pub CreateInstance: fn(ComPtr, *mut ComPtr, PCVOID, *mut ComPtr) -> HRESULT,
 	pub GetMops: fn(ComPtr, i32, *mut PSTR) -> HRESULT,
 	pub GetContainingTypeLib: fn(ComPtr, *mut ComPtr, *mut u32) -> HRESULT,
 	pub ReleaseTypeAttr: fn(ComPtr, PVOID) -> HRESULT,
@@ -62,9 +63,9 @@ pub trait ITypeInfoT: IUnknownT {
 				(vt.CreateInstance)(
 					self.ptr(),
 					iunk_outer.as_ref()
-						.map_or(std::ptr::null_mut(), |_| &mut ppv_outer as *mut _ as _),
+						.map_or(std::ptr::null_mut(), |_| &mut ppv_outer),
 					&T::IID as *const _ as _,
-					&mut ppv_queried as *mut _ as _,
+					&mut ppv_queried,
 				),
 			)
 		}.map(|_| T::from(ppv_queried))

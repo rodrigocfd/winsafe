@@ -10,6 +10,7 @@ use crate::privs::hr_to_winresult;
 use crate::various::WString;
 
 /// [`IShellItem`](crate::shell::IShellItem) virtual table.
+#[repr(C)]
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
 	pub BindToHandler: fn(ComPtr, PVOID, PCVOID, PCVOID, *mut ComPtr) -> HRESULT,
@@ -127,9 +128,7 @@ pub trait IShellItemT: IUnknownT {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
-			hr_to_winresult(
-				(vt.GetParent)(self.ptr(), &mut ppv_queried as *mut _ as _),
-			)
+			hr_to_winresult((vt.GetParent)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItem::from(ppv_queried))
 	}
 }

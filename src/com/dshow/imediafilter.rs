@@ -7,6 +7,7 @@ use crate::ffi::{HRESULT, PVOID};
 use crate::privs::hr_to_winresult_bool;
 
 /// [`IMediaFilter`](crate::dshow::IMediaFilter) virtual table.
+#[repr(C)]
 pub struct IMediaFilterVT {
 	pub IPersistVT: IPersistVT,
 	pub Stop: fn(ComPtr) -> HRESULT,

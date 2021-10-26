@@ -9,6 +9,7 @@ use crate::ffi::{HRESULT, PCVOID, PVOID};
 use crate::privs::hr_to_winresult;
 
 /// [`IShellItemArray`](crate::shell::IShellItemArray) virtual table.
+#[repr(C)]
 pub struct IShellItemArrayVT {
 	pub IUnknownVT: IUnknownVT,
 	pub BindToHandler: fn(ComPtr, PVOID, PCVOID, PCVOID, *mut ComPtr) -> HRESULT,
@@ -53,9 +54,7 @@ pub trait IShellItemArrayT: IUnknownT {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IShellItemArrayVT);
-			hr_to_winresult(
-				(vt.GetItemAt)(self.ptr(), index, &mut ppv_queried as *mut _ as _),
-			)
+			hr_to_winresult((vt.GetItemAt)(self.ptr(), index, &mut ppv_queried))
 		}.map(|_| IShellItem::from(ppv_queried))
 	}
 

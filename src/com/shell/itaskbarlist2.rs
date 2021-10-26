@@ -8,6 +8,7 @@ use crate::handles::HWND;
 use crate::privs::hr_to_winresult;
 
 /// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
+#[repr(C)]
 pub struct ITaskbarList2VT {
 	pub ITaskbarListVT: ITaskbarListVT,
 	pub MarkFullscreenWindow: fn(ComPtr, HANDLE, BOOL) -> HRESULT,

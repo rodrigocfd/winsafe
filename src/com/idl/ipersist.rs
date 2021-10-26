@@ -7,6 +7,7 @@ use crate::privs::hr_to_winresult;
 use crate::structs::CLSID;
 
 /// [`IPersist`](crate::idl::IPersist) virtual table.
+#[repr(C)]
 pub struct IPersistVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetClassID: fn(ComPtr, PVOID) -> HRESULT,

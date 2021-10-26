@@ -9,6 +9,7 @@ use crate::ffi::{BOOL, HANDLE, HRESULT};
 use crate::privs::hr_to_winresult;
 
 /// [`IFileSaveDialog`](crate::shell::IFileSaveDialog) virtual table.
+#[repr(C)]
 pub struct IFileSaveDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
 	pub SetSaveAsItem: fn(ComPtr, ComPtr) -> HRESULT,

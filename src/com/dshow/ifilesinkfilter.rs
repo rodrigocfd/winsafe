@@ -9,6 +9,7 @@ use crate::privs::hr_to_winresult;
 use crate::various::WString;
 
 /// [`IFileSinkFilter`](crate::dshow::IFileSinkFilter) virtual table.
+#[repr(C)]
 pub struct IFileSinkFilterVT {
 	pub IUnknownVT: IUnknownVT,
 	pub SetFileName: fn(ComPtr, PCSTR, PCVOID) -> HRESULT,

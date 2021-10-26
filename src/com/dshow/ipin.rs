@@ -8,6 +8,7 @@ use crate::privs::hr_to_winresult;
 use crate::various::WString;
 
 /// [`IPin`](crate::dshow::IPin) virtual table.
+#[repr(C)]
 pub struct IPinVT {
 	pub IUnknownVT: IUnknownVT,
 	pub Connect: fn(ComPtr, ComPtr, ComPtr, PCVOID) -> HRESULT,
@@ -56,7 +57,7 @@ pub trait IPinT: IUnknownT {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
 			hr_to_winresult(
-				(vt.ConnectedTo)(self.ptr(), &mut ppv_queried as *mut _ as _),
+				(vt.ConnectedTo)(self.ptr(), &mut ppv_queried),
 			)
 		}.map(|_| IPin::from(ppv_queried))
 	}

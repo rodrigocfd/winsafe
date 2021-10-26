@@ -9,6 +9,7 @@ use crate::ffi::HRESULT;
 use crate::privs::hr_to_winresult;
 
 /// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) virtual table.
+#[repr(C)]
 pub struct IFileOpenDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
 	pub GetResults: fn(ComPtr, *mut ComPtr) -> HRESULT,
@@ -70,9 +71,7 @@ pub trait IFileOpenDialogT: IFileDialogT {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
-			hr_to_winresult(
-				(vt.GetResults)(self.ptr(), &mut ppv_queried as *mut _ as _),
-			)
+			hr_to_winresult((vt.GetResults)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItemArray::from(ppv_queried))
 	}
 
@@ -82,9 +81,7 @@ pub trait IFileOpenDialogT: IFileDialogT {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
-			hr_to_winresult(
-				(vt.GetSelectedItems)(self.ptr(), &mut ppv_queried as *mut _ as _),
-			)
+			hr_to_winresult((vt.GetSelectedItems)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItemArray::from(ppv_queried))
 	}
 }

@@ -13,6 +13,7 @@ use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
 
 /// [`IMFVideoDisplayControl`](crate::dshow::IMFVideoDisplayControl) virtual
 /// table.
+#[repr(C)]
 pub struct IMFVideoDisplayControlVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetNativeVideoSize: fn(ComPtr, PVOID, PVOID) -> HRESULT,
