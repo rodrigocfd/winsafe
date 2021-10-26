@@ -13,7 +13,6 @@ pub mod co;
 pub mod guid;
 
 pub(in crate::com) mod any_structs;
-pub(in crate::com) mod ienumshellitems;
 pub(in crate::com) mod ifiledialog;
 pub(in crate::com) mod ifileopendialog;
 pub(in crate::com) mod ifilesavedialog;
@@ -26,7 +25,6 @@ pub(in crate::com) mod itaskbarlist3;
 pub(in crate::com) mod itaskbarlist4;
 
 pub use any_structs::*;
-pub use ienumshellitems::IEnumShellItems;
 pub use ifiledialog::IFileDialog;
 pub use ifileopendialog::IFileOpenDialog;
 pub use ifilesavedialog::IFileSaveDialog;
@@ -39,7 +37,6 @@ pub use itaskbarlist3::ITaskbarList3;
 pub use itaskbarlist4::ITaskbarList4;
 
 pub(crate) mod prelude {
-	pub use super::ienumshellitems::IEnumShellItemsT;
 	pub use super::ifiledialog::IFileDialogT;
 	pub use super::ifileopendialog::IFileOpenDialogT;
 	pub use super::ifilesavedialog::IFileSaveDialogT;
@@ -55,7 +52,6 @@ pub(crate) mod prelude {
 /// [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/) COM
 /// virtual tables.
 pub mod vt {
-	pub use super::ienumshellitems::IEnumShellItemsVT;
 	pub use super::ifiledialog::IFileDialogVT;
 	pub use super::ifileopendialog::IFileOpenDialogVT;
 	pub use super::ifilesavedialog::IFileSaveDialogVT;

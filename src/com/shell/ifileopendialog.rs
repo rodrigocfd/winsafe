@@ -46,6 +46,26 @@ impl IFileOpenDialogT for IFileOpenDialog {}
 pub trait IFileOpenDialogT: IFileDialogT {
 	/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// Collecting the file paths into a
+	/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html):
+	///
+	/// ```rust,ignore
+	/// use winsafe::prelude::*;
+	/// use winsafe::{shell, WinResult};
+	///
+	/// let fo: shell::IFileOpenDialog; // initialized somewhere
+	///
+	/// let paths = fo.GetResults()?.iter()
+	///     .map(|shi|
+	///         shi.and_then(|shi|
+	///             shi.GetDisplayName(shell::co::SIGDN::FILESYSPATH)
+	///         )
+	///     )
+	///     .collect::<WinResult<Vec<_>>>()?,
+	/// ```
 	fn GetResults(&self) -> WinResult<IShellItemArray> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {

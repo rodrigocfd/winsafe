@@ -1,9 +1,10 @@
 #![allow(non_snake_case)]
 
+use std::mem::ManuallyDrop;
+
 use crate::aliases::WinResult;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
-use crate::com::shell;
-use crate::com::shell::ishellitem::{IShellItemT, IShellItem};
+use crate::com::shell::ishellitem::IShellItem;
 use crate::ffi::{HRESULT, PCVOID, PVOID};
 use crate::privs::hr_to_winresult;
 
@@ -43,24 +44,11 @@ pub trait IShellItemArrayT: IUnknownT {
 		}.map(|_| count)
 	}
 
-	/// Iterates through all items with
-	/// [`GetCount`](crate::prelude::IShellItemArrayT::GetCount) and
-	/// [`GetItemAt`](crate::prelude::IShellItemArrayT::GetItemAt), then calls
-	/// [`GetDisplayName`](crate::prelude::IShellItemT::GetDisplayName) on each
-	/// one of them.
-	fn GetDisplayNames(&self,
-		sigdn_name: shell::co::SIGDN) -> WinResult<Vec<String>>
-	{
-		let mut names = Vec::default();
-		for i in 0..self.GetCount()? {
-			let shell_item = self.GetItemAt(i)?;
-			names.push(shell_item.GetDisplayName(sigdn_name)?);
-		}
-		Ok(names)
-	}
-
 	/// [`IShellItemArray::GetItemAt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
 	/// method.
+	///
+	/// Prefer using
+	/// [`IShellItemArrayT::iter`](crate::prelude::IShellItemArrayT::iter).
 	fn GetItemAt(&self, index: u32) -> WinResult<IShellItem> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
@@ -69,5 +57,92 @@ pub trait IShellItemArrayT: IUnknownT {
 				(vt.GetItemAt)(self.ptr(), index, &mut ppv_queried as *mut _ as _),
 			)
 		}.map(|_| IShellItem::from(ppv_queried))
+	}
+
+	/// Returns an iterator over the [`IShellItem`](crate::shell::IShellItem)
+	/// elements by calling
+	/// [`IShellItemArrayT::GetCount`](crate::prelude::IShellItemArrayT::GetCount)
+	/// and
+	/// [`IShellItemArray::GetItemAt`](crate::prelude::IShellItemArrayT::GetItemAt)
+	/// consecutively.
+	///
+	/// # Examples
+	///
+	/// Iterating over the [`IShellItem`](crate::shell::IShellItem) objects:
+	///
+	/// ```rust,ignore
+	/// use winsafe::prelude::*;
+	/// use winsafe:shell;
+	///
+	/// let ish_arr: shell::IShellItemArray; // initialized somewhere
+	///
+	/// for ish_item in ish_arr.iter() {
+	///     let ish_item = ish_item?;
+	///     println!("Path: {}",
+	///         ish_item.GetDisplayName(shell::co::SIGDN::FILESYSPATH)?);
+	/// }
+	/// ```
+	///
+	/// Collecting the file paths into a
+	/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html):
+	///
+	/// ```rust,ignore
+	/// use winsafe::prelude::*;
+	/// use winsafe:{shell, WinResult};
+	///
+	/// let ish_arr: shell::IShellItemArray; // initialized somewhere
+	///
+	/// let paths = ish_arr.iter()
+	///     .map(|shi|
+	///         shi.and_then(|shi|
+	///             shi.GetDisplayName(shell::co::SIGDN::FILESYSPATH)
+	///         )
+	///     )
+	///     .collect::<WinResult<Vec<_>>>()?;
+	/// ```
+	fn iter(&self) -> Box<dyn Iterator<Item = WinResult<IShellItem>>> {
+		Box::new(ShellItemIter::new(unsafe { self.ptr() }))
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct ShellItemIter {
+	array: ManuallyDrop<IShellItemArray>,
+	index: u32,
+	count: Option<u32>,
+}
+
+impl Iterator for ShellItemIter {
+	type Item = WinResult<IShellItem>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.count.is_none() { // first iteration
+			match self.array.GetCount() {
+				Err(e) => {
+					self.count = Some(0); // prevent further iterations
+					return Some(Err(e))
+				},
+				Ok(count) => self.count = Some(count),
+			}
+		}
+
+		let count = self.count.unwrap();
+		if self.index == count {
+			None
+		} else {
+			self.index += 1;
+			Some(self.array.GetItemAt(self.index - 1))
+		}
+	}
+}
+
+impl ShellItemIter {
+	fn new(com_ptr: ComPtr) -> Self {
+		Self {
+			array: ManuallyDrop::new(IShellItemArray(com_ptr)),
+			index: 0,
+			count: None,
+		}
 	}
 }

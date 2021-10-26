@@ -13,7 +13,6 @@ pub_struct_handle_closeable! {
 	/// Handle to a process list
 	/// [snapshot](https://docs.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
 	/// Originally just a `HANDLE`.
-	/// ```
 	HPROCESSLIST
 }
 
