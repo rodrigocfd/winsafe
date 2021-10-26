@@ -76,13 +76,13 @@ impl HDROP {
 	/// }
 	/// ```
 	pub fn iter(self) -> impl Iterator<Item = WinResult<String>> {
-		HdropIter::new(self)
+		DropsIter::new(self)
 	}
 }
 
 //------------------------------------------------------------------------------
 
-struct HdropIter {
+struct DropsIter {
 	hdrop: HDROP,
 	first_pass: bool,
 	cur_index: u32,
@@ -90,13 +90,13 @@ struct HdropIter {
 	buf: WString,
 }
 
-impl Drop for HdropIter {
+impl Drop for DropsIter {
 	fn drop(&mut self) {
 		self.hdrop.DragFinish();
 	}
 }
 
-impl Iterator for HdropIter {
+impl Iterator for DropsIter {
 	type Item = WinResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -131,7 +131,7 @@ impl Iterator for HdropIter {
 	}
 }
 
-impl HdropIter {
+impl DropsIter {
 	fn new(hdrop: HDROP) -> Self {
 		Self {
 			hdrop,

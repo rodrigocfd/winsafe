@@ -1,5 +1,8 @@
 #![allow(non_snake_case)]
 
+use std::marker::PhantomData;
+use std::ptr::NonNull;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
@@ -10,28 +13,6 @@ pub_struct_handle_closeable! {
 	/// Handle to a process list
 	/// [snapshot](https://docs.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
 	/// Originally just a `HANDLE`.
-	///
-	/// # Examples
-	///
-	/// Listing the names of all processes currently running, along with their
-	/// process ID and number of execution threads:
-	///
-	/// ```rust,ignore
-	/// use winsafe::{co, HPROCESSLIST, PROCESSENTRY32};
-	///
-	/// let mut pe = PROCESSENTRY32::default();
-	/// let hpl = HPROCESSLIST::CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)?;
-	///
-	/// if hpl.Process32First(&mut pe)? {
-	///     loop {
-	///         println!("{} {} {}", pe.szExeFile(), pe.th32ProcessID, pe.cntThreads);
-	///         if !hpl.Process32Next(&mut pe)? {
-	///             break;
-	///         }
-	///     }
-	/// }
-	///
-	/// hpl.CloseHandle()?;
 	/// ```
 	HPROCESSLIST
 }
@@ -57,6 +38,9 @@ impl HPROCESSLIST {
 
 	/// [`Process32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw)
 	/// method.
+	///
+	/// Prefer using [`HPROCESSLIST::iter`](crate::HPROCESSLIST::iter), which is
+	/// simpler.
 	pub fn Process32First(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {
 			kernel32::Process32FirstW(self.ptr, pe as *mut _ as _)
@@ -71,6 +55,9 @@ impl HPROCESSLIST {
 
 	/// [`Process32Next`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw)
 	/// method.
+	///
+	/// Prefer using [`HPROCESSLIST::iter`](crate::HPROCESSLIST::iter), which is
+	/// simpler.
 	pub fn Process32Next(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {
 			kernel32::Process32NextW(self.ptr, pe as *mut _ as _)
@@ -80,6 +67,87 @@ impl HPROCESSLIST {
 				err => Err(err),
 			},
 			_ => Ok(true),
+		}
+	}
+
+	/// Returns an iterator over the processes list by calling
+	/// [`HPROCESSLIST::Process32First`](crate::HPROCESSLIST::Process32First)
+	/// and then
+	/// [`HPROCESSLIST::Process32Next`](crate::HPROCESSLIST::Process32Next)
+	/// consecutively.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::{co, HPROCESSLIST, PROCESSENTRY32};
+	///
+	/// let pe = PROCESSENTRY32::default();
+	/// let hpl = HPROCESSLIST::
+	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)?;
+	///
+	/// for ret in hpl.iter(&pe) {
+	///     ret?;
+	///     println!("{} {} {}",
+	///         pe.szExeFile(), pe.th32ProcessID, pe.cntThreads);
+	/// }
+	///
+	/// hpl.CloseHandle()?;
+	/// ```
+	pub fn iter<'a>(&'a self, pe32: &'a PROCESSENTRY32)
+		-> impl Iterator<Item = WinResult<()>> + 'a
+	{
+		ProcessIter::new(*self, pe32)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct ProcessIter<'a> {
+	hpl: HPROCESSLIST,
+	pe32: NonNull<PROCESSENTRY32>,
+	first_pass: bool,
+	has_more: bool,
+	pe32_: PhantomData<&'a PROCESSENTRY32>,
+}
+
+impl<'a> Iterator for ProcessIter<'a> {
+	type Item = WinResult<()>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if !self.has_more {
+			return None;
+		}
+
+		match if self.first_pass {
+			self.first_pass = false;
+			self.hpl.Process32First(unsafe { self.pe32.as_mut() })
+		} else {
+			self.hpl.Process32Next(unsafe { self.pe32.as_mut() })
+		} {
+			Err(e) => {
+				self.has_more = false; // no further iterations
+				Some(Err(e))
+			},
+			Ok(has_more) => {
+				self.has_more = has_more;
+				if has_more {
+					Some(Ok(()))
+				} else {
+					None // no process found
+				}
+			},
+		}
+	}
+}
+
+impl<'a> ProcessIter<'a> {
+	fn new(hpl: HPROCESSLIST, pe32: &'a PROCESSENTRY32) -> Self {
+		Self {
+			hpl,
+			pe32: NonNull::from(pe32),
+			first_pass: true,
+			has_more: true,
+			pe32_: PhantomData,
 		}
 	}
 }
