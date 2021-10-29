@@ -53,3 +53,7 @@ pub mod tbm;
 pub mod trbm;
 pub mod tvm;
 pub mod wm;
+
+pub(crate) mod prelude {
+	pub use super::message::{MsgSend, MsgSendRecv};
+}

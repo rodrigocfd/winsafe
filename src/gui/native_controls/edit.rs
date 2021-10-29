@@ -1,26 +1,23 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{EditEvents, EventsView};
+use crate::gui::events::{EditEvents, EventsView, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{
+	AsAny,
+	Child,
+	NativeControl,
+	NativeControlEvents,
+	Parent,
+	Window,
+};
+use crate::handles::HWND;
 use crate::msg::{em, wm};
 use crate::structs::{POINT, SIZE};
-
-struct Obj { // actual fields of Edit
-	base: BaseNativeControl,
-	opts_id: OptsId<EditOpts>,
-	events: EditEvents,
-}
-
-impl_obj_window!(Obj);
-impl_obj_child!(Obj);
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Native
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
@@ -28,66 +25,96 @@ impl_obj_nativecontrol!(Obj);
 #[derive(Clone)]
 pub struct Edit(Arc<Obj>);
 
-impl_send_sync!(Edit);
-impl_ctl_debug!(Edit);
+struct Obj { // actual fields of Edit
+	base: BaseNativeControl,
+	opts_id: OptsId<EditOpts>,
+	events: EditEvents,
+}
 
-impl_ctl_window!(Edit);
-impl_ctl_aswindow!(Edit);
-impl_ctl_child!(Edit);
-impl_ctl_nativecontrol!(Edit);
-impl_ctl_asnativecontrol!(Edit);
-impl_ctl_nativecontrolevents!(Edit, EditEvents);
-impl_ctl_focus!(Edit);
+unsafe impl Send for Edit {}
+
+impl AsAny for Edit {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for Edit {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for Edit {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
+		}
+	}
+}
+
+impl NativeControl for Edit {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
+
+impl NativeControlEvents<EditEvents> for Edit {
+	fn on(&self) -> &EditEvents {
+		if !self.0.base.hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !self.0.base.parent_base().hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &impl Parent, opts: EditOpts) -> Edit {
-		let parent_base_ref = baseref_from_parent(parent);
 		let opts = EditOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Wnd(opts),
-					events: EditEvents::new(parent_base_ref, ctrl_id),
+					events: EditEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
-
 		new_self
 	}
 
 	/// Instantiates a new `Edit` object, to be loaded from a dialog resource
 	/// with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent, ctrl_id: u16,
+		parent: &impl Parent,
+		ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> Edit
 	{
-		let parent_base_ref = baseref_from_parent(parent);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: EditEvents::new(parent_base_ref, ctrl_id),
+					events: EditEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm_init_dialog({
+		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
-
 		new_self
 	}
 
@@ -98,7 +125,7 @@ impl Edit {
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
 				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-				let our_hwnd = self.0.base.create_window( // may panic
+				let our_hwnd = self.0.base.create_window(
 					"EDIT", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
@@ -107,11 +134,10 @@ impl Edit {
 
 				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
 		}
 
-		self.0.base.parent_base_ref().resizer_add(
-			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
+		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
 	/// Sets the selection range of the text by sending an

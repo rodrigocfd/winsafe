@@ -1,26 +1,23 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{EventsView, TrackbarEvents};
+use crate::gui::events::{EventsView, TrackbarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{
+	AsAny,
+	Child,
+	NativeControl,
+	NativeControlEvents,
+	Parent,
+	Window,
+};
+use crate::handles::HWND;
 use crate::msg::trbm;
 use crate::structs::{POINT, SIZE};
-
-struct Obj { // actual fields of Trackbar
-	base: BaseNativeControl,
-	opts_id: OptsId<TrackbarOpts>,
-	events: TrackbarEvents,
-}
-
-impl_obj_window!(Obj);
-impl_obj_child!(Obj);
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Native
 /// [trackbar](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
@@ -28,66 +25,94 @@ impl_obj_nativecontrol!(Obj);
 #[derive(Clone)]
 pub struct Trackbar(Arc<Obj>);
 
-impl_send_sync!(Trackbar);
-impl_ctl_debug!(Trackbar);
+struct Obj { // actual fields of Trackbar
+	base: BaseNativeControl,
+	opts_id: OptsId<TrackbarOpts>,
+	events: TrackbarEvents,
+}
 
-impl_ctl_window!(Trackbar);
-impl_ctl_aswindow!(Trackbar);
-impl_ctl_child!(Trackbar);
-impl_ctl_nativecontrol!(Trackbar);
-impl_ctl_asnativecontrol!(Trackbar);
-impl_ctl_nativecontrolevents!(Trackbar, TrackbarEvents);
-impl_ctl_focus!(Trackbar);
+impl AsAny for Trackbar {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for Trackbar {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for Trackbar {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
+		}
+	}
+}
+
+impl NativeControl for Trackbar {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
+
+impl NativeControlEvents<TrackbarEvents> for Trackbar {
+	fn on(&self) -> &TrackbarEvents {
+		if !self.hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !self.0.base.parent_base().hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &impl Parent, opts: TrackbarOpts) -> Trackbar {
-		let parent_base_ref = baseref_from_parent(parent);
 		let opts = TrackbarOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Wnd(opts),
-					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
+					events: TrackbarEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
-
 		new_self
 	}
 
 	/// Instantiates a new `Trackbar` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent, ctrl_id: u16,
+		parent: &impl Parent,
+		ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> Trackbar
 	{
-		let parent_base_ref = baseref_from_parent(parent);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
+					events: TrackbarEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm_init_dialog({
+		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
-
 		new_self
 	}
 
@@ -112,8 +137,7 @@ impl Trackbar {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
 		}
 
-		self.0.base.parent_base_ref().resizer_add(
-			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
+		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
 	/// Retrieves the current position by sending a

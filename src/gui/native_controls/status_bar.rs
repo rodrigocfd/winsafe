@@ -1,36 +1,25 @@
+use std::any::Any;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{EventsView, StatusBarEvents};
+use crate::gui::events::{EventsView, StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{
+	AsAny,
+	Child,
+	NativeControl,
+	NativeControlEvents,
+	Parent,
+	Window,
+};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
+use crate::handles::HWND;
 use crate::msg::{MsgSend, sb, wm};
 use crate::structs::{POINT, SIZE};
-
-struct Obj { // actual fields of StatusBar
-	base: BaseNativeControl,
-	ctrl_id: u16,
-	events: StatusBarEvents,
-	parts_info: VeryUnsafeCell<Vec<StatusBarPart>>,
-	right_edges: VeryUnsafeCell<Vec<i32>>, // buffer to speed up resize calls
-}
-
-impl_obj_window!(Obj);
-
-impl Child for Obj {
-	fn ctrl_id(&self) -> u16 {
-		self.ctrl_id
-	}
-}
-
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Used when adding the parts in
 /// [`StatusBar::new`](crate::gui::StatusBar::new).
@@ -61,15 +50,50 @@ pub enum StatusBarPart {
 #[derive(Clone)]
 pub struct StatusBar(Arc<Obj>);
 
-impl_send_sync!(StatusBar);
-impl_ctl_debug!(StatusBar);
+struct Obj { // actual fields of StatusBar
+	base: BaseNativeControl,
+	ctrl_id: u16,
+	events: StatusBarEvents,
+	parts_info: VeryUnsafeCell<Vec<StatusBarPart>>,
+	right_edges: VeryUnsafeCell<Vec<i32>>, // buffer to speed up resize calls
+}
 
-impl_ctl_window!(StatusBar);
-impl_ctl_aswindow!(StatusBar);
-impl_ctl_child!(StatusBar);
-impl_ctl_nativecontrol!(StatusBar);
-impl_ctl_asnativecontrol!(StatusBar);
-impl_ctl_nativecontrolevents!(StatusBar, StatusBarEvents);
+unsafe impl Send for StatusBar {}
+
+impl AsAny for StatusBar {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for StatusBar {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for StatusBar {
+	fn ctrl_id(&self) -> u16 {
+		self.0.ctrl_id
+	}
+}
+
+impl NativeControl for StatusBar {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
+
+impl NativeControlEvents<StatusBarEvents> for StatusBar {
+	fn on(&self) -> &StatusBarEvents {
+		if !self.hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !self.0.base.parent_base().hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
@@ -90,30 +114,27 @@ impl StatusBar {
 	/// ]);
 	/// ```
 	pub fn new(parent: &impl Parent, parts: &[StatusBarPart]) -> StatusBar {
-		let parent_base_ref = baseref_from_parent(parent);
 		let ctrl_id = auto_ctrl_id();
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					ctrl_id,
-					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
+					events: StatusBarEvents::new(parent.as_base(), ctrl_id),
 					parts_info: VeryUnsafeCell::new(parts.to_vec()),
 					right_edges: VeryUnsafeCell::new(vec![0; parts.len()]),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
 			move |_| { self2.create()?; Ok(0) }
 		});
-		parent_base_ref.privileged_events_ref().wm_size({
+		parent.as_base().privileged_on().wm_size({
 			let self2 = new_self.clone();
 			move |p| { self2.resize(&p)?; Ok(()) }
 		});
-
 		new_self
 	}
 
@@ -126,7 +147,7 @@ impl StatusBar {
 			}
 		}
 
-		let hparent = *self.0.base.parent_base_ref().hwnd_ref();
+		let hparent = self.0.base.parent_base().hwnd();
 		let parent_style = co::WS(
 			hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
 		);

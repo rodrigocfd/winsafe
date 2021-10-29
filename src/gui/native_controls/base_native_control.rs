@@ -6,7 +6,6 @@ use crate::enums::{AtomStr, IdMenu};
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
-use crate::gui::traits::Window;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::HWND;
 use crate::msg::WndMsg;
@@ -27,48 +26,36 @@ pub enum OptsId<Op> {
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.
-pub(in crate::gui) struct BaseNativeControl(VeryUnsafeCell<Obj>);
-
-struct Obj { // actual fields of BaseNativeControl
-	hwnd: HWND,
+pub(in crate::gui) struct BaseNativeControl {
+	hwnd: VeryUnsafeCell<HWND>,
 	parent_ptr: NonNull<Base>,
 	subclass_events: WindowEvents, // for control subclassing
 }
 
-impl Window for BaseNativeControl {
-	fn hwnd(&self) -> HWND {
-		self.0.hwnd
-	}
-}
-
 impl BaseNativeControl {
-	pub(in crate::gui) fn new(parent_base_ref: &Base) -> BaseNativeControl {
-		Self(
-			VeryUnsafeCell::new(
-				Obj {
-					hwnd: HWND::NULL,
-					parent_ptr: NonNull::from(parent_base_ref),
-					subclass_events: WindowEvents::new(),
-				},
-			),
-		)
+	pub(in crate::gui) fn new(parent_base: &Base) -> Self {
+		Self {
+			hwnd: VeryUnsafeCell::new(HWND::NULL),
+			parent_ptr: NonNull::from(parent_base),
+			subclass_events: WindowEvents::new(),
+		}
 	}
 
-	pub(in crate::gui) fn hwnd_ref(&self) -> &HWND {
-		&self.0.hwnd
+	pub(in crate::gui) fn hwnd(&self) -> HWND {
+		*self.hwnd
 	}
 
-	pub(in crate::gui) fn parent_base_ref(&self) -> &Base {
-		unsafe { self.0.parent_ptr.as_ref() }
+	pub(in crate::gui) fn parent_base(&self) -> &Base {
+		unsafe { self.parent_ptr.as_ref() }
 	}
 
 	pub(in crate::gui) fn on_subclass(&self) -> &WindowEvents {
-		if !self.0.hwnd.is_null() {
-			panic!("Cannot add subclass events after the control is created.");
-		} else if !self.parent_base_ref().hwnd_ref().is_null() {
-			panic!("Cannot add subclass events after the parent window is created.");
+		if !self.hwnd.is_null() {
+			panic!("Cannot add subclass events after control creation.");
+		} else if !self.parent_base().hwnd().is_null() {
+			panic!("Cannot add subclass events after parent window creation.");
 		}
-		&self.0.subclass_events
+		&self.subclass_events
 	}
 
 	pub(in crate::gui) fn create_window(
@@ -81,15 +68,15 @@ impl BaseNativeControl {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> WinResult<HWND>
 	{
-		let hparent = *self.parent_base_ref().hwnd_ref();
+		let hparent = self.parent_base().hwnd();
 
-		if !self.0.hwnd.is_null() {
+		if !self.hwnd.is_null() {
 			panic!("Cannot create control twice.");
 		} else if hparent.is_null() {
-			panic!("Cannot create control before parent window is created.");
+			panic!("Cannot create control before parent window creation.");
 		}
 
-		self.0.as_mut().hwnd = HWND::CreateWindowEx(
+		*self.hwnd.as_mut() = HWND::CreateWindowEx(
 			ex_styles,
 			AtomStr::from_str(class_name),
 			title, styles,
@@ -101,35 +88,35 @@ impl BaseNativeControl {
 		)?;
 
 		self.install_subclass_if_needed()?;
-		Ok(self.0.hwnd)
+		Ok(*self.hwnd)
 	}
 
 	pub(in crate::gui) fn create_dlg(&self, ctrl_id: u16) -> WinResult<HWND> {
-		if self.parent_base_ref().create_or_initdlg() != co::WM::INITDIALOG {
+		if self.parent_base().wmcreate_or_wminitdialog() != co::WM::INITDIALOG {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
 
-		let hparent = *self.parent_base_ref().hwnd_ref();
+		let hparent = self.parent_base().hwnd();
 
-		if !self.0.hwnd.is_null() {
+		if !self.hwnd.is_null() {
 			panic!("Cannot create control twice.");
 		} else if hparent.is_null() {
-			panic!("Cannot create control before parent window is created.");
+			panic!("Cannot create control before parent window creation.");
 		}
 
-		self.0.as_mut().hwnd = hparent.GetDlgItem(ctrl_id)?;
+		*self.hwnd.as_mut() = hparent.GetDlgItem(ctrl_id)?;
 		self.install_subclass_if_needed()?;
-		Ok(self.0.hwnd)
+		Ok(*self.hwnd)
 	}
 
 	fn install_subclass_if_needed(&self) -> WinResult<()> {
-		if !self.0.subclass_events.is_empty() {
+		if !self.subclass_events.is_empty() {
 			let subclass_id = unsafe {
 				BASE_SUBCLASS_ID += 1;
 				BASE_SUBCLASS_ID
 			};
 
-			self.0.hwnd.SetWindowSubclass(
+			self.hwnd.SetWindowSubclass(
 				Self::subclass_proc, subclass_id,
 				self as *const _ as _, // pass pointer to self
 			)
@@ -156,8 +143,8 @@ impl BaseNativeControl {
 
 		if !ptr_self.is_null() {
 			let ref_self = unsafe { &mut *ptr_self };
-			if !ref_self.0.hwnd.is_null() {
-				process_result = ref_self.0.subclass_events.process_one_message(wm_any)?;
+			if !ref_self.hwnd.is_null() {
+				process_result = ref_self.subclass_events.process_one_message(wm_any)?;
 			}
 		}
 

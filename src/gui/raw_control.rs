@@ -1,113 +1,64 @@
 use std::ptr::NonNull;
 use std::sync::Arc;
 
-use crate::aliases::ErrResult;
 use crate::co;
 use crate::enums::IdMenu;
 use crate::gui::base::Base;
-use crate::gui::events::{EventsView, WindowEventsAll};
+use crate::gui::events::EventsView;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{AsWindow, Child, ParentEvents, UiThread, Window};
 use crate::handles::{HBRUSH, HCURSOR, HICON};
-use crate::handles::HWND;
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
-struct Obj { // actual fields of RawControl
-	base: RawBase,
-	opts: WindowControlOpts,
-}
-
-impl Window for Obj {
-	fn hwnd(&self) -> HWND {
-		self.base.hwnd()
-	}
-}
-
-//------------------------------------------------------------------------------
-
+/// A WindowControl with a raw window.
 #[derive(Clone)]
-pub(in crate::gui) struct RawControl(Arc<Obj>);
+pub(in crate::gui) struct RawControl(pub(in crate::gui) Arc<Obj>);
 
-impl Window for RawControl {
-	fn hwnd(&self) -> HWND {
-		self.0.base.hwnd()
-	}
-}
-
-impl AsWindow for RawControl {
-	fn as_window(&self) -> Arc<dyn Window> {
-		self.0.clone()
-	}
-}
-
-impl UiThread for RawControl {
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.0.base.run_ui_thread(func);
-	}
-}
-
-impl ParentEvents for RawControl {
-	fn on(&self) -> &WindowEventsAll {
-		self.0.base.on()
-	}
-}
-
-impl Child for RawControl {
-	fn ctrl_id(&self) -> u16 {
-		self.0.opts.ctrl_id
-	}
+pub(in crate::gui) struct Obj { // actual fields of RawControl
+	pub(in crate::gui) raw_base: RawBase,
+	pub(in crate::gui) opts: WindowControlOpts,
 }
 
 impl RawControl {
 	pub(in crate::gui) fn new(
-		parent_base_ref: &Base, opts: WindowControlOpts) -> RawControl
+		parent_base: &Base,
+		opts: WindowControlOpts) -> Self
 	{
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
-
-		let wnd = Self(
-			Arc::new(
-				Obj {
-					base: RawBase::new(Some(parent_base_ref)),
-					opts,
-				},
-			),
-		);
-		wnd.default_message_handlers(parent_base_ref, horz, vert);
-		wnd
-	}
-
-	pub(in crate::gui) fn base_ref(&self) -> &Base {
-		self.0.base.base_ref()
+		let new_self = Self(Arc::new(
+			Obj {
+				raw_base: RawBase::new(Some(parent_base)),
+				opts,
+			},
+		));
+		new_self.default_message_handlers(parent_base, horz, vert);
+		new_self
 	}
 
 	fn default_message_handlers(&self,
-		parent_base_ref: &Base, horz: Horz, vert: Vert)
+		parent_base: &Base, horz: Horz, vert: Vert)
 	{
-		self.base_ref().default_message_handlers();
-
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent_base.privileged_on().wm(parent_base.wmcreate_or_wminitdialog(), {
 			let self2 = self.clone();
-			let parent_base_ptr = NonNull::from(parent_base_ref);
+			let parent_base_ptr = NonNull::from(parent_base);
 			move |_| {
 				let opts = &self2.0.opts;
 
 				let mut wcx = WNDCLASSEX::default();
 				let mut class_name_buf = WString::default();
-				RawBase::fill_wndclassex(self2.base_ref().parent_hinstance()?,
+				RawBase::fill_wndclassex(
+					self2.0.raw_base.base.parent_base().unwrap().hwnd().hinstance(),
 					opts.class_style, opts.class_icon, opts.class_icon,
 					opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
-				let atom = self2.0.base.register_class(&mut wcx)?;
+				let atom = self2.0.raw_base.register_class(&mut wcx)?;
 
 				let mut wnd_pos = opts.position;
 				let mut wnd_sz = opts.size;
 				multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
-				self2.0.base.create_window( // may panic
+				self2.0.raw_base.create_window(
 					atom,
 					None,
 					IdMenu::Id(opts.ctrl_id),
@@ -116,20 +67,18 @@ impl RawControl {
 				)?;
 
 				unsafe {
-					parent_base_ptr.as_ref().resizer_add(
-						parent_base_ptr.as_ref(), self2.base_ref().hwnd_ref(), horz, vert)?;
+					parent_base_ptr.as_ref().add_to_resizer(
+						self2.0.raw_base.base.hwnd(), horz, vert)?;
 				}
 
 				Ok(0)
 			}
 		});
 
-		self.on().wm_nc_paint({
+		self.0.raw_base.base.on().wm_nc_paint({
 			let self2 = self.clone();
-			move |p| {
-				paint_control_borders(*self2.base_ref().hwnd_ref(), p)?;
-				Ok(())
-			}
+			move |p| paint_control_borders(self2.0.raw_base.base.hwnd(), p)
+				.map_err(|e| e.into())
 		});
 	}
 }

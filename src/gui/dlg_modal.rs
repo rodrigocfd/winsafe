@@ -1,87 +1,45 @@
 use std::sync::Arc;
 
-use crate::aliases::{ErrResult, WinResult};
+use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::{EventsView, WindowEventsAll};
-use crate::gui::traits::{AsWindow, ParentEvents, UiThread, Window};
-use crate::handles::HWND;
+use crate::gui::events::EventsView;
 use crate::structs::{POINT, SIZE};
 
-struct Obj { // actual fields of DlgModal
-	base: DlgBase,
-}
-
-impl Window for Obj {
-	fn hwnd(&self) -> HWND {
-		self.base.hwnd()
-	}
-}
-
-//------------------------------------------------------------------------------
-
+/// A WindowModal with a dialog window.
 #[derive(Clone)]
-pub(in crate::gui) struct DlgModal(Arc<Obj>);
+pub(in crate::gui) struct DlgModal(pub(in crate::gui) Arc<Obj>);
 
-impl Window for DlgModal {
-	fn hwnd(&self) -> HWND {
-		self.0.hwnd()
-	}
-}
-
-impl AsWindow for DlgModal {
-	fn as_window(&self) -> Arc<dyn Window> {
-		self.0.clone()
-	}
-}
-
-impl UiThread for DlgModal {
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.0.base.run_ui_thread(func);
-	}
-}
-
-impl ParentEvents for DlgModal {
-	fn on(&self) -> &WindowEventsAll {
-		self.0.base.on()
-	}
+pub(in crate::gui) struct Obj { // actual fields of DlgModal
+	pub(in crate::gui) dlg_base: DlgBase,
 }
 
 impl DlgModal {
 	pub(in crate::gui) fn new(
-		parent_base_ref: &Base, dialog_id: u16) -> DlgModal
+		parent_base: &Base,
+		dialog_id: u16) -> DlgModal
 	{
-		let dlg = Self(
-			Arc::new(
-				Obj {
-					base: DlgBase::new(Some(parent_base_ref), dialog_id),
-				},
-			),
-		);
+		let dlg = Self(Arc::new(
+			Obj {
+				dlg_base: DlgBase::new(Some(parent_base), dialog_id),
+			},
+		));
 		dlg.default_message_handlers();
 		dlg
 	}
 
-	pub(in crate::gui) fn base_ref(&self) -> &Base {
-		self.0.base.base_ref()
-	}
-
 	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {
-		self.0.base.dialog_box_param()
+		self.0.dlg_base.dialog_box_param()
 	}
 
 	fn default_message_handlers(&self) {
-		self.base_ref().default_message_handlers();
-
-		self.base_ref().privileged_events_ref().wm_init_dialog({
+		self.0.dlg_base.base.privileged_on().wm_init_dialog({
 			let self2 = self.clone();
 			move |_| {
 				// Center modal on parent.
-				let hwnd = *self2.base_ref().hwnd_ref();
+				let hwnd = self2.0.dlg_base.base.hwnd();
 				let rc = hwnd.GetWindowRect()?;
 				let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 				hwnd.SetWindowPos(
@@ -97,13 +55,11 @@ impl DlgModal {
 			}
 		});
 
-		self.on().wm_close({
+		self.0.dlg_base.base.on().wm_close({
 			let self2 = self.clone();
-			move || {
-				self2.base_ref().hwnd_ref()
-					.EndDialog(co::DLGID::CANCEL.0 as _)?;
-				Ok(())
-			}
+			move || self2.0.dlg_base.base.hwnd()
+				.EndDialog(co::DLGID::CANCEL.0 as _)
+				.map_err(|e| e.into())
 		});
 	}
 }

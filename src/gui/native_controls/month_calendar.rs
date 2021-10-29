@@ -1,27 +1,24 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::gui::events::{EventsView, MonthCalendarEvents};
+use crate::gui::events::{EventsView, MonthCalendarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{
+	AsAny,
+	Child,
+	NativeControl,
+	NativeControlEvents,
+	Parent,
+	Window,
+};
+use crate::handles::HWND;
 use crate::msg::mcm;
 use crate::structs::{POINT, RECT, SIZE, SYSTEMTIME};
-
-struct Obj { // actual fields of MonthCalendar
-	base: BaseNativeControl,
-	opts_id: OptsId<MonthCalendarOpts>,
-	events: MonthCalendarEvents,
-}
-
-impl_obj_window!(Obj);
-impl_obj_child!(Obj);
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Native
 /// [month calendar](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
@@ -29,66 +26,96 @@ impl_obj_nativecontrol!(Obj);
 #[derive(Clone)]
 pub struct MonthCalendar(Arc<Obj>);
 
-impl_send_sync!(MonthCalendar);
-impl_ctl_debug!(MonthCalendar);
+struct Obj { // actual fields of MonthCalendar
+	base: BaseNativeControl,
+	opts_id: OptsId<MonthCalendarOpts>,
+	events: MonthCalendarEvents,
+}
 
-impl_ctl_window!(MonthCalendar);
-impl_ctl_aswindow!(MonthCalendar);
-impl_ctl_child!(MonthCalendar);
-impl_ctl_nativecontrol!(MonthCalendar);
-impl_ctl_asnativecontrol!(MonthCalendar);
-impl_ctl_nativecontrolevents!(MonthCalendar, MonthCalendarEvents);
-impl_ctl_focus!(MonthCalendar);
+unsafe impl Send for MonthCalendar {}
+
+impl AsAny for MonthCalendar {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for MonthCalendar {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for MonthCalendar {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
+		}
+	}
+}
+
+impl NativeControl for MonthCalendar {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
+
+impl NativeControlEvents<MonthCalendarEvents> for MonthCalendar {
+	fn on(&self) -> &MonthCalendarEvents {
+		if !self.0.base.hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !self.0.base.parent_base().hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent
 	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &impl Parent, opts: MonthCalendarOpts) -> MonthCalendar {
-		let parent_base_ref = baseref_from_parent(parent);
 		let opts = MonthCalendarOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Wnd(opts),
-					events: MonthCalendarEvents::new(parent_base_ref, ctrl_id),
+					events: MonthCalendarEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
-
 		new_self
 	}
 
 	/// Instantiates a new `MonthCalendar` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent, ctrl_id: u16,
+		parent: &impl Parent,
+		ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> MonthCalendar
 	{
-		let parent_base_ref = baseref_from_parent(parent);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: MonthCalendarEvents::new(parent_base_ref, ctrl_id),
+					events: MonthCalendarEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm_init_dialog({
+		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
-
 		new_self
 	}
 
@@ -104,7 +131,7 @@ impl MonthCalendar {
 				let mut pos = opts.position;
 				multiply_dpi(Some(&mut pos), None)?;
 
-				let our_hwnd = self.0.base.create_window( // may panic
+				let our_hwnd = self.0.base.create_window(
 					"SysMonthCal32", None, pos, SIZE::new(0, 0),
 					opts.ctrl_id,
 					opts.window_ex_style,
@@ -119,11 +146,10 @@ impl MonthCalendar {
 					SIZE::new(bounding_rect.right, bounding_rect.bottom),
 					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
 		}
 
-		self.0.base.parent_base_ref().resizer_add(
-			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
+		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
 	/// Retrieves the currently selected date by sending a

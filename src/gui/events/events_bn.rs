@@ -16,8 +16,8 @@ use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 pub struct ButtonEvents(BaseEventsProxy);
 
 impl ButtonEvents {
-	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
-		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	pub(in crate::gui) fn new(parent_base: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
 	pub_fn_nfy_ret0_param! { bcn_drop_down, co::BCN::DROPDOWN.into(), NMBCDROPDOWN,

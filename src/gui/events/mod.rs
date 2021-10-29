@@ -1,8 +1,3 @@
-//! Structs which expose the event methods of windows and controls.
-//!
-//! You cannot directly instantiate these objects, they are created internally
-//! by the controls.
-
 #[macro_use] mod macros;
 
 mod base_events_proxy;
@@ -34,11 +29,10 @@ pub use events_sbn::StatusBarEvents;
 pub use events_stn::LabelEvents;
 pub use events_trbn::TrackbarEvents;
 pub use events_tvn::TreeViewEvents;
-pub use events_wm::WindowEvents;
 pub use events_wm_nfy::WindowEventsAll;
-pub(in crate::gui) use events_wm::*;
+pub use events_wm::WindowEvents;
 pub(in crate::gui) use events_wm_nfy::*;
-pub(in crate::gui) use func_store::FuncStore;
+pub(in crate::gui) use events_wm::*;
 
 pub mod prelude {
 	pub use super::events_wm::EventsView;

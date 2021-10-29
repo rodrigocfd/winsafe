@@ -1,13 +1,15 @@
 use std::ops::Index;
+use std::ptr::NonNull;
 use std::rc::Rc;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::{RadioButton, RadioButtonOpts};
+use crate::gui::base::Base;
 use crate::gui::events::{EventsView, RadioGroupEvents};
+use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{Child, NativeControlEvents, Parent, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
@@ -15,11 +17,10 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 pub struct RadioGroup(Arc<Obj>);
 
 struct Obj { // actual fields of RadioGroup
+	parent_ptr: NonNull<Base>,
 	radios: VeryUnsafeCell<Vec<RadioButton>>,
-	parent_events: RadioGroupEvents,
+	events: RadioGroupEvents,
 }
-
-impl_send_sync!(RadioGroup);
 
 impl std::fmt::Debug for RadioGroup {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -43,6 +44,17 @@ impl Index<usize> for RadioGroup {
 	}
 }
 
+impl NativeControlEvents<RadioGroupEvents> for RadioGroup {
+	fn on(&self) -> &RadioGroupEvents {
+		if !self.index(0).hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !unsafe { self.0.parent_ptr.as_ref() }.hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
+
 impl RadioGroup {
 	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be created
 	/// on the parent window with
@@ -56,15 +68,15 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_base_ref = baseref_from_parent(parent);
-
-		let radios = opts.iter().enumerate().map(|(i, opt)| {
-			let mut radio_opt = opt.manual_clone();
-			if i == 0 { // first radio?
-				radio_opt.window_style |= co::WS::TABSTOP | co::WS::GROUP;
-			}
-			RadioButton::new(parent, radio_opt)
-		}).collect::<Vec<_>>();
+		let radios = opts.iter().enumerate()
+			.map(|(i, opt)| {
+				let mut radio_opt = opt.manual_clone();
+				if i == 0 { // first radio?
+					radio_opt.window_style |= co::WS::TABSTOP | co::WS::GROUP;
+				}
+				RadioButton::new(parent, radio_opt)
+			})
+			.collect::<Vec<_>>();
 
 		let ctrl_ids = opts.iter().map(|opt| opt.ctrl_id).collect::<Vec<_>>();
 		let horz_verts = Rc::new(opts.iter().map(|opt| (opt.horz_resize, opt.vert_resize)).collect::<Vec<_>>());
@@ -72,18 +84,18 @@ impl RadioGroup {
 		let new_self = Self(
 			Arc::new(
 				Obj {
+					parent_ptr: NonNull::from(parent.as_base()),
 					radios: VeryUnsafeCell::new(radios),
-					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
+					events: RadioGroupEvents::new(parent.as_base(), ctrl_ids),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let me = new_self.clone();
 			let horz_verts = horz_verts.clone();
 			move |_| { me.create(horz_verts.as_ref())?; Ok(0) }
 		});
-
 		new_self
 	}
 
@@ -98,27 +110,28 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_base_ref = baseref_from_parent(parent);
+		let radios = ctrls.iter()
+			.map(|(ctrl_id, _, _)| RadioButton::new_dlg(parent, *ctrl_id))
+			.collect::<Vec<_>>();
 
-		let radios = ctrls.iter().map(|(ctrl_id, _, _)| RadioButton::new_dlg(parent, *ctrl_id)).collect::<Vec<_>>();
 		let ctrl_ids = ctrls.iter().map(|(ctrl_id, _, _)| *ctrl_id).collect::<Vec<_>>();
 		let horz_verts = Rc::new(ctrls.iter().map(|(_, horz, vert)| (*horz, *vert)).collect::<Vec<_>>());
 
 		let new_self = Self(
 			Arc::new(
 				Obj {
+					parent_ptr: NonNull::from(parent.as_base()),
 					radios: VeryUnsafeCell::new(radios),
-					parent_events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
+					events: RadioGroupEvents::new(parent.as_base(), ctrl_ids),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm_init_dialog({
+		parent.as_base().privileged_on().wm_init_dialog({
 			let me = new_self.clone();
 			let horz_verts = horz_verts.clone();
 			move |_| { me.create(horz_verts.as_ref())?; Ok(true) }
 		});
-
 		new_self
 	}
 
@@ -127,27 +140,6 @@ impl RadioGroup {
 			radio.create(horz_vert[i].0, horz_vert[i].1)?;
 		}
 		Ok(())
-	}
-
-	/// Exposes the radio group events.
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window,
-	/// who is the real responsible for the child event handling.
-	///
-	/// # Panics
-	///
-	/// Panics if the control or the parent window are already created. Events
-	/// must be set before control and parent window creation.
-	pub fn on(&self) -> &RadioGroupEvents {
-		let first_radio = self.index(0);
-
-		if !first_radio.hwnd().is_null() {
-			panic!("Cannot add events after the control is created.");
-		} else if !first_radio.parent_hwnd_ref().is_null() {
-			panic!("Cannot add events after the parent window is created.");
-		}
-		&self.0.parent_events
 	}
 
 	/// Returns an iterator over the internal

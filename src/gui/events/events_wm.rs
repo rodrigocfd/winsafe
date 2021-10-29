@@ -1,7 +1,6 @@
 use crate::aliases::ErrResult;
 use crate::co;
-use crate::gui::events::FuncStore;
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
+use crate::gui::events::func_store::FuncStore;
 use crate::handles::{HBRUSH, HFONT, HICON, HMENU};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
@@ -22,9 +21,7 @@ pub(in crate::gui) enum ProcessResult {
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
-pub struct WindowEvents(VeryUnsafeCell<Obj>);
-
-struct Obj { // actual fields of WindowEvents
+pub struct WindowEvents {
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
 		Box<dyn Fn(WndMsg) -> ErrResult<Option<isize>>>, // return value may be meaningful
@@ -33,17 +30,13 @@ struct Obj { // actual fields of WindowEvents
 
 impl WindowEvents {
 	pub(in crate::gui) fn new() -> Self {
-		Self(
-			VeryUnsafeCell::new(
-				Obj {
-					msgs: FuncStore::new(),
-				},
-			),
-		)
+		Self {
+			msgs: FuncStore::new(),
+		}
 	}
 
 	pub(in crate::gui) fn is_empty(&self) -> bool {
-		self.0.msgs.is_empty()
+		self.msgs.is_empty()
 	}
 
 	/// Searches for the last added user function for the given message, and
@@ -51,7 +44,7 @@ impl WindowEvents {
 	pub(in crate::gui) fn process_one_message(&self,
 		wm_any: WndMsg) -> ErrResult<ProcessResult>
 	{
-		Ok(match self.0.msgs.find(wm_any.msg_id) {
+		Ok(match self.msgs.find(wm_any.msg_id) {
 			Some(func) => { // we have a stored function to handle this message
 				match func(wm_any)? { // execute user function
 					Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -65,7 +58,7 @@ impl WindowEvents {
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
 	pub(in crate::gui) fn process_all_messages(&self, wm_any: WndMsg) -> ErrResult<()> {
-		for func in self.0.msgs.find_all(wm_any.msg_id) {
+		for func in self.msgs.find_all(wm_any.msg_id) {
 			func(wm_any)?; // execute stored function
 		}
 		Ok(())
@@ -78,7 +71,7 @@ impl sealed_events_wm::SealedEventsWm for WindowEvents {
 	fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
 	{
-		self.0.as_mut().msgs.insert(ident, Box::new(func));
+		self.msgs.insert(ident, Box::new(func));
 	}
 }
 

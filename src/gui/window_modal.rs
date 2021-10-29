@@ -1,19 +1,20 @@
+use std::any::Any;
+
 use crate::aliases::{ErrResult, WinResult};
 use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEventsAll;
-use crate::gui::raw_modal::{WindowModalOpts, RawModal};
-use crate::gui::traits::{
-	ParentEvents,
-	baseref_from_parent,
-	Parent,
-	UiThread,
-	Window,
-};
+use crate::gui::raw_modal::{RawModal, WindowModalOpts};
+use crate::gui::resizer::{Horz, Vert};
+use crate::gui::traits::{AsAny, Modal, Parent, UiThread, Window};
+use crate::gui::traits_sealed::{SealedBase, SealedParent};
 use crate::handles::HWND;
 
+/// Keeps a raw or dialog window.
 #[derive(Clone)]
 enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
+
+//------------------------------------------------------------------------------
 
 /// An user modal window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
@@ -22,14 +23,59 @@ pub struct WindowModal {
 	raw_dlg: RawDlg,
 }
 
-impl_send_sync!(WindowModal);
-impl_debug!(WindowModal);
-impl_parent!(WindowModal);
+unsafe impl Send for WindowModal {}
 
-impl_window!(WindowModal);
-impl_aswindow!(WindowModal);
-impl_uithread!(WindowModal);
-impl_parentevents!(WindowModal);
+impl AsAny for WindowModal {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for WindowModal {
+	fn hwnd(&self) -> HWND {
+		self.as_base().hwnd()
+	}
+}
+
+impl SealedBase for WindowModal {
+	fn as_base(&self) -> &Base {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => &r.0.raw_base.base,
+			RawDlg::Dlg(d) => &d.0.dlg_base.base,
+		}
+	}
+}
+
+impl SealedParent for WindowModal {
+	fn add_to_resizer(&self,
+		hchild: HWND, horz: Horz, vert: Vert) -> WinResult<()>
+	{
+		self.as_base().add_to_resizer(hchild, horz, vert)
+	}
+}
+
+impl Parent for WindowModal {
+	fn on(&self) -> &WindowEventsAll {
+		self.as_base().on()
+	}
+}
+
+impl Modal for WindowModal {
+	fn show_modal(&self) -> WinResult<i32> {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.show_modal(),
+			RawDlg::Dlg(d) => d.show_modal(),
+		}
+	}
+}
+
+impl UiThread for WindowModal {
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()>,
+	{
+		self.as_base().run_ui_thread(func);
+	}
+}
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with
@@ -37,7 +83,7 @@ impl WindowModal {
 	pub fn new(parent: &impl Parent, opts: WindowModalOpts) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Raw(
-				RawModal::new(baseref_from_parent(parent), opts),
+				RawModal::new(parent.as_base(), opts),
 			),
 		}
 	}
@@ -47,23 +93,8 @@ impl WindowModal {
 	pub fn new_dlg(parent: &impl Parent, dialog_id: u16) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Dlg(
-				DlgModal::new(baseref_from_parent(parent), dialog_id),
+				DlgModal::new(parent.as_base(), dialog_id),
 			),
-		}
-	}
-
-	fn_base_ref!();
-
-	/// Physically creates the window, then runs the modal loop. This method
-	/// will block until the window is closed.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created.
-	pub fn show_modal(&self) -> WinResult<i32> {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.show_modal(),
-			RawDlg::Dlg(d) => d.show_modal(),
 		}
 	}
 }

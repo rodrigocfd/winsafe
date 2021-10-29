@@ -2,11 +2,11 @@ use std::rc::Rc;
 
 use crate::aliases::ErrResult;
 use crate::co;
-use crate::gui::events::{
+use crate::gui::events::func_store::FuncStore;
+use crate::gui::events::events_wm::{
 	EventsView,
-	FuncStore,
 	ProcessResult,
-	sealed_events_wm,
+	sealed_events_wm::SealedEventsWm,
 	WindowEvents,
 };
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
@@ -18,9 +18,7 @@ use crate::msg::{MsgSendRecv, wm, WndMsg};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
-pub struct WindowEventsAll(VeryUnsafeCell<Obj>);
-
-struct Obj { // actual fields of WindowEvents All
+pub struct WindowEventsAll {
 	events_wm: WindowEvents,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
@@ -38,16 +36,12 @@ struct Obj { // actual fields of WindowEvents All
 
 impl WindowEventsAll {
 	pub(in crate::gui) fn new() -> Self {
-		Self(
-			VeryUnsafeCell::new(
-				Obj {
-					events_wm: WindowEvents::new(),
-					tmrs: FuncStore::new(),
-					cmds: FuncStore::new(),
-					nfys: FuncStore::new(),
-				},
-			),
-		)
+		Self {
+			events_wm: WindowEvents::new(),
+			tmrs: FuncStore::new(),
+			cmds: FuncStore::new(),
+			nfys: FuncStore::new(),
+		}
 	}
 
 	/// Searches for the last added user function for the given message, and
@@ -59,7 +53,7 @@ impl WindowEventsAll {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				match self.0.nfys.find(key) {
+				match self.nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy)? { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -72,7 +66,7 @@ impl WindowEventsAll {
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = wm_cmd.event.code_id();
-				match self.0.cmds.find(key) {
+				match self.cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func()?; // execute user function
 						ProcessResult::HandledWithoutRet
@@ -82,7 +76,7 @@ impl WindowEventsAll {
 			},
 			co::WM::TIMER => {
 				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				match self.0.tmrs.find(wm_tmr.timer_id) {
+				match self.tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func()?; // execute user function
 						ProcessResult::HandledWithoutRet
@@ -90,7 +84,7 @@ impl WindowEventsAll {
 					None => ProcessResult::NotHandled, // no stored WM_TIMER message
 				}
 			}
-			_ => self.0.events_wm.process_one_message(wm_any)?,
+			_ => self.events_wm.process_one_message(wm_any)?,
 		})
 	}
 
@@ -101,24 +95,24 @@ impl WindowEventsAll {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				for func in self.0.nfys.find_all(key) {
+				for func in self.nfys.find_all(key) {
 					func(wm_nfy)?; // execute stored function
 				}
 			},
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = wm_cmd.event.code_id();
-				for func in self.0.cmds.find_all(key) {
+				for func in self.cmds.find_all(key) {
 					func()?; // execute stored function
 				}
 			},
 			co::WM::TIMER => {
 				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				for func in self.0.tmrs.find_all(wm_tmr.timer_id) {
+				for func in self.tmrs.find_all(wm_tmr.timer_id) {
 					func()?; // execute stored function
 				}
 			},
-			_ => self.0.events_wm.process_all_messages(wm_any)?,
+			_ => self.events_wm.process_all_messages(wm_any)?,
 		})
 	}
 
@@ -129,7 +123,7 @@ impl WindowEventsAll {
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
-		self.0.as_mut().tmrs.insert(timer_id, Box::new(func));
+		self.tmrs.insert(timer_id, Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](crate::msg::wm::Command) message, for specific code and
@@ -146,7 +140,7 @@ impl WindowEventsAll {
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
-		self.0.as_mut().cmds.insert((code, ctrl_id), Box::new(func));
+		self.cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](crate::msg::wm::Command) message, handling both
@@ -192,11 +186,11 @@ impl WindowEventsAll {
 
 //------------------------------------------------------------------------------
 
-impl sealed_events_wm::SealedEventsWm for WindowEventsAll {
+impl SealedEventsWm for WindowEventsAll {
 	fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
 	{
-		self.0.events_wm.add_msg(ident, Box::new(func));
+		self.events_wm.add_msg(ident, Box::new(func));
 	}
 }
 
@@ -206,7 +200,7 @@ impl sealed_events_wm_nfy::SealedEventsWmNfy for WindowEventsAll {
 	fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
 		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
 	{
-		self.0.as_mut().nfys.insert((id_from, code), Box::new(func));
+		self.nfys.insert((id_from, code), Box::new(func));
 	}
 }
 

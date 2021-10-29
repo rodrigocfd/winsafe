@@ -5,35 +5,97 @@ use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{
 	EventsView,
-	ProcessResult,
 	sealed_events_wm::SealedEventsWm,
+	ProcessResult,
 	WindowEventsAll,
 };
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::gui::resizer::{Horz, Resizer, Vert};
-use crate::gui::traits::{ParentEvents, UiThread, Window};
-use crate::handles::{HACCEL, HINSTANCE, HWND};
+use crate::handles::{HACCEL, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
 
 /// Base to `RawBase` and `DlgBase`.
-pub(in crate::gui) struct Base {
+///
+/// While the parent module is private, the struct is public so it can be used
+/// in sealed traits.
+pub struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
-	parent_ptr: Option<NonNull<Base>>, // parent of this window
+	parent_ptr: Option<NonNull<Self>>,
 	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	privileged_events: WindowEventsAll, // inserted internally to automate tasks: all will be executed
 	resizer: Resizer,
 }
 
-impl Window for Base {
-	fn hwnd(&self) -> HWND {
+impl Base {
+	const WM_UI_THREAD: co::WM = co::WM(co::WM::APP.0 + 0x3fff);
+
+	pub(in crate::gui) fn new(
+		is_dialog: bool,
+		parent_base: Option<&Base>) -> Self
+	{
+		let new_self = Self {
+			hwnd: HWND::NULL,
+			is_dialog,
+			parent_ptr: parent_base.map(|parent_base| NonNull::from(parent_base)),
+			user_events: WindowEventsAll::new(),
+			privileged_events: WindowEventsAll::new(),
+			resizer: Resizer::new(),
+		};
+		new_self.default_message_handlers();
+		new_self
+	}
+
+	pub(in crate::gui) const fn hwnd(&self) -> HWND {
 		self.hwnd
 	}
-}
 
-impl UiThread for Base {
-	fn run_ui_thread<F>(&self, func: F)
+	pub(in crate::gui) fn hwnd_mut(&mut self) -> &mut HWND {
+		&mut self.hwnd
+	}
+
+	pub(in crate::gui) const fn wmcreate_or_wminitdialog(&self) -> co::WM {
+		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
+	}
+
+	pub(in crate::gui) fn parent_base(&self) -> Option<&Self> {
+		self.parent_ptr.as_ref().map(|ptr| unsafe { ptr.as_ref() })
+	}
+
+	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add event after window creation.");
+		}
+		&self.user_events
+	}
+
+	pub(in crate::gui) fn process_user_message(&self,
+		wm_any: WndMsg) -> ErrResult<ProcessResult>
+	{
+		self.user_events.process_one_message(wm_any)
+	}
+
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+		if !self.hwnd.is_null() {
+			panic!("Cannot add privileged event after window creation.");
+		}
+		&self.privileged_events
+	}
+
+	pub(in crate::gui) fn process_privileged_messages(&self,
+		wm_any: WndMsg) -> ErrResult<()>
+	{
+		self.privileged_events.process_all_messages(wm_any)
+	}
+
+	pub(in crate::gui) fn add_to_resizer(&self,
+		hchild: HWND, horz: Horz, vert: Vert) -> WinResult<()>
+	{
+		self.resizer.add(self.hwnd, hchild, horz, vert)
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()>,
 	{
 		// This method is analog to SendMessage (synchronous), but intended to
@@ -51,83 +113,8 @@ impl UiThread for Base {
 			lparam: ptr_pack as _,
 		});
 	}
-}
 
-impl ParentEvents for Base {
-	fn on(&self) -> &WindowEventsAll {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add event after window is created.");
-		}
-		&self.user_events
-	}
-}
-
-impl Base {
-	const WM_UI_THREAD: co::WM = co::WM(co::WM::APP.0 + 0x3fff);
-
-	pub(in crate::gui) fn new(
-		parent_base_ref: Option<&Base>, is_dialog: bool) -> Base
-	{
-		Self {
-			hwnd: HWND::NULL,
-			is_dialog,
-			parent_ptr: parent_base_ref.map(|pb_ref| NonNull::from(pb_ref)),
-			user_events: WindowEventsAll::new(),
-			privileged_events: WindowEventsAll::new(),
-			resizer: Resizer::new(),
-		}
-	}
-
-	pub(in crate::gui) fn hwnd_ref(&self) -> &HWND {
-		&self.hwnd
-	}
-
-	pub(in crate::gui) fn set_hwnd(&mut self, hwnd: HWND) {
-		self.hwnd = hwnd;
-	}
-
-	pub(in crate::gui) const fn create_or_initdlg(&self) -> co::WM {
-		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
-	}
-
-	pub(in crate::gui) fn parent_base_ref(&self) -> Option<&Base> {
-		self.parent_ptr.as_ref().map(|ptr| unsafe { ptr.as_ref() })
-	}
-
-	pub(in crate::gui) fn parent_hinstance(&self) -> WinResult<HINSTANCE> {
-		self.parent_base_ref().map_or_else(
-			|| HINSTANCE::GetModuleHandle(None),
-			|parent| Ok(parent.hwnd_ref().hinstance()),
-		)
-	}
-
-	pub(in crate::gui) fn privileged_events_ref(&self) -> &WindowEventsAll {
-		if !self.hwnd.is_null() {
-			panic!("Cannot add privileged event after window is created.");
-		}
-		&self.privileged_events
-	}
-
-	pub(in crate::gui) fn process_one_message(&mut self,
-		wm_any: WndMsg) -> ErrResult<ProcessResult>
-	{
-		self.user_events.process_one_message(wm_any)
-	}
-
-	pub(in crate::gui) fn process_privileged_messages(&mut self,
-		wm_any: WndMsg) -> ErrResult<()>
-	{
-		self.privileged_events.process_all_messages(wm_any)
-	}
-
-	pub(in crate::gui) fn resizer_add(&self,
-		parent_base_ref: &Base, hwnd_ref: &HWND,
-		horz: Horz, vert: Vert) -> WinResult<()>
-	{
-		self.resizer.add(parent_base_ref, hwnd_ref, horz, vert)
-	}
-
-	pub(in crate::gui) fn default_message_handlers(&self) {
+	fn default_message_handlers(&self) {
 		self.privileged_events.wm_size({
 			let resizer = self.resizer.clone();
 			move |p| { resizer.resize(&p)?; Ok(()) }

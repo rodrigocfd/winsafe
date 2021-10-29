@@ -1,26 +1,23 @@
+use std::any::Any;
+
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData};
-use crate::gui::events::ButtonEvents;
+use crate::gui::events::{ButtonEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{
+	AsAny,
+	Child,
+	NativeControl,
+	NativeControlEvents,
+	Parent,
+	Window,
+};
 use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
-
-struct Obj { // actual fields of RadioButton
-	base: BaseNativeControl,
-	opts_id: OptsId<RadioButtonOpts>,
-	events: ButtonEvents,
-}
-
-impl_obj_window!(Obj);
-impl_obj_child!(Obj);
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Native
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
@@ -31,38 +28,73 @@ impl_obj_nativecontrol!(Obj);
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton(Obj);
 
-impl_send_sync!(RadioButton);
-impl_ctl_debug!(RadioButton);
+struct Obj { // actual fields of RadioButton
+	base: BaseNativeControl,
+	opts_id: OptsId<RadioButtonOpts>,
+	events: ButtonEvents,
+}
 
-impl_ctl_window!(RadioButton);
-impl_ctl_child!(RadioButton);
-impl_ctl_nativecontrol!(RadioButton);
-impl_ctl_nativecontrolevents!(RadioButton, ButtonEvents);
-impl_ctl_focus!(RadioButton);
+impl AsAny for RadioButton {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for RadioButton {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for RadioButton {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
+		}
+	}
+}
+
+impl NativeControl for RadioButton {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
+
+impl NativeControlEvents<ButtonEvents> for RadioButton {
+	fn on(&self) -> &ButtonEvents {
+		if !self.hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !self.0.base.parent_base().hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
 
 impl RadioButton {
-	pub(in crate::gui) fn new(parent: &impl Parent, opts: RadioButtonOpts) -> RadioButton {
-		let parent_base_ref = baseref_from_parent(parent);
+	pub(in crate::gui) fn new(
+		parent: &impl Parent, opts: RadioButtonOpts) -> RadioButton
+	{
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
-
 		Self(
 			Obj {
-				base: BaseNativeControl::new(parent_base_ref),
+				base: BaseNativeControl::new(parent.as_base()),
 				opts_id: OptsId::Wnd(opts),
-				events: ButtonEvents::new(parent_base_ref, ctrl_id),
+				events: ButtonEvents::new(parent.as_base(), ctrl_id),
 			},
 		)
 	}
 
-	pub(in crate::gui) fn new_dlg(parent: &impl Parent, ctrl_id: u16) -> RadioButton {
-		let parent_base_ref = baseref_from_parent(parent);
-
+	pub(in crate::gui) fn new_dlg(
+		parent: &impl Parent, ctrl_id: u16) -> RadioButton
+	{
 		Self(
 			Obj {
-				base: BaseNativeControl::new(parent_base_ref),
+				base: BaseNativeControl::new(parent.as_base()),
 				opts_id: OptsId::Dlg(ctrl_id),
-				events: ButtonEvents::new(parent_base_ref, ctrl_id),
+				events: ButtonEvents::new(parent.as_base(), ctrl_id),
 			},
 		)
 	}
@@ -95,15 +127,9 @@ impl RadioButton {
 			},
 		}
 
-		self.0.base.parent_base_ref().resizer_add(
-			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)?;
-
+		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)?;
 		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
 		Ok(())
-	}
-
-	pub(in crate::gui) fn parent_hwnd_ref(&self) -> &HWND {
-		self.0.base.parent_base_ref().hwnd_ref() // used by RadioGroup
 	}
 
 	/// Emulates the click event for the radio button by sending a

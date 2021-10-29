@@ -5,7 +5,6 @@ use crate::aliases::ErrResult;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
-use crate::gui::traits::ParentEvents;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 
 /// Exposes button control
@@ -25,10 +24,10 @@ pub struct RadioGroupEvents {
 
 impl RadioGroupEvents {
 	pub(in crate::gui) fn new(
-		parent_base_ref: &Base, ctrl_ids: Vec<u16>) -> RadioGroupEvents
+		parent_base: &Base, ctrl_ids: Vec<u16>) -> RadioGroupEvents
 	{
 		Self {
-			parent_ptr: NonNull::from(parent_base_ref),
+			parent_ptr: NonNull::from(parent_base),
 			ctrl_ids,
 		}
 	}

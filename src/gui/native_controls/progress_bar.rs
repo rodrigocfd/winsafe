@@ -1,25 +1,16 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::EventsView;
+use crate::gui::events::{EventsView, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{AsAny, Child, NativeControl, Parent, Window};
+use crate::handles::HWND;
 use crate::msg::pbm;
 use crate::structs::{PBRANGE, POINT, SIZE};
-
-struct Obj { // actual fields of ProgressBar
-	base: BaseNativeControl,
-	opts_id: OptsId<ProgressBarOpts>,
-}
-
-impl_obj_window!(Obj);
-impl_obj_child!(Obj);
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Native
 /// [progress bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
@@ -27,33 +18,56 @@ impl_obj_nativecontrol!(Obj);
 #[derive(Clone)]
 pub struct ProgressBar(Arc<Obj>);
 
-impl_send_sync!(ProgressBar);
-impl_ctl_debug!(ProgressBar);
+struct Obj { // actual fields of ProgressBar
+	base: BaseNativeControl,
+	opts_id: OptsId<ProgressBarOpts>,
+}
 
-impl_ctl_window!(ProgressBar);
-impl_ctl_aswindow!(ProgressBar);
-impl_ctl_child!(ProgressBar);
-impl_ctl_nativecontrol!(ProgressBar);
-impl_ctl_asnativecontrol!(ProgressBar);
+unsafe impl Send for ProgressBar {}
+
+impl AsAny for ProgressBar {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for ProgressBar {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for ProgressBar {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
+		}
+	}
+}
+
+impl NativeControl for ProgressBar {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
 	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &impl Parent, opts: ProgressBarOpts) -> ProgressBar {
-		let parent_base_ref = baseref_from_parent(parent);
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Wnd(opts),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
@@ -64,21 +78,20 @@ impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent, ctrl_id: u16,
+		parent: &impl Parent,
+		ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> ProgressBar
 	{
-		let parent_base_ref = baseref_from_parent(parent);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Dlg(ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm_init_dialog({
+		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
@@ -93,18 +106,17 @@ impl ProgressBar {
 				let mut sz = opts.size;
 				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
 
-				self.0.base.create_window( // may panic
+				self.0.base.create_window(
 					"msctls_progress32", None, pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.progress_bar_style.into(),
 				)?;
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
 		}
 
-		self.0.base.parent_base_ref().resizer_add(
-			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
+		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
 	/// Retrieves the current position by sending a

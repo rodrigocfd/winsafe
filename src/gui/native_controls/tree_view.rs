@@ -1,28 +1,25 @@
+use std::any::Any;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{EventsView, TreeViewEvents};
+use crate::gui::events::{EventsView, TreeViewEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::native_controls::tree_view_items::TreeViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{
+	AsAny,
+	Child,
+	NativeControl,
+	NativeControlEvents,
+	Parent,
+	Window,
+};
+use crate::handles::HWND;
 use crate::msg::tvm;
 use crate::structs::{POINT, SIZE};
-
-struct Obj { // actual fields of TreeView
-	base: BaseNativeControl,
-	opts_id: OptsId<TreeViewOpts>,
-	events: TreeViewEvents,
-}
-
-impl_obj_window!(Obj);
-impl_obj_child!(Obj);
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Native
 /// [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
@@ -30,66 +27,96 @@ impl_obj_nativecontrol!(Obj);
 #[derive(Clone)]
 pub struct TreeView(Arc<Obj>);
 
-impl_send_sync!(TreeView);
-impl_ctl_debug!(TreeView);
+struct Obj { // actual fields of TreeView
+	base: BaseNativeControl,
+	opts_id: OptsId<TreeViewOpts>,
+	events: TreeViewEvents,
+}
 
-impl_ctl_window!(TreeView);
-impl_ctl_aswindow!(TreeView);
-impl_ctl_child!(TreeView);
-impl_ctl_nativecontrol!(TreeView);
-impl_ctl_asnativecontrol!(TreeView);
-impl_ctl_nativecontrolevents!(TreeView, TreeViewEvents);
-impl_ctl_focus!(TreeView);
+unsafe impl Send for TreeView {}
+
+impl AsAny for TreeView {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for TreeView {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for TreeView {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
+		}
+	}
+}
+
+impl NativeControl for TreeView {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
+
+impl NativeControlEvents<TreeViewEvents> for TreeView {
+	fn on(&self) -> &TreeViewEvents {
+		if !self.hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !self.0.base.parent_base().hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &impl Parent, opts: TreeViewOpts) -> TreeView {
-		let parent_base_ref = baseref_from_parent(parent);
 		let opts = TreeViewOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Wnd(opts),
-					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
+					events: TreeViewEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
-
 		new_self
 	}
 
 	/// Instantiates a new `TreeView` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent, ctrl_id: u16,
+		parent: &impl Parent,
+		ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> TreeView
 	{
-		let parent_base_ref = baseref_from_parent(parent);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: TreeViewEvents::new(parent_base_ref, ctrl_id),
+					events: TreeViewEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm_init_dialog({
+		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
-
 		new_self
 	}
 
@@ -114,8 +141,7 @@ impl TreeView {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
 		}
 
-		self.0.base.parent_base_ref().resizer_add(
-			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
+		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
 	/// Exposes the item methods.

@@ -1,10 +1,8 @@
-use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::gui::base::Base;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::handles::{HDWP, HWND};
 use crate::msg::wm;
@@ -38,8 +36,8 @@ pub enum Vert {
 	Resize,
 }
 
-struct Ctrl {
-	hwnd_ptr: NonNull<HWND>,
+struct ChildInfo {
+	hchild: HWND,
 	rc_orig: RECT, // original coordinates relative to parent
 	horz: Horz,
 	vert: Vert,
@@ -47,13 +45,13 @@ struct Ctrl {
 
 //------------------------------------------------------------------------------
 
+/// Resizes all registered child controls at once, according to predefined
+/// behaviors.
 #[derive(Clone)]
 pub(in crate::gui) struct Resizer(Arc<VeryUnsafeCell<Obj>>);
 
-impl_send_sync!(Resizer);
-
 struct Obj { // actual fields of Resizer
-	ctrls: Vec<Ctrl>,
+	ctrls: Vec<ChildInfo>,
 	sz_parent_orig: SIZE, // original parent client area
 }
 
@@ -70,28 +68,24 @@ impl Resizer {
 	}
 
 	pub(in crate::gui) fn add(&self,
-		parent_base_ref: &Base,
-		hwnd_ref: &HWND,
+		hparent: HWND,
+		hchild: HWND,
 		horz: Horz, vert: Vert) -> WinResult<()>
 	{
-		// Note that, in order to have valid HWNDs, this method must be called
-		// after the parent and the control have been created.
-
-		if self.0.ctrls.is_empty() { // first control being added?
-			let rc_parent = parent_base_ref.hwnd_ref().GetClientRect()?;
-			self.0.as_mut().sz_parent_orig = SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
+		if hparent.is_null() || hchild.is_null() {
+			panic!("Cannot add resizer entries before window/control creation.");
 		}
 
-		let mut rc_orig = hwnd_ref.GetWindowRect()?;
-		parent_base_ref.hwnd_ref().ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
+		if self.0.ctrls.is_empty() { // first control being added?
+			let rc_parent = hparent.GetClientRect()?;
+			self.0.as_mut().sz_parent_orig =
+				SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
+		}
 
-		self.0.as_mut().ctrls.push(Ctrl {
-			hwnd_ptr: NonNull::from(hwnd_ref),
-			rc_orig: rc_orig,
-			horz,
-			vert,
-		});
+		let mut rc_orig = hchild.GetWindowRect()?;
+		hparent.ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
 
+		self.0.as_mut().ctrls.push(ChildInfo { hchild, rc_orig, horz, vert });
 		Ok(())
 	}
 
@@ -111,26 +105,28 @@ impl Resizer {
 				uflags |= co::SWP::NOMOVE;
 			}
 
+			let sz_parent_orig = self.0.sz_parent_orig;
+
 			hdwp.DeferWindowPos(
-				unsafe { *ctrl.hwnd_ptr.as_ref() },
+				ctrl.hchild,
 				HwndPlace::None,
 				POINT::new(
 					match ctrl.horz {
-						Horz::Repos => p.client_area.cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.left,
+						Horz::Repos => p.client_area.cx - sz_parent_orig.cx + ctrl.rc_orig.left,
 						_ => ctrl.rc_orig.left // keep original x pos
 					},
 					match ctrl.vert {
-						Vert::Repos => p.client_area.cy - self.0.sz_parent_orig.cy + ctrl.rc_orig.top,
+						Vert::Repos => p.client_area.cy - sz_parent_orig.cy + ctrl.rc_orig.top,
 						_ => ctrl.rc_orig.top // keep original y pos
 					},
 				),
 				SIZE::new(
 					match ctrl.horz {
-						Horz::Resize => p.client_area.cx - self.0.sz_parent_orig.cx + ctrl.rc_orig.right - ctrl.rc_orig.left,
+						Horz::Resize => p.client_area.cx - sz_parent_orig.cx + ctrl.rc_orig.right - ctrl.rc_orig.left,
 						_ => ctrl.rc_orig.right - ctrl.rc_orig.left // keep original width
 					},
 					match ctrl.vert {
-						Vert::Resize => p.client_area.cy - self.0.sz_parent_orig.cy + ctrl.rc_orig.bottom - ctrl.rc_orig.top,
+						Vert::Resize => p.client_area.cy - sz_parent_orig.cy + ctrl.rc_orig.bottom - ctrl.rc_orig.top,
 						_ =>ctrl.rc_orig.bottom - ctrl.rc_orig.top // keep original height
 					},
 				),

@@ -1,27 +1,24 @@
+use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData, HwndPlace};
-use crate::gui::events::{ButtonEvents, EventsView};
+use crate::gui::events::{ButtonEvents, EventsView, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{baseref_from_parent, Child, Parent, Window};
+use crate::gui::traits::{
+	AsAny,
+	Child,
+	NativeControl,
+	NativeControlEvents,
+	Parent,
+	Window,
+};
+use crate::handles::HWND;
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
-
-struct Obj { // actual fields of CheckBox
-	base: BaseNativeControl,
-	opts_id: OptsId<CheckBoxOpts>,
-	events: ButtonEvents,
-}
-
-impl_obj_window!(Obj);
-impl_obj_child!(Obj);
-impl_obj_nativecontrol!(Obj);
-
-//------------------------------------------------------------------------------
 
 /// Possible states of a [`CheckBox`](crate::gui::CheckBox) control.
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -45,66 +42,96 @@ pub enum CheckState {
 #[derive(Clone)]
 pub struct CheckBox(Arc<Obj>);
 
-impl_send_sync!(CheckBox);
-impl_ctl_debug!(CheckBox);
+struct Obj { // actual fields of CheckBox
+	base: BaseNativeControl,
+	opts_id: OptsId<CheckBoxOpts>,
+	events: ButtonEvents,
+}
 
-impl_ctl_window!(CheckBox);
-impl_ctl_aswindow!(CheckBox);
-impl_ctl_child!(CheckBox);
-impl_ctl_nativecontrol!(CheckBox);
-impl_ctl_asnativecontrol!(CheckBox);
-impl_ctl_nativecontrolevents!(CheckBox, ButtonEvents);
-impl_ctl_focus!(CheckBox);
+unsafe impl Send for CheckBox {}
+
+impl AsAny for CheckBox {
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
+}
+
+impl Window for CheckBox {
+	fn hwnd(&self) -> HWND {
+		self.0.base.hwnd()
+	}
+}
+
+impl Child for CheckBox {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0.opts_id {
+			OptsId::Wnd(opts) => opts.ctrl_id,
+			OptsId::Dlg(ctrl_id) => *ctrl_id,
+		}
+	}
+}
+
+impl NativeControl for CheckBox {
+	fn on_subclass(&self) -> &WindowEvents {
+		self.0.base.on_subclass()
+	}
+}
+
+impl NativeControlEvents<ButtonEvents> for CheckBox {
+	fn on(&self) -> &ButtonEvents {
+		if !self.0.base.hwnd().is_null() {
+			panic!("Cannot add events after the control creation.");
+		} else if !self.0.base.parent_base().hwnd().is_null() {
+			panic!("Cannot add events after the parent window creation.");
+		}
+		&self.0.events
+	}
+}
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	pub fn new(parent: &impl Parent, opts: CheckBoxOpts) -> CheckBox {
-		let parent_base_ref = baseref_from_parent(parent);
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Wnd(opts),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					events: ButtonEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm(parent_base_ref.create_or_initdlg(), {
+		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz, vert)?; Ok(0) }
 		});
-
 		new_self
 	}
 
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent, ctrl_id: u16,
+		parent: &impl Parent,
+		ctrl_id: u16,
 		horz_resize: Horz, vert_resize: Vert) -> CheckBox
 	{
-		let parent_base_ref = baseref_from_parent(parent);
-
 		let new_self = Self(
 			Arc::new(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref),
+					base: BaseNativeControl::new(parent.as_base()),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					events: ButtonEvents::new(parent.as_base(), ctrl_id),
 				},
 			),
 		);
 
-		parent_base_ref.privileged_events_ref().wm_init_dialog({
+		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
 			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
 		});
-
 		new_self
 	}
 
@@ -121,7 +148,7 @@ impl CheckBox {
 					multiply_dpi(None, Some(&mut sz))?; // user-defined size
 				}
 
-				let our_hwnd = self.0.base.create_window( // may panic
+				let our_hwnd = self.0.base.create_window(
 					"BUTTON", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
@@ -133,11 +160,10 @@ impl CheckBox {
 					self.set_check_state(opts.check_state);
 				}
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?, // may panic
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
 		}
 
-		self.0.base.parent_base_ref().resizer_add(
-			self.0.base.parent_base_ref(), self.0.base.hwnd_ref(), horz, vert)
+		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
 	/// Retrieves the current check state by sending a

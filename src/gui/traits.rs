@@ -1,68 +1,107 @@
 use std::any::Any;
-use std::sync::Arc;
 
 use crate::aliases::{ErrResult, WinResult};
-use crate::enums::HwndFocus;
-use crate::gui::{WindowControl, WindowMain, WindowModal};
-use crate::gui::base::Base;
+use crate::co;
 use crate::gui::events::{WindowEvents, WindowEventsAll};
+use crate::gui::traits_sealed::{SealedBase, SealedParent};
 use crate::handles::HWND;
-use crate::msg::wm;
 
-/// Trait to any window which can host child controls.
-///
-/// **Note:** This is a
-/// [sealed trait](https://rust-lang.github.io/api-guidelines/future-proofing.html#c-sealed)
-/// which cannot be implemented outside the library.
-pub trait Parent: sealed_parent::SealedParent {
-	/// Returns a reference to the `Any` trait, allowing downcasting.
+/// Used to convert a reference to the
+/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait.
+pub trait AsAny {
+	/// Converts a reference to the
+	/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait.
 	fn as_any(&self) -> &dyn Any;
 }
 
-pub(in crate::gui) mod sealed_parent {
-	// Parent trait is a tunnel to baseref_from_parent(), which is specifically
-	// implemented to the 3 Window structs. If the user ever implements Parent,
-	// baseref_from_parent() would crash – that's why Parent trait is sealed.
-	pub trait SealedParent {}
-	impl SealedParent for super::WindowControl {}
-	impl SealedParent for super::WindowMain {}
-	impl SealedParent for super::WindowModal {}
-}
-
-pub(in crate::gui) fn baseref_from_parent(parent: &impl Parent) -> &Base {
-	if let Some(w) = parent.as_any().downcast_ref::<WindowMain>() {
-		w.base_ref()
-	} else if let Some(w) = parent.as_any().downcast_ref::<WindowModal>() {
-		w.base_ref()
-	} else if let Some(w) = parent.as_any().downcast_ref::<WindowControl>() {
-		w.base_ref()
-	} else {
-		panic!("Unknown Parent downcasting, something really bad happened.")
-	}
-}
-
-//------------------------------------------------------------------------------
-
 /// Any window. Exposes the underlying window handle.
-pub trait Window {
+pub trait Window: AsAny {
 	/// Returns the underlying handle for this control.
 	///
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is physically created, what usually happens right
-	/// before [`WM_CREATE`](crate::gui::events::prelude::EventsView::wm_create)
-	/// or
-	/// [`WM_INITDIALOG`](crate::gui::events::prelude::EventsView::wm_init_dialog)
+	/// before [`WM_CREATE`](crate::gui::prelude::EventsView::wm_create) or
+	/// [`WM_INITDIALOG`](crate::gui::prelude::EventsView::wm_init_dialog)
 	/// events.
 	fn hwnd(&self) -> HWND;
 }
 
-/// Converts a concrete window into an upcasted reference.
-pub trait AsWindow: Window {
-	fn as_window(&self) -> Arc<dyn Window>;
+/// Any window which can host child controls.
+///
+/// This is a sealed trait, which cannot be implemented outside `winsafe`.
+pub trait Parent: Send + Window + SealedBase + SealedParent {
+	/// Exposes the window events and control notifications.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
+	fn on(&self) -> &WindowEventsAll;
+}
+
+/// The main window of an application.
+///
+/// This is a sealed trait, which cannot be implemented outside `winsafe`.
+pub trait Main: Parent {
+	/// Physically creates the window, then runs the main application loop. This
+	/// method will block until the window is closed.
+	///
+	/// The `cmd_show` parameter defaults to
+	/// [`co::SW::SHOW`](crate::co::SW::SHOW).
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created.
+	fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32>;
+}
+
+/// A modal window.
+///
+/// This is a sealed trait, which cannot be implemented outside `winsafe`.
+pub trait Modal: Parent {
+	/// Physically creates the window, then runs the modal loop. This method
+	/// will block until the window is closed.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created.
+	fn show_modal(&self) -> WinResult<i32>;
+}
+
+/// Any child window.
+pub trait Child: Window {
+	/// Returns the control ID.
+	fn ctrl_id(&self) -> u16;
+}
+
+/// Any native control, which can be subclassed.
+pub trait NativeControl: Child {
+	/// Exposes the subclass events. If at least one event exists, the control
+	/// will be
+	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
+	///
+	/// **Note:** Subclassing may impact performance, use with care.
+	///
+	/// # Panics
+	///
+	/// Panics if the control or the parent window are already created. Events
+	/// must be set before control and parent window creation.
+	fn on_subclass(&self) -> &WindowEvents;
+}
+
+/// Events of a native control.
+pub trait NativeControlEvents<E> {
+	/// Exposes the specific control events.
+	///
+	/// # Panics
+	///
+	/// Panics if the control is already created. Events must be set before
+	/// control creation.
+	fn on(&self) -> &E;
 }
 
 /// Allows running code in the original UI thread.
-pub trait UiThread {
+pub trait UiThread: Window {
 	/// If you perform a very long task in the UI thread, the UI freezes until
 	/// the task is complete – this may cause the impression that your
 	/// application crashed. That's why long tasks are performed in parallel
@@ -138,72 +177,4 @@ pub trait UiThread {
 	/// ```
 	fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()>;
-}
-
-/// Exposes all parent window events and control notifications through
-/// [`WindowEventsAll`](crate::gui::events::WindowEventsAll).
-pub trait ParentEvents {
-	/// Exposes the window events and control notifications.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created. Events must be set before
-	/// window creation.
-	fn on(&self) -> &WindowEventsAll;
-}
-
-/// Any child window.
-pub trait Child: Window {
-	/// Returns the control ID.
-	fn ctrl_id(&self) -> u16;
-}
-
-/// Any native child control.
-pub trait NativeControl: Child {
-	/// Exposes the subclass events. If at least one event exists, the control
-	/// will be
-	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
-	///
-	/// **Note:** Subclassing may impact performance, use with care.
-	///
-	/// # Panics
-	///
-	/// Panics if the control or the parent window are already created. Events
-	/// must be set before control and parent window creation.
-	fn on_subclass(&self) -> &WindowEvents;
-}
-
-/// Converts a concrete native control into an upcasted reference.
-pub trait AsNativeControl: NativeControl {
-	fn as_native_control(&self) -> Arc<dyn NativeControl>;
-}
-
-/// Exposes the native control events.
-pub trait NativeControlEvents<E>: NativeControl {
-	/// Exposes the control events.
-	///
-	/// These event methods are just proxies to the
-	/// [`WindowEventsAll`](crate::gui::events::WindowEventsAll) of the parent
-	/// window, who is the real responsible for the child event handling.
-	///
-	/// # Panics
-	///
-	/// Panics if the control or the parent window are already created. Events
-	/// must be set before control and parent window creation.
-	fn on(&self) -> &E;
-}
-
-/// Focus a child control with [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl)
-/// message.
-pub trait Focus: Child {
-	/// Focuses the control by sending a
-	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message.
-	fn focus(&self) -> WinResult<()> {
-		self.hwnd().GetParent()
-			.map(|hparent| {
-				hparent.SendMessage(wm::NextDlgCtl {
-					hwnd_focus: HwndFocus::Hwnd(self.hwnd()),
-				})
-			})
-	}
 }

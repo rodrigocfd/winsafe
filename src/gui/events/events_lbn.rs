@@ -14,8 +14,8 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 pub struct ListBoxEvents(BaseEventsProxy);
 
 impl ListBoxEvents {
-	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
-		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	pub(in crate::gui) fn new(parent_base: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
 	pub_fn_cmd_ret0! { lbn_dbl_clk, co::LBN::DBLCLK.into(),

@@ -3,9 +3,8 @@ use crate::co;
 use crate::enums::{AtomStr, IdIdcStr, IdMenu};
 use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
-use crate::gui::events::{ProcessResult, WindowEventsAll};
+use crate::gui::events::ProcessResult;
 use crate::gui::privs::post_quit_error;
-use crate::gui::traits::{ParentEvents, UiThread, Window};
 use crate::handles::{HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
@@ -13,61 +12,45 @@ use crate::various::WString;
 
 /// Base to all ordinary windows.
 pub(in crate::gui) struct RawBase {
-	base: Base,
+	pub(in crate::gui) base: Base,
 }
 
 impl Drop for RawBase {
 	fn drop(&mut self) {
-		if !self.base.hwnd_ref().is_null() {
-			self.base.hwnd_ref().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+		if !self.base.hwnd().is_null() {
+			self.base.hwnd().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 		}
-	}
-}
-
-impl Window for RawBase {
-	fn hwnd(&self) -> HWND {
-		self.base.hwnd()
-	}
-}
-
-impl UiThread for RawBase {
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.base.run_ui_thread(func);
-	}
-}
-
-impl ParentEvents for RawBase {
-	fn on(&self) -> &WindowEventsAll {
-		self.base.on()
 	}
 }
 
 impl RawBase {
-	pub(in crate::gui) fn new(parent_base_ref: Option<&Base>) -> RawBase {
+	pub(in crate::gui) fn new(parent_base: Option<&Base>) -> Self {
 		Self {
-			base: Base::new(parent_base_ref, false),
+			base: Base::new(false, parent_base),
 		}
 	}
 
-	pub(in crate::gui) fn base_ref(&self) -> &Base {
-		&self.base
-	}
-
-	pub(in crate::gui) fn focus_first_child(&self) {
-		// https://stackoverflow.com/a/2835220/6923555
-		if let Ok(hchild) = self.base.hwnd_ref().GetWindow(co::GW::CHILD) {
-			hchild.SetFocus();
+	pub(in crate::gui) fn delegate_focus_to_first_child(&self) -> ErrResult<()> {
+		if let Some(hwnd_cur_focus) = HWND::GetFocus() {
+			if self.base.hwnd() == hwnd_cur_focus {
+				// https://stackoverflow.com/a/2835220/6923555
+				if let Ok(hchild_first) = self.base.hwnd().GetWindow(co::GW::CHILD) {
+					hchild_first.SetFocus(); // if window receives focus, delegate to first child
+				}
+			}
 		}
+		Ok(())
 	}
 
 	/// Fills `WNDCLASSEX` with the given values, and generates the class name.
 	pub(in crate::gui) fn fill_wndclassex<'a>(
-		hinst: HINSTANCE, class_style: co::CS,
+		hinst: HINSTANCE,
+		class_style: co::CS,
 		class_icon: HICON, class_icon_sm: HICON,
-		class_bg_brush: HBRUSH, class_cursor: HCURSOR,
-		wcx: &mut WNDCLASSEX<'a>, class_name_buf: &'a mut WString) -> WinResult<()>
+		class_bg_brush: HBRUSH,
+		class_cursor: HCURSOR,
+		wcx: &mut WNDCLASSEX<'a>,
+		class_name_buf: &'a mut WString) -> WinResult<()>
 	{
 		wcx.lpfnWndProc = Some(Self::window_proc);
 		wcx.hInstance = hinst;
@@ -129,7 +112,7 @@ impl RawBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS) -> WinResult<()>
 	{
-		if !self.base.hwnd_ref().is_null() {
+		if !self.base.hwnd().is_null() {
 			panic!("Cannot create window twice.");
 		}
 
@@ -140,9 +123,12 @@ impl RawBase {
 			AtomStr::Atom(class_name),
 			title, styles,
 			pos, sz,
-			self.base.parent_base_ref().map(|parent| *parent.hwnd_ref()),
+			self.base.parent_base().map(|parent| parent.hwnd()),
 			hmenu,
-			self.base.parent_hinstance()?,
+			self.base.parent_base().map_or_else(
+				|| HINSTANCE::GetModuleHandle(None),
+				|parent| Ok(parent.hwnd().hinstance()),
+			)?,
 			Some(self as *const _ as _), // pass pointer to self
 		).map(|_| ())
 	}
@@ -165,7 +151,7 @@ impl RawBase {
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
 				let ref_self = unsafe { &mut *ptr_self };
-				ref_self.base.set_hwnd(hwnd); // store HWND in struct field
+				*ref_self.base.hwnd_mut() = hwnd; // store HWND in struct field
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
@@ -182,11 +168,11 @@ impl RawBase {
 		ref_self.base.process_privileged_messages(wm_any)?;
 
 		// Execute user closure, if any.
-		let process_result = ref_self.base.process_one_message(wm_any)?;
+		let process_result = ref_self.base.process_user_message(wm_any)?;
 
 		if msg == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
-			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
+			*ref_self.base.hwnd_mut() = HWND::NULL; // clear stored HWND
 		}
 
 		Ok(match process_result {

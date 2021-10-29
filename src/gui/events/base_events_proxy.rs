@@ -4,7 +4,6 @@ use crate::aliases::ErrResult;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::events_wm_nfy::sealed_events_wm_nfy::SealedEventsWmNfy;
-use crate::gui::traits::ParentEvents;
 use crate::msg::wm;
 
 /// Base to all native control event proxies.
@@ -14,9 +13,9 @@ pub(in crate::gui) struct BaseEventsProxy {
 }
 
 impl BaseEventsProxy {
-	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
+	pub(in crate::gui) fn new(parent_base: &Base, ctrl_id: u16) -> Self {
 		Self {
-			parent_ptr: NonNull::from(parent_base_ref),
+			parent_ptr: NonNull::from(parent_base),
 			ctrl_id
 		}
 	}

@@ -6,52 +6,18 @@ use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::{EventsView, WindowEventsAll};
-use crate::gui::traits::{AsWindow, ParentEvents, UiThread, Window};
-use crate::handles::{HINSTANCE, HWND};
+use crate::gui::events::EventsView;
+use crate::handles::HINSTANCE;
 use crate::msg::wm;
 
-struct Obj { // actual fields of DlgMain
-	base: DlgBase,
+/// A WindowMain with a dialog window.
+#[derive(Clone)]
+pub(in crate::gui) struct DlgMain(pub(in crate::gui) Arc<Obj>);
+
+pub(in crate::gui) struct Obj { // actual fields of DlgMain
+	pub(in crate::gui) dlg_base: DlgBase,
 	icon_id: Option<u16>,
 	accel_table_id: Option<u16>,
-}
-
-impl Window for Obj {
-	fn hwnd(&self) -> HWND {
-		self.base.hwnd()
-	}
-}
-
-//------------------------------------------------------------------------------
-
-#[derive(Clone)]
-pub(in crate::gui) struct DlgMain(Arc<Obj>);
-
-impl Window for DlgMain {
-	fn hwnd(&self) -> HWND {
-		self.0.base.hwnd()
-	}
-}
-
-impl AsWindow for DlgMain {
-	fn as_window(&self) -> Arc<dyn Window> {
-		self.0.clone()
-	}
-}
-
-impl UiThread for DlgMain {
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
-	{
-		self.0.base.run_ui_thread(func);
-	}
-}
-
-impl ParentEvents for DlgMain {
-	fn on(&self) -> &WindowEventsAll {
-		self.0.base.on()
-	}
 }
 
 impl DlgMain {
@@ -63,7 +29,7 @@ impl DlgMain {
 		let dlg = Self(
 			Arc::new(
 				Obj {
-					base: DlgBase::new(None, dialog_id),
+					dlg_base: DlgBase::new(None, dialog_id),
 					icon_id,
 					accel_table_id,
 				},
@@ -73,36 +39,28 @@ impl DlgMain {
 		dlg
 	}
 
-	pub(in crate::gui) fn base_ref(&self) -> &Base {
-		self.0.base.base_ref()
-	}
-
 	pub(in crate::gui) fn run_main(&self,
 		cmd_show: Option<co::SW>) -> ErrResult<i32>
 	{
-		self.0.base.create_dialog_param()?; // may panic
-		let hinst = self.base_ref().parent_hinstance()?;
+		self.0.dlg_base.create_dialog_param()?;
+		let hinst = HINSTANCE::GetModuleHandle(None)?;
 		let haccel = self.0.accel_table_id
 			.map(|id| hinst.LoadAccelerators(IdStr::Id(id))) // resources are automatically freed
 			.transpose()?;
 
 		self.set_icon_if_any(hinst)?;
-
-		let hwnd = *self.base_ref().hwnd_ref();
-		hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.0.dlg_base.base.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
 		Base::run_main_loop(haccel) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
-		self.base_ref().default_message_handlers();
-
-		self.on().wm_close({
+		self.0.dlg_base.base.on().wm_close({
 			let self2 = self.clone();
-			move || { self2.base_ref().hwnd_ref().DestroyWindow()?; Ok(()) }
+			move || { self2.0.dlg_base.base.hwnd().DestroyWindow()?; Ok(()) }
 		});
 
-		self.on().wm_nc_destroy(|| {
+		self.0.dlg_base.base.on().wm_nc_destroy(|| {
 			PostQuitMessage(0);
 			Ok(())
 		});
@@ -112,14 +70,14 @@ impl DlgMain {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {
-			self.base_ref().hwnd_ref().SendMessage(
+			self.0.dlg_base.base.hwnd().SendMessage(
 				wm::SetIcon {
 					hicon: hinst.LoadImageIcon(id, 16, 16, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::SMALL,
 				},
 			);
 
-			self.base_ref().hwnd_ref().SendMessage(
+			self.0.dlg_base.base.hwnd().SendMessage(
 				wm::SetIcon {
 					hicon: hinst.LoadImageIcon(id, 32, 32, co::LR::DEFAULTCOLOR)?,
 					size: co::ICON_SZ::BIG,

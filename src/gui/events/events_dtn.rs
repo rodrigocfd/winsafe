@@ -21,8 +21,8 @@ use crate::structs::{
 pub struct DateTimePickerEvents(BaseEventsProxy);
 
 impl DateTimePickerEvents {
-	pub(in crate::gui) fn new(parent_base_ref: &Base, ctrl_id: u16) -> Self {
-		Self(BaseEventsProxy::new(parent_base_ref, ctrl_id))
+	pub(in crate::gui) fn new(parent_base: &Base, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
 	pub_fn_nfy_ret0! { dtn_close_up, co::DTN::CLOSEUP.into(),
