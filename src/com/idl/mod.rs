@@ -5,7 +5,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! winsafe = { version = "0.0.6", features = ["idl"] }
+//! winsafe = { version = "0.0.7", features = ["idl"] }
 //! ```
 
 pub(in crate::com) mod ipersist;
