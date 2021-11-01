@@ -78,8 +78,15 @@ impl RadioGroup {
 			})
 			.collect::<Vec<_>>();
 
-		let ctrl_ids = opts.iter().map(|opt| opt.ctrl_id).collect::<Vec<_>>();
-		let horz_verts = Rc::new(opts.iter().map(|opt| (opt.horz_resize, opt.vert_resize)).collect::<Vec<_>>());
+		let ctrl_ids = radios.iter()
+			.map(|r| r.ctrl_id()) // when the radio is created, the ctrl ID is defined
+			.collect::<Vec<_>>();
+
+		let horz_verts = Rc::new(
+			opts.iter()
+				.map(|opt| (opt.horz_resize, opt.vert_resize))
+				.collect::<Vec<_>>(),
+		);
 
 		let new_self = Self(
 			Arc::new(
