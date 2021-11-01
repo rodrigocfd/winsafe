@@ -11,7 +11,6 @@ mod dlg_base;
 mod dlg_control;
 mod dlg_main;
 mod dlg_modal;
-mod events;
 mod native_controls;
 mod privs;
 mod raw_base;
@@ -25,6 +24,8 @@ mod very_unsafe_cell;
 mod window_control;
 mod window_main;
 mod window_modal;
+
+pub mod events;
 
 pub use native_controls::*;
 pub use raw_control::WindowControlOpts;

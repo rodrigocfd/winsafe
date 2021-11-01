@@ -58,8 +58,8 @@ impl HWND {
 	/// # Examples
 	///
 	/// `BeginPaint` is usually called inside a
-	/// [`WM_PAINT`](crate::gui::events::prelude::EventsView::wm_paint) event to
-	/// paint the window client area:
+	/// [`WM_PAINT`](crate::gui::prelude::EventsView::wm_paint) event to paint
+	/// the window client area:
 	///
 	/// ```rust,ignore
 	/// use winsafe::{gui, PAINTSTRUCT};

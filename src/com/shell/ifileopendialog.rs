@@ -55,14 +55,14 @@ pub trait IFileOpenDialogT: IFileDialogT {
 	///
 	/// ```rust,ignore
 	/// use winsafe::prelude::*;
-	/// use winsafe::{shell, WinResult};
+	/// use winsafe::{shell, shell::co::SIGDN, WinResult};
 	///
 	/// let fo: shell::IFileOpenDialog; // initialized somewhere
 	///
 	/// let paths = fo.GetResults()?.iter()
 	///     .map(|shi|
 	///         shi.and_then(|shi|
-	///             shi.GetDisplayName(shell::co::SIGDN::FILESYSPATH)
+	///             shi.GetDisplayName(SIGDN::FILESYSPATH)
 	///         )
 	///     )
 	///     .collect::<WinResult<Vec<_>>>()?,

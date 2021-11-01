@@ -223,7 +223,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 
 	/// [`WM_CREATE`](crate::msg::wm::Create) message, sent only to non-dialog
 	/// windows. Dialog windows receive
-	/// [`WM_INITDIALOG`](crate::gui::events::prelude::EventsView::wm_init_dialog)
+	/// [`WM_INITDIALOG`](crate::gui::prelude::EventsView::wm_init_dialog)
 	/// instead.
 	///
 	/// Sent when an application requests that a window be created by calling
@@ -439,7 +439,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// loop. The window enters the moving or sizing modal loop when the
 		/// user clicks the window's title bar or sizing border, or when the
 		/// window passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::events::prelude::EventsView::wm_sys_command)
+		/// [`WM_SYSCOMMAND`](crate::gui::prelude::EventsView::wm_sys_command)
 		/// message to the `DefWindowProc` function and the `wParam` parameter
 		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
 		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
@@ -475,7 +475,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// modal loop. The window enters the moving or sizing modal loop when
 		/// the user clicks the window's title bar or sizing border, or when the
 		/// window passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::events::prelude::EventsView::wm_sys_command)
+		/// [`WM_SYSCOMMAND`](crate::gui::prelude::EventsView::wm_sys_command)
 		/// message to the `DefWindowProc` function and the `wParam` parameter
 		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
 		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
@@ -565,8 +565,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 	pub_fn_wm_retbool_param! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog,
 		/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to
 		/// dialog windows. Non-dialog windows receive
-		/// [`WM_CREATE`](crate::gui::events::prelude::EventsView::wm_create)
-		/// instead.
+		/// [`WM_CREATE`](crate::gui::prelude::EventsView::wm_create) instead.
 		///
 		/// Sent to the dialog box procedure immediately before a dialog box is
 		/// displayed. Dialog box procedures typically use this message to
@@ -769,8 +768,8 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
 		///
 		/// Sent prior to the
-		/// [`WM_CREATE`](crate::gui::events::prelude::EventsView::wm_create)
-		/// message when a window is first created.
+		/// [`WM_CREATE`](crate::gui::prelude::EventsView::wm_create) message
+		/// when a window is first created.
 	}
 
 	pub_fn_wm_ret0! { wm_nc_destroy, co::WM::NCDESTROY,
@@ -779,9 +778,9 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// Notifies a window that its nonclient area is being destroyed. The
 		/// [`HWND::DestroyWindow`](crate::HWND::DestroyWindow) function sends
 		/// the message to the window following the
-		/// [`WM_DESTROY`](crate::gui::events::prelude::EventsView::wm_destroy)
-		/// message. `WM_DESTROY` is used to free the allocated memory object
-		/// associated with the window.
+		/// [`WM_DESTROY`](crate::gui::prelude::EventsView::wm_destroy) message.
+		/// `WM_DESTROY` is used to free the allocated memory object associated
+		/// with the window.
 		///
 		/// The `WM_NCDESTROY` message is sent after the child windows have been
 		/// destroyed. In contrast, `WM_DESTROY` is sent before the child
