@@ -95,8 +95,8 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
 	/// specific events, which will give you the correct message parameters.
-	/// This generic method should be used when you have a custom, non-standard
-	/// window message.
+	/// This generic method should be used only when you have a custom,
+	/// non-standard window message.
 	///
 	/// # Examples
 	///

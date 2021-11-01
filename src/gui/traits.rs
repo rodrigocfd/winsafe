@@ -10,7 +10,27 @@ use crate::handles::HWND;
 /// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait.
 pub trait AsAny {
 	/// Converts a reference to the
-	/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait.
+	/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait. This is
+	/// useful when storing a collection of polymorphic controls, because `Any`
+	/// allows downcasting.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use std::sync::Arc;
+	/// use winsafe::prelude::*;
+	/// use winsafe::gui;
+	///
+	/// let parent: gui::WindowMain; // initialized somewhere
+	///
+	/// let ctrls: Vec<Arc<dyn gui::NativeControl>> = vec![
+	///     Arc::new( gui::Edit::new(&parent, gui::EditOpts::default()) ),
+	///     Arc::new( gui::Button::new(&parent, gui::ButtonOpts::default()) ),
+	/// ];
+	///
+	/// let edit = ctrls[0].as_any().downcast_ref::<gui::Edit>()?;
+	/// edit.set_text("Foo")?;
+	/// ```
 	fn as_any(&self) -> &dyn Any;
 }
 
@@ -70,7 +90,9 @@ pub trait Modal: Parent {
 
 /// Any child window.
 pub trait Child: Window {
-	/// Returns the control ID.
+	/// Returns the control ID, which is defined at control creation.
+	///
+	/// The control ID should be unique within a parent.
 	fn ctrl_id(&self) -> u16;
 }
 

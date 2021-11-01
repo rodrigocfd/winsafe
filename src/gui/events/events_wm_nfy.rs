@@ -135,8 +135,8 @@ impl WindowEventsAll {
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
 	/// specific command notifications, which will give you the correct message
-	/// parameters. This generic method should be used when you have a custom,
-	/// non-standard window notification.
+	/// parameters. This generic method should be used only when you have a
+	/// custom, non-standard window notification.
 	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
@@ -230,7 +230,7 @@ pub trait EventsViewAll: sealed_events_wm_nfy::SealedEventsWmNfy + EventsView {
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
 	/// specific notifications, which will give you the correct notification
-	/// struct. This generic method should be used when you have a custom,
+	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
 	fn wm_notify<F>(&self, id_from: i32, code: co::NM, func: F)
 		where F: Fn(wm::Notify) -> ErrResult<isize> + 'static,
