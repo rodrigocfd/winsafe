@@ -52,6 +52,14 @@ pub_struct_const_ws! { UDS, u32,
 	HOTTRACK, 0x0100
 }
 
+pub_struct_const! { UOI, i32,
+	/// [`HPROCESS::SetUserObjectInformation`](crate::HPROCESS::SetUserObjectInformation)
+	/// `index` (`i32`).
+	=>
+	FLAGS, 1
+	TIMERPROC_EXCEPTION_SUPPRESSION, 7
+}
+
 pub_struct_const! { VER_COND, u8,
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
 	=>

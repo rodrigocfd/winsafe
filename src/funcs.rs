@@ -1285,7 +1285,7 @@ pub fn SoundSentry() -> bool {
 /// [`SystemParametersInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)
 /// function.
 ///
-/// **Note:** The `pvParam` type varies according to `uiAction`. If you set it
+/// **Note:** The `pv_param` type varies according to `action`. If you set it
 /// wrong, you're likely to cause a buffer overrun.
 pub unsafe fn SystemParametersInfo<T>(
 	action: co::SPI,

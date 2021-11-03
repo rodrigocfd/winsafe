@@ -172,6 +172,7 @@ extern_sys! { "user32",
 	SetScrollRange, HANDLE, i32, i32, i32, BOOL, => BOOL
 	SetSystemCursor, HANDLE, u32, => BOOL
 	SetTimer, HANDLE, usize, u32, PFUNC, => usize
+	SetUserObjectInformationW, HANDLE, i32, PVOID, u32, => BOOL
 	SetWindowDisplayAffinity, HANDLE, u32, => BOOL
 	SetWindowLongPtrW, HANDLE, i32, isize, => isize
 	SetWindowPlacement, HANDLE, PCVOID, => BOOL

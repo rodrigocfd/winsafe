@@ -2,7 +2,7 @@
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::ffi::{BOOL, kernel32};
+use crate::ffi::{BOOL, kernel32, user32};
 use crate::funcs::GetLastError;
 use crate::privs::{bool_to_winresult, INFINITE, MAX_PATH};
 use crate::structs::{
@@ -187,6 +187,24 @@ impl HPROCESS {
 				)
 			},
 		).map(|_| buf.to_string())
+	}
+
+	/// [`SetUserObjectInformation`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
+	/// method.
+	///
+	/// **Note:** The `pv_info` type varies according to `index`. If you set it
+	/// wrong, you're likely to cause a buffer overrun.
+	pub unsafe fn SetUserObjectInformation<T>(self,
+		index: co::UOI, pv_info: &mut T) -> WinResult<()>
+	{
+		bool_to_winresult(
+			user32::SetUserObjectInformationW(
+				self.ptr,
+				index.0,
+				pv_info as *mut _ as _,
+				std::mem::size_of::<T>() as _,
+			),
+		)
 	}
 
 	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)

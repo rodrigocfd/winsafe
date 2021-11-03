@@ -2,6 +2,7 @@ use std::any::Any;
 
 use crate::aliases::{ErrResult, WinResult};
 use crate::co;
+use crate::ffi::BOOL;
 use crate::funcs::{
 	InitCommonControls,
 	IsWindowsVistaOrGreater,
@@ -15,7 +16,7 @@ use crate::gui::raw_main::{RawMain, WindowMainOpts};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{AsAny, Main, Parent, UiThread, Window};
 use crate::gui::traits_sealed::{SealedBase, SealedParent};
-use crate::handles::HWND;
+use crate::handles::{HPROCESS, HWND};
 
 /// Keeps a raw or dialog window.
 #[derive(Clone)]
@@ -181,6 +182,13 @@ impl Main for WindowMain {
 		}
 
 		InitCommonControls();
+
+		let mut b_val: BOOL = 0; // false
+		unsafe {
+			HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
+				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, &mut b_val)?;
+		}
+
 		create_ui_font()?;
 
 		let res = match &self.raw_dlg {
