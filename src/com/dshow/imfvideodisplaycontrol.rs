@@ -7,7 +7,7 @@ use crate::com::dshow::any_structs::MFVideoNormalizedRect;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{BOOL, HANDLE, HRESULT, PCVOID, PVOID};
-use crate::handles::HWND;
+use crate::handles::{Handle, HWND};
 use crate::privs::hr_to_winresult;
 use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
 
@@ -191,7 +191,7 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 		let mut hwnd = HWND::NULL;
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.GetVideoWindow)(self.ptr(), &mut hwnd.ptr))
+			hr_to_winresult((vt.GetVideoWindow)(self.ptr(), &mut hwnd.0))
 		}.map(|_| hwnd)
 	}
 
@@ -263,7 +263,7 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 	fn SetVideoWindow(&self, hwnd_video: HWND) -> WinResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.ptr))
+			hr_to_winresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.0))
 		}
 	}
 }

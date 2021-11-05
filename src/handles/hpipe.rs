@@ -2,16 +2,19 @@
 
 use crate::aliases::WinResult;
 use crate::ffi::kernel32;
-use crate::handles::HFILE;
+use crate::handles::{Handle, HandleClose, HFILE};
 use crate::privs::bool_to_winresult;
 use crate::structs::{OVERLAPPED, SECURITY_ATTRIBUTES};
 
-pub_struct_handle_closeable! {
-	/// Handle to an
-	/// [anonymous pipe](https://docs.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes).
-	/// Originally just a `HANDLE`.
-	HPIPE
-}
+/// Handle to an
+/// [anonymous pipe](https://docs.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HPIPE(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HPIPE);
+impl HandleClose for HPIPE {}
 
 impl HPIPE {
 	/// [`CreatePipe`](https://docs.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe)
@@ -29,8 +32,8 @@ impl HPIPE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::CreatePipe(
-					&mut hread.ptr,
-					&mut hwrite.ptr,
+					&mut hread.0,
+					&mut hwrite.0,
 					attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					size,
 				)
@@ -47,7 +50,7 @@ impl HPIPE {
 		num_bytes_to_read: u32,
 		overlapped: Option<&mut OVERLAPPED>) -> WinResult<()>
 	{
-		HFILE { ptr: self.ptr }.ReadFile(buffer, num_bytes_to_read, overlapped)
+		HFILE(self.0).ReadFile(buffer, num_bytes_to_read, overlapped)
 	}
 
 	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
@@ -56,6 +59,6 @@ impl HPIPE {
 		data: &[u8],
 		overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
 	{
-		HFILE { ptr: self.ptr }.WriteFile(data, overlapped)
+		HFILE(self.0).WriteFile(data, overlapped)
 	}
 }

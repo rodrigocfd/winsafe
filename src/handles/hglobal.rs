@@ -6,12 +6,14 @@ use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
 use crate::privs::{bool_to_winresult, GMEM_INVALID_HANDLE};
 
-pub_struct_handle! {
-	/// Handle to a
-	/// [global memory block](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc).
-	/// Originally just a `HANDLE`.
-	HGLOBAL
-}
+/// Handle to a
+/// [global memory block](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HGLOBAL(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HGLOBAL);
 
 impl HGLOBAL {
 	/// [`GlobalAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
@@ -21,14 +23,14 @@ impl HGLOBAL {
 	/// [`HGLOBAL::GlobalFree`](crate::HGLOBAL::GlobalFree) call.
 	pub fn GlobalAlloc(flags: co::GMEM, num_bytes: u64) -> WinResult<HGLOBAL> {
 		unsafe { kernel32::GlobalAlloc(flags.0, num_bytes).as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GlobalFlags`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
 	/// method.
 	pub fn GlobalFlags(self) -> WinResult<co::GMEM> {
-		match unsafe { kernel32::GlobalFlags(self.ptr) } {
+		match unsafe { kernel32::GlobalFlags(self.0) } {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(co::GMEM(flags)),
 		}
@@ -37,7 +39,7 @@ impl HGLOBAL {
 	/// [`GlobalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
 	/// method.
 	pub fn GlobalFree(self) -> WinResult<()> {
-		match unsafe { kernel32::GlobalFree(self.ptr).as_mut() } {
+		match unsafe { kernel32::GlobalFree(self.0).as_mut() } {
 			None => Ok(()),
 			Some(_) => Err(GetLastError()),
 		}
@@ -53,7 +55,7 @@ impl HGLOBAL {
 	/// [`HGLOBAL::GlobalUnlock`](crate::HGLOBAL::GlobalUnlock) call.
 	pub fn GlobalLock<'a>(self) -> WinResult<&'a mut [u8]> {
 		let mem_sz = self.GlobalSize()?;
-		unsafe { kernel32::GlobalLock(self.ptr).as_mut() }
+		unsafe { kernel32::GlobalLock(self.0).as_mut() }
 			.map(|ptr| unsafe {
 				std::slice::from_raw_parts_mut(ptr as *mut _ as *mut _, mem_sz as _)
 			})
@@ -68,15 +70,15 @@ impl HGLOBAL {
 	pub fn GlobalReAlloc(self,
 		num_bytes: u64, flags: co::GMEM) -> WinResult<HGLOBAL>
 	{
-		unsafe { kernel32::GlobalReAlloc(self.ptr, num_bytes, flags.0).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { kernel32::GlobalReAlloc(self.0, num_bytes, flags.0).as_mut() }
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GlobalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
 	/// method.
 	pub fn GlobalSize(self) -> WinResult<u64> {
-		match unsafe { kernel32::GlobalSize(self.ptr) } {
+		match unsafe { kernel32::GlobalSize(self.0) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),
 		}
@@ -85,6 +87,6 @@ impl HGLOBAL {
 	/// [`GlobalUnlock`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 	/// method.
 	pub fn GlobalUnlock(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel32::GlobalUnlock(self.ptr) })
+		bool_to_winresult(unsafe { kernel32::GlobalUnlock(self.0) })
 	}
 }

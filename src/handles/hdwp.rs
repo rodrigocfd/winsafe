@@ -9,11 +9,13 @@ use crate::handles::HWND;
 use crate::privs::bool_to_winresult;
 use crate::structs::{POINT, SIZE};
 
-pub_struct_handle! {
-	/// Handle to a
-	/// [deferred window position](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
-	HDWP
-}
+/// Handle to a
+/// [deferred window position](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HDWP(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HDWP);
 
 impl HDWP {
 	/// [`BeginDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
@@ -23,7 +25,7 @@ impl HDWP {
 	/// [`HDWP::EndDeferWindowPos`](crate::HDWP::EndDeferWindowPos) call.
 	pub fn BeginDeferWindowPos(num_windows: u32) -> WinResult<HDWP> {
 		unsafe { user32::BeginDeferWindowPos(num_windows as _).as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -35,19 +37,19 @@ impl HDWP {
 	{
 		unsafe {
 			user32::DeferWindowPos(
-				self.ptr,
-				hwnd.ptr,
+				self.0,
+				hwnd.0,
 				hwnd_insert_after.as_ptr(),
 				top_left.x, top_left.y, sz.cx, sz.cy,
 				flags.0,
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`EndDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// method.
 	pub fn EndDeferWindowPos(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::EndDeferWindowPos(self.ptr) })
+		bool_to_winresult(unsafe { user32::EndDeferWindowPos(self.0) })
 	}
 }

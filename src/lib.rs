@@ -247,4 +247,5 @@ pub use various::*;
 pub mod prelude {
 	pub use super::com::prelude::*;
 	pub use super::gui::prelude::*;
+	pub use super::handles::prelude::*;
 }

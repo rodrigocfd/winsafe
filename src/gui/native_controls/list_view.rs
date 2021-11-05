@@ -25,7 +25,7 @@ use crate::gui::traits::{
 	Parent,
 	Window,
 };
-use crate::handles::{HIMAGELIST, HMENU, HWND};
+use crate::handles::{Handle, HIMAGELIST, HMENU, HWND};
 use crate::msg::{lvm, wm};
 use crate::structs::{NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 

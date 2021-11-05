@@ -8,12 +8,14 @@ use crate::privs::bool_to_winresult;
 use crate::structs::LANGID;
 use crate::various::WString;
 
-pub_struct_handle! {
-	/// Handle to an
-	/// [updateable resource](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew).
-	/// Originally just a `HANDLE`.
-	HUPDATERSRC
-}
+/// Handle to an
+/// [updateable resource](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HUPDATERSRC(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HUPDATERSRC);
 
 impl HUPDATERSRC {
 	/// [`BeginUpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
@@ -30,7 +32,7 @@ impl HUPDATERSRC {
 				WString::from_str(file_name).as_ptr(),
 				delete_existing_resources as _,
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -38,7 +40,7 @@ impl HUPDATERSRC {
 	/// method.
 	pub fn EndUpdateResource(self, discard: bool) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { kernel32::EndUpdateResourceW(self.ptr, discard as _) },
+			unsafe { kernel32::EndUpdateResourceW(self.0, discard as _) },
 		)
 	}
 
@@ -51,7 +53,7 @@ impl HUPDATERSRC {
 		bool_to_winresult(
 			unsafe {
 				kernel32::UpdateResourceW(
-					self.ptr,
+					self.0,
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
 					language.0,

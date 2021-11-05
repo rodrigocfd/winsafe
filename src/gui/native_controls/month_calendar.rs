@@ -16,7 +16,7 @@ use crate::gui::traits::{
 	Parent,
 	Window,
 };
-use crate::handles::HWND;
+use crate::handles::{Handle, HWND};
 use crate::msg::mcm;
 use crate::structs::{POINT, RECT, SIZE, SYSTEMTIME};
 

@@ -22,28 +22,30 @@ use crate::structs::{
 };
 use crate::various::WString;
 
-pub_struct_handle! {
-	/// Handle to a
-	/// [window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
-	HWND
-}
+/// Handle to a
+/// [window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HWND(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HWND);
 
 impl HWND {
 	/// Represents all top-level windows in
 	/// [`HWND::PostMessage`](crate::HWND::PostMessage) and
 	/// [`HWND::SendMessage`](crate::HWND::SendMessage).
-	pub const BROADCAST: Self = Self { ptr: 0xffff as _ };
+	pub const BROADCAST: Self = Self(0xffff as _);
 
 	/// [`GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) wrapper to retrieve
 	/// the window [`HINSTANCE`](crate::HINSTANCE).
 	pub fn hinstance(self) -> HINSTANCE {
-		HINSTANCE { ptr: self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _ }
+		HINSTANCE(self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _)
 	}
 
 	/// [`ArrangeIconicWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-arrangeiconicwindows)
 	/// method.
 	pub fn ArrangeIconicWindows(self) -> WinResult<u32> {
-		match unsafe { user32::ArrangeIconicWindows(self.ptr) } {
+		match unsafe { user32::ArrangeIconicWindows(self.0) } {
 			0 => Err(GetLastError()),
 			height => Ok(height),
 		}
@@ -80,29 +82,29 @@ impl HWND {
 	/// });
 	/// ```
 	pub fn BeginPaint(self, ps: &mut PAINTSTRUCT) -> WinResult<HDC> {
-		unsafe { user32::BeginPaint(self.ptr, ps as *mut _ as _).as_mut() }
-			.map(|ptr| HDC { ptr })
+		unsafe { user32::BeginPaint(self.0, ps as *mut _ as _).as_mut() }
+			.map(|ptr| HDC(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`BringWindowToTop`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-bringwindowtotop)
 	/// method.
 	pub fn BringWindowToTop(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::BringWindowToTop(self.ptr) })
+		bool_to_winresult(unsafe { user32::BringWindowToTop(self.0) })
 	}
 
 	/// [`ChildWindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-childwindowfrompoint)
 	/// method.
 	pub fn ChildWindowFromPoint(self, pt: POINT) -> Option<HWND> {
-		unsafe { user32::ChildWindowFromPoint(self.ptr, pt.x, pt.y).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::ChildWindowFromPoint(self.0, pt.x, pt.y).as_mut() }
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`ClientToScreen`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen)
 	/// method.
 	pub fn ClientToScreen(self, pt: &mut POINT) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::ClientToScreen(self.ptr, pt as *mut _ as _) },
+			unsafe { user32::ClientToScreen(self.0, pt as *mut _ as _) },
 		)
 	}
 
@@ -112,14 +114,14 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::ClientToScreen(
-					self.ptr,
+					self.0,
 					&mut rc.left as *mut _ as _,
 				)
 			},
 		).and_then(|_| bool_to_winresult(
 			unsafe {
 				user32::ClientToScreen(
-					self.ptr,
+					self.0,
 					&mut rc.right as *mut _ as _,
 				)
 			},
@@ -131,7 +133,7 @@ impl HWND {
 	///
 	/// Note that this method will actually minimize the window, not destroy it.
 	pub fn CloseWindow(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::CloseWindow(self.ptr) })
+		bool_to_winresult(unsafe { user32::CloseWindow(self.0) })
 	}
 
 	/// [`CreateWindowEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw)
@@ -156,12 +158,12 @@ impl HWND {
 				style.0,
 				pos.x, pos.y,
 				size.cx, size.cy,
-				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
 				hmenu.as_ptr(),
-				hinstance.ptr,
+				hinstance.0,
 				lparam.unwrap_or_default() as _,
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -176,7 +178,7 @@ impl HWND {
 		msg.convert_ret(
 			unsafe {
 				comctl32::DefSubclassProc(
-					self.ptr, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.0, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -193,7 +195,7 @@ impl HWND {
 		msg.convert_ret(
 			unsafe {
 				user32::DefWindowProcW(
-					self.ptr, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.0, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -202,31 +204,31 @@ impl HWND {
 	/// [`DestroyWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
 	/// method.
 	pub fn DestroyWindow(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::DestroyWindow(self.ptr) })
+		bool_to_winresult(unsafe { user32::DestroyWindow(self.0) })
 	}
 
 	/// [`DrawMenuBar`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawmenubar)
 	/// method.
 	pub fn DrawMenuBar(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::DrawMenuBar(self.ptr) })
+		bool_to_winresult(unsafe { user32::DrawMenuBar(self.0) })
 	}
 
 	/// [`EnableWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablewindow)
 	/// method.
 	pub fn EnableWindow(self, enable: bool) -> bool {
-		unsafe { user32::EnableWindow(self.ptr, enable as _) != 0 }
+		unsafe { user32::EnableWindow(self.0, enable as _) != 0 }
 	}
 
 	/// [`EndDialog`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddialog)
 	/// method.
 	pub fn EndDialog(self, result: isize) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::EndDialog(self.ptr, result) })
+		bool_to_winresult(unsafe { user32::EndDialog(self.0, result) })
 	}
 
 	/// [`EndPaint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 	/// method.
 	pub fn EndPaint(self, ps: &PAINTSTRUCT) {
-		unsafe { user32::EndPaint(self.ptr, ps as *const _ as _); }
+		unsafe { user32::EndPaint(self.0, ps as *const _ as _); }
 	}
 
 	/// [`EnumChildWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumchildwindows)
@@ -249,7 +251,7 @@ impl HWND {
 	{
 		unsafe {
 			user32::EnumChildWindows(
-				self.ptr,
+				self.0,
 				Self::enum_child_windows_proc::<F> as _, // https://redd.it/npehj9
 				&func as *const _ as _,
 			);
@@ -274,7 +276,7 @@ impl HWND {
 				class_name.map_or(std::ptr::null_mut(), |p| p.as_ptr()),
 				WString::from_opt_str(title).as_ptr(),
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -287,12 +289,12 @@ impl HWND {
 	{
 		unsafe {
 			user32::FindWindowExW(
-				self.ptr,
-				hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.ptr),
+				self.0,
+				hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.0),
 				class_name.as_ptr(),
 				WString::from_opt_str(title).as_ptr(),
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -300,7 +302,7 @@ impl HWND {
 	/// static method.
 	pub fn GetActiveWindow() -> Option<HWND> {
 		unsafe { user32::GetActiveWindow().as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`GetAltTabInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getalttabinfow)
@@ -324,7 +326,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::GetAltTabInfoW(
-					self.ptr,
+					self.0,
 					item.map_or(-1, |item| item as i32),
 					ati as *mut _ as _,
 					item.map_or(std::ptr::null_mut(), |_| buf.as_mut_ptr()),
@@ -337,21 +339,21 @@ impl HWND {
 	/// [`GetAncestor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getancestor)
 	/// method.
 	pub fn GetAncestor(self, flags: co::GA) -> Option<HWND> {
-		unsafe { user32::GetAncestor(self.ptr, flags.0).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::GetAncestor(self.0, flags.0).as_mut() }
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`GetCapture`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcapture)
 	/// static method.
 	pub fn GetCapture() -> Option<HWND> {
 		unsafe { user32::GetCapture().as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`GetClassLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclasslongptrw)
 	/// method.
 	pub fn GetClassLongPtr(self, index: co::GCLP) -> usize {
-		unsafe { user32::GetClassLongPtrW(self.ptr, index.0) }
+		unsafe { user32::GetClassLongPtrW(self.0, index.0) }
 	}
 
 	/// [`GetClassName`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassnamew)
@@ -360,7 +362,7 @@ impl HWND {
 		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
 		match unsafe {
 			user32::GetClassNameW(
-				self.ptr,
+				self.0,
 				buf.as_mut_ptr(),
 				buf.buffer_size() as _,
 			)
@@ -375,7 +377,7 @@ impl HWND {
 	pub fn GetClientRect(self) -> WinResult<RECT> {
 		let mut rc = RECT::default();
 		match unsafe {
-			user32::GetClientRect(self.ptr, &mut rc as *mut _ as _)
+			user32::GetClientRect(self.0, &mut rc as *mut _ as _)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(rc),
@@ -388,23 +390,21 @@ impl HWND {
 	/// **Note:** Must be paired with an
 	/// [`HWND::ReleaseDC`](crate::HWND::ReleaseDC) call.
 	pub fn GetDC(self) -> WinResult<HDC> {
-		unsafe { user32::GetDC(self.ptr).as_mut() }
-			.map(|ptr| HDC { ptr })
+		unsafe { user32::GetDC(self.0).as_mut() }
+			.map(|ptr| HDC(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetDesktopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
 	/// static method.
 	pub fn GetDesktopWindow() -> HWND {
-		Self {
-			ptr: unsafe { user32::GetDesktopWindow() }
-		}
+		Self(unsafe { user32::GetDesktopWindow() })
 	}
 
 	/// [`GetDlgCtrlID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgctrlid)
 	/// method.
 	pub fn GetDlgCtrlID(self) -> WinResult<u16> {
-		match unsafe { user32::GetDlgCtrlID(self.ptr) } {
+		match unsafe { user32::GetDlgCtrlID(self.0) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual ID is zero
 				err => Err(err),
@@ -416,8 +416,8 @@ impl HWND {
 	/// [`GetDlgItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitem)
 	/// method.
 	pub fn GetDlgItem(self, ctrl_id: u16) -> WinResult<HWND> {
-		unsafe { user32::GetDlgItem(self.ptr, ctrl_id as _).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::GetDlgItem(self.0, ctrl_id as _).as_mut() }
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -425,28 +425,28 @@ impl HWND {
 	/// static method.
 	pub fn GetFocus() -> Option<HWND> {
 		unsafe { user32::GetFocus().as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// static method.
 	pub fn GetForegroundWindow() -> Option<HWND> {
 		unsafe { user32::GetForegroundWindow().as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`GetLastActivePopup`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastactivepopup)
 	/// method.
 	pub fn GetLastActivePopup(self) -> Option<HWND> {
-		unsafe { user32::GetLastActivePopup(self.ptr).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::GetLastActivePopup(self.0).as_mut() }
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`GetMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenu)
 	/// method.
 	pub fn GetMenu(self) -> Option<HMENU> {
-		unsafe { user32::GetMenu(self.ptr).as_mut() }
-			.map(|ptr| HMENU { ptr })
+		unsafe { user32::GetMenu(self.0).as_mut() }
+			.map(|ptr| HMENU(ptr))
 	}
 
 	/// [`GetMenuBarInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenubarinfo)
@@ -457,7 +457,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::GetMenuBarInfo(
-					self.ptr,
+					self.0,
 					obj_id.0 as _,
 					item_id as _,
 					mbi as *mut _ as _,
@@ -474,8 +474,8 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::GetMenuItemRect(
-					self.ptr,
-					hmenu.ptr,
+					self.0,
+					hmenu.0,
 					item_pos,
 					rc_item as *mut _ as _,
 				)
@@ -489,9 +489,9 @@ impl HWND {
 		hwnd_ctrl: HWND, previous: bool) -> WinResult<HWND>
 	{
 		unsafe {
-			user32::GetNextDlgGroupItem(self.ptr, hwnd_ctrl.ptr, previous as _)
+			user32::GetNextDlgGroupItem(self.0, hwnd_ctrl.0, previous as _)
 				.as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -501,16 +501,16 @@ impl HWND {
 		hwnd_ctrl: HWND, previous: bool) -> WinResult<HWND>
 	{
 		unsafe {
-			user32::GetNextDlgTabItem(self.ptr, hwnd_ctrl.ptr, previous as _).as_mut()
-		}.map(|ptr| Self { ptr })
+			user32::GetNextDlgTabItem(self.0, hwnd_ctrl.0, previous as _).as_mut()
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`GetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getparent)
 	/// method.
 	pub fn GetParent(self) -> WinResult<HWND> {
-		unsafe { user32::GetParent(self.ptr).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::GetParent(self.0).as_mut() }
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -521,7 +521,7 @@ impl HWND {
 	{
 		bool_to_winresult(
 			unsafe {
-				user32::GetScrollInfo(self.ptr, bar.0, si as *mut _ as _)
+				user32::GetScrollInfo(self.0, bar.0, si as *mut _ as _)
 			},
 		)
 	}
@@ -529,7 +529,7 @@ impl HWND {
 	/// [`GetScrollPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getscrollpos)
 	/// method.
 	pub fn GetScrollPos(self, bar: co::SBB) -> WinResult<i32> {
-		match unsafe { user32::GetScrollPos(self.ptr, bar.0) } {
+		match unsafe { user32::GetScrollPos(self.0, bar.0) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero position
 				err => Err(err),
@@ -542,21 +542,21 @@ impl HWND {
 	/// static method.
 	pub fn GetShellWindow() -> Option<HWND> {
 		unsafe { user32::GetShellWindow().as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`GetSystemMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmenu)
 	/// method.
 	pub fn GetSystemMenu(self, revert: bool) -> Option<HMENU> {
-		unsafe { user32::GetSystemMenu(self.ptr, revert as _).as_mut() }
-			.map(|ptr| HMENU { ptr })
+		unsafe { user32::GetSystemMenu(self.0, revert as _).as_mut() }
+			.map(|ptr| HMENU(ptr))
 	}
 
 	/// [`GetTopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-gettopwindow)
 	/// method.
 	pub fn GetTopWindow(self) -> WinResult<Option<HWND>> {
-		match unsafe { user32::GetTopWindow(self.ptr).as_mut() } {
-			Some(h) => Ok(Some(Self { ptr: h })),
+		match unsafe { user32::GetTopWindow(self.0).as_mut() } {
+			Some(ptr) => Ok(Some(Self(ptr))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no child window
 				err => Err(err),
@@ -567,7 +567,7 @@ impl HWND {
 	/// [`GetUpdateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdatergn)
 	/// method.
 	pub fn GetUpdateRgn(self, hrgn: HRGN, erase: bool) -> WinResult<co::REGION> {
-		match unsafe { user32::GetUpdateRgn(self.ptr, hrgn.ptr, erase as _) } {
+		match unsafe { user32::GetUpdateRgn(self.0, hrgn.0, erase as _) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
 		}
@@ -576,8 +576,8 @@ impl HWND {
 	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
 	/// method.
 	pub fn GetWindow(self, cmd: co::GW) -> WinResult<HWND> {
-		unsafe { user32::GetWindow(self.ptr, cmd.0).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::GetWindow(self.0, cmd.0).as_mut() }
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -587,8 +587,8 @@ impl HWND {
 	/// **Note:** Must be paired with an
 	/// [`HWND::ReleaseDC`](crate::HWND::ReleaseDC) call.
 	pub fn GetWindowDC(self) -> WinResult<HDC> {
-		unsafe { user32::GetWindowDC(self.ptr).as_mut() }
-			.map(|ptr| HDC { ptr })
+		unsafe { user32::GetWindowDC(self.0).as_mut() }
+			.map(|ptr| HDC(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -598,7 +598,7 @@ impl HWND {
 		let mut affinity = co::WDA::default();
 		match unsafe {
 			user32::GetWindowDisplayAffinity(
-				self.ptr,
+				self.0,
 				&mut affinity as *mut _ as _,
 			)
 		} {
@@ -611,21 +611,21 @@ impl HWND {
 	/// method.
 	pub fn GetWindowInfo(self, wi: &mut WINDOWINFO) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::GetWindowInfo(self.ptr, wi as *mut _ as _) },
+			unsafe { user32::GetWindowInfo(self.0, wi as *mut _ as _) },
 		)
 	}
 
 	/// [`GetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw)
 	/// method.
 	pub fn GetWindowLongPtr(self, index: co::GWLP) -> isize {
-		unsafe { user32::GetWindowLongPtrW(self.ptr, index.0) }
+		unsafe { user32::GetWindowLongPtrW(self.0, index.0) }
 	}
 
 	/// [`GetWindowPlacement`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement)
 	/// method.
 	pub fn GetWindowPlacement(self, wp: &mut WINDOWPLACEMENT) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::GetWindowPlacement(self.ptr, wp as *mut _ as _) },
+			unsafe { user32::GetWindowPlacement(self.0, wp as *mut _ as _) },
 		)
 	}
 
@@ -634,7 +634,7 @@ impl HWND {
 	pub fn GetWindowRect(self) -> WinResult<RECT> {
 		let mut rc = RECT::default();
 		match unsafe {
-			user32::GetWindowRect(self.ptr, &mut rc as *mut _ as _)
+			user32::GetWindowRect(self.0, &mut rc as *mut _ as _)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(rc),
@@ -644,7 +644,7 @@ impl HWND {
 	/// [`GetWindowRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrgn)
 	/// method.
 	pub fn GetWindowRgn(self, hrgn: HRGN) -> WinResult<co::REGION> {
-		match unsafe { user32::GetWindowRgn(self.ptr, hrgn.ptr) } {
+		match unsafe { user32::GetWindowRgn(self.0, hrgn.0) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
 		}
@@ -654,7 +654,7 @@ impl HWND {
 	/// method.
 	pub fn GetWindowRgnBox(self, rc: &mut RECT) -> WinResult<co::REGION> {
 		match unsafe {
-			user32::GetWindowRgnBox(self.ptr, rc as *mut _ as _)
+			user32::GetWindowRgnBox(self.0, rc as *mut _ as _)
 		} {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
@@ -680,7 +680,7 @@ impl HWND {
 
 		let mut buf = WString::new_alloc_buffer(len as usize + 1); // plus terminating null
 		match unsafe {
-			user32::GetWindowTextW(self.ptr, buf.as_mut_ptr(), len + 1)
+			user32::GetWindowTextW(self.0, buf.as_mut_ptr(), len + 1)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(String::default()), // no chars copied for some reason
@@ -694,7 +694,7 @@ impl HWND {
 	/// method. Does not count the terminating null.
 	pub fn GetWindowTextLength(self) -> WinResult<i32> {
 		SetLastError(co::ERROR::SUCCESS);
-		match unsafe { user32::GetWindowTextLengthW(self.ptr) } {
+		match unsafe { user32::GetWindowTextLengthW(self.0) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero length
 				err => Err(err),
@@ -706,7 +706,7 @@ impl HWND {
 	/// [`GetWindowThreadProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid)
 	/// method.
 	pub fn GetWindowThreadProcessId(self) -> u32 {
-		unsafe { user32::GetWindowThreadProcessId(self.ptr, std::ptr::null_mut()) }
+		unsafe { user32::GetWindowThreadProcessId(self.0, std::ptr::null_mut()) }
 	}
 
 	/// [`HiliteMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hilitemenuitem)
@@ -716,7 +716,7 @@ impl HWND {
 	{
 		unsafe {
 			user32::HiliteMenuItem(
-				self.ptr, hmenu.ptr, id_or_pos.id_or_pos_u32(), hilite.0,
+				self.0, hmenu.0, id_or_pos.id_or_pos_u32(), hilite.0,
 			) != 0
 		}
 	}
@@ -741,7 +741,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::InvalidateRect(
-					self.ptr,
+					self.0,
 					rc.map_or(std::ptr::null(), |lp| lp as *const _ as _),
 					erase as _,
 				)
@@ -752,70 +752,70 @@ impl HWND {
 	/// [`InvalidateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidatergn)
 	/// method.
 	pub fn InvalidateRgn(self, hrgn: HRGN, erase: bool) {
-		unsafe { user32::InvalidateRgn(self.ptr, hrgn.ptr, erase as _); }
+		unsafe { user32::InvalidateRgn(self.0, hrgn.0, erase as _); }
 	}
 
 	/// [`IsChild`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ischild)
 	/// method.
 	pub fn IsChild(self, hwnd_possible_child: HWND) -> bool {
-		unsafe { user32::IsChild(self.ptr, hwnd_possible_child.ptr) != 0 }
+		unsafe { user32::IsChild(self.0, hwnd_possible_child.0) != 0 }
 	}
 
 	/// [`IsDialogMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isdialogmessagew)
 	/// method.
 	pub fn IsDialogMessage(self, msg: &mut MSG) -> bool {
 		unsafe {
-			user32::IsDialogMessageW(self.ptr, msg as *mut _ as _) != 0
+			user32::IsDialogMessageW(self.0, msg as *mut _ as _) != 0
 		}
 	}
 
 	/// [`IsIconic`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isiconic)
 	/// method.
 	pub fn IsIconic(self) -> bool {
-		unsafe { user32::IsIconic(self.ptr) != 0 }
+		unsafe { user32::IsIconic(self.0) != 0 }
 	}
 
 	/// [`IsWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindow)
 	/// method.
 	pub fn IsWindow(self) -> bool {
-		unsafe { user32::IsWindow(self.ptr) != 0 }
+		unsafe { user32::IsWindow(self.0) != 0 }
 	}
 
 	/// [`IsWindowEnabled`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowenabled)
 	/// method.
 	pub fn IsWindowEnabled(self) -> bool {
-		unsafe { user32::IsWindowEnabled(self.ptr) != 0 }
+		unsafe { user32::IsWindowEnabled(self.0) != 0 }
 	}
 
 	/// [`IsWindowUnicode`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowunicode)
 	/// method.
 	pub fn IsWindowUnicode(self) -> bool {
-		unsafe { user32::IsWindowUnicode(self.ptr) != 0 }
+		unsafe { user32::IsWindowUnicode(self.0) != 0 }
 	}
 
 	/// [`IsWindowVisible`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible)
 	/// method.
 	pub fn IsWindowVisible(self) -> bool {
-		unsafe { user32::IsWindowVisible(self.ptr) != 0 }
+		unsafe { user32::IsWindowVisible(self.0) != 0 }
 	}
 
 	/// [`IsZoomed`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iszoomed)
 	/// method.
 	pub fn IsZoomed(self) -> bool {
-		unsafe { user32::IsZoomed(self.ptr) != 0 }
+		unsafe { user32::IsZoomed(self.0) != 0 }
 	}
 
 	/// [`KillTimer`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-killtimer)
 	/// method.
 	pub fn KillTimer(self, event_id: usize) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::KillTimer(self.ptr, event_id) })
+		bool_to_winresult(unsafe { user32::KillTimer(self.0, event_id) })
 	}
 
 	/// [`LogicalToPhysicalPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-logicaltophysicalpoint)
 	/// method.
 	pub fn LogicalToPhysicalPoint(self, pt: *mut POINT) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::LogicalToPhysicalPoint(self.ptr, pt as _) },
+			unsafe { user32::LogicalToPhysicalPoint(self.0, pt as _) },
 		)
 	}
 
@@ -823,7 +823,7 @@ impl HWND {
 	/// method.
 	pub fn MapDialogRect(self, rc: &mut RECT) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::MapDialogRect(self.ptr, rc as *mut _ as _) },
+			unsafe { user32::MapDialogRect(self.0, rc as *mut _ as _) },
 		)
 	}
 
@@ -859,7 +859,7 @@ impl HWND {
 	{
 		match unsafe {
 			user32::MessageBoxW(
-				self.ptr,
+				self.0,
 				WString::from_str(text).as_ptr(),
 				WString::from_str(caption).as_ptr(),
 				flags.0,
@@ -873,9 +873,7 @@ impl HWND {
 	/// [`MonitorFromWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromwindow)
 	/// method.
 	pub fn MonitorFromWindow(self, flags: co::MONITOR) -> HMONITOR {
-		HMONITOR {
-			ptr: unsafe { user32::MonitorFromWindow(self.ptr, flags.0) },
-		}
+		HMONITOR(unsafe { user32::MonitorFromWindow(self.0, flags.0) })
 	}
 
 	/// [`MoveWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow)
@@ -886,7 +884,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::MoveWindow(
-					self.ptr,
+					self.0,
 					pos.x, pos.y,
 					size.cx, size.cy,
 					repaint as _,
@@ -901,7 +899,7 @@ impl HWND {
 	/// **Note:** Must be paired with a
 	/// [`CloseClipboard`](crate::CloseClipboard) call.
 	pub fn OpenClipboard(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::OpenClipboard(self.ptr) })
+		bool_to_winresult(unsafe { user32::OpenClipboard(self.0) })
 	}
 
 	/// [`OpenThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
@@ -912,10 +910,10 @@ impl HWND {
 	pub fn OpenThemeData(self, class_list: &str) -> Option<HTHEME> {
 		unsafe {
 			uxtheme::OpenThemeData(
-				self.ptr,
+				self.0,
 				WString::from_str(class_list).as_ptr(),
 			).as_mut()
-		}.map(|ptr| HTHEME { ptr })
+		}.map(|ptr| HTHEME(ptr))
 	}
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
@@ -947,7 +945,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::PostMessageW(
-					self.ptr, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.0, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -960,11 +958,11 @@ impl HWND {
 	{
 		unsafe {
 			user32::RealChildWindowFromPoint(
-				self.ptr,
+				self.0,
 				pt_parent_client_coords.x,
 				pt_parent_client_coords.y,
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 	}
 
 	/// [`RealGetWindowClassW`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realgetwindowclassw)
@@ -973,7 +971,7 @@ impl HWND {
 		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
 		match unsafe {
 			user32::RealGetWindowClassW(
-				self.ptr,
+				self.0,
 				buf.as_mut_ptr(),
 				buf.buffer_size() as _,
 			)
@@ -991,9 +989,9 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::RedrawWindow(
-					self.ptr,
+					self.0,
 					rc_update as *const _ as _,
-					hrgn_update.ptr,
+					hrgn_update.0,
 					flags.0,
 				)
 			},
@@ -1004,7 +1002,7 @@ impl HWND {
 	/// method.
 	pub fn ReleaseDC(self, hdc: HDC) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::ReleaseDC(self.ptr, hdc.ptr) },
+			unsafe { user32::ReleaseDC(self.0, hdc.0) },
 		)
 	}
 
@@ -1016,7 +1014,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				comctl32::RemoveWindowSubclass(
-					self.ptr,
+					self.0,
 					subclass_func as _,
 					subclass_id,
 				)
@@ -1029,7 +1027,7 @@ impl HWND {
 	pub fn ScreenToClient(self, pt: &mut POINT) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
-				user32::ScreenToClient(self.ptr, pt as *mut _ as _)
+				user32::ScreenToClient(self.0, pt as *mut _ as _)
 			},
 		)
 	}
@@ -1040,14 +1038,14 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::ScreenToClient(
-					self.ptr,
+					self.0,
 					&mut rc.left as *mut _ as _,
 				)
 			},
 		).and_then(|_| bool_to_winresult(
 			unsafe {
 				user32::ScreenToClient(
-					self.ptr,
+					self.0,
 					&mut rc.right as *mut _ as _,
 				)
 			},
@@ -1084,7 +1082,7 @@ impl HWND {
 		msg.convert_ret(
 			unsafe {
 				user32::SendMessageW(
-					self.ptr, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.0, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -1096,36 +1094,36 @@ impl HWND {
 	/// **Note:** Must be paired with a
 	/// [`ReleaseCapture`](crate::ReleaseCapture) call.
 	pub fn SetCapture(&self) -> Option<HWND> {
-		unsafe { user32::SetCapture(self.ptr).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::SetCapture(self.0).as_mut() }
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`SetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
 	/// method.
 	pub fn SetFocus(self) -> Option<HWND> {
-		unsafe { user32::SetFocus(self.ptr).as_mut() }
-			.map(|ptr| Self { ptr })
+		unsafe { user32::SetFocus(self.0).as_mut() }
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`SetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow)
 	/// method.
 	pub fn SetForegroundWindow(self) -> bool {
-		unsafe { user32::SetForegroundWindow(self.ptr) != 0 }
+		unsafe { user32::SetForegroundWindow(self.0) != 0 }
 	}
 
 	/// [`SetMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenu)
 	/// method.
 	pub fn SetMenu(self, hmenu: HMENU) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::SetMenu(self.ptr, hmenu.ptr) })
+		bool_to_winresult(unsafe { user32::SetMenu(self.0, hmenu.0) })
 	}
 
 	/// [`SetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setparent)
 	/// method.
 	pub fn SetParent(self, hwnd_new_parent: HWND) -> WinResult<Option<HWND>> {
 		match unsafe {
-			user32::SetParent(self.ptr, hwnd_new_parent.ptr).as_mut()
+			user32::SetParent(self.0, hwnd_new_parent.0).as_mut()
 		} {
-			Some(ptr) => Ok(Some(Self { ptr })),
+			Some(ptr) => Ok(Some(Self(ptr))),
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no previous parent
 				err => Err(err),
@@ -1140,7 +1138,7 @@ impl HWND {
 	{
 		unsafe {
 			user32::SetScrollInfo(
-				self.ptr,
+				self.0,
 				bar.0,
 				si as *const _ as _,
 				redraw as _,
@@ -1154,7 +1152,7 @@ impl HWND {
 		b: co::SBB, pos: i32, redraw: bool) -> WinResult<i32>
 	{
 		match unsafe {
-			user32::SetScrollPos(self.ptr, b.0, pos, redraw as BOOL)
+			user32::SetScrollPos(self.0, b.0, pos, redraw as BOOL)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero position
@@ -1172,7 +1170,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::SetScrollRange(
-					self.ptr,
+					self.0,
 					bar.0,
 					min_pos,
 					max_pos,
@@ -1190,7 +1188,7 @@ impl HWND {
 	{
 		match unsafe {
 			user32::SetTimer(
-				self.ptr,
+				self.0,
 				event_id,
 				elapse_ms,
 				timer_func.map_or(std::ptr::null(), |lp| lp as _),
@@ -1205,21 +1203,21 @@ impl HWND {
 	/// method.
 	pub fn SetWindowDisplayAffinity(self, affinity: co::WDA) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::SetWindowDisplayAffinity(self.ptr, affinity.0) },
+			unsafe { user32::SetWindowDisplayAffinity(self.0, affinity.0) },
 		)
 	}
 
 	/// [`SetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// method.
 	pub fn SetWindowLongPtr(self, index: co::GWLP, new_long: isize) -> isize {
-		unsafe { user32::SetWindowLongPtrW(self.ptr, index.0, new_long) }
+		unsafe { user32::SetWindowLongPtrW(self.0, index.0, new_long) }
 	}
 
 	/// [`SetWindowPlacement`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowplacement)
 	/// method.
 	pub fn SetWindowPlacement(self, wp: &WINDOWPLACEMENT) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::SetWindowPlacement(self.ptr, wp as *const _ as _) },
+			unsafe { user32::SetWindowPlacement(self.0, wp as *const _ as _) },
 		)
 	}
 
@@ -1232,7 +1230,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::SetWindowPos(
-					self.ptr,
+					self.0,
 					hwnd_insert_after.as_ptr(),
 					pos.x, pos.y,
 					size.cx, size.cy,
@@ -1246,7 +1244,7 @@ impl HWND {
 	/// method.
 	pub fn SetWindowRgn(self, hrgn: HRGN, redraw: bool) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe { user32::SetWindowRgn(self.ptr, hrgn.ptr, redraw as _) },
+			unsafe { user32::SetWindowRgn(self.0, hrgn.0, redraw as _) },
 		)
 	}
 
@@ -1259,7 +1257,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				comctl32::SetWindowSubclass(
-					self.ptr,
+					self.0,
 					subclass_proc as _,
 					subclass_id,
 					ref_data,
@@ -1274,7 +1272,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::SetWindowTextW(
-					self.ptr,
+					self.0,
 					WString::from_str(text).as_ptr(),
 				)
 			},
@@ -1292,7 +1290,7 @@ impl HWND {
 	{
 		let ret = unsafe {
 			shell32::ShellExecuteW(
-				self.ptr,
+				self.0,
 				WString::from_str(operation).as_ptr(),
 				WString::from_str(file).as_ptr(),
 				parameters.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
@@ -1304,20 +1302,20 @@ impl HWND {
 		if ret <= 32 as _ {
 			Err(co::SE_ERR(ret as _))
 		} else {
-			Ok(HINSTANCE { ptr: ret as _ })
+			Ok(HINSTANCE(ret as _))
 		}
 	}
 
 	/// [`ShowCaret`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcaret)
 	/// method.
 	pub fn ShowCaret(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::ShowCaret(self.ptr) })
+		bool_to_winresult(unsafe { user32::ShowCaret(self.0) })
 	}
 
 	/// [`ShowWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow)
 	/// method.
 	pub fn ShowWindow(self, show_cmd: co::SW) -> bool {
-		unsafe { user32::ShowWindow(self.ptr, show_cmd.0) != 0 }
+		unsafe { user32::ShowWindow(self.0, show_cmd.0) != 0 }
 	}
 
 	/// [`TaskDialog`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
@@ -1378,8 +1376,8 @@ impl HWND {
 		hr_to_winresult(
 			unsafe {
 				comctl32::TaskDialog(
-					self.ptr,
-					hinstance.map_or(std::ptr::null_mut(), |h| h.ptr),
+					self.0,
+					hinstance.map_or(std::ptr::null_mut(), |h| h.0),
 					WString::from_opt_str(window_title).as_ptr(),
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),
@@ -1398,8 +1396,8 @@ impl HWND {
 	{
 		match unsafe {
 			user32::TranslateAcceleratorW(
-				self.ptr,
-				haccel_table.ptr,
+				self.0,
+				haccel_table.0,
 				msg as *mut _ as _,
 			)
 		} {
@@ -1411,7 +1409,7 @@ impl HWND {
 	/// [`UpdateWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatewindow)
 	/// method.
 	pub fn UpdateWindow(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::UpdateWindow(self.ptr) })
+		bool_to_winresult(unsafe { user32::UpdateWindow(self.0) })
 	}
 
 	/// [`ValidateRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validaterect)
@@ -1419,7 +1417,7 @@ impl HWND {
 	pub fn ValidateRect(self, rc: &RECT) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
-				user32::ValidateRect(self.ptr, rc as *const _ as _)
+				user32::ValidateRect(self.0, rc as *const _ as _)
 			},
 		)
 	}
@@ -1427,21 +1425,21 @@ impl HWND {
 	/// [`ValidateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validatergn)
 	/// method.
 	pub fn ValidateRgn(self, hrgn: HRGN) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::ValidateRgn(self.ptr, hrgn.ptr) })
+		bool_to_winresult(unsafe { user32::ValidateRgn(self.0, hrgn.0) })
 	}
 
 	/// [`WindowFromPhysicalPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromphysicalpoint)
 	/// static method.
 	pub fn WindowFromPhysicalPoint(pt: POINT) -> Option<HWND> {
 		unsafe { user32::WindowFromPhysicalPoint(pt.x, pt.y).as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`WindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfrompoint)
 	/// static method.
 	pub fn WindowFromPoint(pt: POINT) -> Option<HWND> {
 		unsafe { user32::WindowFromPoint(pt.x, pt.y).as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 	}
 
 	/// [`WinHelp`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-winhelpw)
@@ -1452,7 +1450,7 @@ impl HWND {
 		bool_to_winresult(
 			unsafe {
 				user32::WinHelpW(
-					self.ptr,
+					self.0,
 					WString::from_str(help_file).as_ptr(),
 					cmd.0,
 					data,

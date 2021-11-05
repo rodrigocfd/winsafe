@@ -4,7 +4,7 @@ use crate::enums::IdStr;
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
 use crate::gui::privs::{post_quit_error, ui_font};
-use crate::handles::{HINSTANCE, HWND};
+use crate::handles::{Handle, HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 
 /// Base to all dialog windows.

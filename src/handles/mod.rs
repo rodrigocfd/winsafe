@@ -1,4 +1,5 @@
-//! Win32 handles.
+//! Win32
+//! [handles](https://docs.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects).
 
 #[macro_use] mod macros;
 
@@ -32,6 +33,7 @@ mod htheme;
 mod hthread;
 mod hupdatersrc;
 mod hwnd;
+mod traits;
 
 pub use any_handles::*;
 pub use haccel::HACCEL;
@@ -63,3 +65,8 @@ pub use htheme::HTHEME;
 pub use hthread::HTHREAD;
 pub use hupdatersrc::HUPDATERSRC;
 pub use hwnd::HWND;
+pub use traits::*;
+
+pub(crate) mod prelude {
+	pub use super::traits::*;
+}

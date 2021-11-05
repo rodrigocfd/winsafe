@@ -1,3 +1,47 @@
+/// Implements `Handle` trait to handle object, plus required bounds.
+macro_rules! impl_handle {
+	($name:ident) => {
+		unsafe impl Send for $name {}
+
+		impl std::fmt::Debug for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{} {:#010x}", stringify!($name), self.0 as usize)
+			}
+		}
+
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{:#010x}", self.0 as usize)
+			}
+		}
+
+		impl std::fmt::LowerHex for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::LowerHex::fmt(&(self.0 as usize), f)
+			}
+		}
+
+		impl std::fmt::UpperHex for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::UpperHex::fmt(&(self.0 as usize), f)
+			}
+		}
+
+		impl crate::handles::traits::Handle for $name {
+			const NULL: Self = Self(std::ptr::null_mut());
+
+			unsafe fn from_ptr<T>(p: *mut T) -> Self {
+				Self(p as _)
+			}
+
+			unsafe fn as_ptr(self) -> *mut std::ffi::c_void {
+				self.0
+			}
+		}
+	};
+}
+
+
 /// Declares the type of a handle.
 macro_rules! pub_struct_handle {
 	(
@@ -101,35 +145,6 @@ macro_rules! pub_struct_handle_closeable {
 				crate::privs::bool_to_winresult(
 					unsafe { crate::ffi::kernel32::CloseHandle(self.ptr) },
 				)
-			}
-		}
-	};
-}
-
-/// Declares the type of an HGDIOBJ handle.
-macro_rules! pub_struct_handle_gdi {
-	(
-		$(#[$doc:meta])*
-		$name:ident
-	) => {
-		pub_struct_handle! {
-			$(#[$doc])*
-			$name
-		}
-
-		impl $name {
-			/// [`DeleteObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
-			/// method.
-			///
-			/// This method is common to all GDI handle types.
-			pub fn DeleteObject(self) -> WinResult<()> {
-				match unsafe { crate::ffi::gdi32::DeleteObject(self.ptr) } {
-					0 => match crate::funcs::GetLastError() {
-						crate::co::ERROR::SUCCESS => Ok(()), // not really an error
-						err => Err(err),
-					},
-					_ => Ok(()),
-				}
 			}
 		}
 	};

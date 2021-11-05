@@ -4,14 +4,18 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
+use crate::handles::HandleGdi;
 use crate::structs::{RECT, SIZE};
 
-pub_struct_handle_gdi! {
-	/// Handle to a
-	/// [region](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
-	/// GDI object.
-	HRGN
-}
+/// Handle to a
+/// [region](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
+/// GDI object.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HRGN(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HRGN);
+impl HandleGdi for HRGN {}
 
 impl HRGN {
 	/// [`CreateRectRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
@@ -25,7 +29,7 @@ impl HRGN {
 				bounds.left, bounds.top, bounds.right, bounds.bottom,
 			).as_mut()
 		}
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -36,7 +40,7 @@ impl HRGN {
 	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn CreateRectRgnIndirect(rc: &RECT) -> WinResult<HRGN> {
 		unsafe { gdi32::CreateRectRgnIndirect(rc as *const _ as _).as_mut() }
-			.map(|ptr| Self { ptr })
+			.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -53,14 +57,14 @@ impl HRGN {
 				bounds.left, bounds.top, bounds.right, bounds.top,
 				size.cx, size.cy,
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`OffsetClipRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
 	/// method.
 	pub fn OffsetClipRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
-		match unsafe { gdi32::OffsetClipRgn(self.ptr, x, y) } {
+		match unsafe { gdi32::OffsetClipRgn(self.0, x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
 		}
@@ -69,7 +73,7 @@ impl HRGN {
 	/// [`OffsetRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
 	/// method.
 	pub fn OffsetRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
-		match unsafe { gdi32::OffsetRgn(self.ptr, x, y) } {
+		match unsafe { gdi32::OffsetRgn(self.0, x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
 		}
@@ -78,14 +82,12 @@ impl HRGN {
 	/// [`PtInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptinregion)
 	/// method.
 	pub fn PtInRegion(self, x: i32, y: i32) -> bool {
-		unsafe { gdi32::PtInRegion(self.ptr, x, y) != 0 }
+		unsafe { gdi32::PtInRegion(self.0, x, y) != 0 }
 	}
 
 	/// [`RectInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// method.
 	pub fn RectInRegion(self, rc: &RECT) -> bool {
-		unsafe {
-			gdi32::RectInRegion(self.ptr, rc as *const _ as _) != 0
-		}
+		unsafe { gdi32::RectInRegion(self.0, rc as *const _ as _) != 0 }
 	}
 }

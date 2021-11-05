@@ -338,7 +338,7 @@ impl MsgSend for GetHeader {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND { ptr: p as _ })
+		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -362,7 +362,7 @@ impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -1156,14 +1156,14 @@ impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himagelist.ptr as _,
+			lparam: self.himagelist.0 as _,
 		}
 	}
 }

@@ -336,8 +336,8 @@ impl MsgSend for GetImage {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.img_type {
-			co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP { ptr: v as _ })),
-			co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON { ptr: v as _ })),
+			co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP(v as _))),
+			co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON(v as _))),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
 		}
 	}
@@ -434,8 +434,8 @@ impl MsgSend for SetImage {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.image {
-			BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP { ptr: v as _ })),
-			BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON { ptr: v as _ })),
+			BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP(v as _))),
+			BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON(v as _))),
 		}
 	}
 

@@ -4,6 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, kernel32, user32};
 use crate::funcs::GetLastError;
+use crate::handles::HandleClose;
 use crate::privs::{bool_to_winresult, INFINITE, MAX_PATH};
 use crate::structs::{
 	FILETIME,
@@ -13,12 +14,15 @@ use crate::structs::{
 };
 use crate::various::WString;
 
-pub_struct_handle_closeable! {
-	/// Handle to a
-	/// [process](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
-	/// Originally just a `HANDLE`.
-	HPROCESS
-}
+/// Handle to a
+/// [process](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HPROCESS(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HPROCESS);
+impl HandleClose for HPROCESS {}
 
 impl HPROCESS {
 	/// [`CreateProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
@@ -75,7 +79,7 @@ impl HPROCESS {
 	{
 		bool_to_winresult(
 			unsafe {
-				kernel32::FlushInstructionCache(self.ptr, base_address, size)
+				kernel32::FlushInstructionCache(self.0, base_address, size)
 			},
 		)
 	}
@@ -89,7 +93,7 @@ impl HPROCESS {
 	/// [`GetCurrentProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
 	/// static method.
 	pub fn GetCurrentProcess() -> HPROCESS {
-		Self { ptr: unsafe { kernel32::GetCurrentProcess() } }
+		Self(unsafe { kernel32::GetCurrentProcess() })
 	}
 
 	/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
@@ -97,14 +101,14 @@ impl HPROCESS {
 	pub fn GetExitCodeProcess(self) -> WinResult<u32> {
 		let mut exit_code = u32::default();
 		bool_to_winresult(
-			unsafe { kernel32::GetExitCodeProcess(self.ptr, &mut exit_code) },
+			unsafe { kernel32::GetExitCodeProcess(self.0, &mut exit_code) },
 		).map(|_| exit_code)
 	}
 
 	/// [`GetGuiResources`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
 	/// method.
 	pub fn GetGuiResources(self, flags: co::GR) -> WinResult<u32> {
-		match unsafe { kernel32::GetGuiResources(self.ptr, flags.0) } {
+		match unsafe { kernel32::GetGuiResources(self.0, flags.0) } {
 			0 => Err(GetLastError()),
 			count => Ok(count),
 		}
@@ -113,7 +117,7 @@ impl HPROCESS {
 	/// [`GetProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
 	/// method.
 	pub fn GetProcessId(self) -> WinResult<u32> {
-		match unsafe { kernel32::GetProcessId(self.ptr) } {
+		match unsafe { kernel32::GetProcessId(self.0) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -130,7 +134,7 @@ impl HPROCESS {
 		bool_to_winresult(
 			unsafe {
 				kernel32::GetProcessTimes(
-					self.ptr,
+					self.0,
 					creation as *mut _ as _,
 					exit as *mut _ as _,
 					kernel as *mut _ as _,
@@ -144,7 +148,7 @@ impl HPROCESS {
 	/// method.
 	pub fn IsWow64Process(self) -> WinResult<bool> {
 		let mut wow64: BOOL = 0;
-		match unsafe { kernel32::IsWow64Process(self.ptr, &mut wow64) } {
+		match unsafe { kernel32::IsWow64Process(self.0, &mut wow64) } {
 			0 => Err(GetLastError()),
 			_ => Ok(wow64 != 0),
 		}
@@ -165,7 +169,7 @@ impl HPROCESS {
 				inherit_handle as _,
 				process_id,
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -180,7 +184,7 @@ impl HPROCESS {
 		bool_to_winresult(
 			unsafe {
 				kernel32::QueryFullProcessImageNameW(
-					self.ptr,
+					self.0,
 					flags.0,
 					buf.as_mut_ptr(),
 					&mut sz,
@@ -199,7 +203,7 @@ impl HPROCESS {
 	{
 		bool_to_winresult(
 			user32::SetUserObjectInformationW(
-				self.ptr,
+				self.0,
 				index.0,
 				pv_info as *mut _ as _,
 				std::mem::size_of::<T>() as _,
@@ -215,7 +219,7 @@ impl HPROCESS {
 		match unsafe {
 			co::WAIT(
 				kernel32::WaitForSingleObject(
-					self.ptr,
+					self.0,
 					milliseconds.unwrap_or(INFINITE),
 				),
 			)

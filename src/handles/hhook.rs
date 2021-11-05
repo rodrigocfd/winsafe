@@ -7,11 +7,13 @@ use crate::funcs::GetLastError;
 use crate::handles::HINSTANCE;
 use crate::privs::bool_to_winresult;
 
-pub_struct_handle! {
-	/// Handle to a
-	/// [hook](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
-	HHOOK
-}
+/// Handle to a
+/// [hook](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HHOOK(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HHOOK);
 
 impl HHOOK {
 	/// [`CallNextHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
@@ -19,7 +21,7 @@ impl HHOOK {
 	pub fn CallNextHookEx(self,
 		code: co::WH, wparam: usize, lparam: isize) -> isize
 	{
-		unsafe { user32::CallNextHookEx(self.ptr, code.0, wparam, lparam) }
+		unsafe { user32::CallNextHookEx(self.0, code.0, wparam, lparam) }
 	}
 
 	/// [`SetWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
@@ -32,16 +34,16 @@ impl HHOOK {
 			user32::SetWindowsHookExW(
 				hook_id.0,
 				proc as _,
-				module.map_or(std::ptr::null_mut(), |h| h.ptr),
+				module.map_or(std::ptr::null_mut(), |h| h.0),
 				thread_id.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`UnhookWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
 	/// method.
 	pub fn UnhookWindowsHookEx(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::UnhookWindowsHookEx(self.ptr) })
+		bool_to_winresult(unsafe { user32::UnhookWindowsHookEx(self.0) })
 	}
 }

@@ -46,7 +46,7 @@ impl MsgSend for EditLabel {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND { ptr: p as _ })
+		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -190,7 +190,7 @@ impl MsgSend for GetEditControl {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HWND { ptr: p as _ }),
+			p => Ok(HWND(p as _)),
 		}
 	}
 
@@ -237,7 +237,7 @@ impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -496,7 +496,7 @@ impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -644,14 +644,14 @@ impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST { ptr: p as _ })
+		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himglist.map_or(0, |h| h.ptr as _),
+			lparam: self.himglist.map_or(0, |h| h.0 as _),
 		}
 	}
 }

@@ -134,14 +134,14 @@ macro_rules! pub_struct_msg_ctlcolor {
 			type RetType = HBRUSH;
 
 			fn convert_ret(&self, v: isize) -> Self::RetType {
-				HBRUSH { ptr: v as _ }
+				HBRUSH(v as _)
 			}
 
 			fn as_generic_wm(&self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
-					wparam: self.hdc.ptr as usize,
-					lparam: self.hwnd.ptr as isize,
+					wparam: self.hdc.0 as usize,
+					lparam: self.hwnd.0 as isize,
 				}
 			}
 		}
@@ -149,8 +149,8 @@ macro_rules! pub_struct_msg_ctlcolor {
 		impl MsgSendRecv for $name {
 			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
-					hdc: HDC { ptr: p.wparam as _ },
-					hwnd: HWND { ptr: p.lparam as _ },
+					hdc: HDC(p.wparam as _),
+					hwnd: HWND(p.lparam as _),
 				}
 			}
 		}

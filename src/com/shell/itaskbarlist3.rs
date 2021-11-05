@@ -61,7 +61,7 @@ pub trait ITaskbarList3T: ITaskbarList2T {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
 			hr_to_winresult(
-				(vt.RegisterTab)(self.ptr(), hwnd_tab.ptr, hwnd_mdi.ptr),
+				(vt.RegisterTab)(self.ptr(), hwnd_tab.0, hwnd_mdi.0),
 			)
 		}
 	}
@@ -74,7 +74,7 @@ pub trait ITaskbarList3T: ITaskbarList2T {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
 			hr_to_winresult(
-				(vt.SetProgressState)(self.ptr(), hwnd.ptr, tbpf_flags.0),
+				(vt.SetProgressState)(self.ptr(), hwnd.0, tbpf_flags.0),
 			)
 		}
 	}
@@ -101,7 +101,7 @@ pub trait ITaskbarList3T: ITaskbarList2T {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
 			hr_to_winresult(
-				(vt.SetProgressValue)(self.ptr(), hwnd.ptr, completed, total),
+				(vt.SetProgressValue)(self.ptr(), hwnd.0, completed, total),
 			)
 		}
 	}
@@ -112,7 +112,7 @@ pub trait ITaskbarList3T: ITaskbarList2T {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
 			hr_to_winresult(
-				(vt.SetTabActive)(self.ptr(), hwnd_tab.ptr, hwnd_mdi.ptr, 0),
+				(vt.SetTabActive)(self.ptr(), hwnd_tab.0, hwnd_mdi.0, 0),
 			)
 		}
 	}
@@ -125,7 +125,7 @@ pub trait ITaskbarList3T: ITaskbarList2T {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
 			hr_to_winresult(
-				(vt.SetTabOrder)(self.ptr(), hwnd_tab.ptr, hwnd_insert_before.ptr),
+				(vt.SetTabOrder)(self.ptr(), hwnd_tab.0, hwnd_insert_before.0),
 			)
 		}
 	}

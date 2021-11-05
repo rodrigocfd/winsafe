@@ -19,12 +19,14 @@ use crate::privs::{bool_to_winresult, MAX_PATH, str_to_iso88591};
 use crate::structs::{ATOM, LANGID, SIZE, WNDCLASSEX};
 use crate::various::WString;
 
-pub_struct_handle! {
-	/// Handle to an
-	/// [instance](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
-	/// same as `HMODULE`.
-	HINSTANCE
-}
+/// Handle to an
+/// [instance](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
+/// same as `HMODULE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HINSTANCE(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HINSTANCE);
 
 impl HINSTANCE {
 	/// [`CreateDialogParam`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
@@ -38,13 +40,13 @@ impl HINSTANCE {
 	{
 		unsafe {
 			user32::CreateDialogParamW(
-				self.ptr,
+				self.0,
 				resource_id.as_ptr(),
-				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
 				dialog_proc as _,
 				init_param.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| HWND { ptr })
+		}.map(|ptr| HWND(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -59,9 +61,9 @@ impl HINSTANCE {
 	{
 		match unsafe {
 			user32::DialogBoxParamW(
-				self.ptr,
+				self.0,
 				resource_id.as_ptr(),
-				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
 				dialog_proc as _,
 				init_param.unwrap_or_default(),
 			)
@@ -80,7 +82,7 @@ impl HINSTANCE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceLanguagesW(
-					self.ptr,
+					self.0,
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
 					Self::enum_resource_languages_proc::<F> as _,
@@ -107,7 +109,7 @@ impl HINSTANCE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceNamesW(
-					self.ptr,
+					self.0,
 					resource_type.as_ptr(),
 					Self::enum_resource_names_proc::<F> as _,
 					&func as *const _ as _,
@@ -131,7 +133,7 @@ impl HINSTANCE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::EnumResourceTypesW(
-					self.ptr,
+					self.0,
 					Self::enum_resource_types_proc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -156,7 +158,7 @@ impl HINSTANCE {
 	{
 		unsafe {
 			kernel32::FindResourceW(
-				self.ptr,
+				self.0,
 				resource_id.as_ptr(),
 				resource_type.as_ptr(),
 			).as_mut()
@@ -175,7 +177,7 @@ impl HINSTANCE {
 	{
 		unsafe {
 			kernel32::FindResourceExW(
-				self.ptr,
+				self.0,
 				resource_id.as_ptr(),
 				resource_type.as_ptr(),
 				language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
@@ -187,7 +189,7 @@ impl HINSTANCE {
 	/// [`FreeLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
 	/// method.
 	pub fn FreeLibrary(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel32::FreeLibrary(self.ptr) })
+		bool_to_winresult(unsafe { kernel32::FreeLibrary(self.0) })
 	}
 
 	/// [`GetClassInfoEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassinfoexw)
@@ -209,7 +211,7 @@ impl HINSTANCE {
 	{
 		match unsafe {
 			user32::GetClassInfoExW(
-				self.ptr,
+				self.0,
 				WString::from_str(class_name).as_ptr(),
 				wcx as *mut _ as _,
 			)
@@ -237,7 +239,7 @@ impl HINSTANCE {
 		let mut buf = [0; MAX_PATH];
 		match unsafe {
 			kernel32::GetModuleFileNameW(
-				self.ptr,
+				self.0,
 				buf.as_mut_ptr(),
 				buf.len() as _,
 			)
@@ -261,10 +263,9 @@ impl HINSTANCE {
 	/// ```
 	pub fn GetModuleHandle(module_name: Option<&str>) -> WinResult<HINSTANCE> {
 		unsafe {
-			kernel32::GetModuleHandleW(
-				WString::from_opt_str(module_name).as_ptr()
-			).as_mut()
-		}.map(|ptr| Self { ptr })
+			kernel32::GetModuleHandleW(WString::from_opt_str(module_name).as_ptr())
+				.as_mut()
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -274,10 +275,8 @@ impl HINSTANCE {
 		proc_name: &str) -> WinResult<*const std::ffi::c_void>
 	{
 		unsafe {
-			kernel32::GetProcAddress(
-				self.ptr,
-				str_to_iso88591(proc_name).as_ptr(),
-			).as_ref()
+			kernel32::GetProcAddress(self.0, str_to_iso88591(proc_name).as_ptr())
+				.as_ref()
 		}.map(|ptr| ptr as _)
 			.ok_or_else(|| GetLastError())
 	}
@@ -286,11 +285,8 @@ impl HINSTANCE {
 	/// method.
 	pub fn LoadAccelerators(self, table_name: IdStr) -> WinResult<HACCEL> {
 		unsafe {
-			user32::LoadAcceleratorsW(
-				self.ptr,
-				table_name.as_ptr(),
-			).as_mut()
-		}.map(|ptr| HACCEL { ptr })
+			user32::LoadAcceleratorsW(self.0, table_name.as_ptr()).as_mut()
+		}.map(|ptr| HACCEL(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -309,11 +305,8 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadCursor(self, resource_id: IdIdcStr) -> WinResult<HCURSOR> {
 		unsafe {
-				user32::LoadCursorW(
-				self.ptr,
-				resource_id.as_ptr(),
-			).as_mut()
-		}.map(|ptr| HCURSOR { ptr })
+			user32::LoadCursorW(self.0, resource_id.as_ptr()).as_mut()
+		}.map(|ptr| HCURSOR(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -332,11 +325,8 @@ impl HINSTANCE {
 	/// ```
 	pub fn LoadIcon(self, icon_id: IdIdiStr) -> WinResult<HICON> {
 		unsafe {
-			user32::LoadIconW(
-				self.ptr,
-				icon_id.as_ptr(),
-			).as_mut()
-		}.map(|ptr| HICON { ptr })
+			user32::LoadIconW(self.0, icon_id.as_ptr()).as_mut()
+		}.map(|ptr| HICON(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -346,9 +336,8 @@ impl HINSTANCE {
 		name: u16, sz: SIZE, load: co::LR) -> WinResult<HBITMAP>
 	{
 		unsafe {
-			user32::LoadImageW(self.ptr, name as _, 0, sz.cx, sz.cy, load.0)
-				.as_mut()
-		}.map(|ptr| HBITMAP { ptr })
+			user32::LoadImageW(self.0, name as _, 0, sz.cx, sz.cy, load.0).as_mut()
+		}.map(|ptr| HBITMAP(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -358,9 +347,8 @@ impl HINSTANCE {
 		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HCURSOR>
 	{
 		unsafe {
-			user32::LoadImageW(self.ptr, name as _, 2, cx, cy, load.0)
-				.as_mut()
-		}.map(|ptr| HCURSOR { ptr })
+			user32::LoadImageW(self.0, name as _, 2, cx, cy, load.0).as_mut()
+		}.map(|ptr| HCURSOR(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -370,9 +358,8 @@ impl HINSTANCE {
 		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HICON>
 	{
 		unsafe {
-			user32::LoadImageW(self.ptr, name as _, 1, cx, cy, load.0)
-				.as_mut()
-		}.map(|ptr| HICON { ptr })
+			user32::LoadImageW(self.0, name as _, 1, cx, cy, load.0).as_mut()
+		}.map(|ptr| HICON(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -385,15 +372,15 @@ impl HINSTANCE {
 		unsafe {
 			kernel32::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
 				.as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`LoadMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// method.
 	pub fn LoadMenu(self, resource_id: IdStr) -> WinResult<HMENU> {
-		unsafe { user32::LoadMenuW(self.ptr, resource_id.as_ptr()).as_mut() }
-			.map(|ptr| HMENU { ptr })
+		unsafe { user32::LoadMenuW(self.0, resource_id.as_ptr()).as_mut() }
+			.map(|ptr| HMENU(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -403,7 +390,7 @@ impl HINSTANCE {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	pub fn LoadResource(self, res_info: HRSRC) -> WinResult<HRSRCMEM> {
-		unsafe { kernel32::LoadResource(self.ptr, res_info.ptr).as_mut() }
+		unsafe { kernel32::LoadResource(self.0, res_info.ptr).as_mut() }
 			.map(|ptr| HRSRCMEM { ptr })
 			.ok_or_else(|| GetLastError())
 	}
@@ -414,7 +401,7 @@ impl HINSTANCE {
 		let mut pData: *const u16 = std::ptr::null_mut();
 		match unsafe {
 			user32::LoadStringW(
-				self.ptr,
+				self.0,
 				id as _,
 				&mut pData as *mut _ as  _, 0,
 			)
@@ -484,7 +471,7 @@ impl HINSTANCE {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	pub fn SizeofResource(self, res_info: HRSRC) -> WinResult<u32> {
-		match unsafe { kernel32::SizeofResource(self.ptr, res_info.ptr) } {
+		match unsafe { kernel32::SizeofResource(self.0, res_info.ptr) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz)
 		}

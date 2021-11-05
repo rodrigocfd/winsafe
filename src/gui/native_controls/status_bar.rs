@@ -17,7 +17,7 @@ use crate::gui::traits::{
 	Window,
 };
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::HWND;
+use crate::handles::{Handle, HWND};
 use crate::msg::{MsgSend, sb, wm};
 use crate::structs::{POINT, SIZE};
 

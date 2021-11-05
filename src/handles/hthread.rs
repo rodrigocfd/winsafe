@@ -4,15 +4,19 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
+use crate::handles::HandleClose;
 use crate::privs::bool_to_winresult;
 use crate::structs::{FILETIME, SECURITY_ATTRIBUTES};
 
-pub_struct_handle_closeable! {
-	/// Handle to a
-	/// [thread](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
-	/// Originally just a `HANDLE`.
-	HTHREAD
-}
+/// Handle to a
+/// [thread](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HTHREAD(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HTHREAD);
+impl HandleClose for HTHREAD {}
 
 impl HTHREAD {
 	/// [`CreateThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
@@ -39,7 +43,7 @@ impl HTHREAD {
 				flags.0,
 				&mut thread_id,
 			).as_mut()
-		}.map(|ptr| (Self { ptr }, thread_id))
+		}.map(|ptr| (Self(ptr), thread_id))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -52,7 +56,7 @@ impl HTHREAD {
 	/// [`GetCurrentThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
 	/// static method.
 	pub fn GetCurrentThread() -> HTHREAD {
-		Self { ptr: unsafe { kernel32::GetCurrentThread() } }
+		Self(unsafe { kernel32::GetCurrentThread() })
 	}
 
 	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
@@ -60,14 +64,14 @@ impl HTHREAD {
 	pub fn GetExitCodeThread(self) -> WinResult<u32> {
 		let mut exit_code = u32::default();
 		bool_to_winresult(
-			unsafe { kernel32::GetExitCodeThread(self.ptr, &mut exit_code) },
+			unsafe { kernel32::GetExitCodeThread(self.0, &mut exit_code) },
 		).map(|_| exit_code)
 	}
 
 	/// [`GetProcessIdOfThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessidofthread)
 	/// method.
 	pub fn GetProcessIdOfThread(self) -> WinResult<u32> {
-		match unsafe { kernel32::GetProcessIdOfThread(self.ptr) } {
+		match unsafe { kernel32::GetProcessIdOfThread(self.0) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -76,7 +80,7 @@ impl HTHREAD {
 	/// [`GetThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadid)
 	/// method.
 	pub fn GetThreadId(self) -> WinResult<u32> {
-		match unsafe { kernel32::GetThreadId(self.ptr) } {
+		match unsafe { kernel32::GetThreadId(self.0) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -93,7 +97,7 @@ impl HTHREAD {
 		bool_to_winresult(
 			unsafe {
 				kernel32::GetThreadTimes(
-					self.ptr,
+					self.0,
 					creation as *mut _ as _,
 					exit as *mut _ as _,
 					kernel as *mut _ as _,

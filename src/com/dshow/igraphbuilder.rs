@@ -110,7 +110,7 @@ pub trait IGraphBuilderT: IFilterGraphT {
 			hr_to_winresult(
 				(vt.SetLogFile)(
 					self.ptr(),
-					hfile.map_or(std::ptr::null_mut(), |h| h.ptr),
+					hfile.map_or(std::ptr::null_mut(), |h| h.0),
 				),
 			)
 		}

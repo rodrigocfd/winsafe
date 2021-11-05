@@ -269,7 +269,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		where F: Fn(wm::CtlColorBtn) -> ErrResult<HBRUSH> + 'static,
 	{
 		self.add_msg(co::WM::CTLCOLORBTN,
-			move |p| Ok(Some(func(wm::CtlColorBtn::from_generic_wm(p))?.ptr as _)));
+			move |p| Ok(Some(func(wm::CtlColorBtn::from_generic_wm(p))?.0 as _)));
 	}
 
 	pub_fn_wm_ctlcolor! { wm_ctl_color_dlg, co::WM::CTLCOLORDLG, wm::CtlColorDlg,
@@ -499,7 +499,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		where F: Fn() -> ErrResult<Option<HFONT>> + 'static,
 	{
 		self.add_msg(co::WM::GETFONT,
-			move |_| Ok(Some(func()?.map(|h| h.ptr as _).unwrap_or_default())));
+			move |_| Ok(Some(func()?.map(|h| h.0 as _).unwrap_or_default())));
 	}
 
 	/// [`MN_GETHMENU`](crate::msg::wm::GetHMenu) message.
@@ -509,7 +509,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		where F: Fn() -> ErrResult<Option<HMENU>> + 'static
 	{
 		self.add_msg(co::WM::MN_GETHMENU,
-			move |_| Ok(Some(func()?.map(|h| h.ptr as _).unwrap_or_default())));
+			move |_| Ok(Some(func()?.map(|h| h.0 as _).unwrap_or_default())));
 	}
 
 	pub_fn_wm_ret0_param! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo,
@@ -930,7 +930,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		self.add_msg(co::WM::SETICON, move |p|
 			Ok(Some(
 				func(wm::SetIcon::from_generic_wm(p))?
-					.map(|h| h.ptr as _).unwrap_or_default(),
+					.map(|h| h.0 as _).unwrap_or_default(),
 			))
 		);
 	}

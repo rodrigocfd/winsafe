@@ -2843,7 +2843,7 @@ impl ERROR {
 				),
 				nchars => {
 					let final_str = WString::from_wchars_count(ptr_buf, nchars as _);
-					match (HLOCAL { ptr: ptr_buf as _ }).LocalFree() {
+					match (HLOCAL(ptr_buf as _)).LocalFree() {
 						Ok(()) => final_str.to_string(),
 						Err(err) => format!(
 							"LocalFree failed after formatting error {:#06x}: error {:#06x}.",

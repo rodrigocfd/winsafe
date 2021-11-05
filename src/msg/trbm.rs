@@ -68,7 +68,7 @@ impl MsgSend for GetBuddy {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -336,7 +336,7 @@ impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -361,14 +361,14 @@ impl MsgSend for SetBuddy {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND { ptr: p as _ })
+		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TRBM::SETBUDDY.into(),
 			wparam: self.left_above as _,
-			lparam: self.hwnd_buddy.ptr as _,
+			lparam: self.hwnd_buddy.0 as _,
 		}
 	}
 }
@@ -612,7 +612,7 @@ impl MsgSend for SetTooltips {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TRBM::SETTOOLTIPS.into(),
-			wparam: self.hwnd_tooltip.ptr as _,
+			wparam: self.hwnd_tooltip.0 as _,
 			lparam: 0,
 		}
 	}

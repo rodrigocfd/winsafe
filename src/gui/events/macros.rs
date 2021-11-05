@@ -81,7 +81,7 @@ macro_rules! pub_fn_wm_ctlcolor {
 			where F: Fn($parm) -> crate::aliases::ErrResult<HBRUSH> + 'static,
 		{
 			self.add_msg($wmconst,
-				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.ptr as _)));
+				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.0 as _)));
 		}
 	};
 }

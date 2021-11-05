@@ -1,5 +1,3 @@
-//! Public traits.
-
 use std::any::Any;
 
 use crate::aliases::{ErrResult, WinResult};

@@ -5,22 +5,25 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
+use crate::handles::Handle;
 use crate::privs::bool_to_winresult;
 use crate::structs::WIN32_FIND_DATA;
 use crate::various::{path, WString};
 
-pub_struct_handle! {
-	/// Handle to a
-	/// [file search](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew).
-	/// Originally just a `HANDLE`.
-	HFINDFILE
-}
+/// Handle to a
+/// [file search](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HFINDFILE(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HFINDFILE);
 
 impl HFINDFILE {
 	/// [`FindClose`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
 	/// method.
 	pub fn FindClose(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel32::FindClose(self.ptr) })
+		bool_to_winresult(unsafe { kernel32::FindClose(self.0) })
 	}
 
 	/// [`FindFirstFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
@@ -41,7 +44,7 @@ impl HFINDFILE {
 				wfd as *mut _ as _,
 			).as_mut()
 		} {
-			Some(ptr) => Ok((Self { ptr }, true)), // first file found
+			Some(ptr) => Ok((Self(ptr), true)), // first file found
 			None => match GetLastError() {
 				co::ERROR::FILE_NOT_FOUND => Ok((Self::NULL, false)), // not an error, first file not found
 				err => Err(err),
@@ -55,9 +58,7 @@ impl HFINDFILE {
 	/// This method is rather tricky, consider using
 	/// [`HFINDFILE::iter`](crate::HFINDFILE::iter).
 	pub fn FindNextFile(self, wfd: &mut WIN32_FIND_DATA) -> WinResult<bool> {
-		match unsafe {
-			kernel32::FindNextFileW(self.ptr, wfd as *mut _ as _)
-		} {
+		match unsafe { kernel32::FindNextFileW(self.0, wfd as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false), // not an error, no further files found
 				err => Err(err),

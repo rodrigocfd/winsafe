@@ -54,7 +54,7 @@ pub trait ITaskbarList4T: ITaskbarList3T {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList4VT);
 			hr_to_winresult(
-				(vt.SetTabProperties)(self.ptr(), hwnd_tab.ptr, stp_flags.0),
+				(vt.SetTabProperties)(self.ptr(), hwnd_tab.0, stp_flags.0),
 			)
 		}
 	}

@@ -18,7 +18,7 @@ use crate::gui::traits::{
 	TextControl,
 	Window,
 };
-use crate::handles::HWND;
+use crate::handles::{Handle, HWND};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 

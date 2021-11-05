@@ -48,7 +48,7 @@ pub trait ITaskbarListT: IUnknownT {
 	fn ActivateTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarListVT);
-			hr_to_winresult((vt.ActivateTab)(self.ptr(), hwnd.ptr))
+			hr_to_winresult((vt.ActivateTab)(self.ptr(), hwnd.0))
 		}
 	}
 
@@ -57,7 +57,7 @@ pub trait ITaskbarListT: IUnknownT {
 	fn AddTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarListVT);
-			hr_to_winresult((vt.AddTab)(self.ptr(), hwnd.ptr))
+			hr_to_winresult((vt.AddTab)(self.ptr(), hwnd.0))
 		}
 	}
 
@@ -66,7 +66,7 @@ pub trait ITaskbarListT: IUnknownT {
 	fn DeleteTab(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarListVT);
-			hr_to_winresult((vt.DeleteTab)(self.ptr(), hwnd.ptr))
+			hr_to_winresult((vt.DeleteTab)(self.ptr(), hwnd.0))
 		}
 	}
 
@@ -84,7 +84,7 @@ pub trait ITaskbarListT: IUnknownT {
 	fn SetActiveAlt(&self, hwnd: HWND) -> WinResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarListVT);
-			hr_to_winresult((vt.SetActiveAlt)(self.ptr(), hwnd.ptr))
+			hr_to_winresult((vt.SetActiveAlt)(self.ptr(), hwnd.0))
 		}
 	}
 }

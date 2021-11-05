@@ -85,7 +85,7 @@ impl MsgSend for AddString {
 		WndMsg {
 			msg_id: co::TBM::ADDSTRING.into(),
 			wparam: match &self.texts {
-				ResStrs::Res(_, hinst) => hinst.ptr as _,
+				ResStrs::Res(_, hinst) => hinst.0 as _,
 				ResStrs::Strs(_) => 0,
 			},
 			lparam: match &self.texts {

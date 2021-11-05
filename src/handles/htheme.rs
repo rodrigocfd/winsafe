@@ -3,21 +3,23 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::uxtheme;
-use crate::handles::{HDC, HRGN};
+use crate::handles::{Handle, HDC, HRGN};
 use crate::structs::{COLORREF, RECT};
 use crate::privs::hr_to_winresult;
 
-pub_struct_handle! {
-	/// Handle to a
-	/// [theme](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/).
-	HTHEME
-}
+/// Handle to a
+/// [theme](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/).
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HTHEME(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HTHEME);
 
 impl HTHEME {
 	/// [`CloseThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
 	pub fn CloseThemeData(self) -> WinResult<()> {
-		hr_to_winresult(unsafe { uxtheme::CloseThemeData(self.ptr) })
+		hr_to_winresult(unsafe { uxtheme::CloseThemeData(self.0) })
 	}
 
 	/// [`DrawThemeBackground`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
@@ -29,8 +31,8 @@ impl HTHEME {
 		hr_to_winresult(
 			unsafe {
 				uxtheme::DrawThemeBackground(
-					self.ptr,
-					hdc.ptr,
+					self.0,
+					hdc.0,
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
@@ -56,8 +58,8 @@ impl HTHEME {
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundContentRect(
-					self.ptr,
-					hdc.ptr,
+					self.0,
+					hdc.0,
 					part_state.part,
 					part_state.state,
 					&bounds as *const _ as _,
@@ -77,8 +79,8 @@ impl HTHEME {
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundExtent(
-					self.ptr,
-					hdc.ptr,
+					self.0,
+					hdc.0,
 					part_state.part,
 					part_state.state,
 					&rc_content as *const _ as _,
@@ -101,8 +103,8 @@ impl HTHEME {
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundRegion(
-					self.ptr,
-					hdc.ptr,
+					self.0,
+					hdc.0,
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
@@ -122,7 +124,7 @@ impl HTHEME {
 		hr_to_winresult(
 			unsafe {
 				uxtheme::GetThemeColor(
-					self.ptr,
+					self.0,
 					part_state.part,
 					part_state.state,
 					prop.0,
@@ -157,7 +159,7 @@ impl HTHEME {
 	{
 		unsafe {
 			uxtheme::IsThemeBackgroundPartiallyTransparent(
-				self.ptr, part_state.part, part_state.state) != 0
+				self.0, part_state.part, part_state.state) != 0
 		}
 	}
 
@@ -172,7 +174,7 @@ impl HTHEME {
 	pub fn IsThemePartDefined(self, part_state: co::VS) -> bool {
 		unsafe {
 			uxtheme::IsThemePartDefined(
-				self.ptr, part_state.part, part_state.state) != 0
+				self.0, part_state.part, part_state.state) != 0
 		}
 	}
 }

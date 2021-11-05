@@ -7,14 +7,18 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
+use crate::handles::HandleClose;
 use crate::structs::PROCESSENTRY32;
 
-pub_struct_handle_closeable! {
-	/// Handle to a process list
-	/// [snapshot](https://docs.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
-	/// Originally just a `HANDLE`.
-	HPROCESSLIST
-}
+/// Handle to a process list
+/// [snapshot](https://docs.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HPROCESSLIST(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HPROCESSLIST);
+impl HandleClose for HPROCESSLIST {}
 
 impl HPROCESSLIST {
 	/// [`CreateToolhelp32Snapshot`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
@@ -31,7 +35,7 @@ impl HPROCESSLIST {
 				flags.0,
 				th32_process_id.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -42,7 +46,7 @@ impl HPROCESSLIST {
 	/// simpler.
 	pub fn Process32First(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {
-			kernel32::Process32FirstW(self.ptr, pe as *mut _ as _)
+			kernel32::Process32FirstW(self.0, pe as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false),
@@ -59,7 +63,7 @@ impl HPROCESSLIST {
 	/// simpler.
 	pub fn Process32Next(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {
-			kernel32::Process32NextW(self.ptr, pe as *mut _ as _)
+			kernel32::Process32NextW(self.0, pe as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false),

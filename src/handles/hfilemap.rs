@@ -4,14 +4,18 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
+use crate::handles::HandleClose;
 use crate::privs::bool_to_winresult;
 
-pub_struct_handle_closeable! {
-	/// Handle to a
-	/// [file mapping](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
-	/// Originally just a `HANDLE`.
-	HFILEMAP
-}
+/// Handle to a
+/// [file mapping](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HFILEMAP(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HFILEMAP);
+impl HandleClose for HFILEMAP {}
 
 impl HFILEMAP {
 	/// [`MapViewOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
@@ -27,7 +31,7 @@ impl HFILEMAP {
 	{
 		unsafe {
 			kernel32::MapViewOfFile(
-				self.ptr,
+				self.0,
 				desired_access.0,
 				HIDWORD(offset),
 				LODWORD(offset),

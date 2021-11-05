@@ -11,7 +11,7 @@ use crate::gui::events::{
 };
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::gui::resizer::{Horz, Resizer, Vert};
-use crate::handles::{HACCEL, HWND};
+use crate::handles::{Handle, HACCEL, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
 

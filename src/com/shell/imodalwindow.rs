@@ -34,7 +34,7 @@ pub trait IModalWindowT: IUnknownT {
 	fn Show(&self, hwnd_owner: HWND) -> WinResult<bool> {
 		let hr = unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IModalWindowVT);
-			(vt.Show)(self.ptr(), hwnd_owner.ptr)
+			(vt.Show)(self.ptr(), hwnd_owner.0)
 		};
 		match HRESULT_FROM_WIN32(hr) {
 			co::ERROR::S_OK => Ok(true),

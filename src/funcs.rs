@@ -190,7 +190,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> WinResult<Vec<String>> {
 		strs.push(WString::from_wchars_nullt(*lp).to_string());
 	}
 
-	(HLOCAL { ptr: lp_arr as _ })
+	(HLOCAL(lp_arr as _))
 		.LocalFree()
 		.map(|_| strs)
 }
@@ -666,7 +666,7 @@ pub fn GetMessage(
 	match unsafe {
 		user32::GetMessageW(
 			msg as *mut _ as _,
-			hwnd.map_or(std::ptr::null_mut(), |h| h.ptr),
+			hwnd.map_or(std::ptr::null_mut(), |h| h.0),
 			msg_filter_min, msg_filter_max,
 		)
 	} {
@@ -1077,7 +1077,7 @@ pub fn PeekMessage(
 	unsafe {
 		user32::PeekMessageW(
 			msg as *mut _ as _,
-			hwnd.map_or(std::ptr::null_mut(), |h| h.ptr),
+			hwnd.map_or(std::ptr::null_mut(), |h| h.0),
 			msg_filter_min,
 			msg_filter_max,
 			remove_msg.0,
@@ -1428,7 +1428,7 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 		unsafe {
 			user32::UnregisterClassW(
 				WString::from_str(class_name).as_ptr(),
-				hinst.ptr,
+				hinst.0,
 			)
 		},
 	)

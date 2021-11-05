@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
-use crate::handles::HFILEMAP;
+use crate::handles::{HandleClose, HFILEMAP};
 use crate::privs::{bool_to_winresult, INVALID_HANDLE_VALUE};
 use crate::structs::{
 	BY_HANDLE_FILE_INFORMATION,
@@ -13,12 +13,15 @@ use crate::structs::{
 };
 use crate::various::WString;
 
-pub_struct_handle_closeable! {
-	/// Handle to a
-	/// [file](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
-	/// Originally just a `HANDLE`.
-	HFILE
-}
+/// Handle to a
+/// [file](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
+/// Originally just a `HANDLE`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HFILE(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HFILE);
+impl HandleClose for HFILE {}
 
 impl HFILE {
 	/// [`CreateFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
@@ -81,11 +84,11 @@ impl HFILE {
 				security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				creation_disposition.0,
 				flags_and_attrs.0,
-				hfile_template.map_or(std::ptr::null_mut(), |h| h.ptr),
+				hfile_template.map_or(std::ptr::null_mut(), |h| h.0),
 			) as _
 		} {
 			INVALID_HANDLE_VALUE => Err(GetLastError()),
-			ptr => Ok((Self { ptr: ptr as _ }, GetLastError())),
+			ptr => Ok((Self(ptr as _), GetLastError())),
 		}
 	}
 
@@ -102,14 +105,14 @@ impl HFILE {
 	{
 		unsafe {
 			kernel32::CreateFileMappingW(
-				self.ptr,
+				self.0,
 				mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				protect.0,
 				max_size.map_or(0, |n| HIDWORD(n)),
 				max_size.map_or(0, |n| LODWORD(n)),
 				mapping_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
 			).as_mut()
-		}.map(|ptr| HFILEMAP { ptr })
+		}.map(|ptr| HFILEMAP(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -120,10 +123,7 @@ impl HFILE {
 	{
 		bool_to_winresult(
 			unsafe {
-				kernel32::GetFileInformationByHandle(
-					self.ptr,
-					fi as *mut _ as _,
-				)
+				kernel32::GetFileInformationByHandle(self.0, fi as *mut _ as _)
 			},
 		)
 	}
@@ -132,7 +132,7 @@ impl HFILE {
 	/// method.
 	pub fn GetFileSizeEx(self) -> WinResult<usize> {
 		let mut sz_buf = 0;
-		match unsafe { kernel32::GetFileSizeEx(self.ptr, &mut sz_buf) } {
+		match unsafe { kernel32::GetFileSizeEx(self.0, &mut sz_buf) } {
 			0 => Err(GetLastError()),
 			_ => Ok(sz_buf as _),
 		}
@@ -141,7 +141,7 @@ impl HFILE {
 	/// [`GetFileType`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
 	/// method.
 	pub fn GetFileType(self) -> WinResult<co::FILE_TYPE> {
-		match co::FILE_TYPE(unsafe { kernel32::GetFileType(self.ptr) }) {
+		match co::FILE_TYPE(unsafe { kernel32::GetFileType(self.0) }) {
 			co::FILE_TYPE::UNKNOWN => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(co::FILE_TYPE::UNKNOWN), // actual unknown type
 				err => Err(err),
@@ -159,7 +159,7 @@ impl HFILE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::LockFile(
-					self.ptr,
+					self.0,
 					LODWORD(offset),
 					HIDWORD(offset),
 					LODWORD(num_bytes_to_lock),
@@ -184,7 +184,7 @@ impl HFILE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::ReadFile(
-					self.ptr,
+					self.0,
 					buffer.as_mut_ptr() as _,
 					num_bytes_to_read,
 					&mut bytes_read,
@@ -197,7 +197,7 @@ impl HFILE {
 	/// [`SetEndOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
 	/// method.
 	pub fn SetEndOfFile(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel32::SetEndOfFile(self.ptr) })
+		bool_to_winresult(unsafe { kernel32::SetEndOfFile(self.0) })
 	}
 
 	/// [`SetFilePointerEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
@@ -211,7 +211,7 @@ impl HFILE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::SetFilePointerEx(
-					self.ptr,
+					self.0,
 					distance_to_move,
 					&mut new_offset,
 					move_method.0,
@@ -228,7 +228,7 @@ impl HFILE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::UnlockFile(
-					self.ptr,
+					self.0,
 					LODWORD(offset),
 					HIDWORD(offset),
 					LODWORD(num_bytes_to_lock),
@@ -250,7 +250,7 @@ impl HFILE {
 		bool_to_winresult(
 			unsafe {
 				kernel32::WriteFile(
-					self.ptr,
+					self.0,
 					buffer.as_ptr() as _,
 					buffer.len() as _,
 					&mut bytes_written,

@@ -8,7 +8,7 @@ use crate::gui::events::EventsView;
 use crate::gui::privs::{multiply_dpi, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
-use crate::handles::{HBRUSH, HCURSOR, HICON};
+use crate::handles::{Handle, HBRUSH, HCURSOR, HICON};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 

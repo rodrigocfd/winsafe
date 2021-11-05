@@ -6,24 +6,27 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
+use crate::handles::Handle;
 use crate::structs::FILETIME;
 use crate::various::WString;
 
-pub_struct_handle! {
-	/// Handle to a
-	/// [registry key](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hkey).
-	///
-	/// This handle also exposes several
-	/// [predefined registry keys](https://docs.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),
-	/// like `HKEY::CURRENT_USER`, which are always open and ready to be used.
-	/// Usually, they are the starting point to open a registry key.
-	HKEY
-}
+/// Handle to a
+/// [registry key](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hkey).
+///
+/// This handle also exposes several
+/// [predefined registry keys](https://docs.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),
+/// like `HKEY::CURRENT_USER`, which are always open and ready to be used.
+/// Usually, they are the starting point to open a registry key.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HKEY(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HKEY);
 
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
 		/// Predefined registry key, always open.
-		pub const $name: Self = Self { ptr: $val as *mut _ };
+		pub const $name: Self = Self($val as *mut _);
 	};
 }
 
@@ -42,7 +45,7 @@ impl HKEY {
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
 	pub fn CloseKey(self) -> WinResult<()> {
-		match co::ERROR(unsafe { advapi32::RegCloseKey(self.ptr) as _ }) {
+		match co::ERROR(unsafe { advapi32::RegCloseKey(self.0) as _ }) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
@@ -87,7 +90,7 @@ impl HKEY {
 			let err = co::ERROR(
 				unsafe {
 					advapi32::RegEnumKeyExW(
-						self.ptr,
+						self.0,
 						index,
 						name_buf.as_mut_ptr(),
 						&mut len_buf,
@@ -148,7 +151,7 @@ impl HKEY {
 			let err = co::ERROR(
 				unsafe {
 					advapi32::RegEnumValueW(
-						self.ptr,
+						self.0,
 						index,
 						name_buf.as_mut_ptr(),
 						&mut len_buf,
@@ -212,7 +215,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi32::RegGetValueW(
-					self.ptr,
+					self.0,
 					sub_key_w.as_ptr(),
 					value_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
@@ -232,7 +235,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi32::RegGetValueW(
-					self.ptr,
+					self.0,
 					sub_key_w.as_ptr(),
 					value_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
@@ -291,11 +294,11 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi32::RegOpenKeyExW(
-					self.ptr,
+					self.0,
 					WString::from_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
-					&mut hKey.ptr,
+					&mut hKey.0,
 				)
 			} as _
 		) {
@@ -342,7 +345,7 @@ impl HKEY {
 			match co::ERROR(
 				unsafe {
 					advapi32::RegQueryInfoKeyW(
-						self.ptr,
+						self.0,
 						class_ptr,
 						&mut class_len,
 						std::ptr::null_mut(),
@@ -415,7 +418,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi32::RegQueryValueExW(
-					self.ptr,
+					self.0,
 					value_w.as_ptr(),
 					std::ptr::null_mut(),
 					&mut raw_data_type,
@@ -434,7 +437,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi32::RegQueryValueExW(
-					self.ptr,
+					self.0,
 					value_w.as_ptr(),
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
@@ -488,7 +491,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi32::RegSetKeyValueW(
-					self.ptr,
+					self.0,
 					WString::from_str(sub_key).as_ptr(),
 					WString::from_str(value).as_ptr(),
 					data.reg_type().0,
@@ -532,7 +535,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi32::RegSetValueExW(
-					self.ptr,
+					self.0,
 					WString::from_str(value).as_ptr(),
 					0,
 					data.reg_type().0,

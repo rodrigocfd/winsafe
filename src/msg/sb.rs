@@ -22,7 +22,7 @@ impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HICON { ptr: p as _ })
+		zero_as_err(v).map(|p| HICON(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -152,7 +152,7 @@ impl MsgSend for SetIcon {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
-			lparam: self.hicon.map(|h| h.ptr as _).unwrap_or_default(),
+			lparam: self.hicon.map(|h| h.0 as _).unwrap_or_default(),
 		}
 	}
 }

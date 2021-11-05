@@ -6,11 +6,13 @@ use crate::funcs::GetLastError;
 use crate::structs::POINT;
 use crate::various::WString;
 
-pub_struct_handle! {
-	/// Handle to an
-	/// [internal drop structure](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
-	HDROP
-}
+/// Handle to an
+/// [internal drop structure](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HDROP(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HDROP);
 
 impl HDROP {
 	/// [`DragFinish`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
@@ -19,7 +21,7 @@ impl HDROP {
 	/// Prefer using [`HDROP::iter`](crate::HDROP::iter), which calls
 	/// `DragFinish` automatically.
 	pub fn DragFinish(self) {
-		unsafe { shell32::DragFinish(self.ptr) }
+		unsafe { shell32::DragFinish(self.0) }
 	}
 
 	/// [`DragQueryFile`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
@@ -34,7 +36,7 @@ impl HDROP {
 
 		match unsafe {
 			shell32::DragQueryFileW(
-				self.ptr,
+				self.0,
 				ifile.unwrap_or(0xffff_ffff),
 				buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr()),
 				cch as _,
@@ -53,7 +55,7 @@ impl HDROP {
 	pub fn DragQueryPoint(self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let client_area = unsafe {
-			shell32::DragQueryPoint(self.ptr, &mut pt as *mut _ as _)
+			shell32::DragQueryPoint(self.0, &mut pt as *mut _ as _)
 		};
 		(pt, client_area != 0)
 	}

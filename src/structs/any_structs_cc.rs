@@ -6,7 +6,15 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::enums::{BmpIdbRes, IdStr, IndexStr, TreeitemTvi};
-use crate::handles::{HBITMAP, HDC, HIMAGELIST, HINSTANCE, HTREEITEM, HWND};
+use crate::handles::{
+	Handle,
+	HBITMAP,
+	HDC,
+	HIMAGELIST,
+	HINSTANCE,
+	HTREEITEM,
+	HWND,
+};
 use crate::privs::{
 	HINST_COMMCTRL,
 	IS_INTRESOURCE,
@@ -621,7 +629,7 @@ impl TBADDBITMAP {
 	pub fn nID(&self) -> BmpIdbRes {
 		match self.hInst {
 			HINST_COMMCTRL => BmpIdbRes::Idb(co::IDB(self.nID)),
-			HINSTANCE::NULL => BmpIdbRes::Bmp(HBITMAP { ptr: self.nID as _ }),
+			HINSTANCE::NULL => BmpIdbRes::Bmp(HBITMAP(self.nID as _ )),
 			hInst => BmpIdbRes::Res(IdStr::from_ptr(self.nID as _), hInst),
 		}
 	}
@@ -630,7 +638,7 @@ impl TBADDBITMAP {
 	pub fn set_nID(&mut self, val: &BmpIdbRes) {
 		*self = match val {
 			BmpIdbRes::Idb(idb) => Self { hInst: HINST_COMMCTRL, nID: idb.0 },
-			BmpIdbRes::Bmp(bmp) => Self { hInst: HINSTANCE::NULL, nID: bmp.ptr as _ },
+			BmpIdbRes::Bmp(bmp) => Self { hInst: HINSTANCE::NULL, nID: bmp.0 as _ },
 			BmpIdbRes::Res(res, hInst) => Self { hInst: *hInst, nID: res.as_ptr() as _ },
 		}
 	}

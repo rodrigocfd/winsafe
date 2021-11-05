@@ -49,7 +49,7 @@ pub trait ITaskbarList2T: ITaskbarListT {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList2VT);
 			hr_to_winresult(
-				(vt.MarkFullscreenWindow)(self.ptr(), hwnd.ptr, full_screen as _),
+				(vt.MarkFullscreenWindow)(self.ptr(), hwnd.0, full_screen as _),
 			)
 		}
 	}

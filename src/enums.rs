@@ -87,8 +87,8 @@ pub enum BmpIcon {
 impl BmpIcon {
 	pub fn as_isize(&self) -> isize {
 		(match self {
-			Self::Bmp(hbmp) => hbmp.ptr,
-			Self::Icon(hicon) => hicon.ptr,
+			Self::Bmp(hbmp) => hbmp.0,
+			Self::Icon(hicon) => hicon.0,
 		}) as isize
 	}
 }
@@ -113,7 +113,7 @@ impl BmpPtrStr {
 
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Bmp(hbmp) => hbmp.ptr as _,
+			Self::Bmp(hbmp) => hbmp.0 as _,
 			Self::Ptr(lp) => *lp as _,
 			Self::Str(ws) => unsafe { ws.as_ptr() },
 			Self::None => std::ptr::null(),
@@ -171,8 +171,8 @@ pub enum HwndHmenu {
 impl HwndHmenu {
 	pub fn as_isize(&self) -> isize {
 		(match self {
-			Self::Hwnd(hwnd) => hwnd.ptr,
-			Self::Hmenu(hmenu) => hmenu.ptr,
+			Self::Hwnd(hwnd) => hwnd.0,
+			Self::Hmenu(hmenu) => hmenu.0,
 		}) as _
 	}
 }
@@ -193,7 +193,7 @@ pub enum HwndPlace {
 impl HwndPlace {
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
-			Self::Hwnd(hwnd) => hwnd.ptr,
+			Self::Hwnd(hwnd) => hwnd.0,
 			Self::Place(v) => v.0 as _,
 			Self::None => std::ptr::null_mut(),
 		}
@@ -216,7 +216,7 @@ pub enum HwndPointId {
 impl HwndPointId {
 	pub fn as_isize(&self) -> isize {
 		match self {
-			Self::Hwnd(hwnd) => hwnd.ptr as _,
+			Self::Hwnd(hwnd) => hwnd.0 as _,
 			Self::Point(pt) => MAKEDWORD(pt.x as _, pt.y as _) as _,
 			Self::Id(id) => *id as _,
 		}
@@ -319,7 +319,7 @@ impl IdMenu {
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
-			Self::Menu(hMenu) => hMenu.ptr,
+			Self::Menu(hMenu) => hMenu.0,
 			Self::None => std::ptr::null_mut(),
 		}
 	}
@@ -327,7 +327,7 @@ impl IdMenu {
 	pub fn as_usize(&self) -> usize {
 		match self {
 			IdMenu::Id(id) => *id as _,
-			IdMenu::Menu(hMenu) => hMenu.ptr as _,
+			IdMenu::Menu(hMenu) => hMenu.0 as _,
 			IdMenu::None => 0,
 		}
 	}

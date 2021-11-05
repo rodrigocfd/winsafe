@@ -100,7 +100,7 @@ impl MsgSend for GetMcFont {
 	type RetType = WinResult<HFONT>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HFONT { ptr: p as _ })
+		zero_as_err(v).map(|p| HFONT(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -147,7 +147,7 @@ impl MsgSend for GetMonthCalendar {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND { ptr: p as _ })
+		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&self) -> WndMsg {
@@ -286,7 +286,7 @@ impl MsgSend for SetMcFont {
 	fn as_generic_wm(&self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCFONT.into(),
-			wparam: self.hfont.ptr as _,
+			wparam: self.hfont.0 as _,
 			lparam: self.redraw as _,
 		}
 	}

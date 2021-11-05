@@ -8,11 +8,13 @@ use crate::handles::{HBITMAP, HICON};
 use crate::privs::bool_to_winresult;
 use crate::structs::{COLORREF, POINT, SIZE, SHFILEINFO};
 
-pub_struct_handle! {
-	/// Handle to an
-	/// [image list](https://docs.microsoft.com/en-us/windows/win32/controls/image-lists).
-	HIMAGELIST
-}
+/// Handle to an
+/// [image list](https://docs.microsoft.com/en-us/windows/win32/controls/image-lists).
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HIMAGELIST(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HIMAGELIST);
 
 impl HIMAGELIST {
 	/// [`ImageList_Add`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
@@ -25,9 +27,9 @@ impl HIMAGELIST {
 	{
 		match unsafe {
 			comctl32::ImageList_Add(
-				self.ptr,
-				hbmp_image.ptr,
-				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.ptr),
+				self.0,
+				hbmp_image.0,
+				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.0),
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -80,7 +82,7 @@ impl HIMAGELIST {
 		hbmp_image: HBITMAP, color_mask: COLORREF) -> WinResult<u32>
 	{
 		match unsafe {
-			comctl32::ImageList_AddMasked(self.ptr, hbmp_image.ptr, color_mask.0)
+			comctl32::ImageList_AddMasked(self.0, hbmp_image.0, color_mask.0)
 		} {
 			-1 => Err(GetLastError()),
 			idx => Ok(idx as _),
@@ -96,7 +98,7 @@ impl HIMAGELIST {
 		bool_to_winresult(
 			unsafe {
 				comctl32::ImageList_BeginDrag(
-					self.ptr,
+					self.0,
 					track as _,
 					hotspot.x, hotspot.y,
 				)
@@ -131,20 +133,20 @@ impl HIMAGELIST {
 				initial_size,
 				grow_size,
 			).as_mut()
-		}.map(|ptr| Self { ptr })
+		}.map(|ptr| Self(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`ImageList_Destroy`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)
 	/// method.
 	pub fn Destroy(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { comctl32::ImageList_Destroy(self.ptr) })
+		bool_to_winresult(unsafe { comctl32::ImageList_Destroy(self.0) })
 	}
 
 	/// [`ImageList_DragMove`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
 	/// method.
 	pub fn DragMove(self, x: i32, y: i32) -> WinResult<()> {
-		bool_to_winresult(unsafe { comctl32::ImageList_DragMove(self.ptr, x, y) })
+		bool_to_winresult(unsafe { comctl32::ImageList_DragMove(self.0, x, y) })
 	}
 
 	/// [`ImageList_DragShowNolock`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragshownolock)
@@ -167,7 +169,7 @@ impl HIMAGELIST {
 		let mut sz = SIZE::default();
 		bool_to_winresult(
 			unsafe {
-				comctl32::ImageList_GetIconSize(self.ptr, &mut sz.cx, &mut sz.cy)
+				comctl32::ImageList_GetIconSize(self.0, &mut sz.cx, &mut sz.cy)
 			}
 		).map(|_| sz)
 	}
@@ -175,7 +177,7 @@ impl HIMAGELIST {
 	/// [`ImageList_GetImageCount`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount)
 	/// method.
 	pub fn GetImageCount(self) -> u32 {
-		unsafe { comctl32::ImageList_GetImageCount(self.ptr) as _ }
+		unsafe { comctl32::ImageList_GetImageCount(self.0) as _ }
 	}
 
 	/// [`ImageList_Remove`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
@@ -184,7 +186,7 @@ impl HIMAGELIST {
 		bool_to_winresult(
 			unsafe {
 				comctl32::ImageList_Remove(
-					self.ptr,
+					self.0,
 					index.map_or(-1, |i| i as _),
 				)
 			},
@@ -204,9 +206,9 @@ impl HIMAGELIST {
 	{
 		match unsafe {
 			comctl32::ImageList_ReplaceIcon(
-				self.ptr,
+				self.0,
 				index.map_or(-1, |i| i as _),
-				hicon_new.ptr,
+				hicon_new.0,
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -218,9 +220,7 @@ impl HIMAGELIST {
 	/// methods.
 	pub fn SetImageCount(self, new_count: u32) -> WinResult<()> {
 		bool_to_winresult(
-			unsafe {
-				comctl32::ImageList_SetImageCount(self.ptr, new_count)
-			},
+			unsafe { comctl32::ImageList_SetImageCount(self.0, new_count) },
 		)
 	}
 }

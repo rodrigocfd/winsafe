@@ -510,8 +510,8 @@ pub struct HELPINFO {
 impl HELPINFO {
 	pub fn hItemHandle(&self) -> HwndHmenu {
 		match self.iContextType {
-			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND { ptr: self.hItemHandle as _ }),
-			_ => HwndHmenu::Hmenu(HMENU { ptr: self.hItemHandle as _ }),
+			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND(self.hItemHandle as _)),
+			_ => HwndHmenu::Hmenu(HMENU(self.hItemHandle as _)),
 		}
 	}
 }
@@ -1291,7 +1291,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 				IconIdTdicon::Id(self.pszMainIcon as _)
 			}
 		} else {
-			IconIdTdicon::Icon(HICON { ptr: self.pszMainIcon as _ })
+			IconIdTdicon::Icon(HICON(self.pszMainIcon as _))
 		}
 	}
 
@@ -1299,7 +1299,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub fn set_pszMainIcon(&mut self, val: IconIdTdicon) {
 		match val {
 			IconIdTdicon::None => self.pszMainIcon = std::ptr::null_mut(),
-			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.ptr as _,
+			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.0 as _,
 			IconIdTdicon::Id(id) => self.pszMainIcon = MAKEINTRESOURCE(id as _),
 			IconIdTdicon::Tdicon(tdi) => self.pszMainIcon = MAKEINTRESOURCE(tdi.0 as _),
 		}
@@ -1319,7 +1319,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 		if IS_INTRESOURCE(self.pszFooterIcon) {
 			IconId::Id(self.pszFooterIcon as _)
 		} else {
-			IconId::Icon(HICON { ptr: self.pszFooterIcon as _ })
+			IconId::Icon(HICON(self.pszFooterIcon as _))
 		}
 	}
 
@@ -1327,7 +1327,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub fn set_pszFooterIcon(&mut self, val: IconId) {
 		match val {
 			IconId::None => self.pszFooterIcon = std::ptr::null_mut(),
-			IconId::Icon(hicon) => self.pszFooterIcon = hicon.ptr as _,
+			IconId::Icon(hicon) => self.pszFooterIcon = hicon.0 as _,
 			IconId::Id(id) => self.pszFooterIcon = MAKEINTRESOURCE(id as _),
 		}
 	}
@@ -1550,14 +1550,14 @@ impl WINDOWPOS {
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
 			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),
-			_ => HwndPlace::Hwnd(HWND { ptr: self.hwndInsertAfter as _ }),
+			_ => HwndPlace::Hwnd(HWND(self.hwndInsertAfter as _)),
 		}
 	}
 
 	/// Sets the `hwndInsertAfter` field.
 	pub fn set_hwndInsertAfter(&mut self, hwnd: HwndPlace) {
 		self.hwndInsertAfter = match hwnd {
-			HwndPlace::Hwnd(h) => h.ptr as _,
+			HwndPlace::Hwnd(h) => h.0 as _,
 			HwndPlace::Place(v) => v.into(),
 			HwndPlace::None => 0,
 		};

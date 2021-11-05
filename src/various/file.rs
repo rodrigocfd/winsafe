@@ -1,6 +1,6 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::handles::HFILE;
+use crate::handles::{HandleClose, HFILE};
 
 /// Access types for [`File::open`](crate::File::open) and
 /// [`FileMapped::open`](crate::FileMapped::open).
