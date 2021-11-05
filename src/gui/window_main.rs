@@ -14,7 +14,7 @@ use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{RawMain, WindowMainOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{AsAny, Main, Parent, UiThread, Window};
+use crate::gui::traits::{AsAny, Parent, UiThread, Window};
 use crate::gui::traits_sealed::{SealedBase, SealedParent};
 use crate::handles::{HPROCESS, HWND};
 
@@ -175,32 +175,6 @@ impl Parent for WindowMain {
 	}
 }
 
-impl Main for WindowMain {
-	fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32> {
-		if IsWindowsVistaOrGreater()? {
-			SetProcessDPIAware()?;
-		}
-
-		InitCommonControls();
-
-		let mut b_val: BOOL = 0; // false
-		unsafe {
-			HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
-				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, &mut b_val)?;
-		}
-
-		create_ui_font()?;
-
-		let res = match &self.raw_dlg {
-			RawDlg::Raw(r) => r.run_main(cmd_show),
-			RawDlg::Dlg(d) => d.run_main(cmd_show),
-		};
-
-		delete_ui_font()?; // cleanup
-		res
-	}
-}
-
 impl UiThread for WindowMain {
 	fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()>,
@@ -232,5 +206,38 @@ impl WindowMain {
 				DlgMain::new(dialog_id, icon_id, accel_table_id),
 			),
 		}
+	}
+
+	/// Physically creates the window, then runs the main application loop. This
+	/// method will block until the window is closed.
+	///
+	/// The `cmd_show` parameter defaults to
+	/// [`co::SW::SHOW`](crate::co::SW::SHOW).
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created.
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32> {
+		if IsWindowsVistaOrGreater()? {
+			SetProcessDPIAware()?;
+		}
+
+		InitCommonControls();
+
+		let mut b_val: BOOL = 0; // false
+		unsafe {
+			HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
+				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, &mut b_val)?;
+		}
+
+		create_ui_font()?;
+
+		let res = match &self.raw_dlg {
+			RawDlg::Raw(r) => r.run_main(cmd_show),
+			RawDlg::Dlg(d) => d.run_main(cmd_show),
+		};
+
+		delete_ui_font()?; // cleanup
+		res
 	}
 }

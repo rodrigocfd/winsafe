@@ -63,7 +63,7 @@ pub trait IFileOpenDialogT: IFileDialogT {
 	///     .map(|shi|
 	///         shi.and_then(|shi|
 	///             shi.GetDisplayName(SIGDN::FILESYSPATH)
-	///         )
+	///         ),
 	///     )
 	///     .collect::<WinResult<Vec<_>>>()?,
 	/// ```

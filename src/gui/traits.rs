@@ -1,7 +1,6 @@
 use std::any::Any;
 
 use crate::aliases::{ErrResult, WinResult};
-use crate::co;
 use crate::gui::events::{WindowEvents, WindowEventsAll};
 use crate::gui::traits_sealed::{SealedBase, SealedParent};
 use crate::handles::HWND;
@@ -57,35 +56,6 @@ pub trait Parent: Send + Window + SealedBase + SealedParent {
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
 	fn on(&self) -> &WindowEventsAll;
-}
-
-/// The main window of an application.
-///
-/// This is a sealed trait, which cannot be implemented outside `winsafe`.
-pub trait Main: Parent {
-	/// Physically creates the window, then runs the main application loop. This
-	/// method will block until the window is closed.
-	///
-	/// The `cmd_show` parameter defaults to
-	/// [`co::SW::SHOW`](crate::co::SW::SHOW).
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created.
-	fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32>;
-}
-
-/// A modal window.
-///
-/// This is a sealed trait, which cannot be implemented outside `winsafe`.
-pub trait Modal: Parent {
-	/// Physically creates the window, then runs the modal loop. This method
-	/// will block until the window is closed.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created.
-	fn show_modal(&self) -> WinResult<i32>;
 }
 
 /// Any child window.

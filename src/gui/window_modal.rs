@@ -6,7 +6,7 @@ use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::raw_modal::{RawModal, WindowModalOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{AsAny, Modal, Parent, UiThread, Window};
+use crate::gui::traits::{AsAny, Parent, UiThread, Window};
 use crate::gui::traits_sealed::{SealedBase, SealedParent};
 use crate::handles::HWND;
 
@@ -60,15 +60,6 @@ impl Parent for WindowModal {
 	}
 }
 
-impl Modal for WindowModal {
-	fn show_modal(&self) -> WinResult<i32> {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.show_modal(),
-			RawDlg::Dlg(d) => d.show_modal(),
-		}
-	}
-}
-
 impl UiThread for WindowModal {
 	fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()>,
@@ -95,6 +86,19 @@ impl WindowModal {
 			raw_dlg: RawDlg::Dlg(
 				DlgModal::new(parent.as_base(), dialog_id),
 			),
+		}
+	}
+
+	/// Physically creates the window, then runs the modal loop. This method
+	/// will block until the window is closed.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created.
+	pub fn show_modal(&self) -> WinResult<i32> {
+		match &self.raw_dlg {
+			RawDlg::Raw(r) => r.show_modal(),
+			RawDlg::Dlg(d) => d.show_modal(),
 		}
 	}
 }

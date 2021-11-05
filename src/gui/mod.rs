@@ -42,8 +42,6 @@ pub(crate) mod prelude {
 	pub use super::traits::{
 		AsAny,
 		Child,
-		Main,
-		Modal,
 		NativeControl,
 		NativeControlEvents,
 		Parent,
