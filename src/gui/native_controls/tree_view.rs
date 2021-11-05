@@ -12,6 +12,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	FocusControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -72,6 +73,8 @@ impl NativeControlEvents<TreeViewEvents> for TreeView {
 		&self.0.events
 	}
 }
+
+impl FocusControl for TreeView {}
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window

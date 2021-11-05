@@ -11,6 +11,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	FocusControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -90,6 +91,7 @@ impl NativeControlEvents<ButtonEvents> for CheckBox {
 }
 
 impl TextControl for CheckBox {}
+impl FocusControl for CheckBox {}
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window

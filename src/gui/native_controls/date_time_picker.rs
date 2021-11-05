@@ -11,6 +11,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	FocusControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -71,6 +72,8 @@ impl NativeControlEvents<DateTimePickerEvents> for DateTimePicker {
 		&self.0.events
 	}
 }
+
+impl FocusControl for DateTimePicker {}
 
 impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent

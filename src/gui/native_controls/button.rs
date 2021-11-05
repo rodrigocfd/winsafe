@@ -10,6 +10,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	FocusControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -73,6 +74,7 @@ impl NativeControlEvents<ButtonEvents> for Button {
 }
 
 impl TextControl for Button {}
+impl FocusControl for Button {}
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window

@@ -12,6 +12,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	FocusControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -73,6 +74,8 @@ impl NativeControlEvents<ListBoxEvents> for ListBox {
 		&self.0.events
 	}
 }
+
+impl FocusControl for ListBox {}
 
 impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window

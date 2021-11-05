@@ -1,9 +1,11 @@
 use std::any::Any;
 
 use crate::aliases::{ErrResult, WinResult};
+use crate::enums::HwndFocus;
 use crate::gui::events::{WindowEvents, WindowEventsAll};
 use crate::gui::traits_sealed::{SealedBase, SealedParent};
 use crate::handles::HWND;
+use crate::msg::wm;
 
 /// Used to convert a reference to the
 /// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait.
@@ -104,6 +106,23 @@ pub trait TextControl: Child {
 	/// [`HWND::GetWindowText`](crate::HWND::GetWindowText).
 	fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowText()
+	}
+}
+
+/// Any child window which can be focused.
+pub trait FocusControl: Child {
+	/// Focus the control by sending a
+	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message. This is
+	/// preferable to the [`HWND::SetFocus`](crate::HWND::SetFocus) method,
+	/// because it takes care of border highlighting, like the native
+	/// [`Button`](crate::gui::Button) control needs.
+	fn focus(&self) -> WinResult<()> {
+		self.hwnd().GetParent()
+			.map(|hparent|
+				hparent.SendMessage(wm::NextDlgCtl {
+					hwnd_focus: HwndFocus::Hwnd(self.hwnd()),
+				}),
+			)
 	}
 }
 

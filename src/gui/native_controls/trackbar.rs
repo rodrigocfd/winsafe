@@ -10,6 +10,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	FocusControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -68,6 +69,8 @@ impl NativeControlEvents<TrackbarEvents> for Trackbar {
 		&self.0.events
 	}
 }
+
+impl FocusControl for Trackbar {}
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window

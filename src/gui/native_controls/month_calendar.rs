@@ -11,6 +11,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	FocusControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -71,6 +72,8 @@ impl NativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 		&self.0.events
 	}
 }
+
+impl FocusControl for MonthCalendar {}
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent
