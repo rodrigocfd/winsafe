@@ -11,8 +11,8 @@
 pub(in crate::com) mod idispatch;
 pub(in crate::com) mod itypeinfo;
 
-pub use idispatch::IDispatch;
-pub use itypeinfo::ITypeInfo;
+pub use idispatch::{IDispatch, IDispatchT};
+pub use itypeinfo::{ITypeInfo, ITypeInfoT};
 
 pub(crate) mod prelude {
 	pub use super::idispatch::IDispatchT;

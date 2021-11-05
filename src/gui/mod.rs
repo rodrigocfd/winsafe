@@ -39,14 +39,5 @@ pub use window_modal::WindowModal;
 
 pub(crate) mod prelude {
 	pub use super::events::prelude::*;
-	pub use super::traits::{
-		AsAny,
-		Child,
-		NativeControl,
-		NativeControlEvents,
-		Parent,
-		TextControl,
-		UiThread,
-		Window,
-	};
+	pub use super::traits::*;
 }

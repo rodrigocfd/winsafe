@@ -236,9 +236,10 @@ pub use handles::*;
 pub use structs::*;
 pub use various::*;
 
-/// Commonly imported traits.
+/// The WinSafe prelude.
 ///
-/// Intended to be used as:
+/// The purpose of this module is to alleviate imports of many common traits by
+/// adding a glob import to the top of your module:
 ///
 /// ```rust,ignore
 /// use winsafe::prelude::*;

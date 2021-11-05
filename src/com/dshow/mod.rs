@@ -26,16 +26,16 @@ pub(in crate::com) mod imfvideodisplaycontrol;
 pub(in crate::com) mod ipin;
 
 pub use any_structs::*;
-pub use ibasefilter::IBaseFilter;
-pub use ienumfilters::IEnumFilters;
-pub use ifilesinkfilter::IFileSinkFilter;
-pub use ifiltergraph::IFilterGraph;
-pub use igraphbuilder::IGraphBuilder;
-pub use imediacontrol::IMediaControl;
-pub use imediafilter::IMediaFilter;
-pub use imediaseeking::IMediaSeeking;
-pub use imfgetservice::IMFGetService;
-pub use imfvideodisplaycontrol::IMFVideoDisplayControl;
+pub use ibasefilter::{IBaseFilter, IBaseFilterT};
+pub use ienumfilters::{IEnumFilters, IEnumFiltersT};
+pub use ifilesinkfilter::{IFileSinkFilter, IFileSinkFilterT};
+pub use ifiltergraph::{IFilterGraph, IFilterGraphT};
+pub use igraphbuilder::{IGraphBuilder, IGraphBuilderT};
+pub use imediacontrol::{IMediaControl, IMediaControlT};
+pub use imediafilter::{IMediaFilter, IMediaFilterT};
+pub use imediaseeking::{IMediaSeeking, IMediaSeekingT};
+pub use imfgetservice::{IMFGetService, IMFGetServiceT};
+pub use imfvideodisplaycontrol::{IMFVideoDisplayControl, IMFVideoDisplayControlT};
 pub use ipin::IPin;
 
 pub(crate) mod prelude {
