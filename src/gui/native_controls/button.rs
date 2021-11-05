@@ -13,6 +13,7 @@ use crate::gui::traits::{
 	NativeControl,
 	NativeControlEvents,
 	Parent,
+	TextControl,
 	Window,
 };
 use crate::handles::HWND;
@@ -70,6 +71,8 @@ impl NativeControlEvents<ButtonEvents> for Button {
 		&self.0.events
 	}
 }
+
+impl TextControl for Button {}
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window

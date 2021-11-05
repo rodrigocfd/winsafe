@@ -122,6 +122,21 @@ pub trait NativeControlEvents<E> {
 	fn on(&self) -> &E;
 }
 
+/// Any child window which can get/set text.
+pub trait TextControl: Child {
+	/// Sets the text by calling
+	/// [`HWND::SetWindowText`](crate::HWND::SetWindowText).
+	fn set_text(&self, text: &str) -> WinResult<()> {
+		self.hwnd().SetWindowText(text)
+	}
+
+	/// Retrieves the text by calling
+	/// [`HWND::GetWindowText`](crate::HWND::GetWindowText).
+	fn text(&self) -> WinResult<String> {
+		self.hwnd().GetWindowText()
+	}
+}
+
 /// Allows running code in the original UI thread.
 pub trait UiThread: Window {
 	/// If you perform a very long task in the UI thread, the UI freezes until

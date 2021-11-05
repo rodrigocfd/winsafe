@@ -14,6 +14,7 @@ use crate::gui::traits::{
 	NativeControl,
 	NativeControlEvents,
 	Parent,
+	TextControl,
 	Window,
 };
 use crate::handles::HWND;
@@ -71,6 +72,8 @@ impl NativeControlEvents<LabelEvents> for Label {
 		&self.0.events
 	}
 }
+
+impl TextControl for Label {}
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window
@@ -147,28 +150,7 @@ impl Label {
 		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
-	/// Resizes the control to exactly fit current text.
-	pub fn resize_to_text(&self) -> WinResult<()> {
-		self.resize_to_given_text(&self.text()?)
-	}
-
-	/// Sets the text by calling [`SetWindowText`](crate::HWND::SetWindowText).
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
-	///
-	/// let my_label: gui::Label; // initialized somewhere
-	///
-	/// my_label.set_text("This my text")?;
-	/// ```
-	pub fn set_text(&self, text: &str) -> WinResult<()> {
-		self.hwnd().SetWindowText(text)
-	}
-
-	/// Calls [`set_text`](crate::gui::Label::set_text) and resizes the control
+	/// Calls [`set_text`](crate::gui::TextControl::set_text) and resizes the control
 	/// to exactly fit the new text.
 	///
 	/// # Examples
@@ -183,27 +165,6 @@ impl Label {
 	/// ```
 	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
 		self.set_text(text)?;
-		self.resize_to_given_text(text)
-	}
-
-	/// Retrieves the text in the control by calling
-	/// [`HWND::GetWindowText`](crate::HWND::GetWindowText).
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
-	///
-	/// let my_label: gui::Label; // initialized somewhere
-	///
-	/// println!("The text is: {}", my_label.text()?);
-	/// ```
-	pub fn text(&self) -> WinResult<String> {
-		self.hwnd().GetWindowText()
-	}
-
-	fn resize_to_given_text(&self, text: &str) -> WinResult<()> {
 		let bound_box = calc_text_bound_box(text)?;
 		self.hwnd().SetWindowPos(
 			HwndPlace::None, POINT::default(), bound_box,

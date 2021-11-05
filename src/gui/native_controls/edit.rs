@@ -13,6 +13,7 @@ use crate::gui::traits::{
 	NativeControl,
 	NativeControlEvents,
 	Parent,
+	TextControl,
 	Window,
 };
 use crate::handles::HWND;
@@ -70,6 +71,8 @@ impl NativeControlEvents<EditEvents> for Edit {
 		&self.0.events
 	}
 }
+
+impl TextControl for Edit {}
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window
@@ -167,37 +170,6 @@ impl Edit {
 	/// ```
 	pub fn set_selection(&self, start: Option<u32>, end: Option<u32>) {
 		self.hwnd().SendMessage(em::SetSel { start, end });
-	}
-
-	/// Sets the text in the control by calling
-	/// [`SetWindowText`](crate::HWND::SetWindowText).
-	///
-	/// # Examples
-	///
-	/// ```rust,ignore
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
-	///
-	/// let my_edit: gui::Edit; // initialized somewhere
-	///
-	/// my_edit.set_text("This my text")?;
-	/// ```
-	pub fn set_text(&self, text: &str) -> WinResult<()> {
-		self.hwnd().SetWindowText(text)
-	}
-
-	/// Retrieves the text in the control by calling
-	/// [`HWND::GetWindowText`](crate::HWND::GetWindowText).
-	///
-	/// ```rust,ignore
-	/// use winsafe::gui;
-	///
-	/// let my_edit: gui::Edit; // initialized somewhere
-	///
-	/// println!("The text is: {}", my_edit.text()?);
-	/// ```
-	pub fn text(&self) -> WinResult<String> {
-		self.hwnd().GetWindowText()
 	}
 }
 

@@ -2,7 +2,7 @@ use std::any::Any;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData};
+use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData, HwndPlace};
 use crate::gui::events::{ButtonEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check, multiply_dpi, ui_font};
@@ -13,6 +13,7 @@ use crate::gui::traits::{
 	NativeControl,
 	NativeControlEvents,
 	Parent,
+	TextControl,
 	Window,
 };
 use crate::handles::HWND;
@@ -71,6 +72,8 @@ impl NativeControlEvents<ButtonEvents> for RadioButton {
 		&self.0.events
 	}
 }
+
+impl TextControl for RadioButton {}
 
 impl RadioButton {
 	pub(in crate::gui) fn new(
@@ -168,6 +171,16 @@ impl RadioButton {
 			),
 		});
 		Ok(())
+	}
+
+	/// Calls [`set_text`](crate::gui::TextControl::set_text) and resizes the
+	/// control to exactly fit the new text.
+	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
+		self.set_text(text)?;
+		let bound_box = calc_text_bound_box_check(text)?;
+		self.hwnd().SetWindowPos(
+			HwndPlace::None, POINT::default(), bound_box,
+			co::SWP::NOZORDER | co::SWP::NOMOVE)
 	}
 }
 

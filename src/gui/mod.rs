@@ -47,6 +47,7 @@ pub(crate) mod prelude {
 		NativeControl,
 		NativeControlEvents,
 		Parent,
+		TextControl,
 		UiThread,
 		Window,
 	};
