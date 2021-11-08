@@ -73,8 +73,8 @@ impl NativeControlEvents<ButtonEvents> for Button {
 	}
 }
 
-impl TextControl for Button {}
 impl FocusControl for Button {}
+impl TextControl for Button {}
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window

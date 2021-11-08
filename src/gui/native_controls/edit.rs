@@ -73,8 +73,8 @@ impl NativeControlEvents<EditEvents> for Edit {
 	}
 }
 
-impl TextControl for Edit {}
 impl FocusControl for Edit {}
+impl TextControl for Edit {}
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window

@@ -74,8 +74,8 @@ impl NativeControlEvents<ButtonEvents> for RadioButton {
 	}
 }
 
-impl TextControl for RadioButton {}
 impl FocusControl for RadioButton {}
+impl TextControl for RadioButton {}
 
 impl RadioButton {
 	pub(in crate::gui) fn new(

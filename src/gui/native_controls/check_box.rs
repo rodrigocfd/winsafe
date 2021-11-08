@@ -90,8 +90,8 @@ impl NativeControlEvents<ButtonEvents> for CheckBox {
 	}
 }
 
-impl TextControl for CheckBox {}
 impl FocusControl for CheckBox {}
+impl TextControl for CheckBox {}
 
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window

@@ -75,8 +75,8 @@ impl NativeControlEvents<ComboBoxEvents> for ComboBox {
 	}
 }
 
-impl TextControl for ComboBox {}
 impl FocusControl for ComboBox {}
+impl TextControl for ComboBox {}
 
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
