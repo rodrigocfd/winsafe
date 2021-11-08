@@ -12,6 +12,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	EnableControl,
 	FocusControl,
 	NativeControl,
 	NativeControlEvents,
@@ -75,6 +76,7 @@ impl NativeControlEvents<ComboBoxEvents> for ComboBox {
 	}
 }
 
+impl EnableControl for ComboBox {}
 impl FocusControl for ComboBox {}
 impl TextControl for ComboBox {}
 

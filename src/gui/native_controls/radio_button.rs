@@ -10,6 +10,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	EnableControl,
 	FocusControl,
 	NativeControl,
 	NativeControlEvents,
@@ -74,6 +75,7 @@ impl NativeControlEvents<ButtonEvents> for RadioButton {
 	}
 }
 
+impl EnableControl for RadioButton {}
 impl FocusControl for RadioButton {}
 impl TextControl for RadioButton {}
 

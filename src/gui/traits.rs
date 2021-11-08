@@ -94,6 +94,14 @@ pub trait NativeControlEvents<E> {
 	fn on(&self) -> &E;
 }
 
+/// Any child window which can be enabled/disabled.
+pub trait EnableControl: Child {
+	/// Enables or disables the control.
+	fn enable(&self, enable: bool) {
+		self.hwnd().EnableWindow(enable);
+	}
+}
+
 /// Any child window which can be focused.
 pub trait FocusControl: Child {
 	/// Focus the control by sending a

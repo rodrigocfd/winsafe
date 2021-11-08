@@ -11,6 +11,7 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
+	EnableControl,
 	NativeControl,
 	NativeControlEvents,
 	Parent,
@@ -73,6 +74,7 @@ impl NativeControlEvents<LabelEvents> for Label {
 	}
 }
 
+impl EnableControl for Label {}
 impl TextControl for Label {}
 
 impl Label {
