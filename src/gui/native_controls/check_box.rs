@@ -11,7 +11,6 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
-	EnableControl,
 	FocusControl,
 	NativeControl,
 	NativeControlEvents,
@@ -91,7 +90,6 @@ impl NativeControlEvents<ButtonEvents> for CheckBox {
 	}
 }
 
-impl EnableControl for CheckBox {}
 impl FocusControl for CheckBox {}
 impl TextControl for CheckBox {}
 

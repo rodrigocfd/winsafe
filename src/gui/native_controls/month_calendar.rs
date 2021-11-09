@@ -11,7 +11,6 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
-	EnableControl,
 	FocusControl,
 	NativeControl,
 	NativeControlEvents,
@@ -74,7 +73,6 @@ impl NativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 	}
 }
 
-impl EnableControl for MonthCalendar {}
 impl FocusControl for MonthCalendar {}
 
 impl MonthCalendar {

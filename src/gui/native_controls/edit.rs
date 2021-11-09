@@ -10,7 +10,6 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
-	EnableControl,
 	FocusControl,
 	NativeControl,
 	NativeControlEvents,
@@ -74,7 +73,6 @@ impl NativeControlEvents<EditEvents> for Edit {
 	}
 }
 
-impl EnableControl for Edit {}
 impl FocusControl for Edit {}
 impl TextControl for Edit {}
 

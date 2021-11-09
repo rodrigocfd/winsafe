@@ -20,7 +20,6 @@ use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
 	Child,
-	EnableControl,
 	FocusControl,
 	NativeControl,
 	NativeControlEvents,
@@ -85,7 +84,6 @@ impl NativeControlEvents<ListViewEvents> for ListView {
 	}
 }
 
-impl EnableControl for ListView {}
 impl FocusControl for ListView {}
 
 impl ListView {
