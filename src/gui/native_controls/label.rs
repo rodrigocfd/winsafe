@@ -5,8 +5,16 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::events::{EventsView, LabelEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
-use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box, multiply_dpi, ui_font};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl,
+	OptsId,
+};
+use crate::gui::privs::{
+	auto_ctrl_id,
+	calc_text_bound_box,
+	multiply_dpi_or_dtu,
+	ui_font,
+};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
@@ -126,13 +134,15 @@ impl Label {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
-				multiply_dpi(Some(&mut pos), None)?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), Some(&mut pos), None)?;
 
 				let mut sz = opts.size;
 				if sz.cx == -1 && sz.cy == -1 {
 					sz = calc_text_bound_box(&opts.text)?; // resize to fit text
 				} else {
-					multiply_dpi(None, Some(&mut sz))?; // user-defined size
+					multiply_dpi_or_dtu(
+						self.0.base.parent_base(), None, Some(&mut sz))?; // user-defined size
 				}
 
 				let our_hwnd = self.0.base.create_window(
@@ -182,17 +192,21 @@ pub struct LabelOpts {
 	///
 	/// Defaults to empty string.
 	pub text: String,
-	/// Control position within parent client area, in pixels, to be
+	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control size, in pixels, to be
+	/// Control size, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to the size needed to fit the text.
 	pub size: SIZE,

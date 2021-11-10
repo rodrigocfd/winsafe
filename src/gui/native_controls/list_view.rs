@@ -6,16 +6,15 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{GetAsyncKeyState, GetCursorPos};
 use crate::gui::base::Base;
-use crate::gui::events::{
-	EventsView,
-	ListViewEvents,
-	sealed_events_wm_nfy::SealedEventsWmNfy,
-	WindowEvents,
+use crate::gui::events::{EventsView, ListViewEvents, WindowEvents};
+use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl,
+	OptsId,
 };
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
@@ -148,7 +147,8 @@ impl ListView {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = opts.size;
-				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
 
 				self.0.base.create_window(
 					"SysListView32", None, pos, sz,
@@ -319,17 +319,21 @@ impl ListView {
 /// Options to create a [`ListView`](crate::gui::ListView) programmatically with
 /// [`ListView::new`](crate::gui::ListView::new).
 pub struct ListViewOpts {
-	/// Control position within parent client area, in pixels, to be
+	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control size, in pixels, to be
+	/// Control size, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 50 x 50.
 	pub size: SIZE,

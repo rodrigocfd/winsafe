@@ -6,6 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, PostQuitMessage, SystemParametersInfo};
+use crate::gui::base::Base;
 use crate::handles::{Handle, HandleGdi, HFONT, HTHEME, HWND};
 use crate::msg::wm;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
@@ -98,6 +99,40 @@ pub(in crate::gui) fn multiply_dpi(
 		}
 	}
 	Ok(())
+}
+
+/// If parent is a dialog, converts Dialog Template Units to pixels; otherwise
+/// multiplies by current DPI factor.
+pub(in crate::gui) fn multiply_dpi_or_dtu(
+	parent_base: &Base,
+	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> WinResult<()>
+{
+	if parent_base.is_dialog() {
+		let mut rc = RECT::default();
+		pt.as_ref().map(|pt| {
+			rc.left = pt.x;
+			rc.top = pt.y;
+		});
+		sz.as_ref().map(|sz| {
+			rc.right = sz.cx;
+			rc.bottom = sz.cy;
+		});
+
+		parent_base.hwnd().MapDialogRect(&mut rc)?;
+		let (mut pt, mut sz) = (pt, sz);
+		pt.as_mut().map(|pt| {
+			pt.x = rc.left;
+			pt.y = rc.top;
+		});
+		sz.as_mut().map(|sz| {
+			sz.cx = rc.right;
+			sz.cy = rc.bottom;
+		});
+		Ok(())
+
+	} else {
+		multiply_dpi(pt, sz)
+	}
 }
 
 //------------------------------------------------------------------------------

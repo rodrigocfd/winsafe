@@ -92,7 +92,9 @@ impl WindowControl {
 	/// Instantiates a new `WindowControl` object, to be loaded from a dialog
 	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
-	/// Position will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, position is in Dialog Template Units;
+	/// otherwise in pixels, which will be multiplied to match current system
+	/// DPI.
 	pub fn new_dlg(
 		parent: &impl Parent,
 		dialog_id: u16,

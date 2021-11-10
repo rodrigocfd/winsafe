@@ -4,8 +4,11 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{EventsView, TrackbarEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl,
+	OptsId,
+};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
@@ -124,7 +127,8 @@ impl Trackbar {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = opts.size;
-				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
 
 				self.0.base.create_window( // may panic
 					"msctls_trackbar32", None, pos, sz,
@@ -179,17 +183,21 @@ impl Trackbar {
 /// Options to create a [`Trackbar`](crate::gui::Trackbar) programmatically with
 /// [`Trackbar::new`](crate::gui::Trackbar::new).
 pub struct TrackbarOpts {
-	/// Control position within parent client area, in pixels, to be
+	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control size, in pixels, to be
+	/// Control size, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 120 x 23.
 	pub size: SIZE,

@@ -6,8 +6,11 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{ComboBoxEvents, EventsView, WindowEvents};
 use crate::gui::native_controls::combo_box_items::ComboBoxItems;
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl,
+	OptsId,
+};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
@@ -134,7 +137,8 @@ impl ComboBox {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, 0);
-				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
 
 				let our_hwnd = self.0.base.create_window(
 					"COMBOBOX", None, pos, sz,
@@ -168,17 +172,21 @@ impl ComboBox {
 /// Options to create a [`ComboBox`](crate::gui::ComboBox) programmatically with
 /// [`ComboBox::new`](crate::gui::ComboBox::new).
 pub struct ComboBoxOpts {
-	/// Control position within parent client area, in pixels, to be
+	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control width, in pixels, to be
+	/// Control width, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the value is in Dialog Template Units;
+	/// otherwise in pixels, which will be multiplied to match current system
+	/// DPI.
 	///
 	/// Defaults to 120.
 	pub width: u32,

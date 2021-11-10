@@ -5,9 +5,12 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{EventsView, TreeViewEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl,
+	OptsId,
+};
 use crate::gui::native_controls::tree_view_items::TreeViewItems;
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
@@ -128,7 +131,8 @@ impl TreeView {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = opts.size;
-				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
 
 				self.0.base.create_window( // may panic
 					"SysTreeView32", None, pos, sz,
@@ -172,17 +176,21 @@ impl TreeView {
 /// Options to create a [`TreeView`](crate::gui::TreeView) programmatically with
 /// [`TreeView::new`](crate::gui::TreeView::new).
 pub struct TreeViewOpts {
-	/// Control position within parent client area, in pixels, to be
+	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control size, in pixels, to be
+	/// Control size, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 50 x 50.
 	pub size: SIZE,

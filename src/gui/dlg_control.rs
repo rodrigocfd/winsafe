@@ -6,7 +6,11 @@ use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::EventsView;
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi, paint_control_borders};
+use crate::gui::privs::{
+	auto_ctrl_id,
+	multiply_dpi_or_dtu,
+	paint_control_borders,
+};
 use crate::gui::resizer::{Horz, Vert};
 use crate::structs::{POINT, SIZE};
 
@@ -51,7 +55,8 @@ impl DlgControl {
 
 				// Set control position within parent.
 				let mut dlg_pos = self2.0.position;
-				multiply_dpi(Some(&mut dlg_pos), None)?;
+				multiply_dpi_or_dtu(self2.0.dlg_base.base.parent_base().unwrap(),
+					Some(&mut dlg_pos), None)?;
 				self2.0.dlg_base.base.hwnd().SetWindowPos(
 					HwndPlace::None,
 					dlg_pos, SIZE::default(),

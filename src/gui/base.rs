@@ -55,6 +55,10 @@ impl Base {
 		&mut self.hwnd
 	}
 
+	pub(in crate::gui) const fn is_dialog(&self) -> bool {
+		self.is_dialog
+	}
+
 	pub(in crate::gui) const fn wmcreate_or_wminitdialog(&self) -> co::WM {
 		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
 	}

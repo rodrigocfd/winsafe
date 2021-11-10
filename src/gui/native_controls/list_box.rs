@@ -6,8 +6,11 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{EventsView, ListBoxEvents, WindowEvents};
 use crate::gui::native_controls::list_box_items::ListBoxItems;
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl,
+	OptsId,
+};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
@@ -131,7 +134,8 @@ impl ListBox {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = opts.size;
-				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
 
 				let our_hwnd = self.0.base.create_window(
 					"ListBox", None, pos, sz,
@@ -163,17 +167,21 @@ impl ListBox {
 /// Options to create a [`ListBox`](crate::gui::ListBox) programmatically with
 /// [`ListBox::new`](crate::gui::ListBox::new).
 pub struct ListBoxOpts {
-	/// Control position within parent client area, in pixels, to be
+	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control size, in pixels, to be
+	/// Control size, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 50 x 50.
 	pub size: SIZE,

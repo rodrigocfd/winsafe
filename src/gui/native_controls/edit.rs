@@ -4,8 +4,11 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::events::{EditEvents, EventsView, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl, OptsId};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi, ui_font};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl,
+	OptsId,
+};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::traits::{
 	AsAny,
@@ -128,7 +131,8 @@ impl Edit {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
-				multiply_dpi(Some(&mut pos), Some(&mut sz))?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
 
 				let our_hwnd = self.0.base.create_window(
 					"EDIT", Some(&opts.text), pos, sz,
@@ -185,24 +189,30 @@ pub struct EditOpts {
 	///
 	/// Defaults to empty string.
 	pub text: String,
-	/// Control position within parent client area, in pixels, to be
+	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
-	/// Control width, in pixels, to be
+	/// Control width, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the value is in Dialog Template Units;
+	/// otherwise in pixels, which will be multiplied to match current system
+	/// DPI.
 	///
 	/// Defaults to 100.
 	pub width: u32,
-	/// Control height, in pixels, to be
+	/// Control height, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the value is in Dialog Template Units;
+	/// otherwise in pixels, which will be multiplied to match current system
+	/// DPI.
 	///
 	/// Defaults to 21.
 	///

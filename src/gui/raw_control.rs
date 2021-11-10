@@ -5,7 +5,7 @@ use crate::co;
 use crate::enums::IdMenu;
 use crate::gui::base::Base;
 use crate::gui::events::EventsView;
-use crate::gui::privs::{multiply_dpi, paint_control_borders};
+use crate::gui::privs::{multiply_dpi_or_dtu, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
 use crate::handles::{Handle, HBRUSH, HCURSOR, HICON};
@@ -56,7 +56,8 @@ impl RawControl {
 
 				let mut wnd_pos = opts.position;
 				let mut wnd_sz = opts.size;
-				multiply_dpi(Some(&mut wnd_pos), Some(&mut wnd_sz))?;
+				multiply_dpi_or_dtu(self2.0.raw_base.base.parent_base().unwrap(),
+					Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
 				self2.0.raw_base.create_window(
 					atom,

@@ -7,7 +7,7 @@ use crate::co;
 use crate::gui::events::{EventsView, StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::traits::{
 	AsAny,
 	Child,
@@ -142,7 +142,8 @@ impl StatusBar {
 		for part in self.0.parts_info.as_mut().iter_mut() {
 			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 				let mut col_cx = SIZE::new(*width as _, 0);
-				multiply_dpi(None, Some(&mut col_cx))?;
+				multiply_dpi_or_dtu(
+					self.0.base.parent_base(), None, Some(&mut col_cx))?;
 				*width = col_cx.cx as _;
 			}
 		}
