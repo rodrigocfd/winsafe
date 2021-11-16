@@ -72,9 +72,10 @@ impl ProgressBar {
 
 		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
-			move |_| { self2.create(horz, vert)?; Ok(0) }
+			move |_| self2.create(horz, vert)
+				.map_err(|e| e.into())
+				.map(|_| 0)
 		});
-
 		new_self
 	}
 
@@ -83,7 +84,7 @@ impl ProgressBar {
 	pub fn new_dlg(
 		parent: &impl Parent,
 		ctrl_id: u16,
-		horz_resize: Horz, vert_resize: Vert) -> ProgressBar
+		resize_behavior: (Horz, Vert)) -> ProgressBar
 	{
 		let new_self = Self(
 			Arc::new(
@@ -96,9 +97,10 @@ impl ProgressBar {
 
 		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
-			move |_| { self2.create(horz_resize, vert_resize)?; Ok(true) }
+			move |_| self2.create(resize_behavior.0, resize_behavior.1)
+				.map_err(|e| e.into())
+				.map(|_| true)
 		});
-
 		new_self
 	}
 

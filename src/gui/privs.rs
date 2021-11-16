@@ -92,7 +92,6 @@ pub(in crate::gui) fn multiply_dpi(
 			pt.x = kernel32::MulDiv(pt.x, DPI.x, 96);
 			pt.y = kernel32::MulDiv(pt.y, DPI.y, 96);
 		}
-
 		if let Some(sz) = sz {
 			sz.cx = kernel32::MulDiv(sz.cx, DPI.x, 96);
 			sz.cy = kernel32::MulDiv(sz.cy, DPI.y, 96);

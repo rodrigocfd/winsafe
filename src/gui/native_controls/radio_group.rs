@@ -102,7 +102,9 @@ impl RadioGroup {
 		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let me = new_self.clone();
 			let horz_verts = horz_verts.clone();
-			move |_| { me.create(horz_verts.as_ref())?; Ok(0) }
+			move |_| me.create(horz_verts.as_ref())
+				.map_err(|e| e.into())
+				.map(|_| 0)
 		});
 		new_self
 	}
@@ -138,7 +140,9 @@ impl RadioGroup {
 		parent.as_base().privileged_on().wm_init_dialog({
 			let me = new_self.clone();
 			let horz_verts = horz_verts.clone();
-			move |_| { me.create(horz_verts.as_ref())?; Ok(true) }
+			move |_| me.create(horz_verts.as_ref())
+				.map_err(|e| e.into())
+				.map(|_| true)
 		});
 		new_self
 	}

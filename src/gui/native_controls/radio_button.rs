@@ -101,7 +101,8 @@ impl RadioButton {
 	}
 
 	pub(in crate::gui) fn new_dlg(
-		parent: &impl Parent, ctrl_id: u16) -> RadioButton
+		parent: &impl Parent,
+		ctrl_id: u16) -> RadioButton
 	{
 		Self(
 			Obj {

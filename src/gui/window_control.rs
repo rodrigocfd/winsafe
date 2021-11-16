@@ -99,7 +99,7 @@ impl WindowControl {
 		parent: &impl Parent,
 		dialog_id: u16,
 		position: POINT,
-		horz_resize: Horz, vert_resize: Vert,
+		resize_behavior: (Horz, Vert),
 		ctrl_id: Option<u16>) -> WindowControl
 	{
 		Self {
@@ -108,7 +108,7 @@ impl WindowControl {
 					parent.as_base(),
 					dialog_id,
 					position,
-					horz_resize, vert_resize,
+					resize_behavior,
 					ctrl_id,
 				),
 			),

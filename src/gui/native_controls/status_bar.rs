@@ -129,11 +129,14 @@ impl StatusBar {
 
 		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
 			let self2 = new_self.clone();
-			move |_| { self2.create()?; Ok(0) }
+			move |_| self2.create()
+				.map_err(|e| e.into())
+				.map(|_| 0)
 		});
 		parent.as_base().privileged_on().wm_size({
 			let self2 = new_self.clone();
-			move |p| { self2.resize(&p)?; Ok(()) }
+			move |p| self2.resize(&p)
+				.map_err(|e| e.into())
 		});
 		new_self
 	}

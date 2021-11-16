@@ -29,7 +29,7 @@ impl DlgControl {
 		parent_base: &Base,
 		dialog_id: u16,
 		position: POINT,
-		horz_resize: Horz, vert_resize: Vert,
+		resize_behavior: (Horz, Vert),
 		ctrl_id: Option<u16>) -> DlgControl
 	{
 		let dlg = Self(Arc::new(
@@ -39,7 +39,7 @@ impl DlgControl {
 				ctrl_id: ctrl_id.unwrap_or_else(|| auto_ctrl_id()),
 			},
 		));
-		dlg.default_message_handlers(parent_base, horz_resize, vert_resize);
+		dlg.default_message_handlers(parent_base, resize_behavior.0, resize_behavior.1);
 		dlg
 	}
 
