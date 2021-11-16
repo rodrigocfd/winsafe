@@ -213,6 +213,7 @@
 //! buffer to receive text from Win32 calls.
 
 #[macro_use] pub mod co;
+#[macro_use] mod macros;
 #[macro_use] mod structs;
 
 mod ffi;
