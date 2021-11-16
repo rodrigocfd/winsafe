@@ -1,7 +1,7 @@
 /// Base to all const type macros, with basic impls.
 macro_rules! pub_struct_const_base {
 	(
-		$name:ident, $ntype:ty,
+		$name:ident: $ntype:ty;
 		$(#[$doc:meta])*
 	) => {
 		$(#[$doc])*
@@ -99,10 +99,10 @@ macro_rules! pub_struct_const_base {
 /// Declares multiple public constant values for the given const type.
 macro_rules! impl_pub_const_values {
 	(
-		$name:ident,
+		$name:ident;
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		impl $name {
@@ -117,10 +117,10 @@ macro_rules! impl_pub_const_values {
 /// Declares multiple private constant values for the given const type.
 macro_rules! impl_const_values {
 	(
-		$name:ident,
+		$name:ident;
 		$(
 			$(#[$privvaldoc:meta])*
-			$privvalname:ident, $privval:expr
+			$privvalname:ident $privval:expr
 		)*
 	) => {
 		impl $name {
@@ -135,16 +135,16 @@ macro_rules! impl_const_values {
 /// Declares the type of a constant, along with values.
 macro_rules! pub_struct_const {
 	(
-		$name:ident, $ntype:ty,
+		$name:ident: $ntype:ty;
 		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		pub_struct_const_base! {
-			$name, $ntype,
+			$name: $ntype;
 			$(#[$doc])*
 			#[derive(Debug)]
 		}
@@ -156,10 +156,10 @@ macro_rules! pub_struct_const {
 		}
 
 		// All public const values.
-		impl_pub_const_values! { $name,
+		impl_pub_const_values! { $name;
 			$(
 				$(#[$pubvaldoc])*
-				$pubvalname, $pubval
+				$pubvalname $pubval
 			)*
 		}
 	};
@@ -169,24 +169,24 @@ macro_rules! pub_struct_const {
 /// `Debug` and `Display` impls.
 macro_rules! pub_struct_const_no_debug_display {
 	(
-		$name:ident, $ntype:ty,
+		$name:ident: $ntype:ty;
 		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		pub_struct_const_base! {
-			$name, $ntype,
+			$name: $ntype;
 			$(#[$doc])*
 		}
 
 		// All public const values.
-		impl_pub_const_values! { $name,
+		impl_pub_const_values! { $name;
 			$(
 				$(#[$pubvaldoc])*
-				$pubvalname, $pubval
+				$pubvalname $pubval
 			)*
 		}
 	};
@@ -196,26 +196,26 @@ macro_rules! pub_struct_const_no_debug_display {
 /// [`WM`](crate::co::WM) constant type, along with private and public values.
 macro_rules! pub_struct_const_wm {
 	(
-		$name:ident,
+		$name:ident;
 		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$privvaldoc:meta])*
-			$privvalname:ident, $privval:expr
+			$privvalname:ident $privval:expr
 		)*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		pub_struct_const! {
-			$name, u32,
+			$name: u32;
 			$(#[$doc])*
 			=>
 			$(
 				$(#[$pubvaldoc])*
-				$pubvalname, $pubval
+				$pubvalname $pubval
 			)*
 		}
 
@@ -226,10 +226,10 @@ macro_rules! pub_struct_const_wm {
 		}
 
 		// All private const values.
-		impl_const_values! { $name,
+		impl_const_values! { $name;
 			$(
 				$(#[$privvaldoc])*
-				$privvalname, $privval
+				$privvalname $privval
 			)*
 		}
 	};
@@ -240,21 +240,21 @@ macro_rules! pub_struct_const_wm {
 /// values.
 macro_rules! pub_struct_const_cmd {
 	(
-		$name:ident,
+		$name:ident;
 		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		pub_struct_const! {
-			$name, u16,
+			$name: u16;
 			$(#[$doc])*
 			=>
 			$(
 				$(#[$pubvaldoc])*
-				$pubvalname, $pubval
+				$pubvalname $pubval
 			)*
 		}
 
@@ -271,26 +271,26 @@ macro_rules! pub_struct_const_cmd {
 /// public values.
 macro_rules! pub_struct_const_nm {
 	(
-		$name:ident,
+		$name:ident;
 		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$privvaldoc:meta])*
-			$privvalname:ident, $privval:expr
+			$privvalname:ident $privval:expr
 		)*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		pub_struct_const! {
-			$name, i32,
+			$name: i32;
 			$(#[$doc])*
 			=>
 			$(
 				$(#[$pubvaldoc])*
-				$pubvalname, $pubval
+				$pubvalname $pubval
 			)*
 		}
 
@@ -301,10 +301,10 @@ macro_rules! pub_struct_const_nm {
 		}
 
 		// All private const values.
-		impl_const_values! { $name,
+		impl_const_values! { $name;
 			$(
 				$(#[$privvaldoc])*
-				$privvalname, $privval
+				$privvalname $privval
 			)*
 		}
 	};
@@ -314,21 +314,21 @@ macro_rules! pub_struct_const_nm {
 /// [`WS`](crate::co::WS) constant type, along with public values.
 macro_rules! pub_struct_const_ws {
 	(
-		$name:ident, $ntype:ty,
+		$name:ident: $ntype:ty;
 		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		pub_struct_const! {
-			$name, $ntype,
+			$name: $ntype;
 			$(#[$doc])*
 			=>
 			$(
 				$(#[$pubvaldoc])*
-				$pubvalname, $pubval
+				$pubvalname $pubval
 			)*
 		}
 
@@ -344,21 +344,21 @@ macro_rules! pub_struct_const_ws {
 /// [`WS_EX`](crate::co::WS_EX) constant type, along with public values.
 macro_rules! pub_struct_const_wsex {
 	(
-		$name:ident,
+		$name:ident;
 		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident, $pubval:expr
+			$pubvalname:ident $pubval:expr
 		)*
 	) => {
 		pub_struct_const! {
-			$name, u32,
+			$name: u32;
 			$(#[$doc])*
 			=>
 			$(
 				$(#[$pubvaldoc])*
-				$pubvalname, $pubval
+				$pubvalname $pubval
 			)*
 		}
 
