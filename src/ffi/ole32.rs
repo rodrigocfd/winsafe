@@ -2,9 +2,9 @@
 
 use crate::ffi::{HRESULT, PCVOID, PVOID};
 
-extern_sys! { "ole32",
-	CoCreateInstance, PCVOID, PVOID, u32, PCVOID, *mut PVOID, => HRESULT
-	CoInitializeEx, PVOID, u32, => HRESULT
-	CoTaskMemFree, PVOID, => ()
-	CoUninitialize, => ()
+extern_sys! { "ole32";
+	CoCreateInstance(PCVOID, PVOID, u32, PCVOID, *mut PVOID) -> HRESULT
+	CoInitializeEx(PVOID, u32) -> HRESULT
+	CoTaskMemFree(PVOID)
+	CoUninitialize()
 }
