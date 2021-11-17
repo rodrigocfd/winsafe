@@ -111,6 +111,8 @@ extern_sys! { "user32",
 	GetWindowTextW, HANDLE, PSTR, i32, => i32
 	GetWindowThreadProcessId, HANDLE, *mut u32, => u32
 	HiliteMenuItem, HANDLE, HANDLE, u32, u32, => BOOL
+	InSendMessage, => BOOL
+	InSendMessageEx, => u32
 	InsertMenuItemW, HANDLE, u32, BOOL, PCVOID, => BOOL
 	InvalidateRect, HANDLE, PCVOID, BOOL, => BOOL
 	InvalidateRgn, HANDLE, HANDLE, BOOL, => BOOL

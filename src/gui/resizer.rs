@@ -10,6 +10,8 @@ use crate::structs::{POINT, RECT, SIZE};
 
 /// Specifies the horizontal behavior of the control when the parent window is
 /// resized.
+///
+/// These values are analog to [`gui::Vert`](crate::gui::Vert).
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Horz {
 	/// Nothing will be done when parent window is resized.
@@ -24,6 +26,8 @@ pub enum Horz {
 
 /// Specifies the vertical behavior of the control when the parent window is
 /// resized.
+///
+/// These values are analog to [`gui::Horz`](crate::gui::Horz).
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Vert {
 	/// Nothing will be done when parent window is resized.

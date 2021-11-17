@@ -834,6 +834,18 @@ pub fn InitCommonControls() {
 	unsafe { comctl32::InitCommonControls() }
 }
 
+/// [`InSendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessage)
+/// function.
+pub fn InSendMessage() -> bool {
+	unsafe { user32::InSendMessage() != 0 }
+}
+
+/// [`InSendMessageEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessageex)
+/// function.
+pub fn InSendMessageEx() -> co::ISMEX {
+	co::ISMEX(unsafe { user32::InSendMessageEx()})
+}
+
 /// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
 /// function.
 pub fn IsGUIThread(convert_to_gui_thread: bool) -> WinResult<bool> {

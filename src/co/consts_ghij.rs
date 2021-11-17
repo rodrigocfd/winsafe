@@ -551,3 +551,13 @@ pub_struct_const_nm! { IPN;
 	=>
 	FIELDCHANGED Self::FIRST.0 - 0
 }
+
+pub_struct_const! { ISMEX: u32;
+	/// [`InSendMessageEx`](crate::InSendMessageEx) return value (`u32`).
+	=>
+	NOSEND 0x0000_0000
+	CALLBACK 0x0000_0004
+	NOTIFY 0x0000_0002
+	REPLIED 0x0000_0008
+	SEND 0x0000_0001
+}
