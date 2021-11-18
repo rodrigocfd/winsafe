@@ -126,18 +126,68 @@ pub trait TextControl: Child {
 	}
 }
 
-/// Allows running code in the original UI thread.
+/// Allows a window to spawn new threads which can return errors, and run
+/// closures in the original UI thread.
 pub trait UiThread: Window {
+	/// This method calls
+	/// [`std::thread::spawn`](https://doc.rust-lang.org/std/thread/fn.spawn.html),
+	/// but it allows the returning of an error value. This error value will be
+	/// forwarded to the original UI thread, allowing it to be caught at
+	/// [`WindowMain::run_main`](crate::gui::WindowMain::run_main).
+	///
+	/// It's a way to ensure that, upon an unexpected error, you application
+	/// will be terminated gracefully.
+	///
+	/// # Examples
+	///
+	/// The example below shows the event of a
+	/// [button click](crate::gui::events::ButtonEvents::bn_clicked) which
+	/// spawns a new thread.
+	///
+	/// ```rust,ignore
+	/// use winsafe::prelude::*;
+	/// use winsafe::{gui, ErrResult, GetCurrentThreadId};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// let btn: gui::Button;
+	///
+	/// btn.on().bn_clicked({
+	///     let wnd = wnd.clone();
+	///     move || -> ErrResult<()> {
+	///         println!("Click event at {:#x}", GetCurrentThreadId());
+	///
+	///         wnd.spawn_new_thread({
+	///             let wnd = wnd.clone();
+	///             move || {
+	///                 println!("This is another thread: {:#x}", GetCurrentThreadId());
+	///                 if 1 != 2 {
+	///                     Err("Unexpected condition, goodbye.".into())
+	///                 } else {
+	///                     Ok(())
+	///                 }
+	///             }
+	///         });
+	///
+	///         Ok(())
+	///     }
+	/// });
+	///
+	/// ```
+	fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static;
+
+	/// Runs a closure synchronously in the window's original UI thread,
+	/// allowing UI updates without the risk of a deadlock.
+	///
+	/// # Rationale
+	///
 	/// If you perform a very long task in the UI thread, the UI freezes until
 	/// the task is complete – this may cause the impression that your
-	/// application crashed. That's why long tasks are performed in parallel
-	/// threads. However, at some point you'll want to update the UI to reflect
-	/// the task progress, but if you update the UI from another thread
+	/// application crashed. That's why long tasks should be performed in
+	/// parallel threads. However, at some point you'll want to update the UI to
+	/// reflect the task progress, but if you update the UI from another thread
 	/// (different from the original UI thread), the UI may deadlock, and you
 	/// application crashes.
-	///
-	/// The `run_ui_thread` method allows UI updates by running a closure
-	/// synchronously in the window's original UI thread.
 	///
 	/// This is what this `run_ui_thread` does, step-by-step:
 	///

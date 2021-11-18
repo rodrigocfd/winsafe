@@ -99,6 +99,24 @@ impl Base {
 		self.resizer.add(self.hwnd, hchild, horz, vert)
 	}
 
+	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+	{
+		let hwnd = self.hwnd;
+		std::thread::spawn(move || {
+			if let Err(e) = func() {
+				// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
+				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = Box::new(Box::new(|| Err(e)));
+				let ptr_pack = Box::into_raw(pack);
+				hwnd.SendMessage(WndMsg {
+					msg_id: Self::WM_UI_THREAD,
+					wparam: Self::WM_UI_THREAD.0 as _,
+					lparam: ptr_pack as _,
+				});
+			}
+		});
+	}
+
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{

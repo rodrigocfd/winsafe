@@ -61,6 +61,12 @@ impl Parent for WindowModal {
 }
 
 impl UiThread for WindowModal {
+	fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+	{
+		self.as_base().spawn_new_thread(func);
+	}
+
 	fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
