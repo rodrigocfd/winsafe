@@ -7,8 +7,8 @@ use crate::handles::HWND;
 
 /// A specialized
 /// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) which
-/// returns a `Box<dyn Error>` on failure.
-pub type ErrResult<T> = Result<T, Box<dyn Error>>;
+/// returns a `Box<dyn Error + Send + Sync>` on failure.
+pub type ErrResult<T> = Result<T, Box<dyn Error + Send + Sync>>;
 
 /// A specialized
 /// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) for Win32

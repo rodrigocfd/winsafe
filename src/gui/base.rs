@@ -139,7 +139,8 @@ impl Base {
 	fn default_message_handlers(&self) {
 		self.privileged_events.wm_size({
 			let resizer = self.resizer.clone();
-			move |p| { resizer.resize(&p)?; Ok(()) }
+			move |p| resizer.resize(&p)
+				.map_err(|e| e.into())
 		});
 
 		self.privileged_events.add_msg(Self::WM_UI_THREAD, |p| {

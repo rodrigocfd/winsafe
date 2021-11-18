@@ -12,10 +12,10 @@ use crate::msg::wm;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
 
 /// Global return error, will be taken in main loop.
-pub(in crate::gui) static mut QUIT_ERROR: Option<Box<dyn Error>> = None;
+pub(in crate::gui) static mut QUIT_ERROR: Option<Box<dyn Error + Send + Sync>> = None;
 
 /// Terminates the program with the given error.
-pub(in crate::gui) fn post_quit_error(err: Box<dyn Error>) {
+pub(in crate::gui) fn post_quit_error(err: Box<dyn Error + Send + Sync>) {
 	unsafe { QUIT_ERROR = Some(err); } // store the error, so the main window/dialog can grab it
 	PostQuitMessage(-1); // this -1 will be discarded in the main loop, anyway
 }
