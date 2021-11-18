@@ -100,7 +100,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
 		// This method is analog to SendMessage (synchronous), but intended to
 		// be called from another thread, so a callback function can, tunelled

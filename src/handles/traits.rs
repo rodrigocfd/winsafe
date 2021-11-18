@@ -40,15 +40,14 @@ pub trait HandleClose: Handle {
 	/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// method.
 	fn CloseHandle(self) -> WinResult<()> {
-		bool_to_winresult(
-			unsafe { kernel32::CloseHandle(self.as_ptr()) },
-		)
+		bool_to_winresult(unsafe { kernel32::CloseHandle(self.as_ptr()) })
 	}
 }
 
 /// Any
 /// [`HGDIOBJ`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hgdiobj)
-/// handle.
+/// handle, which is a specific handle for
+/// [GDI objects](https://docs.microsoft.com/en-us/windows/win32/sysinfo/gdi-objects).
 pub trait HandleGdi: Handle {
 	/// [`DeleteObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 	/// method.
@@ -62,36 +61,3 @@ pub trait HandleGdi: Handle {
 		}
 	}
 }
-
-// #[repr(transparent)]
-// #[derive(Copy, Clone, PartialEq, Eq)]
-// pub struct Foo(pub(crate) *mut std::ffi::c_void);
-// impl Debug for Foo {
-// 	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-// 		write!(f, "HWND {:#010x}", self.0 as usize)
-// 	}
-// }
-
-// unsafe impl Send for Foo {}
-// impl Display for Foo {
-// 	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-// 		write!(f, "{:#010x}", self.0 as usize)
-// 	}
-// }
-// impl Handle for Foo {
-// 	const NULL: Self = Self(std::ptr::null_mut());
-// 	unsafe fn from_ptr<T>(p: *mut T) -> Self {
-// 		Self(p as _)
-// 	}
-// 	unsafe fn as_ptr(self) -> *mut std::ffi::c_void {
-// 		self.0
-// 	}
-// }
-
-// impl HandleClose for Foo {}
-// impl HandleGdi for Foo {}
-
-// fn foo() {
-// 	let u = Foo::NULL;
-// 	u.is_null();
-// }

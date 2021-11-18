@@ -202,5 +202,5 @@ pub trait UiThread: Window {
 	/// });
 	/// ```
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>;
+		where F: FnOnce() -> ErrResult<()> + Send + 'static;
 }

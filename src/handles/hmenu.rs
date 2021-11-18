@@ -459,7 +459,7 @@ impl HMENU {
 			)
 		};
 
-		if (flags & co::TPM::RETURNCMD) != co::TPM::default() {
+		if flags.has(co::TPM::RETURNCMD) {
 			match ret {
 				0 => match GetLastError() {
 					co::ERROR::SUCCESS => Ok(None), // success, user cancelled the menu

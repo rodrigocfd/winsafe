@@ -72,7 +72,7 @@ impl Child for WindowControl {
 
 impl UiThread for WindowControl {
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()>,
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
 		self.as_base().run_ui_thread(func);
 	}
