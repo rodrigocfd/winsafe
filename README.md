@@ -5,7 +5,7 @@
 [![Lines of code](https://tokei.rs/b1/github/rodrigocfd/winsafe)](https://github.com/rodrigocfd/winsafe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Win32 GUI and related APIs in safe, idiomatic Rust.
+Windows API and GUI in safe, idiomatic Rust.
 
 WinSafe has:
 
@@ -25,7 +25,7 @@ This crate is still in alpha stage. Below is an estimated progress of feature gr
 | Feature group | Estimated progress |
 | - | - |
 | User windows (main, modal and control) | ![Progress](https://progress-bar.dev/100/) |
-| Native controls | ![Progress](https://progress-bar.dev/75/) |
+| Native controls | ![Progress](https://progress-bar.dev/80/) |
 | Window messages | ![Progress](https://progress-bar.dev/55/) |
 | Overall Win32 APIs | ![Progress](https://progress-bar.dev/25/) | |
 
@@ -40,7 +40,7 @@ winsafe = "0.0.7"
 
 The COM modules are disabled by default, and can be enabled when needed:
 
-| Module | Cargo.toml `[dependencies]` |
+| Module | Cargo.toml `[dependencies]` entry |
 | - | - |
 | [Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) | `winsafe = { version = "0.0.7", features = ["autom"] }` |
 | [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) | `winsafe = { version = "0.0.7", features = ["dshow"] }` |

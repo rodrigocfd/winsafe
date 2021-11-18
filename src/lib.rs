@@ -1,4 +1,4 @@
-//! Win32 GUI and related APIs in safe, idiomatic Rust.
+//! Windows API and GUI in safe, idiomatic Rust.
 //!
 //! WinSafe has:
 //!
@@ -26,7 +26,7 @@
 //!
 //! The COM modules are disabled by default, and can be enabled when needed:
 //!
-//! | Module | Cargo.toml `[dependencies]` |
+//! | Module | Cargo.toml `[dependencies]` entry |
 //! | - | - |
 //! | [Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) | `winsafe = { version = "0.0.7", features = ["autom"] }` |
 //! | [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) | `winsafe = { version = "0.0.7", features = ["dshow"] }` |
