@@ -44,8 +44,8 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// Panics if `texts` is empty, or if the number of texts is greater than
 	/// the number of columns.
-	pub fn add<S: AsRef<str>>(&self,
-		texts: &[S],
+	pub fn add(&self,
+		texts: &[impl AsRef<str>],
 		icon_index: Option<u32>) -> WinResult<ListViewItem<'a>>
 	{
 		if texts.is_empty() {

@@ -481,7 +481,7 @@ pub enum ResStrs {
 }
 
 impl ResStrs {
-	pub fn from_strs<S: AsRef<str>>(texts: &[S]) -> ResStrs {
+	pub fn from_strs(texts: &[impl AsRef<str>]) -> ResStrs {
 		Self::Strs(WString::from_str_vec(texts))
 	}
 }

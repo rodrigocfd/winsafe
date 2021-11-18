@@ -107,7 +107,7 @@ impl WString {
 	///
 	/// This method is intended to pass multi-strings to native APIs, not to
 	/// retrieve them.
-	pub fn from_str_vec<S: AsRef<str>>(v: &[S]) -> WString {
+	pub fn from_str_vec(v: &[impl AsRef<str>]) -> WString {
 		let mut tot_chars = 0; // number of chars of all strings, including terminating nulls
 		for s in v.iter() {
 			tot_chars = s.as_ref().len() + 1; // including terminating null

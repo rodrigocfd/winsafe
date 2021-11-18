@@ -36,8 +36,8 @@ impl<'a> ListViewColumns<'a> {
 	///     ("Address", 500),
 	/// ])?;
 	/// ```
-	pub fn add<S: AsRef<str>>(&self,
-		texts_and_widths: &[(S, u32)]) -> WinResult<()>
+	pub fn add(&self,
+		texts_and_widths: &[(impl AsRef<str>, u32)]) -> WinResult<()>
 	{
 		for (text, width) in texts_and_widths.iter() {
 			let mut col_cx = SIZE::new(*width as _, 0);

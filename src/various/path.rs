@@ -91,7 +91,7 @@ pub fn get_path(full_path: &str) -> Option<&str> {
 /// println!("{}",
 ///     Path::has_extension("file.txt", &[".txt", ".bat"]));
 /// ```
-pub fn has_extension<S: AsRef<str>>(full_path: &str, extensions: &[S]) -> bool {
+pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 	let full_path_u = full_path.to_uppercase();
 	extensions.iter()
 		.find(|ext| {

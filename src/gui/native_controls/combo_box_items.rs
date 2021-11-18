@@ -28,7 +28,7 @@ impl<'a> ComboBoxItems<'a> {
 	///
 	/// cmb_names.items().add(&["John", "Mary"]);
 	/// ```
-	pub fn add<S: AsRef<str>>(&self, items: &[S]) -> WinResult<()> {
+	pub fn add(&self, items: &[impl AsRef<str>]) -> WinResult<()> {
 		for text in items.iter() {
 			self.hwnd.SendMessage(cb::AddString {
 				text: WString::from_str(text.as_ref()),
