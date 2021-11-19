@@ -146,6 +146,7 @@ extern_sys! { "user32";
 	PeekMessageW(PVOID, HANDLE, u32, u32, u32) -> BOOL
 	PostMessageW(HANDLE, u32, usize, isize) -> BOOL
 	PostQuitMessage(i32)
+	PostThreadMessageW(u32, u32, usize, isize) -> BOOL
 	RealChildWindowFromPoint(HANDLE, i32, i32) -> HANDLE
 	RealGetWindowClassW(HANDLE, PSTR, i32) -> u32
 	RedrawWindow(HANDLE, PCVOID, HANDLE, u32) -> BOOL

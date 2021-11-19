@@ -705,8 +705,14 @@ impl HWND {
 
 	/// [`GetWindowThreadProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid)
 	/// method.
-	pub fn GetWindowThreadProcessId(self) -> u32 {
-		unsafe { user32::GetWindowThreadProcessId(self.0, std::ptr::null_mut()) }
+	///
+	/// Returns thread ID and process ID, respectively.
+	pub fn GetWindowThreadProcessId(self) -> (u32, u32) {
+		let mut proc_id = u32::default();
+		let thread_id = unsafe {
+			user32::GetWindowThreadProcessId(self.0, &mut proc_id)
+		};
+		(thread_id, proc_id)
 	}
 
 	/// [`HiliteMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hilitemenuitem)

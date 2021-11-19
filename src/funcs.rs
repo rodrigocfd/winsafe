@@ -18,6 +18,7 @@ use crate::ffi::{
 	version,
 };
 use crate::handles::{HINSTANCE, HLOCAL, HWND};
+use crate::msg::MsgSend;
 use crate::privs::{
 	bool_to_winresult,
 	hr_to_winresult,
@@ -1101,6 +1102,19 @@ pub fn PeekMessage(
 /// function.
 pub fn PostQuitMessage(exit_code: i32) {
 	unsafe { user32::PostQuitMessage(exit_code) }
+}
+
+/// [`PostThreadMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew)
+/// function.
+pub fn PostThreadMessage<M: MsgSend>(thread_id: u32, msg: M) -> WinResult<()> {
+	let wm_any = msg.as_generic_wm();
+	bool_to_winresult(
+		unsafe {
+			user32::PostThreadMessageW(
+				thread_id, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+			)
+		}
+	)
 }
 
 /// [`QueryPerformanceCounter`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
