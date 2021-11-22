@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS};
+use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS, WM};
 
 pub_struct_const! { EDS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `flags` (`u32`).
@@ -9,12 +9,45 @@ pub_struct_const! { EDS: u32;
 	ROTATEDMODE 0x0000_0004
 }
 
+pub_struct_const! { EIMES: u16;
+	/// [`em::GetImeStatus`](crate::msg::em::GetImeStatus) return value (`u16`).
+	=>
+	GETCOMPSTRATONCE 0x0001
+	CANCELCOMPSTRINFOCUS 0x0002
+	COMPLETECOMPSTRKILLFOCUS 0x0004
+}
+
 pub_struct_const_wm! { EM;
 	/// Edit control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
 	/// (`u32`) convertible to [`WM`](crate::co::WM).
 	=>
+	FIRST 0x1500
 	=>
+	SETCUEBANNER Self::FIRST.0 + 1
+	GETCUEBANNER Self::FIRST.0 + 2
+	SHOWBALLOONTIP Self::FIRST.0 + 3
+	HIDEBALLOONTIP Self::FIRST.0 + 4
+	SETHILITE Self::FIRST.0 + 5
+	GETHILITE Self::FIRST.0 + 6
+	NOSETFOCUS Self::FIRST.0 + 7
+	TAKEFOCUS Self::FIRST.0 + 8
+	SETEXTENDEDSTYLE Self::FIRST.0 + 10
+	GETEXTENDEDSTYLE Self::FIRST.0 + 11
+	SETENDOFLINE Self::FIRST.0 + 12
+	GETENDOFLINE Self::FIRST.0 + 13
+	ENABLESEARCHWEB Self::FIRST.0 + 14
+	SEARCHWEB Self::FIRST.0 + 15
+	SETCARETINDEX Self::FIRST.0 + 17
+	GETCARETINDEX Self::FIRST.0 + 18
+	GETZOOM WM::USER.0 + 224
+	SETZOOM WM::USER.0 + 225
+	FILELINEFROMCHAR Self::FIRST.0 + 19
+	FILELINEINDEX Self::FIRST.0 + 20
+	FILELINELENGTH Self::FIRST.0 + 21
+	GETFILELINE Self::FIRST.0 + 22
+	GETFILELINECOUNT Self::FIRST.0 + 23
+
 	GETSEL 0x00b0
 	SETSEL 0x00b1
 	GETRECT 0x00b2

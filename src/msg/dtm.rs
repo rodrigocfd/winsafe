@@ -141,9 +141,9 @@ impl MsgSend for GetMcStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `WinResult<HWND>`.
-pub struct GetMonthCalendar {}
+pub struct GetMonthCal {}
 
-impl MsgSend for GetMonthCalendar {
+impl MsgSend for GetMonthCal {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

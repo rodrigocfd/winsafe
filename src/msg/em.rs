@@ -4,9 +4,11 @@
 
 use crate::aliases::WinResult;
 use crate::co;
+use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
+use crate::handles::HLOCAL;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::zero_as_err;
-use crate::structs::RECT;
+use crate::structs::{POINT, RECT};
 use crate::various::WString;
 
 /// [`EN_CANUNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-canundo)
@@ -26,6 +28,153 @@ impl MsgSend for CanUndo {
 		WndMsg {
 			msg_id: co::EM::CANUNDO.into(),
 			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_CHARFROMPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-charfrompos)
+/// message parameters.
+///
+/// Return type: `(u16, u16)`.
+///
+/// This message is implemented for ordinary edit controls, not for rich edit.
+pub struct CharFromPos {
+	pub coords: POINT,
+}
+
+impl MsgSend for CharFromPos {
+	type RetType = (u16, u16);
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as _), HIWORD(v as _))
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::CHARFROMPOS.into(),
+			wparam: 0,
+			lparam: MAKEDWORD(self.coords.x as _, self.coords.y as _) as _,
+		}
+	}
+}
+
+pub_struct_msg_empty! { EmptyUndoBuffer, co::EM::EMPTYUNDOBUFFER.into(),
+	/// [`EM_EMPTYUNDOBUFFER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-emptyundobuffer)
+}
+
+/// [`EM_FMTLINES`](https://docs.microsoft.com/en-us/windows/win32/controls/em-fmtlines)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct FmtLines {
+	pub insert_soft_line_breaks: bool,
+}
+
+impl MsgSend for FmtLines {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::FMTLINES.into(),
+			wparam: self.insert_soft_line_breaks as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_GETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getcuebanner)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct GetCueBanner<'a> {
+	pub buffer: &'a mut WString,
+}
+
+impl<'a> MsgSend for GetCueBanner<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			0 | 1 => Ok(()),
+			_ => Err(co::ERROR::BAD_ARGUMENTS),
+		}
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETCUEBANNER.into(),
+			wparam: unsafe { self.buffer.as_ptr() } as _,
+			lparam: self.buffer.buffer_size() as _,
+		}
+	}
+}
+
+/// [`EM_GETFIRSTVISIBLELINE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getfirstvisibleline)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+pub struct GetFirstVisibleLine {}
+
+impl MsgSend for GetFirstVisibleLine {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETFIRSTVISIBLELINE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_GETHANDLE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-gethandle)
+/// message, which has no parameters.
+///
+/// Return type: `HLOCAL`.
+pub struct GetHandle {}
+
+impl MsgSend for GetHandle {
+	type RetType = HLOCAL;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		HLOCAL(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETHANDLE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_GETIMESTATUS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getimestatus)
+/// message, which has no parameters.
+///
+/// Return type: `co::EIMES`.
+pub struct GetImeStatus {}
+
+impl MsgSend for GetImeStatus {
+	type RetType = co::EIMES;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::EIMES(v as _)
+	}
+
+	fn as_generic_wm(&self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETIMESTATUS.into(),
+			wparam: 0x0001, // EMSIS_COMPOSITIONSTRING
 			lparam: 0,
 		}
 	}
