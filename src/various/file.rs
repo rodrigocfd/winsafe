@@ -79,14 +79,13 @@ impl File {
 			.map(|off| off as _)
 	}
 
-	/// Reads the given number of bytes from the file into a new `Vec`.
+	/// Reads bytes from the file.
 	///
 	/// Note that the bytes will start being read from the current offset of the
 	/// internal file pointer, which is then incremented by `num_bytes`.
-	pub fn read(&self, num_bytes: usize) -> WinResult<Vec<u8>> {
-		let mut buf = vec![0x00; num_bytes];
-		self.hfile.ReadFile(&mut buf, num_bytes as _, None)?;
-		Ok(buf)
+	pub fn read(&self, buffer: &mut [u8]) -> WinResult<usize> {
+		self.hfile.ReadFile(buffer, None)
+			.map(|n| n as _)
 	}
 
 	/// Reads all the bytes from the file into a new `Vec`.
@@ -94,7 +93,9 @@ impl File {
 	/// The internal file pointer will be rewound to the beginning of the file.
 	pub fn read_all(&self) -> WinResult<Vec<u8>> {
 		self.rewind_pointer()?;
-		let data = self.read(self.size()?)?;
+		let mut data: Vec<u8> = vec![0; self.size()?];
+		let bytes_read = self.read(&mut data)?;
+		data.resize(bytes_read, 0);
 		self.rewind_pointer()?;
 		Ok(data)
 	}
