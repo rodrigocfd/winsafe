@@ -84,20 +84,20 @@ impl HPROCESSLIST {
 	/// ```rust,ignore
 	/// use winsafe::{co, HPROCESSLIST, PROCESSENTRY32};
 	///
-	/// let pe = PROCESSENTRY32::default();
+	/// let mut pe = PROCESSENTRY32::default();
 	/// let hpl = HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)?;
 	///
-	/// for ret in hpl.iter(&pe) {
-	///     ret?;
+	/// for pe in hpl.iter(&pe) {
+	///     let pe = pe?;
 	///     println!("{} {} {}",
 	///         pe.szExeFile(), pe.th32ProcessID, pe.cntThreads);
 	/// }
 	///
 	/// hpl.CloseHandle()?;
 	/// ```
-	pub fn iter<'a>(&'a self, pe32: &'a PROCESSENTRY32)
-		-> impl Iterator<Item = WinResult<()>> + 'a
+	pub fn iter<'a>(&'a self, pe32: &'a mut PROCESSENTRY32)
+		-> impl Iterator<Item = WinResult<&'a PROCESSENTRY32>> + 'a
 	{
 		ProcessIter::new(*self, pe32)
 	}
@@ -110,11 +110,11 @@ struct ProcessIter<'a> {
 	pe32: NonNull<PROCESSENTRY32>,
 	first_pass: bool,
 	has_more: bool,
-	pe32_: PhantomData<&'a PROCESSENTRY32>,
+	pe32_: PhantomData<&'a mut PROCESSENTRY32>,
 }
 
 impl<'a> Iterator for ProcessIter<'a> {
-	type Item = WinResult<()>;
+	type Item = WinResult<&'a PROCESSENTRY32>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if !self.has_more {
@@ -134,7 +134,7 @@ impl<'a> Iterator for ProcessIter<'a> {
 			Ok(has_more) => {
 				self.has_more = has_more;
 				if has_more {
-					Some(Ok(()))
+					Some(Ok(unsafe { self.pe32.as_mut() }))
 				} else {
 					None // no process found
 				}
@@ -144,7 +144,7 @@ impl<'a> Iterator for ProcessIter<'a> {
 }
 
 impl<'a> ProcessIter<'a> {
-	fn new(hpl: HPROCESSLIST, pe32: &'a PROCESSENTRY32) -> Self {
+	fn new(hpl: HPROCESSLIST, pe32: &'a mut PROCESSENTRY32) -> Self {
 		Self {
 			hpl,
 			pe32: NonNull::from(pe32),

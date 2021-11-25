@@ -903,7 +903,6 @@ impl_default!(PROCESS_INFORMATION);
 
 /// [`PROCESSENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)
 /// struct.
-#[allow(dead_code)]
 #[repr(C)]
 pub struct PROCESSENTRY32 {
 	dwSize: u32,
