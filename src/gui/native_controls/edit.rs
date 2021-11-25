@@ -23,6 +23,7 @@ use crate::gui::traits::{
 use crate::handles::{Handle, HWND};
 use crate::msg::{em, wm};
 use crate::structs::{POINT, SIZE};
+use crate::various::WString;
 
 /// Native
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
@@ -153,6 +154,24 @@ impl Edit {
 		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
+	/// Returns an iterator over the lines in the Edit.
+	///
+	/// # Examples
+	///
+	/// ```rust,ignore
+	/// use winsafe::prelude::*;
+	/// use winsafe::gui;
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	///
+	/// for line in my_edit.iter_lines()? {
+	///     println!("{}", line);
+	/// }
+	/// ```
+	pub fn iter_lines(&self) -> WinResult<impl Iterator<Item = String>> {
+		LinesIter::new(self.hwnd())
+	}
+
 	/// Sets the selection range of the text by sending an
 	/// [`em::SetSel`](crate::msg::em::SetSel) message.
 	///
@@ -180,6 +199,47 @@ impl Edit {
 	/// ```
 	pub fn set_selection(&self, start: Option<u32>, end: Option<u32>) {
 		self.hwnd().SendMessage(em::SetSel { start, end });
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct LinesIter {
+	hwnd: HWND,
+	buf: WString,
+	total: usize,
+	current: usize,
+}
+
+impl Iterator for LinesIter {
+	type Item = String;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.total {
+			return None;
+		}
+
+		let line = match self.hwnd.SendMessage(em::GetLine {
+			index: self.current as _,
+			buffer: &mut self.buf,
+		}) {
+			Some(_) => self.buf.to_string(),
+			None => "".to_owned(),
+		};
+
+		self.current += 1;
+		Some(line)
+	}
+}
+
+impl LinesIter {
+	fn new(hwnd: HWND) -> WinResult<Self> {
+		Ok(Self {
+			hwnd,
+			buf: WString::new_alloc_buffer(hwnd.GetWindowTextLength()? as usize + 1),
+			total: hwnd.SendMessage(em::GetLineCount {}) as _,
+			current: 0,
+		})
 	}
 }
 
@@ -230,7 +290,7 @@ pub struct EditOpts {
 	/// Suggestions:
 	/// * add `ES::PASSWORD` for a password input;
 	/// * add `ES::NUMBER` to accept only numbers;
-	/// * replace with `ES::MULTILINE | ES:WANTRETURN | ES:AUTOVSCROLL | ES::NOHIDESEL` for a multi-line edit.
+	/// * replace with `ES::MULTILINE | ES::WANTRETURN | ES::AUTOVSCROLL | ES::NOHIDESEL` for a multi-line edit.
 	pub edit_style: co::ES,
 	/// Window styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

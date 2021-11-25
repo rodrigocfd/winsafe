@@ -7,7 +7,7 @@ use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HLOCAL;
 use crate::msg::{MsgSend, WndMsg};
-use crate::msg::macros::zero_as_err;
+use crate::msg::macros::{zero_as_err, zero_as_none};
 use crate::structs::{POINT, RECT};
 use crate::various::WString;
 
@@ -205,23 +205,34 @@ impl MsgSend for GetLimitText {
 /// [`EM_GETLINE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getline)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// The message will retrieve at most `buffer.len() - 1` characters for the
+/// line, because there must be room for a terminating null. There is no
+/// documented way to know the size of the line: the safe way to deal with this
+/// is simply retrieving the length of the whole text with
+/// [`HWND::GetWindowTextLength`](crate::HWND::GetWindowTextLength) and adding
+/// `1`.
+///
+/// Returns the number of chars copied to `buffer`, not counting the terminating
+/// null, or `None` if no chars were copied. There is no documented way to
+/// differentiate between an error and an empty line.
+///
+/// Return type: `Option<u32>`.
 pub struct GetLine<'a> {
 	pub index: u16,
-	pub text: &'a mut WString,
+	pub buffer: &'a mut WString,
 }
 
 impl<'a> MsgSend for GetLine<'a> {
-	type RetType = WinResult<u32>;
+	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|count| count as _)
+		zero_as_none(v).map(|count| count as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
-		self.text.fill_with_zero();
-		let buf_len = self.text.len() - 1; // leave room for terminating null
-		self.text.as_mut_slice()
+		self.buffer.fill_with_zero();
+		let buf_len = self.buffer.buffer_size() - 1; // leave room for terminating null
+		self.buffer.as_mut_slice()
 			.iter_mut()
 			.next()
 			.map(|wchar| *wchar = buf_len as _); // leave room for terminating null
@@ -229,7 +240,7 @@ impl<'a> MsgSend for GetLine<'a> {
 		WndMsg {
 			msg_id: co::EM::GETLINE.into(),
 			wparam: self.index as _,
-			lparam: unsafe { self.text.as_mut_ptr() } as _,
+			lparam: unsafe { self.buffer.as_mut_ptr() } as _,
 		}
 	}
 }
