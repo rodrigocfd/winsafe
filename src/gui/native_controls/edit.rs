@@ -236,7 +236,7 @@ impl LinesIter {
 	fn new(hwnd: HWND) -> WinResult<Self> {
 		Ok(Self {
 			hwnd,
-			buf: WString::new_alloc_buffer(hwnd.GetWindowTextLength()? as usize + 1),
+			buf: WString::new_alloc_buffer(hwnd.GetWindowTextLength()? as usize + 1), // so we alloc just once
 			total: hwnd.SendMessage(em::GetLineCount {}) as _,
 			current: 0,
 		})

@@ -206,11 +206,7 @@ impl MsgSend for GetLimitText {
 /// message parameters.
 ///
 /// The message will retrieve at most `buffer.len() - 1` characters for the
-/// line, because there must be room for a terminating null. There is no
-/// documented way to know the size of the line: the safe way to deal with this
-/// is simply retrieving the length of the whole text with
-/// [`HWND::GetWindowTextLength`](crate::HWND::GetWindowTextLength) and adding
-/// `1`.
+/// line, because there must be room for a terminating null.
 ///
 /// Returns the number of chars copied to `buffer`, not counting the terminating
 /// null, or `None` if no chars were copied. There is no documented way to
@@ -421,6 +417,127 @@ impl MsgSend for GetWordBreakProc {
 		WndMsg {
 			msg_id: co::EM::GETTHUMB.into(),
 			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_HIDEBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-hideballoontip)
+/// message, which has no parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct HideBalloonTip {}
+
+impl MsgSend for HideBalloonTip {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::HIDEBALLOONTIP.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_LIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-limittext)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct LimitText {
+	pub max: Option<u32>,
+}
+
+impl MsgSend for LimitText {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::LIMITTEXT.into(),
+			wparam: self.max .unwrap_or(0) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_LINEFROMCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-linefromchar)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct LineFromChar {
+	pub char_index: Option<u32>,
+}
+
+impl MsgSend for LineFromChar {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::LINEFROMCHAR.into(),
+			wparam: self.char_index.unwrap_or(-1i32 as _) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_LINEINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/em-lineindex)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct LineIndex {
+	pub line_index: Option<u32>,
+}
+
+impl MsgSend for LineIndex {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::LINEINDEX.into(),
+			wparam: self.line_index.unwrap_or(-1i32 as _) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_LINELENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/em-linelength)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct LineLength {
+	pub char_index: Option<u32>,
+}
+
+impl MsgSend for LineLength {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::LINELENGTH.into(),
+			wparam: self.char_index.unwrap_or(-1i32 as _) as _,
 			lparam: 0,
 		}
 	}
