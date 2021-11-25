@@ -29,7 +29,7 @@ impl MsgSend for AddFile {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
@@ -56,7 +56,7 @@ impl MsgSend for AddString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
@@ -83,7 +83,7 @@ impl MsgSend for DeleteString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::DELETESTRING.into(),
 			wparam: self.index as _,
@@ -112,7 +112,7 @@ impl MsgSend for Dir {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::DELETESTRING.into(),
 			wparam: self.attributes.0 as _,
@@ -140,7 +140,7 @@ impl MsgSend for FindString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::FINDSTRING.into(),
 			wparam: match self.preceding_index {
@@ -171,7 +171,7 @@ impl MsgSend for FindStringExact {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::FINDSTRINGEXACT.into(),
 			wparam: match self.preceding_index {
@@ -196,7 +196,7 @@ impl MsgSend for GetAnchorIndex {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETANCHORINDEX.into(),
 			wparam: 0,
@@ -218,7 +218,7 @@ impl MsgSend for GetCaretIndex {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETCARETINDEX.into(),
 			wparam: 0,
@@ -243,7 +243,7 @@ impl MsgSend for GetCount {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETCOUNT.into(),
 			wparam: 0,
@@ -268,7 +268,7 @@ impl MsgSend for GetCurSel {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETCURSEL.into(),
 			wparam: 0,
@@ -290,7 +290,7 @@ impl MsgSend for GetHorizontalExtent {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETHORIZONTALEXTENT.into(),
 			wparam: 0,
@@ -318,7 +318,7 @@ impl MsgSend for GetItemData {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETITEMDATA.into(),
 			wparam: 0,
@@ -345,7 +345,7 @@ impl MsgSend for GetItemHeight {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETITEMHEIGHT.into(),
 			wparam: self.index.unwrap_or_default() as _,
@@ -373,11 +373,11 @@ impl<'a> MsgSend for GetItemRect<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETITEMRECT.into(),
 			wparam: self.index as _,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -395,7 +395,7 @@ impl MsgSend for GetListBoxInfo {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETLISTBOXINFO.into(),
 			wparam: 0,
@@ -422,7 +422,7 @@ impl MsgSend for GetSel {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETSEL.into(),
 			wparam: self.index as _,
@@ -447,7 +447,7 @@ impl MsgSend for GetSelCount {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETSELCOUNT.into(),
 			wparam: 0,
@@ -474,11 +474,11 @@ impl<'a> MsgSend for GetSelItems<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETSELITEMS.into(),
 			wparam: self.buffer.len(),
-			lparam: self.buffer.as_ptr() as _,
+			lparam: self.buffer.as_mut_ptr() as _,
 		}
 	}
 }
@@ -502,11 +502,11 @@ impl<'a> MsgSend for GetText<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETTEXT.into(),
 			wparam: self.index as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}
 }
@@ -529,7 +529,7 @@ impl MsgSend for GetTextLen {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETTEXTLEN.into(),
 			wparam: self.index as _,
@@ -554,7 +554,7 @@ impl MsgSend for GetTopIndex {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETTOPINDEX.into(),
 			wparam: 0,
@@ -582,7 +582,7 @@ impl MsgSend for InitStorage {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::INITSTORAGE.into(),
 			wparam: self.num_items as _,
@@ -610,7 +610,7 @@ impl MsgSend for InsertString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
 			wparam: self.insertion_index.map_or(-1, |idx| idx as i32) as _,
@@ -634,7 +634,7 @@ impl MsgSend for ItemFromPoint {
 		(LOWORD(v as _) as _, HIWORD(v as _) == 1)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::ITEMFROMPOINT.into(),
 			wparam: 0,
@@ -666,7 +666,7 @@ impl MsgSend for SelectString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SELECTSTRING.into(),
 			wparam: match self.index {
@@ -698,7 +698,7 @@ impl MsgSend for SelItemRange {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SELITEMRANGE.into(),
 			wparam: self.select as usize,
@@ -725,7 +725,7 @@ impl MsgSend for SetAnchorIndex {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETANCHORINDEX.into(),
 			wparam: self.index as _,
@@ -753,7 +753,7 @@ impl MsgSend for SetSel {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETSEL.into(),
 			wparam: self.select as _,
@@ -777,7 +777,7 @@ impl<'a> MsgSend for SetTabStops<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETTABSTOPS.into(),
 			wparam: self.tab_stops.len(),
@@ -804,7 +804,7 @@ impl MsgSend for SetTopIndex {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETTOPINDEX.into(),
 			wparam: self.index as _,

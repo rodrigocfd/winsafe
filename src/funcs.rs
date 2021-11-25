@@ -1107,6 +1107,7 @@ pub fn PostQuitMessage(exit_code: i32) {
 /// [`PostThreadMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew)
 /// function.
 pub fn PostThreadMessage<M: MsgSend>(thread_id: u32, msg: M) -> WinResult<()> {
+	let mut msg = msg;
 	let wm_any = msg.as_generic_wm();
 	bool_to_winresult(
 		unsafe {

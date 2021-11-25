@@ -25,7 +25,7 @@ impl MsgSend for GetIcon {
 		zero_as_err(v).map(|p| HICON(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETICON.into(),
 			wparam: self.part_index as _,
@@ -49,11 +49,11 @@ impl<'a> MsgSend for GetParts<'a> {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETPARTS.into(),
 			wparam: self.right_edges.as_ref().map_or(0, |re| re.len()),
-			lparam: self.right_edges.as_ref().map_or(0, |re| re.as_ptr() as _),
+			lparam: self.right_edges.as_mut().map_or(0, |re| re.as_mut_ptr() as _),
 		}
 	}
 }
@@ -74,11 +74,11 @@ impl<'a> MsgSend for GetText<'a> {
 		(LOWORD(v as _), co::SBT(HIWORD(v as _)))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETTEXT.into(),
 			wparam: self.part_index as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}
 }
@@ -98,7 +98,7 @@ impl MsgSend for GetTextLength {
 		(LOWORD(v as _), co::SBT(HIWORD(v as _)))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETTEXTLENGTH.into(),
 			wparam: self.part_index as _,
@@ -123,11 +123,11 @@ impl<'a> MsgSend for GetTipText<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETTIPTEXT.into(),
 			wparam: MAKEDWORD(self.part_index as _, self.text.len() as _) as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}
 }
@@ -148,7 +148,7 @@ impl MsgSend for SetIcon {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
@@ -172,7 +172,7 @@ impl<'a> MsgSend for SetParts<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETPARTS.into(),
 			wparam: self.right_edges.len(),
@@ -198,7 +198,7 @@ impl MsgSend for SetText {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETTEXT.into(),
 			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.draw_operation.0) as _,
@@ -221,7 +221,7 @@ impl MsgSend for SetTipText {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETTIPTEXT.into(),
 			wparam: self.part_index as _,
@@ -243,7 +243,7 @@ impl MsgSend for Simple {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SIMPLE.into(),
 			wparam: self.display_simple as _,

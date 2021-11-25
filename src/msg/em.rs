@@ -24,7 +24,7 @@ impl MsgSend for CanUndo {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::CANUNDO.into(),
 			wparam: 0,
@@ -50,7 +50,7 @@ impl MsgSend for CharFromPos {
 		(LOWORD(v as _), HIWORD(v as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::CHARFROMPOS.into(),
 			wparam: 0,
@@ -78,7 +78,7 @@ impl MsgSend for FmtLines {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::FMTLINES.into(),
 			wparam: self.insert_soft_line_breaks as _,
@@ -105,10 +105,10 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETCUEBANNER.into(),
-			wparam: unsafe { self.buffer.as_ptr() } as _,
+			wparam: unsafe { self.buffer.as_mut_ptr() } as _,
 			lparam: self.buffer.buffer_size() as _,
 		}
 	}
@@ -127,7 +127,7 @@ impl MsgSend for GetFirstVisibleLine {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETFIRSTVISIBLELINE.into(),
 			wparam: 0,
@@ -149,7 +149,7 @@ impl MsgSend for GetHandle {
 		HLOCAL(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETHANDLE.into(),
 			wparam: 0,
@@ -171,7 +171,7 @@ impl MsgSend for GetImeStatus {
 		co::EIMES(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETIMESTATUS.into(),
 			wparam: 0x0001, // EMSIS_COMPOSITIONSTRING
@@ -193,11 +193,43 @@ impl MsgSend for GetLimitText {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETLIMITTEXT.into(),
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_GETLINE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getline)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct GetLine<'a> {
+	pub index: u16,
+	pub text: &'a mut WString,
+}
+
+impl<'a> MsgSend for GetLine<'a> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|count| count as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		self.text.fill_with_zero();
+		let buf_len = self.text.len() - 1; // leave room for terminating null
+		self.text.as_mut_slice()
+			.iter_mut()
+			.next()
+			.map(|wchar| *wchar = buf_len as _); // leave room for terminating null
+
+		WndMsg {
+			msg_id: co::EM::GETLINE.into(),
+			wparam: self.index as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}
 }
@@ -215,7 +247,7 @@ impl MsgSend for GetLineCount {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETLINECOUNT.into(),
 			wparam: 0,
@@ -239,11 +271,11 @@ impl<'a> MsgSend for GetRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETRECT.into(),
 			wparam: 0,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -264,11 +296,11 @@ impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETSEL.into(),
-			wparam: self.first_index.as_ref().map_or(0, |r| r as *const _ as _),
-			lparam: self.past_last_index.as_ref().map_or(0, |r| r as *const _ as _),
+			wparam: self.first_index.as_mut().map_or(0, |r| r as *mut _ as _),
+			lparam: self.past_last_index.as_mut().map_or(0, |r| r as *mut _ as _),
 		}
 	}
 }
@@ -286,7 +318,7 @@ impl MsgSend for GetThumb {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::GETTHUMB.into(),
 			wparam: 0,
@@ -311,7 +343,7 @@ impl MsgSend for ReplaceSel {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::REPLACESEL.into(),
 			wparam: self.can_be_undone as _,
@@ -335,7 +367,7 @@ impl MsgSend for SetLimitText {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETLIMITTEXT.into(),
 			wparam: self.max_chars as _,
@@ -360,7 +392,7 @@ impl MsgSend for SetSel {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETSEL.into(),
 			wparam: self.start.map_or(-1, |n| n as i32) as _,
@@ -382,7 +414,7 @@ impl MsgSend for Undo {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::UNDO.into(),
 			wparam: 0,

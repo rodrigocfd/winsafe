@@ -174,6 +174,7 @@ impl HWND {
 	/// type of the [`MsgSend`](crate::msg::MsgSend) trait. That means each
 	/// message can define its own return type.
 	pub fn DefSubclassProc<M: MsgSend>(self, msg: M) -> M::RetType {
+		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		msg.convert_ret(
 			unsafe {
@@ -191,6 +192,7 @@ impl HWND {
 	/// type of the [`MsgSend`](crate::msg::MsgSend) trait. That means each
 	/// message can define its own return type.
 	pub fn DefWindowProc<M: MsgSend>(self, msg: M) -> M::RetType {
+		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		msg.convert_ret(
 			unsafe {
@@ -947,6 +949,7 @@ impl HWND {
 	/// )?;
 	/// ```
 	pub fn PostMessage<M: MsgSend>(self, msg: M) -> WinResult<()> {
+		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		bool_to_winresult(
 			unsafe {
@@ -1084,6 +1087,7 @@ impl HWND {
 	/// });
 	/// ```
 	pub fn SendMessage<M: MsgSend>(self, msg: M) -> M::RetType {
+		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		msg.convert_ret(
 			unsafe {

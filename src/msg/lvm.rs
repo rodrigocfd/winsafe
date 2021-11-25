@@ -38,7 +38,7 @@ impl MsgSend for ApproximateViewRect {
 		SIZE::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::APPROXIMATEVIEWRECT.into(),
 			wparam: match self.num_items {
@@ -74,7 +74,7 @@ impl MsgSend for Arrange {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ARRANGE.into(),
 			wparam: self.arrangement.0 as _,
@@ -100,7 +100,7 @@ impl MsgSend for DeleteAllItems {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::DELETEALLITEMS.into(),
 			wparam: 0,
@@ -124,7 +124,7 @@ impl MsgSend for DeleteItem {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::DELETEITEM.into(),
 			wparam: self.index as _,
@@ -149,7 +149,7 @@ impl MsgSend for EnsureVisible {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ENSUREVISIBLE.into(),
 			wparam: self.index as _,
@@ -177,7 +177,7 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::FINDITEM.into(),
 			wparam: self.start_index.map_or(-1, |idx| idx as i32) as _,
@@ -199,7 +199,7 @@ impl MsgSend for GetBkColor {
 		COLORREF(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETBKCOLOR.into(),
 			wparam: 0,
@@ -224,11 +224,11 @@ impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETCOLUMN.into(),
 			wparam: self.index as _,
-			lparam: self.lvcolumn as *const _ as _,
+			lparam: self.lvcolumn as *mut _ as _,
 		}
 	}
 }
@@ -248,11 +248,11 @@ impl<'a> MsgSend for GetColumnOrderArray<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETCOLUMNORDERARRAY.into(),
 			wparam: self.indexes.len() as _,
-			lparam: self.indexes.as_ptr() as _,
+			lparam: self.indexes.as_mut_ptr() as _,
 		}
 	}
 }
@@ -275,7 +275,7 @@ impl MsgSend for GetColumnWidth {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETCOLUMNWIDTH.into(),
 			wparam: self.index as _,
@@ -297,7 +297,7 @@ impl MsgSend for GetCountPerPage {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETCOUNTPERPAGE.into(),
 			wparam: 0,
@@ -319,7 +319,7 @@ impl MsgSend for GetExtendedListViewStyle {
 		co::LVS_EX(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETEXTENDEDLISTVIEWSTYLE.into(),
 			wparam: 0,
@@ -341,7 +341,7 @@ impl MsgSend for GetHeader {
 		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETHEADER.into(),
 			wparam: 0,
@@ -365,7 +365,7 @@ impl MsgSend for GetImageList {
 		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
@@ -389,11 +389,11 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETITEM.into(),
 			wparam: 0,
-			lparam: self.lvitem as *const _ as _,
+			lparam: self.lvitem as *mut _ as _,
 		}
 	}
 }
@@ -411,7 +411,7 @@ impl MsgSend for GetItemCount {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETITEMCOUNT.into(),
 			wparam: 0,
@@ -436,7 +436,7 @@ impl MsgSend for GetItemState {
 		co::LVIS(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETITEMSTATE.into(),
 			wparam: self.index as _,
@@ -461,11 +461,11 @@ impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETITEMTEXT.into(),
 			wparam: self.index as _,
-			lparam: self.lvitem as *const _ as _,
+			lparam: self.lvitem as *mut _ as _,
 		}
 	}
 }
@@ -487,14 +487,13 @@ impl<'a> MsgSend for GetItemRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
-		let ptr_rect = self.rect as *const _ as *mut RECT;
-		unsafe { &mut *ptr_rect }.left = self.portion.0 as _;
+	fn as_generic_wm(&mut self) -> WndMsg {
+		self.rect.left = self.portion.0 as _;
 
 		WndMsg {
 			msg_id: co::LVM::GETITEMRECT.into(),
 			wparam: self.index as _,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -518,7 +517,7 @@ impl MsgSend for GetNextItem {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETNEXTITEM.into(),
 			wparam: self.initial_index.map_or(-1, |idx| idx as i32) as _,
@@ -543,10 +542,10 @@ impl<'a> MsgSend for GetNextItemIndex<'a> {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETNEXTITEMINDEX.into(),
-			wparam: self.initial_item as *const _ as _,
+			wparam: self.initial_item as *mut _ as _,
 			lparam: self.relationship.0 as _,
 		}
 	}
@@ -567,11 +566,11 @@ impl<'a> MsgSend for GetNumberOfWorkAreas<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETNUMBEROFWORKAREAS.into(),
 			wparam: 0,
-			lparam: self.num as *const _ as _,
+			lparam: self.num as *mut _ as _,
 		}
 	}
 }
@@ -591,11 +590,11 @@ impl<'a> MsgSend for GetOrigin<'a> {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETORIGIN.into(),
 			wparam: 0,
-			lparam: self.origin as *const _ as _,
+			lparam: self.origin as *mut _ as _,
 		}
 	}
 }
@@ -613,7 +612,7 @@ impl MsgSend for GetOutlineColor {
 		COLORREF(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETOUTLINECOLOR.into(),
 			wparam: 0,
@@ -638,7 +637,7 @@ impl MsgSend for GetSelectedColumn {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETSELECTEDCOLUMN.into(),
 			wparam: 0,
@@ -660,7 +659,7 @@ impl MsgSend for GetSelectedCount {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETSELECTEDCOUNT.into(),
 			wparam: 0,
@@ -685,7 +684,7 @@ impl MsgSend for GetSelectionMark {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETSELECTIONMARK.into(),
 			wparam: 0,
@@ -706,13 +705,10 @@ impl MsgSend for GetStringWidth {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			len => Ok(len as _),
-		}
+		zero_as_err(v).map(|len| len as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETSTRINGWIDTH.into(),
 			wparam: 0,
@@ -734,7 +730,7 @@ impl MsgSend for GetTextBkColor {
 		COLORREF(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETTEXTBKCOLOR.into(),
 			wparam: 0,
@@ -756,7 +752,7 @@ impl MsgSend for GetTextColor {
 		COLORREF(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETTEXTCOLOR.into(),
 			wparam: 0,
@@ -781,7 +777,7 @@ impl MsgSend for GetTopIndex {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETTOPINDEX.into(),
 			wparam: 0,
@@ -803,7 +799,7 @@ impl MsgSend for GetView {
 		co::LV_VIEW(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETVIEW.into(),
 			wparam: 0,
@@ -827,11 +823,11 @@ impl<'a> MsgSend for GetViewRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETVIEWRECT.into(),
 			wparam: 0,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -854,11 +850,11 @@ impl<'a> MsgSend for HitTest<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::HITTEST.into(),
 			wparam: -1 as _,
-			lparam: self.info as *const _ as _,
+			lparam: self.info as *mut _ as _,
 		}
 	}
 }
@@ -882,7 +878,7 @@ impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::INSERTCOLUMN.into(),
 			wparam: self.index as _,
@@ -909,7 +905,7 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::INSERTITEM.into(),
 			wparam: 0,
@@ -931,7 +927,7 @@ impl MsgSend for IsGroupViewEnabled {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ISGROUPVIEWENABLED.into(),
 			wparam: 0,
@@ -955,7 +951,7 @@ impl MsgSend for IsItemVisible {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ISITEMVISIBLE.into(),
 			wparam: self.index as _,
@@ -982,7 +978,7 @@ impl MsgSend for MapIdToIndex {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::MAPIDTOINDEX.into(),
 			wparam: self.id as _,
@@ -1009,7 +1005,7 @@ impl MsgSend for MapIndexToId {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::MAPINDEXTOID.into(),
 			wparam: self.index as _,
@@ -1034,7 +1030,7 @@ impl MsgSend for RedrawItems {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::REDRAWITEMS.into(),
 			wparam: self.first_index as _,
@@ -1059,7 +1055,7 @@ impl MsgSend for Scroll {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SCROLL.into(),
 			wparam: self.horizontal as _,
@@ -1084,7 +1080,7 @@ impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETCOLUMN.into(),
 			wparam: self.index as _,
@@ -1109,7 +1105,7 @@ impl MsgSend for SetColumnWidth {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETCOLUMNWIDTH.into(),
 			wparam: self.index as _,
@@ -1134,7 +1130,7 @@ impl MsgSend for SetExtendedListViewStyle {
 		co::LVS_EX(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETEXTENDEDLISTVIEWSTYLE.into(),
 			wparam: self.style.0 as _,
@@ -1159,7 +1155,7 @@ impl MsgSend for SetImageList {
 		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
@@ -1183,7 +1179,7 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETITEM.into(),
 			wparam: 0,
@@ -1208,7 +1204,7 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETITEMSTATE.into(),
 			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
@@ -1233,7 +1229,7 @@ impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETITEMTEXT.into(),
 			wparam: self.index as _,
@@ -1257,7 +1253,7 @@ impl MsgSend for SetSelectedColumn {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETSELECTEDCOLUMN.into(),
 			wparam: self.index as _,
@@ -1284,7 +1280,7 @@ impl MsgSend for SetView {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETVIEW.into(),
 			wparam: self.view.0 as _,
@@ -1308,7 +1304,7 @@ impl MsgSend for Update {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::UPDATE.into(),
 			wparam: self.index as _,

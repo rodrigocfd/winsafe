@@ -270,11 +270,11 @@ impl WString {
 	/// Fills the entire buffer with zero values. The buffer size is not
 	/// changed.
 	pub fn fill_with_zero(&mut self) {
-		if let Some(vec_u16_ref) = self.vec_u16.as_mut() {
-			for wchar in vec_u16_ref {
-				*wchar = 0x0000;
-			}
-		}
+		self.vec_u16.as_mut()
+			.map(|vec_u16|
+				vec_u16.iter_mut()
+					.for_each(|wchar| *wchar = 0x0000),
+			);
 	}
 
 	/// Tells whether the internal buffer is storing a null string pointer, or
@@ -296,7 +296,8 @@ impl WString {
 	/// stored in the internal buffer, not counting the terminating null.
 	pub fn len(&self) -> usize {
 		self.vec_u16.as_ref()
-			.map_or(0, |v| unsafe { kernel32::lstrlenW(v.as_ptr())} as _ )
+			.map_or(0,
+				|vec_u16| unsafe { kernel32::lstrlenW(vec_u16.as_ptr())} as _)
 	}
 
 	/// Resizes the internal buffer, to be used as a buffer for native Win32

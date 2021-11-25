@@ -135,8 +135,11 @@ impl StatusBar {
 		});
 		parent.as_base().privileged_on().wm_size({
 			let self2 = new_self.clone();
-			move |p| self2.resize(&p)
-				.map_err(|e| e.into())
+			move |p| {
+				let mut p = p;
+				self2.resize(&mut p)
+					.map_err(|e| e.into())
+			}
 		});
 		new_self
 	}
@@ -173,7 +176,7 @@ impl StatusBar {
 
 		// Force first resizing, so the panels are created.
 		let parent_rc = hparent.GetClientRect()?;
-		self.resize(&wm::Size {
+		self.resize(&mut wm::Size {
 			client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
 			request: co::SIZE_R::RESTORED,
 		})?;
@@ -181,7 +184,7 @@ impl StatusBar {
 		Ok(())
 	}
 
-	fn resize(&self, p: &wm::Size) -> WinResult<()> {
+	fn resize(&self, p: &mut wm::Size) -> WinResult<()> {
 		if p.request == co::SIZE_R::MINIMIZED || self.hwnd().is_null() {
 			return Ok(()); // nothing to do
 		}

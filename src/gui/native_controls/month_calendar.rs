@@ -149,12 +149,12 @@ impl MonthCalendar {
 					opts.window_style | opts.month_calendar_style.into(),
 				)?;
 
-				let mut bounding_rect = RECT::default();
+				let mut bounds_rect = RECT::default();
 				our_hwnd.SendMessage(mcm::GetMinReqRect {
-					bounding_rect: &mut bounding_rect,
+					bounds_rect: &mut bounds_rect,
 				})?;
 				our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(),
-					SIZE::new(bounding_rect.right, bounding_rect.bottom),
+					SIZE::new(bounds_rect.right, bounds_rect.bottom),
 					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 			},
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,

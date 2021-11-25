@@ -18,7 +18,7 @@ pub trait MsgSend {
 
 	/// Converts the specific message parameters struct into the generic
 	/// [`WndMsg`](crate::msg::WndMsg) message struct.
-	fn as_generic_wm(&self) -> WndMsg;
+	fn as_generic_wm(&mut self) -> WndMsg;
 }
 
 /// Trait to the parameters of a message that can be sent and handled.
@@ -58,7 +58,7 @@ impl MsgSend for WndMsg {
 		v
 	}
 
-	fn as_generic_wm(&self) -> Self {
+	fn as_generic_wm(&mut self) -> Self {
 		*self
 	}
 }

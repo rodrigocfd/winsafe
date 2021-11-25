@@ -26,11 +26,11 @@ impl<'a> MsgSend for GetIdealSize<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETIDEALSIZE.into(),
 			wparam: 0,
-			lparam: self.size as *const _ as _,
+			lparam: self.size as *mut _ as _,
 		}
 	}
 }
@@ -50,11 +50,11 @@ impl<'a> MsgSend for GetImageList<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as _,
+			lparam: self.info as *mut _ as _,
 		}
 	}
 }
@@ -74,11 +74,11 @@ impl<'a> MsgSend for GetNote<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETNOTE.into(),
 			wparam: self.text.buffer_size(),
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}
 }
@@ -96,7 +96,7 @@ impl MsgSend for GetNoteLength {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETNOTELENGTH.into(),
 			wparam: 0,
@@ -120,11 +120,11 @@ impl<'a> MsgSend for GetSplitInfo<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETSPLITINFO.into(),
 			wparam: 0,
-			lparam: self.splitinfo as *const _ as _,
+			lparam: self.splitinfo as *mut _ as _,
 		}
 	}
 }
@@ -144,11 +144,11 @@ impl<'a> MsgSend for GetTextMargin<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETTEXTMARGIN.into(),
 			wparam: 0,
-			lparam: self.margins as *const _ as _,
+			lparam: self.margins as *mut _ as _,
 		}
 	}
 }
@@ -168,7 +168,7 @@ impl MsgSend for SetDropDownState {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETDROPDOWNSTATE.into(),
 			wparam: self.is_pushed as _,
@@ -192,7 +192,7 @@ impl<'a> MsgSend for SetImageList<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETIMAGELIST.into(),
 			wparam: 0,
@@ -205,18 +205,18 @@ impl<'a> MsgSend for SetImageList<'a> {
 /// message parameters.
 ///
 /// Return type: `WinResult<()>`.
-pub struct SetNote<'a> {
-	pub text: &'a WString,
+pub struct SetNote {
+	pub text: WString,
 }
 
-impl<'a> MsgSend for SetNote<'a> {
+impl MsgSend for SetNote {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETNOTE.into(),
 			wparam: self.text.buffer_size(),
@@ -240,7 +240,7 @@ impl MsgSend for SetShield {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSHIELD.into(),
 			wparam: self.has_elevated_icon as _,
@@ -264,7 +264,7 @@ impl<'a> MsgSend for SetSplitInfo<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSPLITINFO.into(),
 			wparam: 0,
@@ -288,7 +288,7 @@ impl<'a> MsgSend for SetTextMargin<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETTEXTMARGIN.into(),
 			wparam: 0,
@@ -314,7 +314,7 @@ impl MsgSend for GetCheck {
 		co::BST(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETCHECK.into(),
 			wparam: 0,
@@ -342,7 +342,7 @@ impl MsgSend for GetImage {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETIMAGE.into(),
 			wparam: self.img_type.0 as _,
@@ -364,7 +364,7 @@ impl MsgSend for GetState {
 		co::BST(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETSTATE.into(),
 			wparam: 0,
@@ -388,7 +388,7 @@ impl MsgSend for SetCheck {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETCHECK.into(),
 			wparam: self.state.0 as _,
@@ -412,7 +412,7 @@ impl MsgSend for SetDontClick {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETDONTCLICK.into(),
 			wparam: self.dont_click as _,
@@ -439,7 +439,7 @@ impl MsgSend for SetImage {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETIMAGE.into(),
 			wparam: match self.image {
@@ -466,7 +466,7 @@ impl MsgSend for SetState {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSTATE.into(),
 			wparam: self.highlight as _,
@@ -491,7 +491,7 @@ impl MsgSend for SetStyle {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSTYLE.into(),
 			wparam: self.style.0 as _,

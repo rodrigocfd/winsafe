@@ -23,11 +23,11 @@ impl<'a> MsgSend for GetCurSel<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::GETCURSEL.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as _,
+			lparam: self.info as *mut _ as _,
 		}
 	}
 }
@@ -37,7 +37,7 @@ impl<'a> MsgSend for GetCurSel<'a> {
 ///
 /// Return type: `WinResult<()>`.
 pub struct GetMinReqRect<'a> {
-	pub bounding_rect: &'a mut RECT,
+	pub bounds_rect: &'a mut RECT,
 }
 
 impl<'a> MsgSend for GetMinReqRect<'a> {
@@ -47,11 +47,11 @@ impl<'a> MsgSend for GetMinReqRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::GETMINREQRECT.into(),
 			wparam: 0,
-			lparam: self.bounding_rect as *const _ as _,
+			lparam: self.bounds_rect as *mut _ as _,
 		}
 	}
 }
@@ -69,7 +69,7 @@ impl MsgSend for GetMonthDelta {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::GETMONTHDELTA.into(),
 			wparam: 0,
@@ -93,7 +93,7 @@ impl<'a> MsgSend for SetCurSel<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::SETCURSEL.into(),
 			wparam: 0,
@@ -117,7 +117,7 @@ impl MsgSend for SetCurrentView {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::SETCURRENTVIEW.into(),
 			wparam: 0,
@@ -141,7 +141,7 @@ impl<'a> MsgSend for SetToday<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::SETTODAY.into(),
 			wparam: 0,

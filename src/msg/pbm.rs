@@ -6,6 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_err;
 use crate::structs::PBRANGE;
 
 /// [`PBM_DELTAPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-deltapos)
@@ -23,7 +24,7 @@ impl MsgSend for DeltaPos {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::DELTAPOS.into(),
 			wparam: self.advance_amount as _,
@@ -45,7 +46,7 @@ impl MsgSend for GetPos {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::GETPOS.into(),
 			wparam: 0,
@@ -70,11 +71,11 @@ impl<'a> MsgSend for GetRange<'a> {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::GETRANGE.into(),
 			wparam: self.return_low as _,
-			lparam: self.ranges.as_ref().map_or(0, |r| r as *const _ as _),
+			lparam: self.ranges.as_mut().map_or(0, |r| r as *mut _ as _),
 		}
 	}
 }
@@ -92,7 +93,7 @@ impl MsgSend for GetState {
 		co::PBST(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::GETSTATE.into(),
 			wparam: 0,
@@ -117,7 +118,7 @@ impl MsgSend for SetMarquee {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETMARQUEE.into(),
 			wparam: self.turn_on as _,
@@ -141,7 +142,7 @@ impl MsgSend for SetPos {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETPOS.into(),
 			wparam: self.position as _,
@@ -163,13 +164,10 @@ impl MsgSend for SetRange {
 	type RetType = WinResult<(u16, u16)>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v as u32 {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			v => Ok((LOWORD(v), HIWORD(v))),
-		}
+		zero_as_err(v).map(|v| (LOWORD(v as _), HIWORD(v as _)))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETPOS.into(),
 			wparam: 0,
@@ -194,7 +192,7 @@ impl MsgSend for SetRange32 {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETRANGE32.into(),
 			wparam: self.min as _,
@@ -218,7 +216,7 @@ impl MsgSend for SetState {
 		co::PBST(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETSTATE.into(),
 			wparam: self.state.0 as _,
@@ -242,7 +240,7 @@ impl MsgSend for SetStep {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETSTEP.into(),
 			wparam: self.step as _,
@@ -264,7 +262,7 @@ impl MsgSend for StepIt {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::STEPIT.into(),
 			wparam: 0,

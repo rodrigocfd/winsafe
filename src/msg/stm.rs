@@ -21,7 +21,7 @@ impl MsgSend for GetIcon {
 		zero_as_err(v).map(|p| HICON(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::STM::GETICON.into(),
 			wparam: 0,
@@ -45,7 +45,7 @@ impl MsgSend for SetIcon {
 		zero_as_err(v).map(|p| HICON(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::STM::SETICON.into(),
 			wparam: self.icon.0 as _,

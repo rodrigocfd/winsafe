@@ -24,7 +24,7 @@ impl MsgSend for GetItemCount {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETITEMCOUNT.into(),
 			wparam: 0,
@@ -49,11 +49,11 @@ impl<'a> MsgSend for GetItemDropDownRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETITEMDROPDOWNRECT.into(),
 			wparam: self.index as _,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -74,11 +74,11 @@ impl<'a> MsgSend for GetItemRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETITEMRECT.into(),
 			wparam: self.index as _,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -98,11 +98,11 @@ impl<'a> MsgSend for GetOrderArray<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETORDERARRAY.into(),
 			wparam: self.buffer.len(),
-			lparam: self.buffer.as_ptr() as _,
+			lparam: self.buffer.as_mut_ptr() as _,
 		}
 	}
 }
@@ -122,11 +122,11 @@ impl<'a> MsgSend for GetOverflowRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETOVERFLOWRECT.into(),
 			wparam: 0,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }

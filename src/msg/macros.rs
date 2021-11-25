@@ -23,7 +23,7 @@ macro_rules! pub_struct_msg_empty {
 				()
 			}
 
-			fn as_generic_wm(&self) -> WndMsg {
+			fn as_generic_wm(&mut self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
 					wparam: 0,
@@ -81,7 +81,7 @@ macro_rules! pub_struct_msg_char {
 				()
 			}
 
-			fn as_generic_wm(&self) -> WndMsg {
+			fn as_generic_wm(&mut self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
 					wparam: self.char_code as _,
@@ -137,7 +137,7 @@ macro_rules! pub_struct_msg_ctlcolor {
 				HBRUSH(v as _)
 			}
 
-			fn as_generic_wm(&self) -> WndMsg {
+			fn as_generic_wm(&mut self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
 					wparam: self.hdc.0 as usize,
@@ -179,7 +179,7 @@ macro_rules! pub_struct_msg_button {
 				()
 			}
 
-			fn as_generic_wm(&self) -> WndMsg {
+			fn as_generic_wm(&mut self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
 					wparam: self.vkey_code.0 as usize,

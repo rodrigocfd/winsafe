@@ -6,6 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::ResStrs;
 use crate::msg::{MsgSend, WndMsg};
+use crate::msg::macros::zero_as_err;
 use crate::structs::{TBADDBITMAP, TBBUTTON};
 
 /// [`TB_ADDBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
@@ -27,7 +28,7 @@ impl<'a> MsgSend for AddBitmap<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::ADDBITMAP.into(),
 			wparam: self.num_images as _,
@@ -48,17 +49,14 @@ impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
+		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::ADDBUTTONS.into(),
 			wparam: self.buttons.len() as _,
-			lparam: self.buttons.as_ptr() as _,
+			lparam: self.buttons.as_mut_ptr() as _,
 		}
 	}
 }
@@ -81,7 +79,7 @@ impl MsgSend for AddString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::ADDSTRING.into(),
 			wparam: match &self.texts {
@@ -113,7 +111,7 @@ impl MsgSend for ButtonCount {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::BUTTONCOUNT.into(),
 			wparam: 0,
@@ -137,7 +135,7 @@ impl MsgSend for ButtonStructSize {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::BUTTONSTRUCTSIZE.into(),
 			wparam: self.size as _,

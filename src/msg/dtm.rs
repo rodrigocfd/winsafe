@@ -30,11 +30,11 @@ impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETDATETIMEPICKERINFO.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as _,
+			lparam: self.info as *mut _ as _,
 		}
 	}
 }
@@ -54,11 +54,11 @@ impl<'a> MsgSend for GetIdealSize<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETIDEALSIZE.into(),
 			wparam: 0,
-			lparam: self.size as *const _ as _,
+			lparam: self.size as *mut _ as _,
 		}
 	}
 }
@@ -81,7 +81,7 @@ impl MsgSend for GetMcColor {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETMCCOLOR.into(),
 			wparam: self.color_index.0 as _,
@@ -103,7 +103,7 @@ impl MsgSend for GetMcFont {
 		zero_as_err(v).map(|p| HFONT(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETMCFONT.into(),
 			wparam: 0,
@@ -122,13 +122,10 @@ impl MsgSend for GetMcStyle {
 	type RetType = WinResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			v => Ok(co::MCS(v as _)),
-		}
+		zero_as_err(v).map(|v| co::MCS(v as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETMCSTYLE.into(),
 			wparam: 0,
@@ -150,7 +147,7 @@ impl MsgSend for GetMonthCal {
 		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETMONTHCAL.into(),
 			wparam: 0,
@@ -174,11 +171,11 @@ impl<'a> MsgSend for GetRange<'a> {
 		co::GDTR(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETRANGE.into(),
 			wparam: 0,
-			lparam: self.system_times as *const _ as _,
+			lparam: self.system_times as *mut _ as _,
 		}
 	}
 }
@@ -203,11 +200,11 @@ impl<'a> MsgSend for GetSystemTime<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETSYSTEMTIME.into(),
 			wparam: 0,
-			lparam: self.system_time as *const _ as _,
+			lparam: self.system_time as *mut _ as _,
 		}
 	}
 }
@@ -227,7 +224,7 @@ impl MsgSend for SetFormat {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETFORMAT.into(),
 			wparam: 0,
@@ -258,7 +255,7 @@ impl MsgSend for SetMcColor {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCCOLOR.into(),
 			wparam: self.color_index.0 as _,
@@ -283,7 +280,7 @@ impl MsgSend for SetMcFont {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCFONT.into(),
 			wparam: self.hfont.0 as _,
@@ -304,13 +301,10 @@ impl MsgSend for SetMcStyle {
 	type RetType = WinResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			v => Ok(co::MCS(v as _)),
-		}
+		zero_as_err(v).map(|v| co::MCS(v as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCSTYLE.into(),
 			wparam: 0,
@@ -335,11 +329,11 @@ impl<'a> MsgSend for SetRange<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETRANGE.into(),
 			wparam: self.valid.0 as _,
-			lparam: self.system_times as *const _ as _,
+			lparam: self.system_times as *mut _ as _,
 		}
 	}
 }
@@ -359,7 +353,7 @@ impl<'a> MsgSend for SetSystemTime<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETSYSTEMTIME.into(),
 			wparam: self.system_time.as_ref().map_or(co::GDT::NONE.0, |_| co::GDT::VALID.0) as _,

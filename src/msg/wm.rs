@@ -49,7 +49,7 @@ impl MsgSend for Activate {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ACTIVATE,
 			wparam: MAKEDWORD(self.event.0, self.is_minimized as _) as _,
@@ -84,7 +84,7 @@ impl MsgSend for ActivateApp {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ACTIVATEAPP,
 			wparam: self.is_being_activated as _,
@@ -120,7 +120,7 @@ impl MsgSend for AppCommand {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::APPCOMMAND,
 			wparam: self.hwnd_owner.0 as _,
@@ -159,7 +159,7 @@ impl MsgSend for CaptureChanged {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::CAPTURECHANGED,
 			wparam: self.hwnd_gaining_mouse.0 as _,
@@ -203,7 +203,7 @@ impl MsgSend for Command {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::COMMAND,
 			wparam: match self.event {
@@ -254,7 +254,7 @@ impl MsgSend for ContextMenu {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::CONTEXTMENU,
 			wparam: self.hwnd.0 as _,
@@ -287,7 +287,7 @@ impl<'a, 'b, 'c> MsgSend for Create<'a, 'b, 'c> {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::CREATE,
 			wparam: 0,
@@ -348,7 +348,7 @@ impl<'a> MsgSend for DeleteItem<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::DELETEITEM,
 			wparam: self.control_id as _,
@@ -387,7 +387,7 @@ impl MsgSend for DisplayChange {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::DISPLAYCHANGE,
 			wparam: self.depth_bpp as _,
@@ -421,7 +421,7 @@ impl MsgSend for DropFiles {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::DROPFILES,
 			wparam: self.hdrop.0 as _,
@@ -453,7 +453,7 @@ impl MsgSend for Enable {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ENABLE,
 			wparam: self.has_been_enabled as _,
@@ -486,7 +486,7 @@ impl MsgSend for EndSession {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ENDSESSION,
 			wparam: self.is_session_being_ended as _,
@@ -520,7 +520,7 @@ impl MsgSend for EnterIdle {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ENTERIDLE,
 			wparam: self.reason.0 as _,
@@ -561,7 +561,7 @@ impl MsgSend for EnterMenuLoop {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ENTERMENULOOP,
 			wparam: self.with_trackpopupmenu as _,
@@ -593,7 +593,7 @@ impl MsgSend for EraseBkgnd {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ERASEBKGND,
 			wparam: self.hdc.0 as _,
@@ -625,7 +625,7 @@ impl MsgSend for ExitMenuLoop {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::EXITMENULOOP,
 			wparam: self.is_shortcut as _,
@@ -662,11 +662,11 @@ impl<'a> MsgSend for GetDlgCode<'a> {
 		co::DLGC(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::GETDLGCODE,
 			wparam: self.vkey_code.0 as _,
-			lparam: self.msg.as_ref().map_or(0, |m| m as *const _ as _),
+			lparam: self.msg.as_mut().map_or(0, |m| m as *mut _ as _),
 		}
 	}
 }
@@ -696,7 +696,7 @@ impl MsgSend for GetFont {
 		zero_as_none(v).map(|p| HFONT(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::GETFONT,
 			wparam: 0,
@@ -724,7 +724,7 @@ impl MsgSend for GetHMenu {
 		zero_as_none(v).map(|p| HMENU(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::MN_GETHMENU,
 			wparam: 0,
@@ -754,11 +754,11 @@ impl<'a> MsgSend for GetMinMaxInfo<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::GETMINMAXINFO,
 			wparam: 0,
-			lparam: self.info as *const _ as _,
+			lparam: self.info as *mut _ as _,
 		}
 	}
 }
@@ -793,7 +793,7 @@ impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 /// println!("Text: {}", buf.to_string());
 /// ```
 pub struct GetText<'a> {
-	pub buffer: &'a mut [u16],
+	pub buffer: &'a mut [u16], // can't be WString because this message can be received
 }
 
 impl<'a> MsgSend for GetText<'a> {
@@ -803,11 +803,11 @@ impl<'a> MsgSend for GetText<'a> {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::GETTEXT,
 			wparam: self.buffer.len(),
-			lparam: self.buffer.as_ptr() as _,
+			lparam: self.buffer.as_mut_ptr() as _,
 		}
 	}
 }
@@ -833,7 +833,7 @@ impl MsgSend for GetTextLength {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::GETTEXTLENGTH,
 			wparam: 0,
@@ -863,11 +863,11 @@ impl<'a> MsgSend for GetTitleBarInfoEx<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::GETTITLEBARINFOEX,
 			wparam: 0,
-			lparam: self.info as *const _ as _,
+			lparam: self.info as *mut _ as _,
 		}
 	}
 }
@@ -895,7 +895,7 @@ impl<'a> MsgSend for Help<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::HELP,
 			wparam: 0,
@@ -929,7 +929,7 @@ impl MsgSend for HScroll {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::HSCROLL,
 			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
@@ -967,7 +967,7 @@ impl MsgSend for InitDialog {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::INITDIALOG,
 			wparam: self.hwnd_focus.0 as _,
@@ -1002,7 +1002,7 @@ impl MsgSend for InitMenuPopup {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::INITMENUPOPUP,
 			wparam: self.hmenu.0 as _,
@@ -1044,7 +1044,7 @@ impl MsgSend for KillFocus {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::KILLFOCUS,
 			wparam: self.hwnd.map(|h| h.0 as _).unwrap_or_default(),
@@ -1104,7 +1104,7 @@ impl MsgSend for MenuCommand {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::MENUCOMMAND,
 			wparam: self.item_index as _,
@@ -1138,7 +1138,7 @@ impl MsgSend for MenuDrag {
 		co::MND(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::MENUDRAG,
 			wparam: self.position as _,
@@ -1172,7 +1172,7 @@ impl MsgSend for MenuRButtonUp {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::MENURBUTTONUP,
 			wparam: self.position as _,
@@ -1217,7 +1217,7 @@ impl MsgSend for Move {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::MOVE,
 			wparam: 0,
@@ -1249,11 +1249,11 @@ impl<'a> MsgSend for Moving<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::MOVING,
 			wparam: 0,
-			lparam: self.window_pos as *const _ as _,
+			lparam: self.window_pos as *mut _ as _,
 		}
 	}
 }
@@ -1281,7 +1281,7 @@ impl<'a, 'b> MsgSend for NcCalcSize<'a, 'b> {
 		co::WVR(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCCALCSIZE,
 			wparam: match &self.data {
@@ -1322,7 +1322,7 @@ impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCCREATE,
 			wparam: 0,
@@ -1358,7 +1358,7 @@ impl MsgSend for NcHitTest {
 		co::HT(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCHITTEST,
 			wparam: 0,
@@ -1390,7 +1390,7 @@ impl MsgSend for NcPaint {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCPAINT,
 			wparam: self.updated_hrgn.0 as _,
@@ -1422,7 +1422,7 @@ impl MsgSend for NextDlgCtl {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NEXTDLGCTL,
 			wparam: match self.hwnd_focus {
@@ -1468,7 +1468,7 @@ impl<'a> MsgSend for Notify<'a> {
 		v
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NOTIFY,
 			wparam: self.nmhdr.hwndFrom.0 as _,
@@ -1524,7 +1524,7 @@ impl MsgSend for ParentNotify {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::PARENTNOTIFY,
 			wparam: MAKEDWORD(self.event.0, self.child_id) as _,
@@ -1561,7 +1561,7 @@ impl MsgSend for QueryOpen {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::QUERYOPEN,
 			wparam: 0,
@@ -1605,7 +1605,7 @@ impl MsgSend for SetCursor {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETCURSOR,
 			wparam: self.hwnd.0 as _,
@@ -1639,7 +1639,7 @@ impl MsgSend for SetFocus {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETFOCUS,
 			wparam: self.hwnd_losing_focus.0 as _,
@@ -1672,7 +1672,7 @@ impl MsgSend for SetFont {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETFONT,
 			wparam: self.hfont.0 as _,
@@ -1706,7 +1706,7 @@ impl MsgSend for SetIcon {
 		zero_as_none(v).map(|p| HICON(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETICON,
 			wparam: self.size.0 as _,
@@ -1739,7 +1739,7 @@ impl MsgSend for SetRedraw {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETREDRAW,
 			wparam: self.can_redraw as _,
@@ -1775,7 +1775,7 @@ impl MsgSendRecv for SetRedraw {
 /// });
 /// ```
 pub struct SetText {
-	pub text: *const u16,
+	pub text: *const u16, // can't be WString because this message can be received
 }
 
 impl MsgSend for SetText {
@@ -1788,7 +1788,7 @@ impl MsgSend for SetText {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETTEXT,
 			wparam: 0,
@@ -1821,7 +1821,7 @@ impl MsgSend for ShowWindow {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SHOWWINDOW,
 			wparam: self.being_shown as _,
@@ -1855,7 +1855,7 @@ impl MsgSend for Size {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SIZE,
 			wparam: self.request.0 as _,
@@ -1895,11 +1895,11 @@ impl<'a> MsgSend for Sizing<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SIZING,
 			wparam: self.window_edge.0 as _,
-			lparam: self.coords as *const _ as _,
+			lparam: self.coords as *mut _ as _,
 		}
 	}
 }
@@ -1929,7 +1929,7 @@ impl<'a> MsgSend for StyleChanged<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::STYLECHANGED,
 			wparam: self.change.0 as _,
@@ -1964,7 +1964,7 @@ impl<'a> MsgSend for StyleChanging<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::STYLECHANGING,
 			wparam: self.change.0 as _,
@@ -2007,7 +2007,7 @@ impl MsgSend for SysCommand {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SYSCOMMAND,
 			wparam: self.request.0 as _,
@@ -2057,7 +2057,7 @@ impl MsgSend for Timer {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::TIMER,
 			wparam: self.timer_id as _,
@@ -2097,7 +2097,7 @@ impl MsgSend for UninitMenuPopup {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::UNINITMENUPOPUP,
 			wparam: self.hmenu.0 as _,
@@ -2132,7 +2132,7 @@ impl MsgSend for VScroll {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::VSCROLL,
 			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
@@ -2169,7 +2169,7 @@ impl<'a> MsgSend for WindowPosChanged<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::WINDOWPOSCHANGED,
 			wparam: 0,
@@ -2201,7 +2201,7 @@ impl<'a> MsgSend for WindowPosChanging<'a> {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::WINDOWPOSCHANGING,
 			wparam: 0,

@@ -25,7 +25,7 @@ impl MsgSend for DeleteItem {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::DELETEITEM.into(),
 			wparam: 0,
@@ -49,7 +49,7 @@ impl MsgSend for EditLabel {
 		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::EDITLABEL.into(),
 			wparam: 0,
@@ -73,7 +73,7 @@ impl MsgSend for EndEditLabelNow {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::ENDEDITLABELNOW.into(),
 			wparam: if self.save { 0 } else { 1 }, // logic is reversed
@@ -97,7 +97,7 @@ impl MsgSend for EnsureVisible {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
@@ -122,7 +122,7 @@ impl MsgSend for Expand {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::EXPAND.into(),
 			wparam: self.action.0 as _,
@@ -147,7 +147,7 @@ impl MsgSend for GetBkColor {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETBKCOLOR.into(),
 			wparam: 0,
@@ -169,7 +169,7 @@ impl MsgSend for GetCount {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETCOUNT.into(),
 			wparam: 0,
@@ -188,13 +188,10 @@ impl MsgSend for GetEditControl {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			p => Ok(HWND(p as _)),
-		}
+		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETEDITCONTROL.into(),
 			wparam: 0,
@@ -216,7 +213,7 @@ impl MsgSend for GetExtendedStyle {
 		co::TVS_EX(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETEXTENDEDSTYLE.into(),
 			wparam: 0,
@@ -240,7 +237,7 @@ impl MsgSend for GetImageList {
 		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
@@ -262,7 +259,7 @@ impl MsgSend for GetIndent {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETINDENT.into(),
 			wparam: 0,
@@ -284,7 +281,7 @@ impl MsgSend for GetInsertMarkColor {
 		COLORREF(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETINSERTMARKCOLOR.into(),
 			wparam: 0,
@@ -308,11 +305,11 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEM.into(),
 			wparam: 0,
-			lparam: self.tvitem as *const _ as _,
+			lparam: self.tvitem as *mut _ as _,
 		}
 	}
 }
@@ -330,7 +327,7 @@ impl MsgSend for GetItemHeight {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMHEIGHT.into(),
 			wparam: 0,
@@ -355,11 +352,11 @@ impl<'a> MsgSend for GetItemRect<'a> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMRECT.into(),
 			wparam: self.text_only as _,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -380,7 +377,7 @@ impl MsgSend for GetItemState {
 		co::TVIS(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMSTATE.into(),
 			wparam: self.hitem.ptr as _,
@@ -405,7 +402,7 @@ impl MsgSend for GetLineColor {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETLINECOLOR.into(),
 			wparam: 0,
@@ -430,7 +427,7 @@ impl MsgSend for GetNextItem {
 		zero_as_none(v).map(|p| HTREEITEM { ptr: p as _ })
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.0 as _,
@@ -452,7 +449,7 @@ impl MsgSend for GetScrollTime {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETSCROLLTIME.into(),
 			wparam: 0,
@@ -477,7 +474,7 @@ impl MsgSend for GetTextColor {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETTEXTCOLOR.into(),
 			wparam: 0,
@@ -499,7 +496,7 @@ impl MsgSend for GetTooltips {
 		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETTOOLTIPS.into(),
 			wparam: 0,
@@ -521,7 +518,7 @@ impl MsgSend for GetVisibleCount {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETVISIBLECOUNT.into(),
 			wparam: 0,
@@ -545,7 +542,7 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 		zero_as_err(v).map(|p| HTREEITEM { ptr: p as _ })
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::INSERTITEM.into(),
 			wparam: 0,
@@ -570,7 +567,7 @@ impl MsgSend for SelectItem {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.0 as _,
@@ -598,7 +595,7 @@ impl MsgSend for SetExtendedStyle {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETEXTENDEDSTYLE.into(),
 			wparam: self.style.0 as _,
@@ -622,7 +619,7 @@ impl MsgSend for SetHot {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
@@ -647,7 +644,7 @@ impl MsgSend for SetImageList {
 		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
@@ -671,7 +668,7 @@ impl MsgSend for SetIndent {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETINDENT.into(),
 			wparam: self.width as _,
@@ -695,7 +692,7 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETITEM.into(),
 			wparam: 0,
@@ -719,7 +716,7 @@ impl MsgSend for ShowInfoTip {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SHOWINFOTIP.into(),
 			wparam: 0,
@@ -743,7 +740,7 @@ impl MsgSend for SortChildren {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SORTCHILDREN.into(),
 			wparam: self.recursive as _,

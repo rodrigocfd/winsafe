@@ -30,7 +30,7 @@ impl MsgSend for AddString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::ADDSTRING.into(),
 			wparam: 0,
@@ -57,7 +57,7 @@ impl MsgSend for DeleteString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::DELETESTRING.into(),
 			wparam: self.index as _,
@@ -86,7 +86,7 @@ impl MsgSend for Dir {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::DELETESTRING.into(),
 			wparam: self.attributes.0 as _,
@@ -114,7 +114,7 @@ impl MsgSend for FindString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::FINDSTRING.into(),
 			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
@@ -142,7 +142,7 @@ impl MsgSend for FindStringExact {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::FINDSTRINGEXACT.into(),
 			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
@@ -163,17 +163,14 @@ impl<'a> MsgSend for GetComboBoxInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
+		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETCOMBOBOXINFO.into(),
 			wparam: 0,
-			lparam: self.data as *const _ as _,
+			lparam: self.data as *mut _ as _,
 		}
 	}
 }
@@ -188,13 +185,10 @@ impl MsgSend for GetCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v as i32 {
-			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as _),
-		}
+		zero_as_err(v).map(|count| count as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETCOUNT.into(),
 			wparam: 0,
@@ -221,10 +215,10 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETCUEBANNER.into(),
-			wparam: unsafe { self.buffer.as_ptr() } as _,
+			wparam: unsafe { self.buffer.as_mut_ptr() } as _,
 			lparam: self.buffer.buffer_size() as _,
 		}
 	}
@@ -246,7 +240,7 @@ impl MsgSend for GetCurSel {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETCURSEL.into(),
 			wparam: 0,
@@ -267,17 +261,14 @@ impl<'a> MsgSend for GetDroppedControlRect<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
+		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETDROPPEDCONTROLRECT.into(),
 			wparam: 0,
-			lparam: self.rect as *const _ as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -295,7 +286,7 @@ impl MsgSend for GetDroppedState {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETDROPPEDSTATE.into(),
 			wparam: 0,
@@ -320,7 +311,7 @@ impl MsgSend for GetDroppedWidth {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETDROPPEDWIDTH.into(),
 			wparam: 0,
@@ -342,7 +333,7 @@ impl MsgSend for GetEditSel {
 		(LOWORD(v as _) as _, HIWORD(v as _) as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETEDITSEL.into(),
 			wparam: 0,
@@ -364,7 +355,7 @@ impl MsgSend for GetExtendedUi {
 		v != 0
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETEXTENDEDUI.into(),
 			wparam: 0,
@@ -386,7 +377,7 @@ impl MsgSend for GetHorizontalExtent {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETHORIZONTALEXTENT.into(),
 			wparam: 0,
@@ -413,7 +404,7 @@ impl MsgSend for GetItemData {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETITEMDATA.into(),
 			wparam: self.index as _,
@@ -440,7 +431,7 @@ impl MsgSend for GetItemHeight {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETITEMHEIGHT.into(),
 			wparam: self.component as _,
@@ -468,11 +459,11 @@ impl<'a> MsgSend for GetLbText<'a> {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETLBTEXT.into(),
 			wparam: self.index as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}
 }
@@ -495,7 +486,7 @@ impl MsgSend for GetLbTextLen {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETLBTEXTLEN.into(),
 			wparam: self.index as _,
@@ -517,7 +508,7 @@ impl MsgSend for GetLocale {
 		LANGID(v as _)
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETLOCALE.into(),
 			wparam: 0,
@@ -539,7 +530,7 @@ impl MsgSend for GetMinVisible {
 		v as _
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETMINVISIBLE.into(),
 			wparam: 0,
@@ -564,7 +555,7 @@ impl MsgSend for GetTopIndex {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::GETTOPINDEX.into(),
 			wparam: 0,
@@ -592,7 +583,7 @@ impl MsgSend for InitStorage {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::INITSTORAGE.into(),
 			wparam: self.num_items as _,
@@ -621,7 +612,7 @@ impl MsgSend for InsertString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::INSERTSTRING.into(),
 			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
@@ -645,7 +636,7 @@ impl MsgSend for LimitText {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::LIMITTEXT.into(),
 			wparam: self.max_chars.unwrap_or(0) as _,
@@ -677,7 +668,7 @@ impl MsgSend for SelectString {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETCURSEL.into(),
 			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
@@ -704,7 +695,7 @@ impl MsgSend for SetCueBanner {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETCUEBANNER.into(),
 			wparam: 0,
@@ -728,7 +719,7 @@ impl MsgSend for SetCurSel {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETCURSEL.into(),
 			wparam: match self.index {
@@ -758,7 +749,7 @@ impl MsgSend for SetDroppedWidth {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETDROPPEDWIDTH.into(),
 			wparam: self.min_width as _,
@@ -786,7 +777,7 @@ impl MsgSend for SetEditSel {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETEDITSEL.into(),
 			wparam: 0,
@@ -816,7 +807,7 @@ impl MsgSend for SetExtendedUi {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETEXTENDEDUI.into(),
 			wparam: self.use_extended_ui as _,
@@ -840,7 +831,7 @@ impl MsgSend for SetHorizontalExtent {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETHORIZONTALEXTENT.into(),
 			wparam: self.scrollable_width as _,
@@ -868,7 +859,7 @@ impl MsgSend for SetItemData {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETITEMDATA.into(),
 			wparam: self.index as _,
@@ -896,7 +887,7 @@ impl MsgSend for SetItemHeight {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETITEMHEIGHT.into(),
 			wparam: self.component as _,
@@ -923,7 +914,7 @@ impl MsgSend for SetLocale {
 		}
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETLOCALE.into(),
 			wparam: self.locale.0 as _,
@@ -947,7 +938,7 @@ impl MsgSend for SetMinVisible {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETMINVISIBLE.into(),
 			wparam: self.num_items as _,
@@ -971,7 +962,7 @@ impl MsgSend for SetTopIndex {
 		zero_as_err(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETTOPINDEX.into(),
 			wparam: self.index as _,
@@ -995,7 +986,7 @@ impl MsgSend for ShowDropDown {
 		()
 	}
 
-	fn as_generic_wm(&self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SHOWDROPDOWN.into(),
 			wparam: self.show as _,
