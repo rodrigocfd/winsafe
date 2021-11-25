@@ -80,6 +80,10 @@ impl Resizer {
 			panic!("Cannot add resizer entries before window/control creation.");
 		}
 
+		if horz == Horz::None && vert == Vert::None {
+			return Ok(()); // nothing to do, don't even add it
+		}
+
 		if self.0.ctrls.is_empty() { // first control being added?
 			let rc_parent = hparent.GetClientRect()?;
 			self.0.as_mut().sz_parent_orig =
