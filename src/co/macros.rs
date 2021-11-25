@@ -84,12 +84,10 @@ macro_rules! pub_struct_const_base {
 			}
 		}
 
-		impl $name {
-			/// Tells whether other bitflag style is present. Equivalent to
-			/// `(val & other) != 0`.
-			///
-			/// This method is common to all constant types.
-			pub fn has(&self, other: $name) -> bool {
+		impl crate::co::traits::NativeConstant for $name {
+			type Concrete = $ntype;
+
+			fn has(&self, other: Self) -> bool {
 				(self.0 & other.0) != 0
 			}
 		}

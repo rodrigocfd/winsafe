@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::WinResult;
-use crate::co;
+use crate::co::{self, traits::NativeConstant};
 use crate::enums::{BmpPtrStr, IdMenu, IdPos, MenuEnum};
 use crate::ffi::user32;
 use crate::funcs::GetLastError;

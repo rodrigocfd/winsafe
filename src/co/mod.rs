@@ -18,6 +18,7 @@ mod consts_t;
 mod consts_uv;
 mod consts_wxyz;
 mod error;
+pub(crate) mod traits;
 mod vs;
 
 pub use consts_ab::*;
@@ -33,4 +34,9 @@ pub use consts_t::*;
 pub use consts_uv::*;
 pub use consts_wxyz::*;
 pub use error::{CDERR, ERROR};
+pub use traits::*;
 pub use vs::VS;
+
+pub(crate) mod prelude {
+	pub use super::traits::*;
+}

@@ -16,7 +16,7 @@ impl ComPtr {
 	}
 }
 
-/// Trait to any
+/// Any
 /// [COM](https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal)
 /// object, which encapsulates a COM interface pointer.
 pub trait ComInterface: From<ComPtr> {

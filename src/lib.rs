@@ -246,6 +246,7 @@ pub use various::*;
 /// use winsafe::prelude::*;
 /// ```
 pub mod prelude {
+	pub use super::co::prelude::*;
 	pub use super::com::prelude::*;
 	pub use super::gui::prelude::*;
 	pub use super::handles::prelude::*;

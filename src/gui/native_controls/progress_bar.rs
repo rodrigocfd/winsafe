@@ -2,7 +2,7 @@ use std::any::Any;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
-use crate::co;
+use crate::co::{self, traits::NativeConstant};
 use crate::gui::events::{EventsView, WindowEvents};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl,
