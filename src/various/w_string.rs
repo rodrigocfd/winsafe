@@ -108,19 +108,17 @@ impl WString {
 	/// This method is intended to pass multi-strings to native APIs, not to
 	/// retrieve them.
 	pub fn from_str_vec(v: &[impl AsRef<str>]) -> WString {
-		let mut tot_chars = 0; // number of chars of all strings, including terminating nulls
-		for s in v.iter() {
-			tot_chars = s.as_ref().len() + 1; // including terminating null
-		}
-		tot_chars += 1; // double terminating null
+		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
+			.fold(0, |tot, s| tot + s.as_ref().len() + 1) // including terminating null
+				+ 1; // double terminating null
 
 		let mut buf16 = Vec::with_capacity(tot_chars);
-		for s in v.iter() {
+		v.iter().for_each(|s|
 			buf16.extend(
 				s.as_ref().encode_utf16()
 					.chain(std::iter::once(0x0000)) // append a terminating null
-			);
-		}
+			),
+		);
 		buf16.push(0x0000); // double terminating null
 
 		Self { vec_u16: Some(buf16) }
@@ -297,7 +295,7 @@ impl WString {
 	pub fn len(&self) -> usize {
 		self.vec_u16.as_ref()
 			.map_or(0,
-				|vec_u16| unsafe { kernel32::lstrlenW(vec_u16.as_ptr())} as _)
+				|vec_u16| unsafe { kernel32::lstrlenW(vec_u16.as_ptr()) } as _)
 	}
 
 	/// Resizes the internal buffer, to be used as a buffer for native Win32
@@ -405,15 +403,18 @@ impl WString {
 		// No BOM found, guess UTF-8 without BOM, or Windows-1252 (superset of
 		// ISO-8859-1).
 		let mut can_be_win1252 = false;
-		for i in 0..data.len() - 1 {
-			if data[i] > 0x7f { // 127
+		for (c0, c1) in data.windows(2)
+			.map(|chunk| unsafe { (*chunk.get_unchecked(0), *chunk.get_unchecked(1)) })
+		{
+			if c0 > 0x7f { // 127
 				can_be_win1252 = true;
-				if i <= data.len() - 2 && (
-					(data[i] == 0xc2 && (data[i+1] >= 0xa1 && data[i+1] <= 0xbf)) || // http://www.utf8-chartable.de
-					(data[i] == 0xc3 && (data[i+1] >= 0x80 && data[i+1] <= 0xbf)) )
+				if c0 == 0xc2 && (c1 >= 0xa1 && c1 <= 0xbf) // http://www.utf8-chartable.de
+					|| c0 == 0xc3 && (c1 >= 0x80 && c1 <= 0xbf)
 				{
 					return (Encoding::Utf8, 0); // UTF-8 without BOM
 				}
+			} else if c1 > 0x7f {
+				can_be_win1252 = true;
 			}
 		}
 
@@ -477,21 +478,19 @@ impl WString {
 			data
 		};
 
-		let mut str16: Vec<u16> = Vec::with_capacity(data.len() / 2 + 1); // room for terminating null
-		for i in (0..data.len()).step_by(2) {
-			let (by0, by1) = unsafe {
-				(*data.get_unchecked(i), *data.get_unchecked(i + 1))
-			};
-
-			if by0 == 0x00 && by1 == 0x00 {
+		let mut str16 = Vec::<u16>::with_capacity(data.len() / 2 + 1); // room for terminating null
+		for (b0, b1) in data.windows(2)
+			.map(|chunk| unsafe { (*chunk.get_unchecked(0), *chunk.get_unchecked(1)) })
+		{
+			if b0 == 0x00 && b1 == 0x00 {
 				break; // found terminating null amidst data, stop processing
 			}
 
-			let (by0, by1) = (by0 as u16, by1 as u16); // avoid shift left overflow
+			let (b0, b1) = (b0 as u16, b1 as u16); // avoid left shift overflow
 			str16.push(if is_big_endian {
-				(by0 << 8) | by1
+				(b0 << 8) | b1
 			} else {
-				by0 | (by1 << 8)
+				b0 | (b1 << 8)
 			} as _);
 		}
 
