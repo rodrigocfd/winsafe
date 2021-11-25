@@ -602,13 +602,13 @@ impl TreeitemTvi {
 			co::TVI::LAST => Self::Tvi(co::TVI::LAST),
 			co::TVI::ROOT => Self::Tvi(co::TVI::ROOT),
 			co::TVI::SORT => Self::Tvi(co::TVI::SORT),
-			val => Self::Treeitem(HTREEITEM { ptr: val.0 as _ }),
+			val => Self::Treeitem(HTREEITEM(val.0 as _)),
 		}
 	}
 
 	pub fn as_isize(&self) -> isize {
 		match self {
-			Self::Treeitem(htreeitem) => htreeitem.ptr as _,
+			Self::Treeitem(htreeitem) => htreeitem.0 as _,
 			Self::Tvi(tvi) => tvi.0 as _,
 		}
 	}

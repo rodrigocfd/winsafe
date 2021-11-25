@@ -162,7 +162,7 @@ impl HINSTANCE {
 				resource_id.as_ptr(),
 				resource_type.as_ptr(),
 			).as_mut()
-		}.map(|ptr| HRSRC { ptr })
+		}.map(|ptr| HRSRC(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -182,7 +182,7 @@ impl HINSTANCE {
 				resource_type.as_ptr(),
 				language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
 			).as_mut()
-		}.map(|ptr| HRSRC { ptr })
+		}.map(|ptr| HRSRC(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -390,8 +390,8 @@ impl HINSTANCE {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	pub fn LoadResource(self, res_info: HRSRC) -> WinResult<HRSRCMEM> {
-		unsafe { kernel32::LoadResource(self.0, res_info.ptr).as_mut() }
-			.map(|ptr| HRSRCMEM { ptr })
+		unsafe { kernel32::LoadResource(self.0, res_info.0).as_mut() }
+			.map(|ptr| HRSRCMEM(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -458,7 +458,7 @@ impl HINSTANCE {
 		res_info: HRSRC, hres_loaded: HRSRCMEM) -> WinResult<&'a [u8]>
 	{
 		let sz = self.SizeofResource(res_info)?;
-		unsafe { kernel32::LockResource(hres_loaded.ptr).as_mut() }
+		unsafe { kernel32::LockResource(hres_loaded.0).as_mut() }
 			.map(|ptr| unsafe {
 				std::slice::from_raw_parts(ptr as *const _ as _, sz as _, )
 			})
@@ -471,7 +471,7 @@ impl HINSTANCE {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	pub fn SizeofResource(self, res_info: HRSRC) -> WinResult<u32> {
-		match unsafe { kernel32::SizeofResource(self.0, res_info.ptr) } {
+		match unsafe { kernel32::SizeofResource(self.0, res_info.0) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz)
 		}

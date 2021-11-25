@@ -2,13 +2,13 @@
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages),
 //! whose constants have [`EM`](crate::co::EM) prefix.
 
-use crate::aliases::WinResult;
+use crate::aliases::{EDITWORDBREAKPROC, WinResult};
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HLOCAL;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{zero_as_err, zero_as_none};
-use crate::structs::{POINT, RECT};
+use crate::structs::{POINT, RECT, SIZE};
 use crate::various::WString;
 
 /// [`EN_CANUNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-canundo)
@@ -267,6 +267,72 @@ impl MsgSend for GetLineCount {
 	}
 }
 
+/// [`EM_GETMARGINS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getmargins)
+/// message, which has no parameters.
+///
+/// Return type: `SIZE`.
+pub struct GetMargins {}
+
+impl MsgSend for GetMargins {
+	type RetType = SIZE;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		SIZE::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETMARGINS.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_GETMODIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getmodify)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+pub struct GetModify {}
+
+impl MsgSend for GetModify {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETMODIFY.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_GETPASSWORDCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getpasswordchar)
+/// message, which has no parameters.
+///
+/// Return type: `Option<char>`.
+pub struct GetPasswordChar {}
+
+impl MsgSend for GetPasswordChar {
+	type RetType = Option<char>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|c| unsafe { std::char::from_u32_unchecked(c as _) })
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETPASSWORDCHAR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`EM_GETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getrect)
 /// message parameters.
 ///
@@ -327,6 +393,28 @@ impl MsgSend for GetThumb {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::GETTHUMB.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_GETWORDBREAKPROC`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getwordbreakproc)
+/// message, which has no parameters.
+///
+/// Return type: `Option<EDITWORDBREAKPROC>`.
+pub struct GetWordBreakProc {}
+
+impl MsgSend for GetWordBreakProc {
+	type RetType = Option<EDITWORDBREAKPROC>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| unsafe { std::mem::transmute(p) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

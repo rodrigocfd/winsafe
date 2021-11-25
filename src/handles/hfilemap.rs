@@ -37,25 +37,27 @@ impl HFILEMAP {
 				LODWORD(offset),
 				number_of_bytes_to_map.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| HFILEMAPVIEW { ptr })
+		}.map(|ptr| HFILEMAPVIEW(ptr))
 			.ok_or_else(|| GetLastError())
 	}
 }
 
 //------------------------------------------------------------------------------
 
-pub_struct_handle! {
-	/// Address of a
-	/// [mapped view](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
-	/// Originally just an `LPVOID`.
-	HFILEMAPVIEW
-}
+/// Address of a
+/// [mapped view](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
+/// Originally just an `LPVOID`.
+#[repr(transparent)]
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct HFILEMAPVIEW(pub(crate) *mut std::ffi::c_void);
+
+impl_handle!(HFILEMAPVIEW);
 
 impl HFILEMAPVIEW {
 	/// [`UnmapViewOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
 	/// method.
 	pub fn UnmapViewOfFile(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel32::UnmapViewOfFile(self.ptr) })
+		bool_to_winresult(unsafe { kernel32::UnmapViewOfFile(self.0) })
 	}
 
 	/// Returns a slice representing the mapped memory. You can modify the
@@ -65,7 +67,7 @@ impl HFILEMAPVIEW {
 	/// map the bytes beyond the file. This may cause serious errors. So, if the
 	/// file is resized, re-generate the slice by calling `as_slice` again.
 	pub fn as_mut_slice<'a>(self, len: usize) -> &'a mut [u8] {
-		unsafe { std::slice::from_raw_parts_mut(self.ptr as _, len) }
+		unsafe { std::slice::from_raw_parts_mut(self.0 as _, len) }
 	}
 
 	/// Returns a slice representing the mapped memory.
@@ -110,6 +112,6 @@ impl HFILEMAPVIEW {
 	/// println!("{}", text);
 	/// ```
 	pub fn as_slice<'a>(self, len: usize) -> &'a [u8] {
-		unsafe { std::slice::from_raw_parts(self.ptr as _, len) }
+		unsafe { std::slice::from_raw_parts(self.0 as _, len) }
 	}
 }

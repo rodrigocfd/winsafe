@@ -33,7 +33,7 @@ mod htheme;
 mod hthread;
 mod hupdatersrc;
 mod hwnd;
-mod traits;
+pub(crate) mod traits;
 
 pub use any_handles::*;
 pub use haccel::HACCEL;

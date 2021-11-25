@@ -38,6 +38,17 @@ pub type DLGPROC =
 	) -> isize;
 
 /// Type alias to
+/// [`EDITWORDBREAKPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-editwordbreakprocw)
+/// callback function.
+pub type EDITWORDBREAKPROC =
+	extern "system" fn(
+		lpch: *mut u16,
+		ichCurrent: i32,
+		cch: i32,
+		code: i32,
+	) -> i32;
+
+/// Type alias to
 /// [`HOOKPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-hookproc)
 /// callback function.
 pub type HOOKPROC =

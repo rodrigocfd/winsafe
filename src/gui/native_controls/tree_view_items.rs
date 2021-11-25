@@ -4,6 +4,7 @@ use crate::aliases::WinResult;
 use crate::co::{self, traits::NativeConstant};
 use crate::enums::TreeitemTvi;
 use crate::handles::{HTREEITEM, HWND};
+use crate::handles::traits::Handle;
 use crate::msg::tvm;
 use crate::privs::MAX_PATH;
 use crate::structs::{TVINSERTSTRUCT, TVITEMEX};

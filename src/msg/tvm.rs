@@ -5,6 +5,7 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::handles::{HIMAGELIST, HTREEITEM, HWND};
+use crate::handles::traits::Handle;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{zero_as_err, zero_as_none};
 use crate::privs::CLR_DEFAULT;
@@ -29,7 +30,7 @@ impl MsgSend for DeleteItem {
 		WndMsg {
 			msg_id: co::TVM::DELETEITEM.into(),
 			wparam: 0,
-			lparam: self.hitem.ptr as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }
@@ -53,7 +54,7 @@ impl MsgSend for EditLabel {
 		WndMsg {
 			msg_id: co::TVM::EDITLABEL.into(),
 			wparam: 0,
-			lparam: self.hitem.ptr as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }
@@ -101,7 +102,7 @@ impl MsgSend for EnsureVisible {
 		WndMsg {
 			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
-			lparam: self.hitem.ptr as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }
@@ -126,7 +127,7 @@ impl MsgSend for Expand {
 		WndMsg {
 			msg_id: co::TVM::EXPAND.into(),
 			wparam: self.action.0 as _,
-			lparam: self.hitem.ptr as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }
@@ -380,7 +381,7 @@ impl MsgSend for GetItemState {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMSTATE.into(),
-			wparam: self.hitem.ptr as _,
+			wparam: self.hitem.0 as _,
 			lparam: self.mask.0 as _,
 		}
 	}
@@ -424,14 +425,14 @@ impl MsgSend for GetNextItem {
 	type RetType = Option<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HTREEITEM { ptr: p as _ })
+		zero_as_none(v).map(|p| HTREEITEM(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.0 as _,
-			lparam: self.hitem.unwrap_or(HTREEITEM::NULL).ptr as _,
+			lparam: self.hitem.unwrap_or(HTREEITEM::NULL).0 as _,
 		}
 	}
 }
@@ -539,7 +540,7 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = WinResult<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HTREEITEM { ptr: p as _ })
+		zero_as_err(v).map(|p| HTREEITEM(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -571,7 +572,7 @@ impl MsgSend for SelectItem {
 		WndMsg {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.0 as _,
-			lparam: self.hitem.ptr as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }
@@ -623,7 +624,7 @@ impl MsgSend for SetHot {
 		WndMsg {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
-			lparam: self.hitem.map_or(0, |h| h.ptr as _),
+			lparam: self.hitem.map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -720,7 +721,7 @@ impl MsgSend for ShowInfoTip {
 		WndMsg {
 			msg_id: co::TVM::SHOWINFOTIP.into(),
 			wparam: 0,
-			lparam: self.hitem.ptr as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }

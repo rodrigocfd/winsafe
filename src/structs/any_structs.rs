@@ -1248,7 +1248,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pszContent: *mut u16,
 	cButtons: u32,
 	pButtons: *mut TASKDIALOG_BUTTON<'d>,
-	pub nDefaultButton: i32,
+	pub nDefaultButton: i32, // actually co::DLGID, which is u16
 	cRadioButtons: u32,
 	pRadioButtons: *mut TASKDIALOG_BUTTON<'e>,
 	pub nDefaultRadioButton: i32,
