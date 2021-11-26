@@ -543,6 +543,57 @@ impl MsgSend for LineLength {
 	}
 }
 
+/// [`EM_LINESCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-linescroll)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct LineScroll {
+	pub num_chars: u32,
+	pub num_lines: u32,
+}
+
+impl MsgSend for LineScroll {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::LINESCROLL.into(),
+			wparam: self.num_chars as _,
+			lparam: self.num_lines as _,
+		}
+	}
+}
+
+/// [`EM_POSFROMCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-posfromchar)
+/// message parameters.
+///
+/// Return type: `POINT`.
+///
+/// This message is implemented for ordinary edit controls, not for rich edit.
+pub struct PosFromChar {
+	pub char_index: u32,
+}
+
+impl MsgSend for PosFromChar {
+	type RetType = POINT;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		POINT::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::POSFROMCHAR.into(),
+			wparam: self.char_index as _,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`EM_REPLACESEL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-replacesel)
 /// message parameters.
 ///
