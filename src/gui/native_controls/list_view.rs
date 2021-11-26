@@ -230,7 +230,7 @@ impl ListView {
 	pub fn items<'a>(&'a self) -> ListViewItems<'a> {
 		ListViewItems {
 			hwnd: self.hwnd(),
-			owner: PhantomData,
+			owner_: PhantomData,
 		}
 	}
 

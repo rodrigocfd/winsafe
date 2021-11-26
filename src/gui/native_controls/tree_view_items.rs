@@ -77,17 +77,17 @@ impl<'a> TreeViewItems<'a> {
 		TreeViewItem {
 			hwnd: self.hwnd,
 			htreeitem,
-			owner: PhantomData,
+			owner_: PhantomData,
 		}
 	}
 
 	/// Returns an iterator over the selected items.
-	pub fn iter_selected(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
+	pub fn iter_selected(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewItemIter::new(self.hwnd, None, co::TVGN::CARET)
 	}
 
 	/// Returns an iterator over the root items.
-	pub fn iter_root(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
+	pub fn iter_root(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewChildItemIter::new(self.hwnd, None)
 	}
 }
@@ -104,7 +104,7 @@ impl<'a> TreeViewItems<'a> {
 pub struct TreeViewItem<'a> {
 	hwnd: HWND,
 	htreeitem: HTREEITEM,
-	owner: PhantomData<&'a ()>,
+	owner_: PhantomData<&'a ()>,
 }
 
 impl<'a> TreeViewItem<'a> {
@@ -134,7 +134,7 @@ impl<'a> TreeViewItem<'a> {
 			.map(|htreeitem| TreeViewItem {
 				hwnd: self.hwnd,
 				htreeitem,
-				owner: PhantomData,
+				owner_: PhantomData,
 			})
 	}
 
@@ -191,17 +191,17 @@ impl<'a> TreeViewItem<'a> {
 	}
 
 	/// Returns an iterator over the child items.
-	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
+	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewChildItemIter::new(self.hwnd, Some(*self))
 	}
 
 	/// Returns an iterator over the next sibling items.
-	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
+	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewItemIter::new(self.hwnd, Some(*self), co::TVGN::NEXT)
 	}
 
 	/// Returns an iterator over the previous sibling items.
-	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> {
+	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewItemIter::new(self.hwnd, Some(*self), co::TVGN::PREVIOUS)
 	}
 
@@ -214,7 +214,7 @@ impl<'a> TreeViewItem<'a> {
 		}).map(|htreeitem| TreeViewItem {
 			hwnd: self.hwnd,
 			htreeitem,
-			owner: PhantomData,
+			owner_: PhantomData,
 		})
 	}
 
@@ -252,7 +252,6 @@ struct TreeViewItemIter<'a> {
 	hwnd: HWND,
 	current: Option<TreeViewItem<'a>>,
 	relationship: co::TVGN,
-	owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for TreeViewItemIter<'a> {
@@ -265,7 +264,7 @@ impl<'a> Iterator for TreeViewItemIter<'a> {
 		}).map(|htreeitem| TreeViewItem {
 			hwnd: self.hwnd,
 			htreeitem,
-			owner: PhantomData,
+			owner_: PhantomData,
 		});
 
 		self.current
@@ -278,12 +277,7 @@ impl<'a> TreeViewItemIter<'a> {
 		current: Option<TreeViewItem<'a>>,
 		relationship: co::TVGN) -> Self
 	{
-		Self {
-			hwnd,
-			current,
-			relationship,
-			owner: PhantomData,
-		}
+		Self { hwnd, current, relationship }
 	}
 }
 
@@ -291,7 +285,6 @@ struct TreeViewChildItemIter<'a> {
 	hwnd: HWND,
 	current: Option<TreeViewItem<'a>>,
 	first_call: bool,
-	owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for TreeViewChildItemIter<'a> {
@@ -305,7 +298,7 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 			}).map(|htreeitem| TreeViewItem {
 				hwnd: self.hwnd,
 				htreeitem,
-				owner: PhantomData,
+				owner_: PhantomData,
 			});
 			self.first_call = false;
 
@@ -320,11 +313,6 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 
 impl<'a> TreeViewChildItemIter<'a> {
 	fn new(hwnd: HWND, current: Option<TreeViewItem<'a>>) -> Self {
-		Self {
-			hwnd,
-			current,
-			first_call: true,
-			owner: PhantomData,
-		}
+		Self { hwnd, current, first_call: true }
 	}
 }

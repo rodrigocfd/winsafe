@@ -1,8 +1,11 @@
 #![allow(non_snake_case)]
 
+use std::marker::PhantomData;
+
 use crate::aliases::WinResult;
 use crate::ffi::shell32;
 use crate::funcs::GetLastError;
+use crate::privs::MAX_PATH;
 use crate::structs::POINT;
 use crate::various::WString;
 
@@ -72,75 +75,63 @@ impl HDROP {
 	///
 	/// let hdrop: HDROP; // initialized somewhere
 	///
-	/// for file_res in hdrop.iter() {
-	///     let file_path = file_res?;
+	/// for file_path in hdrop.iter()? {
+	///     let file_path = file_path?;
 	///     println!("File: {}", file_path);
 	/// }
 	/// ```
-	pub fn iter(self) -> impl Iterator<Item = WinResult<String>> {
-		DropsIter::new(self)
+	pub fn iter<'a>(&'a self) -> WinResult<impl Iterator<Item = WinResult<String>> + 'a> {
+		DropsIter::new(*self)
 	}
 }
 
 //------------------------------------------------------------------------------
 
-struct DropsIter {
+struct DropsIter<'a> {
 	hdrop: HDROP,
-	first_pass: bool,
-	cur_index: u32,
+	buffer: WString,
 	count: u32,
-	buf: WString,
+	current: u32,
+	owner_: PhantomData<&'a ()>,
 }
 
-impl Drop for DropsIter {
+impl<'a> Drop for DropsIter<'a> {
 	fn drop(&mut self) {
 		self.hdrop.DragFinish();
 	}
 }
 
-impl Iterator for DropsIter {
+impl<'a> Iterator for DropsIter<'a> {
 	type Item = WinResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.first_pass {
-			self.first_pass = false;
-			self.count = match self.hdrop.DragQueryFile(None, None) {
-				Err(e) => return Some(Err(e)), // cur_index == count (zero), so no further iterations
-				Ok(count) => count,
-			};
-		}
-
-		if self.cur_index == self.count { // no more files?
+		if self.current == self.count {
 			return None;
 		}
 
-		let len = match self.hdrop.DragQueryFile(Some(self.cur_index), None) {
+		match self.hdrop
+			.DragQueryFile(Some(self.current), Some(&mut self.buffer))
+		{
 			Err(e) => {
-				self.cur_index = self.count; // no further iterations will be done
-				return Some(Err(e))
+				self.current = self.count; // no further iterations will be made
+				Some(Err(e))
 			},
-			Ok(len) => len as usize, // number of chars to be retrieved, not including terminating null
-		};
-
-		self.buf.realloc_buffer(len + 1); // reuse buffer
-		if let Err(e) = self.hdrop.DragQueryFile(Some(self.cur_index), Some(&mut self.buf)) {
-			self.cur_index = self.count; // no further iterations will be done
-			return Some(Err(e));
+			Ok(_) => {
+				self.current += 1;
+				Some(Ok(self.buffer.to_string()))
+			},
 		}
-
-		self.cur_index += 1;
-		Some(Ok(self.buf.to_string()))
 	}
 }
 
-impl DropsIter {
-	fn new(hdrop: HDROP) -> Self {
-		Self {
+impl<'a> DropsIter<'a> {
+	fn new(hdrop: HDROP) -> WinResult<Self> {
+		Ok(Self {
 			hdrop,
-			first_pass: true,
-			cur_index: 0,
-			count: 0,
-			buf: WString::default(),
-		}
+			buffer: WString::new_alloc_buffer(MAX_PATH + 1), // so we alloc just once
+			count: hdrop.DragQueryFile(None, None)?,
+			current: 0,
+			owner_: PhantomData,
+		})
 	}
 }

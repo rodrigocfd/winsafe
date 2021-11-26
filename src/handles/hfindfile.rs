@@ -79,8 +79,8 @@ impl HFINDFILE {
 	/// ```rust,ignore
 	/// use winsafe::HFINDFILE;
 	///
-	/// for txt_file in HFINDFILE::iter("C:\\Temp\\*.txt") {
-	///     let file = txt_file?;
+	/// for file_path in HFINDFILE::iter("C:\\Temp\\*.txt") {
+	///     let file_path = file_path?;
 	///     println!("File: {}", file);
 	/// }
 	/// ```

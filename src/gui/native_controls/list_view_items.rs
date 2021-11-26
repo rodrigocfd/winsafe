@@ -13,7 +13,7 @@ use crate::various::WString;
 /// control.
 pub struct ListViewItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
-	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
+	pub(in crate::gui::native_controls) owner_: PhantomData<&'a ()>,
 }
 
 impl<'a> ListViewItems<'a> {
@@ -135,7 +135,7 @@ impl<'a> ListViewItems<'a> {
 		ListViewItem {
 			hwnd: self.hwnd,
 			index,
-			owner: PhantomData,
+			owner_: PhantomData,
 		}
 	}
 
@@ -166,7 +166,7 @@ impl<'a> ListViewItems<'a> {
 	///         item.index(), item.text(0));
 	/// }
 	/// ```
-	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a>> {
+	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a>> + 'a {
 		ListViewItemIter::new(self.hwnd, co::LVNI::ALL)
 	}
 
@@ -185,7 +185,7 @@ impl<'a> ListViewItems<'a> {
 	///         item.index(), item.text(0));
 	/// }
 	/// ```
-	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a>> {
+	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a>> + 'a {
 		ListViewItemIter::new(self.hwnd, co::LVNI::ALL | co::LVNI::SELECTED)
 	}
 
@@ -233,7 +233,7 @@ impl<'a> ListViewItems<'a> {
 pub struct ListViewItem<'a> {
 	hwnd: HWND,
 	index: u32,
-	owner: PhantomData<&'a ()>,
+	owner_: PhantomData<&'a ()>,
 }
 
 impl<'a> ListViewItem<'a> {
@@ -431,7 +431,6 @@ struct ListViewItemIter<'a> {
 	hwnd: HWND,
 	current: Option<ListViewItem<'a>>,
 	relationship: co::LVNI,
-	owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for ListViewItemIter<'a> {
@@ -444,7 +443,7 @@ impl<'a> Iterator for ListViewItemIter<'a> {
 		}).map(|index| ListViewItem {
 			hwnd: self.hwnd,
 			index,
-			owner: PhantomData,
+			owner_: PhantomData,
 		});
 
 		self.current
@@ -457,7 +456,6 @@ impl<'a> ListViewItemIter<'a> {
 			hwnd,
 			current: None,
 			relationship,
-			owner: PhantomData,
 		}
 	}
 }

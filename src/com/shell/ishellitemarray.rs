@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use std::marker::PhantomData;
 use std::mem::ManuallyDrop;
 
 use crate::aliases::WinResult;
@@ -75,7 +76,7 @@ pub trait IShellItemArrayT: IUnknownT {
 	///
 	/// let ish_arr: shell::IShellItemArray; // initialized somewhere
 	///
-	/// for ish_item in ish_arr.iter() {
+	/// for ish_item in ish_arr.iter()? {
 	///     let ish_item = ish_item?;
 	///     println!("Path: {}",
 	///         ish_item.GetDisplayName(shell::co::SIGDN::FILESYSPATH)?);
@@ -91,57 +92,59 @@ pub trait IShellItemArrayT: IUnknownT {
 	///
 	/// let ish_arr: shell::IShellItemArray; // initialized somewhere
 	///
-	/// let paths = ish_arr.iter()
+	/// let paths = ish_arr.iter()?
 	///     .map(|shi|
 	///         shi.and_then(|shi|
-	///             shi.GetDisplayName(shell::co::SIGDN::FILESYSPATH)
-	///         )
+	///             shi.GetDisplayName(shell::co::SIGDN::FILESYSPATH),
+	///         ),
 	///     )
 	///     .collect::<WinResult<Vec<_>>>()?;
 	/// ```
-	fn iter(&self) -> Box<dyn Iterator<Item = WinResult<IShellItem>>> {
-		Box::new(ShellItemIter::new(unsafe { self.ptr() }))
+	fn iter<'a>(&'a self) -> WinResult<Box<dyn Iterator<Item = WinResult<IShellItem>> + 'a>> {
+		Ok(Box::new(ShellItemIter::new(unsafe { self.ptr() })?))
 	}
 }
 
 //------------------------------------------------------------------------------
 
-struct ShellItemIter {
+struct ShellItemIter<'a> {
 	array: ManuallyDrop<IShellItemArray>,
-	index: u32,
-	count: Option<u32>,
+	count: u32,
+	current: u32,
+	owner_: PhantomData<&'a ()>,
 }
 
-impl Iterator for ShellItemIter {
+impl<'a> Iterator for ShellItemIter<'a> {
 	type Item = WinResult<IShellItem>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.count.is_none() { // first iteration
-			match self.array.GetCount() {
-				Err(e) => {
-					self.count = Some(0); // prevent further iterations
-					return Some(Err(e))
-				},
-				Ok(count) => self.count = Some(count),
-			}
+		if self.current == self.count {
+			return None;
 		}
 
-		let count = self.count.unwrap();
-		if self.index == count {
-			None
-		} else {
-			self.index += 1;
-			Some(self.array.GetItemAt(self.index - 1))
+		match self.array.GetItemAt(self.current) {
+			Err(e) => {
+				self.current = self.count; // no further iterations will be made
+				Some(Err(e))
+			},
+			Ok(shell_item) => {
+				self.current += 1;
+				Some(Ok(shell_item))
+			},
 		}
 	}
 }
 
-impl ShellItemIter {
-	fn new(com_ptr: ComPtr) -> Self {
-		Self {
-			array: ManuallyDrop::new(IShellItemArray(com_ptr)),
-			index: 0,
-			count: None,
-		}
+impl<'a> ShellItemIter<'a> {
+	fn new(com_ptr: ComPtr) -> WinResult<Self> {
+		let array = ManuallyDrop::new(IShellItemArray(com_ptr));
+		let count = array.GetCount()?;
+
+		Ok(Self {
+			array,
+			count,
+			current: 0,
+			owner_: PhantomData,
+		})
 	}
 }

@@ -11,7 +11,7 @@ use crate::various::WString;
 /// control.
 pub struct ComboBoxItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
-	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
+	pub(in crate::gui::native_controls) owner_: PhantomData<&'a ()>,
 }
 
 impl<'a> ComboBoxItems<'a> {
@@ -70,7 +70,7 @@ impl<'a> ComboBoxItems<'a> {
 	///     println!("Text {}", text);
 	/// }
 	/// ```
-	pub fn iter(&self) -> impl Iterator<Item = String> {
+	pub fn iter(&self) -> impl Iterator<Item = String> + 'a {
 		ComboBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))
 	}
 
@@ -108,7 +108,7 @@ struct ComboBoxItemIter<'a> {
 	current: Option<u32>,
 	total: u32,
 	buf: WString,
-	owner: PhantomData<&'a ()>,
+	owner_: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for ComboBoxItemIter<'a> {
@@ -144,7 +144,7 @@ impl<'a> ComboBoxItemIter<'a> {
 			current: Some(0),
 			total,
 			buf: WString::default(),
-			owner: PhantomData,
+			owner_: PhantomData,
 		}
 	}
 }

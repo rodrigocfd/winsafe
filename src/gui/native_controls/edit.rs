@@ -1,4 +1,5 @@
 use std::any::Any;
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
@@ -168,7 +169,7 @@ impl Edit {
 	///     println!("{}", line);
 	/// }
 	/// ```
-	pub fn iter_lines(&self) -> WinResult<impl Iterator<Item = String>> {
+	pub fn iter_lines<'a>(&'a self) -> WinResult<impl Iterator<Item = String> + 'a> {
 		LinesIter::new(self.hwnd())
 	}
 
@@ -204,14 +205,15 @@ impl Edit {
 
 //------------------------------------------------------------------------------
 
-struct LinesIter {
+struct LinesIter<'a> {
 	hwnd: HWND,
 	buf: WString,
 	total: usize,
 	current: usize,
+	owner_: PhantomData<&'a ()>,
 }
 
-impl Iterator for LinesIter {
+impl<'a> Iterator for LinesIter<'a> {
 	type Item = String;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -232,13 +234,14 @@ impl Iterator for LinesIter {
 	}
 }
 
-impl LinesIter {
+impl<'a> LinesIter<'a> {
 	fn new(hwnd: HWND) -> WinResult<Self> {
 		Ok(Self {
 			hwnd,
 			buf: WString::new_alloc_buffer(hwnd.GetWindowTextLength()? as usize + 1), // so we alloc just once
 			total: hwnd.SendMessage(em::GetLineCount {}) as _,
 			current: 0,
+			owner_: PhantomData,
 		})
 	}
 }
