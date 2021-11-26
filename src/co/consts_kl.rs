@@ -2,9 +2,9 @@
 
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, WM, WS};
 
-pub_struct_const! { KEY: u32;
-	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `access_rights`
-	/// (`u32`).
+const_ordinary! { KEY: u32;
+	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `access_rights` (`u32`).
+	=>
 	=>
 	QUERY_VALUE 0x0001
 	SET_VALUE 0x0002
@@ -21,10 +21,11 @@ pub_struct_const! { KEY: u32;
 	ALL_ACCESS (STANDARD_RIGHTS::ALL.0 | Self::QUERY_VALUE.0 | Self::SET_VALUE.0 | Self::CREATE_SUB_KEY.0 | Self::ENUMERATE_SUB_KEYS.0 | Self::NOTIFY.0 | Self::CREATE_LINK.0) & !ACCESS_RIGHTS::SYNCHRONIZE.0
 }
 
-pub_struct_const! { LANG: u16;
+const_ordinary! { LANG: u16;
 	/// Language
 	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
+	=>
 	=>
 	NEUTRAL 0x00
 	INVARIANT 0x7f
@@ -168,10 +169,10 @@ pub_struct_const! { LANG: u16;
 	ZULU 0x35
 }
 
-pub_struct_const_wm! { LB;
+const_wm! { LB;
 	/// List box control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	ADDSTRING 0x0180
@@ -217,12 +218,13 @@ pub_struct_const_wm! { LB;
 	GETLISTBOXINFO 0x01b2
 }
 
-pub_struct_const_cmd! { LBN;
+const_cmd! { LBN;
 	/// List box control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications)
-	/// (`u16`) convertible to [`CMD`](crate::co::CMD).
+	/// (`u16`).
 	=>
-	ERRSPACE (0 - 2) as u16
+	=>
+	ERRSPACE -2i16 as _
 	SELCHANGE 1
 	DBLCLK 2
 	SELCANCEL 3
@@ -230,10 +232,11 @@ pub_struct_const_cmd! { LBN;
 	KILLFOCUS 5
 }
 
-pub_struct_const_ws! { LBS: u32;
+const_ws! { LBS: u32;
 	/// List box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-box-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	NOTIFY 0x0001
 	SORT 0x0002
@@ -254,8 +257,9 @@ pub_struct_const_ws! { LBS: u32;
 	STANDARD Self::NOTIFY.0 | Self::SORT.0 | WS::VSCROLL.0 | WS::BORDER.0
 }
 
-pub_struct_const! { LIF: u32;
+const_ordinary! { LIF: u32;
 	/// [`LITEM`](crate::LITEM) `mask` (`u32`).
+	=>
 	=>
 	ITEMINDEX 0x0000_0001
 	STATE 0x0000_0002
@@ -263,8 +267,9 @@ pub_struct_const! { LIF: u32;
 	URL 0x0000_0008
 }
 
-pub_struct_const! { LIS: u32;
+const_ordinary! { LIS: u32;
 	/// [`LITEM`](crate::LITEM) `state` (`u32`).
+	=>
 	=>
 	FOCUSED 0x0000_0001
 	ENABLED 0x0000_0002
@@ -273,18 +278,19 @@ pub_struct_const! { LIS: u32;
 	DEFAULTCOLORS 0x0000_0010
 }
 
-pub_struct_const! { LLMHF: u32;
+const_ordinary! { LLMHF: u32;
 	/// [`MSLLHOOKSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msllhookstruct)
 	/// `flags` (`u32`).
+	=>
 	=>
 	INJECTED 0x0000_0001
 	LOWER_IL_INJECTED 0x0000_0002
 }
 
-pub_struct_const_wm! { LM;
+const_wm! { LM;
 	/// SysLink control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	HITTEST WM::USER.0 + 0x300
@@ -294,10 +300,11 @@ pub_struct_const_wm! { LM;
 	GETIDEALSIZE Self::GETIDEALHEIGHT.0
 }
 
-pub_struct_const! { LR: u32;
+const_ordinary! { LR: u32;
 	/// [`HINSTANCE::LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
 	/// [`HINSTANCE::LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and
 	/// [`HINSTANCE::LoadImageIcon`](crate::HINSTANCE::LoadImageIcon) `load`.
+	=>
 	=>
 	DEFAULTCOLOR 0x0000_0000
 	MONOCHROME 0x0000_0001
@@ -314,18 +321,20 @@ pub_struct_const! { LR: u32;
 	SHARED 0x0000_8000
 }
 
-pub_struct_const! { LSFW: u32;
+const_ordinary! { LSFW: u32;
 	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `lock_code`
 	/// (`u32`).
+	=>
 	=>
 	LOCK 1
 	UNLOCK 2
 }
 
-pub_struct_const! { LV_VIEW: u32;
+const_ordinary! { LV_VIEW: u32;
 	/// ListView
 	/// [views](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 	/// (`u32`).
+	=>
 	=>
 	ICON 0x0000
 	DETAILS 0x0001
@@ -334,23 +343,26 @@ pub_struct_const! { LV_VIEW: u32;
 	TILE 0x0004
 }
 
-pub_struct_const! { LVA: u16;
+const_ordinary! { LVA: u16;
 	/// [`lvm::Arrange`](crate::msg::lvm::Arrange) arrangement (`u16`).
+	=>
 	=>
 	DEFAULT 0x0000
 	SNAPTOGRID 0x0005
 }
 
-pub_struct_const! { LVCDI: u32;
+const_ordinary! { LVCDI: u32;
 	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `dwItemType` (`u32`).
+	=>
 	=>
 	LVCDI_ITEM 0x0000_0000
 	GROUP 0x0000_0001
 	ITEMSLIST 0x0000_0002
 }
 
-pub_struct_const! { LVCF: u32;
+const_ordinary! { LVCF: u32;
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
+	=>
 	=>
 	DEFAULTWIDTH 0x0080
 	FMT 0x0001
@@ -363,8 +375,9 @@ pub_struct_const! { LVCF: u32;
 	WIDTH 0x0002
 }
 
-pub_struct_const! { LVCFMT_C: i32;
+const_ordinary! { LVCFMT_C: i32;
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`i32`).
+	=>
 	=>
 	LEFT 0x0000
 	RIGHT 0x0001
@@ -379,8 +392,9 @@ pub_struct_const! { LVCFMT_C: i32;
 	SPLITBUTTON 0x100_0000
 }
 
-pub_struct_const! { LVCFMT_I: i32;
+const_ordinary! { LVCFMT_I: i32;
 	/// [`LVITEM`](crate::LVITEM) `piColFmt` (`i32`).
+	=>
 	=>
 	LINE_BREAK 0x10_0000
 	FILL 0x20_0000
@@ -389,8 +403,9 @@ pub_struct_const! { LVCFMT_I: i32;
 	TILE_PLACEMENTMASK Self::LINE_BREAK.0 | Self::FILL.0
 }
 
-pub_struct_const! { LVFI: u32;
+const_ordinary! { LVFI: u32;
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags` (`u32`).
+	=>
 	=>
 	PARAM 0x0001
 	STRING 0x0002
@@ -400,23 +415,26 @@ pub_struct_const! { LVFI: u32;
 	NEARESTXY 0x0040
 }
 
-pub_struct_const! { LVGA_HEADER: u32;
+const_ordinary! { LVGA_HEADER: u32;
 	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `uAlign` (`u32`).
+	=>
 	=>
 	LEFT 0x0000_0001
 	CENTER 0x0000_0002
 	RIGHT 0x0000_0004
 }
 
-pub_struct_const! { LVGIT: u32;
+const_ordinary! { LVGIT: u32;
 	/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags` (`u32`).
+	=>
 	=>
 	FOLDED 0x0000
 	UNFOLDED 0x0001
 }
 
-pub_struct_const! { LVHT: u32;
+const_ordinary! { LVHT: u32;
 	/// [`LVHITTESTINFO`](crate::LVHITTESTINFO) `flags` (`u32`).
+	=>
 	=>
 	NOWHERE 0x0000_0001
 	ONITEMICON 0x0000_0002
@@ -439,8 +457,9 @@ pub_struct_const! { LVHT: u32;
 	EX_FOOTER 0x0800_0000
 }
 
-pub_struct_const! { LVIR: u8;
+const_ordinary! { LVIR: u8;
 	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) `portion` (`u8`).
+	=>
 	=>
 	BOUNDS 0
 	ICON 1
@@ -448,10 +467,11 @@ pub_struct_const! { LVIR: u8;
 	SELECTBOUNDS 3
 }
 
-pub_struct_const! { LVIS: u32;
+const_ordinary! { LVIS: u32;
 	/// ListView item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
 	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -465,15 +485,17 @@ pub_struct_const! { LVIS: u32;
 	STATEIMAGEMASK 0xf000
 }
 
-pub_struct_const! { LVI_GROUPID: i32;
+const_ordinary! { LVI_GROUPID: i32;
 	/// [`LVITEM`](crate::LVITEM) `iGroupId` (`i32`).
+	=>
 	=>
 	I_GROUPIDCALLBACK -1
 	I_GROUPIDNONE -2
 }
 
-pub_struct_const! { LVIF: u32;
+const_ordinary! { LVIF: u32;
 	/// [`LVITEM`](crate::LVITEM) `mask` (`u32`).
+	=>
 	=>
 	COLFMT 0x0001_0000
 	COLUMNS 0x0000_0200
@@ -486,18 +508,19 @@ pub_struct_const! { LVIF: u32;
 	TEXT 0x0000_0001
 }
 
-pub_struct_const! { LVKF: u32;
+const_ordinary! { LVKF: u32;
 	/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags` (`u32`).
+	=>
 	=>
 	ALT 0x0001
 	CONTROL 0x0002
 	SHIFT 0x0004
 }
 
-pub_struct_const_wm! { LVM;
+const_wm! { LVM;
 	/// List view control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1000
 	=>
@@ -627,10 +650,10 @@ pub_struct_const_wm! { LVM;
 	GETNEXTITEMINDEX Self::FIRST.0 + 211
 }
 
-pub_struct_const_nm! { LVN;
+const_nm! { LVN;
 	/// List view control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -100
 	=>
@@ -663,8 +686,9 @@ pub_struct_const_nm! { LVN;
 	GETEMPTYMARKUP Self::FIRST.0 - 87
 }
 
-pub_struct_const! { LVNI: u32;
+const_ordinary! { LVNI: u32;
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) relationship (`u32`).
+	=>
 	=>
 	ALL 0x0000
 	FOCUSED 0x0001
@@ -681,10 +705,11 @@ pub_struct_const! { LVNI: u32;
 	TORIGHT 0x0800
 }
 
-pub_struct_const_ws! { LVS: u32;
+const_ws! { LVS: u32;
 	/// List view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	ICON 0x0000
 	REPORT 0x0001
@@ -710,10 +735,11 @@ pub_struct_const_ws! { LVS: u32;
 	NOSORTHEADER 0x8000
 }
 
-pub_struct_const_wsex! { LVS_EX;
+const_wsex! { LVS_EX;
 	/// Extended list view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
-	/// (`u32`) convertible to [`WS_EX`](crate::co::WS_EX).
+	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -749,8 +775,9 @@ pub_struct_const_wsex! { LVS_EX;
 	UNDERLINEHOT 0x0000_0800
 }
 
-pub_struct_const! { LVSIL: u8;
+const_ordinary! { LVSIL: u8;
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) `kind` (`u8`).
+	=>
 	=>
 	NORMAL 0
 	SMALL 1
@@ -758,10 +785,11 @@ pub_struct_const! { LVSIL: u8;
 	GROUPHEADER 3
 }
 
-pub_struct_const_ws! { LWS: u32;
+const_ws! { LWS: u32;
 	/// SysLink control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	/// The background mix mode is transparent.
 	TRANSPARENT 0x0001

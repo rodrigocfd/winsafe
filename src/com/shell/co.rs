@@ -1,9 +1,10 @@
 //! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
 //! constants.
 
-pub_struct_const! { DROPEFFECT: u32;
+const_ordinary! { DROPEFFECT: u32;
 	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
 	/// constants (`u32`).
+	=>
 	=>
 	NONE 0
 	COPY 1
@@ -12,17 +13,19 @@ pub_struct_const! { DROPEFFECT: u32;
 	SCROLL 0x8000_0000
 }
 
-pub_struct_const! { FDAP: u32;
+const_ordinary! { FDAP: u32;
 	/// [`FDAP`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fdap)
 	/// enumeration (`u32`).
+	=>
 	=>
 	BOTTOM 0
 	TOP 1
 }
 
-pub_struct_const! { FOS: u32;
+const_ordinary! { FOS: u32;
 	/// [`_FILEOPENDIALOGOPTIONS`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
+	=>
 	=>
 	/// When saving a file prompt before overwriting an existing file of the
 	/// same name. This is a default value for the Save dialog.
@@ -121,9 +124,10 @@ pub_struct_const! { FOS: u32;
 	SUPPORTSTREAMABLEITEMS 0x8000_0000
 }
 
-pub_struct_const! { SFGAO: u32;
+const_ordinary! { SFGAO: u32;
 	/// [`SFGAO`](https://docs.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
+	=>
 	=>
 	CANCOPY DROPEFFECT::COPY.0
 	CANMOVE DROPEFFECT::MOVE.0
@@ -161,9 +165,10 @@ pub_struct_const! { SFGAO: u32;
 	PKEYSFGAOMASK 0x8104_4000
 }
 
-pub_struct_const! { SIGDN: u32;
+const_ordinary! { SIGDN: u32;
 	/// [`SIGDN`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
 	/// enumeration (`u32`).
+	=>
 	=>
 	/// Returns the display name relative to the parent folder. In UI this name
 	/// is generally ideal for display to the user.
@@ -205,9 +210,10 @@ pub_struct_const! { SIGDN: u32;
 	PARENTRELATIVEFORUI 0x8009_4001
 }
 
-pub_struct_const! { STPFLAG: u32;
+const_ordinary! { STPFLAG: u32;
 	/// [`STPFLAG`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
 	/// enumeration (`u32`).
+	=>
 	=>
 	NONE 0
 	USEAPPTHUMBNAILALWAYS 0x1
@@ -216,9 +222,10 @@ pub_struct_const! { STPFLAG: u32;
 	USEAPPPEEKWHENACTIVE 0x8
 }
 
-pub_struct_const! { TBPF: u32;
+const_ordinary! { TBPF: u32;
 	/// [`ITaskbarList3::SetProgressState`](crate::prelude::ITaskbarList3T::SetProgressState)
 	/// `tbpFlags` (`u32`).
+	=>
 	=>
 	/// Stops displaying progress and returns the button to its normal state.
 	/// Call this method with this flag to dismiss the progress bar when the

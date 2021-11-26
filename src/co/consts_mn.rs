@@ -2,8 +2,9 @@
 
 use crate::co::CCM;
 
-pub_struct_const! { MB: u32;
+const_ordinary! { MB: u32;
 	/// [`HWND::MessageBox`](crate::HWND::MessageBox) `flags` (`u32`).
+	=>
 	=>
 	/// The message box contains three push buttons: Abort Retry and Ignore.
 	ABORTRETRYIGNORE 0x0000_0002
@@ -134,9 +135,11 @@ pub_struct_const! { MB: u32;
 	SERVICE_NOTIFICATION 0x0020_0000
 }
 
-pub_struct_const! { MBC: u32;
+const_ordinary! { MBC: u32;
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `flags` (`u32`).
+	///
 	/// Originally has `MB` prefix.
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -146,10 +149,10 @@ pub_struct_const! { MBC: u32;
 	USEGLYPHCHARS 0x0000_0004
 }
 
-pub_struct_const_wm! { MCM;
+const_wm! { MCM;
 	/// Month calendar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1000
 	=>
@@ -187,8 +190,9 @@ pub_struct_const_wm! { MCM;
 	SETCURRENTVIEW Self::FIRST.0 + 32
 }
 
-pub_struct_const! { MCMV: u32;
+const_ordinary! { MCMV: u32;
 	/// [`NMVIEWCHANGE`](crate::NMVIEWCHANGE) `dwOldView` and `dwNewView` (`u32`).
+	=>
 	=>
 	MONTH 0
 	YEAR 1
@@ -196,10 +200,10 @@ pub_struct_const! { MCMV: u32;
 	CENTURY 3
 }
 
-pub_struct_const_nm! { MCN;
+const_nm! { MCN;
 	/// Month calendar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -746
 	=>
@@ -209,8 +213,9 @@ pub_struct_const_nm! { MCN;
 	VIEWCHANGE Self::FIRST.0 - 4
 }
 
-pub_struct_const! { MCSC: u8;
+const_ordinary! { MCSC: u8;
 	/// [`dtm::GetMcColor`](crate::msg::dtm::GetMcColor) color (`u8`).
+	=>
 	=>
 	BACKGROUND 0
 	TEXT 1
@@ -220,10 +225,11 @@ pub_struct_const! { MCSC: u8;
 	TRAILINGTEXT 5
 }
 
-pub_struct_const_ws! { MCS: u32;
+const_ws! { MCS: u32;
 	/// Month calendar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -237,11 +243,12 @@ pub_struct_const_ws! { MCS: u32;
 	NOSELCHANGEONNAV 0x0100
 }
 
-pub_struct_const! { MF: u32;
+const_ordinary! { MF: u32;
 	/// [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `flags`,
 	/// [`HMENU::GetMenuState`](crate::HMENU::GetMenuState) return value,
 	/// [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem) `hilite`
 	/// (`u32`).
+	=>
 	=>
 	INSERT 0x0000_0000
 	CHANGE 0x0000_0080
@@ -272,8 +279,9 @@ pub_struct_const! { MF: u32;
 	MOUSESELECT 0x0000_8000
 }
 
-pub_struct_const! { MFS: u32;
+const_ordinary! { MFS: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
+	=>
 	=>
 	GRAYED 0x0000_0003
 	DISABLED MFS::GRAYED.0
@@ -285,8 +293,9 @@ pub_struct_const! { MFS: u32;
 	DEFAULT MF::DEFAULT.0
 }
 
-pub_struct_const! { MFT: u32;
+const_ordinary! { MFT: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType` (`u32`).
+	=>
 	=>
 	STRING MF::STRING.0
 	BITMAP MF::BITMAP.0
@@ -299,19 +308,9 @@ pub_struct_const! { MFT: u32;
 	RIGHTJUSTIFY MF::RIGHTJUSTIFY.0
 }
 
-pub_struct_const! { MIM: u32;
+const_ordinary! { MIM: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
 	=>
-	MAXHEIGHT 0x0000_0001
-	BACKGROUND 0x0000_0002
-	HELPID 0x0000_0004
-	MENUDATA 0x0000_0008
-	STYLE 0x0000_0010
-	APPLYTOSUBMENUS 0x8000_0000
-}
-
-pub_struct_const! { MIIM: u32;
-	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
 	=>
 	MAXHEIGHT 0x0000_0001
 	BACKGROUND 0x0000_0002
@@ -321,9 +320,22 @@ pub_struct_const! { MIIM: u32;
 	APPLYTOSUBMENUS 0x8000_0000
 }
 
-pub_struct_const! { MK: u16;
+const_ordinary! { MIIM: u32;
+	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
+	=>
+	=>
+	MAXHEIGHT 0x0000_0001
+	BACKGROUND 0x0000_0002
+	HELPID 0x0000_0004
+	MENUDATA 0x0000_0008
+	STYLE 0x0000_0010
+	APPLYTOSUBMENUS 0x8000_0000
+}
+
+const_ordinary! { MK: u16;
 	/// [`wm::LButtonDown`](crate::msg::wm::LButtonDown) (and similar) virtual
 	/// keys (`u16`).
+	=>
 	=>
 	LBUTTON 0x0001
 	RBUTTON 0x0002
@@ -334,15 +346,17 @@ pub_struct_const! { MK: u16;
 	XBUTTON2 0x0040
 }
 
-pub_struct_const! { MND: u8;
-	/// [`wm::MenuDrag`](crate::msg::wm::MenuDrag) return value.
+const_ordinary! { MND: u8;
+	/// [`wm::MenuDrag`](crate::msg::wm::MenuDrag) return value (`u8`).
+	=>
 	=>
 	CONTINUE 0
 	ENDMENU 1
 }
 
-pub_struct_const! { MNS: u32;
+const_ordinary! { MNS: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
+	=>
 	=>
 	NOCHECK 0x8000_0000
 	MODELESS 0x4000_0000
@@ -352,34 +366,38 @@ pub_struct_const! { MNS: u32;
 	CHECKORBMP 0x0400_0000
 }
 
-pub_struct_const! { MONITOR: u32;
+const_ordinary! { MONITOR: u32;
 	/// [`HMONITOR::MonitorFromPoint`](crate::HMONITOR::MonitorFromPoint),
 	/// [`HMONITOR::MonitorFromRect`](crate::HMONITOR::MonitorFromRect),
 	/// [`HWND::MonitorFromWindow`](crate::HWND::MonitorFromWindow) flags
 	/// (`u32`).
+	=>
 	=>
 	DEFAULTTONULL 0x0000_0000
 	DEFAULTTOPRIMARY 0x0000_0001
 	DEFAULTTONEAREST 0x0000_0002
 }
 
-pub_struct_const! { MONITORINFOF: u32;
+const_ordinary! { MONITORINFOF: u32;
 	/// [`MONITORINFO`](crate::MONITORINFO) `dwFlags` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	PRIMARY 0x0000_0001
 }
 
-pub_struct_const! { MSGF: u8;
+const_ordinary! { MSGF: u8;
 	/// [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason (`u8`).
+	=>
 	=>
 	DIALOGBOX 0
 	MENU 2
 }
 
-pub_struct_const! { NIF: u32;
+const_ordinary! { NIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `uFlags` (`u32`).
+	=>
 	=>
 	MESSAGE 0x0000_0001
 	ICON 0x0000_0002
@@ -391,8 +409,9 @@ pub_struct_const! { NIF: u32;
 	SHOWTIP 0x0000_0080
 }
 
-pub_struct_const! { NIIF: u32;
+const_ordinary! { NIIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwInfoFlags` (`u32`).
+	=>
 	=>
 	NONE 0x0000_0000
 	INFO 0x0000_0001
@@ -404,8 +423,9 @@ pub_struct_const! { NIIF: u32;
 	RESPECT_QUIET_TIME 0x0000_0080
 }
 
-pub_struct_const! { NIM: u32;
+const_ordinary! { NIM: u32;
 	/// [`Shell_NotifyIcon`](crate::Shell_NotifyIcon) `message` (`u32`).
+	=>
 	=>
 	ADD 0x0000_0000
 	MODIFY 0x0000_0001
@@ -414,19 +434,22 @@ pub_struct_const! { NIM: u32;
 	SETVERSION 0x0000_0004
 }
 
-pub_struct_const! { NIS: u32;
+const_ordinary! { NIS: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwState` and `dwStateFlags`
 	/// (`u32`).
+	=>
 	=>
 	HIDDEN 0x0000_0001
 	SHAREDICON 0x0000_0002
 }
 
-pub_struct_const! { NM: i32;
+const_ordinary! { NM: i32;
 	/// [`wm::Notify`](crate::msg::wm::Notify) notification codes (`i32`).
 	///
-	/// Control-specific notification codes have their own types which are
-	/// convertible to `NM`.
+	/// **Note:** Control-specific notification codes have their own types,
+	/// which are convertible to `NM`.
+	=>
+	FIRST 0
 	=>
 	OUTOFMEMORY Self::FIRST.0 - 1
 	CLICK Self::FIRST.0 - 2
@@ -447,7 +470,4 @@ pub_struct_const! { NM: i32;
 	LDOWN Self::FIRST.0 - 20
 	RDOWN Self::FIRST.0 - 21
 	THEMECHANGED Self::FIRST.0 - 22
-}
-impl_const_values! { NM;
-	FIRST 0
 }

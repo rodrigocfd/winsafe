@@ -2,8 +2,9 @@
 
 use crate::co::{CCM, WM};
 
-pub_struct_const! { GA: u32;
+const_ordinary! { GA: u32;
 	/// [`HWND::GetAncestor`](crate::HWND::GetAncestor) `flags` (`u32`).
+	=>
 	=>
 	/// Retrieves the parent window. This does not include the owner as it does
 	/// with the [`HWND::GetParent`](crate::HWND::GetParent) function.
@@ -26,9 +27,11 @@ pub_struct_const! { GA: u32;
 	ROOTOWNER 3
 }
 
-pub_struct_const! { GCLP: i32;
+const_ordinary! { GCLP: i32;
 	/// [`HWND::GetClassLongPtr`](crate::HWND::GetClassLongPtr) `index` (`i32`).
+	///
 	/// Originally has prefixes `GCW` and `GCL` also.
+	=>
 	=>
 	ATOM -32
 	CBWNDEXTRA -18
@@ -42,9 +45,11 @@ pub_struct_const! { GCLP: i32;
 	HICONSM -34
 }
 
-pub_struct_const! { GDC: i32;
+const_ordinary! { GDC: i32;
 	/// [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps) `index` (`i32`).
+	///
 	/// Originally has no prefix.
+	=>
 	=>
 	DRIVERVERSION 0
 	TECHNOLOGY 2
@@ -88,25 +93,28 @@ pub_struct_const! { GDC: i32;
 	COLORMGMTCAPS 121
 }
 
-pub_struct_const! { GDT: u32;
+const_ordinary! { GDT: u32;
 	/// [`NMDATETIMECHANGE`](crate::NMDATETIMECHANGE) and
 	/// [`NMDATETIMESTRING`](crate::NMDATETIMESTRING) `dwFlags` (`u32`).
+	=>
 	=>
 	VALID 0
 	NONE 1
 }
 
-pub_struct_const! { GDTR: u32;
+const_ordinary! { GDTR: u32;
 	/// [`dtm::GetRange`](crate::msg::dtm::GetRange) return value (`u32`).
+	=>
 	=>
 	MIN 0x0001
 	MAX 0x0002
 }
 
-pub_struct_const! { GENERIC: u32;
+const_ordinary! { GENERIC: u32;
 	/// Generic access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
+	=>
 	=>
 	/// Read access.
 	READ 0x8000_0000
@@ -118,25 +126,28 @@ pub_struct_const! { GENERIC: u32;
 	ALL 0x1000_0000
 }
 
-pub_struct_const! { GM: i32;
+const_ordinary! { GM: i32;
 	/// [`HDC::SetGraphicsMode`](crate::HDC::SetGraphicsMode) `mode` (`i32`).
+	=>
 	=>
 	COMPATIBLE 1
 	ADVANCED 2
 }
 
-pub_struct_const! { GMDI: u32;
+const_ordinary! { GMDI: u32;
 	/// [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem) `flags`
 	/// (`u32`).
+	=>
 	=>
 	USEDISABLED 0x0001
 	GOINTOPOPUPS 0x0002
 }
 
-pub_struct_const! { GMEM: u32;
+const_ordinary! { GMEM: u32;
 	/// [`HGLOBAL::GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) and
 	/// [`HGLOBAL::GlobalReAlloc`](crate::HGLOBAL::GlobalReAlloc) `flags`
 	/// (`u32`).
+	=>
 	=>
 	FIXED 0x0000
 	MOVEABLE 0x0002
@@ -145,9 +156,10 @@ pub_struct_const! { GMEM: u32;
 	GPTR Self::FIXED.0 | Self::ZEROINIT.0
 }
 
-pub_struct_const! { GR: u32;
+const_ordinary! { GR: u32;
 	/// [`HPROCESS::GetGuiResources`](crate::HPROCESS::GetGuiResources) `flags`
 	/// (`u32`).
+	=>
 	=>
 	GDIOBJECTS 0
 	GDIOBJECTS_PEAK 2
@@ -155,8 +167,9 @@ pub_struct_const! { GR: u32;
 	USEROBJECTS_PEAK 4
 }
 
-pub_struct_const! { GUI: u32;
+const_ordinary! { GUI: u32;
 	/// [`GUITHREADINFO`](crate::GUITHREADINFO) `flags` (`u32`).
+	=>
 	=>
 	CARETBLINKING 0x0000_0001
 	INMENUMODE 0x0000_0004
@@ -165,8 +178,9 @@ pub_struct_const! { GUI: u32;
 	SYSTEMMENUMODE 0x0000_0008
 }
 
-pub_struct_const! { GW: u32;
+const_ordinary! { GW: u32;
 	/// [`HWND::GetWindow`](crate::HWND::GetWindow) `cmd` (`u32`).
+	=>
 	=>
 	HWNDFIRST 0
 	HWNDLAST 1
@@ -178,19 +192,24 @@ pub_struct_const! { GW: u32;
 	MAX 6
 }
 
-pub_struct_const! { GWL_C: i8;
+const_ordinary! { GWL_C: i8;
 	/// [`wm::StyleChanged`](crate::msg::wm::StyleChanged) and
 	/// [`wm::StyleChanging`](crate::msg::wm::StyleChanging) change (`i8`).
+	///
 	/// Originally has `GWL` prefix.
+	=>
 	=>
 	EXSTYLE -20
 	STYLE -16
 }
 
-pub_struct_const! { GWLP: i32;
+const_ordinary! { GWLP: i32;
 	/// [`HWND::GetWindowLongPtr`](crate::HWND::GetWindowLongPtr) and
 	/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) `index`
-	/// (`i32`). Originally has prefix `GWL` also.
+	/// (`i32`).
+	///
+	/// Originally has prefix `GWL` also.
+	=>
 	=>
 	STYLE -16
 	EXSTYLE -20
@@ -204,10 +223,10 @@ pub_struct_const! { GWLP: i32;
 	DWLP_USER Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
 }
 
-pub_struct_const_wm! { HDM;
+const_wm! { HDM;
 	/// Header control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1200
 	=>
@@ -239,10 +258,10 @@ pub_struct_const_wm! { HDM;
 	SETFOCUSEDITEM Self::FIRST.0 + 28
 }
 
-pub_struct_const_nm! { HDN;
+const_nm! { HDN;
 	/// Header control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -300
 	=>
@@ -267,10 +286,11 @@ pub_struct_const_nm! { HDN;
 	OVERFLOWCLICK Self::FIRST.0 - 19
 }
 
-pub_struct_const_ws! { HDS: u32;
+const_ws! { HDS: u32;
 	/// Header control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/header-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	HORZ 0x0000
 	BUTTONS 0x0002
@@ -285,15 +305,17 @@ pub_struct_const_ws! { HDS: u32;
 	OVERFLOW 0x1000
 }
 
-pub_struct_const! { HELPINFO: i32;
+const_ordinary! { HELPINFO: i32;
 	/// [`HELPINFO`](crate::HELPINFO) `iContextType` (`i32`).
+	=>
 	=>
 	WINDOW 0x0001
 	MENUITEM 0x0002
 }
 
-pub_struct_const! { HELPW: u32;
+const_ordinary! { HELPW: u32;
 	/// [`HWND::WinHelp`](crate::HWND::WinHelp) `uCommand` (`u32`).
+	=>
 	=>
 	CONTEXT 0x0001
 	QUIT 0x0002
@@ -318,8 +340,9 @@ pub_struct_const! { HELPW: u32;
 	TCARD_OTHER_CALLER 0x0011
 }
 
-pub_struct_const! { HICF: u32;
+const_ordinary! { HICF: u32;
 	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags` (`u32`).
+	=>
 	=>
 	OTHER 0x0000_0000
 	ARROWKEYS 0x0000_0002
@@ -332,9 +355,10 @@ pub_struct_const! { HICF: u32;
 	TOGGLEDROPDOWN 0x0000_0100
 }
 
-pub_struct_const! { HWND_PLACE: isize;
+const_ordinary! { HWND_PLACE: isize;
 	/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `hWndInsertAfter`
 	/// (`isize`).
+	=>
 	=>
 	TOP 0
 	BOTTOM 1
@@ -342,9 +366,10 @@ pub_struct_const! { HWND_PLACE: isize;
 	NOTOPMOST -2
 }
 
-pub_struct_const! { HS: i32;
+const_ordinary! { HS: i32;
 	/// [`HBRUSH::CreateHatchBrush`](crate::HBRUSH::CreateHatchBrush) `hatch`
 	/// (`i32`).
+	=>
 	=>
 	/// Horizontal hatch: `-----`.
 	HORIZONTAL 0
@@ -360,9 +385,10 @@ pub_struct_const! { HS: i32;
 	DIAGCROSS 5
 }
 
-pub_struct_const! { HT: u16;
+const_ordinary! { HT: u16;
 	/// [`wm::NcHitTest`](crate::msg::wm::NcHitTest),
 	/// [`wm::SetCursor`](crate::msg::wm::SetCursor) `hit_test` (`u16`).
+	=>
 	=>
 	BORDER 18
 	BOTTOM 15
@@ -392,8 +418,9 @@ pub_struct_const! { HT: u16;
 	ZOOM 9
 }
 
-pub_struct_const! { IDB: usize;
+const_ordinary! { IDB: usize;
 	/// [`TBADDBITMAP`](crate::TBADDBITMAP) `nID` (`usize`).
+	=>
 	=>
 	STD_SMALL_COLOR 0
 	STD_LARGE_COLOR 1
@@ -407,17 +434,20 @@ pub_struct_const! { IDB: usize;
 	HIST_PRESSED 15
 }
 
-pub_struct_const! { ICON_SZ: u8;
-	/// [`wm::SetIcon`](crate::msg::wm::SetIcon) icon size (`u8`). Originally
-	/// has `ICON` prefix.
+const_ordinary! { ICON_SZ: u8;
+	/// [`wm::SetIcon`](crate::msg::wm::SetIcon) icon size (`u8`).
+	///
+	/// Originally has `ICON` prefix.
+	=>
 	=>
 	SMALL 0
 	BIG 1
 }
 
-pub_struct_const! { IDC: isize;
+const_ordinary! { IDC: isize;
 	/// [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor) `lpCursorName`
 	/// (`isize`).
+	=>
 	=>
 	ARROW 32512
 	IBEAM 32513
@@ -437,9 +467,10 @@ pub_struct_const! { IDC: isize;
 	PERSON 32672
 }
 
-pub_struct_const! { IDI: isize;
+const_ordinary! { IDI: isize;
 	/// [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon) `lpIconName`
 	/// (`isize`).
+	=>
 	=>
 	APPLICATION 32512
 	HAND 32513
@@ -453,8 +484,9 @@ pub_struct_const! { IDI: isize;
 	INFORMATION Self::ASTERISK.0
 }
 
-pub_struct_const! { ILC: u32;
+const_ordinary! { ILC: u32;
 	/// [`HIMAGELIST::Create`](crate::HIMAGELIST::Create) `flags` (`u32`).
+	=>
 	=>
 	/// Use a mask. The image list contains two bitmaps one of which is a
 	/// monochrome bitmap used as a mask. If this value is not included the
@@ -488,9 +520,10 @@ pub_struct_const! { ILC: u32;
 	ORIGINALSIZE 0x0001_0000
 }
 
-pub_struct_const! { ILD: u32;
+const_ordinary! { ILD: u32;
 	/// [`IMAGELISTDRAWFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).
+	=>
 	=>
 	NORMAL 0x0000_0000
 	TRANSPARENT 0x0000_0001
@@ -509,9 +542,10 @@ pub_struct_const! { ILD: u32;
 	BLEND Self::BLEND50.0
 }
 
-pub_struct_const! { ILS: u32;
+const_ordinary! { ILS: u32;
 	/// [`IMAGELISTSTATEFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
 	/// enumeration (`u32`).
+	=>
 	=>
 	NORMAL 0x0000_0000
 	GLOW 0x0000_0001
@@ -520,18 +554,20 @@ pub_struct_const! { ILS: u32;
 	ALPHA 0x0000_0008
 }
 
-pub_struct_const! { IMAGE_TYPE: u8;
-	/// [`bm::GetImage`](crate::msg::bm::GetImage) `img_type` (`u8`). Originally
-	/// has `IMAGE` prefix.
+const_ordinary! { IMAGE_TYPE: u8;
+	/// [`bm::GetImage`](crate::msg::bm::GetImage) `img_type` (`u8`).
+	///
+	/// Originally has `IMAGE` prefix.
+	=>
 	=>
 	BITMAP 0
 	ICON 1
 }
 
-pub_struct_const_wm! { IPM;
+const_wm! { IPM;
 	/// IP address control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	CLEARADDRESS WM::USER.0 + 100
@@ -542,18 +578,19 @@ pub_struct_const_wm! { IPM;
 	ISBLANK WM::USER.0 + 105
 }
 
-pub_struct_const_nm! { IPN;
+const_nm! { IPN;
 	/// IP address control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -860
 	=>
 	FIELDCHANGED Self::FIRST.0 - 0
 }
 
-pub_struct_const! { ISMEX: u32;
+const_ordinary! { ISMEX: u32;
 	/// [`InSendMessageEx`](crate::InSendMessageEx) return value (`u32`).
+	=>
 	=>
 	NOSEND 0x0000_0000
 	CALLBACK 0x0000_0004

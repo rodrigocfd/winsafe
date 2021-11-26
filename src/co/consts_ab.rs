@@ -1,7 +1,10 @@
 #![allow(non_camel_case_types)]
 
-pub_struct_const! { ACCELF: u8;
-	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`). Originally has `F` prefix.
+const_ordinary! { ACCELF: u8;
+	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
+	///
+	/// Originally has `F` prefix.
+	=>
 	=>
 	/// The `key` member specifies a virtual-key code. If this flag is not
 	/// specified key is assumed to specify a character code.
@@ -14,10 +17,13 @@ pub_struct_const! { ACCELF: u8;
 	ALT 0x10
 }
 
-pub_struct_const! { ACCESS_RIGHTS: u32;
+const_ordinary! { ACCESS_RIGHTS: u32;
 	/// Standard access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
-	/// (`u32`). Originally has no prefix.
+	/// (`u32`).
+	///
+	/// Originally has no prefix.
+	=>
 	=>
 	DELETE 0x0001_0000
 	READ_CONTROL 0x0002_0000
@@ -26,16 +32,18 @@ pub_struct_const! { ACCESS_RIGHTS: u32;
 	SYNCHRONIZE 0x0010_0000
 }
 
-pub_struct_const! { AD: i32;
+const_ordinary! { AD: i32;
 	/// [`HDC::SetArcDirection`](crate::HDC::SetArcDirection) `dir` (`i32`).
+	=>
 	=>
 	COUNTERCLOCKWISE 1
 	CLOCKWISE 2
 }
 
-pub_struct_const! { ADRF: u32;
+const_ordinary! { ADRF: u32;
 	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`). Don't seem
 	/// to be defined anywhere unconfirmed values.
+	=>
 	=>
 	DRAWSYNC 0
 	DRAWNOTHING 1
@@ -43,8 +51,9 @@ pub_struct_const! { ADRF: u32;
 	DRAWIMAGE 3
 }
 
-pub_struct_const! { APPCOMMAND: u16;
+const_ordinary! { APPCOMMAND: u16;
 	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) commands (`u16`).
+	=>
 	=>
 	BROWSER_BACKWARD 1
 	BROWSER_FORWARD 2
@@ -102,10 +111,10 @@ pub_struct_const! { APPCOMMAND: u16;
 	DWM_FLIP3D 54
 }
 
-pub_struct_const_nm! { BCN;
+const_nm! { BCN;
 	/// Button control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -1250
 	=>
@@ -113,8 +122,9 @@ pub_struct_const_nm! { BCN;
 	DROPDOWN Self::FIRST.0 + 0x0002
 }
 
-pub_struct_const! { BCSIF: u32;
+const_ordinary! { BCSIF: u32;
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
+	=>
 	=>
 	GLYPH 0x0001
 	IMAGE 0x0002
@@ -122,8 +132,9 @@ pub_struct_const! { BCSIF: u32;
 	SIZE 0x0008
 }
 
-pub_struct_const! { BCSS: u32;
+const_ordinary! { BCSS: u32;
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `uSplitStyle` (`u32`).
+	=>
 	=>
 	NOSPLIT 0x0001
 	STRETCH 0x0002
@@ -131,8 +142,9 @@ pub_struct_const! { BCSS: u32;
 	IMAGE 0x0008
 }
 
-pub_struct_const! { BI: u32;
+const_ordinary! { BI: u32;
 	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression` (`u32`).
+	=>
 	=>
 	RGB 0
 	RLE8 1
@@ -142,9 +154,11 @@ pub_struct_const! { BI: u32;
 	PNG 5
 }
 
-pub_struct_const! { BIA: u32;
+const_ordinary! { BIA: u32;
 	/// [`BUTTON_IMAGELIST`](crate::BUTTON_IMAGELIST) `uAlign` (`u32`).
+	///
 	/// Originally has `BUTTON_IMAGELIST_ALIGN_` prefix.
+	=>
 	=>
 	LEFT 0
 	RIGHT 1
@@ -153,17 +167,18 @@ pub_struct_const! { BIA: u32;
 	CENTER 4
 }
 
-pub_struct_const! { BKMODE: i32;
+const_ordinary! { BKMODE: i32;
 	/// [`HDC::SetBkMode`](crate::HDC::SetBkMode) `mode` (`i32`).
+	=>
 	=>
 	TRANSPARENT 1
 	OPAQUE 2
 }
 
-pub_struct_const_wm! { BM;
+const_wm! { BM;
 	/// Button control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	///
 	/// Also includes constants originally with `BCM` prefix.
 	=>
@@ -205,10 +220,11 @@ pub_struct_const_wm! { BM;
 	SETDONTCLICK 0x00f8
 }
 
-pub_struct_const_cmd! { BN;
+const_cmd! { BN;
 	/// Button control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
-	/// (`u16`) convertible to [`CMD`](crate::co::CMD).
+	/// (`u16`).
+	=>
 	=>
 	CLICKED 0
 	PAINT 1
@@ -223,10 +239,11 @@ pub_struct_const_cmd! { BN;
 	KILLFOCUS 7
 }
 
-pub_struct_const_ws! { BS: u32;
+const_ws! { BS: u32;
 	/// Button control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	PUSHBUTTON 0x0000_0000
 	DEFPUSHBUTTON 0x0000_0001
@@ -258,9 +275,11 @@ pub_struct_const_ws! { BS: u32;
 	RIGHTBUTTON Self::LEFTTEXT.0
 }
 
-pub_struct_const! { BSS: u32;
-	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbStyle` (`u32`). Originally has `BS`
-	/// prefix.
+const_ordinary! { BSS: u32;
+	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbStyle` (`u32`).
+	///
+	/// Originally has `BS` prefix.
+	=>
 	=>
 	SOLID 0
 	NULL 1
@@ -275,8 +294,9 @@ pub_struct_const! { BSS: u32;
 	MONOPATTERN 9
 }
 
-pub_struct_const! { BST: u32;
+const_ordinary! { BST: u32;
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) return value (`u32`).
+	=>
 	=>
 	UNCHECKED 0x0000
 	CHECKED 0x0001
@@ -285,10 +305,11 @@ pub_struct_const! { BST: u32;
 	FOCUS 0x0008
 }
 
-pub_struct_const_ws! { BTNS: u8;
+const_ws! { BTNS: u8;
 	/// Toolbar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-control-and-button-styles)
-	/// (`u8`) convertible to [`WS`](crate::co::WS).
+	/// (`u8`).
+	=>
 	=>
 	BUTTON 0x00
 	SEP 0x01

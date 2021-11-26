@@ -1,8 +1,19 @@
-/// Base to all const type macros, with basic impls.
-macro_rules! pub_struct_const_base {
+/// Declares the type of a constant, along with private and public values. Won't
+/// include `Debug` and `Display` impls.
+macro_rules! const_no_debug_display {
 	(
 		$name:ident: $ntype:ty;
 		$(#[$doc:meta])*
+		=>
+		$(
+			$(#[$privvaldoc:meta])*
+			$privvalname:ident $privval:expr
+		)*
+		=>
+		$(
+			$(#[$pubvaldoc:meta])*
+			$pubvalname:ident $pubval:expr
+		)*
 	) => {
 		$(#[$doc])*
 		#[repr(transparent)]
@@ -84,6 +95,7 @@ macro_rules! pub_struct_const_base {
 			}
 		}
 
+		// NativeConstant trait.
 		impl crate::co::traits::NativeConstant for $name {
 			type Concrete = $ntype;
 
@@ -91,19 +103,13 @@ macro_rules! pub_struct_const_base {
 				(self.0 & other.0) != 0
 			}
 		}
-	};
-}
 
-/// Declares multiple public constant values for the given const type.
-macro_rules! impl_pub_const_values {
-	(
-		$name:ident;
-		$(
-			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident $pubval:expr
-		)*
-	) => {
+		// Private and public values.
 		impl $name {
+			$(
+				$(#[$privvaldoc])*
+				pub(crate) const $privvalname: Self = Self($privval);
+			)*
 			$(
 				$(#[$pubvaldoc])*
 				pub const $pubvalname: Self = Self($pubval);
@@ -112,39 +118,37 @@ macro_rules! impl_pub_const_values {
 	};
 }
 
-/// Declares multiple private constant values for the given const type.
-macro_rules! impl_const_values {
+/// Declares the type of an ordinary constant, along with private and public
+/// values.
+macro_rules! const_ordinary {
 	(
-		$name:ident;
+		$name:ident: $ntype:ty;
+		$(#[$doc:meta])*
+		=>
 		$(
 			$(#[$privvaldoc:meta])*
 			$privvalname:ident $privval:expr
 		)*
-	) => {
-		impl $name {
-			$(
-				$(#[$privvaldoc])*
-				pub(crate) const $privvalname: Self = Self($privval);
-			)*
-		}
-	};
-}
-
-/// Declares the type of a constant, along with values.
-macro_rules! pub_struct_const {
-	(
-		$name:ident: $ntype:ty;
-		$(#[$doc:meta])*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		pub_struct_const_base! {
+		const_no_debug_display! {
 			$name: $ntype;
 			$(#[$doc])*
 			#[derive(Debug)]
+			=>
+			$(
+				$(#[$privvaldoc])*
+				$privvalname $privval
+			)*
+			=>
+			$(
+				$(#[$pubvaldoc])*
+				$pubvalname $pubval
+			)*
 		}
 
 		impl std::fmt::Display for $name {
@@ -152,47 +156,12 @@ macro_rules! pub_struct_const {
 				std::fmt::Display::fmt(&self.0, f) // delegate
 			}
 		}
-
-		// All public const values.
-		impl_pub_const_values! { $name;
-			$(
-				$(#[$pubvaldoc])*
-				$pubvalname $pubval
-			)*
-		}
-	};
-}
-
-/// Declares the type of a constant, along with public values. Won't include
-/// `Debug` and `Display` impls.
-macro_rules! pub_struct_const_no_debug_display {
-	(
-		$name:ident: $ntype:ty;
-		$(#[$doc:meta])*
-		=>
-		$(
-			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident $pubval:expr
-		)*
-	) => {
-		pub_struct_const_base! {
-			$name: $ntype;
-			$(#[$doc])*
-		}
-
-		// All public const values.
-		impl_pub_const_values! { $name;
-			$(
-				$(#[$pubvaldoc])*
-				$pubvalname $pubval
-			)*
-		}
 	};
 }
 
 /// Declares the type of a constant for a window message, convertible to
 /// [`WM`](crate::co::WM) constant type, along with private and public values.
-macro_rules! pub_struct_const_wm {
+macro_rules! const_wm {
 	(
 		$name:ident;
 		$(#[$doc:meta])*
@@ -207,9 +176,16 @@ macro_rules! pub_struct_const_wm {
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		pub_struct_const! {
+		const_ordinary! {
 			$name: u32;
 			$(#[$doc])*
+			///
+			/// Convertible to [`WM`](crate::co::WM).
+			=>
+			$(
+				$(#[$privvaldoc])*
+				$privvalname $privval
+			)*
 			=>
 			$(
 				$(#[$pubvaldoc])*
@@ -222,33 +198,37 @@ macro_rules! pub_struct_const_wm {
 				Self(v.0)
 			}
 		}
-
-		// All private const values.
-		impl_const_values! { $name;
-			$(
-				$(#[$privvaldoc])*
-				$privvalname $privval
-			)*
-		}
 	};
 }
 
 /// Declares the type of a constant for a WM_COMMAND notification code,
-/// convertible to [`CMD`](crate::co::CMD) constant type, along with public
-/// values.
-macro_rules! pub_struct_const_cmd {
+/// convertible to [`CMD`](crate::co::CMD) constant type, along with private and
+/// public values.
+macro_rules! const_cmd {
 	(
 		$name:ident;
 		$(#[$doc:meta])*
+		=>
+		$(
+			$(#[$privvaldoc:meta])*
+			$privvalname:ident $privval:expr
+		)*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		pub_struct_const! {
+		const_ordinary! {
 			$name: u16;
 			$(#[$doc])*
+			///
+			/// Convertible to [`CMD`](crate::co::CMD).
+			=>
+			$(
+				$(#[$privvaldoc])*
+				$privvalname $privval
+			)*
 			=>
 			$(
 				$(#[$pubvaldoc])*
@@ -267,7 +247,7 @@ macro_rules! pub_struct_const_cmd {
 /// Declares the type of a constant for a WM_NOTIFY notification code,
 /// convertible to [`NM`](crate::co::NM) constant type, along with private and
 /// public values.
-macro_rules! pub_struct_const_nm {
+macro_rules! const_nm {
 	(
 		$name:ident;
 		$(#[$doc:meta])*
@@ -282,9 +262,16 @@ macro_rules! pub_struct_const_nm {
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		pub_struct_const! {
+		const_ordinary! {
 			$name: i32;
 			$(#[$doc])*
+			///
+			/// Convertible to [`NM`](crate::co::NM).
+			=>
+			$(
+				$(#[$privvaldoc])*
+				$privvalname $privval
+			)*
 			=>
 			$(
 				$(#[$pubvaldoc])*
@@ -297,32 +284,36 @@ macro_rules! pub_struct_const_nm {
 				Self(v.0)
 			}
 		}
-
-		// All private const values.
-		impl_const_values! { $name;
-			$(
-				$(#[$privvaldoc])*
-				$privvalname $privval
-			)*
-		}
 	};
 }
 
 /// Declares the type of a constant for a window style, convertible to
-/// [`WS`](crate::co::WS) constant type, along with public values.
-macro_rules! pub_struct_const_ws {
+/// [`WS`](crate::co::WS) constant type, along with private and public values.
+macro_rules! const_ws {
 	(
 		$name:ident: $ntype:ty;
 		$(#[$doc:meta])*
+		=>
+		$(
+			$(#[$privvaldoc:meta])*
+			$privvalname:ident $privval:expr
+		)*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		pub_struct_const! {
+		const_ordinary! {
 			$name: $ntype;
 			$(#[$doc])*
+			///
+			/// Convertible to [`WS`](crate::co::WS).
+			=>
+			$(
+				$(#[$privvaldoc])*
+				$privvalname $privval
+			)*
 			=>
 			$(
 				$(#[$pubvaldoc])*
@@ -339,20 +330,33 @@ macro_rules! pub_struct_const_ws {
 }
 
 /// Declares the type of a constant for an extended window style, convertible to
-/// [`WS_EX`](crate::co::WS_EX) constant type, along with public values.
-macro_rules! pub_struct_const_wsex {
+/// [`WS_EX`](crate::co::WS_EX) constant type, along with private and public
+/// values.
+macro_rules! const_wsex {
 	(
 		$name:ident;
 		$(#[$doc:meta])*
+		=>
+		$(
+			$(#[$privvaldoc:meta])*
+			$privvalname:ident $privval:expr
+		)*
 		=>
 		$(
 			$(#[$pubvaldoc:meta])*
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		pub_struct_const! {
+		const_ordinary! {
 			$name: u32;
 			$(#[$doc])*
+			///
+			/// Convertible to [`WS_EX`](crate::co::WS_EX).
+			=>
+			$(
+				$(#[$privvaldoc])*
+				$privvalname $privval
+			)*
 			=>
 			$(
 				$(#[$pubvaldoc])*

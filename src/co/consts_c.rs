@@ -2,10 +2,10 @@
 
 use crate::co::WM;
 
-pub_struct_const_wm! { CB;
+const_wm! { CB;
 	/// Combo box control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1700
 	=>
@@ -51,10 +51,10 @@ pub_struct_const_wm! { CB;
 	GETCOMBOBOXINFO 0x0164
 }
 
-pub_struct_const_wm! { CBEM;
+const_wm! { CBEM;
 	/// ComboBoxEx control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	SETIMAGELIST WM::USER.0 + 2
@@ -72,10 +72,11 @@ pub_struct_const_wm! { CBEM;
 	GETITEM WM::USER.0 + 13
 }
 
-pub_struct_const_wsex! { CBES_EX;
+const_wsex! { CBES_EX;
 	/// Extended combo box
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
-	/// (`u32`) convertible to [`WS_EX`](crate::co::WS_EX).
+	/// (`u32`).
+	=>
 	=>
 	NOEDITIMAGE 0x0000_0001
 	NOEDITIMAGEINDENT 0x0000_0002
@@ -85,12 +86,13 @@ pub_struct_const_wsex! { CBES_EX;
 	TEXTENDELLIPSIS 0x0000_0020
 }
 
-pub_struct_const_cmd! { CBN;
+const_cmd! { CBN;
 	/// Combo box control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
-	/// (`u16`) convertible to [`CMD`](crate::co::CMD).
+	/// (`u16`).
 	=>
-	ERRSPACE (0 - 1) as u16
+	=>
+	ERRSPACE -1i16 as _
 	SELCHANGE 1
 	DBLCLK 2
 	SETFOCUS 3
@@ -103,10 +105,11 @@ pub_struct_const_cmd! { CBN;
 	SELENDCANCEL 10
 }
 
-pub_struct_const_ws! { CBS: u32;
+const_ws! { CBS: u32;
 	/// Combo box control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	SIMPLE 0x0001
 	DROPDOWN 0x0002
@@ -123,8 +126,9 @@ pub_struct_const_ws! { CBS: u32;
 	LOWERCASE 0x4000
 }
 
-pub_struct_const! { CC: u32;
+const_ordinary! { CC: u32;
 	/// [`CHOOSECOLOR`](crate::CHOOSECOLOR) `Flags` (`u32`).
+	=>
 	=>
 	/// Causes the dialog box to use the color specified in the `rgbResult`
 	/// member as the initial color selection.
@@ -160,10 +164,10 @@ pub_struct_const! { CC: u32;
 	ANYCOLOR 0x0000_0100
 }
 
-pub_struct_const_wm! { CCM;
+const_wm! { CCM;
 	/// Generic common controls
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x2000
 	=>
@@ -180,8 +184,9 @@ pub_struct_const_wm! { CCM;
 	DPISCALE Self::FIRST.0 + 0xc
 }
 
-pub_struct_const! { CDDS: u32;
+const_ordinary! { CDDS: u32;
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
+	=>
 	=>
 	PREPAINT 0x0000_0001
 	POSTPAINT 0x0000_0002
@@ -195,8 +200,9 @@ pub_struct_const! { CDDS: u32;
 	SUBITEM 0x0002_0000
 }
 
-pub_struct_const! { CDIS: u32;
+const_ordinary! { CDIS: u32;
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState` (`u32`).
+	=>
 	=>
 	SELECTED 0x0001
 	GRAYED 0x0002
@@ -213,9 +219,10 @@ pub_struct_const! { CDIS: u32;
 	DROPHILITED 0x1000
 }
 
-pub_struct_const! { CDRF: u32;
+const_ordinary! { CDRF: u32;
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
 	/// return value (`u32`).
+	=>
 	=>
 	DODEFAULT 0x0000_0000
 	NEWFONT 0x0000_0002
@@ -228,8 +235,9 @@ pub_struct_const! { CDRF: u32;
 	NOTIFYPOSTERASE 0x0000_0040
 }
 
-pub_struct_const! { CDS: u32;
+const_ordinary! { CDS: u32;
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `flags` (`u32`).
+	=>
 	=>
 	DYNAMICALLY 0
 	FULLSCREEN 0x0000_0004
@@ -241,10 +249,11 @@ pub_struct_const! { CDS: u32;
 	UPDATEREGISTRY 0x0000_0001
 }
 
-pub_struct_const! { CF: u32;
+const_ordinary! { CF: u32;
 	/// Standard clipboard
 	/// [formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
 	/// (`u32`).
+	=>
 	=>
 	TEXT 1
 	BITMAP 2
@@ -274,9 +283,10 @@ pub_struct_const! { CF: u32;
 	GDIOBJLAST 0x03ff
 }
 
-pub_struct_const! { CHARSET: u8;
+const_ordinary! { CHARSET: u8;
 	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `char_set` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
+	=>
 	=>
 	ANSI 0
 	DEFAULT 1
@@ -300,9 +310,10 @@ pub_struct_const! { CHARSET: u8;
 	BALTIC 186
 }
 
-pub_struct_const! { CLIP: u8;
+const_ordinary! { CLIP: u8;
 	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `clip_precision` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision` (`u8`).
+	=>
 	=>
 	DEFAULT_PRECIS 0
 	CHARACTER_PRECIS 1
@@ -314,16 +325,18 @@ pub_struct_const! { CLIP: u8;
 	EMBEDDED 8 << 4
 }
 
-pub_struct_const! { CLR: u32;
+const_ordinary! { CLR: u32;
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
+	=>
 	=>
 	CLR_NONE 0xffff_ffff
 	DEFAULT 0xff00_0000
 }
 
-pub_struct_const! { CLSCTX: u32;
+const_ordinary! { CLSCTX: u32;
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
+	=>
 	=>
 	/// The code that creates and manages objects of this class is a DLL that
 	/// runs in the same process as the caller of the function specifying the
@@ -375,19 +388,21 @@ pub_struct_const! { CLSCTX: u32;
 	ACTIVATE_ARM32_SERVER 0x200_0000
 }
 
-pub_struct_const! { CMD: u16;
+const_ordinary! { CMD: u16;
 	/// [`wm::Command`](crate::msg::wm::Command) notification codes (`u16`).
 	///
 	/// **Note:** Control-specific notification codes have their own types,
 	/// which are convertible to `CMD`.
 	=>
+	=>
 	Menu 0
 	Accelerator 1
 }
 
-pub_struct_const! { COINIT: u32;
+const_ordinary! { COINIT: u32;
 	/// [`COINIT`](https://docs.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
 	/// enumeration (`u32`).
+	=>
 	=>
 	/// Initializes the thread for apartment-threaded object concurrency.
 	APARTMENTTHREADED 0x2
@@ -399,10 +414,11 @@ pub_struct_const! { COINIT: u32;
 	SPEED_OVER_MEMORY 0x8
 }
 
-pub_struct_const! { COLOR: i32;
+const_ordinary! { COLOR: i32;
 	/// System
 	/// [colors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 	/// (`i32`).
+	=>
 	=>
 	SCROLLBAR 0
 	BACKGROUND 1
@@ -442,14 +458,15 @@ pub_struct_const! { COLOR: i32;
 	BTNHILIGHT Self::BTNHIGHLIGHT.0
 }
 
-pub_struct_const! { CP: u16;
+const_ordinary! { CP: u16;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `code_page`
 	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
 	/// (`u16`).
 	///
-	/// Originally these functions receive an `u32` parameter but these are in
+	/// Originally these functions receive an `u32` parameter, but these are in
 	/// fact `u16` constants.
+	=>
 	=>
 	/// The system default Windows ANSI code page.
 	ACP 0
@@ -504,10 +521,11 @@ pub_struct_const! { CP: u16;
 	UTF8 65001
 }
 
-pub_struct_const! { CREATE: u32;
+const_ordinary! { CREATE: u32;
 	/// Process creation
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -535,10 +553,11 @@ pub_struct_const! { CREATE: u32;
 	INHERIT_PARENT_AFFINITY 0x0001_0000
 }
 
-pub_struct_const! { CS: u32;
+const_ordinary! { CS: u32;
 	/// Window class
 	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).
+	=>
 	=>
 	VREDRAW 0x0001
 	HREDRAW 0x0002

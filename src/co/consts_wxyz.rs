@@ -1,17 +1,18 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-pub_struct_const! { WA: u16;
-	/// [`wm::Activate`](crate::msg::wm::Activate)
-	/// activation state (`u16`).
+const_ordinary! { WA: u16;
+	/// [`wm::Activate`](crate::msg::wm::Activate) activation state (`u16`).
+	=>
 	=>
 	INACTIVE 0
 	ACTIVE 1
 	CLICKACTIVE 2
 }
 
-pub_struct_const! { WAIT: u32;
+const_ordinary! { WAIT: u32;
 	/// [`HPROCESS::WaitForSingleObject`](crate::HPROCESS::WaitForSingleObject)
 	/// return value (`u32`).
+	=>
 	=>
 	ABANDONED 0x0000_0080
 	OBJECT_0 0x0000_0000
@@ -19,8 +20,9 @@ pub_struct_const! { WAIT: u32;
 	FAILED 0xffff_ffff
 }
 
-pub_struct_const! { WC: u32;
+const_ordinary! { WC: u32;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
+	=>
 	=>
 	COMPOSITECHECK 0x0000_0200
 	ERR_INVALID_CHARS 0x0000_0080
@@ -30,20 +32,22 @@ pub_struct_const! { WC: u32;
 	SEPCHARS 0x0000_0020
 }
 
-pub_struct_const! { WDA: u32;
+const_ordinary! { WDA: u32;
 	/// [`HWND::GetWindowDisplayAffinity`](crate::HWND::GetWindowDisplayAffinity) and
 	/// [`HWND::SetWindowDisplayAffinity`](crate::HWND::SetWindowDisplayAffinity)
 	/// `dwAffinity` (`u32`).
+	=>
 	=>
 	NONE 0x0000_0000
 	MONITOR 0x0000_0001
 	EXCLUDEFROMCAPTURE 0x0000_0011
 }
 
-pub_struct_const! { WH: i32;
+const_ordinary! { WH: i32;
 	/// [`HHOOK::CallNextHookEx`](crate::HHOOK::CallNextHookEx) `code` and
 	/// [`HHOOK::SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `hook_id`
 	/// (`i32`).
+	=>
 	=>
 	MSGFILTER -1
 	JOURNALRECORD 0
@@ -62,9 +66,10 @@ pub_struct_const! { WH: i32;
 	MOUSE_LL 14
 }
 
-pub_struct_const! { WIN32: u16;
+const_ordinary! { WIN32: u16;
 	/// [`_WIN32`](https://docs.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
+	=>
 	=>
 	WINNT_NT4 0x0400
 	WINNT_WIN2K 0x0500
@@ -126,11 +131,13 @@ pub_struct_const! { WIN32: u16;
 	IE_WIN10 Self::IE_IE110.0
 }
 
-pub_struct_const! { WM: u32;
+const_ordinary! { WM: u32;
 	/// Window message codes (`u32`).
 	///
-	/// Control-specific messages codes have their own types which are
+	///
+	/// **Note:** Control-specific messages have their own types, which are
 	/// convertible to `WM`.
+	=>
 	=>
 	NULL 0x0000
 	CREATE 0x0001
@@ -391,8 +398,9 @@ pub_struct_const! { WM: u32;
 	USER 0x0400
 }
 
-pub_struct_const! { WMPN: u16;
+const_ordinary! { WMPN: u16;
 	/// [`wm::ParentNotify`](crate::msg::wm::ParentNotify) event (`u16`).
+	=>
 	=>
 	CREATE WM::CREATE.0 as u16
 	DESTROY WM::DESTROY.0 as u16
@@ -403,8 +411,9 @@ pub_struct_const! { WMPN: u16;
 	POINTERDOWN WM::POINTERDOWN.0 as u16
 }
 
-pub_struct_const! { WMSZ: u8;
+const_ordinary! { WMSZ: u8;
 	/// [`wm::Sizing`](crate::msg::wm::Sizing) window edge (`u8`).
+	=>
 	=>
 	LEFT 1
 	RIGHT 2
@@ -416,18 +425,23 @@ pub_struct_const! { WMSZ: u8;
 	BOTTOMRIGHT 8
 }
 
-pub_struct_const! { WPF: u32;
+const_ordinary! { WPF: u32;
 	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags` (`u32`).
+	=>
 	=>
 	SETMINPOSITION 0x0001
 	RESTORETOMAXIMIZED 0x0002
 	ASYNCWINDOWPLACEMENT 0x0004
 }
 
-pub_struct_const! { WS: u32;
+const_ordinary! { WS: u32;
 	/// Window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles)
 	/// (`u32`).
+	///
+	/// **Note:** Control-specific styles have their own types, which are
+	/// convertible to `WS`.
+	=>
 	=>
 	/// The window is an overlapped window. An overlapped window has a title bar
 	/// and a border. Same as the `WS::TILED` style.
@@ -527,10 +541,14 @@ pub_struct_const! { WS: u32;
 	CHILDWINDOW Self::CHILD.0
 }
 
-pub_struct_const! { WS_EX: u32;
+const_ordinary! { WS_EX: u32;
 	/// Extended window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
 	/// (`u32`).
+	///
+	/// **Note:** Control-specific extended styles have their own types, which
+	/// are convertible to `WS`.
+	=>
 	=>
 	/// The window has a double border; the window can optionally be created
 	/// with a title bar by specifying the
@@ -671,8 +689,9 @@ pub_struct_const! { WS_EX: u32;
 	NOACTIVATE 0x0800_0000
 }
 
-pub_struct_const! { WVR: u32;
+const_ordinary! { WVR: u32;
 	/// [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize) return flags (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0

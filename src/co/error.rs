@@ -7,7 +7,7 @@ use crate::handles::HLOCAL;
 use crate::structs::LANGID;
 use crate::various::WString;
 
-pub_struct_const_no_debug_display! { ERROR: u32;
+const_no_debug_display! { ERROR: u32;
 	/// A Windows
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// (`u32`) retrieved by
@@ -36,6 +36,7 @@ pub_struct_const_no_debug_display! { ERROR: u32;
 	/// ```
 	/// [0x001c 28] The printer is out of paper.
 	/// ```
+	=>
 	=>
 	/// The operation completed successfully.
 	SUCCESS 0
@@ -2855,10 +2856,11 @@ impl ERROR {
 	}
 }
 
-pub_struct_const_no_debug_display! { CDERR: u32;
+const_no_debug_display! { CDERR: u32;
 	/// Common dialog box
 	/// [error codes](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror).
 	/// Also includes `PDERR`, `CFERR, `FNERR` and `FRERR` prefixes.
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0

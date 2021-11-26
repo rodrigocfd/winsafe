@@ -1,8 +1,9 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-pub_struct_const! { DDL: u16;
+const_ordinary! { DDL: u16;
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
+	=>
 	=>
 	READWRITE 0x0000
 	READONLY 0x0001
@@ -15,8 +16,9 @@ pub_struct_const! { DDL: u16;
 	EXCLUSIVE 0x8000
 }
 
-pub_struct_const! { DIB: u32;
+const_ordinary! { DIB: u32;
 	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
+	=>
 	=>
 	/// The color table consists of an array of 16-bit indexes into the
 	/// currently realized logical palette.
@@ -25,9 +27,10 @@ pub_struct_const! { DIB: u32;
 	PAL_COLORS 1
 }
 
-pub_struct_const! { DISP_CHANGE: i32;
+const_ordinary! { DISP_CHANGE: i32;
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) return value
 	/// (`u32`).
+	=>
 	=>
 	SUCCESSFUL 0
 	RESTART 1
@@ -39,9 +42,12 @@ pub_struct_const! { DISP_CHANGE: i32;
 	BADDUALVIEW -6
 }
 
-pub_struct_const! { DISPOSITION: u32;
+const_ordinary! { DISPOSITION: u32;
 	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `creation_disposition`
-	/// (`u32`). Originally has no prefix.
+	/// (`u32`).
+	///
+	/// Originally has no prefix.
+	=>
 	=>
 	/// Creates a new file only if it does not already exist.
 	///
@@ -90,8 +96,9 @@ pub_struct_const! { DISPOSITION: u32;
 	TRUNCATE_EXISTING 5
 }
 
-pub_struct_const! { DLGC: u16;
+const_ordinary! { DLGC: u16;
 	/// [`wm::GetDlgCode`](crate::msg::wm::GetDlgCode) return value (`u16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -108,10 +115,11 @@ pub_struct_const! { DLGC: u16;
 	WANTTAB 0x0002
 }
 
-pub_struct_const! { DLGID: u16;
+const_ordinary! { DLGID: u16;
 	/// Dialog built-in IDs (`u16`). These are also returned from
 	/// [`HWND::MessageBox`](crate::HWND::MessageBox) and
 	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog).
+	=>
 	=>
 	OK 1
 	CANCEL 2
@@ -124,8 +132,9 @@ pub_struct_const! { DLGID: u16;
 	CONTINUE 11
 }
 
-pub_struct_const! { DM: u32;
+const_ordinary! { DM: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmFields` (`u32`).
+	=>
 	=>
 	ORIENTATION 0x0000_0001
 	PAPERSIZE 0x0000_0002
@@ -159,9 +168,9 @@ pub_struct_const! { DM: u32;
 	DISPLAYFIXEDOUTPUT 0x2000_0000
 }
 
-pub_struct_const! { DMBIN: i16;
+const_ordinary! { DMBIN: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDefaultSource` (`i16`).
-	=>
+	=>=>
 	/// None of the actual values (zero).
 	NoValue 0
 	UPPER 1
@@ -183,8 +192,9 @@ pub_struct_const! { DMBIN: i16;
 	USER 256
 }
 
-pub_struct_const! { DMCOLOR: i16;
+const_ordinary! { DMCOLOR: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmColor` (`i16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -192,8 +202,9 @@ pub_struct_const! { DMCOLOR: i16;
 	COLOR 2
 }
 
-pub_struct_const! { DMDISPLAYFLAGS: u32;
+const_ordinary! { DMDISPLAYFLAGS: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayFlags` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -201,8 +212,9 @@ pub_struct_const! { DMDISPLAYFLAGS: u32;
 	TEXTMODE 0x0000_0004
 }
 
-pub_struct_const! { DMICMMETHOD: u32;
+const_ordinary! { DMICMMETHOD: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmICMMethod` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -218,16 +230,18 @@ pub_struct_const! { DMICMMETHOD: u32;
 	USER 256
 }
 
-pub_struct_const! { DMDFO: u32;
+const_ordinary! { DMDFO: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayFixedOutput` (`u32`).
+	=>
 	=>
 	DEFAULT 0
 	STRETCH 1
 	CENTER 2
 }
 
-pub_struct_const! { DMDITHER: u32;
+const_ordinary! { DMDITHER: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDitherType` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -255,8 +269,9 @@ pub_struct_const! { DMDITHER: u32;
 	USER 256
 }
 
-pub_struct_const! { DMDO: u32;
+const_ordinary! { DMDO: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayOrientation` (`u32`).
+	=>
 	=>
 	DEFAULT 0
 	D90 1
@@ -264,8 +279,9 @@ pub_struct_const! { DMDO: u32;
 	D270 3
 }
 
-pub_struct_const! { DMDUP: i16;
+const_ordinary! { DMDUP: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDuplex` (`i16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -274,8 +290,9 @@ pub_struct_const! { DMDUP: i16;
 	HORIZONTAL 3
 }
 
-pub_struct_const! { DMICM: u32;
+const_ordinary! { DMICM: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmICMIntent` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -291,8 +308,9 @@ pub_struct_const! { DMICM: u32;
 	USER 256
 }
 
-pub_struct_const! { DMMEDIA: u32;
+const_ordinary! { DMMEDIA: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmMediaType` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -306,8 +324,9 @@ pub_struct_const! { DMMEDIA: u32;
 	USER 256
 }
 
-pub_struct_const! { DMNUP: u32;
+const_ordinary! { DMNUP: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmNup` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -315,8 +334,9 @@ pub_struct_const! { DMNUP: u32;
 	ONEUP 2
 }
 
-pub_struct_const! { DMORIENT: i16;
+const_ordinary! { DMORIENT: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmOrientation` (`i16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -324,8 +344,9 @@ pub_struct_const! { DMORIENT: i16;
 	LANDSCAPE 2
 }
 
-pub_struct_const! { DMPAPER: i16;
+const_ordinary! { DMPAPER: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmPaperSize` (`i16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -565,8 +586,9 @@ pub_struct_const! { DMPAPER: i16;
 	USER 256
 }
 
-pub_struct_const! { DMRES: i16;
+const_ordinary! { DMRES: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmPrintQuality` (`i16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -576,8 +598,9 @@ pub_struct_const! { DMRES: i16;
 	HIGH -4
 }
 
-pub_struct_const! { DMTT: i16;
+const_ordinary! { DMTT: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmTTOption` (`i16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -591,10 +614,10 @@ pub_struct_const! { DMTT: i16;
 	DOWNLOAD_OUTLINE 4
 }
 
-pub_struct_const_wm! { DTM;
+const_wm! { DTM;
 	/// Date and time picker control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1000
 	=>
@@ -615,10 +638,10 @@ pub_struct_const_wm! { DTM;
 	GETIDEALSIZE Self::FIRST.0 + 15
 }
 
-pub_struct_const_nm! { DTN;
+const_nm! { DTN;
 	/// Date and time picker control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -740
 	FIRST2 -753
@@ -632,10 +655,11 @@ pub_struct_const_nm! { DTN;
 	WMKEYDOWN Self::FIRST.0 - 4
 }
 
-pub_struct_const_ws! { DTS: u32;
+const_ws! { DTS: u32;
 	/// Date and time picker control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	UPDOWN 0x0001
 	SHOWNONE 0x0002

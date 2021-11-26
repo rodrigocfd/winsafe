@@ -2,10 +2,10 @@
 
 use crate::co::{ACCESS_RIGHTS, CCM, WM};
 
-pub_struct_const_wm! { SB;
+const_wm! { SB;
 	/// Status bar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
-	/// (`u32`). Convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	SETTEXT WM::USER.0 + 11
@@ -27,10 +27,11 @@ pub_struct_const_wm! { SB;
 	SETBKCOLOR CCM::SETBKCOLOR.0
 }
 
-pub_struct_const_ws! { SBARS: u32;
+const_ws! { SBARS: u32;
 	/// Status bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -38,31 +39,33 @@ pub_struct_const_ws! { SBARS: u32;
 	TOOLTIPS 0x0800
 }
 
-pub_struct_const! { SBB: i32;
+const_ordinary! { SBB: i32;
 	/// [`HWND::GetScrollInfo`](crate::HWND::GetScrollInfo),
 	/// [`HWND::SetScrollInfo`](crate::HWND::SetScrollInfo) and
 	/// [`HWND::SetScrollRange`](crate::HWND::SetScrollRange) `bar` (`i32`).
 	/// Originally has `SB` prefix.
+	=>
 	=>
 	HORZ 0
 	VERT 1
 	CTL 2
 }
 
-pub_struct_const_nm! { SBN;
+const_nm! { SBN;
 	/// Status bar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -880
 	=>
 	SIMPLEMODECHANGE Self::FIRST.0 - 0
 }
 
-pub_struct_const! { SBT: u16;
+const_ordinary! { SBT: u16;
 	/// [`sb::GetText`](crate::msg::sb::GetText),
 	/// [`sb::GetTextLength`](crate::msg::sb::GetTextLength) and
 	/// [`sb::SetText`](crate::msg::sb::SetText) drawing operation (`u16`).
+	=>
 	=>
 	BORDER 0
 	OWNERDRAW 0x1000
@@ -72,10 +75,11 @@ pub_struct_const! { SBT: u16;
 	NOTABPARSING 0x0800
 }
 
-pub_struct_const! { SB_REQ: u16;
+const_ordinary! { SB_REQ: u16;
 	/// [`wm::HScroll`](crate::msg::wm::HScroll) and
 	/// [`wm::VScroll`](crate::msg::wm::VScroll) request (`u16`). Originally has
 	/// `SB` prefix.
+	=>
 	=>
 	LINEUP 0
 	LINELEFT 0
@@ -94,9 +98,10 @@ pub_struct_const! { SB_REQ: u16;
 	ENDSCROLL 8
 }
 
-pub_struct_const! { SC: u32;
+const_ordinary! { SC: u32;
 	/// [`wm::SysCommand`](crate::msg::wm::SysCommand) type of system command
 	/// requested (`u32`).
+	=>
 	=>
 	CLOSE 0xf060
 	CONTEXTHELP 0xf180
@@ -119,8 +124,9 @@ pub_struct_const! { SC: u32;
 	VSCROLL 0xf070
 }
 
-pub_struct_const! { SCS: u32;
+const_ordinary! { SCS: u32;
 	/// [`GetBinaryType`](crate::GetBinaryType) return value (`u32`).
+	=>
 	=>
 	W_32BIT_BINARY 0
 	DOS_BINARY 1
@@ -131,8 +137,9 @@ pub_struct_const! { SCS: u32;
 	W_64BIT_BINARY 6
 }
 
-pub_struct_const! { SE_ERR: u32;
+const_ordinary! { SE_ERR: u32;
 	/// [`HWND::ShellExecute`](crate::HWND::ShellExecute) return value (`u32`).
+	=>
 	=>
 	FILE_NOT_FOUND 2
 	PATH_NOT_FOUND 3
@@ -150,8 +157,9 @@ pub_struct_const! { SE_ERR: u32;
 	NOASSOC 31
 }
 
-pub_struct_const! { SECTION: u32;
+const_ordinary! { SECTION: u32;
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
+	=>
 	=>
 	QUERY 0x0001
 	MAP_WRITE 0x0002
@@ -162,9 +170,10 @@ pub_struct_const! { SECTION: u32;
 	ALL_ACCESS STANDARD_RIGHTS::REQUIRED.0 | Self::QUERY.0 | Self::MAP_WRITE.0 | Self::MAP_EXECUTE.0 | Self::EXTEND_SIZE.0
 }
 
-pub_struct_const! { SHARD: u32;
+const_ordinary! { SHARD: u32;
 	/// [`SHARD`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-shard)
 	/// enumeration (`u32`).
+	=>
 	=>
 	PIDL 0x0000_0001
 	PATHA 0x0000_0002
@@ -176,8 +185,9 @@ pub_struct_const! { SHARD: u32;
 	SHELLITEM 0x0000_0008
 }
 
-pub_struct_const! { SHGFI: u32;
+const_ordinary! { SHGFI: u32;
 	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `flags` (`u32`).
+	=>
 	=>
 	ICON 0x0000_0100
 	DISPLAYNAME 0x0000_0200
@@ -199,8 +209,9 @@ pub_struct_const! { SHGFI: u32;
 	OVERLAYINDEX 0x0000_0040
 }
 
-pub_struct_const! { SIF: u32;
+const_ordinary! { SIF: u32;
 	/// [`SCROLLINFO`](crate::SCROLLINFO) `fMask` (`u32`).
+	=>
 	=>
 	RANGE 0x0001
 	PAGE 0x0002
@@ -210,8 +221,9 @@ pub_struct_const! { SIF: u32;
 	ALL Self::RANGE.0 | Self::PAGE.0 | Self::POS.0 | Self::TRACKPOS.0
 }
 
-pub_struct_const! { SIZE_R: u8;
+const_ordinary! { SIZE_R: u8;
 	/// [`wm::Size`](crate::msg::wm::Size) request (`u8`).
+	=>
 	=>
 	/// The window has been resized but neither the `SIZE_R::MINIMIZED` nor
 	/// `SIZE_R::MAXIMIZED` value applies.
@@ -228,8 +240,9 @@ pub_struct_const! { SIZE_R: u8;
 	MAXHIDE 4
 }
 
-pub_struct_const! { SM: i32;
+const_ordinary! { SM: i32;
 	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `index` (`i32`).
+	=>
 	=>
 	CXSCREEN 0
 	CYSCREEN 1
@@ -346,10 +359,11 @@ pub_struct_const! { SM: i32;
 	SYSTEMDOCKED 0x2004
 }
 
-pub_struct_const! { SORT: u16;
+const_ordinary! { SORT: u16;
 	/// Sort order
 	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
 	/// (`u16`).
+	=>
 	=>
 	DEFAULT 0x0
 	INVARIANT_MATH 0x1
@@ -371,8 +385,9 @@ pub_struct_const! { SORT: u16;
 	GEORGIAN_MODERN 0x1
 }
 
-pub_struct_const! { SPI: u32;
+const_ordinary! { SPI: u32;
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `action` (`u32`).
+	=>
 	=>
 	GETBEEP 0x0001
 	SETBEEP 0x0002
@@ -517,8 +532,9 @@ pub_struct_const! { SPI: u32;
 	SETDOCKMOVING 0x0091
 }
 
-pub_struct_const! { SPIF: u32;
+const_ordinary! { SPIF: u32;
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `win_ini` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -527,10 +543,11 @@ pub_struct_const! { SPIF: u32;
 	SENDCHANGE Self::SENDWININICHANGE.0
 }
 
-pub_struct_const_ws! { SS: u32;
+const_ws! { SS: u32;
 	/// Label control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/static-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	LEFT 0x0000_0000
 	CENTER 0x0000_0001
@@ -565,10 +582,11 @@ pub_struct_const_ws! { SS: u32;
 	WORDELLIPSIS 0x0000_c000
 }
 
-pub_struct_const! { STANDARD_RIGHTS: u32;
+const_ordinary! { STANDARD_RIGHTS: u32;
 	/// Standard access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
+	=>
 	=>
 	REQUIRED 0x000_f0000
 	READ ACCESS_RIGHTS::READ_CONTROL.0
@@ -577,9 +595,10 @@ pub_struct_const! { STANDARD_RIGHTS: u32;
 	ALL 0x001_f0000
 }
 
-pub_struct_const! { STAP: u32;
+const_ordinary! { STAP: u32;
 	/// [`HTHEME::GetThemeAppProperties`](crate::HTHEME::GetThemeAppProperties)
 	/// return value (`u32`).
+	=>
 	=>
 	ALLOW_NONCLIENT 1 << 0
 	ALLOW_CONTROLS 1 << 1
@@ -587,9 +606,10 @@ pub_struct_const! { STAP: u32;
 	VALIDBITS Self::ALLOW_NONCLIENT.0 | Self::ALLOW_CONTROLS.0 | Self::ALLOW_WEBCONTENT.0
 }
 
-pub_struct_const! { STARTF: u32;
+const_ordinary! { STARTF: u32;
 	/// [`HPROCESS::CreateProcess`](crate::HPROCESS::CreateProcess) `dwFlags`
 	/// (`u32`).
+	=>
 	=>
 	FORCEONFEEDBACK 0x0000_0040
 	FORCEOFFFEEDBACK 0x0000_0080
@@ -607,11 +627,12 @@ pub_struct_const! { STARTF: u32;
 	USESTDHANDLES 0x0000_0100
 }
 
-pub_struct_const! { STATE_SYSTEM: u32;
+const_ordinary! { STATE_SYSTEM: u32;
 	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and `stateButton`,
 	/// [`TITLEBARINFOEX`](crate::TITLEBARINFOEX) `rgstate`,
 	/// [`COMBOBOXINFO`](crate::COMBOBOXINFO) `stateButton`
 	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -649,10 +670,10 @@ pub_struct_const! { STATE_SYSTEM: u32;
 	VALID 0x3fff_ffff
 }
 
-pub_struct_const_wm! { STM;
+const_wm! { STM;
 	/// Static control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	SETICON 0x0170
@@ -661,10 +682,11 @@ pub_struct_const_wm! { STM;
 	GETIMAGE 0x0173
 }
 
-pub_struct_const_cmd! { STN;
+const_cmd! { STN;
 	/// Static control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
-	/// (`u16`) convertible to [`CMD`](crate::co::CMD).
+	/// (`u16`).
+	=>
 	=>
 	CLICKED 0
 	DBLCLK 1
@@ -672,8 +694,9 @@ pub_struct_const_cmd! { STN;
 	DISABLE 3
 }
 
-pub_struct_const! { STOCK_BRUSH: i32;
+const_ordinary! { STOCK_BRUSH: i32;
 	/// [`HBRUSH::GetStockObject`](crate::HBRUSH::GetStockObject) `i` (`i32`).
+	=>
 	=>
 	BLACK 4
 	DKGRAY 3
@@ -685,8 +708,9 @@ pub_struct_const! { STOCK_BRUSH: i32;
 	WHITE 0
 }
 
-pub_struct_const! { STOCK_PEN: i32;
+const_ordinary! { STOCK_PEN: i32;
 	/// [`HPEN::GetStockObject`](crate::HPEN::GetStockObject) `i` (`i32`).
+	=>
 	=>
 	BLACK 7
 	DC 19
@@ -694,8 +718,9 @@ pub_struct_const! { STOCK_PEN: i32;
 	WHITE 6
 }
 
-pub_struct_const! { STOCK_FONT: i32;
+const_ordinary! { STOCK_FONT: i32;
 	/// [`HFONT::GetStockObject`](crate::HFONT::GetStockObject) `i` (`i32`).
+	=>
 	=>
 	ANSI_FIXED 11
 	ANSI_VAR 12
@@ -706,10 +731,11 @@ pub_struct_const! { STOCK_FONT: i32;
 	SYSTEM_FIXED 16
 }
 
-pub_struct_const! { SUBLANG: u16;
+const_ordinary! { SUBLANG: u16;
 	/// Sublanguage
 	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
+	=>
 	=>
 	NEUTRAL 0x00
 	DEFAULT 0x01
@@ -957,8 +983,9 @@ pub_struct_const! { SUBLANG: u16;
 	ZULU_SOUTH_AFRICA 0x01
 }
 
-pub_struct_const! { SW: i32;
+const_ordinary! { SW: i32;
 	/// [`HWND::ShowWindow`](crate::HWND::ShowWindow) `show_cmd` (`i32`).
+	=>
 	=>
 	/// Hides the window and activates another window.
 	HIDE 0
@@ -1000,9 +1027,11 @@ pub_struct_const! { SW: i32;
 	FORCEMINIMIZE 11
 }
 
-pub_struct_const! { SW_S: u8;
-	/// [`wm::ShowWindow`](crate::msg::wm::ShowWindow) status (`u8`). Originally
-	/// has `SW` prefix.
+const_ordinary! { SW_S: u8;
+	/// [`wm::ShowWindow`](crate::msg::wm::ShowWindow) status (`u8`).
+	///
+	/// Originally has `SW` prefix.
+	=>
 	=>
 	PARENTCLOSING 1
 	OTHERZOOM 2
@@ -1010,8 +1039,9 @@ pub_struct_const! { SW_S: u8;
 	OTHERUNZOOM 4
 }
 
-pub_struct_const! { SWP: u32;
+const_ordinary! { SWP: u32;
 	/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `flags` (`u32`).
+	=>
 	=>
 	NOSIZE 0x0001
 	NOMOVE 0x0002

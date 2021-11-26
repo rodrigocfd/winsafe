@@ -2,17 +2,19 @@
 
 use crate::co::{ACCESS_RIGHTS, CCM, FF, STANDARD_RIGHTS, WM};
 
-pub_struct_const! { OBJID: u32;
+const_ordinary! { OBJID: u32;
 	/// [`HWND::GetMenuBarInfo`](crate::HWND::GetMenuBarInfo) `idObject` (`i32`).
+	=>
 	=>
 	CLIENT 0xffff_fffc
 	MENU 0xffff_fffd
 	SYSMENU 0xffff_ffff
 }
 
-pub_struct_const! { OCR: u32;
+const_ordinary! { OCR: u32;
 	/// [`HCURSOR::SetSystemCursor`](crate::HCURSOR::SetSystemCursor) `id`
 	/// (`u32`).
+	=>
 	=>
 	APPSTARTING 32650
 	NORMAL 32512
@@ -30,16 +32,18 @@ pub_struct_const! { OCR: u32;
 	WAIT 32514
 }
 
-pub_struct_const! { ODA: u32;
+const_ordinary! { ODA: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemAction` (`u32`).
+	=>
 	=>
 	DRAWENTIRE 0x0001
 	SELECT 0x0002
 	FOCUS 0x0004
 }
 
-pub_struct_const! { ODS: u32;
+const_ordinary! { ODS: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemState` (`u32`).
+	=>
 	=>
 	SELECTED 0x0001
 	GRAYED 0x0002
@@ -54,8 +58,9 @@ pub_struct_const! { ODS: u32;
 	NOFOCUSRECT 0x0200
 }
 
-pub_struct_const! { ODT: u32;
+const_ordinary! { ODT: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `CtlType` (`u32`).
+	=>
 	=>
 	MENU 1
 	LISTBOX 2
@@ -66,18 +71,21 @@ pub_struct_const! { ODT: u32;
 	LISTVIEW 102
 }
 
-pub_struct_const! { ODT_C: u32;
+const_ordinary! { ODT_C: u32;
 	/// [`COMPAREITEMSTRUCT`](crate::COMPAREITEMSTRUCT) and
 	/// [`DELETEITEMSTRUCT`](crate::DELETEITEMSTRUCT) `CtlType` (`u32`).
+	///
 	/// Originally has `ODT` prefix.
+	=>
 	=>
 	LISTBOX ODT::LISTBOX.0
 	COMBOBOX ODT::COMBOBOX.0
 }
 
-pub_struct_const! { OUT_PRECIS: u8;
+const_ordinary! { OUT_PRECIS: u8;
 	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `out_precision` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
+	=>
 	=>
 	DEFAULT 0
 	STRING 1
@@ -92,9 +100,10 @@ pub_struct_const! { OUT_PRECIS: u8;
 	PS_ONLY 10
 }
 
-pub_struct_const! { PAGE: u32;
+const_ordinary! { PAGE: u32;
 	/// [`HFILE::CreateFileMapping`](crate::HFILE::CreateFileMapping) `protect`
 	/// (`u32`).
+	=>
 	=>
 	/// Allows views to be mapped for read-only copy-on-write or execute
 	/// access.
@@ -147,10 +156,10 @@ pub_struct_const! { PAGE: u32;
 	SEC_WRITECOMBINE 0x4000_0000
 }
 
-pub_struct_const_wm! { PBM;
+const_wm! { PBM;
 	/// Progress bar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	SETRANGE WM::USER.0 + 1
@@ -171,10 +180,11 @@ pub_struct_const_wm! { PBM;
 	GETSTATE WM::USER.0 + 17
 }
 
-pub_struct_const_ws! { PBS: u32;
+const_ws! { PBS: u32;
 	/// Progress bar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	SMOOTH 0x01
 	VERTICAL 0x04
@@ -182,10 +192,11 @@ pub_struct_const_ws! { PBS: u32;
 	SMOOTHREVERSE 0x10
 }
 
-pub_struct_const! { PBST: u32;
+const_ordinary! { PBST: u32;
 	/// Progress bar
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -194,10 +205,11 @@ pub_struct_const! { PBST: u32;
 	PAUSED 0x0003
 }
 
-pub_struct_const! { PITCH: u8;
+const_ordinary! { PITCH: u8;
 	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `pitch_and_family` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`) used with
 	/// [`FF`](crate::co::FF).
+	=>
 	=>
 	DEFAULT 0
 	FIXED 1
@@ -211,8 +223,9 @@ impl PITCH {
 	}
 }
 
-pub_struct_const! { PM: u32;
+const_ordinary! { PM: u32;
 	/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
+	=>
 	=>
 	NOREMOVE 0x0000
 	REMOVE 0x0001
@@ -224,10 +237,11 @@ pub_struct_const! { PM: u32;
 	QS_SENDMESSAGE QS::SENDMESSAGE.0 << 16
 }
 
-pub_struct_const! { PROCESS: u32;
+const_ordinary! { PROCESS: u32;
 	/// Process
 	/// [security and access rights](https://docs.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
 	/// (`u32`).
+	=>
 	=>
 	DELETE ACCESS_RIGHTS::DELETE.0
 	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.0
@@ -250,9 +264,10 @@ pub_struct_const! { PROCESS: u32;
 	VM_WRITE 0x0020
 }
 
-pub_struct_const! { PROCESS_NAME: u32;
+const_ordinary! { PROCESS_NAME: u32;
 	/// [`QueryFullProcessImageName`](crate::HPROCESS::QueryFullProcessImageName)
 	/// flags (`u32`).
+	=>
 	=>
 	/// The name should use the Win32 path format.
 	WIN32 0
@@ -260,8 +275,9 @@ pub_struct_const! { PROCESS_NAME: u32;
 	NATIVE 0x0000_0001
 }
 
-pub_struct_const! { PROCESSOR: u32;
+const_ordinary! { PROCESSOR: u32;
 	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `dwProcessorType` (`u32`).
+	=>
 	=>
 	INTEL_386 386
 	INTEL_486 486
@@ -288,8 +304,9 @@ pub_struct_const! { PROCESSOR: u32;
 	OPTIL 0x494f
 }
 
-pub_struct_const! { PROCESSOR_ARCHITECTURE: u16;
+const_ordinary! { PROCESSOR_ARCHITECTURE: u16;
 	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `wProcessorArchitecture` (`u16`).
+	=>
 	=>
 	INTEL 0
 	MIPS 1
@@ -309,8 +326,9 @@ pub_struct_const! { PROCESSOR_ARCHITECTURE: u16;
 	UNKNOWN 0xffff
 }
 
-pub_struct_const! { PS: i32;
+const_ordinary! { PS: i32;
 	/// [`HPEN::CreatePen`](crate::HPEN::CreatePen) `style` (`i32`).
+	=>
 	=>
 	SOLID 0
 	DASH 1
@@ -321,9 +339,10 @@ pub_struct_const! { PS: i32;
 	INSIDEFRAME 6
 }
 
-pub_struct_const! { QUALITY: u8;
+const_ordinary! { QUALITY: u8;
 	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `quality` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
+	=>
 	=>
 	DEFAULT 0
 	DRAFT 1
@@ -334,8 +353,9 @@ pub_struct_const! { QUALITY: u8;
 	CLEARTYPE_NATURAL 6
 }
 
-pub_struct_const! { QS: u32;
+const_ordinary! { QS: u32;
 	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags` (`u32`).
+	=>
 	=>
 	KEY 0x0001
 	MOUSEMOVE 0x0002
@@ -354,10 +374,10 @@ pub_struct_const! { QS: u32;
 	ALLINPUT Self::INPUT.0 | Self::POSTMESSAGE.0 | Self::TIMER.0 | Self::PAINT.0 | Self::HOTKEY.0 | Self::SENDMESSAGE.0
 }
 
-pub_struct_const_wm! { RB;
+const_wm! { RB;
 	/// Rebar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	DELETEBAND WM::USER.0 + 2
@@ -404,10 +424,10 @@ pub_struct_const_wm! { RB;
 	SETBANDWIDTH WM::USER.0 + 44
 }
 
-pub_struct_const_nm! { RBN;
+const_nm! { RBN;
 	/// Rebar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -831
 	=>
@@ -426,10 +446,11 @@ pub_struct_const_nm! { RBN;
 	AUTOBREAK Self::FIRST.0 - 22
 }
 
-pub_struct_const_ws! { RBS: u32;
+const_ws! { RBS: u32;
 	/// Rebar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	TOOLTIPS 0x0000_0100
 	VARHEIGHT 0x0000_0200
@@ -441,8 +462,9 @@ pub_struct_const_ws! { RBS: u32;
 	DBLCLKTOGGLE 0x0000_8000
 }
 
-pub_struct_const! { RDW: u32;
+const_ordinary! { RDW: u32;
 	/// [`HWND::RedrawWindow`](crate::HWND::RedrawWindow) `flags` (`u32`).
+	=>
 	=>
 	INVALIDATE 0x0001
 	INTERNALPAINT 0x0002
@@ -458,10 +480,11 @@ pub_struct_const! { RDW: u32;
 	NOFRAME 0x0800
 }
 
-pub_struct_const! { REG: u32;
+const_ordinary! { REG: u32;
 	/// Registry
 	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
+	=>
 	=>
 	NONE 0
 	SZ 1
@@ -479,8 +502,9 @@ pub_struct_const! { REG: u32;
 	QWORD_LITTLE_ENDIAN 11
 }
 
-pub_struct_const! { REG_OPTION: u32;
+const_ordinary! { REG_OPTION: u32;
 	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `options` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -492,31 +516,35 @@ pub_struct_const! { REG_OPTION: u32;
 	OPEN_LINK 0x0000_0008
 }
 
-pub_struct_const! { REGION: i32;
+const_ordinary! { REGION: i32;
 	/// [`HWND::GetUpdateRgn`](crate::HWND::GetUpdateRgn),
 	/// [`HWND::GetWindowRgn`](crate::HWND::GetWindowRgn) and
 	/// [`HDC::SelectObjectRgn`](crate::HDC::SelectObjectRgn) return value
 	/// (`i32`).
+	=>
 	=>
 	NULL 1
 	SIMPLE 2
 	COMPLEX 3
 }
 
-pub_struct_const! { REPLACEFILE: u32;
+const_ordinary! { REPLACEFILE: u32;
 	/// [`ReplaceFile`](crate::ReplaceFile) `flags` (`u32`).
+	=>
 	=>
 	WRITE_THROUGH 0x0000_0001
 	IGNORE_MERGE_ERRORS 0x0000_0002
 	IGNORE_ACL_ERRORS 0x0000_0004
 }
 
-pub_struct_const! { ROP: u32;
+const_ordinary! { ROP: u32;
 	/// Raster operation code (`u32`).
 	/// [`HDC::BitBlt`](crate::HDC::BitBlt) `rop`,
 	/// [`HDC::PatBlt`](crate::HDC::PatBlt) `rop` and
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop`.
+	///
 	/// Originally has no prefix.
+	=>
 	=>
 	SRCCOPY 0x00cc_0020
 	SRCPAINT 0x00ee_0086
@@ -537,8 +565,9 @@ pub_struct_const! { ROP: u32;
 	CAPTUREBLT 0x4000_0000
 }
 
-pub_struct_const! { RRF: u32;
+const_ordinary! { RRF: u32;
 	/// [`HKEY::GetValue`](crate::HKEY::GetValue) `dwFlags` (`u32`).
+	=>
 	=>
 	RT_REG_NONE 0x0000_0001
 	RT_REG_SZ 0x0000_0002
@@ -559,10 +588,11 @@ pub_struct_const! { RRF: u32;
 	ZEROONFAILURE 0x2000_0000
 }
 
-pub_struct_const! { RT: u16;
+const_ordinary! { RT: u16;
 	/// Predefined resource
 	/// [types](https://docs.microsoft.com/en-us/windows/win32/menurc/resource-types)
 	/// (`u16`).
+	=>
 	=>
 	ACCELERATOR 9
 	ANICURSOR 21

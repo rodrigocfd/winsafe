@@ -2,25 +2,27 @@
 
 use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS, WM};
 
-pub_struct_const! { EDS: u32;
+const_ordinary! { EDS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `flags` (`u32`).
+	=>
 	=>
 	RAWMODE 0x0000_0002
 	ROTATEDMODE 0x0000_0004
 }
 
-pub_struct_const! { EIMES: u16;
+const_ordinary! { EIMES: u16;
 	/// [`em::GetImeStatus`](crate::msg::em::GetImeStatus) return value (`u16`).
+	=>
 	=>
 	GETCOMPSTRATONCE 0x0001
 	CANCELCOMPSTRINFOCUS 0x0002
 	COMPLETECOMPSTRKILLFOCUS 0x0004
 }
 
-pub_struct_const_wm! { EM;
+const_wm! { EM;
 	/// Edit control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1500
 	=>
@@ -90,17 +92,19 @@ pub_struct_const_wm! { EM;
 	ENABLEFEATURE 0x00da
 }
 
-pub_struct_const! { EMF: u32;
+const_ordinary! { EMF: u32;
 	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
+	=>
 	=>
 	LEFT 0x0000_0000
 	CENTERED 0x0000_0001
 }
 
-pub_struct_const_cmd! { EN;
+const_cmd! { EN;
 	/// Edit control `WM_COMMAND`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
-	/// (`u16`) convertible to [`CMD`](crate::co::CMD).
+	/// (`u16`).
+	=>
 	=>
 	SETFOCUS 0x0100
 	KILLFOCUS 0x0200
@@ -116,8 +120,9 @@ pub_struct_const_cmd! { EN;
 	AFTER_PASTE 0x0801
 }
 
-pub_struct_const! { ENDSESSION: u32;
+const_ordinary! { ENDSESSION: u32;
 	/// [`wm::EndSession`](crate::msg::wm::EndSession) event (`u32`).
+	=>
 	=>
 	RESTARTORSHUTDOWN 0
 	CLOSEAPP 0x0000_0001
@@ -125,18 +130,22 @@ pub_struct_const! { ENDSESSION: u32;
 	LOGOFF 0x8000_0000
 }
 
-pub_struct_const! { ENUM_SETTINGS: u32;
+const_ordinary! { ENUM_SETTINGS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `mode_num`
-	/// (`u32`). Originally with `ENUM` prefix and `SETTINGS` suffix.
+	/// (`u32`).
+	///
+	/// Originally with `ENUM` prefix and `SETTINGS` suffix.
+	=>
 	=>
 	CURRENT (0 - 1) as u32
 	REGISTRY (0 - 2) as u32
 }
 
-pub_struct_const_ws! { ES: u32;
+const_ws! { ES: u32;
 	/// Edit control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	LEFT 0x0000
 	CENTER 0x0001
@@ -154,17 +163,19 @@ pub_struct_const_ws! { ES: u32;
 	NUMBER 0x2000
 }
 
-pub_struct_const! { FAPPCOMMAND: u16;
+const_ordinary! { FAPPCOMMAND: u16;
 	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) input event (`u16`).
+	=>
 	=>
 	MOUSE 0x8000
 	KEY 0
 	OEM 0x1000
 }
 
-pub_struct_const! { FF: u8;
+const_ordinary! { FF: u8;
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`) used with
 	/// [`PITCH`](crate::co::PITCH).
+	=>
 	=>
 	DONTCARE 0 << 4
 	ROMAN 1 << 4
@@ -174,11 +185,12 @@ pub_struct_const! { FF: u8;
 	DECORATIVE 5 << 4
 }
 
-pub_struct_const! { FILE_ATTRIBUTE: u32;
+const_ordinary! { FILE_ATTRIBUTE: u32;
 	/// File attribute
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
 	/// also other flags from [`HFILE::CreateFile`](crate::HFILE::CreateFile)
 	/// `flags_and_attrs` (`u32`).
+	=>
 	=>
 	READONLY 0x0000_0001
 	HIDDEN 0x0000_0002
@@ -224,9 +236,10 @@ pub_struct_const! { FILE_ATTRIBUTE: u32;
 	SECURITY_EFFECTIVE_ONLY 0x0008_0000
 }
 
-pub_struct_const! { FILE_MAP: u32;
+const_ordinary! { FILE_MAP: u32;
 	/// [`HFILEMAP::MapViewOfFile`](crate::HFILEMAP::MapViewOfFile)
 	/// `desired_access` (`u32`).
+	=>
 	=>
 	ALL_ACCESS SECTION::ALL_ACCESS.0
 	READ SECTION::MAP_READ.0
@@ -238,10 +251,11 @@ pub_struct_const! { FILE_MAP: u32;
 	TARGETS_INVALID 0x4000_0000
 }
 
-pub_struct_const! { FILE_RIGHT: u32;
+const_ordinary! { FILE_RIGHT: u32;
 	/// File access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants)
 	/// (`u32`). Originally has `FILE` prefix.
+	=>
 	=>
 	ADD_FILE 0x0002
 	ADD_SUBDIRECTORY 0x0004
@@ -259,8 +273,9 @@ pub_struct_const! { FILE_RIGHT: u32;
 	WRITE_DATA 0x0002
 }
 
-pub_struct_const! { FILE_SHARE: u32;
+const_ordinary! { FILE_SHARE: u32;
 	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `share_mode` (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -269,9 +284,12 @@ pub_struct_const! { FILE_SHARE: u32;
 	DELETE 0x0000_0004
 }
 
-pub_struct_const! { FILE_STARTING_POINT: u32;
+const_ordinary! { FILE_STARTING_POINT: u32;
 	/// [`HFILE::SetFilePointerEx`](crate::HFILE::SetFilePointerEx)
-	/// `move_method` (`u32`). Originally has `FILE` prefix.
+	/// `move_method` (`u32`).
+	///
+	/// Originally has `FILE` prefix.
+	=>
 	=>
 	/// The starting point is zero or the beginning of the file. If this flag is
 	/// specified then the `liDistanceToMove` parameter is interpreted as an
@@ -283,8 +301,9 @@ pub_struct_const! { FILE_STARTING_POINT: u32;
 	END 2
 }
 
-pub_struct_const! { FILE_TYPE: u32;
+const_ordinary! { FILE_TYPE: u32;
 	/// [`HFILE::GetFileType`](crate::HFILE::GetFileType) return value (`u32`).
+	=>
 	=>
 	/// The specified file is a character file typically an LPT device or a
 	/// console.
@@ -300,17 +319,19 @@ pub_struct_const! { FILE_TYPE: u32;
 	UNKNOWN 0x0000
 }
 
-pub_struct_const! { FIRMWARE_TYPE: u32;
+const_ordinary! { FIRMWARE_TYPE: u32;
 	/// [`FIRMWARE_TYPE`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
 	/// enumeration (`u32`).
+	=>
 	=>
 	Unknown 0
 	Bios 1
 	Uefi 2
 }
 
-pub_struct_const! { FO: u32;
+const_ordinary! { FO: u32;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).
+	=>
 	=>
 	MOVE 0x0001
 	COPY 0x0002
@@ -318,8 +339,9 @@ pub_struct_const! { FO: u32;
 	RENAME 0x0004
 }
 
-pub_struct_const! { FOF: u16;
+const_ordinary! { FOF: u16;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `fFlags` (`u16`).
+	=>
 	=>
 	MULTIDESTFILES 0x0001
 	CONFIRMMOUSE 0x0002
@@ -340,8 +362,9 @@ pub_struct_const! { FOF: u16;
 	NO_UI Self::SILENT.0 | Self::NOCONFIRMATION.0 | Self::NOERRORUI.0 | Self::NOCONFIRMMKDIR.0
 }
 
-pub_struct_const! { FORMAT_MESSAGE: u32;
+const_ordinary! { FORMAT_MESSAGE: u32;
 	/// [`FormatMessage`](crate::co::ERROR::FormatMessage) `dwFlags` (`u32`).
+	=>
 	=>
 	ALLOCATE_BUFFER 0x0000_0100
 	ARGUMENT_ARRAY 0x0000_2000
@@ -352,9 +375,10 @@ pub_struct_const! { FORMAT_MESSAGE: u32;
 	MAX_WIDTH_MASK 0x0000_00ff
 }
 
-pub_struct_const! { FW: u32;
+const_ordinary! { FW: u32;
 	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `weight` and
 	/// [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
+	=>
 	=>
 	DONTCARE 0
 	THIN 100

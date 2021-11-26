@@ -2,9 +2,11 @@
 
 use crate::co::{CCM, WM};
 
-pub_struct_const! { TA: u32;
-	/// [`HDC::SetTextAlign`](crate::HDC::SetTextAlign) `align` (`u32`). Also
-	/// includes constants with `VTA` prefix.
+const_ordinary! { TA: u32;
+	/// [`HDC::SetTextAlign`](crate::HDC::SetTextAlign) `align` (`u32`).
+	///
+	/// Also includes constants with `VTA` prefix.
+	=>
 	=>
 	NOUPDATECP 0
 	UPDATECP 1
@@ -17,9 +19,10 @@ pub_struct_const! { TA: u32;
 	RTLREADING 256
 }
 
-pub_struct_const! { TB: i32;
+const_ordinary! { TB: i32;
 	/// [`NMTRBTHUMBPOSCHANGING`](crate::NMTRBTHUMBPOSCHANGING) `nReason`
 	/// (`i32`).
+	=>
 	=>
 	LINEUP 0
 	LINEDOWN 1
@@ -32,11 +35,12 @@ pub_struct_const! { TB: i32;
 	ENDTRACK 8
 }
 
-pub_struct_const_wm! { TBM;
+const_wm! { TBM;
 	/// Toolbar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM). Originally has `TB`
-	/// prefix.
+	/// (`u32`).
+	///
+	/// Originally has `TB` prefix.
 	=>
 	=>
 	ADDBITMAP WM::USER.0 + 19
@@ -135,10 +139,10 @@ pub_struct_const_wm! { TBM;
 	SETWINDOWTHEME CCM::SETWINDOWTHEME.0
 }
 
-pub_struct_const_nm! { TBN;
+const_nm! { TBN;
 	/// Toolbar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -700
 	=>
@@ -169,10 +173,11 @@ pub_struct_const_nm! { TBN;
 	WRAPHOTITEM Self::FIRST.0 - 24
 }
 
-pub_struct_const_ws! { TBS: u32;
+const_ws! { TBS: u32;
 	/// Trackbar control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	AUTOTICKS 0x0001
 	VERT 0x0002
@@ -193,10 +198,11 @@ pub_struct_const_ws! { TBS: u32;
 	TRANSPARENTBKGND 0x1000
 }
 
-pub_struct_const! { TBSTATE: u8;
+const_ordinary! { TBSTATE: u8;
 	/// Toolbar button
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-button-states)
 	/// (`u8`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -210,10 +216,11 @@ pub_struct_const! { TBSTATE: u8;
 	MARKED 0x80
 }
 
-pub_struct_const! { TCIS: u32;
+const_ordinary! { TCIS: u32;
 	/// Tab control item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
 	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -221,10 +228,10 @@ pub_struct_const! { TCIS: u32;
 	HIGHLIGHTED 0x0002
 }
 
-pub_struct_const_wm! { TCM;
+const_wm! { TCM;
 	/// Tab control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1300
 	=>
@@ -259,10 +266,10 @@ pub_struct_const_wm! { TCM;
 	GETUNICODEFORMAT CCM::GETUNICODEFORMAT.0
 }
 
-pub_struct_const_nm! { TCN;
+const_nm! { TCN;
 	/// Tab control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -550
 	=>
@@ -273,10 +280,11 @@ pub_struct_const_nm! { TCN;
 	SELCHANGING Self::FIRST.0 - 2
 }
 
-pub_struct_const_ws! { TCS: u32;
+const_ws! { TCS: u32;
 	/// Tab control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	SCROLLOPPOSITE 0x0001
 	BOTTOM 0x0002
@@ -300,19 +308,21 @@ pub_struct_const_ws! { TCS: u32;
 	FOCUSNEVER 0x8000
 }
 
-pub_struct_const_wsex! { TCS_EX;
+const_wsex! { TCS_EX;
 	/// Extended tab control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
-	/// (`u32`) convertible to [`WS_EX`](crate::co::WS_EX).
+	/// (`u32`).
+	=>
 	=>
 	FLATSEPARATORS 0x0000_0001
 	REGISTERDROP 0x0000_0002
 }
 
-pub_struct_const! { TD_ICON: u16;
+const_ordinary! { TD_ICON: u16;
 	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog) `pszIcon` and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `pszMainIcon` (`u16`).
 	/// Originally has `TD` prefix and `ICON` suffix.
+	=>
 	=>
 	WARNING 0xffff
 	ERROR 0xfffe
@@ -320,10 +330,11 @@ pub_struct_const! { TD_ICON: u16;
 	SHIELD 0xfffc
 }
 
-pub_struct_const! { TDCBF: i32;
+const_ordinary! { TDCBF: i32;
 	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog) and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
 	/// Originally has `TDCBF` prefix and `BUTTON` suffix.
+	=>
 	=>
 	OK 0x0001
 	YES 0x0002
@@ -333,8 +344,9 @@ pub_struct_const! { TDCBF: i32;
 	CLOSE 0x0020
 }
 
-pub_struct_const! { TDF: i32;
+const_ordinary! { TDF: i32;
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwFlags` (`i32`).
+	=>
 	=>
 	ENABLE_HYPERLINKS 0x0001
 	USE_HICON_MAIN 0x0002
@@ -356,9 +368,10 @@ pub_struct_const! { TDF: i32;
 	SIZE_TO_CONTENT 0x0100_0000
 }
 
-pub_struct_const! { TH32CS: u32;
+const_ordinary! { TH32CS: u32;
 	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
+	=>
 	=>
 	SNAPHEAPLIST 0x0000_0001
 	SNAPPROCESS 0x0000_0002
@@ -369,9 +382,10 @@ pub_struct_const! { TH32CS: u32;
 	INHERIT 0x8000_0000
 }
 
-pub_struct_const! { THREAD_CREATE: u32;
+const_ordinary! { THREAD_CREATE: u32;
 	/// [`HTHREAD::CreateThread`](crate::HTHREAD::CreateThread) `flags` (`u32`).
 	/// Originally has no prefix.
+	=>
 	=>
 	/// Originally just a zero.
 	RUN_IMMEDIATELY 0
@@ -379,8 +393,9 @@ pub_struct_const! { THREAD_CREATE: u32;
 	STACK_SIZE_PARAM_IS_A_RESERVATION 0x0001_0000
 }
 
-pub_struct_const! { TME: u32;
+const_ordinary! { TME: u32;
 	/// [`TrackMouseEvent`](crate::TrackMouseEvent) `dwFlags` (`u32`).
+	=>
 	=>
 	CANCEL 0x8000_0000
 	HOVER 0x0000_0001
@@ -389,10 +404,11 @@ pub_struct_const! { TME: u32;
 	QUERY 0x4000_0000
 }
 
-pub_struct_const! { TMT: i32;
+const_ordinary! { TMT: i32;
 	/// Theme property
 	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/controls/property-typedefs)
 	/// (`i32`).
+	=>
 	=>
 	DIBDATA 2
 	GLYPHDIBDATA 8
@@ -651,8 +667,9 @@ pub_struct_const! { TMT: i32;
 	ATLASRECT 8002
 }
 
-pub_struct_const! { TPM: u32;
+const_ordinary! { TPM: u32;
 	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `flags` (`u32`).
+	=>
 	=>
 	LEFTBUTTON 0x0000
 	RIGHTBUTTON 0x0002
@@ -676,11 +693,12 @@ pub_struct_const! { TPM: u32;
 	WORKAREA 0x10000
 }
 
-pub_struct_const_wm! { TRBM;
+const_wm! { TRBM;
 	/// Trackbar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM). Originally has `TBM`
-	/// prefix.
+	/// (`u32`).
+	///
+	/// Originally has `TBM` prefix.
 	=>
 	=>
 	GETPOS WM::USER.0
@@ -721,18 +739,19 @@ pub_struct_const_wm! { TRBM;
 	GETUNICODEFORMAT CCM::GETUNICODEFORMAT.0
 }
 
-pub_struct_const_nm! { TRBN;
+const_nm! { TRBN;
 	/// Trackbar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -1501
 	=>
 	THUMBPOSCHANGING Self::FIRST.0 - 1
 }
 
-pub_struct_const! { TVE: u32;
+const_ordinary! { TVE: u32;
 	/// [`tvm::Expand`](crate::msg::tvm::Expand) `action` (`u32`).
+	=>
 	=>
 	COLLAPSE 0x0001
 	EXPAND 0x0002
@@ -741,8 +760,9 @@ pub_struct_const! { TVE: u32;
 	COLLAPSERESET 0x8000
 }
 
-pub_struct_const! { TVGN: u32;
+const_ordinary! { TVGN: u32;
 	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) `which` (`u32`).
+	=>
 	=>
 	ROOT 0x0000
 	NEXT 0x0001
@@ -760,8 +780,9 @@ pub_struct_const! { TVGN: u32;
 	TVSI_NOSINGLEEXPAND 0x8000
 }
 
-pub_struct_const! { TVI: isize;
+const_ordinary! { TVI: isize;
 	/// [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter` (`isize`).
+	=>
 	=>
 	ROOT -0x10000
 	FIRST -0x0ffff
@@ -769,8 +790,9 @@ pub_struct_const! { TVI: isize;
 	SORT -0x0fffd
 }
 
-pub_struct_const! { TVIF: u32;
+const_ordinary! { TVIF: u32;
 	/// [`TVITEM`](crate::TVITEM) `mask` (`u32`).
+	=>
 	=>
 	TEXT 0x0001
 	IMAGE 0x0002
@@ -784,10 +806,11 @@ pub_struct_const! { TVIF: u32;
 	EXPANDEDIMAGE 0x0200
 }
 
-pub_struct_const! { TVIS: u32;
+const_ordinary! { TVIS: u32;
 	/// Tree view item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
 	/// (`u32`)
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -803,19 +826,20 @@ pub_struct_const! { TVIS: u32;
 	USERMASK 0xf000
 }
 
-pub_struct_const! { TVIS_EX: u32;
+const_ordinary! { TVIS_EX: u32;
 	/// [`TVITEMEX`](crate::TVITEMEX) `uStateEx` (`u32`).
+	=>
 	=>
 	DISABLED 0x0002
 	FLAT 0x0001
-	/// This value is not declared in any header it may not be accurate.
+	/// This value is not declared in any header, it may not be accurate.
 	HWND 0x0000
 }
 
-pub_struct_const_wm! { TVM;
+const_wm! { TVM;
 	/// Tree view control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	FIRST 0x1100
 	=>
@@ -872,10 +896,10 @@ pub_struct_const_wm! { TVM;
 	GETITEMPARTRECT Self::FIRST.0 + 72
 }
 
-pub_struct_const_nm! { TVN;
+const_nm! { TVN;
 	/// Tree view control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -400
 	=>
@@ -898,10 +922,11 @@ pub_struct_const_nm! { TVN;
 	ASYNCDRAW Self::FIRST.0 - 20
 }
 
-pub_struct_const_ws! { TVS: u32;
+const_ws! { TVS: u32;
 	/// Tree view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	HASBUTTONS 0x0001
 	HASLINES 0x0002
@@ -921,10 +946,11 @@ pub_struct_const_ws! { TVS: u32;
 	NOHSCROLL 0x8000
 }
 
-pub_struct_const_wsex! { TVS_EX;
+const_wsex! { TVS_EX;
 	/// Extended tree view control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
-	/// (`u32`) convertible to [`WS_EX`](crate::co::WS_EX).
+	/// (`u32`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -941,9 +967,10 @@ pub_struct_const_wsex! { TVS_EX;
 	DRAWIMAGEASYNC 0x0400
 }
 
-pub_struct_const! { TVSIL: u8;
+const_ordinary! { TVSIL: u8;
 	/// [`tvm::GetImageList`](crate::msg::tvm::GetImageList) and
 	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList) `kind`.
+	=>
 	=>
 	NORMAL 0
 	STATE 2

@@ -2,10 +2,10 @@
 
 use crate::co::{CCM, WM};
 
-pub_struct_const_wm! { UDM;
+const_wm! { UDM;
 	/// Up-down control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages)
-	/// (`u32`) convertible to [`WM`](crate::co::WM).
+	/// (`u32`).
 	=>
 	=>
 	SETRANGE WM::USER.0 + 101
@@ -26,20 +26,21 @@ pub_struct_const_wm! { UDM;
 	GETPOS32 WM::USER.0 + 114
 }
 
-pub_struct_const_nm! { UDN;
+const_nm! { UDN;
 	/// Up-down control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
-	/// (`i32`) convertible to [`NM`](crate::co::NM).
+	/// (`i32`).
 	=>
 	FIRST -721
 	=>
 	DELTAPOS Self::FIRST.0 - 1
 }
 
-pub_struct_const_ws! { UDS: u32;
+const_ws! { UDS: u32;
 	/// Up-down control
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
-	/// (`u32`) convertible to [`WS`](crate::co::WS).
+	/// (`u32`).
+	=>
 	=>
 	WRAP 0x0001
 	SETBUDDYINT 0x0002
@@ -52,16 +53,18 @@ pub_struct_const_ws! { UDS: u32;
 	HOTTRACK 0x0100
 }
 
-pub_struct_const! { UOI: i32;
+const_ordinary! { UOI: i32;
 	/// [`HPROCESS::SetUserObjectInformation`](crate::HPROCESS::SetUserObjectInformation)
 	/// `index` (`i32`).
+	=>
 	=>
 	FLAGS 1
 	TIMERPROC_EXCEPTION_SUPPRESSION 7
 }
 
-pub_struct_const! { VER_COND: u8;
+const_ordinary! { VER_COND: u8;
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
+	=>
 	=>
 	EQUAL 1
 	GREATER 2
@@ -73,9 +76,10 @@ pub_struct_const! { VER_COND: u8;
 	CONDITION_MASK 7
 }
 
-pub_struct_const! { VER_MASK: u32;
+const_ordinary! { VER_MASK: u32;
 	/// [`VerifyVersionInfo`](crate::VerifyVersionInfo) and
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `type_mask` (`u32`).
+	=>
 	=>
 	MINORVERSION 0x000_0001
 	MAJORVERSION 0x000_0002
@@ -87,24 +91,27 @@ pub_struct_const! { VER_MASK: u32;
 	PRODUCT_TYPE 0x000_0080
 }
 
-pub_struct_const! { VER_NT: u8;
+const_ordinary! { VER_NT: u8;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
+	=>
 	=>
 	WORKSTATION 0x000_0001
 	DOMAIN_CONTROLLER 0x000_0002
 	SERVER 0x000_0003
 }
 
-pub_struct_const! { VER_PLATFORM: u32;
+const_ordinary! { VER_PLATFORM: u32;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
+	=>
 	=>
 	WIN32s 0
 	WIN32_WINDOWS 1
 	WIN32_NT 2
 }
 
-pub_struct_const! { VER_SUITE: u16;
+const_ordinary! { VER_SUITE: u16;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
+	=>
 	=>
 	SMALLBUSINESS 0x0001
 	ENTERPRISE 0x0002
@@ -125,8 +132,9 @@ pub_struct_const! { VER_SUITE: u16;
 	//MULTIUSERTS 0x00020000 // Win32 bug truncated to zero as u16
 }
 
-pub_struct_const! { VFT: u32;
+const_ordinary! { VFT: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileType` (`u32`).
+	=>
 	=>
 	UNKNOWN 0x0000_0000
 	APP 0x0000_0001
@@ -137,8 +145,9 @@ pub_struct_const! { VFT: u32;
 	STATIC_LIB 0x0000_0007
 }
 
-pub_struct_const! { VFT2: u32;
+const_ordinary! { VFT2: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileSubType` (`u32`).
+	=>
 	=>
 	UNKNOWN 0x0000_0000
 	DRV_PRINTER 0x0000_0001
@@ -159,9 +168,10 @@ pub_struct_const! { VFT2: u32;
 	FONT_TRUETYPE 0x0000_0003
 }
 
-pub_struct_const! { VK: u16;
+const_ordinary! { VK: u16;
 	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
+	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -472,8 +482,9 @@ pub_struct_const! { VK: u16;
 	OEM_CLEAR 0xfe
 }
 
-pub_struct_const! { VK_DIR: u16;
+const_ordinary! { VK_DIR: u16;
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `vkDirection` (`u16`).
+	=>
 	=>
 	PRIOR 0x21
 	NEXT 0x22
@@ -485,8 +496,9 @@ pub_struct_const! { VK_DIR: u16;
 	DOWN 0x28
 }
 
-pub_struct_const! { VOS: u32;
+const_ordinary! { VOS: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileOS` (`u32`).
+	=>
 	=>
 	UNKNOWN 0x0000_0000
 	DOS 0x0001_0000
@@ -508,8 +520,9 @@ pub_struct_const! { VOS: u32;
 	NT_WINDOWS32 0x0004_0004
 }
 
-pub_struct_const! { VS_FF: u32;
+const_ordinary! { VS_FF: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileFlags` (`u32`).
+	=>
 	=>
 	DEBUG 0x0000_0001
 	PRERELEASE 0x0000_0002
