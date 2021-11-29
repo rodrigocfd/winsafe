@@ -75,10 +75,23 @@ const_ordinary! { SBT: u16;
 	NOTABPARSING 0x0800
 }
 
+const_ordinary! { SB_EM: u16;
+	/// [`em::Scroll`](crate::msg::em::Scroll) action.
+	///
+	/// Originally has `SB` prefix.
+	=>
+	=>
+	LINEUP 0
+	LINEDOWN 1
+	PAGEUP 2
+	PAGEDOWN 3
+}
+
 const_ordinary! { SB_REQ: u16;
 	/// [`wm::HScroll`](crate::msg::wm::HScroll) and
-	/// [`wm::VScroll`](crate::msg::wm::VScroll) request (`u16`). Originally has
-	/// `SB` prefix.
+	/// [`wm::VScroll`](crate::msg::wm::VScroll) request (`u16`).
+	///
+	/// Originally has `SB` prefix.
 	=>
 	=>
 	LINEUP 0

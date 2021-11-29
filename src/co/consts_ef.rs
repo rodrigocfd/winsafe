@@ -2,6 +2,15 @@
 
 use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS, WM};
 
+const_ordinary! { EC: u16;
+	/// [`em::GetImeStatus`](crate::msg::em::SetMargins) margins to set (`u16`).
+	=>
+	=>
+	LEFTMARGIN 0x0001
+	RIGHTMARGIN 0x0002
+	USEFONTINFO 0xffff
+}
+
 const_ordinary! { EDS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `flags` (`u32`).
 	=>
@@ -11,7 +20,8 @@ const_ordinary! { EDS: u32;
 }
 
 const_ordinary! { EIMES: u16;
-	/// [`em::GetImeStatus`](crate::msg::em::GetImeStatus) return value (`u16`).
+	/// [`em::GetImeStatus`](crate::msg::em::GetImeStatus) and
+	/// [`em::SetImeStatus`](crate::msg::em::SetImeStatus) status (`u16`).
 	=>
 	=>
 	GETCOMPSTRATONCE 0x0001

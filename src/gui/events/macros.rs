@@ -36,6 +36,22 @@ macro_rules! pub_fn_wm_ret0_param {
 	};
 }
 
+/// Declares a method for `EventsWm` trait, which has no parameter and returns
+/// `bool`.
+macro_rules! pub_fn_retbool {
+	(
+		$name:ident, $wmconst:expr,
+		$(#[$doc:meta])*
+	) => {
+		$(#[$doc])*
+		fn $name<F>(&self, func: F)
+			where F: Fn() -> crate::aliases::ErrResult<bool> + 'static,
+		{
+			self.add_msg($wmconst, move |_| Ok(Some(func()? as _)));
+		}
+	};
+}
+
 /// Declares a method for `EventsWm` trait, which carries an object with its
 /// parameters, and returns `bool`.
 macro_rules! pub_fn_wm_retbool_param {

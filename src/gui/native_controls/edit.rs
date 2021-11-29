@@ -173,6 +173,12 @@ impl Edit {
 		LinesIter::new(self.hwnd())
 	}
 
+	/// Limits the number of characters that can be type by sending an
+	/// /// [`em::SetLimitText`](crate::msg::em::SetLimitText) message.
+	pub fn limit_text(&self, max_chars: Option<u32>) {
+		self.hwnd().SendMessage(em::SetLimitText { max_chars });
+	}
+
 	/// Sets the selection range of the text by sending an
 	/// [`em::SetSel`](crate::msg::em::SetSel) message.
 	///

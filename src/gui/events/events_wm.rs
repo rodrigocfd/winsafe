@@ -854,14 +854,11 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// window.
 	}
 
-	/// [`WM_QUERYOPEN`](crate::msg::wm::QueryOpen) message.
-	///
-	/// Sent to an icon when the user requests that the window be restored to
-	/// its previous size and position.
-	fn wm_query_open<F>(&self, func: F)
-		where F: Fn() -> ErrResult<bool> + 'static,
-	{
-		self.add_msg(co::WM::QUERYOPEN, move |_| Ok(Some(func()? as _)));
+	pub_fn_retbool! { wm_query_open, co::WM::QUERYOPEN,
+		/// [`WM_QUERYOPEN`](crate::msg::wm::QueryOpen) message.
+		///
+		/// Sent to an icon when the user requests that the window be restored
+		/// to its previous size and position.
 	}
 
 	pub_fn_wm_ret0_param! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk,
@@ -1076,6 +1073,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// [`WM_UNINITMENUPOPUP`](crate::msg::wm::UninitMenuPopup) message.
 		///
 		/// Sent when a drop-down menu or submenu has been destroyed.
+	}
+
+	pub_fn_retbool! { wm_undo, co::WM::UNDO,
+		/// [`WM_UNDO`](crate::msg::wm::Undo) message.
+		///
+		/// Sent to undo the last operation.
 	}
 
 	pub_fn_wm_ret0_param! { wm_v_scroll, co::WM::VSCROLL, wm::VScroll,

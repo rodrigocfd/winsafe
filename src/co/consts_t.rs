@@ -749,6 +749,19 @@ const_nm! { TRBN;
 	THUMBPOSCHANGING Self::FIRST.0 - 1
 }
 
+const_ordinary! { TTI: i32;
+	/// [`EDITBALLOONTIP`](crate::EDITBALLOONTIP) ttiIcon (`i32`).
+	=>
+	=>
+	ERROR 3
+	INFO 1
+	NONE 0
+	WARNING 2
+	INFO_LARGE 4
+	WARNING_LARGE 5
+	ERROR_LARGE 6
+}
+
 const_ordinary! { TVE: u32;
 	/// [`tvm::Expand`](crate::msg::tvm::Expand) `action` (`u32`).
 	=>

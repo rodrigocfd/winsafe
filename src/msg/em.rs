@@ -8,7 +8,7 @@ use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::handles::HLOCAL;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{zero_as_err, zero_as_none};
-use crate::structs::{POINT, RECT, SIZE};
+use crate::structs::{EDITBALLOONTIP, POINT, RECT, SIZE};
 use crate::various::WString;
 
 /// [`EN_CANUNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-canundo)
@@ -619,12 +619,116 @@ impl MsgSend for ReplaceSel {
 	}
 }
 
+/// [`EM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-scroll)
+/// message parameters.
+///
+/// Return type: `WinResult<u16>`.
+pub struct Scroll {
+	pub action: co::SB_EM,
+}
+
+impl MsgSend for Scroll {
+	type RetType = WinResult<u16>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|num_lines| num_lines as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SCROLL.into(),
+			wparam: self.action.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
+pub_struct_msg_empty! { ScrollCaret, co::EM::SCROLLCARET.into(),
+	/// [`EM_SCROLLCARET`](https://docs.microsoft.com/en-us/windows/win32/controls/em-scrollcaret)
+	/// message, which has no parameters.
+	///
+	/// Return type: `()`.
+}
+
+/// [`EM_SETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setcuebanner)
+/// message parameters..
+///
+/// Return type: `WinResult<()>`.
+pub struct SetCueBanner {
+	pub show_even_with_focus: bool,
+	pub text: WString,
+}
+
+impl MsgSend for SetCueBanner {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETCUEBANNER.into(),
+			wparam: self.show_even_with_focus as _,
+			lparam: unsafe { self.text.as_ptr() } as _,
+		}
+	}
+}
+
+/// [`EM_SETHANDLE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-sethandle)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetHandle {
+	pub handle: HLOCAL,
+}
+
+impl MsgSend for SetHandle {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETHANDLE.into(),
+			wparam: self.handle.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_SETIMESTATUS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setimestatus)
+/// message parameters.
+///
+/// Return type: `co::EIMES`.
+pub struct SetImeStatus {
+	pub status: co::EIMES,
+}
+
+impl MsgSend for SetImeStatus {
+	type RetType = co::EIMES;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::EIMES(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETIMESTATUS.into(),
+			wparam: 0x0001, // EMSIS_COMPOSITIONSTRING
+			lparam: self.status.0 as _,
+		}
+	}
+}
+
 /// [`EM_SETLIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setlimittext)
 /// message parameters.
 ///
 /// Return type: `()`.
 pub struct SetLimitText {
-	pub max_chars: u32,
+	pub max_chars: Option<u32>,
 }
 
 impl MsgSend for SetLimitText {
@@ -637,8 +741,155 @@ impl MsgSend for SetLimitText {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETLIMITTEXT.into(),
-			wparam: self.max_chars as _,
+			wparam: self.max_chars.unwrap_or(0) as _,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_SETMARGINS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setmargins)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetMargins {
+	pub margins: co::EC,
+	pub size: SIZE,
+}
+
+impl MsgSend for SetMargins {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETMARGINS.into(),
+			wparam: self.margins.0 as _,
+			lparam: MAKEDWORD(self.size.cx as _, self.size.cy as _) as _,
+		}
+	}
+}
+
+/// [`EM_SETMODIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setmodify)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetModify {
+	pub flag: bool,
+}
+
+impl MsgSend for SetModify {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETMODIFY.into(),
+			wparam: self.flag as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_SETPASSWORDCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setpasswordchar)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetPasswordChar {
+	pub character: Option<char>,
+}
+
+impl MsgSend for SetPasswordChar {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETPASSWORDCHAR.into(),
+			wparam: self.character.map(|ch| ch as u32).unwrap_or(0) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_SETREADONLY`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setreadonly)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetReadOnly {
+	pub read_only: bool,
+}
+
+impl MsgSend for SetReadOnly {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETREADONLY.into(),
+			wparam: self.read_only as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`EM_SETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setrect)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetRect<'a> {
+	pub is_absolute_coords: bool,
+	pub rect: Option<&'a RECT>,
+}
+
+impl<'a> MsgSend for SetRect<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETRECT.into(),
+			wparam: self.is_absolute_coords as _,
+			lparam: self.rect.map(|rect| rect as *const _ as _).unwrap_or(0),
+		}
+	}
+}
+
+/// [`EM_SETRECTNP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setrectnp)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetRectNp<'a> {
+	pub is_absolute_coords: bool,
+	pub rect: Option<&'a RECT>,
+}
+
+impl<'a> MsgSend for SetRectNp<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETRECTNP.into(),
+			wparam: self.is_absolute_coords as _,
+			lparam: self.rect.map(|rect| rect as *const _ as _).unwrap_or(0),
 		}
 	}
 }
@@ -664,6 +915,78 @@ impl MsgSend for SetSel {
 			msg_id: co::EM::SETSEL.into(),
 			wparam: self.start.map_or(-1, |n| n as i32) as _,
 			lparam: self.end.map_or(-1, |n| n as i32) as _,
+		}
+	}
+}
+
+/// [`EM_SETTABSTOPS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-settabstops)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetTabStops<'a> {
+	pub tab_stops: Option<&'a [i32]>,
+}
+
+impl<'a> MsgSend for SetTabStops<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETTABSTOPS.into(),
+			wparam: self.tab_stops.map(|ts| ts.len() as _).unwrap_or(0),
+			lparam: self.tab_stops.map(|ts| ts.as_ptr() as _).unwrap_or(0),
+		}
+	}
+}
+
+/// [`EM_SETWORDBREAKPROC`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setwordbreakproc)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetWordBreakProc {
+	pub proc: Option<EDITWORDBREAKPROC>,
+}
+
+impl MsgSend for SetWordBreakProc {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SETWORDBREAKPROC.into(),
+			wparam: 0,
+			lparam: self.proc.map(|proc| proc as _).unwrap_or(0),
+		}
+	}
+}
+
+/// [`EM_SHOWBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-showballoontip)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct ShowBalloonTip<'a, 'b, 'c> {
+	pub info: &'c EDITBALLOONTIP<'a, 'b>,
+}
+
+impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::EM::SHOWBALLOONTIP.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }

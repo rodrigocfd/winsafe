@@ -467,6 +467,26 @@ pub struct DRAWITEMSTRUCT {
 
 impl_default!(DRAWITEMSTRUCT);
 
+/// [`EDITBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-editballoontip)
+/// struct.
+#[repr(C)]
+pub struct EDITBALLOONTIP<'a, 'b> {
+	cbStruct: u32,
+	pszTitle: *mut u16,
+	pszText: *mut u16,
+	pub ttiIcon: co::TTI,
+
+	pszTitle_: PhantomData<&'a mut u16>,
+	pszText_: PhantomData<&'b mut u16>,
+}
+
+impl_default_with_size!(EDITBALLOONTIP, cbStruct, 'a, 'b);
+
+impl<'a, 'b> EDITBALLOONTIP<'a, 'b> {
+	pub_fn_string_ptr_get_set!('a, pszTitle, set_pszTitle);
+	pub_fn_string_ptr_get_set!('b, pszText, set_pszText);
+}
+
 /// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
 #[repr(C)]

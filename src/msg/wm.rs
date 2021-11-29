@@ -2115,6 +2115,34 @@ impl MsgSendRecv for UninitMenuPopup {
 	}
 }
 
+/// [`WM_UNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-undo)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+pub struct Undo {}
+
+impl MsgSend for Undo {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::UNDO,
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+impl MsgSendRecv for Undo {
+	fn from_generic_wm(_: WndMsg) -> Self {
+		Self {}
+	}
+}
+
 /// [`WM_VSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-vscroll)
 /// message parameters.
 ///

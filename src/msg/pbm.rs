@@ -228,7 +228,7 @@ impl MsgSend for SetState {
 /// [`PBM_SETSTEP`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstep)
 /// message parameters.
 ///
-/// Return value: `u32`.
+/// Return type: `u32`.
 pub struct SetStep {
 	pub step: u32,
 }
