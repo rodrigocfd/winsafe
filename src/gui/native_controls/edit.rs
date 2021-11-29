@@ -23,7 +23,7 @@ use crate::gui::traits::{
 };
 use crate::handles::{Handle, HWND};
 use crate::msg::{em, wm};
-use crate::structs::{POINT, SIZE};
+use crate::structs::{EDITBALLOONTIP, POINT, SIZE};
 use crate::various::WString;
 
 /// Native
@@ -155,6 +155,12 @@ impl Edit {
 		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
+	/// Hides any balloon tip by sending an
+	/// [`em::HideBalloonTip`](crate::msg::em::HideBalloonTip) message.
+	pub fn hide_balloon_tip(&self) {
+		self.hwnd().SendMessage(em::HideBalloonTip {}).ok(); // ignore error
+	}
+
 	/// Returns an iterator over the lines in the Edit.
 	///
 	/// # Examples
@@ -206,6 +212,22 @@ impl Edit {
 	/// ```
 	pub fn set_selection(&self, start: Option<u32>, end: Option<u32>) {
 		self.hwnd().SendMessage(em::SetSel { start, end });
+	}
+
+	/// Displays a balloon tip by sending an
+	/// [`em::ShowBalloonTip`](crate::msg::em::ShowBalloonTip) message.
+	pub fn show_ballon_tip(&self,
+		title: &str, text: &str, icon: co::TTI) -> WinResult<()>
+	{
+		let mut title16 = WString::from_str(title);
+		let mut text16 = WString::from_str(text);
+
+		let mut info = EDITBALLOONTIP::default();
+		info.set_pszTitle(Some(&mut title16));
+		info.set_pszText(Some(&mut text16));
+		info.ttiIcon = icon;
+
+		self.hwnd().SendMessage(em::ShowBalloonTip { info: &info })
 	}
 }
 
