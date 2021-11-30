@@ -19,7 +19,7 @@ impl MonthCalendarEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_ret0_param! { mcn_get_day_state, co::MCN::GETDAYSTATE.into(), NMDAYSTATE,
+	pub_fn_nfy_ret0_param! { mcn_get_day_state, co::MCN::GETDAYSTATE, NMDAYSTATE,
 		/// [`MCN_GETDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-getdaystate)
 		/// notification.
 		///
@@ -29,7 +29,7 @@ impl MonthCalendarEvents {
 		/// [`MCS_DAYSTATE`](crate::co::MCS::DAYSTATE) style
 	}
 
-	pub_fn_nfy_ret0_param! { mcn_sel_change, co::MCN::SELCHANGE.into(), NMSELCHANGE,
+	pub_fn_nfy_ret0_param! { mcn_sel_change, co::MCN::SELCHANGE, NMSELCHANGE,
 		/// [`MCN_GETDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-selchange)
 		/// notification.
 		///
@@ -37,7 +37,7 @@ impl MonthCalendarEvents {
 		/// range of dates changes.
 	}
 
-	pub_fn_nfy_ret0_param! { mcn_select, co::MCN::SELECT.into(), NMSELCHANGE,
+	pub_fn_nfy_ret0_param! { mcn_select, co::MCN::SELECT, NMSELCHANGE,
 		/// [`MCN_SELECT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-select)
 		/// notification.
 		///
@@ -45,7 +45,7 @@ impl MonthCalendarEvents {
 		/// date selection within a month calendar control.
 	}
 
-	pub_fn_nfy_ret0_param! { mcn_view_change, co::MCN::VIEWCHANGE.into(), NMVIEWCHANGE,
+	pub_fn_nfy_ret0_param! { mcn_view_change, co::MCN::VIEWCHANGE, NMVIEWCHANGE,
 		/// [`MCN_VIEWCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-viewchange)
 		/// notification.
 		///

@@ -20,7 +20,7 @@ impl TrackbarEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_ret0_param! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING.into(), NMTRBTHUMBPOSCHANGING,
+	pub_fn_nfy_ret0_param! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING, NMTRBTHUMBPOSCHANGING,
 		/// [`TRBN_THUMBPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/trbn-thumbposchanging)
 		/// notification.
 		///

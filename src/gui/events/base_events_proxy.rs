@@ -20,14 +20,14 @@ impl BaseEventsProxy {
 		}
 	}
 
-	pub(in crate::gui) fn wm_command<F>(&self, code: co::CMD, func: F)
+	pub(in crate::gui) fn wm_command<F>(&self, code: impl Into<co::CMD>, func: F)
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_base_ref.on().wm_command(code, self.ctrl_id, func);
 	}
 
-	pub(in crate::gui) fn add_nfy<F>(&self, code: co::NM, func: F)
+	pub(in crate::gui) fn add_nfy<F>(&self, code: impl Into<co::NM>, func: F)
 		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };

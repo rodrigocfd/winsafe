@@ -18,7 +18,7 @@ impl ListBoxEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_cmd_ret0! { lbn_dbl_clk, co::LBN::DBLCLK.into(),
+	pub_fn_cmd_ret0! { lbn_dbl_clk, co::LBN::DBLCLK,
 		/// [`LBN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-dblclk)
 		/// notification.
 		///
@@ -26,7 +26,7 @@ impl ListBoxEvents {
 		/// a list box.
 	}
 
-	pub_fn_cmd_ret0! { lbn_err_space, co::LBN::ERRSPACE.into(),
+	pub_fn_cmd_ret0! { lbn_err_space, co::LBN::ERRSPACE,
 		/// [`LBN_ERRSPACE`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-errspace)
 		/// notification.
 		///
@@ -34,14 +34,14 @@ impl ListBoxEvents {
 		/// memory to meet a specific request.
 	}
 
-	pub_fn_cmd_ret0! { lbn_kill_focus, co::LBN::KILLFOCUS.into(),
+	pub_fn_cmd_ret0! { lbn_kill_focus, co::LBN::KILLFOCUS,
 		/// [`LBN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-killfocus)
 		/// notification.
 		///
 		/// Notifies the application that the list box has lost the keyboard focus.
 	}
 
-	pub_fn_cmd_ret0! { lbn_sel_cancel, co::LBN::SELCANCEL.into(),
+	pub_fn_cmd_ret0! { lbn_sel_cancel, co::LBN::SELCANCEL,
 		/// [`LBN_SELCANCEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-selcancel)
 		/// notification.
 		///
@@ -49,7 +49,7 @@ impl ListBoxEvents {
 		/// a list box.
 	}
 
-	pub_fn_cmd_ret0! { lbn_sel_change, co::LBN::SELCHANGE.into(),
+	pub_fn_cmd_ret0! { lbn_sel_change, co::LBN::SELCHANGE,
 		/// [`LBN_SELCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-selchange)
 		/// notification.
 		///
@@ -57,7 +57,7 @@ impl ListBoxEvents {
 		/// changed as a result of user input.
 	}
 
-	pub_fn_cmd_ret0! { lbn_set_focus, co::LBN::SETFOCUS.into(),
+	pub_fn_cmd_ret0! { lbn_set_focus, co::LBN::SETFOCUS,
 		/// [`LBN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/lbn-setfocus)
 		/// notification.
 		///

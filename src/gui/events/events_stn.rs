@@ -18,7 +18,7 @@ impl LabelEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_cmd_ret0! { stn_clicked, co::STN::CLICKED.into(),
+	pub_fn_cmd_ret0! { stn_clicked, co::STN::CLICKED,
 		/// [`STN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-clicked)
 		/// notification.
 		///
@@ -26,7 +26,7 @@ impl LabelEvents {
 		/// [`SS::NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
-	pub_fn_cmd_ret0! { stn_dbl_clk, co::STN::DBLCLK.into(),
+	pub_fn_cmd_ret0! { stn_dbl_clk, co::STN::DBLCLK,
 		/// [`STN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-dblclk)
 		/// notification.
 		///
@@ -34,7 +34,7 @@ impl LabelEvents {
 		/// [`SS::NOTIFY`](crate::co::SS::NOTIFY) style.
 	}
 
-	pub_fn_cmd_ret0! { stn_disable, co::STN::DISABLE.into(),
+	pub_fn_cmd_ret0! { stn_disable, co::STN::DISABLE,
 		/// [`STN_DISABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-disable)
 		/// notification.
 		///
@@ -43,7 +43,7 @@ impl LabelEvents {
 		/// notification code.
 	}
 
-	pub_fn_cmd_ret0! { stn_enable, co::STN::ENABLE.into(),
+	pub_fn_cmd_ret0! { stn_enable, co::STN::ENABLE,
 		/// [`STN_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/controls/stn-enable)
 		/// notification.
 		///

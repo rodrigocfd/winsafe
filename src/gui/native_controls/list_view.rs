@@ -174,7 +174,7 @@ impl ListView {
 	}
 
 	fn handled_events(&self, parent_base: &Base, ctrl_id: u16) {
-		parent_base.privileged_on().add_nfy(ctrl_id, co::LVN::KEYDOWN.into(), {
+		parent_base.privileged_on().add_nfy(ctrl_id, co::LVN::KEYDOWN, {
 			let self2 = self.clone();
 			move |p| {
 				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
@@ -190,7 +190,7 @@ impl ListView {
 			}
 		});
 
-		parent_base.privileged_on().add_nfy(ctrl_id, co::NM::RCLICK.into(), {
+		parent_base.privileged_on().add_nfy(ctrl_id, co::NM::RCLICK, {
 			let self2 = self.clone();
 			move |p| {
 				let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };

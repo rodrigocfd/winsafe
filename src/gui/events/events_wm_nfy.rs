@@ -137,9 +137,10 @@ impl WindowEventsAll {
 	/// specific command notifications, which will give you the correct message
 	/// parameters. This generic method should be used only when you have a
 	/// custom, non-standard window notification.
-	pub fn wm_command<F>(&self, code: co::CMD, ctrl_id: u16, func: F)
+	pub fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
+		let code: co::CMD = code.into();
 		self.cmds.insert((code, ctrl_id), Box::new(func));
 	}
 
@@ -197,9 +198,10 @@ impl SealedEventsWm for WindowEventsAll {
 impl EventsView for WindowEventsAll {}
 
 impl sealed_events_wm_nfy::SealedEventsWmNfy for WindowEventsAll {
-	fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
+	fn add_nfy<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
 		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
 	{
+		let code: co::NM = code.into();
 		self.nfys.insert((id_from, code), Box::new(func));
 	}
 }
@@ -213,7 +215,7 @@ pub(in crate::gui) mod sealed_events_wm_nfy {
 
 	pub trait SealedEventsWmNfy {
 		/// Raw add notification.
-		fn add_nfy<F>(&self, id_from: u16, code: co::NM, func: F)
+		fn add_nfy<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
 			where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static;
 	}
 }
@@ -232,7 +234,7 @@ pub trait EventsViewAll: sealed_events_wm_nfy::SealedEventsWmNfy + EventsView {
 	/// specific notifications, which will give you the correct notification
 	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
-	fn wm_notify<F>(&self, id_from: i32, code: co::NM, func: F)
+	fn wm_notify<F>(&self, id_from: i32, code: impl Into<co::NM>, func: F)
 		where F: Fn(wm::Notify) -> ErrResult<isize> + 'static,
 	{
 		self.add_nfy(id_from as _, code, move |p| Ok(Some(func(p)?))); // return value is meaningful

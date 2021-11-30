@@ -18,7 +18,7 @@ impl EditEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_cmd_ret0! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC.into(),
+	pub_fn_cmd_ret0! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC,
 		/// [`EN_ALIGN_LTR_EC`](https://docs.microsoft.com/en-us/windows/win32/controls/en-align-ltr-ec)
 		/// command notification.
 		///
@@ -26,7 +26,7 @@ impl EditEvents {
 		/// left-to-right.
 	}
 
-	pub_fn_cmd_ret0! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC.into(),
+	pub_fn_cmd_ret0! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC,
 		/// [`EN_ALIGN_LTR_EC`](https://docs.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
 		/// command notification.
 		///
@@ -34,7 +34,7 @@ impl EditEvents {
 		/// right-to-left.
 	}
 
-	pub_fn_cmd_ret0! { en_change, co::EN::CHANGE.into(),
+	pub_fn_cmd_ret0! { en_change, co::EN::CHANGE,
 		/// [`EN_CHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-change)
 		/// command notification.
 		///
@@ -62,7 +62,7 @@ impl EditEvents {
 		/// ```
 	}
 
-	pub_fn_cmd_ret0! { en_err_space, co::EN::ERRSPACE.into(),
+	pub_fn_cmd_ret0! { en_err_space, co::EN::ERRSPACE,
 		/// [`EN_ERRSPACE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-errspace)
 		/// command notification.
 		///
@@ -70,7 +70,7 @@ impl EditEvents {
 		/// specific request.
 	}
 
-	pub_fn_cmd_ret0! { en_h_scroll, co::EN::HSCROLL.into(),
+	pub_fn_cmd_ret0! { en_h_scroll, co::EN::HSCROLL,
 		/// [`EN_HSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/en-hscroll)
 		/// command notification.
 		///
@@ -78,14 +78,14 @@ impl EditEvents {
 		/// Notified before the screen is updated.
 	}
 
-	pub_fn_cmd_ret0! { en_kill_focus, co::EN::KILLFOCUS.into(),
+	pub_fn_cmd_ret0! { en_kill_focus, co::EN::KILLFOCUS,
 		/// [`EN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/en-killfocus)
 		/// command notification.
 		///
 		/// Sent when an edit control loses the keyboard focus.
 	}
 
-	pub_fn_cmd_ret0! { en_max_text, co::EN::MAXTEXT.into(),
+	pub_fn_cmd_ret0! { en_max_text, co::EN::MAXTEXT,
 		/// [`EN_MAXTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/en-maxtext)
 		/// command notification.
 		///
@@ -104,14 +104,14 @@ impl EditEvents {
 		/// exceed the height of the edit control.
 	}
 
-	pub_fn_cmd_ret0! { en_set_focus, co::EN::SETFOCUS.into(),
+	pub_fn_cmd_ret0! { en_set_focus, co::EN::SETFOCUS,
 		/// [`EN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/en-setfocus)
 		/// command notification.
 		///
 		/// Sent when an edit control receives the keyboard focus.
 	}
 
-	pub_fn_cmd_ret0! { en_update, co::EN::UPDATE.into(),
+	pub_fn_cmd_ret0! { en_update, co::EN::UPDATE,
 		/// [`EN_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-update)
 		/// command notification.
 		///
@@ -121,7 +121,7 @@ impl EditEvents {
 		/// the edit control window, if necessary.
 	}
 
-	pub_fn_cmd_ret0! { en_v_scroll, co::EN::VSCROLL.into(),
+	pub_fn_cmd_ret0! { en_v_scroll, co::EN::VSCROLL,
 		/// [`EN_VSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/en-vscroll)
 		/// command notification.
 		///

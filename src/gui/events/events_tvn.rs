@@ -20,7 +20,7 @@ impl TreeViewEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_ret0_param! { tvn_delete_item, co::TVN::DELETEITEM.into(), NMTREEVIEW,
+	pub_fn_nfy_ret0_param! { tvn_delete_item, co::TVN::DELETEITEM, NMTREEVIEW,
 		/// [`TVN_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-deleteitem)
 		/// notification.
 		///
@@ -28,7 +28,7 @@ impl TreeViewEvents {
 		/// deleted.
 	}
 
-	pub_fn_nfy_ret0_param! { tvn_item_changed, co::TVN::ITEMCHANGED.into(), NMTREEVIEW,
+	pub_fn_nfy_ret0_param! { tvn_item_changed, co::TVN::ITEMCHANGED, NMTREEVIEW,
 		/// [`TVN_ITEMCHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanged)
 		/// notification.
 		///
@@ -36,7 +36,7 @@ impl TreeViewEvents {
 		/// have changed.
 	}
 
-	pub_fn_nfy_retbool_param! { tvn_item_changing, co::TVN::ITEMCHANGING.into(), NMTREEVIEW,
+	pub_fn_nfy_retbool_param! { tvn_item_changing, co::TVN::ITEMCHANGING, NMTREEVIEW,
 		/// [`TVN_ITEMCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanging)
 		/// notification.
 		///
@@ -44,7 +44,7 @@ impl TreeViewEvents {
 		/// are about to change.
 	}
 
-	pub_fn_nfy_ret0_param! { tvn_item_expanded, co::TVN::ITEMEXPANDED.into(), NMTREEVIEW,
+	pub_fn_nfy_ret0_param! { tvn_item_expanded, co::TVN::ITEMEXPANDED, NMTREEVIEW,
 		/// [`TVN_ITEMEXPANDED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanded)
 		/// notification.
 		///
@@ -52,7 +52,7 @@ impl TreeViewEvents {
 		/// list of child items has expanded or collapsed.
 	}
 
-	pub_fn_nfy_retbool_param! { tvn_item_expanding, co::TVN::ITEMEXPANDING.into(), NMTREEVIEW,
+	pub_fn_nfy_retbool_param! { tvn_item_expanding, co::TVN::ITEMEXPANDING, NMTREEVIEW,
 		/// [`TVN_ITEMEXPANDING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanding)
 		/// notification.
 		///
@@ -60,7 +60,7 @@ impl TreeViewEvents {
 		/// list of child items is about to expand or collapse.
 	}
 
-	pub_fn_nfy_ret0_param! { tvn_sel_changed, co::TVN::SELCHANGED.into(), NMTREEVIEW,
+	pub_fn_nfy_ret0_param! { tvn_sel_changed, co::TVN::SELCHANGED, NMTREEVIEW,
 		/// [`TVN_SELCHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanged)
 		/// notification.
 		///
@@ -68,7 +68,7 @@ impl TreeViewEvents {
 		/// changed from one item to another.
 	}
 
-	pub_fn_nfy_retbool_param! { tvn_sel_changing, co::TVN::SELCHANGING.into(), NMTREEVIEW,
+	pub_fn_nfy_retbool_param! { tvn_sel_changing, co::TVN::SELCHANGING, NMTREEVIEW,
 		/// [`TVN_SELCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanging)
 		/// notification.
 		///

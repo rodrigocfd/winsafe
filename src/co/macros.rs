@@ -20,15 +20,15 @@ macro_rules! const_no_debug_display {
 		#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
 		pub struct $name(pub(crate) $ntype);
 
-		// Conversions from/to underlying number.
+		// Conversions from/to underlying number type.
 		impl From<$ntype> for $name {
 			fn from(n: $ntype) -> Self {
-				Self(n) // the type can be created from the number
+				Self(n)
 			}
 		}
 		impl From<$name> for $ntype {
 			fn from(n: $name) -> Self {
-				n.0 // the number can be created from the type
+				n.0
 			}
 		}
 
