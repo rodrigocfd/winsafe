@@ -67,10 +67,11 @@ impl<'a> ComboBoxItems<'a> {
 	/// let my_combo: gui::ComboBox; // initialized somewhere
 	///
 	/// for text in my_combo.items().iter() {
+	///     let text = text?;
 	///     println!("Text {}", text);
 	/// }
 	/// ```
-	pub fn iter(&self) -> impl Iterator<Item = String> + 'a {
+	pub fn iter(&self) -> impl Iterator<Item = WinResult<String>> + 'a {
 		ComboBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))
 	}
 
@@ -89,15 +90,27 @@ impl<'a> ComboBoxItems<'a> {
 	/// Retrieves the currently selected text, if any, by calling
 	/// [`selected_index`](crate::gui::spec::ComboBoxItems::selected_index) and
 	/// [`text`](crate::gui::spec::ComboBoxItems::text) methods.
-	pub fn selected_text(&self) -> Option<String> {
-		self.selected_index()
-			.and_then(|idx| self.text(idx))
+	pub fn selected_text(&self) -> WinResult<Option<String>> {
+		self.text(
+			match self.selected_index() {
+				None => return Ok(None),
+				Some(idx) => idx,
+			},
+		)
 	}
 
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`cb::GetLbText`](crate::msg::cb::GetLbText) message.
-	pub fn text(&self, index: u32) -> Option<String> {
-		self.iter().nth(index as _)
+	pub fn text(&self, index: u32) -> WinResult<Option<String>> {
+		let mut buf = WString::new_alloc_buffer(
+			match self.hwnd.SendMessage(cb::GetLbTextLen { index }) {
+				Err(_) => return Ok(None), // index out of bounds
+				Ok(len) => len,
+			} as usize + 1,
+		);
+
+		self.hwnd.SendMessage(cb::GetLbText { index, text: &mut buf })
+			.map(|_| Some(buf.to_string()))
 	}
 }
 
@@ -105,45 +118,55 @@ impl<'a> ComboBoxItems<'a> {
 
 struct ComboBoxItemIter<'a> {
 	hwnd: HWND,
-	current: Option<u32>,
-	total: u32,
-	buf: WString,
+	count: u32,
+	current: u32,
+	buffer: WString,
 	owner_: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for ComboBoxItemIter<'a> {
-	type Item = String;
+	type Item = WinResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		self.current.and_then(|index| {
-			self.hwnd.SendMessage(cb::GetLbTextLen { index })
-				.ok()
-				.and_then(|len| {
-					self.buf.realloc_buffer(len as usize + 1);
-					self.hwnd.SendMessage(cb::GetLbText{
-						index,
-						text: &mut self.buf,
-					}).ok()
-						.map(|_| {
-							self.current = if index + 1 == self.total {
-								None // iteration is over
-							} else {
-								Some(index + 1)
-							};
-							self.buf.to_string()
-						})
-				})
-		})
+		if self.current == self.count {
+			return None;
+		}
+
+		let len = match self.hwnd
+			.SendMessage(cb::GetLbTextLen { index: self.current })
+		{
+			Err(e) => {
+				self.current = self.count; // no further iterations will be made
+				return Some(Err(e))
+			},
+			Ok(len) => len,
+		};
+
+		self.buffer.realloc_buffer(len as usize + 1);
+
+		match self.hwnd.SendMessage(cb::GetLbText {
+			index: self.current,
+			text: &mut self.buffer,
+		}) {
+			Err(e) => {
+				self.current = self.count; // no further iterations will be made
+				Some(Err(e))
+			},
+			Ok(_) => {
+				self.current += 1;
+				Some(Ok(self.buffer.to_string()))
+			},
+		}
 	}
 }
 
 impl<'a> ComboBoxItemIter<'a> {
-	fn new(hwnd: HWND, total: u32) -> Self {
+	fn new(hwnd: HWND, count: u32) -> Self {
 		Self {
 			hwnd,
-			current: Some(0),
-			total,
-			buf: WString::default(),
+			count,
+			current: 0,
+			buffer: WString::new_alloc_buffer(40), // arbitrary
 			owner_: PhantomData,
 		}
 	}
