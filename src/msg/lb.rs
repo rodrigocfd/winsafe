@@ -8,7 +8,7 @@ use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{point_to_lp, zero_as_err};
 use crate::privs::{LB_ERR, LB_ERRSPACE};
-use crate::structs::{POINT, RECT};
+use crate::structs::{LCID, POINT, RECT};
 use crate::various::WString;
 
 /// [`LB_ADDFILE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-addfile)
@@ -317,7 +317,7 @@ impl MsgSend for GetItemData {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETITEMDATA.into(),
-			wparam: 0,
+			wparam: self.index as _,
 			lparam: 0,
 		}
 	}
@@ -326,13 +326,13 @@ impl MsgSend for GetItemData {
 /// [`LB_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemheight)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `WinResult<u8>`.
 pub struct GetItemHeight {
 	pub index: Option<u32>,
 }
 
 impl MsgSend for GetItemHeight {
-	type RetType = WinResult<u32>;
+	type RetType = WinResult<u8>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -394,6 +394,28 @@ impl MsgSend for GetListBoxInfo {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETLISTBOXINFO.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LB_GETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getlocale)
+/// message, which has no parameters.
+///
+/// Return type: `LCID`.
+pub struct GetLocale {}
+
+impl MsgSend for GetLocale {
+	type RetType = LCID;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		LCID(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::GETLOCALE.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -863,6 +885,113 @@ impl MsgSend for SetCurSel {
 		WndMsg {
 			msg_id: co::LB::SETCURSEL.into(),
 			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LB_SETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-sethorizontalextent)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetHorizontalExtent {
+	pub width: u32,
+}
+
+impl MsgSend for SetHorizontalExtent {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETHORIZONTALEXTENT.into(),
+			wparam: self.width as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LB_SETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setitemdata)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetItemData {
+	pub index: u32,
+	pub data: isize,
+}
+
+impl MsgSend for SetItemData {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETITEMDATA.into(),
+			wparam: self.index as _,
+			lparam: self.data,
+		}
+	}
+}
+
+/// [`LB_SETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setitemheight)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetItemHeight {
+	pub index: Option<u32>,
+	pub height: u8,
+}
+
+impl MsgSend for SetItemHeight {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETITEMHEIGHT.into(),
+			wparam: self.index.unwrap_or(0) as _,
+			lparam: self.height as _,
+		}
+	}
+}
+
+/// [`LB_SETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setlocale)
+/// message parameters.
+///
+/// Return type: `WinResult<LCID>`.
+pub struct SetLocale {
+	pub locale: LCID,
+}
+
+impl MsgSend for SetLocale {
+	type RetType = WinResult<LCID>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			lcid => Ok(LCID(lcid as _)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETLOCALE.into(),
+			wparam: self.locale.0 as _,
 			lparam: 0,
 		}
 	}
