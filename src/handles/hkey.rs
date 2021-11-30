@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 use std::convert::TryInto;
+use std::marker::PhantomData;
 
 use crate::aliases::WinResult;
 use crate::co;
@@ -51,9 +52,9 @@ impl HKEY {
 		}
 	}
 
-	/// This method calls
+	/// Returns an iterator over the names of the keys, which calls
 	/// [`RegEnumKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw)
-	/// method repeatedly to retrieve all key names.
+	/// repeatedly.
 	///
 	/// # Examples
 	///
@@ -66,55 +67,20 @@ impl HKEY {
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// let key_names = hkey.EnumKeyEx()?;
-	/// for key_name in key_names.iter() {
+	/// for key_name in hkey.EnumKeyEx()? {
+	///     let key_name = key_name?;
 	///     println!("{}", key_name);
 	/// }
 	///
 	/// hkey.CloseKey()?;
 	/// ```
-	pub fn EnumKeyEx(self) -> WinResult<Vec<String>> {
-		let mut num_keys = u32::default();
-		let mut max_key_name_len = u32::default();
-		self.QueryInfoKey(
-			None, Some(&mut num_keys), Some(&mut max_key_name_len),
-			None, None, None, None, None, None)?;
-
-		let mut names_vec = Vec::with_capacity(num_keys as _);
-		let mut name_buf = WString::new_alloc_buffer(max_key_name_len as usize + 1);
-		let mut len_buf;
-
-		for index in 0..num_keys {
-			len_buf = name_buf.buffer_size() as _;
-
-			let err = co::ERROR(
-				unsafe {
-					advapi32::RegEnumKeyExW(
-						self.0,
-						index,
-						name_buf.as_mut_ptr(),
-						&mut len_buf,
-						std::ptr::null_mut(),
-						std::ptr::null_mut(),
-						std::ptr::null_mut(),
-						std::ptr::null_mut(),
-					)
-				} as _,
-			);
-
-			if err != co::ERROR::SUCCESS {
-				return Err(err);
-			}
-			names_vec.push(name_buf.to_string());
-		}
-
-		names_vec.sort_by(|a, b| a.to_uppercase().cmp(&b.to_uppercase()));
-		Ok(names_vec)
+	pub fn EnumKeyEx<'a>(self) -> WinResult<impl Iterator<Item = WinResult<String>> + 'a> {
+		EnumKeyIter::new(self)
 	}
 
-	/// This method calls
+	/// Returns an iterator of the names and types of the values, which calls
 	/// [`RegEnumValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumvaluew)
-	/// method repeatedly to retrieve all value names and types.
+	/// repeatedly.
 	///
 	/// # Examples
 	///
@@ -127,50 +93,15 @@ impl HKEY {
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// let values_and_types = hkey.EnumValue()?;
-	/// for (value, reg_type) in values_and_types.iter() {
+	/// for value_and_type in hkey.EnumValue()? {
+	///     let (value, reg_type) = value_and_type?;
 	///     println!("{}, {}", value, reg_type);
 	/// }
 	///
 	/// hkey.CloseKey()?;
 	/// ```
-	pub fn EnumValue(self) -> WinResult<Vec<(String, co::REG)>> {
-		let mut num_vals = u32::default();
-		let mut max_val_name_len = u32::default();
-		self.QueryInfoKey(
-			None, None, None, None, Some(&mut num_vals), Some(&mut max_val_name_len),
-			None, None, None)?;
-
-		let mut names_types_vec = Vec::with_capacity(num_vals as _);
-		let mut name_buf = WString::new_alloc_buffer(max_val_name_len as usize + 1);
-		let mut raw_data_type = u32::default();
-
-		for index in 0..num_vals {
-			let mut len_buf = name_buf.buffer_size() as _;
-
-			let err = co::ERROR(
-				unsafe {
-					advapi32::RegEnumValueW(
-						self.0,
-						index,
-						name_buf.as_mut_ptr(),
-						&mut len_buf,
-						std::ptr::null_mut(),
-						&mut raw_data_type,
-						std::ptr::null_mut(),
-						std::ptr::null_mut(),
-					)
-				} as _
-			);
-
-			if err != co::ERROR::SUCCESS {
-				return Err(err);
-			}
-			names_types_vec.push((name_buf.to_string(), co::REG(raw_data_type)));
-		}
-
-		names_types_vec.sort_by(|a, b| a.0.to_uppercase().cmp(&b.0.to_uppercase()));
-		Ok(names_types_vec)
+	pub fn EnumValue<'a>(self) -> WinResult<impl Iterator<Item = WinResult<(String, co::REG)>> + 'a> {
+		EnumValueIter::new(self)
 	}
 
 	/// [`RegGetValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -547,5 +478,130 @@ impl HKEY {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct EnumKeyIter<'a> {
+	hkey: HKEY,
+	count: u32,
+	current: u32,
+	name_buffer: WString,
+	owner_: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for EnumKeyIter<'a> {
+	type Item = WinResult<String>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.count {
+			return None;
+		}
+
+		let mut len_buffer = self.name_buffer.buffer_size() as u32;
+		match co::ERROR(
+			unsafe {
+				advapi32::RegEnumKeyExW(
+					self.hkey.0,
+					self.current,
+					self.name_buffer.as_mut_ptr(),
+					&mut len_buffer,
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => {
+				self.current += 1;
+				Some(Ok(self.name_buffer.to_string()))
+			},
+			e => {
+				self.current = self.count; // no further iterations will be made
+				Some(Err(e))
+			},
+		}
+	}
+}
+
+impl<'a> EnumKeyIter<'a> {
+	fn new(hkey: HKEY) -> WinResult<Self> {
+		let mut num_keys = u32::default();
+		let mut max_key_name_len = u32::default();
+		hkey.QueryInfoKey(
+			None, Some(&mut num_keys), Some(&mut max_key_name_len),
+			None, None, None, None, None, None)?;
+
+		Ok(Self {
+			hkey,
+			count: num_keys,
+			current: 0,
+			name_buffer: WString::new_alloc_buffer(max_key_name_len as usize + 1),
+			owner_: PhantomData,
+		})
+	}
+}
+
+struct EnumValueIter<'a> {
+	hkey: HKEY,
+	count: u32,
+	current: u32,
+	name_buffer: WString,
+	owner_: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for EnumValueIter<'a> {
+	type Item = WinResult<(String, co::REG)>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.count {
+			return None;
+		}
+
+		let mut raw_data_type = u32::default();
+		let mut len_buffer = self.name_buffer.buffer_size() as u32;
+		match co::ERROR(
+			unsafe {
+				advapi32::RegEnumValueW(
+					self.hkey.0,
+					self.current,
+					self.name_buffer.as_mut_ptr(),
+					&mut len_buffer,
+					std::ptr::null_mut(),
+					&mut raw_data_type,
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+				)
+			} as _
+		) {
+			co::ERROR::SUCCESS => {
+				self.current += 1;
+				Some(Ok((self.name_buffer.to_string(), co::REG(raw_data_type))))
+			},
+			e => {
+				self.current = self.count; // no further iterations will be made
+				Some(Err(e))
+			},
+		}
+	}
+}
+
+impl<'a> EnumValueIter<'a> {
+	fn new(hkey: HKEY) -> WinResult<Self> {
+		let mut num_vals = u32::default();
+		let mut max_val_name_len = u32::default();
+		hkey.QueryInfoKey(
+			None, None, None, None, Some(&mut num_vals), Some(&mut max_val_name_len),
+			None, None, None)?;
+
+		Ok(Self {
+			hkey,
+			count: num_vals,
+			current: 0,
+			name_buffer: WString::new_alloc_buffer(max_val_name_len as usize + 1),
+			owner_: PhantomData,
+		})
 	}
 }
