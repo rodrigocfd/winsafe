@@ -122,7 +122,7 @@ impl MsgSend for SetMarquee {
 		WndMsg {
 			msg_id: co::PBM::SETMARQUEE.into(),
 			wparam: self.turn_on as _,
-			lparam: self.time_ms.unwrap_or_default() as _,
+			lparam: self.time_ms.unwrap_or(0) as _,
 		}
 	}
 }

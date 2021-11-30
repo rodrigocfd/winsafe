@@ -77,7 +77,7 @@ impl MsgSend for EndEditLabelNow {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::ENDEDITLABELNOW.into(),
-			wparam: if self.save { 0 } else { 1 }, // logic is reversed
+			wparam: !self.save as _,
 			lparam: 0,
 		}
 	}

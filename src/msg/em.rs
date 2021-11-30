@@ -462,7 +462,7 @@ impl MsgSend for LimitText {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::LIMITTEXT.into(),
-			wparam: self.max .unwrap_or(0) as _,
+			wparam: self.max.unwrap_or(0) as _,
 			lparam: 0,
 		}
 	}
@@ -864,7 +864,7 @@ impl<'a> MsgSend for SetRect<'a> {
 		WndMsg {
 			msg_id: co::EM::SETRECT.into(),
 			wparam: self.is_absolute_coords as _,
-			lparam: self.rect.map(|rect| rect as *const _ as _).unwrap_or(0),
+			lparam: self.rect.map_or(0, |rect| rect as *const _ as _),
 		}
 	}
 }
@@ -889,7 +889,7 @@ impl<'a> MsgSend for SetRectNp<'a> {
 		WndMsg {
 			msg_id: co::EM::SETRECTNP.into(),
 			wparam: self.is_absolute_coords as _,
-			lparam: self.rect.map(|rect| rect as *const _ as _).unwrap_or(0),
+			lparam: self.rect.map_or(0, |rect| rect as *const _ as _),
 		}
 	}
 }
@@ -937,8 +937,8 @@ impl<'a> MsgSend for SetTabStops<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETTABSTOPS.into(),
-			wparam: self.tab_stops.map(|ts| ts.len() as _).unwrap_or(0),
-			lparam: self.tab_stops.map(|ts| ts.as_ptr() as _).unwrap_or(0),
+			wparam: self.tab_stops.map_or(0, |ts| ts.len() as _),
+			lparam: self.tab_stops.map_or(0, |ts| ts.as_ptr() as _),
 		}
 	}
 }
@@ -962,7 +962,7 @@ impl MsgSend for SetWordBreakProc {
 		WndMsg {
 			msg_id: co::EM::SETWORDBREAKPROC.into(),
 			wparam: 0,
-			lparam: self.proc.map(|proc| proc as _).unwrap_or(0),
+			lparam: self.proc.map_or(0, |proc| proc as _),
 		}
 	}
 }

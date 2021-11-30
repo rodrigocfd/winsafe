@@ -41,19 +41,10 @@ impl MsgSend for ApproximateViewRect {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::APPROXIMATEVIEWRECT.into(),
-			wparam: match self.num_items {
-				None => -1,
-				Some(num) => num as isize,
-			} as _,
+			wparam: self.num_items.map_or(-1, |n| n as i32) as _,
 			lparam: MAKEDWORD(
-				match self.proposed_x {
-					None => -1,
-					Some(x) => x as i32,
-				} as _,
-				match self.proposed_y {
-					None => -1,
-					Some(y) => y as i32,
-				} as _,
+				self.proposed_x.map_or(-1, |x| x as i32) as _,
+				self.proposed_y.map_or(-1, |y| y as i32) as _,
 			) as _,
 		}
 	}

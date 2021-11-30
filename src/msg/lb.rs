@@ -24,14 +24,15 @@ impl MsgSend for AddFile {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
 			idx => Ok(idx as _),
 		}
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
-			msg_id: co::LB::ADDSTRING.into(),
+			msg_id: co::LB::ADDFILE.into(),
 			wparam: 0,
 			lparam: unsafe { self.text.as_ptr() } as _,
 		}
@@ -51,7 +52,8 @@ impl MsgSend for AddString {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
 			idx => Ok(idx as _),
 		}
 	}
@@ -114,7 +116,7 @@ impl MsgSend for Dir {
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
-			msg_id: co::LB::DELETESTRING.into(),
+			msg_id: co::LB::DIR.into(),
 			wparam: self.attributes.0 as _,
 			lparam: unsafe { self.path.as_ptr() } as _,
 		}
@@ -143,10 +145,7 @@ impl MsgSend for FindString {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::FINDSTRING.into(),
-			wparam: match self.preceding_index {
-				None => -1,
-				Some(idx) => idx as i32,
-			} as _,
+			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
@@ -174,10 +173,7 @@ impl MsgSend for FindStringExact {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::FINDSTRINGEXACT.into(),
-			wparam: match self.preceding_index {
-				None => -1,
-				Some(idx) => idx as i32,
-			} as _,
+			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}
@@ -348,7 +344,7 @@ impl MsgSend for GetItemHeight {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::GETITEMHEIGHT.into(),
-			wparam: self.index.unwrap_or_default() as _,
+			wparam: self.index.unwrap_or(0) as _,
 			lparam: 0,
 		}
 	}
@@ -605,7 +601,8 @@ impl MsgSend for InsertString {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
 			idx => Ok(idx as _),
 		}
 	}
@@ -661,7 +658,8 @@ impl MsgSend for SelectString {
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			LB_ERR | LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
 			idx => Ok(idx as _),
 		}
 	}
@@ -669,10 +667,7 @@ impl MsgSend for SelectString {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SELECTSTRING.into(),
-			wparam: match self.index {
-				None => -1,
-				Some(idx) => idx as i32,
-			} as _,
+			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.prefix.as_ptr() } as _,
 		}
 	}
@@ -684,8 +679,8 @@ impl MsgSend for SelectString {
 /// Return type: `WinResult<()>`.
 pub struct SelItemRange {
 	pub select: bool,
-	pub first_item: u32,
-	pub last_item: u32,
+	pub first_item: u16,
+	pub last_item: u16,
 }
 
 impl MsgSend for SelItemRange {
@@ -701,8 +696,36 @@ impl MsgSend for SelItemRange {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SELITEMRANGE.into(),
-			wparam: self.select as usize,
-			lparam: MAKEDWORD(self.first_item as _, self.last_item as _) as _,
+			wparam: self.select as _,
+			lparam: MAKEDWORD(self.first_item, self.last_item) as _,
+		}
+	}
+}
+
+/// [`LB_SELITEMRANGEEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selitemrangeex)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SelItemRangeEx {
+	pub first_index: u32,
+	pub last_index: u32,
+}
+
+impl MsgSend for SelItemRangeEx {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SELITEMRANGEEX.into(),
+			wparam: self.first_index as _,
+			lparam: self.last_index as _,
 		}
 	}
 }
@@ -729,6 +752,117 @@ impl MsgSend for SetAnchorIndex {
 		WndMsg {
 			msg_id: co::LB::SETANCHORINDEX.into(),
 			wparam: self.index as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LB_SETCARETINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcaretindex)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetCaretIndex {
+	pub index: u32,
+	pub at_least_partially_visible: bool,
+}
+
+impl MsgSend for SetCaretIndex {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETCARETINDEX.into(),
+			wparam: self.index as _,
+			lparam: self.at_least_partially_visible as _,
+		}
+	}
+}
+
+/// [`LB_SETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcolumnwidth)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetColumnWidth {
+	pub width: u32,
+}
+
+impl MsgSend for SetColumnWidth {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETCOLUMNWIDTH.into(),
+			wparam: self.width as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LB_SETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcount)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetCount {
+	pub new_count: u32,
+}
+
+impl MsgSend for SetCount {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as i32 {
+			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
+			_ => Ok(()),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETCOUNT.into(),
+			wparam: self.new_count as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LB_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcursel)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetCurSel {
+	pub index: Option<u32>,
+}
+
+impl MsgSend for SetCurSel {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		if let None = self.index {
+			Ok(())
+		} else {
+			match v as i32 {
+				LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
+				_ => Ok(()),
+			}
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LB::SETCURSEL.into(),
+			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
 			lparam: 0,
 		}
 	}

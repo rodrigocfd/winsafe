@@ -228,10 +228,7 @@ impl MsgSend for SetFormat {
 		WndMsg {
 			msg_id: co::DTM::SETFORMAT.into(),
 			wparam: 0,
-			lparam: match &self.format_string {
-				None => 0,
-				Some(fmtstr) => unsafe { fmtstr.as_ptr() as _ },
-			},
+			lparam: self.format_string.as_ref().map_or(0, |ws| unsafe { ws.as_ptr() } as _),
 		}
 	}
 }

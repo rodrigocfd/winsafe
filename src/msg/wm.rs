@@ -1047,7 +1047,7 @@ impl MsgSend for KillFocus {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::KILLFOCUS,
-			wparam: self.hwnd.map(|h| h.0 as _).unwrap_or_default(),
+			wparam: self.hwnd.map_or(0, |h| h.0 as _),
 			lparam: 0,
 		}
 	}
@@ -2061,10 +2061,7 @@ impl MsgSend for Timer {
 		WndMsg {
 			msg_id: co::WM::TIMER,
 			wparam: self.timer_id as _,
-			lparam: match self.timer_proc {
-				Some(proc) => proc as _,
-				None => 0,
-			},
+			lparam: self.timer_proc.map_or(0, |proc| proc as _),
 		}
 	}
 }
@@ -2164,7 +2161,7 @@ impl MsgSend for VScroll {
 		WndMsg {
 			msg_id: co::WM::VSCROLL,
 			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
-			lparam: self.hcontrol.map(|h| h.0 as _).unwrap_or_default(),
+			lparam: self.hcontrol.map_or(0, |h| h.0 as _),
 		}
 	}
 }

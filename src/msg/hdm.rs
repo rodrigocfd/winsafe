@@ -29,7 +29,7 @@ impl MsgSend for ClearFilter {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::CLEARFILTER.into(),
-			wparam: self.filter.map(|f| f as i32).unwrap_or(-1) as _,
+			wparam: self.filter.map_or(-1, |f| f as i32) as _,
 			lparam: 0,
 		}
 	}
@@ -568,7 +568,7 @@ impl MsgSend for SetImageList {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
 			wparam: self.which.0 as _,
-			lparam: self.himagelist.map(|h| h.0 as _).unwrap_or(0),
+			lparam: self.himagelist.map_or(0, |h| h.0 as _),
 		}
 	}
 }

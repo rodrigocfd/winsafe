@@ -88,7 +88,7 @@ impl MsgSend for Dir {
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
-			msg_id: co::CB::DELETESTRING.into(),
+			msg_id: co::CB::DIR.into(),
 			wparam: self.attributes.0 as _,
 			lparam: unsafe { self.path.as_ptr() } as _,
 		}
@@ -670,7 +670,7 @@ impl MsgSend for SelectString {
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
-			msg_id: co::CB::SETCURSEL.into(),
+			msg_id: co::CB::SELECTSTRING.into(),
 			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: unsafe { self.search_text.as_ptr() } as _,
 		}
