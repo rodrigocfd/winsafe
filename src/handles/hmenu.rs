@@ -47,15 +47,17 @@ impl HMENU {
 	/// Adding multiple entries at once, with their command IDs:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{HMENU, MenuEnum};
+	/// use winsafe::{HMENU, MenuEnum, seq_ids};
 	///
-	/// let my_hmenu: HMENU; // initialized somewhere
+	/// seq_ids! {
+	///     ID_FILE_OPEN = 2001;
+	///     ID_FILE_SAVE
+	///     ID_FILE_EXIT
+	/// }
 	///
-	/// const ID_FILE_OPEN: i32 = 2001;
-	/// const ID_FILE_SAVE: i32 = 2002;
-	/// const ID_FILE_EXIT: i32 = 2003;
+	/// let hmenu: HMENU; // initialized somewhere
 	///
-	/// my_hmenu.AppendMenuEnum(&[
+	/// hmenu.AppendMenuEnum(&[
 	///     MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
 	///     MenuEnum::Entry(ID_FILE_OPEN, "&Save"),
 	///     MenuEnum::Separator,
@@ -185,9 +187,11 @@ impl HMENU {
 	/// Disabling a menu item:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{HMENU, IdPos};
+	/// use winsafe::{HMENU, IdPos, seq_ids};
 	///
-	/// const ID_FILE_OPEN: i32 = 101;
+	/// seq_ids! {
+	///     ID_FILE_OPEN = 101;
+	/// }
 	///
 	/// let hmenu: HMENU; // initialized somewhere
 	///
@@ -200,10 +204,12 @@ impl HMENU {
 	/// Disabling multiple menu items at once:
 	///
 	/// ```rust,ignore
-	/// use winsafe::{HMENU, IdPos};
+	/// use winsafe::{HMENU, IdPos, seq_ids};
 	///
-	/// const ID_FILE_OPEN: i32 = 201;
-	/// const ID_FILE_SAVE: i32 = 202;
+	/// seq_ids! {
+	///     ID_FILE_OPEN = 201;
+	///     ID_FILE_SAVE
+	/// }
 	///
 	/// let hmenu: HMENU; // initialized somewhere
 	///

@@ -41,8 +41,10 @@
 //! | - | - |
 //! | `winsafe` | The root of the crate has Win32 free functions and structs. |
 //! | [`winsafe::co`](crate::co) | Types and values of Win32 constants. |
-//! | [`winsafe::msg`](crate::msg) | Window messages. |
 //! | [`winsafe::gui`](crate::gui) | High-level GUI wrappers. |
+//! | [`winsafe::msg`](crate::msg) | Window messages. |
+//! | [`winsafe::path`](crate::path) | File path utilities. |
+//! | [`winsafe::prelude`](crate::prelude) | The WinSafe prelude, with common traits. |
 //!
 //! And the COM modules:
 //!
@@ -50,7 +52,7 @@
 //! | - | - |
 //! | [`winsafe::autom`](crate::autom) | Win32 Automation COM interfaces. |
 //! | [`winsafe::dshow`](crate::dshow) | Win32 DirectShow COM interfaces. |
-//! | [`winsafe::idl`](crate::idl) | Win32 IDL COM interfaces. |
+//! | [`winsafe::idl`](crate::idl) | Win32 IDL COM interfaces, which are shared among other COM modules. |
 //! | [`winsafe::shell`](crate::shell) | Win32 Shell COM interfaces. |
 //!
 //! # The GUI API

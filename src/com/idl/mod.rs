@@ -1,5 +1,5 @@
 //! [IDL](https://docs.microsoft.com/en-us/windows/win32/api/objidl/) COM
-//! interfaces, structs and constants.
+//! interfaces, structs and constants, which are shared among other COM modules.
 //!
 //! To enable the IDL COM module, use:
 //!

@@ -154,7 +154,7 @@ impl HKEY {
 					std::ptr::null_mut(),
 					&mut data_len,
 				)
-			} as _
+			} as _,
 		) {
 			co::ERROR::SUCCESS => {},
 			err => return Err(err),
@@ -174,7 +174,7 @@ impl HKEY {
 					buf.as_mut_ptr() as _,
 					&mut data_len,
 				)
-			} as _
+			} as _,
 		) {
 			co::ERROR::SUCCESS => {},
 			err => return Err(err),
@@ -231,7 +231,7 @@ impl HKEY {
 					access_rights.0,
 					&mut hKey.0,
 				)
-			} as _
+			} as _,
 		) {
 			co::ERROR::SUCCESS => Ok(hKey),
 			err => Err(err),
@@ -289,7 +289,7 @@ impl HKEY {
 						security_descr_len,
 						last_write_time,
 					)
-				} as _
+				} as _,
 			) {
 				co::ERROR::MORE_DATA => match &mut class {
 					Some(class) => {
@@ -356,7 +356,7 @@ impl HKEY {
 					std::ptr::null_mut(),
 					&mut data_len,
 				)
-			} as _
+			} as _,
 		) {
 			co::ERROR::SUCCESS => {},
 			err => return Err(err),
@@ -429,7 +429,7 @@ impl HKEY {
 					data.as_ptr(),
 					data.len() as _,
 				)
-			} as _
+			} as _,
 		) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -473,7 +473,7 @@ impl HKEY {
 					data.as_ptr() as _,
 					data.len() as _,
 				)
-			} as _
+			} as _,
 		) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -574,7 +574,7 @@ impl<'a> Iterator for EnumValueIter<'a> {
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
 				)
-			} as _
+			} as _,
 		) {
 			co::ERROR::SUCCESS => {
 				self.current += 1;
