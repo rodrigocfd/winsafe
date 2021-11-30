@@ -1,4 +1,4 @@
-#![allow(non_camel_case_types)]
+#![allow(non_camel_case_types, non_upper_case_globals)]
 
 use crate::co::{CCM, WM};
 
@@ -223,6 +223,67 @@ const_ordinary! { GWLP: i32;
 	DWLP_USER Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
 }
 
+const_ordinary! { HDF: i32;
+	/// [`HDITEM`](crate::HDITEM) `fmt` (`i32`).
+	=>
+	=>
+	LEFT 0x0000
+	RIGHT 0x0001
+	CENTER 0x0002
+	JUSTIFYMASK 0x0003
+	RTLREADING 0x0004
+
+	BITMAP 0x2000
+	STRING 0x4000
+	OWNERDRAW 0x8000
+	IMAGE 0x0800
+	BITMAP_ON_RIGHT 0x1000
+
+	SORTUP 0x0400
+	SORTDOWN 0x0200
+
+	CHECKBOX 0x0040
+	CHECKED 0x0080
+	FIXEDWIDTH 0x0100
+	SPLITBUTTON 0x100_0000
+}
+
+const_ordinary! { HDFT: u32;
+	/// [`HDITEM`](crate::HDITEM) `typeFilter` (`i32`).
+	=>
+	=>
+	ISSTRING 0x0000
+	ISNUMBER 0x0001
+	ISDATE 0x0002
+	HASNOVALUE 0x8000
+}
+
+const_ordinary! { HDI: i32;
+	/// [`HDITEM`](crate::HDITEM) `mask` (`i32`).
+	=>
+	=>
+	WIDTH 0x0001
+	HEIGHT Self::WIDTH.0
+	TEXT 0x0002
+	FORMAT 0x0004
+	LPARAM 0x0008
+	BITMAP 0x0010
+	IMAGE 0x0020
+	DI_SETITEM 0x0040
+	ORDER 0x0080
+	FILTER 0x0100
+	STATE 0x0200
+}
+
+const_ordinary! { HDIS: u32;
+	/// [`HDITEM`](crate::HDITEM) `state` (`i32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	FOCUSED 0x0000_0001
+}
+
 const_wm! { HDM;
 	/// Header control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
@@ -305,6 +366,15 @@ const_ws! { HDS: u32;
 	OVERFLOW 0x1000
 }
 
+const_ordinary! { HDSIL: u8;
+	/// [`hdm::GetImageList`](crate::msg::hdm::GetImageList) and
+	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList) `which` (`u8`).
+	=>
+	=>
+	NORMAL 0
+	STATE 1
+}
+
 const_ordinary! { HELPINFO: i32;
 	/// [`HELPINFO`](crate::HELPINFO) `iContextType` (`i32`).
 	=>
@@ -338,6 +408,25 @@ const_ordinary! { HELPW: u32;
 	TCARD 0x8000
 	TCARD_DATA 0x0010
 	TCARD_OTHER_CALLER 0x0011
+}
+
+const_ordinary! { HHT: u32;
+	/// [`HDHITTESTINFO`](crate::HDHITTESTINFO) `flags` (`u32`).
+	=>
+	=>
+	NOWHERE 0x0001
+	ONHEADER 0x0002
+	ONDIVIDER 0x0004
+	ONDIVOPEN 0x0008
+	ONFILTER 0x0010
+	ONFILTERBUTTON 0x0020
+	ABOVE 0x0100
+	BELOW 0x0200
+	TORIGHT 0x0400
+	TOLEFT 0x0800
+	ONITEMSTATEICON 0x1000
+	ONDROPDOWN 0x2000
+	ONOVERFLOW 0x4000
 }
 
 const_ordinary! { HICF: u32;

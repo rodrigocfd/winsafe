@@ -157,7 +157,7 @@ impl HIMAGELIST {
 		)
 	}
 
-	// [`ImageList_EndDrag`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
+	/// [`ImageList_EndDrag`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
 	/// static method.
 	pub fn EndDrag() {
 		unsafe { comctl32::ImageList_EndDrag(); }

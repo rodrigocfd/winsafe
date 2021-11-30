@@ -21,7 +21,7 @@ use crate::privs::{
 	L_MAX_URL_LENGTH,
 	MAX_LINKID_TEXT,
 };
-use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME};
+use crate::structs::{COLORREF, NMHDR, POINT, RECT, SIZE, SYSTEMTIME, WINDOWPOS};
 use crate::various::WString;
 
 /// [`BUTTON_IMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
@@ -58,6 +58,68 @@ pub struct DATETIMEPICKERINFO {
 }
 
 impl_default_with_size!(DATETIMEPICKERINFO, cbSize);
+
+/// [`HDHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdhittestinfo)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct HDHITTESTINFO {
+	pub pt: POINT,
+	pub flags: co::HHT,
+	pub iItem: i32,
+}
+
+/// [`HDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hditemw)
+/// struct.
+#[repr(C)]
+pub struct HDITEM<'a> {
+	pub mask: co::HDI,
+	pub cxy: i32,
+	pszText: *mut u16,
+	pub hbm: HBITMAP,
+	cchTextMax: i32,
+	pub fmt: co::HDF,
+	pub lParam: isize,
+	pub iImage: i32,
+	pub iOrder: i32,
+	pub typeFilter: co::HDFT,
+	pub pvFilter: *mut std::ffi::c_void,
+	pub state: co::HDIS,
+
+	pszText_: PhantomData<&'a mut u16>,
+}
+
+impl_default!(HDITEM, 'a);
+
+impl<'a> HDITEM<'a> {
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+}
+
+/// [`HDLAYOUT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdlayout)
+/// struct.
+#[repr(C)]
+pub struct HDLAYOUT<'a, 'b> {
+	prc: *mut RECT,
+	pwpos: *mut WINDOWPOS,
+	fuuu: i32,
+
+	prc_: PhantomData<&'a mut RECT>,
+	pwpos_: PhantomData<&'b mut WINDOWPOS>,
+}
+
+impl_default!(HDLAYOUT, 'a, 'b);
+
+impl<'a, 'b> HDLAYOUT<'a, 'b> {
+	/// Sets the field.
+	pub fn set_prc(&mut self, rc: Option<&'a mut RECT>) {
+		self.prc = rc.map(|rc| rc as _).unwrap_or(std::ptr::null_mut());
+	}
+
+	/// Sets the field.
+	pub fn set_pwpos(&mut self, pos: Option<&'b mut WINDOWPOS>) {
+		self.pwpos = pos.map(|pos| pos as _).unwrap_or(std::ptr::null_mut());
+	}
+}
 
 /// [`IMAGELISTDRAWPARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.

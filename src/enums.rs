@@ -470,6 +470,16 @@ pub enum MenuEnum<'a> {
 
 /// Variant parameter for:
 ///
+/// * [`hdm::SetHotDivider`](crate::msg::hdm::SetHotDivider) `value`.
+pub enum PtIdx {
+	/// X and Y coordinates of the pointer
+	Pt(POINT),
+	/// Index of the divider.
+	Idx(u32),
+}
+
+/// Variant parameter for:
+///
 /// * [`tbm::AddString`](crate::msg::tbm::AddString) `texts`.
 pub enum ResStrs {
 	/// A resource string resource.
