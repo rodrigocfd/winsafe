@@ -5,7 +5,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! winsafe = { version = "0.0.7", features = ["shell"] }
+//! winsafe = { version = "0.0.8", features = ["shell"] }
 //! ```
 
 pub mod clsid;

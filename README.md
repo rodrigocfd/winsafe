@@ -25,9 +25,9 @@ This crate is still in alpha stage. Below is an estimated progress of feature gr
 | Feature group | Estimated progress |
 | - | - |
 | User windows (main, modal and control) | ![Progress](https://progress-bar.dev/100/) |
-| Native controls | ![Progress](https://progress-bar.dev/80/) |
-| Window messages | ![Progress](https://progress-bar.dev/55/) |
-| Overall Win32 APIs | ![Progress](https://progress-bar.dev/25/) | |
+| Native controls | ![Progress](https://progress-bar.dev/85/) |
+| Window messages | ![Progress](https://progress-bar.dev/75/) |
+| Overall Win32 APIs | ![Progress](https://progress-bar.dev/30/) | |
 
 ## Usage
 
@@ -35,17 +35,17 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = "0.0.7"
+winsafe = "0.0.8"
 ```
 
 The COM modules are disabled by default, and can be enabled when needed:
 
 | Module | Cargo.toml `[dependencies]` entry |
 | - | - |
-| [Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) | `winsafe = { version = "0.0.7", features = ["autom"] }` |
-| [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) | `winsafe = { version = "0.0.7", features = ["dshow"] }` |
-| [IDL](https://docs.microsoft.com/en-us/windows/win32/api/objidl/) | `winsafe = { version = "0.0.7", features = ["idl"] }` |
-| [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/) | `winsafe = { version = "0.0.7", features = ["shell"] }` |
+| [Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) | `winsafe = { version = "0.0.8", features = ["autom"] }` |
+| [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) | `winsafe = { version = "0.0.8", features = ["dshow"] }` |
+| [IDL](https://docs.microsoft.com/en-us/windows/win32/api/_com/) | `winsafe = { version = "0.0.8", features = ["idl"] }` |
+| [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/) | `winsafe = { version = "0.0.8", features = ["shell"] }` |
 
 ## Example
 

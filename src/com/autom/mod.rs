@@ -5,7 +5,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! winsafe = { version = "0.0.7", features = ["autom"] }
+//! winsafe = { version = "0.0.8", features = ["autom"] }
 //! ```
 
 pub(in crate::com) mod idispatch;
