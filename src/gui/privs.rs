@@ -3,11 +3,12 @@
 use std::error::Error;
 
 use crate::aliases::{ErrResult, WinResult};
-use crate::co::{self, traits::NativeConstant};
+use crate::co::{self, prelude::NativeConstant};
 use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, PostQuitMessage, SystemParametersInfo};
 use crate::gui::base::Base;
-use crate::handles::{Handle, HandleGdi, HFONT, HTHEME, HWND};
+use crate::handles::{HFONT, HTHEME, HWND};
+use crate::handles::prelude::{Handle, HandleGdi};
 use crate::msg::wm;
 use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
 

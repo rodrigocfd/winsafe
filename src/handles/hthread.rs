@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
-use crate::handles::HandleClose;
+use crate::handles::prelude::HandleClose;
 use crate::privs::bool_to_winresult;
 use crate::structs::{FILETIME, SECURITY_ATTRIBUTES};
 
@@ -25,7 +25,7 @@ impl HTHREAD {
 	/// Returns the thread handle and ID.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HTHREAD::CloseHandle`](crate::HTHREAD::CloseHandle) call.
+	/// [`HTHREAD::CloseHandle`](crate::prelude::HandleClose::CloseHandle) call.
 	pub fn CreateThread(
 		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		stack_size: u64,

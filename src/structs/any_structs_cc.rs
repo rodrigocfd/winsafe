@@ -6,15 +6,8 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::enums::{BmpIdbRes, IdStr, IndexStr, TreeitemTvi};
-use crate::handles::{
-	Handle,
-	HBITMAP,
-	HDC,
-	HIMAGELIST,
-	HINSTANCE,
-	HTREEITEM,
-	HWND,
-};
+use crate::handles::{HBITMAP, HDC, HIMAGELIST, HINSTANCE, HTREEITEM, HWND};
+use crate::handles::prelude::Handle;
 use crate::privs::{
 	HINST_COMMCTRL,
 	IS_INTRESOURCE,

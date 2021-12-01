@@ -1,8 +1,8 @@
 //! Native Win32 constants and types of constants.
 //!
-//! All types implement the [`NativeConstant`](crate::co::NativeConstant) trait
-//! and bitflag operations, and they can be converted from/to their underlying
-//! integer type.
+//! All types implement the [`NativeConstant`](crate::prelude::NativeConstant)
+//! trait and bitflag operations, and they can be converted from/to their
+//! underlying integer type.
 //!
 //! Among these constant types, three are error types:
 //! [`CDERR`](crate::co::CDERR), [`ERROR`](crate::co::ERROR) and
@@ -25,7 +25,7 @@ mod consts_wxyz;
 mod e_cderr;
 mod e_error;
 mod e_hresult;
-pub(crate) mod traits;
+mod traits;
 mod vs;
 
 pub use consts_ab::*;
@@ -43,7 +43,6 @@ pub use consts_wxyz::*;
 pub use e_cderr::CDERR;
 pub use e_error::ERROR;
 pub use e_hresult::HRESULT;
-pub use traits::*;
 pub use vs::VS;
 
 pub(crate) mod prelude {

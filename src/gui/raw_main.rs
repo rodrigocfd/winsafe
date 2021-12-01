@@ -5,20 +5,12 @@ use crate::co;
 use crate::enums::IdMenu;
 use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::base::Base;
-use crate::gui::events::EventsView;
+use crate::gui::events::prelude::EventsView;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{
-	HACCEL,
-	Handle,
-	HBRUSH,
-	HCURSOR,
-	HICON,
-	HINSTANCE,
-	HMENU,
-	HWND,
-};
+use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
+use crate::handles::prelude::Handle;
 use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 

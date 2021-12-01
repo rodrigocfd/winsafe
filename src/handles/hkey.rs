@@ -7,7 +7,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::RegistryValue;
 use crate::ffi::advapi32;
-use crate::handles::Handle;
+use crate::handles::prelude::Handle;
 use crate::structs::FILETIME;
 use crate::various::WString;
 

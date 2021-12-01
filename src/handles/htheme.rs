@@ -3,9 +3,9 @@
 use crate::aliases::HrResult;
 use crate::co;
 use crate::ffi::uxtheme;
-use crate::handles::{Handle, HDC, HRGN};
-use crate::structs::{COLORREF, RECT};
+use crate::handles::{prelude::Handle, HDC, HRGN};
 use crate::privs::ok_to_hrresult;
+use crate::structs::{COLORREF, RECT};
 
 /// Handle to a
 /// [theme](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/).
@@ -94,7 +94,7 @@ impl HTHEME {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn GetThemeBackgroundRegion(self,
 		hdc: HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>
 	{

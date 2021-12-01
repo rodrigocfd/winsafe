@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, kernel32, user32};
 use crate::funcs::GetLastError;
-use crate::handles::HandleClose;
+use crate::handles::prelude::HandleClose;
 use crate::privs::{bool_to_winresult, INFINITE, MAX_PATH};
 use crate::structs::{
 	FILETIME,
@@ -31,8 +31,9 @@ impl HPROCESS {
 	/// **Note:** Process and thread handles are returned in the
 	/// [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION) struct, and they
 	/// must be paired with their respective
-	/// [`HPROCESS::CloseHandle`](crate::HPROCESS::CloseHandle) and
-	/// [`HTHREAD::CloseHandle`](crate::HTHREAD::CloseHandle) calls.
+	/// [`HPROCESS::CloseHandle`](crate::prelude::HandleClose::CloseHandle) and
+	/// [`HTHREAD::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
+	/// calls.
 	pub fn CreateProcess(
 		application_name: Option<&str>,
 		command_line: Option<&str>,
@@ -158,7 +159,8 @@ impl HPROCESS {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HPROCESS::CloseHandle`](crate::HPROCESS::CloseHandle) call.
+	/// [`HPROCESS::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
+	/// call.
 	pub fn OpenProcess(
 		desired_access: co::PROCESS,
 		inherit_handle: bool, process_id: u32) -> WinResult<HPROCESS>

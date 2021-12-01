@@ -5,7 +5,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
-use crate::handles::Handle;
+use crate::handles::prelude::Handle;
 use crate::privs::bool_to_winresult;
 use crate::structs::WIN32_FIND_DATA;
 use crate::various::{path, WString};

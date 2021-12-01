@@ -87,8 +87,9 @@ const_ordinary! { FOS: u32;
 	HIDEMRUPLACES 0x2_0000
 	/// Hide items shown by default in the view's navigation pane. This flag is
 	/// often used in conjunction with the
-	/// [`IFileDialog::AddPlace`](crate::prelude::IFileDialogT::AddPlace) method,
-	/// to hide standard locations and replace them with custom locations.
+	/// [`IFileDialog::AddPlace`](crate::prelude::IFileDialogT::AddPlace)
+	/// method, to hide standard locations and replace them with custom
+	/// locations.
 	///
 	/// Windows 7 and later. Hide all of the standard namespace locations (such
 	/// as Favorites Libraries Computer and Network) shown in the navigation

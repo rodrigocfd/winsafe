@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use crate::aliases::WinResult;
-use crate::co::{self, traits::NativeConstant};
+use crate::co::{self, prelude::NativeConstant};
 use crate::handles::HWND;
 use crate::msg::lvm;
 use crate::structs::{LVFINDINFO, LVHITTESTINFO, LVITEM, POINT, RECT};

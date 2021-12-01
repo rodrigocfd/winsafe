@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::aliases::{ErrResult, HrResult};
 use crate::co;
-use crate::gui::events::{EventsView, TreeViewEvents, WindowEvents};
+use crate::gui::events::{prelude::EventsView, TreeViewEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl,
 	OptsId,
@@ -21,7 +21,7 @@ use crate::gui::traits::{
 	Parent,
 	Window,
 };
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::tvm;
 use crate::structs::{POINT, SIZE};
 

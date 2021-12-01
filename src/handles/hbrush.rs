@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::handles::{HandleGdi, HBITMAP};
+use crate::handles::{prelude::HandleGdi, HBITMAP};
 use crate::structs::{COLORREF, LOGBRUSH};
 
 /// Handle to a
@@ -30,7 +30,7 @@ impl HBRUSH {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateBrushIndirect(lb: &LOGBRUSH) -> WinResult<HBRUSH> {
 		unsafe { gdi32::CreateBrushIndirect(lb as *const _ as _).as_mut() }
 			.map(|ptr| Self(ptr))
@@ -41,7 +41,7 @@ impl HBRUSH {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateHatchBrush(
 		hatch: co::HS, color: COLORREF) -> WinResult<HBRUSH>
 	{
@@ -54,7 +54,7 @@ impl HBRUSH {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreatePatternBrush(hbmp: HBITMAP) -> WinResult<HBRUSH> {
 		unsafe { gdi32::CreatePatternBrush(hbmp.0).as_mut() }
 			.map(|ptr| Self(ptr))
@@ -65,7 +65,7 @@ impl HBRUSH {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::HBRUSH::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateSolidBrush(color: COLORREF) -> WinResult<HBRUSH> {
 		unsafe { gdi32::CreateSolidBrush(color.0).as_mut() }
 			.map(|ptr| Self(ptr))

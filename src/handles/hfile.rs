@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
-use crate::handles::{HandleClose, HFILEMAP};
+use crate::handles::{prelude::HandleClose, HFILEMAP};
 use crate::privs::{bool_to_winresult, INVALID_HANDLE_VALUE};
 use crate::structs::{
 	BY_HANDLE_FILE_INFORMATION,
@@ -28,7 +28,7 @@ impl HFILE {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFILE::CloseHandle`](crate::HFILE::CloseHandle) call.
+	/// [`HFILE::CloseHandle`](crate::prelude::HandleClose::CloseHandle) call.
 	///
 	/// # Examples
 	///
@@ -96,7 +96,8 @@ impl HFILE {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFILEMAP::CloseHandle`](crate::HFILEMAP::CloseHandle) call.
+	/// [`HFILEMAP::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
+	/// call.
 	pub fn CreateFileMapping(self,
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,

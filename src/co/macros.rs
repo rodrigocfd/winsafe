@@ -96,7 +96,7 @@ macro_rules! const_no_debug_display {
 		}
 
 		// NativeConstant trait.
-		impl crate::co::traits::NativeConstant for $name {
+		impl crate::co::prelude::NativeConstant for $name {
 			type Concrete = $ntype;
 
 			fn has(&self, other: Self) -> bool {

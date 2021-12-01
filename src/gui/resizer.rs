@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{Handle, HDWP, HWND};
+use crate::handles::{prelude::Handle, HDWP, HWND};
 use crate::msg::wm;
 use crate::structs::{POINT, RECT, SIZE};
 

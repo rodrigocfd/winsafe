@@ -3,8 +3,8 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
-use crate::co::{self, traits::NativeConstant};
-use crate::gui::events::{EventsView, StatusBarEvents, WindowEvents};
+use crate::co::{self, prelude::NativeConstant};
+use crate::gui::events::{prelude::EventsView, StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
@@ -17,7 +17,7 @@ use crate::gui::traits::{
 	Window,
 };
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::{MsgSend, sb, wm};
 use crate::structs::{POINT, SIZE};
 

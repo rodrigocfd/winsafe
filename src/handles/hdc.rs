@@ -94,7 +94,7 @@ impl HDC {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::HBITMAP::DeleteObject) call.
+	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateCompatibleBitmap(self, cx: i32, cy: i32) -> WinResult<HBITMAP> {
 		unsafe { gdi32::CreateCompatibleBitmap(self.0, cx, cy).as_mut() }
 			.map(|ptr| HBITMAP(ptr))
@@ -274,7 +274,7 @@ impl HDC {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn PathToRegion(self) -> WinResult<HRGN> {
 		unsafe { gdi32::PathToRegion(self.0).as_mut() }
 			.map(|ptr| HRGN(ptr))

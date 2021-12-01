@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::HwndPlace;
-use crate::gui::events::{EventsView, LabelEvents, WindowEvents};
+use crate::gui::events::{prelude::EventsView, LabelEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl,
 	OptsId,
@@ -25,7 +25,7 @@ use crate::gui::traits::{
 	TextControl,
 	Window,
 };
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 
@@ -164,8 +164,8 @@ impl Label {
 		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
-	/// Calls [`set_text`](crate::gui::TextControl::set_text) and resizes the control
-	/// to exactly fit the new text.
+	/// Calls [`set_text`](crate::prelude::TextControl::set_text) and resizes
+	/// the control to exactly fit the new text.
 	///
 	/// # Examples
 	///

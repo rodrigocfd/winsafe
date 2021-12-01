@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::handles::HandleClose;
+use crate::handles::prelude::HandleClose;
 
 /// Handle to an
 /// [event](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).

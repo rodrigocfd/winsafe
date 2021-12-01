@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::{GetLastError, HIDWORD, LODWORD};
-use crate::handles::HandleClose;
+use crate::handles::prelude::HandleClose;
 use crate::privs::bool_to_winresult;
 
 /// Handle to a

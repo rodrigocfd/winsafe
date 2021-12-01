@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::handles::HandleGdi;
+use crate::handles::prelude::HandleGdi;
 use crate::structs::{LOGFONT, SIZE};
 use crate::various::WString;
 
@@ -22,7 +22,7 @@ impl HFONT {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::HFONT::DeleteObject) call.
+	/// [`HFONT::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateFont(
 		sz: SIZE, escapement: i32, orientation: i32,
 		weight: co::FW, italic: bool, underline: bool, strike_out: bool,
@@ -49,7 +49,7 @@ impl HFONT {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::HFONT::DeleteObject) call.
+	/// [`HFONT::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateFontIndirect(lf: &LOGFONT) -> WinResult<HFONT> {
 		unsafe { gdi32::CreateFontIndirectW(lf as *const _ as _).as_mut() }
 			.map(|ptr| Self(ptr))

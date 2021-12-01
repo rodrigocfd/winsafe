@@ -25,7 +25,7 @@ use crate::gui::traits::{
 	TextControl,
 	Window,
 };
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::{bm, wm};
 use crate::structs::{POINT, SIZE};
 
@@ -186,8 +186,8 @@ impl RadioButton {
 		Ok(())
 	}
 
-	/// Calls [`set_text`](crate::gui::TextControl::set_text) and resizes the
-	/// control to exactly fit the new text.
+	/// Calls [`set_text`](crate::prelude::TextControl::set_text) and resizes
+	/// the control to exactly fit the new text.
 	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
 		self.set_text(text)?;
 		let bound_box = calc_text_bound_box_check(text)?;

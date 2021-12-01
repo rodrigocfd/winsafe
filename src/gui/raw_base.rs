@@ -5,7 +5,7 @@ use crate::funcs::{RegisterClassEx, SetLastError};
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
 use crate::gui::privs::post_quit_error;
-use crate::handles::{Handle, HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
+use crate::handles::{prelude::Handle, HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
 use crate::msg::{MsgSendRecv, wm, WndMsg};
 use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;

@@ -11,11 +11,11 @@ use crate::funcs::{
 	TranslateMessage,
 };
 use crate::gui::base::Base;
-use crate::gui::events::EventsView;
+use crate::gui::events::prelude::EventsView;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{Handle, HBRUSH, HCURSOR, HICON, HWND};
+use crate::handles::{prelude::Handle, HBRUSH, HCURSOR, HICON, HWND};
 use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 

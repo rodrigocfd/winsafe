@@ -5,7 +5,7 @@ use crate::co;
 use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::EventsView;
+use crate::gui::events::prelude::EventsView;
 use crate::gui::privs::{
 	auto_ctrl_id,
 	multiply_dpi_or_dtu,

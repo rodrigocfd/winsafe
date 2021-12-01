@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{EventsView, TrackbarEvents, WindowEvents};
+use crate::gui::events::{prelude::EventsView, TrackbarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl,
 	OptsId,
@@ -19,7 +19,7 @@ use crate::gui::traits::{
 	Parent,
 	Window,
 };
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::trbm;
 use crate::structs::{POINT, SIZE};
 

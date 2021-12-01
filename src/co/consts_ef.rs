@@ -522,8 +522,8 @@ const_ordinary! { FOF: u16;
 }
 
 const_ordinary! { FORMAT_MESSAGE: u32;
-	/// [`FormatMessage`](crate::co::FormattedError::FormatMessage) `dwFlags`
-	/// (`u32`).
+	/// [`FormatMessage`](crate::prelude::FormattedError::FormatMessage)
+	/// `dwFlags` (`u32`).
 	=>
 	=>
 	ALLOCATE_BUFFER 0x0000_0100

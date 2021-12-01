@@ -32,8 +32,8 @@ pub use events_sbn::StatusBarEvents;
 pub use events_stn::LabelEvents;
 pub use events_trbn::TrackbarEvents;
 pub use events_tvn::TreeViewEvents;
-pub use events_wm_nfy::{EventsViewAll, WindowEventsAll};
-pub use events_wm::{EventsView, WindowEvents};
+pub use events_wm_nfy::WindowEventsAll;
+pub use events_wm::WindowEvents;
 pub(in crate::gui) use events_wm_nfy::sealed_events_wm_nfy;
 pub(in crate::gui) use events_wm::{ProcessResult, sealed_events_wm};
 

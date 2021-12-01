@@ -1,6 +1,6 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::handles::{HandleClose, HFILE};
+use crate::handles::{prelude::HandleClose, HFILE};
 use crate::various::{FileAccess, FileMapped, WString};
 
 /// Keeps sections and key/value pairs of a `.ini` file, also doing parsing and

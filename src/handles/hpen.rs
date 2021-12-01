@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::handles::HandleGdi;
+use crate::handles::prelude::HandleGdi;
 use crate::structs::{COLORREF, LOGPEN};
 
 /// Handle to a

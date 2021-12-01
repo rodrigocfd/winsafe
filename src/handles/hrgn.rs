@@ -4,7 +4,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::handles::HandleGdi;
+use crate::handles::prelude::HandleGdi;
 use crate::structs::{RECT, SIZE};
 
 /// Handle to a
@@ -22,7 +22,7 @@ impl HRGN {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateRectRgn(bounds: RECT) -> WinResult<HRGN> {
 		unsafe {
 			gdi32::CreateRectRgn(
@@ -37,7 +37,7 @@ impl HRGN {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateRectRgnIndirect(rc: &RECT) -> WinResult<HRGN> {
 		unsafe { gdi32::CreateRectRgnIndirect(rc as *const _ as _).as_mut() }
 			.map(|ptr| Self(ptr))
@@ -48,7 +48,7 @@ impl HRGN {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateRoundRectRgn(
 		bounds: RECT, size: SIZE) -> WinResult<HRGN>
 	{

@@ -2,7 +2,8 @@
 
 use crate::aliases::WinResult;
 use crate::ffi::kernel32;
-use crate::handles::{Handle, HandleClose, HFILE};
+use crate::handles::HFILE;
+use crate::handles::prelude::{Handle, HandleClose};
 use crate::privs::bool_to_winresult;
 use crate::structs::{OVERLAPPED, SECURITY_ATTRIBUTES};
 
@@ -23,7 +24,7 @@ impl HPIPE {
 	/// Returns handles to the read and write pipes.
 	///
 	/// **Note:** Must be paired with
-	/// [`HPIPE::CloseHandle`](crate::HPIPE::CloseHandle) calls.
+	/// [`HPIPE::CloseHandle`](crate::prelude::HandleClose::CloseHandle) calls.
 	pub fn CreatePipe(
 		attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		size: u32) -> WinResult<(HPIPE, HPIPE)>

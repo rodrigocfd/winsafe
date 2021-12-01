@@ -32,7 +32,6 @@ pub use raw_control::WindowControlOpts;
 pub use raw_main::WindowMainOpts;
 pub use raw_modal::WindowModalOpts;
 pub use resizer::{Horz, Vert};
-pub use traits::*;
 pub use window_control::WindowControl;
 pub use window_main::WindowMain;
 pub use window_modal::WindowModal;

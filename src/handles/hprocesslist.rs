@@ -7,7 +7,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::kernel32;
 use crate::funcs::GetLastError;
-use crate::handles::HandleClose;
+use crate::handles::prelude::HandleClose;
 use crate::structs::PROCESSENTRY32;
 
 /// Handle to a process list
@@ -25,7 +25,8 @@ impl HPROCESSLIST {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HPROCESSLIST::CloseHandle`](crate::HPROCESSLIST::CloseHandle) call.
+	/// [`HPROCESSLIST::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
+	/// call.
 	pub fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
 		th32_process_id: Option<u32>) -> WinResult<HPROCESSLIST>

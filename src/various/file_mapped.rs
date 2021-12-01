@@ -1,6 +1,7 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::handles::{Handle, HandleClose, HFILEMAP, HFILEMAPVIEW};
+use crate::handles::{HFILEMAP, HFILEMAPVIEW};
+use crate::handles::prelude::{Handle, HandleClose};
 use crate::various::{File, FileAccess};
 
 /// Manages a memory-mapped file, which can be read/written through slices. It

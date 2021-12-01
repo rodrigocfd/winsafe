@@ -7,7 +7,7 @@ use crate::com::dshow::any_structs::MFVideoNormalizedRect;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{BOOL, HANDLE, HRES, PCVOID, PVOID};
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::privs::ok_to_hrresult;
 use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
 

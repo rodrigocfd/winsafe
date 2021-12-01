@@ -4,14 +4,14 @@ use crate::aliases::{ErrResult, WinResult};
 use crate::co;
 use crate::funcs::{DispatchMessage, GetMessage, TranslateMessage};
 use crate::gui::events::{
-	EventsView,
+	prelude::EventsView,
 	sealed_events_wm::SealedEventsWm,
 	ProcessResult,
 	WindowEventsAll,
 };
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::gui::resizer::{Horz, Resizer, Vert};
-use crate::handles::{Handle, HACCEL, HWND};
+use crate::handles::{prelude::Handle, HACCEL, HWND};
 use crate::msg::WndMsg;
 use crate::structs::MSG;
 

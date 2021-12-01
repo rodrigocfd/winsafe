@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{ComboBoxEvents, EventsView, WindowEvents};
+use crate::gui::events::{prelude::EventsView, ComboBoxEvents, WindowEvents};
 use crate::gui::native_controls::combo_box_items::ComboBoxItems;
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl,
@@ -22,7 +22,7 @@ use crate::gui::traits::{
 	TextControl,
 	Window,
 };
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::wm;
 use crate::structs::{POINT, SIZE};
 

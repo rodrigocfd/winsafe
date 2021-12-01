@@ -3,10 +3,10 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
-use crate::co::{self, traits::NativeConstant};
+use crate::co::{self, prelude::NativeConstant};
 use crate::funcs::{GetAsyncKeyState, GetCursorPos};
 use crate::gui::base::Base;
-use crate::gui::events::{EventsView, ListViewEvents, WindowEvents};
+use crate::gui::events::{prelude::EventsView, ListViewEvents, WindowEvents};
 use crate::gui::events::sealed_events_wm_nfy::SealedEventsWmNfy;
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl,
@@ -25,7 +25,7 @@ use crate::gui::traits::{
 	Parent,
 	Window,
 };
-use crate::handles::{Handle, HIMAGELIST, HMENU, HWND};
+use crate::handles::{prelude::Handle, HIMAGELIST, HMENU, HWND};
 use crate::msg::{lvm, wm};
 use crate::structs::{NMITEMACTIVATE, NMLVKEYDOWN, POINT, SIZE};
 

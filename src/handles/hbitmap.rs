@@ -3,7 +3,7 @@
 use crate::aliases::WinResult;
 use crate::ffi::gdi32;
 use crate::funcs::GetLastError;
-use crate::handles::HandleGdi;
+use crate::handles::prelude::HandleGdi;
 use crate::structs::{BITMAP, SIZE};
 
 /// Handle to a
@@ -20,7 +20,7 @@ impl HBITMAP {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::HBITMAP::DeleteObject) call.
+	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	pub fn CreateBitmap(
 		sz: SIZE, num_planes: u32,
 		bit_count: u32, bits: *mut u8) -> WinResult<HBITMAP>

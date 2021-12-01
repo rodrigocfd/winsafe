@@ -4,11 +4,11 @@ use std::sync::Arc;
 use crate::co;
 use crate::enums::IdMenu;
 use crate::gui::base::Base;
-use crate::gui::events::EventsView;
+use crate::gui::events::prelude::EventsView;
 use crate::gui::privs::{multiply_dpi_or_dtu, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
-use crate::handles::{Handle, HBRUSH, HCURSOR, HICON};
+use crate::handles::{prelude::Handle, HBRUSH, HCURSOR, HICON};
 use crate::structs::{POINT, SIZE, WNDCLASSEX};
 use crate::various::WString;
 

@@ -1,5 +1,5 @@
 use crate::co;
-use crate::co::FormattedError;
+use crate::co::prelude::FormattedError;
 
 const_no_debug_display! { HRESULT: u32;
 	/// A native COM
@@ -14,8 +14,8 @@ const_no_debug_display! { HRESULT: u32;
 	/// [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
 	/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) traits
 	/// to show the error code along with the error description, taken from
-	/// [`FormattedError`](crate::co::FormattedError) trait. For example, the
-	/// code below:
+	/// [`FormattedError`](crate::prelude::FormattedError) trait. For example,
+	/// the code below:
 	///
 	/// ```rust,ignore
 	/// use winsafe::co::HRESULT;

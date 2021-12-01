@@ -4,8 +4,7 @@
 
 use crate::aliases::{HrResult, WinResult};
 use crate::co;
-use crate::handles::{HIMAGELIST, HTREEITEM, HWND};
-use crate::handles::traits::Handle;
+use crate::handles::{prelude::Handle, HIMAGELIST, HTREEITEM, HWND};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{zero_as_err, zero_as_none};
 use crate::privs::CLR_DEFAULT;

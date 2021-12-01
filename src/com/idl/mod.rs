@@ -10,7 +10,7 @@
 
 pub(in crate::com) mod ipersist;
 
-pub use ipersist::{IPersist, IPersistT};
+pub use ipersist::IPersist;
 
 pub(crate) mod prelude {
 	pub use super::ipersist::IPersistT;

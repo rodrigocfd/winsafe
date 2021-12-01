@@ -6,7 +6,7 @@ use crate::enums::IdStr;
 use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::EventsView;
+use crate::gui::events::prelude::EventsView;
 use crate::handles::HINSTANCE;
 use crate::msg::wm;
 

@@ -33,7 +33,7 @@ mod htheme;
 mod hthread;
 mod hupdatersrc;
 mod hwnd;
-pub(crate) mod traits;
+mod traits;
 
 pub use any_handles::*;
 pub use haccel::HACCEL;
@@ -65,7 +65,6 @@ pub use htheme::HTHEME;
 pub use hthread::HTHREAD;
 pub use hupdatersrc::HUPDATERSRC;
 pub use hwnd::HWND;
-pub use traits::*;
 
 pub(crate) mod prelude {
 	pub use super::traits::*;

@@ -7,7 +7,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::WndMsg;
 use crate::structs::{POINT, SIZE};
 

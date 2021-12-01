@@ -1,10 +1,9 @@
 use std::marker::PhantomData;
 
 use crate::aliases::WinResult;
-use crate::co::{self, traits::NativeConstant};
+use crate::co::{self, prelude::NativeConstant};
 use crate::enums::TreeitemTvi;
-use crate::handles::{HTREEITEM, HWND};
-use crate::handles::traits::Handle;
+use crate::handles::{prelude::Handle, HTREEITEM, HWND};
 use crate::msg::tvm;
 use crate::privs::MAX_PATH;
 use crate::structs::{TVINSERTSTRUCT, TVITEMEX};

@@ -25,16 +25,16 @@ pub(in crate::com) mod itaskbarlist3;
 pub(in crate::com) mod itaskbarlist4;
 
 pub use any_structs::*;
-pub use ifiledialog::{IFileDialog, IFileDialogT};
-pub use ifileopendialog::{IFileOpenDialog, IFileOpenDialogT};
-pub use ifilesavedialog::{IFileSaveDialog, IFileSaveDialogT};
-pub use imodalwindow::{IModalWindow, IModalWindowT};
-pub use ishellitem::{IShellItem, IShellItemT};
-pub use ishellitemarray::{IShellItemArray, IShellItemArrayT};
-pub use itaskbarlist::{ITaskbarList, ITaskbarListT};
-pub use itaskbarlist2::{ITaskbarList2, ITaskbarList2T};
-pub use itaskbarlist3::{ITaskbarList3, ITaskbarList3T};
-pub use itaskbarlist4::{ITaskbarList4, ITaskbarList4T};
+pub use ifiledialog::IFileDialog;
+pub use ifileopendialog::IFileOpenDialog;
+pub use ifilesavedialog::IFileSaveDialog;
+pub use imodalwindow::IModalWindow;
+pub use ishellitem::IShellItem;
+pub use ishellitemarray::IShellItemArray;
+pub use itaskbarlist::ITaskbarList;
+pub use itaskbarlist2::ITaskbarList2;
+pub use itaskbarlist3::ITaskbarList3;
+pub use itaskbarlist4::ITaskbarList4;
 
 pub(crate) mod prelude {
 	pub use super::ifiledialog::IFileDialogT;

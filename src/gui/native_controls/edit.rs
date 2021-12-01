@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{EditEvents, EventsView, WindowEvents};
+use crate::gui::events::{prelude::EventsView, EditEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl,
 	OptsId,
@@ -21,7 +21,7 @@ use crate::gui::traits::{
 	TextControl,
 	Window,
 };
-use crate::handles::{Handle, HWND};
+use crate::handles::{prelude::Handle, HWND};
 use crate::msg::{em, wm};
 use crate::structs::{EDITBALLOONTIP, POINT, SIZE};
 use crate::various::WString;
