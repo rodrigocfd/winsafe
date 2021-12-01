@@ -7,7 +7,7 @@
 
 pub(crate) type BOOL = i32;
 pub(crate) type HANDLE = *mut std::ffi::c_void;
-pub(crate) type HRESULT = i32;
+pub(crate) type HRES = u32; // originally declared as i32
 pub(crate) type PCSTR = *const u16;
 pub(crate) type PCVOID = *const std::ffi::c_void;
 pub(crate) type PFUNC = *const std::ffi::c_void;

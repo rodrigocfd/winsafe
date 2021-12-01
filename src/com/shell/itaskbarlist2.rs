@@ -1,17 +1,17 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::iunknown::ComPtr;
 use crate::com::shell::itaskbarlist::{ITaskbarListT, ITaskbarListVT};
-use crate::ffi::{BOOL, HANDLE, HRESULT};
+use crate::ffi::{BOOL, HANDLE, HRES};
 use crate::handles::HWND;
-use crate::privs::hr_to_winresult;
+use crate::privs::ok_to_hrresult;
 
 /// [`ITaskbarList2`](crate::shell::ITaskbarList2) virtual table.
 #[repr(C)]
 pub struct ITaskbarList2VT {
 	pub ITaskbarListVT: ITaskbarListVT,
-	pub MarkFullscreenWindow: fn(ComPtr, HANDLE, BOOL) -> HRESULT,
+	pub MarkFullscreenWindow: fn(ComPtr, HANDLE, BOOL) -> HRES,
 }
 
 /// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
@@ -44,11 +44,11 @@ pub trait ITaskbarList2T: ITaskbarListT {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	fn MarkFullscreenWindow(&self,
-		hwnd: HWND, full_screen: bool) -> WinResult<()>
+		hwnd: HWND, full_screen: bool) -> HrResult<()>
 	{
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList2VT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.MarkFullscreenWindow)(self.ptr(), hwnd.0, full_screen as _),
 			)
 		}

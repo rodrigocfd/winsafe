@@ -1,26 +1,26 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::autom::idispatch::{IDispatch, IDispatchT, IDispatchVT};
 use crate::com::dshow;
 use crate::com::iunknown::ComPtr;
-use crate::ffi::{HRESULT, PSTR};
-use crate::privs::{hr_to_winresult, hr_to_winresult_bool, INFINITE};
+use crate::ffi::{HRES, PSTR};
+use crate::privs::{ok_to_hrresult, okfalse_to_hrresult, INFINITE};
 use crate::various::WString;
 
 /// [`IMediaControl`](crate::dshow::IMediaControl) virtual table.
 #[repr(C)]
 pub struct IMediaControlVT {
 	pub IDispatchVT: IDispatchVT,
-	pub Run: fn(ComPtr) -> HRESULT,
-	pub Pause: fn(ComPtr) -> HRESULT,
-	pub Stop: fn(ComPtr) -> HRESULT,
-	pub GetState: fn(ComPtr, i32, *mut u32) -> HRESULT,
-	pub RenderFile: fn(ComPtr, PSTR) -> HRESULT,
-	pub AddSourceFilter: fn(ComPtr, PSTR, *mut ComPtr) -> HRESULT,
-	pub GetFilterCollection: fn(ComPtr, *mut ComPtr) -> HRESULT,
-	pub GetRegFilterCollection: fn(ComPtr, *mut ComPtr) -> HRESULT,
-	pub StopWhenReady: fn(ComPtr) -> HRESULT,
+	pub Run: fn(ComPtr) -> HRES,
+	pub Pause: fn(ComPtr) -> HRES,
+	pub Stop: fn(ComPtr) -> HRES,
+	pub GetState: fn(ComPtr, i32, *mut u32) -> HRES,
+	pub RenderFile: fn(ComPtr, PSTR) -> HRES,
+	pub AddSourceFilter: fn(ComPtr, PSTR, *mut ComPtr) -> HRES,
+	pub GetFilterCollection: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub GetRegFilterCollection: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub StopWhenReady: fn(ComPtr) -> HRES,
 }
 
 /// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
@@ -51,11 +51,11 @@ impl IMediaControlT for IMediaControl {}
 pub trait IMediaControlT: IDispatchT {
 	/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 	/// method.
-	fn AddSourceFilter(&self, file_name: &str) -> WinResult<IDispatch> {
+	fn AddSourceFilter(&self, file_name: &str) -> HrResult<IDispatch> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.AddSourceFilter)(
 					self.ptr(),
 					WString::from_str(file_name).as_mut_ptr(), // BSTR
@@ -68,12 +68,12 @@ pub trait IMediaControlT: IDispatchT {
 	/// [`IMediaControl::GetState`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
 	/// method.
 	fn GetState(&self,
-		ms_timeout: Option<i32>) -> WinResult<dshow::co::FILTER_STATE>
+		ms_timeout: Option<i32>) -> HrResult<dshow::co::FILTER_STATE>
 	{
 		let mut state = dshow::co::FILTER_STATE::Stopped;
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetState)(
 					self.ptr(),
 					ms_timeout.unwrap_or(INFINITE as _),
@@ -85,19 +85,19 @@ pub trait IMediaControlT: IDispatchT {
 
 	/// [`IMediaControl::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-pause)
 	/// method.
-	fn Pause(&self) -> WinResult<bool> {
+	fn Pause(&self) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
-			hr_to_winresult_bool((vt.Pause)(self.ptr()))
+			okfalse_to_hrresult((vt.Pause)(self.ptr()))
 		}
 	}
 
 	/// [`IMediaControl::RenderFile`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-renderfile)
 	/// method.
-	fn RenderFile(&self, file_name: &str) -> WinResult<()> {
+	fn RenderFile(&self, file_name: &str) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.RenderFile)(
 					self.ptr(),
 					WString::from_str(file_name).as_mut_ptr(), // BSTR
@@ -108,28 +108,28 @@ pub trait IMediaControlT: IDispatchT {
 
 	/// [`IMediaControl::Run`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-run)
 	/// method.
-	fn Run(&self) -> WinResult<bool> {
+	fn Run(&self) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
-			hr_to_winresult_bool((vt.Run)(self.ptr()))
+			okfalse_to_hrresult((vt.Run)(self.ptr()))
 		}
 	}
 
 	/// [`IMediaControl::Stop`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stop)
 	/// method.
-	fn Stop(&self) -> WinResult<()> {
+	fn Stop(&self) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
-			hr_to_winresult((vt.Stop)(self.ptr()))
+			ok_to_hrresult((vt.Stop)(self.ptr()))
 		}
 	}
 
 	/// [`IMediaControl::StopWhenReady`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stopwhenready)
 	/// method.
-	fn StopWhenReady(&self) -> WinResult<bool> {
+	fn StopWhenReady(&self) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
-			hr_to_winresult_bool((vt.StopWhenReady)(self.ptr()))
+			okfalse_to_hrresult((vt.StopWhenReady)(self.ptr()))
 		}
 	}
 }

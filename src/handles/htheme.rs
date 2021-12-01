@@ -1,11 +1,11 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::co;
 use crate::ffi::uxtheme;
 use crate::handles::{Handle, HDC, HRGN};
 use crate::structs::{COLORREF, RECT};
-use crate::privs::hr_to_winresult;
+use crate::privs::ok_to_hrresult;
 
 /// Handle to a
 /// [theme](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/).
@@ -18,17 +18,17 @@ impl_handle!(HTHEME);
 impl HTHEME {
 	/// [`CloseThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
-	pub fn CloseThemeData(self) -> WinResult<()> {
-		hr_to_winresult(unsafe { uxtheme::CloseThemeData(self.0) })
+	pub fn CloseThemeData(self) -> HrResult<()> {
+		ok_to_hrresult(unsafe { uxtheme::CloseThemeData(self.0) })
 	}
 
 	/// [`DrawThemeBackground`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// method.
 	pub fn DrawThemeBackground(self,
 		hdc: HDC, part_state: co::VS,
-		rc: RECT, rc_clip: RECT) -> WinResult<()>
+		rc: RECT, rc_clip: RECT) -> HrResult<()>
 	{
-		hr_to_winresult(
+		ok_to_hrresult(
 			unsafe {
 				uxtheme::DrawThemeBackground(
 					self.0,
@@ -51,11 +51,11 @@ impl HTHEME {
 	/// [`GetThemeBackgroundContentRect`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
 	/// method.
 	pub fn GetThemeBackgroundContentRect(self,
-		hdc: HDC, part_state: co::VS, bounds: RECT) -> WinResult<RECT>
+		hdc: HDC, part_state: co::VS, bounds: RECT) -> HrResult<RECT>
 	{
 		let mut rc_content = RECT::default();
 
-		hr_to_winresult(
+		ok_to_hrresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundContentRect(
 					self.0,
@@ -72,11 +72,11 @@ impl HTHEME {
 	/// [`GetThemeBackgroundExtent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
 	/// method.
 	pub fn GetThemeBackgroundExtent(self,
-		hdc: HDC, part_state: co::VS, rc_content: RECT) -> WinResult<RECT>
+		hdc: HDC, part_state: co::VS, rc_content: RECT) -> HrResult<RECT>
 	{
 		let mut rc_extent = RECT::default();
 
-		hr_to_winresult(
+		ok_to_hrresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundExtent(
 					self.0,
@@ -96,11 +96,11 @@ impl HTHEME {
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::HRGN::DeleteObject) call.
 	pub fn GetThemeBackgroundRegion(self,
-		hdc: HDC, part_state: co::VS, rc: RECT) -> WinResult<HRGN>
+		hdc: HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>
 	{
 		let mut hrgn = HRGN::NULL;
 
-		hr_to_winresult(
+		ok_to_hrresult(
 			unsafe {
 				uxtheme::GetThemeBackgroundRegion(
 					self.0,
@@ -117,11 +117,11 @@ impl HTHEME {
 	/// [`GetThemeColor`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
 	/// method.
 	pub fn GetThemeColor(self,
-		part_state: co::VS, prop: co::TMT) -> WinResult<COLORREF>
+		part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF>
 	{
 		let mut color = COLORREF(0);
 
-		hr_to_winresult(
+		ok_to_hrresult(
 			unsafe {
 				uxtheme::GetThemeColor(
 					self.0,

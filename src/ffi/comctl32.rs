@@ -1,6 +1,6 @@
 //! Raw bindings to comctl32.lib functions.
 
-use crate::ffi::{BOOL, HANDLE, HRESULT, PCSTR, PCVOID, PFUNC};
+use crate::ffi::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PFUNC};
 
 extern_sys! { "comctl32";
 	DefSubclassProc(HANDLE, u32, usize, isize) -> isize
@@ -20,6 +20,6 @@ extern_sys! { "comctl32";
 	InitCommonControls()
 	RemoveWindowSubclass(HANDLE, PFUNC, usize) -> BOOL
 	SetWindowSubclass(HANDLE, PFUNC, usize, usize) -> BOOL
-	TaskDialog(HANDLE, HANDLE, PCSTR, PCSTR, PCSTR, i32, PCSTR, *mut i32) -> HRESULT
-	TaskDialogIndirect(PCVOID, *mut i32, *mut i32, *mut BOOL) -> HRESULT
+	TaskDialog(HANDLE, HANDLE, PCSTR, PCSTR, PCSTR, i32, PCSTR, *mut i32) -> HRES
+	TaskDialogIndirect(PCVOID, *mut i32, *mut i32, *mut BOOL) -> HRES
 }

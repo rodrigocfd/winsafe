@@ -12,6 +12,11 @@ pub type ErrResult<T> = Result<T, Box<dyn Error + Send + Sync>>;
 
 /// A specialized
 /// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) for Win32
+/// COM operations, which returns an [`HRESULT`](crate::co::HRESULT) on failure.
+pub type HrResult<T> = Result<T, co::HRESULT>;
+
+/// A specialized
+/// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) for Win32
 /// operations, which returns an [`ERROR`](crate::co::ERROR) on failure.
 pub type WinResult<T> = Result<T, co::ERROR>;
 

@@ -1,17 +1,16 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::co;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
-use crate::ffi::{HANDLE, HRESULT};
-use crate::funcs::HRESULT_FROM_WIN32;
+use crate::ffi::HANDLE;
 use crate::handles::HWND;
 
 /// [`IModalWindow`](crate::shell::IModalWindow) virtual table.
 #[repr(C)]
 pub struct IModalWindowVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Show: fn(ComPtr, HANDLE) -> HRESULT,
+	pub Show: fn(ComPtr, HANDLE) -> u32,
 }
 
 /// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
@@ -31,15 +30,16 @@ pub trait IModalWindowT: IUnknownT {
 	/// method.
 	///
 	/// Returns false if user clicked Cancel.
-	fn Show(&self, hwnd_owner: HWND) -> WinResult<bool> {
-		let hr = unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IModalWindowVT);
-			(vt.Show)(self.ptr(), hwnd_owner.0)
-		};
-		match HRESULT_FROM_WIN32(hr) {
-			co::ERROR::S_OK => Ok(true),
-			co::ERROR::CANCELLED => Ok(false), // ordinary error, not a COM error
-			_ => Err(co::ERROR(hr as _)),
+	fn Show(&self, hwnd_owner: HWND) -> HrResult<bool> {
+		match co::ERROR(
+			unsafe {
+				let vt = &**(self.ptr().0 as *mut *mut IModalWindowVT);
+				(vt.Show)(self.ptr(), hwnd_owner.0)
+			},
+		) {
+			co::ERROR::SUCCESS => Ok(true),
+			co::ERROR::CANCELLED => Ok(false),
+			e => Err(e.to_hresult()),
 		}
 	}
 }

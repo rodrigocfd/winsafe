@@ -1,21 +1,21 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::iunknown::ComPtr;
 use crate::com::idl::ipersist::{IPersistT, IPersistVT};
-use crate::ffi::{HRESULT, PVOID};
-use crate::privs::hr_to_winresult_bool;
+use crate::ffi::{HRES, PVOID};
+use crate::privs::okfalse_to_hrresult;
 
 /// [`IMediaFilter`](crate::dshow::IMediaFilter) virtual table.
 #[repr(C)]
 pub struct IMediaFilterVT {
 	pub IPersistVT: IPersistVT,
-	pub Stop: fn(ComPtr) -> HRESULT,
-	pub Pause: fn(ComPtr) -> HRESULT,
-   pub Run: fn(ComPtr, i64) -> HRESULT,
-	pub GetState: fn(ComPtr, i64, PVOID, *mut u32) -> HRESULT,
-	pub SetSyncSource: fn(ComPtr, ComPtr) -> HRESULT,
-	pub GetSyncSource: fn(ComPtr, *mut ComPtr) -> HRESULT,
+	pub Stop: fn(ComPtr) -> HRES,
+	pub Pause: fn(ComPtr) -> HRES,
+   pub Run: fn(ComPtr, i64) -> HRES,
+	pub GetState: fn(ComPtr, i64, PVOID, *mut u32) -> HRES,
+	pub SetSyncSource: fn(ComPtr, ComPtr) -> HRES,
+	pub GetSyncSource: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
 /// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
@@ -34,28 +34,28 @@ impl IMediaFilterT for IMediaFilter {}
 pub trait IMediaFilterT: IPersistT {
 	/// [`IMediaFilter::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.
-	fn Pause(&self) -> WinResult<bool> {
+	fn Pause(&self) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaFilterVT);
-			hr_to_winresult_bool((vt.Pause)(self.ptr()))
+			okfalse_to_hrresult((vt.Pause)(self.ptr()))
 		}
 	}
 
 	/// [`IMediaFilter::Run`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-run)
 	/// method.
-	fn Run(&self, start: i64) -> WinResult<bool> {
+	fn Run(&self, start: i64) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaFilterVT);
-			hr_to_winresult_bool((vt.Run)(self.ptr(), start))
+			okfalse_to_hrresult((vt.Run)(self.ptr(), start))
 		}
 	}
 
 	/// [`IMediaFilter::Stop`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-stop)
 	/// method.
-	fn Stop(&self) -> WinResult<bool> {
+	fn Stop(&self) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaFilterVT);
-			hr_to_winresult_bool((vt.Stop)(self.ptr()))
+			okfalse_to_hrresult((vt.Stop)(self.ptr()))
 		}
 	}
 }

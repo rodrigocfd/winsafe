@@ -1,19 +1,19 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::iunknown::ComPtr;
 use crate::com::shell::ifiledialog::{IFileDialogT, IFileDialogVT};
 use crate::com::shell::imodalwindow::IModalWindowT;
 use crate::com::shell::ishellitemarray::IShellItemArray;
-use crate::ffi::HRESULT;
-use crate::privs::hr_to_winresult;
+use crate::ffi::HRES;
+use crate::privs::ok_to_hrresult;
 
 /// [`IFileOpenDialog`](crate::shell::IFileOpenDialog) virtual table.
 #[repr(C)]
 pub struct IFileOpenDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub GetResults: fn(ComPtr, *mut ComPtr) -> HRESULT,
-	pub GetSelectedItems: fn(ComPtr, *mut ComPtr) -> HRESULT,
+	pub GetResults: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub GetSelectedItems: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
 /// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
@@ -55,7 +55,7 @@ pub trait IFileOpenDialogT: IFileDialogT {
 	///
 	/// ```rust,ignore
 	/// use winsafe::prelude::*;
-	/// use winsafe::{shell, shell::co::SIGDN, WinResult};
+	/// use winsafe::{HrResult, shell, shell::co::SIGDN};
 	///
 	/// let fo: shell::IFileOpenDialog; // initialized somewhere
 	///
@@ -65,23 +65,23 @@ pub trait IFileOpenDialogT: IFileDialogT {
 	///             shi.GetDisplayName(SIGDN::FILESYSPATH)
 	///         ),
 	///     )
-	///     .collect::<WinResult<Vec<_>>>()?,
+	///     .collect::<HrResult<Vec<_>>>()?,
 	/// ```
-	fn GetResults(&self) -> WinResult<IShellItemArray> {
+	fn GetResults(&self) -> HrResult<IShellItemArray> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
-			hr_to_winresult((vt.GetResults)(self.ptr(), &mut ppv_queried))
+			ok_to_hrresult((vt.GetResults)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItemArray::from(ppv_queried))
 	}
 
 	/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 	/// method.
-	fn GetSelectedItems(&self) -> WinResult<IShellItemArray> {
+	fn GetSelectedItems(&self) -> HrResult<IShellItemArray> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
-			hr_to_winresult((vt.GetSelectedItems)(self.ptr(), &mut ppv_queried))
+			ok_to_hrresult((vt.GetSelectedItems)(self.ptr(), &mut ppv_queried))
 		}.map(|_| IShellItemArray::from(ppv_queried))
 	}
 }

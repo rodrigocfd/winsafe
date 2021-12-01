@@ -1,13 +1,13 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::{SUBCLASSPROC, TIMERPROC, WinResult};
+use crate::aliases::{HrResult, SUBCLASSPROC, TIMERPROC, WinResult};
 use crate::co;
 use crate::enums::{AtomStr, HwndPlace, IdMenu, IdPos, IdTdiconStr};
 use crate::ffi::{BOOL, comctl32, shell32, user32, uxtheme};
 use crate::funcs::{GetLastError, SetLastError};
 use crate::handles::{HACCEL, HDC, HINSTANCE, HMENU, HMONITOR, HRGN, HTHEME};
 use crate::msg::MsgSend;
-use crate::privs::{bool_to_winresult, hr_to_winresult};
+use crate::privs::{bool_to_winresult, ok_to_hrresult};
 use crate::structs::{
 	ALTTABINFO,
 	MENUBARINFO,
@@ -1379,11 +1379,11 @@ impl HWND {
 		main_instruction: Option<&str>,
 		content: Option<&str>,
 		common_buttons: co::TDCBF,
-		icon: IdTdiconStr) -> WinResult<co::DLGID>
+		icon: IdTdiconStr) -> HrResult<co::DLGID>
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
 		let mut pn_button = i32::default();
-		hr_to_winresult(
+		ok_to_hrresult(
 			unsafe {
 				comctl32::TaskDialog(
 					self.0,

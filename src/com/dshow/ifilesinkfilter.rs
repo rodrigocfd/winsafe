@@ -1,19 +1,19 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::dshow::any_structs::AM_MEDIA_TYPE;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
-use crate::ffi::{HRESULT, PCSTR, PCVOID, PSTR, PVOID};
-use crate::privs::hr_to_winresult;
+use crate::ffi::{HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::privs::ok_to_hrresult;
 use crate::various::WString;
 
 /// [`IFileSinkFilter`](crate::dshow::IFileSinkFilter) virtual table.
 #[repr(C)]
 pub struct IFileSinkFilterVT {
 	pub IUnknownVT: IUnknownVT,
-	pub SetFileName: fn(ComPtr, PCSTR, PCVOID) -> HRESULT,
-	pub GetCurFile: fn(ComPtr, *mut PSTR, PVOID) -> HRESULT,
+	pub SetFileName: fn(ComPtr, PCSTR, PCVOID) -> HRES,
+	pub GetCurFile: fn(ComPtr, *mut PSTR, PVOID) -> HRES,
 }
 
 /// [`IFileSinkFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
@@ -55,11 +55,11 @@ pub trait IFileSinkFilterT: IUnknownT {
 	/// }
 	/// ```
 	unsafe fn GetCurFile(&self,
-		mt: Option<&mut AM_MEDIA_TYPE>) -> WinResult<String>
+		mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
 	{
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		let vt = &**(self.ptr().0 as *mut *mut IFileSinkFilterVT);
-		hr_to_winresult(
+		ok_to_hrresult(
 			(vt.GetCurFile)(
 				self.ptr(),
 				&mut pstr,
@@ -75,11 +75,11 @@ pub trait IFileSinkFilterT: IUnknownT {
 	/// [`IFileSinkFilter::SetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
 	/// method.
 	fn SetFileName(&self,
-		file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> WinResult<()>
+		file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IFileSinkFilterVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.SetFileName)(
 					self.ptr(),
 					WString::from_str(file_name).as_ptr(),

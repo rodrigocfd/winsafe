@@ -1,14 +1,14 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::co;
 use crate::com::dshow;
 use crate::com::dshow::any_structs::MFVideoNormalizedRect;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
-use crate::ffi::{BOOL, HANDLE, HRESULT, PCVOID, PVOID};
+use crate::ffi::{BOOL, HANDLE, HRES, PCVOID, PVOID};
 use crate::handles::{Handle, HWND};
-use crate::privs::hr_to_winresult;
+use crate::privs::ok_to_hrresult;
 use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
 
 /// [`IMFVideoDisplayControl`](crate::dshow::IMFVideoDisplayControl) virtual
@@ -16,22 +16,22 @@ use crate::structs::{BITMAPINFOHEADER, COLORREF, RECT, SIZE};
 #[repr(C)]
 pub struct IMFVideoDisplayControlVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetNativeVideoSize: fn(ComPtr, PVOID, PVOID) -> HRESULT,
-	pub GetIdealVideoSize: fn(ComPtr, PVOID, PVOID) -> HRESULT,
-	pub SetVideoPosition: fn(ComPtr, PCVOID, PCVOID) -> HRESULT,
-	pub GetVideoPosition: fn(ComPtr, PVOID, PCVOID) -> HRESULT,
-	pub SetAspectRatioMode: fn(ComPtr, u32) -> HRESULT,
-	pub GetAspectRatioMode: fn(ComPtr, *mut u32) -> HRESULT,
-	pub SetVideoWindow: fn(ComPtr, HANDLE) -> HRESULT,
-	pub GetVideoWindow: fn(ComPtr, *mut HANDLE) -> HRESULT,
-	pub RepaintVideo: fn(ComPtr) -> HRESULT,
-	pub GetCurrentImage: fn(ComPtr, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRESULT,
-	pub SetBorderColor: fn(ComPtr, u32) -> HRESULT,
-	pub GetBorderColor: fn(ComPtr, *mut u32) -> HRESULT,
-	pub SetRenderingPrefs: fn(ComPtr, u32) -> HRESULT,
-	pub GetRenderingPrefs: fn(ComPtr, *mut u32) -> HRESULT,
-	pub SetFullscreen: fn(ComPtr, BOOL) -> HRESULT,
-	pub GetFullscreen: fn(ComPtr, *mut BOOL) -> HRESULT,
+	pub GetNativeVideoSize: fn(ComPtr, PVOID, PVOID) -> HRES,
+	pub GetIdealVideoSize: fn(ComPtr, PVOID, PVOID) -> HRES,
+	pub SetVideoPosition: fn(ComPtr, PCVOID, PCVOID) -> HRES,
+	pub GetVideoPosition: fn(ComPtr, PVOID, PCVOID) -> HRES,
+	pub SetAspectRatioMode: fn(ComPtr, u32) -> HRES,
+	pub GetAspectRatioMode: fn(ComPtr, *mut u32) -> HRES,
+	pub SetVideoWindow: fn(ComPtr, HANDLE) -> HRES,
+	pub GetVideoWindow: fn(ComPtr, *mut HANDLE) -> HRES,
+	pub RepaintVideo: fn(ComPtr) -> HRES,
+	pub GetCurrentImage: fn(ComPtr, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRES,
+	pub SetBorderColor: fn(ComPtr, u32) -> HRES,
+	pub GetBorderColor: fn(ComPtr, *mut u32) -> HRES,
+	pub SetRenderingPrefs: fn(ComPtr, u32) -> HRES,
+	pub GetRenderingPrefs: fn(ComPtr, *mut u32) -> HRES,
+	pub SetFullscreen: fn(ComPtr, BOOL) -> HRES,
+	pub GetFullscreen: fn(ComPtr, *mut BOOL) -> HRES,
 }
 
 /// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
@@ -65,11 +65,11 @@ impl IMFVideoDisplayControlT for IMFVideoDisplayControl {}
 pub trait IMFVideoDisplayControlT: IUnknownT {
 	/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 	/// method.
-	fn GetAspectRatioMode(&self) -> WinResult<dshow::co::MFVideoARMode> {
+	fn GetAspectRatioMode(&self) -> HrResult<dshow::co::MFVideoARMode> {
 		let mut mode = dshow::co::MFVideoARMode::None;
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetAspectRatioMode)(self.ptr(), &mut mode as *mut _ as _),
 			)
 		}.map(|_| mode)
@@ -77,11 +77,11 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 
 	/// [`IMFVideoDisplayControl::GetBorderColor`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getbordercolor)
 	/// method;
-	fn GetBorderColor(&self) -> WinResult<COLORREF> {
+	fn GetBorderColor(&self) -> HrResult<COLORREF> {
 		let mut color = COLORREF::new(0, 0, 0);
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.GetBorderColor)(self.ptr(), &mut color.0))
+			ok_to_hrresult((vt.GetBorderColor)(self.ptr(), &mut color.0))
 		}.map(|_| color)
 	}
 
@@ -89,9 +89,7 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 	/// method.
 	///
 	/// Returns bitmap description, DIB bytes and time stamp.
-	fn GetCurrentImage(&self)
-		-> WinResult<(BITMAPINFOHEADER, Vec<u8>, i64)>
-	{
+	fn GetCurrentImage(&self) -> HrResult<(BITMAPINFOHEADER, Vec<u8>, i64)> {
 		let mut bih = BITMAPINFOHEADER::default();
 		let mut dib_ptr: *mut u8 = std::ptr::null_mut();
 		let mut dib_sz = u32::default();
@@ -99,7 +97,7 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetCurrentImage)(
 					self.ptr(),
 					&mut bih as *mut _ as _,
@@ -119,11 +117,11 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 
 	/// [`IMFVideoDisplayControl::GetFullscreen`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getfullscreen)
 	/// method.
-	fn GetFullscreen(&self) -> WinResult<bool> {
+	fn GetFullscreen(&self) -> HrResult<bool> {
 		let mut fulls = false;
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetFullscreen)(self.ptr(), &mut fulls as *mut _ as _),
 			)
 		}.map(|_| fulls)
@@ -133,11 +131,11 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 	/// method.
 	///
 	/// Returns minimum and maximum ideal sizes.
-	fn GetIdealVideoSize(&self) -> WinResult<(SIZE, SIZE)> {
+	fn GetIdealVideoSize(&self) -> HrResult<(SIZE, SIZE)> {
 		let (mut min, mut max) = (SIZE::default(), SIZE::default());
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetIdealVideoSize)(
 					self.ptr(),
 					&mut min as *mut _ as _,
@@ -151,11 +149,11 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 	/// method.
 	///
 	/// Returns native and aspect ratio sizes.
-	fn GetNativeVideoSize(&self) -> WinResult<(SIZE, SIZE)> {
+	fn GetNativeVideoSize(&self) -> HrResult<(SIZE, SIZE)> {
 		let (mut native, mut aspec) = (SIZE::default(), SIZE::default());
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetNativeVideoSize)(
 					self.ptr(),
 					&mut native as *mut _ as _,
@@ -167,15 +165,13 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 
 	/// [`IMFVideoDisplayControl::GetVideoPosition`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideoposition)
 	/// method.
-	fn GetVideoPosition(&self)
-		-> WinResult<(MFVideoNormalizedRect, RECT)>
-	{
+	fn GetVideoPosition(&self) -> HrResult<(MFVideoNormalizedRect, RECT)> {
 		let mut norm_rc = MFVideoNormalizedRect::default();
 		let mut rc = RECT::default();
 
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetVideoPosition)(
 					self.ptr(),
 					&mut norm_rc as *mut _ as _,
@@ -187,54 +183,55 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 
 	/// [`IMFVideoDisplayControl::GetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideowindow)
 	/// method.
-	fn GetVideoWindow(&self) -> WinResult<HWND> {
+	fn GetVideoWindow(&self) -> HrResult<HWND> {
 		let mut hwnd = HWND::NULL;
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.GetVideoWindow)(self.ptr(), &mut hwnd.0))
+			ok_to_hrresult((vt.GetVideoWindow)(self.ptr(), &mut hwnd.0))
 		}.map(|_| hwnd)
 	}
 
 	/// [`IMFVideoDisplayControl::RepaintVideo`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-repaintvideo)
 	/// method.
-	fn RepaintVideo(&self) -> WinResult<()> {
-		match co::ERROR(
+	fn RepaintVideo(&self) -> HrResult<()> {
+		match co::HRESULT(
 			unsafe {
 				let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-				(vt.RepaintVideo)(self.ptr()) as _
-			}
+				(vt.RepaintVideo)(self.ptr())
+			},
 		) {
-			co::ERROR::S_OK | co::ERROR::MF_E_INVALIDREQUEST => Ok(()),
-			err => Err(err),
+			co::HRESULT::S_OK
+			| co::HRESULT::MF_E_INVALIDREQUEST => Ok(()),
+			hr => Err(hr),
 		}
 	}
 
 	/// [`IMFVideoDisplayControl::SetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setaspectratiomode)
 	/// method.
 	fn SetAspectRatioMode(&self,
-		mode: dshow::co::MFVideoARMode) -> WinResult<()>
+		mode: dshow::co::MFVideoARMode) -> HrResult<()>
 	{
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.SetAspectRatioMode)(self.ptr(), mode.0))
+			ok_to_hrresult((vt.SetAspectRatioMode)(self.ptr(), mode.0))
 		}
 	}
 
 	/// [`IMFVideoDisplayControl::SetBorderColor`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setbordercolor)
 	/// method.
-	fn SetBorderColor(&self, color: COLORREF) -> WinResult<()> {
+	fn SetBorderColor(&self, color: COLORREF) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.SetBorderColor)(self.ptr(), color.0))
+			ok_to_hrresult((vt.SetBorderColor)(self.ptr(), color.0))
 		}
 	}
 
 	/// [`IMFVideoDisplayControl::SetFullscreen`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setfullscreen)
 	/// method.
-	fn SetFullscreen(&self, full_screen: bool) -> WinResult<()> {
+	fn SetFullscreen(&self, full_screen: bool) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.SetFullscreen)(self.ptr(), full_screen as _))
+			ok_to_hrresult((vt.SetFullscreen)(self.ptr(), full_screen as _))
 		}
 	}
 
@@ -244,11 +241,11 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 	/// At least one parameter must be passed.
 	fn SetVideoPosition(&self,
 		src: Option<MFVideoNormalizedRect>,
-		dest: Option<RECT>) -> WinResult<()>
+		dest: Option<RECT>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.SetVideoPosition)(
 					self.ptr(),
 					src.as_ref().map_or(std::ptr::null(), |src| src as *const _ as _),
@@ -260,10 +257,10 @@ pub trait IMFVideoDisplayControlT: IUnknownT {
 
 	/// [`IMFVideoDisplayControl::SetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideowindow)
 	/// method.
-	fn SetVideoWindow(&self, hwnd_video: HWND) -> WinResult<()> {
+	fn SetVideoWindow(&self, hwnd_video: HWND) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
-			hr_to_winresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.0))
+			ok_to_hrresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.0))
 		}
 	}
 }

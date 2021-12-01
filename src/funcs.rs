@@ -4,14 +4,13 @@
 
 use std::collections::HashMap;
 
-use crate::aliases::WinResult;
+use crate::aliases::{HrResult, WinResult};
 use crate::co;
 use crate::ffi::{
 	advapi32,
 	BOOL,
 	comctl32,
 	comdlg32,
-	HRESULT,
 	kernel32,
 	shell32,
 	user32,
@@ -21,7 +20,7 @@ use crate::handles::{HINSTANCE, HLOCAL, HWND};
 use crate::msg::MsgSend;
 use crate::privs::{
 	bool_to_winresult,
-	hr_to_winresult,
+	ok_to_hrresult,
 	INVALID_FILE_ATTRIBUTES,
 	MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH,
@@ -823,12 +822,6 @@ pub const fn HIWORD(v: u32) -> u16 {
 	(v >> 16 & 0xffff) as _
 }
 
-/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
-/// function. Originally a macro.
-pub const fn HRESULT_FROM_WIN32(hr: HRESULT) -> co::ERROR {
-	co::ERROR((hr as u32) & 0xffff)
-}
-
 /// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
 /// function.
 pub fn InitCommonControls() {
@@ -1410,13 +1403,13 @@ pub fn SystemTimeToTzSpecificLocalTime(
 /// ```
 pub fn TaskDialogIndirect(
 	task_config: &TASKDIALOGCONFIG,
-	verification_flag_checked: Option<&mut bool>) -> WinResult<(co::DLGID, u16)>
+	verification_flag_checked: Option<&mut bool>) -> HrResult<(co::DLGID, u16)>
 {
 	let mut pn_button = i32::default();
 	let mut pn_radio_button = i32::default();
 	let mut pf_bool: BOOL = 0;
 
-	hr_to_winresult(
+	ok_to_hrresult(
 		unsafe {
 			comctl32::TaskDialogIndirect(
 				task_config as *const _ as _,

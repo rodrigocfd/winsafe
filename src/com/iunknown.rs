@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
-use crate::ffi::{HRESULT, PCVOID};
-use crate::privs::hr_to_winresult;
+use crate::aliases::HrResult;
+use crate::ffi::{HRES, PCVOID};
+use crate::privs::ok_to_hrresult;
 use crate::structs::IID;
 
 /// A pointer to a COM virtual table.
@@ -29,7 +29,7 @@ pub trait ComInterface: From<ComPtr> {
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
 #[repr(C)]
 pub struct IUnknownVT {
-	pub QueryInterface: fn(ComPtr, PCVOID, *mut ComPtr) -> HRESULT,
+	pub QueryInterface: fn(ComPtr, PCVOID, *mut ComPtr) -> HRES,
 	pub AddRef: fn(ComPtr) -> u32,
 	pub Release: fn(ComPtr) -> u32,
 }
@@ -56,11 +56,11 @@ pub trait IUnknownT: ComInterface + Clone {
 
 	/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
 	/// method.
-	fn QueryInterface<T: ComInterface>(&self) -> WinResult<T> {
+	fn QueryInterface<T: ComInterface>(&self) -> HrResult<T> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IUnknownVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.QueryInterface)(
 					self.ptr(),
 					&T::IID as *const _ as _,

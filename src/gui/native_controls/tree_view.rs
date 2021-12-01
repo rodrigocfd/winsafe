@@ -2,7 +2,7 @@ use std::any::Any;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
+use crate::aliases::{ErrResult, HrResult};
 use crate::co;
 use crate::gui::events::{EventsView, TreeViewEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::{
@@ -124,13 +124,12 @@ impl TreeView {
 		parent.as_base().privileged_on().wm_init_dialog({
 			let self2 = new_self.clone();
 			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
 				.map(|_| true)
 		});
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) -> ErrResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
@@ -153,6 +152,7 @@ impl TreeView {
 		}
 
 		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+			.map_err(|e| e.into())
 	}
 
 	/// Exposes the item methods.
@@ -166,7 +166,7 @@ impl TreeView {
 	/// Sets or unsets the given extended list view styles by sending a
 	/// [`tvm::SetExtendedStyle`](crate::msg::tvm::SetExtendedStyle) message.
 	pub fn set_extended_style(&self,
-		set: bool, ex_style: co::TVS_EX) -> WinResult<()>
+		set: bool, ex_style: co::TVS_EX) -> HrResult<()>
 	{
 		self.hwnd().SendMessage(tvm::SetExtendedStyle {
 			mask: ex_style,

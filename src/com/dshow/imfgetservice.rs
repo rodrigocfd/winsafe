@@ -1,16 +1,16 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::iunknown::{ComInterface, ComPtr, IUnknownT, IUnknownVT};
-use crate::ffi::{HRESULT, PCVOID};
-use crate::privs::hr_to_winresult;
+use crate::ffi::{HRES, PCVOID};
+use crate::privs::ok_to_hrresult;
 use crate::structs::GUID;
 
 /// [`IMFGetService`](crate::dshow::IMFGetService) virtual table.
 #[repr(C)]
 pub struct IMFGetServiceVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetService: fn(ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRESULT,
+	pub GetService: fn(ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRES,
 }
 
 /// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
@@ -53,11 +53,11 @@ pub trait IMFGetServiceT: IUnknownT {
 	///         &dshow::guid::MR_VIDEO_RENDER_SERVICE,
 	///     )?;
 	/// ```
-	fn GetService<T: ComInterface>(&self, service_guid: &GUID) -> WinResult<T> {
+	fn GetService<T: ComInterface>(&self, service_guid: &GUID) -> HrResult<T> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFGetServiceVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.GetService)(
 					self.ptr(),
 					service_guid as *const _ as _,

@@ -151,10 +151,9 @@
 //! hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)?;
 //! ```
 //!
-//! The method [`MessageBox`](crate::HWND::MessageBox), like all native
-//! functions that can return errors, will return
-//! [`WinResult`](crate::WinResult), which can contain an
-//! [`ERROR`](crate::co::ERROR) constant.
+//! The method [`MessageBox`](crate::HWND::MessageBox), like most functions that
+//! can return errors, will return [`WinResult`](crate::WinResult), which can
+//! contain an [`ERROR`](crate::co::ERROR) constant.
 //!
 //! # Native structs
 //!

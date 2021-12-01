@@ -79,7 +79,6 @@ impl RawControl {
 		self.0.raw_base.base.on().wm_nc_paint({
 			let self2 = self.clone();
 			move |p| paint_control_borders(self2.0.raw_base.base.hwnd(), p)
-				.map_err(|e| e.into())
 		});
 	}
 }

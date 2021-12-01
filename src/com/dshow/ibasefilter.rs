@@ -1,24 +1,24 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::dshow::ifiltergraph::IFilterGraph;
 use crate::com::dshow::imediafilter::{IMediaFilterT, IMediaFilterVT};
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::idl::ipersist::IPersistT;
 use crate::com::iunknown::{ComPtr, IUnknownT};
-use crate::ffi::{HRESULT, PCSTR, PSTR, PVOID};
-use crate::privs::hr_to_winresult;
+use crate::ffi::{HRES, PCSTR, PSTR, PVOID};
+use crate::privs::ok_to_hrresult;
 use crate::various::WString;
 
 /// [`IBaseFilter`](crate::dshow::IBaseFilter) virtual table.
 #[repr(C)]
 pub struct IBaseFilterVT {
 	pub IMediaFilterVT: IMediaFilterVT,
-	pub EnumPins: fn(ComPtr, *mut ComPtr) -> HRESULT,
-	pub FindPin: fn(ComPtr, PCSTR, *mut ComPtr) -> HRESULT,
-	pub QueryFilterInfo: fn(ComPtr, PVOID) -> HRESULT,
-	pub JoinFilterGraph: fn(ComPtr, ComPtr, PCSTR) -> HRESULT,
-	pub QueryVendorInfo: fn(ComPtr, *mut PSTR) -> HRESULT,
+	pub EnumPins: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub FindPin: fn(ComPtr, PCSTR, *mut ComPtr) -> HRES,
+	pub QueryFilterInfo: fn(ComPtr, PVOID) -> HRES,
+	pub JoinFilterGraph: fn(ComPtr, ComPtr, PCSTR) -> HRES,
+	pub QueryVendorInfo: fn(ComPtr, *mut PSTR) -> HRES,
 }
 
 /// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
@@ -52,11 +52,11 @@ pub trait IBaseFilterT: IMediaFilterT {
 	/// [`IBaseFilter::JoinFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.
 	fn JoinFilterGraph(&self,
-		graph: Option<&IFilterGraph>, name: &str) -> WinResult<()>
+		graph: Option<&IFilterGraph>, name: &str) -> HrResult<()>
 	{
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IBaseFilterVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.JoinFilterGraph)(
 					self.ptr(),
 					graph.map_or(ComPtr::null(), |g| g.ptr()),
@@ -68,11 +68,11 @@ pub trait IBaseFilterT: IMediaFilterT {
 
 	/// [`IBaseFilter::QueryVendorInfo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryvendorinfo)
 	/// method.
-	fn QueryVendorInfo(&self) -> WinResult<String> {
+	fn QueryVendorInfo(&self) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IBaseFilterVT);
-			hr_to_winresult((vt.QueryVendorInfo)(self.ptr(), &mut pstr))
+			ok_to_hrresult((vt.QueryVendorInfo)(self.ptr(), &mut pstr))
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
 			CoTaskMemFree(pstr);

@@ -2,7 +2,7 @@
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages),
 //! whose constants have [`TVM`](crate::co::TVM) prefix.
 
-use crate::aliases::WinResult;
+use crate::aliases::{HrResult, WinResult};
 use crate::co;
 use crate::handles::{HIMAGELIST, HTREEITEM, HWND};
 use crate::handles::traits::Handle;
@@ -580,19 +580,19 @@ impl MsgSend for SelectItem {
 /// [`TVM_SETEXTENDEDSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-setextendedstyle)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `HrResult<()>`.
 pub struct SetExtendedStyle {
 	pub style: co::TVS_EX,
 	pub mask: co::TVS_EX,
 }
 
 impl MsgSend for SetExtendedStyle {
-	type RetType = WinResult<()>;
+	type RetType = HrResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match co::ERROR(v as _) {
-			co::ERROR::S_OK => Ok(()),
-			err => Err(err),
+		match co::HRESULT(v as _) {
+			co::HRESULT::S_OK => Ok(()),
+			hr => Err(hr),
 		}
 	}
 

@@ -1,10 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::co;
 use crate::com::iunknown::{ComInterface, ComPtr, IUnknown};
 use crate::ffi::ole32;
-use crate::privs::hr_to_winresult;
+use crate::privs::ok_to_hrresult;
 use crate::structs::CLSID;
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
@@ -29,12 +29,12 @@ use crate::structs::CLSID;
 pub fn CoCreateInstance<T: ComInterface>(
 	clsid: &CLSID,
 	iunk_outer: Option<&mut IUnknown>,
-	cls_context: co::CLSCTX) -> WinResult<T>
+	cls_context: co::CLSCTX) -> HrResult<T>
 {
 	let mut ppv = ComPtr::null();
 	let mut ppv_outer = ComPtr::null();
 
-	hr_to_winresult(
+	ok_to_hrresult(
 		unsafe {
 			ole32::CoCreateInstance(
 				clsid as *const _ as _,
@@ -71,18 +71,17 @@ pub fn CoCreateInstance<T: ComInterface>(
 ///
 /// CoUninitialize();
 /// ```
-pub fn CoInitializeEx(coinit: co::COINIT) -> WinResult<co::ERROR> {
-	let code = co::ERROR(
-		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), coinit.0) } as _
+pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<co::HRESULT> {
+	let code = co::HRESULT(
+		unsafe { ole32::CoInitializeEx(std::ptr::null_mut(), coinit.0) },
 	);
 	match code {
-		co::ERROR::S_OK
-			| co::ERROR::S_FALSE
-			| co::ERROR::RPC_E_CHANGED_MODE => Ok(code),
-		err => Err(err),
+		co::HRESULT::S_OK
+		| co::HRESULT::S_FALSE
+		| co::HRESULT::RPC_E_CHANGED_MODE => Ok(code),
+		hr => Err(hr),
 	}
 }
-
 
 /// [`CoTaskMemFree`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.

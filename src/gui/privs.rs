@@ -2,7 +2,7 @@
 
 use std::error::Error;
 
-use crate::aliases::WinResult;
+use crate::aliases::{ErrResult, WinResult};
 use crate::co::{self, traits::NativeConstant};
 use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, PostQuitMessage, SystemParametersInfo};
@@ -196,7 +196,7 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 
 /// Paints the themed border of an user control, if it has the proper styles.
 pub(in crate::gui) fn paint_control_borders(
-	hwnd: HWND, wm_ncp: wm::NcPaint) -> WinResult<()>
+	hwnd: HWND, wm_ncp: wm::NcPaint) -> ErrResult<()>
 {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
@@ -233,4 +233,5 @@ pub(in crate::gui) fn paint_control_borders(
 	}
 
 	hwnd.ReleaseDC(hdc)
+		.map_err(|e| e.into())
 }

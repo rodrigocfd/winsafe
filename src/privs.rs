@@ -2,9 +2,9 @@
 
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::{HrResult, WinResult};
 use crate::co;
-use crate::ffi::{BOOL, HRESULT};
+use crate::ffi::{BOOL, HRES};
 use crate::funcs::GetLastError;
 use crate::handles::HINSTANCE;
 use crate::various::WString;
@@ -55,21 +55,21 @@ pub(crate) fn bool_to_winresult(expr: BOOL) -> WinResult<()> {
 }
 
 /// If value is `S_OK` yields `Ok()`, othersize `Err(hresult)`.
-pub(crate) fn hr_to_winresult(hresult: HRESULT) -> WinResult<()> {
-	match co::ERROR(hresult as _) {
-		co::ERROR::S_OK => Ok(()),
-		hresult => Err(hresult),
+pub(crate) fn ok_to_hrresult(hr: HRES) -> HrResult<()> {
+	match co::HRESULT(hr) {
+		co::HRESULT::S_OK => Ok(()),
+		hr => Err(hr),
 	}
 }
 
 /// If value is `S_OK` yields `Ok(true)`, if `S_FALSE` yields `Ok(false)`
 /// othersize `Err(hresult)`.
 #[allow(dead_code)]
-pub(crate) fn hr_to_winresult_bool(hresult: HRESULT) -> WinResult<bool> {
-	match co::ERROR(hresult as _) {
-		co::ERROR::S_OK => Ok(true),
-		co::ERROR::S_FALSE => Ok(false),
-		hresult => Err(hresult),
+pub(crate) fn okfalse_to_hrresult(hr: HRES) -> HrResult<bool> {
+	match co::HRESULT(hr) {
+		co::HRESULT::S_OK => Ok(true),
+		co::HRESULT::S_FALSE => Ok(false),
+		hr => Err(hr),
 	}
 }
 

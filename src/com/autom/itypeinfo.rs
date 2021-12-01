@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::iunknown::{
 	ComInterface,
 	ComPtr,
@@ -8,32 +8,32 @@ use crate::com::iunknown::{
 	IUnknownT,
 	IUnknownVT,
 };
-use crate::ffi::{HRESULT, PCVOID, PSTR, PVOID};
-use crate::privs::hr_to_winresult;
+use crate::ffi::{HRES, PCVOID, PSTR, PVOID};
+use crate::privs::ok_to_hrresult;
 
 /// [`ITypeInfo`](crate::autom::ITypeInfo) virtual table.
 #[repr(C)]
 pub struct ITypeInfoVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetTypeAttr: fn(ComPtr, *mut PVOID) -> HRESULT,
-	pub GetTypeComp: fn(ComPtr, *mut ComPtr) -> HRESULT,
-	pub GetFuncDesc: fn(ComPtr, u32, *mut PVOID) -> HRESULT,
-	pub GetVarDesc: fn(ComPtr, u32, *mut PVOID) -> HRESULT,
-	pub GetNames: fn(ComPtr, i32, *mut PSTR, u32, *mut u32) -> HRESULT,
-	pub GetRefTypeOfImplType: fn(ComPtr, u32, *mut u32) -> HRESULT,
-	pub GetImplTypeFlags: fn(ComPtr, u32, *mut i32) -> HRESULT,
-	pub GetIDsOfNames: fn(ComPtr, *mut PSTR, u32, *mut i32) -> HRESULT,
-	pub Invoke: fn(ComPtr, PVOID, i32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRESULT,
-	pub GetDocumentation: fn(ComPtr, i32, *mut PSTR, *mut PSTR, *mut u32, PSTR) -> HRESULT,
-	pub GetDllEntry: fn(ComPtr, i32, u32, *mut PSTR, *mut PSTR, *mut u16) -> HRESULT,
-	pub GetRefTypeInfo: fn(ComPtr, u32, *mut ComPtr) -> HRESULT,
-	pub AddressOfMember: fn(ComPtr, i32, u32, *mut PVOID) -> HRESULT,
-	pub CreateInstance: fn(ComPtr, *mut ComPtr, PCVOID, *mut ComPtr) -> HRESULT,
-	pub GetMops: fn(ComPtr, i32, *mut PSTR) -> HRESULT,
-	pub GetContainingTypeLib: fn(ComPtr, *mut ComPtr, *mut u32) -> HRESULT,
-	pub ReleaseTypeAttr: fn(ComPtr, PVOID) -> HRESULT,
-	pub ReleaseFuncDesc: fn(ComPtr, PVOID) -> HRESULT,
-	pub ReleaseVarDesc: fn(ComPtr, PVOID) -> HRESULT,
+	pub GetTypeAttr: fn(ComPtr, *mut PVOID) -> HRES,
+	pub GetTypeComp: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub GetFuncDesc: fn(ComPtr, u32, *mut PVOID) -> HRES,
+	pub GetVarDesc: fn(ComPtr, u32, *mut PVOID) -> HRES,
+	pub GetNames: fn(ComPtr, i32, *mut PSTR, u32, *mut u32) -> HRES,
+	pub GetRefTypeOfImplType: fn(ComPtr, u32, *mut u32) -> HRES,
+	pub GetImplTypeFlags: fn(ComPtr, u32, *mut i32) -> HRES,
+	pub GetIDsOfNames: fn(ComPtr, *mut PSTR, u32, *mut i32) -> HRES,
+	pub Invoke: fn(ComPtr, PVOID, i32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRES,
+	pub GetDocumentation: fn(ComPtr, i32, *mut PSTR, *mut PSTR, *mut u32, PSTR) -> HRES,
+	pub GetDllEntry: fn(ComPtr, i32, u32, *mut PSTR, *mut PSTR, *mut u16) -> HRES,
+	pub GetRefTypeInfo: fn(ComPtr, u32, *mut ComPtr) -> HRES,
+	pub AddressOfMember: fn(ComPtr, i32, u32, *mut PVOID) -> HRES,
+	pub CreateInstance: fn(ComPtr, *mut ComPtr, PCVOID, *mut ComPtr) -> HRES,
+	pub GetMops: fn(ComPtr, i32, *mut PSTR) -> HRES,
+	pub GetContainingTypeLib: fn(ComPtr, *mut ComPtr, *mut u32) -> HRES,
+	pub ReleaseTypeAttr: fn(ComPtr, PVOID) -> HRES,
+	pub ReleaseFuncDesc: fn(ComPtr, PVOID) -> HRES,
+	pub ReleaseVarDesc: fn(ComPtr, PVOID) -> HRES,
 }
 
 /// [`ITypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
@@ -52,14 +52,14 @@ pub trait ITypeInfoT: IUnknownT {
 	/// [`ITypeInfo::CreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.
 	fn CreateInstance<T: ComInterface>(&self,
-		iunk_outer: Option<&mut IUnknown>) -> WinResult<T>
+		iunk_outer: Option<&mut IUnknown>) -> HrResult<T>
 	{
 		let mut ppv_queried = ComPtr::null();
 		let mut ppv_outer = ComPtr::null();
 
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITypeInfoVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.CreateInstance)(
 					self.ptr(),
 					iunk_outer.as_ref()

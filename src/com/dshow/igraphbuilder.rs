@@ -1,26 +1,26 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::dshow::ibasefilter::IBaseFilter;
 use crate::com::dshow::ifiltergraph::{IFilterGraphT, IFilterGraphVT};
 use crate::com::dshow::ipin::IPin;
 use crate::com::iunknown::{ComPtr, IUnknownT};
-use crate::ffi::{HANDLE, HRESULT, PCSTR};
+use crate::ffi::{HANDLE, HRES, PCSTR};
 use crate::handles::HFILE;
-use crate::privs::{hr_to_winresult, hr_to_winresult_bool};
+use crate::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::various::WString;
 
 /// [`IGraphBuilder`](crate::dshow::IGraphBuilder) virtual table.
 #[repr(C)]
 pub struct IGraphBuilderVT {
 	pub IFilterGraphVT: IFilterGraphVT,
-	pub Connect: fn(ComPtr, ComPtr, ComPtr) -> HRESULT,
-	pub Render: fn(ComPtr, ComPtr) -> HRESULT,
-	pub RenderFile: fn(ComPtr, PCSTR, PCSTR) -> HRESULT,
-	pub AddSourceFilter: fn(ComPtr, PCSTR, PCSTR, *mut ComPtr) -> HRESULT,
-	pub SetLogFile: fn(ComPtr, HANDLE) -> HRESULT,
-	pub Abort: fn(ComPtr) -> HRESULT,
-	pub ShouldOperationContinue: fn(ComPtr) -> HRESULT,
+	pub Connect: fn(ComPtr, ComPtr, ComPtr) -> HRES,
+	pub Render: fn(ComPtr, ComPtr) -> HRES,
+	pub RenderFile: fn(ComPtr, PCSTR, PCSTR) -> HRES,
+	pub AddSourceFilter: fn(ComPtr, PCSTR, PCSTR, *mut ComPtr) -> HRES,
+	pub SetLogFile: fn(ComPtr, HANDLE) -> HRES,
+	pub Abort: fn(ComPtr) -> HRES,
+	pub ShouldOperationContinue: fn(ComPtr) -> HRES,
 }
 
 /// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
@@ -52,22 +52,22 @@ impl IGraphBuilderT for IGraphBuilder {}
 pub trait IGraphBuilderT: IFilterGraphT {
 	/// [`IGraphBuilder::Abort`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
 	/// method.
-	fn Abort(&self) -> WinResult<()> {
+	fn Abort(&self) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
-			hr_to_winresult((vt.Abort)(self.ptr()))
+			ok_to_hrresult((vt.Abort)(self.ptr()))
 		}
 	}
 
 	/// [`IGraphBuilder::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)
 	/// method.
 	fn AddSourceFilter(&self,
-		file_name: &str, filter_name: &str) -> WinResult<IBaseFilter>
+		file_name: &str, filter_name: &str) -> HrResult<IBaseFilter>
 	{
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.AddSourceFilter)(
 					self.ptr(),
 					WString::from_str(file_name).as_ptr(),
@@ -80,19 +80,19 @@ pub trait IGraphBuilderT: IFilterGraphT {
 
 	/// [`IGraphBuilder::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 	/// method.
-	fn Connect(&self, pin_out: &IPin, pin_in: &IPin) -> WinResult<()> {
+	fn Connect(&self, pin_out: &IPin, pin_in: &IPin) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
-			hr_to_winresult((vt.Connect)(self.ptr(), pin_out.ptr(), pin_in.ptr()))
+			ok_to_hrresult((vt.Connect)(self.ptr(), pin_out.ptr(), pin_in.ptr()))
 		}
 	}
 
 	/// [`IGraphBuilder::RenderFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)
 	/// method.
-	fn RenderFile(&self, file: &str) -> WinResult<()> {
+	fn RenderFile(&self, file: &str) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.RenderFile)(
 					self.ptr(),
 					WString::from_str(file).as_ptr(),
@@ -104,10 +104,10 @@ pub trait IGraphBuilderT: IFilterGraphT {
 
 	/// [`IGraphBuilder::SetLogFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
 	/// method.
-	fn SetLogFile(&self, hfile: Option<HFILE>) -> WinResult<()> {
+	fn SetLogFile(&self, hfile: Option<HFILE>) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.SetLogFile)(
 					self.ptr(),
 					hfile.map_or(std::ptr::null_mut(), |h| h.0),
@@ -118,10 +118,10 @@ pub trait IGraphBuilderT: IFilterGraphT {
 
 	/// [`IGraphBuilder::ShouldOperationContinue`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-shouldoperationcontinue)
 	/// method.
-	fn ShouldOperationContinue(&self) -> WinResult<bool> {
+	fn ShouldOperationContinue(&self) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
-			hr_to_winresult_bool((vt.ShouldOperationContinue)(self.ptr()))
+			okfalse_to_hrresult((vt.ShouldOperationContinue)(self.ptr()))
 		}
 	}
 }

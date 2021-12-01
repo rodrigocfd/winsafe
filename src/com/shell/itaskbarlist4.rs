@@ -1,20 +1,20 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::WinResult;
+use crate::aliases::HrResult;
 use crate::com::iunknown::ComPtr;
 use crate::com::shell;
 use crate::com::shell::itaskbarlist::ITaskbarListT;
 use crate::com::shell::itaskbarlist2::ITaskbarList2T;
 use crate::com::shell::itaskbarlist3::{ITaskbarList3T, ITaskbarList3VT};
-use crate::ffi::{HANDLE, HRESULT};
+use crate::ffi::{HANDLE, HRES};
 use crate::handles::HWND;
-use crate::privs::hr_to_winresult;
+use crate::privs::ok_to_hrresult;
 
 /// [`ITaskbarList4`](crate::shell::ITaskbarList4) virtual table.
 #[repr(C)]
 pub struct ITaskbarList4VT {
 	pub ITaskbarList3VT: ITaskbarList3VT,
-	pub SetTabProperties: fn(ComPtr, HANDLE, u32) -> HRESULT,
+	pub SetTabProperties: fn(ComPtr, HANDLE, u32) -> HRES,
 }
 
 /// [`ITaskbarList4`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist4)
@@ -49,11 +49,11 @@ pub trait ITaskbarList4T: ITaskbarList3T {
 	/// [`ITaskbarList4::SetTabProperties`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
 	/// method.
 	fn SetTabProperties(&self,
-		hwnd_tab: HWND, stp_flags: shell::co::STPFLAG) -> WinResult<()>
+		hwnd_tab: HWND, stp_flags: shell::co::STPFLAG) -> HrResult<()>
 	{
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList4VT);
-			hr_to_winresult(
+			ok_to_hrresult(
 				(vt.SetTabProperties)(self.ptr(), hwnd_tab.0, stp_flags.0),
 			)
 		}

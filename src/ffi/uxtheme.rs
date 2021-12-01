@@ -1,15 +1,15 @@
 //! Raw bindings to uxtheme.lib functions.
 
-use crate::ffi::{BOOL, HANDLE, HRESULT, PCSTR, PCVOID, PVOID};
+use crate::ffi::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PVOID};
 
 extern_sys! { "uxtheme";
-	CloseThemeData(HANDLE) -> HRESULT
-	DrawThemeBackground(HANDLE, HANDLE, i32, i32, PCVOID, PCVOID) -> HRESULT
+	CloseThemeData(HANDLE) -> HRES
+	DrawThemeBackground(HANDLE, HANDLE, i32, i32, PCVOID, PCVOID) -> HRES
 	GetThemeAppProperties() -> u32
-	GetThemeBackgroundContentRect(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRESULT
-	GetThemeBackgroundExtent(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRESULT
-	GetThemeBackgroundRegion(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRESULT
-	GetThemeColor(HANDLE, i32, i32, i32, *mut u32) -> HRESULT
+	GetThemeBackgroundContentRect(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRES
+	GetThemeBackgroundExtent(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRES
+	GetThemeBackgroundRegion(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRES
+	GetThemeColor(HANDLE, i32, i32, i32, *mut u32) -> HRES
 	IsAppThemed() -> BOOL
 	IsCompositionActive() -> BOOL
 	IsThemeActive() -> BOOL
