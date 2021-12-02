@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::HrResult;
+use crate::com::idl;
 use crate::com::iunknown::{ComInterface, ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{BOOL, HANDLE, HRES, oleaut32, PCVOID};
 use crate::handles::{prelude::Handle, HBITMAP, HDC};
@@ -14,7 +15,7 @@ pub struct IPictureVT {
 	pub IUnknownVT: IUnknownVT,
 	pub get_Handle: fn(ComPtr, *mut u32) -> HRES,
 	pub get_hPal: fn(ComPtr, *mut u32) -> HRES,
-	pub get_Type: fn(ComPtr, *mut u16) -> HRES,
+	pub get_Type: fn(ComPtr, *mut i16) -> HRES,
 	pub get_Width: fn(ComPtr, *mut i32) -> HRES,
 	pub get_Height: fn(ComPtr, *mut i32) -> HRES,
 	pub Render: fn(ComPtr, HANDLE, i32, i32, i32, i32, i32, i32, i32, i32, PCVOID) -> HRES,
@@ -107,6 +108,17 @@ pub trait IPictureT: IUnknownT {
 			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
 			ok_to_hrresult((vt.get_Height)(self.ptr(), &mut h))
 				.map(|_| h)
+		}
+	}
+
+	/// [`IPicture::get_Type`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
+	/// method.
+	fn get_Type(&self) -> HrResult<idl::co::PICTYPE> {
+		let mut ty = i16::default();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			ok_to_hrresult((vt.get_Type)(self.ptr(), &mut ty))
+				.map(|_| idl::co::PICTYPE(ty))
 		}
 	}
 

@@ -241,7 +241,7 @@ impl HFILE {
 	///
 	/// Returns the number of bytes written.
 	pub fn WriteFile(self,
-		buffer: &[u8], overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
 	{
 		let mut bytes_written = u32::default();
 
@@ -249,8 +249,8 @@ impl HFILE {
 			unsafe {
 				kernel32::WriteFile(
 					self.0,
-					buffer.as_ptr() as _,
-					buffer.len() as _,
+					data.as_ptr() as _,
+					data.len() as _,
 					&mut bytes_written,
 					overlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				)
