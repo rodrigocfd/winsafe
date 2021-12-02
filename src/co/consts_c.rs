@@ -126,7 +126,7 @@ const_ws! { CBS: u32;
 	LOWERCASE 0x4000
 }
 
-const_ordinary! { CC: u32;
+const_bitflag! { CC: u32;
 	/// [`CHOOSECOLOR`](crate::CHOOSECOLOR) `Flags` (`u32`).
 	=>
 	=>
@@ -184,7 +184,7 @@ const_wm! { CCM;
 	DPISCALE Self::FIRST.0 + 0xc
 }
 
-const_ordinary! { CDDS: u32;
+const_bitflag! { CDDS: u32;
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
 	=>
 	=>
@@ -200,7 +200,7 @@ const_ordinary! { CDDS: u32;
 	SUBITEM 0x0002_0000
 }
 
-const_ordinary! { CDIS: u32;
+const_bitflag! { CDIS: u32;
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState` (`u32`).
 	=>
 	=>
@@ -235,7 +235,7 @@ const_ordinary! { CDRF: u32;
 	NOTIFYPOSTERASE 0x0000_0040
 }
 
-const_ordinary! { CDS: u32;
+const_bitflag! { CDS: u32;
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `flags` (`u32`).
 	=>
 	=>
@@ -399,7 +399,7 @@ const_ordinary! { CMD: u16;
 	Accelerator 1
 }
 
-const_ordinary! { COINIT: u32;
+const_bitflag! { COINIT: u32;
 	/// [`COINIT`](https://docs.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
 	/// enumeration (`u32`).
 	=>
@@ -521,7 +521,7 @@ const_ordinary! { CP: u16;
 	UTF8 65001
 }
 
-const_ordinary! { CREATE: u32;
+const_bitflag! { CREATE: u32;
 	/// Process creation
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
@@ -553,7 +553,7 @@ const_ordinary! { CREATE: u32;
 	INHERIT_PARENT_AFFINITY 0x0001_0000
 }
 
-const_ordinary! { CS: u32;
+const_bitflag! { CS: u32;
 	/// Window class
 	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).

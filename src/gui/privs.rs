@@ -3,7 +3,7 @@
 use std::error::Error;
 
 use crate::aliases::{ErrResult, WinResult};
-use crate::co::{self, prelude::NativeConstant};
+use crate::co::{self, prelude::NativeBitflag};
 use crate::ffi::kernel32;
 use crate::funcs::{GetSystemMetrics, PostQuitMessage, SystemParametersInfo};
 use crate::gui::base::Base;

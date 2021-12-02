@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types)]
 
-const_ordinary! { ACCELF: u8;
+const_bitflag! { ACCELF: u8;
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
 	///
 	/// Originally has `F` prefix.
@@ -17,7 +17,7 @@ const_ordinary! { ACCELF: u8;
 	ALT 0x10
 }
 
-const_ordinary! { ACCESS_RIGHTS: u32;
+const_bitflag! { ACCESS_RIGHTS: u32;
 	/// Standard access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
@@ -123,7 +123,7 @@ const_nm! { BCN;
 	DROPDOWN Self::FIRST.0 + 0x0002
 }
 
-const_ordinary! { BCSIF: u32;
+const_bitflag! { BCSIF: u32;
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
 	=>
 	=>
@@ -133,7 +133,7 @@ const_ordinary! { BCSIF: u32;
 	SIZE 0x0008
 }
 
-const_ordinary! { BCSS: u32;
+const_bitflag! { BCSS: u32;
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `uSplitStyle` (`u32`).
 	=>
 	=>

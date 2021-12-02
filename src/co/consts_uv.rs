@@ -76,7 +76,7 @@ const_ordinary! { VER_COND: u8;
 	CONDITION_MASK 7
 }
 
-const_ordinary! { VER_MASK: u32;
+const_bitflag! { VER_MASK: u32;
 	/// [`VerifyVersionInfo`](crate::VerifyVersionInfo) and
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `type_mask` (`u32`).
 	=>
@@ -109,7 +109,7 @@ const_ordinary! { VER_PLATFORM: u32;
 	WIN32_NT 2
 }
 
-const_ordinary! { VER_SUITE: u16;
+const_bitflag! { VER_SUITE: u16;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
 	=>
 	=>
@@ -520,7 +520,7 @@ const_ordinary! { VOS: u32;
 	NT_WINDOWS32 0x0004_0004
 }
 
-const_ordinary! { VS_FF: u32;
+const_bitflag! { VS_FF: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileFlags` (`u32`).
 	=>
 	=>

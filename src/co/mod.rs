@@ -1,8 +1,8 @@
 //! Native Win32 constants and types of constants.
 //!
-//! All types implement the [`NativeConstant`](crate::prelude::NativeConstant)
-//! trait and bitflag operations, and they can be converted from/to their
-//! underlying integer type.
+//! All types can be converted from/to their underlying integer type. Some types
+//! implement the [`NativeBitflag`](crate::prelude::NativeBitflag) trait and
+//! bitflag operations.
 //!
 //! Among these constant types, three are error types:
 //! [`CDERR`](crate::co::CDERR), [`ERROR`](crate::co::ERROR) and

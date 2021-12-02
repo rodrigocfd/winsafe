@@ -2,7 +2,7 @@
 
 use crate::co::{ACCESS_RIGHTS, SECTION, STANDARD_RIGHTS, WM};
 
-const_ordinary! { EC: u16;
+const_bitflag! { EC: u16;
 	/// [`em::GetImeStatus`](crate::msg::em::SetMargins) margins to set (`u16`).
 	=>
 	=>
@@ -11,7 +11,7 @@ const_ordinary! { EC: u16;
 	USEFONTINFO 0xffff
 }
 
-const_ordinary! { EDS: u32;
+const_bitflag! { EDS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `flags` (`u32`).
 	=>
 	=>
@@ -19,7 +19,7 @@ const_ordinary! { EDS: u32;
 	ROTATEDMODE 0x0000_0004
 }
 
-const_ordinary! { EIMES: u16;
+const_bitflag! { EIMES: u16;
 	/// [`em::GetImeStatus`](crate::msg::em::GetImeStatus) and
 	/// [`em::SetImeStatus`](crate::msg::em::SetImeStatus) status (`u16`).
 	=>
@@ -102,7 +102,7 @@ const_wm! { EM;
 	ENABLEFEATURE 0x00da
 }
 
-const_ordinary! { EMF: u32;
+const_bitflag! { EMF: u32;
 	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
 	=>
 	=>
@@ -130,7 +130,7 @@ const_cmd! { EN;
 	AFTER_PASTE 0x0801
 }
 
-const_ordinary! { ENDSESSION: u32;
+const_bitflag! { ENDSESSION: u32;
 	/// [`wm::EndSession`](crate::msg::wm::EndSession) event (`u32`).
 	=>
 	=>
@@ -147,8 +147,8 @@ const_ordinary! { ENUM_SETTINGS: u32;
 	/// Originally with `ENUM` prefix and `SETTINGS` suffix.
 	=>
 	=>
-	CURRENT (0 - 1) as u32
-	REGISTRY (0 - 2) as u32
+	CURRENT -1i32 as u32
+	REGISTRY -2i32 as u32
 }
 
 const_ws! { ES: u32;
@@ -344,7 +344,7 @@ const_ordinary! { FF: u8;
 	DECORATIVE 5 << 4
 }
 
-const_ordinary! { FILE_ATTRIBUTE: u32;
+const_bitflag! { FILE_ATTRIBUTE: u32;
 	/// File attribute
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
 	/// also other flags from [`HFILE::CreateFile`](crate::HFILE::CreateFile)
@@ -395,7 +395,7 @@ const_ordinary! { FILE_ATTRIBUTE: u32;
 	SECURITY_EFFECTIVE_ONLY 0x0008_0000
 }
 
-const_ordinary! { FILE_MAP: u32;
+const_bitflag! { FILE_MAP: u32;
 	/// [`HFILEMAP::MapViewOfFile`](crate::HFILEMAP::MapViewOfFile)
 	/// `desired_access` (`u32`).
 	=>
@@ -410,10 +410,12 @@ const_ordinary! { FILE_MAP: u32;
 	TARGETS_INVALID 0x4000_0000
 }
 
-const_ordinary! { FILE_RIGHT: u32;
+const_bitflag! { FILE_RIGHT: u32;
 	/// File access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-access-rights-constants)
-	/// (`u32`). Originally has `FILE` prefix.
+	/// (`u32`).
+	///
+	/// Originally has `FILE` prefix.
 	=>
 	=>
 	ADD_FILE 0x0002
@@ -432,7 +434,7 @@ const_ordinary! { FILE_RIGHT: u32;
 	WRITE_DATA 0x0002
 }
 
-const_ordinary! { FILE_SHARE: u32;
+const_bitflag! { FILE_SHARE: u32;
 	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `share_mode` (`u32`).
 	=>
 	=>
@@ -498,7 +500,7 @@ const_ordinary! { FO: u32;
 	RENAME 0x0004
 }
 
-const_ordinary! { FOF: u16;
+const_bitflag! { FOF: u16;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `fFlags` (`u16`).
 	=>
 	=>
@@ -521,7 +523,7 @@ const_ordinary! { FOF: u16;
 	NO_UI Self::SILENT.0 | Self::NOCONFIRMATION.0 | Self::NOERRORUI.0 | Self::NOCONFIRMMKDIR.0
 }
 
-const_ordinary! { FORMAT_MESSAGE: u32;
+const_bitflag! { FORMAT_MESSAGE: u32;
 	/// [`FormatMessage`](crate::prelude::FormattedError::FormatMessage)
 	/// `dwFlags` (`u32`).
 	=>

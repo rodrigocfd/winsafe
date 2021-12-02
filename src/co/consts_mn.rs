@@ -2,7 +2,7 @@
 
 use crate::co::CCM;
 
-const_ordinary! { MB: u32;
+const_bitflag! { MB: u32;
 	/// [`HWND::MessageBox`](crate::HWND::MessageBox) `flags` (`u32`).
 	=>
 	=>
@@ -135,7 +135,7 @@ const_ordinary! { MB: u32;
 	SERVICE_NOTIFICATION 0x0020_0000
 }
 
-const_ordinary! { MBC: u32;
+const_bitflag! { MBC: u32;
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `flags` (`u32`).
 	///
 	/// Originally has `MB` prefix.
@@ -243,7 +243,7 @@ const_ws! { MCS: u32;
 	NOSELCHANGEONNAV 0x0100
 }
 
-const_ordinary! { MF: u32;
+const_bitflag! { MF: u32;
 	/// [`HMENU::AppendMenu`](crate::HMENU::AppendMenu) `flags`,
 	/// [`HMENU::GetMenuState`](crate::HMENU::GetMenuState) return value,
 	/// [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem) `hilite`
@@ -279,7 +279,7 @@ const_ordinary! { MF: u32;
 	MOUSESELECT 0x0000_8000
 }
 
-const_ordinary! { MFS: u32;
+const_bitflag! { MFS: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
 	=>
 	=>
@@ -293,7 +293,7 @@ const_ordinary! { MFS: u32;
 	DEFAULT MF::DEFAULT.0
 }
 
-const_ordinary! { MFT: u32;
+const_bitflag! { MFT: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType` (`u32`).
 	=>
 	=>
@@ -308,7 +308,7 @@ const_ordinary! { MFT: u32;
 	RIGHTJUSTIFY MF::RIGHTJUSTIFY.0
 }
 
-const_ordinary! { MIM: u32;
+const_bitflag! { MIM: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
 	=>
 	=>
@@ -320,7 +320,7 @@ const_ordinary! { MIM: u32;
 	APPLYTOSUBMENUS 0x8000_0000
 }
 
-const_ordinary! { MIIM: u32;
+const_bitflag! { MIIM: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
 	=>
 	=>
@@ -332,7 +332,7 @@ const_ordinary! { MIIM: u32;
 	APPLYTOSUBMENUS 0x8000_0000
 }
 
-const_ordinary! { MK: u16;
+const_bitflag! { MK: u16;
 	/// [`wm::LButtonDown`](crate::msg::wm::LButtonDown) (and similar) virtual
 	/// keys (`u16`).
 	=>
@@ -354,7 +354,7 @@ const_ordinary! { MND: u8;
 	ENDMENU 1
 }
 
-const_ordinary! { MNS: u32;
+const_bitflag! { MNS: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
 	=>
 	=>
@@ -395,7 +395,7 @@ const_ordinary! { MSGF: u8;
 	MENU 2
 }
 
-const_ordinary! { NIF: u32;
+const_bitflag! { NIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `uFlags` (`u32`).
 	=>
 	=>
@@ -409,7 +409,7 @@ const_ordinary! { NIF: u32;
 	SHOWTIP 0x0000_0080
 }
 
-const_ordinary! { NIIF: u32;
+const_bitflag! { NIIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwInfoFlags` (`u32`).
 	=>
 	=>
@@ -434,7 +434,7 @@ const_ordinary! { NIM: u32;
 	SETVERSION 0x0000_0004
 }
 
-const_ordinary! { NIS: u32;
+const_bitflag! { NIS: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwState` and `dwStateFlags`
 	/// (`u32`).
 	=>

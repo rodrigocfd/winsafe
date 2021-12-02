@@ -22,7 +22,7 @@ const_ordinary! { FDAP: u32;
 	TOP 1
 }
 
-const_ordinary! { FOS: u32;
+const_bitflag! { FOS: u32;
 	/// [`_FILEOPENDIALOGOPTIONS`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
 	=>
@@ -125,7 +125,7 @@ const_ordinary! { FOS: u32;
 	SUPPORTSTREAMABLEITEMS 0x8000_0000
 }
 
-const_ordinary! { SFGAO: u32;
+const_bitflag! { SFGAO: u32;
 	/// [`SFGAO`](https://docs.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
 	=>

@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-const_ordinary! { DDL: u16;
+const_bitflag! { DDL: u16;
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
 	=>
@@ -132,7 +132,7 @@ const_ordinary! { DLGID: u16;
 	CONTINUE 11
 }
 
-const_ordinary! { DM: u32;
+const_bitflag! { DM: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmFields` (`u32`).
 	=>
 	=>
@@ -170,7 +170,8 @@ const_ordinary! { DM: u32;
 
 const_ordinary! { DMBIN: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDefaultSource` (`i16`).
-	=>=>
+	=>
+	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	UPPER 1
@@ -202,7 +203,7 @@ const_ordinary! { DMCOLOR: i16;
 	COLOR 2
 }
 
-const_ordinary! { DMDISPLAYFLAGS: u32;
+const_bitflag! { DMDISPLAYFLAGS: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayFlags` (`u32`).
 	=>
 	=>

@@ -2,7 +2,7 @@
 
 use crate::co::{CCM, WM};
 
-const_ordinary! { TA: u32;
+const_bitflag! { TA: u32;
 	/// [`HDC::SetTextAlign`](crate::HDC::SetTextAlign) `align` (`u32`).
 	///
 	/// Also includes constants with `VTA` prefix.
@@ -198,7 +198,7 @@ const_ws! { TBS: u32;
 	TRANSPARENTBKGND 0x1000
 }
 
-const_ordinary! { TBSTATE: u8;
+const_bitflag! { TBSTATE: u8;
 	/// Toolbar button
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-button-states)
 	/// (`u8`).
@@ -216,7 +216,7 @@ const_ordinary! { TBSTATE: u8;
 	MARKED 0x80
 }
 
-const_ordinary! { TCIS: u32;
+const_bitflag! { TCIS: u32;
 	/// Tab control item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
 	/// (`u32`).
@@ -330,9 +330,10 @@ const_ordinary! { TD_ICON: u16;
 	SHIELD 0xfffc
 }
 
-const_ordinary! { TDCBF: i32;
+const_bitflag! { TDCBF: i32;
 	/// [`HWND::TaskDialog`](crate::HWND::TaskDialog) and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
+	///
 	/// Originally has `TDCBF` prefix and `BUTTON` suffix.
 	=>
 	=>
@@ -344,7 +345,7 @@ const_ordinary! { TDCBF: i32;
 	CLOSE 0x0020
 }
 
-const_ordinary! { TDF: i32;
+const_bitflag! { TDF: i32;
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwFlags` (`i32`).
 	=>
 	=>
@@ -368,7 +369,7 @@ const_ordinary! { TDF: i32;
 	SIZE_TO_CONTENT 0x0100_0000
 }
 
-const_ordinary! { TH32CS: u32;
+const_bitflag! { TH32CS: u32;
 	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
 	=>
@@ -382,7 +383,7 @@ const_ordinary! { TH32CS: u32;
 	INHERIT 0x8000_0000
 }
 
-const_ordinary! { THREAD_CREATE: u32;
+const_bitflag! { THREAD_CREATE: u32;
 	/// [`HTHREAD::CreateThread`](crate::HTHREAD::CreateThread) `flags` (`u32`).
 	/// Originally has no prefix.
 	=>
@@ -393,7 +394,7 @@ const_ordinary! { THREAD_CREATE: u32;
 	STACK_SIZE_PARAM_IS_A_RESERVATION 0x0001_0000
 }
 
-const_ordinary! { TME: u32;
+const_bitflag! { TME: u32;
 	/// [`TrackMouseEvent`](crate::TrackMouseEvent) `dwFlags` (`u32`).
 	=>
 	=>
@@ -667,7 +668,7 @@ const_ordinary! { TMT: i32;
 	ATLASRECT 8002
 }
 
-const_ordinary! { TPM: u32;
+const_bitflag! { TPM: u32;
 	/// [`TrackPopupMenu`](crate::HMENU::TrackPopupMenu) `flags` (`u32`).
 	=>
 	=>
@@ -803,7 +804,7 @@ const_ordinary! { TVI: isize;
 	SORT -0x0fffd
 }
 
-const_ordinary! { TVIF: u32;
+const_bitflag! { TVIF: u32;
 	/// [`TVITEM`](crate::TVITEM) `mask` (`u32`).
 	=>
 	=>
@@ -819,7 +820,7 @@ const_ordinary! { TVIF: u32;
 	EXPANDEDIMAGE 0x0200
 }
 
-const_ordinary! { TVIS: u32;
+const_bitflag! { TVIS: u32;
 	/// Tree view item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
 	/// (`u32`)
@@ -839,10 +840,12 @@ const_ordinary! { TVIS: u32;
 	USERMASK 0xf000
 }
 
-const_ordinary! { TVIS_EX: u32;
+const_bitflag! { TVIS_EX: u32;
 	/// [`TVITEMEX`](crate::TVITEMEX) `uStateEx` (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	DISABLED 0x0002
 	FLAT 0x0001
 	/// This value is not declared in any header, it may not be accurate.

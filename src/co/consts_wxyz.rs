@@ -20,7 +20,7 @@ const_ordinary! { WAIT: u32;
 	FAILED 0xffff_ffff
 }
 
-const_ordinary! { WC: u32;
+const_bitflag! { WC: u32;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
 	=>
 	=>
@@ -133,7 +133,6 @@ const_ordinary! { WIN32: u16;
 
 const_ordinary! { WM: u32;
 	/// Window message codes (`u32`).
-	///
 	///
 	/// **Note:** Control-specific messages have their own types, which are
 	/// convertible to `WM`.
@@ -425,7 +424,7 @@ const_ordinary! { WMSZ: u8;
 	BOTTOMRIGHT 8
 }
 
-const_ordinary! { WPF: u32;
+const_bitflag! { WPF: u32;
 	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags` (`u32`).
 	=>
 	=>
@@ -434,7 +433,7 @@ const_ordinary! { WPF: u32;
 	ASYNCWINDOWPLACEMENT 0x0004
 }
 
-const_ordinary! { WS: u32;
+const_bitflag! { WS: u32;
 	/// Window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles)
 	/// (`u32`).
@@ -541,7 +540,7 @@ const_ordinary! { WS: u32;
 	CHILDWINDOW Self::CHILD.0
 }
 
-const_ordinary! { WS_EX: u32;
+const_bitflag! { WS_EX: u32;
 	/// Extended window
 	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
 	/// (`u32`).
@@ -689,7 +688,7 @@ const_ordinary! { WS_EX: u32;
 	NOACTIVATE 0x0800_0000
 }
 
-const_ordinary! { WVR: u32;
+const_bitflag! { WVR: u32;
 	/// [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize) return flags (`u32`).
 	=>
 	=>

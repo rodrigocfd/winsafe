@@ -170,7 +170,7 @@ const_ordinary! { SE_ERR: u32;
 	NOASSOC 31
 }
 
-const_ordinary! { SECTION: u32;
+const_bitflag! { SECTION: u32;
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	=>
 	=>
@@ -198,7 +198,7 @@ const_ordinary! { SHARD: u32;
 	SHELLITEM 0x0000_0008
 }
 
-const_ordinary! { SHGFI: u32;
+const_bitflag! { SHGFI: u32;
 	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `flags` (`u32`).
 	=>
 	=>
@@ -222,7 +222,7 @@ const_ordinary! { SHGFI: u32;
 	OVERLAYINDEX 0x0000_0040
 }
 
-const_ordinary! { SIF: u32;
+const_bitflag! { SIF: u32;
 	/// [`SCROLLINFO`](crate::SCROLLINFO) `fMask` (`u32`).
 	=>
 	=>
@@ -545,7 +545,7 @@ const_ordinary! { SPI: u32;
 	SETDOCKMOVING 0x0091
 }
 
-const_ordinary! { SPIF: u32;
+const_bitflag! { SPIF: u32;
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `win_ini` (`u32`).
 	=>
 	=>
@@ -595,7 +595,7 @@ const_ws! { SS: u32;
 	WORDELLIPSIS 0x0000_c000
 }
 
-const_ordinary! { STANDARD_RIGHTS: u32;
+const_bitflag! { STANDARD_RIGHTS: u32;
 	/// Standard access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
@@ -619,7 +619,7 @@ const_ordinary! { STAP: u32;
 	VALIDBITS Self::ALLOW_NONCLIENT.0 | Self::ALLOW_CONTROLS.0 | Self::ALLOW_WEBCONTENT.0
 }
 
-const_ordinary! { STARTF: u32;
+const_bitflag! { STARTF: u32;
 	/// [`HPROCESS::CreateProcess`](crate::HPROCESS::CreateProcess) `dwFlags`
 	/// (`u32`).
 	=>
@@ -640,7 +640,7 @@ const_ordinary! { STARTF: u32;
 	USESTDHANDLES 0x0000_0100
 }
 
-const_ordinary! { STATE_SYSTEM: u32;
+const_bitflag! { STATE_SYSTEM: u32;
 	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and `stateButton`,
 	/// [`TITLEBARINFOEX`](crate::TITLEBARINFOEX) `rgstate`,
 	/// [`COMBOBOXINFO`](crate::COMBOBOXINFO) `stateButton`
@@ -1052,7 +1052,7 @@ const_ordinary! { SW_S: u8;
 	OTHERUNZOOM 4
 }
 
-const_ordinary! { SWP: u32;
+const_bitflag! { SWP: u32;
 	/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) `flags` (`u32`).
 	=>
 	=>

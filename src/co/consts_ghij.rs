@@ -2,7 +2,7 @@
 
 use crate::co::{CCM, WM};
 
-const_ordinary! { GA: u32;
+const_bitflag! { GA: u32;
 	/// [`HWND::GetAncestor`](crate::HWND::GetAncestor) `flags` (`u32`).
 	=>
 	=>
@@ -93,7 +93,7 @@ const_ordinary! { GDC: i32;
 	COLORMGMTCAPS 121
 }
 
-const_ordinary! { GDT: u32;
+const_bitflag! { GDT: u32;
 	/// [`NMDATETIMECHANGE`](crate::NMDATETIMECHANGE) and
 	/// [`NMDATETIMESTRING`](crate::NMDATETIMESTRING) `dwFlags` (`u32`).
 	=>
@@ -110,7 +110,7 @@ const_ordinary! { GDTR: u32;
 	MAX 0x0002
 }
 
-const_ordinary! { GENERIC: u32;
+const_bitflag! { GENERIC: u32;
 	/// Generic access rights
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
@@ -134,7 +134,7 @@ const_ordinary! { GM: i32;
 	ADVANCED 2
 }
 
-const_ordinary! { GMDI: u32;
+const_bitflag! { GMDI: u32;
 	/// [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem) `flags`
 	/// (`u32`).
 	=>
@@ -143,7 +143,7 @@ const_ordinary! { GMDI: u32;
 	GOINTOPOPUPS 0x0002
 }
 
-const_ordinary! { GMEM: u32;
+const_bitflag! { GMEM: u32;
 	/// [`HGLOBAL::GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) and
 	/// [`HGLOBAL::GlobalReAlloc`](crate::HGLOBAL::GlobalReAlloc) `flags`
 	/// (`u32`).
@@ -156,7 +156,7 @@ const_ordinary! { GMEM: u32;
 	GPTR Self::FIXED.0 | Self::ZEROINIT.0
 }
 
-const_ordinary! { GR: u32;
+const_bitflag! { GR: u32;
 	/// [`HPROCESS::GetGuiResources`](crate::HPROCESS::GetGuiResources) `flags`
 	/// (`u32`).
 	=>
@@ -167,7 +167,7 @@ const_ordinary! { GR: u32;
 	USEROBJECTS_PEAK 4
 }
 
-const_ordinary! { GUI: u32;
+const_bitflag! { GUI: u32;
 	/// [`GUITHREADINFO`](crate::GUITHREADINFO) `flags` (`u32`).
 	=>
 	=>
@@ -218,12 +218,12 @@ const_ordinary! { GWLP: i32;
 	HWNDPARENT -8
 	USERDATA -21
 	ID -12
-	DWLP_DLGPROC 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
+	DWLP_DLGPROC std::mem::size_of::<isize>() as i32
 	DWLP_MSGRESULT 0
-	DWLP_USER Self::DWLP_DLGPROC.0 + 8 //std::mem::size_of::<isize> as i32 https://github.com/rust-lang/rust/issues/51910
+	DWLP_USER Self::DWLP_DLGPROC.0 + std::mem::size_of::<isize>() as i32
 }
 
-const_ordinary! { HDF: i32;
+const_bitflag! { HDF: i32;
 	/// [`HDITEM`](crate::HDITEM) `fmt` (`i32`).
 	=>
 	=>
@@ -258,7 +258,7 @@ const_ordinary! { HDFT: u32;
 	HASNOVALUE 0x8000
 }
 
-const_ordinary! { HDI: i32;
+const_bitflag! { HDI: i32;
 	/// [`HDITEM`](crate::HDITEM) `mask` (`i32`).
 	=>
 	=>
@@ -410,7 +410,7 @@ const_ordinary! { HELPW: u32;
 	TCARD_OTHER_CALLER 0x0011
 }
 
-const_ordinary! { HHT: u32;
+const_bitflag! { HHT: u32;
 	/// [`HDHITTESTINFO`](crate::HDHITTESTINFO) `flags` (`u32`).
 	=>
 	=>
@@ -429,7 +429,7 @@ const_ordinary! { HHT: u32;
 	ONOVERFLOW 0x4000
 }
 
-const_ordinary! { HICF: u32;
+const_bitflag! { HICF: u32;
 	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags` (`u32`).
 	=>
 	=>
@@ -502,7 +502,7 @@ const_ordinary! { HT: u16;
 	TOP 12
 	TOPLEFT 13
 	TOPRIGHT 14
-	TRANSPARENT (0 - 1) as u16
+	TRANSPARENT 1i16 as u16
 	VSCROLL 7
 	ZOOM 9
 }
@@ -573,7 +573,7 @@ const_ordinary! { IDI: isize;
 	INFORMATION Self::ASTERISK.0
 }
 
-const_ordinary! { ILC: u32;
+const_bitflag! { ILC: u32;
 	/// [`HIMAGELIST::Create`](crate::HIMAGELIST::Create) `flags` (`u32`).
 	=>
 	=>
@@ -609,7 +609,7 @@ const_ordinary! { ILC: u32;
 	ORIGINALSIZE 0x0001_0000
 }
 
-const_ordinary! { ILD: u32;
+const_bitflag! { ILD: u32;
 	/// [`IMAGELISTDRAWFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).
 	=>
@@ -631,7 +631,7 @@ const_ordinary! { ILD: u32;
 	BLEND Self::BLEND50.0
 }
 
-const_ordinary! { ILS: u32;
+const_bitflag! { ILS: u32;
 	/// [`IMAGELISTSTATEFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
 	/// enumeration (`u32`).
 	=>
@@ -677,7 +677,7 @@ const_nm! { IPN;
 	FIELDCHANGED Self::FIRST.0 - 0
 }
 
-const_ordinary! { ISMEX: u32;
+const_bitflag! { ISMEX: u32;
 	/// [`InSendMessageEx`](crate::InSendMessageEx) return value (`u32`).
 	=>
 	=>

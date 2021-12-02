@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeConstant};
+use crate::co::{self, prelude::NativeBitflag};
 use crate::gui::events::{prelude::EventsView, StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;

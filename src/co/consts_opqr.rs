@@ -32,7 +32,7 @@ const_ordinary! { OCR: u32;
 	WAIT 32514
 }
 
-const_ordinary! { ODA: u32;
+const_bitflag! { ODA: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemAction` (`u32`).
 	=>
 	=>
@@ -41,7 +41,7 @@ const_ordinary! { ODA: u32;
 	FOCUS 0x0004
 }
 
-const_ordinary! { ODS: u32;
+const_bitflag! { ODS: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemState` (`u32`).
 	=>
 	=>
@@ -223,7 +223,7 @@ impl PITCH {
 	}
 }
 
-const_ordinary! { PM: u32;
+const_bitflag! { PM: u32;
 	/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
 	=>
 	=>
@@ -237,7 +237,7 @@ const_ordinary! { PM: u32;
 	QS_SENDMESSAGE QS::SENDMESSAGE.0 << 16
 }
 
-const_ordinary! { PROCESS: u32;
+const_bitflag! { PROCESS: u32;
 	/// Process
 	/// [security and access rights](https://docs.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
 	/// (`u32`).
@@ -353,7 +353,7 @@ const_ordinary! { QUALITY: u8;
 	CLEARTYPE_NATURAL 6
 }
 
-const_ordinary! { QS: u32;
+const_bitflag! { QS: u32;
 	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags` (`u32`).
 	=>
 	=>
@@ -462,7 +462,7 @@ const_ws! { RBS: u32;
 	DBLCLKTOGGLE 0x0000_8000
 }
 
-const_ordinary! { RDW: u32;
+const_bitflag! { RDW: u32;
 	/// [`HWND::RedrawWindow`](crate::HWND::RedrawWindow) `flags` (`u32`).
 	=>
 	=>
@@ -502,7 +502,7 @@ const_ordinary! { REG: u32;
 	QWORD_LITTLE_ENDIAN 11
 }
 
-const_ordinary! { REG_OPTION: u32;
+const_bitflag! { REG_OPTION: u32;
 	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `options` (`u32`).
 	=>
 	=>
@@ -528,7 +528,7 @@ const_ordinary! { REGION: i32;
 	COMPLEX 3
 }
 
-const_ordinary! { REPLACEFILE: u32;
+const_bitflag! { REPLACEFILE: u32;
 	/// [`ReplaceFile`](crate::ReplaceFile) `flags` (`u32`).
 	=>
 	=>
@@ -565,7 +565,7 @@ const_ordinary! { ROP: u32;
 	CAPTUREBLT 0x4000_0000
 }
 
-const_ordinary! { RRF: u32;
+const_bitflag! { RRF: u32;
 	/// [`HKEY::GetValue`](crate::HKEY::GetValue) `dwFlags` (`u32`).
 	=>
 	=>

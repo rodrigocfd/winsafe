@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::fmt;
-use std::hash::Hash;
 use std::ops;
 
 use crate::co;
@@ -11,18 +9,13 @@ use crate::handles::HLOCAL;
 use crate::structs::LANGID;
 use crate::various::WString;
 
-/// Any native Windows constant.
-pub trait NativeConstant: Default + Copy + Clone + Eq + PartialEq + Hash
-	+ From<Self::Concrete> + Into<Self::Concrete>
-	+ fmt::LowerHex + fmt::UpperHex + fmt::Binary + fmt::Octal
+/// Any native Windows bitflag constant.
+pub trait NativeBitflag: Sized
 	+ ops::BitAnd + ops::BitAndAssign
 	+ ops::BitOr + ops::BitOrAssign
 	+ ops::BitXor + ops::BitXorAssign
 	+ ops::Not
 {
-	/// The underlying concrete type for this constant type.
-	type Concrete;
-
 	/// Tells whether other bitflag style is present.
 	///
 	/// Equivalent to `(val & other) != 0`.
@@ -31,7 +24,7 @@ pub trait NativeConstant: Default + Copy + Clone + Eq + PartialEq + Hash
 
 /// A system error which can be formatted with
 /// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew).
-pub trait FormattedError: NativeConstant + Into<u32> {
+pub trait FormattedError: Into<u32> {
 	/// Returns the textual description of the system error, by calling
 	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// function.

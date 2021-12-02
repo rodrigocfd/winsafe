@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeConstant};
+use crate::co::{self, prelude::NativeBitflag};
 use crate::enums::TreeitemTvi;
 use crate::handles::{prelude::Handle, HTREEITEM, HWND};
 use crate::msg::tvm;

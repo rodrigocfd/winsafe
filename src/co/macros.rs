@@ -70,56 +70,6 @@ macro_rules! const_no_debug_display {
 				std::fmt::Octal::fmt(&self.0, f)
 			}
 		}
-
-		// Bitflag operations.
-		impl std::ops::BitAnd for $name {
-			type Output = $name;
-			fn bitand(self, rhs: Self) -> Self::Output {
-				Self(self.0 & rhs.0)
-			}
-		}
-		impl std::ops::BitAndAssign for $name {
-			fn bitand_assign(&mut self, rhs: Self) {
-				*self = Self(self.0 & rhs.0);
-			}
-		}
-		impl std::ops::BitOr for $name {
-			type Output = $name;
-			fn bitor(self, rhs: Self) -> Self {
-				Self(self.0 | rhs.0)
-			}
-		}
-		impl std::ops::BitOrAssign for $name {
-			fn bitor_assign(&mut self, rhs: Self) {
-				*self = Self(self.0 | rhs.0);
-			}
-		}
-		impl std::ops::BitXor for $name {
-			type Output = $name;
-			fn bitxor(self, rhs: Self) -> Self::Output {
-				Self(self.0 ^ rhs.0)
-			}
-		}
-		impl std::ops::BitXorAssign for $name {
-			fn bitxor_assign(&mut self, rhs: Self) {
-				*self = Self(self.0 ^ rhs.0);
-			}
-		}
-		impl std::ops::Not for $name {
-			type Output = $name;
-			fn not(self) -> Self::Output {
-				Self(!self.0)
-			}
-		}
-
-		// NativeConstant trait.
-		impl crate::co::prelude::NativeConstant for $name {
-			type Concrete = $ntype;
-
-			fn has(&self, other: Self) -> bool {
-				(self.0 & other.0) != 0
-			}
-		}
 	};
 }
 
@@ -167,6 +117,91 @@ macro_rules! const_ordinary {
 	};
 }
 
+/// Declares the type of an ordinary bitflag constant, along with private and
+/// public values.
+macro_rules! const_bitflag {
+	(
+		$name:ident: $ntype:ty;
+		$(#[$doc:meta])*
+		=>
+		$(
+			$(#[$privvaldoc:meta])*
+			$privvalname:ident $privval:expr
+		)*
+		=>
+		$(
+			$(#[$pubvaldoc:meta])*
+			$pubvalname:ident $pubval:expr
+		)*
+	) => {
+		const_ordinary! {
+			$name: $ntype;
+			$(#[$doc])*
+			///
+			/// This is a bitflag constant, which implements the
+			/// [`NativeBitflag`](crate::prelude::NativeBitflag) trait.
+			=>
+			$(
+				$(#[$privvaldoc])*
+				$privvalname $privval
+			)*
+			=>
+			$(
+				$(#[$pubvaldoc])*
+				$pubvalname $pubval
+			)*
+		}
+
+		// Bitflag operations.
+		impl std::ops::BitAnd for $name {
+			type Output = $name;
+			fn bitand(self, rhs: Self) -> Self::Output {
+				Self(self.0 & rhs.0)
+			}
+		}
+		impl std::ops::BitAndAssign for $name {
+			fn bitand_assign(&mut self, rhs: Self) {
+				*self = Self(self.0 & rhs.0);
+			}
+		}
+		impl std::ops::BitOr for $name {
+			type Output = $name;
+			fn bitor(self, rhs: Self) -> Self {
+				Self(self.0 | rhs.0)
+			}
+		}
+		impl std::ops::BitOrAssign for $name {
+			fn bitor_assign(&mut self, rhs: Self) {
+				*self = Self(self.0 | rhs.0);
+			}
+		}
+		impl std::ops::BitXor for $name {
+			type Output = $name;
+			fn bitxor(self, rhs: Self) -> Self::Output {
+				Self(self.0 ^ rhs.0)
+			}
+		}
+		impl std::ops::BitXorAssign for $name {
+			fn bitxor_assign(&mut self, rhs: Self) {
+				*self = Self(self.0 ^ rhs.0);
+			}
+		}
+		impl std::ops::Not for $name {
+			type Output = $name;
+			fn not(self) -> Self::Output {
+				Self(!self.0)
+			}
+		}
+
+		// NativeBitflag trait.
+		impl crate::co::prelude::NativeBitflag for $name {
+			fn has(&self, other: Self) -> bool {
+				(self.0 & other.0) != 0
+			}
+		}
+	};
+}
+
 /// Declares the type of a constant for a window message, convertible to
 /// [`WM`](crate::co::WM) constant type, along with private and public values.
 macro_rules! const_wm {
@@ -188,7 +223,7 @@ macro_rules! const_wm {
 			$name: u32;
 			$(#[$doc])*
 			///
-			/// Convertible to [`WM`](crate::co::WM).
+			/// This is a window message, convertible to [`WM`](crate::co::WM).
 			=>
 			$(
 				$(#[$privvaldoc])*
@@ -231,7 +266,8 @@ macro_rules! const_cmd {
 			$name: u16;
 			$(#[$doc])*
 			///
-			/// Convertible to [`CMD`](crate::co::CMD).
+			/// This is a [`wm::Command`](crate::msg::wm::Command) notification
+			/// code, convertible to [`CMD`](crate::co::CMD).
 			=>
 			$(
 				$(#[$privvaldoc])*
@@ -274,7 +310,8 @@ macro_rules! const_nm {
 			$name: i32;
 			$(#[$doc])*
 			///
-			/// Convertible to [`NM`](crate::co::NM).
+			/// This is a [`wm::Notify`](crate::msg::wm::Notify) notification
+			/// code, convertible to [`NM`](crate::co::NM).
 			=>
 			$(
 				$(#[$privvaldoc])*
@@ -312,11 +349,11 @@ macro_rules! const_ws {
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		const_ordinary! {
+		const_bitflag! {
 			$name: $ntype;
 			$(#[$doc])*
 			///
-			/// Convertible to [`WS`](crate::co::WS).
+			/// This is a window style, convertible to [`WS`](crate::co::WS).
 			=>
 			$(
 				$(#[$privvaldoc])*
@@ -355,11 +392,12 @@ macro_rules! const_wsex {
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		const_ordinary! {
+		const_bitflag! {
 			$name: u32;
 			$(#[$doc])*
 			///
-			/// Convertible to [`WS_EX`](crate::co::WS_EX).
+			/// This is an extended windoow style, convertible to
+			/// [`WS_EX`](crate::co::WS_EX).
 			=>
 			$(
 				$(#[$privvaldoc])*

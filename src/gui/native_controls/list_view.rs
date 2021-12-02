@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeConstant};
+use crate::co::{self, prelude::NativeBitflag};
 use crate::funcs::{GetAsyncKeyState, GetCursorPos};
 use crate::gui::base::Base;
 use crate::gui::events::{prelude::EventsView, ListViewEvents, WindowEvents};

@@ -2,7 +2,7 @@
 
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, WM, WS};
 
-const_ordinary! { KEY: u32;
+const_bitflag! { KEY: u32;
 	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `access_rights` (`u32`).
 	=>
 	=>
@@ -257,7 +257,7 @@ const_ws! { LBS: u32;
 	STANDARD Self::NOTIFY.0 | Self::SORT.0 | WS::VSCROLL.0 | WS::BORDER.0
 }
 
-const_ordinary! { LIF: u32;
+const_bitflag! { LIF: u32;
 	/// [`LITEM`](crate::LITEM) `mask` (`u32`).
 	=>
 	=>
@@ -267,7 +267,7 @@ const_ordinary! { LIF: u32;
 	URL 0x0000_0008
 }
 
-const_ordinary! { LIS: u32;
+const_bitflag! { LIS: u32;
 	/// [`LITEM`](crate::LITEM) `state` (`u32`).
 	=>
 	=>
@@ -300,7 +300,7 @@ const_wm! { LM;
 	GETIDEALSIZE Self::GETIDEALHEIGHT.0
 }
 
-const_ordinary! { LR: u32;
+const_bitflag! { LR: u32;
 	/// [`HINSTANCE::LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
 	/// [`HINSTANCE::LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and
 	/// [`HINSTANCE::LoadImageIcon`](crate::HINSTANCE::LoadImageIcon) `load`.
@@ -355,12 +355,12 @@ const_ordinary! { LVCDI: u32;
 	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `dwItemType` (`u32`).
 	=>
 	=>
-	LVCDI_ITEM 0x0000_0000
+	ITEM 0x0000_0000
 	GROUP 0x0000_0001
 	ITEMSLIST 0x0000_0002
 }
 
-const_ordinary! { LVCF: u32;
+const_bitflag! { LVCF: u32;
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
 	=>
 	=>
@@ -375,7 +375,7 @@ const_ordinary! { LVCF: u32;
 	WIDTH 0x0002
 }
 
-const_ordinary! { LVCFMT_C: i32;
+const_bitflag! { LVCFMT_C: i32;
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`i32`).
 	=>
 	=>
@@ -392,7 +392,7 @@ const_ordinary! { LVCFMT_C: i32;
 	SPLITBUTTON 0x100_0000
 }
 
-const_ordinary! { LVCFMT_I: i32;
+const_bitflag! { LVCFMT_I: i32;
 	/// [`LVITEM`](crate::LVITEM) `piColFmt` (`i32`).
 	=>
 	=>
@@ -403,7 +403,7 @@ const_ordinary! { LVCFMT_I: i32;
 	TILE_PLACEMENTMASK Self::LINE_BREAK.0 | Self::FILL.0
 }
 
-const_ordinary! { LVFI: u32;
+const_bitflag! { LVFI: u32;
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags` (`u32`).
 	=>
 	=>
@@ -432,7 +432,7 @@ const_ordinary! { LVGIT: u32;
 	UNFOLDED 0x0001
 }
 
-const_ordinary! { LVHT: u32;
+const_bitflag! { LVHT: u32;
 	/// [`LVHITTESTINFO`](crate::LVHITTESTINFO) `flags` (`u32`).
 	=>
 	=>
@@ -467,7 +467,7 @@ const_ordinary! { LVIR: u8;
 	SELECTBOUNDS 3
 }
 
-const_ordinary! { LVIS: u32;
+const_bitflag! { LVIS: u32;
 	/// ListView item
 	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
 	/// (`u32`).
@@ -493,7 +493,7 @@ const_ordinary! { LVI_GROUPID: i32;
 	I_GROUPIDNONE -2
 }
 
-const_ordinary! { LVIF: u32;
+const_bitflag! { LVIF: u32;
 	/// [`LVITEM`](crate::LVITEM) `mask` (`u32`).
 	=>
 	=>
@@ -508,7 +508,7 @@ const_ordinary! { LVIF: u32;
 	TEXT 0x0000_0001
 }
 
-const_ordinary! { LVKF: u32;
+const_bitflag! { LVKF: u32;
 	/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags` (`u32`).
 	=>
 	=>
@@ -686,7 +686,7 @@ const_nm! { LVN;
 	GETEMPTYMARKUP Self::FIRST.0 - 87
 }
 
-const_ordinary! { LVNI: u32;
+const_bitflag! { LVNI: u32;
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) relationship (`u32`).
 	=>
 	=>
