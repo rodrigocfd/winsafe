@@ -28,7 +28,7 @@ const_ordinary! { SEEKING_FLAGS: u32;
 	/// [`IMediaSeeking::SetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 	/// flags (`u32`).
 	///
-	/// Originally AM_SEEKING_SeekingFlags enum.
+	/// Originally `AM_SEEKING_SeekingFlags` enum.
 	=>
 	=>
 	NoPositioning 0x0

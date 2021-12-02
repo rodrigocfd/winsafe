@@ -12,7 +12,6 @@ pub mod clsid;
 pub mod co;
 pub mod guid;
 
-pub(in crate::com) mod any_structs;
 pub(in crate::com) mod ifiledialog;
 pub(in crate::com) mod ifileopendialog;
 pub(in crate::com) mod ifilesavedialog;
@@ -23,8 +22,8 @@ pub(in crate::com) mod itaskbarlist;
 pub(in crate::com) mod itaskbarlist2;
 pub(in crate::com) mod itaskbarlist3;
 pub(in crate::com) mod itaskbarlist4;
+pub(in crate::com) mod structs;
 
-pub use any_structs::*;
 pub use ifiledialog::IFileDialog;
 pub use ifileopendialog::IFileOpenDialog;
 pub use ifilesavedialog::IFileSaveDialog;
@@ -35,6 +34,7 @@ pub use itaskbarlist::ITaskbarList;
 pub use itaskbarlist2::ITaskbarList2;
 pub use itaskbarlist3::ITaskbarList3;
 pub use itaskbarlist4::ITaskbarList4;
+pub use structs::*;
 
 pub(crate) mod prelude {
 	pub use super::ifiledialog::IFileDialogT;

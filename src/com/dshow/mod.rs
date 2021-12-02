@@ -12,7 +12,6 @@ pub mod clsid;
 pub mod co;
 pub mod guid;
 
-pub(in crate::com) mod any_structs;
 pub(in crate::com) mod ibasefilter;
 pub(in crate::com) mod ienumfilters;
 pub(in crate::com) mod ifilesinkfilter;
@@ -24,8 +23,8 @@ pub(in crate::com) mod imediaseeking;
 pub(in crate::com) mod imfgetservice;
 pub(in crate::com) mod imfvideodisplaycontrol;
 pub(in crate::com) mod ipin;
+pub(in crate::com) mod structs;
 
-pub use any_structs::*;
 pub use ibasefilter::IBaseFilter;
 pub use ienumfilters::IEnumFilters;
 pub use ifilesinkfilter::IFileSinkFilter;
@@ -37,6 +36,7 @@ pub use imediaseeking::IMediaSeeking;
 pub use imfgetservice::IMFGetService;
 pub use imfvideodisplaycontrol::IMFVideoDisplayControl;
 pub use ipin::IPin;
+pub use structs::*;
 
 pub(crate) mod prelude {
 	pub use super::ibasefilter::IBaseFilterT;

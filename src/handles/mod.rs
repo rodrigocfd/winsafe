@@ -3,7 +3,6 @@
 
 #[macro_use] mod macros;
 
-mod any_handles;
 mod haccel;
 mod hbitmap;
 mod hbrush;
@@ -34,8 +33,8 @@ mod hthread;
 mod hupdatersrc;
 mod hwnd;
 mod traits;
+mod without_impl;
 
-pub use any_handles::*;
 pub use haccel::HACCEL;
 pub use hbitmap::HBITMAP;
 pub use hbrush::HBRUSH;
@@ -65,6 +64,7 @@ pub use htheme::HTHEME;
 pub use hthread::HTHREAD;
 pub use hupdatersrc::HUPDATERSRC;
 pub use hwnd::HWND;
+pub use without_impl::*;
 
 pub(crate) mod prelude {
 	pub use super::traits::*;

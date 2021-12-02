@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::HrResult;
-use crate::com::dshow::any_structs::AM_MEDIA_TYPE;
+use crate::com::dshow::structs::AM_MEDIA_TYPE;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{HRES, PCSTR, PCVOID, PSTR, PVOID};

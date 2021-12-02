@@ -1,5 +1,5 @@
 //! [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/)
-//! constants.
+//! constants and types of constants.
 
 const_ordinary! { DROPEFFECT: u32;
 	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)

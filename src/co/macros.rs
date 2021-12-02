@@ -1,3 +1,30 @@
+/// Writes pub(crate) and pub values of the given constant type.
+macro_rules! const_values {
+	(
+		$name:ident
+		$(
+			$(#[$privvaldoc:meta])*
+			$privvalname:ident $privval:expr
+		)*
+		=>
+		$(
+			$(#[$pubvaldoc:meta])*
+			$pubvalname:ident $pubval:expr
+		)*
+	) => {
+		impl $name {
+			$(
+				$(#[$privvaldoc])*
+				pub(crate) const $privvalname: Self = Self($privval);
+			)*
+			$(
+				$(#[$pubvaldoc])*
+				pub const $pubvalname: Self = Self($pubval);
+			)*
+		}
+	};
+}
+
 /// Declares the type of a constant, along with private and public values. Won't
 /// include `Debug` and `Display` impls.
 macro_rules! const_no_debug_display {
@@ -105,14 +132,16 @@ macro_rules! const_no_debug_display {
 		}
 
 		// Private and public values.
-		impl $name {
+		const_values! {
+			$name
 			$(
 				$(#[$privvaldoc])*
-				pub(crate) const $privvalname: Self = Self($privval);
+				$privvalname $privval
 			)*
+			=>
 			$(
 				$(#[$pubvaldoc])*
-				pub const $pubvalname: Self = Self($pubval);
+				$pubvalname $pubval
 			)*
 		}
 	};

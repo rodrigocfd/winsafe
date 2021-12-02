@@ -3,7 +3,7 @@
 use crate::aliases::HrResult;
 use crate::co;
 use crate::com::dshow;
-use crate::com::dshow::any_structs::MFVideoNormalizedRect;
+use crate::com::dshow::structs::MFVideoNormalizedRect;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::iunknown::{ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{BOOL, HANDLE, HRES, PCVOID, PVOID};

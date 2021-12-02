@@ -41,8 +41,9 @@ const_ordinary! { AD: i32;
 }
 
 const_ordinary! { ADRF: u32;
-	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`). Don't seem
-	/// to be defined anywhere unconfirmed values.
+	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`).
+	///
+	/// Don't seem to be defined anywhere; unconfirmed values.
 	=>
 	=>
 	DRAWSYNC 0

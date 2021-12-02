@@ -2,12 +2,12 @@
 
 #[macro_use] mod macros;
 
-mod any_newtypes;
-mod any_structs;
-mod any_structs_cc;
 mod guid;
+mod newtypes;
+mod structs_cc;
+mod structs_ord;
 
-pub use any_newtypes::*;
-pub use any_structs::*;
-pub use any_structs_cc::*;
 pub use guid::{CLSID, GUID, IID};
+pub use newtypes::*;
+pub use structs_cc::*;
+pub use structs_ord::*;
