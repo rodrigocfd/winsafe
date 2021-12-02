@@ -31,16 +31,6 @@ macro_rules! const_no_debug_display {
 	(
 		$name:ident: $ntype:ty;
 		$(#[$doc:meta])*
-		=>
-		$(
-			$(#[$privvaldoc:meta])*
-			$privvalname:ident $privval:expr
-		)*
-		=>
-		$(
-			$(#[$pubvaldoc:meta])*
-			$pubvalname:ident $pubval:expr
-		)*
 	) => {
 		$(#[$doc])*
 		#[repr(transparent)]
@@ -130,20 +120,6 @@ macro_rules! const_no_debug_display {
 				(self.0 & other.0) != 0
 			}
 		}
-
-		// Private and public values.
-		const_values! {
-			$name
-			$(
-				$(#[$privvaldoc])*
-				$privvalname $privval
-			)*
-			=>
-			$(
-				$(#[$pubvaldoc])*
-				$pubvalname $pubval
-			)*
-		}
 	};
 }
 
@@ -168,7 +144,16 @@ macro_rules! const_ordinary {
 			$name: $ntype;
 			$(#[$doc])*
 			#[derive(Debug)]
-			=>
+		}
+
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+				std::fmt::Display::fmt(&self.0, f) // delegate
+			}
+		}
+
+		const_values! {
+			$name
 			$(
 				$(#[$privvaldoc])*
 				$privvalname $privval
@@ -178,12 +163,6 @@ macro_rules! const_ordinary {
 				$(#[$pubvaldoc])*
 				$pubvalname $pubval
 			)*
-		}
-
-		impl std::fmt::Display for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-				std::fmt::Display::fmt(&self.0, f) // delegate
-			}
 		}
 	};
 }

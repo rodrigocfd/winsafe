@@ -14,7 +14,31 @@ const_no_debug_display! { CDERR: u32;
 	/// common dialog box error, since
 	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// offers no support to it.
-	=>
+}
+
+impl std::error::Error for CDERR {
+	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+		None
+	}
+}
+
+impl std::fmt::Debug for CDERR {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		if self.0 > 0xffff {
+			write!(f, "[{:#010x} {}] Common dialog error.", self.0, self.0)
+		} else {
+			write!(f, "[{:#06x} {}] Common dialog error.", self.0, self.0)
+		}
+	}
+}
+
+impl std::fmt::Display for CDERR {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+	}
+}
+
+const_values! { CDERR
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -49,26 +73,4 @@ const_no_debug_display! { CDERR: u32;
 	FN_INVALIDFILENAME 0x3002
 	FN_SUBCLASSFAILURE 0x3001
 	FR_BUFFERLENGTHZERO 0x4001
-}
-
-impl std::error::Error for CDERR {
-	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-		None
-	}
-}
-
-impl std::fmt::Debug for CDERR {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		if self.0 > 0xffff {
-			write!(f, "[{:#010x} {}] Common dialog error.", self.0, self.0)
-		} else {
-			write!(f, "[{:#06x} {}] Common dialog error.", self.0, self.0)
-		}
-	}
-}
-
-impl std::fmt::Display for CDERR {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
-	}
 }

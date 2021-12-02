@@ -31,7 +31,47 @@ const_no_debug_display! { ERROR: u32;
 	/// ```text
 	/// [0x001c 28] The printer is out of paper.
 	/// ```
-	=>
+}
+
+impl std::error::Error for ERROR {
+	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+		None
+	}
+}
+
+impl std::fmt::Debug for ERROR {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		if self.0 > 0xffff {
+			write!(f, "[{:#010x} {}] {}",
+				self.0, self.0, self.FormatMessage())
+		} else {
+			write!(f, "[{:#06x} {}] {}",
+				self.0, self.0, self.FormatMessage())
+		}
+	}
+}
+
+impl std::fmt::Display for ERROR {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+	}
+}
+
+impl FormattedError for ERROR {}
+
+impl ERROR {
+	/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
+	/// method. Originally a macro.
+	pub fn to_hresult(self) -> co::HRESULT {
+		if self.0 as i32 <= 0 {
+			co::HRESULT(self.0)
+		} else {
+			co::HRESULT((self.0 & 0x0000_ffff) | co::FACILITY::WIN32.0 << 16 | 0x8000_0000)
+		}
+	}
+}
+
+const_values! { ERROR
 	=>
 	/// The operation completed successfully.
 	SUCCESS 0
@@ -2639,42 +2679,4 @@ const_no_debug_display! { ERROR: u32;
 	STATE_SETTING_NAME_SIZE_LIMIT_EXCEEDED 15817
 	STATE_CONTAINER_NAME_SIZE_LIMIT_EXCEEDED 15818
 	API_UNAVAILABLE 15841
-}
-
-impl std::error::Error for ERROR {
-	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-		None
-	}
-}
-
-impl std::fmt::Debug for ERROR {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		if self.0 > 0xffff {
-			write!(f, "[{:#010x} {}] {}",
-				self.0, self.0, self.FormatMessage())
-		} else {
-			write!(f, "[{:#06x} {}] {}",
-				self.0, self.0, self.FormatMessage())
-		}
-	}
-}
-
-impl std::fmt::Display for ERROR {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
-	}
-}
-
-impl FormattedError for ERROR {}
-
-impl ERROR {
-	/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
-	/// method. Originally a macro.
-	pub fn to_hresult(self) -> co::HRESULT {
-		if self.0 as i32 <= 0 {
-			co::HRESULT(self.0)
-		} else {
-			co::HRESULT((self.0 & 0x0000_ffff) | co::FACILITY::WIN32.0 << 16 | 0x8000_0000)
-		}
-	}
 }

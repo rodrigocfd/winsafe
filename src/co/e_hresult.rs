@@ -28,7 +28,55 @@ const_no_debug_display! { HRESULT: u32;
 	/// ```text
 	/// [0x80070057 2147942487] The parameter is incorrect.
 	/// ```
-	=>
+}
+
+impl std::error::Error for HRESULT {
+	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+		None
+	}
+}
+
+impl std::fmt::Debug for HRESULT {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		if self.0 > 0xffff {
+			write!(f, "[{:#010x} {}] {}",
+				self.0, self.0, self.FormatMessage())
+		} else {
+			write!(f, "[{:#06x} {}] {}",
+				self.0, self.0, self.FormatMessage())
+		}
+	}
+}
+
+impl std::fmt::Display for HRESULT {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+	}
+}
+
+impl FormattedError for HRESULT {}
+
+impl HRESULT {
+	/// [`HRESULT_CODE`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_code)
+	/// method. Originally a macro.
+	pub fn code(self) -> u16 {
+		(self.0 & 0xffff) as u16
+	}
+
+	/// [`HRESULT_FACILITY`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_facility)
+	/// method. Originally a macro.
+	pub fn facility(self) -> co::FACILITY {
+		co::FACILITY((self.0 >> 16) & 0x1fff)
+	}
+
+	/// [`HRESULT_SEVERITY`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
+	/// method. Originally a macro.
+	pub fn severity(self) -> u8 {
+		((self.0 >> 31) & 0x1) as u8
+	}
+}
+
+const_values! { HRESULT
 	=>
 	/// Operation successful.
 	S_OK 0
@@ -3296,50 +3344,4 @@ const_no_debug_display! { HRESULT: u32;
 	WINML_ERR_INVALID_BINDING 0x8890_0002
 	WINML_ERR_VALUE_NOTFOUND 0x8890_0003
 	WINML_ERR_SIZE_MISMATCH 0x8890_0004
-}
-
-impl std::error::Error for HRESULT {
-	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-		None
-	}
-}
-
-impl std::fmt::Debug for HRESULT {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		if self.0 > 0xffff {
-			write!(f, "[{:#010x} {}] {}",
-				self.0, self.0, self.FormatMessage())
-		} else {
-			write!(f, "[{:#06x} {}] {}",
-				self.0, self.0, self.FormatMessage())
-		}
-	}
-}
-
-impl std::fmt::Display for HRESULT {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
-	}
-}
-
-impl FormattedError for HRESULT {}
-
-impl HRESULT {
-	/// [`HRESULT_CODE`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_code)
-	/// method. Originally a macro.
-	pub fn code(self) -> u16 {
-		(self.0 & 0xffff) as u16
-	}
-
-	/// [`HRESULT_FACILITY`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_facility)
-	/// method. Originally a macro.
-	pub fn facility(self) -> co::FACILITY {
-		co::FACILITY((self.0 >> 16) & 0x1fff)
-	}
-
-	/// [`HRESULT_SEVERITY`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
-	/// method. Originally a macro.
-	pub fn severity(self) -> u8 {
-		((self.0 >> 31) & 0x1) as u8
-	}
 }
