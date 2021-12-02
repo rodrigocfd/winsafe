@@ -76,7 +76,7 @@ pub(in crate::gui) fn auto_ctrl_id() -> u16 {
 
 //------------------------------------------------------------------------------
 
-static mut DPI: POINT = POINT { x: 0, y: 0 };
+static mut DPI: POINT = POINT::new(0, 0);
 
 /// Multiplies the given coordinates by current system DPI.
 pub(in crate::gui) fn multiply_dpi(
@@ -87,6 +87,7 @@ pub(in crate::gui) fn multiply_dpi(
 			let screen_dc = HWND::NULL.GetDC()?;
 			DPI.x = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSX); // cache
 			DPI.y = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSY);
+			HWND::NULL.ReleaseDC(screen_dc)?;
 		}
 
 		if let Some(pt) = pt {

@@ -56,11 +56,11 @@ impl IShellItem {
 				SHCreateItemFromParsingName(
 					WString::from_str(file_or_folder_path).as_ptr(),
 					std::ptr::null_mut(),
-					&IShellItem::IID as *const _ as _,
+					&Self::IID as *const _ as _,
 					&mut ppv_queried as *mut _ as _,
 				)
 			},
-		).map(|_| IShellItem::from(ppv_queried))
+		).map(|_| Self::from(ppv_queried))
 	}
 }
 

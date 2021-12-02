@@ -20,10 +20,10 @@ use crate::handles::{HINSTANCE, HLOCAL, HWND};
 use crate::msg::MsgSend;
 use crate::privs::{
 	bool_to_winresult,
-	ok_to_hrresult,
 	INVALID_FILE_ATTRIBUTES,
 	MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH,
+	ok_to_hrresult,
 	parse_multi_z_str,
 	UNLEN,
 };

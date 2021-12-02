@@ -9,15 +9,19 @@
 //! ```
 
 pub(in crate::com) mod ipersist;
+pub(in crate::com) mod ipicture;
 
 pub use ipersist::IPersist;
+pub use ipicture::IPicture;
 
 pub(crate) mod prelude {
 	pub use super::ipersist::IPersistT;
+	pub use super::ipicture::IPictureT;
 }
 
 /// [IDL](https://docs.microsoft.com/en-us/windows/win32/api/_com/) COM
 /// virtual tables.
 pub mod vt {
 	pub use super::ipersist::IPersistVT;
+	pub use super::ipicture::IPictureVT;
 }

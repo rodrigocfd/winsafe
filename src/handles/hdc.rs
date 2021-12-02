@@ -3,9 +3,14 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::ffi::{BOOL, gdi32, msimg32, user32};
-use crate::funcs::GetLastError;
+use crate::funcs::{GetLastError, MulDiv};
 use crate::handles::{HBITMAP, HBRUSH, HFONT, HMONITOR, HPEN, HRGN};
-use crate::privs::{bool_to_winresult, CLR_INVALID, GDI_ERROR};
+use crate::privs::{
+	bool_to_winresult,
+	CLR_INVALID,
+	GDI_ERROR,
+	HIMETRIC_PER_INCH,
+};
 use crate::structs::{COLORREF, POINT, RECT, SIZE, TEXTMETRIC};
 use crate::various::WString;
 
@@ -236,6 +241,20 @@ impl HDC {
 		)
 	}
 
+	/// Converts HIMETRIC units to pixels.
+	///
+	/// Equivalent to
+	/// [`AtlHiMetricToPixel`](https://docs.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlhimetrictopixel)
+	/// ATL function.
+	pub fn HiMetricToPixel(self, x: i32, y: i32) -> (i32, i32) {
+		// http://www.verycomputer.com/5_5f2f75dc2d090ee8_1.htm
+		// https://forums.codeguru.com/showthread.php?109554-Unresizable-activeX-control
+		(
+			MulDiv(x, self.GetDeviceCaps(co::GDC::LOGPIXELSX), HIMETRIC_PER_INCH),
+			MulDiv(y, self.GetDeviceCaps(co::GDC::LOGPIXELSY), HIMETRIC_PER_INCH),
+		)
+	}
+
 	/// [`LineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
 	/// method.
 	pub fn LineTo(self, x: i32, y: i32) -> WinResult<()> {
@@ -295,6 +314,18 @@ impl HDC {
 					radial_2.y, radial_2.y,
 				)
 			},
+		)
+	}
+
+	/// Converts pixels to HIMETRIC units.
+	///
+	/// Equivalent to
+	/// [`AtlPixelToHiMetric`](https://docs.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlpixeltohimetric)
+	/// ATL function.
+	pub fn PixelToHiMetric(self, x: i32, y: i32) -> (i32, i32) {
+		(
+			MulDiv(x, HIMETRIC_PER_INCH, self.GetDeviceCaps(co::GDC::LOGPIXELSX)),
+			MulDiv(y, HIMETRIC_PER_INCH, self.GetDeviceCaps(co::GDC::LOGPIXELSY)),
 		)
 	}
 

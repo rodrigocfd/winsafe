@@ -21,6 +21,7 @@ pub(crate) mod gdi32;
 pub(crate) mod kernel32;
 pub(crate) mod msimg32;
 pub(crate) mod ole32;
+pub(crate) mod oleaut32;
 pub(crate) mod shell32;
 pub(crate) mod user32;
 pub(crate) mod uxtheme;
