@@ -31,15 +31,16 @@ pub trait IModalWindowT: IUnknownT {
 	///
 	/// Returns false if user clicked Cancel.
 	fn Show(&self, hwnd_owner: HWND) -> HrResult<bool> {
-		match co::ERROR(
+		const CANCELLED: co::HRESULT = co::ERROR::CANCELLED.to_hresult();
+		match co::HRESULT(
 			unsafe {
 				let vt = &**(self.ptr().0 as *mut *mut IModalWindowVT);
 				(vt.Show)(self.ptr(), hwnd_owner.0)
 			},
 		) {
-			co::ERROR::SUCCESS => Ok(true),
-			co::ERROR::CANCELLED => Ok(false),
-			e => Err(e.to_hresult()),
+			co::HRESULT::S_OK => Ok(true),
+			CANCELLED => Ok(false),
+			e => Err(e),
 		}
 	}
 }

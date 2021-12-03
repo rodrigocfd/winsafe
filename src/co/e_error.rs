@@ -62,7 +62,7 @@ impl FormattedError for ERROR {}
 impl ERROR {
 	/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 	/// method. Originally a macro.
-	pub fn to_hresult(self) -> co::HRESULT {
+	pub const fn to_hresult(self) -> co::HRESULT {
 		if self.0 as i32 <= 0 {
 			co::HRESULT(self.0)
 		} else {
