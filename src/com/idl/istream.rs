@@ -1,13 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::aliases::HrResult;
+use crate::co;
 use crate::com::idl;
 use crate::com::idl::isequentialstream::{
 	ISequentialStreamT,
 	ISequentialStreamVT,
 };
 use crate::com::iunknown::{ComPtr, IUnknownT};
-use crate::ffi::{HRES, PVOID};
+use crate::ffi::{HRES, PVOID, shlwapi};
 use crate::privs::ok_to_hrresult;
 
 /// [`ISequentialStream`](crate::idl::ISequentialStream) virtual table.
@@ -36,6 +37,21 @@ pub struct IStream(ComPtr);
 impl_iunknown!(IStream, 0x0000000c, 0x0000, 0x0000, 0xc000, 0x000000000046);
 impl ISequentialStreamT for IStream {}
 impl IStreamT for IStream {}
+
+impl IStream {
+	/// Calls
+	/// [`SHCreateMemStream`](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
+	/// to create a new stream over a slice.
+	pub fn from_slice(src: &[u8]) -> HrResult<IStream> {
+		unsafe {
+			shlwapi::SHCreateMemStream(src.as_ptr(), src.len() as _)
+				.as_ref()
+		}.map_or(
+			Err(co::HRESULT::E_OUTOFMEMORY),
+			|p| Ok(Self(ComPtr(p as *const _ as *mut *mut _))),
+		)
+	}
+}
 
 /// Exposes the [`IStream`](crate::idl::IStream) methods.
 pub trait IStreamT: IUnknownT {

@@ -2,6 +2,7 @@
 
 use crate::aliases::HrResult;
 use crate::com::idl;
+use crate::com::idl::IStream;
 use crate::com::iunknown::{ComInterface, ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{BOOL, HANDLE, HRES, oleaut32, PCVOID};
 use crate::handles::{prelude::Handle, HBITMAP, HDC};
@@ -65,6 +66,38 @@ impl IPicture {
 			},
 		).map(|_| Self::from(ppv_queried))
 	}
+
+	/// Calls [`IStream::from_slice`](crate::idl::IStream::from_slice) and
+	/// [`IPicture::from_stream`](crate::idl::IPicture::from_stream) to load a
+	/// picture straight from a slice.
+	pub fn from_slice(
+		src: &[u8],
+		keep_original_format: bool) -> HrResult<IPicture>
+	{
+		Self::from_stream(&IStream::from_slice(src)?, None, keep_original_format)
+	}
+
+	/// Calls
+	/// [`OleLoadPicture`](https://docs.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture)
+	/// to load a picture from a stream.
+	pub fn from_stream(
+		stream: &IStream,
+		size: Option<u32>,
+		keep_original_format: bool) -> HrResult<IPicture>
+	{
+		let mut ppv_queried = ComPtr::null();
+		ok_to_hrresult(
+			unsafe {
+				oleaut32::OleLoadPicture(
+					stream.ptr().0 as _,
+					size.unwrap_or(0) as _,
+					!keep_original_format as _, // note: reversed
+					&Self::IID as *const _ as _,
+					&mut ppv_queried as *mut _ as _,
+				)
+			},
+		).map(|_| Self::from(ppv_queried))
+	}
 }
 
 /// Exposes the [`IPicture`](crate::idl::IPicture) methods.
@@ -97,7 +130,7 @@ pub trait IPictureT: IUnknownT {
 	///
 	/// let hdc = HWND::NULL.GetDC()?;
 	///
-	/// let (_, height) = hdc.HiMetricToPixel(0, pp.get_Height()?);
+	/// let (_, height) = hdc.HiMetricToPixel(0, pic.get_Height()?);
 	/// println!("Height: {} px", height);
 	///
 	/// HWND::NULL.ReleaseDC(hdc)?;
@@ -139,7 +172,7 @@ pub trait IPictureT: IUnknownT {
 	///
 	/// let hdc = HWND::NULL.GetDC()?;
 	///
-	/// let (width, _) = hdc.HiMetricToPixel(pp.get_Width()?, 0);
+	/// let (width, _) = hdc.HiMetricToPixel(pic.get_Width()?, 0);
 	/// println!("Width: {} px", width);
 	///
 	/// HWND::NULL.ReleaseDC(hdc)?;

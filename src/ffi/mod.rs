@@ -23,6 +23,7 @@ pub(crate) mod msimg32;
 pub(crate) mod ole32;
 pub(crate) mod oleaut32;
 pub(crate) mod shell32;
+pub(crate) mod shlwapi;
 pub(crate) mod user32;
 pub(crate) mod uxtheme;
 pub(crate) mod version;

@@ -5,7 +5,7 @@ use crate::co;
 use crate::com::funcs::CoTaskMemFree;
 use crate::com::iunknown::{ComInterface, ComPtr, IUnknownT, IUnknownVT};
 use crate::com::shell;
-use crate::ffi::{HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::ffi::{HRES, PCVOID, PSTR, PVOID, shell32};
 use crate::privs::ok_to_hrresult;
 use crate::various::WString;
 
@@ -18,11 +18,6 @@ pub struct IShellItemVT {
 	pub GetDisplayName: fn(ComPtr, u32, *mut PSTR) -> HRES,
 	pub GetAttributes: fn(ComPtr, u32, *mut u32) -> HRES,
 	pub Compare: fn(ComPtr, PVOID, u32, *mut i32) -> HRES,
-}
-
-#[link(name = "shell32")]
-extern "system" {
-	fn SHCreateItemFromParsingName(_: PCSTR, _: PVOID, _: PCVOID, _: *mut PVOID) -> HRES;
 }
 
 /// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
@@ -53,7 +48,7 @@ impl IShellItem {
 		let mut ppv_queried = ComPtr::null();
 		ok_to_hrresult(
 			unsafe {
-				SHCreateItemFromParsingName(
+				shell32::SHCreateItemFromParsingName(
 					WString::from_str(file_or_folder_path).as_ptr(),
 					std::ptr::null_mut(),
 					&Self::IID as *const _ as _,
