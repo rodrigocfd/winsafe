@@ -816,7 +816,13 @@ impl HWND {
 	/// [`KillTimer`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-killtimer)
 	/// method.
 	pub fn KillTimer(self, event_id: usize) -> WinResult<()> {
-		bool_to_winresult(unsafe { user32::KillTimer(self.0, event_id) })
+		match unsafe { user32::KillTimer(self.0, event_id) } {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(()),
+				e => Err(e),
+			}
+			_ => Ok(()),
+		}
 	}
 
 	/// [`LogicalToPhysicalPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-logicaltophysicalpoint)
