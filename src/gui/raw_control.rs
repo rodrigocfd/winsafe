@@ -117,14 +117,18 @@ pub struct WindowControlOpts {
 	/// Position of control within parent's client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Size of window, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Will be adjusted to match current system DPI.
+	/// If the parent window is a dialog, the values are in Dialog Template
+	/// Units; otherwise in pixels, which will be multiplied to match current
+	/// system DPI.
 	///
 	/// Defaults to 0 x 0.
 	pub size: SIZE,
