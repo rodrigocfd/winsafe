@@ -904,7 +904,7 @@ impl POINT {
 	}
 
 	/// Tells whether the struct contains exactly the given values.
-	pub fn is(&self, x: i32, y: i32) -> bool {
+	pub const fn is(&self, x: i32, y: i32) -> bool {
 		self.x == x && self.y == y
 	}
 }
@@ -963,7 +963,7 @@ impl std::fmt::Display for RECT {
 
 impl RECT {
 	/// Tells whether the struct contains exactly the given values.
-	pub fn is(&self, left: i32, top: i32, right: i32, bottom: i32) -> bool {
+	pub const fn is(&self, left: i32, top: i32, right: i32, bottom: i32) -> bool {
 		self.left == left && self.top == top && self.right == right && self.bottom == bottom
 	}
 }
@@ -1120,7 +1120,7 @@ impl SIZE {
 	}
 
 	/// Tells whether the struct contains exactly the given values.
-	pub fn is(&self, cx: i32, cy: i32) -> bool {
+	pub const fn is(&self, cx: i32, cy: i32) -> bool {
 		self.cx == cx && self.cy == cy
 	}
 }

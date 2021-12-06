@@ -208,7 +208,7 @@ pub trait IPictureT: IUnknownT {
 	/// method.
 	fn Render(&self,
 		hdc: HDC, dest_pt: POINT, dest_sz: SIZE,
-		src_offset: POINT, src_extent: SIZE,
+		src_offset: Option<POINT>, src_extent: SIZE,
 		metafile_bounds: Option<&RECT>) -> HrResult<()>
 	{
 		unsafe {
@@ -219,7 +219,8 @@ pub trait IPictureT: IUnknownT {
 					hdc.0,
 					dest_pt.x, dest_pt.y,
 					dest_sz.cx, dest_sz.cy,
-					src_offset.x, src_offset.y,
+					src_offset.map_or(0, |off| off.x),
+					src_offset.map_or(0, |off| off.y),
 					src_extent.cx, src_extent.cy,
 					metafile_bounds.map_or(std::ptr::null_mut(), |rc| rc as *const _ as _),
 				),

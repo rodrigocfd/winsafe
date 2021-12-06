@@ -546,22 +546,57 @@ const_ordinary! { ROP: u32;
 	/// Originally has no prefix.
 	=>
 	=>
+	/// Copies the source rectangle directly to the destination rectangle.
 	SRCCOPY 0x00cc_0020
+	/// Combines the colors of the source and destination rectangles by using
+	/// the Boolean OR operator.
 	SRCPAINT 0x00ee_0086
+	/// Combines the colors of the source and destination rectangles by using
+	/// the Boolean AND operator.
 	SRCAND 0x0088_00c6
+	/// Combines the colors of the source and destination rectangles by using
+	/// the Boolean XOR operator.
 	SRCINVERT 0x0066_0046
+	/// Combines the inverted colors of the destination rectangle with the
+	/// colors of the source rectangle by using the Boolean AND operator.
 	SRCERASE 0x0044_0328
+	/// Copies the inverted source rectangle to the destination.
 	NOTSRCCOPY 0x0033_0008
+	/// Combines the colors of the source and destination rectangles by using
+	/// the Boolean OR operator and then inverts the resultant color.
 	NOTSRCERASE 0x0011_00a6
+	/// Merges the colors of the source rectangle with the brush currently
+	/// selected in hdcDest, by using the Boolean AND operator.
 	MERGECOPY 0x00c0_00ca
+	/// Merges the colors of the inverted source rectangle with the colors of
+	/// the destination rectangle by using the Boolean OR operator.
 	MERGEPAINT 0x00bb_0226
+	/// Copies the brush currently selected in hdcDest, into the destination
+	/// bitmap.
 	PATCOPY 0x00f0_0021
+	/// Combines the colors of the brush currently selected in hdcDest, with the
+	/// colors of the inverted source rectangle by using the Boolean OR
+	/// operator. The result of this operation is combined with the colors of
+	/// the destination rectangle by using the Boolean OR operator.
 	PATPAINT 0x00fb_0a09
+	/// Combines the colors of the brush currently selected in hdcDest, with the
+	/// colors of the destination rectangle by using the Boolean XOR operator.
 	PATINVERT 0x005a_0049
+	/// Inverts the destination rectangle.
 	DSTINVERT 0x0055_0009
+	/// Fills the destination rectangle using the color associated with index 0
+	/// in the physical palette. (This color is black for the default physical
+	/// palette.)
 	BLACKNESS 0x0000_0042
+	/// Fills the destination rectangle using the color associated with index 1
+	/// in the physical palette. (This color is white for the default physical
+	/// palette.)
 	WHITENESS 0x00ff_0062
+	/// Prevents the bitmap from being mirrored.
 	NOMIRRORBITMAP 0x8000_0000
+	/// Includes any windows that are layered on top of your window in the
+	/// resulting image. By default, the image only contains your window. Note
+	/// that this generally cannot be used for printing device contexts.
 	CAPTUREBLT 0x4000_0000
 }
 

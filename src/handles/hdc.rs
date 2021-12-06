@@ -55,17 +55,17 @@ impl HDC {
 	/// [`BitBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt)
 	/// method.
 	pub fn BitBlt(self,
-		dest_top_left: POINT, sz: SIZE,
-		hdc_src: HDC, src_top_left: POINT, rop: co::ROP) -> WinResult<()>
+		dest_pos: POINT, sz: SIZE,
+		hdc_src: HDC, src_src: POINT, rop: co::ROP) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
 				gdi32::BitBlt(
 					self.0,
-					dest_top_left.x, dest_top_left.y,
+					dest_pos.x, dest_pos.y,
 					sz.cx, sz.cy,
 					hdc_src.0,
-					src_top_left.x, src_top_left.y,
+					src_src.x, src_src.y,
 					rop.0,
 				)
 			},
@@ -206,6 +206,15 @@ impl HDC {
 	/// method.
 	pub fn GetDeviceCaps(self, index: co::GDC) -> i32 {
 		unsafe { gdi32::GetDeviceCaps(self.0, index.0) }
+	}
+
+	/// [`GetStretchBltMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)
+	/// method.
+	pub fn GetStretchBltMode(self) -> WinResult<co::STRETCH_MODE> {
+		match unsafe { gdi32::GetStretchBltMode(self.0) } {
+			0 => Err(GetLastError()),
+			sm => Ok(co::STRETCH_MODE(sm)),
+		}
 	}
 
 	/// [`GetTextColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextcolor)
@@ -475,7 +484,23 @@ impl HDC {
 		}
 	}
 
+	/// [`SetBrushOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbrushorgex)
+	/// method.
+	pub fn SetBrushOrgEx(self, new_origin: POINT) -> WinResult<POINT> {
+		let mut old_origin = POINT::default();
+		bool_to_winresult(
+			unsafe {
+				gdi32::SetBrushOrgEx(
+					self.0,
+					new_origin.x, new_origin.y,
+					&mut old_origin as *mut _ as _,
+				)
+			},
+		).map(|_| old_origin)
+	}
+
 	/// [`SetDCBrushColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcbrushcolor)
+	/// method.
 	pub fn SetDCBrushColor(self, color: COLORREF) -> WinResult<COLORREF> {
 		match unsafe { gdi32::SetDCBrushColor(self.0, color.0) } {
 			CLR_INVALID => Err(GetLastError()),
@@ -484,6 +509,7 @@ impl HDC {
 	}
 
 	/// [`SetDCPenColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcpencolor)
+	/// method.
 	pub fn SetDCPenColor(self, color: COLORREF) -> WinResult<COLORREF> {
 		match unsafe { gdi32::SetDCPenColor(self.0, color.0) } {
 			CLR_INVALID => Err(GetLastError()),
@@ -497,6 +523,19 @@ impl HDC {
 		match unsafe { gdi32::SetGraphicsMode(self.0, mode.0) } {
 			0 => Err(GetLastError()),
 			v => Ok(co::GM(v))
+		}
+	}
+
+	/// [`SetStretchBltMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setstretchbltmode)
+	/// method.
+	pub fn SetStretchBltMode(self,
+		mode: co::STRETCH_MODE) -> WinResult<co::STRETCH_MODE>
+	{
+		match co::ERROR(
+			unsafe { gdi32::SetStretchBltMode(self.0, mode.0) } as _,
+		) {
+			co::ERROR::INVALID_PARAMETER => Err(co::ERROR::INVALID_PARAMETER),
+			err_val => Ok(co::STRETCH_MODE(err_val.0 as _)),
 		}
 	}
 
@@ -568,6 +607,29 @@ impl HDC {
 				gdi32::SetWindowOrgEx(self.0, x, y, &mut pt as *mut _ as _)
 			},
 		).map(|_| pt)
+	}
+
+	/// [`StretchBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-stretchblt)
+	/// method.
+	pub fn StretchBlt(self,
+		pos_dest: POINT, sz_dest: SIZE,
+		hdc_src: HDC,
+		pt_src: POINT, sz_src: SIZE,
+		rop: co::ROP) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				gdi32::StretchBlt(
+					self.0,
+					pos_dest.x, pos_dest.y,
+					sz_dest.cx, sz_dest.cy,
+					hdc_src.0,
+					pt_src.x, pt_src.y,
+					sz_src.cx, sz_src.cy,
+					rop.0,
+				)
+			},
+		)
 	}
 
 	/// [`StrokeAndFillPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokeandfillpath)

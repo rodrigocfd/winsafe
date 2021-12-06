@@ -33,6 +33,7 @@ extern_sys! { "gdi32";
 	GetDeviceCaps(HANDLE, i32) -> i32
 	GetObjectW(HANDLE, i32, PVOID) -> i32
 	GetStockObject(i32) -> HANDLE
+	GetStretchBltMode(HANDLE) -> i32
 	GetSysColorBrush(i32) -> HANDLE
 	GetTextColor(HANDLE) -> u32
 	GetTextExtentPoint32W(HANDLE, PCSTR, i32, PVOID) -> BOOL
@@ -58,9 +59,11 @@ extern_sys! { "gdi32";
 	SelectObject(HANDLE, HANDLE) -> HANDLE
 	SetArcDirection(HANDLE, i32) -> i32
 	SetBkMode(HANDLE, i32) -> i32
+	SetBrushOrgEx(HANDLE, i32, i32, PVOID) -> BOOL
 	SetDCBrushColor(HANDLE, u32) -> u32
 	SetDCPenColor(HANDLE, u32) -> u32
 	SetGraphicsMode(HANDLE, i32) -> i32
+	SetStretchBltMode(HANDLE, i32) -> i32
 	SetTextAlign(HANDLE, u32) -> u32
 	SetTextColor(HANDLE, u32) -> u32
 	SetTextJustification(HANDLE, i32, i32) -> BOOL
@@ -68,6 +71,7 @@ extern_sys! { "gdi32";
 	SetViewportOrgEx(HANDLE, i32, i32, PVOID) -> BOOL
 	SetWindowExtEx(HANDLE, i32, i32, PVOID) -> BOOL
 	SetWindowOrgEx(HANDLE, i32, i32, PVOID) -> BOOL
+	StretchBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -> BOOL
 	StrokeAndFillPath(HANDLE) -> BOOL
 	StrokePath(HANDLE) -> BOOL
 	TextOutW(HANDLE, i32, i32, PCSTR, i32) -> BOOL

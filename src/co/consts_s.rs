@@ -744,6 +744,39 @@ const_ordinary! { STOCK_FONT: i32;
 	SYSTEM_FIXED 16
 }
 
+const_ordinary! { STRETCH_MODE: i32;
+	/// [`HDC::SetStretchBltMode`](crate::HDC::SetStretchBltMode) `mode` (`i32`).
+	=>
+	=>
+	/// Performs a Boolean AND operation using the color values for the
+	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
+	/// this mode preserves black pixels at the expense of white pixels.
+	BLACKONWHITE 1
+	/// Deletes the pixels. This mode deletes all eliminated lines of pixels
+	/// without trying to preserve their information.
+	COLORONCOLOR 3
+	/// Maps pixels from the source rectangle into blocks of pixels in the
+	/// destination rectangle. The average color over the destination block of
+	/// pixels approximates the color of the source pixels.
+	///
+	/// After setting the `HALFTONE` stretching mode, an application must call
+	/// the [`HDC::SetBrushOrgEx`](crate::HDC::SetBrushOrgEx) function to set
+	/// the brush origin. If it fails to do so, brush misalignment occurs.
+	HALFTONE 4
+	/// Same as `BLACKONWHITE`.
+	STRETCH_ANDSCANS Self::BLACKONWHITE.0
+	/// Same as `WHITEONBLACK`.
+	STRETCH_ORSCANS Self::WHITEONBLACK.0
+	/// Same as `COLORONCOLOR`.
+	STRETCH_DELETESCANS Self::COLORONCOLOR.0
+	/// Same as `HALFTONE`.
+	STRETCH_HALFTONE Self::HALFTONE.0
+	/// Performs a Boolean OR operation using the color values for the
+	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
+	/// this mode preserves white pixels at the expense of black pixels.
+	WHITEONBLACK 2
+}
+
 const_ordinary! { SUBLANG: u16;
 	/// Sublanguage
 	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
