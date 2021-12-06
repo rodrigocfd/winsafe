@@ -6,8 +6,10 @@ use crate::com::shell;
 use crate::com::shell::itaskbarlist::ITaskbarListT;
 use crate::com::shell::itaskbarlist2::{ITaskbarList2T, ITaskbarList2VT};
 use crate::ffi::{HANDLE, HRES, PCSTR, PVOID};
-use crate::handles::HWND;
+use crate::handles::{HICON, HWND};
 use crate::privs::ok_to_hrresult;
+use crate::structs::RECT;
+use crate::various::WString;
 
 /// [`ITaskbarList3`](crate::shell::ITaskbarList3) virtual table.
 #[repr(C)]
@@ -62,6 +64,24 @@ pub trait ITaskbarList3T: ITaskbarList2T {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
 			ok_to_hrresult(
 				(vt.RegisterTab)(self.ptr(), hwnd_tab.0, hwnd_mdi.0),
+			)
+		}
+	}
+
+	/// [`ITaskbarList3::SetOverlayIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setoverlayicon)
+	/// method.
+	fn SetOverlayIcon(&self,
+		hwnd: HWND, hicon: Option<HICON>, description: &str) -> HrResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			ok_to_hrresult(
+				(vt.SetOverlayIcon)(
+					self.ptr(),
+					hwnd.0,
+					hicon.map_or(std::ptr::null_mut(), |h| h.0),
+					WString::from_str(description).as_ptr(),
+				),
 			)
 		}
 	}
@@ -126,6 +146,34 @@ pub trait ITaskbarList3T: ITaskbarList2T {
 			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
 			ok_to_hrresult(
 				(vt.SetTabOrder)(self.ptr(), hwnd_tab.0, hwnd_insert_before.0),
+			)
+		}
+	}
+
+	/// [`ITaskbarList3::SetThumbnailClip`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailclip)
+	/// method.
+	fn SetThumbnailClip(&self, hwnd: HWND, clip: Option<RECT>) -> HrResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			ok_to_hrresult(
+				(vt.SetThumbnailClip)(self.ptr(), hwnd.0, &clip as *const _ as _),
+			)
+		}
+	}
+
+	/// [`ITaskbarList3::SetThumbnailTooltip`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailtooltip)
+	/// method.
+	fn SetThumbnailTooltip(&self,
+		hwnd: HWND, tip: Option<&str>) -> HrResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			ok_to_hrresult(
+				(vt.SetThumbnailTooltip)(
+					self.ptr(),
+					hwnd.0,
+					tip.map_or(std::ptr::null_mut(), |s| WString::from_str(s).as_ptr()),
+				),
 			)
 		}
 	}

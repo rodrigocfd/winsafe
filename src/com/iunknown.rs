@@ -11,7 +11,7 @@ use crate::structs::IID;
 pub struct ComPtr(pub(in crate::com) *mut *mut IUnknownVT);
 
 impl ComPtr {
-	pub(in crate::com) fn null() -> Self {
+	pub(in crate::com) const fn null() -> Self {
 		ComPtr(std::ptr::null_mut())
 	}
 }
