@@ -169,8 +169,8 @@ impl<'a> CHOOSECOLOR<'a> {
 	}
 
 	/// Sets the `lpCustColors` field.
-	pub fn set_lpCustColors(&mut self, buf: Option<&'a mut [COLORREF; 16]>) {
-		self.lpCustColors = buf.map_or(std::ptr::null_mut(), |buf| buf);
+	pub fn set_lpCustColors(&mut self, val: Option<&'a mut [COLORREF; 16]>) {
+		self.lpCustColors = val.map_or(std::ptr::null_mut(), |buf| buf);
 	}
 
 	pub_fn_resource_id_get_set!(lpTemplateName, set_lpTemplateName);

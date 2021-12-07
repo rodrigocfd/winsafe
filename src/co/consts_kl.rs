@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case, non_upper_case_globals)]
 
-use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS, WM, WS};
+use crate::co::{ACCESS_RIGHTS, CCM, STANDARD_RIGHTS, WM, WS};
 
 const_bitflag! { KEY: u32;
 	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `access_rights` (`u32`).
@@ -351,6 +351,22 @@ const_ordinary! { LVA: u16;
 	SNAPTOGRID 0x0005
 }
 
+const_bitflag! { LVBKIF: u32;
+	/// [`LVBKIMAGE`](crate::LVBKIMAGE) `uFlags` (`u32`).
+	=>
+	=>
+	SOURCE_NONE 0x0000_0000
+	SOURCE_HBITMAP 0x0000_0001
+	SOURCE_URL 0x0000_0002
+	SOURCE_MASK 0x0000_0003
+	STYLE_NORMAL 0x0000_0000
+	STYLE_TILE 0x0000_0010
+	STYLE_MASK 0x0000_0010
+	FLAG_TILEOFFSET 0x0000_0100
+	TYPE_WATERMARK 0x1000_0000
+	FLAG_ALPHABLEND 0x2000_0000
+}
+
 const_ordinary! { LVCDI: u32;
 	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `dwItemType` (`u32`).
 	=>
@@ -403,6 +419,15 @@ const_bitflag! { LVCFMT_I: i32;
 	TILE_PLACEMENTMASK Self::LINE_BREAK.0 | Self::FILL.0
 }
 
+const_ordinary! { LVFF: u32;
+	/// [`LVFOOTERINFO`](crate::LVFOOTERINFO) `mask` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ITEMCOUNT 0x0001
+}
+
 const_bitflag! { LVFI: u32;
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags` (`u32`).
 	=>
@@ -415,6 +440,38 @@ const_bitflag! { LVFI: u32;
 	NEARESTXY 0x0040
 }
 
+const_ordinary! { LVFIF: u32;
+	/// [`LVFOOTERITEM`](crate::LVFOOTERITEM) `mask` (`u32`).
+	=>
+	=>
+	TEXT 0x0001
+	STATE 0x0002
+}
+
+const_ordinary! { LVFIS: u32;
+	/// [`LVFOOTERITEM`](crate::LVFOOTERITEM) `state` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	FOCUSED 0x0001
+}
+
+const_bitflag! { LVGA_FH: u32;
+	/// [`LVGROUP`](crate::LVGROUP) `uAlign` (`u32`).
+	///
+	/// These constants are composed of both
+	/// [`LVGA_HEADER`](crate::co::LVGA_HEADER) and `LVGA_FOOTER`.
+	=>
+	=>
+	FOOTER_LEFT 0x0000_0008
+	FOOTER_CENTER 0x0000_0010
+	FOOTER_RIGHT 0x0000_0020
+	HEADER_LEFT LVGA_HEADER::LEFT.0
+	HEADER_CENTER LVGA_HEADER::CENTER.0
+	HEADER_RIGHT LVGA_HEADER::RIGHT.0
+}
+
 const_ordinary! { LVGA_HEADER: u32;
 	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `uAlign` (`u32`).
 	=>
@@ -424,12 +481,68 @@ const_ordinary! { LVGA_HEADER: u32;
 	RIGHT 0x0000_0004
 }
 
+const_bitflag! { LVGF: u32;
+	/// [`LVGROUP`](crate::LVGROUP) `mask` (`u32`).
+	=>
+	=>
+	NONE 0x0000_0000
+	HEADER 0x0000_0001
+	FOOTER 0x0000_0002
+	STATE 0x0000_0004
+	ALIGN 0x0000_0008
+	GROUPID 0x0000_0010
+	SUBTITLE 0x0000_0100
+	TASK 0x0000_0200
+	DESCRIPTIONTOP 0x0000_0400
+	DESCRIPTIONBOTTOM 0x0000_0800
+	TITLEIMAGE 0x0000_1000
+	EXTENDEDIMAGE 0x0000_2000
+	ITEMS 0x0000_4000
+	SUBSET 0x0000_8000
+	SUBSETITEMS 0x0001_0000
+}
+
+const_ordinary! { LVGGR: i32;
+	/// [`lvm::GetGroupRect`](crate::msg::lvm::GetGroupRect) `flags` (`i32`).
+	=>
+	=>
+	GROUP 0
+	HEADER 1
+	LABEL 2
+	SUBSETLINK 3
+}
+
 const_ordinary! { LVGIT: u32;
 	/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags` (`u32`).
 	=>
 	=>
 	FOLDED 0x0000
 	UNFOLDED 0x0001
+}
+
+const_bitflag! { LVGMF: u32;
+	/// [`LVGROUPMETRICS`](crate::LVGROUPMETRICS) `mask` (`u32`).
+	=>
+	=>
+	NONE 0x0000_0000
+	BORDERSIZE 0x0000_0001
+	BORDERCOLOR 0x0000_0002
+	TEXTCOLOR 0x0000_0004
+}
+
+const_bitflag! { LVGS: u32;
+	/// [`LVGROUP`](crate::LVGROUP) `state` (`u32`).
+	=>
+	=>
+	NORMAL 0x0000_0000
+	COLLAPSED 0x0000_0001
+	HIDDEN 0x0000_0002
+	NOHEADER 0x0000_0004
+	COLLAPSIBLE 0x0000_0008
+	FOCUSED 0x0000_0010
+	SELECTED 0x0000_0020
+	SUBSETED 0x0000_0040
+	SUBSETLINKFOCUSED 0x0000_0080
 }
 
 const_bitflag! { LVHT: u32;
@@ -455,6 +568,15 @@ const_bitflag! { LVHT: u32;
 	EX_GROUP Self::EX_GROUP_BACKGROUND.0 | Self::EX_GROUP_COLLAPSE.0 | Self::EX_GROUP_FOOTER.0 | Self::EX_GROUP_HEADER.0 | Self::EX_GROUP_STATEICON.0 | Self::EX_GROUP_SUBSETLINK.0
 	EX_ONCONTENTS 0x0400_0000
 	EX_FOOTER 0x0800_0000
+}
+
+const_ordinary! { LVIM: u32;
+	/// [`LVINSERTMARK`](crate::LVINSERTMARK) `dwFlags` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	AFTER 0x0000_0001
 }
 
 const_ordinary! { LVIR: u8;
@@ -524,6 +646,8 @@ const_wm! { LVM;
 	=>
 	FIRST 0x1000
 	=>
+	SETUNICODEFORMAT CCM::SETUNICODEFORMAT.0
+	GETUNICODEFORMAT CCM::GETUNICODEFORMAT.0
 	GETBKCOLOR Self::FIRST.0 + 0
 	SETBKCOLOR Self::FIRST.0 + 1
 	GETIMAGELIST Self::FIRST.0 + 2
@@ -783,6 +907,26 @@ const_ordinary! { LVSIL: u8;
 	SMALL 1
 	STATE 2
 	GROUPHEADER 3
+}
+
+const_bitflag! { LVTVIF: u32;
+	/// [`LVTILEVIEWINFO`](crate::LVTILEVIEWINFO) `dwFlags` (`u32`).
+	=>
+	=>
+	AUTOSIZE 0x0000_0000
+	FIXEDWIDTH 0x0000_0001
+	FIXEDHEIGHT 0x0000_0002
+	FIXEDSIZE 0x0000_0003
+	EXTENDED 0x0000_0004
+}
+
+const_bitflag! { LVTVIM: u32;
+	/// [`LVTILEVIEWINFO`](crate::LVTILEVIEWINFO) `dwMask` (`u32`).
+	=>
+	=>
+	TILESIZE 0x0000_0001
+	COLUMNS 0x0000_0002
+	LABELMARGIN 0x0000_0004
 }
 
 const_ws! { LWS: u32;

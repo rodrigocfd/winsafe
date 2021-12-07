@@ -158,6 +158,26 @@ impl LITEM {
 	pub_fn_string_arr_get_set!(szUrl, set_szUrl);
 }
 
+/// [`LVBKIMAGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvbkimagew)
+/// struct.
+#[repr(C)]
+pub struct LVBKIMAGE<'a> {
+	pub uFlags: co::LVBKIF,
+	pub hbm: HBITMAP,
+	pszImage: *mut u16,
+	cchImageMax: u32,
+	pub xOffsetPercent: i32,
+	pub yOffsetPercent: i32,
+
+	pszImage_: PhantomData<&'a mut u16>,
+}
+
+impl_default!(LVBKIMAGE, 'a);
+
+impl<'a> LVBKIMAGE<'a> {
+	pub_fn_string_buf_get_set!('a, pszImage, set_pszImage, cchImageMax);
+}
+
 /// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
 /// struct.
 #[repr(C)]
@@ -202,6 +222,114 @@ impl<'a> LVFINDINFO<'a> {
 	pub_fn_string_ptr_get_set!('a, psz, set_psz);
 }
 
+/// [`LVFOOTERINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooterinfo)
+/// struct.
+#[repr(C)]
+pub struct LVFOOTERINFO<'a> {
+	pub mask: co::LVFF,
+	pszText: *mut u16,
+	cchTextMax: i32,
+	pub cItems: u32,
+
+	pszText_: PhantomData<&'a mut u16>,
+}
+
+impl_default!(LVFOOTERINFO, 'a);
+
+impl<'a> LVFOOTERINFO<'a> {
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+}
+
+/// [`LVFOOTERITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooteritem)
+/// struct.
+#[repr(C)]
+pub struct LVFOOTERITEM<'a> {
+	pub mask: co::LVFIF,
+	pub iItem: i32,
+	pszText: *mut u16,
+	cchTextMax: i32,
+	pub state: co::LVFIS,
+	pub stateMask: co::LVFIS,
+
+	pszText_: PhantomData<&'a mut u16>,
+}
+
+impl_default!(LVFOOTERITEM, 'a);
+
+impl<'a> LVFOOTERITEM<'a> {
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+}
+
+/// [`LVGROUP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroup)
+/// struct.
+#[repr(C)]
+pub struct LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	cbSize: u32,
+	pub mask: co::LVGF,
+	pszHeader: *mut u16,
+	cchHeader: i32,
+	pszFooter: *mut u16,
+	cchFooter: i32,
+	pub iGroupId: i32,
+	pub stateMask: co::LVGS,
+	pub state: co::LVGS,
+	pub uAlign: co::LVGA_FH,
+	pszSubtitle: *mut u16,
+	cchSubtitle: i32,
+	pszTask: *mut u16,
+	cchTask: i32,
+	pszDescriptionTop: *mut u16,
+	cchDescriptionTop: i32,
+	pszDescriptionBottom: *mut u16,
+	cchDescriptionBottom: i32,
+	pub iTitleImage: i32,
+	pub iExtendedImage: i32,
+	pub iFirstItem: i32,
+	pub cItems: u32,
+	pszSubsetTitle: *mut u16,
+	cchSubsetTitle: i32,
+
+	pszHeader_: PhantomData<&'a mut u16>,
+	pszFooter_: PhantomData<&'b mut u16>,
+	pszSubtitle_: PhantomData<&'c mut u16>,
+	pszTask_: PhantomData<&'d mut u16>,
+	pszDescriptionTop_: PhantomData<&'e mut u16>,
+	pszDescriptionBottom_: PhantomData<&'f mut u16>,
+	pszSubsetTitle_: PhantomData<&'g mut u16>,
+}
+
+impl_default_with_size!(LVGROUP, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	pub_fn_string_buf_get_set!('a, pszHeader, set_pszHeader, cchHeader);
+	pub_fn_string_buf_get_set!('b, pszFooter, set_pszFooter, cchFooter);
+	pub_fn_string_buf_get_set!('c, pszSubtitle, set_pszSubtitle, cchSubtitle);
+	pub_fn_string_buf_get_set!('d, pszTask, set_pszTask, cchTask);
+	pub_fn_string_buf_get_set!('e, pszDescriptionTop, set_pszDescriptionTop, cchDescriptionTop);
+	pub_fn_string_buf_get_set!('f, pszDescriptionBottom, set_pszDescriptionBottom, cchDescriptionBottom);
+	pub_fn_string_buf_get_set!('g, pszSubsetTitle, set_pszSubsetTitle, cchSubsetTitle);
+}
+
+/// [`LVGROUPMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroupmetrics)
+/// struct.
+#[repr(C)]
+pub struct LVGROUPMETRICS {
+	cbSize: u32,
+	pub mask: co::LVGMF,
+	pub Left: u32,
+	pub Top: u32,
+	pub Right: u32,
+	pub Bottom: u32,
+	pub crLeft: COLORREF,
+	pub crTop: COLORREF,
+	pub crRight: COLORREF,
+	pub crBottom: COLORREF,
+	pub crHeader: COLORREF,
+	pub crFooter: COLORREF,
+}
+
+impl_default_with_size!(LVGROUPMETRICS, cbSize);
+
 /// [`LVHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvhittestinfo)
 /// struct.
 #[repr(C)]
@@ -213,6 +341,18 @@ pub struct LVHITTESTINFO {
 	pub iSubItem: i32,
 	pub iGroup: i32,
 }
+
+/// [`LVINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertmark)
+/// struct.
+#[repr(C)]
+pub struct LVINSERTMARK {
+	cbSize: u32,
+	pub dwFlags: co::LVIM,
+	pub iItem: i32,
+	dwReserved: u32,
+}
+
+impl_default!(LVINSERTMARK);
 
 /// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
@@ -251,6 +391,70 @@ pub struct LVITEMINDEX {
 	pub iItem: i32,
 	pub iGroup: i32,
 }
+
+/// [`LVTILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileinfo)
+/// struct.
+#[repr(C)]
+pub struct LVTILEINFO<'a> {
+	cbSize: u32,
+	pub iItem: i32,
+	cColumns: u32,
+	puColumns: *mut u32,
+	piColFmt: *mut co::LVCFMT_C,
+
+	puColumns_: PhantomData<&'a mut u32>,
+}
+
+impl_default_with_size!(LVTILEINFO, cbSize, 'a);
+
+impl<'a> LVTILEINFO<'a> {
+	/// Returns the `puColumns` field.
+	pub fn puColumns(&self) -> Option<&'a mut [u32]> {
+		unsafe {
+			self.puColumns.as_mut()
+				.map(|_| std::slice::from_raw_parts_mut(self.puColumns, self.cColumns as _))
+		}
+	}
+
+	/// Returns the `piColFmt` field.
+	pub fn piColFmt(&self) -> Option<&'a mut [co::LVCFMT_C]> {
+		unsafe {
+			self.puColumns.as_mut()
+				.map(|_| std::slice::from_raw_parts_mut(self.piColFmt, self.cColumns as _))
+		}
+	}
+
+	/// Sets the `puColumns` and `piColFmt` fields. The slices must have the
+	/// same length.
+	pub fn set_puColumns_piColFmt(&mut self, val: Option<(&'a mut [u32], &'a mut [co::LVCFMT_C])>) {
+		if let Some(val) = val {
+			if val.0.len() != val.1.len() {
+				panic!("Different slice lengths: {} and {}.", val.0.len(), val.1.len());
+			}
+			self.cColumns = val.0.len() as _;
+			self.puColumns = val.0.as_mut_ptr();
+			self.piColFmt = val.1.as_mut_ptr();
+		} else {
+			self.cColumns = 0;
+			self.puColumns = std::ptr::null_mut();
+			self.piColFmt = std::ptr::null_mut();
+		}
+	}
+}
+
+/// [`LVTILEVIEWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileviewinfo)
+/// struct.
+#[repr(C)]
+pub struct LVTILEVIEWINFO {
+	cbSize: u32,
+	pub dwMask: co::LVTVIM,
+	pub dwFlags: co::LVTVIF,
+	pub sizeTile: SIZE,
+	pub cLines: i32,
+	pub rcLabelMargin: RECT,
+}
+
+impl_default_with_size!(LVTILEVIEWINFO, cbSize);
 
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
