@@ -64,14 +64,24 @@ pub type HOOKPROC =
 	) -> isize;
 
 /// Type alias to
+/// [`PFNLVCOMPARE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-listview_sortitems)
+/// callback function.
+pub type PFNLVCOMPARE =
+	extern "system" fn(
+		lParam1: isize,
+		lParam2: isize,
+		lParamSort: isize,
+	) -> i32;
+
+/// Type alias to
 /// [`PFNLVGROUPCOMPARE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-pfnlvgroupcompare)
 /// callback function.
 pub type PFNLVGROUPCOMPARE =
 	extern "system" fn(
 		groupId1: i32,
 		groupId2: i32,
-		lpRefData: usize,
-	);
+		lpRefData: isize,
+	) -> i32;
 
 /// Type alias to
 /// [`PFTASKDIALOGCALLBACK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-pftaskdialogcallback)

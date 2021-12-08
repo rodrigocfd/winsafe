@@ -2,7 +2,7 @@
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages),
 //! whose constants have [`LVM`](crate::co::LVM) prefix.
 
-use crate::aliases::{HrResult, WinResult};
+use crate::aliases::{HrResult, PFNLVCOMPARE, PFNLVGROUPCOMPARE, WinResult};
 use crate::co;
 use crate::funcs::MAKEDWORD;
 use crate::handles::{HCURSOR, HIMAGELIST, HWND};
@@ -2572,6 +2572,31 @@ impl MsgSend for SetItemPosition {
 	}
 }
 
+/// [`LVM_SETITEMPOSITION32`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemposition32)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetItemPosition32 {
+	pub index: u32,
+	pub position: POINT,
+}
+
+impl MsgSend for SetItemPosition32 {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETITEMPOSITION32.into(),
+			wparam: self.index as _,
+			lparam: &self.position as *const _ as _,
+		}
+	}
+}
+
 /// [`LVM_SETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemstate)
 /// message parameters.
 ///
@@ -2622,6 +2647,30 @@ impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 	}
 }
 
+/// [`LVM_SETOUTLINECOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setoutlinecolor)
+/// message parameters.
+///
+/// Return type: `COLORREF`.
+pub struct SetOutlineColor {
+	pub color: COLORREF,
+}
+
+impl MsgSend for SetOutlineColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETOUTLINECOLOR.into(),
+			wparam: 0,
+			lparam: self.color.0 as _,
+		}
+	}
+}
+
 /// [`LVM_SETSELECTEDCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setselectedcolumn)
 /// message parameters.
 ///
@@ -2641,6 +2690,177 @@ impl MsgSend for SetSelectedColumn {
 		WndMsg {
 			msg_id: co::LVM::SETSELECTEDCOLUMN.into(),
 			wparam: self.index as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_SETSELECTIONMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setselectionmark)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct SetSelectionMark {
+	pub index: Option<u32>,
+}
+
+impl MsgSend for SetSelectionMark {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETSELECTIONMARK.into(),
+			wparam: 0,
+			lparam: self.index.map_or(-1, |idx| idx as i32) as _,
+		}
+	}
+}
+
+/// [`LVM_SETTEXTBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settextbkcolor)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetTextBkColor {
+	pub color: Option<COLORREF>,
+}
+
+impl MsgSend for SetTextBkColor {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETTEXTBKCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.map_or(co::CLR::NONE.0 as _, |c| c.0 as _),
+		}
+	}
+}
+
+/// [`LVM_SETTEXTCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settextcolor)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetTextColor {
+	pub color: Option<COLORREF>,
+}
+
+impl MsgSend for SetTextColor {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETTEXTCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.map_or(co::CLR::NONE.0 as _, |c| c.0 as _),
+		}
+	}
+}
+
+/// [`LVM_SETTILEINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settileinfo)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetTileInfo<'a, 'b> {
+	pub info: &'b LVTILEINFO<'a>,
+}
+
+impl<'a, 'b> MsgSend for SetTileInfo<'a, 'b> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETTILEINFO.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETTILEVIEWINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settileviewinfo)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetTileViewInfo<'a> {
+	pub info: &'a LVTILEVIEWINFO,
+}
+
+impl<'a> MsgSend for SetTileViewInfo<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETTILEVIEWINFO.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETTOOLTIPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settooltips)
+/// message parameters.
+///
+/// Return type: `Option<HWND>`.
+pub struct SetTooltips {
+	pub tooltip: Option<HWND>,
+}
+
+impl MsgSend for SetTooltips {
+	type RetType = Option<HWND>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|h| HWND(h as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETTOOLTIPS.into(),
+			wparam: self.tooltip.map_or(0, |h| h.0 as _),
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_SETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setunicodeformat)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct SetUnicodeFormat {
+	pub use_unicode: bool,
+}
+
+impl MsgSend for SetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETUNICODEFORMAT.into(),
+			wparam: self.use_unicode as _,
 			lparam: 0,
 		}
 	}
@@ -2669,6 +2889,132 @@ impl MsgSend for SetView {
 			msg_id: co::LVM::SETVIEW.into(),
 			wparam: self.view.0 as _,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_SETWORKAREAS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setworkareas)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetWorkAreas<'a> {
+	pub rects: Option<&'a [RECT]>,
+}
+
+impl<'a> MsgSend for SetWorkAreas<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETWORKAREAS.into(),
+			wparam: self.rects.map_or(0, |r| r.len() as _),
+			lparam: self.rects.map_or(0, |r| r.as_ptr() as _),
+		}
+	}
+}
+
+/// [`LVM_SORTGROUPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortgroups)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SortGroups {
+	pub callback: Option<PFNLVGROUPCOMPARE>,
+	pub param: Option<isize>,
+}
+
+impl MsgSend for SortGroups {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SORTGROUPS.into(),
+			wparam: self.callback.map_or(0, |cb| cb as _),
+			lparam: self.param.unwrap_or(0),
+		}
+	}
+}
+
+/// [`LVM_SORTITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortitems)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SortItems {
+	pub param: isize,
+	pub callback: PFNLVCOMPARE,
+}
+
+impl MsgSend for SortItems {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SORTITEMS.into(),
+			wparam: self.param as _,
+			lparam: self.callback as _,
+		}
+	}
+}
+
+/// [`LVM_SORTITEMSEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortitemsex)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SortItemsEx {
+	pub param: isize,
+	pub callback: PFNLVCOMPARE,
+}
+
+impl MsgSend for SortItemsEx {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SORTITEMSEX.into(),
+			wparam: self.param as _,
+			lparam: self.callback as _,
+		}
+	}
+}
+
+/// [`LVM_SUBITEMHITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-subitemhittest)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct SubItemHitTest<'a> {
+	pub info: &'a mut LVHITTESTINFO,
+}
+
+impl<'a> MsgSend for SubItemHitTest<'a> {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			i => Some(i as _),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SUBITEMHITTEST.into(),
+			wparam: -1 as _,
+			lparam: self.info as *mut _ as _,
 		}
 	}
 }
