@@ -4,6 +4,7 @@
 
 use std::marker::PhantomData;
 
+use crate::aliases::PFNLVGROUPCOMPARE;
 use crate::co;
 use crate::enums::{BmpIdbRes, IdStr, IndexStr, TreeitemTvi};
 use crate::handles::{HBITMAP, HDC, HIMAGELIST, HINSTANCE, HTREEITEM, HWND};
@@ -342,6 +343,25 @@ pub struct LVHITTESTINFO {
 	pub iGroup: i32,
 }
 
+/// [`LVINSERTGROUPSORTED`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertgroupsorted)
+/// struct.
+#[repr(C)]
+pub struct LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	pub pfnGroupCompare: Option<PFNLVGROUPCOMPARE>,
+	pub pvData: usize,
+	pub lvGroup: LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
+}
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> Default for LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	fn default() -> Self {
+		Self {
+			pfnGroupCompare: None,
+			pvData: 0,
+			lvGroup: LVGROUP::default(), // has cbSize, so we can't use impl_default_size macro
+		}
+	}
+}
+
 /// [`LVINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertmark)
 /// struct.
 #[repr(C)]
@@ -390,6 +410,25 @@ impl<'a> LVITEM<'a> {
 pub struct LVITEMINDEX {
 	pub iItem: i32,
 	pub iGroup: i32,
+}
+
+/// [`LVSETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvsetinfotip)
+/// struct.
+#[repr(C)]
+pub struct LVSETINFOTIP<'a> {
+	cbSize: u32,
+	pub dwFlags: u32, // unspecified
+	pszText: *mut u16,
+	pub iItem: i32,
+	pub iSubItem: i32,
+
+	pszText_: PhantomData<&'a mut u16>,
+}
+
+impl_default_with_size!(LVSETINFOTIP, cbSize, 'a);
+
+impl<'a> LVSETINFOTIP<'a> {
+	pub_fn_string_ptr_get_set!('a, pszText, set_pszText);
 }
 
 /// [`LVTILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileinfo)

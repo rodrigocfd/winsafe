@@ -4,7 +4,7 @@
 
 use crate::aliases::{EDITWORDBREAKPROC, WinResult};
 use crate::co;
-use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
+use crate::funcs::{HIWORD, LOWORD};
 use crate::handles::HLOCAL;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{zero_as_err, zero_as_none};
@@ -54,7 +54,7 @@ impl MsgSend for CharFromPos {
 		WndMsg {
 			msg_id: co::EM::CHARFROMPOS.into(),
 			wparam: 0,
-			lparam: MAKEDWORD(self.coords.x as _, self.coords.y as _) as _,
+			lparam: self.coords.into_u32() as _,
 		}
 	}
 }
@@ -273,7 +273,7 @@ impl MsgSend for GetMargins {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
+		SIZE::from_u32(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -582,7 +582,7 @@ impl MsgSend for PosFromChar {
 	type RetType = POINT;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		POINT::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
+		POINT::from_u32(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -767,7 +767,7 @@ impl MsgSend for SetMargins {
 		WndMsg {
 			msg_id: co::EM::SETMARGINS.into(),
 			wparam: self.margins.0 as _,
-			lparam: MAKEDWORD(self.size.cx as _, self.size.cy as _) as _,
+			lparam: self.size.into_u32() as _,
 		}
 	}
 }

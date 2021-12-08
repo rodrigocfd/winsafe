@@ -899,6 +899,16 @@ const_wsex! { LVS_EX;
 	UNDERLINEHOT 0x0000_0800
 }
 
+const_bitflag! { LVSICF: u32;
+	/// [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) `behavior` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	NOINVALIDATEALL 0x0000_0001
+	NOSCROLL 0x0000_0002
+}
+
 const_ordinary! { LVSIL: u8;
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) `kind` (`u8`).
 	=>

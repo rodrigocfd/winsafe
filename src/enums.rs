@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::funcs::MAKEDWORD;
 use crate::handles::{HBITMAP, HICON, HINSTANCE, HMENU, HTREEITEM, HWND};
 use crate::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::structs::{ATOM, NCCALCSIZE_PARAMS, POINT, RECT};
@@ -217,7 +216,7 @@ impl HwndPointId {
 	pub fn as_isize(&self) -> isize {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.0 as _,
-			Self::Point(pt) => MAKEDWORD(pt.x as _, pt.y as _) as _,
+			Self::Point(pt) => pt.into_u32() as _,
 			Self::Id(id) => *id as _,
 		}
 	}

@@ -329,7 +329,7 @@ const_ordinary! { CLR: u32;
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
 	=>
 	=>
-	CLR_NONE 0xffff_ffff
+	NONE 0xffff_ffff
 	DEFAULT 0xff00_0000
 }
 

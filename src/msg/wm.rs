@@ -15,7 +15,7 @@ use crate::enums::{
 use crate::funcs::{HIBYTE, HIWORD, LOBYTE, LOWORD, MAKEDWORD, MAKEWORD};
 use crate::handles::{HBRUSH, HDC, HDROP, HFONT, HICON, HMENU, HRGN, HWND};
 use crate::msg::{MsgSend, MsgSendRecv, WndMsg};
-use crate::msg::macros::{lp_to_point, point_to_lp, zero_as_none};
+use crate::msg::macros::zero_as_none;
 use crate::privs::{CB_ERR, FAPPCOMMAND_MASK, LB_ERRSPACE};
 use crate::structs::{
 	CREATESTRUCT,
@@ -258,7 +258,7 @@ impl MsgSend for ContextMenu {
 		WndMsg {
 			msg_id: co::WM::CONTEXTMENU,
 			wparam: self.hwnd.0 as _,
-			lparam: point_to_lp(self.cursor_pos),
+			lparam: self.cursor_pos.into_u32() as _,
 		}
 	}
 }
@@ -267,7 +267,7 @@ impl MsgSendRecv for ContextMenu {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd: HWND(p.wparam as _),
-			cursor_pos: lp_to_point(p),
+			cursor_pos: POINT::from_u32(p.lparam as _),
 		}
 	}
 }
@@ -933,7 +933,7 @@ impl MsgSend for HScroll {
 		WndMsg {
 			msg_id: co::WM::HSCROLL,
 			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
-			lparam: self.hcontrol.map(|h| h.0 as _).unwrap_or_default(),
+			lparam: self.hcontrol.map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -1221,7 +1221,7 @@ impl MsgSend for Move {
 		WndMsg {
 			msg_id: co::WM::MOVE,
 			wparam: 0,
-			lparam: point_to_lp(self.coords),
+			lparam: self.coords.into_u32() as _,
 		}
 	}
 }
@@ -1229,7 +1229,7 @@ impl MsgSend for Move {
 impl MsgSendRecv for Move {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			coords: lp_to_point(p),
+			coords: POINT::from_u32(p.lparam as _),
 		}
 	}
 }
@@ -1362,7 +1362,7 @@ impl MsgSend for NcHitTest {
 		WndMsg {
 			msg_id: co::WM::NCHITTEST,
 			wparam: 0,
-			lparam: point_to_lp(self.cursor_pos),
+			lparam: self.cursor_pos.into_u32() as _,
 		}
 	}
 }
@@ -1370,7 +1370,7 @@ impl MsgSend for NcHitTest {
 impl MsgSendRecv for NcHitTest {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			cursor_pos: lp_to_point(p),
+			cursor_pos: POINT::from_u32(p.lparam as _),
 		}
 	}
 }
@@ -1542,7 +1542,7 @@ impl MsgSendRecv for ParentNotify {
 			data: match event {
 				co::WMPN::CREATE | co::WMPN::DESTROY => HwndPointId::Hwnd(HWND(p.lparam as _)),
 				co::WMPN::POINTERDOWN => HwndPointId::Id(p.lparam as _),
-				_ => HwndPointId::Point(lp_to_point(p)),
+				_ => HwndPointId::Point(POINT::from_u32(p.lparam as _)),
 			},
 		}
 	}
@@ -1859,10 +1859,7 @@ impl MsgSend for Size {
 		WndMsg {
 			msg_id: co::WM::SIZE,
 			wparam: self.request.0 as _,
-			lparam: MAKEDWORD(
-				self.client_area.cx as _,
-				self.client_area.cy as _,
-			) as _,
+			lparam: self.client_area.into_u32() as _,
 		}
 	}
 }
@@ -2011,7 +2008,7 @@ impl MsgSend for SysCommand {
 		WndMsg {
 			msg_id: co::WM::SYSCOMMAND,
 			wparam: self.request.0 as _,
-			lparam: point_to_lp(self.position),
+			lparam: self.position.into_u32() as _,
 		}
 	}
 }
@@ -2020,7 +2017,7 @@ impl MsgSendRecv for SysCommand {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			request: co::SC(p.wparam as _),
-			position: lp_to_point(p),
+			position: POINT::from_u32(p.lparam as _),
 		}
 	}
 }

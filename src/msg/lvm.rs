@@ -2,9 +2,9 @@
 //! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages),
 //! whose constants have [`LVM`](crate::co::LVM) prefix.
 
-use crate::aliases::WinResult;
+use crate::aliases::{HrResult, WinResult};
 use crate::co;
-use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
+use crate::funcs::MAKEDWORD;
 use crate::handles::{HCURSOR, HIMAGELIST, HWND};
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{zero_as_err, zero_as_none};
@@ -18,9 +18,11 @@ use crate::structs::{
 	LVGROUP,
 	LVGROUPMETRICS,
 	LVHITTESTINFO,
+	LVINSERTGROUPSORTED,
 	LVINSERTMARK,
 	LVITEM,
 	LVITEMINDEX,
+	LVSETINFOTIP,
 	LVTILEINFO,
 	LVTILEVIEWINFO,
 	POINT,
@@ -43,7 +45,7 @@ impl MsgSend for ApproximateViewRect {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
+		SIZE::from_u32(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -746,7 +748,7 @@ impl<'a> MsgSend for GetGroupMetrics<'a> {
 ///
 /// Return type: `WinResult<()>`.
 pub struct GetGroupRect<'a> {
-	pub group_id: u32,
+	pub id: u32,
 	pub flags: co::LVGGR,
 	pub rect: &'a mut RECT,
 }
@@ -763,7 +765,7 @@ impl<'a> MsgSend for GetGroupRect<'a> {
 
 		WndMsg {
 			msg_id: co::LVM::GETGROUPRECT.into(),
-			wparam: self.group_id as _,
+			wparam: self.id as _,
 			lparam: self.rect as *mut _ as _,
 		}
 	}
@@ -774,7 +776,7 @@ impl<'a> MsgSend for GetGroupRect<'a> {
 ///
 /// Return type: `co::LVGS`.
 pub struct GetGroupState {
-	pub group_id: u32,
+	pub id: u32,
 	pub mask: co::LVGS,
 }
 
@@ -788,7 +790,7 @@ impl MsgSend for GetGroupState {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETGROUPSTATE.into(),
-			wparam: self.group_id as _,
+			wparam: self.id as _,
 			lparam: self.mask.0 as _,
 		}
 	}
@@ -1141,7 +1143,7 @@ impl MsgSend for GetItemSpacing {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::new(LOWORD(v as _) as _, HIWORD(v as _) as _)
+		SIZE::from_u32(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1688,7 +1690,7 @@ impl<'a> MsgSend for GetWorkAreas<'a> {
 ///
 /// Return type: `bool`.
 pub struct HasGroup {
-	pub group_id: u32,
+	pub id: u32,
 }
 
 impl MsgSend for HasGroup {
@@ -1701,7 +1703,7 @@ impl MsgSend for HasGroup {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::HASGROUP.into(),
-			wparam: self.group_id as _,
+			wparam: self.id as _,
 			lparam: 0,
 		}
 	}
@@ -1762,6 +1764,57 @@ impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 	}
 }
 
+/// [`LVM_INSERTGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertgroup)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+	pub lvgroup: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
+}
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			i => Ok(i as _),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::INSERTGROUP.into(),
+			wparam: 0,
+			lparam: self.lvgroup as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_INSERTGROUPSORTED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertgroupsorted)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct InsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+	pub lvgroup: &'h LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
+}
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::INSERTGROUPSORTED.into(),
+			wparam: 0,
+			lparam: self.lvgroup as *const _ as _,
+		}
+	}
+}
+
 /// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
 ///
@@ -1789,29 +1842,27 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	}
 }
 
-/// [`LVM_INSERTGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertgroup)
+/// [`LVM_INSERTMARKHITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertmarkhittest)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
-pub struct InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	pub lvgroup: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
+/// Return type: `WinResult<()>`.
+pub struct InsertMarkHitTest<'a> {
+	pub point: POINT,
+	pub lvinsertmark: &'a LVINSERTMARK,
 }
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	type RetType = WinResult<u32>;
+impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
+	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as _),
-		}
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
-			msg_id: co::LVM::INSERTGROUP.into(),
-			wparam: 0,
-			lparam: self.lvgroup as *const _ as _,
+			msg_id: co::LVM::INSERTMARKHITTEST.into(),
+			wparam: &self.point as *const _ as _,
+			lparam: self.lvinsertmark as *const _ as _,
 		}
 	}
 }
@@ -1941,6 +1992,37 @@ impl MsgSend for RedrawItems {
 	}
 }
 
+pub_struct_msg_empty! { RemoveAllGroups, co::LVM::REMOVEALLGROUPS.into(),
+	/// [`LVM_REMOVEALLGROUPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-removeallgroups)
+	/// message, which has no parameters.
+	///
+	/// Return type: `WinResult<()>`.
+}
+
+/// [`LVM_REMOVEGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-removegroup)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct RemoveGroup {
+	pub id: u32,
+}
+
+impl MsgSend for RemoveGroup {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|id| id as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::REMOVEGROUP.into(),
+			wparam: self.id as _,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
 ///
@@ -1966,6 +2048,78 @@ impl MsgSend for Scroll {
 	}
 }
 
+/// [`LVM_SETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setbkcolor)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetBkColor {
+	pub color: Option<COLORREF>,
+}
+
+impl MsgSend for SetBkColor {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETBKCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.map_or(co::CLR::NONE.0 as _, |c| c.0 as _),
+		}
+	}
+}
+
+/// [`LVM_SETBKIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setbkimage)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetBkImage<'a, 'b> {
+	pub lvbkimage: &'b LVBKIMAGE<'a>,
+}
+
+impl<'a, 'b> MsgSend for SetBkImage<'a, 'b> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETBKIMAGE.into(),
+			wparam: 0,
+			lparam: self.lvbkimage as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETCALLBACKMASK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcallbackmask)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetCallbackMask {
+	pub mask: co::LVIS,
+}
+
+impl MsgSend for SetCallbackMask {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETCALLBACKMASK.into(),
+			wparam: self.mask.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
 ///
@@ -1987,6 +2141,30 @@ impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 			msg_id: co::LVM::SETCOLUMN.into(),
 			wparam: self.index as _,
 			lparam: self.lvcolumn as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETCOLUMNORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnorderarray)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetColumnOrderArray<'a> {
+	pub order: &'a [u32],
+}
+
+impl<'a> MsgSend for SetColumnOrderArray<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETCOLUMNORDERARRAY.into(),
+			wparam: self.order.len() as _,
+			lparam: self.order.as_ptr() as _,
 		}
 	}
 }
@@ -2041,6 +2219,160 @@ impl MsgSend for SetExtendedListViewStyle {
 	}
 }
 
+/// [`LVM_SETGROUPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setgroupinfo)
+/// message parameters.
+///
+/// Return type: `WinResult<u32>`.
+pub struct SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+	pub id: u32,
+	pub info: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>
+}
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+	type RetType = WinResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => Err(co::ERROR::BAD_ARGUMENTS),
+			id => Ok(id as _),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETGROUPINFO.into(),
+			wparam: self.id as _,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETGROUPMETRICS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setgroupmetrics)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetGroupMetrics<'a> {
+	pub info: &'a LVGROUPMETRICS,
+}
+
+impl<'a> MsgSend for SetGroupMetrics<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETGROUPMETRICS.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETHOTCURSOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sethotcursor)
+/// message parameters.
+///
+/// Return type: `Option<HCURSOR>`.
+pub struct SetHotCursor {
+	pub hcursor: Option<HCURSOR>,
+}
+
+impl MsgSend for SetHotCursor {
+	type RetType = Option<HCURSOR>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HCURSOR(p as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETHOTCURSOR.into(),
+			wparam: 0,
+			lparam: self.hcursor.map_or(0, |h| h.0 as _),
+		}
+	}
+}
+
+/// [`LVM_SETHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sethotitem)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct SetHotItem {
+	pub index: Option<u32>,
+}
+
+impl MsgSend for SetHotItem {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			idx => Some(idx as _),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETHOTITEM.into(),
+			wparam: self.index.unwrap_or(0) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_SETHOVERTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sethovertime)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct SetHoverTime {
+	pub ms: Option<u32>,
+}
+
+impl MsgSend for SetHoverTime {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			ms => Some(ms as _),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETHOVERTIME.into(),
+			wparam: self.ms.map_or(-1, |ms| ms as i32) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`LVM_SETICONSPACING`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-seticonspacing)
+/// message parameters.
+///
+/// Return type: `SIZE`.
+pub struct SetIconSpacing {
+	pub size: SIZE,
+}
+
+impl MsgSend for SetIconSpacing {
+	type RetType = SIZE;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		SIZE::from_u32(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETICONSPACING.into(),
+			wparam: 0,
+			lparam: self.size.into_u32() as _,
+		}
+	}
+}
+
 /// [`LVM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setimagelist)
 /// message parameters.
 ///
@@ -2066,6 +2398,78 @@ impl MsgSend for SetImageList {
 	}
 }
 
+/// [`LVM_SETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinfotip)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetInfoTip<'a, 'b> {
+	pub info: &'b LVSETINFOTIP<'a>,
+}
+
+impl<'a, 'b> MsgSend for SetInfoTip<'a, 'b> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETINFOTIP.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinsertmark)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetInsertMark<'a> {
+	pub info: &'a LVINSERTMARK,
+}
+
+impl<'a> MsgSend for SetInsertMark<'a> {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETINSERTMARK.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETINSERTMARKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinsertmarkcolor)
+/// message parameters.
+///
+/// Return type: `COLORREF`.
+pub struct SetInsertMarkColor {
+	pub color: COLORREF,
+}
+
+impl MsgSend for SetInsertMarkColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETINSERTMARKCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.0 as _,
+		}
+	}
+}
+
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
 ///
@@ -2086,6 +2490,84 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 			msg_id: co::LVM::SETITEM.into(),
 			wparam: 0,
 			lparam: self.lvitem as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemcount)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetItemCount {
+	pub count: u32,
+	pub behavior: co::LVSICF,
+}
+
+impl MsgSend for SetItemCount {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETITEMCOUNT.into(),
+			wparam: self.count as _,
+			lparam: self.behavior.0 as _,
+		}
+	}
+}
+
+/// [`LVM_SETITEMINDEXSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemindexstate)
+/// message parameters.
+///
+/// Return type: `HrResult<()>`.
+pub struct SetItemIndexState<'a, 'b, 'c> {
+	pub lvitemindex: &'a LVITEMINDEX,
+	pub lvitem: &'c LVITEM<'b>,
+}
+
+impl<'a, 'b, 'c> MsgSend for SetItemIndexState<'a, 'b, 'c> {
+	type RetType = HrResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match co::HRESULT(v as _) {
+			co::HRESULT::S_OK => Ok(()),
+			e => Err(e),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETITEMINDEXSTATE.into(),
+			wparam: self.lvitemindex as *const _ as _,
+			lparam: self.lvitem as *const _ as _,
+		}
+	}
+}
+
+/// [`LVM_SETITEMPOSITION`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemposition)
+/// message parameters.
+///
+/// Return type: `WinResult<()>`.
+pub struct SetItemPosition {
+	pub index: u32,
+	pub position: POINT,
+}
+
+impl MsgSend for SetItemPosition {
+	type RetType = WinResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETITEMPOSITION.into(),
+			wparam: self.index as _,
+			lparam: self.position.into_u32() as _,
 		}
 	}
 }

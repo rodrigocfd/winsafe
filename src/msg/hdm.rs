@@ -5,7 +5,6 @@
 use crate::aliases::WinResult;
 use crate::co;
 use crate::enums::PtIdx;
-use crate::funcs::MAKEDWORD;
 use crate::handles::HIMAGELIST;
 use crate::msg::{MsgSend, WndMsg};
 use crate::msg::macros::{zero_as_err, zero_as_none};
@@ -541,7 +540,7 @@ impl MsgSend for SetHotDivider {
 				PtIdx::Idx(_) => false,
 			} as _,
 			lparam: match self.value {
-				PtIdx::Pt(pt) => MAKEDWORD(pt.x as _, pt.y as _),
+				PtIdx::Pt(pt) => pt.into_u32(),
 				PtIdx::Idx(idx) => idx,
 			} as _,
 		}

@@ -653,8 +653,7 @@ pub fn GetLogicalDriveStrings() -> WinResult<Vec<String>> {
 /// [`GetMenuCheckMarkDimensions`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenucheckmarkdimensions)
 /// function.
 pub fn GetMenuCheckMarkDimensions() -> SIZE {
-	let dims = unsafe { user32::GetMenuCheckMarkDimensions() };
-	SIZE::new(LOWORD(dims as _) as _, HIWORD(dims as _) as _)
+	SIZE::from_u32(unsafe { user32::GetMenuCheckMarkDimensions() } as _)
 }
 
 /// [`GetMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
@@ -679,8 +678,7 @@ pub fn GetMessage(
 /// [`GetMessagePos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagepos)
 /// function.
 pub fn GetMessagePos() -> POINT {
-	let xy = unsafe { user32::GetMessagePos() };
-	POINT::new(LOWORD(xy) as _, HIWORD(xy) as _)
+	POINT::from_u32(unsafe { user32::GetMessagePos() })
 }
 
 /// [`GetNativeSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)

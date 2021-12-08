@@ -1,8 +1,5 @@
 use crate::aliases::WinResult;
 use crate::co;
-use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
-use crate::msg::WndMsg;
-use crate::structs::POINT;
 
 /// Struct for a message that has no parameters and no meaningful return value.
 macro_rules! pub_struct_msg_empty {
@@ -183,7 +180,7 @@ macro_rules! pub_struct_msg_button {
 				WndMsg {
 					msg_id: $wmconst,
 					wparam: self.vkey_code.0 as usize,
-					lparam: MAKEDWORD(self.coords.x as _, self.coords.y as _) as _,
+					lparam: self.coords.into_u32() as _,
 				}
 			}
 		}
@@ -216,17 +213,4 @@ pub(crate) fn zero_as_none(v: isize) -> Option<isize> {
 		0 => None,
 		v => Some(v),
 	}
-}
-
-/// Converts a `POINT` to a an `LPARAM` field.
-pub(crate) fn point_to_lp(p: POINT) -> isize {
-	MAKEDWORD(p.x as u16, p.y as u16) as _
-}
-
-/// Converts the `LPARAM` field to a `POINT`.
-pub(crate) fn lp_to_point(p: WndMsg) -> POINT {
-	POINT::new(
-		LOWORD(p.lparam as _) as _,
-		HIWORD(p.lparam as _) as _,
-	)
 }

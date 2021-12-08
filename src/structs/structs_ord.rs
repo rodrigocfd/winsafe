@@ -903,9 +903,20 @@ impl POINT {
 		Self { x, y }
 	}
 
+	/// Creates a new `POINT` by splitting `val` into two `u16` values, with
+	/// [`LOWORD`](crate::LOWORD) and [`HIWORD`](crate::HIWORD).
+	pub const fn from_u32(val: u32) -> POINT {
+		Self::new(LOWORD(val) as _, HIWORD(val) as _)
+	}
+
 	/// Tells whether the struct contains exactly the given values.
 	pub const fn is(&self, x: i32, y: i32) -> bool {
 		self.x == x && self.y == y
+	}
+
+	/// Calls [`MAKEDWORD`](crate::MAKEDWORD) with `x` and `y`.
+	pub const fn into_u32(&self) -> u32 {
+		MAKEDWORD(self.x as _, self.y as _)
 	}
 }
 
@@ -1119,9 +1130,20 @@ impl SIZE {
 		Self { cx, cy }
 	}
 
+	/// Creates a new `SIZE` by splitting `val` into two `u16` values, with
+	/// [`LOWORD`](crate::LOWORD) and [`HIWORD`](crate::HIWORD).
+	pub const fn from_u32(val: u32) -> SIZE {
+		Self::new(LOWORD(val) as _, HIWORD(val) as _)
+	}
+
 	/// Tells whether the struct contains exactly the given values.
 	pub const fn is(&self, cx: i32, cy: i32) -> bool {
 		self.cx == cx && self.cy == cy
+	}
+
+	/// Calls [`MAKEDWORD`](crate::MAKEDWORD) with `cx` and `cy`.
+	pub const fn into_u32(&self) -> u32 {
+		MAKEDWORD(self.cx as _, self.cy as _)
 	}
 }
 

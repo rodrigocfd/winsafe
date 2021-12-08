@@ -6,7 +6,7 @@ use crate::aliases::WinResult;
 use crate::co;
 use crate::funcs::{HIWORD, LOWORD, MAKEDWORD};
 use crate::msg::{MsgSend, WndMsg};
-use crate::msg::macros::{point_to_lp, zero_as_err};
+use crate::msg::macros::zero_as_err;
 use crate::privs::{LB_ERR, LB_ERRSPACE};
 use crate::structs::{LCID, POINT, RECT};
 use crate::various::WString;
@@ -657,7 +657,7 @@ impl MsgSend for ItemFromPoint {
 		WndMsg {
 			msg_id: co::LB::ITEMFROMPOINT.into(),
 			wparam: 0,
-			lparam: point_to_lp(self.coords),
+			lparam: self.coords.into_u32() as _,
 		}
 	}
 }

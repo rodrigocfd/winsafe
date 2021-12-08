@@ -64,6 +64,16 @@ pub type HOOKPROC =
 	) -> isize;
 
 /// Type alias to
+/// [`PFNLVGROUPCOMPARE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-pfnlvgroupcompare)
+/// callback function.
+pub type PFNLVGROUPCOMPARE =
+	extern "system" fn(
+		groupId1: i32,
+		groupId2: i32,
+		lpRefData: usize,
+	);
+
+/// Type alias to
 /// [`PFTASKDIALOGCALLBACK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-pftaskdialogcallback)
 /// calback function.
 pub type PFTASKDIALOGCALLBACK =
