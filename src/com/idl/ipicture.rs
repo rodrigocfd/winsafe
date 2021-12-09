@@ -1,11 +1,11 @@
 #![allow(non_snake_case)]
 
-use crate::aliases::HrResult;
+use crate::aliases::{ErrResult, HrResult};
 use crate::com::idl;
 use crate::com::idl::IStream;
 use crate::com::iunknown::{ComInterface, ComPtr, IUnknownT, IUnknownVT};
 use crate::ffi::{BOOL, HANDLE, HRES, oleaut32, PCVOID};
-use crate::handles::{prelude::Handle, HBITMAP, HDC};
+use crate::handles::{prelude::Handle, HBITMAP, HDC, HWND};
 use crate::privs::ok_to_hrresult;
 use crate::structs::{COLORREF, POINT, RECT, SIZE};
 use crate::various::WString;
@@ -116,9 +116,11 @@ pub trait IPictureT: IUnknownT {
 	/// [`IPicture::get_Height`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height)
 	/// method.
 	///
-	/// **Note:** Returns a value in HIMETRIC units. Use
-	/// [`HDC::HiMetricToPixel`](crate::HDC::HiMetricToPixel) to convert it to
-	/// pixels.
+	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
+	/// prefer using the simpler
+	/// [`IPicture::size_px`](crate::idl::IPictureT::size_px), or use
+	/// [`HDC::HiMetricToPixel`](crate::HDC::HiMetricToPixel) to perform the
+	/// conversion manually.
 	///
 	/// # Examples
 	///
@@ -158,9 +160,11 @@ pub trait IPictureT: IUnknownT {
 	/// [`IPicture::get_Width`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)
 	/// method.
 	///
-	/// **Note:** Returns a value in HIMETRIC units. Use
-	/// [`HDC::HiMetricToPixel`](crate::HDC::HiMetricToPixel) to convert it to
-	/// pixels.
+	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
+	/// prefer using the simpler
+	/// [`IPicture::size_px`](crate::idl::IPictureT::size_px), or use
+	/// [`HDC::HiMetricToPixel`](crate::HDC::HiMetricToPixel) to perform the
+	/// conversion manually.
 	///
 	/// # Examples
 	///
@@ -240,5 +244,17 @@ pub trait IPictureT: IUnknownT {
 				(vt.SelectPicture)(self.ptr(), hdc.0, &mut hdc_out.0, &mut hbmp.0),
 			)
 		}.map(|_| (hdc_out, hbmp))
+	}
+
+	/// Calls [`IPicture::get_Width`](crate::idl::IPictureT::get_Width) and
+	/// [`IPicture::get_Height`](crate::idl::IPictureT::get_Height), then
+	/// converts the HIMETRIC units to pixels.
+	///
+	/// If `hdc` is not provided, `HWND::NULL.GetDC()` will be used.
+	fn size_px(&self, hdc: Option<HDC>) -> ErrResult<SIZE> {
+		let our_hdc = if let Some(hdc) = hdc { hdc } else { HWND::NULL.GetDC()? };
+		let (cx, cy) = our_hdc.HiMetricToPixel(self.get_Width()?, self.get_Height()?);
+		if hdc.is_none() { HWND::NULL.ReleaseDC(our_hdc)?; }
+		Ok(SIZE::new(cx, cy))
 	}
 }
