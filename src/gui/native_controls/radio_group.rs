@@ -3,17 +3,18 @@ use std::ptr::NonNull;
 use std::rc::Rc;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
 use crate::gui::base::Base;
-use crate::gui::events::{prelude::EventsView, RadioGroupEvents};
+use crate::gui::events::RadioGroupEvents;
 use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{Child, NativeControlEvents, Parent, Window};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::prelude::Handle;
+use crate::kernel::decl::WinResult;
+use crate::prelude::{GuiChild, GuiEventsView, GuiNativeControlEvents, GuiParent,
+	GuiWindow, Handle};
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct RadioGroup(Arc<Obj>);
 
@@ -45,7 +46,7 @@ impl Index<usize> for RadioGroup {
 	}
 }
 
-impl NativeControlEvents<RadioGroupEvents> for RadioGroup {
+impl GuiNativeControlEvents<RadioGroupEvents> for RadioGroup {
 	fn on(&self) -> &RadioGroupEvents {
 		if !self.index(0).hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
@@ -59,12 +60,15 @@ impl NativeControlEvents<RadioGroupEvents> for RadioGroup {
 impl RadioGroup {
 	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be created
 	/// on the parent window with
-	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	///
 	/// # Panics
 	///
 	/// Panics if `opts` is empty
-	pub fn new(parent: &impl Parent, opts: &[RadioButtonOpts]) -> RadioGroup {
+	pub fn new(
+		parent: &impl GuiParent,
+		opts: &[RadioButtonOpts]) -> RadioGroup
+	{
 		if opts.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
@@ -110,12 +114,16 @@ impl RadioGroup {
 	}
 
 	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	///
 	/// # Panics
 	///
 	/// Panics if `ctrls` is empty.
-	pub fn new_dlg(parent: &impl Parent, ctrls: &[(u16, Horz, Vert)]) -> RadioGroup {
+	pub fn new_dlg(
+		parent: &impl GuiParent,
+		ctrls: &[(u16, Horz, Vert)]) -> RadioGroup
+	{
 		if ctrls.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
@@ -161,14 +169,18 @@ impl RadioGroup {
 	///
 	/// Changing the text of all radio buttons to `"One"`:
 	///
-	/// ```rust,ignore
-	/// use winsafe::gui::RadioGroup;
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::gui;
 	///
-	/// let radio_group: RadioGroup; // initialized somewhere
+	/// let radio_group: gui::RadioGroup; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let radio_group = gui::RadioGroup::new(&wnd, &[]);
 	///
-	/// for single_radio in me.rads.iter() {
+	/// for single_radio in radio_group.iter() {
 	///     single_radio.hwnd().SetWindowText("One")?;
 	/// }
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {
 		self.0.radios.iter()

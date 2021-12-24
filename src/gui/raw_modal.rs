@@ -1,23 +1,15 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::IdMenu;
-use crate::funcs::{
-	AdjustWindowRectEx,
-	DispatchMessage,
-	GetMessage,
-	PostQuitMessage,
-	TranslateMessage,
-};
 use crate::gui::base::Base;
-use crate::gui::events::prelude::EventsView;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{prelude::Handle, HBRUSH, HCURSOR, HICON, HWND};
-use crate::structs::{MSG, POINT, RECT, SIZE, WNDCLASSEX};
-use crate::various::WString;
+use crate::kernel::decl::{WinResult, WString};
+use crate::prelude::{GdiHbrush, GuiEventsView, Handle, UserHwnd};
+use crate::user::decl::{AdjustWindowRectEx, HBRUSH, HCURSOR, HICON, HWND,
+	DispatchMessage, GetMessage, IdMenu, MSG, POINT, PostQuitMessage, RECT, SIZE,
+	TranslateMessage, WNDCLASSEX};
 
 /// A WindowModal with a raw window.
 #[derive(Clone)]
@@ -151,6 +143,7 @@ impl RawModal {
 
 /// Options to create a [`WindowModal`](crate::gui::WindowModal) programmatically
 /// with [`WindowModal::new`](crate::gui::WindowModal::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowModalOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).

@@ -2,17 +2,12 @@ use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::co;
-use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::prelude::EventsView;
-use crate::gui::privs::{
-	auto_ctrl_id,
-	multiply_dpi_or_dtu,
-	paint_control_borders,
-};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, paint_control_borders};
 use crate::gui::resizer::{Horz, Vert};
-use crate::structs::{POINT, SIZE};
+use crate::prelude::{GuiEventsView, UserHwnd};
+use crate::user::decl::{HwndPlace, POINT, SIZE};
 
 /// A WindowControl with a dialog window.
 #[derive(Clone)]

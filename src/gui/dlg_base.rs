@@ -1,11 +1,12 @@
-use crate::aliases::{ErrResult, WinResult};
 use crate::co;
-use crate::enums::IdStr;
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
 use crate::gui::privs::{post_quit_error, ui_font};
-use crate::handles::{prelude::Handle, HINSTANCE, HWND};
-use crate::msg::{MsgSendRecv, wm, WndMsg};
+use crate::kernel::decl::{ErrResult, HINSTANCE, IdStr, WinResult};
+use crate::msg::{wm, WndMsg};
+use crate::prelude::{Handle, KernelHinstance, MsgSendRecv, UserHinstance,
+	UserHwnd};
+use crate::user::decl::HWND;
 
 /// Base to all dialog windows.
 pub(in crate::gui) struct DlgBase {

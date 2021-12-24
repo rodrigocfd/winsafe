@@ -1,17 +1,18 @@
 use std::marker::PhantomData;
 
-use crate::aliases::WinResult;
 use crate::co;
+use crate::comctl::decl::LVCOLUMN;
 use crate::gui::privs::multiply_dpi;
-use crate::handles::HWND;
+use crate::kernel::decl::{WinResult, WString};
 use crate::msg::{hdm, lvm};
-use crate::structs::{LVCOLUMN, SIZE};
-use crate::various::WString;
+use crate::prelude::UserHwnd;
+use crate::user::decl::{HWND, SIZE};
 
 /// Exposes column methods of a [`ListView`](crate::gui::ListView) control.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListViewColumns<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
 	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
@@ -25,16 +26,19 @@ impl<'a> ListViewColumns<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 	///
 	/// my_list.columns().add(&[
 	///     ("Name", 300),
 	///     ("Address", 500),
 	/// ])?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	pub fn add(&self,
 		texts_and_widths: &[(impl AsRef<str>, u32)]) -> WinResult<()>

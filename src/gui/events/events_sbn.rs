@@ -1,7 +1,7 @@
 use crate::co;
+use crate::comctl::decl::NMMOUSE;
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::structs::NMMOUSE;
 
 /// Exposes status bar control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications).
@@ -12,6 +12,7 @@ use crate::structs::NMMOUSE;
 ///
 /// You cannot directly instantiate this object, it is created internally by
 /// the control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct StatusBarEvents(BaseEventsProxy);
 
 impl StatusBarEvents {

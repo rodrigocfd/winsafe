@@ -2,27 +2,22 @@ use std::any::Any;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeBitflag};
-use crate::gui::events::{prelude::EventsView, StatusBarEvents, WindowEvents};
+use crate::co;
+use crate::gui::events::{StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::gui::traits::{
-	AsAny,
-	Child,
-	NativeControl,
-	NativeControlEvents,
-	Parent,
-	Window,
-};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{prelude::Handle, HWND};
-use crate::msg::{MsgSend, sb, wm};
-use crate::structs::{POINT, SIZE};
+use crate::kernel::decl::WinResult;
+use crate::msg::{sb, wm};
+use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, MsgSend, NativeBitflag,
+	UserHwnd};
+use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Used when adding the parts in
 /// [`StatusBar::new`](crate::gui::StatusBar::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy)]
 pub enum StatusBarPart {
 	/// A part that has a fixed size, in pixels.
@@ -47,6 +42,7 @@ pub enum StatusBarPart {
 /// Native
 /// [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/status-bars)
 /// control, which has one or more parts.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct StatusBar(Arc<Obj>);
 
@@ -66,25 +62,25 @@ impl AsAny for StatusBar {
 	}
 }
 
-impl Window for StatusBar {
+impl GuiWindow for StatusBar {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for StatusBar {
+impl GuiChild for StatusBar {
 	fn ctrl_id(&self) -> u16 {
 		self.0.ctrl_id
 	}
 }
 
-impl NativeControl for StatusBar {
+impl GuiNativeControl for StatusBar {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
 }
 
-impl NativeControlEvents<StatusBarEvents> for StatusBar {
+impl GuiNativeControlEvents<StatusBarEvents> for StatusBar {
 	fn on(&self) -> &StatusBarEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
@@ -97,23 +93,31 @@ impl NativeControlEvents<StatusBarEvents> for StatusBar {
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
-	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// window with
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
-	/// let status_bar = gui::StatusBar::new(&[
-	///     gui::StatusBarPart::Fixed(200),      // 200 pixels, never resizes
-	///     gui::StatusBarPart::Proportional(1), // these two will fill the remaning space
-	///     gui::StatusBarPart::Proportional(1),
-	/// ]);
+	/// let status_bar = gui::StatusBar::new(
+	///     &wnd,
+	///     &[
+	///         gui::StatusBarPart::Fixed(200),      // 200 pixels, never resizes
+	///         gui::StatusBarPart::Proportional(1), // these two will fill the remaning space
+	///         gui::StatusBarPart::Proportional(1),
+	///     ],
+	/// );
 	/// ```
-	pub fn new(parent: &impl Parent, parts: &[StatusBarPart]) -> StatusBar {
+	pub fn new(
+		parent: &impl GuiParent,
+		parts: &[StatusBarPart]) -> StatusBar
+	{
 		let ctrl_id = auto_ctrl_id();
 		let new_self = Self(
 			Arc::new(

@@ -2,15 +2,16 @@
 
 use std::error::Error;
 
-use crate::aliases::{ErrResult, WinResult};
-use crate::co::{self, prelude::NativeBitflag};
-use crate::ffi::kernel32;
-use crate::funcs::{GetSystemMetrics, PostQuitMessage, SystemParametersInfo};
+use crate::co;
+use crate::gdi::decl::{HFONT, NONCLIENTMETRICS};
 use crate::gui::base::Base;
-use crate::handles::{HFONT, HTHEME, HWND};
-use crate::handles::prelude::{Handle, HandleGdi};
+use crate::kernel::decl::{ErrResult, MulDiv, WinResult};
 use crate::msg::wm;
-use crate::structs::{NONCLIENTMETRICS, POINT, RECT, SIZE};
+use crate::prelude::{GdiHdc, GdiHfont, Handle, HandleGdi, NativeBitflag,
+	UserHwnd, UxthemeHtheme, UxthemeHwnd};
+use crate::user::decl::{GetSystemMetrics, HWND, POINT, PostQuitMessage, RECT,
+	SIZE, SystemParametersInfo};
+use crate::uxtheme::decl::{IsAppThemed, IsThemeActive};
 
 /// Global return error, will be taken in main loop.
 pub(in crate::gui) static mut QUIT_ERROR: Option<Box<dyn Error + Send + Sync>> = None;
@@ -91,12 +92,12 @@ pub(in crate::gui) fn multiply_dpi(
 		}
 
 		if let Some(pt) = pt {
-			pt.x = kernel32::MulDiv(pt.x, DPI.x, 96);
-			pt.y = kernel32::MulDiv(pt.y, DPI.y, 96);
+			pt.x = MulDiv(pt.x, DPI.x, 96);
+			pt.y = MulDiv(pt.y, DPI.y, 96);
 		}
 		if let Some(sz) = sz {
-			sz.cx = kernel32::MulDiv(sz.cx, DPI.x, 96);
-			sz.cy = kernel32::MulDiv(sz.cy, DPI.y, 96);
+			sz.cx = MulDiv(sz.cx, DPI.x, 96);
+			sz.cy = MulDiv(sz.cy, DPI.y, 96);
 		}
 	}
 	Ok(())
@@ -204,8 +205,8 @@ pub(in crate::gui) fn paint_control_borders(
 
 	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as _);
 	if !ex_style.has(co::WS_EX::CLIENTEDGE) // no border
-		|| !HTHEME::IsThemeActive()
-		|| !HTHEME::IsAppThemed()
+		|| !IsThemeActive()
+		|| !IsAppThemed()
 	{
 		return Ok(());
 	}

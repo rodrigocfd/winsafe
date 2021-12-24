@@ -1,14 +1,14 @@
 use std::any::Any;
 
-use crate::aliases::{ErrResult, WinResult};
 use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEventsAll;
+use crate::gui::gui_traits_sealed::{GuiSealedBase, GuiSealedParent};
 use crate::gui::raw_modal::{RawModal, WindowModalOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{AsAny, Parent, UiThread, Window};
-use crate::gui::traits_sealed::{SealedBase, SealedParent};
-use crate::handles::HWND;
+use crate::kernel::decl::{ErrResult, WinResult};
+use crate::prelude::{AsAny, GuiParent, GuiThread, GuiWindow};
+use crate::user::decl::HWND;
 
 /// Keeps a raw or dialog window.
 #[derive(Clone)]
@@ -18,6 +18,7 @@ enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
 
 /// An user modal window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct WindowModal {
 	raw_dlg: RawDlg,
@@ -31,13 +32,13 @@ impl AsAny for WindowModal {
 	}
 }
 
-impl Window for WindowModal {
+impl GuiWindow for WindowModal {
 	fn hwnd(&self) -> HWND {
 		self.as_base().hwnd()
 	}
 }
 
-impl SealedBase for WindowModal {
+impl GuiSealedBase for WindowModal {
 	fn as_base(&self) -> &Base {
 		match &self.raw_dlg {
 			RawDlg::Raw(r) => &r.0.raw_base.base,
@@ -46,7 +47,7 @@ impl SealedBase for WindowModal {
 	}
 }
 
-impl SealedParent for WindowModal {
+impl GuiSealedParent for WindowModal {
 	fn add_to_resizer(&self,
 		hchild: HWND, horz: Horz, vert: Vert) -> WinResult<()>
 	{
@@ -54,13 +55,13 @@ impl SealedParent for WindowModal {
 	}
 }
 
-impl Parent for WindowModal {
+impl GuiParent for WindowModal {
 	fn on(&self) -> &WindowEventsAll {
 		self.as_base().on()
 	}
 }
 
-impl UiThread for WindowModal {
+impl GuiThread for WindowModal {
 	fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
@@ -76,8 +77,8 @@ impl UiThread for WindowModal {
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with
-	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &impl Parent, opts: WindowModalOpts) -> WindowModal {
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	pub fn new(parent: &impl GuiParent, opts: WindowModalOpts) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Raw(
 				RawModal::new(parent.as_base(), opts),
@@ -86,8 +87,8 @@ impl WindowModal {
 	}
 
 	/// Instantiates a new `WindowModal` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
-	pub fn new_dlg(parent: &impl Parent, dialog_id: u16) -> WindowModal {
+	/// resource with [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	pub fn new_dlg(parent: &impl GuiParent, dialog_id: u16) -> WindowModal {
 		Self {
 			raw_dlg: RawDlg::Dlg(
 				DlgModal::new(parent.as_base(), dialog_id),

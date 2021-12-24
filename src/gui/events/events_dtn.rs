@@ -1,13 +1,8 @@
 use crate::co;
+use crate::comctl::decl::{NMDATETIMECHANGE, NMDATETIMEFORMAT,
+	NMDATETIMEFORMATQUERY, NMDATETIMESTRING, NMDATETIMEWMKEYDOWN};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::structs::{
-	NMDATETIMECHANGE,
-	NMDATETIMEFORMAT,
-	NMDATETIMEFORMATQUERY,
-	NMDATETIMESTRING,
-	NMDATETIMEWMKEYDOWN,
-};
 
 /// Exposes date and time picker control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
@@ -18,6 +13,7 @@ use crate::structs::{
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct DateTimePickerEvents(BaseEventsProxy);
 
 impl DateTimePickerEvents {

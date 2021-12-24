@@ -1,9 +1,9 @@
 use std::ptr::NonNull;
 
-use crate::aliases::ErrResult;
 use crate::co;
 use crate::gui::base::Base;
-use crate::gui::events::events_wm_nfy::sealed_events_wm_nfy::SealedEventsWmNfy;
+use crate::gui::events::events_wm_nfy::sealed_events_wm_nfy::GuiSealedEventsWmNfy;
+use crate::kernel::decl::ErrResult;
 use crate::msg::wm;
 
 /// Base to all native control event proxies.

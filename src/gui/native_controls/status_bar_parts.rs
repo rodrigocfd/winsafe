@@ -1,15 +1,16 @@
 use std::marker::PhantomData;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::handles::HWND;
+use crate::kernel::decl::{WinResult, WString};
 use crate::msg::sb;
-use crate::various::WString;
+use crate::prelude::UserHwnd;
+use crate::user::decl::HWND;
 
 /// Exposes the part methods of a [`StatusBar`](crate::gui::StatusBar) control.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct StatusBarParts<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
 	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
@@ -37,11 +38,13 @@ impl<'a> StatusBarParts<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_sb: gui::StatusBar; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_sb = gui::StatusBar::new(&wnd, &[]);
 	///
 	/// println!("Text: {}", my_sb.parts().text(0));
 	/// ```

@@ -2,15 +2,14 @@ use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::co;
-use crate::enums::IdMenu;
 use crate::gui::base::Base;
-use crate::gui::events::prelude::EventsView;
 use crate::gui::privs::{multiply_dpi_or_dtu, paint_control_borders};
 use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
-use crate::handles::{prelude::Handle, HBRUSH, HCURSOR, HICON};
-use crate::structs::{POINT, SIZE, WNDCLASSEX};
-use crate::various::WString;
+use crate::kernel::decl::WString;
+use crate::prelude::{GdiHbrush, GuiEventsView, Handle, UserHwnd};
+use crate::user::decl::{HBRUSH, HCURSOR, HICON, IdMenu, POINT, SIZE,
+	WNDCLASSEX};
 
 /// A WindowControl with a raw window.
 #[derive(Clone)]
@@ -87,6 +86,7 @@ impl RawControl {
 
 /// Options to create a [`WindowControl`](crate::gui::WindowControl)
 /// programmatically with [`WindowControl::new`](crate::gui::WindowControl::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowControlOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).

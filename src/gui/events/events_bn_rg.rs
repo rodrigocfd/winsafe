@@ -1,11 +1,11 @@
 use std::ptr::NonNull;
 use std::rc::Rc;
 
-use crate::aliases::ErrResult;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
+use crate::kernel::decl::ErrResult;
 
 /// Exposes button control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -43,18 +43,20 @@ impl RadioGroupEvents {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// let radios: gui::RadioGroup;
+	/// # let radios = gui::RadioGroup::new(&wnd, &[]);
 	///
 	/// radios.on().bn_clicked({
 	///     let radios = radios.clone();
 	///     move || -> ErrResult<()> {
 	///         println!("Selected {}",
-	///             rads.checked().unwrap()
+	///             radios.checked().unwrap()
 	///                 .hwnd().GetWindowText()?,
 	///         );
 	///         Ok(())

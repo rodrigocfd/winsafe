@@ -1,16 +1,17 @@
 use std::marker::PhantomData;
 
-use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeBitflag};
-use crate::handles::HWND;
+use crate::co;
+use crate::comctl::decl::{LVFINDINFO, LVHITTESTINFO, LVITEM};
+use crate::kernel::decl::{WinResult, WString};
 use crate::msg::lvm;
-use crate::structs::{LVFINDINFO, LVHITTESTINFO, LVITEM, POINT, RECT};
-use crate::various::WString;
+use crate::prelude::{NativeBitflag, UserHwnd};
+use crate::user::decl::{HWND, POINT, RECT};
 
 /// Exposes item methods of a [`ListView`](crate::gui::ListView) control.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListViewItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
 	pub(in crate::gui::native_controls) owner_: PhantomData<&'a ()>,
@@ -25,11 +26,13 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 	///
 	/// let new_item = my_list.items().add(
 	///     &[
@@ -38,6 +41,7 @@ impl<'a> ListViewItems<'a> {
 	///     ],
 	///     None, // no icon; requires a previous set_image_list()
 	/// )?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	///
 	/// # Panics
@@ -155,11 +159,13 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::gui::ListView;
+	/// use winsafe::gui;
 	///
-	/// let my_list: ListView; // initialized somewhere
+	/// let my_list: gui::ListView; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter() {
 	///     println!("Item {}, text of the first column: {}",
@@ -174,11 +180,13 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter_selected() {
 	///     println!("Selected item {}, text of the first column: {}",
@@ -229,6 +237,7 @@ impl<'a> ListViewItems<'a> {
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy)]
 pub struct ListViewItem<'a> {
 	hwnd: HWND,

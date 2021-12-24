@@ -27,7 +27,7 @@ This crate is still in alpha stage. Below is an estimated progress of feature gr
 | User windows (main, modal and control) | ![Progress](https://progress-bar.dev/100/) |
 | Native controls | ![Progress](https://progress-bar.dev/85/) |
 | Window messages | ![Progress](https://progress-bar.dev/75/) |
-| Overall Win32 APIs | ![Progress](https://progress-bar.dev/30/) | |
+| Overall Win32 APIs | ![Progress](https://progress-bar.dev/35/) | |
 
 ## Usage
 
@@ -35,17 +35,33 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = "0.0.8"
+winsafe = { version = "0.0.8", features = [] }
 ```
 
-The COM modules are disabled by default, and can be enabled when needed:
+Then you must enable the [Cargo features](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section) you want to be included – these modules are named after native Windows DLL and library names, mostly.
 
-| Module | Cargo.toml `[dependencies]` entry |
+The following Cargo features are available so far:
+
+| Feature | Description |
 | - | - |
-| [Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) | `winsafe = { version = "0.0.8", features = ["autom"] }` |
-| [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) | `winsafe = { version = "0.0.8", features = ["dshow"] }` |
-| [IDL](https://docs.microsoft.com/en-us/windows/win32/api/_com/) | `winsafe = { version = "0.0.8", features = ["idl"] }` |
-| [Shell](https://docs.microsoft.com/en-us/windows/win32/api/_shell/) | `winsafe = { version = "0.0.8", features = ["shell"] }` |
+| `advapi` | Advapi32.dll, for Windows Registry |
+| `comctl` | ComCtl32.dll, for [Common Controls](https://docs.microsoft.com/en-us/windows/win32/api/_controls/) |
+| `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://docs.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
+| `dshow` | [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) |
+| `gdi` | Gdi32.dll, the [Windows GDI](https://docs.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
+| **`gui`** | **The WinSafe high-level GUI structs** |
+| `kernel` | Kernel32.dll, required by all others |
+| `msimg` | Msimg32.dll |
+| `ole` | OLE and basic COM support |
+| `oleaut` | [OLE Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) |
+| `shell` | Shell32.dll, the COM-based [Windows Shell](https://docs.microsoft.com/en-us/windows/win32/shell/shell-entry) |
+| `shlwapi` | Shlwapi.dll, for some [Shell](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/) functions |
+| `user` | User32.dll, the basic Windows UI support |
+| `uxtheme` | UxTheme.dll, extended UI theming |
+| `version` | Version.dll, to manipulate *.exe version info |
+
+Note that a Cargo feature may depend on other features, which will be enabled automatically.
+
 
 ## Example
 
@@ -59,6 +75,11 @@ WinSafe allows you to create windows in two ways:
 The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/01_button_click/) creates a window  with a button programmatically. Note how the click event is handled with a closure:
 
 ![Example 01](https://raw.githubusercontent.com/rodrigocfd/winsafe-examples/master/01_button_click/screen.gif)
+
+```toml
+[dependencies]
+winsafe = { version = "0.0.8", features = ["gui"] }
+```
 
 ```rust
 #![windows_subsystem = "windows"]

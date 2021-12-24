@@ -1,16 +1,13 @@
 use std::rc::Rc;
 
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::gui::events::events_wm::{GuiEventsView, ProcessResult,
+	sealed_events_wm::GuiSealedEventsWm, WindowEvents};
 use crate::gui::events::func_store::FuncStore;
-use crate::gui::events::events_wm::{
-	EventsView,
-	ProcessResult,
-	sealed_events_wm::SealedEventsWm,
-	WindowEvents,
-};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::msg::{MsgSendRecv, wm, WndMsg};
+use crate::kernel::decl::ErrResult;
+use crate::msg::{wm, WndMsg};
+use crate::prelude::MsgSendRecv;
 
 /// Exposes window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
@@ -18,6 +15,7 @@ use crate::msg::{MsgSendRecv, wm, WndMsg};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowEventsAll {
 	events_wm: WindowEvents,
 	tmrs: FuncStore< // WM_TIMER messages
@@ -154,11 +152,12 @@ impl WindowEventsAll {
 	///
 	/// Closing the window on ESC key:
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, gui, msg, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
 	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
 	///     let wnd = wnd.clone(); // pass into the closure
@@ -187,7 +186,7 @@ impl WindowEventsAll {
 
 //------------------------------------------------------------------------------
 
-impl SealedEventsWm for WindowEventsAll {
+impl GuiSealedEventsWm for WindowEventsAll {
 	fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
 	{
@@ -195,9 +194,9 @@ impl SealedEventsWm for WindowEventsAll {
 	}
 }
 
-impl EventsView for WindowEventsAll {}
+impl GuiEventsView for WindowEventsAll {}
 
-impl sealed_events_wm_nfy::SealedEventsWmNfy for WindowEventsAll {
+impl sealed_events_wm_nfy::GuiSealedEventsWmNfy for WindowEventsAll {
 	fn add_nfy<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
 		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
 	{
@@ -206,14 +205,14 @@ impl sealed_events_wm_nfy::SealedEventsWmNfy for WindowEventsAll {
 	}
 }
 
-impl EventsViewAll for WindowEventsAll {}
+impl GuiEventsViewAll for WindowEventsAll {}
 
 //------------------------------------------------------------------------------
 
 pub(in crate::gui) mod sealed_events_wm_nfy {
 	use super::{co, ErrResult, wm};
 
-	pub trait SealedEventsWmNfy {
+	pub trait GuiSealedEventsWmNfy {
 		/// Raw add notification.
 		fn add_nfy<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
 			where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static;
@@ -222,7 +221,8 @@ pub(in crate::gui) mod sealed_events_wm_nfy {
 
 /// Exposes the methods of
 /// [`WindowEventsAll`](crate::gui::events::WindowEventsAll).
-pub trait EventsViewAll: sealed_events_wm_nfy::SealedEventsWmNfy + EventsView {
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub trait GuiEventsViewAll: sealed_events_wm_nfy::GuiSealedEventsWmNfy + GuiEventsView {
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
 	/// notification code.
 	///

@@ -1,14 +1,12 @@
 use std::sync::Arc;
 
-use crate::aliases::{ErrResult, WinResult};
 use crate::co;
-use crate::enums::IdStr;
-use crate::funcs::PostQuitMessage;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::prelude::EventsView;
-use crate::handles::HINSTANCE;
+use crate::kernel::decl::{ErrResult, HINSTANCE, IdStr, WinResult};
 use crate::msg::wm;
+use crate::prelude::{GuiEventsView, KernelHinstance, UserHinstance, UserHwnd};
+use crate::user::decl::PostQuitMessage;
 
 /// A WindowMain with a dialog window.
 #[derive(Clone)]

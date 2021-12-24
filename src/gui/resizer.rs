@@ -1,17 +1,17 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::HwndPlace;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{prelude::Handle, HDWP, HWND};
+use crate::kernel::decl::WinResult;
 use crate::msg::wm;
-use crate::structs::{POINT, RECT, SIZE};
+use crate::prelude::{Handle, UserHdwp, UserHwnd};
+use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
 
 /// Specifies the horizontal behavior of the control when the parent window is
 /// resized.
 ///
 /// These values are analog to [`gui::Vert`](crate::gui::Vert).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Horz {
 	/// Nothing will be done when parent window is resized.
@@ -28,6 +28,7 @@ pub enum Horz {
 /// resized.
 ///
 /// These values are analog to [`gui::Horz`](crate::gui::Horz).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Vert {
 	/// Nothing will be done when parent window is resized.

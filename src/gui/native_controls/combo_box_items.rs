@@ -1,14 +1,15 @@
 use std::marker::PhantomData;
 
-use crate::aliases::WinResult;
-use crate::handles::HWND;
+use crate::kernel::decl::{WinResult, WString};
 use crate::msg::cb;
-use crate::various::WString;
+use crate::prelude::UserHwnd;
+use crate::user::decl::HWND;
 
 /// Exposes item methods of a [`ComboBox`](crate::gui::ComboBox) control.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ComboBoxItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
 	pub(in crate::gui::native_controls) owner_: PhantomData<&'a ()>,
@@ -20,13 +21,15 @@ impl<'a> ComboBoxItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::ComboBox;
+	/// use winsafe::gui;
 	///
-	/// let cmb_names: ComboBox; // initialized somewhere
+	/// let my_combo: gui::ComboBox; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_combo = gui::ComboBox::new(&wnd, gui::ComboBoxOpts::default());
 	///
-	/// cmb_names.items().add(&["John", "Mary"]);
+	/// my_combo.items().add(&["John", "Mary"]);
 	/// ```
 	pub fn add(&self, items: &[impl AsRef<str>]) -> WinResult<()> {
 		for text in items.iter() {
@@ -60,16 +63,19 @@ impl<'a> ComboBoxItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_combo: gui::ComboBox; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_combo = gui::ComboBox::new(&wnd, gui::ComboBoxOpts::default());
 	///
 	/// for text in my_combo.items().iter() {
 	///     let text = text?;
 	///     println!("Text {}", text);
 	/// }
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	pub fn iter(&self) -> impl Iterator<Item = WinResult<String>> + 'a {
 		ComboBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))

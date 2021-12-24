@@ -1,8 +1,8 @@
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::comctl::decl::{NMMOUSE, NMTREEVIEW, NMTVCUSTOMDRAW};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::structs::{NMMOUSE, NMTREEVIEW, NMTVCUSTOMDRAW};
+use crate::kernel::decl::ErrResult;
 
 /// Exposes tree view control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications).
@@ -13,6 +13,7 @@ use crate::structs::{NMMOUSE, NMTREEVIEW, NMTVCUSTOMDRAW};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TreeViewEvents(BaseEventsProxy);
 
 impl TreeViewEvents {

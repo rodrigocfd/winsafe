@@ -1,22 +1,20 @@
 use std::any::Any;
 
-use crate::aliases::{ErrResult, WinResult};
 use crate::co;
-use crate::ffi::BOOL;
-use crate::funcs::{
-	InitCommonControls,
-	IsWindowsVistaOrGreater,
-	SetProcessDPIAware,
-};
+use crate::comctl::decl::InitCommonControls;
+use crate::ffi_types::BOOL;
 use crate::gui::base::Base;
 use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEventsAll;
+use crate::gui::gui_traits_sealed::{GuiSealedBase, GuiSealedParent};
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{RawMain, WindowMainOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{AsAny, Parent, UiThread, Window};
-use crate::gui::traits_sealed::{SealedBase, SealedParent};
-use crate::handles::{HPROCESS, HWND};
+use crate::kernel::decl::{ErrResult, HPROCESS, IsWindowsVistaOrGreater,
+	WinResult};
+use crate::prelude::{AsAny, GuiParent, GuiThread, GuiWindow, KernelHprocess,
+	UserHprocess};
+use crate::user::decl::{HWND, SetProcessDPIAware};
 
 /// Keeps a raw or dialog window.
 #[derive(Clone)]
@@ -49,7 +47,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// with a closure, and it displays the clicked coordinates in the
 /// [title bar](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowtextw).
 ///
-/// ```rust,ignore
+/// ```rust,no_run
 /// #![windows_subsystem = "windows"]
 ///
 /// use winsafe::prelude::*;
@@ -100,13 +98,15 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 /// instead of creating the window programmatically. Note how
 /// `WindowMain::new_dlg` instead of `WindowMain::new`.
 ///
-/// ```rust,ignore
+/// ```rust,no_run
 /// #![windows_subsystem = "windows"]
 ///
 /// use winsafe::prelude::*;
-/// use winsafe::gui;
+/// use winsafe::{gui, seq_ids};
 ///
-/// const ID_DLG_MAIN: i32 = 101; // in our .res file, this is the dialog ID
+/// seq_ids! {
+///     ID_DLG_MAIN = 101; // in our .res file, this is the dialog ID
+/// }
 ///
 /// fn main() {
 ///     let my_main = MyDlg::new();
@@ -133,6 +133,7 @@ enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 ///     }
 /// }
 /// ```
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct WindowMain {
 	raw_dlg: RawDlg,
@@ -146,13 +147,13 @@ impl AsAny for WindowMain {
 	}
 }
 
-impl Window for WindowMain {
+impl GuiWindow for WindowMain {
 	fn hwnd(&self) -> HWND {
 		self.as_base().hwnd()
 	}
 }
 
-impl SealedBase for WindowMain {
+impl GuiSealedBase for WindowMain {
 	fn as_base(&self) -> &Base {
 		match &self.raw_dlg {
 			RawDlg::Raw(r) => &r.0.raw_base.base,
@@ -161,7 +162,7 @@ impl SealedBase for WindowMain {
 	}
 }
 
-impl SealedParent for WindowMain {
+impl GuiSealedParent for WindowMain {
 	fn add_to_resizer(&self,
 		hchild: HWND, horz: Horz, vert: Vert) -> WinResult<()>
 	{
@@ -169,13 +170,13 @@ impl SealedParent for WindowMain {
 	}
 }
 
-impl Parent for WindowMain {
+impl GuiParent for WindowMain {
 	fn on(&self) -> &WindowEventsAll {
 		self.as_base().on()
 	}
 }
 
-impl UiThread for WindowMain {
+impl GuiThread for WindowMain {
 	fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
@@ -191,7 +192,7 @@ impl UiThread for WindowMain {
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with
-	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
 		Self {
 			raw_dlg: RawDlg::Raw(
@@ -201,7 +202,8 @@ impl WindowMain {
 	}
 
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	pub fn new_dlg(
 		dialog_id: u16,
 		icon_id: Option<u16>,

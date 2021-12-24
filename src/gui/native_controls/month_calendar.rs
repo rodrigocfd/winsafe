@@ -1,36 +1,23 @@
 use std::any::Any;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::HwndPlace;
-use crate::gui::events::{
-	prelude::EventsView,
-	MonthCalendarEvents,
-	WindowEvents,
-};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl,
-	OptsId,
-};
+use crate::gui::events::{MonthCalendarEvents, WindowEvents};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl,
+	OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{
-	AsAny,
-	Child,
-	FocusControl,
-	NativeControl,
-	NativeControlEvents,
-	Parent,
-	Window,
-};
-use crate::handles::{prelude::Handle, HWND};
+use crate::kernel::decl::{SYSTEMTIME, WinResult};
 use crate::msg::mcm;
-use crate::structs::{POINT, RECT, SIZE, SYSTEMTIME};
+use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiFocusControl,
+	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
+	UserHwnd};
+use crate::user::decl::{HWND, HwndPlace, POINT, RECT, SIZE};
 
 /// Native
 /// [month calendar](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct MonthCalendar(Arc<Obj>);
 
@@ -48,13 +35,13 @@ impl AsAny for MonthCalendar {
 	}
 }
 
-impl Window for MonthCalendar {
+impl GuiWindow for MonthCalendar {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for MonthCalendar {
+impl GuiChild for MonthCalendar {
 	fn ctrl_id(&self) -> u16 {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => opts.ctrl_id,
@@ -63,13 +50,13 @@ impl Child for MonthCalendar {
 	}
 }
 
-impl NativeControl for MonthCalendar {
+impl GuiNativeControl for MonthCalendar {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
 }
 
-impl NativeControlEvents<MonthCalendarEvents> for MonthCalendar {
+impl GuiNativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 	fn on(&self) -> &MonthCalendarEvents {
 		if !self.0.base.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
@@ -80,12 +67,16 @@ impl NativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 	}
 }
 
-impl FocusControl for MonthCalendar {}
+impl GuiFocusControl for MonthCalendar {}
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent
-	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &impl Parent, opts: MonthCalendarOpts) -> MonthCalendar {
+	/// window with
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	pub fn new(
+		parent: &impl GuiParent,
+		opts: MonthCalendarOpts) -> MonthCalendar
+	{
 		let opts = MonthCalendarOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
 		let new_self = Self(
@@ -108,9 +99,10 @@ impl MonthCalendar {
 	}
 
 	/// Instantiates a new `MonthCalendar` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent,
+		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> MonthCalendar
 	{
@@ -185,6 +177,7 @@ impl MonthCalendar {
 /// Options to create a [`MonthCalendar`](crate::gui::MonthCalendar)
 /// programmatically with
 /// [`MonthCalendar::new`](crate::gui::MonthCalendar::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct MonthCalendarOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

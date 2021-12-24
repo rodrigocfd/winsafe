@@ -1,23 +1,23 @@
 use std::any::Any;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeBitflag};
-use crate::gui::events::{prelude::EventsView, WindowEvents};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl,
-	OptsId,
-};
+use crate::co;
+use crate::comctl::decl::PBRANGE;
+use crate::gui::events::{WindowEvents};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl,
+	OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{AsAny, Child, NativeControl, Parent, Window};
-use crate::handles::HWND;
+use crate::kernel::decl::WinResult;
 use crate::msg::pbm;
-use crate::structs::{PBRANGE, POINT, SIZE};
+use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiNativeControl,
+	GuiParent, GuiWindow, NativeBitflag, UserHwnd};
+use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Native
 /// [progress bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct ProgressBar(Arc<Obj>);
 
@@ -34,13 +34,13 @@ impl AsAny for ProgressBar {
 	}
 }
 
-impl Window for ProgressBar {
+impl GuiWindow for ProgressBar {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for ProgressBar {
+impl GuiChild for ProgressBar {
 	fn ctrl_id(&self) -> u16 {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => opts.ctrl_id,
@@ -49,7 +49,7 @@ impl Child for ProgressBar {
 	}
 }
 
-impl NativeControl for ProgressBar {
+impl GuiNativeControl for ProgressBar {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
@@ -57,8 +57,9 @@ impl NativeControl for ProgressBar {
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
-	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &impl Parent, opts: ProgressBarOpts) -> ProgressBar {
+	/// window with
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	pub fn new(parent: &impl GuiParent, opts: ProgressBarOpts) -> ProgressBar {
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
 		let new_self = Self(
@@ -80,9 +81,10 @@ impl ProgressBar {
 	}
 
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent,
+		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> ProgressBar
 	{
@@ -145,8 +147,8 @@ impl ProgressBar {
 
 	/// Sets or unsets the marquee mode by sending a
 	/// [`pbm::SetMarquee`](crate::msg::pbm::SetMarquee) message combined with a
-	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) call for a style
-	/// change.
+	/// [`SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr) call
+	/// for a style change.
 	pub fn set_marquee(&self, marquee: bool) {
 		if marquee {
 			self.hwnd().SetWindowLongPtr(
@@ -208,6 +210,7 @@ impl ProgressBar {
 
 /// Options to create a [`ProgressBar`](crate::gui::ProgressBar)
 /// programmatically with [`ProgressBar::new`](crate::gui::ProgressBar::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ProgressBarOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

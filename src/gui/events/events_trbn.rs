@@ -1,8 +1,8 @@
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::comctl::decl::{NMCUSTOMDRAW, NMTRBTHUMBPOSCHANGING};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::structs::{NMCUSTOMDRAW, NMTRBTHUMBPOSCHANGING};
+use crate::kernel::decl::ErrResult;
 
 /// Exposes trackbar control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
@@ -13,6 +13,7 @@ use crate::structs::{NMCUSTOMDRAW, NMTRBTHUMBPOSCHANGING};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TrackbarEvents(BaseEventsProxy);
 
 impl TrackbarEvents {

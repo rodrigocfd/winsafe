@@ -11,6 +11,7 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct EditEvents(BaseEventsProxy);
 
 impl EditEvents {
@@ -46,16 +47,18 @@ impl EditEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult};
 		///
 		/// let txt: gui::Edit; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let txt = gui::Edit::new(&wnd, gui::EditOpts::default());
 		///
 		/// txt.on().en_change({
 		///     let txt = txt.clone(); // pass into the closure
 		///     move || -> ErrResult<()> {
-		///         println!("Text: {}", btn.hwnd().GetWindowText()?);
+		///         println!("Text: {}", txt.hwnd().GetWindowText()?);
 		///         Ok(())
 		///     }
 		/// });

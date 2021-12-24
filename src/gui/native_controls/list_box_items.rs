@@ -1,15 +1,16 @@
 use std::marker::PhantomData;
 
-use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeBitflag};
-use crate::handles::HWND;
+use crate::co;
+use crate::kernel::decl::{WinResult, WString};
 use crate::msg::lb;
-use crate::various::WString;
+use crate::prelude::{NativeBitflag, UserHwnd};
+use crate::user::decl::HWND;
 
 /// Exposes item methods of a [`ListBox`](crate::gui::ListBox) control.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListBoxItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
 	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
@@ -21,13 +22,15 @@ impl<'a> ListBoxItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::ListBox;
+	/// use winsafe::gui;
 	///
-	/// let lst_names: ListBox; // initialized somewhere
+	/// let my_list: gui::ListBox; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListBox::new(&wnd, gui::ListBoxOpts::default());
 	///
-	/// lst_names.items().add(&["John", "Mary"]);
+	/// my_list.items().add(&["John", "Mary"]);
 	/// ```
 	pub fn add(&self, items: &[impl AsRef<str>]) -> WinResult<()> {
 		for text in items.iter() {
@@ -61,16 +64,19 @@ impl<'a> ListBoxItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_list: gui::ListBox; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListBox::new(&wnd, gui::ListBoxOpts::default());
 	///
 	/// for text in my_list.items().iter() {
 	///     let text = text?;
 	///     println!("Text {}", text);
 	/// }
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	pub fn iter(&self) -> impl Iterator<Item = WinResult<String>> + 'a {
 		ListBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))

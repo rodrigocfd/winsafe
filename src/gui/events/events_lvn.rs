@@ -1,21 +1,10 @@
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::comctl::decl::{NMITEMACTIVATE, NMLISTVIEW, NMLVCACHEHINT,
+	NMLVCUSTOMDRAW, NMLVDISPINFO, NMLVEMPTYMARKUP, NMLVFINDITEM, NMLVGETINFOTIP,
+	NMLVKEYDOWN, NMLVLINK, NMLVODSTATECHANGE, NMLVSCROLL};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::structs::{
-	NMITEMACTIVATE,
-	NMLISTVIEW,
-	NMLVCACHEHINT,
-	NMLVCUSTOMDRAW,
-	NMLVDISPINFO,
-	NMLVEMPTYMARKUP,
-	NMLVFINDITEM,
-	NMLVGETINFOTIP,
-	NMLVKEYDOWN,
-	NMLVLINK,
-	NMLVODSTATECHANGE,
-	NMLVSCROLL,
-};
+use crate::kernel::decl::ErrResult;
 
 /// Exposes list view control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
@@ -26,6 +15,7 @@ use crate::structs::{
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListViewEvents(BaseEventsProxy);
 
 impl ListViewEvents {
@@ -101,11 +91,13 @@ impl ListViewEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
 		/// list.on().lvn_delete_item(|p: &NMLISTVIEW| -> ErrResult<()> {
 		///     println!("Item: {}", p.iItem);
@@ -194,11 +186,13 @@ impl ListViewEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
 		/// list.on().lvn_item_changed(|p: &NMLISTVIEW| -> ErrResult<()> {
 		///     println!("Item: {}", p.iItem);
@@ -222,13 +216,15 @@ impl ListViewEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult, NMLVKEYDOWN};
+		/// use winsafe::{co, gui, ErrResult, NMLVKEYDOWN};
 		///
 		/// let list: gui::ListView; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
-		/// list.on().lvn_delete_item(|p: &NMLVKEYDOWN| -> ErrResult<()> {
+		/// list.on().lvn_key_down(|p: &NMLVKEYDOWN| -> ErrResult<()> {
 		///     if p.wVKey == co::VK::DELETE {
 		///         println!("DEL key was pressed.");
 		///     }

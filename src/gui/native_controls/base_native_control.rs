@@ -1,25 +1,24 @@
 use std::ptr::NonNull;
 
-use crate::aliases::{ErrResult, WinResult};
 use crate::co;
-use crate::enums::{AtomStr, IdMenu};
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{prelude::Handle, HWND};
+use crate::kernel::decl::{ErrResult, WinResult};
 use crate::msg::WndMsg;
-use crate::structs::{POINT, SIZE};
+use crate::prelude::{ComctlHwnd, Handle, UserHwnd};
+use crate::user::decl::{AtomStr, HWND, IdMenu, POINT, SIZE};
 
 static mut BASE_SUBCLASS_ID: usize = 0;
 
 /// Variant field for child controls: creation options or just a control ID.
 pub enum OptsId<Op> {
 	/// The control will be created with
-	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	Wnd(Op),
 	/// The control belongs to a dialog and will be attached with
-	/// [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	Dlg(u16),
 }
 

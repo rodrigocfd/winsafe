@@ -2,33 +2,24 @@ use std::any::Any;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::gui::events::{prelude::EventsView, EditEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl,
-	OptsId,
-};
+use crate::comctl::decl::EDITBALLOONTIP;
+use crate::gui::events::{EditEvents, WindowEvents};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl,
+	OptsId};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{
-	AsAny,
-	Child,
-	FocusControl,
-	NativeControl,
-	NativeControlEvents,
-	Parent,
-	TextControl,
-	Window,
-};
-use crate::handles::{prelude::Handle, HWND};
+use crate::kernel::decl::{WinResult, WString};
 use crate::msg::{em, wm};
-use crate::structs::{EDITBALLOONTIP, POINT, SIZE};
-use crate::various::WString;
+use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiFocusControl,
+	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiTextControl,
+	GuiWindow, Handle, UserHwnd};
+use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Native
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct Edit(Arc<Obj>);
 
@@ -46,13 +37,13 @@ impl AsAny for Edit {
 	}
 }
 
-impl Window for Edit {
+impl GuiWindow for Edit {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for Edit {
+impl GuiChild for Edit {
 	fn ctrl_id(&self) -> u16 {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => opts.ctrl_id,
@@ -61,13 +52,13 @@ impl Child for Edit {
 	}
 }
 
-impl NativeControl for Edit {
+impl GuiNativeControl for Edit {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
 }
 
-impl NativeControlEvents<EditEvents> for Edit {
+impl GuiNativeControlEvents<EditEvents> for Edit {
 	fn on(&self) -> &EditEvents {
 		if !self.0.base.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
@@ -78,13 +69,13 @@ impl NativeControlEvents<EditEvents> for Edit {
 	}
 }
 
-impl FocusControl for Edit {}
-impl TextControl for Edit {}
+impl GuiFocusControl for Edit {}
+impl GuiTextControl for Edit {}
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window
-	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &impl Parent, opts: EditOpts) -> Edit {
+	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Edit {
 		let opts = EditOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
 		let new_self = Self(
@@ -107,9 +98,9 @@ impl Edit {
 	}
 
 	/// Instantiates a new `Edit` object, to be loaded from a dialog resource
-	/// with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// with [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent,
+		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> Edit
 	{
@@ -165,15 +156,18 @@ impl Edit {
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
 	///
 	/// for line in my_edit.iter_lines()? {
 	///     println!("{}", line);
 	/// }
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	pub fn iter_lines<'a>(&'a self) -> WinResult<impl Iterator<Item = String> + 'a> {
 		LinesIter::new(self.hwnd())
@@ -192,21 +186,25 @@ impl Edit {
 	///
 	/// Selecting all text in the control:
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
 	///
 	/// my_edit.set_selection(Some(0), None);
 	/// ```
 	///
 	/// Clearing the selection:
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::gui;
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
 	///
 	/// my_edit.set_selection(None, None);
 	/// ```
@@ -278,6 +276,7 @@ impl<'a> LinesIter<'a> {
 
 /// Options to create an [`Edit`](crate::gui::Edit) programmatically with
 /// [`Edit::new`](crate::gui::Edit::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct EditOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

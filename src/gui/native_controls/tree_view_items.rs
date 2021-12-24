@@ -1,18 +1,18 @@
 use std::marker::PhantomData;
 
-use crate::aliases::WinResult;
-use crate::co::{self, prelude::NativeBitflag};
-use crate::enums::TreeitemTvi;
-use crate::handles::{prelude::Handle, HTREEITEM, HWND};
+use crate::co;
+use crate::comctl::decl::{HTREEITEM, TreeitemTvi, TVINSERTSTRUCT, TVITEMEX};
+use crate::kernel::decl::{WinResult, WString};
+use crate::kernel::privs::MAX_PATH;
 use crate::msg::tvm;
-use crate::privs::MAX_PATH;
-use crate::structs::{TVINSERTSTRUCT, TVITEMEX};
-use crate::various::WString;
+use crate::prelude::{Handle, NativeBitflag, UserHwnd};
+use crate::user::decl::HWND;
 
 /// Exposes item methods of a [`TreeView`](crate::gui::TreeView) control.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TreeViewItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
 	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
@@ -99,6 +99,7 @@ impl<'a> TreeViewItems<'a> {
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy)]
 pub struct TreeViewItem<'a> {
 	hwnd: HWND,

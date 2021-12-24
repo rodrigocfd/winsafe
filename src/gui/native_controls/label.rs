@@ -1,37 +1,24 @@
 use std::any::Any;
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::HwndPlace;
-use crate::gui::events::{prelude::EventsView, LabelEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl,
-	OptsId,
-};
-use crate::gui::privs::{
-	auto_ctrl_id,
-	calc_text_bound_box,
-	multiply_dpi_or_dtu,
-	ui_font,
-};
+use crate::gui::events::{LabelEvents, WindowEvents};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl,
+	OptsId};
+use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box,
+	multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{
-	AsAny,
-	Child,
-	NativeControl,
-	NativeControlEvents,
-	Parent,
-	TextControl,
-	Window,
-};
-use crate::handles::{prelude::Handle, HWND};
+use crate::kernel::decl::WinResult;
 use crate::msg::wm;
-use crate::structs::{POINT, SIZE};
+use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
+	UserHwnd};
+use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
 /// Native
 /// [label](https://docs.microsoft.com/en-us/windows/win32/controls/about-static-controls)
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct Label(Arc<Obj>);
 
@@ -49,13 +36,13 @@ impl AsAny for Label {
 	}
 }
 
-impl Window for Label {
+impl GuiWindow for Label {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for Label {
+impl GuiChild for Label {
 	fn ctrl_id(&self) -> u16 {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => opts.ctrl_id,
@@ -64,13 +51,13 @@ impl Child for Label {
 	}
 }
 
-impl NativeControl for Label {
+impl GuiNativeControl for Label {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
 }
 
-impl NativeControlEvents<LabelEvents> for Label {
+impl GuiNativeControlEvents<LabelEvents> for Label {
 	fn on(&self) -> &LabelEvents {
 		if !self.0.base.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
@@ -81,12 +68,12 @@ impl NativeControlEvents<LabelEvents> for Label {
 	}
 }
 
-impl TextControl for Label {}
+impl GuiTextControl for Label {}
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window
-	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &impl Parent, opts: LabelOpts) -> Label {
+	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	pub fn new(parent: &impl GuiParent, opts: LabelOpts) -> Label {
 		let opts = LabelOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
 		let new_self = Self(
@@ -109,9 +96,10 @@ impl Label {
 	}
 
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent,
+		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> Label
 	{
@@ -164,18 +152,21 @@ impl Label {
 		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
 	}
 
-	/// Calls [`set_text`](crate::prelude::TextControl::set_text) and resizes
+	/// Calls [`set_text`](crate::prelude::GuiTextControl::set_text) and resizes
 	/// the control to exactly fit the new text.
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
 	/// let my_label: gui::Label; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_label = gui::Label::new(&wnd, gui::LabelOpts::default());
 	///
 	/// my_label.set_text_and_resize("This my text")?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
 		self.set_text(text)?;
@@ -190,6 +181,7 @@ impl Label {
 
 /// Options to create a [`Label`](crate::gui::Label) programmatically with
 /// [`label::new`](crate::gui::Label::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct LabelOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

@@ -1,14 +1,14 @@
-use crate::aliases::{ErrResult, WinResult};
+use crate::kernel::decl::{ErrResult, HINSTANCE, SetLastError, WinResult,
+	WString};
 use crate::co;
-use crate::enums::{AtomStr, IdIdcStr, IdMenu};
-use crate::funcs::{RegisterClassEx, SetLastError};
+use crate::user::decl::{ATOM, AtomStr, HBRUSH, HCURSOR, HICON, HWND, IdIdcStr,
+	IdMenu, POINT, RegisterClassEx, SIZE, WNDCLASSEX};
 use crate::gui::base::Base;
 use crate::gui::events::ProcessResult;
 use crate::gui::privs::post_quit_error;
-use crate::handles::{prelude::Handle, HBRUSH, HCURSOR, HICON, HINSTANCE, HWND};
-use crate::msg::{MsgSendRecv, wm, WndMsg};
-use crate::structs::{ATOM, POINT, SIZE, WNDCLASSEX};
-use crate::various::WString;
+use crate::prelude::{Handle, KernelHinstance, MsgSendRecv, UserHinstance,
+	UserHwnd};
+use crate::msg::{wm, WndMsg};
 
 /// Base to all ordinary windows.
 pub(in crate::gui) struct RawBase {

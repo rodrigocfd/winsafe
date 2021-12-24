@@ -2,32 +2,25 @@ use std::any::Any;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-use crate::aliases::{ErrResult, HrResult};
 use crate::co;
-use crate::gui::events::{prelude::EventsView, TreeViewEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl,
-	OptsId,
-};
+use crate::gui::events::{TreeViewEvents, WindowEvents};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl,
+	OptsId};
 use crate::gui::native_controls::tree_view_items::TreeViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{
-	AsAny,
-	Child,
-	FocusControl,
-	NativeControl,
-	NativeControlEvents,
-	Parent,
-	Window,
-};
-use crate::handles::{prelude::Handle, HWND};
+use crate::kernel::decl::{ErrResult};
 use crate::msg::tvm;
-use crate::structs::{POINT, SIZE};
+use crate::ole::decl::HrResult;
+use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiFocusControl,
+	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
+	UserHwnd};
+use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Native
 /// [tree view](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct TreeView(Arc<Obj>);
 
@@ -45,13 +38,13 @@ impl AsAny for TreeView {
 	}
 }
 
-impl Window for TreeView {
+impl GuiWindow for TreeView {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for TreeView {
+impl GuiChild for TreeView {
 	fn ctrl_id(&self) -> u16 {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => opts.ctrl_id,
@@ -60,13 +53,13 @@ impl Child for TreeView {
 	}
 }
 
-impl NativeControl for TreeView {
+impl GuiNativeControl for TreeView {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
 }
 
-impl NativeControlEvents<TreeViewEvents> for TreeView {
+impl GuiNativeControlEvents<TreeViewEvents> for TreeView {
 	fn on(&self) -> &TreeViewEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
@@ -77,12 +70,12 @@ impl NativeControlEvents<TreeViewEvents> for TreeView {
 	}
 }
 
-impl FocusControl for TreeView {}
+impl GuiFocusControl for TreeView {}
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window
-	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &impl Parent, opts: TreeViewOpts) -> TreeView {
+	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	pub fn new(parent: &impl GuiParent, opts: TreeViewOpts) -> TreeView {
 		let opts = TreeViewOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
 		let new_self = Self(
@@ -105,9 +98,10 @@ impl TreeView {
 	}
 
 	/// Instantiates a new `TreeView` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	pub fn new_dlg(
-		parent: &impl Parent,
+		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> TreeView
 	{
@@ -179,6 +173,7 @@ impl TreeView {
 
 /// Options to create a [`TreeView`](crate::gui::TreeView) programmatically with
 /// [`TreeView::new`](crate::gui::TreeView::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TreeViewOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

@@ -1,15 +1,14 @@
 use std::any::Any;
 
-use crate::aliases::{ErrResult, WinResult};
 use crate::gui::base::Base;
 use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEventsAll;
+use crate::gui::gui_traits_sealed::{GuiSealedBase, GuiSealedParent};
 use crate::gui::raw_control::{RawControl, WindowControlOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits_sealed::{SealedBase, SealedParent};
-use crate::gui::traits::{AsAny, Child, Parent, UiThread, Window};
-use crate::handles::HWND;
-use crate::structs::POINT;
+use crate::kernel::decl::{ErrResult, WinResult};
+use crate::prelude::{AsAny, GuiChild, GuiParent, GuiThread, GuiWindow};
+use crate::user::decl::{HWND, POINT};
 
 /// Keeps a raw or dialog window.
 #[derive(Clone)]
@@ -19,6 +18,7 @@ enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
 
 /// An user child window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct WindowControl {
 	raw_dlg: RawDlg,
@@ -32,13 +32,13 @@ impl AsAny for WindowControl {
 	}
 }
 
-impl Window for WindowControl {
+impl GuiWindow for WindowControl {
 	fn hwnd(&self) -> HWND {
 		self.as_base().hwnd()
 	}
 }
 
-impl SealedBase for WindowControl {
+impl GuiSealedBase for WindowControl {
 	fn as_base(&self) -> &Base {
 		match &self.raw_dlg {
 			RawDlg::Raw(r) => &r.0.raw_base.base,
@@ -47,7 +47,7 @@ impl SealedBase for WindowControl {
 	}
 }
 
-impl SealedParent for WindowControl {
+impl GuiSealedParent for WindowControl {
 	fn add_to_resizer(&self,
 		hchild: HWND, horz: Horz, vert: Vert) -> WinResult<()>
 	{
@@ -55,13 +55,13 @@ impl SealedParent for WindowControl {
 	}
 }
 
-impl Parent for WindowControl {
+impl GuiParent for WindowControl {
 	fn on(&self) -> &WindowEventsAll {
 		self.as_base().on()
 	}
 }
 
-impl Child for WindowControl {
+impl GuiChild for WindowControl {
 	fn ctrl_id(&self) -> u16 {
 		match &self.raw_dlg {
 			RawDlg::Raw(r) => r.0.opts.ctrl_id,
@@ -70,7 +70,7 @@ impl Child for WindowControl {
 	}
 }
 
-impl UiThread for WindowControl {
+impl GuiThread for WindowControl {
 	fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
@@ -86,8 +86,11 @@ impl UiThread for WindowControl {
 
 impl WindowControl {
 	/// Instantiates a new `WindowControl` object, to be created with
-	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
-	pub fn new(parent: &impl Parent, opts: WindowControlOpts) -> WindowControl {
+	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	pub fn new(
+		parent: &impl GuiParent,
+		opts: WindowControlOpts) -> WindowControl
+	{
 		Self {
 			raw_dlg: RawDlg::Raw(
 				RawControl::new(parent.as_base(), opts),
@@ -96,13 +99,14 @@ impl WindowControl {
 	}
 
 	/// Instantiates a new `WindowControl` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
 	///
 	/// If the parent window is a dialog, position is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	pub fn new_dlg(
-		parent: &impl Parent,
+		parent: &impl GuiParent,
 		dialog_id: u16,
 		position: POINT,
 		resize_behavior: (Horz, Vert),

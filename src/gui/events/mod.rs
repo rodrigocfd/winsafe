@@ -37,7 +37,7 @@ pub use events_wm::WindowEvents;
 pub(in crate::gui) use events_wm_nfy::sealed_events_wm_nfy;
 pub(in crate::gui) use events_wm::{ProcessResult, sealed_events_wm};
 
-pub(in crate::gui) mod prelude {
-	pub use super::events_wm::EventsView;
-	pub use super::events_wm_nfy::EventsViewAll;
+pub(in crate::gui) mod traits {
+	pub use super::events_wm::GuiEventsView;
+	pub use super::events_wm_nfy::GuiEventsViewAll;
 }

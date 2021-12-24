@@ -1,12 +1,11 @@
 use std::sync::Arc;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::HwndPlace;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::prelude::EventsView;
-use crate::structs::{POINT, SIZE};
+use crate::kernel::decl::WinResult;
+use crate::prelude::{GuiEventsView, UserHwnd};
+use crate::user::decl::{HwndPlace, POINT, SIZE};
 
 /// A WindowModal with a dialog window.
 #[derive(Clone)]

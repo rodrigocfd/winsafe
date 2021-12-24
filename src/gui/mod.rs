@@ -11,6 +11,8 @@ mod dlg_base;
 mod dlg_control;
 mod dlg_main;
 mod dlg_modal;
+mod gui_traits_sealed;
+mod gui_traits;
 mod native_controls;
 mod privs;
 mod raw_base;
@@ -18,8 +20,6 @@ mod raw_control;
 mod raw_main;
 mod raw_modal;
 mod resizer;
-mod traits_sealed;
-mod traits;
 mod very_unsafe_cell;
 mod window_control;
 mod window_main;
@@ -36,7 +36,7 @@ pub use window_control::WindowControl;
 pub use window_main::WindowMain;
 pub use window_modal::WindowModal;
 
-pub(crate) mod prelude {
-	pub use super::events::prelude::*;
-	pub use super::traits::*;
+pub(crate) mod traits {
+	pub use super::events::traits::*;
+	pub use super::gui_traits::*;
 }

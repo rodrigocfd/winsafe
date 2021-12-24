@@ -7,7 +7,7 @@ macro_rules! pub_fn_wm_ret0 {
 	) => {
 		$(#[$doc])*
 		fn $name<F>(&self, func: F)
-			where F: Fn() -> crate::aliases::ErrResult<()> + 'static,
+			where F: Fn() -> crate::kernel::decl::ErrResult<()> + 'static,
 		{
 			self.add_msg($wmconst, move |_| {
 				func()?;
@@ -26,7 +26,7 @@ macro_rules! pub_fn_wm_ret0_param {
 	) => {
 		$(#[$doc])*
 		fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> crate::aliases::ErrResult<()> + 'static,
+			where F: Fn($parm) -> crate::kernel::decl::ErrResult<()> + 'static,
 		{
 			self.add_msg($wmconst, move |p| {
 				func(<$parm>::from_generic_wm(p))?;
@@ -45,7 +45,7 @@ macro_rules! pub_fn_retbool {
 	) => {
 		$(#[$doc])*
 		fn $name<F>(&self, func: F)
-			where F: Fn() -> crate::aliases::ErrResult<bool> + 'static,
+			where F: Fn() -> crate::kernel::decl::ErrResult<bool> + 'static,
 		{
 			self.add_msg($wmconst, move |_| Ok(Some(func()? as _)));
 		}
@@ -61,7 +61,7 @@ macro_rules! pub_fn_wm_retbool_param {
 	) => {
 		$(#[$doc])*
 		fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> crate::aliases::ErrResult<bool> + 'static,
+			where F: Fn($parm) -> crate::kernel::decl::ErrResult<bool> + 'static,
 		{
 			self.add_msg($wmconst,
 				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))? as _)));
@@ -78,7 +78,7 @@ macro_rules! pub_fn_wm_retco_param {
 	) => {
 		$(#[$doc])*
 		fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> crate::aliases::ErrResult<$retco> + 'static,
+			where F: Fn($parm) -> crate::kernel::decl::ErrResult<$retco> + 'static,
 		{
 			self.add_msg($wmconst,
 				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.0 as _)));
@@ -94,7 +94,7 @@ macro_rules! pub_fn_wm_ctlcolor {
 	) => {
 		$(#[$doc])*
 		fn $name<F>(&self, func: F)
-			where F: Fn($parm) -> crate::aliases::ErrResult<HBRUSH> + 'static,
+			where F: Fn($parm) -> crate::kernel::decl::ErrResult<HBRUSH> + 'static,
 		{
 			self.add_msg($wmconst,
 				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.0 as _)));
@@ -110,7 +110,7 @@ macro_rules! pub_fn_cmd_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn() -> crate::aliases::ErrResult<()> + 'static,
+			where F: Fn() -> crate::kernel::decl::ErrResult<()> + 'static,
 		{
 			self.0.wm_command($cmd, move || func());
 		}
@@ -127,7 +127,7 @@ macro_rules! pub_fn_nfy_ret0 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn() -> crate::aliases::ErrResult<()> + 'static,
+			where F: Fn() -> crate::kernel::decl::ErrResult<()> + 'static,
 		{
 			self.0.add_nfy($nfy, move |_| { func()?; Ok(None) });
 		}
@@ -143,7 +143,7 @@ macro_rules! pub_fn_nfy_ret0_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&$param) -> crate::aliases::ErrResult<()> + 'static,
+			where F: Fn(&$param) -> crate::kernel::decl::ErrResult<()> + 'static,
 		{
 			self.0.add_nfy($nfy,
 				move |p| { func(unsafe { p.cast_nmhdr::<$param>() })?; Ok(None) });
@@ -160,7 +160,7 @@ macro_rules! pub_fn_nfy_ret0_mutparam {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&mut $param) -> crate::aliases::ErrResult<()> + 'static,
+			where F: Fn(&mut $param) -> crate::kernel::decl::ErrResult<()> + 'static,
 		{
 			self.0.add_nfy($nfy,
 				move |p| { func(unsafe { p.cast_nmhdr_mut::<$param>() })?; Ok(None) });
@@ -177,7 +177,7 @@ macro_rules! pub_fn_nfy_retbool_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&$param) -> crate::aliases::ErrResult<bool> + 'static,
+			where F: Fn(&$param) -> crate::kernel::decl::ErrResult<bool> + 'static,
 		{
 			self.0.add_nfy($nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));
@@ -194,7 +194,7 @@ macro_rules! pub_fn_nfy_retbool_mutparam {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&mut $param) -> crate::aliases::ErrResult<bool> + 'static,
+			where F: Fn(&mut $param) -> crate::kernel::decl::ErrResult<bool> + 'static,
 		{
 			self.0.add_nfy($nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<$param>() })? as _)));
@@ -212,7 +212,7 @@ macro_rules! pub_fn_nfy_reti32 {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn() -> crate::aliases::ErrResult<i32> + 'static,
+			where F: Fn() -> crate::kernel::decl::ErrResult<i32> + 'static,
 		{
 			self.0.add_nfy($nfy, move |_| Ok(Some(func()? as _)));
 		}
@@ -228,7 +228,7 @@ macro_rules! pub_fn_nfy_reti32_param {
 	) => {
 		$(#[$doc])*
 		pub fn $name<F>(&self, func: F)
-			where F: Fn(&$param) -> crate::aliases::ErrResult<i32> + 'static,
+			where F: Fn(&$param) -> crate::kernel::decl::ErrResult<i32> + 'static,
 		{
 			self.0.add_nfy($nfy,
 				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));

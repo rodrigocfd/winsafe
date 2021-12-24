@@ -1,8 +1,10 @@
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::gdi::decl::HFONT;
 use crate::gui::events::func_store::FuncStore;
-use crate::handles::{HBRUSH, HFONT, HICON, HMENU};
-use crate::msg::{MsgSendRecv, wm, WndMsg};
+use crate::kernel::decl::ErrResult;
+use crate::msg::{wm, WndMsg};
+use crate::prelude::MsgSendRecv;
+use crate::user::decl::{HBRUSH, HICON, HMENU};
 
 /// The result of processing a message.
 pub(in crate::gui) enum ProcessResult {
@@ -21,6 +23,7 @@ pub(in crate::gui) enum ProcessResult {
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowEvents {
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
@@ -67,7 +70,7 @@ impl WindowEvents {
 
 //------------------------------------------------------------------------------
 
-impl sealed_events_wm::SealedEventsWm for WindowEvents {
+impl sealed_events_wm::GuiSealedEventsWm for WindowEvents {
 	fn add_msg<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
 	{
@@ -75,14 +78,14 @@ impl sealed_events_wm::SealedEventsWm for WindowEvents {
 	}
 }
 
-impl EventsView for WindowEvents {}
+impl GuiEventsView for WindowEvents {}
 
 //------------------------------------------------------------------------------
 
 pub(in crate::gui) mod sealed_events_wm {
 	use super::{co, ErrResult, WndMsg};
 
-	pub trait SealedEventsWm {
+	pub trait GuiSealedEventsWm {
 		/// Raw add message.
 		fn add_msg<F>(&self, ident: co::WM, func: F)
 			where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static;
@@ -90,7 +93,8 @@ pub(in crate::gui) mod sealed_events_wm {
 }
 
 /// Exposes the methods of [`WindowEvents`](crate::gui::events::WindowEvents).
-pub trait EventsView: sealed_events_wm::SealedEventsWm {
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub trait GuiEventsView: sealed_events_wm::GuiSealedEventsWm {
 	/// Event to any [window message](crate::co::WM).
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
@@ -102,11 +106,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 	///
 	/// Handling a custom, user-defined message:
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, gui, msg, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
 	/// let CUSTOM_MSG = co::WM::from(0x1234);
 	///
@@ -171,8 +176,8 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// or message box is displayed. Certain functions also send this
 		/// message explicitly to the specified window regardless of whether it
 		/// is the active window. For example, the
-		/// [`HWND::EnableWindow`](crate::HWND::EnableWindow) function sends
-		/// this message when disabling the specified window.
+		/// [`HWND::EnableWindow`](crate::prelude::UserHwnd::EnableWindow)
+		/// function sends this message when disabling the specified window.
 	}
 
 	pub_fn_wm_ret0_param! { wm_capture_changed, co::WM::CAPTURECHANGED, wm::CaptureChanged,
@@ -223,22 +228,23 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 
 	/// [`WM_CREATE`](crate::msg::wm::Create) message, sent only to non-dialog
 	/// windows. Dialog windows receive
-	/// [`WM_INITDIALOG`](crate::gui::prelude::EventsView::wm_init_dialog)
+	/// [`WM_INITDIALOG`](crate::prelude::GuiEventsView::wm_init_dialog)
 	/// instead.
 	///
 	/// Sent when an application requests that a window be created by calling
-	/// the [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx) function. The
-	/// message is sent before the function returns. The window procedure of the
-	/// new window receives this message after the window is created, but before
-	/// the window becomes visible.
+	/// the [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx)
+	/// function. The message is sent before the function returns. The window
+	/// procedure of the new window receives this message after the window is
+	/// created, but before the window becomes visible.
 	///
 	/// # Examples
 	///
-	/// ```rust,ignore
+	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, msg, ErrResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
 	/// wnd.on().wm_create({
 	///     let wnd = wnd.clone(); // pass into the closure
@@ -353,11 +359,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_destroy(|| -> ErrResult<()> {
 		///     println!("Window is gone, goodbye!");
@@ -380,16 +387,17 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_drop_files(|p: msg::wm::DropFiles| -> ErrResult<()> {
-		///     for dropped_file in p.hdrop.iter() {
-		///         let file = dropped_file?;
-		///         println!("Dropped: {}", file);
+		///     for dropped_file in p.hdrop.iter()? {
+		///         let dropped_file = dropped_file?;
+		///         println!("Dropped: {}", dropped_file);
 		///     }
 		///     Ok(())
 		/// });
@@ -401,7 +409,8 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// Sent when an application changes the enabled state of a window. It
 		/// is sent to the window whose enabled state is changing. This message
-		/// is sent before the [`HWND::EnableWindow`](crate::HWND::EnableWindow)
+		/// is sent before the
+		/// [`HWND::EnableWindow`](crate::prelude::UserHwnd::EnableWindow)
 		/// function returns, but after the enabled state
 		/// ([`WS::DISABLED`](crate::co::WS::DISABLED) style bit) of the window
 		/// has changed.
@@ -439,11 +448,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// loop. The window enters the moving or sizing modal loop when the
 		/// user clicks the window's title bar or sizing border, or when the
 		/// window passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::prelude::EventsView::wm_sys_command)
-		/// message to the `DefWindowProc` function and the `wParam` parameter
-		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
-		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
-		/// when `DefWindowProc` returns.
+		/// [`WM_SYSCOMMAND`](crate::prelude::GuiEventsView::wm_sys_command)
+		/// message to the
+		/// [`HWND::DefWindowProc`](crate::prelude::UserHwnd::DefWindowProc)
+		/// function and the `wParam` parameter of the message specifies the
+		/// [`SC_MOVE`](crate::co::SC::MOVE) or [`SC_SIZE`](crate::co::SC::SIZE)
+		/// value. The operation is complete when `DefWindowProc` returns.
 		///
 		/// The system sends the message regardless of whether the dragging of
 		/// full windows is enabled.
@@ -475,11 +485,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// modal loop. The window enters the moving or sizing modal loop when
 		/// the user clicks the window's title bar or sizing border, or when the
 		/// window passes the
-		/// [`WM_SYSCOMMAND`](crate::gui::prelude::EventsView::wm_sys_command)
-		/// message to the `DefWindowProc` function and the `wParam` parameter
-		/// of the message specifies the [`SC_MOVE`](crate::co::SC::MOVE) or
-		/// [`SC_SIZE`](crate::co::SC::SIZE) value. The operation is complete
-		/// when `DefWindowProc` returns.
+		/// [`WM_SYSCOMMAND`](crate::prelude::GuiEventsView::wm_sys_command)
+		/// message to the
+		/// [`HWND::DefWindowProc`](crate::prelude::UserHwnd::DefWindowProc)
+		/// function and the `wParam` parameter of the message specifies the
+		/// [`SC_MOVE`](crate::co::SC::MOVE) or [`SC_SIZE`](crate::co::SC::SIZE)
+		/// value. The operation is complete when `DefWindowProc` returns.
 	}
 
 	pub_fn_wm_retco_param! { wm_get_dlg_code, co::WM::GETDLGCODE, wm::GetDlgCode, co::DLGC,
@@ -565,7 +576,7 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 	pub_fn_wm_retbool_param! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog,
 		/// [`WM_INITDIALOG`](crate::msg::wm::InitDialog) message, sent only to
 		/// dialog windows. Non-dialog windows receive
-		/// [`WM_CREATE`](crate::gui::prelude::EventsView::wm_create) instead.
+		/// [`WM_CREATE`](crate::prelude::GuiEventsView::wm_create) instead.
 		///
 		/// Sent to the dialog box procedure immediately before a dialog box is
 		/// displayed. Dialog box procedures typically use this message to
@@ -574,11 +585,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_init_dialog({
 		///     let wnd = wnd.clone(); // pass into the closure
@@ -641,11 +653,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_l_button_down({
 		///     let wnd = wnd.clone(); // pass into the closure
@@ -768,17 +781,17 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// [`WM_NCCREATE`](crate::msg::wm::NcCreate) message.
 		///
 		/// Sent prior to the
-		/// [`WM_CREATE`](crate::gui::prelude::EventsView::wm_create) message
-		/// when a window is first created.
+		/// [`WM_CREATE`](crate::prelude::GuiEventsView::wm_create) message when
+		/// a window is first created.
 	}
 
 	pub_fn_wm_ret0! { wm_nc_destroy, co::WM::NCDESTROY,
 		/// [`WM_NCDESTROY`](crate::msg::wm::NcDestroy) message.
 		///
 		/// Notifies a window that its nonclient area is being destroyed. The
-		/// [`HWND::DestroyWindow`](crate::HWND::DestroyWindow) function sends
-		/// the message to the window following the
-		/// [`WM_DESTROY`](crate::gui::prelude::EventsView::wm_destroy) message.
+		/// [`HWND::DestroyWindow`](crate::prelude::UserHwnd::DestroyWindow)
+		/// function sends the message to the window following the
+		/// [`WM_DESTROY`](crate::prelude::GuiEventsView::wm_destroy) message.
 		/// `WM_DESTROY` is used to free the allocated memory object associated
 		/// with the window.
 		///
@@ -801,10 +814,10 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// corresponds to a particular screen coordinate. This can happen, for
 		/// example, when the cursor moves, when a mouse button is pressed or
 		/// released, or in response to a call to a function such as
-		/// [`HWND::WindowFromPoint`](crate::HWND::WindowFromPoint). If the
-		/// mouse is not captured, the message is sent to the window beneath the
-		/// cursor. Otherwise, the message is sent to the window that has
-		/// captured the mouse.
+		/// [`HWND::WindowFromPoint`](crate::prelude::UserHwnd::WindowFromPoint).
+		/// If the mouse is not captured, the message is sent to the window
+		/// beneath the cursor. Otherwise, the message is sent to the window
+		/// that has captured the mouse.
 	}
 
 	pub_fn_wm_ret0_param! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint,
@@ -839,11 +852,12 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// Sent when the system or another application makes a request to paint
 		/// a portion of an application's window. The message is sent when the
-		/// [`HWND::UpdateWindow`](crate::HWND::UpdateWindow) or
-		/// [`HWND::RedrawWindow`](crate::HWND::RedrawWindow) function is
-		/// called, or by the [`DispatchMessage`](crate::DispatchMessage)
-		/// function when the application obtains a `WM_PAINT` message by using
-		/// the [`GetMessage`](crate::GetMessage) or
+		/// [`HWND::UpdateWindow`](crate::prelude::UserHwnd::UpdateWindow) or
+		/// [`HWND::RedrawWindow`](crate::prelude::UserHwnd::RedrawWindow)
+		/// function is called, or by the
+		/// [`DispatchMessage`](crate::DispatchMessage) function when the
+		/// application obtains a `WM_PAINT` message by using the
+		/// [`GetMessage`](crate::GetMessage) or
 		/// [`PeekMessage`](crate::PeekMessage) function.
 	}
 
@@ -952,19 +966,20 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, ErrResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_size({
 		///     let wnd = wnd.clone(); // pass into the closure
 		///     move |p: msg::wm::Size| -> ErrResult<()> {
 		///         println!("HWND: {}, client area: {}x{}",
 		///             wnd.hwnd(),
-		///             p.width,
-		///             p.height,
+		///             p.client_area.cx,
+		///             p.client_area.cy,
 		///         );
 		///         Ok(())
 		///     }
@@ -984,16 +999,16 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		/// [`WM_STYLECHANGED`](crate::msg::wm::StyleChanged) message.
 		///
 		/// Sent to a window after the
-		/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function
-		/// has changed one or more of the window's styles.
+		/// [`HWND::SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr)
+		/// function has changed one or more of the window's styles.
 	}
 
 	pub_fn_wm_ret0_param! { wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging,
 		/// [`WM_STYLECHANGING`](crate::msg::wm::StyleChanging) message.
 		///
 		/// Sent to a window when the
-		/// [`HWND::SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) function
-		/// is about to change one or more of the window's styles.
+		/// [`HWND::SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr)
+		/// function is about to change one or more of the window's styles.
 	}
 
 	pub_fn_wm_ret0! { wm_sync_paint, co::WM::SYNCPAINT,
@@ -1095,8 +1110,8 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// Sent to a window whose size, position, or place in the Z order has
 		/// changed as a result of a call to the
-		/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) function or
-		/// another window-management function.
+		/// [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos)
+		/// function or another window-management function.
 	}
 
 	pub_fn_wm_ret0_param! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging,
@@ -1104,8 +1119,8 @@ pub trait EventsView: sealed_events_wm::SealedEventsWm {
 		///
 		/// Sent to a window whose size, position, or place in the Z order is
 		/// about to change as a result of a call to the
-		/// [`HWND::SetWindowPos`](crate::HWND::SetWindowPos) function or
-		/// another window-management function.
+		/// [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos)
+		/// function or another window-management function.
 	}
 
 	pub_fn_wm_ret0_param! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk,

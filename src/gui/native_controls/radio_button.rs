@@ -1,33 +1,19 @@
 use std::any::Any;
 
-use crate::aliases::WinResult;
 use crate::co;
-use crate::enums::{AccelMenuCtrl, AccelMenuCtrlData, HwndPlace};
 use crate::gui::events::{ButtonEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl,
-	OptsId,
-};
-use crate::gui::privs::{
-	auto_ctrl_id,
-	calc_text_bound_box_check,
-	multiply_dpi_or_dtu,
-	ui_font,
-};
+use crate::gui::native_controls::base_native_control::{BaseNativeControl,
+	OptsId};
+use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check,
+	multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
-use crate::gui::traits::{
-	AsAny,
-	Child,
-	FocusControl,
-	NativeControl,
-	NativeControlEvents,
-	Parent,
-	TextControl,
-	Window,
-};
-use crate::handles::{prelude::Handle, HWND};
+use crate::kernel::decl::WinResult;
 use crate::msg::{bm, wm};
-use crate::structs::{POINT, SIZE};
+use crate::prelude::{AsAny, GuiChild, GuiFocusControl, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
+	UserHwnd};
+use crate::user::decl::{AccelMenuCtrl, AccelMenuCtrlData, HWND, HwndPlace,
+	POINT, SIZE};
 
 /// Native
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
@@ -36,6 +22,7 @@ use crate::structs::{POINT, SIZE};
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct RadioButton(Obj);
 
 struct Obj { // actual fields of RadioButton
@@ -50,13 +37,13 @@ impl AsAny for RadioButton {
 	}
 }
 
-impl Window for RadioButton {
+impl GuiWindow for RadioButton {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
 }
 
-impl Child for RadioButton {
+impl GuiChild for RadioButton {
 	fn ctrl_id(&self) -> u16 {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => opts.ctrl_id,
@@ -65,13 +52,13 @@ impl Child for RadioButton {
 	}
 }
 
-impl NativeControl for RadioButton {
+impl GuiNativeControl for RadioButton {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
 }
 
-impl NativeControlEvents<ButtonEvents> for RadioButton {
+impl GuiNativeControlEvents<ButtonEvents> for RadioButton {
 	fn on(&self) -> &ButtonEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
@@ -82,12 +69,12 @@ impl NativeControlEvents<ButtonEvents> for RadioButton {
 	}
 }
 
-impl FocusControl for RadioButton {}
-impl TextControl for RadioButton {}
+impl GuiFocusControl for RadioButton {}
+impl GuiTextControl for RadioButton {}
 
 impl RadioButton {
 	pub(in crate::gui) fn new(
-		parent: &impl Parent, opts: RadioButtonOpts) -> RadioButton
+		parent: &impl GuiParent, opts: RadioButtonOpts) -> RadioButton
 	{
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
@@ -101,7 +88,7 @@ impl RadioButton {
 	}
 
 	pub(in crate::gui) fn new_dlg(
-		parent: &impl Parent,
+		parent: &impl GuiParent,
 		ctrl_id: u16) -> RadioButton
 	{
 		Self(
@@ -186,7 +173,7 @@ impl RadioButton {
 		Ok(())
 	}
 
-	/// Calls [`set_text`](crate::prelude::TextControl::set_text) and resizes
+	/// Calls [`set_text`](crate::prelude::GuiTextControl::set_text) and resizes
 	/// the control to exactly fit the new text.
 	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
 		self.set_text(text)?;
@@ -201,6 +188,7 @@ impl RadioButton {
 
 /// Options to create a [`RadioButton`](crate::gui::RadioButton)
 /// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct RadioButtonOpts {
 	/// Text of the control to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

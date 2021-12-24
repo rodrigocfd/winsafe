@@ -1,8 +1,8 @@
-use crate::aliases::ErrResult;
 use crate::co;
+use crate::comctl::decl::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
+use crate::kernel::decl::ErrResult;
 
 /// Exposes button control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
@@ -13,6 +13,7 @@ use crate::structs::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ButtonEvents(BaseEventsProxy);
 
 impl ButtonEvents {
@@ -43,11 +44,13 @@ impl ButtonEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,ignore
+		/// ```rust,no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, ErrResult};
 		///
 		/// let btn: gui::Button; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let btn = gui::Button::new(&wnd, gui::ButtonOpts::default());
 		///
 		/// btn.on().bn_clicked({
 		///     let btn = btn.clone(); // pass into the closure

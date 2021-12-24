@@ -1,18 +1,16 @@
 use std::sync::Arc;
 
-use crate::aliases::ErrResult;
 use crate::co;
-use crate::enums::IdMenu;
-use crate::funcs::{AdjustWindowRectEx, GetSystemMetrics, PostQuitMessage};
 use crate::gui::base::Base;
-use crate::gui::events::prelude::EventsView;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::handles::{HACCEL, HBRUSH, HCURSOR, HICON, HINSTANCE, HMENU, HWND};
-use crate::handles::prelude::Handle;
-use crate::structs::{POINT, RECT, SIZE, WNDCLASSEX};
-use crate::various::WString;
+use crate::kernel::decl::{ErrResult, HINSTANCE, WString};
+use crate::prelude::{GdiHbrush, GuiEventsView, Handle, KernelHinstance,
+	UserHaccel, UserHwnd};
+use crate::user::decl::{AdjustWindowRectEx, GetSystemMetrics, HACCEL, HBRUSH,
+	HICON, HCURSOR, HMENU, HWND, IdMenu, POINT, PostQuitMessage, RECT, SIZE,
+	WNDCLASSEX};
 
 /// A WindowMain with a raw window.
 #[derive(Clone)]
@@ -132,6 +130,7 @@ impl RawMain {
 
 /// Options to create a [`WindowMain`](crate::gui::WindowMain) programmatically
 /// with [`WindowMain::new`](crate::gui::WindowMain::new).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowMainOpts {
 	/// Window class name to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
