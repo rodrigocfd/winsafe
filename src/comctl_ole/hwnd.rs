@@ -13,6 +13,14 @@ impl ComctlOleHwnd for HWND {}
 /// [`HWND`](crate::HWND) methods from `comctl`+`ole` features.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub trait ComctlOleHwnd: Handle {
+	/// [`InitializeFlatSB`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
+	/// method.
+	fn InitializeFlatSB(self) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe { comctl_ole::ffi::InitializeFlatSB(self.as_ptr()) },
+		)
+	}
+
 	/// [`TaskDialog`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
 	/// method.
 	///
@@ -88,5 +96,13 @@ pub trait ComctlOleHwnd: Handle {
 				)
 			},
 		).map(|_| co::DLGID(pn_button as _))
+	}
+
+	/// [`UninitializeFlatSB`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
+	/// method.
+	fn UninitializeFlatSB(self) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe { comctl_ole::ffi::UninitializeFlatSB(self.as_ptr()) },
+		)
 	}
 }

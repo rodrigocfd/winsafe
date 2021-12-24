@@ -137,6 +137,17 @@ impl<'a, 'b> HDLAYOUT<'a, 'b> {
 	}
 }
 
+/// [`INITCOMMONCONTROLSEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-initcommoncontrolsex)
+/// struct
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+pub struct INITCOMMONCONTROLSEX {
+	dwSize: u32,
+	pub icc: co::ICC,
+}
+
+impl_default_with_size!(INITCOMMONCONTROLSEX, dwSize);
+
 /// [`LITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]

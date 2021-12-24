@@ -508,6 +508,49 @@ const_bitflag! { HHT: u32: "comctl";
 	ONOVERFLOW 0x4000
 }
 
+const_bitflag! { ICC: u32: "comctl";
+	/// [`INITCOMMONCONTROLSEX`](crate::INITCOMMONCONTROLSEX) `icc` (`u32`).
+	=>
+	=>
+	/// Load animate control class.
+	ANIMATE_CLASS 0x0000_0080
+	/// Load toolbar, status bar, trackbar, and tooltip control classes.
+	BAR_CLASSES 0x0000_0004
+	/// Load rebar control class.
+	COOL_CLASSES 0x0000_0400
+	/// Load date and time picker control class.
+	DATE_CLASSES 0x0000_0100
+	/// Load hot key control class.
+	HOTKEY_CLASS 0x0000_0040
+	/// Load IP address class.
+	INTERNET_CLASSES 0x0000_0800
+	/// Load a hyperlink control class.
+	LINK_CLASS 0x0000_8000
+	/// Load list-view and header control classes.
+	LISTVIEW_CLASSES 0x0000_0001
+	/// Load a native font control class.
+	NATIVEFNTCTL_CLASS 0x0000_2000
+	/// Load pager control class.
+	PAGESCROLLER_CLASS 0x0000_1000
+	/// Load progress bar control class.
+	PROGRESS_CLASS 0x0000_0020
+	/// Load one of the intrinsic User32 control classes. The user controls
+	/// include button, edit, static, listbox, combobox, and scroll bar.
+	STANDARD_CLASSES 0x0000_4000
+	/// Load tab and tooltip control classes.
+	TAB_CLASSES 0x0000_0008
+	/// Load tree-view and tooltip control classes.
+	TREEVIEW_CLASSES 0x0000_0002
+	/// Load up-down control class.
+	UPDOWN_CLASS 0x0000_0010
+	/// Load ComboBoxEx class.
+	USEREX_CLASSES 0x0000_0200
+	/// Load animate control, header, hot key, list-view, progress bar, status
+	/// bar, tab, tooltip, toolbar, trackbar, tree-view, and up-down control
+	/// classes.
+	WIN95_CLASSES 0x0000_00ff
+}
+
 const_ordinary! { IDB: usize: "comctl";
 	/// [`TBADDBITMAP`](crate::TBADDBITMAP) `nID` (`usize`).
 	=>

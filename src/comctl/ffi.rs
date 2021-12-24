@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HANDLE, PFUNC};
+use crate::ffi_types::{BOOL, HANDLE, PFUNC, PVOID};
 
 extern_sys! { "comctl32";
 	DefSubclassProc(HANDLE, u32, usize, isize) -> isize
@@ -16,6 +16,8 @@ extern_sys! { "comctl32";
 	ImageList_ReplaceIcon(HANDLE, i32, HANDLE) -> i32
 	ImageList_SetImageCount(HANDLE, u32) -> BOOL
 	InitCommonControls()
+	InitCommonControlsEx(PVOID) -> BOOL
+	InitMUILanguage(u16)
 	RemoveWindowSubclass(HANDLE, PFUNC, usize) -> BOOL
 	SetWindowSubclass(HANDLE, PFUNC, usize, usize) -> BOOL
 }
