@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::{HFONT, HPEN, TEXTMETRIC};
-use crate::gdi::privs::{CLR_INVALID, GDI_ERROR};
+use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::Handle;
@@ -206,12 +206,68 @@ pub trait GdiHdc: Handle {
 		).map(|_| sz)
 	}
 
+	/// [`GetTextFace`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextfacew)
+	/// method.
+	fn GetTextFace(self) -> WinResult<String> {
+		let mut buf = WString::new_alloc_buffer(LF_FACESIZE + 1);
+		match unsafe {
+			gdi::ffi::GetTextFaceW(self.as_ptr(), buf.len() as _, buf.as_mut_ptr())
+		} {
+			0 => Err(GetLastError()),
+			v => Ok(v),
+		}.map(|_| buf.to_string())
+	}
+
 	/// [`GetTextMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextmetricsw)
 	/// method.
 	fn GetTextMetrics(self, tm: &mut TEXTMETRIC) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe { gdi::ffi::GetTextMetricsW(self.as_ptr(), tm as *mut _ as _) },
 		)
+	}
+
+	/// [`GetViewportExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportextex)
+	/// method.
+	fn GetViewportExtEx(self) -> WinResult<SIZE> {
+		let mut sz = SIZE::default();
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::GetViewportExtEx(self.as_ptr(), &mut sz as *mut _ as _)
+			},
+		).map(|_| sz)
+	}
+
+	/// [`GetViewportOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportorgex)
+	/// method.
+	fn GetViewportOrgEx(self) -> WinResult<POINT> {
+		let mut pt = POINT::default();
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::GetViewportOrgEx(self.as_ptr(), &mut pt as *mut _ as _)
+			},
+		).map(|_| pt)
+	}
+
+	/// [`GetWindowExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindowextex)
+	/// method.
+	fn GetWindowExtEx(self) -> WinResult<SIZE> {
+		let mut sz = SIZE::default();
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::GetWindowExtEx(self.as_ptr(), &mut sz as *mut _ as _)
+			},
+		).map(|_| sz)
+	}
+
+	/// [`GetWindowOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindoworgex)
+	/// method.
+	fn GetWindowOrgEx(self) -> WinResult<POINT> {
+		let mut pt = POINT::default();
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::GetWindowOrgEx(self.as_ptr(), &mut pt as *mut _ as _)
+			},
+		).map(|_| pt)
 	}
 
 	/// [`LineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)

@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PVOID};
+use crate::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
 extern_sys! { "gdi32";
 	AbortPath(HANDLE) -> BOOL
@@ -36,7 +36,12 @@ extern_sys! { "gdi32";
 	GetSysColorBrush(i32) -> HANDLE
 	GetTextColor(HANDLE) -> u32
 	GetTextExtentPoint32W(HANDLE, PCSTR, i32, PVOID) -> BOOL
+	GetTextFaceW(HANDLE, i32, PSTR) -> i32
 	GetTextMetricsW(HANDLE, PVOID) -> BOOL
+	GetViewportExtEx(HANDLE, PVOID) -> BOOL
+	GetViewportOrgEx(HANDLE, PVOID) -> BOOL
+	GetWindowExtEx(HANDLE, PVOID) -> BOOL
+	GetWindowOrgEx(HANDLE, PVOID) -> BOOL
 	LineTo(HANDLE, i32, i32) -> BOOL
 	MoveToEx(HANDLE, i32, i32, PVOID) -> BOOL
 	OffsetClipRgn(HANDLE, i32, i32) -> i32
