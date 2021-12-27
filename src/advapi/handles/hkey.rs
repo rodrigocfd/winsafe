@@ -203,7 +203,7 @@ pub trait AdvapiHkey: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HKEY::CloseKey`](crate::HKEY::CloseKey) call.
+	/// [`HKEY::CloseKey`](crate::prelude::AdvapiHkey::CloseKey) call.
 	///
 	/// # Examples
 	///

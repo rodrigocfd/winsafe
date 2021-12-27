@@ -3,7 +3,8 @@
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS};
 
 const_bitflag! { KEY: u32: "advapi";
-	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `access_rights` (`u32`).
+	/// [`HKEY::OpenKeyEx`](crate::prelude::AdvapiHkey::OpenKeyEx)
+	/// `access_rights` (`u32`).
 	=>
 	=>
 	QUERY_VALUE 0x0001
@@ -44,7 +45,8 @@ const_ordinary! { REG: u32: "advapi";
 }
 
 const_bitflag! { REG_OPTION: u32: "advapi";
-	/// [`HKEY::OpenKeyEx`](crate::HKEY::OpenKeyEx) `options` (`u32`).
+	/// [`HKEY::OpenKeyEx`](crate::prelude::AdvapiHkey::OpenKeyEx) `options`
+	/// (`u32`).
 	=>
 	=>
 	/// None of the actual values (zero).
@@ -58,7 +60,8 @@ const_bitflag! { REG_OPTION: u32: "advapi";
 }
 
 const_bitflag! { RRF: u32: "advapi";
-	/// [`HKEY::GetValue`](crate::HKEY::GetValue) `dwFlags` (`u32`).
+	/// [`HKEY::GetValue`](crate::prelude::AdvapiHkey::GetValue) `dwFlags`
+	/// (`u32`).
 	=>
 	=>
 	RT_REG_NONE 0x0000_0001

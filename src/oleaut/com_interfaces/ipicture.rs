@@ -120,9 +120,10 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
 	/// prefer using the simpler
-	/// [`IPicture::size_px`](crate::prelude::OleautIPicture::size_px), or use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::OleautHdc::HiMetricToPixel) to
-	/// perform the conversion manually.
+	/// [`IPicture::size_px`](crate::prelude::GdiOleautIPicture::size_px), or
+	/// use
+	/// [`HDC::HiMetricToPixel`](crate::prelude::GdiOleautHdc::HiMetricToPixel)
+	/// to perform the conversion manually.
 	///
 	/// # Examples
 	///
@@ -167,9 +168,10 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
 	/// prefer using the simpler
-	/// [`IPicture::size_px`](crate::prelude::OleautIPicture::size_px), or use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::OleautHdc::HiMetricToPixel) to
-	/// perform the conversion manually.
+	/// [`IPicture::size_px`](crate::prelude::GdiOleautIPicture::size_px), or
+	/// use
+	/// [`HDC::HiMetricToPixel`](crate::prelude::GdiOleautHdc::HiMetricToPixel)
+	/// to perform the conversion manually.
 	///
 	/// # Examples
 	///
