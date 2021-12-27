@@ -1,11 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, uxtheme};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HDC, HRGN, RECT};
-use crate::uxtheme;
 
 impl_handle! { HTHEME: "uxtheme";
 	/// Handle to a

@@ -2,9 +2,8 @@
 
 use std::marker::PhantomData;
 
-use crate::advapi;
+use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
-use crate::co;
 use crate::kernel::decl::{FILETIME, WinResult, WString};
 use crate::prelude::Handle;
 

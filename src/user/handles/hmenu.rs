@@ -1,11 +1,9 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, msg, user};
 use crate::kernel::decl::{GetLastError, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
-use crate::msg;
 use crate::prelude::{Handle, NativeBitflag, UserHwnd};
-use crate::user;
 use crate::user::decl::{BmpPtrStr, HBITMAP, HWND, IdMenu, IdPos, MenuEnum,
 	MENUINFO, MENUITEMINFO, POINT};
 

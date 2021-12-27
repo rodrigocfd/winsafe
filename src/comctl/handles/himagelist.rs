@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::comctl;
+use crate::{co, comctl};
 use crate::kernel::decl::{GetLastError, WinResult};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::Handle;

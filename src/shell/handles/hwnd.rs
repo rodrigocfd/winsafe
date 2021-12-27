@@ -1,9 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, shell};
 use crate::kernel::decl::{HINSTANCE, WString};
 use crate::prelude::Handle;
-use crate::shell;
 use crate::user::decl::HWND;
 
 impl ShellHwnd for HWND {}

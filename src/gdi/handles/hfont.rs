@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::gdi;
+use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
 use crate::kernel::decl::{GetLastError, WinResult, WString};
 use crate::prelude::{Handle, HandleGdi};

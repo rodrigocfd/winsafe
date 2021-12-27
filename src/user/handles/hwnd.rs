@@ -1,12 +1,11 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, user};
 use crate::ffi_types::BOOL;
 use crate::kernel::decl::{GetLastError, HINSTANCE, SetLastError, WinResult,
 	WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::{Handle, MsgSend};
-use crate::user;
 use crate::user::decl::{ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN,
 	HwndPlace, IdMenu, IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, RECT,
 	SCROLLINFO, SIZE, TIMERPROC, WINDOWINFO, WINDOWPLACEMENT};

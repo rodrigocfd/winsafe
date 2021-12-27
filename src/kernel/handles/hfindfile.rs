@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::kernel;
+use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, path, WIN32_FIND_DATA, WinResult,
 	WString};
 use crate::kernel::privs::bool_to_winresult;

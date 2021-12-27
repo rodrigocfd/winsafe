@@ -1,9 +1,9 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::gdi;
+use crate::{co, gdi};
 use crate::gdi::decl::LOGBRUSH;
 use crate::kernel::decl::{GetLastError, WinResult};
+use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::{Handle, HandleGdi};
 use crate::user::decl::{COLORREF, HBITMAP, HBRUSH};
 
@@ -97,5 +97,11 @@ pub trait GdiHbrush: Handle {
 		unsafe { gdi::ffi::GetSysColorBrush(index.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
 			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`UnrealizeObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
+	/// method.
+	fn UnrealizeObject(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { gdi::ffi::UnrealizeObject(self.as_ptr()) })
 	}
 }

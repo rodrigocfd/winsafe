@@ -1,11 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, user};
 use crate::ffi_types::BOOL;
 use crate::kernel::decl::{GetLastError, HINSTANCE, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::MsgSend;
-use crate::user;
 use crate::user::decl::{ATOM, COLORREF, DEVMODE, GUITHREADINFO, HWND, MSG,
 	POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX};
 

@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, shell};
 use crate::kernel::decl::{GetLastError, HLOCAL, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::KernelHlocal;
-use crate::shell;
 use crate::shell::decl::{NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT};
 
 /// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)

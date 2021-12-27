@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::comdlg;
+use crate::{co, comdlg};
 use crate::comdlg::decl::CHOOSECOLOR;
 
 /// [`ChooseColor`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms646912(v=vs.85))

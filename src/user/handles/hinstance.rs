@@ -1,8 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::co;
+use crate::{co, user};
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, WinResult, WString};
-use crate::user;
 use crate::user::decl::{ATOM, DLGPROC, HACCEL, HBITMAP, HCURSOR, HICON, HMENU,
 	HWND, IdIdcStr, IdIdiStr, SIZE, WNDCLASSEX};
 use crate::prelude::Handle;

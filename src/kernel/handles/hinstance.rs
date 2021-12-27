@@ -1,8 +1,7 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, kernel};
 use crate::ffi_types::BOOL;
-use crate::kernel;
 use crate::kernel::decl::{GetLastError, HRSRC, HRSRCMEM, IdStr, LANGID, RtStr,
 	WinResult, WString};
 use crate::kernel::privs::{bool_to_winresult, MAX_PATH, str_to_iso88591};

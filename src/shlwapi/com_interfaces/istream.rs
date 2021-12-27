@@ -1,11 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, shlwapi};
 use crate::ffi_types::{HRES, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{OleIUnknown, ShlwapiISequentialStream};
-use crate::shlwapi;
 use crate::vt::ISequentialStreamVT;
 
 /// [`ISequentialStream`](crate::ISequentialStream) virtual table.

@@ -3,8 +3,7 @@
 use std::marker::PhantomData;
 use std::ptr::NonNull;
 
-use crate::co;
-use crate::kernel;
+use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, PROCESSENTRY32, WinResult};
 use crate::prelude::{Handle, HandleClose};
 

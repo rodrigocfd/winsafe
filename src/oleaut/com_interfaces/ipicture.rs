@@ -1,11 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, oleaut};
 use crate::ffi_types::{BOOL, HANDLE, HRES, PCVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut;
 use crate::prelude::{Handle, OleIUnknown, ShlwapiIStream};
 use crate::shlwapi::decl::IStream;
 use crate::user::decl::{COLORREF, HBITMAP, HDC, POINT, RECT, SIZE};

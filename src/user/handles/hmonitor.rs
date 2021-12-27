@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, user};
 use crate::kernel::decl::WinResult;
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::Handle;
-use crate::user;
 use crate::user::decl::{MONITORINFO, POINT, RECT};
 
 impl_handle! { HMONITOR: "user";

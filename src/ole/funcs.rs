@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::ole;
+use crate::{co, ole};
 use crate::ole::decl::{CLSID, ComPtr, HrResult, IUnknown};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ComInterface;

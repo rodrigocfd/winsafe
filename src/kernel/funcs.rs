@@ -2,9 +2,8 @@
 
 use std::collections::HashMap;
 
-use crate::co;
+use crate::{co, kernel};
 use crate::ffi_types::BOOL;
-use crate::kernel;
 use crate::kernel::decl::{MEMORYSTATUSEX, OSVERSIONINFOEX, STARTUPINFO,
 	SYSTEM_INFO, TIME_ZONE_INFORMATION, WinResult, WString};
 use crate::kernel::privs::{bool_to_winresult, INVALID_FILE_ATTRIBUTES,

@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, user};
 use crate::kernel::decl::{GetLastError, WinResult};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::Handle;
-use crate::user;
 
 impl_handle! { HCURSOR: "user";
 	/// Handle to a

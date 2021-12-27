@@ -1,8 +1,7 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, kernel};
 use crate::ffi_types::BOOL;
-use crate::kernel;
 use crate::kernel::decl::{FILETIME, GetLastError, PROCESS_INFORMATION,
 	SECURITY_ATTRIBUTES, STARTUPINFO, WinResult, WString};
 use crate::kernel::privs::{bool_to_winresult, INFINITE, MAX_PATH};

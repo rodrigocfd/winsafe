@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::kernel;
+use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, WinResult};
 use crate::kernel::privs::{bool_to_winresult, GMEM_INVALID_HANDLE};
 use crate::prelude::Handle;

@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::kernel;
+use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, HFILEMAPVIEW, HIDWORD, LODWORD,
 	WinResult};
 use crate::prelude::{Handle, HandleClose};

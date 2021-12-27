@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::gdi;
+use crate::{co, gdi};
 use crate::gdi::decl::{HFONT, HPEN, TEXTMETRIC};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR};
 use crate::kernel::decl::{GetLastError, WinResult, WString};
@@ -137,6 +136,15 @@ pub trait GdiHdc: Handle {
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
+		}
+	}
+
+	/// [`GetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkmode)
+	/// method.
+	fn GetBkMode(self) -> WinResult<co::BKMODE> {
+		match unsafe { gdi::ffi::GetBkMode(self.as_ptr()) } {
+			0 => Err(GetLastError()),
+			v => Ok(co::BKMODE(v)),
 		}
 	}
 
@@ -319,6 +327,15 @@ pub trait GdiHdc: Handle {
 			-1 => Err(GetLastError()),
 			0 => Ok(false),
 			_ => Ok(true),
+		}
+	}
+
+	/// [`RealizePalette`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-realizepalette)
+	/// method.
+	fn RealizePalette(self) -> WinResult<u32> {
+		match unsafe { gdi::ffi::RealizePalette(self.as_ptr()) } {
+			GDI_ERROR => Err(GetLastError()),
+			num => Ok(num),
 		}
 	}
 
@@ -601,6 +618,12 @@ pub trait GdiHdc: Handle {
 				)
 			},
 		)
+	}
+
+	/// [`UpdateColors`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-updatecolors)
+	/// method.
+	fn UpdateColors(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { gdi::ffi::UpdateColors(self.as_ptr()) })
 	}
 
 	/// [`WidenPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-widenpath)

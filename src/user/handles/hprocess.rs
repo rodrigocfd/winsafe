@@ -1,9 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, user};
 use crate::kernel::decl::{HPROCESS, WinResult};
 use crate::kernel::privs::bool_to_winresult;
-use crate::user;
 use crate::prelude::Handle;
 
 impl UserHprocess for HPROCESS {}

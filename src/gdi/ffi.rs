@@ -26,6 +26,7 @@ extern_sys! { "gdi32";
 	EndPath(HANDLE) -> BOOL
 	FillPath(HANDLE) -> BOOL
 	FillRect(HANDLE, PCVOID, HANDLE) -> i32
+	GetBkMode(HANDLE) -> i32
 	GetDCBrushColor(HANDLE) -> u32
 	GetDCPenColor(HANDLE) -> u32
 	GetDeviceCaps(HANDLE, i32) -> i32
@@ -49,6 +50,7 @@ extern_sys! { "gdi32";
 	PolylineTo(HANDLE, PCVOID, u32) -> BOOL
 	PtInRegion(HANDLE, i32, i32) -> BOOL
 	PtVisible(HANDLE, i32, i32) -> BOOL
+	RealizePalette(HANDLE) -> u32
 	Rectangle(HANDLE, i32, i32, i32, i32) -> BOOL
 	RectInRegion(HANDLE, PCVOID) -> BOOL
 	RestoreDC(HANDLE, i32) -> BOOL
@@ -73,5 +75,7 @@ extern_sys! { "gdi32";
 	StrokeAndFillPath(HANDLE) -> BOOL
 	StrokePath(HANDLE) -> BOOL
 	TextOutW(HANDLE, i32, i32, PCSTR, i32) -> BOOL
+	UnrealizeObject(HANDLE) -> BOOL
+	UpdateColors(HANDLE) -> BOOL
 	WidenPath(HANDLE) -> BOOL
 }
