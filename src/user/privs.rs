@@ -1,6 +1,7 @@
 use crate::co;
 use crate::kernel::decl::WinResult;
 
+pub(crate) const ASFW_ANY: u32 = -1i32 as _;
 pub(crate) const CB_ERR: i32 = -1;
 pub(crate) const CB_ERRSPACE: i32 = -2;
 pub(crate) const CCHDEVICENAME: usize = 32;

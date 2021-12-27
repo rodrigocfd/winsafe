@@ -1248,6 +1248,14 @@ pub trait UserHwnd: Handle {
 		unsafe { user::ffi::ShowWindow(self.as_ptr(), show_cmd.0) != 0 }
 	}
 
+	/// [`ShowWindowAsync`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindowasync)
+	/// method.
+	fn ShowWindowAsync(self, show_cmd: co::SW) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe { user::ffi::ShowWindowAsync(self.as_ptr(), show_cmd.0) }
+		)
+	}
+
 	/// [`TranslateAccelerator`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translateacceleratorw)
 	/// method.
 	fn TranslateAccelerator(self,

@@ -2,6 +2,7 @@ use crate::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 extern_sys! { "user32";
 	AdjustWindowRectEx(PVOID, u32, BOOL, u32) -> BOOL
+	AllowSetForegroundWindow(u32) -> BOOL
 	AnyPopup() -> BOOL
 	AppendMenuW(HANDLE, u32, usize, PCSTR) -> BOOL
 	ArrangeIconicWindows(HANDLE) -> u32
@@ -184,6 +185,7 @@ extern_sys! { "user32";
 	ShowCaret(HANDLE) -> BOOL
 	ShowCursor(BOOL) -> i32
 	ShowWindow(HANDLE, i32) -> BOOL
+	ShowWindowAsync(HANDLE, i32) -> BOOL
 	SoundSentry() -> BOOL
 	SystemParametersInfoW(u32, u32, PVOID, u32) -> BOOL
 	TrackMouseEvent(PVOID) -> BOOL
