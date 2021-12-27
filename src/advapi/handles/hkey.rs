@@ -18,14 +18,18 @@ impl_handle! { HKEY: "advapi";
 	/// Usually, they are the starting point to open a registry key.
 }
 
+impl AdvapiHkey for HKEY {}
+
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
 		/// Predefined registry key, always open.
-		pub const $name: Self = Self($val as *mut _);
+		const $name: HKEY = HKEY($val as *mut _);
 	};
 }
 
-impl HKEY {
+/// [`HKEY`](crate::HKEY) methods from `advapi` feature.
+#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
+pub trait AdvapiHkey: Handle {
 	predef_key!(CLASSES_ROOT, 0x8000_0000);
 	predef_key!(CURRENT_USER, 0x8000_0001);
 	predef_key!(LOCAL_MACHINE, 0x8000_0002);
@@ -39,8 +43,8 @@ impl HKEY {
 
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
-	pub fn CloseKey(self) -> WinResult<()> {
-		match co::ERROR(unsafe { advapi::ffi::RegCloseKey(self.0) as _ }) {
+	fn CloseKey(self) -> WinResult<()> {
+		match co::ERROR(unsafe { advapi::ffi::RegCloseKey(self.as_ptr()) as _ }) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
@@ -70,8 +74,8 @@ impl HKEY {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	pub fn EnumKeyEx<'a>(self) -> WinResult<impl Iterator<Item = WinResult<String>> + 'a> {
-		EnumKeyIter::new(self)
+	fn EnumKeyEx<'a>(self) -> WinResult<Box<dyn Iterator<Item = WinResult<String>> + 'a>> {
+		Ok(Box::new(EnumKeyIter::new(HKEY(unsafe { self.as_ptr() }))?))
 	}
 
 	/// Returns an iterator of the names and types of the values, which calls
@@ -98,8 +102,8 @@ impl HKEY {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	pub fn EnumValue<'a>(self) -> WinResult<impl Iterator<Item = WinResult<(String, co::REG)>> + 'a> {
-		EnumValueIter::new(self)
+	fn EnumValue<'a>(self) -> WinResult<Box<dyn Iterator<Item = WinResult<(String, co::REG)>> + 'a>> {
+		Ok(Box::new(EnumValueIter::new(HKEY(unsafe { self.as_ptr() }))?))
 	}
 
 	/// [`RegGetValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -134,9 +138,7 @@ impl HKEY {
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	pub fn GetValue(self,
-		sub_key: &str, value: &str) -> WinResult<RegistryValue>
-	{
+	fn GetValue(self, sub_key: &str, value: &str) -> WinResult<RegistryValue> {
 		let sub_key_w = WString::from_str(sub_key);
 		let value_w = WString::from_str(value);
 		let mut raw_data_type = u32::default();
@@ -146,7 +148,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegGetValueW(
-					self.0,
+					self.as_ptr(),
 					sub_key_w.as_ptr(),
 					value_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
@@ -166,7 +168,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegGetValueW(
-					self.0,
+					self.as_ptr(),
 					sub_key_w.as_ptr(),
 					value_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
@@ -219,19 +221,19 @@ impl HKEY {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	pub fn OpenKeyEx(self, sub_key: &str,
+	fn OpenKeyEx(self, sub_key: &str,
 		options: co::REG_OPTION, access_rights: co::KEY) -> WinResult<HKEY>
 	{
-		let mut hKey = Self::NULL;
+		let hKey = HKEY::NULL;
 
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegOpenKeyExW(
-					self.0,
+					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
-					&mut hKey.0,
+					&mut hKey.as_ptr(),
 				)
 			} as _,
 		) {
@@ -242,7 +244,7 @@ impl HKEY {
 
 	/// [`RegQueryInfoKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
 	/// method.
-	pub fn QueryInfoKey(self,
+	fn QueryInfoKey(self,
 		mut class: Option<&mut WString>,
 		num_sub_keys: Option<&mut u32>,
 		max_sub_key_name_len: Option<&mut u32>,
@@ -278,7 +280,7 @@ impl HKEY {
 			match co::ERROR(
 				unsafe {
 					advapi::ffi::RegQueryInfoKeyW(
-						self.0,
+						self.as_ptr(),
 						class_ptr,
 						&mut class_len,
 						std::ptr::null_mut(),
@@ -344,7 +346,7 @@ impl HKEY {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	pub fn QueryValueEx(self, value: &str) -> WinResult<RegistryValue> {
+	fn QueryValueEx(self, value: &str) -> WinResult<RegistryValue> {
 		let value_w = WString::from_str(value);
 		let mut raw_data_type = u32::default();
 		let mut data_len = u32::default();
@@ -353,7 +355,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegQueryValueExW(
-					self.0,
+					self.as_ptr(),
 					value_w.as_ptr(),
 					std::ptr::null_mut(),
 					&mut raw_data_type,
@@ -372,7 +374,7 @@ impl HKEY {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegQueryValueExW(
-					self.0,
+					self.as_ptr(),
 					value_w.as_ptr(),
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
@@ -422,13 +424,13 @@ impl HKEY {
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	pub fn SetKeyValue(self,
+	fn SetKeyValue(self,
 		sub_key: &str, value: &str, data: RegistryValue) -> WinResult<()>
 	{
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegSetKeyValueW(
-					self.0,
+					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					WString::from_str(value).as_ptr(),
 					data.reg_type().0,
@@ -468,13 +470,11 @@ impl HKEY {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	pub fn SetValueEx(self,
-		value: &str, data: RegistryValue) -> WinResult<()>
-	{
+	fn SetValueEx(self, value: &str, data: RegistryValue) -> WinResult<()> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegSetValueExW(
-					self.0,
+					self.as_ptr(),
 					WString::from_str(value).as_ptr(),
 					0,
 					data.reg_type().0,

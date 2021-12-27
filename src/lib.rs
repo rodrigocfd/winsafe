@@ -416,6 +416,7 @@ pub mod prelude {
 	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "dshow", feature = "gdi"))] pub use super::dshow_gdi::traits::*;
+	#[cfg(feature = "advapi")] pub use super::advapi::traits::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::traits::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::traits::*;

@@ -10,5 +10,9 @@ mod handles;
 pub mod decl {
 	pub use super::enums::*;
 	pub use super::funcs::*;
-	pub use super::handles::*;
+	pub use super::handles::decl::*;
+}
+
+pub mod traits {
+	pub use super::handles::traits::*;
 }
