@@ -35,7 +35,7 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.8", features = [] }
+winsafe = { version = "0.0.9", features = [] }
 ```
 
 Then you must enable the [Cargo features](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section) you want to be included – these modules are named after native Windows DLL and library names, mostly.
@@ -50,14 +50,14 @@ The following Cargo features are available so far:
 | `dshow` | [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) |
 | `gdi` | Gdi32.dll, the [Windows GDI](https://docs.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 | **`gui`** | **The WinSafe high-level GUI structs** |
-| `kernel` | Kernel32.dll, required by all others |
+| `kernel` | Kernel32.dll, all others will include it |
 | `msimg` | Msimg32.dll |
 | `ole` | OLE and basic COM support |
 | `oleaut` | [OLE Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) |
 | `shell` | Shell32.dll, the COM-based [Windows Shell](https://docs.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 | `shlwapi` | Shlwapi.dll, for some [Shell](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/) functions |
-| `user` | User32.dll, the basic Windows UI support |
-| `uxtheme` | UxTheme.dll, extended UI theming |
+| `user` | User32.dll, the basic Windows GUI support |
+| `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |
 
 Note that a Cargo feature may depend on other features, which will be enabled automatically.
@@ -78,7 +78,7 @@ The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/0
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.8", features = ["gui"] }
+winsafe = { version = "0.0.9", features = ["gui"] }
 ```
 
 ```rust

@@ -1,6 +1,6 @@
 [package]
 name = "winsafe"
-version = "0.0.8"
+version = "0.0.9"
 authors = ["Rodrigo Cesar de Freitas Dias <rcesar@gmail.com>"]
 description = "Windows API and GUI in safe, idiomatic Rust."
 categories = ["api-bindings", "gui", "os::windows-apis"]
