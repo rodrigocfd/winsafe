@@ -91,8 +91,8 @@ impl<'a> ListViewItems<'a> {
 		self.hwnd.SendMessage(lvm::DeleteAllItems {})
 	}
 
-	/// Deletes the selected items by sending
-	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) messages.
+	/// Deletes all selected items by sending
+	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) messages.
 	pub fn delete_selected(&self) -> WinResult<()> {
 		loop {
 			match self.hwnd.SendMessage(lvm::GetNextItem {
