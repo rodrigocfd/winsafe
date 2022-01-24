@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+use crate::co;
+use crate::{CoCreateInstance, CLSID};
 use crate::ffi_types::HRES;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -47,6 +49,30 @@ impl ShellIFileOpenDialog for IFileOpenDialog {}
 /// [`IFileOpenDialog`](crate::IFileOpenDialog) methods from `shell` feature.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait ShellIFileOpenDialog: ShellIFileDialog {
+	/// Calls [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
+	/// function to create a new file open dialog.
+	///
+	/// To customize CLSCTX and such, use [`CoCreateInstance`](crate::CoCreateInstance) function
+	/// directly.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::IFileOpenDialog;
+	///
+	/// let fod = IFileOpenDialog::new()?;
+	/// // setup file open dialog to your taste
+	/// let _ = fod.Show()?;
+	/// ```
+	fn new() -> HrResult<IFileOpenDialog> {
+		CoCreateInstance::<IFileOpenDialog>(
+			&CLSID::FileOpenDialog,
+			None,
+			co::CLSCTX::INPROC_SERVER,
+		)
+	}
+
 	/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 	/// method.
 	///

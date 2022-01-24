@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+use crate::co;
+use crate::{CoCreateInstance, CLSID};
 use crate::ffi_types::{BOOL, HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -50,6 +52,30 @@ impl ShellIFileSaveDialog for IFileSaveDialog {}
 /// [`IFileSaveDialog`](crate::IFileSaveDialog) methods from `shell` feature.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait ShellIFileSaveDialog: ShellIFileDialog {
+	/// Calls [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
+	/// function to create a new file save dialog.
+	///
+	/// To customize CLSCTX and such, use [`CoCreateInstance`](crate::CoCreateInstance) function
+	/// directly.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::IFileSaveDialog;
+	///
+	/// let fod = IFileSaveDialog::new()?;
+	/// // setup file save dialog to your taste
+	/// let _ = fod.Show()?;
+	/// ```
+	fn new() -> HrResult<IFileSaveDialog> {
+		CoCreateInstance::<IFileSaveDialog>(
+			&CLSID::FileSaveDialog,
+			None,
+			co::CLSCTX::INPROC_SERVER,
+		)
+	}
+
 	/// [`IFileSaveDialog::SetSaveAsItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 	/// method.
 	fn SetSaveAsItem(&self, psi: IShellItem) -> HrResult<()> {
