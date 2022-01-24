@@ -64,9 +64,9 @@ pub trait ShellIFileSaveDialog: ShellIFileDialog {
 	/// use winsafe::prelude::*;
 	/// use winsafe::IFileSaveDialog;
 	///
-	/// let fod = IFileSaveDialog::new()?;
+	/// let fsd = IFileSaveDialog::new()?;
 	/// // setup file save dialog to your taste
-	/// let _ = fod.Show()?;
+	/// let _ = fsd.Show()?;
 	/// ```
 	fn new() -> HrResult<IFileSaveDialog> {
 		CoCreateInstance::<IFileSaveDialog>(
