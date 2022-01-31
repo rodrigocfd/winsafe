@@ -27,10 +27,10 @@ pub struct IFileOpenDialogVT {
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{CLSID, co, CoCreateInstance, IFileOpenDialog};
+/// use winsafe::{co, CoCreateInstance, IFileOpenDialog};
 ///
 /// let obj = CoCreateInstance::<IFileOpenDialog>(
-///     &CLSID::FileOpenDialog,
+///     &co::CLSID::FileOpenDialog,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
@@ -60,7 +60,7 @@ pub trait ShellIFileOpenDialog: ShellIFileDialog {
 	/// use winsafe::{co, HrResult, IFileOpenDialog};
 	///
 	/// let fo: IFileOpenDialog; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let fo = CoCreateInstance::<IFileOpenDialog>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let paths = fo.GetResults()?.iter()?

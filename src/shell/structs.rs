@@ -9,11 +9,6 @@ use crate::kernel::privs::{MAX_PATH, parse_multi_z_str};
 use crate::ole::decl::GUID;
 use crate::user::decl::{HICON, HWND};
 
-pub_guid_wrapper! { BHID: "shell";
-	/// [`IShellItem::BindToHandler`](crate::prelude::ShellIShellItem::BindToHandler)
-	/// `bhid`. Just a safe abstraction over a [`GUID`](crate::GUID).
-}
-
 /// [`COMDLG_FILTERSPEC`](https://docs.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
@@ -31,11 +26,6 @@ impl_default!(COMDLG_FILTERSPEC, 'a, 'b);
 impl<'a, 'b> COMDLG_FILTERSPEC<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, pszName, set_pszName);
 	pub_fn_string_ptr_get_set!('b, pszSpec, set_pszSpec);
-}
-
-pub_guid_wrapper! { KNOWNFOLDERID: "shell";
-	/// [Constants](https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid)
-	/// that represent known system folders.
 }
 
 /// [`NOTIFYICONDATA`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)

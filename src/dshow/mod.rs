@@ -1,4 +1,3 @@
-mod clsid;
 mod com_interfaces;
 mod structs;
 

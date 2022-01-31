@@ -30,10 +30,10 @@ pub struct IFileSaveDialogVT {
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{CLSID, co, CoCreateInstance, IFileSaveDialog};
+/// use winsafe::{co, CoCreateInstance, IFileSaveDialog};
 ///
 /// let obj = CoCreateInstance::<IFileSaveDialog>(
-///     &CLSID::FileSaveDialog,
+///     &co::CLSID::FileSaveDialog,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;

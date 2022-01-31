@@ -6,7 +6,6 @@ use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{ComInterface, OleIUnknown};
-use crate::shell::decl::BHID;
 use crate::shlwapi::decl::IBindCtx;
 use crate::vt::IUnknownVT;
 
@@ -66,7 +65,8 @@ pub trait ShellIShellItem: OleIUnknown {
 
 	/// [`IShellItem::BindToHandler`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
 	/// method.
-	fn BindToHandler<T>(&self, bind_ctx: IBindCtx, bhid: &BHID) -> HrResult<T>
+	fn BindToHandler<T>(&self,
+		bind_ctx: IBindCtx, bhid: &co::BHID) -> HrResult<T>
 		where T: ComInterface,
 	{
 		let mut ppv_queried = ComPtr::null();

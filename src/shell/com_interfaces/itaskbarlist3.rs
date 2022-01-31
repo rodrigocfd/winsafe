@@ -39,10 +39,10 @@ pub struct ITaskbarList3VT {
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{CLSID, co, CoCreateInstance, ITaskbarList3};
+/// use winsafe::{co, CoCreateInstance, ITaskbarList3};
 ///
 /// let obj = CoCreateInstance::<ITaskbarList3>(
-///     &CLSID::TaskbarList,
+///     &co::CLSID::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
@@ -113,7 +113,7 @@ pub trait ShellITaskbarList3: ShellITaskbarList2 {
 	/// use winsafe::{HWND, ITaskbarList3};
 	///
 	/// let tbar: ITaskbarList3; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let tbar = CoCreateInstance::<ITaskbarList3>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	/// let hwnd: HWND;
 	/// # let hwnd = HWND::NULL;

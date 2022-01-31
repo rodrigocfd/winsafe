@@ -1,6 +1,5 @@
 pub(in crate::shell) mod ffi;
 
-mod clsid;
 mod com_interfaces;
 mod funcs;
 mod handles;

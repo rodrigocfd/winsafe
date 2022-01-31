@@ -1,7 +1,3 @@
-pub_guid_wrapper! { CLSID: "ole";
-	/// COM class ID. Just a safe abstraction over a [`GUID`](crate::GUID).
-}
-
 /// [`GUID`](https://docs.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
@@ -46,8 +42,4 @@ impl GUID {
 		guid.data4 = guid.data4.swap_bytes();
 		guid
 	}
-}
-
-pub_guid_wrapper! { IID: "ole";
-	/// COM interface ID. Just a safe abstraction over a [`GUID`](crate::GUID).
 }

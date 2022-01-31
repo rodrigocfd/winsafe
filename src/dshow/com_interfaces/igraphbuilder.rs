@@ -33,10 +33,10 @@ pub struct IGraphBuilderVT {
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{CLSID, co, CoCreateInstance, IGraphBuilder};
+/// use winsafe::{co, CoCreateInstance, IGraphBuilder};
 ///
 /// let obj = CoCreateInstance::<IGraphBuilder>(
-///     &CLSID::FilterGraph,
+///     &co::CLSID::FilterGraph,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;

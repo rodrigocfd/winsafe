@@ -1,7 +1,8 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::ffi_types::{HRES, PCVOID};
-use crate::ole::decl::{ComPtr, GUID, HrResult};
+use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{ComInterface, OleIUnknown};
 use crate::vt::IUnknownVT;
@@ -28,7 +29,7 @@ pub struct IMFGetServiceVT {
 /// use winsafe::{IBaseFilter, IMFGetService};
 ///
 /// let vmr: IBaseFilter; // initialized somewhere
-/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 /// # let vmr = CoCreateInstance::<IBaseFilter>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 ///
 /// let get_svc = vmr.QueryInterface::<IMFGetService>()?;
@@ -51,19 +52,19 @@ pub trait DshowIMFGetService: OleIUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{GUID, IMFGetService, IMFVideoDisplayControl};
+	/// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
 	///
 	/// let get_svc: IMFGetService; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let get_svc = CoCreateInstance::<IMFGetService>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let controller_evr = get_svc
 	///     .GetService::<IMFVideoDisplayControl>(
-	///         &GUID::MR_VIDEO_RENDER_SERVICE,
+	///         &co::DSHOW_SERVICE::MR_VIDEO_RENDER_SERVICE,
 	///     )?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # Ok::<_, co::HRESULT>(())
 	/// ```
-	fn GetService<T>(&self, service_guid: &GUID) -> HrResult<T>
+	fn GetService<T>(&self, service_id: &co::DSHOW_SERVICE) -> HrResult<T>
 		where T: ComInterface,
 	{
 		let mut ppv_queried = ComPtr::null();
@@ -72,7 +73,7 @@ pub trait DshowIMFGetService: OleIUnknown {
 			ok_to_hrresult(
 				(vt.GetService)(
 					self.ptr(),
-					service_guid as *const _ as _,
+					service_id as *const _ as _,
 					&T::IID as *const _ as _,
 					&mut ppv_queried,
 				),

@@ -55,7 +55,7 @@ pub trait ShellIShellItemArray: OleIUnknown {
 	/// use winsafe::{co, IShellItemArray};
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// for ish_item in ish_arr.iter()? {
@@ -74,7 +74,7 @@ pub trait ShellIShellItemArray: OleIUnknown {
 	/// use winsafe::{co, HrResult, IShellItemArray};
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let paths = ish_arr.iter()?

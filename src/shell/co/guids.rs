@@ -1,15 +1,17 @@
 #![allow(non_upper_case_globals)]
 
-use crate::ole::decl::CLSID;
-use crate::shell::decl::{BHID, KNOWNFOLDERID};
+use crate::co::CLSID;
 
-pub_const_guid! { CLSID: "shell";
+const_guid_values! { CLSID: "shell";
 	FileOpenDialog 0xdc1c5a9c, 0xe88a, 0x4dde, 0xa5a1, 0x60f82a20aef7
 	FileSaveDialog 0xc0b4e2f3, 0xba21, 0x4773, 0x8dba, 0x335ec946eb8b
 	TaskbarList 0x56fdf344, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090
 }
 
-pub_const_guid! { BHID: "shell";
+const_guid! { BHID: "shell";
+	/// [`IShellItem::BindToHandler`](crate::prelude::ShellIShellItem::BindToHandler)
+	/// `bhid` (`GUID`).
+	=>
 	SFObject 0x3981e224, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
 	SFUIObject 0x3981e225, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
 	SFViewObject 0x3981e226, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
@@ -29,7 +31,11 @@ pub_const_guid! { BHID: "shell";
 	FilePlaceholder 0x8677dceb, 0xaae0, 0x4005, 0x8d3d, 0x547fa852f825
 }
 
-pub_const_guid! { KNOWNFOLDERID: "shell";
+const_guid! { KNOWNFOLDERID: "shell";
+	/// Known
+	/// [system folders](https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid)
+	/// (`GUID`).
+	=>
 	NetworkFolder 0xd20beec4, 0x5ca8, 0x4905, 0xae3b, 0xbf251ea09b53
 	ComputerFolder 0x0ac0837c, 0xbbf8, 0x452a, 0x850d, 0x79d08e667ca7
 	InternetFolder 0x4d9f7874, 0x4e0c, 0x4904, 0x967b, 0x40b0d20c3e4b

@@ -2,6 +2,7 @@
 
 use std::marker::PhantomData;
 
+use crate::co;
 use crate::ffi_types::BOOL;
 use crate::ole::decl::GUID;
 
@@ -10,12 +11,12 @@ use crate::ole::decl::GUID;
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct AM_MEDIA_TYPE<'a> {
-	pub majortype: MEDIATYPE,
+	pub majortype: co::MEDIATYPE,
 	pub subtype: GUID,
 	bFixedSizeSamples: BOOL,
 	bTemporalCompression: BOOL,
 	pub lSampleSize: u32,
-	pub formattype: MEDIA_FORMAT,
+	pub formattype: co::MEDIA_FORMAT,
 	pUnk: usize,
 	cbFormat: u32,
 	pbFormat: *mut std::ffi::c_void,
@@ -62,16 +63,6 @@ pub struct DVINFO {
 	dwDVReserved: [u32; 2],
 }
 
-pub_guid_wrapper! { MEDIA_FORMAT: "dshow";
-	/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `formattype`, originally with
-	/// `FORMAT` prefix. Just a safe abstraction over a [`GUID`](crate::GUID).
-}
-
-pub_guid_wrapper! { MEDIATYPE: "dshow";
-	/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `majortype`. Just a safe
-	/// abstraction over a [`GUID`](crate::GUID).
-}
-
 /// [`MFVideoNormalizedRect`](https://docs.microsoft.com/en-us/windows/win32/api/evr/ns-evr-mfvideonormalizedrect)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
@@ -98,9 +89,4 @@ impl MFVideoNormalizedRect {
 	{
 		Self { left, top, right, bottom }
 	}
-}
-
-pub_guid_wrapper! { TIME_FORMAT: "dshow";
-	/// [`IMediaSeeking::SetTimeFormat`](crate::prelude::DshowIMediaSeeking::SetTimeFormat)
-	/// `format`. Just a safe abstraction over a [`GUID`](crate::GUID).
 }

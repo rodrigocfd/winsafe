@@ -224,7 +224,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 	/// use winsafe::IFileDialog;
 	///
 	/// let file_dlg: IFileDialog; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let file_dlg = CoCreateInstance::<IFileDialog>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// file_dlg.SetFileTypes(&[

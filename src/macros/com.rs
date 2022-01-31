@@ -25,8 +25,7 @@ macro_rules! impl_iunknown {
 		}
 
 		impl crate::prelude::ComInterface for $name {
-			const IID: crate::ole::decl::IID =
-				crate::ole::decl::IID::new($p1, $p2, $p3, $p4, $p5);
+			const IID: crate::co::IID = crate::co::IID::new($p1, $p2, $p3, $p4, $p5);
 		}
 
 		impl crate::prelude::OleIUnknown for $name {
@@ -37,11 +36,30 @@ macro_rules! impl_iunknown {
 	};
 }
 
-/// Creates a safe wrapper to a `GUID`.
-macro_rules! pub_guid_wrapper {
+/// Creates multiple `GUID`-derived pub const values.
+macro_rules! const_guid_values {
+	(
+		$name:ident $(: $feature:literal)*;
+		$($pubname:ident $iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr)*
+	) => {
+		$( #[cfg_attr(docsrs, doc(cfg(feature = $feature)))] )*
+		impl $name {
+			$(
+				pub const $pubname: $name = $name::new($iid1, $iid2, $iid3, $iid4, $iid5);
+			)*
+		}
+	};
+}
+
+/// Declares the type of a GUID constant, along with public values.
+macro_rules! const_guid {
 	(
 		$name:ident : $feature:literal;
 		$( #[$doc:meta] )*
+		=>
+		$(
+			$pubname:ident $iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr
+		)*
 	) => {
 		$( #[$doc] )*
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
@@ -55,7 +73,7 @@ macro_rules! pub_guid_wrapper {
 			}
 		}
 
-		impl AsRef<GUID> for $name {
+		impl AsRef<crate::ole::decl::GUID> for $name {
 			fn as_ref(&self) -> &crate::ole::decl::GUID {
 				&self.0
 			}
@@ -83,19 +101,11 @@ macro_rules! pub_guid_wrapper {
 				Self(crate::ole::decl::GUID::new(p1, p2, p3, p4, p5))
 			}
 		}
-	};
-}
 
-/// Creates multiple `GUID`-derived pub const values.
-macro_rules! pub_const_guid {
-	(
-		$type:ident: $feature:literal;
-		$($name:ident $iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr)*
-	) => {
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
-		impl $type {
+		const_guid_values! {
+			$name;
 			$(
-				pub const $name: $type = $type::new($iid1, $iid2, $iid3, $iid4, $iid5);
+				$pubname $iid1, $iid2, $iid3, $iid4, $iid5
 			)*
 		}
 	};

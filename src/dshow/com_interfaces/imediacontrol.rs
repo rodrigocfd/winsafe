@@ -40,7 +40,7 @@ pub struct IMediaControlVT {
 /// use winsafe::{IGraphBuilder, IMediaControl};
 ///
 /// let graph_builder: IGraphBuilder; // initialized somewhere
-/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 /// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 ///
 /// let media_control = graph_builder

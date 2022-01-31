@@ -30,10 +30,10 @@ pub struct ITaskbarListVT {
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{CLSID, co, CoCreateInstance, ITaskbarList};
+/// use winsafe::{co, CoCreateInstance, ITaskbarList};
 ///
 /// let obj = CoCreateInstance::<ITaskbarList>(
-///     &CLSID::TaskbarList,
+///     &co::CLSID::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;

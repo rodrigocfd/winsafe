@@ -48,7 +48,7 @@ pub trait DshowIFileSinkFilter: OleIUnknown {
 	///     DVINFO, IFileSinkFilter};
 	///
 	/// let sinkf: IFileSinkFilter; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let sinkf = CoCreateInstance::<IFileSinkFilter>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let mut ammt = AM_MEDIA_TYPE::default();

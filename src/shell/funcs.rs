@@ -7,8 +7,7 @@ use crate::kernel::privs::bool_to_winresult;
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, KernelHlocal};
-use crate::shell::decl::{KNOWNFOLDERID, NOTIFYICONDATA, SHFILEINFO,
-	SHFILEOPSTRUCT};
+use crate::shell::decl::{NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT};
 
 /// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
 /// function.
@@ -108,9 +107,27 @@ pub fn SHGetFileInfo(
 
 /// [`SHGetKnownFolderPath`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
 /// function.
+///
+/// # Examples
+///
+/// Retrieving documents folder:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, SHGetKnownFolderPath};
+///
+/// let docs_folder = SHGetKnownFolderPath(
+///     &co::KNOWNFOLDERID::Documents,
+///     co::KF::DEFAULT,
+///     None,
+/// )?;
+///
+/// println!("Docs folder: {}", docs_folder);
+/// # Ok::<_, co::HRESULT>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHGetKnownFolderPath(
-	folder_id: &KNOWNFOLDERID,
+	folder_id: &co::KNOWNFOLDERID,
 	flags: co::KF,
 	token: Option<HACCESSTOKEN>) -> HrResult<String>
 {

@@ -132,7 +132,7 @@ pub trait OleautIPicture: OleIUnknown {
 	/// use winsafe::{HWND, IPicture};
 	///
 	/// let pic: IPicture; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let hdc = HWND::NULL.GetDC()?;
@@ -180,7 +180,7 @@ pub trait OleautIPicture: OleIUnknown {
 	/// use winsafe::{HWND, IPicture};
 	///
 	/// let pic: IPicture; // initialized somewhere
-	/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let hdc = HWND::NULL.GetDC()?;

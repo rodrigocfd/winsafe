@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::dshow::decl::TIME_FORMAT;
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -47,7 +46,7 @@ pub struct IMediaSeekingVT {
 /// use winsafe::{IGraphBuilder, IMediaSeeking};
 ///
 /// let graph_builder: IGraphBuilder; // initialized somewhere
-/// # use winsafe::{CLSID, co::CLSCTX, CoCreateInstance};
+/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
 /// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
 ///
 /// let media_seeking = graph_builder
@@ -67,8 +66,8 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 	/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 	/// method.
 	fn ConvertTimeFormat(&self,
-		target_format: &TIME_FORMAT,
-		source: i64, source_format: &TIME_FORMAT) -> HrResult<i64>
+		target_format: &co::TIME_FORMAT,
+		source: i64, source_format: &co::TIME_FORMAT) -> HrResult<i64>
 	{
 		let mut target = i64::default();
 		unsafe {
@@ -161,8 +160,8 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::GetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-gettimeformat)
 	/// method.
-	fn GetTimeFormat(&self) -> HrResult<TIME_FORMAT> {
-		let mut time_guid = TIME_FORMAT::NONE;
+	fn GetTimeFormat(&self) -> HrResult<co::TIME_FORMAT> {
+		let mut time_guid = co::TIME_FORMAT::NONE;
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
 			ok_to_hrresult(
@@ -207,7 +206,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::SetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-settimeformat)
 	/// method.
-	fn SetTimeFormat(&self, format: &TIME_FORMAT) -> HrResult<()> {
+	fn SetTimeFormat(&self, format: &co::TIME_FORMAT) -> HrResult<()> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
 			ok_to_hrresult(

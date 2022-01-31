@@ -1,9 +1,8 @@
-#![allow(non_upper_case_globals)]
+#![allow(non_camel_case_types, non_upper_case_globals)]
 
-use crate::dshow::decl::{MEDIA_FORMAT, MEDIATYPE, TIME_FORMAT};
-use crate::ole::decl::{CLSID, GUID};
+use crate::co::CLSID;
 
-pub_const_guid! { CLSID: "dshow";
+const_guid_values! { CLSID: "dshow";
 	AviDest 0xe2510970, 0xf137, 0x11ce, 0x8b67, 0x00aa00a3f1a6
 	EnhancedVideoRenderer 0xfa10746c, 0x9b63, 0x4b6c, 0xbc49, 0xfc300ea5f256
 	FileWriter 0x8596e5f0, 0x0da5, 0x11d0, 0xbd21, 0x00a0c911ce86
@@ -11,7 +10,10 @@ pub_const_guid! { CLSID: "dshow";
 	NullRenderer 0xc1f400a4, 0x3f08, 0x11d3, 0x9f0b, 0x006008039e37
 }
 
-pub_const_guid! { GUID: "dshow";
+const_guid! { DSHOW_SERVICE: "dshow";
+	/// [`IMFGetService::GetService`](`crate::DshowIMFGetService::GetService`)
+	/// `service_guid` (`GUID`).
+	=>
 	MR_VIDEO_RENDER_SERVICE 0x1092a86c, 0xab1a, 0x459a, 0xa336, 0x831fbc4d11ff
 	MR_VIDEO_MIXER_SERVICE 0x073cd2fc, 0x6cf4, 0x40b7, 0x8859, 0xe89552c841f8
 	MR_VIDEO_ACCELERATION_SERVICE 0xefef5175, 0x5c7d, 0x4ce2, 0xbbbd, 0x34ff8bca6554
@@ -19,7 +21,10 @@ pub_const_guid! { GUID: "dshow";
 	VIDEO_ZOOM_RECT 0x7aaa1638, 0x1b7f, 0x4c93, 0xbd89, 0x5b9c9fb6fcf0
 }
 
-pub_const_guid! { MEDIA_FORMAT: "dshow";
+const_guid! { MEDIA_FORMAT: "dshow";
+	/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `formattype`, originally with
+	/// `FORMAT` prefix (`GUID`).
+	=>
 	DvInfo 0x05589f84, 0xc356, 0x11ce, 0xbf01, 0x00aa0055595a
 	MPEG2Video 0xe06d80e3, 0xdb46, 0x11cf, 0xb4d1, 0x00805f6cbbea
 	MPEGStreams 0x05589f83, 0xc356, 0x11ce, 0xbf01, 0x00aa0055595a
@@ -30,7 +35,9 @@ pub_const_guid! { MEDIA_FORMAT: "dshow";
 	WaveFormatEx 0x05589f81, 0xc356, 0x11ce, 0xbf01, 0x00aa0055595a
 }
 
-pub_const_guid! { MEDIATYPE: "dshow";
+const_guid! { MEDIATYPE: "dshow";
+	/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `majortype` (`GUID`).
+	=>
 	AnalogAudio 0x0482dee1, 0x7817, 0x11cf, 0x8a03, 0x00aa006ecb65
 	AnalogVideo 0x0482dde1, 0x7817, 0x11cf, 0x8a03, 0x00aa006ecb65
 	Audio 0x73647561, 0x0000, 0x0010, 0x8000, 0x00aa00389b71
@@ -48,7 +55,10 @@ pub_const_guid! { MEDIATYPE: "dshow";
 	Video 0x73646976, 0x0000, 0x0010, 0x8000, 0x00aa00389b71
 }
 
-pub_const_guid! { TIME_FORMAT: "dshow";
+const_guid! { TIME_FORMAT: "dshow";
+	/// [`IMediaSeeking::SetTimeFormat`](crate::prelude::DshowIMediaSeeking::SetTimeFormat)
+	/// `format` (`GUID`).
+	=>
 	NONE 0x00000000, 0x0000, 0x0000, 0x0000, 0x000000000000
 	FRAME 0x7b785570, 0x8c82, 0x11cf, 0xbc0c, 0x00aa00ac74f6
 	BYTE 0x7b785571, 0x8c82, 0x11cf, 0xbc0c, 0x00aa00ac74f6

@@ -1,7 +1,8 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::ffi_types::{HRES, PVOID};
-use crate::ole::decl::{CLSID, ComPtr, HrResult};
+use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::OleIUnknown;
 use crate::vt::IUnknownVT;
@@ -31,8 +32,8 @@ impl ShlwapiIPersist for IPersist {}
 pub trait ShlwapiIPersist: OleIUnknown {
 	/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 	/// method.
-	fn GetClassID(&self) -> HrResult<CLSID> {
-		let mut clsid = CLSID::new(0, 0, 0, 0, 0);
+	fn GetClassID(&self) -> HrResult<co::CLSID> {
+		let mut clsid = co::CLSID::new(0, 0, 0, 0, 0);
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IPersistVT);
 			ok_to_hrresult(

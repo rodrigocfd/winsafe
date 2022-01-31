@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{co, ole};
-use crate::ole::decl::{CLSID, ComPtr, HrResult, IUnknown};
+use crate::ole::decl::{ComPtr, HrResult, IUnknown};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ComInterface;
 
@@ -16,10 +16,10 @@ use crate::prelude::ComInterface;
 ///
 /// ```rust,ignore
 /// use winsafe::prelude::*;
-/// use winsafe::{CLSID, co, CoCreateInstance, ITaskbarList};
+/// use winsafe::{co, CoCreateInstance, ITaskbarList};
 ///
 /// let obj = CoCreateInstance::<ITaskbarList>(
-///     &CLSID::TaskbarList,
+///     &co::CLSID::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
@@ -27,7 +27,7 @@ use crate::prelude::ComInterface;
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoCreateInstance<T>(
-	clsid: &CLSID,
+	clsid: &co::CLSID,
 	iunk_outer: Option<&mut IUnknown>,
 	cls_context: co::CLSCTX) -> HrResult<T>
 	where T: ComInterface,

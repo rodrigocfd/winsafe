@@ -31,10 +31,10 @@ pub struct IBaseFilterVT {
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{CLSID, co, CoCreateInstance, IBaseFilter};
+/// use winsafe::{co, CoCreateInstance, IBaseFilter};
 ///
 /// let vmr = CoCreateInstance::<IBaseFilter>(
-///     &CLSID::EnhancedVideoRenderer,
+///     &co::CLSID::EnhancedVideoRenderer,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;

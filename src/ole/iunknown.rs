@@ -1,7 +1,8 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::ffi_types::{HRES, PCVOID};
-use crate::ole::decl::{HrResult, IID};
+use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 
 /// A pointer to a COM virtual table.
@@ -22,7 +23,7 @@ impl ComPtr {
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ComInterface: From<ComPtr> {
 	/// The COM interface ID.
-	const IID: IID;
+	const IID: co::IID;
 }
 
 //------------------------------------------------------------------------------
