@@ -63,7 +63,7 @@ macro_rules! pub_struct_msg_char {
 		/// Return type: `()`.
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		pub struct $name {
-			pub char_code: u32,
+			pub char_code: u16,
 			pub repeat_count: u16,
 			pub scan_code: u8,
 			pub is_extended_key: bool,
