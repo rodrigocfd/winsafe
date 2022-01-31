@@ -1,3 +1,5 @@
+#![allow(unused_macros)]
+
 /// Builds one single FFI binding function.
 macro_rules! one_func {
 	($func:ident( $( $parm:ty ),* ) -> $ret:ty) => {

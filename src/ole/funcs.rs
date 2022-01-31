@@ -14,7 +14,7 @@ use crate::prelude::ComInterface;
 ///
 /// Instantiating an [`ITaskbarList`](crate::ITaskbarList) object:
 ///
-/// ```rust,no_run
+/// ```rust,ignore
 /// use winsafe::prelude::*;
 /// use winsafe::{CLSID, co, CoCreateInstance, ITaskbarList};
 ///

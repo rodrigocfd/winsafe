@@ -127,7 +127,7 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```rust,ignore
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HWND, IPicture};
 	///
@@ -175,7 +175,7 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```rust,ignore
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HWND, IPicture};
 	///

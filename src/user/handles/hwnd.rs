@@ -1031,23 +1031,38 @@ pub trait UserHwnd: Handle {
 	///
 	/// # Examples
 	///
-	/// Sending a [`lvm::SetItem`](crate::msg::lvm::SetItem) list view message,
-	/// which demands a reference to an [`LVITEM`](crate::LVITEM) object:
+	/// Sending a [`bm::GetImage`](crate::msg::bm::GetImage) button message,
+	/// which demands an image type parameter. Note that this specific message
+	/// can also return an error, which is handled with `?`:
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HWND, LVITEM, msg::lvm};
+	/// use winsafe::{co, HWND, msg::bm};
 	///
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
-	/// let mut lvi = LVITEM::default(); // object to be sent
-	/// lvi.mask = co::LVIF::IMAGE;
-	/// lvi.iImage = 3;
+	/// let bmp = hwnd.SendMessage(bm::GetImage {
+	///     img_type: co::IMAGE_TYPE::BITMAP,
+	/// })?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	///
-	/// hwnd.SendMessage(lvm::SetItem {
-	///     lvitem: &lvi,
-	/// });
+	/// Sending an [`em::CharFromPos`](crate::msg::em::CharFromPos) edit message,
+	/// which receives point coordinates and returns two values:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HWND, msg::em, POINT};
+	///
+	/// let hwnd: HWND; // initialized somewhere
+	/// # let hwnd = HWND::NULL;
+	///
+	/// let (char_pos, line_pos) = hwnd.SendMessage(
+	///     em::CharFromPos {
+	///         coords: POINT::new(12, 20),
+	///     },
+	/// );
 	/// ```
 	fn SendMessage<M>(self, msg: M) -> M::RetType
 		where M: MsgSend,

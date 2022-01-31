@@ -82,7 +82,7 @@
 //!
 //! This is equivalent to:
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use winsafe::prelude::*;
 //! use winsafe::HWND;
 //!
@@ -108,7 +108,7 @@
 //!
 //! Is equivalent to:
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use winsafe::prelude::*;
 //! use winsafe::PostQuitMessage;
 //!
@@ -143,7 +143,7 @@
 //!
 //! This is equivalent to:
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use winsafe::prelude::*;
 //! use winsafe::{co::MB, HWND};
 //!
@@ -183,7 +183,7 @@
 //!
 //! Is equivalent to:
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use winsafe::prelude::*;
 //! use winsafe::{RegisterClassEx, WNDCLASSEX, WString};
 //!
@@ -306,7 +306,7 @@ pub mod msg {
 	//! The message struct also defines the data type returned by `SendMessage`.
 	//! In the example below, `LVM_DELETEITEM` returns `WinResult<()>`.
 	//!
-	//! ```rust,no_run
+	//! ```rust,ignore
 	//! use winsafe::prelude::*;
 	//! use winsafe::{HWND, msg::lvm};
 	//!
