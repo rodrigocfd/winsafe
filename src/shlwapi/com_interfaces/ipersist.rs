@@ -24,7 +24,7 @@ pub struct IPersistVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
 pub struct IPersist(ComPtr);
 
-impl_iunknown!(IPersist, 0x0000010c, 0x0000, 0x0000, 0xc000, 0x000000000046);
+impl_iunknown!(IPersist, "0000010c-0000-0000-c000-000000000046");
 impl ShlwapiIPersist for IPersist {}
 
 /// [`IPersist`](crate::IPersist) methods from `shlwapi` feature.
@@ -33,7 +33,7 @@ pub trait ShlwapiIPersist: OleIUnknown {
 	/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 	/// method.
 	fn GetClassID(&self) -> HrResult<co::CLSID> {
-		let mut clsid = co::CLSID::new(0, 0, 0, 0, 0);
+		let mut clsid = co::CLSID::new("00000000-0000-0000-0000-000000000000");
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IPersistVT);
 			ok_to_hrresult(

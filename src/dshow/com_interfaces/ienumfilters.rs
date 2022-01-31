@@ -28,7 +28,7 @@ pub struct IEnumFiltersVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IEnumFilters(ComPtr);
 
-impl_iunknown!(IEnumFilters, 0x56a86893, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl_iunknown!(IEnumFilters, "56a86893-0ad4-11ce-b03a-0020af0ba770");
 impl DshowIEnumFilters for IEnumFilters {}
 
 /// [`IEnumFilters`](crate::IEnumFilters) methods from `dshow` feature.

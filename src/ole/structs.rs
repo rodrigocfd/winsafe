@@ -21,8 +21,8 @@ impl std::fmt::Display for GUID {
 }
 
 impl GUID {
-	/// Creates a new `GUID` from hex numbers, which can be copied straight from
-	/// standard `GUID` definitions.
+	/// Creates a new `GUID` from a representative hex string, which can be
+	/// copied straight from standard `GUID` declarations.
 	///
 	/// # Examples
 	///
@@ -30,16 +30,58 @@ impl GUID {
 	/// use winsafe::prelude::*;
 	/// use winsafe::GUID;
 	///
-	/// let g = GUID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
+	/// let g = GUID::new("00000000-0000-0000-c000-000000000046");
 	/// ```
-	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> GUID {
-		let mut guid = GUID {
-			data1: p1,
-			data2: p2,
-			data3: p3,
-			data4: ((p4 as u64) << 48) | p5,
-		};
-		guid.data4 = guid.data4.swap_bytes();
-		guid
+	pub const fn new(guid_str: &str) -> GUID {
+		if guid_str.len() != 36 {
+			panic!("Bad number of GUID chars.");
+		}
+
+		let chs = guid_str.as_bytes();
+		let p1 = parse_block([chs[0], chs[1], chs[2], chs[3], chs[4], chs[5], chs[6], chs[7]]);
+		let p2 = parse_block([chs[9], chs[10], chs[11], chs[12]]);
+		let p3 = parse_block([chs[14], chs[15], chs[16], chs[17]]);
+		let p4 = parse_block([chs[19], chs[20], chs[21], chs[22]]);
+		let p5 = parse_block([chs[24], chs[25], chs[26], chs[27], chs[28], chs[29],
+			chs[30], chs[31], chs[32], chs[33], chs[34], chs[35]]);
+
+		Self {
+			data1: p1 as _,
+			data2: p2 as _,
+			data3: p3 as _,
+			data4: ((p4 << 48) | p5).swap_bytes(),
+		}
+	}
+}
+
+const fn parse_block<const N: usize>(chars: [u8; N]) -> u64 {
+	let mut res: u64 = 0;
+	let mut idx: usize = 0;
+	while idx < N {
+		let ch = chars[idx];
+		if !valid_char(ch) {
+			panic!("Bad GUID char.");
+		}
+		res += char_to_num(ch) * 16_u64.pow((N - idx - 1) as _);
+		idx += 1;
+	}
+	res
+}
+
+const fn valid_char(ch: u8) -> bool {
+	(ch >= 48 && ch <= 57) // 0-9
+		|| (ch >= 65 && ch <= 70) // A-F
+		|| (ch >= 97 && ch <= 102) // a-f
+}
+
+const fn char_to_num(ch: u8) -> u64 {
+	if ch >= 48 && ch <= 57 {
+		ch as u64 - 48
+	} else if ch >= 65 && ch <= 70 {
+		ch as u64 - 65 + 10
+	} else if ch >= 97 && ch <= 102 {
+		ch as u64 - 97 + 10
+	} else {
+		panic!("Bad GUID char in conversion.");
 	}
 }

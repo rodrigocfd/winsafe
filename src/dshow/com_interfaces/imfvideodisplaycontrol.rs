@@ -48,7 +48,7 @@ pub struct IMFVideoDisplayControlVT {
 ///
 /// let get_svc: IMFGetService; // initialized somewhere
 /// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-/// # let get_svc = CoCreateInstance::<IMFGetService>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+/// # let get_svc = CoCreateInstance::<IMFGetService>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 ///
 /// let controller_evr = get_svc
 ///     .GetService::<IMFVideoDisplayControl>(
@@ -59,7 +59,7 @@ pub struct IMFVideoDisplayControlVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IMFVideoDisplayControl(ComPtr);
 
-impl_iunknown!(IMFVideoDisplayControl, 0xa490b1e4, 0xab84, 0x4d31, 0xa1b2, 0x181e03b1077a);
+impl_iunknown!(IMFVideoDisplayControl, "a490b1e4-ab84-4d31-a1b2-181e03b1077a");
 impl DshowIMFVideoDisplayControl for IMFVideoDisplayControl {}
 
 /// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl) methods from

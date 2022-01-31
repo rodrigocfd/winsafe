@@ -24,7 +24,7 @@ pub struct ISequentialStreamVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
 pub struct ISequentialStream(ComPtr);
 
-impl_iunknown!(ISequentialStream, 0x0c733a30, 0x2a1c, 0x11ce, 0xade5, 0x00aa0044773d);
+impl_iunknown!(ISequentialStream, "0c733a30-2a1c-11ce-ade5-00aa0044773d");
 impl ShlwapiISequentialStream for ISequentialStream {}
 
 /// [`ISequentialStream`](crate::ISequentialStream) methods from `shlwapi`

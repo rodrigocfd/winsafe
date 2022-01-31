@@ -32,7 +32,7 @@ pub struct IFilterGraphVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IFilterGraph(ComPtr);
 
-impl_iunknown!(IFilterGraph, 0x56a8689f, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl_iunknown!(IFilterGraph, "56a8689f-0ad4-11ce-b03a-0020af0ba770");
 impl DshowIFilterGraph for IFilterGraph {}
 
 /// [`IFilterGraph`](crate::IFilterGraph) methods methods from `dshow` feature.

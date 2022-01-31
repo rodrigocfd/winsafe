@@ -42,7 +42,7 @@ pub struct IFileSaveDialogVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct IFileSaveDialog(ComPtr);
 
-impl_iunknown!(IFileSaveDialog, 0x84bccd23, 0x5fde, 0x4cdb, 0xaea4, 0xaf64b83d78ab);
+impl_iunknown!(IFileSaveDialog, "84bccd23-5fde-4cdb-aea4-af64b83d78ab");
 impl ShellIModalWindow for IFileSaveDialog {}
 impl ShellIFileDialog for IFileSaveDialog {}
 impl ShellIFileSaveDialog for IFileSaveDialog {}

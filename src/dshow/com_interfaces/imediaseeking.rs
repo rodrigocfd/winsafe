@@ -47,7 +47,7 @@ pub struct IMediaSeekingVT {
 ///
 /// let graph_builder: IGraphBuilder; // initialized somewhere
 /// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-/// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+/// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 ///
 /// let media_seeking = graph_builder
 ///     .QueryInterface::<IMediaSeeking>()?;
@@ -56,7 +56,7 @@ pub struct IMediaSeekingVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IMediaSeeking(ComPtr);
 
-impl_iunknown!(IMediaSeeking, 0x36b73880, 0xc2c8, 0x11cf, 0x8b46, 0x00805f6cef60);
+impl_iunknown!(IMediaSeeking, "36b73880-c2c8-11cf-8b46-00805f6cef60");
 impl DshowIMediaSeeking for IMediaSeeking {}
 
 /// [`IMediaSeeking`](crate::IMediaSeeking) methods methods from `dshow`

@@ -45,7 +45,7 @@ pub struct IGraphBuilderVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IGraphBuilder(ComPtr);
 
-impl_iunknown!(IGraphBuilder, 0x56a868a9, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl_iunknown!(IGraphBuilder, "56a868a9-0ad4-11ce-b03a-0020af0ba770");
 impl DshowIFilterGraph for IGraphBuilder {}
 impl DshowIGraphBuilder for IGraphBuilder {}
 

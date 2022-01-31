@@ -32,7 +32,7 @@ pub struct IStreamVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
 pub struct IStream(ComPtr);
 
-impl_iunknown!(IStream, 0x0000000c, 0x0000, 0x0000, 0xc000, 0x000000000046);
+impl_iunknown!(IStream, "0000000c-0000-0000-c000-000000000046");
 impl ShlwapiISequentialStream for IStream {}
 impl ShlwapiIStream for IStream {}
 

@@ -33,7 +33,7 @@ pub struct IShellItemArrayVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct IShellItemArray(ComPtr);
 
-impl_iunknown!(IShellItemArray, 0xb63ea76d, 0x1f85, 0x456f, 0xa19c, 0x48159efa858b);
+impl_iunknown!(IShellItemArray, "b63ea76d-1f85-456f-a19c-48159efa858b");
 impl ShellIShellItemArray for IShellItemArray {}
 
 /// [`IShellItemArray`](crate::IShellItemArray) methods from `shell` feature.
@@ -56,7 +56,7 @@ pub trait ShellIShellItemArray: OleIUnknown {
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// for ish_item in ish_arr.iter()? {
 	///     let ish_item = ish_item?;
@@ -75,7 +75,7 @@ pub trait ShellIShellItemArray: OleIUnknown {
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let paths = ish_arr.iter()?
 	///     .map(|shi|

@@ -28,7 +28,7 @@ pub struct IDispatchVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub struct IDispatch(ComPtr);
 
-impl_iunknown!(IDispatch, 0x00020400, 0x0000, 0x0000, 0xc000, 0x000000000046);
+impl_iunknown!(IDispatch, "00020400-0000-0000-c000-000000000046");
 impl OleautIDispatch for IDispatch {}
 
 /// [`IDispatch`](crate::IDispatch) methods from `oleaut` feature.

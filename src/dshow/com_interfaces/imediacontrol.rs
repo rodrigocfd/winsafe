@@ -41,7 +41,7 @@ pub struct IMediaControlVT {
 ///
 /// let graph_builder: IGraphBuilder; // initialized somewhere
 /// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-/// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+/// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 ///
 /// let media_control = graph_builder
 ///     .QueryInterface::<IMediaControl>()?;
@@ -50,7 +50,7 @@ pub struct IMediaControlVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IMediaControl(ComPtr);
 
-impl_iunknown!(IMediaControl, 0x56a868b1, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl_iunknown!(IMediaControl, "56a868b1-0ad4-11ce-b03a-0020af0ba770");
 impl OleautIDispatch for IMediaControl {}
 impl DshowIMediaControl for IMediaControl {}
 

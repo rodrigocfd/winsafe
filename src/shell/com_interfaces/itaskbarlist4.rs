@@ -39,7 +39,7 @@ pub struct ITaskbarList4VT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct ITaskbarList4(ComPtr);
 
-impl_iunknown!(ITaskbarList4, 0xc43dc798, 0x95d1, 0x4bea, 0x9030, 0xbb99e2983a1a);
+impl_iunknown!(ITaskbarList4, "c43dc798-95d1-4bea-9030-bb99e2983a1a");
 impl ShellITaskbarList for ITaskbarList4 {}
 impl ShellITaskbarList2 for ITaskbarList4 {}
 impl ShellITaskbarList3 for ITaskbarList4 {}

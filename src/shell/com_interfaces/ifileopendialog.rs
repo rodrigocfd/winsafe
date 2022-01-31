@@ -39,7 +39,7 @@ pub struct IFileOpenDialogVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct IFileOpenDialog(ComPtr);
 
-impl_iunknown!(IFileOpenDialog, 0xd57c7288, 0xd4ad, 0x4768, 0xbe02, 0x9d969532d960);
+impl_iunknown!(IFileOpenDialog, "d57c7288-d4ad-4768-be02-9d969532d960");
 impl ShellIModalWindow for IFileOpenDialog {}
 impl ShellIFileDialog for IFileOpenDialog {}
 impl ShellIFileOpenDialog for IFileOpenDialog {}
@@ -61,7 +61,7 @@ pub trait ShellIFileOpenDialog: ShellIFileDialog {
 	///
 	/// let fo: IFileOpenDialog; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let fo = CoCreateInstance::<IFileOpenDialog>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let fo = CoCreateInstance::<IFileOpenDialog>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let paths = fo.GetResults()?.iter()?
 	///     .map(|shi|

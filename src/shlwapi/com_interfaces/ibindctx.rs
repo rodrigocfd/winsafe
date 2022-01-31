@@ -33,7 +33,7 @@ pub struct IBindCtxVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
 pub struct IBindCtx(ComPtr);
 
-impl_iunknown!(IBindCtx, 0x0000000e, 0x0000, 0x0000, 0xc000, 0x000000000046);
+impl_iunknown!(IBindCtx, "0000000e-0000-0000-c000-000000000046");
 impl ShlwapiIBindCtx for IBindCtx {}
 
 /// [`IBindCtx`](crate::IBindCtx) methods from `shlwapi` feature.

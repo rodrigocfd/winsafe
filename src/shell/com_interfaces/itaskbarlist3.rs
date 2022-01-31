@@ -51,7 +51,7 @@ pub struct ITaskbarList3VT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct ITaskbarList3(ComPtr);
 
-impl_iunknown!(ITaskbarList3, 0xea1afb91, 0x9e28, 0x4b86, 0x90e9, 0x9e9f8a5eefaf);
+impl_iunknown!(ITaskbarList3, "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf");
 impl ShellITaskbarList for ITaskbarList3 {}
 impl ShellITaskbarList2 for ITaskbarList3 {}
 impl ShellITaskbarList3 for ITaskbarList3 {}
@@ -114,7 +114,7 @@ pub trait ShellITaskbarList3: ShellITaskbarList2 {
 	///
 	/// let tbar: ITaskbarList3; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let tbar = CoCreateInstance::<ITaskbarList3>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let tbar = CoCreateInstance::<ITaskbarList3>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	/// let hwnd: HWND;
 	/// # let hwnd = HWND::NULL;
 	///

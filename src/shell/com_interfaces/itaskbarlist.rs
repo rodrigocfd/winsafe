@@ -42,7 +42,7 @@ pub struct ITaskbarListVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct ITaskbarList(ComPtr);
 
-impl_iunknown!(ITaskbarList, 0x56fdf342, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090);
+impl_iunknown!(ITaskbarList, "56fdf342-fd6d-11d0-958a-006097c9a090");
 impl ShellITaskbarList for ITaskbarList {}
 
 /// [`ITaskbarList`](crate::ITaskbarList) methods from `shell` feature.

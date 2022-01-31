@@ -43,7 +43,7 @@ pub struct IBaseFilterVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IBaseFilter(ComPtr);
 
-impl_iunknown!(IBaseFilter, 0x56a86895, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl_iunknown!(IBaseFilter, "56a86895-0ad4-11ce-b03a-0020af0ba770");
 impl ShlwapiIPersist for IBaseFilter {}
 impl DshowIMediaFilter for IBaseFilter {}
 impl DshowIBaseFilter for IBaseFilter {}

@@ -26,7 +26,7 @@ pub struct IFileSinkFilterVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IFileSinkFilter(ComPtr);
 
-impl_iunknown!(IFileSinkFilter, 0xa2104830, 0x7c70, 0x11cf, 0x8bce, 0x00aa00a3f1a6);
+impl_iunknown!(IFileSinkFilter, "a2104830-7c70-11cf-8bce-00aa00a3f1a6");
 impl DshowIFileSinkFilter for IFileSinkFilter {}
 
 /// [`IFileSinkFilter`](crate::IFileSinkFilter) methods from `dshow` feature.
@@ -49,7 +49,7 @@ pub trait DshowIFileSinkFilter: OleIUnknown {
 	///
 	/// let sinkf: IFileSinkFilter; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let sinkf = CoCreateInstance::<IFileSinkFilter>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let sinkf = CoCreateInstance::<IFileSinkFilter>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let mut ammt = AM_MEDIA_TYPE::default();
 	/// unsafe {

@@ -3,32 +3,32 @@
 use crate::co::CLSID;
 
 const_guid_values! { CLSID: "shell";
-	FileOpenDialog 0xdc1c5a9c, 0xe88a, 0x4dde, 0xa5a1, 0x60f82a20aef7
-	FileSaveDialog 0xc0b4e2f3, 0xba21, 0x4773, 0x8dba, 0x335ec946eb8b
-	TaskbarList 0x56fdf344, 0xfd6d, 0x11d0, 0x958a, 0x006097c9a090
+	FileOpenDialog "dc1c5a9c-e88a-4dde-a5a1-60f82a20aef7"
+	FileSaveDialog "c0b4e2f3-ba21-4773-8dba-335ec946eb8b"
+	TaskbarList "56fdf344-fd6d-11d0-958a-006097c9a090"
 }
 
 const_guid! { BHID: "shell";
 	/// [`IShellItem::BindToHandler`](crate::prelude::ShellIShellItem::BindToHandler)
 	/// `bhid` (`GUID`).
 	=>
-	SFObject 0x3981e224, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
-	SFUIObject 0x3981e225, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
-	SFViewObject 0x3981e226, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
-	Storage 0x3981e227, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
-	Stream 0x1cebb3ab, 0x7c10, 0x499a, 0xa417, 0x92ca16c4cb83
-	RandomAccessStream 0xf16fc93b, 0x77ae, 0x4cfe, 0xbda7, 0xa866eea6878d
-	LinkTargetItem 0x3981e228, 0xf559, 0x11d3, 0x8e3a, 0x00c04f6837d5
-	StorageEnum 0x4621a4e3, 0xf0d6, 0x4773, 0x8a9c, 0x46e77b174840
-	Transfer 0xd5e346a1, 0xf753, 0x4932, 0xb403, 0x4574800e2498
-	PropertyStore 0x0384e1a4, 0x1523, 0x439c, 0xa4c8, 0xab911052f586
-	ThumbnailHandler 0x7b2e650a, 0x8e20, 0x4f4a, 0xb09e, 0x6597afc72fb0
-	EnumItems 0x94f60519, 0x2850, 0x4924, 0xaa5a, 0xd15e84868039
-	DataObject 0xb8c0bd9f, 0xed24, 0x455c, 0x83e6, 0xd5390c4fe8c4
-	AssociationArray 0xbea9ef17, 0x82f1, 0x4f60, 0x9284, 0x4f8db75c3be9
-	Filter 0x38d08778, 0xf557, 0x4690, 0x9ebf, 0xba54706ad8f7
-	EnumAssocHandlers 0xb8ab0b9c, 0xc2ec, 0x4f7a, 0x918d, 0x314900e6280a
-	FilePlaceholder 0x8677dceb, 0xaae0, 0x4005, 0x8d3d, 0x547fa852f825
+	SFObject "3981e224-f559-11d3-8e3a-00c04f6837d5"
+	SFUIObject "3981e225-f559-11d3-8e3a-00c04f6837d5"
+	SFViewObject "3981e226-f559-11d3-8e3a-00c04f6837d5"
+	Storage "3981e227-f559-11d3-8e3a-00c04f6837d5"
+	Stream "1cebb3ab-7c10-499a-a417-92ca16c4cb83"
+	RandomAccessStream "f16fc93b-77ae-4cfe-bda7-a866eea6878d"
+	LinkTargetItem "3981e228-f559-11d3-8e3a-00c04f6837d5"
+	StorageEnum "4621a4e3-f0d6-4773-8a9c-46e77b174840"
+	Transfer "d5e346a1-f753-4932-b403-4574800e2498"
+	PropertyStore "0384e1a4-1523-439c-a4c8-ab911052f586"
+	ThumbnailHandler "7b2e650a-8e20-4f4a-b09e-6597afc72fb0"
+	EnumItems "94f60519-2850-4924-aa5a-d15e84868039"
+	DataObject "b8c0bd9f-ed24-455c-83e6-d5390c4fe8c4"
+	AssociationArray "bea9ef17-82f1-4f60-9284-4f8db75c3be9"
+	Filter "38d08778-f557-4690-9ebf-ba54706ad8f7"
+	EnumAssocHandlers "b8ab0b9c-c2ec-4f7a-918d-314900e6280a"
+	FilePlaceholder "8677dceb-aae0-4005-8d3d-547fa852f825"
 }
 
 const_guid! { KNOWNFOLDERID: "shell";
@@ -36,145 +36,145 @@ const_guid! { KNOWNFOLDERID: "shell";
 	/// [system folders](https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid)
 	/// (`GUID`).
 	=>
-	NetworkFolder 0xd20beec4, 0x5ca8, 0x4905, 0xae3b, 0xbf251ea09b53
-	ComputerFolder 0x0ac0837c, 0xbbf8, 0x452a, 0x850d, 0x79d08e667ca7
-	InternetFolder 0x4d9f7874, 0x4e0c, 0x4904, 0x967b, 0x40b0d20c3e4b
-	ControlPanelFolder 0x82a74aeb, 0xaeb4, 0x465c, 0xa014, 0xd097ee346d63
-	PrintersFolder 0x76fc4e2d, 0xd6ad, 0x4519, 0xa663, 0x37bd56068185
-	SyncManagerFolder 0x43668bf8, 0xc14e, 0x49b2, 0x97c9, 0x747784d784b7
-	SyncSetupFolder 0x0f214138, 0xb1d3, 0x4a90, 0xbba9, 0x27cbc0c5389a
-	ConflictFolder 0x4bfefb45, 0x347d, 0x4006, 0xa5be, 0xac0cb0567192
-	SyncResultsFolder 0x289a9a43, 0xbe44, 0x4057, 0xa41b, 0x587a76d7e7f9
-	RecycleBinFolder 0xb7534046, 0x3ecb, 0x4c18, 0xbe4e, 0x64cd4cb7d6ac
-	ConnectionsFolder 0x6f0cd92b, 0x2e97, 0x45d1, 0x88ff, 0xb0d186b8dedd
-	Fonts 0xfd228cb7, 0xae11, 0x4ae3, 0x864c, 0x16f3910ab8fe
-	Desktop 0xb4bfcc3a, 0xdb2c, 0x424c, 0xb029, 0x7fe99a87c641
-	Startup 0xb97d20bb, 0xf46a, 0x4c97, 0xba10, 0x5e3608430854
-	Programs 0xa77f5d77, 0x2e2b, 0x44c3, 0xa6a2, 0xaba601054a51
-	StartMenu 0x625b53c3, 0xab48, 0x4ec1, 0xba1f, 0xa1ef4146fc19
-	Recent 0xae50c081, 0xebd2, 0x438a, 0x8655, 0x8a092e34987a
-	SendTo 0x8983036c, 0x27c0, 0x404b, 0x8f08, 0x102d10dcfd74
-	Documents 0xfdd39ad0, 0x238f, 0x46af, 0xadb4, 0x6c85480369c7
-	Favorites 0x1777f761, 0x68ad, 0x4d8a, 0x87bd, 0x30b759fa33dd
-	NetHood 0xc5abbf53, 0xe17f, 0x4121, 0x8900, 0x86626fc2c973
-	PrintHood 0x9274bd8d, 0xcfd1, 0x41c3, 0xb35e, 0xb13f55a758f4
-	Templates 0xa63293e8, 0x664e, 0x48db, 0xa079, 0xdf759e0509f7
-	CommonStartup 0x82a5ea35, 0xd9cd, 0x47c5, 0x9629, 0xe15d2f714e6e
-	CommonPrograms 0x0139d44e, 0x6afe, 0x49f2, 0x8690, 0x3dafcae6ffb8
-	CommonStartMenu 0xa4115719, 0xd62e, 0x491d, 0xaa7c, 0xe74b8be3b067
-	PublicDesktop 0xc4aa340d, 0xf20f, 0x4863, 0xafef, 0xf87ef2e6ba25
-	ProgramData 0x62ab5d82, 0xfdc1, 0x4dc3, 0xa9dd, 0x070d1d495d97
-	CommonTemplates 0xb94237e7, 0x57ac, 0x4347, 0x9151, 0xb08c6c32d1f7
-	PublicDocuments 0xed4824af, 0xdce4, 0x45a8, 0x81e2, 0xfc7965083634
-	RoamingAppData 0x3eb685db, 0x65f9, 0x4cf6, 0xa03a, 0xe3ef65729f3d
-	LocalAppData 0xf1b32785, 0x6fba, 0x4fcf, 0x9d55, 0x7b8e7f157091
-	LocalAppDataLow 0xa520a1a4, 0x1780, 0x4ff6, 0xbd18, 0x167343c5af16
-	InternetCache 0x352481e8, 0x33be, 0x4251, 0xba85, 0x6007caedcf9d
-	Cookies 0x2b0f765d, 0xc0e9, 0x4171, 0x908e, 0x08a611b84ff6
-	History 0xd9dc8a3b, 0xb784, 0x432e, 0xa781, 0x5a1130a75963
-	System 0x1ac14e77, 0x02e7, 0x4e5d, 0xb744, 0x2eb1ae5198b7
-	SystemX86 0xd65231b0, 0xb2f1, 0x4857, 0xa4ce, 0xa8e7c6ea7d27
-	Windows 0xf38bf404, 0x1d43, 0x42f2, 0x9305, 0x67de0b28fc23
-	Profile 0x5e6c858f, 0x0e22, 0x4760, 0x9afe, 0xea3317b67173
-	Pictures 0x33e28130, 0x4e1e, 0x4676, 0x835a, 0x98395c3bc3bb
-	ProgramFilesX86 0x7c5a40ef, 0xa0fb, 0x4bfc, 0x874a, 0xc0f2e0b9fa8e
-	ProgramFilesCommonX86 0xde974d24, 0xd9c6, 0x4d3e, 0xbf91, 0xf4455120b917
-	ProgramFilesX64 0x6d809377, 0x6af0, 0x444b, 0x8957, 0xa3773f02200e
-	ProgramFilesCommonX64 0x6365d5a7, 0x0f0d, 0x45e5, 0x87f6, 0x0da56b6a4f7d
-	ProgramFiles 0x905e63b6, 0xc1bf, 0x494e, 0xb29c, 0x65b732d3d21a
-	ProgramFilesCommon 0xf7f1ed05, 0x9f6d, 0x47a2, 0xaaae, 0x29d317c6f066
-	UserProgramFiles 0x5cd7aee2, 0x2219, 0x4a67, 0xb85d, 0x6c9ce15660cb
-	UserProgramFilesCommon 0xbcbd3057, 0xca5c, 0x4622, 0xb42d, 0xbc56db0ae516
-	AdminTools 0x724ef170, 0xa42d, 0x4fef, 0x9f26, 0xb60e846fba4f
-	CommonAdminTools 0xd0384e7d, 0xbac3, 0x4797, 0x8f14, 0xcba229b392b5
-	Music 0x4bd8d571, 0x6d19, 0x48d3, 0xbe97, 0x422220080e43
-	Videos 0x18989b1d, 0x99b5, 0x455b, 0x841c, 0xab7c74e4ddfc
-	Ringtones 0xc870044b, 0xf49e, 0x4126, 0xa9c3, 0xb52a1ff411e8
-	PublicPictures 0xb6ebfb86, 0x6907, 0x413c, 0x9af7, 0x4fc2abf07cc5
-	PublicMusic 0x3214fab5, 0x9757, 0x4298, 0xbb61, 0x92a9deaa44ff
-	PublicVideos 0x2400183a, 0x6185, 0x49fb, 0xa2d8, 0x4a392a602ba3
-	PublicRingtones 0xe555ab60, 0x153b, 0x4d17, 0x9f04, 0xa5fe99fc15ec
-	ResourceDir 0x8ad10c31, 0x2adb, 0x4296, 0xa8f7, 0xe4701232c972
-	LocalizedResourcesDir 0x2a00375e, 0x224c, 0x49de, 0xb8d1, 0x440df7ef3ddc
-	CommonOEMLinks 0xc1bae2d0, 0x10df, 0x4334, 0xbedd, 0x7aa20b227a9d
-	CDBurning 0x9e52ab10, 0xf80d, 0x49df, 0xacb8, 0x4330f5687855
-	UserProfiles 0x0762d272, 0xc50a, 0x4bb0, 0xa382, 0x697dcd729b80
-	Playlists 0xde92c1c7, 0x837f, 0x4f69, 0xa3bb, 0x86e631204a23
-	SamplePlaylists 0x15ca69b3, 0x30ee, 0x49c1, 0xace1, 0x6b5ec372afb5
-	SampleMusic 0xb250c668, 0xf57d, 0x4ee1, 0xa63c, 0x290ee7d1aa1f
-	SamplePictures 0xc4900540, 0x2379, 0x4c75, 0x844b, 0x64e6faf8716b
-	SampleVideos 0x859ead94, 0x2e85, 0x48ad, 0xa71a, 0x0969cb56a6cd
-	PhotoAlbums 0x69d2cf90, 0xfc33, 0x4fb7, 0x9a0c, 0xebb0f0fcb43c
-	Public 0xdfdf76a2, 0xc82a, 0x4d63, 0x906a, 0x5644ac457385
-	ChangeRemovePrograms 0xdf7266ac, 0x9274, 0x4867, 0x8d55, 0x3bd661de872d
-	AppUpdates 0xa305ce99, 0xf527, 0x492b, 0x8b1a, 0x7e76fa98d6e4
-	AddNewPrograms 0xde61d971, 0x5ebc, 0x4f02, 0xa3a9, 0x6c82895e5c04
-	Downloads 0x374de290, 0x123f, 0x4565, 0x9164, 0x39c4925e467b
-	PublicDownloads 0x3d644c9b, 0x1fb8, 0x4f30, 0x9b45, 0xf670235f79c0
-	SavedSearches 0x7d1d3a04, 0xdebb, 0x4115, 0x95cf, 0x2f29da2920da
-	QuickLaunch 0x52a4f021, 0x7b75, 0x48a9, 0x9f6b, 0x4b87a210bc8f
-	Contacts 0x56784854, 0xc6cb, 0x462b, 0x8169, 0x88e350acb882
-	SidebarParts 0xa75d362e, 0x50fc, 0x4fb7, 0xac2c, 0xa8beaa314493
-	SidebarDefaultParts 0x7b396e54, 0x9ec5, 0x4300, 0xbe0a, 0x2482ebae1a26
-	PublicGameTasks 0xdebf2536, 0xe1a8, 0x4c59, 0xb6a2, 0x414586476aea
-	GameTasks 0x054fae61, 0x4dd8, 0x4787, 0x80b6, 0x090220c4b700
-	SavedGames 0x4c5c32ff, 0xbb9d, 0x43b0, 0xb5b4, 0x2d72e54eaaa4
-	Games 0xcac52c1a, 0xb53d, 0x4edc, 0x92d7, 0x6b2e8ac19434
-	SEARCH_MAPI 0x98ec0e18, 0x2098, 0x4d44, 0x8644, 0x66979315a281
-	SEARCH_CSC 0xee32e446, 0x31ca, 0x4aba, 0x814f, 0xa5ebd2fd6d5e
-	Links 0xbfb9d5e0, 0xc6a9, 0x404c, 0xb2b2, 0xae6db6af4968
-	UsersFiles 0xf3ce0f7c, 0x4901, 0x4acc, 0x8648, 0xd5d44b04ef8f
-	UsersLibraries 0xa302545d, 0xdeff, 0x464b, 0xabe8, 0x61c8648d939b
-	SearchHome 0x190337d1, 0xb8ca, 0x4121, 0xa639, 0x6d472d16972a
-	OriginalImages 0x2c36c0aa, 0x5812, 0x4b87, 0xbfd0, 0x4cd0dfb19b39
-	DocumentsLibrary 0x7b0db17d, 0x9cd2, 0x4a93, 0x9733, 0x46cc89022e7c
-	MusicLibrary 0x2112ab0a, 0xc86a, 0x4ffe, 0xa368, 0x0de96e47012e
-	PicturesLibrary 0xa990ae9f, 0xa03b, 0x4e80, 0x94bc, 0x9912d7504104
-	VideosLibrary 0x491e922f, 0x5643, 0x4af4, 0xa7eb, 0x4e7a138d8174
-	RecordedTVLibrary 0x1a6fdba2, 0xf42d, 0x4358, 0xa798, 0xb74d745926c5
-	HomeGroup 0x52528a6b, 0xb9e3, 0x4add, 0xb60d, 0x588c2dba842d
-	HomeGroupCurrentUser 0x9b74b6a3, 0x0dfd, 0x4f11, 0x9e78, 0x5f7800f2e772
-	DeviceMetadataStore 0x5ce4a5e9, 0xe4eb, 0x479d, 0xb89f, 0x130c02886155
-	Libraries 0x1b3ea5dc, 0xb587, 0x4786, 0xb4ef, 0xbd1dc332aeae
-	PublicLibraries 0x48daf80b, 0xe6cf, 0x4f4e, 0xb800, 0x0e69d84ee384
-	UserPinned 0x9e3995ab, 0x1f9c, 0x4f13, 0xb827, 0x48b24b6c7174
-	ImplicitAppShortcuts 0xbcb5256f, 0x79f6, 0x4cee, 0xb725, 0xdc34e402fd46
-	AccountPictures 0x008ca0b1, 0x55b4, 0x4c56, 0xb8a8, 0x4de4b299d3be
-	PublicUserTiles 0x0482af6c, 0x08f1, 0x4c34, 0x8c90, 0xe17ec98b1e17
-	AppsFolder 0x1e87508d, 0x89c2, 0x42f0, 0x8a7e, 0x645a0f50ca58
-	StartMenuAllPrograms 0xf26305ef, 0x6948, 0x40b9, 0xb255, 0x81453d09c785
-	CommonStartMenuPlaces 0xa440879f, 0x87a0, 0x4f7d, 0xb700, 0x0207b966194a
-	ApplicationShortcuts 0xa3918781, 0xe5f2, 0x4890, 0xb3d9, 0xa7e54332328c
-	RoamingTiles 0x00bcfc5a, 0xed94, 0x4e48, 0x96a1, 0x3f6217f21990
-	RoamedTileImages 0xaaa8d5a5, 0xf1d6, 0x4259, 0xbaa8, 0x78e7ef60835e
-	Screenshots 0xb7bede81, 0xdf94, 0x4682, 0xa7d8, 0x57a52620b86f
-	CameraRoll 0xab5fb87b, 0x7ce2, 0x4f83, 0x915d, 0x550846c9537b
-	SkyDrive 0xa52bba46, 0xe9e1, 0x435f, 0xb3d9, 0x28daa648c0f6
-	OneDrive 0xa52bba46, 0xe9e1, 0x435f, 0xb3d9, 0x28daa648c0f6
-	SkyDriveDocuments 0x24d89e24, 0x2f19, 0x4534, 0x9dde, 0x6a6671fbb8fe
-	SkyDrivePictures 0x339719b5, 0x8c47, 0x4894, 0x94c2, 0xd8f77add44a6
-	SkyDriveMusic 0xc3f2459e, 0x80d6, 0x45dc, 0xbfef, 0x1f769f2be730
-	SkyDriveCameraRoll 0x767e6811, 0x49cb, 0x4273, 0x87c2, 0x20f355e1085b
-	SearchHistory 0x0d4c3db6, 0x03a3, 0x462f, 0xa0e6, 0x08924c41b5d4
-	SearchTemplates 0x7e636bfe, 0xdfa9, 0x4d5e, 0xb456, 0xd7b39851d8a9
-	CameraRollLibrary 0x2b20df75, 0x1eda, 0x4039, 0x8097, 0x38798227d5b7
-	SavedPictures 0x3b193882, 0xd3ad, 0x4eab, 0x965a, 0x69829d1fb59f
-	SavedPicturesLibrary 0xe25b5812, 0xbe88, 0x4bd9, 0x94b0, 0x29233477b6c3
-	RetailDemo 0x12d4c69e, 0x24ad, 0x4923, 0xbe19, 0x31321c43a767
-	Device 0x1c2ac1dc, 0x4358, 0x4b6c, 0x9733, 0xaf21156576f0
-	DevelopmentFiles 0xdbe8e08e, 0x3053, 0x4bbc, 0xb183, 0x2a7b2b191e59
-	Objects3D 0x31c0dd25, 0x9439, 0x4f12, 0xbf41, 0x7ff4eda38722
-	AppCaptures 0xedc0fe71, 0x98d8, 0x4f4a, 0xb920, 0xc8dc133cb165
-	LocalDocuments 0xf42ee2d3, 0x909f, 0x4907, 0x8871, 0x4c22fc0bf756
-	LocalPictures 0x0ddd015d, 0xb06c, 0x45d5, 0x8c4c, 0xf59713854639
-	LocalVideos 0x35286a68, 0x3c57, 0x41a1, 0xbbb1, 0x0eae73d76c95
-	LocalMusic 0xa0c69a99, 0x21c8, 0x4671, 0x8703, 0x7934162fcf1d
-	LocalDownloads 0x7d83ee9b, 0x2244, 0x4e70, 0xb1f5, 0x5393042af1e4
-	RecordedCalls 0x2f8b40c2, 0x83ed, 0x48ee, 0xb383, 0xa1f157ec6f9a
-	AllAppMods 0x7ad67899, 0x66af, 0x43ba, 0x9156, 0x6aad42e6c596
-	CurrentAppMods 0x3db40b20, 0x2a30, 0x4dbe, 0x917e, 0x771dd21dd099
-	AppDataDesktop 0xb2c5e279, 0x7add, 0x439f, 0xb28c, 0xc41fe1bbf672
-	AppDataDocuments 0x7be16610, 0x1f7f, 0x44ac, 0xbff0, 0x83e15f2ffca1
-	AppDataFavorites 0x7cfbefbc, 0xde1f, 0x45aa, 0xb843, 0xa542ac536cc9
-	AppDataProgramData 0x559d40a3, 0xa036, 0x40fa, 0xaf61, 0x84cb430a4d34
+	NetworkFolder "d20beec4-5ca8-4905-ae3b-bf251ea09b53"
+	ComputerFolder "0ac0837c-bbf8-452a-850d-79d08e667ca7"
+	InternetFolder "4d9f7874-4e0c-4904-967b-40b0d20c3e4b"
+	ControlPanelFolder "82a74aeb-aeb4-465c-a014-d097ee346d63"
+	PrintersFolder "76fc4e2d-d6ad-4519-a663-37bd56068185"
+	SyncManagerFolder "43668bf8-c14e-49b2-97c9-747784d784b7"
+	SyncSetupFolder "0f214138-b1d3-4a90-bba9-27cbc0c5389a"
+	ConflictFolder "4bfefb45-347d-4006-a5be-ac0cb0567192"
+	SyncResultsFolder "289a9a43-be44-4057-a41b-587a76d7e7f9"
+	RecycleBinFolder "b7534046-3ecb-4c18-be4e-64cd4cb7d6ac"
+	ConnectionsFolder "6f0cd92b-2e97-45d1-88ff-b0d186b8dedd"
+	Fonts "fd228cb7-ae11-4ae3-864c-16f3910ab8fe"
+	Desktop "b4bfcc3a-db2c-424c-b029-7fe99a87c641"
+	Startup "b97d20bb-f46a-4c97-ba10-5e3608430854"
+	Programs "a77f5d77-2e2b-44c3-a6a2-aba601054a51"
+	StartMenu "625b53c3-ab48-4ec1-ba1f-a1ef4146fc19"
+	Recent "ae50c081-ebd2-438a-8655-8a092e34987a"
+	SendTo "8983036c-27c0-404b-8f08-102d10dcfd74"
+	Documents "fdd39ad0-238f-46af-adb4-6c85480369c7"
+	Favorites "1777f761-68ad-4d8a-87bd-30b759fa33dd"
+	NetHood "c5abbf53-e17f-4121-8900-86626fc2c973"
+	PrintHood "9274bd8d-cfd1-41c3-b35e-b13f55a758f4"
+	Templates "a63293e8-664e-48db-a079-df759e0509f7"
+	CommonStartup "82a5ea35-d9cd-47c5-9629-e15d2f714e6e"
+	CommonPrograms "0139d44e-6afe-49f2-8690-3dafcae6ffb8"
+	CommonStartMenu "a4115719-d62e-491d-aa7c-e74b8be3b067"
+	PublicDesktop "c4aa340d-f20f-4863-afef-f87ef2e6ba25"
+	ProgramData "62ab5d82-fdc1-4dc3-a9dd-070d1d495d97"
+	CommonTemplates "b94237e7-57ac-4347-9151-b08c6c32d1f7"
+	PublicDocuments "ed4824af-dce4-45a8-81e2-fc7965083634"
+	RoamingAppData "3eb685db-65f9-4cf6-a03a-e3ef65729f3d"
+	LocalAppData "f1b32785-6fba-4fcf-9d55-7b8e7f157091"
+	LocalAppDataLow "a520a1a4-1780-4ff6-bd18-167343c5af16"
+	InternetCache "352481e8-33be-4251-ba85-6007caedcf9d"
+	Cookies "2b0f765d-c0e9-4171-908e-08a611b84ff6"
+	History "d9dc8a3b-b784-432e-a781-5a1130a75963"
+	System "1ac14e77-02e7-4e5d-b744-2eb1ae5198b7"
+	SystemX86 "d65231b0-b2f1-4857-a4ce-a8e7c6ea7d27"
+	Windows "f38bf404-1d43-42f2-9305-67de0b28fc23"
+	Profile "5e6c858f-0e22-4760-9afe-ea3317b67173"
+	Pictures "33e28130-4e1e-4676-835a-98395c3bc3bb"
+	ProgramFilesX86 "7c5a40ef-a0fb-4bfc-874a-c0f2e0b9fa8e"
+	ProgramFilesCommonX86 "de974d24-d9c6-4d3e-bf91-f4455120b917"
+	ProgramFilesX64 "6d809377-6af0-444b-8957-a3773f02200e"
+	ProgramFilesCommonX64 "6365d5a7-0f0d-45e5-87f6-0da56b6a4f7d"
+	ProgramFiles "905e63b6-c1bf-494e-b29c-65b732d3d21a"
+	ProgramFilesCommon "f7f1ed05-9f6d-47a2-aaae-29d317c6f066"
+	UserProgramFiles "5cd7aee2-2219-4a67-b85d-6c9ce15660cb"
+	UserProgramFilesCommon "bcbd3057-ca5c-4622-b42d-bc56db0ae516"
+	AdminTools "724ef170-a42d-4fef-9f26-b60e846fba4f"
+	CommonAdminTools "d0384e7d-bac3-4797-8f14-cba229b392b5"
+	Music "4bd8d571-6d19-48d3-be97-422220080e43"
+	Videos "18989b1d-99b5-455b-841c-ab7c74e4ddfc"
+	Ringtones "c870044b-f49e-4126-a9c3-b52a1ff411e8"
+	PublicPictures "b6ebfb86-6907-413c-9af7-4fc2abf07cc5"
+	PublicMusic "3214fab5-9757-4298-bb61-92a9deaa44ff"
+	PublicVideos "2400183a-6185-49fb-a2d8-4a392a602ba3"
+	PublicRingtones "e555ab60-153b-4d17-9f04-a5fe99fc15ec"
+	ResourceDir "8ad10c31-2adb-4296-a8f7-e4701232c972"
+	LocalizedResourcesDir "2a00375e-224c-49de-b8d1-440df7ef3ddc"
+	CommonOEMLinks "c1bae2d0-10df-4334-bedd-7aa20b227a9d"
+	CDBurning "9e52ab10-f80d-49df-acb8-4330f5687855"
+	UserProfiles "0762d272-c50a-4bb0-a382-697dcd729b80"
+	Playlists "de92c1c7-837f-4f69-a3bb-86e631204a23"
+	SamplePlaylists "15ca69b3-30ee-49c1-ace1-6b5ec372afb5"
+	SampleMusic "b250c668-f57d-4ee1-a63c-290ee7d1aa1f"
+	SamplePictures "c4900540-2379-4c75-844b-64e6faf8716b"
+	SampleVideos "859ead94-2e85-48ad-a71a-0969cb56a6cd"
+	PhotoAlbums "69d2cf90-fc33-4fb7-9a0c-ebb0f0fcb43c"
+	Public "dfdf76a2-c82a-4d63-906a-5644ac457385"
+	ChangeRemovePrograms "df7266ac-9274-4867-8d55-3bd661de872d"
+	AppUpdates "a305ce99-f527-492b-8b1a-7e76fa98d6e4"
+	AddNewPrograms "de61d971-5ebc-4f02-a3a9-6c82895e5c04"
+	Downloads "374de290-123f-4565-9164-39c4925e467b"
+	PublicDownloads "3d644c9b-1fb8-4f30-9b45-f670235f79c0"
+	SavedSearches "7d1d3a04-debb-4115-95cf-2f29da2920da"
+	QuickLaunch "52a4f021-7b75-48a9-9f6b-4b87a210bc8f"
+	Contacts "56784854-c6cb-462b-8169-88e350acb882"
+	SidebarParts "a75d362e-50fc-4fb7-ac2c-a8beaa314493"
+	SidebarDefaultParts "7b396e54-9ec5-4300-be0a-2482ebae1a26"
+	PublicGameTasks "debf2536-e1a8-4c59-b6a2-414586476aea"
+	GameTasks "054fae61-4dd8-4787-80b6-090220c4b700"
+	SavedGames "4c5c32ff-bb9d-43b0-b5b4-2d72e54eaaa4"
+	Games "cac52c1a-b53d-4edc-92d7-6b2e8ac19434"
+	SEARCH_MAPI "98ec0e18-2098-4d44-8644-66979315a281"
+	SEARCH_CSC "ee32e446-31ca-4aba-814f-a5ebd2fd6d5e"
+	Links "bfb9d5e0-c6a9-404c-b2b2-ae6db6af4968"
+	UsersFiles "f3ce0f7c-4901-4acc-8648-d5d44b04ef8f"
+	UsersLibraries "a302545d-deff-464b-abe8-61c8648d939b"
+	SearchHome "190337d1-b8ca-4121-a639-6d472d16972a"
+	OriginalImages "2c36c0aa-5812-4b87-bfd0-4cd0dfb19b39"
+	DocumentsLibrary "7b0db17d-9cd2-4a93-9733-46cc89022e7c"
+	MusicLibrary "2112ab0a-c86a-4ffe-a368-0de96e47012e"
+	PicturesLibrary "a990ae9f-a03b-4e80-94bc-9912d7504104"
+	VideosLibrary "491e922f-5643-4af4-a7eb-4e7a138d8174"
+	RecordedTVLibrary "1a6fdba2-f42d-4358-a798-b74d745926c5"
+	HomeGroup "52528a6b-b9e3-4add-b60d-588c2dba842d"
+	HomeGroupCurrentUser "9b74b6a3-0dfd-4f11-9e78-5f7800f2e772"
+	DeviceMetadataStore "5ce4a5e9-e4eb-479d-b89f-130c02886155"
+	Libraries "1b3ea5dc-b587-4786-b4ef-bd1dc332aeae"
+	PublicLibraries "48daf80b-e6cf-4f4e-b800-0e69d84ee384"
+	UserPinned "9e3995ab-1f9c-4f13-b827-48b24b6c7174"
+	ImplicitAppShortcuts "bcb5256f-79f6-4cee-b725-dc34e402fd46"
+	AccountPictures "008ca0b1-55b4-4c56-b8a8-4de4b299d3be"
+	PublicUserTiles "0482af6c-08f1-4c34-8c90-e17ec98b1e17"
+	AppsFolder "1e87508d-89c2-42f0-8a7e-645a0f50ca58"
+	StartMenuAllPrograms "f26305ef-6948-40b9-b255-81453d09c785"
+	CommonStartMenuPlaces "a440879f-87a0-4f7d-b700-0207b966194a"
+	ApplicationShortcuts "a3918781-e5f2-4890-b3d9-a7e54332328c"
+	RoamingTiles "00bcfc5a-ed94-4e48-96a1-3f6217f21990"
+	RoamedTileImages "aaa8d5a5-f1d6-4259-baa8-78e7ef60835e"
+	Screenshots "b7bede81-df94-4682-a7d8-57a52620b86f"
+	CameraRoll "ab5fb87b-7ce2-4f83-915d-550846c9537b"
+	SkyDrive "a52bba46-e9e1-435f-b3d9-28daa648c0f6"
+	OneDrive "a52bba46-e9e1-435f-b3d9-28daa648c0f6"
+	SkyDriveDocuments "24d89e24-2f19-4534-9dde-6a6671fbb8fe"
+	SkyDrivePictures "339719b5-8c47-4894-94c2-d8f77add44a6"
+	SkyDriveMusic "c3f2459e-80d6-45dc-bfef-1f769f2be730"
+	SkyDriveCameraRoll "767e6811-49cb-4273-87c2-20f355e1085b"
+	SearchHistory "0d4c3db6-03a3-462f-a0e6-08924c41b5d4"
+	SearchTemplates "7e636bfe-dfa9-4d5e-b456-d7b39851d8a9"
+	CameraRollLibrary "2b20df75-1eda-4039-8097-38798227d5b7"
+	SavedPictures "3b193882-d3ad-4eab-965a-69829d1fb59f"
+	SavedPicturesLibrary "e25b5812-be88-4bd9-94b0-29233477b6c3"
+	RetailDemo "12d4c69e-24ad-4923-be19-31321c43a767"
+	Device "1c2ac1dc-4358-4b6c-9733-af21156576f0"
+	DevelopmentFiles "dbe8e08e-3053-4bbc-b183-2a7b2b191e59"
+	Objects3D "31c0dd25-9439-4f12-bf41-7ff4eda38722"
+	AppCaptures "edc0fe71-98d8-4f4a-b920-c8dc133cb165"
+	LocalDocuments "f42ee2d3-909f-4907-8871-4c22fc0bf756"
+	LocalPictures "0ddd015d-b06c-45d5-8c4c-f59713854639"
+	LocalVideos "35286a68-3c57-41a1-bbb1-0eae73d76c95"
+	LocalMusic "a0c69a99-21c8-4671-8703-7934162fcf1d"
+	LocalDownloads "7d83ee9b-2244-4e70-b1f5-5393042af1e4"
+	RecordedCalls "2f8b40c2-83ed-48ee-b383-a1f157ec6f9a"
+	AllAppMods "7ad67899-66af-43ba-9156-6aad42e6c596"
+	CurrentAppMods "3db40b20-2a30-4dbe-917e-771dd21dd099"
+	AppDataDesktop "b2c5e279-7add-439f-b28c-c41fe1bbf672"
+	AppDataDocuments "7be16610-1f7f-44ac-bff0-83e15f2ffca1"
+	AppDataFavorites "7cfbefbc-de1f-45aa-b843-a542ac536cc9"
+	AppDataProgramData "559d40a3-a036-40fa-af61-84cb430a4d34"
 }

@@ -40,7 +40,7 @@ pub struct IPictureVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub struct IPicture(ComPtr);
 
-impl_iunknown!(IPicture, 0x7bf80980, 0xbf32, 0x101a, 0x8bbb, 0x00aa00300cab);
+impl_iunknown!(IPicture, "7bf80980-bf32-101a-8bbb-00aa00300cab");
 impl OleautIPicture for IPicture {}
 
 /// [`IPicture`](crate::IPicture) methods from `oleaut` feature.
@@ -133,7 +133,7 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// let pic: IPicture; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let hdc = HWND::NULL.GetDC()?;
 	///
@@ -181,7 +181,7 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// let pic: IPicture; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let hdc = HWND::NULL.GetDC()?;
 	///

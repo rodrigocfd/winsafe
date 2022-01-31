@@ -51,7 +51,7 @@ pub struct IUnknownVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub struct IUnknown(ComPtr);
 
-impl_iunknown!(IUnknown, 0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
+impl_iunknown!(IUnknown, "00000000-0000-0000-c000-000000000046");
 
 /// [`IUnknown`](crate::IUnknown) methods from `ole` feature.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]

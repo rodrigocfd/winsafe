@@ -41,7 +41,7 @@ pub struct ITypeInfoVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub struct ITypeInfo(ComPtr);
 
-impl_iunknown!(ITypeInfo, 0x00020401, 0x0000, 0x0000, 0xc000, 0x000000000046);
+impl_iunknown!(ITypeInfo, "00020401-0000-0000-c000-000000000046");
 impl OleautITypeInfo for ITypeInfo {}
 
 /// [`ITypeInfo`](crate::ITypeInfo) methods from `oleaut` feature.

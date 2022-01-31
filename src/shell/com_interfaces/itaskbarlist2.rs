@@ -38,7 +38,7 @@ pub struct ITaskbarList2VT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct ITaskbarList2(ComPtr);
 
-impl_iunknown!(ITaskbarList2, 0x602d4995, 0xb13a, 0x429b, 0xa66e, 0x1935e44f4317);
+impl_iunknown!(ITaskbarList2, "602d4995-b13a-429b-a66e-1935e44f4317");
 impl ShellITaskbarList for ITaskbarList2 {}
 impl ShellITaskbarList2 for ITaskbarList2 {}
 

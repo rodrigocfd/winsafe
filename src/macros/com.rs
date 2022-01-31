@@ -2,7 +2,7 @@
 
 /// Implements IUnknown trait to COM object, plus all its trait bounds.
 macro_rules! impl_iunknown {
-	($name:ident, $p1:expr, $p2:expr, $p3:expr, $p4:expr, $p5:expr) => {
+	($name:ident, $guid:expr) => {
 		impl Drop for $name {
 			fn drop(&mut self) {
 				let vt = unsafe { &**(self.0.0 as *mut *mut crate::vt::IUnknownVT) };
@@ -25,7 +25,7 @@ macro_rules! impl_iunknown {
 		}
 
 		impl crate::prelude::ComInterface for $name {
-			const IID: crate::co::IID = crate::co::IID::new($p1, $p2, $p3, $p4, $p5);
+			const IID: crate::co::IID = crate::co::IID::new($guid);
 		}
 
 		impl crate::prelude::OleIUnknown for $name {
@@ -40,12 +40,12 @@ macro_rules! impl_iunknown {
 macro_rules! const_guid_values {
 	(
 		$name:ident $(: $feature:literal)*;
-		$($pubname:ident $iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr)*
+		$($pubname:ident $guid:expr)*
 	) => {
 		$( #[cfg_attr(docsrs, doc(cfg(feature = $feature)))] )*
 		impl $name {
 			$(
-				pub const $pubname: $name = $name::new($iid1, $iid2, $iid3, $iid4, $iid5);
+				pub const $pubname: $name = $name::new($guid);
 			)*
 		}
 	};
@@ -58,7 +58,7 @@ macro_rules! const_guid {
 		$( #[$doc:meta] )*
 		=>
 		$(
-			$pubname:ident $iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr
+			$pubname:ident $guid:expr
 		)*
 	) => {
 		$( #[$doc] )*
@@ -86,8 +86,8 @@ macro_rules! const_guid {
 		}
 
 		impl $name {
-			/// Creates a new object from hex numbers, which can be copied
-			/// straight from standard GUID definitions.
+			/// Creates a new `GUID` from a representative hex string, which can
+			/// be copied straight from standard `GUID` declarations.
 			///
 			/// # Examples
 			///
@@ -95,17 +95,17 @@ macro_rules! const_guid {
 			/// use winsafe::prelude::*;
 			/// use winsafe::GUID;
 			///
-			/// let g = GUID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
+			/// let g = GUID::new("00000000-0000-0000-c000-000000000046");
 			/// ```
-			pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> $name {
-				Self(crate::ole::decl::GUID::new(p1, p2, p3, p4, p5))
+			pub const fn new(guid_str: &str) -> $name {
+				Self(crate::ole::decl::GUID::new(guid_str))
 			}
 		}
 
 		const_guid_values! {
 			$name;
 			$(
-				$pubname $iid1, $iid2, $iid3, $iid4, $iid5
+				$pubname $guid
 			)*
 		}
 	};

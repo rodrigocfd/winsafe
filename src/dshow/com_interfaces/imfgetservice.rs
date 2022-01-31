@@ -30,7 +30,7 @@ pub struct IMFGetServiceVT {
 ///
 /// let vmr: IBaseFilter; // initialized somewhere
 /// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-/// # let vmr = CoCreateInstance::<IBaseFilter>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+/// # let vmr = CoCreateInstance::<IBaseFilter>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 ///
 /// let get_svc = vmr.QueryInterface::<IMFGetService>()?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
@@ -38,7 +38,7 @@ pub struct IMFGetServiceVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IMFGetService(ComPtr);
 
-impl_iunknown!(IMFGetService, 0xfa993888, 0x4383, 0x415a, 0xa930, 0xdd472a8cf6f7);
+impl_iunknown!(IMFGetService, "fa993888-4383-415a-a930-dd472a8cf6f7");
 impl DshowIMFGetService for IMFGetService {}
 
 /// [`IMFGetService`](crate::IMFGetService) methods methods from `dshow`
@@ -56,7 +56,7 @@ pub trait DshowIMFGetService: OleIUnknown {
 	///
 	/// let get_svc: IMFGetService; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let get_svc = CoCreateInstance::<IMFGetService>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let get_svc = CoCreateInstance::<IMFGetService>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// let controller_evr = get_svc
 	///     .GetService::<IMFVideoDisplayControl>(

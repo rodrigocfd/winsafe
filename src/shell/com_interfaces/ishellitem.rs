@@ -30,7 +30,7 @@ pub struct IShellItemVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct IShellItem(ComPtr);
 
-impl_iunknown!(IShellItem, 0x43826d1e, 0xe718, 0x42ee, 0xbc55, 0xa1e261c37bfe);
+impl_iunknown!(IShellItem, "43826d1e-e718-42ee-bc55-a1e261c37bfe");
 impl ShellIShellItem for IShellItem {}
 
 /// [`IShellItem`](crate::IShellItem) methods from `shell` feature.

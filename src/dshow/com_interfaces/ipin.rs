@@ -38,7 +38,7 @@ pub struct IPinVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IPin(ComPtr);
 
-impl_iunknown!(IPin, 0x56a86891, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl_iunknown!(IPin, "56a86891-0ad4-11ce-b03a-0020af0ba770");
 impl DshowIPin for IPin {}
 
 /// [`IPin`](crate::IPin) methods methods from `dshow` feature.

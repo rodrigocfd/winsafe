@@ -28,7 +28,7 @@ pub struct IMediaFilterVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub struct IMediaFilter(ComPtr);
 
-impl_iunknown!(IMediaFilter, 0x56a86899, 0x0ad4, 0x11ce, 0xb03a, 0x0020af0ba770);
+impl_iunknown!(IMediaFilter, "56a86899-0ad4-11ce-b03a-0020af0ba770");
 impl ShlwapiIPersist for IMediaFilter {}
 impl DshowIMediaFilter for IMediaFilter {}
 

@@ -24,7 +24,7 @@ pub struct IModalWindowVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct IModalWindow(ComPtr);
 
-impl_iunknown!(IModalWindow, 0xb4db1657, 0x70d7, 0x485e, 0x8e3e, 0x6fcb5a5c1802);
+impl_iunknown!(IModalWindow, "b4db1657-70d7-485e-8e3e-6fcb5a5c1802");
 impl ShellIModalWindow for IModalWindow {}
 
 /// [`IModalWindow`](crate::IModalWindow) methods from `shell` feature.

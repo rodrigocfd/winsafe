@@ -48,7 +48,7 @@ pub struct IFileDialogVT {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct IFileDialog(ComPtr);
 
-impl_iunknown!(IFileDialog, 0x42f85136, 0xdb7e, 0x439c, 0x85f1, 0xe4075d135fc8);
+impl_iunknown!(IFileDialog, "42f85136-db7e-439c-85f1-e4075d135fc8");
 impl ShellIModalWindow for IFileDialog {}
 impl ShellIFileDialog for IFileDialog {}
 
@@ -225,7 +225,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 	///
 	/// let file_dlg: IFileDialog; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let file_dlg = CoCreateInstance::<IFileDialog>(&CLSID::new(0,0,0,0,0), None, CLSCTX::INPROC_SERVER)?;
+	/// # let file_dlg = CoCreateInstance::<IFileDialog>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
 	///
 	/// file_dlg.SetFileTypes(&[
 	///     ("Documents", "*.docx;*.txt"),
