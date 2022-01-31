@@ -714,6 +714,17 @@ const_bitflag! { SECTION: u32: "kernel";
 	ALL_ACCESS STANDARD_RIGHTS::REQUIRED.0 | Self::QUERY.0 | Self::MAP_WRITE.0 | Self::MAP_EXECUTE.0 | Self::EXTEND_SIZE.0
 }
 
+const_bitflag! { SECURITY_IMPERSONATION: u32: "kernel";
+	/// [`SECURITY_IMPERSONATION_LEVEL`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Anonymous 0
+	Identification 1
+	Impersonation 2
+	Delegation 3
+}
+
 const_ordinary! { SORT: u16: "kernel";
 	/// Sort order
 	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
@@ -1094,6 +1105,33 @@ const_bitflag! { THREAD_CREATE: u32: "kernel";
 	RUN_IMMEDIATELY 0
 	CREATE_SUSPENDED 0x0000_0004
 	STACK_SIZE_PARAM_IS_A_RESERVATION 0x0001_0000
+}
+
+const_bitflag! { TOKEN: u32: "kernel";
+	/// [Token access rights](https://docs.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects).
+	=>
+	=>
+	DELETE ACCESS_RIGHTS::DELETE.0
+	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.0
+	WRITE_DAC ACCESS_RIGHTS::WRITE_DAC.0
+	WRITE_OWNER ACCESS_RIGHTS::WRITE_OWNER.0
+
+	ASSIGN_PRIMARY 0x0001
+	DUPLICATE 0x0002
+	IMPERSONATE 0x0004
+	QUERY 0x0008
+	QUERY_SOURCE 0x0010
+	ADJUST_PRIVILEGES 0x0020
+	ADJUST_GROUPS 0x0040
+	ADJUST_DEFAULT 0x0080
+	ADJUST_SESSIONID 0x0100
+	ALL_ACCESS_P STANDARD_RIGHTS::REQUIRED.0 | Self::ASSIGN_PRIMARY.0 | Self::DUPLICATE.0 | Self::IMPERSONATE.0 | Self::QUERY.0 | Self::QUERY_SOURCE.0 | Self::ADJUST_PRIVILEGES.0 | Self::ADJUST_GROUPS.0 | Self::ADJUST_DEFAULT.0
+	ALL_ACCESS Self::ALL_ACCESS_P.0 | Self::ADJUST_SESSIONID.0
+	READ STANDARD_RIGHTS::READ.0 | Self::QUERY.0
+	WRITE STANDARD_RIGHTS::WRITE.0 | Self::ADJUST_PRIVILEGES.0 | Self::ADJUST_GROUPS.0 | Self::ADJUST_DEFAULT.0
+	EXECUTE STANDARD_RIGHTS::EXECUTE.0
+	TRUST_CONSTRAINT_MASK STANDARD_RIGHTS::READ.0 | Self::QUERY.0 | Self::QUERY_SOURCE.0
+	ACCESS_PSEUDO_HANDLE Self::QUERY.0 | Self::QUERY_SOURCE.0
 }
 
 const_ordinary! { VER_COND: u8: "kernel";

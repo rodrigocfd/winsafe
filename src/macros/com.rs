@@ -87,11 +87,10 @@ macro_rules! pub_guid_wrapper {
 }
 
 /// Creates multiple `GUID`-derived pub const values.
-#[allow(unused_macros)]
 macro_rules! pub_const_guid {
 	(
 		$type:ident: $feature:literal;
-		$($name:ident, $iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr)*
+		$($name:ident $iid1:expr, $iid2:expr, $iid3:expr, $iid4:expr, $iid5:expr)*
 	) => {
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		impl $type {

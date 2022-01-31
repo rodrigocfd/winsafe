@@ -49,8 +49,8 @@ impl OleautITypeInfo for ITypeInfo {}
 pub trait OleautITypeInfo: OleIUnknown {
 	/// [`ITypeInfo::CreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.
-	fn CreateInstance<T: ComInterface>(&self,
-		iunk_outer: Option<&mut IUnknown>) -> HrResult<T>
+	fn CreateInstance<T>(&self, iunk_outer: Option<&mut IUnknown>) -> HrResult<T>
+		where T: ComInterface,
 	{
 		let mut ppv_queried = ComPtr::null();
 		let mut ppv_outer = ComPtr::null();

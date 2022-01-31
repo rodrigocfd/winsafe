@@ -11,4 +11,5 @@ extern_sys! { "shell32";
 	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -> HANDLE
 	SHFileOperationW(PVOID) -> i32
 	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -> usize
+	SHGetKnownFolderPath(PCVOID, u32, HANDLE, *mut PSTR) -> HRES
 }

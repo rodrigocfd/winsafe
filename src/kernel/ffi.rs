@@ -9,7 +9,9 @@ extern_sys! { "kernel32";
 	CreatePipe(*mut HANDLE, *mut HANDLE, PVOID, u32) -> BOOL
 	CreateProcessW(PCSTR, PSTR, PVOID, PVOID, BOOL, u32, PVOID, PCSTR, PVOID, PVOID) -> BOOL
 	CreateThread(PVOID, u64, PVOID, PVOID, u32, *mut u32) -> HANDLE
+	CreateToolhelp32Snapshot(u32, u32) -> HANDLE
 	DeleteFileW(PCSTR) -> BOOL
+	DuplicateToken(HANDLE, u32, *mut HANDLE) -> BOOL
 	EndUpdateResourceW(HANDLE, BOOL) -> BOOL
 	EnumResourceLanguagesW(HANDLE, PCSTR, PCSTR, PFUNC, isize) -> BOOL
 	EnumResourceNamesW(HANDLE, PCSTR, PFUNC, isize) -> BOOL
@@ -32,12 +34,11 @@ extern_sys! { "kernel32";
 	GetCommandLineW() -> PCSTR
 	GetComputerNameW(PSTR, *mut u32) -> BOOL
 	GetCurrentDirectoryW(u32, PSTR) -> u32
-	CreateToolhelp32Snapshot(u32, u32) -> HANDLE
-	Process32FirstW(HANDLE, PVOID) -> BOOL
-	Process32NextW(HANDLE, PVOID) -> BOOL
 	GetCurrentProcess() -> HANDLE
 	GetCurrentProcessId() -> u32
+	GetCurrentProcessToken() -> HANDLE
 	GetCurrentThread() -> HANDLE
+	GetCurrentThreadEffectiveToken() -> HANDLE
 	GetCurrentThreadId() -> u32
 	GetEnvironmentStringsW() -> HANDLE
 	GetExitCodeProcess(HANDLE, *mut u32) -> BOOL
@@ -78,6 +79,7 @@ extern_sys! { "kernel32";
 	GlobalSize(HANDLE) -> u64
 	GlobalUnlock(HANDLE) -> BOOL
 	IsNativeVhdBoot(*mut BOOL) -> BOOL
+	IsTokenRestricted(HANDLE) -> BOOL
 	IsWow64Process(HANDLE, *mut BOOL) -> BOOL
 	LoadLibraryW(PCSTR) -> HANDLE
 	LoadResource(HANDLE, HANDLE) -> HANDLE
@@ -91,7 +93,11 @@ extern_sys! { "kernel32";
 	MulDiv(i32, i32, i32) -> i32
 	MultiByteToWideChar(u32, u32, *const u8, i32, PSTR, i32) -> i32
 	OpenProcess(u32, BOOL, u32) -> HANDLE
+	OpenProcessToken(HANDLE, u32, *mut HANDLE) -> BOOL
+	OpenThreadToken(HANDLE, u32, BOOL, *mut HANDLE) -> BOOL
 	OutputDebugStringW(PCSTR)
+	Process32FirstW(HANDLE, PVOID) -> BOOL
+	Process32NextW(HANDLE, PVOID) -> BOOL
 	QueryFullProcessImageNameW(HANDLE, u32, PSTR, *mut u32) -> BOOL
 	QueryPerformanceCounter(*mut i64) -> BOOL
 	QueryPerformanceFrequency(*mut i64) -> BOOL

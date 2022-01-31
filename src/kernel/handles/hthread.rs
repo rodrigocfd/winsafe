@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{FILETIME, GetLastError, SECURITY_ATTRIBUTES,
-	WinResult};
+use crate::kernel::decl::{FILETIME, GetLastError, HACCESSTOKEN,
+	SECURITY_ATTRIBUTES, WinResult};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::{Handle, HandleClose};
 
@@ -106,5 +106,27 @@ pub trait KernelHthread: Handle {
 				)
 			},
 		)
+	}
+
+	/// [`OpenThreadToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)
+	/// method.
+	///
+	/// **Note:** Must be paired with an
+	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
+	/// call.
+	fn OpenThreadToken(self,
+		desired_access: co::TOKEN, open_as_self: bool) -> WinResult<HACCESSTOKEN>
+	{
+		let mut handle = HACCESSTOKEN::NULL;
+		bool_to_winresult(
+			unsafe {
+				kernel::ffi::OpenThreadToken(
+					self.as_ptr(),
+					desired_access.0,
+					open_as_self as _,
+					&mut handle.0,
+				)
+			},
+		).map(|_| handle)
 	}
 }

@@ -28,10 +28,11 @@ kernel = []
 msimg = ["user"]
 ole = ["kernel"]
 oleaut = ["shlwapi", "user"]
-shell = ["ole", "user"]
+shell = ["shlwapi", "user"]
 shlwapi = ["ole"]
 user = ["kernel"]
 uxtheme = ["ole", "user"]
 version = ["kernel"]
 
+# Generate docs locally:
 # RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features

@@ -5,7 +5,9 @@ use crate::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::{ComInterface, OleIUnknown};
+use crate::shell::decl::BHID;
+use crate::shlwapi::decl::IBindCtx;
 use crate::vt::IUnknownVT;
 
 /// [`IShellItem`](crate::IShellItem) virtual table.
@@ -13,7 +15,7 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(ComPtr, PVOID, PCVOID, PCVOID, *mut ComPtr) -> HRES,
+	pub BindToHandler: fn(ComPtr, ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRES,
 	pub GetParent: fn(ComPtr, *mut ComPtr) -> HRES,
 	pub GetDisplayName: fn(ComPtr, u32, *mut PSTR) -> HRES,
 	pub GetAttributes: fn(ComPtr, u32, *mut u32) -> HRES,
@@ -60,6 +62,26 @@ pub trait ShellIShellItem: OleIUnknown {
 				)
 			},
 		).map(|_| IShellItem::from(ppv_queried))
+	}
+
+	/// [`IShellItem::BindToHandler`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
+	/// method.
+	fn BindToHandler<T>(&self, bind_ctx: IBindCtx, bhid: &BHID) -> HrResult<T>
+		where T: ComInterface,
+	{
+		let mut ppv_queried = ComPtr::null();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
+			ok_to_hrresult(
+				(vt.BindToHandler)(
+					self.ptr(),
+					bind_ctx.ptr(),
+					bhid as *const _ as _,
+					&T::IID as *const _ as _,
+					&mut ppv_queried,
+				)
+			)
+		}.map(|_| T::from(ppv_queried))
 	}
 
 	/// [`IShellItem::GetAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)

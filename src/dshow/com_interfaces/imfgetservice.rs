@@ -63,7 +63,9 @@ pub trait DshowIMFGetService: OleIUnknown {
 	///     )?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
-	fn GetService<T: ComInterface>(&self, service_guid: &GUID) -> HrResult<T> {
+	fn GetService<T>(&self, service_guid: &GUID) -> HrResult<T>
+		where T: ComInterface,
+	{
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IMFGetServiceVT);

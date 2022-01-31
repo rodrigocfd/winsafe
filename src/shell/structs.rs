@@ -9,46 +9,9 @@ use crate::kernel::privs::{MAX_PATH, parse_multi_z_str};
 use crate::ole::decl::GUID;
 use crate::user::decl::{HICON, HWND};
 
-/// [`IShellItem::BindToHandler`](crate::prelude::ShellIShellItem::BindToHandler)
-/// `bhid`. Just a safe abstraction over a [`GUID`](crate::GUID).
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-#[repr(transparent)]
-#[derive(Copy, Clone, Eq, PartialEq, Hash)]
-pub struct BHID(GUID);
-
-impl From<GUID> for BHID {
-	fn from(guid: GUID) -> Self {
-		Self(guid)
-	}
-}
-
-impl AsRef<GUID> for BHID {
-	fn as_ref(&self) -> &GUID {
-		&self.0
-	}
-}
-
-impl std::fmt::Display for BHID {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		self.0.fmt(f)
-	}
-}
-
-impl BHID {
-	/// Creates a new `BHID` from hex numbers, which can be copied straight from
-	/// standard `BHID` definitions.
-	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::BHID;
-	///
-	/// let g = BHID::new(0x00000000, 0x0000, 0x0000, 0xc000, 0x000000000046);
-	/// ```
-	pub const fn new(p1: u32, p2: u16, p3: u16, p4: u16, p5: u64) -> BHID {
-		Self(GUID::new(p1, p2, p3, p4, p5))
-	}
+pub_guid_wrapper! { BHID: "shell";
+	/// [`IShellItem::BindToHandler`](crate::prelude::ShellIShellItem::BindToHandler)
+	/// `bhid`. Just a safe abstraction over a [`GUID`](crate::GUID).
 }
 
 /// [`COMDLG_FILTERSPEC`](https://docs.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
@@ -68,6 +31,11 @@ impl_default!(COMDLG_FILTERSPEC, 'a, 'b);
 impl<'a, 'b> COMDLG_FILTERSPEC<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, pszName, set_pszName);
 	pub_fn_string_ptr_get_set!('b, pszSpec, set_pszSpec);
+}
+
+pub_guid_wrapper! { KNOWNFOLDERID: "shell";
+	/// [Constants](https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid)
+	/// that represent known system folders.
 }
 
 /// [`NOTIFYICONDATA`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)

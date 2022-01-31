@@ -1,3 +1,4 @@
+mod haccesstoken;
 mod handle;
 mod hevent;
 mod hfile;
@@ -14,6 +15,7 @@ mod hthread;
 mod hupdatesrc;
 
 pub mod decl {
+	pub use super::haccesstoken::HACCESSTOKEN;
 	pub use super::hevent::HEVENT;
 	pub use super::hfile::HFILE;
 	pub use super::hfilemap::HFILEMAP;
@@ -48,6 +50,7 @@ pub mod decl {
 }
 
 pub mod traits {
+	pub use super::haccesstoken::KernelHaccesstoken;
 	pub use super::handle::{Handle, HandleClose};
 	pub use super::hfile::KernelHfile;
 	pub use super::hfilemap::KernelHfilemap;

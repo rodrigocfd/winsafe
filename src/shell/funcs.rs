@@ -1,10 +1,14 @@
 #![allow(non_snake_case)]
 
 use crate::{co, shell};
-use crate::kernel::decl::{GetLastError, HLOCAL, WinResult, WString};
+use crate::kernel::decl::{GetLastError, HACCESSTOKEN, HLOCAL, WinResult,
+	WString};
 use crate::kernel::privs::bool_to_winresult;
-use crate::prelude::KernelHlocal;
-use crate::shell::decl::{NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT};
+use crate::ole::decl::{CoTaskMemFree, HrResult};
+use crate::ole::privs::ok_to_hrresult;
+use crate::prelude::{Handle, KernelHlocal};
+use crate::shell::decl::{KNOWNFOLDERID, NOTIFYICONDATA, SHFILEINFO,
+	SHFILEOPSTRUCT};
 
 /// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
 /// function.
@@ -100,4 +104,29 @@ pub fn SHGetFileInfo(
 		0 => Err(GetLastError()),
 		n => Ok(n as _),
 	}
+}
+
+/// [`SHGetKnownFolderPath`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn SHGetKnownFolderPath(
+	folder_id: &KNOWNFOLDERID,
+	flags: co::KF,
+	token: Option<HACCESSTOKEN>) -> HrResult<String>
+{
+	let mut pstr: *mut u16 = std::ptr::null_mut();
+	ok_to_hrresult(
+		unsafe {
+			shell::ffi::SHGetKnownFolderPath(
+				folder_id as *const _ as _,
+				flags.0,
+				token.map_or(std::ptr::null_mut(), |t| t.as_ptr()),
+				&mut pstr,
+			)
+		},
+	).map(|_| {
+		let path = WString::from_wchars_nullt(pstr);
+		CoTaskMemFree(pstr);
+		path.to_string()
+	})
 }

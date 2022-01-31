@@ -2,8 +2,8 @@
 
 use crate::{co, kernel};
 use crate::ffi_types::BOOL;
-use crate::kernel::decl::{FILETIME, GetLastError, PROCESS_INFORMATION,
-	SECURITY_ATTRIBUTES, STARTUPINFO, WinResult, WString};
+use crate::kernel::decl::{FILETIME, GetLastError, HACCESSTOKEN,
+	PROCESS_INFORMATION, SECURITY_ATTRIBUTES, STARTUPINFO, WinResult, WString};
 use crate::kernel::privs::{bool_to_winresult, INFINITE, MAX_PATH};
 use crate::prelude::{Handle, HandleClose};
 
@@ -171,6 +171,27 @@ pub trait KernelHprocess: Handle {
 			).as_mut()
 		}.map(|ptr| HPROCESS(ptr))
 			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`OpenProcessToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
+	/// method.
+	///
+	/// **Note:** Must be paired with an
+	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
+	/// call.
+	fn OpenProcessToken(self,
+		desired_access: co::TOKEN) -> WinResult<HACCESSTOKEN>
+	{
+		let mut handle = HACCESSTOKEN::NULL;
+		bool_to_winresult(
+			unsafe {
+				kernel::ffi::OpenProcessToken(
+					self.as_ptr(),
+					desired_access.0,
+					&mut handle.0,
+				)
+			},
+		).map(|_| handle)
 	}
 
 	/// [`QueryFullProcessImageName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
