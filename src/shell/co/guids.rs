@@ -5,6 +5,7 @@ use crate::co::CLSID;
 const_guid_values! { CLSID: "shell";
 	FileOpenDialog "dc1c5a9c-e88a-4dde-a5a1-60f82a20aef7"
 	FileSaveDialog "c0b4e2f3-ba21-4773-8dba-335ec946eb8b"
+	ShellLink "00021401-0000-0000-c000-000000000046"
 	TaskbarList "56fdf344-fd6d-11d0-958a-006097c9a090"
 }
 
