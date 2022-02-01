@@ -12,4 +12,5 @@ extern_sys! { "shell32";
 	SHFileOperationW(PVOID) -> i32
 	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -> usize
 	SHGetKnownFolderPath(PCVOID, u32, HANDLE, *mut PSTR) -> HRES
+	SHGetStockIconInfo(u32, u32, PVOID) -> HRES
 }

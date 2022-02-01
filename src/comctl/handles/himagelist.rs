@@ -38,6 +38,9 @@ pub trait ComctlHimagelist: Handle {
 
 	/// [`ImageList_AddIcon`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addicon)
 	/// method.
+	///
+	/// The icon can be destroyed right after this call, its handle its
+	/// duplicated inside the image list.
 	fn AddIcon(self, hicon: HICON) -> WinResult<u32> {
 		self.ReplaceIcon(None, hicon)
 	}
@@ -170,6 +173,9 @@ pub trait ComctlHimagelist: Handle {
 
 	/// [`ImageList_ReplaceIcon`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_replaceicon)
 	/// method.
+	///
+	/// The icon can be destroyed right after this call, its handle its
+	/// duplicated inside the image list.
 	fn ReplaceIcon(self,
 		index: Option<u32>, hicon_new: HICON) -> WinResult<u32>
 	{

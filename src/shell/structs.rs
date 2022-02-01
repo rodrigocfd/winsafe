@@ -131,3 +131,21 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 
 	pub_fn_string_ptr_get_set!('c, lpszProgressTitle, set_lpszProgressTitle);
 }
+
+/// [`SHSTOCKICONINFO`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shstockiconinfo)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[repr(C)]
+pub struct SHSTOCKICONINFO {
+	cbSize: u32,
+	pub hIcon: HICON,
+	pub iSysImageIndex: i32,
+	pub iIcon: i32,
+	szPath: [u16; MAX_PATH],
+}
+
+impl_default_with_size!(SHSTOCKICONINFO, cbSize);
+
+impl SHSTOCKICONINFO {
+	pub_fn_string_arr_get_set!(szPath, get_szPath);
+}

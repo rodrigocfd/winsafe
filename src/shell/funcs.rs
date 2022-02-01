@@ -7,7 +7,8 @@ use crate::kernel::privs::bool_to_winresult;
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, KernelHlocal};
-use crate::shell::decl::{NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT};
+use crate::shell::decl::{NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT,
+	SHSTOCKICONINFO};
 
 /// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
 /// function.
@@ -146,4 +147,43 @@ pub fn SHGetKnownFolderPath(
 		CoTaskMemFree(pstr);
 		path.to_string()
 	})
+}
+
+/// [`SHGetStockIconInfo`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetstockiconinfo)
+/// function.
+///
+/// **Note:** The `hIcon` member of [`SHSTOCKICONINFO`](crate::SHSTOCKICONINFO)
+/// must be paired with an
+/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+///
+/// # Examples
+///
+/// Loading the small (16x16 pixels) camera icon from the system:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, SHGetStockIconInfo, SHSTOCKICONINFO};
+///
+/// let mut sii = SHSTOCKICONINFO::default();
+///
+/// SHGetStockIconInfo(
+///     co::SIID::DEVICECAMERA,
+///     co::SHGSI::ICON | co::SHGSI::SMALLICON,
+///     &mut sii,
+/// )?;
+///
+/// println!("HICON handle: {}", sii.hIcon);
+///
+/// sii.hIcon.DestroyIcon()?;
+/// # Ok::<_, Box<dyn std::error::Error>>(())
+/// ```
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn SHGetStockIconInfo(
+	siid: co::SIID, flags: co::SHGSI, sii: &mut SHSTOCKICONINFO) -> HrResult<()>
+{
+	ok_to_hrresult(
+		unsafe {
+			shell::ffi::SHGetStockIconInfo(siid.0, flags.0, sii as *mut _ as _)
+		},
+	)
 }
