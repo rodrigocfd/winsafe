@@ -11,7 +11,7 @@ const_guid_values! { CLSID: "dshow";
 }
 
 const_guid! { DSHOW_SERVICE: "dshow";
-	/// [`IMFGetService::GetService`](`crate::DshowIMFGetService::GetService`)
+	/// [`IMFGetService::GetService`](`crate::prelude::DshowIMFGetService::GetService`)
 	/// `service_guid` (`GUID`).
 	=>
 	MR_VIDEO_RENDER_SERVICE "1092a86c-ab1a-459a-a336-831fbc4d11ff"
