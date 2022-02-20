@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use crate::{co, user};
+use crate::{co, DISPLAY_DEVICE, user};
 use crate::ffi_types::BOOL;
 use crate::kernel::decl::{GetLastError, HINSTANCE, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
@@ -116,6 +116,27 @@ pub fn EmptyClipboard() -> WinResult<()> {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn EndMenu() -> WinResult<()> {
 	bool_to_winresult(unsafe { user::ffi::EndMenu() })
+}
+
+/// [`EnumDisplayDevicesW`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw)
+/// function
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+pub fn EnumDisplayDevices(
+	device_name: Option<&str>,
+	device_num: u32,
+	display_device: &mut DISPLAY_DEVICE,
+	flags: co::EDD) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			user::ffi::EnumDisplayDevicesW(
+				device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				device_num,
+				display_device as *mut _ as _,
+				flags.0
+			)
+		},
+	)
 }
 
 /// [`EnumDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw)

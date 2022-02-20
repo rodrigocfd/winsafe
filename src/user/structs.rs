@@ -7,8 +7,7 @@ use crate::ffi_types::BOOL;
 use crate::kernel::decl::{HINSTANCE, HIWORD, LCID, LOBYTE, LOWORD, MAKEDWORD};
 use crate::user::decl::{DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU,
 	HWND, HwndHmenu, HwndPlace, WNDPROC};
-use crate::user::privs::{CCHDEVICENAME, CCHFORMNAME, CCHILDREN_TITLEBAR,
-	DM_SPECVERSION};
+use crate::user::privs::{CCHDEVICEID, CCHDEVICEKEY, CCHDEVICENAME, CCHDEVICESTRING, CCHFORMNAME, CCHILDREN_TITLEBAR, DM_SPECVERSION};
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.
@@ -205,6 +204,32 @@ pub struct DELETEITEMSTRUCT {
 }
 
 impl_default!(DELETEITEMSTRUCT);
+
+#[repr(C)]
+pub struct DISPLAY_DEVICE {
+	cb: u32,
+	DeviceName: [u16; CCHDEVICENAME],
+	DeviceString: [u16; CCHDEVICESTRING],
+	pub StateFlags: co::STATE_FLAGS,
+	DeviceID: [u16; CCHDEVICEID],
+	DeviceKey: [u16; CCHDEVICEKEY],
+}
+
+impl Default for DISPLAY_DEVICE {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.cb = std::mem::size_of::<Self>() as _;
+		obj
+	}
+}
+
+impl DISPLAY_DEVICE {
+	pub_fn_string_arr_get_set!(DeviceName, set_DeviceName);
+	pub_fn_string_arr_get_set!(DeviceString, set_DeviceString);
+	pub_fn_string_arr_get_set!(DeviceID, set_DeviceID);
+	pub_fn_string_arr_get_set!(DeviceKey, set_DeviceKey);
+}
+
 
 /// [`DEVMODE`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-devmodew)
 /// struct.

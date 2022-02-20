@@ -44,6 +44,7 @@ extern_sys! { "user32";
 	EndMenu() -> BOOL
 	EndPaint(HANDLE, PCVOID) -> BOOL
 	EnumChildWindows(HANDLE, PFUNC, isize) -> BOOL
+	EnumDisplayDevicesW(PCSTR, u32, PVOID, u32) -> BOOL
 	EnumDisplayMonitors(HANDLE, PCVOID, PFUNC, isize) -> BOOL
 	EnumDisplaySettingsExW(PCSTR, u32, PVOID, u32) -> BOOL
 	EnumWindows(PFUNC, isize) -> BOOL
