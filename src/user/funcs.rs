@@ -77,6 +77,31 @@ pub fn ChangeDisplaySettings(
 	}
 }
 
+/// [`ChangeDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changedisplaysettingsexw)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+pub fn ChangeDisplaySettingsEx(
+	device_name: Option<&str>,
+	dev_mode: &mut DEVMODE,
+	flags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
+{
+	let ret = unsafe {
+		user::ffi::ChangeDisplaySettingsExW(
+			device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+			dev_mode as *mut _ as _,
+			std::ptr::null_mut(),
+			flags.0,
+			std::ptr::null_mut()
+		)
+	};
+
+	if ret < 0 {
+		Err(co::DISP_CHANGE(ret))
+	} else {
+		Ok(co::DISP_CHANGE(ret))
+	}
+}
+
 /// [`ClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
