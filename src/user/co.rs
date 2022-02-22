@@ -366,6 +366,18 @@ const_ordinary! { DISP_CHANGE: i32: "user";
 	BADDUALVIEW -6
 }
 
+const_bitflag! { STATE_FLAGS: u32: "user";
+	/// [`DISPLAY_DEVICE`](crate::DISPLAY_DEVICE) `StateFlags` (`u32`)
+	=>
+	=>
+	DISPLAY_DEVICE_ACTIVE 0x0000_0001
+	DISPLAY_DEVICE_MIRRORING_DRIVER 0x0000_0008
+	DISPLAY_DEVICE_MODESPRUNED 0x0800_0000
+	DISPLAY_DEVICE_PRIMARY_DEVICE 0x0000_0004
+	DISPLAY_DEVICE_REMOVABLE 0x0000_0020
+	DISPLAY_DEVICE_VGA_COMPATIBLE 0x0000_0010
+}
+
 const_bitflag! { DM: u32: "user";
 	/// [`DEVMODE`](crate::DEVMODE) `dmFields` (`u32`).
 	=>
@@ -932,6 +944,13 @@ const_bitflag! { EC: u16: "user";
 	LEFTMARGIN 0x0001
 	RIGHTMARGIN 0x0002
 	USEFONTINFO 0xffff
+}
+
+const_bitflag! { EDD: u32: "user";
+	/// [`EnumDisplayDevices`](crate::EnumDisplayDevices) `flags` (`u32`).
+	=>
+	=>
+	EDD_GET_DEVICE_INTERFACE_NAME 0x0000_0001
 }
 
 const_bitflag! { EDS: u32: "user";
