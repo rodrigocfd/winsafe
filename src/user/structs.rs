@@ -459,7 +459,6 @@ pub struct MSG {
 	pub lParam: isize,
 	pub time: u32,
 	pub pt: POINT,
-	lPrivate: u32,
 }
 
 impl_default!(MSG);
