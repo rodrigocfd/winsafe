@@ -99,9 +99,12 @@ pub fn CloseClipboard() -> WinResult<()> {
 
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
+///
+/// This function is used internally in window loops. Avoid using it in other
+/// situations.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn DispatchMessage(msg: &MSG) -> isize {
-	unsafe { user::ffi::DispatchMessageW(msg as *const _ as _) }
+pub unsafe fn DispatchMessage(msg: &MSG) -> isize {
+	user::ffi::DispatchMessageW(msg as *const _ as _)
 }
 
 /// [`EmptyClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
