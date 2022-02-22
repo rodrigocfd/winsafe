@@ -119,24 +119,53 @@ pub fn EndMenu() -> WinResult<()> {
 }
 
 /// [`EnumDisplayDevicesW`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw)
-/// function
+/// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, DISPLAY_DEVICE, EnumDisplayDevices};
+///
+/// let mut dide = DISPLAY_DEVICE::default();
+/// let mut dev_num: u32 = 0;
+///
+/// loop {
+///     let is_finished = EnumDisplayDevices(
+///         None, dev_num, &mut dide, co::EDD::NoValue)?;
+///
+///     if !is_finished {
+///         break;
+///     }
+///
+///     println!("{}: {} - {}",
+///         dev_num, dide.DeviceName(), dide.DeviceString());
+///
+///     dev_num += 1; // advance to next display device
+/// }
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn EnumDisplayDevices(
 	device_name: Option<&str>,
 	device_num: u32,
 	display_device: &mut DISPLAY_DEVICE,
-	flags: co::EDD) -> WinResult<()>
+	flags: co::EDD) -> WinResult<bool>
 {
-	bool_to_winresult(
-		unsafe {
-			user::ffi::EnumDisplayDevicesW(
-				device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
-				device_num,
-				display_device as *mut _ as _,
-				flags.0
-			)
+	match unsafe {
+		user::ffi::EnumDisplayDevicesW(
+			device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+			device_num,
+			display_device as *mut _ as _,
+			flags.0
+		)
+	} {
+		0 => match GetLastError() {
+			co::ERROR::SUCCESS => Ok(false), // actual false
+			err => Err(err),
 		},
-	)
+		ret => Ok(ret != 0),
+	}
 }
 
 /// [`EnumDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw)

@@ -335,6 +335,46 @@ const_ordinary! { COLOR: i32: "user";
 	BTNHILIGHT Self::BTNHIGHLIGHT.0
 }
 
+const_ordinary! { CLR: u32: "user";
+	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
+	=>
+	=>
+	NONE 0xffff_ffff
+	DEFAULT 0xff00_0000
+}
+
+const_ordinary! { CMD: u16: "user";
+	/// [`wm::Command`](crate::msg::wm::Command) notification codes (`u16`).
+	///
+	/// **Note:** Control-specific notification codes have their own types,
+	/// which are convertible to `CMD`.
+	=>
+	=>
+	Menu 0
+	Accelerator 1
+}
+
+const_bitflag! { CS: u32: "user";
+	/// Window class
+	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
+	/// (`u32`).
+	=>
+	=>
+	VREDRAW 0x0001
+	HREDRAW 0x0002
+	DBLCLKS 0x0008
+	OWNDC 0x0020
+	CLASSDC 0x0040
+	PARENTDC 0x0080
+	NOCLOSE 0x0200
+	SAVEBITS 0x0800
+	BYTEALIGNCLIENT 0x1000
+	BYTEALIGNWINDOW 0x2000
+	GLOBALCLASS 0x4000
+	IME 0x00010000
+	DROPSHADOW 0x00020000
+}
+
 const_bitflag! { DDL: u16: "user";
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
@@ -366,16 +406,26 @@ const_ordinary! { DISP_CHANGE: i32: "user";
 	BADDUALVIEW -6
 }
 
-const_bitflag! { STATE_FLAGS: u32: "user";
-	/// [`DISPLAY_DEVICE`](crate::DISPLAY_DEVICE) `StateFlags` (`u32`)
+const_bitflag! { DISPLAY_DEVICE: u32: "user";
+	/// [`DISPLAY_DEVICE`](crate::DISPLAY_DEVICE) `StateFlags` (`u32`).
 	=>
 	=>
-	DISPLAY_DEVICE_ACTIVE 0x0000_0001
-	DISPLAY_DEVICE_MIRRORING_DRIVER 0x0000_0008
-	DISPLAY_DEVICE_MODESPRUNED 0x0800_0000
-	DISPLAY_DEVICE_PRIMARY_DEVICE 0x0000_0004
-	DISPLAY_DEVICE_REMOVABLE 0x0000_0020
-	DISPLAY_DEVICE_VGA_COMPATIBLE 0x0000_0010
+	ATTACHED_TO_DESKTOP 0x0000_0001
+	MULTI_DRIVER 0x0000_0002
+	PRIMARY_DEVICE 0x0000_0004
+	MIRRORING_DRIVER 0x0000_0008
+	VGA_COMPATIBLE 0x0000_0010
+	REMOVABLE 0x0000_0020
+	ACC_DRIVER 0x0000_0040
+	MODESPRUNED 0x0800_0000
+	RDPUDD 0x0100_0000
+	REMOTE 0x0400_0000
+	DISCONNECT 0x0200_0000
+	TS_COMPATIBLE 0x0020_0000
+	UNSAFE_MODES_ON 0x0008_0000
+
+	ACTIVE 0x0000_0001
+	ATTACHED 0x0000_0002
 }
 
 const_bitflag! { DM: u32: "user";
@@ -861,46 +911,6 @@ const_ordinary! { DMTT: i16: "user";
 	DOWNLOAD_OUTLINE 4
 }
 
-const_ordinary! { CLR: u32: "user";
-	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
-	=>
-	=>
-	NONE 0xffff_ffff
-	DEFAULT 0xff00_0000
-}
-
-const_ordinary! { CMD: u16: "user";
-	/// [`wm::Command`](crate::msg::wm::Command) notification codes (`u16`).
-	///
-	/// **Note:** Control-specific notification codes have their own types,
-	/// which are convertible to `CMD`.
-	=>
-	=>
-	Menu 0
-	Accelerator 1
-}
-
-const_bitflag! { CS: u32: "user";
-	/// Window class
-	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
-	/// (`u32`).
-	=>
-	=>
-	VREDRAW 0x0001
-	HREDRAW 0x0002
-	DBLCLKS 0x0008
-	OWNDC 0x0020
-	CLASSDC 0x0040
-	PARENTDC 0x0080
-	NOCLOSE 0x0200
-	SAVEBITS 0x0800
-	BYTEALIGNCLIENT 0x1000
-	BYTEALIGNWINDOW 0x2000
-	GLOBALCLASS 0x4000
-	IME 0x00010000
-	DROPSHADOW 0x00020000
-}
-
 const_ordinary! { DLGC: u16: "user";
 	/// [`wm::GetDlgCode`](crate::msg::wm::GetDlgCode) return value (`u16`).
 	=>
@@ -950,7 +960,9 @@ const_bitflag! { EDD: u32: "user";
 	/// [`EnumDisplayDevices`](crate::EnumDisplayDevices) `flags` (`u32`).
 	=>
 	=>
-	EDD_GET_DEVICE_INTERFACE_NAME 0x0000_0001
+	/// None of the actual values (zero).
+	NoValue 0
+	GET_DEVICE_INTERFACE_NAME 0x0000_0001
 }
 
 const_bitflag! { EDS: u32: "user";
