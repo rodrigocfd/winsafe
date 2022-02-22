@@ -122,7 +122,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`CreateWindowEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw)
 	/// static method.
-	fn CreateWindowEx(
+	unsafe fn CreateWindowEx(
 		ex_style: co::WS_EX,
 		class_name: AtomStr,
 		title: Option<&str>,
@@ -134,7 +134,6 @@ pub trait UserHwnd: Handle {
 		hinstance: HINSTANCE,
 		lparam: Option<isize>) -> WinResult<HWND>
 	{
-		unsafe {
 			user::ffi::CreateWindowExW(
 				ex_style.0,
 				class_name.as_ptr(),
@@ -147,8 +146,8 @@ pub trait UserHwnd: Handle {
 				hinstance.0,
 				lparam.unwrap_or_default() as _,
 			).as_mut()
-		}.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+				.map(|ptr| HWND(ptr))
+				.ok_or_else(|| GetLastError())
 	}
 
 	/// [`DefWindowProc`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)

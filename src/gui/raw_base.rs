@@ -118,19 +118,21 @@ impl RawBase {
 
 		// Our hwnd member is set during WM_NCCREATE processing, already set when
 		// CreateWindowEx returns.
-		HWND::CreateWindowEx(
-			ex_styles,
-			AtomStr::Atom(class_name),
-			title, styles,
-			pos, sz,
-			self.base.parent_base().map(|parent| parent.hwnd()),
-			hmenu,
-			self.base.parent_base().map_or_else(
-				|| HINSTANCE::GetModuleHandle(None),
-				|parent| Ok(parent.hwnd().hinstance()),
-			)?,
-			Some(self as *const _ as _), // pass pointer to self
-		).map(|_| ())
+		unsafe {
+			HWND::CreateWindowEx(
+				ex_styles,
+				AtomStr::Atom(class_name),
+				title, styles,
+				pos, sz,
+				self.base.parent_base().map(|parent| parent.hwnd()),
+				hmenu,
+				self.base.parent_base().map_or_else(
+					|| HINSTANCE::GetModuleHandle(None),
+					|parent| Ok(parent.hwnd().hinstance()),
+				)?,
+				Some(self as *const _ as _), // pass pointer to self
+			)
+		}.map(|_| ())
 	}
 
 	extern "system" fn window_proc(

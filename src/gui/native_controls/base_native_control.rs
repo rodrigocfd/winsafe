@@ -75,16 +75,18 @@ impl BaseNativeControl {
 			panic!("Cannot create control before parent window creation.");
 		}
 
-		*self.hwnd.as_mut() = HWND::CreateWindowEx(
-			ex_styles,
-			AtomStr::from_str(class_name),
-			title, styles,
-			pos, sz,
-			Some(hparent),
-			IdMenu::Id(ctrl_id),
-			hparent.hinstance(),
-			None,
-		)?;
+		*self.hwnd.as_mut() = unsafe {
+			HWND::CreateWindowEx(
+				ex_styles,
+				AtomStr::from_str(class_name),
+				title, styles,
+				pos, sz,
+				Some(hparent),
+				IdMenu::Id(ctrl_id),
+				hparent.hinstance(),
+				None,
+			)?
+		};
 
 		self.install_subclass_if_needed()?;
 		Ok(*self.hwnd)
