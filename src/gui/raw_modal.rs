@@ -109,7 +109,7 @@ impl RawModal {
 			}
 
 			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			unsafe { DispatchMessage(&msg); }
 
 			if self.0.raw_base.base.hwnd().is_null() {
 				return Ok(0); // our modal was destroyed, terminate loop

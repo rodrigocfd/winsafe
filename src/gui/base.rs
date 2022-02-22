@@ -191,7 +191,7 @@ impl Base {
 			}
 
 			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			unsafe { DispatchMessage(&msg); }
 		}
 	}
 }
