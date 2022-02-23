@@ -17,7 +17,7 @@ pub struct ClearSel {
 	pub redraw: bool,
 }
 
-impl MsgSend for ClearSel {
+unsafe impl MsgSend for ClearSel {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -42,7 +42,7 @@ pub struct ClearTics {
 	pub redraw: bool,
 }
 
-impl MsgSend for ClearTics {
+unsafe impl MsgSend for ClearTics {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -67,7 +67,7 @@ pub struct GetBuddy {
 	pub left_above: bool,
 }
 
-impl MsgSend for GetBuddy {
+unsafe impl MsgSend for GetBuddy {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -92,7 +92,7 @@ pub struct GetChannelRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetChannelRect<'a> {
+unsafe impl<'a> MsgSend for GetChannelRect<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -115,7 +115,7 @@ impl<'a> MsgSend for GetChannelRect<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetLineSize {}
 
-impl MsgSend for GetLineSize {
+unsafe impl MsgSend for GetLineSize {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -138,7 +138,7 @@ impl MsgSend for GetLineSize {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNumTics {}
 
-impl MsgSend for GetNumTics {
+unsafe impl MsgSend for GetNumTics {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -161,7 +161,7 @@ impl MsgSend for GetNumTics {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPageSize {}
 
-impl MsgSend for GetPageSize {
+unsafe impl MsgSend for GetPageSize {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -184,7 +184,7 @@ impl MsgSend for GetPageSize {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPos {}
 
-impl MsgSend for GetPos {
+unsafe impl MsgSend for GetPos {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -207,7 +207,7 @@ impl MsgSend for GetPos {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRangeMax {}
 
-impl MsgSend for GetRangeMax {
+unsafe impl MsgSend for GetRangeMax {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -230,7 +230,7 @@ impl MsgSend for GetRangeMax {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRangeMin {}
 
-impl MsgSend for GetRangeMin {
+unsafe impl MsgSend for GetRangeMin {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -253,7 +253,7 @@ impl MsgSend for GetRangeMin {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelEnd {}
 
-impl MsgSend for GetSelEnd {
+unsafe impl MsgSend for GetSelEnd {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -276,7 +276,7 @@ impl MsgSend for GetSelEnd {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelStart {}
 
-impl MsgSend for GetSelStart {
+unsafe impl MsgSend for GetSelStart {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -299,7 +299,7 @@ impl MsgSend for GetSelStart {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetThumbLength {}
 
-impl MsgSend for GetThumbLength {
+unsafe impl MsgSend for GetThumbLength {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -324,7 +324,7 @@ pub struct GetThumbRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetThumbRect<'a> {
+unsafe impl<'a> MsgSend for GetThumbRect<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -347,7 +347,7 @@ impl<'a> MsgSend for GetThumbRect<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTooltips {}
 
-impl MsgSend for GetTooltips {
+unsafe impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -373,7 +373,7 @@ pub struct SetBuddy {
 	pub hwnd_buddy: HWND,
 }
 
-impl MsgSend for SetBuddy {
+unsafe impl MsgSend for SetBuddy {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -398,7 +398,7 @@ pub struct SetPageSize {
 	pub page_size: u32,
 }
 
-impl MsgSend for SetPageSize {
+unsafe impl MsgSend for SetPageSize {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -424,7 +424,7 @@ pub struct SetPos {
 	pub pos: u32,
 }
 
-impl MsgSend for SetPos {
+unsafe impl MsgSend for SetPos {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -449,7 +449,7 @@ pub struct SetPosNotify {
 	pub pos: u32,
 }
 
-impl MsgSend for SetPosNotify {
+unsafe impl MsgSend for SetPosNotify {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -475,7 +475,7 @@ pub struct SetRangeMax {
 	pub max: u32,
 }
 
-impl MsgSend for SetRangeMax {
+unsafe impl MsgSend for SetRangeMax {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -501,7 +501,7 @@ pub struct SetRangeMin {
 	pub min: u32,
 }
 
-impl MsgSend for SetRangeMin {
+unsafe impl MsgSend for SetRangeMin {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -527,7 +527,7 @@ pub struct SetSelEnd {
 	pub end: u32,
 }
 
-impl MsgSend for SetSelEnd {
+unsafe impl MsgSend for SetSelEnd {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -553,7 +553,7 @@ pub struct SetSelStart {
 	pub start: u32,
 }
 
-impl MsgSend for SetSelStart {
+unsafe impl MsgSend for SetSelStart {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -578,7 +578,7 @@ pub struct SetThumbLength {
 	pub length: u32,
 }
 
-impl MsgSend for SetThumbLength {
+unsafe impl MsgSend for SetThumbLength {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -603,7 +603,7 @@ pub struct SetTicFreq {
 	pub freq: u32,
 }
 
-impl MsgSend for SetTicFreq {
+unsafe impl MsgSend for SetTicFreq {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -628,7 +628,7 @@ pub struct SetTooltips {
 	pub hwnd_tooltip: HWND,
 }
 
-impl MsgSend for SetTooltips {
+unsafe impl MsgSend for SetTooltips {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

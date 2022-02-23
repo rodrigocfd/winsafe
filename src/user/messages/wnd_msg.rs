@@ -21,7 +21,7 @@ pub struct WndMsg {
 	pub lparam: isize,
 }
 
-impl MsgSend for WndMsg {
+unsafe impl MsgSend for WndMsg {
 	type RetType = isize;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -33,7 +33,7 @@ impl MsgSend for WndMsg {
 	}
 }
 
-impl MsgSendRecv for WndMsg {
+unsafe impl MsgSendRecv for WndMsg {
 	fn from_generic_wm(p: Self) -> Self {
 		p
 	}

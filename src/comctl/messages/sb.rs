@@ -19,7 +19,7 @@ pub struct GetIcon {
 	pub part_index: u8,
 }
 
-impl MsgSend for GetIcon {
+unsafe impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -44,7 +44,7 @@ pub struct GetParts<'a> {
 	pub right_edges: Option<&'a mut [i32]>,
 }
 
-impl<'a> MsgSend for GetParts<'a> {
+unsafe impl<'a> MsgSend for GetParts<'a> {
 	type RetType = u8;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -70,7 +70,7 @@ pub struct GetText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetText<'a> {
+unsafe impl<'a> MsgSend for GetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -95,7 +95,7 @@ pub struct GetTextLength {
 	pub part_index: u8,
 }
 
-impl MsgSend for GetTextLength {
+unsafe impl MsgSend for GetTextLength {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -121,7 +121,7 @@ pub struct GetTipText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetTipText<'a> {
+unsafe impl<'a> MsgSend for GetTipText<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -147,7 +147,7 @@ pub struct SetIcon {
 	pub hicon: Option<HICON>,
 }
 
-impl MsgSend for SetIcon {
+unsafe impl MsgSend for SetIcon {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -172,7 +172,7 @@ pub struct SetParts<'a> {
 	pub right_edges: &'a [i32],
 }
 
-impl<'a> MsgSend for SetParts<'a> {
+unsafe impl<'a> MsgSend for SetParts<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -199,7 +199,7 @@ pub struct SetText {
 	pub text: WString,
 }
 
-impl MsgSend for SetText {
+unsafe impl MsgSend for SetText {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -223,7 +223,7 @@ pub struct SetTipText {
 	pub text: WString,
 }
 
-impl MsgSend for SetTipText {
+unsafe impl MsgSend for SetTipText {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -246,7 +246,7 @@ pub struct Simple {
 	pub display_simple: bool,
 }
 
-impl MsgSend for Simple {
+unsafe impl MsgSend for Simple {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

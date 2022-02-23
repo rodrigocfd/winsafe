@@ -15,7 +15,7 @@ pub_struct_msg_empty! { Click: co::BM::CLICK.into(); "user";
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCheck {}
 
-impl MsgSend for GetCheck {
+unsafe impl MsgSend for GetCheck {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -40,7 +40,7 @@ pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
 
-impl MsgSend for GetImage {
+unsafe impl MsgSend for GetImage {
 	type RetType = WinResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -67,7 +67,7 @@ impl MsgSend for GetImage {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetState {}
 
-impl MsgSend for GetState {
+unsafe impl MsgSend for GetState {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -92,7 +92,7 @@ pub struct SetCheck {
 	pub state: co::BST,
 }
 
-impl MsgSend for SetCheck {
+unsafe impl MsgSend for SetCheck {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -117,7 +117,7 @@ pub struct SetDontClick {
 	pub dont_click: bool,
 }
 
-impl MsgSend for SetDontClick {
+unsafe impl MsgSend for SetDontClick {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -142,7 +142,7 @@ pub struct SetImage {
 	pub image: BmpIcon,
 }
 
-impl MsgSend for SetImage {
+unsafe impl MsgSend for SetImage {
 	type RetType = WinResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -173,7 +173,7 @@ pub struct SetState {
 	pub highlight: bool,
 }
 
-impl MsgSend for SetState {
+unsafe impl MsgSend for SetState {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -199,7 +199,7 @@ pub struct SetStyle {
 	pub redraw: bool,
 }
 
-impl MsgSend for SetStyle {
+unsafe impl MsgSend for SetStyle {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

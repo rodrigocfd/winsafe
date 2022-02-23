@@ -20,7 +20,7 @@ pub struct GetDateTimePickerInfo<'a> {
 	pub info: &'a mut DATETIMEPICKERINFO,
 }
 
-impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
+unsafe impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -45,7 +45,7 @@ pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-impl<'a> MsgSend for GetIdealSize<'a> {
+unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -70,7 +70,7 @@ pub struct GetMcColor {
 	pub color_index: co::MCSC,
 }
 
-impl MsgSend for GetMcColor {
+unsafe impl MsgSend for GetMcColor {
 	type RetType = WinResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -96,7 +96,7 @@ impl MsgSend for GetMcColor {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMcStyle {}
 
-impl MsgSend for GetMcStyle {
+unsafe impl MsgSend for GetMcStyle {
 	type RetType = WinResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -119,7 +119,7 @@ impl MsgSend for GetMcStyle {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMonthCal {}
 
-impl MsgSend for GetMonthCal {
+unsafe impl MsgSend for GetMonthCal {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -144,7 +144,7 @@ pub struct GetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for GetRange<'a> {
+unsafe impl<'a> MsgSend for GetRange<'a> {
 	type RetType = co::GDTR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -169,7 +169,7 @@ pub struct GetSystemTime<'a> {
 	pub system_time: &'a mut SYSTEMTIME,
 }
 
-impl<'a> MsgSend for GetSystemTime<'a> {
+unsafe impl<'a> MsgSend for GetSystemTime<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -199,7 +199,7 @@ pub struct SetFormat {
 	pub format_string: Option<WString>,
 }
 
-impl MsgSend for SetFormat {
+unsafe impl MsgSend for SetFormat {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -225,7 +225,7 @@ pub struct SetMcColor {
 	pub color: COLORREF,
 }
 
-impl MsgSend for SetMcColor {
+unsafe impl MsgSend for SetMcColor {
 	type RetType = WinResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -253,7 +253,7 @@ pub struct SetMcStyle {
 	pub style: co::MCS,
 }
 
-impl MsgSend for SetMcStyle {
+unsafe impl MsgSend for SetMcStyle {
 	type RetType = WinResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -279,7 +279,7 @@ pub struct SetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for SetRange<'a> {
+unsafe impl<'a> MsgSend for SetRange<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -304,7 +304,7 @@ pub struct SetSystemTime<'a> {
 	pub system_time: Option<&'a SYSTEMTIME>,
 }
 
-impl<'a> MsgSend for SetSystemTime<'a> {
+unsafe impl<'a> MsgSend for SetSystemTime<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

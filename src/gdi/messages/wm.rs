@@ -46,7 +46,7 @@ pub struct DisplayChange {
 	pub vert_res: u16,
 }
 
-impl MsgSend for DisplayChange {
+unsafe impl MsgSend for DisplayChange {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -62,7 +62,7 @@ impl MsgSend for DisplayChange {
 	}
 }
 
-impl MsgSendRecv for DisplayChange {
+unsafe impl MsgSendRecv for DisplayChange {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			depth_bpp: p.wparam as _,
@@ -79,7 +79,7 @@ impl MsgSendRecv for DisplayChange {
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub struct GetFont {}
 
-impl MsgSend for GetFont {
+unsafe impl MsgSend for GetFont {
 	type RetType = Option<HFONT>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -95,7 +95,7 @@ impl MsgSend for GetFont {
 	}
 }
 
-impl MsgSendRecv for GetFont {
+unsafe impl MsgSendRecv for GetFont {
 	fn from_generic_wm(_: WndMsg) -> Self {
 		Self {}
 	}
@@ -110,7 +110,7 @@ pub struct NcPaint {
 	pub updated_hrgn: HRGN,
 }
 
-impl MsgSend for NcPaint {
+unsafe impl MsgSend for NcPaint {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -126,7 +126,7 @@ impl MsgSend for NcPaint {
 	}
 }
 
-impl MsgSendRecv for NcPaint {
+unsafe impl MsgSendRecv for NcPaint {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			updated_hrgn: HRGN(p.wparam as _),
@@ -148,7 +148,7 @@ pub struct SetFont {
 	pub redraw: bool,
 }
 
-impl MsgSend for SetFont {
+unsafe impl MsgSend for SetFont {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -164,7 +164,7 @@ impl MsgSend for SetFont {
 	}
 }
 
-impl MsgSendRecv for SetFont {
+unsafe impl MsgSendRecv for SetFont {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hfont: HFONT(p.wparam as _),
@@ -182,7 +182,7 @@ pub struct SetRedraw {
 	pub can_redraw: bool,
 }
 
-impl MsgSend for SetRedraw {
+unsafe impl MsgSend for SetRedraw {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -198,7 +198,7 @@ impl MsgSend for SetRedraw {
 	}
 }
 
-impl MsgSendRecv for SetRedraw {
+unsafe impl MsgSendRecv for SetRedraw {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			can_redraw: p.wparam != 0,

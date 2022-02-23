@@ -19,7 +19,7 @@ pub struct AddBitmap<'a> {
 	pub info: &'a TBADDBITMAP,
 }
 
-impl<'a> MsgSend for AddBitmap<'a> {
+unsafe impl<'a> MsgSend for AddBitmap<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -47,7 +47,7 @@ pub struct AddButtons<'a, 'b> {
 	pub buttons: &'a mut [TBBUTTON<'b>],
 }
 
-impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
+unsafe impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -72,7 +72,7 @@ pub struct AddString {
 	pub texts: ResStrs,
 }
 
-impl MsgSend for AddString {
+unsafe impl MsgSend for AddString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -108,7 +108,7 @@ pub_struct_msg_empty! { AutoSize: co::TBM::AUTOSIZE.into(); "comctl";
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ButtonCount {}
 
-impl MsgSend for ButtonCount {
+unsafe impl MsgSend for ButtonCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -133,7 +133,7 @@ pub struct ButtonStructSize {
 	pub size: u32,
 }
 
-impl MsgSend for ButtonStructSize {
+unsafe impl MsgSend for ButtonStructSize {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

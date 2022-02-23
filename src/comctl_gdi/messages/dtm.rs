@@ -15,7 +15,7 @@ pub struct SetMcFont {
 	pub redraw: bool,
 }
 
-impl MsgSend for SetMcFont {
+unsafe impl MsgSend for SetMcFont {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -38,7 +38,7 @@ impl MsgSend for SetMcFont {
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 pub struct GetMcFont {}
 
-impl MsgSend for GetMcFont {
+unsafe impl MsgSend for GetMcFont {
 	type RetType = WinResult<HFONT>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

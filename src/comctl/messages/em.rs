@@ -14,7 +14,7 @@ pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetCueBanner<'a> {
+unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -40,7 +40,7 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HideBalloonTip {}
 
-impl MsgSend for HideBalloonTip {
+unsafe impl MsgSend for HideBalloonTip {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -66,7 +66,7 @@ pub struct SetCueBanner {
 	pub text: WString,
 }
 
-impl MsgSend for SetCueBanner {
+unsafe impl MsgSend for SetCueBanner {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -91,7 +91,7 @@ pub struct ShowBalloonTip<'a, 'b, 'c> {
 	pub info: &'c EDITBALLOONTIP<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
+unsafe impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

@@ -13,7 +13,7 @@ pub struct SetExtendedStyle {
 	pub mask: co::TVS_EX,
 }
 
-impl MsgSend for SetExtendedStyle {
+unsafe impl MsgSend for SetExtendedStyle {
 	type RetType = HrResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

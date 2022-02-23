@@ -16,7 +16,7 @@ use crate::user::privs::zero_as_err;
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIcon {}
 
-impl MsgSend for GetIcon {
+unsafe impl MsgSend for GetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -41,7 +41,7 @@ pub struct SetIcon {
 	pub icon: HICON,
 }
 
-impl MsgSend for SetIcon {
+unsafe impl MsgSend for SetIcon {
 	type RetType = WinResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

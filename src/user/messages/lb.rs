@@ -18,7 +18,7 @@ pub struct AddFile {
 	pub text: WString,
 }
 
-impl MsgSend for AddFile {
+unsafe impl MsgSend for AddFile {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -47,7 +47,7 @@ pub struct AddString {
 	pub text: WString,
 }
 
-impl MsgSend for AddString {
+unsafe impl MsgSend for AddString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -76,7 +76,7 @@ pub struct DeleteString {
 	pub index: u32,
 }
 
-impl MsgSend for DeleteString {
+unsafe impl MsgSend for DeleteString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -105,7 +105,7 @@ pub struct Dir {
 	pub path: WString,
 }
 
-impl MsgSend for Dir {
+unsafe impl MsgSend for Dir {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -135,7 +135,7 @@ pub struct FindString {
 	pub text: WString,
 }
 
-impl MsgSend for FindString {
+unsafe impl MsgSend for FindString {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -164,7 +164,7 @@ pub struct FindStringExact {
 	pub text: WString,
 }
 
-impl MsgSend for FindStringExact {
+unsafe impl MsgSend for FindStringExact {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -190,7 +190,7 @@ impl MsgSend for FindStringExact {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetAnchorIndex {}
 
-impl MsgSend for GetAnchorIndex {
+unsafe impl MsgSend for GetAnchorIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -213,7 +213,7 @@ impl MsgSend for GetAnchorIndex {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCaretIndex {}
 
-impl MsgSend for GetCaretIndex {
+unsafe impl MsgSend for GetCaretIndex {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -236,7 +236,7 @@ impl MsgSend for GetCaretIndex {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCount {}
 
-impl MsgSend for GetCount {
+unsafe impl MsgSend for GetCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -262,7 +262,7 @@ impl MsgSend for GetCount {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCurSel {}
 
-impl MsgSend for GetCurSel {
+unsafe impl MsgSend for GetCurSel {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -288,7 +288,7 @@ impl MsgSend for GetCurSel {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHorizontalExtent {}
 
-impl MsgSend for GetHorizontalExtent {
+unsafe impl MsgSend for GetHorizontalExtent {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -313,7 +313,7 @@ pub struct GetItemData {
 	pub index: u32,
 }
 
-impl MsgSend for GetItemData {
+unsafe impl MsgSend for GetItemData {
 	type RetType = WinResult<isize>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -342,7 +342,7 @@ pub struct GetItemHeight {
 	pub index: Option<u32>,
 }
 
-impl MsgSend for GetItemHeight {
+unsafe impl MsgSend for GetItemHeight {
 	type RetType = WinResult<u8>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -371,7 +371,7 @@ pub struct GetItemRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetItemRect<'a> {
+unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -397,7 +397,7 @@ impl<'a> MsgSend for GetItemRect<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetListBoxInfo {}
 
-impl MsgSend for GetListBoxInfo {
+unsafe impl MsgSend for GetListBoxInfo {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -420,7 +420,7 @@ impl MsgSend for GetListBoxInfo {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLocale {}
 
-impl MsgSend for GetLocale {
+unsafe impl MsgSend for GetLocale {
 	type RetType = LCID;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -445,7 +445,7 @@ pub struct GetSel {
 	pub index: u32,
 }
 
-impl MsgSend for GetSel {
+unsafe impl MsgSend for GetSel {
 	type RetType = WinResult<bool>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -471,7 +471,7 @@ impl MsgSend for GetSel {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetSelCount {}
 
-impl MsgSend for GetSelCount {
+unsafe impl MsgSend for GetSelCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -499,7 +499,7 @@ pub struct GetSelItems<'a> {
 	pub buffer: &'a mut [u32],
 }
 
-impl<'a> MsgSend for GetSelItems<'a> {
+unsafe impl<'a> MsgSend for GetSelItems<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -528,7 +528,7 @@ pub struct GetText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetText<'a> {
+unsafe impl<'a> MsgSend for GetText<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -556,7 +556,7 @@ pub struct GetTextLen {
 	pub index: u32,
 }
 
-impl MsgSend for GetTextLen {
+unsafe impl MsgSend for GetTextLen {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -582,7 +582,7 @@ impl MsgSend for GetTextLen {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTopIndex {}
 
-impl MsgSend for GetTopIndex {
+unsafe impl MsgSend for GetTopIndex {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -611,7 +611,7 @@ pub struct InitStorage {
 	pub memory_bytes: u32,
 }
 
-impl MsgSend for InitStorage {
+unsafe impl MsgSend for InitStorage {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -640,7 +640,7 @@ pub struct InsertString {
 	pub text: WString,
 }
 
-impl MsgSend for InsertString {
+unsafe impl MsgSend for InsertString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -669,7 +669,7 @@ pub struct ItemFromPoint {
 	pub coords: POINT,
 }
 
-impl MsgSend for ItemFromPoint {
+unsafe impl MsgSend for ItemFromPoint {
 	type RetType = (i32, bool);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -699,7 +699,7 @@ pub struct SelectString {
 	pub prefix: WString,
 }
 
-impl MsgSend for SelectString {
+unsafe impl MsgSend for SelectString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -730,7 +730,7 @@ pub struct SelItemRange {
 	pub last_item: u16,
 }
 
-impl MsgSend for SelItemRange {
+unsafe impl MsgSend for SelItemRange {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -759,7 +759,7 @@ pub struct SelItemRangeEx {
 	pub last_index: u32,
 }
 
-impl MsgSend for SelItemRangeEx {
+unsafe impl MsgSend for SelItemRangeEx {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -787,7 +787,7 @@ pub struct SetAnchorIndex {
 	pub index: u32,
 }
 
-impl MsgSend for SetAnchorIndex {
+unsafe impl MsgSend for SetAnchorIndex {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -816,7 +816,7 @@ pub struct SetCaretIndex {
 	pub at_least_partially_visible: bool,
 }
 
-impl MsgSend for SetCaretIndex {
+unsafe impl MsgSend for SetCaretIndex {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -844,7 +844,7 @@ pub struct SetColumnWidth {
 	pub width: u32,
 }
 
-impl MsgSend for SetColumnWidth {
+unsafe impl MsgSend for SetColumnWidth {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -869,7 +869,7 @@ pub struct SetCount {
 	pub new_count: u32,
 }
 
-impl MsgSend for SetCount {
+unsafe impl MsgSend for SetCount {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -898,7 +898,7 @@ pub struct SetCurSel {
 	pub index: Option<u32>,
 }
 
-impl MsgSend for SetCurSel {
+unsafe impl MsgSend for SetCurSel {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -930,7 +930,7 @@ pub struct SetHorizontalExtent {
 	pub width: u32,
 }
 
-impl MsgSend for SetHorizontalExtent {
+unsafe impl MsgSend for SetHorizontalExtent {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -956,7 +956,7 @@ pub struct SetItemData {
 	pub data: isize,
 }
 
-impl MsgSend for SetItemData {
+unsafe impl MsgSend for SetItemData {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -985,7 +985,7 @@ pub struct SetItemHeight {
 	pub height: u8,
 }
 
-impl MsgSend for SetItemHeight {
+unsafe impl MsgSend for SetItemHeight {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -1013,7 +1013,7 @@ pub struct SetLocale {
 	pub locale: LCID,
 }
 
-impl MsgSend for SetLocale {
+unsafe impl MsgSend for SetLocale {
 	type RetType = WinResult<LCID>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -1042,7 +1042,7 @@ pub struct SetSel {
 	pub index: Option<u32>,
 }
 
-impl MsgSend for SetSel {
+unsafe impl MsgSend for SetSel {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -1070,7 +1070,7 @@ pub struct SetTabStops<'a> {
 	pub tab_stops: &'a [u32],
 }
 
-impl<'a> MsgSend for SetTabStops<'a> {
+unsafe impl<'a> MsgSend for SetTabStops<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -1095,7 +1095,7 @@ pub struct SetTopIndex {
 	pub index: u32,
 }
 
-impl MsgSend for SetTopIndex {
+unsafe impl MsgSend for SetTopIndex {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

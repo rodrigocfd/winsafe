@@ -15,7 +15,7 @@ pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-impl<'a> MsgSend for GetIdealSize<'a> {
+unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -40,7 +40,7 @@ pub struct GetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
 
-impl<'a> MsgSend for GetImageList<'a> {
+unsafe impl<'a> MsgSend for GetImageList<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -65,7 +65,7 @@ pub struct GetNote<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetNote<'a> {
+unsafe impl<'a> MsgSend for GetNote<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -88,7 +88,7 @@ impl<'a> MsgSend for GetNote<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNoteLength {}
 
-impl MsgSend for GetNoteLength {
+unsafe impl MsgSend for GetNoteLength {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -113,7 +113,7 @@ pub struct GetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
 
-impl<'a> MsgSend for GetSplitInfo<'a> {
+unsafe impl<'a> MsgSend for GetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -138,7 +138,7 @@ pub struct GetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetTextMargin<'a> {
+unsafe impl<'a> MsgSend for GetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -163,7 +163,7 @@ pub struct SetDropDownState {
 	pub is_pushed: bool,
 }
 
-impl MsgSend for SetDropDownState {
+unsafe impl MsgSend for SetDropDownState {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -188,7 +188,7 @@ pub struct SetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
 
-impl<'a> MsgSend for SetImageList<'a> {
+unsafe impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -213,7 +213,7 @@ pub struct SetNote {
 	pub text: WString,
 }
 
-impl MsgSend for SetNote {
+unsafe impl MsgSend for SetNote {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -238,7 +238,7 @@ pub struct SetShield {
 	pub has_elevated_icon: bool,
 }
 
-impl MsgSend for SetShield {
+unsafe impl MsgSend for SetShield {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -263,7 +263,7 @@ pub struct SetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
 
-impl<'a> MsgSend for SetSplitInfo<'a> {
+unsafe impl<'a> MsgSend for SetSplitInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -288,7 +288,7 @@ pub struct SetTextMargin<'a> {
 	pub margins: &'a RECT,
 }
 
-impl<'a> MsgSend for SetTextMargin<'a> {
+unsafe impl<'a> MsgSend for SetTextMargin<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

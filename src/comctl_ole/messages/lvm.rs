@@ -14,7 +14,7 @@ pub struct SetItemIndexState<'a, 'b, 'c> {
 	pub lvitem: &'c LVITEM<'b>,
 }
 
-impl<'a, 'b, 'c> MsgSend for SetItemIndexState<'a, 'b, 'c> {
+unsafe impl<'a, 'b, 'c> MsgSend for SetItemIndexState<'a, 'b, 'c> {
 	type RetType = HrResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

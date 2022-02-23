@@ -16,7 +16,7 @@ pub struct DeleteItem {
 	pub hitem: HTREEITEM,
 }
 
-impl MsgSend for DeleteItem {
+unsafe impl MsgSend for DeleteItem {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -41,7 +41,7 @@ pub struct EditLabel {
 	pub hitem: HTREEITEM,
 }
 
-impl MsgSend for EditLabel {
+unsafe impl MsgSend for EditLabel {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -66,7 +66,7 @@ pub struct EndEditLabelNow {
 	pub save: bool,
 }
 
-impl MsgSend for EndEditLabelNow {
+unsafe impl MsgSend for EndEditLabelNow {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -91,7 +91,7 @@ pub struct EnsureVisible {
 	pub hitem: HTREEITEM,
 }
 
-impl MsgSend for EnsureVisible {
+unsafe impl MsgSend for EnsureVisible {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -117,7 +117,7 @@ pub struct Expand {
 	pub hitem: HTREEITEM,
 }
 
-impl MsgSend for Expand {
+unsafe impl MsgSend for Expand {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -140,7 +140,7 @@ impl MsgSend for Expand {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBkColor {}
 
-impl MsgSend for GetBkColor {
+unsafe impl MsgSend for GetBkColor {
 	type RetType = Option<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -166,7 +166,7 @@ impl MsgSend for GetBkColor {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCount {}
 
-impl MsgSend for GetCount {
+unsafe impl MsgSend for GetCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -189,7 +189,7 @@ impl MsgSend for GetCount {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetEditControl {}
 
-impl MsgSend for GetEditControl {
+unsafe impl MsgSend for GetEditControl {
 	type RetType = WinResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -212,7 +212,7 @@ impl MsgSend for GetEditControl {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetExtendedStyle {}
 
-impl MsgSend for GetExtendedStyle {
+unsafe impl MsgSend for GetExtendedStyle {
 	type RetType = co::TVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -237,7 +237,7 @@ pub struct GetImageList {
 	pub kind: co::TVSIL,
 }
 
-impl MsgSend for GetImageList {
+unsafe impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -260,7 +260,7 @@ impl MsgSend for GetImageList {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIndent {}
 
-impl MsgSend for GetIndent {
+unsafe impl MsgSend for GetIndent {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -283,7 +283,7 @@ impl MsgSend for GetIndent {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMarkColor {}
 
-impl MsgSend for GetInsertMarkColor {
+unsafe impl MsgSend for GetInsertMarkColor {
 	type RetType = COLORREF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -308,7 +308,7 @@ pub struct GetItem<'a, 'b> {
 	pub tvitem: &'b mut TVITEMEX<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
+unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -331,7 +331,7 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemHeight {}
 
-impl MsgSend for GetItemHeight {
+unsafe impl MsgSend for GetItemHeight {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -357,7 +357,7 @@ pub struct GetItemRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetItemRect<'a> {
+unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -383,7 +383,7 @@ pub struct GetItemState {
 	pub mask: co::TVIS,
 }
 
-impl MsgSend for GetItemState {
+unsafe impl MsgSend for GetItemState {
 	type RetType = co::TVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -406,7 +406,7 @@ impl MsgSend for GetItemState {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetLineColor {}
 
-impl MsgSend for GetLineColor {
+unsafe impl MsgSend for GetLineColor {
 	type RetType = Option<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -435,7 +435,7 @@ pub struct GetNextItem {
 	pub hitem: Option<HTREEITEM>,
 }
 
-impl MsgSend for GetNextItem {
+unsafe impl MsgSend for GetNextItem {
 	type RetType = Option<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -458,7 +458,7 @@ impl MsgSend for GetNextItem {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetScrollTime {}
 
-impl MsgSend for GetScrollTime {
+unsafe impl MsgSend for GetScrollTime {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -481,7 +481,7 @@ impl MsgSend for GetScrollTime {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextColor {}
 
-impl MsgSend for GetTextColor {
+unsafe impl MsgSend for GetTextColor {
 	type RetType = Option<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -507,7 +507,7 @@ impl MsgSend for GetTextColor {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTooltips {}
 
-impl MsgSend for GetTooltips {
+unsafe impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -530,7 +530,7 @@ impl MsgSend for GetTooltips {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetVisibleCount {}
 
-impl MsgSend for GetVisibleCount {
+unsafe impl MsgSend for GetVisibleCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -555,7 +555,7 @@ pub struct InsertItem<'a, 'b> {
 	pub tvinsertstruct: &'b TVINSERTSTRUCT<'a>,
 }
 
-impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
+unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = WinResult<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -581,7 +581,7 @@ pub struct SelectItem {
 	pub hitem: HTREEITEM,
 }
 
-impl MsgSend for SelectItem {
+unsafe impl MsgSend for SelectItem {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -606,7 +606,7 @@ pub struct SetHot {
 	pub hitem: Option<HTREEITEM>,
 }
 
-impl MsgSend for SetHot {
+unsafe impl MsgSend for SetHot {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -632,7 +632,7 @@ pub struct SetImageList {
 	pub himglist: Option<HIMAGELIST>,
 }
 
-impl MsgSend for SetImageList {
+unsafe impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -657,7 +657,7 @@ pub struct SetIndent {
 	pub width: u32,
 }
 
-impl MsgSend for SetIndent {
+unsafe impl MsgSend for SetIndent {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -682,7 +682,7 @@ pub struct SetItem<'a, 'b> {
 	pub tvitem: &'b TVITEMEX<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
+unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -707,7 +707,7 @@ pub struct ShowInfoTip {
 	pub hitem: HTREEITEM,
 }
 
-impl MsgSend for ShowInfoTip {
+unsafe impl MsgSend for ShowInfoTip {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -732,7 +732,7 @@ pub struct SortChildren {
 	pub recursive: bool,
 }
 
-impl MsgSend for SortChildren {
+unsafe impl MsgSend for SortChildren {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

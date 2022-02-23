@@ -13,7 +13,7 @@ pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetCueBanner<'a> {
+unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -39,7 +39,7 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMinVisible {}
 
-impl MsgSend for GetMinVisible {
+unsafe impl MsgSend for GetMinVisible {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -64,7 +64,7 @@ pub struct SetCueBanner {
 	pub text: WString,
 }
 
-impl MsgSend for SetCueBanner {
+unsafe impl MsgSend for SetCueBanner {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -92,7 +92,7 @@ pub struct SetMinVisible {
 	pub num_items: u32,
 }
 
-impl MsgSend for SetMinVisible {
+unsafe impl MsgSend for SetMinVisible {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

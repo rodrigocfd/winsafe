@@ -13,7 +13,7 @@ macro_rules! pub_struct_msg_empty {
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		pub struct $name {}
 
-		impl MsgSend for $name {
+		unsafe impl MsgSend for $name {
 			type RetType = ();
 
 			fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -43,7 +43,7 @@ macro_rules! pub_struct_msg_empty_handleable {
 			$( #[$msdn] )*
 		}
 
-		impl MsgSendRecv for $name {
+		unsafe impl MsgSendRecv for $name {
 			fn from_generic_wm(_: WndMsg) -> Self {
 				Self {}
 			}
@@ -72,7 +72,7 @@ macro_rules! pub_struct_msg_char {
 			pub key_is_being_released: bool,
 		}
 
-		impl crate::prelude::MsgSend for $name {
+		unsafe impl crate::prelude::MsgSend for $name {
 			type RetType = ();
 
 			fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -97,7 +97,7 @@ macro_rules! pub_struct_msg_char {
 			}
 		}
 
-		impl crate::prelude::MsgSendRecv for $name {
+		unsafe impl crate::prelude::MsgSendRecv for $name {
 			fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
@@ -130,7 +130,7 @@ macro_rules! pub_struct_msg_ctlcolor {
 			pub hwnd: crate::user::decl::HWND,
 		}
 
-		impl crate::prelude::MsgSend for $name {
+		unsafe impl crate::prelude::MsgSend for $name {
 			type RetType = crate::user::decl::HBRUSH;
 
 			fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -146,7 +146,7 @@ macro_rules! pub_struct_msg_ctlcolor {
 			}
 		}
 
-		impl crate::prelude::MsgSendRecv for $name {
+		unsafe impl crate::prelude::MsgSendRecv for $name {
 			fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				Self {
 					hdc: crate::user::decl::HDC(p.wparam as _),
@@ -173,7 +173,7 @@ macro_rules! pub_struct_msg_button {
 			pub coords: POINT,
 		}
 
-		impl MsgSend for $name {
+		unsafe impl MsgSend for $name {
 			type RetType = ();
 
 			fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -189,7 +189,7 @@ macro_rules! pub_struct_msg_button {
 			}
 		}
 
-		impl MsgSendRecv for $name {
+		unsafe impl MsgSendRecv for $name {
 			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
 					vkey_code: co::VK(p.wparam as _),

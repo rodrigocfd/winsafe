@@ -15,7 +15,7 @@ pub struct AddString {
 	pub text: WString,
 }
 
-impl MsgSend for AddString {
+unsafe impl MsgSend for AddString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -44,7 +44,7 @@ pub struct DeleteString {
 	pub index: u32,
 }
 
-impl MsgSend for DeleteString {
+unsafe impl MsgSend for DeleteString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -73,7 +73,7 @@ pub struct Dir {
 	pub path: WString,
 }
 
-impl MsgSend for Dir {
+unsafe impl MsgSend for Dir {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -103,7 +103,7 @@ pub struct FindString {
 	pub text: WString,
 }
 
-impl MsgSend for FindString {
+unsafe impl MsgSend for FindString {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -132,7 +132,7 @@ pub struct FindStringExact {
 	pub text: WString,
 }
 
-impl MsgSend for FindStringExact {
+unsafe impl MsgSend for FindStringExact {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -160,7 +160,7 @@ pub struct GetComboBoxInfo<'a> {
 	pub data: &'a mut COMBOBOXINFO,
 }
 
-impl<'a> MsgSend for GetComboBoxInfo<'a> {
+unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -183,7 +183,7 @@ impl<'a> MsgSend for GetComboBoxInfo<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCount {}
 
-impl MsgSend for GetCount {
+unsafe impl MsgSend for GetCount {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -206,7 +206,7 @@ impl MsgSend for GetCount {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCurSel {}
 
-impl MsgSend for GetCurSel {
+unsafe impl MsgSend for GetCurSel {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -234,7 +234,7 @@ pub struct GetDroppedControlRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetDroppedControlRect<'a> {
+unsafe impl<'a> MsgSend for GetDroppedControlRect<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -257,7 +257,7 @@ impl<'a> MsgSend for GetDroppedControlRect<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDroppedState {}
 
-impl MsgSend for GetDroppedState {
+unsafe impl MsgSend for GetDroppedState {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -280,7 +280,7 @@ impl MsgSend for GetDroppedState {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDroppedWidth {}
 
-impl MsgSend for GetDroppedWidth {
+unsafe impl MsgSend for GetDroppedWidth {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -306,7 +306,7 @@ impl MsgSend for GetDroppedWidth {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetEditSel {}
 
-impl MsgSend for GetEditSel {
+unsafe impl MsgSend for GetEditSel {
 	type RetType = (i32, i32);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -329,7 +329,7 @@ impl MsgSend for GetEditSel {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetExtendedUi {}
 
-impl MsgSend for GetExtendedUi {
+unsafe impl MsgSend for GetExtendedUi {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -352,7 +352,7 @@ impl MsgSend for GetExtendedUi {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHorizontalExtent {}
 
-impl MsgSend for GetHorizontalExtent {
+unsafe impl MsgSend for GetHorizontalExtent {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -377,7 +377,7 @@ pub struct GetItemData {
 	pub index: u32,
 }
 
-impl MsgSend for GetItemData {
+unsafe impl MsgSend for GetItemData {
 	type RetType = WinResult<isize>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -405,7 +405,7 @@ pub struct GetItemHeight {
 	pub component: i32,
 }
 
-impl MsgSend for GetItemHeight {
+unsafe impl MsgSend for GetItemHeight {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -434,7 +434,7 @@ pub struct GetLbText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetLbText<'a> {
+unsafe impl<'a> MsgSend for GetLbText<'a> {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -462,7 +462,7 @@ pub struct GetLbTextLen {
 	pub index: u32,
 }
 
-impl MsgSend for GetLbTextLen {
+unsafe impl MsgSend for GetLbTextLen {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -488,7 +488,7 @@ impl MsgSend for GetLbTextLen {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLocale {}
 
-impl MsgSend for GetLocale {
+unsafe impl MsgSend for GetLocale {
 	type RetType = LANGID;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -511,7 +511,7 @@ impl MsgSend for GetLocale {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTopIndex {}
 
-impl MsgSend for GetTopIndex {
+unsafe impl MsgSend for GetTopIndex {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -540,7 +540,7 @@ pub struct InitStorage {
 	pub memory_bytes: u32,
 }
 
-impl MsgSend for InitStorage {
+unsafe impl MsgSend for InitStorage {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -569,7 +569,7 @@ pub struct InsertString {
 	pub text: WString,
 }
 
-impl MsgSend for InsertString {
+unsafe impl MsgSend for InsertString {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -598,7 +598,7 @@ pub struct LimitText {
 	pub max_chars: Option<u32>,
 }
 
-impl MsgSend for LimitText {
+unsafe impl MsgSend for LimitText {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -628,7 +628,7 @@ pub struct SelectString {
 	pub search_text: WString,
 }
 
-impl MsgSend for SelectString {
+unsafe impl MsgSend for SelectString {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -656,7 +656,7 @@ pub struct SetCurSel {
 	pub index: Option<u32>,
 }
 
-impl MsgSend for SetCurSel {
+unsafe impl MsgSend for SetCurSel {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -684,7 +684,7 @@ pub struct SetDroppedWidth {
 	pub min_width: u32,
 }
 
-impl MsgSend for SetDroppedWidth {
+unsafe impl MsgSend for SetDroppedWidth {
 	type RetType = WinResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -713,7 +713,7 @@ pub struct SetEditSel {
 	pub end_pos: Option<u32>,
 }
 
-impl MsgSend for SetEditSel {
+unsafe impl MsgSend for SetEditSel {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -744,7 +744,7 @@ pub struct SetExtendedUi {
 	pub use_extended_ui: bool,
 }
 
-impl MsgSend for SetExtendedUi {
+unsafe impl MsgSend for SetExtendedUi {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -772,7 +772,7 @@ pub struct SetHorizontalExtent {
 	pub scrollable_width: u32,
 }
 
-impl MsgSend for SetHorizontalExtent {
+unsafe impl MsgSend for SetHorizontalExtent {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -798,7 +798,7 @@ pub struct SetItemData {
 	pub data: isize,
 }
 
-impl MsgSend for SetItemData {
+unsafe impl MsgSend for SetItemData {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -827,7 +827,7 @@ pub struct SetItemHeight {
 	pub height: u32,
 }
 
-impl MsgSend for SetItemHeight {
+unsafe impl MsgSend for SetItemHeight {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -855,7 +855,7 @@ pub struct SetLocale {
 	pub locale: LANGID,
 }
 
-impl MsgSend for SetLocale {
+unsafe impl MsgSend for SetLocale {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -883,7 +883,7 @@ pub struct SetTopIndex {
 	pub index: u32,
 }
 
-impl MsgSend for SetTopIndex {
+unsafe impl MsgSend for SetTopIndex {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -908,7 +908,7 @@ pub struct ShowDropDown {
 	pub show: bool,
 }
 
-impl MsgSend for ShowDropDown {
+unsafe impl MsgSend for ShowDropDown {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

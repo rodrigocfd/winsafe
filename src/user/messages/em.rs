@@ -12,7 +12,7 @@ use crate::user::privs::{zero_as_err, zero_as_none};
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct CanUndo {}
 
-impl MsgSend for CanUndo {
+unsafe impl MsgSend for CanUndo {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -39,7 +39,7 @@ pub struct CharFromPos {
 	pub coords: POINT,
 }
 
-impl MsgSend for CharFromPos {
+unsafe impl MsgSend for CharFromPos {
 	type RetType = (u16, u16);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -68,7 +68,7 @@ pub struct FmtLines {
 	pub insert_soft_line_breaks: bool,
 }
 
-impl MsgSend for FmtLines {
+unsafe impl MsgSend for FmtLines {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -91,7 +91,7 @@ impl MsgSend for FmtLines {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetFirstVisibleLine {}
 
-impl MsgSend for GetFirstVisibleLine {
+unsafe impl MsgSend for GetFirstVisibleLine {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -114,7 +114,7 @@ impl MsgSend for GetFirstVisibleLine {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHandle {}
 
-impl MsgSend for GetHandle {
+unsafe impl MsgSend for GetHandle {
 	type RetType = HLOCAL;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -137,7 +137,7 @@ impl MsgSend for GetHandle {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetImeStatus {}
 
-impl MsgSend for GetImeStatus {
+unsafe impl MsgSend for GetImeStatus {
 	type RetType = co::EIMES;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -160,7 +160,7 @@ impl MsgSend for GetImeStatus {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLimitText {}
 
-impl MsgSend for GetLimitText {
+unsafe impl MsgSend for GetLimitText {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -193,7 +193,7 @@ pub struct GetLine<'a> {
 	pub buffer: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetLine<'a> {
+unsafe impl<'a> MsgSend for GetLine<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -223,7 +223,7 @@ impl<'a> MsgSend for GetLine<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLineCount {}
 
-impl MsgSend for GetLineCount {
+unsafe impl MsgSend for GetLineCount {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -246,7 +246,7 @@ impl MsgSend for GetLineCount {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetMargins {}
 
-impl MsgSend for GetMargins {
+unsafe impl MsgSend for GetMargins {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -269,7 +269,7 @@ impl MsgSend for GetMargins {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetModify {}
 
-impl MsgSend for GetModify {
+unsafe impl MsgSend for GetModify {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -292,7 +292,7 @@ impl MsgSend for GetModify {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetPasswordChar {}
 
-impl MsgSend for GetPasswordChar {
+unsafe impl MsgSend for GetPasswordChar {
 	type RetType = Option<char>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -317,7 +317,7 @@ pub struct GetRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetRect<'a> {
+unsafe impl<'a> MsgSend for GetRect<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -343,7 +343,7 @@ pub struct GetSel<'a, 'b> {
 	pub past_last_index: Option<&'b mut u32>,
 }
 
-impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
+unsafe impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -366,7 +366,7 @@ impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetThumb {}
 
-impl MsgSend for GetThumb {
+unsafe impl MsgSend for GetThumb {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -389,7 +389,7 @@ impl MsgSend for GetThumb {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetWordBreakProc {}
 
-impl MsgSend for GetWordBreakProc {
+unsafe impl MsgSend for GetWordBreakProc {
 	type RetType = Option<EDITWORDBREAKPROC>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -414,7 +414,7 @@ pub struct LimitText {
 	pub max: Option<u32>,
 }
 
-impl MsgSend for LimitText {
+unsafe impl MsgSend for LimitText {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -439,7 +439,7 @@ pub struct LineFromChar {
 	pub char_index: Option<u32>,
 }
 
-impl MsgSend for LineFromChar {
+unsafe impl MsgSend for LineFromChar {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -464,7 +464,7 @@ pub struct LineIndex {
 	pub line_index: Option<u32>,
 }
 
-impl MsgSend for LineIndex {
+unsafe impl MsgSend for LineIndex {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -492,7 +492,7 @@ pub struct LineLength {
 	pub char_index: Option<u32>,
 }
 
-impl MsgSend for LineLength {
+unsafe impl MsgSend for LineLength {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -518,7 +518,7 @@ pub struct LineScroll {
 	pub num_lines: u32,
 }
 
-impl MsgSend for LineScroll {
+unsafe impl MsgSend for LineScroll {
 	type RetType = bool;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -545,7 +545,7 @@ pub struct PosFromChar {
 	pub char_index: u32,
 }
 
-impl MsgSend for PosFromChar {
+unsafe impl MsgSend for PosFromChar {
 	type RetType = POINT;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -571,7 +571,7 @@ pub struct ReplaceSel {
 	pub replacement_text: WString,
 }
 
-impl MsgSend for ReplaceSel {
+unsafe impl MsgSend for ReplaceSel {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -596,7 +596,7 @@ pub struct Scroll {
 	pub action: co::SB_EM,
 }
 
-impl MsgSend for Scroll {
+unsafe impl MsgSend for Scroll {
 	type RetType = WinResult<u16>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -625,7 +625,7 @@ pub struct SetHandle {
 	pub handle: HLOCAL,
 }
 
-impl MsgSend for SetHandle {
+unsafe impl MsgSend for SetHandle {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -650,7 +650,7 @@ pub struct SetImeStatus {
 	pub status: co::EIMES,
 }
 
-impl MsgSend for SetImeStatus {
+unsafe impl MsgSend for SetImeStatus {
 	type RetType = co::EIMES;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -675,7 +675,7 @@ pub struct SetLimitText {
 	pub max_chars: Option<u32>,
 }
 
-impl MsgSend for SetLimitText {
+unsafe impl MsgSend for SetLimitText {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -701,7 +701,7 @@ pub struct SetMargins {
 	pub size: SIZE,
 }
 
-impl MsgSend for SetMargins {
+unsafe impl MsgSend for SetMargins {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -726,7 +726,7 @@ pub struct SetModify {
 	pub flag: bool,
 }
 
-impl MsgSend for SetModify {
+unsafe impl MsgSend for SetModify {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -751,7 +751,7 @@ pub struct SetPasswordChar {
 	pub character: Option<char>,
 }
 
-impl MsgSend for SetPasswordChar {
+unsafe impl MsgSend for SetPasswordChar {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -776,7 +776,7 @@ pub struct SetReadOnly {
 	pub read_only: bool,
 }
 
-impl MsgSend for SetReadOnly {
+unsafe impl MsgSend for SetReadOnly {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -802,7 +802,7 @@ pub struct SetRect<'a> {
 	pub rect: Option<&'a RECT>,
 }
 
-impl<'a> MsgSend for SetRect<'a> {
+unsafe impl<'a> MsgSend for SetRect<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -828,7 +828,7 @@ pub struct SetRectNp<'a> {
 	pub rect: Option<&'a RECT>,
 }
 
-impl<'a> MsgSend for SetRectNp<'a> {
+unsafe impl<'a> MsgSend for SetRectNp<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -854,7 +854,7 @@ pub struct SetSel {
 	pub end: Option<u32>,
 }
 
-impl MsgSend for SetSel {
+unsafe impl MsgSend for SetSel {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -879,7 +879,7 @@ pub struct SetTabStops<'a> {
 	pub tab_stops: Option<&'a [i32]>,
 }
 
-impl<'a> MsgSend for SetTabStops<'a> {
+unsafe impl<'a> MsgSend for SetTabStops<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -904,7 +904,7 @@ pub struct SetWordBreakProc {
 	pub proc: Option<EDITWORDBREAKPROC>,
 }
 
-impl MsgSend for SetWordBreakProc {
+unsafe impl MsgSend for SetWordBreakProc {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -927,7 +927,7 @@ impl MsgSend for SetWordBreakProc {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Undo {}
 
-impl MsgSend for Undo {
+unsafe impl MsgSend for Undo {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

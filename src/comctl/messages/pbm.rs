@@ -18,7 +18,7 @@ pub struct DeltaPos {
 	pub advance_amount: u32,
 }
 
-impl MsgSend for DeltaPos {
+unsafe impl MsgSend for DeltaPos {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -41,7 +41,7 @@ impl MsgSend for DeltaPos {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPos {}
 
-impl MsgSend for GetPos {
+unsafe impl MsgSend for GetPos {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -67,7 +67,7 @@ pub struct GetRange<'a> {
 	pub ranges: Option<&'a mut PBRANGE>,
 }
 
-impl<'a> MsgSend for GetRange<'a> {
+unsafe impl<'a> MsgSend for GetRange<'a> {
 	type RetType = i32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -90,7 +90,7 @@ impl<'a> MsgSend for GetRange<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetState {}
 
-impl MsgSend for GetState {
+unsafe impl MsgSend for GetState {
 	type RetType = co::PBST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -116,7 +116,7 @@ pub struct SetMarquee {
 	pub time_ms: Option<u32>,
 }
 
-impl MsgSend for SetMarquee {
+unsafe impl MsgSend for SetMarquee {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -141,7 +141,7 @@ pub struct SetPos {
 	pub position: u32,
 }
 
-impl MsgSend for SetPos {
+unsafe impl MsgSend for SetPos {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -167,7 +167,7 @@ pub struct SetRange {
 	pub max: u16,
 }
 
-impl MsgSend for SetRange {
+unsafe impl MsgSend for SetRange {
 	type RetType = WinResult<(u16, u16)>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -193,7 +193,7 @@ pub struct SetRange32 {
 	pub max: u32,
 }
 
-impl MsgSend for SetRange32 {
+unsafe impl MsgSend for SetRange32 {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -218,7 +218,7 @@ pub struct SetState {
 	pub state: co::PBST,
 }
 
-impl MsgSend for SetState {
+unsafe impl MsgSend for SetState {
 	type RetType = co::PBST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -243,7 +243,7 @@ pub struct SetStep {
 	pub step: u32,
 }
 
-impl MsgSend for SetStep {
+unsafe impl MsgSend for SetStep {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -266,7 +266,7 @@ impl MsgSend for SetStep {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct StepIt {}
 
-impl MsgSend for StepIt {
+unsafe impl MsgSend for StepIt {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

@@ -12,7 +12,7 @@ pub struct DropFiles {
 	pub hdrop: HDROP,
 }
 
-impl MsgSend for DropFiles {
+unsafe impl MsgSend for DropFiles {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -28,7 +28,7 @@ impl MsgSend for DropFiles {
 	}
 }
 
-impl MsgSendRecv for DropFiles {
+unsafe impl MsgSendRecv for DropFiles {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hdrop: HDROP(p.wparam as _),

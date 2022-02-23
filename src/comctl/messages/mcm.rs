@@ -18,7 +18,7 @@ pub struct GetCurSel<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
 
-impl<'a> MsgSend for GetCurSel<'a> {
+unsafe impl<'a> MsgSend for GetCurSel<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -43,7 +43,7 @@ pub struct GetMinReqRect<'a> {
 	pub bounds_rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetMinReqRect<'a> {
+unsafe impl<'a> MsgSend for GetMinReqRect<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -66,7 +66,7 @@ impl<'a> MsgSend for GetMinReqRect<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMonthDelta {}
 
-impl MsgSend for GetMonthDelta {
+unsafe impl MsgSend for GetMonthDelta {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -91,7 +91,7 @@ pub struct SetCurSel<'a> {
 	pub info: &'a SYSTEMTIME,
 }
 
-impl<'a> MsgSend for SetCurSel<'a> {
+unsafe impl<'a> MsgSend for SetCurSel<'a> {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -116,7 +116,7 @@ pub struct SetCurrentView {
 	pub view: co::MCMV,
 }
 
-impl MsgSend for SetCurrentView {
+unsafe impl MsgSend for SetCurrentView {
 	type RetType = WinResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -141,7 +141,7 @@ pub struct SetToday<'a> {
 	pub today: &'a SYSTEMTIME,
 }
 
-impl<'a> MsgSend for SetToday<'a> {
+unsafe impl<'a> MsgSend for SetToday<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

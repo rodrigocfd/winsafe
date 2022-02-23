@@ -13,7 +13,7 @@ pub struct Notify<'a> {
 	pub nmhdr: &'a NMHDR,
 }
 
-impl<'a> MsgSend for Notify<'a> {
+unsafe impl<'a> MsgSend for Notify<'a> {
 	type RetType = isize;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -29,7 +29,7 @@ impl<'a> MsgSend for Notify<'a> {
 	}
 }
 
-impl<'a> MsgSendRecv for Notify<'a> {
+unsafe impl<'a> MsgSendRecv for Notify<'a> {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			nmhdr: unsafe { &*(p.lparam as *const _) },
