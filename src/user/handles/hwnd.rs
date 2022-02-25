@@ -895,35 +895,8 @@ pub trait UserHwnd: Handle {
 
 	/// [`PostMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
 	/// method. Note that this method is asychronous.
-	///
-	/// # Examples
-	///
-	/// Programatically closing a window:
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HWND, msg::wm};
-	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
-	///
-	/// hwnd.PostMessage(wm::Close {})?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
-	/// ```
-	///
-	/// Sending a message to all top-level windows:
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HWND, msg::wm};
-	///
-	/// HWND::BROADCAST.PostMessage(
-	///     wm::ExitMenuLoop { is_shortcut: false },
-	/// )?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
-	/// ```
 	fn PostMessage<M>(self, msg: M) -> WinResult<()>
-		where M: MsgSend,
+		where M: MsgSend + Send + Copy + 'static,
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
@@ -1075,6 +1048,31 @@ pub trait UserHwnd: Handle {
 				)
 			},
 		)
+	}
+
+	/// [`SendMessageTimeout`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagetimeoutw)
+	/// method.
+	fn SendMessageTimeout<M>(self,
+		msg: M, flags: co::SMTO, timeout_ms: u32) -> WinResult<M::RetType>
+		where M: MsgSend,
+	{
+		let mut msg = msg;
+		let wm_any = msg.as_generic_wm();
+		let mut result = isize::default();
+
+		bool_to_winresult(
+			unsafe {
+				user::ffi::SendMessageTimeoutW(
+					self.as_ptr(),
+					wm_any.msg_id.0,
+					wm_any.wparam,
+					wm_any.lparam,
+					flags.0,
+					timeout_ms,
+					&mut result,
+				)
+			} as _,
+		).map(|_| msg.convert_ret(result))
 	}
 
 	/// [`SetCapture`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)

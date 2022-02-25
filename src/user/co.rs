@@ -2146,6 +2146,18 @@ const_ordinary! { SM: i32: "user";
 	SYSTEMDOCKED 0x2004
 }
 
+const_bitflag! { SMTO: u32: "user";
+	/// [`SendMessageTimeout`](crate::prelude::UserHwnd::SendMessageTimeout)
+	/// `flags` (`u32`).
+	=>
+	=>
+	ABORTIFHUNG 0x0002
+	BLOCK 0x0001
+	NORMAL 0x0000
+	NOTIMEOUTIFNOTHUNG 0x0008
+	ERRORONEXIT 0x0020
+}
+
 const_ordinary! { SPI: u32: "user";
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `action` (`u32`).
 	=>

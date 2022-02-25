@@ -11,6 +11,7 @@ macro_rules! pub_struct_msg_empty {
 		///
 		/// Return type: `()`.
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
+		#[derive(Copy, Clone)]
 		pub struct $name {}
 
 		unsafe impl MsgSend for $name {

@@ -155,6 +155,7 @@ extern_sys! { "user32";
 	ReleaseDC(HANDLE, HANDLE) -> i32
 	RemoveMenu(HANDLE, u32, u32) -> BOOL
 	ScreenToClient(HANDLE, PVOID) -> BOOL
+	SendMessageTimeoutW(HANDLE, u32, usize, isize, u32, u32, *mut isize) -> isize
 	SendMessageW(HANDLE, u32, usize, isize) -> isize
 	SetCapture(HANDLE) -> HANDLE
 	SetCaretBlinkTime(u32) -> BOOL

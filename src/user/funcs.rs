@@ -426,7 +426,9 @@ pub fn PostQuitMessage(exit_code: i32) {
 /// [`PostThreadMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn PostThreadMessage<M: MsgSend>(thread_id: u32, msg: M) -> WinResult<()> {
+pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> WinResult<()>
+	where M: MsgSend + Send + Copy + 'static,
+{
 	let mut msg = msg;
 	let wm_any = msg.as_generic_wm();
 	bool_to_winresult(
