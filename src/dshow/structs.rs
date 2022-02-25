@@ -67,7 +67,7 @@ pub struct DVINFO {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq)]
 pub struct MFVideoNormalizedRect {
 	pub left: f32,
 	pub top: f32,

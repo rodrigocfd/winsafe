@@ -142,7 +142,7 @@ impl Default for NONCLIENTMETRICS {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
 pub struct RGBQUAD {
 	pub rgbBlue: u8,
 	pub rgbGreen: u8,

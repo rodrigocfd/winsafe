@@ -123,7 +123,7 @@ impl ResStrs {
 ///
 /// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum TreeitemTvi {
 	/// Handle to a tree view item.
 	Treeitem(HTREEITEM),

@@ -64,7 +64,7 @@ macro_rules! const_guid {
 		$( #[$doc] )*
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
-		#[derive(Copy, Clone, Eq, PartialEq, Hash)]
+		#[derive(Clone, Copy, Eq, PartialEq, Hash)]
 		pub struct $name(crate::ole::decl::GUID);
 
 		impl From<crate::ole::decl::GUID> for $name {

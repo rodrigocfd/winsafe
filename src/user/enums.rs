@@ -8,7 +8,7 @@ use crate::user::decl::{ATOM, HBITMAP, HICON, HMENU, HWND, NCCALCSIZE_PARAMS,
 
 /// Variant parameters of a [`wm::Command`](crate::msg::wm::Command) message.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum AccelMenuCtrl {
 	/// Accelerator event. Contains the accelerator command ID.
 	Accel(u16),
@@ -32,7 +32,7 @@ impl AccelMenuCtrl {
 
 /// The data of the [`AccelMenuCtrl`](crate::AccelMenuCtrl) `Ctrl` option.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub struct AccelMenuCtrlData {
 	pub notif_code: co::CMD,
 	pub ctrl_id: u16,
@@ -74,7 +74,7 @@ impl AtomStr {
 /// * [`bm::GetImage`](crate::msg::bm::GetImage) `image`;
 /// * [`bm::GetImage`](crate::msg::bm::SetImage) `image`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum BmpIcon {
 	Bmp(HBITMAP),
 	Icon(HICON),
@@ -125,7 +125,7 @@ impl BmpPtrStr {
 /// * [`DEVMODE`](crate::DEVMODE) `dmDisplayFlags`;
 /// * [`DEVMODE`](crate::DEVMODE) `dmNup`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum DispfNup {
 	/// Used for displays.
 	Dispf(co::DMDISPLAYFLAGS),
@@ -137,7 +137,7 @@ pub enum DispfNup {
 ///
 /// * [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum HwndFocus {
 	/// Handle to the control to receive the focus.
 	Hwnd(HWND),
@@ -151,7 +151,7 @@ pub enum HwndFocus {
 /// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason;
 /// * [`HELPINFO`](crate::HELPINFO) `hItemHandle`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum HwndHmenu {
 	Hwnd(HWND),
 	Hmenu(HMENU),
@@ -170,7 +170,7 @@ impl HwndHmenu {
 ///
 /// * [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos) `hwnd_insert_after`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.
 	Hwnd(HWND),
@@ -194,7 +194,7 @@ impl HwndPlace {
 ///
 /// * [`wm::ParentNotify`](crate::msg::wm::ParentNotify) `data32`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum HwndPointId {
 	/// Handle to the child window.
 	Hwnd(HWND),
@@ -275,7 +275,7 @@ impl IdIdiStr {
 /// * [`HMENU::AppendMenu`](crate::prelude::UserHmenu::AppendMenu) `uIDNewItem`;
 /// * [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx) `hMenu`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum IdMenu {
 	/// A command ID.
 	Id(u16),
@@ -319,7 +319,7 @@ impl IdMenu {
 /// * [`HMENU::SetMenuItemInfo`](crate::prelude::UserHmenu::SetMenuItemInfo) `item`;
 /// * [`HWND::HiliteMenuItem`](crate::prelude::UserHwnd::HiliteMenuItem) `uIDHiliteItem`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub enum IdPos {
 	/// A command ID.
 	Id(u16),

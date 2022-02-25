@@ -14,7 +14,7 @@ use crate::user::privs::{CCHDEVICENAME, CCHFORMNAME, CCHILDREN_TITLEBAR,
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
 pub struct ACCEL {
 	pub fVirt: co::ACCELF,
 	pub key: co::VK,
@@ -43,7 +43,7 @@ impl_default_with_size!(ALTTABINFO, cbSize);
 /// returned by [`RegisterClassEx`](crate::RegisterClassEx).
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(transparent)]
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct ATOM(pub(crate) u16);
 
 impl std::fmt::Display for ATOM {
@@ -56,7 +56,7 @@ impl std::fmt::Display for ATOM {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(transparent)]
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct COLORREF(pub(crate) u32);
 
 impl From<co::CLR> for COLORREF {
@@ -642,7 +642,7 @@ impl_default!(PAINTSTRUCT);
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct POINT {
 	pub x: i32,
 	pub y: i32,
@@ -681,7 +681,7 @@ impl POINT {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct RECT {
 	pub left: i32,
 	pub top: i32,
@@ -724,7 +724,7 @@ impl_default_with_size!(SCROLLINFO, cbSize);
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct SIZE {
 	pub cx: i32,
 	pub cy: i32,

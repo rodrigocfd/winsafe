@@ -10,7 +10,7 @@ use crate::prelude::{MsgSend, MsgSendRecv};
 ///
 /// Return type: `isize`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy)]
 pub struct WndMsg {
 	/// The [`co::WM`](crate::co::WM) constant that identifies the window
 	/// message.

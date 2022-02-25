@@ -427,7 +427,7 @@ impl<'a> LVITEM<'a> {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
 pub struct LVITEMINDEX {
 	pub iItem: i32,
 	pub iGroup: i32,
@@ -725,7 +725,7 @@ pub struct NMITEMACTIVATE {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
-#[derive(Default, Copy, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
 pub struct PBRANGE {
 	pub iLow: i32,
 	pub iHigh: i32,

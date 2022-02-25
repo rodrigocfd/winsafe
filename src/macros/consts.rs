@@ -38,7 +38,7 @@ macro_rules! const_no_debug_display {
 		$( #[$doc] )*
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
-		#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
+		#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
 		pub struct $name(pub(crate) $ntype);
 
 		// Conversions from/to underlying number type.

@@ -2,7 +2,7 @@
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
-#[derive(Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Clone, Copy, Eq, PartialEq, Hash)]
 pub struct GUID {
 	data1: u32,
 	data2: u16,

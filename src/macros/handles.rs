@@ -9,7 +9,7 @@ macro_rules! impl_handle {
 		$( #[$doc] )*
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
-		#[derive(Copy, Clone, PartialEq, Eq)]
+		#[derive(Clone, Copy, PartialEq, Eq)]
 		pub struct $name(pub(crate) *mut std::ffi::c_void);
 
 		unsafe impl Send for $name {}

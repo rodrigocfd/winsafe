@@ -51,7 +51,7 @@ pub struct FILETIME {
 /// language identifier.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(transparent)]
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct LANGID(pub(crate) u16);
 
 impl From<LANGID> for u16 {
@@ -97,7 +97,7 @@ impl LANGID {
 /// locale identifier.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(transparent)]
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct LCID(pub(crate) u32);
 
 impl LCID {
