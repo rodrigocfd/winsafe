@@ -382,6 +382,74 @@ pub fn GetTickCount64() -> u64 {
 	unsafe { kernel::ffi::GetTickCount64() }
 }
 
+/// [`GetVolumeInformation`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationw)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::{co, GetVolumeInformation};
+///
+/// let mut name = String::default();
+/// let mut serial_no = u32::default();
+/// let mut max_comp_len = u32::default();
+/// let mut sys_flags = co::FILE_VOL::default();
+/// let mut sys_name = String::default();
+///
+/// GetVolumeInformation(
+///     Some("C:\\"),
+///     Some(&mut name), Some(&mut serial_no), Some(&mut max_comp_len),
+///     Some(&mut sys_flags), Some(&mut sys_name),
+/// )?;
+///
+/// println!("Name: {}", name);
+/// println!("Serial no: {:#010x}", serial_no);
+/// println!("Max comp len: {}", max_comp_len);
+/// println!("Sys flags: {:?}", sys_flags);
+/// println!("Sys name: {}", sys_name);
+/// # Ok::<_, co::ERROR>(())
+/// ```
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+pub fn GetVolumeInformation(
+	root_path_name: Option<&str>,
+	name: Option<&mut String>,
+	serial_number: Option<&mut u32>,
+	max_component_len: Option<&mut u32>,
+	file_system_flags: Option<&mut co::FILE_VOL>,
+	file_system_name: Option<&mut String>) -> WinResult<()>
+{
+	let mut name_buf = match name {
+		None => (WString::default(), 0),
+		Some(_) => (WString::new_alloc_buffer(MAX_PATH + 1), MAX_PATH + 1),
+	};
+	let mut sys_name_buf = match file_system_name {
+		None => (WString::default(), 0),
+		Some(_) => (WString::new_alloc_buffer(MAX_PATH + 1), MAX_PATH + 1),
+	};
+
+	bool_to_winresult(
+		unsafe {
+			kernel::ffi::GetVolumeInformationW(
+				WString::from_opt_str(root_path_name).as_ptr(),
+				name_buf.0.as_mut_ptr(),
+				name_buf.1 as u32,
+				serial_number.map_or(std::ptr::null_mut(), |n| n),
+				max_component_len.map_or(std::ptr::null_mut(), |m| m),
+				file_system_flags.map_or(std::ptr::null_mut(), |f| &mut f.0),
+				sys_name_buf.0.as_mut_ptr(),
+				sys_name_buf.1 as u32,
+			)
+		},
+	).map(|_| {
+		if let Some(name) = name {
+			*name = name_buf.0.to_string();
+		}
+		if let Some(sys_name) = file_system_name {
+			*sys_name = sys_name_buf.0.to_string();
+		}
+	})
+}
+
 /// [`GlobalMemoryStatusEx`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]

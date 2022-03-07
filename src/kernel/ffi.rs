@@ -70,6 +70,7 @@ extern_sys! { "kernel32";
 	GetThreadId(HANDLE) -> u32
 	GetThreadTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
 	GetTickCount64() -> u64
+	GetVolumeInformationW(PCSTR, PSTR, u32, *mut u32, *mut u32, *mut u32, PSTR, u32) -> BOOL
 	GlobalAlloc(u32, u64) -> HANDLE
 	GlobalFlags(HANDLE) -> u32
 	GlobalFree(HANDLE) -> HANDLE
