@@ -1,4 +1,5 @@
 pub(in crate::shell) mod ffi;
+pub(crate) mod privs;
 
 mod com_interfaces;
 mod funcs;

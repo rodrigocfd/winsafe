@@ -7,8 +7,8 @@ use crate::kernel::privs::MAX_PATH;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::OleIUnknown;
+use crate::shell::privs::INFOTIPSIZE;
 use crate::user::decl::HWND;
-use crate::user::privs::INFOTIPSIZE;
 use crate::vt::IUnknownVT;
 
 /// [`IShellLink`](crate::IShellLink) virtual table.
