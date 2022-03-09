@@ -431,12 +431,18 @@ pub fn GetVolumeInformation(
 		unsafe {
 			kernel::ffi::GetVolumeInformationW(
 				WString::from_opt_str(root_path_name).as_ptr(),
-				name_buf.0.as_mut_ptr(),
+				match name {
+					Some(_) => name_buf.0.as_mut_ptr(),
+					None => std::ptr::null_mut(),
+				},
 				name_buf.1 as u32,
 				serial_number.map_or(std::ptr::null_mut(), |n| n),
 				max_component_len.map_or(std::ptr::null_mut(), |m| m),
 				file_system_flags.map_or(std::ptr::null_mut(), |f| &mut f.0),
-				sys_name_buf.0.as_mut_ptr(),
+				match file_system_name {
+					Some(_) => sys_name_buf.0.as_mut_ptr(),
+					None => std::ptr::null_mut(),
+				},
 				sys_name_buf.1 as u32,
 			)
 		},
