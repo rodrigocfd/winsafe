@@ -110,7 +110,7 @@ struct DropsIter<'a> {
 	buffer: WString,
 	count: u32,
 	current: u32,
-	owner_: PhantomData<&'a ()>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Drop for DropsIter<'a> {
@@ -149,7 +149,7 @@ impl<'a> DropsIter<'a> {
 			buffer: WString::new_alloc_buffer(MAX_PATH + 1), // so we alloc just once
 			count: hdrop.DragQueryFile(None, None)?,
 			current: 0,
-			owner_: PhantomData,
+			_owner: PhantomData,
 		})
 	}
 }

@@ -113,7 +113,7 @@ struct ProcessIter<'a> {
 	pe32: NonNull<PROCESSENTRY32>,
 	first_pass: bool,
 	has_more: bool,
-	pe32_: PhantomData<&'a mut PROCESSENTRY32>,
+	_pe32: PhantomData<&'a mut PROCESSENTRY32>,
 }
 
 impl<'a> Iterator for ProcessIter<'a> {
@@ -153,7 +153,7 @@ impl<'a> ProcessIter<'a> {
 			pe32: NonNull::from(pe32),
 			first_pass: true,
 			has_more: true,
-			pe32_: PhantomData,
+			_pe32: PhantomData,
 		}
 	}
 }

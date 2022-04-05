@@ -21,7 +21,7 @@ pub struct CHOOSECOLOR<'a> {
 	pub lpfnHook: Option<CCHOOKPROC>,
 	lpTemplateName: *mut u16, // u16 resource ID
 
-	lpCustColors_: PhantomData<&'a mut COLORREF>,
+	_lpCustColors: PhantomData<&'a mut COLORREF>,
 }
 
 impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a);

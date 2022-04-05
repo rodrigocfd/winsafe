@@ -63,8 +63,8 @@ pub struct EDITBALLOONTIP<'a, 'b> {
 	pszText: *mut u16,
 	pub ttiIcon: co::TTI,
 
-	pszTitle_: PhantomData<&'a mut u16>,
-	pszText_: PhantomData<&'b mut u16>,
+	_pszTitle: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'b mut u16>,
 }
 
 impl_default_with_size!(EDITBALLOONTIP, cbStruct, 'a, 'b);
@@ -92,7 +92,7 @@ pub struct HDITEM<'a> {
 	pub pvFilter: *mut std::ffi::c_void,
 	pub state: co::HDIS,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(HDITEM, 'a);
@@ -119,10 +119,9 @@ pub struct HDHITTESTINFO {
 pub struct HDLAYOUT<'a, 'b> {
 	prc: *mut RECT,
 	pwpos: *mut WINDOWPOS,
-	fuuu: i32,
 
-	prc_: PhantomData<&'a mut RECT>,
-	pwpos_: PhantomData<&'b mut WINDOWPOS>,
+	_prc: PhantomData<&'a mut RECT>,
+	_pwpos: PhantomData<&'b mut WINDOWPOS>,
 }
 
 impl_default!(HDLAYOUT, 'a, 'b);
@@ -182,7 +181,7 @@ pub struct LVBKIMAGE<'a> {
 	pub xOffsetPercent: i32,
 	pub yOffsetPercent: i32,
 
-	pszImage_: PhantomData<&'a mut u16>,
+	_pszImage: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVBKIMAGE, 'a);
@@ -208,7 +207,7 @@ pub struct LVCOLUMN<'a> {
 	pub cxDefault: i32,
 	pub cxIdeal: i32,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVCOLUMN, 'a);
@@ -228,7 +227,7 @@ pub struct LVFINDINFO<'a> {
 	pub pt: POINT,
 	pub vkDirection: co::VK_DIR,
 
-	psz_: PhantomData<&'a mut u16>,
+	_psz: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVFINDINFO, 'a);
@@ -247,7 +246,7 @@ pub struct LVFOOTERINFO<'a> {
 	cchTextMax: i32,
 	pub cItems: u32,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVFOOTERINFO, 'a);
@@ -268,7 +267,7 @@ pub struct LVFOOTERITEM<'a> {
 	pub state: co::LVFIS,
 	pub stateMask: co::LVFIS,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVFOOTERITEM, 'a);
@@ -307,13 +306,13 @@ pub struct LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	pszSubsetTitle: *mut u16,
 	cchSubsetTitle: i32,
 
-	pszHeader_: PhantomData<&'a mut u16>,
-	pszFooter_: PhantomData<&'b mut u16>,
-	pszSubtitle_: PhantomData<&'c mut u16>,
-	pszTask_: PhantomData<&'d mut u16>,
-	pszDescriptionTop_: PhantomData<&'e mut u16>,
-	pszDescriptionBottom_: PhantomData<&'f mut u16>,
-	pszSubsetTitle_: PhantomData<&'g mut u16>,
+	_pszHeader: PhantomData<&'a mut u16>,
+	_pszFooter: PhantomData<&'b mut u16>,
+	_pszSubtitle: PhantomData<&'c mut u16>,
+	_pszTask: PhantomData<&'d mut u16>,
+	_pszDescriptionTop: PhantomData<&'e mut u16>,
+	_pszDescriptionBottom: PhantomData<&'f mut u16>,
+	_pszSubsetTitle: PhantomData<&'g mut u16>,
 }
 
 impl_default_with_size!(LVGROUP, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
@@ -416,7 +415,7 @@ pub struct LVITEM<'a> {
 	pub piColFmt: *mut co::LVCFMT_I,
 	pub iGroup: i32,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(LVITEM, 'a);
@@ -446,7 +445,7 @@ pub struct LVSETINFOTIP<'a> {
 	pub iItem: i32,
 	pub iSubItem: i32,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default_with_size!(LVSETINFOTIP, cbSize, 'a);
@@ -466,7 +465,7 @@ pub struct LVTILEINFO<'a> {
 	puColumns: *mut u32,
 	piColFmt: *mut co::LVCFMT_C,
 
-	puColumns_: PhantomData<&'a mut u32>,
+	_puColumns: PhantomData<&'a mut u32>,
 }
 
 impl_default_with_size!(LVTILEINFO, cbSize, 'a);
@@ -585,7 +584,7 @@ pub struct NMDATETIMEFORMAT<'a> {
 	pszDisplay: *mut u16,
 	szDisplay: [u16; 64], // used as a buffer to pszDisplay
 
-	pszFormat_: PhantomData<&'a mut u16>,
+	_pszFormat: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMEFORMAT, 'a);
@@ -613,7 +612,7 @@ pub struct NMDATETIMEFORMATQUERY<'a> {
 	pszFormat: *mut u16,
 	pub szMax: SIZE,
 
-	pszFormat_: PhantomData<&'a mut u16>,
+	_pszFormat: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMEFORMATQUERY, 'a);
@@ -632,7 +631,7 @@ pub struct NMDATETIMESTRING<'a> {
 	pub st: SYSTEMTIME,
 	pub dwFlags: co::GDT,
 
-	pszUserString_: PhantomData<&'a mut u16>,
+	_pszUserString: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMESTRING, 'a);
@@ -651,7 +650,7 @@ pub struct NMDATETIMEWMKEYDOWN<'a> {
 	pszFormat: *mut u16,
 	pub st: SYSTEMTIME,
 
-	pszFormat_: PhantomData<&'a mut u16>,
+	_pszFormat: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMDATETIMEWMKEYDOWN, 'a);
@@ -670,7 +669,7 @@ pub struct NMDAYSTATE<'a> {
 	cDayState: i32,
 	prgDayState: *mut u32,
 
-	prgDayState_: PhantomData<&'a mut u32>,
+	_prgDayState: PhantomData<&'a mut u32>,
 }
 
 impl_default!(NMDAYSTATE, 'a);
@@ -844,7 +843,7 @@ pub struct NMLVGETINFOTIP<'a> {
 	pub iSubItem: i32,
 	pub lParam: isize,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(NMLVGETINFOTIP, 'a);
@@ -984,7 +983,7 @@ pub struct TASKDIALOG_BUTTON<'a> {
 	nButtonID: i32,
 	pszButtonText: *mut u16,
 
-	pszButtonText_: PhantomData<&'a mut u16>,
+	_pszButtonText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(TASKDIALOG_BUTTON, 'a);
@@ -1024,16 +1023,16 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pub lpCallbackData: isize,
 	pub cxWidth: u32,
 
-	pszWindowTitle_: PhantomData<&'a mut u16>,
-	pszMainInstruction_: PhantomData<&'b mut u16>,
-	pszContent_: PhantomData<&'c mut u16>,
-	pButtons_: PhantomData<&'d mut TASKDIALOG_BUTTON<'d>>,
-	pRadioButtons_: PhantomData<&'e mut TASKDIALOG_BUTTON<'e>>,
-	pszVerificationText_: PhantomData<&'f mut u16>,
-	pszExpandedInformation_: PhantomData<&'g mut u16>,
-	pszExpandedControlText_: PhantomData<&'h mut u16>,
-	pszCollapsedControlText_: PhantomData<&'i mut u16>,
-	pszFooter_: PhantomData<&'j mut u16>,
+	_pszWindowTitle: PhantomData<&'a mut u16>,
+	_pszMainInstruction: PhantomData<&'b mut u16>,
+	_pszContent: PhantomData<&'c mut u16>,
+	_pButtons: PhantomData<&'d mut TASKDIALOG_BUTTON<'d>>,
+	_pRadioButtons: PhantomData<&'e mut TASKDIALOG_BUTTON<'e>>,
+	_pszVerificationText: PhantomData<&'f mut u16>,
+	_pszExpandedInformation: PhantomData<&'g mut u16>,
+	_pszExpandedControlText: PhantomData<&'h mut u16>,
+	_pszCollapsedControlText: PhantomData<&'i mut u16>,
+	_pszFooter: PhantomData<&'j mut u16>,
 }
 
 impl_default_with_size!(TASKDIALOGCONFIG, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j);
@@ -1141,7 +1140,7 @@ pub struct TBBUTTON<'a> {
 	pub dwData: usize,
 	iString: isize,
 
-	iString_: PhantomData<&'a mut u16>,
+	_iString: PhantomData<&'a mut u16>,
 }
 
 impl_default!(TBBUTTON, 'a);
@@ -1210,7 +1209,7 @@ pub struct TVITEMEX<'a> {
 	pub iExpandedImage: i32,
 	iReserved: i32,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(TVITEMEX, 'a);
@@ -1235,7 +1234,7 @@ pub struct TVITEM<'a> {
 	pub cChildren: i32,
 	pub lParam: isize,
 
-	pszText_: PhantomData<&'a mut u16>,
+	_pszText: PhantomData<&'a mut u16>,
 }
 
 impl_default!(TVITEM, 'a);

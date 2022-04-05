@@ -493,7 +493,7 @@ struct EnumKeyIter<'a> {
 	count: u32,
 	current: u32,
 	name_buffer: WString,
-	owner_: PhantomData<&'a ()>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for EnumKeyIter<'a> {
@@ -544,7 +544,7 @@ impl<'a> EnumKeyIter<'a> {
 			count: num_keys,
 			current: 0,
 			name_buffer: WString::new_alloc_buffer(max_key_name_len as usize + 1),
-			owner_: PhantomData,
+			_owner: PhantomData,
 		})
 	}
 }
@@ -554,7 +554,7 @@ struct EnumValueIter<'a> {
 	count: u32,
 	current: u32,
 	name_buffer: WString,
-	owner_: PhantomData<&'a ()>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for EnumValueIter<'a> {
@@ -606,7 +606,7 @@ impl<'a> EnumValueIter<'a> {
 			count: num_vals,
 			current: 0,
 			name_buffer: WString::new_alloc_buffer(max_val_name_len as usize + 1),
-			owner_: PhantomData,
+			_owner: PhantomData,
 		})
 	}
 }

@@ -15,7 +15,7 @@ use crate::user::decl::HWND;
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TreeViewItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
-	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
+	pub(in crate::gui::native_controls) _owner: PhantomData<&'a ()>,
 }
 
 impl<'a> TreeViewItems<'a> {
@@ -76,7 +76,7 @@ impl<'a> TreeViewItems<'a> {
 		TreeViewItem {
 			hwnd: self.hwnd,
 			htreeitem,
-			owner_: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 
@@ -104,7 +104,7 @@ impl<'a> TreeViewItems<'a> {
 pub struct TreeViewItem<'a> {
 	hwnd: HWND,
 	htreeitem: HTREEITEM,
-	owner_: PhantomData<&'a ()>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> TreeViewItem<'a> {
@@ -134,7 +134,7 @@ impl<'a> TreeViewItem<'a> {
 			.map(|htreeitem| TreeViewItem {
 				hwnd: self.hwnd,
 				htreeitem,
-				owner_: PhantomData,
+				_owner: PhantomData,
 			})
 	}
 
@@ -214,7 +214,7 @@ impl<'a> TreeViewItem<'a> {
 		}).map(|htreeitem| TreeViewItem {
 			hwnd: self.hwnd,
 			htreeitem,
-			owner_: PhantomData,
+			_owner: PhantomData,
 		})
 	}
 
@@ -264,7 +264,7 @@ impl<'a> Iterator for TreeViewItemIter<'a> {
 		}).map(|htreeitem| TreeViewItem {
 			hwnd: self.hwnd,
 			htreeitem,
-			owner_: PhantomData,
+			_owner: PhantomData,
 		});
 
 		self.current
@@ -298,7 +298,7 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 			}).map(|htreeitem| TreeViewItem {
 				hwnd: self.hwnd,
 				htreeitem,
-				owner_: PhantomData,
+				_owner: PhantomData,
 			});
 			self.first_call = false;
 

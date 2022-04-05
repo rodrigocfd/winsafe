@@ -163,7 +163,7 @@ impl ComboBox {
 	pub fn items<'a>(&'a self) -> ComboBoxItems<'a> {
 		ComboBoxItems {
 			hwnd: self.hwnd(),
-			owner_: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 }

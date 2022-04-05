@@ -45,7 +45,7 @@ pub struct NMTVASYNCDRAW<'a> {
 	pub dwRetFlags: co::ADRF,
 	pub iRetImageIndex: i32,
 
-	pimldp_: PhantomData<&'a mut IMAGELISTDRAWPARAMS>,
+	_pimldp: PhantomData<&'a mut IMAGELISTDRAWPARAMS>,
 }
 
 impl_default!(NMTVASYNCDRAW, 'a);

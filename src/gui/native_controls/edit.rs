@@ -239,7 +239,7 @@ struct LinesIter<'a> {
 	buf: WString,
 	total: usize,
 	current: usize,
-	owner_: PhantomData<&'a ()>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for LinesIter<'a> {
@@ -270,7 +270,7 @@ impl<'a> LinesIter<'a> {
 			buf: WString::new_alloc_buffer(hwnd.GetWindowTextLength()? as usize + 1), // so we alloc just once
 			total: hwnd.SendMessage(em::GetLineCount {}) as _,
 			current: 0,
-			owner_: PhantomData,
+			_owner: PhantomData,
 		})
 	}
 }

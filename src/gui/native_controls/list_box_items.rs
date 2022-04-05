@@ -13,7 +13,7 @@ use crate::user::decl::HWND;
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListBoxItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
-	pub(in crate::gui::native_controls) owner: PhantomData<&'a ()>,
+	pub(in crate::gui::native_controls) _owner: PhantomData<&'a ()>,
 }
 
 impl<'a> ListBoxItems<'a> {
@@ -133,7 +133,7 @@ struct ListBoxItemIter<'a> {
 	count: u32,
 	current: u32,
 	buffer: WString,
-	owner_: PhantomData<&'a ()>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for ListBoxItemIter<'a> {
@@ -179,7 +179,7 @@ impl<'a> ListBoxItemIter<'a> {
 			count,
 			current: 0,
 			buffer: WString::new_alloc_buffer(40), // arbitrary
-			owner_: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 }

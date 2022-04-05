@@ -120,7 +120,7 @@ struct ShellItemIter<'a> {
 	array: ManuallyDrop<IShellItemArray>,
 	count: u32,
 	current: u32,
-	owner_: PhantomData<&'a ()>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for ShellItemIter<'a> {
@@ -153,7 +153,7 @@ impl<'a> ShellItemIter<'a> {
 			array,
 			count,
 			current: 0,
-			owner_: PhantomData,
+			_owner: PhantomData,
 		})
 	}
 }

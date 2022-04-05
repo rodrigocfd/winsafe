@@ -17,8 +17,8 @@ pub struct COMDLG_FILTERSPEC<'a, 'b> {
 	pszName: *mut u16,
 	pszSpec: *mut u16,
 
-	pszName_: PhantomData<&'a mut u16>,
-	pszSpec_: PhantomData<&'b mut u16>,
+	_pszName: PhantomData<&'a mut u16>,
+	_pszSpec: PhantomData<&'b mut u16>,
 }
 
 impl_default!(COMDLG_FILTERSPEC, 'a, 'b);
@@ -91,9 +91,9 @@ pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
 	hNameMappings: *mut std::ffi::c_void, // lots of stuff going here...
 	lpszProgressTitle: *mut u16,
 
-	pFrom_: PhantomData<&'a mut usize>,
-	pTo_: PhantomData<&'b mut usize>,
-	lpszProgressTitle_: PhantomData<&'c mut usize>,
+	_pFrom: PhantomData<&'a mut usize>,
+	_pTo: PhantomData<&'b mut usize>,
+	_lpszProgressTitle: PhantomData<&'c mut usize>,
 }
 
 impl_default!(SHFILEOPSTRUCT, 'a, 'b, 'c);

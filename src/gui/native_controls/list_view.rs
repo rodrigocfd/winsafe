@@ -205,7 +205,7 @@ impl ListView {
 	pub fn columns<'a>(&'a self) -> ListViewColumns<'a> {
 		ListViewColumns {
 			hwnd: self.hwnd(),
-			owner: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 
@@ -228,7 +228,7 @@ impl ListView {
 	pub fn items<'a>(&'a self) -> ListViewItems<'a> {
 		ListViewItems {
 			hwnd: self.hwnd(),
-			owner_: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 

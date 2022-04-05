@@ -247,7 +247,7 @@ pub struct SECURITY_ATTRIBUTES<'a> {
 	lpSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
 	bInheritHandle: i32,
 
-	lpSecurityDescriptor_: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
+	_lpSecurityDescriptor: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
 }
 
 impl_default_with_size!(SECURITY_ATTRIBUTES, nLength, 'a);
@@ -281,8 +281,8 @@ pub struct STARTUPINFO<'a, 'b> {
 	pub hStdOutput: HPIPE,
 	pub hStdError: HPIPE,
 
-	lpDesktop_: PhantomData<&'a mut u16>,
-	lpTitle_: PhantomData<&'b mut u16>,
+	_lpDesktop: PhantomData<&'a mut u16>,
+	_lpTitle: PhantomData<&'b mut u16>,
 }
 
 impl_default_with_size!(STARTUPINFO, cb, 'a, 'b);

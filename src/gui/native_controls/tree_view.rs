@@ -155,7 +155,7 @@ impl TreeView {
 	pub fn items<'a>(&'a self) -> TreeViewItems<'a> {
 		TreeViewItems {
 			hwnd: self.hwnd(),
-			owner: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 

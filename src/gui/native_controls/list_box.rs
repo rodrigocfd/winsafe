@@ -155,7 +155,7 @@ impl ListBox {
 	pub fn items<'a>(&'a self) -> ListBoxItems<'a> {
 		ListBoxItems {
 			hwnd: self.hwnd(),
-			owner: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 }

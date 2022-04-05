@@ -14,7 +14,7 @@ use crate::user::decl::{HWND, POINT, RECT};
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListViewItems<'a> {
 	pub(in crate::gui::native_controls) hwnd: HWND,
-	pub(in crate::gui::native_controls) owner_: PhantomData<&'a ()>,
+	pub(in crate::gui::native_controls) _owner: PhantomData<&'a ()>,
 }
 
 impl<'a> ListViewItems<'a> {

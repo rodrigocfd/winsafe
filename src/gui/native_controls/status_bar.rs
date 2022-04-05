@@ -225,7 +225,7 @@ impl StatusBar {
 	pub fn parts<'a>(&'a self) -> StatusBarParts<'a> {
 		StatusBarParts {
 			hwnd: self.hwnd(),
-			owner: PhantomData,
+			_owner: PhantomData,
 		}
 	}
 }

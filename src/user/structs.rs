@@ -184,8 +184,8 @@ pub struct CREATESTRUCT<'a, 'b> {
 	lpszClass: *mut u16,
 	pub dwExStyle: co::WS_EX,
 
-	lpszName_: PhantomData<&'a mut u16>,
-	lpszClass_: PhantomData<&'b mut u16>,
+	_lpszName: PhantomData<&'a mut u16>,
+	_lpszClass: PhantomData<&'b mut u16>,
 }
 
 impl_default!(CREATESTRUCT, 'a, 'b);
@@ -617,7 +617,7 @@ pub struct NCCALCSIZE_PARAMS<'a> {
 	pub rgrc: [RECT; 3],
 	lppos: *mut WINDOWPOS,
 
-	lppos_: PhantomData<&'a mut WINDOWPOS>,
+	_lppos: PhantomData<&'a mut WINDOWPOS>,
 }
 
 impl<'a> NCCALCSIZE_PARAMS<'a> {
@@ -910,7 +910,7 @@ pub struct WNDCLASSEX<'a> {
 	lpszClassName: *mut u16,
 	pub hIconSm: HICON,
 
-	lpszClassName_: PhantomData<&'a mut u16>,
+	_lpszClassName: PhantomData<&'a mut u16>,
 }
 
 impl_default_with_size!(WNDCLASSEX, cbSize, 'a);
