@@ -2,8 +2,10 @@
 
 use crate::{co, kernel};
 use crate::ffi_types::BOOL;
-use crate::kernel::decl::{FILETIME, GetLastError, HACCESSTOKEN,
-	PROCESS_INFORMATION, SECURITY_ATTRIBUTES, STARTUPINFO, WinResult, WString};
+use crate::kernel::decl::{
+	FILETIME, GetLastError, HACCESSTOKEN, PROCESS_INFORMATION,
+	SECURITY_ATTRIBUTES, STARTUPINFO, WinResult, WString,
+};
 use crate::kernel::privs::{bool_to_winresult, INFINITE, MAX_PATH};
 use crate::prelude::{Handle, HandleClose};
 

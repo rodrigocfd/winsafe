@@ -5,10 +5,13 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::ffi_types::BOOL;
 use crate::kernel::decl::{HINSTANCE, HIWORD, LCID, LOBYTE, LOWORD, MAKEDWORD};
-use crate::user::decl::{DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU,
-	HWND, HwndHmenu, HwndPlace, WNDPROC};
-use crate::user::privs::{CCHDEVICENAME, CCHFORMNAME, CCHILDREN_TITLEBAR,
-	DM_SPECVERSION};
+use crate::user::decl::{
+	DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU, HWND, HwndHmenu,
+	HwndPlace, WNDPROC,
+};
+use crate::user::privs::{
+	CCHDEVICENAME, CCHFORMNAME, CCHILDREN_TITLEBAR, DM_SPECVERSION,
+};
 
 /// [`ACCEL`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.

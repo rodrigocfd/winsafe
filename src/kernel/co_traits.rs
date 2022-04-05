@@ -2,8 +2,7 @@
 
 use std::ops;
 
-use crate::co;
-use crate::kernel;
+use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, HLOCAL, LANGID, WString};
 use crate::prelude::KernelHlocal;
 

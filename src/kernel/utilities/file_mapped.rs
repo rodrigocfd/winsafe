@@ -1,7 +1,8 @@
 use crate::co;
 use crate::kernel::decl::{File, FileAccess, HFILEMAP, HFILEMAPVIEW, WinResult};
-use crate::prelude::{Handle, HandleClose, KernelHfile, KernelHfilemap,
-	KernelHfilemapview};
+use crate::prelude::{
+	Handle, HandleClose, KernelHfile, KernelHfilemap, KernelHfilemapview,
+};
 
 /// Manages a memory-mapped file, which can be read/written through slices. It
 /// is closed automatically when the object goes out of scope.

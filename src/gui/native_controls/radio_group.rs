@@ -10,8 +10,10 @@ use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
 use crate::gui::resizer::{Horz, Vert};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::WinResult;
-use crate::prelude::{GuiChild, GuiEventsView, GuiNativeControlEvents, GuiParent,
-	GuiWindow, Handle};
+use crate::prelude::{
+	GuiChild, GuiEventsView, GuiNativeControlEvents, GuiParent, GuiWindow,
+	Handle,
+};
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]

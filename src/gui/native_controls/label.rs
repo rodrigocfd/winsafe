@@ -3,16 +3,19 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::events::{LabelEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl,
-	OptsId};
-use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box,
-	multiply_dpi_or_dtu, ui_font};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl, OptsId,
+};
+use crate::gui::privs::{
+	auto_ctrl_id, calc_text_bound_box, multiply_dpi_or_dtu, ui_font,
+};
 use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::WinResult;
 use crate::msg::wm;
-use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
-	UserHwnd};
+use crate::prelude::{
+	AsAny, GuiChild, GuiEventsView, GuiNativeControl, GuiNativeControlEvents,
+	GuiParent, GuiTextControl, GuiWindow, Handle, UserHwnd,
+};
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
 /// Native

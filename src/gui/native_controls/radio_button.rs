@@ -2,18 +2,22 @@ use std::any::Any;
 
 use crate::co;
 use crate::gui::events::{ButtonEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl,
-	OptsId};
-use crate::gui::privs::{auto_ctrl_id, calc_text_bound_box_check,
-	multiply_dpi_or_dtu, ui_font};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl, OptsId,
+};
+use crate::gui::privs::{
+	auto_ctrl_id, calc_text_bound_box_check, multiply_dpi_or_dtu, ui_font,
+};
 use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::WinResult;
 use crate::msg::{bm, wm};
-use crate::prelude::{AsAny, GuiChild, GuiFocusControl, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
-	UserHwnd};
-use crate::user::decl::{AccelMenuCtrl, AccelMenuCtrlData, HWND, HwndPlace,
-	POINT, SIZE};
+use crate::prelude::{
+	AsAny, GuiChild, GuiFocusControl, GuiNativeControl, GuiNativeControlEvents,
+	GuiParent, GuiTextControl, GuiWindow, Handle, UserHwnd,
+};
+use crate::user::decl::{
+	AccelMenuCtrl, AccelMenuCtrlData, HWND, HwndPlace, POINT, SIZE,
+};
 
 /// Native
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)

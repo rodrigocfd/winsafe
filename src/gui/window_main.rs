@@ -10,10 +10,12 @@ use crate::gui::gui_traits_sealed::{GuiSealedBase, GuiSealedParent};
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{RawMain, WindowMainOpts};
 use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::{ErrResult, HPROCESS, IsWindowsVistaOrGreater,
-	WinResult};
-use crate::prelude::{AsAny, GuiParent, GuiThread, GuiWindow, KernelHprocess,
-	UserHprocess};
+use crate::kernel::decl::{
+	ErrResult, HPROCESS, IsWindowsVistaOrGreater, WinResult,
+};
+use crate::prelude::{
+	AsAny, GuiParent, GuiThread, GuiWindow, KernelHprocess, UserHprocess,
+};
 use crate::user::decl::{HWND, SetProcessDPIAware};
 
 /// Keeps a raw or dialog window.

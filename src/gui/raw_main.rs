@@ -6,11 +6,13 @@ use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{ErrResult, HINSTANCE, WString};
-use crate::prelude::{GdiHbrush, GuiEventsView, Handle, KernelHinstance,
-	UserHaccel, UserHwnd};
-use crate::user::decl::{AdjustWindowRectEx, GetSystemMetrics, HACCEL, HBRUSH,
-	HICON, HCURSOR, HMENU, HWND, IdMenu, POINT, PostQuitMessage, RECT, SIZE,
-	WNDCLASSEX};
+use crate::prelude::{
+	GdiHbrush, GuiEventsView, Handle, KernelHinstance, UserHaccel, UserHwnd,
+};
+use crate::user::decl::{
+	AdjustWindowRectEx, GetSystemMetrics, HACCEL, HBRUSH, HCURSOR, HICON, HMENU,
+	HWND, IdMenu, POINT, PostQuitMessage, RECT, SIZE, WNDCLASSEX,
+};
 
 /// A WindowMain with a raw window.
 #[derive(Clone)]

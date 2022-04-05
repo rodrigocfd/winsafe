@@ -1,7 +1,3 @@
-//! Static control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages),
-//! whose constants have [`STM`](crate::co::STM) prefix.
-
 use crate::co;
 use crate::kernel::decl::WinResult;
 use crate::msg::WndMsg;

@@ -7,10 +7,14 @@ use crate::gdi::decl::{HFONT, NONCLIENTMETRICS};
 use crate::gui::base::Base;
 use crate::kernel::decl::{ErrResult, MulDiv, WinResult};
 use crate::msg::wm;
-use crate::prelude::{GdiHdc, GdiHfont, Handle, HandleGdi, NativeBitflag,
-	UserHwnd, UxthemeHtheme, UxthemeHwnd};
-use crate::user::decl::{GetSystemMetrics, HWND, POINT, PostQuitMessage, RECT,
-	SIZE, SystemParametersInfo};
+use crate::prelude::{
+	GdiHdc, GdiHfont, Handle, HandleGdi, NativeBitflag, UserHwnd, UxthemeHtheme,
+	UxthemeHwnd,
+};
+use crate::user::decl::{
+	GetSystemMetrics, HWND, POINT, PostQuitMessage, RECT, SIZE,
+	SystemParametersInfo,
+};
 use crate::uxtheme::decl::{IsAppThemed, IsThemeActive};
 
 /// Global return error, will be taken in main loop.

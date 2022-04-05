@@ -1,15 +1,17 @@
 use std::ptr::NonNull;
 
 use crate::co;
-use crate::gui::events::{sealed_events_wm::GuiSealedEventsWm, ProcessResult,
-	WindowEventsAll};
+use crate::gui::events::{
+	sealed_events_wm::GuiSealedEventsWm, ProcessResult, WindowEventsAll,
+};
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::gui::resizer::{Horz, Resizer, Vert};
 use crate::kernel::decl::{ErrResult, WinResult};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, GuiEventsView, UserHwnd};
-use crate::user::decl::{DispatchMessage, GetMessage, HACCEL, HWND, MSG,
-	TranslateMessage};
+use crate::prelude::{GuiEventsView, Handle, UserHwnd};
+use crate::user::decl::{
+	DispatchMessage, GetMessage, HACCEL, HWND, MSG, TranslateMessage,
+};
 
 /// Base to `RawBase` and `DlgBase`.
 ///

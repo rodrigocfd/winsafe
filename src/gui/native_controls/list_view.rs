@@ -7,19 +7,23 @@ use crate::comctl::decl::{HIMAGELIST, NMITEMACTIVATE, NMLVKEYDOWN};
 use crate::gui::base::Base;
 use crate::gui::events::{ListViewEvents, WindowEvents};
 use crate::gui::events::sealed_events_wm_nfy::GuiSealedEventsWmNfy;
-use crate::gui::native_controls::base_native_control::{BaseNativeControl,
-	OptsId};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl, OptsId,
+};
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::WinResult;
 use crate::msg::{lvm, wm};
-use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiFocusControl,
-	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
-	NativeBitflag, UserHmenu, UserHwnd};
-use crate::user::decl::{GetAsyncKeyState, GetCursorPos};
-use crate::user::decl::{HMENU, HWND, POINT, SIZE};
+use crate::prelude::{
+	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, NativeBitflag,
+	UserHmenu, UserHwnd,
+};
+use crate::user::decl::{
+	GetAsyncKeyState, GetCursorPos, HMENU, HWND, POINT, SIZE,
+};
 
 /// Native
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)

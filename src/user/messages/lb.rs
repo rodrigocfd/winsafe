@@ -1,7 +1,3 @@
-//! List box control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages),
-//! whose constants have [`LB`](crate::co::LB) prefix.
-
 use crate::co;
 use crate::kernel::decl::{HIWORD, LCID, LOWORD, MAKEDWORD, WinResult, WString};
 use crate::msg::WndMsg;

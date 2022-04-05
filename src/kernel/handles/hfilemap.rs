@@ -1,8 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, HFILEMAPVIEW, HIDWORD, LODWORD,
-	WinResult};
+use crate::kernel::decl::{
+	GetLastError, HFILEMAPVIEW, HIDWORD, LODWORD, WinResult,
+};
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HFILEMAP: "kernel";

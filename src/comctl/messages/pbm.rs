@@ -1,7 +1,3 @@
-//! Progress bar control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages),
-//! whose constants have [`PBM`](crate::co::PBM) prefix.
-
 use crate::co;
 use crate::comctl::decl::PBRANGE;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, WinResult};

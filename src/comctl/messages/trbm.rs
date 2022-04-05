@@ -1,7 +1,3 @@
-//! Trackbar control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages),
-//! whose constants have [`TRBM`](crate::co::TRBM) prefix.
-
 use crate::co;
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;

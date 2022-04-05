@@ -10,9 +10,10 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::WinResult;
 use crate::msg::{sb, wm};
-use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, MsgSend, NativeBitflag,
-	UserHwnd};
+use crate::prelude::{
+	AsAny, GuiChild, GuiEventsView, GuiNativeControl, GuiNativeControlEvents,
+	GuiParent, GuiWindow, Handle, MsgSend, NativeBitflag, UserHwnd,
+};
 use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Used when adding the parts in

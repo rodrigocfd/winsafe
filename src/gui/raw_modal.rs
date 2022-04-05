@@ -7,9 +7,11 @@ use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{WinResult, WString};
 use crate::prelude::{GdiHbrush, GuiEventsView, Handle, UserHwnd};
-use crate::user::decl::{AdjustWindowRectEx, HBRUSH, HCURSOR, HICON, HWND,
-	DispatchMessage, GetMessage, IdMenu, MSG, POINT, PostQuitMessage, RECT, SIZE,
-	TranslateMessage, WNDCLASSEX};
+use crate::user::decl::{
+	AdjustWindowRectEx, DispatchMessage, GetMessage, HBRUSH, HCURSOR, HICON,
+	HWND, IdMenu, MSG, POINT, PostQuitMessage, RECT, SIZE, TranslateMessage,
+	WNDCLASSEX,
+};
 
 /// A WindowModal with a raw window.
 #[derive(Clone)]

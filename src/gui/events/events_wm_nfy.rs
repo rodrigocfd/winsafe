@@ -1,8 +1,10 @@
 use std::rc::Rc;
 
 use crate::co;
-use crate::gui::events::events_wm::{GuiEventsView, ProcessResult,
-	sealed_events_wm::GuiSealedEventsWm, WindowEvents};
+use crate::gui::events::events_wm::{
+	GuiEventsView, ProcessResult, sealed_events_wm::GuiSealedEventsWm,
+	WindowEvents,
+};
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::ErrResult;

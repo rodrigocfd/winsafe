@@ -5,7 +5,7 @@ use crate::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, GUID, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ShellIModalWindow, OleIUnknown};
+use crate::prelude::{OleIUnknown, ShellIModalWindow};
 use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};
 use crate::vt::IModalWindowVT;
 

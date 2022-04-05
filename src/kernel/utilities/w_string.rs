@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 
-use crate::co;
-use crate::kernel;
+use crate::{co, kernel};
 use crate::kernel::decl::{MultiByteToWideChar, WinResult};
 
 /// String encodings that can be guessed by

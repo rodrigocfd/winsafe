@@ -2,9 +2,11 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, WinResult, WString};
-use crate::user::decl::{ATOM, DLGPROC, HACCEL, HBITMAP, HCURSOR, HICON, HMENU,
-	HWND, IdIdcStr, IdIdiStr, SIZE, WNDCLASSEX};
 use crate::prelude::Handle;
+use crate::user::decl::{
+	ATOM, DLGPROC, HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND, IdIdcStr,
+	IdIdiStr, SIZE, WNDCLASSEX,
+};
 
 impl UserHinstance for HINSTANCE {}
 

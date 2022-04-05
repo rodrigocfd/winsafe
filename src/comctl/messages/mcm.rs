@@ -1,7 +1,3 @@
-//! Month calendar control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages),
-//! whose constants have [`MCM`](crate::co::MCM) prefix.
-
 use crate::co;
 use crate::kernel::decl::{SYSTEMTIME, WinResult};
 use crate::msg::WndMsg;

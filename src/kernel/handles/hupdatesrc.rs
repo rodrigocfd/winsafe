@@ -1,8 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::kernel;
-use crate::kernel::decl::{GetLastError, IdStr, LANGID, RtStr, WinResult,
-	WString};
+use crate::kernel::decl::{
+	GetLastError, IdStr, LANGID, RtStr, WinResult, WString,
+};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::Handle;
 

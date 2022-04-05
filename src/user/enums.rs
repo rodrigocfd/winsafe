@@ -3,8 +3,9 @@
 use crate::co;
 use crate::kernel::decl::WString;
 use crate::kernel::privs::MAKEINTRESOURCE;
-use crate::user::decl::{ATOM, HBITMAP, HICON, HMENU, HWND, NCCALCSIZE_PARAMS,
-	POINT, RECT};
+use crate::user::decl::{
+	ATOM, HBITMAP, HICON, HMENU, HWND, NCCALCSIZE_PARAMS, POINT, RECT,
+};
 
 /// Variant parameters of a [`wm::Command`](crate::msg::wm::Command) message.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]

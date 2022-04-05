@@ -1,8 +1,10 @@
 #![allow(non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP,
-	HIDWORD, LODWORD, OVERLAPPED, SECURITY_ATTRIBUTES, WinResult, WString};
+use crate::kernel::decl::{
+	BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP, HIDWORD, LODWORD,
+	OVERLAPPED, SECURITY_ATTRIBUTES, WinResult, WString,
+};
 use crate::kernel::privs::{bool_to_winresult, INVALID_HANDLE_VALUE};
 use crate::prelude::{Handle, HandleClose};
 

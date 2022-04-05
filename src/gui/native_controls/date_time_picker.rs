@@ -3,16 +3,18 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::events::{DateTimePickerEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl,
-	OptsId};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl, OptsId,
+};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::{SYSTEMTIME, WinResult};
 use crate::msg::{dtm, wm};
-use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiFocusControl,
-	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd};
-use crate::user::decl::{HWND, POINT, SIZE};
-use crate::user::decl::HwndPlace;
+use crate::prelude::{
+	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd,
+};
+use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
 /// Native
 /// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)

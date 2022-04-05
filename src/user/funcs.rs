@@ -5,8 +5,10 @@ use crate::ffi_types::BOOL;
 use crate::kernel::decl::{GetLastError, HINSTANCE, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::MsgSend;
-use crate::user::decl::{ATOM, COLORREF, DEVMODE, GUITHREADINFO, HWND, MSG,
-	POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX};
+use crate::user::decl::{
+	ATOM, COLORREF, DEVMODE, GUITHREADINFO, HWND, MSG, POINT, RECT, SIZE,
+	TRACKMOUSEEVENT, WNDCLASSEX,
+};
 use crate::user::privs::ASFW_ANY;
 
 /// [`AdjustWindowRectEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)

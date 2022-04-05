@@ -4,8 +4,10 @@ use crate::{co, msg, user};
 use crate::kernel::decl::{GetLastError, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::{Handle, NativeBitflag, UserHwnd};
-use crate::user::decl::{BmpPtrStr, HBITMAP, HWND, IdMenu, IdPos, MenuEnum,
-	MENUINFO, MENUITEMINFO, POINT};
+use crate::user::decl::{
+	BmpPtrStr, HBITMAP, HWND, IdMenu, IdPos, MenuEnum, MENUINFO, MENUITEMINFO,
+	POINT,
+};
 
 impl_handle! { HMENU: "user";
 	/// Handle to a

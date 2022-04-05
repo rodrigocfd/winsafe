@@ -4,16 +4,18 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::events::{ListBoxEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl,
-	OptsId};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl, OptsId,
+};
 use crate::gui::native_controls::list_box_items::ListBoxItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::WinResult;
 use crate::msg::wm;
-use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiFocusControl,
-	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
-	UserHwnd};
+use crate::prelude::{
+	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd,
+};
 use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Native

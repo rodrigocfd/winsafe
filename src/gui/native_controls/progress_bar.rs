@@ -3,15 +3,18 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::comctl::decl::PBRANGE;
-use crate::gui::events::{WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl,
-	OptsId};
+use crate::gui::events::WindowEvents;
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl, OptsId,
+};
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::WinResult;
 use crate::msg::pbm;
-use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiNativeControl,
-	GuiParent, GuiWindow, NativeBitflag, UserHwnd};
+use crate::prelude::{
+	AsAny, GuiChild, GuiEventsView, GuiNativeControl, GuiParent, GuiWindow,
+	NativeBitflag, UserHwnd,
+};
 use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Native

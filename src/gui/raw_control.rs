@@ -8,8 +8,9 @@ use crate::gui::raw_base::RawBase;
 use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::WString;
 use crate::prelude::{GdiHbrush, GuiEventsView, Handle, UserHwnd};
-use crate::user::decl::{HBRUSH, HCURSOR, HICON, IdMenu, POINT, SIZE,
-	WNDCLASSEX};
+use crate::user::decl::{
+	HBRUSH, HCURSOR, HICON, IdMenu, POINT, SIZE, WNDCLASSEX,
+};
 
 /// A WindowControl with a raw window.
 #[derive(Clone)]

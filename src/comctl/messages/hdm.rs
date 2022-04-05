@@ -1,9 +1,5 @@
-//! Header control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages),
-//! whose constants have [`HDM`](crate::co::HDM) prefix.
-
 use crate::co;
-use crate::comctl::decl::{HDITEM, HDHITTESTINFO, HDLAYOUT, HIMAGELIST, PtIdx};
+use crate::comctl::decl::{HDHITTESTINFO, HDITEM, HDLAYOUT, HIMAGELIST, PtIdx};
 use crate::kernel::decl::WinResult;
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;

@@ -1,7 +1,3 @@
-//! Toolbar control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages),
-//! whose constants have [`TBM`](crate::co::TBM) prefix.
-
 use crate::co;
 use crate::comctl::decl::{ResStrs, TBADDBITMAP, TBBUTTON};
 use crate::kernel::decl::WinResult;

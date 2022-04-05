@@ -1,6 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{NMDATETIMECHANGE, NMDATETIMEFORMAT,
-	NMDATETIMEFORMATQUERY, NMDATETIMESTRING, NMDATETIMEWMKEYDOWN};
+use crate::comctl::decl::{
+	NMDATETIMECHANGE, NMDATETIMEFORMAT, NMDATETIMEFORMATQUERY, NMDATETIMESTRING,
+	NMDATETIMEWMKEYDOWN,
+};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
 

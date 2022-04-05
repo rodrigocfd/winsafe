@@ -1,8 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{FILETIME, GetLastError, HACCESSTOKEN,
-	SECURITY_ATTRIBUTES, WinResult};
+use crate::kernel::decl::{
+	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, WinResult,
+};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::{Handle, HandleClose};
 

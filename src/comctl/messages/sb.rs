@@ -1,10 +1,7 @@
-//! Status bar control
-//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages),
-//! whose constants have [`SB`](crate::co::SB) prefix.
-
 use crate::co;
-use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, MAKEWORD, WinResult,
-	WString};
+use crate::kernel::decl::{
+	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, WinResult, WString,
+};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::HICON;

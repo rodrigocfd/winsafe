@@ -1,6 +1,7 @@
 use crate::co;
-use crate::kernel::decl::{HIWORD, LANGID, LOWORD, MAKEDWORD, WinResult,
-	WString};
+use crate::kernel::decl::{
+	HIWORD, LANGID, LOWORD, MAKEDWORD, WinResult, WString,
+};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COMBOBOXINFO, RECT};

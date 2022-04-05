@@ -4,17 +4,19 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::events::{TreeViewEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{BaseNativeControl,
-	OptsId};
+use crate::gui::native_controls::base_native_control::{
+	BaseNativeControl, OptsId,
+};
 use crate::gui::native_controls::tree_view_items::TreeViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::{ErrResult};
+use crate::kernel::decl::ErrResult;
 use crate::msg::tvm;
 use crate::ole::decl::HrResult;
-use crate::prelude::{AsAny, GuiChild, GuiEventsView, GuiFocusControl,
-	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
-	UserHwnd};
+use crate::prelude::{
+	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd,
+};
 use crate::user::decl::{HWND, POINT, SIZE};
 
 /// Native

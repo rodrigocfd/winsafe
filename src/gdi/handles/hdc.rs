@@ -6,8 +6,9 @@ use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::Handle;
-use crate::user::decl::{COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT,
-	SIZE};
+use crate::user::decl::{
+	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
+};
 
 impl GdiHdc for HDC {}
 
