@@ -195,6 +195,7 @@ impl GuiThread for WindowMain {
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created with
 	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
 		Self {
 			raw_dlg: RawDlg::Raw(
@@ -206,6 +207,7 @@ impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	#[must_use]
 	pub fn new_dlg(
 		dialog_id: u16,
 		icon_id: Option<u16>,

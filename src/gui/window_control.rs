@@ -87,6 +87,7 @@ impl GuiThread for WindowControl {
 impl WindowControl {
 	/// Instantiates a new `WindowControl` object, to be created with
 	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent,
 		opts: WindowControlOpts) -> WindowControl
@@ -105,6 +106,7 @@ impl WindowControl {
 	/// If the parent window is a dialog, position is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		dialog_id: u16,

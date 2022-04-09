@@ -55,6 +55,7 @@ impl ShellIShellItem for IShellItem {}
 pub trait ShellIShellItem: OleIUnknown {
 	/// [`IShellItem::BindToHandler`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
 	/// method.
+	#[must_use]
 	fn BindToHandler<T>(&self,
 		bind_ctx: &IBindCtx, bhid: &co::BHID) -> HrResult<T>
 		where T: ComInterface,
@@ -76,6 +77,7 @@ pub trait ShellIShellItem: OleIUnknown {
 
 	/// [`IShellItem::GetAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
 	/// method.
+	#[must_use]
 	fn GetAttributes(&self, sfgao_mask: co::SFGAO) -> HrResult<co::SFGAO> {
 		let mut attrs = u32::default();
 		match co::HRESULT(
@@ -109,6 +111,7 @@ pub trait ShellIShellItem: OleIUnknown {
 	/// println!("{}", full_path);
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
+	#[must_use]
 	fn GetDisplayName(&self, sigdn_name: co::SIGDN) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {
@@ -143,6 +146,7 @@ pub trait ShellIShellItem: OleIUnknown {
 	/// println!("{}", full_path);
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
+	#[must_use]
 	fn GetParent(&self) -> HrResult<IShellItem> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {

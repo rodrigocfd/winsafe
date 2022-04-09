@@ -57,10 +57,12 @@ impl_iunknown!(IUnknown, "00000000-0000-0000-c000-000000000046");
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait OleIUnknown: ComInterface + Clone {
 	/// Returns the pointer to the underlying COM virtual table.
+	#[must_use]
 	unsafe fn ptr(&self) -> ComPtr;
 
 	/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
 	/// method.
+	#[must_use]
 	fn QueryInterface<T>(&self) -> HrResult<T>
 		where T: ComInterface,
 	{

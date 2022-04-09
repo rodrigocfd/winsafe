@@ -55,6 +55,7 @@ pub trait DshowIPin: OleIUnknown {
 
 	/// [`IPin::ConnectedTo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
 	/// method.
+	#[must_use]
 	fn ConnectedTo(&self) -> HrResult<IPin> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
@@ -94,6 +95,7 @@ pub trait DshowIPin: OleIUnknown {
 
 	/// [`IPin::QueryId`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryid)
 	/// method.
+	#[must_use]
 	fn QueryId(&self) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {

@@ -16,6 +16,7 @@ pub trait GdiHrgn: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> WinResult<HRGN> {
 		unsafe {
 			gdi::ffi::CreateRectRgn(
@@ -31,6 +32,7 @@ pub trait GdiHrgn: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> WinResult<HRGN> {
 		unsafe { gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _).as_mut() }
 			.map(|ptr| HRGN(ptr))
@@ -42,6 +44,7 @@ pub trait GdiHrgn: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateRoundRectRgn(
 		bounds: RECT, size: SIZE) -> WinResult<HRGN>
 	{
@@ -74,12 +77,14 @@ pub trait GdiHrgn: Handle {
 
 	/// [`PtInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptinregion)
 	/// method.
+	#[must_use]
 	fn PtInRegion(self, x: i32, y: i32) -> bool {
 		unsafe { gdi::ffi::PtInRegion(self.as_ptr(), x, y) != 0 }
 	}
 
 	/// [`RectInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// method.
+	#[must_use]
 	fn RectInRegion(self, rc: &RECT) -> bool {
 		unsafe { gdi::ffi::RectInRegion(self.as_ptr(), rc as *const _ as _) != 0 }
 	}

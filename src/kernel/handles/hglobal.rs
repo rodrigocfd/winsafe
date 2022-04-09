@@ -21,6 +21,7 @@ pub trait KernelHglobal: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HGLOBAL::GlobalFree`](crate::prelude::KernelHglobal::GlobalFree) call.
+	#[must_use]
 	fn GlobalAlloc(flags: co::GMEM, num_bytes: u64) -> WinResult<HGLOBAL> {
 		unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes).as_mut() }
 			.map(|ptr| HGLOBAL(ptr))
@@ -29,6 +30,7 @@ pub trait KernelHglobal: Handle {
 
 	/// [`GlobalFlags`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
 	/// method.
+	#[must_use]
 	fn GlobalFlags(self) -> WinResult<co::GMEM> {
 		match unsafe { kernel::ffi::GlobalFlags(self.as_ptr()) } {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
@@ -54,6 +56,7 @@ pub trait KernelHglobal: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HGLOBAL::GlobalUnlock`](crate::prelude::KernelHglobal::GlobalUnlock)
 	/// call.
+	#[must_use]
 	fn GlobalLock<'a>(self) -> WinResult<&'a mut [u8]> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe { kernel::ffi::GlobalLock(self.as_ptr()).as_mut() }
@@ -68,6 +71,7 @@ pub trait KernelHglobal: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HGLOBAL::GlobalFree`](crate::prelude::KernelHglobal::GlobalFree) call.
+	#[must_use]
 	fn GlobalReAlloc(self,
 		num_bytes: u64, flags: co::GMEM) -> WinResult<HGLOBAL>
 	{
@@ -79,6 +83,7 @@ pub trait KernelHglobal: Handle {
 
 	/// [`GlobalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
 	/// method.
+	#[must_use]
 	fn GlobalSize(self) -> WinResult<u64> {
 		match unsafe { kernel::ffi::GlobalSize(self.as_ptr()) } {
 			0 => Err(GetLastError()),

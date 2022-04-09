@@ -18,6 +18,7 @@ pub trait GdiHbrush: Handle {
 	/// **Note:** This should be used only to initialize the
 	/// [`WNDCLASSEX`](crate::WNDCLASSEX)'s `hbrBackground` field. Any other use
 	/// will yield an invalid handle.
+	#[must_use]
 	fn from_sys_color(color: co::COLOR) -> HBRUSH {
 		HBRUSH((color.0 + 1) as _ )
 	}
@@ -27,6 +28,7 @@ pub trait GdiHbrush: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateBrushIndirect(lb: &LOGBRUSH) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
@@ -38,6 +40,7 @@ pub trait GdiHbrush: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateHatchBrush(
 		hatch: co::HS, color: COLORREF) -> WinResult<HBRUSH>
 	{
@@ -51,6 +54,7 @@ pub trait GdiHbrush: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreatePatternBrush(hbmp: HBITMAP) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::CreatePatternBrush(hbmp.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
@@ -62,6 +66,7 @@ pub trait GdiHbrush: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateSolidBrush(color: COLORREF) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::CreateSolidBrush(color.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
@@ -85,6 +90,7 @@ pub trait GdiHbrush: Handle {
 
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
+	#[must_use]
 	fn GetStockObject(sb: co::STOCK_BRUSH) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::GetStockObject(sb.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
@@ -93,6 +99,7 @@ pub trait GdiHbrush: Handle {
 
 	/// [`GetSysColorBrush`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
+	#[must_use]
 	fn GetSysColorBrush(index: co::COLOR) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::GetSysColorBrush(index.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))

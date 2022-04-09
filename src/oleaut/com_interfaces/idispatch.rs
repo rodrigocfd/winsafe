@@ -36,6 +36,7 @@ impl OleautIDispatch for IDispatch {}
 pub trait OleautIDispatch: OleIUnknown {
 	/// [`IDispatch::GetTypeInfoCount`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
 	/// method.
+	#[must_use]
 	fn GetTypeInfoCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
 		unsafe {
@@ -47,6 +48,7 @@ pub trait OleautIDispatch: OleIUnknown {
 
 	/// [`IDispatch::GetTypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)
 	/// method.
+	#[must_use]
 	fn GetTypeInfo(&self, info_type: u32, lcid: LCID) -> HrResult<ITypeInfo> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {

@@ -90,6 +90,7 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
+	#[must_use]
 	fn LoadAccelerators(self, table_name: IdStr) -> WinResult<HACCEL> {
 		unsafe {
 			user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr())
@@ -113,6 +114,7 @@ pub trait UserHinstance: Handle {
 	///     .LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn LoadCursor(self, resource_id: IdIdcStr) -> WinResult<HCURSOR> {
 		unsafe {
 			user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()).as_mut()
@@ -135,6 +137,7 @@ pub trait UserHinstance: Handle {
 	///     .LoadIcon(IdIdiStr::Idi(co::IDI::INFORMATION))?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn LoadIcon(self, icon_id: IdIdiStr) -> WinResult<HICON> {
 		unsafe {
 			user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()).as_mut()
@@ -144,6 +147,7 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
+	#[must_use]
 	fn LoadImageBitmap(self,
 		name: u16, sz: SIZE, load: co::LR) -> WinResult<HBITMAP>
 	{
@@ -157,6 +161,7 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
+	#[must_use]
 	fn LoadImageCursor(self,
 		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HCURSOR>
 	{
@@ -169,6 +174,7 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
+	#[must_use]
 	fn LoadImageIcon(self,
 		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HICON>
 	{
@@ -181,6 +187,7 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// method.
+	#[must_use]
 	fn LoadMenu(self, resource_id: IdStr) -> WinResult<HMENU> {
 		unsafe {
 			user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()).as_mut()
@@ -190,6 +197,7 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadString`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
 	/// method.
+	#[must_use]
 	fn LoadString(self, id: u16) -> WinResult<String> {
 		let mut pdata: *const u16 = std::ptr::null_mut();
 		match unsafe {

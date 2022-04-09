@@ -42,12 +42,14 @@ pub trait UserHmonitor: Handle {
 
 	/// [`MonitorFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint)
 	/// static method.
+	#[must_use]
 	fn MonitorFromPoint(pt: POINT, flags: co::MONITOR) -> HMONITOR {
 		HMONITOR(unsafe { user::ffi::MonitorFromPoint(pt.x, pt.y, flags.0) })
 	}
 
 	/// [`MonitorFromRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromrect)
 	/// static method.
+	#[must_use]
 	fn MonitorFromRect(rc: RECT, flags: co::MONITOR) -> HMONITOR {
 		HMONITOR(
 			unsafe { user::ffi::MonitorFromRect(&rc as *const _ as _, flags.0) },

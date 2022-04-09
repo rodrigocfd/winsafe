@@ -28,6 +28,7 @@ pub trait Handle:
 	}
 
 	/// Returns `None` if the handle is null, otherwise returns `Some(&Self)`.
+	#[must_use]
 	fn as_opt(self) -> Option<Self> {
 		if self.is_null() {
 			None

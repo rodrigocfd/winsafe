@@ -44,6 +44,7 @@ pub fn EncryptionDisable(dir_path: &str, disable: bool) -> WinResult<()> {
 /// [`GetUserName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
+#[must_use]
 pub fn GetUserName() -> WinResult<String> {
 	let mut buf = WString::new_alloc_buffer(UNLEN + 1);
 	let mut sz = buf.buffer_size() as u32;

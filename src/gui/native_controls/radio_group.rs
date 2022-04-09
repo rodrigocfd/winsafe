@@ -67,6 +67,7 @@ impl RadioGroup {
 	/// # Panics
 	///
 	/// Panics if `opts` is empty
+	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent,
 		opts: &[RadioButtonOpts]) -> RadioGroup
@@ -122,6 +123,7 @@ impl RadioGroup {
 	/// # Panics
 	///
 	/// Panics if `ctrls` is empty.
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrls: &[(u16, Horz, Vert)]) -> RadioGroup
@@ -184,18 +186,21 @@ impl RadioGroup {
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {
 		self.0.radios.iter()
 	}
 
 	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton) of
 	/// this group, if any.
+	#[must_use]
 	pub fn checked(&self) -> Option<&RadioButton> {
 		self.checked_index().map(|idx| &self.0.radios[idx])
 	}
 
 	/// Returns the index of the currently selected
 	/// [`RadioButton`](crate::gui::RadioButton) of this group, if any.
+	#[must_use]
 	pub fn checked_index(&self) -> Option<usize> {
 		for (idx, radio) in self.0.radios.iter().enumerate() {
 			if radio.is_selected() {
@@ -207,6 +212,7 @@ impl RadioGroup {
 
 	/// Returns the number of [`RadioButton`](crate::gui::RadioButton) controls
 	/// in this group.
+	#[must_use]
 	pub fn count(&self) -> usize {
 		self.0.radios.len()
 	}

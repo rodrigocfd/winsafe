@@ -72,6 +72,7 @@ pub trait ShellIFileOpenDialog: ShellIFileDialog {
 	///     .collect::<HrResult<Vec<_>>>()?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
+	#[must_use]
 	fn GetResults(&self) -> HrResult<IShellItemArray> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
@@ -82,6 +83,7 @@ pub trait ShellIFileOpenDialog: ShellIFileDialog {
 
 	/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 	/// method.
+	#[must_use]
 	fn GetSelectedItems(&self) -> HrResult<IShellItemArray> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {

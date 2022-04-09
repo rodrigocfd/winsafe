@@ -23,6 +23,7 @@ pub trait KernelHaccesstoken: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
+	#[must_use]
 	fn DuplicateToken(self,
 		level: co::SECURITY_IMPERSONATION) -> WinResult<HACCESSTOKEN>
 	{
@@ -40,18 +41,21 @@ pub trait KernelHaccesstoken: Handle {
 
 	/// [`GetCurrentProcessToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocesstoken)
 	/// static method.
+	#[must_use]
 	fn GetCurrentProcessToken() -> HACCESSTOKEN {
 		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentProcessToken() })
 	}
 
 	/// [`GetCurrentThreadEffectiveToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadeffectivetoken)
 	/// static method.
+	#[must_use]
 	fn GetCurrentThreadEffectiveToken() -> HACCESSTOKEN {
 		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentThreadEffectiveToken() })
 	}
 
 	/// [`IsTokenRestricted`](https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
 	/// method.
+	#[must_use]
 	fn IsTokenRestricted(self) -> WinResult<bool> {
 		match unsafe { kernel::ffi::IsTokenRestricted(self.as_ptr()) } {
 			0 => match GetLastError() {

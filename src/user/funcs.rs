@@ -44,6 +44,7 @@ pub fn AllowSetForegroundWindow(process_id: Option<u32>) -> WinResult<()> {
 /// [`AnyPopup`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-anypopup)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn AnyPopup() -> bool {
 	unsafe { user::ffi::AnyPopup() != 0 }
 }
@@ -239,6 +240,7 @@ pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 /// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetClipCursor() -> WinResult<RECT> {
 	let mut rc = RECT::default();
 	bool_to_winresult(
@@ -249,6 +251,7 @@ pub fn GetClipCursor() -> WinResult<RECT> {
 /// [`GetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetCursorPos() -> WinResult<POINT> {
 	let mut pt = POINT::default();
 	bool_to_winresult(
@@ -259,6 +262,7 @@ pub fn GetCursorPos() -> WinResult<POINT> {
 /// [`GetDialogBaseUnits`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetDialogBaseUnits() -> i32 {
 	unsafe { user::ffi::GetDialogBaseUnits() }
 }
@@ -266,6 +270,7 @@ pub fn GetDialogBaseUnits() -> i32 {
 /// [`GetDoubleClickTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdoubleclicktime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetDoubleClickTime() -> u32 {
 	unsafe { user::ffi::GetDoubleClickTime() }
 }
@@ -322,6 +327,7 @@ pub fn GetMessage(
 /// [`GetMenuCheckMarkDimensions`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenucheckmarkdimensions)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetMenuCheckMarkDimensions() -> SIZE {
 	SIZE::from_u32(unsafe { user::ffi::GetMenuCheckMarkDimensions() } as _)
 }
@@ -329,6 +335,7 @@ pub fn GetMenuCheckMarkDimensions() -> SIZE {
 /// [`GetMessagePos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagepos)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetMessagePos() -> POINT {
 	POINT::from_u32(unsafe { user::ffi::GetMessagePos() })
 }
@@ -336,6 +343,7 @@ pub fn GetMessagePos() -> POINT {
 /// [`GetQueueStatus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetQueueStatus(flags: co::QS) -> u32 {
 	unsafe { user::ffi::GetQueueStatus(flags.0) }
 }
@@ -343,6 +351,7 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 /// [`GetSysColor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetSysColor(index: co::COLOR) -> COLORREF {
 	COLORREF(unsafe { user::ffi::GetSysColor(index.0) })
 }
@@ -350,6 +359,7 @@ pub fn GetSysColor(index: co::COLOR) -> COLORREF {
 /// [`GetSystemMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetSystemMetrics(index: co::SM) -> i32 {
 	unsafe { user::ffi::GetSystemMetrics(index.0) }
 }
@@ -357,6 +367,7 @@ pub fn GetSystemMetrics(index: co::SM) -> i32 {
 /// [`InSendMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessage)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn InSendMessage() -> bool {
 	unsafe { user::ffi::InSendMessage() != 0 }
 }
@@ -364,6 +375,7 @@ pub fn InSendMessage() -> bool {
 /// [`InSendMessageEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessageex)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn InSendMessageEx() -> co::ISMEX {
 	co::ISMEX(unsafe { user::ffi::InSendMessageEx()})
 }
@@ -387,6 +399,7 @@ pub fn IsGUIThread(convert_to_gui_thread: bool) -> WinResult<bool> {
 /// [`IsWow64Message`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswow64message)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn IsWow64Message() -> bool {
 	return unsafe { user::ffi::IsWow64Message() != 0}
 }

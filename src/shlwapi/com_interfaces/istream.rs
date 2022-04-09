@@ -42,6 +42,7 @@ pub trait ShlwapiIStream: OleIUnknown {
 	/// Calls
 	/// [`SHCreateMemStream`](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
 	/// to create a new stream over a slice.
+	#[must_use]
 	fn from_slice(src: &[u8]) -> HrResult<IStream> {
 		unsafe {
 			shlwapi::ffi::SHCreateMemStream(src.as_ptr(), src.len() as _)

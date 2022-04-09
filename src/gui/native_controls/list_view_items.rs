@@ -81,6 +81,7 @@ impl<'a> ListViewItems<'a> {
 
 	/// Retrieves the total number of items by sending an
 	/// [`lvm::GetItemCount`](crate::msg::lvm::GetItemCount) message.
+	#[must_use]
 	pub fn count(&self) -> u32 {
 		self.hwnd.SendMessage(lvm::GetItemCount {})
 	}
@@ -108,6 +109,7 @@ impl<'a> ListViewItems<'a> {
 
 	/// Searches for an item with the given text, case-insensitive, by sending
 	/// an [`lvm::FindItem`](crate::msg::lvm::FindItem) message.
+	#[must_use]
 	pub fn find(&self, text: &str) -> Option<ListViewItem<'a>> {
 		let mut buf = WString::from_str(text);
 
@@ -123,6 +125,7 @@ impl<'a> ListViewItems<'a> {
 
 	/// Retrieves the index of the focused item by sending an
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
+	#[must_use]
 	pub fn focused(&self) -> Option<ListViewItem<'a>> {
 		self.hwnd.SendMessage(lvm::GetNextItem {
 			initial_index: None,
@@ -135,6 +138,7 @@ impl<'a> ListViewItems<'a> {
 	/// **Note:** This method is cheap – even if `index` is beyond the range of
 	/// existing items, an object will still be returned. However, operations
 	/// upon this object will fail.
+	#[must_use]
 	pub const fn get(&self, index: u32) -> ListViewItem<'a> {
 		ListViewItem {
 			hwnd: self.hwnd,
@@ -147,6 +151,7 @@ impl<'a> ListViewItems<'a> {
 	/// [`lvm::HitTest`](crate::msg::lvm::HitTest) message
 	///
 	/// `coords` must be relative to the list view.
+	#[must_use]
 	pub fn hit_test(&self, coords: POINT) -> Option<ListViewItem<'a>> {
 		let mut lvhti = LVHITTESTINFO::default();
 		lvhti.pt = coords;
@@ -172,6 +177,7 @@ impl<'a> ListViewItems<'a> {
 	///         item.index(), item.text(0));
 	/// }
 	/// ```
+	#[must_use]
 	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a>> + 'a {
 		ListViewItemIter::new(self.hwnd, co::LVNI::ALL)
 	}
@@ -193,6 +199,7 @@ impl<'a> ListViewItems<'a> {
 	///         item.index(), item.text(0));
 	/// }
 	/// ```
+	#[must_use]
 	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a>> + 'a {
 		ListViewItemIter::new(self.hwnd, co::LVNI::ALL | co::LVNI::SELECTED)
 	}
@@ -202,6 +209,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// If the item of the given unique ID doesn't exist anymore, returns
 	/// `None`.
+	#[must_use]
 	pub fn map_id_to_index(&self, item_id: u32) -> Option<ListViewItem<'a>> {
 		self.hwnd.SendMessage(lvm::MapIdToIndex { id: item_id })
 			.map(|idx| self.get(idx))
@@ -222,6 +230,7 @@ impl<'a> ListViewItems<'a> {
 
 	/// Retrieves the number of selected items by sending an
 	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
+	#[must_use]
 	pub fn selected_count(&self) -> u32 {
 		self.hwnd.SendMessage(lvm::GetSelectedCount {})
 	}

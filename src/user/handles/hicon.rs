@@ -20,6 +20,7 @@ pub trait UserHicon: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+	#[must_use]
 	fn CopyIcon(self) -> WinResult<HICON> {
 		unsafe { user::ffi::CopyIcon(self.as_ptr()).as_mut() }
 			.map(|ptr| HICON(ptr))

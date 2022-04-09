@@ -16,10 +16,12 @@ pub unsafe trait MsgSend {
 
 	/// Converts the generic `isize` return value to the specific type returned
 	/// by the message.
+	#[must_use]
 	fn convert_ret(&self, v: isize) -> Self::RetType;
 
 	/// Converts the specific message parameters struct into the generic
 	/// [`WndMsg`](crate::msg::WndMsg) message struct.
+	#[must_use]
 	fn as_generic_wm(&mut self) -> WndMsg;
 }
 
@@ -33,5 +35,6 @@ pub unsafe trait MsgSend {
 pub unsafe trait MsgSendRecv: MsgSend {
 	/// Converts the generic [`WndMsg`](crate::msg::WndMsg) parameters struct
 	/// into the specific message struct.
+	#[must_use]
 	fn from_generic_wm(parm: WndMsg) -> Self;
 }

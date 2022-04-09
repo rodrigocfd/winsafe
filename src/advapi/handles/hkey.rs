@@ -73,6 +73,7 @@ pub trait AdvapiHkey: Handle {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn EnumKeyEx<'a>(self) -> WinResult<Box<dyn Iterator<Item = WinResult<String>> + 'a>> {
 		Ok(Box::new(EnumKeyIter::new(HKEY(unsafe { self.as_ptr() }))?))
 	}
@@ -101,6 +102,7 @@ pub trait AdvapiHkey: Handle {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn EnumValue<'a>(self) -> WinResult<Box<dyn Iterator<Item = WinResult<(String, co::REG)>> + 'a>> {
 		Ok(Box::new(EnumValueIter::new(HKEY(unsafe { self.as_ptr() }))?))
 	}
@@ -137,6 +139,7 @@ pub trait AdvapiHkey: Handle {
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn GetValue(self, sub_key: &str, value: &str) -> WinResult<RegistryValue> {
 		let sub_key_w = WString::from_str(sub_key);
 		let value_w = WString::from_str(value);
@@ -220,6 +223,7 @@ pub trait AdvapiHkey: Handle {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn OpenKeyEx(self, sub_key: &str,
 		options: co::REG_OPTION, access_rights: co::KEY) -> WinResult<HKEY>
 	{
@@ -345,6 +349,7 @@ pub trait AdvapiHkey: Handle {
 	/// hkey.CloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn QueryValueEx(self, value: &str) -> WinResult<RegistryValue> {
 		let value_w = WString::from_str(value);
 		let mut raw_data_type = u32::default();

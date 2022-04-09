@@ -20,6 +20,7 @@ impl GdiHpen for HPEN {}
 pub trait GdiHpen: Handle {
 	/// [`CreatePen`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// static method.
+	#[must_use]
 	fn CreatePen(
 		style: co::PS, width: i32, color: COLORREF) -> WinResult<HPEN>
 	{
@@ -30,6 +31,7 @@ pub trait GdiHpen: Handle {
 
 	/// [`CreatePenIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
 	/// static method.
+	#[must_use]
 	fn CreatePenIndirect(lp: &mut LOGPEN) -> WinResult<HPEN> {
 		unsafe { gdi::ffi::CreatePenIndirect(lp as *const _ as _).as_mut() }
 			.map(|ptr| HPEN(ptr))
@@ -38,6 +40,7 @@ pub trait GdiHpen: Handle {
 
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
+	#[must_use]
 	fn GetStockObject(sp: co::STOCK_PEN) -> WinResult<HPEN> {
 		unsafe { gdi::ffi::GetStockObject(sp.0).as_mut() }
 			.map(|ptr| HPEN(ptr))

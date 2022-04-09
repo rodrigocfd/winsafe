@@ -22,6 +22,7 @@ pub enum AccelMenuCtrl {
 
 impl AccelMenuCtrl {
 	/// Returns the notification code and the control ID pair.
+	#[must_use]
 	pub fn code_id(&self) -> (co::CMD, u16) {
 		match self {
 			AccelMenuCtrl::Accel(id) => (co::CMD::Accelerator, *id),
@@ -58,10 +59,12 @@ pub enum AtomStr {
 }
 
 impl AtomStr {
+	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Atom(atom) => MAKEINTRESOURCE(atom.0 as _),
@@ -82,6 +85,7 @@ pub enum BmpIcon {
 }
 
 impl BmpIcon {
+	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		(match self {
 			Self::Bmp(hbmp) => hbmp.0,
@@ -107,10 +111,12 @@ pub enum BmpPtrStr {
 }
 
 impl BmpPtrStr {
+	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Bmp(hbmp) => hbmp.0 as _,
@@ -159,6 +165,7 @@ pub enum HwndHmenu {
 }
 
 impl HwndHmenu {
+	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		(match self {
 			Self::Hwnd(hwnd) => hwnd.0,
@@ -182,6 +189,7 @@ pub enum HwndPlace {
 }
 
 impl HwndPlace {
+	#[must_use]
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.0,
@@ -206,6 +214,7 @@ pub enum HwndPointId {
 }
 
 impl HwndPointId {
+	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.0 as _,
@@ -230,10 +239,12 @@ pub enum IdIdcStr {
 }
 
 impl IdIdcStr {
+	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
@@ -258,10 +269,12 @@ pub enum IdIdiStr {
 }
 
 impl IdIdiStr {
+	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
@@ -287,6 +300,7 @@ pub enum IdMenu {
 }
 
 impl IdMenu {
+	#[must_use]
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
@@ -295,6 +309,7 @@ impl IdMenu {
 		}
 	}
 
+	#[must_use]
 	pub fn as_usize(&self) -> usize {
 		match self {
 			IdMenu::Id(id) => *id as _,
@@ -330,6 +345,7 @@ pub enum IdPos {
 
 impl IdPos {
 	/// Returns whether value is `Pos`.
+	#[must_use]
 	pub fn is_by_pos(self) -> bool {
 		match self {
 			IdPos::Id(_) => false,
@@ -338,6 +354,7 @@ impl IdPos {
 	}
 
 	/// Returns the ID or the position as a plain `u32`.
+	#[must_use]
 	pub fn id_or_pos_u32(self) -> u32 {
 		match self {
 			IdPos::Id(id) => id as _,
@@ -347,6 +364,7 @@ impl IdPos {
 
 	/// Returns [`MF::BYCOMMAND`](crate::co::MF::BYCOMMAND) if value is `Id`, or
 	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION) if value is `Pos`.
+	#[must_use]
 	pub fn mf_flag(self) -> co::MF {
 		match self {
 			IdPos::Id(_) => co::MF::BYCOMMAND,

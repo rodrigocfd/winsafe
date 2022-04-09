@@ -26,6 +26,7 @@ use crate::prelude::ComInterface;
 /// # Ok::<_, co::HRESULT>(())
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
+#[must_use]
 pub fn CoCreateInstance<T>(
 	clsid: &co::CLSID,
 	iunk_outer: Option<&mut IUnknown>,

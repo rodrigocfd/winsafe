@@ -145,6 +145,7 @@ pub trait UserHmenu: Handle {
 	///
 	/// **Note:** If not attached to a window, must be paired with an
 	/// [`HMENU::DestroyMenu`](crate::prelude::UserHmenu::DestroyMenu) call.
+	#[must_use]
 	fn CreateMenu() -> WinResult<HMENU> {
 		unsafe { user::ffi::CreateMenu().as_mut() }
 			.map(|ptr| HMENU(ptr))
@@ -156,6 +157,7 @@ pub trait UserHmenu: Handle {
 	///
 	/// **Note:** If not attached to a window, must be paired with an
 	/// [`HMENU::DestroyMenu`](crate::prelude::UserHmenu::DestroyMenu) call.
+	#[must_use]
 	fn CreatePopupMenu() -> WinResult<HMENU> {
 		unsafe { user::ffi::CreatePopupMenu().as_mut() }
 			.map(|ptr| HMENU(ptr))
@@ -250,6 +252,7 @@ pub trait UserHmenu: Handle {
 
 	/// [`GetMenuDefaultItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenudefaultitem)
 	/// method.
+	#[must_use]
 	fn GetMenuDefaultItem(self,
 		by_pos: bool, flags: co::GMDI) -> WinResult<IdPos>
 	{
@@ -272,6 +275,7 @@ pub trait UserHmenu: Handle {
 
 	/// [`GetMenuItemCount`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
 	/// method.
+	#[must_use]
 	fn GetMenuItemCount(self) -> WinResult<u32> {
 		match unsafe { user::ffi::GetMenuItemCount(self.as_ptr()) } {
 			-1 => Err(GetLastError()),
@@ -281,6 +285,7 @@ pub trait UserHmenu: Handle {
 
 	/// [`GetMenuItemID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemid)
 	/// method.
+	#[must_use]
 	fn GetMenuItemID(self, nPos: i32) -> Option<i32> {
 		match unsafe { user::ffi::GetMenuItemID(self.as_ptr(), nPos) } {
 			-1 => None,
@@ -307,6 +312,7 @@ pub trait UserHmenu: Handle {
 
 	/// [`GetMenuState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustate)
 	/// method.
+	#[must_use]
 	fn GetMenuState(self, id_or_pos: IdPos) -> WinResult<co::MF> {
 		match unsafe {
 			user::ffi::GetMenuState(
@@ -322,6 +328,7 @@ pub trait UserHmenu: Handle {
 
 	/// [`GetMenuString`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustringw)
 	/// method.
+	#[must_use]
 	fn GetMenuString(self, id_or_pos: IdPos) -> WinResult<String> {
 		const BLOCK: usize = 64; // arbitrary
 		let mut buf_sz = BLOCK;
@@ -355,6 +362,7 @@ pub trait UserHmenu: Handle {
 
 	/// [`GetSubMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu)
 	/// method.
+	#[must_use]
 	fn GetSubMenu(self, pos: u32) -> Option<HMENU> {
 		unsafe { user::ffi::GetSubMenu(self.as_ptr(), pos as _).as_mut() }
 			.map(|ptr| HMENU(ptr))
@@ -379,6 +387,7 @@ pub trait UserHmenu: Handle {
 
 	/// [`IsMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ismenu)
 	/// method.
+	#[must_use]
 	fn IsMenu(self) -> bool {
 		unsafe { user::ffi::IsMenu(self.as_ptr()) != 0 }
 	}

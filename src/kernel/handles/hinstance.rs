@@ -77,6 +77,7 @@ pub trait KernelHinstance: Handle {
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	#[must_use]
 	fn FindResource(self,
 		resource_id: IdStr, resource_type: RtStr) -> WinResult<HRSRC>
 	{
@@ -95,6 +96,7 @@ pub trait KernelHinstance: Handle {
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	#[must_use]
 	fn FindResourceEx(self,
 		resource_id: IdStr, resource_type: RtStr,
 		language: Option<LANGID>) -> WinResult<HRSRC>
@@ -132,6 +134,7 @@ pub trait KernelHinstance: Handle {
 	/// println!("EXE: {}", exe_name);
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn GetModuleFileName(self) -> WinResult<String> {
 		let mut buf = [0; MAX_PATH];
 		match unsafe {
@@ -160,6 +163,7 @@ pub trait KernelHinstance: Handle {
 	/// let hinstance = HINSTANCE::GetModuleHandle(None)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn GetModuleHandle(module_name: Option<&str>) -> WinResult<HINSTANCE> {
 		unsafe {
 			kernel::ffi::GetModuleHandleW(
@@ -171,6 +175,7 @@ pub trait KernelHinstance: Handle {
 
 	/// [`GetProcAddress`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
 	/// method.
+	#[must_use]
 	fn GetProcAddress(self,
 		proc_name: &str) -> WinResult<*const std::ffi::c_void>
 	{
@@ -189,6 +194,7 @@ pub trait KernelHinstance: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HINSTANCE::FreeLibrary`](crate::prelude::KernelHinstance::FreeLibrary)
 	/// call.
+	#[must_use]
 	fn LoadLibrary(lib_file_name: &str) -> WinResult<HINSTANCE> {
 		unsafe {
 			kernel::ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
@@ -202,6 +208,7 @@ pub trait KernelHinstance: Handle {
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	#[must_use]
 	fn LoadResource(self, res_info: HRSRC) -> WinResult<HRSRCMEM> {
 		unsafe { kernel::ffi::LoadResource(self.as_ptr(), res_info.0).as_mut() }
 			.map(|ptr| HRSRCMEM(ptr))
@@ -253,6 +260,7 @@ pub trait KernelHinstance: Handle {
 	/// hExe.FreeLibrary()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn LockResource<'a>(self,
 		res_info: HRSRC, hres_loaded: HRSRCMEM) -> WinResult<&'a [u8]>
 	{
@@ -269,6 +277,7 @@ pub trait KernelHinstance: Handle {
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	#[must_use]
 	fn SizeofResource(self, res_info: HRSRC) -> WinResult<u32> {
 		match unsafe { kernel::ffi::SizeofResource(self.as_ptr(), res_info.0) } {
 			0 => Err(GetLastError()),

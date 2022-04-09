@@ -67,6 +67,7 @@ pub trait KernelHfile: Handle {
 	/// hfile.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn CreateFile(
 		file_name: &str,
 		desired_access: co::GENERIC,
@@ -98,6 +99,7 @@ pub trait KernelHfile: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HFILEMAP::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
+	#[must_use]
 	fn CreateFileMapping(self,
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
@@ -133,6 +135,7 @@ pub trait KernelHfile: Handle {
 
 	/// [`GetFileSizeEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// method.
+	#[must_use]
 	fn GetFileSizeEx(self) -> WinResult<usize> {
 		let mut sz_buf = 0;
 		match unsafe { kernel::ffi::GetFileSizeEx(self.as_ptr(), &mut sz_buf) } {
@@ -143,6 +146,7 @@ pub trait KernelHfile: Handle {
 
 	/// [`GetFileType`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
 	/// method.
+	#[must_use]
 	fn GetFileType(self) -> WinResult<co::FILE_TYPE> {
 		match co::FILE_TYPE(unsafe { kernel::ffi::GetFileType(self.as_ptr()) }) {
 			co::FILE_TYPE::UNKNOWN => match GetLastError() {

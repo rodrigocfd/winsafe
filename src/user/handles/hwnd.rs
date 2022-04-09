@@ -30,6 +30,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindowLongPtr`](crate::prelude::UserHwnd::GetWindowLongPtr) wrapper
 	/// to retrieve the window [`HINSTANCE`](crate::HINSTANCE).
+	#[must_use]
 	fn hinstance(self) -> HINSTANCE {
 		HINSTANCE(self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _)
 	}
@@ -81,6 +82,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`ChildWindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-childwindowfrompoint)
 	/// method.
+	#[must_use]
 	fn ChildWindowFromPoint(self, pt: POINT) -> Option<HWND> {
 		unsafe {
 			user::ffi::ChildWindowFromPoint(self.as_ptr(), pt.x, pt.y).as_mut()
@@ -234,6 +236,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`FindWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindoww)
 	/// static method.
+	#[must_use]
 	fn FindWindow(
 		class_name: Option<AtomStr>,
 		title: Option<&str>) -> WinResult<HWND>
@@ -249,6 +252,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`FindWindowEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw)
 	/// method.
+	#[must_use]
 	fn FindWindowEx(self,
 		hwnd_child_after: Option<HWND>,
 		class_name: AtomStr,
@@ -267,6 +271,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetActiveWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)
 	/// static method.
+	#[must_use]
 	fn GetActiveWindow() -> Option<HWND> {
 		unsafe { user::ffi::GetActiveWindow().as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -305,6 +310,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetAncestor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getancestor)
 	/// method.
+	#[must_use]
 	fn GetAncestor(self, flags: co::GA) -> Option<HWND> {
 		unsafe { user::ffi::GetAncestor(self.as_ptr(), flags.0).as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -312,6 +318,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetCapture`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcapture)
 	/// static method.
+	#[must_use]
 	fn GetCapture() -> Option<HWND> {
 		unsafe { user::ffi::GetCapture().as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -319,12 +326,14 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetClassLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclasslongptrw)
 	/// method.
+	#[must_use]
 	fn GetClassLongPtr(self, index: co::GCLP) -> usize {
 		unsafe { user::ffi::GetClassLongPtrW(self.as_ptr(), index.0) }
 	}
 
 	/// [`GetClassName`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassnamew)
 	/// method.
+	#[must_use]
 	fn GetClassName(self) -> WinResult<String> {
 		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
 		match unsafe {
@@ -341,6 +350,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetClientRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect)
 	/// method.
+	#[must_use]
 	fn GetClientRect(self) -> WinResult<RECT> {
 		let mut rc = RECT::default();
 		match unsafe {
@@ -356,6 +366,7 @@ pub trait UserHwnd: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HWND::ReleaseDC`](crate::prelude::UserHwnd::ReleaseDC) call.
+	#[must_use]
 	fn GetDC(self) -> WinResult<HDC> {
 		unsafe { user::ffi::GetDC(self.as_ptr()).as_mut() }
 			.map(|ptr| HDC(ptr))
@@ -364,12 +375,14 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetDesktopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
 	/// static method.
+	#[must_use]
 	fn GetDesktopWindow() -> HWND {
 		HWND(unsafe { user::ffi::GetDesktopWindow() })
 	}
 
 	/// [`GetDlgCtrlID`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgctrlid)
 	/// method.
+	#[must_use]
 	fn GetDlgCtrlID(self) -> WinResult<u16> {
 		match unsafe { user::ffi::GetDlgCtrlID(self.as_ptr()) } {
 			0 => match GetLastError() {
@@ -382,6 +395,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetDlgItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgitem)
 	/// method.
+	#[must_use]
 	fn GetDlgItem(self, ctrl_id: u16) -> WinResult<HWND> {
 		unsafe { user::ffi::GetDlgItem(self.as_ptr(), ctrl_id as _).as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -390,6 +404,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetFocus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getfocus)
 	/// static method.
+	#[must_use]
 	fn GetFocus() -> Option<HWND> {
 		unsafe { user::ffi::GetFocus().as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -397,6 +412,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// static method.
+	#[must_use]
 	fn GetForegroundWindow() -> Option<HWND> {
 		unsafe { user::ffi::GetForegroundWindow().as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -404,6 +420,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetLastActivePopup`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastactivepopup)
 	/// method.
+	#[must_use]
 	fn GetLastActivePopup(self) -> Option<HWND> {
 		unsafe { user::ffi::GetLastActivePopup(self.as_ptr()).as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -411,6 +428,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenu)
 	/// method.
+	#[must_use]
 	fn GetMenu(self) -> Option<HMENU> {
 		unsafe { user::ffi::GetMenu(self.as_ptr()).as_mut() }
 			.map(|ptr| HMENU(ptr))
@@ -452,6 +470,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetNextDlgGroupItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlggroupitem)
 	/// method.
+	#[must_use]
 	fn GetNextDlgGroupItem(self,
 		hwnd_ctrl: HWND, previous: bool) -> WinResult<HWND>
 	{
@@ -465,6 +484,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetNextDlgTabItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlgtabitem)
 	/// method.
+	#[must_use]
 	fn GetNextDlgTabItem(self,
 		hwnd_ctrl: HWND, previous: bool) -> WinResult<HWND>
 	{
@@ -477,6 +497,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetParent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getparent)
 	/// method.
+	#[must_use]
 	fn GetParent(self) -> WinResult<HWND> {
 		unsafe { user::ffi::GetParent(self.as_ptr()).as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -497,6 +518,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetScrollPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getscrollpos)
 	/// method.
+	#[must_use]
 	fn GetScrollPos(self, bar: co::SBB) -> WinResult<i32> {
 		match unsafe { user::ffi::GetScrollPos(self.as_ptr(), bar.0) } {
 			0 => match GetLastError() {
@@ -509,6 +531,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetShellWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getshellwindow)
 	/// static method.
+	#[must_use]
 	fn GetShellWindow() -> Option<HWND> {
 		unsafe { user::ffi::GetShellWindow().as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -516,6 +539,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetSystemMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmenu)
 	/// method.
+	#[must_use]
 	fn GetSystemMenu(self, revert: bool) -> Option<HMENU> {
 		unsafe { user::ffi::GetSystemMenu(self.as_ptr(), revert as _).as_mut() }
 			.map(|ptr| HMENU(ptr))
@@ -523,6 +547,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetTopWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-gettopwindow)
 	/// method.
+	#[must_use]
 	fn GetTopWindow(self) -> WinResult<Option<HWND>> {
 		match unsafe { user::ffi::GetTopWindow(self.as_ptr()).as_mut() } {
 			Some(ptr) => Ok(Some(HWND(ptr))),
@@ -535,6 +560,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetUpdateRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdatergn)
 	/// method.
+	#[must_use]
 	fn GetUpdateRgn(self, hrgn: HRGN, erase: bool) -> WinResult<co::REGION> {
 		match unsafe {
 			user::ffi::GetUpdateRgn(self.as_ptr(), hrgn.0, erase as _) }
@@ -546,6 +572,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindow)
 	/// method.
+	#[must_use]
 	fn GetWindow(self, cmd: co::GW) -> WinResult<HWND> {
 		unsafe { user::ffi::GetWindow(self.as_ptr(), cmd.0).as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -557,6 +584,7 @@ pub trait UserHwnd: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HWND::ReleaseDC`](crate::prelude::UserHwnd::ReleaseDC) call.
+	#[must_use]
 	fn GetWindowDC(self) -> WinResult<HDC> {
 		unsafe { user::ffi::GetWindowDC(self.as_ptr()).as_mut() }
 			.map(|ptr| HDC(ptr))
@@ -565,6 +593,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindowDisplayAffinity`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdisplayaffinity)
 	/// method.
+	#[must_use]
 	fn GetWindowDisplayAffinity(self) -> WinResult<co::WDA> {
 		let mut affinity = co::WDA::default();
 		match unsafe {
@@ -588,6 +617,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw)
 	/// method.
+	#[must_use]
 	fn GetWindowLongPtr(self, index: co::GWLP) -> isize {
 		unsafe { user::ffi::GetWindowLongPtrW(self.as_ptr(), index.0) }
 	}
@@ -604,6 +634,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindowRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrect)
 	/// method.
+	#[must_use]
 	fn GetWindowRect(self) -> WinResult<RECT> {
 		let mut rc = RECT::default();
 		match unsafe {
@@ -616,6 +647,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindowRgn`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrgn)
 	/// method.
+	#[must_use]
 	fn GetWindowRgn(self, hrgn: HRGN) -> WinResult<co::REGION> {
 		match unsafe { user::ffi::GetWindowRgn(self.as_ptr(), hrgn.0) } {
 			0 => Err(GetLastError()),
@@ -625,6 +657,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindowRgnBox`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrgnbox)
 	/// method.
+	#[must_use]
 	fn GetWindowRgnBox(self, rc: &mut RECT) -> WinResult<co::REGION> {
 		match unsafe {
 			user::ffi::GetWindowRgnBox(self.as_ptr(), rc as *mut _ as _)
@@ -648,6 +681,7 @@ pub trait UserHwnd: Handle {
 	/// println!("Text: {}", text);
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn GetWindowText(self) -> WinResult<String> {
 		let len = self.GetWindowTextLength()?;
 		if len == 0 {
@@ -668,6 +702,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetWindowTextLength`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextlengthw)
 	/// method. Does not count the terminating null.
+	#[must_use]
 	fn GetWindowTextLength(self) -> WinResult<i32> {
 		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { user::ffi::GetWindowTextLengthW(self.as_ptr()) } {
@@ -683,6 +718,7 @@ pub trait UserHwnd: Handle {
 	/// method.
 	///
 	/// Returns thread ID and process ID, respectively.
+	#[must_use]
 	fn GetWindowThreadProcessId(self) -> (u32, u32) {
 		let mut proc_id = u32::default();
 		let thread_id = unsafe {
@@ -740,12 +776,14 @@ pub trait UserHwnd: Handle {
 
 	/// [`IsChild`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ischild)
 	/// method.
+	#[must_use]
 	fn IsChild(self, hwnd_possible_child: HWND) -> bool {
 		unsafe { user::ffi::IsChild(self.as_ptr(), hwnd_possible_child.0) != 0 }
 	}
 
 	/// [`IsDialogMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isdialogmessagew)
 	/// method.
+	#[must_use]
 	fn IsDialogMessage(self, msg: &mut MSG) -> bool {
 		unsafe {
 			user::ffi::IsDialogMessageW(self.as_ptr(), msg as *mut _ as _) != 0
@@ -754,36 +792,42 @@ pub trait UserHwnd: Handle {
 
 	/// [`IsIconic`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isiconic)
 	/// method.
+	#[must_use]
 	fn IsIconic(self) -> bool {
 		unsafe { user::ffi::IsIconic(self.as_ptr()) != 0 }
 	}
 
 	/// [`IsWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindow)
 	/// method.
+	#[must_use]
 	fn IsWindow(self) -> bool {
 		unsafe { user::ffi::IsWindow(self.as_ptr()) != 0 }
 	}
 
 	/// [`IsWindowEnabled`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowenabled)
 	/// method.
+	#[must_use]
 	fn IsWindowEnabled(self) -> bool {
 		unsafe { user::ffi::IsWindowEnabled(self.as_ptr()) != 0 }
 	}
 
 	/// [`IsWindowUnicode`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowunicode)
 	/// method.
+	#[must_use]
 	fn IsWindowUnicode(self) -> bool {
 		unsafe { user::ffi::IsWindowUnicode(self.as_ptr()) != 0 }
 	}
 
 	/// [`IsWindowVisible`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible)
 	/// method.
+	#[must_use]
 	fn IsWindowVisible(self) -> bool {
 		unsafe { user::ffi::IsWindowVisible(self.as_ptr()) != 0 }
 	}
 
 	/// [`IsZoomed`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iszoomed)
 	/// method.
+	#[must_use]
 	fn IsZoomed(self) -> bool {
 		unsafe { user::ffi::IsZoomed(self.as_ptr()) != 0 }
 	}
@@ -868,7 +912,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`MonitorFromWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromwindow)
 	/// method.
-	fn MonitorFromWindow(self, flags: co::MONITOR) -> HMONITOR {
+	#[must_use]fn MonitorFromWindow(self, flags: co::MONITOR) -> HMONITOR {
 		HMONITOR(unsafe { user::ffi::MonitorFromWindow(self.as_ptr(), flags.0) })
 	}
 
@@ -914,6 +958,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`RealChildWindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realchildwindowfrompoint)
 	/// method.
+	#[must_use]
 	fn RealChildWindowFromPoint(self,
 		pt_parent_client_coords: POINT) -> Option<HWND>
 	{
@@ -928,6 +973,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`RealGetWindowClassW`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realgetwindowclassw)
 	/// method.
+	#[must_use]
 	fn RealGetWindowClass(self) -> WinResult<String> {
 		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
 		match unsafe {
@@ -1314,6 +1360,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`WindowFromPhysicalPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromphysicalpoint)
 	/// static method.
+	#[must_use]
 	fn WindowFromPhysicalPoint(pt: POINT) -> Option<HWND> {
 		unsafe { user::ffi::WindowFromPhysicalPoint(pt.x, pt.y).as_mut() }
 			.map(|ptr| HWND(ptr))
@@ -1321,6 +1368,7 @@ pub trait UserHwnd: Handle {
 
 	/// [`WindowFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfrompoint)
 	/// static method.
+	#[must_use]
 	fn WindowFromPoint(pt: POINT) -> Option<HWND> {
 		unsafe { user::ffi::WindowFromPoint(pt.x, pt.y).as_mut() }
 			.map(|ptr| HWND(ptr))

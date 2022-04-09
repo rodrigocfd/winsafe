@@ -15,6 +15,7 @@ use crate::prelude::{Handle, KernelHinstance};
 /// In a debug build, the `target\debug` folders will not show up.
 #[cfg(debug_assertions)]
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn exe_path() -> WinResult<String> {
 	let dbg = HINSTANCE::NULL.GetModuleFileName()?;
 	Ok(
@@ -33,6 +34,7 @@ pub fn exe_path() -> WinResult<String> {
 /// In a debug build, the `target\debug` folders will not show up.
 #[cfg(not(debug_assertions))]
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn exe_path() -> WinResult<String> {
 	Ok(
 		get_path(&HINSTANCE::NULL.GetModuleFileName()?)
@@ -42,6 +44,7 @@ pub fn exe_path() -> WinResult<String> {
 
 /// Returns an iterator over each part of the path.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn iter(full_path: &str) -> impl Iterator<Item = &str> {
 	PathIterator { path: full_path }
 }
@@ -57,6 +60,7 @@ pub fn iter(full_path: &str) -> impl Iterator<Item = &str> {
 /// let f = path::get_file_name("C:\\Temp\\foo.txt"); // foo.txt
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn get_file_name(full_path: &str) -> Option<&str> {
 	full_path.rfind('\\')
 		.map_or(
@@ -82,6 +86,7 @@ pub fn get_file_name(full_path: &str) -> Option<&str> {
 /// let r = path::get_path("C:\\Temp\\xx");        // C:\Temp"
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn get_path(full_path: &str) -> Option<&str> {
 	full_path.rfind('\\') // if no backslash, the whole string is the file name, so no path
 		.map(|idx| &full_path[0..idx])
@@ -100,6 +105,7 @@ pub fn get_path(full_path: &str) -> Option<&str> {
 ///     path::has_extension("file.txt", &[".txt", ".bat"]));
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 	let full_path_u = full_path.to_uppercase();
 	extensions.iter()
@@ -122,6 +128,7 @@ pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 ///     "C:\\Temp\\something.txt", ".sh"); // C:\Temp\something.sh
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn replace_extension(full_path: &str, new_extension: &str) -> String {
 	if let Some(last) = full_path.chars().last() {
 		if last == '\\' { // full_path is a directory, do nothing
@@ -147,6 +154,7 @@ pub fn replace_extension(full_path: &str, new_extension: &str) -> String {
 
 /// Replaces the file name by the given one.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 	get_path(full_path)
 		.map_or_else(
@@ -169,6 +177,7 @@ pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 /// );
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn replace_path(full_path: &str, new_path: &str) -> String {
 	let file_name = get_file_name(full_path);
 	format!("{}{}{}",
@@ -188,6 +197,7 @@ pub fn replace_path(full_path: &str, new_path: &str) -> String {
 /// let p = path::rtrim_backslash("C:\\Temp\\"); // C:\Temp
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
 pub fn rtrim_backslash(full_path: &str) -> &str {
 	full_path.chars()
 		.last()

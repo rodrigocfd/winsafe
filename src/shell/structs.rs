@@ -102,6 +102,7 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub_fn_bool_get_set!(fAnyOperationsAborted, set_fAnyOperationsAborted);
 
 	/// Retrieves the `pFrom` field.
+	#[must_use]
 	pub fn pFrom(&self) -> Option<Vec<String>> {
  		unsafe { self.pFrom.as_mut() }
 			.map(|p| parse_multi_z_str(p))
@@ -116,6 +117,7 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	}
 
 	/// Retrieves the `pTo` field.
+	#[must_use]
 	pub fn pTo(&self) -> Option<Vec<String>> {
 		unsafe { self.pTo.as_mut() }
 		  .map(|p| parse_multi_z_str(p))

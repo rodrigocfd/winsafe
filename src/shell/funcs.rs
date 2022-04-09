@@ -29,6 +29,7 @@ use crate::shlwapi::decl::IBindCtx;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[must_use]
 pub fn CommandLineToArgv(cmd_line: &str) -> WinResult<Vec<String>> {
 	let mut num_args = i32::default();
 	let lp_arr = unsafe {
@@ -80,6 +81,7 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[must_use]
 pub fn SHCreateItemFromParsingName<T>(
 	file_or_folder_path: &str,
 	bind_ctx: Option<&IBindCtx>) -> HrResult<T>
@@ -167,6 +169,7 @@ pub fn SHGetFileInfo(
 /// # Ok::<_, co::HRESULT>(())
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[must_use]
 pub fn SHGetKnownFolderPath(
 	folder_id: &co::KNOWNFOLDERID,
 	flags: co::KF,

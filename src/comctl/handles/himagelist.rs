@@ -95,6 +95,7 @@ pub trait ComctlHimagelist: Handle {
 	/// himgl.Destroy()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn Create(
 		image_sz: SIZE, flags: co::ILC,
 		initial_size: i32, grow_size: i32) -> WinResult<HIMAGELIST>
@@ -142,6 +143,7 @@ pub trait ComctlHimagelist: Handle {
 
 	/// [`ImageList_GetIconSize`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
 	/// method.
+	#[must_use]
 	fn GetIconSize(self) -> WinResult<SIZE> {
 		let mut sz = SIZE::default();
 		bool_to_winresult(
@@ -155,6 +157,7 @@ pub trait ComctlHimagelist: Handle {
 
 	/// [`ImageList_GetImageCount`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount)
 	/// method.
+	#[must_use]
 	fn GetImageCount(self) -> u32 {
 		unsafe { comctl::ffi::ImageList_GetImageCount(self.as_ptr()) as _ }
 	}

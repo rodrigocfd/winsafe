@@ -76,6 +76,7 @@ impl GuiTextControl for Button {}
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ButtonOpts) -> Button {
 		let opts = ButtonOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -100,6 +101,7 @@ impl Button {
 
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
 	/// with [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,

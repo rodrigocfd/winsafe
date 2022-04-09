@@ -24,6 +24,7 @@ pub trait KernelHupdatersrc: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HUPDATERSRC::EndUpdateResource`](crate::prelude::KernelHupdatersrc::EndUpdateResource)
 	/// call.
+	#[must_use]
 	fn BeginUpdateResource(
 		file_name: &str, delete_existing_resources: bool) -> WinResult<HUPDATERSRC>
 	{

@@ -22,6 +22,7 @@ pub trait KernelHfilemapview: Handle {
 	/// **Note**: If the file is resized to a smaller size, the slice will still
 	/// map the bytes beyond the file. This may cause serious errors. So, if the
 	/// file is resized, re-generate the slice by calling `as_slice` again.
+	#[must_use]
 	fn as_mut_slice<'a>(self, len: usize) -> &'a mut [u8] {
 		unsafe { std::slice::from_raw_parts_mut(self.as_ptr() as _, len) }
 	}
@@ -69,6 +70,7 @@ pub trait KernelHfilemapview: Handle {
 	/// println!("{}", text);
 	/// # Ok::<_, Box<dyn std::error::Error>>(())
 	/// ```
+	#[must_use]
 	fn as_slice<'a>(self, len: usize) -> &'a [u8] {
 		unsafe { std::slice::from_raw_parts(self.as_ptr() as _, len) }
 	}

@@ -43,6 +43,7 @@ impl<'a> ListBoxItems<'a> {
 
 	/// Retrieves the number of items by sending an
 	/// [`lb::GetCount`](crate::msg::lb::GetCount) message.
+	#[must_use]
 	pub fn count(&self) -> WinResult<u32> {
 		self.hwnd.SendMessage(lb::GetCount {})
 	}
@@ -78,6 +79,7 @@ impl<'a> ListBoxItems<'a> {
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	pub fn iter(&self) -> impl Iterator<Item = WinResult<String>> + 'a {
 		ListBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))
 	}
@@ -85,6 +87,7 @@ impl<'a> ListBoxItems<'a> {
 	/// Returns the currently selected items.
 	///
 	/// This method works for both single and multiple-selection lists.
+	#[must_use]
 	pub fn selected(&self) -> Vec<u32> {
 		let styles = co::LBS(self.hwnd.GetWindowLongPtr(co::GWLP::STYLE) as _);
 
@@ -113,6 +116,7 @@ impl<'a> ListBoxItems<'a> {
 
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`lb::GetText`](crate::msg::lb::GetText) message.
+	#[must_use]
 	pub fn text(&self, index: u32) -> WinResult<Option<String>> {
 		let mut buf = WString::new_alloc_buffer(
 			match self.hwnd.SendMessage(lb::GetTextLen { index }) {

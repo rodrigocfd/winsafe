@@ -75,6 +75,7 @@ impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent
 	/// window with
 	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent, opts: DateTimePickerOpts) -> DateTimePicker
 	{
@@ -102,6 +103,7 @@ impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be loaded from a dialog
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,

@@ -32,6 +32,7 @@ impl GUID {
 	///
 	/// let g = GUID::new("00000000-0000-0000-c000-000000000046");
 	/// ```
+	#[must_use]
 	pub const fn new(guid_str: &str) -> GUID {
 		if guid_str.len() != 36 {
 			panic!("Bad number of GUID chars.");

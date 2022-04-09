@@ -37,6 +37,7 @@ impl Drop for File {
 
 impl File {
 	/// Opens a file with the desired access.
+	#[must_use]
 	pub fn open(file_path: &str, access: FileAccess) -> WinResult<File> {
 		let (acc, share, disp) = match access {
 			FileAccess::ExistingReadOnly =>  (
@@ -71,11 +72,13 @@ impl File {
 	}
 
 	/// Returns the underlying file handle.
+	#[must_use]
 	pub const fn hfile(&self) -> HFILE {
 		self.hfile
 	}
 
 	/// Returns the current offset of the internal pointer.
+	#[must_use]
 	pub fn pointer_offset(&self) -> WinResult<usize> {
 		self.hfile.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021/6923555
 			.map(|off| off as _)
@@ -93,6 +96,7 @@ impl File {
 	/// Reads all the bytes from the file into a new `Vec`.
 	///
 	/// The internal file pointer will be rewound to the beginning of the file.
+	#[must_use]
 	pub fn read_all(&self) -> WinResult<Vec<u8>> {
 		self.rewind_pointer()?;
 		let mut data: Vec<u8> = vec![0; self.size()?];
@@ -117,6 +121,7 @@ impl File {
 	}
 
 	/// Returns the size of the file.
+	#[must_use]
 	pub fn size(&self) -> WinResult<usize> {
 		self.hfile.GetFileSizeEx()
 	}

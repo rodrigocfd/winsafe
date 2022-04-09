@@ -55,6 +55,7 @@ pub trait DshowIFilterGraph: OleIUnknown {
 
 	/// [`IFilterGraph::EnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 	/// method.
+	#[must_use]
 	fn EnumFilters(&self) -> HrResult<IEnumFilters> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
@@ -67,6 +68,7 @@ pub trait DshowIFilterGraph: OleIUnknown {
 
 	/// [`IFilterGraph::FindFilterByName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
 	/// method.
+	#[must_use]
 	fn FindFilterByName(&self, name: &str) -> HrResult<IBaseFilter> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {

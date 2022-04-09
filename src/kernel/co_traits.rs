@@ -13,6 +13,7 @@ pub trait FormattedError: Into<u32> {
 	/// Returns the textual description of the system error, by calling
 	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// function.
+	#[must_use]
 	fn FormatMessage(self) -> String {
 		let err_code: u32 = self.into();
 		unsafe {
@@ -57,5 +58,6 @@ pub trait NativeBitflag: Sized
 	/// Tells whether other bitflag style is present.
 	///
 	/// Equivalent to `(val & other) != 0`.
+	#[must_use]
 	fn has(&self, other: Self) -> bool;
 }

@@ -52,6 +52,7 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// The picture must be in BMP (bitmap), JPEG, WMF (metafile), ICO (icon),
 	/// or GIF format.
+	#[must_use]
 	fn from_file(
 		path: &str,
 		transparent_color: Option<COLORREF>) -> HrResult<IPicture>
@@ -75,6 +76,7 @@ pub trait OleautIPicture: OleIUnknown {
 	/// [`IStream::from_slice`](crate::prelude::ShlwapiIStream::from_slice) and
 	/// [`IPicture::from_stream`](crate::prelude::OleautIPicture::from_stream)
 	/// to load a picture straight from a slice.
+	#[must_use]
 	fn from_slice(
 		src: &[u8],
 		keep_original_format: bool) -> HrResult<IPicture>
@@ -85,6 +87,7 @@ pub trait OleautIPicture: OleIUnknown {
 	/// Calls
 	/// [`OleLoadPicture`](https://docs.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture)
 	/// to load a picture from a stream.
+	#[must_use]
 	fn from_stream(
 		stream: &IStream,
 		size: Option<u32>,
@@ -106,6 +109,7 @@ pub trait OleautIPicture: OleIUnknown {
 
 	/// [`IPicture::get_CurDC`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_curdc)
 	/// method.
+	#[must_use]
 	fn get_CurDC(&self) -> HrResult<HDC> {
 		let mut hdc = HDC::NULL;
 		unsafe {
@@ -143,6 +147,7 @@ pub trait OleautIPicture: OleIUnknown {
 	/// HWND::NULL.ReleaseDC(hdc)?;
 	/// # Ok::<_, Box<dyn std::error::Error>>(())
 	/// ```
+	#[must_use]
 	fn get_Height(&self) -> HrResult<i32> {
 		let mut h = i32::default();
 		unsafe {
@@ -154,6 +159,7 @@ pub trait OleautIPicture: OleIUnknown {
 
 	/// [`IPicture::get_Type`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
 	/// method.
+	#[must_use]
 	fn get_Type(&self) -> HrResult<co::PICTYPE> {
 		let mut ty = i16::default();
 		unsafe {
@@ -191,6 +197,7 @@ pub trait OleautIPicture: OleIUnknown {
 	/// HWND::NULL.ReleaseDC(hdc)?;
 	/// # Ok::<_, Box<dyn std::error::Error>>(())
 	/// ```
+	#[must_use]
 	fn get_Width(&self) -> HrResult<i32> {
 		let mut w = i32::default();
 		unsafe {

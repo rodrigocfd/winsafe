@@ -17,6 +17,7 @@ pub trait UxthemeHwnd: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HTHEME::CloseThemeData`](crate::prelude::UxthemeHtheme::CloseThemeData)
 	/// call.
+	#[must_use]
 	fn OpenThemeData(self, class_list: &str) -> Option<HTHEME> {
 		unsafe {
 			uxtheme::ffi::OpenThemeData(

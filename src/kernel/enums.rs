@@ -13,10 +13,12 @@ pub enum IdStr {
 }
 
 impl IdStr {
+	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
 	}
 
+	#[must_use]
 	pub fn from_ptr(ptr: *const u16) -> IdStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Id(ptr as _)
@@ -25,6 +27,7 @@ impl IdStr {
 		}
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
@@ -44,10 +47,12 @@ pub enum RtStr {
 }
 
 impl RtStr {
+	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
 	}
 
+	#[must_use]
 	pub fn from_ptr(ptr: *const u16) -> RtStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Rt(co::RT(ptr as _))
@@ -56,6 +61,7 @@ impl RtStr {
 		}
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Rt(id) => MAKEINTRESOURCE(id.0 as _),

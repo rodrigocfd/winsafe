@@ -55,6 +55,7 @@ pub trait ShellHdrop: Handle {
 	///     .collect::<WinResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn iter<'a>(&'a self) -> WinResult<Box<dyn Iterator<Item = WinResult<String>> + 'a>> {
 		Ok(Box::new(DropsIter::new(HDROP(unsafe { self.as_ptr() }))?))
 	}
@@ -96,6 +97,7 @@ pub trait ShellHdrop: Handle {
 	///
 	/// Returns the coordinates and whether the drop occurred in the client area
 	/// of the window.
+	#[must_use]
 	fn DragQueryPoint(self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let client_area = unsafe {

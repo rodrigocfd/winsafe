@@ -65,6 +65,7 @@ impl DshowIMediaSeeking for IMediaSeeking {}
 pub trait DshowIMediaSeeking: OleIUnknown {
 	/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 	/// method.
+	#[must_use]
 	fn ConvertTimeFormat(&self,
 		target_format: &co::TIME_FORMAT,
 		source: i64, source_format: &co::TIME_FORMAT) -> HrResult<i64>
@@ -88,6 +89,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 	/// method.
 	///
 	/// Returns earliest and latest times for efficient seeking.
+	#[must_use]
 	fn GetAvailable(&self) -> HrResult<(i64, i64)> {
 		let (mut early, mut late) = (i64::default(), i64::default());
 		unsafe {
@@ -98,6 +100,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::GetCurrentPosition method`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getcurrentposition)
 	/// method.
+	#[must_use]
 	fn GetCurrentPosition(&self) -> HrResult<i64> {
 		let mut pos = i64::default();
 		unsafe {
@@ -108,6 +111,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::GetDuration`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getduration)
 	/// method.
+	#[must_use]
 	fn GetDuration(&self) -> HrResult<i64> {
 		let mut duration = i64::default();
 		unsafe {
@@ -120,6 +124,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 	/// method.
 	///
 	/// Returns current and stop positions.
+	#[must_use]
 	fn GetPositions(&self) -> HrResult<(i64, i64)> {
 		let (mut current, mut stop) = (i64::default(), i64::default());
 		unsafe {
@@ -130,6 +135,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::GetPreroll`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getpreroll)
 	/// method.
+	#[must_use]
 	fn GetPreroll(&self) -> HrResult<i64> {
 		let mut preroll = i64::default();
 		unsafe {
@@ -140,6 +146,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::GetRate`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getrate)
 	/// method.
+	#[must_use]
 	fn GetRate(&self) -> HrResult<f64> {
 		let mut rate = f64::default();
 		unsafe {
@@ -150,6 +157,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::GetStopPosition`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getstopposition)
 	/// method.
+	#[must_use]
 	fn GetStopPosition(&self) -> HrResult<i64> {
 		let mut pos = i64::default();
 		unsafe {
@@ -160,6 +168,7 @@ pub trait DshowIMediaSeeking: OleIUnknown {
 
 	/// [`IMediaSeeking::GetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-gettimeformat)
 	/// method.
+	#[must_use]
 	fn GetTimeFormat(&self) -> HrResult<co::TIME_FORMAT> {
 		let mut time_guid = co::TIME_FORMAT::NONE;
 		unsafe {

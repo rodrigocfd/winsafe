@@ -22,6 +22,7 @@ pub trait UserHdwp: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HDWP::EndDeferWindowPos`](crate::prelude::UserHdwp::EndDeferWindowPos)
 	/// call.
+	#[must_use]
 	fn BeginDeferWindowPos(num_windows: u32) -> WinResult<HDWP> {
 		unsafe { user::ffi::BeginDeferWindowPos(num_windows as _).as_mut() }
 			.map(|ptr| HDWP(ptr))

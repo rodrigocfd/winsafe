@@ -66,6 +66,7 @@ impl<'a> ListViewColumns<'a> {
 	/// Retrieves the number of columns by sending an
 	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message to the
 	/// handle returned by [`lvm::GetHeader`](crate::msg::lvm::GetHeader).
+	#[must_use]
 	pub fn count(&self) -> WinResult<u32> {
 		self.hwnd.SendMessage(lvm::GetHeader {})?
 			.SendMessage(hdm::GetItemCount {})
@@ -138,6 +139,7 @@ impl<'a> ListViewColumns<'a> {
 
 	/// Retrieves the title of the column by calling
 	/// [`info`](crate::gui::spec::ListViewColumns::info).
+	#[must_use]
 	pub fn title(&self, column_index: u32) -> WinResult<String> {
 		let mut lvc = LVCOLUMN::default();
 		lvc.iSubItem = column_index as _;
@@ -152,6 +154,7 @@ impl<'a> ListViewColumns<'a> {
 
 	/// Retrieves the width of the column by sending an
 	/// [`lvm::GetColumnWidth`](crate::msg::lvm::GetColumnWidth) message.
+	#[must_use]
 	pub fn width(&self, column_index: u32) -> WinResult<u32> {
 		self.hwnd.SendMessage(lvm::GetColumnWidth { index: column_index })
 	}

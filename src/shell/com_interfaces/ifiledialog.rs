@@ -84,6 +84,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 
 	/// [`IFileDialog::GetCurrentSelection`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
 	/// method.
+	#[must_use]
 	fn GetCurrentSelection(&self) -> HrResult<IShellItem> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
@@ -94,6 +95,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 
 	/// [`IFileDialog::GetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfilename)
 	/// method.
+	#[must_use]
 	fn GetFileName(&self) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {
@@ -108,6 +110,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 
 	/// [`IFileDialog::GetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfiletypeindex)
 	/// method.
+	#[must_use]
 	fn GetFileTypeIndex(&self) -> HrResult<u32> {
 		let mut index = u32::default();
 		unsafe {
@@ -118,6 +121,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 
 	/// [`IFileDialog::GetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
 	/// method.
+	#[must_use]
 	fn GetFolder(&self) -> HrResult<IShellItem> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
@@ -128,6 +132,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 
 	/// [`IFileDialog::GetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
 	/// method.
+	#[must_use]
 	fn GetOptions(&self) -> HrResult<co::FOS> {
 		let mut opts = u32::default();
 		unsafe {
@@ -138,6 +143,7 @@ pub trait ShellIFileDialog: ShellIModalWindow {
 
 	/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
 	/// method.
+	#[must_use]
 	fn GetResult(&self) -> HrResult<IShellItem> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {

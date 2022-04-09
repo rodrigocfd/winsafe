@@ -70,6 +70,7 @@ pub trait DshowIBaseFilter: DshowIMediaFilter {
 
 	/// [`IBaseFilter::QueryVendorInfo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryvendorinfo)
 	/// method.
+	#[must_use]
 	fn QueryVendorInfo(&self) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {

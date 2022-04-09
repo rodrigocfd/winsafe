@@ -29,6 +29,7 @@ macro_rules! impl_default_with_size {
 macro_rules! pub_fn_bool_get_set {
 	($field:ident, $setter:ident) => {
 		/// Returns the bool field.
+		#[must_use]
 		pub fn $field(&self) -> bool {
 			self.$field != 0
 		}
@@ -45,6 +46,7 @@ macro_rules! pub_fn_bool_get_set {
 macro_rules! pub_fn_resource_id_get_set {
 	($field:ident, $setter:ident) => {
 		/// Returns the resource ID field.
+		#[must_use]
 		pub fn $field(&self) -> u16 {
 			self.$field as _
 		}
@@ -60,6 +62,7 @@ macro_rules! pub_fn_resource_id_get_set {
 macro_rules! pub_fn_string_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident) => {
 		/// Returns the string field, if any.
+		#[must_use]
 		pub fn $field(&self) -> Option<String> {
 			unsafe { self.$field.as_mut() }
 				.map(|psz| crate::kernel::decl::WString::from_wchars_nullt(psz).to_string())
@@ -76,6 +79,7 @@ macro_rules! pub_fn_string_ptr_get_set {
 macro_rules! pub_fn_string_arr_get_set {
 	($field:ident, $setter:ident) => {
 		/// Returns the string field.
+		#[must_use]
 		pub fn $field(&self) -> String {
 			crate::kernel::decl::WString::from_wchars_slice(&self.$field).to_string()
 		}
@@ -92,6 +96,7 @@ macro_rules! pub_fn_string_arr_get_set {
 macro_rules! pub_fn_string_buf_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $cch:ident) => {
 		/// Returns the string field.
+		#[must_use]
 		pub fn $field(&self) -> Option<String> {
 			unsafe { self.$field.as_mut() }
 				.map(|psz| crate::kernel::decl::WString::from_wchars_nullt(psz).to_string())
@@ -109,6 +114,7 @@ macro_rules! pub_fn_string_buf_get_set {
 macro_rules! pub_fn_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $ty:ty) => {
 		/// Returns the pointer field.
+		#[must_use]
 		pub fn $field(&self) -> Option<&$life mut $ty> {
 			unsafe { self.$field.as_mut() }
 		}
@@ -125,6 +131,7 @@ macro_rules! pub_fn_ptr_get_set {
 macro_rules! pub_fn_array_buf_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $cch:ident, $ty:ty) => {
 		/// Returns the array field.
+		#[must_use]
 		pub fn $field(&self) -> Option<&$life mut [$ty]> {
 			unsafe {
 				self.$field.as_mut()

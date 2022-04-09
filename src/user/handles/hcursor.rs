@@ -21,6 +21,7 @@ pub trait UserHcursor: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HCURSOR::DestroyCursor`](crate::prelude::UserHcursor::DestroyCursor)
 	/// call.
+	#[must_use]
 	fn CopyCursor(self) -> WinResult<HCURSOR> {
 		unsafe { user::ffi::CopyIcon(self.as_ptr()).as_mut() }
 			.map(|ptr| HCURSOR(ptr))

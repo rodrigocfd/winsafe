@@ -147,6 +147,7 @@ impl RadioButton {
 
 	/// Tells if this radio button is the currently selected one by sending a
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
+	#[must_use]
 	pub fn is_selected(&self) -> bool {
 		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
 	}

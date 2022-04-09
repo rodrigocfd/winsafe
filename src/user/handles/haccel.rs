@@ -21,6 +21,7 @@ pub trait UserHaccel: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HACCEL::DestroyAcceleratorTable`](crate::prelude::UserHaccel::DestroyAcceleratorTable)
 	/// call.
+	#[must_use]
 	fn CreateAcceleratorTable(accel: &mut [ACCEL]) -> WinResult<HACCEL> {
 		unsafe {
 			user::ffi::CreateAcceleratorTableW(

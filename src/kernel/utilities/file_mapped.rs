@@ -24,6 +24,7 @@ impl Drop for FileMapped {
 
 impl FileMapped {
 	/// Opens a file with the desired access, then map its contents in memory.
+	#[must_use]
 	pub fn open(
 		file_path: &str, access: FileAccess) -> WinResult<FileMapped>
 	{
@@ -66,6 +67,7 @@ impl FileMapped {
 	}
 
 	/// Returns a mutable slice to the mapped memory.
+	#[must_use]
 	pub fn as_mut_slice(&mut self) -> &mut [u8] {
 		self.hview.as_mut_slice(self.size)
 	}
@@ -92,6 +94,7 @@ impl FileMapped {
 	}
 
 	/// Returns the size of the file. This value is cached.
+	#[must_use]
 	pub const fn size(&self) -> usize {
 		self.size
 	}

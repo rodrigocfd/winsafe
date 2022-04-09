@@ -28,6 +28,7 @@ impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a);
 
 impl<'a> CHOOSECOLOR<'a> {
 	/// Returns the `lpCustColors` field.
+	#[must_use]
 	pub fn lpCustColors(&self) -> Option<&'a mut [COLORREF; 16]> {
 		unsafe { self.lpCustColors.as_mut() }
 	}

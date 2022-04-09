@@ -10,6 +10,7 @@ use crate::version;
 /// The buffer will be automatically allocated with
 /// [`GetFileVersionInfoSize`](crate::GetFileVersionInfoSize).
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
+#[must_use]
 pub fn GetFileVersionInfo(file_name: &str) -> WinResult<Vec<u8>> {
 	let block_sz = GetFileVersionInfoSize(file_name)?;
 	let mut buf: Vec<u8> = vec![0x00; block_sz as _];
@@ -29,6 +30,7 @@ pub fn GetFileVersionInfo(file_name: &str) -> WinResult<Vec<u8>> {
 /// [`GetFileVersionInfoSize`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
+#[must_use]
 pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
 	let mut dw_handle = u32::default();
 	match unsafe {
@@ -73,6 +75,7 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
+#[must_use]
 pub unsafe fn VarQueryValue<T>(
 	block: &[u8], sub_block: &str) -> WinResult<(*const T, u32)>
 {

@@ -86,12 +86,14 @@ pub trait ShellIShellItemArray: OleIUnknown {
 	///     .collect::<HrResult<Vec<_>>>()?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
+	#[must_use]
 	fn iter<'a>(&'a self) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + 'a>> {
 		Ok(Box::new(ShellItemIter::new(unsafe { self.ptr() })?))
 	}
 
 	/// [`IShellItemArray::GetCount`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)
 	/// method.
+	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
 		unsafe {
@@ -105,6 +107,7 @@ pub trait ShellIShellItemArray: OleIUnknown {
 	///
 	/// Prefer using
 	/// [`IShellItemArrayT::iter`](crate::prelude::ShellIShellItemArray::iter).
+	#[must_use]
 	fn GetItemAt(&self, index: u32) -> HrResult<IShellItem> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {

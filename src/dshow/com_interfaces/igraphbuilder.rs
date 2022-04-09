@@ -64,6 +64,7 @@ pub trait DshowIGraphBuilder: DshowIFilterGraph {
 
 	/// [`IGraphBuilder::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)
 	/// method.
+	#[must_use]
 	fn AddSourceFilter(&self,
 		file_name: &str, filter_name: &str) -> HrResult<IBaseFilter>
 	{
@@ -121,6 +122,7 @@ pub trait DshowIGraphBuilder: DshowIFilterGraph {
 
 	/// [`IGraphBuilder::ShouldOperationContinue`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-shouldoperationcontinue)
 	/// method.
+	#[must_use]
 	fn ShouldOperationContinue(&self) -> HrResult<bool> {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);

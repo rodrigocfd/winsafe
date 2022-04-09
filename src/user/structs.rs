@@ -86,6 +86,7 @@ impl COLORREF {
 	///
 	/// let color = COLORREF::new(0xff, 0x80, 0x00);
 	/// ```
+	#[must_use]
 	pub const fn new(red: u8, green: u8, blue: u8) -> COLORREF {
 		Self(red as u32 | ((green as u32) << 8) | ((blue as u32) << 16))
 	}
@@ -103,6 +104,7 @@ impl COLORREF {
 	///     (0x00, 0xa0, 0x40),
 	/// ]);
 	/// ```
+	#[must_use]
 	pub fn new_array<const N: usize>(rgbs: &[(u8, u8, u8); N]) -> [COLORREF; N] {
 		let mut arr = [Self::new(0, 0, 0); N];
 		for (i, rgb) in rgbs.iter().enumerate() {
@@ -114,6 +116,7 @@ impl COLORREF {
 	/// Retrieves the red intensity. Originally
 	/// [`GetRValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getrvalue)
 	/// macro.
+	#[must_use]
 	pub const fn GetRValue(self) -> u8 {
 		LOBYTE(LOWORD(self.0))
 	}
@@ -121,6 +124,7 @@ impl COLORREF {
 	/// Retrieves the green intensity. Originally
 	/// [`GetGValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgvalue)
 	/// macro.
+	#[must_use]
 	pub const fn GetGValue(self) -> u8 {
 		LOBYTE(LOWORD(self.0 >> 8))
 	}
@@ -128,6 +132,7 @@ impl COLORREF {
 	/// Retrieves the blue intensity. Originally
 	/// [`GetBValue`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbvalue)
 	/// macro.
+	#[must_use]
 	pub const fn GetBValue(self) -> u8 {
 		LOBYTE(LOWORD(self.0 >> 16))
 	}
@@ -300,6 +305,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmOrientation` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmOrientation(&self) -> co::DMORIENT {
 		unsafe { self.union0.printer.dmOrientation }
 	}
@@ -310,6 +316,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmPaperSize` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmPaperSize(&self) -> co::DMPAPER {
 		unsafe { self.union0.printer.dmPaperSize }
 	}
@@ -320,6 +327,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmPaperLength` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmPaperLength(&self) -> i16 {
 		unsafe { self.union0.printer.dmPaperLength }
 	}
@@ -330,6 +338,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmPaperWidth` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmPaperWidth(&self) -> i16 {
 		unsafe { self.union0.printer.dmPaperWidth }
 	}
@@ -340,6 +349,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmScale` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmScale(&self) -> i16 {
 		unsafe { self.union0.printer.dmScale }
 	}
@@ -350,6 +360,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmCopies` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmCopies(&self) -> i16 {
 		unsafe { self.union0.printer.dmCopies }
 	}
@@ -360,6 +371,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmDefaultSource` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmDefaultSource(&self) -> co::DMBIN {
 		unsafe { self.union0.printer.dmDefaultSource }
 	}
@@ -370,6 +382,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmPrintQuality` printer field, which is part of an union.
+	#[must_use]
 	pub fn dmPrintQuality(&self) -> co::DMRES {
 		unsafe { self.union0.printer.dmPrintQuality }
 	}
@@ -380,6 +393,7 @@ impl DEVMODE {
 	}
 
 	/// Returns the `dmPosition` display field, which is part of an union.
+	#[must_use]
 	pub fn dmPosition(&self) -> POINT {
 		unsafe { self.union0.display.dmPosition }
 	}
@@ -391,6 +405,7 @@ impl DEVMODE {
 
 	/// Returns the `dmDisplayOrientation` display field, which is part of an
 	/// union.
+	#[must_use]
 	pub fn dmDisplayOrientation(&self) -> co::DMDO {
 		unsafe { self.union0.display.dmDisplayOrientation }
 	}
@@ -402,6 +417,7 @@ impl DEVMODE {
 
 	/// Returns the `dmDisplayFixedOutput` display field, which is part of an
 	/// union.
+	#[must_use]
 	pub fn dmDisplayFixedOutput(&self) -> co::DMDFO {
 		unsafe { self.union0.display.dmDisplayFixedOutput }
 	}
@@ -500,6 +516,7 @@ pub struct HELPINFO {
 }
 
 impl HELPINFO {
+	#[must_use]
 	pub fn hItemHandle(&self) -> HwndHmenu {
 		match self.iContextType {
 			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND(self.hItemHandle as _)),
@@ -659,22 +676,26 @@ impl std::fmt::Display for POINT {
 
 impl POINT {
 	/// Creates a new `POINT`.
+	#[must_use]
 	pub const fn new(x: i32, y: i32) -> POINT {
 		Self { x, y }
 	}
 
 	/// Creates a new `POINT` by splitting `val` into two `u16` values, with
 	/// [`LOWORD`](crate::LOWORD) and [`HIWORD`](crate::HIWORD).
+	#[must_use]
 	pub const fn from_u32(val: u32) -> POINT {
 		Self::new(LOWORD(val) as _, HIWORD(val) as _)
 	}
 
 	/// Tells whether the struct contains exactly the given values.
+	#[must_use]
 	pub const fn is(&self, x: i32, y: i32) -> bool {
 		self.x == x && self.y == y
 	}
 
 	/// Calls [`MAKEDWORD`](crate::MAKEDWORD) with `x` and `y`.
+	#[must_use]
 	pub const fn into_u32(&self) -> u32 {
 		MAKEDWORD(self.x as _, self.y as _)
 	}
@@ -701,6 +722,7 @@ impl std::fmt::Display for RECT {
 
 impl RECT {
 	/// Tells whether the struct contains exactly the given values.
+	#[must_use]
 	pub const fn is(&self, left: i32, top: i32, right: i32, bottom: i32) -> bool {
 		self.left == left && self.top == top && self.right == right && self.bottom == bottom
 	}
@@ -741,22 +763,26 @@ impl std::fmt::Display for SIZE {
 
 impl SIZE {
 	/// Creates a new `SIZE`.
+	#[must_use]
 	pub const fn new(cx: i32, cy: i32) -> SIZE {
 		Self { cx, cy }
 	}
 
 	/// Creates a new `SIZE` by splitting `val` into two `u16` values, with
 	/// [`LOWORD`](crate::LOWORD) and [`HIWORD`](crate::HIWORD).
+	#[must_use]
 	pub const fn from_u32(val: u32) -> SIZE {
 		Self::new(LOWORD(val) as _, HIWORD(val) as _)
 	}
 
 	/// Tells whether the struct contains exactly the given values.
+	#[must_use]
 	pub const fn is(&self, cx: i32, cy: i32) -> bool {
 		self.cx == cx && self.cy == cy
 	}
 
 	/// Calls [`MAKEDWORD`](crate::MAKEDWORD) with `cx` and `cy`.
+	#[must_use]
 	pub const fn into_u32(&self) -> u32 {
 		MAKEDWORD(self.cx as _, self.cy as _)
 	}
@@ -776,21 +802,25 @@ pub struct STYLESTRUCT {
 
 impl STYLESTRUCT {
 	/// Returns the [`WS`](crate::co::WS) of `styleOld` field.
+	#[must_use]
 	pub fn styleOld_WS(&self) -> co::WS {
 		co::WS(self.styleOld)
 	}
 
 	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleOld` field.
+	#[must_use]
 	pub fn styleOld_WSEX(&self) -> co::WS_EX {
 		co::WS_EX(self.styleOld)
 	}
 
 	/// Returns the [`WS`](crate::co::WS) of `styleNew` field.
+	#[must_use]
 	pub fn styleNew_WS(&self) -> co::WS {
 		co::WS(self.styleNew)
 	}
 
 	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleNew` field.
+	#[must_use]
 	pub fn styleNew_WSEX(&self) -> co::WS_EX {
 		co::WS_EX(self.styleNew)
 	}
@@ -875,6 +905,7 @@ impl_default!(WINDOWPOS);
 
 impl WINDOWPOS {
 	/// Returns the `hwndInsertAfter` field.
+	#[must_use]
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
 			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),

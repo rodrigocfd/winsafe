@@ -64,16 +64,19 @@ impl LANGID {
 	/// [`LANGID`](crate::LANGID) composed of
 	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
 	/// [`SUBLANG::SYS_DEFAULT`](crate::co::SUBLANG::SYS_DEFAULT).
+	#[must_use]
 	pub const SYSTEM_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::SYS_DEFAULT);
 
 	/// [`LANGID`](crate::LANGID) composed of
 	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
 	/// [`SUBLANG::DEFAULT`](crate::co::SUBLANG::DEFAULT).
+	#[must_use]
 	pub const USER_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::DEFAULT);
 
 	/// Creates a new `LANGID`. Originally
 	/// [`MAKELANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelangid)
 	/// macro.
+	#[must_use]
 	pub const fn new(lang: co::LANG, sublang: co::SUBLANG) -> LANGID {
 		Self((sublang.0 << 10) | lang.0)
 	}
@@ -81,6 +84,7 @@ impl LANGID {
 	/// Returns the primary language ID. Originally
 	/// [`PRIMARYLANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-primarylangid)
 	/// macro.
+	#[must_use]
 	pub const fn primary_lang_id(self) -> co::LANG {
 		co::LANG(self.0 & 0x3ff)
 	}
@@ -88,6 +92,7 @@ impl LANGID {
 	/// Returns the sublanguage ID. Originally
 	/// [`SUBLANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-sublangid)
 	/// macro.
+	#[must_use]
 	pub const fn sub_lang_id(self) -> co::SUBLANG {
 		co::SUBLANG(self.0 >> 10)
 	}
@@ -104,16 +109,19 @@ impl LCID {
 	/// [`LCID`](crate::LCID) composed of
 	/// [`LANGID::SYSTEM_DEFAULT`](crate::LANGID::SYSTEM_DEFAULT) and
 	/// [`SORT::DEFAULT`](crate::co::SORT::DEFAULT).
+	#[must_use]
 	pub const SYSTEM_DEFAULT: Self = Self::new(LANGID::SYSTEM_DEFAULT, co::SORT::DEFAULT);
 
 	/// [`LCID`](crate::LCID) composed of
 	/// [`LANGID::USER_DEFAULT`](crate::LANGID::USER_DEFAULT) and
 	/// [`SORT::DEFAULT`](crate::co::SORT::DEFAULT).
+	#[must_use]
 	pub const USER_DEFAULT: Self = Self::new(LANGID::USER_DEFAULT, co::SORT::DEFAULT);
 
 	/// Creates a new `LCID`. Originally
 	/// [`MAKELCID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelcid)
 	/// macro.
+	#[must_use]
 	pub const fn new(lang_id: LANGID, sort_id: co::SORT) -> LCID {
 		Self(((sort_id.0 as u32) << 16) | lang_id.0 as u32)
 	}
@@ -121,6 +129,7 @@ impl LCID {
 	/// Returns the language identifier. Originally
 	/// [`LANGIDFROMLCID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-langidfromlcid)
 	/// macro.
+	#[must_use]
 	pub const fn lang_id(self) -> LANGID {
 		LANGID(self.0 as _)
 	}
@@ -128,6 +137,7 @@ impl LCID {
 	/// Returns the sort ID. Originally
 	/// [`SORTIDFROMLCID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-sortidfromlcid)
 	/// macro.
+	#[must_use]
 	pub const fn sort_id(self) -> co::SORT {
 		co::SORT(((self.0 >> 16) & 0xf) as _)
 	}
@@ -292,6 +302,7 @@ impl<'a, 'b> STARTUPINFO<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, lpTitle, set_lpTitle);
 
 	/// Returns the `wShowWindow` field.
+	#[must_use]
 	pub fn wShowWindow(&self) -> co::SW {
 		co::SW(self.wShowWindow as _)
 	}
@@ -382,6 +393,7 @@ impl WIN32_FIND_DATA {
 	pub_fn_string_arr_get_set!(cAlternateFileName, set_cAlternateFileName);
 
 	/// Returns the nFileSizeHigh and nFileSizeLow fields.
+	#[must_use]
 	pub fn nFileSize(&self) -> u64 {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
 	}

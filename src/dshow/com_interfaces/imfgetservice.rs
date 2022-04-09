@@ -64,6 +64,7 @@ pub trait DshowIMFGetService: OleIUnknown {
 	///     )?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
+	#[must_use]
 	fn GetService<T>(&self, service_id: &co::DSHOW_SERVICE) -> HrResult<T>
 		where T: ComInterface,
 	{

@@ -97,6 +97,7 @@ impl GuiTextControl for CheckBox {}
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: CheckBoxOpts) -> CheckBox {
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -122,6 +123,7 @@ impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
@@ -181,6 +183,7 @@ impl CheckBox {
 
 	/// Retrieves the current check state by sending a
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
+	#[must_use]
 	pub fn check_state(&self) -> CheckState {
 		match self.hwnd().SendMessage(bm::GetCheck {}) {
 			co::BST::CHECKED => CheckState::Checked,
@@ -198,6 +201,7 @@ impl CheckBox {
 	/// Calls [`check_state`](crate::gui::CheckBox::check_state) and compares
 	/// the result with
 	/// [`CheckState::Checked`](crate::gui::CheckState::Checked).
+	#[must_use]
 	pub fn is_checked(&self) -> bool {
 		self.check_state() == CheckState::Checked
 	}
@@ -218,7 +222,9 @@ impl CheckBox {
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
 	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
 	/// can handle the event.
-	pub fn set_check_state_and_trigger(&self, state: CheckState) -> WinResult<()> {
+	pub fn set_check_state_and_trigger(&self,
+		state: CheckState) -> WinResult<()>
+	{
 		self.set_check_state(state);
 		self.hwnd().GetParent()?.SendMessage(wm::Command {
 			event: AccelMenuCtrl::Ctrl(

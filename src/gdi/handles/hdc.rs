@@ -92,6 +92,7 @@ pub trait GdiHdc: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateCompatibleBitmap(self, cx: i32, cy: i32) -> WinResult<HBITMAP> {
 		unsafe {
 			gdi::ffi::CreateCompatibleBitmap(self.as_ptr(), cx, cy).as_mut()
@@ -104,6 +105,7 @@ pub trait GdiHdc: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HDC::DeleteDC`](crate::prelude::GdiHdc::DeleteDC) call.
+	#[must_use]
 	fn CreateCompatibleDC(self) -> WinResult<HDC> {
 		unsafe { gdi::ffi::CreateCompatibleDC(self.as_ptr()).as_mut() }
 			.map(|ptr| HDC(ptr))
@@ -142,6 +144,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkmode)
 	/// method.
+	#[must_use]
 	fn GetBkMode(self) -> WinResult<co::BKMODE> {
 		match unsafe { gdi::ffi::GetBkMode(self.as_ptr()) } {
 			0 => Err(GetLastError()),
@@ -151,6 +154,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetDCBrushColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcbrushcolor)
 	/// method.
+	#[must_use]
 	fn GetDCBrushColor(self) -> WinResult<COLORREF> {
 		match unsafe { gdi::ffi::GetDCBrushColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
@@ -160,6 +164,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetDCPenColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcpencolor)
 	/// method.
+	#[must_use]
 	fn GetDCPenColor(self) -> WinResult<COLORREF> {
 		match unsafe { gdi::ffi::GetDCPenColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
@@ -169,12 +174,14 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
 	/// method.
+	#[must_use]
 	fn GetDeviceCaps(self, index: co::GDC) -> i32 {
 		unsafe { gdi::ffi::GetDeviceCaps(self.as_ptr(), index.0) }
 	}
 
 	/// [`GetStretchBltMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)
 	/// method.
+	#[must_use]
 	fn GetStretchBltMode(self) -> WinResult<co::STRETCH_MODE> {
 		match unsafe { gdi::ffi::GetStretchBltMode(self.as_ptr()) } {
 			0 => Err(GetLastError()),
@@ -184,6 +191,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetTextColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextcolor)
 	/// method.
+	#[must_use]
 	fn GetTextColor(self) -> WinResult<COLORREF> {
 		match unsafe { gdi::ffi::GetTextColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
@@ -193,6 +201,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetTextExtentPoint32`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextextentpoint32w)
 	/// method.
+	#[must_use]
 	fn GetTextExtentPoint32(self, text: &str) -> WinResult<SIZE> {
 		let mut sz = SIZE::default();
 		bool_to_winresult(
@@ -209,6 +218,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetTextFace`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextfacew)
 	/// method.
+	#[must_use]
 	fn GetTextFace(self) -> WinResult<String> {
 		let mut buf = WString::new_alloc_buffer(LF_FACESIZE + 1);
 		match unsafe {
@@ -229,6 +239,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetViewportExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportextex)
 	/// method.
+	#[must_use]
 	fn GetViewportExtEx(self) -> WinResult<SIZE> {
 		let mut sz = SIZE::default();
 		bool_to_winresult(
@@ -240,6 +251,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetViewportOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportorgex)
 	/// method.
+	#[must_use]
 	fn GetViewportOrgEx(self) -> WinResult<POINT> {
 		let mut pt = POINT::default();
 		bool_to_winresult(
@@ -251,6 +263,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetWindowExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindowextex)
 	/// method.
+	#[must_use]
 	fn GetWindowExtEx(self) -> WinResult<SIZE> {
 		let mut sz = SIZE::default();
 		bool_to_winresult(
@@ -262,6 +275,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`GetWindowOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindoworgex)
 	/// method.
+	#[must_use]
 	fn GetWindowOrgEx(self) -> WinResult<POINT> {
 		let mut pt = POINT::default();
 		bool_to_winresult(
@@ -308,6 +322,7 @@ pub trait GdiHdc: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn PathToRegion(self) -> WinResult<HRGN> {
 		unsafe { gdi::ffi::PathToRegion(self.as_ptr()).as_mut() }
 			.map(|ptr| HRGN(ptr))
@@ -379,6 +394,7 @@ pub trait GdiHdc: Handle {
 
 	/// [`PtVisible`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptvisible)
 	/// method.
+	#[must_use]
 	fn PtVisible(self, x: i32, y: i32) -> WinResult<bool> {
 		match unsafe { gdi::ffi::PtVisible(self.as_ptr(), x, y) } {
 			-1 => Err(GetLastError()),

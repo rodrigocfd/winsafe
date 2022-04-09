@@ -52,6 +52,7 @@ pub struct ResourceInfo {
 
 impl ResourceInfo {
 	/// Reads and stores the resource data from an executable file or a DLL.
+	#[must_use]
 	pub fn read_from(exe_file: &str) -> WinResult<ResourceInfo> {
 		Ok(Self { res_buf: GetFileVersionInfo(exe_file)? })
 	}
@@ -61,6 +62,7 @@ impl ResourceInfo {
 	///
 	/// These blocks allow retrieval of version information strings in their
 	/// respective languages.
+	#[must_use]
 	pub fn blocks<'a>(&'a self) -> impl Iterator<Item = ResourceInfoBlock> + 'a {
 		unsafe {
 			VarQueryValue::<(LANGID, co::CP)>(&self.res_buf, "\\VarFileInfo\\Translation")
@@ -84,6 +86,7 @@ impl ResourceInfo {
 	}
 
 	/// Returns the version information, if any.
+	#[must_use]
 	pub fn version_info(&self) -> Option<&VS_FIXEDFILEINFO> {
 		unsafe {
 			VarQueryValue::<VS_FIXEDFILEINFO>(&self.res_buf, "\\")
@@ -103,21 +106,21 @@ pub struct ResourceInfoBlock<'a> {
 }
 
 impl<'a> ResourceInfoBlock<'a> {
-	pub const fn lang_id(&self) -> LANGID { self.lang_id }
-	pub const fn code_page(&self) -> co::CP { self.code_page }
+	#[must_use] pub const fn lang_id(&self) -> LANGID { self.lang_id }
+	#[must_use] pub const fn code_page(&self) -> co::CP { self.code_page }
 
-	pub fn comments(&self) -> Option<String> { self.generic_string_info("Comments") }
-	pub fn company_name(&self) -> Option<String> { self.generic_string_info("CompanyName") }
-	pub fn file_description(&self) -> Option<String> { self.generic_string_info("FileDescrition") }
-	pub fn file_version(&self) -> Option<String> { self.generic_string_info("FileVersion") }
-	pub fn internal_name(&self) -> Option<String> { self.generic_string_info("InternalName") }
-	pub fn legal_copyright(&self) -> Option<String> { self.generic_string_info("LegalCopyright") }
-	pub fn legal_trademarks(&self) -> Option<String> { self.generic_string_info("LegalTrademarks") }
-	pub fn original_filename(&self) -> Option<String> { self.generic_string_info("OriginalFilename") }
-	pub fn product_name(&self) -> Option<String> { self.generic_string_info("ProductName") }
-	pub fn product_version(&self) -> Option<String> { self.generic_string_info("ProductVersion") }
-	pub fn private_build(&self) -> Option<String> { self.generic_string_info("PrivateBuild") }
-	pub fn special_build(&self) -> Option<String> { self.generic_string_info("SpecialBuild") }
+	#[must_use] pub fn comments(&self) -> Option<String> { self.generic_string_info("Comments") }
+	#[must_use] pub fn company_name(&self) -> Option<String> { self.generic_string_info("CompanyName") }
+	#[must_use] pub fn file_description(&self) -> Option<String> { self.generic_string_info("FileDescrition") }
+	#[must_use] pub fn file_version(&self) -> Option<String> { self.generic_string_info("FileVersion") }
+	#[must_use] pub fn internal_name(&self) -> Option<String> { self.generic_string_info("InternalName") }
+	#[must_use] pub fn legal_copyright(&self) -> Option<String> { self.generic_string_info("LegalCopyright") }
+	#[must_use] pub fn legal_trademarks(&self) -> Option<String> { self.generic_string_info("LegalTrademarks") }
+	#[must_use] pub fn original_filename(&self) -> Option<String> { self.generic_string_info("OriginalFilename") }
+	#[must_use] pub fn product_name(&self) -> Option<String> { self.generic_string_info("ProductName") }
+	#[must_use] pub fn product_version(&self) -> Option<String> { self.generic_string_info("ProductVersion") }
+	#[must_use] pub fn private_build(&self) -> Option<String> { self.generic_string_info("PrivateBuild") }
+	#[must_use] pub fn special_build(&self) -> Option<String> { self.generic_string_info("SpecialBuild") }
 
 	fn generic_string_info(&self, info: &str) -> Option<String> {
 		unsafe {

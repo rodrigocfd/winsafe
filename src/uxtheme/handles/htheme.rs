@@ -44,12 +44,14 @@ pub trait UxthemeHtheme: Handle {
 
 	/// [`GetThemeAppProperties`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
 	/// static method.
+	#[must_use]
 	fn GetThemeAppProperties() -> co::STAP {
 		co::STAP(unsafe { uxtheme::ffi::GetThemeAppProperties() })
 	}
 
 	/// [`GetThemeBackgroundContentRect`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
 	/// method.
+	#[must_use]
 	fn GetThemeBackgroundContentRect(self,
 		hdc: HDC, part_state: co::VS, bounds: RECT) -> HrResult<RECT>
 	{
@@ -71,6 +73,7 @@ pub trait UxthemeHtheme: Handle {
 
 	/// [`GetThemeBackgroundExtent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
 	/// method.
+	#[must_use]
 	fn GetThemeBackgroundExtent(self,
 		hdc: HDC, part_state: co::VS, rc_content: RECT) -> HrResult<RECT>
 	{
@@ -95,6 +98,7 @@ pub trait UxthemeHtheme: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn GetThemeBackgroundRegion(self,
 		hdc: HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>
 	{
@@ -116,6 +120,7 @@ pub trait UxthemeHtheme: Handle {
 
 	/// [`GetThemeColor`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
 	/// method.
+	#[must_use]
 	fn GetThemeColor(self,
 		part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF>
 	{
@@ -136,6 +141,7 @@ pub trait UxthemeHtheme: Handle {
 
 	/// [`IsThemeBackgroundPartiallyTransparent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
 	/// method.
+	#[must_use]
 	fn IsThemeBackgroundPartiallyTransparent(self,
 		part_state: co::VS) -> bool
 	{
@@ -147,6 +153,7 @@ pub trait UxthemeHtheme: Handle {
 
 	/// [`IsThemePartDefined`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
 	/// method.
+	#[must_use]
 	fn IsThemePartDefined(self, part_state: co::VS) -> bool {
 		unsafe {
 			uxtheme::ffi::IsThemePartDefined(

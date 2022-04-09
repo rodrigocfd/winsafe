@@ -36,6 +36,7 @@ impl DshowIEnumFilters for IEnumFilters {}
 pub trait DshowIEnumFilters: OleIUnknown {
 	/// [`IEnumFilters::Next`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
 	/// method.
+	#[must_use]
 	fn Next(&self) -> HrResult<Option<IBaseFilter>> {
 		let mut ppv_queried = ComPtr::null();
 		let mut fetched = u32::default();

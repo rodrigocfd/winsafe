@@ -85,6 +85,7 @@ impl GuiFocusControl for ListView {}
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ListViewOpts) -> ListView {
 		let opts = ListViewOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -117,6 +118,7 @@ impl ListView {
 	/// **Note:** The optional `context_menu` is shared: it must be destroyed
 	/// manually after the control is destroyed. But note that menus loaded from
 	/// resources don't need to be destroyed.
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
@@ -202,6 +204,7 @@ impl ListView {
 	}
 
 	/// Exposes the column methods.
+	#[must_use]
 	pub fn columns<'a>(&'a self) -> ListViewColumns<'a> {
 		ListViewColumns {
 			hwnd: self.hwnd(),
@@ -214,17 +217,20 @@ impl ListView {
 	/// The context menu is attached when the list view is created, either by
 	/// calling [`ListView::new`](crate::gui::ListView::new) or
 	/// [`ListView::new_dlg`](crate::gui::ListView::new_dlg).
+	#[must_use]
 	pub fn context_menu(&self) -> Option<HMENU> {
 		self.0.context_menu
 	}
 
 	/// Retrieves one of the associated image lists by sending an
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
+	#[must_use]
 	pub fn image_list(&self, kind: co::LVSIL) -> Option<HIMAGELIST> {
 		self.hwnd().SendMessage(lvm::GetImageList { kind })
 	}
 
 	/// Exposes the item methods.
+	#[must_use]
 	pub fn items<'a>(&'a self) -> ListViewItems<'a> {
 		ListViewItems {
 			hwnd: self.hwnd(),
@@ -234,6 +240,7 @@ impl ListView {
 
 	/// Retrieves the current view by sending an
 	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
+	#[must_use]
 	pub fn current_view(&self) -> co::LV_VIEW {
 		self.hwnd().SendMessage(lvm::GetView {})
 	}

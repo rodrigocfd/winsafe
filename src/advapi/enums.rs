@@ -20,10 +20,12 @@ pub enum RegistryValue {
 
 impl RegistryValue {
 	/// Creates a new `RegistryValue::Sz` value from a `&str`.
+	#[must_use]
 	pub fn new_sz(s: &str) -> RegistryValue {
 		Self::Sz(WString::from_str(s))
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const std::ffi::c_void {
 		match self {
 			Self::Binary(b) => b.as_ptr() as _,
@@ -35,6 +37,7 @@ impl RegistryValue {
 	}
 
 	/// Returns the correspondent [`co::REG`](crate::co::REG) constant.
+	#[must_use]
 	pub fn reg_type(&self) -> co::REG {
 		match self {
 			Self::Binary(_) => co::REG::BINARY,
@@ -46,6 +49,7 @@ impl RegistryValue {
 	}
 
 	/// Returns the length of the stored data.
+	#[must_use]
 	pub fn len(&self) -> usize {
 		match self {
 			Self::Binary(b) => b.len(),

@@ -51,6 +51,7 @@ pub trait KernelHfindfile: Handle {
 	///     .collect::<WinResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn iter<'a>(
 		path_and_pattern: &'a str) -> Box<dyn Iterator<Item = WinResult<String>> + 'a>
 	{
@@ -72,6 +73,7 @@ pub trait KernelHfindfile: Handle {
 	///
 	/// This method is rather tricky, consider using
 	/// [`HFINDFILE::iter`](crate::prelude::KernelHfindfile::iter).
+	#[must_use]
 	fn FindFirstFile(
 		file_name: &str,
 		wfd: &mut WIN32_FIND_DATA) -> WinResult<(HFINDFILE, bool)>

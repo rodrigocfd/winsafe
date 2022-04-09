@@ -26,6 +26,7 @@ pub trait KernelHthread: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HTHREAD::CloseHandle`](crate::prelude::HandleClose::CloseHandle) call.
+	#[must_use]
 	fn CreateThread(
 		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		stack_size: u64,
@@ -55,12 +56,14 @@ pub trait KernelHthread: Handle {
 
 	/// [`GetCurrentThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
 	/// static method.
+	#[must_use]
 	fn GetCurrentThread() -> HTHREAD {
 		HTHREAD(unsafe { kernel::ffi::GetCurrentThread() })
 	}
 
 	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
 	/// method.
+	#[must_use]
 	fn GetExitCodeThread(self) -> WinResult<u32> {
 		let mut exit_code = u32::default();
 		bool_to_winresult(
@@ -72,6 +75,7 @@ pub trait KernelHthread: Handle {
 
 	/// [`GetProcessIdOfThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessidofthread)
 	/// method.
+	#[must_use]
 	fn GetProcessIdOfThread(self) -> WinResult<u32> {
 		match unsafe { kernel::ffi::GetProcessIdOfThread(self.as_ptr()) } {
 			0 => Err(GetLastError()),
@@ -81,6 +85,7 @@ pub trait KernelHthread: Handle {
 
 	/// [`GetThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadid)
 	/// method.
+	#[must_use]
 	fn GetThreadId(self) -> WinResult<u32> {
 		match unsafe { kernel::ffi::GetThreadId(self.as_ptr()) } {
 			0 => Err(GetLastError()),
@@ -115,6 +120,7 @@ pub trait KernelHthread: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
+	#[must_use]
 	fn OpenThreadToken(self,
 		desired_access: co::TOKEN, open_as_self: bool) -> WinResult<HACCESSTOKEN>
 	{

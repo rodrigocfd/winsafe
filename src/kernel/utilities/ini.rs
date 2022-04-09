@@ -48,6 +48,7 @@ pub struct IniEntry {
 
 impl Ini {
 	/// Parses an `Ini` from a string.
+	#[must_use]
 	pub fn parse_str(contents: &str) -> Ini {
 		let mut sections = Vec::default();
 		let mut cur_section = IniSection {
@@ -86,6 +87,7 @@ impl Ini {
 	/// Parses an `Ini` from raw bytes. The [`Encoding`](crate::Encoding) will
 	/// be guessed with
 	/// [`WString::guess_encoding`](crate::WString::guess_encoding).
+	#[must_use]
 	pub fn parse_bytes(bytes: &[u8]) -> WinResult<Ini> {
 		Ok(
 			Self::parse_str(&WString::parse_str(bytes)?.to_string()),
@@ -93,12 +95,14 @@ impl Ini {
 	}
 
 	/// Parses an `Ini` directly from a file.
+	#[must_use]
 	pub fn parse_from_file(ini_path: &str) -> WinResult<Ini> {
 		let fin = FileMapped::open(ini_path, FileAccess::ExistingReadOnly)?;
 		Self::parse_bytes(fin.as_slice())
 	}
 
 	/// Serializes the data to a string.
+	#[must_use]
 	pub fn serialize_to_str(&self) -> String {
 		let mut tot_size = 0;
 		for (idx, section) in self.sections.iter().enumerate() {
@@ -133,6 +137,7 @@ impl Ini {
 
 	/// Serializes the data to raw bytes with
 	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
+	#[must_use]
 	pub fn serialize_to_bytes(&self) -> Vec<u8> {
 		self.serialize_to_str().into_bytes()
 	}
@@ -149,6 +154,7 @@ impl Ini {
 	}
 
 	/// Returns a reference to the specified value, if any.
+	#[must_use]
 	pub fn value(&self, section: &str, key: &str) -> Option<&str> {
 		self.sections.iter()
 			.find(|s| s.name == section)
@@ -159,6 +165,7 @@ impl Ini {
 	}
 
 	/// Returns a mutable reference to the specified value, if any.
+	#[must_use]
 	pub fn value_mut(&mut self, section: &str, key: &str) -> Option<&mut str> {
 		self.sections.iter_mut()
 			.find(|s| s.name == section)

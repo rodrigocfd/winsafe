@@ -32,6 +32,7 @@ impl ShlwapiIPersist for IPersist {}
 pub trait ShlwapiIPersist: OleIUnknown {
 	/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 	/// method.
+	#[must_use]
 	fn GetClassID(&self) -> HrResult<co::CLSID> {
 		let mut clsid = co::CLSID::new("00000000-0000-0000-0000-000000000000");
 		unsafe {

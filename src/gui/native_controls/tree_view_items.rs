@@ -51,12 +51,14 @@ impl<'a> TreeViewItems<'a> {
 
 	/// Retrieves the total number of items by sending a
 	/// [`tvm::GetCount`](crate::msg::tvm::GetCount) message.
+	#[must_use]
 	pub fn count(&self) -> u32 {
 		self.hwnd.SendMessage(tvm::GetCount {})
 	}
 
 	/// Retrieves the number of visible items by sending a
 	/// [`tvm::GetVisibleCount`](crate::msg::tvm::GetVisibleCount) message.
+	#[must_use]
 	pub fn count_visible(&self) -> u32 {
 		self.hwnd.SendMessage(tvm::GetVisibleCount {})
 	}
@@ -72,6 +74,7 @@ impl<'a> TreeViewItems<'a> {
 	/// **Note:** This method is cheap – even if `htreeitem` is invalid, an
 	/// object will still be returned. However, operations upon this object will
 	/// fail.
+	#[must_use]
 	pub const fn get(&self, htreeitem: HTREEITEM) -> TreeViewItem<'a> {
 		TreeViewItem {
 			hwnd: self.hwnd,
@@ -81,11 +84,13 @@ impl<'a> TreeViewItems<'a> {
 	}
 
 	/// Returns an iterator over the selected items.
+	#[must_use]
 	pub fn iter_selected(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewItemIter::new(self.hwnd, None, co::TVGN::CARET)
 	}
 
 	/// Returns an iterator over the root items.
+	#[must_use]
 	pub fn iter_root(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewChildItemIter::new(self.hwnd, None)
 	}

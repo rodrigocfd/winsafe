@@ -17,6 +17,7 @@ pub trait DshowGdiIMFVideoDisplayControl: OleIUnknown {
 	/// method.
 	///
 	/// Returns bitmap description, DIB bytes and time stamp.
+	#[must_use]
 	fn GetCurrentImage(&self) -> HrResult<(BITMAPINFOHEADER, Vec<u8>, i64)> {
 		let mut bih = BITMAPINFOHEADER::default();
 		let mut dib_ptr: *mut u8 = std::ptr::null_mut();

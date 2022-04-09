@@ -34,6 +34,7 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 	///
 	/// Varies according to the `formattype`. If you set it wrong, you're likely
 	/// to cause a buffer overrun.
+	#[must_use]
 	pub unsafe fn pbFormat<T>(&self) -> Option<&mut T> {
 		(self.pbFormat as *mut T).as_mut()
 	}
@@ -84,6 +85,7 @@ impl std::fmt::Display for MFVideoNormalizedRect {
 
 impl MFVideoNormalizedRect {
 	/// Creates a new `MFVideoNormalizedRect`.
+	#[must_use]
 	pub fn new(
 		left: f32, top: f32, right: f32, bottom: f32) -> MFVideoNormalizedRect
 	{

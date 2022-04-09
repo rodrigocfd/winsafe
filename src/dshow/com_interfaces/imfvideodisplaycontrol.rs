@@ -68,6 +68,7 @@ impl DshowIMFVideoDisplayControl for IMFVideoDisplayControl {}
 pub trait DshowIMFVideoDisplayControl: OleIUnknown {
 	/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 	/// method.
+	#[must_use]
 	fn GetAspectRatioMode(&self) -> HrResult<co::MFVideoARMode> {
 		let mut mode = co::MFVideoARMode::None;
 		unsafe {
@@ -80,6 +81,7 @@ pub trait DshowIMFVideoDisplayControl: OleIUnknown {
 
 	/// [`IMFVideoDisplayControl::GetBorderColor`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getbordercolor)
 	/// method;
+	#[must_use]
 	fn GetBorderColor(&self) -> HrResult<COLORREF> {
 		let mut color = COLORREF::new(0, 0, 0);
 		unsafe {
@@ -90,6 +92,7 @@ pub trait DshowIMFVideoDisplayControl: OleIUnknown {
 
 	/// [`IMFVideoDisplayControl::GetFullscreen`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getfullscreen)
 	/// method.
+	#[must_use]
 	fn GetFullscreen(&self) -> HrResult<bool> {
 		let mut fulls = false;
 		unsafe {
@@ -104,6 +107,7 @@ pub trait DshowIMFVideoDisplayControl: OleIUnknown {
 	/// method.
 	///
 	/// Returns minimum and maximum ideal sizes.
+	#[must_use]
 	fn GetIdealVideoSize(&self) -> HrResult<(SIZE, SIZE)> {
 		let (mut min, mut max) = (SIZE::default(), SIZE::default());
 		unsafe {
@@ -122,6 +126,7 @@ pub trait DshowIMFVideoDisplayControl: OleIUnknown {
 	/// method.
 	///
 	/// Returns native and aspect ratio sizes.
+	#[must_use]
 	fn GetNativeVideoSize(&self) -> HrResult<(SIZE, SIZE)> {
 		let (mut native, mut aspec) = (SIZE::default(), SIZE::default());
 		unsafe {
@@ -138,6 +143,7 @@ pub trait DshowIMFVideoDisplayControl: OleIUnknown {
 
 	/// [`IMFVideoDisplayControl::GetVideoPosition`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideoposition)
 	/// method.
+	#[must_use]
 	fn GetVideoPosition(&self) -> HrResult<(MFVideoNormalizedRect, RECT)> {
 		let mut norm_rc = MFVideoNormalizedRect::default();
 		let mut rc = RECT::default();
@@ -156,6 +162,7 @@ pub trait DshowIMFVideoDisplayControl: OleIUnknown {
 
 	/// [`IMFVideoDisplayControl::GetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideowindow)
 	/// method.
+	#[must_use]
 	fn GetVideoWindow(&self) -> HrResult<HWND> {
 		let mut hwnd = HWND::NULL;
 		unsafe {

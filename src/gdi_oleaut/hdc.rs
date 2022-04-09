@@ -15,6 +15,7 @@ pub trait GdiOleautHdc: GdiHdc {
 	/// Equivalent to
 	/// [`AtlHiMetricToPixel`](https://docs.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlhimetrictopixel)
 	/// ATL function.
+	#[must_use]
 	fn HiMetricToPixel(self, x: i32, y: i32) -> (i32, i32) {
 		// http://www.verycomputer.com/5_5f2f75dc2d090ee8_1.htm
 		// https://forums.codeguru.com/showthread.php?109554-Unresizable-activeX-control
@@ -29,6 +30,7 @@ pub trait GdiOleautHdc: GdiHdc {
 	/// Equivalent to
 	/// [`AtlPixelToHiMetric`](https://docs.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlpixeltohimetric)
 	/// ATL function.
+	#[must_use]
 	fn PixelToHiMetric(self, x: i32, y: i32) -> (i32, i32) {
 		(
 			MulDiv(x, HIMETRIC_PER_INCH, self.GetDeviceCaps(co::GDC::LOGPIXELSX)),

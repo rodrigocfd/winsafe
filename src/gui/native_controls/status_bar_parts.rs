@@ -19,6 +19,7 @@ pub struct StatusBarParts<'a> {
 impl<'a> StatusBarParts<'a> {
 	/// Retrieves the number of parts by sending an
 	/// [`sb::GetParts`](crate::msg::sb::GetParts) message.
+	#[must_use]
 	pub fn count(&self) -> u8 {
 		self.hwnd.SendMessage(sb::GetParts { right_edges: None })
 	}
@@ -48,6 +49,7 @@ impl<'a> StatusBarParts<'a> {
 	///
 	/// println!("Text: {}", my_sb.parts().text(0));
 	/// ```
+	#[must_use]
 	pub fn text(&self, part_index: u8) -> String {
 		let (len, _) = self.hwnd.SendMessage(sb::GetTextLength { part_index });
 		let mut buf = WString::new_alloc_buffer(len as usize + 1);

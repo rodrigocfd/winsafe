@@ -81,6 +81,7 @@ impl WString {
 	/// The string will be stored with a terminating null.
 	///
 	/// If `s` is `None`, the internal buffer is not allocated.
+	#[must_use]
 	pub fn from_opt_str(s: Option<&str>) -> WString {
 		Self {
 			vec_u16: s.map(
@@ -95,6 +96,7 @@ impl WString {
 	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
 	///
 	/// The string will be stored with a terminating null.
+	#[must_use]
 	pub fn from_str(s: &str) -> WString {
 		Self::from_opt_str(Some(s))
 	}
@@ -107,6 +109,7 @@ impl WString {
 	///
 	/// This method is intended to pass multi-strings to native APIs, not to
 	/// retrieve them.
+	#[must_use]
 	pub fn from_str_vec(v: &[impl AsRef<str>]) -> WString {
 		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
 			.fold(0, |tot, s| tot + s.as_ref().len() + 1) // including terminating null
@@ -128,6 +131,7 @@ impl WString {
 	/// number of existing chars, not counting a terminating null.
 	///
 	/// The string will be stored with a terminating null.
+	#[must_use]
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> WString {
 		if src.is_null() || num_chars == 0 {
 			Self::default()
@@ -146,6 +150,7 @@ impl WString {
 	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
 	///
 	/// The string will be stored with a terminating null.
+	#[must_use]
 	pub fn from_wchars_nullt(src: *const u16) -> WString {
 		if src.is_null() {
 			Self::default()
@@ -158,12 +163,14 @@ impl WString {
 	/// Creates a new UTF-16 string by copying from a slice.
 	///
 	/// The string will be stored with a terminating null.
+	#[must_use]
 	pub fn from_wchars_slice(src: &[u16]) -> WString {
 		Self::from_wchars_count(src.as_ptr(), src.len())
 	}
 
 	/// Creates a new UTF-16 buffer allocated with an specific length. All
 	/// UTF-16 chars will be set to zero.
+	#[must_use]
 	pub fn new_alloc_buffer(num_chars: usize) -> WString {
 		let mut me = Self::default();
 		me.realloc_buffer(num_chars);
@@ -179,6 +186,7 @@ impl WString {
 	///
 	/// Panics if the buffer wasn't previously allocated. Be sure to alloc
 	/// enough room, otherwise a buffer overrun may occur.
+	#[must_use]
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		self.vec_u16.as_mut()
 			.map_or_else(
@@ -195,6 +203,7 @@ impl WString {
 	/// **Note:** Returns a null pointer if the buffer wasn't previously
 	/// allocated. Make sure the `WString` object outlives the function call,
 	/// otherwise it will point to an invalid memory location.
+	#[must_use]
 	pub unsafe fn as_ptr(&self) -> *const u16 {
 		self.vec_u16.as_ref()
 			.map_or(std::ptr::null(), |v| v.as_ptr())
@@ -208,6 +217,7 @@ impl WString {
 	///
 	/// Panics if the buffer wasn't previously allocated. Be sure to alloc
 	/// enough room, otherwise a buffer overrun may occur.
+	#[must_use]
 	pub fn as_mut_slice(&mut self) -> &mut [u16] {
 		self.vec_u16.as_mut()
 			.map_or_else(
@@ -223,6 +233,7 @@ impl WString {
 	/// Panics if the buffer wasn't previously allocated. Make sure the
 	/// `WString` object outlives the function call, otherwise it will point to
 	/// an invalid memory location.
+	#[must_use]
 	pub fn as_slice(&self) -> &[u16] {
 		self.vec_u16.as_ref()
 			.map_or_else(
@@ -234,6 +245,7 @@ impl WString {
 	/// Returns the size of the allocated internal buffer.
 	///
 	/// If the buffer was not allocated yet, returns zero.
+	#[must_use]
 	pub fn buffer_size(&self) -> usize {
 		self.vec_u16.as_ref()
 			.map_or(0, |v| v.len())
@@ -278,11 +290,13 @@ impl WString {
 
 	/// Tells whether the internal buffer is storing a null string pointer, or
 	/// if it's holding a string with a length of zero.
+	#[must_use]
 	pub fn is_empty(&self) -> bool {
 		self.len() == 0
 	}
 
 	/// Tells whether the internal buffer is storing a null string pointer.
+	#[must_use]
 	pub fn is_null(&self) -> bool {
 		self.vec_u16.is_none()
 	}
@@ -293,6 +307,7 @@ impl WString {
 	/// Returns the number of
 	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) characters
 	/// stored in the internal buffer, not counting the terminating null.
+	#[must_use]
 	pub fn len(&self) -> usize {
 		self.vec_u16.as_ref()
 			.map_or(0,
@@ -336,7 +351,8 @@ impl WString {
 	///
 	/// If you're parsing raw data which may contain errors, prefer using
  	/// [`to_string_checked`](crate::WString::to_string_checked) instead.
-	pub fn to_string(&self) -> String {
+	 #[must_use]
+	 pub fn to_string(&self) -> String {
 		self.to_string_checked().unwrap()
 	}
 
@@ -349,6 +365,7 @@ impl WString {
 	/// This method is useful if you're parsing raw data which may contain
 	/// invalid characters. If you're dealing with a string known to be valid,
 	/// [`to_string`](crate::WString::to_string) is more practical.
+	#[must_use]
 	pub fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
 		self.vec_u16.as_ref()
 			.map_or(
@@ -360,6 +377,7 @@ impl WString {
 	/// Guesses the [`Encoding`](crate::Encoding) of the given data, also
 	/// returning the size of its
 	/// [BOM](https://en.wikipedia.org/wiki/Byte_order_mark), if any.
+	#[must_use]
 	pub fn guess_encoding(data: &[u8]) -> (Encoding, usize) {
 		let has_bom = |bom_bytes: &[u8]| -> bool {
 			data.len() >= bom_bytes.len()
@@ -432,6 +450,7 @@ impl WString {
 	///
 	/// To serialize the string back into UTF-8 bytes, use the built-in
 	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
+	#[must_use]
 	pub fn parse_str(data: &[u8]) -> WinResult<WString> {
 		let mut data = data;
 		if data.is_empty() { // nothing to parse

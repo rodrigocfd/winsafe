@@ -115,6 +115,7 @@ impl StatusBar {
 	///     ],
 	/// );
 	/// ```
+	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent,
 		parts: &[StatusBarPart]) -> StatusBar
@@ -222,6 +223,7 @@ impl StatusBar {
 	}
 
 	/// Exposes the part methods.
+	#[must_use]
 	pub fn parts<'a>(&'a self) -> StatusBarParts<'a> {
 		StatusBarParts {
 			hwnd: self.hwnd(),

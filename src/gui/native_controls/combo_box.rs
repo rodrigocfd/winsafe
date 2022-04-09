@@ -78,6 +78,7 @@ impl GuiTextControl for ComboBox {}
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ComboBoxOpts) -> ComboBox {
 		let opts = ComboBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -103,6 +104,7 @@ impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be loaded from a dialog
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
@@ -160,6 +162,7 @@ impl ComboBox {
 	}
 
 	/// Item methods.
+	#[must_use]
 	pub fn items<'a>(&'a self) -> ComboBoxItems<'a> {
 		ComboBoxItems {
 			hwnd: self.hwnd(),

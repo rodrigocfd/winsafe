@@ -30,6 +30,7 @@ pub trait KernelHprocess: Handle {
 	/// [`HPROCESS::CloseHandle`](crate::prelude::HandleClose::CloseHandle) and
 	/// [`HTHREAD::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// calls.
+	#[must_use]
 	fn CreateProcess(
 		application_name: Option<&str>,
 		command_line: Option<&str>,
@@ -91,12 +92,14 @@ pub trait KernelHprocess: Handle {
 
 	/// [`GetCurrentProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
 	/// static method.
+	#[must_use]
 	fn GetCurrentProcess() -> HPROCESS {
 		HPROCESS(unsafe { kernel::ffi::GetCurrentProcess() })
 	}
 
 	/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
 	/// method.
+	#[must_use]
 	fn GetExitCodeProcess(self) -> WinResult<u32> {
 		let mut exit_code = u32::default();
 		bool_to_winresult(
@@ -108,6 +111,7 @@ pub trait KernelHprocess: Handle {
 
 	/// [`GetGuiResources`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
 	/// method.
+	#[must_use]
 	fn GetGuiResources(self, flags: co::GR) -> WinResult<u32> {
 		match unsafe { kernel::ffi::GetGuiResources(self.as_ptr(), flags.0) } {
 			0 => Err(GetLastError()),
@@ -117,6 +121,7 @@ pub trait KernelHprocess: Handle {
 
 	/// [`GetProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
 	/// method.
+	#[must_use]
 	fn GetProcessId(self) -> WinResult<u32> {
 		match unsafe { kernel::ffi::GetProcessId(self.as_ptr()) } {
 			0 => Err(GetLastError()),
@@ -147,6 +152,7 @@ pub trait KernelHprocess: Handle {
 
 	/// [`IsWow64Process`](https://docs.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
 	/// method.
+	#[must_use]
 	fn IsWow64Process(self) -> WinResult<bool> {
 		let mut wow64: BOOL = 0;
 		match unsafe { kernel::ffi::IsWow64Process(self.as_ptr(), &mut wow64) } {
@@ -161,6 +167,7 @@ pub trait KernelHprocess: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HPROCESS::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
+	#[must_use]
 	fn OpenProcess(
 		desired_access: co::PROCESS,
 		inherit_handle: bool, process_id: u32) -> WinResult<HPROCESS>
@@ -181,6 +188,7 @@ pub trait KernelHprocess: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
+	#[must_use]
 	fn OpenProcessToken(self,
 		desired_access: co::TOKEN) -> WinResult<HACCESSTOKEN>
 	{
@@ -198,6 +206,7 @@ pub trait KernelHprocess: Handle {
 
 	/// [`QueryFullProcessImageName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
 	/// method.
+	#[must_use]
 	fn QueryFullProcessImageName(self,
 		flags: co::PROCESS_NAME) -> WinResult<String>
 	{

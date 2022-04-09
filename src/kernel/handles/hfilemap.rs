@@ -24,6 +24,7 @@ pub trait KernelHfilemap: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HFILEMAPVIEW::UnmapViewOfFile`](crate::prelude::KernelHfilemapview::UnmapViewOfFile)
 	/// call.
+	#[must_use]
 	fn MapViewOfFile(self,
 		desired_access: co::FILE_MAP,
 		offset: u64,

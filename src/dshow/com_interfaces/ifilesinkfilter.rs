@@ -60,6 +60,7 @@ pub trait DshowIFileSinkFilter: OleIUnknown {
 	/// }
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
+	#[must_use]
 	unsafe fn GetCurFile(&self,
 		mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
 	{

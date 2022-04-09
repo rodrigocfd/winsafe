@@ -62,6 +62,7 @@ impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
 	/// window with
 	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ProgressBarOpts) -> ProgressBar {
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
@@ -86,6 +87,7 @@ impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
@@ -132,6 +134,7 @@ impl ProgressBar {
 
 	/// Retrieves the current position by sending a
 	/// [`pbm::GetPos`](crate::msg::pbm::GetPos) message.
+	#[must_use]
 	pub fn position(&self) -> u32 {
 		self.hwnd().SendMessage(pbm::GetPos {})
 	}
@@ -139,6 +142,7 @@ impl ProgressBar {
 	/// Retrieves the current minimum and maximum values by sending a
 	/// [`pbm::GetRange`](crate::msg::pbm::GetRange) message. Default values are
 	/// 0 and 100.
+	#[must_use]
 	pub fn range(&self) -> (u32, u32) {
 		let mut ranges = PBRANGE::default();
 		self.hwnd().SendMessage(pbm::GetRange {
@@ -200,6 +204,7 @@ impl ProgressBar {
 
 	/// Retrieves the current state by sending a
 	/// [`pbm::GetState`](crate::msg::pbm::GetState) message.
+	#[must_use]
 	pub fn state(&self) -> co::PBST {
 		self.hwnd().SendMessage(pbm::GetState {})
 	}

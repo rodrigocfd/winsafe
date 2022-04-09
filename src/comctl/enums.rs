@@ -65,10 +65,12 @@ pub enum IdTdiconStr {
 }
 
 impl IdTdiconStr {
+	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
 	}
 
+	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::None => std::ptr::null(),
@@ -114,6 +116,7 @@ pub enum ResStrs {
 }
 
 impl ResStrs {
+	#[must_use]
 	pub fn from_strs(texts: &[impl AsRef<str>]) -> ResStrs {
 		Self::Strs(WString::from_str_vec(texts))
 	}
@@ -132,6 +135,7 @@ pub enum TreeitemTvi {
 }
 
 impl TreeitemTvi {
+	#[must_use]
 	pub fn from_isize(val: isize) -> TreeitemTvi {
 		match co::TVI(val) {
 			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
@@ -142,6 +146,7 @@ impl TreeitemTvi {
 		}
 	}
 
+	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		match self {
 			Self::Treeitem(htreeitem) => htreeitem.0 as _,

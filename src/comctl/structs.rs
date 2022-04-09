@@ -372,6 +372,7 @@ pub struct LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 }
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> Default for LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	#[must_use]
 	fn default() -> Self {
 		Self {
 			pfnGroupCompare: None,
@@ -472,6 +473,7 @@ impl_default_with_size!(LVTILEINFO, cbSize, 'a);
 
 impl<'a> LVTILEINFO<'a> {
 	/// Returns the `puColumns` field.
+	#[must_use]
 	pub fn puColumns(&self) -> Option<&'a mut [u32]> {
 		unsafe {
 			self.puColumns.as_mut()
@@ -480,6 +482,7 @@ impl<'a> LVTILEINFO<'a> {
 	}
 
 	/// Returns the `piColFmt` field.
+	#[must_use]
 	pub fn piColFmt(&self) -> Option<&'a mut [co::LVCFMT_C]> {
 		unsafe {
 			self.puColumns.as_mut()
@@ -593,6 +596,7 @@ impl<'a> NMDATETIMEFORMAT<'a> {
 	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
 
 	/// Returns the `pszDisplay` field.
+	#[must_use]
 	pub fn pszDisplay(&self) -> String {
 		WString::from_wchars_nullt(self.pszDisplay).to_string()
 	}
@@ -696,6 +700,7 @@ impl_default!(NMHDR);
 
 impl NMHDR {
 	/// `Returns the `idFrom` field, the ID of the control sending the message.
+	#[must_use]
 	pub fn idFrom(&self) -> u16 {
 		self.idFrom as _
 	}
@@ -1043,6 +1048,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub_fn_string_ptr_get_set!('a, pszWindowTitle, set_pszWindowTitle);
 
 	/// Returns the `pszMainIcon` field.
+	#[must_use]
 	pub fn pszMainIcon(&self) -> IconIdTdicon {
 		if IS_INTRESOURCE(self.pszMainIcon) {
 			if self.pszMainIcon as u16 >= 0xfffc {
@@ -1075,6 +1081,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub_fn_string_ptr_get_set!('i, pszCollapsedControlText, set_pszCollapsedControlText);
 
 	/// Returns the `pszFooterIcon` field.
+	#[must_use]
 	pub fn pszFooterIcon(&self) -> IconId {
 		if IS_INTRESOURCE(self.pszFooterIcon) {
 			IconId::Id(self.pszFooterIcon as _)
@@ -1109,6 +1116,7 @@ impl_default!(TBADDBITMAP);
 
 impl TBADDBITMAP {
 	/// Returns the `hInst` and `nID` fields.
+	#[must_use]
 	pub fn nID(&self) -> BmpIdbRes {
 		match self.hInst {
 			HINST_COMMCTRL => BmpIdbRes::Idb(co::IDB(self.nID)),
@@ -1147,6 +1155,7 @@ impl_default!(TBBUTTON, 'a);
 
 impl<'a> TBBUTTON<'a> {
 	/// Returns the `iString` field.
+	#[must_use]
 	pub fn iString(&self) -> IndexStr {
 		if IS_INTRESOURCE(self.iString as _) {
 			IndexStr::Index(self.iString as _)
@@ -1178,6 +1187,7 @@ impl_default!(TVINSERTSTRUCT, 'a);
 
 impl<'a> TVINSERTSTRUCT<'a> {
 	/// Returns the `hInsertAfter` field.
+	#[must_use]
 	pub fn hInsertAfter(&self) -> TreeitemTvi {
 		TreeitemTvi::from_isize(self.hInsertAfter)
 	}

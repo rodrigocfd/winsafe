@@ -17,6 +17,7 @@ pub trait GdiHbitmap: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateBitmap(
 		sz: SIZE, num_planes: u32,
 		bit_count: u32, bits: *mut u8) -> WinResult<HBITMAP>

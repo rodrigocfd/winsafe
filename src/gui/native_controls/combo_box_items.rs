@@ -42,6 +42,7 @@ impl<'a> ComboBoxItems<'a> {
 
 	/// Retrieves the number of items by sending a
 	/// [`cb::GetCount`](crate::msg::cb::GetCount) message.
+	#[must_use]
 	pub fn count(&self) -> WinResult<u32> {
 		self.hwnd.SendMessage(cb::GetCount {})
 	}
@@ -77,6 +78,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	pub fn iter(&self) -> impl Iterator<Item = WinResult<String>> + 'a {
 		ComboBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))
 	}
@@ -89,6 +91,7 @@ impl<'a> ComboBoxItems<'a> {
 
 	/// Retrieves the index of the currently selected item, if any, by sending a
 	/// [`cb::GetCurSel`](crate::msg::cb::GetCurSel) message.
+	#[must_use]
 	pub fn selected_index(&self) -> Option<u32> {
 		self.hwnd.SendMessage(cb::GetCurSel {})
 	}
@@ -96,6 +99,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// Retrieves the currently selected text, if any, by calling
 	/// [`selected_index`](crate::gui::spec::ComboBoxItems::selected_index) and
 	/// [`text`](crate::gui::spec::ComboBoxItems::text) methods.
+	#[must_use]
 	pub fn selected_text(&self) -> WinResult<Option<String>> {
 		self.text(
 			match self.selected_index() {
@@ -107,6 +111,7 @@ impl<'a> ComboBoxItems<'a> {
 
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`cb::GetLbText`](crate::msg::cb::GetLbText) message.
+	#[must_use]
 	pub fn text(&self, index: u32) -> WinResult<Option<String>> {
 		let mut buf = WString::new_alloc_buffer(
 			match self.hwnd.SendMessage(cb::GetLbTextLen { index }) {

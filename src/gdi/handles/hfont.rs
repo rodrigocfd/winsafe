@@ -22,6 +22,7 @@ pub trait GdiHfont: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HFONT::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateFont(
 		sz: SIZE, escapement: i32, orientation: i32,
 		weight: co::FW, italic: bool, underline: bool, strike_out: bool,
@@ -49,6 +50,7 @@ pub trait GdiHfont: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HFONT::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> WinResult<HFONT> {
 		unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _).as_mut() }
 			.map(|ptr| HFONT(ptr))
@@ -72,6 +74,7 @@ pub trait GdiHfont: Handle {
 
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
+	#[must_use]
 	fn GetStockObject(sf: co::STOCK_FONT) -> WinResult<HFONT> {
 		unsafe { gdi::ffi::GetStockObject(sf.0).as_mut() }
 			.map(|ptr| HFONT(ptr))

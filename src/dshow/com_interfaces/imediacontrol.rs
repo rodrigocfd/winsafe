@@ -59,6 +59,7 @@ impl DshowIMediaControl for IMediaControl {}
 pub trait DshowIMediaControl: OleautIDispatch {
 	/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 	/// method.
+	#[must_use]
 	fn AddSourceFilter(&self, file_name: &str) -> HrResult<IDispatch> {
 		let mut ppv_queried = ComPtr::null();
 		unsafe {
@@ -75,6 +76,7 @@ pub trait DshowIMediaControl: OleautIDispatch {
 
 	/// [`IMediaControl::GetState`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
 	/// method.
+	#[must_use]
 	fn GetState(&self,
 		ms_timeout: Option<i32>) -> HrResult<co::FILTER_STATE>
 	{

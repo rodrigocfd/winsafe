@@ -44,6 +44,7 @@ pub trait KernelHprocesslist: Handle {
 	/// hpl.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn iter<'a>(&'a self, pe32: &'a mut PROCESSENTRY32)
 		-> Box<dyn Iterator<Item = WinResult<&'a PROCESSENTRY32>> + 'a>
 	{
@@ -56,6 +57,7 @@ pub trait KernelHprocesslist: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HPROCESSLIST::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
+	#[must_use]
 	fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
 		th32_process_id: Option<u32>) -> WinResult<HPROCESSLIST>

@@ -24,6 +24,7 @@ pub trait KernelHpipe: Handle {
 	///
 	/// **Note:** Must be paired with
 	/// [`HPIPE::CloseHandle`](crate::prelude::HandleClose::CloseHandle) calls.
+	#[must_use]
 	fn CreatePipe(
 		attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		size: u32) -> WinResult<(HPIPE, HPIPE)>

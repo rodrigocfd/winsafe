@@ -67,6 +67,7 @@ impl ShellIShellLink for IShellLink {}
 pub trait ShellIShellLink: OleIUnknown {
 	/// [`IShellLinkW::GetArguments`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getarguments)
 	/// method.
+	#[must_use]
 	fn GetArguments(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buffer(INFOTIPSIZE + 1); // arbitrary
 		unsafe {
@@ -83,6 +84,7 @@ pub trait ShellIShellLink: OleIUnknown {
 
 	/// [`IShellLinkW::GetDescription`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getdescription)
 	/// method.
+	#[must_use]
 	fn GetDescription(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buffer(INFOTIPSIZE + 1);
 		unsafe {
@@ -101,6 +103,7 @@ pub trait ShellIShellLink: OleIUnknown {
 	/// method.
 	///
 	/// Returns the path of the icon and its index within the file.
+	#[must_use]
 	fn GetIconLocation(&self) -> HrResult<(String, i32)> {
 		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
 		let mut index: i32 = 0;
@@ -120,6 +123,7 @@ pub trait ShellIShellLink: OleIUnknown {
 
 	/// [`IShellLinkW::GetPath`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getpath)
 	/// method.
+	#[must_use]
 	fn GetPath(&self,
 		fd: Option<&mut WIN32_FIND_DATA>,
 		flags: co::SLGP) -> HrResult<String>
@@ -141,6 +145,7 @@ pub trait ShellIShellLink: OleIUnknown {
 
 	/// [`IShellLinkW::GetShowCmd`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getshowcmd)
 	/// method.
+	#[must_use]
 	fn GetShowCmd(&self) -> HrResult<co::SW> {
 		let mut show_cmd = co::SW::default();
 		unsafe {
@@ -152,6 +157,7 @@ pub trait ShellIShellLink: OleIUnknown {
 
 	/// [`IShellLinkW::GetWorkingDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getworkingdirectory)
 	/// method.
+	#[must_use]
 	fn GetWorkingDirectory(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
 		unsafe {

@@ -37,6 +37,7 @@ pub trait AsAny {
 	/// edit.set_text("Foo")?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn as_any(&self) -> &dyn Any;
 }
 
@@ -49,6 +50,7 @@ pub trait GuiWindow: AsAny {
 	/// after the control is physically created, what usually happens right
 	/// before [`WM_CREATE`](crate::prelude::GuiEventsView::wm_create) or
 	/// [`WM_INITDIALOG`](crate::prelude::GuiEventsView::wm_init_dialog) events.
+	#[must_use]
 	fn hwnd(&self) -> HWND;
 }
 
@@ -63,6 +65,7 @@ pub trait GuiParent: Send + GuiWindow + GuiSealedBase + GuiSealedParent {
 	///
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
+	#[must_use]
 	fn on(&self) -> &WindowEventsAll;
 }
 
@@ -72,6 +75,7 @@ pub trait GuiChild: GuiWindow {
 	/// Returns the control ID, which is defined at control creation.
 	///
 	/// The control ID should be unique within a parent.
+	#[must_use]
 	fn ctrl_id(&self) -> u16;
 }
 
@@ -88,6 +92,7 @@ pub trait GuiNativeControl: GuiChild {
 	///
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
+	#[must_use]
 	fn on_subclass(&self) -> &WindowEvents;
 }
 
@@ -100,6 +105,7 @@ pub trait GuiNativeControlEvents<E> {
 	///
 	/// Panics if the control is already created. Events must be set before
 	/// control creation.
+	#[must_use]
 	fn on(&self) -> &E;
 }
 
@@ -132,6 +138,7 @@ pub trait GuiTextControl: GuiChild {
 
 	/// Retrieves the text by calling
 	/// [`HWND::GetWindowText`](crate::prelude::UserHwnd::GetWindowText).
+	#[must_use]
 	fn text(&self) -> WinResult<String> {
 		self.hwnd().GetWindowText()
 	}
