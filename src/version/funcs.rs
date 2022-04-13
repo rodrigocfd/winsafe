@@ -59,8 +59,9 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{GetFileVersionInfo, HINSTANCE,
-///     VarQueryValue, VS_FIXEDFILEINFO};
+/// use winsafe::{
+///     GetFileVersionInfo, HINSTANCE, VarQueryValue, VS_FIXEDFILEINFO,
+/// };
 ///
 /// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
 /// let res_buf = GetFileVersionInfo(&exe_name)?;

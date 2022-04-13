@@ -44,8 +44,9 @@ pub trait DshowIFileSinkFilter: OleIUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{AM_MEDIA_TYPE, CoTaskMemFree,
-	///     DVINFO, IFileSinkFilter};
+	/// use winsafe::{
+	///     AM_MEDIA_TYPE, CoTaskMemFree, DVINFO, IFileSinkFilter,
+	/// };
 	///
 	/// let sinkf: IFileSinkFilter; // initialized somewhere
 	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};

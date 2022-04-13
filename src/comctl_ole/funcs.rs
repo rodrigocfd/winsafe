@@ -22,9 +22,10 @@ use crate::ole::privs::ok_to_hrresult;
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{co, HWND, IconIdTdicon,
-///     TASKDIALOG_BUTTON, TASKDIALOGCONFIG, TaskDialogIndirect,
-///     WString};
+/// use winsafe::{
+///     co, HWND, IconIdTdicon, TASKDIALOG_BUTTON, TASKDIALOGCONFIG,
+///     TaskDialogIndirect, WString,
+/// };
 ///
 /// let hwnd: HWND; // initialized somewhere
 /// # let hwnd = HWND::NULL;

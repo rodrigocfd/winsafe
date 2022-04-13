@@ -231,8 +231,9 @@ pub trait KernelHinstance: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HINSTANCE, HUPDATERSRC,
-	///     IdStr, LANGID, RtStr};
+	/// use winsafe::{
+	///     co, HINSTANCE, HUPDATERSRC, IdStr, LANGID, RtStr,
+	/// };
 	///
 	/// const IDD_HAND_ABOUTBOX: u16 = 103;
 	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
