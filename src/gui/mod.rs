@@ -28,6 +28,7 @@ pub mod events;
 
 pub use layout_arranger::{Horz, Vert};
 pub use native_controls::*;
+pub use raw_base::{Brush, Cursor, Icon};
 pub use raw_control::WindowControlOpts;
 pub use raw_main::WindowMainOpts;
 pub use raw_modal::WindowModalOpts;

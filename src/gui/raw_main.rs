@@ -6,15 +6,13 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
-use crate::gui::raw_base::RawBase;
+use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{ErrResult, HINSTANCE, WString};
-use crate::prelude::{
-	GdiHbrush, GuiEvents, Handle, KernelHinstance, UserHaccel, UserHwnd,
-};
+use crate::prelude::{GuiEvents, Handle, KernelHinstance, UserHaccel, UserHwnd};
 use crate::user::decl::{
-	AdjustWindowRectEx, GetSystemMetrics, HACCEL, HBRUSH, HCURSOR, HICON, HMENU,
-	HWND, IdMenu, POINT, PostQuitMessage, RECT, SIZE, WNDCLASSEX,
+	AdjustWindowRectEx, GetSystemMetrics, HACCEL, HMENU, HWND, IdMenu, POINT,
+	PostQuitMessage, RECT, SIZE, WNDCLASSEX,
 };
 
 struct Obj { // actual fields of RawMain
@@ -79,8 +77,9 @@ impl RawMain {
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
 			HINSTANCE::GetModuleHandle(None).unwrap(),
-			opts.class_style, opts.class_icon, opts.class_icon,
-			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf);
+			opts.class_style, &opts.class_icon, &opts.class_icon,
+			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
+			&mut class_name_buf);
 		let atom = self.0.raw_base.register_class(&mut wcx);
 
 		let mut wnd_sz = opts.size;
@@ -177,18 +176,18 @@ pub struct WindowMainOpts {
 	/// Window main icon to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to none.
-	pub class_icon: HICON,
+	/// Defaults to `Icon::None`.
+	pub class_icon: Icon,
 	/// Window cursor to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `co::IDC::ARROW`.
-	pub class_cursor: HCURSOR,
+	/// Defaults to `Cursor::Idc(co::IDC::ARROW)`.
+	pub class_cursor: Cursor,
 	/// Window background brush to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `co::COLOR::BTNFACE`.
-	pub class_bg_brush: HBRUSH,
+	/// Defaults to `Brush::Color(co::COLOR::BTNFACE)`.
+	pub class_bg_brush: Brush,
 
 	/// Window title to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -241,9 +240,9 @@ impl Default for WindowMainOpts {
 		Self {
 			class_name: "".to_owned(),
 			class_style: co::CS::DBLCLKS,
-			class_icon: HICON::NULL,
-			class_cursor: HCURSOR::NULL,
-			class_bg_brush: HBRUSH::from_sys_color(co::COLOR::BTNFACE),
+			class_icon: Icon::None,
+			class_cursor: Cursor::Idc(co::IDC::ARROW),
+			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
 			title: "".to_owned(),
 			size: SIZE { cx: 600, cy: 500 },
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,

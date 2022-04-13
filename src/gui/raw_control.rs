@@ -7,12 +7,10 @@ use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::privs::{multiply_dpi_or_dtu, paint_control_borders};
-use crate::gui::raw_base::RawBase;
+use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::kernel::decl::{ErrResult, WString};
-use crate::prelude::{GdiHbrush, GuiEvents, Handle};
-use crate::user::decl::{
-	HBRUSH, HCURSOR, HICON, HWND, IdMenu, POINT, SIZE, WNDCLASSEX,
-};
+use crate::prelude:: GuiEvents;
+use crate::user::decl::{HWND, IdMenu, POINT, SIZE, WNDCLASSEX};
 
 struct Obj { // actual fields of RawControl
 	raw_base: RawBase,
@@ -82,8 +80,8 @@ impl RawControl {
 			let mut class_name_buf = WString::default();
 			RawBase::fill_wndclassex(
 				self2.0.raw_base.parent_hinstance(),
-				opts.class_style, opts.class_icon, opts.class_icon,
-				opts.class_bg_brush, opts.class_cursor, &mut wcx,
+				opts.class_style, &opts.class_icon, &opts.class_icon,
+				&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 				&mut class_name_buf);
 			let atom = self2.0.raw_base.register_class(&mut wcx);
 
@@ -132,18 +130,18 @@ pub struct WindowControlOpts {
 	/// Window main icon to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to none.
-	pub class_icon: HICON,
+	/// Defaults to `Icon::None`.
+	pub class_icon: Icon,
 	/// Window cursor to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `co::IDC::ARROW`.
-	pub class_cursor: HCURSOR,
+	/// Defaults to `Cursor::Idc(co::IDC::ARROW)`.
+	pub class_cursor: Cursor,
 	/// Window background brush to be
 	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `co::COLOR::WINDOW`.
-	pub class_bg_brush: HBRUSH,
+	/// Defaults to `Brush::Color(co::COLOR::WINDOW)`.
+	pub class_bg_brush: Brush,
 
 	/// Position of control within parent's client area, in pixels, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -196,9 +194,9 @@ impl Default for WindowControlOpts {
 		Self {
 			class_name: "".to_owned(),
 			class_style: co::CS::DBLCLKS,
-			class_icon: HICON::NULL,
-			class_cursor: HCURSOR::NULL,
-			class_bg_brush: HBRUSH::from_sys_color(co::COLOR::WINDOW),
+			class_icon: Icon::None,
+			class_cursor: Cursor::Idc(co::IDC::ARROW),
+			class_bg_brush: Brush::Color(co::COLOR::WINDOW),
 			position: POINT { x: 0, y: 0 },
 			size: SIZE { cx: 0, cy: 0 },
 			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,

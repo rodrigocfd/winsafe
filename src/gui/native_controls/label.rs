@@ -167,7 +167,7 @@ impl Label {
 		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
-	/// Calls [`set_text`](crate::prelude::GuiTextControl::set_text) and resizes
+	/// Calls [`set_text`](crate::prelude::GuiWindowText::set_text) and resizes
 	/// the control to exactly fit the new text.
 	///
 	/// # Examples

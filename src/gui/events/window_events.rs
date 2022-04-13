@@ -79,7 +79,7 @@ impl GuiEvents for WindowEvents {
 }
 
 /// Exposes the basic window message methods of
-/// [`EventsWm`](crate::gui::events::EventsWm).
+/// [`WindowEvents`](crate::gui::events::WindowEvents).
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiEvents {
 	/// Event to any [window message](crate::co::WM).

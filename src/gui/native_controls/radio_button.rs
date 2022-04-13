@@ -174,7 +174,7 @@ impl RadioButton {
 		Ok(())
 	}
 
-	/// Calls [`set_text`](crate::prelude::GuiTextControl::set_text) and resizes
+	/// Calls [`set_text`](crate::prelude::GuiWindowText::set_text) and resizes
 	/// the control to exactly fit the new text.
 	pub fn set_text_and_resize(&self, text: &str) {
 		self.set_text(text);

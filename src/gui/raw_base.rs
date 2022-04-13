@@ -4,11 +4,91 @@ use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::post_quit_error;
 use crate::kernel::decl::{ErrResult, HINSTANCE, SetLastError, WString};
 use crate::msg::{wm, WndMsg};
-use crate::prelude::{Handle, MsgSendRecv, UserHinstance, UserHwnd};
+use crate::prelude::{GdiHbrush, Handle, MsgSendRecv, UserHinstance, UserHwnd};
 use crate::user::decl::{
-	ATOM, AtomStr, HBRUSH, HCURSOR, HICON, HWND, IdIdcStr, IdMenu, POINT,
-	RegisterClassEx, SIZE, WNDCLASSEX,
+	ATOM, AtomStr, HBRUSH, HCURSOR, HICON, HWND, IdIdcStr, IdIdiStr, IdMenu,
+	POINT, RegisterClassEx, SIZE, WNDCLASSEX,
 };
+
+/// The class background brush to be loaded for
+/// [`WindowMainOpts`](crate::gui::WindowMainOpts),
+/// [`WindowModalOpts`](crate::gui::WindowModalOpts) or
+/// [`WindowControlOpts`](crate::gui::WindowControlOpts).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub enum Brush {
+	/// A solid [system color](co::COLOR).
+	Color(co::COLOR),
+	/// A brush handle, previously created by you.
+	Handle(HBRUSH),
+}
+
+impl Brush {
+	pub fn as_hbrush(&self) -> HBRUSH {
+		match self {
+			Brush::Color(c) => HBRUSH::from_sys_color(*c),
+			Brush::Handle(h) => *h,
+		}
+	}
+}
+
+/// The class cursor to be loaded for
+/// [`WindowMainOpts`](crate::gui::WindowMainOpts),
+/// [`WindowModalOpts`](crate::gui::WindowModalOpts) or
+/// [`WindowControlOpts`](crate::gui::WindowControlOpts).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub enum Cursor {
+	/// A cursor handle, previously loaded by you.
+	Handle(HCURSOR),
+	/// A resource ID.
+	Id(u16),
+	/// A [`co::IDC`](crate::co::IDC) constant for a stock system cursor.
+	Idc(co::IDC),
+	/// A resource string identifier.
+	Str(WString),
+}
+
+impl Cursor {
+	pub fn as_hcursor(&self, hinst: HINSTANCE) -> HCURSOR {
+		match self {
+			Cursor::Handle(h) => *h,
+			Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id)).unwrap(),
+			Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc)).unwrap(),
+			Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone())).unwrap(),
+		}
+	}
+}
+
+/// The class icon to be loaded for
+/// [`WindowMainOpts`](crate::gui::WindowMainOpts),
+/// [`WindowModalOpts`](crate::gui::WindowModalOpts) or
+/// [`WindowControlOpts`](crate::gui::WindowControlOpts).
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub enum Icon {
+	/// An icon handle, previously loaded by you.
+	Handle(HICON),
+	/// A resource ID.
+	Id(u16),
+	/// A [`co::IDC`](crate::co::IDC) constant for a stock system icon.
+	Idi(co::IDI),
+	/// No icon.
+	None,
+	/// A resource string identifier.
+	Str(WString),
+}
+
+impl Icon {
+	pub fn as_hicon(&self, hinst: HINSTANCE) -> HICON {
+		match self {
+			Icon::Handle(h) => *h,
+			Icon::Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id)).unwrap(),
+			Icon::Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi)).unwrap(),
+			Icon::None => HICON::NULL,
+			Icon::Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone())).unwrap(),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
 
 /// Base to all ordinary windows.
 pub(in crate::gui) struct RawBase {
@@ -69,23 +149,19 @@ impl RawBase {
 	pub(in crate::gui) fn fill_wndclassex<'a>(
 		hinst: HINSTANCE,
 		class_style: co::CS,
-		class_icon: HICON, class_icon_sm: HICON,
-		class_bg_brush: HBRUSH,
-		class_cursor: HCURSOR,
+		class_icon: &Icon, class_icon_sm: &Icon,
+		class_bg_brush: &Brush,
+		class_cursor: &Cursor,
 		wcx: &mut WNDCLASSEX<'a>,
 		class_name_buf: &'a mut WString)
 	{
 		wcx.lpfnWndProc = Some(Self::window_proc);
 		wcx.hInstance = hinst;
 		wcx.style = class_style;
-		wcx.hIcon = class_icon;
-		wcx.hIconSm = class_icon_sm;
-		wcx.hbrBackground = class_bg_brush;
-
-		wcx.hCursor = match class_cursor.as_opt() {
-			Some(h) => h,
-			None => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(co::IDC::ARROW)).unwrap(),
-		};
+		wcx.hIcon = class_icon.as_hicon(hinst);
+		wcx.hIconSm = class_icon_sm.as_hicon(hinst);
+		wcx.hbrBackground = class_bg_brush.as_hbrush();
+		wcx.hCursor = class_cursor.as_hcursor(hinst);
 
 		if wcx.lpszClassName().is_none() { // an actual class name was not provided?
 			*class_name_buf = WString::from_str(
