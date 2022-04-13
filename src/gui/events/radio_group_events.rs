@@ -17,6 +17,7 @@ use crate::kernel::decl::ErrResult;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct RadioGroupEvents {
 	parent_ptr: NonNull<Base>,
 	ctrl_ids: Vec<u16>,

@@ -8,14 +8,11 @@ pub(in crate::gui) struct FuncStore<K: Copy + Eq, F> {
 impl<K: Copy + Eq, F> FuncStore<K, F> {
 	/// Creates a new, empty store.
 	pub(in crate::gui) fn new() -> FuncStore<K, F> {
-		Self {
-			elems: VeryUnsafeCell::new(Vec::default()),
-		}
+		Self { elems: VeryUnsafeCell::new(Vec::default()) }
 	}
 
-	/// Inserts a new function into the store, associated to the given
-	/// identifier.
-	pub(in crate::gui) fn insert(&self, id: K, func: F) {
+	/// Adds a new function into the store, associated to the given identifier.
+	pub(in crate::gui) fn push(&self, id: K, func: F) {
 		let elems = self.elems.as_mut();
 		if elems.is_empty() {
 			elems.reserve(16); // arbitrary, prealloc for speed
@@ -34,7 +31,7 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 	}
 
 	/// Finds all the functions associated to the given identifier, if any, and
-	/// returns an iterator to t
+	/// returns an iterator to it.
 	pub(in crate::gui) fn find_all(&self, id: K) -> impl Iterator<Item = &F> {
 		// https://depth-first.com/articles/2020/06/22/returning-rust-iterators
 		self.elems.iter()

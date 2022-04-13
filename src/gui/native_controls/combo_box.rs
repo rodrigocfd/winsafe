@@ -1,50 +1,52 @@
 use std::any::Any;
-use std::marker::PhantomData;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::{ComboBoxEvents, WindowEvents};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::native_controls::combo_box_items::ComboBoxItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::WinResult;
 use crate::msg::wm;
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
+	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, GuiWindowText, Handle,
 	UserHwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
+
+struct Obj { // actual fields of ComboBox
+	base: BaseNativeControl,
+	opts_id: OptsId<ComboBoxOpts>,
+	events: ComboBoxEvents,
+	_pin: PhantomPinned,
+}
 
 /// Native
 /// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct ComboBox(Arc<Obj>);
-
-struct Obj { // actual fields of ComboBox
-	base: BaseNativeControl,
-	opts_id: OptsId<ComboBoxOpts>,
-	events: ComboBoxEvents,
-}
+pub struct ComboBox(Pin<Arc<Obj>>);
 
 unsafe impl Send for ComboBox {}
-
-impl AsAny for ComboBox {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for ComboBox {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
 }
+
+impl GuiWindowText for ComboBox {}
 
 impl GuiChild for ComboBox {
 	fn ctrl_id(&self) -> u16 {
@@ -55,6 +57,8 @@ impl GuiChild for ComboBox {
 	}
 }
 
+impl GuiChildFocus for ComboBox {}
+
 impl GuiNativeControl for ComboBox {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
@@ -63,40 +67,39 @@ impl GuiNativeControl for ComboBox {
 
 impl GuiNativeControlEvents<ComboBoxEvents> for ComboBox {
 	fn on(&self) -> &ComboBoxEvents {
-		if !self.0.base.hwnd().is_null() {
+		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
 	}
 }
 
-impl GuiFocusControl for ComboBox {}
-impl GuiTextControl for ComboBox {}
-
 impl ComboBox {
 	/// Instantiates a new `ComboBox` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ComboBoxOpts) -> ComboBox {
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ComboBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: ComboBoxEvents::new(parent.as_base(), ctrl_id),
+					events: ComboBoxEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
 		new_self
 	}
@@ -110,28 +113,29 @@ impl ComboBox {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> ComboBox
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ComboBoxEvents::new(parent.as_base(), ctrl_id),
+					events: ComboBoxEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| {
-				self2.create(resize_behavior.0, resize_behavior.1)
-					.map_err(|e| e.into())
-					.map(|_| true)
-			}
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		if vert == Vert::Resize {
 			panic!("ComboBox cannot be resized with Vert::Resize.");
 		}
@@ -141,33 +145,30 @@ impl ComboBox {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, 0);
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
 
-				let our_hwnd = self.0.base.create_window(
+				self.0.base.create_window(
 					"COMBOBOX", None, pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.combo_box_style.into(),
-				)?;
+				);
 
-				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
-
-				self.items().add(&opts.items)?;
+				self.hwnd().SendMessage(
+					wm::SetFont { hfont: ui_font(), redraw: true });
+				self.items().add(&opts.items);
 				self.items().select(opts.selected_item);
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
 	/// Item methods.
 	#[must_use]
-	pub fn items<'a>(&'a self) -> ComboBoxItems<'a> {
-		ComboBoxItems {
-			hwnd: self.hwnd(),
-			_owner: PhantomData,
-		}
+	pub const fn items(&self) -> ComboBoxItems {
+		ComboBoxItems::new(self)
 	}
 }
 

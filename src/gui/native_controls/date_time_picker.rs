@@ -1,45 +1,49 @@
 use std::any::Any;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::{DateTimePickerEvents, WindowEvents};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::{SYSTEMTIME, WinResult};
+use crate::kernel::decl::SYSTEMTIME;
 use crate::msg::{dtm, wm};
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
+	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
 	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd,
 };
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
+
+struct Obj { // actual fields of DateTimePicker
+	base: BaseNativeControl,
+	opts_id: OptsId<DateTimePickerOpts>,
+	events: DateTimePickerEvents,
+	_pin: PhantomPinned,
+}
+
+//------------------------------------------------------------------------------
 
 /// Native
 /// [date and time picker](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct DateTimePicker(Arc<Obj>);
-
-struct Obj { // actual fields of DateTimePicker
-	base: BaseNativeControl,
-	opts_id: OptsId<DateTimePickerOpts>,
-	events: DateTimePickerEvents,
-}
+pub struct DateTimePicker(Pin<Arc<Obj>>);
 
 unsafe impl Send for DateTimePicker {}
-
-impl AsAny for DateTimePicker {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for DateTimePicker {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -52,6 +56,8 @@ impl GuiChild for DateTimePicker {
 	}
 }
 
+impl GuiChildFocus for DateTimePicker {}
+
 impl GuiNativeControl for DateTimePicker {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
@@ -60,16 +66,14 @@ impl GuiNativeControl for DateTimePicker {
 
 impl GuiNativeControlEvents<DateTimePickerEvents> for DateTimePicker {
 	fn on(&self) -> &DateTimePickerEvents {
-		if !self.0.base.hwnd().is_null() {
+		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
 	}
 }
-
-impl GuiFocusControl for DateTimePicker {}
 
 impl DateTimePicker {
 	/// Instantiates a new `DateTimePicker` object, to be created on the parent
@@ -79,24 +83,27 @@ impl DateTimePicker {
 	pub fn new(
 		parent: &impl GuiParent, opts: DateTimePickerOpts) -> DateTimePicker
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = DateTimePickerOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: DateTimePickerEvents::new(parent.as_base(), ctrl_id),
+					events: DateTimePickerEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
+
 		new_self
 	}
 
@@ -109,26 +116,29 @@ impl DateTimePicker {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> DateTimePicker
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: DateTimePickerEvents::new(parent.as_base(), ctrl_id),
+					events: DateTimePickerEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		if vert == Vert::Resize {
 			panic!("DateTimePicker cannot be resized with Vert::Resize.");
 		}
@@ -138,42 +148,50 @@ impl DateTimePicker {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, 21); // default height
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
 
-				let our_hwnd = self.0.base.create_window(
+				self.0.base.create_window(
 					"SysDateTimePick32", None, pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.date_time_picker_style.into(),
-				)?;
+				);
 
 				if sz.cx == 0 { // use ideal width?
 					let mut sz_ideal = SIZE::default();
-					our_hwnd.SendMessage(dtm::GetIdealSize { size: &mut sz_ideal });
+					self.hwnd().SendMessage(
+						dtm::GetIdealSize { size: &mut sz_ideal });
 					sz.cx = sz_ideal.cx; // already adjusted for DPI
 
-					our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(), sz,
-						co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+					self.hwnd().SetWindowPos(
+						HwndPlace::None, POINT::default(), sz,
+						co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 				}
 
-				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(
+					wm::SetFont { hfont: ui_font(), redraw: true });
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
 	/// Retrieves the currently selected date by sending a
 	/// [`dtm::GetSystemTime`](crate::msg::dtm::GetSystemTime) message.
-	pub fn date(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
-		self.hwnd().SendMessage(dtm::GetSystemTime { system_time: st })
+	#[must_use]
+	pub fn date(&self, st: &mut SYSTEMTIME) {
+		self.hwnd()
+			.SendMessage(dtm::GetSystemTime { system_time: st })
+			.unwrap()
 	}
 
 	/// Sets the currently selected date by sending a
 	/// [`dtm::SetSystemTime`](crate::msg::dtm::SetSystemTime) message.
-	pub fn set_date(&self, st: &SYSTEMTIME) -> WinResult<()> {
-		self.hwnd().SendMessage(dtm::SetSystemTime { system_time: Some(st) })
+	pub fn set_date(&self, st: &SYSTEMTIME) {
+		self.hwnd()
+			.SendMessage(dtm::SetSystemTime { system_time: Some(st) })
+			.unwrap()
 	}
 }
 

@@ -1,84 +1,114 @@
-use std::ptr::NonNull;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::gui::base::Base;
+use crate::gui::events::WindowEventsAll;
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::privs::{multiply_dpi_or_dtu, paint_control_borders};
 use crate::gui::raw_base::RawBase;
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::WString;
-use crate::prelude::{GdiHbrush, GuiEventsView, Handle, UserHwnd};
+use crate::kernel::decl::{ErrResult, WString};
+use crate::prelude::{GdiHbrush, GuiEvents, Handle};
 use crate::user::decl::{
-	HBRUSH, HCURSOR, HICON, IdMenu, POINT, SIZE, WNDCLASSEX,
+	HBRUSH, HCURSOR, HICON, HWND, IdMenu, POINT, SIZE, WNDCLASSEX,
 };
 
-/// A WindowControl with a raw window.
-#[derive(Clone)]
-pub(in crate::gui) struct RawControl(pub(in crate::gui) Arc<Obj>);
-
-pub(in crate::gui) struct Obj { // actual fields of RawControl
-	pub(in crate::gui) raw_base: RawBase,
-	pub(in crate::gui) opts: WindowControlOpts,
+struct Obj { // actual fields of RawControl
+	raw_base: RawBase,
+	opts: WindowControlOpts,
+	_pin: PhantomPinned,
 }
+
+//------------------------------------------------------------------------------
+
+/// An ordinary custom control window.
+#[derive(Clone)]
+pub(in crate::gui) struct RawControl(Pin<Arc<Obj>>);
 
 impl RawControl {
 	pub(in crate::gui) fn new(
-		parent_base: &Base,
+		parent: &Base,
 		opts: WindowControlOpts) -> Self
 	{
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
-		let new_self = Self(Arc::new(
-			Obj {
-				raw_base: RawBase::new(Some(parent_base)),
-				opts,
-			},
-		));
-		new_self.default_message_handlers(parent_base, horz, vert);
+		let new_self = Self(
+			Arc::pin(
+				Obj {
+					raw_base: RawBase::new(Some(parent)),
+					opts,
+					_pin: PhantomPinned,
+				},
+			),
+		);
+		new_self.default_message_handlers(parent, horz, vert);
 		new_self
 	}
 
-	fn default_message_handlers(&self,
-		parent_base: &Base, horz: Horz, vert: Vert)
+	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
+		self.0.raw_base.as_base()
+	}
+
+	pub(in crate::gui) fn hwnd(&self) -> HWND {
+		self.0.raw_base.hwnd()
+	}
+
+	pub(in crate::gui) fn ctrl_id(&self) -> u16 {
+		self.0.opts.ctrl_id
+	}
+
+	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
+		self.0.raw_base.on()
+	}
+
+	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
-		parent_base.privileged_on().wm(parent_base.wmcreate_or_wminitdialog(), {
-			let self2 = self.clone();
-			let parent_base_ptr = NonNull::from(parent_base);
-			move |_| {
-				let opts = &self2.0.opts;
+		self.0.raw_base.spawn_new_thread(func);
+	}
 
-				let mut wcx = WNDCLASSEX::default();
-				let mut class_name_buf = WString::default();
-				RawBase::fill_wndclassex(
-					self2.0.raw_base.base.parent_base().unwrap().hwnd().hinstance(),
-					opts.class_style, opts.class_icon, opts.class_icon,
-					opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
-				let atom = self2.0.raw_base.register_class(&mut wcx)?;
+	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static
+	{
+		self.0.raw_base.run_ui_thread(func);
+	}
 
-				let mut wnd_pos = opts.position;
-				let mut wnd_sz = opts.size;
-				multiply_dpi_or_dtu(self2.0.raw_base.base.parent_base().unwrap(),
-					Some(&mut wnd_pos), Some(&mut wnd_sz))?;
+	fn default_message_handlers(&self, parent: &Base, horz: Horz, vert: Vert) {
+		let self2 = self.clone();
+		self.0.raw_base.parent().unwrap().privileged_on().wm(parent.creation_msg(), move |_| {
+			let opts = &self2.0.opts;
 
-				self2.0.raw_base.create_window(
-					atom,
-					None,
-					IdMenu::Id(opts.ctrl_id),
-					wnd_pos, wnd_sz,
-					opts.ex_style, opts.style,
-				)?;
+			let mut wcx = WNDCLASSEX::default();
+			let mut class_name_buf = WString::default();
+			RawBase::fill_wndclassex(
+				self2.0.raw_base.parent_hinstance(),
+				opts.class_style, opts.class_icon, opts.class_icon,
+				opts.class_bg_brush, opts.class_cursor, &mut wcx,
+				&mut class_name_buf);
+			let atom = self2.0.raw_base.register_class(&mut wcx);
 
-				unsafe {
-					parent_base_ptr.as_ref().add_to_resizer(
-						self2.0.raw_base.base.hwnd(), horz, vert)?;
-				}
+			let mut wnd_pos = opts.position;
+			let mut wnd_sz = opts.size;
+			multiply_dpi_or_dtu(self2.0.raw_base.parent().unwrap(),
+				Some(&mut wnd_pos), Some(&mut wnd_sz));
 
-				Ok(0)
-			}
+			self2.0.raw_base.create_window(
+				atom,
+				None,
+				IdMenu::Id(opts.ctrl_id),
+				wnd_pos, wnd_sz,
+				opts.ex_style, opts.style,
+			);
+
+			self2.0.raw_base.parent().unwrap()
+				.add_to_layout_arranger(self2.hwnd(), horz, vert);
+			Ok(None) // not meaningful
 		});
 
-		self.0.raw_base.base.on().wm_nc_paint({
-			let self2 = self.clone();
-			move |p| paint_control_borders(self2.0.raw_base.base.hwnd(), p)
+		let self2 = self.clone();
+		self.on().wm_nc_paint(move |p| {
+			paint_control_borders(self2.hwnd(), p);
+			Ok(())
 		});
 	}
 }

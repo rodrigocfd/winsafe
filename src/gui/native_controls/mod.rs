@@ -11,6 +11,7 @@ mod label;
 mod list_box_items;
 mod list_box;
 mod list_view_columns;
+mod list_view_item;
 mod list_view_items;
 mod list_view;
 mod month_calendar;
@@ -20,6 +21,7 @@ mod radio_group;
 mod status_bar_parts;
 mod status_bar;
 mod trackbar;
+mod tree_view_item;
 mod tree_view_items;
 mod tree_view;
 
@@ -44,7 +46,9 @@ pub mod spec {
 	pub use super::combo_box_items::ComboBoxItems;
 	pub use super::list_box_items::ListBoxItems;
 	pub use super::list_view_columns::ListViewColumns;
-	pub use super::list_view_items::{ListViewItem, ListViewItems};
+	pub use super::list_view_item::ListViewItem;
+	pub use super::list_view_items::ListViewItems;
 	pub use super::status_bar_parts::StatusBarParts;
-	pub use super::tree_view_items::{TreeViewItem, TreeViewItems};
+	pub use super::tree_view_item::TreeViewItem;
+	pub use super::tree_view_items::TreeViewItems;
 }

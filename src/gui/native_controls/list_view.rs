@@ -1,23 +1,22 @@
 use std::any::Any;
-use std::marker::PhantomData;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::comctl::decl::{HIMAGELIST, NMITEMACTIVATE, NMLVKEYDOWN};
 use crate::gui::base::Base;
 use crate::gui::events::{ListViewEvents, WindowEvents};
-use crate::gui::events::sealed_events_wm_nfy::GuiSealedEventsWmNfy;
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::WinResult;
 use crate::msg::{lvm, wm};
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
+	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
 	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, NativeBitflag,
 	UserHmenu, UserHwnd,
 };
@@ -25,32 +24,33 @@ use crate::user::decl::{
 	GetAsyncKeyState, GetCursorPos, HMENU, HWND, POINT, SIZE,
 };
 
+struct Obj { // atual fields of ListView
+	base: BaseNativeControl,
+	opts_id: OptsId<ListViewOpts>,
+	events: ListViewEvents,
+	context_menu: Option<HMENU>,
+	_pin: PhantomPinned,
+}
+
+//------------------------------------------------------------------------------
+
 /// Native
 /// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct ListView(Arc<Obj>);
-
-struct Obj { // actual fields of ListView
-	base: BaseNativeControl,
-	opts_id: OptsId<ListViewOpts>,
-	events: ListViewEvents,
-	context_menu: Option<HMENU>,
-}
+pub struct ListView(Pin<Arc<Obj>>);
 
 unsafe impl Send for ListView {}
-
-impl AsAny for ListView {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for ListView {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -63,6 +63,8 @@ impl GuiChild for ListView {
 	}
 }
 
+impl GuiChildFocus for ListView {}
+
 impl GuiNativeControl for ListView {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
@@ -71,43 +73,44 @@ impl GuiNativeControl for ListView {
 
 impl GuiNativeControlEvents<ListViewEvents> for ListView {
 	fn on(&self) -> &ListViewEvents {
-		if !self.0.base.hwnd().is_null() {
+		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
 	}
 }
 
-impl GuiFocusControl for ListView {}
-
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ListViewOpts) -> ListView {
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ListViewOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
 		let context_menu = opts.context_menu;
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: ListViewEvents::new(parent.as_base(), ctrl_id),
+					events: ListViewEvents::new(parent_ref, ctrl_id),
 					context_menu,
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
-		new_self.handled_events(parent.as_base(), ctrl_id);
+
+		new_self.default_message_handlers(parent_ref, ctrl_id);
 		new_self
 	}
 
@@ -125,91 +128,87 @@ impl ListView {
 		resize_behavior: (Horz, Vert),
 		context_menu: Option<HMENU>) -> ListView
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ListViewEvents::new(parent.as_base(), ctrl_id),
+					events: ListViewEvents::new(parent_ref, ctrl_id),
 					context_menu,
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
-		new_self.handled_events(parent.as_base(), ctrl_id);
+
+		new_self.default_message_handlers(parent_ref, ctrl_id);
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = opts.size;
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
 
 				self.0.base.create_window(
 					"SysListView32", None, pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.list_view_style.into(),
-				)?;
+				);
 
 				if opts.list_view_ex_style != co::LVS_EX::NoValue {
 					self.set_extended_style(true, opts.list_view_ex_style);
 				}
 
-				self.columns().add(&opts.columns)?;
+				self.columns().add(&opts.columns);
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
-	fn handled_events(&self, parent_base: &Base, ctrl_id: u16) {
-		parent_base.privileged_on().add_nfy(ctrl_id, co::LVN::KEYDOWN, {
-			let self2 = self.clone();
-			move |p| {
-				let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
-				let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
-				let has_shift = GetAsyncKeyState(co::VK::SHIFT);
+	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
+		let self2 = self.clone();
+		parent.privileged_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |p| {
+			let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
+			let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
+			let has_shift = GetAsyncKeyState(co::VK::SHIFT);
 
-				if has_ctrl && lvnk.wVKey == co::VK('A' as _) { // Ctrl+A
-					self2.items().select_all(true)?;
-				} else if lvnk.wVKey == co::VK::APPS { // context menu key
-					self2.show_context_menu(false, has_ctrl, has_shift)?;
-				}
-				Ok(None)
+			if has_ctrl && lvnk.wVKey == co::VK('A' as _) { // Ctrl+A
+				self2.items().select_all(true);
+			} else if lvnk.wVKey == co::VK::APPS { // context menu key
+				self2.show_context_menu(false, has_ctrl, has_shift);
 			}
+			Ok(None) // not meaningful
 		});
 
-		parent_base.privileged_on().add_nfy(ctrl_id, co::NM::RCLICK, {
-			let self2 = self.clone();
-			move |p| {
-				let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
-				let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
-				let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
+		let self2 = self.clone();
+		parent.privileged_on().wm_notify(ctrl_id, co::NM::RCLICK, move |p| {
+			let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
+			let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
+			let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
-				self2.show_context_menu(true, has_ctrl, has_shift)?;
-				Ok(None)
-			}
+			self2.show_context_menu(true, has_ctrl, has_shift);
+			Ok(None) // not meaningful
 		});
 	}
 
 	/// Exposes the column methods.
 	#[must_use]
-	pub fn columns<'a>(&'a self) -> ListViewColumns<'a> {
-		ListViewColumns {
-			hwnd: self.hwnd(),
-			_owner: PhantomData,
-		}
+	pub const fn columns(&self) -> ListViewColumns {
+		ListViewColumns::new(self)
 	}
 
 	/// Returns the context menu attached to this list view, if any.
@@ -231,11 +230,8 @@ impl ListView {
 
 	/// Exposes the item methods.
 	#[must_use]
-	pub fn items<'a>(&'a self) -> ListViewItems<'a> {
-		ListViewItems {
-			hwnd: self.hwnd(),
-			_owner: PhantomData,
-		}
+	pub const fn items(&self) -> ListViewItems {
+		ListViewItems::new(self)
 	}
 
 	/// Retrieves the current view by sending an
@@ -247,8 +243,8 @@ impl ListView {
 
 	/// Sets the current view by sending an
 	/// [`lvm::SetView`](crate::msg::lvm::SetView) message.
-	pub fn set_current_view(&self, view: co::LV_VIEW) -> WinResult<()> {
-		self.hwnd().SendMessage(lvm::SetView { view })
+	pub fn set_current_view(&self, view: co::LV_VIEW) {
+		self.hwnd().SendMessage(lvm::SetView { view }).unwrap();
 	}
 
 	/// Sets or unsets the given extended list view styles by sending an
@@ -278,27 +274,25 @@ impl ListView {
 	}
 
 	fn show_context_menu(&self,
-		follow_cursor: bool, has_ctrl: bool, has_shift: bool) -> WinResult<()>
+		follow_cursor: bool, has_ctrl: bool, has_shift: bool)
 	{
 		let hmenu = match self.0.context_menu {
 			Some(h) => h,
-			None => return Ok(()), // no menu, nothing to do
+			None => return, // no menu, nothing to do
 		};
 
 		let menu_pos = if follow_cursor { // usually when fired by a right-click
-			let mut menu_pos = GetCursorPos()?; // relative to screen
-			self.hwnd().ScreenToClient(&mut menu_pos)?; // now relative to list view
+			let mut menu_pos = GetCursorPos().unwrap(); // relative to screen
+			self.hwnd().ScreenToClient(&mut menu_pos).unwrap(); // now relative to list view
 
 			match self.items().hit_test(menu_pos) {
 				Some(item_over) => {
 					if !has_ctrl && !has_shift {
-						item_over.select(true)?; // if not yet
-						item_over.focus()?;
+						item_over.select(true); // if not yet
+						item_over.focus();
 					}
 				},
-				None => { // no item was right-clicked
-					self.items().select_all(false)?;
-				},
+				None => self.items().select_all(false), // no item was right-clicked
 			}
 
 			self.hwnd().SetFocus(); // because a right-click won't set the focus by itself
@@ -309,17 +303,17 @@ impl ListView {
 
 			if focused_opt.is_some() && focused_opt.unwrap().is_visible() {
 				let focused = focused_opt.unwrap();
-				let rc_item = focused.rect(co::LVIR::BOUNDS)?;
+				let rc_item = focused.rect(co::LVIR::BOUNDS);
 				POINT::new(rc_item.left + 16,
 					rc_item.top + (rc_item.bottom - rc_item.top) / 2)
 
 			} else { // no item is focused and visible
-				POINT::new(6, 10) // arbitrary
+				POINT::new(6, 10) // arbitrary coordinates
 			}
 		};
 
 		hmenu.TrackPopupMenuAtPoint(
-			menu_pos, self.hwnd().GetParent()?, self.hwnd())
+			menu_pos, self.hwnd().GetParent().unwrap(), self.hwnd()).unwrap();
 	}
 }
 

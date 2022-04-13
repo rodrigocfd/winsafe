@@ -1,15 +1,12 @@
 use std::rc::Rc;
 
 use crate::co;
-use crate::gui::events::events_wm::{
-	GuiEventsView, ProcessResult, sealed_events_wm::GuiSealedEventsWm,
-	WindowEvents,
-};
+use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::ErrResult;
 use crate::msg::{wm, WndMsg};
-use crate::prelude::MsgSendRecv;
+use crate::prelude::{GuiEvents, MsgSendRecv};
 
 /// Exposes window
 /// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
@@ -19,7 +16,7 @@ use crate::prelude::MsgSendRecv;
 /// window.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowEventsAll {
-	events_wm: WindowEvents,
+	window_events: WindowEvents,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
 		Box<dyn Fn() -> ErrResult<()>>, // return value is never meaningful
@@ -34,10 +31,18 @@ pub struct WindowEventsAll {
 	>,
 }
 
+impl GuiEvents for WindowEventsAll {
+	fn wm<F>(&self, ident: co::WM, func: F)
+		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
+	{
+		self.window_events.wm(ident, func);
+	}
+}
+
 impl WindowEventsAll {
 	pub(in crate::gui) fn new() -> Self {
 		Self {
-			events_wm: WindowEvents::new(),
+			window_events: WindowEvents::new(),
 			tmrs: FuncStore::new(),
 			cmds: FuncStore::new(),
 			nfys: FuncStore::new(),
@@ -84,13 +89,15 @@ impl WindowEventsAll {
 					None => ProcessResult::NotHandled, // no stored WM_TIMER message
 				}
 			}
-			_ => self.events_wm.process_one_message(wm_any)?,
+			_ => self.window_events.process_one_message(wm_any)?,
 		})
 	}
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
-	pub(in crate::gui) fn process_all_messages(&self, wm_any: WndMsg) -> ErrResult<()> {
+	pub(in crate::gui) fn process_all_messages(&self,
+		wm_any: WndMsg) -> ErrResult<()>
+	{
 		Ok(match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
@@ -112,22 +119,20 @@ impl WindowEventsAll {
 					func()?; // execute stored function
 				}
 			},
-			_ => self.events_wm.process_all_messages(wm_any)?,
+			_ => self.window_events.process_all_messages(wm_any)?,
 		})
 	}
 
-	/// [`WM_TIMER`](crate::msg::wm::Timer) message, narrowed to a specific
-	/// timer ID.
-	///
-	/// Posted to the installing thread's message queue when a timer expires.
+	/// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
+	/// message, narrowed to a specific timer ID.
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
-		self.tmrs.insert(timer_id, Box::new(func));
+		self.tmrs.push(timer_id, Box::new(func));
 	}
 
-	/// [`WM_COMMAND`](crate::msg::wm::Command) message, for specific code and
-	/// control ID.
+	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// message, for specific code and control ID.
 	///
 	/// A command notification must be narrowed by the
 	/// [command code](crate::co::CMD) and the control ID, so the closure will
@@ -141,34 +146,15 @@ impl WindowEventsAll {
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
 		let code: co::CMD = code.into();
-		self.cmds.insert((code, ctrl_id), Box::new(func));
+		self.cmds.push((code, ctrl_id), Box::new(func));
 	}
 
-	/// [`WM_COMMAND`](crate::msg::wm::Command) message, handling both
-	/// `CMD::Accelerator` and `CMD::Menu`, for a specific command ID.
+	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// message, handling both `CMD::Accelerator` and `CMD::Menu`, for a
+	/// specific command ID.
 	///
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators.
-	///
-	/// # Examples
-	///
-	/// Closing the window on ESC key:
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, gui, msg, ErrResult};
-	///
-	/// let wnd: gui::WindowMain; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	///
-	/// wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), {
-	///     let wnd = wnd.clone(); // pass into the closure
-	///     move || -> ErrResult<()> {
-	///         wnd.hwnd().SendMessage(msg::wm::Close {});
-	///         Ok(())
-	///     }
-	/// });
-	/// ```
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
 		where F: Fn() -> ErrResult<()> + 'static,
 	{
@@ -176,69 +162,26 @@ impl WindowEventsAll {
 
 		self.wm_command(co::CMD::Menu, ctrl_id, {
 			let shared_func = shared_func.clone();
-			move || shared_func.as_mut()()
+			move || shared_func()
 		});
 
 		self.wm_command(co::CMD::Accelerator, ctrl_id, {
 			let shared_func = shared_func.clone();
-			move || shared_func.as_mut()()
+			move || shared_func()
 		});
 	}
-}
 
-//------------------------------------------------------------------------------
-
-impl GuiSealedEventsWm for WindowEventsAll {
-	fn add_msg<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
-	{
-		self.events_wm.add_msg(ident, Box::new(func));
-	}
-}
-
-impl GuiEventsView for WindowEventsAll {}
-
-impl sealed_events_wm_nfy::GuiSealedEventsWmNfy for WindowEventsAll {
-	fn add_nfy<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
-	{
-		let code: co::NM = code.into();
-		self.nfys.insert((id_from, code), Box::new(func));
-	}
-}
-
-impl GuiEventsViewAll for WindowEventsAll {}
-
-//------------------------------------------------------------------------------
-
-pub(in crate::gui) mod sealed_events_wm_nfy {
-	use super::{co, ErrResult, wm};
-
-	pub trait GuiSealedEventsWmNfy {
-		/// Raw add notification.
-		fn add_nfy<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
-			where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static;
-	}
-}
-
-/// Exposes the methods of
-/// [`WindowEventsAll`](crate::gui::events::WindowEventsAll).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiEventsViewAll: sealed_events_wm_nfy::GuiSealedEventsWmNfy + GuiEventsView {
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
 	/// notification code.
-	///
-	/// A notification must be narrowed by the
-	/// [notification code](crate::co::NM) and the control ID, so the closure
-	/// will be fired for that specific control at the specific event.
 	///
 	/// **Note:** Instead of using this event, you should always prefer the
 	/// specific notifications, which will give you the correct notification
 	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
-	fn wm_notify<F>(&self, id_from: i32, code: impl Into<co::NM>, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<isize> + 'static,
+	pub fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
+		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
 	{
-		self.add_nfy(id_from as _, code, move |p| Ok(Some(func(p)?))); // return value is meaningful
+		let code: co::NM = code.into();
+		self.nfys.push((id_from, code), Box::new(func));
 	}
 }

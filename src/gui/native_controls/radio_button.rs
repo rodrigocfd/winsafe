@@ -1,19 +1,20 @@
 use std::any::Any;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::{ButtonEvents, WindowEvents};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{
 	auto_ctrl_id, calc_text_bound_box_check, multiply_dpi_or_dtu, ui_font,
 };
-use crate::gui::resizer::{Horz, Vert};
 use crate::kernel::decl::WinResult;
 use crate::msg::{bm, wm};
 use crate::prelude::{
-	AsAny, GuiChild, GuiFocusControl, GuiNativeControl, GuiNativeControlEvents,
-	GuiParent, GuiTextControl, GuiWindow, Handle, UserHwnd,
+	GuiChild, GuiChildFocus, GuiNativeControl, GuiNativeControlEvents,
+	GuiParent, GuiWindow, GuiWindowText, Handle, UserHwnd,
 };
 use crate::user::decl::{
 	AccelMenuCtrl, AccelMenuCtrlData, HWND, HwndPlace, POINT, SIZE,
@@ -21,44 +22,43 @@ use crate::user::decl::{
 
 /// Native
 /// [radio button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
-/// control, actually a variation of the ordinary
-/// [`Button`](crate::gui::Button): just a button with a specific style.
+/// control.
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub struct RadioButton(Obj);
-
-struct Obj { // actual fields of RadioButton
+pub struct RadioButton {
 	base: BaseNativeControl,
 	opts_id: OptsId<RadioButtonOpts>,
 	events: ButtonEvents,
 }
 
-impl AsAny for RadioButton {
+impl GuiWindow for RadioButton {
+	fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+
 	fn as_any(&self) -> &dyn Any {
 		self
 	}
 }
 
-impl GuiWindow for RadioButton {
-	fn hwnd(&self) -> HWND {
-		self.0.base.hwnd()
-	}
-}
+impl GuiWindowText for RadioButton {}
 
 impl GuiChild for RadioButton {
 	fn ctrl_id(&self) -> u16 {
-		match &self.0.opts_id {
+		match &self.opts_id {
 			OptsId::Wnd(opts) => opts.ctrl_id,
 			OptsId::Dlg(ctrl_id) => *ctrl_id,
 		}
 	}
 }
 
+impl GuiChildFocus for RadioButton {}
+
 impl GuiNativeControl for RadioButton {
 	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
+		self.base.on_subclass()
 	}
 }
 
@@ -66,77 +66,73 @@ impl GuiNativeControlEvents<ButtonEvents> for RadioButton {
 	fn on(&self) -> &ButtonEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
-		&self.0.events
+		&self.events
 	}
 }
 
-impl GuiFocusControl for RadioButton {}
-impl GuiTextControl for RadioButton {}
-
 impl RadioButton {
 	pub(in crate::gui) fn new(
-		parent: &impl GuiParent, opts: RadioButtonOpts) -> RadioButton
+		parent: &impl GuiParent, opts: RadioButtonOpts) -> Self
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
-		Self(
-			Obj {
-				base: BaseNativeControl::new(parent.as_base()),
-				opts_id: OptsId::Wnd(opts),
-				events: ButtonEvents::new(parent.as_base(), ctrl_id),
-			},
-		)
+
+		Self {
+			base: BaseNativeControl::new(parent_ref),
+			opts_id: OptsId::Wnd(opts),
+			events: ButtonEvents::new(parent_ref, ctrl_id),
+		}
 	}
 
 	pub(in crate::gui) fn new_dlg(
-		parent: &impl GuiParent,
-		ctrl_id: u16) -> RadioButton
+		parent: &impl GuiParent, ctrl_id: u16) -> Self
 	{
-		Self(
-			Obj {
-				base: BaseNativeControl::new(parent.as_base()),
-				opts_id: OptsId::Dlg(ctrl_id),
-				events: ButtonEvents::new(parent.as_base(), ctrl_id),
-			},
-		)
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
+		Self {
+			base: BaseNativeControl::new(parent_ref),
+			opts_id: OptsId::Dlg(ctrl_id),
+			events: ButtonEvents::new(parent_ref, ctrl_id),
+		}
 	}
 
-	pub(in crate::gui) fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
-		match &self.0.opts_id {
+	pub(in crate::gui) fn create(&self, horz: Horz, vert: Vert) {
+		match &self.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), None)?;
+					self.base.parent(), Some(&mut pos), None);
 
 				let mut sz = opts.size;
 					if sz.cx == -1 && sz.cy == -1 {
-						sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
+						sz = calc_text_bound_box_check(&opts.text); // resize to fit text
 					} else {
 						multiply_dpi_or_dtu(
-							self.0.base.parent_base(), None, Some(&mut sz))?; // user-defined size
+							self.base.parent(), None, Some(&mut sz)); // user-defined size
 					}
 
-				let our_hwnd = self.0.base.create_window( // may panic
+				self.base.create_window( // may panic
 					"BUTTON", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
-				)?;
+				);
 
-				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(
+					wm::SetFont { hfont: ui_font(), redraw: true });
 				if opts.selected { self.select(true); }
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.0.base.create_dlg(*ctrl_id)?; // may panic
+				self.base.create_dlg(*ctrl_id); // may panic
 			},
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)?;
+		self.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
-		Ok(())
 	}
 
 	/// Emulates the click event for the radio button by sending a
@@ -180,12 +176,12 @@ impl RadioButton {
 
 	/// Calls [`set_text`](crate::prelude::GuiTextControl::set_text) and resizes
 	/// the control to exactly fit the new text.
-	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
-		self.set_text(text)?;
-		let bound_box = calc_text_bound_box_check(text)?;
+	pub fn set_text_and_resize(&self, text: &str) {
+		self.set_text(text);
+		let bound_box = calc_text_bound_box_check(text);
 		self.hwnd().SetWindowPos(
-			HwndPlace::None, POINT::default(), bound_box,
-			co::SWP::NOZORDER | co::SWP::NOMOVE)
+			HwndPlace::None, POINT::default(),
+			bound_box, co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 	}
 }
 

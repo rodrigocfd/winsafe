@@ -1,50 +1,55 @@
 use std::any::Any;
-use std::marker::PhantomData;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::comctl::decl::EDITBALLOONTIP;
+use crate::gui::base::Base;
 use crate::gui::events::{EditEvents, WindowEvents};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::{WinResult, WString};
+use crate::kernel::decl::WString;
 use crate::msg::{em, wm};
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
+	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, GuiWindowText, Handle,
 	UserHwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
+
+struct Obj { // actual fields of Edit
+	base: BaseNativeControl,
+	opts_id: OptsId<EditOpts>,
+	events: EditEvents,
+	_pin: PhantomPinned,
+}
+
+//------------------------------------------------------------------------------
 
 /// Native
 /// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct Edit(Arc<Obj>);
-
-struct Obj { // actual fields of Edit
-	base: BaseNativeControl,
-	opts_id: OptsId<EditOpts>,
-	events: EditEvents,
-}
+pub struct Edit(Pin<Arc<Obj>>);
 
 unsafe impl Send for Edit {}
-
-impl AsAny for Edit {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for Edit {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
 }
+
+impl GuiWindowText for Edit {}
 
 impl GuiChild for Edit {
 	fn ctrl_id(&self) -> u16 {
@@ -55,6 +60,8 @@ impl GuiChild for Edit {
 	}
 }
 
+impl GuiChildFocus for Edit {}
+
 impl GuiNativeControl for Edit {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
@@ -63,41 +70,41 @@ impl GuiNativeControl for Edit {
 
 impl GuiNativeControlEvents<EditEvents> for Edit {
 	fn on(&self) -> &EditEvents {
-		if !self.0.base.hwnd().is_null() {
+		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
 	}
 }
 
-impl GuiFocusControl for Edit {}
-impl GuiTextControl for Edit {}
-
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Edit {
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = EditOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: EditEvents::new(parent.as_base(), ctrl_id),
+					events: EditEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
+
 		new_self
 	}
 
@@ -109,52 +116,56 @@ impl Edit {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> Edit
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: EditEvents::new(parent.as_base(), ctrl_id),
+					events: EditEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
 
-				let our_hwnd = self.0.base.create_window(
+				self.0.base.create_window(
 					"EDIT", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.edit_style.into(),
-				)?;
+				);
 
-				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(
+					wm::SetFont { hfont: ui_font(), redraw: true });
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
 	/// Hides any balloon tip by sending an
 	/// [`em::HideBalloonTip`](crate::msg::em::HideBalloonTip) message.
 	pub fn hide_balloon_tip(&self) {
-		self.hwnd().SendMessage(em::HideBalloonTip {}).ok(); // ignore error
+		self.hwnd().SendMessage(em::HideBalloonTip {}).unwrap();
 	}
 
 	/// Returns an iterator over the lines in the Edit.
@@ -169,14 +180,14 @@ impl Edit {
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
 	///
-	/// for line in my_edit.iter_lines()? {
+	/// for line in my_edit.iter_lines() {
 	///     println!("{}", line);
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	pub fn iter_lines<'a>(&'a self) -> WinResult<impl Iterator<Item = String> + 'a> {
-		LinesIter::new(self.hwnd())
+	pub fn iter_lines<'a>(&'a self) -> impl Iterator<Item = String> + 'a {
+		LinesIter::new(self)
 	}
 
 	/// Limits the number of characters that can be type by sending an
@@ -220,9 +231,7 @@ impl Edit {
 
 	/// Displays a balloon tip by sending an
 	/// [`em::ShowBalloonTip`](crate::msg::em::ShowBalloonTip) message.
-	pub fn show_ballon_tip(&self,
-		title: &str, text: &str, icon: co::TTI) -> WinResult<()>
-	{
+	pub fn show_ballon_tip(&self, title: &str, text: &str, icon: co::TTI) {
 		let mut title16 = WString::from_str(title);
 		let mut text16 = WString::from_str(text);
 
@@ -231,50 +240,50 @@ impl Edit {
 		info.set_pszText(Some(&mut text16));
 		info.ttiIcon = icon;
 
-		self.hwnd().SendMessage(em::ShowBalloonTip { info: &info })
+		self.hwnd()
+			.SendMessage(em::ShowBalloonTip { info: &info })
+			.unwrap();
 	}
 }
 
 //------------------------------------------------------------------------------
 
 struct LinesIter<'a> {
-	hwnd: HWND,
-	buf: WString,
-	total: usize,
-	current: usize,
-	_owner: PhantomData<&'a ()>,
+	owner: &'a Edit,
+	count: u32,
+	current: u32,
+	buffer: WString,
 }
 
 impl<'a> Iterator for LinesIter<'a> {
 	type Item = String;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.total {
+		if self.current == self.count {
 			return None;
 		}
 
-		let line = match self.hwnd.SendMessage(em::GetLine {
-			index: self.current as _,
-			buffer: &mut self.buf,
-		}) {
-			Some(_) => self.buf.to_string(),
-			None => "".to_owned(),
-		};
-
+		self.owner.hwnd()
+			.SendMessage(em::GetLine {
+				index: self.current as _,
+				buffer: &mut self.buffer,
+			})
+			.unwrap();
 		self.current += 1;
-		Some(line)
+		Some(self.buffer.to_string())
 	}
 }
 
 impl<'a> LinesIter<'a> {
-	fn new(hwnd: HWND) -> WinResult<Self> {
-		Ok(Self {
-			hwnd,
-			buf: WString::new_alloc_buffer(hwnd.GetWindowTextLength()? as usize + 1), // so we alloc just once
-			total: hwnd.SendMessage(em::GetLineCount {}) as _,
+	fn new(owner: &'a Edit) -> Self {
+		Self {
+			owner,
+			count: owner.hwnd().SendMessage(em::GetLineCount {}),
 			current: 0,
-			_owner: PhantomData,
-		})
+			buffer: WString::new_alloc_buffer(
+				owner.hwnd().GetWindowTextLength().unwrap() as usize + 1,
+			),
+		}
 	}
 }
 
@@ -314,7 +323,7 @@ pub struct EditOpts {
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 21.
+	/// Defaults to 23.
 	///
 	/// **Note:** You should change the default height only in a multi-line edit.
 	pub height: u32,
@@ -361,7 +370,7 @@ impl Default for EditOpts {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
 			width: 100,
-			height: 21,
+			height: 23,
 			edit_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,

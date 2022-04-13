@@ -158,16 +158,16 @@ unsafe impl MsgSendRecv for CaptureChanged {
 	}
 }
 
+pub_struct_msg_char! { Char: co::WM::CHAR; "user";
+	/// [`WM_CHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-char)
+}
+
 pub_struct_msg_empty_handleable! { ChildActivate: co::WM::CHILDACTIVATE; "user";
 	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 }
 
 pub_struct_msg_empty_handleable! { Close: co::WM::CLOSE; "user";
 	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
-}
-
-pub_struct_msg_char! { Char: co::WM::CHAR; "user";
-	/// [`WM_CHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 }
 
 /// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -435,10 +435,6 @@ unsafe impl MsgSendRecv for EnterIdle {
 	}
 }
 
-pub_struct_msg_empty_handleable! { EnterSizeMove: co::WM::ENTERSIZEMOVE; "user";
-	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
-}
-
 /// [`WM_ENTERMENULOOP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-entermenuloop)
 /// message parameters.
 ///
@@ -470,6 +466,10 @@ unsafe impl MsgSendRecv for EnterMenuLoop {
 			with_trackpopupmenu: p.wparam != 0,
 		}
 	}
+}
+
+pub_struct_msg_empty_handleable! { EnterSizeMove: co::WM::ENTERSIZEMOVE; "user";
+	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 }
 
 /// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)

@@ -1,8 +1,9 @@
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::WinResult;
 use crate::msg::wm;
 use crate::prelude::{Handle, UserHdwp, UserHwnd};
 use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
@@ -10,7 +11,7 @@ use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
 /// Specifies the horizontal behavior of the control when the parent window is
 /// resized.
 ///
-/// These values are analog to [`gui::Vert`](crate::gui::Vert).
+/// The values are analog to [`gui::Vert`](crate::gui::Vert).
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Horz {
@@ -27,7 +28,7 @@ pub enum Horz {
 /// Specifies the vertical behavior of the control when the parent window is
 /// resized.
 ///
-/// These values are analog to [`gui::Horz`](crate::gui::Horz).
+/// The values are analog to [`gui::Horz`](crate::gui::Horz).
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Vert {
@@ -48,63 +49,65 @@ struct ChildInfo {
 	vert: Vert,
 }
 
-//------------------------------------------------------------------------------
-
-/// Resizes all registered child controls at once, according to predefined
-/// behaviors.
-#[derive(Clone)]
-pub(in crate::gui) struct Resizer(Arc<VeryUnsafeCell<Obj>>);
-
-struct Obj { // actual fields of Resizer
-	ctrls: Vec<ChildInfo>,
-	sz_parent_orig: SIZE, // original parent client area
+struct Obj { // actual fields of LayoutArranger
+	ctrls: VeryUnsafeCell<Vec<ChildInfo>>,
+	sz_parent_orig: VeryUnsafeCell<SIZE>, // original parent client area
+	_pin: PhantomPinned,
 }
 
-impl Resizer {
+//------------------------------------------------------------------------------
+
+/// Rearranges the controls according to predefined rules.
+#[derive(Clone)]
+pub(in crate::gui) struct LayoutArranger(Pin<Arc<Obj>>);
+
+impl LayoutArranger {
 	pub(in crate::gui) fn new() -> Self {
 		Self(
-			Arc::new(VeryUnsafeCell::new(
+			Arc::pin(
 				Obj {
-					ctrls: Vec::with_capacity(10), // arbitrary
-					sz_parent_orig: SIZE::default(),
+					ctrls: VeryUnsafeCell::new(Vec::with_capacity(10)), // arbitrary
+					sz_parent_orig: VeryUnsafeCell::new(SIZE::default()),
+					_pin: PhantomPinned,
 				},
-			)),
+			),
 		)
 	}
 
+	/// Adds a new child control to the internal list, so this control will have
+	/// its position and size rearranged when requested.
 	pub(in crate::gui) fn add(&self,
-		hparent: HWND,
-		hchild: HWND,
-		horz: Horz, vert: Vert) -> WinResult<()>
+		hparent: HWND, hchild: HWND, horz: Horz, vert: Vert)
 	{
 		if hparent.is_null() || hchild.is_null() {
 			panic!("Cannot add resizer entries before window/control creation.");
 		}
 
 		if horz == Horz::None && vert == Vert::None {
-			return Ok(()); // nothing to do, don't even add it
+			return; // nothing to do, don't even add it
 		}
 
 		if self.0.ctrls.is_empty() { // first control being added?
-			let rc_parent = hparent.GetClientRect()?;
-			self.0.as_mut().sz_parent_orig =
+			let rc_parent = hparent.GetClientRect().unwrap();
+			*self.0.sz_parent_orig.as_mut() =
 				SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
 		}
 
-		let mut rc_orig = hchild.GetWindowRect()?;
-		hparent.ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
+		let mut rc_orig = hchild.GetWindowRect().unwrap();
+		hparent.ScreenToClientRc(&mut rc_orig).unwrap(); // control client coordinates relative to parent
 
-		self.0.as_mut().ctrls.push(ChildInfo { hchild, rc_orig, horz, vert });
-		Ok(())
+		self.0.ctrls.as_mut().push(ChildInfo { hchild, rc_orig, horz, vert });
 	}
 
-	pub(in crate::gui) fn resize(&self, p: &wm::Size) -> WinResult<()> {
+	/// Rearranges all child controls to fit the new width/height of parent
+	/// window.
+	pub(in crate::gui) fn rearrange(&self, p: &wm::Size) {
 		if self.0.ctrls.is_empty() // no controls
 			|| p.request == co::SIZE_R::MINIMIZED { // we're minimized
-			return Ok(());
+			return;
 		}
 
-		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as _)?;
+		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as _).unwrap();
 
 		for ctrl in self.0.ctrls.iter() {
 			let mut uflags = co::SWP::NOZORDER;
@@ -114,7 +117,7 @@ impl Resizer {
 				uflags |= co::SWP::NOMOVE;
 			}
 
-			let sz_parent_orig = self.0.sz_parent_orig;
+			let sz_parent_orig = *self.0.sz_parent_orig;
 
 			hdwp.DeferWindowPos(
 				ctrl.hchild,
@@ -140,9 +143,9 @@ impl Resizer {
 					},
 				),
 				uflags,
-			)?;
+			).unwrap();
 		}
 
-		hdwp.EndDeferWindowPos()
+		hdwp.EndDeferWindowPos().unwrap();
 	}
 }

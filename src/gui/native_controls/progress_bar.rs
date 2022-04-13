@@ -1,45 +1,48 @@
 use std::any::Any;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::comctl::decl::PBRANGE;
+use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::WinResult;
 use crate::msg::pbm;
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiNativeControl, GuiParent, GuiWindow,
-	NativeBitflag, UserHwnd,
+	GuiChild, GuiEvents, GuiNativeControl, GuiParent, GuiWindow, NativeBitflag,
+	UserHwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
+
+struct Obj { // actual fields of ProgressBar
+	base: BaseNativeControl,
+	opts_id: OptsId<ProgressBarOpts>,
+	_pin: PhantomPinned,
+}
+
+//------------------------------------------------------------------------------
 
 /// Native
 /// [progress bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct ProgressBar(Arc<Obj>);
-
-struct Obj { // actual fields of ProgressBar
-	base: BaseNativeControl,
-	opts_id: OptsId<ProgressBarOpts>,
-}
+pub struct ProgressBar(Pin<Arc<Obj>>);
 
 unsafe impl Send for ProgressBar {}
-
-impl AsAny for ProgressBar {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for ProgressBar {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -64,23 +67,26 @@ impl ProgressBar {
 	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ProgressBarOpts) -> ProgressBar {
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
+
 		new_self
 	}
 
@@ -93,43 +99,46 @@ impl ProgressBar {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> ProgressBar
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = opts.size;
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
 
 				self.0.base.create_window(
 					"msctls_progress32", None, pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.progress_bar_style.into(),
-				)?;
+				);
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
 	/// Retrieves the current position by sending a
@@ -158,6 +167,8 @@ impl ProgressBar {
 	/// for a style change.
 	pub fn set_marquee(&self, marquee: bool) {
 		if marquee {
+			// We must also adjust the window style before/after sending
+			// PBM_SETMARQUEE message.
 			self.hwnd().SetWindowLongPtr(
 				co::GWLP::STYLE,
 				u32::from(self.cur_style() | co::PBS::MARQUEE) as _,

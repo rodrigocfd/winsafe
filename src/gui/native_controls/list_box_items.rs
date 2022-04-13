@@ -1,10 +1,8 @@
-use std::marker::PhantomData;
-
 use crate::co;
-use crate::kernel::decl::{WinResult, WString};
+use crate::gui::native_controls::ListBox;
+use crate::kernel::decl::WString;
 use crate::msg::lb;
-use crate::prelude::{NativeBitflag, UserHwnd};
-use crate::user::decl::HWND;
+use crate::prelude::{GuiWindow, NativeBitflag, UserHwnd};
 
 /// Exposes item methods of a [`ListBox`](crate::gui::ListBox) control.
 ///
@@ -12,11 +10,14 @@ use crate::user::decl::HWND;
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListBoxItems<'a> {
-	pub(in crate::gui::native_controls) hwnd: HWND,
-	pub(in crate::gui::native_controls) _owner: PhantomData<&'a ()>,
+	owner: &'a ListBox,
 }
 
 impl<'a> ListBoxItems<'a> {
+	pub(in crate::gui) const fn new(owner: &'a ListBox) -> Self {
+		Self { owner }
+	}
+
 	/// Adds new texts by sending [`lb::AddString`](crate::msg::lb::AddString)
 	/// messages.
 	///
@@ -32,33 +33,37 @@ impl<'a> ListBoxItems<'a> {
 	///
 	/// my_list.items().add(&["John", "Mary"]);
 	/// ```
-	pub fn add(&self, items: &[impl AsRef<str>]) -> WinResult<()> {
+	pub fn add(&self, items: &[impl AsRef<str>]) {
 		for text in items.iter() {
-			self.hwnd.SendMessage(lb::AddString {
-				text: WString::from_str(text.as_ref()),
-			})?;
+			self.owner.hwnd()
+				.SendMessage(lb::AddString {
+					text: WString::from_str(text.as_ref()),
+				})
+				.unwrap();
 		}
-		Ok(())
 	}
 
 	/// Retrieves the number of items by sending an
 	/// [`lb::GetCount`](crate::msg::lb::GetCount) message.
 	#[must_use]
-	pub fn count(&self) -> WinResult<u32> {
-		self.hwnd.SendMessage(lb::GetCount {})
+	pub fn count(&self) -> u32 {
+		self.owner.hwnd()
+			.SendMessage(lb::GetCount {})
+			.unwrap()
 	}
 
 	/// Deletes the item at the given index by sending an
 	/// [`lb::DeleteString`](crate::msg::lb::DeleteString) message.
-	pub fn delete(&self, index: u32) -> WinResult<()> {
-		self.hwnd.SendMessage(lb::DeleteString { index })
-			.map(|_| ())
+	pub fn delete(&self, index: u32) {
+		self.owner.hwnd()
+			.SendMessage(lb::DeleteString { index })
+			.unwrap();
 	}
 
 	/// Deletes all items by sending an
 	/// [`lb::ResetContent`](crate::msg::lb::ResetContent) message.
 	pub fn delete_all(&self) {
-		self.hwnd.SendMessage(lb::ResetContent {})
+		self.owner.hwnd().SendMessage(lb::ResetContent {});
 	}
 
 	/// Returns an iterator over the texts.
@@ -74,116 +79,159 @@ impl<'a> ListBoxItems<'a> {
 	/// # let my_list = gui::ListBox::new(&wnd, gui::ListBoxOpts::default());
 	///
 	/// for text in my_list.items().iter() {
-	///     let text = text?;
 	///     println!("Text {}", text);
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = WinResult<String>> + 'a {
-		ListBoxItemIter::new(self.hwnd, self.count().unwrap_or(0))
+	pub fn iter(&self) -> impl Iterator<Item = String> + 'a {
+		ListBoxItemIter::new(self.owner)
 	}
 
-	/// Returns the currently selected items.
+	/// Returns an iterator over the currently selected texts.
 	///
 	/// This method works for both single and multiple-selection lists.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::gui;
+	///
+	/// let my_list: gui::ListBox; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListBox::new(&wnd, gui::ListBoxOpts::default());
+	///
+	/// for (sel_idx, text) in my_list.items().iter_selected() {
+	///     println!("Text {}: {}", sel_idx, text);
+	/// }
+	/// ```
 	#[must_use]
-	pub fn selected(&self) -> Vec<u32> {
-		let styles = co::LBS(self.hwnd.GetWindowLongPtr(co::GWLP::STYLE) as _);
-
-		if styles.has(co::LBS::EXTENDEDSEL) {
-			let num_indexes = match self.hwnd.SendMessage(lb::GetSelCount {}) {
-				Err(_) => return vec![], // should never happen
-				Ok(sel_count) => sel_count as _,
-			};
-			let mut indexes = vec![0; num_indexes];
-
-			match self.hwnd.SendMessage(lb::GetSelItems {
-				buffer: &mut indexes,
-			}) {
-				Err(_) => vec![], // should never happen
-				Ok(_) => indexes,
-			}
-
-		} else {
-			self.hwnd.SendMessage(lb::GetCurSel {})
-				.map_or_else(
-					|| Vec::default(),
-					|idx| vec![idx],
-				)
-		}
+	pub fn iter_selected(&self) -> impl Iterator<Item = (u32, String)> + 'a {
+		ListBoxSelItemIter::new(self.owner)
 	}
 
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`lb::GetText`](crate::msg::lb::GetText) message.
 	#[must_use]
-	pub fn text(&self, index: u32) -> WinResult<Option<String>> {
-		let mut buf = WString::new_alloc_buffer(
-			match self.hwnd.SendMessage(lb::GetTextLen { index }) {
-				Err(_) => return Ok(None), // index out of bounds
-				Ok(len) => len,
-			} as usize + 1,
-		);
-
-		self.hwnd.SendMessage(lb::GetText { index, text: &mut buf })
-			.map(|_| Some(buf.to_string()))
+	pub fn text(&self, index: u32) -> String {
+		let num_chars = self.owner.hwnd()
+			.SendMessage(lb::GetTextLen { index })
+			.unwrap();
+		let mut buf = WString::new_alloc_buffer(num_chars as usize + 1);
+		self.owner.hwnd()
+			.SendMessage(lb::GetText { index, text: &mut buf })
+			.unwrap();
+		buf.to_string()
 	}
 }
 
 //------------------------------------------------------------------------------
 
 struct ListBoxItemIter<'a> {
-	hwnd: HWND,
+	owner: &'a ListBox,
 	count: u32,
 	current: u32,
 	buffer: WString,
-	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for ListBoxItemIter<'a> {
-	type Item = WinResult<String>;
+	type Item = String;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.count {
 			return None;
 		}
 
-		let len = match self.hwnd
+		let num_chars = self.owner.hwnd()
 			.SendMessage(lb::GetTextLen { index: self.current })
-		{
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				return Some(Err(e))
-			},
-			Ok(len) => len,
-		};
+			.unwrap();
+		self.buffer.realloc_buffer(num_chars as usize + 1);
 
-		self.buffer.realloc_buffer(len as usize + 1);
-
-		match self.hwnd.SendMessage(lb::GetText {
-			index: self.current,
-			text: &mut self.buffer,
-		}) {
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-			Ok(_) => {
-				self.current += 1;
-				Some(Ok(self.buffer.to_string()))
-			},
-		}
+		self.owner.hwnd()
+			.SendMessage(lb::GetText {
+				index: self.current,
+				text: &mut self.buffer,
+			})
+			.unwrap();
+		self.current += 1;
+		Some(self.buffer.to_string())
 	}
 }
 
 impl<'a> ListBoxItemIter<'a> {
-	fn new(hwnd: HWND, count: u32) -> Self {
+	fn new(owner: &'a ListBox) -> Self {
 		Self {
-			hwnd,
-			count,
+			owner,
+			count: owner.items().count(),
 			current: 0,
 			buffer: WString::new_alloc_buffer(40), // arbitrary
-			_owner: PhantomData,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct ListBoxSelItemIter<'a> {
+	owner: &'a ListBox,
+	indexes: Vec<u32>,
+	current: u32,
+	buffer: WString,
+}
+
+impl<'a> Iterator for ListBoxSelItemIter<'a> {
+	type Item = (u32, String);
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.indexes.len() as u32 {
+			return None;
+		}
+
+		let cur_sel_index = self.indexes[self.current as usize];
+
+		let num_chars = self.owner.hwnd()
+			.SendMessage(lb::GetTextLen { index: cur_sel_index })
+			.unwrap();
+		self.buffer.realloc_buffer(num_chars as usize + 1);
+
+		self.owner.hwnd()
+			.SendMessage(lb::GetText {
+				index: cur_sel_index,
+				text: &mut self.buffer,
+			})
+			.unwrap();
+		self.current += 1;
+		Some((cur_sel_index, self.buffer.to_string()))
+	}
+}
+
+impl<'a> ListBoxSelItemIter<'a> {
+	fn new(owner: &'a ListBox) -> Self {
+		let styles = co::LBS(
+			owner.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _,
+		);
+
+		let indexes = if styles.has(co::LBS::EXTENDEDSEL) { // multiple selection?
+			let num_indexes = owner.hwnd()
+				.SendMessage(lb::GetSelCount {})
+				.unwrap();
+			let mut indexes = vec![0; num_indexes as _];
+
+			owner.hwnd()
+				.SendMessage(lb::GetSelItems { buffer: &mut indexes })
+				.unwrap();
+			indexes
+		} else {
+			match owner.hwnd().SendMessage(lb::GetCurSel {}) {
+				Some(index) => vec![index], // single selection: at max 1
+				None => Vec::default(),
+			}
+		};
+
+		Self {
+			owner,
+			indexes,
+			current: 0,
+			buffer: WString::new_alloc_buffer(40), // arbitrary
 		}
 	}
 }

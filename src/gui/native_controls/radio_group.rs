@@ -1,4 +1,6 @@
+use std::marker::PhantomPinned;
 use std::ops::Index;
+use std::pin::Pin;
 use std::ptr::NonNull;
 use std::rc::Rc;
 use std::sync::Arc;
@@ -6,39 +8,28 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::RadioGroupEvents;
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
-use crate::gui::resizer::{Horz, Vert};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::WinResult;
 use crate::prelude::{
-	GuiChild, GuiEventsView, GuiNativeControlEvents, GuiParent, GuiWindow,
-	Handle,
+	GuiChild, GuiEvents, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
 };
-
-/// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-#[derive(Clone)]
-pub struct RadioGroup(Arc<Obj>);
 
 struct Obj { // actual fields of RadioGroup
 	parent_ptr: NonNull<Base>,
 	radios: VeryUnsafeCell<Vec<RadioButton>>,
 	events: RadioGroupEvents,
+	_pin: PhantomPinned,
 }
 
-impl std::fmt::Debug for RadioGroup {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		let mut out = String::with_capacity(self.count() * 40); // arbitrary
-		for (idx, radio) in self.iter().enumerate() {
-			out += &format!("[{}] HWND {}, ID {} ",
-				idx,
-				radio.hwnd(),
-				radio.ctrl_id(),
-			);
-		}
-		write!(f, "{}", out)
-	}
-}
+//------------------------------------------------------------------------------
+
+/// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+#[derive(Clone)]
+pub struct RadioGroup(Pin<Arc<Obj>>);
+
+unsafe impl Send for RadioGroup {}
 
 impl Index<usize> for RadioGroup {
 	type Output = RadioButton;
@@ -66,7 +57,7 @@ impl RadioGroup {
 	///
 	/// # Panics
 	///
-	/// Panics if `opts` is empty
+	/// Panics if `opts` is empty.
 	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent,
@@ -96,22 +87,24 @@ impl RadioGroup {
 				.collect::<Vec<_>>(),
 		);
 
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					parent_ptr: NonNull::from(parent.as_base()),
+					parent_ptr: NonNull::from(parent_ref),
 					radios: VeryUnsafeCell::new(radios),
-					events: RadioGroupEvents::new(parent.as_base(), ctrl_ids),
+					events: RadioGroupEvents::new(parent_ref, ctrl_ids),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let me = new_self.clone();
-			let horz_verts = horz_verts.clone();
-			move |_| me.create(horz_verts.as_ref())
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		let horz_verts = horz_verts.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz_verts.as_ref());
+			Ok(None) // not meaningful
 		});
 		new_self
 	}
@@ -136,34 +129,39 @@ impl RadioGroup {
 			.map(|(ctrl_id, _, _)| RadioButton::new_dlg(parent, *ctrl_id))
 			.collect::<Vec<_>>();
 
-		let ctrl_ids = ctrls.iter().map(|(ctrl_id, _, _)| *ctrl_id).collect::<Vec<_>>();
-		let horz_verts = Rc::new(ctrls.iter().map(|(_, horz, vert)| (*horz, *vert)).collect::<Vec<_>>());
+		let ctrl_ids = ctrls.iter()
+			.map(|(ctrl_id, _, _)| *ctrl_id)
+			.collect::<Vec<_>>();
+
+		let horz_verts = ctrls.iter()
+			.map(|(_, horz, vert)| (*horz, *vert))
+			.collect::<Vec<_>>();
+
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					parent_ptr: NonNull::from(parent.as_base()),
+					parent_ptr: NonNull::from(parent_ref),
 					radios: VeryUnsafeCell::new(radios),
-					events: RadioGroupEvents::new(parent.as_base(), ctrl_ids),
+					events: RadioGroupEvents::new(parent_ref, ctrl_ids),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let me = new_self.clone();
-			let horz_verts = horz_verts.clone();
-			move |_| me.create(horz_verts.as_ref())
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(horz_verts.as_ref());
+			Ok(true) // not meaningful
 		});
 		new_self
 	}
 
-	fn create(&self, horz_vert: &[(Horz, Vert)]) -> WinResult<()> {
-		for (i, radio) in self.0.radios.as_mut().iter_mut().enumerate() {
-			radio.create(horz_vert[i].0, horz_vert[i].1)?;
+	fn create(&self, horz_vert: &[(Horz, Vert)]) {
+		for (i, radio) in self.0.radios.iter().enumerate() {
+			radio.create(horz_vert[i].0, horz_vert[i].1); // create each RadioButton sequentially
 		}
-		Ok(())
 	}
 
 	/// Returns an iterator over the internal
@@ -182,7 +180,7 @@ impl RadioGroup {
 	/// # let radio_group = gui::RadioGroup::new(&wnd, &[]);
 	///
 	/// for single_radio in radio_group.iter() {
-	///     single_radio.hwnd().SetWindowText("One")?;
+	///     single_radio.hwnd().SetWindowText("One");
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
@@ -191,8 +189,8 @@ impl RadioGroup {
 		self.0.radios.iter()
 	}
 
-	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton) of
-	/// this group, if any.
+	/// Returns the currently checked [`RadioButton`](crate::gui::RadioButton)
+	/// of this group, if any.
 	#[must_use]
 	pub fn checked(&self) -> Option<&RadioButton> {
 		self.checked_index().map(|idx| &self.0.radios[idx])

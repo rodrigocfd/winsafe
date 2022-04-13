@@ -1,45 +1,48 @@
 use std::ptr::NonNull;
 
 use crate::co;
-use crate::gui::events::{
-	sealed_events_wm::GuiSealedEventsWm, ProcessResult, WindowEventsAll,
-};
+use crate::gui::events::{ProcessResult, WindowEventsAll};
+use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
-use crate::gui::resizer::{Horz, Resizer, Vert};
-use crate::kernel::decl::{ErrResult, WinResult};
+use crate::gui::very_unsafe_cell::VeryUnsafeCell;
+use crate::kernel::decl::{ErrResult, HINSTANCE};
 use crate::msg::WndMsg;
-use crate::prelude::{GuiEventsView, Handle, UserHwnd};
+use crate::prelude::{GuiEvents, GuiParent, Handle, KernelHinstance, UserHwnd};
 use crate::user::decl::{
 	DispatchMessage, GetMessage, HACCEL, HWND, MSG, TranslateMessage,
 };
 
-/// Base to `RawBase` and `DlgBase`.
-///
-/// While the parent module is private, the struct is public so it can be used
-/// in sealed traits.
-pub struct Base {
+/// Base to `RawBase` and `DlgBase`, which means all container windows.
+pub(in crate::gui) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
 	parent_ptr: Option<NonNull<Self>>,
 	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	privileged_events: WindowEventsAll, // inserted internally to automate tasks: all will be executed
-	resizer: Resizer,
+	layout_arranger: VeryUnsafeCell<LayoutArranger>,
 }
 
 impl Base {
 	const WM_UI_THREAD: co::WM = co::WM(co::WM::APP.0 + 0x3fff);
 
+	pub(in crate::gui) unsafe fn from_guiparent<'a>(
+		p: &impl GuiParent) -> &'a Self
+	{
+		let ptr = NonNull::new_unchecked(p.as_base() as *mut _);
+		ptr.as_ref()
+	}
+
 	pub(in crate::gui) fn new(
 		is_dialog: bool,
-		parent_base: Option<&Base>) -> Self
+		parent: Option<&Base>) -> Self
 	{
 		let new_self = Self {
 			hwnd: HWND::NULL,
 			is_dialog,
-			parent_ptr: parent_base.map(|parent_base| NonNull::from(parent_base)),
+			parent_ptr: parent.map(|parent| NonNull::from(parent)),
 			user_events: WindowEventsAll::new(),
 			privileged_events: WindowEventsAll::new(),
-			resizer: Resizer::new(),
+			layout_arranger: VeryUnsafeCell::new(LayoutArranger::new()),
 		};
 		new_self.default_message_handlers();
 		new_self
@@ -49,22 +52,30 @@ impl Base {
 		self.hwnd
 	}
 
-	pub(in crate::gui) fn hwnd_mut(&mut self) -> &mut HWND {
-		&mut self.hwnd
+	pub(in crate::gui) unsafe fn set_hwnd(&mut self, hwnd: HWND) {
+		self.hwnd = hwnd
 	}
 
 	pub(in crate::gui) const fn is_dialog(&self) -> bool {
 		self.is_dialog
 	}
 
-	pub(in crate::gui) const fn wmcreate_or_wminitdialog(&self) -> co::WM {
+	pub(in crate::gui) const fn creation_msg(&self) -> co::WM {
 		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
 	}
 
-	pub(in crate::gui) fn parent_base(&self) -> Option<&Self> {
-		self.parent_ptr.as_ref().map(|ptr| unsafe { ptr.as_ref() })
+	pub(in crate::gui) fn parent(&self) -> Option<&Base> {
+		self.parent_ptr.map(move |parent| unsafe { parent.as_ref() })
 	}
 
+	pub(in crate::gui) fn parent_hinstance(&self) -> HINSTANCE {
+		self.parent().map_or_else(
+			|| HINSTANCE::GetModuleHandle(None).unwrap(),
+			|parent| parent.hwnd().hinstance(),
+		)
+	}
+
+	/// User events can be overriden; only the last one is executed.
 	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add event after window creation.");
@@ -78,6 +89,7 @@ impl Base {
 		self.user_events.process_one_message(wm_any)
 	}
 
+	/// Internal events are always executed.
 	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
 		if !self.hwnd.is_null() {
 			panic!("Cannot add privileged event after window creation.");
@@ -91,10 +103,10 @@ impl Base {
 		self.privileged_events.process_all_messages(wm_any)
 	}
 
-	pub(in crate::gui) fn add_to_resizer(&self,
-		hchild: HWND, horz: Horz, vert: Vert) -> WinResult<()>
+	pub(in crate::gui) fn add_to_layout_arranger(&self,
+		hchild: HWND, horz: Horz, vert: Vert)
 	{
-		self.resizer.add(self.hwnd, hchild, horz, vert)
+		self.layout_arranger.as_mut().add(self.hwnd, hchild, horz, vert)
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
@@ -143,19 +155,22 @@ impl Base {
 	}
 
 	fn default_message_handlers(&self) {
-		self.privileged_events.wm_size({
-			let resizer = self.resizer.clone();
-			move |p| resizer.resize(&p)
-				.map_err(|e| e.into())
+		// We cant pass a pointer to Self because at this moment the parent
+		// struct isn't created and pinned yet, so we make LayoutArranger
+		// clonable.
+		let layout_arranger = self.layout_arranger.clone();
+		self.privileged_events.wm_size(move |p| {
+			layout_arranger.rearrange(&p);
+			Ok(()) // not meaningful
 		});
 
-		self.privileged_events.add_msg(Self::WM_UI_THREAD, |p| {
+		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
 			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
 				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
 				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
 				pack().unwrap_or_else(|err| post_quit_error(err));
 			}
-			Ok(None) // return value is not meaningful for privileged events
+			Ok(None) // not meaningful
 		});
 	}
 
@@ -165,7 +180,7 @@ impl Base {
 		let mut msg = MSG::default();
 
 		loop {
-			if !GetMessage(&mut msg, None, 0, 0)? {
+			if !GetMessage(&mut msg, None, 0, 0).unwrap() {
 				// WM_QUIT was sent, gracefully terminate the program.
 				// wParam has the program exit code.
 				// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues

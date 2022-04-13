@@ -1,43 +1,73 @@
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::gui::base::Base;
+use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{ErrResult, HINSTANCE, WString};
 use crate::prelude::{
-	GdiHbrush, GuiEventsView, Handle, KernelHinstance, UserHaccel, UserHwnd,
+	GdiHbrush, GuiEvents, Handle, KernelHinstance, UserHaccel, UserHwnd,
 };
 use crate::user::decl::{
 	AdjustWindowRectEx, GetSystemMetrics, HACCEL, HBRUSH, HCURSOR, HICON, HMENU,
 	HWND, IdMenu, POINT, PostQuitMessage, RECT, SIZE, WNDCLASSEX,
 };
 
-/// A WindowMain with a raw window.
-#[derive(Clone)]
-pub(in crate::gui) struct RawMain(pub(in crate::gui) Arc<Obj>);
-
-pub(in crate::gui) struct Obj { // actual fields of RawMain
-	pub(in crate::gui) raw_base: RawBase,
+struct Obj { // actual fields of RawMain
+	raw_base: RawBase,
 	opts: WindowMainOpts,
 	hchild_prev_focus: VeryUnsafeCell<HWND>, // WM_ACTIVATE woes
+	_pin: PhantomPinned,
 }
 
+//------------------------------------------------------------------------------
+
+/// An ordinary main window.
+#[derive(Clone)]
+pub(in crate::gui) struct RawMain(Pin<Arc<Obj>>);
+
 impl RawMain {
-	pub(in crate::gui) fn new(
-		parent_base: Option<&Base>,
-		opts: WindowMainOpts) -> Self
-	{
-		let new_self = Self(Arc::new(
-			Obj {
-				raw_base: RawBase::new(parent_base),
-				opts,
-				hchild_prev_focus: VeryUnsafeCell::new(HWND::NULL),
-			},
-		));
+	pub(in crate::gui) fn new(opts: WindowMainOpts) -> Self {
+		let new_self = Self(
+			Arc::pin(
+				Obj {
+					raw_base: RawBase::new(None),
+					opts,
+					hchild_prev_focus: VeryUnsafeCell::new(HWND::NULL),
+					_pin: PhantomPinned,
+				},
+			),
+		);
 		new_self.default_message_handlers();
 		new_self
+	}
+
+	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
+		self.0.raw_base.as_base()
+	}
+
+	pub(in crate::gui) fn hwnd(&self) -> HWND {
+		self.0.raw_base.hwnd()
+	}
+
+	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
+		self.0.raw_base.on()
+	}
+
+	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+	{
+		self.0.raw_base.spawn_new_thread(func);
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static
+	{
+		self.0.raw_base.run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn run_main(&self,
@@ -48,13 +78,13 @@ impl RawMain {
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
-			HINSTANCE::GetModuleHandle(None)?,
+			HINSTANCE::GetModuleHandle(None).unwrap(),
 			opts.class_style, opts.class_icon, opts.class_icon,
-			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
-		let atom = self.0.raw_base.register_class(&mut wcx)?;
+			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf);
+		let atom = self.0.raw_base.register_class(&mut wcx);
 
 		let mut wnd_sz = opts.size;
-		multiply_dpi(None, Some(&mut wnd_sz))?;
+		multiply_dpi(None, Some(&mut wnd_sz));
 
 		let screen_sz = SIZE::new(
 			GetSystemMetrics(co::SM::CXSCREEN),
@@ -83,45 +113,45 @@ impl RawMain {
 			if opts.menu.is_null() { IdMenu::None } else { IdMenu::Menu(opts.menu) },
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
-		)?;
+		);
 
-		self.0.raw_base.base.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		self.0.raw_base.base.hwnd().UpdateWindow()?;
+		self.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.hwnd().UpdateWindow().unwrap();
 
-		let loop_ret = Base::run_main_loop(opts.accel_table.as_opt()); // blocks until window is closed
+		let loop_res = Base::run_main_loop(opts.accel_table.as_opt()); // blocks until window is closed
 
 		if let Some(haccel) = opts.accel_table.as_opt() {
 			haccel.DestroyAcceleratorTable();
 		}
 
-		loop_ret
+		loop_res
 	}
 
 	fn default_message_handlers(&self) {
-		self.0.raw_base.base.on().wm_activate({
-			let self2 = self.clone();
-			move |p| {
-				if !p.is_minimized {
-					if p.event == co::WA::INACTIVE {
-						if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-							if self2.0.raw_base.base.hwnd().IsChild(hwnd_cur_focus) {
-								*self2.0.hchild_prev_focus.as_mut() = hwnd_cur_focus; // save previously focused control
-							}
+		let self2 = self.clone();
+		self.on().wm_activate(move |p| {
+			let hchild_prev_focus = self2.0.hchild_prev_focus.as_mut();
+			if !p.is_minimized {
+				if p.event == co::WA::INACTIVE {
+					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
+						if self2.hwnd().IsChild(hwnd_cur_focus) {
+							*hchild_prev_focus = hwnd_cur_focus; // save previously focused control
 						}
-					} else if !self2.0.hchild_prev_focus.is_null() {
-						self2.0.hchild_prev_focus.SetFocus(); // put focus back
 					}
+				} else if !hchild_prev_focus.is_null() {
+					hchild_prev_focus.SetFocus(); // put focus back
 				}
-				Ok(())
 			}
+			Ok(())
 		});
 
-		self.0.raw_base.base.on().wm_set_focus({
-			let self2 = self.clone();
-			move |_| self2.0.raw_base.delegate_focus_to_first_child()
+		let self2 = self.clone();
+		self.on().wm_set_focus(move |_| {
+			self2.0.raw_base.delegate_focus_to_first_child();
+			Ok(())
 		});
 
-		self.0.raw_base.base.on().wm_nc_destroy(|| {
+		self.on().wm_nc_destroy(move || {
 			PostQuitMessage(0);
 			Ok(())
 		});

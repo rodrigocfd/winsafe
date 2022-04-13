@@ -1,20 +1,30 @@
 use std::any::Any;
-use std::marker::PhantomData;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::{StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::WinResult;
 use crate::msg::{sb, wm};
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiNativeControl, GuiNativeControlEvents,
-	GuiParent, GuiWindow, Handle, MsgSend, NativeBitflag, UserHwnd,
+	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
+	GuiWindow, Handle, MsgSend, NativeBitflag, UserHwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
+
+struct Obj { // actual fields of StatusBar
+	base: BaseNativeControl,
+	ctrl_id: u16,
+	events: StatusBarEvents,
+	parts_info: VeryUnsafeCell<Vec<StatusBarPart>>,
+	right_edges: VeryUnsafeCell<Vec<i32>>, // buffer to speed up resize calls
+	_pin: PhantomPinned,
+}
 
 /// Used when adding the parts in
 /// [`StatusBar::new`](crate::gui::StatusBar::new).
@@ -45,27 +55,17 @@ pub enum StatusBarPart {
 /// control, which has one or more parts.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct StatusBar(Arc<Obj>);
-
-struct Obj { // actual fields of StatusBar
-	base: BaseNativeControl,
-	ctrl_id: u16,
-	events: StatusBarEvents,
-	parts_info: VeryUnsafeCell<Vec<StatusBarPart>>,
-	right_edges: VeryUnsafeCell<Vec<i32>>, // buffer to speed up resize calls
-}
+pub struct StatusBar(Pin<Arc<Obj>>);
 
 unsafe impl Send for StatusBar {}
-
-impl AsAny for StatusBar {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for StatusBar {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -85,7 +85,7 @@ impl GuiNativeControlEvents<StatusBarEvents> for StatusBar {
 	fn on(&self) -> &StatusBarEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -120,47 +120,48 @@ impl StatusBar {
 		parent: &impl GuiParent,
 		parts: &[StatusBarPart]) -> StatusBar
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let ctrl_id = auto_ctrl_id();
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					ctrl_id,
-					events: StatusBarEvents::new(parent.as_base(), ctrl_id),
+					events: StatusBarEvents::new(parent_ref, ctrl_id),
 					parts_info: VeryUnsafeCell::new(parts.to_vec()),
 					right_edges: VeryUnsafeCell::new(vec![0; parts.len()]),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create()
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create();
+			Ok(None) // not meaningful
 		});
-		parent.as_base().privileged_on().wm_size({
-			let self2 = new_self.clone();
-			move |p| {
-				let mut p = p;
-				self2.resize(&mut p)
-					.map_err(|e| e.into())
-			}
+
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_size(move |p| {
+			let mut p = p;
+			self2.resize(&mut p);
+			Ok(())
 		});
+
 		new_self
 	}
 
-	fn create(&self) -> WinResult<()> {
+	fn create(&self) {
 		for part in self.0.parts_info.as_mut().iter_mut() {
 			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 				let mut col_cx = SIZE::new(*width as _, 0);
-				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), None, Some(&mut col_cx))?;
+				multiply_dpi_or_dtu(self.0.base.parent(), None, Some(&mut col_cx));
 				*width = col_cx.cx as _;
 			}
 		}
 
-		let hparent = self.0.base.parent_base().hwnd();
+		let hparent = self.0.base.parent().hwnd();
 		let parent_style = co::WS(
 			hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
 		);
@@ -178,21 +179,19 @@ impl StatusBar {
 				} else {
 					co::SBARS::NoValue
 				}.into(),
-		)?;
+		);
 
 		// Force first resizing, so the panels are created.
-		let parent_rc = hparent.GetClientRect()?;
+		let parent_rc = hparent.GetClientRect().unwrap();
 		self.resize(&mut wm::Size {
 			client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
 			request: co::SIZE_R::RESTORED,
-		})?;
-
-		Ok(())
+		});
 	}
 
-	fn resize(&self, p: &mut wm::Size) -> WinResult<()> {
+	fn resize(&self, p: &mut wm::Size) {
 		if p.request == co::SIZE_R::MINIMIZED || self.hwnd().is_null() {
-			return Ok(()); // nothing to do
+			return; // nothing to do
 		}
 
 		self.hwnd().SendMessage(p.as_generic_wm()); // send WM_SIZE to status bar, so it resizes itself to fit parent
@@ -219,15 +218,14 @@ impl StatusBar {
 		}
 		*right_edges.last_mut().unwrap() = -1;
 
-		self.hwnd().SendMessage(sb::SetParts { right_edges: &right_edges })
+		self.hwnd()
+			.SendMessage(sb::SetParts { right_edges: &right_edges })
+			.unwrap();
 	}
 
 	/// Exposes the part methods.
 	#[must_use]
-	pub fn parts<'a>(&'a self) -> StatusBarParts<'a> {
-		StatusBarParts {
-			hwnd: self.hwnd(),
-			_owner: PhantomData,
-		}
+	pub const fn parts(&self) -> StatusBarParts {
+		StatusBarParts::new(self)
 	}
 }

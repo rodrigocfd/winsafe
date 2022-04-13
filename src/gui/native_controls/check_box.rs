@@ -1,20 +1,22 @@
 use std::any::Any;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::{ButtonEvents, WindowEvents};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{
 	auto_ctrl_id, calc_text_bound_box_check, multiply_dpi_or_dtu, ui_font,
 };
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::WinResult;
 use crate::msg::{bm, wm};
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
+	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, GuiWindowText, Handle,
 	UserHwnd,
 };
 use crate::user::decl::{
@@ -35,6 +37,13 @@ pub enum CheckState {
 	Unchecked,
 }
 
+struct Obj { // actual fields of CheckBox
+	base: BaseNativeControl,
+	opts_id: OptsId<CheckBoxOpts>,
+	events: ButtonEvents,
+	_pin: PhantomPinned,
+}
+
 //------------------------------------------------------------------------------
 
 /// Native
@@ -43,27 +52,21 @@ pub enum CheckState {
 /// [`Button`](crate::gui::Button): just a button with a specific style.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct CheckBox(Arc<Obj>);
-
-struct Obj { // actual fields of CheckBox
-	base: BaseNativeControl,
-	opts_id: OptsId<CheckBoxOpts>,
-	events: ButtonEvents,
-}
+pub struct CheckBox(Pin<Arc<Obj>>);
 
 unsafe impl Send for CheckBox {}
-
-impl AsAny for CheckBox {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for CheckBox {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
 }
+
+impl GuiWindowText for CheckBox {}
 
 impl GuiChild for CheckBox {
 	fn ctrl_id(&self) -> u16 {
@@ -74,6 +77,8 @@ impl GuiChild for CheckBox {
 	}
 }
 
+impl GuiChildFocus for CheckBox {}
+
 impl GuiNativeControl for CheckBox {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
@@ -82,41 +87,40 @@ impl GuiNativeControl for CheckBox {
 
 impl GuiNativeControlEvents<ButtonEvents> for CheckBox {
 	fn on(&self) -> &ButtonEvents {
-		if !self.0.base.hwnd().is_null() {
+		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
 	}
 }
 
-impl GuiFocusControl for CheckBox {}
-impl GuiTextControl for CheckBox {}
-
 impl CheckBox {
 	/// Instantiates a new `CheckBox` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: CheckBoxOpts) -> CheckBox {
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = CheckBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: ButtonEvents::new(parent.as_base(), ctrl_id),
+					events: ButtonEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
+
 		new_self
 	}
 
@@ -129,56 +133,60 @@ impl CheckBox {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> CheckBox
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ButtonEvents::new(parent.as_base(), ctrl_id),
+					events: ButtonEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), None)?;
+					self.0.base.parent(), Some(&mut pos), None);
 
 				let mut sz = opts.size;
 				if sz.cx == -1 && sz.cy == -1 {
-					sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
+					sz = calc_text_bound_box_check(&opts.text); // resize to fit text
 				} else {
 					multiply_dpi_or_dtu(
-						self.0.base.parent_base(), None, Some(&mut sz))?; // user-defined size
+						self.0.base.parent(), None, Some(&mut sz)); // user-defined size
 				}
 
-				let our_hwnd = self.0.base.create_window(
+				self.0.base.create_window(
 					"BUTTON", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
-				)?;
+				);
 
-				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(
+					wm::SetFont { hfont: ui_font(), redraw: true });
 				if opts.check_state != CheckState::Unchecked {
 					self.set_check_state(opts.check_state);
 				}
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
 	/// Retrieves the current check state by sending a
@@ -222,30 +230,29 @@ impl CheckBox {
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
 	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
 	/// can handle the event.
-	pub fn set_check_state_and_trigger(&self,
-		state: CheckState) -> WinResult<()>
-	{
+	pub fn set_check_state_and_trigger(&self, state: CheckState) {
 		self.set_check_state(state);
-		self.hwnd().GetParent()?.SendMessage(wm::Command {
-			event: AccelMenuCtrl::Ctrl(
-				AccelMenuCtrlData {
-					notif_code: co::BN::CLICKED.into(),
-					ctrl_id: self.ctrl_id(),
-					ctrl_hwnd: self.hwnd(),
-				},
-			),
-		});
-		Ok(())
+		self.hwnd().GetParent().unwrap().SendMessage(
+			wm::Command {
+				event: AccelMenuCtrl::Ctrl(
+					AccelMenuCtrlData {
+						notif_code: co::BN::CLICKED.into(),
+						ctrl_id: self.ctrl_id(),
+						ctrl_hwnd: self.hwnd(),
+					},
+				),
+			},
+		);
 	}
 
 	/// Calls [`set_text`](crate::prelude::GuiTextControl::set_text) and resizes
 	/// the control to exactly fit the new text.
-	pub fn set_text_and_resize(&self, text: &str) -> WinResult<()> {
-		self.set_text(text)?;
-		let bound_box = calc_text_bound_box_check(text)?;
+	pub fn set_text_and_resize(&self, text: &str) {
+		self.set_text(text);
+		let bound_box = calc_text_bound_box_check(text);
 		self.hwnd().SetWindowPos(
 			HwndPlace::None, POINT::default(), bound_box,
-			co::SWP::NOZORDER | co::SWP::NOMOVE)
+			co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 	}
 }
 

@@ -21,30 +21,22 @@ impl TrackbarEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_ret0_param! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING, NMTRBTHUMBPOSCHANGING,
+	pub_fn_nfy_withparm_noret! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING, NMTRBTHUMBPOSCHANGING,
 		/// [`TRBN_THUMBPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/trbn-thumbposchanging)
 		/// notification.
-		///
-		/// Notifies that the thumb position on a trackbar is changing.
 	}
 
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-trackbar)
 	/// notification.
-	///
-	/// Sent by a trackbar control to notify its parent windows about drawing
-	/// operations.
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
 	{
-		self.0.add_nfy(co::NM::CUSTOMDRAW,
+		self.0.wm_notify(co::NM::CUSTOMDRAW,
 			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.0 as _)));
 	}
 
-	pub_fn_nfy_ret0! { nm_released_capture, co::NM::RELEASEDCAPTURE,
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE,
 		/// [`NM_RELEASEDCAPTURE`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
 		/// notification.
-		///
-		/// Notifies a trackbar control's parent window that the control is
-		/// releasing mouse capture.
 	}
 }

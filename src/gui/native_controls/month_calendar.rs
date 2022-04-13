@@ -1,45 +1,49 @@
 use std::any::Any;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::{MonthCalendarEvents, WindowEvents};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::{SYSTEMTIME, WinResult};
+use crate::kernel::decl::SYSTEMTIME;
 use crate::msg::mcm;
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
+	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
 	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd,
 };
 use crate::user::decl::{HWND, HwndPlace, POINT, RECT, SIZE};
+
+struct Obj { // actual fields of MonthCalendar
+	base: BaseNativeControl,
+	opts_id: OptsId<MonthCalendarOpts>,
+	events: MonthCalendarEvents,
+	_pin: PhantomPinned,
+}
+
+//------------------------------------------------------------------------------
 
 /// Native
 /// [month calendar](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct MonthCalendar(Arc<Obj>);
-
-struct Obj { // actual fields of MonthCalendar
-	base: BaseNativeControl,
-	opts_id: OptsId<MonthCalendarOpts>,
-	events: MonthCalendarEvents,
-}
+pub struct MonthCalendar(Pin<Arc<Obj>>);
 
 unsafe impl Send for MonthCalendar {}
-
-impl AsAny for MonthCalendar {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for MonthCalendar {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
+	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
 	}
 }
 
@@ -52,6 +56,8 @@ impl GuiChild for MonthCalendar {
 	}
 }
 
+impl GuiChildFocus for MonthCalendar {}
+
 impl GuiNativeControl for MonthCalendar {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
@@ -60,16 +66,14 @@ impl GuiNativeControl for MonthCalendar {
 
 impl GuiNativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 	fn on(&self) -> &MonthCalendarEvents {
-		if !self.0.base.hwnd().is_null() {
+		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
 	}
 }
-
-impl GuiFocusControl for MonthCalendar {}
 
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent
@@ -80,23 +84,25 @@ impl MonthCalendar {
 		parent: &impl GuiParent,
 		opts: MonthCalendarOpts) -> MonthCalendar
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = MonthCalendarOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: MonthCalendarEvents::new(parent.as_base(), ctrl_id),
+					events: MonthCalendarEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
 		new_self
 	}
@@ -110,26 +116,29 @@ impl MonthCalendar {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> MonthCalendar
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: MonthCalendarEvents::new(parent.as_base(), ctrl_id),
+					events: MonthCalendarEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		if horz == Horz::Resize {
 			panic!("MonthCalendar cannot be resized with Horz::Resize.");
 		} else if vert == Vert::Resize {
@@ -139,40 +148,39 @@ impl MonthCalendar {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
-				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), None)?;
+				multiply_dpi_or_dtu(self.0.base.parent(), Some(&mut pos), None);
 
-				let our_hwnd = self.0.base.create_window(
+				self.0.base.create_window(
 					"SysMonthCal32", None, pos, SIZE::new(0, 0),
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.month_calendar_style.into(),
-				)?;
+				);
 
 				let mut bounds_rect = RECT::default();
-				our_hwnd.SendMessage(mcm::GetMinReqRect {
+				self.hwnd().SendMessage(mcm::GetMinReqRect {
 					bounds_rect: &mut bounds_rect,
-				})?;
-				our_hwnd.SetWindowPos(HwndPlace::None, POINT::default(),
+				}).unwrap();
+				self.hwnd().SetWindowPos(HwndPlace::None, POINT::default(),
 					SIZE::new(bounds_rect.right, bounds_rect.bottom),
-					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+					co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
 	/// Retrieves the currently selected date by sending a
 	/// [`mcm::GetCurSel`](crate::msg::mcm::GetCurSel) message.
-	pub fn date(&self, st: &mut SYSTEMTIME) -> WinResult<()> {
-		self.hwnd().SendMessage(mcm::GetCurSel { info: st })
+	pub fn date(&self, st: &mut SYSTEMTIME) {
+		self.hwnd().SendMessage(mcm::GetCurSel { info: st }).unwrap();
 	}
 
 	/// Sets the currently selected date by sending a
 	/// [`mcm::SetCurSel`](crate::msg::mcm::SetCurSel) message.
-	pub fn set_date(&self, st: &SYSTEMTIME) -> WinResult<()> {
-		self.hwnd().SendMessage(mcm::SetCurSel { info: st })
+	pub fn set_date(&self, st: &SYSTEMTIME) {
+		self.hwnd().SendMessage(mcm::SetCurSel { info: st }).unwrap();
 	}
 }
 

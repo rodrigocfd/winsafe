@@ -1,48 +1,53 @@
 use std::any::Any;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gui::base::Base;
 use crate::gui::events::{ButtonEvents, WindowEvents};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::WinResult;
 use crate::msg::{bm, wm};
 use crate::prelude::{
-	AsAny, GuiChild, GuiEventsView, GuiFocusControl, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiTextControl, GuiWindow, Handle,
+	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
+	GuiNativeControlEvents, GuiParent, GuiWindow, GuiWindowText, Handle,
 	UserHwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
+
+struct Obj { // actual fields of Button
+	base: BaseNativeControl,
+	opts_id: OptsId<ButtonOpts>,
+	events: ButtonEvents,
+	_pin: PhantomPinned,
+}
+
+//------------------------------------------------------------------------------
 
 /// Native
 /// [button](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct Button(Arc<Obj>);
-
-struct Obj { // actual fields of Button
-	base: BaseNativeControl,
-	opts_id: OptsId<ButtonOpts>,
-	events: ButtonEvents,
-}
+pub struct Button(Pin<Arc<Obj>>);
 
 unsafe impl Send for Button {}
-
-impl AsAny for Button {
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
 
 impl GuiWindow for Button {
 	fn hwnd(&self) -> HWND {
 		self.0.base.hwnd()
 	}
+
+	fn as_any(&self) -> &dyn Any {
+		self
+	}
 }
+
+impl GuiWindowText for Button {}
 
 impl GuiChild for Button {
 	fn ctrl_id(&self) -> u16 {
@@ -52,6 +57,8 @@ impl GuiChild for Button {
 		}
 	}
 }
+
+impl GuiChildFocus for Button {}
 
 impl GuiNativeControl for Button {
 	fn on_subclass(&self) -> &WindowEvents {
@@ -63,39 +70,39 @@ impl GuiNativeControlEvents<ButtonEvents> for Button {
 	fn on(&self) -> &ButtonEvents {
 		if !self.hwnd().is_null() {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent_base().hwnd().is_null() {
+		} else if !self.0.base.parent().hwnd().is_null() {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
 	}
 }
 
-impl GuiFocusControl for Button {}
-impl GuiTextControl for Button {}
-
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
 	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ButtonOpts) -> Button {
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ButtonOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
-					events: ButtonEvents::new(parent.as_base(), ctrl_id),
+					events: ButtonEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm(parent.as_base().wmcreate_or_wminitdialog(), {
-			let self2 = new_self.clone();
-			move |_| self2.create(horz, vert)
-				.map_err(|e| e.into())
-				.map(|_| 0)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+			self2.create(horz, vert);
+			Ok(None) // not meaningful
 		});
+
 		new_self
 	}
 
@@ -107,46 +114,50 @@ impl Button {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert)) -> Button
 	{
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let new_self = Self(
-			Arc::new(
+			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent.as_base()),
+					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
-					events: ButtonEvents::new(parent.as_base(), ctrl_id),
+					events: ButtonEvents::new(parent_ref, ctrl_id),
+					_pin: PhantomPinned,
 				},
 			),
 		);
 
-		parent.as_base().privileged_on().wm_init_dialog({
-			let self2 = new_self.clone();
-			move |_| self2.create(resize_behavior.0, resize_behavior.1)
-				.map_err(|e| e.into())
-				.map(|_| true)
+		let self2 = new_self.clone();
+		parent_ref.privileged_on().wm_init_dialog(move |_| {
+			self2.create(resize_behavior.0, resize_behavior.1);
+			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> WinResult<()> {
+	fn create(&self, horz: Horz, vert: Vert) {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
 				multiply_dpi_or_dtu(
-					self.0.base.parent_base(), Some(&mut pos), Some(&mut sz))?;
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
 
-				let our_hwnd = self.0.base.create_window(
+				self.0.base.create_window(
 					"BUTTON", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
-				)?;
+				);
 
-				our_hwnd.SendMessage(wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(
+					wm::SetFont { hfont: ui_font(), redraw: true });
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id).map(|_| ())?,
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent_base().add_to_resizer(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
 	}
 
 	/// Fires the click event for the button by sending a
@@ -183,7 +194,7 @@ pub struct ButtonOpts {
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 80.
+	/// Defaults to 88.
 	pub width: u32,
 	/// Control height, to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -192,7 +203,7 @@ pub struct ButtonOpts {
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 23.
+	/// Defaults to 26.
 	pub height: u32,
 	/// Button styles to be
 	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -233,8 +244,8 @@ impl Default for ButtonOpts {
 		Self {
 			text: "".to_owned(),
 			position: POINT::new(0, 0),
-			width: 80,
-			height: 23,
+			width: 88,
+			height: 26,
 			button_style: co::BS::PUSHBUTTON,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT,

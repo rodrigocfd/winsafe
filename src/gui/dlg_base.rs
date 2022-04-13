@@ -1,17 +1,15 @@
 use crate::co;
 use crate::gui::base::Base;
-use crate::gui::events::ProcessResult;
+use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::{post_quit_error, ui_font};
-use crate::kernel::decl::{ErrResult, HINSTANCE, IdStr, WinResult};
+use crate::kernel::decl::{ErrResult, IdStr};
 use crate::msg::{wm, WndMsg};
-use crate::prelude::{
-	Handle, KernelHinstance, MsgSendRecv, UserHinstance, UserHwnd,
-};
+use crate::prelude::{Handle, MsgSendRecv, UserHinstance, UserHwnd};
 use crate::user::decl::HWND;
 
 /// Base to all dialog windows.
 pub(in crate::gui) struct DlgBase {
-	pub(in crate::gui) base: Base,
+	base: Base,
 	dialog_id: u16,
 }
 
@@ -24,49 +22,80 @@ impl Drop for DlgBase {
 }
 
 impl DlgBase {
-	pub(in crate::gui) fn new(
-		parent_base: Option<&Base>, dialog_id: u16) -> DlgBase
-	{
+	pub(in crate::gui) fn new(parent: Option<&Base>, dialog_id: u16) -> DlgBase {
 		Self {
-			base: Base::new(true, parent_base),
+			base: Base::new(true, parent),
 			dialog_id,
 		}
 	}
 
-	pub(in crate::gui) fn create_dialog_param(&self) -> WinResult<()> {
-		if !self.base.hwnd().is_null() {
-			panic!("Cannot create dialog twice.");
-		}
-
-		// Our hwnd member is set during WM_INITDIALOG processing, already set
-		// when CreateDialogParam returns.
-		self.base.parent_base().map_or_else(
-			|| HINSTANCE::GetModuleHandle(None),
-			|parent| Ok(parent.hwnd().hinstance()),
-		)?.CreateDialogParam(
-			IdStr::Id(self.dialog_id),
-			self.base.parent_base().map(|parent| parent.hwnd()),
-			Self::dialog_proc,
-			Some(self as *const _ as _), // pass pointer to self
-		).map(|_| ())
+	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
+		// At this moment, the parent struct is already created and pinned.
+		&self.base as *const _ as _
 	}
 
-	pub(in crate::gui) fn dialog_box_param(&self) -> WinResult<i32> {
+	pub(in crate::gui) const fn hwnd(&self) -> HWND {
+		self.base.hwnd()
+	}
+
+	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
+		self.base.on()
+	}
+
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+		self.base.privileged_on()
+	}
+
+	pub(in crate::gui) fn parent(&self) -> Option<&Base> {
+		self.base.parent()
+	}
+
+	pub(in crate::gui) fn create_dialog_param(&self) {
 		if !self.base.hwnd().is_null() {
 			panic!("Cannot create dialog twice.");
 		}
 
-		// Our hwnd member is set during WM_INITDIALOG processing, already set
-		// when DialogBoxParam returns.
-		self.base.parent_base().map_or_else(
-			|| HINSTANCE::GetModuleHandle(None),
-			|parent| Ok(parent.hwnd().hinstance()),
-		)?.DialogBoxParam(
+		// Our hwnd member is set during WM_INITDIALOG processing; already set
+		// when CreateDialogParam returns.
+		self.base.parent_hinstance().CreateDialogParam(
 			IdStr::Id(self.dialog_id),
-			self.base.parent_base().map(|parent| parent.hwnd()),
+			self.base.parent().map(|parent| parent.hwnd()),
 			Self::dialog_proc,
-			Some(self as *const _ as _), // pass pointer to self
-		).map(|res| res as _)
+			// Pass pointer to Self.
+			// At this moment, the parent struct is already created and pinned.
+			Some(self as *const _ as _),
+		).unwrap();
+	}
+
+	pub(in crate::gui) fn dialog_box_param(&self) -> i32 {
+		if !self.base.hwnd().is_null() {
+			panic!("Cannot create dialog twice.");
+		}
+
+		// Our hwnd member is set during WM_INITDIALOG processing; already set
+		// when DialogBoxParam returns.
+		let ret = self.base.parent_hinstance().DialogBoxParam(
+			IdStr::Id(self.dialog_id),
+			self.base.parent().map(|parent| parent.hwnd()),
+			Self::dialog_proc,
+			// Pass pointer to Self.
+			// At this moment, the parent struct is already created and pinned.
+			Some(self as *const _ as _),
+		).unwrap();
+
+		ret as _
+	}
+
+	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+	{
+		self.base.spawn_new_thread(func);
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static
+	{
+		self.base.run_ui_thread(func);
 	}
 
 	extern "system" fn dialog_proc(
@@ -87,7 +116,7 @@ impl DlgBase {
 				let ptr_self = wm_idlg.additional_data as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
 				let ref_self = unsafe { &mut *ptr_self };
-				*ref_self.base.hwnd_mut() = hwnd; // store HWND in struct field
+				unsafe { ref_self.base.set_hwnd(hwnd); } // store HWND in struct field
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) as *mut Self, // retrieve
@@ -124,7 +153,7 @@ impl DlgBase {
 
 		if msg == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
-			*ref_self.base.hwnd_mut() = HWND::NULL; // clear stored HWND
+			unsafe { ref_self.base.set_hwnd(HWND::NULL); } // clear stored HWND
 		}
 
 		Ok(match process_result {

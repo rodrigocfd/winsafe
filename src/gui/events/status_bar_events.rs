@@ -2,6 +2,7 @@ use crate::co;
 use crate::comctl::decl::NMMOUSE;
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
+use crate::kernel::decl::ErrResult;
 
 /// Exposes status bar control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications).
@@ -20,43 +21,28 @@ impl StatusBarEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_retbool_param! { nm_click, co::NM::CLICK, NMMOUSE,
+	pub_fn_nfy_withparm_boolret! { nm_click, co::NM::CLICK, NMMOUSE,
 		/// [`NM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-click-status-bar)
 		/// notification.
-		///
-		/// Notifies that the user has clicked the left mouse button within the
-		/// control.
 	}
 
-	pub_fn_nfy_retbool_param! { nm_dbl_clk, co::NM::DBLCLK, NMMOUSE,
+	pub_fn_nfy_withparm_boolret! { nm_dbl_clk, co::NM::DBLCLK, NMMOUSE,
 		/// [`NM_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-dblclk-status-bar)
 		/// notification.
-		///
-		/// Notifies that the user has double-clicked the left mouse button
-		/// within the control.
 	}
 
-	pub_fn_nfy_retbool_param! { nm_rclick, co::NM::RCLICK, NMMOUSE,
+	pub_fn_nfy_withparm_boolret! { nm_rclick, co::NM::RCLICK, NMMOUSE,
 		/// [`NM_RCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rclick-status-bar)
 		/// notification.
-		///
-		/// Notifies that the user has clicked the right mouse button within the
-		/// control.
 	}
 
-	pub_fn_nfy_retbool_param! { nm_r_dbl_clk, co::NM::RDBLCLK, NMMOUSE,
+	pub_fn_nfy_withparm_boolret! { nm_r_dbl_clk, co::NM::RDBLCLK, NMMOUSE,
 		/// [`NM_RDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-status-bar)
 		/// notification.
-		///
-		/// Notifies that the user has double-clicked the right mouse button
-		/// within the control.
 	}
 
-	pub_fn_nfy_ret0! { sbn_simple_mode_change, co::SBN::SIMPLEMODECHANGE,
+	pub_fn_nfy_noparm_noret! { sbn_simple_mode_change, co::SBN::SIMPLEMODECHANGE,
 		/// [`SBN_SIMPLEMODECHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/sbn-simplemodechange)
 		/// notification.
-		///
-		/// Sent by a status bar control when the simple mode changes due to a
-		/// [`sb::Simple`](crate::msg::sb::Simple) message.
 	}
 }

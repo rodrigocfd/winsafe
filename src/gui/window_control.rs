@@ -3,11 +3,10 @@ use std::any::Any;
 use crate::gui::base::Base;
 use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEventsAll;
-use crate::gui::gui_traits_sealed::{GuiSealedBase, GuiSealedParent};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::raw_control::{RawControl, WindowControlOpts};
-use crate::gui::resizer::{Horz, Vert};
-use crate::kernel::decl::{ErrResult, WinResult};
-use crate::prelude::{AsAny, GuiChild, GuiParent, GuiThread, GuiWindow};
+use crate::kernel::decl::ErrResult;
+use crate::prelude::{GuiChild, GuiParent, GuiThread, GuiWindow};
 use crate::user::decl::{HWND, POINT};
 
 /// Keeps a raw or dialog window.
@@ -20,52 +19,35 @@ enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
 /// created or load a dialog resource from a `.res` file.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
-pub struct WindowControl {
-	raw_dlg: RawDlg,
-}
+pub struct WindowControl(RawDlg);
 
 unsafe impl Send for WindowControl {}
 
-impl AsAny for WindowControl {
+impl GuiWindow for WindowControl {
+	fn hwnd(&self) -> HWND {
+		match &self.0 {
+			RawDlg::Raw(r) => r.hwnd(),
+			RawDlg::Dlg(d) => d.hwnd(),
+		}
+	}
+
 	fn as_any(&self) -> &dyn Any {
 		self
 	}
 }
 
-impl GuiWindow for WindowControl {
-	fn hwnd(&self) -> HWND {
-		self.as_base().hwnd()
-	}
-}
-
-impl GuiSealedBase for WindowControl {
-	fn as_base(&self) -> &Base {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => &r.0.raw_base.base,
-			RawDlg::Dlg(d) => &d.0.dlg_base.base,
-		}
-	}
-}
-
-impl GuiSealedParent for WindowControl {
-	fn add_to_resizer(&self,
-		hchild: HWND, horz: Horz, vert: Vert) -> WinResult<()>
-	{
-		self.as_base().add_to_resizer(hchild, horz, vert)
-	}
-}
-
 impl GuiParent for WindowControl {
 	fn on(&self) -> &WindowEventsAll {
-		self.as_base().on()
+		match &self.0 {
+			RawDlg::Raw(r) => r.on(),
+			RawDlg::Dlg(d) => d.on(),
+		}
 	}
-}
 
-impl GuiChild for WindowControl {
-	fn ctrl_id(&self) -> u16 {
-		match &self.raw_dlg {
-			RawDlg::Raw(r) => r.0.opts.ctrl_id,
-			RawDlg::Dlg(d) => d.0.ctrl_id,
+	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
+		match &self.0 {
+			RawDlg::Raw(r) => r.as_base(),
+			RawDlg::Dlg(d) => d.as_base(),
 		}
 	}
 }
@@ -74,13 +56,28 @@ impl GuiThread for WindowControl {
 	fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()> + Send + 'static,
 	{
-		self.as_base().spawn_new_thread(func);
+		match &self.0 {
+			RawDlg::Raw(r) => r.spawn_new_thread(func),
+			RawDlg::Dlg(d) => d.spawn_new_thread(func),
+		}
 	}
 
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> ErrResult<()> + Send + 'static
 	{
-		self.as_base().run_ui_thread(func);
+		match &self.0 {
+			RawDlg::Raw(r) => r.run_ui_thread(func),
+			RawDlg::Dlg(d) => d.run_ui_thread(func),
+		}
+	}
+}
+
+impl GuiChild for WindowControl {
+	fn ctrl_id(&self) -> u16 {
+		match &self.0 {
+			RawDlg::Raw(r) => r.ctrl_id(),
+			RawDlg::Dlg(d) => d.ctrl_id(),
+		}
 	}
 }
 
@@ -89,14 +86,14 @@ impl WindowControl {
 	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(
-		parent: &impl GuiParent,
-		opts: WindowControlOpts) -> WindowControl
+		parent: &impl GuiParent, opts: WindowControlOpts) -> WindowControl
 	{
-		Self {
-			raw_dlg: RawDlg::Raw(
-				RawControl::new(parent.as_base(), opts),
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		Self(
+			RawDlg::Raw(
+				RawControl::new(parent_ref, opts),
 			),
-		}
+		)
 	}
 
 	/// Instantiates a new `WindowControl` object, to be loaded from a dialog
@@ -114,16 +111,17 @@ impl WindowControl {
 		resize_behavior: (Horz, Vert),
 		ctrl_id: Option<u16>) -> WindowControl
 	{
-		Self {
-			raw_dlg: RawDlg::Dlg(
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		Self(
+			RawDlg::Dlg(
 				DlgControl::new(
-					parent.as_base(),
+					parent_ref,
 					dialog_id,
 					position,
 					resize_behavior,
 					ctrl_id,
 				),
 			),
-		}
+		)
 	}
 }

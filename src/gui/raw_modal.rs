@@ -1,61 +1,93 @@
+use std::marker::PhantomPinned;
+use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::gui::base::Base;
+use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::RawBase;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::{WinResult, WString};
-use crate::prelude::{GdiHbrush, GuiEventsView, Handle, UserHwnd};
+use crate::kernel::decl::{ErrResult, WString};
+use crate::prelude::{GdiHbrush, GuiEvents, Handle, UserHwnd};
 use crate::user::decl::{
 	AdjustWindowRectEx, DispatchMessage, GetMessage, HBRUSH, HCURSOR, HICON,
 	HWND, IdMenu, MSG, POINT, PostQuitMessage, RECT, SIZE, TranslateMessage,
 	WNDCLASSEX,
 };
 
-/// A WindowModal with a raw window.
-#[derive(Clone)]
-pub(in crate::gui) struct RawModal(pub(in crate::gui) Arc<Obj>);
-
-pub(in crate::gui) struct Obj { // actual fields of RawModal
-	pub(in crate::gui) raw_base: RawBase,
+struct Obj { // actual fields of RawModal
+	raw_base: RawBase,
 	opts: WindowModalOpts,
 	hchild_prev_focus_parent: VeryUnsafeCell<HWND>,
+	_pin: PhantomPinned,
 }
+
+//------------------------------------------------------------------------------
+
+/// An ordinary modal window.
+#[derive(Clone)]
+pub(in crate::gui) struct RawModal(Pin<Arc<Obj>>);
 
 impl RawModal {
 	pub(in crate::gui) fn new(
-		parent_base: &Base,
-		opts: WindowModalOpts) -> RawModal
+		parent: &Base, opts: WindowModalOpts) -> Self
 	{
-		let wnd = Self(Arc::new(
-			Obj {
-				raw_base: RawBase::new(Some(parent_base)),
-				opts,
-				hchild_prev_focus_parent: VeryUnsafeCell::new(HWND::NULL),
-			},
-		));
-		wnd.default_message_handlers();
-		wnd
+		let new_self = Self(
+			Arc::pin(
+				Obj {
+					raw_base: RawBase::new(Some(parent)),
+					opts,
+					hchild_prev_focus_parent: VeryUnsafeCell::new(HWND::NULL),
+					_pin: PhantomPinned,
+				},
+			),
+		);
+		new_self.default_message_handlers();
+		new_self
 	}
 
-	pub(in crate::gui) fn show_modal(&self) -> WinResult<i32> {
-		let hparent = self.0.raw_base.base.parent_base().unwrap().hwnd();
+	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
+		self.0.raw_base.as_base()
+	}
+
+	pub(in crate::gui) fn hwnd(&self) -> HWND {
+		self.0.raw_base.hwnd()
+	}
+
+	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
+		self.0.raw_base.on()
+	}
+
+	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+	{
+		self.0.raw_base.spawn_new_thread(func);
+	}
+
+	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> ErrResult<()> + Send + 'static
+	{
+		self.0.raw_base.run_ui_thread(func);
+	}
+
+	pub(in crate::gui) fn show_modal(&self) -> i32 {
+		let hparent = self.0.raw_base.parent().unwrap().hwnd();
 		let opts = &self.0.opts;
 
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
-			self.0.raw_base.base.parent_base().unwrap().hwnd().hinstance(),
+			self.0.raw_base.parent_hinstance(),
 			opts.class_style, opts.class_icon, opts.class_icon,
-			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf)?;
-		let atom = self.0.raw_base.register_class(&mut wcx)?;
+			opts.class_bg_brush, opts.class_cursor, &mut wcx, &mut class_name_buf);
+		let atom = self.0.raw_base.register_class(&mut wcx);
 
 		*self.0.hchild_prev_focus_parent.as_mut() = HWND::GetFocus().unwrap_or(HWND::NULL);
 		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
 
 		let mut wnd_sz = opts.size;
-		multiply_dpi(None, Some(&mut wnd_sz))?;
+		multiply_dpi(None, Some(&mut wnd_sz));
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
 			left: 0,
@@ -63,11 +95,11 @@ impl RawModal {
 			right: wnd_sz.cx,
 			bottom: wnd_sz.cy,
 		};
-		AdjustWindowRectEx(&mut wnd_rc, opts.style, false, opts.ex_style)?;
+		AdjustWindowRectEx(&mut wnd_rc, opts.style, false, opts.ex_style).unwrap();
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
-		let rc_parent = hparent.GetWindowRect()?; // relative to screen
+		let rc_parent = hparent.GetWindowRect().unwrap(); // relative to screen
 		let wnd_pos = POINT {
 			x: rc_parent.left + (rc_parent.right - rc_parent.left) / 2 - wnd_sz.cx / 2, // center on parent
 			y: rc_parent.top + (rc_parent.bottom - rc_parent.top) / 2 - wnd_sz.cy / 2
@@ -79,20 +111,20 @@ impl RawModal {
 			IdMenu::None,
 			wnd_pos, wnd_sz,
 			opts.ex_style, opts.style,
-		)?;
+		);
 
 		self.run_modal_loop()
 	}
 
-	fn run_modal_loop(&self) -> WinResult<i32> {
+	fn run_modal_loop(&self) -> i32 {
 		loop {
 			let mut msg = MSG::default();
-			if !GetMessage(&mut msg, None, 0, 0)? {
+			if !GetMessage(&mut msg, None, 0, 0).unwrap() {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.
 				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
 				PostQuitMessage(msg.wParam as _);
-				return Ok(msg.wParam as _);
+				return msg.wParam as _;
 			}
 
 			// If a child window, will retrieve its top-level parent.
@@ -103,8 +135,8 @@ impl RawModal {
 			// Try to process keyboard actions for child controls.
 			if hwnd_top_level.IsDialogMessage(&mut msg) {
 				// Processed all keyboard actions for child controls.
-				if self.0.raw_base.base.hwnd().is_null() {
-					return Ok(0); // our modal was destroyed, terminate loop
+				if self.hwnd().is_null() {
+					return 0; // our modal was destroyed, terminate loop
 				} else {
 					continue;
 				}
@@ -113,30 +145,29 @@ impl RawModal {
 			TranslateMessage(&msg);
 			unsafe { DispatchMessage(&msg); }
 
-			if self.0.raw_base.base.hwnd().is_null() {
-				return Ok(0); // our modal was destroyed, terminate loop
+			if self.hwnd().is_null() {
+				return 0; // our modal was destroyed, terminate loop
 			}
 		}
 	}
 
 	fn default_message_handlers(&self) {
-		self.0.raw_base.base.on().wm_set_focus({
-			let self2 = self.clone();
-			move |_| self2.0.raw_base.delegate_focus_to_first_child()
+		let self2 = self.clone();
+		self.on().wm_set_focus(move |_| {
+			self2.0.raw_base.delegate_focus_to_first_child();
+			Ok(())
 		});
 
-		self.0.raw_base.base.on().wm_close({
-			let self2 = self.clone();
-			move || {
-				if let Ok(hparent) = self2.0.raw_base.base.hwnd().GetWindow(co::GW::OWNER) {
-					hparent.EnableWindow(true); // re-enable parent
-					self2.0.raw_base.base.hwnd().DestroyWindow()?; // then destroy modal
-					if !self2.0.hchild_prev_focus_parent.is_null() {
-						self2.0.hchild_prev_focus_parent.SetFocus(); // this focus could be set on WM_DESTROY as well
-					}
+		let self2 = self.clone();
+		self.on().wm_close(move || {
+			if let Ok(hparent) = self2.hwnd().GetWindow(co::GW::OWNER) {
+				hparent.EnableWindow(true); // re-enable parent
+				self2.hwnd().DestroyWindow()?; // then destroy modal
+				if !self2.0.hchild_prev_focus_parent.is_null() {
+					self2.0.hchild_prev_focus_parent.SetFocus(); // this focus could be set on WM_DESTROY as well
 				}
-				Ok(())
 			}
+			Ok(())
 		});
 	}
 }

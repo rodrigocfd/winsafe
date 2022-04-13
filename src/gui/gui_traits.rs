@@ -1,16 +1,26 @@
 use std::any::Any;
 
 use crate::gui::events::{WindowEvents, WindowEventsAll};
-use crate::gui::gui_traits_sealed::{GuiSealedBase, GuiSealedParent};
-use crate::kernel::decl::{ErrResult, WinResult};
+use crate::kernel::decl::ErrResult;
 use crate::msg::wm;
 use crate::prelude::UserHwnd;
 use crate::user::decl::{HWND, HwndFocus};
 
-/// Used to convert a reference to the
-/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait.
+/// Any window. Exposes the underlying window handle.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait AsAny {
+pub trait GuiWindow {
+	/// Returns the underlying handle for this control.
+	///
+	/// Note that the handle is initially null, receiving an actual value only
+	/// after the control is physically created, what usually happens right
+	/// before
+	/// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
+	/// or
+	/// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
+	/// events.
+	#[must_use]
+	fn hwnd(&self) -> HWND;
+
 	/// Converts a reference to the
 	/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait. This is
 	/// useful when storing a collection of polymorphic controls, because `Any`
@@ -34,31 +44,32 @@ pub trait AsAny {
 	/// let edit = ctrls[0].as_any().downcast_ref::<gui::Edit>()
 	///     .expect("This Edit downcast should never fail.");
 	///
-	/// edit.set_text("Foo")?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// edit.set_text("Foo");
 	/// ```
 	#[must_use]
 	fn as_any(&self) -> &dyn Any;
 }
 
-/// Any window. Exposes the underlying window handle.
+/// Any window which can get/set text.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiWindow: AsAny {
-	/// Returns the underlying handle for this control.
-	///
-	/// Note that the handle is initially null, receiving an actual value only
-	/// after the control is physically created, what usually happens right
-	/// before [`WM_CREATE`](crate::prelude::GuiEventsView::wm_create) or
-	/// [`WM_INITDIALOG`](crate::prelude::GuiEventsView::wm_init_dialog) events.
+pub trait GuiWindowText: GuiWindow {
+	/// Sets the text by calling
+	/// [`HWND::SetWindowText`](crate::prelude::UserHwnd::SetWindowText).
+	fn set_text(&self, text: &str) {
+		self.hwnd().SetWindowText(text).unwrap();
+	}
+
+	/// Retrieves the text by calling
+	/// [`HWND::GetWindowText`](crate::prelude::UserHwnd::GetWindowText).
 	#[must_use]
-	fn hwnd(&self) -> HWND;
+	fn text(&self) -> String {
+		self.hwnd().GetWindowText().unwrap()
+	}
 }
 
 /// Any window which can host child controls.
-///
-/// This is a sealed trait, which cannot be implemented outside `winsafe`.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiParent: Send + GuiWindow + GuiSealedBase + GuiSealedParent {
+pub trait GuiParent: GuiWindow {
 	/// Exposes the window events and control notifications.
 	///
 	/// # Panics
@@ -67,87 +78,18 @@ pub trait GuiParent: Send + GuiWindow + GuiSealedBase + GuiSealedParent {
 	/// window creation.
 	#[must_use]
 	fn on(&self) -> &WindowEventsAll;
-}
 
-/// Any child window.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiChild: GuiWindow {
-	/// Returns the control ID, which is defined at control creation.
+	/// Returns a pointer to the inner base window structure.
 	///
-	/// The control ID should be unique within a parent.
+	/// Used internally by the library.
 	#[must_use]
-	fn ctrl_id(&self) -> u16;
-}
-
-/// Any native control, which can be subclassed.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiNativeControl: GuiChild {
-	/// Exposes the subclass events. If at least one event exists, the control
-	/// will be
-	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
-	///
-	/// **Note:** Subclassing may impact performance, use with care.
-	///
-	/// # Panics
-	///
-	/// Panics if the control or the parent window are already created. Events
-	/// must be set before control and parent window creation.
-	#[must_use]
-	fn on_subclass(&self) -> &WindowEvents;
-}
-
-/// Events of a native control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiNativeControlEvents<E> {
-	/// Exposes the specific control events.
-	///
-	/// # Panics
-	///
-	/// Panics if the control is already created. Events must be set before
-	/// control creation.
-	#[must_use]
-	fn on(&self) -> &E;
-}
-
-/// Any child window which can be focused.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiFocusControl: GuiChild {
-	/// Focus the control by sending a
-	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message. This is
-	/// preferable to the [`HWND::SetFocus`](crate::prelude::UserHwnd::SetFocus)
-	/// method, because it takes care of border highlighting, like the native
-	/// [`Button`](crate::gui::Button) control needs.
-	fn focus(&self) -> WinResult<()> {
-		self.hwnd().GetParent()
-			.map(|hparent|
-				hparent.SendMessage(wm::NextDlgCtl {
-					hwnd_focus: HwndFocus::Hwnd(self.hwnd()),
-				}),
-			)
-	}
-}
-
-/// Any child window which can get/set text.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiTextControl: GuiChild {
-	/// Sets the text by calling
-	/// [`HWND::SetWindowText`](crate::prelude::UserHwnd::SetWindowText).
-	fn set_text(&self, text: &str) -> WinResult<()> {
-		self.hwnd().SetWindowText(text)
-	}
-
-	/// Retrieves the text by calling
-	/// [`HWND::GetWindowText`](crate::prelude::UserHwnd::GetWindowText).
-	#[must_use]
-	fn text(&self) -> WinResult<String> {
-		self.hwnd().GetWindowText()
-	}
+	unsafe fn as_base(&self) -> *mut std::ffi::c_void;
 }
 
 /// Allows a window to spawn new threads which can return errors, and run
 /// closures in the original UI thread.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-pub trait GuiThread: GuiWindow {
+pub trait GuiThread: GuiParent {
 	/// This method calls
 	/// [`std::thread::spawn`](https://doc.rust-lang.org/std/thread/fn.spawn.html),
 	/// but it allows the returning of an error value. This error value will be
@@ -275,4 +217,60 @@ pub trait GuiThread: GuiWindow {
 	/// ```
 	fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> ErrResult<()> + Send + 'static;
+}
+
+/// Any child window.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub trait GuiChild: GuiWindow {
+	/// Returns the control ID, which is defined at control creation.
+	///
+	/// The control ID should be unique within a parent.
+	#[must_use]
+	fn ctrl_id(&self) -> u16;
+}
+
+/// Any child window which can be focused.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub trait GuiChildFocus: GuiChild {
+	/// Focus the control by sending a
+	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message. This is
+	/// preferable to the [`HWND::SetFocus`](crate::prelude::UserHwnd::SetFocus)
+	/// method, because it takes care of border highlighting, like the native
+	/// [`Button`](crate::gui::Button) control needs.
+	fn focus(&self) {
+		let hparent = self.hwnd().GetParent().unwrap();
+		hparent.SendMessage(wm::NextDlgCtl {
+			hwnd_focus: HwndFocus::Hwnd(self.hwnd()),
+		});
+	}
+}
+
+/// Any native control, which can be subclassed.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub trait GuiNativeControl: GuiChild {
+	/// Exposes the subclass events. If at least one event exists, the control
+	/// will be
+	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
+	///
+	/// **Note:** Subclassing may impact performance, use with care.
+	///
+	/// # Panics
+	///
+	/// Panics if the control or the parent window are already created. Events
+	/// must be set before control and parent window creation.
+	#[must_use]
+	fn on_subclass(&self) -> &WindowEvents;
+}
+
+/// Events of a native control.
+#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+pub trait GuiNativeControlEvents<E> {
+	/// Exposes the specific control events.
+	///
+	/// # Panics
+	///
+	/// Panics if the control is already created. Events must be set before
+	/// control creation.
+	#[must_use]
+	fn on(&self) -> &E;
 }
