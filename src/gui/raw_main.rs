@@ -7,6 +7,7 @@ use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
+use crate::gui::runtime_error::RunResult;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{ErrResult, HINSTANCE, WString};
 use crate::prelude::{GuiEvents, Handle, KernelHinstance, UserHaccel, UserHwnd};
@@ -69,7 +70,7 @@ impl RawMain {
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> ErrResult<i32>
+		cmd_show: Option<co::SW>) -> RunResult<i32>
 	{
 		let opts = &self.0.opts;
 
@@ -102,7 +103,7 @@ impl RawMain {
 			bottom: wnd_pos.y + wnd_sz.cy,
 		};
 		AdjustWindowRectEx(&mut wnd_rc, opts.style,
-			!opts.menu.is_null(), opts.ex_style)?;
+			!opts.menu.is_null(), opts.ex_style).unwrap();
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 

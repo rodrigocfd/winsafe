@@ -243,16 +243,13 @@ impl RawBase {
 	extern "system" fn window_proc(
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
 	{
-		Self::window_proc_proc(hwnd, msg, wparam, lparam)
-			.unwrap_or_else(|err| { post_quit_error(err); 0 })
+		let wm_any = WndMsg::new(msg, wparam, lparam);
+		Self::window_proc_proc(hwnd, wm_any)
+			.unwrap_or_else(|err| { post_quit_error(wm_any, err); 0 })
 	}
 
-	fn window_proc_proc(
-		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> ErrResult<isize>
-	{
-		let wm_any = WndMsg { msg_id: msg, wparam, lparam };
-
-		let ptr_self = match msg {
+	fn window_proc_proc(hwnd: HWND, wm_any: WndMsg) -> ErrResult<isize> {
+		let ptr_self = match wm_any.msg_id {
 			co::WM::NCCREATE => { // first message being handled
 				let wm_ncc = wm::NcCreate::from_generic_wm(wm_any);
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
@@ -277,7 +274,7 @@ impl RawBase {
 		// Execute user closure, if any.
 		let process_result = ref_self.base.process_user_message(wm_any)?;
 
-		if msg == co::WM::NCDESTROY { // always check
+		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 			unsafe { ref_self.base.set_hwnd(HWND::NULL); } // clear stored HWND
 		}

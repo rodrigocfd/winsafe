@@ -85,10 +85,10 @@ winsafe = { version = "0.0.9", features = ["gui"] }
 #![windows_subsystem = "windows"]
 
 use winsafe::prelude::*;
-use winsafe::{gui, POINT, SIZE, WinResult};
+use winsafe::{gui, POINT, SIZE};
 
 fn main() {
-    let my = MyWindow::new();  // instantiate our main window
+    let my = MyWindow::new(); // instantiate our main window
     if let Err(e) = my.wnd.run_main(None) { // ... and run it
         eprintln!("{}", e);
     }
@@ -102,7 +102,7 @@ pub struct MyWindow {
 }
 
 impl MyWindow {
-    pub fn new() -> MyWindow {
+    pub fn new() -> Self {
         let wnd = gui::WindowMain::new( // instantiate the window manager
             gui::WindowMainOpts {
                 title: "My window title".to_owned(),

@@ -7,6 +7,7 @@ use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{RawMain, WindowMainOpts};
+use crate::gui::runtime_error::RunResult;
 use crate::kernel::decl::{ErrResult, HPROCESS, IsWindowsVistaOrGreater};
 use crate::prelude::{
 	GuiParent, GuiThread, GuiWindow, GuiWindowText, KernelHprocess,
@@ -117,9 +118,9 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> ErrResult<i32> {
-		if IsWindowsVistaOrGreater()? {
-			SetProcessDPIAware()?;
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> RunResult<i32> {
+		if IsWindowsVistaOrGreater().unwrap() {
+			SetProcessDPIAware().unwrap();
 		}
 
 		InitCommonControls();
@@ -127,7 +128,7 @@ impl WindowMain {
 		let mut b_val: BOOL = 0; // false
 		unsafe {
 			HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
-				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, &mut b_val)?;
+				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, &mut b_val).unwrap();
 		}
 
 		create_ui_font();

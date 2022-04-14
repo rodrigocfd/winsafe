@@ -6,6 +6,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEventsAll;
+use crate::gui::runtime_error::RunResult;
 use crate::kernel::decl::{ErrResult, HINSTANCE, IdStr};
 use crate::msg::wm;
 use crate::prelude::{GuiEvents, KernelHinstance, UserHinstance, UserHwnd};
@@ -69,7 +70,7 @@ impl DlgMain {
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> ErrResult<i32>
+		cmd_show: Option<co::SW>) -> RunResult<i32>
 	{
 		self.0.dlg_base.create_dialog_param();
 		let hinst = HINSTANCE::GetModuleHandle(None).unwrap();

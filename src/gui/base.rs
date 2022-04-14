@@ -4,6 +4,7 @@ use crate::co;
 use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
+use crate::gui::runtime_error::RunResult;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{ErrResult, HINSTANCE};
 use crate::msg::WndMsg;
@@ -168,14 +169,14 @@ impl Base {
 			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
 				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
 				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
-				pack().unwrap_or_else(|err| post_quit_error(err));
+				pack().unwrap_or_else(|err| post_quit_error(p, err));
 			}
 			Ok(None) // not meaningful
 		});
 	}
 
 	pub(in crate::gui) fn run_main_loop(
-		haccel: Option<HACCEL>) -> ErrResult<i32>
+		haccel: Option<HACCEL>) -> RunResult<i32>
 	{
 		let mut msg = MSG::default();
 
@@ -185,7 +186,7 @@ impl Base {
 				// wParam has the program exit code.
 				// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
 				return match unsafe { QUIT_ERROR.take() } {
-					Some(err) => Err(err),
+					Some(rt_err) => Err(rt_err),
 					None => Ok(msg.wParam as _),
 				};
 			}

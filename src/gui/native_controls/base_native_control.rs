@@ -127,16 +127,16 @@ impl BaseNativeControl {
 		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
 		subclass_id: usize, ref_data: usize) -> isize
 	{
-		Self::subclass_proc_proc(hwnd, msg, wparam, lparam, subclass_id, ref_data)
-			.unwrap_or_else(|err| { post_quit_error(err); 0 })
+		let wm_any = WndMsg::new(msg, wparam, lparam);
+		Self::subclass_proc_proc(hwnd, wm_any, subclass_id, ref_data)
+			.unwrap_or_else(|err| { post_quit_error(wm_any, err); 0 })
 	}
 
 	fn subclass_proc_proc(
-		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
+		hwnd: HWND, wm_any: WndMsg,
 		subclass_id: usize, ref_data: usize) -> ErrResult<isize>
 	{
 		let ptr_self = ref_data as *mut Self; // retrieve
-		let wm_any = WndMsg { msg_id: msg, wparam, lparam };
 		let mut process_result = ProcessResult::NotHandled;
 
 		if !ptr_self.is_null() {
@@ -146,7 +146,7 @@ impl BaseNativeControl {
 			}
 		}
 
-		if msg == co::WM::NCDESTROY { // always check
+		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
 		}
 
