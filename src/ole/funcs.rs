@@ -56,7 +56,9 @@ pub fn CoCreateInstance<T>(
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
-/// function. Returns some error codes as success status.
+/// function, which
+/// [initializes](https://docs.microsoft.com/en-us/windows/win32/learnwin32/initializing-the-com-library)
+/// the COM library. Returns some error codes as success status.
 ///
 /// **Note:** Must be paired with a [`CoUninitialize`](crate::CoUninitialize)
 /// call.
@@ -67,7 +69,9 @@ pub fn CoCreateInstance<T>(
 /// use winsafe::prelude::*;
 /// use winsafe::{co, CoInitializeEx, CoUninitialize};
 ///
-/// CoInitializeEx(co::COINIT::MULTITHREADED)?;
+/// CoInitializeEx(
+///     co::COINIT::APARTMENTTHREADED
+///     | co::COINIT::DISABLE_OLE1DDE)?;
 ///
 /// // program runs...
 ///

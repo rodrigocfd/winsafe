@@ -3,6 +3,8 @@ const_ordinary! { CLSCTX: u32: "ole";
 	/// enumeration (`u32`).
 	=>
 	=>
+	/// Same process.
+	///
 	/// The code that creates and manages objects of this class is a DLL that
 	/// runs in the same process as the caller of the function specifying the
 	/// class context.
@@ -12,9 +14,13 @@ const_ordinary! { CLSCTX: u32: "ole";
 	/// structures of this class when instances of the class are accessed
 	/// remotely.
 	INPROC_HANDLER 0x2
+	/// Different process, same computer.
+	///
 	/// The EXE code that creates and manages objects of this class runs on same
 	/// machine but is loaded in a separate process space.
 	LOCAL_SERVER 0x4
+	/// Different computer.
+	///
 	/// A remote context. The `LocalServer32` or `LocalService` code that creates
 	/// and manages objects of this class is run on a different computer.
 	REMOTE_SERVER 0x10
@@ -59,10 +65,17 @@ const_bitflag! { COINIT: u32: "ole";
 	=>
 	=>
 	/// Initializes the thread for apartment-threaded object concurrency.
+	///
+	/// Use this when in a thread that creates a window.
 	APARTMENTTHREADED 0x2
 	/// Initializes the thread for multithreaded object concurrency.
+	///
+	/// Use this when in a thread that doesn't create a window.
 	MULTITHREADED 0x0
 	/// Disables DDE for OLE1 support.
+	///
+	/// It's a good idea to add this flag, since it avoids some overhead
+	/// associated with OLE 1.0, an obsolete technology.
 	DISABLE_OLE1DDE 0x4
 	/// Increase memory usage in an attempt to increase performance.
 	SPEED_OVER_MEMORY 0x8
