@@ -21,6 +21,30 @@ pub struct BITMAP {
 
 impl_default!(BITMAP);
 
+/// [`BITMAPFILEHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
+#[repr(C, packed(2))]
+pub struct BITMAPFILEHEADER {
+	bfType: u16,
+	pub bfSize: u32,
+	bfReserved1: u16,
+	bfReserved2: u16,
+	pub bfOffBits: u32,
+}
+
+impl Default for BITMAPFILEHEADER {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.bfType = 0x4d42; // BM
+		obj
+	}
+}
+
+impl BITMAPFILEHEADER {
+	pub_fn_serialize!();
+}
+
 /// [`BITMAPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
@@ -28,6 +52,15 @@ impl_default!(BITMAP);
 pub struct BITMAPINFO {
 	pub bmiHeader: BITMAPINFOHEADER,
 	pub bmiColors: [RGBQUAD; 1],
+}
+
+impl Default for BITMAPINFO {
+	fn default() -> Self {
+		Self {
+			bmiHeader: BITMAPINFOHEADER::default(),
+			bmiColors: [RGBQUAD::default()],
+		}
+	}
 }
 
 /// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
@@ -49,6 +82,10 @@ pub struct BITMAPINFOHEADER {
 }
 
 impl_default_with_size!(BITMAPINFOHEADER, biSize);
+
+impl BITMAPINFOHEADER {
+	pub_fn_serialize!();
+}
 
 /// [`LOGBRUSH`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)
 /// struct.

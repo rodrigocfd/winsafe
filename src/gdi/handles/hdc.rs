@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{co, gdi};
-use crate::gdi::decl::{HFONT, HPEN, TEXTMETRIC};
+use crate::gdi::decl::{BITMAPINFO, HFONT, HPEN, TEXTMETRIC};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
@@ -124,7 +124,6 @@ pub trait GdiHdc: Handle {
 		bool_to_winresult(unsafe { gdi::ffi::EndPath(self.as_ptr()) })
 	}
 
-
 	/// [`FillPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillpath)
 	/// method.
 	fn FillPath(self) -> WinResult<()> {
@@ -169,6 +168,89 @@ pub trait GdiHdc: Handle {
 		match unsafe { gdi::ffi::GetDCPenColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
 			color => Ok(COLORREF(color)),
+		}
+	}
+
+	/// [`GetDIBits`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdibits)
+	/// method.
+	///
+	/// **Note:** If `bmpDataBuf` is smaller than needed, you'll have a buffer
+	/// overflow.
+	///
+	/// # Examples
+	///
+	/// Taking a screenshot and saving to file:
+	///
+	/// ```rust,no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let cx_screen = w::GetSystemMetrics(co::SM::CXSCREEN);
+	/// let cy_screen = w::GetSystemMetrics(co::SM::CYSCREEN);
+	///
+	/// let hdc_screen = w::HWND::DESKTOP.GetDC()?;
+	/// let hbmp = hdc_screen.CreateCompatibleBitmap(cx_screen, cy_screen)?;
+	/// let hdc_mem = hdc_screen.CreateCompatibleDC()?;
+	/// let hbmp_old = hdc_mem.SelectObjectBitmap(hbmp)?;
+	///
+	/// hdc_mem.BitBlt(w::POINT::new(0, 0), w::SIZE::new(cx_screen, cy_screen),
+	///     hdc_screen, w::POINT::new(0, 0), co::ROP::SRCCOPY)?;
+	///
+	/// let mut bmp_obj = w::BITMAP::default();
+	/// hbmp.GetObject(&mut bmp_obj)?;
+	///
+	/// let mut bi = w::BITMAPINFO::default();
+	/// bi.bmiHeader.biWidth = cx_screen;
+	/// bi.bmiHeader.biHeight = cy_screen;
+	/// bi.bmiHeader.biPlanes = 1;
+	/// bi.bmiHeader.biBitCount = 32;
+	/// bi.bmiHeader.biCompression = co::BI::RGB;
+	///
+	/// let bmp_size = (bmp_obj.bmWidth * (bi.bmiHeader.biBitCount as i32) + 31)
+	///     / 32 * 4 * bmp_obj.bmHeight;
+	/// let mut data_buf = vec![0u8; bmp_size as _];
+	///
+	/// unsafe {
+	///     hdc_screen.GetDIBits(hbmp, 0, cy_screen as _,
+	///         Some(&mut data_buf), &mut bi, co::DIB::RGB_COLORS)?;
+	/// }
+	///
+	/// let mut bfh = w::BITMAPFILEHEADER::default();
+	/// bfh.bfOffBits = (std::mem::size_of::<w::BITMAPFILEHEADER>()
+	///     + std::mem::size_of::<w::BITMAPINFOHEADER>()) as _;
+	/// bfh.bfSize = bfh.bfOffBits + (bmp_size as u32);
+	///
+	/// let fo = w::File::open("C:\\Users\\Rodrigo\\Desktop\\foo.bmp",
+	///     w::FileAccess::OpenOrCreateReadWrite)?;
+	/// fo.write(bfh.serialize())?;
+	/// fo.write(bi.bmiHeader.serialize())?;
+	/// fo.write(&data_buf)?;
+	///
+	/// hdc_mem.SelectObjectBitmap(hbmp_old)?;
+	/// hdc_mem.DeleteDC()?;
+	/// hbmp.DeleteObject()?;
+	/// w::HWND::DESKTOP.ReleaseDC(hdc_screen)?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	unsafe fn GetDIBits(self,
+		hbm: HBITMAP, firstScanLine: u32, numScanLines: u32,
+		bmpDataBuf: Option<&mut [u8]>, bmi: &mut BITMAPINFO,
+		usage: co::DIB) -> WinResult<i32>
+	{
+		let ret = gdi::ffi::GetDIBits(
+			self.as_ptr(),
+			hbm.as_ptr(),
+			firstScanLine, numScanLines,
+			bmpDataBuf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr() as _),
+			bmi as *const _ as _,
+			usage.0,
+		);
+
+		if co::ERROR(ret as _) == co::ERROR::INVALID_PARAMETER {
+			Err(co::ERROR::INVALID_PARAMETER)
+		} else if ret == 0 {
+			Err(GetLastError())
+		} else {
+			Ok(ret)
 		}
 	}
 

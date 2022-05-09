@@ -30,6 +30,7 @@ extern_sys! { "gdi32";
 	GetDCBrushColor(HANDLE) -> u32
 	GetDCPenColor(HANDLE) -> u32
 	GetDeviceCaps(HANDLE, i32) -> i32
+	GetDIBits(HANDLE, HANDLE, u32, u32, PVOID, PVOID, u32) -> i32
 	GetObjectW(HANDLE, i32, PVOID) -> i32
 	GetStockObject(i32) -> HANDLE
 	GetStretchBltMode(HANDLE) -> i32

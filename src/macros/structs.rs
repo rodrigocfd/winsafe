@@ -25,6 +25,21 @@ macro_rules! impl_default_with_size {
 	};
 }
 
+/// Implements a serialization method.
+macro_rules! pub_fn_serialize {
+	() => {
+		/// Serializes the struct into `&[u8]`.
+		pub fn serialize<'seri>(&'seri self) -> &'seri [u8] {
+			unsafe {
+				std::slice::from_raw_parts(
+					self as *const _ as _,
+					std::mem::size_of::<Self>(),
+				)
+			}
+		}
+	};
+}
+
 /// Implements getter and setter methods for the given `BOOL` member.
 macro_rules! pub_fn_bool_get_set {
 	($field:ident, $setter:ident) => {

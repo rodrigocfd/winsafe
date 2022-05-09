@@ -28,6 +28,10 @@ pub trait UserHwnd: Handle {
 	/// [`HWND::SendMessage`](crate::prelude::UserHwnd::SendMessage).
 	const BROADCAST: HWND = HWND(0xffff as _);
 
+	/// Represents the desktop window in
+	/// [`HWND::GetDC`](crate::prelude::UserHwnd::GetDC).
+	const DESKTOP: HWND = HWND(std::ptr::null_mut());
+
 	/// [`GetWindowLongPtr`](crate::prelude::UserHwnd::GetWindowLongPtr) wrapper
 	/// to retrieve the window [`HINSTANCE`](crate::HINSTANCE).
 	#[must_use]
@@ -363,6 +367,9 @@ pub trait UserHwnd: Handle {
 
 	/// [`GetDC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
+	///
+	/// To get the device context of the desktop window, use the predefined
+	/// [`HWND::DESKTOP`](crate::prelude::UserHwnd::DESKTOP).
 	///
 	/// **Note:** Must be paired with an
 	/// [`HWND::ReleaseDC`](crate::prelude::UserHwnd::ReleaseDC) call.
