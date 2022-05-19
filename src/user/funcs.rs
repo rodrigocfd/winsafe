@@ -90,11 +90,11 @@ pub fn ChangeDisplaySettingsEx(
 {
 	let ret = unsafe {
 		user::ffi::ChangeDisplaySettingsExW(
-			device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+			WString::from_opt_str(device_name).as_ptr(),
 			dev_mode as *mut _ as _,
 			std::ptr::null_mut(),
 			flags.0,
-			std::ptr::null_mut()
+			std::ptr::null_mut(),
 		)
 	};
 
