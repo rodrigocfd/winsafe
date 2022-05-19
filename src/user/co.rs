@@ -247,7 +247,9 @@ const_bitflag! { CDS: u32: "user";
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `flags` (`u32`).
 	=>
 	=>
+	DISABLE_UNSAFE_MODES 0x0000_0200
 	DYNAMICALLY 0
+	ENABLE_UNSAFE_MODES 0x0000_0100
 	FULLSCREEN 0x0000_0004
 	GLOBAL 0x0000_0008
 	NORESET 0x1000_0000
@@ -255,6 +257,7 @@ const_bitflag! { CDS: u32: "user";
 	SET_PRIMARY 0x0000_0010
 	TEST 0x0000_0002
 	UPDATEREGISTRY 0x0000_0001
+	VIDEOPARAMETERS 0x0000_0020
 }
 
 const_ordinary! { CF: u32: "user";
