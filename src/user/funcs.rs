@@ -174,6 +174,25 @@ pub fn EnumDisplayDevices(
 	}
 }
 
+/// [`EnumDisplaySettings`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsw)
+/// function
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+pub fn EnumDisplaySettings(
+	device_name: Option<&str>,
+	mode_num: co::ENUM_SETTINGS,
+	dev_mode: &mut DEVMODE) -> WinResult<()>
+{
+	bool_to_winresult(
+		unsafe {
+			user::ffi::EnumDisplaySettingsW(
+				device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				mode_num.0,
+				dev_mode as *mut _ as _,
+			)
+		},
+	)
+}
+
 /// [`EnumDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw)
 /// function
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
