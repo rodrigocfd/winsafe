@@ -12,6 +12,7 @@ extern_sys! { "user32";
 	BringWindowToTop(HANDLE) -> BOOL
 	CallNextHookEx(HANDLE, i32, usize, isize) -> isize
 	ChangeDisplaySettingsW(PVOID, u32) -> i32
+	ChangeDisplaySettingsExW(PCSTR, PVOID, PVOID, u32, PVOID) -> i32
 	CheckMenuItem(HANDLE, u32, u32) -> i32
 	CheckMenuRadioItem(HANDLE, u32, u32, u32, u32) -> BOOL
 	ChildWindowFromPoint(HANDLE, i32, i32) -> HANDLE
