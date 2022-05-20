@@ -11,8 +11,8 @@ extern_sys! { "user32";
 	BeginPaint(HANDLE, PVOID) -> HANDLE
 	BringWindowToTop(HANDLE) -> BOOL
 	CallNextHookEx(HANDLE, i32, usize, isize) -> isize
-	ChangeDisplaySettingsW(PVOID, u32) -> i32
 	ChangeDisplaySettingsExW(PCSTR, PVOID, PVOID, u32, PVOID) -> i32
+	ChangeDisplaySettingsW(PVOID, u32) -> i32
 	CheckMenuItem(HANDLE, u32, u32) -> i32
 	CheckMenuRadioItem(HANDLE, u32, u32, u32, u32) -> BOOL
 	ChildWindowFromPoint(HANDLE, i32, i32) -> HANDLE
@@ -47,8 +47,8 @@ extern_sys! { "user32";
 	EnumChildWindows(HANDLE, PFUNC, isize) -> BOOL
 	EnumDisplayDevicesW(PCSTR, u32, PVOID, u32) -> BOOL
 	EnumDisplayMonitors(HANDLE, PCVOID, PFUNC, isize) -> BOOL
-	EnumDisplaySettingsW(PCSTR, u32, PVOID) -> BOOL
 	EnumDisplaySettingsExW(PCSTR, u32, PVOID, u32) -> BOOL
+	EnumDisplaySettingsW(PCSTR, u32, PVOID) -> BOOL
 	EnumWindows(PFUNC, isize) -> BOOL
 	FindWindowExW(HANDLE, HANDLE, PCSTR, PCSTR) -> HANDLE
 	FindWindowW(PCSTR, PCSTR) -> HANDLE

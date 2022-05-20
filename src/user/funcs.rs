@@ -210,7 +210,7 @@ pub fn EnumDisplaySettings(
 	bool_to_winresult(
 		unsafe {
 			user::ffi::EnumDisplaySettingsW(
-				device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				WString::from_opt_str(device_name).as_ptr(),
 				mode_num.0,
 				dev_mode as *mut _ as _,
 			)
@@ -230,7 +230,7 @@ pub fn EnumDisplaySettingsEx(
 	bool_to_winresult(
 		unsafe {
 			user::ffi::EnumDisplaySettingsExW(
-				device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				WString::from_opt_str(device_name).as_ptr(),
 				mode_num.0,
 				dev_mode as *mut _ as _,
 				flags.0
