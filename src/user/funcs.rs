@@ -66,11 +66,14 @@ pub fn AttachThreadInput(
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn ChangeDisplaySettings(
-	dev_mode: &mut DEVMODE,
+	dev_mode: Option<&mut DEVMODE>,
 	flags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
 {
 	let ret = unsafe {
-		user::ffi::ChangeDisplaySettingsW(dev_mode as *mut _ as _, flags.0)
+		user::ffi::ChangeDisplaySettingsW(
+			dev_mode.map_or(std::ptr::null_mut(), |dm| dm as *mut _ as _),
+			flags.0
+		)
 	};
 
 	if ret < 0 {
@@ -85,13 +88,13 @@ pub fn ChangeDisplaySettings(
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn ChangeDisplaySettingsEx(
 	device_name: Option<&str>,
-	dev_mode: &mut DEVMODE,
+	dev_mode: Option<&mut DEVMODE>,
 	flags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
 {
 	let ret = unsafe {
 		user::ffi::ChangeDisplaySettingsExW(
 			WString::from_opt_str(device_name).as_ptr(),
-			dev_mode as *mut _ as _,
+			dev_mode.map_or(std::ptr::null_mut(), |dm| dm as *mut _ as _),
 			std::ptr::null_mut(),
 			flags.0,
 			std::ptr::null_mut(),
