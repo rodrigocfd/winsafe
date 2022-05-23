@@ -446,6 +446,8 @@ impl_default_with_size!(DISPLAY_DEVICE, cb);
 impl DISPLAY_DEVICE {
 	pub_fn_string_arr_get_set!(DeviceName, set_DeviceName);
 	pub_fn_string_arr_get_set!(DeviceString, set_DeviceString);
+	pub_fn_string_arr_get_set!(DeviceID, set_DeviceID);
+	pub_fn_string_arr_get_set!(DeviceKey, set_DeviceKey);
 }
 
 /// [`DRAWITEMSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawitemstruct)

@@ -64,13 +64,11 @@ impl LANGID {
 	/// [`LANGID`](crate::LANGID) composed of
 	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
 	/// [`SUBLANG::SYS_DEFAULT`](crate::co::SUBLANG::SYS_DEFAULT).
-	#[must_use]
 	pub const SYSTEM_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::SYS_DEFAULT);
 
 	/// [`LANGID`](crate::LANGID) composed of
 	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
 	/// [`SUBLANG::DEFAULT`](crate::co::SUBLANG::DEFAULT).
-	#[must_use]
 	pub const USER_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::DEFAULT);
 
 	/// Creates a new `LANGID`. Originally
@@ -109,13 +107,11 @@ impl LCID {
 	/// [`LCID`](crate::LCID) composed of
 	/// [`LANGID::SYSTEM_DEFAULT`](crate::LANGID::SYSTEM_DEFAULT) and
 	/// [`SORT::DEFAULT`](crate::co::SORT::DEFAULT).
-	#[must_use]
 	pub const SYSTEM_DEFAULT: Self = Self::new(LANGID::SYSTEM_DEFAULT, co::SORT::DEFAULT);
 
 	/// [`LCID`](crate::LCID) composed of
 	/// [`LANGID::USER_DEFAULT`](crate::LANGID::USER_DEFAULT) and
 	/// [`SORT::DEFAULT`](crate::co::SORT::DEFAULT).
-	#[must_use]
 	pub const USER_DEFAULT: Self = Self::new(LANGID::USER_DEFAULT, co::SORT::DEFAULT);
 
 	/// Creates a new `LCID`. Originally
