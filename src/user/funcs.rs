@@ -152,7 +152,7 @@ pub fn EndMenu() -> WinResult<()> {
 	bool_to_winresult(unsafe { user::ffi::EndMenu() })
 }
 
-/// [`EnumDisplayDevicesW`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw)
+/// [`EnumDisplayDevices`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw)
 /// function.
 ///
 /// # Examples
@@ -188,17 +188,17 @@ pub fn EnumDisplayDevices(
 {
 	match unsafe {
 		user::ffi::EnumDisplayDevicesW(
-			device_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+			WString::from_opt_str(device_name).as_ptr(),
 			device_num,
 			display_device as *mut _ as _,
-			flags.0
+			flags.0,
 		)
 	} {
 		0 => match GetLastError() {
-			co::ERROR::SUCCESS => Ok(false), // actual false
+			co::ERROR::PROC_NOT_FOUND => Ok(false), // actual false
 			err => Err(err),
 		},
-		ret => Ok(ret != 0),
+		_ => Ok(true),
 	}
 }
 
