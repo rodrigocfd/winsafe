@@ -45,7 +45,7 @@ macro_rules! pub_fn_bool_get_set {
 	($field:ident, $setter:ident) => {
 		/// Returns the bool field.
 		#[must_use]
-		pub fn $field(&self) -> bool {
+		pub const fn $field(&self) -> bool {
 			self.$field != 0
 		}
 

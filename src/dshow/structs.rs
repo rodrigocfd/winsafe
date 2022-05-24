@@ -86,7 +86,7 @@ impl std::fmt::Display for MFVideoNormalizedRect {
 impl MFVideoNormalizedRect {
 	/// Creates a new `MFVideoNormalizedRect`.
 	#[must_use]
-	pub fn new(
+	pub const fn new(
 		left: f32, top: f32, right: f32, bottom: f32) -> MFVideoNormalizedRect
 	{
 		Self { left, top, right, bottom }

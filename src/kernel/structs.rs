@@ -299,7 +299,7 @@ impl<'a, 'b> STARTUPINFO<'a, 'b> {
 
 	/// Returns the `wShowWindow` field.
 	#[must_use]
-	pub fn wShowWindow(&self) -> co::SW {
+	pub const fn wShowWindow(&self) -> co::SW {
 		co::SW(self.wShowWindow as _)
 	}
 
@@ -390,7 +390,7 @@ impl WIN32_FIND_DATA {
 
 	/// Returns the nFileSizeHigh and nFileSizeLow fields.
 	#[must_use]
-	pub fn nFileSize(&self) -> u64 {
+	pub const fn nFileSize(&self) -> u64 {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
 	}
 }

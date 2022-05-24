@@ -372,7 +372,6 @@ pub struct LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 }
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> Default for LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
-	#[must_use]
 	fn default() -> Self {
 		Self {
 			pfnGroupCompare: None,
@@ -701,7 +700,7 @@ impl_default!(NMHDR);
 impl NMHDR {
 	/// `Returns the `idFrom` field, the ID of the control sending the message.
 	#[must_use]
-	pub fn idFrom(&self) -> u16 {
+	pub const fn idFrom(&self) -> u16 {
 		self.idFrom as _
 	}
 

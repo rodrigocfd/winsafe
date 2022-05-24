@@ -306,7 +306,7 @@ impl DEVMODE {
 
 	/// Returns the `dmOrientation` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmOrientation(&self) -> co::DMORIENT {
+	pub const fn dmOrientation(&self) -> co::DMORIENT {
 		unsafe { self.union0.printer.dmOrientation }
 	}
 
@@ -317,7 +317,7 @@ impl DEVMODE {
 
 	/// Returns the `dmPaperSize` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmPaperSize(&self) -> co::DMPAPER {
+	pub const fn dmPaperSize(&self) -> co::DMPAPER {
 		unsafe { self.union0.printer.dmPaperSize }
 	}
 
@@ -328,7 +328,7 @@ impl DEVMODE {
 
 	/// Returns the `dmPaperLength` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmPaperLength(&self) -> i16 {
+	pub const fn dmPaperLength(&self) -> i16 {
 		unsafe { self.union0.printer.dmPaperLength }
 	}
 
@@ -339,7 +339,7 @@ impl DEVMODE {
 
 	/// Returns the `dmPaperWidth` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmPaperWidth(&self) -> i16 {
+	pub const fn dmPaperWidth(&self) -> i16 {
 		unsafe { self.union0.printer.dmPaperWidth }
 	}
 
@@ -350,7 +350,7 @@ impl DEVMODE {
 
 	/// Returns the `dmScale` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmScale(&self) -> i16 {
+	pub const fn dmScale(&self) -> i16 {
 		unsafe { self.union0.printer.dmScale }
 	}
 
@@ -361,7 +361,7 @@ impl DEVMODE {
 
 	/// Returns the `dmCopies` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmCopies(&self) -> i16 {
+	pub const fn dmCopies(&self) -> i16 {
 		unsafe { self.union0.printer.dmCopies }
 	}
 
@@ -372,7 +372,7 @@ impl DEVMODE {
 
 	/// Returns the `dmDefaultSource` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmDefaultSource(&self) -> co::DMBIN {
+	pub const fn dmDefaultSource(&self) -> co::DMBIN {
 		unsafe { self.union0.printer.dmDefaultSource }
 	}
 
@@ -383,7 +383,7 @@ impl DEVMODE {
 
 	/// Returns the `dmPrintQuality` printer field, which is part of an union.
 	#[must_use]
-	pub fn dmPrintQuality(&self) -> co::DMRES {
+	pub const fn dmPrintQuality(&self) -> co::DMRES {
 		unsafe { self.union0.printer.dmPrintQuality }
 	}
 
@@ -394,7 +394,7 @@ impl DEVMODE {
 
 	/// Returns the `dmPosition` display field, which is part of an union.
 	#[must_use]
-	pub fn dmPosition(&self) -> POINT {
+	pub const fn dmPosition(&self) -> POINT {
 		unsafe { self.union0.display.dmPosition }
 	}
 
@@ -406,7 +406,7 @@ impl DEVMODE {
 	/// Returns the `dmDisplayOrientation` display field, which is part of an
 	/// union.
 	#[must_use]
-	pub fn dmDisplayOrientation(&self) -> co::DMDO {
+	pub const fn dmDisplayOrientation(&self) -> co::DMDO {
 		unsafe { self.union0.display.dmDisplayOrientation }
 	}
 
@@ -418,7 +418,7 @@ impl DEVMODE {
 	/// Returns the `dmDisplayFixedOutput` display field, which is part of an
 	/// union.
 	#[must_use]
-	pub fn dmDisplayFixedOutput(&self) -> co::DMDFO {
+	pub const fn dmDisplayFixedOutput(&self) -> co::DMDFO {
 		unsafe { self.union0.display.dmDisplayFixedOutput }
 	}
 
@@ -519,7 +519,7 @@ pub struct HELPINFO {
 
 impl HELPINFO {
 	#[must_use]
-	pub fn hItemHandle(&self) -> HwndHmenu {
+	pub const fn hItemHandle(&self) -> HwndHmenu {
 		match self.iContextType {
 			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND(self.hItemHandle as _)),
 			_ => HwndHmenu::Hmenu(HMENU(self.hItemHandle as _)),
@@ -805,7 +805,7 @@ pub struct STYLESTRUCT {
 impl STYLESTRUCT {
 	/// Returns the [`WS`](crate::co::WS) of `styleOld` field.
 	#[must_use]
-	pub fn styleOld_WS(&self) -> co::WS {
+	pub const fn styleOld_WS(&self) -> co::WS {
 		co::WS(self.styleOld)
 	}
 
@@ -817,13 +817,13 @@ impl STYLESTRUCT {
 
 	/// Returns the [`WS`](crate::co::WS) of `styleNew` field.
 	#[must_use]
-	pub fn styleNew_WS(&self) -> co::WS {
+	pub const fn styleNew_WS(&self) -> co::WS {
 		co::WS(self.styleNew)
 	}
 
 	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleNew` field.
 	#[must_use]
-	pub fn styleNew_WSEX(&self) -> co::WS_EX {
+	pub const fn styleNew_WSEX(&self) -> co::WS_EX {
 		co::WS_EX(self.styleNew)
 	}
 }
@@ -908,7 +908,7 @@ impl_default!(WINDOWPOS);
 impl WINDOWPOS {
 	/// Returns the `hwndInsertAfter` field.
 	#[must_use]
-	pub fn hwndInsertAfter(&self) -> HwndPlace {
+	pub const fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
 			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),
 			_ => HwndPlace::Hwnd(HWND(self.hwndInsertAfter as _)),

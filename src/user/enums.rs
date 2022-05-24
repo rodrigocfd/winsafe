@@ -23,7 +23,7 @@ pub enum AccelMenuCtrl {
 impl AccelMenuCtrl {
 	/// Returns the notification code and the control ID pair.
 	#[must_use]
-	pub fn code_id(&self) -> (co::CMD, u16) {
+	pub const fn code_id(&self) -> (co::CMD, u16) {
 		match self {
 			AccelMenuCtrl::Accel(id) => (co::CMD::Accelerator, *id),
 			AccelMenuCtrl::Menu(id) => (co::CMD::Menu, *id),
@@ -212,7 +212,7 @@ pub enum HwndPlace {
 
 impl HwndPlace {
 	#[must_use]
-	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
+	pub const fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.0,
 			Self::Place(v) => v.0 as _,
@@ -323,7 +323,7 @@ pub enum IdMenu {
 
 impl IdMenu {
 	#[must_use]
-	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
+	pub const fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
 			Self::Menu(hMenu) => hMenu.0,
@@ -368,7 +368,7 @@ pub enum IdPos {
 impl IdPos {
 	/// Returns whether value is `Pos`.
 	#[must_use]
-	pub fn is_by_pos(self) -> bool {
+	pub const fn is_by_pos(self) -> bool {
 		match self {
 			IdPos::Id(_) => false,
 			IdPos::Pos(_) => true,
@@ -377,7 +377,7 @@ impl IdPos {
 
 	/// Returns the ID or the position as a plain `u32`.
 	#[must_use]
-	pub fn id_or_pos_u32(self) -> u32 {
+	pub const fn id_or_pos_u32(self) -> u32 {
 		match self {
 			IdPos::Id(id) => id as _,
 			IdPos::Pos(pos) => pos,
@@ -387,7 +387,7 @@ impl IdPos {
 	/// Returns [`MF::BYCOMMAND`](crate::co::MF::BYCOMMAND) if value is `Id`, or
 	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION) if value is `Pos`.
 	#[must_use]
-	pub fn mf_flag(self) -> co::MF {
+	pub const fn mf_flag(self) -> co::MF {
 		match self {
 			IdPos::Id(_) => co::MF::BYCOMMAND,
 			IdPos::Pos(_) => co::MF::BYPOSITION,

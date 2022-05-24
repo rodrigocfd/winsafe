@@ -36,7 +36,7 @@ impl Default for VS_FIXEDFILEINFO {
 impl VS_FIXEDFILEINFO {
 	/// Returns the `dwFileVersionMS` and `dwFileVersionLS` fields.
 	#[must_use]
-	pub fn dwFileVersion(&self) -> [u16; 4] {
+	pub const fn dwFileVersion(&self) -> [u16; 4] {
 		[HIWORD(self.dwFileVersionMS), LOWORD(self.dwFileVersionMS),
 			HIWORD(self.dwFileVersionLS), LOWORD(self.dwFileVersionLS)]
 	}
@@ -49,7 +49,7 @@ impl VS_FIXEDFILEINFO {
 
 	/// Returns the `dwProductVersionMS` and `dwProductVersionLS` fields.
 	#[must_use]
-	pub fn dwProductVersion(&self) -> [u16; 4] {
+	pub const fn dwProductVersion(&self) -> [u16; 4] {
 		[HIWORD(self.dwProductVersionMS), LOWORD(self.dwProductVersionMS),
 			HIWORD(self.dwProductVersionLS), LOWORD(self.dwProductVersionLS)]
 	}
@@ -62,7 +62,7 @@ impl VS_FIXEDFILEINFO {
 
 	/// Returns the `dwFileDateMS` and `dwFileDateLS` fields.
 	#[must_use]
-	pub fn dwFileDate(&self) -> u64 {
+	pub const fn dwFileDate(&self) -> u64 {
 		MAKEQWORD(self.dwFileDateLS, self.dwFileDateMS)
 	}
 
