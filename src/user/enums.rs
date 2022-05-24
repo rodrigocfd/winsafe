@@ -142,6 +142,28 @@ pub enum DispfNup {
 
 /// Variant parameter for:
 ///
+/// * [`EnumDisplaySettings`](crate::EnumDisplaySettings) `mode_num`.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[derive(Clone, Copy)]
+pub enum GmidxEnum {
+	/// Graphics mode index.
+	Gmidx(u32),
+	/// Predefined enumeration.
+	Enum(co::ENUM_SETTINGS),
+}
+
+impl GmidxEnum {
+	#[must_use]
+	pub const fn as_u32(&self) -> u32 {
+		match self {
+			Self::Gmidx(idx) => *idx,
+			Self::Enum(es) => es.0,
+		}
+	}
+}
+
+/// Variant parameter for:
+///
 /// * [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]

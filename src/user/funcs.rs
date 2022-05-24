@@ -6,8 +6,8 @@ use crate::kernel::decl::{GetLastError, HINSTANCE, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::MsgSend;
 use crate::user::decl::{
-	ATOM, COLORREF, DEVMODE, GUITHREADINFO, HWND, MSG, POINT, RECT, SIZE,
-	TRACKMOUSEEVENT, WNDCLASSEX,
+	ATOM, COLORREF, DEVMODE, GmidxEnum, GUITHREADINFO, HWND, MSG, POINT, RECT,
+	SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
 };
 use crate::user::privs::ASFW_ANY;
 
@@ -165,10 +165,10 @@ pub fn EndMenu() -> WinResult<()> {
 /// let mut dev_num: u32 = 0;
 ///
 /// loop {
-///     let is_finished = EnumDisplayDevices(
+///     let has_more = EnumDisplayDevices(
 ///         None, dev_num, &mut dide, co::EDD::NoValue)?;
 ///
-///     if !is_finished {
+///     if !has_more {
 ///         break;
 ///     }
 ///
@@ -203,43 +203,101 @@ pub fn EnumDisplayDevices(
 }
 
 /// [`EnumDisplaySettings`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsw)
-/// function
+/// function.
+///
+/// # Examples
+///
+/// Iterating graphics modes.
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{DEVMODE, EnumDisplaySettings, GmidxEnum};
+///
+/// let mut dm = DEVMODE::default();
+/// let mut graphics_mode_idx: u32 = 0;
+///
+/// loop {
+///     let has_more = EnumDisplaySettings(
+///         None,
+///         GmidxEnum::Gmidx(graphics_mode_idx),
+///         &mut dm,
+///     )?;
+///
+///     if !has_more {
+///         break;
+///     }
+///
+///     println!("{}: {}, {}, {}",
+///         graphics_mode_idx,
+///         dm.dmDeviceName(), dm.dmDisplayFrequency, dm.dmBitsPerPel);
+///
+///     graphics_mode_idx += 1;
+/// }
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+///
+/// Retrieving from the predefined enum.
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, DEVMODE, EnumDisplaySettings, GmidxEnum};
+///
+/// let mut dm = DEVMODE::default();
+///
+/// EnumDisplaySettings(
+///     None,
+///     GmidxEnum::Enum(co::ENUM_SETTINGS::CURRENT),
+///     &mut dm,
+/// )?;
+///
+/// println!("{}, {}, {}",
+///     dm.dmDeviceName(), dm.dmDisplayFrequency, dm.dmBitsPerPel);
+/// # Ok::<_, co::ERROR>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn EnumDisplaySettings(
 	device_name: Option<&str>,
-	mode_num: co::ENUM_SETTINGS,
-	dev_mode: &mut DEVMODE) -> WinResult<()>
+	mode_num: GmidxEnum,
+	dev_mode: &mut DEVMODE) -> WinResult<bool>
 {
-	bool_to_winresult(
-		unsafe {
-			user::ffi::EnumDisplaySettingsW(
-				WString::from_opt_str(device_name).as_ptr(),
-				mode_num.0,
-				dev_mode as *mut _ as _,
-			)
+	match unsafe {
+		user::ffi::EnumDisplaySettingsW(
+			WString::from_opt_str(device_name).as_ptr(),
+			mode_num.as_u32(),
+			dev_mode as *mut _ as _,
+		)
+	} {
+		0 => match GetLastError() {
+			co::ERROR::PROC_NOT_FOUND => Ok(false), // actual false
+			err => Err(err),
 		},
-	)
+		_ => Ok(true),
+	}
 }
 
 /// [`EnumDisplaySettingsEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsexw)
-/// function
+/// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn EnumDisplaySettingsEx(
 	device_name: Option<&str>,
-	mode_num: co::ENUM_SETTINGS,
+	mode_num: GmidxEnum,
 	dev_mode: &mut DEVMODE,
-	flags: co::EDS) -> WinResult<()>
+	flags: co::EDS) -> WinResult<bool>
 {
-	bool_to_winresult(
-		unsafe {
-			user::ffi::EnumDisplaySettingsExW(
-				WString::from_opt_str(device_name).as_ptr(),
-				mode_num.0,
-				dev_mode as *mut _ as _,
-				flags.0
-			)
+	match unsafe {
+		user::ffi::EnumDisplaySettingsExW(
+			WString::from_opt_str(device_name).as_ptr(),
+			mode_num.as_u32(),
+			dev_mode as *mut _ as _,
+			flags.0,
+		)
+	} {
+		0 => match GetLastError() {
+			co::ERROR::PROC_NOT_FOUND => Ok(false), // actual false
+			err => Err(err),
 		},
-	)
+		_ => Ok(true),
+	}
 }
 
 /// [`EnumWindows`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumwindows)
