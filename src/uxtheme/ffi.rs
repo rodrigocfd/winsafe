@@ -1,5 +1,10 @@
 use crate::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PVOID};
 
+#[cfg(target_pointer_width = "64")]
+extern_sys! { "uxtheme";
+	IsThemeDialogTextureEnabled() -> BOOL
+}
+
 extern_sys! { "uxtheme";
 	CloseThemeData(HANDLE) -> HRES
 	DrawThemeBackground(HANDLE, HANDLE, i32, i32, PCVOID, PCVOID) -> HRES
@@ -12,7 +17,6 @@ extern_sys! { "uxtheme";
 	IsCompositionActive() -> BOOL
 	IsThemeActive() -> BOOL
 	IsThemeBackgroundPartiallyTransparent(HANDLE, i32, i32) -> BOOL
-	IsThemeDialogTextureEnabled() -> BOOL
 	IsThemePartDefined(HANDLE, i32, i32) -> BOOL
 	OpenThemeData(HANDLE, PCSTR) -> HANDLE
 }

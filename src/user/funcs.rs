@@ -479,7 +479,10 @@ pub fn InSendMessage() -> bool {
 
 /// [`InSendMessageEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessageex)
 /// function.
+///
+/// **Note:** This function doesn't exist in x32.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[cfg(target_pointer_width = "64")]
 #[must_use]
 pub fn InSendMessageEx() -> co::ISMEX {
 	co::ISMEX(unsafe { user::ffi::InSendMessageEx()})

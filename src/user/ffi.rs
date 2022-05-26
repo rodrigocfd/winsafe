@@ -10,6 +10,7 @@ extern_sys! { "user32";
 extern_sys! { "user32";
 	GetWindowLongPtrW(HANDLE, i32) -> isize
 	SetWindowLongPtrW(HANDLE, i32, isize) -> isize
+	InSendMessageEx() -> u32
 }
 
 extern_sys! { "user32";
@@ -125,7 +126,6 @@ extern_sys! { "user32";
 	GetWindowThreadProcessId(HANDLE, *mut u32) -> u32
 	HiliteMenuItem(HANDLE, HANDLE, u32, u32) -> BOOL
 	InSendMessage() -> BOOL
-	InSendMessageEx() -> u32
 	InsertMenuItemW(HANDLE, u32, BOOL, PCVOID) -> BOOL
 	InvalidateRect(HANDLE, PCVOID, BOOL) -> BOOL
 	InvalidateRgn(HANDLE, HANDLE, BOOL) -> BOOL

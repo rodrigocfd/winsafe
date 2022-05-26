@@ -1360,8 +1360,11 @@ const_ordinary! { IMAGE_TYPE: u8: "user";
 	ICON 1
 }
 
+#[cfg(target_pointer_width = "64")]
 const_bitflag! { ISMEX: u32: "user";
 	/// [`InSendMessageEx`](crate::InSendMessageEx) return value (`u32`).
+	///
+	/// **Note:** This constant doesn't exist in x32.
 	=>
 	=>
 	NOSEND 0x0000_0000
