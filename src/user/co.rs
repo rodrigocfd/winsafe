@@ -1202,21 +1202,21 @@ const_ordinary! { GWLP: i32: "user";
 	/// [`HWND::GetWindowLongPtr`](crate::prelude::UserHwnd::GetWindowLongPtr)
 	/// and
 	/// [`HWND::SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr)
-	/// `index`
-	/// (`i32`).
+	/// `index` (`i32`).
 	///
-	/// Originally has prefix `GWL` also.
+	/// Originally has prefixes `GWL`, `GWLP`, `DWL` and `DWLP`.
 	=>
 	=>
-	STYLE -16
-	EXSTYLE -20
 	WNDPROC -4
 	HINSTANCE -6
 	HWNDPARENT -8
-	USERDATA -21
 	ID -12
-	DWLP_DLGPROC std::mem::size_of::<isize>() as i32
+	STYLE -16
+	EXSTYLE -20
+	USERDATA -21
+
 	DWLP_MSGRESULT 0
+	DWLP_DLGPROC Self::DWLP_MSGRESULT.0 + std::mem::size_of::<isize>() as i32
 	DWLP_USER Self::DWLP_DLGPROC.0 + std::mem::size_of::<isize>() as i32
 }
 

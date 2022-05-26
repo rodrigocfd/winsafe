@@ -165,10 +165,10 @@ pub fn EndMenu() -> WinResult<()> {
 /// let mut dev_num: u32 = 0;
 ///
 /// loop {
-///     let has_more = EnumDisplayDevices(
+///     let is_good = EnumDisplayDevices(
 ///         None, dev_num, &mut dide, co::EDD::NoValue)?;
 ///
-///     if !has_more {
+///     if !is_good {
 ///         break;
 ///     }
 ///
@@ -217,13 +217,13 @@ pub fn EnumDisplayDevices(
 /// let mut graphics_mode_idx: u32 = 0;
 ///
 /// loop {
-///     let has_more = EnumDisplaySettings(
+///     let is_good = EnumDisplaySettings(
 ///         None,
 ///         GmidxEnum::Gmidx(graphics_mode_idx),
 ///         &mut dm,
 ///     )?;
 ///
-///     if !has_more {
+///     if !is_good {
 ///         break;
 ///     }
 ///

@@ -1,5 +1,17 @@
 use crate::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
+#[cfg(target_pointer_width = "32")]
+extern_sys! { "user32";
+	GetWindowLongW(HANDLE, i32) -> isize
+	SetWindowLongW(HANDLE, i32, isize) -> isize
+}
+
+#[cfg(target_pointer_width = "64")]
+extern_sys! { "user32";
+	GetWindowLongPtrW(HANDLE, i32) -> isize
+	SetWindowLongPtrW(HANDLE, i32, isize) -> isize
+}
+
 extern_sys! { "user32";
 	AdjustWindowRectEx(PVOID, u32, BOOL, u32) -> BOOL
 	AllowSetForegroundWindow(u32) -> BOOL
@@ -104,7 +116,6 @@ extern_sys! { "user32";
 	GetWindowDC(HANDLE) -> HANDLE
 	GetWindowDisplayAffinity(HANDLE, PVOID) -> BOOL
 	GetWindowInfo(HANDLE, PVOID) -> BOOL
-	GetWindowLongPtrW(HANDLE, i32) -> isize
 	GetWindowPlacement(HANDLE, PVOID) -> BOOL
 	GetWindowRect(HANDLE, PVOID) -> BOOL
 	GetWindowRgn(HANDLE, HANDLE) -> i32
@@ -180,7 +191,6 @@ extern_sys! { "user32";
 	SetTimer(HANDLE, usize, u32, PFUNC) -> usize
 	SetUserObjectInformationW(HANDLE, i32, PVOID, u32) -> BOOL
 	SetWindowDisplayAffinity(HANDLE, u32) -> BOOL
-	SetWindowLongPtrW(HANDLE, i32, isize) -> isize
 	SetWindowPlacement(HANDLE, PCVOID) -> BOOL
 	SetWindowPos(HANDLE, HANDLE, i32, i32, i32, i32, u32) -> BOOL
 	SetWindowRgn(HANDLE, HANDLE, BOOL) -> i32

@@ -406,8 +406,9 @@ pub mod msg {
 pub mod prelude {
 	//! The WinSafe prelude.
 	//!
-	//! The purpose of this module is to alleviate imports of many common traits by
-	//! adding a glob import to the top of your module:
+	//! The purpose of this module is to alleviate imports of many common
+	//! traits. To use it, add a glob import to the top of all your modules that
+	//! use the library:
 	//!
 	//! ```rust,no_run
 	//! use winsafe::prelude::*;

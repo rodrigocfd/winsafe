@@ -626,6 +626,10 @@ pub trait UserHwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetWindowLongPtr(self, index: co::GWLP) -> isize {
+		#[cfg(target_pointer_width = "32")]
+		unsafe { user::ffi::GetWindowLongW(self.as_ptr(), index.0) }
+
+		#[cfg(target_pointer_width = "64")]
 		unsafe { user::ffi::GetWindowLongPtrW(self.as_ptr(), index.0) }
 	}
 
@@ -1251,6 +1255,10 @@ pub trait UserHwnd: Handle {
 	/// [`SetWindowLongPtr`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// method.
 	fn SetWindowLongPtr(self, index: co::GWLP, new_long: isize) -> isize {
+		#[cfg(target_pointer_width = "32")]
+		unsafe { user::ffi::SetWindowLongW(self.as_ptr(), index.0, new_long) }
+
+		#[cfg(target_pointer_width = "64")]
 		unsafe { user::ffi::SetWindowLongPtrW(self.as_ptr(), index.0, new_long) }
 	}
 
