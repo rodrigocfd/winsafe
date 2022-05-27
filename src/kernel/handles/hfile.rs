@@ -107,13 +107,12 @@ pub trait KernelHfile: Handle {
 		mapping_name: Option<&str>) -> WinResult<HFILEMAP>
 	{
 		unsafe {
-			kernel::ffi::CreateFileMappingW(
+			kernel::ffi::CreateFileMappingFromApp(
 				self.as_ptr(),
 				mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 				protect.0,
-				max_size.map_or(0, |n| HIDWORD(n)),
-				max_size.map_or(0, |n| LODWORD(n)),
-				mapping_name.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
+				max_size.unwrap_or_default(),
+				WString::from_opt_str(mapping_name).as_ptr(),
 			).as_mut()
 		}.map(|ptr| HFILEMAP(ptr))
 			.ok_or_else(|| GetLastError())

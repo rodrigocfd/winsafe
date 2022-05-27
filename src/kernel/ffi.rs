@@ -4,7 +4,7 @@ extern_sys! { "kernel32";
 	BeginUpdateResourceW(PCSTR, BOOL) -> HANDLE
 	CloseHandle(HANDLE) -> BOOL
 	CopyFileW(PCSTR, PCSTR, BOOL) -> BOOL
-	CreateFileMappingW(HANDLE, PVOID, u32, u32, u32, PCSTR) -> HANDLE
+	CreateFileMappingFromApp(HANDLE, PVOID, u32, u64, PCSTR) -> HANDLE
 	CreateFileW(PCSTR, u32, u32, PVOID, u32, u32, HANDLE) -> HANDLE
 	CreatePipe(*mut HANDLE, *mut HANDLE, PVOID, u32) -> BOOL
 	CreateProcessW(PCSTR, PSTR, PVOID, PVOID, BOOL, u32, PVOID, PCSTR, PVOID, PVOID) -> BOOL
@@ -89,7 +89,7 @@ extern_sys! { "kernel32";
 	LockFile(HANDLE, u32, u32, u32, u32) -> BOOL
 	LockResource(HANDLE) -> PVOID
 	lstrlenW(PCSTR) -> i32
-	MapViewOfFile(HANDLE, u32, u32, u32, i64) -> PVOID
+	MapViewOfFileFromApp(HANDLE, u32, u64, usize) -> PVOID
 	MoveFileW(PCSTR, PCSTR) -> BOOL
 	MulDiv(i32, i32, i32) -> i32
 	MultiByteToWideChar(u32, u32, *const u8, i32, PSTR, i32) -> i32
