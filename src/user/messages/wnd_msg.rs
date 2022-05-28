@@ -42,7 +42,7 @@ unsafe impl MsgSendRecv for WndMsg {
 impl WndMsg {
 	/// Creates a new `WndMsg` from the given message parameters.
 	#[must_use]
-	pub fn new(msg_id: co::WM, wparam: usize, lparam: isize) -> WndMsg {
+	pub const fn new(msg_id: co::WM, wparam: usize, lparam: isize) -> WndMsg {
 		Self { msg_id, wparam, lparam }
 	}
 }

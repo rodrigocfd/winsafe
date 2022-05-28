@@ -31,6 +31,9 @@ const_no_debug_display! { ERROR: u32: "kernel";
 	/// ```text
 	/// [0x001c 28] The printer is out of paper.
 	/// ```
+	///
+	/// The numbers inside the brackets are the system error code, in
+	/// hexadecimal and decimal formats for convenience.
 }
 
 impl std::error::Error for ERROR {
