@@ -14,3 +14,7 @@ extern_sys! { "shell32";
 	SHGetKnownFolderPath(PCVOID, u32, HANDLE, *mut PSTR) -> HRES
 	SHGetStockIconInfo(u32, u32, PVOID) -> HRES
 }
+
+extern_sys! { "shlwapi";
+	SHCreateMemStream(*const u8, u32) -> PVOID
+}

@@ -9,9 +9,8 @@ use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, KernelHlocal, OleIUnknown, ShellIShellItem};
 use crate::shell::decl::{
-	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
+	IBindCtx, NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
-use crate::shlwapi::decl::IBindCtx;
 
 /// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
 /// function.

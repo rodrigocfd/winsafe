@@ -44,8 +44,7 @@
 //! | `msimg` | Msimg32.dll |
 //! | `ole` | OLE and basic COM support |
 //! | `oleaut` | [OLE Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) |
-//! | `shell` | Shell32.dll, the COM-based [Windows Shell](https://docs.microsoft.com/en-us/windows/win32/shell/shell-entry) |
-//! | `shlwapi` | Shlwapi.dll, for some [Shell](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/) functions |
+//! | `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://docs.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 //! | `user` | User32.dll, the basic Windows UI support |
 //! | `uxtheme` | UxTheme.dll, extended UI theming |
 //! | `version` | Version.dll, to manipulate *.exe version info |
@@ -237,7 +236,6 @@ mod ffi_types;
 #[cfg(feature = "ole")] mod ole;
 #[cfg(feature = "oleaut")] mod oleaut;
 #[cfg(feature = "shell")] mod shell;
-#[cfg(feature = "shlwapi")] mod shlwapi;
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
@@ -255,7 +253,6 @@ mod ffi_types;
 #[cfg(feature = "ole")] pub use ole::decl::*;
 #[cfg(feature = "oleaut")] pub use oleaut::decl::*;
 #[cfg(feature = "shell")] pub use shell::decl::*;
-#[cfg(feature = "shlwapi")] pub use shlwapi::decl::*;
 #[cfg(feature = "user")] pub use user::decl::*;
 #[cfg(feature = "uxtheme")] pub use uxtheme::decl::*;
 #[cfg(feature = "version")] pub use version::decl::*;
@@ -278,7 +275,6 @@ pub mod co {
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;
 	#[cfg(feature = "ole")] pub use super::ole::co::*;
 	#[cfg(feature = "shell")] pub use super::shell::co::*;
-	#[cfg(feature = "shlwapi")] pub use super::shlwapi::co::*;
 	#[cfg(feature = "user")] pub use super::user::co::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::co::*;
 	#[cfg(feature = "version")] pub use super::version::co::*;
@@ -427,7 +423,6 @@ pub mod prelude {
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
 	#[cfg(feature = "shell")] pub use super::shell::traits::*;
-	#[cfg(feature = "shlwapi")] pub use super::shlwapi::traits::*;
 	#[cfg(feature = "user")] pub use super::user::traits::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
 }
@@ -439,5 +434,4 @@ pub mod vt {
 	#[cfg(feature = "ole")] pub use super::ole::vt::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::vt::*;
 	#[cfg(feature = "shell")] pub use super::shell::vt::*;
-	#[cfg(feature = "shlwapi")] pub use super::shlwapi::vt::*;
 }

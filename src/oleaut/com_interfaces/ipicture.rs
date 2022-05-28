@@ -5,8 +5,8 @@ use crate::ffi_types::{BOOL, HANDLE, HRES, PCVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, OleIUnknown, ShlwapiIStream};
-use crate::shlwapi::decl::IStream;
+use crate::prelude::{Handle, OleIUnknown, ShellIStream};
+use crate::shell::decl::IStream;
 use crate::user::decl::{COLORREF, HBITMAP, HDC, POINT, RECT, SIZE};
 use crate::vt::IUnknownVT;
 
@@ -73,7 +73,7 @@ pub trait OleautIPicture: OleIUnknown {
 	}
 
 	/// Calls
-	/// [`IStream::from_slice`](crate::prelude::ShlwapiIStream::from_slice) and
+	/// [`IStream::from_slice`](crate::prelude::ShellIStream::from_slice) and
 	/// [`IPicture::from_stream`](crate::prelude::OleautIPicture::from_stream)
 	/// to load a picture straight from a slice.
 	#[must_use]

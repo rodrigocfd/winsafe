@@ -54,8 +54,7 @@ The following Cargo features are available so far:
 | `msimg` | Msimg32.dll |
 | `ole` | OLE and basic COM support |
 | `oleaut` | [OLE Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) |
-| `shell` | Shell32.dll, the COM-based [Windows Shell](https://docs.microsoft.com/en-us/windows/win32/shell/shell-entry) |
-| `shlwapi` | Shlwapi.dll, for some [Shell](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/) functions |
+| `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://docs.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 | `user` | User32.dll, the basic Windows GUI support |
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |

@@ -6,7 +6,7 @@ use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{ComInterface, OleIUnknown};
-use crate::shlwapi::decl::IBindCtx;
+use crate::shell::decl::IBindCtx;
 use crate::vt::IUnknownVT;
 
 /// [`IShellItem`](crate::IShellItem) virtual table.

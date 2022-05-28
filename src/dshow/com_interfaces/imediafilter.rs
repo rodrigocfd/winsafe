@@ -3,7 +3,7 @@
 use crate::ffi_types::{HRES, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::okfalse_to_hrresult;
-use crate::prelude::ShlwapiIPersist;
+use crate::prelude::ShellIPersist;
 use crate::vt::IPersistVT;
 
 /// [`IMediaFilter`](crate::IMediaFilter) virtual table.
@@ -29,12 +29,12 @@ pub struct IMediaFilterVT {
 pub struct IMediaFilter(ComPtr);
 
 impl_iunknown!(IMediaFilter, "56a86899-0ad4-11ce-b03a-0020af0ba770");
-impl ShlwapiIPersist for IMediaFilter {}
+impl ShellIPersist for IMediaFilter {}
 impl DshowIMediaFilter for IMediaFilter {}
 
 /// [`IMediaFilter`](crate::IMediaFilter) methods methods from `dshow` feature.
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIMediaFilter: ShlwapiIPersist {
+pub trait DshowIMediaFilter: ShellIPersist {
 	/// [`IMediaFilter::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {

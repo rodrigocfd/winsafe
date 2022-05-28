@@ -7,7 +7,7 @@ use crate::prelude::OleIUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`ISequentialStream`](crate::ISequentialStream) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct ISequentialStreamVT {
 	pub IUnknownVT: IUnknownVT,
@@ -21,16 +21,16 @@ pub struct ISequentialStreamVT {
 /// Automatically calls
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct ISequentialStream(ComPtr);
 
 impl_iunknown!(ISequentialStream, "0c733a30-2a1c-11ce-ade5-00aa0044773d");
-impl ShlwapiISequentialStream for ISequentialStream {}
+impl ShellISequentialStream for ISequentialStream {}
 
-/// [`ISequentialStream`](crate::ISequentialStream) methods from `shlwapi`
+/// [`ISequentialStream`](crate::ISequentialStream) methods from `shell`
 /// feature.
-#[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
-pub trait ShlwapiISequentialStream: OleIUnknown {
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub trait ShellISequentialStream: OleIUnknown {
 	/// [`ISequentialStream::Read`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-read)
 	/// method.
 	///

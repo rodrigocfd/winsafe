@@ -179,6 +179,16 @@ const_bitflag! { KF: u32: "shell";
 	ALIAS_ONLY 0x8000_0000
 }
 
+const_bitflag! { LOCKTYPE: u32: "shell";
+	/// [`LOCKTYPE`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-locktype)
+	/// enumeration (`u32`).
+	=>
+	=>
+	WRITE 1
+	EXCLUSIVE 2
+	ONLYONCE 4
+}
+
 const_bitflag! { NIF: u32: "shell";
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `uFlags` (`u32`).
 	=>
@@ -225,6 +235,19 @@ const_bitflag! { NIS: u32: "shell";
 	=>
 	HIDDEN 0x0000_0001
 	SHAREDICON 0x0000_0002
+}
+
+const_ordinary! { PICTYPE: i16: "shell";
+	/// [`PICTYPE`](https://docs.microsoft.com/en-us/windows/win32/com/pictype-constants)
+	/// constants (`i16`).
+	=>
+	=>
+	UNINITIALIZED -1
+	NONE 0
+	BITMAP 1
+	METAFILE 2
+	ICON 3
+	ENHMETAFILE 4
 }
 
 const_ordinary! { SE_ERR: u32: "shell";
@@ -523,6 +546,18 @@ const_bitflag! { SLR: u32: "shell";
 	NO_OBJECT_ID 0x2000
 }
 
+const_bitflag! { STGC: u32: "shell";
+	/// [`STGC`](https://docs.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgc)
+	/// enumeration (`u32`).
+	=>
+	=>
+	DEFAULT 0
+	OVERWRITE 1
+	ONLYIFCURRENT 2
+	DANGEROUSLYCOMMITMERELYTODISKCACHE 4
+	CONSOLIDATE 8
+}
+
 const_ordinary! { STPFLAG: u32: "shell";
 	/// [`STPFLAG`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
 	/// enumeration (`u32`).
@@ -533,6 +568,16 @@ const_ordinary! { STPFLAG: u32: "shell";
 	USEAPPTHUMBNAILWHENACTIVE 0x2
 	USEAPPPEEKALWAYS 0x4
 	USEAPPPEEKWHENACTIVE 0x8
+}
+
+const_ordinary! { STREAM_SEEK: u32: "shell";
+	/// [`STREAM_SEEK`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-stream_seek)
+	/// enumeration (`u32`).
+	=>
+	=>
+	SET 0
+	CUR 1
+	END 2
 }
 
 const_ordinary! { TBPF: u32: "shell";

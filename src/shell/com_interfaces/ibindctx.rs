@@ -8,7 +8,7 @@ use crate::prelude::OleIUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IBindCtx`](crate::IBindCtx) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IBindCtxVT {
 	pub IUnknownVT: IUnknownVT,
@@ -30,15 +30,15 @@ pub struct IBindCtxVT {
 /// Automatically calls
 /// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "shlell")))]
 pub struct IBindCtx(ComPtr);
 
 impl_iunknown!(IBindCtx, "0000000e-0000-0000-c000-000000000046");
-impl ShlwapiIBindCtx for IBindCtx {}
+impl ShellIBindCtx for IBindCtx {}
 
-/// [`IBindCtx`](crate::IBindCtx) methods from `shlwapi` feature.
-#[cfg_attr(docsrs, doc(cfg(feature = "shlwapi")))]
-pub trait ShlwapiIBindCtx: OleIUnknown {
+/// [`IBindCtx`](crate::IBindCtx) methods from `shell` feature.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub trait ShellIBindCtx: OleIUnknown {
 	/// [`IBindCtx::ReleaseBoundObjects`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
 	/// method.
 	fn ReleaseBoundObjects(&self) -> HrResult<()> {
