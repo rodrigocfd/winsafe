@@ -98,12 +98,14 @@ impl<'a> TreeViewItem<'a> {
 	}
 
 	/// Returns the underlying handle of the item.
+	#[must_use]
 	pub const fn htreeitem(&self) -> HTREEITEM {
 		self.hitem
 	}
 
 	/// Tells if the item is expanded by sending a
 	/// [`tvm::GetItemState`](crate::msg::tvm::GetItemState) message.
+	#[must_use]
 	pub fn is_expanded(&self) -> bool {
 		self.owner.hwnd()
 			.SendMessage(tvm::GetItemState {
@@ -115,27 +117,32 @@ impl<'a> TreeViewItem<'a> {
 
 	/// Tells if the item is a root by sending a
 	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
+	#[must_use]
 	pub fn is_root(&self) -> bool {
 		self.parent().is_none()
 	}
 
 	/// Returns an iterator over the child items.
+	#[must_use]
 	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewChildItemIter::new(self.owner, Some(*self))
 	}
 
 	/// Returns an iterator over the next sibling items.
+	#[must_use]
 	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewItemIter::new(self.owner, Some(*self), co::TVGN::NEXT)
 	}
 
 	/// Returns an iterator over the previous sibling items.
+	#[must_use]
 	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewItemIter::new(self.owner, Some(*self), co::TVGN::PREVIOUS)
 	}
 
 	/// Retrieves the parent of the item by sending a
 	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
+	#[must_use]
 	pub fn parent(&self) -> Option<TreeViewItem<'a>> {
 		self.owner.hwnd()
 			.SendMessage(tvm::GetNextItem {
@@ -162,6 +169,7 @@ impl<'a> TreeViewItem<'a> {
 
 	/// Retrieves the text of the item by sending a
 	/// [`tvm::GetItem`](crate::msg::tvm::GetItem) message.
+	#[must_use]
 	pub fn text(&self) -> String {
 		let mut tvi = TVITEMEX::default();
 		tvi.hItem = self.hitem;

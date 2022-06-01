@@ -63,6 +63,7 @@ impl<'a> ListViewItem<'a> {
 
 	/// Retrieves the icon index of the item by sending an
 	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
+	#[must_use]
 	pub fn icon_index(&self) -> Option<u32> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
@@ -79,12 +80,14 @@ impl<'a> ListViewItem<'a> {
 	}
 
 	/// Returns the zero-based index of the item.
+	#[must_use]
 	pub const fn index(&self) -> u32 {
 		self.index
 	}
 
 	/// Tells if the item is the focused one by sending an
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
+	#[must_use]
 	pub fn is_focused(&self) -> bool {
 		self.owner.hwnd()
 			.SendMessage(lvm::GetItemState {
@@ -96,6 +99,7 @@ impl<'a> ListViewItem<'a> {
 
 	/// Tells if the item is selected by sending an
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
+	#[must_use]
 	pub fn is_selected(&self) -> bool {
 		self.owner.hwnd()
 			.SendMessage(lvm::GetItemState {
@@ -107,6 +111,7 @@ impl<'a> ListViewItem<'a> {
 
 	/// Tells if the item is currently visible by sending an
 	/// [`lvm::IsItemVisible`](crate::msg::lvm::IsItemVisible) message.
+	#[must_use]
 	pub fn is_visible(&self) -> bool {
 		self.owner.hwnd()
 			.SendMessage(lvm::IsItemVisible { index: self.index })
@@ -114,6 +119,7 @@ impl<'a> ListViewItem<'a> {
 
 	/// Retrieves the user-defined value by sending an
 	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
+	#[must_use]
 	pub fn lparam(&self) -> isize {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
@@ -129,6 +135,7 @@ impl<'a> ListViewItem<'a> {
 	/// [`lvm::MapIndexToId`](crate::msg::lvm::MapIndexToId) message.
 	///
 	/// If the item index has became invalid, returns `None`.
+	#[must_use]
 	pub fn map_index_to_id(&self) -> u32 {
 		self.owner.hwnd()
 			.SendMessage(lvm::MapIndexToId { index: self.index })
@@ -137,6 +144,7 @@ impl<'a> ListViewItem<'a> {
 
 	/// Retrieves the bound rectangle of item by sending an
 	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) message.
+	#[must_use]
 	pub fn rect(&self, portion: co::LVIR) -> RECT {
 		let mut rc = RECT::default();
 		self.owner.hwnd()
@@ -209,6 +217,7 @@ impl<'a> ListViewItem<'a> {
 
 	/// Retrieves the text of an item under a column by sending an
 	/// [`lvm::GetItemText`](crate::msg::lvm::GetItemText) message.
+	#[must_use]
 	pub fn text(&self, column_index: u32) -> String {
 		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
 		const BLOCK: usize = 64; // arbitrary
