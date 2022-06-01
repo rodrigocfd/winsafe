@@ -194,10 +194,11 @@ pub fn EnumDisplayDevices(
 			flags.0,
 		)
 	} {
-		0 => match GetLastError() {
-			co::ERROR::PROC_NOT_FOUND => Ok(false), // actual false
-			err => Err(err),
-		},
+		// Different tests returned different error codes for the "done" state,
+		// so so by now we don't know which code is the real "false".
+		// That's why the current implementation never fails.
+		// https://github.com/rodrigocfd/winsafe/issues/36
+		0 => Ok(false),
 		_ => Ok(true),
 	}
 }
