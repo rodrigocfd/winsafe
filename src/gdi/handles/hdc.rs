@@ -38,6 +38,42 @@ pub trait GdiHdc: Handle {
 		)
 	}
 
+	/// [`Arc`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arc)
+	/// method.
+	fn Arc(self,
+		bound: RECT, radialStart: POINT, radialEnd: POINT) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::Arc(
+					self.as_ptr(),
+					bound.left, bound.top,
+					bound.right, bound.bottom,
+					radialStart.x, radialStart.y,
+					radialEnd.x, radialEnd.y,
+				)
+			},
+		)
+	}
+
+	/// [`ArcTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arcto)
+	/// method.
+	fn ArcTo(self,
+		bound: RECT, radialStart: POINT, radialEnd: POINT) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::ArcTo(
+					self.as_ptr(),
+					bound.left, bound.top,
+					bound.right, bound.bottom,
+					radialStart.x, radialStart.y,
+					radialEnd.x, radialEnd.y,
+				)
+			},
+		)
+	}
+
 	/// [`BeginPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-beginpath)
 	/// method.
 	fn BeginPath(self) -> WinResult<()> {
@@ -87,6 +123,12 @@ pub trait GdiHdc: Handle {
 		)
 	}
 
+	/// [`CloseFigure`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-closefigure)
+	/// method.
+	fn CloseFigure(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { gdi::ffi::CloseFigure(self.as_ptr()) })
+	}
+
 	/// [`CreateCompatibleBitmap`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap)
 	/// method.
 	///
@@ -118,6 +160,20 @@ pub trait GdiHdc: Handle {
 		bool_to_winresult(unsafe { gdi::ffi::DeleteDC(self.as_ptr()) })
 	}
 
+	/// [`Ellipse`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
+	/// method.
+	fn Ellipse(self, bound: RECT) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::Ellipse(
+					self.as_ptr(),
+					bound.left, bound.top,
+					bound.right, bound.bottom,
+				)
+			},
+		)
+	}
+
 	/// [`EndPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-endpath)
 	/// method.
 	fn EndPath(self) -> WinResult<()> {
@@ -139,6 +195,39 @@ pub trait GdiHdc: Handle {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
 		}
+	}
+
+	/// [`FillRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillrgn)
+	/// method.
+	fn FillRgn(self, rgn: HRGN, brush: HBRUSH) -> WinResult<()> {
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::FillRgn(self.as_ptr(), rgn.as_ptr(), brush.as_ptr())
+			},
+		)
+	}
+
+	/// [`FlattenPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-flattenpath)
+	/// method.
+	fn FlattenPath(self) -> WinResult<()> {
+		bool_to_winresult(unsafe { gdi::ffi::FlattenPath(self.as_ptr()) })
+	}
+
+	/// [`FrameRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-framergn)
+	/// method.
+	fn FrameRgn(self,
+		rgn: HRGN, brush: HBRUSH, w: i32, h: i32) -> WinResult<()>
+	{
+		bool_to_winresult(
+			unsafe {
+				gdi::ffi::FrameRgn(
+					self.as_ptr(),
+					rgn.as_ptr(),
+					brush.as_ptr(),
+					w, h,
+				)
+			},
+		)
 	}
 
 	/// [`GetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkmode)

@@ -3,10 +3,13 @@ use crate::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 extern_sys! { "gdi32";
 	AbortPath(HANDLE) -> BOOL
 	AngleArc(HANDLE, i32, i32, u32, f32, f32) -> BOOL
+	Arc(HANDLE, i32, i32, i32, i32, i32, i32, i32, i32) -> BOOL
+	ArcTo(HANDLE, i32, i32, i32, i32, i32, i32, i32, i32) -> BOOL
 	BeginPath(HANDLE) -> BOOL
 	BitBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, u32) -> BOOL
 	CancelDC(HANDLE) -> BOOL
 	Chord(HANDLE, i32, i32, i32, i32, i32, i32, i32, i32) -> BOOL
+	CloseFigure(HANDLE) -> BOOL
 	CreateBitmap(i32, i32, u32, u32, PVOID) -> HANDLE
 	CreateBrushIndirect(PCVOID) -> HANDLE
 	CreateCompatibleBitmap(HANDLE, i32, i32) -> HANDLE
@@ -23,9 +26,13 @@ extern_sys! { "gdi32";
 	CreateSolidBrush(u32) -> HANDLE
 	DeleteDC(HANDLE) -> BOOL
 	DeleteObject(HANDLE) -> BOOL
+	Ellipse(HANDLE, i32, i32, i32, i32) -> BOOL
 	EndPath(HANDLE) -> BOOL
 	FillPath(HANDLE) -> BOOL
 	FillRect(HANDLE, PCVOID, HANDLE) -> i32
+	FillRgn(HANDLE, HANDLE, HANDLE) -> BOOL
+	FlattenPath(HANDLE) -> BOOL
+	FrameRgn(HANDLE, HANDLE, HANDLE, i32, i32) -> BOOL
 	GetBkMode(HANDLE) -> i32
 	GetDCBrushColor(HANDLE) -> u32
 	GetDCPenColor(HANDLE) -> u32
