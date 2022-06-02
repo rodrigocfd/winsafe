@@ -9,8 +9,8 @@ Windows API and GUI in safe, idiomatic Rust.
 
 WinSafe has:
 
-* high-level structs to build native Win32 GUI applications;
-* low-level Win32 API constants, functions and structs related to GUI.
+* low-level Win32 API constants, functions and structs;
+* high-level structs to build native Win32 GUI applications.
 
 If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
@@ -35,7 +35,7 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.9", features = [] }
+winsafe = { version = "0.0.10", features = [] }
 ```
 
 Then you must enable the [Cargo features](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section) you want to be included – these modules are named after native Windows DLL and library names, mostly.
@@ -77,7 +77,7 @@ The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/0
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.9", features = ["gui"] }
+winsafe = { version = "0.0.10", features = ["gui"] }
 ```
 
 ```rust

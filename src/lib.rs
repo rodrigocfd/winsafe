@@ -8,8 +8,8 @@
 //!
 //! WinSafe has:
 //!
-//! * high-level structs to build native Win32 GUI applications;
-//! * low-level Win32 API constants, functions and structs related to GUI.
+//! * low-level Win32 API constants, functions and structs;
+//! * high-level structs to build native Win32 GUI applications.
 //!
 //! If you're looking for a comprehensive Win32 coverage, take a look at
 //! [winapi](https://crates.io/crates/winapi) or
@@ -22,7 +22,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! winsafe = { version = "0.0.9", features = [] }
+//! winsafe = { version = "0.0.10", features = [] }
 //! ```
 //!
 //! Then you must enable the
