@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{co, comctl_ole};
-use crate::comctl::decl::TASKDIALOGCONFIG;
+use crate::comctl_ole::decl::TASKDIALOGCONFIG;
 use crate::ffi_types::BOOL;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
