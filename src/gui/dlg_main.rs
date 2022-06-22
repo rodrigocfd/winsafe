@@ -10,7 +10,7 @@ use crate::gui::runtime_error::RunResult;
 use crate::kernel::decl::{ErrResult, HINSTANCE, IdStr};
 use crate::msg::wm;
 use crate::prelude::{GuiEvents, KernelHinstance, UserHinstance, UserHwnd};
-use crate::user::decl::{HWND, PostQuitMessage};
+use crate::user::decl::{HWND, IdOicStr, PostQuitMessage, SIZE};
 
 struct Obj { // actual fields of DlgMain
 	dlg_base: DlgBase,
@@ -104,14 +104,16 @@ impl DlgMain {
 		if let Some(id) = self.0.icon_id {
 			self.hwnd().SendMessage(
 				wm::SetIcon {
-					hicon: hinst.LoadImageIcon(id, 16, 16, co::LR::DEFAULTCOLOR).unwrap(),
+					hicon: hinst.LoadImageIcon(
+						IdOicStr::Id(id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR).unwrap(),
 					size: co::ICON_SZ::SMALL,
 				},
 			);
 
 			self.hwnd().SendMessage(
 				wm::SetIcon {
-					hicon: hinst.LoadImageIcon(id, 32, 32, co::LR::DEFAULTCOLOR).unwrap(),
+					hicon: hinst.LoadImageIcon(
+						IdOicStr::Id(id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR).unwrap(),
 					size: co::ICON_SZ::BIG,
 				},
 			);

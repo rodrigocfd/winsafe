@@ -270,7 +270,7 @@ impl IdIdcStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Idc(idc) => MAKEINTRESOURCE(idc.0),
+			Self::Idc(idc) => MAKEINTRESOURCE(idc.0 as _),
 			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
@@ -300,7 +300,7 @@ impl IdIdiStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Idi(idi) => MAKEINTRESOURCE(idi.0),
+			Self::Idi(idi) => MAKEINTRESOURCE(idi.0 as _),
 			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
@@ -337,6 +337,96 @@ impl IdMenu {
 			IdMenu::Id(id) => *id as _,
 			IdMenu::Menu(hMenu) => hMenu.0 as _,
 			IdMenu::None => 0,
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`HINSTANCE::LoadImageBitmap`](crate::prelude::UserHinstance::LoadImageBitmap) `name`.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[derive(Clone)]
+pub enum IdObmStr {
+	/// A resource ID.
+	Id(u16),
+	/// A [`co::OBM`](crate::co::OBM) constant for an OEM bitmap.
+	Obm(co::OBM),
+	/// A resource string identifier or file path.
+	Str(WString),
+}
+
+impl IdObmStr {
+	#[must_use]
+	pub fn from_str(v: &str) -> Self {
+		Self::Str(WString::from_str(v))
+	}
+
+	#[must_use]
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
+			Self::Obm(obm) => MAKEINTRESOURCE(obm.0 as _),
+			Self::Str(ws) => unsafe { ws.as_ptr() },
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`HINSTANCE::LoadImageCursor`](crate::prelude::UserHinstance::LoadImageCursor) `name`.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[derive(Clone)]
+pub enum IdOcrStr {
+	/// A resource ID.
+	Id(u16),
+	/// A [`co::OCR`](crate::co::OCR) constant for an OEM cursor.
+	Ocr(co::OCR),
+	/// A resource string identifier or file path.
+	Str(WString),
+}
+
+impl IdOcrStr {
+	#[must_use]
+	pub fn from_str(v: &str) -> Self {
+		Self::Str(WString::from_str(v))
+	}
+
+	#[must_use]
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
+			Self::Ocr(ocr) => MAKEINTRESOURCE(ocr.0 as _),
+			Self::Str(ws) => unsafe { ws.as_ptr() },
+		}
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`HINSTANCE::LoadImageIcon`](crate::prelude::UserHinstance::LoadImageIcon) `name`.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[derive(Clone)]
+pub enum IdOicStr {
+	/// A resource ID.
+	Id(u16),
+	/// A [`co::OIC`](crate::co::OIC) constant for an OEM icon.
+	Oic(co::OIC),
+	/// A resource string identifier or file path.
+	Str(WString),
+}
+
+impl IdOicStr {
+	#[must_use]
+	pub fn from_str(v: &str) -> Self {
+		Self::Str(WString::from_str(v))
+	}
+
+	#[must_use]
+	pub fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
+			Self::Oic(oic) => MAKEINTRESOURCE(oic.0 as _),
+			Self::Str(ws) => unsafe { ws.as_ptr() },
 		}
 	}
 }

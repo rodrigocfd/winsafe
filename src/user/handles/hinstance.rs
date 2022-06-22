@@ -5,7 +5,7 @@ use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, WinResult, WString};
 use crate::prelude::Handle;
 use crate::user::decl::{
 	ATOM, DLGPROC, HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND, IdIdcStr,
-	IdIdiStr, SIZE, WNDCLASSEX,
+	IdIdiStr, IdObmStr, IdOcrStr, IdOicStr, SIZE, WNDCLASSEX,
 };
 
 impl UserHinstance for HINSTANCE {}
@@ -149,11 +149,11 @@ pub trait UserHinstance: Handle {
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	#[must_use]
 	fn LoadImageBitmap(self,
-		name: u16, sz: SIZE, load: co::LR) -> WinResult<HBITMAP>
+		name: IdObmStr, sz: SIZE, load: co::LR) -> WinResult<HBITMAP>
 	{
 		unsafe {
 			user::ffi::LoadImageW(
-				self.as_ptr(), name as _, 0, sz.cx, sz.cy, load.0,
+				self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0,
 			).as_mut()
 		}.map(|ptr| HBITMAP(ptr))
 			.ok_or_else(|| GetLastError())
@@ -163,11 +163,12 @@ pub trait UserHinstance: Handle {
 	/// method for [`HCURSOR`](crate::HCURSOR).
 	#[must_use]
 	fn LoadImageCursor(self,
-		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HCURSOR>
+		name: IdOcrStr, sz: SIZE, load: co::LR) -> WinResult<HCURSOR>
 	{
 		unsafe {
-			user::ffi::LoadImageW(self.as_ptr(), name as _, 2, cx, cy, load.0)
-				.as_mut()
+			user::ffi::LoadImageW(
+				self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.0,
+			).as_mut()
 		}.map(|ptr| HCURSOR(ptr))
 			.ok_or_else(|| GetLastError())
 	}
@@ -176,11 +177,12 @@ pub trait UserHinstance: Handle {
 	/// method for [`HICON`](crate::HICON).
 	#[must_use]
 	fn LoadImageIcon(self,
-		name: u16, cx: i32, cy: i32, load: co::LR) -> WinResult<HICON>
+		name: IdOicStr, sz: SIZE, load: co::LR) -> WinResult<HICON>
 	{
 		unsafe {
-			user::ffi::LoadImageW(self.as_ptr(), name as _, 1, cx, cy, load.0)
-				.as_mut()
+			user::ffi::LoadImageW(
+				self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.0,
+			).as_mut()
 		}.map(|ptr| HICON(ptr))
 			.ok_or_else(|| GetLastError())
 	}
