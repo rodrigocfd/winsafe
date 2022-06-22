@@ -125,6 +125,9 @@ pub trait UserHinstance: Handle {
 	/// [`LoadIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
 	/// method.
 	///
+	/// **Note:** Must be paired with an
+	/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+	///
 	/// # Examples
 	///
 	/// Loading a system icon:
@@ -147,6 +150,9 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
+	///
+	/// **Note:** Must be paired with an
+	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
 	#[must_use]
 	fn LoadImageBitmap(self,
 		name: IdObmStr, sz: SIZE, load: co::LR) -> WinResult<HBITMAP>
@@ -161,6 +167,10 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
+	///
+	/// **Note:** Must be paired with an
+	/// [`HCURSOR::DestroyCursor`](crate::prelude::UserHcursor::DestroyCursor)
+	/// call.
 	#[must_use]
 	fn LoadImageCursor(self,
 		name: IdOcrStr, sz: SIZE, load: co::LR) -> WinResult<HCURSOR>
@@ -175,6 +185,9 @@ pub trait UserHinstance: Handle {
 
 	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
+	///
+	/// **Note:** Must be paired with an
+	/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
 	#[must_use]
 	fn LoadImageIcon(self,
 		name: IdOicStr, sz: SIZE, load: co::LR) -> WinResult<HICON>
