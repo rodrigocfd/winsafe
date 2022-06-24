@@ -35,6 +35,7 @@ pub enum IdTdiconStr {
 }
 
 impl IdTdiconStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))

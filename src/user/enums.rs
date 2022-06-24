@@ -59,6 +59,7 @@ pub enum AtomStr {
 }
 
 impl AtomStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
@@ -111,6 +112,7 @@ pub enum BmpPtrStr {
 }
 
 impl BmpPtrStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
@@ -261,6 +263,7 @@ pub enum IdIdcStr {
 }
 
 impl IdIdcStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
@@ -291,6 +294,7 @@ pub enum IdIdiStr {
 }
 
 impl IdIdiStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
@@ -356,6 +360,7 @@ pub enum IdObmStr {
 }
 
 impl IdObmStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
@@ -386,6 +391,7 @@ pub enum IdOcrStr {
 }
 
 impl IdOcrStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
@@ -416,6 +422,7 @@ pub enum IdOicStr {
 }
 
 impl IdOicStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))

@@ -13,6 +13,7 @@ pub enum IdStr {
 }
 
 impl IdStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))
@@ -47,6 +48,7 @@ pub enum RtStr {
 }
 
 impl RtStr {
+	/// Constructs the enum directly from a string.
 	#[must_use]
 	pub fn from_str(v: &str) -> Self {
 		Self::Str(WString::from_str(v))

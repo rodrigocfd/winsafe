@@ -341,8 +341,17 @@ extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 /// [`GetAsyncKeyState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
 pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 	unsafe { user::ffi::GetAsyncKeyState(virt_key.0 as _) != 0 }
+}
+
+/// [`GetClipboardSequenceNumber`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardsequencenumber)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+#[must_use]
+pub fn GetClipboardSequenceNumber() -> u32 {
+	unsafe { user::ffi::GetClipboardSequenceNumber() }
 }
 
 /// [`GetClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)

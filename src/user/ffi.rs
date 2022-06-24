@@ -74,6 +74,7 @@ extern_sys! { "user32";
 	GetClassLongPtrW(HANDLE, i32) -> usize
 	GetClassNameW(HANDLE, PSTR, i32) -> i32
 	GetClientRect(HANDLE, PVOID) -> BOOL
+	GetClipboardSequenceNumber() -> u32
 	GetClipCursor(PVOID) -> BOOL
 	GetCursorPos(PVOID) -> BOOL
 	GetDC(HANDLE) -> HANDLE
