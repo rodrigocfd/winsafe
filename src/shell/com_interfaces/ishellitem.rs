@@ -14,7 +14,7 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(ComPtr, ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRES,
+	pub BindToHandler: fn(ComPtr, PVOID, PCVOID, PCVOID, *mut ComPtr) -> HRES,
 	pub GetParent: fn(ComPtr, *mut ComPtr) -> HRES,
 	pub GetDisplayName: fn(ComPtr, u32, *mut PSTR) -> HRES,
 	pub GetAttributes: fn(ComPtr, u32, *mut u32) -> HRES,
@@ -57,7 +57,7 @@ pub trait ShellIShellItem: OleIUnknown {
 	/// method.
 	#[must_use]
 	fn BindToHandler<T>(&self,
-		bind_ctx: &IBindCtx, bhid: &co::BHID) -> HrResult<T>
+		bind_ctx: Option<&IBindCtx>, bhid: &co::BHID) -> HrResult<T>
 		where T: ComInterface,
 	{
 		let mut ppv_queried = ComPtr::null();
@@ -66,7 +66,7 @@ pub trait ShellIShellItem: OleIUnknown {
 			ok_to_hrresult(
 				(vt.BindToHandler)(
 					self.ptr(),
-					bind_ctx.ptr(),
+					bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
 					bhid as *const _ as _,
 					&T::IID as *const _ as _,
 					&mut ppv_queried,
