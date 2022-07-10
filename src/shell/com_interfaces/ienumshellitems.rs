@@ -1,5 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::marker::PhantomData;
+use std::mem::ManuallyDrop;
+
 use crate::co;
 use crate::ffi_types::HRES;
 use crate::ole::decl::{ComPtr, HrResult};
@@ -41,6 +44,32 @@ impl shell_IEnumShellItems for IEnumShellItems {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IEnumShellItems: ole_IUnknown {
+	/// Returns an iterator over the [`IShellItem`](crate::IShellItem) elements
+	/// which successively calls
+	/// [`IEnumShellItems::Next`](crate::prelude::shell_IEnumShellItems::Next).
+	///
+	/// # Examples
+	///
+	/// Iterating over the [`IShellItem`](crate::IShellItem) objects:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
+	///
+	/// let folder = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp", None)?;
+	/// let items = folder.BindToHandler::<IEnumShellItems>(None, &co::BHID::EnumItems)?;
+	///
+	/// for item in items.iter() {
+	///     let item = item?;
+	///     println!("{}", item.GetDisplayName(co::SIGDN::FILESYSPATH)?);
+	/// }
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+	#[must_use]
+	fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = HrResult<IShellItem>> + 'a> {
+		Box::new(EnumShellItemsIter::new(unsafe { self.ptr() }))
+	}
+
 	/// [`IEnumShellItems::Next`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-next)
 	/// method.
 	#[must_use]
@@ -56,7 +85,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 		}.map(|_| IShellItem::from(ppv_queried)) {
 			Ok(filter) => Ok(Some(filter)),
 			Err(hr) => match hr {
-				co::HRESULT::S_FALSE => Ok(None), // no filter found
+				co::HRESULT::S_FALSE => Ok(None), // no item found
 				hr => Err(hr), // actual error
 			},
 		}
@@ -78,5 +107,33 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 			let vt = &**(self.ptr().0 as *mut *mut IEnumShellItemsVT);
 			okfalse_to_hrresult((vt.Skip)(self.ptr(), count))
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct EnumShellItemsIter<'a> {
+	array: ManuallyDrop<IEnumShellItems>,
+	_owner: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for EnumShellItemsIter<'a> {
+	type Item = HrResult<IShellItem>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		match self.array.Next() {
+			Err(err) => Some(Err(err)),
+			Ok(maybe_item) => match maybe_item {
+				None => None,
+				Some(item) => Some(Ok(item)),
+			},
+		}
+	}
+}
+
+impl<'a> EnumShellItemsIter<'a> {
+	fn new(com_ptr: ComPtr) -> Self {
+		let array = ManuallyDrop::new(IEnumShellItems(com_ptr));
+		Self { array, _owner: PhantomData }
 	}
 }

@@ -48,7 +48,7 @@ impl shell_IShellItemArray for IShellItemArray {}
 pub trait shell_IShellItemArray: ole_IUnknown {
 	/// Returns an iterator over the [`IShellItem`](crate::IShellItem) elements
 	/// by calling
-	/// [`IShellItemArrayT::GetCount`](crate::prelude::shell_IShellItemArray::GetCount)
+	/// [`IShellItemArray::GetCount`](crate::prelude::shell_IShellItemArray::GetCount)
 	/// and
 	/// [`IShellItemArray::GetItemAt`](crate::prelude::shell_IShellItemArray::GetItemAt)
 	/// consecutively.
