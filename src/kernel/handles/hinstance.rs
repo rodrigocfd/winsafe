@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
 use crate::ffi_types::BOOL;
@@ -14,11 +14,18 @@ impl_handle! { HINSTANCE: "kernel";
 	/// same as `HMODULE`.
 }
 
-impl KernelHinstance for HINSTANCE {}
+impl kernel_Hinstance for HINSTANCE {}
 
-/// [`HINSTANCE`](crate::HINSTANCE) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HINSTANCE`](crate::HINSTANCE).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHinstance: Handle {
+pub trait kernel_Hinstance: Handle {
 	/// [`EnumResourceLanguages`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
 	/// method.
 	fn EnumResourceLanguages<F>(self,
@@ -76,7 +83,7 @@ pub trait KernelHinstance: Handle {
 	/// method.
 	///
 	/// For an example, see
-	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn FindResource(self,
 		resource_id: IdStr, resource_type: RtStr) -> WinResult<HRSRC>
@@ -95,7 +102,7 @@ pub trait KernelHinstance: Handle {
 	/// method.
 	///
 	/// For an example, see
-	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn FindResourceEx(self,
 		resource_id: IdStr, resource_type: RtStr,
@@ -192,7 +199,7 @@ pub trait KernelHinstance: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HINSTANCE::FreeLibrary`](crate::prelude::KernelHinstance::FreeLibrary)
+	/// [`HINSTANCE::FreeLibrary`](crate::prelude::kernel_Hinstance::FreeLibrary)
 	/// call.
 	#[must_use]
 	fn LoadLibrary(lib_file_name: &str) -> WinResult<HINSTANCE> {
@@ -207,7 +214,7 @@ pub trait KernelHinstance: Handle {
 	/// method.
 	///
 	/// For an example, see
-	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn LoadResource(self, res_info: HRSRC) -> WinResult<HRSRCMEM> {
 		unsafe { kernel::ffi::LoadResource(self.as_ptr(), res_info.0).as_mut() }
@@ -220,7 +227,7 @@ pub trait KernelHinstance: Handle {
 	///
 	/// This method should belong to [`HRSRCMEM`](crate::HRSRCMEM), but in order
 	/// to make it safe, we automatically call
-	/// [`HINSTANCE::SizeofResource`](crate::prelude::KernelHinstance::SizeofResource),
+	/// [`HINSTANCE::SizeofResource`](crate::prelude::kernel_Hinstance::SizeofResource),
 	/// so it's implemented here.
 	///
 	/// # Examples
@@ -277,7 +284,7 @@ pub trait KernelHinstance: Handle {
 	/// method.
 	///
 	/// For an example, see
-	/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn SizeofResource(self, res_info: HRSRC) -> WinResult<u32> {
 		match unsafe { kernel::ffi::SizeofResource(self.as_ptr(), res_info.0) } {

@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
 use crate::ffi_types::BOOL;
@@ -18,22 +18,29 @@ impl_handle! { HWND: "user";
 	/// [window](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
 }
 
-impl UserHwnd for HWND {}
+impl user_Hwnd for HWND {}
 
-/// [`HWND`](crate::HWND) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HWND`](crate::HWND).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHwnd: Handle {
+pub trait user_Hwnd: Handle {
 	/// Represents all top-level windows in
-	/// [`HWND::PostMessage`](crate::prelude::UserHwnd::PostMessage) and
-	/// [`HWND::SendMessage`](crate::prelude::UserHwnd::SendMessage).
+	/// [`HWND::PostMessage`](crate::prelude::user_Hwnd::PostMessage) and
+	/// [`HWND::SendMessage`](crate::prelude::user_Hwnd::SendMessage).
 	const BROADCAST: HWND = HWND(0xffff as _);
 
 	/// Represents the desktop window in
-	/// [`HWND::GetDC`](crate::prelude::UserHwnd::GetDC).
+	/// [`HWND::GetDC`](crate::prelude::user_Hwnd::GetDC).
 	const DESKTOP: HWND = HWND(std::ptr::null_mut());
 
-	/// [`GetWindowLongPtr`](crate::prelude::UserHwnd::GetWindowLongPtr) wrapper
-	/// to retrieve the window [`HINSTANCE`](crate::HINSTANCE).
+	/// [`GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
+	/// wrapper to retrieve the window [`HINSTANCE`](crate::HINSTANCE).
 	#[must_use]
 	fn hinstance(self) -> HINSTANCE {
 		HINSTANCE(self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _)
@@ -52,7 +59,7 @@ pub trait UserHwnd: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HWND::EndPaint`](crate::prelude::UserHwnd::EndPaint) call.
+	/// [`HWND::EndPaint`](crate::prelude::user_Hwnd::EndPaint) call.
 	///
 	/// # Examples
 	///
@@ -101,7 +108,7 @@ pub trait UserHwnd: Handle {
 		)
 	}
 
-	/// [`ClientToScreen`](crate::prelude::UserHwnd::ClientToScreen) method for
+	/// [`ClientToScreen`](crate::prelude::user_Hwnd::ClientToScreen) method for
 	/// a [`RECT`](crate::RECT).
 	fn ClientToScreenRc(self, rc: &mut RECT) -> WinResult<()> {
 		bool_to_winresult(
@@ -369,10 +376,10 @@ pub trait UserHwnd: Handle {
 	/// method.
 	///
 	/// To get the device context of the desktop window, use the predefined
-	/// [`HWND::DESKTOP`](crate::prelude::UserHwnd::DESKTOP).
+	/// [`HWND::DESKTOP`](crate::prelude::user_Hwnd::DESKTOP).
 	///
 	/// **Note:** Must be paired with an
-	/// [`HWND::ReleaseDC`](crate::prelude::UserHwnd::ReleaseDC) call.
+	/// [`HWND::ReleaseDC`](crate::prelude::user_Hwnd::ReleaseDC) call.
 	#[must_use]
 	fn GetDC(self) -> WinResult<HDC> {
 		unsafe { user::ffi::GetDC(self.as_ptr()).as_mut() }
@@ -590,7 +597,7 @@ pub trait UserHwnd: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HWND::ReleaseDC`](crate::prelude::UserHwnd::ReleaseDC) call.
+	/// [`HWND::ReleaseDC`](crate::prelude::user_Hwnd::ReleaseDC) call.
 	#[must_use]
 	fn GetWindowDC(self) -> WinResult<HDC> {
 		unsafe { user::ffi::GetWindowDC(self.as_ptr()).as_mut() }
@@ -875,7 +882,7 @@ pub trait UserHwnd: Handle {
 	/// method.
 	///
 	/// Consider using the more modern
-	/// [`TaskDialog`](crate::prelude::ComctlOleHwnd::TaskDialog) method.
+	/// [`TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) method.
 	///
 	/// # Examples
 	///
@@ -1034,7 +1041,7 @@ pub trait UserHwnd: Handle {
 		)
 	}
 
-	/// [`ScreenToClient`](crate::prelude::UserHwnd::ScreenToClient) method for
+	/// [`ScreenToClient`](crate::prelude::user_Hwnd::ScreenToClient) method for
 	/// a [`RECT`](crate::RECT).
 	fn ScreenToClientRc(self, rc: &mut RECT) -> WinResult<()> {
 		bool_to_winresult(

@@ -9,7 +9,7 @@ use crate::gui::events::WindowEventsAll;
 use crate::gui::runtime_error::RunResult;
 use crate::kernel::decl::{ErrResult, HINSTANCE, IdStr};
 use crate::msg::wm;
-use crate::prelude::{GuiEvents, KernelHinstance, UserHinstance, UserHwnd};
+use crate::prelude::{GuiEvents, kernel_Hinstance, user_Hinstance, user_Hwnd};
 use crate::user::decl::{HWND, IdOicStr, PostQuitMessage, SIZE};
 
 struct Obj { // actual fields of DlgMain

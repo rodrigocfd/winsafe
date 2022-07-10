@@ -28,7 +28,7 @@ macro_rules! impl_iunknown {
 			const IID: crate::co::IID = crate::co::IID::new($guid);
 		}
 
-		impl crate::prelude::OleIUnknown for $name {
+		impl crate::prelude::ole_IUnknown for $name {
 			unsafe fn ptr(&self) -> ComPtr {
 				self.0
 			}

@@ -4,7 +4,7 @@ use crate::gui::native_controls::list_view::ListView;
 use crate::gui::privs::multiply_dpi;
 use crate::kernel::decl::WString;
 use crate::msg::{hdm, lvm};
-use crate::prelude::{GuiWindow, UserHwnd};
+use crate::prelude::{GuiWindow, user_Hwnd};
 use crate::user::decl::SIZE;
 
 /// Exposes column methods of a [`ListView`](crate::gui::ListView) control.

@@ -7,7 +7,7 @@
 //! [`&OsStr`](https://doc.rust-lang.org/std/ffi/struct.OsStr.html).
 
 use crate::kernel::decl::{HINSTANCE, WinResult};
-use crate::prelude::{Handle, KernelHinstance};
+use crate::prelude::{Handle, kernel_Hinstance};
 
 /// Returns the path of the current EXE file, without the EXE filename, and
 /// without a trailing backslash.

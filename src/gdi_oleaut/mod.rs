@@ -1,9 +1,9 @@
 pub(crate) mod privs;
 
-mod hdc;
-mod ipicture;
+mod com_interfaces;
+mod handles;
 
 pub mod traits {
-	pub use super::hdc::GdiOleautHdc;
-	pub use super::ipicture::GdiOleautIPicture;
+	pub use super::com_interfaces::traits::*;
+	pub use super::handles::traits::*;
 }

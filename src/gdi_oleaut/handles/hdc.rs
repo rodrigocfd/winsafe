@@ -1,15 +1,23 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::gdi_oleaut::privs::HIMETRIC_PER_INCH;
 use crate::kernel::decl::MulDiv;
-use crate::prelude::GdiHdc;
+use crate::prelude::gdi_Hdc;
 use crate::user::decl::HDC;
 
-impl GdiOleautHdc for HDC {}
+impl gdi_oleaut_Hdc for HDC {}
 
-/// [`HDC`](crate::HDC) methods from `gdi`+`oleaut` feature.
-pub trait GdiOleautHdc: GdiHdc {
+/// This trait is enabled with `gdi` and `oleaut` features, and provides methods
+/// for [`HDC`](crate::HDC).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
+#[cfg_attr(docsrs, doc(cfg(all(feature = "gdi", feature = "oleaut"))))]
+pub trait gdi_oleaut_Hdc: gdi_Hdc {
 	/// Converts HIMETRIC units to pixels.
 	///
 	/// Equivalent to

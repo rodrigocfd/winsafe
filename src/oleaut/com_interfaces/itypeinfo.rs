@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, HrResult, IUnknown};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ComInterface, OleIUnknown};
+use crate::prelude::{ComInterface, ole_IUnknown};
 use crate::vt::IUnknownVT;
 
 /// [`ITypeInfo`](crate::ITypeInfo) virtual table.
@@ -42,11 +42,18 @@ pub struct ITypeInfoVT {
 pub struct ITypeInfo(ComPtr);
 
 impl_iunknown!(ITypeInfo, "00020401-0000-0000-c000-000000000046");
-impl OleautITypeInfo for ITypeInfo {}
+impl oleaut_ITypeInfo for ITypeInfo {}
 
-/// [`ITypeInfo`](crate::ITypeInfo) methods from `oleaut` feature.
+/// This trait is enabled with the `oleaut` feature, and provides methods for
+/// [`ITypeInfo`](crate::ITypeInfo).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
-pub trait OleautITypeInfo: OleIUnknown {
+pub trait oleaut_ITypeInfo: ole_IUnknown {
 	/// [`ITypeInfo::CreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.
 	#[must_use]

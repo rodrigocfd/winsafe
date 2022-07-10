@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::{IBaseFilter, IPin};
 use crate::ffi_types::{HANDLE, HRES, PCSTR};
 use crate::kernel::decl::{HFILE, WString};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
-use crate::prelude::{DshowIFilterGraph, OleIUnknown};
+use crate::prelude::{dshow_IFilterGraph, ole_IUnknown};
 use crate::vt::IFilterGraphVT;
 
 /// [`IGraphBuilder`](crate::IGraphBuilder) virtual table.
@@ -46,13 +46,19 @@ pub struct IGraphBuilderVT {
 pub struct IGraphBuilder(ComPtr);
 
 impl_iunknown!(IGraphBuilder, "56a868a9-0ad4-11ce-b03a-0020af0ba770");
-impl DshowIFilterGraph for IGraphBuilder {}
-impl DshowIGraphBuilder for IGraphBuilder {}
+impl dshow_IFilterGraph for IGraphBuilder {}
+impl dshow_IGraphBuilder for IGraphBuilder {}
 
-/// [`IGraphBuilder`](crate::IGraphBuilder) methods methods from `dshow`
-/// feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IGraphBuilder`](crate::IGraphBuilder).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIGraphBuilder: DshowIFilterGraph {
+pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// [`IGraphBuilder::Abort`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
 	/// method.
 	fn Abort(&self) -> HrResult<()> {

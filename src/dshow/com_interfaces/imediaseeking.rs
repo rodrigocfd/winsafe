@@ -1,10 +1,10 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IMediaSeeking`](crate::IMediaSeeking) virtual table.
@@ -57,12 +57,18 @@ pub struct IMediaSeekingVT {
 pub struct IMediaSeeking(ComPtr);
 
 impl_iunknown!(IMediaSeeking, "36b73880-c2c8-11cf-8b46-00805f6cef60");
-impl DshowIMediaSeeking for IMediaSeeking {}
+impl dshow_IMediaSeeking for IMediaSeeking {}
 
-/// [`IMediaSeeking`](crate::IMediaSeeking) methods methods from `dshow`
-/// feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IMediaSeeking`](crate::IMediaSeeking).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIMediaSeeking: OleIUnknown {
+pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 	/// method.
 	#[must_use]

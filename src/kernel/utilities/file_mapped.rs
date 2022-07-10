@@ -1,7 +1,7 @@
 use crate::co;
 use crate::kernel::decl::{File, FileAccess, HFILEMAP, HFILEMAPVIEW, WinResult};
 use crate::prelude::{
-	Handle, HandleClose, KernelHfile, KernelHfilemap, KernelHfilemapview,
+	Handle, HandleClose, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
 };
 
 /// Manages a memory-mapped file, which can be read/written through slices. It

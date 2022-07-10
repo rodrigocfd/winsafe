@@ -15,7 +15,7 @@ use crate::msg::{bm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
 	GuiNativeControlEvents, GuiParent, GuiWindow, GuiWindowText, Handle,
-	UserHwnd,
+	user_Hwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
 
@@ -79,7 +79,8 @@ impl GuiNativeControlEvents<ButtonEvents> for Button {
 
 impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
-	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// with
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ButtonOpts) -> Button {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -107,7 +108,7 @@ impl Button {
 	}
 
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
-	/// with [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// with [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

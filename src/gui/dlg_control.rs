@@ -11,7 +11,7 @@ use crate::gui::privs::{
 	auto_ctrl_id, multiply_dpi_or_dtu, paint_control_borders,
 };
 use crate::kernel::decl::ErrResult;
-use crate::prelude::{GuiEvents, UserHwnd};
+use crate::prelude::{GuiEvents, user_Hwnd};
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
 struct Obj { // actual fields of DlgControl

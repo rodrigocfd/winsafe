@@ -10,8 +10,8 @@ use crate::gui::raw_main::{RawMain, WindowMainOpts};
 use crate::gui::runtime_error::RunResult;
 use crate::kernel::decl::{ErrResult, HPROCESS, IsWindowsVistaOrGreater};
 use crate::prelude::{
-	GuiParent, GuiThread, GuiWindow, GuiWindowText, KernelHprocess,
-	UserHprocess,
+	GuiParent, GuiThread, GuiWindow, GuiWindowText, kernel_Hprocess,
+	user_Hprocess,
 };
 use crate::user::decl::{HWND, SetProcessDPIAware};
 
@@ -83,7 +83,7 @@ impl GuiThread for WindowMain {
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created internally with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(opts: WindowMainOpts) -> WindowMain {
 		Self(
@@ -95,7 +95,7 @@ impl WindowMain {
 
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	#[must_use]
 	pub fn new_dlg(
 		dialog_id: u16,

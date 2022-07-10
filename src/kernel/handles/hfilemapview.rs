@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
 use crate::kernel::decl::WinResult;
@@ -11,11 +11,18 @@ impl_handle! { HFILEMAPVIEW: "kernel";
 	/// Originally just an `LPVOID`.
 }
 
-impl KernelHfilemapview for HFILEMAPVIEW {}
+impl kernel_Hfilemapview for HFILEMAPVIEW {}
 
-/// [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HFILEMAPVIEW`](crate::HFILEMAPVIEW).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHfilemapview: Handle {
+pub trait kernel_Hfilemapview: Handle {
 	/// Returns a slice representing the mapped memory. You can modify the
 	/// contents. You should call this method only if the file has write access.
 	///

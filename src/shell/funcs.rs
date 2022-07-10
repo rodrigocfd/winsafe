@@ -7,7 +7,7 @@ use crate::kernel::decl::{
 use crate::kernel::privs::bool_to_winresult;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, KernelHlocal, OleIUnknown, ShellIShellItem};
+use crate::prelude::{Handle, kernel_Hlocal, ole_IUnknown, shell_IShellItem};
 use crate::shell::decl::{
 	IBindCtx, NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
@@ -84,7 +84,7 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 pub fn SHCreateItemFromParsingName<T>(
 	file_or_folder_path: &str,
 	bind_ctx: Option<&IBindCtx>) -> HrResult<T>
-	where T: ShellIShellItem,
+	where T: shell_IShellItem,
 {
 	let mut ppv_queried = ComPtr::null();
 	ok_to_hrresult(
@@ -127,7 +127,7 @@ pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> WinResult<()> {
 ///
 /// **Note:** If you are returning an icon in the `hIcon` member of
 /// [`SHFILEINFO`](crate::SHFILEINFO), it must be paired with an
-/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHGetFileInfo(
 	path: &str, file_attrs: co::FILE_ATTRIBUTE,
@@ -196,7 +196,7 @@ pub fn SHGetKnownFolderPath(
 ///
 /// **Note:** The `hIcon` member of [`SHSTOCKICONINFO`](crate::SHSTOCKICONINFO)
 /// must be paired with an
-/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 ///
 /// # Examples
 ///

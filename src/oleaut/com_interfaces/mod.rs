@@ -9,9 +9,9 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::idispatch::OleautIDispatch;
-	pub use super::itypeinfo::OleautITypeInfo;
-	pub use super::ipicture::OleautIPicture;
+	pub use super::idispatch::oleaut_IDispatch;
+	pub use super::itypeinfo::oleaut_ITypeInfo;
+	pub use super::ipicture::oleaut_IPicture;
 }
 
 pub mod vt {

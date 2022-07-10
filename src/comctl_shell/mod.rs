@@ -1,5 +1,5 @@
-mod himagelist;
+mod handles;
 
 pub mod traits {
-	pub use super::himagelist::ComctlShellHimagelist;
+	pub use super::handles::traits::*;
 }

@@ -1,10 +1,10 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IPin`](crate::IPin) virtual table.
@@ -39,11 +39,12 @@ pub struct IPinVT {
 pub struct IPin(ComPtr);
 
 impl_iunknown!(IPin, "56a86891-0ad4-11ce-b03a-0020af0ba770");
-impl DshowIPin for IPin {}
+impl dshow_IPin for IPin {}
 
-/// [`IPin`](crate::IPin) methods methods from `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IPin`](crate::IPin).
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIPin: OleIUnknown {
+pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::BeginFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
 	/// method.
 	fn BeginFlush(&self) -> HrResult<()> {

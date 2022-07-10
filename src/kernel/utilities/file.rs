@@ -1,6 +1,6 @@
 use crate::co;
 use crate::kernel::decl::{HFILE, WinResult};
-use crate::prelude::{HandleClose, KernelHfile};
+use crate::prelude::{HandleClose, kernel_Hfile};
 
 /// Access types for [`File::open`](crate::File::open) and
 /// [`FileMapped::open`](crate::FileMapped::open).

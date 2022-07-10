@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, WinResult};
@@ -10,16 +10,23 @@ impl_handle! { HCURSOR: "user";
 	/// [cursor](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hcursor).
 }
 
-impl UserHcursor for HCURSOR {}
+impl user_Hcursor for HCURSOR {}
 
-/// [`HCURSOR`](crate::HCURSOR) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HCURSOR`](crate::HCURSOR).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHcursor: Handle {
+pub trait user_Hcursor: Handle {
 	/// [`CopyCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copycursor)
 	/// method. Originally a macro.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HCURSOR::DestroyCursor`](crate::prelude::UserHcursor::DestroyCursor)
+	/// [`HCURSOR::DestroyCursor`](crate::prelude::user_Hcursor::DestroyCursor)
 	/// call.
 	#[must_use]
 	fn CopyCursor(self) -> WinResult<HCURSOR> {

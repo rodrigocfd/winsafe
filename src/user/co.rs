@@ -935,8 +935,8 @@ const_ordinary! { DLGC: u16: "user";
 
 const_ordinary! { DLGID: u16: "user";
 	/// Dialog built-in IDs (`u16`). These are also returned from
-	/// [`HWND::MessageBox`](crate::prelude::UserHwnd::MessageBox) and
-	/// [`HWND::TaskDialog`](crate::prelude::ComctlOleHwnd::TaskDialog).
+	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) and
+	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog).
 	=>
 	=>
 	OK 1
@@ -1107,12 +1107,12 @@ const_ordinary! { FAPPCOMMAND: u16: "user";
 }
 
 const_bitflag! { GA: u32: "user";
-	/// [`HWND::GetAncestor`](crate::prelude::UserHwnd::GetAncestor) `flags`
+	/// [`HWND::GetAncestor`](crate::prelude::user_Hwnd::GetAncestor) `flags`
 	/// (`u32`).
 	=>
 	=>
 	/// Retrieves the parent window. This does not include the owner as it does
-	/// with the [`HWND::GetParent`](crate::prelude::UserHwnd::GetParent)
+	/// with the [`HWND::GetParent`](crate::prelude::user_Hwnd::GetParent)
 	/// function.
 	PARENT 1
 	/// Retrieves the root window by walking the chain of parent windows.
@@ -1124,7 +1124,7 @@ const_bitflag! { GA: u32: "user";
 	ROOT 2
 	/// Retrieves the owned root window by walking the chain of parent and owner
 	/// windows returned by
-	/// [`HWND::GetParent`](crate::prelude::UserHwnd::GetParent).
+	/// [`HWND::GetParent`](crate::prelude::user_Hwnd::GetParent).
 	///
 	/// Returns the
 	/// [furthest](https://groups.google.com/a/chromium.org/g/chromium-dev/c/Hirr_DkuZdw/m/N0pSoJBhAAAJ)
@@ -1135,7 +1135,7 @@ const_bitflag! { GA: u32: "user";
 }
 
 const_ordinary! { GCLP: i32: "user";
-	/// [`HWND::GetClassLongPtr`](crate::prelude::UserHwnd::GetClassLongPtr)
+	/// [`HWND::GetClassLongPtr`](crate::prelude::user_Hwnd::GetClassLongPtr)
 	/// `index` (`i32`).
 	///
 	/// Originally has prefixes `GCW` and `GCL` also.
@@ -1154,7 +1154,7 @@ const_ordinary! { GCLP: i32: "user";
 }
 
 const_bitflag! { GMDI: u32: "user";
-	/// [`HMENU::GetMenuDefaultItem`](crate::prelude::UserHmenu::GetMenuDefaultItem)
+	/// [`HMENU::GetMenuDefaultItem`](crate::prelude::user_Hmenu::GetMenuDefaultItem)
 	/// `flags` (`u32`).
 	=>
 	=>
@@ -1174,7 +1174,7 @@ const_bitflag! { GUI: u32: "user";
 }
 
 const_ordinary! { GW: u32: "user";
-	/// [`HWND::GetWindow`](crate::prelude::UserHwnd::GetWindow) `cmd` (`u32`).
+	/// [`HWND::GetWindow`](crate::prelude::user_Hwnd::GetWindow) `cmd` (`u32`).
 	=>
 	=>
 	HWNDFIRST 0
@@ -1199,9 +1199,9 @@ const_ordinary! { GWL_C: i8: "user";
 }
 
 const_ordinary! { GWLP: i32: "user";
-	/// [`HWND::GetWindowLongPtr`](crate::prelude::UserHwnd::GetWindowLongPtr)
+	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
 	/// and
-	/// [`HWND::SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr)
+	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
 	/// `index` (`i32`).
 	///
 	/// Originally has prefixes `GWL`, `GWLP`, `DWL` and `DWLP`.
@@ -1229,7 +1229,8 @@ const_ordinary! { HELPINFO: i32: "user";
 }
 
 const_ordinary! { HELPW: u32: "user";
-	/// [`HWND::WinHelp`](crate::prelude::UserHwnd::WinHelp) `uCommand` (`u32`).
+	/// [`HWND::WinHelp`](crate::prelude::user_Hwnd::WinHelp) `uCommand`
+	/// (`u32`).
 	=>
 	=>
 	CONTEXT 0x0001
@@ -1289,7 +1290,7 @@ const_ordinary! { HT: u16: "user";
 }
 
 const_ordinary! { HWND_PLACE: isize: "user";
-	/// [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos)
+	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos)
 	/// `hWndInsertAfter` (`isize`).
 	=>
 	=>
@@ -1310,7 +1311,7 @@ const_ordinary! { ICON_SZ: u8: "user";
 }
 
 const_ordinary! { IDC: u32: "user";
-	/// [`HINSTANCE::LoadCursor`](crate::prelude::UserHinstance::LoadCursor)
+	/// [`HINSTANCE::LoadCursor`](crate::prelude::user_Hinstance::LoadCursor)
 	/// `lpCursorName` (`u32`).
 	=>
 	=>
@@ -1333,7 +1334,7 @@ const_ordinary! { IDC: u32: "user";
 }
 
 const_ordinary! { IDI: u32: "user";
-	/// [`HINSTANCE::LoadIcon`](crate::prelude::UserHinstance::LoadIcon)
+	/// [`HINSTANCE::LoadIcon`](crate::prelude::user_Hinstance::LoadIcon)
 	/// `lpIconName` (`u32`).
 	=>
 	=>
@@ -1462,10 +1463,10 @@ const_ws! { LBS: u32: "user";
 }
 
 const_bitflag! { LR: u32: "user";
-	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::UserHinstance::LoadImageBitmap),
-	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::UserHinstance::LoadImageCursor)
+	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap),
+	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor)
 	/// and
-	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::UserHinstance::LoadImageIcon)
+	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::user_Hinstance::LoadImageIcon)
 	/// `load`.
 	=>
 	=>
@@ -1494,7 +1495,7 @@ const_ordinary! { LSFW: u32: "user";
 }
 
 const_bitflag! { MB: u32: "user";
-	/// [`HWND::MessageBox`](crate::prelude::UserHwnd::MessageBox) `flags`
+	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) `flags`
 	/// (`u32`).
 	=>
 	=>
@@ -1590,7 +1591,7 @@ const_bitflag! { MB: u32: "user";
 	/// [Window Stations](https://docs.microsoft.com/en-us/windows/win32/winstation/window-stations).
 	///
 	/// If the current input desktop is not the default desktop,
-	/// [`HWND::MessageBox`](crate::prelude::UserHwnd::MessageBox) does not
+	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) does not
 	/// return until the user switches to the default desktop.
 	DEFAULT_DESKTOP_ONLY 0x0002_0000
 	/// The text is right-justified.
@@ -1600,7 +1601,7 @@ const_bitflag! { MB: u32: "user";
 	RTLREADING 0x0010_0000
 	/// The message box becomes the foreground window. Internally the system
 	/// calls the
-	/// [`HWND::SetForegroundWindow`](crate::prelude::UserHwnd::SetForegroundWindow)
+	/// [`HWND::SetForegroundWindow`](crate::prelude::user_Hwnd::SetForegroundWindow)
 	/// function for the message box.
 	SETFOREGROUND 0x0001_0000
 	/// The message box is created with the
@@ -1666,10 +1667,10 @@ const_bitflag! { MK: u16: "user";
 }
 
 const_bitflag! { MF: u32: "user";
-	/// [`HMENU::AppendMenu`](crate::prelude::UserHmenu::AppendMenu) `flags`,
-	/// [`HMENU::GetMenuState`](crate::prelude::UserHmenu::GetMenuState) return
+	/// [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu) `flags`,
+	/// [`HMENU::GetMenuState`](crate::prelude::user_Hmenu::GetMenuState) return
 	/// value,
-	/// [`HWND::HiliteMenuItem`](crate::prelude::UserHwnd::HiliteMenuItem)
+	/// [`HWND::HiliteMenuItem`](crate::prelude::user_Hwnd::HiliteMenuItem)
 	/// `hilite` (`u32`).
 	=>
 	=>
@@ -1752,9 +1753,9 @@ const_bitflag! { MNS: u32: "user";
 }
 
 const_ordinary! { MONITOR: u32: "user";
-	/// [`HMONITOR::MonitorFromPoint`](crate::prelude::UserHmonitor::MonitorFromPoint),
-	/// [`HMONITOR::MonitorFromRect`](crate::prelude::UserHmonitor::MonitorFromRect),
-	/// [`HWND::MonitorFromWindow`](crate::prelude::UserHwnd::MonitorFromWindow)
+	/// [`HMONITOR::MonitorFromPoint`](crate::prelude::user_Hmonitor::MonitorFromPoint),
+	/// [`HMONITOR::MonitorFromRect`](crate::prelude::user_Hmonitor::MonitorFromRect),
+	/// [`HWND::MonitorFromWindow`](crate::prelude::user_Hwnd::MonitorFromWindow)
 	/// flags (`u32`).
 	=>
 	=>
@@ -1781,7 +1782,7 @@ const_ordinary! { MSGF: u8: "user";
 }
 
 const_ordinary! { OBJID: u32: "user";
-	/// [`HWND::GetMenuBarInfo`](crate::prelude::UserHwnd::GetMenuBarInfo)
+	/// [`HWND::GetMenuBarInfo`](crate::prelude::user_Hwnd::GetMenuBarInfo)
 	/// `idObject` (`i32`).
 	=>
 	=>
@@ -1791,7 +1792,7 @@ const_ordinary! { OBJID: u32: "user";
 }
 
 const_ordinary! { OBM: u32: "user";
-	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::UserHinstance::LoadImageBitmap)
+	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap)
 	/// OEM image identifier (`u32`).
 	=>
 	=>
@@ -1833,9 +1834,9 @@ const_ordinary! { OBM: u32: "user";
 }
 
 const_ordinary! { OCR: u32: "user";
-	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::UserHinstance::LoadImageCursor)
+	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor)
 	/// and
-	/// [`HCURSOR::SetSystemCursor`](crate::prelude::UserHcursor::SetSystemCursor)
+	/// [`HCURSOR::SetSystemCursor`](crate::prelude::user_Hcursor::SetSystemCursor)
 	/// OEM cursor identifier (`u32`).
 	=>
 	=>
@@ -1907,7 +1908,7 @@ const_ordinary! { ODT_C: u32: "user";
 }
 
 const_ordinary! { OIC: u32: "user";
-	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::UserHinstance::LoadImageIcon)
+	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::user_Hinstance::LoadImageIcon)
 	/// OEM icon identifier (`u32`).
 	=>
 	=>
@@ -1959,7 +1960,7 @@ const_bitflag! { QS: u32: "user";
 }
 
 const_bitflag! { RDW: u32: "user";
-	/// [`HWND::RedrawWindow`](crate::prelude::UserHwnd::RedrawWindow) `flags`
+	/// [`HWND::RedrawWindow`](crate::prelude::user_Hwnd::RedrawWindow) `flags`
 	/// (`u32`).
 	=>
 	=>
@@ -1978,10 +1979,10 @@ const_bitflag! { RDW: u32: "user";
 }
 
 const_ordinary! { REGION: i32: "user";
-	/// [`HWND::GetUpdateRgn`](crate::prelude::UserHwnd::GetUpdateRgn),
-	/// [`HWND::GetWindowRgn`](crate::prelude::UserHwnd::GetWindowRgn) and
-	/// [`HDC::SelectObjectRgn`](crate::prelude::GdiHdc::SelectObjectRgn) return
-	/// value (`i32`).
+	/// [`HWND::GetUpdateRgn`](crate::prelude::user_Hwnd::GetUpdateRgn),
+	/// [`HWND::GetWindowRgn`](crate::prelude::user_Hwnd::GetWindowRgn) and
+	/// [`HDC::SelectObjectRgn`](crate::prelude::gdi_Hdc::SelectObjectRgn)
+	/// return value (`i32`).
 	=>
 	=>
 	NULL 1
@@ -2026,10 +2027,10 @@ const_ordinary! { SB_REQ: u16: "user";
 }
 
 const_ordinary! { SBB: i32: "user";
-	/// [`HWND::GetScrollInfo`](crate::prelude::UserHwnd::GetScrollInfo),
-	/// [`HWND::SetScrollInfo`](crate::prelude::UserHwnd::SetScrollInfo) and
-	/// [`HWND::SetScrollRange`](crate::prelude::UserHwnd::SetScrollRange) `bar`
-	/// (`i32`). Originally has `SB` prefix.
+	/// [`HWND::GetScrollInfo`](crate::prelude::user_Hwnd::GetScrollInfo),
+	/// [`HWND::SetScrollInfo`](crate::prelude::user_Hwnd::SetScrollInfo) and
+	/// [`HWND::SetScrollRange`](crate::prelude::user_Hwnd::SetScrollRange)
+	/// `bar` (`i32`). Originally has `SB` prefix.
 	=>
 	=>
 	HORZ 0
@@ -2214,7 +2215,7 @@ const_ordinary! { SM: i32: "user";
 }
 
 const_bitflag! { SMTO: u32: "user";
-	/// [`SendMessageTimeout`](crate::prelude::UserHwnd::SendMessageTimeout)
+	/// [`SendMessageTimeout`](crate::prelude::user_Hwnd::SendMessageTimeout)
 	/// `flags` (`u32`).
 	=>
 	=>
@@ -2477,7 +2478,7 @@ const_cmd! { STN: "user";
 }
 
 const_bitflag! { SWP: u32: "user";
-	/// [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos) `flags`
+	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos) `flags`
 	/// (`u32`).
 	=>
 	=>
@@ -2522,7 +2523,7 @@ const_bitflag! { TME: u32: "user";
 }
 
 const_bitflag! { TPM: u32: "user";
-	/// [`TrackPopupMenu`](crate::prelude::UserHmenu::TrackPopupMenu) `flags`
+	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu) `flags`
 	/// (`u32`).
 	=>
 	=>
@@ -2549,7 +2550,7 @@ const_bitflag! { TPM: u32: "user";
 }
 
 const_ordinary! { UOI: i32: "user";
-	/// [`HPROCESS::SetUserObjectInformation`](crate::prelude::UserHprocess::SetUserObjectInformation)
+	/// [`HPROCESS::SetUserObjectInformation`](crate::prelude::user_Hprocess::SetUserObjectInformation)
 	/// `index` (`i32`).
 	=>
 	=>
@@ -2881,9 +2882,9 @@ const_ordinary! { WA: u16: "user";
 }
 
 const_ordinary! { WDA: u32: "user";
-	/// [`HWND::GetWindowDisplayAffinity`](crate::prelude::UserHwnd::GetWindowDisplayAffinity)
+	/// [`HWND::GetWindowDisplayAffinity`](crate::prelude::user_Hwnd::GetWindowDisplayAffinity)
 	/// and
-	/// [`HWND::SetWindowDisplayAffinity`](crate::prelude::UserHwnd::SetWindowDisplayAffinity)
+	/// [`HWND::SetWindowDisplayAffinity`](crate::prelude::user_Hwnd::SetWindowDisplayAffinity)
 	/// `dwAffinity` (`u32`).
 	=>
 	=>
@@ -2893,9 +2894,9 @@ const_ordinary! { WDA: u32: "user";
 }
 
 const_ordinary! { WH: i32: "user";
-	/// [`HHOOK::CallNextHookEx`](crate::prelude::UserHhook::CallNextHookEx)
+	/// [`HHOOK::CallNextHookEx`](crate::prelude::user_Hhook::CallNextHookEx)
 	/// `code` and
-	/// [`HHOOK::SetWindowsHookEx`](crate::prelude::UserHhook::SetWindowsHookEx)
+	/// [`HHOOK::SetWindowsHookEx`](crate::prelude::user_Hhook::SetWindowsHookEx)
 	/// `hook_id` (`i32`).
 	=>
 	=>
@@ -3239,12 +3240,14 @@ const_bitflag! { WS: u32: "user";
 	/// The window is initially minimized. Same as the `WS::ICONIC` style.
 	MINIMIZE 0x2000_0000
 	/// The window is initially visible. This style can be turned on and off by
-	/// using the [`HWND::ShowWindow`](crate::prelude::UserHwnd::ShowWindow) or
-	/// [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos) function.
+	/// using the [`HWND::ShowWindow`](crate::prelude::user_Hwnd::ShowWindow) or
+	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos)
+	/// function.
 	VISIBLE 0x1000_0000
 	/// The window is initially disabled. A disabled window cannot receive input
 	/// from the user. To change this after a window has been created use the
-	/// [`HWND::EnableWindow`](crate::prelude::UserHwnd::EnableWindow) function.
+	/// [`HWND::EnableWindow`](crate::prelude::user_Hwnd::EnableWindow)
+	/// function.
 	DISABLED 0x0800_0000
 	/// Clips child windows relative to each other; that is when a particular
 	/// child window receives a [`wm::Paint`](crate::msg::wm::Paint) message,
@@ -3285,7 +3288,7 @@ const_bitflag! { WS: u32: "user";
 	///
 	/// You can turn this style on and off to change dialog box navigation. To
 	/// change this style after a window has been created use the
-	/// [`HWND::SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr)
+	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
 	/// function.
 	GROUP 0x0002_0000
 	/// The window is a control that can receive the keyboard focus when the user
@@ -3294,10 +3297,10 @@ const_bitflag! { WS: u32: "user";
 	///
 	/// You can turn this style on and off to change dialog box navigation. To
 	/// change this style after a window has been created use the
-	/// [`HWND::SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr)
+	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
 	/// function. For user-created windows and modeless dialogs to work with tab
 	/// stops alter the message loop to call the
-	/// [`HWND::IsDialogMessage`](crate::prelude::UserHwnd::IsDialogMessage)
+	/// [`HWND::IsDialogMessage`](crate::prelude::user_Hwnd::IsDialogMessage)
 	/// function.
 	TABSTOP 0x0001_0000
 	/// The window has a minimize button. Cannot be combined with the
@@ -3347,7 +3350,8 @@ const_bitflag! { WS_EX: u32: "user";
 	/// The window should be placed above all non-topmost windows and should
 	/// stay above them even when the window is deactivated. To add or remove
 	/// this style use the
-	/// [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos) function.
+	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos)
+	/// function.
 	TOPMOST 0x0000_0008
 	/// The window accepts drag-drop files.
 	ACCEPTFILES 0x0000_0010
@@ -3357,7 +3361,8 @@ const_bitflag! { WS_EX: u32: "user";
 	/// been painted.
 	///
 	/// To achieve transparency without these restrictions use the
-	/// [`HWND::SetWindowRgn`](crate::prelude::UserHwnd::SetWindowRgn) function.
+	/// [`HWND::SetWindowRgn`](crate::prelude::user_Hwnd::SetWindowRgn)
+	/// function.
 	TRANSPARENT 0x0000_0020
 	/// The window is a MDI child window.
 	MDICHILD 0x0000_0040
@@ -3378,7 +3383,7 @@ const_bitflag! { WS_EX: u32: "user";
 	/// pointer. If the user then clicks a child window the child receives a
 	/// [`wm::Help`](crate::msg::wm::Help) message. The child window should pass
 	/// the message to the parent window procedure which should call the
-	/// [`WinHelp`](crate::prelude::UserHwnd::WinHelp) function using the
+	/// [`WinHelp`](crate::prelude::user_Hwnd::WinHelp) function using the
 	/// `HELP_WM_HELP` command. The Help application displays a pop-up window
 	/// that typically contains help for the child window.
 	///
@@ -3467,7 +3472,7 @@ const_bitflag! { WS_EX: u32: "user";
 	/// keyboard navigation by accessible technology such as Narrator.
 	///
 	/// To activate the window use the SetActiveWindow or
-	/// [`HWND::SetForegroundWindow`](crate::prelude::UserHwnd::SetForegroundWindow)
+	/// [`HWND::SetForegroundWindow`](crate::prelude::user_Hwnd::SetForegroundWindow)
 	/// function.
 	///
 	/// The window does not appear on the taskbar by default. To force the

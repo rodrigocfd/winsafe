@@ -111,7 +111,7 @@ const_bitflag! { CREATE: u32: "kernel";
 }
 
 const_ordinary! { DISPOSITION: u32: "kernel";
-	/// [`HFILE::CreateFile`](crate::prelude::KernelHfile::CreateFile)
+	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `creation_disposition` (`u32`).
 	///
 	/// Originally has no prefix.
@@ -168,7 +168,7 @@ const_bitflag! { FILE_ATTRIBUTE: u32: "kernel";
 	/// File attribute
 	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
 	/// also other flags from
-	/// [`HFILE::CreateFile`](crate::prelude::KernelHfile::CreateFile)
+	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `flags_and_attrs` (`u32`).
 	=>
 	=>
@@ -217,7 +217,7 @@ const_bitflag! { FILE_ATTRIBUTE: u32: "kernel";
 }
 
 const_bitflag! { FILE_MAP: u32: "kernel";
-	/// [`HFILEMAP::MapViewOfFile`](crate::prelude::KernelHfilemap::MapViewOfFile)
+	/// [`HFILEMAP::MapViewOfFile`](crate::prelude::kernel_Hfilemap::MapViewOfFile)
 	/// `desired_access` (`u32`).
 	=>
 	=>
@@ -232,7 +232,7 @@ const_bitflag! { FILE_MAP: u32: "kernel";
 }
 
 const_bitflag! { FILE_SHARE: u32: "kernel";
-	/// [`HFILE::CreateFile`](crate::prelude::KernelHfile::CreateFile)
+	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `share_mode` (`u32`).
 	=>
 	=>
@@ -244,7 +244,7 @@ const_bitflag! { FILE_SHARE: u32: "kernel";
 }
 
 const_ordinary! { FILE_STARTING_POINT: u32: "kernel";
-	/// [`HFILE::SetFilePointerEx`](crate::prelude::KernelHfile::SetFilePointerEx)
+	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx)
 	/// `move_method` (`u32`).
 	///
 	/// Originally has `FILE` prefix.
@@ -261,7 +261,7 @@ const_ordinary! { FILE_STARTING_POINT: u32: "kernel";
 }
 
 const_ordinary! { FILE_TYPE: u32: "kernel";
-	/// [`HFILE::GetFileType`](crate::prelude::KernelHfile::GetFileType) return
+	/// [`HFILE::GetFileType`](crate::prelude::kernel_Hfile::GetFileType) return
 	/// value (`u32`).
 	=>
 	=>
@@ -349,8 +349,9 @@ const_bitflag! { GENERIC: u32: "kernel";
 }
 
 const_bitflag! { GMEM: u32: "kernel";
-	/// [`HGLOBAL::GlobalAlloc`](crate::prelude::KernelHglobal::GlobalAlloc) and
-	/// [`HGLOBAL::GlobalReAlloc`](crate::prelude::KernelHglobal::GlobalReAlloc)
+	/// [`HGLOBAL::GlobalAlloc`](crate::prelude::kernel_Hglobal::GlobalAlloc)
+	/// and
+	/// [`HGLOBAL::GlobalReAlloc`](crate::prelude::kernel_Hglobal::GlobalReAlloc)
 	/// `flags` (`u32`).
 	=>
 	=>
@@ -362,7 +363,7 @@ const_bitflag! { GMEM: u32: "kernel";
 }
 
 const_bitflag! { GR: u32: "kernel";
-	/// [`HPROCESS::GetGuiResources`](crate::prelude::KernelHprocess::GetGuiResources)
+	/// [`HPROCESS::GetGuiResources`](crate::prelude::kernel_Hprocess::GetGuiResources)
 	/// `flags` (`u32`).
 	=>
 	=>
@@ -535,7 +536,7 @@ const_bitflag! { MBC: u32: "kernel";
 }
 
 const_ordinary! { PAGE: u32: "kernel";
-	/// [`HFILE::CreateFileMapping`](crate::prelude::KernelHfile::CreateFileMapping)
+	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
 	=>
 	=>
@@ -647,7 +648,7 @@ const_ordinary! { PROCESSOR: u32: "kernel";
 }
 
 const_ordinary! { PROCESS_NAME: u32: "kernel";
-	/// [`QueryFullProcessImageName`](crate::prelude::KernelHprocess::QueryFullProcessImageName)
+	/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
 	/// flags (`u32`).
 	=>
 	=>
@@ -794,7 +795,7 @@ const_bitflag! { STANDARD_RIGHTS: u32: "kernel";
 }
 
 const_bitflag! { STARTF: u32: "kernel";
-	/// [`HPROCESS::CreateProcess`](crate::prelude::KernelHprocess::CreateProcess)
+	/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
 	/// `dwFlags` (`u32`).
 	=>
 	=>
@@ -1067,7 +1068,7 @@ const_ordinary! { SUBLANG: u16: "kernel";
 }
 
 const_ordinary! { SW: i32: "kernel";
-	/// [`HWND::ShowWindow`](crate::prelude::UserHwnd::ShowWindow) `show_cmd`
+	/// [`HWND::ShowWindow`](crate::prelude::user_Hwnd::ShowWindow) `show_cmd`
 	/// (`i32`).
 	=>
 	=>
@@ -1102,7 +1103,7 @@ const_ordinary! { SW: i32: "kernel";
 	RESTORE 9
 	/// Sets the show state based on the SW value specified in the
 	/// [`STARTUPINFO`](crate::STARTUPINFO) structure passed to the
-	/// [`HPROCESS::CreateProcess`](crate::prelude::KernelHprocess::CreateProcess)
+	/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
 	/// function by the program that started the application.
 	SHOWDEFAULT 10
 	/// Minimizes a window even if the thread that owns the window is not
@@ -1126,7 +1127,7 @@ const_bitflag! { TH32CS: u32: "kernel";
 }
 
 const_bitflag! { THREAD_CREATE: u32: "kernel";
-	/// [`HTHREAD::CreateThread`](crate::prelude::KernelHthread::CreateThread)
+	/// [`HTHREAD::CreateThread`](crate::prelude::kernel_Hthread::CreateThread)
 	/// `flags` (`u32`). Originally has no prefix.
 	=>
 	=>
@@ -1234,7 +1235,7 @@ const_ordinary! { VER_PLATFORM: u32: "kernel";
 }
 
 const_ordinary! { WAIT: u32: "kernel";
-	/// [`HPROCESS::WaitForSingleObject`](crate::prelude::KernelHprocess::WaitForSingleObject)
+	/// [`HPROCESS::WaitForSingleObject`](crate::prelude::kernel_Hprocess::WaitForSingleObject)
 	/// return value (`u32`).
 	=>
 	=>

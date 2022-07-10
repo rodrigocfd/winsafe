@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`ISequentialStream`](crate::ISequentialStream) virtual table.
@@ -25,12 +25,18 @@ pub struct ISequentialStreamVT {
 pub struct ISequentialStream(ComPtr);
 
 impl_iunknown!(ISequentialStream, "0c733a30-2a1c-11ce-ade5-00aa0044773d");
-impl ShellISequentialStream for ISequentialStream {}
+impl shell_ISequentialStream for ISequentialStream {}
 
-/// [`ISequentialStream`](crate::ISequentialStream) methods from `shell`
-/// feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`ISequentialStream`](crate::ISequentialStream).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellISequentialStream: OleIUnknown {
+pub trait shell_ISequentialStream: ole_IUnknown {
 	/// [`ISequentialStream::Read`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-read)
 	/// method.
 	///

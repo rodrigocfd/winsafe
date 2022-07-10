@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{BOOL, HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::ShellITaskbarList;
+use crate::prelude::shell_ITaskbarList;
 use crate::user::decl::HWND;
 use crate::vt::ITaskbarListVT;
 
@@ -39,12 +39,19 @@ pub struct ITaskbarList2VT {
 pub struct ITaskbarList2(ComPtr);
 
 impl_iunknown!(ITaskbarList2, "602d4995-b13a-429b-a66e-1935e44f4317");
-impl ShellITaskbarList for ITaskbarList2 {}
-impl ShellITaskbarList2 for ITaskbarList2 {}
+impl shell_ITaskbarList for ITaskbarList2 {}
+impl shell_ITaskbarList2 for ITaskbarList2 {}
 
-/// [`ITaskbarList2`](crate::ITaskbarList2) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`ITaskbarList2`](crate::ITaskbarList2).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellITaskbarList2: ShellITaskbarList {
+pub trait shell_ITaskbarList2: shell_ITaskbarList {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	fn MarkFullscreenWindow(&self,

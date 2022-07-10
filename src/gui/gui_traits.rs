@@ -3,7 +3,7 @@ use std::any::Any;
 use crate::gui::events::{WindowEvents, WindowEventsAll};
 use crate::kernel::decl::ErrResult;
 use crate::msg::wm;
-use crate::prelude::UserHwnd;
+use crate::prelude::user_Hwnd;
 use crate::user::decl::{HWND, HwndFocus};
 
 /// Any window. Exposes the underlying window handle.
@@ -54,13 +54,13 @@ pub trait GuiWindow {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiWindowText: GuiWindow {
 	/// Sets the text by calling
-	/// [`HWND::SetWindowText`](crate::prelude::UserHwnd::SetWindowText).
+	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
 	fn set_text(&self, text: &str) {
 		self.hwnd().SetWindowText(text).unwrap();
 	}
 
 	/// Retrieves the text by calling
-	/// [`HWND::GetWindowText`](crate::prelude::UserHwnd::GetWindowText).
+	/// [`HWND::GetWindowText`](crate::prelude::user_Hwnd::GetWindowText).
 	#[must_use]
 	fn text(&self) -> String {
 		self.hwnd().GetWindowText().unwrap()
@@ -234,8 +234,9 @@ pub trait GuiChild: GuiWindow {
 pub trait GuiChildFocus: GuiChild {
 	/// Focus the control by sending a
 	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message. This is
-	/// preferable to the [`HWND::SetFocus`](crate::prelude::UserHwnd::SetFocus)
-	/// method, because it takes care of border highlighting, like the native
+	/// preferable to the
+	/// [`HWND::SetFocus`](crate::prelude::user_Hwnd::SetFocus) method, because
+	/// it takes care of border highlighting, like the native
 	/// [`Button`](crate::gui::Button) control needs.
 	fn focus(&self) {
 		let hparent = self.hwnd().GetParent().unwrap();

@@ -83,7 +83,7 @@ impl GuiChild for WindowControl {
 
 impl WindowControl {
 	/// Instantiates a new `WindowControl` object, to be created with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent, opts: WindowControlOpts) -> WindowControl
@@ -98,7 +98,7 @@ impl WindowControl {
 
 	/// Instantiates a new `WindowControl` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	///
 	/// If the parent window is a dialog, position is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system

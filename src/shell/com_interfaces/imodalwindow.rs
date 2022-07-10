@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::HANDLE;
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
 
@@ -25,11 +25,18 @@ pub struct IModalWindowVT {
 pub struct IModalWindow(ComPtr);
 
 impl_iunknown!(IModalWindow, "b4db1657-70d7-485e-8e3e-6fcb5a5c1802");
-impl ShellIModalWindow for IModalWindow {}
+impl shell_IModalWindow for IModalWindow {}
 
-/// [`IModalWindow`](crate::IModalWindow) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IModalWindow`](crate::IModalWindow).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIModalWindow: OleIUnknown {
+pub trait shell_IModalWindow: ole_IUnknown {
 	/// [`IModalWindow::Show`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-imodalwindow-show)
 	/// method.
 	///

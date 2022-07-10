@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::dshow::decl::MFVideoNormalizedRect;
 use crate::ffi_types::{BOOL, HANDLE, HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, OleIUnknown};
+use crate::prelude::{Handle, ole_IUnknown};
 use crate::user::decl::{COLORREF, HWND, RECT, SIZE};
 use crate::vt::IUnknownVT;
 
@@ -60,12 +60,18 @@ pub struct IMFVideoDisplayControlVT {
 pub struct IMFVideoDisplayControl(ComPtr);
 
 impl_iunknown!(IMFVideoDisplayControl, "a490b1e4-ab84-4d31-a1b2-181e03b1077a");
-impl DshowIMFVideoDisplayControl for IMFVideoDisplayControl {}
+impl dshow_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 
-/// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl) methods from
-/// `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIMFVideoDisplayControl: OleIUnknown {
+pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 	/// method.
 	#[must_use]

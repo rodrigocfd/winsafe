@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 
@@ -13,15 +13,22 @@ impl_handle! { HDROP: "shell";
 	/// [internal drop structure](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
 }
 
-impl ShellHdrop for HDROP {}
+impl shell_Hdrop for HDROP {}
 
-/// [`HDROP`](crate::HDROP) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`HDROP`](crate::HDROP).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellHdrop: Handle {
+pub trait shell_Hdrop: Handle {
 	/// Returns an iterator over the dropped files by calling
-	/// [`HDROP::DragQueryFile`](crate::prelude::ShellHdrop::DragQueryFile)
+	/// [`HDROP::DragQueryFile`](crate::prelude::shell_Hdrop::DragQueryFile)
 	/// consecutively, then frees the handle by calling
-	/// [`HDROP::DragFinish`](crate::prelude::ShellHdrop::DragFinish).
+	/// [`HDROP::DragFinish`](crate::prelude::shell_Hdrop::DragFinish).
 	///
 	/// # Examples
 	///
@@ -63,7 +70,7 @@ pub trait ShellHdrop: Handle {
 	/// [`DragFinish`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
 	/// method.
 	///
-	/// Prefer using [`HDROP::iter`](crate::prelude::ShellHdrop::iter), which
+	/// Prefer using [`HDROP::iter`](crate::prelude::shell_Hdrop::iter), which
 	/// calls `DragFinish` automatically.
 	fn DragFinish(self) {
 		unsafe { shell::ffi::DragFinish(self.as_ptr()) }
@@ -73,7 +80,7 @@ pub trait ShellHdrop: Handle {
 	/// method.
 	///
 	/// This method is rather tricky, consider using
-	/// [`HDROP::iter`](crate::prelude::ShellHdrop::iter).
+	/// [`HDROP::iter`](crate::prelude::shell_Hdrop::iter).
 	fn DragQueryFile(self,
 		ifile: Option<u32>, buf: Option<&mut WString>) -> WinResult<u32>
 	{

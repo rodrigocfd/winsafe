@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::dshow::decl::IBaseFilter;
 use crate::ffi_types::HRES;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IEnumFilters`](crate::IEnumFilters) virtual table.
@@ -29,11 +29,18 @@ pub struct IEnumFiltersVT {
 pub struct IEnumFilters(ComPtr);
 
 impl_iunknown!(IEnumFilters, "56a86893-0ad4-11ce-b03a-0020af0ba770");
-impl DshowIEnumFilters for IEnumFilters {}
+impl dshow_IEnumFilters for IEnumFilters {}
 
-/// [`IEnumFilters`](crate::IEnumFilters) methods from `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IEnumFilters`](crate::IEnumFilters).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIEnumFilters: OleIUnknown {
+pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// [`IEnumFilters::Next`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
 	/// method.
 	#[must_use]

@@ -36,7 +36,7 @@ pub mod decl {
 		/// Originally just a `HANDLE`.
 		///
 		/// For an example, see
-		/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+		/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	}
 
 	impl_handle! { HRSRCMEM: "kernel";
@@ -45,23 +45,23 @@ pub mod decl {
 		/// Originally just an `HGLOBAL`.
 		///
 		/// For an example, see
-		/// [`HINSTANCE::LockResource`](crate::prelude::KernelHinstance::LockResource).
+		/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	}
 }
 
 pub mod traits {
-	pub use super::haccesstoken::KernelHaccesstoken;
+	pub use super::haccesstoken::kernel_Haccesstoken;
 	pub use super::handle::{Handle, HandleClose};
-	pub use super::hfile::KernelHfile;
-	pub use super::hfilemap::KernelHfilemap;
-	pub use super::hfilemapview::KernelHfilemapview;
-	pub use super::hfindfile::KernelHfindfile;
-	pub use super::hglobal::KernelHglobal;
-	pub use super::hinstance::KernelHinstance;
-	pub use super::hlocal::KernelHlocal;
-	pub use super::hpipe::KernelHpipe;
-	pub use super::hprocess::KernelHprocess;
-	pub use super::hprocesslist::KernelHprocesslist;
-	pub use super::hthread::KernelHthread;
-	pub use super::hupdatesrc::KernelHupdatersrc;
+	pub use super::hfile::kernel_Hfile;
+	pub use super::hfilemap::kernel_Hfilemap;
+	pub use super::hfilemapview::kernel_Hfilemapview;
+	pub use super::hfindfile::kernel_Hfindfile;
+	pub use super::hglobal::kernel_Hglobal;
+	pub use super::hinstance::kernel_Hinstance;
+	pub use super::hlocal::kernel_Hlocal;
+	pub use super::hpipe::kernel_Hpipe;
+	pub use super::hprocess::kernel_Hprocess;
+	pub use super::hprocesslist::kernel_Hprocesslist;
+	pub use super::hthread::kernel_Hthread;
+	pub use super::hupdatesrc::kernel_Hupdatersrc;
 }

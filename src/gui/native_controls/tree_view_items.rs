@@ -4,7 +4,7 @@ use crate::gui::native_controls::tree_view_item::TreeViewItem;
 use crate::gui::native_controls::tree_view::TreeView;
 use crate::kernel::decl::WString;
 use crate::msg::tvm;
-use crate::prelude::{GuiWindow, Handle, UserHwnd};
+use crate::prelude::{GuiWindow, Handle, user_Hwnd};
 
 /// Exposes item methods of a [`TreeView`](crate::gui::TreeView) control.
 ///

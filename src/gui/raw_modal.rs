@@ -9,7 +9,7 @@ use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{ErrResult, WString};
-use crate::prelude::{GuiEvents, Handle, UserHwnd};
+use crate::prelude::{GuiEvents, Handle, user_Hwnd};
 use crate::user::decl::{
 	AdjustWindowRectEx, DispatchMessage, GetMessage, HWND, IdMenu, MSG, POINT,
 	PostQuitMessage, RECT, SIZE, TranslateMessage, WNDCLASSEX,

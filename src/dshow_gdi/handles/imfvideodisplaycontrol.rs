@@ -1,18 +1,24 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::IMFVideoDisplayControl;
 use crate::gdi::decl::BITMAPINFOHEADER;
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IMFVideoDisplayControlVT;
 
-impl DshowGdiIMFVideoDisplayControl for IMFVideoDisplayControl {}
+impl dshow_gdi_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 
-/// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl) methods from
-/// `dshow`+`gdi` feature.
+/// This trait is enabled with `dshow` and `gdi` features, and provides methods
+/// for [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "dshow", feature = "gdi"))))]
-pub trait DshowGdiIMFVideoDisplayControl: OleIUnknown {
+pub trait dshow_gdi_IMFVideoDisplayControl: ole_IUnknown {
 	/// [`GetCurrentImage`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getcurrentimage)
 	/// method.
 	///

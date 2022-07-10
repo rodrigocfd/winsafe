@@ -10,7 +10,9 @@ use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::gui::runtime_error::RunResult;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{ErrResult, HINSTANCE, WString};
-use crate::prelude::{GuiEvents, Handle, KernelHinstance, UserHaccel, UserHwnd};
+use crate::prelude::{
+	GuiEvents, Handle, kernel_Hinstance, user_Haccel, user_Hwnd,
+};
 use crate::user::decl::{
 	AdjustWindowRectEx, GetSystemMetrics, HACCEL, HMENU, HWND, IdMenu, POINT,
 	PostQuitMessage, RECT, SIZE, WNDCLASSEX,

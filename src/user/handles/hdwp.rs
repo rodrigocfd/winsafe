@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, WinResult};
@@ -11,16 +11,23 @@ impl_handle! { HDWP: "user32";
 	/// [deferred window position](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
 }
 
-impl UserHdwp for HDWP {}
+impl user_Hdwp for HDWP {}
 
-/// [`HDWP`](crate::HDWP) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HDWP`](crate::HDWP).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHdwp: Handle {
+pub trait user_Hdwp: Handle {
 	/// [`BeginDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HDWP::EndDeferWindowPos`](crate::prelude::UserHdwp::EndDeferWindowPos)
+	/// [`HDWP::EndDeferWindowPos`](crate::prelude::user_Hdwp::EndDeferWindowPos)
 	/// call.
 	#[must_use]
 	fn BeginDeferWindowPos(num_windows: u32) -> WinResult<HDWP> {

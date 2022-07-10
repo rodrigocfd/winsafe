@@ -55,7 +55,7 @@ const_bitflag! { FOS: u32: "shell";
 	OVERWRITEPROMPT 0x2
 	/// In the Save dialog only allow the user to choose a file that has one of
 	/// the file name extensions specified through
-	/// [`IFileDialog::SetFileTypes`](crate::prelude::ShellIFileDialog::SetFileTypes).
+	/// [`IFileDialog::SetFileTypes`](crate::prelude::shell_IFileDialog::SetFileTypes).
 	STRICTFILETYPES 0x4
 	/// Don't change the current working directory.
 	NOCHANGEDIR 0x8
@@ -65,7 +65,7 @@ const_bitflag! { FOS: u32: "shell";
 	/// Ensures that returned items are file system items
 	/// ([`SFGAO::FILESYSTEM`](crate::co::SFGAO::FILESYSTEM)). Note that this
 	/// does not apply to items returned by
-	/// [`IFileDialog::GetCurrentSelection`](crate::prelude::ShellIFileDialog::GetCurrentSelection).
+	/// [`IFileDialog::GetCurrentSelection`](crate::prelude::shell_IFileDialog::GetCurrentSelection).
 	FORCEFILESYSTEM 0x40
 	/// Enables the user to choose any item in the Shell namespace not just
 	/// those with [`SFGAO::STREAM`](crate::co::SFGAO::STREAM) or
@@ -92,7 +92,7 @@ const_bitflag! { FOS: u32: "shell";
 	CREATEPROMPT 0x2000
 	/// In the case of a sharing violation when an application is opening a
 	/// file call the application back through
-	/// [`OnShareViolation`](crate::prelude::ShellIFileDialogEvents::OnShareViolation)
+	/// [`OnShareViolation`](crate::prelude::shell_IFileDialogEvents::OnShareViolation)
 	/// for guidance. This flag is overridden by
 	/// [`FOS::NOVALIDATE`](crate::co::FOS::NOVALIDATE).
 	SHAREAWARE 0x4000
@@ -109,7 +109,7 @@ const_bitflag! { FOS: u32: "shell";
 	HIDEMRUPLACES 0x2_0000
 	/// Hide items shown by default in the view's navigation pane. This flag is
 	/// often used in conjunction with the
-	/// [`IFileDialog::AddPlace`](crate::prelude::ShellIFileDialog::AddPlace)
+	/// [`IFileDialog::AddPlace`](crate::prelude::shell_IFileDialog::AddPlace)
 	/// method, to hide standard locations and replace them with custom
 	/// locations.
 	///
@@ -142,7 +142,7 @@ const_bitflag! { FOS: u32: "shell";
 	/// displayed.
 	FORCEPREVIEWPANEON 0x4000_0000
 	/// Indicates that the caller is opening a file as a stream
-	/// ([`BHID_Stream`](crate::prelude::ShellIShellItem::BindToHandler)) so
+	/// ([`BHID_Stream`](crate::prelude::shell_IShellItem::BindToHandler)) so
 	/// there is no need to download that file.
 	SUPPORTSTREAMABLEITEMS 0x8000_0000
 }
@@ -251,7 +251,7 @@ const_ordinary! { PICTYPE: i16: "shell";
 }
 
 const_ordinary! { SE_ERR: u32: "shell";
-	/// [`HWND::ShellExecute`](crate::prelude::ShellHwnd::ShellExecute) return
+	/// [`HWND::ShellExecute`](crate::prelude::shell_Hwnd::ShellExecute) return
 	/// value (`u32`).
 	=>
 	=>
@@ -390,14 +390,14 @@ const_ordinary! { SIGDN: u32: "shell";
 	/// Returns the item's file system path if it has one. Only items that
 	/// report [`SFGAO::FILESYSTEM`](crate::co::SFGAO::FILESYSTEM) have a file
 	/// system path. When an item does not have a file system path a call to
-	/// [`IShellItem::GetDisplayName`](crate::prelude::ShellIShellItem::GetDisplayName)
+	/// [`IShellItem::GetDisplayName`](crate::prelude::shell_IShellItem::GetDisplayName)
 	/// on that item will fail. In UI this name is suitable for display to the
 	/// user in some cases but note that it might not be specified for all
 	/// items.
 	FILESYSPATH 0x8005_8000
 	/// Returns the item's URL if it has one. Some items do not have a URL and
 	/// in those cases a call to
-	/// [`IShellItem::GetDisplayName`](crate::prelude::ShellIShellItem::GetDisplayName)
+	/// [`IShellItem::GetDisplayName`](crate::prelude::shell_IShellItem::GetDisplayName)
 	/// will fail. This name is suitable for display to the user in some cases,
 	/// but note that it might not be specified for all items.
 	URL 0x8006_8000
@@ -514,7 +514,7 @@ const_ordinary! { SIID: u32: "shell";
 }
 
 const_bitflag! { SLGP: u32: "shell";
-	/// [`IShellLink::GetPath`](crate::prelude::ShellIShellLink::GetPath)
+	/// [`IShellLink::GetPath`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
 	=>
 	=>
@@ -525,7 +525,7 @@ const_bitflag! { SLGP: u32: "shell";
 }
 
 const_bitflag! { SLR: u32: "shell";
-	/// [`IShellLink::Resolve`](crate::prelude::ShellIShellLink::GetPath)
+	/// [`IShellLink::Resolve`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
 	=>
 	=>
@@ -581,7 +581,7 @@ const_ordinary! { STREAM_SEEK: u32: "shell";
 }
 
 const_ordinary! { TBPF: u32: "shell";
-	/// [`ITaskbarList3::SetProgressState`](crate::prelude::ShellITaskbarList3::SetProgressState)
+	/// [`ITaskbarList3::SetProgressState`](crate::prelude::shell_ITaskbarList3::SetProgressState)
 	/// `tbpFlags` (`u32`).
 	=>
 	=>

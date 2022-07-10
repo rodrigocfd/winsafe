@@ -1,22 +1,30 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::gdi;
 use crate::gdi::decl::BITMAP;
 use crate::kernel::decl::{GetLastError, WinResult};
-use crate::prelude::{Handle, HandleGdi};
+use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::{HBITMAP, SIZE};
 
-impl HandleGdi for HBITMAP {}
-impl GdiHbitmap for HBITMAP {}
+impl gdi_Hgdiobj for HBITMAP {}
+impl gdi_Hbitmap for HBITMAP {}
 
-/// [`HBITMAP`](crate::HBITMAP) methods from `gdi` feature.
+/// This trait is enabled with the `gdi` feature, and provides methods for
+/// [`HBITMAP`](crate::HBITMAP).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
-pub trait GdiHbitmap: Handle {
+pub trait gdi_Hbitmap: gdi_Hgdiobj {
 	/// [`CreateBitmap`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HBITMAP::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
+	/// call.
 	#[must_use]
 	fn CreateBitmap(
 		sz: SIZE, num_planes: u32,

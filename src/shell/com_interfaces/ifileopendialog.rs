@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::HRES;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ShellIFileDialog, ShellIModalWindow};
+use crate::prelude::{shell_IFileDialog, shell_IModalWindow};
 use crate::shell::decl::IShellItemArray;
 use crate::vt::IFileDialogVT;
 
@@ -40,13 +40,20 @@ pub struct IFileOpenDialogVT {
 pub struct IFileOpenDialog(ComPtr);
 
 impl_iunknown!(IFileOpenDialog, "d57c7288-d4ad-4768-be02-9d969532d960");
-impl ShellIModalWindow for IFileOpenDialog {}
-impl ShellIFileDialog for IFileOpenDialog {}
-impl ShellIFileOpenDialog for IFileOpenDialog {}
+impl shell_IModalWindow for IFileOpenDialog {}
+impl shell_IFileDialog for IFileOpenDialog {}
+impl shell_IFileOpenDialog for IFileOpenDialog {}
 
-/// [`IFileOpenDialog`](crate::IFileOpenDialog) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IFileOpenDialog`](crate::IFileOpenDialog).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIFileOpenDialog: ShellIFileDialog {
+pub trait shell_IFileOpenDialog: shell_IFileDialog {
 	/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 	/// method.
 	///

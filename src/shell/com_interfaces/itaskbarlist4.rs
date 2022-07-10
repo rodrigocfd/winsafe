@@ -1,10 +1,12 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ShellITaskbarList, ShellITaskbarList2, ShellITaskbarList3};
+use crate::prelude::{
+	shell_ITaskbarList, shell_ITaskbarList2, shell_ITaskbarList3,
+};
 use crate::user::decl::HWND;
 use crate::vt::ITaskbarList3VT;
 
@@ -40,14 +42,21 @@ pub struct ITaskbarList4VT {
 pub struct ITaskbarList4(ComPtr);
 
 impl_iunknown!(ITaskbarList4, "c43dc798-95d1-4bea-9030-bb99e2983a1a");
-impl ShellITaskbarList for ITaskbarList4 {}
-impl ShellITaskbarList2 for ITaskbarList4 {}
-impl ShellITaskbarList3 for ITaskbarList4 {}
-impl ShellITaskbarList4 for ITaskbarList4 {}
+impl shell_ITaskbarList for ITaskbarList4 {}
+impl shell_ITaskbarList2 for ITaskbarList4 {}
+impl shell_ITaskbarList3 for ITaskbarList4 {}
+impl shell_ITaskbarList4 for ITaskbarList4 {}
 
-/// [`ITaskbarList4`](crate::ITaskbarList4) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`ITaskbarList4`](crate::ITaskbarList4).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellITaskbarList4: ShellITaskbarList3 {
+pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 	/// [`ITaskbarList4::SetTabProperties`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
 	/// method.
 	fn SetTabProperties(&self,

@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
 use crate::kernel::decl::WinResult;
@@ -11,11 +11,18 @@ impl_handle! { HMONITOR: "user";
 	/// [display monitor](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmonitor).
 }
 
-impl UserHmonitor for HMONITOR {}
+impl user_Hmonitor for HMONITOR {}
 
-/// [`HMONITOR`](crate::HMONITOR) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HMONITOR`](crate::HMONITOR).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHmonitor: Handle {
+pub trait user_Hmonitor: Handle {
 	/// [`GetMonitorInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow)
 	/// method.
 	///

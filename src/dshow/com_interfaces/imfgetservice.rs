@@ -1,10 +1,10 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HRES, PCVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ComInterface, OleIUnknown};
+use crate::prelude::{ComInterface, ole_IUnknown};
 use crate::vt::IUnknownVT;
 
 /// [`IMFGetService`](crate::IMFGetService) virtual table.
@@ -39,12 +39,18 @@ pub struct IMFGetServiceVT {
 pub struct IMFGetService(ComPtr);
 
 impl_iunknown!(IMFGetService, "fa993888-4383-415a-a930-dd472a8cf6f7");
-impl DshowIMFGetService for IMFGetService {}
+impl dshow_IMFGetService for IMFGetService {}
 
-/// [`IMFGetService`](crate::IMFGetService) methods methods from `dshow`
-/// feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IMFGetService`](crate::IMFGetService).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIMFGetService: OleIUnknown {
+pub trait dshow_IMFGetService: ole_IUnknown {
 	/// [`IMFGetService::GetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
 	/// method.
 	///

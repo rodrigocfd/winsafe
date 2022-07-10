@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
 use crate::kernel::decl::{
@@ -13,16 +13,23 @@ impl_handle! { HUPDATERSRC: "kernel";
 	/// Originally just a `HANDLE`.
 }
 
-impl KernelHupdatersrc for HUPDATERSRC {}
+impl kernel_Hupdatersrc for HUPDATERSRC {}
 
-/// [`HUPDATERSRC`](crate::HUPDATERSRC) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HUPDATERSRC`](crate::HUPDATERSRC).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHupdatersrc: Handle {
+pub trait kernel_Hupdatersrc: Handle {
 	/// [`BeginUpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HUPDATERSRC::EndUpdateResource`](crate::prelude::KernelHupdatersrc::EndUpdateResource)
+	/// [`HUPDATERSRC::EndUpdateResource`](crate::prelude::kernel_Hupdatersrc::EndUpdateResource)
 	/// call.
 	#[must_use]
 	fn BeginUpdateResource(

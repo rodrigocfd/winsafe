@@ -53,7 +53,7 @@ impl GuiNativeControlEvents<RadioGroupEvents> for RadioGroup {
 impl RadioGroup {
 	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be created
 	/// on the parent window with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -111,7 +111,7 @@ impl RadioGroup {
 
 	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	///
 	/// # Panics
 	///

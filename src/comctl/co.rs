@@ -568,8 +568,8 @@ const_ordinary! { IDB: usize: "comctl";
 }
 
 const_bitflag! { ILC: u32: "comctl";
-	/// [`HIMAGELIST::Create`](crate::prelude::ComctlHimagelist::Create) `flags`
-	/// (`u32`).
+	/// [`HIMAGELIST::Create`](crate::prelude::comctl_Himagelist::Create)
+	/// `flags` (`u32`).
 	=>
 	=>
 	/// Use a mask. The image list contains two bitmaps one of which is a
@@ -1961,7 +1961,7 @@ const_wsex! { TCS_EX: "comctl";
 }
 
 const_ordinary! { TD_ICON: u16: "comctl";
-	/// [`HWND::TaskDialog`](crate::prelude::ComctlOleHwnd::TaskDialog)
+	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog)
 	/// `pszIcon` and [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
 	/// `pszMainIcon` (`u16`). Originally has `TD` prefix and `ICON` suffix.
 	=>
@@ -1973,7 +1973,7 @@ const_ordinary! { TD_ICON: u16: "comctl";
 }
 
 const_bitflag! { TDCBF: i32: "comctl";
-	/// [`HWND::TaskDialog`](crate::prelude::ComctlOleHwnd::TaskDialog) and
+	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
 	///
 	/// Originally has `TDCBF` prefix and `BUTTON` suffix.

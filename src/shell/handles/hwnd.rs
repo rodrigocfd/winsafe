@@ -1,15 +1,22 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, shell};
 use crate::kernel::decl::{HINSTANCE, WString};
 use crate::prelude::Handle;
 use crate::user::decl::HWND;
 
-impl ShellHwnd for HWND {}
+impl shell_Hwnd for HWND {}
 
-/// [`HWND`](crate::HWND) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`HWND`](crate::HWND).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellHwnd: Handle {
+pub trait shell_Hwnd: Handle {
 	/// [`ShellExecute`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
 	/// method.
 	fn ShellExecute(self,

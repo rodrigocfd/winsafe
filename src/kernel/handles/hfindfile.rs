@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
@@ -13,17 +13,24 @@ impl_handle! { HFINDFILE: "kernel";
 	/// Originally just a `HANDLE`.
 }
 
-impl KernelHfindfile for HFINDFILE {}
+impl kernel_Hfindfile for HFINDFILE {}
 
-/// [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HFINDFILE`](crate::HFINDFILE).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHfindfile: Handle {
+pub trait kernel_Hfindfile: Handle {
 	/// Returns an iterator over the found items, by calling
-	/// [`HFINDFILE::FindFirstFile`](crate::prelude::KernelHfindfile::FindFirstFile),
+	/// [`HFINDFILE::FindFirstFile`](crate::prelude::kernel_Hfindfile::FindFirstFile),
 	/// then subsequent
-	/// [`HFINDFILE::FindNextFile`](crate::prelude::KernelHfindfile::FindNextFile),
+	/// [`HFINDFILE::FindNextFile`](crate::prelude::kernel_Hfindfile::FindNextFile),
 	/// and finally freeing the resource by calling
-	/// [`HFINDFILE::FindClose`](crate::prelude::KernelHfindfile::FindClose).
+	/// [`HFINDFILE::FindClose`](crate::prelude::kernel_Hfindfile::FindClose).
 	///
 	/// # Examples
 	///
@@ -68,11 +75,11 @@ pub trait KernelHfindfile: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFINDFILE::FindClose`](crate::prelude::KernelHfindfile::FindClose)
+	/// [`HFINDFILE::FindClose`](crate::prelude::kernel_Hfindfile::FindClose)
 	/// call.
 	///
 	/// This method is rather tricky, consider using
-	/// [`HFINDFILE::iter`](crate::prelude::KernelHfindfile::iter).
+	/// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
 	#[must_use]
 	fn FindFirstFile(
 		file_name: &str,
@@ -96,7 +103,7 @@ pub trait KernelHfindfile: Handle {
 	/// method.
 	///
 	/// This method is rather tricky, consider using
-	/// [`HFINDFILE::iter`](crate::prelude::KernelHfindfile::iter).
+	/// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
 	fn FindNextFile(self, wfd: &mut WIN32_FIND_DATA) -> WinResult<bool> {
 		match unsafe {
 			kernel::ffi::FindNextFileW(self.as_ptr(), wfd as *mut _ as _)

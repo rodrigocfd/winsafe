@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, WinResult};
 use crate::kernel::privs::bool_to_winresult;
@@ -10,16 +10,23 @@ impl_handle! { HICON: "user";
 	/// [icon](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hicon).
 }
 
-impl UserHicon for HICON {}
+impl user_Hicon for HICON {}
 
-/// [`HICON`](crate::HICON) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HICON`](crate::HICON).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHicon: Handle {
+pub trait user_Hicon: Handle {
 	/// [`CopyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copyicon)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 	#[must_use]
 	fn CopyIcon(self) -> WinResult<HICON> {
 		unsafe { user::ffi::CopyIcon(self.as_ptr()).as_mut() }

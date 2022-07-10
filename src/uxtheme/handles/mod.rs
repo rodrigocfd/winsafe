@@ -6,6 +6,6 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::htheme::UxthemeHtheme;
-	pub use super::hwnd::UxthemeHwnd;
+	pub use super::htheme::uxtheme_Htheme;
+	pub use super::hwnd::uxtheme_Hwnd;
 }

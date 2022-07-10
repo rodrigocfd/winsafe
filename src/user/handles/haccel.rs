@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, WinResult};
 use crate::prelude::Handle;
@@ -10,16 +10,23 @@ impl_handle! { HACCEL: "user";
 	/// [accelerator table](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#haccel).
 }
 
-impl UserHaccel for HACCEL {}
+impl user_Haccel for HACCEL {}
 
-/// [`HACCEL`](crate::HACCEL) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HACCEL`](crate::HACCEL).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHaccel: Handle {
+pub trait user_Haccel: Handle {
 	/// [`CreateAcceleratorTable`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HACCEL::DestroyAcceleratorTable`](crate::prelude::UserHaccel::DestroyAcceleratorTable)
+	/// [`HACCEL::DestroyAcceleratorTable`](crate::prelude::user_Haccel::DestroyAcceleratorTable)
 	/// call.
 	#[must_use]
 	fn CreateAcceleratorTable(accel: &mut [ACCEL]) -> WinResult<HACCEL> {

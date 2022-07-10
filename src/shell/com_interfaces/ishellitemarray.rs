@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 use std::mem::ManuallyDrop;
@@ -6,7 +6,7 @@ use std::mem::ManuallyDrop;
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::shell::decl::IShellItem;
 use crate::vt::IUnknownVT;
 
@@ -34,16 +34,23 @@ pub struct IShellItemArrayVT {
 pub struct IShellItemArray(ComPtr);
 
 impl_iunknown!(IShellItemArray, "b63ea76d-1f85-456f-a19c-48159efa858b");
-impl ShellIShellItemArray for IShellItemArray {}
+impl shell_IShellItemArray for IShellItemArray {}
 
-/// [`IShellItemArray`](crate::IShellItemArray) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IShellItemArray`](crate::IShellItemArray).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIShellItemArray: OleIUnknown {
+pub trait shell_IShellItemArray: ole_IUnknown {
 	/// Returns an iterator over the [`IShellItem`](crate::IShellItem) elements
 	/// by calling
-	/// [`IShellItemArrayT::GetCount`](crate::prelude::ShellIShellItemArray::GetCount)
+	/// [`IShellItemArrayT::GetCount`](crate::prelude::shell_IShellItemArray::GetCount)
 	/// and
-	/// [`IShellItemArray::GetItemAt`](crate::prelude::ShellIShellItemArray::GetItemAt)
+	/// [`IShellItemArray::GetItemAt`](crate::prelude::shell_IShellItemArray::GetItemAt)
 	/// consecutively.
 	///
 	/// # Examples
@@ -106,7 +113,7 @@ pub trait ShellIShellItemArray: OleIUnknown {
 	/// method.
 	///
 	/// Prefer using
-	/// [`IShellItemArrayT::iter`](crate::prelude::ShellIShellItemArray::iter).
+	/// [`IShellItemArrayT::iter`](crate::prelude::shell_IShellItemArray::iter).
 	#[must_use]
 	fn GetItemAt(&self, index: u32) -> HrResult<IShellItem> {
 		let mut ppv_queried = ComPtr::null();

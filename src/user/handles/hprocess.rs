@@ -1,15 +1,22 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
 use crate::kernel::decl::{HPROCESS, WinResult};
 use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::Handle;
 
-impl UserHprocess for HPROCESS {}
+impl user_Hprocess for HPROCESS {}
 
-/// [`HPROCESS`](crate::HPROCESS) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HPROCESS`](crate::HPROCESS).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHprocess: Handle {
+pub trait user_Hprocess: Handle {
 	/// [`SetUserObjectInformation`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
 	/// method.
 	///

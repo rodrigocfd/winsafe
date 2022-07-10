@@ -33,21 +33,21 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::ibindctx::ShellIBindCtx;
-	pub use super::ifiledialog::ShellIFileDialog;
-	pub use super::ifileopendialog::ShellIFileOpenDialog;
-	pub use super::ifilesavedialog::ShellIFileSaveDialog;
-	pub use super::imodalwindow::ShellIModalWindow;
-	pub use super::ipersist::ShellIPersist;
-	pub use super::isequentialstream::ShellISequentialStream;
-	pub use super::ishellitem::ShellIShellItem;
-	pub use super::ishellitemarray::ShellIShellItemArray;
-	pub use super::ishelllink::ShellIShellLink;
-	pub use super::istream::ShellIStream;
-	pub use super::itaskbarlist::ShellITaskbarList;
-	pub use super::itaskbarlist2::ShellITaskbarList2;
-	pub use super::itaskbarlist3::ShellITaskbarList3;
-	pub use super::itaskbarlist4::ShellITaskbarList4;
+	pub use super::ibindctx::shell_IBindCtx;
+	pub use super::ifiledialog::shell_IFileDialog;
+	pub use super::ifileopendialog::shell_IFileOpenDialog;
+	pub use super::ifilesavedialog::shell_IFileSaveDialog;
+	pub use super::imodalwindow::shell_IModalWindow;
+	pub use super::ipersist::shell_IPersist;
+	pub use super::isequentialstream::shell_ISequentialStream;
+	pub use super::ishellitem::shell_IShellItem;
+	pub use super::ishellitemarray::shell_IShellItemArray;
+	pub use super::ishelllink::shell_IShellLink;
+	pub use super::istream::shell_IStream;
+	pub use super::itaskbarlist::shell_ITaskbarList;
+	pub use super::itaskbarlist2::shell_ITaskbarList2;
+	pub use super::itaskbarlist3::shell_ITaskbarList3;
+	pub use super::itaskbarlist4::shell_ITaskbarList4;
 }
 
 pub mod vt {

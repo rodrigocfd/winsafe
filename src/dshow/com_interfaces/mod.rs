@@ -25,17 +25,17 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::ibasefilter::DshowIBaseFilter;
-	pub use super::ienumfilters::DshowIEnumFilters;
-	pub use super::ifilesinkfilter::DshowIFileSinkFilter;
-	pub use super::ifiltergraph::DshowIFilterGraph;
-	pub use super::igraphbuilder::DshowIGraphBuilder;
-	pub use super::imediacontrol::DshowIMediaControl;
-	pub use super::imediafilter::DshowIMediaFilter;
-	pub use super::imediaseeking::DshowIMediaSeeking;
-	pub use super::imfgetservice::DshowIMFGetService;
-	pub use super::imfvideodisplaycontrol::DshowIMFVideoDisplayControl;
-	pub use super::ipin::DshowIPin;
+	pub use super::ibasefilter::dshow_IBaseFilter;
+	pub use super::ienumfilters::dshow_IEnumFilters;
+	pub use super::ifilesinkfilter::dshow_IFileSinkFilter;
+	pub use super::ifiltergraph::dshow_IFilterGraph;
+	pub use super::igraphbuilder::dshow_IGraphBuilder;
+	pub use super::imediacontrol::dshow_IMediaControl;
+	pub use super::imediafilter::dshow_IMediaFilter;
+	pub use super::imediaseeking::dshow_IMediaSeeking;
+	pub use super::imfgetservice::dshow_IMFGetService;
+	pub use super::imfvideodisplaycontrol::dshow_IMFVideoDisplayControl;
+	pub use super::ipin::dshow_IPin;
 }
 
 pub mod vt {

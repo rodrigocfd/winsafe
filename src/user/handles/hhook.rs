@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, HINSTANCE, WinResult};
@@ -11,11 +11,18 @@ impl_handle! { HHOOK: "user";
 	/// [hook](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
 }
 
-impl UserHhook for HHOOK {}
+impl user_Hhook for HHOOK {}
 
-/// [`HHOOK`](crate::HHOOK) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HHOOK`](crate::HHOOK).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHhook: Handle {
+pub trait user_Hhook: Handle {
 	/// [`CallNextHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
 	/// method.
 	fn CallNextHookEx(self,

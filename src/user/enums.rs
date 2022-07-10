@@ -45,8 +45,8 @@ pub struct AccelMenuCtrlData {
 /// [window class](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-classes)
 /// functions:
 ///
-/// * [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx) `lpClassName`;
-/// * [`HWND::FindWindowEx`](crate::prelude::UserHwnd::FindWindowEx) `lpszClass`;
+/// * [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx) `lpClassName`;
+/// * [`HWND::FindWindowEx`](crate::prelude::user_Hwnd::FindWindowEx) `lpszClass`;
 /// * [`UnregisterClass`](crate::UnregisterClass) `lpClassName`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
@@ -97,7 +97,7 @@ impl BmpIcon {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::AppendMenu`](crate::prelude::UserHmenu::AppendMenu) `lpNewItem`.
+/// * [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu) `lpNewItem`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum BmpPtrStr {
@@ -200,7 +200,7 @@ impl HwndHmenu {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::SetWindowPos`](crate::prelude::UserHwnd::SetWindowPos) `hwnd_insert_after`.
+/// * [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos) `hwnd_insert_after`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]
 pub enum HwndPlace {
@@ -250,7 +250,7 @@ impl HwndPointId {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadCursor`](crate::prelude::UserHinstance::LoadCursor) `resource_id`.
+/// * [`HINSTANCE::LoadCursor`](crate::prelude::user_Hinstance::LoadCursor) `resource_id`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdIdcStr {
@@ -281,7 +281,7 @@ impl IdIdcStr {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadIcon`](crate::prelude::UserHinstance::LoadIcon) `icon_id`.
+/// * [`HINSTANCE::LoadIcon`](crate::prelude::user_Hinstance::LoadIcon) `icon_id`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdIdiStr {
@@ -312,8 +312,8 @@ impl IdIdiStr {
 
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
-/// * [`HMENU::AppendMenu`](crate::prelude::UserHmenu::AppendMenu) `uIDNewItem`;
-/// * [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx) `hMenu`.
+/// * [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu) `uIDNewItem`;
+/// * [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx) `hMenu`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]
 pub enum IdMenu {
@@ -347,7 +347,7 @@ impl IdMenu {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadImageBitmap`](crate::prelude::UserHinstance::LoadImageBitmap) `name`.
+/// * [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap) `name`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdObmStr {
@@ -378,7 +378,7 @@ impl IdObmStr {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadImageCursor`](crate::prelude::UserHinstance::LoadImageCursor) `name`.
+/// * [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor) `name`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdOcrStr {
@@ -409,7 +409,7 @@ impl IdOcrStr {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadImageIcon`](crate::prelude::UserHinstance::LoadImageIcon) `name`.
+/// * [`HINSTANCE::LoadImageIcon`](crate::prelude::user_Hinstance::LoadImageIcon) `name`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdOicStr {
@@ -440,19 +440,19 @@ impl IdOicStr {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::CheckMenuItem`](crate::prelude::UserHmenu::CheckMenuItem) `uIDCheckItem`;
-/// * [`HMENU::CheckMenuRadioItem`](crate::prelude::UserHmenu::CheckMenuRadioItem) `first`, `last`, `check`;
-/// * [`HMENU::DeleteMenu`](crate::prelude::UserHmenu::DeleteMenu) `uPosition`;
-/// * [`HMENU::EnableMenuItem`](crate::prelude::UserHmenu::EnableMenuItem) `uIDEnableItem`;
-/// * [`HMENU::GetMenuDefaultItem`](crate::prelude::UserHmenu::GetMenuDefaultItem) return value;
-/// * [`HMENU::GetMenuItemInfo`](crate::prelude::UserHmenu::GetMenuItemInfo) `item`;
-/// * [`HMENU::GetMenuState`](crate::prelude::UserHmenu::GetMenuState) `uId`;
-/// * [`HMENU::GetMenuString`](crate::prelude::UserHmenu::GetMenuString) `uIDItem`;
-/// * [`HMENU::InsertMenuItem`](crate::prelude::UserHmenu::InsertMenuItem) `item`;
-/// * [`HMENU::RemoveMenu`](crate::prelude::UserHmenu::RemoveMenu) `uPosition`;
-/// * [`HMENU::SetMenuItemBitmaps`](crate::prelude::UserHmenu::SetMenuItemBitmaps) `uPosition`;
-/// * [`HMENU::SetMenuItemInfo`](crate::prelude::UserHmenu::SetMenuItemInfo) `item`;
-/// * [`HWND::HiliteMenuItem`](crate::prelude::UserHwnd::HiliteMenuItem) `uIDHiliteItem`.
+/// * [`HMENU::CheckMenuItem`](crate::prelude::user_Hmenu::CheckMenuItem) `uIDCheckItem`;
+/// * [`HMENU::CheckMenuRadioItem`](crate::prelude::user_Hmenu::CheckMenuRadioItem) `first`, `last`, `check`;
+/// * [`HMENU::DeleteMenu`](crate::prelude::user_Hmenu::DeleteMenu) `uPosition`;
+/// * [`HMENU::EnableMenuItem`](crate::prelude::user_Hmenu::EnableMenuItem) `uIDEnableItem`;
+/// * [`HMENU::GetMenuDefaultItem`](crate::prelude::user_Hmenu::GetMenuDefaultItem) return value;
+/// * [`HMENU::GetMenuItemInfo`](crate::prelude::user_Hmenu::GetMenuItemInfo) `item`;
+/// * [`HMENU::GetMenuState`](crate::prelude::user_Hmenu::GetMenuState) `uId`;
+/// * [`HMENU::GetMenuString`](crate::prelude::user_Hmenu::GetMenuString) `uIDItem`;
+/// * [`HMENU::InsertMenuItem`](crate::prelude::user_Hmenu::InsertMenuItem) `item`;
+/// * [`HMENU::RemoveMenu`](crate::prelude::user_Hmenu::RemoveMenu) `uPosition`;
+/// * [`HMENU::SetMenuItemBitmaps`](crate::prelude::user_Hmenu::SetMenuItemBitmaps) `uPosition`;
+/// * [`HMENU::SetMenuItemInfo`](crate::prelude::user_Hmenu::SetMenuItemInfo) `item`;
+/// * [`HWND::HiliteMenuItem`](crate::prelude::user_Hwnd::HiliteMenuItem) `uIDHiliteItem`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]
 pub enum IdPos {
@@ -494,7 +494,7 @@ impl IdPos {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::AppendMenuEnum`](crate::prelude::UserHmenu::AppendMenuEnum) `entry`.
+/// * [`HMENU::AppendMenuEnum`](crate::prelude::user_Hmenu::AppendMenuEnum) `entry`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum MenuEnum<'a> {
 	/// A selectable entry item, with command ID and text.

@@ -1,7 +1,7 @@
 pub(in crate::msimg) mod ffi;
 
-mod hdc;
+mod handles;
 
 pub mod traits {
-	pub use super::hdc::MsimgHdc;
+	pub use super::handles::traits::*;
 }

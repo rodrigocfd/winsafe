@@ -5,5 +5,5 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::hkey::AdvapiHkey;
+	pub use super::hkey::advapi_Hkey;
 }

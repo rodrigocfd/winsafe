@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::{IBaseFilter, IEnumFilters};
 use crate::ffi_types::{HRES, PCSTR, PCVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IFilterGraph`](crate::IFilterGraph) virtual table.
@@ -33,11 +33,18 @@ pub struct IFilterGraphVT {
 pub struct IFilterGraph(ComPtr);
 
 impl_iunknown!(IFilterGraph, "56a8689f-0ad4-11ce-b03a-0020af0ba770");
-impl DshowIFilterGraph for IFilterGraph {}
+impl dshow_IFilterGraph for IFilterGraph {}
 
-/// [`IFilterGraph`](crate::IFilterGraph) methods methods from `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IFilterGraph`](crate::IFilterGraph).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIFilterGraph: OleIUnknown {
+pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// [`IFilterGraph::AddFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 	/// method.
 	fn AddFilter(&self, filter: &IBaseFilter, name: &str) -> HrResult<()> {

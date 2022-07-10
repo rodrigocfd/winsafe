@@ -7,7 +7,14 @@ use crate::kernel::decl::WinResult;
 use crate::kernel::privs::bool_to_winresult;
 
 /// A native
-/// [handle](https://docs.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects).
+/// [handle](https://docs.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects),
+/// base to all other handles.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait Handle:
 	fmt::Debug + fmt::Display + fmt::LowerHex + fmt::UpperHex +
@@ -39,6 +46,12 @@ pub trait Handle:
 }
 
 /// A [`Handle`](crate::prelude::Handle) which can be closed.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait HandleClose: Handle {
 	/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)

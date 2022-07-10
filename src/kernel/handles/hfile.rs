@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
@@ -15,11 +15,18 @@ impl_handle! { HFILE: "kernel";
 }
 
 impl HandleClose for HFILE {}
-impl KernelHfile for HFILE {}
+impl kernel_Hfile for HFILE {}
 
-/// [`HFILE`](crate::HFILE) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HFILE`](crate::HFILE).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHfile: Handle {
+pub trait kernel_Hfile: Handle {
 	/// [`CreateFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
 	/// static method.
 	///
@@ -160,7 +167,7 @@ pub trait KernelHfile: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFILE::UnlockFile`](crate::prelude::KernelHfile::UnlockFile) call.
+	/// [`HFILE::UnlockFile`](crate::prelude::kernel_Hfile::UnlockFile) call.
 	fn LockFile(self, offset: u64, num_bytes_to_lock: u64) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {

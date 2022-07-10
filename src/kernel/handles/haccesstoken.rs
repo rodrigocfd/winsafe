@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, WinResult};
@@ -12,11 +12,18 @@ impl_handle! { HACCESSTOKEN: "kernel";
 }
 
 impl HandleClose for HACCESSTOKEN {}
-impl KernelHaccesstoken for HACCESSTOKEN {}
+impl kernel_Haccesstoken for HACCESSTOKEN {}
 
-/// [`HACCESSTOKEN`](crate::HACCESSTOKEN) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HACCESSTOKEN`](crate::HACCESSTOKEN).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHaccesstoken: Handle {
+pub trait kernel_Haccesstoken: Handle {
 	/// [`DuplicateToken`](https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
 	/// method.
 	///

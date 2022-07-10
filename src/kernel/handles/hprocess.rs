@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
 use crate::ffi_types::BOOL;
@@ -16,11 +16,18 @@ impl_handle! { HPROCESS: "kernel";
 }
 
 impl HandleClose for HPROCESS {}
-impl KernelHprocess for HPROCESS {}
+impl kernel_Hprocess for HPROCESS {}
 
-/// [`HPROCESS`](crate::HPROCESS) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HPROCESS`](crate::HPROCESS).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHprocess: Handle {
+pub trait kernel_Hprocess: Handle {
 	/// [`CreateProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
 	/// static method.
 	///

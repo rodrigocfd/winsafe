@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HRES, PCVOID};
@@ -53,9 +53,16 @@ pub struct IUnknown(ComPtr);
 
 impl_iunknown!(IUnknown, "00000000-0000-0000-c000-000000000046");
 
-/// [`IUnknown`](crate::IUnknown) methods from `ole` feature.
+/// This trait is enabled with the `ole` feature, and provides methods for
+/// [`IUnknown`](crate::IUnknown).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-pub trait OleIUnknown: ComInterface + Clone {
+pub trait ole_IUnknown: ComInterface + Clone {
 	/// Returns the pointer to the underlying COM virtual table.
 	#[must_use]
 	unsafe fn ptr(&self) -> ComPtr;

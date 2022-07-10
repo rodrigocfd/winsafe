@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HANDLE, HRES, PCSTR, PSTR, PVOID};
@@ -6,7 +6,7 @@ use crate::kernel::decl::{WIN32_FIND_DATA, WString};
 use crate::kernel::privs::MAX_PATH;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::shell::privs::INFOTIPSIZE;
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
@@ -36,7 +36,7 @@ pub struct IShellLinkVT {
 	pub SetPath: fn(ComPtr, PCSTR) -> HRES,
 }
 
-/// [`IShellLinkW`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
+/// [`IShellLink`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
 /// COM interface over [`IShellLinkVT`](crate::vt::IShellLinkVT).
 ///
 /// Automatically calls
@@ -60,11 +60,18 @@ pub struct IShellLinkVT {
 pub struct IShellLink(ComPtr);
 
 impl_iunknown!(IShellLink, "000214f9-0000-0000-c000-000000000046");
-impl ShellIShellLink for IShellLink {}
+impl shell_IShellLink for IShellLink {}
 
-/// [`IShellLink`](crate::IShellLink) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IShellLink`](crate::IShellLink).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIShellLink: OleIUnknown {
+pub trait shell_IShellLink: ole_IUnknown {
 	/// [`IShellLinkW::GetArguments`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getarguments)
 	/// method.
 	#[must_use]

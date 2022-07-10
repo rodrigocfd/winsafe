@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, comctl_ole};
 use crate::comctl::decl::IdTdiconStr;
@@ -8,11 +8,18 @@ use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
 use crate::user::decl::HWND;
 
-impl ComctlOleHwnd for HWND {}
+impl comctl_ole_Hwnd for HWND {}
 
-/// [`HWND`](crate::HWND) methods from `comctl`+`ole` features.
+/// This trait is enabled with `comctl` and `ole` features, and provides methods
+/// for [`HWND`](crate::HWND).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
-pub trait ComctlOleHwnd: Handle {
+pub trait comctl_ole_Hwnd: Handle {
 	/// [`InitializeFlatSB`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// method.
 	fn InitializeFlatSB(self) -> HrResult<()> {

@@ -1,17 +1,26 @@
+#![allow(non_camel_case_types)]
+
 use crate::co;
 use crate::comctl::decl::HIMAGELIST;
 use crate::kernel::decl::WinResult;
-use crate::prelude::{ComctlHimagelist, UserHicon};
+use crate::prelude::{comctl_Himagelist, user_Hicon};
 use crate::shell::decl::{SHFILEINFO, SHGetFileInfo};
 
-impl ComctlShellHimagelist for HIMAGELIST {}
+impl comctl_shell_Himagelist for HIMAGELIST {}
 
-/// [`HIMAGELIST`](crate::HIMAGELIST) methods from `comctl`+`shell` features.
+/// This trait is enabled with `comctl` and `shell` features, and provides
+/// methods for [`HIMAGELIST`](crate::HIMAGELIST).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "shell"))))]
-pub trait ComctlShellHimagelist: ComctlHimagelist {
+pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// Calls [`SHGetFileInfo`](crate::SHGetFileInfo) to retrieve one or more
 	/// shell file icons, then passes them to
-	/// [`AddIcon`](crate::prelude::ComctlHimagelist::AddIcon).
+	/// [`AddIcon`](crate::prelude::comctl_Himagelist::AddIcon).
 	///
 	/// # Examples
 	///

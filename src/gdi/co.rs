@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types)]
 
 const_ordinary! { AD: i32: "gdi";
-	/// [`HDC::SetArcDirection`](crate::prelude::GdiHdc::SetArcDirection) `dir`
+	/// [`HDC::SetArcDirection`](crate::prelude::gdi_Hdc::SetArcDirection) `dir`
 	/// (`i32`).
 	=>
 	=>
@@ -22,7 +22,7 @@ const_ordinary! { BI: u32: "gdi";
 }
 
 const_ordinary! { BKMODE: i32: "gdi";
-	/// [`HDC::SetBkMode`](crate::prelude::GdiHdc::SetBkMode) `mode` (`i32`).
+	/// [`HDC::SetBkMode`](crate::prelude::gdi_Hdc::SetBkMode) `mode` (`i32`).
 	=>
 	=>
 	TRANSPARENT 1
@@ -49,7 +49,7 @@ const_ordinary! { BSS: u32: "gdi";
 }
 
 const_ordinary! { CHARSET: u8: "gdi";
-	/// [`HFONT::CreateFont`](crate::prelude::GdiHfont::CreateFont) `char_set`
+	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `char_set`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 	=>
 	=>
@@ -76,7 +76,7 @@ const_ordinary! { CHARSET: u8: "gdi";
 }
 
 const_ordinary! { CLIP: u8: "gdi";
-	/// [`HFONT::CreateFont`](crate::prelude::GdiHfont::CreateFont)
+	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `clip_precision` and [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`
 	/// (`u8`).
 	=>
@@ -116,8 +116,8 @@ const_ordinary! { FF: u8: "gdi";
 }
 
 const_ordinary! { FW: u32: "gdi";
-	/// [`HFONT::CreateFont`](crate::prelude::GdiHfont::CreateFont) `weight` and
-	/// [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
+	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `weight`
+	/// and [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
 	=>
 	=>
 	DONTCARE 0
@@ -138,7 +138,7 @@ const_ordinary! { FW: u32: "gdi";
 }
 
 const_ordinary! { GDC: i32: "gdi";
-	/// [`HDC::GetDeviceCaps`](crate::prelude::GdiHdc::GetDeviceCaps) `index`
+	/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps) `index`
 	/// (`i32`).
 	///
 	/// Originally has no prefix.
@@ -187,8 +187,8 @@ const_ordinary! { GDC: i32: "gdi";
 }
 
 const_ordinary! { GM: i32: "gdi";
-	/// [`HDC::SetGraphicsMode`](crate::prelude::GdiHdc::SetGraphicsMode) `mode`
-	/// (`i32`).
+	/// [`HDC::SetGraphicsMode`](crate::prelude::gdi_Hdc::SetGraphicsMode)
+	/// `mode` (`i32`).
 	=>
 	=>
 	COMPATIBLE 1
@@ -196,9 +196,8 @@ const_ordinary! { GM: i32: "gdi";
 }
 
 const_ordinary! { HS: i32: "gdi";
-	/// [`HBRUSH::CreateHatchBrush`](crate::prelude::GdiHbrush::CreateHatchBrush)
-	/// `hatch`
-	/// (`i32`).
+	/// [`HBRUSH::CreateHatchBrush`](crate::prelude::gdi_Hbrush::CreateHatchBrush)
+	/// `hatch` (`i32`).
 	=>
 	=>
 	/// Horizontal hatch: `-----`.
@@ -216,7 +215,7 @@ const_ordinary! { HS: i32: "gdi";
 }
 
 const_ordinary! { OUT_PRECIS: u8: "gdi";
-	/// [`HFONT::CreateFont`](crate::prelude::GdiHfont::CreateFont)
+	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `out_precision` and [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	=>
 	=>
@@ -234,7 +233,7 @@ const_ordinary! { OUT_PRECIS: u8: "gdi";
 }
 
 const_ordinary! { PITCH: u8: "gdi";
-	/// [`HFONT::CreateFont`](crate::prelude::GdiHfont::CreateFont)
+	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `pitch_and_family` and [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`
 	/// (`u8`) used with [`FF`](crate::co::FF).
 	=>
@@ -252,7 +251,8 @@ impl PITCH {
 }
 
 const_ordinary! { PS: i32: "gdi";
-	/// [`HPEN::CreatePen`](crate::prelude::GdiHpen::CreatePen) `style` (`i32`).
+	/// [`HPEN::CreatePen`](crate::prelude::gdi_Hpen::CreatePen) `style`
+	/// (`i32`).
 	=>
 	=>
 	SOLID 0
@@ -265,7 +265,7 @@ const_ordinary! { PS: i32: "gdi";
 }
 
 const_ordinary! { QUALITY: u8: "gdi";
-	/// [`HFONT::CreateFont`](crate::prelude::GdiHfont::CreateFont) `quality`
+	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	=>
 	=>
@@ -280,8 +280,8 @@ const_ordinary! { QUALITY: u8: "gdi";
 
 const_ordinary! { ROP: u32: "gdi";
 	/// Raster operation code (`u32`).
-	/// [`HDC::BitBlt`](crate::prelude::GdiHdc::BitBlt) `rop`,
-	/// [`HDC::PatBlt`](crate::prelude::GdiHdc::PatBlt) `rop` and
+	/// [`HDC::BitBlt`](crate::prelude::gdi_Hdc::BitBlt) `rop`,
+	/// [`HDC::PatBlt`](crate::prelude::gdi_Hdc::PatBlt) `rop` and
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop`.
 	///
 	/// Originally has no prefix.
@@ -342,7 +342,7 @@ const_ordinary! { ROP: u32: "gdi";
 }
 
 const_ordinary! { STOCK_BRUSH: i32: "gdi";
-	/// [`HBRUSH::GetStockObject`](crate::prelude::GdiHbrush::GetStockObject)
+	/// [`HBRUSH::GetStockObject`](crate::prelude::gdi_Hbrush::GetStockObject)
 	/// `i` (`i32`).
 	=>
 	=>
@@ -357,7 +357,7 @@ const_ordinary! { STOCK_BRUSH: i32: "gdi";
 }
 
 const_ordinary! { STOCK_FONT: i32: "gdi";
-	/// [`HFONT::GetStockObject`](crate::prelude::GdiHfont::GetStockObject) `i`
+	/// [`HFONT::GetStockObject`](crate::prelude::gdi_Hfont::GetStockObject) `i`
 	/// (`i32`).
 	=>
 	=>
@@ -371,7 +371,7 @@ const_ordinary! { STOCK_FONT: i32: "gdi";
 }
 
 const_ordinary! { STOCK_PEN: i32: "gdi";
-	/// [`HPEN::GetStockObject`](crate::prelude::GdiHpen::GetStockObject) `i`
+	/// [`HPEN::GetStockObject`](crate::prelude::gdi_Hpen::GetStockObject) `i`
 	/// (`i32`).
 	=>
 	=>
@@ -382,7 +382,7 @@ const_ordinary! { STOCK_PEN: i32: "gdi";
 }
 
 const_ordinary! { STRETCH_MODE: i32: "gdi";
-	/// [`HDC::SetStretchBltMode`](crate::prelude::GdiHdc::SetStretchBltMode)
+	/// [`HDC::SetStretchBltMode`](crate::prelude::gdi_Hdc::SetStretchBltMode)
 	/// `mode` (`i32`).
 	=>
 	=>
@@ -398,7 +398,7 @@ const_ordinary! { STRETCH_MODE: i32: "gdi";
 	/// pixels approximates the color of the source pixels.
 	///
 	/// After setting the `HALFTONE` stretching mode, an application must call
-	/// the [`HDC::SetBrushOrgEx`](crate::prelude::GdiHdc::SetBrushOrgEx)
+	/// the [`HDC::SetBrushOrgEx`](crate::prelude::gdi_Hdc::SetBrushOrgEx)
 	/// function to set the brush origin. If it fails to do so, brush
 	/// misalignment occurs.
 	HALFTONE 4
@@ -417,7 +417,7 @@ const_ordinary! { STRETCH_MODE: i32: "gdi";
 }
 
 const_bitflag! { TA: u32: "gdi";
-	/// [`HDC::SetTextAlign`](crate::prelude::GdiHdc::SetTextAlign) `align`
+	/// [`HDC::SetTextAlign`](crate::prelude::gdi_Hdc::SetTextAlign) `align`
 	/// (`u32`).
 	///
 	/// Also includes constants with `VTA` prefix.

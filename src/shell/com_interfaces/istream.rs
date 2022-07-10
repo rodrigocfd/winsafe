@@ -1,10 +1,10 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, shell};
 use crate::ffi_types::{HRES, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{OleIUnknown, ShellISequentialStream};
+use crate::prelude::{ole_IUnknown, shell_ISequentialStream};
 use crate::vt::ISequentialStreamVT;
 
 /// [`ISequentialStream`](crate::ISequentialStream) virtual table.
@@ -33,12 +33,12 @@ pub struct IStreamVT {
 pub struct IStream(ComPtr);
 
 impl_iunknown!(IStream, "0000000c-0000-0000-c000-000000000046");
-impl ShellISequentialStream for IStream {}
-impl ShellIStream for IStream {}
+impl shell_ISequentialStream for IStream {}
+impl shell_IStream for IStream {}
 
 /// [`IStream`](crate::IStream) methods from `shell` feature.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIStream: OleIUnknown {
+pub trait shell_IStream: ole_IUnknown {
 	/// Calls
 	/// [`SHCreateMemStream`](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
 	/// to create a new stream over a slice.
@@ -88,7 +88,7 @@ pub trait ShellIStream: OleIUnknown {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`IStream::UnlockRegion`](crate::prelude::ShellIStream::UnlockRegion)
+	/// [`IStream::UnlockRegion`](crate::prelude::shell_IStream::UnlockRegion)
 	/// call.
 	fn LockRegion(&self,
 		offset: u64, length: u64, lock_type: co::LOCKTYPE) -> HrResult<()>

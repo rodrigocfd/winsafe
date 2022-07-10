@@ -4,7 +4,7 @@ use std::ops;
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, HLOCAL, LANGID, WString};
-use crate::prelude::KernelHlocal;
+use crate::prelude::kernel_Hlocal;
 
 /// A system error which can be formatted with
 /// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew).

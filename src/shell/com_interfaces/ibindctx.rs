@@ -1,10 +1,10 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{HRES, PCSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IBindCtx`](crate::IBindCtx) virtual table.
@@ -34,11 +34,18 @@ pub struct IBindCtxVT {
 pub struct IBindCtx(ComPtr);
 
 impl_iunknown!(IBindCtx, "0000000e-0000-0000-c000-000000000046");
-impl ShellIBindCtx for IBindCtx {}
+impl shell_IBindCtx for IBindCtx {}
 
-/// [`IBindCtx`](crate::IBindCtx) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IBindCtx`](crate::IBindCtx).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIBindCtx: OleIUnknown {
+pub trait shell_IBindCtx: ole_IUnknown {
 	/// [`IBindCtx::ReleaseBoundObjects`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
 	/// method.
 	fn ReleaseBoundObjects(&self) -> HrResult<()> {

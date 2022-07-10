@@ -1,6 +1,6 @@
 use crate::co;
 use crate::kernel::decl::{FileAccess, FileMapped, HFILE, WinResult, WString};
-use crate::prelude::{HandleClose, KernelHfile};
+use crate::prelude::{HandleClose, kernel_Hfile};
 
 /// Keeps sections and key/value pairs of a `.ini` file, also doing parsing and
 /// serialization of the data.

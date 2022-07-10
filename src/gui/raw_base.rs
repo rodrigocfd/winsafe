@@ -4,7 +4,9 @@ use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::post_quit_error;
 use crate::kernel::decl::{ErrResult, HINSTANCE, SetLastError, WString};
 use crate::msg::{wm, WndMsg};
-use crate::prelude::{GdiHbrush, Handle, MsgSendRecv, UserHinstance, UserHwnd};
+use crate::prelude::{
+	gdi_Hbrush, Handle, MsgSendRecv, user_Hinstance, user_Hwnd,
+};
 use crate::user::decl::{
 	ATOM, AtomStr, HBRUSH, HCURSOR, HICON, HWND, IdIdcStr, IdIdiStr, IdMenu,
 	POINT, RegisterClassEx, SIZE, WNDCLASSEX,

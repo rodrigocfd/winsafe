@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ComInterface, OleIUnknown};
+use crate::prelude::{ComInterface, ole_IUnknown};
 use crate::shell::decl::IBindCtx;
 use crate::vt::IUnknownVT;
 
@@ -48,11 +48,18 @@ pub struct IShellItemVT {
 pub struct IShellItem(ComPtr);
 
 impl_iunknown!(IShellItem, "43826d1e-e718-42ee-bc55-a1e261c37bfe");
-impl ShellIShellItem for IShellItem {}
+impl shell_IShellItem for IShellItem {}
 
-/// [`IShellItem`](crate::IShellItem) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IShellItem`](crate::IShellItem).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIShellItem: OleIUnknown {
+pub trait shell_IShellItem: ole_IUnknown {
 	/// [`IShellItem::BindToHandler`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
 	/// method.
 	#[must_use]

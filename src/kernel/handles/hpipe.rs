@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
 use crate::kernel::decl::{HFILE, OVERLAPPED, SECURITY_ATTRIBUTES, WinResult};
 use crate::kernel::privs::bool_to_winresult;
-use crate::prelude::{Handle, HandleClose, KernelHfile};
+use crate::prelude::{Handle, HandleClose, kernel_Hfile};
 
 impl_handle! { HPIPE: "kernel";
 	/// Handle to an
@@ -12,11 +12,18 @@ impl_handle! { HPIPE: "kernel";
 }
 
 impl HandleClose for HPIPE {}
-impl KernelHpipe for HPIPE {}
+impl kernel_Hpipe for HPIPE {}
 
-/// [`HPIPE`](crate::HPIPE) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HPIPE`](crate::HPIPE).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHpipe: Handle {
+pub trait kernel_Hpipe: Handle {
 	/// [`CreatePipe`](https://docs.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe)
 	/// static method.
 	///

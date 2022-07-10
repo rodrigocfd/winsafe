@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, uxtheme};
 use crate::ole::decl::HrResult;
@@ -11,11 +11,18 @@ impl_handle! { HTHEME: "uxtheme";
 	/// [theme](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/).
 }
 
-impl UxthemeHtheme for HTHEME {}
+impl uxtheme_Htheme for HTHEME {}
 
-/// [`HTHEME`](crate::HTHEME) methods from `uxtheme` feature.
+/// This trait is enabled with the `uxtheme` feature, and provides methods for
+/// [`HTHEME`](crate::HTHEME).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]
-pub trait UxthemeHtheme: Handle {
+pub trait uxtheme_Htheme: Handle {
 	/// [`CloseThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
 	fn CloseThemeData(self) -> HrResult<()> {
@@ -97,7 +104,7 @@ pub trait UxthemeHtheme: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
 	fn GetThemeBackgroundRegion(self,
 		hdc: HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>

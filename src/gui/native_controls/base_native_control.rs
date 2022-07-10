@@ -7,7 +7,7 @@ use crate::gui::privs::post_quit_error;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::ErrResult;
 use crate::msg::WndMsg;
-use crate::prelude::{ComctlHwnd, Handle, UserHwnd};
+use crate::prelude::{comctl_Hwnd, Handle, user_Hwnd};
 use crate::user::decl::{AtomStr, HWND, IdMenu, POINT, SIZE};
 
 static mut BASE_SUBCLASS_ID: usize = 0;
@@ -15,12 +15,12 @@ static mut BASE_SUBCLASS_ID: usize = 0;
 /// Variant field for child controls: creation options or just a control ID.
 pub enum OptsId<P> {
 	/// The control will be created with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx). We
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx). We
 	/// keep a lot of options for manual creation.
 	Wnd(P),
 	/// The control belongs to a dialog and will be attached with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem). We keep just
-	/// the control ID from the dialog resource.
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem). We keep
+	/// just the control ID from the dialog resource.
 	Dlg(u16),
 }
 

@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, msg, user};
 use crate::kernel::decl::{GetLastError, WinResult, WString};
 use crate::kernel::privs::bool_to_winresult;
-use crate::prelude::{Handle, NativeBitflag, UserHwnd};
+use crate::prelude::{Handle, NativeBitflag, user_Hwnd};
 use crate::user::decl::{
 	BmpPtrStr, HBITMAP, HWND, IdMenu, IdPos, MenuEnum, MENUINFO, MENUITEMINFO,
 	POINT,
@@ -14,16 +14,23 @@ impl_handle! { HMENU: "user";
 	/// [menu](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmenu).
 }
 
-impl UserHmenu for HMENU {}
+impl user_Hmenu for HMENU {}
 
-/// [`HMENU`](crate::HMENU) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HMENU`](crate::HMENU).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHmenu: Handle {
+pub trait user_Hmenu: Handle {
 	/// [`AppendMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// method.
 	///
 	/// This method is rather tricky, consider using
-	/// [`HMENU::AppendMenuEnum`](crate::prelude::UserHmenu::AppendMenuEnum).
+	/// [`HMENU::AppendMenuEnum`](crate::prelude::user_Hmenu::AppendMenuEnum).
 	fn AppendMenu(self, flags: co::MF,
 		new_item: IdMenu, content: BmpPtrStr) -> WinResult<()>
 	{
@@ -40,7 +47,7 @@ pub trait UserHmenu: Handle {
 	}
 
 	/// A more convenient
-	/// [`HMENU::AppendMenu`](crate::prelude::UserHmenu::AppendMenu).
+	/// [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu).
 	///
 	/// # Examples
 	///
@@ -144,7 +151,7 @@ pub trait UserHmenu: Handle {
 	/// static method.
 	///
 	/// **Note:** If not attached to a window, must be paired with an
-	/// [`HMENU::DestroyMenu`](crate::prelude::UserHmenu::DestroyMenu) call.
+	/// [`HMENU::DestroyMenu`](crate::prelude::user_Hmenu::DestroyMenu) call.
 	#[must_use]
 	fn CreateMenu() -> WinResult<HMENU> {
 		unsafe { user::ffi::CreateMenu().as_mut() }
@@ -156,7 +163,7 @@ pub trait UserHmenu: Handle {
 	/// static method.
 	///
 	/// **Note:** If not attached to a window, must be paired with an
-	/// [`HMENU::DestroyMenu`](crate::prelude::UserHmenu::DestroyMenu) call.
+	/// [`HMENU::DestroyMenu`](crate::prelude::user_Hmenu::DestroyMenu) call.
 	#[must_use]
 	fn CreatePopupMenu() -> WinResult<HMENU> {
 		unsafe { user::ffi::CreatePopupMenu().as_mut() }
@@ -469,7 +476,7 @@ pub trait UserHmenu: Handle {
 	/// method.
 	///
 	/// **Note:** If you just want to display a popup menu, consider the simpler
-	/// [`HMENU::TrackPopupMenuAtPoint`](crate::prelude::UserHmenu::TrackPopupMenuAtPoint).
+	/// [`HMENU::TrackPopupMenuAtPoint`](crate::prelude::user_Hmenu::TrackPopupMenuAtPoint).
 	fn TrackPopupMenu(self,
 		flags: co::TPM, location: POINT, hwnd: HWND) -> WinResult<Option<i32>>
 	{
@@ -501,7 +508,7 @@ pub trait UserHmenu: Handle {
 	}
 
 	/// Shows the popup menu anchored at the given coordinates using
-	/// [`TrackPopupMenu`](crate::prelude::UserHmenu::TrackPopupMenu), and
+	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu), and
 	/// performs other needed operations.
 	///
 	/// This method will block until the menu disappears.

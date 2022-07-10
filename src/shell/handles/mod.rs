@@ -6,6 +6,6 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::hdrop::ShellHdrop;
-	pub use super::hwnd::ShellHwnd;
+	pub use super::hdrop::shell_Hdrop;
+	pub use super::hwnd::shell_Hwnd;
 }

@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::kernel::decl::LCID;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::ITypeInfo;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IDispatch`](crate::IDispatch) virtual table.
@@ -29,11 +29,18 @@ pub struct IDispatchVT {
 pub struct IDispatch(ComPtr);
 
 impl_iunknown!(IDispatch, "00020400-0000-0000-c000-000000000046");
-impl OleautIDispatch for IDispatch {}
+impl oleaut_IDispatch for IDispatch {}
 
-/// [`IDispatch`](crate::IDispatch) methods from `oleaut` feature.
+/// This trait is enabled with the `oleaut` feature, and provides methods for
+/// [`IDispatch`](crate::IDispatch).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
-pub trait OleautIDispatch: OleIUnknown {
+pub trait oleaut_IDispatch: ole_IUnknown {
 	/// [`IDispatch::GetTypeInfoCount`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
 	/// method.
 	#[must_use]

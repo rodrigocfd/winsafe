@@ -3,7 +3,7 @@ pub(in crate::comctl_ole) mod ffi;
 mod aliases;
 mod enums;
 mod funcs;
-mod hwnd;
+mod handles;
 mod structs;
 
 pub mod messages;
@@ -16,5 +16,5 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::hwnd::ComctlOleHwnd;
+	pub use super::handles::traits::*;
 }

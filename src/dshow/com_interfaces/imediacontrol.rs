@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HRES, PSTR};
@@ -7,7 +7,7 @@ use crate::kernel::privs::INFINITE;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::oleaut::decl::IDispatch;
-use crate::prelude::OleautIDispatch;
+use crate::prelude::oleaut_IDispatch;
 use crate::vt::IDispatchVT;
 
 /// [`IMediaControl`](crate::IMediaControl) virtual table.
@@ -51,12 +51,19 @@ pub struct IMediaControlVT {
 pub struct IMediaControl(ComPtr);
 
 impl_iunknown!(IMediaControl, "56a868b1-0ad4-11ce-b03a-0020af0ba770");
-impl OleautIDispatch for IMediaControl {}
-impl DshowIMediaControl for IMediaControl {}
+impl oleaut_IDispatch for IMediaControl {}
+impl dshow_IMediaControl for IMediaControl {}
 
-/// [`IMediaControl`](crate::IMediaControl) methods from `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IMediaControl`](crate::IMediaControl).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIMediaControl: OleautIDispatch {
+pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 	/// method.
 	#[must_use]

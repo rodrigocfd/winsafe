@@ -1,5 +1,5 @@
-mod imfvideodisplaycontrol;
+mod handles;
 
 pub mod traits {
-	pub use super::imfvideodisplaycontrol::DshowGdiIMFVideoDisplayControl;
+	pub use super::handles::traits::*;
 }

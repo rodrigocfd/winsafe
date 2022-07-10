@@ -15,7 +15,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::msg::pbm;
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControl, GuiParent, GuiWindow, NativeBitflag,
-	UserHwnd,
+	user_Hwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
 
@@ -64,7 +64,7 @@ impl GuiNativeControl for ProgressBar {
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
 	/// window with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ProgressBarOpts) -> ProgressBar {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -92,7 +92,7 @@ impl ProgressBar {
 
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
@@ -163,7 +163,7 @@ impl ProgressBar {
 
 	/// Sets or unsets the marquee mode by sending a
 	/// [`pbm::SetMarquee`](crate::msg::pbm::SetMarquee) message combined with a
-	/// [`SetWindowLongPtr`](crate::prelude::UserHwnd::SetWindowLongPtr) call
+	/// [`SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr) call
 	/// for a style change.
 	pub fn set_marquee(&self, marquee: bool) {
 		if marquee {

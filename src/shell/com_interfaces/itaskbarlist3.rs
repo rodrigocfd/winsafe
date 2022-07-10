@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HANDLE, HRES, PCSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ShellITaskbarList, ShellITaskbarList2};
+use crate::prelude::{shell_ITaskbarList, shell_ITaskbarList2};
 use crate::user::decl::{HICON, HWND, RECT};
 use crate::vt::ITaskbarList2VT;
 
@@ -52,13 +52,20 @@ pub struct ITaskbarList3VT {
 pub struct ITaskbarList3(ComPtr);
 
 impl_iunknown!(ITaskbarList3, "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf");
-impl ShellITaskbarList for ITaskbarList3 {}
-impl ShellITaskbarList2 for ITaskbarList3 {}
-impl ShellITaskbarList3 for ITaskbarList3 {}
+impl shell_ITaskbarList for ITaskbarList3 {}
+impl shell_ITaskbarList2 for ITaskbarList3 {}
+impl shell_ITaskbarList3 for ITaskbarList3 {}
 
-/// [`ITaskbarList3`](crate::ITaskbarList3) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`ITaskbarList3`](crate::ITaskbarList3).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellITaskbarList3: ShellITaskbarList2 {
+pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.
 	fn RegisterTab(&self, hwnd_tab: HWND, hwnd_mdi: HWND) -> HrResult<()> {

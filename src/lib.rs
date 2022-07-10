@@ -89,9 +89,9 @@
 //! hwnd.SetFocus();
 //! ```
 //!
-//! Note how [`GetDesktopWindow`](crate::prelude::UserHwnd::GetDesktopWindow) is
-//! a static method of [`HWND`](crate::HWND), and
-//! [`SetFocus`](crate::prelude::UserHwnd::SetFocus) is an instance method
+//! Note how [`GetDesktopWindow`](crate::prelude::user_Hwnd::GetDesktopWindow)
+//! is a static method of [`HWND`](crate::HWND), and
+//! [`SetFocus`](crate::prelude::user_Hwnd::SetFocus) is an instance method
 //! called directly upon `hwnd`. All native handles (`HWND`,
 //! [`HDC`](crate::HDC), [`HINSTANCE`](crate::HINSTANCE), etc.) are structs,
 //! thus:
@@ -130,7 +130,7 @@
 //! [integer type](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types).
 //!
 //! The name of the constant type is often its prefix. For example, constants of
-//! [`MessageBox`](crate::prelude::UserHwnd::MessageBox) function, like
+//! [`MessageBox`](crate::prelude::user_Hwnd::MessageBox) function, like
 //! `MB_OKCANCEL`, belong to a type called [`MB`](crate::co::MB).
 //!
 //! For example, take the following C code:
@@ -151,7 +151,7 @@
 //! # Ok::<_, winsafe::co::ERROR>(())
 //! ```
 //!
-//! The method [`MessageBox`](crate::prelude::UserHwnd::MessageBox), like most
+//! The method [`MessageBox`](crate::prelude::user_Hwnd::MessageBox), like most
 //! functions that can return errors, will return
 //! [`WinResult`](crate::WinResult), which can contain an
 //! [`ERROR`](crate::co::ERROR) constant.
@@ -295,7 +295,7 @@ pub mod msg {
 	//! We want to delete the 3rd element of a
 	//! [`ListView`](crate::gui::ListView) control. This can be done by sending
 	//! it an [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message via
-	//! [`HWND::SendMessage`](crate::prelude::UserHwnd::SendMessage). The
+	//! [`HWND::SendMessage`](crate::prelude::user_Hwnd::SendMessage). The
 	//! message itself is a struct, which is initialized with the specific
 	//! message parameters.
 	//!

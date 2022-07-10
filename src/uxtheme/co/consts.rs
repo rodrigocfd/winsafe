@@ -1,5 +1,5 @@
 const_ordinary! { STAP: u32: "uxtheme";
-	/// [`HTHEME::GetThemeAppProperties`](crate::prelude::UxthemeHtheme::GetThemeAppProperties)
+	/// [`HTHEME::GetThemeAppProperties`](crate::prelude::uxtheme_Htheme::GetThemeAppProperties)
 	/// return value (`u32`).
 	=>
 	=>

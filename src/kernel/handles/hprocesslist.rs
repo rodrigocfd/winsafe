@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 use std::ptr::NonNull;
@@ -14,15 +14,22 @@ impl_handle! { HPROCESSLIST: "kernel";
 }
 
 impl HandleClose for HPROCESSLIST {}
-impl KernelHprocesslist for HPROCESSLIST {}
+impl kernel_Hprocesslist for HPROCESSLIST {}
 
-/// [`HPROCESSLIST`](crate::HPROCESSLIST) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HPROCESSLIST`](crate::HPROCESSLIST).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHprocesslist: Handle {
+pub trait kernel_Hprocesslist: Handle {
 		/// Returns an iterator over the processes list by calling
-	/// [`HPROCESSLIST::Process32First`](crate::prelude::KernelHprocesslist::Process32First)
+	/// [`HPROCESSLIST::Process32First`](crate::prelude::kernel_Hprocesslist::Process32First)
 	/// and then
-	/// [`HPROCESSLIST::Process32Next`](crate::prelude::KernelHprocesslist::Process32Next)
+	/// [`HPROCESSLIST::Process32Next`](crate::prelude::kernel_Hprocesslist::Process32Next)
 	/// consecutively.
 	///
 	/// # Examples
@@ -75,7 +82,7 @@ pub trait KernelHprocesslist: Handle {
 	/// method.
 	///
 	/// Prefer using
-	/// [`HPROCESSLIST::iter`](crate::prelude::KernelHprocesslist::iter), which
+	/// [`HPROCESSLIST::iter`](crate::prelude::kernel_Hprocesslist::iter), which
 	/// is simpler.
 	fn Process32First(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {
@@ -93,7 +100,7 @@ pub trait KernelHprocesslist: Handle {
 	/// method.
 	///
 	/// Prefer using
-	/// [`HPROCESSLIST::iter`](crate::prelude::KernelHprocesslist::iter), which
+	/// [`HPROCESSLIST::iter`](crate::prelude::kernel_Hprocesslist::iter), which
 	/// is simpler.
 	fn Process32Next(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
 		match unsafe {

@@ -14,7 +14,7 @@ use crate::kernel::decl::WinResult;
 use crate::msg::{bm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiNativeControl, GuiNativeControlEvents,
-	GuiParent, GuiWindow, GuiWindowText, Handle, UserHwnd,
+	GuiParent, GuiWindow, GuiWindowText, Handle, user_Hwnd,
 };
 use crate::user::decl::{
 	AccelMenuCtrl, AccelMenuCtrlData, HWND, HwndPlace, POINT, SIZE,

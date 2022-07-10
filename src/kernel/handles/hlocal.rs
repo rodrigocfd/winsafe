@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
 use crate::kernel::decl::{GetLastError, WinResult};
@@ -9,11 +9,18 @@ impl_handle! { HLOCAL: "kernel";
 	/// [local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
 }
 
-impl KernelHlocal for HLOCAL {}
+impl kernel_Hlocal for HLOCAL {}
 
-/// [`HLOCAL`](crate::HLOCAL) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HLOCAL`](crate::HLOCAL).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHlocal: Handle {
+pub trait kernel_Hlocal: Handle {
 	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
 	fn LocalFree(self) -> WinResult<()> {

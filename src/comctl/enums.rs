@@ -20,7 +20,7 @@ pub enum BmpIdbRes {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::TaskDialog`](crate::prelude::ComctlOleHwnd::TaskDialog) `pszIcon`.
+/// * [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) `pszIcon`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone)]
 pub enum IdTdiconStr {

@@ -18,7 +18,7 @@ use crate::msg::{lvm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
 	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, NativeBitflag,
-	UserHmenu, UserHwnd,
+	user_Hmenu, user_Hwnd,
 };
 use crate::user::decl::{
 	GetAsyncKeyState, GetCursorPos, HMENU, HWND, POINT, SIZE,
@@ -84,7 +84,8 @@ impl GuiNativeControlEvents<ListViewEvents> for ListView {
 
 impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
-	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// with
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ListViewOpts) -> ListView {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -116,7 +117,7 @@ impl ListView {
 
 	/// Instantiates a new `ListView` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	///
 	/// **Note:** The optional `context_menu` is shared: it must be destroyed
 	/// manually after the control is destroyed. But note that menus loaded from

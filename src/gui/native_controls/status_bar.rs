@@ -13,7 +13,7 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::msg::{sb, wm};
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
-	GuiWindow, Handle, MsgSend, NativeBitflag, UserHwnd,
+	GuiWindow, Handle, MsgSend, NativeBitflag, user_Hwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
 
@@ -95,7 +95,7 @@ impl GuiNativeControlEvents<StatusBarEvents> for StatusBar {
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
 	/// window with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	///
 	/// # Examples
 	///

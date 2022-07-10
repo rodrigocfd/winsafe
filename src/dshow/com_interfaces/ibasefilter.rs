@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::IFilterGraph;
 use crate::ffi_types::{HRES, PCSTR, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{DshowIMediaFilter, OleIUnknown, ShellIPersist};
+use crate::prelude::{dshow_IMediaFilter, ole_IUnknown, shell_IPersist};
 use crate::vt::IMediaFilterVT;
 
 /// [`IBaseFilter`](crate::IBaseFilter) virtual table.
@@ -44,13 +44,20 @@ pub struct IBaseFilterVT {
 pub struct IBaseFilter(ComPtr);
 
 impl_iunknown!(IBaseFilter, "56a86895-0ad4-11ce-b03a-0020af0ba770");
-impl ShellIPersist for IBaseFilter {}
-impl DshowIMediaFilter for IBaseFilter {}
-impl DshowIBaseFilter for IBaseFilter {}
+impl shell_IPersist for IBaseFilter {}
+impl dshow_IMediaFilter for IBaseFilter {}
+impl dshow_IBaseFilter for IBaseFilter {}
 
-/// [`IBaseFilter`](crate::IBaseFilter) methods from `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IBaseFilter`](crate::IBaseFilter).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIBaseFilter: DshowIMediaFilter {
+pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	/// [`IBaseFilter::JoinFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.
 	fn JoinFilterGraph(&self,

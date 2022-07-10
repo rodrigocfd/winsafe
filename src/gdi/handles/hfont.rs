@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
 use crate::kernel::decl::{GetLastError, WinResult, WString};
-use crate::prelude::{Handle, HandleGdi};
+use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::SIZE;
 
 impl_handle! { HFONT: "gdi";
@@ -11,17 +11,24 @@ impl_handle! { HFONT: "gdi";
 	/// [font](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 }
 
-impl HandleGdi for HFONT {}
-impl GdiHfont for HFONT {}
+impl gdi_Hgdiobj for HFONT {}
+impl gdi_Hfont for HFONT {}
 
-/// [`HFONT`](crate::HFONT) methods from `gdi` feature.
+/// This trait is enabled with the `gdi` feature, and provides methods for
+/// [`HFONT`](crate::HFONT).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
-pub trait GdiHfont: Handle {
+pub trait gdi_Hfont: gdi_Hgdiobj {
 	/// [`CreateFont`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HFONT::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
 	fn CreateFont(
 		sz: SIZE, escapement: i32, orientation: i32,
@@ -49,7 +56,7 @@ pub trait GdiHfont: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HFONT::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> WinResult<HFONT> {
 		unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _).as_mut() }

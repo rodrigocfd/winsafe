@@ -15,7 +15,7 @@ use crate::kernel::decl::SYSTEMTIME;
 use crate::msg::mcm;
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd,
+	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, user_Hwnd,
 };
 use crate::user::decl::{HWND, HwndPlace, POINT, RECT, SIZE};
 
@@ -78,7 +78,7 @@ impl GuiNativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 impl MonthCalendar {
 	/// Instantiates a new `MonthCalendar` object, to be created on the parent
 	/// window with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent,
@@ -109,7 +109,7 @@ impl MonthCalendar {
 
 	/// Instantiates a new `MonthCalendar` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

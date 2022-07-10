@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::comctl;
 use crate::comctl::decl::SUBCLASSPROC;
@@ -7,11 +7,18 @@ use crate::kernel::privs::bool_to_winresult;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::HWND;
 
-impl ComctlHwnd for HWND {}
+impl comctl_Hwnd for HWND {}
 
-/// [`HWND`](crate::HWND) methods from `comctl` feature.
+/// This trait is enabled with the `comctl` feature, and provides methods for
+/// [`HWND`](crate::HWND).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-pub trait ComctlHwnd: Handle {
+pub trait comctl_Hwnd: Handle {
 	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
 	///

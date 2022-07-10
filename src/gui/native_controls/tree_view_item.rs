@@ -7,7 +7,7 @@ use crate::gui::native_controls::tree_view::TreeView;
 use crate::kernel::decl::WString;
 use crate::kernel::privs::MAX_PATH;
 use crate::msg::tvm;
-use crate::prelude::{GuiWindow, NativeBitflag, UserHwnd};
+use crate::prelude::{GuiWindow, NativeBitflag, user_Hwnd};
 use crate::user::decl::HWND;
 
 /// A single item of a [`TreeView`](crate::gui::TreeView) control.

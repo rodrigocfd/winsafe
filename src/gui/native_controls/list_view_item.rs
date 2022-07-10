@@ -3,7 +3,7 @@ use crate::comctl::decl::LVITEM;
 use crate::gui::native_controls::list_view::ListView;
 use crate::kernel::decl::WString;
 use crate::msg::lvm;
-use crate::prelude::{GuiWindow, NativeBitflag, UserHwnd};
+use crate::prelude::{GuiWindow, NativeBitflag, user_Hwnd};
 use crate::user::decl::RECT;
 
 /// A single item of a [`ListView`](crate::gui::ListView) control.

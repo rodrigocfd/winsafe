@@ -75,7 +75,7 @@ impl GuiThread for WindowModal {
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created with
-	/// [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: WindowModalOpts) -> WindowModal {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -87,7 +87,8 @@ impl WindowModal {
 	}
 
 	/// Instantiates a new `WindowModal` object, to be loaded from a dialog
-	/// resource with [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// resource with
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	#[must_use]
 	pub fn new_dlg(parent: &impl GuiParent, dialog_id: u16) -> WindowModal {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };

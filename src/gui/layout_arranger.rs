@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::msg::wm;
-use crate::prelude::{Handle, UserHdwp, UserHwnd};
+use crate::prelude::{Handle, user_Hdwp, user_Hwnd};
 use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
 
 /// Specifies the horizontal behavior of the control when the parent window is

@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{HRES, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::okfalse_to_hrresult;
-use crate::prelude::ShellIPersist;
+use crate::prelude::shell_IPersist;
 use crate::vt::IPersistVT;
 
 /// [`IMediaFilter`](crate::IMediaFilter) virtual table.
@@ -29,12 +29,19 @@ pub struct IMediaFilterVT {
 pub struct IMediaFilter(ComPtr);
 
 impl_iunknown!(IMediaFilter, "56a86899-0ad4-11ce-b03a-0020af0ba770");
-impl ShellIPersist for IMediaFilter {}
-impl DshowIMediaFilter for IMediaFilter {}
+impl shell_IPersist for IMediaFilter {}
+impl dshow_IMediaFilter for IMediaFilter {}
 
-/// [`IMediaFilter`](crate::IMediaFilter) methods methods from `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IMediaFilter`](crate::IMediaFilter).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIMediaFilter: ShellIPersist {
+pub trait dshow_IMediaFilter: shell_IPersist {
 	/// [`IMediaFilter::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {

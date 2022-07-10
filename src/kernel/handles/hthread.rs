@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
@@ -14,11 +14,18 @@ impl_handle! { HTHREAD: "kernel";
 }
 
 impl HandleClose for HTHREAD {}
-impl KernelHthread for HTHREAD {}
+impl kernel_Hthread for HTHREAD {}
 
-/// [`HTHREAD`](crate::HTHREAD) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HTHREAD`](crate::HTHREAD).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHthread: Handle {
+pub trait kernel_Hthread: Handle {
 	/// [`CreateThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 	/// static method.
 	///

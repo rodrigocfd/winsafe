@@ -16,7 +16,7 @@ use crate::ole::privs::ok_to_hrresult;
 /// otherwise zero.
 ///
 /// If you don't need all customizations, consider the
-/// [`TaskDialog`](crate::prelude::ComctlOleHwnd::TaskDialog) method.
+/// [`TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) method.
 ///
 /// # Examples
 ///

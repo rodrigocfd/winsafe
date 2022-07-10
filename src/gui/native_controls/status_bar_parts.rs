@@ -2,7 +2,7 @@ use crate::co;
 use crate::gui::native_controls::status_bar::StatusBar;
 use crate::kernel::decl::WString;
 use crate::msg::sb;
-use crate::prelude::{GuiWindow, UserHwnd};
+use crate::prelude::{GuiWindow, user_Hwnd};
 
 /// Exposes the part methods of a [`StatusBar`](crate::gui::StatusBar) control.
 ///

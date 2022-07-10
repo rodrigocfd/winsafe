@@ -1,7 +1,7 @@
 use crate::gui::native_controls::combo_box::ComboBox;
 use crate::kernel::decl::WString;
 use crate::msg::cb;
-use crate::prelude::{GuiWindow, UserHwnd};
+use crate::prelude::{GuiWindow, user_Hwnd};
 
 /// Exposes item methods of a [`ComboBox`](crate::gui::ComboBox) control.
 ///

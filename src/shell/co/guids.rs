@@ -10,7 +10,7 @@ const_guid_values! { CLSID: "shell";
 }
 
 const_guid! { BHID: "shell";
-	/// [`IShellItem::BindToHandler`](crate::prelude::ShellIShellItem::BindToHandler)
+	/// [`IShellItem::BindToHandler`](crate::prelude::shell_IShellItem::BindToHandler)
 	/// `bhid` (`GUID`).
 	=>
 	SFObject "3981e224-f559-11d3-8e3a-00c04f6837d5"

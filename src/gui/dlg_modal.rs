@@ -7,7 +7,7 @@ use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEventsAll;
 use crate::kernel::decl::ErrResult;
-use crate::prelude::{GuiEvents, UserHwnd};
+use crate::prelude::{GuiEvents, user_Hwnd};
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
 struct Obj { // actual fields of DlgModal

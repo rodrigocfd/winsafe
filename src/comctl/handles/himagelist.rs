@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, comctl};
 use crate::kernel::decl::{GetLastError, WinResult};
@@ -11,11 +11,18 @@ impl_handle! { HIMAGELIST: "comctl";
 	/// [image list](https://docs.microsoft.com/en-us/windows/win32/controls/image-lists).
 }
 
-impl ComctlHimagelist for HIMAGELIST {}
+impl comctl_Himagelist for HIMAGELIST {}
 
-/// [`HIMAGELIST`](crate::HIMAGELIST) methods from `comctl` feature.
+/// This trait is enabled with the `comctl` feature, and provides methods for
+/// [`HIMAGELIST`](crate::HIMAGELIST).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-pub trait ComctlHimagelist: Handle {
+pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_Add`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
 	/// method.
 	///
@@ -64,7 +71,8 @@ pub trait ComctlHimagelist: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HIMAGELIST::EndDrag`](crate::prelude::ComctlHimagelist::EndDrag) call.
+	/// [`HIMAGELIST::EndDrag`](crate::prelude::comctl_Himagelist::EndDrag)
+	/// call.
 	fn BeginDrag(self, track: u32, hotspot: POINT) -> WinResult<()> {
 		bool_to_winresult(
 			unsafe {
@@ -81,7 +89,8 @@ pub trait ComctlHimagelist: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HIMAGELIST::Destroy`](crate::prelude::ComctlHimagelist::Destroy) call.
+	/// [`HIMAGELIST::Destroy`](crate::prelude::comctl_Himagelist::Destroy)
+	/// call.
 	///
 	/// # Examples
 	///

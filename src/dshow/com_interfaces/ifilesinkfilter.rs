@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::AM_MEDIA_TYPE;
 use crate::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IFileSinkFilter`](crate::IFileSinkFilter) virtual table.
@@ -27,11 +27,18 @@ pub struct IFileSinkFilterVT {
 pub struct IFileSinkFilter(ComPtr);
 
 impl_iunknown!(IFileSinkFilter, "a2104830-7c70-11cf-8bce-00aa00a3f1a6");
-impl DshowIFileSinkFilter for IFileSinkFilter {}
+impl dshow_IFileSinkFilter for IFileSinkFilter {}
 
-/// [`IFileSinkFilter`](crate::IFileSinkFilter) methods from `dshow` feature.
+/// This trait is enabled with the `dshow` feature, and provides methods for
+/// [`IFileSinkFilter`](crate::IFileSinkFilter).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait DshowIFileSinkFilter: OleIUnknown {
+pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// [`IFileSinkFilter::GetCurFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-getcurfile)
 	/// method.
 	///

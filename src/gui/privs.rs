@@ -9,8 +9,8 @@ use crate::gui::runtime_error::RuntimeError;
 use crate::kernel::decl::MulDiv;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{
-	GdiHdc, GdiHfont, Handle, HandleGdi, NativeBitflag, UserHwnd, UxthemeHtheme,
-	UxthemeHwnd,
+	gdi_Hdc, gdi_Hfont, gdi_Hgdiobj, Handle, NativeBitflag, user_Hwnd,
+	uxtheme_Htheme, uxtheme_Hwnd,
 };
 use crate::user::decl::{
 	GetSystemMetrics, HWND, POINT, PostQuitMessage, RECT, SIZE,

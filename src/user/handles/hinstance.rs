@@ -8,11 +8,18 @@ use crate::user::decl::{
 	IdIdiStr, IdObmStr, IdOcrStr, IdOicStr, SIZE, WNDCLASSEX,
 };
 
-impl UserHinstance for HINSTANCE {}
+impl user_Hinstance for HINSTANCE {}
 
-/// [`HINSTANCE`](crate::HINSTANCE) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HINSTANCE`](crate::HINSTANCE).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHinstance: Handle {
+pub trait user_Hinstance: Handle {
 	/// [`CreateDialogParam`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// method.
 	fn CreateDialogParam(
@@ -126,7 +133,7 @@ pub trait UserHinstance: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 	///
 	/// # Examples
 	///
@@ -152,7 +159,8 @@ pub trait UserHinstance: Handle {
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HBITMAP::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
+	/// call.
 	#[must_use]
 	fn LoadImageBitmap(self,
 		name: IdObmStr, sz: SIZE, load: co::LR) -> WinResult<HBITMAP>
@@ -169,7 +177,7 @@ pub trait UserHinstance: Handle {
 	/// method for [`HCURSOR`](crate::HCURSOR).
 	///
 	/// **Note:** Must be paired with an
-	/// [`HCURSOR::DestroyCursor`](crate::prelude::UserHcursor::DestroyCursor)
+	/// [`HCURSOR::DestroyCursor`](crate::prelude::user_Hcursor::DestroyCursor)
 	/// call.
 	#[must_use]
 	fn LoadImageCursor(self,
@@ -187,7 +195,7 @@ pub trait UserHinstance: Handle {
 	/// method for [`HICON`](crate::HICON).
 	///
 	/// **Note:** Must be paired with an
-	/// [`HICON::DestroyIcon`](crate::prelude::UserHicon::DestroyIcon) call.
+	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 	#[must_use]
 	fn LoadImageIcon(self,
 		name: IdOicStr, sz: SIZE, load: co::LR) -> WinResult<HICON>

@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::{HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
 
@@ -43,11 +43,18 @@ pub struct ITaskbarListVT {
 pub struct ITaskbarList(ComPtr);
 
 impl_iunknown!(ITaskbarList, "56fdf342-fd6d-11d0-958a-006097c9a090");
-impl ShellITaskbarList for ITaskbarList {}
+impl shell_ITaskbarList for ITaskbarList {}
 
-/// [`ITaskbarList`](crate::ITaskbarList) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`ITaskbarList`](crate::ITaskbarList).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellITaskbarList: OleIUnknown {
+pub trait shell_ITaskbarList: ole_IUnknown {
 	/// [`ITaskbarList::ActivateTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
 	/// method.
 	fn ActivateTab(&self, hwnd: HWND) -> HrResult<()> {

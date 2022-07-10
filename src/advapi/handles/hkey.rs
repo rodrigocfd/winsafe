@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 
@@ -17,7 +17,7 @@ impl_handle! { HKEY: "advapi";
 	/// Usually, they are the starting point to open a registry key.
 }
 
-impl AdvapiHkey for HKEY {}
+impl advapi_Hkey for HKEY {}
 
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
@@ -26,9 +26,16 @@ macro_rules! predef_key {
 	};
 }
 
-/// [`HKEY`](crate::HKEY) methods from `advapi` feature.
+/// This trait is enabled with the `advapi` feature, and provides methods for
+/// [`HKEY`](crate::HKEY).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
-pub trait AdvapiHkey: Handle {
+pub trait advapi_Hkey: Handle {
 	predef_key!(CLASSES_ROOT, 0x8000_0000);
 	predef_key!(CURRENT_USER, 0x8000_0001);
 	predef_key!(LOCAL_MACHINE, 0x8000_0002);
@@ -206,7 +213,7 @@ pub trait AdvapiHkey: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HKEY::CloseKey`](crate::prelude::AdvapiHkey::CloseKey) call.
+	/// [`HKEY::CloseKey`](crate::prelude::advapi_Hkey::CloseKey) call.
 	///
 	/// # Examples
 	///

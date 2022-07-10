@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, oleaut};
 use crate::ffi_types::{BOOL, HANDLE, HRES, PCVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, OleIUnknown, ShellIStream};
+use crate::prelude::{Handle, ole_IUnknown, shell_IStream};
 use crate::shell::decl::IStream;
 use crate::user::decl::{COLORREF, HBITMAP, HDC, POINT, RECT, SIZE};
 use crate::vt::IUnknownVT;
@@ -41,11 +41,18 @@ pub struct IPictureVT {
 pub struct IPicture(ComPtr);
 
 impl_iunknown!(IPicture, "7bf80980-bf32-101a-8bbb-00aa00300cab");
-impl OleautIPicture for IPicture {}
+impl oleaut_IPicture for IPicture {}
 
-/// [`IPicture`](crate::IPicture) methods from `oleaut` feature.
+/// This trait is enabled with the `oleaut` feature, and provides methods for
+/// [`IPicture`](crate::IPicture).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
-pub trait OleautIPicture: OleIUnknown {
+pub trait oleaut_IPicture: ole_IUnknown {
 	/// Calls
 	/// [`OleLoadPicturePath`](https://docs.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicturepath)
 	/// to load a picture from a file.
@@ -72,9 +79,9 @@ pub trait OleautIPicture: OleIUnknown {
 		).map(|_| IPicture::from(ppv_queried))
 	}
 
-	/// Calls
-	/// [`IStream::from_slice`](crate::prelude::ShellIStream::from_slice) and
-	/// [`IPicture::from_stream`](crate::prelude::OleautIPicture::from_stream)
+	/// Calls [`IStream::from_slice`](crate::prelude::shell_IStream::from_slice)
+	/// and
+	/// [`IPicture::from_stream`](crate::prelude::oleaut_IPicture::from_stream)
 	/// to load a picture straight from a slice.
 	#[must_use]
 	fn from_slice(
@@ -124,9 +131,9 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
 	/// prefer using the simpler
-	/// [`IPicture::size_px`](crate::prelude::GdiOleautIPicture::size_px), or
+	/// [`IPicture::size_px`](crate::prelude::gdi_oleaut_IPicture::size_px), or
 	/// use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::GdiOleautHdc::HiMetricToPixel)
+	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_oleaut_Hdc::HiMetricToPixel)
 	/// to perform the conversion manually.
 	///
 	/// # Examples
@@ -174,9 +181,9 @@ pub trait OleautIPicture: OleIUnknown {
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
 	/// prefer using the simpler
-	/// [`IPicture::size_px`](crate::prelude::GdiOleautIPicture::size_px), or
+	/// [`IPicture::size_px`](crate::prelude::gdi_oleaut_IPicture::size_px), or
 	/// use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::GdiOleautHdc::HiMetricToPixel)
+	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_oleaut_Hdc::HiMetricToPixel)
 	/// to perform the conversion manually.
 	///
 	/// # Examples

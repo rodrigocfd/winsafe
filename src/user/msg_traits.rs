@@ -7,8 +7,8 @@ use crate::user::messages::WndMsg;
 /// parameters, and also defines the return type of the message.
 ///
 /// Used in functions like
-/// [`SendMessage`](crate::prelude::UserHwnd::SendMessage) and
-/// [`DefWindowProc`](`crate::prelude::UserHwnd::DefWindowProc`).
+/// [`SendMessage`](crate::prelude::user_Hwnd::SendMessage) and
+/// [`DefWindowProc`](`crate::prelude::user_Hwnd::DefWindowProc`).
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub unsafe trait MsgSend {
 	/// The specific type of the value returned by the message.

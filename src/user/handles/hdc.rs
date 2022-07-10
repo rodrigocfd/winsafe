@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::BOOL;
 use crate::kernel::decl::WinResult;
@@ -12,11 +12,18 @@ impl_handle! { HDC: "user";
 	/// [device context](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdc).
 }
 
-impl UserHdc for HDC {}
+impl user_Hdc for HDC {}
 
-/// [`HDC`](crate::HDC) methods from `user` feature.
+/// This trait is enabled with the `user` feature, and provides methods for
+/// [`HDC`](crate::HDC).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub trait UserHdc: Handle {
+pub trait user_Hdc: Handle {
 	/// [`EnumDisplayMonitors`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors)
 	/// method.
 	///

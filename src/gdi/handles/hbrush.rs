@@ -1,18 +1,25 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGBRUSH;
 use crate::kernel::decl::{GetLastError, WinResult};
 use crate::kernel::privs::bool_to_winresult;
-use crate::prelude::{Handle, HandleGdi};
+use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::{COLORREF, HBITMAP, HBRUSH};
 
-impl HandleGdi for HBRUSH {}
-impl GdiHbrush for HBRUSH {}
+impl gdi_Hgdiobj for HBRUSH {}
+impl gdi_Hbrush for HBRUSH {}
 
-/// [`HBRUSH`](crate::HBRUSH) methods from `gdi` feature.
+/// This trait is enabled with the `gdi` feature, and provides methods for
+/// [`HBRUSH`](crate::HBRUSH).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
-pub trait GdiHbrush: Handle {
+pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// Creates a brush with the given system color.
 	///
 	/// **Note:** This should be used only to initialize the
@@ -27,7 +34,8 @@ pub trait GdiHbrush: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
+	/// call.
 	#[must_use]
 	fn CreateBrushIndirect(lb: &LOGBRUSH) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _).as_mut() }
@@ -39,7 +47,8 @@ pub trait GdiHbrush: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
+	/// call.
 	#[must_use]
 	fn CreateHatchBrush(
 		hatch: co::HS, color: COLORREF) -> WinResult<HBRUSH>
@@ -53,7 +62,8 @@ pub trait GdiHbrush: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
+	/// call.
 	#[must_use]
 	fn CreatePatternBrush(hbmp: HBITMAP) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::CreatePatternBrush(hbmp.0).as_mut() }
@@ -65,7 +75,8 @@ pub trait GdiHbrush: Handle {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
+	/// call.
 	#[must_use]
 	fn CreateSolidBrush(color: COLORREF) -> WinResult<HBRUSH> {
 		unsafe { gdi::ffi::CreateSolidBrush(color.0).as_mut() }

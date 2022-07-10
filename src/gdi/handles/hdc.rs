@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
 use crate::gdi::decl::{BITMAPINFO, HFONT, HPEN, TEXTMETRIC};
@@ -10,11 +10,18 @@ use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
 };
 
-impl GdiHdc for HDC {}
+impl gdi_Hdc for HDC {}
 
-/// [`HDC`](crate::HDC) methods from `gdi` feature.
+/// This trait is enabled with the `gdi` feature, and provides methods for
+/// [`HDC`](crate::HDC).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
-pub trait GdiHdc: Handle {
+pub trait gdi_Hdc: Handle {
 	/// [`AborthPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-abortpath)
 	/// method.
 	fn AbortPath(self) -> WinResult<()> {
@@ -133,7 +140,8 @@ pub trait GdiHdc: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HBITMAP::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
+	/// call.
 	#[must_use]
 	fn CreateCompatibleBitmap(self, cx: i32, cy: i32) -> WinResult<HBITMAP> {
 		unsafe {
@@ -146,7 +154,7 @@ pub trait GdiHdc: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HDC::DeleteDC`](crate::prelude::GdiHdc::DeleteDC) call.
+	/// [`HDC::DeleteDC`](crate::prelude::gdi_Hdc::DeleteDC) call.
 	#[must_use]
 	fn CreateCompatibleDC(self) -> WinResult<HDC> {
 		unsafe { gdi::ffi::CreateCompatibleDC(self.as_ptr()).as_mut() }
@@ -492,7 +500,7 @@ pub trait GdiHdc: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::HandleGdi::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
 	fn PathToRegion(self) -> WinResult<HRGN> {
 		unsafe { gdi::ffi::PathToRegion(self.as_ptr()).as_mut() }

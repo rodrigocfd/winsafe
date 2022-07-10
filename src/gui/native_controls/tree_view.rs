@@ -15,7 +15,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::msg::tvm;
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, UserHwnd,
+	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, user_Hwnd,
 };
 use crate::user::decl::{HWND, POINT, SIZE};
 
@@ -77,7 +77,8 @@ impl GuiNativeControlEvents<TreeViewEvents> for TreeView {
 
 impl TreeView {
 	/// Instantiates a new `TreeView` object, to be created on the parent window
-	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// with
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: TreeViewOpts) -> TreeView {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -106,7 +107,7 @@ impl TreeView {
 
 	/// Instantiates a new `TreeView` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

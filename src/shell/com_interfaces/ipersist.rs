@@ -1,10 +1,10 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HRES, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::OleIUnknown;
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IPersist`](crate::IPersist) virtual table.
@@ -25,11 +25,18 @@ pub struct IPersistVT {
 pub struct IPersist(ComPtr);
 
 impl_iunknown!(IPersist, "0000010c-0000-0000-c000-000000000046");
-impl ShellIPersist for IPersist {}
+impl shell_IPersist for IPersist {}
 
-/// [`IPersist`](crate::IPersist) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IPersist`](crate::IPersist).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIPersist: OleIUnknown {
+pub trait shell_IPersist: ole_IUnknown {
 	/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 	/// method.
 	#[must_use]

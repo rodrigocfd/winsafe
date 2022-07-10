@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, GUID, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{OleIUnknown, ShellIModalWindow};
+use crate::prelude::{ole_IUnknown, shell_IModalWindow};
 use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};
 use crate::vt::IModalWindowVT;
 
@@ -49,12 +49,19 @@ pub struct IFileDialogVT {
 pub struct IFileDialog(ComPtr);
 
 impl_iunknown!(IFileDialog, "42f85136-db7e-439c-85f1-e4075d135fc8");
-impl ShellIModalWindow for IFileDialog {}
-impl ShellIFileDialog for IFileDialog {}
+impl shell_IModalWindow for IFileDialog {}
+impl shell_IFileDialog for IFileDialog {}
 
-/// [`IFileDialog`](crate::IFileDialog) methods from `shell` feature.
+/// This trait is enabled with the `shell` feature, and provides methods for
+/// [`IFileDialog`](crate::IFileDialog).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait ShellIFileDialog: ShellIModalWindow {
+pub trait shell_IFileDialog: shell_IModalWindow {
 	/// [`IFileDialog::AddPlace`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-addplace)
 	/// method.
 	fn AddPlace(&self, si: &IShellItem, fdap: co::FDAP) -> HrResult<()> {

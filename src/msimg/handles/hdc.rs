@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::WinResult;
 use crate::kernel::privs::bool_to_winresult;
@@ -6,11 +6,18 @@ use crate::msimg;
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HDC, POINT, SIZE};
 
-impl MsimgHdc for HDC {}
+impl msimg_Hdc for HDC {}
 
-/// [`HDC`](crate::HDC) methods from `msimg` feature.
+/// This trait is enabled with the `msimg` feature, and provides methods for
+/// [`HDC`](crate::HDC).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "msimg")))]
-pub trait MsimgHdc: Handle {
+pub trait msimg_Hdc: Handle {
 	/// [`TransparentBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
 	/// method.
 	fn TransparentBlt(self,

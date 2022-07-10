@@ -16,7 +16,7 @@ use crate::gui::privs::{
 use crate::msg::wm;
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
-	GuiWindow, GuiWindowText, Handle, UserHwnd,
+	GuiWindow, GuiWindowText, Handle, user_Hwnd,
 };
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -78,7 +78,8 @@ impl GuiNativeControlEvents<LabelEvents> for Label {
 
 impl Label {
 	/// Instantiates a new `Label` object, to be created on the parent window
-	/// with [`HWND::CreateWindowEx`](crate::prelude::UserHwnd::CreateWindowEx).
+	/// with
+	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: LabelOpts) -> Label {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -107,7 +108,7 @@ impl Label {
 
 	/// Instantiates a new `CheckBox` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::UserHwnd::GetDlgItem).
+	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

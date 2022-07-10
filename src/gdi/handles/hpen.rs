@@ -1,9 +1,9 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGPEN;
 use crate::kernel::decl::{GetLastError, WinResult};
-use crate::prelude::{Handle, HandleGdi};
+use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::COLORREF;
 
 impl_handle! { HPEN: "gdi";
@@ -12,12 +12,19 @@ impl_handle! { HPEN: "gdi";
 	/// GDI object.
 }
 
-impl HandleGdi for HPEN {}
-impl GdiHpen for HPEN {}
+impl gdi_Hgdiobj for HPEN {}
+impl gdi_Hpen for HPEN {}
 
-/// [`HPEN`](crate::HPEN) methods from `gdi` feature.
+/// This trait is enabled with the `gdi` feature, and provides methods for
+/// [`HPEN`](crate::HPEN).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
-pub trait GdiHpen: Handle {
+pub trait gdi_Hpen: gdi_Hgdiobj {
 	/// [`CreatePen`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// static method.
 	#[must_use]

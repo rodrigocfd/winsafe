@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, WinResult};
@@ -11,16 +11,24 @@ impl_handle! { HGLOBAL: "kernel";
 	/// Originally just a `HANDLE`.
 }
 
-impl KernelHglobal for HGLOBAL {}
+impl kernel_Hglobal for HGLOBAL {}
 
-/// [`HGLOBAL`](crate::HGLOBAL) methods from `kernel` feature.
+/// This trait is enabled with the `kernel` feature, and provides methods for
+/// [`HGLOBAL`](crate::HGLOBAL).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait KernelHglobal: Handle {
+pub trait kernel_Hglobal: Handle {
 	/// [`GlobalAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HGLOBAL::GlobalFree`](crate::prelude::KernelHglobal::GlobalFree) call.
+	/// [`HGLOBAL::GlobalFree`](crate::prelude::kernel_Hglobal::GlobalFree)
+	/// call.
 	#[must_use]
 	fn GlobalAlloc(flags: co::GMEM, num_bytes: u64) -> WinResult<HGLOBAL> {
 		unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes).as_mut() }
@@ -50,11 +58,11 @@ pub trait KernelHglobal: Handle {
 	/// [`GlobalLock`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
 	/// method.
 	///
-	/// Calls [`HGLOBAL::GlobalSize`](crate::prelude::KernelHglobal::GlobalSize)
+	/// Calls [`HGLOBAL::GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize)
 	/// to retrieve the size of the memory block.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HGLOBAL::GlobalUnlock`](crate::prelude::KernelHglobal::GlobalUnlock)
+	/// [`HGLOBAL::GlobalUnlock`](crate::prelude::kernel_Hglobal::GlobalUnlock)
 	/// call.
 	#[must_use]
 	fn GlobalLock<'a>(self) -> WinResult<&'a mut [u8]> {
@@ -70,7 +78,8 @@ pub trait KernelHglobal: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HGLOBAL::GlobalFree`](crate::prelude::KernelHglobal::GlobalFree) call.
+	/// [`HGLOBAL::GlobalFree`](crate::prelude::kernel_Hglobal::GlobalFree)
+	/// call.
 	#[must_use]
 	fn GlobalReAlloc(self,
 		num_bytes: u64, flags: co::GMEM) -> WinResult<HGLOBAL>
