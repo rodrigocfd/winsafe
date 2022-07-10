@@ -1,4 +1,5 @@
 mod ibindctx;
+mod ienumshellitems;
 mod ifiledialog;
 mod ifileopendialog;
 mod ifilesavedialog;
@@ -16,6 +17,7 @@ mod itaskbarlist4;
 
 pub mod decl {
 	pub use super::ibindctx::IBindCtx;
+	pub use super::ienumshellitems::IEnumShellItems;
 	pub use super::ifiledialog::IFileDialog;
 	pub use super::ifileopendialog::IFileOpenDialog;
 	pub use super::ifilesavedialog::IFileSaveDialog;
@@ -34,6 +36,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::ibindctx::shell_IBindCtx;
+	pub use super::ienumshellitems::shell_IEnumShellItems;
 	pub use super::ifiledialog::shell_IFileDialog;
 	pub use super::ifileopendialog::shell_IFileOpenDialog;
 	pub use super::ifilesavedialog::shell_IFileSaveDialog;
@@ -52,6 +55,7 @@ pub mod traits {
 
 pub mod vt {
 	pub use super::ibindctx::IBindCtxVT;
+	pub use super::ienumshellitems::IEnumShellItemsVT;
 	pub use super::ifiledialog::IFileDialogVT;
 	pub use super::ifileopendialog::IFileOpenDialogVT;
 	pub use super::ifilesavedialog::IFileSaveDialogVT;
