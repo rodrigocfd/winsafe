@@ -4,7 +4,7 @@ use crate::co;
 use crate::ffi_types::{HRES, PCVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ComInterface, ole_IUnknown};
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IMFGetService`](crate::IMFGetService) virtual table.
@@ -70,7 +70,7 @@ pub trait dshow_IMFGetService: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn GetService<T>(&self, service_id: &co::DSHOW_SERVICE) -> HrResult<T>
-		where T: ComInterface,
+		where T: ole_IUnknown,
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();

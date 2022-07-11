@@ -5,7 +5,7 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::iunknown::{ComInterface, ole_IUnknown};
+	pub use super::iunknown::ole_IUnknown;
 }
 
 pub mod vt {

@@ -21,15 +21,6 @@ impl ComPtr {
 	}
 }
 
-/// Any
-/// [COM](https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal)
-/// object, which encapsulates a COM interface pointer.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-pub trait ComInterface: From<ComPtr> {
-	/// The COM interface ID.
-	const IID: co::IID;
-}
-
 //------------------------------------------------------------------------------
 
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
@@ -58,15 +49,29 @@ pub struct IUnknown(ComPtr);
 impl_iunknown!(IUnknown, "00000000-0000-0000-c000-000000000046");
 
 /// This trait is enabled with the `ole` feature, and provides methods for
-/// [`IUnknown`](crate::IUnknown).
+/// [`IUnknown`](crate::IUnknown). It is the base trait for all COM traits.
 ///
 /// Prefer importing this trait through the prelude:
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
+///
+/// Note that the [`IUnknownVT`](crate::vt::IUnknownVT) virtual table has two
+/// other methods: `AddRef` and `Release`. While these methods are relevant in
+/// C++, here they are abstracted away as it follows:
+///
+/// * `AddRef` – called along the `clone` method from the
+/// [`Clone`](https://doc.rust-lang.org/std/clone/trait.Clone.html) trait;
+///
+/// * `Release` – called automatically by the
+/// [`Drop`](https://doc.rust-lang.org/std/ops/trait.Drop.html) trait, so you
+/// don't need to worry about it.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-pub trait ole_IUnknown: ComInterface + Clone {
+pub trait ole_IUnknown: Clone + From<ComPtr> {
+	/// The COM interface ID.
+	const IID: co::IID;
+
 	/// Returns the pointer to the underlying COM virtual table.
 	#[must_use]
 	unsafe fn ptr(&self) -> ComPtr;
@@ -75,7 +80,7 @@ pub trait ole_IUnknown: ComInterface + Clone {
 	/// method.
 	#[must_use]
 	fn QueryInterface<T>(&self) -> HrResult<T>
-		where T: ComInterface,
+		where T: ole_IUnknown,
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();

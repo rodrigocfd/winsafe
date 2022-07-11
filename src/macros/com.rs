@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 
-/// Implements IUnknown trait to COM object, plus all its trait bounds.
+/// Implements ole_IUnknown trait to COM object, plus all its trait bounds.
 macro_rules! impl_iunknown {
 	($name:ident, $guid:expr) => {
 		impl Drop for $name {
@@ -24,11 +24,9 @@ macro_rules! impl_iunknown {
 			}
 		}
 
-		impl crate::prelude::ComInterface for $name {
-			const IID: crate::co::IID = crate::co::IID::new($guid);
-		}
-
 		impl crate::prelude::ole_IUnknown for $name {
+			const IID: crate::co::IID = crate::co::IID::new($guid);
+
 			unsafe fn ptr(&self) -> ComPtr {
 				self.0
 			}

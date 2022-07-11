@@ -3,7 +3,7 @@
 use crate::{co, ole};
 use crate::ole::decl::{ComPtr, HrResult, IUnknown};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::ComInterface;
+use crate::prelude::ole_IUnknown;
 
 /// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
@@ -31,7 +31,7 @@ pub fn CoCreateInstance<T>(
 	clsid: &co::CLSID,
 	iunk_outer: Option<&mut IUnknown>,
 	cls_context: co::CLSCTX) -> HrResult<T>
-	where T: ComInterface,
+	where T: ole_IUnknown,
 {
 	unsafe {
 		let mut ppv = ComPtr::null();

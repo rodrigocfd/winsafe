@@ -3,7 +3,7 @@
 use crate::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, HrResult, IUnknown};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ComInterface, ole_IUnknown};
+use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`ITypeInfo`](crate::ITypeInfo) virtual table.
@@ -58,7 +58,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn CreateInstance<T>(&self, iunk_outer: Option<&mut IUnknown>) -> HrResult<T>
-		where T: ComInterface,
+		where T: ole_IUnknown,
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();

@@ -5,7 +5,7 @@ use crate::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ComInterface, ole_IUnknown};
+use crate::prelude::ole_IUnknown;
 use crate::shell::decl::IBindCtx;
 use crate::vt::IUnknownVT;
 
@@ -65,7 +65,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	#[must_use]
 	fn BindToHandler<T>(&self,
 		bind_ctx: Option<&IBindCtx>, bhid: &co::BHID) -> HrResult<T>
-		where T: ComInterface,
+		where T: ole_IUnknown,
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
