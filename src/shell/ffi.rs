@@ -1,5 +1,9 @@
 use crate::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PSTR, PVOID};
 
+extern_sys! { "propsys";
+	PSGetNameFromPropertyKey(PCVOID, *mut PSTR) -> HRES
+}
+
 extern_sys! { "shell32";
 	CommandLineToArgvW(PCSTR, *mut i32) -> *mut PSTR
 	DragFinish(HANDLE)

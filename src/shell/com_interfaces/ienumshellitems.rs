@@ -28,6 +28,19 @@ pub struct IEnumShellItemsVT {
 /// Automatically calls
 /// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 /// when the object goes out of scope.
+///
+/// # Examples
+///
+/// Instantiating from an [`IShellItem`](crate::IShellItem) object:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
+///
+/// let folder = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp", None)?;
+/// let items = folder.BindToHandler::<IEnumShellItems>(None, &co::BHID::EnumItems)?;
+/// # Ok::<_, co::HRESULT>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct IEnumShellItems(ComPtr);
 

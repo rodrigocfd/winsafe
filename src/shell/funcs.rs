@@ -9,7 +9,8 @@ use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, kernel_Hlocal, ole_IUnknown, shell_IShellItem};
 use crate::shell::decl::{
-	IBindCtx, NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
+	IBindCtx, NOTIFYICONDATA, PROPERTYKEY, SHFILEINFO, SHFILEOPSTRUCT,
+	SHSTOCKICONINFO,
 };
 
 /// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
@@ -49,6 +50,25 @@ pub fn CommandLineToArgv(cmd_line: &str) -> WinResult<Vec<String>> {
 	(HLOCAL(lp_arr as _))
 		.LocalFree()
 		.map(|_| strs)
+}
+
+/// [`PSGetNameFromPropertyKey`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-psgetnamefrompropertykey)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
+	let mut pstr: *mut u16 = std::ptr::null_mut();
+	ok_to_hrresult(
+		unsafe {
+			shell::ffi::PSGetNameFromPropertyKey(
+				prop_key as *const _ as _,
+				&mut pstr,
+			)
+		},
+	).map(|_| {
+		let name = WString::from_wchars_nullt(pstr);
+		CoTaskMemFree(pstr);
+		name.to_string()
+	})
 }
 
 /// [`SHAddToRecentDocs`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)
