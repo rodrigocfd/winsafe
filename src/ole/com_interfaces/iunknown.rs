@@ -12,8 +12,12 @@ use crate::ole::privs::ok_to_hrresult;
 pub struct ComPtr(pub(crate) *mut *mut IUnknownVT);
 
 impl ComPtr {
-	pub(crate) const fn null() -> Self {
-		ComPtr(std::ptr::null_mut())
+	/// Creates a null pointer to a COM virtual table.
+	///
+	/// Used internally by the library.
+	#[must_use]
+	pub const unsafe fn null() -> Self {
+		Self(std::ptr::null_mut())
 	}
 }
 
@@ -73,8 +77,8 @@ pub trait ole_IUnknown: ComInterface + Clone {
 	fn QueryInterface<T>(&self) -> HrResult<T>
 		where T: ComInterface,
 	{
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IUnknownVT);
 			ok_to_hrresult(
 				(vt.QueryInterface)(
@@ -82,7 +86,7 @@ pub trait ole_IUnknown: ComInterface + Clone {
 					&T::IID as *const _ as _,
 					&mut ppv_queried,
 				),
-			)
-		}.map(|_| T::from(ppv_queried))
+			).map(|_| T::from(ppv_queried))
+		}
 	}
 }

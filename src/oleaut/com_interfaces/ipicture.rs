@@ -64,9 +64,9 @@ pub trait oleaut_IPicture: ole_IUnknown {
 		path: &str,
 		transparent_color: Option<COLORREF>) -> HrResult<IPicture>
 	{
-		let mut ppv_queried = ComPtr::null();
-		ok_to_hrresult(
-			unsafe {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			ok_to_hrresult(
 				oleaut::ffi::OleLoadPicturePath(
 					WString::from_str(path).as_ptr(),
 					std::ptr::null_mut(),
@@ -75,8 +75,8 @@ pub trait oleaut_IPicture: ole_IUnknown {
 					&Self::IID as *const _ as _,
 					&mut ppv_queried as *mut _ as _,
 				)
-			},
-		).map(|_| IPicture::from(ppv_queried))
+			).map(|_| IPicture::from(ppv_queried))
+		}
 	}
 
 	/// Calls [`IStream::from_slice`](crate::prelude::shell_IStream::from_slice)
@@ -100,18 +100,18 @@ pub trait oleaut_IPicture: ole_IUnknown {
 		size: Option<u32>,
 		keep_original_format: bool) -> HrResult<IPicture>
 	{
-		let mut ppv_queried = ComPtr::null();
-		ok_to_hrresult(
-			unsafe {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			ok_to_hrresult(
 				oleaut::ffi::OleLoadPicture(
 					stream.ptr().0 as _,
 					size.unwrap_or(0) as _,
 					!keep_original_format as _, // note: reversed
 					&Self::IID as *const _ as _,
 					&mut ppv_queried as *mut _ as _,
-				)
-			},
-		).map(|_| IPicture::from(ppv_queried))
+				),
+			).map(|_| IPicture::from(ppv_queried))
+		}
 	}
 
 	/// [`IPicture::get_CurDC`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_curdc)
@@ -143,8 +143,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	/// use winsafe::{HWND, IPicture};
 	///
 	/// let pic: IPicture; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let pic = IPicture::from(unsafe { winsafe::ComPtr::null() });
 	///
 	/// let hdc = HWND::NULL.GetDC()?;
 	///
@@ -193,8 +192,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	/// use winsafe::{HWND, IPicture};
 	///
 	/// let pic: IPicture; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let pic = CoCreateInstance::<IPicture>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let pic = IPicture::from(unsafe { winsafe::ComPtr::null() });
 	///
 	/// let hdc = HWND::NULL.GetDC()?;
 	///

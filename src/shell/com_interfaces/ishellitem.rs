@@ -67,8 +67,8 @@ pub trait shell_IShellItem: ole_IUnknown {
 		bind_ctx: Option<&IBindCtx>, bhid: &co::BHID) -> HrResult<T>
 		where T: ComInterface,
 	{
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
 			ok_to_hrresult(
 				(vt.BindToHandler)(
@@ -78,8 +78,8 @@ pub trait shell_IShellItem: ole_IUnknown {
 					&T::IID as *const _ as _,
 					&mut ppv_queried,
 				)
-			)
-		}.map(|_| T::from(ppv_queried))
+			).map(|_| T::from(ppv_queried))
+		}
 	}
 
 	/// [`IShellItem::GetAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
@@ -155,10 +155,11 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn GetParent(&self) -> HrResult<IShellItem> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
 			ok_to_hrresult((vt.GetParent)(self.ptr(), &mut ppv_queried))
-		}.map(|_| IShellItem::from(ppv_queried))
+				.map(|_| IShellItem::from(ppv_queried))
+		}
 	}
 }

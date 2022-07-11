@@ -56,8 +56,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// };
 	///
 	/// let sinkf: IFileSinkFilter; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let sinkf = CoCreateInstance::<IFileSinkFilter>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let sinkf = IFileSinkFilter::from(unsafe { winsafe::ComPtr::null() });
 	///
 	/// let mut ammt = AM_MEDIA_TYPE::default();
 	/// unsafe {

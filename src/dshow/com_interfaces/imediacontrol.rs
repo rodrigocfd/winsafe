@@ -40,8 +40,7 @@ pub struct IMediaControlVT {
 /// use winsafe::{IGraphBuilder, IMediaControl};
 ///
 /// let graph_builder: IGraphBuilder; // initialized somewhere
-/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-/// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+/// # let graph_builder = IGraphBuilder::from(unsafe { winsafe::ComPtr::null() });
 ///
 /// let media_control = graph_builder
 ///     .QueryInterface::<IMediaControl>()?;
@@ -68,8 +67,8 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn AddSourceFilter(&self, file_name: &str) -> HrResult<IDispatch> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
 			ok_to_hrresult(
 				(vt.AddSourceFilter)(
@@ -77,8 +76,8 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 					WString::from_str(file_name).as_mut_ptr(), // BSTR
 					&mut ppv_queried,
 				),
-			)
-		}.map(|_| IDispatch::from(ppv_queried))
+			).map(|_| IDispatch::from(ppv_queried))
+		}
 	}
 
 	/// [`IMediaControl::GetState`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)

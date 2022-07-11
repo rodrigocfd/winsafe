@@ -57,8 +57,8 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetTypeInfo(&self, info_type: u32, lcid: LCID) -> HrResult<ITypeInfo> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IDispatchVT);
 			ok_to_hrresult(
 				(vt.GetTypeInfo)(
@@ -67,7 +67,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 					lcid.0,
 					&mut ppv_queried,
 				),
-			)
-		}.map(|_| ITypeInfo::from(ppv_queried))
+			).map(|_| ITypeInfo::from(ppv_queried))
+		}
 	}
 }

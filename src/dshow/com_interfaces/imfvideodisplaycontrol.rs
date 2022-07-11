@@ -47,8 +47,7 @@ pub struct IMFVideoDisplayControlVT {
 /// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
 ///
 /// let get_svc: IMFGetService; // initialized somewhere
-/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-/// # let get_svc = CoCreateInstance::<IMFGetService>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+/// # let get_svc = IMFGetService::from(unsafe { winsafe::ComPtr::null() });
 ///
 /// let controller_evr = get_svc
 ///     .GetService::<IMFVideoDisplayControl>(

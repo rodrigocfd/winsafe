@@ -64,21 +64,21 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn EnumFilters(&self) -> HrResult<IEnumFilters> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
 			ok_to_hrresult(
 				(vt.EnumFilters)(self.ptr(), &mut ppv_queried),
-			)
-		}.map(|_| IEnumFilters::from(ppv_queried))
+			).map(|_| IEnumFilters::from(ppv_queried))
+		}
 	}
 
 	/// [`IFilterGraph::FindFilterByName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
 	/// method.
 	#[must_use]
 	fn FindFilterByName(&self, name: &str) -> HrResult<IBaseFilter> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
 			ok_to_hrresult(
 				(vt.FindFilterByName)(
@@ -86,8 +86,8 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 					WString::from_str(name).as_ptr(),
 					&mut ppv_queried,
 				),
-			)
-		}.map(|_| IBaseFilter::from(ppv_queried))
+			).map(|_| IBaseFilter::from(ppv_queried))
+		}
 	}
 
 	/// [`IFilterGraph::RemoveFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-removefilter)

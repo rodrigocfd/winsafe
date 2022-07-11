@@ -120,8 +120,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// use winsafe::{HWND, ITaskbarList3};
 	///
 	/// let tbar: ITaskbarList3; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let tbar = CoCreateInstance::<ITaskbarList3>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let tbar = ITaskbarList3::from(unsafe { winsafe::ComPtr::null() });
 	/// let hwnd: HWND;
 	/// # let hwnd = HWND::NULL;
 	///

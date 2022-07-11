@@ -46,8 +46,7 @@ pub struct IMediaSeekingVT {
 /// use winsafe::{IGraphBuilder, IMediaSeeking};
 ///
 /// let graph_builder: IGraphBuilder; // initialized somewhere
-/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-/// # let graph_builder = CoCreateInstance::<IGraphBuilder>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+/// # let graph_builder = IGraphBuilder::from(unsafe { winsafe::ComPtr::null() });
 ///
 /// let media_seeking = graph_builder
 ///     .QueryInterface::<IMediaSeeking>()?;

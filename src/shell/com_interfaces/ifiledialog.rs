@@ -93,11 +93,12 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	#[must_use]
 	fn GetCurrentSelection(&self) -> HrResult<IShellItem> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
 			ok_to_hrresult((vt.GetCurrentSelection)(self.ptr(), &mut ppv_queried))
-		}.map(|_| IShellItem::from(ppv_queried))
+				.map(|_| IShellItem::from(ppv_queried))
+		}
 	}
 
 	/// [`IFileDialog::GetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfilename)
@@ -130,11 +131,12 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	#[must_use]
 	fn GetFolder(&self) -> HrResult<IShellItem> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
 			ok_to_hrresult((vt.GetFolder)(self.ptr(), &mut ppv_queried))
-		}.map(|_| IShellItem::from(ppv_queried))
+				.map(|_| IShellItem::from(ppv_queried))
+		}
 	}
 
 	/// [`IFileDialog::GetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
@@ -152,11 +154,12 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	#[must_use]
 	fn GetResult(&self) -> HrResult<IShellItem> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
 			ok_to_hrresult((vt.GetResult)(self.ptr(), &mut ppv_queried))
-		}.map(|_| IShellItem::from(ppv_queried))
+				.map(|_| IShellItem::from(ppv_queried))
+		}
 	}
 
 	/// [`IFileDialog::SetClientGuid`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setclientguid)
@@ -237,8 +240,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// use winsafe::IFileDialog;
 	///
 	/// let file_dlg: IFileDialog; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let file_dlg = CoCreateInstance::<IFileDialog>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let file_dlg = IFileDialog::from(unsafe { winsafe::ComPtr::null() });
 	///
 	/// file_dlg.SetFileTypes(&[
 	///     ("Documents", "*.docx;*.txt"),

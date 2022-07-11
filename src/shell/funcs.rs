@@ -86,17 +86,17 @@ pub fn SHCreateItemFromParsingName<T>(
 	bind_ctx: Option<&IBindCtx>) -> HrResult<T>
 	where T: shell_IShellItem,
 {
-	let mut ppv_queried = ComPtr::null();
-	ok_to_hrresult(
-		unsafe {
+	unsafe {
+		let mut ppv_queried = ComPtr::null();
+		ok_to_hrresult(
 			shell::ffi::SHCreateItemFromParsingName(
 				WString::from_str(file_or_folder_path).as_ptr(),
 				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
 				&T::IID as *const _ as _,
 				&mut ppv_queried as *mut _ as _,
-			)
-		},
-	).map(|_| T::from(ppv_queried))
+			),
+		).map(|_| T::from(ppv_queried))
+	}
 }
 
 /// [`Shell_NotifyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)

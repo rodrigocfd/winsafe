@@ -67,8 +67,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 	/// use winsafe::{co, HrResult, IFileOpenDialog};
 	///
 	/// let fo: IFileOpenDialog; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let fo = CoCreateInstance::<IFileOpenDialog>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let fo = IFileOpenDialog::from(unsafe { winsafe::ComPtr::null() });
 	///
 	/// let paths = fo.GetResults()?.iter()?
 	///     .map(|shi|
@@ -81,21 +80,23 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 	/// ```
 	#[must_use]
 	fn GetResults(&self) -> HrResult<IShellItemArray> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
 			ok_to_hrresult((vt.GetResults)(self.ptr(), &mut ppv_queried))
-		}.map(|_| IShellItemArray::from(ppv_queried))
+				.map(|_| IShellItemArray::from(ppv_queried))
+		}
 	}
 
 	/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 	/// method.
 	#[must_use]
 	fn GetSelectedItems(&self) -> HrResult<IShellItemArray> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
 			ok_to_hrresult((vt.GetSelectedItems)(self.ptr(), &mut ppv_queried))
-		}.map(|_| IShellItemArray::from(ppv_queried))
+				.map(|_| IShellItemArray::from(ppv_queried))
+		}
 	}
 }

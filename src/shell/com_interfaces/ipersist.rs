@@ -41,7 +41,7 @@ pub trait shell_IPersist: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetClassID(&self) -> HrResult<co::CLSID> {
-		let mut clsid = co::CLSID::new("00000000-0000-0000-0000-000000000000");
+		let mut clsid = co::CLSID::new("00000000-0000-0000-0000-000000000000"); // just a placeholder
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IPersistVT);
 			ok_to_hrresult(

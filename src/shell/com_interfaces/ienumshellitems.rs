@@ -50,7 +50,8 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	///
 	/// # Examples
 	///
-	/// Iterating over the [`IShellItem`](crate::IShellItem) objects:
+	/// Enumerating the items in a folder by iterating over the
+	/// [`IShellItem`](crate::IShellItem) objects:
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -74,20 +75,19 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IShellItem>> {
-		let mut ppv_queried = ComPtr::null();
 		let mut fetched = u32::default();
-
-		match unsafe {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IEnumShellItemsVT);
-			ok_to_hrresult(
+			match ok_to_hrresult(
 				(vt.Next)(self.ptr(), 1, &mut ppv_queried, &mut fetched),
-			)
-		}.map(|_| IShellItem::from(ppv_queried)) {
-			Ok(filter) => Ok(Some(filter)),
-			Err(hr) => match hr {
-				co::HRESULT::S_FALSE => Ok(None), // no item found
+			) {
+				Ok(_) => Ok(Some(IShellItem::from(ppv_queried))),
+				Err(hr) => match hr {
+					co::HRESULT::S_FALSE => Ok(None), // no item found
 				hr => Err(hr), // actual error
-			},
+				},
+			}
 		}
 	}
 
@@ -133,7 +133,9 @@ impl<'a> Iterator for EnumShellItemsIter<'a> {
 
 impl<'a> EnumShellItemsIter<'a> {
 	fn new(com_ptr: ComPtr) -> Self {
-		let array = ManuallyDrop::new(IEnumShellItems(com_ptr));
-		Self { array, _owner: PhantomData }
+		Self {
+			array: ManuallyDrop::new(IEnumShellItems(com_ptr)),
+			_owner: PhantomData,
+		}
 	}
 }

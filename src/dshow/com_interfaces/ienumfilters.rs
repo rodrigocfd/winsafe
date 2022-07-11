@@ -1,5 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::marker::PhantomData;
+use std::mem::ManuallyDrop;
+
 use crate::co;
 use crate::dshow::decl::IBaseFilter;
 use crate::ffi_types::HRES;
@@ -41,24 +44,49 @@ impl dshow_IEnumFilters for IEnumFilters {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IEnumFilters: ole_IUnknown {
+	/// Returns an iterator over the [`IBaseFilter`](crate::IBaseFilter)
+	/// elements which successively calls
+	/// [`IEnumFilters::Next`](crate::prelude::shell_IEnumFilters::Next).
+	///
+	/// # Examples
+	///
+	/// Enumerating the [`IBaseFilter`](crate::IBaseFilter) objects:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::IEnumFilters;
+	///
+	/// let filters: IEnumFilters; // initialized somewhere
+	/// # let filters = IEnumFilters::from(unsafe { winsafe::ComPtr::null() });
+	///
+	/// for filter in filters.iter() {
+	///     let filter = filter?;
+	///     // ...
+	/// }
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
+	#[must_use]
+	fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = HrResult<IBaseFilter>> + 'a> {
+		Box::new(EnumFiltersIter::new(unsafe { self.ptr() }))
+	}
+
 	/// [`IEnumFilters::Next`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
 	/// method.
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IBaseFilter>> {
-		let mut ppv_queried = ComPtr::null();
 		let mut fetched = u32::default();
-
-		match unsafe {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IEnumFiltersVT);
-			ok_to_hrresult(
+			match ok_to_hrresult(
 				(vt.Next)(self.ptr(), 1, &mut ppv_queried, &mut fetched),
-			)
-		}.map(|_| IBaseFilter::from(ppv_queried)) {
-			Ok(filter) => Ok(Some(filter)),
-			Err(hr) => match hr {
-				co::HRESULT::S_FALSE => Ok(None), // no filter found
-				hr => Err(hr), // actual error
-			},
+			) {
+				Ok(_) => Ok(Some(IBaseFilter::from(ppv_queried))),
+				Err(hr) => match hr {
+					co::HRESULT::S_FALSE => Ok(None), // no filter found
+					hr => Err(hr), // actual error
+				},
+			}
 		}
 	}
 
@@ -77,6 +105,36 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IEnumFiltersVT);
 			okfalse_to_hrresult((vt.Skip)(self.ptr(), count))
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct EnumFiltersIter<'a> {
+	array: ManuallyDrop<IEnumFilters>,
+	_owner: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for EnumFiltersIter<'a> {
+	type Item = HrResult<IBaseFilter>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		match self.array.Next() {
+			Err(err) => Some(Err(err)),
+			Ok(maybe_item) => match maybe_item {
+				None => None,
+				Some(item) => Some(Ok(item)),
+			},
+		}
+	}
+}
+
+impl<'a> EnumFiltersIter<'a> {
+	fn new(com_ptr: ComPtr) -> Self {
+		Self {
+			array: ManuallyDrop::new(IEnumFilters(com_ptr)),
+			_owner: PhantomData,
 		}
 	}
 }

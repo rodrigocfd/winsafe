@@ -60,10 +60,9 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 	fn CreateInstance<T>(&self, iunk_outer: Option<&mut IUnknown>) -> HrResult<T>
 		where T: ComInterface,
 	{
-		let mut ppv_queried = ComPtr::null();
-		let mut ppv_outer = ComPtr::null();
-
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let mut ppv_outer = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut ITypeInfoVT);
 			ok_to_hrresult(
 				(vt.CreateInstance)(
@@ -73,7 +72,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 					&T::IID as *const _ as _,
 					&mut ppv_queried,
 				),
-			)
-		}.map(|_| T::from(ppv_queried))
+			).map(|_| T::from(ppv_queried))
+		}
 	}
 }

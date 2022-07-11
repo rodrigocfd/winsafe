@@ -58,13 +58,13 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn ConnectedTo(&self) -> HrResult<IPin> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
 			ok_to_hrresult(
 				(vt.ConnectedTo)(self.ptr(), &mut ppv_queried),
-			)
-		}.map(|_| IPin::from(ppv_queried))
+			).map(|_| IPin::from(ppv_queried))
+		}
 	}
 
 	/// [`IPin::Disconnect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)

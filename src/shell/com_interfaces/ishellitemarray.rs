@@ -62,8 +62,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// use winsafe::{co, IShellItemArray};
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let ish_arr = IShellItemArray::from(unsafe { winsafe::ComPtr::null() });
 	///
 	/// for ish_item in ish_arr.iter()? {
 	///     let ish_item = ish_item?;
@@ -81,8 +80,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// use winsafe::{co, HrResult, IShellItemArray};
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # use winsafe::{co::CLSID, co::CLSCTX, CoCreateInstance};
-	/// # let ish_arr = CoCreateInstance::<IShellItemArray>(&CLSID::new("00000000-0000-0000-0000-000000000000"), None, CLSCTX::INPROC_SERVER)?;
+	/// # let ish_arr = IShellItemArray::from(unsafe { winsafe::ComPtr::null() });
 	///
 	/// let paths = ish_arr.iter()?
 	///     .map(|shi|
@@ -116,11 +114,12 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// [`IShellItemArrayT::iter`](crate::prelude::shell_IShellItemArray::iter).
 	#[must_use]
 	fn GetItemAt(&self, index: u32) -> HrResult<IShellItem> {
-		let mut ppv_queried = ComPtr::null();
 		unsafe {
+			let mut ppv_queried = ComPtr::null();
 			let vt = &**(self.ptr().0 as *mut *mut IShellItemArrayVT);
 			ok_to_hrresult((vt.GetItemAt)(self.ptr(), index, &mut ppv_queried))
-		}.map(|_| IShellItem::from(ppv_queried))
+				.map(|_| IShellItem::from(ppv_queried))
+		}
 	}
 }
 

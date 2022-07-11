@@ -33,11 +33,10 @@ pub fn CoCreateInstance<T>(
 	cls_context: co::CLSCTX) -> HrResult<T>
 	where T: ComInterface,
 {
-	let mut ppv = ComPtr::null();
-	let mut ppv_outer = ComPtr::null();
-
-	ok_to_hrresult(
-		unsafe {
+	unsafe {
+		let mut ppv = ComPtr::null();
+		let mut ppv_outer = ComPtr::null();
+		ok_to_hrresult(
 			ole::ffi::CoCreateInstance(
 				clsid as *const _ as _,
 				iunk_outer.as_ref()
@@ -45,14 +44,14 @@ pub fn CoCreateInstance<T>(
 				cls_context.0,
 				&T::IID as *const _ as _,
 				&mut ppv as *mut _ as _,
-			)
-		},
-	).map(|_| {
-		if let Some(iunk_outer) = iunk_outer {
-			*iunk_outer = IUnknown::from(ppv_outer); // create outer Unknown if due
-		}
-		T::from(ppv) // return new Unknown-derived object
-	})
+			),
+		).map(|_| {
+			if let Some(iunk_outer) = iunk_outer {
+				*iunk_outer = IUnknown::from(ppv_outer); // create outer Unknown if due
+			}
+			T::from(ppv) // return new Unknown-derived object
+		})
+	}
 }
 
 /// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
