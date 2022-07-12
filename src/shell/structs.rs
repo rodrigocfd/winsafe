@@ -58,18 +58,6 @@ impl NOTIFYICONDATA {
 	pub_fn_string_arr_get_set!(szInfoTitle, set_szInfoTitle);
 }
 
-/// [`PROPERTYKEY`](https://docs.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
-/// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-#[repr(C)]
-#[derive(Clone, Copy, Eq, PartialEq)]
-pub struct PROPERTYKEY {
-	pub fmtid: GUID,
-	pub pid: u32,
-}
-
-impl_default!(PROPERTYKEY);
-
 /// [`SHFILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]

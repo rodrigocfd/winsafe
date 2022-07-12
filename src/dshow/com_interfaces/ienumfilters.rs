@@ -46,7 +46,7 @@ impl dshow_IEnumFilters for IEnumFilters {}
 pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// Returns an iterator over the [`IBaseFilter`](crate::IBaseFilter)
 	/// elements which successively calls
-	/// [`IEnumFilters::Next`](crate::prelude::shell_IEnumFilters::Next).
+	/// [`IEnumFilters::Next`](crate::prelude::dshow_IEnumFilters::Next).
 	///
 	/// # Examples
 	///

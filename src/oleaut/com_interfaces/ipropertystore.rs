@@ -6,12 +6,12 @@ use std::mem::ManuallyDrop;
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
+use crate::oleaut::decl::PROPERTYKEY;
 use crate::prelude::ole_IUnknown;
-use crate::shell::decl::PROPERTYKEY;
 use crate::vt::IUnknownVT;
 
 /// [`IPropertyStore`](crate::IPropertyStore) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]
 pub struct IPropertyStoreVT {
 	pub IUnknownVT: IUnknownVT,
@@ -41,13 +41,13 @@ pub struct IPropertyStoreVT {
 /// let props = file.BindToHandler::<IPropertyStore>(None, &co::BHID::PropertyStore)?;
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub struct IPropertyStore(ComPtr);
 
 impl_iunknown!(IPropertyStore, "886d8eeb-8cf2-4446-8d02-cdba1dbdcf99");
-impl shell_IPropertyStore for IPropertyStore {}
+impl oleaut_IPropertyStore for IPropertyStore {}
 
-/// This trait is enabled with the `shell` feature, and provides methods for
+/// This trait is enabled with the `oleaut` feature, and provides methods for
 /// [`IPropertyStore`](crate::IPropertyStore).
 ///
 /// Prefer importing this trait through the prelude:
@@ -55,13 +55,13 @@ impl shell_IPropertyStore for IPropertyStore {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait shell_IPropertyStore: ole_IUnknown {
+#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
+pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// Returns an iterator over the [`PROPERTYKEY`](crate::PROPERTYKEY)
 	/// elements by calling
-	/// [`IPropertyStore::GetCount`](crate::prelude::shell_IPropertyStore::GetCount)
+	/// [`IPropertyStore::GetCount`](crate::prelude::oleaut_IPropertyStore::GetCount)
 	/// and
-	/// [`IPropertyStore::GetAt`](crate::prelude::shell_IPropertyStore::GetAt)
+	/// [`IPropertyStore::GetAt`](crate::prelude::oleaut_IPropertyStore::GetAt)
 	/// consecutively.
 	///
 	/// # Examples

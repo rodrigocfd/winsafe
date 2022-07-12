@@ -5,7 +5,6 @@ mod ifileopendialog;
 mod ifilesavedialog;
 mod imodalwindow;
 mod ipersist;
-mod ipropertystore;
 mod isequentialstream;
 mod ishellitem;
 mod ishellitemarray;
@@ -24,7 +23,6 @@ pub mod decl {
 	pub use super::ifilesavedialog::IFileSaveDialog;
 	pub use super::imodalwindow::IModalWindow;
 	pub use super::ipersist::IPersist;
-	pub use super::ipropertystore::IPropertyStore;
 	pub use super::isequentialstream::ISequentialStream;
 	pub use super::ishellitem::IShellItem;
 	pub use super::ishellitemarray::IShellItemArray;
@@ -44,7 +42,6 @@ pub mod traits {
 	pub use super::ifilesavedialog::shell_IFileSaveDialog;
 	pub use super::imodalwindow::shell_IModalWindow;
 	pub use super::ipersist::shell_IPersist;
-	pub use super::ipropertystore::shell_IPropertyStore;
 	pub use super::isequentialstream::shell_ISequentialStream;
 	pub use super::ishellitem::shell_IShellItem;
 	pub use super::ishellitemarray::shell_IShellItemArray;
@@ -64,7 +61,6 @@ pub mod vt {
 	pub use super::ifilesavedialog::IFileSaveDialogVT;
 	pub use super::imodalwindow::IModalWindowVT;
 	pub use super::ipersist::IPersistVT;
-	pub use super::ipropertystore::IPropertyStoreVT;
 	pub use super::isequentialstream::ISequentialStreamVT;
 	pub use super::ishellitem::IShellItemVT;
 	pub use super::ishellitemarray::IShellItemArrayVT;
