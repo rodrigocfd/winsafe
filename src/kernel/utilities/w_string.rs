@@ -3,50 +3,6 @@ use std::cmp::Ordering;
 use crate::{co, kernel};
 use crate::kernel::decl::{MultiByteToWideChar, WinResult};
 
-/// String encodings that can be guessed by
-/// [`WString::guess_encoding`](crate::WString::guess_encoding).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub enum Encoding {
-	/// Unknown encoding.
-	Unknown,
-	/// Common [US_ASCII](https://en.wikipedia.org/wiki/ASCII) encoding.
-	Ansi,
-	/// [Windows-1252](https://en.wikipedia.org/wiki/Windows-1252) encoding.
-	Win1252,
-	/// [UTF-8](https://en.wikipedia.org/wiki/UTF-8) encoding.
-	Utf8,
-	/// [UTF-16](https://en.wikipedia.org/wiki/UTF-16) encoding, big-endian.
-	Utf16be,
-	/// [UTF-16](https://en.wikipedia.org/wiki/UTF-16) encoding, little-endian.
-	Utf16le,
-	/// [UTF-32](https://en.wikipedia.org/wiki/UTF-32) encoding, big-endian.
-	Utf32be,
-	/// [UTF-32](https://en.wikipedia.org/wiki/UTF-32) encoding, little-endian.
-	Utf32le,
-	/// [Standard Compression Scheme for Unicode](https://en.wikipedia.org/wiki/Standard_Compression_Scheme_for_Unicode).
-	Scsu,
-	/// [Binary Ordered Compression for Unicode](https://en.wikipedia.org/wiki/Binary_Ordered_Compression_for_Unicode).
-	Bocu1,
-}
-
-impl std::fmt::Display for Encoding {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{}", match self {
-			Self::Unknown => "Unknown",
-			Self::Ansi => "ANSI",
-			Self::Win1252 => "Windows 1252",
-			Self::Utf8 => "UTF-8",
-			Self::Utf16be => "UTF-16 BE",
-			Self::Utf16le => "UTF-16 LE",
-			Self::Utf32be => "UTF-32 BE",
-			Self::Utf32le => "UTF-32 LE",
-			Self::Scsu => "SCSU",
-			Self::Bocu1 => "BOCU1",
-		})
-	}
-}
-
 /// Stores a `Vec<u16>` buffer for a null-terminated
 /// [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
 /// wide string natively used by Windows.
@@ -516,5 +472,51 @@ impl WString {
 
 		str16.push(0x0000); // terminating null
 		str16
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// String encodings that can be guessed by
+/// [`WString::guess_encoding`](crate::WString::guess_encoding).
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Encoding {
+	/// Unknown encoding.
+	Unknown,
+	/// Common [US_ASCII](https://en.wikipedia.org/wiki/ASCII) encoding.
+	Ansi,
+	/// [Windows-1252](https://en.wikipedia.org/wiki/Windows-1252) encoding.
+	Win1252,
+	/// [UTF-8](https://en.wikipedia.org/wiki/UTF-8) encoding.
+	Utf8,
+	/// [UTF-16](https://en.wikipedia.org/wiki/UTF-16) encoding, big-endian.
+	Utf16be,
+	/// [UTF-16](https://en.wikipedia.org/wiki/UTF-16) encoding, little-endian.
+	Utf16le,
+	/// [UTF-32](https://en.wikipedia.org/wiki/UTF-32) encoding, big-endian.
+	Utf32be,
+	/// [UTF-32](https://en.wikipedia.org/wiki/UTF-32) encoding, little-endian.
+	Utf32le,
+	/// [Standard Compression Scheme for Unicode](https://en.wikipedia.org/wiki/Standard_Compression_Scheme_for_Unicode).
+	Scsu,
+	/// [Binary Ordered Compression for Unicode](https://en.wikipedia.org/wiki/Binary_Ordered_Compression_for_Unicode).
+	Bocu1,
+}
+
+impl std::fmt::Display for Encoding {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "{}", match self {
+			Self::Unknown => "Unknown",
+			Self::Ansi => "ANSI",
+			Self::Win1252 => "Windows 1252",
+			Self::Utf8 => "UTF-8",
+			Self::Utf16be => "UTF-16 BE",
+			Self::Utf16le => "UTF-16 LE",
+			Self::Utf32be => "UTF-32 BE",
+			Self::Utf32le => "UTF-32 LE",
+			Self::Scsu => "SCSU",
+			Self::Bocu1 => "BOCU1",
+		})
 	}
 }

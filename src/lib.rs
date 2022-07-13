@@ -274,6 +274,7 @@ pub mod co {
 	#[cfg(feature = "gdi")] pub use super::gdi::co::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;
 	#[cfg(feature = "ole")] pub use super::ole::co::*;
+	#[cfg(feature = "ole")] pub use super::oleaut::co::*;
 	#[cfg(feature = "shell")] pub use super::shell::co::*;
 	#[cfg(feature = "user")] pub use super::user::co::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::co::*;

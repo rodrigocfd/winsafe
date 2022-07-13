@@ -51,6 +51,7 @@ extern_sys! { "kernel32";
 	GetGuiResources(HANDLE, u32) -> u32
 	GetLargePageMinimum() -> u64
 	GetLastError() -> u32
+	GetLocalTime(PVOID)
 	GetLogicalDriveStringsW(u32, PSTR) -> u32
 	GetModuleFileNameW(HANDLE, PSTR, u32) -> u32
 	GetModuleHandleW(PCSTR) -> HANDLE

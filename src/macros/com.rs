@@ -5,15 +5,17 @@ macro_rules! impl_iunknown {
 	($name:ident, $guid:expr) => {
 		impl Drop for $name {
 			fn drop(&mut self) {
-				let vt = unsafe { &**(self.0.0 as *mut *mut crate::vt::IUnknownVT) };
-				(vt.Release)(self.0); // call Release()
+				if !self.0.is_null() {
+					let vt = unsafe { &**(self.0.0 as *mut *mut crate::vt::IUnknownVT) };
+					(vt.Release)(self.0);
+				}
 			}
 		}
 
 		impl Clone for $name {
 			fn clone(&self) -> Self {
 				let vt = unsafe { &**(self.0.0 as *mut *mut crate::vt::IUnknownVT) };
-				(vt.AddRef)(self.0); // call AddRef()
+				(vt.AddRef)(self.0);
 				Self(self.0)
 			}
 		}
@@ -26,6 +28,12 @@ macro_rules! impl_iunknown {
 
 		impl crate::prelude::ole_IUnknown for $name {
 			const IID: crate::co::IID = crate::co::IID::new($guid);
+
+			unsafe fn leak(&mut self) -> ComPtr {
+				let ptr = self.0;
+				self.0 = ComPtr::null();
+				ptr
+			}
 
 			unsafe fn ptr(&self) -> ComPtr {
 				self.0

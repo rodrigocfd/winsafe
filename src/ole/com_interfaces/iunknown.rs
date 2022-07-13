@@ -11,6 +11,12 @@ use crate::ole::privs::ok_to_hrresult;
 #[derive(Clone, Copy)]
 pub struct ComPtr(pub(crate) *mut *mut IUnknownVT);
 
+impl From<ComPtr> for usize {
+	fn from(com_ptr: ComPtr) -> Self {
+		com_ptr.0 as _
+	}
+}
+
 impl ComPtr {
 	/// Creates a null pointer to a COM virtual table.
 	///
@@ -18,6 +24,12 @@ impl ComPtr {
 	#[must_use]
 	pub const unsafe fn null() -> Self {
 		Self(std::ptr::null_mut())
+	}
+
+	/// Returns `true` if the pointer is null.
+	#[must_use]
+	pub fn is_null(&self) -> bool {
+		self.0.is_null()
 	}
 }
 
@@ -71,6 +83,16 @@ impl_iunknown!(IUnknown, "00000000-0000-0000-c000-000000000046");
 pub trait ole_IUnknown: Clone + From<ComPtr> {
 	/// The COM interface ID.
 	const IID: co::IID;
+
+	/// Returns the pointer to the underlying COM virtual table and sets the
+	/// internal pointer to null, so that
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// won't be called.
+	///
+	/// **Note:** Be sure to release the pointer, otherwise, as the name of this
+	/// method implies, you will cause a resource leak.
+	#[must_use]
+	unsafe fn leak(&mut self) -> ComPtr;
 
 	/// Returns the pointer to the underlying COM virtual table.
 	#[must_use]

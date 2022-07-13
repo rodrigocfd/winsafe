@@ -305,6 +305,13 @@ pub fn GetFileAttributes(file_name: &str) -> WinResult<co::FILE_ATTRIBUTE> {
 	}
 }
 
+/// [`GetLocalTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+pub fn GetLocalTime(st: &mut SYSTEMTIME) {
+	unsafe { kernel::ffi::GetLocalTime(st as *mut _ as _) }
+}
+
 /// [`GetNativeSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
@@ -321,6 +328,9 @@ pub fn GetStartupInfo(si: &mut STARTUPINFO) {
 
 /// [`GetSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
 /// function.
+///
+/// This function retrieves UTC time; for local time use
+/// [`GetLocalTime`](crate::GetLocalTime).
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetSystemTime(st: &mut SYSTEMTIME) {
 	unsafe { kernel::ffi::GetSystemTime(st as *mut _ as _) }
