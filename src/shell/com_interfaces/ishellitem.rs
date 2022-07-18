@@ -62,6 +62,23 @@ impl shell_IShellItem for IShellItem {}
 pub trait shell_IShellItem: ole_IUnknown {
 	/// [`IShellItem::BindToHandler`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// Retrieving the items inside a directory:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, IEnumShellItems, IShellItem};
+	///
+	/// let sh_folder: IShellItem; // initialized somewhere
+	/// # let sh_folder = IShellItem::from(unsafe { winsafe::ComPtr::null() });
+	/// let sh_items = sh_folder.BindToHandler::<IEnumShellItems>(
+	///     None,
+	///     &co::BHID::EnumItems,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
 	#[must_use]
 	fn BindToHandler<T>(&self,
 		bind_ctx: Option<&IBindCtx>, bhid: &co::BHID) -> HrResult<T>

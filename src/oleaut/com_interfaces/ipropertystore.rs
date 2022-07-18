@@ -3,10 +3,11 @@
 use std::marker::PhantomData;
 use std::mem::ManuallyDrop;
 
+use crate::co;
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::PROPERTYKEY;
+use crate::oleaut::decl::{PROPERTYKEY, VARIANT};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -115,6 +116,27 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 			let vt = &**(self.ptr().0 as *mut *mut IPropertyStoreVT);
 			ok_to_hrresult((vt.GetCount)(self.ptr(), &mut count))
 		}.map(|_| count)
+	}
+
+	/// [`IPropertyStore::GetValue`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getvalue)
+	/// method.
+	#[must_use]
+	fn GetValue(&self, key: &PROPERTYKEY) -> HrResult<VARIANT> {
+		let mut var = VARIANT::default();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPropertyStoreVT);
+			match co::HRESULT(
+				(vt.GetValue)(
+					self.ptr(),
+					key as *const _ as _,
+					&mut var as *mut _ as _,
+				),
+			) {
+				co::HRESULT::S_OK
+					| co::HRESULT::INPLACE_S_TRUNCATED => Ok(var),
+				hr => Err(hr),
+			}
+		}
 	}
 }
 

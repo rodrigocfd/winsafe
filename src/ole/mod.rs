@@ -12,7 +12,7 @@ pub mod decl {
 	pub use super::aliases::*;
 	pub use super::com_interfaces::decl::*;
 	pub use super::funcs::*;
-	pub use super::structs::*;
+	pub use super::structs::decl::*;
 }
 
 pub mod traits {
