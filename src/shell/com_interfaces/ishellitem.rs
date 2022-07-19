@@ -72,6 +72,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// use winsafe::{co, IEnumShellItems, IShellItem};
 	///
 	/// let sh_folder: IShellItem; // initialized somewhere
+	///
 	/// # let sh_folder = IShellItem::from(unsafe { winsafe::ComPtr::null() });
 	/// let sh_items = sh_folder.BindToHandler::<IEnumShellItems>(
 	///     None,

@@ -50,24 +50,29 @@ impl VARIANT {
 		self.vt
 	}
 
+	/// Returns a reference to the raw data held by the `VARIANT`.
+	#[must_use]
+	pub const unsafe fn raw(&self) -> &[u8; 16] {
+		&self.data
+	}
+
 	/// Tells whether the `VARIANT` holds no value.
 	#[must_use]
 	pub fn is_empty(&self) -> bool {
 		self.vt == co::VT::EMPTY
 	}
 
+	/// Tells whether the `VARIANT` holds an SQL style null.
+	#[must_use]
+	pub fn is_null(&self) -> bool {
+		self.vt == co::VT::NULL
+	}
+
 	/// Crates a new `VARIANT` holding a `bool` value.
 	#[must_use]
 	pub fn new_bool(val: bool) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::BOOL;
-
 		let val16: i16 = if val { -1 } else { 0 };
-		val16.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val16.to_ne_bytes(), co::VT::BOOL)
 	}
 
 	/// If the `VARIANT` holds a `bool` value, returns it, otherwise `None`.
@@ -84,16 +89,9 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding a [`BSTR`](crate::BSTR) value.
 	#[must_use]
 	pub fn new_bstr(val: &str) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::BSTR;
-
 		let mut bstr = BSTR::SysAllocString(val);
 		let ptr = unsafe { bstr.leak() } as usize;
-		ptr.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&ptr.to_ne_bytes(), co::VT::BSTR)
 	}
 
 	/// If the `VARIANT` holds a [`BSTR`](crate::BSTR) value, returns it,
@@ -112,14 +110,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `f32` value.
 	#[must_use]
 	pub fn new_f32(val: f32) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::R4;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::R4)
 	}
 
 	/// If the `VARIANT` holds an `f32` value, returns it, otherwise `None`.
@@ -135,14 +126,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `f64` value.
 	#[must_use]
 	pub fn new_f64(val: f64) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::R8;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::R8)
 	}
 
 	/// If the `VARIANT` holds an `f64` value, returns it, otherwise `None`.
@@ -158,14 +142,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `i8` value.
 	#[must_use]
 	pub fn new_i8(val: i8) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::I1;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::I1)
 	}
 
 	/// If the `VARIANT` holds an `i8` value, returns it, otherwise `None`.
@@ -181,14 +158,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `i16` value.
 	#[must_use]
 	pub fn new_i16(val: i16) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::I2;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::I2)
 	}
 
 	/// If the `VARIANT` holds an `i16` value, returns it, otherwise `None`.
@@ -204,14 +174,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `i32` value.
 	#[must_use]
 	pub fn new_i32(val: i32) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::I4;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::I4)
 	}
 
 	/// If the `VARIANT` holds an `i32` value, returns it, otherwise `None`.
@@ -227,14 +190,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `i64` value.
 	#[must_use]
 	pub fn new_i64(val: i64) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::I8;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::I8)
 	}
 
 	/// If the `VARIANT` holds an `i64` value, returns it, otherwise `None`.
@@ -256,16 +212,9 @@ impl VARIANT {
 	pub fn new_idispatch<T>(val: &T) -> VARIANT
 		where T: oleaut_IDispatch,
 	{
-		let mut obj = Self::default();
-		obj.vt = co::VT::DISPATCH;
-
 		let mut cloned = val.clone();
 		let ptr: usize = unsafe { cloned.leak() }.into();
-		ptr.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&ptr.to_ne_bytes(), co::VT::DISPATCH)
 	}
 
 	/// If the `VARIANT` holds an [`IDispatch`](crate::IDispatch) COM value,
@@ -296,16 +245,9 @@ impl VARIANT {
 	pub fn new_iunknown<T>(val: &T) -> VARIANT
 		where T: ole_IUnknown,
 	{
-		let mut obj = Self::default();
-		obj.vt = co::VT::UNKNOWN;
-
 		let mut cloned = val.clone();
 		let ptr: usize = unsafe { cloned.leak() }.into();
-		ptr.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&ptr.to_ne_bytes(), co::VT::UNKNOWN)
 	}
 
 	/// If the `VARIANT` holds an [`IUnknown`](crate::IUnknown) COM value,
@@ -330,15 +272,8 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding a date/time value.
 	#[must_use]
 	pub fn new_time(val: &SYSTEMTIME) -> WinResult<VARIANT> {
-		let mut obj = Self::default();
-		obj.vt = co::VT::DATE;
-
 		let double = SystemTimeToVariantTime(val)?;
-		double.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		Ok(obj)
+		Ok(Self::new_serialized(&double.to_ne_bytes(), co::VT::DATE))
 	}
 
 	/// If the `VARIANT` holds a date/time value, returns it, otherwise `None`.
@@ -357,14 +292,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `u8` value.
 	#[must_use]
 	pub fn new_u8(val: u8) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::UI1;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::UI1)
 	}
 
 	/// If the `VARIANT` holds an `u8` value, returns it, otherwise `None`.
@@ -380,14 +308,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `u16` value.
 	#[must_use]
 	pub fn new_u16(val: u16) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::UI2;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::UI2)
 	}
 
 	/// If the `VARIANT` holds an `u16` value, returns it, otherwise `None`.
@@ -403,14 +324,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `u32` value.
 	#[must_use]
 	pub fn new_u32(val: u32) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::UI4;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::UI4)
 	}
 
 	/// If the `VARIANT` holds an `u32` value, returns it, otherwise `None`.
@@ -426,14 +340,7 @@ impl VARIANT {
 	/// Creates a new `VARIANT` holding an `u64` value.
 	#[must_use]
 	pub fn new_u64(val: u64) -> VARIANT {
-		let mut obj = Self::default();
-		obj.vt = co::VT::UI8;
-
-		val.to_ne_bytes()
-			.iter()
-			.zip(&mut obj.data)
-			.for_each(|(src, dest)| *dest = *src);
-		obj
+		Self::new_serialized(&val.to_ne_bytes(), co::VT::UI8)
 	}
 
 	/// If the `VARIANT` holds an `u64` value, returns it, otherwise `None`.
@@ -444,5 +351,14 @@ impl VARIANT {
 		} else {
 			None
 		}
+	}
+
+	fn new_serialized(data: &[u8], vt: co::VT) -> Self {
+		let mut obj = Self::default();
+		obj.vt = vt;
+		data.iter()
+			.zip(&mut obj.data)
+			.for_each(|(src, dest)| *dest = *src);
+		obj
 	}
 }
