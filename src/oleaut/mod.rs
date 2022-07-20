@@ -14,6 +14,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::com_interfaces::traits::*;
+	pub use super::structs::traits::*;
 }
 
 pub mod vt {

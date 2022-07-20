@@ -7,7 +7,7 @@ use crate::co;
 use crate::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::{PROPERTYKEY, VARIANT};
+use crate::oleaut::decl::{PROPERTYKEY, PROPVARIANT};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -121,8 +121,8 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// [`IPropertyStore::GetValue`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getvalue)
 	/// method.
 	#[must_use]
-	fn GetValue(&self, key: &PROPERTYKEY) -> HrResult<VARIANT> {
-		let mut var = VARIANT::default();
+	fn GetValue(&self, key: &PROPERTYKEY) -> HrResult<PROPVARIANT> {
+		let mut var = PROPVARIANT::default();
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IPropertyStoreVT);
 			match co::HRESULT(
