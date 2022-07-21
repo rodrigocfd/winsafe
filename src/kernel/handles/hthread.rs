@@ -36,7 +36,7 @@ pub trait kernel_Hthread: Handle {
 	#[must_use]
 	fn CreateThread(
 		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
-		stack_size: u64,
+		stack_size: usize,
 		start_addr: *mut std::ffi::c_void,
 		parameter: *mut std::ffi::c_void,
 		flags: co::THREAD_CREATE) -> WinResult<(HTHREAD, u32)>

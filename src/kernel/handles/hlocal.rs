@@ -33,7 +33,7 @@ pub trait kernel_Hlocal: Handle {
 	/// [`LocalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
 	/// method.
 	#[must_use]
-	fn LocalSize(self) -> WinResult<u64> {
+	fn LocalSize(self) -> WinResult<usize> {
 		match unsafe { kernel::ffi::LocalSize(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),

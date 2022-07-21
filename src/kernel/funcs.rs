@@ -226,7 +226,7 @@ pub fn GetFirmwareType() -> WinResult<co::FIRMWARE_TYPE> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetLargePageMinimum() -> u64 {
+pub fn GetLargePageMinimum() -> usize {
 	unsafe { kernel::ffi::GetLargePageMinimum() }
 }
 

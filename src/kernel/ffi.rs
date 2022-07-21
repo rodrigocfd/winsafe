@@ -8,7 +8,7 @@ extern_sys! { "kernel32";
 	CreateFileW(PCSTR, u32, u32, PVOID, u32, u32, HANDLE) -> HANDLE
 	CreatePipe(*mut HANDLE, *mut HANDLE, PVOID, u32) -> BOOL
 	CreateProcessW(PCSTR, PSTR, PVOID, PVOID, BOOL, u32, PVOID, PCSTR, PVOID, PVOID) -> BOOL
-	CreateThread(PVOID, u64, PVOID, PVOID, u32, *mut u32) -> HANDLE
+	CreateThread(PVOID, usize, PVOID, PVOID, u32, *mut u32) -> HANDLE
 	CreateToolhelp32Snapshot(u32, u32) -> HANDLE
 	DeleteFileW(PCSTR) -> BOOL
 	DuplicateToken(HANDLE, u32, *mut HANDLE) -> BOOL
@@ -25,7 +25,7 @@ extern_sys! { "kernel32";
 	FindNextFileW(HANDLE, PVOID) -> BOOL
 	FindResourceExW(HANDLE, PCSTR, PCSTR, u16) -> HANDLE
 	FindResourceW(HANDLE, PCSTR, PCSTR) -> HANDLE
-	FlushInstructionCache(HANDLE, PCVOID, u64) -> BOOL
+	FlushInstructionCache(HANDLE, PCVOID, usize) -> BOOL
 	FlushProcessWriteBuffers()
 	FormatMessageW(u32, PCVOID, u32, u32, PSTR, u32, PVOID) -> u32
 	FreeEnvironmentStringsW(HANDLE) -> BOOL
@@ -49,7 +49,7 @@ extern_sys! { "kernel32";
 	GetFileType(HANDLE) -> u32
 	GetFirmwareType(*mut u32) -> BOOL
 	GetGuiResources(HANDLE, u32) -> u32
-	GetLargePageMinimum() -> u64
+	GetLargePageMinimum() -> usize
 	GetLastError() -> u32
 	GetLocalTime(PVOID)
 	GetLogicalDriveStringsW(u32, PSTR) -> u32
@@ -72,13 +72,13 @@ extern_sys! { "kernel32";
 	GetThreadTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
 	GetTickCount64() -> u64
 	GetVolumeInformationW(PCSTR, PSTR, u32, *mut u32, *mut u32, *mut u32, PSTR, u32) -> BOOL
-	GlobalAlloc(u32, u64) -> HANDLE
+	GlobalAlloc(u32, usize) -> HANDLE
 	GlobalFlags(HANDLE) -> u32
 	GlobalFree(HANDLE) -> HANDLE
 	GlobalLock(HANDLE) -> PVOID
 	GlobalMemoryStatusEx(PVOID) -> BOOL
-	GlobalReAlloc(HANDLE, u64, u32) -> HANDLE
-	GlobalSize(HANDLE) -> u64
+	GlobalReAlloc(HANDLE, usize, u32) -> HANDLE
+	GlobalSize(HANDLE) -> usize
 	GlobalUnlock(HANDLE) -> BOOL
 	IsNativeVhdBoot(*mut BOOL) -> BOOL
 	IsTokenRestricted(HANDLE) -> BOOL
@@ -86,7 +86,7 @@ extern_sys! { "kernel32";
 	LoadLibraryW(PCSTR) -> HANDLE
 	LoadResource(HANDLE, HANDLE) -> HANDLE
 	LocalFree(HANDLE) -> HANDLE
-	LocalSize(HANDLE) -> u64
+	LocalSize(HANDLE) -> usize
 	LockFile(HANDLE, u32, u32, u32, u32) -> BOOL
 	LockResource(HANDLE) -> PVOID
 	lstrlenW(PCSTR) -> i32

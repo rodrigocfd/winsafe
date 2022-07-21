@@ -80,7 +80,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`FlushInstructionCache`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// method.
 	fn FlushInstructionCache(self,
-		base_address: *mut std::ffi::c_void, size: u64) -> WinResult<()>
+		base_address: *mut std::ffi::c_void, size: usize) -> WinResult<()>
 	{
 		bool_to_winresult(
 			unsafe {
