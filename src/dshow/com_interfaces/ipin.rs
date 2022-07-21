@@ -104,7 +104,7 @@ pub trait dshow_IPin: ole_IUnknown {
 			ok_to_hrresult((vt.QueryId)(self.ptr(), &mut pstr))
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
-			CoTaskMemFree(pstr);
+			CoTaskMemFree(pstr as _);
 			name.to_string()
 		})
 	}

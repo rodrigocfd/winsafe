@@ -22,7 +22,7 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 		},
 	).map(|_| {
 		let name = WString::from_wchars_nullt(pstr);
-		CoTaskMemFree(pstr);
+		CoTaskMemFree(pstr as _);
 		name.to_string()
 	})
 }

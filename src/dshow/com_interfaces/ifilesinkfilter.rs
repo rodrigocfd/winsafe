@@ -42,18 +42,16 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// [`IFileSinkFilter::GetCurFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-getcurfile)
 	/// method.
 	///
-	/// If you pass an [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) reference to
-	/// `pmt`, its `pbFormat` field may return a valid reference to a format
-	/// block. If so, you must free it with
+	/// **Note:** If you pass an [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE)
+	/// reference to `pmt`, its `pbFormat` field may return a valid reference to
+	/// a format block. If so, you must free it with
 	/// [`CoTaskMemFree`](crate::CoTaskMemFree), or you'll have a memory leak.
 	///
 	/// # Examples
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{
-	///     AM_MEDIA_TYPE, CoTaskMemFree, DVINFO, IFileSinkFilter,
-	/// };
+	/// use winsafe::{AM_MEDIA_TYPE, CoTaskMemFree, DVINFO, IFileSinkFilter};
 	///
 	/// let sinkf: IFileSinkFilter; // initialized somewhere
 	/// # let sinkf = IFileSinkFilter::from(unsafe { winsafe::ComPtr::null() });
@@ -61,8 +59,8 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// let mut ammt = AM_MEDIA_TYPE::default();
 	/// unsafe {
 	///     sinkf.GetCurFile(Some(&mut ammt))?;
-	///     if let Some(pb_format) = ammt.pbFormat::<DVINFO>() {
-	///         CoTaskMemFree(pb_format);
+	///     if let Some(pb_format) = ammt.pbFormat::<DVINFO>() { // valid reference?
+	///         CoTaskMemFree(pb_format as *mut _ as _);
 	///     }
 	/// }
 	/// # Ok::<_, winsafe::co::HRESULT>(())
@@ -81,7 +79,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 			),
 		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
-			CoTaskMemFree(pstr);
+			CoTaskMemFree(pstr as _);
 			name.to_string()
 		})
 	}

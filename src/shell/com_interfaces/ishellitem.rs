@@ -146,7 +146,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 			)
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
-			CoTaskMemFree(pstr);
+			CoTaskMemFree(pstr as _);
 			name.to_string()
 		})
 	}

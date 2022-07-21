@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::kernel::decl::WString;
 use crate::oleaut;
 
@@ -37,19 +38,37 @@ impl std::fmt::Display for BSTR {
 impl BSTR {
 	/// [`SysAllocString`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysallocstring)
 	/// function.
+	///
+	/// # Panics
+	///
+	/// Panics if there is not enough memory.
 	#[must_use]
 	pub fn SysAllocString(s: &str) -> BSTR {
 		let str_obj = WString::from_str(s);
-		Self(unsafe { oleaut::ffi::SysAllocString(str_obj.as_ptr()) }) // ignore errors
+		let ptr = unsafe { oleaut::ffi::SysAllocString(str_obj.as_ptr()) };
+		if ptr.is_null() {
+			panic!("{}", co::HRESULT::E_OUTOFMEMORY)
+		} else {
+			Self(ptr)
+		}
 	}
 
 	/// [`SysReAllocString`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysreallocstring)
 	/// function.
+	///
+	/// # Panics
+	///
+	/// Panics if there is not enough memory.
 	pub fn SysReAllocString(&mut self, s: &str) {
 		let str_obj = WString::from_str(s);
-		self.0 = unsafe {
+		let ptr = unsafe {
 			oleaut::ffi::SysReAllocString(self.0, str_obj.as_ptr())
 		};
+		if ptr.is_null() {
+			panic!("{}", co::HRESULT::E_OUTOFMEMORY);
+		} else {
+			self.0 = ptr;
+		}
 	}
 
 	/// [`SysStringLen`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysstringlen)
@@ -57,6 +76,24 @@ impl BSTR {
 	#[must_use]
 	pub fn SysStringLen(&self) -> u32 {
 		unsafe { oleaut::ffi::SysStringLen(self.0) }
+	}
+
+	/// Returns the underlying
+	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// pointer.
+	#[must_use]
+	pub const fn as_ptr(&self) -> *mut u16 {
+		self.0
+	}
+
+	/// Returns the underlying
+	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// memory block as a null-terminated `u16` slice.
+	#[must_use]
+	pub fn as_slice(&self) -> &[u16] {
+		unsafe {
+			std::slice::from_raw_parts(self.0, self.SysStringLen() as usize + 1)
+		}
 	}
 
 	/// Returns the underlying
@@ -72,14 +109,6 @@ impl BSTR {
 		let ptr = self.0;
 		self.0 = std::ptr::null_mut();
 		ptr
-	}
-
-	/// Returns the underlying
-	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
-	/// pointer.
-	#[must_use]
-	pub const unsafe fn ptr(&self) -> *mut u16 {
-		self.0
 	}
 
 	/// Converts into

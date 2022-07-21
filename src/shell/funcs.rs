@@ -186,7 +186,7 @@ pub fn SHGetKnownFolderPath(
 		},
 	).map(|_| {
 		let path = WString::from_wchars_nullt(pstr);
-		CoTaskMemFree(pstr);
+		CoTaskMemFree(pstr as _);
 		path.to_string()
 	})
 }

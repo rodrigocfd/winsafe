@@ -85,7 +85,7 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 			ok_to_hrresult((vt.QueryVendorInfo)(self.ptr(), &mut pstr))
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
-			CoTaskMemFree(pstr);
+			CoTaskMemFree(pstr as _);
 			name.to_string()
 		})
 	}
