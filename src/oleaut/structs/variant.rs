@@ -64,9 +64,7 @@ impl VARIANT {
 	/// Note that the `IDispatch` object will be cloned into the object, still
 	/// being able to be used thereafter.
 	#[must_use]
-	pub fn new_idispatch<T>(val: &T) -> VARIANT
-		where T: oleaut_IDispatch,
-	{
+	pub fn new_idispatch(val: &impl oleaut_IDispatch) -> VARIANT {
 		let mut cloned = val.clone();
 		let ptr: usize = unsafe { cloned.leak() }.into();
 		unsafe { Self::from_raw(co::VT::DISPATCH, &ptr.to_ne_bytes()) }
@@ -83,7 +81,7 @@ impl VARIANT {
 	{
 		if self.vt() == co::VT::DISPATCH {
 			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
-			let obj = ManuallyDrop::new(T::from(ComPtr(ptr as *mut _)));
+			let obj = ManuallyDrop::new(T::from(ComPtr(ptr as *mut _))); // won't release the stored pointer
 			let cloned = T::clone(&obj);
 			Some(cloned)
 		} else {
@@ -96,9 +94,7 @@ impl VARIANT {
 	/// Note that the `IUnknown` object will be cloned into the object, still
 	/// being able to be used thereafter.
 	#[must_use]
-	pub fn new_iunknown<T>(val: &T) -> VARIANT
-		where T: ole_IUnknown,
-	{
+	pub fn new_iunknown<T>(val: &impl ole_IUnknown) -> VARIANT {
 		let mut cloned = val.clone();
 		let ptr: usize = unsafe { cloned.leak() }.into();
 		unsafe { Self::from_raw(co::VT::UNKNOWN, &ptr.to_ne_bytes()) }
@@ -115,7 +111,7 @@ impl VARIANT {
 	{
 		if self.vt() == co::VT::UNKNOWN {
 			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
-			let obj = ManuallyDrop::new(T::from(ComPtr(ptr as *mut _)));
+			let obj = ManuallyDrop::new(T::from(ComPtr(ptr as *mut _))); // won't release the stored pointer
 			let cloned = T::clone(&obj);
 			Some(cloned)
 		} else {

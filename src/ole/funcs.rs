@@ -93,7 +93,7 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<co::HRESULT> {
 /// [`CoTaskMemAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc)
 /// function.
 ///
-/// **Note:** Must be paired with an [`CoTaskMemFree`](crate::CoTaskMemFree)
+/// **Note:** Must be paired with a [`CoTaskMemFree`](crate::CoTaskMemFree)
 /// call.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
@@ -115,7 +115,7 @@ pub fn CoTaskMemFree(pv: *mut u8) {
 /// [`CoTaskMemRealloc`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.
 ///
-/// **Note:** Must be paired with an [`CoTaskMemFree`](crate::CoTaskMemFree)
+/// **Note:** Must be paired with a [`CoTaskMemFree`](crate::CoTaskMemFree)
 /// call.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
