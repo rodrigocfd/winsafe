@@ -1,3 +1,5 @@
+#![allow(unused_macros)]
+
 /// Ordinary window message, no parameters, no meaningful return.
 macro_rules! fn_wm_noparm_noret {
 	(
