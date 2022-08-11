@@ -4,7 +4,8 @@ use crate::prelude::FormattedError;
 const_no_debug_display! { HRESULT: u32: "ole";
 	/// A native COM
 	/// [error code](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
-	/// (`u32`).
+	/// (`u32`), which can be considered a superset of
+	/// [`co::ERROR`](crate::co::ERROR).
 	///
 	/// Implements the standard
 	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)

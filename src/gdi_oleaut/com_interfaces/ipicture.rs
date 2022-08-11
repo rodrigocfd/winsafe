@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types)]
 
-use crate::kernel::decl::ErrResult;
+use crate::ole::decl::HrResult;
 use crate::oleaut::decl::IPicture;
 use crate::prelude::{gdi_oleaut_Hdc, Handle, oleaut_IPicture, user_Hwnd};
 use crate::user::decl::{HDC, HWND, SIZE};
@@ -24,10 +24,19 @@ pub trait gdi_oleaut_IPicture: oleaut_IPicture {
 	///
 	/// If `hdc` is not provided, `HWND::NULL.GetDC()` will be used.
 	#[must_use]
-	fn size_px(&self, hdc: Option<HDC>) -> ErrResult<SIZE> {
-		let our_hdc = if let Some(hdc) = hdc { hdc } else { HWND::NULL.GetDC()? };
-		let (cx, cy) = our_hdc.HiMetricToPixel(self.get_Width()?, self.get_Height()?);
-		if hdc.is_none() { HWND::NULL.ReleaseDC(our_hdc)?; }
+	fn size_px(&self, hdc: Option<HDC>) -> HrResult<SIZE> {
+		let our_hdc = if let Some(hdc) = hdc {
+			hdc
+		} else {
+			HWND::NULL.GetDC()
+				.map_err(|e| e.to_hresult())?
+		};
+		let (cx, cy) = our_hdc.HiMetricToPixel(
+			self.get_Width()?, self.get_Height()?);
+		if hdc.is_none() {
+			HWND::NULL.ReleaseDC(our_hdc)
+				.map_err(|e| e.to_hresult())?;
+		}
 		Ok(SIZE::new(cx, cy))
 	}
 }
