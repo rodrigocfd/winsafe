@@ -1,7 +1,7 @@
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes list box control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications).

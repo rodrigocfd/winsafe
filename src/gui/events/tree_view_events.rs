@@ -2,7 +2,7 @@ use crate::co;
 use crate::comctl::decl::{NMMOUSE, NMTREEVIEW, NMTVCUSTOMDRAW};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes tree view control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications).
@@ -64,7 +64,7 @@ impl TreeViewEvents {
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-tree-view)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMTVCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
+		where F: Fn(&NMTVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW,
 			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() })?.0 as _)));

@@ -8,7 +8,7 @@ use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::{ErrResult, WString};
+use crate::kernel::decl::{AnyResult, WString};
 use crate::prelude::{GuiEvents, Handle, user_Hwnd};
 use crate::user::decl::{
 	AdjustWindowRectEx, DispatchMessage, GetMessage, HWND, IdMenu, MSG, POINT,
@@ -59,13 +59,13 @@ impl RawModal {
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.0.raw_base.spawn_new_thread(func);
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		self.0.raw_base.run_ui_thread(func);
 	}

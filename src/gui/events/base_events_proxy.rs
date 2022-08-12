@@ -2,7 +2,7 @@ use std::ptr::NonNull;
 
 use crate::co;
 use crate::gui::base::Base;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::msg::wm;
 
 /// Base to all native control events. This is actually a proxy to the events of
@@ -23,7 +23,7 @@ impl BaseEventsProxy {
 
 	/// Adds a `WM_COMMAND` event to the parent window.
 	pub(in crate::gui) fn wm_command<F>(&self, code: impl Into<co::CMD>, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_base_ref.on().wm_command(code, self.ctrl_id, func);
@@ -31,7 +31,7 @@ impl BaseEventsProxy {
 
 	/// Adds a `WM_NOTIFY` event to the parent window.
 	pub(in crate::gui) fn wm_notify<F>(&self, code: impl Into<co::NM>, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static
+		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static
 	{
 		let parent_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_ref.on().wm_notify(self.ctrl_id as _, code, func);

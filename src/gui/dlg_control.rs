@@ -10,7 +10,7 @@ use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::privs::{
 	auto_ctrl_id, multiply_dpi_or_dtu, paint_control_borders,
 };
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::prelude::{GuiEvents, user_Hwnd};
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -67,13 +67,13 @@ impl DlgControl {
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.0.dlg_base.spawn_new_thread(func);
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		self.0.dlg_base.run_ui_thread(func);
 	}

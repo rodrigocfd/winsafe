@@ -2,7 +2,7 @@ use crate::co;
 use crate::comctl::decl::{NMCUSTOMDRAW, NMTRBTHUMBPOSCHANGING};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes trackbar control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
@@ -29,7 +29,7 @@ impl TrackbarEvents {
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-trackbar)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
+		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW,
 			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.0 as _)));

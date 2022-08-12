@@ -2,7 +2,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::{post_quit_error, ui_font};
-use crate::kernel::decl::{ErrResult, IdStr};
+use crate::kernel::decl::{AnyResult, IdStr};
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{Handle, MsgSendRecv, user_Hinstance, user_Hwnd};
 use crate::user::decl::HWND;
@@ -87,13 +87,13 @@ impl DlgBase {
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.base.spawn_new_thread(func);
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		self.base.run_ui_thread(func);
 	}
@@ -106,7 +106,7 @@ impl DlgBase {
 			.unwrap_or_else(|err| { post_quit_error(wm_any, err); true as _ })
 	}
 
-	fn dialog_proc_proc(hwnd: HWND, wm_any: WndMsg) -> ErrResult<isize> {
+	fn dialog_proc_proc(hwnd: HWND, wm_any: WndMsg) -> AnyResult<isize> {
 		let ptr_self = match wm_any.msg_id {
 			co::WM::INITDIALOG => { // first message being handled
 				let wm_idlg = wm::InitDialog::from_generic_wm(wm_any);

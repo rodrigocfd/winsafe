@@ -5,10 +5,10 @@ use crate::comctl::decl::InitCommonControls;
 use crate::ffi_types::BOOL;
 use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEventsAll;
+use crate::gui::msg_error::MsgResult;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{RawMain, WindowMainOpts};
-use crate::gui::runtime_error::RunResult;
-use crate::kernel::decl::{ErrResult, HPROCESS, IsWindowsVistaOrGreater};
+use crate::kernel::decl::{AnyResult, HPROCESS, IsWindowsVistaOrGreater};
 use crate::prelude::{
 	GuiParent, GuiThread, GuiWindow, GuiWindowText, kernel_Hprocess,
 	user_Hprocess,
@@ -63,7 +63,7 @@ impl GuiParent for WindowMain {
 
 impl GuiThread for WindowMain {
 	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		match &self.0 {
 			RawDlg::Raw(r) => r.spawn_new_thread(func),
@@ -72,7 +72,7 @@ impl GuiThread for WindowMain {
 	}
 
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		match &self.0 {
 			RawDlg::Raw(r) => r.run_ui_thread(func),
@@ -118,7 +118,7 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> RunResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> MsgResult<i32> {
 		if IsWindowsVistaOrGreater().unwrap() {
 			SetProcessDPIAware().unwrap();
 		}

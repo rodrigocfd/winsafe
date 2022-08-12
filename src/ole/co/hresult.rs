@@ -5,7 +5,10 @@ const_no_debug_display! { HRESULT: u32: "ole";
 	/// A native COM
 	/// [error code](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
 	/// (`u32`), which can be considered a superset of
-	/// [`co::ERROR`](crate::co::ERROR).
+	/// [`ERROR`](crate::co::ERROR).
+	///
+	/// The [`Result` alias](crate#errors-and-result-aliases) for this type is
+	/// [`HrResult`](crate::HrResult).
 	///
 	/// Implements the standard
 	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)
@@ -29,6 +32,20 @@ const_no_debug_display! { HRESULT: u32: "ole";
 	///
 	/// ```text
 	/// [0x80070057 2147942487] The parameter is incorrect.
+	/// ```
+	///
+	/// An [`ERROR`](crate::co::ERROR) can be seamlessly converted into an
+	/// `HRESULT`. This operation is equivalent to the
+	/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
+	/// macro:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co::ERROR, co::HRESULT};
+	///
+	/// let err = ERROR::FILE_NOT_FOUND;
+	///
+	/// let hr = err.to_hresult();
 	/// ```
 }
 
@@ -86,8 +103,8 @@ impl HRESULT {
 
 	/// [`HRESULT_SEVERITY`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
 	/// method. Originally a macro.
-	pub fn severity(self) -> u8 {
-		((self.0 >> 31) & 0x1) as u8
+	pub fn severity(self) -> co::SEVERITY {
+		co::SEVERITY(((self.0 >> 31) & 0x1) as _)
 	}
 }
 

@@ -39,7 +39,7 @@
 //! | `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://docs.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
 //! | `dshow` | [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) |
 //! | `gdi` | Gdi32.dll, the [Windows GDI](https://docs.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
-//! | **`gui`** | **The WinSafe high-level GUI structs** |
+//! | **[`gui`](crate::gui)** | **The WinSafe high-level GUI structs** |
 //! | `kernel` | Kernel32.dll, required by all others |
 //! | `msimg` | Msimg32.dll |
 //! | `ole` | OLE and basic COM support |
@@ -214,6 +214,19 @@
 //! when dealing with native Win32 structs. In such cases, you can use the
 //! [`WString`](crate::WString) struct, which is also capable of working as a
 //! buffer to receive text from Win32 calls.
+//!
+//! # Errors and result aliases
+//!
+//! WinSafe declares a few
+//! [`Result` aliases](https://doc.rust-lang.org/rust-by-example/error/result/result_alias.html)
+//! which are returned by its functions and methods:
+//!
+//! | Alias | Error | Used for |
+//! | - | - | - |
+//! | [`WinResult`](crate::WinResult) | [`ERROR`](crate::co::ERROR) | Standard [system errors](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes). |
+//! | [`HrResult`](crate::HrResult) | [`HRESULT`](crate::co::HRESULT) | [COM errors](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
+//! | [`MsgResult`](crate::gui::MsgResult) | [`MsgError`](crate::gui::MsgError) | Errors from a closure of a window message handling. |
+//! | [`AnyResult`](crate::AnyResult) | `Box<dyn Error + Send + Sync>` | Holding different error types – all other `Result` aliases can be converted into it. |
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
 

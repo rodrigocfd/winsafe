@@ -5,7 +5,7 @@ use std::error::Error;
 use crate::co;
 use crate::gdi::decl::{HFONT, NONCLIENTMETRICS};
 use crate::gui::base::Base;
-use crate::gui::runtime_error::RuntimeError;
+use crate::gui::msg_error::MsgError;
 use crate::kernel::decl::MulDiv;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{
@@ -20,13 +20,13 @@ use crate::uxtheme::decl::{IsAppThemed, IsThemeActive};
 
 /// Global return error originated from an event handling closure; will be taken
 /// in main loop.
-pub(in crate::gui) static mut QUIT_ERROR: Option<RuntimeError> = None;
+pub(in crate::gui) static mut QUIT_ERROR: Option<MsgError> = None;
 
 /// Terminates the program with the given error.
 pub(in crate::gui) fn post_quit_error(
 	src_msg: WndMsg, err: Box<dyn Error + Send + Sync>)
 {
-	unsafe { QUIT_ERROR = Some(RuntimeError::new(src_msg, err)); } // store the error, so the main window/dialog can grab it
+	unsafe { QUIT_ERROR = Some(MsgError::new(src_msg, err)); } // store the error, so the main window/dialog can grab it
 	PostQuitMessage(-1); // this -1 will be discarded in the main loop, anyway
 }
 

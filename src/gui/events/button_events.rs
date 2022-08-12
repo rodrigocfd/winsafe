@@ -2,7 +2,7 @@ use crate::co;
 use crate::comctl::decl::{NMBCDROPDOWN, NMBCHOTITEM, NMCUSTOMDRAW};
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes button control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
@@ -39,7 +39,7 @@ impl ButtonEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult};
+		/// use winsafe::{gui, AnyResult};
 		///
 		/// let btn: gui::Button; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -47,7 +47,7 @@ impl ButtonEvents {
 		///
 		/// btn.on().bn_clicked({
 		///     let btn = btn.clone(); // to pass into the closure
-		///     move || -> ErrResult<()> {
+		///     move || -> AnyResult<()> {
 		///         println!("HWND: {}", btn.hwnd());
 		///         Ok(())
 		///     }
@@ -73,7 +73,7 @@ impl ButtonEvents {
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
+		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW,
 			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.0 as _)));

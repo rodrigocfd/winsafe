@@ -6,7 +6,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEventsAll;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::prelude::{GuiEvents, user_Hwnd};
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -48,13 +48,13 @@ impl DlgModal {
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.0.dlg_base.spawn_new_thread(func);
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		self.0.dlg_base.run_ui_thread(func);
 	}

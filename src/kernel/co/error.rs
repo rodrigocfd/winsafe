@@ -8,6 +8,9 @@ const_no_debug_display! { ERROR: u32: "kernel";
 	/// (`u32`) retrieved by
 	/// [`GetLastError`](crate::GetLastError) function.
 	///
+	/// The [`Result` alias](crate#errors-and-result-aliases) for this type is
+	/// [`WinResult`](crate::WinResult).
+	///
 	/// Implements the standard
 	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)
 	/// trait.

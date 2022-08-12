@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::gui::events::{WindowEvents, WindowEventsAll};
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::msg::wm;
 use crate::prelude::user_Hwnd;
 use crate::user::decl::{HWND, HwndFocus};
@@ -107,7 +107,7 @@ pub trait GuiThread: GuiParent {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{gui, ErrResult, GetCurrentThreadId};
+	/// use winsafe::{gui, AnyResult, GetCurrentThreadId};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -116,7 +116,7 @@ pub trait GuiThread: GuiParent {
 	///
 	/// btn.on().bn_clicked({
 	///     let wnd = wnd.clone();
-	///     move || -> ErrResult<()> {
+	///     move || -> AnyResult<()> {
 	///         println!("Click event at {:#x}", GetCurrentThreadId());
 	///
 	///         wnd.spawn_new_thread({
@@ -136,7 +136,7 @@ pub trait GuiThread: GuiParent {
 	/// });
 	/// ```
 	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static;
+		where F: FnOnce() -> AnyResult<()> + Send + 'static;
 
 	/// Runs a closure synchronously in the window's original UI thread,
 	/// allowing UI updates without the risk of a deadlock.
@@ -170,7 +170,7 @@ pub trait GuiThread: GuiParent {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{gui, ErrResult, GetCurrentThreadId, Sleep};
+	/// use winsafe::{gui, AnyResult, GetCurrentThreadId, Sleep};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -179,7 +179,7 @@ pub trait GuiThread: GuiParent {
 	///
 	/// btn.on().bn_clicked({
 	///     let wnd = wnd.clone();
-	///     move || -> ErrResult<()> {
+	///     move || -> AnyResult<()> {
 	///         println!("Click event at {:#x}", GetCurrentThreadId());
 	///
 	///         std::thread::spawn({
@@ -190,7 +190,7 @@ pub trait GuiThread: GuiParent {
 	///
 	///                 wnd.run_ui_thread({
 	///                     let wnd = wnd.clone();
-	///                     move || -> ErrResult<()> {
+	///                     move || -> AnyResult<()> {
 	///                         println!("Updating UI at {:#x}", GetCurrentThreadId());
 	///                         wnd.hwnd().SetWindowText("Status... 50%")?;
 	///                         Ok(())
@@ -202,7 +202,7 @@ pub trait GuiThread: GuiParent {
 	///
 	///                 wnd.run_ui_thread({
 	///                     let wnd = wnd.clone();
-	///                     move || -> ErrResult<()> {
+	///                     move || -> AnyResult<()> {
 	///                         println!("Updating UI at {:#x}", GetCurrentThreadId());
 	///                         wnd.hwnd().SetWindowText("Status... 100%")?;
 	///                         Ok(())
@@ -216,7 +216,7 @@ pub trait GuiThread: GuiParent {
 	/// });
 	/// ```
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static;
+		where F: FnOnce() -> AnyResult<()> + Send + 'static;
 }
 
 /// Any child window.

@@ -1,7 +1,7 @@
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes edit control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
@@ -38,7 +38,7 @@ impl EditEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult};
+		/// use winsafe::{gui, AnyResult};
 		///
 		/// let txt: gui::Edit; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -46,7 +46,7 @@ impl EditEvents {
 		///
 		/// txt.on().en_change({
 		///     let txt = txt.clone(); // to pass into the closure
-		///     move || -> ErrResult<()> {
+		///     move || -> AnyResult<()> {
 		///         println!("Text: {}", txt.hwnd().GetWindowText()?);
 		///         Ok(())
 		///     }

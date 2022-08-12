@@ -1,7 +1,7 @@
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes combo box control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications).
@@ -63,7 +63,7 @@ impl ComboBoxEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult};
+		/// use winsafe::{gui, AnyResult};
 		///
 		/// let cmb: gui::ComboBox; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -71,7 +71,7 @@ impl ComboBoxEvents {
 		///
 		/// cmb.on().cbn_sel_change({
 		///     let cmb = cmb.clone(); // to pass into the closure
-		///     move || -> ErrResult<()> {
+		///     move || -> AnyResult<()> {
 		///         if let Some(sel_text) = cmb.items().selected_text() {
 		///             println!("New selected text: {}", sel_text);
 		///         }

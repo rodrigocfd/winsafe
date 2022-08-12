@@ -8,7 +8,7 @@ use crate::gui::events::WindowEventsAll;
 use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::privs::{multiply_dpi_or_dtu, paint_control_borders};
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::kernel::decl::{ErrResult, WString};
+use crate::kernel::decl::{AnyResult, WString};
 use crate::prelude:: GuiEvents;
 use crate::user::decl::{HWND, IdMenu, POINT, SIZE, WNDCLASSEX};
 
@@ -60,13 +60,13 @@ impl RawControl {
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.0.raw_base.spawn_new_thread(func);
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		self.0.raw_base.run_ui_thread(func);
 	}

@@ -4,7 +4,7 @@ use crate::co;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::events::func_store::FuncStore;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{GuiEvents, MsgSendRecv};
 
@@ -19,21 +19,21 @@ pub struct WindowEventsAll {
 	window_events: WindowEvents,
 	tmrs: FuncStore< // WM_TIMER messages
 		u32,
-		Box<dyn Fn() -> ErrResult<()>>, // return value is never meaningful
+		Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
 	>,
 	cmds: FuncStore< // WM_COMMAND notifications
 		(co::CMD, u16), // notif code, control ID
-		Box<dyn Fn() -> ErrResult<()>>, // return value is never meaningful
+		Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
 	>,
 	nfys: FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
-		Box<dyn Fn(wm::Notify) -> ErrResult<Option<isize>>>, // return value may be meaningful
+		Box<dyn Fn(wm::Notify) -> AnyResult<Option<isize>>>, // return value may be meaningful
 	>,
 }
 
 impl GuiEvents for WindowEventsAll {
 	fn wm<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
+		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static,
 	{
 		self.window_events.wm(ident, func);
 	}
@@ -52,7 +52,7 @@ impl WindowEventsAll {
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
 	pub(in crate::gui) fn process_one_message(&self,
-		wm_any: WndMsg) -> ErrResult<ProcessResult>
+		wm_any: WndMsg) -> AnyResult<ProcessResult>
 	{
 		Ok(match wm_any.msg_id {
 			co::WM::NOTIFY => {
@@ -96,7 +96,7 @@ impl WindowEventsAll {
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
 	pub(in crate::gui) fn process_all_messages(&self,
-		wm_any: WndMsg) -> ErrResult<()>
+		wm_any: WndMsg) -> AnyResult<()>
 	{
 		Ok(match wm_any.msg_id {
 			co::WM::NOTIFY => {
@@ -126,7 +126,7 @@ impl WindowEventsAll {
 	/// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 	/// message, narrowed to a specific timer ID.
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		self.tmrs.push(timer_id, Box::new(func));
 	}
@@ -143,7 +143,7 @@ impl WindowEventsAll {
 	/// parameters. This generic method should be used only when you have a
 	/// custom, non-standard window notification.
 	pub fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let code: co::CMD = code.into();
 		self.cmds.push((code, ctrl_id), Box::new(func));
@@ -156,7 +156,7 @@ impl WindowEventsAll {
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators.
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -179,7 +179,7 @@ impl WindowEventsAll {
 	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
 	pub fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
-		where F: Fn(wm::Notify) -> ErrResult<Option<isize>> + 'static,
+		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
 	{
 		let code: co::NM = code.into();
 		self.nfys.push((id_from, code), Box::new(func));

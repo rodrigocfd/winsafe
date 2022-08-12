@@ -5,7 +5,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::msg::WndMsg;
 use crate::prelude::{comctl_Hwnd, Handle, user_Hwnd};
 use crate::user::decl::{AtomStr, HWND, IdMenu, POINT, SIZE};
@@ -134,7 +134,7 @@ impl BaseNativeControl {
 
 	fn subclass_proc_proc(
 		hwnd: HWND, wm_any: WndMsg,
-		subclass_id: usize, ref_data: usize) -> ErrResult<isize>
+		subclass_id: usize, ref_data: usize) -> AnyResult<isize>
 	{
 		let ptr_self = ref_data as *mut Self; // retrieve
 		let mut process_result = ProcessResult::NotHandled;

@@ -3,10 +3,10 @@ use std::ptr::NonNull;
 use crate::co;
 use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
+use crate::gui::msg_error::MsgResult;
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
-use crate::gui::runtime_error::RunResult;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::{ErrResult, HINSTANCE};
+use crate::kernel::decl::{AnyResult, HINSTANCE};
 use crate::msg::WndMsg;
 use crate::prelude::{GuiEvents, GuiParent, Handle, kernel_Hinstance, user_Hwnd};
 use crate::user::decl::{
@@ -85,7 +85,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn process_user_message(&self,
-		wm_any: WndMsg) -> ErrResult<ProcessResult>
+		wm_any: WndMsg) -> AnyResult<ProcessResult>
 	{
 		self.user_events.process_one_message(wm_any)
 	}
@@ -99,7 +99,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn process_privileged_messages(&self,
-		wm_any: WndMsg) -> ErrResult<()>
+		wm_any: WndMsg) -> AnyResult<()>
 	{
 		self.privileged_events.process_all_messages(wm_any)
 	}
@@ -111,12 +111,12 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		let hwnd = self.hwnd;
 		std::thread::spawn(move || {
 			func().unwrap_or_else(|err| {
-				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = Box::new(Box::new(|| Err(err)));
+				let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = Box::new(Box::new(|| Err(err)));
 				let ptr_pack = Box::into_raw(pack);
 				hwnd.GetAncestor(co::GA::ROOTOWNER)
 					.map(|hwnd| {
@@ -131,7 +131,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		// This method is analog to SendMessage (synchronous), but intended to
 		// be called from another thread, so a callback function can, tunelled
@@ -140,7 +140,7 @@ impl Base {
 		// WM_ message.
 
 		// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
-		let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = Box::new(Box::new(func));
+		let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = Box::new(Box::new(func));
 		let ptr_pack = Box::into_raw(pack);
 
 		// Bypass any modals and send straight to main window. This avoids any
@@ -167,8 +167,8 @@ impl Base {
 
 		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
 			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
-				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> ErrResult<()>>;
-				let pack: Box<Box<dyn FnOnce() -> ErrResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
+				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> AnyResult<()>>;
+				let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
 				pack().unwrap_or_else(|err| post_quit_error(p, err));
 			}
 			Ok(None) // not meaningful
@@ -176,7 +176,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_main_loop(
-		haccel: Option<HACCEL>) -> RunResult<i32>
+		haccel: Option<HACCEL>) -> MsgResult<i32>
 	{
 		let mut msg = MSG::default();
 

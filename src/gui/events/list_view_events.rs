@@ -6,7 +6,7 @@ use crate::comctl::decl::{
 };
 use crate::gui::base::Base;
 use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes list view control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
@@ -73,13 +73,13 @@ impl ListViewEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
+		/// use winsafe::{gui, AnyResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
-		/// list.on().lvn_delete_item(|p: &NMLISTVIEW| -> ErrResult<()> {
+		/// list.on().lvn_delete_item(|p: &NMLISTVIEW| -> AnyResult<()> {
 		///     println!("Item: {}", p.iItem);
 		///     Ok(())
 		/// });
@@ -104,7 +104,7 @@ impl ListViewEvents {
 	/// [`LVN_GETEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-getemptymarkup)
 	/// notification.
 	pub fn lvn_get_empty_markup<F>(&self, func: F)
-		where F: Fn(&mut NMLVEMPTYMARKUP) -> ErrResult<bool> + 'static,
+		where F: Fn(&mut NMLVEMPTYMARKUP) -> AnyResult<bool> + 'static,
 	{
 		self.0.wm_notify(co::LVN::GETEMPTYMARKUP,
 			move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<NMLVEMPTYMARKUP>() })? as _)));
@@ -143,13 +143,13 @@ impl ListViewEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult, NMLISTVIEW};
+		/// use winsafe::{gui, AnyResult, NMLISTVIEW};
 		///
 		/// let list: gui::ListView; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
-		/// list.on().lvn_item_changed(|p: &NMLISTVIEW| -> ErrResult<()> {
+		/// list.on().lvn_item_changed(|p: &NMLISTVIEW| -> AnyResult<()> {
 		///     println!("Item: {}", p.iItem);
 		///     Ok(())
 		/// });
@@ -169,13 +169,13 @@ impl ListViewEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{co, gui, ErrResult, NMLVKEYDOWN};
+		/// use winsafe::{co, gui, AnyResult, NMLVKEYDOWN};
 		///
 		/// let list: gui::ListView; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
-		/// list.on().lvn_key_down(|p: &NMLVKEYDOWN| -> ErrResult<()> {
+		/// list.on().lvn_key_down(|p: &NMLVKEYDOWN| -> AnyResult<()> {
 		///     if p.wVKey == co::VK::DELETE {
 		///         println!("DEL key was pressed.");
 		///     }
@@ -202,7 +202,7 @@ impl ListViewEvents {
 	/// [`LVN_ODFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvn-odfinditem)
 	/// notification.
 	pub fn lvn_od_find_item<F>(&self, func: F)
-		where F: Fn(&mut NMLVFINDITEM) -> ErrResult<Option<u32>> + 'static,
+		where F: Fn(&mut NMLVFINDITEM) -> AnyResult<Option<u32>> + 'static,
 	{
 		self.0.wm_notify(co::LVN::ODFINDITEM, move |p| {
 			Ok(Some(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
@@ -230,7 +230,7 @@ impl ListViewEvents {
 	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-list-view)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMLVCUSTOMDRAW) -> ErrResult<co::CDRF> + 'static,
+		where F: Fn(&NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW,
 			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMLVCUSTOMDRAW>() })?.0 as _)));

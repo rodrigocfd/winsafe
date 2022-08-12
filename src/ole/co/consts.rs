@@ -229,3 +229,11 @@ const_ordinary! { FACILITY: u32: "ole";
 	GAME 2340
 	PIX 2748
 }
+
+const_ordinary! { SEVERITY: u8: "ole";
+	/// [`HRESULT`](crate::co::HRESULT) severity (`u8`).
+	=>
+	=>
+	SUCCESS 0
+	FAILURE 1
+}

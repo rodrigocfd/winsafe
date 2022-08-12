@@ -4,7 +4,7 @@ use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::raw_modal::{RawModal, WindowModalOpts};
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::prelude::{GuiParent, GuiThread, GuiWindow, GuiWindowText};
 use crate::user::decl::HWND;
 
@@ -55,7 +55,7 @@ impl GuiParent for WindowModal {
 
 impl GuiThread for WindowModal {
 	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		match &self.0 {
 			RawDlg::Raw(r) => r.spawn_new_thread(func),
@@ -64,7 +64,7 @@ impl GuiThread for WindowModal {
 	}
 
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		match &self.0 {
 			RawDlg::Raw(r) => r.run_ui_thread(func),

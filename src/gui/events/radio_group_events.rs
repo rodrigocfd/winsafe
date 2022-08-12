@@ -5,7 +5,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 
 /// Exposes button control
 /// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -46,7 +46,7 @@ impl RadioGroupEvents {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{gui, ErrResult};
+	/// use winsafe::{gui, AnyResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -55,7 +55,7 @@ impl RadioGroupEvents {
 	///
 	/// radios.on().bn_clicked({
 	///     let radios = radios.clone();
-	///     move || -> ErrResult<()> {
+	///     move || -> AnyResult<()> {
 	///         println!("Selected {}",
 	///             radios.checked().unwrap()
 	///                 .hwnd().GetWindowText()?,
@@ -65,7 +65,7 @@ impl RadioGroupEvents {
 	/// });
 	/// ```
 	pub fn bn_clicked<F>(&self, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -86,7 +86,7 @@ impl RadioGroupEvents {
 	/// [`BS::OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
 	/// send only if they have the [`BS::NOTIFY`](crate::co::BS::NOTIFY) style.
 	pub fn bn_dbl_clk<F>(&self, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -105,7 +105,7 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_kill_focus<F>(&self, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 
@@ -124,7 +124,7 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_set_focus<F>(&self, func: F)
-		where F: Fn() -> ErrResult<()> + 'static,
+		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(VeryUnsafeCell::new(func));
 

@@ -1,7 +1,7 @@
 use crate::co;
 use crate::gdi::decl::HFONT;
 use crate::gui::events::func_store::FuncStore;
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::MsgSendRecv;
 use crate::user::decl::{HICON, HMENU};
@@ -27,7 +27,7 @@ pub(in crate::gui) enum ProcessResult {
 pub struct WindowEvents {
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
-		Box<dyn Fn(WndMsg) -> ErrResult<Option<isize>>>, // return value may be meaningful
+		Box<dyn Fn(WndMsg) -> AnyResult<Option<isize>>>, // return value may be meaningful
 	>,
 }
 
@@ -43,7 +43,7 @@ impl WindowEvents {
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
 	pub(in crate::gui) fn process_one_message(&self,
-		wm_any: WndMsg) -> ErrResult<ProcessResult>
+		wm_any: WndMsg) -> AnyResult<ProcessResult>
 	{
 		Ok(match self.msgs.find(wm_any.msg_id) {
 			Some(func) => { // we have a stored function to handle this message
@@ -59,7 +59,7 @@ impl WindowEvents {
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
 	pub(in crate::gui) fn process_all_messages(&self,
-		wm_any: WndMsg) -> ErrResult<()>
+		wm_any: WndMsg) -> AnyResult<()>
 	{
 		for func in self.msgs.find_all(wm_any.msg_id) {
 			func(wm_any)?; // execute each stored function
@@ -72,7 +72,7 @@ impl WindowEvents {
 
 impl GuiEvents for WindowEvents {
 	fn wm<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static,
+		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static,
 	{
 		self.msgs.push(ident, Box::new(func));
 	}
@@ -95,7 +95,7 @@ pub trait GuiEvents {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, gui, msg, ErrResult};
+	/// use winsafe::{co, gui, msg, AnyResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -104,14 +104,14 @@ pub trait GuiEvents {
 	///
 	/// wnd.on().wm(CUSTOM_MSG, {
 	///     let wnd = wnd.clone(); // to pass into the closure
-	///     move |p: msg::WndMsg| -> ErrResult<Option<isize>> {
+	///     move |p: msg::WndMsg| -> AnyResult<Option<isize>> {
 	///         println!("HWND: {}, msg ID: {}", wnd.hwnd(), p.msg_id);
 	///         Ok(Some(0))
 	///     }
 	/// });
 	/// ```
 	fn wm<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> ErrResult<Option<isize>> + 'static;
+		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static;
 
 	fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate,
 		/// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
@@ -132,7 +132,7 @@ pub trait GuiEvents {
 	/// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 	/// message.
 	fn wm_app_command<F>(&self, func: F)
-		where F: Fn(wm::AppCommand) -> ErrResult<()> + 'static,
+		where F: Fn(wm::AppCommand) -> AnyResult<()> + 'static,
 	{
 		self.wm(co::WM::APPCOMMAND, move |p| {
 			func(wm::AppCommand::from_generic_wm(p))?;
@@ -187,14 +187,14 @@ pub trait GuiEvents {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{gui, msg, ErrResult};
+	/// use winsafe::{gui, msg, AnyResult};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
 	/// wnd.on().wm_create({
 	///     let wnd = wnd.clone(); // to pass into the closure
-	///     move |p: msg::wm::Create| -> ErrResult<i32> {
+	///     move |p: msg::wm::Create| -> AnyResult<i32> {
 	///         println!("HWND: {}, client area: {}x{}",
 	///             wnd.hwnd(),
 	///             p.createstruct.cx,
@@ -205,7 +205,7 @@ pub trait GuiEvents {
 	/// });
 	/// ```
 	fn wm_create<F>(&self, func: F)
-		where F: Fn(wm::Create) -> ErrResult<i32> + 'static,
+		where F: Fn(wm::Create) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::CREATE,
 			move |p| Ok(Some(func(wm::Create::from_generic_wm(p))? as _)));
@@ -258,12 +258,12 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult};
+		/// use winsafe::{gui, AnyResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_destroy(move || -> ErrResult<()> {
+		/// wnd.on().wm_destroy(move || -> AnyResult<()> {
 		///     println!("Window is gone, goodbye!");
 		///     Ok(())
 		/// });
@@ -283,12 +283,12 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, AnyResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_drop_files(move |p: msg::wm::DropFiles| -> ErrResult<()> {
+		/// wnd.on().wm_drop_files(move |p: msg::wm::DropFiles| -> AnyResult<()> {
 		///     for dropped_file in p.hdrop.iter()? {
 		///         let dropped_file = dropped_file?;
 		///         println!("Dropped: {}", dropped_file);
@@ -326,7 +326,7 @@ pub trait GuiEvents {
 	/// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 	/// message.
 	fn wm_erase_bkgnd<F>(&self, func: F)
-		where F: Fn(wm::EraseBkgnd) -> ErrResult<i32> + 'static,
+		where F: Fn(wm::EraseBkgnd) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::ERASEBKGND,
 			move |p| Ok(Some(func(wm::EraseBkgnd::from_generic_wm(p))? as _)));
@@ -350,7 +350,7 @@ pub trait GuiEvents {
 	/// [`WM_GETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)
 	/// message.
 	fn wm_get_font<F>(&self, func: F)
-		where F: Fn() -> ErrResult<Option<HFONT>> + 'static,
+		where F: Fn() -> AnyResult<Option<HFONT>> + 'static,
 	{
 		self.wm(co::WM::GETFONT,
 			move |_| Ok(Some(func()?.map(|h| h.0 as _).unwrap_or_default())));
@@ -359,7 +359,7 @@ pub trait GuiEvents {
 	/// [`WM_GETHMENU`](https://docs.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
 	/// message. Originally has `MN` prefix.
 	fn wm_get_hmenu<F>(&self, func: F)
-		where F: Fn() -> ErrResult<Option<HMENU>> + 'static
+		where F: Fn() -> AnyResult<Option<HMENU>> + 'static
 	{
 		self.wm(co::WM::MN_GETHMENU,
 			move |_| Ok(Some(func()?.map(|h| h.0 as _).unwrap_or_default())));
@@ -373,7 +373,7 @@ pub trait GuiEvents {
 	/// [`WM_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-gettext)
 	/// message.
 	fn wm_get_text<F>(&self, func: F)
-		where F: Fn(wm::GetText) -> ErrResult<u32> + 'static,
+		where F: Fn(wm::GetText) -> AnyResult<u32> + 'static,
 	{
 		self.wm(co::WM::GETTEXT,
 			move |p| Ok(Some(func(wm::GetText::from_generic_wm(p))? as _)));
@@ -382,7 +382,7 @@ pub trait GuiEvents {
 	/// [`WM_GETTEXTLENGTH`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-gettextlength)
 	/// message.
 	fn wm_get_text_length<F>(&self, func: F)
-		where F: Fn() -> ErrResult<u32> + 'static,
+		where F: Fn() -> AnyResult<u32> + 'static,
 	{
 		self.wm(co::WM::GETTEXTLENGTH,
 			move |_| Ok(Some(func()? as _)));
@@ -413,14 +413,14 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, AnyResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_init_dialog({
 		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move |p: msg::wm::InitDialog| -> ErrResult<bool> {
+		///     move |p: msg::wm::InitDialog| -> AnyResult<bool> {
 		///         println!("Focused HWND: {}", p.hwnd_focus);
 		///         Ok(true)
 		///     }
@@ -456,14 +456,14 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, AnyResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_l_button_dbl_clk({
 		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move |p: msg::wm::LButtonDblClk| -> ErrResult<()> {
+		///     move |p: msg::wm::LButtonDblClk| -> AnyResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     }
@@ -479,14 +479,14 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, AnyResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_l_button_down({
 		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move |p: msg::wm::LButtonDown| -> ErrResult<()> {
+		///     move |p: msg::wm::LButtonDown| -> AnyResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     }
@@ -611,14 +611,14 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, ErrResult, PAINTSTRUCT};
+		/// use winsafe::{gui, AnyResult, PAINTSTRUCT};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_paint({
 		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move || -> ErrResult<()> {
+		///     move || -> AnyResult<()> {
 		///         let mut ps = PAINTSTRUCT::default();
 		///         let hdc = wnd.hwnd().BeginPaint(&mut ps)?;
 		///
@@ -678,7 +678,7 @@ pub trait GuiEvents {
 	/// [`WM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
 	/// message.
 	fn wm_set_icon<F>(&self, func: F)
-		where F: Fn(wm::SetIcon) -> ErrResult<Option<HICON>> + 'static,
+		where F: Fn(wm::SetIcon) -> AnyResult<Option<HICON>> + 'static,
 	{
 		self.wm(co::WM::SETICON, move |p|
 			Ok(Some(
@@ -711,14 +711,14 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, ErrResult};
+		/// use winsafe::{gui, msg, AnyResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_size({
 		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move |p: msg::wm::Size| -> ErrResult<()> {
+		///     move |p: msg::wm::Size| -> AnyResult<()> {
 		///         println!("HWND: {}, client area: {}x{}",
 		///             wnd.hwnd(),
 		///             p.client_area.cx,

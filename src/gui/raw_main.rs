@@ -5,11 +5,11 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
+use crate::gui::msg_error::MsgResult;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::gui::runtime_error::RunResult;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::{ErrResult, HINSTANCE, WString};
+use crate::kernel::decl::{AnyResult, HINSTANCE, WString};
 use crate::prelude::{
 	GuiEvents, Handle, kernel_Hinstance, user_Haccel, user_Hwnd,
 };
@@ -60,19 +60,19 @@ impl RawMain {
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.0.raw_base.spawn_new_thread(func);
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		self.0.raw_base.run_ui_thread(func);
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> RunResult<i32>
+		cmd_show: Option<co::SW>) -> MsgResult<i32>
 	{
 		let opts = &self.0.opts;
 

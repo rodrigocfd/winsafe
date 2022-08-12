@@ -5,7 +5,7 @@ use crate::gui::dlg_control::DlgControl;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::raw_control::{RawControl, WindowControlOpts};
-use crate::kernel::decl::ErrResult;
+use crate::kernel::decl::AnyResult;
 use crate::prelude::{GuiChild, GuiParent, GuiThread, GuiWindow};
 use crate::user::decl::{HWND, POINT};
 
@@ -54,7 +54,7 @@ impl GuiParent for WindowControl {
 
 impl GuiThread for WindowControl {
 	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static,
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		match &self.0 {
 			RawDlg::Raw(r) => r.spawn_new_thread(func),
@@ -63,7 +63,7 @@ impl GuiThread for WindowControl {
 	}
 
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> ErrResult<()> + Send + 'static
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
 		match &self.0 {
 			RawDlg::Raw(r) => r.run_ui_thread(func),
