@@ -688,6 +688,10 @@ pub trait user_Hwnd: Handle {
 	/// [`GetWindowText`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw)
 	/// method.
 	///
+	/// Returns a
+	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html),
+	/// performing all necessary allocations.
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
@@ -720,6 +724,11 @@ pub trait user_Hwnd: Handle {
 
 	/// [`GetWindowTextLength`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextlengthw)
 	/// method. Does not count the terminating null.
+	///
+	/// You should rarely use this method since
+	/// [`GetWindowText`](crate::prelude::user_Hwnd::GetWindowText) returns a
+	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html),
+	/// performing all necessary allocations.
 	#[must_use]
 	fn GetWindowTextLength(self) -> SysResult<i32> {
 		SetLastError(co::ERROR::SUCCESS);

@@ -10,16 +10,17 @@ pub enum FileAccess {
 	/// Opens the file as read-only. Fails if the file doesn't exist.
 	ExistingReadOnly,
 	/// Opens the file as read/write. Fails if the file doesn't exist.
-	ExistingReadWrite,
+	ExistingRW,
 	/// Opens the file as read/write. If the file doesn't exist, it will be
 	/// created.
-	OpenOrCreateReadWrite,
+	OpenOrCreateRW,
 }
 
 //------------------------------------------------------------------------------
 
-/// Manages an [`HFILE`](crate::HFILE) handle, which is closed automatically
-/// when the object goes out of scope.
+/// Manages an [`HFILE`](crate::HFILE) handle, which provides file read/write
+/// and other operations. It is closed automatically when the object goes out of
+/// scope.
 ///
 /// This is an alternative to the standard
 /// [`std::fs::File`](https://doc.rust-lang.org/std/fs/struct.File.html), with a
@@ -40,17 +41,17 @@ impl File {
 	#[must_use]
 	pub fn open(file_path: &str, access: FileAccess) -> SysResult<File> {
 		let (acc, share, disp) = match access {
-			FileAccess::ExistingReadOnly =>  (
+			FileAccess::ExistingReadOnly => (
 				co::GENERIC::READ,
 				co::FILE_SHARE::READ,
 				co::DISPOSITION::OPEN_EXISTING,
 			),
-			FileAccess::ExistingReadWrite => (
+			FileAccess::ExistingRW => (
 				co::GENERIC::READ | co::GENERIC::WRITE,
 				co::FILE_SHARE::NoValue,
 				co::DISPOSITION::OPEN_EXISTING,
 			),
-			FileAccess::OpenOrCreateReadWrite => (
+			FileAccess::OpenOrCreateRW => (
 				co::GENERIC::READ | co::GENERIC::WRITE,
 				co::FILE_SHARE::NoValue,
 				co::DISPOSITION::OPEN_ALWAYS,
@@ -87,7 +88,8 @@ impl File {
 	/// Reads bytes from the file.
 	///
 	/// Note that the bytes will start being read from the current offset of the
-	/// internal file pointer, which is then incremented by `num_bytes`.
+	/// internal file pointer, which is then incremented by the size of
+	/// `buffer`.
 	pub fn read(&self, buffer: &mut [u8]) -> SysResult<usize> {
 		self.hfile.ReadFile(buffer, None)
 			.map(|n| n as _)

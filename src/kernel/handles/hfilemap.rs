@@ -8,6 +8,9 @@ impl_handle! { HFILEMAP: "kernel";
 	/// Handle to a
 	/// [file mapping](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
 	/// Originally just a `HANDLE`.
+	///
+	/// Unless you need something specific, consider using the
+	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 }
 
 impl HandleClose for HFILEMAP {}

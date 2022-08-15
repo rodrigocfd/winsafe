@@ -12,6 +12,9 @@ impl_handle! { HFILE: "kernel";
 	/// Handle to a
 	/// [file](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
 	/// Originally just a `HANDLE`.
+	///
+	/// Unless you need something specific, consider using the
+	/// [`File`](crate::File) high-level abstraction.
 }
 
 impl HandleClose for HFILE {}

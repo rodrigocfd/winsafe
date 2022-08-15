@@ -26,7 +26,7 @@ pub trait Handle:
 	/// Creates a new handle instance by wrapping a pointer.
 	unsafe fn from_ptr<T>(p: *mut T) -> Self;
 
-	/// Returning the underlying raw pointer.
+	/// Returns the underlying raw pointer.
 	unsafe fn as_ptr(self) -> *mut std::ffi::c_void;
 
 	/// Tells if the handle is invalid (null).
@@ -34,7 +34,7 @@ pub trait Handle:
 		unsafe { self.as_ptr().is_null() }
 	}
 
-	/// Returns `None` if the handle is null, otherwise returns `Some(&Self)`.
+	/// Returns `None` if the handle is null, otherwise returns `Some(self)`.
 	#[must_use]
 	fn as_opt(self) -> Option<Self> {
 		if self.is_null() {
@@ -45,7 +45,8 @@ pub trait Handle:
 	}
 }
 
-/// A [`Handle`](crate::prelude::Handle) which can be closed.
+/// A [`Handle`](crate::prelude::Handle) which can be closed. Note that only
+/// some handles can be closed, so not all handles implement this trait.
 ///
 /// Prefer importing this trait through the prelude:
 ///

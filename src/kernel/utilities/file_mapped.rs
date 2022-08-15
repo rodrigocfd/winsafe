@@ -4,8 +4,9 @@ use crate::prelude::{
 	Handle, HandleClose, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
 };
 
-/// Manages a memory-mapped file, which can be read/written through slices. It
-/// is closed automatically when the object goes out of scope.
+/// Manages an [`HFILEMAP`](crate::HFILEMAP) handle, which provides
+/// memory-mapped file operations, including read/write through slices. It is
+/// closed automatically when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct FileMapped {
 	access: FileAccess,
@@ -45,8 +46,8 @@ impl FileMapped {
 			None,
 			match self.access {
 				FileAccess::ExistingReadOnly => co::PAGE::READONLY,
-				FileAccess::ExistingReadWrite
-					| FileAccess::OpenOrCreateReadWrite => co::PAGE::READWRITE,
+				FileAccess::ExistingRW
+					| FileAccess::OpenOrCreateRW => co::PAGE::READWRITE,
 			},
 			None,
 			None,
@@ -55,8 +56,8 @@ impl FileMapped {
 		self.hview = self.hmap.MapViewOfFile(
 			match self.access {
 				FileAccess::ExistingReadOnly => co::FILE_MAP::READ,
-				FileAccess::ExistingReadWrite
-					| FileAccess::OpenOrCreateReadWrite => co::FILE_MAP::READ | co::FILE_MAP::WRITE,
+				FileAccess::ExistingRW
+					| FileAccess::OpenOrCreateRW => co::FILE_MAP::READ | co::FILE_MAP::WRITE,
 			},
 			0,
 			None,

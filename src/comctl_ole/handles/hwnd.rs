@@ -31,7 +31,7 @@ pub trait comctl_ole_Hwnd: Handle {
 	/// [`TaskDialog`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
 	/// method.
 	///
-	/// If you need more customization, consider the
+	/// If you need more customization, see the
 	/// [`TaskDialogIndirect`](crate::TaskDialogIndirect) function.
 	///
 	/// # Examples
