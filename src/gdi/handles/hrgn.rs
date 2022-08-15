@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
-use crate::kernel::decl::{GetLastError, WinResult};
+use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::{HRGN, RECT, SIZE};
 
@@ -24,7 +24,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
-	fn CreateRectRgn(bounds: RECT) -> WinResult<HRGN> {
+	fn CreateRectRgn(bounds: RECT) -> SysResult<HRGN> {
 		unsafe {
 			gdi::ffi::CreateRectRgn(
 				bounds.left, bounds.top, bounds.right, bounds.bottom,
@@ -39,7 +39,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
-	fn CreateRectRgnIndirect(rc: RECT) -> WinResult<HRGN> {
+	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<HRGN> {
 		unsafe { gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _).as_mut() }
 			.map(|ptr| HRGN(ptr))
 			.ok_or_else(|| GetLastError())
@@ -52,7 +52,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
 	fn CreateRoundRectRgn(
-		bounds: RECT, size: SIZE) -> WinResult<HRGN>
+		bounds: RECT, size: SIZE) -> SysResult<HRGN>
 	{
 		unsafe {
 			gdi::ffi::CreateRoundRectRgn(
@@ -65,7 +65,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 
 	/// [`OffsetClipRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
 	/// method.
-	fn OffsetClipRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
+	fn OffsetClipRgn(self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetClipRgn(self.as_ptr(), x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
@@ -74,7 +74,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 
 	/// [`OffsetRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
 	/// method.
-	fn OffsetRgn(self, x: i32, y: i32) -> WinResult<co::REGION> {
+	fn OffsetRgn(self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetRgn(self.as_ptr(), x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),

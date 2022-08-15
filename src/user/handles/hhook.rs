@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
-use crate::kernel::decl::{GetLastError, HINSTANCE, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::HOOKPROC;
 
@@ -37,7 +37,7 @@ pub trait user_Hhook: Handle {
 	/// static method.
 	fn SetWindowsHookEx(
 		hook_id: co::WH, proc: HOOKPROC,
-		module: Option<HINSTANCE>, thread_id: Option<u32>) -> WinResult<HHOOK>
+		module: Option<HINSTANCE>, thread_id: Option<u32>) -> SysResult<HHOOK>
 	{
 		unsafe {
 			user::ffi::SetWindowsHookExW(
@@ -52,8 +52,8 @@ pub trait user_Hhook: Handle {
 
 	/// [`UnhookWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
 	/// method.
-	fn UnhookWindowsHookEx(self) -> WinResult<()> {
-		bool_to_winresult(
+	fn UnhookWindowsHookEx(self) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe { user::ffi::UnhookWindowsHookEx(self.as_ptr()) },
 		)
 	}

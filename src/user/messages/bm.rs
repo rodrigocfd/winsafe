@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{BmpIcon, HBITMAP, HICON};
@@ -34,14 +34,14 @@ unsafe impl MsgSend for GetCheck {
 /// [`BM_GETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<BmpIcon>`.
+/// Return type: `SysResult<BmpIcon>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
 
 unsafe impl MsgSend for GetImage {
-	type RetType = WinResult<BmpIcon>;
+	type RetType = SysResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.img_type {
@@ -136,14 +136,14 @@ unsafe impl MsgSend for SetDontClick {
 /// [`BM_SETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<BmpIcon>`.
+/// Return type: `SysResult<BmpIcon>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetImage {
 	pub image: BmpIcon,
 }
 
 unsafe impl MsgSend for SetImage {
-	type RetType = WinResult<BmpIcon>;
+	type RetType = SysResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match self.image {

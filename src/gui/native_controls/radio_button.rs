@@ -10,7 +10,7 @@ use crate::gui::native_controls::base_native_control::{
 use crate::gui::privs::{
 	auto_ctrl_id, calc_text_bound_box_check, multiply_dpi_or_dtu, ui_font,
 };
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 use crate::msg::{bm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiNativeControl, GuiNativeControlEvents,
@@ -160,7 +160,7 @@ impl RadioButton {
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
 	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
 	/// can handle the event.
-	pub fn select_and_trigger(&self, selected: bool) -> WinResult<()> {
+	pub fn select_and_trigger(&self, selected: bool) -> SysResult<()> {
 		self.select(selected);
 		self.hwnd().GetParent()?.SendMessage(wm::Command {
 			event: AccelMenuCtrl::Ctrl(

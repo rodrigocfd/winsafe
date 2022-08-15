@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 use std::ptr::NonNull;
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, PROCESSENTRY32, WinResult};
+use crate::kernel::decl::{GetLastError, PROCESSENTRY32, SysResult};
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HPROCESSLIST: "kernel";
@@ -26,7 +26,7 @@ impl kernel_Hprocesslist for HPROCESSLIST {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hprocesslist: Handle {
-		/// Returns an iterator over the processes list by calling
+	/// Returns an iterator over the processes list by calling
 	/// [`HPROCESSLIST::Process32First`](crate::prelude::kernel_Hprocesslist::Process32First)
 	/// and then
 	/// [`HPROCESSLIST::Process32Next`](crate::prelude::kernel_Hprocesslist::Process32Next)
@@ -53,7 +53,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// ```
 	#[must_use]
 	fn iter<'a>(&'a self, pe32: &'a mut PROCESSENTRY32)
-		-> Box<dyn Iterator<Item = WinResult<&'a PROCESSENTRY32>> + 'a>
+		-> Box<dyn Iterator<Item = SysResult<&'a PROCESSENTRY32>> + 'a>
 	{
 		Box::new(ProcessIter::new(HPROCESSLIST(unsafe { self.as_ptr() }), pe32))
 	}
@@ -67,7 +67,7 @@ pub trait kernel_Hprocesslist: Handle {
 	#[must_use]
 	fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
-		th32_process_id: Option<u32>) -> WinResult<HPROCESSLIST>
+		th32_process_id: Option<u32>) -> SysResult<HPROCESSLIST>
 	{
 		unsafe {
 			kernel::ffi::CreateToolhelp32Snapshot(
@@ -84,7 +84,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// Prefer using
 	/// [`HPROCESSLIST::iter`](crate::prelude::kernel_Hprocesslist::iter), which
 	/// is simpler.
-	fn Process32First(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
+	fn Process32First(self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Process32FirstW(self.as_ptr(), pe as *mut _ as _)
 		} {
@@ -102,7 +102,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// Prefer using
 	/// [`HPROCESSLIST::iter`](crate::prelude::kernel_Hprocesslist::iter), which
 	/// is simpler.
-	fn Process32Next(self, pe: &mut PROCESSENTRY32) -> WinResult<bool> {
+	fn Process32Next(self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Process32NextW(self.as_ptr(), pe as *mut _ as _)
 		} {
@@ -126,7 +126,7 @@ struct ProcessIter<'a> {
 }
 
 impl<'a> Iterator for ProcessIter<'a> {
-	type Item = WinResult<&'a PROCESSENTRY32>;
+	type Item = SysResult<&'a PROCESSENTRY32>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if !self.has_more {

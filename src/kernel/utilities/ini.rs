@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{FileAccess, FileMapped, HFILE, WinResult, WString};
+use crate::kernel::decl::{FileAccess, FileMapped, HFILE, SysResult, WString};
 use crate::prelude::{HandleClose, kernel_Hfile};
 
 /// Keeps sections and key/value pairs of a `.ini` file, also doing parsing and
@@ -88,7 +88,7 @@ impl Ini {
 	/// be guessed with
 	/// [`WString::guess_encoding`](crate::WString::guess_encoding).
 	#[must_use]
-	pub fn parse_bytes(bytes: &[u8]) -> WinResult<Ini> {
+	pub fn parse_bytes(bytes: &[u8]) -> SysResult<Ini> {
 		Ok(
 			Self::parse_str(&WString::parse_str(bytes)?.to_string()),
 		)
@@ -96,7 +96,7 @@ impl Ini {
 
 	/// Parses an `Ini` directly from a file.
 	#[must_use]
-	pub fn parse_from_file(ini_path: &str) -> WinResult<Ini> {
+	pub fn parse_from_file(ini_path: &str) -> SysResult<Ini> {
 		let fin = FileMapped::open(ini_path, FileAccess::ExistingReadOnly)?;
 		Self::parse_bytes(fin.as_slice())
 	}
@@ -143,7 +143,7 @@ impl Ini {
 	}
 
 	/// Serializes the data directly to a file.
-	pub fn serialize_to_file(&self, ini_path: &str) -> WinResult<()> {
+	pub fn serialize_to_file(&self, ini_path: &str) -> SysResult<()> {
 		let (fout, _) = HFILE::CreateFile(ini_path, co::GENERIC::WRITE,
 			co::FILE_SHARE::NoValue, None, co::DISPOSITION::CREATE_ALWAYS,
 			co::FILE_ATTRIBUTE::NORMAL, None)?;

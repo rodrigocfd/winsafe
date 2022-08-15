@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::ffi_types::BOOL;
-use crate::kernel::decl::{GetLastError, WinResult, WString};
+use crate::kernel::decl::{GetLastError, SysResult, WString};
 
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
@@ -23,7 +23,7 @@ pub(crate) fn MAKEINTRESOURCE(val: isize) -> *const u16 {
 }
 
 /// If value is `FALSE`, yields `Err(GetLastError)`, otherwise `Ok()`.
-pub(crate) fn bool_to_winresult(expr: BOOL) -> WinResult<()> {
+pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 	match expr {
 		0 => Err(GetLastError()),
 		_ => Ok(()),

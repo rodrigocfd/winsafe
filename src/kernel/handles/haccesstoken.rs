@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HACCESSTOKEN: "kernel";
@@ -32,10 +32,10 @@ pub trait kernel_Haccesstoken: Handle {
 	/// call.
 	#[must_use]
 	fn DuplicateToken(self,
-		level: co::SECURITY_IMPERSONATION) -> WinResult<HACCESSTOKEN>
+		level: co::SECURITY_IMPERSONATION) -> SysResult<HACCESSTOKEN>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::DuplicateToken(
 					self.as_ptr(),
@@ -63,7 +63,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// [`IsTokenRestricted`](https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
 	/// method.
 	#[must_use]
-	fn IsTokenRestricted(self) -> WinResult<bool> {
+	fn IsTokenRestricted(self) -> SysResult<bool> {
 		match unsafe { kernel::ffi::IsTokenRestricted(self.as_ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(false), // actual false

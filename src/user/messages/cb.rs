@@ -1,6 +1,6 @@
 use crate::co;
 use crate::kernel::decl::{
-	HIWORD, LANGID, LOWORD, MAKEDWORD, WinResult, WString,
+	HIWORD, LANGID, LOWORD, MAKEDWORD, SysResult, WString,
 };
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
@@ -10,14 +10,14 @@ use crate::user::privs::{CB_ERR, CB_ERRSPACE, zero_as_err};
 /// [`CB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-addstring)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct AddString {
 	pub text: WString,
 }
 
 unsafe impl MsgSend for AddString {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -39,14 +39,14 @@ unsafe impl MsgSend for AddString {
 /// [`CB_DELETESTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-deletestring)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct DeleteString {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for DeleteString {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -67,7 +67,7 @@ unsafe impl MsgSend for DeleteString {
 /// [`CB_DIR`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-dir)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Dir {
 	pub attributes: co::DDL,
@@ -75,7 +75,7 @@ pub struct Dir {
 }
 
 unsafe impl MsgSend for Dir {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -155,14 +155,14 @@ unsafe impl MsgSend for FindStringExact {
 /// [`CB_GETCOMBOBOXINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcomboboxinfo)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetComboBoxInfo<'a> {
 	pub data: &'a mut COMBOBOXINFO,
 }
 
 unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -180,12 +180,12 @@ unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
 /// [`CB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcount)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCount {}
 
 unsafe impl MsgSend for GetCount {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|count| count as _)
@@ -229,14 +229,14 @@ unsafe impl MsgSend for GetCurSel {
 /// [`CB_GETDROPPEDCONTROLRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedcontrolrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDroppedControlRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
 unsafe impl<'a> MsgSend for GetDroppedControlRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -277,12 +277,12 @@ unsafe impl MsgSend for GetDroppedState {
 /// [`CB_GETDROPPEDWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedwidth)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDroppedWidth {}
 
 unsafe impl MsgSend for GetDroppedWidth {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -372,14 +372,14 @@ unsafe impl MsgSend for GetHorizontalExtent {
 /// [`CB_GETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getitemdata)
 /// message parameters.
 ///
-/// Return type: `WinResult<isize>`.
+/// Return type: `SysResult<isize>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetItemData {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for GetItemData {
-	type RetType = WinResult<isize>;
+	type RetType = SysResult<isize>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -400,14 +400,14 @@ unsafe impl MsgSend for GetItemData {
 /// [`CB_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getitemheight)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetItemHeight {
 	pub component: i32,
 }
 
 unsafe impl MsgSend for GetItemHeight {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -428,7 +428,7 @@ unsafe impl MsgSend for GetItemHeight {
 /// [`CB_GETLBTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtext)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLbText<'a> {
 	pub index: u32,
@@ -436,7 +436,7 @@ pub struct GetLbText<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetLbText<'a> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -457,14 +457,14 @@ unsafe impl<'a> MsgSend for GetLbText<'a> {
 /// [`CB_GETLBTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtextlen)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLbTextLen {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for GetLbTextLen {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -508,12 +508,12 @@ unsafe impl MsgSend for GetLocale {
 /// [`CB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gettopindex)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTopIndex {}
 
 unsafe impl MsgSend for GetTopIndex {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -534,7 +534,7 @@ unsafe impl MsgSend for GetTopIndex {
 /// [`CB_INITSTORAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-initstorage)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InitStorage {
 	pub num_items: u32,
@@ -542,7 +542,7 @@ pub struct InitStorage {
 }
 
 unsafe impl MsgSend for InitStorage {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -563,7 +563,7 @@ unsafe impl MsgSend for InitStorage {
 /// [`CB_INSERTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-insertstring)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InsertString {
 	pub index: Option<u32>,
@@ -571,7 +571,7 @@ pub struct InsertString {
 }
 
 unsafe impl MsgSend for InsertString {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -679,14 +679,14 @@ unsafe impl MsgSend for SetCurSel {
 /// [`CB_SETDROPPEDWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setdroppedwidth)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetDroppedWidth {
 	pub min_width: u32,
 }
 
 unsafe impl MsgSend for SetDroppedWidth {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -707,7 +707,7 @@ unsafe impl MsgSend for SetDroppedWidth {
 /// [`CB_SETEDITSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-seteditsel)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetEditSel {
 	pub start_pos: Option<u32>,
@@ -715,7 +715,7 @@ pub struct SetEditSel {
 }
 
 unsafe impl MsgSend for SetEditSel {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -739,14 +739,14 @@ unsafe impl MsgSend for SetEditSel {
 /// [`CB_SETEXTENDEDUI`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setextendedui)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetExtendedUi {
 	pub use_extended_ui: bool,
 }
 
 unsafe impl MsgSend for SetExtendedUi {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -792,7 +792,7 @@ unsafe impl MsgSend for SetHorizontalExtent {
 /// [`CB_SETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setitemdata)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetItemData {
 	pub index: u32,
@@ -800,7 +800,7 @@ pub struct SetItemData {
 }
 
 unsafe impl MsgSend for SetItemData {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -821,7 +821,7 @@ unsafe impl MsgSend for SetItemData {
 /// [`CB_SETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setitemheight)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetItemHeight {
 	pub component: i32,
@@ -829,7 +829,7 @@ pub struct SetItemHeight {
 }
 
 unsafe impl MsgSend for SetItemHeight {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -850,14 +850,14 @@ unsafe impl MsgSend for SetItemHeight {
 /// [`CB_SETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setlocale)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetLocale {
 	pub locale: LANGID,
 }
 
 unsafe impl MsgSend for SetLocale {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -878,14 +878,14 @@ unsafe impl MsgSend for SetLocale {
 /// [`CB_SETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-settopindex)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetTopIndex {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for SetTopIndex {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

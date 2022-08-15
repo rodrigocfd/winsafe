@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGPEN;
-use crate::kernel::decl::{GetLastError, WinResult};
+use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::COLORREF;
 
@@ -29,7 +29,7 @@ pub trait gdi_Hpen: gdi_Hgdiobj {
 	/// static method.
 	#[must_use]
 	fn CreatePen(
-		style: co::PS, width: i32, color: COLORREF) -> WinResult<HPEN>
+		style: co::PS, width: i32, color: COLORREF) -> SysResult<HPEN>
 	{
 		unsafe { gdi::ffi::CreatePen(style.0, width, color.0).as_mut() }
 			.map(|ptr| HPEN(ptr))
@@ -39,7 +39,7 @@ pub trait gdi_Hpen: gdi_Hgdiobj {
 	/// [`CreatePenIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
 	/// static method.
 	#[must_use]
-	fn CreatePenIndirect(lp: &mut LOGPEN) -> WinResult<HPEN> {
+	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<HPEN> {
 		unsafe { gdi::ffi::CreatePenIndirect(lp as *const _ as _).as_mut() }
 			.map(|ptr| HPEN(ptr))
 			.ok_or_else(|| GetLastError())
@@ -48,7 +48,7 @@ pub trait gdi_Hpen: gdi_Hgdiobj {
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
 	#[must_use]
-	fn GetStockObject(sp: co::STOCK_PEN) -> WinResult<HPEN> {
+	fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
 		unsafe { gdi::ffi::GetStockObject(sp.0).as_mut() }
 			.map(|ptr| HPEN(ptr))
 			.ok_or_else(|| GetLastError())

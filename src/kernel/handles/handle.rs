@@ -3,8 +3,8 @@
 use std::fmt;
 
 use crate::kernel;
-use crate::kernel::decl::WinResult;
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::bool_to_sysresult;
 
 /// A native
 /// [handle](https://docs.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects),
@@ -56,7 +56,7 @@ pub trait Handle:
 pub trait HandleClose: Handle {
 	/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// method.
-	fn CloseHandle(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel::ffi::CloseHandle(self.as_ptr()) })
+	fn CloseHandle(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { kernel::ffi::CloseHandle(self.as_ptr()) })
 	}
 }

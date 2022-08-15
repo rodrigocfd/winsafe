@@ -3,9 +3,9 @@
 use crate::{co, kernel};
 use crate::kernel::decl::{
 	BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP, HIDWORD, LODWORD,
-	OVERLAPPED, SECURITY_ATTRIBUTES, WinResult, WString,
+	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
-use crate::kernel::privs::{bool_to_winresult, INVALID_HANDLE_VALUE};
+use crate::kernel::privs::{bool_to_sysresult, INVALID_HANDLE_VALUE};
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HFILE: "kernel";
@@ -82,7 +82,7 @@ pub trait kernel_Hfile: Handle {
 		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
 		flags_and_attrs: co::FILE_ATTRIBUTE,
-		hfile_template: Option<HFILE>) -> WinResult<(HFILE, co::ERROR)>
+		hfile_template: Option<HFILE>) -> SysResult<(HFILE, co::ERROR)>
 	{
 		match unsafe {
 			kernel::ffi::CreateFileW(
@@ -111,7 +111,7 @@ pub trait kernel_Hfile: Handle {
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
 		max_size: Option<u64>,
-		mapping_name: Option<&str>) -> WinResult<HFILEMAP>
+		mapping_name: Option<&str>) -> SysResult<HFILEMAP>
 	{
 		unsafe {
 			kernel::ffi::CreateFileMappingFromApp(
@@ -128,9 +128,9 @@ pub trait kernel_Hfile: Handle {
 	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 	/// method.
 	fn GetFileInformationByHandle(self,
-		fi: &mut BY_HANDLE_FILE_INFORMATION) -> WinResult<()>
+		fi: &mut BY_HANDLE_FILE_INFORMATION) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetFileInformationByHandle(
 					self.as_ptr(), fi as *mut _ as _,
@@ -142,7 +142,7 @@ pub trait kernel_Hfile: Handle {
 	/// [`GetFileSizeEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// method.
 	#[must_use]
-	fn GetFileSizeEx(self) -> WinResult<usize> {
+	fn GetFileSizeEx(self) -> SysResult<usize> {
 		let mut sz_buf = 0;
 		match unsafe { kernel::ffi::GetFileSizeEx(self.as_ptr(), &mut sz_buf) } {
 			0 => Err(GetLastError()),
@@ -153,7 +153,7 @@ pub trait kernel_Hfile: Handle {
 	/// [`GetFileType`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
 	/// method.
 	#[must_use]
-	fn GetFileType(self) -> WinResult<co::FILE_TYPE> {
+	fn GetFileType(self) -> SysResult<co::FILE_TYPE> {
 		match co::FILE_TYPE(unsafe { kernel::ffi::GetFileType(self.as_ptr()) }) {
 			co::FILE_TYPE::UNKNOWN => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(co::FILE_TYPE::UNKNOWN), // actual unknown type
@@ -168,8 +168,8 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// **Note:** Must be paired with an
 	/// [`HFILE::UnlockFile`](crate::prelude::kernel_Hfile::UnlockFile) call.
-	fn LockFile(self, offset: u64, num_bytes_to_lock: u64) -> WinResult<()> {
-		bool_to_winresult(
+	fn LockFile(self, offset: u64, num_bytes_to_lock: u64) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::LockFile(
 					self.as_ptr(),
@@ -188,10 +188,10 @@ pub trait kernel_Hfile: Handle {
 	/// Returns the number of bytes read.
 	fn ReadFile(self,
 		buffer: &mut [u8],
-		overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
 		let mut bytes_read = u32::default();
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::ReadFile(
 					self.as_ptr(),
@@ -206,19 +206,19 @@ pub trait kernel_Hfile: Handle {
 
 	/// [`SetEndOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
 	/// method.
-	fn SetEndOfFile(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel::ffi::SetEndOfFile(self.as_ptr()) })
+	fn SetEndOfFile(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { kernel::ffi::SetEndOfFile(self.as_ptr()) })
 	}
 
 	/// [`SetFilePointerEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
 	/// method.
 	fn SetFilePointerEx(self,
 		distance_to_move: i64,
-		move_method: co::FILE_STARTING_POINT) -> WinResult<i64>
+		move_method: co::FILE_STARTING_POINT) -> SysResult<i64>
 	{
 		let mut new_offset = i64::default();
 
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::SetFilePointerEx(
 					self.as_ptr(),
@@ -233,9 +233,9 @@ pub trait kernel_Hfile: Handle {
 	/// [`UnlockFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// method.
 	fn UnlockFile(self,
-		offset: u64, num_bytes_to_lock: u64) -> WinResult<()>
+		offset: u64, num_bytes_to_lock: u64) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::UnlockFile(
 					self.as_ptr(),
@@ -253,11 +253,11 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// Returns the number of bytes written.
 	fn WriteFile(self,
-		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
 		let mut bytes_written = u32::default();
 
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::WriteFile(
 					self.as_ptr(),

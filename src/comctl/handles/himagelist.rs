@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, comctl};
-use crate::kernel::decl::{GetLastError, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HBITMAP, HICON, POINT, SIZE};
 
@@ -29,7 +29,7 @@ pub trait comctl_Himagelist: Handle {
 	/// **Note:** A copy of the bitmap is made, and this copy is then stored.
 	/// You're still responsible for freeing the original bitmap.
 	fn Add(self,
-		hbmp_image: HBITMAP, hbmp_mask: Option<HBITMAP>) -> WinResult<u32>
+		hbmp_image: HBITMAP, hbmp_mask: Option<HBITMAP>) -> SysResult<u32>
 	{
 		match unsafe {
 			comctl::ffi::ImageList_Add(
@@ -48,14 +48,14 @@ pub trait comctl_Himagelist: Handle {
 	///
 	/// The icon can be destroyed right after this call, its handle its
 	/// duplicated inside the image list.
-	fn AddIcon(self, hicon: HICON) -> WinResult<u32> {
+	fn AddIcon(self, hicon: HICON) -> SysResult<u32> {
 		self.ReplaceIcon(None, hicon)
 	}
 
 	/// [`ImageList_AddMasked`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addmasked)
 	/// method.
 	fn AddMasked(self,
-		hbmp_image: HBITMAP, color_mask: COLORREF) -> WinResult<u32>
+		hbmp_image: HBITMAP, color_mask: COLORREF) -> SysResult<u32>
 	{
 		match unsafe {
 			comctl::ffi::ImageList_AddMasked(
@@ -73,8 +73,8 @@ pub trait comctl_Himagelist: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HIMAGELIST::EndDrag`](crate::prelude::comctl_Himagelist::EndDrag)
 	/// call.
-	fn BeginDrag(self, track: u32, hotspot: POINT) -> WinResult<()> {
-		bool_to_winresult(
+	fn BeginDrag(self, track: u32, hotspot: POINT) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::ImageList_BeginDrag(
 					self.as_ptr(),
@@ -107,7 +107,7 @@ pub trait comctl_Himagelist: Handle {
 	#[must_use]
 	fn Create(
 		image_sz: SIZE, flags: co::ILC,
-		initial_size: i32, grow_size: i32) -> WinResult<HIMAGELIST>
+		initial_size: i32, grow_size: i32) -> SysResult<HIMAGELIST>
 	{
 		unsafe {
 			comctl::ffi::ImageList_Create(
@@ -122,24 +122,24 @@ pub trait comctl_Himagelist: Handle {
 
 	/// [`ImageList_Destroy`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)
 	/// method.
-	fn Destroy(self) -> WinResult<()> {
-		bool_to_winresult(
+	fn Destroy(self) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe { comctl::ffi::ImageList_Destroy(self.as_ptr()) },
 		)
 	}
 
 	/// [`ImageList_DragMove`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
 	/// method.
-	fn DragMove(self, x: i32, y: i32) -> WinResult<()> {
-		bool_to_winresult(
+	fn DragMove(self, x: i32, y: i32) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe { comctl::ffi::ImageList_DragMove(self.as_ptr(), x, y) },
 		)
 	}
 
 	/// [`ImageList_DragShowNolock`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragshownolock)
 	/// static method.
-	fn DragShowNolock(show: bool) -> WinResult<()> {
-		bool_to_winresult(
+	fn DragShowNolock(show: bool) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe { comctl::ffi::ImageList_DragShowNolock(show as _) },
 		)
 	}
@@ -153,9 +153,9 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_GetIconSize`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
 	/// method.
 	#[must_use]
-	fn GetIconSize(self) -> WinResult<SIZE> {
+	fn GetIconSize(self) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::ImageList_GetIconSize(
 					self.as_ptr(), &mut sz.cx, &mut sz.cy,
@@ -173,8 +173,8 @@ pub trait comctl_Himagelist: Handle {
 
 	/// [`ImageList_Remove`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
 	/// method.
-	fn Remove(self, index: Option<u32>) -> WinResult<()> {
-		bool_to_winresult(
+	fn Remove(self, index: Option<u32>) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::ImageList_Remove(
 					self.as_ptr(), index.map_or(-1, |i| i as _),
@@ -189,7 +189,7 @@ pub trait comctl_Himagelist: Handle {
 	/// The icon can be destroyed right after this call, its handle its
 	/// duplicated inside the image list.
 	fn ReplaceIcon(self,
-		index: Option<u32>, hicon_new: HICON) -> WinResult<u32>
+		index: Option<u32>, hicon_new: HICON) -> SysResult<u32>
 	{
 		match unsafe {
 			comctl::ffi::ImageList_ReplaceIcon(
@@ -205,8 +205,8 @@ pub trait comctl_Himagelist: Handle {
 
 	/// [`ImageList_SetImageCount`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_setimagecount)
 	/// methods.
-	fn SetImageCount(self, new_count: u32) -> WinResult<()> {
-		bool_to_winresult(
+	fn SetImageCount(self, new_count: u32) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::ImageList_SetImageCount(self.as_ptr(), new_count)
 			},

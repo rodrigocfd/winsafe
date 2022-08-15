@@ -4,9 +4,9 @@ use crate::{co, kernel};
 use crate::ffi_types::BOOL;
 use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, PROCESS_INFORMATION,
-	SECURITY_ATTRIBUTES, STARTUPINFO, WinResult, WString,
+	SECURITY_ATTRIBUTES, STARTUPINFO, SysResult, WString,
 };
-use crate::kernel::privs::{bool_to_winresult, INFINITE, MAX_PATH};
+use crate::kernel::privs::{bool_to_sysresult, INFINITE, MAX_PATH};
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HPROCESS: "kernel";
@@ -47,12 +47,12 @@ pub trait kernel_Hprocess: Handle {
 		creation_flags: co::CREATE,
 		environment: Option<Vec<String>>,
 		current_dir: Option<&str>,
-		si: &mut STARTUPINFO) -> WinResult<PROCESS_INFORMATION>
+		si: &mut STARTUPINFO) -> SysResult<PROCESS_INFORMATION>
 	{
 		let mut buf_cmd_line = command_line.map_or(WString::default(), |lp| WString::from_str(lp));
 		let mut pi = PROCESS_INFORMATION::default();
 
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::CreateProcessW(
 					WString::from_opt_str(application_name).as_ptr(),
@@ -80,9 +80,9 @@ pub trait kernel_Hprocess: Handle {
 	/// [`FlushInstructionCache`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// method.
 	fn FlushInstructionCache(self,
-		base_address: *mut std::ffi::c_void, size: usize) -> WinResult<()>
+		base_address: *mut std::ffi::c_void, size: usize) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::FlushInstructionCache(
 					self.as_ptr(), base_address, size,
@@ -107,9 +107,9 @@ pub trait kernel_Hprocess: Handle {
 	/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
 	/// method.
 	#[must_use]
-	fn GetExitCodeProcess(self) -> WinResult<u32> {
+	fn GetExitCodeProcess(self) -> SysResult<u32> {
 		let mut exit_code = u32::default();
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetExitCodeProcess(self.as_ptr(), &mut exit_code)
 			},
@@ -119,7 +119,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`GetGuiResources`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
 	/// method.
 	#[must_use]
-	fn GetGuiResources(self, flags: co::GR) -> WinResult<u32> {
+	fn GetGuiResources(self, flags: co::GR) -> SysResult<u32> {
 		match unsafe { kernel::ffi::GetGuiResources(self.as_ptr(), flags.0) } {
 			0 => Err(GetLastError()),
 			count => Ok(count),
@@ -129,7 +129,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`GetProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
 	/// method.
 	#[must_use]
-	fn GetProcessId(self) -> WinResult<u32> {
+	fn GetProcessId(self) -> SysResult<u32> {
 		match unsafe { kernel::ffi::GetProcessId(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
@@ -142,9 +142,9 @@ pub trait kernel_Hprocess: Handle {
 		creation: &mut FILETIME,
 		exit: &mut FILETIME,
 		kernel: &mut FILETIME,
-		user: &mut FILETIME) -> WinResult<()>
+		user: &mut FILETIME) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetProcessTimes(
 					self.as_ptr(),
@@ -160,7 +160,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`IsWow64Process`](https://docs.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
 	/// method.
 	#[must_use]
-	fn IsWow64Process(self) -> WinResult<bool> {
+	fn IsWow64Process(self) -> SysResult<bool> {
 		let mut wow64: BOOL = 0;
 		match unsafe { kernel::ffi::IsWow64Process(self.as_ptr(), &mut wow64) } {
 			0 => Err(GetLastError()),
@@ -177,7 +177,7 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn OpenProcess(
 		desired_access: co::PROCESS,
-		inherit_handle: bool, process_id: u32) -> WinResult<HPROCESS>
+		inherit_handle: bool, process_id: u32) -> SysResult<HPROCESS>
 	{
 		unsafe {
 			kernel::ffi::OpenProcess(
@@ -197,10 +197,10 @@ pub trait kernel_Hprocess: Handle {
 	/// call.
 	#[must_use]
 	fn OpenProcessToken(self,
-		desired_access: co::TOKEN) -> WinResult<HACCESSTOKEN>
+		desired_access: co::TOKEN) -> SysResult<HACCESSTOKEN>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::OpenProcessToken(
 					self.as_ptr(),
@@ -215,12 +215,12 @@ pub trait kernel_Hprocess: Handle {
 	/// method.
 	#[must_use]
 	fn QueryFullProcessImageName(self,
-		flags: co::PROCESS_NAME) -> WinResult<String>
+		flags: co::PROCESS_NAME) -> SysResult<String>
 	{
 		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
 		let mut sz = buf.buffer_size() as u32;
 
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::QueryFullProcessImageNameW(
 					self.as_ptr(),
@@ -235,7 +235,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// method.
 	fn WaitForSingleObject(self,
-		milliseconds: Option<u32>) -> WinResult<co::WAIT>
+		milliseconds: Option<u32>) -> SysResult<co::WAIT>
 	{
 		match unsafe {
 			co::WAIT(

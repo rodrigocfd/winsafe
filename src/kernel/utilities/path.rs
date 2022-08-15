@@ -6,7 +6,7 @@
 //! [`&str`](https://doc.rust-lang.org/std/primitive.str.html) instead of
 //! [`&OsStr`](https://doc.rust-lang.org/std/ffi/struct.OsStr.html).
 
-use crate::kernel::decl::{HINSTANCE, WinResult};
+use crate::kernel::decl::{HINSTANCE, SysResult};
 use crate::prelude::{Handle, kernel_Hinstance};
 
 /// Returns the path of the current EXE file, without the EXE filename, and
@@ -16,7 +16,7 @@ use crate::prelude::{Handle, kernel_Hinstance};
 #[cfg(debug_assertions)]
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn exe_path() -> WinResult<String> {
+pub fn exe_path() -> SysResult<String> {
 	let dbg = HINSTANCE::NULL.GetModuleFileName()?;
 	Ok(
 		get_path( // target
@@ -35,7 +35,7 @@ pub fn exe_path() -> WinResult<String> {
 #[cfg(not(debug_assertions))]
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn exe_path() -> WinResult<String> {
+pub fn exe_path() -> SysResult<String> {
 	Ok(
 		get_path(&HINSTANCE::NULL.GetModuleFileName()?)
 			.unwrap().to_owned(),

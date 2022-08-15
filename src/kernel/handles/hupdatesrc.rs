@@ -2,9 +2,9 @@
 
 use crate::kernel;
 use crate::kernel::decl::{
-	GetLastError, IdStr, LANGID, RtStr, WinResult, WString,
+	GetLastError, IdStr, LANGID, RtStr, SysResult, WString,
 };
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
 impl_handle! { HUPDATERSRC: "kernel";
@@ -33,7 +33,7 @@ pub trait kernel_Hupdatersrc: Handle {
 	/// call.
 	#[must_use]
 	fn BeginUpdateResource(
-		file_name: &str, delete_existing_resources: bool) -> WinResult<HUPDATERSRC>
+		file_name: &str, delete_existing_resources: bool) -> SysResult<HUPDATERSRC>
 	{
 		unsafe {
 			kernel::ffi::BeginUpdateResourceW(
@@ -46,8 +46,8 @@ pub trait kernel_Hupdatersrc: Handle {
 
 	/// [`EndUpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
 	/// method.
-	fn EndUpdateResource(self, discard: bool) -> WinResult<()> {
-		bool_to_winresult(
+	fn EndUpdateResource(self, discard: bool) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::EndUpdateResourceW(self.as_ptr(), discard as _)
 			},
@@ -58,9 +58,9 @@ pub trait kernel_Hupdatersrc: Handle {
 	/// method.
 	fn UpdateResource(self,
 		resource_type: RtStr, resource_id: IdStr,
-		language: LANGID, data: &[u8]) -> WinResult<()>
+		language: LANGID, data: &[u8]) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::UpdateResourceW(
 					self.as_ptr(),

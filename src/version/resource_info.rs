@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{LANGID, WinResult, WString};
+use crate::kernel::decl::{LANGID, SysResult, WString};
 use crate::version::decl::{GetFileVersionInfo, VarQueryValue, VS_FIXEDFILEINFO};
 
 /// Retrieves data from an embedded resource, which can be read from an
@@ -53,7 +53,7 @@ pub struct ResourceInfo {
 impl ResourceInfo {
 	/// Reads and stores the resource data from an executable file or a DLL.
 	#[must_use]
-	pub fn read_from(exe_file: &str) -> WinResult<ResourceInfo> {
+	pub fn read_from(exe_file: &str) -> SysResult<ResourceInfo> {
 		Ok(Self { res_buf: GetFileVersionInfo(exe_file)? })
 	}
 

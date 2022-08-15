@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 
-use crate::co;
-use crate::kernel::decl::{SYSTEMTIME, WinResult, WString};
+use crate::{co, oleaut};
+use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut;
 use crate::oleaut::decl::PROPERTYKEY;
 
 /// [`PSGetNameFromPropertyKey`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-psgetnamefrompropertykey)
@@ -35,7 +34,7 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 /// ignored.
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[must_use]
-pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> WinResult<f64> {
+pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 	let mut double = f64::default();
 	match unsafe {
 		oleaut::ffi::SystemTimeToVariantTime(st as *const _ as _, &mut double)
@@ -51,7 +50,7 @@ pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> WinResult<f64> {
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[must_use]
 pub fn VariantTimeToSystemTime(
-	var_time: f64, st: &mut SYSTEMTIME) -> WinResult<()>
+	var_time: f64, st: &mut SYSTEMTIME) -> SysResult<()>
 {
 	match unsafe {
 		oleaut::ffi::VariantTimeToSystemTime(var_time, st as *mut _ as _)

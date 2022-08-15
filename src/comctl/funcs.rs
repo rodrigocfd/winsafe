@@ -2,8 +2,8 @@
 
 use crate::comctl;
 use crate::comctl::decl::INITCOMMONCONTROLSEX;
-use crate::kernel::decl::{LANGID, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{LANGID, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 
 /// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
 /// function.
@@ -15,8 +15,8 @@ pub fn InitCommonControls() {
 /// [`InitCommonControlsEx`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrolsex)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> WinResult<()> {
-	bool_to_winresult(
+pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe { comctl::ffi::InitCommonControlsEx(icce as *const _ as  _) }
 	)
 }

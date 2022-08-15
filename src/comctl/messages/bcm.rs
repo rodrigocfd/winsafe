@@ -1,6 +1,6 @@
 use crate::co;
 use crate::comctl::decl::{BUTTON_IMAGELIST, BUTTON_SPLITINFO};
-use crate::kernel::decl::{WinResult, WString};
+use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{RECT, SIZE};
@@ -9,14 +9,14 @@ use crate::user::privs::zero_as_err;
 /// [`BCM_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getidealsize)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
 unsafe impl<'a> MsgSend for GetIdealSize<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -34,14 +34,14 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 /// [`BCM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getimagelist)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
 
 unsafe impl<'a> MsgSend for GetImageList<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -59,14 +59,14 @@ unsafe impl<'a> MsgSend for GetImageList<'a> {
 /// [`BCM_GETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnote)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNote<'a> {
 	pub text: &'a mut WString,
 }
 
 unsafe impl<'a> MsgSend for GetNote<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -107,14 +107,14 @@ unsafe impl MsgSend for GetNoteLength {
 /// [`BCM_GETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getsplitinfo)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
 
 unsafe impl<'a> MsgSend for GetSplitInfo<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -132,14 +132,14 @@ unsafe impl<'a> MsgSend for GetSplitInfo<'a> {
 /// [`BCM_GETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-gettextmargin)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
 
 unsafe impl<'a> MsgSend for GetTextMargin<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -157,14 +157,14 @@ unsafe impl<'a> MsgSend for GetTextMargin<'a> {
 /// [`BCM_SETDROPDOWNSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setdropdownstate)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetDropDownState {
 	pub is_pushed: bool,
 }
 
 unsafe impl MsgSend for SetDropDownState {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -182,14 +182,14 @@ unsafe impl MsgSend for SetDropDownState {
 /// [`BCM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setimagelist)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
 
 unsafe impl<'a> MsgSend for SetImageList<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -207,14 +207,14 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 /// [`BCM_SETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setnote)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetNote {
 	pub text: WString,
 }
 
 unsafe impl MsgSend for SetNote {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -232,14 +232,14 @@ unsafe impl MsgSend for SetNote {
 /// [`BCM_SETSHIELD`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setshield)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetShield {
 	pub has_elevated_icon: bool,
 }
 
 unsafe impl MsgSend for SetShield {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -257,14 +257,14 @@ unsafe impl MsgSend for SetShield {
 /// [`BCM_SETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setsplitinfo)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
 
 unsafe impl<'a> MsgSend for SetSplitInfo<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -282,14 +282,14 @@ unsafe impl<'a> MsgSend for SetSplitInfo<'a> {
 /// [`BCM_SETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-settextmargin)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTextMargin<'a> {
 	pub margins: &'a RECT,
 }
 
 unsafe impl<'a> MsgSend for SetTextMargin<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

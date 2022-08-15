@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{SYSTEMTIME, WinResult};
+use crate::kernel::decl::{SysResult, SYSTEMTIME};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::RECT;
@@ -8,14 +8,14 @@ use crate::user::privs::zero_as_err;
 /// [`MCM_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcursel)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCurSel<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
 
 unsafe impl<'a> MsgSend for GetCurSel<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -33,14 +33,14 @@ unsafe impl<'a> MsgSend for GetCurSel<'a> {
 /// [`MCM_GETMINREQRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getminreqrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMinReqRect<'a> {
 	pub bounds_rect: &'a mut RECT,
 }
 
 unsafe impl<'a> MsgSend for GetMinReqRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -81,14 +81,14 @@ unsafe impl MsgSend for GetMonthDelta {
 /// [`MCM_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcursel)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCurSel<'a> {
 	pub info: &'a SYSTEMTIME,
 }
 
 unsafe impl<'a> MsgSend for SetCurSel<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -106,14 +106,14 @@ unsafe impl<'a> MsgSend for SetCurSel<'a> {
 /// [`MCM_SETCURRENTVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcurrentview)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCurrentView {
 	pub view: co::MCMV,
 }
 
 unsafe impl MsgSend for SetCurrentView {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

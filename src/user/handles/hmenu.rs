@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, msg, user};
-use crate::kernel::decl::{GetLastError, WinResult, WString};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, SysResult, WString};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, NativeBitflag, user_Hwnd};
 use crate::user::decl::{
 	BmpPtrStr, HBITMAP, HWND, IdMenu, IdPos, MenuEnum, MENUINFO, MENUITEMINFO,
@@ -32,9 +32,9 @@ pub trait user_Hmenu: Handle {
 	/// This method is rather tricky, consider using
 	/// [`HMENU::AppendMenuEnum`](crate::prelude::user_Hmenu::AppendMenuEnum).
 	fn AppendMenu(self, flags: co::MF,
-		new_item: IdMenu, content: BmpPtrStr) -> WinResult<()>
+		new_item: IdMenu, content: BmpPtrStr) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::AppendMenuW(
 					self.as_ptr(),
@@ -74,7 +74,7 @@ pub trait user_Hmenu: Handle {
 	/// ])?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn AppendMenuEnum(self, items: &[MenuEnum]) -> WinResult<()> {
+	fn AppendMenuEnum(self, items: &[MenuEnum]) -> SysResult<()> {
 		items.iter().map(|item| {
 			match item {
 				MenuEnum::Entry(cmd_id, text) => self.AppendMenu(
@@ -101,7 +101,7 @@ pub trait user_Hmenu: Handle {
 	/// [`CheckMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem)
 	/// method.
 	fn CheckMenuItem(self,
-		id_or_pos: IdPos, check: bool) -> WinResult<co::MF>
+		id_or_pos: IdPos, check: bool) -> SysResult<co::MF>
 	{
 		match unsafe {
 			user::ffi::CheckMenuItem(
@@ -126,7 +126,7 @@ pub trait user_Hmenu: Handle {
 	///
 	/// Panics if `first`, `last` and `check` don't use the same enum field.
 	fn CheckMenuRadioItem(self,
-		first: IdPos, last: IdPos, check: IdPos) -> WinResult<()>
+		first: IdPos, last: IdPos, check: IdPos) -> SysResult<()>
 	{
 		if !(first.is_by_pos() == last.is_by_pos()
 			&& last.is_by_pos() == check.is_by_pos())
@@ -134,7 +134,7 @@ pub trait user_Hmenu: Handle {
 			panic!("Different enum fields.");
 		}
 
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::CheckMenuRadioItem(
 					self.as_ptr(),
@@ -153,7 +153,7 @@ pub trait user_Hmenu: Handle {
 	/// **Note:** If not attached to a window, must be paired with an
 	/// [`HMENU::DestroyMenu`](crate::prelude::user_Hmenu::DestroyMenu) call.
 	#[must_use]
-	fn CreateMenu() -> WinResult<HMENU> {
+	fn CreateMenu() -> SysResult<HMENU> {
 		unsafe { user::ffi::CreateMenu().as_mut() }
 			.map(|ptr| HMENU(ptr))
 			.ok_or_else(|| GetLastError())
@@ -165,7 +165,7 @@ pub trait user_Hmenu: Handle {
 	/// **Note:** If not attached to a window, must be paired with an
 	/// [`HMENU::DestroyMenu`](crate::prelude::user_Hmenu::DestroyMenu) call.
 	#[must_use]
-	fn CreatePopupMenu() -> WinResult<HMENU> {
+	fn CreatePopupMenu() -> SysResult<HMENU> {
 		unsafe { user::ffi::CreatePopupMenu().as_mut() }
 			.map(|ptr| HMENU(ptr))
 			.ok_or_else(|| GetLastError())
@@ -173,8 +173,8 @@ pub trait user_Hmenu: Handle {
 
 	/// [`DeleteMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deletemenu)
 	/// method.
-	fn DeleteMenu(self, id_or_pos: IdPos) -> WinResult<()> {
-		bool_to_winresult(
+	fn DeleteMenu(self, id_or_pos: IdPos) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::DeleteMenu(
 					self.as_ptr(),
@@ -187,8 +187,8 @@ pub trait user_Hmenu: Handle {
 
 	/// [`DestroyMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu)
 	/// method.
-	fn DestroyMenu(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user::ffi::DestroyMenu(self.as_ptr()) })
+	fn DestroyMenu(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { user::ffi::DestroyMenu(self.as_ptr()) })
 	}
 
 	/// [`EnableMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablemenuitem)
@@ -242,7 +242,7 @@ pub trait user_Hmenu: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn EnableMenuItem(self,
-		id_or_pos: IdPos, enable: bool) -> WinResult<co::MF>
+		id_or_pos: IdPos, enable: bool) -> SysResult<co::MF>
 	{
 		match unsafe {
 			user::ffi::EnableMenuItem(
@@ -261,7 +261,7 @@ pub trait user_Hmenu: Handle {
 	/// method.
 	#[must_use]
 	fn GetMenuDefaultItem(self,
-		by_pos: bool, flags: co::GMDI) -> WinResult<IdPos>
+		by_pos: bool, flags: co::GMDI) -> SysResult<IdPos>
 	{
 		match unsafe {
 			user::ffi::GetMenuDefaultItem(self.as_ptr(), by_pos as _, flags.0)
@@ -274,8 +274,8 @@ pub trait user_Hmenu: Handle {
 
 	/// [`GetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 	/// method.
-	fn GetMenuInfo(self, mi: &mut MENUINFO) -> WinResult<()> {
-		bool_to_winresult(
+	fn GetMenuInfo(self, mi: &mut MENUINFO) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe { user::ffi::GetMenuInfo(self.as_ptr(), mi as *mut _ as _) },
 		)
 	}
@@ -283,7 +283,7 @@ pub trait user_Hmenu: Handle {
 	/// [`GetMenuItemCount`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
 	/// method.
 	#[must_use]
-	fn GetMenuItemCount(self) -> WinResult<u32> {
+	fn GetMenuItemCount(self) -> SysResult<u32> {
 		match unsafe { user::ffi::GetMenuItemCount(self.as_ptr()) } {
 			-1 => Err(GetLastError()),
 			count => Ok(count as _),
@@ -303,9 +303,9 @@ pub trait user_Hmenu: Handle {
 	/// [`GetMenuItemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuiteminfow)
 	/// method.
 	fn GetMenuItemInfo(self,
-		id_or_pos: IdPos, mii: &mut MENUITEMINFO) -> WinResult<()>
+		id_or_pos: IdPos, mii: &mut MENUITEMINFO) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::GetMenuItemInfoW(
 					self.as_ptr(),
@@ -320,7 +320,7 @@ pub trait user_Hmenu: Handle {
 	/// [`GetMenuState`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustate)
 	/// method.
 	#[must_use]
-	fn GetMenuState(self, id_or_pos: IdPos) -> WinResult<co::MF> {
+	fn GetMenuState(self, id_or_pos: IdPos) -> SysResult<co::MF> {
 		match unsafe {
 			user::ffi::GetMenuState(
 				self.as_ptr(),
@@ -336,7 +336,7 @@ pub trait user_Hmenu: Handle {
 	/// [`GetMenuString`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustringw)
 	/// method.
 	#[must_use]
-	fn GetMenuString(self, id_or_pos: IdPos) -> WinResult<String> {
+	fn GetMenuString(self, id_or_pos: IdPos) -> SysResult<String> {
 		const BLOCK: usize = 64; // arbitrary
 		let mut buf_sz = BLOCK;
 		let mut buf = WString::default();
@@ -378,9 +378,9 @@ pub trait user_Hmenu: Handle {
 	/// [`InsertMenuItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuitemw)
 	/// method.
 	fn InsertMenuItem(self,
-		id_or_pos: IdPos, mii: &MENUITEMINFO) -> WinResult<()>
+		id_or_pos: IdPos, mii: &MENUITEMINFO) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::InsertMenuItemW(
 					self.as_ptr(),
@@ -401,8 +401,8 @@ pub trait user_Hmenu: Handle {
 
 	/// [`RemoveMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-removemenu)
 	/// method.
-	fn RemoveMenu(self, id_or_pos: IdPos) -> WinResult<()> {
-		bool_to_winresult(
+	fn RemoveMenu(self, id_or_pos: IdPos) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::RemoveMenu(
 					self.as_ptr(),
@@ -415,8 +415,8 @@ pub trait user_Hmenu: Handle {
 
 	/// [`SetMenuDefaultItem`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenudefaultitem)
 	/// method.
-	fn SetMenuDefaultItem(self, id_or_pos: IdPos) -> WinResult<()> {
-		bool_to_winresult(
+	fn SetMenuDefaultItem(self, id_or_pos: IdPos) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::SetMenuDefaultItem(
 					self.as_ptr(),
@@ -429,8 +429,8 @@ pub trait user_Hmenu: Handle {
 
 	/// [`SetMenuInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 	/// method.
-	fn SetMenuInfo(self, mi: &MENUINFO) -> WinResult<()> {
-		bool_to_winresult(
+	fn SetMenuInfo(self, mi: &MENUINFO) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe { user::ffi::SetMenuInfo(self.as_ptr(), mi as *const _ as _) },
 		)
 	}
@@ -440,9 +440,9 @@ pub trait user_Hmenu: Handle {
 	fn SetMenuItemBitmaps(self,
 		id_or_pos: IdPos,
 		hbmp_unchecked: Option<HBITMAP>,
-		hbmp_checked: Option<HBITMAP>) -> WinResult<()>
+		hbmp_checked: Option<HBITMAP>) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::SetMenuItemBitmaps(
 					self.as_ptr(),
@@ -458,9 +458,9 @@ pub trait user_Hmenu: Handle {
 	/// [`SetMenuItemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuiteminfow)
 	/// method.
 	fn SetMenuItemInfo(self,
-		id_or_pos: IdPos, mii: &MENUITEMINFO) -> WinResult<()>
+		id_or_pos: IdPos, mii: &MENUITEMINFO) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::SetMenuItemInfoW(
 					self.as_ptr(),
@@ -478,7 +478,7 @@ pub trait user_Hmenu: Handle {
 	/// **Note:** If you just want to display a popup menu, consider the simpler
 	/// [`HMENU::TrackPopupMenuAtPoint`](crate::prelude::user_Hmenu::TrackPopupMenuAtPoint).
 	fn TrackPopupMenu(self,
-		flags: co::TPM, location: POINT, hwnd: HWND) -> WinResult<Option<i32>>
+		flags: co::TPM, location: POINT, hwnd: HWND) -> SysResult<Option<i32>>
 	{
 		let ret = unsafe {
 			user::ffi::TrackPopupMenu(
@@ -515,7 +515,7 @@ pub trait user_Hmenu: Handle {
 	fn TrackPopupMenuAtPoint(self,
 		pos: POINT,
 		hwnd_parent: HWND,
-		hwnd_coords_relative_to: HWND) -> WinResult<()>
+		hwnd_coords_relative_to: HWND) -> SysResult<()>
 	{
 		let mut pos = pos;
 		hwnd_coords_relative_to.ClientToScreen(&mut pos)?; // now relative to screen

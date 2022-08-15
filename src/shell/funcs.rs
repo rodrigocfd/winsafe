@@ -2,9 +2,9 @@
 
 use crate::{co, shell};
 use crate::kernel::decl::{
-	GetLastError, HACCESSTOKEN, HLOCAL, WinResult, WString,
+	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, kernel_Hlocal, ole_IUnknown, shell_IShellItem};
@@ -29,7 +29,7 @@ use crate::shell::decl::{
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[must_use]
-pub fn CommandLineToArgv(cmd_line: &str) -> WinResult<Vec<String>> {
+pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 	let mut num_args = i32::default();
 	let lp_arr = unsafe {
 		shell::ffi::CommandLineToArgvW(
@@ -103,9 +103,9 @@ pub fn SHCreateItemFromParsingName<T>(
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn Shell_NotifyIcon(
-	message: co::NIM, data: &mut NOTIFYICONDATA) -> WinResult<()>
+	message: co::NIM, data: &mut NOTIFYICONDATA) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe { shell::ffi::Shell_NotifyIconW(message.0, data as *mut _ as _) },
 	)
 }
@@ -113,7 +113,7 @@ pub fn Shell_NotifyIcon(
 /// [`SHFileOperation`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> WinResult<()> {
+pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
 	match unsafe {
 		shell::ffi::SHFileOperationW(file_op as *mut _ as _)
 	} {
@@ -131,7 +131,7 @@ pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> WinResult<()> {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHGetFileInfo(
 	path: &str, file_attrs: co::FILE_ATTRIBUTE,
-	shfi: &mut SHFILEINFO, flags: co::SHGFI) -> WinResult<u32>
+	shfi: &mut SHFILEINFO, flags: co::SHGFI) -> SysResult<u32>
 {
 	match unsafe {
 		shell::ffi::SHGetFileInfoW(

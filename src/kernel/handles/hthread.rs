@@ -2,9 +2,9 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, WinResult,
+	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, SysResult,
 };
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HTHREAD: "kernel";
@@ -39,7 +39,7 @@ pub trait kernel_Hthread: Handle {
 		stack_size: usize,
 		start_addr: *mut std::ffi::c_void,
 		parameter: *mut std::ffi::c_void,
-		flags: co::THREAD_CREATE) -> WinResult<(HTHREAD, u32)>
+		flags: co::THREAD_CREATE) -> SysResult<(HTHREAD, u32)>
 	{
 		let mut thread_id = u32::default();
 		unsafe {
@@ -71,9 +71,9 @@ pub trait kernel_Hthread: Handle {
 	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
 	/// method.
 	#[must_use]
-	fn GetExitCodeThread(self) -> WinResult<u32> {
+	fn GetExitCodeThread(self) -> SysResult<u32> {
 		let mut exit_code = u32::default();
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetExitCodeThread(self.as_ptr(), &mut exit_code)
 			},
@@ -83,7 +83,7 @@ pub trait kernel_Hthread: Handle {
 	/// [`GetProcessIdOfThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessidofthread)
 	/// method.
 	#[must_use]
-	fn GetProcessIdOfThread(self) -> WinResult<u32> {
+	fn GetProcessIdOfThread(self) -> SysResult<u32> {
 		match unsafe { kernel::ffi::GetProcessIdOfThread(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
@@ -93,7 +93,7 @@ pub trait kernel_Hthread: Handle {
 	/// [`GetThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadid)
 	/// method.
 	#[must_use]
-	fn GetThreadId(self) -> WinResult<u32> {
+	fn GetThreadId(self) -> SysResult<u32> {
 		match unsafe { kernel::ffi::GetThreadId(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
@@ -106,9 +106,9 @@ pub trait kernel_Hthread: Handle {
 		creation: &mut FILETIME,
 		exit: &mut FILETIME,
 		kernel: &mut FILETIME,
-		user: &mut FILETIME) -> WinResult<()>
+		user: &mut FILETIME) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetThreadTimes(
 					self.as_ptr(),
@@ -129,10 +129,10 @@ pub trait kernel_Hthread: Handle {
 	/// call.
 	#[must_use]
 	fn OpenThreadToken(self,
-		desired_access: co::TOKEN, open_as_self: bool) -> WinResult<HACCESSTOKEN>
+		desired_access: co::TOKEN, open_as_self: bool) -> SysResult<HACCESSTOKEN>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::OpenThreadToken(
 					self.as_ptr(),

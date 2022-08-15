@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 
 pub(crate) const ASFW_ANY: u32 = -1i32 as _;
 pub(crate) const CB_ERR: i32 = -1;
@@ -13,7 +13,7 @@ pub(crate) const LB_ERR: i32 = -1;
 pub(crate) const LB_ERRSPACE: i32 = -2;
 
 /// Takes an `isize` and returns `Err` if zero.
-pub(crate) fn zero_as_err(v: isize) -> WinResult<isize> {
+pub(crate) fn zero_as_err(v: isize) -> SysResult<isize> {
 	match v {
 		0 => Err(co::ERROR::BAD_ARGUMENTS), // all message errors will return this code
 		v => Ok(v),

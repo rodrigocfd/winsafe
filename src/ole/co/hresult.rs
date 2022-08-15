@@ -2,8 +2,8 @@ use crate::co;
 use crate::prelude::FormattedError;
 
 const_no_debug_display! { HRESULT: u32: "ole";
-	/// A native COM
-	/// [error code](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
+	/// A native
+	/// [COM error code](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
 	/// (`u32`), which can be considered a superset of
 	/// [`ERROR`](crate::co::ERROR).
 	///
@@ -33,6 +33,9 @@ const_no_debug_display! { HRESULT: u32: "ole";
 	/// ```text
 	/// [0x80070057 2147942487] The parameter is incorrect.
 	/// ```
+	///
+	/// The numbers inside the brackets are the system error code, in
+	/// hexadecimal and decimal formats for convenience.
 	///
 	/// An [`ERROR`](crate::co::ERROR) can be seamlessly converted into an
 	/// `HRESULT`. This operation is equivalent to the

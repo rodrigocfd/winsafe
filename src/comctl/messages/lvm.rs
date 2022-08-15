@@ -5,7 +5,7 @@ use crate::comctl::decl::{
 	LVITEM, LVITEMINDEX, LVSETINFOTIP, LVTILEINFO, LVTILEVIEWINFO, PFNLVCOMPARE,
 	PFNLVGROUPCOMPARE,
 };
-use crate::kernel::decl::{MAKEDWORD, WinResult, WString};
+use crate::kernel::decl::{MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HCURSOR, HWND, POINT, RECT, SIZE};
@@ -45,14 +45,14 @@ unsafe impl MsgSend for ApproximateViewRect {
 /// [`LVM_ARRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-arrange)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Arrange {
 	pub arrangement: co::LVA,
 }
 
 unsafe impl MsgSend for Arrange {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -74,7 +74,7 @@ pub_struct_msg_empty! { CancelEditLabel: co::LVM::CANCELEDITLABEL.into(); "comct
 /// [`LVM_CREATEDRAGIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-createdragimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<HIMAGELIST>`.
+/// Return type: `SysResult<HIMAGELIST>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct CreateDragImage<'a> {
 	pub index: u32,
@@ -82,7 +82,7 @@ pub struct CreateDragImage<'a> {
 }
 
 unsafe impl<'a> MsgSend for CreateDragImage<'a> {
-	type RetType = WinResult<HIMAGELIST>;
+	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|h| HIMAGELIST(h as _))
@@ -100,12 +100,12 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 /// [`LVM_DELETEALLITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteallitems)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteAllItems {}
 
 unsafe impl MsgSend for DeleteAllItems {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -123,14 +123,14 @@ unsafe impl MsgSend for DeleteAllItems {
 /// [`LVM_DELETECOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deletecolumn)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteColumn {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for DeleteColumn {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -148,14 +148,14 @@ unsafe impl MsgSend for DeleteColumn {
 /// [`LVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteItem {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for DeleteItem {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -173,14 +173,14 @@ unsafe impl MsgSend for DeleteItem {
 /// [`LVM_EDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-editlabel)
 /// message parameters.
 ///
-/// Return type: `WinResult<HWND>`.
+/// Return type: `SysResult<HWND>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EditLabel {
 	pub index: Option<u32>,
 }
 
 unsafe impl MsgSend for EditLabel {
-	type RetType = WinResult<HWND>;
+	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|h| HWND(h as _))
@@ -198,14 +198,14 @@ unsafe impl MsgSend for EditLabel {
 /// [`LVM_ENABLEGROUPVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-enablegroupview)
 /// message parameters.
 ///
-/// Return type: `WinResult<bool>`.
+/// Return type: `SysResult<bool>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EnableGroupView {
 	pub enable: bool,
 }
 
 unsafe impl MsgSend for EnableGroupView {
-	type RetType = WinResult<bool>;
+	type RetType = SysResult<bool>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -226,7 +226,7 @@ unsafe impl MsgSend for EnableGroupView {
 /// [`LVM_ENSUREVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-ensurevisible)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EnsureVisible {
 	pub index: u32,
@@ -234,7 +234,7 @@ pub struct EnsureVisible {
 }
 
 unsafe impl MsgSend for EnsureVisible {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -304,14 +304,14 @@ unsafe impl MsgSend for GetBkColor {
 /// [`LVM_GETBKIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getbkimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBkImage<'a, 'b> {
 	pub lvbkimage: &'b mut LVBKIMAGE<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for GetBkImage<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -352,7 +352,7 @@ unsafe impl MsgSend for GetCallbackMask {
 /// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColumn<'a, 'b> {
 	pub index: u32,
@@ -360,7 +360,7 @@ pub struct GetColumn<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -378,14 +378,14 @@ unsafe impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 /// [`LVM_GETCOLUMNORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnorderarray)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColumnOrderArray<'a> {
 	pub indexes: &'a mut Vec<u32>,
 }
 
 unsafe impl<'a> MsgSend for GetColumnOrderArray<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -403,14 +403,14 @@ unsafe impl<'a> MsgSend for GetColumnOrderArray<'a> {
 /// [`LVM_GETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnwidth)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColumnWidth {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for GetColumnWidth {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -477,14 +477,14 @@ unsafe impl MsgSend for GetEditControl {
 /// [`LVM_GETEMPTYTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getemptytext)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetEmptyText<'a> {
 	pub text: &'a mut WString,
 }
 
 unsafe impl<'a> MsgSend for GetEmptyText<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -576,7 +576,7 @@ unsafe impl<'a, 'b> MsgSend for GetFooterInfo<'a, 'b> {
 /// [`LVM_GETFOOTERITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfooteritem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFooterItem<'a, 'b> {
 	pub index: u32,
@@ -584,7 +584,7 @@ pub struct GetFooterItem<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for GetFooterItem<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -602,7 +602,7 @@ unsafe impl<'a, 'b> MsgSend for GetFooterItem<'a, 'b> {
 /// [`LVM_GETFOOTERITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfooteritemrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFooterItemRect<'a> {
 	pub index: u32,
@@ -610,7 +610,7 @@ pub struct GetFooterItemRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetFooterItemRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -628,14 +628,14 @@ unsafe impl<'a> MsgSend for GetFooterItemRect<'a> {
 /// [`LVM_GETFOOTERRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfooterrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFooterRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
 unsafe impl<'a> MsgSend for GetFooterRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -676,7 +676,7 @@ unsafe impl MsgSend for GetGroupCount {
 /// [`LVM_GROUPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgroupinfo)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub id: u32,
@@ -684,7 +684,7 @@ pub struct GetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 }
 
 unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -705,7 +705,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfo<'a, 'b, 'c,
 /// [`LVM_GETGROUPINFOBYINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgroupinfobyindex)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub index: u32,
@@ -713,7 +713,7 @@ pub struct GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 }
 
 unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -756,7 +756,7 @@ unsafe impl<'a> MsgSend for GetGroupMetrics<'a> {
 /// [`LVM_GETGROUPRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgrouprect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupRect<'a> {
 	pub id: u32,
@@ -765,7 +765,7 @@ pub struct GetGroupRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetGroupRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -811,12 +811,12 @@ unsafe impl MsgSend for GetGroupState {
 /// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<HWND>`.
+/// Return type: `SysResult<HWND>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHeader {}
 
 unsafe impl MsgSend for GetHeader {
-	type RetType = WinResult<HWND>;
+	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HWND(p as _))
@@ -834,12 +834,12 @@ unsafe impl MsgSend for GetHeader {
 /// [`LVM_GETHOTCURSOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gethotcursor)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<HCURSOR>`.
+/// Return type: `SysResult<HCURSOR>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHotCursor {}
 
 unsafe impl MsgSend for GetHotCursor {
-	type RetType = WinResult<HCURSOR>;
+	type RetType = SysResult<HCURSOR>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HCURSOR(p as _))
@@ -928,14 +928,14 @@ unsafe impl MsgSend for GetImageList {
 /// [`LVM_GETINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getinsertmark)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMark<'a> {
 	pub info: &'a mut LVINSERTMARK,
 }
 
 unsafe impl<'a> MsgSend for GetInsertMark<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -1026,14 +1026,14 @@ unsafe impl<'a> MsgSend for GetISearchString<'a> {
 /// [`LVM_GETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItem<'a, 'b> {
 	pub lvitem: &'b mut LVITEM<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -1074,7 +1074,7 @@ unsafe impl MsgSend for GetItemCount {
 /// [`LVM_GETITEMINDEXRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemindexrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemIndexRect<'a, 'b> {
 	pub lvitemindex: &'a LVITEMINDEX,
@@ -1084,7 +1084,7 @@ pub struct GetItemIndexRect<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for GetItemIndexRect<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -1105,7 +1105,7 @@ unsafe impl<'a, 'b> MsgSend for GetItemIndexRect<'a, 'b> {
 /// [`LVM_GETITEMPOSITION`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemposition)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemPosition<'a> {
 	pub index: u32,
@@ -1113,7 +1113,7 @@ pub struct GetItemPosition<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetItemPosition<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -1131,7 +1131,7 @@ unsafe impl<'a> MsgSend for GetItemPosition<'a> {
 /// [`LVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemRect<'a> {
 	pub index: u32,
@@ -1140,7 +1140,7 @@ pub struct GetItemRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetItemRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -1440,14 +1440,14 @@ unsafe impl MsgSend for GetSelectionMark {
 /// [`LVM_GETSTRINGWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getstringwidth)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetStringWidth {
 	pub text: WString,
 }
 
 unsafe impl MsgSend for GetStringWidth {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|len| len as _)
@@ -1465,7 +1465,7 @@ unsafe impl MsgSend for GetStringWidth {
 /// [`LVM_GETSUBITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getsubitemrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSubItemRect<'a> {
 	pub item_index: u32,
@@ -1475,7 +1475,7 @@ pub struct GetSubItemRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetSubItemRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -1687,14 +1687,14 @@ unsafe impl MsgSend for GetView {
 /// [`LVM_GETVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getviewrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetViewRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
 unsafe impl<'a> MsgSend for GetViewRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -1790,7 +1790,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// [`LVM_INSERTCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertcolumn)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertColumn<'a, 'b> {
 	pub index: u32,
@@ -1798,7 +1798,7 @@ pub struct InsertColumn<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -1819,14 +1819,14 @@ unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 /// [`LVM_INSERTGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertgroup)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub lvgroup: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
 unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -1872,14 +1872,14 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b
 /// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertItem<'a, 'b> {
 	pub lvitem: &'b LVITEM<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -1900,7 +1900,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// [`LVM_INSERTMARKHITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertmarkhittest)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertMarkHitTest<'a> {
 	pub point: POINT,
@@ -1908,7 +1908,7 @@ pub struct InsertMarkHitTest<'a> {
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2030,7 +2030,7 @@ unsafe impl MsgSend for MapIndexToId {
 /// [`LVM_REDRAWITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-redrawitems)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct RedrawItems {
 	pub first_index: u32,
@@ -2038,7 +2038,7 @@ pub struct RedrawItems {
 }
 
 unsafe impl MsgSend for RedrawItems {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2057,20 +2057,20 @@ pub_struct_msg_empty! { RemoveAllGroups: co::LVM::REMOVEALLGROUPS.into(); "comct
 	/// [`LVM_REMOVEALLGROUPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-removeallgroups)
 	/// message, which has no parameters.
 	///
-	/// Return type: `WinResult<()>`.
+	/// Return type: `SysResult<()>`.
 }
 
 /// [`LVM_REMOVEGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-removegroup)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct RemoveGroup {
 	pub id: u32,
 }
 
 unsafe impl MsgSend for RemoveGroup {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|id| id as _)
@@ -2088,7 +2088,7 @@ unsafe impl MsgSend for RemoveGroup {
 /// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Scroll {
 	pub horizontal: i32,
@@ -2096,7 +2096,7 @@ pub struct Scroll {
 }
 
 unsafe impl MsgSend for Scroll {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2114,14 +2114,14 @@ unsafe impl MsgSend for Scroll {
 /// [`LVM_SETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setbkcolor)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBkColor {
 	pub color: Option<COLORREF>,
 }
 
 unsafe impl MsgSend for SetBkColor {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2139,14 +2139,14 @@ unsafe impl MsgSend for SetBkColor {
 /// [`LVM_SETBKIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setbkimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBkImage<'a, 'b> {
 	pub lvbkimage: &'b LVBKIMAGE<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for SetBkImage<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2164,14 +2164,14 @@ unsafe impl<'a, 'b> MsgSend for SetBkImage<'a, 'b> {
 /// [`LVM_SETCALLBACKMASK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcallbackmask)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCallbackMask {
 	pub mask: co::LVIS,
 }
 
 unsafe impl MsgSend for SetCallbackMask {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2189,7 +2189,7 @@ unsafe impl MsgSend for SetCallbackMask {
 /// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetColumn<'a, 'b> {
 	pub index: u32,
@@ -2197,7 +2197,7 @@ pub struct SetColumn<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2215,14 +2215,14 @@ unsafe impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 /// [`LVM_SETCOLUMNORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnorderarray)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetColumnOrderArray<'a> {
 	pub order: &'a [u32],
 }
 
 unsafe impl<'a> MsgSend for SetColumnOrderArray<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2240,7 +2240,7 @@ unsafe impl<'a> MsgSend for SetColumnOrderArray<'a> {
 /// [`LVM_SETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnwidth)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetColumnWidth {
 	pub index: u32,
@@ -2248,7 +2248,7 @@ pub struct SetColumnWidth {
 }
 
 unsafe impl MsgSend for SetColumnWidth {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2292,7 +2292,7 @@ unsafe impl MsgSend for SetExtendedListViewStyle {
 /// [`LVM_SETGROUPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setgroupinfo)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub id: u32,
@@ -2300,7 +2300,7 @@ pub struct SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 }
 
 unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -2478,14 +2478,14 @@ unsafe impl MsgSend for SetImageList {
 /// [`LVM_SETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinfotip)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetInfoTip<'a, 'b> {
 	pub info: &'b LVSETINFOTIP<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for SetInfoTip<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2503,14 +2503,14 @@ unsafe impl<'a, 'b> MsgSend for SetInfoTip<'a, 'b> {
 /// [`LVM_SETINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinsertmark)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetInsertMark<'a> {
 	pub info: &'a LVINSERTMARK,
 }
 
 unsafe impl<'a> MsgSend for SetInsertMark<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2553,14 +2553,14 @@ unsafe impl MsgSend for SetInsertMarkColor {
 /// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItem<'a, 'b> {
 	pub lvitem: &'b LVITEM<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2578,7 +2578,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// [`LVM_SETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemcount)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemCount {
 	pub count: u32,
@@ -2586,7 +2586,7 @@ pub struct SetItemCount {
 }
 
 unsafe impl MsgSend for SetItemCount {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2604,7 +2604,7 @@ unsafe impl MsgSend for SetItemCount {
 /// [`LVM_SETITEMPOSITION`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemposition)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemPosition {
 	pub index: u32,
@@ -2612,7 +2612,7 @@ pub struct SetItemPosition {
 }
 
 unsafe impl MsgSend for SetItemPosition {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2656,7 +2656,7 @@ unsafe impl MsgSend for SetItemPosition32 {
 /// [`LVM_SETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemstate)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemState<'a, 'b> {
 	pub index: Option<u32>,
@@ -2664,7 +2664,7 @@ pub struct SetItemState<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2682,7 +2682,7 @@ unsafe impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 /// [`LVM_SETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemText<'a, 'b> {
 	pub index: u32,
@@ -2690,7 +2690,7 @@ pub struct SetItemText<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2786,14 +2786,14 @@ unsafe impl MsgSend for SetSelectionMark {
 /// [`LVM_SETTEXTBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settextbkcolor)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTextBkColor {
 	pub color: Option<COLORREF>,
 }
 
 unsafe impl MsgSend for SetTextBkColor {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2811,14 +2811,14 @@ unsafe impl MsgSend for SetTextBkColor {
 /// [`LVM_SETTEXTCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settextcolor)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTextColor {
 	pub color: Option<COLORREF>,
 }
 
 unsafe impl MsgSend for SetTextColor {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2836,14 +2836,14 @@ unsafe impl MsgSend for SetTextColor {
 /// [`LVM_SETTILEINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settileinfo)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTileInfo<'a, 'b> {
 	pub info: &'b LVTILEINFO<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for SetTileInfo<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2861,14 +2861,14 @@ unsafe impl<'a, 'b> MsgSend for SetTileInfo<'a, 'b> {
 /// [`LVM_SETTILEVIEWINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settileviewinfo)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTileViewInfo<'a> {
 	pub info: &'a LVTILEVIEWINFO,
 }
 
 unsafe impl<'a> MsgSend for SetTileViewInfo<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -2936,14 +2936,14 @@ unsafe impl MsgSend for SetUnicodeFormat {
 /// [`LVM_SETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setview)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetView {
 	pub view: co::LV_VIEW,
 }
 
 unsafe impl MsgSend for SetView {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -2989,7 +2989,7 @@ unsafe impl<'a> MsgSend for SetWorkAreas<'a> {
 /// [`LVM_SORTGROUPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortgroups)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortGroups {
 	pub callback: Option<PFNLVGROUPCOMPARE>,
@@ -2997,7 +2997,7 @@ pub struct SortGroups {
 }
 
 unsafe impl MsgSend for SortGroups {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -3015,7 +3015,7 @@ unsafe impl MsgSend for SortGroups {
 /// [`LVM_SORTITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortitems)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortItems {
 	pub param: isize,
@@ -3023,7 +3023,7 @@ pub struct SortItems {
 }
 
 unsafe impl MsgSend for SortItems {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -3041,7 +3041,7 @@ unsafe impl MsgSend for SortItems {
 /// [`LVM_SORTITEMSEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortitemsex)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortItemsEx {
 	pub param: isize,
@@ -3049,7 +3049,7 @@ pub struct SortItemsEx {
 }
 
 unsafe impl MsgSend for SortItemsEx {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -3095,14 +3095,14 @@ unsafe impl<'a> MsgSend for SubItemHitTest<'a> {
 /// [`LVM_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-update)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Update {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for Update {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

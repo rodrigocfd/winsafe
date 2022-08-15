@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, HFILEMAPVIEW, WinResult};
+use crate::kernel::decl::{GetLastError, HFILEMAPVIEW, SysResult};
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HFILEMAP: "kernel";
@@ -33,7 +33,7 @@ pub trait kernel_Hfilemap: Handle {
 	fn MapViewOfFile(self,
 		desired_access: co::FILE_MAP,
 		offset: u64,
-		number_of_bytes_to_map: Option<usize>) -> WinResult<HFILEMAPVIEW>
+		number_of_bytes_to_map: Option<usize>) -> SysResult<HFILEMAPVIEW>
 	{
 		unsafe {
 			kernel::ffi::MapViewOfFileFromApp(

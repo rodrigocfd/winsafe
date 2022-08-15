@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{File, FileAccess, HFILEMAP, HFILEMAPVIEW, WinResult};
+use crate::kernel::decl::{File, FileAccess, HFILEMAP, HFILEMAPVIEW, SysResult};
 use crate::prelude::{
 	Handle, HandleClose, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
 };
@@ -26,7 +26,7 @@ impl FileMapped {
 	/// Opens a file with the desired access, then map its contents in memory.
 	#[must_use]
 	pub fn open(
-		file_path: &str, access: FileAccess) -> WinResult<FileMapped>
+		file_path: &str, access: FileAccess) -> SysResult<FileMapped>
 	{
 		let mut new_self = Self {
 			access,
@@ -40,7 +40,7 @@ impl FileMapped {
 		Ok(new_self)
 	}
 
-	fn map_in_memory(&mut self) -> WinResult<()> {
+	fn map_in_memory(&mut self) -> SysResult<()> {
 		self.hmap = self.file.hfile().CreateFileMapping(
 			None,
 			match self.access {
@@ -83,7 +83,7 @@ impl FileMapped {
 	/// must be recreated. The following functions must be called again:
 	/// * [`as_mut_slice`](crate::FileMapped::as_mut_slice);
 	/// * [`as_slice`](crate::FileMapped::as_slice).
-	pub fn resize(&mut self, num_bytes: usize) -> WinResult<()> {
+	pub fn resize(&mut self, num_bytes: usize) -> SysResult<()> {
 		self.hview.UnmapViewOfFile()?;
 		self.hmap.CloseHandle()?;
 

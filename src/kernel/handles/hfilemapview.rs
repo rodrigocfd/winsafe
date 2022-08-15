@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
-use crate::kernel::decl::WinResult;
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
 impl_handle! { HFILEMAPVIEW: "kernel";
@@ -84,7 +84,7 @@ pub trait kernel_Hfilemapview: Handle {
 
 	/// [`UnmapViewOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
 	/// method.
-	fn UnmapViewOfFile(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel::ffi::UnmapViewOfFile(self.as_ptr()) })
+	fn UnmapViewOfFile(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { kernel::ffi::UnmapViewOfFile(self.as_ptr()) })
 	}
 }

@@ -2,8 +2,8 @@
 
 use crate::comctl;
 use crate::comctl::decl::SUBCLASSPROC;
-use crate::kernel::decl::WinResult;
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::HWND;
 
@@ -42,9 +42,9 @@ pub trait comctl_Hwnd: Handle {
 	/// [`RemoveWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
 	/// method.
 	fn RemoveWindowSubclass(self,
-		subclass_func: SUBCLASSPROC, subclass_id: usize) -> WinResult<()>
+		subclass_func: SUBCLASSPROC, subclass_id: usize) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::RemoveWindowSubclass(
 					self.as_ptr(),
@@ -59,9 +59,9 @@ pub trait comctl_Hwnd: Handle {
 	/// method.
 	fn SetWindowSubclass(self,
 		subclass_proc: SUBCLASSPROC,
-		subclass_id: usize, ref_data: usize) -> WinResult<()>
+		subclass_id: usize, ref_data: usize) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::SetWindowSubclass(
 					self.as_ptr(),

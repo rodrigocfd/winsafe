@@ -1,13 +1,13 @@
 #![allow(non_snake_case)]
 
-use crate::{co, DISPLAY_DEVICE, user};
+use crate::{co, user};
 use crate::ffi_types::BOOL;
-use crate::kernel::decl::{GetLastError, HINSTANCE, WinResult, WString};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult, WString};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::MsgSend;
 use crate::user::decl::{
-	ATOM, COLORREF, DEVMODE, GmidxEnum, GUITHREADINFO, HWND, MSG, POINT, RECT,
-	SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
+	ATOM, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO, HWND,
+	MSG, POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
 };
 use crate::user::privs::ASFW_ANY;
 
@@ -16,9 +16,9 @@ use crate::user::privs::ASFW_ANY;
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn AdjustWindowRectEx(
 	rc: &mut RECT, style: co::WS,
-	has_menu: bool, ex_style: co::WS_EX) -> WinResult<()>
+	has_menu: bool, ex_style: co::WS_EX) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			user::ffi::AdjustWindowRectEx(
 				rc as *mut _ as _,
@@ -33,8 +33,8 @@ pub fn AdjustWindowRectEx(
 /// [`AllowSetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-allowsetforegroundwindow)
 /// function
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn AllowSetForegroundWindow(process_id: Option<u32>) -> WinResult<()> {
-	bool_to_winresult(
+pub fn AllowSetForegroundWindow(process_id: Option<u32>) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe {
 			user::ffi::AllowSetForegroundWindow(process_id.unwrap_or(ASFW_ANY))
 		},
@@ -53,9 +53,9 @@ pub fn AnyPopup() -> bool {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn AttachThreadInput(
-	attach_id: u32, attach_to_id: u32, do_attach: bool) -> WinResult<()>
+	attach_id: u32, attach_to_id: u32, do_attach: bool) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			user::ffi::AttachThreadInput(attach_id, attach_to_id, do_attach as _)
 		},
@@ -111,8 +111,8 @@ pub fn ChangeDisplaySettingsEx(
 /// [`ClipCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn ClipCursor(rc: Option<&RECT>) -> WinResult<()> {
-	bool_to_winresult(
+pub fn ClipCursor(rc: Option<&RECT>) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe {
 			user::ffi::ClipCursor(
 				rc.map_or(std::ptr::null(), |lp| lp as *const _ as _),
@@ -124,8 +124,8 @@ pub fn ClipCursor(rc: Option<&RECT>) -> WinResult<()> {
 /// [`CloseClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn CloseClipboard() -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::CloseClipboard() })
+pub fn CloseClipboard() -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::CloseClipboard() })
 }
 
 /// [`DispatchMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
@@ -141,15 +141,15 @@ pub unsafe fn DispatchMessage(msg: &MSG) -> isize {
 /// [`EmptyClipboard`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn EmptyClipboard() -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::EmptyClipboard() })
+pub fn EmptyClipboard() -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::EmptyClipboard() })
 }
 
 /// [`EndMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endmenu)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn EndMenu() -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::EndMenu() })
+pub fn EndMenu() -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::EndMenu() })
 }
 
 /// [`EnumDisplayDevices`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw)
@@ -184,7 +184,7 @@ pub fn EnumDisplayDevices(
 	device_name: Option<&str>,
 	device_num: u32,
 	display_device: &mut DISPLAY_DEVICE,
-	flags: co::EDD) -> WinResult<bool>
+	flags: co::EDD) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::EnumDisplayDevicesW(
@@ -261,7 +261,7 @@ pub fn EnumDisplayDevices(
 pub fn EnumDisplaySettings(
 	device_name: Option<&str>,
 	mode_num: GmidxEnum,
-	dev_mode: &mut DEVMODE) -> WinResult<bool>
+	dev_mode: &mut DEVMODE) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::EnumDisplaySettingsW(
@@ -285,7 +285,7 @@ pub fn EnumDisplaySettingsEx(
 	device_name: Option<&str>,
 	mode_num: GmidxEnum,
 	dev_mode: &mut DEVMODE,
-	flags: co::EDS) -> WinResult<bool>
+	flags: co::EDS) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::EnumDisplaySettingsExW(
@@ -319,10 +319,10 @@ pub fn EnumDisplaySettingsEx(
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn EnumWindows<F>(func: F) -> WinResult<()>
+pub fn EnumWindows<F>(func: F) -> SysResult<()>
 	where F: Fn(HWND) -> bool,
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			user::ffi::EnumWindows(
 				enum_windows_proc::<F> as _,
@@ -358,9 +358,9 @@ pub fn GetClipboardSequenceNumber() -> u32 {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[must_use]
-pub fn GetClipCursor() -> WinResult<RECT> {
+pub fn GetClipCursor() -> SysResult<RECT> {
 	let mut rc = RECT::default();
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe { user::ffi::GetClipCursor(&mut rc as *mut _ as _) },
 	).map(|_| rc)
 }
@@ -369,9 +369,9 @@ pub fn GetClipCursor() -> WinResult<RECT> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[must_use]
-pub fn GetCursorPos() -> WinResult<POINT> {
+pub fn GetCursorPos() -> SysResult<POINT> {
 	let mut pt = POINT::default();
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe { user::ffi::GetCursorPos(&mut pt as *mut _ as _) },
 	).map(|_| pt)
 }
@@ -414,9 +414,9 @@ pub fn GetDoubleClickTime() -> u32 {
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn GetGUIThreadInfo(
-	thread_id: u32, gti: &mut GUITHREADINFO) -> WinResult<()>
+	thread_id: u32, gti: &mut GUITHREADINFO) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe { user::ffi::GetGUIThreadInfo(thread_id, gti as *mut _ as _) }
 	)
 }
@@ -426,7 +426,7 @@ pub fn GetGUIThreadInfo(
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn GetMessage(
 	msg: &mut MSG, hwnd: Option<HWND>,
-	msg_filter_min: u32, msg_filter_max: u32) -> WinResult<bool>
+	msg_filter_min: u32, msg_filter_max: u32) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::GetMessageW(
@@ -503,7 +503,7 @@ pub fn InSendMessageEx() -> co::ISMEX {
 /// [`IsGUIThread`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn IsGUIThread(convert_to_gui_thread: bool) -> WinResult<bool> {
+pub fn IsGUIThread(convert_to_gui_thread: bool) -> SysResult<bool> {
 	let r = unsafe { user::ffi::IsGUIThread(convert_to_gui_thread as _) };
 	if convert_to_gui_thread {
 		match r {
@@ -527,8 +527,8 @@ pub fn IsWow64Message() -> bool {
 /// [`LockSetForegroundWindow`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> WinResult<()> {
-	bool_to_winresult(
+pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe { user::ffi::LockSetForegroundWindow(lock_code.0) },
 	)
 }
@@ -561,12 +561,12 @@ pub fn PostQuitMessage(exit_code: i32) {
 /// [`PostThreadMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> WinResult<()>
+pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 	where M: MsgSend + Send + Copy + 'static,
 {
 	let mut msg = msg;
 	let wm_any = msg.as_generic_wm();
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			user::ffi::PostThreadMessageW(
 				thread_id, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
@@ -578,7 +578,7 @@ pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> WinResult<()>
 /// [`RegisterClassEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn RegisterClassEx(wcx: &WNDCLASSEX) -> WinResult<ATOM> {
+pub fn RegisterClassEx(wcx: &WNDCLASSEX) -> SysResult<ATOM> {
 	match unsafe { user::ffi::RegisterClassExW(wcx as *const _ as _) } {
 		0 => Err(GetLastError()),
 		atom => Ok(ATOM(atom)),
@@ -588,15 +588,15 @@ pub fn RegisterClassEx(wcx: &WNDCLASSEX) -> WinResult<ATOM> {
 /// [`ReleaseCapture`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn ReleaseCapture() -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::ReleaseCapture() })
+pub fn ReleaseCapture() -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::ReleaseCapture() })
 }
 
 /// [`SetCaretBlinkTime`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn SetCaretBlinkTime(milliseconds: u32) -> WinResult<()> {
-	bool_to_winresult(
+pub fn SetCaretBlinkTime(milliseconds: u32) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe { user::ffi::SetCaretBlinkTime(milliseconds) },
 	)
 }
@@ -604,14 +604,14 @@ pub fn SetCaretBlinkTime(milliseconds: u32) -> WinResult<()> {
 /// [`SetCaretPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretpos)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn SetCaretPos(x: i32, y: i32) -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::SetCaretPos(x, y) })
+pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::SetCaretPos(x, y) })
 }
 
 /// [`SetClipboardData`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn SetClipboardData(format: co::CF, hmem: *mut u8) -> WinResult<*mut u8> {
+pub fn SetClipboardData(format: co::CF, hmem: *mut u8) -> SysResult<*mut u8> {
 	unsafe { user::ffi::SetClipboardData(format.0, hmem as _).as_mut() }
 		.map(|hmem| hmem as *mut _ as _)
 		.ok_or_else(|| GetLastError())
@@ -620,15 +620,15 @@ pub fn SetClipboardData(format: co::CF, hmem: *mut u8) -> WinResult<*mut u8> {
 /// [`SetCursorPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn SetCursorPos(x: i32, y: i32) -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::SetCursorPos(x, y) })
+pub fn SetCursorPos(x: i32, y: i32) -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::SetCursorPos(x, y) })
 }
 
 /// [`SetProcessDPIAware`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn SetProcessDPIAware() -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::SetProcessDPIAware() })
+pub fn SetProcessDPIAware() -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::SetProcessDPIAware() })
 }
 
 /// [`ShowCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)
@@ -655,9 +655,9 @@ pub unsafe fn SystemParametersInfo<T>(
 	action: co::SPI,
 	ui_param: u32,
 	pv_param: &mut T,
-	win_ini: co::SPIF) -> WinResult<()>
+	win_ini: co::SPIF) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		user::ffi::SystemParametersInfoW(
 			action.0,
 			ui_param,
@@ -670,8 +670,8 @@ pub unsafe fn SystemParametersInfo<T>(
 /// [`TrackMouseEvent`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn TrackMouseEvent(tme: &mut TRACKMOUSEEVENT) -> WinResult<()> {
-	bool_to_winresult(
+pub fn TrackMouseEvent(tme: &mut TRACKMOUSEEVENT) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe { user::ffi::TrackMouseEvent(tme as *mut _ as _) },
 	)
 }
@@ -686,8 +686,8 @@ pub fn TranslateMessage(msg: &MSG) -> bool {
 /// [`UnregisterClass`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
-	bool_to_winresult(
+pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe {
 			user::ffi::UnregisterClassW(
 				WString::from_str(class_name).as_ptr(),
@@ -700,6 +700,6 @@ pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> WinResult<()> {
 /// [`WaitMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitmessage)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn WaitMessage() -> WinResult<()> {
-	bool_to_winresult(unsafe { user::ffi::WaitMessage() })
+pub fn WaitMessage() -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::WaitMessage() })
 }

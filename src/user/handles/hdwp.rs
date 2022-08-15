@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
-use crate::kernel::decl::{GetLastError, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -30,7 +30,7 @@ pub trait user_Hdwp: Handle {
 	/// [`HDWP::EndDeferWindowPos`](crate::prelude::user_Hdwp::EndDeferWindowPos)
 	/// call.
 	#[must_use]
-	fn BeginDeferWindowPos(num_windows: u32) -> WinResult<HDWP> {
+	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<HDWP> {
 		unsafe { user::ffi::BeginDeferWindowPos(num_windows as _).as_mut() }
 			.map(|ptr| HDWP(ptr))
 			.ok_or_else(|| GetLastError())
@@ -40,7 +40,7 @@ pub trait user_Hdwp: Handle {
 	/// method.
 	fn DeferWindowPos(self,
 		hwnd: HWND, hwnd_insert_after: HwndPlace,
-		top_left: POINT, sz: SIZE, flags: co::SWP) -> WinResult<HDWP>
+		top_left: POINT, sz: SIZE, flags: co::SWP) -> SysResult<HDWP>
 	{
 		unsafe {
 			user::ffi::DeferWindowPos(
@@ -56,7 +56,7 @@ pub trait user_Hdwp: Handle {
 
 	/// [`EndDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// method.
-	fn EndDeferWindowPos(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { user::ffi::EndDeferWindowPos(self.as_ptr()) })
+	fn EndDeferWindowPos(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { user::ffi::EndDeferWindowPos(self.as_ptr()) })
 	}
 }

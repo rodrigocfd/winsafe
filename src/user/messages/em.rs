@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{HIWORD, HLOCAL, LOWORD, WinResult, WString};
+use crate::kernel::decl::{HIWORD, HLOCAL, LOWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{EDITWORDBREAKPROC, POINT, RECT, SIZE};
@@ -311,14 +311,14 @@ unsafe impl MsgSend for GetPasswordChar {
 /// [`EM_GETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
 unsafe impl<'a> MsgSend for GetRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -590,14 +590,14 @@ unsafe impl MsgSend for ReplaceSel {
 /// [`EM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-scroll)
 /// message parameters.
 ///
-/// Return type: `WinResult<u16>`.
+/// Return type: `SysResult<u16>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Scroll {
 	pub action: co::SB_EM,
 }
 
 unsafe impl MsgSend for Scroll {
-	type RetType = WinResult<u16>;
+	type RetType = SysResult<u16>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|num_lines| num_lines as _)
@@ -770,14 +770,14 @@ unsafe impl MsgSend for SetPasswordChar {
 /// [`EM_SETREADONLY`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setreadonly)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetReadOnly {
 	pub read_only: bool,
 }
 
 unsafe impl MsgSend for SetReadOnly {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -873,14 +873,14 @@ unsafe impl MsgSend for SetSel {
 /// [`EM_SETTABSTOPS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-settabstops)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetTabStops<'a> {
 	pub tab_stops: Option<&'a [i32]>,
 }
 
 unsafe impl<'a> MsgSend for SetTabStops<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -923,12 +923,12 @@ unsafe impl MsgSend for SetWordBreakProc {
 /// [`EM_UNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-undo)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Undo {}
 
 unsafe impl MsgSend for Undo {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

@@ -9,8 +9,8 @@ use crate::co;
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
-/// A [`Result` alias](crate#errors-and-result-aliases) for Win32 operations,
-/// which returns an [`ERROR`](crate::co::ERROR) on failure.
+/// A [`Result` alias](crate#errors-and-result-aliases) for native system error
+/// codes, which returns an [`ERROR`](crate::co::ERROR) on failure.
 ///
 /// # Examples
 ///
@@ -18,11 +18,11 @@ pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{co, AnyResult, WinResult};
+/// use winsafe::{co, AnyResult, SysResult};
 ///
-/// let win_result: WinResult<()> = Err(co::ERROR::SUCCESS);
+/// let sys_result: SysResult<()> = Err(co::ERROR::SUCCESS);
 ///
 /// let err_result: AnyResult<()> = win_result.map_err(|err| err.into());
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub type WinResult<T> = Result<T, co::ERROR>;
+pub type SysResult<T> = Result<T, co::ERROR>;

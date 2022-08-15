@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{HFILE, WinResult};
+use crate::kernel::decl::{HFILE, SysResult};
 use crate::prelude::{HandleClose, kernel_Hfile};
 
 /// Access types for [`File::open`](crate::File::open) and
@@ -38,7 +38,7 @@ impl Drop for File {
 impl File {
 	/// Opens a file with the desired access.
 	#[must_use]
-	pub fn open(file_path: &str, access: FileAccess) -> WinResult<File> {
+	pub fn open(file_path: &str, access: FileAccess) -> SysResult<File> {
 		let (acc, share, disp) = match access {
 			FileAccess::ExistingReadOnly =>  (
 				co::GENERIC::READ,
@@ -65,7 +65,7 @@ impl File {
 	/// Erases the file content, then writes the new bytes.
 	///
 	/// The internal file pointer will be rewound to the beginning of the file.
-	pub fn erase_and_write(&self, data: &[u8]) -> WinResult<()> {
+	pub fn erase_and_write(&self, data: &[u8]) -> SysResult<()> {
 		self.resize(data.len())?;
 		self.write(data)?;
 		self.rewind_pointer()
@@ -79,7 +79,7 @@ impl File {
 
 	/// Returns the current offset of the internal pointer.
 	#[must_use]
-	pub fn pointer_offset(&self) -> WinResult<usize> {
+	pub fn pointer_offset(&self) -> SysResult<usize> {
 		self.hfile.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021/6923555
 			.map(|off| off as _)
 	}
@@ -88,7 +88,7 @@ impl File {
 	///
 	/// Note that the bytes will start being read from the current offset of the
 	/// internal file pointer, which is then incremented by `num_bytes`.
-	pub fn read(&self, buffer: &mut [u8]) -> WinResult<usize> {
+	pub fn read(&self, buffer: &mut [u8]) -> SysResult<usize> {
 		self.hfile.ReadFile(buffer, None)
 			.map(|n| n as _)
 	}
@@ -97,7 +97,7 @@ impl File {
 	///
 	/// The internal file pointer will be rewound to the beginning of the file.
 	#[must_use]
-	pub fn read_all(&self) -> WinResult<Vec<u8>> {
+	pub fn read_all(&self) -> SysResult<Vec<u8>> {
 		self.rewind_pointer()?;
 		let mut data: Vec<u8> = vec![0; self.size()?];
 		let bytes_read = self.read(&mut data)?;
@@ -108,27 +108,27 @@ impl File {
 
 	/// Truncates or expands the file, according to the new size. Zero will empty
 	/// the file.
-	pub fn resize(&self, num_bytes: usize) -> WinResult<()> {
+	pub fn resize(&self, num_bytes: usize) -> SysResult<()> {
 		self.hfile.SetFilePointerEx(num_bytes as _, co::FILE_STARTING_POINT::BEGIN)?;
 		self.hfile.SetEndOfFile()?;
 		self.rewind_pointer()
 	}
 
 	/// Rewinds the internal file pointer to the beginning of the file.
-	pub fn rewind_pointer(&self) -> WinResult<()> {
+	pub fn rewind_pointer(&self) -> SysResult<()> {
 		self.hfile.SetFilePointerEx(0, co::FILE_STARTING_POINT::BEGIN)?;
 		Ok(())
 	}
 
 	/// Returns the size of the file.
 	#[must_use]
-	pub fn size(&self) -> WinResult<usize> {
+	pub fn size(&self) -> SysResult<usize> {
 		self.hfile.GetFileSizeEx()
 	}
 
 	/// Writes the given bytes. The content will be written at the position
 	/// currently pointed by the internal file pointer.
-	pub fn write(&self, data: &[u8]) -> WinResult<()> {
+	pub fn write(&self, data: &[u8]) -> SysResult<()> {
 		self.hfile.WriteFile(data, None)?;
 		Ok(())
 	}

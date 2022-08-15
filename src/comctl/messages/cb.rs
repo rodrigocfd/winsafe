@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{WinResult, WString};
+use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
@@ -7,14 +7,14 @@ use crate::user::privs::zero_as_err;
 /// [`CB_GETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcuebanner)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
 unsafe impl<'a> MsgSend for GetCueBanner<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -58,14 +58,14 @@ unsafe impl MsgSend for GetMinVisible {
 /// [`CB_SETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setcuebanner)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCueBanner {
 	pub text: WString,
 }
 
 unsafe impl MsgSend for SetCueBanner {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
@@ -86,14 +86,14 @@ unsafe impl MsgSend for SetCueBanner {
 /// [`CB_SETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setminvisible)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMinVisible {
 	pub num_items: u32,
 }
 
 unsafe impl MsgSend for SetMinVisible {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

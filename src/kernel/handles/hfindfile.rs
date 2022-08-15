@@ -2,9 +2,9 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	GetLastError, path, WIN32_FIND_DATA, WinResult, WString,
+	GetLastError, path, SysResult, WIN32_FIND_DATA, WString,
 };
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
 impl_handle! { HFINDFILE: "kernel";
@@ -52,23 +52,23 @@ pub trait kernel_Hfindfile: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{HFINDFILE, WinResult};
+	/// use winsafe::{HFINDFILE, SysResult};
 	///
 	/// let file_paths = HFINDFILE::iter("")
-	///     .collect::<WinResult<Vec<_>>>()?;
+	///     .collect::<SysResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
 	fn iter<'a>(
-		path_and_pattern: &'a str) -> Box<dyn Iterator<Item = WinResult<String>> + 'a>
+		path_and_pattern: &'a str) -> Box<dyn Iterator<Item = SysResult<String>> + 'a>
 	{
 		Box::new(HfindfileIter::new(path_and_pattern))
 	}
 
 	/// [`FindClose`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
 	/// method.
-	fn FindClose(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel::ffi::FindClose(self.as_ptr()) })
+	fn FindClose(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { kernel::ffi::FindClose(self.as_ptr()) })
 	}
 
 	/// [`FindFirstFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
@@ -83,7 +83,7 @@ pub trait kernel_Hfindfile: Handle {
 	#[must_use]
 	fn FindFirstFile(
 		file_name: &str,
-		wfd: &mut WIN32_FIND_DATA) -> WinResult<(HFINDFILE, bool)>
+		wfd: &mut WIN32_FIND_DATA) -> SysResult<(HFINDFILE, bool)>
 	{
 		match unsafe {
 			kernel::ffi::FindFirstFileW(
@@ -104,7 +104,7 @@ pub trait kernel_Hfindfile: Handle {
 	///
 	/// This method is rather tricky, consider using
 	/// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
-	fn FindNextFile(self, wfd: &mut WIN32_FIND_DATA) -> WinResult<bool> {
+	fn FindNextFile(self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::FindNextFileW(self.as_ptr(), wfd as *mut _ as _)
 		} {
@@ -134,7 +134,7 @@ impl<'a> Drop for HfindfileIter<'a> {
 }
 
 impl<'a> Iterator for HfindfileIter<'a> {
-	type Item = WinResult<String>;
+	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.no_more {

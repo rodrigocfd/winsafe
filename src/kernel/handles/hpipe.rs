@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
-use crate::kernel::decl::{HFILE, OVERLAPPED, SECURITY_ATTRIBUTES, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{HFILE, OVERLAPPED, SECURITY_ATTRIBUTES, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, HandleClose, kernel_Hfile};
 
 impl_handle! { HPIPE: "kernel";
@@ -34,10 +34,10 @@ pub trait kernel_Hpipe: Handle {
 	#[must_use]
 	fn CreatePipe(
 		attrs: Option<&mut SECURITY_ATTRIBUTES>,
-		size: u32) -> WinResult<(HPIPE, HPIPE)>
+		size: u32) -> SysResult<(HPIPE, HPIPE)>
 	{
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::CreatePipe(
 					&mut hread.0,
@@ -55,7 +55,7 @@ pub trait kernel_Hpipe: Handle {
 	/// Returns the number of bytes read.
 	fn ReadFile(self,
 		buffer: &mut [u8],
-		overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
 		HFILE(unsafe { self.as_ptr() }).ReadFile(buffer, overlapped)
 	}
@@ -64,7 +64,7 @@ pub trait kernel_Hpipe: Handle {
 	/// method.
 	fn WriteFile(self,
 		data: &[u8],
-		overlapped: Option<&mut OVERLAPPED>) -> WinResult<u32>
+		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
 		HFILE(unsafe { self.as_ptr() }).WriteFile(data, overlapped)
 	}

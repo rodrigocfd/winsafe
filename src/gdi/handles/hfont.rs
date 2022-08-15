@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
-use crate::kernel::decl::{GetLastError, WinResult, WString};
+use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::SIZE;
 
@@ -36,7 +36,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 		char_set: co::CHARSET,
 		out_precision: co::OUT_PRECIS, clip_precision: co::CLIP,
 		quality: co::QUALITY, pitch_and_family: co::PITCH,
-		face_name: &str) -> WinResult<HFONT>
+		face_name: &str) -> SysResult<HFONT>
 	{
 		unsafe {
 			gdi::ffi::CreateFontW(
@@ -58,7 +58,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 	/// **Note:** Must be paired with an
 	/// [`HFONT::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
-	fn CreateFontIndirect(lf: &LOGFONT) -> WinResult<HFONT> {
+	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<HFONT> {
 		unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _).as_mut() }
 			.map(|ptr| HFONT(ptr))
 			.ok_or_else(|| GetLastError())
@@ -66,7 +66,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 
 	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
-	fn GetObject(self, lf: &mut LOGFONT) -> WinResult<()> {
+	fn GetObject(self, lf: &mut LOGFONT) -> SysResult<()> {
 		match unsafe {
 			gdi::ffi::GetObjectW(
 				self.as_ptr(),
@@ -82,7 +82,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
 	#[must_use]
-	fn GetStockObject(sf: co::STOCK_FONT) -> WinResult<HFONT> {
+	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
 		unsafe { gdi::ffi::GetStockObject(sf.0).as_mut() }
 			.map(|ptr| HFONT(ptr))
 			.ok_or_else(|| GetLastError())

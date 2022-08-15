@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
-use crate::kernel::decl::WinResult;
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{MONITORINFO, POINT, RECT};
 
@@ -39,8 +39,8 @@ pub trait user_Hmonitor: Handle {
 	/// hmon.GetMonitorInfo(&mut mi)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn GetMonitorInfo(self, mi: &mut MONITORINFO) -> WinResult<()> {
-		bool_to_winresult(
+	fn GetMonitorInfo(self, mi: &mut MONITORINFO) -> SysResult<()> {
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::GetMonitorInfoW(self.as_ptr(), mi as *mut _ as _)
 			},

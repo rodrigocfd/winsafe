@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::ffi_types::BOOL;
-use crate::kernel::decl::WinResult;
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::{HMONITOR, RECT};
@@ -46,10 +46,10 @@ pub trait user_Hdc: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn EnumDisplayMonitors<F>(self,
-		rc_clip: Option<RECT>, func: F) -> WinResult<()>
+		rc_clip: Option<RECT>, func: F) -> SysResult<()>
 		where F: Fn(HMONITOR, HDC, &RECT) -> bool,
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::EnumDisplayMonitors(
 					self.as_ptr(),

@@ -1,6 +1,6 @@
 use crate::co;
 use crate::comctl::decl::PBRANGE;
-use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, WinResult};
+use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
@@ -156,7 +156,7 @@ unsafe impl MsgSend for SetPos {
 /// [`PBM_SETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setrange)
 /// message parameters.
 ///
-/// Return type: `WinResult<(u16, u16)>`.
+/// Return type: `SysResult<(u16, u16)>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetRange {
 	pub min: u16,
@@ -164,7 +164,7 @@ pub struct SetRange {
 }
 
 unsafe impl MsgSend for SetRange {
-	type RetType = WinResult<(u16, u16)>;
+	type RetType = SysResult<(u16, u16)>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|v| (LOWORD(v as _), HIWORD(v as _)))

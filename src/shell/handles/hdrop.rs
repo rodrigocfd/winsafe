@@ -2,7 +2,7 @@
 
 use std::marker::PhantomData;
 
-use crate::kernel::decl::{GetLastError, WinResult, WString};
+use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::MAX_PATH;
 use crate::prelude::Handle;
 use crate::shell;
@@ -53,17 +53,17 @@ pub trait shell_Hdrop: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{HDROP, WinResult};
+	/// use winsafe::{HDROP, SysResult};
 	///
 	/// let hdrop: HDROP; // initialized somewhere
 	/// # let hdrop = HDROP::NULL;
 	///
 	/// let file_paths = hdrop.iter()?
-	///     .collect::<WinResult<Vec<_>>>()?;
+	///     .collect::<SysResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter<'a>(&'a self) -> WinResult<Box<dyn Iterator<Item = WinResult<String>> + 'a>> {
+	fn iter<'a>(&'a self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + 'a>> {
 		Ok(Box::new(DropsIter::new(HDROP(unsafe { self.as_ptr() }))?))
 	}
 
@@ -82,7 +82,7 @@ pub trait shell_Hdrop: Handle {
 	/// This method is rather tricky, consider using
 	/// [`HDROP::iter`](crate::prelude::shell_Hdrop::iter).
 	fn DragQueryFile(self,
-		ifile: Option<u32>, buf: Option<&mut WString>) -> WinResult<u32>
+		ifile: Option<u32>, buf: Option<&mut WString>) -> SysResult<u32>
 	{
 		let cch = buf.as_ref().map_or(0, |buf| buf.buffer_size());
 
@@ -129,7 +129,7 @@ impl<'a> Drop for DropsIter<'a> {
 }
 
 impl<'a> Iterator for DropsIter<'a> {
-	type Item = WinResult<String>;
+	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.count {
@@ -152,7 +152,7 @@ impl<'a> Iterator for DropsIter<'a> {
 }
 
 impl<'a> DropsIter<'a> {
-	fn new(hdrop: HDROP) -> WinResult<Self> {
+	fn new(hdrop: HDROP) -> SysResult<Self> {
 		Ok(Self {
 			hdrop,
 			buffer: WString::new_alloc_buffer(MAX_PATH + 1), // so we alloc just once

@@ -1,6 +1,6 @@
 use crate::co;
 use crate::comctl::decl::{ResStrs, TBADDBITMAP, TBBUTTON};
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
@@ -8,7 +8,7 @@ use crate::user::privs::zero_as_err;
 /// [`TB_ADDBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct AddBitmap<'a> {
 	pub num_images: u32,
@@ -16,7 +16,7 @@ pub struct AddBitmap<'a> {
 }
 
 unsafe impl<'a> MsgSend for AddBitmap<'a> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -37,14 +37,14 @@ unsafe impl<'a> MsgSend for AddBitmap<'a> {
 /// [`TB_ADDBUTTONS`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addbuttons)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct AddButtons<'a, 'b> {
 	pub buttons: &'a mut [TBBUTTON<'b>],
 }
 
 unsafe impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -62,14 +62,14 @@ unsafe impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 /// [`TB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addstring)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct AddString {
 	pub texts: ResStrs,
 }
 
 unsafe impl MsgSend for AddString {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {

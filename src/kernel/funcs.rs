@@ -5,23 +5,22 @@ use std::collections::HashMap;
 use crate::{co, kernel};
 use crate::ffi_types::BOOL;
 use crate::kernel::decl::{
-	MEMORYSTATUSEX, OSVERSIONINFOEX, STARTUPINFO, SYSTEM_INFO,
-	TIME_ZONE_INFORMATION, WinResult, WString,
+	FILETIME, MEMORYSTATUSEX, OSVERSIONINFOEX, STARTUPINFO, SysResult,
+	SYSTEM_INFO, SYSTEMTIME, TIME_ZONE_INFORMATION, WString,
 };
 use crate::kernel::privs::{
-	bool_to_winresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
+	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str,
 };
-use crate::kernel::structs::{FILETIME, SYSTEMTIME};
 
 /// [`CopyFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn CopyFile(
 	existing_file: &str, new_file: &str,
-	fail_if_exists: bool) -> WinResult<()>
+	fail_if_exists: bool) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::CopyFileW(
 				WString::from_str(existing_file).as_ptr(),
@@ -35,8 +34,8 @@ pub fn CopyFile(
 /// [`DeleteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub fn DeleteFile(file_name: &str) -> WinResult<()> {
-	bool_to_winresult(
+pub fn DeleteFile(file_name: &str) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::DeleteFileW(WString::from_str(file_name).as_ptr())
 		},
@@ -61,7 +60,7 @@ pub fn DeleteFile(file_name: &str) -> WinResult<()> {
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn ExpandEnvironmentStrings(src: &str) -> WinResult<String> {
+pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 	let wsrc = WString::from_str(src);
 	let len = unsafe {
 		kernel::ffi::ExpandEnvironmentStringsW(
@@ -88,9 +87,9 @@ pub fn ExpandEnvironmentStrings(src: &str) -> WinResult<String> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn FileTimeToSystemTime(
-	file_time: &FILETIME, system_time: &mut SYSTEMTIME) -> WinResult<()>
+	file_time: &FILETIME, system_time: &mut SYSTEMTIME) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::FileTimeToSystemTime(
 				file_time as *const _ as _,
@@ -104,9 +103,9 @@ pub fn FileTimeToSystemTime(
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetBinaryType(application_name: &str) -> WinResult<co::SCS> {
+pub fn GetBinaryType(application_name: &str) -> SysResult<co::SCS> {
 	let mut binary_type = co::SCS::default();
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::GetBinaryTypeW(
 				WString::from_str(application_name).as_ptr(),
@@ -131,11 +130,11 @@ pub fn GetCommandLine() -> String {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetComputerName() -> WinResult<String> {
+pub fn GetComputerName() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buffer(MAX_COMPUTERNAME_LENGTH + 1);
 	let mut sz = buf.buffer_size() as u32;
 
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe { kernel::ffi::GetComputerNameW(buf.as_mut_ptr(), &mut sz) },
 	).map(|_| buf.to_string())
 }
@@ -144,7 +143,7 @@ pub fn GetComputerName() -> WinResult<String> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetCurrentDirectory() -> WinResult<String> {
+pub fn GetCurrentDirectory() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
 	match unsafe {
 		kernel::ffi::GetCurrentDirectoryW(
@@ -196,7 +195,7 @@ pub fn GetCurrentThreadId() -> u32 {
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
+pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
 	unsafe { kernel::ffi::GetEnvironmentStringsW().as_mut() }
 		.map(|ptr| {
 			let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);
@@ -216,9 +215,9 @@ pub fn GetEnvironmentStrings() -> WinResult<HashMap<String, String>> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetFirmwareType() -> WinResult<co::FIRMWARE_TYPE> {
+pub fn GetFirmwareType() -> SysResult<co::FIRMWARE_TYPE> {
 	let mut ft = u32::default();
-	bool_to_winresult(unsafe { kernel::ffi::GetFirmwareType(&mut ft) })
+	bool_to_sysresult(unsafe { kernel::ffi::GetFirmwareType(&mut ft) })
 		.map(|_| co::FIRMWARE_TYPE(ft))
 }
 
@@ -234,7 +233,7 @@ pub fn GetLargePageMinimum() -> usize {
 /// function.
 ///
 /// This function is automatically called every time a
-/// [`WinResult`](crate::WinResult) evaluates to `Err`, so it's unlikely that
+/// [`SysResult`](crate::SysResult) evaluates to `Err`, so it's unlikely that
 /// you ever need to call it.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -246,7 +245,7 @@ pub fn GetLastError() -> co::ERROR {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetLogicalDriveStrings() -> WinResult<Vec<String>> {
+pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 	match unsafe {
 		kernel::ffi::GetLogicalDriveStringsW(0, std::ptr::null_mut())
 	} {
@@ -295,7 +294,7 @@ pub fn GetLogicalDriveStrings() -> WinResult<Vec<String>> {
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetFileAttributes(file_name: &str) -> WinResult<co::FILE_ATTRIBUTE> {
+pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 	const INVALID: u32 = INVALID_FILE_ATTRIBUTES as u32;
 	match unsafe {
 		kernel::ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr())
@@ -356,9 +355,9 @@ pub fn GetSystemTimePreciseAsFileTime(ft: &mut FILETIME) {
 pub fn GetSystemTimes(
 	idle_time: &mut FILETIME,
 	kernel_time: &mut FILETIME,
-	user_time: &mut FILETIME) -> WinResult<()>
+	user_time: &mut FILETIME) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::GetSystemTimes(
 				idle_time as *mut _ as _,
@@ -373,7 +372,7 @@ pub fn GetSystemTimes(
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetTempPath() -> WinResult<String> {
+pub fn GetTempPath() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
 	match unsafe {
 		kernel::ffi::GetTempPathW(buf.buffer_size() as _, buf.as_mut_ptr()) }
@@ -387,7 +386,7 @@ pub fn GetTempPath() -> WinResult<String> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn GetSystemDirectory() -> WinResult<String> {
+pub fn GetSystemDirectory() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
 	match unsafe {
 		kernel::ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buffer_size() as _)
@@ -446,7 +445,7 @@ pub fn GetVolumeInformation(
 	serial_number: Option<&mut u32>,
 	max_component_len: Option<&mut u32>,
 	file_system_flags: Option<&mut co::FILE_VOL>,
-	file_system_name: Option<&mut String>) -> WinResult<()>
+	file_system_name: Option<&mut String>) -> SysResult<()>
 {
 	let mut name_buf = match name {
 		None => (WString::default(), 0),
@@ -457,7 +456,7 @@ pub fn GetVolumeInformation(
 		Some(_) => (WString::new_alloc_buffer(MAX_PATH + 1), MAX_PATH + 1),
 	};
 
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::GetVolumeInformationW(
 				WString::from_opt_str(root_path_name).as_ptr(),
@@ -489,8 +488,8 @@ pub fn GetVolumeInformation(
 /// [`GlobalMemoryStatusEx`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> WinResult<()> {
-	bool_to_winresult(
+pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe { kernel::ffi::GlobalMemoryStatusEx(msx as *mut _ as _) },
 	)
 }
@@ -522,7 +521,7 @@ pub const fn HIWORD(v: u32) -> u16 {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn IsNativeVhdBoot() -> WinResult<bool> {
+pub fn IsNativeVhdBoot() -> SysResult<bool> {
 	let mut is_native: BOOL = 0;
 	match unsafe { kernel::ffi::IsNativeVhdBoot(&mut is_native) } {
 		0 => Err(GetLastError()),
@@ -534,7 +533,7 @@ pub fn IsNativeVhdBoot() -> WinResult<bool> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn IsWindows10OrGreater() -> WinResult<bool> {
+pub fn IsWindows10OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as _,
 		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as _,
@@ -546,7 +545,7 @@ pub fn IsWindows10OrGreater() -> WinResult<bool> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn IsWindows7OrGreater() -> WinResult<bool> {
+pub fn IsWindows7OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WIN7.0) as _,
 		LOBYTE(co::WIN32::WINNT_WIN7.0) as _,
@@ -558,7 +557,7 @@ pub fn IsWindows7OrGreater() -> WinResult<bool> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn IsWindows8OrGreater() -> WinResult<bool> {
+pub fn IsWindows8OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WIN8.0) as _,
 		LOBYTE(co::WIN32::WINNT_WIN8.0) as _,
@@ -570,7 +569,7 @@ pub fn IsWindows8OrGreater() -> WinResult<bool> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
+pub fn IsWindows8Point1OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_WINBLUE.0) as _,
 		LOBYTE(co::WIN32::WINNT_WINBLUE.0) as _,
@@ -582,7 +581,7 @@ pub fn IsWindows8Point1OrGreater() -> WinResult<bool> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn IsWindowsServer() -> WinResult<bool> {
+pub fn IsWindowsServer() -> SysResult<bool> {
 	let mut osvi = OSVERSIONINFOEX::default();
 	osvi.wProductType = co::VER_NT::WORKSTATION;
 	let cond_mask = VerSetConditionMask(
@@ -597,7 +596,7 @@ pub fn IsWindowsServer() -> WinResult<bool> {
 #[must_use]
 pub fn IsWindowsVersionOrGreater(
 	major_version: u16, minor_version: u16,
-	service_pack_major: u16) -> WinResult<bool>
+	service_pack_major: u16) -> SysResult<bool>
 {
 	let mut osvi = OSVERSIONINFOEX::default();
 	let cond_mask = VerSetConditionMask(
@@ -623,7 +622,7 @@ pub fn IsWindowsVersionOrGreater(
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn IsWindowsVistaOrGreater() -> WinResult<bool> {
+pub fn IsWindowsVistaOrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
 		HIBYTE(co::WIN32::WINNT_VISTA.0) as _,
 		LOBYTE(co::WIN32::WINNT_VISTA.0) as _,
@@ -684,8 +683,8 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 /// [`MoveFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub fn MoveFile(existing_file: &str, new_file: &str) -> WinResult<()> {
-	bool_to_winresult(
+pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::MoveFileW(
 				WString::from_str(existing_file).as_ptr(),
@@ -711,7 +710,7 @@ pub fn MulDiv(number: i32, numerator: i32, denominator: i32) -> i32 {
 #[must_use]
 pub fn MultiByteToWideChar(
 	code_page: co::CP, flags: co::MBC,
-	multi_byte_str: &[u8]) -> WinResult<Vec<u16>>
+	multi_byte_str: &[u8]) -> SysResult<Vec<u16>>
 {
 	match unsafe {
 		kernel::ffi::MultiByteToWideChar(
@@ -779,9 +778,9 @@ pub fn OutputDebugString(output_string: &str) {
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn QueryPerformanceCounter() -> WinResult<i64> {
+pub fn QueryPerformanceCounter() -> SysResult<i64> {
 	let mut perf_count = i64::default();
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe { kernel::ffi::QueryPerformanceCounter(&mut perf_count) },
 	).map(|_| perf_count)
 }
@@ -790,9 +789,9 @@ pub fn QueryPerformanceCounter() -> WinResult<i64> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn QueryPerformanceFrequency() -> WinResult<i64> {
+pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 	let mut freq = i64::default();
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe { kernel::ffi::QueryPerformanceFrequency(&mut freq) },
 	).map(|_| freq)
 }
@@ -802,9 +801,9 @@ pub fn QueryPerformanceFrequency() -> WinResult<i64> {
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn ReplaceFile(
 	replaced: &str, replacement: &str,
-	backup: Option<&str>, flags: co::REPLACEFILE) -> WinResult<()>
+	backup: Option<&str>, flags: co::REPLACEFILE) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::ReplaceFileW(
 				WString::from_str(replaced).as_ptr(),
@@ -821,8 +820,8 @@ pub fn ReplaceFile(
 /// [`SetCurrentDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub fn SetCurrentDirectory(path_name: &str) -> WinResult<()> {
-	bool_to_winresult(
+pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::SetCurrentDirectoryW(WString::from_str(path_name).as_ptr())
 		},
@@ -847,9 +846,9 @@ pub fn Sleep(milliseconds: u32) {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn SystemTimeToFileTime(
-	st: &SYSTEMTIME, ft: &mut FILETIME) -> WinResult<()>
+	st: &SYSTEMTIME, ft: &mut FILETIME) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::SystemTimeToFileTime(
 				st as *const _ as _,
@@ -865,9 +864,9 @@ pub fn SystemTimeToFileTime(
 pub fn SystemTimeToTzSpecificLocalTime(
 	time_zone: Option<&TIME_ZONE_INFORMATION>,
 	universal_time: &SYSTEMTIME,
-	local_time: &mut SYSTEMTIME) -> WinResult<()>
+	local_time: &mut SYSTEMTIME) -> SysResult<()>
 {
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::SystemTimeToTzSpecificLocalTime(
 				time_zone.map_or(std::ptr::null(), |lp| lp as *const _ as _),
@@ -885,7 +884,7 @@ pub fn SystemTimeToTzSpecificLocalTime(
 pub fn VerifyVersionInfo(
 	osvix: &mut OSVERSIONINFOEX,
 	type_mask: co::VER_MASK,
-	condition_mask: u64) -> WinResult<bool>
+	condition_mask: u64) -> SysResult<bool>
 {
 	match unsafe {
 		kernel::ffi::VerifyVersionInfoW(
@@ -923,7 +922,7 @@ pub fn VerSetConditionMask(
 pub fn WideCharToMultiByte(
 	code_page: co::CP, flags: co::WC,
 	wide_char_str: &[u16], default_char: Option<u8>,
-	used_default_char: Option<&mut bool>) -> WinResult<Vec<u8>> {
+	used_default_char: Option<&mut bool>) -> SysResult<Vec<u8>> {
 
 	let mut default_char_buf = default_char.unwrap_or_default();
 

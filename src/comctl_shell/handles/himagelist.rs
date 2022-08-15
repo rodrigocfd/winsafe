@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::comctl::decl::HIMAGELIST;
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 use crate::prelude::{comctl_Himagelist, user_Hicon};
 use crate::shell::decl::{SHFILEINFO, SHGetFileInfo};
 
@@ -36,7 +36,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// himgl.Destroy()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	fn add_icon_from_shell(self, file_extensions: &[&str]) -> WinResult<()> {
+	fn add_icon_from_shell(self, file_extensions: &[&str]) -> SysResult<()> {
 		let sz = self.GetIconSize()?;
 		if !sz.is(16, 16) && !sz.is(32, 32) {
 			return Err(co::ERROR::NOT_SUPPORTED); // only 16x16 or 32x32 icons can be loaded

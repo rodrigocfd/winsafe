@@ -2,8 +2,8 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGBRUSH;
-use crate::kernel::decl::{GetLastError, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::{COLORREF, HBITMAP, HBRUSH};
 
@@ -37,7 +37,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
 	/// call.
 	#[must_use]
-	fn CreateBrushIndirect(lb: &LOGBRUSH) -> WinResult<HBRUSH> {
+	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<HBRUSH> {
 		unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
 			.ok_or_else(|| GetLastError())
@@ -51,7 +51,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// call.
 	#[must_use]
 	fn CreateHatchBrush(
-		hatch: co::HS, color: COLORREF) -> WinResult<HBRUSH>
+		hatch: co::HS, color: COLORREF) -> SysResult<HBRUSH>
 	{
 		unsafe { gdi::ffi::CreateHatchBrush(hatch.0, color.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
@@ -65,7 +65,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
 	/// call.
 	#[must_use]
-	fn CreatePatternBrush(hbmp: HBITMAP) -> WinResult<HBRUSH> {
+	fn CreatePatternBrush(hbmp: HBITMAP) -> SysResult<HBRUSH> {
 		unsafe { gdi::ffi::CreatePatternBrush(hbmp.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
 			.ok_or_else(|| GetLastError())
@@ -78,7 +78,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
 	/// call.
 	#[must_use]
-	fn CreateSolidBrush(color: COLORREF) -> WinResult<HBRUSH> {
+	fn CreateSolidBrush(color: COLORREF) -> SysResult<HBRUSH> {
 		unsafe { gdi::ffi::CreateSolidBrush(color.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
 			.ok_or_else(|| GetLastError())
@@ -86,7 +86,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 
 	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
-	fn GetObject(self, pv: &mut LOGBRUSH) -> WinResult<()> {
+	fn GetObject(self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
 			gdi::ffi::GetObjectW(
 				self.as_ptr(),
@@ -102,7 +102,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
 	#[must_use]
-	fn GetStockObject(sb: co::STOCK_BRUSH) -> WinResult<HBRUSH> {
+	fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
 		unsafe { gdi::ffi::GetStockObject(sb.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
 			.ok_or_else(|| GetLastError())
@@ -111,7 +111,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// [`GetSysColorBrush`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
 	#[must_use]
-	fn GetSysColorBrush(index: co::COLOR) -> WinResult<HBRUSH> {
+	fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
 		unsafe { gdi::ffi::GetSysColorBrush(index.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
 			.ok_or_else(|| GetLastError())
@@ -119,7 +119,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 
 	/// [`UnrealizeObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 	/// method.
-	fn UnrealizeObject(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { gdi::ffi::UnrealizeObject(self.as_ptr()) })
+	fn UnrealizeObject(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { gdi::ffi::UnrealizeObject(self.as_ptr()) })
 	}
 }

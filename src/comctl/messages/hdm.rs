@@ -1,6 +1,6 @@
 use crate::co;
 use crate::comctl::decl::{HDHITTESTINFO, HDITEM, HDLAYOUT, HIMAGELIST, PtIdx};
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::RECT;
@@ -34,14 +34,14 @@ unsafe impl MsgSend for ClearFilter {
 /// [`HDM_CREATEDRAGIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-createdragimage)
 /// message parameters.
 ///
-/// Return type: `WinResult<HIMAGELIST>`.
+/// Return type: `SysResult<HIMAGELIST>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct CreateDragImage {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for CreateDragImage {
-	type RetType = WinResult<HIMAGELIST>;
+	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HIMAGELIST(p as _))
@@ -59,14 +59,14 @@ unsafe impl MsgSend for CreateDragImage {
 /// [`HDM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-deleteitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteItem {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for DeleteItem {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -181,7 +181,7 @@ unsafe impl MsgSend for GetImageList {
 /// [`HDM_GETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItem<'a, 'b> {
 	pub index: u32,
@@ -189,7 +189,7 @@ pub struct GetItem<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -207,12 +207,12 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// [`HDM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemcount)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemCount {}
 
 unsafe impl MsgSend for GetItemCount {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -233,7 +233,7 @@ unsafe impl MsgSend for GetItemCount {
 /// [`HDM_GETITEMDROPDOWNRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemdropdownrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemDropDownRect<'a> {
 	pub index: u32,
@@ -241,7 +241,7 @@ pub struct GetItemDropDownRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetItemDropDownRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -259,7 +259,7 @@ unsafe impl<'a> MsgSend for GetItemDropDownRect<'a> {
 /// [`HDM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemRect<'a> {
 	pub index: u32,
@@ -267,7 +267,7 @@ pub struct GetItemRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetItemRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -285,14 +285,14 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// [`HDM_GETORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getorderarray)
 /// message parameters.
 ///
-/// Return type `WinResult<()>`.
+/// Return type `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetOrderArray<'a> {
 	pub buffer: &'a mut [u32],
 }
 
 unsafe impl<'a> MsgSend for GetOrderArray<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -310,14 +310,14 @@ unsafe impl<'a> MsgSend for GetOrderArray<'a> {
 /// [`HDM_GETOVERFLOWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getoverflowrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetOverflowRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
 unsafe impl<'a> MsgSend for GetOverflowRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -383,7 +383,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// [`HDM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-insertitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<u32>`.
+/// Return type: `SysResult<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertItem<'a, 'b> {
 	pub index_after: u32,
@@ -391,7 +391,7 @@ pub struct InsertItem<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
-	type RetType = WinResult<u32>;
+	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -412,14 +412,14 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// [`HDM_LAYOUT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-layout)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Layout<'a, 'b, 'c> {
 	pub hdlayout: &'c mut HDLAYOUT<'a, 'b>,
 }
 
 unsafe impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -594,7 +594,7 @@ unsafe impl MsgSend for SetImageList {
 /// [`HDM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItem<'a, 'b> {
 	pub index: u32,
@@ -602,7 +602,7 @@ pub struct SetItem<'a, 'b> {
 }
 
 unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -620,14 +620,14 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// [`HDM_SETORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setorderarray)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetOrderArray<'a> {
 	pub buffer: &'a [u32],
 }
 
 unsafe impl<'a> MsgSend for SetOrderArray<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

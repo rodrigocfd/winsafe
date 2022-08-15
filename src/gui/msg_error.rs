@@ -1,7 +1,8 @@
 use crate::msg::WndMsg;
 
-/// A [`Result` alias](crate#errors-and-result-aliases) for runtime, which
-/// returns a [`MsgError`](crate::gui::MsgError) on failure.
+/// A [`Result` alias](crate#errors-and-result-aliases) for errors from window
+/// message handling, which returns a [`MsgError`](crate::gui::MsgError) on
+/// failure.
 ///
 /// # Examples
 ///

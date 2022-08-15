@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::WinResult;
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::bool_to_sysresult;
 use crate::msimg;
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HDC, POINT, SIZE};
@@ -24,9 +24,9 @@ pub trait msimg_Hdc: Handle {
 		dest_top_left: POINT, dest_sz: SIZE,
 		hdc_src: HDC,
 		src_top_left: POINT, src_sz: SIZE,
-		color_transparent: COLORREF) -> WinResult<()>
+		color_transparent: COLORREF) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			unsafe {
 				msimg::ffi::TransparentBlt(
 					self.as_ptr(),

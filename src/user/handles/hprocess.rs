@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
-use crate::kernel::decl::{HPROCESS, WinResult};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{HPROCESS, SysResult};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
 impl user_Hprocess for HPROCESS {}
@@ -23,9 +23,9 @@ pub trait user_Hprocess: Handle {
 	/// **Note:** The `pv_info` type varies according to `index`. If you set it
 	/// wrong, you're likely to cause a buffer overrun.
 	unsafe fn SetUserObjectInformation<T>(self,
-		index: co::UOI, pv_info: &mut T) -> WinResult<()>
+		index: co::UOI, pv_info: &mut T) -> SysResult<()>
 	{
-		bool_to_winresult(
+		bool_to_sysresult(
 			user::ffi::SetUserObjectInformationW(
 				self.as_ptr(),
 				index.0,

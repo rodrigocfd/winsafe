@@ -1,6 +1,6 @@
 use crate::co;
 use crate::kernel::decl::{
-	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, WinResult, WString,
+	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, SysResult, WString,
 };
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
@@ -10,14 +10,14 @@ use crate::user::privs::zero_as_err;
 /// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
 /// message parameters.
 ///
-/// Return type: `WinResult<HICON>`.
+/// Return type: `SysResult<HICON>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIcon {
 	pub part_index: u8,
 }
 
 unsafe impl MsgSend for GetIcon {
-	type RetType = WinResult<HICON>;
+	type RetType = SysResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HICON(p as _))
@@ -137,7 +137,7 @@ unsafe impl<'a> MsgSend for GetTipText<'a> {
 /// [`SB_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-seticon)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetIcon {
 	pub part_index: u8,
@@ -145,7 +145,7 @@ pub struct SetIcon {
 }
 
 unsafe impl MsgSend for SetIcon {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -163,14 +163,14 @@ unsafe impl MsgSend for SetIcon {
 /// [`SB_SETPARTS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setparts)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetParts<'a> {
 	pub right_edges: &'a [i32],
 }
 
 unsafe impl<'a> MsgSend for SetParts<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -188,7 +188,7 @@ unsafe impl<'a> MsgSend for SetParts<'a> {
 /// [`SB_SETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-settext)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetText {
 	pub part_index: u8,
@@ -197,7 +197,7 @@ pub struct SetText {
 }
 
 unsafe impl MsgSend for SetText {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

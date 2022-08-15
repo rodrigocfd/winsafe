@@ -153,7 +153,7 @@
 //!
 //! The method [`MessageBox`](crate::prelude::user_Hwnd::MessageBox), like most
 //! functions that can return errors, will return
-//! [`WinResult`](crate::WinResult), which can contain an
+//! [`SysResult`](crate::SysResult), which can contain an
 //! [`ERROR`](crate::co::ERROR) constant.
 //!
 //! # Native structs
@@ -198,7 +198,7 @@
 //!
 //! Note how you *don't need* to call [`GetLastError`](crate::GetLastError) to
 //! retrieve the error code: it's returned by the method itself in the
-//! [`WinResult`](crate::WinResult).
+//! [`SysResult`](crate::SysResult).
 //!
 //! # Text encoding
 //!
@@ -223,10 +223,10 @@
 //!
 //! | Alias | Error | Used for |
 //! | - | - | - |
-//! | [`WinResult`](crate::WinResult) | [`ERROR`](crate::co::ERROR) | Standard [system errors](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes). |
+//! | [`SysResult`](crate::SysResult) | [`ERROR`](crate::co::ERROR) | Standard [system errors](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes). |
 //! | [`HrResult`](crate::HrResult) | [`HRESULT`](crate::co::HRESULT) | [COM errors](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
-//! | [`MsgResult`](crate::gui::MsgResult) | [`MsgError`](crate::gui::MsgError) | Errors from a closure of a window message handling. |
-//! | [`AnyResult`](crate::AnyResult) | `Box<dyn Error + Send + Sync>` | Holding different error types – all other `Result` aliases can be converted into it. |
+//! | [`MsgResult`](crate::gui::MsgResult) | [`MsgError`](crate::gui::MsgError) | Errors from a closure of a window message handling. Usually these are the errors thrown by the user. |
+//! | [`AnyResult`](crate::AnyResult) | `Box<dyn Error + Send + Sync>` | Holding different error types. All other `Result` aliases can be converted into it. |
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
@@ -314,7 +314,7 @@ pub mod msg {
 	//! message parameters.
 	//!
 	//! The message struct also defines the data type returned by `SendMessage`.
-	//! In the example below, `LVM_DELETEITEM` returns `WinResult<()>`.
+	//! In the example below, `LVM_DELETEITEM` returns `SysResult<()>`.
 	//!
 	//! ```rust,ignore
 	//! use winsafe::prelude::*;

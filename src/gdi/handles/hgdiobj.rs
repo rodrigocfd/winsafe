@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
-use crate::kernel::decl::{GetLastError, WinResult};
+use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::Handle;
 
 /// Any
@@ -20,7 +20,7 @@ use crate::prelude::Handle;
 pub trait gdi_Hgdiobj: Handle {
 	/// [`DeleteObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 	/// method.
-	fn DeleteObject(self) -> WinResult<()> {
+	fn DeleteObject(self) -> SysResult<()> {
 		match unsafe { gdi::ffi::DeleteObject(self.as_ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(()), // not really an error

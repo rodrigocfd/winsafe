@@ -1,6 +1,6 @@
 use crate::co;
 use crate::gdi::decl::HFONT;
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
@@ -34,12 +34,12 @@ unsafe impl MsgSend for SetMcFont {
 /// [`DTM_GETMCFONT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcfont)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<HFONT>`.
+/// Return type: `SysResult<HFONT>`.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 pub struct GetMcFont {}
 
 unsafe impl MsgSend for GetMcFont {
-	type RetType = WinResult<HFONT>;
+	type RetType = SysResult<HFONT>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HFONT(p as _))

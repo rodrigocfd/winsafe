@@ -1,6 +1,6 @@
 use crate::co;
 use crate::comctl::decl::EDITBALLOONTIP;
-use crate::kernel::decl::{WinResult, WString};
+use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
@@ -8,14 +8,14 @@ use crate::user::privs::zero_as_err;
 /// [`EM_GETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getcuebanner)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
 unsafe impl<'a> MsgSend for GetCueBanner<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
@@ -36,12 +36,12 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 /// [`EM_HIDEBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-hideballoontip)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HideBalloonTip {}
 
 unsafe impl MsgSend for HideBalloonTip {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -59,7 +59,7 @@ unsafe impl MsgSend for HideBalloonTip {
 /// [`EM_SETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setcuebanner)
 /// message parameters..
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCueBanner {
 	pub show_even_with_focus: bool,
@@ -67,7 +67,7 @@ pub struct SetCueBanner {
 }
 
 unsafe impl MsgSend for SetCueBanner {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -85,14 +85,14 @@ unsafe impl MsgSend for SetCueBanner {
 /// [`EM_SHOWBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-showballoontip)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ShowBalloonTip<'a, 'b, 'c> {
 	pub info: &'c EDITBALLOONTIP<'a, 'b>,
 }
 
 unsafe impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

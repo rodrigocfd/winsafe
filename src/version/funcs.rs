@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
-use crate::kernel::decl::{GetLastError, WinResult, WString};
-use crate::kernel::privs::bool_to_winresult;
+use crate::kernel::decl::{GetLastError, SysResult, WString};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::version;
 
 /// [`GetFileVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
@@ -11,11 +11,11 @@ use crate::version;
 /// [`GetFileVersionInfoSize`](crate::GetFileVersionInfoSize).
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 #[must_use]
-pub fn GetFileVersionInfo(file_name: &str) -> WinResult<Vec<u8>> {
+pub fn GetFileVersionInfo(file_name: &str) -> SysResult<Vec<u8>> {
 	let block_sz = GetFileVersionInfoSize(file_name)?;
 	let mut buf: Vec<u8> = vec![0x00; block_sz as _];
 
-	bool_to_winresult(
+	bool_to_sysresult(
 		unsafe {
 			version::ffi::GetFileVersionInfoW(
 				WString::from_str(file_name).as_ptr(),
@@ -31,7 +31,7 @@ pub fn GetFileVersionInfo(file_name: &str) -> WinResult<Vec<u8>> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 #[must_use]
-pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
+pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 	let mut dw_handle = u32::default();
 	match unsafe {
 		version::ffi::GetFileVersionInfoSizeW(
@@ -78,12 +78,12 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> WinResult<u32> {
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 #[must_use]
 pub unsafe fn VarQueryValue<T>(
-	block: &[u8], sub_block: &str) -> WinResult<(*const T, u32)>
+	block: &[u8], sub_block: &str) -> SysResult<(*const T, u32)>
 {
 	let mut lp_lp_buffer = std::ptr::null();
 	let mut pu_len = 0;
 
-	bool_to_winresult(
+	bool_to_sysresult(
 		version::ffi::VerQueryValueW(
 			block.as_ptr() as _,
 			WString::from_str(sub_block).as_ptr(),

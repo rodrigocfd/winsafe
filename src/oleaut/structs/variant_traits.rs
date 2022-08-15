@@ -3,7 +3,7 @@
 use std::mem::ManuallyDrop;
 
 use crate::co;
-use crate::kernel::decl::{SYSTEMTIME, WinResult};
+use crate::kernel::decl::{SysResult, SYSTEMTIME};
 use crate::oleaut::decl::{
 	BSTR, SystemTimeToVariantTime, VariantTimeToSystemTime,
 };
@@ -176,7 +176,7 @@ pub trait oleaut_Variant {
 
 	/// Creates a new object holding a date/time value.
 	#[must_use]
-	fn new_time(val: &SYSTEMTIME) -> WinResult<Self>
+	fn new_time(val: &SYSTEMTIME) -> SysResult<Self>
 		where Self: Sized,
 	{
 		let double = SystemTimeToVariantTime(val)?;

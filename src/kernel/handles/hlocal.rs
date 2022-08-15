@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
-use crate::kernel::decl::{GetLastError, WinResult};
+use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::Handle;
 
 impl_handle! { HLOCAL: "kernel";
@@ -23,7 +23,7 @@ impl kernel_Hlocal for HLOCAL {}
 pub trait kernel_Hlocal: Handle {
 	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
-	fn LocalFree(self) -> WinResult<()> {
+	fn LocalFree(self) -> SysResult<()> {
 		match unsafe { kernel::ffi::LocalFree(self.as_ptr()).as_mut() } {
 			None => Ok(()),
 			Some(_) => Err(GetLastError()),
@@ -33,7 +33,7 @@ pub trait kernel_Hlocal: Handle {
 	/// [`LocalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
 	/// method.
 	#[must_use]
-	fn LocalSize(self) -> WinResult<usize> {
+	fn LocalSize(self) -> SysResult<usize> {
 		match unsafe { kernel::ffi::LocalSize(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),

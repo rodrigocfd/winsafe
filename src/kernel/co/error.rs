@@ -5,11 +5,11 @@ use crate::prelude::FormattedError;
 const_no_debug_display! { ERROR: u32: "kernel";
 	/// A native
 	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
-	/// (`u32`) retrieved by
+	/// (`u32`), commonly retrieved by
 	/// [`GetLastError`](crate::GetLastError) function.
 	///
 	/// The [`Result` alias](crate#errors-and-result-aliases) for this type is
-	/// [`WinResult`](crate::WinResult).
+	/// [`SysResult`](crate::SysResult).
 	///
 	/// Implements the standard
 	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)

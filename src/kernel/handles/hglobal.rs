@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, WinResult};
-use crate::kernel::privs::{bool_to_winresult, GMEM_INVALID_HANDLE};
+use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::{bool_to_sysresult, GMEM_INVALID_HANDLE};
 use crate::prelude::Handle;
 
 impl_handle! { HGLOBAL: "kernel";
@@ -30,7 +30,7 @@ pub trait kernel_Hglobal: Handle {
 	/// [`HGLOBAL::GlobalFree`](crate::prelude::kernel_Hglobal::GlobalFree)
 	/// call.
 	#[must_use]
-	fn GlobalAlloc(flags: co::GMEM, num_bytes: usize) -> WinResult<HGLOBAL> {
+	fn GlobalAlloc(flags: co::GMEM, num_bytes: usize) -> SysResult<HGLOBAL> {
 		unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes).as_mut() }
 			.map(|ptr| HGLOBAL(ptr))
 			.ok_or_else(|| GetLastError())
@@ -39,7 +39,7 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalFlags`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
 	/// method.
 	#[must_use]
-	fn GlobalFlags(self) -> WinResult<co::GMEM> {
+	fn GlobalFlags(self) -> SysResult<co::GMEM> {
 		match unsafe { kernel::ffi::GlobalFlags(self.as_ptr()) } {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(co::GMEM(flags)),
@@ -48,7 +48,7 @@ pub trait kernel_Hglobal: Handle {
 
 	/// [`GlobalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
 	/// method.
-	fn GlobalFree(self) -> WinResult<()> {
+	fn GlobalFree(self) -> SysResult<()> {
 		match unsafe { kernel::ffi::GlobalFree(self.as_ptr()).as_mut() } {
 			None => Ok(()),
 			Some(_) => Err(GetLastError()),
@@ -65,7 +65,7 @@ pub trait kernel_Hglobal: Handle {
 	/// [`HGLOBAL::GlobalUnlock`](crate::prelude::kernel_Hglobal::GlobalUnlock)
 	/// call.
 	#[must_use]
-	fn GlobalLock<'a>(self) -> WinResult<&'a mut [u8]> {
+	fn GlobalLock<'a>(self) -> SysResult<&'a mut [u8]> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe { kernel::ffi::GlobalLock(self.as_ptr()).as_mut() }
 			.map(|ptr| unsafe {
@@ -82,7 +82,7 @@ pub trait kernel_Hglobal: Handle {
 	/// call.
 	#[must_use]
 	fn GlobalReAlloc(self,
-		num_bytes: usize, flags: co::GMEM) -> WinResult<HGLOBAL>
+		num_bytes: usize, flags: co::GMEM) -> SysResult<HGLOBAL>
 	{
 		unsafe {
 			kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0).as_mut()
@@ -93,7 +93,7 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
 	/// method.
 	#[must_use]
-	fn GlobalSize(self) -> WinResult<usize> {
+	fn GlobalSize(self) -> SysResult<usize> {
 		match unsafe { kernel::ffi::GlobalSize(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),
@@ -102,7 +102,7 @@ pub trait kernel_Hglobal: Handle {
 
 	/// [`GlobalUnlock`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 	/// method.
-	fn GlobalUnlock(self) -> WinResult<()> {
-		bool_to_winresult(unsafe { kernel::ffi::GlobalUnlock(self.as_ptr()) })
+	fn GlobalUnlock(self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { kernel::ffi::GlobalUnlock(self.as_ptr()) })
 	}
 }

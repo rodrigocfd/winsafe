@@ -1,7 +1,7 @@
 use crate::co;
 use crate::comctl::decl::{HIMAGELIST, HTREEITEM, TVINSERTSTRUCT, TVITEMEX};
 use crate::comctl::privs::CLR_DEFAULT;
-use crate::kernel::decl::WinResult;
+use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
@@ -10,14 +10,14 @@ use crate::user::privs::{zero_as_err, zero_as_none};
 /// [`TVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-deleteitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteItem {
 	pub hitem: HTREEITEM,
 }
 
 unsafe impl MsgSend for DeleteItem {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -35,14 +35,14 @@ unsafe impl MsgSend for DeleteItem {
 /// [`TVM_EDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-editlabel)
 /// message parameters.
 ///
-/// Return type: `WinResult<HWND>.
+/// Return type: `SysResult<HWND>.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EditLabel {
 	pub hitem: HTREEITEM,
 }
 
 unsafe impl MsgSend for EditLabel {
-	type RetType = WinResult<HWND>;
+	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HWND(p as _))
@@ -60,14 +60,14 @@ unsafe impl MsgSend for EditLabel {
 /// [`TVM_ENDEDITLABELNOW`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-endeditlabelnow)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EndEditLabelNow {
 	pub save: bool,
 }
 
 unsafe impl MsgSend for EndEditLabelNow {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -110,7 +110,7 @@ unsafe impl MsgSend for EnsureVisible {
 /// [`TVM_EXPAND`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-expand)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Expand {
 	pub action: co::TVE,
@@ -118,7 +118,7 @@ pub struct Expand {
 }
 
 unsafe impl MsgSend for Expand {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -185,12 +185,12 @@ unsafe impl MsgSend for GetCount {
 /// [`TVM_GETEDITCONTROL`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-geteditcontrol)
 /// message, which has no parameters.
 ///
-/// Return type: `WinResult<HWND>`.
+/// Return type: `SysResult<HWND>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetEditControl {}
 
 unsafe impl MsgSend for GetEditControl {
-	type RetType = WinResult<HWND>;
+	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HWND(p as _))
@@ -302,14 +302,14 @@ unsafe impl MsgSend for GetInsertMarkColor {
 /// [`TVM_GETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItem<'a, 'b> {
 	pub tvitem: &'b mut TVITEMEX<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -350,7 +350,7 @@ unsafe impl MsgSend for GetItemHeight {
 /// [`TVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitemrect)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemRect<'a> {
 	pub text_only: bool,
@@ -358,7 +358,7 @@ pub struct GetItemRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetItemRect<'a> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -549,14 +549,14 @@ unsafe impl MsgSend for GetVisibleCount {
 /// [`TVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-insertitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<HTREEITEM>`.
+/// Return type: `SysResult<HTREEITEM>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertItem<'a, 'b> {
 	pub tvinsertstruct: &'b TVINSERTSTRUCT<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
-	type RetType = WinResult<HTREEITEM>;
+	type RetType = SysResult<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|p| HTREEITEM(p as _))
@@ -574,7 +574,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// [`TVM_SELECTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-selectitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SelectItem {
 	pub action: co::TVGN,
@@ -582,7 +582,7 @@ pub struct SelectItem {
 }
 
 unsafe impl MsgSend for SelectItem {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -600,14 +600,14 @@ unsafe impl MsgSend for SelectItem {
 /// [`TVM_SETHOT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-sethot)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetHot {
 	pub hitem: Option<HTREEITEM>,
 }
 
 unsafe impl MsgSend for SetHot {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -676,14 +676,14 @@ unsafe impl MsgSend for SetIndent {
 /// [`TVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-setitem)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItem<'a, 'b> {
 	pub tvitem: &'b TVITEMEX<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())
@@ -726,14 +726,14 @@ unsafe impl MsgSend for ShowInfoTip {
 /// [`TVM_SORTCHILDREN`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-sortchildren)
 /// message parameters.
 ///
-/// Return type: `WinResult<()>`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortChildren {
 	pub recursive: bool,
 }
 
 unsafe impl MsgSend for SortChildren {
-	type RetType = WinResult<()>;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		zero_as_err(v).map(|_| ())

@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 
 use crate::{co, kernel};
-use crate::kernel::decl::{MultiByteToWideChar, WinResult};
+use crate::kernel::decl::{MultiByteToWideChar, SysResult};
 
 /// Stores a `Vec<u16>` buffer for a null-terminated
 /// [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
@@ -407,7 +407,7 @@ impl WString {
 	/// To serialize the string back into UTF-8 bytes, use the built-in
 	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
 	#[must_use]
-	pub fn parse_str(data: &[u8]) -> WinResult<WString> {
+	pub fn parse_str(data: &[u8]) -> SysResult<WString> {
 		let mut data = data;
 		if data.is_empty() { // nothing to parse
 			return Ok(WString::default());
