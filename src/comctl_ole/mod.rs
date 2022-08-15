@@ -5,6 +5,7 @@ mod enums;
 mod funcs;
 mod handles;
 mod structs;
+mod utilities;
 
 pub mod messages;
 
@@ -13,6 +14,7 @@ pub mod decl {
 	pub use super::enums::*;
 	pub use super::funcs::*;
 	pub use super::structs::*;
+	pub use super::utilities::*;
 }
 
 pub mod traits {

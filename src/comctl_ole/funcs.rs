@@ -15,6 +15,9 @@ use crate::ole::privs::ok_to_hrresult;
 /// was set, the `u16` control ID of one of the specified radio buttons;
 /// otherwise zero.
 ///
+/// Unless you need something specific, consider using the
+/// [`task_dlg`](crate::task_dlg) high-level abstractions.
+///
 /// If you don't need all customizations, consider the
 /// [`TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) method.
 ///

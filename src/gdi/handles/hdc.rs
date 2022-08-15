@@ -316,8 +316,7 @@ pub trait gdi_Hdc: Handle {
 	///     + std::mem::size_of::<w::BITMAPINFOHEADER>()) as _;
 	/// bfh.bfSize = bfh.bfOffBits + (bmp_size as u32);
 	///
-	/// let fo = w::File::open("C:\\Users\\Rodrigo\\Desktop\\foo.bmp",
-	///     w::FileAccess::OpenOrCreateReadWrite)?;
+	/// let fo = w::File::open("C:\\Temp\\foo.bmp", w::FileAccess::OpenOrCreateRW)?;
 	/// fo.write(bfh.serialize())?;
 	/// fo.write(bi.bmiHeader.serialize())?;
 	/// fo.write(&data_buf)?;

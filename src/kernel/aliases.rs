@@ -22,7 +22,7 @@ pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 ///
 /// let sys_result: SysResult<()> = Err(co::ERROR::SUCCESS);
 ///
-/// let err_result: AnyResult<()> = win_result.map_err(|err| err.into());
+/// let err_result: AnyResult<()> = sys_result.map_err(|err| err.into());
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub type SysResult<T> = Result<T, co::ERROR>;

@@ -227,6 +227,22 @@
 //! | [`HrResult`](crate::HrResult) | [`HRESULT`](crate::co::HRESULT) | [COM errors](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
 //! | [`MsgResult`](crate::gui::MsgResult) | [`MsgError`](crate::gui::MsgError) | Errors from a closure of a window message handling. Usually these are the errors thrown by the user. |
 //! | [`AnyResult`](crate::AnyResult) | `Box<dyn Error + Send + Sync>` | Holding different error types. All other `Result` aliases can be converted into it. |
+//!
+//! # Utilities
+//!
+//! Beyond the [GUI](crate::gui) API, WinSafe features a few high-level
+//! abstractions to deal with some particularly complex Win32 topics. Unless you
+//! need something specific, prefer using these over the raw, native calls:
+//!
+//! | Utility | Used for |
+//! | - | - |
+//! | [`File`](crate::File) | File read/write and other operations. |
+//! | [`FileMapped`](crate::FileMapped) | Memory-mapped file operations. |
+//! | [`Ini`](crate::Ini) | Managing key/value pairs of a `.ini` file. |
+//! | [`path`](crate::path) | File path operations. |
+//! | [`ResourceInfo`](crate::ResourceInfo) | Retrieve embedded data from executables or DLLs. |
+//! | [`task_dlg`](crate::task_dlg) | Various dialog prompts. |
+//! | [`WString`](crate::WString) | Managing native wide strings. |
 
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
