@@ -221,10 +221,10 @@ impl WString {
 			panic!("Destination buffer cannot have zero length.");
 		}
 
-		if let Some(vec_u16_ref) = self.vec_u16.as_ref() {
-			let num_chars = std::cmp::min(vec_u16_ref.len() - 1, dest.len() - 1); // no terminating null
+		if let Some(vec_u16) = &self.vec_u16 {
+			let num_chars = std::cmp::min(vec_u16.len() - 1, dest.len() - 1); // no terminating null
 			unsafe {
-				vec_u16_ref.as_ptr()
+				vec_u16.as_ptr()
 					.copy_to_nonoverlapping(dest.as_mut_ptr(), num_chars);
 
 				for i in num_chars..dest.len() {
@@ -307,8 +307,8 @@ impl WString {
 	///
 	/// If you're parsing raw data which may contain errors, prefer using
  	/// [`to_string_checked`](crate::WString::to_string_checked) instead.
-	 #[must_use]
-	 pub fn to_string(&self) -> String {
+	#[must_use]
+	pub fn to_string(&self) -> String {
 		self.to_string_checked().unwrap()
 	}
 
@@ -335,6 +335,24 @@ impl WString {
 	/// [BOM](https://en.wikipedia.org/wiki/Byte_order_mark), if any.
 	#[must_use]
 	pub fn guess_encoding(data: &[u8]) -> (Encoding, usize) {
+		if let Some((enc, bom_sz)) = Self::guess_bom(data) {
+			return (enc, bom_sz); // BOM found, we already guessed the encoding
+		}
+
+		if Self::guess_utf8(data) {
+			return (Encoding::Utf8, 0);
+		}
+
+		let has_non_ansi_char = data.iter().find(|ch| **ch > 0x7f).is_some();
+		if has_non_ansi_char {
+			(Encoding::Win1252, 0) // by exclusion, not assertive
+		} else {
+			(Encoding::Ansi, 0)
+		}
+	}
+
+	#[must_use]
+	fn guess_bom(data: &[u8]) -> Option<(Encoding, usize)> {
 		let has_bom = |bom_bytes: &[u8]| -> bool {
 			data.len() >= bom_bytes.len()
 				&& data[..bom_bytes.len()].cmp(bom_bytes) == Ordering::Equal
@@ -342,58 +360,127 @@ impl WString {
 
 		const UTF8: [u8; 3] = [0xef, 0xbb, 0xbf];
 		if has_bom(&UTF8) { // UTF-8 BOM
-			return (Encoding::Utf8, UTF8.len());
+			return Some((Encoding::Utf8, UTF8.len()));
 		}
 
 		const UTF16BE: [u8; 2] = [0xfe, 0xff];
 		if has_bom(&UTF16BE) {
-			return (Encoding::Utf16be, UTF16BE.len());
+			return Some((Encoding::Utf16be, UTF16BE.len()));
 		}
 
 		const UTF16LE: [u8; 2] = [0xff, 0xfe];
 		if has_bom(&UTF16LE) {
-			return (Encoding::Utf16le, UTF16LE.len());
+			return Some((Encoding::Utf16le, UTF16LE.len()));
 		}
 
 		const UTF32BE: [u8; 4] = [0x00, 0x00, 0xfe, 0xff];
 		if has_bom(&UTF32BE) {
-			return (Encoding::Utf32be, UTF32BE.len())
+			return Some((Encoding::Utf32be, UTF32BE.len()));
 		}
 
 		const UTF32LE: [u8; 4] = [0xff, 0xfe, 0x00, 0x00];
 		if has_bom(&UTF32LE) {
-			return (Encoding::Utf32le, UTF32LE.len())
+			return Some((Encoding::Utf32le, UTF32LE.len()));
 		}
 
 		const SCSU: [u8; 3] = [0x0e, 0xfe, 0xff];
 		if has_bom(&SCSU) {
-			return (Encoding::Scsu, SCSU.len())
+			return Some((Encoding::Scsu, SCSU.len()));
 		}
 
 		const BOCU1: [u8; 3] = [0xfb, 0xee, 0x28];
 		if has_bom(&BOCU1) {
-			return (Encoding::Bocu1, BOCU1.len())
+			return Some((Encoding::Bocu1, BOCU1.len()));
 		}
 
-		// No BOM found, guess UTF-8 without BOM, or Windows-1252 (superset of
-		// ISO-8859-1).
-		let mut can_be_win1252 = false;
-		for (c0, c1) in data.windows(2)
-			.map(|chunk| unsafe { (*chunk.get_unchecked(0), *chunk.get_unchecked(1)) })
-		{
-			if c0 > 0x7f { // 127
-				can_be_win1252 = true;
-				if c0 == 0xc2 && (c1 >= 0xa1 && c1 <= 0xbf) // http://www.utf8-chartable.de
-					|| c0 == 0xc3 && (c1 >= 0x80 && c1 <= 0xbf)
-				{
-					return (Encoding::Utf8, 0); // UTF-8 without BOM
-				}
-			} else if c1 > 0x7f {
-				can_be_win1252 = true;
+		None // no BOM found
+	}
+
+	#[must_use]
+	fn guess_utf8(data: &[u8]) -> bool {
+		let mut i = 0;
+		while i < data.len() {
+			let ch0 = unsafe { *data.get_unchecked(i) };
+
+			if ch0 == 0x00 { // end of string
+				break;
 			}
-		}
 
-		(if can_be_win1252 { Encoding::Win1252 } else { Encoding::Ansi }, 0)
+			if ch0 == 0x09 || // ASCII
+				ch0 == 0x0a ||
+				ch0 == 0x0d ||
+				(0x20 <= ch0 && ch0 <= 0x7e)
+			{
+				i += 1;
+				continue;
+			}
+
+			if i < data.len() - 1 {
+				let ch1 = unsafe { *data.get_unchecked(i + 1) };
+
+				if (0xc2 <= ch0 && ch0 <= 0xdf) && // non-overlong 2-byte
+					(0x80 <= ch1 && ch1 <= 0xbf)
+				{
+					i += 2;
+					continue;
+				}
+
+				if i < data.len() - 2 {
+					let ch2 = unsafe { *data.get_unchecked(i + 2) };
+
+					if (ch0 == 0xe0 && // excluding overlongs
+							(0xa0 <= ch1 && ch1 <= 0xbf) &&
+							(0x80 <= ch2 && ch2 <= 0xbf)
+						) ||
+						(
+							(
+								(0xe1 <= ch0 && ch0 <= 0xec) || // straight 3-byte
+								ch0 == 0xee ||
+								ch0 == 0xef
+							) &&
+							(0x80 <= ch1 && ch1 <= 0xbf) &&
+							(0x80 <= ch2 && ch2 <= 0xbf)
+						) ||
+						(ch0 == 0xed && // excluding surrogates
+							(0x80 <= ch1 && ch1 <= 0x9f) &&
+							(0x80 <= ch2 && ch2 <= 0xbf)
+						)
+					{
+						i += 3;
+						continue;
+					}
+
+					if i < data.len() - 3 {
+						let ch3 = unsafe { *data.get_unchecked(i + 3) };
+
+						if (ch0 == 0xf0 && // planes 1-3
+								(0x90 <= ch1 && ch1 <= 0xbf) &&
+								(0x80 <= ch2 && ch2 <= 0xbf) &&
+								(0x80 <= ch3 && ch3 <= 0xbf)
+							) ||
+							(
+								(0xf1 <= ch0 && ch0 <= 0xf3) && // planes 4-15
+								(0x80 <= ch1 && ch1 <= 0xbf) &&
+								(0x80 <= ch2 && ch2 <= 0xbf) &&
+								(0x80 <= ch3 && ch3 <= 0xbf)
+							) ||
+							(
+								ch0 == 0xf4 && // plane 16
+								(0x80 <= ch1 && ch1 <= 0x8f) &&
+								(0x80 <= ch2 && ch2 <= 0xbf) &&
+								(0x80 <= ch3 && ch3 <= 0xbf)
+							)
+						{
+							i += 4;
+							continue;
+						}
+					}
+				}
+			}
+
+	 		return false; // none of the conditions were accepted, not UTF-8
+		}
+		true // all the conditions accepted through the whole string
 	}
 
 	/// Guesses the encoding with
@@ -432,6 +519,7 @@ impl WString {
 		})
 	}
 
+	#[must_use]
 	fn parse_ansi_str(data: &[u8]) -> Vec<u16> {
 		let mut the_len = data.len();
 		for (idx, by) in data.iter().enumerate() {
@@ -441,12 +529,13 @@ impl WString {
 			}
 		}
 
-		let mut str16 = Vec::with_capacity(the_len + 1); // room for terminating null
+		let mut str16 = Vec::<u16>::with_capacity(the_len + 1); // room for terminating null
 		data.iter().for_each(|by| str16.push(*by as _)); // u8 to u18 raw conversion
 		str16.push(0x0000); // terminating null
 		str16
 	}
 
+	#[must_use]
 	fn parse_utf16_str(data: &[u8], is_big_endian: bool) -> Vec<u16> {
 		let data = if data.len() % 2 == 1 {
 			&data[..data.len() - 1] // if odd number of bytes, discard last one
