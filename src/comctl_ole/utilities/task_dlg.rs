@@ -11,6 +11,27 @@ use crate::ole::decl::HrResult;
 use crate::user::decl::HWND;
 
 /// Displays an error modal window with an OK button.
+///
+/// High-level abstraction over
+/// [`TaskDialogIndirect`](crate::TaskDialogIndirect).
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HWND, task_dlg};
+///
+/// let hparent: HWND; // initialized somewhere
+/// # let hparent = HWND::NULL;
+///
+/// task_dlg::error(
+///     hparent,
+///     "Error",
+///     Some("The error"),
+///     "Operation failed to complete.",
+/// )?;
+/// # Ok::<_, co::HRESULT>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub fn error(
 	hparent: HWND,
@@ -24,6 +45,27 @@ pub fn error(
 }
 
 /// Displays an information modal window with an OK button.
+///
+/// High-level abstraction over
+/// [`TaskDialogIndirect`](crate::TaskDialogIndirect).
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HWND, task_dlg};
+///
+/// let hparent: HWND; // initialized somewhere
+/// # let hparent = HWND::NULL;
+///
+/// task_dlg::info(
+///     hparent,
+///     "Information",
+///     Some("The information"),
+///     "Operation completed successfully.",
+/// )?;
+/// # Ok::<_, co::HRESULT>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub fn info(
 	hparent: HWND,
@@ -40,6 +82,34 @@ pub fn info(
 /// OK button can be customized.
 ///
 /// Returns `true` if the user clicked OK.
+///
+/// High-level abstraction over
+/// [`TaskDialogIndirect`](crate::TaskDialogIndirect).
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HWND, task_dlg};
+///
+/// let hparent: HWND; // initialized somewhere
+/// # let hparent = HWND::NULL;
+///
+/// let got_ok = task_dlg::ok_cancel(
+///     hparent,
+///     "Question",
+///     Some("The question"),
+///     "Do you want to proceed with this operation?",
+///     Some("Proceed"),
+/// )?;
+///
+/// if got_ok {
+///     // ...
+/// } else {
+///     // ...
+/// }
+/// # Ok::<_, co::HRESULT>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn ok_cancel(
@@ -62,6 +132,33 @@ pub fn ok_cancel(
 /// Displays a question modal window with Yes and No buttons.
 ///
 /// Returns `true` if the user clicked Yes.
+///
+/// High-level abstraction over
+/// [`TaskDialogIndirect`](crate::TaskDialogIndirect).
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HWND, task_dlg};
+///
+/// let hparent: HWND; // initialized somewhere
+/// # let hparent = HWND::NULL;
+///
+/// let got_yes = task_dlg::yes_no(
+///     hparent,
+///     "Question",
+///     Some("The question"),
+///     "Do you want to proceed with this operation?",
+/// )?;
+///
+/// if got_yes {
+///     // ...
+/// } else {
+///     // ...
+/// }
+/// # Ok::<_, co::HRESULT>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn yes_no(
@@ -76,6 +173,35 @@ pub fn yes_no(
 }
 
 /// Displays a question modal window with Yes, No and Cancel buttons.
+///
+/// High-level abstraction over
+/// [`TaskDialogIndirect`](crate::TaskDialogIndirect).
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HWND, task_dlg};
+///
+/// let hparent: HWND; // initialized somewhere
+/// # let hparent = HWND::NULL;
+///
+/// let ret_code = task_dlg::yes_no_cancel(
+///     hparent,
+///     "Question",
+///     Some("The question"),
+///     "Do you want to proceed with this operation?",
+/// )?;
+///
+/// if ret_code == co::DLGID::YES {
+///     // ...
+/// } else if ret_code == co::DLGID::NO {
+///     // ...
+/// } else {
+///     // ...
+/// }
+/// # Ok::<_, co::HRESULT>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn yes_no_cancel(
