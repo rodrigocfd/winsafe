@@ -24,12 +24,18 @@ pub trait Handle:
 	const NULL: Self;
 
 	/// Creates a new handle instance by wrapping a pointer.
+	///
+	/// **Note:** Be sure the pointer is of the correct type and not owned by
+	/// anyone else, otherwise you may cause memory access violations.
+	#[must_use]
 	unsafe fn from_ptr<T>(p: *mut T) -> Self;
 
 	/// Returns the underlying raw pointer.
+	#[must_use]
 	unsafe fn as_ptr(self) -> *mut std::ffi::c_void;
 
 	/// Tells if the handle is invalid (null).
+	#[must_use]
 	fn is_null(self) -> bool {
 		unsafe { self.as_ptr().is_null() }
 	}

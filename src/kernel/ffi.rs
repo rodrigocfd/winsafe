@@ -81,6 +81,7 @@ extern_sys! { "kernel32";
 	GlobalSize(HANDLE) -> usize
 	GlobalUnlock(HANDLE) -> BOOL
 	IsNativeVhdBoot(*mut BOOL) -> BOOL
+	IsProcessCritical(HANDLE, *mut BOOL) -> BOOL
 	IsTokenRestricted(HANDLE) -> BOOL
 	IsWow64Process(HANDLE, *mut BOOL) -> BOOL
 	LoadLibraryW(PCSTR) -> HANDLE

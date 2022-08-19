@@ -157,6 +157,19 @@ pub trait kernel_Hprocess: Handle {
 		)
 	}
 
+	/// [`IsProcessCritical`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)
+	/// method.
+	#[must_use]
+	fn IsProcessCritical(self) -> SysResult<bool> {
+		let mut critical: BOOL = 0;
+		match unsafe {
+			kernel::ffi::IsProcessCritical(self.as_ptr(), &mut critical) }
+		{
+			0 => Err(GetLastError()),
+			_ => Ok(critical != 0),
+		}
+	}
+
 	/// [`IsWow64Process`](https://docs.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
 	/// method.
 	#[must_use]
@@ -170,6 +183,10 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`OpenProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)
 	/// static method.
+	///
+	/// This method will return
+	/// [`ERROR::INVALID_PARAMETER`](crate::co::ERROR::INVALID_PARAMETER) if you
+	/// try to open a system process.
 	///
 	/// **Note:** Must be paired with an
 	/// [`HPROCESS::CloseHandle`](crate::prelude::HandleClose::CloseHandle)

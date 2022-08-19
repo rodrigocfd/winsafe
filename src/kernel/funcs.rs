@@ -787,6 +787,9 @@ pub fn QueryPerformanceCounter() -> SysResult<i64> {
 
 /// [`QueryPerformanceFrequency`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
 /// function.
+///
+/// Usually used with
+/// [`QueryPerformanceCounter`](crate::QueryPerformanceCounter).
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn QueryPerformanceFrequency() -> SysResult<i64> {
