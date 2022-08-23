@@ -110,6 +110,8 @@ impl File {
 
 	/// Truncates or expands the file, according to the new size. Zero will empty
 	/// the file.
+	///
+	/// The internal file pointer will be rewound to the beginning of the file.
 	pub fn resize(&self, num_bytes: usize) -> SysResult<()> {
 		self.hfile.SetFilePointerEx(num_bytes as _, co::FILE_STARTING_POINT::BEGIN)?;
 		self.hfile.SetEndOfFile()?;

@@ -1,24 +1,51 @@
-use crate::co;
-use crate::kernel::decl::{FileAccess, FileMapped, HFILE, SysResult, WString};
-use crate::prelude::{HandleClose, kernel_Hfile};
+use crate::kernel::decl::{File, FileAccess, FileMapped, SysResult, WString};
 
-/// Keeps sections and key/value pairs of a `.ini` file, also doing parsing and
-/// serialization of the data.
+/// High-level abstraction to load, manage and serialize sections and key/value
+/// pairs of a `.ini` file.
 ///
 /// # Examples
+///
+/// Printing all sections, keys and values:
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::Ini;
 ///
-/// let fini = Ini::parse_from_file("C:\\Temp\\my_file.ini")?;
+/// let ini = Ini::parse_from_file("C:\\Temp\\foo.ini")?;
 ///
-/// for section in fini.sections.iter() {
+/// for section in ini.sections.iter() {
 ///     println!("Section: {}", section.name);
 ///     for entry in section.entries.iter() {
 ///         println!("Key: {}; Value: {}", entry.key, entry.val);
 ///     }
 /// }
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+///
+/// Reading a value:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::Ini;
+///
+/// let ini = Ini::parse_from_file("C:\\Temp\\foo.ini")?;
+///
+/// println!("{}", ini.value("the_section", "the_key").unwrap());
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+///
+/// Changing an existing value:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::Ini;
+///
+/// let ini_path = "C:\\Temp\\foo.ini";
+/// let mut ini = Ini::parse_from_file(ini_path)?;
+///
+/// *ini.value_mut("the_section", "the_key").unwrap() = "new_value".to_owned();
+///
+/// ini.serialize_to_file(ini_path)?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
@@ -94,14 +121,19 @@ impl Ini {
 		)
 	}
 
-	/// Parses an `Ini` directly from a file.
+	/// Parses an `Ini` directly from a file. The [`Encoding`](crate::Encoding)
+	/// will be guessed with
+	/// [`WString::guess_encoding`](crate::WString::guess_encoding).
+	///
+	/// The file will be [mapped in memory](crate::FileMapped) during reading
+	/// for maximum performance.
 	#[must_use]
 	pub fn parse_from_file(ini_path: &str) -> SysResult<Ini> {
 		let fin = FileMapped::open(ini_path, FileAccess::ExistingReadOnly)?;
 		Self::parse_bytes(fin.as_slice())
 	}
 
-	/// Serializes the data to a string.
+	/// Serializes the sections and entries to a string.
 	#[must_use]
 	pub fn serialize_to_str(&self) -> String {
 		let mut tot_size = 0;
@@ -135,21 +167,18 @@ impl Ini {
 		buf
 	}
 
-	/// Serializes the data to raw bytes with
+	/// Serializes the sections and entries to raw bytes with
 	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
 	#[must_use]
 	pub fn serialize_to_bytes(&self) -> Vec<u8> {
 		self.serialize_to_str().into_bytes()
 	}
 
-	/// Serializes the data directly to a file.
+	/// Serializes the data directly to a file with
+	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
 	pub fn serialize_to_file(&self, ini_path: &str) -> SysResult<()> {
-		let (fout, _) = HFILE::CreateFile(ini_path, co::GENERIC::WRITE,
-			co::FILE_SHARE::NoValue, None, co::DISPOSITION::CREATE_ALWAYS,
-			co::FILE_ATTRIBUTE::NORMAL, None)?;
-
-		fout.WriteFile(&self.serialize_to_bytes(), None)?;
-		fout.CloseHandle()?;
+		let fout = File::open(ini_path, FileAccess::OpenOrCreateRW)?;
+		fout.erase_and_write(&self.serialize_to_bytes())?;
 		Ok(())
 	}
 
@@ -158,20 +187,39 @@ impl Ini {
 	pub fn value(&self, section: &str, key: &str) -> Option<&str> {
 		self.sections.iter()
 			.find(|s| s.name == section)
-			.and_then(|s| s.entries.iter()
-				.find(|e| e.key == key)
-				.map(|e| e.val.as_ref())
-			)
+			.and_then(|s| {
+				s.entries.iter()
+					.find(|e| e.key == key)
+					.map(|e| e.val.as_ref())
+			})
 	}
 
 	/// Returns a mutable reference to the specified value, if any.
+	///
+	/// # Examples
+	///
+	/// Changing an existing value:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::Ini;
+	///
+	/// let ini_path = "C:\\Temp\\foo.ini";
+	/// let mut ini = Ini::parse_from_file(ini_path)?;
+	///
+	/// *ini.value_mut("the_section", "the_key").unwrap() = "new_value".to_owned();
+	///
+	/// ini.serialize_to_file(ini_path)?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
 	#[must_use]
-	pub fn value_mut(&mut self, section: &str, key: &str) -> Option<&mut str> {
+	pub fn value_mut(&mut self, section: &str, key: &str) -> Option<&mut String> {
 		self.sections.iter_mut()
 			.find(|s| s.name == section)
-			.and_then(|s| s.entries.iter_mut()
-				.find(|e| e.key == key)
-				.map(|e| e.val.as_mut())
-			)
+			.and_then(|s| {
+				s.entries.iter_mut()
+					.find(|e| e.key == key)
+					.map(|e| &mut e.val)
+			})
 	}
 }
