@@ -1,3 +1,7 @@
+//! All macros used throughout the library are declared in this module, which is
+//! declared before everything in lib.rs. This is necessary because macros must
+//! exist before a module declaration to be used inside of the module.
+
 #[macro_use] mod com;
 #[macro_use] mod consts;
 #[macro_use] mod ffis;

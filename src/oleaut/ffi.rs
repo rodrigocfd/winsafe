@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::kernel::ffi_types::{BOOL, HRES, PCSTR, PCVOID, PSTR, PVOID};
 
 // This block should be in the "ole" feature, but there is a circular dependency
 // in the Windows headers.

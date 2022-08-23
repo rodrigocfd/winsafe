@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
-use crate::ffi_types::BOOL;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
+use crate::kernel::ffi_types::BOOL;
 
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;

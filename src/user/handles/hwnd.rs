@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
-use crate::ffi_types::BOOL;
 use crate::kernel::decl::{
 	GetLastError, HINSTANCE, SetLastError, SysResult, WString,
 };
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{

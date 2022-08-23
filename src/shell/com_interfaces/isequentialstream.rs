@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::ffi_types::{HRES, PCVOID, PVOID};
+use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::prelude::ole_IUnknown;

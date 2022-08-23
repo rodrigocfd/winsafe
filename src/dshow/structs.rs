@@ -3,7 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::ffi_types::BOOL;
+use crate::kernel::ffi_types::BOOL;
 use crate::ole::decl::GUID;
 
 /// [`AM_MEDIA_TYPE`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)

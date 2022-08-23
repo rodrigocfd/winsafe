@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 use std::mem::ManuallyDrop;
 
 use crate::co;
-use crate::ffi_types::{HRES, PCVOID, PVOID};
+use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::{PROPERTYKEY, PROPVARIANT};

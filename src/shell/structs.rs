@@ -3,8 +3,8 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::ffi_types::BOOL;
 use crate::kernel::decl::WString;
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{MAX_PATH, parse_multi_z_str};
 use crate::ole::decl::GUID;
 use crate::user::decl::{HICON, HWND};

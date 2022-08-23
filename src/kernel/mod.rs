@@ -1,4 +1,5 @@
 pub(in crate::kernel) mod ffi;
+pub(crate) mod ffi_types;
 pub(crate) mod privs;
 
 mod aliases;

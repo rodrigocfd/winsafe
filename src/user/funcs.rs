@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::{co, user};
-use crate::ffi_types::BOOL;
 use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult, WString};
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::MsgSend;
 use crate::user::decl::{
@@ -650,7 +650,7 @@ pub fn SoundSentry() -> bool {
 ///
 /// **Note:** The `pv_param` type varies according to `action`. If you set it
 /// wrong, you're likely to cause a buffer overrun.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub unsafe fn SystemParametersInfo<T>(
 	action: co::SPI,
 	ui_param: u32,

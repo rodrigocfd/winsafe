@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
+use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
 extern_sys! { "advapi32";
 	DecryptFileW(PCSTR, u32) -> BOOL

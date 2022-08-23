@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::ffi_types::HANDLE;
+use crate::kernel::ffi_types::HANDLE;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::prelude::ole_IUnknown;
 use crate::user::decl::HWND;

@@ -5,7 +5,7 @@ use std::mem::ManuallyDrop;
 
 use crate::co;
 use crate::dshow::decl::IBaseFilter;
-use crate::ffi_types::HRES;
+use crate::kernel::ffi_types::HRES;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::prelude::ole_IUnknown;

@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::dshow::decl::MFVideoNormalizedRect;
-use crate::ffi_types::{BOOL, HANDLE, HRES, PCVOID, PVOID};
+use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, ole_IUnknown};

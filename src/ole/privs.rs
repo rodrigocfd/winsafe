@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::co;
-use crate::ffi_types::HRES;
+use crate::kernel::ffi_types::HRES;
 use crate::ole::decl::HrResult;
 
 /// If value is `S_OK` yields `Ok()`, othersize `Err(hresult)`.

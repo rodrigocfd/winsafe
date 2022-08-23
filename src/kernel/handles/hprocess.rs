@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::ffi_types::BOOL;
 use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, PROCESS_INFORMATION,
 	SECURITY_ATTRIBUTES, STARTUPINFO, SysResult, WString,
 };
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, INFINITE, MAX_PATH};
 use crate::prelude::{Handle, HandleClose};
 

@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::ffi_types::{HRES, PSTR};
 use crate::kernel::decl::WString;
+use crate::kernel::ffi_types::{HRES, PSTR};
 use crate::kernel::privs::INFINITE;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};

@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PSTR, PVOID};
 
 extern_sys! { "shell32";
 	CommandLineToArgvW(PCSTR, *mut i32) -> *mut PSTR

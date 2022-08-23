@@ -1,3 +1,5 @@
+//! Low-level types used in FFI declarations.
+
 #![allow(dead_code)]
 
 pub(crate) type BOOL = i32;

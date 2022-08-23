@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
+use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 extern_sys! { "kernel32";
 	BeginUpdateResourceW(PCSTR, BOOL) -> HANDLE

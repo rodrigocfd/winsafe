@@ -248,8 +248,6 @@
 
 #[macro_use] mod macros;
 
-mod ffi_types;
-
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
 #[cfg(all(feature = "comctl", feature = "ole"))] mod comctl_ole;
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;

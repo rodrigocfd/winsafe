@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HANDLE, PFUNC, PVOID};
+use crate::kernel::ffi_types::{BOOL, HANDLE, PFUNC, PVOID};
 
 extern_sys! { "comctl32";
 	DefSubclassProc(HANDLE, u32, usize, isize) -> isize

@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::IFilterGraph;
-use crate::ffi_types::{HRES, PCSTR, PSTR, PVOID};
 use crate::kernel::decl::WString;
+use crate::kernel::ffi_types::{HRES, PCSTR, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{dshow_IMediaFilter, ole_IUnknown, shell_IPersist};

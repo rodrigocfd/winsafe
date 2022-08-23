@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::ffi_types::BOOL;
 use crate::kernel::decl::{
 	GetLastError, HRSRC, HRSRCMEM, IdStr, LANGID, RtStr, SysResult, WString,
 };
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, str_to_iso88591};
 use crate::prelude::Handle;
 

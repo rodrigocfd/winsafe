@@ -3,11 +3,11 @@
 use std::collections::HashMap;
 
 use crate::{co, kernel};
-use crate::ffi_types::BOOL;
 use crate::kernel::decl::{
 	FILETIME, MEMORYSTATUSEX, OSVERSIONINFOEX, STARTUPINFO, SysResult,
 	SYSTEM_INFO, SYSTEMTIME, TIME_ZONE_INFORMATION, WString,
 };
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str,

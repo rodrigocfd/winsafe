@@ -1,4 +1,4 @@
-use crate::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PVOID};
+use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PVOID};
 
 #[cfg(target_pointer_width = "64")]
 extern_sys! { "uxtheme";
