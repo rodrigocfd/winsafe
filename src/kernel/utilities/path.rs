@@ -62,15 +62,14 @@ pub fn iter(full_path: &str) -> impl Iterator<Item = &str> {
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn get_file_name(full_path: &str) -> Option<&str> {
-	full_path.rfind('\\')
-		.map_or(
-			Some(full_path), // if no backslash, the whole string is the file name
-			|idx| if idx == full_path.chars().count() - 1 {
-				None // last char is '\\', no file name
-			} else {
-				Some(&full_path[idx + 1..])
-			},
-		)
+	match full_path.rfind('\\') {
+		None => Some(full_path), // if no backslash, the whole string is the file name
+		Some(idx) => if idx == full_path.chars().count() - 1 {
+			None // last char is '\\', no file name
+		} else {
+			Some(&full_path[idx + 1..])
+		},
+	}
 }
 
 /// Extracts the full path, but the last part.
@@ -137,30 +136,28 @@ pub fn replace_extension(full_path: &str, new_extension: &str) -> String {
 	}
 
 	let new_has_dot = new_extension.chars().next() == Some('.');
-	full_path.rfind('.')
-		.map_or_else(
-			|| format!("{}{}{}", // file name without extension, just append it
-				full_path,
-				if new_has_dot { "" } else { "." },
-				new_extension,
-			),
-			|idx| format!("{}{}{}",
-				&full_path[0..idx],
-				if new_has_dot { "" } else { "." },
-				new_extension,
-			),
-		)
+	match full_path.rfind('.') {
+		None => format!("{}{}{}", // file name without extension, just append it
+			full_path,
+			if new_has_dot { "" } else { "." },
+			new_extension,
+		),
+		Some(idx) => format!("{}{}{}",
+			&full_path[0..idx],
+			if new_has_dot { "" } else { "." },
+			new_extension,
+		),
+	}
 }
 
 /// Replaces the file name by the given one.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
-	get_path(full_path)
-		.map_or_else(
-			|| new_file.to_owned(),
-			|path| format!("{}\\{}", path, new_file),
-		)
+	match get_path(full_path) {
+		None => new_file.to_owned(),
+		Some(path) => format!("{}\\{}", path, new_file),
+	}
 }
 
 /// Keeps the file name and replaces the path by the given one.
@@ -199,18 +196,16 @@ pub fn replace_path(full_path: &str, new_path: &str) -> String {
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn rtrim_backslash(full_path: &str) -> &str {
-	full_path.chars()
-		.last()
-		.map_or(
-			full_path, // empty string
-			|last_ch| if last_ch == '\\' {
-				let mut chars = full_path.chars();
-				chars.next_back(); // remove last char
-				chars.as_str()
-			} else {
-				full_path // no trailing backslash
-			},
-		)
+	match full_path.chars().last() {
+		None => full_path, // empty string
+		Some(last_ch) => if last_ch == '\\' {
+			let mut chars = full_path.chars();
+			chars.next_back(); // remove last char
+			chars.as_str()
+		} else {
+			full_path // no trailing backslash
+		},
+	}
 }
 
 //------------------------------------------------------------------------------

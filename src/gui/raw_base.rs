@@ -151,7 +151,8 @@ impl RawBase {
 	pub(in crate::gui) fn fill_wndclassex<'a>(
 		hinst: HINSTANCE,
 		class_style: co::CS,
-		class_icon: &Icon, class_icon_sm: &Icon,
+		class_icon: &Icon,
+		class_icon_sm: &Icon,
 		class_bg_brush: &Brush,
 		class_cursor: &Cursor,
 		wcx: &mut WNDCLASSEX<'a>,

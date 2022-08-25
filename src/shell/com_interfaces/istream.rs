@@ -44,13 +44,14 @@ pub trait shell_IStream: ole_IUnknown {
 	/// to create a new stream over a slice.
 	#[must_use]
 	fn from_slice(src: &[u8]) -> HrResult<IStream> {
-		unsafe {
+		let p = unsafe {
 			shell::ffi::SHCreateMemStream(src.as_ptr(), src.len() as _)
-				.as_ref()
-		}.map_or(
-			Err(co::HRESULT::E_OUTOFMEMORY),
-			|p| Ok(IStream::from(ComPtr(p as *const _ as *mut *mut _))),
-		)
+		};
+		if p.is_null() {
+			Err(co::HRESULT::E_OUTOFMEMORY)
+		} else {
+			Ok(IStream::from(ComPtr(p as _)))
+		}
 	}
 
 	/// [`IStream::Commit`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-commit)

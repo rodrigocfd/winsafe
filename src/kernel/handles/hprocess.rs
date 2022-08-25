@@ -49,7 +49,7 @@ pub trait kernel_Hprocess: Handle {
 		current_dir: Option<&str>,
 		si: &mut STARTUPINFO) -> SysResult<PROCESS_INFORMATION>
 	{
-		let mut buf_cmd_line = command_line.map_or(WString::default(), |lp| WString::from_str(lp));
+		let mut buf_cmd_line = WString::from_opt_str(command_line);
 		let mut pi = PROCESS_INFORMATION::default();
 
 		bool_to_sysresult(

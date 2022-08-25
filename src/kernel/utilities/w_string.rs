@@ -323,11 +323,10 @@ impl WString {
 	/// [`to_string`](crate::WString::to_string) is more practical.
 	#[must_use]
 	pub fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
-		self.vec_u16.as_ref()
-			.map_or(
-				Ok(String::default()),
-				|v| String::from_utf16(&v[..self.len()]), // without terminating null
-			)
+		match &self.vec_u16 {
+			None => Ok(String::default()),
+			Some(v) => String::from_utf16(&v[..self.len()]), // without terminating null
+		}
 	}
 
 	/// Guesses the [`Encoding`](crate::Encoding) of the given data, also
@@ -398,7 +397,7 @@ impl WString {
 
 	#[must_use]
 	fn guess_utf8(data: &[u8]) -> bool {
-		let mut i = 0;
+		let mut i = 0; // https://stackoverflow.com/a/1031773/6923555
 		while i < data.len() {
 			let ch0 = unsafe { *data.get_unchecked(i) };
 
