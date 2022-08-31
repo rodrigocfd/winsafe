@@ -236,6 +236,7 @@
 //!
 //! | Utility | Used for |
 //! | - | - |
+//! | [`Encoding`](crate::Encoding) | String encodings. |
 //! | [`File`](crate::File) | File read/write and other operations. |
 //! | [`FileMapped`](crate::FileMapped) | Memory-mapped file operations. |
 //! | [`Ini`](crate::Ini) | Managing key/value pairs of a `.ini` file. |

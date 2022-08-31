@@ -269,10 +269,10 @@ pub trait advapi_Hkey: Handle {
 
 		let (mut class_ptr, mut class_len) = match &mut class {
 			Some(class) => {
-				if class.buffer_size() < BLOCK {
-					class.realloc_buffer(BLOCK); // make it at least BLOCK_SZ
+				if class.buf_len() < BLOCK {
+					unsafe { class.buf_realloc(BLOCK); } // make it at least BLOCK_SZ
 				}
-				(unsafe { class.as_mut_ptr() }, class.buffer_size() as u32)
+				(unsafe { class.as_mut_ptr() }, class.buf_len() as u32)
 			},
 			None => (std::ptr::null_mut(), 0),
 		};
@@ -307,9 +307,9 @@ pub trait advapi_Hkey: Handle {
 			) {
 				co::ERROR::MORE_DATA => match &mut class {
 					Some(class) => {
-						class.realloc_buffer(class.buffer_size() + BLOCK);
+						unsafe { class.buf_realloc(class.buf_len() + BLOCK); }
 						class_ptr = unsafe { class.as_mut_ptr() };
-						class_len = class.buffer_size() as _;
+						class_len = class.buf_len() as _;
 					},
 					None => return Err(co::ERROR::MORE_DATA),
 				},
@@ -516,7 +516,7 @@ impl<'a> Iterator for EnumKeyIter<'a> {
 			return None;
 		}
 
-		let mut len_buffer = self.name_buffer.buffer_size() as u32;
+		let mut len_buffer = self.name_buffer.buf_len() as u32;
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegEnumKeyExW(
@@ -555,7 +555,7 @@ impl<'a> EnumKeyIter<'a> {
 			hkey,
 			count: num_keys,
 			current: 0,
-			name_buffer: WString::new_alloc_buffer(max_key_name_len as usize + 1),
+			name_buffer: WString::new_alloc_buf(max_key_name_len as usize + 1),
 			_owner: PhantomData,
 		})
 	}
@@ -578,7 +578,7 @@ impl<'a> Iterator for EnumValueIter<'a> {
 		}
 
 		let mut raw_data_type = u32::default();
-		let mut len_buffer = self.name_buffer.buffer_size() as u32;
+		let mut len_buffer = self.name_buffer.buf_len() as u32;
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegEnumValueW(
@@ -617,7 +617,7 @@ impl<'a> EnumValueIter<'a> {
 			hkey,
 			count: num_vals,
 			current: 0,
-			name_buffer: WString::new_alloc_buffer(max_val_name_len as usize + 1),
+			name_buffer: WString::new_alloc_buf(max_val_name_len as usize + 1),
 			_owner: PhantomData,
 		})
 	}

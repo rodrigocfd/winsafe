@@ -123,7 +123,7 @@ impl<'a> ComboBoxItems<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(cb::GetLbTextLen { index })
 			.unwrap();
-		let mut buf = WString::new_alloc_buffer(num_chars as usize + 1);
+		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
 		self.owner.hwnd()
 			.SendMessage(cb::GetLbText { index, text: &mut buf })
 			.unwrap();
@@ -151,7 +151,7 @@ impl<'a> Iterator for ComboBoxItemIter<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(cb::GetLbTextLen { index: self.current })
 			.unwrap();
-		self.buffer.realloc_buffer(num_chars as usize + 1);
+		unsafe { self.buffer.buf_realloc(num_chars as usize + 1); }
 
 		self.owner.hwnd()
 			.SendMessage(cb::GetLbText {
@@ -170,7 +170,7 @@ impl<'a> ComboBoxItemIter<'a> {
 			owner,
 			count: owner.items().count(),
 			current: 0,
-			buffer: WString::new_alloc_buffer(40), // arbitrary
+			buffer: WString::new_alloc_buf(40), // arbitrary
 		}
 	}
 }

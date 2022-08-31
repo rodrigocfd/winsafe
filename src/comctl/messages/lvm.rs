@@ -493,7 +493,7 @@ unsafe impl<'a> MsgSend for GetEmptyText<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETEMPTYTEXT.into(),
-			wparam: self.text.buffer_size(),
+			wparam: self.text.buf_len(),
 			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}

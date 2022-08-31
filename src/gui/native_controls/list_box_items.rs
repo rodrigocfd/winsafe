@@ -117,7 +117,7 @@ impl<'a> ListBoxItems<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(lb::GetTextLen { index })
 			.unwrap();
-		let mut buf = WString::new_alloc_buffer(num_chars as usize + 1);
+		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
 		self.owner.hwnd()
 			.SendMessage(lb::GetText { index, text: &mut buf })
 			.unwrap();
@@ -145,7 +145,7 @@ impl<'a> Iterator for ListBoxItemIter<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(lb::GetTextLen { index: self.current })
 			.unwrap();
-		self.buffer.realloc_buffer(num_chars as usize + 1);
+		unsafe { self.buffer.buf_realloc(num_chars as usize + 1); }
 
 		self.owner.hwnd()
 			.SendMessage(lb::GetText {
@@ -164,7 +164,7 @@ impl<'a> ListBoxItemIter<'a> {
 			owner,
 			count: owner.items().count(),
 			current: 0,
-			buffer: WString::new_alloc_buffer(40), // arbitrary
+			buffer: WString::new_alloc_buf(40), // arbitrary
 		}
 	}
 }
@@ -191,7 +191,7 @@ impl<'a> Iterator for ListBoxSelItemIter<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(lb::GetTextLen { index: cur_sel_index })
 			.unwrap();
-		self.buffer.realloc_buffer(num_chars as usize + 1);
+		unsafe { self.buffer.buf_realloc(num_chars as usize + 1); }
 
 		self.owner.hwnd()
 			.SendMessage(lb::GetText {
@@ -223,7 +223,7 @@ impl<'a> ListBoxSelItemIter<'a> {
 		} else {
 			match owner.hwnd().SendMessage(lb::GetCurSel {}) {
 				Some(index) => vec![index], // single selection: at max 1
-				None => Vec::default(),
+				None => Vec::<u32>::default(),
 			}
 		};
 
@@ -231,7 +231,7 @@ impl<'a> ListBoxSelItemIter<'a> {
 			owner,
 			indexes,
 			current: 0,
-			buffer: WString::new_alloc_buffer(40), // arbitrary
+			buffer: WString::new_alloc_buf(40), // arbitrary
 		}
 	}
 }

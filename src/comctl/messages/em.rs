@@ -28,7 +28,7 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 		WndMsg {
 			msg_id: co::EM::GETCUEBANNER.into(),
 			wparam: unsafe { self.buffer.as_mut_ptr() } as _,
-			lparam: self.buffer.buffer_size() as _,
+			lparam: self.buffer.buf_len() as _,
 		}
 	}
 }

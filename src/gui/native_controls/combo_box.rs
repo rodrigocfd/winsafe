@@ -254,7 +254,7 @@ impl Default for ComboBoxOpts {
 			ctrl_id: 0,
 			horz_resize: Horz::None,
 			vert_resize: Vert::None,
-			items: Vec::default(),
+			items: Vec::<String>::default(),
 			selected_item: None,
 		}
 	}

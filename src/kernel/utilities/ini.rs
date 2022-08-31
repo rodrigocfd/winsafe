@@ -77,10 +77,10 @@ impl Ini {
 	/// Parses an `Ini` from a string.
 	#[must_use]
 	pub fn parse_str(contents: &str) -> Ini {
-		let mut sections = Vec::default();
+		let mut sections = Vec::<IniSection>::default();
 		let mut cur_section = IniSection {
 			name: "".to_owned(),
-			entries: Vec::default(),
+			entries: Vec::<IniEntry>::default(),
 		};
 
 		for line in contents.lines() {
@@ -92,7 +92,7 @@ impl Ini {
 				}
 				cur_section = IniSection {
 					name: line[1..line.len() - 1].to_owned(),
-					entries: Vec::default(),
+					entries: Vec::<IniEntry>::default(),
 				};
 				continue;
 			}
@@ -111,22 +111,19 @@ impl Ini {
 		Self { sections }
 	}
 
-	/// Parses an `Ini` from raw bytes. The [`Encoding`](crate::Encoding) will
-	/// be guessed with
-	/// [`WString::guess_encoding`](crate::WString::guess_encoding).
+	/// Parses an `Ini` from raw bytes with
+	/// [`WString::parse`](crate::WString::parse).
 	#[must_use]
 	pub fn parse_bytes(bytes: &[u8]) -> SysResult<Ini> {
 		Ok(
-			Self::parse_str(&WString::parse_str(bytes)?.to_string()),
+			Self::parse_str(&WString::parse(bytes)?.to_string()),
 		)
 	}
 
-	/// Parses an `Ini` directly from a file. The [`Encoding`](crate::Encoding)
-	/// will be guessed with
-	/// [`WString::guess_encoding`](crate::WString::guess_encoding).
-	///
-	/// The file will be [mapped in memory](crate::FileMapped) during reading
-	/// for maximum performance.
+	/// Parses an `Ini` directly from a file with
+	/// [`WString::parse`](crate::WString::parse). The file will be
+	/// [mapped in memory](crate::FileMapped) during reading for maximum
+	/// performance.
 	#[must_use]
 	pub fn parse_from_file(ini_path: &str) -> SysResult<Ini> {
 		let fin = FileMapped::open(ini_path, FileAccess::ExistingReadOnly)?;

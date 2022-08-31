@@ -175,7 +175,7 @@ impl<'a> TreeViewItem<'a> {
 		tvi.hItem = self.hitem;
 		tvi.mask = co::TVIF::TEXT;
 
-		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1); // arbitrary
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
 		tvi.set_pszText(Some(&mut buf));
 
 		self.owner.hwnd()

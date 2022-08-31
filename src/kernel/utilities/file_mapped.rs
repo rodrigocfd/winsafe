@@ -7,6 +7,20 @@ use crate::prelude::{
 /// Manages an [`HFILEMAP`](crate::HFILEMAP) handle, which provides
 /// memory-mapped file operations, including read/write through slices. It is
 /// closed automatically when the object goes out of scope.
+///
+/// # Examples
+///
+/// [Parsing](crate::WString::parse) a file as string by memory-mapping the file
+/// (usually the fastest method):
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{FileAccess, FileMapped, WString};
+///
+/// let file_in = FileMapped::open("C:\\Temp\\foo.txt", FileAccess::ExistingReadOnly)?;
+/// let str_contents = WString::parse(file_in.as_slice())?.to_string();
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct FileMapped {
 	access: FileAccess,

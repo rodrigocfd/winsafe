@@ -301,10 +301,10 @@ pub trait user_Hwnd: Handle {
 		sz_item_text: Option<u32>) -> SysResult<String>
 	{
 		let buf_sz = sz_item_text.unwrap_or(100) + 1;
-		let mut buf = item.map_or(
-			WString::default(),
-			|_| WString::new_alloc_buffer(buf_sz as _), // room for terminating null
-		);
+		let mut buf = match item {
+			None => WString::default(),
+			Some(_) => WString::new_alloc_buf(buf_sz as _), // room for terminating null
+		};
 
 		bool_to_sysresult(
 			unsafe {
@@ -346,12 +346,12 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetClassName(self) -> SysResult<String> {
-		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
+		let mut buf = WString::new_alloc_buf(256 + 1); // according to WNDCLASSEX docs
 		match unsafe {
 			user::ffi::GetClassNameW(
 				self.as_ptr(),
 				buf.as_mut_ptr(),
-				buf.buffer_size() as _,
+				buf.buf_len() as _,
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -710,7 +710,7 @@ pub trait user_Hwnd: Handle {
 			return Ok(String::default()); // window has no text
 		}
 
-		let mut buf = WString::new_alloc_buffer(len as usize + 1); // plus terminating null
+		let mut buf = WString::new_alloc_buf(len as usize + 1); // plus terminating null
 		match unsafe {
 			user::ffi::GetWindowTextW(self.as_ptr(), buf.as_mut_ptr(), len + 1)
 		} {
@@ -1002,12 +1002,12 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn RealGetWindowClass(self) -> SysResult<String> {
-		let mut buf = WString::new_alloc_buffer(256 + 1); // according to WNDCLASSEX docs
+		let mut buf = WString::new_alloc_buf(256 + 1); // according to WNDCLASSEX docs
 		match unsafe {
 			user::ffi::RealGetWindowClassW(
 				self.as_ptr(),
 				buf.as_mut_ptr(),
-				buf.buffer_size() as _,
+				buf.buf_len() as _,
 			)
 		} {
 			0 => Err(GetLastError()),

@@ -228,7 +228,7 @@ impl<'a> ListViewItem<'a> {
 			let mut lvi = LVITEM::default();
 			lvi.iSubItem = column_index as _;
 
-			buf.realloc_buffer(buf_sz);
+			unsafe { buf.buf_realloc(buf_sz); }
 			lvi.set_pszText(Some(&mut buf));
 
 			let num_chars = self.owner.hwnd()

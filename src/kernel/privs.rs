@@ -40,7 +40,7 @@ pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 /// Parses a null-delimited multi-string, which must terminate with two nulls.
 pub(crate) fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 	let mut src = src;
-	let mut strings = Vec::default();
+	let mut strings = Vec::<String>::default();
 	let mut i = 0;
 
 	loop {

@@ -76,14 +76,14 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetArguments(&self) -> HrResult<String> {
-		let mut buf = WString::new_alloc_buffer(INFOTIPSIZE + 1); // arbitrary
+		let mut buf = WString::new_alloc_buf(INFOTIPSIZE + 1); // arbitrary
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
 			ok_to_hrresult(
 				(vt.GetArguments)(
 					self.ptr(),
 					buf.as_mut_ptr(),
-					buf.buffer_size() as _,
+					buf.buf_len() as _,
 				),
 			).map(|_| buf.to_string())
 		}
@@ -93,14 +93,14 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetDescription(&self) -> HrResult<String> {
-		let mut buf = WString::new_alloc_buffer(INFOTIPSIZE + 1);
+		let mut buf = WString::new_alloc_buf(INFOTIPSIZE + 1);
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
 			ok_to_hrresult(
 				(vt.GetDescription)(
 					self.ptr(),
 					buf.as_mut_ptr(),
-					buf.buffer_size() as _,
+					buf.buf_len() as _,
 				),
 			).map(|_| buf.to_string())
 		}
@@ -112,7 +112,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// Returns the path of the icon and its index within the file.
 	#[must_use]
 	fn GetIconLocation(&self) -> HrResult<(String, i32)> {
-		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		let mut index: i32 = 0;
 
 		unsafe {
@@ -121,7 +121,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 				(vt.GetIconLocation)(
 					self.ptr(),
 					buf.as_mut_ptr(),
-					buf.buffer_size() as _,
+					buf.buf_len() as _,
 					&mut index,
 				),
 			).map(|_| (buf.to_string(), index))
@@ -135,14 +135,14 @@ pub trait shell_IShellLink: ole_IUnknown {
 		fd: Option<&mut WIN32_FIND_DATA>,
 		flags: co::SLGP) -> HrResult<String>
 	{
-		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
 			ok_to_hrresult(
 				(vt.GetPath)(
 					self.ptr(),
 					buf.as_mut_ptr(),
-					buf.buffer_size() as _,
+					buf.buf_len() as _,
 					fd.map_or(std::ptr::null_mut(), |fd| fd as *mut _ as _),
 					flags.0,
 				),
@@ -166,14 +166,14 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetWorkingDirectory(&self) -> HrResult<String> {
-		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		unsafe {
 			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
 			ok_to_hrresult(
 				(vt.GetWorkingDirectory)(
 					self.ptr(),
 					buf.as_mut_ptr(),
-					buf.buffer_size() as _,
+					buf.buf_len() as _,
 				),
 			).map(|_| buf.to_string())
 		}

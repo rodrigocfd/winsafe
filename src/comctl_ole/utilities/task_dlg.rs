@@ -233,7 +233,7 @@ fn generate(
 		custom_btns.push(td_btn);
 		custom_btns
 	} else {
-		Vec::default()
+		Vec::<TASKDIALOG_BUTTON>::default()
 	};
 
 	let mut tdc = TASKDIALOGCONFIG::default();

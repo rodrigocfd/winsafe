@@ -234,8 +234,8 @@ pub trait kernel_Hprocess: Handle {
 	fn QueryFullProcessImageName(self,
 		flags: co::PROCESS_NAME) -> SysResult<String>
 	{
-		let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
-		let mut sz = buf.buffer_size() as u32;
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
+		let mut sz = buf.buf_len() as u32;
 
 		bool_to_sysresult(
 			unsafe {

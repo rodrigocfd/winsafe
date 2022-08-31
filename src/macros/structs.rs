@@ -119,7 +119,7 @@ macro_rules! pub_fn_string_buf_get_set {
 
 		/// Sets the string field.
 		pub fn $setter(&mut self, buf: Option<&$life mut crate::kernel::decl::WString>) {
-			self.$cch = buf.as_ref().map_or(0, |buf| buf.buffer_size() as _);
+			self.$cch = buf.as_ref().map_or(0, |buf| buf.buf_len() as _);
 			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
 		}
 	};

@@ -46,8 +46,8 @@ pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
 #[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 #[must_use]
 pub fn GetUserName() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buffer(UNLEN + 1);
-	let mut sz = buf.buffer_size() as u32;
+	let mut buf = WString::new_alloc_buf(UNLEN + 1);
+	let mut sz = buf.buf_len() as u32;
 
 	match unsafe { advapi::ffi::GetUserNameW(buf.as_mut_ptr(), &mut sz) } {
 		0 => Err(GetLastError()),

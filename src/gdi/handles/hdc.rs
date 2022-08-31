@@ -398,9 +398,13 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	#[must_use]
 	fn GetTextFace(self) -> SysResult<String> {
-		let mut buf = WString::new_alloc_buffer(LF_FACESIZE + 1);
+		let mut buf = WString::new_alloc_buf(LF_FACESIZE + 1);
 		match unsafe {
-			gdi::ffi::GetTextFaceW(self.as_ptr(), buf.len() as _, buf.as_mut_ptr())
+			gdi::ffi::GetTextFaceW(
+				self.as_ptr(),
+				buf.buf_len() as _,
+				buf.as_mut_ptr(),
+			)
 		} {
 			0 => Err(GetLastError()),
 			v => Ok(v),

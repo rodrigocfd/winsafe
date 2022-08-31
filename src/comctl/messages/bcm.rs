@@ -75,7 +75,7 @@ unsafe impl<'a> MsgSend for GetNote<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BCM::GETNOTE.into(),
-			wparam: self.text.buffer_size(),
+			wparam: self.text.buf_len(),
 			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}
@@ -223,7 +223,7 @@ unsafe impl MsgSend for SetNote {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BCM::SETNOTE.into(),
-			wparam: self.text.buffer_size(),
+			wparam: self.text.buf_len(),
 			lparam: unsafe { self.text.as_ptr() } as _,
 		}
 	}

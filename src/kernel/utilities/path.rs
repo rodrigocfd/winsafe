@@ -12,7 +12,7 @@ use crate::prelude::{Handle, kernel_Hinstance};
 /// Returns the path of the current EXE file, without the EXE filename, and
 /// without a trailing backslash.
 ///
-/// In a debug build, the `target\debug` folders will not show up.
+/// In a debug build, the `target\debug` folders will be suppressed.
 #[cfg(debug_assertions)]
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -31,7 +31,7 @@ pub fn exe_path() -> SysResult<String> {
 /// Returns the path of the current EXE file, without the EXE filename, and
 /// without a trailing backslash.
 ///
-/// In a debug build, the `target\debug` folders will not show up.
+/// In a debug build, the `target\debug` folders will be suppressed.
 #[cfg(not(debug_assertions))]
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]

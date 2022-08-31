@@ -342,14 +342,14 @@ pub trait user_Hmenu: Handle {
 		let mut buf = WString::default();
 
 		loop {
-			buf.realloc_buffer(buf_sz);
+			unsafe { buf.buf_realloc(buf_sz); }
 
 			let nchars = match unsafe {
 				user::ffi::GetMenuStringW(
 					self.as_ptr(),
 					id_or_pos.id_or_pos_u32(),
 					buf.as_mut_ptr(),
-					buf.buffer_size() as _,
+					buf.buf_len() as _,
 					id_or_pos.mf_flag().0,
 				)
 			} {

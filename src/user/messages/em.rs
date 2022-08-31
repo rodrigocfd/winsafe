@@ -202,7 +202,7 @@ unsafe impl<'a> MsgSend for GetLine<'a> {
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		self.buffer.fill_with_zero();
-		let buf_len = self.buffer.buffer_size() - 1; // leave room for terminating null
+		let buf_len = self.buffer.buf_len() - 1; // leave room for terminating null
 		self.buffer.as_mut_slice()
 			.iter_mut()
 			.next()

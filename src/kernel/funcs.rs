@@ -70,7 +70,7 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 		)
 	};
 
-	let mut buf = WString::new_alloc_buffer(len as _);
+	let mut buf = WString::new_alloc_buf(len as _);
 	match unsafe {
 		kernel::ffi::ExpandEnvironmentStringsW(
 			wsrc.as_ptr(),
@@ -131,8 +131,8 @@ pub fn GetCommandLine() -> String {
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn GetComputerName() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buffer(MAX_COMPUTERNAME_LENGTH + 1);
-	let mut sz = buf.buffer_size() as u32;
+	let mut buf = WString::new_alloc_buf(MAX_COMPUTERNAME_LENGTH + 1);
+	let mut sz = buf.buf_len() as u32;
 
 	bool_to_sysresult(
 		unsafe { kernel::ffi::GetComputerNameW(buf.as_mut_ptr(), &mut sz) },
@@ -144,10 +144,10 @@ pub fn GetComputerName() -> SysResult<String> {
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn GetCurrentDirectory() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 	match unsafe {
 		kernel::ffi::GetCurrentDirectoryW(
-			buf.buffer_size() as _,
+			buf.buf_len() as _,
 			buf.as_mut_ptr(),
 		)
 	} {
@@ -251,7 +251,7 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 	} {
 		0 => Err(GetLastError()),
 		len => {
-			let mut buf = WString::new_alloc_buffer(len as usize + 1);
+			let mut buf = WString::new_alloc_buf(len as usize + 1);
 
 			match unsafe {
 				kernel::ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr())
@@ -373,9 +373,9 @@ pub fn GetSystemTimes(
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn GetTempPath() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 	match unsafe {
-		kernel::ffi::GetTempPathW(buf.buffer_size() as _, buf.as_mut_ptr()) }
+		kernel::ffi::GetTempPathW(buf.buf_len() as _, buf.as_mut_ptr()) }
 	{
 		0 => Err(GetLastError()),
 		_ => Ok(buf.to_string()),
@@ -387,9 +387,9 @@ pub fn GetTempPath() -> SysResult<String> {
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn GetSystemDirectory() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buffer(MAX_PATH + 1);
+	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 	match unsafe {
-		kernel::ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buffer_size() as _)
+		kernel::ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _)
 	} {
 		0 => Err(GetLastError()),
 		_ => Ok(buf.to_string()),
@@ -449,11 +449,11 @@ pub fn GetVolumeInformation(
 {
 	let mut name_buf = match name {
 		None => (WString::default(), 0),
-		Some(_) => (WString::new_alloc_buffer(MAX_PATH + 1), MAX_PATH + 1),
+		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
 	};
 	let mut sys_name_buf = match file_system_name {
 		None => (WString::default(), 0),
-		Some(_) => (WString::new_alloc_buffer(MAX_PATH + 1), MAX_PATH + 1),
+		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
 	};
 
 	bool_to_sysresult(

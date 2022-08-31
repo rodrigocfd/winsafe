@@ -84,7 +84,7 @@ pub trait shell_Hdrop: Handle {
 	fn DragQueryFile(self,
 		ifile: Option<u32>, buf: Option<&mut WString>) -> SysResult<u32>
 	{
-		let cch = buf.as_ref().map_or(0, |buf| buf.buffer_size());
+		let cch = buf.as_ref().map_or(0, |buf| buf.buf_len());
 
 		match unsafe {
 			shell::ffi::DragQueryFileW(
@@ -155,7 +155,7 @@ impl<'a> DropsIter<'a> {
 	fn new(hdrop: HDROP) -> SysResult<Self> {
 		Ok(Self {
 			hdrop,
-			buffer: WString::new_alloc_buffer(MAX_PATH + 1), // so we alloc just once
+			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
 			count: hdrop.DragQueryFile(None, None)?,
 			current: 0,
 			_owner: PhantomData,

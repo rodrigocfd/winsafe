@@ -404,7 +404,7 @@ impl Default for ListViewOpts {
 			horz_resize: Horz::None,
 			vert_resize: Vert::None,
 			context_menu: None,
-			columns: Vec::default(),
+			columns: Vec::<(String, u32)>::default(),
 		}
 	}
 }

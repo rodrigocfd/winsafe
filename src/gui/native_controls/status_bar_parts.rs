@@ -58,7 +58,7 @@ impl<'a> StatusBarParts<'a> {
 		let (num_chars, _) = self.owner.hwnd()
 			.SendMessage(sb::GetTextLength { part_index });
 
-		let mut buf = WString::new_alloc_buffer(num_chars as usize + 1);
+		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
 		self.owner.hwnd()
 			.SendMessage(sb::GetText {
 				part_index,

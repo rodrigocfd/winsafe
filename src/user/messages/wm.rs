@@ -657,7 +657,7 @@ unsafe impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 /// # let hwnd = HWND::NULL;
 ///
 /// let needed_len = hwnd.SendMessage(wm::GetTextLength {});
-/// let mut buf = WString::new_alloc_buffer(needed_len as _);
+/// let mut buf = WString::new_alloc_buf(needed_len as _);
 ///
 /// hwnd.SendMessage(wm::GetText {
 ///     buffer: buf.as_mut_slice(),

@@ -281,7 +281,7 @@ impl<'a> LinesIter<'a> {
 			owner,
 			count: owner.hwnd().SendMessage(em::GetLineCount {}),
 			current: 0,
-			buffer: WString::new_alloc_buffer(
+			buffer: WString::new_alloc_buf(
 				owner.hwnd().GetWindowTextLength().unwrap() as usize + 1,
 			),
 		}

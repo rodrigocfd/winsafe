@@ -155,7 +155,7 @@ impl<'a> ListViewColumns<'a> {
 		lvc.iSubItem = column_index as _;
 		lvc.mask = co::LVCF::TEXT;
 
-		let mut buf = WString::new_alloc_buffer(128); // arbitrary
+		let mut buf = WString::new_alloc_buf(128); // arbitrary
 		lvc.set_pszText(Some(&mut buf));
 
 		self.info(column_index, &mut lvc);

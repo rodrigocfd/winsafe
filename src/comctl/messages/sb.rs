@@ -128,7 +128,7 @@ unsafe impl<'a> MsgSend for GetTipText<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::GETTIPTEXT.into(),
-			wparam: MAKEDWORD(self.part_index as _, self.text.len() as _) as _,
+			wparam: MAKEDWORD(self.part_index as _, self.text.buf_len() as _) as _,
 			lparam: unsafe { self.text.as_mut_ptr() } as _,
 		}
 	}

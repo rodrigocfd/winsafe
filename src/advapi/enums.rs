@@ -55,7 +55,7 @@ impl RegistryValue {
 			Self::Binary(b) => b.len(),
 			Self::Dword(_) => std::mem::size_of::<u32>(),
 			Self::Qword(_) => std::mem::size_of::<u64>(),
-			Self::Sz(ws) => (ws.len() + 1) * std::mem::size_of::<u16>(), // including terminating null
+			Self::Sz(ws) => (ws.buf_len() + 1) * std::mem::size_of::<u16>(), // including terminating null
 			Self::None => 0,
 		}
 	}

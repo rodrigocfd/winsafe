@@ -25,6 +25,9 @@ pub enum FileAccess {
 /// This is an alternative to the standard
 /// [`std::fs::File`](https://doc.rust-lang.org/std/fs/struct.File.html), with a
 /// possibly faster implementation since it's Windows-only.
+///
+/// If you just want to read the file, consider memory-mapping it with
+/// [`FileMapped`](crate::FileMapped), which tends to be faster.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct File {
 	hfile: HFILE,
