@@ -373,6 +373,15 @@ const_bitflag! { GR: u32: "kernel";
 	USEROBJECTS_PEAK 4
 }
 
+const_ordinary! { HF32: u32: "kernel";
+	/// [`HEAPLIST32`](crate::HEAPLIST32) `dwFlags` (`u32`).
+	=>
+	=>
+	NoValue 0
+	/// Default heap of the process.
+	DEFAULT 1
+}
+
 const_ordinary! { LANG: u16: "kernel";
 	/// Language
 	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)

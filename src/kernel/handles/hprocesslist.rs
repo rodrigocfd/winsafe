@@ -4,7 +4,8 @@ use std::marker::PhantomData;
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	GetLastError, MODULEENTRY32, PROCESSENTRY32, SysResult, THREADENTRY32,
+	GetLastError, HEAPLIST32, MODULEENTRY32, PROCESSENTRY32, SysResult,
+	THREADENTRY32,
 };
 use crate::prelude::{Handle, HandleClose};
 
@@ -27,8 +28,41 @@ impl kernel_Hprocesslist for HPROCESSLIST {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hprocesslist: Handle {
-	/// Returns an iterator over the [`MODULEENTRY32`](crate::MODULEENTRY32)
-	/// structs of the processes list by calling
+	/// Returns an iterator over the heaps of a process, with
+	/// [`HEAPLIST32`](crate::HEAPLIST32) structs. Calls
+	/// [`HPROCESSLIST::Heap32ListFirst`](crate::prelude::kernel_Hprocesslist::Heap32ListFirst)
+	/// and then
+	/// [`HPROCESSLIST::Heap32ListNext`](crate::prelude::kernel_Hprocesslist::Heap32ListNext)
+	/// consecutively.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HPROCESSLIST};
+	///
+	/// let hpl = HPROCESSLIST::
+	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPHEAPLIST, None)?;
+	///
+	/// for heap_entry in hpl.iter_heaps() {
+	///     let heap_entry = heap_entry?;
+	///     let is_default_heap = heap_entry.dwFlags == co::HF32::DEFAULT;
+	///     println!("{} {}",
+	///         heap_entry.th32HeapID, heap_entry.th32ProcessID);
+	/// }
+	///
+	/// hpl.CloseHandle()?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn iter_heaps<'a>(&'a self)
+		-> Box<dyn Iterator<Item = SysResult<&'a HEAPLIST32>> + 'a>
+	{
+		Box::new(HeapIter::new(HPROCESSLIST(unsafe { self.as_ptr() })))
+	}
+
+	/// Returns an iterator over the modules of a process, with
+	/// [`MODULEENTRY32`](crate::MODULEENTRY32) structs. Calls
 	/// [`HPROCESSLIST::Module32First`](crate::prelude::kernel_Hprocesslist::Module32First)
 	/// and then
 	/// [`HPROCESSLIST::Module32Next`](crate::prelude::kernel_Hprocesslist::Module32Next)
@@ -59,8 +93,8 @@ pub trait kernel_Hprocesslist: Handle {
 		Box::new(ModuleIter::new(HPROCESSLIST(unsafe { self.as_ptr() })))
 	}
 
-	/// Returns an iterator over the [`PROCESSENTRY32`](crate::PROCESSENTRY32)
-	/// structs of the processes list by calling
+	/// Returns an iterator over the processes of a process, with
+	/// [`PROCESSENTRY32`](crate::PROCESSENTRY32) structs. Calls
 	/// [`HPROCESSLIST::Process32First`](crate::prelude::kernel_Hprocesslist::Process32First)
 	/// and then
 	/// [`HPROCESSLIST::Process32Next`](crate::prelude::kernel_Hprocesslist::Process32Next)
@@ -91,8 +125,8 @@ pub trait kernel_Hprocesslist: Handle {
 		Box::new(ProcessIter::new(HPROCESSLIST(unsafe { self.as_ptr() })))
 	}
 
-	/// Returns an iterator over the [`THREADENTRY32`](crate::THREADENTRY32)
-	/// structs of the threads list by calling
+	/// Returns an iterator over the threads of a process, with
+	/// [`THREADENTRY32`](crate::THREADENTRY32) structs. Calls
 	/// [`HPROCESSLIST::Thread32First`](crate::prelude::kernel_Hprocesslist::Thread32First)
 	/// and then
 	/// [`HPROCESSLIST::Thread32Next`](crate::prelude::kernel_Hprocesslist::Thread32Next)
@@ -143,6 +177,44 @@ pub trait kernel_Hprocesslist: Handle {
 			).as_mut()
 		}.map(|ptr| HPROCESSLIST(ptr))
 			.ok_or_else(|| GetLastError())
+	}
+
+	/// [`HeapList32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listfirst)
+	/// method.
+	///
+	/// Prefer using
+	/// [`HPROCESSLIST::iter_heaps`](crate::prelude::kernel_Hprocesslist::iter_heaps),
+	/// which is simpler.
+	#[must_use]
+	fn Heap32ListFirst(self, hl: &mut HEAPLIST32) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::Heap32ListFirst(self.as_ptr(), hl as *mut _ as _)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::NO_MORE_FILES => Ok(false),
+				err => Err(err),
+			},
+			_ => Ok(true),
+		}
+	}
+
+	/// [`HeapList32Next`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listnext)
+	/// method.
+	///
+	/// Prefer using
+	/// [`HPROCESSLIST::iter_heaps`](crate::prelude::kernel_Hprocesslist::iter_heaps),
+	/// which is simpler.
+	#[must_use]
+	fn Heap32ListNext(self, hl: &mut HEAPLIST32) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::Heap32ListNext(self.as_ptr(), hl as *mut _ as _)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::NO_MORE_FILES => Ok(false),
+				err => Err(err),
+			},
+			_ => Ok(true),
+		}
 	}
 
 	/// [`Module32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32firstw)
@@ -256,6 +328,63 @@ pub trait kernel_Hprocesslist: Handle {
 				err => Err(err),
 			},
 			_ => Ok(true),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct HeapIter<'a> {
+	hpl: HPROCESSLIST,
+	hl32: HEAPLIST32,
+	first_pass: bool,
+	has_more: bool,
+	_owner: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for HeapIter<'a> {
+	type Item = SysResult<&'a HEAPLIST32>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if !self.has_more {
+			return None;
+		}
+
+		let has_more_res = if self.first_pass {
+			self.first_pass = false;
+			self.hpl.Heap32ListFirst(&mut self.hl32)
+		} else {
+			self.hpl.Heap32ListNext(&mut self.hl32)
+		};
+
+		match has_more_res {
+			Err(e) => {
+				self.has_more = false; // no further iterations
+				Some(Err(e))
+			},
+			Ok(has_more) => {
+				self.has_more = has_more;
+				if has_more {
+					// Returning a reference cannot be done until GATs
+					// stabilization, so we simply cheat the borrow checker.
+					let ptr = &self.hl32 as *const HEAPLIST32;
+					Some(Ok(unsafe { &*ptr }))
+				} else {
+					None // no heap found
+				}
+			},
+		}
+	}
+}
+
+impl<'a> HeapIter<'a> {
+	fn new(hpl: HPROCESSLIST) -> Self {
+		Self {
+			hpl,
+			hl32: HEAPLIST32::default(),
+			first_pass: true,
+			has_more: true,
+			_owner: PhantomData,
 		}
 	}
 }

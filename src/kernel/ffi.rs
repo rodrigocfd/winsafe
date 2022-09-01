@@ -81,6 +81,8 @@ extern_sys! { "kernel32";
 	GlobalReAlloc(HANDLE, usize, u32) -> HANDLE
 	GlobalSize(HANDLE) -> usize
 	GlobalUnlock(HANDLE) -> BOOL
+	Heap32ListFirst(HANDLE, PVOID) -> BOOL
+	Heap32ListNext(HANDLE, PVOID) -> BOOL
 	IsDebuggerPresent() -> BOOL
 	IsNativeVhdBoot(*mut BOOL) -> BOOL
 	IsProcessCritical(HANDLE, *mut BOOL) -> BOOL

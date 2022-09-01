@@ -49,6 +49,19 @@ pub struct FILETIME {
 	pub dwHighDateTime: u32,
 }
 
+/// [`HEAPLIST32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-heaplist32)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[repr(C)]
+pub struct HEAPLIST32 {
+	dwSize: usize,
+	pub th32ProcessID: u32,
+	pub th32HeapID: usize,
+	pub dwFlags: co::HF32,
+}
+
+impl_default_with_size!(HEAPLIST32, dwSize);
+
 /// [`LANGID`](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifiers)
 /// language identifier.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
