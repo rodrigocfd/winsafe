@@ -38,23 +38,30 @@ pub trait kernel_Hfindfile: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::HFINDFILE;
+	/// use winsafe::{AnyResult, HFINDFILE};
 	///
 	/// for file_path in HFINDFILE::iter("C:\\Temp\\*.txt") {
 	///     let file_path = file_path?;
 	///     println!("File: {}", file_path);
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	///
+	/// HFINDFILE::iter("C:\\Temp\\*.txt")
+	///     .try_for_each(|file_path| -> AnyResult<()> {
+	///         let file_path = file_path?;
+	///         println!("File: {}", file_path);
+	///         Ok(())
+	///     })?;
+	/// # Ok::<_, Box<dyn std::error::Error + Send + Sync>>(())
 	/// ```
 	///
-	/// Collecting the strings into a
+	/// Collecting the TXTs into a
 	/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html):
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HFINDFILE, SysResult};
 	///
-	/// let file_paths = HFINDFILE::iter("")
+	/// let file_paths = HFINDFILE::iter("C:\\Temp\\*.txt")
 	///     .collect::<SysResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
@@ -62,7 +69,7 @@ pub trait kernel_Hfindfile: Handle {
 	fn iter<'a>(
 		path_and_pattern: &'a str) -> Box<dyn Iterator<Item = SysResult<String>> + 'a>
 	{
-		Box::new(HfindfileIter::new(path_and_pattern))
+		Box::new(FindFileIter::new(path_and_pattern))
 	}
 
 	/// [`FindClose`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
@@ -119,21 +126,21 @@ pub trait kernel_Hfindfile: Handle {
 
 //------------------------------------------------------------------------------
 
-struct HfindfileIter<'a> {
+struct FindFileIter<'a> {
 	hfind: HFINDFILE,
-	first_pass: bool,
 	wfd: WIN32_FIND_DATA,
 	path_and_pattern: &'a str,
+	first_pass: bool,
 	no_more: bool,
 }
 
-impl<'a> Drop for HfindfileIter<'a> {
+impl<'a> Drop for FindFileIter<'a> {
 	fn drop(&mut self) {
 		self.hfind.FindClose().ok(); // ignore error
 	}
 }
 
-impl<'a> Iterator for HfindfileIter<'a> {
+impl<'a> Iterator for FindFileIter<'a> {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -173,13 +180,13 @@ impl<'a> Iterator for HfindfileIter<'a> {
 	}
 }
 
-impl<'a> HfindfileIter<'a> {
+impl<'a> FindFileIter<'a> {
 	fn new(path_and_pattern: &'a str) -> Self {
 		Self {
 			hfind: HFINDFILE::NULL,
-			first_pass: true,
 			wfd: WIN32_FIND_DATA::default(),
 			path_and_pattern,
+			first_pass: true,
 			no_more: false,
 		}
 	}
