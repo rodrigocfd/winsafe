@@ -8,6 +8,7 @@ pub(crate) const INFINITE: u32 = 0xffff_ffff;
 pub(crate) const INVALID_FILE_ATTRIBUTES: i32 = -1;
 pub(crate) const INVALID_HANDLE_VALUE: isize = -1;
 pub(crate) const MAX_COMPUTERNAME_LENGTH: usize = 15;
+pub(crate) const MAX_MODULE_NAME32: usize = 255;
 pub(crate) const MAX_PATH: usize = 260;
 
 /// [`IS_INTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)

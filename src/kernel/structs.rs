@@ -3,8 +3,10 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::kernel::decl::{HEVENT, HPIPE, HPROCESS, HTHREAD, MAKEQWORD};
-use crate::kernel::privs::MAX_PATH;
+use crate::kernel::decl::{
+	HEVENT, HINSTANCE, HPIPE, HPROCESS, HTHREAD, MAKEQWORD,
+};
+use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
 
 /// [`ACL`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
@@ -137,6 +139,30 @@ impl LCID {
 	pub const fn sort_id(self) -> co::SORT {
 		co::SORT(((self.0 >> 16) & 0xf) as _)
 	}
+}
+
+/// [`MODULEENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[repr(C)]
+pub struct MODULEENTRY32 {
+	dwSize: u32,
+	th32ModuleID: u32,
+	pub th32ProcessID: u32,
+	pub GlblcntUsage: u32,
+	pub ProccntUsage: u32,
+	pub modBaseAddr: *mut std::ffi::c_void,
+	pub modBaseSize: u32,
+	pub hModule: HINSTANCE,
+	szModule: [u16; MAX_MODULE_NAME32 + 1],
+	szExePath: [u16; MAX_PATH],
+}
+
+impl_default_with_size!(MODULEENTRY32, dwSize);
+
+impl MODULEENTRY32 {
+	pub_fn_string_arr_get_set!(szModule, set_szModule);
+	pub_fn_string_arr_get_set!(szExePath, set_szExePath);
 }
 
 /// [`MEMORYSTATUSEX`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)

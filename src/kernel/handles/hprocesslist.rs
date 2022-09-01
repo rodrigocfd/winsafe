@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	GetLastError, PROCESSENTRY32, SysResult, THREADENTRY32,
+	GetLastError, MODULEENTRY32, PROCESSENTRY32, SysResult, THREADENTRY32,
 };
 use crate::prelude::{Handle, HandleClose};
 
@@ -27,6 +27,38 @@ impl kernel_Hprocesslist for HPROCESSLIST {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hprocesslist: Handle {
+	/// Returns an iterator over the [`MODULEENTRY32`](crate::MODULEENTRY32)
+	/// structs of the processes list by calling
+	/// [`HPROCESSLIST::Module32First`](crate::prelude::kernel_Hprocesslist::Module32First)
+	/// and then
+	/// [`HPROCESSLIST::Module32Next`](crate::prelude::kernel_Hprocesslist::Module32Next)
+	/// consecutively.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HPROCESSLIST};
+	///
+	/// let hpl = HPROCESSLIST::
+	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPMODULE, None)?;
+	///
+	/// for mod_entry in hpl.iter_modules() {
+	///     let mod_entry = mod_entry?;
+	///     println!("{} {}",
+	///         mod_entry.szModule(), mod_entry.th32ProcessID);
+	/// }
+	///
+	/// hpl.CloseHandle()?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn iter_modules<'a>(&'a self)
+		-> Box<dyn Iterator<Item = SysResult<&'a MODULEENTRY32>> + 'a>
+	{
+		Box::new(ModuleIter::new(HPROCESSLIST(unsafe { self.as_ptr() })))
+	}
+
 	/// Returns an iterator over the [`PROCESSENTRY32`](crate::PROCESSENTRY32)
 	/// structs of the processes list by calling
 	/// [`HPROCESSLIST::Process32First`](crate::prelude::kernel_Hprocesslist::Process32First)
@@ -113,6 +145,44 @@ pub trait kernel_Hprocesslist: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
+	/// [`Module32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32firstw)
+	/// method.
+	///
+	/// Prefer using
+	/// [`HPROCESSLIST::iter_modules`](crate::prelude::kernel_Hprocesslist::iter_modules),
+	/// which is simpler.
+	#[must_use]
+	fn Module32First(self, me: &mut MODULEENTRY32) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::Module32FirstW(self.as_ptr(), me as *mut _ as _)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::NO_MORE_FILES => Ok(false),
+				err => Err(err),
+			},
+			_ => Ok(true),
+		}
+	}
+
+	/// [`Module32Next`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32nextw)
+	/// method.
+	///
+	/// Prefer using
+	/// [`HPROCESSLIST::iter_modules`](crate::prelude::kernel_Hprocesslist::iter_modules),
+	/// which is simpler.
+	#[must_use]
+	fn Module32Next(self, me: &mut MODULEENTRY32) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::Module32NextW(self.as_ptr(), me as *mut _ as _)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::NO_MORE_FILES => Ok(false),
+				err => Err(err),
+			},
+			_ => Ok(true),
+		}
+	}
+
 	/// [`Process32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw)
 	/// method.
 	///
@@ -186,6 +256,63 @@ pub trait kernel_Hprocesslist: Handle {
 				err => Err(err),
 			},
 			_ => Ok(true),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct ModuleIter<'a> {
+	hpl: HPROCESSLIST,
+	me32: MODULEENTRY32,
+	first_pass: bool,
+	has_more: bool,
+	_owner: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for ModuleIter<'a> {
+	type Item = SysResult<&'a MODULEENTRY32>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if !self.has_more {
+			return None;
+		}
+
+		let has_more_res = if self.first_pass {
+			self.first_pass = false;
+			self.hpl.Module32First(&mut self.me32)
+		} else {
+			self.hpl.Module32Next(&mut self.me32)
+		};
+
+		match has_more_res {
+			Err(e) => {
+				self.has_more = false; // no further iterations
+				Some(Err(e))
+			},
+			Ok(has_more) => {
+				self.has_more = has_more;
+				if has_more {
+					// Returning a reference cannot be done until GATs
+					// stabilization, so we simply cheat the borrow checker.
+					let ptr = &self.me32 as *const MODULEENTRY32;
+					Some(Ok(unsafe { &*ptr }))
+				} else {
+					None // no module found
+				}
+			},
+		}
+	}
+}
+
+impl<'a> ModuleIter<'a> {
+	fn new(hpl: HPROCESSLIST) -> Self {
+		Self {
+			hpl,
+			me32: MODULEENTRY32::default(),
+			first_pass: true,
+			has_more: true,
+			_owner: PhantomData,
 		}
 	}
 }
@@ -285,7 +412,7 @@ impl<'a> Iterator for ThreadIter<'a> {
 					let ptr = &self.te32 as *const THREADENTRY32;
 					Some(Ok(unsafe { &*ptr }))
 				} else {
-					None // no process found
+					None // no thread found
 				}
 			},
 		}
