@@ -345,6 +345,22 @@ pub struct SYSTEMTIME {
 	pub wMilliseconds: u16,
 }
 
+/// [`THREADENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-threadentry32)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[repr(C)]
+pub struct THREADENTRY32 {
+	dwSize: u32,
+	cntUsage: u32,
+	pub th32ThreadID: u32,
+	pub th32OwnerProcessID: u32,
+	pub tpBasePri: i32,
+	tpDeltaPri: i32,
+	dwFlags: u32,
+}
+
+impl_default_with_size!(THREADENTRY32, dwSize);
+
 /// [`TIME_ZONE_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]

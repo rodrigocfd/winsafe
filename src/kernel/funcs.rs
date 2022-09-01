@@ -156,22 +156,6 @@ pub fn GetCurrentDirectory() -> SysResult<String> {
 	}
 }
 
-/// [`GetCurrentProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
-/// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-#[must_use]
-pub fn GetCurrentProcessId() -> u32 {
-	unsafe { kernel::ffi::GetCurrentProcessId() }
-}
-
-/// [`GetCurrentThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid)
-/// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-#[must_use]
-pub fn GetCurrentThreadId() -> u32 {
-	unsafe { kernel::ffi::GetCurrentThreadId() }
-}
-
 /// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
 /// function.
 ///

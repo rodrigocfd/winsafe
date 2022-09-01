@@ -1,10 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
-use std::ptr::NonNull;
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, PROCESSENTRY32, SysResult};
+use crate::kernel::decl::{
+	GetLastError, PROCESSENTRY32, SysResult, THREADENTRY32,
+};
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HPROCESSLIST: "kernel";
@@ -26,7 +27,8 @@ impl kernel_Hprocesslist for HPROCESSLIST {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hprocesslist: Handle {
-	/// Returns an iterator over the processes list by calling
+	/// Returns an iterator over the [`PROCESSENTRY32`](crate::PROCESSENTRY32)
+	/// structs of the processes list by calling
 	/// [`HPROCESSLIST::Process32First`](crate::prelude::kernel_Hprocesslist::Process32First)
 	/// and then
 	/// [`HPROCESSLIST::Process32Next`](crate::prelude::kernel_Hprocesslist::Process32Next)
@@ -36,26 +38,59 @@ pub trait kernel_Hprocesslist: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HPROCESSLIST, PROCESSENTRY32};
+	/// use winsafe::{co, HPROCESSLIST};
 	///
-	/// let mut pe = PROCESSENTRY32::default();
 	/// let hpl = HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)?;
 	///
-	/// for pe in hpl.iter(&mut pe) {
-	///     let pe = pe?;
+	/// for proc_entry in hpl.iter_processes() {
+	///     let proc_entry = proc_entry?;
 	///     println!("{} {} {}",
-	///         pe.szExeFile(), pe.th32ProcessID, pe.cntThreads);
+	///         proc_entry.szExeFile(), proc_entry.th32ProcessID, proc_entry.cntThreads);
 	/// }
 	///
 	/// hpl.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter<'a>(&'a self, pe32: &'a mut PROCESSENTRY32)
+	fn iter_processes<'a>(&'a self)
 		-> Box<dyn Iterator<Item = SysResult<&'a PROCESSENTRY32>> + 'a>
 	{
-		Box::new(ProcessIter::new(HPROCESSLIST(unsafe { self.as_ptr() }), pe32))
+		Box::new(ProcessIter::new(HPROCESSLIST(unsafe { self.as_ptr() })))
+	}
+
+	/// Returns an iterator over the [`THREADENTRY32`](crate::THREADENTRY32)
+	/// structs of the threads list by calling
+	/// [`HPROCESSLIST::Thread32First`](crate::prelude::kernel_Hprocesslist::Thread32First)
+	/// and then
+	/// [`HPROCESSLIST::Thread32Next`](crate::prelude::kernel_Hprocesslist::Thread32Next)
+	/// consecutively.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HPROCESS, HPROCESSLIST};
+	///
+	/// let hpl = HPROCESSLIST::CreateToolhelp32Snapshot(
+	///     co::TH32CS::SNAPTHREAD,
+	///     Some(HPROCESS::GetCurrentProcessId()),
+	/// )?;
+	///
+	/// for thread_entry in hpl.iter_threads() {
+	///     let thread_entry = thread_entry?;
+	///     println!("{} {}",
+	///         thread_entry.th32ThreadID, thread_entry.th32OwnerProcessID);
+	/// }
+	///
+	/// hpl.CloseHandle()?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn iter_threads<'a>(&'a self)
+		-> Box<dyn Iterator<Item = SysResult<&'a THREADENTRY32>> + 'a>
+	{
+		Box::new(ThreadIter::new(HPROCESSLIST(unsafe { self.as_ptr() })))
 	}
 
 	/// [`CreateToolhelp32Snapshot`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
@@ -82,8 +117,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// method.
 	///
 	/// Prefer using
-	/// [`HPROCESSLIST::iter`](crate::prelude::kernel_Hprocesslist::iter), which
-	/// is simpler.
+	/// [`HPROCESSLIST::iter_processes`](crate::prelude::kernel_Hprocesslist::iter_processes),
+	/// which is simpler.
+	#[must_use]
 	fn Process32First(self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Process32FirstW(self.as_ptr(), pe as *mut _ as _)
@@ -100,11 +136,50 @@ pub trait kernel_Hprocesslist: Handle {
 	/// method.
 	///
 	/// Prefer using
-	/// [`HPROCESSLIST::iter`](crate::prelude::kernel_Hprocesslist::iter), which
-	/// is simpler.
+	/// [`HPROCESSLIST::iter_processes`](crate::prelude::kernel_Hprocesslist::iter_processes),
+	/// which is simpler.
+	#[must_use]
 	fn Process32Next(self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Process32NextW(self.as_ptr(), pe as *mut _ as _)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::NO_MORE_FILES => Ok(false),
+				err => Err(err),
+			},
+			_ => Ok(true),
+		}
+	}
+
+	/// [`Thread32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32first)
+	/// method.
+	///
+	/// Prefer using
+	/// [`HPROCESSLIST::iter_threads`](crate::prelude::kernel_Hprocesslist::iter_threads),
+	/// which is simpler.
+	#[must_use]
+	fn Thread32First(self, te: &mut THREADENTRY32) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::Thread32First(self.as_ptr(), te as *mut _ as _)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::NO_MORE_FILES => Ok(false),
+				err => Err(err),
+			},
+			_ => Ok(true),
+		}
+	}
+
+	/// [`Thread32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32next)
+	/// method.
+	///
+	/// Prefer using
+	/// [`HPROCESSLIST::iter_threads`](crate::prelude::kernel_Hprocesslist::iter_threads),
+	/// which is simpler.
+	#[must_use]
+	fn Thread32Next(self, te: &mut THREADENTRY32) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::Thread32Next(self.as_ptr(), te as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false),
@@ -119,10 +194,10 @@ pub trait kernel_Hprocesslist: Handle {
 
 struct ProcessIter<'a> {
 	hpl: HPROCESSLIST,
-	pe32: NonNull<PROCESSENTRY32>,
+	pe32: PROCESSENTRY32,
 	first_pass: bool,
 	has_more: bool,
-	_pe32: PhantomData<&'a mut PROCESSENTRY32>,
+	_owner: PhantomData<&'a ()>,
 }
 
 impl<'a> Iterator for ProcessIter<'a> {
@@ -133,12 +208,14 @@ impl<'a> Iterator for ProcessIter<'a> {
 			return None;
 		}
 
-		match if self.first_pass {
+		let has_more_res = if self.first_pass {
 			self.first_pass = false;
-			self.hpl.Process32First(unsafe { self.pe32.as_mut() })
+			self.hpl.Process32First(&mut self.pe32)
 		} else {
-			self.hpl.Process32Next(unsafe { self.pe32.as_mut() })
-		} {
+			self.hpl.Process32Next(&mut self.pe32)
+		};
+
+		match has_more_res {
 			Err(e) => {
 				self.has_more = false; // no further iterations
 				Some(Err(e))
@@ -146,7 +223,10 @@ impl<'a> Iterator for ProcessIter<'a> {
 			Ok(has_more) => {
 				self.has_more = has_more;
 				if has_more {
-					Some(Ok(unsafe { self.pe32.as_mut() }))
+					// Returning a reference cannot be done until GATs
+					// stabilization, so we simply cheat the borrow checker.
+					let ptr = &self.pe32 as *const PROCESSENTRY32;
+					Some(Ok(unsafe { &*ptr }))
 				} else {
 					None // no process found
 				}
@@ -156,13 +236,70 @@ impl<'a> Iterator for ProcessIter<'a> {
 }
 
 impl<'a> ProcessIter<'a> {
-	fn new(hpl: HPROCESSLIST, pe32: &'a mut PROCESSENTRY32) -> Self {
+	fn new(hpl: HPROCESSLIST) -> Self {
 		Self {
 			hpl,
-			pe32: NonNull::from(pe32),
+			pe32: PROCESSENTRY32::default(),
 			first_pass: true,
 			has_more: true,
-			_pe32: PhantomData,
+			_owner: PhantomData,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct ThreadIter<'a> {
+	hpl: HPROCESSLIST,
+	te32: THREADENTRY32,
+	first_pass: bool,
+	has_more: bool,
+	_owner: PhantomData<&'a ()>,
+}
+
+impl<'a> Iterator for ThreadIter<'a> {
+	type Item = SysResult<&'a THREADENTRY32>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if !self.has_more {
+			return None;
+		}
+
+		let has_more_res = if self.first_pass {
+			self.first_pass = false;
+			self.hpl.Thread32First(&mut self.te32)
+		} else {
+			self.hpl.Thread32Next(&mut self.te32)
+		};
+
+		match has_more_res {
+			Err(e) => {
+				self.has_more = false; // no further iterations
+				Some(Err(e))
+			},
+			Ok(has_more) => {
+				self.has_more = has_more;
+				if has_more {
+					// Returning a reference cannot be done until GATs
+					// stabilization, so we simply cheat the borrow checker.
+					let ptr = &self.te32 as *const THREADENTRY32;
+					Some(Ok(unsafe { &*ptr }))
+				} else {
+					None // no process found
+				}
+			},
+		}
+	}
+}
+
+impl<'a> ThreadIter<'a> {
+	fn new(hpl: HPROCESSLIST) -> Self {
+		Self {
+			hpl,
+			te32: THREADENTRY32::default(),
+			first_pass: true,
+			has_more: true,
+			_owner: PhantomData,
 		}
 	}
 }

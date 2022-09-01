@@ -1117,12 +1117,21 @@ const_bitflag! { TH32CS: u32: "kernel";
 	/// (`u32`).
 	=>
 	=>
+	/// Includes all heaps of the process.
 	SNAPHEAPLIST 0x0000_0001
+	/// Includes all processes of the process in the snapshot.
 	SNAPPROCESS 0x0000_0002
+	/// Includes all threads of the process in the snapshot.
 	SNAPTHREAD 0x0000_0004
+	/// Includes all modules of the process in the snapshot.
 	SNAPMODULE 0x0000_0008
+	/// Includes all 32-bit modules of the process when called from a 64-bit
+	/// process.
 	SNAPMODULE32 0x0000_0010
+	/// Includes all processes and threads in the system, plus the heaps and
+	/// modules of the process.
 	SNAPALL Self::SNAPHEAPLIST.0 | Self::SNAPPROCESS.0 | Self::SNAPTHREAD.0 | Self::SNAPMODULE.0
+	/// Indicates that the snapshot handle is to be inheritable.
 	INHERIT 0x8000_0000
 }
 

@@ -68,6 +68,13 @@ pub trait kernel_Hthread: Handle {
 		HTHREAD(unsafe { kernel::ffi::GetCurrentThread() })
 	}
 
+	/// [`GetCurrentThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid)
+	/// static method.
+	#[must_use]
+	fn GetCurrentThreadId() -> u32 {
+		unsafe { kernel::ffi::GetCurrentThreadId() }
+	}
+
 	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
 	/// method.
 	#[must_use]

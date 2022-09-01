@@ -104,6 +104,13 @@ pub trait kernel_Hprocess: Handle {
 		HPROCESS(unsafe { kernel::ffi::GetCurrentProcess() })
 	}
 
+	/// [`GetCurrentProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
+	/// static method.
+	#[must_use]
+	fn GetCurrentProcessId() -> u32 {
+		unsafe { kernel::ffi::GetCurrentProcessId() }
+	}
+
 	/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
 	/// method.
 	#[must_use]
@@ -124,6 +131,18 @@ pub trait kernel_Hprocess: Handle {
 			0 => Err(GetLastError()),
 			count => Ok(count),
 		}
+	}
+
+	/// [`GetProcessHandleCount`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount)
+	/// method.
+	#[must_use]
+	fn GetProcessHandleCount(self) -> SysResult<u32> {
+		let mut count = u32::default();
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::GetProcessHandleCount(self.as_ptr(), &mut count)
+			},
+		).map(|_| count)
 	}
 
 	/// [`GetProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
@@ -155,6 +174,13 @@ pub trait kernel_Hprocess: Handle {
 				)
 			},
 		)
+	}
+
+	/// [`IsDebuggerPresent`](https://docs.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-isdebuggerpresent)
+	/// static method.
+	#[must_use]
+	fn IsDebuggerPresent() -> bool {
+		unsafe { kernel::ffi::IsDebuggerPresent() != 0 }
 	}
 
 	/// [`IsProcessCritical`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)
@@ -194,7 +220,8 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn OpenProcess(
 		desired_access: co::PROCESS,
-		inherit_handle: bool, process_id: u32) -> SysResult<HPROCESS>
+		inherit_handle: bool,
+		process_id: u32) -> SysResult<HPROCESS>
 	{
 		unsafe {
 			kernel::ffi::OpenProcess(

@@ -57,6 +57,7 @@ extern_sys! { "kernel32";
 	GetModuleHandleW(PCSTR) -> HANDLE
 	GetNativeSystemInfo(PVOID)
 	GetProcAddress(HANDLE, *const u8) -> PCVOID
+	GetProcessHandleCount(HANDLE, &mut u32) -> BOOL
 	GetProcessId(HANDLE) -> u32
 	GetProcessIdOfThread(HANDLE) -> u32
 	GetProcessTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
@@ -80,6 +81,7 @@ extern_sys! { "kernel32";
 	GlobalReAlloc(HANDLE, usize, u32) -> HANDLE
 	GlobalSize(HANDLE) -> usize
 	GlobalUnlock(HANDLE) -> BOOL
+	IsDebuggerPresent() -> BOOL
 	IsNativeVhdBoot(*mut BOOL) -> BOOL
 	IsProcessCritical(HANDLE, *mut BOOL) -> BOOL
 	IsTokenRestricted(HANDLE) -> BOOL
@@ -114,6 +116,8 @@ extern_sys! { "kernel32";
 	Sleep(u32)
 	SystemTimeToFileTime(PCVOID, PVOID) -> BOOL
 	SystemTimeToTzSpecificLocalTime(PCVOID, PCVOID, PVOID) -> BOOL
+	Thread32First(HANDLE, PVOID) -> BOOL
+	Thread32Next(HANDLE, PVOID) -> BOOL
 	UnlockFile(HANDLE, u32, u32, u32, u32) -> BOOL
 	UnmapViewOfFile(PCVOID) -> BOOL
 	UpdateResourceW(HANDLE, PCSTR, PCSTR, u16, PVOID, u32) -> BOOL
