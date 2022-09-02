@@ -49,7 +49,7 @@ macro_rules! com_interface {
 			}
 
 			unsafe fn vt_ref<T>(&self) -> &T {
-				&**(self.0.0 as *mut *mut T)
+				&**self.0.into_ptr::<T>()
 			}
 		}
 	}

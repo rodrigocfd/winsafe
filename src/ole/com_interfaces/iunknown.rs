@@ -2,38 +2,8 @@
 
 use crate::co;
 use crate::kernel::ffi_types::{HRES, PCVOID};
-use crate::ole::decl::HrResult;
+use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-
-/// A pointer to a COM virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-#[repr(transparent)]
-#[derive(Clone, Copy)]
-pub struct ComPtr(pub(crate) *mut *mut IUnknownVT);
-
-impl From<ComPtr> for usize {
-	fn from(com_ptr: ComPtr) -> Self {
-		com_ptr.0 as _
-	}
-}
-
-impl ComPtr {
-	/// Creates a null pointer to a COM virtual table.
-	///
-	/// Used internally by the library.
-	#[must_use]
-	pub const unsafe fn null() -> Self {
-		Self(std::ptr::null_mut())
-	}
-
-	/// Returns `true` if the pointer is null.
-	#[must_use]
-	pub fn is_null(&self) -> bool {
-		self.0.is_null()
-	}
-}
-
-//------------------------------------------------------------------------------
 
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
