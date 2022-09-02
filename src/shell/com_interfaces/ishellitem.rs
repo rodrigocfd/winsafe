@@ -87,7 +87,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
+			let vt = self.vt_ref::<IShellItemVT>();
 			ok_to_hrresult(
 				(vt.BindToHandler)(
 					self.ptr(),
@@ -107,7 +107,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		let mut attrs = u32::default();
 		match co::HRESULT(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
+				let vt = self.vt_ref::<IShellItemVT>();
 				(vt.GetAttributes)(self.ptr(), sfgao_mask.0, &mut attrs)
 			},
 		) {
@@ -140,7 +140,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	fn GetDisplayName(&self, sigdn_name: co::SIGDN) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
+			let vt = self.vt_ref::<IShellItemVT>();
 			ok_to_hrresult(
 				(vt.GetDisplayName)(self.ptr(), sigdn_name.0, &mut pstr),
 			)
@@ -175,7 +175,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	fn GetParent(&self) -> HrResult<IShellItem> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IShellItemVT);
+			let vt = self.vt_ref::<IShellItemVT>();
 			ok_to_hrresult((vt.GetParent)(self.ptr(), &mut ppv_queried))
 				.map(|_| IShellItem::from(ppv_queried))
 		}

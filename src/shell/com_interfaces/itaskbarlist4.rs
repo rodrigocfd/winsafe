@@ -63,7 +63,7 @@ pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 		hwnd_tab: HWND, stp_flags: co::STPFLAG) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList4VT);
+			let vt = self.vt_ref::<ITaskbarList4VT>();
 			ok_to_hrresult(
 				(vt.SetTabProperties)(self.ptr(), hwnd_tab.0, stp_flags.0),
 			)

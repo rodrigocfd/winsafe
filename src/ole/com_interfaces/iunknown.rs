@@ -97,6 +97,13 @@ pub trait ole_IUnknown: Clone + From<ComPtr> {
 	#[must_use]
 	unsafe fn ptr(&self) -> ComPtr;
 
+	/// Returns a reference to the underlying COM virtual table.
+	///
+	/// **Note:** Be sure the pointer has the correct virtual table type (or
+	/// inherits from it), and it is not null.
+	#[must_use]
+	unsafe fn vt_ref<T>(&self) -> &T;
+
 	/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
 	/// method.
 	#[must_use]
@@ -105,7 +112,7 @@ pub trait ole_IUnknown: Clone + From<ComPtr> {
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IUnknownVT);
+			let vt = self.vt_ref::<IUnknownVT>();
 			ok_to_hrresult(
 				(vt.QueryInterface)(
 					self.ptr(),

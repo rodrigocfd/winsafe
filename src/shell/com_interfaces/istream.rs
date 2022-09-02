@@ -59,7 +59,7 @@ pub trait shell_IStream: ole_IUnknown {
 	fn Commit(&self, flags: co::STGC) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IStreamVT);
+				let vt = self.vt_ref::<IStreamVT>();
 				(vt.Commit)(self.ptr(), flags.0)
 			},
 		)
@@ -73,7 +73,7 @@ pub trait shell_IStream: ole_IUnknown {
 		let (mut read, mut written) = (u64::default(), u64::default());
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IStreamVT);
+				let vt = self.vt_ref::<IStreamVT>();
 				(vt.CopyTo)(
 					self.ptr(),
 					dest.ptr(),
@@ -96,7 +96,7 @@ pub trait shell_IStream: ole_IUnknown {
 	{
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IStreamVT);
+				let vt = self.vt_ref::<IStreamVT>();
 				(vt.LockRegion)(self.ptr(), offset, length, lock_type.0)
 			},
 		)
@@ -107,7 +107,7 @@ pub trait shell_IStream: ole_IUnknown {
 	fn Revert(&self) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IStreamVT);
+				let vt = self.vt_ref::<IStreamVT>();
 				(vt.Revert)(self.ptr())
 			},
 		)
@@ -123,7 +123,7 @@ pub trait shell_IStream: ole_IUnknown {
 		let mut new_off = u64::default();
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IStreamVT);
+				let vt = self.vt_ref::<IStreamVT>();
 				(vt.Seek)(self.ptr(), displacement, origin.0, &mut new_off)
 			},
 		).map(|_| new_off)
@@ -134,7 +134,7 @@ pub trait shell_IStream: ole_IUnknown {
 	fn SetSize(&self, new_size: u64) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IStreamVT);
+				let vt = self.vt_ref::<IStreamVT>();
 				(vt.SetSize)(self.ptr(), new_size)
 			},
 		)
@@ -147,7 +147,7 @@ pub trait shell_IStream: ole_IUnknown {
 	{
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IStreamVT);
+				let vt = self.vt_ref::<IStreamVT>();
 				(vt.UnlockRegion)(self.ptr(), offset, length, lock_type.0)
 			},
 		)

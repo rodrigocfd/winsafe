@@ -66,7 +66,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn AddPlace(&self, si: &IShellItem, fdap: co::FDAP) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.AddPlace)(self.ptr(), si.ptr(), fdap.0))
 		}
 	}
@@ -75,7 +75,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn ClearClientData(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.ClearClientData)(self.ptr()))
 		}
 	}
@@ -84,7 +84,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn Close(&self, hr: co::ERROR) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.Close)(self.ptr(), hr.0 as _))
 		}
 	}
@@ -95,7 +95,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn GetCurrentSelection(&self) -> HrResult<IShellItem> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetCurrentSelection)(self.ptr(), &mut ppv_queried))
 				.map(|_| IShellItem::from(ppv_queried))
 		}
@@ -107,7 +107,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn GetFileName(&self) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetFileName)(self.ptr(), &mut pstr))
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
@@ -122,7 +122,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn GetFileTypeIndex(&self) -> HrResult<u32> {
 		let mut index = u32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetFileTypeIndex)(self.ptr(), &mut index))
 		}.map(|_| index)
 	}
@@ -133,7 +133,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn GetFolder(&self) -> HrResult<IShellItem> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetFolder)(self.ptr(), &mut ppv_queried))
 				.map(|_| IShellItem::from(ppv_queried))
 		}
@@ -145,7 +145,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn GetOptions(&self) -> HrResult<co::FOS> {
 		let mut opts = u32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetOptions)(self.ptr(), &mut opts))
 		}.map(|_| co::FOS(opts))
 	}
@@ -156,7 +156,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn GetResult(&self) -> HrResult<IShellItem> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetResult)(self.ptr(), &mut ppv_queried))
 				.map(|_| IShellItem::from(ppv_queried))
 		}
@@ -166,7 +166,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetClientGuid(&self, guid: &GUID) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.SetClientGuid)(self.ptr(), guid as *const _ as _))
 		}
 	}
@@ -175,7 +175,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetDefaultExtension(&self, default_extension: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult(
 				(vt.SetDefaultExtension)(
 					self.ptr(),
@@ -189,7 +189,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetDefaultFolder(&self, si: &IShellItem) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.SetDefaultFolder)(self.ptr(), si.ptr()))
 		}
 	}
@@ -198,7 +198,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetFileName(&self, name: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult(
 				(vt.SetFileName)(self.ptr(), WString::from_str(name).as_ptr()),
 			)
@@ -209,7 +209,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetFileNameLabel(&self, label: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult(
 				(vt.SetFileNameLabel)(
 					self.ptr(),
@@ -225,7 +225,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// **Note:** The index is one-based.
 	fn SetFileTypeIndex(&self, index: u32) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.SetFileTypeIndex)(self.ptr(), index))
 		}
 	}
@@ -269,7 +269,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 			.for_each(|(i, el)| com_dlgs[i].set_pszSpec(Some(el)));
 
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult(
 				(vt.SetFileTypes)(
 					self.ptr(),
@@ -284,7 +284,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetFolder(&self, si: &IShellItem) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.SetFolder)(self.ptr(), si.ptr()))
 		}
 	}
@@ -293,7 +293,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetOkButtonLabel(&self, text: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult(
 				(vt.SetOkButtonLabel)(self.ptr(), WString::from_str(text).as_ptr()),
 			)
@@ -304,7 +304,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetOptions(&self, opts: co::FOS) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.SetOptions)(self.ptr(), opts.0))
 		}
 	}
@@ -313,7 +313,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetTitle(&self, text: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileDialogVT);
+			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult(
 				(vt.SetTitle)(self.ptr(), WString::from_str(text).as_ptr()),
 			)

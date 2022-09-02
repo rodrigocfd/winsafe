@@ -51,7 +51,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	fn BeginFlush(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.BeginFlush)(self.ptr()))
 		}
 	}
@@ -62,7 +62,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		receive_pin: &IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult(
 				(vt.Connect)(
 					self.ptr(),
@@ -79,7 +79,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	fn ConnectedTo(&self) -> HrResult<IPin> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult(
 				(vt.ConnectedTo)(self.ptr(), &mut ppv_queried),
 			).map(|_| IPin::from(ppv_queried))
@@ -90,7 +90,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	fn ConnectionMediaType(&self, mt: &mut AM_MEDIA_TYPE) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.ConnectionMediaType)(self.ptr(), mt as *mut _ as _))
 		}
 	}
@@ -99,7 +99,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	fn Disconnect(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.Disconnect)(self.ptr()))
 		}
 	}
@@ -108,7 +108,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	fn EndFlush(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.EndFlush)(self.ptr()))
 		}
 	}
@@ -117,7 +117,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	fn EndOfStream(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.EndOfStream)(self.ptr()))
 		}
 	}
@@ -126,7 +126,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	fn NewSegment(&self, start: i64, stop: i64, rate: f64) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.NewSegment)(self.ptr(), start, stop, rate))
 		}
 	}
@@ -136,7 +136,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	#[must_use]
 	fn QueryAccept(&self, mt: &AM_MEDIA_TYPE) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			okfalse_to_hrresult((vt.QueryAccept)(self.ptr(), mt as *const _ as _))
 		}
 	}
@@ -147,7 +147,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	fn QueryDirection(&self) -> HrResult<co::PIN_DIRECTION> {
 		let mut pin_dir = co::PIN_DIRECTION::INPUT;
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult(
 				(vt.QueryDirection)(self.ptr(), &mut pin_dir as *mut _ as _),
 			).map(|_| pin_dir)
@@ -160,7 +160,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	fn QueryId(&self) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.QueryId)(self.ptr(), &mut pstr))
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
@@ -175,7 +175,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	fn QueryInternalConnections(&self) -> HrResult<Vec<IPin>> {
 		let mut count = u32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			if let Err(e) = ok_to_hrresult(
 				(vt.QueryInternalConnections)(
 					self.ptr(),
@@ -205,18 +205,18 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	fn QueryPinInfo(&self, info: &mut PIN_INFO) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.QueryPinInfo)(self.ptr(), info as *mut _ as _))
 		}
 	}
 
-	/// [`IPin::ReceiveConnection`]`(https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
+	/// [`IPin::ReceiveConnection`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
 	/// method.
 	fn ReceiveConnection(&self,
 		connector: &IPin, mt: &AM_MEDIA_TYPE) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult(
 				(vt.ReceiveConnection)(
 					self.ptr(),

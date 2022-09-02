@@ -77,7 +77,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn GetAspectRatioMode(&self) -> HrResult<co::MFVideoARMode> {
 		let mut mode = co::MFVideoARMode::None;
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult(
 				(vt.GetAspectRatioMode)(self.ptr(), &mut mode as *mut _ as _),
 			)
@@ -90,7 +90,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn GetBorderColor(&self) -> HrResult<COLORREF> {
 		let mut color = COLORREF::new(0, 0, 0);
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult((vt.GetBorderColor)(self.ptr(), &mut color.0))
 		}.map(|_| color)
 	}
@@ -101,7 +101,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn GetFullscreen(&self) -> HrResult<bool> {
 		let mut fulls = false;
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult(
 				(vt.GetFullscreen)(self.ptr(), &mut fulls as *mut _ as _),
 			)
@@ -116,7 +116,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn GetIdealVideoSize(&self) -> HrResult<(SIZE, SIZE)> {
 		let (mut min, mut max) = (SIZE::default(), SIZE::default());
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult(
 				(vt.GetIdealVideoSize)(
 					self.ptr(),
@@ -135,7 +135,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn GetNativeVideoSize(&self) -> HrResult<(SIZE, SIZE)> {
 		let (mut native, mut aspec) = (SIZE::default(), SIZE::default());
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult(
 				(vt.GetNativeVideoSize)(
 					self.ptr(),
@@ -154,7 +154,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		let mut rc = RECT::default();
 
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult(
 				(vt.GetVideoPosition)(
 					self.ptr(),
@@ -171,7 +171,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn GetVideoWindow(&self) -> HrResult<HWND> {
 		let mut hwnd = HWND::NULL;
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult((vt.GetVideoWindow)(self.ptr(), &mut hwnd.0))
 		}.map(|_| hwnd)
 	}
@@ -181,7 +181,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn RepaintVideo(&self) -> HrResult<()> {
 		match co::HRESULT(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+				let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 				(vt.RepaintVideo)(self.ptr())
 			},
 		) {
@@ -195,7 +195,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// method.
 	fn SetAspectRatioMode(&self, mode: co::MFVideoARMode) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult((vt.SetAspectRatioMode)(self.ptr(), mode.0))
 		}
 	}
@@ -204,7 +204,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// method.
 	fn SetBorderColor(&self, color: COLORREF) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult((vt.SetBorderColor)(self.ptr(), color.0))
 		}
 	}
@@ -213,7 +213,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// method.
 	fn SetFullscreen(&self, full_screen: bool) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult((vt.SetFullscreen)(self.ptr(), full_screen as _))
 		}
 	}
@@ -227,7 +227,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		dest: Option<RECT>) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult(
 				(vt.SetVideoPosition)(
 					self.ptr(),
@@ -242,7 +242,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// method.
 	fn SetVideoWindow(&self, hwnd_video: HWND) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.0))
 		}
 	}

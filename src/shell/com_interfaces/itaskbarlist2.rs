@@ -58,7 +58,7 @@ pub trait shell_ITaskbarList2: shell_ITaskbarList {
 		hwnd: HWND, full_screen: bool) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList2VT);
+			let vt = self.vt_ref::<ITaskbarList2VT>();
 			ok_to_hrresult(
 				(vt.MarkFullscreenWindow)(self.ptr(), hwnd.0, full_screen as _),
 			)

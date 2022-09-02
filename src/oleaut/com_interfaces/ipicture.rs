@@ -120,7 +120,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	fn get_CurDC(&self) -> HrResult<HDC> {
 		let mut hdc = HDC::NULL;
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_CurDC)(self.ptr(), &mut hdc.0))
 				.map(|_| hdc)
 		}
@@ -157,7 +157,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	fn get_Height(&self) -> HrResult<i32> {
 		let mut h = i32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_Height)(self.ptr(), &mut h))
 				.map(|_| h)
 		}
@@ -169,7 +169,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	fn get_Type(&self) -> HrResult<co::PICTYPE> {
 		let mut ty = i16::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_Type)(self.ptr(), &mut ty))
 				.map(|_| co::PICTYPE(ty))
 		}
@@ -206,7 +206,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	fn get_Width(&self) -> HrResult<i32> {
 		let mut w = i32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_Width)(self.ptr(), &mut w))
 				.map(|_| w)
 		}
@@ -216,7 +216,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	/// method.
 	fn PictureChanged(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.PictureChanged)(self.ptr()))
 		}
 	}
@@ -225,7 +225,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 	/// method.
 	fn put_KeepOriginalFormat(&self, keep: bool) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.put_KeepOriginalFormat)(self.ptr(), keep as _))
 		}
 	}
@@ -238,7 +238,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 		metafile_bounds: Option<&RECT>) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult(
 				(vt.Render)(
 					self.ptr(),
@@ -261,7 +261,7 @@ pub trait oleaut_IPicture: ole_IUnknown {
 		let mut hbmp = HBITMAP::NULL;
 
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPictureVT);
+			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult(
 				(vt.SelectPicture)(self.ptr(), hdc.0, &mut hdc_out.0, &mut hbmp.0),
 			)

@@ -47,7 +47,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	fn GetTypeInfoCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IDispatchVT);
+			let vt = self.vt_ref::<IDispatchVT>();
 			ok_to_hrresult((vt.GetTypeInfoCount)(self.ptr(), &mut count))
 		}.map(|_| count)
 
@@ -59,7 +59,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	fn GetTypeInfo(&self, info_type: u32, lcid: LCID) -> HrResult<ITypeInfo> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IDispatchVT);
+			let vt = self.vt_ref::<IDispatchVT>();
 			ok_to_hrresult(
 				(vt.GetTypeInfo)(
 					self.ptr(),

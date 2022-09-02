@@ -61,7 +61,7 @@ pub trait shell_IFileSaveDialog: shell_IFileDialog {
 	/// method.
 	fn SetSaveAsItem(&self, psi: IShellItem) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileSaveDialogVT);
+			let vt = self.vt_ref::<IFileSaveDialogVT>();
 			ok_to_hrresult((vt.SetSaveAsItem)(self.ptr(), psi.ptr()))
 		}
 	}

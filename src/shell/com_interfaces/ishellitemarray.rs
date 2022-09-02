@@ -102,7 +102,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellItemArrayVT);
+			let vt = self.vt_ref::<IShellItemArrayVT>();
 			ok_to_hrresult((vt.GetCount)(self.ptr(), &mut count))
 		}.map(|_| count)
 	}
@@ -116,7 +116,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	fn GetItemAt(&self, index: u32) -> HrResult<IShellItem> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IShellItemArrayVT);
+			let vt = self.vt_ref::<IShellItemArrayVT>();
 			ok_to_hrresult((vt.GetItemAt)(self.ptr(), index, &mut ppv_queried))
 				.map(|_| IShellItem::from(ppv_queried))
 		}

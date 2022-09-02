@@ -82,7 +82,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 	fn GetResults(&self) -> HrResult<IShellItemArray> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
+			let vt = self.vt_ref::<IFileOpenDialogVT>();
 			ok_to_hrresult((vt.GetResults)(self.ptr(), &mut ppv_queried))
 				.map(|_| IShellItemArray::from(ppv_queried))
 		}
@@ -94,7 +94,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 	fn GetSelectedItems(&self) -> HrResult<IShellItemArray> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IFileOpenDialogVT);
+			let vt = self.vt_ref::<IFileOpenDialogVT>();
 			ok_to_hrresult((vt.GetSelectedItems)(self.ptr(), &mut ppv_queried))
 				.map(|_| IShellItemArray::from(ppv_queried))
 		}

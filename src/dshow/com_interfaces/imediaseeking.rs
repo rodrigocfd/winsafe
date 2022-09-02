@@ -77,7 +77,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	{
 		let mut target = i64::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult(
 				(vt.ConvertTimeFormat)(
 					self.ptr(),
@@ -98,7 +98,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetAvailable(&self) -> HrResult<(i64, i64)> {
 		let (mut early, mut late) = (i64::default(), i64::default());
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.GetPositions)(self.ptr(), &mut early, &mut late))
 		}.map(|_| (early, late))
 	}
@@ -109,7 +109,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetCurrentPosition(&self) -> HrResult<i64> {
 		let mut pos = i64::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.GetCurrentPosition)(self.ptr(), &mut pos))
 		}.map(|_| pos)
 	}
@@ -120,7 +120,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetDuration(&self) -> HrResult<i64> {
 		let mut duration = i64::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.GetDuration)(self.ptr(), &mut duration))
 		}.map(|_| duration)
 	}
@@ -133,7 +133,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetPositions(&self) -> HrResult<(i64, i64)> {
 		let (mut current, mut stop) = (i64::default(), i64::default());
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.GetPositions)(self.ptr(), &mut current, &mut stop))
 		}.map(|_| (current, stop))
 	}
@@ -144,7 +144,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetPreroll(&self) -> HrResult<i64> {
 		let mut preroll = i64::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.GetPreroll)(self.ptr(), &mut preroll))
 		}.map(|_| preroll)
 	}
@@ -155,7 +155,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetRate(&self) -> HrResult<f64> {
 		let mut rate = f64::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.GetRate)(self.ptr(), &mut rate))
 		}.map(|_| rate)
 	}
@@ -166,7 +166,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetStopPosition(&self) -> HrResult<i64> {
 		let mut pos = i64::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.GetStopPosition)(self.ptr(), &mut pos))
 		}.map(|_| pos)
 	}
@@ -177,7 +177,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetTimeFormat(&self) -> HrResult<co::TIME_FORMAT> {
 		let mut time_guid = co::TIME_FORMAT::NONE;
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult(
 				(vt.GetStopPosition)(self.ptr(), &mut time_guid as *mut _ as _),
 			)
@@ -193,7 +193,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		let (mut current, mut stop) = (current, stop);
 		match co::HRESULT(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+				let vt = self.vt_ref::<IMediaSeekingVT>();
 				(vt.SetPositions)(
 					self.ptr(),
 					&mut current,
@@ -213,7 +213,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// method.
 	fn SetRate(&self, rate: f64) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult((vt.SetRate)(self.ptr(), rate))
 		}
 	}
@@ -222,7 +222,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// method.
 	fn SetTimeFormat(&self, format: &co::TIME_FORMAT) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaSeekingVT);
+			let vt = self.vt_ref::<IMediaSeekingVT>();
 			ok_to_hrresult(
 				(vt.SetTimeFormat)(self.ptr(), format as *const _ as _),
 			)

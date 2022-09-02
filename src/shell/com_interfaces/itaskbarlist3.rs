@@ -70,7 +70,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// method.
 	fn RegisterTab(&self, hwnd_tab: HWND, hwnd_mdi: HWND) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.RegisterTab)(self.ptr(), hwnd_tab.0, hwnd_mdi.0),
 			)
@@ -83,7 +83,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		hwnd: HWND, hicon: Option<HICON>, description: &str) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.SetOverlayIcon)(
 					self.ptr(),
@@ -101,7 +101,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		hwnd: HWND, tbpf_flags: co::TBPF) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.SetProgressState)(self.ptr(), hwnd.0, tbpf_flags.0),
 			)
@@ -131,7 +131,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		hwnd: HWND, completed: u64, total: u64) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.SetProgressValue)(self.ptr(), hwnd.0, completed, total),
 			)
@@ -142,7 +142,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// method.
 	fn SetTabActive(&self, hwnd_tab: HWND, hwnd_mdi: HWND) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.SetTabActive)(self.ptr(), hwnd_tab.0, hwnd_mdi.0, 0),
 			)
@@ -155,7 +155,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		hwnd_tab: HWND, hwnd_insert_before: HWND) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.SetTabOrder)(self.ptr(), hwnd_tab.0, hwnd_insert_before.0),
 			)
@@ -166,7 +166,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// method.
 	fn SetThumbnailClip(&self, hwnd: HWND, clip: Option<RECT>) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.SetThumbnailClip)(self.ptr(), hwnd.0, &clip as *const _ as _),
 			)
@@ -179,7 +179,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		hwnd: HWND, tip: Option<&str>) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut ITaskbarList3VT);
+			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
 				(vt.SetThumbnailTooltip)(
 					self.ptr(),

@@ -64,7 +64,7 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 		graph: Option<&IFilterGraph>, name: &str) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IBaseFilterVT);
+			let vt = self.vt_ref::<IBaseFilterVT>();
 			ok_to_hrresult(
 				(vt.JoinFilterGraph)(
 					self.ptr(),
@@ -81,7 +81,7 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	fn QueryVendorInfo(&self) -> HrResult<String> {
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IBaseFilterVT);
+			let vt = self.vt_ref::<IBaseFilterVT>();
 			ok_to_hrresult((vt.QueryVendorInfo)(self.ptr(), &mut pstr))
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);

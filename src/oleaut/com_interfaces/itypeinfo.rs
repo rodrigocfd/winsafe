@@ -63,7 +63,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
 			let mut ppv_outer = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut ITypeInfoVT);
+			let vt = self.vt_ref::<ITypeInfoVT>();
 			ok_to_hrresult(
 				(vt.CreateInstance)(
 					self.ptr(),

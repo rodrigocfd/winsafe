@@ -45,7 +45,7 @@ pub trait shell_IModalWindow: ole_IUnknown {
 		const CANCELLED: co::HRESULT = co::ERROR::CANCELLED.to_hresult();
 		match co::HRESULT(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IModalWindowVT);
+				let vt = self.vt_ref::<IModalWindowVT>();
 				(vt.Show)(self.ptr(), hwnd_owner.0)
 			},
 		) {

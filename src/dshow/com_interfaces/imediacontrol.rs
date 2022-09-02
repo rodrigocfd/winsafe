@@ -69,7 +69,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	fn AddSourceFilter(&self, file_name: &str) -> HrResult<IDispatch> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
+			let vt = self.vt_ref::<IMediaControlVT>();
 			ok_to_hrresult(
 				(vt.AddSourceFilter)(
 					self.ptr(),
@@ -88,7 +88,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	{
 		let mut state = co::FILTER_STATE::Stopped;
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
+			let vt = self.vt_ref::<IMediaControlVT>();
 			ok_to_hrresult(
 				(vt.GetState)(
 					self.ptr(),
@@ -103,7 +103,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
+			let vt = self.vt_ref::<IMediaControlVT>();
 			okfalse_to_hrresult((vt.Pause)(self.ptr()))
 		}
 	}
@@ -112,7 +112,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// method.
 	fn RenderFile(&self, file_name: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
+			let vt = self.vt_ref::<IMediaControlVT>();
 			ok_to_hrresult(
 				(vt.RenderFile)(
 					self.ptr(),
@@ -126,7 +126,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// method.
 	fn Run(&self) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
+			let vt = self.vt_ref::<IMediaControlVT>();
 			okfalse_to_hrresult((vt.Run)(self.ptr()))
 		}
 	}
@@ -135,7 +135,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// method.
 	fn Stop(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
+			let vt = self.vt_ref::<IMediaControlVT>();
 			ok_to_hrresult((vt.Stop)(self.ptr()))
 		}
 	}
@@ -144,7 +144,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// method.
 	fn StopWhenReady(&self) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaControlVT);
+			let vt = self.vt_ref::<IMediaControlVT>();
 			okfalse_to_hrresult((vt.StopWhenReady)(self.ptr()))
 		}
 	}

@@ -89,7 +89,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// method.
 	fn Commit(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPropertyStoreVT);
+			let vt = self.vt_ref::<IPropertyStoreVT>();
 			ok_to_hrresult((vt.Commit)(self.ptr()))
 		}
 	}
@@ -100,7 +100,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	fn GetAt(&self, index: u32) -> HrResult<PROPERTYKEY> {
 		let mut ppk = PROPERTYKEY::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPropertyStoreVT);
+			let vt = self.vt_ref::<IPropertyStoreVT>();
 			ok_to_hrresult(
 				(vt.GetAt)(self.ptr(), index, &mut ppk as *const _ as _),
 			)
@@ -113,7 +113,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPropertyStoreVT);
+			let vt = self.vt_ref::<IPropertyStoreVT>();
 			ok_to_hrresult((vt.GetCount)(self.ptr(), &mut count))
 		}.map(|_| count)
 	}
@@ -124,7 +124,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	fn GetValue(&self, key: &PROPERTYKEY) -> HrResult<PROPVARIANT> {
 		let mut var = PROPVARIANT::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IPropertyStoreVT);
+			let vt = self.vt_ref::<IPropertyStoreVT>();
 			match co::HRESULT(
 				(vt.GetValue)(
 					self.ptr(),

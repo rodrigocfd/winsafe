@@ -70,7 +70,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 		mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
 	{
 		let mut pstr: *mut u16 = std::ptr::null_mut();
-		let vt = &**(self.ptr().0 as *mut *mut IFileSinkFilterVT);
+		let vt = self.vt_ref::<IFileSinkFilterVT>();
 		ok_to_hrresult(
 			(vt.GetCurFile)(
 				self.ptr(),
@@ -90,7 +90,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 		file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFileSinkFilterVT);
+			let vt = self.vt_ref::<IFileSinkFilterVT>();
 			ok_to_hrresult(
 				(vt.SetFileName)(
 					self.ptr(),

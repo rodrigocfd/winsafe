@@ -47,6 +47,10 @@ macro_rules! com_interface {
 			unsafe fn ptr(&self) -> ComPtr {
 				self.0
 			}
+
+			unsafe fn vt_ref<T>(&self) -> &T {
+				&**(self.0.0 as *mut *mut T)
+			}
 		}
 	}
 }

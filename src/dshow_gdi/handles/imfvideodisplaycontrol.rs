@@ -31,7 +31,7 @@ pub trait dshow_gdi_IMFVideoDisplayControl: ole_IUnknown {
 		let mut time_stamp = i64::default();
 
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMFVideoDisplayControlVT);
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult(
 				(vt.GetCurrentImage)(
 					self.ptr(),

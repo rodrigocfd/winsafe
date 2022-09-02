@@ -46,7 +46,7 @@ pub trait dshow_IMediaFilter: shell_IPersist {
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaFilterVT);
+			let vt = self.vt_ref::<IMediaFilterVT>();
 			okfalse_to_hrresult((vt.Pause)(self.ptr()))
 		}
 	}
@@ -55,7 +55,7 @@ pub trait dshow_IMediaFilter: shell_IPersist {
 	/// method.
 	fn Run(&self, start: i64) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaFilterVT);
+			let vt = self.vt_ref::<IMediaFilterVT>();
 			okfalse_to_hrresult((vt.Run)(self.ptr(), start))
 		}
 	}
@@ -64,7 +64,7 @@ pub trait dshow_IMediaFilter: shell_IPersist {
 	/// method.
 	fn Stop(&self) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IMediaFilterVT);
+			let vt = self.vt_ref::<IMediaFilterVT>();
 			okfalse_to_hrresult((vt.Stop)(self.ptr()))
 		}
 	}

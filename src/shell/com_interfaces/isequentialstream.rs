@@ -46,7 +46,7 @@ pub trait shell_ISequentialStream: ole_IUnknown {
 		let mut num_read = u32::default();
 		okfalse_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut ISequentialStreamVT);
+				let vt = self.vt_ref::<ISequentialStreamVT>();
 				(vt.Read)(
 					self.ptr(),
 					buffer.as_mut_ptr() as _,
@@ -65,7 +65,7 @@ pub trait shell_ISequentialStream: ole_IUnknown {
 		let mut num_written = u32::default();
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut ISequentialStreamVT);
+				let vt = self.vt_ref::<ISequentialStreamVT>();
 				(vt.Read)(
 					self.ptr(),
 					data.as_ptr() as _,

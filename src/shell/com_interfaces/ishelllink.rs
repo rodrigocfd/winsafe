@@ -78,7 +78,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	fn GetArguments(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buf(INFOTIPSIZE + 1); // arbitrary
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.GetArguments)(
 					self.ptr(),
@@ -95,7 +95,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	fn GetDescription(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buf(INFOTIPSIZE + 1);
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.GetDescription)(
 					self.ptr(),
@@ -116,7 +116,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		let mut index: i32 = 0;
 
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.GetIconLocation)(
 					self.ptr(),
@@ -137,7 +137,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	{
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.GetPath)(
 					self.ptr(),
@@ -156,7 +156,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	fn GetShowCmd(&self) -> HrResult<co::SW> {
 		let mut show_cmd = co::SW::default();
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult((vt.GetShowCmd)(self.ptr(), &mut show_cmd.0))
 				.map(|_| show_cmd)
 		}
@@ -168,7 +168,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	fn GetWorkingDirectory(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.GetWorkingDirectory)(
 					self.ptr(),
@@ -183,7 +183,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn Resolve(&self, hwnd: HWND, flags: co::SLR) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult((vt.Resolve)(self.ptr(), hwnd.0, flags.0))
 		}
 	}
@@ -192,7 +192,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn SetArguments(&self, args: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.SetArguments)(
 					self.ptr(),
@@ -206,7 +206,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn SetDescription(&self, args: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.SetDescription)(
 					self.ptr(),
@@ -220,7 +220,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn SetIconLocation(&self, path: &str, index: i32) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.SetIconLocation)(
 					self.ptr(),
@@ -235,7 +235,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn SetPath(&self, file: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.SetPath)(
 					self.ptr(),
@@ -249,7 +249,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn SetRelativePath(&self, file: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.SetRelativePath)(
 					self.ptr(),
@@ -264,7 +264,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn SetShowCmd(&self, show_cmd: co::SW) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult((vt.SetShowCmd)(self.ptr(), show_cmd.0))
 		}
 	}
@@ -273,7 +273,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	fn SetWorkingDirectory(&self, dir: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IShellLinkVT);
+			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult(
 				(vt.SetWorkingDirectory)(
 					self.ptr(),

@@ -72,14 +72,18 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 
 	/// [`IEnumFilters::Next`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
 	/// method.
+	///
+	/// Prefer using
+	/// [`IEnumFilters::iter`](crate::prelude::dshow_IEnumFilters::iter), which
+	/// is simpler.
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IBaseFilter>> {
 		let mut fetched = u32::default();
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IEnumFiltersVT);
+			let vt = self.vt_ref::<IEnumFiltersVT>();
 			match ok_to_hrresult(
-				(vt.Next)(self.ptr(), 1, &mut ppv_queried, &mut fetched),
+				(vt.Next)(self.ptr(), 1, &mut ppv_queried, &mut fetched), // retrieve only 1
 			) {
 				Ok(_) => Ok(Some(IBaseFilter::from(ppv_queried))),
 				Err(hr) => match hr {
@@ -94,7 +98,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IEnumFiltersVT);
+			let vt = self.vt_ref::<IEnumFiltersVT>();
 			ok_to_hrresult((vt.Reset)(self.ptr()))
 		}
 	}
@@ -103,7 +107,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IEnumFiltersVT);
+			let vt = self.vt_ref::<IEnumFiltersVT>();
 			okfalse_to_hrresult((vt.Skip)(self.ptr(), count))
 		}
 	}
@@ -122,10 +126,7 @@ impl<'a> Iterator for EnumFiltersIter<'a> {
 	fn next(&mut self) -> Option<Self::Item> {
 		match self.array.Next() {
 			Err(err) => Some(Err(err)),
-			Ok(maybe_item) => match maybe_item {
-				None => None,
-				Some(item) => Some(Ok(item)),
-			},
+			Ok(maybe_item) => maybe_item.map(|item| Ok(item)),
 		}
 	}
 }

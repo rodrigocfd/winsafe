@@ -49,7 +49,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// method.
 	fn AddFilter(&self, filter: &IBaseFilter, name: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
+			let vt = self.vt_ref::<IFilterGraphVT>();
 			ok_to_hrresult(
 				(vt.AddFilter)(
 					self.ptr(),
@@ -66,7 +66,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	fn EnumFilters(&self) -> HrResult<IEnumFilters> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
+			let vt = self.vt_ref::<IFilterGraphVT>();
 			ok_to_hrresult(
 				(vt.EnumFilters)(self.ptr(), &mut ppv_queried),
 			).map(|_| IEnumFilters::from(ppv_queried))
@@ -79,7 +79,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	fn FindFilterByName(&self, name: &str) -> HrResult<IBaseFilter> {
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
+			let vt = self.vt_ref::<IFilterGraphVT>();
 			ok_to_hrresult(
 				(vt.FindFilterByName)(
 					self.ptr(),
@@ -94,7 +94,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// method.
 	fn RemoveFilter(&self, filter: &IBaseFilter) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
+			let vt = self.vt_ref::<IFilterGraphVT>();
 			ok_to_hrresult((vt.RemoveFilter)(self.ptr(), filter.ptr()))
 		}
 	}
@@ -103,7 +103,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// method.
 	fn SetDefaultSyncSource(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IFilterGraphVT);
+			let vt = self.vt_ref::<IFilterGraphVT>();
 			ok_to_hrresult((vt.SetDefaultSyncSource)(self.ptr()))
 		}
 	}

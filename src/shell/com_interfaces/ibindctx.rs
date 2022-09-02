@@ -51,7 +51,7 @@ pub trait shell_IBindCtx: ole_IUnknown {
 	fn ReleaseBoundObjects(&self) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IBindCtxVT);
+				let vt = self.vt_ref::<IBindCtxVT>();
 				(vt.ReleaseBoundObjects)(self.ptr())
 			}
 		)
@@ -62,7 +62,7 @@ pub trait shell_IBindCtx: ole_IUnknown {
 	fn RevokeObjectParam(&self, key: &str) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				let vt = &**(self.ptr().0 as *mut *mut IBindCtxVT);
+				let vt = self.vt_ref::<IBindCtxVT>();
 				(vt.RevokeObjectParam)(
 					self.ptr(),
 					WString::from_str(key).as_ptr(),

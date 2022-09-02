@@ -63,7 +63,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// method.
 	fn Abort(&self) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
+			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult((vt.Abort)(self.ptr()))
 		}
 	}
@@ -76,7 +76,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
+			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult(
 				(vt.AddSourceFilter)(
 					self.ptr(),
@@ -92,7 +92,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// method.
 	fn Connect(&self, pin_out: &IPin, pin_in: &IPin) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
+			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult((vt.Connect)(self.ptr(), pin_out.ptr(), pin_in.ptr()))
 		}
 	}
@@ -101,7 +101,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// method.
 	fn RenderFile(&self, file: &str) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
+			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult(
 				(vt.RenderFile)(
 					self.ptr(),
@@ -116,7 +116,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// method.
 	fn SetLogFile(&self, hfile: Option<HFILE>) -> HrResult<()> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
+			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult(
 				(vt.SetLogFile)(
 					self.ptr(),
@@ -131,7 +131,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	#[must_use]
 	fn ShouldOperationContinue(&self) -> HrResult<bool> {
 		unsafe {
-			let vt = &**(self.ptr().0 as *mut *mut IGraphBuilderVT);
+			let vt = self.vt_ref::<IGraphBuilderVT>();
 			okfalse_to_hrresult((vt.ShouldOperationContinue)(self.ptr()))
 		}
 	}

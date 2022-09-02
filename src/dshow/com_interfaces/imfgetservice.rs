@@ -74,7 +74,7 @@ pub trait dshow_IMFGetService: ole_IUnknown {
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
-			let vt = &**(self.ptr().0 as *mut *mut IMFGetServiceVT);
+			let vt = self.vt_ref::<IMFGetServiceVT>();
 			ok_to_hrresult(
 				(vt.GetService)(
 					self.ptr(),
