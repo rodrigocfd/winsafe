@@ -1,9 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
+use crate::dshow::decl::{AM_MEDIA_TYPE, PIN_INFO};
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -12,7 +14,7 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IPinVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Connect: fn(ComPtr, ComPtr, ComPtr, PCVOID) -> HRES,
+	pub Connect: fn(ComPtr, ComPtr, PCVOID) -> HRES,
 	pub ReceiveConnection: fn(ComPtr, ComPtr, PCVOID) -> HRES,
 	pub Disconnect: fn(ComPtr) -> HRES,
 	pub ConnectedTo: fn(ComPtr, *mut ComPtr) -> HRES,
@@ -54,6 +56,23 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
+	/// [`IPin::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connect)
+	/// method.
+	fn Connect(&self,
+		receive_pin: &IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			ok_to_hrresult(
+				(vt.Connect)(
+					self.ptr(),
+					receive_pin.ptr(),
+					mt.map_or(std::ptr::null(), |p| p as *const _ as _),
+				),
+			)
+		}
+	}
+
 	/// [`IPin::ConnectedTo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
 	/// method.
 	#[must_use]
@@ -64,6 +83,15 @@ pub trait dshow_IPin: ole_IUnknown {
 			ok_to_hrresult(
 				(vt.ConnectedTo)(self.ptr(), &mut ppv_queried),
 			).map(|_| IPin::from(ppv_queried))
+		}
+	}
+
+	/// [`IPin::ConnectionMediaType`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectionmediatype)
+	/// method.
+	fn ConnectionMediaType(&self, mt: &mut AM_MEDIA_TYPE) -> HrResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			ok_to_hrresult((vt.ConnectionMediaType)(self.ptr(), mt as *mut _ as _))
 		}
 	}
 
@@ -94,6 +122,38 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
+	/// [`IPin::NewSegment`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-newsegment)
+	/// method.
+	fn NewSegment(&self, start: i64, stop: i64, rate: f64) -> HrResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			ok_to_hrresult((vt.NewSegment)(self.ptr(), start, stop, rate))
+		}
+	}
+
+	/// [`IPin::QueryAccept`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryaccept)
+	/// method.
+	#[must_use]
+	fn QueryAccept(&self, mt: &AM_MEDIA_TYPE) -> HrResult<bool> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			okfalse_to_hrresult((vt.QueryAccept)(self.ptr(), mt as *const _ as _))
+		}
+	}
+
+	/// [`IPin::QueryDirection`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-querydirection)
+	/// method.
+	#[must_use]
+	fn QueryDirection(&self) -> HrResult<co::PIN_DIRECTION> {
+		let mut pin_dir = co::PIN_DIRECTION::INPUT;
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			ok_to_hrresult(
+				(vt.QueryDirection)(self.ptr(), &mut pin_dir as *mut _ as _),
+			).map(|_| pin_dir)
+		}
+	}
+
 	/// [`IPin::QueryId`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryid)
 	/// method.
 	#[must_use]
@@ -107,5 +167,63 @@ pub trait dshow_IPin: ole_IUnknown {
 			CoTaskMemFree(pstr as _);
 			name.to_string()
 		})
+	}
+
+	/// [`IPin::QueryInternalConnections`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryinternalconnections)
+	/// method.
+	#[must_use]
+	fn QueryInternalConnections(&self) -> HrResult<Vec<IPin>> {
+		let mut count = u32::default();
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			if let Err(e) = ok_to_hrresult(
+				(vt.QueryInternalConnections)(
+					self.ptr(),
+					std::ptr::null_mut(),
+					&mut count as *mut _ as _,
+				),
+			) {
+				return Err(e);
+			}
+
+			let mut ppv_queried = vec![ComPtr::null(); count as _];
+			ok_to_hrresult(
+				(vt.QueryInternalConnections)(
+					self.ptr(),
+					ppv_queried.as_mut_ptr(),
+					&mut count as *mut _ as _,
+				),
+			).map(|_| {
+				ppv_queried.into_iter()
+					.map(|ppv| IPin::from(ppv))
+					.collect::<Vec<_>>()
+			})
+		}
+	}
+
+	/// [`IPin::QueryPinInfo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-querypininfo)
+	/// method.
+	fn QueryPinInfo(&self, info: &mut PIN_INFO) -> HrResult<()> {
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			ok_to_hrresult((vt.QueryPinInfo)(self.ptr(), info as *mut _ as _))
+		}
+	}
+
+	/// [`IPin::ReceiveConnection`]`(https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
+	/// method.
+	fn ReceiveConnection(&self,
+		connector: &IPin, mt: &AM_MEDIA_TYPE) -> HrResult<()>
+	{
+		unsafe {
+			let vt = &**(self.ptr().0 as *mut *mut IPinVT);
+			ok_to_hrresult(
+				(vt.ReceiveConnection)(
+					self.ptr(),
+					connector.ptr(),
+					mt as *const _ as _,
+				),
+			)
+		}
 	}
 }

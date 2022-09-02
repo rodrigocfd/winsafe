@@ -3,6 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
+use crate::dshow::decl::IBaseFilter;
 use crate::kernel::ffi_types::BOOL;
 use crate::ole::decl::GUID;
 
@@ -91,4 +92,20 @@ impl MFVideoNormalizedRect {
 	{
 		Self { left, top, right, bottom }
 	}
+}
+
+/// [`PIN_INFO`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-pin_info)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
+#[repr(C)]
+pub struct PIN_INFO {
+	pub pFilter: IBaseFilter,
+	pub dir: co::PIN_DIRECTION,
+	achName: [u16; 128],
+}
+
+impl_default!(PIN_INFO);
+
+impl PIN_INFO {
+	pub_fn_string_arr_get_set!(achName, set_achName);
 }

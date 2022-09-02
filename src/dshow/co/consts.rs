@@ -21,6 +21,15 @@ const_ordinary! { MFVideoARMode: u32: "dshow";
 	NonLinearStretch 0x4
 }
 
+const_ordinary! { PIN_DIRECTION: u32: "dshow";
+	/// [`PIN_DIRECTION`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ne-strmif-pin_direction)
+	/// enumeration (`u32`).
+	=>
+	=>
+	INPUT 0
+	OUTPUT 1
+}
+
 const_ordinary! { SEEKING_FLAGS: u32: "dshow";
 	/// [`IMediaSeeking::SetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 	/// flags (`u32`).
