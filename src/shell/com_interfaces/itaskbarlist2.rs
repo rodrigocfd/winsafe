@@ -15,30 +15,30 @@ pub struct ITaskbarList2VT {
 	pub MarkFullscreenWindow: fn(ComPtr, HANDLE, BOOL) -> HRES,
 }
 
-/// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
-/// COM interface over [`ITaskbarList2VT`](crate::vt::ITaskbarList2VT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, ITaskbarList2};
-///
-/// let obj = CoCreateInstance::<ITaskbarList2>(
-///     &co::CLSID::TaskbarList,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct ITaskbarList2(ComPtr);
+com_interface! { ITaskbarList2: "shell";
+	"602d4995-b13a-429b-a66e-1935e44f4317";
+	/// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
+	/// COM interface over [`ITaskbarList2VT`](crate::vt::ITaskbarList2VT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, ITaskbarList2};
+	///
+	/// let obj = CoCreateInstance::<ITaskbarList2>(
+	///     &co::CLSID::TaskbarList,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(ITaskbarList2, "602d4995-b13a-429b-a66e-1935e44f4317");
 impl shell_ITaskbarList for ITaskbarList2 {}
 impl shell_ITaskbarList2 for ITaskbarList2 {}
 

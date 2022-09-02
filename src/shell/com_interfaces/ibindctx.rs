@@ -24,16 +24,16 @@ pub struct IBindCtxVT {
 	pub RevokeObjectParam: fn(ComPtr, PCSTR) -> HRES,
 }
 
-/// [`IBindCtx`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ibindctx)
-/// COM interface over [`IBindCtxVT`](crate::vt::IBindCtxVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shlell")))]
-pub struct IBindCtx(ComPtr);
+com_interface! { IBindCtx: "shell";
+	"0000000e-0000-0000-c000-000000000046";
+	/// [`IBindCtx`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ibindctx)
+	/// COM interface over [`IBindCtxVT`](crate::vt::IBindCtxVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IBindCtx, "0000000e-0000-0000-c000-000000000046");
 impl shell_IBindCtx for IBindCtx {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

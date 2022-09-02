@@ -19,16 +19,16 @@ pub struct IDispatchVT {
 	pub Invoke: fn(ComPtr, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRES,
 }
 
-/// [`IDispatch`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
-/// COM interface over [`IDispatchVT`](crate::vt::IDispatchVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
-pub struct IDispatch(ComPtr);
+com_interface! { IDispatch: "oleaut";
+	"00020400-0000-0000-c000-000000000046";
+	/// [`IDispatch`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
+	/// COM interface over [`IDispatchVT`](crate::vt::IDispatchVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IDispatch, "00020400-0000-0000-c000-000000000046");
 impl oleaut_IDispatch for IDispatch {}
 
 /// This trait is enabled with the `oleaut` feature, and provides methods for

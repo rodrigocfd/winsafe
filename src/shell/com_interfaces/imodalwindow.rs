@@ -15,16 +15,16 @@ pub struct IModalWindowVT {
 	pub Show: fn(ComPtr, HANDLE) -> u32,
 }
 
-/// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
-/// COM interface over [`IModalWindowVT`](crate::vt::IModalWindowVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IModalWindow(ComPtr);
+com_interface! { IModalWindow: "shell";
+	"b4db1657-70d7-485e-8e3e-6fcb5a5c1802";
+	/// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
+	/// COM interface over [`IModalWindowVT`](crate::vt::IModalWindowVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IModalWindow, "b4db1657-70d7-485e-8e3e-6fcb5a5c1802");
 impl shell_IModalWindow for IModalWindow {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

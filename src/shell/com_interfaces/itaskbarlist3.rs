@@ -28,30 +28,30 @@ pub struct ITaskbarList3VT {
 	pub SetThumbnailClip: fn(ComPtr, HANDLE, PVOID) -> HRES,
 }
 
-/// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
-/// COM interface over [`ITaskbarList3VT`](crate::vt::ITaskbarList3VT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, ITaskbarList3};
-///
-/// let obj = CoCreateInstance::<ITaskbarList3>(
-///     &co::CLSID::TaskbarList,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct ITaskbarList3(ComPtr);
+com_interface! { ITaskbarList3: "shell";
+	"ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
+	/// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
+	/// COM interface over [`ITaskbarList3VT`](crate::vt::ITaskbarList3VT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, ITaskbarList3};
+	///
+	/// let obj = CoCreateInstance::<ITaskbarList3>(
+	///     &co::CLSID::TaskbarList,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(ITaskbarList3, "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf");
 impl shell_ITaskbarList for ITaskbarList3 {}
 impl shell_ITaskbarList2 for ITaskbarList3 {}
 impl shell_ITaskbarList3 for ITaskbarList3 {}

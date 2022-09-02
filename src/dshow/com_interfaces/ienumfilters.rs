@@ -22,16 +22,16 @@ pub struct IEnumFiltersVT {
 	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-/// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
-/// COM interface over [`IEnumFiltersVT`](crate::vt::IEnumFiltersVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IEnumFilters(ComPtr);
+com_interface! { IEnumFilters: "dshow";
+	"56a86893-0ad4-11ce-b03a-0020af0ba770";
+	/// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
+	/// COM interface over [`IEnumFiltersVT`](crate::vt::IEnumFiltersVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IEnumFilters, "56a86893-0ad4-11ce-b03a-0020af0ba770");
 impl dshow_IEnumFilters for IEnumFilters {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for

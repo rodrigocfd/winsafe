@@ -1,8 +1,17 @@
 #![allow(unused_macros)]
 
-/// Implements ole_IUnknown trait to COM object, plus all its trait bounds.
-macro_rules! impl_iunknown {
-	($name:ident, $guid:expr) => {
+/// Declares an ordinary COM interface, and implements ole_IUnknown trait.
+macro_rules! com_interface {
+	(
+		$name:ident : $feature:literal;
+		$guid:expr;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
+		#[repr(transparent)]
+		pub struct $name(ComPtr);
+
 		impl Drop for $name {
 			fn drop(&mut self) {
 				if !self.0.is_null() {
@@ -39,7 +48,7 @@ macro_rules! impl_iunknown {
 				self.0
 			}
 		}
-	};
+	}
 }
 
 /// Creates multiple `GUID`-derived pub const values.

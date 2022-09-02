@@ -32,16 +32,16 @@ pub struct ITypeInfoVT {
 	pub ReleaseVarDesc: fn(ComPtr, PVOID) -> HRES,
 }
 
-/// [`ITypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
-/// COM interface over [`ITypeInfoVT`](crate::vt::ITypeInfoVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
-pub struct ITypeInfo(ComPtr);
+com_interface! { ITypeInfo: "oleaut";
+	"00020401-0000-0000-c000-000000000046";
+	/// [`ITypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
+	/// COM interface over [`ITypeInfoVT`](crate::vt::ITypeInfoVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(ITypeInfo, "00020401-0000-0000-c000-000000000046");
 impl oleaut_ITypeInfo for ITypeInfo {}
 
 /// This trait is enabled with the `oleaut` feature, and provides methods for

@@ -44,21 +44,20 @@ pub struct IUnknownVT {
 	pub Release: fn(ComPtr) -> u32,
 }
 
-/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
-/// COM interface over [`IUnknownVT`](crate::vt::IUnknownVT). It's the base to
-/// all COM interfaces.
-///
-/// The `clone` method calls
-/// [`AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
-/// internally.
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-pub struct IUnknown(ComPtr);
-
-impl_iunknown!(IUnknown, "00000000-0000-0000-c000-000000000046");
+com_interface! { IUnknown: "ole";
+	"00000000-0000-0000-c000-000000000046";
+	/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
+	/// COM interface over [`IUnknownVT`](crate::vt::IUnknownVT). It's the base to
+	/// all COM interfaces.
+	///
+	/// The `clone` method calls
+	/// [`AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
+	/// internally.
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
 /// This trait is enabled with the `ole` feature, and provides methods for
 /// [`IUnknown`](crate::IUnknown). It is the base trait for all COM traits.

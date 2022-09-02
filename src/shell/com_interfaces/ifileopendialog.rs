@@ -16,30 +16,30 @@ pub struct IFileOpenDialogVT {
 	pub GetSelectedItems: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-/// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
-/// COM interface over [`IFileOpenDialogVT`](crate::vt::IFileOpenDialogVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, IFileOpenDialog};
-///
-/// let obj = CoCreateInstance::<IFileOpenDialog>(
-///     &co::CLSID::FileOpenDialog,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IFileOpenDialog(ComPtr);
+com_interface! { IFileOpenDialog: "shell";
+	"d57c7288-d4ad-4768-be02-9d969532d960";
+	/// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
+	/// COM interface over [`IFileOpenDialogVT`](crate::vt::IFileOpenDialogVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, IFileOpenDialog};
+	///
+	/// let obj = CoCreateInstance::<IFileOpenDialog>(
+	///     &co::CLSID::FileOpenDialog,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IFileOpenDialog, "d57c7288-d4ad-4768-be02-9d969532d960");
 impl shell_IModalWindow for IFileOpenDialog {}
 impl shell_IFileDialog for IFileOpenDialog {}
 impl shell_IFileOpenDialog for IFileOpenDialog {}

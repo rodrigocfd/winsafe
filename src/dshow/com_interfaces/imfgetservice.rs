@@ -15,29 +15,29 @@ pub struct IMFGetServiceVT {
 	pub GetService: fn(ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRES,
 }
 
-/// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
-/// COM interface over [`IMFGetServiceVT`](crate::vt::IMFGetServiceVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IBaseFilter, IMFGetService};
-///
-/// let vmr: IBaseFilter; // initialized somewhere
-/// # let vmr = IBaseFilter::from(unsafe { winsafe::ComPtr::null() });
-///
-/// let get_svc = vmr.QueryInterface::<IMFGetService>()?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IMFGetService(ComPtr);
+com_interface! { IMFGetService: "dshow";
+	"fa993888-4383-415a-a930-dd472a8cf6f7";
+	/// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
+	/// COM interface over [`IMFGetServiceVT`](crate::vt::IMFGetServiceVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{IBaseFilter, IMFGetService};
+	///
+	/// let vmr: IBaseFilter; // initialized somewhere
+	/// # let vmr = IBaseFilter::from(unsafe { winsafe::ComPtr::null() });
+	///
+	/// let get_svc = vmr.QueryInterface::<IMFGetService>()?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IMFGetService, "fa993888-4383-415a-a930-dd472a8cf6f7");
 impl dshow_IMFGetService for IMFGetService {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for

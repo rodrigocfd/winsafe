@@ -32,33 +32,33 @@ pub struct IMFVideoDisplayControlVT {
 	pub GetFullscreen: fn(ComPtr, *mut BOOL) -> HRES,
 }
 
-/// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
-/// COM interface over
-/// [`IMFVideoDisplayControlVT`](crate::vt::IMFVideoDisplayControlVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
-///
-/// let get_svc: IMFGetService; // initialized somewhere
-/// # let get_svc = IMFGetService::from(unsafe { winsafe::ComPtr::null() });
-///
-/// let controller_evr = get_svc
-///     .GetService::<IMFVideoDisplayControl>(
-///         &co::DSHOW_SERVICE::MR_VIDEO_RENDER_SERVICE,
-///     )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IMFVideoDisplayControl(ComPtr);
+com_interface! { IMFVideoDisplayControl: "dshow";
+	"a490b1e4-ab84-4d31-a1b2-181e03b1077a";
+	/// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
+	/// COM interface over
+	/// [`IMFVideoDisplayControlVT`](crate::vt::IMFVideoDisplayControlVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
+	///
+	/// let get_svc: IMFGetService; // initialized somewhere
+	/// # let get_svc = IMFGetService::from(unsafe { winsafe::ComPtr::null() });
+	///
+	/// let controller_evr = get_svc
+	///     .GetService::<IMFVideoDisplayControl>(
+	///         &co::DSHOW_SERVICE::MR_VIDEO_RENDER_SERVICE,
+	///     )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IMFVideoDisplayControl, "a490b1e4-ab84-4d31-a1b2-181e03b1077a");
 impl dshow_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for

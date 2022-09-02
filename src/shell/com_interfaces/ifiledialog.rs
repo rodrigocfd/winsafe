@@ -39,16 +39,16 @@ pub struct IFileDialogVT {
 	pub SetFilter: fn(ComPtr, PVOID) -> HRES,
 }
 
-/// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
-/// COM interface over [`IFileDialogVT`](crate::vt::IFileDialogVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IFileDialog(ComPtr);
+com_interface! { IFileDialog: "shell";
+	"42f85136-db7e-439c-85f1-e4075d135fc8";
+	/// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
+	/// COM interface over [`IFileDialogVT`](crate::vt::IFileDialogVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IFileDialog, "42f85136-db7e-439c-85f1-e4075d135fc8");
 impl shell_IModalWindow for IFileDialog {}
 impl shell_IFileDialog for IFileDialog {}
 

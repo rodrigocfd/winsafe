@@ -31,16 +31,16 @@ pub struct IPictureVT {
 	pub get_Attributes: fn(ComPtr, *mut u32) -> HRES,
 }
 
-/// [`IPicture`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nn-ocidl-ipicture)
-/// COM interface over [`IPictureVT`](crate::vt::IPictureVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
-pub struct IPicture(ComPtr);
+com_interface! { IPicture: "oleaut";
+	"7bf80980-bf32-101a-8bbb-00aa00300cab";
+	/// [`IPicture`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nn-ocidl-ipicture)
+	/// COM interface over [`IPictureVT`](crate::vt::IPictureVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IPicture, "7bf80980-bf32-101a-8bbb-00aa00300cab");
 impl oleaut_IPicture for IPicture {}
 
 /// This trait is enabled with the `oleaut` feature, and provides methods for

@@ -15,16 +15,16 @@ pub struct IPersistVT {
 	pub GetClassID: fn(ComPtr, PVOID) -> HRES,
 }
 
-/// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
-/// COM interface over [`IPersistVT`](crate::vt::IPersistVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IPersist(ComPtr);
+com_interface! { IPersist: "shell";
+	"0000010c-0000-0000-c000-000000000046";
+	/// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
+	/// COM interface over [`IPersistVT`](crate::vt::IPersistVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IPersist, "0000010c-0000-0000-c000-000000000046");
 impl shell_IPersist for IPersist {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

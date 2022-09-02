@@ -19,30 +19,30 @@ pub struct ITaskbarListVT {
 	pub SetActiveAlt: fn(ComPtr, HANDLE) -> HRES,
 }
 
-/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-/// COM interface over [`ITaskbarListVT`](crate::vt::ITaskbarListVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, ITaskbarList};
-///
-/// let obj = CoCreateInstance::<ITaskbarList>(
-///     &co::CLSID::TaskbarList,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct ITaskbarList(ComPtr);
+com_interface! { ITaskbarList: "shell";
+	"56fdf342-fd6d-11d0-958a-006097c9a090";
+	/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
+	/// COM interface over [`ITaskbarListVT`](crate::vt::ITaskbarListVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, ITaskbarList};
+	///
+	/// let obj = CoCreateInstance::<ITaskbarList>(
+	///     &co::CLSID::TaskbarList,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(ITaskbarList, "56fdf342-fd6d-11d0-958a-006097c9a090");
 impl shell_ITaskbarList for ITaskbarList {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

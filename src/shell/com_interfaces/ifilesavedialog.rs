@@ -19,30 +19,30 @@ pub struct IFileSaveDialogVT {
 	pub ApplyProperties: fn(ComPtr, ComPtr, ComPtr, HANDLE, ComPtr) -> HRES,
 }
 
-/// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
-/// COM interface over [`IFileSaveDialogVT`](crate::vt::IFileSaveDialogVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, IFileSaveDialog};
-///
-/// let obj = CoCreateInstance::<IFileSaveDialog>(
-///     &co::CLSID::FileSaveDialog,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IFileSaveDialog(ComPtr);
+com_interface! { IFileSaveDialog: "shell";
+	"84bccd23-5fde-4cdb-aea4-af64b83d78ab";
+	/// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
+	/// COM interface over [`IFileSaveDialogVT`](crate::vt::IFileSaveDialogVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, IFileSaveDialog};
+	///
+	/// let obj = CoCreateInstance::<IFileSaveDialog>(
+	///     &co::CLSID::FileSaveDialog,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IFileSaveDialog, "84bccd23-5fde-4cdb-aea4-af64b83d78ab");
 impl shell_IModalWindow for IFileSaveDialog {}
 impl shell_IFileDialog for IFileSaveDialog {}
 impl shell_IFileSaveDialog for IFileSaveDialog {}

@@ -17,16 +17,16 @@ pub struct IFileSinkFilterVT {
 	pub GetCurFile: fn(ComPtr, *mut PSTR, PVOID) -> HRES,
 }
 
-/// [`IFileSinkFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
-/// COM interface over [`IFileSinkFilterVT`](crate::vt::IFileSinkFilterVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IFileSinkFilter(ComPtr);
+com_interface! { IFileSinkFilter: "dshow";
+	"a2104830-7c70-11cf-8bce-00aa00a3f1a6";
+	/// [`IFileSinkFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
+	/// COM interface over [`IFileSinkFilterVT`](crate::vt::IFileSinkFilterVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IFileSinkFilter, "a2104830-7c70-11cf-8bce-00aa00a3f1a6");
 impl dshow_IFileSinkFilter for IFileSinkFilter {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for

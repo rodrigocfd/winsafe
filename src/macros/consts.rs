@@ -32,7 +32,7 @@ macro_rules! const_values {
 /// include `Debug` and `Display` impls.
 macro_rules! const_no_debug_display {
 	(
-		$name:ident: $ntype:ty : $feature:literal;
+		$name:ident: $ntype:ty: $feature:literal;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -81,7 +81,7 @@ macro_rules! const_no_debug_display {
 /// values.
 macro_rules! const_ordinary {
 	(
-		$name:ident: $ntype:ty : $feature:literal;
+		$name:ident: $ntype:ty: $feature:literal;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -125,7 +125,7 @@ macro_rules! const_ordinary {
 /// public values.
 macro_rules! const_bitflag {
 	(
-		$name:ident: $ntype:ty : $feature:literal;
+		$name:ident: $ntype:ty: $feature:literal;
 		$( #[$doc:meta] )*
 		=>
 		$(

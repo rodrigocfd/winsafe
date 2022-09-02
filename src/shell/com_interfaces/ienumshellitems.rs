@@ -22,29 +22,29 @@ pub struct IEnumShellItemsVT {
 	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-/// [`IEnumShellItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ienumshellitems)
-/// COM interface over [`IEnumShellItemsVT`](crate::vt::IEnumShellItemsVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// Instantiating from an [`IShellItem`](crate::IShellItem) object:
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
-///
-/// let folder = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp", None)?;
-/// let items = folder.BindToHandler::<IEnumShellItems>(None, &co::BHID::EnumItems)?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IEnumShellItems(ComPtr);
+com_interface! { IEnumShellItems: "shell";
+	"70629033-e363-4a28-a567-0db78006e6d7";
+	/// [`IEnumShellItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ienumshellitems)
+	/// COM interface over [`IEnumShellItemsVT`](crate::vt::IEnumShellItemsVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// Instantiating from an [`IShellItem`](crate::IShellItem) object:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
+	///
+	/// let folder = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp", None)?;
+	/// let items = folder.BindToHandler::<IEnumShellItems>(None, &co::BHID::EnumItems)?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IEnumShellItems, "70629033-e363-4a28-a567-0db78006e6d7");
 impl shell_IEnumShellItems for IEnumShellItems {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

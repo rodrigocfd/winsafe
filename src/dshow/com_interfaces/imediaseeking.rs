@@ -31,31 +31,31 @@ pub struct IMediaSeekingVT {
 	pub GetPreroll: fn(ComPtr, *mut i64) -> HRES,
 }
 
-/// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
-/// COM interface over [`IMediaSeekingVT`](crate::vt::IMediaSeekingVT). Inherits
-/// from [`IUnknown`](crate::IUnknown).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IGraphBuilder, IMediaSeeking};
-///
-/// let graph_builder: IGraphBuilder; // initialized somewhere
-/// # let graph_builder = IGraphBuilder::from(unsafe { winsafe::ComPtr::null() });
-///
-/// let media_seeking = graph_builder
-///     .QueryInterface::<IMediaSeeking>()?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IMediaSeeking(ComPtr);
+com_interface! { IMediaSeeking: "dshow";
+	"36b73880-c2c8-11cf-8b46-00805f6cef60";
+	/// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
+	/// COM interface over [`IMediaSeekingVT`](crate::vt::IMediaSeekingVT). Inherits
+	/// from [`IUnknown`](crate::IUnknown).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{IGraphBuilder, IMediaSeeking};
+	///
+	/// let graph_builder: IGraphBuilder; // initialized somewhere
+	/// # let graph_builder = IGraphBuilder::from(unsafe { winsafe::ComPtr::null() });
+	///
+	/// let media_seeking = graph_builder
+	///     .QueryInterface::<IMediaSeeking>()?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IMediaSeeking, "36b73880-c2c8-11cf-8b46-00805f6cef60");
 impl dshow_IMediaSeeking for IMediaSeeking {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for

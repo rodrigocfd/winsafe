@@ -20,30 +20,30 @@ pub struct IBaseFilterVT {
 	pub QueryVendorInfo: fn(ComPtr, *mut PSTR) -> HRES,
 }
 
-/// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
-/// COM interface over [`IBaseFilterVT`](crate::vt::IBaseFilterVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, IBaseFilter};
-///
-/// let vmr = CoCreateInstance::<IBaseFilter>(
-///     &co::CLSID::EnhancedVideoRenderer,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IBaseFilter(ComPtr);
+com_interface! { IBaseFilter: "dshow";
+	"56a86895-0ad4-11ce-b03a-0020af0ba770";
+	/// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
+	/// COM interface over [`IBaseFilterVT`](crate::vt::IBaseFilterVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, IBaseFilter};
+	///
+	/// let vmr = CoCreateInstance::<IBaseFilter>(
+	///     &co::CLSID::EnhancedVideoRenderer,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IBaseFilter, "56a86895-0ad4-11ce-b03a-0020af0ba770");
 impl shell_IPersist for IBaseFilter {}
 impl dshow_IMediaFilter for IBaseFilter {}
 impl dshow_IBaseFilter for IBaseFilter {}

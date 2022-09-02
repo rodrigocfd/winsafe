@@ -22,30 +22,30 @@ pub struct IGraphBuilderVT {
 	pub ShouldOperationContinue: fn(ComPtr) -> HRES,
 }
 
-/// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
-/// COM interface over [`IGraphBuilderVT`](crate::vt::IGraphBuilderVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, IGraphBuilder};
-///
-/// let obj = CoCreateInstance::<IGraphBuilder>(
-///     &co::CLSID::FilterGraph,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IGraphBuilder(ComPtr);
+com_interface! { IGraphBuilder: "dshow";
+	"56a868a9-0ad4-11ce-b03a-0020af0ba770";
+	/// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
+	/// COM interface over [`IGraphBuilderVT`](crate::vt::IGraphBuilderVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, IGraphBuilder};
+	///
+	/// let obj = CoCreateInstance::<IGraphBuilder>(
+	///     &co::CLSID::FilterGraph,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IGraphBuilder, "56a868a9-0ad4-11ce-b03a-0020af0ba770");
 impl dshow_IFilterGraph for IGraphBuilder {}
 impl dshow_IGraphBuilder for IGraphBuilder {}
 

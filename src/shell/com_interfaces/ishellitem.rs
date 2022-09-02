@@ -21,33 +21,33 @@ pub struct IShellItemVT {
 	pub Compare: fn(ComPtr, PVOID, u32, *mut i32) -> HRES,
 }
 
-/// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
-/// COM interface over [`IShellItemVT`](crate::vt::IShellItemVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// Creating an object with
-/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName):
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IShellItem, SHCreateItemFromParsingName};
-///
-/// let shi = SHCreateItemFromParsingName::<IShellItem>(
-///     "C:\\Temp\\test.txt",
-///     None,
-/// )?;
-///
-/// # Ok::<_, winsafe::co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IShellItem(ComPtr);
+com_interface! { IShellItem: "shell";
+	"43826d1e-e718-42ee-bc55-a1e261c37bfe";
+	/// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
+	/// COM interface over [`IShellItemVT`](crate::vt::IShellItemVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// Creating an object with
+	/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName):
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{IShellItem, SHCreateItemFromParsingName};
+	///
+	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
+	///     "C:\\Temp\\test.txt",
+	///     None,
+	/// )?;
+	///
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IShellItem, "43826d1e-e718-42ee-bc55-a1e261c37bfe");
 impl shell_IShellItem for IShellItem {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

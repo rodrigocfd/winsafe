@@ -26,30 +26,30 @@ pub struct IMediaControlVT {
 	pub StopWhenReady: fn(ComPtr) -> HRES,
 }
 
-/// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
-/// COM interface over [`IMediaControlVT`](crate::vt::IMediaControlVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IGraphBuilder, IMediaControl};
-///
-/// let graph_builder: IGraphBuilder; // initialized somewhere
-/// # let graph_builder = IGraphBuilder::from(unsafe { winsafe::ComPtr::null() });
-///
-/// let media_control = graph_builder
-///     .QueryInterface::<IMediaControl>()?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IMediaControl(ComPtr);
+com_interface! { IMediaControl: "dshow";
+	"56a868b1-0ad4-11ce-b03a-0020af0ba770";
+	/// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
+	/// COM interface over [`IMediaControlVT`](crate::vt::IMediaControlVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{IGraphBuilder, IMediaControl};
+	///
+	/// let graph_builder: IGraphBuilder; // initialized somewhere
+	/// # let graph_builder = IGraphBuilder::from(unsafe { winsafe::ComPtr::null() });
+	///
+	/// let media_control = graph_builder
+	///     .QueryInterface::<IMediaControl>()?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IMediaControl, "56a868b1-0ad4-11ce-b03a-0020af0ba770");
 impl oleaut_IDispatch for IMediaControl {}
 impl dshow_IMediaControl for IMediaControl {}
 

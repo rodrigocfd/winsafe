@@ -19,16 +19,16 @@ pub struct IMediaFilterVT {
 	pub GetSyncSource: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-/// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
-/// COM interface over [`IMediaFilterVT`](crate::vt::IMediaFilterVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IMediaFilter(ComPtr);
+com_interface! { IMediaFilter: "dshow";
+	"56a86899-0ad4-11ce-b03a-0020af0ba770";
+	/// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
+	/// COM interface over [`IMediaFilterVT`](crate::vt::IMediaFilterVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IMediaFilter, "56a86899-0ad4-11ce-b03a-0020af0ba770");
 impl shell_IPersist for IMediaFilter {}
 impl dshow_IMediaFilter for IMediaFilter {}
 

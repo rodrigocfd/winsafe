@@ -23,29 +23,29 @@ pub struct IPropertyStoreVT {
 	pub Commit: fn(ComPtr) -> HRES,
 }
 
-/// [`IPropertyStore`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nn-propsys-ipropertystore)
-/// COM interface over [`IPropertyStoreVT`](crate::vt::IPropertyStoreVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// Instantiating from an [`IShellItem`](crate::IShellItem) object:
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, IPropertyStore, IShellItem, SHCreateItemFromParsingName};
-///
-/// let file = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp\\foo.txt", None)?;
-/// let props = file.BindToHandler::<IPropertyStore>(None, &co::BHID::PropertyStore)?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
-pub struct IPropertyStore(ComPtr);
+com_interface! { IPropertyStore: "oleaut";
+	"886d8eeb-8cf2-4446-8d02-cdba1dbdcf99";
+	/// [`IPropertyStore`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nn-propsys-ipropertystore)
+	/// COM interface over [`IPropertyStoreVT`](crate::vt::IPropertyStoreVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// Instantiating from an [`IShellItem`](crate::IShellItem) object:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, IPropertyStore, IShellItem, SHCreateItemFromParsingName};
+	///
+	/// let file = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp\\foo.txt", None)?;
+	/// let props = file.BindToHandler::<IPropertyStore>(None, &co::BHID::PropertyStore)?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IPropertyStore, "886d8eeb-8cf2-4446-8d02-cdba1dbdcf99");
 impl oleaut_IPropertyStore for IPropertyStore {}
 
 /// This trait is enabled with the `oleaut` feature, and provides methods for

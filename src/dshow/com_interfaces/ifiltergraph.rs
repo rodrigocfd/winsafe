@@ -23,16 +23,16 @@ pub struct IFilterGraphVT {
 	pub SetDefaultSyncSource: fn(ComPtr) -> HRES,
 }
 
-/// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
-/// COM interface over [`IFilterGraphVT`](crate::vt::IFilterGraphVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IFilterGraph(ComPtr);
+com_interface! { IFilterGraph: "dshow";
+	"56a8689f-0ad4-11ce-b03a-0020af0ba770";
+	/// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
+	/// COM interface over [`IFilterGraphVT`](crate::vt::IFilterGraphVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IFilterGraph, "56a8689f-0ad4-11ce-b03a-0020af0ba770");
 impl dshow_IFilterGraph for IFilterGraph {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for

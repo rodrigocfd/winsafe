@@ -36,30 +36,30 @@ pub struct IShellLinkVT {
 	pub SetPath: fn(ComPtr, PCSTR) -> HRES,
 }
 
-/// [`IShellLink`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
-/// COM interface over [`IShellLinkVT`](crate::vt::IShellLinkVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, IShellLink};
-///
-/// let obj = CoCreateInstance::<IShellLink>(
-///     &co::CLSID::ShellLink,
-///     None,
-///     co::CLSCTX::INPROC_SERVER,
-/// )?;
-/// # Ok::<_, co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IShellLink(ComPtr);
+com_interface! { IShellLink: "shell";
+	"000214f9-0000-0000-c000-000000000046";
+	/// [`IShellLink`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
+	/// COM interface over [`IShellLinkVT`](crate::vt::IShellLinkVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, CoCreateInstance, IShellLink};
+	///
+	/// let obj = CoCreateInstance::<IShellLink>(
+	///     &co::CLSID::ShellLink,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+}
 
-impl_iunknown!(IShellLink, "000214f9-0000-0000-c000-000000000046");
 impl shell_IShellLink for IShellLink {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

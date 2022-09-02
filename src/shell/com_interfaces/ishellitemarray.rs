@@ -24,16 +24,16 @@ pub struct IShellItemArrayVT {
 	pub EnumItems: fn(ComPtr, *mut PVOID) -> HRES,
 }
 
-/// [`IShellItemArray`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
-/// COM interface over [`IShellItemArrayVT`](crate::vt::IShellItemArrayVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IShellItemArray(ComPtr);
+com_interface! { IShellItemArray: "shell";
+	"b63ea76d-1f85-456f-a19c-48159efa858b";
+	/// [`IShellItemArray`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
+	/// COM interface over [`IShellItemArrayVT`](crate::vt::IShellItemArrayVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IShellItemArray, "b63ea76d-1f85-456f-a19c-48159efa858b");
 impl shell_IShellItemArray for IShellItemArray {}
 
 /// This trait is enabled with the `shell` feature, and provides methods for

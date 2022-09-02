@@ -29,16 +29,16 @@ pub struct IPinVT {
 	pub NewSegment: fn(ComPtr, i64, i64, f64) -> HRES,
 }
 
-/// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
-/// COM interface over [`IPinVT`](crate::vt::IPinVT).
-///
-/// Automatically calls
-/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub struct IPin(ComPtr);
+com_interface! { IPin: "dshow";
+	"56a86891-0ad4-11ce-b03a-0020af0ba770";
+	/// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
+	/// COM interface over [`IPinVT`](crate::vt::IPinVT).
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IPin, "56a86891-0ad4-11ce-b03a-0020af0ba770");
 impl dshow_IPin for IPin {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for

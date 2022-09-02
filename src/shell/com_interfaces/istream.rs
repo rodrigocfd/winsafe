@@ -23,16 +23,16 @@ pub struct IStreamVT {
 	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-/// [`IStream`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream)
-/// COM interface over [`IStreamVT`](crate::vt::IStreamVT).
-///
-/// Automatically calls
-/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-/// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub struct IStream(ComPtr);
+com_interface! { IStream: "shell";
+	"0000000c-0000-0000-c000-000000000046";
+	/// [`IStream`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream)
+	/// COM interface over [`IStreamVT`](crate::vt::IStreamVT).
+	///
+	/// Automatically calls
+	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+}
 
-impl_iunknown!(IStream, "0000000c-0000-0000-c000-000000000046");
 impl shell_ISequentialStream for IStream {}
 impl shell_IStream for IStream {}
 
