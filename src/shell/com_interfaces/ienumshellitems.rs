@@ -58,8 +58,9 @@ impl shell_IEnumShellItems for IEnumShellItems {}
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// Returns an iterator over the [`IShellItem`](crate::IShellItem) elements
-	/// which successively calls
-	/// [`IEnumShellItems::Next`](crate::prelude::shell_IEnumShellItems::Next).
+	/// which calls
+	/// [`IEnumShellItems::Next`](crate::prelude::shell_IEnumShellItems::Next)
+	/// internally.
 	///
 	/// # Examples
 	///

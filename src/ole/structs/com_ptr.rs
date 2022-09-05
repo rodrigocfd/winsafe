@@ -16,6 +16,8 @@ impl ComPtr {
 	///
 	/// **Note:** Be sure the pointer actually points to the given virtual table
 	/// type.
+	///
+	/// Used internally by the library.
 	#[must_use]
 	pub const unsafe fn into_ptr<T>(self) -> *mut *mut T {
 		self.0 as *mut *mut T

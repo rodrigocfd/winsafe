@@ -43,9 +43,10 @@ impl dshow_IEnumMediaTypes for IEnumMediaTypes {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IEnumMediaTypes: ole_IUnknown {
-	/// Returns an iterator over the [AM_MEDIA_TYPE](crate::AM_MEDIA_TYPE)
-	/// elements which successively calls
-	/// [`IEnumMediaTypes::next`](crate::prelude::dshow_IEnumMediaTypes::Next).
+	/// Returns an iterator over the [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE)
+	/// elements which calls
+	/// [`IEnumMediaTypes::next`](crate::prelude::dshow_IEnumMediaTypes::Next)
+	/// internally.
 	///
 	/// # Examples
 	///

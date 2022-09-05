@@ -45,8 +45,9 @@ impl dshow_IEnumFilters for IEnumFilters {}
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// Returns an iterator over the [`IBaseFilter`](crate::IBaseFilter)
-	/// elements which successively calls
-	/// [`IEnumFilters::Next`](crate::prelude::dshow_IEnumFilters::Next).
+	/// elements which calls
+	/// [`IEnumFilters::Next`](crate::prelude::dshow_IEnumFilters::Next)
+	/// internally.
 	///
 	/// # Examples
 	///
