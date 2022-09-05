@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::dshow::decl::{AM_MEDIA_TYPE, PIN_INFO};
+use crate::dshow::decl::{AM_MEDIA_TYPE, IEnumMediaTypes, PIN_INFO};
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
@@ -59,7 +59,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connect)
 	/// method.
 	fn Connect(&self,
-		receive_pin: &IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		receive_pin: &IPin, amt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IPinVT>();
@@ -67,7 +67,7 @@ pub trait dshow_IPin: ole_IUnknown {
 				(vt.Connect)(
 					self.ptr(),
 					receive_pin.ptr(),
-					mt.map_or(std::ptr::null(), |p| p as *const _ as _),
+					amt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
 				),
 			)
 		}
@@ -88,10 +88,12 @@ pub trait dshow_IPin: ole_IUnknown {
 
 	/// [`IPin::ConnectionMediaType`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectionmediatype)
 	/// method.
-	fn ConnectionMediaType(&self, mt: &mut AM_MEDIA_TYPE) -> HrResult<()> {
+	fn ConnectionMediaType(&self, amt: &mut AM_MEDIA_TYPE) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IPinVT>();
-			ok_to_hrresult((vt.ConnectionMediaType)(self.ptr(), mt as *mut _ as _))
+			ok_to_hrresult(
+				(vt.ConnectionMediaType)(self.ptr(), amt as *mut _ as _),
+			)
 		}
 	}
 
@@ -122,6 +124,18 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
+	/// [`IPin::EnumMediaTypes`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-enummediatypes)
+	/// method.
+	#[must_use]
+	fn EnumMediaTypes(&self) -> HrResult<IEnumMediaTypes> {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let vt = self.vt_ref::<IPinVT>();
+			ok_to_hrresult((vt.EnumMediaTypes)(self.ptr(), &mut ppv_queried))
+				.map(|_| IEnumMediaTypes::from(ppv_queried))
+		}
+	}
+
 	/// [`IPin::NewSegment`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-newsegment)
 	/// method.
 	fn NewSegment(&self, start: i64, stop: i64, rate: f64) -> HrResult<()> {
@@ -134,10 +148,10 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::QueryAccept`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryaccept)
 	/// method.
 	#[must_use]
-	fn QueryAccept(&self, mt: &AM_MEDIA_TYPE) -> HrResult<bool> {
+	fn QueryAccept(&self, amt: &AM_MEDIA_TYPE) -> HrResult<bool> {
 		unsafe {
 			let vt = self.vt_ref::<IPinVT>();
-			okfalse_to_hrresult((vt.QueryAccept)(self.ptr(), mt as *const _ as _))
+			okfalse_to_hrresult((vt.QueryAccept)(self.ptr(), amt as *const _ as _))
 		}
 	}
 
@@ -213,7 +227,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::ReceiveConnection`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
 	/// method.
 	fn ReceiveConnection(&self,
-		connector: &IPin, mt: &AM_MEDIA_TYPE) -> HrResult<()>
+		connector: &IPin, amt: &AM_MEDIA_TYPE) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IPinVT>();
@@ -221,7 +235,7 @@ pub trait dshow_IPin: ole_IUnknown {
 				(vt.ReceiveConnection)(
 					self.ptr(),
 					connector.ptr(),
-					mt as *const _ as _,
+					amt as *const _ as _,
 				),
 			)
 		}

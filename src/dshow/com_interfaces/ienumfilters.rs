@@ -50,8 +50,6 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	///
 	/// # Examples
 	///
-	/// Enumerating the [`IBaseFilter`](crate::IBaseFilter) objects:
-	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::IEnumFilters;

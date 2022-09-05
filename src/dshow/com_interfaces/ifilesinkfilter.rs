@@ -67,7 +67,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// ```
 	#[must_use]
 	unsafe fn GetCurFile(&self,
-		mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
+		amt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
 	{
 		let mut pstr: *mut u16 = std::ptr::null_mut();
 		let vt = self.vt_ref::<IFileSinkFilterVT>();
@@ -75,7 +75,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 			(vt.GetCurFile)(
 				self.ptr(),
 				&mut pstr,
-				mt.map_or(std::ptr::null_mut(), |p| p as *mut _ as _),
+				amt.map_or(std::ptr::null_mut(), |amt| amt as *mut _ as _),
 			),
 		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
@@ -87,7 +87,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// [`IFileSinkFilter::SetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
 	/// method.
 	fn SetFileName(&self,
-		file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		file_name: &str, amt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IFileSinkFilterVT>();
@@ -95,7 +95,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 				(vt.SetFileName)(
 					self.ptr(),
 					WString::from_str(file_name).as_ptr(),
-					mt.map_or(std::ptr::null(), |p| p as *const _ as _),
+					amt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
 				),
 			)
 		}
