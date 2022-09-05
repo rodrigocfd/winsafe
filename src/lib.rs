@@ -388,8 +388,21 @@ pub mod msg {
 		pub use super::super::user::messages::em::*;
 	}
 
-	#[cfg(feature = "comctl")] pub use super::comctl::messages::hdm;
-	#[cfg(feature = "user")] pub use super::user::messages::lb;
+	#[cfg(feature = "comctl")]
+	pub mod hdm {
+		//! Header control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages),
+		//! whose constants have [`HDM`](crate::co::HDM) prefix.
+		pub use super::super::comctl::messages::hdm::*;
+	}
+
+	#[cfg(feature = "user")]
+	pub mod lb {
+		//! ListBox control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages),
+		//! whose constants have [`LB`](crate::co::LB) prefix.
+		pub use super::super::user::messages::lb::*;
+	}
 
 	#[cfg(feature = "comctl")]
 	pub mod lvm {
@@ -400,12 +413,55 @@ pub mod msg {
 		pub use super::super::comctl::messages::lvm::*;
 	}
 
-	#[cfg(feature = "comctl")] pub use super::comctl::messages::mcm;
-	#[cfg(feature = "comctl")] pub use super::comctl::messages::pbm;
-	#[cfg(feature = "comctl")] pub use super::comctl::messages::sb;
-	#[cfg(feature = "comctl")] pub use super::comctl::messages::stm;
-	#[cfg(feature = "comctl")] pub use super::comctl::messages::tbm;
-	#[cfg(feature = "comctl")] pub use super::comctl::messages::trbm;
+	#[cfg(feature = "comctl")]
+	pub mod mcm {
+		//! Month calendar control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages),
+		//! whose constants have [`MCM`](crate::co::MCM) prefix.
+		pub use super::super::comctl::messages::mcm::*;
+	}
+
+	#[cfg(feature = "comctl")]
+	pub mod pbm {
+		//! Progress bar control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages),
+		//! whose constants have [`PBM`](crate::co::PBM) prefix.
+		pub use super::super::comctl::messages::pbm::*;
+	}
+
+	#[cfg(feature = "comctl")]
+	pub mod sb {
+		//! Status bar control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages),
+		//! whose constants have [`SB`](crate::co::SB) prefix.
+		pub use super::super::comctl::messages::sb::*;
+	}
+
+	#[cfg(feature = "comctl")]
+	pub mod stm {
+		//! Static control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages),
+		//! whose constants have [`STM`](crate::co::STM) prefix.
+		pub use super::super::comctl::messages::stm::*;
+	}
+
+	#[cfg(feature = "comctl")]
+	pub mod tbm {
+		//! Toolbar control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages),
+		//! whose constants have [`TBM`](crate::co::TBM) prefix.
+		pub use super::super::comctl::messages::tbm::*;
+	}
+
+	#[cfg(feature = "comctl")]
+	pub mod trbm {
+		//! Trackbar control
+		//! [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages),
+		//! whose constants have [`TRBM`](crate::co::TRBM) prefix.
+		//!
+		//! Originally has `TBM` prefix.
+		pub use super::super::comctl::messages::trbm::*;
+	}
 
 	#[cfg(feature = "comctl")]
 	pub mod tvm {
