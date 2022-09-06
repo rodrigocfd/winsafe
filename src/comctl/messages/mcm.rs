@@ -1,5 +1,5 @@
 use crate::co;
-use crate::comctl::decl::MCGRIDINFO;
+use crate::comctl::decl::{MCGRIDINFO, MCHITTESTINFO};
 use crate::kernel::decl::{HIWORD, LOWORD, SysResult, SYSTEMTIME};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
@@ -417,27 +417,107 @@ unsafe impl MsgSend for GetUnicodeFormat {
 	}
 }
 
-/// [`MCM_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcursel)
+/// [`MCM_HITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-hittest)
 /// message parameters.
 ///
-/// Return type: `SysResult<()>`.
+/// Return type: `()`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-pub struct SetCurSel<'a> {
-	pub info: &'a SYSTEMTIME,
+pub struct HitTest<'a> {
+	pub test_info: &'a mut MCHITTESTINFO,
 }
 
-unsafe impl<'a> MsgSend for SetCurSel<'a> {
-	type RetType = SysResult<()>;
+unsafe impl<'a> MsgSend for HitTest<'a> {
+	type RetType = ();
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
-			msg_id: co::MCM::SETCURSEL.into(),
+			msg_id: co::MCM::HITTEST.into(),
 			wparam: 0,
-			lparam: self.info as *const _ as _,
+			lparam: self.test_info as *mut _ as _,
+		}
+	}
+}
+
+/// [`MCM_SETCALENDARBORDER`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcalendarborder)
+/// message parameters.
+///
+/// Return type: `()`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetCalendarBorder {
+	pub border: bool,
+	pub pixels: u32,
+}
+
+unsafe impl MsgSend for SetCalendarBorder {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETCALENDARBORDER.into(),
+			wparam: self.border as _,
+			lparam: self.pixels as _,
+		}
+	}
+}
+
+/// [`MCM_SETCALID`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcalid)
+/// message parameters.
+///
+/// Return type: `()`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetCalId {
+	pub id: co::CAL,
+}
+
+unsafe impl MsgSend for SetCalId {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETCALID.into(),
+			wparam: self.id.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`MCM_SETCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcolor)
+/// message parameters.
+///
+/// Return type: `Option<COLORREF>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetColor {
+	pub which: co::MCSC,
+	pub color: COLORREF,
+}
+
+unsafe impl MsgSend for SetColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			v => Some(COLORREF(v as _)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETCOLOR.into(),
+			wparam: self.which.0 as _,
+			lparam: self.color.0 as _,
 		}
 	}
 }
@@ -463,6 +543,31 @@ unsafe impl MsgSend for SetCurrentView {
 			msg_id: co::MCM::SETCURRENTVIEW.into(),
 			wparam: 0,
 			lparam: self.view.0 as _,
+		}
+	}
+}
+
+/// [`MCM_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcursel)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetCurSel<'a> {
+	pub info: &'a SYSTEMTIME,
+}
+
+unsafe impl<'a> MsgSend for SetCurSel<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETCURSEL.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }

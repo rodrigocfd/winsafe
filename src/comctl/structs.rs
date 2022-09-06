@@ -549,6 +549,23 @@ impl<'a> MCGRIDINFO<'a> {
 	pub_fn_bool_get_set!(bSelected, set_bSelected); // ignore cchName
 }
 
+/// [`MCHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mchittestinfo)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+pub struct MCHITTESTINFO {
+	cbSize: u32,
+	pub pt: POINT,
+	pub uHit: co::MCHT,
+	pub st: SYSTEMTIME,
+	pub rc: RECT,
+	pub iOffset: i32,
+	pub iRow: i32,
+	pub iCol: i32,
+}
+
+impl_default_with_size!(MCHITTESTINFO, cbSize);
+
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
