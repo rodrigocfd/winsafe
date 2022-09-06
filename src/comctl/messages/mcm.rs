@@ -1,5 +1,5 @@
 use crate::co;
-use crate::comctl::decl::{MCGRIDINFO, MCHITTESTINFO};
+use crate::comctl::decl::{MCGRIDINFO, MCHITTESTINFO, MONTHDAYSTATE};
 use crate::kernel::decl::{HIWORD, LOWORD, SysResult, SYSTEMTIME};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
@@ -572,13 +572,164 @@ unsafe impl<'a> MsgSend for SetCurSel<'a> {
 	}
 }
 
+/// [`MCM_SETDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setdaystate)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetDayState<'a> {
+	pub months: &'a [MONTHDAYSTATE],
+}
+
+unsafe impl<'a> MsgSend for SetDayState<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETDAYSTATE.into(),
+			wparam: self.months.len(),
+			lparam: self.months.as_ptr() as _,
+		}
+	}
+}
+
+/// [`MCM_SETFIRSTDAYOFWEEK`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setfirstdayofweek)
+/// message parameters.
+///
+/// Return type: `(bool, u16)`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetFirstDayOfWeek {
+	pub first_day: u8,
+}
+
+unsafe impl MsgSend for SetFirstDayOfWeek {
+	type RetType = (bool, u16);
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		(HIWORD(v as _) != 0, LOWORD(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETFIRSTDAYOFWEEK.into(),
+			wparam: 0,
+			lparam: self.first_day as _,
+		}
+	}
+}
+
+/// [`MCM_SETMAXSELCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setmaxselcount)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetMaxSelCount {
+	pub max_days: u8,
+}
+
+unsafe impl MsgSend for SetMaxSelCount {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETMAXSELCOUNT.into(),
+			wparam: self.max_days as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`MCM_SETMONTHDELTA`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setmonthdelta)
+/// message parameters.
+///
+/// Return type: `u8`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetMonthDelta {
+	pub num_months: u8,
+}
+
+unsafe impl MsgSend for SetMonthDelta {
+	type RetType = u8;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETMONTHDELTA.into(),
+			wparam: self.num_months as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`MCM_SETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setrange)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetRange<'a> {
+	pub which: co::GDTR,
+	pub limits: &'a [SYSTEMTIME; 2],
+}
+
+unsafe impl<'a> MsgSend for SetRange<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETRANGE.into(),
+			wparam: self.which.0 as _,
+			lparam: self.limits.as_ptr() as _,
+		}
+	}
+}
+
+/// [`MCM_SETSELRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setselrange)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetSelRange<'a> {
+	pub limits: &'a [SYSTEMTIME; 2],
+}
+
+unsafe impl<'a> MsgSend for SetSelRange<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETSELRANGE.into(),
+			wparam: 0,
+			lparam: self.limits.as_ptr() as _,
+		}
+	}
+}
+
 /// [`MCM_SETTODAY`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-settoday)
 /// message parameters.
 ///
 /// Return type: `()`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetToday<'a> {
-	pub today: &'a SYSTEMTIME,
+	pub today: Option<&'a SYSTEMTIME>,
 }
 
 unsafe impl<'a> MsgSend for SetToday<'a> {
@@ -592,7 +743,57 @@ unsafe impl<'a> MsgSend for SetToday<'a> {
 		WndMsg {
 			msg_id: co::MCM::SETTODAY.into(),
 			wparam: 0,
-			lparam: self.today as *const _ as _,
+			lparam: self.today.map_or(0, |today| today as *const _ as _),
+		}
+	}
+}
+
+/// [`MCM_SETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setunicodeformat)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetUnicodeFormat {
+	pub use_unicode: bool,
+}
+
+unsafe impl MsgSend for SetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SETUNICODEFORMAT.into(),
+			wparam: self.use_unicode as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`MCM_SIZERECTTOMIN`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-sizerecttomin)
+/// message parameters.
+///
+/// Return type: `()`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SizeRectToMin<'a> {
+	pub region: &'a mut RECT,
+}
+
+unsafe impl<'a> MsgSend for SizeRectToMin<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::MCM::SIZERECTTOMIN.into(),
+			wparam: 0,
+			lparam: self.region as *mut _ as _,
 		}
 	}
 }

@@ -566,6 +566,43 @@ pub struct MCHITTESTINFO {
 
 impl_default_with_size!(MCHITTESTINFO, cbSize);
 
+/// [`MONTHDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/monthdaystate)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(transparent)]
+#[derive(Default, Clone, Copy)]
+pub struct MONTHDAYSTATE(u32);
+
+impl MONTHDAYSTATE {
+	/// Returns the state of the bit corresponding to the given day index.
+	///
+	/// # Panics
+	///
+	/// Panics if `index` is greater than 31.
+	pub fn get_day(&self, index: u8) -> bool {
+		if index > 31 {
+			panic!("MONTHDAYSTATE max index is 31, tried to get {}.", index)
+		} else {
+			((self.0 >> index) & 1) != 0
+		}
+	}
+
+	/// Sets the state of the bit corresponding to the given day index.
+	///
+	/// # Panics
+	///
+	/// Panics if `index` is greater than 31.
+	pub fn set_day(&mut self, index: u8, state: bool) {
+		if index > 31 {
+			panic!("MONTHDAYSTATE max index is 31, tried to set {}.", index)
+		} else if state {
+			self.0 |= 1 << index;
+		} else {
+			self.0 &= !(1 << index);
+		}
+	}
+}
+
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
@@ -714,15 +751,15 @@ pub struct NMDAYSTATE<'a> {
 	pub nmhdr: NMHDR,
 	pub stStart: SYSTEMTIME,
 	cDayState: i32,
-	prgDayState: *mut u32,
+	prgDayState: *mut MONTHDAYSTATE,
 
-	_prgDayState: PhantomData<&'a mut u32>,
+	_prgDayState: PhantomData<&'a mut MONTHDAYSTATE>,
 }
 
 impl_default!(NMDAYSTATE, 'a);
 
 impl<'a> NMDAYSTATE<'a> {
-	pub_fn_array_buf_get_set!('a, prgDayState, set_prgDayState, cDayState, u32);
+	pub_fn_array_buf_get_set!('a, prgDayState, set_prgDayState, cDayState, MONTHDAYSTATE);
 }
 
 /// [`NMHDR`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
