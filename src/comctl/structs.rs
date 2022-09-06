@@ -8,6 +8,7 @@ use crate::comctl::decl::{
 };
 use crate::comctl::privs::{HINST_COMMCTRL, L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::kernel::decl::{HINSTANCE, IdStr, SYSTEMTIME, WString};
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::IS_INTRESOURCE;
 use crate::prelude::Handle;
 use crate::user::decl::{
@@ -520,6 +521,33 @@ pub struct LVTILEVIEWINFO {
 }
 
 impl_default_with_size!(LVTILEVIEWINFO, cbSize);
+
+/// [`MCGRIDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+pub struct MCGRIDINFO<'a> {
+	cbSize: u32,
+	pub dwPart: co::MCGIP,
+	pub dwFlags: co::MCGIF,
+	pub iCalendar: i32,
+	pub iRow: i32,
+	pub iCol: i32,
+	bSelected: BOOL,
+	pub stStart: SYSTEMTIME,
+	pub stEnd: SYSTEMTIME,
+	pub rc: RECT,
+	pszName: *mut u16,
+	cchName: usize,
+
+	_pszName: PhantomData<&'a mut u16>,
+}
+
+impl_default_with_size!(MCGRIDINFO, cbSize, 'a);
+
+impl<'a> MCGRIDINFO<'a> {
+	pub_fn_bool_get_set!(bSelected, set_bSelected); // ignore cchName
+}
 
 /// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.

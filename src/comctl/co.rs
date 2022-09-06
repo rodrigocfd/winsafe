@@ -97,6 +97,41 @@ const_ws! { BTNS: u8: "comctl";
 	WHOLEDROPDOWN 0x80
 }
 
+const_ordinary! { CAL: u32: "comctl";
+	/// [`MCM_GETCALID`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalid)
+	/// return type calendar IDs (`u32`).
+	=>
+	=>
+	/// Gregorian (localized) calendar.
+	GREGORIAN 1
+	/// Gregorian (U.S.) calendar.
+	GREGORIAN_US 2
+	/// Japanese Emperor Era calendar.
+	JAPAN 3
+	/// Taiwan calendar.
+	TAIWAN 4
+	/// Korean Tangun Era calendar.
+	KOREA 5
+	/// Hijri (Arabic Lunar) calendar.
+	HIJRI 6
+	/// Thai calendar.
+	THAI 7
+	/// Hebrew (Lunar) calendar.
+	HEBREW 8
+	/// Gregorian Middle East French calendar.
+	GREGORIAN_ME_FRENCH 9
+	/// Gregorian Arabic calendar.
+	GREGORIAN_ARABIC 10
+	/// Gregorian Transliterated English calendar
+	GREGORIAN_XLIT_ENGLISH 11
+	/// Gregorian Transliterated French calendar.
+	GREGORIAN_XLIT_FRENCH 12
+	/// Persian (Solar Hijri) calendar.
+	PERSIAN 22
+	/// UmAlQura Hijri (Arabic Lunar) calendar.
+	UMALQURA 23
+}
+
 const_values! { CB: "comctl";
 	FIRST 0x1700
 	=>
@@ -320,6 +355,13 @@ const_ordinary! { GDTR: u32: "comctl";
 	=>
 	MIN 0x0001
 	MAX 0x0002
+}
+
+const_ordinary! { GMR: u32: "comctl";
+	=>
+	=>
+	VISIBLE 0
+	DAYSTATE 1
 }
 
 const_bitflag! { HICF: u32: "comctl";
@@ -1326,6 +1368,30 @@ const_ws! { LWS: u32: "comctl";
 	USECUSTOMTEXT 0x0010
 	/// The text is right-justified.
 	RIGHT 0x0020
+}
+
+const_bitflag! { MCGIF: u32: "comctl";
+	=>
+	=>
+	DATE 0x0000_0001
+	RECT 0x0000_0002
+	NAME 0x0000_0004
+}
+
+const_ordinary! { MCGIP: u32: "comctl";
+	/// [`MCGRIDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
+	/// `dwPart` (`u32`).
+	=>
+	=>
+	CALENDARCONTROL 0
+	NEXT 1
+	PREV 2
+	FOOTER 3
+	CALENDAR 4
+	CALENDARHEADER 5
+	CALENDARBODY 6
+	CALENDARROW 7
+	CALENDARCELL 8
 }
 
 const_wm! { MCM: "comctl";

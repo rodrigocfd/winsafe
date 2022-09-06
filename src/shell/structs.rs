@@ -91,9 +91,9 @@ pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
 	hNameMappings: *mut std::ffi::c_void, // lots of stuff going here...
 	lpszProgressTitle: *mut u16,
 
-	_pFrom: PhantomData<&'a mut usize>,
-	_pTo: PhantomData<&'b mut usize>,
-	_lpszProgressTitle: PhantomData<&'c mut usize>,
+	_pFrom: PhantomData<&'a mut u16>,
+	_pTo: PhantomData<&'b mut u16>,
+	_lpszProgressTitle: PhantomData<&'c mut u16>,
 }
 
 impl_default!(SHFILEOPSTRUCT, 'a, 'b, 'c);
