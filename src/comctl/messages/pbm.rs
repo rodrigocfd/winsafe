@@ -1,8 +1,10 @@
 use crate::co;
 use crate::comctl::decl::PBRANGE;
+use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
+use crate::user::decl::COLORREF;
 use crate::user::privs::zero_as_err;
 
 /// [`PBM_DELTAPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-deltapos)
@@ -25,6 +27,58 @@ unsafe impl MsgSend for DeltaPos {
 		WndMsg {
 			msg_id: co::PBM::DELTAPOS.into(),
 			wparam: self.advance_amount as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`PBM_GETBARCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getbarcolor)
+/// message, which has no parameters.
+///
+/// Return type: `Option<COLORREF>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetBarColor {}
+
+unsafe impl MsgSend for GetBarColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as u32 {
+			CLR_DEFAULT => None,
+			v => Some(COLORREF(v)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::PBM::GETBARCOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`PBM_GETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getbkcolor)
+/// message, which has no parameters.
+///
+/// Return type: `Option<COLORREF>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetBkColor {}
+
+unsafe impl MsgSend for GetBkColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as u32 {
+			CLR_DEFAULT => None,
+			v => Some(COLORREF(v)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::PBM::GETBKCOLOR.into(),
+			wparam: 0,
 			lparam: 0,
 		}
 	}
@@ -102,6 +156,85 @@ unsafe impl MsgSend for GetState {
 	}
 }
 
+/// [`PBM_GETSTEP`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getstep)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetStep {}
+
+unsafe impl MsgSend for GetStep {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::PBM::SETSTEP.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`PBM_SETBARCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setbarcolor)
+/// message parameters.
+///
+/// Return type: `Option<COLORREF>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetBarColor {
+	pub color: Option<COLORREF>,
+}
+
+unsafe impl MsgSend for SetBarColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as u32 {
+			CLR_DEFAULT => None,
+			v => Some(COLORREF(v)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::PBM::SETBARCOLOR.into(),
+			wparam: self.color.map_or(CLR_DEFAULT as _, |color| color.0 as _),
+			lparam: 0,
+		}
+	}
+}
+
+/// [`PBM_SETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setbkcolor)
+/// message parameters.
+///
+/// Return type: `Option<COLORREF>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetBkColor {
+	pub color: Option<COLORREF>,
+}
+
+unsafe impl MsgSend for SetBkColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as u32 {
+			CLR_DEFAULT => None,
+			v => Some(COLORREF(v)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::PBM::SETBKCOLOR.into(),
+			wparam: self.color.map_or(CLR_DEFAULT as _, |color| color.0 as _),
+			lparam: 0,
+		}
+	}
+}
+
 /// [`PBM_SETMARQUEE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setmarquee)
 /// message parameters.
 ///
@@ -172,7 +305,7 @@ unsafe impl MsgSend for SetRange {
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
-			msg_id: co::PBM::SETPOS.into(),
+			msg_id: co::PBM::SETRANGE.into(),
 			wparam: 0,
 			lparam: MAKEDWORD(self.min, self.max) as _,
 		}
