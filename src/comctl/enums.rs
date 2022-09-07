@@ -2,7 +2,31 @@ use crate::co;
 use crate::comctl::decl::HTREEITEM;
 use crate::kernel::decl::{HINSTANCE, IdStr, WString};
 use crate::kernel::privs::MAKEINTRESOURCE;
-use crate::user::decl::{HBITMAP, POINT};
+use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
+
+/// Variant parameter for:
+///
+/// * [`stm::GetImage`](crate::msg::stm::GetImage) `image`;
+/// * [`stm::SetImage`](crate::msg::stm::SetImage) `image`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[derive(Clone, Copy)]
+pub enum BmpIconCurMeta {
+	Bmp(HBITMAP),
+	Icon(HICON),
+	Cur(HCURSOR),
+	Meta(HDC),
+}
+
+impl From<BmpIconCurMeta> for isize {
+	fn from(v: BmpIconCurMeta) -> Self {
+		(match v {
+			BmpIconCurMeta::Bmp(hbmp) => hbmp.0,
+			BmpIconCurMeta::Icon(hicon) => hicon.0,
+			BmpIconCurMeta::Cur(hcur) => hcur.0,
+			BmpIconCurMeta::Meta(hdc) => hdc.0,
+		}) as _
+	}
+}
 
 /// Variant parameter for:
 ///
@@ -105,6 +129,15 @@ pub enum TreeitemTvi {
 	Tvi(co::TVI),
 }
 
+impl From<TreeitemTvi> for isize {
+	fn from(v: TreeitemTvi) -> Self {
+		match v {
+			TreeitemTvi::Treeitem(htreeitem) => htreeitem.0 as _,
+			TreeitemTvi::Tvi(tvi) => tvi.0,
+		}
+	}
+}
+
 impl TreeitemTvi {
 	#[must_use]
 	pub fn from_isize(val: isize) -> TreeitemTvi {
@@ -114,14 +147,6 @@ impl TreeitemTvi {
 			co::TVI::ROOT => Self::Tvi(co::TVI::ROOT),
 			co::TVI::SORT => Self::Tvi(co::TVI::SORT),
 			val => Self::Treeitem(HTREEITEM(val.0 as _)),
-		}
-	}
-
-	#[must_use]
-	pub fn as_isize(&self) -> isize {
-		match self {
-			Self::Treeitem(htreeitem) => htreeitem.0 as _,
-			Self::Tvi(tvi) => tvi.0 as _,
 		}
 	}
 }

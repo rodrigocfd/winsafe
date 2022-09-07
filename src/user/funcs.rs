@@ -266,7 +266,7 @@ pub fn EnumDisplaySettings(
 	match unsafe {
 		user::ffi::EnumDisplaySettingsW(
 			WString::from_opt_str(device_name).as_ptr(),
-			mode_num.as_u32(),
+			mode_num.into(),
 			dev_mode as *mut _ as _,
 		)
 	} {
@@ -290,7 +290,7 @@ pub fn EnumDisplaySettingsEx(
 	match unsafe {
 		user::ffi::EnumDisplaySettingsExW(
 			WString::from_opt_str(device_name).as_ptr(),
-			mode_num.as_u32(),
+			mode_num.into(),
 			dev_mode as *mut _ as _,
 			flags.0,
 		)

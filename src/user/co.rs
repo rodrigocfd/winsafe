@@ -1351,13 +1351,16 @@ const_ordinary! { IDI: u32: "user";
 }
 
 const_ordinary! { IMAGE_TYPE: u8: "user";
-	/// [`bm::GetImage`](crate::msg::bm::GetImage) `img_type` (`u8`).
+	/// [`bm::GetImage`](crate::msg::bm::GetImage) `img_type`;
+	/// [`stm::GetImage`](crate::msg::stm::GetImage) `img_type` (`u8`).
 	///
 	/// Originally has `IMAGE` prefix.
 	=>
 	=>
 	BITMAP 0
 	ICON 1
+	CURSOR 2
+	ENHMETAFILE 3
 }
 
 #[cfg(target_pointer_width = "64")]

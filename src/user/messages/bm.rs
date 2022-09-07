@@ -146,9 +146,13 @@ unsafe impl MsgSend for SetImage {
 	type RetType = SysResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match self.image {
-			BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP(v as _))),
-			BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON(v as _))),
+		if v == 0 {
+			Err(co::ERROR::BAD_ARGUMENTS)
+		} else {
+			match self.image {
+				BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP(v as _))),
+				BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON(v as _))),
+			}
 		}
 	}
 
@@ -159,7 +163,7 @@ unsafe impl MsgSend for SetImage {
 				BmpIcon::Bmp(_) => co::IMAGE_TYPE::BITMAP.0,
 				BmpIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
 			} as _,
-			lparam: self.image.as_isize(),
+			lparam: self.image.into(),
 		}
 	}
 }

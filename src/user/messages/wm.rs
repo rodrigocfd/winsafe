@@ -417,7 +417,7 @@ unsafe impl MsgSend for EnterIdle {
 		WndMsg {
 			msg_id: co::WM::ENTERIDLE,
 			wparam: self.reason.0 as _,
-			lparam: self.handle.as_isize(),
+			lparam: self.handle.into(),
 		}
 	}
 }
@@ -1332,7 +1332,7 @@ unsafe impl MsgSend for ParentNotify {
 		WndMsg {
 			msg_id: co::WM::PARENTNOTIFY,
 			wparam: MAKEDWORD(self.event.0, self.child_id) as _,
-			lparam: self.data.as_isize(),
+			lparam: self.data.into(),
 		}
 	}
 }

@@ -77,7 +77,7 @@ impl AtomStr {
 /// Variant parameter for:
 ///
 /// * [`bm::GetImage`](crate::msg::bm::GetImage) `image`;
-/// * [`bm::GetImage`](crate::msg::bm::SetImage) `image`.
+/// * [`bm::SetImage`](crate::msg::bm::SetImage) `image`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]
 pub enum BmpIcon {
@@ -85,13 +85,12 @@ pub enum BmpIcon {
 	Icon(HICON),
 }
 
-impl BmpIcon {
-	#[must_use]
-	pub fn as_isize(&self) -> isize {
-		(match self {
-			Self::Bmp(hbmp) => hbmp.0,
-			Self::Icon(hicon) => hicon.0,
-		}) as isize
+impl From<BmpIcon> for isize {
+	fn from(v: BmpIcon) -> Self {
+		(match v {
+			BmpIcon::Bmp(hbmp) => hbmp.0,
+			BmpIcon::Icon(hicon) => hicon.0,
+		}) as _
 	}
 }
 
@@ -154,12 +153,11 @@ pub enum GmidxEnum {
 	Enum(co::ENUM_SETTINGS),
 }
 
-impl GmidxEnum {
-	#[must_use]
-	pub const fn as_u32(&self) -> u32 {
-		match self {
-			Self::Gmidx(idx) => *idx,
-			Self::Enum(es) => es.0,
+impl From<GmidxEnum> for u32 {
+	fn from(v: GmidxEnum) -> Self {
+		match v {
+			GmidxEnum::Gmidx(idx) => idx,
+			GmidxEnum::Enum(es) => es.0,
 		}
 	}
 }
@@ -188,12 +186,11 @@ pub enum HwndHmenu {
 	Hmenu(HMENU),
 }
 
-impl HwndHmenu {
-	#[must_use]
-	pub fn as_isize(&self) -> isize {
-		(match self {
-			Self::Hwnd(hwnd) => hwnd.0,
-			Self::Hmenu(hmenu) => hmenu.0,
+impl From<HwndHmenu> for isize {
+	fn from(v: HwndHmenu) -> Self {
+		(match v {
+			HwndHmenu::Hwnd(hwnd) => hwnd.0,
+			HwndHmenu::Hmenu(hmenu) => hmenu.0,
 		}) as _
 	}
 }
@@ -237,13 +234,12 @@ pub enum HwndPointId {
 	Id(u16),
 }
 
-impl HwndPointId {
-	#[must_use]
-	pub fn as_isize(&self) -> isize {
-		match self {
-			Self::Hwnd(hwnd) => hwnd.0 as _,
-			Self::Point(pt) => pt.into_u32() as _,
-			Self::Id(id) => *id as _,
+impl From<HwndPointId> for isize {
+	fn from(v: HwndPointId) -> Self {
+		match v {
+			HwndPointId::Hwnd(hwnd) => hwnd.0 as _,
+			HwndPointId::Point(pt) => pt.into_u32() as _,
+			HwndPointId::Id(id) => id as _,
 		}
 	}
 }

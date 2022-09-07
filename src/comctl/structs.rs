@@ -1152,7 +1152,7 @@ impl<'a> TVINSERTSTRUCT<'a> {
 
 	/// Sets the `hInsertAfter` field.
 	pub fn set_hInsertAfter(&mut self, val: TreeitemTvi) {
-		self.hInsertAfter = val.as_isize();
+		self.hInsertAfter = val.into();
 	}
 }
 
