@@ -558,7 +558,7 @@ unsafe impl MsgSend for SetHotDivider {
 				PtIdx::Idx(_) => false,
 			} as _,
 			lparam: match self.value {
-				PtIdx::Pt(pt) => pt.into_u32(),
+				PtIdx::Pt(pt) => pt.into(),
 				PtIdx::Idx(idx) => idx,
 			} as _,
 		}

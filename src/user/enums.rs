@@ -238,7 +238,7 @@ impl From<HwndPointId> for isize {
 	fn from(v: HwndPointId) -> Self {
 		match v {
 			HwndPointId::Hwnd(hwnd) => hwnd.0 as _,
-			HwndPointId::Point(pt) => pt.into_u32() as _,
+			HwndPointId::Point(pt) => u32::from(pt) as _,
 			HwndPointId::Id(id) => id as _,
 		}
 	}

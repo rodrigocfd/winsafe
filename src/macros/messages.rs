@@ -184,8 +184,8 @@ macro_rules! pub_struct_msg_button {
 			fn as_generic_wm(&mut self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
-					wparam: self.vkey_code.0 as usize,
-					lparam: self.coords.into_u32() as _,
+					wparam: self.vkey_code.0 as _,
+					lparam: u32::from(self.coords) as _,
 				}
 			}
 		}

@@ -89,7 +89,7 @@ extern_sys! { "user32";
 	GetLastActivePopup(HANDLE) -> HANDLE
 	GetMenu(HANDLE) -> HANDLE
 	GetMenuBarInfo(HANDLE, i32, i32, PVOID) -> BOOL
-	GetMenuCheckMarkDimensions() -> i32
+	GetMenuCheckMarkDimensions() -> u32
 	GetMenuDefaultItem(HANDLE, u32, u32) -> u32
 	GetMenuInfo(HANDLE, PVOID) -> BOOL
 	GetMenuItemCount(HANDLE) -> i32

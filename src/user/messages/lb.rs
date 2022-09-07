@@ -676,7 +676,7 @@ unsafe impl MsgSend for ItemFromPoint {
 		WndMsg {
 			msg_id: co::LB::ITEMFROMPOINT.into(),
 			wparam: 0,
-			lparam: self.coords.into_u32() as _,
+			lparam: u32::from(self.coords) as _,
 		}
 	}
 }

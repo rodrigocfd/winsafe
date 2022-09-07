@@ -242,7 +242,7 @@ unsafe impl MsgSend for ContextMenu {
 		WndMsg {
 			msg_id: co::WM::CONTEXTMENU,
 			wparam: self.hwnd.0 as _,
-			lparam: self.cursor_pos.into_u32() as _,
+			lparam: u32::from(self.cursor_pos) as _,
 		}
 	}
 }
@@ -251,7 +251,7 @@ unsafe impl MsgSendRecv for ContextMenu {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd: HWND(p.wparam as _),
-			cursor_pos: POINT::from_u32(p.lparam as _),
+			cursor_pos: POINT::from(p.lparam as u32),
 		}
 	}
 }
@@ -1106,7 +1106,7 @@ unsafe impl MsgSend for Move {
 		WndMsg {
 			msg_id: co::WM::MOVE,
 			wparam: 0,
-			lparam: self.coords.into_u32() as _,
+			lparam: u32::from(self.coords) as _,
 		}
 	}
 }
@@ -1114,7 +1114,7 @@ unsafe impl MsgSend for Move {
 unsafe impl MsgSendRecv for Move {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			coords: POINT::from_u32(p.lparam as _),
+			coords: POINT::from(p.lparam as u32),
 		}
 	}
 }
@@ -1251,7 +1251,7 @@ unsafe impl MsgSend for NcHitTest {
 		WndMsg {
 			msg_id: co::WM::NCHITTEST,
 			wparam: 0,
-			lparam: self.cursor_pos.into_u32() as _,
+			lparam: u32::from(self.cursor_pos) as _,
 		}
 	}
 }
@@ -1259,7 +1259,7 @@ unsafe impl MsgSend for NcHitTest {
 unsafe impl MsgSendRecv for NcHitTest {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			cursor_pos: POINT::from_u32(p.lparam as _),
+			cursor_pos: POINT::from(p.lparam as u32),
 		}
 	}
 }
@@ -1346,7 +1346,7 @@ unsafe impl MsgSendRecv for ParentNotify {
 			data: match event {
 				co::WMPN::CREATE | co::WMPN::DESTROY => HwndPointId::Hwnd(HWND(p.lparam as _)),
 				co::WMPN::POINTERDOWN => HwndPointId::Id(p.lparam as _),
-				_ => HwndPointId::Point(POINT::from_u32(p.lparam as _)),
+				_ => HwndPointId::Point(POINT::from(p.lparam as u32)),
 			},
 		}
 	}
@@ -1606,7 +1606,7 @@ unsafe impl MsgSend for Size {
 		WndMsg {
 			msg_id: co::WM::SIZE,
 			wparam: self.request.0 as _,
-			lparam: self.client_area.into_u32() as _,
+			lparam: u32::from(self.client_area) as _,
 		}
 	}
 }
@@ -1755,7 +1755,7 @@ unsafe impl MsgSend for SysCommand {
 		WndMsg {
 			msg_id: co::WM::SYSCOMMAND,
 			wparam: self.request.0 as _,
-			lparam: self.position.into_u32() as _,
+			lparam: u32::from(self.position) as _,
 		}
 	}
 }
@@ -1764,7 +1764,7 @@ unsafe impl MsgSendRecv for SysCommand {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			request: co::SC(p.wparam as _),
-			position: POINT::from_u32(p.lparam as _),
+			position: POINT::from(p.lparam as u32),
 		}
 	}
 }

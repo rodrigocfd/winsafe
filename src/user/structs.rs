@@ -676,6 +676,18 @@ impl std::fmt::Display for POINT {
 	}
 }
 
+impl From<POINT> for u32 {
+	fn from(v: POINT) -> Self {
+		MAKEDWORD(v.x as _, v.y as _)
+	}
+}
+
+impl From<u32> for POINT {
+	fn from(v: u32) -> Self {
+		Self::new(LOWORD(v) as _, HIWORD(v) as _)
+	}
+}
+
 impl POINT {
 	/// Creates a new `POINT`.
 	#[must_use]
@@ -683,23 +695,10 @@ impl POINT {
 		Self { x, y }
 	}
 
-	/// Creates a new `POINT` by splitting `val` into two `u16` values, with
-	/// [`LOWORD`](crate::LOWORD) and [`HIWORD`](crate::HIWORD).
-	#[must_use]
-	pub const fn from_u32(val: u32) -> POINT {
-		Self::new(LOWORD(val) as _, HIWORD(val) as _)
-	}
-
 	/// Tells whether the struct contains exactly the given values.
 	#[must_use]
 	pub const fn is(&self, x: i32, y: i32) -> bool {
 		self.x == x && self.y == y
-	}
-
-	/// Calls [`MAKEDWORD`](crate::MAKEDWORD) with `x` and `y`.
-	#[must_use]
-	pub const fn into_u32(&self) -> u32 {
-		MAKEDWORD(self.x as _, self.y as _)
 	}
 }
 
@@ -763,6 +762,18 @@ impl std::fmt::Display for SIZE {
 	}
 }
 
+impl From<SIZE> for u32 {
+	fn from(v: SIZE) -> Self {
+		MAKEDWORD(v.cx as _, v.cy as _)
+	}
+}
+
+impl From<u32> for SIZE {
+	fn from(v: u32) -> Self {
+		Self::new(LOWORD(v) as _, HIWORD(v) as _)
+	}
+}
+
 impl SIZE {
 	/// Creates a new `SIZE`.
 	#[must_use]
@@ -770,23 +781,10 @@ impl SIZE {
 		Self { cx, cy }
 	}
 
-	/// Creates a new `SIZE` by splitting `val` into two `u16` values, with
-	/// [`LOWORD`](crate::LOWORD) and [`HIWORD`](crate::HIWORD).
-	#[must_use]
-	pub const fn from_u32(val: u32) -> SIZE {
-		Self::new(LOWORD(val) as _, HIWORD(val) as _)
-	}
-
 	/// Tells whether the struct contains exactly the given values.
 	#[must_use]
 	pub const fn is(&self, cx: i32, cy: i32) -> bool {
 		self.cx == cx && self.cy == cy
-	}
-
-	/// Calls [`MAKEDWORD`](crate::MAKEDWORD) with `cx` and `cy`.
-	#[must_use]
-	pub const fn into_u32(&self) -> u32 {
-		MAKEDWORD(self.cx as _, self.cy as _)
 	}
 }
 

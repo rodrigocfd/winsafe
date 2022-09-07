@@ -26,7 +26,7 @@ unsafe impl MsgSend for ApproximateViewRect {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::from_u32(v as _)
+		SIZE::from(v as u32)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1170,7 +1170,7 @@ unsafe impl MsgSend for GetItemSpacing {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::from_u32(v as _)
+		SIZE::from(v as u32)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2437,14 +2437,14 @@ unsafe impl MsgSend for SetIconSpacing {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::from_u32(v as _)
+		SIZE::from(v as u32)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETICONSPACING.into(),
 			wparam: 0,
-			lparam: self.size.into_u32() as _,
+			lparam: u32::from(self.size) as _,
 		}
 	}
 }
@@ -2622,7 +2622,7 @@ unsafe impl MsgSend for SetItemPosition {
 		WndMsg {
 			msg_id: co::LVM::SETITEMPOSITION.into(),
 			wparam: self.index as _,
-			lparam: self.position.into_u32() as _,
+			lparam: u32::from(self.position) as _,
 		}
 	}
 }

@@ -50,7 +50,7 @@ unsafe impl MsgSend for CharFromPos {
 		WndMsg {
 			msg_id: co::EM::CHARFROMPOS.into(),
 			wparam: 0,
-			lparam: self.coords.into_u32() as _,
+			lparam: u32::from(self.coords) as _,
 		}
 	}
 }
@@ -250,7 +250,7 @@ unsafe impl MsgSend for GetMargins {
 	type RetType = SIZE;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		SIZE::from_u32(v as _)
+		SIZE::from(v as u32)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -549,7 +549,7 @@ unsafe impl MsgSend for PosFromChar {
 	type RetType = POINT;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		POINT::from_u32(v as _)
+		POINT::from(v as u32)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -712,7 +712,7 @@ unsafe impl MsgSend for SetMargins {
 		WndMsg {
 			msg_id: co::EM::SETMARGINS.into(),
 			wparam: self.margins.0 as _,
-			lparam: self.size.into_u32() as _,
+			lparam: u32::from(self.size) as _,
 		}
 	}
 }

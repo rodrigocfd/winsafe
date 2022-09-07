@@ -446,7 +446,7 @@ pub fn GetMessage(
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[must_use]
 pub fn GetMenuCheckMarkDimensions() -> SIZE {
-	SIZE::from_u32(unsafe { user::ffi::GetMenuCheckMarkDimensions() } as _)
+	SIZE::from(unsafe { user::ffi::GetMenuCheckMarkDimensions() })
 }
 
 /// [`GetMessagePos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagepos)
@@ -454,7 +454,7 @@ pub fn GetMenuCheckMarkDimensions() -> SIZE {
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[must_use]
 pub fn GetMessagePos() -> POINT {
-	POINT::from_u32(unsafe { user::ffi::GetMessagePos() })
+	POINT::from(unsafe { user::ffi::GetMessagePos() })
 }
 
 /// [`GetQueueStatus`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
