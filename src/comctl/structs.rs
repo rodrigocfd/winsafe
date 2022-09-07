@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::comctl::decl::{
-	BmpIdbRes, HIMAGELIST, HTREEITEM, IndexStr, PFNLVGROUPCOMPARE, TreeitemTvi,
+	BmpIdbRes, HIMAGELIST, HTREEITEM, IdxStr, PFNLVGROUPCOMPARE, TreeitemTvi,
 };
 use crate::comctl::privs::{HINST_COMMCTRL, L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::kernel::decl::{HINSTANCE, IdStr, SYSTEMTIME, WString};
@@ -1114,19 +1114,19 @@ impl_default!(TBBUTTON, 'a);
 impl<'a> TBBUTTON<'a> {
 	/// Returns the `iString` field.
 	#[must_use]
-	pub fn iString(&self) -> IndexStr {
+	pub fn iString(&self) -> IdxStr {
 		if IS_INTRESOURCE(self.iString as _) {
-			IndexStr::Index(self.iString as _)
+			IdxStr::Idx(self.iString as _)
 		} else {
-			IndexStr::Str(WString::from_wchars_nullt(self.iString as _))
+			IdxStr::Str(WString::from_wchars_nullt(self.iString as _))
 		}
 	}
 
 	/// Sets the `iString` field.
-	pub fn set_iString(&mut self, val: &'a mut IndexStr) {
+	pub fn set_iString(&mut self, val: &'a mut IdxStr) {
 		self.iString = match val {
-			IndexStr::Index(i) => *i as _,
-			IndexStr::Str(s) => unsafe { s.as_mut_ptr() as _ },
+			IdxStr::Idx(i) => *i as _,
+			IdxStr::Str(s) => unsafe { s.as_mut_ptr() as _ },
 		};
 	}
 }

@@ -1,5 +1,6 @@
 use crate::co;
 use crate::comctl::decl::HTREEITEM;
+use crate::comctl::privs::{I_IMAGECALLBACK, I_IMAGENONE};
 use crate::kernel::decl::{HINSTANCE, IdStr, WString};
 use crate::kernel::privs::MAKEINTRESOURCE;
 use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
@@ -11,9 +12,13 @@ use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone, Copy)]
 pub enum BmpIconCurMeta {
+	/// Bitmap.
 	Bmp(HBITMAP),
+	/// Icon.
 	Icon(HICON),
+	/// Cursor.
 	Cur(HCURSOR),
+	/// Enhanced metafile.
 	Meta(HDC),
 }
 
@@ -76,13 +81,39 @@ impl IdTdiconStr {
 	}
 }
 
+/// Variant type for:
+///
+/// * [`tbm::ChangeBitmap`](crate::msg::tbm::ChangeBitmap) `image`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[derive(Clone, Copy)]
+pub enum IdxCbNone {
+	/// Index of an image in the toolbar's image list.
+	Idx(u32),
+	/// Toolbar will send `TBN_GETDISPINFO` notifications.
+	Cb,
+	/// Button doesn't have an image.
+	None,
+}
+
+impl From<IdxCbNone> for isize {
+	fn from(v: IdxCbNone) -> Self {
+		match v {
+			IdxCbNone::Idx(idx) => idx as _,
+			IdxCbNone::Cb => I_IMAGECALLBACK,
+			IdxCbNone::None => I_IMAGENONE,
+		}
+	}
+}
+
 /// Variant parameter for:
 ///
 /// * [`TBBUTTON`](crate::TBBUTTON) `iString`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone)]
-pub enum IndexStr {
-	Index(u16),
+pub enum IdxStr {
+	/// Index of button string.
+	Idx(u16),
+	/// A string buffer.
 	Str(WString),
 }
 
