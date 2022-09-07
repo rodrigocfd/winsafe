@@ -1266,7 +1266,7 @@ unsafe impl MsgSend for GetNextItem {
 /// [`LVM_GETNEXTITEMINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitemindex)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNextItemIndex<'a> {
 	pub initial_item: &'a mut LVITEMINDEX,
@@ -1274,10 +1274,10 @@ pub struct GetNextItemIndex<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetNextItemIndex<'a> {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

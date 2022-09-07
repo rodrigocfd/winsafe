@@ -148,7 +148,7 @@ unsafe impl MsgSend for ButtonStructSize {
 /// [`TB_CHANGEBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-changebitmap)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ChangeBitmap {
 	pub btn_cmd_id: u16,
@@ -156,10 +156,10 @@ pub struct ChangeBitmap {
 }
 
 unsafe impl MsgSend for ChangeBitmap {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -174,7 +174,7 @@ unsafe impl MsgSend for ChangeBitmap {
 /// [`TB_CHECKBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-checkbutton)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct CheckButton {
 	pub btn_cmd_id: u16,
@@ -182,10 +182,10 @@ pub struct CheckButton {
 }
 
 unsafe impl MsgSend for CheckButton {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -232,17 +232,17 @@ pub_struct_msg_empty! { Customize: co::TBM::CUSTOMIZE.into(); "comctl";
 /// [`TB_DELETEBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-deletebutton)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteButton {
 	pub btn_index: u32,
 }
 
 unsafe impl MsgSend for DeleteButton {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -257,7 +257,7 @@ unsafe impl MsgSend for DeleteButton {
 /// [`TB_ENABLEBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-enablebutton)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EnableButton {
 	pub btn_cmd_id: u16,
@@ -265,10 +265,10 @@ pub struct EnableButton {
 }
 
 unsafe impl MsgSend for EnableButton {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

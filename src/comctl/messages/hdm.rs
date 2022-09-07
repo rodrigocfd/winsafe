@@ -512,17 +512,17 @@ unsafe impl MsgSend for SetFilterChangeTimeout {
 /// [`HDM_SETFOCUSEDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setfocuseditem)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetFocusedItem {
 	pub index: u32,
 }
 
 unsafe impl MsgSend for SetFocusedItem {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

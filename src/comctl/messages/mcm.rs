@@ -55,17 +55,17 @@ unsafe impl MsgSend for GetCalendarCount {
 /// [`MCM_GETCALENDARGRIDINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalendargridinfo)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCalendarGridInfo<'a, 'b> {
 	pub info: &'b mut MCGRIDINFO<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

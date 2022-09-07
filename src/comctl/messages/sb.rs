@@ -11,17 +11,17 @@ use crate::user::privs::zero_as_err;
 /// [`SB_GETBORDERS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getborders)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBorders<'a> {
 	pub borders: &'a mut [u32; 3],
 }
 
 unsafe impl<'a> MsgSend for GetBorders<'a> {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -86,7 +86,7 @@ unsafe impl<'a> MsgSend for GetParts<'a> {
 /// [`SB_GETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getrect)
 /// message parameters.
 ///
-/// Return type: `bool`.
+/// Return type: `SysResult<()>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRect<'a> {
 	pub part_index: u8,
@@ -94,10 +94,10 @@ pub struct GetRect<'a> {
 }
 
 unsafe impl<'a> MsgSend for GetRect<'a> {
-	type RetType = bool;
+	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v != 0
+		zero_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
