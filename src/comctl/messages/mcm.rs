@@ -314,7 +314,7 @@ unsafe impl<'a> MsgSend for GetMonthRange<'a> {
 		WndMsg {
 			msg_id: co::MCM::GETMONTHRANGE.into(),
 			wparam: self.scope.0 as _,
-			lparam: self.limits.as_ptr() as _,
+			lparam: self.limits.as_mut_ptr() as _,
 		}
 	}
 }
@@ -339,7 +339,7 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 		WndMsg {
 			msg_id: co::MCM::GETRANGE.into(),
 			wparam: 0,
-			lparam: self.limits.as_ptr() as _,
+			lparam: self.limits.as_mut_ptr() as _,
 		}
 	}
 }
@@ -364,7 +364,7 @@ unsafe impl<'a> MsgSend for GetSelRange<'a> {
 		WndMsg {
 			msg_id: co::MCM::GETSELRANGE.into(),
 			wparam: 0,
-			lparam: self.limits.as_ptr() as _,
+			lparam: self.limits.as_mut_ptr() as _,
 		}
 	}
 }

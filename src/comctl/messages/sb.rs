@@ -1,11 +1,37 @@
 use crate::co;
+use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{
 	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, SysResult, WString,
 };
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
-use crate::user::decl::HICON;
+use crate::user::decl::{COLORREF, HICON, RECT};
 use crate::user::privs::zero_as_err;
+
+/// [`SB_GETBORDERS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getborders)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetBorders<'a> {
+	pub borders: &'a mut [u32; 3],
+}
+
+unsafe impl<'a> MsgSend for GetBorders<'a> {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::SB::GETBORDERS.into(),
+			wparam: 0,
+			lparam: self.borders.as_mut_ptr() as _,
+		}
+	}
+}
 
 /// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
 /// message parameters.
@@ -53,6 +79,32 @@ unsafe impl<'a> MsgSend for GetParts<'a> {
 			msg_id: co::SB::GETPARTS.into(),
 			wparam: self.right_edges.as_ref().map_or(0, |re| re.len()),
 			lparam: self.right_edges.as_mut().map_or(0, |re| re.as_mut_ptr() as _),
+		}
+	}
+}
+
+/// [`SB_GETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getrect)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetRect<'a> {
+	pub part_index: u8,
+	pub rect: &'a mut RECT,
+}
+
+unsafe impl<'a> MsgSend for GetRect<'a> {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::SB::GETRECT.into(),
+			wparam: self.part_index as _,
+			lparam: self.rect as *mut _ as _,
 		}
 	}
 }
@@ -134,6 +186,80 @@ unsafe impl<'a> MsgSend for GetTipText<'a> {
 	}
 }
 
+/// [`SB_GETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getunicodeformat)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetUnicodeFormat {}
+
+unsafe impl MsgSend for GetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::SB::GETUNICODEFORMAT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`SB_ISSIMPLE`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-issimple)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct IsSimple {}
+
+unsafe impl MsgSend for IsSimple {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::SB::ISSIMPLE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`SB_SETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setbkcolor)
+/// message parameters.
+///
+/// Return type: `Option<COLORREF>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetBkColor {
+	pub color: Option<COLORREF>,
+}
+
+unsafe impl MsgSend for SetBkColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v as u32 {
+			CLR_DEFAULT => None,
+			v => Some(COLORREF(v)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::SB::SETBKCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.map_or(CLR_DEFAULT, |color| color.0) as _,
+		}
+	}
+}
+
 /// [`SB_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-seticon)
 /// message parameters.
 ///
@@ -156,6 +282,31 @@ unsafe impl MsgSend for SetIcon {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
 			lparam: self.hicon.map(|h| h.0 as _).unwrap_or_default(),
+		}
+	}
+}
+
+/// [`SB_SETMINHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setminheight)
+/// message parameters.
+///
+/// Return value: `()`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetMinHeight {
+	pub min_height: u32,
+}
+
+unsafe impl MsgSend for SetMinHeight {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::SB::SETMINHEIGHT.into(),
+			wparam: self.min_height as _,
+			lparam: 0,
 		}
 	}
 }
@@ -232,6 +383,31 @@ unsafe impl MsgSend for SetTipText {
 			msg_id: co::SB::SETTIPTEXT.into(),
 			wparam: self.part_index as _,
 			lparam: unsafe { self.text.as_ptr() } as _,
+		}
+	}
+}
+
+/// [`SB_SETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setunicodeformat)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct SetUnicodeFormat {
+	pub use_unicode: bool,
+}
+
+unsafe impl MsgSend for SetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::SB::SETUNICODEFORMAT.into(),
+			wparam: self.use_unicode as _,
+			lparam: 0,
 		}
 	}
 }

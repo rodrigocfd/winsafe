@@ -201,7 +201,7 @@ unsafe impl MsgSend for SetBarColor {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETBARCOLOR.into(),
-			wparam: self.color.map_or(CLR_DEFAULT as _, |color| color.0 as _),
+			wparam: self.color.map_or(CLR_DEFAULT, |color| color.0) as _,
 			lparam: 0,
 		}
 	}
@@ -229,7 +229,7 @@ unsafe impl MsgSend for SetBkColor {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETBKCOLOR.into(),
-			wparam: self.color.map_or(CLR_DEFAULT as _, |color| color.0 as _),
+			wparam: self.color.map_or(CLR_DEFAULT, |color| color.0) as _,
 			lparam: 0,
 		}
 	}

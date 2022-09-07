@@ -2131,7 +2131,7 @@ unsafe impl MsgSend for SetBkColor {
 		WndMsg {
 			msg_id: co::LVM::SETBKCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(co::CLR::NONE.0 as _, |c| c.0 as _),
+			lparam: self.color.map_or(co::CLR::NONE.0, |c| c.0) as _,
 		}
 	}
 }
