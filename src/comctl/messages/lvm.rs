@@ -9,7 +9,7 @@ use crate::kernel::decl::{MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HCURSOR, HWND, POINT, RECT, SIZE};
-use crate::user::privs::{zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
@@ -208,10 +208,7 @@ unsafe impl MsgSend for EnableGroupView {
 	type RetType = SysResult<bool>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			v => Ok(v != 0),
-		}
+		minus1_as_err(v).map(|v| v != 0)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -413,10 +410,7 @@ unsafe impl MsgSend for GetColumnWidth {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -687,10 +681,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfo<'a, 'b, 'c,
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			id => Ok(id as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1801,10 +1792,7 @@ unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1829,10 +1817,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1882,10 +1867,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			i => Ok(i as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2303,10 +2285,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c,
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			id => Ok(id as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2946,10 +2925,7 @@ unsafe impl MsgSend for SetView {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			_ => Ok(()),
-		}
+		minus1_as_err(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

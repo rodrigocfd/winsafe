@@ -4,7 +4,7 @@ use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::RECT;
-use crate::user::privs::{zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 
 /// [`HDM_CLEARFILTER`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-clearfilter)
 /// message parameters.
@@ -215,10 +215,7 @@ unsafe impl MsgSend for GetItemCount {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			count => Ok(count as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -394,10 +391,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			index => Ok(index as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

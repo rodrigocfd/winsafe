@@ -4,7 +4,7 @@ use crate::kernel::decl::{HIWORD, LOWORD, SysResult, SYSTEMTIME};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, RECT};
-use crate::user::privs::zero_as_err;
+use crate::user::privs::{minus1_as_err, zero_as_err};
 
 /// [`MCM_GETCALENDARBORDER`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalendarborder)
 /// message, which has no parameters.
@@ -113,10 +113,7 @@ unsafe impl MsgSend for GetColor {
 	type RetType = SysResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			v => Ok(COLORREF(v as _)),
-		}
+		minus1_as_err(v).map(|v| COLORREF(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -36,6 +36,18 @@ pub struct BUTTON_SPLITINFO {
 	pub size: SIZE,
 }
 
+/// [`COLORSCHEME`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-colorscheme)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+pub struct COLORSCHEME {
+	dwSize: u32,
+	pub clrBtnHighlight: COLORREF,
+	pub clrBtnShadow: COLORREF,
+}
+
+impl_default_with_size!(COLORSCHEME, dwSize);
+
 /// [`DATETIMEPICKERINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-datetimepickerinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
@@ -1129,6 +1141,31 @@ impl<'a> TBBUTTON<'a> {
 			IdxStr::Str(s) => unsafe { s.as_mut_ptr() as _ },
 		};
 	}
+}
+
+/// [`TBBUTTONINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbuttoninfow)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+pub struct TBBUTTONINFO<'a> {
+	cbSize: u32,
+	pub dwMask: co::TBIF,
+	pub idCommand: i32,
+	pub iImage: i32,
+	pub fsState: co::TBSTATE,
+	pub fsStyle: co::BTNS,
+	pub cx: u16,
+	pub lParam: usize,
+	pszText: *mut u16,
+	cchText: i32,
+
+	_pszText: PhantomData<&'a mut u16>,
+}
+
+impl_default_with_size!(TBBUTTONINFO, cbSize, 'a);
+
+impl<'a> TBBUTTONINFO<'a> {
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchText);
 }
 
 /// [`TVINSERTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)

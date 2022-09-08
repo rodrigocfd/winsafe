@@ -1769,6 +1769,28 @@ const_ordinary! { TB: i32: "comctl";
 	ENDTRACK 8
 }
 
+const_bitflag! { TBBF: u32: "comctl";
+	/// [`tbm::GetBitmapFlags`](crate::msg::tbm::GetBitmapFlags) return value
+	/// (`u32`).
+	=>
+	=>
+	LARGE 0x0001
+}
+
+const_bitflag! { TBIF: u32: "comctl";
+	/// [`TBBUTTONINFO`](crate::TBBUTTONINFO) `dwFlags` (`u32`).
+	=>
+	=>
+	IMAGE 0x0000_0001
+	TEXT 0x0000_0002
+	STATE 0x0000_0004
+	STYLE 0x0000_0008
+	LPARAM 0x0000_0010
+	COMMAND 0x0000_0020
+	SIZE 0x0000_0040
+	BYINDEX 0x8000_0000
+}
+
 const_wm! { TBM: "comctl";
 	/// Toolbar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages)

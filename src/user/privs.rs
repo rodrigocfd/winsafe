@@ -27,3 +27,11 @@ pub(crate) fn zero_as_none(v: isize) -> Option<isize> {
 		v => Some(v),
 	}
 }
+
+/// Takes an `isize` and returns `Err` if `-1`.
+pub(crate) fn minus1_as_err(v: isize) -> SysResult<isize> {
+	match v {
+		-1 => Err(co::ERROR::BAD_ARGUMENTS), // all message errors will return this code
+		v => Ok(v),
+	}
+}

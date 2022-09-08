@@ -110,15 +110,15 @@ unsafe impl MsgSend for GetFirstVisibleLine {
 /// [`EM_GETHANDLE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-gethandle)
 /// message, which has no parameters.
 ///
-/// Return type: `HLOCAL`.
+/// Return type: `SysResult<HLOCAL>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHandle {}
 
 unsafe impl MsgSend for GetHandle {
-	type RetType = HLOCAL;
+	type RetType = SysResult<HLOCAL>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		HLOCAL(v as _)
+		zero_as_err(v).map(|v| HLOCAL(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

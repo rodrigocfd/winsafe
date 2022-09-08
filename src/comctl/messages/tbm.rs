@@ -1,9 +1,13 @@
 use crate::co;
-use crate::comctl::decl::{IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON};
-use crate::kernel::decl::SysResult;
+use crate::comctl::decl::{
+	COLORSCHEME, HIMAGELIST, IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON,
+	TBBUTTONINFO,
+};
+use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
-use crate::user::privs::zero_as_err;
+use crate::user::decl::SIZE;
+use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 
 /// [`TB_ADDBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
 /// message parameters.
@@ -19,10 +23,7 @@ unsafe impl<'a> MsgSend for AddBitmap<'a> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -72,10 +73,7 @@ unsafe impl MsgSend for AddString {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			idx => Ok(idx as _),
-		}
+		minus1_as_err(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -276,6 +274,226 @@ unsafe impl MsgSend for EnableButton {
 			msg_id: co::TBM::ENABLEBUTTON.into(),
 			wparam: self.btn_cmd_id as _,
 			lparam: self.enable as _,
+		}
+	}
+}
+
+/// [`TB_GETANCHORHIGHLIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getanchorhighlight)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetAnchorHighlight {}
+
+unsafe impl MsgSend for GetAnchorHighlight {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETANCHORHIGHLIGHT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbitmap)
+/// message parameters.
+///
+/// Return type: `u32`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetBitmap {
+	pub btn_cmd_id: u16,
+}
+
+unsafe impl MsgSend for GetBitmap {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETBITMAP.into(),
+			wparam: self.btn_cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETBITMAPFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbitmapflags)
+/// message, which has no parameters.
+///
+/// Return type: `co::TBBF`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetBitmapFlags {}
+
+unsafe impl MsgSend for GetBitmapFlags {
+	type RetType = co::TBBF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::TBBF(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETBITMAPFLAGS.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbutton)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetButton<'a, 'b> {
+	pub btn_index: u32,
+	pub info: &'a mut TBBUTTON<'b>,
+}
+
+unsafe impl<'a, 'b> MsgSend for GetButton<'a, 'b> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETBUTTON.into(),
+			wparam: self.btn_index as _,
+			lparam: self.info as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETBUTTONINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbuttoninfo)
+/// message parameters.
+///
+/// Return type: `SysResult<u32>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetButtonInfo<'a, 'b> {
+	pub btn_cmd_id: u16,
+	pub info: &'a mut TBBUTTONINFO<'b>,
+}
+
+unsafe impl<'a, 'b> MsgSend for GetButtonInfo<'a, 'b> {
+	type RetType = SysResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|v| v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETBUTTONINFO.into(),
+			wparam: self.btn_cmd_id as _,
+			lparam: self.info as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETBUTTONSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbuttonsize)
+/// message, which has no parameters.
+///
+/// Return type: `SIZE`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetButtonSize {}
+
+unsafe impl MsgSend for GetButtonSize {
+	type RetType = SIZE;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		SIZE::from(v as u32)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETBUTTONSIZE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETBUTTONTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbuttontext)
+/// message parameters.
+///
+/// Return type: `SysResult<u32>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetButtonText<'a> {
+	pub btn_cmd_id: u16,
+	pub text: &'a mut WString,
+}
+
+unsafe impl<'a> MsgSend for GetButtonText<'a> {
+	type RetType = SysResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_err(v).map(|v| v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETBUTTONTEXT.into(),
+			wparam: self.btn_cmd_id as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
+		}
+	}
+}
+
+/// [`TB_GETCOLORSCHEME`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getcolorscheme)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetColorScheme<'a> {
+	pub scheme: &'a mut COLORSCHEME,
+}
+
+unsafe impl<'a> MsgSend for GetColorScheme<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETCOLORSCHEME.into(),
+			wparam: 0,
+			lparam: self.scheme as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETDISABLEDIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getdisabledimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetDisabledImageList {}
+
+unsafe impl MsgSend for GetDisabledImageList {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETDISABLEDIMAGELIST.into(),
+			wparam: 0,
+			lparam: 0,
 		}
 	}
 }
