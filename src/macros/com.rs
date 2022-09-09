@@ -52,7 +52,7 @@ macro_rules! com_interface {
 				&**self.0.into_ptr::<T>()
 			}
 		}
-	}
+	};
 }
 
 /// Creates multiple `GUID`-derived pub const values.

@@ -9,7 +9,9 @@ use crate::kernel::decl::{MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HCURSOR, HWND, POINT, RECT, SIZE};
-use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
+use crate::user::privs::{
+	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
+};
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
@@ -260,10 +262,7 @@ unsafe impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			i => Some(i as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -527,10 +526,7 @@ unsafe impl MsgSend for GetFocusedGroup {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1239,10 +1235,7 @@ unsafe impl MsgSend for GetNextItem {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1364,10 +1357,7 @@ unsafe impl MsgSend for GetSelectedColumn {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1413,10 +1403,7 @@ unsafe impl MsgSend for GetSelectionMark {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1763,10 +1750,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			i => Some(i as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1966,10 +1950,7 @@ unsafe impl MsgSend for MapIdToIndex {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1994,10 +1975,7 @@ unsafe impl MsgSend for MapIndexToId {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2360,10 +2338,7 @@ unsafe impl MsgSend for SetHotItem {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2388,10 +2363,7 @@ unsafe impl MsgSend for SetHoverTime {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			ms => Some(ms as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2747,10 +2719,7 @@ unsafe impl MsgSend for SetSelectionMark {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -3053,10 +3022,7 @@ unsafe impl<'a> MsgSend for SubItemHitTest<'a> {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			i => Some(i as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -3,7 +3,7 @@ use crate::kernel::decl::{HIWORD, HLOCAL, LOWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{EDITWORDBREAKPROC, POINT, RECT, SIZE};
-use crate::user::privs::{zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
 /// [`EN_CANUNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-canundo)
 /// message, which has no parameters.
@@ -468,10 +468,7 @@ unsafe impl MsgSend for LineIndex {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			idx => Some(idx as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

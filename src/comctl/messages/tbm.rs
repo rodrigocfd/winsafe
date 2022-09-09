@@ -1,13 +1,15 @@
 use crate::co;
 use crate::comctl::decl::{
 	COLORSCHEME, HIMAGELIST, IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON,
-	TBBUTTONINFO,
+	TBBUTTONINFO, TBINSERTMARK,
 };
 use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
-use crate::user::decl::SIZE;
-use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
+use crate::user::decl::{COLORREF, RECT, SIZE};
+use crate::user::privs::{
+	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
+};
 
 /// [`TB_ADDBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
 /// message parameters.
@@ -208,10 +210,7 @@ unsafe impl MsgSend for CommandToIndex {
 	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			v => Some(v as _),
-		}
+		minus1_as_none(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -494,6 +493,272 @@ unsafe impl MsgSend for GetDisabledImageList {
 			msg_id: co::TBM::GETDISABLEDIMAGELIST.into(),
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETEXTENDEDSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getextendedstyle)
+/// message, which has no parameters.
+///
+/// Return type: `co::TBSTYLE_EX`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetExtendedStyle {}
+
+unsafe impl MsgSend for GetExtendedStyle {
+	type RetType = co::TBSTYLE_EX;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::TBSTYLE_EX(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETEXTENDEDSTYLE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETHOTIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-gethotimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetHotImageList {}
+
+unsafe impl MsgSend for GetHotImageList {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETHOTIMAGELIST.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-gethotitem)
+/// message, which has no parameters.
+///
+/// Return type: `Option<u32>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetHotItem {}
+
+unsafe impl MsgSend for GetHotItem {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_none(v).map(|v| v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETHOTITEM.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getidealsize)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetIdealSize<'a> {
+	pub get_height: bool,
+	pub size: &'a mut SIZE,
+}
+
+unsafe impl<'a> MsgSend for GetIdealSize<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETIDEALSIZE.into(),
+			wparam: self.get_height as _,
+			lparam: self.size as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetImageList {}
+
+unsafe impl MsgSend for GetImageList {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETIMAGELIST.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETIMAGELISTCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getimagelistcount)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetImageListCount {}
+
+unsafe impl MsgSend for GetImageListCount {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETIMAGELISTCOUNT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getinsertmark)
+/// message parameters.
+///
+/// Return type: `()`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetInsertMark<'a> {
+	pub info: &'a mut TBINSERTMARK,
+}
+
+unsafe impl<'a> MsgSend for GetInsertMark<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETINSERTMARK.into(),
+			wparam: 0,
+			lparam: self.info as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETINSERTMARKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getinsertmarkcolor)
+/// message, which has no parameters.
+///
+/// Return type: `COLORREF`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetInsertMarkColor {}
+
+unsafe impl MsgSend for GetInsertMarkColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETINSERTMARKCOLOR.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETITEMDROPDOWNRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getitemdropdownrect)
+/// message parameters.
+///
+/// Return type: `()`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetItemDropdownRect<'a> {
+	pub item_index: u32,
+	pub rect: &'a mut RECT,
+}
+
+unsafe impl<'a> MsgSend for GetItemDropdownRect<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETITEMDROPDOWNRECT.into(),
+			wparam: self.item_index as _,
+			lparam: self.rect as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getitemrect)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetItemRect<'a> {
+	pub btn_index: u32,
+	pub rect: &'a mut RECT,
+}
+
+unsafe impl<'a> MsgSend for GetItemRect<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETITEMRECT.into(),
+			wparam: self.btn_index as _,
+			lparam: self.rect as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETMAXSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getmaxsize)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetMaxSize<'a> {
+	pub size: &'a mut SIZE,
+}
+
+unsafe impl<'a> MsgSend for GetMaxSize<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETMAXSIZE.into(),
+			wparam: 0,
+			lparam: self.size as *mut _ as _,
 		}
 	}
 }

@@ -5,7 +5,7 @@ use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
-use crate::user::privs::{zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
 /// [`TVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-deleteitem)
 /// message parameters.
@@ -144,10 +144,7 @@ unsafe impl MsgSend for GetBkColor {
 	type RetType = Option<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			c => Some(COLORREF(c as _)),
-		}
+		minus1_as_none(v).map(|v| COLORREF(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -485,10 +482,7 @@ unsafe impl MsgSend for GetTextColor {
 	type RetType = Option<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match v {
-			-1 => None,
-			c => Some(COLORREF(c as _)),
-		}
+		minus1_as_none(v).map(|v| COLORREF(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -1168,6 +1168,16 @@ impl<'a> TBBUTTONINFO<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchText);
 }
 
+/// [`TBINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbinsertmark)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+#[derive(Default)]
+pub struct TBINSERTMARK {
+	pub iButton: i32,
+	pub dwFlags: co::TBIMHT,
+}
+
 /// [`TVINSERTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]

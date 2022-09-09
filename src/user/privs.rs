@@ -12,6 +12,22 @@ pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub(crate) const LB_ERR: i32 = -1;
 pub(crate) const LB_ERRSPACE: i32 = -2;
 
+/// Takes an `isize` and returns `Err` if `-1`.
+pub(crate) fn minus1_as_err(v: isize) -> SysResult<isize> {
+	match v {
+		-1 => Err(co::ERROR::BAD_ARGUMENTS), // all message errors will return this code
+		v => Ok(v),
+	}
+}
+
+/// Takes an `isize` and returns `None` if `-1`.
+pub(crate) fn minus1_as_none(v: isize) -> Option<isize> {
+	match v {
+		-1 => None,
+		v => Some(v),
+	}
+}
+
 /// Takes an `isize` and returns `Err` if zero.
 pub(crate) fn zero_as_err(v: isize) -> SysResult<isize> {
 	match v {
@@ -25,13 +41,5 @@ pub(crate) fn zero_as_none(v: isize) -> Option<isize> {
 	match v {
 		0 => None,
 		v => Some(v),
-	}
-}
-
-/// Takes an `isize` and returns `Err` if `-1`.
-pub(crate) fn minus1_as_err(v: isize) -> SysResult<isize> {
-	match v {
-		-1 => Err(co::ERROR::BAD_ARGUMENTS), // all message errors will return this code
-		v => Ok(v),
 	}
 }

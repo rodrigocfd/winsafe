@@ -1791,6 +1791,16 @@ const_bitflag! { TBIF: u32: "comctl";
 	BYINDEX 0x8000_0000
 }
 
+const_ordinary! { TBIMHT: u32: "comctl";
+	/// [`TBINSERTMARK`](crate::TBINSERTMARK) `dwFlags` (`u32`).
+	=>
+	=>
+	/// Originally just a zero, no actual flag definition.
+	BEFORE 0x0000_0000
+	AFTER 0x0000_0001
+	BACKGROUND 0x0000_0002
+}
+
 const_wm! { TBM: "comctl";
 	/// Toolbar control
 	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages)
@@ -1970,6 +1980,20 @@ const_bitflag! { TBSTATE: u8: "comctl";
 	WRAP 0x20
 	ELLIPSES 0x40
 	MARKED 0x80
+}
+
+const_wsex! { TBSTYLE_EX: "comctl";
+	/// Extended toolbar control
+	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-extended-styles)
+	/// (`u32`).
+	=>
+	=>
+	DRAWDDARROWS 0x0000_0001
+	MIXEDBUTTONS 0x0000_0008
+	HIDECLIPPEDBUTTONS 0x0000_0010
+	MULTICOLUMN 0x0000_0002
+	VERTICAL 0x0000_0004
+	DOUBLEBUFFER 0x0000_0080
 }
 
 const_bitflag! { TCIS: u32: "comctl";
