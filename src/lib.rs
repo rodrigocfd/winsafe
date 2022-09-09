@@ -288,9 +288,10 @@
 pub mod co {
 	//! Native constants.
 	//!
-	//! All types can be converted from/to their underlying integer type. Some
-	//! types implement the [`NativeBitflag`](crate::prelude::NativeBitflag)
-	//! trait and bitflag operations.
+	//! All types can be converted from/to their underlying integer type. They
+	//! all implement the [`NativeConst`](crate::prelude::NativeConst) trait;
+	//! those who can be combined as bitflags also implement
+	//! [`NativeBitflag`](crate::prelude::NativeBitflag).
 	//!
 	//! Among these constant types, three are error types:
 	//! [`CDERR`](crate::co::CDERR), [`ERROR`](crate::co::ERROR) and

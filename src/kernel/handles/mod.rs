@@ -1,5 +1,5 @@
 mod haccesstoken;
-mod handle;
+mod handle_traits;
 mod hevent;
 mod hfile;
 mod hfilemap;
@@ -51,7 +51,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::haccesstoken::kernel_Haccesstoken;
-	pub use super::handle::{Handle, HandleClose};
+	pub use super::handle_traits::{Handle, HandleClose};
 	pub use super::hfile::kernel_Hfile;
 	pub use super::hfilemap::kernel_Hfilemap;
 	pub use super::hfilemapview::kernel_Hfilemapview;

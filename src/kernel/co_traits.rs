@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use std::ops;
+use std::{fmt, hash, ops};
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, HLOCAL, LANGID, WString};
@@ -47,9 +47,37 @@ pub trait FormattedError: Into<u32> {
 	}
 }
 
-/// A native bitflag constant.
+/// A native typed constant.
+///
+/// If the values of this constant type can be combined as bitflags, it will
+/// also implement the [`NativeBitflag`](crate::prelude::NativeBitflag) trait.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait NativeBitflag: Sized
+pub trait NativeConst: Sized
+	+ Default + Clone + Copy + PartialEq + Eq + Send + hash::Hash
+	+ From<Self::Raw> + Into<Self::Raw>
+	+ fmt::Debug + fmt::Display
+	+ fmt::LowerHex + fmt::UpperHex
+	+ fmt::Binary + fmt::Octal
+{
+	/// The underlying type of this constant.
+	type Raw;
+}
+
+/// A native typed bitflag constant.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+pub trait NativeBitflag: NativeConst
 	+ ops::BitAnd + ops::BitAndAssign
 	+ ops::BitOr + ops::BitOrAssign
 	+ ops::BitXor + ops::BitXorAssign

@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use std::fmt;
+use std::{fmt, hash};
 
 use crate::kernel;
 use crate::kernel::decl::SysResult;
@@ -16,9 +16,10 @@ use crate::kernel::privs::bool_to_sysresult;
 /// use winsafe::prelude::*;
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait Handle:
-	fmt::Debug + fmt::Display + fmt::LowerHex + fmt::UpperHex +
-	Copy + Clone + PartialEq + Eq + Send
+pub trait Handle: Sized
+	+ Clone + Copy + PartialEq + Eq + Send + hash::Hash
+	+ fmt::Debug + fmt::Display
+	+ fmt::LowerHex + fmt::UpperHex
 {
 	/// The null, invalid handle.
 	const NULL: Self;

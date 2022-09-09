@@ -38,8 +38,14 @@ macro_rules! const_no_debug_display {
 		$( #[$doc] )*
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
-		#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
+		#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 		pub struct $name(pub(crate) $ntype);
+
+		impl crate::prelude::NativeConst for $name {
+			type Raw = $ntype;
+		}
+
+		unsafe impl Send for $name {}
 
 		// Conversions from/to underlying number type.
 		impl From<$ntype> for $name {
@@ -97,12 +103,22 @@ macro_rules! const_ordinary {
 		const_no_debug_display! {
 			$name: $ntype : $feature;
 			$( #[$doc] )*
-			#[derive(Debug)]
 		}
 
+		impl std::fmt::Debug for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				if self.0 as usize > 0xffff {
+					write!(f, "[{:#010x} {}] {}",
+						self.0, self.0, stringify!($name))
+				} else {
+					write!(f, "[{:#06x} {}] {}",
+						self.0, self.0, stringify!($name))
+				}
+			}
+		}
 		impl std::fmt::Display for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-				std::fmt::Display::fmt(&self.0, f) // delegate
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{:#010x}", self.0 as usize)
 			}
 		}
 
@@ -156,6 +172,12 @@ macro_rules! const_bitflag {
 			)*
 		}
 
+		impl crate::prelude::NativeBitflag for $name {
+			fn has(&self, other: Self) -> bool {
+				(self.0 & other.0) != 0
+			}
+		}
+
 		// Bitflag operations.
 		impl std::ops::BitAnd for $name {
 			type Output = $name;
@@ -194,13 +216,6 @@ macro_rules! const_bitflag {
 			type Output = $name;
 			fn not(self) -> Self::Output {
 				Self(!self.0)
-			}
-		}
-
-		// NativeBitflag trait.
-		impl crate::prelude::NativeBitflag for $name {
-			fn has(&self, other: Self) -> bool {
-				(self.0 & other.0) != 0
 			}
 		}
 	};
