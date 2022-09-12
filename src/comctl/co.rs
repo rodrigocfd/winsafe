@@ -1905,6 +1905,15 @@ const_wm! { TBM: "comctl";
 	SETWINDOWTHEME CCM::SETWINDOWTHEME.0
 }
 
+const_bitflag! { TBMF: u32: "comctl";
+	/// [`TBMETRICS`](crate::TBMETRICS) `dwMask` (`u32`).
+	=>
+	=>
+	PAD 0x0000_0001
+	BARPAD 0x0000_0002
+	BUTTONSPACING 0x0000_0004
+}
+
 const_nm! { TBN: "comctl";
 	/// Toolbar control `WM_NOTIFY`
 	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-notifications)

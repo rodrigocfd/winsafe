@@ -1178,6 +1178,23 @@ pub struct TBINSERTMARK {
 	pub dwFlags: co::TBIMHT,
 }
 
+/// [`TBMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbmetrics)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+pub struct TBMETRICS {
+	cbSize: u32,
+	pub dwMask: co::TBMF,
+	pub cxPad: i32,
+	pub cyPad: i32,
+	pub cxBarPad: i32,
+	pub cyBarPad: i32,
+	pub cxButtonSpacing: i32,
+	pub cyButtonSpacing: i32,
+}
+
+impl_default_with_size!(TBMETRICS, cbSize);
+
 /// [`TVINSERTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]

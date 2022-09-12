@@ -1,7 +1,7 @@
 use crate::co;
 use crate::comctl::decl::{
 	COLORSCHEME, HIMAGELIST, IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON,
-	TBBUTTONINFO, TBINSERTMARK,
+	TBBUTTONINFO, TBINSERTMARK, TBMETRICS,
 };
 use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
@@ -759,6 +759,31 @@ unsafe impl<'a> MsgSend for GetMaxSize<'a> {
 			msg_id: co::TBM::GETMAXSIZE.into(),
 			wparam: 0,
 			lparam: self.size as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETMETRICS`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getmetrics)
+/// message parameters.
+///
+/// Return type: `()`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetMetrics<'a> {
+	pub metrics: &'a mut TBMETRICS,
+}
+
+unsafe impl<'a> MsgSend for GetMetrics<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETMETRICS.into(),
+			wparam: 0,
+			lparam: self.metrics as *mut _ as _,
 		}
 	}
 }
