@@ -5,7 +5,7 @@ use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{dshow_IMediaFilter, ole_IUnknown, shell_IPersist};
+use crate::prelude::{dshow_IMediaFilter, ole_IPersist, ole_IUnknown};
 use crate::vt::IMediaFilterVT;
 
 /// [`IBaseFilter`](crate::IBaseFilter) virtual table.
@@ -44,7 +44,7 @@ com_interface! { IBaseFilter: "dshow";
 	/// ```
 }
 
-impl shell_IPersist for IBaseFilter {}
+impl ole_IPersist for IBaseFilter {}
 impl dshow_IMediaFilter for IBaseFilter {}
 impl dshow_IBaseFilter for IBaseFilter {}
 

@@ -8,14 +8,14 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IPersist`](crate::IPersist) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IPersistVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetClassID: fn(ComPtr, PVOID) -> HRES,
 }
 
-com_interface! { IPersist: "shell";
+com_interface! { IPersist: "ole";
 	"0000010c-0000-0000-c000-000000000046";
 	/// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
 	/// COM interface over [`IPersistVT`](crate::vt::IPersistVT).
@@ -25,9 +25,9 @@ com_interface! { IPersist: "shell";
 	/// when the object goes out of scope.
 }
 
-impl shell_IPersist for IPersist {}
+impl ole_IPersist for IPersist {}
 
-/// This trait is enabled with the `shell` feature, and provides methods for
+/// This trait is enabled with the `ole` feature, and provides methods for
 /// [`IPersist`](crate::IPersist).
 ///
 /// Prefer importing this trait through the prelude:
@@ -35,8 +35,8 @@ impl shell_IPersist for IPersist {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait shell_IPersist: ole_IUnknown {
+#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
+pub trait ole_IPersist: ole_IUnknown {
 	/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 	/// method.
 	#[must_use]

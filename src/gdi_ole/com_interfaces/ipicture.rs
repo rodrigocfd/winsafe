@@ -1,13 +1,12 @@
 #![allow(non_camel_case_types)]
 
-use crate::ole::decl::HrResult;
-use crate::oleaut::decl::IPicture;
-use crate::prelude::{gdi_oleaut_Hdc, Handle, oleaut_IPicture, user_Hwnd};
+use crate::ole::decl::{HrResult, IPicture};
+use crate::prelude::{gdi_ole_Hdc, Handle, ole_IPicture, user_Hwnd};
 use crate::user::decl::{HDC, HWND, SIZE};
 
-impl gdi_oleaut_IPicture for IPicture {}
+impl gdi_ole_IPicture for IPicture {}
 
-/// This trait is enabled with `gdi` and `oleaut` features, and provides methods
+/// This trait is enabled with `gdi` and `ole` features, and provides methods
 /// for [`IPicture`](crate::IPicture).
 ///
 /// Prefer importing this trait through the prelude:
@@ -15,11 +14,10 @@ impl gdi_oleaut_IPicture for IPicture {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "gdi", feature = "oleaut"))))]
-pub trait gdi_oleaut_IPicture: oleaut_IPicture {
-	/// Calls
-	/// [`IPicture::get_Width`](crate::prelude::oleaut_IPicture::get_Width) and
-	/// [`IPicture::get_Height`](crate::prelude::oleaut_IPicture::get_Height),
+#[cfg_attr(docsrs, doc(cfg(all(feature = "gdi", feature = "ole"))))]
+pub trait gdi_ole_IPicture: ole_IPicture {
+	/// Calls [`IPicture::get_Width`](crate::prelude::ole_IPicture::get_Width)
+	/// and [`IPicture::get_Height`](crate::prelude::ole_IPicture::get_Height),
 	/// then converts the HIMETRIC units to pixels.
 	///
 	/// If `hdc` is not provided, `HWND::NULL.GetDC()` will be used.

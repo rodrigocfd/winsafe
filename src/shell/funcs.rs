@@ -5,11 +5,11 @@ use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
 use crate::kernel::privs::bool_to_sysresult;
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
+use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, kernel_Hlocal, ole_IUnknown, shell_IShellItem};
+use crate::prelude::{Handle, kernel_Hlocal};
 use crate::shell::decl::{
-	IBindCtx, NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
+	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
 
 /// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
@@ -59,44 +59,6 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 	shell::ffi::SHAddToRecentDocs(flags.0, pv as *const _ as _);
-}
-
-/// [`SHCreateItemFromParsingName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
-/// function.
-///
-/// # Examples
-///
-/// Creating an [`IShellItem`](crate::IShellItem) object:
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IShellItem, SHCreateItemFromParsingName};
-///
-/// let shi = SHCreateItemFromParsingName::<IShellItem>(
-///     "C:\\Temp\\test.txt",
-///     None,
-/// )?;
-///
-/// # Ok::<_, winsafe::co::HRESULT>(())
-/// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-#[must_use]
-pub fn SHCreateItemFromParsingName<T>(
-	file_or_folder_path: &str,
-	bind_ctx: Option<&IBindCtx>) -> HrResult<T>
-	where T: shell_IShellItem,
-{
-	unsafe {
-		let mut ppv_queried = ComPtr::null();
-		ok_to_hrresult(
-			shell::ffi::SHCreateItemFromParsingName(
-				WString::from_str(file_or_folder_path).as_ptr(),
-				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
-				&T::IID as *const _ as _,
-				&mut ppv_queried as *mut _ as _,
-			),
-		).map(|_| T::from(ppv_queried))
-	}
 }
 
 /// [`Shell_NotifyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)

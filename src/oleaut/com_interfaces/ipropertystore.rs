@@ -32,18 +32,8 @@ com_interface! { IPropertyStore: "oleaut";
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
-	/// # Examples
-	///
-	/// Instantiating from an [`IShellItem`](crate::IShellItem) object:
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IPropertyStore, IShellItem, SHCreateItemFromParsingName};
-	///
-	/// let file = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp\\foo.txt", None)?;
-	/// let props = file.BindToHandler::<IPropertyStore>(None, &co::BHID::PropertyStore)?;
-	/// # Ok::<_, co::HRESULT>(())
-	/// ```
+	/// Usually, this interface is taken via
+	/// [`IShellItem::BindToHandler`](crate::prelude::shell_IShellItem::BindToHandler).
 }
 
 impl oleaut_IPropertyStore for IPropertyStore {}

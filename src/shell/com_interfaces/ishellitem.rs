@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::co;
+use crate::{co, shell};
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
+use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IBindCtx};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
-use crate::shell::decl::IBindCtx;
 use crate::vt::IUnknownVT;
 
 /// [`IShellItem`](crate::IShellItem) virtual table.
@@ -29,23 +28,6 @@ com_interface! { IShellItem: "shell";
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	///
-	/// # Examples
-	///
-	/// Creating an object with
-	/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName):
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IShellItem, SHCreateItemFromParsingName};
-	///
-	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
-	///     "C:\\Temp\\test.txt",
-	///     None,
-	/// )?;
-	///
-	/// # Ok::<_, winsafe::co::HRESULT>(())
-	/// ```
 }
 
 impl shell_IShellItem for IShellItem {}
@@ -60,6 +42,40 @@ impl shell_IShellItem for IShellItem {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IShellItem: ole_IUnknown {
+	/// [`SHCreateItemFromParsingName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
+	/// static method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::IShellItem;
+	///
+	/// let shi = IShellItem::SHCreateItemFromParsingName(
+	///     "C:\\Temp\\foo.txt",
+	///     None,
+	/// )?;
+	///
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
+	#[must_use]
+	fn SHCreateItemFromParsingName(
+		file_or_folder_path: &str,
+		bind_ctx: Option<&IBindCtx>) -> HrResult<IShellItem>
+	{
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			ok_to_hrresult(
+				shell::ffi::SHCreateItemFromParsingName(
+					WString::from_str(file_or_folder_path).as_ptr(),
+					bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
+					&IShellItem::IID as *const _ as _,
+					&mut ppv_queried as *mut _ as _,
+				),
+			).map(|_| IShellItem::from(ppv_queried))
+		}
+	}
+
 	/// [`IShellItem::BindToHandler`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
 	/// method.
 	///
@@ -124,10 +140,10 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IShellItem, SHCreateItemFromParsingName};
+	/// use winsafe::{co, IShellItem};
 	///
-	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
-	///     "C:\\Temp\\test.txt",
+	/// let shi = IShellItem::SHCreateItemFromParsingName(
+	///     "C:\\Temp\\foo.txt",
 	///     None,
 	/// )?;
 	///
@@ -158,10 +174,10 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IShellItem, SHCreateItemFromParsingName};
+	/// use winsafe::{co, IShellItem};
 	///
-	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
-	///     "C:\\Temp\\test.txt",
+	/// let shi = IShellItem::SHCreateItemFromParsingName(
+	///     "C:\\Temp\\foo.txt",
 	///     None,
 	/// )?;
 	///

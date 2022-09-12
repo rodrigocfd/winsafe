@@ -30,19 +30,6 @@ com_interface! { IEnumShellItems: "shell";
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	///
-	/// # Examples
-	///
-	/// Instantiating from an [`IShellItem`](crate::IShellItem) object:
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
-	///
-	/// let folder = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp", None)?;
-	/// let items = folder.BindToHandler::<IEnumShellItems>(None, &co::BHID::EnumItems)?;
-	/// # Ok::<_, co::HRESULT>(())
-	/// ```
 }
 
 impl shell_IEnumShellItems for IEnumShellItems {}
@@ -69,9 +56,9 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
+	/// use winsafe::{co, IEnumShellItems, IShellItem};
 	///
-	/// let folder = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp", None)?;
+	/// let folder = IShellItem::SHCreateItemFromParsingName("C:\\Temp", None)?;
 	/// let items = folder.BindToHandler::<IEnumShellItems>(None, &co::BHID::EnumItems)?;
 	///
 	/// for item in items.iter() {

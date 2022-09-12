@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::co;
 use crate::kernel::decl::SysResult;
 

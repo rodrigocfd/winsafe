@@ -1,3 +1,5 @@
+#![allow(non_camel_case_types)]
+
 const_ordinary! { CLSCTX: u32: "ole";
 	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
@@ -230,10 +232,55 @@ const_ordinary! { FACILITY: u32: "ole";
 	PIX 2748
 }
 
+const_bitflag! { LOCKTYPE: u32: "ole";
+	/// [`LOCKTYPE`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-locktype)
+	/// enumeration (`u32`).
+	=>
+	=>
+	WRITE 1
+	EXCLUSIVE 2
+	ONLYONCE 4
+}
+
+const_ordinary! { PICTYPE: i16: "ole";
+	/// [`PICTYPE`](https://docs.microsoft.com/en-us/windows/win32/com/pictype-constants)
+	/// constants (`i16`).
+	=>
+	=>
+	UNINITIALIZED -1
+	NONE 0
+	BITMAP 1
+	METAFILE 2
+	ICON 3
+	ENHMETAFILE 4
+}
+
 const_ordinary! { SEVERITY: u8: "ole";
 	/// [`HRESULT`](crate::co::HRESULT) severity (`u8`).
 	=>
 	=>
 	SUCCESS 0
 	FAILURE 1
+}
+
+const_bitflag! { STGC: u32: "ole";
+	/// [`STGC`](https://docs.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgc)
+	/// enumeration (`u32`).
+	=>
+	=>
+	DEFAULT 0
+	OVERWRITE 1
+	ONLYIFCURRENT 2
+	DANGEROUSLYCOMMITMERELYTODISKCACHE 4
+	CONSOLIDATE 8
+}
+
+const_ordinary! { STREAM_SEEK: u32: "ole";
+	/// [`STREAM_SEEK`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-stream_seek)
+	/// enumeration (`u32`).
+	=>
+	=>
+	SET 0
+	CUR 1
+	END 2
 }

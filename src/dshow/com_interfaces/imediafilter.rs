@@ -3,7 +3,7 @@
 use crate::kernel::ffi_types::{HRES, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::okfalse_to_hrresult;
-use crate::prelude::shell_IPersist;
+use crate::prelude::ole_IPersist;
 use crate::vt::IPersistVT;
 
 /// [`IMediaFilter`](crate::IMediaFilter) virtual table.
@@ -29,7 +29,7 @@ com_interface! { IMediaFilter: "dshow";
 	/// when the object goes out of scope.
 }
 
-impl shell_IPersist for IMediaFilter {}
+impl ole_IPersist for IMediaFilter {}
 impl dshow_IMediaFilter for IMediaFilter {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for
@@ -41,7 +41,7 @@ impl dshow_IMediaFilter for IMediaFilter {}
 /// use winsafe::prelude::*;
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
-pub trait dshow_IMediaFilter: shell_IPersist {
+pub trait dshow_IMediaFilter: ole_IPersist {
 	/// [`IMediaFilter::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {

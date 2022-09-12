@@ -7,7 +7,7 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`ISequentialStream`](crate::ISequentialStream) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct ISequentialStreamVT {
 	pub IUnknownVT: IUnknownVT,
@@ -15,7 +15,7 @@ pub struct ISequentialStreamVT {
 	pub Write: fn(ComPtr, PCVOID, u32, *mut u32) -> HRES,
 }
 
-com_interface! { ISequentialStream: "shell";
+com_interface! { ISequentialStream: "ole";
 	"0c733a30-2a1c-11ce-ade5-00aa0044773d";
 	/// [`ISequentialStream`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-isequentialstream)
 	/// COM interface over [`ISequentialStreamVT`](crate::vt::ISequentialStreamVT).
@@ -25,9 +25,9 @@ com_interface! { ISequentialStream: "shell";
 	/// when the object goes out of scope.
 }
 
-impl shell_ISequentialStream for ISequentialStream {}
+impl ole_ISequentialStream for ISequentialStream {}
 
-/// This trait is enabled with the `shell` feature, and provides methods for
+/// This trait is enabled with the `ole` feature, and provides methods for
 /// [`ISequentialStream`](crate::ISequentialStream).
 ///
 /// Prefer importing this trait through the prelude:
@@ -35,8 +35,8 @@ impl shell_ISequentialStream for ISequentialStream {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
-pub trait shell_ISequentialStream: ole_IUnknown {
+#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
+pub trait ole_ISequentialStream: ole_IUnknown {
 	/// [`ISequentialStream::Read`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-read)
 	/// method.
 	///

@@ -253,7 +253,7 @@
 #[cfg(all(feature = "comctl", feature = "ole"))] mod comctl_ole;
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
 #[cfg(all(feature = "dshow", feature = "gdi"))] mod dshow_gdi;
-#[cfg(all(feature = "gdi", feature = "oleaut"))] mod gdi_oleaut;
+#[cfg(all(feature = "gdi", feature = "ole"))] mod gdi_ole;
 #[cfg(feature = "advapi")] mod advapi;
 #[cfg(feature = "comctl")] mod comctl;
 #[cfg(feature = "comdlg")] mod comdlg;
@@ -495,7 +495,7 @@ pub mod prelude {
 	//! ```rust,no_run
 	//! use winsafe::prelude::*;
 	//! ```
-	#[cfg(all(feature = "gdi", feature = "oleaut"))] pub use super::gdi_oleaut::traits::*;
+	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "dshow", feature = "gdi"))] pub use super::dshow_gdi::traits::*;
