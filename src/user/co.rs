@@ -1667,6 +1667,7 @@ const_bitflag! { MK: u16: "user";
 	MBUTTON 0x0010
 	XBUTTON1 0x0020
 	XBUTTON2 0x0040
+	ALT 0x20 // from oleidl.h
 }
 
 const_bitflag! { MF: u32: "user";

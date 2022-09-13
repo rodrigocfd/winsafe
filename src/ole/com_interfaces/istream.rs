@@ -7,7 +7,7 @@ use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{ole_IUnknown, ole_ISequentialStream};
 use crate::vt::ISequentialStreamVT;
 
-/// [`ISequentialStream`](crate::ISequentialStream) virtual table.
+/// [`IStream`](crate::IStream) virtual table.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IStreamVT {

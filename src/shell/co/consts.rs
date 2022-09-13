@@ -1,16 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-const_ordinary! { DROPEFFECT: u32: "shell";
-	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
-	/// constants (`u32`).
-	=>
-	=>
-	NONE 0
-	COPY 1
-	MOVE 2
-	LINK 4
-	SCROLL 0x8000_0000
-}
+use crate::co::DROPEFFECT;
 
 const_ordinary! { FO: u32: "shell";
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).

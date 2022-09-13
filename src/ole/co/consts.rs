@@ -83,6 +83,18 @@ const_bitflag! { COINIT: u32: "ole";
 	SPEED_OVER_MEMORY 0x8
 }
 
+const_ordinary! { DROPEFFECT: u32: "ole";
+	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
+	/// constants (`u32`).
+	=>
+	=>
+	NONE 0
+	COPY 1
+	MOVE 2
+	LINK 4
+	SCROLL 0x8000_0000
+}
+
 const_ordinary! { FACILITY: u32: "ole";
 	/// [`HRESULT`](crate::co::HRESULT) facility (`u32`).
 	=>

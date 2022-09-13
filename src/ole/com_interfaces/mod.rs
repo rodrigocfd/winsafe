@@ -1,4 +1,6 @@
 mod ibindctx;
+mod idataobject;
+mod idroptarget;
 mod ipersist;
 mod ipicture;
 mod isequentialstream;
@@ -7,6 +9,8 @@ mod iunknown;
 
 pub mod decl {
 	pub use super::ibindctx::IBindCtx;
+	pub use super::idataobject::IDataObject;
+	pub use super::idroptarget::IDropTarget;
 	pub use super::ipersist::IPersist;
 	pub use super::ipicture::IPicture;
 	pub use super::isequentialstream::ISequentialStream;
@@ -16,6 +20,8 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::ibindctx::ole_IBindCtx;
+	pub use super::idataobject::ole_IDataObject;
+	pub use super::idroptarget::ole_IDropTarget;
 	pub use super::ipersist::ole_IPersist;
 	pub use super::ipicture::ole_IPicture;
 	pub use super::isequentialstream::ole_ISequentialStream;
@@ -25,6 +31,8 @@ pub mod traits {
 
 pub mod vt {
 	pub use super::ibindctx::IBindCtxVT;
+	pub use super::idataobject::IDataObjectVT;
+	pub use super::idroptarget::IDropTargetVT;
 	pub use super::ipersist::IPersistVT;
 	pub use super::ipicture::IPictureVT;
 	pub use super::isequentialstream::ISequentialStreamVT;
