@@ -4,6 +4,7 @@ mod ifileopendialog;
 mod ifilesavedialog;
 mod imodalwindow;
 mod ishellitem;
+mod ishellitem2;
 mod ishellitemarray;
 mod ishelllink;
 mod istream;
@@ -19,6 +20,7 @@ pub mod decl {
 	pub use super::ifilesavedialog::IFileSaveDialog;
 	pub use super::imodalwindow::IModalWindow;
 	pub use super::ishellitem::IShellItem;
+	pub use super::ishellitem2::IShellItem2;
 	pub use super::ishellitemarray::IShellItemArray;
 	pub use super::ishelllink::IShellLink;
 	pub use super::itaskbarlist::ITaskbarList;
@@ -34,6 +36,7 @@ pub mod traits {
 	pub use super::ifilesavedialog::shell_IFileSaveDialog;
 	pub use super::imodalwindow::shell_IModalWindow;
 	pub use super::ishellitem::shell_IShellItem;
+	pub use super::ishellitem2::shell_IShellItem2;
 	pub use super::ishellitemarray::shell_IShellItemArray;
 	pub use super::ishelllink::shell_IShellLink;
 	pub use super::istream::shell_IStream;
@@ -50,6 +53,7 @@ pub mod vt {
 	pub use super::ifilesavedialog::IFileSaveDialogVT;
 	pub use super::imodalwindow::IModalWindowVT;
 	pub use super::ishellitem::IShellItemVT;
+	pub use super::ishellitem2::IShellItem2VT;
 	pub use super::ishellitemarray::IShellItemArrayVT;
 	pub use super::ishelllink::IShellLinkVT;
 	pub use super::itaskbarlist::ITaskbarListVT;
