@@ -4,6 +4,7 @@ pub(crate) mod privs;
 mod aliases;
 mod com_interfaces;
 mod funcs;
+mod handles;
 mod structs;
 
 pub mod co;
@@ -17,6 +18,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::com_interfaces::traits::*;
+	pub use super::handles::traits::*;
 }
 
 pub mod vt {

@@ -90,6 +90,28 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<co::HRESULT> {
 	}
 }
 
+/// [`CoLockObjectExternal`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-colockobjectexternal)
+/// function.
+///
+/// **Note:** If you lock a COM pointer, `CoLockObjectExternal` must be called
+/// again to unlock it, or you'll have a resource leak.
+#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
+pub fn CoLockObjectExternal(
+	obj: &impl ole_IUnknown,
+	lock: bool,
+	last_unlock_releases: bool) -> HrResult<()>
+{
+	ok_to_hrresult(
+		unsafe {
+			ole::ffi::CoLockObjectExternal(
+				obj.ptr().0 as _,
+				lock as _,
+				last_unlock_releases as _,
+			)
+		},
+	)
+}
+
 /// [`CoTaskMemAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc)
 /// function.
 ///

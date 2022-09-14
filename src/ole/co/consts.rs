@@ -296,3 +296,18 @@ const_ordinary! { STREAM_SEEK: u32: "ole";
 	CUR 1
 	END 2
 }
+
+const_ordinary! { TYMED: u32: "ole";
+	/// [`TYMED`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-tymed)
+	/// enumeration (`u32`).
+	=>
+	=>
+	HGLOBAL 1
+	FILE 2
+	ISTREAM 4
+	ISTORAGE 8
+	GDI 16
+	MFPICT 32
+	ENHMF 64
+	NULL 0
+}

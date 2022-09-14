@@ -639,11 +639,11 @@ pub struct NCCALCSIZE_PARAMS<'a> {
 	_lppos: PhantomData<&'a mut WINDOWPOS>,
 }
 
+impl_default!(NCCALCSIZE_PARAMS, 'a);
+
 impl<'a> NCCALCSIZE_PARAMS<'a> {
 	pub_fn_ptr_get_set!('a, lppos, set_lppos, WINDOWPOS);
 }
-
-impl_default!(NCCALCSIZE_PARAMS, 'a);
 
 /// [`PAINTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
 /// struct.
