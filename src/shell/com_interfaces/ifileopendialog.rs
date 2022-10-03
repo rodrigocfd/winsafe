@@ -27,15 +27,40 @@ com_interface! { IFileOpenDialog: "shell";
 	///
 	/// # Examples
 	///
+	/// Choosing a single existing TXT file:
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, IFileOpenDialog};
+	/// use winsafe::{co, CoCreateInstance, IFileOpenDialog, HWND};
 	///
-	/// let obj = CoCreateInstance::<IFileOpenDialog>(
+	/// let hparent: HWND; // initialized somewhere
+	/// # let hparent = HWND::NULL;
+	///
+	/// let file_open = CoCreateInstance::<IFileOpenDialog>(
 	///     &co::CLSID::FileOpenDialog,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
+	///
+	/// file_open.SetOptions(
+	///     file_open.GetOptions()?
+	///     | co::FOS::FORCEFILESYSTEM
+	///     | co::FOS::FILEMUSTEXIST,
+	/// )?;
+	///
+	/// file_open.SetFileTypes(&[
+	///     ("Text files", "*.txt"),
+	///     ("All files", "*.*"),
+	/// ])?;
+	///
+	/// file_open.SetFileTypeIndex(1)?;
+	///
+	/// if file_open.Show(hparent)? {
+	///     let chosen_file = file_open.GetResult()?
+	///         .GetDisplayName(co::SIGDN::FILESYSPATH)?;
+	///     println!("{}", chosen_file);
+	/// }
+	///
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 }
@@ -56,6 +81,8 @@ impl shell_IFileOpenDialog for IFileOpenDialog {}
 pub trait shell_IFileOpenDialog: shell_IFileDialog {
 	/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 	/// method.
+	///
+	/// If you chose multiple files, this is the method to retrieve the paths.
 	///
 	/// # Examples
 	///

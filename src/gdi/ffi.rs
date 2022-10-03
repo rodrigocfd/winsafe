@@ -71,6 +71,7 @@ extern_sys! { "gdi32";
 	SaveDC(HANDLE) -> i32
 	SelectObject(HANDLE, HANDLE) -> HANDLE
 	SetArcDirection(HANDLE, i32) -> i32
+	SetBkColor(HANDLE, u32) -> u32
 	SetBkMode(HANDLE, i32) -> i32
 	SetBrushOrgEx(HANDLE, i32, i32, PVOID) -> BOOL
 	SetDCBrushColor(HANDLE, u32) -> u32

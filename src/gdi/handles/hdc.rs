@@ -683,6 +683,15 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
+	/// [`SetBkColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkcolor)
+	/// method.
+	fn SetBkColor(self, color: COLORREF) -> SysResult<COLORREF> {
+		match unsafe { gdi::ffi::SetBkColor(self.as_ptr(), color.0) } {
+			CLR_INVALID => Err(GetLastError()),
+			old => Ok(COLORREF(old)),
+		}
+	}
+
 	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method.
 	fn SetBkMode(self, mode: co::BKMODE) -> SysResult<co::BKMODE> {

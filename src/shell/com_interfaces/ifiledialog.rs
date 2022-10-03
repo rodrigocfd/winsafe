@@ -152,6 +152,8 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 
 	/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
 	/// method.
+	///
+	/// If you chose a single file, this is the method to retrieve its path.
 	#[must_use]
 	fn GetResult(&self) -> HrResult<IShellItem> {
 		unsafe {
