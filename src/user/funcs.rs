@@ -608,6 +608,19 @@ pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 	bool_to_sysresult(unsafe { user::ffi::SetCaretPos(x, y) })
 }
 
+/// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
+/// function.
+///
+/// **Note:** The returned pointer must be correctly cast to the memory block
+/// specified by `format`.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
+	user::ffi::GetClipboardData(format.0)
+		.as_mut()
+		.map(|hmem| hmem as *mut _ as _)
+		.ok_or_else(|| GetLastError())
+}
+
 /// [`SetClipboardData`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
 /// function.
 ///
@@ -617,7 +630,8 @@ pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 pub unsafe fn SetClipboardData(
 	format: co::CF, hmem: *mut u8) -> SysResult<*mut u8>
 {
-	user::ffi::SetClipboardData(format.0, hmem as _).as_mut()
+	user::ffi::SetClipboardData(format.0, hmem as _)
+		.as_mut()
 		.map(|hmem| hmem as *mut _ as _)
 		.ok_or_else(|| GetLastError())
 }
