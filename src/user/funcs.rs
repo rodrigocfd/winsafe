@@ -610,9 +610,14 @@ pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 
 /// [`SetClipboardData`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
 /// function.
+///
+/// **Note:** The `hmem` memory block must be correctly allocated and contain
+/// the type specified by `format`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn SetClipboardData(format: co::CF, hmem: *mut u8) -> SysResult<*mut u8> {
-	unsafe { user::ffi::SetClipboardData(format.0, hmem as _).as_mut() }
+pub unsafe fn SetClipboardData(
+	format: co::CF, hmem: *mut u8) -> SysResult<*mut u8>
+{
+	user::ffi::SetClipboardData(format.0, hmem as _).as_mut()
 		.map(|hmem| hmem as *mut _ as _)
 		.ok_or_else(|| GetLastError())
 }
