@@ -49,7 +49,7 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
-	fn CloseKey(self) -> SysResult<()> {
+	fn RegCloseKey(self) -> SysResult<()> {
 		match co::ERROR(unsafe { advapi::ffi::RegCloseKey(self.as_ptr()) as _ }) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -66,22 +66,22 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY};
 	///
-	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Control Panel",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// for key_name in hkey.EnumKeyEx()? {
+	/// for key_name in hkey.RegEnumKeyEx()? {
 	///     let key_name = key_name?;
 	///     println!("{}", key_name);
 	/// }
 	///
-	/// hkey.CloseKey()?;
+	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn EnumKeyEx<'a>(self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + 'a>> {
+	fn RegEnumKeyEx<'a>(self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + 'a>> {
 		Ok(Box::new(EnumKeyIter::new(HKEY(unsafe { self.as_ptr() }))?))
 	}
 
@@ -93,24 +93,28 @@ pub trait advapi_Hkey: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HKEY};
+	/// use winsafe::{co, HKEY, SysResult};
 	///
-	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Control Panel\\Appearance",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// for value_and_type in hkey.EnumValue()? {
+	/// for value_and_type in hkey.RegEnumValue()? {
 	///     let (value, reg_type) = value_and_type?;
 	///     println!("{}, {}", value, reg_type);
 	/// }
 	///
-	/// hkey.CloseKey()?;
+	/// // Collecting into a Vec
+	/// let values_and_types = hkey.RegEnumValue()?
+	///     .collect::<SysResult<Vec<_>>>()?;
+	///
+	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn EnumValue<'a>(self) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + 'a>> {
+	fn RegEnumValue<'a>(self) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + 'a>> {
 		Ok(Box::new(EnumValueIter::new(HKEY(unsafe { self.as_ptr() }))?))
 	}
 
@@ -126,7 +130,7 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HKEY, RegistryValue};
 	///
-	/// let val = HKEY::CURRENT_USER.GetValue(
+	/// let val = HKEY::CURRENT_USER.RegGetValue(
 	///     "Control Panel\\Mouse",
 	///     "Beep",
 	/// )?;
@@ -147,7 +151,7 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn GetValue(self, sub_key: &str, value: &str) -> SysResult<RegistryValue> {
+	fn RegGetValue(self, sub_key: &str, value: &str) -> SysResult<RegistryValue> {
 		let sub_key_w = WString::from_str(sub_key);
 		let value_w = WString::from_str(value);
 		let mut raw_data_type = u32::default();
@@ -213,7 +217,7 @@ pub trait advapi_Hkey: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HKEY::CloseKey`](crate::prelude::advapi_Hkey::CloseKey) call.
+	/// [`HKEY::RegCloseKey`](crate::prelude::advapi_Hkey::RegCloseKey) call.
 	///
 	/// # Examples
 	///
@@ -221,17 +225,17 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY};
 	///
-	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Control Panel\\Mouse",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// hkey.CloseKey()?;
+	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn OpenKeyEx(self, sub_key: &str,
+	fn RegOpenKeyEx(self, sub_key: &str,
 		options: co::REG_OPTION, access_rights: co::KEY) -> SysResult<HKEY>
 	{
 		let hKey = HKEY::NULL;
@@ -254,7 +258,7 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegQueryInfoKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
 	/// method.
-	fn QueryInfoKey(self,
+	fn RegQueryInfoKey(self,
 		mut class: Option<&mut WString>,
 		num_sub_keys: Option<&mut u32>,
 		max_sub_key_name_len: Option<&mut u32>,
@@ -331,13 +335,13 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY, RegistryValue};
 	///
-	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Control Panel\\Mouse",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// let val = hkey.QueryValueEx("Beep")?;
+	/// let val = hkey.RegQueryValueEx("Beep")?;
 	///
 	/// match val {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
@@ -353,11 +357,11 @@ pub trait advapi_Hkey: Handle {
 	///     RegistryValue::None => println!("No value"),
 	/// }
 	///
-	/// hkey.CloseKey()?;
+	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn QueryValueEx(self, value: &str) -> SysResult<RegistryValue> {
+	fn RegQueryValueEx(self, value: &str) -> SysResult<RegistryValue> {
 		let value_w = WString::from_str(value);
 		let mut raw_data_type = u32::default();
 		let mut data_len = u32::default();
@@ -428,14 +432,14 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HKEY, RegistryValue, WString};
 	///
-	/// HKEY::CURRENT_USER.SetKeyValue(
+	/// HKEY::CURRENT_USER.RegSetKeyValue(
 	///     "Software\\My Company",
 	///     "Color",
 	///     RegistryValue::Sz(WString::from_str("blue")),
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn SetKeyValue(self,
+	fn RegSetKeyValue(self,
 		sub_key: &str, value: &str, data: RegistryValue) -> SysResult<()>
 	{
 		match co::ERROR(
@@ -467,21 +471,21 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY, RegistryValue, WString};
 	///
-	/// let hkey = HKEY::CURRENT_USER.OpenKeyEx(
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     "Console\\Git Bash",
 	///     co::REG_OPTION::default(),
 	///     co::KEY::ALL_ACCESS,
 	/// )?;
 	///
-	/// hkey.SetValueEx(
+	/// hkey.RegSetValueEx(
 	///     "Color",
 	///     RegistryValue::Sz(WString::from_str("blue")),
 	/// )?;
 	///
-	/// hkey.CloseKey()?;
+	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	fn SetValueEx(self, value: &str, data: RegistryValue) -> SysResult<()> {
+	fn RegSetValueEx(self, value: &str, data: RegistryValue) -> SysResult<()> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegSetValueExW(
@@ -547,7 +551,7 @@ impl<'a> EnumKeyIter<'a> {
 	fn new(hkey: HKEY) -> SysResult<Self> {
 		let mut num_keys = u32::default();
 		let mut max_key_name_len = u32::default();
-		hkey.QueryInfoKey(
+		hkey.RegQueryInfoKey(
 			None, Some(&mut num_keys), Some(&mut max_key_name_len),
 			None, None, None, None, None, None)?;
 
@@ -609,7 +613,7 @@ impl<'a> EnumValueIter<'a> {
 	fn new(hkey: HKEY) -> SysResult<Self> {
 		let mut num_vals = u32::default();
 		let mut max_val_name_len = u32::default();
-		hkey.QueryInfoKey(
+		hkey.RegQueryInfoKey(
 			None, None, None, None, Some(&mut num_vals), Some(&mut max_val_name_len),
 			None, None, None)?;
 
