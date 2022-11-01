@@ -1,6 +1,7 @@
 use crate::co;
 use crate::msg::WndMsg;
 use crate::ole::decl::HrResult;
+use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::MsgSend;
 
 /// [`TVM_SETEXTENDEDSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-setextendedstyle)
@@ -17,10 +18,7 @@ unsafe impl MsgSend for SetExtendedStyle {
 	type RetType = HrResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match co::HRESULT(v as _) {
-			co::HRESULT::S_OK => Ok(()),
-			hr => Err(hr),
-		}
+		ok_to_hrresult(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -2,6 +2,7 @@ use crate::co;
 use crate::comctl::decl::{LVITEM, LVITEMINDEX};
 use crate::msg::WndMsg;
 use crate::ole::decl::HrResult;
+use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::MsgSend;
 
 /// [`LVM_SETITEMINDEXSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemindexstate)
@@ -18,10 +19,7 @@ unsafe impl<'a, 'b, 'c> MsgSend for SetItemIndexState<'a, 'b, 'c> {
 	type RetType = HrResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match co::HRESULT(v as _) {
-			co::HRESULT::S_OK => Ok(()),
-			e => Err(e),
-		}
+		ok_to_hrresult(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
