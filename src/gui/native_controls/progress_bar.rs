@@ -28,7 +28,7 @@ struct Obj { // actual fields of ProgressBar
 //------------------------------------------------------------------------------
 
 /// Native
-/// [progress bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
+/// [progress bar](https://learn.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
@@ -232,7 +232,7 @@ impl ProgressBar {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ProgressBarOpts {
 	/// Control position within parent client area, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -241,7 +241,7 @@ pub struct ProgressBarOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Control size, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -250,17 +250,17 @@ pub struct ProgressBarOpts {
 	/// Defaults to 120 x 23.
 	pub size: SIZE,
 	/// Progress bar styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `PBS::SMOOTH`.
 	pub progress_bar_style: co::PBS,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
 	pub window_ex_style: co::WS_EX,

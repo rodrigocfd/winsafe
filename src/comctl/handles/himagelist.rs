@@ -8,7 +8,7 @@ use crate::user::decl::{COLORREF, HBITMAP, HICON, POINT, SIZE};
 
 impl_handle! { HIMAGELIST: "comctl";
 	/// Handle to an
-	/// [image list](https://docs.microsoft.com/en-us/windows/win32/controls/image-lists).
+	/// [image list](https://learn.microsoft.com/en-us/windows/win32/controls/image-lists).
 }
 
 impl comctl_Himagelist for HIMAGELIST {}
@@ -23,7 +23,7 @@ impl comctl_Himagelist for HIMAGELIST {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub trait comctl_Himagelist: Handle {
-	/// [`ImageList_Add`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
+	/// [`ImageList_Add`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
 	/// method.
 	///
 	/// **Note:** A copy of the bitmap is made, and this copy is then stored.
@@ -43,7 +43,7 @@ pub trait comctl_Himagelist: Handle {
 		}
 	}
 
-	/// [`ImageList_AddIcon`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addicon)
+	/// [`ImageList_AddIcon`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addicon)
 	/// method.
 	///
 	/// The icon can be destroyed right after this call, its handle its
@@ -52,7 +52,7 @@ pub trait comctl_Himagelist: Handle {
 		self.ReplaceIcon(None, hicon)
 	}
 
-	/// [`ImageList_AddMasked`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addmasked)
+	/// [`ImageList_AddMasked`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addmasked)
 	/// method.
 	fn AddMasked(self,
 		hbmp_image: HBITMAP, color_mask: COLORREF) -> SysResult<u32>
@@ -67,7 +67,7 @@ pub trait comctl_Himagelist: Handle {
 		}
 	}
 
-	/// [`ImageList_BeginDrag`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_begindrag)
+	/// [`ImageList_BeginDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_begindrag)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -85,7 +85,7 @@ pub trait comctl_Himagelist: Handle {
 		)
 	}
 
-	/// [`ImageList_Create`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)
+	/// [`ImageList_Create`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -120,7 +120,7 @@ pub trait comctl_Himagelist: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`ImageList_Destroy`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)
+	/// [`ImageList_Destroy`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)
 	/// method.
 	fn Destroy(self) -> SysResult<()> {
 		bool_to_sysresult(
@@ -128,7 +128,7 @@ pub trait comctl_Himagelist: Handle {
 		)
 	}
 
-	/// [`ImageList_DragMove`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
+	/// [`ImageList_DragMove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
 	/// method.
 	fn DragMove(self, x: i32, y: i32) -> SysResult<()> {
 		bool_to_sysresult(
@@ -136,7 +136,7 @@ pub trait comctl_Himagelist: Handle {
 		)
 	}
 
-	/// [`ImageList_DragShowNolock`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragshownolock)
+	/// [`ImageList_DragShowNolock`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragshownolock)
 	/// static method.
 	fn DragShowNolock(show: bool) -> SysResult<()> {
 		bool_to_sysresult(
@@ -144,13 +144,13 @@ pub trait comctl_Himagelist: Handle {
 		)
 	}
 
-	/// [`ImageList_EndDrag`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
+	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
 	/// static method.
 	fn EndDrag() {
 		unsafe { comctl::ffi::ImageList_EndDrag(); }
 	}
 
-	/// [`ImageList_GetIconSize`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
+	/// [`ImageList_GetIconSize`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
 	/// method.
 	#[must_use]
 	fn GetIconSize(self) -> SysResult<SIZE> {
@@ -164,14 +164,14 @@ pub trait comctl_Himagelist: Handle {
 		).map(|_| sz)
 	}
 
-	/// [`ImageList_GetImageCount`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount)
+	/// [`ImageList_GetImageCount`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount)
 	/// method.
 	#[must_use]
 	fn GetImageCount(self) -> u32 {
 		unsafe { comctl::ffi::ImageList_GetImageCount(self.as_ptr()) as _ }
 	}
 
-	/// [`ImageList_Remove`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
+	/// [`ImageList_Remove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
 	/// method.
 	fn Remove(self, index: Option<u32>) -> SysResult<()> {
 		bool_to_sysresult(
@@ -183,7 +183,7 @@ pub trait comctl_Himagelist: Handle {
 		)
 	}
 
-	/// [`ImageList_ReplaceIcon`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_replaceicon)
+	/// [`ImageList_ReplaceIcon`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_replaceicon)
 	/// method.
 	///
 	/// The icon can be destroyed right after this call, its handle its
@@ -203,7 +203,7 @@ pub trait comctl_Himagelist: Handle {
 		}
 	}
 
-	/// [`ImageList_SetImageCount`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_setimagecount)
+	/// [`ImageList_SetImageCount`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_setimagecount)
 	/// methods.
 	fn SetImageCount(self, new_count: u32) -> SysResult<()> {
 		bool_to_sysresult(

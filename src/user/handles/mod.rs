@@ -23,17 +23,17 @@ pub mod decl {
 
 	impl_handle! { HBITMAP: "user";
 		/// Handle to a
-		/// [bitmap](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbitmap).
+		/// [bitmap](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbitmap).
 	}
 
 	impl_handle! { HBRUSH: "user";
 		/// Handle to a
-		/// [brush](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
+		/// [brush](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
 	}
 
 	impl_handle! { HRGN: "user";
 		/// Handle to a
-		/// [region](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
+		/// [region](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
 		/// GDI object.
 	}
 }

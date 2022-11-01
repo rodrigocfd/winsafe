@@ -6,7 +6,7 @@ use crate::kernel::ffi_types::BOOL;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 
-/// [`TaskDialogIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
+/// [`TaskDialogIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
 /// function.
 ///
 /// Returns:

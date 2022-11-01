@@ -4,7 +4,7 @@ use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
 
-/// [`CB_GETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcuebanner)
+/// [`CB_GETCUEBANNER`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getcuebanner)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -32,7 +32,7 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 	}
 }
 
-/// [`CB_GETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getminvisible)
+/// [`CB_GETMINVISIBLE`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getminvisible)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -55,7 +55,7 @@ unsafe impl MsgSend for GetMinVisible {
 	}
 }
 
-/// [`CB_SETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setcuebanner)
+/// [`CB_SETCUEBANNER`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setcuebanner)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -83,7 +83,7 @@ unsafe impl MsgSend for SetCueBanner {
 	}
 }
 
-/// [`CB_SETMINVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setminvisible)
+/// [`CB_SETMINVISIBLE`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setminvisible)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.

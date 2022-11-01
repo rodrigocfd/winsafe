@@ -6,7 +6,7 @@ use crate::co;
 use crate::comdlg::decl::CCHOOKPROC;
 use crate::user::decl::{COLORREF, HWND};
 
-/// [`CHOOSECOLOR`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-choosecolorw-r1)
+/// [`CHOOSECOLOR`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-choosecolorw-r1)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comdlg")))]
 #[repr(C)]

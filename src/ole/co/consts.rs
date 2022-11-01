@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types)]
 
 const_ordinary! { CLSCTX: u32: "ole";
-	/// [`CLSCTX`](https://docs.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
+	/// [`CLSCTX`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -62,7 +62,7 @@ const_ordinary! { CLSCTX: u32: "ole";
 }
 
 const_bitflag! { COINIT: u32: "ole";
-	/// [`COINIT`](https://docs.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
+	/// [`COINIT`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -84,7 +84,7 @@ const_bitflag! { COINIT: u32: "ole";
 }
 
 const_ordinary! { DROPEFFECT: u32: "ole";
-	/// [`DROPEFFECT`](https://docs.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
+	/// [`DROPEFFECT`](https://learn.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
 	/// constants (`u32`).
 	=>
 	=>
@@ -245,7 +245,7 @@ const_ordinary! { FACILITY: u32: "ole";
 }
 
 const_bitflag! { LOCKTYPE: u32: "ole";
-	/// [`LOCKTYPE`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-locktype)
+	/// [`LOCKTYPE`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-locktype)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -255,7 +255,7 @@ const_bitflag! { LOCKTYPE: u32: "ole";
 }
 
 const_ordinary! { PICTYPE: i16: "ole";
-	/// [`PICTYPE`](https://docs.microsoft.com/en-us/windows/win32/com/pictype-constants)
+	/// [`PICTYPE`](https://learn.microsoft.com/en-us/windows/win32/com/pictype-constants)
 	/// constants (`i16`).
 	=>
 	=>
@@ -276,7 +276,7 @@ const_ordinary! { SEVERITY: u8: "ole";
 }
 
 const_bitflag! { STGC: u32: "ole";
-	/// [`STGC`](https://docs.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgc)
+	/// [`STGC`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgc)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -288,7 +288,7 @@ const_bitflag! { STGC: u32: "ole";
 }
 
 const_ordinary! { STREAM_SEEK: u32: "ole";
-	/// [`STREAM_SEEK`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-stream_seek)
+	/// [`STREAM_SEEK`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-stream_seek)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -298,7 +298,7 @@ const_ordinary! { STREAM_SEEK: u32: "ole";
 }
 
 const_ordinary! { TYMED: u32: "ole";
-	/// [`TYMED`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-tymed)
+	/// [`TYMED`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-tymed)
 	/// enumeration (`u32`).
 	=>
 	=>

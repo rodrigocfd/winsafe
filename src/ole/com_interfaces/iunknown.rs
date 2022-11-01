@@ -16,16 +16,16 @@ pub struct IUnknownVT {
 
 com_interface! { IUnknown: "ole";
 	"00000000-0000-0000-c000-000000000046";
-	/// [`IUnknown`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
+	/// [`IUnknown`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 	/// COM interface over [`IUnknownVT`](crate::vt::IUnknownVT). It's the base to
 	/// all COM interfaces.
 	///
 	/// The `clone` method calls
-	/// [`AddRef`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
+	/// [`AddRef`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
 	/// internally.
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -55,7 +55,7 @@ pub trait ole_IUnknown: Clone + From<ComPtr> {
 
 	/// Returns the pointer to the underlying COM virtual table and sets the
 	/// internal pointer to null, so that
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// won't be called.
 	///
 	/// **Note:** Be sure to release the pointer, otherwise, as the name of this
@@ -74,7 +74,7 @@ pub trait ole_IUnknown: Clone + From<ComPtr> {
 	#[must_use]
 	unsafe fn vt_ref<T>(&self) -> &T;
 
-	/// [`IUnknown::QueryInterface`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
+	/// [`IUnknown::QueryInterface`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
 	/// method.
 	#[must_use]
 	fn QueryInterface<T>(&self) -> HrResult<T>

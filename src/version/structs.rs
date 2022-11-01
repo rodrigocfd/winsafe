@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	HIDWORD, HIWORD, LODWORD, LOWORD, MAKEDWORD, MAKEQWORD,
 };
 
-/// [`VS_FIXEDFILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo)
+/// [`VS_FIXEDFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 #[repr(C)]

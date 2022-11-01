@@ -6,7 +6,7 @@ use crate::prelude::Handle;
 
 impl_handle! { HLOCAL: "kernel";
 	/// Handle to a
-	/// [local memory block](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
+	/// [local memory block](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
 }
 
 impl kernel_Hlocal for HLOCAL {}
@@ -21,7 +21,7 @@ impl kernel_Hlocal for HLOCAL {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hlocal: Handle {
-	/// [`LocalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
+	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
 	fn LocalFree(self) -> SysResult<()> {
 		match unsafe { kernel::ffi::LocalFree(self.as_ptr()).as_mut() } {
@@ -30,7 +30,7 @@ pub trait kernel_Hlocal: Handle {
 		}
 	}
 
-	/// [`LocalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
+	/// [`LocalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
 	/// method.
 	#[must_use]
 	fn LocalSize(self) -> SysResult<usize> {

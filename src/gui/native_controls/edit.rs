@@ -31,7 +31,7 @@ struct Obj { // actual fields of Edit
 //------------------------------------------------------------------------------
 
 /// Native
-/// [edit](https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
+/// [edit](https://learn.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
@@ -295,12 +295,12 @@ impl<'a> LinesIter<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct EditOpts {
 	/// Text of the control to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
 	pub text: String,
 	/// Control position within parent client area, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -309,7 +309,7 @@ pub struct EditOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Control width, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
@@ -318,7 +318,7 @@ pub struct EditOpts {
 	/// Defaults to 100.
 	pub width: u32,
 	/// Control height, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
@@ -329,7 +329,7 @@ pub struct EditOpts {
 	/// **Note:** You should change the default height only in a multi-line edit.
 	pub height: u32,
 	/// Edit styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `ES::AUTOHSCROLL | ES::NOHIDESEL`.
 	///
@@ -339,12 +339,12 @@ pub struct EditOpts {
 	/// * replace with `ES::MULTILINE | ES::WANTRETURN | ES::AUTOVSCROLL | ES::NOHIDESEL` for a multi-line edit.
 	pub edit_style: co::ES,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT | WS_EX::CLIENTEDGE`.
 	pub window_ex_style: co::WS_EX,

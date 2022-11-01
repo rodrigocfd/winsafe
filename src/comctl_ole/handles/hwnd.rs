@@ -20,7 +20,7 @@ impl comctl_ole_Hwnd for HWND {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub trait comctl_ole_Hwnd: Handle {
-	/// [`InitializeFlatSB`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
+	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// method.
 	fn InitializeFlatSB(self) -> HrResult<()> {
 		ok_to_hrresult(
@@ -28,7 +28,7 @@ pub trait comctl_ole_Hwnd: Handle {
 		)
 	}
 
-	/// [`TaskDialog`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
+	/// [`TaskDialog`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
 	/// method.
 	///
 	/// Unless you need something specific, consider using the
@@ -108,7 +108,7 @@ pub trait comctl_ole_Hwnd: Handle {
 		).map(|_| co::DLGID(pn_button as _))
 	}
 
-	/// [`UninitializeFlatSB`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
+	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
 	/// method.
 	fn UninitializeFlatSB(self) -> HrResult<()> {
 		ok_to_hrresult(

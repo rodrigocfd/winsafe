@@ -7,7 +7,7 @@ use crate::prelude::Handle;
 
 impl_handle! { HFILEMAPVIEW: "kernel";
 	/// Address of a
-	/// [mapped view](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
+	/// [mapped view](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
 	/// Originally just an `LPVOID`.
 }
 
@@ -82,7 +82,7 @@ pub trait kernel_Hfilemapview: Handle {
 		unsafe { std::slice::from_raw_parts(self.as_ptr() as _, len) }
 	}
 
-	/// [`UnmapViewOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
+	/// [`UnmapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
 	/// method.
 	fn UnmapViewOfFile(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::UnmapViewOfFile(self.as_ptr()) })

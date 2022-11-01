@@ -8,7 +8,7 @@ use crate::user::decl::COLORREF;
 
 impl_handle! { HPEN: "gdi";
 	/// Handle to a
-	/// [pen](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpen)
+	/// [pen](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpen)
 	/// GDI object.
 }
 
@@ -25,7 +25,7 @@ impl gdi_Hpen for HPEN {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hpen: gdi_Hgdiobj {
-	/// [`CreatePen`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
+	/// [`CreatePen`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// static method.
 	#[must_use]
 	fn CreatePen(
@@ -36,7 +36,7 @@ pub trait gdi_Hpen: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreatePenIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
+	/// [`CreatePenIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
 	/// static method.
 	#[must_use]
 	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<HPEN> {
@@ -45,7 +45,7 @@ pub trait gdi_Hpen: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
+	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {

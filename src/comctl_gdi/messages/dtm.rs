@@ -5,7 +5,7 @@ use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
 
-/// [`DTM_SETMCFONT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmcfont)
+/// [`DTM_SETMCFONT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-setmcfont)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -31,7 +31,7 @@ unsafe impl MsgSend for SetMcFont {
 	}
 }
 
-/// [`DTM_GETMCFONT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcfont)
+/// [`DTM_GETMCFONT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getmcfont)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HFONT>`.

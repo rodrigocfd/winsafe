@@ -35,7 +35,7 @@ struct Obj { // atual fields of ListView
 //------------------------------------------------------------------------------
 
 /// Native
-/// [list view](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
+/// [list view](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
@@ -325,7 +325,7 @@ impl ListView {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListViewOpts {
 	/// Control position within parent client area, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -334,7 +334,7 @@ pub struct ListViewOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Control size, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -343,22 +343,22 @@ pub struct ListViewOpts {
 	/// Defaults to 50 x 50.
 	pub size: SIZE,
 	/// List view styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS | LVS::SHAREIMAGELISTS`.
 	pub list_view_style: co::LVS,
 	/// Extended list view styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `LVS_EX::NoValue`.
 	pub list_view_ex_style: co::LVS_EX,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT | WS_EX::CLIENTEDGE`.
 	pub window_ex_style: co::WS_EX,

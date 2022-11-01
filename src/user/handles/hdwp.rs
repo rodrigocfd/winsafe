@@ -8,7 +8,7 @@ use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
 impl_handle! { HDWP: "user32";
 	/// Handle to a
-	/// [deferred window position](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
+	/// [deferred window position](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
 }
 
 impl user_Hdwp for HDWP {}
@@ -23,7 +23,7 @@ impl user_Hdwp for HDWP {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hdwp: Handle {
-	/// [`BeginDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
+	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -36,7 +36,7 @@ pub trait user_Hdwp: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`DeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
+	/// [`DeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
 	/// method.
 	fn DeferWindowPos(self,
 		hwnd: HWND, hwnd_insert_after: HwndPlace,
@@ -54,7 +54,7 @@ pub trait user_Hdwp: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`EndDeferWindowPos`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
+	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// method.
 	fn EndDeferWindowPos(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { user::ffi::EndDeferWindowPos(self.as_ptr()) })

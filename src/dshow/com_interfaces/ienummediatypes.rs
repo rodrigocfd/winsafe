@@ -23,11 +23,11 @@ pub struct IEnumMediaTypesVT {
 
 com_interface! { IEnumMediaTypes: "dshow";
 	"89c31040-846b-11ce-97d3-00aa0055595a";
-	/// [`IEnumMediaTypes`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienummediatypes)
+	/// [`IEnumMediaTypes`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienummediatypes)
 	/// COM interface over [`IEnumMediaTypesVT`](crate::vt::IEnumMediaTypesVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -69,7 +69,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 		Box::new(EnumMediaTypesIter::new(unsafe { self.ptr() }))
 	}
 
-	/// [`IEnumMediaTypes::Next`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-next)
+	/// [`IEnumMediaTypes::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-next)
 	/// method.
 	///
 	/// Prefer using
@@ -85,7 +85,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumMediaTypes::Reset`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-reset)
+	/// [`IEnumMediaTypes::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-reset)
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
 		unsafe {
@@ -94,7 +94,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumMediaTypes::Skip`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-skip)
+	/// [`IEnumMediaTypes::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
 		unsafe {

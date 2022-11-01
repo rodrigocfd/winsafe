@@ -26,11 +26,11 @@ pub struct IBindCtxVT {
 
 com_interface! { IBindCtx: "ole";
 	"0000000e-0000-0000-c000-000000000046";
-	/// [`IBindCtx`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ibindctx)
+	/// [`IBindCtx`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ibindctx)
 	/// COM interface over [`IBindCtxVT`](crate::vt::IBindCtxVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -46,7 +46,7 @@ impl ole_IBindCtx for IBindCtx {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IBindCtx: ole_IUnknown {
-	/// [`IBindCtx::ReleaseBoundObjects`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
+	/// [`IBindCtx::ReleaseBoundObjects`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
 	/// method.
 	fn ReleaseBoundObjects(&self) -> HrResult<()> {
 		ok_to_hrresult(
@@ -57,7 +57,7 @@ pub trait ole_IBindCtx: ole_IUnknown {
 		)
 	}
 
-	/// [`IBindCtx::RevokeObjectParam`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-revokeobjectparam)
+	/// [`IBindCtx::RevokeObjectParam`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-revokeobjectparam)
 	/// method.
 	fn RevokeObjectParam(&self, key: &str) -> HrResult<()> {
 		ok_to_hrresult(

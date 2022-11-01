@@ -24,7 +24,7 @@ const_bitflag! { KEY: u32: "advapi";
 
 const_ordinary! { REG: u32: "advapi";
 	/// Registry
-	/// [value types](https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
+	/// [value types](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
 	=>
 	=>

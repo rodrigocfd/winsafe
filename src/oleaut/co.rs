@@ -1,5 +1,5 @@
 const_bitflag! { VT: u16: "ole";
-	/// [`VARENUM`](https://docs.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
+	/// [`VARENUM`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
 	/// enumeration (`u16`).
 	=>
 	=>

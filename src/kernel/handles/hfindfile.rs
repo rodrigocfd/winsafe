@@ -9,7 +9,7 @@ use crate::prelude::Handle;
 
 impl_handle! { HFINDFILE: "kernel";
 	/// Handle to a
-	/// [file search](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew).
+	/// [file search](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew).
 	/// Originally just a `HANDLE`.
 }
 
@@ -72,13 +72,13 @@ pub trait kernel_Hfindfile: Handle {
 		Box::new(FindFileIter::new(path_and_pattern))
 	}
 
-	/// [`FindClose`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
+	/// [`FindClose`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
 	/// method.
 	fn FindClose(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::FindClose(self.as_ptr()) })
 	}
 
-	/// [`FindFirstFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
+	/// [`FindFirstFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -106,7 +106,7 @@ pub trait kernel_Hfindfile: Handle {
 		}
 	}
 
-	/// [`FindNextFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextfilew)
+	/// [`FindNextFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextfilew)
 	/// method.
 	///
 	/// This method is rather tricky, consider using

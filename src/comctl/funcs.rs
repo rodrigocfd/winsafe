@@ -5,14 +5,14 @@ use crate::comctl::decl::INITCOMMONCONTROLSEX;
 use crate::kernel::decl::{LANGID, SysResult};
 use crate::kernel::privs::bool_to_sysresult;
 
-/// [`InitCommonControls`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
+/// [`InitCommonControls`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub fn InitCommonControls() {
 	unsafe { comctl::ffi::InitCommonControls() }
 }
 
-/// [`InitCommonControlsEx`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrolsex)
+/// [`InitCommonControlsEx`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrolsex)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
@@ -21,7 +21,7 @@ pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
 	)
 }
 
-/// [`InitMUILanguage`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initmuilanguage)
+/// [`InitMUILanguage`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initmuilanguage)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub fn InitMUILanguage(ui_lang: LANGID) {

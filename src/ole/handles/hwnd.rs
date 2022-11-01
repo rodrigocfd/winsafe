@@ -18,7 +18,7 @@ impl ole_Hwnd for HWND {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_Hwnd: Handle {
-	/// [`RegisterDragDrop`](https://docs.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-registerdragdrop)
+	/// [`RegisterDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-registerdragdrop)
 	/// method.
 	fn RegisterDragDrop(self, drop_target: &IDropTarget) -> HrResult<()> {
 		ok_to_hrresult(
@@ -28,7 +28,7 @@ pub trait ole_Hwnd: Handle {
 		)
 	}
 
-	/// [`RevokeDragDrop`](https://docs.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
+	/// [`RevokeDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
 	/// method.
 	fn RevokeDragDrop(self) -> HrResult<()> {
 		ok_to_hrresult(unsafe { ole::ffi::RevokeDragDrop(self.as_ptr()) })

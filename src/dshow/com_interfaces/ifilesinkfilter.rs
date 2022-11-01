@@ -19,11 +19,11 @@ pub struct IFileSinkFilterVT {
 
 com_interface! { IFileSinkFilter: "dshow";
 	"a2104830-7c70-11cf-8bce-00aa00a3f1a6";
-	/// [`IFileSinkFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
+	/// [`IFileSinkFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
 	/// COM interface over [`IFileSinkFilterVT`](crate::vt::IFileSinkFilterVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -39,7 +39,7 @@ impl dshow_IFileSinkFilter for IFileSinkFilter {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IFileSinkFilter: ole_IUnknown {
-	/// [`IFileSinkFilter::GetCurFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-getcurfile)
+	/// [`IFileSinkFilter::GetCurFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-getcurfile)
 	/// method.
 	///
 	/// **Note:** If you pass an [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE)
@@ -84,7 +84,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 		})
 	}
 
-	/// [`IFileSinkFilter::SetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
+	/// [`IFileSinkFilter::SetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
 	/// method.
 	fn SetFileName(&self,
 		file_name: &str, amt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>

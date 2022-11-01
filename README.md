@@ -45,16 +45,16 @@ The following Cargo features are available so far:
 | Feature | Description |
 | - | - |
 | `advapi` | Advapi32.dll, for Windows Registry |
-| `comctl` | ComCtl32.dll, for [Common Controls](https://docs.microsoft.com/en-us/windows/win32/api/_controls/) |
-| `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://docs.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
-| `dshow` | [DirectShow](https://docs.microsoft.com/en-us/windows/win32/directshow/directshow) |
-| `gdi` | Gdi32.dll, the [Windows GDI](https://docs.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
+| `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
+| `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://learn.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
+| `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |
+| `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 | **`gui`** | **The WinSafe high-level GUI structs** |
 | `kernel` | Kernel32.dll, all others will include it |
 | `msimg` | Msimg32.dll |
 | `ole` | OLE and basic COM support |
-| `oleaut` | [OLE Automation](https://docs.microsoft.com/en-us/windows/win32/api/_automat/) |
-| `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://docs.microsoft.com/en-us/windows/win32/shell/shell-entry) |
+| `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
+| `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 | `user` | User32.dll, the basic Windows GUI support |
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |

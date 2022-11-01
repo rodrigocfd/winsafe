@@ -33,12 +33,12 @@ pub struct IMediaSeekingVT {
 
 com_interface! { IMediaSeeking: "dshow";
 	"36b73880-c2c8-11cf-8b46-00805f6cef60";
-	/// [`IMediaSeeking`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
+	/// [`IMediaSeeking`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
 	/// COM interface over [`IMediaSeekingVT`](crate::vt::IMediaSeekingVT). Inherits
 	/// from [`IUnknown`](crate::IUnknown).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -68,7 +68,7 @@ impl dshow_IMediaSeeking for IMediaSeeking {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMediaSeeking: ole_IUnknown {
-	/// [`IMediaSeeking::ConvertTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
+	/// [`IMediaSeeking::ConvertTimeFormat`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 	/// method.
 	#[must_use]
 	fn ConvertTimeFormat(&self,
@@ -90,7 +90,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| target)
 	}
 
-	/// [`IMediaSeeking::GetAvailable`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getavailable)
+	/// [`IMediaSeeking::GetAvailable`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getavailable)
 	/// method.
 	///
 	/// Returns earliest and latest times for efficient seeking.
@@ -103,7 +103,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| (early, late))
 	}
 
-	/// [`IMediaSeeking::GetCurrentPosition method`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getcurrentposition)
+	/// [`IMediaSeeking::GetCurrentPosition method`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getcurrentposition)
 	/// method.
 	#[must_use]
 	fn GetCurrentPosition(&self) -> HrResult<i64> {
@@ -114,7 +114,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| pos)
 	}
 
-	/// [`IMediaSeeking::GetDuration`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getduration)
+	/// [`IMediaSeeking::GetDuration`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getduration)
 	/// method.
 	#[must_use]
 	fn GetDuration(&self) -> HrResult<i64> {
@@ -125,7 +125,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| duration)
 	}
 
-	/// [`IMediaSeeking::GetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getpositions)
+	/// [`IMediaSeeking::GetPositions`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getpositions)
 	/// method.
 	///
 	/// Returns current and stop positions.
@@ -138,7 +138,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| (current, stop))
 	}
 
-	/// [`IMediaSeeking::GetPreroll`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getpreroll)
+	/// [`IMediaSeeking::GetPreroll`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getpreroll)
 	/// method.
 	#[must_use]
 	fn GetPreroll(&self) -> HrResult<i64> {
@@ -149,7 +149,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| preroll)
 	}
 
-	/// [`IMediaSeeking::GetRate`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getrate)
+	/// [`IMediaSeeking::GetRate`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getrate)
 	/// method.
 	#[must_use]
 	fn GetRate(&self) -> HrResult<f64> {
@@ -160,7 +160,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| rate)
 	}
 
-	/// [`IMediaSeeking::GetStopPosition`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getstopposition)
+	/// [`IMediaSeeking::GetStopPosition`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getstopposition)
 	/// method.
 	#[must_use]
 	fn GetStopPosition(&self) -> HrResult<i64> {
@@ -171,7 +171,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| pos)
 	}
 
-	/// [`IMediaSeeking::GetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-gettimeformat)
+	/// [`IMediaSeeking::GetTimeFormat`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-gettimeformat)
 	/// method.
 	#[must_use]
 	fn GetTimeFormat(&self) -> HrResult<co::TIME_FORMAT> {
@@ -184,7 +184,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}.map(|_| time_guid)
 	}
 
-	/// [`IMediaSeeking::SetPositions`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
+	/// [`IMediaSeeking::SetPositions`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 	/// method.
 	fn SetPositions(&self,
 		current: i64, current_flags: co::SEEKING_FLAGS,
@@ -209,7 +209,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}
 	}
 
-	/// [`IMediaSeeking::SetRate`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setrate)
+	/// [`IMediaSeeking::SetRate`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setrate)
 	/// method.
 	fn SetRate(&self, rate: f64) -> HrResult<()> {
 		unsafe {
@@ -218,7 +218,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		}
 	}
 
-	/// [`IMediaSeeking::SetTimeFormat`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-settimeformat)
+	/// [`IMediaSeeking::SetTimeFormat`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-settimeformat)
 	/// method.
 	fn SetTimeFormat(&self, format: &co::TIME_FORMAT) -> HrResult<()> {
 		unsafe {

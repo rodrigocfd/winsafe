@@ -51,7 +51,7 @@ pub enum StatusBarPart {
 //------------------------------------------------------------------------------
 
 /// Native
-/// [status bar](https://docs.microsoft.com/en-us/windows/win32/controls/status-bars)
+/// [status bar](https://learn.microsoft.com/en-us/windows/win32/controls/status-bars)
 /// control, which has one or more parts.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]

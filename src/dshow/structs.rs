@@ -7,7 +7,7 @@ use crate::dshow::decl::IBaseFilter;
 use crate::kernel::ffi_types::BOOL;
 use crate::ole::decl::GUID;
 
-/// [`AM_MEDIA_TYPE`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)
+/// [`AM_MEDIA_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
@@ -50,7 +50,7 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 	}
 }
 
-/// [`DVINFO`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-dvinfo)
+/// [`DVINFO`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-dvinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
@@ -65,7 +65,7 @@ pub struct DVINFO {
 	dwDVReserved: [u32; 2],
 }
 
-/// [`MFVideoNormalizedRect`](https://docs.microsoft.com/en-us/windows/win32/api/evr/ns-evr-mfvideonormalizedrect)
+/// [`MFVideoNormalizedRect`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ns-evr-mfvideonormalizedrect)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
@@ -94,7 +94,7 @@ impl MFVideoNormalizedRect {
 	}
 }
 
-/// [`PIN_INFO`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-pin_info)
+/// [`PIN_INFO`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-pin_info)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]

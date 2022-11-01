@@ -22,11 +22,11 @@ pub struct IBaseFilterVT {
 
 com_interface! { IBaseFilter: "dshow";
 	"56a86895-0ad4-11ce-b03a-0020af0ba770";
-	/// [`IBaseFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
+	/// [`IBaseFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
 	/// COM interface over [`IBaseFilterVT`](crate::vt::IBaseFilterVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -58,7 +58,7 @@ impl dshow_IBaseFilter for IBaseFilter {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IBaseFilter: dshow_IMediaFilter {
-	/// [`IBaseFilter::JoinFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
+	/// [`IBaseFilter::JoinFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.
 	fn JoinFilterGraph(&self,
 		graph: Option<&IFilterGraph>, name: &str) -> HrResult<()>
@@ -75,7 +75,7 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 		}
 	}
 
-	/// [`IBaseFilter::QueryVendorInfo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryvendorinfo)
+	/// [`IBaseFilter::QueryVendorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryvendorinfo)
 	/// method.
 	#[must_use]
 	fn QueryVendorInfo(&self) -> HrResult<String> {

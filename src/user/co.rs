@@ -79,7 +79,7 @@ const_ordinary! { APPCOMMAND: u16: "user";
 
 const_wm! { BM: "user";
 	/// Button control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -96,7 +96,7 @@ const_wm! { BM: "user";
 
 const_cmd! { BN: "user";
 	/// Button control `WM_COMMAND`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`u16`).
 	=>
 	=>
@@ -115,7 +115,7 @@ const_cmd! { BN: "user";
 
 const_ws! { BS: u32: "user";
 	/// Button control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/button-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/button-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -162,7 +162,7 @@ const_ordinary! { BST: u32: "user";
 
 const_wm! { CB: "user";
 	/// Combo box control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -205,7 +205,7 @@ const_wm! { CB: "user";
 
 const_cmd! { CBN: "user";
 	/// Combo box control `WM_COMMAND`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
 	/// (`u16`).
 	=>
 	=>
@@ -224,7 +224,7 @@ const_cmd! { CBN: "user";
 
 const_ws! { CBS: u32: "user";
 	/// Combo box control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -262,7 +262,7 @@ const_bitflag! { CDS: u32: "user";
 
 const_ordinary! { CF: u32: "user";
 	/// Standard clipboard
-	/// [formats](https://docs.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
+	/// [formats](https://learn.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
 	/// (`u32`).
 	=>
 	=>
@@ -296,7 +296,7 @@ const_ordinary! { CF: u32: "user";
 
 const_ordinary! { COLOR: i32: "user";
 	/// System
-	/// [colors](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
+	/// [colors](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 	/// (`i32`).
 	=>
 	=>
@@ -359,7 +359,7 @@ const_ordinary! { CMD: u16: "user";
 
 const_bitflag! { CS: u32: "user";
 	/// Window class
-	/// [`styles`](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
+	/// [`styles`](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -988,7 +988,7 @@ const_bitflag! { EIMES: u16: "user";
 
 const_wm! { EM: "user";
 	/// Edit control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -1036,7 +1036,7 @@ const_wm! { EM: "user";
 
 const_cmd! { EN: "user";
 	/// Edit control `WM_COMMAND`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
 	/// (`u16`).
 	=>
 	=>
@@ -1077,7 +1077,7 @@ const_ordinary! { ENUM_SETTINGS: u32: "user";
 
 const_ws! { ES: u32: "user";
 	/// Edit control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1379,7 +1379,7 @@ const_bitflag! { ISMEX: u32: "user";
 
 const_wm! { LB: "user";
 	/// List box control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -1428,7 +1428,7 @@ const_wm! { LB: "user";
 
 const_cmd! { LBN: "user";
 	/// List box control `WM_COMMAND`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications)
 	/// (`u16`).
 	=>
 	=>
@@ -1442,7 +1442,7 @@ const_cmd! { LBN: "user";
 
 const_ws! { LBS: u32: "user";
 	/// List box control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-box-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-box-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1591,7 +1591,7 @@ const_bitflag! { MB: u32: "user";
 
 	/// Same as desktop of the interactive window station. For more information,
 	/// see
-	/// [Window Stations](https://docs.microsoft.com/en-us/windows/win32/winstation/window-stations).
+	/// [Window Stations](https://learn.microsoft.com/en-us/windows/win32/winstation/window-stations).
 	///
 	/// If the current input desktop is not the default desktop,
 	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) does not
@@ -1624,7 +1624,7 @@ const_bitflag! { MB: u32: "user";
 	///
 	/// For information on security considerations in regard to using this flag,
 	/// see
-	/// [Interactive Services](https://docs.microsoft.com/en-us/windows/win32/services/interactive-services).
+	/// [Interactive Services](https://learn.microsoft.com/en-us/windows/win32/services/interactive-services).
 	/// In particular be aware that this flag can produce interactive content
 	/// on a locked desktop and should therefore be used for only a very limited
 	/// set of scenarios such as resource exhaustion.
@@ -2390,7 +2390,7 @@ const_bitflag! { SPIF: u32: "user";
 
 const_ws! { SS: u32: "user";
 	/// Label control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/static-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/static-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -2471,7 +2471,7 @@ const_bitflag! { STATE_SYSTEM: u32: "user";
 
 const_cmd! { STN: "user";
 	/// Static control `WM_COMMAND`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
 	/// (`u16`).
 	=>
 	=>
@@ -2563,7 +2563,7 @@ const_ordinary! { UOI: i32: "user";
 }
 
 const_ordinary! { VK: u16: "user";
-	/// [Virtual key codes](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
+	/// [Virtual key codes](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
 	=>
 	=>
@@ -3225,7 +3225,7 @@ const_ordinary! { WMSZ: u8: "user";
 
 const_bitflag! { WS: u32: "user";
 	/// Window
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles)
 	/// (`u32`).
 	///
 	/// **Note:** Control-specific styles have their own types, which are
@@ -3336,7 +3336,7 @@ const_bitflag! { WS: u32: "user";
 
 const_bitflag! { WS_EX: u32: "user";
 	/// Extended window
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
 	/// (`u32`).
 	///
 	/// **Note:** Control-specific extended styles have their own types, which

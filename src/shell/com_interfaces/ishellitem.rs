@@ -22,11 +22,11 @@ pub struct IShellItemVT {
 
 com_interface! { IShellItem: "shell";
 	"43826d1e-e718-42ee-bc55-a1e261c37bfe";
-	/// [`IShellItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
+	/// [`IShellItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
 	/// COM interface over [`IShellItemVT`](crate::vt::IShellItemVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -42,7 +42,7 @@ impl shell_IShellItem for IShellItem {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IShellItem: ole_IUnknown {
-	/// [`SHCreateItemFromParsingName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
+	/// [`SHCreateItemFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
 	/// static method.
 	///
 	/// # Examples
@@ -76,7 +76,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellItem::BindToHandler`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
+	/// [`IShellItem::BindToHandler`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
 	/// method.
 	///
 	/// # Examples
@@ -116,7 +116,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellItem::GetAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
+	/// [`IShellItem::GetAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
 	/// method.
 	#[must_use]
 	fn GetAttributes(&self, sfgao_mask: co::SFGAO) -> HrResult<co::SFGAO> {
@@ -133,7 +133,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellItem::GetDisplayName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getdisplayname)
+	/// [`IShellItem::GetDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getdisplayname)
 	/// method.
 	///
 	/// # Examples
@@ -167,7 +167,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		})
 	}
 
-	/// [`IShellItem::GetParent`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getparent)
+	/// [`IShellItem::GetParent`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getparent)
 	/// method.
 	///
 	/// # Examples

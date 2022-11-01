@@ -28,7 +28,7 @@ struct Obj { // actual fields of Trackbar
 //------------------------------------------------------------------------------
 
 /// Native
-/// [trackbar](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
+/// [trackbar](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
@@ -200,7 +200,7 @@ impl Trackbar {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TrackbarOpts {
 	/// Control position within parent client area, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -209,7 +209,7 @@ pub struct TrackbarOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Control size, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -218,17 +218,17 @@ pub struct TrackbarOpts {
 	/// Defaults to 120 x 23.
 	pub size: SIZE,
 	/// Trackbar styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `TBS::HORZ | TBS::AUTOTICKS`.
 	pub trackbar_style: co::TBS,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
 	pub window_ex_style: co::WS_EX,

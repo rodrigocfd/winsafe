@@ -8,34 +8,34 @@ use crate::user::decl::HRGN;
 use crate::user::privs::zero_as_none;
 
 pub_struct_msg_ctlcolor! { CtlColorBtn: co::WM::CTLCOLORBTN; "gdi";
-	/// [`WM_CTLCOLORBTN`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
+	/// [`WM_CTLCOLORBTN`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 }
 
 pub_struct_msg_ctlcolor! { CtlColorDlg: co::WM::CTLCOLORDLG; "gdi";
-	/// [`WM_CTLCOLORDLG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
+	/// [`WM_CTLCOLORDLG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 }
 
 pub_struct_msg_ctlcolor! { CtlColorEdit: co::WM::CTLCOLOREDIT; "gdi";
-	/// [`WM_CTLCOLOREDIT`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
+	/// [`WM_CTLCOLOREDIT`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 }
 
 pub_struct_msg_ctlcolor! { CtlColorListBox: co::WM::CTLCOLORLISTBOX; "gdi";
-	/// [`WM_CTLCOLORLISTBOX`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
+	/// [`WM_CTLCOLORLISTBOX`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 }
 
 pub_struct_msg_ctlcolor! { CtlColorScrollBar: co::WM::CTLCOLORSCROLLBAR; "gdi";
-	/// [`WM_CTLCOLORSCROLLBAR`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
+	/// [`WM_CTLCOLORSCROLLBAR`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 }
 
 pub_struct_msg_ctlcolor! { CtlColorStatic: co::WM::CTLCOLORSTATIC; "gdi";
-	/// [`WM_CTLCOLORSTATIC`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
+	/// [`WM_CTLCOLORSTATIC`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 }
 
 pub_struct_msg_char! { DeadChar: co::WM::DEADCHAR; "gdi";
-	/// [`WM_DEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
+	/// [`WM_DEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
 }
 
-/// [`WM_DISPLAYCHANGE`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-displaychange)
+/// [`WM_DISPLAYCHANGE`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-displaychange)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -72,7 +72,7 @@ unsafe impl MsgSendRecv for DisplayChange {
 	}
 }
 
-/// [`WM_GETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)
+/// [`WM_GETFONT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HFONT>`.
@@ -101,7 +101,7 @@ unsafe impl MsgSendRecv for GetFont {
 	}
 }
 
-/// [`WM_NCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
+/// [`WM_NCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -135,10 +135,10 @@ unsafe impl MsgSendRecv for NcPaint {
 }
 
 pub_struct_msg_empty_handleable! { Paint: co::WM::PAINT; "gdi";
-	/// [`WM_PAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-paint)
+	/// [`WM_PAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 }
 
-/// [`WM_SETFONT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-setfont)
+/// [`WM_SETFONT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-setfont)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -173,7 +173,7 @@ unsafe impl MsgSendRecv for SetFont {
 	}
 }
 
-/// [`WM_SETREDRAW`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-setredraw)
+/// [`WM_SETREDRAW`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-setredraw)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -207,5 +207,5 @@ unsafe impl MsgSendRecv for SetRedraw {
 }
 
 pub_struct_msg_empty_handleable! { SyncPaint: co::WM::SYNCPAINT; "gdi";
-	/// [`WM_SYNCPAINT`](https://docs.microsoft.com/en-us/windows/win32/gdi/wm-syncpaint)
+	/// [`WM_SYNCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-syncpaint)
 }

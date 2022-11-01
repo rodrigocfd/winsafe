@@ -8,7 +8,7 @@ use crate::user::decl::{MONITORINFO, POINT, RECT};
 
 impl_handle! { HMONITOR: "user";
 	/// Handle to a
-	/// [display monitor](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmonitor).
+	/// [display monitor](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmonitor).
 }
 
 impl user_Hmonitor for HMONITOR {}
@@ -23,7 +23,7 @@ impl user_Hmonitor for HMONITOR {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hmonitor: Handle {
-	/// [`GetMonitorInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow)
+	/// [`GetMonitorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow)
 	/// method.
 	///
 	/// # Examples
@@ -47,14 +47,14 @@ pub trait user_Hmonitor: Handle {
 		)
 	}
 
-	/// [`MonitorFromPoint`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint)
+	/// [`MonitorFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint)
 	/// static method.
 	#[must_use]
 	fn MonitorFromPoint(pt: POINT, flags: co::MONITOR) -> HMONITOR {
 		HMONITOR(unsafe { user::ffi::MonitorFromPoint(pt.x, pt.y, flags.0) })
 	}
 
-	/// [`MonitorFromRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromrect)
+	/// [`MonitorFromRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromrect)
 	/// static method.
 	#[must_use]
 	fn MonitorFromRect(rc: RECT, flags: co::MONITOR) -> HMONITOR {

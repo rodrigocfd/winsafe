@@ -5,7 +5,7 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes month calendar control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications).
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
@@ -22,27 +22,27 @@ impl MonthCalendarEvents {
 	}
 
 	pub_fn_nfy_withparm_noret! { mcn_get_day_state, co::MCN::GETDAYSTATE, NMDAYSTATE,
-		/// [`MCN_GETDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-getdaystate)
+		/// [`MCN_GETDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-getdaystate)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { mcn_sel_change, co::MCN::SELCHANGE, NMSELCHANGE,
-		/// [`MCN_GETDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-selchange)
+		/// [`MCN_GETDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-selchange)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { mcn_select, co::MCN::SELECT, NMSELCHANGE,
-		/// [`MCN_SELECT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-select)
+		/// [`MCN_SELECT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-select)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { mcn_view_change, co::MCN::VIEWCHANGE, NMVIEWCHANGE,
-		/// [`MCN_VIEWCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcn-viewchange)
+		/// [`MCN_VIEWCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-viewchange)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE,
-		/// [`NM_RELEASEDCAPTURE`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-monthcal-)
+		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-monthcal-)
 		/// notification.
 	}
 }

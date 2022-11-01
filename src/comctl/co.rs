@@ -16,7 +16,7 @@ const_ordinary! { ADRF: u32: "comctl";
 
 const_wm! { BCM: "comctl";
 	/// Button control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
 	/// (`u32`) from comctl.
 	=>
 	FIRST 0x1600
@@ -37,7 +37,7 @@ const_wm! { BCM: "comctl";
 
 const_nm! { BCN: "comctl";
 	/// Button control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -1250
@@ -81,7 +81,7 @@ const_ordinary! { BIA: u32: "comctl";
 
 const_ws! { BTNS: u8: "comctl";
 	/// Toolbar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-control-and-button-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-control-and-button-styles)
 	/// (`u8`).
 	=>
 	=>
@@ -98,7 +98,7 @@ const_ws! { BTNS: u8: "comctl";
 }
 
 const_ordinary! { CAL: u32: "comctl";
-	/// [`MCM_GETCALID`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalid)
+	/// [`MCM_GETCALID`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalid)
 	/// return type calendar IDs (`u32`).
 	=>
 	=>
@@ -143,7 +143,7 @@ const_values! { CB: "comctl";
 
 const_wm! { CBEM: "comctl";
 	/// ComboBoxEx control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -164,7 +164,7 @@ const_wm! { CBEM: "comctl";
 
 const_wsex! { CBES_EX: "comctl";
 	/// Extended combo box
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -178,7 +178,7 @@ const_wsex! { CBES_EX: "comctl";
 
 const_wm! { CCM: "comctl";
 	/// Generic common controls
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/common-controls-intro)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/common-controls-intro)
 	/// (`u32`).
 	=>
 	FIRST 0x2000
@@ -232,7 +232,7 @@ const_bitflag! { CDIS: u32: "comctl";
 }
 
 const_ordinary! { CDRF: u32: "comctl";
-	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
+	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
 	/// return value (`u32`).
 	=>
 	=>
@@ -249,7 +249,7 @@ const_ordinary! { CDRF: u32: "comctl";
 
 const_wm! { DTM: "comctl";
 	/// Date and time picker control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
 	/// (`u32`).
 	=>
 	FIRST 0x1000
@@ -273,7 +273,7 @@ const_wm! { DTM: "comctl";
 
 const_nm! { DTN: "comctl";
 	/// Date and time picker control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -740
@@ -290,7 +290,7 @@ const_nm! { DTN: "comctl";
 
 const_ws! { DTS: u32: "comctl";
 	/// Date and time picker control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -442,7 +442,7 @@ const_ordinary! { HDIS: u32: "comctl";
 
 const_wm! { HDM: "comctl";
 	/// Header control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
 	/// (`u32`).
 	=>
 	FIRST 0x1200
@@ -477,7 +477,7 @@ const_wm! { HDM: "comctl";
 
 const_nm! { HDN: "comctl";
 	/// Header control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -300
@@ -505,7 +505,7 @@ const_nm! { HDN: "comctl";
 
 const_ws! { HDS: u32: "comctl";
 	/// Header control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/header-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/header-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -647,7 +647,7 @@ const_bitflag! { ILC: u32: "comctl";
 }
 
 const_bitflag! { ILD: u32: "comctl";
-	/// [`IMAGELISTDRAWFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
+	/// [`IMAGELISTDRAWFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -669,7 +669,7 @@ const_bitflag! { ILD: u32: "comctl";
 }
 
 const_bitflag! { ILS: u32: "comctl";
-	/// [`IMAGELISTSTATEFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
+	/// [`IMAGELISTSTATEFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -682,7 +682,7 @@ const_bitflag! { ILS: u32: "comctl";
 
 const_wm! { IPM: "comctl";
 	/// IP address control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -696,7 +696,7 @@ const_wm! { IPM: "comctl";
 
 const_nm! { IPN: "comctl";
 	/// IP address control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -860
@@ -727,7 +727,7 @@ const_bitflag! { LIS: u32: "comctl";
 
 const_wm! { LM: "comctl";
 	/// SysLink control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -749,7 +749,7 @@ const_bitflag! { LVKF: u32: "comctl";
 
 const_ordinary! { LV_VIEW: u32: "comctl";
 	/// ListView
-	/// [views](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
+	/// [views](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 	/// (`u32`).
 	=>
 	=>
@@ -1031,7 +1031,7 @@ const_ordinary! { LVIR: u8: "comctl";
 
 const_bitflag! { LVIS: u32: "comctl";
 	/// ListView item
-	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
+	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
 	/// (`u32`).
 	=>
 	=>
@@ -1059,7 +1059,7 @@ const_ordinary! { LVSIL: u8: "comctl";
 
 const_wm! { LVM: "comctl";
 	/// List view control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages)
 	/// (`u32`).
 	=>
 	FIRST 0x1000
@@ -1194,7 +1194,7 @@ const_wm! { LVM: "comctl";
 
 const_nm! { LVN: "comctl";
 	/// List view control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -100
@@ -1249,7 +1249,7 @@ const_bitflag! { LVNI: u32: "comctl";
 
 const_ws! { LVS: u32: "comctl";
 	/// List view control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1279,7 +1279,7 @@ const_ws! { LVS: u32: "comctl";
 
 const_wsex! { LVS_EX: "comctl";
 	/// Extended list view control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1349,7 +1349,7 @@ const_bitflag! { LVTVIM: u32: "comctl";
 
 const_ws! { LWS: u32: "comctl";
 	/// SysLink control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1379,7 +1379,7 @@ const_bitflag! { MCGIF: u32: "comctl";
 }
 
 const_ordinary! { MCGIP: u32: "comctl";
-	/// [`MCGRIDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
+	/// [`MCGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
 	/// `dwPart` (`u32`).
 	=>
 	=>
@@ -1422,7 +1422,7 @@ const_bitflag! { MCHT: u32: "comctl";
 
 const_wm! { MCM: "comctl";
 	/// Month calendar control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)
 	/// (`u32`).
 	=>
 	FIRST 0x1000
@@ -1473,7 +1473,7 @@ const_ordinary! { MCMV: u32: "comctl";
 
 const_nm! { MCN: "comctl";
 	/// Month calendar control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -746
@@ -1486,7 +1486,7 @@ const_nm! { MCN: "comctl";
 
 const_ws! { MCS: u32: "comctl";
 	/// Month calendar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1545,7 +1545,7 @@ const_ordinary! { NM: i32: "comctl";
 
 const_ws! { PBS: u32: "comctl";
 	/// Progress bar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1557,7 +1557,7 @@ const_ws! { PBS: u32: "comctl";
 
 const_wm! { PBM: "comctl";
 	/// Progress bar control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -1581,7 +1581,7 @@ const_wm! { PBM: "comctl";
 
 const_ordinary! { PBST: u32: "comctl";
 	/// Progress bar
-	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
+	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 	/// (`u32`).
 	=>
 	=>
@@ -1594,7 +1594,7 @@ const_ordinary! { PBST: u32: "comctl";
 
 const_wm! { RB: "comctl";
 	/// Rebar control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -1644,7 +1644,7 @@ const_wm! { RB: "comctl";
 
 const_nm! { RBN: "comctl";
 	/// Rebar control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -831
@@ -1666,7 +1666,7 @@ const_nm! { RBN: "comctl";
 
 const_ws! { RBS: u32: "comctl";
 	/// Rebar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1682,7 +1682,7 @@ const_ws! { RBS: u32: "comctl";
 
 const_wm! { SB: "comctl";
 	/// Status bar control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -1707,7 +1707,7 @@ const_wm! { SB: "comctl";
 
 const_ws! { SBARS: u32: "comctl";
 	/// Status bar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1719,7 +1719,7 @@ const_ws! { SBARS: u32: "comctl";
 
 const_nm! { SBN: "comctl";
 	/// Status bar control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -880
@@ -1743,7 +1743,7 @@ const_ordinary! { SBT: u16: "comctl";
 
 const_wm! { STM: "comctl";
 	/// Static control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -1803,7 +1803,7 @@ const_ordinary! { TBIMHT: u32: "comctl";
 
 const_wm! { TBM: "comctl";
 	/// Toolbar control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages)
 	/// (`u32`).
 	///
 	/// Originally has `TB` prefix.
@@ -1916,7 +1916,7 @@ const_bitflag! { TBMF: u32: "comctl";
 
 const_nm! { TBN: "comctl";
 	/// Toolbar control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -700
@@ -1950,7 +1950,7 @@ const_nm! { TBN: "comctl";
 
 const_ws! { TBS: u32: "comctl";
 	/// Trackbar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -1975,7 +1975,7 @@ const_ws! { TBS: u32: "comctl";
 
 const_bitflag! { TBSTATE: u8: "comctl";
 	/// Toolbar button
-	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-button-states)
+	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-button-states)
 	/// (`u8`).
 	=>
 	=>
@@ -1993,7 +1993,7 @@ const_bitflag! { TBSTATE: u8: "comctl";
 
 const_wsex! { TBSTYLE_EX: "comctl";
 	/// Extended toolbar control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-extended-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-extended-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -2007,7 +2007,7 @@ const_wsex! { TBSTYLE_EX: "comctl";
 
 const_bitflag! { TCIS: u32: "comctl";
 	/// Tab control item
-	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
+	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
 	/// (`u32`).
 	=>
 	=>
@@ -2019,7 +2019,7 @@ const_bitflag! { TCIS: u32: "comctl";
 
 const_wm! { TCM: "comctl";
 	/// Tab control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages)
 	/// (`u32`).
 	=>
 	FIRST 0x1300
@@ -2057,7 +2057,7 @@ const_wm! { TCM: "comctl";
 
 const_nm! { TCN: "comctl";
 	/// Tab control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -550
@@ -2071,7 +2071,7 @@ const_nm! { TCN: "comctl";
 
 const_ws! { TCS: u32: "comctl";
 	/// Tab control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -2099,7 +2099,7 @@ const_ws! { TCS: u32: "comctl";
 
 const_wsex! { TCS_EX: "comctl";
 	/// Extended tab control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -2160,7 +2160,7 @@ const_bitflag! { TDF: i32: "comctl";
 
 const_wm! { TRBM: "comctl";
 	/// Trackbar control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
 	/// (`u32`).
 	///
 	/// Originally has `TBM` prefix.
@@ -2206,7 +2206,7 @@ const_wm! { TRBM: "comctl";
 
 const_nm! { TRBN: "comctl";
 	/// Trackbar control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -1501
@@ -2286,7 +2286,7 @@ const_bitflag! { TVIF: u32: "comctl";
 
 const_bitflag! { TVIS: u32: "comctl";
 	/// Tree view item
-	/// [states](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
+	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
 	/// (`u32`)
 	=>
 	=>
@@ -2318,7 +2318,7 @@ const_bitflag! { TVIS_EX: u32: "comctl";
 
 const_wm! { TVM: "comctl";
 	/// Tree view control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
 	/// (`u32`).
 	=>
 	FIRST 0x1100
@@ -2378,7 +2378,7 @@ const_wm! { TVM: "comctl";
 
 const_nm! { TVN: "comctl";
 	/// Tree view control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -400
@@ -2404,7 +2404,7 @@ const_nm! { TVN: "comctl";
 
 const_ws! { TVS: u32: "comctl";
 	/// Tree view control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -2428,7 +2428,7 @@ const_ws! { TVS: u32: "comctl";
 
 const_wsex! { TVS_EX: "comctl";
 	/// Extended tree view control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
 	/// (`u32`).
 	=>
 	=>
@@ -2458,7 +2458,7 @@ const_ordinary! { TVSIL: u8: "comctl";
 
 const_wm! { UDM: "comctl";
 	/// Up-down control
-	/// [messages](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages)
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages)
 	/// (`u32`).
 	=>
 	=>
@@ -2482,7 +2482,7 @@ const_wm! { UDM: "comctl";
 
 const_nm! { UDN: "comctl";
 	/// Up-down control `WM_NOTIFY`
-	/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
 	/// (`i32`).
 	=>
 	FIRST -721
@@ -2492,7 +2492,7 @@ const_nm! { UDN: "comctl";
 
 const_ws! { UDS: u32: "comctl";
 	/// Up-down control
-	/// [styles](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
+	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
 	/// (`u32`).
 	=>
 	=>

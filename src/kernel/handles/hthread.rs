@@ -9,7 +9,7 @@ use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HTHREAD: "kernel";
 	/// Handle to a
-	/// [thread](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
+	/// [thread](https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
 	/// Originally just a `HANDLE`.
 }
 
@@ -26,7 +26,7 @@ impl kernel_Hthread for HTHREAD {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hthread: Handle {
-	/// [`CreateThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
+	/// [`CreateThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 	/// static method.
 	///
 	/// Returns the thread handle and ID.
@@ -55,27 +55,27 @@ pub trait kernel_Hthread: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`ExitThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread)
+	/// [`ExitThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread)
 	/// static method.
 	fn ExitThread(exit_code: u32) {
 		unsafe { kernel::ffi::ExitThread(exit_code) }
 	}
 
-	/// [`GetCurrentThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
+	/// [`GetCurrentThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
 	/// static method.
 	#[must_use]
 	fn GetCurrentThread() -> HTHREAD {
 		HTHREAD(unsafe { kernel::ffi::GetCurrentThread() })
 	}
 
-	/// [`GetCurrentThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid)
+	/// [`GetCurrentThreadId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid)
 	/// static method.
 	#[must_use]
 	fn GetCurrentThreadId() -> u32 {
 		unsafe { kernel::ffi::GetCurrentThreadId() }
 	}
 
-	/// [`GetExitCodeThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
+	/// [`GetExitCodeThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
 	/// method.
 	#[must_use]
 	fn GetExitCodeThread(self) -> SysResult<u32> {
@@ -87,7 +87,7 @@ pub trait kernel_Hthread: Handle {
 		).map(|_| exit_code)
 	}
 
-	/// [`GetProcessIdOfThread`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessidofthread)
+	/// [`GetProcessIdOfThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessidofthread)
 	/// method.
 	#[must_use]
 	fn GetProcessIdOfThread(self) -> SysResult<u32> {
@@ -97,7 +97,7 @@ pub trait kernel_Hthread: Handle {
 		}
 	}
 
-	/// [`GetThreadId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadid)
+	/// [`GetThreadId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadid)
 	/// method.
 	#[must_use]
 	fn GetThreadId(self) -> SysResult<u32> {
@@ -107,7 +107,7 @@ pub trait kernel_Hthread: Handle {
 		}
 	}
 
-	/// [`GetThreadTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes)
+	/// [`GetThreadTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes)
 	/// method.
 	fn GetThreadTimes(self,
 		creation: &mut FILETIME,
@@ -128,7 +128,7 @@ pub trait kernel_Hthread: Handle {
 		)
 	}
 
-	/// [`OpenThreadToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)
+	/// [`OpenThreadToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)
 	/// method.
 	///
 	/// **Note:** Must be paired with an

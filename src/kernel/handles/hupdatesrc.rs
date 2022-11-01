@@ -9,7 +9,7 @@ use crate::prelude::Handle;
 
 impl_handle! { HUPDATERSRC: "kernel";
 	/// Handle to an
-	/// [updateable resource](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew).
+	/// [updateable resource](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew).
 	/// Originally just a `HANDLE`.
 }
 
@@ -25,7 +25,7 @@ impl kernel_Hupdatersrc for HUPDATERSRC {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hupdatersrc: Handle {
-	/// [`BeginUpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
+	/// [`BeginUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -44,7 +44,7 @@ pub trait kernel_Hupdatersrc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`EndUpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
+	/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
 	/// method.
 	fn EndUpdateResource(self, discard: bool) -> SysResult<()> {
 		bool_to_sysresult(
@@ -54,7 +54,7 @@ pub trait kernel_Hupdatersrc: Handle {
 		)
 	}
 
-	/// [`UpdateResource`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)
+	/// [`UpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)
 	/// method.
 	fn UpdateResource(self,
 		resource_type: RtStr, resource_id: IdStr,

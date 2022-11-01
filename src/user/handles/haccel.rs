@@ -7,7 +7,7 @@ use crate::user::decl::ACCEL;
 
 impl_handle! { HACCEL: "user";
 	/// Handle to an
-	/// [accelerator table](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#haccel).
+	/// [accelerator table](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#haccel).
 }
 
 impl user_Haccel for HACCEL {}
@@ -22,7 +22,7 @@ impl user_Haccel for HACCEL {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Haccel: Handle {
-	/// [`CreateAcceleratorTable`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
+	/// [`CreateAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -39,7 +39,7 @@ pub trait user_Haccel: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`DestroyAcceleratorTable`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
+	/// [`DestroyAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
 	/// method.
 	fn DestroyAcceleratorTable(self) -> bool {
 		unsafe { user::ffi::DestroyAcceleratorTable(self.as_ptr()) != 0 }

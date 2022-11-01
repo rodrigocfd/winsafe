@@ -7,7 +7,7 @@ use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HACCESSTOKEN: "kernel";
 	/// Handle to an
-	/// [access token](https://docs.microsoft.com/en-us/windows/win32/secgloss/a-gly).
+	/// [access token](https://learn.microsoft.com/en-us/windows/win32/secgloss/a-gly).
 	/// Originally just a `HANDLE`.
 }
 
@@ -24,7 +24,7 @@ impl kernel_Haccesstoken for HACCESSTOKEN {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Haccesstoken: Handle {
-	/// [`DuplicateToken`](https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
+	/// [`DuplicateToken`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -46,21 +46,21 @@ pub trait kernel_Haccesstoken: Handle {
 		).map(|_| handle)
 	}
 
-	/// [`GetCurrentProcessToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocesstoken)
+	/// [`GetCurrentProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocesstoken)
 	/// static method.
 	#[must_use]
 	fn GetCurrentProcessToken() -> HACCESSTOKEN {
 		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentProcessToken() })
 	}
 
-	/// [`GetCurrentThreadEffectiveToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadeffectivetoken)
+	/// [`GetCurrentThreadEffectiveToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadeffectivetoken)
 	/// static method.
 	#[must_use]
 	fn GetCurrentThreadEffectiveToken() -> HACCESSTOKEN {
 		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentThreadEffectiveToken() })
 	}
 
-	/// [`IsTokenRestricted`](https://docs.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
+	/// [`IsTokenRestricted`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
 	/// method.
 	#[must_use]
 	fn IsTokenRestricted(self) -> SysResult<bool> {

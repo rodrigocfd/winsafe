@@ -17,7 +17,7 @@ impl shell_Hwnd for HWND {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_Hwnd: Handle {
-	/// [`ShellExecute`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
+	/// [`ShellExecute`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
 	/// method.
 	fn ShellExecute(self,
 		operation: &str,

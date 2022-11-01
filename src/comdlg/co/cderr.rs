@@ -2,7 +2,7 @@
 
 const_no_debug_display! { CDERR: u32: "comdlg";
 	/// Common dialog box
-	/// [error codes](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror).
+	/// [error codes](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror).
 	///
 	/// Also includes `PDERR`, `CFERR`, `FNERR` and `FRERR` prefixes.
 	///
@@ -12,7 +12,7 @@ const_no_debug_display! { CDERR: u32: "comdlg";
 	///
 	/// Note that there is no way to obtain the textual error description for a
 	/// common dialog box error, since
-	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
+	/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// offers no support to it.
 }
 

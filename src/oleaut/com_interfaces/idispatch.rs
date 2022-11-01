@@ -21,11 +21,11 @@ pub struct IDispatchVT {
 
 com_interface! { IDispatch: "oleaut";
 	"00020400-0000-0000-c000-000000000046";
-	/// [`IDispatch`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
+	/// [`IDispatch`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
 	/// COM interface over [`IDispatchVT`](crate::vt::IDispatchVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -41,7 +41,7 @@ impl oleaut_IDispatch for IDispatch {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_IDispatch: ole_IUnknown {
-	/// [`IDispatch::GetTypeInfoCount`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
+	/// [`IDispatch::GetTypeInfoCount`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
 	/// method.
 	#[must_use]
 	fn GetTypeInfoCount(&self) -> HrResult<u32> {
@@ -53,7 +53,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 
 	}
 
-	/// [`IDispatch::GetTypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)
+	/// [`IDispatch::GetTypeInfo`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)
 	/// method.
 	#[must_use]
 	fn GetTypeInfo(&self, info_type: u32, lcid: LCID) -> HrResult<ITypeInfo> {

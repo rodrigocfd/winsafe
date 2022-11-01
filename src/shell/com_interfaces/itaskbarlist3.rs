@@ -30,11 +30,11 @@ pub struct ITaskbarList3VT {
 
 com_interface! { ITaskbarList3: "shell";
 	"ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
-	/// [`ITaskbarList3`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
+	/// [`ITaskbarList3`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
 	/// COM interface over [`ITaskbarList3VT`](crate::vt::ITaskbarList3VT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -66,7 +66,7 @@ impl shell_ITaskbarList3 for ITaskbarList3 {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
-	/// [`ITaskbarList3::RegisterTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
+	/// [`ITaskbarList3::RegisterTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.
 	fn RegisterTab(&self, hwnd_tab: HWND, hwnd_mdi: HWND) -> HrResult<()> {
 		unsafe {
@@ -77,7 +77,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		}
 	}
 
-	/// [`ITaskbarList3::SetOverlayIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setoverlayicon)
+	/// [`ITaskbarList3::SetOverlayIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setoverlayicon)
 	/// method.
 	fn SetOverlayIcon(&self,
 		hwnd: HWND, hicon: Option<HICON>, description: &str) -> HrResult<()>
@@ -95,7 +95,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		}
 	}
 
-	/// [`ITaskbarList3::SetProgressState`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
+	/// [`ITaskbarList3::SetProgressState`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
 	/// method.
 	fn SetProgressState(&self,
 		hwnd: HWND, tbpf_flags: co::TBPF) -> HrResult<()>
@@ -108,7 +108,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		}
 	}
 
-	/// [`ITaskbarList3::SetProgressValue`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
+	/// [`ITaskbarList3::SetProgressValue`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
 	/// method.
 	///
 	/// # Examples
@@ -138,7 +138,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		}
 	}
 
-	/// [`ITaskbarList3::SetTabActive`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
+	/// [`ITaskbarList3::SetTabActive`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
 	/// method.
 	fn SetTabActive(&self, hwnd_tab: HWND, hwnd_mdi: HWND) -> HrResult<()> {
 		unsafe {
@@ -149,7 +149,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		}
 	}
 
-	/// [`ITaskbarList3::SetTabOrder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
+	/// [`ITaskbarList3::SetTabOrder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
 	/// method.
 	fn SetTabOrder(&self,
 		hwnd_tab: HWND, hwnd_insert_before: HWND) -> HrResult<()>
@@ -162,7 +162,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		}
 	}
 
-	/// [`ITaskbarList3::SetThumbnailClip`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailclip)
+	/// [`ITaskbarList3::SetThumbnailClip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailclip)
 	/// method.
 	fn SetThumbnailClip(&self, hwnd: HWND, clip: Option<RECT>) -> HrResult<()> {
 		unsafe {
@@ -173,7 +173,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		}
 	}
 
-	/// [`ITaskbarList3::SetThumbnailTooltip`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailtooltip)
+	/// [`ITaskbarList3::SetThumbnailTooltip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailtooltip)
 	/// method.
 	fn SetThumbnailTooltip(&self,
 		hwnd: HWND, tip: Option<&str>) -> HrResult<()>

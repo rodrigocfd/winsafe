@@ -7,7 +7,7 @@ use crate::prelude::{Handle, HandleClose, kernel_Hfile};
 
 impl_handle! { HPIPE: "kernel";
 	/// Handle to an
-	/// [anonymous pipe](https://docs.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes).
+	/// [anonymous pipe](https://learn.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes).
 	/// Originally just a `HANDLE`.
 }
 
@@ -24,7 +24,7 @@ impl kernel_Hpipe for HPIPE {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hpipe: Handle {
-	/// [`CreatePipe`](https://docs.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe)
+	/// [`CreatePipe`](https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe)
 	/// static method.
 	///
 	/// Returns handles to the read and write pipes.
@@ -49,7 +49,7 @@ pub trait kernel_Hpipe: Handle {
 		).map(|_| (hread, hwrite))
 	}
 
-	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
+	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// method.
 	///
 	/// Returns the number of bytes read.
@@ -60,7 +60,7 @@ pub trait kernel_Hpipe: Handle {
 		HFILE(unsafe { self.as_ptr() }).ReadFile(buffer, overlapped)
 	}
 
-	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
+	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// method.
 	fn WriteFile(self,
 		data: &[u8],

@@ -31,11 +31,11 @@ pub struct IPictureVT {
 
 com_interface! { IPicture: "ole";
 	"7bf80980-bf32-101a-8bbb-00aa00300cab";
-	/// [`IPicture`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nn-ocidl-ipicture)
+	/// [`IPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nn-ocidl-ipicture)
 	/// COM interface over [`IPictureVT`](crate::vt::IPictureVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -51,7 +51,7 @@ impl ole_IPicture for IPicture {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IPicture: ole_IUnknown {
-	/// [`IPicture::get_CurDC`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_curdc)
+	/// [`IPicture::get_CurDC`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_curdc)
 	/// method.
 	#[must_use]
 	fn get_CurDC(&self) -> HrResult<HDC> {
@@ -63,7 +63,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		}
 	}
 
-	/// [`IPicture::get_Height`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height)
+	/// [`IPicture::get_Height`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height)
 	/// method.
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
@@ -99,7 +99,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		}
 	}
 
-	/// [`IPicture::get_Type`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
+	/// [`IPicture::get_Type`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
 	/// method.
 	#[must_use]
 	fn get_Type(&self) -> HrResult<co::PICTYPE> {
@@ -111,7 +111,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		}
 	}
 
-	/// [`IPicture::get_Width`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)
+	/// [`IPicture::get_Width`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)
 	/// method.
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
@@ -147,7 +147,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		}
 	}
 
-	/// [`IPicture::PictureChanged`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-picturechanged)
+	/// [`IPicture::PictureChanged`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-picturechanged)
 	/// method.
 	fn PictureChanged(&self) -> HrResult<()> {
 		unsafe {
@@ -156,7 +156,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		}
 	}
 
-	/// [`IPicture::put_KeepOriginalFormat`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-put_keeporiginalformat)
+	/// [`IPicture::put_KeepOriginalFormat`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-put_keeporiginalformat)
 	/// method.
 	fn put_KeepOriginalFormat(&self, keep: bool) -> HrResult<()> {
 		unsafe {
@@ -165,7 +165,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		}
 	}
 
-	/// [`IPicture::Render`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render)
+	/// [`IPicture::Render`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render)
 	/// method.
 	fn Render(&self,
 		hdc: HDC, dest_pt: POINT, dest_sz: SIZE,
@@ -189,7 +189,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		}
 	}
 
-	/// [`IPicture::SelectPicture`](https://docs.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-selectpicture)
+	/// [`IPicture::SelectPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-selectpicture)
 	/// method.
 	fn SelectPicture(&self, hdc: HDC) -> HrResult<(HDC, HBITMAP)> {
 		let mut hdc_out = HDC::NULL;

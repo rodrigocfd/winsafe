@@ -9,10 +9,10 @@ use crate::prelude::Handle;
 
 impl_handle! { HKEY: "advapi";
 	/// Handle to a
-	/// [registry key](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hkey).
+	/// [registry key](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hkey).
 	///
 	/// This handle also exposes several
-	/// [predefined registry keys](https://docs.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),
+	/// [predefined registry keys](https://learn.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),
 	/// like `HKEY::CURRENT_USER`, which are always open and ready to be used.
 	/// Usually, they are the starting point to open a registry key.
 }
@@ -47,7 +47,7 @@ pub trait advapi_Hkey: Handle {
 	predef_key!(DYN_DATA, 0x8000_0006);
 	predef_key!(CURRENT_USER_LOCAL_SETTINGS, 0x8000_0007);
 
-	/// [`RegCloseKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
+	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
 	fn RegCloseKey(self) -> SysResult<()> {
 		match co::ERROR(unsafe { advapi::ffi::RegCloseKey(self.as_ptr()) as _ }) {
@@ -57,7 +57,7 @@ pub trait advapi_Hkey: Handle {
 	}
 
 	/// Returns an iterator over the names of the keys, which calls
-	/// [`RegEnumKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw)
+	/// [`RegEnumKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw)
 	/// repeatedly.
 	///
 	/// # Examples
@@ -86,7 +86,7 @@ pub trait advapi_Hkey: Handle {
 	}
 
 	/// Returns an iterator of the names and types of the values, which calls
-	/// [`RegEnumValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumvaluew)
+	/// [`RegEnumValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumvaluew)
 	/// repeatedly.
 	///
 	/// # Examples
@@ -118,7 +118,7 @@ pub trait advapi_Hkey: Handle {
 		Ok(Box::new(EnumValueIter::new(HKEY(unsafe { self.as_ptr() }))?))
 	}
 
-	/// [`RegGetValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
+	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
 	/// method.
 	///
 	/// The data type will be automatically queried with a first call to
@@ -213,7 +213,7 @@ pub trait advapi_Hkey: Handle {
 		}
 	}
 
-	/// [`RegOpenKeyEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
+	/// [`RegOpenKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -256,7 +256,7 @@ pub trait advapi_Hkey: Handle {
 		}
 	}
 
-	/// [`RegQueryInfoKey`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
+	/// [`RegQueryInfoKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
 	/// method.
 	fn RegQueryInfoKey(self,
 		mut class: Option<&mut WString>,
@@ -323,7 +323,7 @@ pub trait advapi_Hkey: Handle {
 		}
 	}
 
-	/// [`RegQueryValueEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
+	/// [`RegQueryValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
 	/// method.
 	///
 	/// The data type will be automatically queried with a first call to
@@ -420,7 +420,7 @@ pub trait advapi_Hkey: Handle {
 		}
 	}
 
-	/// [`RegSetKeyValue`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
+	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
 	/// method.
 	///
 	/// If the value doesn't exist, if will be created. If new type is different
@@ -459,7 +459,7 @@ pub trait advapi_Hkey: Handle {
 		}
 	}
 
-	/// [`RegSetValueEx`](https://docs.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
+	/// [`RegSetValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
 	/// method.
 	///
 	/// If the value doesn't exist, if will be created. If new type is different

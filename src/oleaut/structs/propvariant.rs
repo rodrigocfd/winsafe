@@ -3,11 +3,11 @@
 use crate::{co, oleaut};
 use crate::prelude::oleaut_Variant;
 
-/// [`PROPVARIANT`](https://docs.microsoft.com/en-us/windows/win32/api/propidlbase/ns-propidlbase-propvariant)
+/// [`PROPVARIANT`](https://learn.microsoft.com/en-us/windows/win32/api/propidlbase/ns-propidlbase-propvariant)
 /// struct.
 ///
 /// Automatically calls
-/// [`PropVariantClear`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-propvariantclear)
+/// [`PropVariantClear`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-propvariantclear)
 /// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]

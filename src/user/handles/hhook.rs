@@ -8,7 +8,7 @@ use crate::user::decl::HOOKPROC;
 
 impl_handle! { HHOOK: "user";
 	/// Handle to a
-	/// [hook](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
+	/// [hook](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
 }
 
 impl user_Hhook for HHOOK {}
@@ -23,7 +23,7 @@ impl user_Hhook for HHOOK {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hhook: Handle {
-	/// [`CallNextHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
+	/// [`CallNextHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
 	/// method.
 	fn CallNextHookEx(self,
 		code: co::WH, wparam: usize, lparam: isize) -> isize
@@ -33,7 +33,7 @@ pub trait user_Hhook: Handle {
 		}
 	}
 
-	/// [`SetWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
+	/// [`SetWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
 	/// static method.
 	fn SetWindowsHookEx(
 		hook_id: co::WH, proc: HOOKPROC,
@@ -50,7 +50,7 @@ pub trait user_Hhook: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`UnhookWindowsHookEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
+	/// [`UnhookWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
 	/// method.
 	fn UnhookWindowsHookEx(self) -> SysResult<()> {
 		bool_to_sysresult(

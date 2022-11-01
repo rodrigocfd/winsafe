@@ -11,7 +11,7 @@ const_ordinary! { STAP: u32: "uxtheme";
 
 const_ordinary! { TMT: i32: "uxtheme";
 	/// Theme property
-	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/controls/property-typedefs)
+	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/controls/property-typedefs)
 	/// (`i32`).
 	=>
 	=>

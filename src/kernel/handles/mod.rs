@@ -32,7 +32,7 @@ pub mod decl {
 
 	impl_handle! { HRSRC: "kernel";
 		/// Handle to a
-		/// [resource](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew).
+		/// [resource](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew).
 		/// Originally just a `HANDLE`.
 		///
 		/// For an example, see
@@ -41,7 +41,7 @@ pub mod decl {
 
 	impl_handle! { HRSRCMEM: "kernel";
 		/// Handle to a resource
-		/// [memory block](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource).
+		/// [memory block](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource).
 		/// Originally just an `HGLOBAL`.
 		///
 		/// For an example, see

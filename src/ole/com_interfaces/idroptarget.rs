@@ -22,11 +22,11 @@ pub struct IDropTargetVT {
 
 com_interface! { IDropTarget: "ole";
 	"00000122-0000-0000-c000-000000000046";
-	/// [`IDropTarget`](https://docs.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
+	/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
 	/// COM interface over [`IDropTargetVT`](crate::vt::IDropTargetVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -42,7 +42,7 @@ impl ole_IDropTarget for IDropTarget {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IDropTarget: ole_IUnknown {
-	/// [`IDropTarget::DragEnter`](https://docs.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
+	/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
 	/// method.
 	fn DragEnter(&self,
 		data_obj: &IDataObject,
@@ -65,7 +65,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		).map(|_| effect_buf)
 	}
 
-	/// [`IDropTarget::DragLeave`](https://docs.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
+	/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
 	/// method.
 	fn DragLeave(&self) -> HrResult<()> {
 		ok_to_hrresult(
@@ -76,7 +76,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		)
 	}
 
-	/// [`IDropTarget::DragOver`](https://docs.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
+	/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
 	/// method.
 	fn DragOver(&self,
 		key_state: co::MK,
@@ -97,7 +97,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		).map(|_| effect_buf)
 	}
 
-	/// [`IDropTarget::Drop`](https://docs.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
+	/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
 	/// method.
 	fn Drop(&self,
 		data_obj: &IDataObject,

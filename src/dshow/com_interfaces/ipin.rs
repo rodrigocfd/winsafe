@@ -33,11 +33,11 @@ pub struct IPinVT {
 
 com_interface! { IPin: "dshow";
 	"56a86891-0ad4-11ce-b03a-0020af0ba770";
-	/// [`IPin`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
+	/// [`IPin`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
 	/// COM interface over [`IPinVT`](crate::vt::IPinVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -47,7 +47,7 @@ impl dshow_IPin for IPin {}
 /// [`IPin`](crate::IPin).
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IPin: ole_IUnknown {
-	/// [`IPin::BeginFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
+	/// [`IPin::BeginFlush`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
 	/// method.
 	fn BeginFlush(&self) -> HrResult<()> {
 		unsafe {
@@ -56,7 +56,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connect)
+	/// [`IPin::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connect)
 	/// method.
 	fn Connect(&self,
 		receive_pin: &IPin, amt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
@@ -73,7 +73,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::ConnectedTo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
+	/// [`IPin::ConnectedTo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
 	/// method.
 	#[must_use]
 	fn ConnectedTo(&self) -> HrResult<IPin> {
@@ -86,7 +86,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::ConnectionMediaType`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectionmediatype)
+	/// [`IPin::ConnectionMediaType`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectionmediatype)
 	/// method.
 	fn ConnectionMediaType(&self, amt: &mut AM_MEDIA_TYPE) -> HrResult<()> {
 		unsafe {
@@ -97,7 +97,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::Disconnect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)
+	/// [`IPin::Disconnect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)
 	/// method.
 	fn Disconnect(&self) -> HrResult<()> {
 		unsafe {
@@ -106,7 +106,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::EndFlush`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endflush)
+	/// [`IPin::EndFlush`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endflush)
 	/// method.
 	fn EndFlush(&self) -> HrResult<()> {
 		unsafe {
@@ -115,7 +115,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::EndOfStream`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endofstream)
+	/// [`IPin::EndOfStream`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endofstream)
 	/// method.
 	fn EndOfStream(&self) -> HrResult<()> {
 		unsafe {
@@ -124,7 +124,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::EnumMediaTypes`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-enummediatypes)
+	/// [`IPin::EnumMediaTypes`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-enummediatypes)
 	/// method.
 	#[must_use]
 	fn EnumMediaTypes(&self) -> HrResult<IEnumMediaTypes> {
@@ -136,7 +136,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::NewSegment`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-newsegment)
+	/// [`IPin::NewSegment`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-newsegment)
 	/// method.
 	fn NewSegment(&self, start: i64, stop: i64, rate: f64) -> HrResult<()> {
 		unsafe {
@@ -145,7 +145,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::QueryAccept`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryaccept)
+	/// [`IPin::QueryAccept`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryaccept)
 	/// method.
 	#[must_use]
 	fn QueryAccept(&self, amt: &AM_MEDIA_TYPE) -> HrResult<bool> {
@@ -155,7 +155,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::QueryDirection`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-querydirection)
+	/// [`IPin::QueryDirection`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-querydirection)
 	/// method.
 	#[must_use]
 	fn QueryDirection(&self) -> HrResult<co::PIN_DIRECTION> {
@@ -168,7 +168,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::QueryId`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryid)
+	/// [`IPin::QueryId`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryid)
 	/// method.
 	#[must_use]
 	fn QueryId(&self) -> HrResult<String> {
@@ -183,7 +183,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		})
 	}
 
-	/// [`IPin::QueryInternalConnections`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryinternalconnections)
+	/// [`IPin::QueryInternalConnections`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryinternalconnections)
 	/// method.
 	#[must_use]
 	fn QueryInternalConnections(&self) -> HrResult<Vec<IPin>> {
@@ -215,7 +215,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::QueryPinInfo`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-querypininfo)
+	/// [`IPin::QueryPinInfo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-querypininfo)
 	/// method.
 	fn QueryPinInfo(&self, info: &mut PIN_INFO) -> HrResult<()> {
 		unsafe {
@@ -224,7 +224,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::ReceiveConnection`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
+	/// [`IPin::ReceiveConnection`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
 	/// method.
 	fn ReceiveConnection(&self,
 		connector: &IPin, amt: &AM_MEDIA_TYPE) -> HrResult<()>

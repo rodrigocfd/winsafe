@@ -28,7 +28,7 @@ struct Obj { // actual fields of ComboBox
 }
 
 /// Native
-/// [combo box](https://docs.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
+/// [combo box](https://learn.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
@@ -180,7 +180,7 @@ impl ComboBox {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ComboBoxOpts {
 	/// Control position within parent client area, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -189,7 +189,7 @@ pub struct ComboBoxOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Control width, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
@@ -198,7 +198,7 @@ pub struct ComboBoxOpts {
 	/// Defaults to 120.
 	pub width: u32,
 	/// Combo box styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `CBS::DROPDOWNLIST`.
 	///
@@ -207,12 +207,12 @@ pub struct ComboBoxOpts {
 	/// * add `CBS::SORT` to automatically sort the items.
 	pub combo_box_style: co::CBS,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
 	pub window_ex_style: co::WS_EX,

@@ -10,7 +10,7 @@ use crate::user::decl::{
 };
 use crate::user::privs::{CB_ERR, FAPPCOMMAND_MASK, LB_ERRSPACE, zero_as_none};
 
-/// [`WM_ACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
+/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -47,7 +47,7 @@ unsafe impl MsgSendRecv for Activate {
 	}
 }
 
-/// [`WM_ACTIVATEAPP`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
+/// [`WM_ACTIVATEAPP`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -82,7 +82,7 @@ unsafe impl MsgSendRecv for ActivateApp {
 	}
 }
 
-/// [`WM_APPCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
+/// [`WM_APPCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -122,10 +122,10 @@ unsafe impl MsgSendRecv for AppCommand {
 }
 
 pub_struct_msg_empty_handleable! { CancelMode: co::WM::CANCELMODE; "user";
-	/// [`WM_CANCELMODE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
+	/// [`WM_CANCELMODE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 }
 
-/// [`WM_CAPTURECHANGED`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-capturechanged)
+/// [`WM_CAPTURECHANGED`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-capturechanged)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -159,18 +159,18 @@ unsafe impl MsgSendRecv for CaptureChanged {
 }
 
 pub_struct_msg_char! { Char: co::WM::CHAR; "user";
-	/// [`WM_CHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-char)
+	/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 }
 
 pub_struct_msg_empty_handleable! { ChildActivate: co::WM::CHILDACTIVATE; "user";
-	/// [`WM_CHILDACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
+	/// [`WM_CHILDACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 }
 
 pub_struct_msg_empty_handleable! { Close: co::WM::CLOSE; "user";
-	/// [`WM_CLOSE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-close)
+	/// [`WM_CLOSE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 }
 
-/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
+/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -221,7 +221,7 @@ unsafe impl MsgSendRecv for Command {
 	}
 }
 
-/// [`WM_CONTEXTMENU`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
+/// [`WM_CONTEXTMENU`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -256,7 +256,7 @@ unsafe impl MsgSendRecv for ContextMenu {
 	}
 }
 
-/// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
+/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 /// message parameters.
 ///
 /// Return type: `i32`.
@@ -289,7 +289,7 @@ unsafe impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
 	}
 }
 
-/// [`WM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-deleteitem)
+/// [`WM_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-deleteitem)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -325,10 +325,10 @@ unsafe impl<'a> MsgSendRecv for DeleteItem<'a> {
 }
 
 pub_struct_msg_empty_handleable! { Destroy: co::WM::DESTROY; "user";
-	/// [`WM_DESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
+	/// [`WM_DESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 }
 
-/// [`WM_ENABLE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
+/// [`WM_ENABLE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -361,7 +361,7 @@ unsafe impl MsgSendRecv for Enable {
 	}
 }
 
-/// [`WM_ENDSESSION`](https://docs.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
+/// [`WM_ENDSESSION`](https://learn.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -396,7 +396,7 @@ unsafe impl MsgSendRecv for EndSession {
 	}
 }
 
-/// [`WM_ENTERIDLE`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-enteridle)
+/// [`WM_ENTERIDLE`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-enteridle)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -435,7 +435,7 @@ unsafe impl MsgSendRecv for EnterIdle {
 	}
 }
 
-/// [`WM_ENTERMENULOOP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-entermenuloop)
+/// [`WM_ENTERMENULOOP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-entermenuloop)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -469,10 +469,10 @@ unsafe impl MsgSendRecv for EnterMenuLoop {
 }
 
 pub_struct_msg_empty_handleable! { EnterSizeMove: co::WM::ENTERSIZEMOVE; "user";
-	/// [`WM_ENTERSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
+	/// [`WM_ENTERSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 }
 
-/// [`WM_ERASEBKGND`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
+/// [`WM_ERASEBKGND`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 /// message parameters.
 ///
 /// Return type: `i32`.
@@ -505,7 +505,7 @@ unsafe impl MsgSendRecv for EraseBkgnd {
 	}
 }
 
-/// [`WM_EXITMENULOOP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-exitmenuloop)
+/// [`WM_EXITMENULOOP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-exitmenuloop)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -539,10 +539,10 @@ unsafe impl MsgSendRecv for ExitMenuLoop {
 }
 
 pub_struct_msg_empty_handleable! { ExitSizeMove: co::WM::EXITSIZEMOVE; "user";
-	/// [`WM_EXITSIZEMOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
+	/// [`WM_EXITSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 }
 
-/// [`WM_GETDLGCODE`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-getdlgcode)
+/// [`WM_GETDLGCODE`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-getdlgcode)
 /// message parameters.
 ///
 /// Return type: `co::DLGC`.
@@ -580,7 +580,7 @@ unsafe impl<'a> MsgSendRecv for GetDlgCode<'a> {
 	}
 }
 
-/// [`WM_GETHMENU`](https://docs.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
+/// [`WM_GETHMENU`](https://learn.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
 /// message, which has no parameters. Originally has `MN` prefix.
 ///
 /// Return type: `Option<HMENU>`.
@@ -609,7 +609,7 @@ unsafe impl MsgSendRecv for GetHMenu {
 	}
 }
 
-/// [`WM_GETMINMAXINFO`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)
+/// [`WM_GETMINMAXINFO`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -642,7 +642,7 @@ unsafe impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 	}
 }
 
-/// [`WM_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-gettext)
+/// [`WM_GETTEXT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettext)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -694,7 +694,7 @@ unsafe impl<'a> MsgSendRecv for GetText<'a> {
 	}
 }
 
-/// [`WM_GETTEXTLENGTH`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-gettextlength)
+/// [`WM_GETTEXTLENGTH`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettextlength)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -723,7 +723,7 @@ unsafe impl MsgSendRecv for GetTextLength {
 	}
 }
 
-/// [`WM_GETTITLEBARINFOEX`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-gettitlebarinfoex)
+/// [`WM_GETTITLEBARINFOEX`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-gettitlebarinfoex)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -756,7 +756,7 @@ unsafe impl<'a> MsgSendRecv for GetTitleBarInfoEx<'a> {
 	}
 }
 
-/// [`WM_HELP`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-help)
+/// [`WM_HELP`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-help)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -789,7 +789,7 @@ unsafe impl<'a> MsgSendRecv for Help<'a> {
 	}
 }
 
-/// [`WM_HSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-hscroll)
+/// [`WM_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-hscroll)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -829,7 +829,7 @@ unsafe impl MsgSendRecv for HScroll {
 	}
 }
 
-/// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
+/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -864,7 +864,7 @@ unsafe impl MsgSendRecv for InitDialog {
 	}
 }
 
-/// [`WM_INITMENUPOPUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
+/// [`WM_INITMENUPOPUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -902,14 +902,14 @@ unsafe impl MsgSendRecv for InitMenuPopup {
 }
 
 pub_struct_msg_char! { KeyDown: co::WM::KEYDOWN; "user";
-	/// [`WM_KEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
+	/// [`WM_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 }
 
 pub_struct_msg_char! { KeyUp: co::WM::KEYUP; "user";
-	/// [`WM_KEYUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
+	/// [`WM_KEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 }
 
-/// [`WM_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-killfocus)
+/// [`WM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-killfocus)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -946,30 +946,30 @@ unsafe impl MsgSendRecv for KillFocus {
 }
 
 pub_struct_msg_button! { LButtonDblClk: co::WM::LBUTTONDBLCLK; "user";
-	/// [`WM_LBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
+	/// [`WM_LBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 }
 
 pub_struct_msg_button! { LButtonDown: co::WM::LBUTTONDOWN; "user";
-	/// [`WM_LBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
+	/// [`WM_LBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 }
 
 pub_struct_msg_button! { LButtonUp: co::WM::LBUTTONUP; "user";
-	/// [`WM_LBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
+	/// [`WM_LBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 }
 
 pub_struct_msg_button! { MButtonDblClk: co::WM::MBUTTONDBLCLK; "user";
-	/// [`WM_MBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
+	/// [`WM_MBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 }
 
 pub_struct_msg_button! { MButtonDown: co::WM::MBUTTONDOWN; "user";
-	/// [`WM_MBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
+	/// [`WM_MBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 }
 
 pub_struct_msg_button! { MButtonUp: co::WM::MBUTTONUP; "user";
-	/// [`WM_MBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
+	/// [`WM_MBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 }
 
-/// [`WM_MENUCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-menucommand)
+/// [`WM_MENUCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menucommand)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1004,7 +1004,7 @@ unsafe impl MsgSendRecv for MenuCommand {
 	}
 }
 
-/// [`WM_MENUDRAG`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-menudrag)
+/// [`WM_MENUDRAG`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menudrag)
 /// message parameters.
 ///
 /// Return type: `co::MND`.
@@ -1039,7 +1039,7 @@ unsafe impl MsgSendRecv for MenuDrag {
 	}
 }
 
-/// [`WM_MENURBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-menurbuttonup)
+/// [`WM_MENURBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menurbuttonup)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1075,18 +1075,18 @@ unsafe impl MsgSendRecv for MenuRButtonUp {
 }
 
 pub_struct_msg_button! { MouseHover: co::WM::MOUSEHOVER; "user";
-	/// [`WM_MOUSEHOVER`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
+	/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 }
 
 pub_struct_msg_empty_handleable! { MouseLeave: co::WM::MOUSELEAVE; "user";
-	/// [`WM_MOUSELEAVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mouseleave)
+	/// [`WM_MOUSELEAVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mouseleave)
 }
 
 pub_struct_msg_button! { MouseMove: co::WM::MOUSEMOVE; "user";
-	/// [`WM_MOUSEMOVE`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
+	/// [`WM_MOUSEMOVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 }
 
-/// [`WM_MOVE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-move)
+/// [`WM_MOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1119,7 +1119,7 @@ unsafe impl MsgSendRecv for Move {
 	}
 }
 
-/// [`WM_MOVING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
+/// [`WM_MOVING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1152,7 +1152,7 @@ unsafe impl<'a> MsgSendRecv for Moving<'a> {
 	}
 }
 
-/// [`WM_NCCALCSIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
+/// [`WM_NCCALCSIZE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
 /// message parameters.
 ///
 /// Return type: `co::WVR`.
@@ -1194,7 +1194,7 @@ unsafe impl<'a, 'b> MsgSendRecv for NcCalcSize<'a, 'b> {
 	}
 }
 
-/// [`WM_NCCREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
+/// [`WM_NCCREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -1228,10 +1228,10 @@ unsafe impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
 }
 
 pub_struct_msg_empty_handleable! { NcDestroy: co::WM::NCDESTROY; "user";
-	/// [`WM_NCDESTROY`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
+	/// [`WM_NCDESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 }
 
-/// [`WM_NCHITTEST`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-nchittest)
+/// [`WM_NCHITTEST`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-nchittest)
 /// message parameters.
 ///
 /// Return type: `co::HT`.
@@ -1264,7 +1264,7 @@ unsafe impl MsgSendRecv for NcHitTest {
 	}
 }
 
-/// [`WM_NEXTDLGCTL`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-nextdlgctl)
+/// [`WM_NEXTDLGCTL`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-nextdlgctl)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1307,10 +1307,10 @@ unsafe impl MsgSendRecv for NextDlgCtl {
 }
 
 pub_struct_msg_empty_handleable! { Null: co::WM::NULL; "user";
-	/// [`WM_NULL`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-null)
+	/// [`WM_NULL`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 }
 
-/// [`WM_PARENTNOTIFY`](https://docs.microsoft.com/en-us/windows/win32/inputmsg/wm-parentnotify)
+/// [`WM_PARENTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/inputmsg/wm-parentnotify)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1352,7 +1352,7 @@ unsafe impl MsgSendRecv for ParentNotify {
 	}
 }
 
-/// [`WM_QUERYOPEN`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
+/// [`WM_QUERYOPEN`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -1382,18 +1382,18 @@ unsafe impl MsgSendRecv for QueryOpen {
 }
 
 pub_struct_msg_button! { RButtonDblClk: co::WM::RBUTTONDBLCLK; "user";
-	/// [`WM_RBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
+	/// [`WM_RBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 }
 
 pub_struct_msg_button! { RButtonDown: co::WM::RBUTTONDOWN; "user";
-	/// [`WM_RBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
+	/// [`WM_RBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 }
 
 pub_struct_msg_button! { RButtonUp: co::WM::RBUTTONUP; "user";
-	/// [`WM_RBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
+	/// [`WM_RBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 }
 
-/// [`WM_SETCURSOR`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-setcursor)
+/// [`WM_SETCURSOR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-setcursor)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -1430,7 +1430,7 @@ unsafe impl MsgSendRecv for SetCursor {
 	}
 }
 
-/// [`WM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
+/// [`WM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1463,7 +1463,7 @@ unsafe impl MsgSendRecv for SetFocus {
 	}
 }
 
-/// [`WM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
+/// [`WM_SETICON`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
 /// message parameters.
 ///
 /// Return type: `Option<HICON>`.
@@ -1498,7 +1498,7 @@ unsafe impl MsgSendRecv for SetIcon {
 	}
 }
 
-/// [`WM_SETTEXT`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-settext)
+/// [`WM_SETTEXT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-settext)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -1550,7 +1550,7 @@ unsafe impl MsgSendRecv for SetText {
 	}
 }
 
-/// [`WM_SHOWWINDOW`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
+/// [`WM_SHOWWINDOW`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1585,7 +1585,7 @@ unsafe impl MsgSendRecv for ShowWindow {
 	}
 }
 
-/// [`WM_SIZE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-size)
+/// [`WM_SIZE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1623,7 +1623,7 @@ unsafe impl MsgSendRecv for Size {
 	}
 }
 
-/// [`WM_SIZING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
+/// [`WM_SIZING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1658,7 +1658,7 @@ unsafe impl<'a> MsgSendRecv for Sizing<'a> {
 	}
 }
 
-/// [`WM_STYLECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanged)
+/// [`WM_STYLECHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanged)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1694,7 +1694,7 @@ unsafe impl<'a> MsgSendRecv for StyleChanged<'a> {
 	}
 }
 
-/// [`WM_STYLECHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanging)
+/// [`WM_STYLECHANGING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanging)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1731,10 +1731,10 @@ unsafe impl<'a> MsgSendRecv for StyleChanging<'a> {
 }
 
 pub_struct_msg_char! { SysChar: co::WM::SYSCHAR; "user";
-	/// [`WM_SYSCHAR`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
+	/// [`WM_SYSCHAR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 }
 
-/// [`WM_SYSCOMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-syscommand)
+/// [`WM_SYSCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syscommand)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1770,22 +1770,22 @@ unsafe impl MsgSendRecv for SysCommand {
 }
 
 pub_struct_msg_char! { SysDeadChar: co::WM::SYSDEADCHAR; "user";
-	/// [`WM_SYSDEADCHAR`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
+	/// [`WM_SYSDEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 }
 
 pub_struct_msg_char! { SysKeyDown: co::WM::SYSKEYDOWN; "user";
-	/// [`WM_SYSKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
+	/// [`WM_SYSKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
 }
 
 pub_struct_msg_char! { SysKeyUp: co::WM::SYSKEYUP; "user";
-	/// [`WM_SYSKEYUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
+	/// [`WM_SYSKEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
 }
 
 pub_struct_msg_empty_handleable! { ThemeChanged: co::WM::THEMECHANGED; "user";
-	/// [`WM_THEMECHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
+	/// [`WM_THEMECHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 }
 
-/// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
+/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1823,7 +1823,7 @@ unsafe impl MsgSendRecv for Timer {
 	}
 }
 
-/// [`WM_UNINITMENUPOPUP`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-uninitmenupopup)
+/// [`WM_UNINITMENUPOPUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-uninitmenupopup)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1858,7 +1858,7 @@ unsafe impl MsgSendRecv for UninitMenuPopup {
 	}
 }
 
-/// [`WM_UNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-undo)
+/// [`WM_UNDO`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-undo)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -1887,7 +1887,7 @@ unsafe impl MsgSendRecv for Undo {
 	}
 }
 
-/// [`WM_VSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-vscroll)
+/// [`WM_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-vscroll)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1927,7 +1927,7 @@ unsafe impl MsgSendRecv for VScroll {
 	}
 }
 
-/// [`WM_WINDOWPOSCHANGED`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged)
+/// [`WM_WINDOWPOSCHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1960,7 +1960,7 @@ unsafe impl<'a> MsgSendRecv for WindowPosChanged<'a> {
 	}
 }
 
-/// [`WM_WINDOWPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging)
+/// [`WM_WINDOWPOSCHANGING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1994,13 +1994,13 @@ unsafe impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 }
 
 pub_struct_msg_button! { XButtonDblClk: co::WM::XBUTTONDBLCLK; "user";
-	/// [`WM_XBUTTONDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
+	/// [`WM_XBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 }
 
 pub_struct_msg_button! { XButtonDown: co::WM::XBUTTONDOWN; "user";
-	/// [`WM_XBUTTONDOWN`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
+	/// [`WM_XBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 }
 
 pub_struct_msg_button! { XButtonUp: co::WM::XBUTTONUP; "user";
-	/// [`WM_XBUTTONUP`](https://docs.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
+	/// [`WM_XBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 }

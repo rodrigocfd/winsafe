@@ -8,7 +8,7 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes date and time picker control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
@@ -25,47 +25,47 @@ impl DateTimePickerEvents {
 	}
 
 	pub_fn_nfy_noparm_noret! { dtn_close_up, co::DTN::CLOSEUP,
-		/// [`DTN_CLOSEUP`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-closeup)
+		/// [`DTN_CLOSEUP`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-closeup)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { dtn_date_time_change, co::DTN::DATETIMECHANGE, NMDATETIMECHANGE,
-		/// [`DTN_DATETIMECHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-datetimechange)
+		/// [`DTN_DATETIMECHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-datetimechange)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_noret! { dtn_drop_down, co::DTN::DROPDOWN,
-		/// [`DTN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-dropdown)
+		/// [`DTN_DROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-dropdown)
 		/// notification.
 	}
 
 	pub_fn_nfy_withmutparm_noret! { dtn_format, co::DTN::FORMAT, NMDATETIMEFORMAT,
-		/// [`DTN_FORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-format)
+		/// [`DTN_FORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-format)
 		/// notification.
 	}
 
 	pub_fn_nfy_withmutparm_noret! { dtn_format_query, co::DTN::FORMATQUERY, NMDATETIMEFORMATQUERY,
-		/// [`DTN_FORMATQUERY`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-formatquery)
+		/// [`DTN_FORMATQUERY`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-formatquery)
 		/// notification.
 	}
 
 	pub_fn_nfy_withmutparm_noret! { dtn_user_string, co::DTN::USERSTRING, NMDATETIMESTRING,
-		/// [`DTN_USERSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-userstring)
+		/// [`DTN_USERSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-userstring)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { dtn_wm_key_down, co::DTN::WMKEYDOWN, NMDATETIMEWMKEYDOWN,
-		/// [`DTN_WMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/dtn-wmkeydown)
+		/// [`DTN_WMKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-wmkeydown)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS,
-		/// [`NM_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-killfocus-date-time)
+		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-date-time)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS,
-		/// [`NM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-setfocus-date-time-)
+		/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-date-time-)
 		/// notification.
 	}
 }

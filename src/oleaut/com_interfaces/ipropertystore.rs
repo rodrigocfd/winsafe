@@ -25,11 +25,11 @@ pub struct IPropertyStoreVT {
 
 com_interface! { IPropertyStore: "oleaut";
 	"886d8eeb-8cf2-4446-8d02-cdba1dbdcf99";
-	/// [`IPropertyStore`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nn-propsys-ipropertystore)
+	/// [`IPropertyStore`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nn-propsys-ipropertystore)
 	/// COM interface over [`IPropertyStoreVT`](crate::vt::IPropertyStoreVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// Usually, this interface is taken via
@@ -75,7 +75,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		Ok(Box::new(PropertyStoreIter::new(unsafe { self.ptr() })?))
 	}
 
-	/// [`IPropertyStore::Commit`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-commit)
+	/// [`IPropertyStore::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-commit)
 	/// method.
 	fn Commit(&self) -> HrResult<()> {
 		unsafe {
@@ -84,7 +84,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		}
 	}
 
-	/// [`IPropertyStore::GetAt`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getat)
+	/// [`IPropertyStore::GetAt`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getat)
 	/// method.
 	#[must_use]
 	fn GetAt(&self, index: u32) -> HrResult<PROPERTYKEY> {
@@ -97,7 +97,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		}.map(|_| ppk)
 	}
 
-	/// [`IPropertyStore::GetCount`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getcount)
+	/// [`IPropertyStore::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getcount)
 	/// method.
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
@@ -108,7 +108,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		}.map(|_| count)
 	}
 
-	/// [`IPropertyStore::GetValue`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getvalue)
+	/// [`IPropertyStore::GetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getvalue)
 	/// method.
 	#[must_use]
 	fn GetValue(&self, key: &PROPERTYKEY) -> HrResult<PROPVARIANT> {

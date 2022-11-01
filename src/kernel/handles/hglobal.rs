@@ -7,7 +7,7 @@ use crate::prelude::Handle;
 
 impl_handle! { HGLOBAL: "kernel";
 	/// Handle to a
-	/// [global memory block](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc).
+	/// [global memory block](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc).
 	/// Originally just a `HANDLE`.
 }
 
@@ -23,7 +23,7 @@ impl kernel_Hglobal for HGLOBAL {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hglobal: Handle {
-	/// [`GlobalAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
+	/// [`GlobalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -36,7 +36,7 @@ pub trait kernel_Hglobal: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GlobalFlags`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
+	/// [`GlobalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
 	/// method.
 	#[must_use]
 	fn GlobalFlags(self) -> SysResult<co::GMEM> {
@@ -46,7 +46,7 @@ pub trait kernel_Hglobal: Handle {
 		}
 	}
 
-	/// [`GlobalFree`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
+	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
 	/// method.
 	fn GlobalFree(self) -> SysResult<()> {
 		match unsafe { kernel::ffi::GlobalFree(self.as_ptr()).as_mut() } {
@@ -55,7 +55,7 @@ pub trait kernel_Hglobal: Handle {
 		}
 	}
 
-	/// [`GlobalLock`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
+	/// [`GlobalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
 	/// method.
 	///
 	/// Calls [`HGLOBAL::GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize)
@@ -74,7 +74,7 @@ pub trait kernel_Hglobal: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GlobalReAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalrealloc)
+	/// [`GlobalReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalrealloc)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -90,7 +90,7 @@ pub trait kernel_Hglobal: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GlobalSize`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
+	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
 	/// method.
 	#[must_use]
 	fn GlobalSize(self) -> SysResult<usize> {
@@ -100,7 +100,7 @@ pub trait kernel_Hglobal: Handle {
 		}
 	}
 
-	/// [`GlobalUnlock`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
+	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 	/// method.
 	fn GlobalUnlock(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::GlobalUnlock(self.as_ptr()) })

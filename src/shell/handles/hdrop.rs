@@ -10,7 +10,7 @@ use crate::user::decl::POINT;
 
 impl_handle! { HDROP: "shell";
 	/// Handle to an
-	/// [internal drop structure](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
+	/// [internal drop structure](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
 }
 
 impl shell_Hdrop for HDROP {}
@@ -67,7 +67,7 @@ pub trait shell_Hdrop: Handle {
 		Ok(Box::new(DropsIter::new(HDROP(unsafe { self.as_ptr() }))?))
 	}
 
-	/// [`DragFinish`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
+	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
 	/// method.
 	///
 	/// Prefer using [`HDROP::iter`](crate::prelude::shell_Hdrop::iter), which
@@ -76,7 +76,7 @@ pub trait shell_Hdrop: Handle {
 		unsafe { shell::ffi::DragFinish(self.as_ptr()) }
 	}
 
-	/// [`DragQueryFile`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
+	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
 	/// method.
 	///
 	/// This method is rather tricky, consider using
@@ -99,7 +99,7 @@ pub trait shell_Hdrop: Handle {
 		}
 	}
 
-	/// [`DragQueryPoint`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
+	/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
 	/// method.
 	///
 	/// Returns the coordinates and whether the drop occurred in the client area

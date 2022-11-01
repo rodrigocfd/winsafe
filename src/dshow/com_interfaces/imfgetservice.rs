@@ -17,11 +17,11 @@ pub struct IMFGetServiceVT {
 
 com_interface! { IMFGetService: "dshow";
 	"fa993888-4383-415a-a930-dd472a8cf6f7";
-	/// [`IMFGetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
+	/// [`IMFGetService`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
 	/// COM interface over [`IMFGetServiceVT`](crate::vt::IMFGetServiceVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -50,7 +50,7 @@ impl dshow_IMFGetService for IMFGetService {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMFGetService: ole_IUnknown {
-	/// [`IMFGetService::GetService`](https://docs.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
+	/// [`IMFGetService::GetService`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
 	/// method.
 	///
 	/// # Examples

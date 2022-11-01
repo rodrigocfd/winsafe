@@ -7,7 +7,7 @@ use crate::user;
 
 impl_handle! { HICON: "user";
 	/// Handle to an
-	/// [icon](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hicon).
+	/// [icon](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hicon).
 }
 
 impl user_Hicon for HICON {}
@@ -22,7 +22,7 @@ impl user_Hicon for HICON {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hicon: Handle {
-	/// [`CopyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copyicon)
+	/// [`CopyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copyicon)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -34,7 +34,7 @@ pub trait user_Hicon: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`DestroyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
+	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// method.
 	fn DestroyIcon(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { user::ffi::DestroyIcon(self.as_ptr()) })

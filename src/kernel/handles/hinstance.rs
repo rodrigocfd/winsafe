@@ -10,7 +10,7 @@ use crate::prelude::Handle;
 
 impl_handle! { HINSTANCE: "kernel";
 	/// Handle to an
-	/// [instance](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
+	/// [instance](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
 	/// same as `HMODULE`.
 }
 
@@ -26,7 +26,7 @@ impl kernel_Hinstance for HINSTANCE {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hinstance: Handle {
-	/// [`EnumResourceLanguages`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
+	/// [`EnumResourceLanguages`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
 	/// method.
 	fn EnumResourceLanguages<F>(self,
 		resource_type: RtStr, resource_id: IdStr, func: F) -> SysResult<()>
@@ -45,7 +45,7 @@ pub trait kernel_Hinstance: Handle {
 		)
 	}
 
-	/// [`EnumResourceNames`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
+	/// [`EnumResourceNames`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
 	/// method.
 	fn EnumResourceNames<F>(self,
 		resource_type: RtStr, func: F) -> SysResult<()>
@@ -63,7 +63,7 @@ pub trait kernel_Hinstance: Handle {
 		)
 	}
 
-	/// [`EnumResourceTypes`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
+	/// [`EnumResourceTypes`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
 	/// method.
 	fn EnumResourceTypes<F>(self, func: F) -> SysResult<()>
 		where F: Fn(RtStr) -> bool,
@@ -79,7 +79,7 @@ pub trait kernel_Hinstance: Handle {
 		)
 	}
 
-	/// [`FindResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew)
+	/// [`FindResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew)
 	/// method.
 	///
 	/// For an example, see
@@ -98,7 +98,7 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`FindResourceEx`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourceexw)
+	/// [`FindResourceEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourceexw)
 	/// method.
 	///
 	/// For an example, see
@@ -119,13 +119,13 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`FreeLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
+	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
 	/// method.
 	fn FreeLibrary(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::FreeLibrary(self.as_ptr()) })
 	}
 
-	/// [`GetModuleFileName`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
+	/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
 	/// method.
 	///
 	/// # Examples
@@ -156,7 +156,7 @@ pub trait kernel_Hinstance: Handle {
 		}
 	}
 
-	/// [`GetModuleHandle`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
+	/// [`GetModuleHandle`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
 	/// static method.
 	///
 	/// # Examples
@@ -180,7 +180,7 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GetProcAddress`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
+	/// [`GetProcAddress`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
 	/// method.
 	#[must_use]
 	fn GetProcAddress(self,
@@ -195,7 +195,7 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadLibrary`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
+	/// [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -210,7 +210,7 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)
+	/// [`LoadResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)
 	/// method.
 	///
 	/// For an example, see
@@ -222,7 +222,7 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LockResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
+	/// [`LockResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
 	/// method.
 	///
 	/// This method should belong to [`HRSRCMEM`](crate::HRSRCMEM), but in order
@@ -233,7 +233,7 @@ pub trait kernel_Hinstance: Handle {
 	/// # Examples
 	///
 	/// The
-	/// [Updating Resources](https://docs.microsoft.com/en-us/windows/win32/menurc/using-resources#updating-resources)
+	/// [Updating Resources](https://learn.microsoft.com/en-us/windows/win32/menurc/using-resources#updating-resources)
 	/// example:
 	///
 	/// ```rust,no_run
@@ -280,7 +280,7 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`SizeofResource`](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)
+	/// [`SizeofResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)
 	/// method.
 	///
 	/// For an example, see

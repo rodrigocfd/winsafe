@@ -2,7 +2,7 @@
 
 const_bitflag! { ACCESS_RIGHTS: u32: "kernel";
 	/// Standard access rights
-	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
+	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
 	///
 	/// Originally has no prefix.
@@ -18,7 +18,7 @@ const_bitflag! { ACCESS_RIGHTS: u32: "kernel";
 const_ordinary! { CP: u16: "kernel";
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `code_page`
-	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
+	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
 	/// (`u16`).
 	///
 	/// Originally these functions receive an `u32` parameter, but these are in
@@ -80,7 +80,7 @@ const_ordinary! { CP: u16: "kernel";
 
 const_bitflag! { CREATE: u32: "kernel";
 	/// Process creation
-	/// [flags](https://docs.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
+	/// [flags](https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
 	=>
 	=>
@@ -166,7 +166,7 @@ const_ordinary! { DISPOSITION: u32: "kernel";
 
 const_bitflag! { FILE_ATTRIBUTE: u32: "kernel";
 	/// File attribute
-	/// [flags](https://docs.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
+	/// [flags](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
 	/// also other flags from
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `flags_and_attrs` (`u32`).
@@ -309,7 +309,7 @@ const_bitflag! { FILE_VOL: u32: "kernel";
 }
 
 const_ordinary! { FIRMWARE_TYPE: u32: "kernel";
-	/// [`FIRMWARE_TYPE`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
+	/// [`FIRMWARE_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -334,7 +334,7 @@ const_bitflag! { FORMAT_MESSAGE: u32: "kernel";
 
 const_bitflag! { GENERIC: u32: "kernel";
 	/// Generic access rights
-	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
+	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
 	=>
 	=>
@@ -384,7 +384,7 @@ const_ordinary! { HF32: u32: "kernel";
 
 const_ordinary! { LANG: u16: "kernel";
 	/// Language
-	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
+	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
 	=>
 	=>
@@ -602,7 +602,7 @@ const_ordinary! { PAGE: u32: "kernel";
 
 const_bitflag! { PROCESS: u32: "kernel";
 	/// Process
-	/// [security and access rights](https://docs.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
+	/// [security and access rights](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
 	/// (`u32`).
 	=>
 	=>
@@ -700,7 +700,7 @@ const_bitflag! { REPLACEFILE: u32: "kernel";
 
 const_ordinary! { RT: u16: "kernel";
 	/// Predefined resource
-	/// [types](https://docs.microsoft.com/en-us/windows/win32/menurc/resource-types)
+	/// [types](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types)
 	/// (`u16`).
 	=>
 	=>
@@ -754,7 +754,7 @@ const_bitflag! { SECTION: u32: "kernel";
 }
 
 const_bitflag! { SECURITY_IMPERSONATION: u32: "kernel";
-	/// [`SECURITY_IMPERSONATION_LEVEL`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
+	/// [`SECURITY_IMPERSONATION_LEVEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -766,7 +766,7 @@ const_bitflag! { SECURITY_IMPERSONATION: u32: "kernel";
 
 const_ordinary! { SORT: u16: "kernel";
 	/// Sort order
-	/// [identifiers](https://docs.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
+	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
 	/// (`u16`).
 	=>
 	=>
@@ -792,7 +792,7 @@ const_ordinary! { SORT: u16: "kernel";
 
 const_bitflag! { STANDARD_RIGHTS: u32: "kernel";
 	/// Standard access rights
-	/// [flags](https://docs.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
+	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
 	=>
 	=>
@@ -826,7 +826,7 @@ const_bitflag! { STARTF: u32: "kernel";
 
 const_ordinary! { SUBLANG: u16: "kernel";
 	/// Sublanguage
-	/// [identifier](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
+	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
 	=>
 	=>
@@ -1156,7 +1156,7 @@ const_bitflag! { THREAD_CREATE: u32: "kernel";
 }
 
 const_bitflag! { TOKEN: u32: "kernel";
-	/// [Token access rights](https://docs.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects).
+	/// [Token access rights](https://learn.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects).
 	=>
 	=>
 	DELETE ACCESS_RIGHTS::DELETE.0
@@ -1276,7 +1276,7 @@ const_bitflag! { WC: u32: "kernel";
 }
 
 const_ordinary! { WIN32: u16: "kernel";
-	/// [`_WIN32`](https://docs.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
+	/// [`_WIN32`](https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
 	=>
 	=>

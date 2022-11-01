@@ -17,11 +17,11 @@ pub struct IModalWindowVT {
 
 com_interface! { IModalWindow: "shell";
 	"b4db1657-70d7-485e-8e3e-6fcb5a5c1802";
-	/// [`IModalWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
+	/// [`IModalWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
 	/// COM interface over [`IModalWindowVT`](crate::vt::IModalWindowVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -37,7 +37,7 @@ impl shell_IModalWindow for IModalWindow {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IModalWindow: ole_IUnknown {
-	/// [`IModalWindow::Show`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-imodalwindow-show)
+	/// [`IModalWindow::Show`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-imodalwindow-show)
 	/// method.
 	///
 	/// Returns false if user clicked Cancel.

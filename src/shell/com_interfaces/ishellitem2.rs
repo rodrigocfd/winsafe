@@ -28,11 +28,11 @@ pub struct IShellItem2VT {
 
 com_interface! { IShellItem2: "shell";
 	"7e9fb0d3-919f-4307-ab2e-9b1860310c93";
-	/// [`IShellItem2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem2)
+	/// [`IShellItem2`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem2)
 	/// COM interface over [`IShellItem2VT`](crate::vt::IShellItem2VT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -49,7 +49,7 @@ impl shell_IShellItem2 for IShellItem2 {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IShellItem2: shell_IShellItem {
-	/// [`IShellItem2::Update`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-update)
+	/// [`IShellItem2::Update`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-update)
 	/// method.
 	fn Update(&self, pbc: &IBindCtx) -> HrResult<()> {
 		unsafe {

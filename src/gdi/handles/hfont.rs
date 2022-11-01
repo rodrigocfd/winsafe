@@ -8,7 +8,7 @@ use crate::user::decl::SIZE;
 
 impl_handle! { HFONT: "gdi";
 	/// Handle to a
-	/// [font](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
+	/// [font](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 }
 
 impl gdi_Hgdiobj for HFONT {}
@@ -24,7 +24,7 @@ impl gdi_Hfont for HFONT {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hfont: gdi_Hgdiobj {
-	/// [`CreateFont`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
+	/// [`CreateFont`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -52,7 +52,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreateFontIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
+	/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -64,7 +64,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
+	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
 	fn GetObject(self, lf: &mut LOGFONT) -> SysResult<()> {
 		match unsafe {
@@ -79,7 +79,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 		}
 	}
 
-	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
+	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {

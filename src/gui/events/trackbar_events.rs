@@ -5,7 +5,7 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes trackbar control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
@@ -22,11 +22,11 @@ impl TrackbarEvents {
 	}
 
 	pub_fn_nfy_withparm_noret! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING, NMTRBTHUMBPOSCHANGING,
-		/// [`TRBN_THUMBPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/trbn-thumbposchanging)
+		/// [`TRBN_THUMBPOSCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/trbn-thumbposchanging)
 		/// notification.
 	}
 
-	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-trackbar)
+	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-trackbar)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
@@ -36,7 +36,7 @@ impl TrackbarEvents {
 	}
 
 	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE,
-		/// [`NM_RELEASEDCAPTURE`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
+		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
 		/// notification.
 	}
 }

@@ -6,7 +6,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON};
 use crate::user::privs::zero_as_err;
 
-/// [`STM_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-geticon)
+/// [`STM_GETICON`](https://learn.microsoft.com/en-us/windows/win32/controls/stm-geticon)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HICON>`.
@@ -29,7 +29,7 @@ unsafe impl MsgSend for GetIcon {
 	}
 }
 
-/// [`STM_GETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-getimage)
+/// [`STM_GETIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/stm-getimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIconCurMeta>`.
@@ -60,7 +60,7 @@ unsafe impl MsgSend for GetImage {
 	}
 }
 
-/// [`STM_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-seticon)
+/// [`STM_SETICON`](https://learn.microsoft.com/en-us/windows/win32/controls/stm-seticon)
 /// message parameters.
 ///
 /// Return type: `SysResult<HICON>`.
@@ -85,7 +85,7 @@ unsafe impl MsgSend for SetIcon {
 	}
 }
 
-/// [`STM_SETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/stm-setimage)
+/// [`STM_SETIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/stm-setimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIconCurMeta>`.

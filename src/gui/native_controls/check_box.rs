@@ -47,7 +47,7 @@ struct Obj { // actual fields of CheckBox
 //------------------------------------------------------------------------------
 
 /// Native
-/// [check box](https://docs.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
+/// [check box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control, actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
@@ -264,12 +264,12 @@ impl CheckBox {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct CheckBoxOpts {
 	/// Text of the control to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
 	pub text: String,
 	/// Control position within parent client area, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -278,7 +278,7 @@ pub struct CheckBoxOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Control size, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -287,7 +287,7 @@ pub struct CheckBoxOpts {
 	/// Defaults to the size needed to fit the text.
 	pub size: SIZE,
 	/// Check box styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `BS::AUTOCHECKBOX`.
 	///
@@ -295,12 +295,12 @@ pub struct CheckBoxOpts {
 	/// * replace with `BS::AUTO3STATE` for a 3-state check box.
 	pub button_style: co::BS,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
 	pub window_ex_style: co::WS_EX,

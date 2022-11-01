@@ -5,7 +5,7 @@ use crate::gdi::privs::LF_FACESIZE;
 use crate::kernel::decl::IsWindowsVistaOrGreater;
 use crate::user::decl::{COLORREF, POINT};
 
-/// [`BITMAP`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)
+/// [`BITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -21,7 +21,7 @@ pub struct BITMAP {
 
 impl_default!(BITMAP);
 
-/// [`BITMAPFILEHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader)
+/// [`BITMAPFILEHEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C, packed(2))]
@@ -45,7 +45,7 @@ impl BITMAPFILEHEADER {
 	pub_fn_serialize!();
 }
 
-/// [`BITMAPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
+/// [`BITMAPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -63,7 +63,7 @@ impl Default for BITMAPINFO {
 	}
 }
 
-/// [`BITMAPINFOHEADER`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
+/// [`BITMAPINFOHEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -87,7 +87,7 @@ impl BITMAPINFOHEADER {
 	pub_fn_serialize!();
 }
 
-/// [`LOGBRUSH`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)
+/// [`LOGBRUSH`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -99,7 +99,7 @@ pub struct LOGBRUSH {
 
 impl_default!(LOGBRUSH);
 
-/// [`LOGFONT`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
+/// [`LOGFONT`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -125,7 +125,7 @@ impl LOGFONT {
 	pub_fn_string_arr_get_set!(lfFaceName, set_lfFaceName);
 }
 
-/// [`LOGPEN`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpen)
+/// [`LOGPEN`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpen)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -137,7 +137,7 @@ pub struct LOGPEN {
 
 impl_default!(LOGPEN);
 
-/// [`NONCLIENTMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)
+/// [`NONCLIENTMETRICS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -175,7 +175,7 @@ impl Default for NONCLIENTMETRICS {
 	}
 }
 
-/// [`RGBQUAD`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
+/// [`RGBQUAD`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
@@ -187,7 +187,7 @@ pub struct RGBQUAD {
 	rgbReserved: u8,
 }
 
-/// [`TEXTMETRIC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw)
+/// [`TEXTMETRIC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]

@@ -6,11 +6,11 @@ use crate::{co, oleaut};
 use crate::ole::decl::ComPtr;
 use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
 
-/// [`VARIANT`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-variant)
+/// [`VARIANT`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-variant)
 /// struct.
 ///
 /// Automatically calls
-/// [`VariantClear`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear)
+/// [`VariantClear`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear)
 /// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]

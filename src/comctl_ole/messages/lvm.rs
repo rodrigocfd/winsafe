@@ -5,7 +5,7 @@ use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::MsgSend;
 
-/// [`LVM_SETITEMINDEXSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemindexstate)
+/// [`LVM_SETITEMINDEXSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemindexstate)
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.

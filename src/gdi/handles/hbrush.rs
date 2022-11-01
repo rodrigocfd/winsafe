@@ -30,7 +30,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 		HBRUSH((color.0 + 1) as _ )
 	}
 
-	/// [`CreateBrushIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
+	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -43,7 +43,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreateHatchBrush`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
+	/// [`CreateHatchBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -58,7 +58,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreatePatternBrush`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
+	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -71,7 +71,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreateSolidBrush`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
+	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -84,7 +84,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
+	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
 	fn GetObject(self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
@@ -99,7 +99,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 		}
 	}
 
-	/// [`GetStockObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
+	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
@@ -108,7 +108,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GetSysColorBrush`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
+	/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
 	#[must_use]
 	fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
@@ -117,7 +117,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`UnrealizeObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
+	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 	/// method.
 	fn UnrealizeObject(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::UnrealizeObject(self.as_ptr()) })

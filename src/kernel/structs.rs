@@ -8,7 +8,7 @@ use crate::kernel::decl::{
 };
 use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
 
-/// [`ACL`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
+/// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -21,7 +21,7 @@ pub struct ACL {
 	pub Sbz2: u16,
 }
 
-/// [`BY_HANDLE_FILE_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information)
+/// [`BY_HANDLE_FILE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -39,7 +39,7 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 	pub nFileIndexLow: u32,
 }
 
-/// [`FILETIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
+/// [`FILETIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -49,7 +49,7 @@ pub struct FILETIME {
 	pub dwHighDateTime: u32,
 }
 
-/// [`HEAPLIST32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-heaplist32)
+/// [`HEAPLIST32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-heaplist32)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -62,7 +62,7 @@ pub struct HEAPLIST32 {
 
 impl_default_with_size!(HEAPLIST32, dwSize);
 
-/// [`LANGID`](https://docs.microsoft.com/en-us/windows/win32/intl/language-identifiers)
+/// [`LANGID`](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers)
 /// language identifier.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(transparent)]
@@ -87,7 +87,7 @@ impl LANGID {
 	pub const USER_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::DEFAULT);
 
 	/// Creates a new `LANGID`. Originally
-	/// [`MAKELANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelangid)
+	/// [`MAKELANGID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelangid)
 	/// macro.
 	#[must_use]
 	pub const fn new(lang: co::LANG, sublang: co::SUBLANG) -> LANGID {
@@ -95,7 +95,7 @@ impl LANGID {
 	}
 
 	/// Returns the primary language ID. Originally
-	/// [`PRIMARYLANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-primarylangid)
+	/// [`PRIMARYLANGID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-primarylangid)
 	/// macro.
 	#[must_use]
 	pub const fn primary_lang_id(self) -> co::LANG {
@@ -103,7 +103,7 @@ impl LANGID {
 	}
 
 	/// Returns the sublanguage ID. Originally
-	/// [`SUBLANGID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-sublangid)
+	/// [`SUBLANGID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-sublangid)
 	/// macro.
 	#[must_use]
 	pub const fn sub_lang_id(self) -> co::SUBLANG {
@@ -111,7 +111,7 @@ impl LANGID {
 	}
 }
 
-/// [`LCID`](https://docs.microsoft.com/en-us/windows/win32/intl/locale-identifiers)
+/// [`LCID`](https://learn.microsoft.com/en-us/windows/win32/intl/locale-identifiers)
 /// locale identifier.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(transparent)]
@@ -130,7 +130,7 @@ impl LCID {
 	pub const USER_DEFAULT: Self = Self::new(LANGID::USER_DEFAULT, co::SORT::DEFAULT);
 
 	/// Creates a new `LCID`. Originally
-	/// [`MAKELCID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelcid)
+	/// [`MAKELCID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelcid)
 	/// macro.
 	#[must_use]
 	pub const fn new(lang_id: LANGID, sort_id: co::SORT) -> LCID {
@@ -138,7 +138,7 @@ impl LCID {
 	}
 
 	/// Returns the language identifier. Originally
-	/// [`LANGIDFROMLCID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-langidfromlcid)
+	/// [`LANGIDFROMLCID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-langidfromlcid)
 	/// macro.
 	#[must_use]
 	pub const fn lang_id(self) -> LANGID {
@@ -146,7 +146,7 @@ impl LCID {
 	}
 
 	/// Returns the sort ID. Originally
-	/// [`SORTIDFROMLCID`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-sortidfromlcid)
+	/// [`SORTIDFROMLCID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-sortidfromlcid)
 	/// macro.
 	#[must_use]
 	pub const fn sort_id(self) -> co::SORT {
@@ -154,7 +154,7 @@ impl LCID {
 	}
 }
 
-/// [`MODULEENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
+/// [`MODULEENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -178,7 +178,7 @@ impl MODULEENTRY32 {
 	pub_fn_string_arr_get_set!(szExePath, set_szExePath);
 }
 
-/// [`MEMORYSTATUSEX`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
+/// [`MEMORYSTATUSEX`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -196,7 +196,7 @@ pub struct MEMORYSTATUSEX {
 
 impl_default_with_size!(MEMORYSTATUSEX, dwLength);
 
-/// [`OSVERSIONINFOEX`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)
+/// [`OSVERSIONINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -220,7 +220,7 @@ impl OSVERSIONINFOEX {
 	pub_fn_string_arr_get_set!(szCSDVersion, set_szCSDVersion);
 }
 
-/// [`OVERLAPPED`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped)
+/// [`OVERLAPPED`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -233,7 +233,7 @@ pub struct OVERLAPPED {
 
 impl_default!(OVERLAPPED);
 
-/// [`PROCESS_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information)
+/// [`PROCESS_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -246,7 +246,7 @@ pub struct PROCESS_INFORMATION {
 
 impl_default!(PROCESS_INFORMATION);
 
-/// [`SECURITY_DESCRIPTOR`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
+/// [`SECURITY_DESCRIPTOR`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -260,7 +260,7 @@ pub struct SECURITY_DESCRIPTOR {
    pub Dacl: *mut ACL,
 }
 
-/// [`PROCESSENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)
+/// [`PROCESSENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -283,7 +283,7 @@ impl PROCESSENTRY32 {
 	pub_fn_string_arr_get_set!(szExeFile, set_szExeFile);
 }
 
-/// [`SECURITY_ATTRIBUTES`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
+/// [`SECURITY_ATTRIBUTES`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -302,7 +302,7 @@ impl<'a> SECURITY_ATTRIBUTES<'a> {
 	pub_fn_bool_get_set!(bInheritHandle, set_bInheritHandle);
 }
 
-/// [`STARTUPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow)
+/// [`STARTUPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -348,7 +348,7 @@ impl<'a, 'b> STARTUPINFO<'a, 'b> {
 	}
 }
 
-/// [`SYSTEM_INFO`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info)
+/// [`SYSTEM_INFO`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -368,7 +368,7 @@ pub struct SYSTEM_INFO {
 
 impl_default!(SYSTEM_INFO);
 
-/// [`SYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
+/// [`SYSTEMTIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -384,7 +384,7 @@ pub struct SYSTEMTIME {
 	pub wMilliseconds: u16,
 }
 
-/// [`THREADENTRY32`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-threadentry32)
+/// [`THREADENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-threadentry32)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -400,7 +400,7 @@ pub struct THREADENTRY32 {
 
 impl_default_with_size!(THREADENTRY32, dwSize);
 
-/// [`TIME_ZONE_INFORMATION`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information)
+/// [`TIME_ZONE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
@@ -420,7 +420,7 @@ impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
 
-/// [`WIN32_FIND_DATA`](https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-win32_find_dataw)
+/// [`WIN32_FIND_DATA`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-win32_find_dataw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]

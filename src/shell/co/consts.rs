@@ -36,7 +36,7 @@ const_bitflag! { FOF: u16: "shell";
 }
 
 const_bitflag! { FOS: u32: "shell";
-	/// [`_FILEOPENDIALOGOPTIONS`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
+	/// [`_FILEOPENDIALOGOPTIONS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -138,7 +138,7 @@ const_bitflag! { FOS: u32: "shell";
 }
 
 const_ordinary! { FDAP: u32: "shell";
-	/// [`FDAP`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fdap)
+	/// [`FDAP`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fdap)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -147,7 +147,7 @@ const_ordinary! { FDAP: u32: "shell";
 }
 
 const_bitflag! { KF: u32: "shell";
-	/// [`KNOWN_FOLDER_FLAG`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-known_folder_flag)
+	/// [`KNOWN_FOLDER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-known_folder_flag)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -239,7 +239,7 @@ const_ordinary! { SE_ERR: u32: "shell";
 }
 
 const_bitflag! { SFGAO: u32: "shell";
-	/// [`SFGAO`](https://docs.microsoft.com/en-us/windows/win32/shell/sfgao)
+	/// [`SFGAO`](https://learn.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
 	=>
 	=>
@@ -280,7 +280,7 @@ const_bitflag! { SFGAO: u32: "shell";
 }
 
 const_ordinary! { SHARD: u32: "shell";
-	/// [`SHARD`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-shard)
+	/// [`SHARD`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-shard)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -335,7 +335,7 @@ const_bitflag! { SHGSI: u32: "shell";
 }
 
 const_ordinary! { SIGDN: u32: "shell";
-	/// [`SIGDN`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
+	/// [`SIGDN`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
 	/// enumeration (`u32`).
 	=>
 	=>
@@ -379,7 +379,7 @@ const_ordinary! { SIGDN: u32: "shell";
 }
 
 const_ordinary! { SIID: u32: "shell";
-	/// [`SHSTOCKICONID`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ne-shellapi-shstockiconid)
+	/// [`SHSTOCKICONID`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ne-shellapi-shstockiconid)
 	/// enumeration, [`SHGetStockIconInfo`](crate::SHGetStockIconInfo) `siid`
 	/// (`u32`).
 	=>
@@ -514,7 +514,7 @@ const_bitflag! { SLR: u32: "shell";
 }
 
 const_ordinary! { STPFLAG: u32: "shell";
-	/// [`STPFLAG`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
+	/// [`STPFLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
 	/// enumeration (`u32`).
 	=>
 	=>

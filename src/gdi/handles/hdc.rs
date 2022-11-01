@@ -22,13 +22,13 @@ impl gdi_Hdc for HDC {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hdc: Handle {
-	/// [`AborthPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-abortpath)
+	/// [`AborthPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-abortpath)
 	/// method.
 	fn AbortPath(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::AbortPath(self.as_ptr()) })
 	}
 
-	/// [`AngleArc`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-anglearc)
+	/// [`AngleArc`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-anglearc)
 	/// method.
 	fn AngleArc(self,
 		center: POINT, radius: u32,
@@ -45,7 +45,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`Arc`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arc)
+	/// [`Arc`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arc)
 	/// method.
 	fn Arc(self,
 		bound: RECT, radialStart: POINT, radialEnd: POINT) -> SysResult<()>
@@ -63,7 +63,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`ArcTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arcto)
+	/// [`ArcTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arcto)
 	/// method.
 	fn ArcTo(self,
 		bound: RECT, radialStart: POINT, radialEnd: POINT) -> SysResult<()>
@@ -81,13 +81,13 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`BeginPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-beginpath)
+	/// [`BeginPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-beginpath)
 	/// method.
 	fn BeginPath(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::BeginPath(self.as_ptr()) })
 	}
 
-	/// [`BitBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt)
+	/// [`BitBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt)
 	/// method.
 	fn BitBlt(self,
 		dest_pos: POINT, sz: SIZE,
@@ -107,13 +107,13 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`CancelDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-canceldc)
+	/// [`CancelDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-canceldc)
 	/// method.
 	fn CancelDC(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::CancelDC(self.as_ptr()) })
 	}
 
-	/// [`Chord`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-chord)
+	/// [`Chord`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-chord)
 	/// method.
 	fn Chord(self,
 		bounds: RECT, start_radial: POINT, end_radial: POINT) -> SysResult<()>
@@ -130,13 +130,13 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`CloseFigure`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-closefigure)
+	/// [`CloseFigure`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-closefigure)
 	/// method.
 	fn CloseFigure(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::CloseFigure(self.as_ptr()) })
 	}
 
-	/// [`CreateCompatibleBitmap`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap)
+	/// [`CreateCompatibleBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -150,7 +150,7 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreateCompatibleDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
+	/// [`CreateCompatibleDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -162,13 +162,13 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`DeleteDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
+	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
 	/// method.
 	fn DeleteDC(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::DeleteDC(self.as_ptr()) })
 	}
 
-	/// [`Ellipse`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
+	/// [`Ellipse`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
 	/// method.
 	fn Ellipse(self, bound: RECT) -> SysResult<()> {
 		bool_to_sysresult(
@@ -182,19 +182,19 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`EndPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-endpath)
+	/// [`EndPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-endpath)
 	/// method.
 	fn EndPath(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::EndPath(self.as_ptr()) })
 	}
 
-	/// [`FillPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillpath)
+	/// [`FillPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillpath)
 	/// method.
 	fn FillPath(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::FillPath(self.as_ptr()) })
 	}
 
-	/// [`FillRect`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
+	/// [`FillRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
 	/// method.
 	fn FillRect(self, rc: RECT, hbr: HBRUSH) -> SysResult<()> {
 		match unsafe {
@@ -205,7 +205,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`FillRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillrgn)
+	/// [`FillRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillrgn)
 	/// method.
 	fn FillRgn(self, rgn: HRGN, brush: HBRUSH) -> SysResult<()> {
 		bool_to_sysresult(
@@ -215,13 +215,13 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`FlattenPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-flattenpath)
+	/// [`FlattenPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-flattenpath)
 	/// method.
 	fn FlattenPath(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::FlattenPath(self.as_ptr()) })
 	}
 
-	/// [`FrameRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-framergn)
+	/// [`FrameRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-framergn)
 	/// method.
 	fn FrameRgn(self,
 		rgn: HRGN, brush: HBRUSH, w: i32, h: i32) -> SysResult<()>
@@ -238,7 +238,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`GetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkmode)
+	/// [`GetBkMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkmode)
 	/// method.
 	#[must_use]
 	fn GetBkMode(self) -> SysResult<co::BKMODE> {
@@ -248,7 +248,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`GetDCBrushColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcbrushcolor)
+	/// [`GetDCBrushColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcbrushcolor)
 	/// method.
 	#[must_use]
 	fn GetDCBrushColor(self) -> SysResult<COLORREF> {
@@ -258,7 +258,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`GetDCPenColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcpencolor)
+	/// [`GetDCPenColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcpencolor)
 	/// method.
 	#[must_use]
 	fn GetDCPenColor(self) -> SysResult<COLORREF> {
@@ -268,7 +268,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`GetDIBits`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdibits)
+	/// [`GetDIBits`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdibits)
 	/// method.
 	///
 	/// **Note:** If `bmpDataBuf` is smaller than needed, you'll have a buffer
@@ -350,14 +350,14 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`GetDeviceCaps`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
+	/// [`GetDeviceCaps`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
 	/// method.
 	#[must_use]
 	fn GetDeviceCaps(self, index: co::GDC) -> i32 {
 		unsafe { gdi::ffi::GetDeviceCaps(self.as_ptr(), index.0) }
 	}
 
-	/// [`GetStretchBltMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)
+	/// [`GetStretchBltMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)
 	/// method.
 	#[must_use]
 	fn GetStretchBltMode(self) -> SysResult<co::STRETCH_MODE> {
@@ -367,7 +367,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`GetTextColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextcolor)
+	/// [`GetTextColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextcolor)
 	/// method.
 	#[must_use]
 	fn GetTextColor(self) -> SysResult<COLORREF> {
@@ -377,7 +377,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`GetTextExtentPoint32`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextextentpoint32w)
+	/// [`GetTextExtentPoint32`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextextentpoint32w)
 	/// method.
 	#[must_use]
 	fn GetTextExtentPoint32(self, text: &str) -> SysResult<SIZE> {
@@ -394,7 +394,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| sz)
 	}
 
-	/// [`GetTextFace`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextfacew)
+	/// [`GetTextFace`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextfacew)
 	/// method.
 	#[must_use]
 	fn GetTextFace(self) -> SysResult<String> {
@@ -411,7 +411,7 @@ pub trait gdi_Hdc: Handle {
 		}.map(|_| buf.to_string())
 	}
 
-	/// [`GetTextMetrics`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextmetricsw)
+	/// [`GetTextMetrics`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextmetricsw)
 	/// method.
 	fn GetTextMetrics(self, tm: &mut TEXTMETRIC) -> SysResult<()> {
 		bool_to_sysresult(
@@ -419,7 +419,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`GetViewportExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportextex)
+	/// [`GetViewportExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportextex)
 	/// method.
 	#[must_use]
 	fn GetViewportExtEx(self) -> SysResult<SIZE> {
@@ -431,7 +431,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| sz)
 	}
 
-	/// [`GetViewportOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportorgex)
+	/// [`GetViewportOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportorgex)
 	/// method.
 	#[must_use]
 	fn GetViewportOrgEx(self) -> SysResult<POINT> {
@@ -443,7 +443,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| pt)
 	}
 
-	/// [`GetWindowExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindowextex)
+	/// [`GetWindowExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindowextex)
 	/// method.
 	#[must_use]
 	fn GetWindowExtEx(self) -> SysResult<SIZE> {
@@ -455,7 +455,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| sz)
 	}
 
-	/// [`GetWindowOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindoworgex)
+	/// [`GetWindowOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindoworgex)
 	/// method.
 	#[must_use]
 	fn GetWindowOrgEx(self) -> SysResult<POINT> {
@@ -467,13 +467,13 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| pt)
 	}
 
-	/// [`LineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
+	/// [`LineTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
 	/// method.
 	fn LineTo(self, x: i32, y: i32) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::LineTo(self.as_ptr(), x, y) })
 	}
 
-	/// [`MoveToEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
+	/// [`MoveToEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
 	/// method.
 	fn MoveToEx(self, x: i32, y: i32, pt: Option<&mut POINT>) -> SysResult<()> {
 		bool_to_sysresult(
@@ -487,7 +487,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`PatBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-patblt)
+	/// [`PatBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-patblt)
 	/// method.
 	fn PatBlt(self, top_left: POINT, sz: SIZE, rop: co::ROP) -> SysResult<()> {
 		bool_to_sysresult(
@@ -499,7 +499,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`PathToRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pathtoregion)
+	/// [`PathToRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pathtoregion)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -511,7 +511,7 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`Pie`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
+	/// [`Pie`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
 	/// method.
 	fn Pie(self,
 		bounds: RECT, radial_1: POINT, radial_2: POINT) -> SysResult<()>
@@ -528,7 +528,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`PolyBezier`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezier)
+	/// [`PolyBezier`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezier)
 	/// method.
 	fn PolyBezier(self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
@@ -540,7 +540,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`PolyBezierTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezierto)
+	/// [`PolyBezierTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezierto)
 	/// method.
 	fn PolyBezierTo(self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
@@ -552,7 +552,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`Polyline`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polyline)
+	/// [`Polyline`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polyline)
 	/// method.
 	fn Polyline(self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
@@ -562,7 +562,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`PolylineTo`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polylineto)
+	/// [`PolylineTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polylineto)
 	/// method.
 	fn PolylineTo(self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
@@ -574,7 +574,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`PtVisible`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptvisible)
+	/// [`PtVisible`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptvisible)
 	/// method.
 	#[must_use]
 	fn PtVisible(self, x: i32, y: i32) -> SysResult<bool> {
@@ -585,7 +585,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`RealizePalette`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-realizepalette)
+	/// [`RealizePalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-realizepalette)
 	/// method.
 	fn RealizePalette(self) -> SysResult<u32> {
 		match unsafe { gdi::ffi::RealizePalette(self.as_ptr()) } {
@@ -594,7 +594,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`Rectangle`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectangle)
+	/// [`Rectangle`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectangle)
 	/// method.
 	fn Rectangle(self, bounds: RECT) -> SysResult<()> {
 		bool_to_sysresult(
@@ -605,13 +605,13 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`RestoreDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-restoredc)
+	/// [`RestoreDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-restoredc)
 	/// method.
 	fn RestoreDC(self, saved_dc: i32) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::RestoreDC(self.as_ptr(), saved_dc) })
 	}
 
-	/// [`RoundRect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
+	/// [`RoundRect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
 	/// method.
 	fn RoundRect(self, bounds: RECT, sz: SIZE) -> SysResult<()> {
 		bool_to_sysresult(
@@ -625,7 +625,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`SaveDC`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-savedc)
+	/// [`SaveDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-savedc)
 	/// method.
 	fn SaveDC(self) -> SysResult<i32> {
 		match unsafe { gdi::ffi::SaveDC(self.as_ptr()) } {
@@ -634,7 +634,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	fn SelectObjectBitmap(self, hbmp: HBITMAP) -> SysResult<HBITMAP> {
 		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hbmp.0).as_mut() }
@@ -642,7 +642,7 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HBRUSH`](crate::HBRUSH).
 	fn SelectObjectBrush(self, hbr: HBRUSH) -> SysResult<HBRUSH> {
 		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hbr.0).as_mut() }
@@ -650,7 +650,7 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HFONT`](crate::HFONT).
 	fn SelectObjectFont(self, hfont: HFONT) -> SysResult<HFONT> {
 		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hfont.0).as_mut() }
@@ -658,7 +658,7 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HPEN`](crate::HPEN).
 	fn SelectObjectPen(self, hpen: HPEN) -> SysResult<HPEN> {
 		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hpen.0).as_mut() }
@@ -666,7 +666,7 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`SelectObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
+	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method for [`HRGN`](crate::HRGN).
 	fn SelectObjectRgn(self, hrgn: HRGN) -> SysResult<co::REGION> {
 		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hrgn.0).as_mut() }
@@ -674,7 +674,7 @@ pub trait gdi_Hdc: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`SetArcDirection`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)
+	/// [`SetArcDirection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)
 	/// method.
 	fn SetArcDirection(self, dir: co::AD) -> SysResult<co::AD> {
 		match unsafe { gdi::ffi::SetArcDirection(self.as_ptr(), dir.0) } {
@@ -692,7 +692,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetBkMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
+	/// [`SetBkMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method.
 	fn SetBkMode(self, mode: co::BKMODE) -> SysResult<co::BKMODE> {
 		match unsafe { gdi::ffi::SetBkMode(self.as_ptr(), mode.0) } {
@@ -701,7 +701,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetBrushOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbrushorgex)
+	/// [`SetBrushOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbrushorgex)
 	/// method.
 	fn SetBrushOrgEx(self, new_origin: POINT) -> SysResult<POINT> {
 		let mut old_origin = POINT::default();
@@ -716,7 +716,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| old_origin)
 	}
 
-	/// [`SetDCBrushColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcbrushcolor)
+	/// [`SetDCBrushColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcbrushcolor)
 	/// method.
 	fn SetDCBrushColor(self, color: COLORREF) -> SysResult<COLORREF> {
 		match unsafe { gdi::ffi::SetDCBrushColor(self.as_ptr(), color.0) } {
@@ -725,7 +725,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetDCPenColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcpencolor)
+	/// [`SetDCPenColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcpencolor)
 	/// method.
 	fn SetDCPenColor(self, color: COLORREF) -> SysResult<COLORREF> {
 		match unsafe { gdi::ffi::SetDCPenColor(self.as_ptr(), color.0) } {
@@ -734,7 +734,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetGraphicsMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode)
+	/// [`SetGraphicsMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode)
 	/// method.
 	fn SetGraphicsMode(self, mode: co::GM) -> SysResult<co::GM> {
 		match unsafe { gdi::ffi::SetGraphicsMode(self.as_ptr(), mode.0) } {
@@ -743,7 +743,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetStretchBltMode`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setstretchbltmode)
+	/// [`SetStretchBltMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setstretchbltmode)
 	/// method.
 	fn SetStretchBltMode(self,
 		mode: co::STRETCH_MODE) -> SysResult<co::STRETCH_MODE>
@@ -756,7 +756,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetTextAlign`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextalign)
+	/// [`SetTextAlign`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextalign)
 	/// method.
 	fn SetTextAlign(self, align: co::TA) -> SysResult<co::TA> {
 		match unsafe { gdi::ffi::SetTextAlign(self.as_ptr(), align.0) } {
@@ -765,7 +765,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetTextColor`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextcolor)
+	/// [`SetTextColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextcolor)
 	/// method.
 	fn SetTextColor(self, color: COLORREF) -> SysResult<COLORREF> {
 		match unsafe { gdi::ffi::SetTextColor(self.as_ptr(), color.0) } {
@@ -774,7 +774,7 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
-	/// [`SetTextJustification`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextjustification)
+	/// [`SetTextJustification`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextjustification)
 	/// method.
 	fn SetTextJustification(self, extra: i32, count: i32) -> SysResult<()> {
 		bool_to_sysresult(
@@ -782,7 +782,7 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`SetViewportExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportextex)
+	/// [`SetViewportExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportextex)
 	/// method.
 	fn SetViewportExtEx(self, x: i32, y: i32) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
@@ -795,7 +795,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| sz)
 	}
 
-	/// [`SetViewportOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportorgex)
+	/// [`SetViewportOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportorgex)
 	/// method.
 	fn SetViewportOrgEx(self, x: i32, y: i32) -> SysResult<POINT> {
 		let mut pt = POINT::default();
@@ -808,7 +808,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| pt)
 	}
 
-	/// [`SetWindowExtEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindowextex)
+	/// [`SetWindowExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindowextex)
 	/// method.
 	fn SetWindowExtEx(self, x: i32, y: i32) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
@@ -821,7 +821,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| sz)
 	}
 
-	/// [`SetWindowOrgEx`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindoworgex)
+	/// [`SetWindowOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindoworgex)
 	/// method.
 	fn SetWindowOrgEx(self, x: i32, y: i32) -> SysResult<POINT> {
 		let mut pt = POINT::default();
@@ -834,7 +834,7 @@ pub trait gdi_Hdc: Handle {
 		).map(|_| pt)
 	}
 
-	/// [`StretchBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-stretchblt)
+	/// [`StretchBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-stretchblt)
 	/// method.
 	fn StretchBlt(self,
 		pos_dest: POINT, sz_dest: SIZE,
@@ -857,19 +857,19 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`StrokeAndFillPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokeandfillpath)
+	/// [`StrokeAndFillPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokeandfillpath)
 	/// method.
 	fn StrokeAndFillPath(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::StrokeAndFillPath(self.as_ptr()) })
 	}
 
-	/// [`StrokePath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokepath)
+	/// [`StrokePath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokepath)
 	/// method.
 	fn StrokePath(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::StrokePath(self.as_ptr()) })
 	}
 
-	/// [`TextOut`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textoutw)
+	/// [`TextOut`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textoutw)
 	/// method.
 	fn TextOut(self, x: i32, y: i32, text: &str) -> SysResult<()> {
 		bool_to_sysresult(
@@ -884,13 +884,13 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
-	/// [`UpdateColors`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-updatecolors)
+	/// [`UpdateColors`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-updatecolors)
 	/// method.
 	fn UpdateColors(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::UpdateColors(self.as_ptr()) })
 	}
 
-	/// [`WidenPath`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-widenpath)
+	/// [`WidenPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-widenpath)
 	/// method.
 	fn WidenPath(self) -> SysResult<()>  {
 		bool_to_sysresult(unsafe { gdi::ffi::WidenPath(self.as_ptr()) })

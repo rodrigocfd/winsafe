@@ -1,6 +1,6 @@
 use crate::ole::decl::GUID;
 
-/// [`PROPERTYKEY`](https://docs.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
+/// [`PROPERTYKEY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]

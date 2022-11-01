@@ -7,7 +7,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{COMBOBOXINFO, RECT};
 use crate::user::privs::{CB_ERR, CB_ERRSPACE, zero_as_err};
 
-/// [`CB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-addstring)
+/// [`CB_ADDSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-addstring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -36,7 +36,7 @@ unsafe impl MsgSend for AddString {
 	}
 }
 
-/// [`CB_DELETESTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-deletestring)
+/// [`CB_DELETESTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-deletestring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -64,7 +64,7 @@ unsafe impl MsgSend for DeleteString {
 	}
 }
 
-/// [`CB_DIR`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-dir)
+/// [`CB_DIR`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-dir)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -94,7 +94,7 @@ unsafe impl MsgSend for Dir {
 	}
 }
 
-/// [`CB_FINDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-findstring)
+/// [`CB_FINDSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-findstring)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -123,7 +123,7 @@ unsafe impl MsgSend for FindString {
 	}
 }
 
-/// [`CB_FINDSTRINGEXACT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-findstringexact)
+/// [`CB_FINDSTRINGEXACT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-findstringexact)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -152,7 +152,7 @@ unsafe impl MsgSend for FindStringExact {
 	}
 }
 
-/// [`CB_GETCOMBOBOXINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcomboboxinfo)
+/// [`CB_GETCOMBOBOXINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getcomboboxinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -177,7 +177,7 @@ unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
 	}
 }
 
-/// [`CB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcount)
+/// [`CB_GETCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getcount)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -200,7 +200,7 @@ unsafe impl MsgSend for GetCount {
 	}
 }
 
-/// [`CB_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getcursel)
+/// [`CB_GETCURSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getcursel)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -226,7 +226,7 @@ unsafe impl MsgSend for GetCurSel {
 	}
 }
 
-/// [`CB_GETDROPPEDCONTROLRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedcontrolrect)
+/// [`CB_GETDROPPEDCONTROLRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getdroppedcontrolrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -251,7 +251,7 @@ unsafe impl<'a> MsgSend for GetDroppedControlRect<'a> {
 	}
 }
 
-/// [`CB_GETDROPPEDSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedstate)
+/// [`CB_GETDROPPEDSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getdroppedstate)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -274,7 +274,7 @@ unsafe impl MsgSend for GetDroppedState {
 	}
 }
 
-/// [`CB_GETDROPPEDWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getdroppedwidth)
+/// [`CB_GETDROPPEDWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getdroppedwidth)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -300,7 +300,7 @@ unsafe impl MsgSend for GetDroppedWidth {
 	}
 }
 
-/// [`CB_GETEDITSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-geteditsel)
+/// [`CB_GETEDITSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-geteditsel)
 /// message, which has no parameters.
 ///
 /// Return type: `(i32, i32)`.
@@ -323,7 +323,7 @@ unsafe impl MsgSend for GetEditSel {
 	}
 }
 
-/// [`CB_GETEXTENDEDUI`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getextendedui)
+/// [`CB_GETEXTENDEDUI`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getextendedui)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -346,7 +346,7 @@ unsafe impl MsgSend for GetExtendedUi {
 	}
 }
 
-/// [`CB_GETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gethorizontalextent)
+/// [`CB_GETHORIZONTALEXTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-gethorizontalextent)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -369,7 +369,7 @@ unsafe impl MsgSend for GetHorizontalExtent {
 	}
 }
 
-/// [`CB_GETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getitemdata)
+/// [`CB_GETITEMDATA`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getitemdata)
 /// message parameters.
 ///
 /// Return type: `SysResult<isize>`.
@@ -397,7 +397,7 @@ unsafe impl MsgSend for GetItemData {
 	}
 }
 
-/// [`CB_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getitemheight)
+/// [`CB_GETITEMHEIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getitemheight)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -425,7 +425,7 @@ unsafe impl MsgSend for GetItemHeight {
 	}
 }
 
-/// [`CB_GETLBTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtext)
+/// [`CB_GETLBTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getlbtext)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -454,7 +454,7 @@ unsafe impl<'a> MsgSend for GetLbText<'a> {
 	}
 }
 
-/// [`CB_GETLBTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlbtextlen)
+/// [`CB_GETLBTEXTLEN`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getlbtextlen)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -482,7 +482,7 @@ unsafe impl MsgSend for GetLbTextLen {
 	}
 }
 
-/// [`CB_GETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-getlocale)
+/// [`CB_GETLOCALE`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getlocale)
 /// message, which has no parameters.
 ///
 /// Return type: `LANGID`.
@@ -505,7 +505,7 @@ unsafe impl MsgSend for GetLocale {
 	}
 }
 
-/// [`CB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-gettopindex)
+/// [`CB_GETTOPINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-gettopindex)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -531,7 +531,7 @@ unsafe impl MsgSend for GetTopIndex {
 	}
 }
 
-/// [`CB_INITSTORAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-initstorage)
+/// [`CB_INITSTORAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-initstorage)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -560,7 +560,7 @@ unsafe impl MsgSend for InitStorage {
 	}
 }
 
-/// [`CB_INSERTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-insertstring)
+/// [`CB_INSERTSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-insertstring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -590,7 +590,7 @@ unsafe impl MsgSend for InsertString {
 	}
 }
 
-/// [`CB_LIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-limittext)
+/// [`CB_LIMITTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-limittext)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -616,10 +616,10 @@ unsafe impl MsgSend for LimitText {
 }
 
 pub_struct_msg_empty! { ResetContent: co::CB::RESETCONTENT.into(); "user";
-	/// [`CB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
+	/// [`CB_RESETCONTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
 }
 
-/// [`CB_SELECTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-selectstring)
+/// [`CB_SELECTSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-selectstring)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -648,7 +648,7 @@ unsafe impl MsgSend for SelectString {
 	}
 }
 
-/// [`CB_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setcursel)
+/// [`CB_SETCURSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setcursel)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -676,7 +676,7 @@ unsafe impl MsgSend for SetCurSel {
 	}
 }
 
-/// [`CB_SETDROPPEDWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setdroppedwidth)
+/// [`CB_SETDROPPEDWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setdroppedwidth)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -704,7 +704,7 @@ unsafe impl MsgSend for SetDroppedWidth {
 	}
 }
 
-/// [`CB_SETEDITSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-seteditsel)
+/// [`CB_SETEDITSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-seteditsel)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -736,7 +736,7 @@ unsafe impl MsgSend for SetEditSel {
 	}
 }
 
-/// [`CB_SETEXTENDEDUI`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setextendedui)
+/// [`CB_SETEXTENDEDUI`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setextendedui)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -764,7 +764,7 @@ unsafe impl MsgSend for SetExtendedUi {
 	}
 }
 
-/// [`CB_SETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-sethorizontalextent)
+/// [`CB_SETHORIZONTALEXTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-sethorizontalextent)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -789,7 +789,7 @@ unsafe impl MsgSend for SetHorizontalExtent {
 	}
 }
 
-/// [`CB_SETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setitemdata)
+/// [`CB_SETITEMDATA`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setitemdata)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -818,7 +818,7 @@ unsafe impl MsgSend for SetItemData {
 	}
 }
 
-/// [`CB_SETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setitemheight)
+/// [`CB_SETITEMHEIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setitemheight)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -847,7 +847,7 @@ unsafe impl MsgSend for SetItemHeight {
 	}
 }
 
-/// [`CB_SETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-setlocale)
+/// [`CB_SETLOCALE`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-setlocale)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -875,7 +875,7 @@ unsafe impl MsgSend for SetLocale {
 	}
 }
 
-/// [`CB_SETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-settopindex)
+/// [`CB_SETTOPINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-settopindex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -900,7 +900,7 @@ unsafe impl MsgSend for SetTopIndex {
 	}
 }
 
-/// [`CB_SHOWDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/cb-showdropdown)
+/// [`CB_SHOWDROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-showdropdown)
 /// message parameters.
 ///
 /// Return type: `()`.

@@ -26,11 +26,11 @@ pub struct IShellItemArrayVT {
 
 com_interface! { IShellItemArray: "shell";
 	"b63ea76d-1f85-456f-a19c-48159efa858b";
-	/// [`IShellItemArray`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
+	/// [`IShellItemArray`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
 	/// COM interface over [`IShellItemArrayVT`](crate::vt::IShellItemArrayVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -96,7 +96,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 		Ok(Box::new(ShellItemIter::new(unsafe { self.ptr() })?))
 	}
 
-	/// [`IShellItemArray::GetCount`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)
+	/// [`IShellItemArray::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)
 	/// method.
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
@@ -107,7 +107,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 		}.map(|_| count)
 	}
 
-	/// [`IShellItemArray::GetItemAt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
+	/// [`IShellItemArray::GetItemAt`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
 	/// method.
 	///
 	/// Prefer using

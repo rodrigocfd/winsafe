@@ -5,7 +5,7 @@ use crate::advapi::privs::UNLEN;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::bool_to_sysresult;
 
-/// [`DecryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
+/// [`DecryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub fn DecryptFile(file_name: &str) -> SysResult<()> {
@@ -16,7 +16,7 @@ pub fn DecryptFile(file_name: &str) -> SysResult<()> {
 	)
 }
 
-/// [`EncryptFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
+/// [`EncryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub fn EncryptFile(file_name: &str) -> SysResult<()> {
@@ -27,7 +27,7 @@ pub fn EncryptFile(file_name: &str) -> SysResult<()> {
 	)
 }
 
-/// [`EncryptionDisable`](https://docs.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
+/// [`EncryptionDisable`](https://learn.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
@@ -41,7 +41,7 @@ pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
 	)
 }
 
-/// [`GetUserName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
+/// [`GetUserName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 #[must_use]

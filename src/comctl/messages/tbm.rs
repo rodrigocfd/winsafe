@@ -11,7 +11,7 @@ use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
 };
 
-/// [`TB_ADDBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
+/// [`TB_ADDBITMAP`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -37,7 +37,7 @@ unsafe impl<'a> MsgSend for AddBitmap<'a> {
 	}
 }
 
-/// [`TB_ADDBUTTONS`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addbuttons)
+/// [`TB_ADDBUTTONS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-addbuttons)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -62,7 +62,7 @@ unsafe impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 	}
 }
 
-/// [`TB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-addstring)
+/// [`TB_ADDSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-addstring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -94,10 +94,10 @@ unsafe impl MsgSend for AddString {
 }
 
 pub_struct_msg_empty! { AutoSize: co::TBM::AUTOSIZE.into(); "comctl";
-	/// [`TB_AUTOSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-autosize)
+	/// [`TB_AUTOSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-autosize)
 }
 
-/// [`TB_BUTTONCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-buttoncount)
+/// [`TB_BUTTONCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-buttoncount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -120,7 +120,7 @@ unsafe impl MsgSend for ButtonCount {
 	}
 }
 
-/// [`TB_BUTTONSTRUCTSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-buttonstructsize)
+/// [`TB_BUTTONSTRUCTSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-buttonstructsize)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -145,7 +145,7 @@ unsafe impl MsgSend for ButtonStructSize {
 	}
 }
 
-/// [`TB_CHANGEBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-changebitmap)
+/// [`TB_CHANGEBITMAP`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-changebitmap)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -171,7 +171,7 @@ unsafe impl MsgSend for ChangeBitmap {
 	}
 }
 
-/// [`TB_CHECKBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-checkbutton)
+/// [`TB_CHECKBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-checkbutton)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -197,7 +197,7 @@ unsafe impl MsgSend for CheckButton {
 	}
 }
 
-/// [`TB_COMMANDTOINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-commandtoindex)
+/// [`TB_COMMANDTOINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-commandtoindex)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -223,10 +223,10 @@ unsafe impl MsgSend for CommandToIndex {
 }
 
 pub_struct_msg_empty! { Customize: co::TBM::CUSTOMIZE.into(); "comctl";
-	/// [`TB_CUSTOMIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-customize)
+	/// [`TB_CUSTOMIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-customize)
 }
 
-/// [`TB_DELETEBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-deletebutton)
+/// [`TB_DELETEBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-deletebutton)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -251,7 +251,7 @@ unsafe impl MsgSend for DeleteButton {
 	}
 }
 
-/// [`TB_ENABLEBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-enablebutton)
+/// [`TB_ENABLEBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-enablebutton)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -277,7 +277,7 @@ unsafe impl MsgSend for EnableButton {
 	}
 }
 
-/// [`TB_GETANCHORHIGHLIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getanchorhighlight)
+/// [`TB_GETANCHORHIGHLIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getanchorhighlight)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -300,7 +300,7 @@ unsafe impl MsgSend for GetAnchorHighlight {
 	}
 }
 
-/// [`TB_GETBITMAP`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbitmap)
+/// [`TB_GETBITMAP`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getbitmap)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -325,7 +325,7 @@ unsafe impl MsgSend for GetBitmap {
 	}
 }
 
-/// [`TB_GETBITMAPFLAGS`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbitmapflags)
+/// [`TB_GETBITMAPFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getbitmapflags)
 /// message, which has no parameters.
 ///
 /// Return type: `co::TBBF`.
@@ -348,7 +348,7 @@ unsafe impl MsgSend for GetBitmapFlags {
 	}
 }
 
-/// [`TB_GETBUTTON`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbutton)
+/// [`TB_GETBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getbutton)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -374,7 +374,7 @@ unsafe impl<'a, 'b> MsgSend for GetButton<'a, 'b> {
 	}
 }
 
-/// [`TB_GETBUTTONINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbuttoninfo)
+/// [`TB_GETBUTTONINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getbuttoninfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -400,7 +400,7 @@ unsafe impl<'a, 'b> MsgSend for GetButtonInfo<'a, 'b> {
 	}
 }
 
-/// [`TB_GETBUTTONSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbuttonsize)
+/// [`TB_GETBUTTONSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getbuttonsize)
 /// message, which has no parameters.
 ///
 /// Return type: `SIZE`.
@@ -423,7 +423,7 @@ unsafe impl MsgSend for GetButtonSize {
 	}
 }
 
-/// [`TB_GETBUTTONTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getbuttontext)
+/// [`TB_GETBUTTONTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getbuttontext)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -449,7 +449,7 @@ unsafe impl<'a> MsgSend for GetButtonText<'a> {
 	}
 }
 
-/// [`TB_GETCOLORSCHEME`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getcolorscheme)
+/// [`TB_GETCOLORSCHEME`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getcolorscheme)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -474,7 +474,7 @@ unsafe impl<'a> MsgSend for GetColorScheme<'a> {
 	}
 }
 
-/// [`TB_GETDISABLEDIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getdisabledimagelist)
+/// [`TB_GETDISABLEDIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getdisabledimagelist)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -497,7 +497,7 @@ unsafe impl MsgSend for GetDisabledImageList {
 	}
 }
 
-/// [`TB_GETEXTENDEDSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getextendedstyle)
+/// [`TB_GETEXTENDEDSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getextendedstyle)
 /// message, which has no parameters.
 ///
 /// Return type: `co::TBSTYLE_EX`.
@@ -520,7 +520,7 @@ unsafe impl MsgSend for GetExtendedStyle {
 	}
 }
 
-/// [`TB_GETHOTIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-gethotimagelist)
+/// [`TB_GETHOTIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-gethotimagelist)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -543,7 +543,7 @@ unsafe impl MsgSend for GetHotImageList {
 	}
 }
 
-/// [`TB_GETHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-gethotitem)
+/// [`TB_GETHOTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-gethotitem)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -566,7 +566,7 @@ unsafe impl MsgSend for GetHotItem {
 	}
 }
 
-/// [`TB_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getidealsize)
+/// [`TB_GETIDEALSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getidealsize)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -592,7 +592,7 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 	}
 }
 
-/// [`TB_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getimagelist)
+/// [`TB_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getimagelist)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -615,7 +615,7 @@ unsafe impl MsgSend for GetImageList {
 	}
 }
 
-/// [`TB_GETIMAGELISTCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getimagelistcount)
+/// [`TB_GETIMAGELISTCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getimagelistcount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -638,7 +638,7 @@ unsafe impl MsgSend for GetImageListCount {
 	}
 }
 
-/// [`TB_GETINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getinsertmark)
+/// [`TB_GETINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getinsertmark)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -663,7 +663,7 @@ unsafe impl<'a> MsgSend for GetInsertMark<'a> {
 	}
 }
 
-/// [`TB_GETINSERTMARKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getinsertmarkcolor)
+/// [`TB_GETINSERTMARKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getinsertmarkcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
@@ -686,7 +686,7 @@ unsafe impl MsgSend for GetInsertMarkColor {
 	}
 }
 
-/// [`TB_GETITEMDROPDOWNRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getitemdropdownrect)
+/// [`TB_GETITEMDROPDOWNRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getitemdropdownrect)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -712,7 +712,7 @@ unsafe impl<'a> MsgSend for GetItemDropdownRect<'a> {
 	}
 }
 
-/// [`TB_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getitemrect)
+/// [`TB_GETITEMRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getitemrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -738,7 +738,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	}
 }
 
-/// [`TB_GETMAXSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getmaxsize)
+/// [`TB_GETMAXSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getmaxsize)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -763,7 +763,7 @@ unsafe impl<'a> MsgSend for GetMaxSize<'a> {
 	}
 }
 
-/// [`TB_GETMETRICS`](https://docs.microsoft.com/en-us/windows/win32/controls/tb-getmetrics)
+/// [`TB_GETMETRICS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getmetrics)
 /// message parameters.
 ///
 /// Return type: `()`.

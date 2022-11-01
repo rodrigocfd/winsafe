@@ -21,11 +21,11 @@ pub struct IMediaFilterVT {
 
 com_interface! { IMediaFilter: "dshow";
 	"56a86899-0ad4-11ce-b03a-0020af0ba770";
-	/// [`IMediaFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
+	/// [`IMediaFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
 	/// COM interface over [`IMediaFilterVT`](crate::vt::IMediaFilterVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -42,7 +42,7 @@ impl dshow_IMediaFilter for IMediaFilter {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMediaFilter: ole_IPersist {
-	/// [`IMediaFilter::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
+	/// [`IMediaFilter::Pause`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {
 		unsafe {
@@ -51,7 +51,7 @@ pub trait dshow_IMediaFilter: ole_IPersist {
 		}
 	}
 
-	/// [`IMediaFilter::Run`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-run)
+	/// [`IMediaFilter::Run`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-run)
 	/// method.
 	fn Run(&self, start: i64) -> HrResult<bool> {
 		unsafe {
@@ -60,7 +60,7 @@ pub trait dshow_IMediaFilter: ole_IPersist {
 		}
 	}
 
-	/// [`IMediaFilter::Stop`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-stop)
+	/// [`IMediaFilter::Stop`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-stop)
 	/// method.
 	fn Stop(&self) -> HrResult<bool> {
 		unsafe {

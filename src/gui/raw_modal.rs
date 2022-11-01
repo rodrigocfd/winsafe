@@ -179,38 +179,38 @@ impl RawModal {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowModalOpts {
 	/// Window class name to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to an auto-generated string.
 	pub class_name: String,
 	/// Window class styles to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `co::CS::DBLCLKS`.
 	pub class_style: co::CS,
 	/// Window main icon to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Icon::None`.
 	pub class_icon: Icon,
 	/// Window cursor to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Cursor::Idc(co::IDC::ARROW)`.
 	pub class_cursor: Cursor,
 	/// Window background brush to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Brush::Color(co::COLOR::BTNFACE)`.
 	pub class_bg_brush: Brush,
 
 	/// Window title to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
 	pub title: String,
 	/// Size of window client area, in pixels, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	/// Does not include title bar or borders.
 	///
 	/// Will be adjusted to match current system DPI.
@@ -218,7 +218,7 @@ pub struct WindowModalOpts {
 	/// Defaults to 500 x 400.
 	pub size: SIZE,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CAPTION | WS::SYSMENU | WS::CLIPCHILDREN | WS::BORDER | WS::VISIBLE`.
 	///
@@ -227,7 +227,7 @@ pub struct WindowModalOpts {
 	/// * `WS::MAXIMIZEBOX` to have a maximize button.
 	pub style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT | WS_EX::DLGMODALFRAME`.
 	pub ex_style: co::WS_EX,

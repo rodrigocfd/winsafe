@@ -6,7 +6,7 @@ use crate::co;
 use crate::comctl::decl::{HIMAGELIST, HTREEITEM, NMHDR};
 use crate::user::decl::{COLORREF, HDC};
 
-/// [`IMAGELISTDRAWPARAMS`](https://docs.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
+/// [`IMAGELISTDRAWPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 #[repr(C)]
@@ -32,7 +32,7 @@ pub struct IMAGELISTDRAWPARAMS {
 
 impl_default_with_size!(IMAGELISTDRAWPARAMS, cbSize);
 
-/// [`NMTVASYNCDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
+/// [`NMTVASYNCDRAW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 #[repr(C)]

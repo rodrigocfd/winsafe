@@ -7,7 +7,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::COLORREF;
 use crate::user::privs::zero_as_err;
 
-/// [`PBM_DELTAPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-deltapos)
+/// [`PBM_DELTAPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-deltapos)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -32,7 +32,7 @@ unsafe impl MsgSend for DeltaPos {
 	}
 }
 
-/// [`PBM_GETBARCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getbarcolor)
+/// [`PBM_GETBARCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-getbarcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -58,7 +58,7 @@ unsafe impl MsgSend for GetBarColor {
 	}
 }
 
-/// [`PBM_GETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getbkcolor)
+/// [`PBM_GETBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-getbkcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -84,7 +84,7 @@ unsafe impl MsgSend for GetBkColor {
 	}
 }
 
-/// [`PBM_GETPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getpos)
+/// [`PBM_GETPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-getpos)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -107,7 +107,7 @@ unsafe impl MsgSend for GetPos {
 	}
 }
 
-/// [`PBM_GETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getrange)
+/// [`PBM_GETRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-getrange)
 /// message parameters.
 ///
 /// Return type: `i32`.
@@ -133,7 +133,7 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 	}
 }
 
-/// [`PBM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getstate)
+/// [`PBM_GETSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-getstate)
 /// message, which has no parameters.
 ///
 /// Return type: `co::PBST`.
@@ -156,7 +156,7 @@ unsafe impl MsgSend for GetState {
 	}
 }
 
-/// [`PBM_GETSTEP`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-getstep)
+/// [`PBM_GETSTEP`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-getstep)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -179,7 +179,7 @@ unsafe impl MsgSend for GetStep {
 	}
 }
 
-/// [`PBM_SETBARCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setbarcolor)
+/// [`PBM_SETBARCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setbarcolor)
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -207,7 +207,7 @@ unsafe impl MsgSend for SetBarColor {
 	}
 }
 
-/// [`PBM_SETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setbkcolor)
+/// [`PBM_SETBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setbkcolor)
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -235,7 +235,7 @@ unsafe impl MsgSend for SetBkColor {
 	}
 }
 
-/// [`PBM_SETMARQUEE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setmarquee)
+/// [`PBM_SETMARQUEE`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setmarquee)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -261,7 +261,7 @@ unsafe impl MsgSend for SetMarquee {
 	}
 }
 
-/// [`PBM_SETPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setpos)
+/// [`PBM_SETPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setpos)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -286,7 +286,7 @@ unsafe impl MsgSend for SetPos {
 	}
 }
 
-/// [`PBM_SETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setrange)
+/// [`PBM_SETRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setrange)
 /// message parameters.
 ///
 /// Return type: `SysResult<(u16, u16)>`.
@@ -312,7 +312,7 @@ unsafe impl MsgSend for SetRange {
 	}
 }
 
-/// [`PBM_SETRANGE32`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setrange32)
+/// [`PBM_SETRANGE32`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setrange32)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -338,7 +338,7 @@ unsafe impl MsgSend for SetRange32 {
 	}
 }
 
-/// [`PBM_SETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
+/// [`PBM_SETSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 /// message parameters.
 ///
 /// Return type: `co::PBST`.
@@ -363,7 +363,7 @@ unsafe impl MsgSend for SetState {
 	}
 }
 
-/// [`PBM_SETSTEP`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-setstep)
+/// [`PBM_SETSTEP`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setstep)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -388,7 +388,7 @@ unsafe impl MsgSend for SetStep {
 	}
 }
 
-/// [`PBM_STEPIT`](https://docs.microsoft.com/en-us/windows/win32/controls/pbm-stepit)
+/// [`PBM_STEPIT`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-stepit)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.

@@ -1,7 +1,7 @@
 use crate::user::decl::HWND;
 
 /// Type alias to
-/// [`CCHOOKPROC`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nc-commdlg-lpcchookproc)
+/// [`CCHOOKPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nc-commdlg-lpcchookproc)
 /// callback function.
 #[cfg_attr(docsrs, doc(cfg(feature = "comdlg")))]
 pub type CCHOOKPROC =

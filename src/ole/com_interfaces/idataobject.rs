@@ -23,11 +23,11 @@ pub struct IDataObjectVT {
 
 com_interface! { IDataObject: "ole";
 	"0000010e-0000-0000-c000-000000000046";
-	/// [`IDataObject`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-idataobject)
+	/// [`IDataObject`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-idataobject)
 	/// COM interface over [`IDataObjectVT`](crate::vt::IDataObjectVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 

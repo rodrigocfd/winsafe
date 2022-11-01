@@ -4,7 +4,7 @@ use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::bool_to_sysresult;
 use crate::version;
 
-/// [`GetFileVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
+/// [`GetFileVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
 /// function.
 ///
 /// The buffer will be automatically allocated with
@@ -27,7 +27,7 @@ pub fn GetFileVersionInfo(file_name: &str) -> SysResult<Vec<u8>> {
 	).map(|_| buf)
 }
 
-/// [`GetFileVersionInfoSize`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
+/// [`GetFileVersionInfoSize`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 #[must_use]
@@ -44,7 +44,7 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 	}
 }
 
-/// [`VarQueryValue`](https://docs.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
+/// [`VarQueryValue`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
 /// function.
 ///
 /// **Note:** The returned pointer and size vary according to `lpSubBlock`. If

@@ -5,10 +5,10 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{BmpIcon, HBITMAP, HICON};
 
 pub_struct_msg_empty! { Click: co::BM::CLICK.into(); "user";
-	/// [`BM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-click)
+	/// [`BM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-click)
 }
 
-/// [`BM_GETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getcheck)
+/// [`BM_GETCHECK`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-getcheck)
 /// message parameters.
 ///
 /// Return type: `co::BST`.
@@ -31,7 +31,7 @@ unsafe impl MsgSend for GetCheck {
 	}
 }
 
-/// [`BM_GETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getimage)
+/// [`BM_GETIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-getimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIcon>`.
@@ -60,7 +60,7 @@ unsafe impl MsgSend for GetImage {
 	}
 }
 
-/// [`BM_GETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-getstate)
+/// [`BM_GETSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-getstate)
 /// message, which has no parameters.
 ///
 /// Return type: `co::BST`.
@@ -83,7 +83,7 @@ unsafe impl MsgSend for GetState {
 	}
 }
 
-/// [`BM_SETCHECK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setcheck)
+/// [`BM_SETCHECK`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-setcheck)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -108,7 +108,7 @@ unsafe impl MsgSend for SetCheck {
 	}
 }
 
-/// [`BM_SETDONTCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setdontclick)
+/// [`BM_SETDONTCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-setdontclick)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -133,7 +133,7 @@ unsafe impl MsgSend for SetDontClick {
 	}
 }
 
-/// [`BM_SETIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setimage)
+/// [`BM_SETIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-setimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIcon>`.
@@ -168,7 +168,7 @@ unsafe impl MsgSend for SetImage {
 	}
 }
 
-/// [`BM_SETSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setstate)
+/// [`BM_SETSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-setstate)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -193,7 +193,7 @@ unsafe impl MsgSend for SetState {
 	}
 }
 
-/// [`BM_SETSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/bm-setstyle)
+/// [`BM_SETSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-setstyle)
 /// message parameters.
 ///
 /// Return type: `()`.

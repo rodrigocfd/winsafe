@@ -6,7 +6,7 @@ use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HFILEMAP: "kernel";
 	/// Handle to a
-	/// [file mapping](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
+	/// [file mapping](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
 	/// Originally just a `HANDLE`.
 	///
 	/// Unless you need something specific, consider using the
@@ -26,7 +26,7 @@ impl kernel_Hfilemap for HFILEMAP {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hfilemap: Handle {
-	/// [`MapViewOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
+	/// [`MapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
 	/// method.
 	///
 	/// **Note:** Must be paired with an

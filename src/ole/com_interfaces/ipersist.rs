@@ -17,11 +17,11 @@ pub struct IPersistVT {
 
 com_interface! { IPersist: "ole";
 	"0000010c-0000-0000-c000-000000000046";
-	/// [`IPersist`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
+	/// [`IPersist`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
 	/// COM interface over [`IPersistVT`](crate::vt::IPersistVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -37,7 +37,7 @@ impl ole_IPersist for IPersist {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IPersist: ole_IUnknown {
-	/// [`IPersist::GetClassID`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
+	/// [`IPersist::GetClassID`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 	/// method.
 	#[must_use]
 	fn GetClassID(&self) -> HrResult<co::CLSID> {

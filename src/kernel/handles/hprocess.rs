@@ -11,7 +11,7 @@ use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HPROCESS: "kernel";
 	/// Handle to a
-	/// [process](https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
+	/// [process](https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
 	/// Originally just a `HANDLE`.
 }
 
@@ -28,7 +28,7 @@ impl kernel_Hprocess for HPROCESS {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hprocess: Handle {
-	/// [`CreateProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
+	/// [`CreateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
 	/// static method.
 	///
 	/// **Note:** Process and thread handles are returned in the
@@ -71,13 +71,13 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| pi)
 	}
 
-	/// [`ExitProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
+	/// [`ExitProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
 	/// static method.
 	fn ExitProcess(exit_code: u32) {
 		unsafe { kernel::ffi::ExitProcess(exit_code) }
 	}
 
-	/// [`FlushInstructionCache`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
+	/// [`FlushInstructionCache`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// method.
 	fn FlushInstructionCache(self,
 		base_address: *mut std::ffi::c_void, size: usize) -> SysResult<()>
@@ -91,27 +91,27 @@ pub trait kernel_Hprocess: Handle {
 		)
 	}
 
-	/// [`FlushProcessWriteBuffers`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
+	/// [`FlushProcessWriteBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
 	/// static method.
 	fn FlushProcessWriteBuffers() {
 		unsafe { kernel::ffi::FlushProcessWriteBuffers() }
 	}
 
-	/// [`GetCurrentProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
+	/// [`GetCurrentProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
 	/// static method.
 	#[must_use]
 	fn GetCurrentProcess() -> HPROCESS {
 		HPROCESS(unsafe { kernel::ffi::GetCurrentProcess() })
 	}
 
-	/// [`GetCurrentProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
+	/// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
 	/// static method.
 	#[must_use]
 	fn GetCurrentProcessId() -> u32 {
 		unsafe { kernel::ffi::GetCurrentProcessId() }
 	}
 
-	/// [`GetExitCodeProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
+	/// [`GetExitCodeProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
 	/// method.
 	#[must_use]
 	fn GetExitCodeProcess(self) -> SysResult<u32> {
@@ -123,7 +123,7 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| exit_code)
 	}
 
-	/// [`GetGuiResources`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
+	/// [`GetGuiResources`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
 	/// method.
 	#[must_use]
 	fn GetGuiResources(self, flags: co::GR) -> SysResult<u32> {
@@ -133,7 +133,7 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
-	/// [`GetProcessHandleCount`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount)
+	/// [`GetProcessHandleCount`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount)
 	/// method.
 	#[must_use]
 	fn GetProcessHandleCount(self) -> SysResult<u32> {
@@ -145,7 +145,7 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| count)
 	}
 
-	/// [`GetProcessId`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
+	/// [`GetProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
 	/// method.
 	#[must_use]
 	fn GetProcessId(self) -> SysResult<u32> {
@@ -155,7 +155,7 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
-	/// [`GetProcessTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
+	/// [`GetProcessTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
 	/// method.
 	fn GetProcessTimes(self,
 		creation: &mut FILETIME,
@@ -176,14 +176,14 @@ pub trait kernel_Hprocess: Handle {
 		)
 	}
 
-	/// [`IsDebuggerPresent`](https://docs.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-isdebuggerpresent)
+	/// [`IsDebuggerPresent`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-isdebuggerpresent)
 	/// static method.
 	#[must_use]
 	fn IsDebuggerPresent() -> bool {
 		unsafe { kernel::ffi::IsDebuggerPresent() != 0 }
 	}
 
-	/// [`IsProcessCritical`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)
+	/// [`IsProcessCritical`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)
 	/// method.
 	#[must_use]
 	fn IsProcessCritical(self) -> SysResult<bool> {
@@ -196,7 +196,7 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
-	/// [`IsWow64Process`](https://docs.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
+	/// [`IsWow64Process`](https://learn.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
 	/// method.
 	#[must_use]
 	fn IsWow64Process(self) -> SysResult<bool> {
@@ -207,7 +207,7 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
-	/// [`OpenProcess`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)
+	/// [`OpenProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)
 	/// static method.
 	///
 	/// This method will return
@@ -233,7 +233,7 @@ pub trait kernel_Hprocess: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`OpenProcessToken`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
+	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -255,7 +255,7 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| handle)
 	}
 
-	/// [`QueryFullProcessImageName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
+	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
 	/// method.
 	#[must_use]
 	fn QueryFullProcessImageName(self,
@@ -276,7 +276,7 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| buf.to_string())
 	}
 
-	/// [`WaitForSingleObject`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
+	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// method.
 	fn WaitForSingleObject(self,
 		milliseconds: Option<u32>) -> SysResult<co::WAIT>

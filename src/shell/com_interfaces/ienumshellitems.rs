@@ -24,11 +24,11 @@ pub struct IEnumShellItemsVT {
 
 com_interface! { IEnumShellItems: "shell";
 	"70629033-e363-4a28-a567-0db78006e6d7";
-	/// [`IEnumShellItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ienumshellitems)
+	/// [`IEnumShellItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ienumshellitems)
 	/// COM interface over [`IEnumShellItemsVT`](crate::vt::IEnumShellItemsVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -72,7 +72,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 		Box::new(EnumShellItemsIter::new(unsafe { self.ptr() }))
 	}
 
-	/// [`IEnumShellItems::Next`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-next)
+	/// [`IEnumShellItems::Next`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-next)
 	/// method.
 	///
 	/// Prefer using
@@ -96,7 +96,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumShellItems::Reset`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-reset)
+	/// [`IEnumShellItems::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-reset)
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
 		unsafe {
@@ -105,7 +105,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumShellItems::Skip`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-skip)
+	/// [`IEnumShellItems::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
 		unsafe {

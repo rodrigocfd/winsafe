@@ -10,7 +10,7 @@ use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HFILE: "kernel";
 	/// Handle to a
-	/// [file](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
+	/// [file](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
 	/// Originally just a `HANDLE`.
 	///
 	/// Unless you need something specific, consider using the
@@ -30,7 +30,7 @@ impl kernel_Hfile for HFILE {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hfile: Handle {
-	/// [`CreateFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
+	/// [`CreateFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -103,7 +103,7 @@ pub trait kernel_Hfile: Handle {
 		}
 	}
 
-	/// [`CreateFileMapping`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
+	/// [`CreateFileMapping`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -128,7 +128,7 @@ pub trait kernel_Hfile: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GetFileInformationByHandle`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
+	/// [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 	/// method.
 	fn GetFileInformationByHandle(self,
 		fi: &mut BY_HANDLE_FILE_INFORMATION) -> SysResult<()>
@@ -142,7 +142,7 @@ pub trait kernel_Hfile: Handle {
 		)
 	}
 
-	/// [`GetFileSizeEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
+	/// [`GetFileSizeEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// method.
 	#[must_use]
 	fn GetFileSizeEx(self) -> SysResult<usize> {
@@ -153,7 +153,7 @@ pub trait kernel_Hfile: Handle {
 		}
 	}
 
-	/// [`GetFileType`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
+	/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
 	/// method.
 	#[must_use]
 	fn GetFileType(self) -> SysResult<co::FILE_TYPE> {
@@ -166,7 +166,7 @@ pub trait kernel_Hfile: Handle {
 		}
 	}
 
-	/// [`LockFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
+	/// [`LockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -185,7 +185,7 @@ pub trait kernel_Hfile: Handle {
 		)
 	}
 
-	/// [`ReadFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
+	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// method.
 	///
 	/// Returns the number of bytes read.
@@ -207,13 +207,13 @@ pub trait kernel_Hfile: Handle {
 		).map(|_| bytes_read)
 	}
 
-	/// [`SetEndOfFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
+	/// [`SetEndOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
 	/// method.
 	fn SetEndOfFile(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::SetEndOfFile(self.as_ptr()) })
 	}
 
-	/// [`SetFilePointerEx`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
+	/// [`SetFilePointerEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
 	/// method.
 	fn SetFilePointerEx(self,
 		distance_to_move: i64,
@@ -233,7 +233,7 @@ pub trait kernel_Hfile: Handle {
 		).map(|_| new_offset)
 	}
 
-	/// [`UnlockFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
+	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// method.
 	fn UnlockFile(self,
 		offset: u64, num_bytes_to_lock: u64) -> SysResult<()>
@@ -251,7 +251,7 @@ pub trait kernel_Hfile: Handle {
 		)
 	}
 
-	/// [`WriteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
+	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// method.
 	///
 	/// Returns the number of bytes written.

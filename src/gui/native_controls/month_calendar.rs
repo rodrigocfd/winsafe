@@ -29,7 +29,7 @@ struct Obj { // actual fields of MonthCalendar
 //------------------------------------------------------------------------------
 
 /// Native
-/// [month calendar](https://docs.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
+/// [month calendar](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
@@ -192,7 +192,7 @@ impl MonthCalendar {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct MonthCalendarOpts {
 	/// Control position within parent client area, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -201,17 +201,17 @@ pub struct MonthCalendarOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Month calendar styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `MCS::NoValue`.
 	pub month_calendar_style: co::MCS,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
 	pub window_ex_style: co::WS_EX,

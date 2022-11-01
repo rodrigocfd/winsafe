@@ -6,7 +6,7 @@ pub mod decl {
 
 	impl_handle! { HTREEITEM: "comctl";
 		/// Handle to an
-		/// [tree view item](https://docs.microsoft.com/en-us/windows/win32/controls/tree-view-controls).
+		/// [tree view item](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls).
 	}
 }
 

@@ -4,7 +4,7 @@ use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::MsgSend;
 
-/// [`TVM_SETEXTENDEDSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-setextendedstyle)
+/// [`TVM_SETEXTENDEDSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setextendedstyle)
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.

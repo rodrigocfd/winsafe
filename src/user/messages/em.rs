@@ -5,7 +5,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{EDITWORDBREAKPROC, POINT, RECT, SIZE};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
-/// [`EN_CANUNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-canundo)
+/// [`EN_CANUNDO`](https://learn.microsoft.com/en-us/windows/win32/controls/em-canundo)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -28,7 +28,7 @@ unsafe impl MsgSend for CanUndo {
 	}
 }
 
-/// [`EM_CHARFROMPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-charfrompos)
+/// [`EM_CHARFROMPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/em-charfrompos)
 /// message parameters.
 ///
 /// Return type: `(u16, u16)`.
@@ -56,10 +56,10 @@ unsafe impl MsgSend for CharFromPos {
 }
 
 pub_struct_msg_empty! { EmptyUndoBuffer: co::EM::EMPTYUNDOBUFFER.into(); "user";
-	/// [`EM_EMPTYUNDOBUFFER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-emptyundobuffer)
+	/// [`EM_EMPTYUNDOBUFFER`](https://learn.microsoft.com/en-us/windows/win32/controls/em-emptyundobuffer)
 }
 
-/// [`EM_FMTLINES`](https://docs.microsoft.com/en-us/windows/win32/controls/em-fmtlines)
+/// [`EM_FMTLINES`](https://learn.microsoft.com/en-us/windows/win32/controls/em-fmtlines)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -84,7 +84,7 @@ unsafe impl MsgSend for FmtLines {
 	}
 }
 
-/// [`EM_GETFIRSTVISIBLELINE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getfirstvisibleline)
+/// [`EM_GETFIRSTVISIBLELINE`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getfirstvisibleline)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -107,7 +107,7 @@ unsafe impl MsgSend for GetFirstVisibleLine {
 	}
 }
 
-/// [`EM_GETHANDLE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-gethandle)
+/// [`EM_GETHANDLE`](https://learn.microsoft.com/en-us/windows/win32/controls/em-gethandle)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HLOCAL>`.
@@ -130,7 +130,7 @@ unsafe impl MsgSend for GetHandle {
 	}
 }
 
-/// [`EM_GETIMESTATUS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getimestatus)
+/// [`EM_GETIMESTATUS`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getimestatus)
 /// message, which has no parameters.
 ///
 /// Return type: `co::EIMES`.
@@ -153,7 +153,7 @@ unsafe impl MsgSend for GetImeStatus {
 	}
 }
 
-/// [`EM_GETLIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getlimittext)
+/// [`EM_GETLIMITTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getlimittext)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -176,7 +176,7 @@ unsafe impl MsgSend for GetLimitText {
 	}
 }
 
-/// [`EM_GETLINE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getline)
+/// [`EM_GETLINE`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getline)
 /// message parameters.
 ///
 /// The message will retrieve at most `buffer.len() - 1` characters for the
@@ -216,7 +216,7 @@ unsafe impl<'a> MsgSend for GetLine<'a> {
 	}
 }
 
-/// [`EM_GETLINECOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getlinecount)
+/// [`EM_GETLINECOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getlinecount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -239,7 +239,7 @@ unsafe impl MsgSend for GetLineCount {
 	}
 }
 
-/// [`EM_GETMARGINS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getmargins)
+/// [`EM_GETMARGINS`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getmargins)
 /// message, which has no parameters.
 ///
 /// Return type: `SIZE`.
@@ -262,7 +262,7 @@ unsafe impl MsgSend for GetMargins {
 	}
 }
 
-/// [`EM_GETMODIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getmodify)
+/// [`EM_GETMODIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getmodify)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -285,7 +285,7 @@ unsafe impl MsgSend for GetModify {
 	}
 }
 
-/// [`EM_GETPASSWORDCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getpasswordchar)
+/// [`EM_GETPASSWORDCHAR`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getpasswordchar)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<char>`.
@@ -308,7 +308,7 @@ unsafe impl MsgSend for GetPasswordChar {
 	}
 }
 
-/// [`EM_GETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getrect)
+/// [`EM_GETRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -333,7 +333,7 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 	}
 }
 
-/// [`EM_GETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getsel)
+/// [`EM_GETSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getsel)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -359,7 +359,7 @@ unsafe impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 	}
 }
 
-/// [`EM_GETTHUMB`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getthumb)
+/// [`EM_GETTHUMB`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getthumb)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -382,7 +382,7 @@ unsafe impl MsgSend for GetThumb {
 	}
 }
 
-/// [`EM_GETWORDBREAKPROC`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getwordbreakproc)
+/// [`EM_GETWORDBREAKPROC`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getwordbreakproc)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<EDITWORDBREAKPROC>`.
@@ -405,7 +405,7 @@ unsafe impl MsgSend for GetWordBreakProc {
 	}
 }
 
-/// [`EM_LIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-limittext)
+/// [`EM_LIMITTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/em-limittext)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -430,7 +430,7 @@ unsafe impl MsgSend for LimitText {
 	}
 }
 
-/// [`EM_LINEFROMCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-linefromchar)
+/// [`EM_LINEFROMCHAR`](https://learn.microsoft.com/en-us/windows/win32/controls/em-linefromchar)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -455,7 +455,7 @@ unsafe impl MsgSend for LineFromChar {
 	}
 }
 
-/// [`EM_LINEINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/em-lineindex)
+/// [`EM_LINEINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/em-lineindex)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -480,7 +480,7 @@ unsafe impl MsgSend for LineIndex {
 	}
 }
 
-/// [`EM_LINELENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/em-linelength)
+/// [`EM_LINELENGTH`](https://learn.microsoft.com/en-us/windows/win32/controls/em-linelength)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -505,7 +505,7 @@ unsafe impl MsgSend for LineLength {
 	}
 }
 
-/// [`EM_LINESCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-linescroll)
+/// [`EM_LINESCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/em-linescroll)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -531,7 +531,7 @@ unsafe impl MsgSend for LineScroll {
 	}
 }
 
-/// [`EM_POSFROMCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-posfromchar)
+/// [`EM_POSFROMCHAR`](https://learn.microsoft.com/en-us/windows/win32/controls/em-posfromchar)
 /// message parameters.
 ///
 /// Return type: `POINT`.
@@ -558,7 +558,7 @@ unsafe impl MsgSend for PosFromChar {
 	}
 }
 
-/// [`EM_REPLACESEL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-replacesel)
+/// [`EM_REPLACESEL`](https://learn.microsoft.com/en-us/windows/win32/controls/em-replacesel)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -584,7 +584,7 @@ unsafe impl MsgSend for ReplaceSel {
 	}
 }
 
-/// [`EM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-scroll)
+/// [`EM_SCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/em-scroll)
 /// message parameters.
 ///
 /// Return type: `SysResult<u16>`.
@@ -610,10 +610,10 @@ unsafe impl MsgSend for Scroll {
 }
 
 pub_struct_msg_empty! { ScrollCaret: co::EM::SCROLLCARET.into(); "user";
-	/// [`EM_SCROLLCARET`](https://docs.microsoft.com/en-us/windows/win32/controls/em-scrollcaret)
+	/// [`EM_SCROLLCARET`](https://learn.microsoft.com/en-us/windows/win32/controls/em-scrollcaret)
 }
 
-/// [`EM_SETHANDLE`](https://docs.microsoft.com/en-us/windows/win32/controls/em-sethandle)
+/// [`EM_SETHANDLE`](https://learn.microsoft.com/en-us/windows/win32/controls/em-sethandle)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -638,7 +638,7 @@ unsafe impl MsgSend for SetHandle {
 	}
 }
 
-/// [`EM_SETIMESTATUS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setimestatus)
+/// [`EM_SETIMESTATUS`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setimestatus)
 /// message parameters.
 ///
 /// Return type: `co::EIMES`.
@@ -663,7 +663,7 @@ unsafe impl MsgSend for SetImeStatus {
 	}
 }
 
-/// [`EM_SETLIMITTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setlimittext)
+/// [`EM_SETLIMITTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setlimittext)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -688,7 +688,7 @@ unsafe impl MsgSend for SetLimitText {
 	}
 }
 
-/// [`EM_SETMARGINS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setmargins)
+/// [`EM_SETMARGINS`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setmargins)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -714,7 +714,7 @@ unsafe impl MsgSend for SetMargins {
 	}
 }
 
-/// [`EM_SETMODIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setmodify)
+/// [`EM_SETMODIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setmodify)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -739,7 +739,7 @@ unsafe impl MsgSend for SetModify {
 	}
 }
 
-/// [`EM_SETPASSWORDCHAR`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setpasswordchar)
+/// [`EM_SETPASSWORDCHAR`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setpasswordchar)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -764,7 +764,7 @@ unsafe impl MsgSend for SetPasswordChar {
 	}
 }
 
-/// [`EM_SETREADONLY`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setreadonly)
+/// [`EM_SETREADONLY`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setreadonly)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -789,7 +789,7 @@ unsafe impl MsgSend for SetReadOnly {
 	}
 }
 
-/// [`EM_SETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setrect)
+/// [`EM_SETRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setrect)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -815,7 +815,7 @@ unsafe impl<'a> MsgSend for SetRect<'a> {
 	}
 }
 
-/// [`EM_SETRECTNP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setrectnp)
+/// [`EM_SETRECTNP`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setrectnp)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -841,7 +841,7 @@ unsafe impl<'a> MsgSend for SetRectNp<'a> {
 	}
 }
 
-/// [`EM_SETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setsel)
+/// [`EM_SETSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setsel)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -867,7 +867,7 @@ unsafe impl MsgSend for SetSel {
 	}
 }
 
-/// [`EM_SETTABSTOPS`](https://docs.microsoft.com/en-us/windows/win32/controls/em-settabstops)
+/// [`EM_SETTABSTOPS`](https://learn.microsoft.com/en-us/windows/win32/controls/em-settabstops)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -892,7 +892,7 @@ unsafe impl<'a> MsgSend for SetTabStops<'a> {
 	}
 }
 
-/// [`EM_SETWORDBREAKPROC`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setwordbreakproc)
+/// [`EM_SETWORDBREAKPROC`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setwordbreakproc)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -917,7 +917,7 @@ unsafe impl MsgSend for SetWordBreakProc {
 	}
 }
 
-/// [`EM_UNDO`](https://docs.microsoft.com/en-us/windows/win32/controls/em-undo)
+/// [`EM_UNDO`](https://learn.microsoft.com/en-us/windows/win32/controls/em-undo)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.

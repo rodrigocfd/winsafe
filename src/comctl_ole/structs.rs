@@ -8,7 +8,7 @@ use crate::kernel::decl::HINSTANCE;
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::user::decl::{HICON, HWND};
 
-/// [`TASKDIALOG_BUTTON`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
+/// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[repr(C, packed)]
@@ -26,7 +26,7 @@ impl<'a> TASKDIALOG_BUTTON<'a> {
 	pub_fn_string_ptr_get_set!('a, pszButtonText, set_pszButtonText);
 }
 
-/// [`TASKDIALOGCONFIG`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
+/// [`TASKDIALOGCONFIG`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[repr(C, packed)]

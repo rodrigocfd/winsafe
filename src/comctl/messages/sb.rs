@@ -8,7 +8,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HICON, RECT};
 use crate::user::privs::zero_as_err;
 
-/// [`SB_GETBORDERS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getborders)
+/// [`SB_GETBORDERS`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-getborders)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -33,7 +33,7 @@ unsafe impl<'a> MsgSend for GetBorders<'a> {
 	}
 }
 
-/// [`SB_GETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-geticon)
+/// [`SB_GETICON`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-geticon)
 /// message parameters.
 ///
 /// Return type: `SysResult<HICON>`.
@@ -58,7 +58,7 @@ unsafe impl MsgSend for GetIcon {
 	}
 }
 
-/// [`SB_GETPARTS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getparts)
+/// [`SB_GETPARTS`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-getparts)
 /// message parameters.
 ///
 /// Return type: `u8`.
@@ -83,7 +83,7 @@ unsafe impl<'a> MsgSend for GetParts<'a> {
 	}
 }
 
-/// [`SB_GETRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getrect)
+/// [`SB_GETRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-getrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -109,7 +109,7 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 	}
 }
 
-/// [`SB_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettext)
+/// [`SB_GETTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-gettext)
 /// message parameters.
 ///
 /// Return type: `(u16, co::SBT)`.
@@ -135,7 +135,7 @@ unsafe impl<'a> MsgSend for GetText<'a> {
 	}
 }
 
-/// [`SB_GETTEXTLENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettextlength)
+/// [`SB_GETTEXTLENGTH`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-gettextlength)
 /// message parameters.
 ///
 /// Return type: `(u16, co::SBT)`.
@@ -160,7 +160,7 @@ unsafe impl MsgSend for GetTextLength {
 	}
 }
 
-/// [`SB_GETTIPTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-gettiptext)
+/// [`SB_GETTIPTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-gettiptext)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -186,7 +186,7 @@ unsafe impl<'a> MsgSend for GetTipText<'a> {
 	}
 }
 
-/// [`SB_GETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-getunicodeformat)
+/// [`SB_GETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-getunicodeformat)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -209,7 +209,7 @@ unsafe impl MsgSend for GetUnicodeFormat {
 	}
 }
 
-/// [`SB_ISSIMPLE`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-issimple)
+/// [`SB_ISSIMPLE`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-issimple)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -232,7 +232,7 @@ unsafe impl MsgSend for IsSimple {
 	}
 }
 
-/// [`SB_SETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setbkcolor)
+/// [`SB_SETBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-setbkcolor)
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -260,7 +260,7 @@ unsafe impl MsgSend for SetBkColor {
 	}
 }
 
-/// [`SB_SETICON`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-seticon)
+/// [`SB_SETICON`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-seticon)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -286,7 +286,7 @@ unsafe impl MsgSend for SetIcon {
 	}
 }
 
-/// [`SB_SETMINHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setminheight)
+/// [`SB_SETMINHEIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-setminheight)
 /// message parameters.
 ///
 /// Return value: `()`.
@@ -311,7 +311,7 @@ unsafe impl MsgSend for SetMinHeight {
 	}
 }
 
-/// [`SB_SETPARTS`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setparts)
+/// [`SB_SETPARTS`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-setparts)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -336,7 +336,7 @@ unsafe impl<'a> MsgSend for SetParts<'a> {
 	}
 }
 
-/// [`SB_SETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-settext)
+/// [`SB_SETTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-settext)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -363,7 +363,7 @@ unsafe impl MsgSend for SetText {
 	}
 }
 
-/// [`SB_SETTIPTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-settiptext)
+/// [`SB_SETTIPTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-settiptext)
 /// message parameters.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTipText {
@@ -387,7 +387,7 @@ unsafe impl MsgSend for SetTipText {
 	}
 }
 
-/// [`SB_SETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-setunicodeformat)
+/// [`SB_SETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-setunicodeformat)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -412,7 +412,7 @@ unsafe impl MsgSend for SetUnicodeFormat {
 	}
 }
 
-/// [`SB_SIMPLE`](https://docs.microsoft.com/en-us/windows/win32/controls/sb-simple)
+/// [`SB_SIMPLE`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-simple)
 /// message parameters.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Simple {

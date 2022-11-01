@@ -9,7 +9,7 @@ use crate::kernel::privs::{MAX_PATH, parse_multi_z_str};
 use crate::ole::decl::GUID;
 use crate::user::decl::{HICON, HWND};
 
-/// [`COMDLG_FILTERSPEC`](https://docs.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
+/// [`COMDLG_FILTERSPEC`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
@@ -28,7 +28,7 @@ impl<'a, 'b> COMDLG_FILTERSPEC<'a, 'b> {
 	pub_fn_string_ptr_get_set!('b, pszSpec, set_pszSpec);
 }
 
-/// [`NOTIFYICONDATA`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)
+/// [`NOTIFYICONDATA`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
@@ -58,7 +58,7 @@ impl NOTIFYICONDATA {
 	pub_fn_string_arr_get_set!(szInfoTitle, set_szInfoTitle);
 }
 
-/// [`SHFILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
+/// [`SHFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
@@ -77,7 +77,7 @@ impl SHFILEINFO {
 	pub_fn_string_arr_get_set!(szTypeName, set_szTypeName);
 }
 
-/// [`SHFILEOPSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileopstructw)
+/// [`SHFILEOPSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileopstructw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
@@ -134,7 +134,7 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub_fn_string_ptr_get_set!('c, lpszProgressTitle, set_lpszProgressTitle);
 }
 
-/// [`SHSTOCKICONINFO`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shstockiconinfo)
+/// [`SHSTOCKICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shstockiconinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]

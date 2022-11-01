@@ -2,7 +2,7 @@ use crate::co;
 use crate::user::decl::HWND;
 
 /// Type alias to
-/// [`DLGPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-dlgproc)
+/// [`DLGPROC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-dlgproc)
 /// callback function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub type DLGPROC =
@@ -14,7 +14,7 @@ pub type DLGPROC =
 	) -> isize;
 
 /// Type alias to
-/// [`EDITWORDBREAKPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-editwordbreakprocw)
+/// [`EDITWORDBREAKPROC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-editwordbreakprocw)
 /// callback function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub type EDITWORDBREAKPROC =
@@ -26,7 +26,7 @@ pub type EDITWORDBREAKPROC =
 	) -> i32;
 
 /// Type alias to
-/// [`HOOKPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-hookproc)
+/// [`HOOKPROC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-hookproc)
 /// callback function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub type HOOKPROC =
@@ -37,7 +37,7 @@ pub type HOOKPROC =
 	) -> isize;
 
 /// Type alias to
-/// [`TIMERPROC`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-timerproc)
+/// [`TIMERPROC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-timerproc)
 /// callback function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub type TIMERPROC =
@@ -49,7 +49,7 @@ pub type TIMERPROC =
 	);
 
 /// Type alias to
-/// [`WNDPROC`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms633573(v=vs.85))
+/// [`WNDPROC`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms633573(v=vs.85))
 /// callback function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub type WNDPROC =

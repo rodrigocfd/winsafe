@@ -21,11 +21,11 @@ pub struct ITaskbarListVT {
 
 com_interface! { ITaskbarList: "shell";
 	"56fdf342-fd6d-11d0-958a-006097c9a090";
-	/// [`ITaskbarList`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
+	/// [`ITaskbarList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 	/// COM interface over [`ITaskbarListVT`](crate::vt::ITaskbarListVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -55,7 +55,7 @@ impl shell_ITaskbarList for ITaskbarList {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_ITaskbarList: ole_IUnknown {
-	/// [`ITaskbarList::ActivateTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
+	/// [`ITaskbarList::ActivateTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
 	/// method.
 	fn ActivateTab(&self, hwnd: HWND) -> HrResult<()> {
 		unsafe {
@@ -64,7 +64,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 		}
 	}
 
-	/// [`ITaskbarList::AddTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-addtab)
+	/// [`ITaskbarList::AddTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-addtab)
 	/// method.
 	fn AddTab(&self, hwnd: HWND) -> HrResult<()> {
 		unsafe {
@@ -73,7 +73,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 		}
 	}
 
-	/// [`ITaskbarList::DeleteTab`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-deletetab)
+	/// [`ITaskbarList::DeleteTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-deletetab)
 	/// method.
 	fn DeleteTab(&self, hwnd: HWND) -> HrResult<()> {
 		unsafe {
@@ -82,7 +82,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 		}
 	}
 
-	/// [`ITaskbarList::HrInit`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit)
+	/// [`ITaskbarList::HrInit`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit)
 	/// method.
 	fn HrInit(&self) -> HrResult<()> {
 		unsafe {
@@ -91,7 +91,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 		}
 	}
 
-	/// [`ITaskbarList::SetActiveAlt`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
+	/// [`ITaskbarList::SetActiveAlt`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
 	/// method.
 	fn SetActiveAlt(&self, hwnd: HWND) -> HrResult<()> {
 		unsafe {

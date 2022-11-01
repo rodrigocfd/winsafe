@@ -3,7 +3,7 @@ use crate::prelude::FormattedError;
 
 const_no_debug_display! { HRESULT: u32: "ole";
 	/// A native
-	/// [COM error code](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
+	/// [COM error code](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
 	/// (`u32`), which can be considered a superset of
 	/// [`ERROR`](crate::co::ERROR).
 	///
@@ -39,7 +39,7 @@ const_no_debug_display! { HRESULT: u32: "ole";
 	///
 	/// An [`ERROR`](crate::co::ERROR) can be seamlessly converted into an
 	/// `HRESULT`. This operation is equivalent to the
-	/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
+	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 	/// macro:
 	///
 	/// ```rust,no_run
@@ -80,7 +80,7 @@ impl FormattedError for HRESULT {}
 
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 impl co::ERROR {
-	/// [`HRESULT_FROM_WIN32`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
+	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 	/// method. Originally a macro.
 	pub const fn to_hresult(self) -> co::HRESULT {
 		if self.0 as i32 <= 0 {
@@ -92,19 +92,19 @@ impl co::ERROR {
 }
 
 impl HRESULT {
-	/// [`HRESULT_CODE`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_code)
+	/// [`HRESULT_CODE`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_code)
 	/// method. Originally a macro.
 	pub fn code(self) -> u16 {
 		(self.0 & 0xffff) as u16
 	}
 
-	/// [`HRESULT_FACILITY`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_facility)
+	/// [`HRESULT_FACILITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_facility)
 	/// method. Originally a macro.
 	pub fn facility(self) -> co::FACILITY {
 		co::FACILITY((self.0 >> 16) & 0x1fff)
 	}
 
-	/// [`HRESULT_SEVERITY`](https://docs.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
+	/// [`HRESULT_SEVERITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
 	/// method. Originally a macro.
 	pub fn severity(self) -> co::SEVERITY {
 		co::SEVERITY(((self.0 >> 31) & 0x1) as _)

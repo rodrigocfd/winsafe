@@ -9,7 +9,7 @@ use crate::msg::{wm, WndMsg};
 use crate::prelude::{GuiEvents, MsgSendRecv};
 
 /// Exposes window
-/// [messages](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
+/// [messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
 /// plus native control notifications.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
@@ -123,7 +123,7 @@ impl WindowEventsAll {
 		})
 	}
 
-	/// [`WM_TIMER`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
+	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 	/// message, narrowed to a specific timer ID.
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
@@ -131,7 +131,7 @@ impl WindowEventsAll {
 		self.tmrs.push(timer_id, Box::new(func));
 	}
 
-	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
 	/// message, for specific code and control ID.
 	///
 	/// A command notification must be narrowed by the
@@ -149,7 +149,7 @@ impl WindowEventsAll {
 		self.cmds.push((code, ctrl_id), Box::new(func));
 	}
 
-	/// [`WM_COMMAND`](https://docs.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
 	/// message, handling both `CMD::Accelerator` and `CMD::Menu`, for a
 	/// specific command ID.
 	///

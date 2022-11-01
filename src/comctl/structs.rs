@@ -15,7 +15,7 @@ use crate::user::decl::{
 	COLORREF, HBITMAP, HDC, HWND, POINT, RECT, SIZE, WINDOWPOS,
 };
 
-/// [`BUTTON_IMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
+/// [`BUTTON_IMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -25,7 +25,7 @@ pub struct BUTTON_IMAGELIST {
 	pub uAlign: co::BIA,
 }
 
-/// [`BUTTON_SPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_splitinfo)
+/// [`BUTTON_SPLITINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_splitinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -36,7 +36,7 @@ pub struct BUTTON_SPLITINFO {
 	pub size: SIZE,
 }
 
-/// [`COLORSCHEME`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-colorscheme)
+/// [`COLORSCHEME`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-colorscheme)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -48,7 +48,7 @@ pub struct COLORSCHEME {
 
 impl_default_with_size!(COLORSCHEME, dwSize);
 
-/// [`DATETIMEPICKERINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-datetimepickerinfo)
+/// [`DATETIMEPICKERINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-datetimepickerinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -65,7 +65,7 @@ pub struct DATETIMEPICKERINFO {
 
 impl_default_with_size!(DATETIMEPICKERINFO, cbSize);
 
-/// [`EDITBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-editballoontip)
+/// [`EDITBALLOONTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-editballoontip)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -86,7 +86,7 @@ impl<'a, 'b> EDITBALLOONTIP<'a, 'b> {
 	pub_fn_string_ptr_get_set!('b, pszText, set_pszText);
 }
 
-/// [`HDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hditemw)
+/// [`HDITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hditemw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -113,7 +113,7 @@ impl<'a> HDITEM<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
-/// [`HDHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdhittestinfo)
+/// [`HDHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdhittestinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -124,7 +124,7 @@ pub struct HDHITTESTINFO {
 	pub iItem: i32,
 }
 
-/// [`HDLAYOUT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdlayout)
+/// [`HDLAYOUT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdlayout)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -150,7 +150,7 @@ impl<'a, 'b> HDLAYOUT<'a, 'b> {
 	}
 }
 
-/// [`INITCOMMONCONTROLSEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-initcommoncontrolsex)
+/// [`INITCOMMONCONTROLSEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-initcommoncontrolsex)
 /// struct
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -161,7 +161,7 @@ pub struct INITCOMMONCONTROLSEX {
 
 impl_default_with_size!(INITCOMMONCONTROLSEX, dwSize);
 
-/// [`LITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
+/// [`LITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -181,7 +181,7 @@ impl LITEM {
 	pub_fn_string_arr_get_set!(szUrl, set_szUrl);
 }
 
-/// [`LVBKIMAGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvbkimagew)
+/// [`LVBKIMAGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvbkimagew)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -202,7 +202,7 @@ impl<'a> LVBKIMAGE<'a> {
 	pub_fn_string_buf_get_set!('a, pszImage, set_pszImage, cchImageMax);
 }
 
-/// [`LVCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
+/// [`LVCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -228,7 +228,7 @@ impl<'a> LVCOLUMN<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
-/// [`LVFINDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
+/// [`LVFINDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -248,7 +248,7 @@ impl<'a> LVFINDINFO<'a> {
 	pub_fn_string_ptr_get_set!('a, psz, set_psz);
 }
 
-/// [`LVFOOTERINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooterinfo)
+/// [`LVFOOTERINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooterinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -267,7 +267,7 @@ impl<'a> LVFOOTERINFO<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
-/// [`LVFOOTERITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooteritem)
+/// [`LVFOOTERITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooteritem)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -288,7 +288,7 @@ impl<'a> LVFOOTERITEM<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
-/// [`LVGROUP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroup)
+/// [`LVGROUP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroup)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -339,7 +339,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	pub_fn_string_buf_get_set!('g, pszSubsetTitle, set_pszSubsetTitle, cchSubsetTitle);
 }
 
-/// [`LVGROUPMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroupmetrics)
+/// [`LVGROUPMETRICS`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroupmetrics)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -360,7 +360,7 @@ pub struct LVGROUPMETRICS {
 
 impl_default_with_size!(LVGROUPMETRICS, cbSize);
 
-/// [`LVHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvhittestinfo)
+/// [`LVHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvhittestinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -373,7 +373,7 @@ pub struct LVHITTESTINFO {
 	pub iGroup: i32,
 }
 
-/// [`LVINSERTGROUPSORTED`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertgroupsorted)
+/// [`LVINSERTGROUPSORTED`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertgroupsorted)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -393,7 +393,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> Default for LVINSERTGROUPSORTED<'a, 'b, 'c, 'd,
 	}
 }
 
-/// [`LVINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertmark)
+/// [`LVINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertmark)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -406,7 +406,7 @@ pub struct LVINSERTMARK {
 
 impl_default!(LVINSERTMARK);
 
-/// [`LVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
+/// [`LVITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -436,7 +436,7 @@ impl<'a> LVITEM<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
-/// [`LVITEMINDEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemindex)
+/// [`LVITEMINDEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemindex)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -446,7 +446,7 @@ pub struct LVITEMINDEX {
 	pub iGroup: i32,
 }
 
-/// [`LVSETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvsetinfotip)
+/// [`LVSETINFOTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvsetinfotip)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -466,7 +466,7 @@ impl<'a> LVSETINFOTIP<'a> {
 	pub_fn_string_ptr_get_set!('a, pszText, set_pszText);
 }
 
-/// [`LVTILEINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileinfo)
+/// [`LVTILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -519,7 +519,7 @@ impl<'a> LVTILEINFO<'a> {
 	}
 }
 
-/// [`LVTILEVIEWINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileviewinfo)
+/// [`LVTILEVIEWINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileviewinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -534,7 +534,7 @@ pub struct LVTILEVIEWINFO {
 
 impl_default_with_size!(LVTILEVIEWINFO, cbSize);
 
-/// [`MCGRIDINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
+/// [`MCGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -561,7 +561,7 @@ impl<'a> MCGRIDINFO<'a> {
 	pub_fn_bool_get_set!(bSelected, set_bSelected); // ignore cchName
 }
 
-/// [`MCHITTESTINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mchittestinfo)
+/// [`MCHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mchittestinfo)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -578,7 +578,7 @@ pub struct MCHITTESTINFO {
 
 impl_default_with_size!(MCHITTESTINFO, cbSize);
 
-/// [`MONTHDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/monthdaystate)
+/// [`MONTHDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/monthdaystate)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(transparent)]
@@ -615,7 +615,7 @@ impl MONTHDAYSTATE {
 	}
 }
 
-/// [`NMBCDROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
+/// [`NMBCDROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbcdropdown)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -624,7 +624,7 @@ pub struct NMBCDROPDOWN {
 	pub rcButton: RECT,
 }
 
-/// [`NMBCHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbchotitem)
+/// [`NMBCHOTITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmbchotitem)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -633,7 +633,7 @@ pub struct NMBCHOTITEM {
 	pub dwFlags: co::HICF,
 }
 
-/// [`NMCHAR`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmchar)
+/// [`NMCHAR`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmchar)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -644,7 +644,7 @@ pub struct NMCHAR {
 	pub dwItemNext: u32,
 }
 
-/// [`NMCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmcustomdraw)
+/// [`NMCUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmcustomdraw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -658,7 +658,7 @@ pub struct NMCUSTOMDRAW {
 	pub lItemlParam: isize,
 }
 
-/// [`NMDATETIMECHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimechange)
+/// [`NMDATETIMECHANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimechange)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -668,7 +668,7 @@ pub struct NMDATETIMECHANGE {
 	pub st: SYSTEMTIME,
 }
 
-/// [`NMDATETIMEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatw)
+/// [`NMDATETIMEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -699,7 +699,7 @@ impl<'a> NMDATETIMEFORMAT<'a> {
 	}
 }
 
-/// [`NMDATETIMEFORMATQUERY`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatqueryw)
+/// [`NMDATETIMEFORMATQUERY`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatqueryw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -717,7 +717,7 @@ impl<'a> NMDATETIMEFORMATQUERY<'a> {
 	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
 }
 
-/// [`NMDATETIMESTRING`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimestringw)
+/// [`NMDATETIMESTRING`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimestringw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -736,7 +736,7 @@ impl<'a> NMDATETIMESTRING<'a> {
 	pub_fn_string_ptr_get_set!('a, pszUserString, set_pszUserString);
 }
 
-/// [`NMDATETIMEWMKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimewmkeydownw)
+/// [`NMDATETIMEWMKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimewmkeydownw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -755,7 +755,7 @@ impl<'a> NMDATETIMEWMKEYDOWN<'a> {
 	pub_fn_string_ptr_get_set!('a, pszFormat, set_pszFormat);
 }
 
-/// [`NMDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)
+/// [`NMDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -774,7 +774,7 @@ impl<'a> NMDAYSTATE<'a> {
 	pub_fn_array_buf_get_set!('a, prgDayState, set_prgDayState, cDayState, MONTHDAYSTATE);
 }
 
-/// [`NMHDR`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
+/// [`NMHDR`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -784,7 +784,7 @@ pub struct NMHDR {
 	pub hwndFrom: HWND,
 	idFrom: usize,
 	/// Notification code sent in
-	/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify).
+	/// [`WM_NOTIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-notify).
 	pub code: co::NM,
 }
 
@@ -803,7 +803,7 @@ impl NMHDR {
 	}
 }
 
-/// [`NMITEMACTIVATE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
+/// [`NMITEMACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -819,7 +819,7 @@ pub struct NMITEMACTIVATE {
 	pub uKeyFlags: co::LVKF,
 }
 
-/// [`PBRANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-pbrange)
+/// [`PBRANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-pbrange)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -829,7 +829,7 @@ pub struct PBRANGE {
 	pub iHigh: i32,
 }
 
-/// [`NMIPADDRESS`](https://docs.microsoft.com/en-us/windows/win32/api/Commctrl/ns-commctrl-nmipaddress)
+/// [`NMIPADDRESS`](https://learn.microsoft.com/en-us/windows/win32/api/Commctrl/ns-commctrl-nmipaddress)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -839,7 +839,7 @@ pub struct NMIPADDRESS {
 	pub iValue: i32,
 }
 
-/// [`NMLINK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlink)
+/// [`NMLINK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlink)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -848,7 +848,7 @@ pub struct NMLINK {
 	pub item: LITEM,
 }
 
-/// [`NMLISTVIEW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlistview)
+/// [`NMLISTVIEW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlistview)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -863,7 +863,7 @@ pub struct NMLISTVIEW {
 	pub lParam: isize,
 }
 
-/// [`NMLVCACHEHINT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcachehint)
+/// [`NMLVCACHEHINT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcachehint)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -873,7 +873,7 @@ pub struct NMLVCACHEHINT {
 	pub iTo: i32,
 }
 
-/// [`NMLVCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcustomdraw)
+/// [`NMLVCUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvcustomdraw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -892,7 +892,7 @@ pub struct NMLVCUSTOMDRAW {
 	pub uAlign: co::LVGA_HEADER,
 }
 
-/// [`NMLVDISPINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvdispinfow)
+/// [`NMLVDISPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvdispinfow)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -901,7 +901,7 @@ pub struct NMLVDISPINFO<'a> {
 	pub item: LVITEM<'a>,
 }
 
-/// [`NMLVEMPTYMARKUP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvemptymarkup)
+/// [`NMLVEMPTYMARKUP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvemptymarkup)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -917,7 +917,7 @@ impl NMLVEMPTYMARKUP {
 	pub_fn_string_arr_get_set!(szMarkup, set_szMarkup);
 }
 
-/// [`NMLVFINDITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
+/// [`NMLVFINDITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -927,7 +927,7 @@ pub struct NMLVFINDITEM<'a> {
 	pub lvfi: LVFINDINFO<'a>,
 }
 
-/// [`NMLVGETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvgetinfotipw)
+/// [`NMLVGETINFOTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvgetinfotipw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -949,7 +949,7 @@ impl<'a> NMLVGETINFOTIP<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
-/// [`NMLVKEYDOWN`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
+/// [`NMLVKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -961,7 +961,7 @@ pub struct NMLVKEYDOWN {
 
 impl_default!(NMLVKEYDOWN);
 
-/// [`NMLVLINK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvlink)
+/// [`NMLVLINK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvlink)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -972,7 +972,7 @@ pub struct NMLVLINK {
 	pub iSubItem: i32,
 }
 
-/// [`NMLVODSTATECHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvodstatechange)
+/// [`NMLVODSTATECHANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvodstatechange)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -984,7 +984,7 @@ pub struct NMLVODSTATECHANGE {
 	pub uOldState: co::LVIS,
 }
 
-/// [`NMLVSCROLL`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvscroll)
+/// [`NMLVSCROLL`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvscroll)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -994,7 +994,7 @@ pub struct NMLVSCROLL {
 	pub dy: i32,
 }
 
-/// [`NMMOUSE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmmouse)
+/// [`NMMOUSE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmmouse)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1006,7 +1006,7 @@ pub struct NMMOUSE {
 	pub dwHitInfo: isize,
 }
 
-/// [`NMTRBTHUMBPOSCHANGING`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtrbthumbposchanging)
+/// [`NMTRBTHUMBPOSCHANGING`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtrbthumbposchanging)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1016,7 +1016,7 @@ pub struct NMTRBTHUMBPOSCHANGING {
 	pub nReason: co::TB,
 }
 
-/// [`NMSELCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmselchange)
+/// [`NMSELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmselchange)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1026,7 +1026,7 @@ pub struct NMSELCHANGE {
 	pub stSelEnd: SYSTEMTIME,
 }
 
-/// [`NMTREEVIEW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtreevieww)
+/// [`NMTREEVIEW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtreevieww)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1038,7 +1038,7 @@ pub struct NMTREEVIEW<'a, 'b> {
 	pub ptDrag: POINT,
 }
 
-/// [`NMTVCUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvcustomdraw)
+/// [`NMTVCUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvcustomdraw)
 /// stuct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1049,7 +1049,7 @@ pub struct NMTVCUSTOMDRAW {
 	pub iLevel: i32,
 }
 
-/// [`NMTVITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvitemchange)
+/// [`NMTVITEMCHANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvitemchange)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1062,7 +1062,7 @@ pub struct NMTVITEMCHANGE {
 	pub lParam: isize,
 }
 
-/// [`NMVIEWCHANGE`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmviewchange)
+/// [`NMVIEWCHANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmviewchange)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1072,7 +1072,7 @@ pub struct NMVIEWCHANGE {
 	pub dwNewView: co::MCMV,
 }
 
-/// [`TBADDBITMAP`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbaddbitmap)
+/// [`TBADDBITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbaddbitmap)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1105,7 +1105,7 @@ impl TBADDBITMAP {
 	}
 }
 
-/// [`TBBUTTON`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbutton)
+/// [`TBBUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbutton)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1143,7 +1143,7 @@ impl<'a> TBBUTTON<'a> {
 	}
 }
 
-/// [`TBBUTTONINFO`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbuttoninfow)
+/// [`TBBUTTONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbuttoninfow)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1168,7 +1168,7 @@ impl<'a> TBBUTTONINFO<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchText);
 }
 
-/// [`TBINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbinsertmark)
+/// [`TBINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbinsertmark)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1178,7 +1178,7 @@ pub struct TBINSERTMARK {
 	pub dwFlags: co::TBIMHT,
 }
 
-/// [`TBMETRICS`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbmetrics)
+/// [`TBMETRICS`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbmetrics)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1195,7 +1195,7 @@ pub struct TBMETRICS {
 
 impl_default_with_size!(TBMETRICS, cbSize);
 
-/// [`TVINSERTSTRUCT`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
+/// [`TVINSERTSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1220,7 +1220,7 @@ impl<'a> TVINSERTSTRUCT<'a> {
 	}
 }
 
-/// [`TVITEMEX`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemexw)
+/// [`TVITEMEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemexw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
@@ -1250,7 +1250,7 @@ impl<'a> TVITEMEX<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
 
-/// [`TVITEM`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemw)
+/// [`TVITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemw)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]

@@ -3,7 +3,7 @@ use crate::msg::WndMsg;
 use crate::prelude::{MsgSend, MsgSendRecv};
 use crate::shell::decl::HDROP;
 
-/// [`WM_DROPFILES`](https://docs.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
+/// [`WM_DROPFILES`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 /// message parameters.
 ///
 /// Return type: `()`.

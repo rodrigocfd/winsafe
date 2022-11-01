@@ -8,7 +8,7 @@ use crate::user::decl::{COLORREF, HDC, HRGN, RECT};
 
 impl_handle! { HTHEME: "uxtheme";
 	/// Handle to a
-	/// [theme](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/).
+	/// [theme](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/).
 }
 
 impl uxtheme_Htheme for HTHEME {}
@@ -23,13 +23,13 @@ impl uxtheme_Htheme for HTHEME {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]
 pub trait uxtheme_Htheme: Handle {
-	/// [`CloseThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
+	/// [`CloseThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
 	fn CloseThemeData(self) -> HrResult<()> {
 		ok_to_hrresult(unsafe { uxtheme::ffi::CloseThemeData(self.as_ptr()) })
 	}
 
-	/// [`DrawThemeBackground`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
+	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// method.
 	fn DrawThemeBackground(self,
 		hdc: HDC, part_state: co::VS,
@@ -49,14 +49,14 @@ pub trait uxtheme_Htheme: Handle {
 		)
 	}
 
-	/// [`GetThemeAppProperties`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
+	/// [`GetThemeAppProperties`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
 	/// static method.
 	#[must_use]
 	fn GetThemeAppProperties() -> co::STAP {
 		co::STAP(unsafe { uxtheme::ffi::GetThemeAppProperties() })
 	}
 
-	/// [`GetThemeBackgroundContentRect`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
+	/// [`GetThemeBackgroundContentRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
 	/// method.
 	#[must_use]
 	fn GetThemeBackgroundContentRect(self,
@@ -78,7 +78,7 @@ pub trait uxtheme_Htheme: Handle {
 		).map(|_| rc_content)
 	}
 
-	/// [`GetThemeBackgroundExtent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
+	/// [`GetThemeBackgroundExtent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
 	/// method.
 	#[must_use]
 	fn GetThemeBackgroundExtent(self,
@@ -100,7 +100,7 @@ pub trait uxtheme_Htheme: Handle {
 		 ).map(|_| rc_extent)
 	}
 
-	/// [`GetThemeBackgroundRegion`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
+	/// [`GetThemeBackgroundRegion`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -125,7 +125,7 @@ pub trait uxtheme_Htheme: Handle {
 		).map(|_| hrgn)
 	}
 
-	/// [`GetThemeColor`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
+	/// [`GetThemeColor`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
 	/// method.
 	#[must_use]
 	fn GetThemeColor(self,
@@ -146,7 +146,7 @@ pub trait uxtheme_Htheme: Handle {
 		).map(|_| color)
 	}
 
-	/// [`IsThemeBackgroundPartiallyTransparent`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
+	/// [`IsThemeBackgroundPartiallyTransparent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
 	/// method.
 	#[must_use]
 	fn IsThemeBackgroundPartiallyTransparent(self,
@@ -158,7 +158,7 @@ pub trait uxtheme_Htheme: Handle {
 		}
 	}
 
-	/// [`IsThemePartDefined`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
+	/// [`IsThemePartDefined`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
 	/// method.
 	#[must_use]
 	fn IsThemePartDefined(self, part_state: co::VS) -> bool {

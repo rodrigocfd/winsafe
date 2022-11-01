@@ -18,11 +18,11 @@ pub struct IFileOpenDialogVT {
 
 com_interface! { IFileOpenDialog: "shell";
 	"d57c7288-d4ad-4768-be02-9d969532d960";
-	/// [`IFileOpenDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
+	/// [`IFileOpenDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
 	/// COM interface over [`IFileOpenDialogVT`](crate::vt::IFileOpenDialogVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -79,7 +79,7 @@ impl shell_IFileOpenDialog for IFileOpenDialog {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IFileOpenDialog: shell_IFileDialog {
-	/// [`IFileOpenDialog::GetResults`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
+	/// [`IFileOpenDialog::GetResults`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 	/// method.
 	///
 	/// If you chose multiple files, this is the method to retrieve the paths.
@@ -115,7 +115,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		}
 	}
 
-	/// [`IFileOpenDialog::GetSelectedItems`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
+	/// [`IFileOpenDialog::GetSelectedItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 	/// method.
 	#[must_use]
 	fn GetSelectedItems(&self) -> HrResult<IShellItemArray> {

@@ -5,7 +5,7 @@ use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
 
-/// [`EM_GETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-getcuebanner)
+/// [`EM_GETCUEBANNER`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getcuebanner)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -33,7 +33,7 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 	}
 }
 
-/// [`EM_HIDEBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-hideballoontip)
+/// [`EM_HIDEBALLOONTIP`](https://learn.microsoft.com/en-us/windows/win32/controls/em-hideballoontip)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -56,7 +56,7 @@ unsafe impl MsgSend for HideBalloonTip {
 	}
 }
 
-/// [`EM_SETCUEBANNER`](https://docs.microsoft.com/en-us/windows/win32/controls/em-setcuebanner)
+/// [`EM_SETCUEBANNER`](https://learn.microsoft.com/en-us/windows/win32/controls/em-setcuebanner)
 /// message parameters..
 ///
 /// Return type: `SysResult<()>`.
@@ -82,7 +82,7 @@ unsafe impl MsgSend for SetCueBanner {
 	}
 }
 
-/// [`EM_SHOWBALLOONTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/em-showballoontip)
+/// [`EM_SHOWBALLOONTIP`](https://learn.microsoft.com/en-us/windows/win32/controls/em-showballoontip)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.

@@ -7,7 +7,7 @@ use crate::kernel::decl::SysResult;
 use crate::kernel::privs::bool_to_sysresult;
 
 /// A native
-/// [handle](https://docs.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects),
+/// [handle](https://learn.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects),
 /// base to all other handles.
 ///
 /// Prefer importing this trait through the prelude:
@@ -62,7 +62,7 @@ pub trait Handle: Sized
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait HandleClose: Handle {
-	/// [`CloseHandle`](https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
+	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// method.
 	fn CloseHandle(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::CloseHandle(self.as_ptr()) })

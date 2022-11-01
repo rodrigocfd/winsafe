@@ -18,7 +18,7 @@ impl gdi_Hrgn for HRGN {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hrgn: gdi_Hgdiobj {
-	/// [`CreateRectRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
+	/// [`CreateRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -33,7 +33,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreateRectRgnIndirect`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgnindirect)
+	/// [`CreateRectRgnIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgnindirect)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -45,7 +45,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`CreateRoundRectRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn)
+	/// [`CreateRoundRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -63,7 +63,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`OffsetClipRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
+	/// [`OffsetClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
 	/// method.
 	fn OffsetClipRgn(self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetClipRgn(self.as_ptr(), x, y) } {
@@ -72,7 +72,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 		}
 	}
 
-	/// [`OffsetRgn`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
+	/// [`OffsetRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
 	/// method.
 	fn OffsetRgn(self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetRgn(self.as_ptr(), x, y) } {
@@ -81,14 +81,14 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 		}
 	}
 
-	/// [`PtInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptinregion)
+	/// [`PtInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptinregion)
 	/// method.
 	#[must_use]
 	fn PtInRegion(self, x: i32, y: i32) -> bool {
 		unsafe { gdi::ffi::PtInRegion(self.as_ptr(), x, y) != 0 }
 	}
 
-	/// [`RectInRegion`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
+	/// [`RectInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// method.
 	#[must_use]
 	fn RectInRegion(self, rc: &RECT) -> bool {

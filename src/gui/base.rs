@@ -184,7 +184,7 @@ impl Base {
 			if !GetMessage(&mut msg, None, 0, 0).unwrap() {
 				// WM_QUIT was sent, gracefully terminate the program.
 				// wParam has the program exit code.
-				// https://docs.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
+				// https://learn.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
 				return match unsafe { QUIT_ERROR.take() } {
 					Some(rt_err) => Err(rt_err),
 					None => Ok(msg.wParam as _),

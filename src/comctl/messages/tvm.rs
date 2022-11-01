@@ -7,7 +7,7 @@ use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
-/// [`TVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-deleteitem)
+/// [`TVM_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-deleteitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -32,7 +32,7 @@ unsafe impl MsgSend for DeleteItem {
 	}
 }
 
-/// [`TVM_EDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-editlabel)
+/// [`TVM_EDITLABEL`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-editlabel)
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>.
@@ -57,7 +57,7 @@ unsafe impl MsgSend for EditLabel {
 	}
 }
 
-/// [`TVM_ENDEDITLABELNOW`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-endeditlabelnow)
+/// [`TVM_ENDEDITLABELNOW`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-endeditlabelnow)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -82,7 +82,7 @@ unsafe impl MsgSend for EndEditLabelNow {
 	}
 }
 
-/// [`TVM_ENSUREVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-ensurevisible)
+/// [`TVM_ENSUREVISIBLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-ensurevisible)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -107,7 +107,7 @@ unsafe impl MsgSend for EnsureVisible {
 	}
 }
 
-/// [`TVM_EXPAND`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-expand)
+/// [`TVM_EXPAND`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-expand)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -133,7 +133,7 @@ unsafe impl MsgSend for Expand {
 	}
 }
 
-/// [`TVM_GETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getbkcolor)
+/// [`TVM_GETBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getbkcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -156,7 +156,7 @@ unsafe impl MsgSend for GetBkColor {
 	}
 }
 
-/// [`TVM_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getcount)
+/// [`TVM_GETCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getcount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -179,7 +179,7 @@ unsafe impl MsgSend for GetCount {
 	}
 }
 
-/// [`TVM_GETEDITCONTROL`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-geteditcontrol)
+/// [`TVM_GETEDITCONTROL`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-geteditcontrol)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
@@ -202,7 +202,7 @@ unsafe impl MsgSend for GetEditControl {
 	}
 }
 
-/// [`TVM_GETEXTENDEDSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getextendedstyle)
+/// [`TVM_GETEXTENDEDSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getextendedstyle)
 /// message, which has no parameters.
 ///
 /// Return type: `co::TVS_EX`.
@@ -225,7 +225,7 @@ unsafe impl MsgSend for GetExtendedStyle {
 	}
 }
 
-/// [`TVM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getimagelist)
+/// [`TVM_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getimagelist)
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -250,7 +250,7 @@ unsafe impl MsgSend for GetImageList {
 	}
 }
 
-/// [`TVM_GETINDENT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getindent)
+/// [`TVM_GETINDENT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getindent)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -273,7 +273,7 @@ unsafe impl MsgSend for GetIndent {
 	}
 }
 
-/// [`TVM_GETINSERTMARKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getinsertmarkcolor)
+/// [`TVM_GETINSERTMARKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getinsertmarkcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
@@ -296,7 +296,7 @@ unsafe impl MsgSend for GetInsertMarkColor {
 	}
 }
 
-/// [`TVM_GETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitem)
+/// [`TVM_GETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -321,7 +321,7 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	}
 }
 
-/// [`TVM_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitemheight)
+/// [`TVM_GETITEMHEIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getitemheight)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -344,7 +344,7 @@ unsafe impl MsgSend for GetItemHeight {
 	}
 }
 
-/// [`TVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitemrect)
+/// [`TVM_GETITEMRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getitemrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -370,7 +370,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	}
 }
 
-/// [`TVM_GETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitemstate)
+/// [`TVM_GETITEMSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getitemstate)
 /// message parameters.
 ///
 /// Return type: `co::TVIS`.
@@ -396,7 +396,7 @@ unsafe impl MsgSend for GetItemState {
 	}
 }
 
-/// [`TVM_GETLINECOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getlinecolor)
+/// [`TVM_GETLINECOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getlinecolor)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -422,7 +422,7 @@ unsafe impl MsgSend for GetLineColor {
 	}
 }
 
-/// [`TVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getnextitem)
+/// [`TVM_GETNEXTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getnextitem)
 /// message parameters.
 ///
 /// Return type: `Option<HTREEITEM>`.
@@ -448,7 +448,7 @@ unsafe impl MsgSend for GetNextItem {
 	}
 }
 
-/// [`TVM_GETSCROLLTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getscrolltime)
+/// [`TVM_GETSCROLLTIME`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getscrolltime)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -471,7 +471,7 @@ unsafe impl MsgSend for GetScrollTime {
 	}
 }
 
-/// [`TVM_GETTEXTCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-gettextcolor)
+/// [`TVM_GETTEXTCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-gettextcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -494,7 +494,7 @@ unsafe impl MsgSend for GetTextColor {
 	}
 }
 
-/// [`TVM_GETTOOLTIPS`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-gettooltips)
+/// [`TVM_GETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-gettooltips)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
@@ -517,7 +517,7 @@ unsafe impl MsgSend for GetTooltips {
 	}
 }
 
-/// [`TVM_GETVISIBLECOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getvisiblecount)
+/// [`TVM_GETVISIBLECOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getvisiblecount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -540,7 +540,7 @@ unsafe impl MsgSend for GetVisibleCount {
 	}
 }
 
-/// [`TVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-insertitem)
+/// [`TVM_INSERTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-insertitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<HTREEITEM>`.
@@ -565,7 +565,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	}
 }
 
-/// [`TVM_SELECTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-selectitem)
+/// [`TVM_SELECTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-selectitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -591,7 +591,7 @@ unsafe impl MsgSend for SelectItem {
 	}
 }
 
-/// [`TVM_SETHOT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-sethot)
+/// [`TVM_SETHOT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-sethot)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -616,7 +616,7 @@ unsafe impl MsgSend for SetHot {
 	}
 }
 
-/// [`TVM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-setimagelist)
+/// [`TVM_SETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setimagelist)
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -642,7 +642,7 @@ unsafe impl MsgSend for SetImageList {
 	}
 }
 
-/// [`TVM_SETINDENT`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-setindent)
+/// [`TVM_SETINDENT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setindent)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -667,7 +667,7 @@ unsafe impl MsgSend for SetIndent {
 	}
 }
 
-/// [`TVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-setitem)
+/// [`TVM_SETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -692,7 +692,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	}
 }
 
-/// [`TVM_SHOWINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-showinfotip)
+/// [`TVM_SHOWINFOTIP`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-showinfotip)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -717,7 +717,7 @@ unsafe impl MsgSend for ShowInfoTip {
 	}
 }
 
-/// [`TVM_SORTCHILDREN`](https://docs.microsoft.com/en-us/windows/win32/controls/tvm-sortchildren)
+/// [`TVM_SORTCHILDREN`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-sortchildren)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.

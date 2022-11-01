@@ -5,7 +5,7 @@ use crate::ole::decl::{ComPtr, HrResult, IUnknown};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
 
-/// [`CoCreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
+/// [`CoCreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
 ///
 /// Returns an [`IUnknown`](crate::IUnknown)-derived COM object.
@@ -54,9 +54,9 @@ pub fn CoCreateInstance<T>(
 	}
 }
 
-/// [`CoInitializeEx`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
+/// [`CoInitializeEx`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
 /// function, which
-/// [initializes](https://docs.microsoft.com/en-us/windows/win32/learnwin32/initializing-the-com-library)
+/// [initializes](https://learn.microsoft.com/en-us/windows/win32/learnwin32/initializing-the-com-library)
 /// the COM library. Returns some error codes as success status.
 ///
 /// **Note:** Must be paired with a [`CoUninitialize`](crate::CoUninitialize)
@@ -90,7 +90,7 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<co::HRESULT> {
 	}
 }
 
-/// [`CoLockObjectExternal`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-colockobjectexternal)
+/// [`CoLockObjectExternal`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-colockobjectexternal)
 /// function.
 ///
 /// **Note:** If you lock a COM pointer, `CoLockObjectExternal` must be called
@@ -112,7 +112,7 @@ pub fn CoLockObjectExternal(
 	)
 }
 
-/// [`CoTaskMemAlloc`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc)
+/// [`CoTaskMemAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc)
 /// function.
 ///
 /// **Note:** Must be paired with a [`CoTaskMemFree`](crate::CoTaskMemFree)
@@ -127,14 +127,14 @@ pub fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
 	}
 }
 
-/// [`CoTaskMemFree`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
+/// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoTaskMemFree(pv: *mut u8) {
 	unsafe { ole::ffi::CoTaskMemFree(pv as _) }
 }
 
-/// [`CoTaskMemRealloc`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
+/// [`CoTaskMemRealloc`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.
 ///
 /// **Note:** Must be paired with a [`CoTaskMemFree`](crate::CoTaskMemFree)
@@ -149,7 +149,7 @@ pub fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
 	}
 }
 
-/// [`CoUninitialize`](https://docs.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
+/// [`CoUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
 /// function.
 ///
 /// **Note:** Must be called **after** all COM interfaces have been released,

@@ -14,9 +14,9 @@ pub trait GuiWindow {
 	/// Note that the handle is initially null, receiving an actual value only
 	/// after the control is physically created, what usually happens right
 	/// before
-	/// [`WM_CREATE`](https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-create)
+	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 	/// or
-	/// [`WM_INITDIALOG`](https://docs.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
+	/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 	/// events.
 	#[must_use]
 	fn hwnd(&self) -> HWND;
@@ -258,7 +258,7 @@ pub trait GuiChildFocus: GuiChild {
 pub trait GuiNativeControl: GuiChild {
 	/// Exposes the subclass events. If at least one event exists, the control
 	/// will be
-	/// [subclassed](https://docs.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
+	/// [subclassed](https://learn.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
 	///
 	/// **Note:** Subclassing may impact performance, use with care.
 	///

@@ -167,38 +167,38 @@ impl RawMain {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowMainOpts {
 	/// Window class name to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to an auto-generated string.
 	pub class_name: String,
 	/// Window class styles to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `co::CS::DBLCLKS`.
 	pub class_style: co::CS,
 	/// Window main icon to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Icon::None`.
 	pub class_icon: Icon,
 	/// Window cursor to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Cursor::Idc(co::IDC::ARROW)`.
 	pub class_cursor: Cursor,
 	/// Window background brush to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Brush::Color(co::COLOR::BTNFACE)`.
 	pub class_bg_brush: Brush,
 
 	/// Window title to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
 	pub title: String,
 	/// Size of window client area, in pixels, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	/// Does not include title bar or borders.
 	///
 	/// Will be adjusted to match current system DPI.
@@ -206,7 +206,7 @@ pub struct WindowMainOpts {
 	/// Defaults to 600 x 500.
 	pub size: SIZE,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CAPTION | WS::SYSMENU | WS::CLIPCHILDREN | WS::BORDER | WS::VISIBLE`.
 	///
@@ -216,12 +216,12 @@ pub struct WindowMainOpts {
 	/// * `WS::MAXIMIZEBOX` to have a maximize button.
 	pub style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
 	pub ex_style: co::WS_EX,
 	/// Main menu of the window to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// This menu is **not** shared: the window will own it, and destroy it when
 	/// the window is destroyed.
@@ -229,7 +229,7 @@ pub struct WindowMainOpts {
 	/// Defaults to none.
 	pub menu: HMENU,
 	/// Main accelerator table of the window to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// This accelerator table is **not** shared: the window will own it, and
 	/// destroy it when the window is destroyed.

@@ -19,7 +19,7 @@ impl oleaut_IPicture for IPicture {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_IPicture: ole_IPicture {
-	/// [`OleLoadPicture`](https://docs.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture)
+	/// [`OleLoadPicture`](https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture)
 	/// static method.
 	///
 	/// # Examples
@@ -56,7 +56,7 @@ pub trait oleaut_IPicture: ole_IPicture {
 		}
 	}
 
-	/// [`OleLoadPicturePath`](https://docs.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicturepath)
+	/// [`OleLoadPicturePath`](https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicturepath)
 	/// static method.
 	///
 	/// The picture must be in BMP (bitmap), JPEG, WMF (metafile), ICO (icon),

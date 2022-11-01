@@ -7,7 +7,7 @@ use crate::prelude::Handle;
 
 impl_handle! { HCURSOR: "user";
 	/// Handle to a
-	/// [cursor](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hcursor).
+	/// [cursor](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hcursor).
 }
 
 impl user_Hcursor for HCURSOR {}
@@ -22,7 +22,7 @@ impl user_Hcursor for HCURSOR {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hcursor: Handle {
-	/// [`CopyCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copycursor)
+	/// [`CopyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copycursor)
 	/// method. Originally a macro.
 	///
 	/// **Note:** Must be paired with an
@@ -35,13 +35,13 @@ pub trait user_Hcursor: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`DestroyCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
+	/// [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
 	/// method.
 	fn DestroyCursor(self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { user::ffi::DestroyCursor(self.as_ptr()) })
 	}
 
-	/// [`SetSystemCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)
+	/// [`SetSystemCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)
 	/// method.
 	fn SetSystemCursor(self, id: co::OCR) -> SysResult<()> {
 		bool_to_sysresult(

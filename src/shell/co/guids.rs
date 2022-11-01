@@ -34,7 +34,7 @@ const_guid! { BHID: "shell";
 
 const_guid! { KNOWNFOLDERID: "shell";
 	/// Known
-	/// [system folders](https://docs.microsoft.com/en-us/windows/win32/shell/knownfolderid)
+	/// [system folders](https://learn.microsoft.com/en-us/windows/win32/shell/knownfolderid)
 	/// (`GUID`).
 	=>
 	NetworkFolder "d20beec4-5ca8-4905-ae3b-bf251ea09b53"

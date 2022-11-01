@@ -21,7 +21,7 @@ pub trait gdi_ole_Hdc: gdi_Hdc {
 	/// Converts HIMETRIC units to pixels.
 	///
 	/// Equivalent to
-	/// [`AtlHiMetricToPixel`](https://docs.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlhimetrictopixel)
+	/// [`AtlHiMetricToPixel`](https://learn.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlhimetrictopixel)
 	/// ATL function.
 	#[must_use]
 	fn HiMetricToPixel(self, x: i32, y: i32) -> (i32, i32) {
@@ -36,7 +36,7 @@ pub trait gdi_ole_Hdc: gdi_Hdc {
 	/// Converts pixels to HIMETRIC units.
 	///
 	/// Equivalent to
-	/// [`AtlPixelToHiMetric`](https://docs.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlpixeltohimetric)
+	/// [`AtlPixelToHiMetric`](https://learn.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlpixeltohimetric)
 	/// ATL function.
 	#[must_use]
 	fn PixelToHiMetric(self, x: i32, y: i32) -> (i32, i32) {

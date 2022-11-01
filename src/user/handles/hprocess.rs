@@ -17,7 +17,7 @@ impl user_Hprocess for HPROCESS {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hprocess: Handle {
-	/// [`SetUserObjectInformation`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
+	/// [`SetUserObjectInformation`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
 	/// method.
 	///
 	/// **Note:** The `pv_info` type varies according to `index`. If you set it

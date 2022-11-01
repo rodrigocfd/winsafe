@@ -3,7 +3,7 @@ use crate::comctl::decl::NMHDR;
 use crate::msg::WndMsg;
 use crate::prelude::{MsgSend, MsgSendRecv};
 
-/// [`WM_NOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/wm-notify)
+/// [`WM_NOTIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-notify)
 /// message parameters.
 ///
 /// Return type: `isize`.

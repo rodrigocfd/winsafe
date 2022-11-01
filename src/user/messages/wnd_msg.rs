@@ -2,7 +2,7 @@ use crate::co;
 use crate::prelude::{MsgSend, MsgSendRecv};
 
 /// Generic
-/// [window message](https://docs.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
+/// [window message](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)
 /// parameters: `WPARAM` and `LPARAM`.
 ///
 /// All message types can be converted to `WndMsg` via the

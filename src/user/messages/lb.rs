@@ -5,7 +5,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{POINT, RECT};
 use crate::user::privs::{LB_ERR, LB_ERRSPACE, zero_as_err};
 
-/// [`LB_ADDFILE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-addfile)
+/// [`LB_ADDFILE`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-addfile)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -34,7 +34,7 @@ unsafe impl MsgSend for AddFile {
 	}
 }
 
-/// [`LB_ADDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-addstring)
+/// [`LB_ADDSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-addstring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -63,7 +63,7 @@ unsafe impl MsgSend for AddString {
 	}
 }
 
-/// [`LB_DELETESTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-deletestring)
+/// [`LB_DELETESTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-deletestring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -91,7 +91,7 @@ unsafe impl MsgSend for DeleteString {
 	}
 }
 
-/// [`LB_DIR`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-dir)
+/// [`LB_DIR`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-dir)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -121,7 +121,7 @@ unsafe impl MsgSend for Dir {
 	}
 }
 
-/// [`LB_FINDSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-findstring)
+/// [`LB_FINDSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-findstring)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -150,7 +150,7 @@ unsafe impl MsgSend for FindString {
 	}
 }
 
-/// [`LB_FINDSTRINGEXACT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-findstringexact)
+/// [`LB_FINDSTRINGEXACT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-findstringexact)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -179,7 +179,7 @@ unsafe impl MsgSend for FindStringExact {
 	}
 }
 
-/// [`LB_GETANCHORINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getanchorindex)
+/// [`LB_GETANCHORINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getanchorindex)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -202,7 +202,7 @@ unsafe impl MsgSend for GetAnchorIndex {
 	}
 }
 
-/// [`LB_GETCARETINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getcaretindex)
+/// [`LB_GETCARETINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getcaretindex)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -225,7 +225,7 @@ unsafe impl MsgSend for GetCaretIndex {
 	}
 }
 
-/// [`LB_GETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getcount)
+/// [`LB_GETCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getcount)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -251,7 +251,7 @@ unsafe impl MsgSend for GetCount {
 	}
 }
 
-/// [`LB_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getcursel)
+/// [`LB_GETCURSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getcursel)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -277,7 +277,7 @@ unsafe impl MsgSend for GetCurSel {
 	}
 }
 
-/// [`LB_GETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gethorizontalextent)
+/// [`LB_GETHORIZONTALEXTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-gethorizontalextent)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -300,7 +300,7 @@ unsafe impl MsgSend for GetHorizontalExtent {
 	}
 }
 
-/// [`LB_GETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemdata)
+/// [`LB_GETITEMDATA`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getitemdata)
 /// message parameters.
 ///
 /// Return type: `SysResult<isize>`.
@@ -329,7 +329,7 @@ unsafe impl MsgSend for GetItemData {
 	}
 }
 
-/// [`LB_GETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemheight)
+/// [`LB_GETITEMHEIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getitemheight)
 /// message parameters.
 ///
 /// Return type: `SysResult<u8>`.
@@ -357,7 +357,7 @@ unsafe impl MsgSend for GetItemHeight {
 	}
 }
 
-/// [`LB_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getitemrect)
+/// [`LB_GETITEMRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getitemrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -386,7 +386,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	}
 }
 
-/// [`LB_GETLISTBOXINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getlistboxinfo)
+/// [`LB_GETLISTBOXINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getlistboxinfo)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -409,7 +409,7 @@ unsafe impl MsgSend for GetListBoxInfo {
 	}
 }
 
-/// [`LB_GETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getlocale)
+/// [`LB_GETLOCALE`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getlocale)
 /// message, which has no parameters.
 ///
 /// Return type: `LCID`.
@@ -432,7 +432,7 @@ unsafe impl MsgSend for GetLocale {
 	}
 }
 
-/// [`LB_GETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getsel)
+/// [`LB_GETSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getsel)
 /// message parameters.
 ///
 /// Return type: `SysResult<bool>`.
@@ -460,7 +460,7 @@ unsafe impl MsgSend for GetSel {
 	}
 }
 
-/// [`LB_GETSELCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getselcount)
+/// [`LB_GETSELCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getselcount)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -486,7 +486,7 @@ unsafe impl MsgSend for GetSelCount {
 	}
 }
 
-/// [`LB_GETSELITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-getselitems)
+/// [`LB_GETSELITEMS`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-getselitems)
 /// message parameters.
 ///
 /// Return type `SysResult<u32>`.
@@ -514,7 +514,7 @@ unsafe impl<'a> MsgSend for GetSelItems<'a> {
 	}
 }
 
-/// [`LB_GETTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettext)
+/// [`LB_GETTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-gettext)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -543,7 +543,7 @@ unsafe impl<'a> MsgSend for GetText<'a> {
 	}
 }
 
-/// [`LB_GETTEXTLEN`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettextlen)
+/// [`LB_GETTEXTLEN`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-gettextlen)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -571,7 +571,7 @@ unsafe impl MsgSend for GetTextLen {
 	}
 }
 
-/// [`LB_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-gettopindex)
+/// [`LB_GETTOPINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-gettopindex)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -597,7 +597,7 @@ unsafe impl MsgSend for GetTopIndex {
 	}
 }
 
-/// [`LB_INITSTORAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-initstorage)
+/// [`LB_INITSTORAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-initstorage)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -626,7 +626,7 @@ unsafe impl MsgSend for InitStorage {
 	}
 }
 
-/// [`LB_INSERTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-insertstring)
+/// [`LB_INSERTSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-insertstring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -656,7 +656,7 @@ unsafe impl MsgSend for InsertString {
 	}
 }
 
-/// [`LB_ITEMFROMPOINT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-itemfrompoint)
+/// [`LB_ITEMFROMPOINT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-itemfrompoint)
 /// message parameters.
 ///
 /// Return type: `(i32, bool)`.
@@ -682,10 +682,10 @@ unsafe impl MsgSend for ItemFromPoint {
 }
 
 pub_struct_msg_empty! { ResetContent: co::LB::RESETCONTENT.into(); "user";
-	/// [`LB_RESETCONTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-resetcontent)
+	/// [`LB_RESETCONTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-resetcontent)
 }
 
-/// [`LB_SELECTSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selectstring)
+/// [`LB_SELECTSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-selectstring)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -715,7 +715,7 @@ unsafe impl MsgSend for SelectString {
 	}
 }
 
-/// [`LB_SELITEMRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selitemrange)
+/// [`LB_SELITEMRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-selitemrange)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -745,7 +745,7 @@ unsafe impl MsgSend for SelItemRange {
 	}
 }
 
-/// [`LB_SELITEMRANGEEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-selitemrangeex)
+/// [`LB_SELITEMRANGEEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-selitemrangeex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -774,7 +774,7 @@ unsafe impl MsgSend for SelItemRangeEx {
 	}
 }
 
-/// [`LB_SETANCHORINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setanchorindex)
+/// [`LB_SETANCHORINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setanchorindex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -802,7 +802,7 @@ unsafe impl MsgSend for SetAnchorIndex {
 	}
 }
 
-/// [`LB_SETCARETINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcaretindex)
+/// [`LB_SETCARETINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setcaretindex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -831,7 +831,7 @@ unsafe impl MsgSend for SetCaretIndex {
 	}
 }
 
-/// [`LB_SETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcolumnwidth)
+/// [`LB_SETCOLUMNWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setcolumnwidth)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -856,7 +856,7 @@ unsafe impl MsgSend for SetColumnWidth {
 	}
 }
 
-/// [`LB_SETCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcount)
+/// [`LB_SETCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setcount)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -885,7 +885,7 @@ unsafe impl MsgSend for SetCount {
 	}
 }
 
-/// [`LB_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setcursel)
+/// [`LB_SETCURSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setcursel)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -917,7 +917,7 @@ unsafe impl MsgSend for SetCurSel {
 	}
 }
 
-/// [`LB_SETHORIZONTALEXTENT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-sethorizontalextent)
+/// [`LB_SETHORIZONTALEXTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-sethorizontalextent)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -942,7 +942,7 @@ unsafe impl MsgSend for SetHorizontalExtent {
 	}
 }
 
-/// [`LB_SETITEMDATA`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setitemdata)
+/// [`LB_SETITEMDATA`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setitemdata)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -971,7 +971,7 @@ unsafe impl MsgSend for SetItemData {
 	}
 }
 
-/// [`LB_SETITEMHEIGHT`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setitemheight)
+/// [`LB_SETITEMHEIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setitemheight)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1000,7 +1000,7 @@ unsafe impl MsgSend for SetItemHeight {
 	}
 }
 
-/// [`LB_SETLOCALE`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setlocale)
+/// [`LB_SETLOCALE`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setlocale)
 /// message parameters.
 ///
 /// Return type: `SysResult<LCID>`.
@@ -1028,7 +1028,7 @@ unsafe impl MsgSend for SetLocale {
 	}
 }
 
-/// [`LB_SETSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-setsel)
+/// [`LB_SETSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-setsel)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1057,7 +1057,7 @@ unsafe impl MsgSend for SetSel {
 	}
 }
 
-/// [`LB_SETTABSTOPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-settabstops)
+/// [`LB_SETTABSTOPS`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-settabstops)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1082,7 +1082,7 @@ unsafe impl<'a> MsgSend for SetTabStops<'a> {
 	}
 }
 
-/// [`LB_SETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lb-settopindex)
+/// [`LB_SETTOPINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-settopindex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.

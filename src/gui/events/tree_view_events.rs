@@ -5,7 +5,7 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes tree view control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications).
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
@@ -22,46 +22,46 @@ impl TreeViewEvents {
 	}
 
 	pub_fn_nfy_withparm_noret! { tvn_delete_item, co::TVN::DELETEITEM, NMTREEVIEW,
-		/// [`TVN_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-deleteitem)
+		/// [`TVN_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-deleteitem)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { tvn_item_changed, co::TVN::ITEMCHANGED, NMTREEVIEW,
-		/// [`TVN_ITEMCHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanged)
+		/// [`TVN_ITEMCHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemchanged)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_boolret! { tvn_item_changing, co::TVN::ITEMCHANGING, NMTREEVIEW,
-		/// [`TVN_ITEMCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanging)
+		/// [`TVN_ITEMCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemchanging)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { tvn_item_expanded, co::TVN::ITEMEXPANDED, NMTREEVIEW,
-		/// [`TVN_ITEMEXPANDED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanded)
+		/// [`TVN_ITEMEXPANDED`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanded)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_boolret! { tvn_item_expanding, co::TVN::ITEMEXPANDING, NMTREEVIEW,
-		/// [`TVN_ITEMEXPANDING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanding)
+		/// [`TVN_ITEMEXPANDING`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanding)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { tvn_sel_changed, co::TVN::SELCHANGED, NMTREEVIEW,
-		/// [`TVN_SELCHANGED`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanged)
+		/// [`TVN_SELCHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-selchanged)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_boolret! { tvn_sel_changing, co::TVN::SELCHANGING, NMTREEVIEW,
-		/// [`TVN_SELCHANGING`](https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanging)
+		/// [`TVN_SELCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-selchanging)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_i32ret! { nm_click, co::NM::CLICK,
-		/// [`NM_CLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-click-tree-view)
+		/// [`NM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-tree-view)
 		/// notification.
 	}
 
-	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-tree-view)
+	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-tree-view)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMTVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
@@ -71,37 +71,37 @@ impl TreeViewEvents {
 	}
 
 	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::NM::DBLCLK,
-		/// [`NM_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tree-view)
+		/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tree-view)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS,
-		/// [`NM_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-killfocus-tree-view)
+		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-tree-view)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK,
-		/// [`NM_RCLICK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rclick-tree-view)
+		/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tree-view)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_i32ret! { nm_r_dbl_clk, co::NM::RDBLCLK,
-		/// [`NM_RDBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tree-view)
+		/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tree-view)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_noret! { nm_return, co::NM::RETURN,
-		/// [`NM_RETURN`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-return-tree-view-)
+		/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-tree-view-)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_i32ret! { nm_set_cursor, co::NM::SETCURSOR, NMMOUSE,
-		/// [`NM_MOUSE`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-setcursor-tree-view-)
+		/// [`NM_MOUSE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setcursor-tree-view-)
 		/// notification.
 	}
 
 	pub_fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS,
-		/// [`NM_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-setfocus-tree-view-)
+		/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-tree-view-)
 		/// notification.
 	}
 }

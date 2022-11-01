@@ -25,11 +25,11 @@ pub struct IFilterGraphVT {
 
 com_interface! { IFilterGraph: "dshow";
 	"56a8689f-0ad4-11ce-b03a-0020af0ba770";
-	/// [`IFilterGraph`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
+	/// [`IFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
 	/// COM interface over [`IFilterGraphVT`](crate::vt::IFilterGraphVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -45,7 +45,7 @@ impl dshow_IFilterGraph for IFilterGraph {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IFilterGraph: ole_IUnknown {
-	/// [`IFilterGraph::AddFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
+	/// [`IFilterGraph::AddFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 	/// method.
 	fn AddFilter(&self, filter: &IBaseFilter, name: &str) -> HrResult<()> {
 		unsafe {
@@ -60,7 +60,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		}
 	}
 
-	/// [`IFilterGraph::EnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
+	/// [`IFilterGraph::EnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 	/// method.
 	#[must_use]
 	fn EnumFilters(&self) -> HrResult<IEnumFilters> {
@@ -73,7 +73,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		}
 	}
 
-	/// [`IFilterGraph::FindFilterByName`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
+	/// [`IFilterGraph::FindFilterByName`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)
 	/// method.
 	#[must_use]
 	fn FindFilterByName(&self, name: &str) -> HrResult<IBaseFilter> {
@@ -90,7 +90,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		}
 	}
 
-	/// [`IFilterGraph::RemoveFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-removefilter)
+	/// [`IFilterGraph::RemoveFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-removefilter)
 	/// method.
 	fn RemoveFilter(&self, filter: &IBaseFilter) -> HrResult<()> {
 		unsafe {
@@ -99,7 +99,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		}
 	}
 
-	/// [`IFilterGraph::SetDefaultSyncSource`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-setdefaultsyncsource)
+	/// [`IFilterGraph::SetDefaultSyncSource`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-setdefaultsyncsource)
 	/// method.
 	fn SetDefaultSyncSource(&self) -> HrResult<()> {
 		unsafe {

@@ -19,7 +19,7 @@ impl comctl_Hwnd for HWND {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub trait comctl_Hwnd: Handle {
-	/// [`DefSubclassProc`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
+	/// [`DefSubclassProc`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// method.
 	///
 	/// The return type is variable, being defined by the `RetType` associated
@@ -39,7 +39,7 @@ pub trait comctl_Hwnd: Handle {
 		)
 	}
 
-	/// [`RemoveWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
+	/// [`RemoveWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
 	/// method.
 	fn RemoveWindowSubclass(self,
 		subclass_func: SUBCLASSPROC, subclass_id: usize) -> SysResult<()>
@@ -55,7 +55,7 @@ pub trait comctl_Hwnd: Handle {
 		)
 	}
 
-	/// [`SetWindowSubclass`](https://docs.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
+	/// [`SetWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
 	/// method.
 	fn SetWindowSubclass(self,
 		subclass_proc: SUBCLASSPROC,

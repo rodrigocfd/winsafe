@@ -8,10 +8,10 @@ use crate::user::decl::{COLORREF, HWND, SIZE};
 use crate::user::privs::{minus1_as_err, zero_as_err};
 
 pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into(); "comctl";
-	/// [`DTM_CLOSEMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
+	/// [`DTM_CLOSEMONTHCAL`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
 }
 
-/// [`DTM_GETDATETIMEPICKERINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getdatetimepickerinfo)
+/// [`DTM_GETDATETIMEPICKERINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getdatetimepickerinfo)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -36,7 +36,7 @@ unsafe impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 	}
 }
 
-/// [`DTM_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getidealsize)
+/// [`DTM_GETIDEALSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getidealsize)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -61,7 +61,7 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 	}
 }
 
-/// [`DTM_GETMCCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmccolor)
+/// [`DTM_GETMCCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getmccolor)
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
@@ -86,7 +86,7 @@ unsafe impl MsgSend for GetMcColor {
 	}
 }
 
-/// [`DTM_GETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmcstyle)
+/// [`DTM_GETMCSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getmcstyle)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<co::MCS>`.
@@ -109,7 +109,7 @@ unsafe impl MsgSend for GetMcStyle {
 	}
 }
 
-/// [`DTM_GETMONTHCAL`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getmonthcal)
+/// [`DTM_GETMONTHCAL`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getmonthcal)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
@@ -132,7 +132,7 @@ unsafe impl MsgSend for GetMonthCal {
 	}
 }
 
-/// [`DTM_GETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getrange)
+/// [`DTM_GETRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getrange)
 /// message parameters.
 ///
 /// Return type: `co::GDTR`.
@@ -157,7 +157,7 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 	}
 }
 
-/// [`DTM_GETSYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-getsystemtime)
+/// [`DTM_GETSYSTEMTIME`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getsystemtime)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -187,7 +187,7 @@ unsafe impl<'a> MsgSend for GetSystemTime<'a> {
 	}
 }
 
-/// [`DTM_SETFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setformat)
+/// [`DTM_SETFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-setformat)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -212,7 +212,7 @@ unsafe impl MsgSend for SetFormat {
 	}
 }
 
-/// [`DTM_SETMCCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmccolor)
+/// [`DTM_SETMCCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-setmccolor)
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
@@ -238,7 +238,7 @@ unsafe impl MsgSend for SetMcColor {
 	}
 }
 
-/// [`DTM_SETMCSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setmcstyle)
+/// [`DTM_SETMCSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-setmcstyle)
 /// message parameters.
 ///
 /// Return type: `SysResult<co::MCS>`.
@@ -263,7 +263,7 @@ unsafe impl MsgSend for SetMcStyle {
 	}
 }
 
-/// [`DTM_SETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setrange)
+/// [`DTM_SETRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-setrange)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -289,7 +289,7 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 	}
 }
 
-/// [`DTM_SETSYSTEMTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/dtm-setsystemtime)
+/// [`DTM_SETSYSTEMTIME`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-setsystemtime)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.

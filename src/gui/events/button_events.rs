@@ -5,7 +5,7 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes button control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
@@ -22,17 +22,17 @@ impl ButtonEvents {
 	}
 
 	pub_fn_nfy_withparm_noret! { bcn_drop_down, co::BCN::DROPDOWN, NMBCDROPDOWN,
-		/// [`BCN_DROPDOWN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
+		/// [`BCN_DROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.
 	}
 
 	pub_fn_nfy_withparm_noret! { bcn_hot_item_change, co::BCN::HOTITEMCHANGE, NMBCHOTITEM,
-		/// [`BCN_HOTITEMCHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
+		/// [`BCN_HOTITEMCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
 		/// notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { bn_clicked, co::BN::CLICKED,
-		/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
+		/// [`BN_CLICKED`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 		/// command notification.
 		///
 		/// # Examples
@@ -56,21 +56,21 @@ impl ButtonEvents {
 	}
 
 	pub_fn_cmd_noparm_noret! { bn_dbl_clk, co::BN::DBLCLK,
-		/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
+		/// [`BN_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { bn_kill_focus, co::BN::KILLFOCUS,
-		/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
+		/// [`BN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { bn_set_focus, co::BN::SETFOCUS,
-		/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
+		/// [`BN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 		/// command notification.
 	}
 
-	/// [`NM_CUSTOMDRAW`](https://docs.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
+	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,

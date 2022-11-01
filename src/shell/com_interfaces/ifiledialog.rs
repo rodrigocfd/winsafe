@@ -41,11 +41,11 @@ pub struct IFileDialogVT {
 
 com_interface! { IFileDialog: "shell";
 	"42f85136-db7e-439c-85f1-e4075d135fc8";
-	/// [`IFileDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
+	/// [`IFileDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
 	/// COM interface over [`IFileDialogVT`](crate::vt::IFileDialogVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -62,7 +62,7 @@ impl shell_IFileDialog for IFileDialog {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IFileDialog: shell_IModalWindow {
-	/// [`IFileDialog::AddPlace`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-addplace)
+	/// [`IFileDialog::AddPlace`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-addplace)
 	/// method.
 	fn AddPlace(&self, si: &IShellItem, fdap: co::FDAP) -> HrResult<()> {
 		unsafe {
@@ -71,7 +71,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::ClearClientData`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-clearclientdata)
+	/// [`IFileDialog::ClearClientData`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-clearclientdata)
 	/// method.
 	fn ClearClientData(&self) -> HrResult<()> {
 		unsafe {
@@ -80,7 +80,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::Close`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-close)
+	/// [`IFileDialog::Close`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-close)
 	/// method.
 	fn Close(&self, hr: co::ERROR) -> HrResult<()> {
 		unsafe {
@@ -89,7 +89,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::GetCurrentSelection`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
+	/// [`IFileDialog::GetCurrentSelection`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
 	/// method.
 	#[must_use]
 	fn GetCurrentSelection(&self) -> HrResult<IShellItem> {
@@ -101,7 +101,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::GetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfilename)
+	/// [`IFileDialog::GetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfilename)
 	/// method.
 	#[must_use]
 	fn GetFileName(&self) -> HrResult<String> {
@@ -116,7 +116,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		})
 	}
 
-	/// [`IFileDialog::GetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfiletypeindex)
+	/// [`IFileDialog::GetFileTypeIndex`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfiletypeindex)
 	/// method.
 	#[must_use]
 	fn GetFileTypeIndex(&self) -> HrResult<u32> {
@@ -127,7 +127,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}.map(|_| index)
 	}
 
-	/// [`IFileDialog::GetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
+	/// [`IFileDialog::GetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
 	/// method.
 	#[must_use]
 	fn GetFolder(&self) -> HrResult<IShellItem> {
@@ -139,7 +139,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::GetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
+	/// [`IFileDialog::GetOptions`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
 	/// method.
 	#[must_use]
 	fn GetOptions(&self) -> HrResult<co::FOS> {
@@ -150,7 +150,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}.map(|_| co::FOS(opts))
 	}
 
-	/// [`IFileDialog::GetResult`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
+	/// [`IFileDialog::GetResult`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
 	/// method.
 	///
 	/// If you chose a single file, this is the method to retrieve its path.
@@ -164,7 +164,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetClientGuid`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setclientguid)
+	/// [`IFileDialog::SetClientGuid`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setclientguid)
 	/// method.
 	fn SetClientGuid(&self, guid: &GUID) -> HrResult<()> {
 		unsafe {
@@ -173,7 +173,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetDefaultExtension`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultextension)
+	/// [`IFileDialog::SetDefaultExtension`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultextension)
 	/// method.
 	fn SetDefaultExtension(&self, default_extension: &str) -> HrResult<()> {
 		unsafe {
@@ -187,7 +187,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetDefaultFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultfolder)
+	/// [`IFileDialog::SetDefaultFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultfolder)
 	/// method.
 	fn SetDefaultFolder(&self, si: &IShellItem) -> HrResult<()> {
 		unsafe {
@@ -196,7 +196,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetFileName`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilename)
+	/// [`IFileDialog::SetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilename)
 	/// method.
 	fn SetFileName(&self, name: &str) -> HrResult<()> {
 		unsafe {
@@ -207,7 +207,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetFileNameLabel`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilenamelabel)
+	/// [`IFileDialog::SetFileNameLabel`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilenamelabel)
 	/// method.
 	fn SetFileNameLabel(&self, label: &str) -> HrResult<()> {
 		unsafe {
@@ -221,7 +221,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetFileTypeIndex`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypeindex)
+	/// [`IFileDialog::SetFileTypeIndex`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypeindex)
 	/// method.
 	///
 	/// **Note:** The index is one-based.
@@ -232,7 +232,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetFileTypes`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypes)
+	/// [`IFileDialog::SetFileTypes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypes)
 	/// method.
 	///
 	/// # Examples
@@ -282,7 +282,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetFolder`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfolder)
+	/// [`IFileDialog::SetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfolder)
 	/// method.
 	fn SetFolder(&self, si: &IShellItem) -> HrResult<()> {
 		unsafe {
@@ -291,7 +291,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetOkButtonLabel`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setokbuttonlabel)
+	/// [`IFileDialog::SetOkButtonLabel`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setokbuttonlabel)
 	/// method.
 	fn SetOkButtonLabel(&self, text: &str) -> HrResult<()> {
 		unsafe {
@@ -302,7 +302,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetOptions`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setoptions)
+	/// [`IFileDialog::SetOptions`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setoptions)
 	/// method.
 	fn SetOptions(&self, opts: co::FOS) -> HrResult<()> {
 		unsafe {
@@ -311,7 +311,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::SetTitle`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-settitle)
+	/// [`IFileDialog::SetTitle`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-settitle)
 	/// method.
 	fn SetTitle(&self, text: &str) -> HrResult<()> {
 		unsafe {

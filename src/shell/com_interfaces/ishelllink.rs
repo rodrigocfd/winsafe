@@ -38,11 +38,11 @@ pub struct IShellLinkVT {
 
 com_interface! { IShellLink: "shell";
 	"000214f9-0000-0000-c000-000000000046";
-	/// [`IShellLink`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
+	/// [`IShellLink`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
 	/// COM interface over [`IShellLinkVT`](crate::vt::IShellLinkVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -72,7 +72,7 @@ impl shell_IShellLink for IShellLink {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IShellLink: ole_IUnknown {
-	/// [`IShellLinkW::GetArguments`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getarguments)
+	/// [`IShellLinkW::GetArguments`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getarguments)
 	/// method.
 	#[must_use]
 	fn GetArguments(&self) -> HrResult<String> {
@@ -89,7 +89,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::GetDescription`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getdescription)
+	/// [`IShellLinkW::GetDescription`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getdescription)
 	/// method.
 	#[must_use]
 	fn GetDescription(&self) -> HrResult<String> {
@@ -106,7 +106,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::GetIconLocation`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-geticonlocation)
+	/// [`IShellLinkW::GetIconLocation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-geticonlocation)
 	/// method.
 	///
 	/// Returns the path of the icon and its index within the file.
@@ -128,7 +128,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::GetPath`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getpath)
+	/// [`IShellLinkW::GetPath`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getpath)
 	/// method.
 	#[must_use]
 	fn GetPath(&self,
@@ -150,7 +150,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::GetShowCmd`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getshowcmd)
+	/// [`IShellLinkW::GetShowCmd`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getshowcmd)
 	/// method.
 	#[must_use]
 	fn GetShowCmd(&self) -> HrResult<co::SW> {
@@ -162,7 +162,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::GetWorkingDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getworkingdirectory)
+	/// [`IShellLinkW::GetWorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getworkingdirectory)
 	/// method.
 	#[must_use]
 	fn GetWorkingDirectory(&self) -> HrResult<String> {
@@ -179,7 +179,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::Resolve`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-resolve)
+	/// [`IShellLinkW::Resolve`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-resolve)
 	/// method.
 	fn Resolve(&self, hwnd: HWND, flags: co::SLR) -> HrResult<()> {
 		unsafe {
@@ -188,7 +188,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::SetArguments`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setarguments)
+	/// [`IShellLinkW::SetArguments`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setarguments)
 	/// method.
 	fn SetArguments(&self, args: &str) -> HrResult<()> {
 		unsafe {
@@ -202,7 +202,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::SetDescription`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setdescription)
+	/// [`IShellLinkW::SetDescription`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setdescription)
 	/// method.
 	fn SetDescription(&self, args: &str) -> HrResult<()> {
 		unsafe {
@@ -216,7 +216,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::SetIconLocation`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-seticonlocation)
+	/// [`IShellLinkW::SetIconLocation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-seticonlocation)
 	/// method.
 	fn SetIconLocation(&self, path: &str, index: i32) -> HrResult<()> {
 		unsafe {
@@ -231,7 +231,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::SetPath`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setpath)
+	/// [`IShellLinkW::SetPath`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setpath)
 	/// method.
 	fn SetPath(&self, file: &str) -> HrResult<()> {
 		unsafe {
@@ -245,7 +245,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::SetRelativePath`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setrelativepath)
+	/// [`IShellLinkW::SetRelativePath`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setrelativepath)
 	/// method.
 	fn SetRelativePath(&self, file: &str) -> HrResult<()> {
 		unsafe {
@@ -260,7 +260,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::SetShowCmd`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setshowcmd)
+	/// [`IShellLinkW::SetShowCmd`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setshowcmd)
 	/// method.
 	fn SetShowCmd(&self, show_cmd: co::SW) -> HrResult<()> {
 		unsafe {
@@ -269,7 +269,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		}
 	}
 
-	/// [`IShellLinkW::SetWorkingDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setworkingdirectory)
+	/// [`IShellLinkW::SetWorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setworkingdirectory)
 	/// method.
 	fn SetWorkingDirectory(&self, dir: &str) -> HrResult<()> {
 		unsafe {

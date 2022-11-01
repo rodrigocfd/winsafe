@@ -19,7 +19,7 @@ impl gdi_Hbitmap for HBITMAP {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hbitmap: gdi_Hgdiobj {
-	/// [`CreateBitmap`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
+	/// [`CreateBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -38,7 +38,7 @@ pub trait gdi_Hbitmap: gdi_Hgdiobj {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`GetObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
+	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
 	fn GetObject(self, pv: &mut BITMAP) -> SysResult<()> {
 		match unsafe {

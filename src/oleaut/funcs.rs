@@ -6,7 +6,7 @@ use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::PROPERTYKEY;
 
-/// [`PSGetNameFromPropertyKey`](https://docs.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-psgetnamefrompropertykey)
+/// [`PSGetNameFromPropertyKey`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-psgetnamefrompropertykey)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[must_use]
@@ -26,7 +26,7 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 	})
 }
 
-/// [`SystemTimeToVariantTime`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-systemtimetovarianttime)
+/// [`SystemTimeToVariantTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-systemtimetovarianttime)
 /// function. The inverse operation is performed by
 /// [`VariantTimeToSystemTime`](crate::VariantTimeToSystemTime).
 ///
@@ -44,7 +44,7 @@ pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 	}
 }
 
-/// [`VariantTimeToSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-varianttimetosystemtime)
+/// [`VariantTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-varianttimetosystemtime)
 /// function. The inverse operation is performed by
 /// [`SystemTimeToVariantTime`](SystemTimeToVariantTime).
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]

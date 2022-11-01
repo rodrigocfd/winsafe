@@ -8,7 +8,7 @@ use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes button control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 /// for a [`RadioGroup`](crate::gui::RadioGroup).
 ///
 /// These event methods are just proxies to the
@@ -37,7 +37,7 @@ impl RadioGroupEvents {
 		unsafe { self.parent_ptr.as_ref().on() }
 	}
 
-	/// [`BN_CLICKED`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-clicked)
+	/// [`BN_CLICKED`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 	/// command notification for all radio buttons in the group.
 	///
 	/// Sent when the user clicks a button.
@@ -77,7 +77,7 @@ impl RadioGroupEvents {
 		}
 	}
 
-	/// [`BN_DBLCLK`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
+	/// [`BN_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 	/// command notification for all radio buttons in the group.
 	///
 	/// Sent when the user double-clicks a button. This notification code is
@@ -98,7 +98,7 @@ impl RadioGroupEvents {
 		}
 	}
 
-	/// [`BN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
+	/// [`BN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 	/// command notification for all radio buttons in the group.
 	///
 	/// Sent when a button loses the keyboard focus. The button must have the
@@ -117,7 +117,7 @@ impl RadioGroupEvents {
 		}
 	}
 
-	/// [`BN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
+	/// [`BN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 	/// command notification for all radio buttons in the group.
 	///
 	/// Sent when a button receives the keyboard focus. The button must have the

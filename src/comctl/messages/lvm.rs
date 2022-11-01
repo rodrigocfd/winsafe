@@ -13,7 +13,7 @@ use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
 };
 
-/// [`LVM_APPROXIMATEVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
+/// [`LVM_APPROXIMATEVIEWRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.
 ///
 /// Return type: `SIZE`.
@@ -44,7 +44,7 @@ unsafe impl MsgSend for ApproximateViewRect {
 }
 
 
-/// [`LVM_ARRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-arrange)
+/// [`LVM_ARRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-arrange)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -70,10 +70,10 @@ unsafe impl MsgSend for Arrange {
 }
 
 pub_struct_msg_empty! { CancelEditLabel: co::LVM::CANCELEDITLABEL.into(); "comctl";
-	/// [`LVM_CANCELEDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
+	/// [`LVM_CANCELEDITLABEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
 }
 
-/// [`LVM_CREATEDRAGIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-createdragimage)
+/// [`LVM_CREATEDRAGIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-createdragimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<HIMAGELIST>`.
@@ -99,7 +99,7 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 	}
 }
 
-/// [`LVM_DELETEALLITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteallitems)
+/// [`LVM_DELETEALLITEMS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-deleteallitems)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -122,7 +122,7 @@ unsafe impl MsgSend for DeleteAllItems {
 	}
 }
 
-/// [`LVM_DELETECOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deletecolumn)
+/// [`LVM_DELETECOLUMN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-deletecolumn)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -147,7 +147,7 @@ unsafe impl MsgSend for DeleteColumn {
 	}
 }
 
-/// [`LVM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-deleteitem)
+/// [`LVM_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-deleteitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -172,7 +172,7 @@ unsafe impl MsgSend for DeleteItem {
 	}
 }
 
-/// [`LVM_EDITLABEL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-editlabel)
+/// [`LVM_EDITLABEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-editlabel)
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>`.
@@ -197,7 +197,7 @@ unsafe impl MsgSend for EditLabel {
 	}
 }
 
-/// [`LVM_ENABLEGROUPVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-enablegroupview)
+/// [`LVM_ENABLEGROUPVIEW`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-enablegroupview)
 /// message parameters.
 ///
 /// Return type: `SysResult<bool>`.
@@ -222,7 +222,7 @@ unsafe impl MsgSend for EnableGroupView {
 	}
 }
 
-/// [`LVM_ENSUREVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-ensurevisible)
+/// [`LVM_ENSUREVISIBLE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-ensurevisible)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -248,7 +248,7 @@ unsafe impl MsgSend for EnsureVisible {
 	}
 }
 
-/// [`LVM_FINDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-finditem)
+/// [`LVM_FINDITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-finditem)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -274,7 +274,7 @@ unsafe impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getbkcolor)
+/// [`LVM_GETBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getbkcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
@@ -297,7 +297,7 @@ unsafe impl MsgSend for GetBkColor {
 	}
 }
 
-/// [`LVM_GETBKIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getbkimage)
+/// [`LVM_GETBKIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getbkimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -322,7 +322,7 @@ unsafe impl<'a, 'b> MsgSend for GetBkImage<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETCALLBACKMASK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcallbackmask)
+/// [`LVM_GETCALLBACKMASK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getcallbackmask)
 /// message, which has no parameters.
 ///
 /// Return type: `co::LVIS`.
@@ -345,7 +345,7 @@ unsafe impl MsgSend for GetCallbackMask {
 	}
 }
 
-/// [`LVM_GETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
+/// [`LVM_GETCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getcolumn)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -371,7 +371,7 @@ unsafe impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETCOLUMNORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnorderarray)
+/// [`LVM_GETCOLUMNORDERARRAY`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnorderarray)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -396,7 +396,7 @@ unsafe impl<'a> MsgSend for GetColumnOrderArray<'a> {
 	}
 }
 
-/// [`LVM_GETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnwidth)
+/// [`LVM_GETCOLUMNWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getcolumnwidth)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -421,7 +421,7 @@ unsafe impl MsgSend for GetColumnWidth {
 	}
 }
 
-/// [`LVM_GETCOUNTPERPAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getcountperpage)
+/// [`LVM_GETCOUNTPERPAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getcountperpage)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -444,7 +444,7 @@ unsafe impl MsgSend for GetCountPerPage {
 	}
 }
 
-/// [`LVM_EDITCONTROL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-geteditcontrol)
+/// [`LVM_EDITCONTROL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-geteditcontrol)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
@@ -467,7 +467,7 @@ unsafe impl MsgSend for GetEditControl {
 	}
 }
 
-/// [`LVM_GETEMPTYTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getemptytext)
+/// [`LVM_GETEMPTYTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getemptytext)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -492,7 +492,7 @@ unsafe impl<'a> MsgSend for GetEmptyText<'a> {
 	}
 }
 
-/// [`LVM_GETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getextendedlistviewstyle)
+/// [`LVM_GETEXTENDEDLISTVIEWSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getextendedlistviewstyle)
 /// message, which has no parameters.
 ///
 /// Return type: `co::LVS_EX`.
@@ -515,7 +515,7 @@ unsafe impl MsgSend for GetExtendedListViewStyle {
 	}
 }
 
-/// [`LVM_GETFOCUSEDGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfocusedgroup)
+/// [`LVM_GETFOCUSEDGROUP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getfocusedgroup)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -538,7 +538,7 @@ unsafe impl MsgSend for GetFocusedGroup {
 	}
 }
 
-/// [`LVM_GETFOOTERINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfooterinfo)
+/// [`LVM_GETFOOTERINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getfooterinfo)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -563,7 +563,7 @@ unsafe impl<'a, 'b> MsgSend for GetFooterInfo<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETFOOTERITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfooteritem)
+/// [`LVM_GETFOOTERITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getfooteritem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -589,7 +589,7 @@ unsafe impl<'a, 'b> MsgSend for GetFooterItem<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETFOOTERITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfooteritemrect)
+/// [`LVM_GETFOOTERITEMRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getfooteritemrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -615,7 +615,7 @@ unsafe impl<'a> MsgSend for GetFooterItemRect<'a> {
 	}
 }
 
-/// [`LVM_GETFOOTERRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getfooterrect)
+/// [`LVM_GETFOOTERRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getfooterrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -640,7 +640,7 @@ unsafe impl<'a> MsgSend for GetFooterRect<'a> {
 	}
 }
 
-/// [`LVM_GROUPCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgroupcount)
+/// [`LVM_GROUPCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getgroupcount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -663,7 +663,7 @@ unsafe impl MsgSend for GetGroupCount {
 	}
 }
 
-/// [`LVM_GROUPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgroupinfo)
+/// [`LVM_GROUPINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getgroupinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -689,7 +689,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfo<'a, 'b, 'c,
 	}
 }
 
-/// [`LVM_GETGROUPINFOBYINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgroupinfobyindex)
+/// [`LVM_GETGROUPINFOBYINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getgroupinfobyindex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -715,7 +715,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfoByIndex<'a, 
 	}
 }
 
-/// [`LVM_GETGROUPMETRICS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgroupmetrics)
+/// [`LVM_GETGROUPMETRICS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getgroupmetrics)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -740,7 +740,7 @@ unsafe impl<'a> MsgSend for GetGroupMetrics<'a> {
 	}
 }
 
-/// [`LVM_GETGROUPRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgrouprect)
+/// [`LVM_GETGROUPRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getgrouprect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -769,7 +769,7 @@ unsafe impl<'a> MsgSend for GetGroupRect<'a> {
 	}
 }
 
-/// [`LVM_GETGROUPSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getgroupstate)
+/// [`LVM_GETGROUPSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getgroupstate)
 /// message parameters.
 ///
 /// Return type: `co::LVGS`.
@@ -795,7 +795,7 @@ unsafe impl MsgSend for GetGroupState {
 	}
 }
 
-/// [`LVM_GETHEADER`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
+/// [`LVM_GETHEADER`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getheader)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
@@ -818,7 +818,7 @@ unsafe impl MsgSend for GetHeader {
 	}
 }
 
-/// [`LVM_GETHOTCURSOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gethotcursor)
+/// [`LVM_GETHOTCURSOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gethotcursor)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HCURSOR>`.
@@ -841,7 +841,7 @@ unsafe impl MsgSend for GetHotCursor {
 	}
 }
 
-/// [`LVM_GETHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gethotitem)
+/// [`LVM_GETHOTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gethotitem)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -864,7 +864,7 @@ unsafe impl MsgSend for GetHotItem {
 	}
 }
 
-/// [`LVM_GETHOVERTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gethovertime)
+/// [`LVM_GETHOVERTIME`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gethovertime)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -887,7 +887,7 @@ unsafe impl MsgSend for GetHoverTime {
 	}
 }
 
-/// [`LVM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getimagelist)
+/// [`LVM_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getimagelist)
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -912,7 +912,7 @@ unsafe impl MsgSend for GetImageList {
 	}
 }
 
-/// [`LVM_GETINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getinsertmark)
+/// [`LVM_GETINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getinsertmark)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -937,7 +937,7 @@ unsafe impl<'a> MsgSend for GetInsertMark<'a> {
 	}
 }
 
-/// [`LVM_GETINSERTMARKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getinsertmarkcolor)
+/// [`LVM_GETINSERTMARKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getinsertmarkcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
@@ -960,7 +960,7 @@ unsafe impl MsgSend for GetInsertMarkColor {
 	}
 }
 
-/// [`LVM_GETINSERTMARKRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getinsertmarkrect)
+/// [`LVM_GETINSERTMARKRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getinsertmarkrect)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -985,7 +985,7 @@ unsafe impl<'a> MsgSend for GetInsertMarkRect<'a> {
 	}
 }
 
-/// [`LVM_GETISEARCHSTRING`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getisearchstring)
+/// [`LVM_GETISEARCHSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getisearchstring)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -1010,7 +1010,7 @@ unsafe impl<'a> MsgSend for GetISearchString<'a> {
 	}
 }
 
-/// [`LVM_GETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitem)
+/// [`LVM_GETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1035,7 +1035,7 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
+/// [`LVM_GETITEMCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitemcount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -1058,7 +1058,7 @@ unsafe impl MsgSend for GetItemCount {
 	}
 }
 
-/// [`LVM_GETITEMINDEXRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemindexrect)
+/// [`LVM_GETITEMINDEXRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitemindexrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1089,7 +1089,7 @@ unsafe impl<'a, 'b> MsgSend for GetItemIndexRect<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETITEMPOSITION`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemposition)
+/// [`LVM_GETITEMPOSITION`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitemposition)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1115,7 +1115,7 @@ unsafe impl<'a> MsgSend for GetItemPosition<'a> {
 	}
 }
 
-/// [`LVM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemrect)
+/// [`LVM_GETITEMRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitemrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1144,7 +1144,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	}
 }
 
-/// [`LVM_GETITEMSPACING`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemspacing)
+/// [`LVM_GETITEMSPACING`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitemspacing)
 /// message parameters.
 ///
 /// Return type: `SIZE`.
@@ -1169,7 +1169,7 @@ unsafe impl MsgSend for GetItemSpacing {
 	}
 }
 
-/// [`LVM_GETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemstate)
+/// [`LVM_GETITEMSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitemstate)
 /// message parameters.
 ///
 /// Return type: `co::LVIS`.
@@ -1195,7 +1195,7 @@ unsafe impl MsgSend for GetItemState {
 	}
 }
 
-/// [`LVM_GETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getitemtext)
+/// [`LVM_GETITEMTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getitemtext)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -1221,7 +1221,7 @@ unsafe impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETNEXTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
+/// [`LVM_GETNEXTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getnextitem)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -1247,7 +1247,7 @@ unsafe impl MsgSend for GetNextItem {
 	}
 }
 
-/// [`LVM_GETNEXTITEMINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnextitemindex)
+/// [`LVM_GETNEXTITEMINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getnextitemindex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1273,7 +1273,7 @@ unsafe impl<'a> MsgSend for GetNextItemIndex<'a> {
 	}
 }
 
-/// [`LVM_GETNUMBEROFWORKAREAS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getnumberofworkareas)
+/// [`LVM_GETNUMBEROFWORKAREAS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getnumberofworkareas)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1298,7 +1298,7 @@ unsafe impl<'a> MsgSend for GetNumberOfWorkAreas<'a> {
 	}
 }
 
-/// [`LVM_GETORIGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getorigin)
+/// [`LVM_GETORIGIN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getorigin)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -1323,7 +1323,7 @@ unsafe impl<'a> MsgSend for GetOrigin<'a> {
 	}
 }
 
-/// [`LVM_GETOUTLINECOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getoutlinecolor)
+/// [`LVM_GETOUTLINECOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getoutlinecolor)
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
@@ -1346,7 +1346,7 @@ unsafe impl MsgSend for GetOutlineColor {
 	}
 }
 
-/// [`LVM_GETSELECTEDCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcolumn)
+/// [`LVM_GETSELECTEDCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcolumn)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>.
@@ -1369,7 +1369,7 @@ unsafe impl MsgSend for GetSelectedColumn {
 	}
 }
 
-/// [`LVM_GETSELECTEDCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcount)
+/// [`LVM_GETSELECTEDCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -1392,7 +1392,7 @@ unsafe impl MsgSend for GetSelectedCount {
 	}
 }
 
-/// [`LVM_GETSELECTIONMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getselectionmark)
+/// [`LVM_GETSELECTIONMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getselectionmark)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>.
@@ -1415,7 +1415,7 @@ unsafe impl MsgSend for GetSelectionMark {
 	}
 }
 
-/// [`LVM_GETSTRINGWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getstringwidth)
+/// [`LVM_GETSTRINGWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getstringwidth)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -1440,7 +1440,7 @@ unsafe impl MsgSend for GetStringWidth {
 	}
 }
 
-/// [`LVM_GETSUBITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getsubitemrect)
+/// [`LVM_GETSUBITEMRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getsubitemrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1471,7 +1471,7 @@ unsafe impl<'a> MsgSend for GetSubItemRect<'a> {
 	}
 }
 
-/// [`LVM_GETTEXTBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettextbkcolor)
+/// [`LVM_GETTEXTBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gettextbkcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
@@ -1494,7 +1494,7 @@ unsafe impl MsgSend for GetTextBkColor {
 	}
 }
 
-/// [`LVM_GETTEXTCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettextcolor)
+/// [`LVM_GETTEXTCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gettextcolor)
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
@@ -1517,7 +1517,7 @@ unsafe impl MsgSend for GetTextColor {
 	}
 }
 
-/// [`LVM_GETTILEINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettileinfo)
+/// [`LVM_GETTILEINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gettileinfo)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1542,7 +1542,7 @@ unsafe impl<'a, 'b> MsgSend for GetTileInfo<'a, 'b> {
 	}
 }
 
-/// [`LVM_GETTILEVIEWINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettileviewinfo)
+/// [`LVM_GETTILEVIEWINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gettileviewinfo)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1567,7 +1567,7 @@ unsafe impl<'a> MsgSend for GetTileViewInfo<'a> {
 	}
 }
 
-/// [`LVM_GETTOOLTIPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettooltips)
+/// [`LVM_GETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gettooltips)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
@@ -1590,7 +1590,7 @@ unsafe impl MsgSend for GetTooltips {
 	}
 }
 
-/// [`LVM_GETTOPINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-gettopindex)
+/// [`LVM_GETTOPINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-gettopindex)
 /// message, which has no parameters.
 ///
 /// In case of error or when there are no items this message returns zero, so
@@ -1616,7 +1616,7 @@ unsafe impl MsgSend for GetTopIndex {
 	}
 }
 
-/// [`LVM_GETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getunicodeformat)
+/// [`LVM_GETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getunicodeformat)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -1639,7 +1639,7 @@ unsafe impl MsgSend for GetUnicodeFormat {
 	}
 }
 
-/// [`LVM_GETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getview)
+/// [`LVM_GETVIEW`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getview)
 /// message, which has no parameters.
 ///
 /// Return type: `co::LV_VIEW`.
@@ -1662,7 +1662,7 @@ unsafe impl MsgSend for GetView {
 	}
 }
 
-/// [`LVM_GETVIEWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getviewrect)
+/// [`LVM_GETVIEWRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getviewrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1687,7 +1687,7 @@ unsafe impl<'a> MsgSend for GetViewRect<'a> {
 	}
 }
 
-/// [`LVM_GETWORKAREAS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-getworkareas)
+/// [`LVM_GETWORKAREAS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getworkareas)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1712,7 +1712,7 @@ unsafe impl<'a> MsgSend for GetWorkAreas<'a> {
 	}
 }
 
-/// [`LVM_HASGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-hasgroup)
+/// [`LVM_HASGROUP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-hasgroup)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -1737,7 +1737,7 @@ unsafe impl MsgSend for HasGroup {
 	}
 }
 
-/// [`LVM_HITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-hittest)
+/// [`LVM_HITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-hittest)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -1762,7 +1762,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 	}
 }
 
-/// [`LVM_INSERTCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertcolumn)
+/// [`LVM_INSERTCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-insertcolumn)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -1788,7 +1788,7 @@ unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 	}
 }
 
-/// [`LVM_INSERTGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertgroup)
+/// [`LVM_INSERTGROUP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-insertgroup)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -1813,7 +1813,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 
 	}
 }
 
-/// [`LVM_INSERTGROUPSORTED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertgroupsorted)
+/// [`LVM_INSERTGROUPSORTED`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-insertgroupsorted)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -1838,7 +1838,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b
 	}
 }
 
-/// [`LVM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
+/// [`LVM_INSERTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-insertitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -1863,7 +1863,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	}
 }
 
-/// [`LVM_INSERTMARKHITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-insertmarkhittest)
+/// [`LVM_INSERTMARKHITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-insertmarkhittest)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -1889,7 +1889,7 @@ unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
 	}
 }
 
-/// [`LVM_ISGROUPVIEWENABLED`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isgroupviewenabled)
+/// [`LVM_ISGROUPVIEWENABLED`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-isgroupviewenabled)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -1912,7 +1912,7 @@ unsafe impl MsgSend for IsGroupViewEnabled {
 	}
 }
 
-/// [`LVM_ISITEMVISIBLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
+/// [`LVM_ISITEMVISIBLE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-isitemvisible)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -1937,7 +1937,7 @@ unsafe impl MsgSend for IsItemVisible {
 	}
 }
 
-/// [`LVM_MAPIDTOINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-mapidtoindex)
+/// [`LVM_MAPIDTOINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-mapidtoindex)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -1962,7 +1962,7 @@ unsafe impl MsgSend for MapIdToIndex {
 	}
 }
 
-/// [`LVM_MAPINDEXTOID`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-mapindextoid)
+/// [`LVM_MAPINDEXTOID`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-mapindextoid)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -1987,7 +1987,7 @@ unsafe impl MsgSend for MapIndexToId {
 	}
 }
 
-/// [`LVM_REDRAWITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-redrawitems)
+/// [`LVM_REDRAWITEMS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-redrawitems)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2014,13 +2014,13 @@ unsafe impl MsgSend for RedrawItems {
 }
 
 pub_struct_msg_empty! { RemoveAllGroups: co::LVM::REMOVEALLGROUPS.into(); "comctl";
-	/// [`LVM_REMOVEALLGROUPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-removeallgroups)
+	/// [`LVM_REMOVEALLGROUPS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-removeallgroups)
 	/// message, which has no parameters.
 	///
 	/// Return type: `SysResult<()>`.
 }
 
-/// [`LVM_REMOVEGROUP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-removegroup)
+/// [`LVM_REMOVEGROUP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-removegroup)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -2045,7 +2045,7 @@ unsafe impl MsgSend for RemoveGroup {
 	}
 }
 
-/// [`LVM_SCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
+/// [`LVM_SCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-scroll)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2071,7 +2071,7 @@ unsafe impl MsgSend for Scroll {
 	}
 }
 
-/// [`LVM_SETBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setbkcolor)
+/// [`LVM_SETBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setbkcolor)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2096,7 +2096,7 @@ unsafe impl MsgSend for SetBkColor {
 	}
 }
 
-/// [`LVM_SETBKIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setbkimage)
+/// [`LVM_SETBKIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setbkimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2121,7 +2121,7 @@ unsafe impl<'a, 'b> MsgSend for SetBkImage<'a, 'b> {
 	}
 }
 
-/// [`LVM_SETCALLBACKMASK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcallbackmask)
+/// [`LVM_SETCALLBACKMASK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setcallbackmask)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2146,7 +2146,7 @@ unsafe impl MsgSend for SetCallbackMask {
 	}
 }
 
-/// [`LVM_SETCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
+/// [`LVM_SETCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setcolumn)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2172,7 +2172,7 @@ unsafe impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 	}
 }
 
-/// [`LVM_SETCOLUMNORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnorderarray)
+/// [`LVM_SETCOLUMNORDERARRAY`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnorderarray)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2197,7 +2197,7 @@ unsafe impl<'a> MsgSend for SetColumnOrderArray<'a> {
 	}
 }
 
-/// [`LVM_SETCOLUMNWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnwidth)
+/// [`LVM_SETCOLUMNWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setcolumnwidth)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2223,7 +2223,7 @@ unsafe impl MsgSend for SetColumnWidth {
 	}
 }
 
-/// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setextendedlistviewstyle)
+/// [`LVM_SETEXTENDEDLISTVIEWSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setextendedlistviewstyle)
 /// message parameters.
 ///
 /// Return type: `co::LVS_EX`.
@@ -2249,7 +2249,7 @@ unsafe impl MsgSend for SetExtendedListViewStyle {
 	}
 }
 
-/// [`LVM_SETGROUPINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setgroupinfo)
+/// [`LVM_SETGROUPINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setgroupinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -2275,7 +2275,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c,
 	}
 }
 
-/// [`LVM_SETGROUPMETRICS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setgroupmetrics)
+/// [`LVM_SETGROUPMETRICS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setgroupmetrics)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -2300,7 +2300,7 @@ unsafe impl<'a> MsgSend for SetGroupMetrics<'a> {
 	}
 }
 
-/// [`LVM_SETHOTCURSOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sethotcursor)
+/// [`LVM_SETHOTCURSOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sethotcursor)
 /// message parameters.
 ///
 /// Return type: `Option<HCURSOR>`.
@@ -2325,7 +2325,7 @@ unsafe impl MsgSend for SetHotCursor {
 	}
 }
 
-/// [`LVM_SETHOTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sethotitem)
+/// [`LVM_SETHOTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sethotitem)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -2350,7 +2350,7 @@ unsafe impl MsgSend for SetHotItem {
 	}
 }
 
-/// [`LVM_SETHOVERTIME`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sethovertime)
+/// [`LVM_SETHOVERTIME`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sethovertime)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -2375,7 +2375,7 @@ unsafe impl MsgSend for SetHoverTime {
 	}
 }
 
-/// [`LVM_SETICONSPACING`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-seticonspacing)
+/// [`LVM_SETICONSPACING`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-seticonspacing)
 /// message parameters.
 ///
 /// Return type: `SIZE`.
@@ -2400,7 +2400,7 @@ unsafe impl MsgSend for SetIconSpacing {
 	}
 }
 
-/// [`LVM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setimagelist)
+/// [`LVM_SETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setimagelist)
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -2426,7 +2426,7 @@ unsafe impl MsgSend for SetImageList {
 	}
 }
 
-/// [`LVM_SETINFOTIP`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinfotip)
+/// [`LVM_SETINFOTIP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setinfotip)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2451,7 +2451,7 @@ unsafe impl<'a, 'b> MsgSend for SetInfoTip<'a, 'b> {
 	}
 }
 
-/// [`LVM_SETINSERTMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinsertmark)
+/// [`LVM_SETINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setinsertmark)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2476,7 +2476,7 @@ unsafe impl<'a> MsgSend for SetInsertMark<'a> {
 	}
 }
 
-/// [`LVM_SETINSERTMARKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setinsertmarkcolor)
+/// [`LVM_SETINSERTMARKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setinsertmarkcolor)
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
@@ -2501,7 +2501,7 @@ unsafe impl MsgSend for SetInsertMarkColor {
 	}
 }
 
-/// [`LVM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
+/// [`LVM_SETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2526,7 +2526,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	}
 }
 
-/// [`LVM_SETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemcount)
+/// [`LVM_SETITEMCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemcount)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2552,7 +2552,7 @@ unsafe impl MsgSend for SetItemCount {
 	}
 }
 
-/// [`LVM_SETITEMPOSITION`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemposition)
+/// [`LVM_SETITEMPOSITION`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemposition)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2578,7 +2578,7 @@ unsafe impl MsgSend for SetItemPosition {
 	}
 }
 
-/// [`LVM_SETITEMPOSITION32`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemposition32)
+/// [`LVM_SETITEMPOSITION32`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemposition32)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -2604,7 +2604,7 @@ unsafe impl MsgSend for SetItemPosition32 {
 	}
 }
 
-/// [`LVM_SETITEMSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemstate)
+/// [`LVM_SETITEMSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemstate)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2630,7 +2630,7 @@ unsafe impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 	}
 }
 
-/// [`LVM_SETITEMTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
+/// [`LVM_SETITEMTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemtext)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2656,7 +2656,7 @@ unsafe impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 	}
 }
 
-/// [`LVM_SETOUTLINECOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setoutlinecolor)
+/// [`LVM_SETOUTLINECOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setoutlinecolor)
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
@@ -2681,7 +2681,7 @@ unsafe impl MsgSend for SetOutlineColor {
 	}
 }
 
-/// [`LVM_SETSELECTEDCOLUMN`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setselectedcolumn)
+/// [`LVM_SETSELECTEDCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setselectedcolumn)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -2706,7 +2706,7 @@ unsafe impl MsgSend for SetSelectedColumn {
 	}
 }
 
-/// [`LVM_SETSELECTIONMARK`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setselectionmark)
+/// [`LVM_SETSELECTIONMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setselectionmark)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -2731,7 +2731,7 @@ unsafe impl MsgSend for SetSelectionMark {
 	}
 }
 
-/// [`LVM_SETTEXTBKCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settextbkcolor)
+/// [`LVM_SETTEXTBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-settextbkcolor)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2756,7 +2756,7 @@ unsafe impl MsgSend for SetTextBkColor {
 	}
 }
 
-/// [`LVM_SETTEXTCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settextcolor)
+/// [`LVM_SETTEXTCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-settextcolor)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2781,7 +2781,7 @@ unsafe impl MsgSend for SetTextColor {
 	}
 }
 
-/// [`LVM_SETTILEINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settileinfo)
+/// [`LVM_SETTILEINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-settileinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2806,7 +2806,7 @@ unsafe impl<'a, 'b> MsgSend for SetTileInfo<'a, 'b> {
 	}
 }
 
-/// [`LVM_SETTILEVIEWINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settileviewinfo)
+/// [`LVM_SETTILEVIEWINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-settileviewinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2831,7 +2831,7 @@ unsafe impl<'a> MsgSend for SetTileViewInfo<'a> {
 	}
 }
 
-/// [`LVM_SETTOOLTIPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-settooltips)
+/// [`LVM_SETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-settooltips)
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
@@ -2856,7 +2856,7 @@ unsafe impl MsgSend for SetTooltips {
 	}
 }
 
-/// [`LVM_SETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setunicodeformat)
+/// [`LVM_SETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setunicodeformat)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -2881,7 +2881,7 @@ unsafe impl MsgSend for SetUnicodeFormat {
 	}
 }
 
-/// [`LVM_SETVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setview)
+/// [`LVM_SETVIEW`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setview)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2906,7 +2906,7 @@ unsafe impl MsgSend for SetView {
 	}
 }
 
-/// [`LVM_SETWORKAREAS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-setworkareas)
+/// [`LVM_SETWORKAREAS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setworkareas)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -2931,7 +2931,7 @@ unsafe impl<'a> MsgSend for SetWorkAreas<'a> {
 	}
 }
 
-/// [`LVM_SORTGROUPS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortgroups)
+/// [`LVM_SORTGROUPS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sortgroups)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2957,7 +2957,7 @@ unsafe impl MsgSend for SortGroups {
 	}
 }
 
-/// [`LVM_SORTITEMS`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortitems)
+/// [`LVM_SORTITEMS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sortitems)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -2983,7 +2983,7 @@ unsafe impl MsgSend for SortItems {
 	}
 }
 
-/// [`LVM_SORTITEMSEX`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-sortitemsex)
+/// [`LVM_SORTITEMSEX`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sortitemsex)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -3009,7 +3009,7 @@ unsafe impl MsgSend for SortItemsEx {
 	}
 }
 
-/// [`LVM_SUBITEMHITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-subitemhittest)
+/// [`LVM_SUBITEMHITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-subitemhittest)
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
@@ -3034,7 +3034,7 @@ unsafe impl<'a> MsgSend for SubItemHitTest<'a> {
 	}
 }
 
-/// [`LVM_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/lvm-update)
+/// [`LVM_UPDATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-update)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.

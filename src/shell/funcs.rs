@@ -12,7 +12,7 @@ use crate::shell::decl::{
 	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
 
-/// [`CommandLineToArgv`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
+/// [`CommandLineToArgv`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
 /// function.
 ///
 /// # Examples
@@ -51,7 +51,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 		.map(|_| strs)
 }
 
-/// [`SHAddToRecentDocs`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)
+/// [`SHAddToRecentDocs`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)
 /// function.
 ///
 /// **Note:** The `pv` type varies according to `uFlags`. If you set it wrong,
@@ -61,7 +61,7 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 	shell::ffi::SHAddToRecentDocs(flags.0, pv as *const _ as _);
 }
 
-/// [`Shell_NotifyIcon`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
+/// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn Shell_NotifyIcon(
@@ -72,7 +72,7 @@ pub fn Shell_NotifyIcon(
 	)
 }
 
-/// [`SHFileOperation`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
+/// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
@@ -84,7 +84,7 @@ pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
 	}
 }
 
-/// [`SHGetFileInfo`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
+/// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
 /// function.
 ///
 /// **Note:** If you are returning an icon in the `hIcon` member of
@@ -109,7 +109,7 @@ pub fn SHGetFileInfo(
 	}
 }
 
-/// [`SHGetKnownFolderPath`](https://docs.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
+/// [`SHGetKnownFolderPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
 /// function.
 ///
 /// # Examples
@@ -153,7 +153,7 @@ pub fn SHGetKnownFolderPath(
 	})
 }
 
-/// [`SHGetStockIconInfo`](https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetstockiconinfo)
+/// [`SHGetStockIconInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetstockiconinfo)
 /// function.
 ///
 /// **Note:** The `hIcon` member of [`SHSTOCKICONINFO`](crate::SHSTOCKICONINFO)

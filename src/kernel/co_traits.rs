@@ -7,11 +7,11 @@ use crate::kernel::decl::{GetLastError, HLOCAL, LANGID, WString};
 use crate::prelude::kernel_Hlocal;
 
 /// A system error which can be formatted with
-/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew).
+/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew).
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait FormattedError: Into<u32> {
 	/// Returns the textual description of the system error, by calling
-	/// [`FormatMessage`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
+	/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 	/// function.
 	#[must_use]
 	fn FormatMessage(self) -> String {

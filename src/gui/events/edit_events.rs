@@ -4,7 +4,7 @@ use crate::gui::events::base_events_proxy::BaseEventsProxy;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes edit control
-/// [notifications](https://docs.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
@@ -21,17 +21,17 @@ impl EditEvents {
 	}
 
 	pub_fn_cmd_noparm_noret! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC,
-		/// [`EN_ALIGN_LTR_EC`](https://docs.microsoft.com/en-us/windows/win32/controls/en-align-ltr-ec)
+		/// [`EN_ALIGN_LTR_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-ltr-ec)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC,
-		/// [`EN_ALIGN_LTR_EC`](https://docs.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
+		/// [`EN_ALIGN_LTR_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_change, co::EN::CHANGE,
-		/// [`EN_CHANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-change)
+		/// [`EN_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-change)
 		/// command notification.
 		///
 		/// # Examples
@@ -55,37 +55,37 @@ impl EditEvents {
 	}
 
 	pub_fn_cmd_noparm_noret! { en_err_space, co::EN::ERRSPACE,
-		/// [`EN_ERRSPACE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-errspace)
+		/// [`EN_ERRSPACE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-errspace)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_h_scroll, co::EN::HSCROLL,
-		/// [`EN_HSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/en-hscroll)
+		/// [`EN_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/en-hscroll)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_kill_focus, co::EN::KILLFOCUS,
-		/// [`EN_KILLFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/en-killfocus)
+		/// [`EN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/en-killfocus)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_max_text, co::EN::MAXTEXT,
-		/// [`EN_MAXTEXT`](https://docs.microsoft.com/en-us/windows/win32/controls/en-maxtext)
+		/// [`EN_MAXTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/en-maxtext)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_set_focus, co::EN::SETFOCUS,
-		/// [`EN_SETFOCUS`](https://docs.microsoft.com/en-us/windows/win32/controls/en-setfocus)
+		/// [`EN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/en-setfocus)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_update, co::EN::UPDATE,
-		/// [`EN_UPDATE`](https://docs.microsoft.com/en-us/windows/win32/controls/en-update)
+		/// [`EN_UPDATE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-update)
 		/// command notification.
 	}
 
 	pub_fn_cmd_noparm_noret! { en_v_scroll, co::EN::VSCROLL,
-		/// [`EN_VSCROLL`](https://docs.microsoft.com/en-us/windows/win32/controls/en-vscroll)
+		/// [`EN_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/en-vscroll)
 		/// command notification.
 	}
 }

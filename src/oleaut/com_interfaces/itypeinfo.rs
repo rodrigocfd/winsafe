@@ -34,11 +34,11 @@ pub struct ITypeInfoVT {
 
 com_interface! { ITypeInfo: "oleaut";
 	"00020401-0000-0000-c000-000000000046";
-	/// [`ITypeInfo`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
+	/// [`ITypeInfo`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
 	/// COM interface over [`ITypeInfoVT`](crate::vt::ITypeInfoVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -54,7 +54,7 @@ impl oleaut_ITypeInfo for ITypeInfo {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_ITypeInfo: ole_IUnknown {
-	/// [`ITypeInfo::CreateInstance`](https://docs.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
+	/// [`ITypeInfo::CreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.
 	#[must_use]
 	fn CreateInstance<T>(&self, iunk_outer: Option<&mut IUnknown>) -> HrResult<T>

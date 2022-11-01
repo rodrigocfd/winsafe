@@ -5,9 +5,9 @@ use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::Handle;
 
 /// Any
-/// [`HGDIOBJ`](https://docs.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hgdiobj)
+/// [`HGDIOBJ`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hgdiobj)
 /// handle, which is the base handle for
-/// [GDI objects](https://docs.microsoft.com/en-us/windows/win32/sysinfo/gdi-objects).
+/// [GDI objects](https://learn.microsoft.com/en-us/windows/win32/sysinfo/gdi-objects).
 ///
 /// This trait is enabled with the `gdi` feature.
 ///
@@ -18,7 +18,7 @@ use crate::prelude::Handle;
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hgdiobj: Handle {
-	/// [`DeleteObject`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
+	/// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 	/// method.
 	fn DeleteObject(self) -> SysResult<()> {
 		match unsafe { gdi::ffi::DeleteObject(self.as_ptr()) } {

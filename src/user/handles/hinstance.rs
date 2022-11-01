@@ -20,7 +20,7 @@ impl user_Hinstance for HINSTANCE {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hinstance: Handle {
-	/// [`CreateDialogParam`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
+	/// [`CreateDialogParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// method.
 	fn CreateDialogParam(
 		self,
@@ -41,7 +41,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`DialogBoxParam`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
+	/// [`DialogBoxParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
 	/// method.
 	fn DialogBoxParam(
 		self,
@@ -64,7 +64,7 @@ pub trait user_Hinstance: Handle {
 		}
 	}
 
-	/// [`GetClassInfoEx`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassinfoexw)
+	/// [`GetClassInfoEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassinfoexw)
 	/// method.
 	///
 	/// # Examples
@@ -95,7 +95,7 @@ pub trait user_Hinstance: Handle {
 		}
 	}
 
-	/// [`LoadAccelerators`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
+	/// [`LoadAccelerators`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
 	#[must_use]
 	fn LoadAccelerators(self, table_name: IdStr) -> SysResult<HACCEL> {
@@ -106,7 +106,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadCursor`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursorw)
+	/// [`LoadCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursorw)
 	/// method.
 	///
 	/// # Examples
@@ -129,7 +129,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadIcon`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
+	/// [`LoadIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -155,7 +155,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
+	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	///
 	/// **Note:** Must be paired with an
@@ -173,7 +173,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
+	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
 	///
 	/// **Note:** Must be paired with an
@@ -191,7 +191,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadImage`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
+	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
 	///
 	/// **Note:** Must be paired with an
@@ -208,7 +208,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadMenu`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
+	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// method.
 	#[must_use]
 	fn LoadMenu(self, resource_id: IdStr) -> SysResult<HMENU> {
@@ -218,7 +218,7 @@ pub trait user_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`LoadString`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
+	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
 	/// method.
 	#[must_use]
 	fn LoadString(self, id: u16) -> SysResult<String> {

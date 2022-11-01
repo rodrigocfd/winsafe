@@ -18,7 +18,7 @@ impl msimg_Hdc for HDC {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "msimg")))]
 pub trait msimg_Hdc: Handle {
-	/// [`TransparentBlt`](https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
+	/// [`TransparentBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
 	/// method.
 	fn TransparentBlt(self,
 		dest_top_left: POINT, dest_sz: SIZE,

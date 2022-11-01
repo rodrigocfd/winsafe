@@ -13,7 +13,7 @@ use crate::kernel::privs::{
 	MAX_PATH, parse_multi_z_str,
 };
 
-/// [`CopyFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
+/// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn CopyFile(
@@ -31,7 +31,7 @@ pub fn CopyFile(
 	)
 }
 
-/// [`DeleteFile`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
+/// [`DeleteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn DeleteFile(file_name: &str) -> SysResult<()> {
@@ -42,7 +42,7 @@ pub fn DeleteFile(file_name: &str) -> SysResult<()> {
 	)
 }
 
-/// [`ExpandEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw)
+/// [`ExpandEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw)
 /// function.
 ///
 /// # Examples
@@ -83,7 +83,7 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 	}
 }
 
-/// [`FileTimeToSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
+/// [`FileTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn FileTimeToSystemTime(
@@ -99,7 +99,7 @@ pub fn FileTimeToSystemTime(
 	)
 }
 
-/// [`GetBinaryType`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getbinarytypew)
+/// [`GetBinaryType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getbinarytypew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -115,7 +115,7 @@ pub fn GetBinaryType(application_name: &str) -> SysResult<co::SCS> {
 	).map(|_| binary_type)
 }
 
-/// [`GetCommandLine`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinew)
+/// [`GetCommandLine`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinew)
 /// function.
 ///
 /// For an example, see [`CommandLineToArgv`](crate::CommandLineToArgv).
@@ -126,7 +126,7 @@ pub fn GetCommandLine() -> String {
 		.to_string()
 }
 
-/// [`GetComputerName`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamew)
+/// [`GetComputerName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -139,7 +139,7 @@ pub fn GetComputerName() -> SysResult<String> {
 	).map(|_| buf.to_string())
 }
 
-/// [`GetCurrentDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory)
+/// [`GetCurrentDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -156,12 +156,12 @@ pub fn GetCurrentDirectory() -> SysResult<String> {
 	}
 }
 
-/// [`GetEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
+/// [`GetEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
 /// function.
 ///
 /// Returns the parsed strings, and automatically frees the retrieved
 /// environment block with
-/// [`FreeEnvironmentStrings`](https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw).
+/// [`FreeEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw).
 ///
 /// # Examples
 ///
@@ -195,7 +195,7 @@ pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
 		.ok_or_else(|| GetLastError())
 }
 
-/// [`GetFirmwareType`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
+/// [`GetFirmwareType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -205,7 +205,7 @@ pub fn GetFirmwareType() -> SysResult<co::FIRMWARE_TYPE> {
 		.map(|_| co::FIRMWARE_TYPE(ft))
 }
 
-/// [`GetLargePageMinimum`](https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getlargepageminimum)
+/// [`GetLargePageMinimum`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getlargepageminimum)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -213,7 +213,7 @@ pub fn GetLargePageMinimum() -> usize {
 	unsafe { kernel::ffi::GetLargePageMinimum() }
 }
 
-/// [`GetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
+/// [`GetLastError`](https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-getlasterror)
 /// function.
 ///
 /// This function is automatically called every time a
@@ -225,7 +225,7 @@ pub fn GetLastError() -> co::ERROR {
 	co::ERROR(unsafe { kernel::ffi::GetLastError() })
 }
 
-/// [`GetLogicalDriveStrings`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)
+/// [`GetLogicalDriveStrings`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -247,7 +247,7 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 	}
 }
 
-/// [`GetFileAttributes`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
+/// [`GetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
 /// function.
 ///
 /// # Examples
@@ -288,28 +288,28 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 	}
 }
 
-/// [`GetLocalTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime)
+/// [`GetLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetLocalTime(st: &mut SYSTEMTIME) {
 	unsafe { kernel::ffi::GetLocalTime(st as *mut _ as _) }
 }
 
-/// [`GetNativeSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
+/// [`GetNativeSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetNativeSystemInfo(si: &mut SYSTEM_INFO) {
 	unsafe { kernel::ffi::GetNativeSystemInfo(si as *mut _ as _) }
 }
 
-/// [`GetStartupInfo`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
+/// [`GetStartupInfo`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetStartupInfo(si: &mut STARTUPINFO) {
 	unsafe { kernel::ffi::GetStartupInfoW(si as *mut _ as _) }
 }
 
-/// [`GetSystemTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
+/// [`GetSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
 /// function.
 ///
 /// This function retrieves UTC time; for local time use
@@ -319,21 +319,21 @@ pub fn GetSystemTime(st: &mut SYSTEMTIME) {
 	unsafe { kernel::ffi::GetSystemTime(st as *mut _ as _) }
 }
 
-/// [`GetSystemTimeAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
+/// [`GetSystemTimeAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetSystemTimeAsFileTime(ft: &mut FILETIME) {
 	unsafe { kernel::ffi::GetSystemTimeAsFileTime(ft as *mut _ as _) }
 }
 
-/// [`GetSystemTimePreciseAsFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimepreciseasfiletime)
+/// [`GetSystemTimePreciseAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimepreciseasfiletime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetSystemTimePreciseAsFileTime(ft: &mut FILETIME) {
 	unsafe { kernel::ffi::GetSystemTimePreciseAsFileTime(ft as *mut _ as _) }
 }
 
-/// [`GetSystemTimes`](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes)
+/// [`GetSystemTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetSystemTimes(
@@ -352,7 +352,7 @@ pub fn GetSystemTimes(
 	)
 }
 
-/// [`GetTempPath`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppathw)
+/// [`GetTempPath`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppathw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -366,7 +366,7 @@ pub fn GetTempPath() -> SysResult<String> {
 	}
 }
 
-/// [`GetSystemDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectoryw)
+/// [`GetSystemDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectoryw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -380,14 +380,14 @@ pub fn GetSystemDirectory() -> SysResult<String> {
 	}
 }
 
-/// [`GetSystemInfo`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
+/// [`GetSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 	unsafe { kernel::ffi::GetSystemInfo(si as *mut _ as _) }
 }
 
-/// [`GetTickCount64`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64)
+/// [`GetTickCount64`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -395,7 +395,7 @@ pub fn GetTickCount64() -> u64 {
 	unsafe { kernel::ffi::GetTickCount64() }
 }
 
-/// [`GetVolumeInformation`](https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationw)
+/// [`GetVolumeInformation`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumeinformationw)
 /// function.
 ///
 /// # Examples
@@ -469,7 +469,7 @@ pub fn GetVolumeInformation(
 	})
 }
 
-/// [`GlobalMemoryStatusEx`](https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
+/// [`GlobalMemoryStatusEx`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> SysResult<()> {
@@ -478,7 +478,7 @@ pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> SysResult<()> {
 	)
 }
 
-/// [`HIBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
+/// [`HIBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
 /// function. Originally a macro.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -493,7 +493,7 @@ pub const fn HIDWORD(v: u64) -> u32 {
 	(v >> 32 & 0xffff_ffff) as _
 }
 
-/// [`HIWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
+/// [`HIWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
 /// function. Originally a macro.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -501,7 +501,7 @@ pub const fn HIWORD(v: u32) -> u16 {
 	(v >> 16 & 0xffff) as _
 }
 
-/// [`IsNativeVhdBoot`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-isnativevhdboot)
+/// [`IsNativeVhdBoot`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-isnativevhdboot)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -513,7 +513,7 @@ pub fn IsNativeVhdBoot() -> SysResult<bool> {
 	}
 }
 
-/// [`IsWindows10OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater)
+/// [`IsWindows10OrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -525,7 +525,7 @@ pub fn IsWindows10OrGreater() -> SysResult<bool> {
 	)
 }
 
-/// [`IsWindows7OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows7orgreater)
+/// [`IsWindows7OrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows7orgreater)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -537,7 +537,7 @@ pub fn IsWindows7OrGreater() -> SysResult<bool> {
 	)
 }
 
-/// [`IsWindows8OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8orgreater)
+/// [`IsWindows8OrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8orgreater)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -549,7 +549,7 @@ pub fn IsWindows8OrGreater() -> SysResult<bool> {
 	)
 }
 
-/// [`IsWindows8Point1OrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8point1orgreater)
+/// [`IsWindows8Point1OrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows8point1orgreater)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -561,7 +561,7 @@ pub fn IsWindows8Point1OrGreater() -> SysResult<bool> {
 	)
 }
 
-/// [`IsWindowsServer`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsserver)
+/// [`IsWindowsServer`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsserver)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -574,7 +574,7 @@ pub fn IsWindowsServer() -> SysResult<bool> {
 		.map(|b| !b) // not workstation
 }
 
-/// [`IsWindowsVersionOrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsversionorgreater)
+/// [`IsWindowsVersionOrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsversionorgreater)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -602,7 +602,7 @@ pub fn IsWindowsVersionOrGreater(
 	)
 }
 
-/// [`IsWindowsVistaOrGreater`](https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsvistaorgreater)
+/// [`IsWindowsVistaOrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsvistaorgreater)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -614,7 +614,7 @@ pub fn IsWindowsVistaOrGreater() -> SysResult<bool> {
 	)
 }
 
-/// [`LOBYTE`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
+/// [`LOBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
 /// function. Originally a macro.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -629,7 +629,7 @@ pub const fn LODWORD(v: u64) -> u32 {
 	(v & 0xffff_ffff) as _
 }
 
-/// [`LOWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))
+/// [`LOWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))
 /// function. Originally a macro.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -638,10 +638,10 @@ pub const fn LOWORD(v: u32) -> u16 {
 }
 
 /// Function that implements
-/// [`MAKELONG`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632660(v=vs.85)),
-/// [`MAKEWPARAM`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makewparam),
+/// [`MAKELONG`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632660(v=vs.85)),
+/// [`MAKEWPARAM`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makewparam),
 /// and
-/// [`MAKELPARAM`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makelparam)
+/// [`MAKELPARAM`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makelparam)
 /// macros.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -656,7 +656,7 @@ pub const fn MAKEQWORD(lo: u32, hi: u32) -> u64 {
 	((lo as u64 & 0xffff_ffff) | ((hi as u64 & 0xffff_ffff) << 32)) as _
 }
 
-/// [`MAKEWORD`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
+/// [`MAKEWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
 /// function. Originally a macro.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -664,7 +664,7 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16
 }
 
-/// [`MoveFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefilew)
+/// [`MoveFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
@@ -678,7 +678,7 @@ pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
 	)
 }
 
-/// [`MulDiv`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-muldiv)
+/// [`MulDiv`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-muldiv)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -686,7 +686,7 @@ pub fn MulDiv(number: i32, numerator: i32, denominator: i32) -> i32 {
 	unsafe { kernel::ffi::MulDiv(number, numerator, denominator) }
 }
 
-/// [`MultiByteToWideChar`](https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar)
+/// [`MultiByteToWideChar`](https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar)
 /// function.
 ///
 /// The resulting `Vec<u16>` includes a terminating null.
@@ -731,7 +731,7 @@ pub fn MultiByteToWideChar(
 	}
 }
 
-/// [`OutputDebugString`](https://docs.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
+/// [`OutputDebugString`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn OutputDebugString(output_string: &str) {
@@ -740,7 +740,7 @@ pub fn OutputDebugString(output_string: &str) {
 	}
 }
 
-/// [`QueryPerformanceCounter`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
+/// [`QueryPerformanceCounter`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
 /// function.
 ///
 /// # Examples
@@ -769,7 +769,7 @@ pub fn QueryPerformanceCounter() -> SysResult<i64> {
 	).map(|_| perf_count)
 }
 
-/// [`QueryPerformanceFrequency`](https://docs.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
+/// [`QueryPerformanceFrequency`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
 /// function.
 ///
 /// Usually used with
@@ -783,7 +783,7 @@ pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 	).map(|_| freq)
 }
 
-/// [`ReplaceFile`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
+/// [`ReplaceFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn ReplaceFile(
@@ -804,7 +804,7 @@ pub fn ReplaceFile(
 	)
 }
 
-/// [`SetCurrentDirectory`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory)
+/// [`SetCurrentDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
@@ -815,21 +815,21 @@ pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
 	)
 }
 
-/// [`SetLastError`](https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
+/// [`SetLastError`](https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn SetLastError(err_code: co::ERROR) {
 	unsafe { kernel::ffi::SetLastError(err_code.0) }
 }
 
-/// [`Sleep`](https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
+/// [`Sleep`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn Sleep(milliseconds: u32) {
 	unsafe { kernel::ffi::Sleep(milliseconds) }
 }
 
-/// [`SystemTimeToFileTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetofiletime)
+/// [`SystemTimeToFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetofiletime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn SystemTimeToFileTime(
@@ -845,7 +845,7 @@ pub fn SystemTimeToFileTime(
 	)
 }
 
-/// [`SystemTimeToTzSpecificLocalTime`](https://docs.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
+/// [`SystemTimeToTzSpecificLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub fn SystemTimeToTzSpecificLocalTime(
@@ -864,7 +864,7 @@ pub fn SystemTimeToTzSpecificLocalTime(
 	)
 }
 
-/// [`VerifyVersionInfo`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
+/// [`VerifyVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -888,7 +888,7 @@ pub fn VerifyVersionInfo(
 	}
 }
 
-/// [`VerSetConditionMask`](https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-versetconditionmask)
+/// [`VerSetConditionMask`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-versetconditionmask)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
@@ -900,7 +900,7 @@ pub fn VerSetConditionMask(
 	}
 }
 
-/// [`WideCharToMultiByte`](https://docs.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte)
+/// [`WideCharToMultiByte`](https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte)
 /// function.
 ///
 /// The resulting `Vec<u16>` includes a terminating null.

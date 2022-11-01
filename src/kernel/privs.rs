@@ -11,13 +11,13 @@ pub(crate) const MAX_COMPUTERNAME_LENGTH: usize = 15;
 pub(crate) const MAX_MODULE_NAME32: usize = 255;
 pub(crate) const MAX_PATH: usize = 260;
 
-/// [`IS_INTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
+/// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.
 pub(crate) fn IS_INTRESOURCE(val: *const u16) -> bool {
 	(val as usize >> 16) == 0
 }
 
-/// [`MAKEINTRESOURCE`](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
+/// [`MAKEINTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
 /// macro.
 pub(crate) fn MAKEINTRESOURCE(val: isize) -> *const u16 {
 	val as u16 as _

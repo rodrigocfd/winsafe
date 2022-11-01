@@ -3,7 +3,7 @@
 use crate::{co, comdlg};
 use crate::comdlg::decl::CHOOSECOLOR;
 
-/// [`ChooseColor`](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms646912(v=vs.85))
+/// [`ChooseColor`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms646912(v=vs.85))
 /// function.
 ///
 /// # Examples
@@ -43,7 +43,7 @@ pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 	}
 }
 
-/// [`CommDlgExtendedError`](https://docs.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
+/// [`CommDlgExtendedError`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "comdlg")))]
 pub fn CommDlgExtendedError() -> co::CDERR {

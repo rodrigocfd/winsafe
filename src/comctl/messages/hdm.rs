@@ -6,7 +6,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::RECT;
 use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 
-/// [`HDM_CLEARFILTER`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-clearfilter)
+/// [`HDM_CLEARFILTER`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-clearfilter)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -31,7 +31,7 @@ unsafe impl MsgSend for ClearFilter {
 	}
 }
 
-/// [`HDM_CREATEDRAGIMAGE`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-createdragimage)
+/// [`HDM_CREATEDRAGIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-createdragimage)
 /// message parameters.
 ///
 /// Return type: `SysResult<HIMAGELIST>`.
@@ -56,7 +56,7 @@ unsafe impl MsgSend for CreateDragImage {
 	}
 }
 
-/// [`HDM_DELETEITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-deleteitem)
+/// [`HDM_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-deleteitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -81,7 +81,7 @@ unsafe impl MsgSend for DeleteItem {
 	}
 }
 
-/// [`HDM_EDITFILTER`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-editfilter)
+/// [`HDM_EDITFILTER`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-editfilter)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -107,7 +107,7 @@ unsafe impl MsgSend for EditFilter {
 	}
 }
 
-/// [`HDM_GETBITMAPMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getbitmapmargin)
+/// [`HDM_GETBITMAPMARGIN`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getbitmapmargin)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -130,7 +130,7 @@ unsafe impl MsgSend for GetBitmapMargin {
 	}
 }
 
-/// [`HDM_GETFOCUSEDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getfocuseditem)
+/// [`HDM_GETFOCUSEDITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getfocuseditem)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -153,7 +153,7 @@ unsafe impl MsgSend for GetFocusedItem {
 	}
 }
 
-/// [`HDM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getimagelist)
+/// [`HDM_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getimagelist)
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -178,7 +178,7 @@ unsafe impl MsgSend for GetImageList {
 	}
 }
 
-/// [`HDM_GETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitem)
+/// [`HDM_GETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -204,7 +204,7 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	}
 }
 
-/// [`HDM_GETITEMCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemcount)
+/// [`HDM_GETITEMCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getitemcount)
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -227,7 +227,7 @@ unsafe impl MsgSend for GetItemCount {
 	}
 }
 
-/// [`HDM_GETITEMDROPDOWNRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemdropdownrect)
+/// [`HDM_GETITEMDROPDOWNRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getitemdropdownrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -253,7 +253,7 @@ unsafe impl<'a> MsgSend for GetItemDropDownRect<'a> {
 	}
 }
 
-/// [`HDM_GETITEMRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getitemrect)
+/// [`HDM_GETITEMRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getitemrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -279,7 +279,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	}
 }
 
-/// [`HDM_GETORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getorderarray)
+/// [`HDM_GETORDERARRAY`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getorderarray)
 /// message parameters.
 ///
 /// Return type `SysResult<()>`.
@@ -304,7 +304,7 @@ unsafe impl<'a> MsgSend for GetOrderArray<'a> {
 	}
 }
 
-/// [`HDM_GETOVERFLOWRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getoverflowrect)
+/// [`HDM_GETOVERFLOWRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getoverflowrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -329,7 +329,7 @@ unsafe impl<'a> MsgSend for GetOverflowRect<'a> {
 	}
 }
 
-/// [`HDM_GETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-getunicodeformat)
+/// [`HDM_GETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getunicodeformat)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -352,7 +352,7 @@ unsafe impl MsgSend for GetUnicodeFormat {
 	}
 }
 
-/// [`HDM_HITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-hittest)
+/// [`HDM_HITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-hittest)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -377,7 +377,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 	}
 }
 
-/// [`HDM_INSERTITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-insertitem)
+/// [`HDM_INSERTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-insertitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
@@ -403,7 +403,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	}
 }
 
-/// [`HDM_LAYOUT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-layout)
+/// [`HDM_LAYOUT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-layout)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -428,7 +428,7 @@ unsafe impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
 	}
 }
 
-/// [`HDM_ORDERTOINDEX`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-ordertoindex)
+/// [`HDM_ORDERTOINDEX`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-ordertoindex)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -453,7 +453,7 @@ unsafe impl MsgSend for OrderToIndex {
 	}
 }
 
-/// [`HDM_SETBITMAPMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setbitmapmargin)
+/// [`HDM_SETBITMAPMARGIN`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setbitmapmargin)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -478,7 +478,7 @@ unsafe impl MsgSend for SetBitmapMargin {
 	}
 }
 
-/// [`HDM_SETFILTERCHANGETIMEOUT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setfilterchangetimeout)
+/// [`HDM_SETFILTERCHANGETIMEOUT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setfilterchangetimeout)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -503,7 +503,7 @@ unsafe impl MsgSend for SetFilterChangeTimeout {
 	}
 }
 
-/// [`HDM_SETFOCUSEDITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setfocuseditem)
+/// [`HDM_SETFOCUSEDITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setfocuseditem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -528,7 +528,7 @@ unsafe impl MsgSend for SetFocusedItem {
 	}
 }
 
-/// [`HDM_SETHOTDIVIDER`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-sethotdivider)
+/// [`HDM_SETHOTDIVIDER`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-sethotdivider)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -559,7 +559,7 @@ unsafe impl MsgSend for SetHotDivider {
 	}
 }
 
-/// [`HDM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setimagelist)
+/// [`HDM_SETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setimagelist)
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
@@ -585,7 +585,7 @@ unsafe impl MsgSend for SetImageList {
 	}
 }
 
-/// [`HDM_SETITEM`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setitem)
+/// [`HDM_SETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -611,7 +611,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	}
 }
 
-/// [`HDM_SETORDERARRAY`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setorderarray)
+/// [`HDM_SETORDERARRAY`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setorderarray)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -636,7 +636,7 @@ unsafe impl<'a> MsgSend for SetOrderArray<'a> {
 	}
 }
 
-/// [`HDM_SETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/hdm-setunicodeformat)
+/// [`HDM_SETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setunicodeformat)
 /// message parameters.
 ///
 /// Return type: `bool`.

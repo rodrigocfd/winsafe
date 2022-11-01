@@ -1,4 +1,4 @@
-/// [`GUID`](https://docs.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid)
+/// [`GUID`](https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]

@@ -5,11 +5,11 @@ use crate::kernel::decl::WString;
 use crate::oleaut;
 
 /// A
-/// [string data type](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/automat/bstr)
+/// [string data type](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/automat/bstr)
 /// used with COM automation.
 ///
 /// Automatically calls
-/// [`SysFreeString`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
+/// [`SysFreeString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
 /// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(transparent)]
@@ -36,7 +36,7 @@ impl std::fmt::Display for BSTR {
 }
 
 impl BSTR {
-	/// [`SysAllocString`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysallocstring)
+	/// [`SysAllocString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysallocstring)
 	/// function.
 	///
 	/// # Panics
@@ -53,7 +53,7 @@ impl BSTR {
 		}
 	}
 
-	/// [`SysReAllocString`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysreallocstring)
+	/// [`SysReAllocString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysreallocstring)
 	/// function.
 	///
 	/// # Panics
@@ -71,7 +71,7 @@ impl BSTR {
 		}
 	}
 
-	/// [`SysStringLen`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysstringlen)
+	/// [`SysStringLen`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysstringlen)
 	/// function.
 	#[must_use]
 	pub fn SysStringLen(&self) -> u32 {
@@ -79,7 +79,7 @@ impl BSTR {
 	}
 
 	/// Returns the underlying
-	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// pointer.
 	#[must_use]
 	pub const fn as_ptr(&self) -> *mut u16 {
@@ -87,7 +87,7 @@ impl BSTR {
 	}
 
 	/// Returns the underlying
-	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// memory block as a null-terminated `u16` slice.
 	#[must_use]
 	pub fn as_slice(&self) -> &[u16] {
@@ -97,9 +97,9 @@ impl BSTR {
 	}
 
 	/// Returns the underlying
-	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// pointer and sets the internal pointer to null, so that
-	/// [`SysFreeString`](https://docs.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
+	/// [`SysFreeString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
 	/// won't be called.
 	///
 	/// **Note:** Be sure to free the pointer, otherwise, as the name of this

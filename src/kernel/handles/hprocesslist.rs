@@ -11,7 +11,7 @@ use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HPROCESSLIST: "kernel";
 	/// Handle to a process list
-	/// [snapshot](https://docs.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
+	/// [snapshot](https://learn.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
 	/// Originally just a `HANDLE`.
 }
 
@@ -159,7 +159,7 @@ pub trait kernel_Hprocesslist: Handle {
 		Box::new(ThreadIter::new(HPROCESSLIST(unsafe { self.as_ptr() })))
 	}
 
-	/// [`CreateToolhelp32Snapshot`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
+	/// [`CreateToolhelp32Snapshot`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
@@ -179,7 +179,7 @@ pub trait kernel_Hprocesslist: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`HeapList32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listfirst)
+	/// [`HeapList32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listfirst)
 	/// method.
 	///
 	/// Prefer using
@@ -198,7 +198,7 @@ pub trait kernel_Hprocesslist: Handle {
 		}
 	}
 
-	/// [`HeapList32Next`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listnext)
+	/// [`HeapList32Next`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listnext)
 	/// method.
 	///
 	/// Prefer using
@@ -217,7 +217,7 @@ pub trait kernel_Hprocesslist: Handle {
 		}
 	}
 
-	/// [`Module32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32firstw)
+	/// [`Module32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32firstw)
 	/// method.
 	///
 	/// Prefer using
@@ -236,7 +236,7 @@ pub trait kernel_Hprocesslist: Handle {
 		}
 	}
 
-	/// [`Module32Next`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32nextw)
+	/// [`Module32Next`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32nextw)
 	/// method.
 	///
 	/// Prefer using
@@ -255,7 +255,7 @@ pub trait kernel_Hprocesslist: Handle {
 		}
 	}
 
-	/// [`Process32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw)
+	/// [`Process32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw)
 	/// method.
 	///
 	/// Prefer using
@@ -274,7 +274,7 @@ pub trait kernel_Hprocesslist: Handle {
 		}
 	}
 
-	/// [`Process32Next`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw)
+	/// [`Process32Next`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw)
 	/// method.
 	///
 	/// Prefer using
@@ -293,7 +293,7 @@ pub trait kernel_Hprocesslist: Handle {
 		}
 	}
 
-	/// [`Thread32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32first)
+	/// [`Thread32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32first)
 	/// method.
 	///
 	/// Prefer using
@@ -312,7 +312,7 @@ pub trait kernel_Hprocesslist: Handle {
 		}
 	}
 
-	/// [`Thread32First`](https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32next)
+	/// [`Thread32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32next)
 	/// method.
 	///
 	/// Prefer using

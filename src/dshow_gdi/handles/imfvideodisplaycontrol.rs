@@ -19,7 +19,7 @@ impl dshow_gdi_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "dshow", feature = "gdi"))))]
 pub trait dshow_gdi_IMFVideoDisplayControl: ole_IUnknown {
-	/// [`GetCurrentImage`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getcurrentimage)
+	/// [`GetCurrentImage`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getcurrentimage)
 	/// method.
 	///
 	/// Returns bitmap description, DIB bytes and time stamp.

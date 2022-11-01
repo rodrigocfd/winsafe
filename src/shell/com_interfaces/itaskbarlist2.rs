@@ -17,11 +17,11 @@ pub struct ITaskbarList2VT {
 
 com_interface! { ITaskbarList2: "shell";
 	"602d4995-b13a-429b-a66e-1935e44f4317";
-	/// [`ITaskbarList2`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
+	/// [`ITaskbarList2`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 	/// COM interface over [`ITaskbarList2VT`](crate::vt::ITaskbarList2VT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -52,7 +52,7 @@ impl shell_ITaskbarList2 for ITaskbarList2 {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_ITaskbarList2: shell_ITaskbarList {
-	/// [`ITaskbarList2::MarkFullscreenWindow`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
+	/// [`ITaskbarList2::MarkFullscreenWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	fn MarkFullscreenWindow(&self,
 		hwnd: HWND, full_screen: bool) -> HrResult<()>

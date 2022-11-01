@@ -17,11 +17,11 @@ pub struct ISequentialStreamVT {
 
 com_interface! { ISequentialStream: "ole";
 	"0c733a30-2a1c-11ce-ade5-00aa0044773d";
-	/// [`ISequentialStream`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-isequentialstream)
+	/// [`ISequentialStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-isequentialstream)
 	/// COM interface over [`ISequentialStreamVT`](crate::vt::ISequentialStreamVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -37,7 +37,7 @@ impl ole_ISequentialStream for ISequentialStream {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_ISequentialStream: ole_IUnknown {
-	/// [`ISequentialStream::Read`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-read)
+	/// [`ISequentialStream::Read`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-read)
 	/// method.
 	///
 	/// Returns the number of bytes written; if this value is lower than the
@@ -57,7 +57,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 		).map(|_| num_read)
 	}
 
-	/// [`ISequentialStream::Write`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-write)
+	/// [`ISequentialStream::Write`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-write)
 	/// method.
 	///
 	/// Returns the number of bytes written.

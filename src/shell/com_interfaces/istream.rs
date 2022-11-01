@@ -16,7 +16,7 @@ impl shell_IStream for IStream {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IStream: ole_IStream {
-	/// [`SHCreateMemStream`](https://docs.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
+	/// [`SHCreateMemStream`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
 	/// static method.
 	///
 	/// # Examples

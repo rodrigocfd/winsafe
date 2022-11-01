@@ -21,11 +21,11 @@ pub struct IFileSaveDialogVT {
 
 com_interface! { IFileSaveDialog: "shell";
 	"84bccd23-5fde-4cdb-aea4-af64b83d78ab";
-	/// [`IFileSaveDialog`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
+	/// [`IFileSaveDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
 	/// COM interface over [`IFileSaveDialogVT`](crate::vt::IFileSaveDialogVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -57,7 +57,7 @@ impl shell_IFileSaveDialog for IFileSaveDialog {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IFileSaveDialog: shell_IFileDialog {
-	/// [`IFileSaveDialog::SetSaveAsItem`](https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
+	/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 	/// method.
 	fn SetSaveAsItem(&self, psi: IShellItem) -> HrResult<()> {
 		unsafe {

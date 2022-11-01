@@ -42,7 +42,7 @@ pub struct AccelMenuCtrlData {
 }
 
 /// Variant parameter used in
-/// [window class](https://docs.microsoft.com/en-us/windows/win32/winmsg/window-classes)
+/// [window class](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-classes)
 /// functions:
 ///
 /// * [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx) `lpClassName`;

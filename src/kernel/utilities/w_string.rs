@@ -2,7 +2,7 @@ use crate::{co, kernel};
 use crate::kernel::decl::{MultiByteToWideChar, Encoding, SysResult};
 
 /// Stores a `Vec<u16>` buffer for a null-terminated
-/// [Unicode UTF-16](https://docs.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
+/// [Unicode UTF-16](https://learn.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
 /// wide string natively used by Windows.
 ///
 /// This is struct is mostly used internally by the library, as a bridge between
@@ -129,7 +129,7 @@ impl WString {
 	}
 
 	/// Returns a
-	/// [`LPWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// mut pointer to the internal UTF-16 string buffer, to be passed to native
 	/// Win32 functions. This is useful to receive strings.
 	///
@@ -147,7 +147,7 @@ impl WString {
 	}
 
 	/// Returns a
-	/// [`LPCWSTR`](https://docs.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// [`LPCWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// const pointer to the internal UTF-16 string buffer, to be passed to
 	/// native Win32 functions.
 	///
@@ -248,7 +248,7 @@ impl WString {
 	}
 
 	/// Wrapper to
-	/// [`lstrlen`](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
+	/// [`lstrlen`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
 	///
 	/// Returns the number of
 	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) characters

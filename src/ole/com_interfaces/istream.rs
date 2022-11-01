@@ -25,11 +25,11 @@ pub struct IStreamVT {
 
 com_interface! { IStream: "ole";
 	"0000000c-0000-0000-c000-000000000046";
-	/// [`IStream`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream)
+	/// [`IStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream)
 	/// COM interface over [`IStreamVT`](crate::vt::IStreamVT).
 	///
 	/// Automatically calls
-	/// [`Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -39,7 +39,7 @@ impl ole_IStream for IStream {}
 /// [`IStream`](crate::IStream) methods from `ole` feature.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IStream: ole_IUnknown {
-	/// [`IStream::Commit`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-commit)
+	/// [`IStream::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-commit)
 	/// method.
 	fn Commit(&self, flags: co::STGC) -> HrResult<()> {
 		ok_to_hrresult(
@@ -50,7 +50,7 @@ pub trait ole_IStream: ole_IUnknown {
 		)
 	}
 
-	/// [`IStream::CopyTo`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-copyto)
+	/// [`IStream::CopyTo`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-copyto)
 	/// method.
 	///
 	/// Returns the number of bytes read and written.
@@ -70,7 +70,7 @@ pub trait ole_IStream: ole_IUnknown {
 		).map(|_| (read, written))
 	}
 
-	/// [`IStream::LockRegion`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-lockregion)
+	/// [`IStream::LockRegion`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-lockregion)
 	/// method.
 	///
 	/// **Note:** Must be paired with an
@@ -87,7 +87,7 @@ pub trait ole_IStream: ole_IUnknown {
 		)
 	}
 
-	/// [`IStream::Revert`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-revert)
+	/// [`IStream::Revert`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-revert)
 	/// method.
 	fn Revert(&self) -> HrResult<()> {
 		ok_to_hrresult(
@@ -98,7 +98,7 @@ pub trait ole_IStream: ole_IUnknown {
 		)
 	}
 
-	/// [`IStream::Seek`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-seek)
+	/// [`IStream::Seek`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-seek)
 	/// method.
 	///
 	/// Returns the new absolute offset.
@@ -114,7 +114,7 @@ pub trait ole_IStream: ole_IUnknown {
 		).map(|_| new_off)
 	}
 
-	/// [`IStream::SetSize`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-setsize)
+	/// [`IStream::SetSize`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-setsize)
 	/// method.
 	fn SetSize(&self, new_size: u64) -> HrResult<()> {
 		ok_to_hrresult(
@@ -125,7 +125,7 @@ pub trait ole_IStream: ole_IUnknown {
 		)
 	}
 
-	/// [`IStream::UnlockRegion`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-unlockregion)
+	/// [`IStream::UnlockRegion`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-unlockregion)
 	/// method.
 	fn UnlockRegion(&self,
 		offset: u64, length: u64, lock_type: co::LOCKTYPE) -> HrResult<()>

@@ -24,11 +24,11 @@ pub struct IGraphBuilderVT {
 
 com_interface! { IGraphBuilder: "dshow";
 	"56a868a9-0ad4-11ce-b03a-0020af0ba770";
-	/// [`IGraphBuilder`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
+	/// [`IGraphBuilder`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
 	/// COM interface over [`IGraphBuilderVT`](crate::vt::IGraphBuilderVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -59,7 +59,7 @@ impl dshow_IGraphBuilder for IGraphBuilder {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
-	/// [`IGraphBuilder::Abort`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
+	/// [`IGraphBuilder::Abort`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
 	/// method.
 	fn Abort(&self) -> HrResult<()> {
 		unsafe {
@@ -68,7 +68,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 		}
 	}
 
-	/// [`IGraphBuilder::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)
+	/// [`IGraphBuilder::AddSourceFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)
 	/// method.
 	#[must_use]
 	fn AddSourceFilter(&self,
@@ -88,7 +88,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 		}
 	}
 
-	/// [`IGraphBuilder::Connect`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
+	/// [`IGraphBuilder::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 	/// method.
 	fn Connect(&self, pin_out: &IPin, pin_in: &IPin) -> HrResult<()> {
 		unsafe {
@@ -97,7 +97,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 		}
 	}
 
-	/// [`IGraphBuilder::RenderFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)
+	/// [`IGraphBuilder::RenderFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)
 	/// method.
 	fn RenderFile(&self, file: &str) -> HrResult<()> {
 		unsafe {
@@ -112,7 +112,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 		}
 	}
 
-	/// [`IGraphBuilder::SetLogFile`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
+	/// [`IGraphBuilder::SetLogFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
 	/// method.
 	fn SetLogFile(&self, hfile: Option<HFILE>) -> HrResult<()> {
 		unsafe {
@@ -126,7 +126,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 		}
 	}
 
-	/// [`IGraphBuilder::ShouldOperationContinue`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-shouldoperationcontinue)
+	/// [`IGraphBuilder::ShouldOperationContinue`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-shouldoperationcontinue)
 	/// method.
 	#[must_use]
 	fn ShouldOperationContinue(&self) -> HrResult<bool> {

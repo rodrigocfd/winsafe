@@ -4,7 +4,7 @@ use crate::prelude::FormattedError;
 
 const_no_debug_display! { ERROR: u32: "kernel";
 	/// A native
-	/// [system error code](https://docs.microsoft.com/en-us/windows/win32/debug/system-error-codes)
+	/// [system error code](https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// (`u32`), commonly retrieved by
 	/// [`GetLastError`](crate::GetLastError) function.
 	///

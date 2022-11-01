@@ -24,11 +24,11 @@ pub struct IEnumFiltersVT {
 
 com_interface! { IEnumFilters: "dshow";
 	"56a86893-0ad4-11ce-b03a-0020af0ba770";
-	/// [`IEnumFilters`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
+	/// [`IEnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
 	/// COM interface over [`IEnumFiltersVT`](crate::vt::IEnumFiltersVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 }
 
@@ -69,7 +69,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 		Box::new(EnumFiltersIter::new(unsafe { self.ptr() }))
 	}
 
-	/// [`IEnumFilters::Next`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
+	/// [`IEnumFilters::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
 	/// method.
 	///
 	/// Prefer using
@@ -93,7 +93,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumFilters::Reset`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-reset)
+	/// [`IEnumFilters::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-reset)
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
 		unsafe {
@@ -102,7 +102,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumFilters::Skip`](https://docs.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-skip)
+	/// [`IEnumFilters::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
 		unsafe {

@@ -28,11 +28,11 @@ pub struct IMediaControlVT {
 
 com_interface! { IMediaControl: "dshow";
 	"56a868b1-0ad4-11ce-b03a-0020af0ba770";
-	/// [`IMediaControl`](https://docs.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
+	/// [`IMediaControl`](https://learn.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
 	/// COM interface over [`IMediaControlVT`](crate::vt::IMediaControlVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -63,7 +63,7 @@ impl dshow_IMediaControl for IMediaControl {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMediaControl: oleaut_IDispatch {
-	/// [`IMediaControl::AddSourceFilter`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
+	/// [`IMediaControl::AddSourceFilter`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 	/// method.
 	#[must_use]
 	fn AddSourceFilter(&self, file_name: &str) -> HrResult<IDispatch> {
@@ -80,7 +80,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		}
 	}
 
-	/// [`IMediaControl::GetState`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
+	/// [`IMediaControl::GetState`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
 	/// method.
 	#[must_use]
 	fn GetState(&self,
@@ -99,7 +99,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		}.map(|_| state)
 	}
 
-	/// [`IMediaControl::Pause`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-pause)
+	/// [`IMediaControl::Pause`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {
 		unsafe {
@@ -108,7 +108,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		}
 	}
 
-	/// [`IMediaControl::RenderFile`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-renderfile)
+	/// [`IMediaControl::RenderFile`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-renderfile)
 	/// method.
 	fn RenderFile(&self, file_name: &str) -> HrResult<()> {
 		unsafe {
@@ -122,7 +122,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		}
 	}
 
-	/// [`IMediaControl::Run`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-run)
+	/// [`IMediaControl::Run`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-run)
 	/// method.
 	fn Run(&self) -> HrResult<bool> {
 		unsafe {
@@ -131,7 +131,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		}
 	}
 
-	/// [`IMediaControl::Stop`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stop)
+	/// [`IMediaControl::Stop`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stop)
 	/// method.
 	fn Stop(&self) -> HrResult<()> {
 		unsafe {
@@ -140,7 +140,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		}
 	}
 
-	/// [`IMediaControl::StopWhenReady`](https://docs.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stopwhenready)
+	/// [`IMediaControl::StopWhenReady`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stopwhenready)
 	/// method.
 	fn StopWhenReady(&self) -> HrResult<bool> {
 		unsafe {

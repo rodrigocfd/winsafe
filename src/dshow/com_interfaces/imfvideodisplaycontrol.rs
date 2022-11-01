@@ -34,12 +34,12 @@ pub struct IMFVideoDisplayControlVT {
 
 com_interface! { IMFVideoDisplayControl: "dshow";
 	"a490b1e4-ab84-4d31-a1b2-181e03b1077a";
-	/// [`IMFVideoDisplayControl`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
+	/// [`IMFVideoDisplayControl`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
 	/// COM interface over
 	/// [`IMFVideoDisplayControlVT`](crate::vt::IMFVideoDisplayControlVT).
 	///
 	/// Automatically calls
-	/// [`IUnknown::Release`](https://docs.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
 	/// # Examples
@@ -71,7 +71,7 @@ impl dshow_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
-	/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
+	/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 	/// method.
 	#[must_use]
 	fn GetAspectRatioMode(&self) -> HrResult<co::MFVideoARMode> {
@@ -84,7 +84,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}.map(|_| mode)
 	}
 
-	/// [`IMFVideoDisplayControl::GetBorderColor`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getbordercolor)
+	/// [`IMFVideoDisplayControl::GetBorderColor`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getbordercolor)
 	/// method;
 	#[must_use]
 	fn GetBorderColor(&self) -> HrResult<COLORREF> {
@@ -95,7 +95,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}.map(|_| color)
 	}
 
-	/// [`IMFVideoDisplayControl::GetFullscreen`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getfullscreen)
+	/// [`IMFVideoDisplayControl::GetFullscreen`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getfullscreen)
 	/// method.
 	#[must_use]
 	fn GetFullscreen(&self) -> HrResult<bool> {
@@ -108,7 +108,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}.map(|_| fulls)
 	}
 
-	/// [`IMFVideoDisplayControl::GetIdealVideoSize`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getidealvideosize)
+	/// [`IMFVideoDisplayControl::GetIdealVideoSize`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getidealvideosize)
 	/// method.
 	///
 	/// Returns minimum and maximum ideal sizes.
@@ -127,7 +127,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}.map(|_| (min, max))
 	}
 
-	/// [`IMFVideoDisplayControl::GetNativeVideoSize`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getnativevideosize)
+	/// [`IMFVideoDisplayControl::GetNativeVideoSize`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getnativevideosize)
 	/// method.
 	///
 	/// Returns native and aspect ratio sizes.
@@ -146,7 +146,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}.map(|_| (native, aspec))
 	}
 
-	/// [`IMFVideoDisplayControl::GetVideoPosition`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideoposition)
+	/// [`IMFVideoDisplayControl::GetVideoPosition`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideoposition)
 	/// method.
 	#[must_use]
 	fn GetVideoPosition(&self) -> HrResult<(MFVideoNormalizedRect, RECT)> {
@@ -165,7 +165,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}.map(|_| (norm_rc, rc))
 	}
 
-	/// [`IMFVideoDisplayControl::GetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideowindow)
+	/// [`IMFVideoDisplayControl::GetVideoWindow`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getvideowindow)
 	/// method.
 	#[must_use]
 	fn GetVideoWindow(&self) -> HrResult<HWND> {
@@ -176,7 +176,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}.map(|_| hwnd)
 	}
 
-	/// [`IMFVideoDisplayControl::RepaintVideo`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-repaintvideo)
+	/// [`IMFVideoDisplayControl::RepaintVideo`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-repaintvideo)
 	/// method.
 	fn RepaintVideo(&self) -> HrResult<()> {
 		match co::HRESULT(
@@ -191,7 +191,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}
 	}
 
-	/// [`IMFVideoDisplayControl::SetAspectRatioMode`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setaspectratiomode)
+	/// [`IMFVideoDisplayControl::SetAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setaspectratiomode)
 	/// method.
 	fn SetAspectRatioMode(&self, mode: co::MFVideoARMode) -> HrResult<()> {
 		unsafe {
@@ -200,7 +200,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}
 	}
 
-	/// [`IMFVideoDisplayControl::SetBorderColor`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setbordercolor)
+	/// [`IMFVideoDisplayControl::SetBorderColor`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setbordercolor)
 	/// method.
 	fn SetBorderColor(&self, color: COLORREF) -> HrResult<()> {
 		unsafe {
@@ -209,7 +209,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}
 	}
 
-	/// [`IMFVideoDisplayControl::SetFullscreen`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setfullscreen)
+	/// [`IMFVideoDisplayControl::SetFullscreen`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setfullscreen)
 	/// method.
 	fn SetFullscreen(&self, full_screen: bool) -> HrResult<()> {
 		unsafe {
@@ -218,7 +218,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}
 	}
 
-	/// [`IMFVideoDisplayControl::SetVideoPosition`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideoposition)
+	/// [`IMFVideoDisplayControl::SetVideoPosition`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideoposition)
 	/// method.
 	///
 	/// At least one parameter must be passed.
@@ -238,7 +238,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		}
 	}
 
-	/// [`IMFVideoDisplayControl::SetVideoWindow`](https://docs.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideowindow)
+	/// [`IMFVideoDisplayControl::SetVideoWindow`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideowindow)
 	/// method.
 	fn SetVideoWindow(&self, hwnd_video: HWND) -> HrResult<()> {
 		unsafe {

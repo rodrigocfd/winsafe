@@ -1,5 +1,5 @@
 /// Visual style
-/// [parts and states](https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states).
+/// [parts and states](https://learn.microsoft.com/en-us/windows/win32/controls/parts-and-states).
 /// These are originally two separated constant types, but since they form a
 /// hierarchy, one single constant type can represent both part and state.
 #[cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]

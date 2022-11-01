@@ -6,7 +6,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{RECT, SIZE};
 use crate::user::privs::zero_as_err;
 
-/// [`BCM_GETIDEALSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getidealsize)
+/// [`BCM_GETIDEALSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-getidealsize)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -31,7 +31,7 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 	}
 }
 
-/// [`BCM_GETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getimagelist)
+/// [`BCM_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-getimagelist)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -56,7 +56,7 @@ unsafe impl<'a> MsgSend for GetImageList<'a> {
 	}
 }
 
-/// [`BCM_GETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnote)
+/// [`BCM_GETNOTE`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-getnote)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -81,7 +81,7 @@ unsafe impl<'a> MsgSend for GetNote<'a> {
 	}
 }
 
-/// [`BCM_GETNOTELENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getnotelength)
+/// [`BCM_GETNOTELENGTH`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-getnotelength)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -104,7 +104,7 @@ unsafe impl MsgSend for GetNoteLength {
 	}
 }
 
-/// [`BCM_GETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-getsplitinfo)
+/// [`BCM_GETSPLITINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-getsplitinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -129,7 +129,7 @@ unsafe impl<'a> MsgSend for GetSplitInfo<'a> {
 	}
 }
 
-/// [`BCM_GETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-gettextmargin)
+/// [`BCM_GETTEXTMARGIN`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-gettextmargin)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -154,7 +154,7 @@ unsafe impl<'a> MsgSend for GetTextMargin<'a> {
 	}
 }
 
-/// [`BCM_SETDROPDOWNSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setdropdownstate)
+/// [`BCM_SETDROPDOWNSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-setdropdownstate)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -179,7 +179,7 @@ unsafe impl MsgSend for SetDropDownState {
 	}
 }
 
-/// [`BCM_SETIMAGELIST`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setimagelist)
+/// [`BCM_SETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-setimagelist)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -204,7 +204,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	}
 }
 
-/// [`BCM_SETNOTE`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setnote)
+/// [`BCM_SETNOTE`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-setnote)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -229,7 +229,7 @@ unsafe impl MsgSend for SetNote {
 	}
 }
 
-/// [`BCM_SETSHIELD`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setshield)
+/// [`BCM_SETSHIELD`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-setshield)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -254,7 +254,7 @@ unsafe impl MsgSend for SetShield {
 	}
 }
 
-/// [`BCM_SETSPLITINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-setsplitinfo)
+/// [`BCM_SETSPLITINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-setsplitinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -279,7 +279,7 @@ unsafe impl<'a> MsgSend for SetSplitInfo<'a> {
 	}
 }
 
-/// [`BCM_SETTEXTMARGIN`](https://docs.microsoft.com/en-us/windows/win32/controls/bcm-settextmargin)
+/// [`BCM_SETTEXTMARGIN`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-settextmargin)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.

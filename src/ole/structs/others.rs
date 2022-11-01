@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 
-/// [`FORMATETC`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-formatetc)
+/// [`FORMATETC`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-formatetc)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
@@ -35,7 +35,7 @@ impl<'a> FORMATETC<'a> {
 	pub_fn_ptr_get_set!('a, ptd, set_ptd, DVTARGETDEVICE);
 }
 
-/// [`DVTARGETDEVICE`](https://docs.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-dvtargetdevice)
+/// [`DVTARGETDEVICE`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-dvtargetdevice)
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]

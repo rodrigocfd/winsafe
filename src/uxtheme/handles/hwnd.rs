@@ -18,7 +18,7 @@ impl uxtheme_Hwnd for HWND {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]
 pub trait uxtheme_Hwnd: Handle {
-	/// [`OpenThemeData`](https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
+	/// [`OpenThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// method.
 	///
 	/// **Note:** Must be paired with an

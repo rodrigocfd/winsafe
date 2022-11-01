@@ -118,33 +118,33 @@ impl RawControl {
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowControlOpts {
 	/// Window class name to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to an auto-generated string.
 	pub class_name: String,
 	/// Window class styles to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `co::CS::DBLCLKS`.
 	pub class_style: co::CS,
 	/// Window main icon to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Icon::None`.
 	pub class_icon: Icon,
 	/// Window cursor to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Cursor::Idc(co::IDC::ARROW)`.
 	pub class_cursor: Cursor,
 	/// Window background brush to be
-	/// [registered](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to `Brush::Color(co::COLOR::WINDOW)`.
 	pub class_bg_brush: Brush,
 
 	/// Position of control within parent's client area, in pixels, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -153,7 +153,7 @@ pub struct WindowControlOpts {
 	/// Defaults to 0 x 0.
 	pub position: POINT,
 	/// Size of window, in pixels, to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
@@ -162,12 +162,12 @@ pub struct WindowControlOpts {
 	/// Defaults to 0 x 0.
 	pub size: SIZE,
 	/// Window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS::CHILD | WS::TABSTOP | WS::GROUP | WS::VISIBLE | WS::CLIPCHILDREN | WS::CLIPSIBLINGS`.
 	pub style: co::WS,
 	/// Extended window styles to be
-	/// [created](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `WS_EX::LEFT`.
 	///

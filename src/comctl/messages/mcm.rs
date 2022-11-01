@@ -6,7 +6,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, RECT};
 use crate::user::privs::{minus1_as_err, minus1_as_none, zero_as_err};
 
-/// [`MCM_GETCALENDARBORDER`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalendarborder)
+/// [`MCM_GETCALENDARBORDER`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalendarborder)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -29,7 +29,7 @@ unsafe impl MsgSend for GetCalendarBorder {
 	}
 }
 
-/// [`MCM_GETCALENDARCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalendarcount)
+/// [`MCM_GETCALENDARCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalendarcount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -52,7 +52,7 @@ unsafe impl MsgSend for GetCalendarCount {
 	}
 }
 
-/// [`MCM_GETCALENDARGRIDINFO`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalendargridinfo)
+/// [`MCM_GETCALENDARGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalendargridinfo)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -77,7 +77,7 @@ unsafe impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
 	}
 }
 
-/// [`MCM_GETCALID`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcalid)
+/// [`MCM_GETCALID`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalid)
 /// message, which has no parameters.
 ///
 /// Return type: `co::CAL`.
@@ -100,7 +100,7 @@ unsafe impl MsgSend for GetCalId {
 	}
 }
 
-/// [`MCM_GETCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcolor)
+/// [`MCM_GETCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcolor)
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
@@ -125,7 +125,7 @@ unsafe impl MsgSend for GetColor {
 	}
 }
 
-/// [`MCM_GETCURRENTVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcurrentview)
+/// [`MCM_GETCURRENTVIEW`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcurrentview)
 /// message, which has no parameters.
 ///
 /// Return type: `co::MCMV`.
@@ -148,7 +148,7 @@ unsafe impl MsgSend for GetCurrentView {
 	}
 }
 
-/// [`MCM_GETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getcursel)
+/// [`MCM_GETCURSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcursel)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -173,7 +173,7 @@ unsafe impl<'a> MsgSend for GetCurSel<'a> {
 	}
 }
 
-/// [`MCM_GETFIRSTDAYOFWEEK`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getfirstdayofweek)
+/// [`MCM_GETFIRSTDAYOFWEEK`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getfirstdayofweek)
 /// message, which has no parameters.
 ///
 /// Return type: `(bool, u16)`.
@@ -196,7 +196,7 @@ unsafe impl MsgSend for GetFirstDayOfWeek {
 	}
 }
 
-/// [`MCM_GETMAXSELCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getmaxselcount)
+/// [`MCM_GETMAXSELCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getmaxselcount)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -219,7 +219,7 @@ unsafe impl MsgSend for GetMaxSelCount {
 	}
 }
 
-/// [`MCM_GETMAXTODAYWIDTH`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getmaxtodaywidth)
+/// [`MCM_GETMAXTODAYWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getmaxtodaywidth)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -242,7 +242,7 @@ unsafe impl MsgSend for GetMaxTodayWidth {
 	}
 }
 
-/// [`MCM_GETMINREQRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getminreqrect)
+/// [`MCM_GETMINREQRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getminreqrect)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -267,7 +267,7 @@ unsafe impl<'a> MsgSend for GetMinReqRect<'a> {
 	}
 }
 
-/// [`MCM_GETMONTHDELTA`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getmonthdelta)
+/// [`MCM_GETMONTHDELTA`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getmonthdelta)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -290,7 +290,7 @@ unsafe impl MsgSend for GetMonthDelta {
 	}
 }
 
-/// [`MCM_GETMONTHRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getmonthrange)
+/// [`MCM_GETMONTHRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getmonthrange)
 /// message parameters.
 ///
 /// Return value: `u32`.
@@ -316,7 +316,7 @@ unsafe impl<'a> MsgSend for GetMonthRange<'a> {
 	}
 }
 
-/// [`MCM_GETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getrange)
+/// [`MCM_GETRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getrange)
 /// message parameters.
 ///
 /// Return type: `co::GDTR`.
@@ -341,7 +341,7 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 	}
 }
 
-/// [`MCM_GETSELRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getselrange)
+/// [`MCM_GETSELRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getselrange)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -366,7 +366,7 @@ unsafe impl<'a> MsgSend for GetSelRange<'a> {
 	}
 }
 
-/// [`MCM_GETTODAY`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-gettoday)
+/// [`MCM_GETTODAY`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-gettoday)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -391,7 +391,7 @@ unsafe impl<'a> MsgSend for GetToday<'a> {
 	}
 }
 
-/// [`MCM_GETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-getunicodeformat)
+/// [`MCM_GETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getunicodeformat)
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
@@ -414,7 +414,7 @@ unsafe impl MsgSend for GetUnicodeFormat {
 	}
 }
 
-/// [`MCM_HITTEST`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-hittest)
+/// [`MCM_HITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-hittest)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -439,7 +439,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 	}
 }
 
-/// [`MCM_SETCALENDARBORDER`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcalendarborder)
+/// [`MCM_SETCALENDARBORDER`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setcalendarborder)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -465,7 +465,7 @@ unsafe impl MsgSend for SetCalendarBorder {
 	}
 }
 
-/// [`MCM_SETCALID`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcalid)
+/// [`MCM_SETCALID`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setcalid)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -490,7 +490,7 @@ unsafe impl MsgSend for SetCalId {
 	}
 }
 
-/// [`MCM_SETCOLOR`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcolor)
+/// [`MCM_SETCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setcolor)
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
@@ -516,7 +516,7 @@ unsafe impl MsgSend for SetColor {
 	}
 }
 
-/// [`MCM_SETCURRENTVIEW`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcurrentview)
+/// [`MCM_SETCURRENTVIEW`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setcurrentview)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -541,7 +541,7 @@ unsafe impl MsgSend for SetCurrentView {
 	}
 }
 
-/// [`MCM_SETCURSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setcursel)
+/// [`MCM_SETCURSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setcursel)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -566,7 +566,7 @@ unsafe impl<'a> MsgSend for SetCurSel<'a> {
 	}
 }
 
-/// [`MCM_SETDAYSTATE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setdaystate)
+/// [`MCM_SETDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setdaystate)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -591,7 +591,7 @@ unsafe impl<'a> MsgSend for SetDayState<'a> {
 	}
 }
 
-/// [`MCM_SETFIRSTDAYOFWEEK`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setfirstdayofweek)
+/// [`MCM_SETFIRSTDAYOFWEEK`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setfirstdayofweek)
 /// message parameters.
 ///
 /// Return type: `(bool, u16)`.
@@ -616,7 +616,7 @@ unsafe impl MsgSend for SetFirstDayOfWeek {
 	}
 }
 
-/// [`MCM_SETMAXSELCOUNT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setmaxselcount)
+/// [`MCM_SETMAXSELCOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setmaxselcount)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -641,7 +641,7 @@ unsafe impl MsgSend for SetMaxSelCount {
 	}
 }
 
-/// [`MCM_SETMONTHDELTA`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setmonthdelta)
+/// [`MCM_SETMONTHDELTA`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setmonthdelta)
 /// message parameters.
 ///
 /// Return type: `u8`.
@@ -666,7 +666,7 @@ unsafe impl MsgSend for SetMonthDelta {
 	}
 }
 
-/// [`MCM_SETRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setrange)
+/// [`MCM_SETRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setrange)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -692,7 +692,7 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 	}
 }
 
-/// [`MCM_SETSELRANGE`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setselrange)
+/// [`MCM_SETSELRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setselrange)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
@@ -717,7 +717,7 @@ unsafe impl<'a> MsgSend for SetSelRange<'a> {
 	}
 }
 
-/// [`MCM_SETTODAY`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-settoday)
+/// [`MCM_SETTODAY`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-settoday)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -742,7 +742,7 @@ unsafe impl<'a> MsgSend for SetToday<'a> {
 	}
 }
 
-/// [`MCM_SETUNICODEFORMAT`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-setunicodeformat)
+/// [`MCM_SETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-setunicodeformat)
 /// message parameters.
 ///
 /// Return type: `bool`.
@@ -767,7 +767,7 @@ unsafe impl MsgSend for SetUnicodeFormat {
 	}
 }
 
-/// [`MCM_SIZERECTTOMIN`](https://docs.microsoft.com/en-us/windows/win32/controls/mcm-sizerecttomin)
+/// [`MCM_SIZERECTTOMIN`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-sizerecttomin)
 /// message parameters.
 ///
 /// Return type: `()`.

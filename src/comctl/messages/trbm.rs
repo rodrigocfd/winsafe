@@ -4,7 +4,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{HWND, RECT};
 use crate::user::privs::zero_as_none;
 
-/// [`TBM_CLEARSEL`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-clearsel)
+/// [`TBM_CLEARSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-clearsel)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -29,7 +29,7 @@ unsafe impl MsgSend for ClearSel {
 	}
 }
 
-/// [`TBM_CLEARTICS`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-cleartics)
+/// [`TBM_CLEARTICS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-cleartics)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -54,7 +54,7 @@ unsafe impl MsgSend for ClearTics {
 	}
 }
 
-/// [`TBM_GETBUDDY`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getbuddy)
+/// [`TBM_GETBUDDY`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getbuddy)
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
@@ -79,7 +79,7 @@ unsafe impl MsgSend for GetBuddy {
 	}
 }
 
-/// [`TBM_GETCHANNELRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getchannelrect)
+/// [`TBM_GETCHANNELRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getchannelrect)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -104,7 +104,7 @@ unsafe impl<'a> MsgSend for GetChannelRect<'a> {
 	}
 }
 
-/// [`TBM_GETLINESIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getlinesize)
+/// [`TBM_GETLINESIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getlinesize)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -127,7 +127,7 @@ unsafe impl MsgSend for GetLineSize {
 	}
 }
 
-/// [`TBM_GETNUMTICS`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getnumtics)
+/// [`TBM_GETNUMTICS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getnumtics)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -150,7 +150,7 @@ unsafe impl MsgSend for GetNumTics {
 	}
 }
 
-/// [`TBM_GETPAGESIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getpagesize)
+/// [`TBM_GETPAGESIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getpagesize)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -173,7 +173,7 @@ unsafe impl MsgSend for GetPageSize {
 	}
 }
 
-/// [`TBM_GETPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getpos)
+/// [`TBM_GETPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getpos)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -196,7 +196,7 @@ unsafe impl MsgSend for GetPos {
 	}
 }
 
-/// [`TBM_GETRANGEMAX`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getrangemax)
+/// [`TBM_GETRANGEMAX`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getrangemax)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -219,7 +219,7 @@ unsafe impl MsgSend for GetRangeMax {
 	}
 }
 
-/// [`TBM_GETRANGEMIN`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getrangemin)
+/// [`TBM_GETRANGEMIN`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getrangemin)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -242,7 +242,7 @@ unsafe impl MsgSend for GetRangeMin {
 	}
 }
 
-/// [`TBM_GETSELEND`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getselend)
+/// [`TBM_GETSELEND`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getselend)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -265,7 +265,7 @@ unsafe impl MsgSend for GetSelEnd {
 	}
 }
 
-/// [`TBM_GETSELSTART`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getselstart)
+/// [`TBM_GETSELSTART`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getselstart)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -288,7 +288,7 @@ unsafe impl MsgSend for GetSelStart {
 	}
 }
 
-/// [`TBM_GETTHUMBLENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getthumblength)
+/// [`TBM_GETTHUMBLENGTH`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getthumblength)
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
@@ -311,7 +311,7 @@ unsafe impl MsgSend for GetThumbLength {
 	}
 }
 
-/// [`TBM_GETTHUMBRECT`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-getthumbrect)
+/// [`TBM_GETTHUMBRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getthumbrect)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -336,7 +336,7 @@ unsafe impl<'a> MsgSend for GetThumbRect<'a> {
 	}
 }
 
-/// [`TBM_GETTOOLTIPS`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-gettooltips)
+/// [`TBM_GETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-gettooltips)
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
@@ -359,7 +359,7 @@ unsafe impl MsgSend for GetTooltips {
 	}
 }
 
-/// [`TBM_SETBUDDY`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setbuddy)
+/// [`TBM_SETBUDDY`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setbuddy)
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
@@ -385,7 +385,7 @@ unsafe impl MsgSend for SetBuddy {
 	}
 }
 
-/// [`TBM_SETPAGSIZE`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setpagesize)
+/// [`TBM_SETPAGSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setpagesize)
 /// message parameters.
 ///
 /// Return type: `u32`.
@@ -410,7 +410,7 @@ unsafe impl MsgSend for SetPageSize {
 	}
 }
 
-/// [`TBM_SETPOS`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setpos)
+/// [`TBM_SETPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setpos)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -436,7 +436,7 @@ unsafe impl MsgSend for SetPos {
 	}
 }
 
-/// [`TBM_SETPOSNOTIFY`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setposnotify)
+/// [`TBM_SETPOSNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setposnotify)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -461,7 +461,7 @@ unsafe impl MsgSend for SetPosNotify {
 	}
 }
 
-/// [`TBM_SETRANGEMAX`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setrangemax)
+/// [`TBM_SETRANGEMAX`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setrangemax)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -487,7 +487,7 @@ unsafe impl MsgSend for SetRangeMax {
 	}
 }
 
-/// [`TBM_SETRANGEMIN`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setrangemin)
+/// [`TBM_SETRANGEMIN`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setrangemin)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -513,7 +513,7 @@ unsafe impl MsgSend for SetRangeMin {
 	}
 }
 
-/// [`TBM_SETSELEND`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setselend)
+/// [`TBM_SETSELEND`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setselend)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -539,7 +539,7 @@ unsafe impl MsgSend for SetSelEnd {
 	}
 }
 
-/// [`TBM_SETSELSTART`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setselstart)
+/// [`TBM_SETSELSTART`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setselstart)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -565,7 +565,7 @@ unsafe impl MsgSend for SetSelStart {
 	}
 }
 
-/// [`TBM_SETTHUMBLENGTH`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setthumblength)
+/// [`TBM_SETTHUMBLENGTH`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setthumblength)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -590,7 +590,7 @@ unsafe impl MsgSend for SetThumbLength {
 	}
 }
 
-/// [`TBM_SETTICFREQ`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-setticfreq)
+/// [`TBM_SETTICFREQ`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setticfreq)
 /// message parameters.
 ///
 /// Return type: `()`.
@@ -615,7 +615,7 @@ unsafe impl MsgSend for SetTicFreq {
 	}
 }
 
-/// [`TBM_SETTOOLTIPS`](https://docs.microsoft.com/en-us/windows/win32/controls/tbm-settooltips)
+/// [`TBM_SETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-settooltips)
 /// message parameters.
 ///
 /// Return type: `()`.
