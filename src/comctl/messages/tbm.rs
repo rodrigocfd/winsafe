@@ -3,7 +3,7 @@ use crate::comctl::decl::{
 	COLORSCHEME, HIMAGELIST, IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON,
 	TBBUTTONINFO, TBINSERTMARK, TBMETRICS,
 };
-use crate::kernel::decl::{SysResult, WString};
+use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, RECT, SIZE};
@@ -784,6 +784,198 @@ unsafe impl<'a> MsgSend for GetMetrics<'a> {
 			msg_id: co::TBM::GETMETRICS.into(),
 			wparam: 0,
 			lparam: self.metrics as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETPADDING`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getpadding)
+/// message, which has no parameters.
+///
+/// Return type: `(u16, u16)`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetPadding {}
+
+unsafe impl MsgSend for GetPadding {
+	type RetType = (u16, u16);
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as _), HIWORD(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETPADDING.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETPRESSEDIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getpressedimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetPressedImageList {}
+
+unsafe impl MsgSend for GetPressedImageList {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETPRESSEDIMAGELIST.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getrect)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetRect<'a> {
+	pub cmd_id: u16,
+	pub rect: &'a mut RECT,
+}
+
+unsafe impl<'a> MsgSend for GetRect<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETRECT.into(),
+			wparam: self.cmd_id as _,
+			lparam: self.rect as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_GETROWS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getrows)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetRows {}
+
+unsafe impl MsgSend for GetRows {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETROWS.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getstate)
+/// message parameters.
+///
+/// Return type: `SysResult<co::TBSTATE>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetState {
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for GetState {
+	type RetType = SysResult<co::TBSTATE>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_err(v).map(|v| co::TBSTATE(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETSTATE.into(),
+			wparam: self.cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getstring)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetString<'a> {
+	pub index: u16,
+	pub text: &'a mut WString,
+}
+
+unsafe impl<'a> MsgSend for GetString<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETSTRING.into(),
+			wparam: MAKEDWORD(self.text.buf_len() as _, self.index) as _,
+			lparam: unsafe { self.text.as_mut_ptr() } as _,
+		}
+	}
+}
+
+/// [`TB_GETSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getstyle)
+/// message, which has no parameters.
+///
+/// Return type: `co::BTNS`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetStyle {}
+
+unsafe impl MsgSend for GetStyle {
+	type RetType = co::BTNS;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::BTNS(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETSTYLE.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETTEXTROWS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-gettextrows)
+/// message, which has no parameters.
+///
+/// Return type: `u32`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetTextRows {}
+
+unsafe impl MsgSend for GetTextRows {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETTEXTROWS.into(),
+			wparam: 0,
+			lparam: 0,
 		}
 	}
 }
