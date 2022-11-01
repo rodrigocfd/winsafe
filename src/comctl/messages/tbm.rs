@@ -6,7 +6,7 @@ use crate::comctl::decl::{
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
-use crate::user::decl::{COLORREF, RECT, SIZE};
+use crate::user::decl::{COLORREF, HWND, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
 };
@@ -976,6 +976,78 @@ unsafe impl MsgSend for GetTextRows {
 			msg_id: co::TBM::GETTEXTROWS.into(),
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-gettooltips)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HWND>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetTooltips {}
+
+unsafe impl MsgSend for GetTooltips {
+	type RetType = Option<HWND>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HWND(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETTOOLTIPS.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_GETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getunicodeformat)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct GetUnicodeFormat {}
+
+unsafe impl MsgSend for GetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETUNICODEFORMAT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_HIDEBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-hidebutton)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct HideButton {
+	pub cmd_id: u16,
+	pub hide: bool,
+}
+
+unsafe impl MsgSend for HideButton {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::HIDEBUTTON.into(),
+			wparam: self.cmd_id as _,
+			lparam: MAKEDWORD(self.hide as _, 0) as _,
 		}
 	}
 }

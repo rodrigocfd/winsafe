@@ -451,6 +451,7 @@ pub mod msg {
 		//! Toolbar control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages),
 		//! whose constants have [`TBM`](crate::co::TBM) prefix.
+		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::tbm::*;
 		pub use super::super::comctl::messages::tbm::*;
 	}
 

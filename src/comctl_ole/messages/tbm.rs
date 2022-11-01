@@ -12,7 +12,7 @@ use crate::prelude::{MsgSend, ole_IDropTarget, ole_IUnknown};
 pub struct GetObject<'a, T>
 	where T: ole_IDropTarget,
 {
-	obj: &'a mut T,
+	pub obj: &'a mut T,
 }
 
 unsafe impl<'a, T> MsgSend for GetObject<'a, T>
