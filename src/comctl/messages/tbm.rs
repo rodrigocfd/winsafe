@@ -3,10 +3,11 @@ use crate::comctl::decl::{
 	COLORSCHEME, HIMAGELIST, IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON,
 	TBBUTTONINFO, TBINSERTMARK, TBMETRICS,
 };
+use crate::comctl::privs::HINST_COMMCTRL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
-use crate::user::decl::{COLORREF, HWND, RECT, SIZE};
+use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
 };
@@ -1048,6 +1049,388 @@ unsafe impl MsgSend for HideButton {
 			msg_id: co::TBM::HIDEBUTTON.into(),
 			wparam: self.cmd_id as _,
 			lparam: MAKEDWORD(self.hide as _, 0) as _,
+		}
+	}
+}
+
+/// [`TB_HITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-hittest)
+/// message parameters.
+///
+/// Return type: `i32`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct HitTest<'a> {
+	pub coords: &'a mut POINT,
+}
+
+unsafe impl<'a> MsgSend for HitTest<'a> {
+	type RetType = i32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::HITTEST.into(),
+			wparam: 0,
+			lparam: self.coords as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_INDETERMINATE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-indeterminate)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct Indeterminate {
+	pub cmd_id: u16,
+	pub indeterminate: bool,
+}
+
+unsafe impl MsgSend for Indeterminate {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::INDETERMINATE.into(),
+			wparam: self.cmd_id as _,
+			lparam: MAKEDWORD(self.indeterminate as _, 0) as _,
+		}
+	}
+}
+
+/// [`TB_INSERTBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-insertbutton)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct InsertButton<'a, 'b> {
+	pub index: u32,
+	pub button: &'a TBBUTTON<'b>,
+}
+
+unsafe impl<'a, 'b> MsgSend for InsertButton<'a, 'b> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::INSERTBUTTON.into(),
+			wparam: self.index as _,
+			lparam: self.button as *const _ as _,
+		}
+	}
+}
+
+/// [`TB_INSERTMARKHITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-insertmarkhittest)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct InsertMarkHitTest<'a, 'b> {
+	pub coords: &'a POINT,
+	pub info: &'b mut TBINSERTMARK,
+}
+
+unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a, 'b> {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::INSERTMARKHITTEST.into(),
+			wparam: self.coords as *const _ as _,
+			lparam: self.info as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_ISBUTTONCHECKED`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-isbuttonchecked)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct IsButtonChecked {
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for IsButtonChecked {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::ISBUTTONCHECKED.into(),
+			wparam: self.cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_ISBUTTONENABLED`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-isbuttonenabled)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct IsButtonEnabled {
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for IsButtonEnabled {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::ISBUTTONENABLED.into(),
+			wparam: self.cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_ISBUTTONHIDDEN`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-isbuttonhidden)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct IsButtonHidden {
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for IsButtonHidden {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::ISBUTTONHIDDEN.into(),
+			wparam: self.cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_ISBUTTONHIGHLIGHTED`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-isbuttonhighlighted)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct IsButtonHighlighted {
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for IsButtonHighlighted {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::ISBUTTONHIGHLIGHTED.into(),
+			wparam: self.cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_ISBUTTONINDETERMINATE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-isbuttonindeterminate)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct IsButtonIndeterminate {
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for IsButtonIndeterminate {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::ISBUTTONINDETERMINATE.into(),
+			wparam: self.cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_ISBUTTONPRESSED`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-isbuttonpressed)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct IsButtonPressed {
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for IsButtonPressed {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::ISBUTTONPRESSED.into(),
+			wparam: self.cmd_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_LOADIMAGES`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-loadimages)
+/// message parameters.
+///
+/// Return type: `u32`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct LoadImages {
+	pub img_list: co::IDB,
+}
+
+unsafe impl MsgSend for LoadImages {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::LOADIMAGES.into(),
+			wparam: self.img_list.0 as _,
+			lparam: HINST_COMMCTRL.0 as _,
+		}
+	}
+}
+
+/// [`TB_MAPACCELERATOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-mapaccelerator)
+/// message parameters.
+///
+/// Return type: `bool`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct MapAccelerator<'a> {
+	pub character: char,
+	pub cmd_id: &'a mut u16,
+}
+
+unsafe impl<'a> MsgSend for MapAccelerator<'a> {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::MAPACCELERATOR.into(),
+			wparam: self.character as _,
+			lparam: self.cmd_id as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_MARKBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-markbutton)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct MarkButton {
+	pub cmd_id: u16,
+	pub highlight: bool,
+}
+
+unsafe impl MsgSend for MarkButton {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::MARKBUTTON.into(),
+			wparam: self.cmd_id as _,
+			lparam: MAKEDWORD(self.highlight as _, 0) as _,
+		}
+	}
+}
+
+/// [`TB_MOVEBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-movebutton)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct MoveButton {
+	pub btn_index: u32,
+	pub dest_index: u32,
+}
+
+unsafe impl MsgSend for MoveButton {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::MOVEBUTTON.into(),
+			wparam: self.btn_index as _,
+			lparam: self.dest_index as _,
+		}
+	}
+}
+
+/// [`TB_PRESSBUTTON`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-pressbutton)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct PressButton {
+	pub cmd_id: u16,
+	pub press: bool,
+}
+
+unsafe impl MsgSend for PressButton {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::PRESSBUTTON.into(),
+			wparam: self.cmd_id as _,
+			lparam: MAKEDWORD(self.press as _, 0) as _,
 		}
 	}
 }
