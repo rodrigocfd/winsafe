@@ -1,7 +1,7 @@
 use crate::co;
 use crate::comctl::decl::{
 	COLORSCHEME, HIMAGELIST, IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON,
-	TBBUTTONINFO, TBINSERTMARK, TBMETRICS,
+	TBBUTTONINFO, TBINSERTMARK, TBMETRICS, TBREPLACEBITMAP,
 };
 use crate::comctl::privs::HINST_COMMCTRL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
@@ -1431,6 +1431,31 @@ unsafe impl MsgSend for PressButton {
 			msg_id: co::TBM::PRESSBUTTON.into(),
 			wparam: self.cmd_id as _,
 			lparam: MAKEDWORD(self.press as _, 0) as _,
+		}
+	}
+}
+
+/// [`TB_REPLACEBITMAP`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-replacebitmap)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct ReplaceBitmap<'a> {
+	pub info: &'a TBREPLACEBITMAP,
+}
+
+unsafe impl<'a> MsgSend for ReplaceBitmap<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::REPLACEBITMAP.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }

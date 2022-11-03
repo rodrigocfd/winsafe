@@ -4,7 +4,8 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::comctl::decl::{
-	BmpIdbRes, HIMAGELIST, HTREEITEM, IdxStr, PFNLVGROUPCOMPARE, TreeitemTvi,
+	BmpIdbRes, BmpInstId, HIMAGELIST, HTREEITEM, IdxStr, PFNLVGROUPCOMPARE,
+	TreeitemTvi,
 };
 use crate::comctl::privs::{HINST_COMMCTRL, L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::kernel::decl::{HINSTANCE, IdStr, SYSTEMTIME, WString};
@@ -1194,6 +1195,70 @@ pub struct TBMETRICS {
 }
 
 impl_default_with_size!(TBMETRICS, cbSize);
+
+/// [`TBREPLACEBITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbreplacebitmap)
+/// struct.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+#[repr(C)]
+pub struct TBREPLACEBITMAP {
+	hInstOld: HINSTANCE,
+	nIDOld: usize,
+	hInstNew: HINSTANCE,
+	nIDNew: usize,
+	pub nButtons: i32,
+}
+
+impl_default!(TBREPLACEBITMAP);
+
+impl TBREPLACEBITMAP {
+	/// Returns the `hInstOld` and `nIDOld` fields.
+	#[must_use]
+	pub fn olds(&self) -> BmpInstId {
+		if self.hInstOld.is_null() {
+			BmpInstId::Bmp(HBITMAP(self.nIDOld as _))
+		} else {
+			BmpInstId::InstId((self.hInstOld, self.nIDOld as _))
+		}
+	}
+
+	/// Sets the `hInstOld` and `nIDOld` fields.
+	pub fn set_olds(&mut self, val: BmpInstId) {
+		match val {
+			BmpInstId::Bmp(hbmp) => {
+				self.hInstOld = HINSTANCE::NULL;
+				self.nIDOld = hbmp.0 as _;
+			},
+			BmpInstId::InstId((hinst, id)) => {
+				self.hInstOld = hinst;
+				self.nIDOld = id as _;
+			},
+		}
+	}
+
+	/// Returns the `hInstNew` and `nIDNew` fields.
+	#[must_use]
+	pub fn news(&self) -> BmpInstId {
+		if self.hInstNew.is_null() {
+			BmpInstId::Bmp(HBITMAP(self.nIDNew as _))
+		} else {
+			BmpInstId::InstId((self.hInstNew, self.nIDNew as _))
+		}
+	}
+
+	/// Sets the `hInstNew` and `nIDNew` fields.
+	pub fn set_news(&mut self, val: BmpInstId) {
+		match val {
+			BmpInstId::Bmp(hbmp) => {
+				self.hInstNew = HINSTANCE::NULL;
+				self.nIDNew = hbmp.0 as _;
+			},
+			BmpInstId::InstId((hinst, id)) => {
+				self.hInstNew = hinst;
+				self.nIDNew = id as _;
+			},
+		}
+	}
+}
 
 /// [`TVINSERTSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
 /// struct.

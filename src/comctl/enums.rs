@@ -49,6 +49,17 @@ pub enum BmpIdbRes {
 
 /// Variant parameter for:
 ///
+/// * [`TBREPLACEBITMAP`](crate::TBREPLACEBITMAP).
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub enum BmpInstId {
+	/// Bitmap handle.
+	Bmp(HBITMAP),
+	/// Module handle and resource ID.
+	InstId((HINSTANCE, u16)),
+}
+
+/// Variant parameter for:
+///
 /// * [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) `pszIcon`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone)]
