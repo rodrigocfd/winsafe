@@ -131,8 +131,8 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{HKEY, RegistryValue};
 	///
 	/// let val = HKEY::CURRENT_USER.RegGetValue(
-	///     "Control Panel\\Mouse",
-	///     "Beep",
+	///     Some("Control Panel\\Mouse"),
+	///     Some("Beep"),
 	/// )?;
 	///
 	/// match val {
@@ -151,9 +151,11 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegGetValue(self, sub_key: &str, value: &str) -> SysResult<RegistryValue> {
-		let sub_key_w = WString::from_str(sub_key);
-		let value_w = WString::from_str(value);
+	fn RegGetValue(self,
+		sub_key: Option<&str>, value: Option<&str>) -> SysResult<RegistryValue>
+	{
+		let sub_key_w = WString::from_opt_str(sub_key);
+		let value_w = WString::from_opt_str(value);
 		let mut raw_data_type = u32::default();
 		let mut data_len = u32::default();
 
