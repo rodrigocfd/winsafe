@@ -238,8 +238,7 @@ pub trait advapi_Hkey: Handle {
 	fn RegOpenKeyEx(self, sub_key: &str,
 		options: co::REG_OPTION, access_rights: co::KEY) -> SysResult<HKEY>
 	{
-		let hKey = HKEY::NULL;
-
+		let mut hKey = HKEY::NULL;
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegOpenKeyExW(
@@ -247,7 +246,7 @@ pub trait advapi_Hkey: Handle {
 					WString::from_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
-					&mut hKey.as_ptr(),
+					&mut hKey.0,
 				)
 			} as _,
 		) {
