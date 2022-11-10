@@ -32,8 +32,8 @@ pub struct FileMapped {
 
 impl Drop for FileMapped {
 	fn drop(&mut self) {
-		if !self.hview.is_null() { self.hview.UnmapViewOfFile().ok(); } // ignore errors
-		if !self.hmap.is_null() { self.hmap.CloseHandle().ok(); }
+		if self.hview != HFILEMAPVIEW::NULL { self.hview.UnmapViewOfFile().ok(); } // ignore errors
+		if self.hmap != HFILEMAP::NULL { self.hmap.CloseHandle().ok(); }
 	}
 }
 

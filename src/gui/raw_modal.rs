@@ -135,7 +135,7 @@ impl RawModal {
 			// Try to process keyboard actions for child controls.
 			if hwnd_top_level.IsDialogMessage(&mut msg) {
 				// Processed all keyboard actions for child controls.
-				if self.hwnd().is_null() {
+				if self.hwnd() == HWND::NULL {
 					return 0; // our modal was destroyed, terminate loop
 				} else {
 					continue;
@@ -145,7 +145,7 @@ impl RawModal {
 			TranslateMessage(&msg);
 			unsafe { DispatchMessage(&msg); }
 
-			if self.hwnd().is_null() {
+			if self.hwnd() == HWND::NULL {
 				return 0; // our modal was destroyed, terminate loop
 			}
 		}
@@ -163,7 +163,7 @@ impl RawModal {
 			if let Ok(hparent) = self2.hwnd().GetWindow(co::GW::OWNER) {
 				hparent.EnableWindow(true); // re-enable parent
 				self2.hwnd().DestroyWindow()?; // then destroy modal
-				if !self2.0.hchild_prev_focus_parent.is_null() {
+				if *self2.0.hchild_prev_focus_parent != HWND::NULL {
 					self2.0.hchild_prev_focus_parent.SetFocus(); // this focus could be set on WM_DESTROY as well
 				}
 			}

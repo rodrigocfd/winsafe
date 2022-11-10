@@ -79,7 +79,7 @@ impl LayoutArranger {
 	pub(in crate::gui) fn add(&self,
 		hparent: HWND, hchild: HWND, horz: Horz, vert: Vert)
 	{
-		if hparent.is_null() || hchild.is_null() {
+		if hparent == HWND::NULL || hchild == HWND::NULL {
 			panic!("Cannot add resizer entries before window/control creation.");
 		}
 

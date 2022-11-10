@@ -105,14 +105,14 @@ impl RawMain {
 			bottom: wnd_pos.y + wnd_sz.cy,
 		};
 		AdjustWindowRectEx(&mut wnd_rc, opts.style,
-			!opts.menu.is_null(), opts.ex_style).unwrap();
+			opts.menu != HMENU::NULL, opts.ex_style).unwrap();
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
 		self.0.raw_base.create_window(
 			atom,
 			Some(&opts.title),
-			if opts.menu.is_null() { IdMenu::None } else { IdMenu::Menu(opts.menu) },
+			if opts.menu == HMENU::NULL { IdMenu::None } else { IdMenu::Menu(opts.menu) },
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
 		);
@@ -140,7 +140,7 @@ impl RawMain {
 							*hchild_prev_focus = hwnd_cur_focus; // save previously focused control
 						}
 					}
-				} else if !hchild_prev_focus.is_null() {
+				} else if *hchild_prev_focus != HWND::NULL {
 					hchild_prev_focus.SetFocus(); // put focus back
 				}
 			}

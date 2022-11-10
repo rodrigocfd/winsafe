@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP, HIDWORD, LODWORD,
 	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
-use crate::kernel::privs::{bool_to_sysresult, INVALID_HANDLE_VALUE};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, HandleClose};
 
 impl_handle! { HFILE: "kernel";
@@ -87,7 +87,7 @@ pub trait kernel_Hfile: Handle {
 		flags_and_attrs: co::FILE_ATTRIBUTE,
 		hfile_template: Option<HFILE>) -> SysResult<(HFILE, co::ERROR)>
 	{
-		match unsafe {
+		match HFILE(unsafe {
 			kernel::ffi::CreateFileW(
 				WString::from_str(file_name).as_ptr(),
 				desired_access.0,
@@ -97,9 +97,9 @@ pub trait kernel_Hfile: Handle {
 				flags_and_attrs.0,
 				hfile_template.map_or(std::ptr::null_mut(), |h| h.0),
 			) as _
-		} {
-			INVALID_HANDLE_VALUE => Err(GetLastError()),
-			ptr => Ok((HFILE(ptr as _), GetLastError())),
+		}) {
+			HFILE::NULL => Err(GetLastError()),
+			h => Ok((h, GetLastError())),
 		}
 	}
 

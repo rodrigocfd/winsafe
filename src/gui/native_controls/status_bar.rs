@@ -83,9 +83,9 @@ impl GuiNativeControl for StatusBar {
 
 impl GuiNativeControlEvents<StatusBarEvents> for StatusBar {
 	fn on(&self) -> &StatusBarEvents {
-		if !self.hwnd().is_null() {
+		if self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent().hwnd().is_null() {
+		} else if self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -190,7 +190,7 @@ impl StatusBar {
 	}
 
 	fn resize(&self, p: &mut wm::Size) {
-		if p.request == co::SIZE_R::MINIMIZED || self.hwnd().is_null() {
+		if p.request == co::SIZE_R::MINIMIZED || self.hwnd() == HWND::NULL {
 			return; // nothing to do
 		}
 

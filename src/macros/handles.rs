@@ -39,6 +39,7 @@ macro_rules! impl_handle {
 
 		impl crate::prelude::Handle for $name {
 			const NULL: Self = Self(std::ptr::null_mut());
+			const INVALID: Self = Self(-1 as _);
 
 			unsafe fn from_ptr<T>(p: *mut T) -> Self {
 				Self(p as _)

@@ -99,7 +99,7 @@ pub(in crate::gui) struct RawBase {
 
 impl Drop for RawBase {
 	fn drop(&mut self) {
-		if !self.base.hwnd().is_null() {
+		if self.base.hwnd() != HWND::NULL {
 			self.base.hwnd().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 		}
 	}
@@ -209,7 +209,7 @@ impl RawBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS)
 	{
-		if !self.hwnd().is_null() {
+		if self.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");
 		}
 

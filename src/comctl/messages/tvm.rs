@@ -35,7 +35,7 @@ unsafe impl MsgSend for DeleteItem {
 /// [`TVM_EDITLABEL`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-editlabel)
 /// message parameters.
 ///
-/// Return type: `SysResult<HWND>.
+/// Return type: `SysResult<HWND>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EditLabel {
 	pub hitem: HTREEITEM,

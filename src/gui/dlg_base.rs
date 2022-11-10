@@ -15,7 +15,7 @@ pub(in crate::gui) struct DlgBase {
 
 impl Drop for DlgBase {
 	fn drop(&mut self) {
-		if !self.base.hwnd().is_null() {
+		if self.base.hwnd() != HWND::NULL {
 			self.base.hwnd().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 		}
 	}
@@ -51,7 +51,7 @@ impl DlgBase {
 	}
 
 	pub(in crate::gui) fn create_dialog_param(&self) {
-		if !self.base.hwnd().is_null() {
+		if self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
 
@@ -68,7 +68,7 @@ impl DlgBase {
 	}
 
 	pub(in crate::gui) fn dialog_box_param(&self) -> i32 {
-		if !self.base.hwnd().is_null() {
+		if self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
 

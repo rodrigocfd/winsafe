@@ -60,7 +60,7 @@ const_bitflag! { REG_OPTION: u32: "advapi";
 }
 
 const_bitflag! { RRF: u32: "advapi";
-	/// [`HKEY::GetValue`](crate::prelude::advapi_Hkey::GetValue) `dwFlags`
+	/// [`HKEY::GetValue`](crate::prelude::advapi_Hkey::RegGetValue) `dwFlags`
 	/// (`u32`).
 	=>
 	=>

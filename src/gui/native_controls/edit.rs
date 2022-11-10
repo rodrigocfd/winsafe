@@ -70,9 +70,9 @@ impl GuiNativeControl for Edit {
 
 impl GuiNativeControlEvents<EditEvents> for Edit {
 	fn on(&self) -> &EditEvents {
-		if !self.hwnd().is_null() {
+		if self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if !self.0.base.parent().hwnd().is_null() {
+		} else if self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events

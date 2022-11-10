@@ -1214,7 +1214,7 @@ impl TBREPLACEBITMAP {
 	/// Returns the `hInstOld` and `nIDOld` fields.
 	#[must_use]
 	pub fn olds(&self) -> BmpInstId {
-		if self.hInstOld.is_null() {
+		if self.hInstOld == HINSTANCE::NULL {
 			BmpInstId::Bmp(HBITMAP(self.nIDOld as _))
 		} else {
 			BmpInstId::InstId((self.hInstOld, self.nIDOld as _))
@@ -1238,7 +1238,7 @@ impl TBREPLACEBITMAP {
 	/// Returns the `hInstNew` and `nIDNew` fields.
 	#[must_use]
 	pub fn news(&self) -> BmpInstId {
-		if self.hInstNew.is_null() {
+		if self.hInstNew == HINSTANCE::NULL {
 			BmpInstId::Bmp(HBITMAP(self.nIDNew as _))
 		} else {
 			BmpInstId::InstId((self.hInstNew, self.nIDNew as _))

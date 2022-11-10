@@ -21,8 +21,14 @@ pub trait Handle: Sized
 	+ fmt::Debug + fmt::Display
 	+ fmt::LowerHex + fmt::UpperHex
 {
-	/// The null, invalid handle.
+	/// The null, uninitialized handle; equals to `0`.
 	const NULL: Self;
+
+	/// The invalid handle; equals to `-1`.
+	///
+	/// Operations upon this handle will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	const INVALID: Self;
 
 	/// Creates a new handle instance by wrapping a pointer.
 	///
@@ -35,16 +41,10 @@ pub trait Handle: Sized
 	#[must_use]
 	unsafe fn as_ptr(self) -> *mut std::ffi::c_void;
 
-	/// Tells if the handle is invalid (null).
-	#[must_use]
-	fn is_null(self) -> bool {
-		unsafe { self.as_ptr().is_null() }
-	}
-
 	/// Returns `None` if the handle is null, otherwise returns `Some(self)`.
 	#[must_use]
 	fn as_opt(self) -> Option<Self> {
-		if self.is_null() {
+		if self == Self::NULL || self == Self::INVALID {
 			None
 		} else {
 			Some(self)

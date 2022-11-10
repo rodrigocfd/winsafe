@@ -78,7 +78,7 @@ impl Base {
 
 	/// User events can be overriden; only the last one is executed.
 	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		if !self.hwnd.is_null() {
+		if self.hwnd != HWND::NULL {
 			panic!("Cannot add event after window creation.");
 		}
 		&self.user_events
@@ -92,7 +92,7 @@ impl Base {
 
 	/// Internal events are always executed.
 	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
-		if !self.hwnd.is_null() {
+		if self.hwnd != HWND::NULL {
 			panic!("Cannot add privileged event after window creation.");
 		}
 		&self.privileged_events

@@ -1349,7 +1349,7 @@ unsafe impl MsgSend for GetOutlineColor {
 /// [`LVM_GETSELECTEDCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getselectedcolumn)
 /// message, which has no parameters.
 ///
-/// Return type: `Option<u32>.
+/// Return type: `Option<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelectedColumn {}
 
@@ -1395,7 +1395,7 @@ unsafe impl MsgSend for GetSelectedCount {
 /// [`LVM_GETSELECTIONMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-getselectionmark)
 /// message, which has no parameters.
 ///
-/// Return type: `Option<u32>.
+/// Return type: `Option<u32>`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelectionMark {}
 
