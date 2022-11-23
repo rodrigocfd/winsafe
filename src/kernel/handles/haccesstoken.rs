@@ -31,7 +31,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
 	#[must_use]
-	fn DuplicateToken(self,
+	fn DuplicateToken(&self,
 		level: co::SECURITY_IMPERSONATION) -> SysResult<HACCESSTOKEN>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
@@ -63,7 +63,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// [`IsTokenRestricted`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
 	/// method.
 	#[must_use]
-	fn IsTokenRestricted(self) -> SysResult<bool> {
+	fn IsTokenRestricted(&self) -> SysResult<bool> {
 		match unsafe { kernel::ffi::IsTokenRestricted(self.as_ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(false), // actual false

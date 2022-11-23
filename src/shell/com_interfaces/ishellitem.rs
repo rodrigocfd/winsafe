@@ -98,7 +98,8 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn BindToHandler<T>(&self,
-		bind_ctx: Option<&IBindCtx>, bhid: &co::BHID) -> HrResult<T>
+		bind_ctx: Option<&IBindCtx>,
+		bhid: &co::BHID) -> HrResult<T>
 		where T: ole_IUnknown,
 	{
 		unsafe {

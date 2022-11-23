@@ -15,7 +15,7 @@ pub(in crate::gui) struct DlgBase {
 
 impl Drop for DlgBase {
 	fn drop(&mut self) {
-		if self.base.hwnd() != HWND::NULL {
+		if *self.base.hwnd() != HWND::NULL {
 			self.base.hwnd().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 		}
 	}
@@ -34,7 +34,7 @@ impl DlgBase {
 		&self.base as *const _ as _
 	}
 
-	pub(in crate::gui) const fn hwnd(&self) -> HWND {
+	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
 		self.base.hwnd()
 	}
 
@@ -51,7 +51,7 @@ impl DlgBase {
 	}
 
 	pub(in crate::gui) fn create_dialog_param(&self) {
-		if self.base.hwnd() != HWND::NULL {
+		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
 
@@ -68,7 +68,7 @@ impl DlgBase {
 	}
 
 	pub(in crate::gui) fn dialog_box_param(&self) -> i32 {
-		if self.base.hwnd() != HWND::NULL {
+		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
 
@@ -113,7 +113,7 @@ impl DlgBase {
 				let ptr_self = wm_idlg.additional_data as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
 				let ref_self = unsafe { &mut *ptr_self };
-				unsafe { ref_self.base.set_hwnd(hwnd); } // store HWND in struct field
+				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) as *mut Self, // retrieve
@@ -133,12 +133,12 @@ impl DlgBase {
 			// Child controls are created in privileged closures, so we set the
 			// system font only now.
 			ref_self.base.hwnd().SendMessage(wm::SetFont { // on the window itself
-				hfont: ui_font(),
+				hfont: unsafe { ui_font().raw_copy() },
 				redraw: false,
 			});
 			ref_self.base.hwnd().EnumChildWindows(|hchild| {
 				hchild.SendMessage(wm::SetFont { // on each child control
-					hfont: ui_font(),
+					hfont: unsafe { ui_font().raw_copy() },
 					redraw: false,
 				});
 				true
@@ -150,7 +150,7 @@ impl DlgBase {
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
-			unsafe { ref_self.base.set_hwnd(HWND::NULL); } // clear stored HWND
+			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 		}
 
 		Ok(match process_result {

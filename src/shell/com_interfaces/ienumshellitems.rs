@@ -68,7 +68,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = HrResult<IShellItem>> + 'a> {
+	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IShellItem>> + '_> {
 		Box::new(EnumShellItemsIter::new(unsafe { self.ptr() }))
 	}
 

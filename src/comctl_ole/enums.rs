@@ -5,7 +5,6 @@ use crate::user::decl::HICON;
 ///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hFooterIcon`.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
-#[derive(Clone)]
 pub enum IconId {
 	/// No icon.
 	None,
@@ -19,7 +18,6 @@ pub enum IconId {
 ///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `hMainIcon`.
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
-#[derive(Clone)]
 pub enum IconIdTdicon {
 	/// No icon.
 	None,

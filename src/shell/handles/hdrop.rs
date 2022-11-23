@@ -1,9 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::MAX_PATH;
+use crate::kernel::privs::{invalidate_handle, MAX_PATH};
 use crate::prelude::Handle;
 use crate::shell;
 use crate::user::decl::POINT;
@@ -63,17 +61,24 @@ pub trait shell_Hdrop: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter<'a>(&'a self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + 'a>> {
-		Ok(Box::new(DropsIter::new(HDROP(unsafe { self.as_ptr() }))?))
+	fn iter(&self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
+		Ok(Box::new(DropsIter::new(self)?))
 	}
 
 	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
 	/// method.
 	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	///
 	/// Prefer using [`HDROP::iter`](crate::prelude::shell_Hdrop::iter), which
 	/// calls `DragFinish` automatically.
-	fn DragFinish(self) {
-		unsafe { shell::ffi::DragFinish(self.as_ptr()) }
+	fn DragFinish(&self) {
+		unsafe {
+			shell::ffi::DragFinish(self.as_ptr());
+			invalidate_handle(self);
+		}
 	}
 
 	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
@@ -81,7 +86,7 @@ pub trait shell_Hdrop: Handle {
 	///
 	/// This method is rather tricky, consider using
 	/// [`HDROP::iter`](crate::prelude::shell_Hdrop::iter).
-	fn DragQueryFile(self,
+	fn DragQueryFile(&self,
 		ifile: Option<u32>, buf: Option<&mut WString>) -> SysResult<u32>
 	{
 		let cch = buf.as_ref().map_or(0, |buf| buf.buf_len());
@@ -105,7 +110,7 @@ pub trait shell_Hdrop: Handle {
 	/// Returns the coordinates and whether the drop occurred in the client area
 	/// of the window.
 	#[must_use]
-	fn DragQueryPoint(self) -> (POINT, bool) {
+	fn DragQueryPoint(&self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let client_area = unsafe {
 			shell::ffi::DragQueryPoint(self.as_ptr(), &mut pt as *mut _ as _)
@@ -114,21 +119,28 @@ pub trait shell_Hdrop: Handle {
 	}
 }
 
-struct DropsIter<'a> {
-	hdrop: HDROP,
+//------------------------------------------------------------------------------
+
+struct DropsIter<'a, H>
+	where H: shell_Hdrop,
+{
+	hdrop: &'a H,
 	buffer: WString,
 	count: u32,
 	current: u32,
-	_owner: PhantomData<&'a ()>,
 }
 
-impl<'a> Drop for DropsIter<'a> {
+impl<'a, H> Drop for DropsIter<'a, H>
+	where H: shell_Hdrop,
+{
 	fn drop(&mut self) {
 		self.hdrop.DragFinish();
 	}
 }
 
-impl<'a> Iterator for DropsIter<'a> {
+impl<'a, H> Iterator for DropsIter<'a, H>
+	where H: shell_Hdrop,
+{
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -151,14 +163,15 @@ impl<'a> Iterator for DropsIter<'a> {
 	}
 }
 
-impl<'a> DropsIter<'a> {
-	fn new(hdrop: HDROP) -> SysResult<Self> {
+impl<'a, H> DropsIter<'a, H>
+	where H: shell_Hdrop,
+{
+	fn new(hdrop: &'a H) -> SysResult<Self> {
 		Ok(Self {
 			hdrop,
 			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
 			count: hdrop.DragQueryFile(None, None)?,
 			current: 0,
-			_owner: PhantomData,
 		})
 	}
 }

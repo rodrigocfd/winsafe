@@ -34,7 +34,7 @@ pub struct RadioButton {
 }
 
 impl GuiWindow for RadioButton {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.base.hwnd()
 	}
 
@@ -64,9 +64,9 @@ impl GuiNativeControl for RadioButton {
 
 impl GuiNativeControlEvents<ButtonEvents> for RadioButton {
 	fn on(&self) -> &ButtonEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.base.parent().hwnd() != HWND::NULL {
+		} else if *self.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.events
@@ -122,8 +122,10 @@ impl RadioButton {
 					opts.window_style | opts.button_style.into(),
 				);
 
-				self.hwnd().SendMessage(
-					wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(wm::SetFont {
+					hfont: unsafe { ui_font().raw_copy() },
+					redraw: true,
+				});
 				if opts.selected { self.select(true); }
 			},
 			OptsId::Dlg(ctrl_id) => {
@@ -167,7 +169,7 @@ impl RadioButton {
 				AccelMenuCtrlData {
 					notif_code: co::BN::CLICKED.into(),
 					ctrl_id: self.ctrl_id(),
-					ctrl_hwnd: self.hwnd(),
+					ctrl_hwnd: HWND(self.hwnd().0),
 				},
 			),
 		});

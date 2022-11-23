@@ -1,5 +1,5 @@
-mod handles;
+mod com_interfaces;
 
 pub mod traits {
-	pub use super::handles::traits::*;
+	pub use super::com_interfaces::traits::*;
 }

@@ -2320,7 +2320,7 @@ unsafe impl MsgSend for SetHotCursor {
 		WndMsg {
 			msg_id: co::LVM::SETHOTCURSOR.into(),
 			wparam: 0,
-			lparam: self.hcursor.map_or(0, |h| h.0 as _),
+			lparam: self.hcursor.as_ref().map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -2850,7 +2850,7 @@ unsafe impl MsgSend for SetTooltips {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETTOOLTIPS.into(),
-			wparam: self.tooltip.map_or(0, |h| h.0 as _),
+			wparam: self.tooltip.as_ref().map_or(0, |h| h.0 as _),
 			lparam: 0,
 		}
 	}

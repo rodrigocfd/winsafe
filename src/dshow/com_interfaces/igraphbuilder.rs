@@ -114,7 +114,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 
 	/// [`IGraphBuilder::SetLogFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
 	/// method.
-	fn SetLogFile(&self, hfile: Option<HFILE>) -> HrResult<()> {
+	fn SetLogFile(&self, hfile: Option<&HFILE>) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult(

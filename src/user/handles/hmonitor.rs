@@ -39,7 +39,7 @@ pub trait user_Hmonitor: Handle {
 	/// hmon.GetMonitorInfo(&mut mi)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn GetMonitorInfo(self, mi: &mut MONITORINFO) -> SysResult<()> {
+	fn GetMonitorInfo(&self, mi: &mut MONITORINFO) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::GetMonitorInfoW(self.as_ptr(), mi as *mut _ as _)

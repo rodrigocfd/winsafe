@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::ACCEL;
@@ -41,7 +42,15 @@ pub trait user_Haccel: Handle {
 
 	/// [`DestroyAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
 	/// method.
-	fn DestroyAcceleratorTable(self) -> bool {
-		unsafe { user::ffi::DestroyAcceleratorTable(self.as_ptr()) != 0 }
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn DestroyAcceleratorTable(&self) -> bool {
+		let ret = unsafe {
+			user::ffi::DestroyAcceleratorTable(self.as_ptr()) != 0
+		};
+		invalidate_handle(self);
+		ret
 	}
 }

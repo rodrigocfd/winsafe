@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 use crate::user;
 
@@ -28,7 +28,7 @@ pub trait user_Hicon: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 	#[must_use]
-	fn CopyIcon(self) -> SysResult<HICON> {
+	fn CopyIcon(&self) -> SysResult<HICON> {
 		unsafe { user::ffi::CopyIcon(self.as_ptr()).as_mut() }
 			.map(|ptr| HICON(ptr))
 			.ok_or_else(|| GetLastError())
@@ -36,7 +36,15 @@ pub trait user_Hicon: Handle {
 
 	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// method.
-	fn DestroyIcon(self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::DestroyIcon(self.as_ptr()) })
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn DestroyIcon(&self) -> SysResult<()> {
+		let ret = bool_to_sysresult(
+			unsafe { user::ffi::DestroyIcon(self.as_ptr()) },
+		);
+		invalidate_handle(self);
+		ret
 	}
 }

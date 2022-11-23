@@ -77,9 +77,9 @@ impl LayoutArranger {
 	/// Adds a new child control to the internal list, so this control will have
 	/// its position and size rearranged when requested.
 	pub(in crate::gui) fn add(&self,
-		hparent: HWND, hchild: HWND, horz: Horz, vert: Vert)
+		hparent: &HWND, hchild: &HWND, horz: Horz, vert: Vert)
 	{
-		if hparent == HWND::NULL || hchild == HWND::NULL {
+		if *hparent == HWND::NULL || *hchild == HWND::NULL {
 			panic!("Cannot add resizer entries before window/control creation.");
 		}
 
@@ -96,7 +96,14 @@ impl LayoutArranger {
 		let mut rc_orig = hchild.GetWindowRect().unwrap();
 		hparent.ScreenToClientRc(&mut rc_orig).unwrap(); // control client coordinates relative to parent
 
-		self.0.ctrls.as_mut().push(ChildInfo { hchild, rc_orig, horz, vert });
+		self.0.ctrls.as_mut().push(
+			ChildInfo {
+				hchild: unsafe { hchild.raw_copy() },
+				rc_orig,
+				horz,
+				vert,
+			},
+		);
 	}
 
 	/// Rearranges all child controls to fit the new width/height of parent
@@ -120,7 +127,7 @@ impl LayoutArranger {
 			let sz_parent_orig = *self.0.sz_parent_orig;
 
 			hdwp.DeferWindowPos(
-				ctrl.hchild,
+				&ctrl.hchild,
 				HwndPlace::None,
 				POINT::new(
 					match ctrl.horz {

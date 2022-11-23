@@ -163,7 +163,7 @@ unsafe impl MsgSend for SetImage {
 				BmpIcon::Bmp(_) => co::IMAGE_TYPE::BITMAP.0,
 				BmpIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
 			} as _,
-			lparam: self.image.into(),
+			lparam: self.image.as_isize(),
 		}
 	}
 }

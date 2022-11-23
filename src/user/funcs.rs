@@ -15,8 +15,10 @@ use crate::user::privs::ASFW_ANY;
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn AdjustWindowRectEx(
-	rc: &mut RECT, style: co::WS,
-	has_menu: bool, ex_style: co::WS_EX) -> SysResult<()>
+	rc: &mut RECT,
+	style: co::WS,
+	has_menu: bool,
+	ex_style: co::WS_EX) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe {
@@ -425,7 +427,7 @@ pub fn GetGUIThreadInfo(
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn GetMessage(
-	msg: &mut MSG, hwnd: Option<HWND>,
+	msg: &mut MSG, hwnd: Option<&HWND>,
 	msg_filter_min: u32, msg_filter_max: u32) -> SysResult<bool>
 {
 	match unsafe {
@@ -537,8 +539,11 @@ pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub fn PeekMessage(
-	msg: &mut MSG, hwnd: Option<HWND>,
-	msg_filter_min: u32, msg_filter_max: u32, remove_msg: co::PM) -> bool
+	msg: &mut MSG,
+	hwnd: Option<&HWND>,
+	msg_filter_min: u32,
+	msg_filter_max: u32,
+	remove_msg: co::PM) -> bool
 {
 	unsafe {
 		user::ffi::PeekMessageW(

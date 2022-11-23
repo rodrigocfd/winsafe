@@ -51,7 +51,7 @@ pub(in crate::gui) fn create_ui_font() {
 /// Frees the global UI font object.
 pub(in crate::gui) fn delete_ui_font() {
 	unsafe {
-		if let Some(hfont) = UI_HFONT {
+		if let Some(hfont) = &UI_HFONT {
 			hfont.DeleteObject().unwrap();
 			UI_HFONT = None;
 		}
@@ -59,9 +59,9 @@ pub(in crate::gui) fn delete_ui_font() {
 }
 
 /// Retrieves the global UI font object, or panics if not created yet.
-pub(in crate::gui) fn ui_font() -> HFONT {
+pub(in crate::gui) fn ui_font() -> &'static HFONT {
 	unsafe {
-		match UI_HFONT {
+		match &UI_HFONT {
 			Some(hfont) => hfont,
 			None => panic!("Global UI font not created."),
 		}
@@ -94,7 +94,7 @@ pub(in crate::gui) fn multiply_dpi(
 			let screen_dc = HWND::NULL.GetDC().unwrap();
 			DPI.x = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSX); // cache
 			DPI.y = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSY);
-			HWND::NULL.ReleaseDC(screen_dc).unwrap();
+			HWND::NULL.ReleaseDC(&screen_dc).unwrap();
 		}
 
 		if let Some(pt) = pt {
@@ -159,9 +159,9 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SIZE {
 		bounds.cx = 0; // if no text was given, return just the height
 	}
 
-	clone_dc.SelectObjectFont(prev_hfont).unwrap();
+	clone_dc.SelectObjectFont(&prev_hfont).unwrap();
 	clone_dc.DeleteDC().unwrap();
-	desktop_hwnd.ReleaseDC(desktop_hdc).unwrap();
+	desktop_hwnd.ReleaseDC(&desktop_hdc).unwrap();
 	bounds
 }
 
@@ -201,7 +201,7 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 //------------------------------------------------------------------------------
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub(in crate::gui) fn paint_control_borders(hwnd: HWND, wm_ncp: wm::NcPaint) {
+pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
 	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as _);
@@ -220,21 +220,21 @@ pub(in crate::gui) fn paint_control_borders(hwnd: HWND, wm_ncp: wm::NcPaint) {
 
 	if let Some(htheme) = hwnd.OpenThemeData("LISTVIEW") {
 		// Draw only the borders to avoid flickering.
-		htheme.DrawThemeBackground(hdc,
+		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.left, top: rc.top, right: rc.left + 2, bottom: rc.bottom }).unwrap();
-		htheme.DrawThemeBackground(hdc,
+		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.left, top: rc.top, right: rc.right, bottom: rc.top + 2 }).unwrap();
-		htheme.DrawThemeBackground(hdc,
+		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.right - 2, top: rc.top, right: rc.right, bottom: rc.bottom }).unwrap();
-		htheme.DrawThemeBackground(hdc,
+		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom }).unwrap();
 
 		htheme.CloseThemeData().unwrap();
 	}
 
-	hwnd.ReleaseDC(hdc).unwrap();
+	hwnd.ReleaseDC(&hdc).unwrap();
 }

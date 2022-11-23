@@ -40,7 +40,7 @@ pub trait gdi_Hbitmap: gdi_Hgdiobj {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
-	fn GetObject(self, pv: &mut BITMAP) -> SysResult<()> {
+	fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
 		match unsafe {
 			gdi::ffi::GetObjectW(
 				self.as_ptr(),

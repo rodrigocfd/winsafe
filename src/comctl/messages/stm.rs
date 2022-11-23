@@ -119,7 +119,7 @@ unsafe impl MsgSend for SetImage {
 				BmpIconCurMeta::Cur(_) => co::IMAGE_TYPE::CURSOR.0,
 				BmpIconCurMeta::Meta(_) => co::IMAGE_TYPE::ENHMETAFILE.0,
 			} as _,
-			lparam: self.image.into(),
+			lparam: self.image.as_isize(),
 		}
 	}
 }

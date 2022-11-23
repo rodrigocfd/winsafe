@@ -66,7 +66,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
-	fn GetObject(self, lf: &mut LOGFONT) -> SysResult<()> {
+	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
 		match unsafe {
 			gdi::ffi::GetObjectW(
 				self.as_ptr(),

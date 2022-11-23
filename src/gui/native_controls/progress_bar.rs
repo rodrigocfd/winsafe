@@ -37,7 +37,7 @@ pub struct ProgressBar(Pin<Arc<Obj>>);
 unsafe impl Send for ProgressBar {}
 
 impl GuiWindow for ProgressBar {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 

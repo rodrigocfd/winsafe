@@ -49,11 +49,11 @@ impl Base {
 		new_self
 	}
 
-	pub(in crate::gui) const fn hwnd(&self) -> HWND {
-		self.hwnd
+	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
+		&self.hwnd
 	}
 
-	pub(in crate::gui) unsafe fn set_hwnd(&mut self, hwnd: HWND) {
+	pub(in crate::gui) fn set_hwnd(&mut self, hwnd: HWND) {
 		self.hwnd = hwnd
 	}
 
@@ -105,15 +105,15 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
-		hchild: HWND, horz: Horz, vert: Vert)
+		hchild: &HWND, horz: Horz, vert: Vert)
 	{
-		self.layout_arranger.as_mut().add(self.hwnd, hchild, horz, vert)
+		self.layout_arranger.as_mut().add(&self.hwnd, hchild, horz, vert)
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
-		let hwnd = self.hwnd;
+		let hwnd = unsafe { self.hwnd.raw_copy() };
 		std::thread::spawn(move || {
 			func().unwrap_or_else(|err| {
 				let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = Box::new(Box::new(|| Err(err)));
@@ -176,7 +176,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_main_loop(
-		haccel: Option<HACCEL>) -> MsgResult<i32>
+		haccel: Option<&HACCEL>) -> MsgResult<i32>
 	{
 		let mut msg = MSG::default();
 
@@ -194,7 +194,7 @@ impl Base {
 			// If a child window, will retrieve its top-level parent.
 			// If a top-level, use itself.
 			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
-				.unwrap_or(msg.hwnd);
+					.unwrap_or(unsafe { msg.hwnd.raw_copy() });
 
 			// If we have an accelerator table, try to translate the message.
 			if let Some(haccel) = haccel {

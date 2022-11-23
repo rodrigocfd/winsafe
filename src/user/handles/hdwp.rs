@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -38,9 +38,12 @@ pub trait user_Hdwp: Handle {
 
 	/// [`DeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
 	/// method.
-	fn DeferWindowPos(self,
-		hwnd: HWND, hwnd_insert_after: HwndPlace,
-		top_left: POINT, sz: SIZE, flags: co::SWP) -> SysResult<HDWP>
+	fn DeferWindowPos(&self,
+		hwnd: &HWND,
+		hwnd_insert_after: HwndPlace,
+		top_left: POINT,
+		sz: SIZE,
+		flags: co::SWP) -> SysResult<HDWP>
 	{
 		unsafe {
 			user::ffi::DeferWindowPos(
@@ -56,7 +59,15 @@ pub trait user_Hdwp: Handle {
 
 	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// method.
-	fn EndDeferWindowPos(self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::EndDeferWindowPos(self.as_ptr()) })
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn EndDeferWindowPos(&self) -> SysResult<()> {
+		let ret = bool_to_sysresult(
+			unsafe { user::ffi::EndDeferWindowPos(self.as_ptr()) },
+		);
+		invalidate_handle(self);
+		ret
 	}
 }

@@ -2,6 +2,7 @@
 
 use crate::kernel;
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 
 impl_handle! { HLOCAL: "kernel";
@@ -23,17 +24,25 @@ impl kernel_Hlocal for HLOCAL {}
 pub trait kernel_Hlocal: Handle {
 	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.
-	fn LocalFree(self) -> SysResult<()> {
-		match unsafe { kernel::ffi::LocalFree(self.as_ptr()).as_mut() } {
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn LocalFree(&self) -> SysResult<()> {
+		let ret = match unsafe {
+			kernel::ffi::LocalFree(self.as_ptr()).as_mut() }
+		{
 			None => Ok(()),
 			Some(_) => Err(GetLastError()),
-		}
+		};
+		invalidate_handle(self);
+		ret
 	}
 
 	/// [`LocalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
 	/// method.
 	#[must_use]
-	fn LocalSize(self) -> SysResult<usize> {
+	fn LocalSize(&self) -> SysResult<usize> {
 		match unsafe { kernel::ffi::LocalSize(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),

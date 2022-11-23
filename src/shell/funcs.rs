@@ -65,7 +65,8 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 /// function.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn Shell_NotifyIcon(
-	message: co::NIM, data: &mut NOTIFYICONDATA) -> SysResult<()>
+	message: co::NIM,
+	data: &mut NOTIFYICONDATA) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe { shell::ffi::Shell_NotifyIconW(message.0, data as *mut _ as _) },
@@ -92,8 +93,10 @@ pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
 /// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHGetFileInfo(
-	path: &str, file_attrs: co::FILE_ATTRIBUTE,
-	shfi: &mut SHFILEINFO, flags: co::SHGFI) -> SysResult<u32>
+	path: &str,
+	file_attrs: co::FILE_ATTRIBUTE,
+	shfi: &mut SHFILEINFO,
+	flags: co::SHGFI) -> SysResult<u32>
 {
 	match unsafe {
 		shell::ffi::SHGetFileInfoW(
@@ -183,7 +186,9 @@ pub fn SHGetKnownFolderPath(
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHGetStockIconInfo(
-	siid: co::SIID, flags: co::SHGSI, sii: &mut SHSTOCKICONINFO) -> HrResult<()>
+	siid: co::SIID,
+	flags: co::SHGSI,
+	sii: &mut SHSTOCKICONINFO) -> HrResult<()>
 {
 	ok_to_hrresult(
 		unsafe {

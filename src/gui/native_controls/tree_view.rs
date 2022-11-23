@@ -38,7 +38,7 @@ pub struct TreeView(Pin<Arc<Obj>>);
 unsafe impl Send for TreeView {}
 
 impl GuiWindow for TreeView {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -66,9 +66,9 @@ impl GuiNativeControl for TreeView {
 
 impl GuiNativeControlEvents<TreeViewEvents> for TreeView {
 	fn on(&self) -> &TreeViewEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events

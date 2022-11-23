@@ -77,8 +77,8 @@ impl File {
 
 	/// Returns the underlying file handle.
 	#[must_use]
-	pub const fn hfile(&self) -> HFILE {
-		self.hfile
+	pub const fn hfile(&self) -> &HFILE {
+		&self.hfile
 	}
 
 	/// Returns the current offset of the internal pointer.

@@ -57,7 +57,7 @@ pub struct CheckBox(Pin<Arc<Obj>>);
 unsafe impl Send for CheckBox {}
 
 impl GuiWindow for CheckBox {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -87,9 +87,9 @@ impl GuiNativeControl for CheckBox {
 
 impl GuiNativeControlEvents<ButtonEvents> for CheckBox {
 	fn on(&self) -> &ButtonEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -178,8 +178,10 @@ impl CheckBox {
 					opts.window_style | opts.button_style.into(),
 				);
 
-				self.hwnd().SendMessage(
-					wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(wm::SetFont {
+					hfont: unsafe { ui_font().raw_copy() },
+					redraw: true,
+				});
 				if opts.check_state != CheckState::Unchecked {
 					self.set_check_state(opts.check_state);
 				}
@@ -239,7 +241,7 @@ impl CheckBox {
 					AccelMenuCtrlData {
 						notif_code: co::BN::CLICKED.into(),
 						ctrl_id: self.ctrl_id(),
-						ctrl_hwnd: self.hwnd(),
+						ctrl_hwnd: HWND(self.hwnd().0),
 					},
 				),
 			},

@@ -47,7 +47,7 @@ impl RawControl {
 		self.0.raw_base.as_base()
 	}
 
-	pub(in crate::gui) fn hwnd(&self) -> HWND {
+	pub(in crate::gui) fn hwnd(&self) -> &HWND {
 		self.0.raw_base.hwnd()
 	}
 
@@ -79,7 +79,7 @@ impl RawControl {
 			let mut wcx = WNDCLASSEX::default();
 			let mut class_name_buf = WString::default();
 			RawBase::fill_wndclassex(
-				self2.0.raw_base.parent_hinstance(),
+				&self2.0.raw_base.parent_hinstance(),
 				opts.class_style, &opts.class_icon, &opts.class_icon,
 				&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 				&mut class_name_buf);

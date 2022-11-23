@@ -3,7 +3,7 @@ use std::any::Any;
 use crate::gui::events::{WindowEvents, WindowEventsAll};
 use crate::kernel::decl::AnyResult;
 use crate::msg::wm;
-use crate::prelude::user_Hwnd;
+use crate::prelude::{Handle, user_Hwnd};
 use crate::user::decl::{HWND, HwndFocus};
 
 /// Any window. Exposes the underlying window handle.
@@ -19,7 +19,7 @@ pub trait GuiWindow {
 	/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 	/// events.
 	#[must_use]
-	fn hwnd(&self) -> HWND;
+	fn hwnd(&self) -> &HWND;
 
 	/// Converts a reference to the
 	/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait. This is
@@ -81,7 +81,10 @@ pub trait GuiParent: GuiWindow {
 
 	/// Returns a pointer to the inner base window structure.
 	///
-	/// Used internally by the library.
+	/// # Safety
+	///
+	/// The returned pointer must be cast to a specific struct used internally
+	/// by the library. This method is for internal use only.
 	#[must_use]
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void;
 }
@@ -248,7 +251,7 @@ pub trait GuiChildFocus: GuiChild {
 	fn focus(&self) {
 		let hparent = self.hwnd().GetParent().unwrap();
 		hparent.SendMessage(wm::NextDlgCtl {
-			hwnd_focus: HwndFocus::Hwnd(self.hwnd()),
+			hwnd_focus: HwndFocus::Hwnd(unsafe { self.hwnd().raw_copy() }),
 		});
 	}
 }

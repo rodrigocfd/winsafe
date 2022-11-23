@@ -45,8 +45,9 @@ pub trait user_Hdc: Handle {
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn EnumDisplayMonitors<F>(self,
-		rc_clip: Option<RECT>, func: F) -> SysResult<()>
+	fn EnumDisplayMonitors<F>(&self,
+		rc_clip: Option<RECT>,
+		func: F) -> SysResult<()>
 		where F: Fn(HMONITOR, HDC, &RECT) -> bool,
 	{
 		bool_to_sysresult(
@@ -61,6 +62,8 @@ pub trait user_Hdc: Handle {
 		)
 	}
 }
+
+//------------------------------------------------------------------------------
 
 extern "system" fn enum_display_monitors_proc<F>(
 	hmon: HMONITOR, hdc: HDC, rc: *const RECT, lparam: isize) -> BOOL

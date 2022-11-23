@@ -55,7 +55,7 @@ pub trait shell_ITaskbarList2: shell_ITaskbarList {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	fn MarkFullscreenWindow(&self,
-		hwnd: HWND, full_screen: bool) -> HrResult<()>
+		hwnd: &HWND, full_screen: bool) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList2VT>();

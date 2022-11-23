@@ -39,7 +39,7 @@ impl DlgModal {
 		self.0.dlg_base.as_base()
 	}
 
-	pub(in crate::gui) fn hwnd(&self) -> HWND {
+	pub(in crate::gui) fn hwnd(&self) -> &HWND {
 		self.0.dlg_base.hwnd()
 	}
 

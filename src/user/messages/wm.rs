@@ -189,12 +189,12 @@ unsafe impl MsgSend for Command {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::COMMAND,
-			wparam: match self.event {
-				AccelMenuCtrl::Accel(id) => MAKEDWORD(id, 1) as _,
-				AccelMenuCtrl::Menu(id) => MAKEDWORD(id, 0) as _,
+			wparam: match &self.event {
+				AccelMenuCtrl::Accel(id) => MAKEDWORD(*id, 1) as _,
+				AccelMenuCtrl::Menu(id) => MAKEDWORD(*id, 0) as _,
 				AccelMenuCtrl::Ctrl(data) => MAKEDWORD(data.ctrl_id, data.notif_code.0) as _,
 			},
-			lparam: match self.event {
+			lparam: match &self.event {
 				AccelMenuCtrl::Accel(_) => co::CMD::Accelerator.0 as _,
 				AccelMenuCtrl::Menu(_) => co::CMD::Menu.0 as _,
 				AccelMenuCtrl::Ctrl(data) => data.ctrl_hwnd.0 as _,
@@ -417,7 +417,7 @@ unsafe impl MsgSend for EnterIdle {
 		WndMsg {
 			msg_id: co::WM::ENTERIDLE,
 			wparam: self.reason.0 as _,
-			lparam: self.handle.into(),
+			lparam: self.handle.as_isize(),
 		}
 	}
 }
@@ -811,7 +811,7 @@ unsafe impl MsgSend for HScroll {
 		WndMsg {
 			msg_id: co::WM::HSCROLL,
 			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
-			lparam: self.hcontrol.map_or(0, |h| h.0 as _),
+			lparam: self.hcontrol.as_ref().map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -928,7 +928,7 @@ unsafe impl MsgSend for KillFocus {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::KILLFOCUS,
-			wparam: self.hwnd.map_or(0, |h| h.0 as _),
+			wparam: self.hwnd.as_ref().map_or(0, |h| h.0 as _),
 			lparam: 0,
 		}
 	}
@@ -1283,11 +1283,11 @@ unsafe impl MsgSend for NextDlgCtl {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NEXTDLGCTL,
-			wparam: match self.hwnd_focus {
+			wparam: match &self.hwnd_focus {
 				HwndFocus::Hwnd(hctl) => hctl.0 as _,
-				HwndFocus::FocusNext(next) => if next { 0 } else { 1 },
+				HwndFocus::FocusNext(next) => if *next { 0 } else { 1 },
 			},
-			lparam: MAKEDWORD(match self.hwnd_focus {
+			lparam: MAKEDWORD(match &self.hwnd_focus {
 				HwndFocus::Hwnd(_) => 1,
 				HwndFocus::FocusNext(_) => 0,
 			}, 0) as _,
@@ -1332,7 +1332,7 @@ unsafe impl MsgSend for ParentNotify {
 		WndMsg {
 			msg_id: co::WM::PARENTNOTIFY,
 			wparam: MAKEDWORD(self.event.0, self.child_id) as _,
-			lparam: self.data.into(),
+			lparam: self.data.as_isize(),
 		}
 	}
 }
@@ -1909,7 +1909,7 @@ unsafe impl MsgSend for VScroll {
 		WndMsg {
 			msg_id: co::WM::VSCROLL,
 			wparam: MAKEDWORD(self.request.0, self.scroll_box_pos) as _,
-			lparam: self.hcontrol.map_or(0, |h| h.0 as _),
+			lparam: self.hcontrol.as_ref().map_or(0, |h| h.0 as _),
 		}
 	}
 }

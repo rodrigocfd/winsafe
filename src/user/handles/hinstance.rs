@@ -22,10 +22,9 @@ impl user_Hinstance for HINSTANCE {}
 pub trait user_Hinstance: Handle {
 	/// [`CreateDialogParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// method.
-	fn CreateDialogParam(
-		self,
+	fn CreateDialogParam(&self,
 		resource_id: IdStr,
-		hwnd_parent: Option<HWND>,
+		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
 		init_param: Option<isize>) -> SysResult<HWND>
 	{
@@ -43,10 +42,9 @@ pub trait user_Hinstance: Handle {
 
 	/// [`DialogBoxParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
 	/// method.
-	fn DialogBoxParam(
-		self,
+	fn DialogBoxParam(&self,
 		resource_id: IdStr,
-		hwnd_parent: Option<HWND>,
+		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
 		init_param: Option<isize>) -> SysResult<isize>
 	{
@@ -80,7 +78,7 @@ pub trait user_Hinstance: Handle {
 	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn GetClassInfoEx(self,
+	fn GetClassInfoEx(&self,
 		class_name: &str, wcx: &mut WNDCLASSEX) -> SysResult<ATOM>
 	{
 		match unsafe {
@@ -98,7 +96,7 @@ pub trait user_Hinstance: Handle {
 	/// [`LoadAccelerators`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// method.
 	#[must_use]
-	fn LoadAccelerators(self, table_name: IdStr) -> SysResult<HACCEL> {
+	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<HACCEL> {
 		unsafe {
 			user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr())
 				.as_mut()
@@ -122,7 +120,7 @@ pub trait user_Hinstance: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn LoadCursor(self, resource_id: IdIdcStr) -> SysResult<HCURSOR> {
+	fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<HCURSOR> {
 		unsafe {
 			user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()).as_mut()
 		}.map(|ptr| HCURSOR(ptr))
@@ -148,7 +146,7 @@ pub trait user_Hinstance: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn LoadIcon(self, icon_id: IdIdiStr) -> SysResult<HICON> {
+	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<HICON> {
 		unsafe {
 			user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()).as_mut()
 		}.map(|ptr| HICON(ptr))
@@ -162,7 +160,7 @@ pub trait user_Hinstance: Handle {
 	/// [`HBITMAP::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
 	/// call.
 	#[must_use]
-	fn LoadImageBitmap(self,
+	fn LoadImageBitmap(&self,
 		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<HBITMAP>
 	{
 		unsafe {
@@ -180,7 +178,7 @@ pub trait user_Hinstance: Handle {
 	/// [`HCURSOR::DestroyCursor`](crate::prelude::user_Hcursor::DestroyCursor)
 	/// call.
 	#[must_use]
-	fn LoadImageCursor(self,
+	fn LoadImageCursor(&self,
 		name: IdOcrStr, sz: SIZE, load: co::LR) -> SysResult<HCURSOR>
 	{
 		unsafe {
@@ -197,7 +195,7 @@ pub trait user_Hinstance: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 	#[must_use]
-	fn LoadImageIcon(self,
+	fn LoadImageIcon(&self,
 		name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<HICON>
 	{
 		unsafe {
@@ -211,7 +209,7 @@ pub trait user_Hinstance: Handle {
 	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// method.
 	#[must_use]
-	fn LoadMenu(self, resource_id: IdStr) -> SysResult<HMENU> {
+	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
 		unsafe {
 			user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()).as_mut()
 		}.map(|ptr| HMENU(ptr))
@@ -221,7 +219,7 @@ pub trait user_Hinstance: Handle {
 	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
 	/// method.
 	#[must_use]
-	fn LoadString(self, id: u16) -> SysResult<String> {
+	fn LoadString(&self, id: u16) -> SysResult<String> {
 		let mut pdata: *const u16 = std::ptr::null_mut();
 		match unsafe {
 			user::ffi::LoadStringW(

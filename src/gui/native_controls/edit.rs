@@ -40,7 +40,7 @@ pub struct Edit(Pin<Arc<Obj>>);
 unsafe impl Send for Edit {}
 
 impl GuiWindow for Edit {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -70,9 +70,9 @@ impl GuiNativeControl for Edit {
 
 impl GuiNativeControlEvents<EditEvents> for Edit {
 	fn on(&self) -> &EditEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -154,8 +154,10 @@ impl Edit {
 					opts.window_style | opts.edit_style.into(),
 				);
 
-				self.hwnd().SendMessage(
-					wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(wm::SetFont {
+					hfont: unsafe { ui_font().raw_copy() },
+					redraw: true,
+				});
 			},
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}

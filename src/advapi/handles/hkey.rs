@@ -1,10 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
 use crate::kernel::decl::{FILETIME, SysResult, WString};
+use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 
 impl_handle! { HKEY: "advapi";
@@ -49,11 +48,17 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// method.
-	fn RegCloseKey(self) -> SysResult<()> {
-		match co::ERROR(unsafe { advapi::ffi::RegCloseKey(self.as_ptr()) as _ }) {
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn RegCloseKey(&self) -> SysResult<()> {
+		let ret = match co::ERROR(unsafe { advapi::ffi::RegCloseKey(self.as_ptr()) as _ }) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
-		}
+		};
+		invalidate_handle(self);
+		ret
 	}
 
 	/// Returns an iterator over the names of the keys, which calls
@@ -81,8 +86,8 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegEnumKeyEx<'a>(self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + 'a>> {
-		Ok(Box::new(EnumKeyIter::new(HKEY(unsafe { self.as_ptr() }))?))
+	fn RegEnumKeyEx(&self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
+		Ok(Box::new(EnumKeyIter::new(self)?))
 	}
 
 	/// Returns an iterator of the names and types of the values, which calls
@@ -107,15 +112,16 @@ pub trait advapi_Hkey: Handle {
 	/// }
 	///
 	/// // Collecting into a Vec
-	/// let values_and_types = hkey.RegEnumValue()?
-	///     .collect::<SysResult<Vec<_>>>()?;
+	/// let values_and_types: Vec<(String, co::REG)> =
+	///     hkey.RegEnumValue()?
+	///         .collect::<SysResult<Vec<_>>>()?;
 	///
 	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegEnumValue<'a>(self) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + 'a>> {
-		Ok(Box::new(EnumValueIter::new(HKEY(unsafe { self.as_ptr() }))?))
+	fn RegEnumValue(&self) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + '_>> {
+		Ok(Box::new(EnumValueIter::new(self)?))
 	}
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -151,7 +157,7 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegGetValue(self,
+	fn RegGetValue(&self,
 		sub_key: Option<&str>, value: Option<&str>) -> SysResult<RegistryValue>
 	{
 		let sub_key_w = WString::from_opt_str(sub_key);
@@ -237,7 +243,7 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegOpenKeyEx(self, sub_key: &str,
+	fn RegOpenKeyEx(&self, sub_key: &str,
 		options: co::REG_OPTION, access_rights: co::KEY) -> SysResult<HKEY>
 	{
 		let mut hKey = HKEY::NULL;
@@ -259,7 +265,7 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegQueryInfoKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
 	/// method.
-	fn RegQueryInfoKey(self,
+	fn RegQueryInfoKey(&self,
 		mut class: Option<&mut WString>,
 		num_sub_keys: Option<&mut u32>,
 		max_sub_key_name_len: Option<&mut u32>,
@@ -362,7 +368,7 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegQueryValueEx(self, value: &str) -> SysResult<RegistryValue> {
+	fn RegQueryValueEx(&self, value: &str) -> SysResult<RegistryValue> {
 		let value_w = WString::from_str(value);
 		let mut raw_data_type = u32::default();
 		let mut data_len = u32::default();
@@ -440,7 +446,7 @@ pub trait advapi_Hkey: Handle {
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn RegSetKeyValue(self,
+	fn RegSetKeyValue(&self,
 		sub_key: &str, value: &str, data: RegistryValue) -> SysResult<()>
 	{
 		match co::ERROR(
@@ -486,7 +492,7 @@ pub trait advapi_Hkey: Handle {
 	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	fn RegSetValueEx(self, value: &str, data: RegistryValue) -> SysResult<()> {
+	fn RegSetValueEx(&self, value: &str, data: RegistryValue) -> SysResult<()> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegSetValueExW(
@@ -505,15 +511,20 @@ pub trait advapi_Hkey: Handle {
 	}
 }
 
-struct EnumKeyIter<'a> {
-	hkey: HKEY,
+//------------------------------------------------------------------------------
+
+struct EnumKeyIter<'a, H>
+	where H: advapi_Hkey,
+{
+	hkey: &'a H,
 	count: u32,
 	current: u32,
 	name_buffer: WString,
-	_owner: PhantomData<&'a ()>,
 }
 
-impl<'a> Iterator for EnumKeyIter<'a> {
+impl<'a, H> Iterator for EnumKeyIter<'a, H>
+	where H: advapi_Hkey,
+{
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -525,7 +536,7 @@ impl<'a> Iterator for EnumKeyIter<'a> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegEnumKeyExW(
-					self.hkey.0,
+					self.hkey.as_ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),
 					&mut len_buffer,
@@ -548,8 +559,10 @@ impl<'a> Iterator for EnumKeyIter<'a> {
 	}
 }
 
-impl<'a> EnumKeyIter<'a> {
-	fn new(hkey: HKEY) -> SysResult<Self> {
+impl<'a, H> EnumKeyIter<'a, H>
+	where H: advapi_Hkey,
+{
+	fn new(hkey: &'a H) -> SysResult<Self> {
 		let mut num_keys = u32::default();
 		let mut max_key_name_len = u32::default();
 		hkey.RegQueryInfoKey(
@@ -561,20 +574,24 @@ impl<'a> EnumKeyIter<'a> {
 			count: num_keys,
 			current: 0,
 			name_buffer: WString::new_alloc_buf(max_key_name_len as usize + 1),
-			_owner: PhantomData,
 		})
 	}
 }
 
-struct EnumValueIter<'a> {
-	hkey: HKEY,
+//------------------------------------------------------------------------------
+
+struct EnumValueIter<'a, H>
+	where H: advapi_Hkey,
+{
+	hkey: &'a H,
 	count: u32,
 	current: u32,
 	name_buffer: WString,
-	_owner: PhantomData<&'a ()>,
 }
 
-impl<'a> Iterator for EnumValueIter<'a> {
+impl<'a, H> Iterator for EnumValueIter<'a, H>
+	where H: advapi_Hkey,
+{
 	type Item = SysResult<(String, co::REG)>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -587,7 +604,7 @@ impl<'a> Iterator for EnumValueIter<'a> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegEnumValueW(
-					self.hkey.0,
+					self.hkey.as_ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),
 					&mut len_buffer,
@@ -610,8 +627,10 @@ impl<'a> Iterator for EnumValueIter<'a> {
 	}
 }
 
-impl<'a> EnumValueIter<'a> {
-	fn new(hkey: HKEY) -> SysResult<Self> {
+impl<'a, H> EnumValueIter<'a, H>
+	where H: advapi_Hkey,
+{
+	fn new(hkey: &'a H) -> SysResult<Self> {
 		let mut num_vals = u32::default();
 		let mut max_val_name_len = u32::default();
 		hkey.RegQueryInfoKey(
@@ -623,7 +642,6 @@ impl<'a> EnumValueIter<'a> {
 			count: num_vals,
 			current: 0,
 			name_buffer: WString::new_alloc_buf(max_val_name_len as usize + 1),
-			_owner: PhantomData,
 		})
 	}
 }

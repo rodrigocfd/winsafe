@@ -38,7 +38,7 @@ pub struct DateTimePicker(Pin<Arc<Obj>>);
 unsafe impl Send for DateTimePicker {}
 
 impl GuiWindow for DateTimePicker {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -66,9 +66,9 @@ impl GuiNativeControl for DateTimePicker {
 
 impl GuiNativeControlEvents<DateTimePickerEvents> for DateTimePicker {
 	fn on(&self) -> &DateTimePickerEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -159,8 +159,9 @@ impl DateTimePicker {
 
 				if sz.cx == 0 { // use ideal width?
 					let mut sz_ideal = SIZE::default();
-					self.hwnd().SendMessage(
-						dtm::GetIdealSize { size: &mut sz_ideal });
+					self.hwnd().SendMessage(dtm::GetIdealSize {
+						size: &mut sz_ideal,
+					});
 					sz.cx = sz_ideal.cx; // already adjusted for DPI
 
 					self.hwnd().SetWindowPos(
@@ -168,8 +169,10 @@ impl DateTimePicker {
 						co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 				}
 
-				self.hwnd().SendMessage(
-					wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(wm::SetFont {
+					hfont: unsafe { ui_font().raw_copy() },
+					redraw: true,
+				});
 			},
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}

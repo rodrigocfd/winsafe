@@ -240,7 +240,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 
 	/// [`IMFVideoDisplayControl::SetVideoWindow`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideowindow)
 	/// method.
-	fn SetVideoWindow(&self, hwnd_video: HWND) -> HrResult<()> {
+	fn SetVideoWindow(&self, hwnd_video: &HWND) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
 			ok_to_hrresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.0))

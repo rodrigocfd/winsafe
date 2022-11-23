@@ -22,7 +22,7 @@ pub trait user_Hprocess: Handle {
 	///
 	/// **Note:** The `pv_info` type varies according to `index`. If you set it
 	/// wrong, you're likely to cause a buffer overrun.
-	unsafe fn SetUserObjectInformation<T>(self,
+	unsafe fn SetUserObjectInformation<T>(&self,
 		index: co::UOI, pv_info: &mut T) -> SysResult<()>
 	{
 		bool_to_sysresult(

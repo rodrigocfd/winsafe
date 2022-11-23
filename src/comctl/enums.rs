@@ -10,7 +10,6 @@ use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
 /// * [`stm::GetImage`](crate::msg::stm::GetImage) `image`;
 /// * [`stm::SetImage`](crate::msg::stm::SetImage) `image`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-#[derive(Clone, Copy)]
 pub enum BmpIconCurMeta {
 	/// Bitmap.
 	Bmp(HBITMAP),
@@ -22,9 +21,11 @@ pub enum BmpIconCurMeta {
 	Meta(HDC),
 }
 
-impl From<BmpIconCurMeta> for isize {
-	fn from(v: BmpIconCurMeta) -> Self {
-		(match v {
+impl BmpIconCurMeta {
+	/// Converts the contents into an `isize`.
+	#[must_use]
+	pub fn as_isize(&self) -> isize {
+		(match self {
 			BmpIconCurMeta::Bmp(hbmp) => hbmp.0,
 			BmpIconCurMeta::Icon(hicon) => hicon.0,
 			BmpIconCurMeta::Cur(hcur) => hcur.0,
@@ -37,7 +38,6 @@ impl From<BmpIconCurMeta> for isize {
 ///
 /// * [`TBADDBITMAP`](crate::TBADDBITMAP) `nID`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-#[derive(Clone)]
 pub enum BmpIdbRes {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bmp(HBITMAP),
@@ -163,7 +163,6 @@ impl ResStrs {
 ///
 /// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-#[derive(Clone, Copy)]
 pub enum TreeitemTvi {
 	/// Handle to a tree view item.
 	Treeitem(HTREEITEM),

@@ -2,6 +2,7 @@
 
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
+use crate::prelude::Handle;
 
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
@@ -28,6 +29,13 @@ pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 		0 => Err(GetLastError()),
 		_ => Ok(()),
 	}
+}
+
+/// Forcibly sets the handle to `Self::INVALID`, preventing further operations.
+pub(crate) fn invalidate_handle<H>(h: &H)
+	where H: Handle,
+{
+	*unsafe { &mut *(h as *const H as *mut H) } = H::INVALID;
 }
 
 /// Converts a string to a ISO-8859-1 null-terminated byte array.

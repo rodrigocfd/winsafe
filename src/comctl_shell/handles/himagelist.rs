@@ -36,7 +36,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// himgl.Destroy()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	fn add_icon_from_shell(self, file_extensions: &[&str]) -> SysResult<()> {
+	fn add_icon_from_shell(&self, file_extensions: &[&str]) -> SysResult<()> {
 		let sz = self.GetIconSize()?;
 		if !sz.is(16, 16) && !sz.is(32, 32) {
 			return Err(co::ERROR::NOT_SUPPORTED); // only 16x16 or 32x32 icons can be loaded
@@ -47,7 +47,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 			SHGetFileInfo(&format!("*.{}", file_extension), co::FILE_ATTRIBUTE::NORMAL,
 				&mut shfi, co::SHGFI::USEFILEATTRIBUTES | co::SHGFI::ICON |
 				if sz.is(16, 16) { co::SHGFI::SMALLICON } else { co::SHGFI::LARGEICON })?;
-			self.AddIcon(shfi.hIcon)?;
+			self.AddIcon(&shfi.hIcon)?;
 			shfi.hIcon.DestroyIcon()?;
 		}
 		Ok(())

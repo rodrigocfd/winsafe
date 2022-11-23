@@ -51,7 +51,7 @@ impl RawMain {
 		self.0.raw_base.as_base()
 	}
 
-	pub(in crate::gui) fn hwnd(&self) -> HWND {
+	pub(in crate::gui) fn hwnd(&self) -> &HWND {
 		self.0.raw_base.hwnd()
 	}
 
@@ -79,7 +79,7 @@ impl RawMain {
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
-			HINSTANCE::GetModuleHandle(None).unwrap(),
+			&HINSTANCE::GetModuleHandle(None).unwrap(),
 			opts.class_style, &opts.class_icon, &opts.class_icon,
 			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 			&mut class_name_buf);
@@ -112,7 +112,11 @@ impl RawMain {
 		self.0.raw_base.create_window(
 			atom,
 			Some(&opts.title),
-			if opts.menu == HMENU::NULL { IdMenu::None } else { IdMenu::Menu(opts.menu) },
+			if opts.menu == HMENU::NULL {
+				IdMenu::None
+			} else {
+				IdMenu::Menu(&opts.menu)
+			},
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
 		);
@@ -136,7 +140,7 @@ impl RawMain {
 			if !p.is_minimized {
 				if p.event == co::WA::INACTIVE {
 					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-						if self2.hwnd().IsChild(hwnd_cur_focus) {
+						if self2.hwnd().IsChild(&hwnd_cur_focus) {
 							*hchild_prev_focus = hwnd_cur_focus; // save previously focused control
 						}
 					}

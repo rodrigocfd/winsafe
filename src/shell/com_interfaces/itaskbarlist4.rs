@@ -60,7 +60,7 @@ pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 	/// [`ITaskbarList4::SetTabProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
 	/// method.
 	fn SetTabProperties(&self,
-		hwnd_tab: HWND, stp_flags: co::STPFLAG) -> HrResult<()>
+		hwnd_tab: &HWND, stp_flags: co::STPFLAG) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList4VT>();

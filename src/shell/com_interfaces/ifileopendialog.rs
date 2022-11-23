@@ -55,7 +55,7 @@ com_interface! { IFileOpenDialog: "shell";
 	///
 	/// file_open.SetFileTypeIndex(1)?;
 	///
-	/// if file_open.Show(hparent)? {
+	/// if file_open.Show(&hparent)? {
 	///     let chosen_file = file_open.GetResult()?
 	///         .GetDisplayName(co::SIGDN::FILESYSPATH)?;
 	///     println!("{}", chosen_file);

@@ -45,7 +45,7 @@ pub struct ListView(Pin<Arc<Obj>>);
 unsafe impl Send for ListView {}
 
 impl GuiWindow for ListView {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -73,9 +73,9 @@ impl GuiNativeControl for ListView {
 
 impl GuiNativeControlEvents<ListViewEvents> for ListView {
 	fn on(&self) -> &ListViewEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -91,7 +91,7 @@ impl ListView {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ListViewOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
-		let context_menu = opts.context_menu;
+		let context_menu = opts.context_menu.as_ref().map(|h| unsafe { h.raw_copy() });
 
 		let new_self = Self(
 			Arc::pin(
@@ -218,8 +218,8 @@ impl ListView {
 	/// calling [`ListView::new`](crate::gui::ListView::new) or
 	/// [`ListView::new_dlg`](crate::gui::ListView::new_dlg).
 	#[must_use]
-	pub fn context_menu(&self) -> Option<HMENU> {
-		self.0.context_menu
+	pub fn context_menu(&self) -> Option<&HMENU> {
+		self.0.context_menu.as_ref()
 	}
 
 	/// Retrieves one of the associated image lists by sending an
@@ -277,7 +277,7 @@ impl ListView {
 	fn show_context_menu(&self,
 		follow_cursor: bool, has_ctrl: bool, has_shift: bool)
 	{
-		let hmenu = match self.0.context_menu {
+		let hmenu = match self.0.context_menu.as_ref() {
 			Some(h) => h,
 			None => return, // no menu, nothing to do
 		};
@@ -314,7 +314,8 @@ impl ListView {
 		};
 
 		hmenu.TrackPopupMenuAtPoint(
-			menu_pos, self.hwnd().GetParent().unwrap(), self.hwnd()).unwrap();
+			menu_pos, &self.hwnd().GetParent().unwrap(), self.hwnd())
+			.unwrap();
 	}
 }
 

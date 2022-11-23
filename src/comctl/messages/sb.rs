@@ -281,7 +281,7 @@ unsafe impl MsgSend for SetIcon {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
-			lparam: self.hicon.map(|h| h.0 as _).unwrap_or_default(),
+			lparam: self.hicon.as_ref().map(|h| h.0 as _).unwrap_or_default(),
 		}
 	}
 }

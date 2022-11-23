@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HCURSOR: "user";
@@ -29,7 +29,7 @@ pub trait user_Hcursor: Handle {
 	/// [`HCURSOR::DestroyCursor`](crate::prelude::user_Hcursor::DestroyCursor)
 	/// call.
 	#[must_use]
-	fn CopyCursor(self) -> SysResult<HCURSOR> {
+	fn CopyCursor(&self) -> SysResult<HCURSOR> {
 		unsafe { user::ffi::CopyIcon(self.as_ptr()).as_mut() }
 			.map(|ptr| HCURSOR(ptr))
 			.ok_or_else(|| GetLastError())
@@ -37,13 +37,21 @@ pub trait user_Hcursor: Handle {
 
 	/// [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
 	/// method.
-	fn DestroyCursor(self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::DestroyCursor(self.as_ptr()) })
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn DestroyCursor(&self) -> SysResult<()> {
+		let ret = bool_to_sysresult(
+			unsafe { user::ffi::DestroyCursor(self.as_ptr()) },
+		);
+		invalidate_handle(self);
+		ret
 	}
 
 	/// [`SetSystemCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)
 	/// method.
-	fn SetSystemCursor(self, id: co::OCR) -> SysResult<()> {
+	fn SetSystemCursor(&self, id: co::OCR) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { user::ffi::SetSystemCursor(self.as_ptr(), id.0) },
 		)

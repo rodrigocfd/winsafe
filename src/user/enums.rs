@@ -9,7 +9,6 @@ use crate::user::decl::{
 
 /// Variant parameters of a [`wm::Command`](crate::msg::wm::Command) message.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
 pub enum AccelMenuCtrl {
 	/// Accelerator event. Contains the accelerator command ID.
 	Accel(u16),
@@ -34,7 +33,6 @@ impl AccelMenuCtrl {
 
 /// The data of the [`AccelMenuCtrl`](crate::AccelMenuCtrl) `Ctrl` option.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
 pub struct AccelMenuCtrlData {
 	pub notif_code: co::CMD,
 	pub ctrl_id: u16,
@@ -65,6 +63,7 @@ impl AtomStr {
 		Self::Str(WString::from_str(v))
 	}
 
+	/// Converts the contents into a `*const u16` pointer.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -79,15 +78,18 @@ impl AtomStr {
 /// * [`bm::GetImage`](crate::msg::bm::GetImage) `image`;
 /// * [`bm::SetImage`](crate::msg::bm::SetImage) `image`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
 pub enum BmpIcon {
+	/// A bitmap.
 	Bmp(HBITMAP),
+	/// An icon.
 	Icon(HICON),
 }
 
-impl From<BmpIcon> for isize {
-	fn from(v: BmpIcon) -> Self {
-		(match v {
+impl BmpIcon {
+	/// Converts the contents into an `isize`.
+	#[must_use]
+	pub fn as_isize(&self) -> isize {
+		(match self {
 			BmpIcon::Bmp(hbmp) => hbmp.0,
 			BmpIcon::Icon(hicon) => hicon.0,
 		}) as _
@@ -98,7 +100,6 @@ impl From<BmpIcon> for isize {
 ///
 /// * [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu) `lpNewItem`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone)]
 pub enum BmpPtrStr {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bmp(HBITMAP),
@@ -117,6 +118,7 @@ impl BmpPtrStr {
 		Self::Str(WString::from_str(v))
 	}
 
+	/// Converts the contents into a `*const u16` pointer.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -166,7 +168,6 @@ impl From<GmidxEnum> for u32 {
 ///
 /// * [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) `hwnd_focus`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
 pub enum HwndFocus {
 	/// Handle to the control to receive the focus.
 	Hwnd(HWND),
@@ -180,15 +181,18 @@ pub enum HwndFocus {
 /// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason;
 /// * [`HELPINFO`](crate::HELPINFO) `hItemHandle`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
 pub enum HwndHmenu {
+	/// A window.
 	Hwnd(HWND),
+	/// A menu.
 	Hmenu(HMENU),
 }
 
-impl From<HwndHmenu> for isize {
-	fn from(v: HwndHmenu) -> Self {
-		(match v {
+impl HwndHmenu {
+	/// Converts the contents into an `isize`.
+	#[must_use]
+	pub fn as_isize(&self) -> isize {
+		(match self {
 			HwndHmenu::Hwnd(hwnd) => hwnd.0,
 			HwndHmenu::Hmenu(hmenu) => hmenu.0,
 		}) as _
@@ -199,7 +203,6 @@ impl From<HwndHmenu> for isize {
 ///
 /// * [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos) `hwnd_insert_after`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.
 	Hwnd(HWND),
@@ -224,7 +227,6 @@ impl HwndPlace {
 ///
 /// * [`wm::ParentNotify`](crate::msg::wm::ParentNotify) `data32`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
 pub enum HwndPointId {
 	/// Handle to the child window.
 	Hwnd(HWND),
@@ -234,12 +236,14 @@ pub enum HwndPointId {
 	Id(u16),
 }
 
-impl From<HwndPointId> for isize {
-	fn from(v: HwndPointId) -> Self {
-		match v {
+impl HwndPointId {
+	/// Converts the contents into an `isize`.
+	#[must_use]
+	pub fn as_isize(&self) -> isize {
+		match self {
 			HwndPointId::Hwnd(hwnd) => hwnd.0 as _,
-			HwndPointId::Point(pt) => u32::from(pt) as _,
-			HwndPointId::Id(id) => id as _,
+			HwndPointId::Point(pt) => u32::from(*pt) as _,
+			HwndPointId::Id(id) => *id as _,
 		}
 	}
 }
@@ -311,17 +315,16 @@ impl IdIdiStr {
 /// * [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu) `uIDNewItem`;
 /// * [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx) `hMenu`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-#[derive(Clone, Copy)]
-pub enum IdMenu {
+pub enum IdMenu<'a> {
 	/// A command ID.
 	Id(u16),
 	/// An [`HMENU`](crate::HMENU).
-	Menu(HMENU),
+	Menu(&'a HMENU),
 	/// Nothing.
 	None,
 }
 
-impl IdMenu {
+impl<'a> IdMenu<'a> {
 	#[must_use]
 	pub const fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
@@ -498,7 +501,7 @@ pub enum MenuEnum<'a> {
 	/// A separator.
 	Separator,
 	/// A submenu, with its entry text.
-	Submenu(HMENU, &'a str),
+	Submenu(&'a HMENU, &'a str),
 }
 
 /// Variant parameter for:

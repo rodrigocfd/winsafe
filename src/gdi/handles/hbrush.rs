@@ -65,7 +65,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// [`HBRUSH::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
 	/// call.
 	#[must_use]
-	fn CreatePatternBrush(hbmp: HBITMAP) -> SysResult<HBRUSH> {
+	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<HBRUSH> {
 		unsafe { gdi::ffi::CreatePatternBrush(hbmp.0).as_mut() }
 			.map(|ptr| HBRUSH(ptr))
 			.ok_or_else(|| GetLastError())
@@ -86,7 +86,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
-	fn GetObject(self, pv: &mut LOGBRUSH) -> SysResult<()> {
+	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
 			gdi::ffi::GetObjectW(
 				self.as_ptr(),
@@ -119,7 +119,7 @@ pub trait gdi_Hbrush: gdi_Hgdiobj {
 
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 	/// method.
-	fn UnrealizeObject(self) -> SysResult<()> {
+	fn UnrealizeObject(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::UnrealizeObject(self.as_ptr()) })
 	}
 }

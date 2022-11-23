@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, uxtheme};
+use crate::kernel::privs::invalidate_handle;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
@@ -25,14 +26,22 @@ impl uxtheme_Htheme for HTHEME {}
 pub trait uxtheme_Htheme: Handle {
 	/// [`CloseThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
 	/// method.
-	fn CloseThemeData(self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { uxtheme::ffi::CloseThemeData(self.as_ptr()) })
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn CloseThemeData(&self) -> HrResult<()> {
+		let ret = ok_to_hrresult(
+			unsafe { uxtheme::ffi::CloseThemeData(self.as_ptr()) },
+		);
+		invalidate_handle(self);
+		ret
 	}
 
 	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// method.
-	fn DrawThemeBackground(self,
-		hdc: HDC, part_state: co::VS,
+	fn DrawThemeBackground(&self,
+		hdc: &HDC, part_state: co::VS,
 		rc: RECT, rc_clip: RECT) -> HrResult<()>
 	{
 		ok_to_hrresult(
@@ -59,8 +68,8 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeBackgroundContentRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
 	/// method.
 	#[must_use]
-	fn GetThemeBackgroundContentRect(self,
-		hdc: HDC, part_state: co::VS, bounds: RECT) -> HrResult<RECT>
+	fn GetThemeBackgroundContentRect(&self,
+		hdc: &HDC, part_state: co::VS, bounds: RECT) -> HrResult<RECT>
 	{
 		let mut rc_content = RECT::default();
 
@@ -81,8 +90,8 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeBackgroundExtent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
 	/// method.
 	#[must_use]
-	fn GetThemeBackgroundExtent(self,
-		hdc: HDC, part_state: co::VS, rc_content: RECT) -> HrResult<RECT>
+	fn GetThemeBackgroundExtent(&self,
+		hdc: &HDC, part_state: co::VS, rc_content: RECT) -> HrResult<RECT>
 	{
 		let mut rc_extent = RECT::default();
 
@@ -106,8 +115,8 @@ pub trait uxtheme_Htheme: Handle {
 	/// **Note:** Must be paired with an
 	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
 	#[must_use]
-	fn GetThemeBackgroundRegion(self,
-		hdc: HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>
+	fn GetThemeBackgroundRegion(&self,
+		hdc: &HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>
 	{
 		let mut hrgn = HRGN::NULL;
 
@@ -128,7 +137,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeColor`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
 	/// method.
 	#[must_use]
-	fn GetThemeColor(self,
+	fn GetThemeColor(&self,
 		part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF>
 	{
 		let mut color = COLORREF(0);
@@ -149,7 +158,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`IsThemeBackgroundPartiallyTransparent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
 	/// method.
 	#[must_use]
-	fn IsThemeBackgroundPartiallyTransparent(self,
+	fn IsThemeBackgroundPartiallyTransparent(&self,
 		part_state: co::VS) -> bool
 	{
 		unsafe {
@@ -161,7 +170,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`IsThemePartDefined`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
 	/// method.
 	#[must_use]
-	fn IsThemePartDefined(self, part_state: co::VS) -> bool {
+	fn IsThemePartDefined(&self, part_state: co::VS) -> bool {
 		unsafe {
 			uxtheme::ffi::IsThemePartDefined(
 				self.as_ptr(), part_state.part, part_state.state) != 0

@@ -39,7 +39,7 @@ pub struct ListBox(Pin<Arc<Obj>>);
 unsafe impl Send for ListBox {}
 
 impl GuiWindow for ListBox {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -67,9 +67,9 @@ impl GuiNativeControl for ListBox {
 
 impl GuiNativeControlEvents<ListBoxEvents> for ListBox {
 	fn on(&self) -> &ListBoxEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -150,8 +150,10 @@ impl ListBox {
 					opts.window_style | opts.list_box_style.into(),
 				);
 
-				self.hwnd().SendMessage(
-					wm::SetFont { hfont: ui_font(), redraw: true });
+				self.hwnd().SendMessage(wm::SetFont {
+					hfont: unsafe { ui_font().raw_copy() },
+					redraw: true,
+				});
 				self.items().add(&opts.items);
 			},
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),

@@ -79,7 +79,7 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`FlushInstructionCache`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// method.
-	fn FlushInstructionCache(self,
+	fn FlushInstructionCache(&self,
 		base_address: *mut std::ffi::c_void, size: usize) -> SysResult<()>
 	{
 		bool_to_sysresult(
@@ -114,7 +114,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`GetExitCodeProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
 	/// method.
 	#[must_use]
-	fn GetExitCodeProcess(self) -> SysResult<u32> {
+	fn GetExitCodeProcess(&self) -> SysResult<u32> {
 		let mut exit_code = u32::default();
 		bool_to_sysresult(
 			unsafe {
@@ -126,7 +126,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`GetGuiResources`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
 	/// method.
 	#[must_use]
-	fn GetGuiResources(self, flags: co::GR) -> SysResult<u32> {
+	fn GetGuiResources(&self, flags: co::GR) -> SysResult<u32> {
 		match unsafe { kernel::ffi::GetGuiResources(self.as_ptr(), flags.0) } {
 			0 => Err(GetLastError()),
 			count => Ok(count),
@@ -136,7 +136,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`GetProcessHandleCount`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount)
 	/// method.
 	#[must_use]
-	fn GetProcessHandleCount(self) -> SysResult<u32> {
+	fn GetProcessHandleCount(&self) -> SysResult<u32> {
 		let mut count = u32::default();
 		bool_to_sysresult(
 			unsafe {
@@ -148,7 +148,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`GetProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
 	/// method.
 	#[must_use]
-	fn GetProcessId(self) -> SysResult<u32> {
+	fn GetProcessId(&self) -> SysResult<u32> {
 		match unsafe { kernel::ffi::GetProcessId(self.as_ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
@@ -157,7 +157,7 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`GetProcessTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
 	/// method.
-	fn GetProcessTimes(self,
+	fn GetProcessTimes(&self,
 		creation: &mut FILETIME,
 		exit: &mut FILETIME,
 		kernel: &mut FILETIME,
@@ -186,7 +186,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`IsProcessCritical`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)
 	/// method.
 	#[must_use]
-	fn IsProcessCritical(self) -> SysResult<bool> {
+	fn IsProcessCritical(&self) -> SysResult<bool> {
 		let mut critical: BOOL = 0;
 		match unsafe {
 			kernel::ffi::IsProcessCritical(self.as_ptr(), &mut critical) }
@@ -199,7 +199,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`IsWow64Process`](https://learn.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
 	/// method.
 	#[must_use]
-	fn IsWow64Process(self) -> SysResult<bool> {
+	fn IsWow64Process(&self) -> SysResult<bool> {
 		let mut wow64: BOOL = 0;
 		match unsafe { kernel::ffi::IsWow64Process(self.as_ptr(), &mut wow64) } {
 			0 => Err(GetLastError()),
@@ -240,7 +240,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
 	/// call.
 	#[must_use]
-	fn OpenProcessToken(self,
+	fn OpenProcessToken(&self,
 		desired_access: co::TOKEN) -> SysResult<HACCESSTOKEN>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
@@ -258,7 +258,7 @@ pub trait kernel_Hprocess: Handle {
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
 	/// method.
 	#[must_use]
-	fn QueryFullProcessImageName(self,
+	fn QueryFullProcessImageName(&self,
 		flags: co::PROCESS_NAME) -> SysResult<String>
 	{
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
@@ -278,7 +278,7 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// method.
-	fn WaitForSingleObject(self,
+	fn WaitForSingleObject(&self,
 		milliseconds: Option<u32>) -> SysResult<co::WAIT>
 	{
 		match unsafe {

@@ -472,7 +472,6 @@ impl_default!(DRAWITEMSTRUCT);
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
-#[derive(Clone)]
 pub struct MSG {
 	pub hwnd: HWND,
 	pub message: co::WM,

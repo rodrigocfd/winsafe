@@ -19,7 +19,7 @@ impl shell_Hwnd for HWND {}
 pub trait shell_Hwnd: Handle {
 	/// [`ShellExecute`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
 	/// method.
-	fn ShellExecute(self,
+	fn ShellExecute(&self,
 		operation: &str,
 		file: &str,
 		parameters: Option<&str>,

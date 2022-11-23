@@ -8,6 +8,7 @@ use crate::comctl_ole::decl::{
 };
 use crate::kernel::decl::WString;
 use crate::ole::decl::HrResult;
+use crate::prelude::Handle;
 use crate::user::decl::HWND;
 
 /// Displays an error modal window with an OK button.
@@ -25,7 +26,7 @@ use crate::user::decl::HWND;
 /// # let hparent = HWND::NULL;
 ///
 /// task_dlg::error(
-///     hparent,
+///     &hparent,
 ///     "Error",
 ///     Some("The error"),
 ///     "Operation failed to complete.",
@@ -34,7 +35,7 @@ use crate::user::decl::HWND;
 /// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub fn error(
-	hparent: HWND,
+	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
 	body: &str) -> HrResult<()>
@@ -59,7 +60,7 @@ pub fn error(
 /// # let hparent = HWND::NULL;
 ///
 /// task_dlg::info(
-///     hparent,
+///     &hparent,
 ///     "Information",
 ///     Some("The information"),
 ///     "Operation completed successfully.",
@@ -68,7 +69,7 @@ pub fn error(
 /// ```
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub fn info(
-	hparent: HWND,
+	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
 	body: &str) -> HrResult<()>
@@ -96,7 +97,7 @@ pub fn info(
 /// # let hparent = HWND::NULL;
 ///
 /// let got_ok = task_dlg::ok_cancel(
-///     hparent,
+///     &hparent,
 ///     "Question",
 ///     Some("The question"),
 ///     "Do you want to proceed with this operation?",
@@ -113,7 +114,7 @@ pub fn info(
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn ok_cancel(
-	hparent: HWND,
+	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
 	body: &str,
@@ -146,7 +147,7 @@ pub fn ok_cancel(
 /// # let hparent = HWND::NULL;
 ///
 /// let got_yes = task_dlg::yes_no(
-///     hparent,
+///     &hparent,
 ///     "Question",
 ///     Some("The question"),
 ///     "Do you want to proceed with this operation?",
@@ -162,7 +163,7 @@ pub fn ok_cancel(
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn yes_no(
-	hparent: HWND,
+	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
 	body: &str) -> HrResult<bool>
@@ -187,7 +188,7 @@ pub fn yes_no(
 /// # let hparent = HWND::NULL;
 ///
 /// let ret_code = task_dlg::yes_no_cancel(
-///     hparent,
+///     &hparent,
 ///     "Question",
 ///     Some("The question"),
 ///     "Do you want to proceed with this operation?",
@@ -205,7 +206,7 @@ pub fn yes_no(
 #[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn yes_no_cancel(
-	hparent: HWND,
+	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
 	body: &str) -> HrResult<co::DLGID>
@@ -215,7 +216,7 @@ pub fn yes_no_cancel(
 }
 
 fn generate(
-	hparent: HWND,
+	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
 	body: &str,
@@ -237,7 +238,7 @@ fn generate(
 	};
 
 	let mut tdc = TASKDIALOGCONFIG::default();
-	tdc.hwndParent = hparent;
+	tdc.hwndParent = unsafe { hparent.raw_copy() };
 	tdc.dwFlags = co::TDF::ALLOW_DIALOG_CANCELLATION | co::TDF::POSITION_RELATIVE_TO_WINDOW;
 	tdc.dwCommonButtons = btns;
 	tdc.set_pszMainIcon(IconIdTdicon::Tdicon(ico));

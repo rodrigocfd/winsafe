@@ -33,7 +33,7 @@ pub trait kernel_Hfilemap: Handle {
 	/// [`HFILEMAPVIEW::UnmapViewOfFile`](crate::prelude::kernel_Hfilemapview::UnmapViewOfFile)
 	/// call.
 	#[must_use]
-	fn MapViewOfFile(self,
+	fn MapViewOfFile(&self,
 		desired_access: co::FILE_MAP,
 		offset: u64,
 		number_of_bytes_to_map: Option<usize>) -> SysResult<HFILEMAPVIEW>

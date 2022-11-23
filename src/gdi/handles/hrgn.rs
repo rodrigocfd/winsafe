@@ -65,7 +65,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 
 	/// [`OffsetClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
 	/// method.
-	fn OffsetClipRgn(self, x: i32, y: i32) -> SysResult<co::REGION> {
+	fn OffsetClipRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetClipRgn(self.as_ptr(), x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
@@ -74,7 +74,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 
 	/// [`OffsetRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
 	/// method.
-	fn OffsetRgn(self, x: i32, y: i32) -> SysResult<co::REGION> {
+	fn OffsetRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetRgn(self.as_ptr(), x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
@@ -84,14 +84,14 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 	/// [`PtInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptinregion)
 	/// method.
 	#[must_use]
-	fn PtInRegion(self, x: i32, y: i32) -> bool {
+	fn PtInRegion(&self, x: i32, y: i32) -> bool {
 		unsafe { gdi::ffi::PtInRegion(self.as_ptr(), x, y) != 0 }
 	}
 
 	/// [`RectInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// method.
 	#[must_use]
-	fn RectInRegion(self, rc: &RECT) -> bool {
+	fn RectInRegion(&self, rc: &RECT) -> bool {
 		unsafe { gdi::ffi::RectInRegion(self.as_ptr(), rc as *const _ as _) != 0 }
 	}
 }

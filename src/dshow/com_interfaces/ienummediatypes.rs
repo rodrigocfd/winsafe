@@ -65,7 +65,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter<'a>(&'a self) -> Box<dyn Iterator<Item = HrResult<&'a AM_MEDIA_TYPE<'a>>> + 'a> {
+	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_> {
 		Box::new(EnumMediaTypesIter::new(unsafe { self.ptr() }))
 	}
 

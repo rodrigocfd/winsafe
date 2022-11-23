@@ -60,7 +60,7 @@ pub struct StatusBar(Pin<Arc<Obj>>);
 unsafe impl Send for StatusBar {}
 
 impl GuiWindow for StatusBar {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -83,9 +83,9 @@ impl GuiNativeControl for StatusBar {
 
 impl GuiNativeControlEvents<StatusBarEvents> for StatusBar {
 	fn on(&self) -> &StatusBarEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events
@@ -190,7 +190,7 @@ impl StatusBar {
 	}
 
 	fn resize(&self, p: &mut wm::Size) {
-		if p.request == co::SIZE_R::MINIMIZED || self.hwnd() == HWND::NULL {
+		if p.request == co::SIZE_R::MINIMIZED || *self.hwnd() == HWND::NULL {
 			return; // nothing to do
 		}
 

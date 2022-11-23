@@ -5,7 +5,9 @@ use crate::kernel::decl::{
 	GetLastError, HRSRC, HRSRCMEM, IdStr, LANGID, RtStr, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, str_to_iso88591};
+use crate::kernel::privs::{
+	bool_to_sysresult, invalidate_handle, MAX_PATH, str_to_iso88591,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HINSTANCE: "kernel";
@@ -28,7 +30,7 @@ impl kernel_Hinstance for HINSTANCE {}
 pub trait kernel_Hinstance: Handle {
 	/// [`EnumResourceLanguages`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
 	/// method.
-	fn EnumResourceLanguages<F>(self,
+	fn EnumResourceLanguages<F>(&self,
 		resource_type: RtStr, resource_id: IdStr, func: F) -> SysResult<()>
 		where F: Fn(LANGID) -> bool,
 	{
@@ -47,7 +49,7 @@ pub trait kernel_Hinstance: Handle {
 
 	/// [`EnumResourceNames`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
 	/// method.
-	fn EnumResourceNames<F>(self,
+	fn EnumResourceNames<F>(&self,
 		resource_type: RtStr, func: F) -> SysResult<()>
 		where F: Fn(IdStr) -> bool,
 	{
@@ -65,7 +67,7 @@ pub trait kernel_Hinstance: Handle {
 
 	/// [`EnumResourceTypes`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
 	/// method.
-	fn EnumResourceTypes<F>(self, func: F) -> SysResult<()>
+	fn EnumResourceTypes<F>(&self, func: F) -> SysResult<()>
 		where F: Fn(RtStr) -> bool,
 	{
 		bool_to_sysresult(
@@ -85,7 +87,7 @@ pub trait kernel_Hinstance: Handle {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
-	fn FindResource(self,
+	fn FindResource(&self,
 		resource_id: IdStr, resource_type: RtStr) -> SysResult<HRSRC>
 	{
 		unsafe {
@@ -104,7 +106,7 @@ pub trait kernel_Hinstance: Handle {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
-	fn FindResourceEx(self,
+	fn FindResourceEx(&self,
 		resource_id: IdStr, resource_type: RtStr,
 		language: Option<LANGID>) -> SysResult<HRSRC>
 	{
@@ -121,8 +123,16 @@ pub trait kernel_Hinstance: Handle {
 
 	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
 	/// method.
-	fn FreeLibrary(self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { kernel::ffi::FreeLibrary(self.as_ptr()) })
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn FreeLibrary(&self) -> SysResult<()> {
+		let ret = bool_to_sysresult(
+			unsafe { kernel::ffi::FreeLibrary(self.as_ptr()) },
+		);
+		invalidate_handle(self);
+		ret
 	}
 
 	/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
@@ -142,7 +152,7 @@ pub trait kernel_Hinstance: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn GetModuleFileName(self) -> SysResult<String> {
+	fn GetModuleFileName(&self) -> SysResult<String> {
 		let mut buf = [0; MAX_PATH];
 		match unsafe {
 			kernel::ffi::GetModuleFileNameW(
@@ -183,7 +193,7 @@ pub trait kernel_Hinstance: Handle {
 	/// [`GetProcAddress`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
 	/// method.
 	#[must_use]
-	fn GetProcAddress(self,
+	fn GetProcAddress(&self,
 		proc_name: &str) -> SysResult<*const std::ffi::c_void>
 	{
 		unsafe {
@@ -216,7 +226,7 @@ pub trait kernel_Hinstance: Handle {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
-	fn LoadResource(self, res_info: HRSRC) -> SysResult<HRSRCMEM> {
+	fn LoadResource(&self, res_info: &HRSRC) -> SysResult<HRSRCMEM> {
 		unsafe { kernel::ffi::LoadResource(self.as_ptr(), res_info.0).as_mut() }
 			.map(|ptr| HRSRCMEM(ptr))
 			.ok_or_else(|| GetLastError())
@@ -252,8 +262,8 @@ pub trait kernel_Hinstance: Handle {
 	///     RtStr::Rt(co::RT::DIALOG),
 	/// )?;
 	///
-	/// let hResLoad = hExe.LoadResource(hRes)?;
-	/// let lpResLock = hExe.LockResource(hRes, hResLoad)?;
+	/// let hResLoad = hExe.LoadResource(&hRes)?;
+	/// let lpResLock = hExe.LockResource(&hRes, &hResLoad)?;
 	/// let hUpdateRes = HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
 	///
 	/// hUpdateRes.UpdateResource(
@@ -269,8 +279,8 @@ pub trait kernel_Hinstance: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn LockResource<'a>(self,
-		res_info: HRSRC, hres_loaded: HRSRCMEM) -> SysResult<&'a [u8]>
+	fn LockResource(&self,
+		res_info: &HRSRC, hres_loaded: &HRSRCMEM) -> SysResult<&[u8]>
 	{
 		let sz = self.SizeofResource(res_info)?;
 		unsafe { kernel::ffi::LockResource(hres_loaded.0).as_mut() }
@@ -286,13 +296,15 @@ pub trait kernel_Hinstance: Handle {
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
-	fn SizeofResource(self, res_info: HRSRC) -> SysResult<u32> {
+	fn SizeofResource(&self, res_info: &HRSRC) -> SysResult<u32> {
 		match unsafe { kernel::ffi::SizeofResource(self.as_ptr(), res_info.0) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz)
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
 
 extern "system" fn enum_resource_languages_proc<F>(
 	_: HINSTANCE, _: *const u16, _: *const u16,

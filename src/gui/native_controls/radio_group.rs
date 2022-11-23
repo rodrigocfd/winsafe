@@ -42,9 +42,9 @@ impl Index<usize> for RadioGroup {
 
 impl GuiNativeControlEvents<RadioGroupEvents> for RadioGroup {
 	fn on(&self) -> &RadioGroupEvents {
-		if self.index(0).hwnd() != HWND::NULL {
+		if *self.index(0).hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if unsafe { self.0.parent_ptr.as_ref() }.hwnd() != HWND::NULL {
+		} else if *unsafe { self.0.parent_ptr.as_ref() }.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events

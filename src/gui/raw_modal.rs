@@ -50,7 +50,7 @@ impl RawModal {
 		self.0.raw_base.as_base()
 	}
 
-	pub(in crate::gui) fn hwnd(&self) -> HWND {
+	pub(in crate::gui) fn hwnd(&self) -> &HWND {
 		self.0.raw_base.hwnd()
 	}
 
@@ -77,7 +77,7 @@ impl RawModal {
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
-			self.0.raw_base.parent_hinstance(),
+			&self.0.raw_base.parent_hinstance(),
 			opts.class_style, &opts.class_icon, &opts.class_icon,
 			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 			&mut class_name_buf);
@@ -130,12 +130,12 @@ impl RawModal {
 			// If a child window, will retrieve its top-level parent.
 			// If a top-level, use itself.
 			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
-				.unwrap_or(msg.hwnd);
+				.unwrap_or(unsafe { msg.hwnd.raw_copy() });
 
 			// Try to process keyboard actions for child controls.
 			if hwnd_top_level.IsDialogMessage(&mut msg) {
 				// Processed all keyboard actions for child controls.
-				if self.hwnd() == HWND::NULL {
+				if *self.hwnd() == HWND::NULL {
 					return 0; // our modal was destroyed, terminate loop
 				} else {
 					continue;
@@ -145,7 +145,7 @@ impl RawModal {
 			TranslateMessage(&msg);
 			unsafe { DispatchMessage(&msg); }
 
-			if self.hwnd() == HWND::NULL {
+			if *self.hwnd() == HWND::NULL {
 				return 0; // our modal was destroyed, terminate loop
 			}
 		}

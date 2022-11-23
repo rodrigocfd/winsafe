@@ -92,7 +92,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter<'a>(&'a self) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + 'a>> {
+	fn iter(&self) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + '_>> {
 		Ok(Box::new(ShellItemIter::new(unsafe { self.ptr() })?))
 	}
 

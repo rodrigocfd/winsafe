@@ -25,10 +25,11 @@ pub enum Brush {
 }
 
 impl Brush {
+	/// Converts the contents of `Brush` to `HBRUSH`.
 	pub fn as_hbrush(&self) -> HBRUSH {
 		match self {
 			Brush::Color(c) => HBRUSH::from_sys_color(*c),
-			Brush::Handle(h) => *h,
+			Brush::Handle(h) => unsafe { h.raw_copy() },
 		}
 	}
 }
@@ -50,9 +51,10 @@ pub enum Cursor {
 }
 
 impl Cursor {
-	pub fn as_hcursor(&self, hinst: HINSTANCE) -> HCURSOR {
+	/// Converts the contents of `Cursor` to `HCURSOR`.
+	pub fn as_hcursor(&self, hinst: &HINSTANCE) -> HCURSOR {
 		match self {
-			Cursor::Handle(h) => *h,
+			Cursor::Handle(h) => unsafe { h.raw_copy() },
 			Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id)).unwrap(),
 			Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc)).unwrap(),
 			Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone())).unwrap(),
@@ -79,9 +81,10 @@ pub enum Icon {
 }
 
 impl Icon {
-	pub fn as_hicon(&self, hinst: HINSTANCE) -> HICON {
+	/// Converts the contents of `Icon` to `HICON`.
+	pub fn as_hicon(&self, hinst: &HINSTANCE) -> HICON {
 		match self {
-			Icon::Handle(h) => *h,
+			Icon::Handle(h) => unsafe { h.raw_copy() },
 			Icon::Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id)).unwrap(),
 			Icon::Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi)).unwrap(),
 			Icon::None => HICON::NULL,
@@ -99,7 +102,7 @@ pub(in crate::gui) struct RawBase {
 
 impl Drop for RawBase {
 	fn drop(&mut self) {
-		if self.base.hwnd() != HWND::NULL {
+		if *self.base.hwnd() != HWND::NULL {
 			self.base.hwnd().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 		}
 	}
@@ -115,7 +118,7 @@ impl RawBase {
 		&self.base as *const _ as _
 	}
 
-	pub(in crate::gui) const fn hwnd(&self) -> HWND {
+	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
 		self.base.hwnd()
 	}
 
@@ -137,7 +140,7 @@ impl RawBase {
 
 	pub(in crate::gui) fn delegate_focus_to_first_child(&self) {
 		if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-			if self.hwnd() == hwnd_cur_focus {
+			if *self.hwnd() == hwnd_cur_focus {
 				// https://stackoverflow.com/a/2835220/6923555
 				if let Ok(hchild_first) = self.hwnd().GetWindow(co::GW::CHILD) {
 					hchild_first.SetFocus(); // if window receives focus, delegate to first child
@@ -149,7 +152,7 @@ impl RawBase {
 	/// Fills `WNDCLASSEX` with the given values, and generates a class name as
 	/// a hash of all fields.
 	pub(in crate::gui) fn fill_wndclassex<'a>(
-		hinst: HINSTANCE,
+		hinst: &HINSTANCE,
 		class_style: co::CS,
 		class_icon: &Icon,
 		class_icon_sm: &Icon,
@@ -159,7 +162,7 @@ impl RawBase {
 		class_name_buf: &'a mut WString)
 	{
 		wcx.lpfnWndProc = Some(Self::window_proc);
-		wcx.hInstance = hinst;
+		wcx.hInstance = unsafe { hinst.raw_copy() };
 		wcx.style = class_style;
 		wcx.hIcon = class_icon.as_hicon(hinst);
 		wcx.hIconSm = class_icon_sm.as_hicon(hinst);
@@ -191,7 +194,7 @@ impl RawBase {
 					// https://devblogs.microsoft.com/oldnewthing/20150429-00/?p=44984
 					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 					// Retrieve ATOM of existing window class.
-					let hinst = wcx.hInstance;
+					let hinst = unsafe { wcx.hInstance.raw_copy() };
 					hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap(), wcx).unwrap()
 				},
 				_ => panic!(),
@@ -209,7 +212,7 @@ impl RawBase {
 		ex_styles: co::WS_EX,
 		styles: co::WS)
 	{
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");
 		}
 
@@ -223,7 +226,7 @@ impl RawBase {
 				pos, sz,
 				self.base.parent().map(|parent| parent.hwnd()),
 				hmenu,
-				self.base.parent_hinstance(),
+				&self.base.parent_hinstance(),
 				// Pass pointer to Self.
 				// At this moment, the parent struct is already created and pinned.
 				Some(self as *const _ as _),
@@ -258,7 +261,7 @@ impl RawBase {
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
 				let ref_self = unsafe { &mut *ptr_self };
-				unsafe { ref_self.base.set_hwnd(hwnd); } // store HWND in struct field
+				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
@@ -279,7 +282,7 @@ impl RawBase {
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
-			unsafe { ref_self.base.set_hwnd(HWND::NULL); } // clear stored HWND
+			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 		}
 
 		Ok(match process_result {

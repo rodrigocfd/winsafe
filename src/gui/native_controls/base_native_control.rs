@@ -42,8 +42,8 @@ impl BaseNativeControl {
 		}
 	}
 
-	pub(in crate::gui) fn hwnd(&self) -> HWND {
-		*self.hwnd
+	pub(in crate::gui) fn hwnd(&self) -> &HWND {
+		&*self.hwnd
 	}
 
 	pub(in crate::gui) fn parent(&self) -> &Base {
@@ -51,9 +51,9 @@ impl BaseNativeControl {
 	}
 
 	pub(in crate::gui) fn on_subclass(&self) -> &WindowEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add subclass events after control creation.");
-		} else if self.parent().hwnd() != HWND::NULL {
+		} else if *self.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add subclass events after parent window creation.");
 		}
 		&self.subclass_events
@@ -70,9 +70,9 @@ impl BaseNativeControl {
 	{
 		let hparent = self.parent().hwnd();
 
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot create control twice.");
-		} else if hparent == HWND::NULL {
+		} else if *hparent == HWND::NULL {
 			panic!("Cannot create control before parent window creation.");
 		}
 
@@ -84,7 +84,7 @@ impl BaseNativeControl {
 				pos, sz,
 				Some(hparent),
 				IdMenu::Id(ctrl_id),
-				hparent.hinstance(),
+				&hparent.hinstance(),
 				None,
 			).unwrap()
 		};
@@ -99,9 +99,9 @@ impl BaseNativeControl {
 
 		let hparent = self.parent().hwnd();
 
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot create control twice.");
-		} else if hparent == HWND::NULL {
+		} else if *hparent == HWND::NULL {
 			panic!("Cannot create control before parent window creation.");
 		}
 
@@ -141,7 +141,7 @@ impl BaseNativeControl {
 
 		if !ptr_self.is_null() {
 			let ref_self = unsafe { &mut *ptr_self };
-			if ref_self.hwnd() != HWND::NULL {
+			if *ref_self.hwnd() != HWND::NULL {
 				process_result = ref_self.subclass_events.process_one_message(wm_any)?;
 			}
 		}

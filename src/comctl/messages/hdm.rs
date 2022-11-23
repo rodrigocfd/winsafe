@@ -580,7 +580,7 @@ unsafe impl MsgSend for SetImageList {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
 			wparam: self.which.0 as _,
-			lparam: self.himagelist.map_or(0, |h| h.0 as _),
+			lparam: self.himagelist.as_ref().map_or(0, |h| h.0 as _),
 		}
 	}
 }

@@ -53,7 +53,7 @@ pub trait kernel_Hpipe: Handle {
 	/// method.
 	///
 	/// Returns the number of bytes read.
-	fn ReadFile(self,
+	fn ReadFile(&self,
 		buffer: &mut [u8],
 		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
@@ -62,7 +62,7 @@ pub trait kernel_Hpipe: Handle {
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// method.
-	fn WriteFile(self,
+	fn WriteFile(&self,
 		data: &[u8],
 		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{

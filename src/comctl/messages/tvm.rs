@@ -3,7 +3,7 @@ use crate::comctl::decl::{HIMAGELIST, HTREEITEM, TVINSERTSTRUCT, TVITEMEX};
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
@@ -443,7 +443,7 @@ unsafe impl MsgSend for GetNextItem {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.0 as _,
-			lparam: self.hitem.unwrap_or(HTREEITEM::NULL).0 as _,
+			lparam: self.hitem.as_ref().map(|h| h.0 as _).unwrap_or_default(),
 		}
 	}
 }
@@ -611,7 +611,7 @@ unsafe impl MsgSend for SetHot {
 		WndMsg {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
-			lparam: self.hitem.map_or(0, |h| h.0 as _),
+			lparam: self.hitem.as_ref().map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -637,7 +637,7 @@ unsafe impl MsgSend for SetImageList {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himglist.map_or(0, |h| h.0 as _),
+			lparam: self.himglist.as_ref().map_or(0, |h| h.0 as _),
 		}
 	}
 }

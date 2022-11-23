@@ -116,11 +116,16 @@ impl<'a> Iterator for TreeViewItemIter<'a> {
 		self.current = self.owner.hwnd()
 			.SendMessage(tvm::GetNextItem {
 				relationship: self.relationship,
-				hitem: self.current.map(|it| it.htreeitem()),
+				hitem: self.current.as_ref()
+					.map(|tvi| unsafe { tvi.htreeitem().raw_copy() }),
 			})
 			.map(|hitem| self.owner.items().get(hitem));
 
-		self.current
+		self.current.as_ref()
+			.map(|tvi| TreeViewItem::new(
+				self.owner,
+				unsafe { tvi.htreeitem().raw_copy() },
+			))
 	}
 }
 
@@ -150,18 +155,28 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 			self.current = self.owner.hwnd()
 				.SendMessage(tvm::GetNextItem {
 					relationship: co::TVGN::CHILD,
-					hitem: self.current.map(|it| it.htreeitem()),
+					hitem: self.current.as_ref()
+						.map(|tvi| unsafe { tvi.htreeitem().raw_copy() }),
 				})
 				.map(|hitem| self.owner.items().get(hitem));
 
 			self.first_call = false;
 
 		} else { // search for next siblings
-			self.current = self.current
-				.and_then(|item| item.iter_next_siblings().next())
+			self.current = self.owner.hwnd()
+				.SendMessage(tvm::GetNextItem {
+					relationship: co::TVGN::NEXT,
+					hitem: self.current.as_ref()
+						.map(|tvi| unsafe { tvi.htreeitem().raw_copy() }),
+				})
+				.map(|hitem| self.owner.items().get(hitem));
 		}
 
-		self.current
+		self.current.as_ref()
+			.map(|tvi| TreeViewItem::new(
+				self.owner,
+				unsafe { tvi.htreeitem().raw_copy() },
+			))
 	}
 }
 

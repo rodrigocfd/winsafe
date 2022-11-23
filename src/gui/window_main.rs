@@ -31,7 +31,7 @@ pub struct WindowMain(RawDlg);
 unsafe impl Send for WindowMain {}
 
 impl GuiWindow for WindowMain {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		match &self.0 {
 			RawDlg::Raw(r) => r.hwnd(),
 			RawDlg::Dlg(d) => d.hwnd(),

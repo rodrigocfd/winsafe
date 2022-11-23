@@ -4,7 +4,7 @@ use crate::kernel;
 use crate::kernel::decl::{
 	GetLastError, IdStr, LANGID, RtStr, SysResult, WString,
 };
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HUPDATERSRC: "kernel";
@@ -33,7 +33,8 @@ pub trait kernel_Hupdatersrc: Handle {
 	/// call.
 	#[must_use]
 	fn BeginUpdateResource(
-		file_name: &str, delete_existing_resources: bool) -> SysResult<HUPDATERSRC>
+		file_name: &str,
+		delete_existing_resources: bool) -> SysResult<HUPDATERSRC>
 	{
 		unsafe {
 			kernel::ffi::BeginUpdateResourceW(
@@ -46,19 +47,27 @@ pub trait kernel_Hupdatersrc: Handle {
 
 	/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
 	/// method.
-	fn EndUpdateResource(self, discard: bool) -> SysResult<()> {
-		bool_to_sysresult(
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn EndUpdateResource(&self, discard: bool) -> SysResult<()> {
+		let ret = bool_to_sysresult(
 			unsafe {
 				kernel::ffi::EndUpdateResourceW(self.as_ptr(), discard as _)
 			},
-		)
+		);
+		invalidate_handle(self);
+		ret
 	}
 
 	/// [`UpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)
 	/// method.
-	fn UpdateResource(self,
-		resource_type: RtStr, resource_id: IdStr,
-		language: LANGID, data: &[u8]) -> SysResult<()>
+	fn UpdateResource(&self,
+		resource_type: RtStr,
+		resource_id: IdStr,
+		language: LANGID,
+		data: &[u8]) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {

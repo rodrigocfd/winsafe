@@ -7,7 +7,7 @@ use crate::gui::native_controls::tree_view::TreeView;
 use crate::kernel::decl::WString;
 use crate::kernel::privs::MAX_PATH;
 use crate::msg::tvm;
-use crate::prelude::{GuiWindow, NativeBitflag, user_Hwnd};
+use crate::prelude::{GuiWindow, Handle, NativeBitflag, user_Hwnd};
 use crate::user::decl::HWND;
 
 /// A single item of a [`TreeView`](crate::gui::TreeView) control.
@@ -17,7 +17,6 @@ use crate::user::decl::HWND;
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 #[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
-#[derive(Clone, Copy)]
 pub struct TreeViewItem<'a> {
 	owner: &'a TreeView,
 	hitem: HTREEITEM,
@@ -30,12 +29,19 @@ impl<'a> TreeViewItem<'a> {
 		Self { owner, hitem }
 	}
 
+	pub(in crate::gui) fn raw_clone(&self) -> Self {
+		Self {
+			owner: self.owner,
+			hitem: unsafe { self.hitem.raw_copy() },
+		}
+	}
+
 	/// Adds a new child item by sending a
 	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
 	/// the newly added item.
 	pub fn add_child(&self,
 		text: &str,
-		icon_index: Option<u32>) -> TreeViewItem<'a>
+		icon_index: Option<u32>) -> TreeViewItem<'_>
 	{
 		let mut buf = WString::from_str(text);
 
@@ -48,7 +54,7 @@ impl<'a> TreeViewItem<'a> {
 		tvix.set_pszText(Some(&mut buf));
 
 		let mut tvis = TVINSERTSTRUCT::default();
-		tvis.hParent = self.hitem;
+		tvis.hParent = unsafe { self.hitem.raw_copy() };
 		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
 		tvis.itemex = tvix;
 
@@ -62,7 +68,9 @@ impl<'a> TreeViewItem<'a> {
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete(&self) {
 		self.owner.hwnd()
-			.SendMessage(tvm::DeleteItem { hitem: self.hitem })
+			.SendMessage(tvm::DeleteItem {
+				hitem: unsafe { self.hitem.raw_copy() },
+			})
 			.unwrap();
 	}
 
@@ -72,7 +80,9 @@ impl<'a> TreeViewItem<'a> {
 	/// Returns a handle to the edit control.
 	pub fn edit_label(&self) -> HWND {
 		self.owner.hwnd()
-			.SendMessage(tvm::EditLabel { hitem: self.hitem })
+			.SendMessage(tvm::EditLabel {
+				hitem: unsafe { self.hitem.raw_copy() },
+			})
 			.unwrap()
 	}
 
@@ -83,7 +93,9 @@ impl<'a> TreeViewItem<'a> {
 	/// Returns whether a scroll occurred and no items were expanded.
 	pub fn ensure_visible(&self) -> bool {
 		self.owner.hwnd()
-			.SendMessage(tvm::EnsureVisible { hitem: self.hitem }) != 0
+			.SendMessage(tvm::EnsureVisible {
+				hitem: unsafe { self.hitem.raw_copy() },
+			}) != 0
 	}
 
 	/// Expands or collapse the item by sending a
@@ -91,7 +103,7 @@ impl<'a> TreeViewItem<'a> {
 	pub fn expand(&self, expand: bool) {
 		self.owner.hwnd()
 			.SendMessage(tvm::Expand {
-				hitem: self.hitem,
+				hitem: unsafe { self.hitem.raw_copy() },
 				action: if expand { co::TVE::EXPAND } else { co::TVE::COLLAPSE },
 			})
 			.unwrap();
@@ -99,8 +111,8 @@ impl<'a> TreeViewItem<'a> {
 
 	/// Returns the underlying handle of the item.
 	#[must_use]
-	pub const fn htreeitem(&self) -> HTREEITEM {
-		self.hitem
+	pub const fn htreeitem(&self) -> &HTREEITEM {
+		&self.hitem
 	}
 
 	/// Tells if the item is expanded by sending a
@@ -109,7 +121,7 @@ impl<'a> TreeViewItem<'a> {
 	pub fn is_expanded(&self) -> bool {
 		self.owner.hwnd()
 			.SendMessage(tvm::GetItemState {
-				hitem: self.hitem,
+				hitem: unsafe { self.hitem.raw_copy() },
 				mask: co::TVIS::EXPANDED,
 			})
 			.has(co::TVIS::EXPANDED)
@@ -124,30 +136,30 @@ impl<'a> TreeViewItem<'a> {
 
 	/// Returns an iterator over the child items.
 	#[must_use]
-	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
-		TreeViewChildItemIter::new(self.owner, Some(*self))
+	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'_>> + '_ {
+		TreeViewChildItemIter::new(self.owner, Some(self.raw_clone()))
 	}
 
 	/// Returns an iterator over the next sibling items.
 	#[must_use]
-	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
-		TreeViewItemIter::new(self.owner, Some(*self), co::TVGN::NEXT)
+	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'_>> + '_ {
+		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::NEXT)
 	}
 
 	/// Returns an iterator over the previous sibling items.
 	#[must_use]
-	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
-		TreeViewItemIter::new(self.owner, Some(*self), co::TVGN::PREVIOUS)
+	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'_>> + '_ {
+		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::PREVIOUS)
 	}
 
 	/// Retrieves the parent of the item by sending a
 	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	#[must_use]
-	pub fn parent(&self) -> Option<TreeViewItem<'a>> {
+	pub fn parent(&self) -> Option<TreeViewItem<'_>> {
 		self.owner.hwnd()
 			.SendMessage(tvm::GetNextItem {
 				relationship: co::TVGN::PARENT,
-				hitem: Some(self.hitem),
+				hitem: Some(unsafe { self.hitem.raw_copy() }),
 			})
 			.map(|hitem| TreeViewItem::new(self.owner, hitem))
 	}
@@ -158,7 +170,7 @@ impl<'a> TreeViewItem<'a> {
 		let mut buf = WString::from_str(text);
 
 		let mut tvi = TVITEMEX::default();
-		tvi.hItem = self.hitem;
+		tvi.hItem = unsafe { self.hitem.raw_copy() };
 		tvi.mask = co::TVIF::TEXT;
 		tvi.set_pszText(Some(&mut buf));
 
@@ -172,7 +184,7 @@ impl<'a> TreeViewItem<'a> {
 	#[must_use]
 	pub fn text(&self) -> String {
 		let mut tvi = TVITEMEX::default();
-		tvi.hItem = self.hitem;
+		tvi.hItem = unsafe { self.hitem.raw_copy() };
 		tvi.mask = co::TVIF::TEXT;
 
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary

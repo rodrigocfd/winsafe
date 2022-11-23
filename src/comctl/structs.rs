@@ -779,7 +779,7 @@ impl<'a> NMDAYSTATE<'a> {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Eq, PartialEq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
 	pub hwndFrom: HWND,
@@ -1077,7 +1077,6 @@ pub struct NMVIEWCHANGE {
 /// struct.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[repr(C)]
-#[derive(Clone)]
 pub struct TBADDBITMAP {
 	hInst: HINSTANCE,
 	nID: usize,
@@ -1089,10 +1088,13 @@ impl TBADDBITMAP {
 	/// Returns the `hInst` and `nID` fields.
 	#[must_use]
 	pub fn nID(&self) -> BmpIdbRes {
-		match self.hInst {
-			HINST_COMMCTRL => BmpIdbRes::Idb(co::IDB(self.nID)),
-			HINSTANCE::NULL => BmpIdbRes::Bmp(HBITMAP(self.nID as _ )),
-			hInst => BmpIdbRes::Res(IdStr::from_ptr(self.nID as _), hInst),
+		match &self.hInst {
+			&HINST_COMMCTRL => BmpIdbRes::Idb(co::IDB(self.nID)),
+			&HINSTANCE::NULL => BmpIdbRes::Bmp(HBITMAP(self.nID as _ )),
+			hInst => BmpIdbRes::Res(
+				IdStr::from_ptr(self.nID as _),
+				unsafe { hInst.raw_copy() },
+			),
 		}
 	}
 
@@ -1101,7 +1103,10 @@ impl TBADDBITMAP {
 		*self = match val {
 			BmpIdbRes::Idb(idb) => Self { hInst: HINST_COMMCTRL, nID: idb.0 },
 			BmpIdbRes::Bmp(bmp) => Self { hInst: HINSTANCE::NULL, nID: bmp.0 as _ },
-			BmpIdbRes::Res(res, hInst) => Self { hInst: *hInst, nID: res.as_ptr() as _ },
+			BmpIdbRes::Res(res, hInst) => Self {
+				hInst: unsafe { hInst.raw_copy() },
+				nID: res.as_ptr() as _,
+			},
 		}
 	}
 }
@@ -1217,7 +1222,10 @@ impl TBREPLACEBITMAP {
 		if self.hInstOld == HINSTANCE::NULL {
 			BmpInstId::Bmp(HBITMAP(self.nIDOld as _))
 		} else {
-			BmpInstId::InstId((self.hInstOld, self.nIDOld as _))
+			BmpInstId::InstId((
+				unsafe { self.hInstOld.raw_copy() },
+				self.nIDOld as _,
+			))
 		}
 	}
 
@@ -1241,7 +1249,10 @@ impl TBREPLACEBITMAP {
 		if self.hInstNew == HINSTANCE::NULL {
 			BmpInstId::Bmp(HBITMAP(self.nIDNew as _))
 		} else {
-			BmpInstId::InstId((self.hInstNew, self.nIDNew as _))
+			BmpInstId::InstId((
+				unsafe { self.hInstNew.raw_copy() },
+				self.nIDNew as _,
+			))
 		}
 	}
 

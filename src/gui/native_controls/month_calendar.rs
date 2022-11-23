@@ -38,7 +38,7 @@ pub struct MonthCalendar(Pin<Arc<Obj>>);
 unsafe impl Send for MonthCalendar {}
 
 impl GuiWindow for MonthCalendar {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
 
@@ -66,9 +66,9 @@ impl GuiNativeControl for MonthCalendar {
 
 impl GuiNativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 	fn on(&self) -> &MonthCalendarEvents {
-		if self.hwnd() != HWND::NULL {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if self.0.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
 		&self.0.events

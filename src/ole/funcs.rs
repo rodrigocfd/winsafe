@@ -115,10 +115,12 @@ pub fn CoLockObjectExternal(
 /// [`CoTaskMemAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc)
 /// function.
 ///
-/// **Note:** Must be paired with a [`CoTaskMemFree`](crate::CoTaskMemFree)
-/// call.
+/// # Safety
+///
+/// This function manually allocates a memory block, which must be freed with
+/// [`CoTaskMemFree`](crate::CoTaskMemFree).
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-pub fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
+pub unsafe fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
 	let p = unsafe { ole::ffi::CoTaskMemAlloc(cb) };
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)
@@ -137,10 +139,12 @@ pub fn CoTaskMemFree(pv: *mut u8) {
 /// [`CoTaskMemRealloc`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.
 ///
-/// **Note:** Must be paired with a [`CoTaskMemFree`](crate::CoTaskMemFree)
-/// call.
+/// # Safety
+///
+/// This function manually allocates a memory block, which must be freed with
+/// [`CoTaskMemFree`](crate::CoTaskMemFree).
 #[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-pub fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
+pub unsafe fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
 	let p = unsafe { ole::ffi::CoTaskMemRealloc(pv as _, cb) };
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)

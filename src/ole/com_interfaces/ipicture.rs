@@ -168,8 +168,11 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::Render`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render)
 	/// method.
 	fn Render(&self,
-		hdc: HDC, dest_pt: POINT, dest_sz: SIZE,
-		src_offset: Option<POINT>, src_extent: SIZE,
+		hdc: &HDC,
+		dest_pt: POINT,
+		dest_sz: SIZE,
+		src_offset: Option<POINT>,
+		src_extent: SIZE,
 		metafile_bounds: Option<&RECT>) -> HrResult<()>
 	{
 		unsafe {
@@ -191,7 +194,7 @@ pub trait ole_IPicture: ole_IUnknown {
 
 	/// [`IPicture::SelectPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-selectpicture)
 	/// method.
-	fn SelectPicture(&self, hdc: HDC) -> HrResult<(HDC, HBITMAP)> {
+	fn SelectPicture(&self, hdc: &HDC) -> HrResult<(HDC, HBITMAP)> {
 		let mut hdc_out = HDC::NULL;
 		let mut hbmp = HBITMAP::NULL;
 

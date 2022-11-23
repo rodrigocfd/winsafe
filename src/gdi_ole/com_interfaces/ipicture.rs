@@ -20,21 +20,25 @@ pub trait gdi_ole_IPicture: ole_IPicture {
 	/// and [`IPicture::get_Height`](crate::prelude::ole_IPicture::get_Height),
 	/// then converts the HIMETRIC units to pixels.
 	///
-	/// If `hdc` is not provided, `HWND::NULL.GetDC()` will be used.
+	/// If `hdc` is not provided, the screen DC, retrieved with
+	/// `HWND::NULL.GetDC()`, will be used.
 	#[must_use]
-	fn size_px(&self, hdc: Option<HDC>) -> HrResult<SIZE> {
-		let our_hdc = if let Some(hdc) = hdc {
-			hdc
-		} else {
-			HWND::NULL.GetDC()
-				.map_err(|e| e.to_hresult())?
+	fn size_px(&self, hdc: Option<&HDC>) -> HrResult<SIZE> {
+		let (cx, cy) = match hdc {
+			Some(hdc) => {
+				hdc.HiMetricToPixel(
+					self.get_Width()?, self.get_Height()?)
+			},
+			None => {
+				let screen_dc = HWND::NULL.GetDC()
+					.map_err(|e| e.to_hresult())?;
+				let (cx, cy) = screen_dc.HiMetricToPixel(
+					self.get_Width()?, self.get_Height()?);
+				HWND::NULL.ReleaseDC(&screen_dc)
+					.map_err(|e| e.to_hresult())?;
+				(cx, cy)
+			},
 		};
-		let (cx, cy) = our_hdc.HiMetricToPixel(
-			self.get_Width()?, self.get_Height()?);
-		if hdc.is_none() {
-			HWND::NULL.ReleaseDC(our_hdc)
-				.map_err(|e| e.to_hresult())?;
-		}
 		Ok(SIZE::new(cx, cy))
 	}
 }

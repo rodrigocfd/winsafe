@@ -22,7 +22,7 @@ impl comctl_ole_Hwnd for HWND {}
 pub trait comctl_ole_Hwnd: Handle {
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// method.
-	fn InitializeFlatSB(self) -> HrResult<()> {
+	fn InitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe { comctl_ole::ffi::InitializeFlatSB(self.as_ptr()) },
 		)
@@ -82,8 +82,8 @@ pub trait comctl_ole_Hwnd: Handle {
 	/// }
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
-	fn TaskDialog(self,
-		hinstance: Option<HINSTANCE>,
+	fn TaskDialog(&self,
+		hinstance: Option<&HINSTANCE>,
 		window_title: Option<&str>,
 		main_instruction: Option<&str>,
 		content: Option<&str>,
@@ -110,7 +110,7 @@ pub trait comctl_ole_Hwnd: Handle {
 
 	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
 	/// method.
-	fn UninitializeFlatSB(self) -> HrResult<()> {
+	fn UninitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe { comctl_ole::ffi::UninitializeFlatSB(self.as_ptr()) },
 		)

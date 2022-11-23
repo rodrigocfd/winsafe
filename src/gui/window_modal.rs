@@ -23,7 +23,7 @@ pub struct WindowModal(RawDlg);
 unsafe impl Send for WindowModal {}
 
 impl GuiWindow for WindowModal {
-	fn hwnd(&self) -> HWND {
+	fn hwnd(&self) -> &HWND {
 		match &self.0 {
 			RawDlg::Raw(r) => r.hwnd(),
 			RawDlg::Dlg(d) => d.hwnd(),

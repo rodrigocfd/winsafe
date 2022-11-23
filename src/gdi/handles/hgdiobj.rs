@@ -2,6 +2,7 @@
 
 use crate::{co, gdi};
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 
 /// Any
@@ -20,13 +21,19 @@ use crate::prelude::Handle;
 pub trait gdi_Hgdiobj: Handle {
 	/// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 	/// method.
-	fn DeleteObject(self) -> SysResult<()> {
-		match unsafe { gdi::ffi::DeleteObject(self.as_ptr()) } {
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn DeleteObject(&self) -> SysResult<()> {
+		let ret = match unsafe { gdi::ffi::DeleteObject(self.as_ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(()), // not really an error
 				err => Err(err),
 			},
 			_ => Ok(()),
-		}
+		};
+		invalidate_handle(self);
+		ret
 	}
 }

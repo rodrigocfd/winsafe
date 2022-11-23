@@ -2,7 +2,7 @@
 
 use crate::kernel;
 use crate::kernel::decl::SysResult;
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HFILEMAPVIEW: "kernel";
@@ -30,7 +30,7 @@ pub trait kernel_Hfilemapview: Handle {
 	/// map the bytes beyond the file. This may cause serious errors. So, if the
 	/// file is resized, re-generate the slice by calling `as_slice` again.
 	#[must_use]
-	fn as_mut_slice<'a>(self, len: usize) -> &'a mut [u8] {
+	fn as_mut_slice(&self, len: usize) -> &mut [u8] {
 		unsafe { std::slice::from_raw_parts_mut(self.as_ptr() as _, len) }
 	}
 
@@ -78,13 +78,21 @@ pub trait kernel_Hfilemapview: Handle {
 	/// # Ok::<_, Box<dyn std::error::Error>>(())
 	/// ```
 	#[must_use]
-	fn as_slice<'a>(self, len: usize) -> &'a [u8] {
+	fn as_slice(&self, len: usize) -> &[u8] {
 		unsafe { std::slice::from_raw_parts(self.as_ptr() as _, len) }
 	}
 
 	/// [`UnmapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
 	/// method.
-	fn UnmapViewOfFile(self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { kernel::ffi::UnmapViewOfFile(self.as_ptr()) })
+	///
+	/// After calling this method, the handle will be invalidated and further
+	/// operations will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	fn UnmapViewOfFile(&self) -> SysResult<()> {
+		let ret = bool_to_sysresult(
+			unsafe { kernel::ffi::UnmapViewOfFile(self.as_ptr()) },
+		);
+		invalidate_handle(self);
+		ret
 	}
 }

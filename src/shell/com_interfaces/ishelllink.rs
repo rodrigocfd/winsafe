@@ -181,7 +181,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 
 	/// [`IShellLinkW::Resolve`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-resolve)
 	/// method.
-	fn Resolve(&self, hwnd: HWND, flags: co::SLR) -> HrResult<()> {
+	fn Resolve(&self, hwnd: &HWND, flags: co::SLR) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IShellLinkVT>();
 			ok_to_hrresult((vt.Resolve)(self.ptr(), hwnd.0, flags.0))

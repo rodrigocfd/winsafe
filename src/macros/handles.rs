@@ -9,7 +9,7 @@ macro_rules! impl_handle {
 		$( #[$doc] )*
 		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
-		#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+		#[derive(PartialEq, Eq, Hash)]
 		pub struct $name(pub(crate) *mut std::ffi::c_void);
 
 		unsafe impl Send for $name {}
@@ -41,12 +41,16 @@ macro_rules! impl_handle {
 			const NULL: Self = Self(std::ptr::null_mut());
 			const INVALID: Self = Self(-1 as _);
 
-			unsafe fn from_ptr<T>(p: *mut T) -> Self {
-				Self(p as _)
+			unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self {
+				Self(p)
 			}
 
-			unsafe fn as_ptr(self) -> *mut std::ffi::c_void {
+			unsafe fn as_ptr(&self) -> *mut std::ffi::c_void {
 				self.0
+			}
+
+			unsafe fn raw_copy(&self) -> Self {
+				Self(self.0)
 			}
 		}
 	};

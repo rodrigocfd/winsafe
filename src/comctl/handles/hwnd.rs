@@ -25,7 +25,7 @@ pub trait comctl_Hwnd: Handle {
 	/// The return type is variable, being defined by the `RetType` associated
 	/// type of the [`MsgSend`](crate::prelude::MsgSend) trait. That means each
 	/// message can define its own return type.
-	fn DefSubclassProc<M>(self, msg: M) -> M::RetType
+	fn DefSubclassProc<M>(&self, msg: M) -> M::RetType
 		where M: MsgSend,
 	{
 		let mut msg = msg;
@@ -41,7 +41,7 @@ pub trait comctl_Hwnd: Handle {
 
 	/// [`RemoveWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
 	/// method.
-	fn RemoveWindowSubclass(self,
+	fn RemoveWindowSubclass(&self,
 		subclass_func: SUBCLASSPROC, subclass_id: usize) -> SysResult<()>
 	{
 		bool_to_sysresult(
@@ -57,7 +57,7 @@ pub trait comctl_Hwnd: Handle {
 
 	/// [`SetWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
 	/// method.
-	fn SetWindowSubclass(self,
+	fn SetWindowSubclass(&self,
 		subclass_proc: SUBCLASSPROC,
 		subclass_id: usize, ref_data: usize) -> SysResult<()>
 	{
