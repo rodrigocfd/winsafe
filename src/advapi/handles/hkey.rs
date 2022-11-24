@@ -3,7 +3,6 @@
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
 use crate::kernel::decl::{FILETIME, SysResult, WString};
-use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 
 impl_handle! { HKEY: "advapi";
@@ -14,9 +13,22 @@ impl_handle! { HKEY: "advapi";
 	/// [predefined registry keys](https://learn.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),
 	/// like `HKEY::CURRENT_USER`, which are always open and ready to be used.
 	/// Usually, they are the starting point to open a registry key.
+	///
+	/// Automatically calls
+	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
+	/// when the object goes out of scope.
 }
 
 impl advapi_Hkey for HKEY {}
+
+impl Drop for HKEY {
+	fn drop(&mut self) {
+		let raw_val = unsafe { self.as_ptr() } as usize;
+		if raw_val < 0x8000_0000 || raw_val > 0x8000_0060 { // guard predefined keys
+			unsafe { advapi::ffi::RegCloseKey(self.as_ptr()); } // ignore errors
+		}
+	}
+}
 
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
@@ -40,26 +52,11 @@ pub trait advapi_Hkey: Handle {
 	predef_key!(LOCAL_MACHINE, 0x8000_0002);
 	predef_key!(USERS, 0x8000_0003);
 	predef_key!(PERFORMANCE_DATA, 0x8000_0004);
-	predef_key!(PERFORMANCE_TEXT, 0x8000_0050);
-	predef_key!(PERFORMANCE_NLSTEXT, 0x8000_0060);
 	predef_key!(CURRENT_CONFIG, 0x8000_0005);
 	predef_key!(DYN_DATA, 0x8000_0006);
 	predef_key!(CURRENT_USER_LOCAL_SETTINGS, 0x8000_0007);
-
-	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn RegCloseKey(&self) -> SysResult<()> {
-		let ret = match co::ERROR(unsafe { advapi::ffi::RegCloseKey(self.as_ptr()) as _ }) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		};
-		invalidate_handle(self);
-		ret
-	}
+	predef_key!(PERFORMANCE_TEXT, 0x8000_0050);
+	predef_key!(PERFORMANCE_NLSTEXT, 0x8000_0060);
 
 	/// Returns an iterator over the names of the keys, which calls
 	/// [`RegEnumKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw)
@@ -81,8 +78,6 @@ pub trait advapi_Hkey: Handle {
 	///     let key_name = key_name?;
 	///     println!("{}", key_name);
 	/// }
-	///
-	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -115,8 +110,6 @@ pub trait advapi_Hkey: Handle {
 	/// let values_and_types: Vec<(String, co::REG)> =
 	///     hkey.RegEnumValue()?
 	///         .collect::<SysResult<Vec<_>>>()?;
-	///
-	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -224,9 +217,6 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegOpenKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
 	/// method.
 	///
-	/// **Note:** Must be paired with an
-	/// [`HKEY::RegCloseKey`](crate::prelude::advapi_Hkey::RegCloseKey) call.
-	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -238,8 +228,6 @@ pub trait advapi_Hkey: Handle {
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
-	///
-	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -363,8 +351,6 @@ pub trait advapi_Hkey: Handle {
 	///     },
 	///     RegistryValue::None => println!("No value"),
 	/// }
-	///
-	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -488,8 +474,6 @@ pub trait advapi_Hkey: Handle {
 	///     "Color",
 	///     RegistryValue::Sz(WString::from_str("blue")),
 	/// )?;
-	///
-	/// hkey.RegCloseKey()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn RegSetValueEx(&self, value: &str, data: RegistryValue) -> SysResult<()> {
