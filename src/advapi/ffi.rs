@@ -8,6 +8,7 @@ extern_sys! { "advapi32";
 	RegCloseKey(HANDLE) -> i32
 	RegEnumKeyExW(HANDLE, u32, PSTR, *mut u32, *mut u32, PSTR, *mut u32, PVOID) -> i32
 	RegEnumValueW(HANDLE, u32, PSTR, *mut u32, *mut u32, *mut u32, *mut u8, *mut u32) -> i32
+	RegFlushKey(HANDLE) -> i32
 	RegGetValueW(HANDLE, PCSTR, PCSTR, u32, *mut u32, PVOID, *mut u32) -> i32
 	RegOpenKeyExW(HANDLE, PCSTR, u32, u32, *mut HANDLE) -> i32
 	RegQueryInfoKeyW(HANDLE, PSTR, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, *mut u32, PVOID) -> i32

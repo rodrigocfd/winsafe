@@ -117,6 +117,15 @@ pub trait advapi_Hkey: Handle {
 		Ok(Box::new(EnumValueIter::new(self)?))
 	}
 
+	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
+	/// method.
+	fn RegFlushKey(&self) -> SysResult<()> {
+		match co::ERROR(unsafe { advapi::ffi::RegFlushKey(self.as_ptr()) } as _) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
 	/// method.
 	///
