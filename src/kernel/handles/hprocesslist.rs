@@ -5,8 +5,9 @@ use crate::kernel::decl::{
 	GetLastError, HEAPLIST32, MODULEENTRY32, PROCESSENTRY32, SysResult,
 	THREADENTRY32,
 };
+use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::invalidate_handle;
-use crate::prelude::{Handle, HandleClose};
+use crate::prelude::Handle;
 
 impl_handle! { HPROCESSLIST: "kernel";
 	/// Handle to a process list
@@ -14,7 +15,6 @@ impl_handle! { HPROCESSLIST: "kernel";
 	/// Originally just a `HANDLE`.
 }
 
-impl HandleClose for HPROCESSLIST {}
 impl kernel_Hprocesslist for HPROCESSLIST {}
 
 /// This trait is enabled with the `kernel` feature, and provides methods for
@@ -49,8 +49,6 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {}",
 	///         heap_entry.th32HeapID, heap_entry.th32ProcessID);
 	/// }
-	///
-	/// hpl.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -81,8 +79,6 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {}",
 	///         mod_entry.szModule(), mod_entry.th32ProcessID);
 	/// }
-	///
-	/// hpl.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -113,8 +109,6 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {} {}",
 	///         proc_entry.szExeFile(), proc_entry.th32ProcessID, proc_entry.cntThreads);
 	/// }
-	///
-	/// hpl.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -147,8 +141,6 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {}",
 	///         thread_entry.th32ThreadID, thread_entry.th32OwnerProcessID);
 	/// }
-	///
-	/// hpl.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -160,21 +152,17 @@ pub trait kernel_Hprocesslist: Handle {
 
 	/// [`CreateToolhelp32Snapshot`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HPROCESSLIST::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
-	/// call.
 	#[must_use]
 	fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
-		th32_process_id: Option<u32>) -> SysResult<HPROCESSLIST>
+		th32_process_id: Option<u32>) -> SysResult<HandleGuard<HPROCESSLIST>>
 	{
 		unsafe {
 			kernel::ffi::CreateToolhelp32Snapshot(
 				flags.0,
 				th32_process_id.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| HPROCESSLIST(ptr))
+		}.map(|ptr| HandleGuard { handle: HPROCESSLIST(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 

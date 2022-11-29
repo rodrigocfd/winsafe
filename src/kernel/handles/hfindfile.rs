@@ -4,7 +4,6 @@ use crate::{co, kernel};
 use crate::kernel::decl::{
 	GetLastError, path, SysResult, WIN32_FIND_DATA, WString,
 };
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HFINDFILE: "kernel";
@@ -72,42 +71,31 @@ pub trait kernel_Hfindfile: Handle {
 		Box::new(FindFileIter::new(path_and_pattern))
 	}
 
-	/// [`FindClose`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn FindClose(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { kernel::ffi::FindClose(self.as_ptr()) },
-		);
-		invalidate_handle(self);
-		ret
-	}
-
 	/// [`FindFirstFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
 	/// static method.
-	///
-	/// # Safety
-	///
-	/// This handle allocates memory, which must be freed with
-	/// [`HFINDFILE::FindClose`](crate::prelude::kernel_Hfindfile::FindClose).
 	///
 	/// This method is rather tricky, consider using
 	/// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
 	#[must_use]
-	unsafe fn FindFirstFile(
+	fn FindFirstFile(
 		file_name: &str,
-		wfd: &mut WIN32_FIND_DATA) -> SysResult<(HFINDFILE, bool)>
+		wfd: &mut WIN32_FIND_DATA) -> SysResult<(HfindfileGuard, bool)>
 	{
-		match kernel::ffi::FindFirstFileW(
-			WString::from_str(file_name).as_ptr(),
-			wfd as *mut _ as _,
-		).as_mut() {
-			Some(ptr) => Ok((HFINDFILE(ptr), true)), // first file found
+		match unsafe {
+			kernel::ffi::FindFirstFileW(
+				WString::from_str(file_name).as_ptr(),
+				wfd as *mut _ as _,
+			).as_mut()
+		} {
+			Some(ptr) => Ok((
+				HfindfileGuard { handle: HFINDFILE(ptr) }, // first file found
+				true,
+			)),
 			None => match GetLastError() {
-				co::ERROR::FILE_NOT_FOUND => Ok((HFINDFILE::NULL, false)), // not an error, first file not found
+				co::ERROR::FILE_NOT_FOUND => Ok((
+					HfindfileGuard { handle: HFINDFILE::NULL }, // not an error, first file not found
+					false,
+				)),
 				err => Err(err),
 			},
 		}
@@ -116,15 +104,12 @@ pub trait kernel_Hfindfile: Handle {
 	/// [`FindNextFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextfilew)
 	/// method.
 	///
-	/// # Safety
-	///
-	/// This handle allocates memory, which must be freed with
-	/// [`HFINDFILE::FindClose`](crate::prelude::kernel_Hfindfile::FindClose).
-	///
 	/// This method is rather tricky, consider using
 	/// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
-	unsafe fn FindNextFile(&self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
-		match kernel::ffi::FindNextFileW(self.as_ptr(), wfd as *mut _ as _) {
+	fn FindNextFile(&self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::FindNextFileW(self.as_ptr(), wfd as *mut _ as _)
+		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false), // not an error, no further files found
 				err => Err(err),
@@ -136,18 +121,22 @@ pub trait kernel_Hfindfile: Handle {
 
 //------------------------------------------------------------------------------
 
+handle_guard! { HfindfileGuard, HFINDFILE, "kernel";
+	kernel::ffi::FindClose;
+	/// RAII implementation for [`HFINDFILE`](crate::HFINDFILE) which
+	/// automatically calls
+	/// [`FindClose`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
+	/// when the object goes out of scope.
+}
+
+//------------------------------------------------------------------------------
+
 struct FindFileIter<'a> {
-	hfind: HFINDFILE,
+	hfind: HfindfileGuard,
 	wfd: WIN32_FIND_DATA,
 	path_and_pattern: &'a str,
 	first_pass: bool,
 	no_more: bool,
-}
-
-impl<'a> Drop for FindFileIter<'a> {
-	fn drop(&mut self) {
-		self.hfind.FindClose().ok(); // ignore error
-	}
 }
 
 impl<'a> Iterator for FindFileIter<'a> {
@@ -161,9 +150,7 @@ impl<'a> Iterator for FindFileIter<'a> {
 		let found = if self.first_pass {
 			self.first_pass = false;
 			let (hfind, found) =
-				match unsafe {
-					HFINDFILE::FindFirstFile(self.path_and_pattern, &mut self.wfd)
-				} {
+				match HFINDFILE::FindFirstFile(self.path_and_pattern, &mut self.wfd) {
 					Err(e) => {
 						self.no_more = true; // prevent further iterations
 						return Some(Err(e))
@@ -173,7 +160,7 @@ impl<'a> Iterator for FindFileIter<'a> {
 			self.hfind = hfind;
 			found
 		} else {
-			match unsafe { self.hfind.FindNextFile(&mut self.wfd) } {
+			match self.hfind.FindNextFile(&mut self.wfd) {
 				Err(e) => {
 					self.no_more = true; // prevent further iterations
 					return Some(Err(e))
@@ -195,7 +182,7 @@ impl<'a> Iterator for FindFileIter<'a> {
 impl<'a> FindFileIter<'a> {
 	fn new(path_and_pattern: &'a str) -> Self {
 		Self {
-			hfind: HFINDFILE::NULL,
+			hfind: HfindfileGuard { handle: HFINDFILE::NULL },
 			wfd: WIN32_FIND_DATA::default(),
 			path_and_pattern,
 			first_pass: true,

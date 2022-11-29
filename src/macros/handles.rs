@@ -55,3 +55,34 @@ macro_rules! impl_handle {
 		}
 	};
 }
+
+/// Declares a handle guard which has a simple cleaner function.
+macro_rules! handle_guard {
+	(
+		$name:ident, $handle:ty, $feature:literal;
+		$cleaner:expr;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
+		pub struct $name {
+			pub(crate) handle: $handle,
+		}
+
+		impl Drop for $name {
+			fn drop(&mut self) {
+				if let Some(h) = self.handle.as_opt() {
+					unsafe { $cleaner(h.as_ptr()); } // ignore errors
+				}
+			}
+		}
+
+		impl std::ops::Deref for $name {
+			type Target = $handle;
+
+			fn deref(&self) -> &Self::Target {
+				&self.handle
+			}
+		}
+	};
+}

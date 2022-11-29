@@ -1,10 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::ops::Deref;
+
 use crate::kernel;
 use crate::kernel::decl::{
 	GetLastError, IdStr, LANGID, RtStr, SysResult, WString,
 };
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
 impl_handle! { HUPDATERSRC: "kernel";
@@ -27,38 +29,18 @@ impl kernel_Hupdatersrc for HUPDATERSRC {}
 pub trait kernel_Hupdatersrc: Handle {
 	/// [`BeginUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HUPDATERSRC::EndUpdateResource`](crate::prelude::kernel_Hupdatersrc::EndUpdateResource)
-	/// call.
 	#[must_use]
 	fn BeginUpdateResource(
 		file_name: &str,
-		delete_existing_resources: bool) -> SysResult<HUPDATERSRC>
+		delete_existing_resources: bool) -> SysResult<HupdatersrcGuard>
 	{
 		unsafe {
 			kernel::ffi::BeginUpdateResourceW(
 				WString::from_str(file_name).as_ptr(),
 				delete_existing_resources as _,
 			).as_mut()
-		}.map(|ptr| HUPDATERSRC(ptr))
+		}.map(|ptr| HupdatersrcGuard { hupdatersrc: HUPDATERSRC(ptr) })
 			.ok_or_else(|| GetLastError())
-	}
-
-	/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn EndUpdateResource(&self, discard: bool) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe {
-				kernel::ffi::EndUpdateResourceW(self.as_ptr(), discard as _)
-			},
-		);
-		invalidate_handle(self);
-		ret
 	}
 
 	/// [`UpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)
@@ -81,5 +63,32 @@ pub trait kernel_Hupdatersrc: Handle {
 				)
 			},
 		)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
+/// calls
+/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
+/// when the object goes out of scope.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+pub struct HupdatersrcGuard {
+	pub(crate) hupdatersrc: HUPDATERSRC,
+}
+
+impl Drop for HupdatersrcGuard {
+	fn drop(&mut self) {
+		if let Some(h) = self.hupdatersrc.as_opt() {
+			unsafe { kernel::ffi::EndUpdateResourceW(h.as_ptr(), false as _); } // ignore errors
+		}
+	}
+}
+
+impl Deref for HupdatersrcGuard {
+	type Target = HUPDATERSRC;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hupdatersrc
 	}
 }

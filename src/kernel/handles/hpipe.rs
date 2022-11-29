@@ -2,8 +2,9 @@
 
 use crate::kernel;
 use crate::kernel::decl::{HFILE, OVERLAPPED, SECURITY_ATTRIBUTES, SysResult};
+use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{Handle, HandleClose, kernel_Hfile};
+use crate::prelude::{Handle, kernel_Hfile};
 
 impl_handle! { HPIPE: "kernel";
 	/// Handle to an
@@ -11,7 +12,6 @@ impl_handle! { HPIPE: "kernel";
 	/// Originally just a `HANDLE`.
 }
 
-impl HandleClose for HPIPE {}
 impl kernel_Hpipe for HPIPE {}
 
 /// This trait is enabled with the `kernel` feature, and provides methods for
@@ -28,13 +28,10 @@ pub trait kernel_Hpipe: Handle {
 	/// static method.
 	///
 	/// Returns handles to the read and write pipes.
-	///
-	/// **Note:** Must be paired with
-	/// [`HPIPE::CloseHandle`](crate::prelude::HandleClose::CloseHandle) calls.
 	#[must_use]
 	fn CreatePipe(
 		attrs: Option<&mut SECURITY_ATTRIBUTES>,
-		size: u32) -> SysResult<(HPIPE, HPIPE)>
+		size: u32) -> SysResult<(HandleGuard<HPIPE>, HandleGuard<HPIPE>)>
 	{
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
 		bool_to_sysresult(
@@ -46,7 +43,10 @@ pub trait kernel_Hpipe: Handle {
 					size,
 				)
 			},
-		).map(|_| (hread, hwrite))
+		).map(|_| (
+			HandleGuard { handle: hread },
+			HandleGuard { handle: hwrite },
+		))
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)

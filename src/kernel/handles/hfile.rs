@@ -5,8 +5,9 @@ use crate::kernel::decl::{
 	BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP, HIDWORD, LODWORD,
 	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
+use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{Handle, HandleClose};
+use crate::prelude::Handle;
 
 impl_handle! { HFILE: "kernel";
 	/// Handle to a
@@ -17,7 +18,6 @@ impl_handle! { HFILE: "kernel";
 	/// [`File`](crate::File) high-level abstraction.
 }
 
-impl HandleClose for HFILE {}
 impl kernel_Hfile for HFILE {}
 
 /// This trait is enabled with the `kernel` feature, and provides methods for
@@ -33,8 +33,8 @@ pub trait kernel_Hfile: Handle {
 	/// [`CreateFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
 	/// static method.
 	///
-	/// **Note:** Must be paired with an
-	/// [`HFILE::CloseHandle`](crate::prelude::HandleClose::CloseHandle) call.
+	/// The error code is also returned because it can carry information even if
+	/// the file is successfully open.
 	///
 	/// # Examples
 	///
@@ -53,8 +53,6 @@ pub trait kernel_Hfile: Handle {
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
 	/// )?;
-	///
-	/// hfile.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	///
@@ -73,8 +71,6 @@ pub trait kernel_Hfile: Handle {
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
 	/// )?;
-	///
-	/// hfile.CloseHandle()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -85,7 +81,7 @@ pub trait kernel_Hfile: Handle {
 		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
 		flags_and_attrs: co::FILE_ATTRIBUTE,
-		hfile_template: Option<&HFILE>) -> SysResult<(HFILE, co::ERROR)>
+		hfile_template: Option<&HFILE>) -> SysResult<(HandleGuard<HFILE>, co::ERROR)>
 	{
 		match HFILE(unsafe {
 			kernel::ffi::CreateFileW(
@@ -99,22 +95,18 @@ pub trait kernel_Hfile: Handle {
 			) as _
 		}) {
 			HFILE::NULL => Err(GetLastError()),
-			h => Ok((h, GetLastError())),
+			handle => Ok((HandleGuard { handle }, GetLastError())),
 		}
 	}
 
 	/// [`CreateFileMapping`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HFILEMAP::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
-	/// call.
 	#[must_use]
 	fn CreateFileMapping(&self,
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
 		max_size: Option<u64>,
-		mapping_name: Option<&str>) -> SysResult<HFILEMAP>
+		mapping_name: Option<&str>) -> SysResult<HandleGuard<HFILEMAP>>
 	{
 		unsafe {
 			kernel::ffi::CreateFileMappingFromApp(
@@ -124,7 +116,7 @@ pub trait kernel_Hfile: Handle {
 				max_size.unwrap_or_default(),
 				WString::from_opt_str(mapping_name).as_ptr(),
 			).as_mut()
-		}.map(|ptr| HFILEMAP(ptr))
+		}.map(|ptr| HandleGuard { handle: HFILEMAP(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 

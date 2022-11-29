@@ -5,9 +5,7 @@ use crate::kernel::decl::{
 	GetLastError, HRSRC, HRSRCMEM, IdStr, LANGID, RtStr, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{
-	bool_to_sysresult, invalidate_handle, MAX_PATH, str_to_iso88591,
-};
+use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, str_to_iso88591};
 use crate::prelude::Handle;
 
 impl_handle! { HINSTANCE: "kernel";
@@ -121,20 +119,6 @@ pub trait kernel_Hinstance: Handle {
 			.ok_or_else(|| GetLastError())
 	}
 
-	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn FreeLibrary(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { kernel::ffi::FreeLibrary(self.as_ptr()) },
-		);
-		invalidate_handle(self);
-		ret
-	}
-
 	/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
 	/// method.
 	///
@@ -207,16 +191,12 @@ pub trait kernel_Hinstance: Handle {
 
 	/// [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HINSTANCE::FreeLibrary`](crate::prelude::kernel_Hinstance::FreeLibrary)
-	/// call.
 	#[must_use]
-	fn LoadLibrary(lib_file_name: &str) -> SysResult<HINSTANCE> {
+	fn LoadLibrary(lib_file_name: &str) -> SysResult<HinstanceGuard> {
 		unsafe {
 			kernel::ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
 				.as_mut()
-		}.map(|ptr| HINSTANCE(ptr))
+		}.map(|ptr| HinstanceGuard { handle: HINSTANCE(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -272,10 +252,6 @@ pub trait kernel_Hinstance: Handle {
 	///     LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
 	///     lpResLock,
 	/// )?;
-	///
-	/// hUpdateRes.EndUpdateResource(false)?;
-	///
-	/// hExe.FreeLibrary()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -302,6 +278,16 @@ pub trait kernel_Hinstance: Handle {
 			sz => Ok(sz)
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+
+handle_guard! { HinstanceGuard, HINSTANCE, "kernel";
+	kernel::ffi::FreeLibrary;
+	/// RAII implementation for [`HINSTANCE`](crate::HINSTANCE) which
+	/// automatically calls
+	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
+	/// when the object goes out of scope.
 }
 
 //------------------------------------------------------------------------------

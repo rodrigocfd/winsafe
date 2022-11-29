@@ -1,6 +1,5 @@
 mod haccesstoken;
 mod handle_traits;
-mod hevent;
 mod hfile;
 mod hfilemap;
 mod hfilemapview;
@@ -16,7 +15,6 @@ mod hupdatesrc;
 
 pub mod decl {
 	pub use super::haccesstoken::HACCESSTOKEN;
-	pub use super::hevent::HEVENT;
 	pub use super::hfile::HFILE;
 	pub use super::hfilemap::HFILEMAP;
 	pub use super::hfilemapview::HFILEMAPVIEW;
@@ -29,6 +27,12 @@ pub mod decl {
 	pub use super::hprocesslist::HPROCESSLIST;
 	pub use super::hthread::HTHREAD;
 	pub use super::hupdatesrc::HUPDATERSRC;
+
+	impl_handle! { HEVENT: "kernel";
+		/// Handle to an
+		/// [event](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).
+		/// Originally just a `HANDLE`.
+	}
 
 	impl_handle! { HRSRC: "kernel";
 		/// Handle to a
@@ -49,9 +53,19 @@ pub mod decl {
 	}
 }
 
+pub mod guard {
+	pub use super::handle_traits::HandleGuard;
+	pub use super::hfilemapview::HfilemapviewGuard;
+	pub use super::hfindfile::HfindfileGuard;
+	pub use super::hglobal::HglobalGuard;
+	pub use super::hinstance::HinstanceGuard;
+	pub use super::hprocess::ProcessInformationGuard;
+	pub use super::hupdatesrc::HupdatersrcGuard;
+}
+
 pub mod traits {
 	pub use super::haccesstoken::kernel_Haccesstoken;
-	pub use super::handle_traits::{Handle, HandleClose};
+	pub use super::handle_traits::Handle;
 	pub use super::hfile::kernel_Hfile;
 	pub use super::hfilemap::kernel_Hfilemap;
 	pub use super::hfilemapview::kernel_Hfilemapview;

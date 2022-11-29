@@ -2,9 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{
-	bool_to_sysresult, GMEM_INVALID_HANDLE, invalidate_handle,
-};
+use crate::kernel::privs::{bool_to_sysresult, GMEM_INVALID_HANDLE};
 use crate::prelude::Handle;
 
 impl_handle! { HGLOBAL: "kernel";
@@ -27,14 +25,12 @@ impl kernel_Hglobal for HGLOBAL {}
 pub trait kernel_Hglobal: Handle {
 	/// [`GlobalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HGLOBAL::GlobalFree`](crate::prelude::kernel_Hglobal::GlobalFree)
-	/// call.
 	#[must_use]
-	fn GlobalAlloc(flags: co::GMEM, num_bytes: usize) -> SysResult<HGLOBAL> {
+	fn GlobalAlloc(
+		flags: co::GMEM, num_bytes: usize) -> SysResult<HglobalGuard>
+	{
 		unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes).as_mut() }
-			.map(|ptr| HGLOBAL(ptr))
+			.map(|ptr| HglobalGuard { handle: HGLOBAL(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -46,23 +42,6 @@ pub trait kernel_Hglobal: Handle {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(co::GMEM(flags)),
 		}
-	}
-
-	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn GlobalFree(&self) -> SysResult<()> {
-		let ret = match unsafe {
-			kernel::ffi::GlobalFree(self.as_ptr()).as_mut()
-		} {
-			None => Ok(()),
-			Some(_) => Err(GetLastError()),
-		};
-		invalidate_handle(self);
-		ret
 	}
 
 	/// [`GlobalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
@@ -89,10 +68,6 @@ pub trait kernel_Hglobal: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HGLOBAL::GlobalFree`](crate::prelude::kernel_Hglobal::GlobalFree)
-	/// call.
 	#[must_use]
 	fn GlobalReAlloc(&self,
 		num_bytes: usize, flags: co::GMEM) -> SysResult<()>
@@ -120,4 +95,14 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalUnlock(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::GlobalUnlock(self.as_ptr()) })
 	}
+}
+
+//------------------------------------------------------------------------------
+
+handle_guard! { HglobalGuard, HGLOBAL, "kernel";
+	kernel::ffi::GlobalFree;
+	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
+	/// calls
+	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
+	/// when the object goes out of scope.
 }

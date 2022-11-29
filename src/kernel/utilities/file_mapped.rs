@@ -1,7 +1,8 @@
 use crate::co;
 use crate::kernel::decl::{File, FileAccess, HFILEMAP, HFILEMAPVIEW, SysResult};
+use crate::kernel::guard::{HandleGuard, HfilemapviewGuard};
 use crate::prelude::{
-	Handle, HandleClose, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
+	Handle, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
 };
 
 /// Manages an [`HFILEMAP`](crate::HFILEMAP) handle, which provides
@@ -25,16 +26,9 @@ use crate::prelude::{
 pub struct FileMapped {
 	access: FileAccess,
 	file: File,
-	hmap: HFILEMAP,
-	hview: HFILEMAPVIEW,
+	hmap: HandleGuard<HFILEMAP>,
+	hview: HfilemapviewGuard,
 	size: usize,
-}
-
-impl Drop for FileMapped {
-	fn drop(&mut self) {
-		if self.hview != HFILEMAPVIEW::NULL { self.hview.UnmapViewOfFile().ok(); } // ignore errors
-		if self.hmap != HFILEMAP::NULL { self.hmap.CloseHandle().ok(); }
-	}
 }
 
 impl FileMapped {
@@ -43,22 +37,19 @@ impl FileMapped {
 	pub fn open(
 		file_path: &str, access: FileAccess) -> SysResult<FileMapped>
 	{
-		let mut new_self = Self {
-			access,
-			file: File::open(file_path, access)?,
-			hmap: HFILEMAP::NULL,
-			hview: HFILEMAPVIEW::NULL,
-			size: 0,
-		};
-
-		new_self.map_in_memory()?;
-		Ok(new_self)
+		let file = File::open(file_path, access)?;
+		let (hmap, hview) = Self::map_in_memory(&file, access)?;
+		let size = file.hfile().GetFileSizeEx()?; // cache
+		Ok(Self { access, file, hmap, hview, size })
 	}
 
-	fn map_in_memory(&mut self) -> SysResult<()> {
-		self.hmap = self.file.hfile().CreateFileMapping(
+	#[must_use]
+	fn map_in_memory(file: &File, access: FileAccess)
+		-> SysResult<(HandleGuard<HFILEMAP>, HfilemapviewGuard)>
+	{
+		let hmap = file.hfile().CreateFileMapping(
 			None,
-			match self.access {
+			match access {
 				FileAccess::ExistingReadOnly => co::PAGE::READONLY,
 				FileAccess::ExistingRW
 					| FileAccess::OpenOrCreateRW => co::PAGE::READWRITE,
@@ -67,8 +58,8 @@ impl FileMapped {
 			None,
 		)?;
 
-		self.hview = self.hmap.MapViewOfFile(
-			match self.access {
+		let hview = hmap.MapViewOfFile(
+			match access {
 				FileAccess::ExistingReadOnly => co::FILE_MAP::READ,
 				FileAccess::ExistingRW
 					| FileAccess::OpenOrCreateRW => co::FILE_MAP::READ | co::FILE_MAP::WRITE,
@@ -77,8 +68,7 @@ impl FileMapped {
 			None,
 		)?;
 
-		self.size = self.file.hfile().GetFileSizeEx()?; // cache
-		Ok(())
+		Ok((hmap, hview))
 	}
 
 	/// Returns a mutable slice to the mapped memory.
@@ -88,6 +78,7 @@ impl FileMapped {
 	}
 
 	/// Returns a slice to the mapped memory.
+	#[must_use]
 	pub fn as_slice(&self) -> &[u8] {
 		self.hview.as_slice(self.size)
 	}
@@ -99,12 +90,15 @@ impl FileMapped {
 	/// * [`as_mut_slice`](crate::FileMapped::as_mut_slice);
 	/// * [`as_slice`](crate::FileMapped::as_slice).
 	pub fn resize(&mut self, num_bytes: usize) -> SysResult<()> {
-		self.hview.UnmapViewOfFile()?;
-		self.hmap.CloseHandle()?;
+		self.hview = HfilemapviewGuard { handle: HFILEMAPVIEW::NULL }; // close mapping handles
+		self.hmap = HandleGuard { handle: HFILEMAP::NULL };
 
 		self.file.resize(num_bytes)?;
+		let (hmap, hview) = Self::map_in_memory(&self.file, self.access)?;
 
-		self.map_in_memory()?;
+		self.hmap = hmap;
+		self.hview = hview;
+		self.size = num_bytes;
 		Ok(())
 	}
 

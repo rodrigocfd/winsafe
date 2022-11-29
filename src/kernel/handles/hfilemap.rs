@@ -2,7 +2,8 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, HFILEMAPVIEW, SysResult};
-use crate::prelude::{Handle, HandleClose};
+use crate::kernel::guard::HfilemapviewGuard;
+use crate::prelude::{Handle};
 
 impl_handle! { HFILEMAP: "kernel";
 	/// Handle to a
@@ -13,7 +14,6 @@ impl_handle! { HFILEMAP: "kernel";
 	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 }
 
-impl HandleClose for HFILEMAP {}
 impl kernel_Hfilemap for HFILEMAP {}
 
 /// This trait is enabled with the `kernel` feature, and provides methods for
@@ -28,15 +28,11 @@ impl kernel_Hfilemap for HFILEMAP {}
 pub trait kernel_Hfilemap: Handle {
 	/// [`MapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HFILEMAPVIEW::UnmapViewOfFile`](crate::prelude::kernel_Hfilemapview::UnmapViewOfFile)
-	/// call.
 	#[must_use]
 	fn MapViewOfFile(&self,
 		desired_access: co::FILE_MAP,
 		offset: u64,
-		number_of_bytes_to_map: Option<usize>) -> SysResult<HFILEMAPVIEW>
+		number_of_bytes_to_map: Option<usize>) -> SysResult<HfilemapviewGuard>
 	{
 		unsafe {
 			kernel::ffi::MapViewOfFileFromApp(
@@ -45,7 +41,7 @@ pub trait kernel_Hfilemap: Handle {
 				offset,
 				number_of_bytes_to_map.unwrap_or_default(),
 			).as_mut()
-		}.map(|ptr| HFILEMAPVIEW(ptr))
+		}.map(|ptr| HfilemapviewGuard { handle: HFILEMAPVIEW(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 }

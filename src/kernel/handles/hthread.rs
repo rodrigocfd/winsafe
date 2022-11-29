@@ -4,8 +4,9 @@ use crate::{co, kernel};
 use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, SysResult,
 };
+use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{Handle, HandleClose};
+use crate::prelude::Handle;
 
 impl_handle! { HTHREAD: "kernel";
 	/// Handle to a
@@ -13,7 +14,6 @@ impl_handle! { HTHREAD: "kernel";
 	/// Originally just a `HANDLE`.
 }
 
-impl HandleClose for HTHREAD {}
 impl kernel_Hthread for HTHREAD {}
 
 /// This trait is enabled with the `kernel` feature, and provides methods for
@@ -29,17 +29,14 @@ pub trait kernel_Hthread: Handle {
 	/// [`CreateThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 	/// static method.
 	///
-	/// Returns the thread handle and ID.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HTHREAD::CloseHandle`](crate::prelude::HandleClose::CloseHandle) call.
+	/// Returns the thread handle and its ID.
 	#[must_use]
 	fn CreateThread(
 		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		stack_size: usize,
 		start_addr: *mut std::ffi::c_void,
 		parameter: *mut std::ffi::c_void,
-		flags: co::THREAD_CREATE) -> SysResult<(HTHREAD, u32)>
+		flags: co::THREAD_CREATE) -> SysResult<(HandleGuard<HTHREAD>, u32)>
 	{
 		let mut thread_id = u32::default();
 		unsafe {
@@ -51,7 +48,7 @@ pub trait kernel_Hthread: Handle {
 				flags.0,
 				&mut thread_id,
 			).as_mut()
-		}.map(|ptr| (HTHREAD(ptr), thread_id))
+		}.map(|ptr| (HandleGuard { handle: HTHREAD(ptr) }, thread_id))
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -130,13 +127,10 @@ pub trait kernel_Hthread: Handle {
 
 	/// [`OpenThreadToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
-	/// call.
 	#[must_use]
 	fn OpenThreadToken(&self,
-		desired_access: co::TOKEN, open_as_self: bool) -> SysResult<HACCESSTOKEN>
+		desired_access: co::TOKEN,
+		open_as_self: bool) -> SysResult<HandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		bool_to_sysresult(
@@ -148,6 +142,6 @@ pub trait kernel_Hthread: Handle {
 					&mut handle.0,
 				)
 			},
-		).map(|_| handle)
+		).map(|_| HandleGuard { handle })
 	}
 }

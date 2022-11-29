@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::ops::Deref;
+
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
 use crate::kernel::decl::{FILETIME, SysResult, WString};
@@ -13,22 +15,9 @@ impl_handle! { HKEY: "advapi";
 	/// [predefined registry keys](https://learn.microsoft.com/en-us/windows/win32/sysinfo/predefined-keys),
 	/// like `HKEY::CURRENT_USER`, which are always open and ready to be used.
 	/// Usually, they are the starting point to open a registry key.
-	///
-	/// Automatically calls
-	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
-	/// when the object goes out of scope.
 }
 
 impl advapi_Hkey for HKEY {}
-
-impl Drop for HKEY {
-	fn drop(&mut self) {
-		let raw_val = unsafe { self.as_ptr() } as usize;
-		if raw_val < 0x8000_0000 || raw_val > 0x8000_0060 { // guard predefined keys
-			unsafe { advapi::ffi::RegCloseKey(self.as_ptr()); } // ignore errors
-		}
-	}
-}
 
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
@@ -241,9 +230,9 @@ pub trait advapi_Hkey: Handle {
 	/// ```
 	#[must_use]
 	fn RegOpenKeyEx(&self, sub_key: &str,
-		options: co::REG_OPTION, access_rights: co::KEY) -> SysResult<HKEY>
+		options: co::REG_OPTION, access_rights: co::KEY) -> SysResult<HkeyGuard>
 	{
-		let mut hKey = HKEY::NULL;
+		let mut hkey = HKEY::NULL;
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegOpenKeyExW(
@@ -251,11 +240,11 @@ pub trait advapi_Hkey: Handle {
 					WString::from_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
-					&mut hKey.0,
+					&mut hkey.0,
 				)
 			} as _,
 		) {
-			co::ERROR::SUCCESS => Ok(hKey),
+			co::ERROR::SUCCESS => Ok(HkeyGuard { hkey }),
 			err => Err(err),
 		}
 	}
@@ -501,6 +490,34 @@ pub trait advapi_Hkey: Handle {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`HKEY`](crate::HKEY) which automatically calls
+/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
+/// when the object goes out of scope.
+#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
+pub struct HkeyGuard {
+	pub(crate) hkey: HKEY,
+}
+
+impl Drop for HkeyGuard {
+	fn drop(&mut self) {
+		if let Some(h) = self.hkey.as_opt() {
+			if h.0 < HKEY::CLASSES_ROOT.0 || h.0 > HKEY::PERFORMANCE_NLSTEXT.0 { // guard predefined keys
+				unsafe { advapi::ffi::RegCloseKey(h.as_ptr()); } // ignore errors
+			}
+		}
+	}
+}
+
+impl Deref for HkeyGuard {
+	type Target = HKEY;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hkey
 	}
 }
 

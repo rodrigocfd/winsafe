@@ -319,6 +319,19 @@ pub mod co {
 	#[cfg(feature = "version")] pub use super::version::co::*;
 }
 
+pub mod guard {
+	//! RAII implementation for handles.
+	//!
+	//! Most handles require cleanup routines, but some handles require cleanup
+	//! routines only *under certain circumstances*, what makes it impossible to
+	//! universally implement these routines for the handle types.
+	//!
+	//! So, when a handle needs a cleanup routine, it is instead returned
+	//! wrapped into a guard.
+	#[cfg(feature = "advapi")] pub use super::advapi::guard::*;
+	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
+}
+
 #[cfg(any(feature = "comctl", feature = "gdi", feature = "shell", feature = "user"))]
 pub mod msg {
 	//! Parameters of

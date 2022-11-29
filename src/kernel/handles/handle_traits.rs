@@ -1,10 +1,9 @@
 #![allow(non_snake_case)]
 
 use std::{fmt, hash};
+use std::ops::Deref;
 
 use crate::kernel;
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 
 /// A native
 /// [handle](https://learn.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects),
@@ -88,28 +87,35 @@ pub trait Handle: Sized
 	}
 }
 
-/// A [`Handle`](crate::prelude::Handle) which can be closed. Note that only
-/// some handles can be directly closed, so not all handles implement this
-/// trait.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// ```
+//------------------------------------------------------------------------------
+
+/// RAII implementation for a [`Handle`](crate::prelude::Handle) which
+/// automatically calls
+/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
+/// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub trait HandleClose: Handle {
-	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn CloseHandle(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { kernel::ffi::CloseHandle(self.as_ptr()) },
-		);
-		invalidate_handle(self);
-		ret
+pub struct HandleGuard<T>
+	where T: Handle,
+{
+	pub(crate) handle: T,
+}
+
+impl<T> Drop for HandleGuard<T>
+	where T: Handle,
+{
+	fn drop(&mut self) {
+		if let Some(h) = self.handle.as_opt() {
+			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); } // ignore errors
+		}
+	}
+}
+
+impl<T> Deref for HandleGuard<T>
+	where T: Handle,
+{
+	type Target = T;
+
+	fn deref(&self) -> &Self::Target {
+		&self.handle
 	}
 }

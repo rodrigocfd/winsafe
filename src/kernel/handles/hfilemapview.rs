@@ -1,14 +1,15 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HFILEMAPVIEW: "kernel";
 	/// Address of a
 	/// [mapped view](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
 	/// Originally just an `LPVOID`.
+	///
+	/// Unless you need something specific, consider using the
+	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 }
 
 impl kernel_Hfilemapview for HFILEMAPVIEW {}
@@ -70,10 +71,6 @@ pub trait kernel_Hfilemapview: Handle {
 	/// let slice = view.as_slice(hfile.GetFileSizeEx()?);
 	/// let text = std::str::from_utf8(slice)?;
 	///
-	/// view.UnmapViewOfFile()?;
-	/// hmap.CloseHandle()?;
-	/// hfile.CloseHandle()?;
-	///
 	/// println!("{}", text);
 	/// # Ok::<_, Box<dyn std::error::Error>>(())
 	/// ```
@@ -81,18 +78,14 @@ pub trait kernel_Hfilemapview: Handle {
 	fn as_slice(&self, len: usize) -> &[u8] {
 		unsafe { std::slice::from_raw_parts(self.as_ptr() as _, len) }
 	}
+}
 
+//------------------------------------------------------------------------------
+
+handle_guard! { HfilemapviewGuard, HFILEMAPVIEW, "kernel";
+	kernel::ffi::UnmapViewOfFile;
+	/// RAII implementation for [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) which
+	/// automatically calls
 	/// [`UnmapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn UnmapViewOfFile(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { kernel::ffi::UnmapViewOfFile(self.as_ptr()) },
-		);
-		invalidate_handle(self);
-		ret
-	}
+	/// when the object goes out of scope.
 }

@@ -1,13 +1,16 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::ops::Deref;
+
 use crate::{co, kernel};
 use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, PROCESS_INFORMATION,
 	SECURITY_ATTRIBUTES, STARTUPINFO, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
+use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::{bool_to_sysresult, INFINITE, MAX_PATH};
-use crate::prelude::{Handle, HandleClose};
+use crate::prelude::Handle;
 
 impl_handle! { HPROCESS: "kernel";
 	/// Handle to a
@@ -15,7 +18,6 @@ impl_handle! { HPROCESS: "kernel";
 	/// Originally just a `HANDLE`.
 }
 
-impl HandleClose for HPROCESS {}
 impl kernel_Hprocess for HPROCESS {}
 
 /// This trait is enabled with the `kernel` feature, and provides methods for
@@ -30,13 +32,6 @@ impl kernel_Hprocess for HPROCESS {}
 pub trait kernel_Hprocess: Handle {
 	/// [`CreateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
 	/// static method.
-	///
-	/// **Note:** Process and thread handles are returned in the
-	/// [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION) struct, and they
-	/// must be paired with their respective
-	/// [`HPROCESS::CloseHandle`](crate::prelude::HandleClose::CloseHandle) and
-	/// [`HTHREAD::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
-	/// calls.
 	#[must_use]
 	fn CreateProcess(
 		application_name: Option<&str>,
@@ -47,7 +42,7 @@ pub trait kernel_Hprocess: Handle {
 		creation_flags: co::CREATE,
 		environment: Option<Vec<String>>,
 		current_dir: Option<&str>,
-		si: &mut STARTUPINFO) -> SysResult<PROCESS_INFORMATION>
+		si: &mut STARTUPINFO) -> SysResult<ProcessInformationGuard>
 	{
 		let mut buf_cmd_line = WString::from_opt_str(command_line);
 		let mut pi = PROCESS_INFORMATION::default();
@@ -68,7 +63,7 @@ pub trait kernel_Hprocess: Handle {
 					&mut pi as *mut _ as _,
 				)
 			},
-		).map(|_| pi)
+		).map(|_| ProcessInformationGuard { pi })
 	}
 
 	/// [`ExitProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
@@ -213,15 +208,11 @@ pub trait kernel_Hprocess: Handle {
 	/// This method will return
 	/// [`ERROR::INVALID_PARAMETER`](crate::co::ERROR::INVALID_PARAMETER) if you
 	/// try to open a system process.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HPROCESS::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
-	/// call.
 	#[must_use]
 	fn OpenProcess(
 		desired_access: co::PROCESS,
 		inherit_handle: bool,
-		process_id: u32) -> SysResult<HPROCESS>
+		process_id: u32) -> SysResult<HandleGuard<HPROCESS>>
 	{
 		unsafe {
 			kernel::ffi::OpenProcess(
@@ -229,19 +220,15 @@ pub trait kernel_Hprocess: Handle {
 				inherit_handle as _,
 				process_id,
 			).as_mut()
-		}.map(|ptr| HPROCESS(ptr))
+		}.map(|ptr| HandleGuard { handle: HPROCESS(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HACCESSTOKEN::CloseHandle`](crate::prelude::HandleClose::CloseHandle)
-	/// call.
 	#[must_use]
 	fn OpenProcessToken(&self,
-		desired_access: co::TOKEN) -> SysResult<HACCESSTOKEN>
+		desired_access: co::TOKEN) -> SysResult<HandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		bool_to_sysresult(
@@ -252,7 +239,7 @@ pub trait kernel_Hprocess: Handle {
 					&mut handle.0,
 				)
 			},
-		).map(|_| handle)
+		).map(|_| HandleGuard { handle })
 	}
 
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
@@ -292,5 +279,35 @@ pub trait kernel_Hprocess: Handle {
 			co::WAIT::FAILED => Err(GetLastError()),
 			wait => Ok(wait),
 		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
+/// which automatically calls
+/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
+/// on `hProcess` and `hThread` fields.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+pub struct ProcessInformationGuard {
+	pub(crate) pi: PROCESS_INFORMATION,
+}
+
+impl Drop for ProcessInformationGuard {
+	fn drop(&mut self) {
+		if let Some(h) = self.pi.hProcess.as_opt() {
+			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); } // ignore errors
+		}
+		if let Some(h) = self.pi.hThread.as_opt() {
+			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); }
+		}
+	}
+}
+
+impl Deref for ProcessInformationGuard {
+	type Target = PROCESS_INFORMATION;
+
+	fn deref(&self) -> &Self::Target {
+		&self.pi
 	}
 }
