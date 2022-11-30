@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::marker::PhantomData;
 use std::ops::Deref;
 
 use crate::{co, user};
@@ -992,10 +993,27 @@ pub trait user_Hwnd: Handle {
 	/// [`OpenClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openclipboard)
 	/// method.
 	///
-	/// **Note:** Must be paired with a
-	/// [`CloseClipboard`](crate::CloseClipboard) call.
-	fn OpenClipboard(&self) -> SysResult<()> {
+	/// Note that the guard returned by this method must be kept alive while you
+	/// work upon the clipboard. This is necessary because, when the guard goes
+	/// out of scope, it will automatically call
+	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard).
+	///
+	/// In the example below, the returned guard is kept alive:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::HWND;
+	///
+	/// let hwnd: HWND; // initialized somewhere
+	/// # let hwnd = HWND::NULL;
+	///
+	/// let _ = hwnd.OpenClipboard()?; // keep the returned guard alive
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn OpenClipboard(&self) -> SysResult<ClipboardGuard<'_>> {
 		bool_to_sysresult(unsafe { user::ffi::OpenClipboard(self.as_ptr()) })
+			.map(|_| ClipboardGuard { _hwnd: PhantomData })
 	}
 
 	/// [`PostMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
@@ -1460,6 +1478,22 @@ extern "system" fn enum_child_windows_proc<F>(
 {
 	let func = unsafe { &*(lparam as *const F) };
 	func(hwnd) as _
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for clipboard which automatically calls
+/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
+/// when the object goes out of scope.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+pub struct ClipboardGuard<'a> {
+	_hwnd: PhantomData<&'a ()>,
+}
+
+impl<'a> Drop for ClipboardGuard<'a> {
+	fn drop(&mut self) {
+		unsafe { user::ffi::CloseClipboard(); } // ignore errors
+	}
 }
 
 //------------------------------------------------------------------------------

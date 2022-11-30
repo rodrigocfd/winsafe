@@ -123,13 +123,6 @@ pub fn ClipCursor(rc: Option<&RECT>) -> SysResult<()> {
 	)
 }
 
-/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
-/// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub fn CloseClipboard() -> SysResult<()> {
-	bool_to_sysresult(unsafe { user::ffi::CloseClipboard() })
-}
-
 /// [`DispatchMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
 ///

@@ -117,6 +117,12 @@
 //! Since [`PostQuitMessage`](crate::PostQuitMessage) is a free function, it's
 //! simply at the root of the crate.
 //!
+//! Also note that some functions which require a cleanup routine – like
+//! [`BeginPaint`](crate::prelude::user_Hwnd::BeginPaint), for example – will
+//! return the resource wrapped in a [guard](crate::guard), which will perform
+//! the cleanup automatically. You'll never have to manually call
+//! [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
+//!
 //! # Native constants
 //!
 //! All native Win32 constants can be found in the [`co`](crate::co) module.
