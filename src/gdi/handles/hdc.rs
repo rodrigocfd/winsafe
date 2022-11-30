@@ -4,7 +4,7 @@ use crate::{co, gdi};
 use crate::gdi::decl::{BITMAPINFO, HFONT, HPEN, TEXTMETRIC};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
+use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
@@ -152,26 +152,11 @@ pub trait gdi_Hdc: Handle {
 
 	/// [`CreateCompatibleDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HDC::DeleteDC`](crate::prelude::gdi_Hdc::DeleteDC) call.
 	#[must_use]
-	fn CreateCompatibleDC(&self) -> SysResult<HDC> {
+	fn CreateCompatibleDC(&self) -> SysResult<HdcDeleteGuard> {
 		unsafe { gdi::ffi::CreateCompatibleDC(self.as_ptr()).as_mut() }
-			.map(|ptr| HDC(ptr))
+			.map(|ptr| HdcDeleteGuard { handle: HDC(ptr) })
 			.ok_or_else(|| GetLastError())
-	}
-
-	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn DeleteDC(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(unsafe { gdi::ffi::DeleteDC(self.as_ptr()) });
-		invalidate_handle(self);
-		ret
 	}
 
 	/// [`Ellipse`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
@@ -328,7 +313,6 @@ pub trait gdi_Hdc: Handle {
 	/// fo.write(&data_buf)?;
 	///
 	/// hdc_mem.SelectObjectBitmap(&hbmp_old)?;
-	/// hdc_mem.DeleteDC()?;
 	/// hbmp.DeleteObject()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -903,4 +887,13 @@ pub trait gdi_Hdc: Handle {
 	fn WidenPath(&self) -> SysResult<()>  {
 		bool_to_sysresult(unsafe { gdi::ffi::WidenPath(self.as_ptr()) })
 	}
+}
+
+//------------------------------------------------------------------------------
+
+handle_guard! { HdcDeleteGuard, HDC, "gdi";
+	gdi::ffi::DeleteDC;
+	/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
+	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
+	/// when the object goes out of scope.
 }

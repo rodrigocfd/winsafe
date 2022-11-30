@@ -159,7 +159,6 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SIZE {
 	}
 
 	clone_dc.SelectObjectFont(&prev_hfont).unwrap();
-	clone_dc.DeleteDC().unwrap();
 	bounds
 }
 

@@ -11,6 +11,10 @@ pub mod decl {
 	pub use super::hpen::HPEN;
 }
 
+pub mod guard {
+	pub use super::hdc::HdcDeleteGuard;
+}
+
 pub mod traits {
 	pub use super::hbitmap::gdi_Hbitmap;
 	pub use super::hbrush::gdi_Hbrush;
