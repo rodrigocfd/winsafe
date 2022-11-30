@@ -335,6 +335,7 @@ pub mod guard {
 	//! So, when a handle needs a cleanup routine, it is instead returned
 	//! wrapped into a guard.
 	#[cfg(feature = "advapi")] pub use super::advapi::guard::*;
+	#[cfg(feature = "comctl")] pub use super::comctl::guard::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
 	#[cfg(feature = "user")] pub use super::user::guard::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guard::*;

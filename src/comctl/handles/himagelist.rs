@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::marker::PhantomData;
+
 use crate::{co, comctl};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
@@ -73,19 +75,35 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_BeginDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_begindrag)
 	/// method.
 	///
-	/// **Note:** Must be paired with an
-	/// [`HIMAGELIST::EndDrag`](crate::prelude::comctl_Himagelist::EndDrag)
-	/// call.
-	fn BeginDrag(&self, track: u32, hotspot: POINT) -> SysResult<()> {
+	/// Note that the guard returned by this method must be kept alive while you
+	/// work on the drag. This is necessary because, when the guard goes out of
+	/// scope, it will automatically call
+	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag).
+	///
+	/// In the example below, the returned guard is kept alive:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HIMAGELIST, POINT};
+	///
+	/// let himgl: HIMAGELIST; // initialized somewhere
+	/// # let himgl = HIMAGELIST::NULL;
+	///
+	/// let _ = himgl.BeginDrag(0, POINT::new(0, 0))?; // keep the returned guard alive
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	fn BeginDrag(&self,
+		itrack: u32, hotspot: POINT) -> SysResult<HimagelistDragGuard<'_>>
+	{
 		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::ImageList_BeginDrag(
 					self.as_ptr(),
-					track as _,
+					itrack as _,
 					hotspot.x, hotspot.y,
 				)
 			},
-		)
+		).map(|_| HimagelistDragGuard { _himagelist: PhantomData })
 	}
 
 	/// [`ImageList_Create`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)
@@ -153,12 +171,6 @@ pub trait comctl_Himagelist: Handle {
 		)
 	}
 
-	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
-	/// static method.
-	fn EndDrag() {
-		unsafe { comctl::ffi::ImageList_EndDrag(); }
-	}
-
 	/// [`ImageList_GetIconSize`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
 	/// method.
 	#[must_use]
@@ -220,5 +232,21 @@ pub trait comctl_Himagelist: Handle {
 				comctl::ffi::ImageList_SetImageCount(self.as_ptr(), new_count)
 			},
 		)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for imagelist drag which automatically calls
+/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
+/// when the object goes out of scope.
+#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+pub struct HimagelistDragGuard<'a> {
+	_himagelist: PhantomData<&'a ()>,
+}
+
+impl<'a> Drop for HimagelistDragGuard<'a> {
+	fn drop(&mut self) {
+		unsafe { comctl::ffi::ImageList_EndDrag(); }
 	}
 }
