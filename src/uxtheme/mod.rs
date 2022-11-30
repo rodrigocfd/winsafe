@@ -10,6 +10,10 @@ pub mod decl {
 	pub use super::handles::decl::*;
 }
 
+pub mod guard {
+	pub use super::handles::guard::*;
+}
+
 pub mod traits {
 	pub use super::handles::traits::*;
 }

@@ -331,6 +331,7 @@ pub mod guard {
 	#[cfg(feature = "advapi")] pub use super::advapi::guard::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
 	#[cfg(feature = "user")] pub use super::user::guard::*;
+	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guard::*;
 }
 
 #[cfg(any(feature = "comctl", feature = "gdi", feature = "shell", feature = "user"))]

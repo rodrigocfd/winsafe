@@ -230,7 +230,5 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) {
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
 			RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom }).unwrap();
-
-		htheme.CloseThemeData().unwrap();
 	}
 }

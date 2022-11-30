@@ -1,7 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, uxtheme};
-use crate::kernel::privs::invalidate_handle;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
@@ -24,20 +23,6 @@ impl uxtheme_Htheme for HTHEME {}
 /// ```
 #[cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]
 pub trait uxtheme_Htheme: Handle {
-	/// [`CloseThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn CloseThemeData(&self) -> HrResult<()> {
-		let ret = ok_to_hrresult(
-			unsafe { uxtheme::ffi::CloseThemeData(self.as_ptr()) },
-		);
-		invalidate_handle(self);
-		ret
-	}
-
 	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// method.
 	fn DrawThemeBackground(&self,
@@ -176,4 +161,13 @@ pub trait uxtheme_Htheme: Handle {
 				self.as_ptr(), part_state.part, part_state.state) != 0
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+
+handle_guard! { HthemeGuard, HTHEME, "uxtheme";
+	uxtheme::ffi::CloseThemeData;
+	/// RAII implementation for [`HTHEME`](crate::HTHEME) which automatically calls
+	/// [`CloseThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)
+	/// when the object goes out of scope.
 }
