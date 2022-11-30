@@ -94,7 +94,6 @@ pub(in crate::gui) fn multiply_dpi(
 			let screen_dc = HWND::NULL.GetDC().unwrap();
 			DPI.x = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSX); // cache
 			DPI.y = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSY);
-			HWND::NULL.ReleaseDC(&screen_dc).unwrap();
 		}
 
 		if let Some(pt) = pt {
@@ -161,7 +160,6 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SIZE {
 
 	clone_dc.SelectObjectFont(&prev_hfont).unwrap();
 	clone_dc.DeleteDC().unwrap();
-	desktop_hwnd.ReleaseDC(&desktop_hdc).unwrap();
 	bounds
 }
 
@@ -235,6 +233,4 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) {
 
 		htheme.CloseThemeData().unwrap();
 	}
-
-	hwnd.ReleaseDC(&hdc).unwrap();
 }

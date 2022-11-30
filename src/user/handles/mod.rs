@@ -39,7 +39,7 @@ pub mod decl {
 }
 
 pub mod guard {
-	pub use super::hwnd::HdcPaintGuard;
+	pub use super::hwnd::{HdcPaintGuard, HdcReleaseGuard};
 }
 
 pub mod traits {

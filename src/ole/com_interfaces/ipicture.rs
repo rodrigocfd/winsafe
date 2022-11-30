@@ -85,8 +85,6 @@ pub trait ole_IPicture: ole_IUnknown {
 	///
 	/// let (_, height) = hdc.HiMetricToPixel(0, pic.get_Height()?);
 	/// println!("Height: {} px", height);
-	///
-	/// HWND::NULL.ReleaseDC(hdc)?;
 	/// # Ok::<_, Box<dyn std::error::Error>>(())
 	/// ```
 	#[must_use]
@@ -133,8 +131,6 @@ pub trait ole_IPicture: ole_IUnknown {
 	///
 	/// let (width, _) = hdc.HiMetricToPixel(pic.get_Width()?, 0);
 	/// println!("Width: {} px", width);
-	///
-	/// HWND::NULL.ReleaseDC(hdc)?;
 	/// # Ok::<_, Box<dyn std::error::Error>>(())
 	/// ```
 	#[must_use]

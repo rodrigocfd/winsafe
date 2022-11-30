@@ -97,6 +97,7 @@ pub trait user_Hwnd: Handle {
 	/// let _ = hwnd.BeginPaint()?; // keep the returned guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
+	#[must_use]
 	fn BeginPaint(&self) -> SysResult<HdcPaintGuard<'_, Self>> {
 		let mut ps = PAINTSTRUCT::default();
 		unsafe {
@@ -178,9 +179,9 @@ pub trait user_Hwnd: Handle {
 				style.0,
 				pos.x, pos.y,
 				size.cx, size.cy,
-				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				hmenu.as_ptr(),
-				hinstance.0,
+				hinstance.as_ptr(),
 				lparam.unwrap_or_default() as _,
 			).as_mut()
 				.map(|ptr| HWND(ptr))
@@ -300,7 +301,7 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			user::ffi::FindWindowExW(
 				self.as_ptr(),
-				hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.0),
+				hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				class_name.as_ptr(),
 				WString::from_opt_str(title).as_ptr(),
 			).as_mut()
@@ -405,13 +406,10 @@ pub trait user_Hwnd: Handle {
 	///
 	/// To get the device context of the desktop window, use the predefined
 	/// [`HWND::DESKTOP`](crate::prelude::user_Hwnd::DESKTOP).
-	///
-	/// **Note:** Must be paired with an
-	/// [`HWND::ReleaseDC`](crate::prelude::user_Hwnd::ReleaseDC) call.
 	#[must_use]
-	fn GetDC(&self) -> SysResult<HDC> {
+	fn GetDC(&self) -> SysResult<HdcReleaseGuard<'_, Self>> {
 		unsafe { user::ffi::GetDC(self.as_ptr()).as_mut() }
-			.map(|ptr| HDC(ptr))
+			.map(|ptr| HdcReleaseGuard { hwnd: self, hdc: HDC(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -502,7 +500,7 @@ pub trait user_Hwnd: Handle {
 			unsafe {
 				user::ffi::GetMenuItemRect(
 					self.as_ptr(),
-					hmenu.0,
+					hmenu.as_ptr(),
 					item_pos,
 					rc_item as *mut _ as _,
 				)
@@ -518,7 +516,7 @@ pub trait user_Hwnd: Handle {
 	{
 		unsafe {
 			user::ffi::GetNextDlgGroupItem(
-				self.as_ptr(), hwnd_ctrl.0, previous as _,
+				self.as_ptr(), hwnd_ctrl.as_ptr(), previous as _,
 			).as_mut()
 		}.map(|ptr| HWND(ptr))
 			.ok_or_else(|| GetLastError())
@@ -531,8 +529,11 @@ pub trait user_Hwnd: Handle {
 		hwnd_ctrl: &HWND, previous: bool) -> SysResult<HWND>
 	{
 		unsafe {
-			user::ffi::GetNextDlgTabItem(self.as_ptr(), hwnd_ctrl.0, previous as _)
-				.as_mut()
+			user::ffi::GetNextDlgTabItem(
+				self.as_ptr(),
+				hwnd_ctrl.as_ptr(),
+				previous as _,
+			).as_mut()
 		}.map(|ptr| HWND(ptr))
 			.ok_or_else(|| GetLastError())
 	}
@@ -605,7 +606,7 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetUpdateRgn(&self, hrgn: &HRGN, erase: bool) -> SysResult<co::REGION> {
 		match unsafe {
-			user::ffi::GetUpdateRgn(self.as_ptr(), hrgn.0, erase as _) }
+			user::ffi::GetUpdateRgn(self.as_ptr(), hrgn.as_ptr(), erase as _) }
 		{
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
@@ -623,13 +624,10 @@ pub trait user_Hwnd: Handle {
 
 	/// [`GetWindowDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HWND::ReleaseDC`](crate::prelude::user_Hwnd::ReleaseDC) call.
 	#[must_use]
-	fn GetWindowDC(&self) -> SysResult<HDC> {
+	fn GetWindowDC(&self) -> SysResult<HdcReleaseGuard<'_, Self>> {
 		unsafe { user::ffi::GetWindowDC(self.as_ptr()).as_mut() }
-			.map(|ptr| HDC(ptr))
+			.map(|ptr| HdcReleaseGuard { hwnd: self, hdc: HDC(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -695,7 +693,7 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetWindowRgn(&self, hrgn: &HRGN) -> SysResult<co::REGION> {
-		match unsafe { user::ffi::GetWindowRgn(self.as_ptr(), hrgn.0) } {
+		match unsafe { user::ffi::GetWindowRgn(self.as_ptr(), hrgn.as_ptr()) } {
 			0 => Err(GetLastError()),
 			ret => Ok(co::REGION(ret)),
 		}
@@ -789,7 +787,7 @@ pub trait user_Hwnd: Handle {
 	{
 		unsafe {
 			user::ffi::HiliteMenuItem(
-				self.as_ptr(), hmenu.0, id_or_pos.id_or_pos_u32(), hilite.0,
+				self.as_ptr(), hmenu.as_ptr(), id_or_pos.id_or_pos_u32(), hilite.0,
 			) != 0
 		}
 	}
@@ -826,14 +824,18 @@ pub trait user_Hwnd: Handle {
 	/// [`InvalidateRgn`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidatergn)
 	/// method.
 	fn InvalidateRgn(&self, hrgn: &HRGN, erase: bool) {
-		unsafe { user::ffi::InvalidateRgn(self.as_ptr(), hrgn.0, erase as _); }
+		unsafe {
+			user::ffi::InvalidateRgn(self.as_ptr(), hrgn.as_ptr(), erase as _);
+		}
 	}
 
 	/// [`IsChild`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ischild)
 	/// method.
 	#[must_use]
 	fn IsChild(&self, hwnd_possible_child: &HWND) -> bool {
-		unsafe { user::ffi::IsChild(self.as_ptr(), hwnd_possible_child.0) != 0 }
+		unsafe {
+			user::ffi::IsChild(self.as_ptr(), hwnd_possible_child.as_ptr()) != 0
+		}
 	}
 
 	/// [`IsDialogMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isdialogmessagew)
@@ -1054,25 +1056,11 @@ pub trait user_Hwnd: Handle {
 				user::ffi::RedrawWindow(
 					self.as_ptr(),
 					rc_update as *const _ as _,
-					hrgn_update.0,
+					hrgn_update.as_ptr(),
 					flags.0,
 				)
 			},
 		)
-	}
-
-	/// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
-	/// method.
-	///
-	/// After calling this method, the `hdc` handle will be invalidated and
-	/// further operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn ReleaseDC(&self, hdc: &HDC) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { user::ffi::ReleaseDC(self.as_ptr(), hdc.0) },
-		);
-		invalidate_handle(hdc);
-		ret
 	}
 
 	/// [`ScreenToClient`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient)
@@ -1212,14 +1200,16 @@ pub trait user_Hwnd: Handle {
 	/// [`SetMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenu)
 	/// method.
 	fn SetMenu(&self, hmenu: &HMENU) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::SetMenu(self.as_ptr(), hmenu.0) })
+		bool_to_sysresult(
+			unsafe { user::ffi::SetMenu(self.as_ptr(), hmenu.as_ptr()) },
+		)
 	}
 
 	/// [`SetParent`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setparent)
 	/// method.
 	fn SetParent(&self, hwnd_new_parent: &HWND) -> SysResult<Option<HWND>> {
 		match unsafe {
-			user::ffi::SetParent(self.as_ptr(), hwnd_new_parent.0).as_mut()
+			user::ffi::SetParent(self.as_ptr(), hwnd_new_parent.as_ptr()).as_mut()
 		} {
 			Some(ptr) => Ok(Some(HWND(ptr))),
 			None => match GetLastError() {
@@ -1348,7 +1338,9 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	fn SetWindowRgn(&self, hrgn: &HRGN, redraw: bool) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::SetWindowRgn(self.as_ptr(), hrgn.0, redraw as _) },
+			unsafe {
+				user::ffi::SetWindowRgn(self.as_ptr(), hrgn.as_ptr(), redraw as _)
+			},
 		)
 	}
 
@@ -1393,7 +1385,7 @@ pub trait user_Hwnd: Handle {
 		match unsafe {
 			user::ffi::TranslateAcceleratorW(
 				self.as_ptr(),
-				haccel_table.0,
+				haccel_table.as_ptr(),
 				msg as *mut _ as _,
 			)
 		} {
@@ -1422,7 +1414,7 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	fn ValidateRgn(&self, hrgn: &HRGN) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::ValidateRgn(self.as_ptr(), hrgn.0) },
+			unsafe { user::ffi::ValidateRgn(self.as_ptr(), hrgn.as_ptr()) },
 		)
 	}
 
@@ -1516,5 +1508,36 @@ impl<'a, T> HdcPaintGuard<'a, T>
 	#[must_use]
 	pub const fn paintstruct(&self) -> &PAINTSTRUCT {
 		&self.ps
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
+/// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
+/// when the object goes out of scope.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+pub struct HdcReleaseGuard<'a, T>
+	where T: user_Hwnd,
+{
+	pub(crate) hwnd: &'a T,
+	pub(crate) hdc: HDC,
+}
+
+impl<'a, T> Drop for HdcReleaseGuard<'a, T>
+	where T: user_Hwnd,
+{
+	fn drop(&mut self) {
+		unsafe { user::ffi::ReleaseDC(self.hwnd.as_ptr(), self.hdc.as_ptr()); } // ignore errors
+	}
+}
+
+impl<'a, T> Deref for HdcReleaseGuard<'a, T>
+	where T: user_Hwnd,
+{
+	type Target = HDC;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hdc
 	}
 }

@@ -330,7 +330,6 @@ pub trait gdi_Hdc: Handle {
 	/// hdc_mem.SelectObjectBitmap(&hbmp_old)?;
 	/// hdc_mem.DeleteDC()?;
 	/// hbmp.DeleteObject()?;
-	/// w::HWND::DESKTOP.ReleaseDC(&hdc_screen)?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	unsafe fn GetDIBits(&self,

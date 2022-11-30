@@ -34,8 +34,6 @@ pub trait gdi_ole_IPicture: ole_IPicture {
 					.map_err(|e| e.to_hresult())?;
 				let (cx, cy) = screen_dc.HiMetricToPixel(
 					self.get_Width()?, self.get_Height()?);
-				HWND::NULL.ReleaseDC(&screen_dc)
-					.map_err(|e| e.to_hresult())?;
 				(cx, cy)
 			},
 		};
