@@ -38,6 +38,10 @@ pub mod decl {
 	}
 }
 
+pub mod guard {
+	pub use super::hwnd::HdcPaintGuard;
+}
+
 pub mod traits {
 	pub use super::haccel::user_Haccel;
 	pub use super::hcursor::user_Hcursor;

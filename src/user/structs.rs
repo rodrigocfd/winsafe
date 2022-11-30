@@ -650,14 +650,18 @@ impl<'a> NCCALCSIZE_PARAMS<'a> {
 #[repr(C)]
 pub struct PAINTSTRUCT {
 	pub hdc: HDC,
-	pub fErase: u32,
+	fErase: BOOL,
 	pub rcPaint: RECT,
-	fRestore: u32,
-	fIncUpdate: u32,
+	fRestore: BOOL,
+	fIncUpdate: BOOL,
 	rgbReserved: [u8; 32],
 }
 
 impl_default!(PAINTSTRUCT);
+
+impl PAINTSTRUCT {
+	pub_fn_bool_get_set!(fErase, set_fErase);
+}
 
 /// [`POINT`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point)
 /// struct.

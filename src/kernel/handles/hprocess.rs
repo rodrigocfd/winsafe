@@ -287,7 +287,7 @@ pub trait kernel_Hprocess: Handle {
 /// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
 /// which automatically calls
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
-/// on `hProcess` and `hThread` fields.
+/// on `hProcess` and `hThread` fields when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct ProcessInformationGuard {
 	pub(crate) pi: PROCESS_INFORMATION,

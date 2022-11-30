@@ -611,7 +611,7 @@ pub trait GuiEvents {
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult, PAINTSTRUCT};
+		/// use winsafe::{gui, AnyResult};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -619,10 +619,10 @@ pub trait GuiEvents {
 		/// wnd.on().wm_paint({
 		///     let wnd = wnd.clone(); // to pass into the closure
 		///     move || -> AnyResult<()> {
-		///         let mut ps = PAINTSTRUCT::default();
-		///         let hdc = wnd.hwnd().BeginPaint(&mut ps)?;
+		///         let hdc = wnd.hwnd().BeginPaint()?;
 		///
-		///         wnd.hwnd().EndPaint(&ps);
+		///         // hdc painting...
+		///
 		///         Ok(())
 		///     }
 		/// });

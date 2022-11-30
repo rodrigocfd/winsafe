@@ -19,6 +19,10 @@ pub mod decl {
 	pub use super::structs::*;
 }
 
+pub mod guard {
+	pub use super::handles::guard::*;
+}
+
 pub mod traits {
 	pub use super::handles::traits::*;
 	pub use super::msg_traits::*;

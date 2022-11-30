@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::ops::Deref;
+
 use crate::{co, user};
 use crate::kernel::decl::{
 	GetLastError, HINSTANCE, SetLastError, SysResult, WString,
@@ -58,31 +60,50 @@ pub trait user_Hwnd: Handle {
 	/// [`BeginPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
 	/// method.
 	///
-	/// **Note:** Must be paired with an
-	/// [`HWND::EndPaint`](crate::prelude::user_Hwnd::EndPaint) call.
-	///
 	/// # Examples
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{HWND, PAINTSTRUCT};
+	/// use winsafe::HWND;
 	///
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
-	/// let mut ps = PAINTSTRUCT::default();
-	/// let hdc = hwnd.BeginPaint(&mut ps)?;
+	/// let hdc = hwnd.BeginPaint()?;
+	///
+	/// println!("Erase background? {}", hdc.paintstruct().fErase());
+	/// println!("Painting area: {}", hdc.paintstruct().rcPaint);
 	///
 	/// // hdc painting...
-	///
-	/// hwnd.EndPaint(&ps);
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn BeginPaint(&self, ps: &mut PAINTSTRUCT) -> SysResult<HDC> {
+	///
+	/// Note that the [`HDC`](crate::HDC) guard returned by this method must be
+	/// kept alive while the painting is made, even if you won't use it
+	/// directly. This is necessary because, when the guard goes out of scope,
+	/// it will automatically call
+	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
+	///
+	/// In the example below, the `HDC` is not used, but the returned guard is
+	/// kept alive:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::HWND;
+	///
+	/// let hwnd: HWND; // initialized somewhere
+	/// # let hwnd = HWND::NULL;
+	///
+	/// let _ = hwnd.BeginPaint()?; // keep the returned guard alive
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	fn BeginPaint(&self) -> SysResult<HdcPaintGuard<'_, Self>> {
+		let mut ps = PAINTSTRUCT::default();
 		unsafe {
-			user::ffi::BeginPaint(self.as_ptr(), ps as *mut _ as _).as_mut()
-		}.map(|ptr| HDC(ptr))
-			.ok_or_else(|| GetLastError())
+			user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _).as_mut()
+		}.map(|ptr| {
+			HdcPaintGuard { hwnd: self, hdc: HDC(ptr), ps }
+		}).ok_or_else(|| GetLastError())
 	}
 
 	/// [`BringWindowToTop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-bringwindowtotop)
@@ -221,12 +242,6 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	fn EndDialog(&self, result: isize) -> SysResult<()> {
 		bool_to_sysresult(unsafe { user::ffi::EndDialog(self.as_ptr(), result) })
-	}
-
-	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
-	/// method.
-	fn EndPaint(&self, ps: &PAINTSTRUCT) {
-		unsafe { user::ffi::EndPaint(self.as_ptr(), ps as *const _ as _); }
 	}
 
 	/// [`EnumChildWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumchildwindows)
@@ -1453,4 +1468,53 @@ extern "system" fn enum_child_windows_proc<F>(
 {
 	let func = unsafe { &*(lparam as *const F) };
 	func(hwnd) as _
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
+/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
+/// when the object goes out of scope.
+///
+/// The [`PAINTSTRUCT`](crate::PAINTSTRUCT) object is stored internally, and can
+/// be accessed through the
+/// [`paintstruct`](crate::guard::HdcPaintGuard::paintstruct) method.
+#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
+pub struct HdcPaintGuard<'a, T>
+	where T: user_Hwnd,
+{
+	pub(crate) hwnd: &'a T,
+	pub(crate) hdc: HDC,
+	pub(crate) ps: PAINTSTRUCT,
+}
+
+impl<'a, T> Drop for HdcPaintGuard<'a, T>
+	where T: user_Hwnd,
+{
+	fn drop(&mut self) {
+		unsafe {
+			user::ffi::EndPaint(self.hwnd.as_ptr(), &self.ps as *const _ as _);
+		}
+	}
+}
+
+impl<'a, T> Deref for HdcPaintGuard<'a, T>
+	where T: user_Hwnd,
+{
+	type Target = HDC;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hdc
+	}
+}
+
+impl<'a, T> HdcPaintGuard<'a, T>
+	where T: user_Hwnd,
+{
+	/// Returns a reference to the internal [`PAINTSTRUCT`](crate::PAINTSTRUCT)
+	/// object.
+	#[must_use]
+	pub const fn paintstruct(&self) -> &PAINTSTRUCT {
+		&self.ps
+	}
 }
