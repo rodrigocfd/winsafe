@@ -152,7 +152,5 @@ impl LayoutArranger {
 				uflags,
 			).unwrap();
 		}
-
-		hdwp.EndDeferWindowPos().unwrap();
 	}
 }

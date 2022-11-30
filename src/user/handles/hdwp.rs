@@ -2,7 +2,6 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -25,14 +24,10 @@ impl user_Hdwp for HDWP {}
 pub trait user_Hdwp: Handle {
 	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HDWP::EndDeferWindowPos`](crate::prelude::user_Hdwp::EndDeferWindowPos)
-	/// call.
 	#[must_use]
-	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<HDWP> {
+	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<HdwpGuard> {
 		unsafe { user::ffi::BeginDeferWindowPos(num_windows as _).as_mut() }
-			.map(|ptr| HDWP(ptr))
+			.map(|ptr| HdwpGuard { handle: HDWP(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -56,18 +51,13 @@ pub trait user_Hdwp: Handle {
 		}.map(|ptr| HDWP(ptr))
 			.ok_or_else(|| GetLastError())
 	}
+}
 
+//------------------------------------------------------------------------------
+
+handle_guard! { HdwpGuard, HDWP, "user";
+	user::ffi::EndDeferWindowPos;
+	/// RAII implementation for [`HDWP`](crate::HDWP) which automatically calls
 	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn EndDeferWindowPos(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { user::ffi::EndDeferWindowPos(self.as_ptr()) },
-		);
-		invalidate_handle(self);
-		ret
-	}
+	/// when the object goes out of scope.
 }

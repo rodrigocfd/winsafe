@@ -39,6 +39,7 @@ pub mod decl {
 }
 
 pub mod guard {
+	pub use super::hdwp::HdwpGuard;
 	pub use super::hwnd::{ClipboardGuard, HdcPaintGuard, HdcReleaseGuard};
 }
 
