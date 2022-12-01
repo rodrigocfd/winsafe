@@ -418,12 +418,10 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_init_dialog({
-		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move |p: msg::wm::InitDialog| -> AnyResult<bool> {
-		///         println!("Focused HWND: {}", p.hwnd_focus);
-		///         Ok(true)
-		///     }
+		/// let wnd = wnd.clone(); // to pass into the closure
+		/// wnd.on().wm_init_dialog(move |p: msg::wm::InitDialog| -> AnyResult<bool> {
+		///     println!("Focused HWND: {}", p.hwnd_focus);
+		///     Ok(true)
 		/// });
 		/// ```
 	}
@@ -461,12 +459,10 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_l_button_dbl_clk({
-		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move |p: msg::wm::LButtonDblClk| -> AnyResult<()> {
-		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
-		///         Ok(())
-		///     }
+		/// let wnd = wnd.clone(); // to pass into the closure
+		/// wnd.on().wm_l_button_dbl_clk(move |p: msg::wm::LButtonDblClk| -> AnyResult<()> {
+		///     println!("Point: {}x{}", p.coords.x, p.coords.y);
+		///     Ok(())
 		/// });
 		/// ```
 	}
@@ -484,12 +480,10 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_l_button_down({
-		///     let wnd = wnd.clone(); // to pass into the closure
-		///     move |p: msg::wm::LButtonDown| -> AnyResult<()> {
-		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
-		///         Ok(())
-		///     }
+		/// let wnd = wnd.clone(); // to pass into the closure
+		/// wnd.on().wm_l_button_down(move |p: msg::wm::LButtonDown| -> AnyResult<()> {
+		///     println!("Point: {}x{}", p.coords.x, p.coords.y);
+		///     Ok(())
 		/// });
 		/// ```
 	}

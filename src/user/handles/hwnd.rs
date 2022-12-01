@@ -96,6 +96,8 @@ pub trait user_Hwnd: Handle {
 	/// # let hwnd = HWND::NULL;
 	///
 	/// let _ = hwnd.BeginPaint()?; // keep the returned guard alive
+	///
+	/// // hdc painting...
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]

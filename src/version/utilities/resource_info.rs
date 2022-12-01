@@ -3,7 +3,7 @@ use crate::kernel::decl::{LANGID, SysResult, WString};
 use crate::version::decl::{GetFileVersionInfo, VarQueryValue, VS_FIXEDFILEINFO};
 
 /// Retrieves data from an embedded resource, which can be read from an
-/// executable file or a DLL.
+/// EXE or a DLL file.
 ///
 /// # Examples
 ///

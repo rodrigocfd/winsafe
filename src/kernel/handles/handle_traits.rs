@@ -56,20 +56,15 @@ pub trait Handle: Sized
 	///
 	/// # Safety
 	///
-	/// When a handle is closed (with methods like
-	/// [`CloseHandle`](crate::prelude::HandleClose::CloseHandle)), its internal
-	/// pointer is invalidated, so no further operations can be done. This
-	/// safety measure is necessary because Windows can reuse handle values, so
-	/// invalidating the pointer prevents this.
+	/// As the name implies, `raw_copy` returns a raw copy of the handle, so
+	/// closing one of the copies won't close the others. This means a handle
+	/// can be used after it has been closed, what can lead to errors and
+	/// undefined behavior. Even worse: sometimes Windows reuses handle values,
+	/// so you can call a method on a completely different handle type, what can
+	/// be catastrophic.
 	///
-	/// As the name implies, `raw_copy` returns a raw copy of the pointer value,
-	/// so closing one handle will **not** invalidate the other copies – if the
-	/// underlying handle value is reused by Windows, you can execute an
-	/// operation on a completely different handle, what can be catastrophic.
-	/// So after closing a handle, be sure to not use its copies anymore.
-	///
-	/// This method is necessary because in some cases the Windows API *demands*
-	/// a copy of a handle – `raw_copy` is an escape hatch to fill this gap.
+	/// However, in some cases the Windows API *demands* a copy of the handle –
+	/// `raw_copy` is an escape hatch to fill this gap.
 	#[must_use]
 	unsafe fn raw_copy(&self) -> Self {
 		Self::from_ptr(self.as_ptr())

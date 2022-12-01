@@ -125,12 +125,10 @@ impl MyWindow {
     }
 
     fn events(&self) {
-        self.btn_hello.on().bn_clicked({
-            let wnd = self.wnd.clone(); // clone so it can be passed into the closure
-            move || {
-                wnd.hwnd().SetWindowText("Hello, world!")?;
-                Ok(())
-            }
+        let wnd = self.wnd.clone(); // clone so it can be passed into the closure
+        self.btn_hello.on().bn_clicked(move || {
+            wnd.hwnd().SetWindowText("Hello, world!")?;
+            Ok(())
         });
     }
 }

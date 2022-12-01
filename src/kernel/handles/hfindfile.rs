@@ -25,11 +25,10 @@ impl kernel_Hfindfile for HFINDFILE {}
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hfindfile: Handle {
 	/// Returns an iterator over the found items, by calling
-	/// [`HFINDFILE::FindFirstFile`](crate::prelude::kernel_Hfindfile::FindFirstFile),
-	/// then subsequent
-	/// [`HFINDFILE::FindNextFile`](crate::prelude::kernel_Hfindfile::FindNextFile),
-	/// and finally freeing the resource by calling
-	/// [`HFINDFILE::FindClose`](crate::prelude::kernel_Hfindfile::FindClose).
+	/// [`HFINDFILE::FindFirstFile`](crate::prelude::kernel_Hfindfile::FindFirstFile)
+	/// and
+	/// [`HFINDFILE::FindNextFile`](crate::prelude::kernel_Hfindfile::FindNextFile).
+	/// The handle is automatically closed.
 	///
 	/// # Examples
 	///
