@@ -6,8 +6,9 @@
 //! [`&str`](https://doc.rust-lang.org/std/primitive.str.html) instead of
 //! [`&OsStr`](https://doc.rust-lang.org/std/ffi/struct.OsStr.html).
 
-use crate::kernel::decl::{HINSTANCE, SysResult};
-use crate::prelude::{Handle, kernel_Hinstance};
+use crate::co;
+use crate::kernel::decl::{GetFileAttributes, HINSTANCE, SysResult};
+use crate::prelude::{Handle, kernel_Hinstance, NativeBitflag};
 
 /// Returns the path of the current EXE file, without the EXE filename, and
 /// without a trailing backslash.
@@ -42,11 +43,11 @@ pub fn exe_path() -> SysResult<String> {
 	)
 }
 
-/// Returns an iterator over each part of the path.
+/// Returns true if the path exists.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn iter(full_path: &str) -> impl Iterator<Item = &str> {
-	PathIterator { path: full_path }
+pub fn exists(full_path: &str) -> bool {
+	GetFileAttributes(full_path).is_ok()
 }
 
 /// Extracts the file name from a full path, if any.
@@ -113,6 +114,40 @@ pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 			full_path_u.ends_with(&ext_u)
 		})
 		.is_some()
+}
+
+/// Returns true if the path is a directory.
+///
+/// # Panics
+///
+/// Panics if the path does not exist.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
+pub fn is_directory(full_path: &str) -> bool {
+	let flags = GetFileAttributes(full_path).unwrap();
+	flags.has(co::FILE_ATTRIBUTE::DIRECTORY)
+}
+
+/// Returns true if the path is hidden.
+///
+/// # Panics
+///
+/// Panics if the path does not exist.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
+pub fn is_hidden(full_path: &str) -> bool {
+	let flags = GetFileAttributes(full_path).unwrap();
+	flags.has(co::FILE_ATTRIBUTE::HIDDEN)
+}
+
+/// Returns an iterator over each part of the path.
+///
+/// To iterate over files within a directory, see
+/// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
+pub fn iter(full_path: &str) -> impl Iterator<Item = &str> {
+	PathIterator { path: full_path }
 }
 
 /// Replaces the extension by the given one.
