@@ -161,9 +161,32 @@ pub trait kernel_Hfile: Handle {
 	/// [`LockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// method.
 	///
-	/// **Note:** Must be paired with an
-	/// [`HFILE::UnlockFile`](crate::prelude::kernel_Hfile::UnlockFile) call.
-	fn LockFile(&self, offset: u64, num_bytes_to_lock: u64) -> SysResult<()> {
+	/// Note that the guard returned by this method must be kept alive while the
+	/// lock is used. This is necessary because, when the guard goes out of
+	/// scope, it will automatically call
+	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile).
+	///
+	/// In the example below, the guard is kept alive:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::HFILE;
+	///
+	/// let hfile: HFILE; // initialized somewhere
+	/// # let hfile = HFILE::NULL;
+	///
+	/// let total_size = hfile.GetFileSizeEx()?;
+	///
+	/// let _ = hfile.LockFile(0, total_size as _)?; // keep the returned guard alive
+	///
+	/// // file read/write operations...
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn LockFile(&self,
+		offset: u64,
+		num_bytes_to_lock: u64) -> SysResult<HfileLockGuard<'_, Self>>
+	{
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::LockFile(
@@ -174,7 +197,7 @@ pub trait kernel_Hfile: Handle {
 					HIDWORD(num_bytes_to_lock),
 				)
 			},
-		)
+		).map(|_| HfileLockGuard { hfile: self, offset, num_bytes_to_lock })
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
@@ -225,24 +248,6 @@ pub trait kernel_Hfile: Handle {
 		).map(|_| new_offset)
 	}
 
-	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
-	/// method.
-	fn UnlockFile(&self,
-		offset: u64, num_bytes_to_lock: u64) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::UnlockFile(
-					self.as_ptr(),
-					LODWORD(offset),
-					HIDWORD(offset),
-					LODWORD(num_bytes_to_lock),
-					HIDWORD(num_bytes_to_lock),
-				)
-			},
-		)
-	}
-
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// method.
 	///
@@ -263,5 +268,36 @@ pub trait kernel_Hfile: Handle {
 				)
 			},
 		).map(|_| bytes_written)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically
+/// calls
+/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
+/// when the object goes out of scope.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+pub struct HfileLockGuard<'a, T>
+	where T: kernel_Hfile,
+{
+	pub(crate) hfile: &'a T,
+	pub(crate) offset: u64,
+	pub(crate) num_bytes_to_lock: u64,
+}
+
+impl<'a, T> Drop for HfileLockGuard<'a, T>
+	where T: kernel_Hfile,
+{
+	fn drop(&mut self) {
+		unsafe {
+			kernel::ffi::UnlockFile( // ignore errors
+				self.hfile.as_ptr(),
+				LODWORD(self.offset),
+				HIDWORD(self.offset),
+				LODWORD(self.num_bytes_to_lock),
+				HIDWORD(self.num_bytes_to_lock),
+			);
+		}
 	}
 }
