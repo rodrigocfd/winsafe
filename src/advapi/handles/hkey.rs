@@ -512,6 +512,17 @@ fn validate_retrieved_reg_val(
 		return Err(co::ERROR::INVALID_DATA);
 	}
 
+	if co::REG(raw_data_type1) == co::REG::SZ {
+		if data_len1 == 0 // empty data
+			|| data_len1 % 2 != 0 // odd number of bytes
+			|| buf[data_len1 as usize - 2] != 0 // terminating null
+			|| buf[data_len1 as usize - 1] != 0
+		{
+			// Bad string.
+			return Err(co::ERROR::INVALID_DATA);
+		}
+	}
+
 	// Return the value according to type.
 	Ok(match co::REG(raw_data_type1) {
 		co::REG::NONE => RegistryValue::None,
