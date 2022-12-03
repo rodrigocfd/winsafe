@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::mem::transmute;
 use std::ops::Deref;
 
 use crate::{advapi, co};
@@ -121,6 +122,10 @@ pub trait advapi_Hkey: Handle {
 	/// The data type will be automatically queried with a first call to
 	/// `RegGetValue`.
 	///
+	/// Note that this method validates some race conditions, returning
+	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
+	/// and [`co::ERROR::INVALID_DATA`](crate::co::ERROR::INVALID_DATA).
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -153,8 +158,8 @@ pub trait advapi_Hkey: Handle {
 	{
 		let sub_key_w = WString::from_opt_str(sub_key);
 		let value_w = WString::from_opt_str(value);
-		let mut raw_data_type = u32::default();
-		let mut data_len = u32::default();
+		let mut raw_data_type1 = u32::default();
+		let mut data_len1 = u32::default();
 
 		// Query data type and length.
 		match co::ERROR(
@@ -164,9 +169,9 @@ pub trait advapi_Hkey: Handle {
 					sub_key_w.as_ptr(),
 					value_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
-					&mut raw_data_type,
+					&mut raw_data_type1,
 					std::ptr::null_mut(),
-					&mut data_len,
+					&mut data_len1,
 				)
 			} as _,
 		) {
@@ -174,9 +179,13 @@ pub trait advapi_Hkey: Handle {
 			err => return Err(err),
 		}
 
-		// Retrieve value.
-		let mut buf: Vec<u8> = vec![0x00; data_len as _];
+		// Alloc the receiving block.
+		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
 
+		let mut raw_data_type2 = u32::default();
+		let mut data_len2 = data_len1;
+
+		// Retrieve the value content.
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegGetValueW(
@@ -184,9 +193,9 @@ pub trait advapi_Hkey: Handle {
 					sub_key_w.as_ptr(),
 					value_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
-					std::ptr::null_mut(),
+					&mut raw_data_type2,
 					buf.as_mut_ptr() as _,
-					&mut data_len,
+					&mut data_len2,
 				)
 			} as _,
 		) {
@@ -194,22 +203,8 @@ pub trait advapi_Hkey: Handle {
 			err => return Err(err),
 		}
 
-		// Return the value according to type.
-		match co::REG(raw_data_type) {
-			co::REG::NONE => Ok(RegistryValue::None),
-			co::REG::DWORD => Ok(RegistryValue::Dword(
-				u32::from_ne_bytes(buf.try_into().unwrap())),
-			),
-			co::REG::QWORD => Ok(RegistryValue::Qword(
-				u64::from_ne_bytes(buf.try_into().unwrap())),
-			),
-			co::REG::SZ => {
-				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
-				Ok(RegistryValue::Sz(WString::from_wchars_slice(&vec16)))
-			},
-			co::REG::BINARY => Ok(RegistryValue::Binary(buf)),
-			_ => Ok(RegistryValue::None), // other types not implemented yet
-		}
+		validate_retrieved_reg_val(
+			raw_data_type1, raw_data_type2, data_len1, data_len2, buf)
 	}
 
 	/// [`RegOpenKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
@@ -322,6 +317,10 @@ pub trait advapi_Hkey: Handle {
 	/// The data type will be automatically queried with a first call to
 	/// `RegQueryValueEx`.
 	///
+	/// Note that this method validates some race conditions, returning
+	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
+	/// and [`co::ERROR::INVALID_DATA`](crate::co::ERROR::INVALID_DATA).
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -354,8 +353,8 @@ pub trait advapi_Hkey: Handle {
 	#[must_use]
 	fn RegQueryValueEx(&self, value: &str) -> SysResult<RegistryValue> {
 		let value_w = WString::from_str(value);
-		let mut raw_data_type = u32::default();
-		let mut data_len = u32::default();
+		let mut raw_data_type1 = u32::default();
+		let mut data_len1 = u32::default();
 
 		// Query data type and length.
 		match co::ERROR(
@@ -364,9 +363,9 @@ pub trait advapi_Hkey: Handle {
 					self.as_ptr(),
 					value_w.as_ptr(),
 					std::ptr::null_mut(),
-					&mut raw_data_type,
+					&mut raw_data_type1,
 					std::ptr::null_mut(),
-					&mut data_len,
+					&mut data_len1,
 				)
 			} as _,
 		) {
@@ -374,18 +373,22 @@ pub trait advapi_Hkey: Handle {
 			err => return Err(err),
 		}
 
-		// Retrieve value.
-		let mut buf: Vec<u8> = vec![0x00; data_len as _];
+		// Alloc the receiving block.
+		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
 
+		let mut raw_data_type2 = u32::default();
+		let mut data_len2 = data_len1;
+
+		// Retrieve the value content.
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegQueryValueExW(
 					self.as_ptr(),
 					value_w.as_ptr(),
 					std::ptr::null_mut(),
-					std::ptr::null_mut(),
+					&mut raw_data_type2,
 					buf.as_mut_ptr() as _,
-					&mut data_len,
+					&mut data_len2,
 				)
 			} as _
 		) {
@@ -393,22 +396,8 @@ pub trait advapi_Hkey: Handle {
 			err => return Err(err),
 		}
 
-		// Return the value according to type.
-		match co::REG(raw_data_type) {
-			co::REG::NONE => Ok(RegistryValue::None),
-			co::REG::DWORD => Ok(RegistryValue::Dword(
-				u32::from_ne_bytes(buf.try_into().unwrap())),
-			),
-			co::REG::QWORD => Ok(RegistryValue::Qword(
-				u64::from_ne_bytes(buf.try_into().unwrap())),
-			),
-			co::REG::SZ => {
-				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
-				Ok(RegistryValue::Sz(WString::from_wchars_slice(&vec16)))
-			},
-			co::REG::BINARY => Ok(RegistryValue::Binary(buf)),
-			_ => Ok(RegistryValue::None), // other types not implemented yet
-		}
+		validate_retrieved_reg_val(
+			raw_data_type1, raw_data_type2, data_len1, data_len2, buf)
 	}
 
 	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
@@ -491,6 +480,58 @@ pub trait advapi_Hkey: Handle {
 			err => Err(err),
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+
+fn validate_retrieved_reg_val(
+	raw_data_type1: u32,
+	raw_data_type2: u32,
+	data_len1: u32,
+	mut data_len2: u32,
+	buf: Vec<u8>) -> SysResult<RegistryValue>
+{
+	if raw_data_type1 != raw_data_type2 {
+		// Race condition: someone modified the data type in between our calls.
+		return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
+	}
+
+	if co::REG(raw_data_type1) == co::REG::SZ {
+		data_len2 += 2; // also count wchar terminating null
+	}
+
+	if data_len1 != data_len2 {
+		// Race condition: someone modified the data content in between our calls.
+		return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
+	}
+
+	if co::REG(raw_data_type1) == co::REG::DWORD && data_len1 != 4
+		|| co::REG(raw_data_type1) == co::REG::QWORD && data_len1 != 8
+	{
+		// Data length makes no sense, possibly corrupted.
+		return Err(co::ERROR::INVALID_DATA);
+	}
+
+	// Return the value according to type.
+	Ok(match co::REG(raw_data_type1) {
+		co::REG::NONE => RegistryValue::None,
+		co::REG::DWORD => RegistryValue::Dword(
+			u32::from_ne_bytes(unsafe {
+				*transmute::<_, *const [u8; 4]>(buf.as_ptr())
+			})
+		),
+		co::REG::QWORD => RegistryValue::Qword(
+			u64::from_ne_bytes(unsafe {
+				*transmute::<_, *const [u8; 8]>(buf.as_ptr())
+			})
+		),
+		co::REG::SZ => {
+			let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
+			RegistryValue::Sz(WString::from_wchars_slice(&vec16))
+		},
+		co::REG::BINARY => RegistryValue::Binary(buf),
+		_ => RegistryValue::None, // other types not implemented yet
+	})
 }
 
 //------------------------------------------------------------------------------
