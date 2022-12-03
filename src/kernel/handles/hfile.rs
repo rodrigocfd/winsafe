@@ -278,16 +278,16 @@ pub trait kernel_Hfile: Handle {
 /// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 /// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-pub struct HfileLockGuard<'a, T>
-	where T: kernel_Hfile,
+pub struct HfileLockGuard<'a, H>
+	where H: kernel_Hfile,
 {
-	pub(crate) hfile: &'a T,
+	pub(crate) hfile: &'a H,
 	pub(crate) offset: u64,
 	pub(crate) num_bytes_to_lock: u64,
 }
 
-impl<'a, T> Drop for HfileLockGuard<'a, T>
-	where T: kernel_Hfile,
+impl<'a, H> Drop for HfileLockGuard<'a, H>
+	where H: kernel_Hfile,
 {
 	fn drop(&mut self) {
 		unsafe {

@@ -1,6 +1,6 @@
 use crate::user::messages::WndMsg;
 
-/// Trait to the parameters of a message that can be sent. Implemented by [all
+/// Parameters of a message which can be sent. Implemented by [all undefined
 /// messages](crate::msg).
 ///
 /// Allows the conversion to the generic [`WndMsg`](crate::msg::WndMsg)
@@ -25,7 +25,7 @@ pub unsafe trait MsgSend {
 	fn as_generic_wm(&mut self) -> WndMsg;
 }
 
-/// Trait to the parameters of a message that can be sent and handled.
+/// Parameters of a message which can be sent and handled (received).
 /// Implemented by [WndMsg](crate::msg::WndMsg) and all
 /// [msg::wm](`crate::msg::wm`) messages.
 ///

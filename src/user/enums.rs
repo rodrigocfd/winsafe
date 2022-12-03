@@ -178,7 +178,7 @@ pub enum HwndFocus {
 
 /// Variant parameter for:
 ///
-/// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason;
+/// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle) `reason`;
 /// * [`HELPINFO`](crate::HELPINFO) `hItemHandle`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum HwndHmenu {
@@ -201,7 +201,9 @@ impl HwndHmenu {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos) `hwnd_insert_after`.
+/// * [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos) `hwnd_insert_after`;
+/// * [`WINDOWPOS`](crate::WINDOWPOS) `hwndInsertAfter`;
+/// * [`WINDOWPOS`](crate::WINDOWPOS) `set_hwndInsertAfter`.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.

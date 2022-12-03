@@ -1508,16 +1508,16 @@ impl<'a> Drop for ClipboardGuard<'a> {
 /// be accessed through the
 /// [`paintstruct`](crate::guard::HdcPaintGuard::paintstruct) method.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub struct HdcPaintGuard<'a, T>
-	where T: user_Hwnd,
+pub struct HdcPaintGuard<'a, H>
+	where H: user_Hwnd,
 {
-	pub(crate) hwnd: &'a T,
+	pub(crate) hwnd: &'a H,
 	pub(crate) hdc: HDC,
 	pub(crate) ps: PAINTSTRUCT,
 }
 
-impl<'a, T> Drop for HdcPaintGuard<'a, T>
-	where T: user_Hwnd,
+impl<'a, H> Drop for HdcPaintGuard<'a, H>
+	where H: user_Hwnd,
 {
 	fn drop(&mut self) {
 		unsafe {
@@ -1526,8 +1526,8 @@ impl<'a, T> Drop for HdcPaintGuard<'a, T>
 	}
 }
 
-impl<'a, T> Deref for HdcPaintGuard<'a, T>
-	where T: user_Hwnd,
+impl<'a, H> Deref for HdcPaintGuard<'a, H>
+	where H: user_Hwnd,
 {
 	type Target = HDC;
 
@@ -1536,8 +1536,8 @@ impl<'a, T> Deref for HdcPaintGuard<'a, T>
 	}
 }
 
-impl<'a, T> HdcPaintGuard<'a, T>
-	where T: user_Hwnd,
+impl<'a, H> HdcPaintGuard<'a, H>
+	where H: user_Hwnd,
 {
 	/// Returns a reference to the internal [`PAINTSTRUCT`](crate::PAINTSTRUCT)
 	/// object.
@@ -1553,23 +1553,23 @@ impl<'a, T> HdcPaintGuard<'a, T>
 /// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 /// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "user")))]
-pub struct HdcReleaseGuard<'a, T>
-	where T: user_Hwnd,
+pub struct HdcReleaseGuard<'a, H>
+	where H: user_Hwnd,
 {
-	pub(crate) hwnd: &'a T,
+	pub(crate) hwnd: &'a H,
 	pub(crate) hdc: HDC,
 }
 
-impl<'a, T> Drop for HdcReleaseGuard<'a, T>
-	where T: user_Hwnd,
+impl<'a, H> Drop for HdcReleaseGuard<'a, H>
+	where H: user_Hwnd,
 {
 	fn drop(&mut self) {
 		unsafe { user::ffi::ReleaseDC(self.hwnd.as_ptr(), self.hdc.as_ptr()); } // ignore errors
 	}
 }
 
-impl<'a, T> Deref for HdcReleaseGuard<'a, T>
-	where T: user_Hwnd,
+impl<'a, H> Deref for HdcReleaseGuard<'a, H>
+	where H: user_Hwnd,
 {
 	type Target = HDC;
 
