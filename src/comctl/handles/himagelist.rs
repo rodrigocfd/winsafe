@@ -89,7 +89,7 @@ pub trait comctl_Himagelist: Handle {
 	/// let himgl: HIMAGELIST; // initialized somewhere
 	/// # let himgl = HIMAGELIST::NULL;
 	///
-	/// let _ = himgl.BeginDrag(0, POINT::new(0, 0))?; // keep the returned guard alive
+	/// let _drag = himgl.BeginDrag(0, POINT::new(0, 0))?; // keep the returned guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn BeginDrag(&self,

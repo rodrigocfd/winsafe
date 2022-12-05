@@ -95,7 +95,7 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
-	/// let _ = hwnd.BeginPaint()?; // keep the returned guard alive
+	/// let _hdc = hwnd.BeginPaint()?; // keep the returned guard alive
 	///
 	/// // hdc painting...
 	/// # Ok::<_, winsafe::co::ERROR>(())
@@ -1009,7 +1009,7 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
-	/// let _ = hwnd.OpenClipboard()?; // keep the returned guard alive
+	/// let _hdc = hwnd.OpenClipboard()?; // keep the returned guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
