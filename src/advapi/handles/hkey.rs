@@ -415,13 +415,16 @@ pub trait advapi_Hkey: Handle {
 	/// HKEY::CURRENT_USER.RegSetKeyValue(
 	///     "Software\\My Company",
 	///     "Color",
-	///     RegistryValue::Sz(WString::from_str("blue")),
+	///     RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn RegSetKeyValue(&self,
 		sub_key: &str, value: &str, data: RegistryValue) -> SysResult<()>
 	{
+		let mut str_buf = WString::default();
+		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
+
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegSetKeyValueW(
@@ -429,8 +432,8 @@ pub trait advapi_Hkey: Handle {
 					WString::from_str(sub_key).as_ptr(),
 					WString::from_str(value).as_ptr(),
 					data.reg_type().0,
-					data.as_ptr(),
-					data.len() as _,
+					data_ptr,
+					data_len,
 				)
 			} as _,
 		) {
@@ -459,11 +462,14 @@ pub trait advapi_Hkey: Handle {
 	///
 	/// hkey.RegSetValueEx(
 	///     "Color",
-	///     RegistryValue::Sz(WString::from_str("blue")),
+	///     RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn RegSetValueEx(&self, value: &str, data: RegistryValue) -> SysResult<()> {
+		let mut str_buf = WString::default();
+		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
+
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegSetValueExW(
@@ -471,8 +477,8 @@ pub trait advapi_Hkey: Handle {
 					WString::from_str(value).as_ptr(),
 					0,
 					data.reg_type().0,
-					data.as_ptr() as _,
-					data.len() as _,
+					data_ptr as _,
+					data_len,
 				)
 			} as _,
 		) {
@@ -538,7 +544,7 @@ fn validate_retrieved_reg_val(
 		),
 		co::REG::SZ => {
 			let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
-			RegistryValue::Sz(WString::from_wchars_slice(&vec16))
+			RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string())
 		},
 		co::REG::BINARY => RegistryValue::Binary(buf),
 		_ => RegistryValue::None, // other types not implemented yet

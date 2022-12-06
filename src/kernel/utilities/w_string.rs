@@ -183,7 +183,8 @@ impl WString {
 		self.vec_u16.is_empty()
 	}
 
-	/// Returns the size of the allocated internal buffer.
+	/// Returns the size of the allocated internal buffer. Note that the
+	/// terminating null, if existing, is also counted.
 	///
 	/// If the buffer was not allocated yet, returns zero.
 	#[must_use]

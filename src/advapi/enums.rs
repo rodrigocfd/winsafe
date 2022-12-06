@@ -12,7 +12,7 @@ pub enum RegistryValue {
 	/// An `u64` integer value, defined as [`REG::QWORD`](crate::co::REG::QWORD).
 	Qword(u64),
 	/// String value, defined as [`REG::SZ`](crate::co::REG::SZ).
-	Sz(WString),
+	Sz(String),
 	/// No value, defined as [`REG::NONE`](crate::co::REG::NONE). Also used for
 	/// non-implemented value types.
 	None,
@@ -22,17 +22,26 @@ impl RegistryValue {
 	/// Creates a new `RegistryValue::Sz` value from a `&str`.
 	#[must_use]
 	pub fn new_sz(s: &str) -> RegistryValue {
-		Self::Sz(WString::from_str(s))
+		Self::Sz(s.to_owned())
 	}
 
+	/// Returns a pointer to the raw data, along with the raw data length.
 	#[must_use]
-	pub fn as_ptr(&self) -> *const std::ffi::c_void {
+	pub fn as_ptr_with_len(&self,
+		str_buf: &mut WString) -> (*const std::ffi::c_void, u32)
+	{
 		match self {
-			Self::Binary(b) => b.as_ptr() as _,
-			Self::Dword(n) => *n as _,
-			Self::Qword(n) => *n as _,
-			Self::Sz(ws) => unsafe { ws.as_ptr() as _ },
-			Self::None => std::ptr::null(),
+			Self::Binary(b) => (b.as_ptr() as _, b.len() as _),
+			Self::Dword(n) => (n as *const _ as _, std::mem::size_of::<u32>() as _),
+			Self::Qword(n) => (n as *const _ as _, std::mem::size_of::<u64>() as _),
+			Self::Sz(s) => {
+				*str_buf = WString::from_str(s);
+				(
+					unsafe { str_buf.as_ptr() as *const std::ffi::c_void },
+					(str_buf.buf_len() * std::mem::size_of::<u16>()) as _, // will include terminating null
+				)
+			},
+			Self::None => (std::ptr::null(), 0),
 		}
 	}
 
@@ -45,18 +54,6 @@ impl RegistryValue {
 			Self::Qword(_) => co::REG::QWORD,
 			Self::Sz(_) => co::REG::SZ,
 			Self::None => co::REG::NONE,
-		}
-	}
-
-	/// Returns the length of the stored data.
-	#[must_use]
-	pub fn len(&self) -> usize {
-		match self {
-			Self::Binary(b) => b.len(),
-			Self::Dword(_) => std::mem::size_of::<u32>(),
-			Self::Qword(_) => std::mem::size_of::<u64>(),
-			Self::Sz(ws) => (ws.buf_len() + 1) * std::mem::size_of::<u16>(), // including terminating null
-			Self::None => 0,
 		}
 	}
 }
