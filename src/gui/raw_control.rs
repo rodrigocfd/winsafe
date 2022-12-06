@@ -76,10 +76,11 @@ impl RawControl {
 		self.0.raw_base.parent().unwrap().privileged_on().wm(parent.creation_msg(), move |_| {
 			let opts = &self2.0.opts;
 
+			let parent_hinst = self2.0.raw_base.parent_hinstance();
 			let mut wcx = WNDCLASSEX::default();
 			let mut class_name_buf = WString::default();
 			RawBase::fill_wndclassex(
-				&self2.0.raw_base.parent_hinstance(),
+				&parent_hinst,
 				opts.class_style, &opts.class_icon, &opts.class_icon,
 				&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 				&mut class_name_buf);

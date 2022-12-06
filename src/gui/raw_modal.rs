@@ -74,10 +74,11 @@ impl RawModal {
 		let hparent = self.0.raw_base.parent().unwrap().hwnd();
 		let opts = &self.0.opts;
 
+		let parent_hinst = self.0.raw_base.parent_hinstance();
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
-			&self.0.raw_base.parent_hinstance(),
+			&parent_hinst,
 			opts.class_style, &opts.class_icon, &opts.class_icon,
 			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 			&mut class_name_buf);

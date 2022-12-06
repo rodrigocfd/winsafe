@@ -152,12 +152,12 @@ impl RawBase {
 	/// Fills `WNDCLASSEX` with the given values, and generates a class name as
 	/// a hash of all fields.
 	pub(in crate::gui) fn fill_wndclassex<'a>(
-		hinst: &HINSTANCE,
+		hinst: &'a HINSTANCE,
 		class_style: co::CS,
-		class_icon: &Icon,
-		class_icon_sm: &Icon,
-		class_bg_brush: &Brush,
-		class_cursor: &Cursor,
+		class_icon: &'a Icon,
+		class_icon_sm: &'a Icon,
+		class_bg_brush: &'a Brush,
+		class_cursor: &'a Cursor,
 		wcx: &mut WNDCLASSEX<'a>,
 		class_name_buf: &'a mut WString)
 	{
