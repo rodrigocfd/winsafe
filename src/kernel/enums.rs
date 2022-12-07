@@ -3,6 +3,19 @@ use crate::kernel::decl::WString;
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 
 /// A resource identifier.
+///
+/// Variable parameter for:
+///
+/// * [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam);
+/// * [`HINSTANCE::EnumResourceLanguages`](crate::prelude::kernel_Hinstance::EnumResourceLanguages);
+/// * [`HINSTANCE::EnumResourceNames`](crate::prelude::kernel_Hinstance::EnumResourceNames);
+/// * [`HINSTANCE::FindResource`](crate::prelude::kernel_Hinstance::FindResource);
+/// * [`HINSTANCE::FindResourceEx`](crate::prelude::kernel_Hinstance::FindResourceEx);
+/// * [`HINSTANCE::LoadAccelerators`](crate::prelude::user_Hinstance::LoadAccelerators);
+/// * [`HINSTANCE::LoadMenu`](crate::prelude::user_Hinstance::LoadMenu);
+/// * [`HUPDATERSRC::UpdateResource`](crate::prelude::kernel_Hupdatersrc::UpdateResource);
+/// * [`BmpIdbRes`](crate::BmpIdbRes);
+/// * [`ResStrs`](crate::ResStrs).
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[derive(Clone)]
 pub enum IdStr {
