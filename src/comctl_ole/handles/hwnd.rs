@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, comctl_ole};
-use crate::comctl::decl::IdTdiconStr;
+use crate::comctl_ole::decl::IdTdiconStr;
 use crate::kernel::decl::{HINSTANCE, WString};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
@@ -91,6 +91,7 @@ pub trait comctl_ole_Hwnd: Handle {
 		icon: IdTdiconStr) -> HrResult<co::DLGID>
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
+		let mut str_buf = WString::default();
 		let mut pn_button = i32::default();
 		ok_to_hrresult(
 			unsafe {
@@ -101,7 +102,7 @@ pub trait comctl_ole_Hwnd: Handle {
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),
 					common_buttons.0,
-					icon.as_ptr(),
+					icon.as_ptr(&mut str_buf),
 					&mut pn_button,
 				)
 			},

@@ -19,6 +19,7 @@ impl IdStr {
 		Self::Str(WString::from_str(v))
 	}
 
+	/// Constructs the enum from a raw pointer.
 	#[must_use]
 	pub fn from_ptr(ptr: *const u16) -> IdStr {
 		if IS_INTRESOURCE(ptr) {
@@ -28,6 +29,7 @@ impl IdStr {
 		}
 	}
 
+	/// Returns a pointer to the raw data content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -38,6 +40,15 @@ impl IdStr {
 }
 
 /// A predefined resource identifier.
+///
+/// Variant parameter for:
+///
+/// * [`HINSTANCE::EnumResourceLanguages`](crate::prelude::kernel_Hinstance::EnumResourceLanguages);
+/// * [`HINSTANCE::EnumResourceNames`](crate::prelude::kernel_Hinstance::EnumResourceNames);
+/// * [`HINSTANCE::EnumResourceTypes`](crate::prelude::kernel_Hinstance::EnumResourceTypes);
+/// * [`HINSTANCE::FindResource`](crate::prelude::kernel_Hinstance::FindResource);
+/// * [`HINSTANCE::FindResourceEx`](crate::prelude::kernel_Hinstance::FindResourceEx);
+/// * [`HUPDATERSRC`](crate::prelude::kernel_Hupdatersrc::UpdateResource).
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[derive(Clone)]
 pub enum RtStr {
@@ -54,6 +65,7 @@ impl RtStr {
 		Self::Str(WString::from_str(v))
 	}
 
+	/// Constructs the enum from a pointer to raw data.
 	#[must_use]
 	pub fn from_ptr(ptr: *const u16) -> RtStr {
 		if IS_INTRESOURCE(ptr) {
@@ -63,6 +75,7 @@ impl RtStr {
 		}
 	}
 
+	/// Returns a pointer to the raw data content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {

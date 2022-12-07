@@ -2,13 +2,12 @@ use crate::co;
 use crate::comctl::decl::HTREEITEM;
 use crate::comctl::privs::{I_IMAGECALLBACK, I_IMAGENONE};
 use crate::kernel::decl::{HINSTANCE, IdStr, WString};
-use crate::kernel::privs::MAKEINTRESOURCE;
 use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
 
 /// Variant parameter for:
 ///
-/// * [`stm::GetImage`](crate::msg::stm::GetImage) `image`;
-/// * [`stm::SetImage`](crate::msg::stm::SetImage) `image`.
+/// * [`stm::GetImage`](crate::msg::stm::GetImage);
+/// * [`stm::SetImage`](crate::msg::stm::SetImage).
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum BmpIconCurMeta {
 	/// Bitmap.
@@ -24,19 +23,21 @@ pub enum BmpIconCurMeta {
 impl BmpIconCurMeta {
 	/// Converts the contents into an `isize`.
 	#[must_use]
-	pub fn as_isize(&self) -> isize {
-		(match self {
-			BmpIconCurMeta::Bmp(hbmp) => hbmp.0,
-			BmpIconCurMeta::Icon(hicon) => hicon.0,
-			BmpIconCurMeta::Cur(hcur) => hcur.0,
-			BmpIconCurMeta::Meta(hdc) => hdc.0,
-		}) as _
+	pub const fn as_isize(&self) -> isize {
+		unsafe {
+			std::mem::transmute(match self {
+				BmpIconCurMeta::Bmp(hbmp) => hbmp.0,
+				BmpIconCurMeta::Icon(hicon) => hicon.0,
+				BmpIconCurMeta::Cur(hcur) => hcur.0,
+				BmpIconCurMeta::Meta(hdc) => hdc.0,
+			})
+		}
 	}
 }
 
 /// Variant parameter for:
 ///
-/// * [`TBADDBITMAP`](crate::TBADDBITMAP) `nID`.
+/// * [`TBADDBITMAP`](crate::TBADDBITMAP).
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum BmpIdbRes {
 	/// An [`HBITMAP`](crate::HBITMAP).
@@ -58,43 +59,9 @@ pub enum BmpInstId {
 	InstId((HINSTANCE, u16)),
 }
 
-/// Variant parameter for:
-///
-/// * [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) `pszIcon`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-#[derive(Clone)]
-pub enum IdTdiconStr {
-	/// No icon.
-	None,
-	/// A resource ID.
-	Id(u16),
-	/// A predefined icon.
-	Tdicon(co::TD_ICON),
-	/// A resource string identifier.
-	Str(WString),
-}
-
-impl IdTdiconStr {
-	/// Constructs the enum directly from a string.
-	#[must_use]
-	pub fn from_str(v: &str) -> Self {
-		Self::Str(WString::from_str(v))
-	}
-
-	#[must_use]
-	pub fn as_ptr(&self) -> *const u16 {
-		match self {
-			Self::None => std::ptr::null(),
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
-		}
-	}
-}
-
 /// Variant type for:
 ///
-/// * [`tbm::ChangeBitmap`](crate::msg::tbm::ChangeBitmap) `image`.
+/// * [`tbm::ChangeBitmap`](crate::msg::tbm::ChangeBitmap).
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone, Copy)]
 pub enum IdxCbNone {
@@ -118,7 +85,7 @@ impl From<IdxCbNone> for isize {
 
 /// Variant parameter for:
 ///
-/// * [`TBBUTTON`](crate::TBBUTTON) `iString`.
+/// * [`TBBUTTON`](crate::TBBUTTON).
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone)]
 pub enum IdxStr {
@@ -130,7 +97,7 @@ pub enum IdxStr {
 
 /// Variant parameter for:
 ///
-/// * [`hdm::SetHotDivider`](crate::msg::hdm::SetHotDivider) `value`.
+/// * [`hdm::SetHotDivider`](crate::msg::hdm::SetHotDivider).
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum PtIdx {
 	/// X and Y coordinates of the pointer
@@ -141,7 +108,7 @@ pub enum PtIdx {
 
 /// Variant parameter for:
 ///
-/// * [`tbm::AddString`](crate::msg::tbm::AddString) `texts`.
+/// * [`tbm::AddString`](crate::msg::tbm::AddString).
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum ResStrs {
 	/// A resource string resource.
@@ -153,6 +120,7 @@ pub enum ResStrs {
 }
 
 impl ResStrs {
+	/// Constructs the enum from a list of strings.
 	#[must_use]
 	pub fn from_strs(texts: &[impl AsRef<str>]) -> ResStrs {
 		Self::Strs(WString::from_str_vec(texts))
@@ -161,7 +129,7 @@ impl ResStrs {
 
 /// Variant parameter for:
 ///
-/// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter`.
+/// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT).
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum TreeitemTvi {
 	/// Handle to a tree view item.
@@ -180,8 +148,9 @@ impl From<TreeitemTvi> for isize {
 }
 
 impl TreeitemTvi {
+	/// Constructs the enum from an `isize`.
 	#[must_use]
-	pub fn from_isize(val: isize) -> TreeitemTvi {
+	pub const fn from_isize(val: isize) -> TreeitemTvi {
 		match co::TVI(val) {
 			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
 			co::TVI::LAST => Self::Tvi(co::TVI::LAST),

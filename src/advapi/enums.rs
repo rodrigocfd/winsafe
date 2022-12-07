@@ -19,12 +19,6 @@ pub enum RegistryValue {
 }
 
 impl RegistryValue {
-	/// Creates a new `RegistryValue::Sz` value from a `&str`.
-	#[must_use]
-	pub fn new_sz(s: &str) -> RegistryValue {
-		Self::Sz(s.to_owned())
-	}
-
 	/// Returns a pointer to the raw data, along with the raw data length.
 	#[must_use]
 	pub fn as_ptr_with_len(&self,

@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::mem::transmute;
 use std::ops::Deref;
 
 use crate::{advapi, co};
@@ -534,12 +533,12 @@ fn validate_retrieved_reg_val(
 		co::REG::NONE => RegistryValue::None,
 		co::REG::DWORD => RegistryValue::Dword(
 			u32::from_ne_bytes(unsafe {
-				*transmute::<_, *const [u8; 4]>(buf.as_ptr())
+				*std::mem::transmute::<_, *const [u8; 4]>(buf.as_ptr())
 			})
 		),
 		co::REG::QWORD => RegistryValue::Qword(
 			u64::from_ne_bytes(unsafe {
-				*transmute::<_, *const [u8; 8]>(buf.as_ptr())
+				*std::mem::transmute::<_, *const [u8; 8]>(buf.as_ptr())
 			})
 		),
 		co::REG::SZ => {
