@@ -140,6 +140,13 @@ pub trait advapi_Hkey: Handle {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
 	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
 	///     RegistryValue::Sz(str) => println!("String: {}", str),
+	///     RegistryValue::MultiSz(strs) => {
+	///        println!("Multi string:");
+	///        for s in strs.iter() {
+	///            print!("[{}] ", s);
+	///        }
+	///        println!("");
+	///     },
 	///     RegistryValue::Binary(bin) => {
 	///         println!("Binary:");
 	///         for b in bin.iter() {
@@ -203,7 +210,8 @@ pub trait advapi_Hkey: Handle {
 		}
 
 		validate_retrieved_reg_val(
-			raw_data_type1, raw_data_type2, data_len1, data_len2, buf)
+			co::REG(raw_data_type1), data_len1,
+			co::REG(raw_data_type2), data_len2, buf)
 	}
 
 	/// [`RegOpenKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
@@ -338,6 +346,13 @@ pub trait advapi_Hkey: Handle {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
 	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
 	///     RegistryValue::Sz(str) => println!("String: {}", str),
+	///     RegistryValue::MultiSz(strs) => {
+	///        println!("Multi string:");
+	///        for s in strs.iter() {
+	///            print!("[{}] ", s);
+	///        }
+	///        println!("");
+	///     },
 	///     RegistryValue::Binary(bin) => {
 	///         println!("Binary:");
 	///         for b in bin.iter() {
@@ -396,7 +411,8 @@ pub trait advapi_Hkey: Handle {
 		}
 
 		validate_retrieved_reg_val(
-			raw_data_type1, raw_data_type2, data_len1, data_len2, buf)
+			co::REG(raw_data_type1), data_len1,
+			co::REG(raw_data_type2), data_len2, buf)
 	}
 
 	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
@@ -490,18 +506,18 @@ pub trait advapi_Hkey: Handle {
 //------------------------------------------------------------------------------
 
 fn validate_retrieved_reg_val(
-	raw_data_type1: u32,
-	raw_data_type2: u32,
+	data_type1: co::REG,
 	data_len1: u32,
+	data_type2: co::REG,
 	mut data_len2: u32,
 	buf: Vec<u8>) -> SysResult<RegistryValue>
 {
-	if raw_data_type1 != raw_data_type2 {
+	if data_type1 != data_type2 {
 		// Race condition: someone modified the data type in between our calls.
 		return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
 	}
 
-	if co::REG(raw_data_type1) == co::REG::SZ {
+	if data_type1 == co::REG::SZ || data_type1 == co::REG::MULTI_SZ {
 		data_len2 += 2; // also count wchar terminating null
 	}
 
@@ -510,14 +526,14 @@ fn validate_retrieved_reg_val(
 		return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
 	}
 
-	if co::REG(raw_data_type1) == co::REG::DWORD && data_len1 != 4
-		|| co::REG(raw_data_type1) == co::REG::QWORD && data_len1 != 8
+	if data_type1 == co::REG::DWORD && data_len1 != 4
+		|| data_type1 == co::REG::QWORD && data_len1 != 8
 	{
 		// Data length makes no sense, possibly corrupted.
 		return Err(co::ERROR::INVALID_DATA);
 	}
 
-	if co::REG(raw_data_type1) == co::REG::SZ {
+	if data_type1 == co::REG::SZ {
 		if data_len1 == 0 // empty data
 			|| data_len1 % 2 != 0 // odd number of bytes
 			|| buf[data_len1 as usize - 2] != 0 // terminating null
@@ -528,26 +544,7 @@ fn validate_retrieved_reg_val(
 		}
 	}
 
-	// Return the value according to type.
-	Ok(match co::REG(raw_data_type1) {
-		co::REG::NONE => RegistryValue::None,
-		co::REG::DWORD => RegistryValue::Dword(
-			u32::from_ne_bytes(unsafe {
-				*std::mem::transmute::<_, *const [u8; 4]>(buf.as_ptr())
-			})
-		),
-		co::REG::QWORD => RegistryValue::Qword(
-			u64::from_ne_bytes(unsafe {
-				*std::mem::transmute::<_, *const [u8; 8]>(buf.as_ptr())
-			})
-		),
-		co::REG::SZ => {
-			let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
-			RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string())
-		},
-		co::REG::BINARY => RegistryValue::Binary(buf),
-		_ => RegistryValue::None, // other types not implemented yet
-	})
+	Ok(unsafe { RegistryValue::from_raw(buf, data_type1) })
 }
 
 //------------------------------------------------------------------------------

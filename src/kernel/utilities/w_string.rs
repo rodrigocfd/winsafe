@@ -65,7 +65,7 @@ impl WString {
 	#[must_use]
 	pub fn from_str_vec(v: &[impl AsRef<str>]) -> WString {
 		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
-			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // including terminating null
+			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // include terminating null
 				+ 1; // double terminating null
 
 		let mut vec_u16 = Vec::<u16>::with_capacity(tot_chars); // prealloc
