@@ -146,8 +146,8 @@ pub fn is_hidden(full_path: &str) -> bool {
 /// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
-pub fn iter(full_path: &str) -> impl Iterator<Item = &str> {
-	PathIterator { path: full_path }
+pub fn iter_parts(full_path: &str) -> impl Iterator<Item = &str> {
+	PartsIterator { path: full_path }
 }
 
 /// Replaces the extension by the given one.
@@ -245,11 +245,11 @@ pub fn rtrim_backslash(full_path: &str) -> &str {
 
 //------------------------------------------------------------------------------
 
-struct PathIterator<'a> {
+struct PartsIterator<'a> {
 	path: &'a str,
 }
 
-impl<'a> Iterator for PathIterator<'a> {
+impl<'a> Iterator for PartsIterator<'a> {
 	type Item = &'a str;
 
 	fn next(&mut self) -> Option<Self::Item> {
