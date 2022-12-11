@@ -4,7 +4,7 @@ use crate::{co, shell};
 use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, MAX_PATH};
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, kernel_Hlocal};
@@ -49,6 +49,103 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 	(HLOCAL(lp_arr as _))
 		.LocalFree()
 		.map(|_| strs)
+}
+
+/// [`PathCombine`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcombinew)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::PathCombine;
+///
+/// let full = PathCombine(Some("C:"), Some("One\\Two\\Three"))?;
+///
+/// // full = "C:\\One\\Two\\Three"
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn PathCombine(
+	str_dir: Option<&str>, str_file: Option<&str>) -> SysResult<String>
+{
+	let mut buf = WString::new_alloc_buf(MAX_PATH);
+	unsafe {
+		shell::ffi::PathCombineW(
+			buf.as_mut_ptr(),
+			WString::from_opt_str(str_dir).as_ptr(),
+			WString::from_opt_str(str_file).as_ptr(),
+		).as_mut()
+	}.map(|_| buf.to_string())
+		.ok_or_else(|| GetLastError())
+}
+
+/// [`PathCommonPrefix`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcommonprefixw)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::PathCommonPrefix;
+///
+/// if let Some(common_prefix) = PathCommonPrefix(
+///     "C:\\temp\\one\\foo.txt",
+///     "C:\\temp\\two\\bar.txt",
+/// ) {
+///     println!("Common prefix: {}", common_prefix); // "C:\\temp"
+/// }
+/// ```
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn PathCommonPrefix(file1: &str, file2: &str) -> Option<String> {
+	let mut buf = WString::new_alloc_buf(MAX_PATH);
+	match unsafe {
+		shell::ffi::PathCommonPrefixW(
+			WString::from_str(file1).as_ptr(),
+			WString::from_str(file2).as_ptr(),
+			buf.as_mut_ptr(),
+		)
+	} {
+		0 => None,
+		_ => Some(buf.to_string()),
+	}
+}
+
+/// [`PathSkipRoot`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathskiprootw)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn PathSkipRoot(str_path: &str) -> Option<String> {
+	let buf = WString::from_str(str_path);
+	unsafe {
+		shell::ffi::PathSkipRootW(buf.as_ptr()).as_ref()
+	}.map(|ptr| WString::from_wchars_nullt(ptr).to_string())
+}
+
+/// [`PathStripPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathstrippathw)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn PathStripPath(str_path: &str) -> String {
+	let mut buf = WString::from_str(str_path);
+	unsafe { shell::ffi::PathStripPathW(buf.as_mut_ptr()); }
+	buf.to_string()
+}
+
+/// [`PathUndecorate`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathundecoratew)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn PathUndecorate(str_path: &str) -> String {
+	let mut buf = WString::from_str(str_path);
+	unsafe { shell::ffi::PathUndecorateW(buf.as_mut_ptr()); }
+	buf.to_string()
+}
+
+/// [`PathUnquoteSpaces`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathunquotespacesw)
+/// function.
+#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+pub fn PathUnquoteSpaces(str_path: &str) -> String {
+	let mut buf = WString::from_str(str_path);
+	unsafe { shell::ffi::PathUnquoteSpacesW(buf.as_mut_ptr()); }
+	buf.to_string()
 }
 
 /// [`SHAddToRecentDocs`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)

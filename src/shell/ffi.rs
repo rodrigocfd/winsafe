@@ -16,5 +16,11 @@ extern_sys! { "shell32";
 }
 
 extern_sys! { "shlwapi";
+	PathCombineW(PSTR, PCSTR, PCSTR) -> PSTR
+	PathCommonPrefixW(PCSTR, PCSTR, PSTR) -> i32
+	PathSkipRootW(PCSTR) -> PCSTR
+	PathStripPathW(PSTR)
+	PathUndecorateW(PSTR)
+	PathUnquoteSpacesW(PSTR) -> BOOL
 	SHCreateMemStream(*const u8, u32) -> PVOID
 }
