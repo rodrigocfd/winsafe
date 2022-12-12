@@ -19,7 +19,7 @@ use crate::ole::privs::ok_to_hrresult;
 /// [`task_dlg`](crate::task_dlg) high-level abstractions.
 ///
 /// If you don't need all customizations, consider the
-/// [`TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) method.
+/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) method.
 ///
 /// # Examples
 ///

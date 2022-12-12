@@ -140,16 +140,6 @@ pub fn is_hidden(full_path: &str) -> bool {
 	flags.has(co::FILE_ATTRIBUTE::HIDDEN)
 }
 
-/// Returns an iterator over each part of the path.
-///
-/// To iterate over files within a directory, see
-/// [`HFINDFILE::iter`](crate::prelude::kernel_Hfindfile::iter).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
-#[must_use]
-pub fn iter_parts(full_path: &str) -> impl Iterator<Item = &str> {
-	PartsIterator { path: full_path }
-}
-
 /// Replaces the extension by the given one.
 ///
 /// # Examples
@@ -243,31 +233,9 @@ pub fn rtrim_backslash(full_path: &str) -> &str {
 	}
 }
 
-//------------------------------------------------------------------------------
-
-struct PartsIterator<'a> {
-	path: &'a str,
-}
-
-impl<'a> Iterator for PartsIterator<'a> {
-	type Item = &'a str;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.path.is_empty() {
-			return None;
-		}
-
-		Some(match self.path.find('\\') {
-			Some(idx) => {
-				let cur_part = &self.path[..idx];
-				self.path = &self.path[idx + 1..];
-				cur_part
-			},
-			None => {
-				let cur_part = self.path; // until the end
-				self.path = &self.path[self.path.len()..]; // empty
-				cur_part
-			},
-		})
-	}
+/// Returns a `Vec` with each part of the full path.
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
+pub fn split_parts(full_path: &str) -> Vec<&str> {
+	full_path.split('\\').collect()
 }
