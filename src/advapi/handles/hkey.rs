@@ -47,6 +47,86 @@ pub trait advapi_Hkey: Handle {
 	predef_key!(PERFORMANCE_TEXT, 0x8000_0050);
 	predef_key!(PERFORMANCE_NLSTEXT, 0x8000_0060);
 
+	/// [`RegDeleteKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyw)
+	/// method.
+	fn RegDeleteKey(&self, sub_key: &str) -> SysResult<()> {
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegDeleteKeyW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegDeleteKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyexw)
+	/// method.
+	///
+	/// # Panics
+	///
+	/// Panics if `platform_view` is different from
+	/// [`co::KEY::WOW64_32KEY`](crate::co::KEY::WOW64_32KEY) and
+	/// [`co::KEY::WOW64_64KEY`](crate::co::KEY::WOW64_64KEY).
+	fn RegDeleteKeyEx(&self,
+		sub_key: &str, platform_view: co::KEY) -> SysResult<()>
+	{
+		if platform_view != co::KEY::WOW64_32KEY
+			&& platform_view != co::KEY::WOW64_64KEY
+		{
+			panic!("Platform view must be co::KEY::WOW64_32KEY or co::KEY::WOW64_64KEY");
+		}
+
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegDeleteKeyExW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+					platform_view.0,
+					0,
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegDeleteTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew)
+	/// method.
+	fn RegDeleteTree(&self, sub_key: &str) -> SysResult<()> {
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegDeleteTreeW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegDeleteValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletevaluew)
+	/// method.
+	fn RegDeleteValue(&self, value_name: &str) -> SysResult<()> {
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegDeleteValueW(
+					self.as_ptr(),
+					WString::from_str(value_name).as_ptr(),
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
 	/// Returns an iterator over the names of the keys, which calls
 	/// [`RegEnumKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenumkeyexw)
 	/// repeatedly.
@@ -160,10 +240,11 @@ pub trait advapi_Hkey: Handle {
 	/// ```
 	#[must_use]
 	fn RegGetValue(&self,
-		sub_key: Option<&str>, value: Option<&str>) -> SysResult<RegistryValue>
+		sub_key: Option<&str>,
+		value_name: Option<&str>) -> SysResult<RegistryValue>
 	{
 		let sub_key_w = WString::from_opt_str(sub_key);
-		let value_w = WString::from_opt_str(value);
+		let value_name_w = WString::from_opt_str(value_name);
 		let mut raw_data_type1 = u32::default();
 		let mut data_len1 = u32::default();
 
@@ -173,7 +254,7 @@ pub trait advapi_Hkey: Handle {
 				advapi::ffi::RegGetValueW(
 					self.as_ptr(),
 					sub_key_w.as_ptr(),
-					value_w.as_ptr(),
+					value_name_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 					&mut raw_data_type1,
 					std::ptr::null_mut(),
@@ -197,7 +278,7 @@ pub trait advapi_Hkey: Handle {
 				advapi::ffi::RegGetValueW(
 					self.as_ptr(),
 					sub_key_w.as_ptr(),
-					value_w.as_ptr(),
+					value_name_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
 					&mut raw_data_type2,
 					buf.as_mut_ptr() as _,
@@ -231,8 +312,10 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegOpenKeyEx(&self, sub_key: &str,
-		options: co::REG_OPTION, access_rights: co::KEY) -> SysResult<HkeyGuard>
+	fn RegOpenKeyEx(&self,
+		sub_key: &str,
+		options: co::REG_OPTION,
+		access_rights: co::KEY) -> SysResult<HkeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
 		match co::ERROR(
@@ -365,8 +448,8 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegQueryValueEx(&self, value: &str) -> SysResult<RegistryValue> {
-		let value_w = WString::from_str(value);
+	fn RegQueryValueEx(&self, value_name: &str) -> SysResult<RegistryValue> {
+		let value_name_w = WString::from_str(value_name);
 		let mut raw_data_type1 = u32::default();
 		let mut data_len1 = u32::default();
 
@@ -375,7 +458,7 @@ pub trait advapi_Hkey: Handle {
 			unsafe {
 				advapi::ffi::RegQueryValueExW(
 					self.as_ptr(),
-					value_w.as_ptr(),
+					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
 					&mut raw_data_type1,
 					std::ptr::null_mut(),
@@ -398,7 +481,7 @@ pub trait advapi_Hkey: Handle {
 			unsafe {
 				advapi::ffi::RegQueryValueExW(
 					self.as_ptr(),
-					value_w.as_ptr(),
+					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
 					&mut raw_data_type2,
 					buf.as_mut_ptr() as _,
@@ -435,7 +518,7 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn RegSetKeyValue(&self,
-		sub_key: &str, value: &str, data: RegistryValue) -> SysResult<()>
+		sub_key: &str, value_name: &str, data: RegistryValue) -> SysResult<()>
 	{
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
@@ -445,7 +528,7 @@ pub trait advapi_Hkey: Handle {
 				advapi::ffi::RegSetKeyValueW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
-					WString::from_str(value).as_ptr(),
+					WString::from_str(value_name).as_ptr(),
 					data.reg_type().0,
 					data_ptr,
 					data_len,
@@ -481,7 +564,9 @@ pub trait advapi_Hkey: Handle {
 	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	fn RegSetValueEx(&self, value: &str, data: RegistryValue) -> SysResult<()> {
+	fn RegSetValueEx(&self,
+		value_name: &str, data: RegistryValue) -> SysResult<()>
+	{
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
@@ -489,7 +574,7 @@ pub trait advapi_Hkey: Handle {
 			unsafe {
 				advapi::ffi::RegSetValueExW(
 					self.as_ptr(),
-					WString::from_str(value).as_ptr(),
+					WString::from_str(value_name).as_ptr(),
 					0,
 					data.reg_type().0,
 					data_ptr as _,

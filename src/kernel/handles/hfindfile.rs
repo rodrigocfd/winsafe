@@ -30,6 +30,9 @@ pub trait kernel_Hfindfile: Handle {
 	/// [`HFINDFILE::FindNextFile`](crate::prelude::kernel_Hfindfile::FindNextFile).
 	/// The handle is automatically closed.
 	///
+	/// Note that the iterator goes only one level deep – it doesn't descend
+	/// into subdirectories.
+	///
 	/// # Examples
 	///
 	/// Enumerating all TXT files in a directory:
