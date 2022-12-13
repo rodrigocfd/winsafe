@@ -7,8 +7,37 @@
 //! [`&OsStr`](https://doc.rust-lang.org/std/ffi/struct.OsStr.html).
 
 use crate::co;
-use crate::kernel::decl::{GetFileAttributes, HINSTANCE, SysResult};
-use crate::prelude::{Handle, kernel_Hinstance, NativeBitflag};
+use crate::kernel::decl::{
+	GetFileAttributes, HFINDFILE, HINSTANCE, SysResult, WIN32_FIND_DATA,
+};
+use crate::kernel::guard::HfindfileGuard;
+use crate::prelude::{Handle, kernel_Hfindfile, kernel_Hinstance, NativeBitflag};
+
+/// Returns an iterator over the files and folders within a directory.
+/// Optionally, a wildcard can be specified to filter files by name.
+///
+/// # Examples
+///
+/// Listing all text files in a directory:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::path;
+///
+/// for file_path in path::dir_list("C:\\temp", Some("*.txt")) {
+///     let file_path = file_path?;
+///     println!("{}", file_path);
+/// }
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
+#[must_use]
+pub fn dir_list<'a>(
+	dir_path: &'a str,
+	filter: Option<&'a str>) -> impl Iterator<Item = SysResult<String>> + 'a
+{
+	DirListIter::new(dir_path, filter)
+}
 
 /// Returns the path of the current EXE file, without the EXE filename, and
 /// without a trailing backslash.
@@ -237,5 +266,74 @@ pub fn rtrim_backslash(full_path: &str) -> &str {
 #[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn split_parts(full_path: &str) -> Vec<&str> {
-	full_path.split('\\').collect()
+	let no_bs = rtrim_backslash(full_path);
+	no_bs.split('\\').collect()
+}
+
+//------------------------------------------------------------------------------
+
+struct DirListIter<'a> {
+	dir_path: &'a str,
+	filter: Option<&'a str>,
+	hfind: Option<HfindfileGuard>,
+	wfd: WIN32_FIND_DATA,
+	no_more: bool,
+}
+
+impl<'a> Iterator for DirListIter<'a> {
+	type Item = SysResult<String>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.no_more {
+			return None;
+		}
+
+		let found = match &self.hfind {
+			None => { // first pass
+				let dir_final = match self.filter {
+					None => format!("{}\\*", self.dir_path),
+					Some(filter) => format!("{}\\{}", self.dir_path, filter),
+				};
+
+				let found = match HFINDFILE::FindFirstFile(&dir_final, &mut self.wfd) {
+					Err(e) => {
+						self.no_more = true; // prevent further iterations
+						return Some(Err(e));
+					},
+					Ok((hfind, found)) => {
+						self.hfind = Some(hfind); // store our find handle
+						found
+					},
+				};
+				found
+			},
+			Some(hfind) => { // subsequent passes
+				match hfind.FindNextFile(&mut self.wfd) {
+					Err(e) => {
+						self.no_more = true; // prevent further iterations
+						return Some(Err(e));
+					},
+					Ok(found) => found,
+				}
+			},
+		};
+
+		if found {
+			Some(Ok(format!("{}\\{}", self.dir_path, self.wfd.cFileName())))
+		} else {
+			None
+		}
+	}
+}
+
+impl<'a> DirListIter<'a> {
+	fn new(dir_path: &'a str, filter: Option<&'a str>) -> Self {
+		Self {
+			dir_path: rtrim_backslash(dir_path),
+			filter,
+			hfind: None,
+			wfd: WIN32_FIND_DATA::default(),
+			no_more: false,
+		}
+	}
 }
