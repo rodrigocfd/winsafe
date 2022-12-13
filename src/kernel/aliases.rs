@@ -6,7 +6,6 @@ use crate::co;
 /// This is the most generic
 /// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) possible –
 /// any other `Result` can be converted into it.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
 /// A [`Result` alias](crate#errors-and-result-aliases) for native system error
@@ -24,5 +23,4 @@ pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 ///
 /// let err_result: AnyResult<()> = sys_result.map_err(|err| err.into());
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub type SysResult<T> = Result<T, co::ERROR>;

@@ -3,12 +3,10 @@
 /// Declares an ordinary COM interface, and implements ole_IUnknown trait.
 macro_rules! com_interface {
 	(
-		$name:ident : $feature:literal;
-		$guid:expr;
+		$name:ident : $guid:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
 		pub struct $name(ComPtr);
 
@@ -58,10 +56,9 @@ macro_rules! com_interface {
 /// Creates multiple `GUID`-derived pub const values.
 macro_rules! const_guid_values {
 	(
-		$name:ident $(: $feature:literal)*;
-		$($pubname:ident $guid:expr)*
+		$name:ident;
+		$( $pubname:ident $guid:expr )*
 	) => {
-		$( #[cfg_attr(docsrs, doc(cfg(feature = $feature)))] )*
 		impl $name {
 			$(
 				pub const $pubname: $name = $name::new($guid);
@@ -73,15 +70,12 @@ macro_rules! const_guid_values {
 /// Declares the type of a GUID constant, along with public values.
 macro_rules! const_guid {
 	(
-		$name:ident : $feature:literal;
+		$name:ident;
 		$( #[$doc:meta] )*
 		=>
-		$(
-			$pubname:ident $guid:expr
-		)*
+		$( $pubname:ident $guid:expr )*
 	) => {
 		$( #[$doc] )*
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
 		#[derive(Clone, Copy, Eq, PartialEq, Hash)]
 		pub struct $name(crate::ole::decl::GUID);
@@ -124,9 +118,7 @@ macro_rules! const_guid {
 
 		const_guid_values! {
 			$name;
-			$(
-				$pubname $guid
-			)*
+			$( $pubname $guid )*
 		}
 	};
 }

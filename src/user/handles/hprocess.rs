@@ -15,7 +15,6 @@ impl user_Hprocess for HPROCESS {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hprocess: Handle {
 	/// [`SetUserObjectInformation`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
 	/// method.

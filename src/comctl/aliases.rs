@@ -4,7 +4,6 @@ use crate::user::decl::HWND;
 /// Type alias to
 /// [`PFNLVCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-listview_sortitems)
 /// callback function.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub type PFNLVCOMPARE =
 	extern "system" fn(
 		lParam1: isize,
@@ -15,7 +14,6 @@ pub type PFNLVCOMPARE =
 /// Type alias to
 /// [`PFNLVGROUPCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-pfnlvgroupcompare)
 /// callback function.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub type PFNLVGROUPCOMPARE =
 	extern "system" fn(
 		groupId1: i32,
@@ -26,7 +24,6 @@ pub type PFNLVGROUPCOMPARE =
 /// Type alias to
 /// [`SUBCLASSPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-subclassproc)
 /// callback function.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub type SUBCLASSPROC =
 	extern "system" fn(
 		hWnd: HWND,

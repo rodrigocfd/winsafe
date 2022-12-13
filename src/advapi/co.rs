@@ -2,7 +2,7 @@
 
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS};
 
-const_bitflag! { KEY: u32: "advapi";
+const_bitflag! { KEY: u32;
 	/// [`HKEY::RegOpenKeyEx`](crate::prelude::advapi_Hkey::RegOpenKeyEx)
 	/// `access_rights` (`u32`).
 	=>
@@ -22,7 +22,7 @@ const_bitflag! { KEY: u32: "advapi";
 	ALL_ACCESS (STANDARD_RIGHTS::ALL.0 | Self::QUERY_VALUE.0 | Self::SET_VALUE.0 | Self::CREATE_SUB_KEY.0 | Self::ENUMERATE_SUB_KEYS.0 | Self::NOTIFY.0 | Self::CREATE_LINK.0) & !ACCESS_RIGHTS::SYNCHRONIZE.0
 }
 
-const_ordinary! { REG: u32: "advapi";
+const_ordinary! { REG: u32;
 	/// Registry
 	/// [value types](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
@@ -44,7 +44,7 @@ const_ordinary! { REG: u32: "advapi";
 	QWORD_LITTLE_ENDIAN 11
 }
 
-const_bitflag! { REG_OPTION: u32: "advapi";
+const_bitflag! { REG_OPTION: u32;
 	/// [`HKEY::RegOpenKeyEx`](crate::prelude::advapi_Hkey::RegOpenKeyEx)
 	/// `options` (`u32`).
 	=>
@@ -59,7 +59,7 @@ const_bitflag! { REG_OPTION: u32: "advapi";
 	OPEN_LINK 0x0000_0008
 }
 
-const_bitflag! { RRF: u32: "advapi";
+const_bitflag! { RRF: u32;
 	/// [`HKEY::GetValue`](crate::prelude::advapi_Hkey::RegGetValue) `dwFlags`
 	/// (`u32`).
 	=>

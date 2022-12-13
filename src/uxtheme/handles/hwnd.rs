@@ -17,7 +17,6 @@ impl uxtheme_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]
 pub trait uxtheme_Hwnd: Handle {
 	/// [`OpenThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// method.

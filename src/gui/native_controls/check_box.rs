@@ -24,7 +24,6 @@ use crate::user::decl::{
 };
 
 /// Possible states of a [`CheckBox`](crate::gui::CheckBox) control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum CheckState {
 	/// CheckBox is checked.
@@ -50,7 +49,6 @@ struct Obj { // actual fields of CheckBox
 /// [check box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control, actually a variation of the ordinary
 /// [`Button`](crate::gui::Button): just a button with a specific style.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct CheckBox(Pin<Arc<Obj>>);
 
@@ -263,7 +261,6 @@ impl CheckBox {
 
 /// Options to create a [`CheckBox`](crate::gui::CheckBox) programmatically with
 /// [`CheckBox::new`](crate::gui::CheckBox::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct CheckBoxOpts {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

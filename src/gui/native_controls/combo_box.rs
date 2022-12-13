@@ -30,7 +30,6 @@ struct Obj { // actual fields of ComboBox
 /// Native
 /// [combo box](https://learn.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct ComboBox(Pin<Arc<Obj>>);
 
@@ -179,7 +178,6 @@ impl ComboBox {
 
 /// Options to create a [`ComboBox`](crate::gui::ComboBox) programmatically with
 /// [`ComboBox::new`](crate::gui::ComboBox::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ComboBoxOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

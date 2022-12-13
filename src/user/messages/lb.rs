@@ -9,7 +9,6 @@ use crate::user::privs::{LB_ERR, LB_ERRSPACE, zero_as_err};
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct AddFile {
 	pub text: WString,
 }
@@ -38,7 +37,6 @@ unsafe impl MsgSend for AddFile {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct AddString {
 	pub text: WString,
 }
@@ -67,7 +65,6 @@ unsafe impl MsgSend for AddString {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct DeleteString {
 	pub index: u32,
 }
@@ -95,7 +92,6 @@ unsafe impl MsgSend for DeleteString {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Dir {
 	pub attributes: co::DDL,
 	pub path: WString,
@@ -125,7 +121,6 @@ unsafe impl MsgSend for Dir {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct FindString {
 	pub preceding_index: Option<u32>,
 	pub text: WString,
@@ -154,7 +149,6 @@ unsafe impl MsgSend for FindString {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct FindStringExact {
 	pub preceding_index: Option<u32>,
 	pub text: WString,
@@ -183,7 +177,6 @@ unsafe impl MsgSend for FindStringExact {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetAnchorIndex {}
 
 unsafe impl MsgSend for GetAnchorIndex {
@@ -206,7 +199,6 @@ unsafe impl MsgSend for GetAnchorIndex {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCaretIndex {}
 
 unsafe impl MsgSend for GetCaretIndex {
@@ -229,7 +221,6 @@ unsafe impl MsgSend for GetCaretIndex {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCount {}
 
 unsafe impl MsgSend for GetCount {
@@ -255,7 +246,6 @@ unsafe impl MsgSend for GetCount {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCurSel {}
 
 unsafe impl MsgSend for GetCurSel {
@@ -281,7 +271,6 @@ unsafe impl MsgSend for GetCurSel {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHorizontalExtent {}
 
 unsafe impl MsgSend for GetHorizontalExtent {
@@ -304,7 +293,6 @@ unsafe impl MsgSend for GetHorizontalExtent {
 /// message parameters.
 ///
 /// Return type: `SysResult<isize>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetItemData {
 	pub index: u32,
 }
@@ -333,7 +321,6 @@ unsafe impl MsgSend for GetItemData {
 /// message parameters.
 ///
 /// Return type: `SysResult<u8>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetItemHeight {
 	pub index: Option<u32>,
 }
@@ -361,7 +348,6 @@ unsafe impl MsgSend for GetItemHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
@@ -390,7 +376,6 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetListBoxInfo {}
 
 unsafe impl MsgSend for GetListBoxInfo {
@@ -413,7 +398,6 @@ unsafe impl MsgSend for GetListBoxInfo {
 /// message, which has no parameters.
 ///
 /// Return type: `LCID`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLocale {}
 
 unsafe impl MsgSend for GetLocale {
@@ -436,7 +420,6 @@ unsafe impl MsgSend for GetLocale {
 /// message parameters.
 ///
 /// Return type: `SysResult<bool>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetSel {
 	pub index: u32,
 }
@@ -464,7 +447,6 @@ unsafe impl MsgSend for GetSel {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetSelCount {}
 
 unsafe impl MsgSend for GetSelCount {
@@ -490,7 +472,6 @@ unsafe impl MsgSend for GetSelCount {
 /// message parameters.
 ///
 /// Return type `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetSelItems<'a> {
 	pub buffer: &'a mut [u32],
 }
@@ -518,7 +499,6 @@ unsafe impl<'a> MsgSend for GetSelItems<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetText<'a> {
 	pub index: u32,
 	pub text: &'a mut WString,
@@ -547,7 +527,6 @@ unsafe impl<'a> MsgSend for GetText<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTextLen {
 	pub index: u32,
 }
@@ -575,7 +554,6 @@ unsafe impl MsgSend for GetTextLen {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTopIndex {}
 
 unsafe impl MsgSend for GetTopIndex {
@@ -601,7 +579,6 @@ unsafe impl MsgSend for GetTopIndex {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InitStorage {
 	pub num_items: u32,
 	pub memory_bytes: u32,
@@ -630,7 +607,6 @@ unsafe impl MsgSend for InitStorage {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InsertString {
 	pub insertion_index: Option<u32>,
 	pub text: WString,
@@ -660,7 +636,6 @@ unsafe impl MsgSend for InsertString {
 /// message parameters.
 ///
 /// Return type: `(i32, bool)`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ItemFromPoint {
 	pub coords: POINT,
 }
@@ -681,7 +656,7 @@ unsafe impl MsgSend for ItemFromPoint {
 	}
 }
 
-pub_struct_msg_empty! { ResetContent: co::LB::RESETCONTENT.into(); "user";
+pub_struct_msg_empty! { ResetContent: co::LB::RESETCONTENT.into();
 	/// [`LB_RESETCONTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-resetcontent)
 }
 
@@ -689,7 +664,6 @@ pub_struct_msg_empty! { ResetContent: co::LB::RESETCONTENT.into(); "user";
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SelectString {
 	pub index: Option<u32>,
 	pub prefix: WString,
@@ -719,7 +693,6 @@ unsafe impl MsgSend for SelectString {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SelItemRange {
 	pub select: bool,
 	pub first_item: u16,
@@ -749,7 +722,6 @@ unsafe impl MsgSend for SelItemRange {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SelItemRangeEx {
 	pub first_index: u32,
 	pub last_index: u32,
@@ -778,7 +750,6 @@ unsafe impl MsgSend for SelItemRangeEx {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetAnchorIndex {
 	pub index: u32,
 }
@@ -806,7 +777,6 @@ unsafe impl MsgSend for SetAnchorIndex {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetCaretIndex {
 	pub index: u32,
 	pub at_least_partially_visible: bool,
@@ -835,7 +805,6 @@ unsafe impl MsgSend for SetCaretIndex {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetColumnWidth {
 	pub width: u32,
 }
@@ -860,7 +829,6 @@ unsafe impl MsgSend for SetColumnWidth {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetCount {
 	pub new_count: u32,
 }
@@ -889,7 +857,6 @@ unsafe impl MsgSend for SetCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetCurSel {
 	pub index: Option<u32>,
 }
@@ -921,7 +888,6 @@ unsafe impl MsgSend for SetCurSel {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetHorizontalExtent {
 	pub width: u32,
 }
@@ -946,7 +912,6 @@ unsafe impl MsgSend for SetHorizontalExtent {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetItemData {
 	pub index: u32,
 	pub data: isize,
@@ -975,7 +940,6 @@ unsafe impl MsgSend for SetItemData {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetItemHeight {
 	pub index: Option<u32>,
 	pub height: u8,
@@ -1004,7 +968,6 @@ unsafe impl MsgSend for SetItemHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<LCID>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetLocale {
 	pub locale: LCID,
 }
@@ -1032,7 +995,6 @@ unsafe impl MsgSend for SetLocale {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetSel {
 	pub select: bool,
 	pub index: Option<u32>,
@@ -1061,7 +1023,6 @@ unsafe impl MsgSend for SetSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetTabStops<'a> {
 	pub tab_stops: &'a [u32],
 }
@@ -1086,7 +1047,6 @@ unsafe impl<'a> MsgSend for SetTabStops<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetTopIndex {
 	pub index: u32,
 }

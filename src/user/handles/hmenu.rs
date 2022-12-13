@@ -9,7 +9,7 @@ use crate::user::decl::{
 	POINT,
 };
 
-impl_handle! { HMENU: "user";
+impl_handle! { HMENU;
 	/// Handle to a
 	/// [menu](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmenu).
 }
@@ -24,7 +24,6 @@ impl user_Hmenu for HMENU {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hmenu: Handle {
 	/// [`AppendMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// method.

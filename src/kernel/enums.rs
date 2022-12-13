@@ -16,7 +16,6 @@ use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 /// * [`HUPDATERSRC::UpdateResource`](crate::prelude::kernel_Hupdatersrc::UpdateResource);
 /// * [`BmpIdbRes`](crate::BmpIdbRes);
 /// * [`ResStrs`](crate::ResStrs).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[derive(Clone)]
 pub enum IdStr {
 	/// A resource ID.
@@ -62,7 +61,6 @@ impl IdStr {
 /// * [`HINSTANCE::FindResource`](crate::prelude::kernel_Hinstance::FindResource);
 /// * [`HINSTANCE::FindResourceEx`](crate::prelude::kernel_Hinstance::FindResourceEx);
 /// * [`HUPDATERSRC`](crate::prelude::kernel_Hupdatersrc::UpdateResource).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[derive(Clone)]
 pub enum RtStr {
 	/// A predefined resource ID.

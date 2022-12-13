@@ -8,7 +8,6 @@ use crate::shell::decl::IShellItemArray;
 use crate::vt::IFileDialogVT;
 
 /// [`IFileOpenDialog`](crate::IFileOpenDialog) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IFileOpenDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
@@ -16,8 +15,7 @@ pub struct IFileOpenDialogVT {
 	pub GetSelectedItems: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IFileOpenDialog: "shell";
-	"d57c7288-d4ad-4768-be02-9d969532d960";
+com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	/// [`IFileOpenDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
 	/// COM interface over [`IFileOpenDialogVT`](crate::vt::IFileOpenDialogVT).
 	///
@@ -77,7 +75,6 @@ impl shell_IFileOpenDialog for IFileOpenDialog {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IFileOpenDialog: shell_IFileDialog {
 	/// [`IFileOpenDialog::GetResults`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 	/// method.

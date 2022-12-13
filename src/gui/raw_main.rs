@@ -169,7 +169,6 @@ impl RawMain {
 
 /// Options to create a [`WindowMain`](crate::gui::WindowMain) programmatically
 /// with [`WindowMain::new`](crate::gui::WindowMain::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowMainOpts {
 	/// Window class name to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).

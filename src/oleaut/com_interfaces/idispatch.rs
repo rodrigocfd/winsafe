@@ -9,7 +9,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IDispatch`](crate::IDispatch) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]
 pub struct IDispatchVT {
 	pub IUnknownVT: IUnknownVT,
@@ -19,8 +18,7 @@ pub struct IDispatchVT {
 	pub Invoke: fn(ComPtr, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRES,
 }
 
-com_interface! { IDispatch: "oleaut";
-	"00020400-0000-0000-c000-000000000046";
+com_interface! { IDispatch: "00020400-0000-0000-c000-000000000046";
 	/// [`IDispatch`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
 	/// COM interface over [`IDispatchVT`](crate::vt::IDispatchVT).
 	///
@@ -39,7 +37,6 @@ impl oleaut_IDispatch for IDispatch {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_IDispatch: ole_IUnknown {
 	/// [`IDispatch::GetTypeInfoCount`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
 	/// method.

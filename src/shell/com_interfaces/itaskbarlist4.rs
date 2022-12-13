@@ -11,15 +11,13 @@ use crate::user::decl::HWND;
 use crate::vt::ITaskbarList3VT;
 
 /// [`ITaskbarList4`](crate::ITaskbarList4) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct ITaskbarList4VT {
 	pub ITaskbarList3VT: ITaskbarList3VT,
 	pub SetTabProperties: fn(ComPtr, HANDLE, u32) -> HRES,
 }
 
-com_interface! { ITaskbarList4: "shell";
-	"c43dc798-95d1-4bea-9030-bb99e2983a1a";
+com_interface! { ITaskbarList4: "c43dc798-95d1-4bea-9030-bb99e2983a1a";
 	/// [`ITaskbarList4`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist4)
 	/// COM interface over [`ITaskbarList4VT`](crate::vt::ITaskbarList4VT).
 	///
@@ -55,7 +53,6 @@ impl shell_ITaskbarList4 for ITaskbarList4 {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 	/// [`ITaskbarList4::SetTabProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
 	/// method.

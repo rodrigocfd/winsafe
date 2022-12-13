@@ -16,7 +16,6 @@ use crate::user::decl::HWND;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TreeViewItem<'a> {
 	owner: &'a TreeView,
 	hitem: HTREEITEM,

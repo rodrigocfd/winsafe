@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types)]
 
-const_ordinary! { AD: i32: "gdi";
+const_ordinary! { AD: i32;
 	/// [`HDC::SetArcDirection`](crate::prelude::gdi_Hdc::SetArcDirection) `dir`
 	/// (`i32`).
 	=>
@@ -9,7 +9,7 @@ const_ordinary! { AD: i32: "gdi";
 	CLOCKWISE 2
 }
 
-const_ordinary! { BI: u32: "gdi";
+const_ordinary! { BI: u32;
 	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression` (`u32`).
 	=>
 	=>
@@ -21,7 +21,7 @@ const_ordinary! { BI: u32: "gdi";
 	PNG 5
 }
 
-const_ordinary! { BKMODE: i32: "gdi";
+const_ordinary! { BKMODE: i32;
 	/// [`HDC::SetBkMode`](crate::prelude::gdi_Hdc::SetBkMode) `mode` (`i32`).
 	=>
 	=>
@@ -29,7 +29,7 @@ const_ordinary! { BKMODE: i32: "gdi";
 	OPAQUE 2
 }
 
-const_ordinary! { BSS: u32: "gdi";
+const_ordinary! { BSS: u32;
 	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbStyle` (`u32`).
 	///
 	/// Originally has `BS` prefix.
@@ -48,7 +48,7 @@ const_ordinary! { BSS: u32: "gdi";
 	MONOPATTERN 9
 }
 
-const_ordinary! { CHARSET: u8: "gdi";
+const_ordinary! { CHARSET: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `char_set`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 	=>
@@ -75,7 +75,7 @@ const_ordinary! { CHARSET: u8: "gdi";
 	BALTIC 186
 }
 
-const_ordinary! { CLIP: u8: "gdi";
+const_ordinary! { CLIP: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `clip_precision` and [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`
 	/// (`u8`).
@@ -91,7 +91,7 @@ const_ordinary! { CLIP: u8: "gdi";
 	EMBEDDED 8 << 4
 }
 
-const_ordinary! { DIB: u32: "gdi";
+const_ordinary! { DIB: u32;
 	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
 	=>
 	=>
@@ -102,7 +102,7 @@ const_ordinary! { DIB: u32: "gdi";
 	PAL_COLORS 1
 }
 
-const_ordinary! { FF: u8: "gdi";
+const_ordinary! { FF: u8;
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`) used with
 	/// [`PITCH`](crate::co::PITCH).
 	=>
@@ -115,7 +115,7 @@ const_ordinary! { FF: u8: "gdi";
 	DECORATIVE 5 << 4
 }
 
-const_ordinary! { FW: u32: "gdi";
+const_ordinary! { FW: u32;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `weight`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
 	=>
@@ -137,7 +137,7 @@ const_ordinary! { FW: u32: "gdi";
 	BLACK Self::HEAVY.0
 }
 
-const_ordinary! { GDC: i32: "gdi";
+const_ordinary! { GDC: i32;
 	/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps) `index`
 	/// (`i32`).
 	///
@@ -186,7 +186,7 @@ const_ordinary! { GDC: i32: "gdi";
 	COLORMGMTCAPS 121
 }
 
-const_ordinary! { GM: i32: "gdi";
+const_ordinary! { GM: i32;
 	/// [`HDC::SetGraphicsMode`](crate::prelude::gdi_Hdc::SetGraphicsMode)
 	/// `mode` (`i32`).
 	=>
@@ -195,7 +195,7 @@ const_ordinary! { GM: i32: "gdi";
 	ADVANCED 2
 }
 
-const_ordinary! { HS: i32: "gdi";
+const_ordinary! { HS: i32;
 	/// [`HBRUSH::CreateHatchBrush`](crate::prelude::gdi_Hbrush::CreateHatchBrush)
 	/// `hatch` (`i32`).
 	=>
@@ -214,7 +214,7 @@ const_ordinary! { HS: i32: "gdi";
 	DIAGCROSS 5
 }
 
-const_ordinary! { OUT_PRECIS: u8: "gdi";
+const_ordinary! { OUT_PRECIS: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `out_precision` and [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	=>
@@ -232,7 +232,7 @@ const_ordinary! { OUT_PRECIS: u8: "gdi";
 	PS_ONLY 10
 }
 
-const_ordinary! { PITCH: u8: "gdi";
+const_ordinary! { PITCH: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `pitch_and_family` and [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`
 	/// (`u8`) used with [`FF`](crate::co::FF).
@@ -250,7 +250,7 @@ impl PITCH {
 	}
 }
 
-const_ordinary! { PS: i32: "gdi";
+const_ordinary! { PS: i32;
 	/// [`HPEN::CreatePen`](crate::prelude::gdi_Hpen::CreatePen) `style`
 	/// (`i32`).
 	=>
@@ -264,7 +264,7 @@ const_ordinary! { PS: i32: "gdi";
 	INSIDEFRAME 6
 }
 
-const_ordinary! { QUALITY: u8: "gdi";
+const_ordinary! { QUALITY: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	=>
@@ -278,7 +278,7 @@ const_ordinary! { QUALITY: u8: "gdi";
 	CLEARTYPE_NATURAL 6
 }
 
-const_ordinary! { ROP: u32: "gdi";
+const_ordinary! { ROP: u32;
 	/// Raster operation code (`u32`).
 	/// [`HDC::BitBlt`](crate::prelude::gdi_Hdc::BitBlt) `rop`,
 	/// [`HDC::PatBlt`](crate::prelude::gdi_Hdc::PatBlt) `rop` and
@@ -341,7 +341,7 @@ const_ordinary! { ROP: u32: "gdi";
 	CAPTUREBLT 0x4000_0000
 }
 
-const_ordinary! { STOCK_BRUSH: i32: "gdi";
+const_ordinary! { STOCK_BRUSH: i32;
 	/// [`HBRUSH::GetStockObject`](crate::prelude::gdi_Hbrush::GetStockObject)
 	/// `i` (`i32`).
 	=>
@@ -356,7 +356,7 @@ const_ordinary! { STOCK_BRUSH: i32: "gdi";
 	WHITE 0
 }
 
-const_ordinary! { STOCK_FONT: i32: "gdi";
+const_ordinary! { STOCK_FONT: i32;
 	/// [`HFONT::GetStockObject`](crate::prelude::gdi_Hfont::GetStockObject) `i`
 	/// (`i32`).
 	=>
@@ -370,7 +370,7 @@ const_ordinary! { STOCK_FONT: i32: "gdi";
 	SYSTEM_FIXED 16
 }
 
-const_ordinary! { STOCK_PEN: i32: "gdi";
+const_ordinary! { STOCK_PEN: i32;
 	/// [`HPEN::GetStockObject`](crate::prelude::gdi_Hpen::GetStockObject) `i`
 	/// (`i32`).
 	=>
@@ -381,7 +381,7 @@ const_ordinary! { STOCK_PEN: i32: "gdi";
 	WHITE 6
 }
 
-const_ordinary! { STRETCH_MODE: i32: "gdi";
+const_ordinary! { STRETCH_MODE: i32;
 	/// [`HDC::SetStretchBltMode`](crate::prelude::gdi_Hdc::SetStretchBltMode)
 	/// `mode` (`i32`).
 	=>
@@ -416,7 +416,7 @@ const_ordinary! { STRETCH_MODE: i32: "gdi";
 	WHITEONBLACK 2
 }
 
-const_bitflag! { TA: u32: "gdi";
+const_bitflag! { TA: u32;
 	/// [`HDC::SetTextAlign`](crate::prelude::gdi_Hdc::SetTextAlign) `align`
 	/// (`u32`).
 	///

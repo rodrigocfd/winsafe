@@ -10,7 +10,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IPin`](crate::IPin) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IPinVT {
 	pub IUnknownVT: IUnknownVT,
@@ -31,8 +30,7 @@ pub struct IPinVT {
 	pub NewSegment: fn(ComPtr, i64, i64, f64) -> HRES,
 }
 
-com_interface! { IPin: "dshow";
-	"56a86891-0ad4-11ce-b03a-0020af0ba770";
+com_interface! { IPin: "56a86891-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IPin`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
 	/// COM interface over [`IPinVT`](crate::vt::IPinVT).
 	///
@@ -45,7 +43,6 @@ impl dshow_IPin for IPin {}
 
 /// This trait is enabled with the `dshow` feature, and provides methods for
 /// [`IPin`](crate::IPin).
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::BeginFlush`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
 	/// method.

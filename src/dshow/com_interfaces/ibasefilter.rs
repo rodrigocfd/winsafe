@@ -9,7 +9,6 @@ use crate::prelude::{dshow_IMediaFilter, ole_IPersist, ole_IUnknown};
 use crate::vt::IMediaFilterVT;
 
 /// [`IBaseFilter`](crate::IBaseFilter) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IBaseFilterVT {
 	pub IMediaFilterVT: IMediaFilterVT,
@@ -20,8 +19,7 @@ pub struct IBaseFilterVT {
 	pub QueryVendorInfo: fn(ComPtr, *mut PSTR) -> HRES,
 }
 
-com_interface! { IBaseFilter: "dshow";
-	"56a86895-0ad4-11ce-b03a-0020af0ba770";
+com_interface! { IBaseFilter: "56a86895-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IBaseFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
 	/// COM interface over [`IBaseFilterVT`](crate::vt::IBaseFilterVT).
 	///
@@ -56,7 +54,6 @@ impl dshow_IBaseFilter for IBaseFilter {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	/// [`IBaseFilter::JoinFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.

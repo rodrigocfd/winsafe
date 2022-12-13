@@ -6,7 +6,7 @@ use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 use crate::user::decl::HOOKPROC;
 
-impl_handle! { HHOOK: "user";
+impl_handle! { HHOOK;
 	/// Handle to a
 	/// [hook](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
 }
@@ -21,7 +21,6 @@ impl user_Hhook for HHOOK {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hhook: Handle {
 	/// [`CallNextHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
 	/// method.

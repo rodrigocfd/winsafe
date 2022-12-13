@@ -5,7 +5,7 @@ use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::{bool_to_sysresult, GMEM_INVALID_HANDLE};
 use crate::prelude::Handle;
 
-impl_handle! { HGLOBAL: "kernel";
+impl_handle! { HGLOBAL;
 	/// Handle to a
 	/// [global memory block](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc).
 	/// Originally just a `HANDLE`.
@@ -21,7 +21,6 @@ impl kernel_Hglobal for HGLOBAL {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hglobal: Handle {
 	/// [`GlobalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 	/// static method.
@@ -99,7 +98,7 @@ pub trait kernel_Hglobal: Handle {
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HglobalGuard, HGLOBAL, "kernel";
+handle_guard! { HglobalGuard: HGLOBAL;
 	kernel::ffi::GlobalFree;
 	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
 	/// calls

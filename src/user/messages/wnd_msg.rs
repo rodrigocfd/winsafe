@@ -9,7 +9,6 @@ use crate::prelude::{MsgSend, MsgSendRecv};
 /// [`as_generic_wm`](crate::prelude::MsgSend::as_generic_wm) method.
 ///
 /// Return type: `isize`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy, Debug)]
 pub struct WndMsg {
 	/// The [`co::WM`](crate::co::WM) constant that identifies the window

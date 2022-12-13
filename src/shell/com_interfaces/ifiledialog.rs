@@ -10,7 +10,6 @@ use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};
 use crate::vt::IModalWindowVT;
 
 /// [`IFileDialog`](crate::IFileDialog) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IFileDialogVT {
 	pub IModalWindowVT: IModalWindowVT,
@@ -39,8 +38,7 @@ pub struct IFileDialogVT {
 	pub SetFilter: fn(ComPtr, PVOID) -> HRES,
 }
 
-com_interface! { IFileDialog: "shell";
-	"42f85136-db7e-439c-85f1-e4075d135fc8";
+com_interface! { IFileDialog: "42f85136-db7e-439c-85f1-e4075d135fc8";
 	/// [`IFileDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
 	/// COM interface over [`IFileDialogVT`](crate::vt::IFileDialogVT).
 	///
@@ -60,7 +58,6 @@ impl shell_IFileDialog for IFileDialog {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IFileDialog: shell_IModalWindow {
 	/// [`IFileDialog::AddPlace`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-addplace)
 	/// method.

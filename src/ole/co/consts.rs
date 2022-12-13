@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types)]
 
-const_ordinary! { CLSCTX: u32: "ole";
+const_ordinary! { CLSCTX: u32;
 	/// [`CLSCTX`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
 	=>
@@ -61,7 +61,7 @@ const_ordinary! { CLSCTX: u32: "ole";
 	ACTIVATE_ARM32_SERVER 0x200_0000
 }
 
-const_bitflag! { COINIT: u32: "ole";
+const_bitflag! { COINIT: u32;
 	/// [`COINIT`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
 	/// enumeration (`u32`).
 	=>
@@ -83,7 +83,7 @@ const_bitflag! { COINIT: u32: "ole";
 	SPEED_OVER_MEMORY 0x8
 }
 
-const_ordinary! { DROPEFFECT: u32: "ole";
+const_ordinary! { DROPEFFECT: u32;
 	/// [`DROPEFFECT`](https://learn.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
 	/// constants (`u32`).
 	=>
@@ -95,7 +95,7 @@ const_ordinary! { DROPEFFECT: u32: "ole";
 	SCROLL 0x8000_0000
 }
 
-const_ordinary! { FACILITY: u32: "ole";
+const_ordinary! { FACILITY: u32;
 	/// [`HRESULT`](crate::co::HRESULT) facility (`u32`).
 	=>
 	=>
@@ -244,7 +244,7 @@ const_ordinary! { FACILITY: u32: "ole";
 	PIX 2748
 }
 
-const_bitflag! { LOCKTYPE: u32: "ole";
+const_bitflag! { LOCKTYPE: u32;
 	/// [`LOCKTYPE`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-locktype)
 	/// enumeration (`u32`).
 	=>
@@ -254,7 +254,7 @@ const_bitflag! { LOCKTYPE: u32: "ole";
 	ONLYONCE 4
 }
 
-const_ordinary! { PICTYPE: i16: "ole";
+const_ordinary! { PICTYPE: i16;
 	/// [`PICTYPE`](https://learn.microsoft.com/en-us/windows/win32/com/pictype-constants)
 	/// constants (`i16`).
 	=>
@@ -267,7 +267,7 @@ const_ordinary! { PICTYPE: i16: "ole";
 	ENHMETAFILE 4
 }
 
-const_ordinary! { SEVERITY: u8: "ole";
+const_ordinary! { SEVERITY: u8;
 	/// [`HRESULT`](crate::co::HRESULT) severity (`u8`).
 	=>
 	=>
@@ -275,7 +275,7 @@ const_ordinary! { SEVERITY: u8: "ole";
 	FAILURE 1
 }
 
-const_bitflag! { STGC: u32: "ole";
+const_bitflag! { STGC: u32;
 	/// [`STGC`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgc)
 	/// enumeration (`u32`).
 	=>
@@ -287,7 +287,7 @@ const_bitflag! { STGC: u32: "ole";
 	CONSOLIDATE 8
 }
 
-const_ordinary! { STREAM_SEEK: u32: "ole";
+const_ordinary! { STREAM_SEEK: u32;
 	/// [`STREAM_SEEK`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-stream_seek)
 	/// enumeration (`u32`).
 	=>
@@ -297,7 +297,7 @@ const_ordinary! { STREAM_SEEK: u32: "ole";
 	END 2
 }
 
-const_ordinary! { TYMED: u32: "ole";
+const_ordinary! { TYMED: u32;
 	/// [`TYMED`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-tymed)
 	/// enumeration (`u32`).
 	=>

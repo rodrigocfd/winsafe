@@ -7,7 +7,6 @@ use crate::prelude::{Handle, user_Hwnd};
 use crate::user::decl::{HWND, HwndFocus};
 
 /// Any window. Exposes the underlying window handle.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiWindow {
 	/// Returns the underlying handle for this control.
 	///
@@ -51,7 +50,6 @@ pub trait GuiWindow {
 }
 
 /// Any window which can get/set text.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiWindowText: GuiWindow {
 	/// Sets the text by calling
 	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
@@ -68,7 +66,6 @@ pub trait GuiWindowText: GuiWindow {
 }
 
 /// Any window which can host child controls.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiParent: GuiWindow {
 	/// Exposes the window events and control notifications.
 	///
@@ -91,7 +88,6 @@ pub trait GuiParent: GuiWindow {
 
 /// Allows a window to spawn new threads which can return errors, and run
 /// closures in the original UI thread.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiThread: GuiParent {
 	/// This method calls
 	/// [`std::thread::spawn`](https://doc.rust-lang.org/std/thread/fn.spawn.html),
@@ -230,7 +226,6 @@ pub trait GuiThread: GuiParent {
 }
 
 /// Any child window.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiChild: GuiWindow {
 	/// Returns the control ID, which is defined at control creation.
 	///
@@ -240,7 +235,6 @@ pub trait GuiChild: GuiWindow {
 }
 
 /// Any child window which can be focused.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiChildFocus: GuiChild {
 	/// Focus the control by sending a
 	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message. This is
@@ -257,7 +251,6 @@ pub trait GuiChildFocus: GuiChild {
 }
 
 /// Any native control, which can be subclassed.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiNativeControl: GuiChild {
 	/// Exposes the subclass events. If at least one event exists, the control
 	/// will be
@@ -274,7 +267,6 @@ pub trait GuiNativeControl: GuiChild {
 }
 
 /// Events of a native control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiNativeControlEvents<E> {
 	/// Exposes the specific control events.
 	///

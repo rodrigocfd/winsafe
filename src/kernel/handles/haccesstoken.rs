@@ -6,7 +6,7 @@ use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
-impl_handle! { HACCESSTOKEN: "kernel";
+impl_handle! { HACCESSTOKEN;
 	/// Handle to an
 	/// [access token](https://learn.microsoft.com/en-us/windows/win32/secgloss/a-gly).
 	/// Originally just a `HANDLE`.
@@ -22,7 +22,6 @@ impl kernel_Haccesstoken for HACCESSTOKEN {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Haccesstoken: Handle {
 	/// [`DuplicateToken`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
 	/// method.

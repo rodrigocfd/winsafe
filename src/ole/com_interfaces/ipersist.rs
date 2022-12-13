@@ -8,15 +8,13 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IPersist`](crate::IPersist) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IPersistVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetClassID: fn(ComPtr, PVOID) -> HRES,
 }
 
-com_interface! { IPersist: "ole";
-	"0000010c-0000-0000-c000-000000000046";
+com_interface! { IPersist: "0000010c-0000-0000-c000-000000000046";
 	/// [`IPersist`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
 	/// COM interface over [`IPersistVT`](crate::vt::IPersistVT).
 	///
@@ -35,7 +33,6 @@ impl ole_IPersist for IPersist {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IPersist: ole_IUnknown {
 	/// [`IPersist::GetClassID`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersist-getclassid)
 	/// method.

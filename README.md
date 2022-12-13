@@ -15,19 +15,30 @@ WinSafe has:
 If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
 WinSafe documentation:
-* stable release: [docs.rs/winsafe](https://docs.rs/winsafe)
-* master branch: [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/)
+
+| Branch | Docs |
+| - | - |
+| Stable | [docs.rs/winsafe](https://docs.rs/winsafe) |
+| Nightly (master) | [rodrigocfd.github.io/winsafe/winsafe](https://rodrigocfd.github.io/winsafe/winsafe/) |
 
 ## Current status
 
-This crate is still in alpha stage. Below is an estimated progress of feature groups:
+These are the estimated progresses of the GUI features:
 
-| Feature group | Estimated progress |
+| GUI feature | Estimated progress |
 | - | - |
-| User windows (main, modal and control) | ![Progress](https://progress-bar.dev/100/) |
-| Native controls | ![Progress](https://progress-bar.dev/85/) |
-| Window messages | ![Progress](https://progress-bar.dev/75/) |
-| Overall Win32 APIs | ![Progress](https://progress-bar.dev/35/) | |
+| User window/dialogs (main, modal and control) | 100% |
+| Native controls | 85% |
+
+Plus, below are the numbers of native FFI items implemented:
+
+| Native FFI item | Count |
+| - | - |
+| Functions | 529 |
+| Constants | 11,776 |
+| Handles | 35 |
+| COM interfaces | 36 |
+| COM methods | 172 |
 
 ## Usage
 
@@ -38,13 +49,20 @@ Add the dependency in your `Cargo.toml`:
 winsafe = { version = "0.0.11", features = [] }
 ```
 
+You can, alternatively, use the Nightly (master) branch [directly](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories), to get the latest features right away:
+
+```toml
+[dependencies]
+winsafe = { git = "https://github.com/rodrigocfd/winsafe", features = [] }
+```
+
 Then you must enable the [Cargo features](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section) you want to be included – these modules are named after native Windows DLL and library names, mostly.
 
 The following Cargo features are available so far:
 
 | Feature | Description |
 | - | - |
-| `advapi` | Advapi32.dll, for Windows Registry |
+| `advapi` | Advapi32.dll, for [Windows Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry) |
 | `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
 | `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://learn.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
 | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |

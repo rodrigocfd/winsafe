@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-const_bitflag! { ACCESS_RIGHTS: u32: "kernel";
+const_bitflag! { ACCESS_RIGHTS: u32;
 	/// Standard access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
@@ -15,7 +15,7 @@ const_bitflag! { ACCESS_RIGHTS: u32: "kernel";
 	SYNCHRONIZE 0x0010_0000
 }
 
-const_ordinary! { CP: u16: "kernel";
+const_ordinary! { CP: u16;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `code_page`
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
@@ -78,7 +78,7 @@ const_ordinary! { CP: u16: "kernel";
 	UTF8 65001
 }
 
-const_bitflag! { CREATE: u32: "kernel";
+const_bitflag! { CREATE: u32;
 	/// Process creation
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
@@ -110,7 +110,7 @@ const_bitflag! { CREATE: u32: "kernel";
 	INHERIT_PARENT_AFFINITY 0x0001_0000
 }
 
-const_ordinary! { DISPOSITION: u32: "kernel";
+const_ordinary! { DISPOSITION: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `creation_disposition` (`u32`).
 	///
@@ -164,7 +164,7 @@ const_ordinary! { DISPOSITION: u32: "kernel";
 	TRUNCATE_EXISTING 5
 }
 
-const_bitflag! { FILE_ATTRIBUTE: u32: "kernel";
+const_bitflag! { FILE_ATTRIBUTE: u32;
 	/// File attribute
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),
 	/// also other flags from
@@ -216,7 +216,7 @@ const_bitflag! { FILE_ATTRIBUTE: u32: "kernel";
 	SECURITY_EFFECTIVE_ONLY 0x0008_0000
 }
 
-const_bitflag! { FILE_MAP: u32: "kernel";
+const_bitflag! { FILE_MAP: u32;
 	/// [`HFILEMAP::MapViewOfFile`](crate::prelude::kernel_Hfilemap::MapViewOfFile)
 	/// `desired_access` (`u32`).
 	=>
@@ -231,7 +231,7 @@ const_bitflag! { FILE_MAP: u32: "kernel";
 	TARGETS_INVALID 0x4000_0000
 }
 
-const_bitflag! { FILE_SHARE: u32: "kernel";
+const_bitflag! { FILE_SHARE: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `share_mode` (`u32`).
 	=>
@@ -243,7 +243,7 @@ const_bitflag! { FILE_SHARE: u32: "kernel";
 	DELETE 0x0000_0004
 }
 
-const_ordinary! { FILE_STARTING_POINT: u32: "kernel";
+const_ordinary! { FILE_STARTING_POINT: u32;
 	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx)
 	/// `move_method` (`u32`).
 	///
@@ -260,7 +260,7 @@ const_ordinary! { FILE_STARTING_POINT: u32: "kernel";
 	END 2
 }
 
-const_ordinary! { FILE_TYPE: u32: "kernel";
+const_ordinary! { FILE_TYPE: u32;
 	/// [`HFILE::GetFileType`](crate::prelude::kernel_Hfile::GetFileType) return
 	/// value (`u32`).
 	=>
@@ -279,7 +279,7 @@ const_ordinary! { FILE_TYPE: u32: "kernel";
 	UNKNOWN 0x0000
 }
 
-const_bitflag! { FILE_VOL: u32: "kernel";
+const_bitflag! { FILE_VOL: u32;
 	/// [`GetVolumeInformation`](crate::GetVolumeInformation) `flags` (`u32`).
 	///
 	/// Originally has `FILE` prefix.
@@ -308,7 +308,7 @@ const_bitflag! { FILE_VOL: u32: "kernel";
 	SUPPORTS_BLOCK_REFCOUNTING 0x0800_0000
 }
 
-const_ordinary! { FIRMWARE_TYPE: u32: "kernel";
+const_ordinary! { FIRMWARE_TYPE: u32;
 	/// [`FIRMWARE_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
 	/// enumeration (`u32`).
 	=>
@@ -318,7 +318,7 @@ const_ordinary! { FIRMWARE_TYPE: u32: "kernel";
 	Uefi 2
 }
 
-const_bitflag! { FORMAT_MESSAGE: u32: "kernel";
+const_bitflag! { FORMAT_MESSAGE: u32;
 	/// [`FormatMessage`](crate::prelude::FormattedError::FormatMessage)
 	/// `dwFlags` (`u32`).
 	=>
@@ -332,7 +332,7 @@ const_bitflag! { FORMAT_MESSAGE: u32: "kernel";
 	MAX_WIDTH_MASK 0x0000_00ff
 }
 
-const_bitflag! { GENERIC: u32: "kernel";
+const_bitflag! { GENERIC: u32;
 	/// Generic access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
@@ -348,7 +348,7 @@ const_bitflag! { GENERIC: u32: "kernel";
 	ALL 0x1000_0000
 }
 
-const_bitflag! { GMEM: u32: "kernel";
+const_bitflag! { GMEM: u32;
 	/// [`HGLOBAL::GlobalAlloc`](crate::prelude::kernel_Hglobal::GlobalAlloc)
 	/// and
 	/// [`HGLOBAL::GlobalReAlloc`](crate::prelude::kernel_Hglobal::GlobalReAlloc)
@@ -362,7 +362,7 @@ const_bitflag! { GMEM: u32: "kernel";
 	GPTR Self::FIXED.0 | Self::ZEROINIT.0
 }
 
-const_bitflag! { GR: u32: "kernel";
+const_bitflag! { GR: u32;
 	/// [`HPROCESS::GetGuiResources`](crate::prelude::kernel_Hprocess::GetGuiResources)
 	/// `flags` (`u32`).
 	=>
@@ -373,7 +373,7 @@ const_bitflag! { GR: u32: "kernel";
 	USEROBJECTS_PEAK 4
 }
 
-const_ordinary! { HF32: u32: "kernel";
+const_ordinary! { HF32: u32;
 	/// [`HEAPLIST32`](crate::HEAPLIST32) `dwFlags` (`u32`).
 	=>
 	=>
@@ -382,7 +382,7 @@ const_ordinary! { HF32: u32: "kernel";
 	DEFAULT 1
 }
 
-const_ordinary! { LANG: u16: "kernel";
+const_ordinary! { LANG: u16;
 	/// Language
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
@@ -530,7 +530,7 @@ const_ordinary! { LANG: u16: "kernel";
 	ZULU 0x35
 }
 
-const_bitflag! { MBC: u32: "kernel";
+const_bitflag! { MBC: u32;
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `flags` (`u32`).
 	///
 	/// Originally has `MB` prefix.
@@ -544,7 +544,7 @@ const_bitflag! { MBC: u32: "kernel";
 	USEGLYPHCHARS 0x0000_0004
 }
 
-const_ordinary! { PAGE: u32: "kernel";
+const_ordinary! { PAGE: u32;
 	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
 	=>
@@ -600,7 +600,7 @@ const_ordinary! { PAGE: u32: "kernel";
 	SEC_WRITECOMBINE 0x4000_0000
 }
 
-const_bitflag! { PROCESS: u32: "kernel";
+const_bitflag! { PROCESS: u32;
 	/// Process
 	/// [security and access rights](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
 	/// (`u32`).
@@ -627,7 +627,7 @@ const_bitflag! { PROCESS: u32: "kernel";
 	VM_WRITE 0x0020
 }
 
-const_ordinary! { PROCESSOR: u32: "kernel";
+const_ordinary! { PROCESSOR: u32;
 	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `dwProcessorType` (`u32`).
 	=>
 	=>
@@ -656,7 +656,7 @@ const_ordinary! { PROCESSOR: u32: "kernel";
 	OPTIL 0x494f
 }
 
-const_ordinary! { PROCESS_NAME: u32: "kernel";
+const_ordinary! { PROCESS_NAME: u32;
 	/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
 	/// flags (`u32`).
 	=>
@@ -667,7 +667,7 @@ const_ordinary! { PROCESS_NAME: u32: "kernel";
 	NATIVE 0x0000_0001
 }
 
-const_ordinary! { PROCESSOR_ARCHITECTURE: u16: "kernel";
+const_ordinary! { PROCESSOR_ARCHITECTURE: u16;
 	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `wProcessorArchitecture` (`u16`).
 	=>
 	=>
@@ -689,7 +689,7 @@ const_ordinary! { PROCESSOR_ARCHITECTURE: u16: "kernel";
 	UNKNOWN 0xffff
 }
 
-const_bitflag! { REPLACEFILE: u32: "kernel";
+const_bitflag! { REPLACEFILE: u32;
 	/// [`ReplaceFile`](crate::ReplaceFile) `flags` (`u32`).
 	=>
 	=>
@@ -698,7 +698,7 @@ const_bitflag! { REPLACEFILE: u32: "kernel";
 	IGNORE_ACL_ERRORS 0x0000_0004
 }
 
-const_ordinary! { RT: u16: "kernel";
+const_ordinary! { RT: u16;
 	/// Predefined resource
 	/// [types](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types)
 	/// (`u16`).
@@ -727,7 +727,7 @@ const_ordinary! { RT: u16: "kernel";
 	VXD 20
 }
 
-const_ordinary! { SCS: u32: "kernel";
+const_ordinary! { SCS: u32;
 	/// [`GetBinaryType`](crate::GetBinaryType) return value (`u32`).
 	=>
 	=>
@@ -740,7 +740,7 @@ const_ordinary! { SCS: u32: "kernel";
 	W_64BIT_BINARY 6
 }
 
-const_bitflag! { SECTION: u32: "kernel";
+const_bitflag! { SECTION: u32;
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	=>
 	=>
@@ -753,7 +753,7 @@ const_bitflag! { SECTION: u32: "kernel";
 	ALL_ACCESS STANDARD_RIGHTS::REQUIRED.0 | Self::QUERY.0 | Self::MAP_WRITE.0 | Self::MAP_EXECUTE.0 | Self::EXTEND_SIZE.0
 }
 
-const_bitflag! { SECURITY_IMPERSONATION: u32: "kernel";
+const_bitflag! { SECURITY_IMPERSONATION: u32;
 	/// [`SECURITY_IMPERSONATION_LEVEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
 	/// enumeration (`u32`).
 	=>
@@ -764,7 +764,7 @@ const_bitflag! { SECURITY_IMPERSONATION: u32: "kernel";
 	Delegation 3
 }
 
-const_ordinary! { SORT: u16: "kernel";
+const_ordinary! { SORT: u16;
 	/// Sort order
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
 	/// (`u16`).
@@ -790,7 +790,7 @@ const_ordinary! { SORT: u16: "kernel";
 	GEORGIAN_MODERN 0x1
 }
 
-const_bitflag! { STANDARD_RIGHTS: u32: "kernel";
+const_bitflag! { STANDARD_RIGHTS: u32;
 	/// Standard access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
@@ -803,7 +803,7 @@ const_bitflag! { STANDARD_RIGHTS: u32: "kernel";
 	ALL 0x001_f0000
 }
 
-const_bitflag! { STARTF: u32: "kernel";
+const_bitflag! { STARTF: u32;
 	/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
 	/// `dwFlags` (`u32`).
 	=>
@@ -824,7 +824,7 @@ const_bitflag! { STARTF: u32: "kernel";
 	USESTDHANDLES 0x0000_0100
 }
 
-const_ordinary! { SUBLANG: u16: "kernel";
+const_ordinary! { SUBLANG: u16;
 	/// Sublanguage
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
@@ -1076,7 +1076,7 @@ const_ordinary! { SUBLANG: u16: "kernel";
 	ZULU_SOUTH_AFRICA 0x01
 }
 
-const_ordinary! { SW: i32: "kernel";
+const_ordinary! { SW: i32;
 	/// [`HWND::ShowWindow`](crate::prelude::user_Hwnd::ShowWindow) `show_cmd`
 	/// (`i32`).
 	=>
@@ -1121,7 +1121,7 @@ const_ordinary! { SW: i32: "kernel";
 	FORCEMINIMIZE 11
 }
 
-const_bitflag! { TH32CS: u32: "kernel";
+const_bitflag! { TH32CS: u32;
 	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
 	=>
@@ -1144,7 +1144,7 @@ const_bitflag! { TH32CS: u32: "kernel";
 	INHERIT 0x8000_0000
 }
 
-const_bitflag! { THREAD_CREATE: u32: "kernel";
+const_bitflag! { THREAD_CREATE: u32;
 	/// [`HTHREAD::CreateThread`](crate::prelude::kernel_Hthread::CreateThread)
 	/// `flags` (`u32`). Originally has no prefix.
 	=>
@@ -1155,7 +1155,7 @@ const_bitflag! { THREAD_CREATE: u32: "kernel";
 	STACK_SIZE_PARAM_IS_A_RESERVATION 0x0001_0000
 }
 
-const_bitflag! { TOKEN: u32: "kernel";
+const_bitflag! { TOKEN: u32;
 	/// [Token access rights](https://learn.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects).
 	=>
 	=>
@@ -1182,7 +1182,7 @@ const_bitflag! { TOKEN: u32: "kernel";
 	ACCESS_PSEUDO_HANDLE Self::QUERY.0 | Self::QUERY_SOURCE.0
 }
 
-const_ordinary! { VER_COND: u8: "kernel";
+const_ordinary! { VER_COND: u8;
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
 	=>
 	=>
@@ -1196,7 +1196,7 @@ const_ordinary! { VER_COND: u8: "kernel";
 	CONDITION_MASK 7
 }
 
-const_bitflag! { VER_MASK: u32: "kernel";
+const_bitflag! { VER_MASK: u32;
 	/// [`VerifyVersionInfo`](crate::VerifyVersionInfo) and
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `type_mask` (`u32`).
 	=>
@@ -1211,7 +1211,7 @@ const_bitflag! { VER_MASK: u32: "kernel";
 	PRODUCT_TYPE 0x000_0080
 }
 
-const_ordinary! { VER_NT: u8: "kernel";
+const_ordinary! { VER_NT: u8;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
 	=>
 	=>
@@ -1220,7 +1220,7 @@ const_ordinary! { VER_NT: u8: "kernel";
 	SERVER 0x000_0003
 }
 
-const_bitflag! { VER_SUITE: u16: "kernel";
+const_bitflag! { VER_SUITE: u16;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
 	=>
 	=>
@@ -1243,7 +1243,7 @@ const_bitflag! { VER_SUITE: u16: "kernel";
 	//MULTIUSERTS 0x00020000 // Win32 bug, truncated to zero as u16
 }
 
-const_ordinary! { VER_PLATFORM: u32: "kernel";
+const_ordinary! { VER_PLATFORM: u32;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
 	=>
 	=>
@@ -1252,7 +1252,7 @@ const_ordinary! { VER_PLATFORM: u32: "kernel";
 	WIN32_NT 2
 }
 
-const_ordinary! { WAIT: u32: "kernel";
+const_ordinary! { WAIT: u32;
 	/// [`HPROCESS::WaitForSingleObject`](crate::prelude::kernel_Hprocess::WaitForSingleObject)
 	/// return value (`u32`).
 	=>
@@ -1263,7 +1263,7 @@ const_ordinary! { WAIT: u32: "kernel";
 	FAILED 0xffff_ffff
 }
 
-const_bitflag! { WC: u32: "kernel";
+const_bitflag! { WC: u32;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
 	=>
 	=>
@@ -1275,7 +1275,7 @@ const_bitflag! { WC: u32: "kernel";
 	SEPCHARS 0x0000_0020
 }
 
-const_ordinary! { WIN32: u16: "kernel";
+const_ordinary! { WIN32: u16;
 	/// [`_WIN32`](https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
 	=>

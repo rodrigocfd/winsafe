@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
+
 mod com_interfaces;
 mod structs;
 

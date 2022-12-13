@@ -8,7 +8,7 @@ use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
-impl_handle! { HTHREAD: "kernel";
+impl_handle! { HTHREAD;
 	/// Handle to a
 	/// [thread](https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
 	/// Originally just a `HANDLE`.
@@ -24,7 +24,6 @@ impl kernel_Hthread for HTHREAD {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hthread: Handle {
 	/// [`CreateThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread)
 	/// static method.

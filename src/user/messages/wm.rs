@@ -14,7 +14,6 @@ use crate::user::privs::{CB_ERR, FAPPCOMMAND_MASK, LB_ERRSPACE, zero_as_none};
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Activate {
 	pub event: co::WA,
 	pub is_minimized: bool,
@@ -51,7 +50,6 @@ unsafe impl MsgSendRecv for Activate {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ActivateApp {
 	pub is_being_activated: bool,
 	pub thread_id: u32,
@@ -86,7 +84,6 @@ unsafe impl MsgSendRecv for ActivateApp {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct AppCommand {
 	pub hwnd_owner: HWND,
 	pub app_command: co::APPCOMMAND,
@@ -121,7 +118,7 @@ unsafe impl MsgSendRecv for AppCommand {
 	}
 }
 
-pub_struct_msg_empty_handleable! { CancelMode: co::WM::CANCELMODE; "user";
+pub_struct_msg_empty_handleable! { CancelMode: co::WM::CANCELMODE;
 	/// [`WM_CANCELMODE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 }
 
@@ -129,7 +126,6 @@ pub_struct_msg_empty_handleable! { CancelMode: co::WM::CANCELMODE; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct CaptureChanged {
 	pub hwnd_gaining_mouse: HWND,
 }
@@ -158,15 +154,15 @@ unsafe impl MsgSendRecv for CaptureChanged {
 	}
 }
 
-pub_struct_msg_char! { Char: co::WM::CHAR; "user";
+pub_struct_msg_char! { Char: co::WM::CHAR;
 	/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 }
 
-pub_struct_msg_empty_handleable! { ChildActivate: co::WM::CHILDACTIVATE; "user";
+pub_struct_msg_empty_handleable! { ChildActivate: co::WM::CHILDACTIVATE;
 	/// [`WM_CHILDACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 }
 
-pub_struct_msg_empty_handleable! { Close: co::WM::CLOSE; "user";
+pub_struct_msg_empty_handleable! { Close: co::WM::CLOSE;
 	/// [`WM_CLOSE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 }
 
@@ -174,7 +170,6 @@ pub_struct_msg_empty_handleable! { Close: co::WM::CLOSE; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Command {
 	pub event: AccelMenuCtrl,
 }
@@ -225,7 +220,6 @@ unsafe impl MsgSendRecv for Command {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ContextMenu {
 	pub hwnd: HWND,
 	pub cursor_pos: POINT,
@@ -260,7 +254,6 @@ unsafe impl MsgSendRecv for ContextMenu {
 /// message parameters.
 ///
 /// Return type: `i32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Create<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
@@ -293,7 +286,6 @@ unsafe impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct DeleteItem<'a> {
 	pub control_id: u16,
 	pub deleteitemstruct: &'a DELETEITEMSTRUCT,
@@ -324,7 +316,7 @@ unsafe impl<'a> MsgSendRecv for DeleteItem<'a> {
 	}
 }
 
-pub_struct_msg_empty_handleable! { Destroy: co::WM::DESTROY; "user";
+pub_struct_msg_empty_handleable! { Destroy: co::WM::DESTROY;
 	/// [`WM_DESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 }
 
@@ -332,7 +324,6 @@ pub_struct_msg_empty_handleable! { Destroy: co::WM::DESTROY; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Enable {
 	pub has_been_enabled: bool,
 }
@@ -365,7 +356,6 @@ unsafe impl MsgSendRecv for Enable {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct EndSession {
 	pub is_session_being_ended: bool,
 	pub event: co::ENDSESSION,
@@ -400,7 +390,6 @@ unsafe impl MsgSendRecv for EndSession {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct EnterIdle {
 	pub reason: co::MSGF,
 	pub handle: HwndHmenu,
@@ -439,7 +428,6 @@ unsafe impl MsgSendRecv for EnterIdle {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct EnterMenuLoop {
 	pub with_trackpopupmenu: bool,
 }
@@ -468,7 +456,7 @@ unsafe impl MsgSendRecv for EnterMenuLoop {
 	}
 }
 
-pub_struct_msg_empty_handleable! { EnterSizeMove: co::WM::ENTERSIZEMOVE; "user";
+pub_struct_msg_empty_handleable! { EnterSizeMove: co::WM::ENTERSIZEMOVE;
 	/// [`WM_ENTERSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 }
 
@@ -476,7 +464,6 @@ pub_struct_msg_empty_handleable! { EnterSizeMove: co::WM::ENTERSIZEMOVE; "user";
 /// message parameters.
 ///
 /// Return type: `i32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct EraseBkgnd {
 	pub hdc: HDC,
 }
@@ -509,7 +496,6 @@ unsafe impl MsgSendRecv for EraseBkgnd {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ExitMenuLoop {
 	pub is_shortcut: bool,
 }
@@ -538,7 +524,7 @@ unsafe impl MsgSendRecv for ExitMenuLoop {
 	}
 }
 
-pub_struct_msg_empty_handleable! { ExitSizeMove: co::WM::EXITSIZEMOVE; "user";
+pub_struct_msg_empty_handleable! { ExitSizeMove: co::WM::EXITSIZEMOVE;
 	/// [`WM_EXITSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 }
 
@@ -546,7 +532,6 @@ pub_struct_msg_empty_handleable! { ExitSizeMove: co::WM::EXITSIZEMOVE; "user";
 /// message parameters.
 ///
 /// Return type: `co::DLGC`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDlgCode<'a> {
 	pub vkey_code: co::VK,
 	pub msg: Option<&'a mut MSG>,
@@ -584,7 +569,6 @@ unsafe impl<'a> MsgSendRecv for GetDlgCode<'a> {
 /// message, which has no parameters. Originally has `MN` prefix.
 ///
 /// Return type: `Option<HMENU>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHMenu {}
 
 unsafe impl MsgSend for GetHMenu {
@@ -613,7 +597,6 @@ unsafe impl MsgSendRecv for GetHMenu {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetMinMaxInfo<'a> {
 	pub info: &'a mut MINMAXINFO,
 }
@@ -665,7 +648,6 @@ unsafe impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 ///
 /// println!("Text: {}", buf.to_string());
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetText<'a> {
 	pub buffer: &'a mut [u16], // can't be WString because this message can be received
 }
@@ -698,7 +680,6 @@ unsafe impl<'a> MsgSendRecv for GetText<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTextLength {}
 
 unsafe impl MsgSend for GetTextLength {
@@ -727,7 +708,6 @@ unsafe impl MsgSendRecv for GetTextLength {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTitleBarInfoEx<'a> {
 	pub info: &'a mut TITLEBARINFOEX,
 }
@@ -760,7 +740,6 @@ unsafe impl<'a> MsgSendRecv for GetTitleBarInfoEx<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Help<'a> {
 	pub helpinfo: &'a HELPINFO,
 }
@@ -793,7 +772,6 @@ unsafe impl<'a> MsgSendRecv for Help<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct HScroll {
 	pub scroll_box_pos: u16,
 	pub request: co::SB_REQ,
@@ -833,7 +811,6 @@ unsafe impl MsgSendRecv for HScroll {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InitDialog {
 	pub hwnd_focus: HWND,
 	pub additional_data: isize,
@@ -868,7 +845,6 @@ unsafe impl MsgSendRecv for InitDialog {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InitMenuPopup {
 	pub hmenu: HMENU,
 	pub item_pos: u16,
@@ -901,11 +877,11 @@ unsafe impl MsgSendRecv for InitMenuPopup {
 	}
 }
 
-pub_struct_msg_char! { KeyDown: co::WM::KEYDOWN; "user";
+pub_struct_msg_char! { KeyDown: co::WM::KEYDOWN;
 	/// [`WM_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 }
 
-pub_struct_msg_char! { KeyUp: co::WM::KEYUP; "user";
+pub_struct_msg_char! { KeyUp: co::WM::KEYUP;
 	/// [`WM_KEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 }
 
@@ -913,7 +889,6 @@ pub_struct_msg_char! { KeyUp: co::WM::KEYUP; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct KillFocus {
 	pub hwnd: Option<HWND>,
 }
@@ -945,27 +920,27 @@ unsafe impl MsgSendRecv for KillFocus {
 	}
 }
 
-pub_struct_msg_button! { LButtonDblClk: co::WM::LBUTTONDBLCLK; "user";
+pub_struct_msg_button! { LButtonDblClk: co::WM::LBUTTONDBLCLK;
 	/// [`WM_LBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 }
 
-pub_struct_msg_button! { LButtonDown: co::WM::LBUTTONDOWN; "user";
+pub_struct_msg_button! { LButtonDown: co::WM::LBUTTONDOWN;
 	/// [`WM_LBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 }
 
-pub_struct_msg_button! { LButtonUp: co::WM::LBUTTONUP; "user";
+pub_struct_msg_button! { LButtonUp: co::WM::LBUTTONUP;
 	/// [`WM_LBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 }
 
-pub_struct_msg_button! { MButtonDblClk: co::WM::MBUTTONDBLCLK; "user";
+pub_struct_msg_button! { MButtonDblClk: co::WM::MBUTTONDBLCLK;
 	/// [`WM_MBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 }
 
-pub_struct_msg_button! { MButtonDown: co::WM::MBUTTONDOWN; "user";
+pub_struct_msg_button! { MButtonDown: co::WM::MBUTTONDOWN;
 	/// [`WM_MBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 }
 
-pub_struct_msg_button! { MButtonUp: co::WM::MBUTTONUP; "user";
+pub_struct_msg_button! { MButtonUp: co::WM::MBUTTONUP;
 	/// [`WM_MBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 }
 
@@ -973,7 +948,6 @@ pub_struct_msg_button! { MButtonUp: co::WM::MBUTTONUP; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct MenuCommand {
 	pub item_index: u32,
 	pub hmenu: HMENU,
@@ -1008,7 +982,6 @@ unsafe impl MsgSendRecv for MenuCommand {
 /// message parameters.
 ///
 /// Return type: `co::MND`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct MenuDrag {
 	pub position: u32,
 	pub hmenu: HMENU,
@@ -1043,7 +1016,6 @@ unsafe impl MsgSendRecv for MenuDrag {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct MenuRButtonUp {
 	pub position: u32,
 	pub hmenu: HMENU,
@@ -1074,15 +1046,15 @@ unsafe impl MsgSendRecv for MenuRButtonUp {
 	}
 }
 
-pub_struct_msg_button! { MouseHover: co::WM::MOUSEHOVER; "user";
+pub_struct_msg_button! { MouseHover: co::WM::MOUSEHOVER;
 	/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 }
 
-pub_struct_msg_empty_handleable! { MouseLeave: co::WM::MOUSELEAVE; "user";
+pub_struct_msg_empty_handleable! { MouseLeave: co::WM::MOUSELEAVE;
 	/// [`WM_MOUSELEAVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mouseleave)
 }
 
-pub_struct_msg_button! { MouseMove: co::WM::MOUSEMOVE; "user";
+pub_struct_msg_button! { MouseMove: co::WM::MOUSEMOVE;
 	/// [`WM_MOUSEMOVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 }
 
@@ -1090,7 +1062,6 @@ pub_struct_msg_button! { MouseMove: co::WM::MOUSEMOVE; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Move {
 	pub coords: POINT,
 }
@@ -1123,7 +1094,6 @@ unsafe impl MsgSendRecv for Move {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Moving<'a> {
 	pub window_pos: &'a mut RECT,
 }
@@ -1156,7 +1126,6 @@ unsafe impl<'a> MsgSendRecv for Moving<'a> {
 /// message parameters.
 ///
 /// Return type: `co::WVR`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct NcCalcSize<'a, 'b> {
 	pub data: NccspRect<'a, 'b>,
 }
@@ -1198,7 +1167,6 @@ unsafe impl<'a, 'b> MsgSendRecv for NcCalcSize<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct NcCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
@@ -1227,7 +1195,7 @@ unsafe impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
 	}
 }
 
-pub_struct_msg_empty_handleable! { NcDestroy: co::WM::NCDESTROY; "user";
+pub_struct_msg_empty_handleable! { NcDestroy: co::WM::NCDESTROY;
 	/// [`WM_NCDESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 }
 
@@ -1235,7 +1203,6 @@ pub_struct_msg_empty_handleable! { NcDestroy: co::WM::NCDESTROY; "user";
 /// message parameters.
 ///
 /// Return type: `co::HT`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct NcHitTest{
 	pub cursor_pos: POINT,
 }
@@ -1268,7 +1235,6 @@ unsafe impl MsgSendRecv for NcHitTest {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct NextDlgCtl {
 	pub hwnd_focus: HwndFocus,
 }
@@ -1306,7 +1272,7 @@ unsafe impl MsgSendRecv for NextDlgCtl {
 	}
 }
 
-pub_struct_msg_empty_handleable! { Null: co::WM::NULL; "user";
+pub_struct_msg_empty_handleable! { Null: co::WM::NULL;
 	/// [`WM_NULL`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 }
 
@@ -1314,7 +1280,6 @@ pub_struct_msg_empty_handleable! { Null: co::WM::NULL; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ParentNotify {
 	pub event: co::WMPN,
 	pub child_id: u16,
@@ -1356,7 +1321,6 @@ unsafe impl MsgSendRecv for ParentNotify {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct QueryOpen {}
 
 unsafe impl MsgSend for QueryOpen {
@@ -1381,15 +1345,15 @@ unsafe impl MsgSendRecv for QueryOpen {
 	}
 }
 
-pub_struct_msg_button! { RButtonDblClk: co::WM::RBUTTONDBLCLK; "user";
+pub_struct_msg_button! { RButtonDblClk: co::WM::RBUTTONDBLCLK;
 	/// [`WM_RBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 }
 
-pub_struct_msg_button! { RButtonDown: co::WM::RBUTTONDOWN; "user";
+pub_struct_msg_button! { RButtonDown: co::WM::RBUTTONDOWN;
 	/// [`WM_RBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 }
 
-pub_struct_msg_button! { RButtonUp: co::WM::RBUTTONUP; "user";
+pub_struct_msg_button! { RButtonUp: co::WM::RBUTTONUP;
 	/// [`WM_RBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 }
 
@@ -1397,7 +1361,6 @@ pub_struct_msg_button! { RButtonUp: co::WM::RBUTTONUP; "user";
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetCursor {
 	pub hwnd: HWND,
 	pub hit_test: co::HT,
@@ -1434,7 +1397,6 @@ unsafe impl MsgSendRecv for SetCursor {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetFocus {
 	pub hwnd_losing_focus: HWND,
 }
@@ -1467,7 +1429,6 @@ unsafe impl MsgSendRecv for SetFocus {
 /// message parameters.
 ///
 /// Return type: `Option<HICON>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetIcon {
 	pub size: co::ICON_SZ,
 	pub hicon: HICON,
@@ -1518,7 +1479,6 @@ unsafe impl MsgSendRecv for SetIcon {
 ///     text: unsafe { new_text.as_ptr() },
 /// });
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetText {
 	pub text: *const u16, // can't be WString because this message can be received
 }
@@ -1554,7 +1514,6 @@ unsafe impl MsgSendRecv for SetText {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ShowWindow {
 	pub being_shown: bool,
 	pub status: co::SW_S,
@@ -1589,7 +1548,6 @@ unsafe impl MsgSendRecv for ShowWindow {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Size {
 	pub request: co::SIZE_R,
 	pub client_area: SIZE,
@@ -1627,7 +1585,6 @@ unsafe impl MsgSendRecv for Size {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Sizing<'a> {
 	pub window_edge: co::WMSZ,
 	pub coords: &'a mut RECT,
@@ -1662,7 +1619,6 @@ unsafe impl<'a> MsgSendRecv for Sizing<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct StyleChanged<'a> {
 	pub change: co::GWL_C,
 	pub stylestruct: &'a STYLESTRUCT,
@@ -1698,7 +1654,6 @@ unsafe impl<'a> MsgSendRecv for StyleChanged<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct StyleChanging<'a> {
 	pub change: co::GWL_C,
 	pub stylestruct: &'a STYLESTRUCT,
@@ -1730,7 +1685,7 @@ unsafe impl<'a> MsgSendRecv for StyleChanging<'a> {
 	}
 }
 
-pub_struct_msg_char! { SysChar: co::WM::SYSCHAR; "user";
+pub_struct_msg_char! { SysChar: co::WM::SYSCHAR;
 	/// [`WM_SYSCHAR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 }
 
@@ -1738,7 +1693,6 @@ pub_struct_msg_char! { SysChar: co::WM::SYSCHAR; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SysCommand {
 	pub request: co::SC,
 	pub position: POINT,
@@ -1769,19 +1723,19 @@ unsafe impl MsgSendRecv for SysCommand {
 	}
 }
 
-pub_struct_msg_char! { SysDeadChar: co::WM::SYSDEADCHAR; "user";
+pub_struct_msg_char! { SysDeadChar: co::WM::SYSDEADCHAR;
 	/// [`WM_SYSDEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 }
 
-pub_struct_msg_char! { SysKeyDown: co::WM::SYSKEYDOWN; "user";
+pub_struct_msg_char! { SysKeyDown: co::WM::SYSKEYDOWN;
 	/// [`WM_SYSKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
 }
 
-pub_struct_msg_char! { SysKeyUp: co::WM::SYSKEYUP; "user";
+pub_struct_msg_char! { SysKeyUp: co::WM::SYSKEYUP;
 	/// [`WM_SYSKEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
 }
 
-pub_struct_msg_empty_handleable! { ThemeChanged: co::WM::THEMECHANGED; "user";
+pub_struct_msg_empty_handleable! { ThemeChanged: co::WM::THEMECHANGED;
 	/// [`WM_THEMECHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 }
 
@@ -1789,7 +1743,6 @@ pub_struct_msg_empty_handleable! { ThemeChanged: co::WM::THEMECHANGED; "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Timer {
 	pub timer_id: u32,
 	pub timer_proc: Option<TIMERPROC>,
@@ -1827,7 +1780,6 @@ unsafe impl MsgSendRecv for Timer {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct UninitMenuPopup {
 	pub hmenu: HMENU,
 	pub which: co::MF,
@@ -1862,7 +1814,6 @@ unsafe impl MsgSendRecv for UninitMenuPopup {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Undo {}
 
 unsafe impl MsgSend for Undo {
@@ -1891,7 +1842,6 @@ unsafe impl MsgSendRecv for Undo {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct VScroll {
 	pub scroll_box_pos: u16,
 	pub request: co::SB_REQ,
@@ -1931,7 +1881,6 @@ unsafe impl MsgSendRecv for VScroll {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct WindowPosChanged<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
@@ -1964,7 +1913,6 @@ unsafe impl<'a> MsgSendRecv for WindowPosChanged<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct WindowPosChanging<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
@@ -1993,14 +1941,14 @@ unsafe impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 	}
 }
 
-pub_struct_msg_button! { XButtonDblClk: co::WM::XBUTTONDBLCLK; "user";
+pub_struct_msg_button! { XButtonDblClk: co::WM::XBUTTONDBLCLK;
 	/// [`WM_XBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 }
 
-pub_struct_msg_button! { XButtonDown: co::WM::XBUTTONDOWN; "user";
+pub_struct_msg_button! { XButtonDown: co::WM::XBUTTONDOWN;
 	/// [`WM_XBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 }
 
-pub_struct_msg_button! { XButtonUp: co::WM::XBUTTONUP; "user";
+pub_struct_msg_button! { XButtonUp: co::WM::XBUTTONUP;
 	/// [`WM_XBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 }

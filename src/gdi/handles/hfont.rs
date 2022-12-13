@@ -6,7 +6,7 @@ use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::SIZE;
 
-impl_handle! { HFONT: "gdi";
+impl_handle! { HFONT;
 	/// Handle to a
 	/// [font](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 }
@@ -22,7 +22,6 @@ impl gdi_Hfont for HFONT {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hfont: gdi_Hgdiobj {
 	/// [`CreateFont`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// static method.

@@ -7,7 +7,7 @@ use crate::advapi::decl::RegistryValue;
 use crate::kernel::decl::{FILETIME, SysResult, WString};
 use crate::prelude::Handle;
 
-impl_handle! { HKEY: "advapi";
+impl_handle! { HKEY;
 	/// Handle to a
 	/// [registry key](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hkey).
 	///
@@ -34,7 +34,6 @@ macro_rules! predef_key {
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub trait advapi_Hkey: Handle {
 	predef_key!(CLASSES_ROOT, 0x8000_0000);
 	predef_key!(CURRENT_USER, 0x8000_0001);
@@ -637,7 +636,6 @@ fn validate_retrieved_reg_val(
 /// RAII implementation for [`HKEY`](crate::HKEY) which automatically calls
 /// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub struct HkeyGuard {
 	pub(crate) hkey: HKEY,
 }

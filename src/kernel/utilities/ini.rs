@@ -33,7 +33,6 @@ use crate::kernel::decl::{File, FileAccess, FileMapped, SysResult, WString};
 /// println!("{}", ini.value("the_section", "the_key").unwrap());
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct Ini {
 	/// All the sections of the file. They can be modified at will.
 	pub sections: Vec<IniSection>,
@@ -251,7 +250,6 @@ impl Ini {
 //------------------------------------------------------------------------------
 
 /// A single section of an [`Ini`](crate::Ini).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct IniSection {
 	/// The name of this section.
 	pub name: String,
@@ -289,7 +287,6 @@ impl IniSection {
 
 /// A single key/value pair of an [`IniSection`](crate::IniSection) of an
 /// [`Ini`](crate::Ini).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct IniEntry {
 	/// Key of this entry.
 	pub key: String,

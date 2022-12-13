@@ -9,7 +9,6 @@ use crate::prelude::oleaut_Variant;
 /// Automatically calls
 /// [`PropVariantClear`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-propvariantclear)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]
 pub struct PROPVARIANT {
 	vt: co::VT,

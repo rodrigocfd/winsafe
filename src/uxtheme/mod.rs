@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]
+
 pub(in crate::uxtheme) mod ffi;
 
 mod funcs;

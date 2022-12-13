@@ -6,7 +6,7 @@ use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::ACCEL;
 
-impl_handle! { HACCEL: "user";
+impl_handle! { HACCEL;
 	/// Handle to an
 	/// [accelerator table](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#haccel).
 }
@@ -21,7 +21,6 @@ impl user_Haccel for HACCEL {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Haccel: Handle {
 	/// [`CreateAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
 	/// static method.

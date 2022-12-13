@@ -32,7 +32,6 @@ struct Obj { // actual fields of Label
 /// Native
 /// [label](https://learn.microsoft.com/en-us/windows/win32/controls/about-static-controls)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct Label(Pin<Arc<Obj>>);
 
@@ -198,7 +197,6 @@ impl Label {
 
 /// Options to create a [`Label`](crate::gui::Label) programmatically with
 /// [`label::new`](crate::gui::Label::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct LabelOpts {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

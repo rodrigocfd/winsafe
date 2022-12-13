@@ -11,7 +11,6 @@ use crate::oleaut;
 /// Automatically calls
 /// [`SysFreeString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(transparent)]
 pub struct BSTR(pub(crate) *mut u16);
 

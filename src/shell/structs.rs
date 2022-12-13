@@ -11,7 +11,6 @@ use crate::user::decl::{HICON, HWND};
 
 /// [`COMDLG_FILTERSPEC`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct COMDLG_FILTERSPEC<'a, 'b> {
 	pszName: *mut u16,
@@ -30,7 +29,6 @@ impl<'a, 'b> COMDLG_FILTERSPEC<'a, 'b> {
 
 /// [`NOTIFYICONDATA`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct NOTIFYICONDATA {
 	cbSize: u32,
@@ -60,7 +58,6 @@ impl NOTIFYICONDATA {
 
 /// [`SHFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct SHFILEINFO {
 	pub hIcon: HICON,
@@ -79,7 +76,6 @@ impl SHFILEINFO {
 
 /// [`SHFILEOPSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileopstructw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub hwnd: HWND,
@@ -136,7 +132,6 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 
 /// [`SHSTOCKICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shstockiconinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct SHSTOCKICONINFO {
 	cbSize: u32,

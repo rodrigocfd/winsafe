@@ -8,7 +8,7 @@ use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, str_to_iso88591};
 use crate::prelude::Handle;
 
-impl_handle! { HINSTANCE: "kernel";
+impl_handle! { HINSTANCE;
 	/// Handle to an
 	/// [instance](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
 	/// same as `HMODULE`.
@@ -24,7 +24,6 @@ impl kernel_Hinstance for HINSTANCE {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hinstance: Handle {
 	/// [`EnumResourceLanguages`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
 	/// method.
@@ -282,7 +281,7 @@ pub trait kernel_Hinstance: Handle {
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HinstanceGuard, HINSTANCE, "kernel";
+handle_guard! { HinstanceGuard: HINSTANCE;
 	kernel::ffi::FreeLibrary;
 	/// RAII implementation for [`HINSTANCE`](crate::HINSTANCE) which
 	/// automatically calls

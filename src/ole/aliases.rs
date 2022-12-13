@@ -26,5 +26,4 @@ use crate::co;
 ///
 /// let hr_result: HrResult<()> = win_result.map_err(|err| err.to_hresult());
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub type HrResult<T> = Result<T, co::HRESULT>;

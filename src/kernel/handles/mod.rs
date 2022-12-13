@@ -28,13 +28,13 @@ pub mod decl {
 	pub use super::hthread::HTHREAD;
 	pub use super::hupdatesrc::HUPDATERSRC;
 
-	impl_handle! { HEVENT: "kernel";
+	impl_handle! { HEVENT;
 		/// Handle to an
 		/// [event](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).
 		/// Originally just a `HANDLE`.
 	}
 
-	impl_handle! { HRSRC: "kernel";
+	impl_handle! { HRSRC;
 		/// Handle to a
 		/// [resource](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew).
 		/// Originally just a `HANDLE`.
@@ -43,7 +43,7 @@ pub mod decl {
 		/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	}
 
-	impl_handle! { HRSRCMEM: "kernel";
+	impl_handle! { HRSRCMEM;
 		/// Handle to a resource
 		/// [memory block](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource).
 		/// Originally just an `HGLOBAL`.

@@ -6,7 +6,7 @@ use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HDC, HRGN, RECT};
 
-impl_handle! { HTHEME: "uxtheme";
+impl_handle! { HTHEME;
 	/// Handle to a
 	/// [theme](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/).
 }
@@ -21,7 +21,6 @@ impl uxtheme_Htheme for HTHEME {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "uxtheme")))]
 pub trait uxtheme_Htheme: Handle {
 	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// method.
@@ -165,7 +164,7 @@ pub trait uxtheme_Htheme: Handle {
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HthemeGuard, HTHEME, "uxtheme";
+handle_guard! { HthemeGuard: HTHEME;
 	uxtheme::ffi::CloseThemeData;
 	/// RAII implementation for [`HTHEME`](crate::HTHEME) which automatically calls
 	/// [`CloseThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-closethemedata)

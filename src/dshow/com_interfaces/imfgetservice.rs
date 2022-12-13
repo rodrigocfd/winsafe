@@ -8,15 +8,13 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IMFGetService`](crate::IMFGetService) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IMFGetServiceVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetService: fn(ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IMFGetService: "dshow";
-	"fa993888-4383-415a-a930-dd472a8cf6f7";
+com_interface! { IMFGetService: "fa993888-4383-415a-a930-dd472a8cf6f7";
 	/// [`IMFGetService`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
 	/// COM interface over [`IMFGetServiceVT`](crate::vt::IMFGetServiceVT).
 	///
@@ -48,7 +46,6 @@ impl dshow_IMFGetService for IMFGetService {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMFGetService: ole_IUnknown {
 	/// [`IMFGetService::GetService`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
 	/// method.

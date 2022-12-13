@@ -12,7 +12,6 @@ use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
 /// resized.
 ///
 /// The values are analog to [`gui::Vert`](crate::gui::Vert).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Horz {
 	/// Nothing will be done when parent window is resized.
@@ -29,7 +28,6 @@ pub enum Horz {
 /// resized.
 ///
 /// The values are analog to [`gui::Horz`](crate::gui::Horz).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Vert {
 	/// Nothing will be done when parent window is resized.

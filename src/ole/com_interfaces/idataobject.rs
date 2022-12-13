@@ -6,7 +6,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IDataObject`](crate::IDataObject) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IDataObjectVT {
 	pub IUnknownVT: IUnknownVT,
@@ -21,8 +20,7 @@ pub struct IDataObjectVT {
 	pub EnumDAdvise: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IDataObject: "ole";
-	"0000010e-0000-0000-c000-000000000046";
+com_interface! { IDataObject: "0000010e-0000-0000-c000-000000000046";
 	/// [`IDataObject`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-idataobject)
 	/// COM interface over [`IDataObjectVT`](crate::vt::IDataObjectVT).
 	///
@@ -41,7 +39,6 @@ impl ole_IDataObject for IDataObject {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IDataObject: ole_IUnknown {
 
 }

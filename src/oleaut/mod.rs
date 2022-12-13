@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
+
 pub(in crate::oleaut) mod ffi;
 
 mod com_interfaces;

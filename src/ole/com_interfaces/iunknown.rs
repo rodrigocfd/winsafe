@@ -6,7 +6,6 @@ use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IUnknownVT {
 	pub QueryInterface: fn(ComPtr, PCVOID, *mut ComPtr) -> HRES,
@@ -14,8 +13,7 @@ pub struct IUnknownVT {
 	pub Release: fn(ComPtr) -> u32,
 }
 
-com_interface! { IUnknown: "ole";
-	"00000000-0000-0000-c000-000000000046";
+com_interface! { IUnknown: "00000000-0000-0000-c000-000000000046";
 	/// [`IUnknown`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
 	/// COM interface over [`IUnknownVT`](crate::vt::IUnknownVT). It's the base to
 	/// all COM interfaces.
@@ -48,7 +46,6 @@ com_interface! { IUnknown: "ole";
 /// * `Release` – called automatically by the
 /// [`Drop`](https://doc.rust-lang.org/std/ops/trait.Drop.html) trait, so you
 /// don't need to worry about it.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IUnknown: Clone + From<ComPtr> {
 	/// The COM interface ID.
 	const IID: co::IID;

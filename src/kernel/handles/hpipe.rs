@@ -6,7 +6,7 @@ use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, kernel_Hfile};
 
-impl_handle! { HPIPE: "kernel";
+impl_handle! { HPIPE;
 	/// Handle to an
 	/// [anonymous pipe](https://learn.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes).
 	/// Originally just a `HANDLE`.
@@ -22,7 +22,6 @@ impl kernel_Hpipe for HPIPE {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hpipe: Handle {
 	/// [`CreatePipe`](https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe)
 	/// static method.

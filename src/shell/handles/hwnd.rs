@@ -15,7 +15,6 @@ impl shell_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_Hwnd: Handle {
 	/// [`ShellExecute`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
 	/// method.

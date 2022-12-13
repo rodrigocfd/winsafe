@@ -18,7 +18,6 @@ impl user_Hinstance for HINSTANCE {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hinstance: Handle {
 	/// [`CreateDialogParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// method.

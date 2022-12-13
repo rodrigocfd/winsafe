@@ -27,7 +27,6 @@ use crate::shell::decl::{
 /// }
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[must_use]
 pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 	let mut num_args = i32::default();
@@ -65,7 +64,6 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 /// // full = "C:\\One\\Two\\Three"
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn PathCombine(
 	str_dir: Option<&str>, str_file: Option<&str>) -> SysResult<String>
 {
@@ -96,7 +94,6 @@ pub fn PathCombine(
 ///     println!("Common prefix: {}", common_prefix); // "C:\\temp"
 /// }
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn PathCommonPrefix(file1: &str, file2: &str) -> Option<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
 	match unsafe {
@@ -113,7 +110,6 @@ pub fn PathCommonPrefix(file1: &str, file2: &str) -> Option<String> {
 
 /// [`PathSkipRoot`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathskiprootw)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn PathSkipRoot(str_path: &str) -> Option<String> {
 	let buf = WString::from_str(str_path);
 	unsafe {
@@ -123,7 +119,6 @@ pub fn PathSkipRoot(str_path: &str) -> Option<String> {
 
 /// [`PathStripPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathstrippathw)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn PathStripPath(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
 	unsafe { shell::ffi::PathStripPathW(buf.as_mut_ptr()); }
@@ -132,7 +127,6 @@ pub fn PathStripPath(str_path: &str) -> String {
 
 /// [`PathUndecorate`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathundecoratew)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn PathUndecorate(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
 	unsafe { shell::ffi::PathUndecorateW(buf.as_mut_ptr()); }
@@ -141,7 +135,6 @@ pub fn PathUndecorate(str_path: &str) -> String {
 
 /// [`PathUnquoteSpaces`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathunquotespacesw)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn PathUnquoteSpaces(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
 	unsafe { shell::ffi::PathUnquoteSpacesW(buf.as_mut_ptr()); }
@@ -153,14 +146,12 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 ///
 /// **Note:** The `pv` type varies according to `uFlags`. If you set it wrong,
 /// you're likely to cause a buffer overrun.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 	shell::ffi::SHAddToRecentDocs(flags.0, pv as *const _ as _);
 }
 
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn Shell_NotifyIcon(
 	message: co::NIM,
 	data: &mut NOTIFYICONDATA) -> SysResult<()>
@@ -172,7 +163,6 @@ pub fn Shell_NotifyIcon(
 
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
 	match unsafe {
 		shell::ffi::SHFileOperationW(file_op as *mut _ as _)
@@ -188,7 +178,6 @@ pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
 /// **Note:** If you are returning an icon in the `hIcon` member of
 /// [`SHFILEINFO`](crate::SHFILEINFO), it must be paired with an
 /// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHGetFileInfo(
 	path: &str,
 	file_attrs: co::FILE_ATTRIBUTE,
@@ -229,7 +218,6 @@ pub fn SHGetFileInfo(
 /// println!("Docs folder: {}", docs_folder);
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[must_use]
 pub fn SHGetKnownFolderPath(
 	folder_id: &co::KNOWNFOLDERID,
@@ -281,7 +269,6 @@ pub fn SHGetKnownFolderPath(
 /// sii.hIcon.DestroyIcon()?;
 /// # Ok::<_, Box<dyn std::error::Error>>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub fn SHGetStockIconInfo(
 	siid: co::SIID,
 	flags: co::SHGSI,

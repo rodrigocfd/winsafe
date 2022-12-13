@@ -9,7 +9,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IShellItem`](crate::IShellItem) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
@@ -20,8 +19,7 @@ pub struct IShellItemVT {
 	pub Compare: fn(ComPtr, PVOID, u32, *mut i32) -> HRES,
 }
 
-com_interface! { IShellItem: "shell";
-	"43826d1e-e718-42ee-bc55-a1e261c37bfe";
+com_interface! { IShellItem: "43826d1e-e718-42ee-bc55-a1e261c37bfe";
 	/// [`IShellItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
 	/// COM interface over [`IShellItemVT`](crate::vt::IShellItemVT).
 	///
@@ -40,7 +38,6 @@ impl shell_IShellItem for IShellItem {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IShellItem: ole_IUnknown {
 	/// [`SHCreateItemFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
 	/// static method.

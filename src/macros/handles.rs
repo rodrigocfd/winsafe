@@ -3,11 +3,10 @@
 /// Declares a handle.
 macro_rules! impl_handle {
 	(
-		$name:ident : $feature:literal;
+		$name:ident;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
 		#[derive(PartialEq, Eq, Hash)]
 		pub struct $name(pub(crate) *mut std::ffi::c_void);
@@ -59,12 +58,11 @@ macro_rules! impl_handle {
 /// Declares a handle guard which has a simple cleaner function.
 macro_rules! handle_guard {
 	(
-		$name:ident, $handle:ty, $feature:literal;
+		$name:ident : $handle:ty;
 		$cleaner:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		pub struct $name {
 			pub(crate) handle: $handle,
 		}

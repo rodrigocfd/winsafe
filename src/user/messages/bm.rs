@@ -4,7 +4,7 @@ use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{BmpIcon, HBITMAP, HICON};
 
-pub_struct_msg_empty! { Click: co::BM::CLICK.into(); "user";
+pub_struct_msg_empty! { Click: co::BM::CLICK.into();
 	/// [`BM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-click)
 }
 
@@ -12,7 +12,6 @@ pub_struct_msg_empty! { Click: co::BM::CLICK.into(); "user";
 /// message parameters.
 ///
 /// Return type: `co::BST`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCheck {}
 
 unsafe impl MsgSend for GetCheck {
@@ -35,7 +34,6 @@ unsafe impl MsgSend for GetCheck {
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIcon>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
@@ -64,7 +62,6 @@ unsafe impl MsgSend for GetImage {
 /// message, which has no parameters.
 ///
 /// Return type: `co::BST`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetState {}
 
 unsafe impl MsgSend for GetState {
@@ -87,7 +84,6 @@ unsafe impl MsgSend for GetState {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetCheck {
 	pub state: co::BST,
 }
@@ -112,7 +108,6 @@ unsafe impl MsgSend for SetCheck {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetDontClick {
 	pub dont_click: bool,
 }
@@ -137,7 +132,6 @@ unsafe impl MsgSend for SetDontClick {
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIcon>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetImage {
 	pub image: BmpIcon,
 }
@@ -172,7 +166,6 @@ unsafe impl MsgSend for SetImage {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetState {
 	pub highlight: bool,
 }
@@ -197,7 +190,6 @@ unsafe impl MsgSend for SetState {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetStyle {
 	pub style: co::BS,
 	pub redraw: bool,

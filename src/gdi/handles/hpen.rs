@@ -6,7 +6,7 @@ use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::gdi_Hgdiobj;
 use crate::user::decl::COLORREF;
 
-impl_handle! { HPEN: "gdi";
+impl_handle! { HPEN;
 	/// Handle to a
 	/// [pen](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpen)
 	/// GDI object.
@@ -23,7 +23,6 @@ impl gdi_Hpen for HPEN {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hpen: gdi_Hgdiobj {
 	/// [`CreatePen`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// static method.

@@ -58,7 +58,6 @@ use crate::ole::privs::ok_to_hrresult;
 /// TaskDialogIndirect(&tdc, None)?;
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub fn TaskDialogIndirect(
 	task_config: &TASKDIALOGCONFIG,
 	verification_flag_checked: Option<&mut bool>) -> HrResult<(co::DLGID, u16)>

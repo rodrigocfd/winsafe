@@ -12,7 +12,6 @@ use crate::user::privs::zero_as_err;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBorders<'a> {
 	pub borders: &'a mut [u32; 3],
 }
@@ -37,7 +36,6 @@ unsafe impl<'a> MsgSend for GetBorders<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<HICON>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIcon {
 	pub part_index: u8,
 }
@@ -62,7 +60,6 @@ unsafe impl MsgSend for GetIcon {
 /// message parameters.
 ///
 /// Return type: `u8`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetParts<'a> {
 	pub right_edges: Option<&'a mut [i32]>,
 }
@@ -87,7 +84,6 @@ unsafe impl<'a> MsgSend for GetParts<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRect<'a> {
 	pub part_index: u8,
 	pub rect: &'a mut RECT,
@@ -113,7 +109,6 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 /// message parameters.
 ///
 /// Return type: `(u16, co::SBT)`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetText<'a> {
 	pub part_index: u8,
 	pub text: &'a mut WString,
@@ -139,7 +134,6 @@ unsafe impl<'a> MsgSend for GetText<'a> {
 /// message parameters.
 ///
 /// Return type: `(u16, co::SBT)`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextLength {
 	pub part_index: u8,
 }
@@ -164,7 +158,6 @@ unsafe impl MsgSend for GetTextLength {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTipText<'a> {
 	pub part_index: u8,
 	pub text: &'a mut WString,
@@ -190,7 +183,6 @@ unsafe impl<'a> MsgSend for GetTipText<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetUnicodeFormat {}
 
 unsafe impl MsgSend for GetUnicodeFormat {
@@ -213,7 +205,6 @@ unsafe impl MsgSend for GetUnicodeFormat {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsSimple {}
 
 unsafe impl MsgSend for IsSimple {
@@ -236,7 +227,6 @@ unsafe impl MsgSend for IsSimple {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBkColor {
 	pub color: Option<COLORREF>,
 }
@@ -264,7 +254,6 @@ unsafe impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetIcon {
 	pub part_index: u8,
 	pub hicon: Option<HICON>,
@@ -290,7 +279,6 @@ unsafe impl MsgSend for SetIcon {
 /// message parameters.
 ///
 /// Return value: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMinHeight {
 	pub min_height: u32,
 }
@@ -315,7 +303,6 @@ unsafe impl MsgSend for SetMinHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetParts<'a> {
 	pub right_edges: &'a [i32],
 }
@@ -340,7 +327,6 @@ unsafe impl<'a> MsgSend for SetParts<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetText {
 	pub part_index: u8,
 	pub draw_operation: co::SBT,
@@ -365,7 +351,6 @@ unsafe impl MsgSend for SetText {
 
 /// [`SB_SETTIPTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-settiptext)
 /// message parameters.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTipText {
 	pub part_index: u8,
 	pub text: WString,
@@ -391,7 +376,6 @@ unsafe impl MsgSend for SetTipText {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
@@ -414,7 +398,6 @@ unsafe impl MsgSend for SetUnicodeFormat {
 
 /// [`SB_SIMPLE`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-simple)
 /// message parameters.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Simple {
 	pub display_simple: bool,
 }

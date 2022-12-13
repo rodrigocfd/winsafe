@@ -33,7 +33,6 @@ struct Obj { // actual fields of Edit
 /// Native
 /// [edit](https://learn.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct Edit(Pin<Arc<Obj>>);
 
@@ -294,7 +293,6 @@ impl<'a> LinesIter<'a> {
 
 /// Options to create an [`Edit`](crate::gui::Edit) programmatically with
 /// [`Edit::new`](crate::gui::Edit::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct EditOpts {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

@@ -12,7 +12,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IEnumFilters`](crate::IEnumFilters) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IEnumFiltersVT {
 	pub IUnknownVT: IUnknownVT,
@@ -22,8 +21,7 @@ pub struct IEnumFiltersVT {
 	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IEnumFilters: "dshow";
-	"56a86893-0ad4-11ce-b03a-0020af0ba770";
+com_interface! { IEnumFilters: "56a86893-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IEnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
 	/// COM interface over [`IEnumFiltersVT`](crate::vt::IEnumFiltersVT).
 	///
@@ -42,7 +40,6 @@ impl dshow_IEnumFilters for IEnumFilters {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// Returns an iterator over the [`IBaseFilter`](crate::IBaseFilter)
 	/// elements which calls

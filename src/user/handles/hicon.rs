@@ -5,7 +5,7 @@ use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 use crate::user;
 
-impl_handle! { HICON: "user";
+impl_handle! { HICON;
 	/// Handle to an
 	/// [icon](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hicon).
 }
@@ -20,7 +20,6 @@ impl user_Hicon for HICON {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hicon: Handle {
 	/// [`CopyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copyicon)
 	/// method.

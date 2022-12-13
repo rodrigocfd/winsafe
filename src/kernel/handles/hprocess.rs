@@ -12,7 +12,7 @@ use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::{bool_to_sysresult, INFINITE, MAX_PATH};
 use crate::prelude::Handle;
 
-impl_handle! { HPROCESS: "kernel";
+impl_handle! { HPROCESS;
 	/// Handle to a
 	/// [process](https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
 	/// Originally just a `HANDLE`.
@@ -28,7 +28,6 @@ impl kernel_Hprocess for HPROCESS {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hprocess: Handle {
 	/// [`CreateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
 	/// static method.
@@ -288,7 +287,6 @@ pub trait kernel_Hprocess: Handle {
 /// which automatically calls
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 /// on `hProcess` and `hThread` fields when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct ProcessInformationGuard {
 	pub(crate) pi: PROCESS_INFORMATION,
 }

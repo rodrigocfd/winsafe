@@ -22,7 +22,6 @@ use crate::prelude::{
 /// let str_contents = WString::parse(file_in.as_slice())?.to_string();
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct FileMapped {
 	access: FileAccess,
 	file: File,

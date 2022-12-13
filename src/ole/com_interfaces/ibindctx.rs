@@ -8,7 +8,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IBindCtx`](crate::IBindCtx) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IBindCtxVT {
 	pub IUnknownVT: IUnknownVT,
@@ -24,8 +23,7 @@ pub struct IBindCtxVT {
 	pub RevokeObjectParam: fn(ComPtr, PCSTR) -> HRES,
 }
 
-com_interface! { IBindCtx: "ole";
-	"0000000e-0000-0000-c000-000000000046";
+com_interface! { IBindCtx: "0000000e-0000-0000-c000-000000000046";
 	/// [`IBindCtx`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ibindctx)
 	/// COM interface over [`IBindCtxVT`](crate::vt::IBindCtxVT).
 	///
@@ -44,7 +42,6 @@ impl ole_IBindCtx for IBindCtx {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IBindCtx: ole_IUnknown {
 	/// [`IBindCtx::ReleaseBoundObjects`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
 	/// method.

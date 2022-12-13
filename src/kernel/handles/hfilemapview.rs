@@ -3,7 +3,7 @@
 use crate::kernel;
 use crate::prelude::Handle;
 
-impl_handle! { HFILEMAPVIEW: "kernel";
+impl_handle! { HFILEMAPVIEW;
 	/// Address of a
 	/// [mapped view](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
 	/// Originally just an `LPVOID`.
@@ -22,7 +22,6 @@ impl kernel_Hfilemapview for HFILEMAPVIEW {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hfilemapview: Handle {
 	/// Returns a slice representing the mapped memory. You can modify the
 	/// contents. You should call this method only if the file has write access.
@@ -82,7 +81,7 @@ pub trait kernel_Hfilemapview: Handle {
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HfilemapviewGuard, HFILEMAPVIEW, "kernel";
+handle_guard! { HfilemapviewGuard: HFILEMAPVIEW;
 	kernel::ffi::UnmapViewOfFile;
 	/// RAII implementation for [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) which
 	/// automatically calls

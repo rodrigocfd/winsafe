@@ -16,7 +16,6 @@ impl msimg_Hdc for HDC {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "msimg")))]
 pub trait msimg_Hdc: Handle {
 	/// [`TransparentBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
 	/// method.

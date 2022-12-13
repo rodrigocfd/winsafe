@@ -18,7 +18,6 @@ impl comctl_ole_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub trait comctl_ole_Hwnd: Handle {
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// method.

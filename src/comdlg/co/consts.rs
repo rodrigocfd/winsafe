@@ -1,4 +1,4 @@
-const_bitflag! { CC: u32: "comdlg";
+const_bitflag! { CC: u32;
 	/// [`CHOOSECOLOR`](crate::CHOOSECOLOR) `Flags` (`u32`).
 	=>
 	=>

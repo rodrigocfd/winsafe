@@ -9,7 +9,7 @@ use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
-impl_handle! { HFILE: "kernel";
+impl_handle! { HFILE;
 	/// Handle to a
 	/// [file](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
 	/// Originally just a `HANDLE`.
@@ -28,7 +28,6 @@ impl kernel_Hfile for HFILE {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hfile: Handle {
 	/// [`CreateFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
 	/// static method.
@@ -277,7 +276,6 @@ pub trait kernel_Hfile: Handle {
 /// calls
 /// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct HfileLockGuard<'a, H>
 	where H: kernel_Hfile,
 {

@@ -5,7 +5,7 @@ use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
-impl_handle! { HDWP: "user32";
+impl_handle! { HDWP;
 	/// Handle to a
 	/// [deferred window position](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
 }
@@ -20,7 +20,6 @@ impl user_Hdwp for HDWP {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hdwp: Handle {
 	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
@@ -55,7 +54,7 @@ pub trait user_Hdwp: Handle {
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HdwpGuard, HDWP, "user";
+handle_guard! { HdwpGuard: HDWP;
 	user::ffi::EndDeferWindowPos;
 	/// RAII implementation for [`HDWP`](crate::HDWP) which automatically calls
 	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)

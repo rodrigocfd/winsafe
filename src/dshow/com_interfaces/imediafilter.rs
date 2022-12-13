@@ -7,7 +7,6 @@ use crate::prelude::ole_IPersist;
 use crate::vt::IPersistVT;
 
 /// [`IMediaFilter`](crate::IMediaFilter) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IMediaFilterVT {
 	pub IPersistVT: IPersistVT,
@@ -19,8 +18,7 @@ pub struct IMediaFilterVT {
 	pub GetSyncSource: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IMediaFilter: "dshow";
-	"56a86899-0ad4-11ce-b03a-0020af0ba770";
+com_interface! { IMediaFilter: "56a86899-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IMediaFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
 	/// COM interface over [`IMediaFilterVT`](crate::vt::IMediaFilterVT).
 	///
@@ -40,7 +38,6 @@ impl dshow_IMediaFilter for IMediaFilter {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMediaFilter: ole_IPersist {
 	/// [`IMediaFilter::Pause`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.

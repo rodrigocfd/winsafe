@@ -10,7 +10,6 @@ use crate::user::privs::zero_as_err;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
@@ -35,7 +34,6 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
@@ -60,7 +58,6 @@ unsafe impl<'a> MsgSend for GetImageList<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNote<'a> {
 	pub text: &'a mut WString,
 }
@@ -85,7 +82,6 @@ unsafe impl<'a> MsgSend for GetNote<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNoteLength {}
 
 unsafe impl MsgSend for GetNoteLength {
@@ -108,7 +104,6 @@ unsafe impl MsgSend for GetNoteLength {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
@@ -133,7 +128,6 @@ unsafe impl<'a> MsgSend for GetSplitInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
@@ -158,7 +152,6 @@ unsafe impl<'a> MsgSend for GetTextMargin<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetDropDownState {
 	pub is_pushed: bool,
 }
@@ -183,7 +176,6 @@ unsafe impl MsgSend for SetDropDownState {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
@@ -208,7 +200,6 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetNote {
 	pub text: WString,
 }
@@ -233,7 +224,6 @@ unsafe impl MsgSend for SetNote {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetShield {
 	pub has_elevated_icon: bool,
 }
@@ -258,7 +248,6 @@ unsafe impl MsgSend for SetShield {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
@@ -283,7 +272,6 @@ unsafe impl<'a> MsgSend for SetSplitInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTextMargin<'a> {
 	pub margins: &'a RECT,
 }

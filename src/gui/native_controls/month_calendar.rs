@@ -31,7 +31,6 @@ struct Obj { // actual fields of MonthCalendar
 /// Native
 /// [month calendar](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct MonthCalendar(Pin<Arc<Obj>>);
 
@@ -189,7 +188,6 @@ impl MonthCalendar {
 /// Options to create a [`MonthCalendar`](crate::gui::MonthCalendar)
 /// programmatically with
 /// [`MonthCalendar::new`](crate::gui::MonthCalendar::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct MonthCalendarOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

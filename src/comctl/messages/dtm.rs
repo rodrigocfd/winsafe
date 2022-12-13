@@ -7,7 +7,7 @@ use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HWND, SIZE};
 use crate::user::privs::{minus1_as_err, zero_as_err};
 
-pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into(); "comctl";
+pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into();
 	/// [`DTM_CLOSEMONTHCAL`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
 }
 
@@ -15,7 +15,6 @@ pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into(); "comctl";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetDateTimePickerInfo<'a> {
 	pub info: &'a mut DATETIMEPICKERINFO,
 }
@@ -40,7 +39,6 @@ unsafe impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
@@ -65,7 +63,6 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMcColor {
 	pub color_index: co::MCSC,
 }
@@ -90,7 +87,6 @@ unsafe impl MsgSend for GetMcColor {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<co::MCS>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMcStyle {}
 
 unsafe impl MsgSend for GetMcStyle {
@@ -113,7 +109,6 @@ unsafe impl MsgSend for GetMcStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMonthCal {}
 
 unsafe impl MsgSend for GetMonthCal {
@@ -136,7 +131,6 @@ unsafe impl MsgSend for GetMonthCal {
 /// message parameters.
 ///
 /// Return type: `co::GDTR`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
@@ -161,7 +155,6 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSystemTime<'a> {
 	pub system_time: &'a mut SYSTEMTIME,
 }
@@ -191,7 +184,6 @@ unsafe impl<'a> MsgSend for GetSystemTime<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetFormat {
 	pub format_string: Option<WString>,
 }
@@ -216,7 +208,6 @@ unsafe impl MsgSend for SetFormat {
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMcColor {
 	pub color_index: co::MCSC,
 	pub color: COLORREF,
@@ -242,7 +233,6 @@ unsafe impl MsgSend for SetMcColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<co::MCS>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMcStyle {
 	pub style: co::MCS,
 }
@@ -267,7 +257,6 @@ unsafe impl MsgSend for SetMcStyle {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetRange<'a> {
 	pub valid: co::GDTR,
 	pub system_times: &'a mut [SYSTEMTIME; 2],
@@ -293,7 +282,6 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSystemTime<'a> {
 	pub system_time: Option<&'a SYSTEMTIME>,
 }

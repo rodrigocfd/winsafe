@@ -7,7 +7,6 @@ use crate::user::decl::{COLORREF, POINT};
 
 /// [`BITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 pub struct BITMAP {
 	pub bmType: i32,
@@ -23,7 +22,6 @@ impl_default!(BITMAP);
 
 /// [`BITMAPFILEHEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C, packed(2))]
 pub struct BITMAPFILEHEADER {
 	bfType: u16,
@@ -47,7 +45,6 @@ impl BITMAPFILEHEADER {
 
 /// [`BITMAPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 pub struct BITMAPINFO {
 	pub bmiHeader: BITMAPINFOHEADER,
@@ -65,7 +62,6 @@ impl Default for BITMAPINFO {
 
 /// [`BITMAPINFOHEADER`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 pub struct BITMAPINFOHEADER {
 	biSize: u32,
@@ -89,7 +85,6 @@ impl BITMAPINFOHEADER {
 
 /// [`LOGBRUSH`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 pub struct LOGBRUSH {
 	pub lbStyle: co::BSS,
@@ -101,7 +96,6 @@ impl_default!(LOGBRUSH);
 
 /// [`LOGFONT`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 #[derive(Default, Clone, Eq, PartialEq)]
 pub struct LOGFONT {
@@ -127,7 +121,6 @@ impl LOGFONT {
 
 /// [`LOGPEN`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpen)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 pub struct LOGPEN {
 	pub lopnStyle: co::PS,
@@ -139,7 +132,6 @@ impl_default!(LOGPEN);
 
 /// [`NONCLIENTMETRICS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nonclientmetricsw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 pub struct NONCLIENTMETRICS {
 	cbSize: u32,
@@ -177,7 +169,6 @@ impl Default for NONCLIENTMETRICS {
 
 /// [`RGBQUAD`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 #[derive(Default, Clone, Copy, Eq, PartialEq)]
 pub struct RGBQUAD {
@@ -189,7 +180,6 @@ pub struct RGBQUAD {
 
 /// [`TEXTMETRIC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 #[repr(C)]
 #[derive(Default, Clone)]
 pub struct TEXTMETRIC {

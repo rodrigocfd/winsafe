@@ -32,7 +32,6 @@ use crate::comdlg::decl::CHOOSECOLOR;
 /// }
 /// # Ok::<_, co::CDERR>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "comdlg")))]
 pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 	match unsafe { comdlg::ffi::ChooseColorW(cc as *mut _ as _) } {
 		0 => match CommDlgExtendedError() {
@@ -45,7 +44,6 @@ pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 
 /// [`CommDlgExtendedError`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "comdlg")))]
 pub fn CommDlgExtendedError() -> co::CDERR {
 	co::CDERR(unsafe { comdlg::ffi::CommDlgExtendedError() })
 }

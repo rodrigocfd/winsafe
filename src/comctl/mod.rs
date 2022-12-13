@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
+
 pub(in crate::comctl) mod ffi;
 pub(crate) mod privs;
 

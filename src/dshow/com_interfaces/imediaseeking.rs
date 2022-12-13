@@ -8,7 +8,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IMediaSeeking`](crate::IMediaSeeking) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IMediaSeekingVT {
 	pub IUnknownVT: IUnknownVT,
@@ -31,8 +30,7 @@ pub struct IMediaSeekingVT {
 	pub GetPreroll: fn(ComPtr, *mut i64) -> HRES,
 }
 
-com_interface! { IMediaSeeking: "dshow";
-	"36b73880-c2c8-11cf-8b46-00805f6cef60";
+com_interface! { IMediaSeeking: "36b73880-c2c8-11cf-8b46-00805f6cef60";
 	/// [`IMediaSeeking`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
 	/// COM interface over [`IMediaSeekingVT`](crate::vt::IMediaSeekingVT). Inherits
 	/// from [`IUnknown`](crate::IUnknown).
@@ -66,7 +64,6 @@ impl dshow_IMediaSeeking for IMediaSeeking {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// [`IMediaSeeking::ConvertTimeFormat`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 	/// method.

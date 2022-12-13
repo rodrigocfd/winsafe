@@ -8,7 +8,6 @@ use crate::prelude::{MsgSend, ole_IDropTarget, ole_IUnknown};
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub struct GetObject<'a, T>
 	where T: ole_IDropTarget,
 {

@@ -8,7 +8,6 @@ use crate::prelude::MsgSend;
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub struct SetExtendedStyle {
 	pub style: co::TVS_EX,
 	pub mask: co::TVS_EX,

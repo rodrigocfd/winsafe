@@ -10,7 +10,6 @@ use crate::user::privs::{minus1_as_err, minus1_as_none, zero_as_err};
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCalendarBorder {}
 
 unsafe impl MsgSend for GetCalendarBorder {
@@ -33,7 +32,6 @@ unsafe impl MsgSend for GetCalendarBorder {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCalendarCount {}
 
 unsafe impl MsgSend for GetCalendarCount {
@@ -56,7 +54,6 @@ unsafe impl MsgSend for GetCalendarCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCalendarGridInfo<'a, 'b> {
 	pub info: &'b mut MCGRIDINFO<'a>,
 }
@@ -81,7 +78,6 @@ unsafe impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::CAL`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCalId {}
 
 unsafe impl MsgSend for GetCalId {
@@ -104,7 +100,6 @@ unsafe impl MsgSend for GetCalId {
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColor {
 	pub which: co::MCSC,
 }
@@ -129,7 +124,6 @@ unsafe impl MsgSend for GetColor {
 /// message, which has no parameters.
 ///
 /// Return type: `co::MCMV`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCurrentView {}
 
 unsafe impl MsgSend for GetCurrentView {
@@ -152,7 +146,6 @@ unsafe impl MsgSend for GetCurrentView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCurSel<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
@@ -177,7 +170,6 @@ unsafe impl<'a> MsgSend for GetCurSel<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `(bool, u16)`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFirstDayOfWeek {}
 
 unsafe impl MsgSend for GetFirstDayOfWeek {
@@ -200,7 +192,6 @@ unsafe impl MsgSend for GetFirstDayOfWeek {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMaxSelCount {}
 
 unsafe impl MsgSend for GetMaxSelCount {
@@ -223,7 +214,6 @@ unsafe impl MsgSend for GetMaxSelCount {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMaxTodayWidth {}
 
 unsafe impl MsgSend for GetMaxTodayWidth {
@@ -246,7 +236,6 @@ unsafe impl MsgSend for GetMaxTodayWidth {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMinReqRect<'a> {
 	pub bounds_rect: &'a mut RECT,
 }
@@ -271,7 +260,6 @@ unsafe impl<'a> MsgSend for GetMinReqRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMonthDelta {}
 
 unsafe impl MsgSend for GetMonthDelta {
@@ -294,7 +282,6 @@ unsafe impl MsgSend for GetMonthDelta {
 /// message parameters.
 ///
 /// Return value: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMonthRange<'a> {
 	pub scope: co::GMR,
 	pub limits: &'a mut [SYSTEMTIME; 2],
@@ -320,7 +307,6 @@ unsafe impl<'a> MsgSend for GetMonthRange<'a> {
 /// message parameters.
 ///
 /// Return type: `co::GDTR`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRange<'a> {
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
@@ -345,7 +331,6 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelRange<'a> {
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
@@ -370,7 +355,6 @@ unsafe impl<'a> MsgSend for GetSelRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetToday<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
@@ -395,7 +379,6 @@ unsafe impl<'a> MsgSend for GetToday<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetUnicodeFormat {}
 
 unsafe impl MsgSend for GetUnicodeFormat {
@@ -418,7 +401,6 @@ unsafe impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HitTest<'a> {
 	pub test_info: &'a mut MCHITTESTINFO,
 }
@@ -443,7 +425,6 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCalendarBorder {
 	pub border: bool,
 	pub pixels: u32,
@@ -469,7 +450,6 @@ unsafe impl MsgSend for SetCalendarBorder {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCalId {
 	pub id: co::CAL,
 }
@@ -494,7 +474,6 @@ unsafe impl MsgSend for SetCalId {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetColor {
 	pub which: co::MCSC,
 	pub color: COLORREF,
@@ -520,7 +499,6 @@ unsafe impl MsgSend for SetColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCurrentView {
 	pub view: co::MCMV,
 }
@@ -545,7 +523,6 @@ unsafe impl MsgSend for SetCurrentView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCurSel<'a> {
 	pub info: &'a SYSTEMTIME,
 }
@@ -570,7 +547,6 @@ unsafe impl<'a> MsgSend for SetCurSel<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetDayState<'a> {
 	pub months: &'a [MONTHDAYSTATE],
 }
@@ -595,7 +571,6 @@ unsafe impl<'a> MsgSend for SetDayState<'a> {
 /// message parameters.
 ///
 /// Return type: `(bool, u16)`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetFirstDayOfWeek {
 	pub first_day: u8,
 }
@@ -620,7 +595,6 @@ unsafe impl MsgSend for SetFirstDayOfWeek {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMaxSelCount {
 	pub max_days: u8,
 }
@@ -645,7 +619,6 @@ unsafe impl MsgSend for SetMaxSelCount {
 /// message parameters.
 ///
 /// Return type: `u8`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMonthDelta {
 	pub num_months: u8,
 }
@@ -670,7 +643,6 @@ unsafe impl MsgSend for SetMonthDelta {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetRange<'a> {
 	pub which: co::GDTR,
 	pub limits: &'a [SYSTEMTIME; 2],
@@ -696,7 +668,6 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSelRange<'a> {
 	pub limits: &'a [SYSTEMTIME; 2],
 }
@@ -721,7 +692,6 @@ unsafe impl<'a> MsgSend for SetSelRange<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetToday<'a> {
 	pub today: Option<&'a SYSTEMTIME>,
 }
@@ -746,7 +716,6 @@ unsafe impl<'a> MsgSend for SetToday<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
@@ -771,7 +740,6 @@ unsafe impl MsgSend for SetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SizeRectToMin<'a> {
 	pub region: &'a mut RECT,
 }

@@ -5,7 +5,6 @@ use crate::prelude::kernel_Hfile;
 
 /// Access types for [`File::open`](crate::File::open) and
 /// [`FileMapped::open`](crate::FileMapped::open).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum FileAccess {
 	/// Opens the file as read-only. Fails if the file doesn't exist.
@@ -29,7 +28,6 @@ pub enum FileAccess {
 ///
 /// If you just want to read the file, consider memory-mapping it with
 /// [`FileMapped`](crate::FileMapped), which tends to be faster.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct File {
 	hfile: HandleGuard<HFILE>,
 }

@@ -38,7 +38,6 @@ struct Obj { // atual fields of ListView
 /// [list view](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct ListView(Pin<Arc<Obj>>);
 
@@ -323,7 +322,6 @@ impl ListView {
 
 /// Options to create a [`ListView`](crate::gui::ListView) programmatically with
 /// [`ListView::new`](crate::gui::ListView::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListViewOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

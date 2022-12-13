@@ -8,15 +8,13 @@ use crate::user::decl::HWND;
 use crate::vt::ITaskbarListVT;
 
 /// [`ITaskbarList2`](crate::ITaskbarList2) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct ITaskbarList2VT {
 	pub ITaskbarListVT: ITaskbarListVT,
 	pub MarkFullscreenWindow: fn(ComPtr, HANDLE, BOOL) -> HRES,
 }
 
-com_interface! { ITaskbarList2: "shell";
-	"602d4995-b13a-429b-a66e-1935e44f4317";
+com_interface! { ITaskbarList2: "602d4995-b13a-429b-a66e-1935e44f4317";
 	/// [`ITaskbarList2`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
 	/// COM interface over [`ITaskbarList2VT`](crate::vt::ITaskbarList2VT).
 	///
@@ -50,7 +48,6 @@ impl shell_ITaskbarList2 for ITaskbarList2 {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_ITaskbarList2: shell_ITaskbarList {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.

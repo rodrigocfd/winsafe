@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "version")))]
+
 pub(in crate::version) mod ffi;
 
 mod funcs;

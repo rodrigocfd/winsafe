@@ -12,7 +12,6 @@ use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
 /// Automatically calls
 /// [`VariantClear`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]
 pub struct VARIANT {
 	vt: co::VT,

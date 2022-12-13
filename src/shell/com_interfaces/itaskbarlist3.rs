@@ -10,7 +10,6 @@ use crate::user::decl::{HICON, HWND, RECT};
 use crate::vt::ITaskbarList2VT;
 
 /// [`ITaskbarList3`](crate::ITaskbarList3) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct ITaskbarList3VT {
 	pub ITaskbarList2VT: ITaskbarList2VT,
@@ -28,8 +27,7 @@ pub struct ITaskbarList3VT {
 	pub SetThumbnailClip: fn(ComPtr, HANDLE, PVOID) -> HRES,
 }
 
-com_interface! { ITaskbarList3: "shell";
-	"ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
+com_interface! { ITaskbarList3: "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
 	/// [`ITaskbarList3`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
 	/// COM interface over [`ITaskbarList3VT`](crate::vt::ITaskbarList3VT).
 	///
@@ -64,7 +62,6 @@ impl shell_ITaskbarList3 for ITaskbarList3 {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::RegisterTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.

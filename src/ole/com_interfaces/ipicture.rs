@@ -9,7 +9,6 @@ use crate::user::decl::{HBITMAP, HDC, POINT, RECT, SIZE};
 use crate::vt::IUnknownVT;
 
 /// [`IPicture`](crate::IPicture) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IPictureVT {
 	pub IUnknownVT: IUnknownVT,
@@ -29,8 +28,7 @@ pub struct IPictureVT {
 	pub get_Attributes: fn(ComPtr, *mut u32) -> HRES,
 }
 
-com_interface! { IPicture: "ole";
-	"7bf80980-bf32-101a-8bbb-00aa00300cab";
+com_interface! { IPicture: "7bf80980-bf32-101a-8bbb-00aa00300cab";
 	/// [`IPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nn-ocidl-ipicture)
 	/// COM interface over [`IPictureVT`](crate::vt::IPictureVT).
 	///
@@ -49,7 +47,6 @@ impl ole_IPicture for IPicture {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::get_CurDC`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_curdc)
 	/// method.

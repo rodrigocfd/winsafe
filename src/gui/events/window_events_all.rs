@@ -14,7 +14,6 @@ use crate::prelude::{GuiEvents, MsgSendRecv};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowEventsAll {
 	window_events: WindowEvents,
 	tmrs: FuncStore< // WM_TIMER messages

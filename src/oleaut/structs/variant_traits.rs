@@ -10,7 +10,6 @@ use crate::oleaut::decl::{
 
 /// Methods common to [`VARIANT`](crate::VARIANT) and
 /// [`PROPVARIANT`](crate::PROPVARIANT) structs.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_Variant {
 	/// Returns a reference to the raw data being held.
 	///

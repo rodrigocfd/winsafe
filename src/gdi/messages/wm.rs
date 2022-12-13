@@ -7,31 +7,31 @@ use crate::prelude::{MsgSend, MsgSendRecv};
 use crate::user::decl::HRGN;
 use crate::user::privs::zero_as_none;
 
-pub_struct_msg_ctlcolor! { CtlColorBtn: co::WM::CTLCOLORBTN; "gdi";
+pub_struct_msg_ctlcolor! { CtlColorBtn: co::WM::CTLCOLORBTN;
 	/// [`WM_CTLCOLORBTN`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorDlg: co::WM::CTLCOLORDLG; "gdi";
+pub_struct_msg_ctlcolor! { CtlColorDlg: co::WM::CTLCOLORDLG;
 	/// [`WM_CTLCOLORDLG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorEdit: co::WM::CTLCOLOREDIT; "gdi";
+pub_struct_msg_ctlcolor! { CtlColorEdit: co::WM::CTLCOLOREDIT;
 	/// [`WM_CTLCOLOREDIT`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorListBox: co::WM::CTLCOLORLISTBOX; "gdi";
+pub_struct_msg_ctlcolor! { CtlColorListBox: co::WM::CTLCOLORLISTBOX;
 	/// [`WM_CTLCOLORLISTBOX`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorScrollBar: co::WM::CTLCOLORSCROLLBAR; "gdi";
+pub_struct_msg_ctlcolor! { CtlColorScrollBar: co::WM::CTLCOLORSCROLLBAR;
 	/// [`WM_CTLCOLORSCROLLBAR`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorStatic: co::WM::CTLCOLORSTATIC; "gdi";
+pub_struct_msg_ctlcolor! { CtlColorStatic: co::WM::CTLCOLORSTATIC;
 	/// [`WM_CTLCOLORSTATIC`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 }
 
-pub_struct_msg_char! { DeadChar: co::WM::DEADCHAR; "gdi";
+pub_struct_msg_char! { DeadChar: co::WM::DEADCHAR;
 	/// [`WM_DEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
 }
 
@@ -39,7 +39,6 @@ pub_struct_msg_char! { DeadChar: co::WM::DEADCHAR; "gdi";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub struct DisplayChange {
 	pub depth_bpp: u32,
 	pub horz_res: u16,
@@ -76,7 +75,6 @@ unsafe impl MsgSendRecv for DisplayChange {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HFONT>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub struct GetFont {}
 
 unsafe impl MsgSend for GetFont {
@@ -105,7 +103,6 @@ unsafe impl MsgSendRecv for GetFont {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub struct NcPaint {
 	pub updated_hrgn: HRGN,
 }
@@ -134,7 +131,7 @@ unsafe impl MsgSendRecv for NcPaint {
 	}
 }
 
-pub_struct_msg_empty_handleable! { Paint: co::WM::PAINT; "gdi";
+pub_struct_msg_empty_handleable! { Paint: co::WM::PAINT;
 	/// [`WM_PAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 }
 
@@ -142,7 +139,6 @@ pub_struct_msg_empty_handleable! { Paint: co::WM::PAINT; "gdi";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub struct SetFont {
 	pub hfont: HFONT,
 	pub redraw: bool,
@@ -177,7 +173,6 @@ unsafe impl MsgSendRecv for SetFont {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub struct SetRedraw {
 	pub can_redraw: bool,
 }
@@ -206,6 +201,6 @@ unsafe impl MsgSendRecv for SetRedraw {
 	}
 }
 
-pub_struct_msg_empty_handleable! { SyncPaint: co::WM::SYNCPAINT; "gdi";
+pub_struct_msg_empty_handleable! { SyncPaint: co::WM::SYNCPAINT;
 	/// [`WM_SYNCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-syncpaint)
 }

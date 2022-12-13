@@ -18,7 +18,6 @@ impl gdi_Hbrush for HBRUSH {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hbrush: gdi_Hgdiobj {
 	/// Creates a brush with the given system color.
 	///

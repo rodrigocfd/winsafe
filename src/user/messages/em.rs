@@ -9,7 +9,6 @@ use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct CanUndo {}
 
 unsafe impl MsgSend for CanUndo {
@@ -34,7 +33,6 @@ unsafe impl MsgSend for CanUndo {
 /// Return type: `(u16, u16)`.
 ///
 /// This message is implemented for ordinary edit controls, not for rich edit.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct CharFromPos {
 	pub coords: POINT,
 }
@@ -55,7 +53,7 @@ unsafe impl MsgSend for CharFromPos {
 	}
 }
 
-pub_struct_msg_empty! { EmptyUndoBuffer: co::EM::EMPTYUNDOBUFFER.into(); "user";
+pub_struct_msg_empty! { EmptyUndoBuffer: co::EM::EMPTYUNDOBUFFER.into();
 	/// [`EM_EMPTYUNDOBUFFER`](https://learn.microsoft.com/en-us/windows/win32/controls/em-emptyundobuffer)
 }
 
@@ -63,7 +61,6 @@ pub_struct_msg_empty! { EmptyUndoBuffer: co::EM::EMPTYUNDOBUFFER.into(); "user";
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct FmtLines {
 	pub insert_soft_line_breaks: bool,
 }
@@ -88,7 +85,6 @@ unsafe impl MsgSend for FmtLines {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetFirstVisibleLine {}
 
 unsafe impl MsgSend for GetFirstVisibleLine {
@@ -111,7 +107,6 @@ unsafe impl MsgSend for GetFirstVisibleLine {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HLOCAL>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHandle {}
 
 unsafe impl MsgSend for GetHandle {
@@ -134,7 +129,6 @@ unsafe impl MsgSend for GetHandle {
 /// message, which has no parameters.
 ///
 /// Return type: `co::EIMES`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetImeStatus {}
 
 unsafe impl MsgSend for GetImeStatus {
@@ -157,7 +151,6 @@ unsafe impl MsgSend for GetImeStatus {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLimitText {}
 
 unsafe impl MsgSend for GetLimitText {
@@ -187,7 +180,6 @@ unsafe impl MsgSend for GetLimitText {
 /// differentiate between an error and an empty line.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLine<'a> {
 	pub index: u16,
 	pub buffer: &'a mut WString,
@@ -220,7 +212,6 @@ unsafe impl<'a> MsgSend for GetLine<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLineCount {}
 
 unsafe impl MsgSend for GetLineCount {
@@ -243,7 +234,6 @@ unsafe impl MsgSend for GetLineCount {
 /// message, which has no parameters.
 ///
 /// Return type: `SIZE`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetMargins {}
 
 unsafe impl MsgSend for GetMargins {
@@ -266,7 +256,6 @@ unsafe impl MsgSend for GetMargins {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetModify {}
 
 unsafe impl MsgSend for GetModify {
@@ -289,7 +278,6 @@ unsafe impl MsgSend for GetModify {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<char>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetPasswordChar {}
 
 unsafe impl MsgSend for GetPasswordChar {
@@ -312,7 +300,6 @@ unsafe impl MsgSend for GetPasswordChar {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -337,7 +324,6 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetSel<'a, 'b> {
 	pub first_index: Option<&'a mut u32>,
 	pub past_last_index: Option<&'b mut u32>,
@@ -363,7 +349,6 @@ unsafe impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetThumb {}
 
 unsafe impl MsgSend for GetThumb {
@@ -386,7 +371,6 @@ unsafe impl MsgSend for GetThumb {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<EDITWORDBREAKPROC>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetWordBreakProc {}
 
 unsafe impl MsgSend for GetWordBreakProc {
@@ -409,7 +393,6 @@ unsafe impl MsgSend for GetWordBreakProc {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct LimitText {
 	pub max: Option<u32>,
 }
@@ -434,7 +417,6 @@ unsafe impl MsgSend for LimitText {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct LineFromChar {
 	pub char_index: Option<u32>,
 }
@@ -459,7 +441,6 @@ unsafe impl MsgSend for LineFromChar {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct LineIndex {
 	pub line_index: Option<u32>,
 }
@@ -484,7 +465,6 @@ unsafe impl MsgSend for LineIndex {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct LineLength {
 	pub char_index: Option<u32>,
 }
@@ -509,7 +489,6 @@ unsafe impl MsgSend for LineLength {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct LineScroll {
 	pub num_chars: u32,
 	pub num_lines: u32,
@@ -537,7 +516,6 @@ unsafe impl MsgSend for LineScroll {
 /// Return type: `POINT`.
 ///
 /// This message is implemented for ordinary edit controls, not for rich edit.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct PosFromChar {
 	pub char_index: u32,
 }
@@ -562,7 +540,6 @@ unsafe impl MsgSend for PosFromChar {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ReplaceSel {
 	pub can_be_undone: bool,
 	pub replacement_text: WString,
@@ -588,7 +565,6 @@ unsafe impl MsgSend for ReplaceSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<u16>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Scroll {
 	pub action: co::SB_EM,
 }
@@ -609,7 +585,7 @@ unsafe impl MsgSend for Scroll {
 	}
 }
 
-pub_struct_msg_empty! { ScrollCaret: co::EM::SCROLLCARET.into(); "user";
+pub_struct_msg_empty! { ScrollCaret: co::EM::SCROLLCARET.into();
 	/// [`EM_SCROLLCARET`](https://learn.microsoft.com/en-us/windows/win32/controls/em-scrollcaret)
 }
 
@@ -617,7 +593,6 @@ pub_struct_msg_empty! { ScrollCaret: co::EM::SCROLLCARET.into(); "user";
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetHandle {
 	pub handle: HLOCAL,
 }
@@ -642,7 +617,6 @@ unsafe impl MsgSend for SetHandle {
 /// message parameters.
 ///
 /// Return type: `co::EIMES`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetImeStatus {
 	pub status: co::EIMES,
 }
@@ -667,7 +641,6 @@ unsafe impl MsgSend for SetImeStatus {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetLimitText {
 	pub max_chars: Option<u32>,
 }
@@ -692,7 +665,6 @@ unsafe impl MsgSend for SetLimitText {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetMargins {
 	pub margins: co::EC,
 	pub size: SIZE,
@@ -718,7 +690,6 @@ unsafe impl MsgSend for SetMargins {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetModify {
 	pub flag: bool,
 }
@@ -743,7 +714,6 @@ unsafe impl MsgSend for SetModify {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetPasswordChar {
 	pub character: Option<char>,
 }
@@ -768,7 +738,6 @@ unsafe impl MsgSend for SetPasswordChar {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetReadOnly {
 	pub read_only: bool,
 }
@@ -793,7 +762,6 @@ unsafe impl MsgSend for SetReadOnly {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetRect<'a> {
 	pub is_absolute_coords: bool,
 	pub rect: Option<&'a RECT>,
@@ -819,7 +787,6 @@ unsafe impl<'a> MsgSend for SetRect<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetRectNp<'a> {
 	pub is_absolute_coords: bool,
 	pub rect: Option<&'a RECT>,
@@ -845,7 +812,6 @@ unsafe impl<'a> MsgSend for SetRectNp<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetSel {
 	pub start: Option<u32>,
 	pub end: Option<u32>,
@@ -871,7 +837,6 @@ unsafe impl MsgSend for SetSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetTabStops<'a> {
 	pub tab_stops: Option<&'a [i32]>,
 }
@@ -896,7 +861,6 @@ unsafe impl<'a> MsgSend for SetTabStops<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetWordBreakProc {
 	pub proc: Option<EDITWORDBREAKPROC>,
 }
@@ -921,7 +885,6 @@ unsafe impl MsgSend for SetWordBreakProc {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Undo {}
 
 unsafe impl MsgSend for Undo {

@@ -1,7 +1,7 @@
 use crate::co;
 use crate::prelude::FormattedError;
 
-const_no_debug_display! { HRESULT: u32: "ole";
+const_no_debug_display! { HRESULT: u32;
 	/// A native
 	/// [COM error code](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
 	/// (`u32`), which can be considered a superset of
@@ -78,7 +78,6 @@ impl std::fmt::Display for HRESULT {
 
 impl FormattedError for HRESULT {}
 
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 impl co::ERROR {
 	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 	/// method. Originally a macro.

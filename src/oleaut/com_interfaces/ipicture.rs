@@ -17,7 +17,6 @@ impl oleaut_IPicture for IPicture {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_IPicture: ole_IPicture {
 	/// [`OleLoadPicture`](https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture)
 	/// static method.

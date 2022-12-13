@@ -16,7 +16,6 @@ impl ole_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_Hwnd: Handle {
 	/// [`RegisterDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-registerdragdrop)
 	/// method.

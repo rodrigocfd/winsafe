@@ -26,7 +26,6 @@ struct Obj { // actual fields of RadioGroup
 //------------------------------------------------------------------------------
 
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct RadioGroup(Pin<Arc<Obj>>);
 

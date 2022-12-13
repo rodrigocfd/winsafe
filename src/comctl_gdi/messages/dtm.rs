@@ -9,7 +9,6 @@ use crate::user::privs::zero_as_err;
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 pub struct SetMcFont {
 	pub hfont: HFONT,
 	pub redraw: bool,
@@ -35,7 +34,6 @@ unsafe impl MsgSend for SetMcFont {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HFONT>`.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 pub struct GetMcFont {}
 
 unsafe impl MsgSend for GetMcFont {

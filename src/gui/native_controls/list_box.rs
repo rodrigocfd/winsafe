@@ -32,7 +32,6 @@ struct Obj { // actual fields of ListBox
 /// [list box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control. Not to be confused with the more complex
 /// [list view](crate::gui::ListView) control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct ListBox(Pin<Arc<Obj>>);
 
@@ -173,7 +172,6 @@ impl ListBox {
 
 /// Options to create a [`ListBox`](crate::gui::ListBox) programmatically with
 /// [`ListBox::new`](crate::gui::ListBox::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListBoxOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

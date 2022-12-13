@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
+
 pub(in crate::gdi) mod ffi;
 pub(crate) mod privs;
 

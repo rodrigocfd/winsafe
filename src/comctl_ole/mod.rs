@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
+
 pub(in crate::comctl_ole) mod ffi;
 
 mod aliases;

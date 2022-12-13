@@ -9,7 +9,6 @@ use crate::prelude::MsgSend;
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub struct SetItemIndexState<'a, 'b, 'c> {
 	pub lvitemindex: &'a LVITEMINDEX,
 	pub lvitem: &'c LVITEM<'b>,

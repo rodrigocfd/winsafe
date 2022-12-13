@@ -3,7 +3,7 @@
 /// Writes pub(crate) and pub values of the given constant type.
 macro_rules! const_values {
 	(
-		$name:ident $(: $feature:literal)*;
+		$name:ident;
 		$(
 			$( #[$privvaldoc:meta] )*
 			$privvalname:ident $privval:expr
@@ -14,7 +14,6 @@ macro_rules! const_values {
 			$pubvalname:ident $pubval:expr
 		)*
 	) => {
-		$( #[cfg_attr(docsrs, doc(cfg(feature = $feature)))] )*
 		impl $name {
 			$(
 				$( #[$privvaldoc] )*
@@ -32,11 +31,10 @@ macro_rules! const_values {
 /// include `Debug` and `Display` impls.
 macro_rules! const_no_debug_display {
 	(
-		$name:ident: $ntype:ty: $feature:literal;
+		$name:ident : $ntype:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[repr(transparent)]
 		#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 		pub struct $name(pub(crate) $ntype);
@@ -87,7 +85,7 @@ macro_rules! const_no_debug_display {
 /// values.
 macro_rules! const_ordinary {
 	(
-		$name:ident: $ntype:ty: $feature:literal;
+		$name:ident : $ntype:ty;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -101,7 +99,7 @@ macro_rules! const_ordinary {
 		)*
 	) => {
 		const_no_debug_display! {
-			$name: $ntype : $feature;
+			$name: $ntype;
 			$( #[$doc] )*
 		}
 
@@ -141,7 +139,7 @@ macro_rules! const_ordinary {
 /// public values.
 macro_rules! const_bitflag {
 	(
-		$name:ident: $ntype:ty: $feature:literal;
+		$name:ident : $ntype:ty;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -155,7 +153,7 @@ macro_rules! const_bitflag {
 		)*
 	) => {
 		const_ordinary! {
-			$name: $ntype : $feature;
+			$name: $ntype;
 			$( #[$doc] )*
 			///
 			/// This is a bitflag constant, which implements the
@@ -225,7 +223,7 @@ macro_rules! const_bitflag {
 /// [`WM`](crate::co::WM) constant type, along with private and public values.
 macro_rules! const_wm {
 	(
-		$name:ident $(: $feature:literal)*;
+		$name:ident;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -239,7 +237,7 @@ macro_rules! const_wm {
 		)*
 	) => {
 		const_ordinary! {
-			$name: u32 $(: $feature )*;
+			$name: u32;
 			$( #[$doc] )*
 			///
 			/// This is a window message, convertible to [`WM`](crate::co::WM).
@@ -268,7 +266,7 @@ macro_rules! const_wm {
 /// public values.
 macro_rules! const_cmd {
 	(
-		$name:ident $(: $feature:literal)*;
+		$name:ident;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -282,7 +280,7 @@ macro_rules! const_cmd {
 		)*
 	) => {
 		const_ordinary! {
-			$name: u16 $(: $feature )*;
+			$name: u16;
 			$( #[$doc] )*
 			///
 			/// This is a [`wm::Command`](crate::msg::wm::Command) notification
@@ -312,7 +310,7 @@ macro_rules! const_cmd {
 /// public values.
 macro_rules! const_nm {
 	(
-		$name:ident $(: $feature:literal)*;
+		$name:ident;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -326,7 +324,7 @@ macro_rules! const_nm {
 		)*
 	) => {
 		const_ordinary! {
-			$name: i32 $(: $feature )*;
+			$name: i32;
 			$( #[$doc] )*
 			///
 			/// This is a [`wm::Notify`](crate::msg::wm::Notify) notification
@@ -355,7 +353,7 @@ macro_rules! const_nm {
 /// [`WS`](crate::co::WS) constant type, along with private and public values.
 macro_rules! const_ws {
 	(
-		$name:ident: $ntype:ty $(: $feature:literal)*;
+		$name:ident : $ntype:ty;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -369,7 +367,7 @@ macro_rules! const_ws {
 		)*
 	) => {
 		const_bitflag! {
-			$name: $ntype $(: $feature )*;
+			$name: $ntype;
 			$( #[$doc] )*
 			///
 			/// This is a window style, convertible to [`WS`](crate::co::WS).
@@ -398,7 +396,7 @@ macro_rules! const_ws {
 /// values.
 macro_rules! const_wsex {
 	(
-		$name:ident $(: $feature:literal)*;
+		$name:ident;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -412,7 +410,7 @@ macro_rules! const_wsex {
 		)*
 	) => {
 		const_bitflag! {
-			$name: u32 $(: $feature )*;
+			$name: u32;
 			$( #[$doc] )*
 			///
 			/// This is an extended windoow style, convertible to

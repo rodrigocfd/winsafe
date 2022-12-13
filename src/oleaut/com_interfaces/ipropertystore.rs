@@ -12,7 +12,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IPropertyStore`](crate::IPropertyStore) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]
 pub struct IPropertyStoreVT {
 	pub IUnknownVT: IUnknownVT,
@@ -23,8 +22,7 @@ pub struct IPropertyStoreVT {
 	pub Commit: fn(ComPtr) -> HRES,
 }
 
-com_interface! { IPropertyStore: "oleaut";
-	"886d8eeb-8cf2-4446-8d02-cdba1dbdcf99";
+com_interface! { IPropertyStore: "886d8eeb-8cf2-4446-8d02-cdba1dbdcf99";
 	/// [`IPropertyStore`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nn-propsys-ipropertystore)
 	/// COM interface over [`IPropertyStoreVT`](crate::vt::IPropertyStoreVT).
 	///
@@ -46,7 +44,6 @@ impl oleaut_IPropertyStore for IPropertyStore {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// Returns an iterator over the [`PROPERTYKEY`](crate::PROPERTYKEY)
 	/// elements by calling

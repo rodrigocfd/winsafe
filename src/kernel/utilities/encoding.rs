@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
 
 /// String encodings.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Encoding {
 	/// Unknown encoding.

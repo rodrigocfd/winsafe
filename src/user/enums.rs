@@ -10,7 +10,6 @@ use crate::user::decl::{
 /// Variant parameter for:
 ///
 /// * [`wm::Command`](crate::msg::wm::Command).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum AccelMenuCtrl {
 	/// Accelerator event. Contains the accelerator command ID.
 	Accel(u16),
@@ -36,7 +35,6 @@ impl AccelMenuCtrl {
 /// Variant parameter for:
 ///
 /// * [`AccelMenuCtrl`](crate::AccelMenuCtrl).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct AccelMenuCtrlData {
 	pub notif_code: co::CMD,
 	pub ctrl_id: u16,
@@ -50,7 +48,6 @@ pub struct AccelMenuCtrlData {
 /// * [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx);
 /// * [`HWND::FindWindowEx`](crate::prelude::user_Hwnd::FindWindowEx);
 /// * [`UnregisterClass`](crate::UnregisterClass).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum AtomStr {
 	/// An [`ATOM`](crate::ATOM) returned by
@@ -81,7 +78,6 @@ impl AtomStr {
 ///
 /// * [`bm::GetImage`](crate::msg::bm::GetImage);
 /// * [`bm::SetImage`](crate::msg::bm::SetImage).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum BmpIcon {
 	/// A bitmap.
 	Bmp(HBITMAP),
@@ -105,7 +101,6 @@ impl BmpIcon {
 /// Variant parameter for:
 ///
 /// * [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum BmpPtrStr {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bmp(HBITMAP),
@@ -139,7 +134,6 @@ impl BmpPtrStr {
 /// Variant parameter for:
 ///
 /// * [`DEVMODE`](crate::DEVMODE).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]
 pub enum DispfNup {
 	/// Used for displays.
@@ -151,7 +145,6 @@ pub enum DispfNup {
 /// Variant parameter for:
 ///
 /// * [`EnumDisplaySettings`](crate::EnumDisplaySettings).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]
 pub enum GmidxEnum {
 	/// Graphics mode index.
@@ -172,7 +165,6 @@ impl From<GmidxEnum> for u32 {
 /// Variant parameter for:
 ///
 /// * [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum HwndFocus {
 	/// Handle to the control to receive the focus.
 	Hwnd(HWND),
@@ -185,7 +177,6 @@ pub enum HwndFocus {
 ///
 /// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle);
 /// * [`HELPINFO`](crate::HELPINFO).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum HwndHmenu {
 	/// A window.
 	Hwnd(HWND),
@@ -211,7 +202,6 @@ impl HwndHmenu {
 /// * [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos);
 /// * [`WINDOWPOS`](crate::WINDOWPOS);
 /// * [`WINDOWPOS`](crate::WINDOWPOS).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.
 	Hwnd(HWND),
@@ -236,7 +226,6 @@ impl HwndPlace {
 /// Variant parameter for:
 ///
 /// * [`wm::ParentNotify`](crate::msg::wm::ParentNotify).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum HwndPointId {
 	/// Handle to the child window.
 	Hwnd(HWND),
@@ -261,7 +250,6 @@ impl HwndPointId {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::LoadCursor`](crate::prelude::user_Hinstance::LoadCursor).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdIdcStr {
 	/// A resource ID.
@@ -293,7 +281,6 @@ impl IdIdcStr {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::LoadIcon`](crate::prelude::user_Hinstance::LoadIcon).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdIdiStr {
 	/// A resource ID.
@@ -326,7 +313,6 @@ impl IdIdiStr {
 ///
 /// * [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu);
 /// * [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum IdMenu<'a> {
 	/// A command ID.
 	Id(u16),
@@ -361,7 +347,6 @@ impl<'a> IdMenu<'a> {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdObmStr {
 	/// A resource ID.
@@ -393,7 +378,6 @@ impl IdObmStr {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdOcrStr {
 	/// A resource ID.
@@ -425,7 +409,6 @@ impl IdOcrStr {
 /// Variant parameter for:
 ///
 /// * [`HINSTANCE::LoadImageIcon`](crate::prelude::user_Hinstance::LoadImageIcon).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone)]
 pub enum IdOicStr {
 	/// A resource ID.
@@ -469,7 +452,6 @@ impl IdOicStr {
 /// * [`HMENU::SetMenuItemBitmaps`](crate::prelude::user_Hmenu::SetMenuItemBitmaps);
 /// * [`HMENU::SetMenuItemInfo`](crate::prelude::user_Hmenu::SetMenuItemInfo);
 /// * [`HWND::HiliteMenuItem`](crate::prelude::user_Hwnd::HiliteMenuItem).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[derive(Clone, Copy)]
 pub enum IdPos {
 	/// A command ID.
@@ -511,7 +493,6 @@ impl IdPos {
 /// Variant parameter for:
 ///
 /// * [`HMENU::AppendMenuEnum`](crate::prelude::user_Hmenu::AppendMenuEnum).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum MenuEnum<'a> {
 	/// A selectable entry item, with command ID and text.
 	Entry(u16, &'a str),
@@ -524,7 +505,6 @@ pub enum MenuEnum<'a> {
 /// Variant parameter for:
 ///
 /// * [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).
 	Nccsp(&'b mut NCCALCSIZE_PARAMS<'a>),

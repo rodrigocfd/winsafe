@@ -11,7 +11,6 @@ use crate::user::privs::zero_as_err;
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeltaPos {
 	pub advance_amount: u32,
 }
@@ -36,7 +35,6 @@ unsafe impl MsgSend for DeltaPos {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBarColor {}
 
 unsafe impl MsgSend for GetBarColor {
@@ -62,7 +60,6 @@ unsafe impl MsgSend for GetBarColor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBkColor {}
 
 unsafe impl MsgSend for GetBkColor {
@@ -88,7 +85,6 @@ unsafe impl MsgSend for GetBkColor {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPos {}
 
 unsafe impl MsgSend for GetPos {
@@ -111,7 +107,6 @@ unsafe impl MsgSend for GetPos {
 /// message parameters.
 ///
 /// Return type: `i32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRange<'a> {
 	pub return_low: bool,
 	pub ranges: Option<&'a mut PBRANGE>,
@@ -137,7 +132,6 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::PBST`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetState {}
 
 unsafe impl MsgSend for GetState {
@@ -160,7 +154,6 @@ unsafe impl MsgSend for GetState {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetStep {}
 
 unsafe impl MsgSend for GetStep {
@@ -183,7 +176,6 @@ unsafe impl MsgSend for GetStep {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBarColor {
 	pub color: Option<COLORREF>,
 }
@@ -211,7 +203,6 @@ unsafe impl MsgSend for SetBarColor {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBkColor {
 	pub color: Option<COLORREF>,
 }
@@ -239,7 +230,6 @@ unsafe impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMarquee {
 	pub turn_on: bool,
 	pub time_ms: Option<u32>,
@@ -265,7 +255,6 @@ unsafe impl MsgSend for SetMarquee {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetPos {
 	pub position: u32,
 }
@@ -290,7 +279,6 @@ unsafe impl MsgSend for SetPos {
 /// message parameters.
 ///
 /// Return type: `SysResult<(u16, u16)>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetRange {
 	pub min: u16,
 	pub max: u16,
@@ -316,7 +304,6 @@ unsafe impl MsgSend for SetRange {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetRange32 {
 	pub min: u32,
 	pub max: u32,
@@ -342,7 +329,6 @@ unsafe impl MsgSend for SetRange32 {
 /// message parameters.
 ///
 /// Return type: `co::PBST`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetState {
 	pub state: co::PBST,
 }
@@ -367,7 +353,6 @@ unsafe impl MsgSend for SetState {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetStep {
 	pub step: u32,
 }
@@ -392,7 +377,6 @@ unsafe impl MsgSend for SetStep {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct StepIt {}
 
 unsafe impl MsgSend for StepIt {

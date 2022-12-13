@@ -17,7 +17,6 @@ impl dshow_gdi_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "dshow", feature = "gdi"))))]
 pub trait dshow_gdi_IMFVideoDisplayControl: ole_IUnknown {
 	/// [`GetCurrentImage`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getcurrentimage)
 	/// method.

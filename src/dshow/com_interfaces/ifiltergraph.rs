@@ -9,7 +9,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IFilterGraph`](crate::IFilterGraph) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IFilterGraphVT {
 	pub IUnknownVT: IUnknownVT,
@@ -23,8 +22,7 @@ pub struct IFilterGraphVT {
 	pub SetDefaultSyncSource: fn(ComPtr) -> HRES,
 }
 
-com_interface! { IFilterGraph: "dshow";
-	"56a8689f-0ad4-11ce-b03a-0020af0ba770";
+com_interface! { IFilterGraph: "56a8689f-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
 	/// COM interface over [`IFilterGraphVT`](crate::vt::IFilterGraphVT).
 	///
@@ -43,7 +41,6 @@ impl dshow_IFilterGraph for IFilterGraph {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// [`IFilterGraph::AddFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 	/// method.

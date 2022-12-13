@@ -28,7 +28,6 @@ struct Obj { // actual fields of StatusBar
 
 /// Used when adding the parts in
 /// [`StatusBar::new`](crate::gui::StatusBar::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy)]
 pub enum StatusBarPart {
 	/// A part that has a fixed size, in pixels.
@@ -53,7 +52,6 @@ pub enum StatusBarPart {
 /// Native
 /// [status bar](https://learn.microsoft.com/en-us/windows/win32/controls/status-bars)
 /// control, which has one or more parts.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct StatusBar(Pin<Arc<Obj>>);
 

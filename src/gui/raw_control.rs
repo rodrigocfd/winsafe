@@ -116,7 +116,6 @@ impl RawControl {
 
 /// Options to create a [`WindowControl`](crate::gui::WindowControl)
 /// programmatically with [`WindowControl::new`](crate::gui::WindowControl::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowControlOpts {
 	/// Window class name to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).

@@ -16,7 +16,6 @@ enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
 
 /// An user modal window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct WindowModal(RawDlg);
 

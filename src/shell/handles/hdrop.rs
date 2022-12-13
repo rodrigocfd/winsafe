@@ -6,7 +6,7 @@ use crate::prelude::Handle;
 use crate::shell;
 use crate::user::decl::POINT;
 
-impl_handle! { HDROP: "shell";
+impl_handle! { HDROP;
 	/// Handle to an
 	/// [internal drop structure](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
 }
@@ -21,7 +21,6 @@ impl shell_Hdrop for HDROP {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_Hdrop: Handle {
 	/// Returns an iterator over the dropped files by calling
 	/// [`HDROP::DragQueryFile`](crate::prelude::shell_Hdrop::DragQueryFile)

@@ -4,7 +4,7 @@ mod hwnd;
 pub mod decl {
 	pub use super::himagelist::HIMAGELIST;
 
-	impl_handle! { HTREEITEM: "comctl";
+	impl_handle! { HTREEITEM;
 		/// Handle to an
 		/// [tree view item](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls).
 	}

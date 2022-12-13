@@ -16,7 +16,6 @@ use crate::user::privs::{
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct AddBitmap<'a> {
 	pub num_images: u32,
 	pub info: &'a TBADDBITMAP,
@@ -42,7 +41,6 @@ unsafe impl<'a> MsgSend for AddBitmap<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct AddButtons<'a, 'b> {
 	pub buttons: &'a mut [TBBUTTON<'b>],
 }
@@ -67,7 +65,6 @@ unsafe impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct AddString {
 	pub texts: ResStrs,
 }
@@ -94,7 +91,7 @@ unsafe impl MsgSend for AddString {
 	}
 }
 
-pub_struct_msg_empty! { AutoSize: co::TBM::AUTOSIZE.into(); "comctl";
+pub_struct_msg_empty! { AutoSize: co::TBM::AUTOSIZE.into();
 	/// [`TB_AUTOSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-autosize)
 }
 
@@ -102,7 +99,6 @@ pub_struct_msg_empty! { AutoSize: co::TBM::AUTOSIZE.into(); "comctl";
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ButtonCount {}
 
 unsafe impl MsgSend for ButtonCount {
@@ -125,7 +121,6 @@ unsafe impl MsgSend for ButtonCount {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ButtonStructSize {
 	pub size: u32,
 }
@@ -150,7 +145,6 @@ unsafe impl MsgSend for ButtonStructSize {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ChangeBitmap {
 	pub btn_cmd_id: u16,
 	pub image: IdxCbNone,
@@ -176,7 +170,6 @@ unsafe impl MsgSend for ChangeBitmap {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct CheckButton {
 	pub btn_cmd_id: u16,
 	pub check: bool,
@@ -202,7 +195,6 @@ unsafe impl MsgSend for CheckButton {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct CommandToIndex {
 	pub btn_cmd_id: u16,
 }
@@ -223,7 +215,7 @@ unsafe impl MsgSend for CommandToIndex {
 	}
 }
 
-pub_struct_msg_empty! { Customize: co::TBM::CUSTOMIZE.into(); "comctl";
+pub_struct_msg_empty! { Customize: co::TBM::CUSTOMIZE.into();
 	/// [`TB_CUSTOMIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-customize)
 }
 
@@ -231,7 +223,6 @@ pub_struct_msg_empty! { Customize: co::TBM::CUSTOMIZE.into(); "comctl";
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteButton {
 	pub btn_index: u32,
 }
@@ -256,7 +247,6 @@ unsafe impl MsgSend for DeleteButton {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EnableButton {
 	pub btn_cmd_id: u16,
 	pub enable: bool,
@@ -282,7 +272,6 @@ unsafe impl MsgSend for EnableButton {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetAnchorHighlight {}
 
 unsafe impl MsgSend for GetAnchorHighlight {
@@ -305,7 +294,6 @@ unsafe impl MsgSend for GetAnchorHighlight {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBitmap {
 	pub btn_cmd_id: u16,
 }
@@ -330,7 +318,6 @@ unsafe impl MsgSend for GetBitmap {
 /// message, which has no parameters.
 ///
 /// Return type: `co::TBBF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBitmapFlags {}
 
 unsafe impl MsgSend for GetBitmapFlags {
@@ -353,7 +340,6 @@ unsafe impl MsgSend for GetBitmapFlags {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetButton<'a, 'b> {
 	pub btn_index: u32,
 	pub info: &'a mut TBBUTTON<'b>,
@@ -379,7 +365,6 @@ unsafe impl<'a, 'b> MsgSend for GetButton<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetButtonInfo<'a, 'b> {
 	pub btn_cmd_id: u16,
 	pub info: &'a mut TBBUTTONINFO<'b>,
@@ -405,7 +390,6 @@ unsafe impl<'a, 'b> MsgSend for GetButtonInfo<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `SIZE`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetButtonSize {}
 
 unsafe impl MsgSend for GetButtonSize {
@@ -428,7 +412,6 @@ unsafe impl MsgSend for GetButtonSize {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetButtonText<'a> {
 	pub btn_cmd_id: u16,
 	pub text: &'a mut WString,
@@ -454,7 +437,6 @@ unsafe impl<'a> MsgSend for GetButtonText<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColorScheme<'a> {
 	pub scheme: &'a mut COLORSCHEME,
 }
@@ -479,7 +461,6 @@ unsafe impl<'a> MsgSend for GetColorScheme<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetDisabledImageList {}
 
 unsafe impl MsgSend for GetDisabledImageList {
@@ -502,7 +483,6 @@ unsafe impl MsgSend for GetDisabledImageList {
 /// message, which has no parameters.
 ///
 /// Return type: `co::TBSTYLE_EX`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetExtendedStyle {}
 
 unsafe impl MsgSend for GetExtendedStyle {
@@ -525,7 +505,6 @@ unsafe impl MsgSend for GetExtendedStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHotImageList {}
 
 unsafe impl MsgSend for GetHotImageList {
@@ -548,7 +527,6 @@ unsafe impl MsgSend for GetHotImageList {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHotItem {}
 
 unsafe impl MsgSend for GetHotItem {
@@ -571,7 +549,6 @@ unsafe impl MsgSend for GetHotItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIdealSize<'a> {
 	pub get_height: bool,
 	pub size: &'a mut SIZE,
@@ -597,7 +574,6 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImageList {}
 
 unsafe impl MsgSend for GetImageList {
@@ -620,7 +596,6 @@ unsafe impl MsgSend for GetImageList {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImageListCount {}
 
 unsafe impl MsgSend for GetImageListCount {
@@ -643,7 +618,6 @@ unsafe impl MsgSend for GetImageListCount {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMark<'a> {
 	pub info: &'a mut TBINSERTMARK,
 }
@@ -668,7 +642,6 @@ unsafe impl<'a> MsgSend for GetInsertMark<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMarkColor {}
 
 unsafe impl MsgSend for GetInsertMarkColor {
@@ -691,7 +664,6 @@ unsafe impl MsgSend for GetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemDropdownRect<'a> {
 	pub item_index: u32,
 	pub rect: &'a mut RECT,
@@ -717,7 +689,6 @@ unsafe impl<'a> MsgSend for GetItemDropdownRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemRect<'a> {
 	pub btn_index: u32,
 	pub rect: &'a mut RECT,
@@ -743,7 +714,6 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMaxSize<'a> {
 	pub size: &'a mut SIZE,
 }
@@ -768,7 +738,6 @@ unsafe impl<'a> MsgSend for GetMaxSize<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMetrics<'a> {
 	pub metrics: &'a mut TBMETRICS,
 }
@@ -793,7 +762,6 @@ unsafe impl<'a> MsgSend for GetMetrics<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `(u16, u16)`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPadding {}
 
 unsafe impl MsgSend for GetPadding {
@@ -816,7 +784,6 @@ unsafe impl MsgSend for GetPadding {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPressedImageList {}
 
 unsafe impl MsgSend for GetPressedImageList {
@@ -839,7 +806,6 @@ unsafe impl MsgSend for GetPressedImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRect<'a> {
 	pub cmd_id: u16,
 	pub rect: &'a mut RECT,
@@ -865,7 +831,6 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRows {}
 
 unsafe impl MsgSend for GetRows {
@@ -888,7 +853,6 @@ unsafe impl MsgSend for GetRows {
 /// message parameters.
 ///
 /// Return type: `SysResult<co::TBSTATE>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetState {
 	pub cmd_id: u16,
 }
@@ -913,7 +877,6 @@ unsafe impl MsgSend for GetState {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetString<'a> {
 	pub index: u16,
 	pub text: &'a mut WString,
@@ -939,7 +902,6 @@ unsafe impl<'a> MsgSend for GetString<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::BTNS`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetStyle {}
 
 unsafe impl MsgSend for GetStyle {
@@ -962,7 +924,6 @@ unsafe impl MsgSend for GetStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextRows {}
 
 unsafe impl MsgSend for GetTextRows {
@@ -985,7 +946,6 @@ unsafe impl MsgSend for GetTextRows {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTooltips {}
 
 unsafe impl MsgSend for GetTooltips {
@@ -1008,7 +968,6 @@ unsafe impl MsgSend for GetTooltips {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetUnicodeFormat {}
 
 unsafe impl MsgSend for GetUnicodeFormat {
@@ -1031,7 +990,6 @@ unsafe impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HideButton {
 	pub cmd_id: u16,
 	pub hide: bool,
@@ -1057,7 +1015,6 @@ unsafe impl MsgSend for HideButton {
 /// message parameters.
 ///
 /// Return type: `i32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HitTest<'a> {
 	pub coords: &'a mut POINT,
 }
@@ -1082,7 +1039,6 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Indeterminate {
 	pub cmd_id: u16,
 	pub indeterminate: bool,
@@ -1108,7 +1064,6 @@ unsafe impl MsgSend for Indeterminate {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertButton<'a, 'b> {
 	pub index: u32,
 	pub button: &'a TBBUTTON<'b>,
@@ -1134,7 +1089,6 @@ unsafe impl<'a, 'b> MsgSend for InsertButton<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertMarkHitTest<'a, 'b> {
 	pub coords: &'a POINT,
 	pub info: &'b mut TBINSERTMARK,
@@ -1160,7 +1114,6 @@ unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsButtonChecked {
 	pub cmd_id: u16,
 }
@@ -1185,7 +1138,6 @@ unsafe impl MsgSend for IsButtonChecked {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsButtonEnabled {
 	pub cmd_id: u16,
 }
@@ -1210,7 +1162,6 @@ unsafe impl MsgSend for IsButtonEnabled {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsButtonHidden {
 	pub cmd_id: u16,
 }
@@ -1235,7 +1186,6 @@ unsafe impl MsgSend for IsButtonHidden {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsButtonHighlighted {
 	pub cmd_id: u16,
 }
@@ -1260,7 +1210,6 @@ unsafe impl MsgSend for IsButtonHighlighted {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsButtonIndeterminate {
 	pub cmd_id: u16,
 }
@@ -1285,7 +1234,6 @@ unsafe impl MsgSend for IsButtonIndeterminate {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsButtonPressed {
 	pub cmd_id: u16,
 }
@@ -1310,7 +1258,6 @@ unsafe impl MsgSend for IsButtonPressed {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct LoadImages {
 	pub img_list: co::IDB,
 }
@@ -1335,7 +1282,6 @@ unsafe impl MsgSend for LoadImages {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct MapAccelerator<'a> {
 	pub character: char,
 	pub cmd_id: &'a mut u16,
@@ -1361,7 +1307,6 @@ unsafe impl<'a> MsgSend for MapAccelerator<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct MarkButton {
 	pub cmd_id: u16,
 	pub highlight: bool,
@@ -1387,7 +1332,6 @@ unsafe impl MsgSend for MarkButton {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct MoveButton {
 	pub btn_index: u32,
 	pub dest_index: u32,
@@ -1413,7 +1357,6 @@ unsafe impl MsgSend for MoveButton {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct PressButton {
 	pub cmd_id: u16,
 	pub press: bool,
@@ -1439,7 +1382,6 @@ unsafe impl MsgSend for PressButton {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ReplaceBitmap<'a> {
 	pub info: &'a TBREPLACEBITMAP,
 }

@@ -7,7 +7,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`ITypeInfo`](crate::ITypeInfo) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[repr(C)]
 pub struct ITypeInfoVT {
 	pub IUnknownVT: IUnknownVT,
@@ -32,8 +31,7 @@ pub struct ITypeInfoVT {
 	pub ReleaseVarDesc: fn(ComPtr, PVOID) -> HRES,
 }
 
-com_interface! { ITypeInfo: "oleaut";
-	"00020401-0000-0000-c000-000000000046";
+com_interface! { ITypeInfo: "00020401-0000-0000-c000-000000000046";
 	/// [`ITypeInfo`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-itypeinfo)
 	/// COM interface over [`ITypeInfoVT`](crate::vt::ITypeInfoVT).
 	///
@@ -52,7 +50,6 @@ impl oleaut_ITypeInfo for ITypeInfo {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 pub trait oleaut_ITypeInfo: ole_IUnknown {
 	/// [`ITypeInfo::CreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.

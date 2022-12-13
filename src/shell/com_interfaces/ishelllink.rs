@@ -12,7 +12,6 @@ use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
 
 /// [`IShellLink`](crate::IShellLink) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IShellLinkVT {
 	pub IUnknownVT: IUnknownVT,
@@ -36,8 +35,7 @@ pub struct IShellLinkVT {
 	pub SetPath: fn(ComPtr, PCSTR) -> HRES,
 }
 
-com_interface! { IShellLink: "shell";
-	"000214f9-0000-0000-c000-000000000046";
+com_interface! { IShellLink: "000214f9-0000-0000-c000-000000000046";
 	/// [`IShellLink`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
 	/// COM interface over [`IShellLinkVT`](crate::vt::IShellLinkVT).
 	///
@@ -70,7 +68,6 @@ impl shell_IShellLink for IShellLink {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IShellLink: ole_IUnknown {
 	/// [`IShellLinkW::GetArguments`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getarguments)
 	/// method.

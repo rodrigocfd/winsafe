@@ -10,7 +10,6 @@ use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ClearFilter {
 	pub filter: Option<u32>,
 }
@@ -35,7 +34,6 @@ unsafe impl MsgSend for ClearFilter {
 /// message parameters.
 ///
 /// Return type: `SysResult<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct CreateDragImage {
 	pub index: u32,
 }
@@ -60,7 +58,6 @@ unsafe impl MsgSend for CreateDragImage {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteItem {
 	pub index: u32,
 }
@@ -85,7 +82,6 @@ unsafe impl MsgSend for DeleteItem {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EditFilter {
 	pub index: u32,
 	pub discard_changes: bool,
@@ -111,7 +107,6 @@ unsafe impl MsgSend for EditFilter {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBitmapMargin {}
 
 unsafe impl MsgSend for GetBitmapMargin {
@@ -134,7 +129,6 @@ unsafe impl MsgSend for GetBitmapMargin {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFocusedItem {}
 
 unsafe impl MsgSend for GetFocusedItem {
@@ -157,7 +151,6 @@ unsafe impl MsgSend for GetFocusedItem {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImageList {
 	pub which: co::HDSIL,
 }
@@ -182,7 +175,6 @@ unsafe impl MsgSend for GetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItem<'a, 'b> {
 	pub index: u32,
 	pub hditem: &'b mut HDITEM<'a>,
@@ -208,7 +200,6 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemCount {}
 
 unsafe impl MsgSend for GetItemCount {
@@ -231,7 +222,6 @@ unsafe impl MsgSend for GetItemCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemDropDownRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
@@ -257,7 +247,6 @@ unsafe impl<'a> MsgSend for GetItemDropDownRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
@@ -283,7 +272,6 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetOrderArray<'a> {
 	pub buffer: &'a mut [u32],
 }
@@ -308,7 +296,6 @@ unsafe impl<'a> MsgSend for GetOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetOverflowRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -333,7 +320,6 @@ unsafe impl<'a> MsgSend for GetOverflowRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetUnicodeFormat {}
 
 unsafe impl MsgSend for GetUnicodeFormat {
@@ -356,7 +342,6 @@ unsafe impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HitTest<'a> {
 	pub test_info: &'a mut HDHITTESTINFO,
 }
@@ -381,7 +366,6 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertItem<'a, 'b> {
 	pub index_after: u32,
 	pub hditem: &'b HDITEM<'a>,
@@ -407,7 +391,6 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Layout<'a, 'b, 'c> {
 	pub hdlayout: &'c mut HDLAYOUT<'a, 'b>,
 }
@@ -432,7 +415,6 @@ unsafe impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct OrderToIndex {
 	pub order: u32,
 }
@@ -457,7 +439,6 @@ unsafe impl MsgSend for OrderToIndex {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBitmapMargin {
 	pub width: u32,
 }
@@ -482,7 +463,6 @@ unsafe impl MsgSend for SetBitmapMargin {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetFilterChangeTimeout {
 	pub timeout_ms: u32,
 }
@@ -507,7 +487,6 @@ unsafe impl MsgSend for SetFilterChangeTimeout {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetFocusedItem {
 	pub index: u32,
 }
@@ -532,7 +511,6 @@ unsafe impl MsgSend for SetFocusedItem {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetHotDivider {
 	pub value: PtIdx,
 }
@@ -563,7 +541,6 @@ unsafe impl MsgSend for SetHotDivider {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetImageList {
 	pub which: co::HDSIL,
 	pub himagelist: Option<HIMAGELIST>,
@@ -589,7 +566,6 @@ unsafe impl MsgSend for SetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItem<'a, 'b> {
 	pub index: u32,
 	pub hditem: &'b HDITEM<'a>,
@@ -615,7 +591,6 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetOrderArray<'a> {
 	pub buffer: &'a [u32],
 }
@@ -640,7 +615,6 @@ unsafe impl<'a> MsgSend for SetOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }

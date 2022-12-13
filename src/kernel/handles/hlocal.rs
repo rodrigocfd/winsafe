@@ -5,7 +5,7 @@ use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 
-impl_handle! { HLOCAL: "kernel";
+impl_handle! { HLOCAL;
 	/// Handle to a
 	/// [local memory block](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
 }
@@ -20,7 +20,6 @@ impl kernel_Hlocal for HLOCAL {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hlocal: Handle {
 	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// method.

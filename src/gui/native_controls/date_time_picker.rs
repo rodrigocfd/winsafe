@@ -31,7 +31,6 @@ struct Obj { // actual fields of DateTimePicker
 /// Native
 /// [date and time picker](https://learn.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct DateTimePicker(Pin<Arc<Obj>>);
 
@@ -202,7 +201,6 @@ impl DateTimePicker {
 /// Options to create a [`DateTimePicker`](crate::gui::DateTimePicker)
 /// programmatically with
 /// [`DateTimePicker::new`](crate::gui::DateTimePicker::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct DateTimePickerOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

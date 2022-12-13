@@ -8,7 +8,6 @@ use crate::oleaut::decl::PROPERTYKEY;
 
 /// [`PSGetNameFromPropertyKey`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-psgetnamefrompropertykey)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[must_use]
 pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 	let mut pstr: *mut u16 = std::ptr::null_mut();
@@ -32,7 +31,6 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 ///
 /// Note that this function resolves the time to one second; milliseconds are
 /// ignored.
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[must_use]
 pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 	let mut double = f64::default();
@@ -47,7 +45,6 @@ pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 /// [`VariantTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-varianttimetosystemtime)
 /// function. The inverse operation is performed by
 /// [`SystemTimeToVariantTime`](SystemTimeToVariantTime).
-#[cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 #[must_use]
 pub fn VariantTimeToSystemTime(
 	var_time: f64, st: &mut SYSTEMTIME) -> SysResult<()>

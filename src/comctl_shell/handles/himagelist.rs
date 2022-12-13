@@ -16,7 +16,6 @@ impl comctl_shell_Himagelist for HIMAGELIST {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "shell"))))]
 pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// Calls [`SHGetFileInfo`](crate::SHGetFileInfo) to retrieve one or more
 	/// shell file icons, then passes them to

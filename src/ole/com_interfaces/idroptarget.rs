@@ -10,7 +10,6 @@ use crate::user::decl::POINT;
 use crate::vt::IUnknownVT;
 
 /// [`IDropTarget`](crate::IDropTarget) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IDropTargetVT {
 	pub IUnknownVT: IUnknownVT,
@@ -20,8 +19,7 @@ pub struct IDropTargetVT {
 	pub Drop: fn(ComPtr, ComPtr, u32, u64, *mut u32) -> HRES,
 }
 
-com_interface! { IDropTarget: "ole";
-	"00000122-0000-0000-c000-000000000046";
+com_interface! { IDropTarget: "00000122-0000-0000-c000-000000000046";
 	/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
 	/// COM interface over [`IDropTargetVT`](crate::vt::IDropTargetVT).
 	///
@@ -40,7 +38,6 @@ impl ole_IDropTarget for IDropTarget {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IDropTarget: ole_IUnknown {
 	/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
 	/// method.

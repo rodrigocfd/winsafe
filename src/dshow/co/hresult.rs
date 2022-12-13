@@ -1,6 +1,6 @@
 use crate::co::HRESULT;
 
-const_values! { HRESULT: "dshow";
+const_values! { HRESULT;
 	=>
 	MF_E_PLATFORM_NOT_INITIALIZED 0xc00d_36b0
 	MF_E_BUFFERTOOSMALL 0xc00d_36b1

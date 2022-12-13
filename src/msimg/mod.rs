@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "msimg")))]
+
 pub(in crate::msimg) mod ffi;
 
 mod handles;

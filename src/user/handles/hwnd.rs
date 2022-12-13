@@ -16,7 +16,7 @@ use crate::user::decl::{
 	TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
 };
 
-impl_handle! { HWND: "user";
+impl_handle! { HWND;
 	/// Handle to a
 	/// [window](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
 }
@@ -31,7 +31,6 @@ impl user_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hwnd: Handle {
 	/// Represents all top-level windows in
 	/// [`HWND::PostMessage`](crate::prelude::user_Hwnd::PostMessage) and
@@ -1487,7 +1486,6 @@ extern "system" fn enum_child_windows_proc<F>(
 /// RAII implementation for clipboard which automatically calls
 /// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ClipboardGuard<'a> {
 	_hwnd: PhantomData<&'a ()>,
 }
@@ -1507,7 +1505,6 @@ impl<'a> Drop for ClipboardGuard<'a> {
 /// The [`PAINTSTRUCT`](crate::PAINTSTRUCT) object is stored internally, and can
 /// be accessed through the
 /// [`paintstruct`](crate::guard::HdcPaintGuard::paintstruct) method.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct HdcPaintGuard<'a, H>
 	where H: user_Hwnd,
 {
@@ -1552,7 +1549,6 @@ impl<'a, H> HdcPaintGuard<'a, H>
 /// RAII implementation for [`HDC`](crate::HDC) which automatically calls
 /// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct HdcReleaseGuard<'a, H>
 	where H: user_Hwnd,
 {

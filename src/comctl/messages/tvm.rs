@@ -11,7 +11,6 @@ use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteItem {
 	pub hitem: HTREEITEM,
 }
@@ -36,7 +35,6 @@ unsafe impl MsgSend for DeleteItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EditLabel {
 	pub hitem: HTREEITEM,
 }
@@ -61,7 +59,6 @@ unsafe impl MsgSend for EditLabel {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EndEditLabelNow {
 	pub save: bool,
 }
@@ -86,7 +83,6 @@ unsafe impl MsgSend for EndEditLabelNow {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EnsureVisible {
 	pub hitem: HTREEITEM,
 }
@@ -111,7 +107,6 @@ unsafe impl MsgSend for EnsureVisible {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Expand {
 	pub action: co::TVE,
 	pub hitem: HTREEITEM,
@@ -137,7 +132,6 @@ unsafe impl MsgSend for Expand {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBkColor {}
 
 unsafe impl MsgSend for GetBkColor {
@@ -160,7 +154,6 @@ unsafe impl MsgSend for GetBkColor {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCount {}
 
 unsafe impl MsgSend for GetCount {
@@ -183,7 +176,6 @@ unsafe impl MsgSend for GetCount {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetEditControl {}
 
 unsafe impl MsgSend for GetEditControl {
@@ -206,7 +198,6 @@ unsafe impl MsgSend for GetEditControl {
 /// message, which has no parameters.
 ///
 /// Return type: `co::TVS_EX`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetExtendedStyle {}
 
 unsafe impl MsgSend for GetExtendedStyle {
@@ -229,7 +220,6 @@ unsafe impl MsgSend for GetExtendedStyle {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImageList {
 	pub kind: co::TVSIL,
 }
@@ -254,7 +244,6 @@ unsafe impl MsgSend for GetImageList {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIndent {}
 
 unsafe impl MsgSend for GetIndent {
@@ -277,7 +266,6 @@ unsafe impl MsgSend for GetIndent {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMarkColor {}
 
 unsafe impl MsgSend for GetInsertMarkColor {
@@ -300,7 +288,6 @@ unsafe impl MsgSend for GetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItem<'a, 'b> {
 	pub tvitem: &'b mut TVITEMEX<'a>,
 }
@@ -325,7 +312,6 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemHeight {}
 
 unsafe impl MsgSend for GetItemHeight {
@@ -348,7 +334,6 @@ unsafe impl MsgSend for GetItemHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemRect<'a> {
 	pub text_only: bool,
 	pub rect: &'a mut RECT,
@@ -374,7 +359,6 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `co::TVIS`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemState {
 	pub hitem: HTREEITEM,
 	pub mask: co::TVIS,
@@ -400,7 +384,6 @@ unsafe impl MsgSend for GetItemState {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetLineColor {}
 
 unsafe impl MsgSend for GetLineColor {
@@ -426,7 +409,6 @@ unsafe impl MsgSend for GetLineColor {
 /// message parameters.
 ///
 /// Return type: `Option<HTREEITEM>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNextItem {
 	pub relationship: co::TVGN,
 	pub hitem: Option<HTREEITEM>,
@@ -452,7 +434,6 @@ unsafe impl MsgSend for GetNextItem {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetScrollTime {}
 
 unsafe impl MsgSend for GetScrollTime {
@@ -475,7 +456,6 @@ unsafe impl MsgSend for GetScrollTime {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextColor {}
 
 unsafe impl MsgSend for GetTextColor {
@@ -498,7 +478,6 @@ unsafe impl MsgSend for GetTextColor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTooltips {}
 
 unsafe impl MsgSend for GetTooltips {
@@ -521,7 +500,6 @@ unsafe impl MsgSend for GetTooltips {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetVisibleCount {}
 
 unsafe impl MsgSend for GetVisibleCount {
@@ -544,7 +522,6 @@ unsafe impl MsgSend for GetVisibleCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<HTREEITEM>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertItem<'a, 'b> {
 	pub tvinsertstruct: &'b TVINSERTSTRUCT<'a>,
 }
@@ -569,7 +546,6 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SelectItem {
 	pub action: co::TVGN,
 	pub hitem: HTREEITEM,
@@ -595,7 +571,6 @@ unsafe impl MsgSend for SelectItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetHot {
 	pub hitem: Option<HTREEITEM>,
 }
@@ -620,7 +595,6 @@ unsafe impl MsgSend for SetHot {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetImageList {
 	pub kind: co::TVSIL,
 	pub himglist: Option<HIMAGELIST>,
@@ -646,7 +620,6 @@ unsafe impl MsgSend for SetImageList {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetIndent {
 	pub width: u32,
 }
@@ -671,7 +644,6 @@ unsafe impl MsgSend for SetIndent {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItem<'a, 'b> {
 	pub tvitem: &'b TVITEMEX<'a>,
 }
@@ -696,7 +668,6 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ShowInfoTip {
 	pub hitem: HTREEITEM,
 }
@@ -721,7 +692,6 @@ unsafe impl MsgSend for ShowInfoTip {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortChildren {
 	pub recursive: bool,
 }

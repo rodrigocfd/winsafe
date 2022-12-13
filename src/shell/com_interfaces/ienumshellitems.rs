@@ -12,7 +12,6 @@ use crate::shell::decl::IShellItem;
 use crate::vt::IUnknownVT;
 
 /// [`IEnumShellItems`](crate::IEnumShellItems) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IEnumShellItemsVT {
 	pub IUnknownVT: IUnknownVT,
@@ -22,8 +21,7 @@ pub struct IEnumShellItemsVT {
 	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IEnumShellItems: "shell";
-	"70629033-e363-4a28-a567-0db78006e6d7";
+com_interface! { IEnumShellItems: "70629033-e363-4a28-a567-0db78006e6d7";
 	/// [`IEnumShellItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ienumshellitems)
 	/// COM interface over [`IEnumShellItemsVT`](crate::vt::IEnumShellItemsVT).
 	///
@@ -42,7 +40,6 @@ impl shell_IEnumShellItems for IEnumShellItems {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// Returns an iterator over the [`IShellItem`](crate::IShellItem) elements
 	/// which calls

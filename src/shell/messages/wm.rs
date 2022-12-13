@@ -7,7 +7,6 @@ use crate::shell::decl::HDROP;
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub struct DropFiles {
 	pub hdrop: HDROP,
 }

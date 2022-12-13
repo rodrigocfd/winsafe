@@ -33,7 +33,6 @@ use crate::user::decl::HWND;
 /// )?;
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub fn error(
 	hparent: &HWND,
 	title: &str,
@@ -67,7 +66,6 @@ pub fn error(
 /// )?;
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub fn info(
 	hparent: &HWND,
 	title: &str,
@@ -111,7 +109,6 @@ pub fn info(
 /// }
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn ok_cancel(
 	hparent: &HWND,
@@ -160,7 +157,6 @@ pub fn ok_cancel(
 /// }
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn yes_no(
 	hparent: &HWND,
@@ -203,7 +199,6 @@ pub fn yes_no(
 /// }
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[must_use]
 pub fn yes_no_cancel(
 	hparent: &HWND,

@@ -6,6 +6,8 @@
 //! You'll probably want to start your GUI application using the
 //! [`WindowMain`](crate::gui::WindowMain).
 
+#![cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+
 mod base;
 mod dlg_base;
 mod dlg_control;

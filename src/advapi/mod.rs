@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
+
 pub(in crate::advapi) mod ffi;
 pub(crate) mod privs;
 

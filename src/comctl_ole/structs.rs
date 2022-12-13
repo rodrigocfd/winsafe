@@ -10,7 +10,6 @@ use crate::user::decl::{HICON, HWND};
 
 /// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[repr(C, packed)]
 pub struct TASKDIALOG_BUTTON<'a> {
 	nButtonID: i32,
@@ -28,7 +27,6 @@ impl<'a> TASKDIALOG_BUTTON<'a> {
 
 /// [`TASKDIALOGCONFIG`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[repr(C, packed)]
 pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	cbSize: u32,

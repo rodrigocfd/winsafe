@@ -7,7 +7,6 @@ use crate::kernel::privs::bool_to_sysresult;
 
 /// [`DecryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub fn DecryptFile(file_name: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
@@ -18,7 +17,6 @@ pub fn DecryptFile(file_name: &str) -> SysResult<()> {
 
 /// [`EncryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub fn EncryptFile(file_name: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
@@ -29,7 +27,6 @@ pub fn EncryptFile(file_name: &str) -> SysResult<()> {
 
 /// [`EncryptionDisable`](https://learn.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
@@ -43,7 +40,6 @@ pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
 
 /// [`GetUserName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 #[must_use]
 pub fn GetUserName() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(UNLEN + 1);

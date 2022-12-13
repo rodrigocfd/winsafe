@@ -16,7 +16,6 @@ impl gdi_ole_Hdc for HDC {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "gdi", feature = "ole"))))]
 pub trait gdi_ole_Hdc: gdi_Hdc {
 	/// Converts HIMETRIC units to pixels.
 	///

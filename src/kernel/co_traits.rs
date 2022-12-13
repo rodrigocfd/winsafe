@@ -8,7 +8,6 @@ use crate::prelude::kernel_Hlocal;
 
 /// A system error which can be formatted with
 /// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew).
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait FormattedError: Into<u32> {
 	/// Returns the textual description of the system error, by calling
 	/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
@@ -57,7 +56,6 @@ pub trait FormattedError: Into<u32> {
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait NativeConst: Sized
 	+ Default + Clone + Copy + PartialEq + Eq + Send + hash::Hash
 	+ From<Self::Raw> + Into<Self::Raw>
@@ -76,7 +74,6 @@ pub trait NativeConst: Sized
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait NativeBitflag: NativeConst
 	+ ops::BitAnd + ops::BitAndAssign
 	+ ops::BitOr + ops::BitOrAssign

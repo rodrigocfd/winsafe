@@ -5,7 +5,7 @@ use crate::kernel::decl::{GetLastError, HFILEMAPVIEW, SysResult};
 use crate::kernel::guard::HfilemapviewGuard;
 use crate::prelude::{Handle};
 
-impl_handle! { HFILEMAP: "kernel";
+impl_handle! { HFILEMAP;
 	/// Handle to a
 	/// [file mapping](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
 	/// Originally just a `HANDLE`.
@@ -24,7 +24,6 @@ impl kernel_Hfilemap for HFILEMAP {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hfilemap: Handle {
 	/// [`MapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
 	/// method.

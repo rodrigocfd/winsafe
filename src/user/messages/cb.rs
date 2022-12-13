@@ -11,7 +11,6 @@ use crate::user::privs::{CB_ERR, CB_ERRSPACE, zero_as_err};
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct AddString {
 	pub text: WString,
 }
@@ -40,7 +39,6 @@ unsafe impl MsgSend for AddString {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct DeleteString {
 	pub index: u32,
 }
@@ -68,7 +66,6 @@ unsafe impl MsgSend for DeleteString {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct Dir {
 	pub attributes: co::DDL,
 	pub path: WString,
@@ -98,7 +95,6 @@ unsafe impl MsgSend for Dir {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct FindString {
 	pub preceding_index: Option<u32>,
 	pub text: WString,
@@ -127,7 +123,6 @@ unsafe impl MsgSend for FindString {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct FindStringExact {
 	pub preceding_index: Option<u32>,
 	pub text: WString,
@@ -156,7 +151,6 @@ unsafe impl MsgSend for FindStringExact {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetComboBoxInfo<'a> {
 	pub data: &'a mut COMBOBOXINFO,
 }
@@ -181,7 +175,6 @@ unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCount {}
 
 unsafe impl MsgSend for GetCount {
@@ -204,7 +197,6 @@ unsafe impl MsgSend for GetCount {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetCurSel {}
 
 unsafe impl MsgSend for GetCurSel {
@@ -230,7 +222,6 @@ unsafe impl MsgSend for GetCurSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDroppedControlRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -255,7 +246,6 @@ unsafe impl<'a> MsgSend for GetDroppedControlRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDroppedState {}
 
 unsafe impl MsgSend for GetDroppedState {
@@ -278,7 +268,6 @@ unsafe impl MsgSend for GetDroppedState {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetDroppedWidth {}
 
 unsafe impl MsgSend for GetDroppedWidth {
@@ -304,7 +293,6 @@ unsafe impl MsgSend for GetDroppedWidth {
 /// message, which has no parameters.
 ///
 /// Return type: `(i32, i32)`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetEditSel {}
 
 unsafe impl MsgSend for GetEditSel {
@@ -327,7 +315,6 @@ unsafe impl MsgSend for GetEditSel {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetExtendedUi {}
 
 unsafe impl MsgSend for GetExtendedUi {
@@ -350,7 +337,6 @@ unsafe impl MsgSend for GetExtendedUi {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetHorizontalExtent {}
 
 unsafe impl MsgSend for GetHorizontalExtent {
@@ -373,7 +359,6 @@ unsafe impl MsgSend for GetHorizontalExtent {
 /// message parameters.
 ///
 /// Return type: `SysResult<isize>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetItemData {
 	pub index: u32,
 }
@@ -401,7 +386,6 @@ unsafe impl MsgSend for GetItemData {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetItemHeight {
 	pub component: i32,
 }
@@ -429,7 +413,6 @@ unsafe impl MsgSend for GetItemHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLbText<'a> {
 	pub index: u32,
 	pub text: &'a mut WString,
@@ -458,7 +441,6 @@ unsafe impl<'a> MsgSend for GetLbText<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLbTextLen {
 	pub index: u32,
 }
@@ -486,7 +468,6 @@ unsafe impl MsgSend for GetLbTextLen {
 /// message, which has no parameters.
 ///
 /// Return type: `LANGID`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetLocale {}
 
 unsafe impl MsgSend for GetLocale {
@@ -509,7 +490,6 @@ unsafe impl MsgSend for GetLocale {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct GetTopIndex {}
 
 unsafe impl MsgSend for GetTopIndex {
@@ -535,7 +515,6 @@ unsafe impl MsgSend for GetTopIndex {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InitStorage {
 	pub num_items: u32,
 	pub memory_bytes: u32,
@@ -564,7 +543,6 @@ unsafe impl MsgSend for InitStorage {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct InsertString {
 	pub index: Option<u32>,
 	pub text: WString,
@@ -594,7 +572,6 @@ unsafe impl MsgSend for InsertString {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct LimitText {
 	pub max_chars: Option<u32>,
 }
@@ -615,7 +592,7 @@ unsafe impl MsgSend for LimitText {
 	}
 }
 
-pub_struct_msg_empty! { ResetContent: co::CB::RESETCONTENT.into(); "user";
+pub_struct_msg_empty! { ResetContent: co::CB::RESETCONTENT.into();
 	/// [`CB_RESETCONTENT`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-resetcontent)
 }
 
@@ -623,7 +600,6 @@ pub_struct_msg_empty! { ResetContent: co::CB::RESETCONTENT.into(); "user";
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SelectString {
 	pub preceding_index: Option<u32>,
 	pub search_text: WString,
@@ -652,7 +628,6 @@ unsafe impl MsgSend for SelectString {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetCurSel {
 	pub index: Option<u32>,
 }
@@ -680,7 +655,6 @@ unsafe impl MsgSend for SetCurSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetDroppedWidth {
 	pub min_width: u32,
 }
@@ -708,7 +682,6 @@ unsafe impl MsgSend for SetDroppedWidth {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetEditSel {
 	pub start_pos: Option<u32>,
 	pub end_pos: Option<u32>,
@@ -740,7 +713,6 @@ unsafe impl MsgSend for SetEditSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetExtendedUi {
 	pub use_extended_ui: bool,
 }
@@ -768,7 +740,6 @@ unsafe impl MsgSend for SetExtendedUi {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetHorizontalExtent {
 	pub scrollable_width: u32,
 }
@@ -793,7 +764,6 @@ unsafe impl MsgSend for SetHorizontalExtent {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetItemData {
 	pub index: u32,
 	pub data: isize,
@@ -822,7 +792,6 @@ unsafe impl MsgSend for SetItemData {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetItemHeight {
 	pub component: i32,
 	pub height: u32,
@@ -851,7 +820,6 @@ unsafe impl MsgSend for SetItemHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetLocale {
 	pub locale: LANGID,
 }
@@ -879,7 +847,6 @@ unsafe impl MsgSend for SetLocale {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct SetTopIndex {
 	pub index: u32,
 }
@@ -904,7 +871,6 @@ unsafe impl MsgSend for SetTopIndex {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub struct ShowDropDown {
 	pub show: bool,
 }

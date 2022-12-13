@@ -8,7 +8,6 @@ use crate::prelude::{GuiWindow, NativeBitflag, user_Hwnd};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListBoxItems<'a> {
 	owner: &'a ListBox,
 }

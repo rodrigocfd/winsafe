@@ -8,15 +8,13 @@ use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
 
 /// [`IModalWindow`](crate::IModalWindow) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IModalWindowVT {
 	pub IUnknownVT: IUnknownVT,
 	pub Show: fn(ComPtr, HANDLE) -> u32,
 }
 
-com_interface! { IModalWindow: "shell";
-	"b4db1657-70d7-485e-8e3e-6fcb5a5c1802";
+com_interface! { IModalWindow: "b4db1657-70d7-485e-8e3e-6fcb5a5c1802";
 	/// [`IModalWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
 	/// COM interface over [`IModalWindowVT`](crate::vt::IModalWindowVT).
 	///
@@ -35,7 +33,6 @@ impl shell_IModalWindow for IModalWindow {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IModalWindow: ole_IUnknown {
 	/// [`IModalWindow::Show`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-imodalwindow-show)
 	/// method.

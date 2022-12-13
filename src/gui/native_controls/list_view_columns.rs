@@ -11,7 +11,6 @@ use crate::user::decl::SIZE;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ListViewColumns<'a> {
 	owner: &'a ListView,
 }

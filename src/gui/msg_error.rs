@@ -16,7 +16,6 @@ use crate::msg::WndMsg;
 ///
 /// let err_result: AnyResult<()> = run_result.map_err(|err| err.into());
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub type MsgResult<T> = Result<T, MsgError>;
 
 /// An error that occurred within a closure of a window message handling.
@@ -27,7 +26,6 @@ pub type MsgResult<T> = Result<T, MsgError>;
 ///
 /// The [`Result` alias](crate#errors-and-result-aliases) for this type is
 /// [`MsgResult`](crate::gui::MsgResult).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct MsgError {
 	src_msg: WndMsg,
 	source: Box<dyn std::error::Error + Send + Sync>,

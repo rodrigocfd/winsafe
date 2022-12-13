@@ -9,7 +9,7 @@ use crate::kernel::guard::HandleGuard;
 use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 
-impl_handle! { HPROCESSLIST: "kernel";
+impl_handle! { HPROCESSLIST;
 	/// Handle to a process list
 	/// [snapshot](https://learn.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
 	/// Originally just a `HANDLE`.
@@ -25,7 +25,6 @@ impl kernel_Hprocesslist for HPROCESSLIST {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hprocesslist: Handle {
 	/// Returns an iterator over the heaps of a process, with
 	/// [`HEAPLIST32`](crate::HEAPLIST32) structs. Calls

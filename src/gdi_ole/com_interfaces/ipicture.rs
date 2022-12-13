@@ -14,7 +14,6 @@ impl gdi_ole_IPicture for IPicture {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(all(feature = "gdi", feature = "ole"))))]
 pub trait gdi_ole_IPicture: ole_IPicture {
 	/// Calls [`IPicture::get_Width`](crate::prelude::ole_IPicture::get_Width)
 	/// and [`IPicture::get_Height`](crate::prelude::ole_IPicture::get_Height),

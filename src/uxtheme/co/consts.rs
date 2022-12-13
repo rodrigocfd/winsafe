@@ -1,4 +1,4 @@
-const_ordinary! { STAP: u32: "uxtheme";
+const_ordinary! { STAP: u32;
 	/// [`HTHEME::GetThemeAppProperties`](crate::prelude::uxtheme_Htheme::GetThemeAppProperties)
 	/// return value (`u32`).
 	=>
@@ -9,7 +9,7 @@ const_ordinary! { STAP: u32: "uxtheme";
 	VALIDBITS Self::ALLOW_NONCLIENT.0 | Self::ALLOW_CONTROLS.0 | Self::ALLOW_WEBCONTENT.0
 }
 
-const_ordinary! { TMT: i32: "uxtheme";
+const_ordinary! { TMT: i32;
 	/// Theme property
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/controls/property-typedefs)
 	/// (`i32`).

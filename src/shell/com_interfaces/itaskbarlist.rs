@@ -8,7 +8,6 @@ use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
 
 /// [`ITaskbarList`](crate::ITaskbarList) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct ITaskbarListVT {
 	pub IUnknownVT: IUnknownVT,
@@ -19,8 +18,7 @@ pub struct ITaskbarListVT {
 	pub SetActiveAlt: fn(ComPtr, HANDLE) -> HRES,
 }
 
-com_interface! { ITaskbarList: "shell";
-	"56fdf342-fd6d-11d0-958a-006097c9a090";
+com_interface! { ITaskbarList: "56fdf342-fd6d-11d0-958a-006097c9a090";
 	/// [`ITaskbarList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
 	/// COM interface over [`ITaskbarListVT`](crate::vt::ITaskbarListVT).
 	///
@@ -53,7 +51,6 @@ impl shell_ITaskbarList for ITaskbarList {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_ITaskbarList: ole_IUnknown {
 	/// [`ITaskbarList::ActivateTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
 	/// method.

@@ -17,7 +17,6 @@ impl gdi_Hbitmap for HBITMAP {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hbitmap: gdi_Hgdiobj {
 	/// [`CreateBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
 	/// static method.

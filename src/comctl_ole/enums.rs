@@ -6,7 +6,6 @@ use crate::user::decl::HICON;
 /// Variant parameter for:
 ///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub enum IconId {
 	/// No icon.
 	None,
@@ -19,7 +18,6 @@ pub enum IconId {
 /// Variant parameter for:
 ///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 pub enum IconIdTdicon {
 	/// No icon.
 	None,
@@ -34,7 +32,6 @@ pub enum IconIdTdicon {
 /// Variant parameter for:
 ///
 /// * [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog).
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "ole"))))]
 #[derive(Clone)]
 pub enum IdTdiconStr {
 	/// No icon.

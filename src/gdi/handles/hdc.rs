@@ -20,7 +20,6 @@ impl gdi_Hdc for HDC {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "gdi")))]
 pub trait gdi_Hdc: Handle {
 	/// [`AborthPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-abortpath)
 	/// method.
@@ -891,7 +890,7 @@ pub trait gdi_Hdc: Handle {
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HdcDeleteGuard, HDC, "gdi";
+handle_guard! { HdcDeleteGuard: HDC;
 	gdi::ffi::DeleteDC;
 	/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
 	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)

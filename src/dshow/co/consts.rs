@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-const_ordinary! { FILTER_STATE: u32: "dshow";
+const_ordinary! { FILTER_STATE: u32;
 	/// [`FILTER_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ne-strmif-filter_state)
 	/// enumeration (`u32`).
 	=>
@@ -10,7 +10,7 @@ const_ordinary! { FILTER_STATE: u32: "dshow";
 	Running 2
 }
 
-const_ordinary! { MFVideoARMode: u32: "dshow";
+const_ordinary! { MFVideoARMode: u32;
 	/// [`MFVideoAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideoaspectratiomode)
 	/// enumeration (`u32`).
 	=>
@@ -21,7 +21,7 @@ const_ordinary! { MFVideoARMode: u32: "dshow";
 	NonLinearStretch 0x4
 }
 
-const_ordinary! { PIN_DIRECTION: u32: "dshow";
+const_ordinary! { PIN_DIRECTION: u32;
 	/// [`PIN_DIRECTION`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ne-strmif-pin_direction)
 	/// enumeration (`u32`).
 	=>
@@ -30,7 +30,7 @@ const_ordinary! { PIN_DIRECTION: u32: "dshow";
 	OUTPUT 1
 }
 
-const_ordinary! { SEEKING_FLAGS: u32: "dshow";
+const_ordinary! { SEEKING_FLAGS: u32;
 	/// [`IMediaSeeking::SetPositions`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 	/// flags (`u32`).
 	///

@@ -8,7 +8,6 @@ use crate::prelude::{ole_IUnknown, ole_ISequentialStream};
 use crate::vt::ISequentialStreamVT;
 
 /// [`IStream`](crate::IStream) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct IStreamVT {
 	pub ISequentialStreamVT: ISequentialStreamVT,
@@ -23,8 +22,7 @@ pub struct IStreamVT {
 	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IStream: "ole";
-	"0000000c-0000-0000-c000-000000000046";
+com_interface! { IStream: "0000000c-0000-0000-c000-000000000046";
 	/// [`IStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream)
 	/// COM interface over [`IStreamVT`](crate::vt::IStreamVT).
 	///
@@ -37,7 +35,6 @@ impl ole_ISequentialStream for IStream {}
 impl ole_IStream for IStream {}
 
 /// [`IStream`](crate::IStream) methods from `ole` feature.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_IStream: ole_IUnknown {
 	/// [`IStream::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-commit)
 	/// method.

@@ -30,7 +30,6 @@ struct Obj { // actual fields of ProgressBar
 /// Native
 /// [progress bar](https://learn.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct ProgressBar(Pin<Arc<Obj>>);
 
@@ -229,7 +228,6 @@ impl ProgressBar {
 
 /// Options to create a [`ProgressBar`](crate::gui::ProgressBar)
 /// programmatically with [`ProgressBar::new`](crate::gui::ProgressBar::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ProgressBarOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

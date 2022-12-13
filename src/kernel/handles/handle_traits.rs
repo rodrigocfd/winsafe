@@ -14,7 +14,6 @@ use crate::kernel;
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait Handle: Sized
 	+ PartialEq + Eq + Send + hash::Hash
 	+ fmt::Debug + fmt::Display
@@ -88,7 +87,6 @@ pub trait Handle: Sized
 /// automatically calls
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct HandleGuard<T>
 	where T: Handle,
 {

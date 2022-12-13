@@ -15,7 +15,6 @@ use crate::user::privs::{
 
 /// [`ACCEL`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Default, Clone, Copy, Eq, PartialEq)]
 pub struct ACCEL {
@@ -26,7 +25,6 @@ pub struct ACCEL {
 
 /// [`ALTTABINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-alttabinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct ALTTABINFO {
 	cbSize: u32,
@@ -44,7 +42,6 @@ impl_default_with_size!(ALTTABINFO, cbSize);
 
 /// [`ATOM`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by [`RegisterClassEx`](crate::RegisterClassEx).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct ATOM(pub(crate) u16);
@@ -57,7 +54,6 @@ impl std::fmt::Display for ATOM {
 
 /// [`COLORREF`](https://learn.microsoft.com/en-us/windows/win32/gdi/colorref)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct COLORREF(pub(crate) u32);
@@ -140,7 +136,6 @@ impl COLORREF {
 
 /// [`COMBOBOXINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-comboboxinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct COMBOBOXINFO {
 	cbSize: u32,
@@ -156,7 +151,6 @@ impl_default_with_size!(COMBOBOXINFO, cbSize);
 
 /// [`COMPAREITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-compareitemstruct)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct COMPAREITEMSTRUCT {
 	pub CtlType: co::ODT_C,
@@ -173,7 +167,6 @@ impl_default!(COMPAREITEMSTRUCT);
 
 /// [`CREATESTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-createstructw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct CREATESTRUCT<'a, 'b> {
 	pub lpCreateParams: isize,
@@ -202,7 +195,6 @@ impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 
 /// [`DELETEITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-deleteitemstruct)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct DELETEITEMSTRUCT {
 	pub CtlType: co::ODT_C,
@@ -216,7 +208,6 @@ impl_default!(DELETEITEMSTRUCT);
 
 /// [`DEVMODE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-devmodew)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct DEVMODE {
 	dmDeviceName: [u16; CCHDEVICENAME],
@@ -430,7 +421,6 @@ impl DEVMODE {
 
 /// [`DISPLAY_DEVICE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-display_devicew)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct DISPLAY_DEVICE {
 	cb: u32,
@@ -452,7 +442,6 @@ impl DISPLAY_DEVICE {
 
 /// [`DRAWITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawitemstruct)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct DRAWITEMSTRUCT {
 	pub CtlType: co::ODT,
@@ -470,7 +459,6 @@ impl_default!(DRAWITEMSTRUCT);
 
 /// [`MSG`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct MSG {
 	pub hwnd: HWND,
@@ -485,7 +473,6 @@ impl_default!(MSG);
 
 /// [`GUITHREADINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-guithreadinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct GUITHREADINFO {
 	cbSize: u32,
@@ -505,7 +492,6 @@ impl_default_with_size!(GUITHREADINFO, cbSize);
 /// struct.
 ///
 /// You cannot directly instantiate this object.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct HELPINFO {
 	cbSize: u32,
@@ -528,7 +514,6 @@ impl HELPINFO {
 
 /// [`MENUBARINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menubarinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct MENUBARINFO {
 	cbSize: u32,
@@ -548,7 +533,6 @@ impl MENUBARINFO {
 
 /// [`MENUINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct MENUINFO {
 	cbSize: u32,
@@ -564,7 +548,6 @@ impl_default_with_size!(MENUINFO, cbSize);
 
 /// [`MENUITEMINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct MENUITEMINFO {
 	cbSize: u32,
@@ -585,7 +568,6 @@ impl_default_with_size!(MENUITEMINFO, cbSize);
 
 /// [`MINMAXINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-minmaxinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Default, Clone, Eq, PartialEq)]
 pub struct MINMAXINFO {
@@ -615,7 +597,6 @@ pub struct MINMAXINFO {
 
 /// [`MONITORINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Clone)]
 pub struct MONITORINFO {
@@ -629,7 +610,6 @@ impl_default_with_size!(MONITORINFO, cbSize);
 
 /// [`NCCALCSIZE_PARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct NCCALCSIZE_PARAMS<'a> {
 	pub rgrc: [RECT; 3],
@@ -646,7 +626,6 @@ impl<'a> NCCALCSIZE_PARAMS<'a> {
 
 /// [`PAINTSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-paintstruct)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct PAINTSTRUCT {
 	pub hdc: HDC,
@@ -665,7 +644,6 @@ impl PAINTSTRUCT {
 
 /// [`POINT`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct POINT {
@@ -707,7 +685,6 @@ impl POINT {
 
 /// [`RECT`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct RECT {
@@ -734,7 +711,6 @@ impl RECT {
 
 /// [`SCROLLINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-scrollinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Clone)]
 pub struct SCROLLINFO {
@@ -751,7 +727,6 @@ impl_default_with_size!(SCROLLINFO, cbSize);
 
 /// [`SIZE`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-size)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct SIZE {
@@ -795,7 +770,6 @@ impl SIZE {
 /// struct.
 ///
 /// You cannot directly instantiate this object.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 #[derive(Default)]
 pub struct STYLESTRUCT {
@@ -831,7 +805,6 @@ impl STYLESTRUCT {
 
 /// [`TITLEBARINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-titlebarinfoex)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct TITLEBARINFOEX {
 	cbSize: u32,
@@ -844,7 +817,6 @@ impl_default_with_size!(TITLEBARINFOEX, cbSize);
 
 /// [`TRACKMOUSEEVENT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct TRACKMOUSEEVENT {
 	cbSize: u32,
@@ -857,7 +829,6 @@ impl_default_with_size!(TRACKMOUSEEVENT, cbSize);
 
 /// [`WINDOWINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct WINDOWINFO {
 	cbSize: u32,
@@ -876,7 +847,6 @@ impl_default_with_size!(WINDOWINFO, cbSize);
 
 /// [`WINDOWPLACEMENT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct WINDOWPLACEMENT {
 	length: u32,
@@ -892,7 +862,6 @@ impl_default_with_size!(WINDOWPLACEMENT, length);
 
 /// [`WINDOWPOS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowpos)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct WINDOWPOS {
 	pub hwnd: HWND,
@@ -928,7 +897,6 @@ impl WINDOWPOS {
 
 /// [`WNDCLASSEX`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassexw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 #[repr(C)]
 pub struct WNDCLASSEX<'a> {
 	cbSize: u32,

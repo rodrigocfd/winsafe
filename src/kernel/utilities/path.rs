@@ -30,7 +30,6 @@ use crate::prelude::{Handle, kernel_Hfindfile, kernel_Hinstance, NativeBitflag};
 /// }
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn dir_list<'a>(
 	dir_path: &'a str,
@@ -44,7 +43,6 @@ pub fn dir_list<'a>(
 ///
 /// In a debug build, the `target\debug` folders will be suppressed.
 #[cfg(debug_assertions)]
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn exe_path() -> SysResult<String> {
 	let dbg = HINSTANCE::NULL.GetModuleFileName()?;
@@ -63,7 +61,6 @@ pub fn exe_path() -> SysResult<String> {
 ///
 /// In a debug build, the `target\debug` folders will be suppressed.
 #[cfg(not(debug_assertions))]
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn exe_path() -> SysResult<String> {
 	Ok(
@@ -73,7 +70,6 @@ pub fn exe_path() -> SysResult<String> {
 }
 
 /// Returns true if the path exists.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn exists(full_path: &str) -> bool {
 	GetFileAttributes(full_path).is_ok()
@@ -89,7 +85,6 @@ pub fn exists(full_path: &str) -> bool {
 ///
 /// let f = path::get_file_name("C:\\Temp\\foo.txt"); // foo.txt
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn get_file_name(full_path: &str) -> Option<&str> {
 	match full_path.rfind('\\') {
@@ -114,7 +109,6 @@ pub fn get_file_name(full_path: &str) -> Option<&str> {
 /// let q = path::get_path("C:\\Temp\\xx\\");      // C:\Temp\xx
 /// let r = path::get_path("C:\\Temp\\xx");        // C:\Temp"
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn get_path(full_path: &str) -> Option<&str> {
 	full_path.rfind('\\') // if no backslash, the whole string is the file name, so no path
@@ -133,7 +127,6 @@ pub fn get_path(full_path: &str) -> Option<&str> {
 /// println!("{}",
 ///     path::has_extension("file.txt", &[".txt", ".bat"]));
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 	let full_path_u = full_path.to_uppercase();
@@ -150,7 +143,6 @@ pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 /// # Panics
 ///
 /// Panics if the path does not exist.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn is_directory(full_path: &str) -> bool {
 	let flags = GetFileAttributes(full_path).unwrap();
@@ -162,7 +154,6 @@ pub fn is_directory(full_path: &str) -> bool {
 /// # Panics
 ///
 /// Panics if the path does not exist.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn is_hidden(full_path: &str) -> bool {
 	let flags = GetFileAttributes(full_path).unwrap();
@@ -180,7 +171,6 @@ pub fn is_hidden(full_path: &str) -> bool {
 /// let p = path::replace_extension(
 ///     "C:\\Temp\\something.txt", ".sh"); // C:\Temp\something.sh
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn replace_extension(full_path: &str, new_extension: &str) -> String {
 	if let Some(last) = full_path.chars().last() {
@@ -205,7 +195,6 @@ pub fn replace_extension(full_path: &str, new_extension: &str) -> String {
 }
 
 /// Replaces the file name by the given one.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 	match get_path(full_path) {
@@ -227,7 +216,6 @@ pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 ///     "C:\\another",
 /// );
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn replace_path(full_path: &str, new_path: &str) -> String {
 	let file_name = get_file_name(full_path);
@@ -247,7 +235,6 @@ pub fn replace_path(full_path: &str, new_path: &str) -> String {
 ///
 /// let p = path::rtrim_backslash("C:\\Temp\\"); // C:\Temp
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn rtrim_backslash(full_path: &str) -> &str {
 	match full_path.chars().last() {
@@ -263,7 +250,6 @@ pub fn rtrim_backslash(full_path: &str) -> &str {
 }
 
 /// Returns a `Vec` with each part of the full path.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[must_use]
 pub fn split_parts(full_path: &str) -> Vec<&str> {
 	let no_bs = rtrim_backslash(full_path);

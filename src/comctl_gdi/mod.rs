@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
+
 mod structs;
 
 pub mod messages;

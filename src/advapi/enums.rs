@@ -3,7 +3,6 @@ use crate::kernel::decl::WString;
 use crate::kernel::privs::parse_multi_z_str;
 
 /// Registry value types.
-#[cfg_attr(docsrs, doc(cfg(feature = "advapi")))]
 #[derive(Clone)]
 pub enum RegistryValue {
 	/// Binary value, defined as [`REG::BINARY`](crate::co::REG::BINARY).

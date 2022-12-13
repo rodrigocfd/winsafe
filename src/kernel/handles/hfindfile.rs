@@ -4,7 +4,7 @@ use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult, WIN32_FIND_DATA, WString};
 use crate::prelude::Handle;
 
-impl_handle! { HFINDFILE: "kernel";
+impl_handle! { HFINDFILE;
 	/// Handle to a
 	/// [file search](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew).
 	/// Originally just a `HANDLE`.
@@ -20,7 +20,6 @@ impl kernel_Hfindfile for HFINDFILE {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hfindfile: Handle {
 	/// [`FindFirstFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
 	/// static method.
@@ -73,7 +72,7 @@ pub trait kernel_Hfindfile: Handle {
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HfindfileGuard, HFINDFILE, "kernel";
+handle_guard! { HfindfileGuard: HFINDFILE;
 	kernel::ffi::FindClose;
 	/// RAII implementation for [`HFINDFILE`](crate::HFINDFILE) which
 	/// automatically calls

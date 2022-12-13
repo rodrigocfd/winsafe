@@ -25,7 +25,6 @@ use crate::prelude::ole_IUnknown;
 /// )?;
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[must_use]
 pub fn CoCreateInstance<T>(
 	clsid: &co::CLSID,
@@ -77,7 +76,6 @@ pub fn CoCreateInstance<T>(
 /// CoUninitialize();
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<co::HRESULT> {
 	let code = co::HRESULT(
 		unsafe { ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.0) },
@@ -95,7 +93,6 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<co::HRESULT> {
 ///
 /// **Note:** If you lock a COM pointer, `CoLockObjectExternal` must be called
 /// again to unlock it, or you'll have a resource leak.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoLockObjectExternal(
 	obj: &impl ole_IUnknown,
 	lock: bool,
@@ -119,7 +116,6 @@ pub fn CoLockObjectExternal(
 ///
 /// This function manually allocates a memory block, which must be freed with
 /// [`CoTaskMemFree`](crate::CoTaskMemFree).
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub unsafe fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
 	let p = unsafe { ole::ffi::CoTaskMemAlloc(cb) };
 	if p.is_null() {
@@ -131,7 +127,6 @@ pub unsafe fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
 
 /// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoTaskMemFree(pv: *mut u8) {
 	unsafe { ole::ffi::CoTaskMemFree(pv as _) }
 }
@@ -143,7 +138,6 @@ pub fn CoTaskMemFree(pv: *mut u8) {
 ///
 /// This function manually allocates a memory block, which must be freed with
 /// [`CoTaskMemFree`](crate::CoTaskMemFree).
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub unsafe fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
 	let p = unsafe { ole::ffi::CoTaskMemRealloc(pv as _, cb) };
 	if p.is_null() {
@@ -159,7 +153,6 @@ pub unsafe fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
 /// **Note:** Must be called **after** all COM interfaces have been released,
 /// otherwise you'll get a segmentation fault error with
 /// `STATUS_ACCESS_VIOLATION` code.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub fn CoUninitialize() {
 	unsafe { ole::ffi::CoUninitialize() }
 }

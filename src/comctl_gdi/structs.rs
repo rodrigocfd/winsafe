@@ -8,7 +8,6 @@ use crate::user::decl::{COLORREF, HDC};
 
 /// [`IMAGELISTDRAWPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 #[repr(C)]
 pub struct IMAGELISTDRAWPARAMS {
 	cbSize: u32,
@@ -34,7 +33,6 @@ impl_default_with_size!(IMAGELISTDRAWPARAMS, cbSize);
 
 /// [`NMTVASYNCDRAW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
 #[repr(C)]
 pub struct NMTVASYNCDRAW<'a> {
 	pub hdr: NMHDR,

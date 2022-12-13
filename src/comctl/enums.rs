@@ -8,7 +8,6 @@ use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
 ///
 /// * [`stm::GetImage`](crate::msg::stm::GetImage);
 /// * [`stm::SetImage`](crate::msg::stm::SetImage).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum BmpIconCurMeta {
 	/// Bitmap.
 	Bmp(HBITMAP),
@@ -38,7 +37,6 @@ impl BmpIconCurMeta {
 /// Variant parameter for:
 ///
 /// * [`TBADDBITMAP`](crate::TBADDBITMAP).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum BmpIdbRes {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bmp(HBITMAP),
@@ -51,7 +49,6 @@ pub enum BmpIdbRes {
 /// Variant parameter for:
 ///
 /// * [`TBREPLACEBITMAP`](crate::TBREPLACEBITMAP).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum BmpInstId {
 	/// Bitmap handle.
 	Bmp(HBITMAP),
@@ -62,7 +59,6 @@ pub enum BmpInstId {
 /// Variant type for:
 ///
 /// * [`tbm::ChangeBitmap`](crate::msg::tbm::ChangeBitmap).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone, Copy)]
 pub enum IdxCbNone {
 	/// Index of an image in the toolbar's image list.
@@ -86,7 +82,6 @@ impl From<IdxCbNone> for isize {
 /// Variant parameter for:
 ///
 /// * [`TBBUTTON`](crate::TBBUTTON).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone)]
 pub enum IdxStr {
 	/// Index of button string.
@@ -98,7 +93,6 @@ pub enum IdxStr {
 /// Variant parameter for:
 ///
 /// * [`hdm::SetHotDivider`](crate::msg::hdm::SetHotDivider).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum PtIdx {
 	/// X and Y coordinates of the pointer
 	Pt(POINT),
@@ -109,7 +103,6 @@ pub enum PtIdx {
 /// Variant parameter for:
 ///
 /// * [`tbm::AddString`](crate::msg::tbm::AddString).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum ResStrs {
 	/// A resource string resource.
 	Res(IdStr, HINSTANCE),
@@ -130,7 +123,6 @@ impl ResStrs {
 /// Variant parameter for:
 ///
 /// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT).
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub enum TreeitemTvi {
 	/// Handle to a tree view item.
 	Treeitem(HTREEITEM),

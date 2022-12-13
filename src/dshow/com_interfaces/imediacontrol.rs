@@ -11,7 +11,6 @@ use crate::prelude::oleaut_IDispatch;
 use crate::vt::IDispatchVT;
 
 /// [`IMediaControl`](crate::IMediaControl) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IMediaControlVT {
 	pub IDispatchVT: IDispatchVT,
@@ -26,8 +25,7 @@ pub struct IMediaControlVT {
 	pub StopWhenReady: fn(ComPtr) -> HRES,
 }
 
-com_interface! { IMediaControl: "dshow";
-	"56a868b1-0ad4-11ce-b03a-0020af0ba770";
+com_interface! { IMediaControl: "56a868b1-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IMediaControl`](https://learn.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
 	/// COM interface over [`IMediaControlVT`](crate::vt::IMediaControlVT).
 	///
@@ -61,7 +59,6 @@ impl dshow_IMediaControl for IMediaControl {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// [`IMediaControl::AddSourceFilter`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-addsourcefilter)
 	/// method.

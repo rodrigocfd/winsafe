@@ -30,7 +30,6 @@ struct Obj { // actual fields of Trackbar
 /// Native
 /// [trackbar](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct Trackbar(Pin<Arc<Obj>>);
 
@@ -197,7 +196,6 @@ impl Trackbar {
 
 /// Options to create a [`Trackbar`](crate::gui::Trackbar) programmatically with
 /// [`Trackbar::new`](crate::gui::Trackbar::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TrackbarOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

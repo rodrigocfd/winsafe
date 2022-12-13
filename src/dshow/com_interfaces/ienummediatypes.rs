@@ -11,7 +11,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IEnumMediaTypes`](crate::IEnumMediaTypes) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IEnumMediaTypesVT {
 	pub IUnknownVT: IUnknownVT,
@@ -21,8 +20,7 @@ pub struct IEnumMediaTypesVT {
 	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
 }
 
-com_interface! { IEnumMediaTypes: "dshow";
-	"89c31040-846b-11ce-97d3-00aa0055595a";
+com_interface! { IEnumMediaTypes: "89c31040-846b-11ce-97d3-00aa0055595a";
 	/// [`IEnumMediaTypes`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienummediatypes)
 	/// COM interface over [`IEnumMediaTypesVT`](crate::vt::IEnumMediaTypesVT).
 	///
@@ -41,7 +39,6 @@ impl dshow_IEnumMediaTypes for IEnumMediaTypes {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// Returns an iterator over the [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE)
 	/// elements which calls

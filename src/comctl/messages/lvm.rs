@@ -17,7 +17,6 @@ use crate::user::privs::{
 /// message parameters.
 ///
 /// Return type: `SIZE`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ApproximateViewRect {
 	pub num_items: Option<u32>,
 	pub proposed_x: Option<u16>,
@@ -48,7 +47,6 @@ unsafe impl MsgSend for ApproximateViewRect {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Arrange {
 	pub arrangement: co::LVA,
 }
@@ -69,7 +67,7 @@ unsafe impl MsgSend for Arrange {
 	}
 }
 
-pub_struct_msg_empty! { CancelEditLabel: co::LVM::CANCELEDITLABEL.into(); "comctl";
+pub_struct_msg_empty! { CancelEditLabel: co::LVM::CANCELEDITLABEL.into();
 	/// [`LVM_CANCELEDITLABEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
 }
 
@@ -77,7 +75,6 @@ pub_struct_msg_empty! { CancelEditLabel: co::LVM::CANCELEDITLABEL.into(); "comct
 /// message parameters.
 ///
 /// Return type: `SysResult<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct CreateDragImage<'a> {
 	pub index: u32,
 	pub img_location: &'a mut RECT,
@@ -103,7 +100,6 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteAllItems {}
 
 unsafe impl MsgSend for DeleteAllItems {
@@ -126,7 +122,6 @@ unsafe impl MsgSend for DeleteAllItems {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteColumn {
 	pub index: u32,
 }
@@ -151,7 +146,6 @@ unsafe impl MsgSend for DeleteColumn {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct DeleteItem {
 	pub index: u32,
 }
@@ -176,7 +170,6 @@ unsafe impl MsgSend for DeleteItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EditLabel {
 	pub index: Option<u32>,
 }
@@ -201,7 +194,6 @@ unsafe impl MsgSend for EditLabel {
 /// message parameters.
 ///
 /// Return type: `SysResult<bool>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EnableGroupView {
 	pub enable: bool,
 }
@@ -226,7 +218,6 @@ unsafe impl MsgSend for EnableGroupView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct EnsureVisible {
 	pub index: u32,
 	pub entirely_visible: bool,
@@ -252,7 +243,6 @@ unsafe impl MsgSend for EnsureVisible {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct FindItem<'a, 'b> {
 	pub start_index: Option<u32>,
 	pub lvfindinfo: &'b LVFINDINFO<'a>,
@@ -278,7 +268,6 @@ unsafe impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBkColor {}
 
 unsafe impl MsgSend for GetBkColor {
@@ -301,7 +290,6 @@ unsafe impl MsgSend for GetBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBkImage<'a, 'b> {
 	pub lvbkimage: &'b mut LVBKIMAGE<'a>,
 }
@@ -326,7 +314,6 @@ unsafe impl<'a, 'b> MsgSend for GetBkImage<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::LVIS`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCallbackMask {}
 
 unsafe impl MsgSend for GetCallbackMask {
@@ -349,7 +336,6 @@ unsafe impl MsgSend for GetCallbackMask {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColumn<'a, 'b> {
 	pub index: u32,
 	pub lvcolumn: &'b mut LVCOLUMN<'a>,
@@ -375,7 +361,6 @@ unsafe impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColumnOrderArray<'a> {
 	pub indexes: &'a mut Vec<u32>,
 }
@@ -400,7 +385,6 @@ unsafe impl<'a> MsgSend for GetColumnOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetColumnWidth {
 	pub index: u32,
 }
@@ -425,7 +409,6 @@ unsafe impl MsgSend for GetColumnWidth {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCountPerPage {}
 
 unsafe impl MsgSend for GetCountPerPage {
@@ -448,7 +431,6 @@ unsafe impl MsgSend for GetCountPerPage {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetEditControl {}
 
 unsafe impl MsgSend for GetEditControl {
@@ -471,7 +453,6 @@ unsafe impl MsgSend for GetEditControl {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetEmptyText<'a> {
 	pub text: &'a mut WString,
 }
@@ -496,7 +477,6 @@ unsafe impl<'a> MsgSend for GetEmptyText<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::LVS_EX`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetExtendedListViewStyle {}
 
 unsafe impl MsgSend for GetExtendedListViewStyle {
@@ -519,7 +499,6 @@ unsafe impl MsgSend for GetExtendedListViewStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFocusedGroup {}
 
 unsafe impl MsgSend for GetFocusedGroup {
@@ -542,7 +521,6 @@ unsafe impl MsgSend for GetFocusedGroup {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFooterInfo<'a, 'b> {
 	pub info: &'b mut LVFOOTERINFO<'a>,
 }
@@ -567,7 +545,6 @@ unsafe impl<'a, 'b> MsgSend for GetFooterInfo<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFooterItem<'a, 'b> {
 	pub index: u32,
 	pub info: &'b mut LVFOOTERITEM<'a>,
@@ -593,7 +570,6 @@ unsafe impl<'a, 'b> MsgSend for GetFooterItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFooterItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
@@ -619,7 +595,6 @@ unsafe impl<'a> MsgSend for GetFooterItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetFooterRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -644,7 +619,6 @@ unsafe impl<'a> MsgSend for GetFooterRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupCount {}
 
 unsafe impl MsgSend for GetGroupCount {
@@ -667,7 +641,6 @@ unsafe impl MsgSend for GetGroupCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub id: u32,
 	pub info: &'h mut LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
@@ -693,7 +666,6 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfo<'a, 'b, 'c,
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub index: u32,
 	pub info: &'h mut LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
@@ -719,7 +691,6 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfoByIndex<'a, 
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupMetrics<'a> {
 	pub info: &'a mut LVGROUPMETRICS,
 }
@@ -744,7 +715,6 @@ unsafe impl<'a> MsgSend for GetGroupMetrics<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupRect<'a> {
 	pub id: u32,
 	pub flags: co::LVGGR,
@@ -773,7 +743,6 @@ unsafe impl<'a> MsgSend for GetGroupRect<'a> {
 /// message parameters.
 ///
 /// Return type: `co::LVGS`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetGroupState {
 	pub id: u32,
 	pub mask: co::LVGS,
@@ -799,7 +768,6 @@ unsafe impl MsgSend for GetGroupState {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHeader {}
 
 unsafe impl MsgSend for GetHeader {
@@ -822,7 +790,6 @@ unsafe impl MsgSend for GetHeader {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HCURSOR>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHotCursor {}
 
 unsafe impl MsgSend for GetHotCursor {
@@ -845,7 +812,6 @@ unsafe impl MsgSend for GetHotCursor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHotItem {}
 
 unsafe impl MsgSend for GetHotItem {
@@ -868,7 +834,6 @@ unsafe impl MsgSend for GetHotItem {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetHoverTime {}
 
 unsafe impl MsgSend for GetHoverTime {
@@ -891,7 +856,6 @@ unsafe impl MsgSend for GetHoverTime {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImageList {
 	pub kind: co::LVSIL,
 }
@@ -916,7 +880,6 @@ unsafe impl MsgSend for GetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMark<'a> {
 	pub info: &'a mut LVINSERTMARK,
 }
@@ -941,7 +904,6 @@ unsafe impl<'a> MsgSend for GetInsertMark<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMarkColor {}
 
 unsafe impl MsgSend for GetInsertMarkColor {
@@ -964,7 +926,6 @@ unsafe impl MsgSend for GetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetInsertMarkRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -989,7 +950,6 @@ unsafe impl<'a> MsgSend for GetInsertMarkRect<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetISearchString<'a> {
 	pub buffer: Option<&'a mut WString>,
 }
@@ -1014,7 +974,6 @@ unsafe impl<'a> MsgSend for GetISearchString<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItem<'a, 'b> {
 	pub lvitem: &'b mut LVITEM<'a>,
 }
@@ -1039,7 +998,6 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemCount {}
 
 unsafe impl MsgSend for GetItemCount {
@@ -1062,7 +1020,6 @@ unsafe impl MsgSend for GetItemCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemIndexRect<'a, 'b> {
 	pub lvitemindex: &'a LVITEMINDEX,
 	pub rect: &'b mut RECT,
@@ -1093,7 +1050,6 @@ unsafe impl<'a, 'b> MsgSend for GetItemIndexRect<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemPosition<'a> {
 	pub index: u32,
 	pub pos: &'a mut POINT,
@@ -1119,7 +1075,6 @@ unsafe impl<'a> MsgSend for GetItemPosition<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
@@ -1148,7 +1103,6 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SIZE`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemSpacing {
 	pub is_small_icon_view: bool,
 }
@@ -1173,7 +1127,6 @@ unsafe impl MsgSend for GetItemSpacing {
 /// message parameters.
 ///
 /// Return type: `co::LVIS`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemState {
 	pub index: u32,
 	pub mask: co::LVIS,
@@ -1199,7 +1152,6 @@ unsafe impl MsgSend for GetItemState {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetItemText<'a, 'b> {
 	pub index: u32,
 	pub lvitem: &'b mut LVITEM<'a>,
@@ -1225,7 +1177,6 @@ unsafe impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNextItem {
 	pub initial_index: Option<u32>,
 	pub relationship: co::LVNI,
@@ -1251,7 +1202,6 @@ unsafe impl MsgSend for GetNextItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNextItemIndex<'a> {
 	pub initial_item: &'a mut LVITEMINDEX,
 	pub relationship: co::LVNI,
@@ -1277,7 +1227,6 @@ unsafe impl<'a> MsgSend for GetNextItemIndex<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNumberOfWorkAreas<'a> {
 	pub num: &'a mut u32,
 }
@@ -1302,7 +1251,6 @@ unsafe impl<'a> MsgSend for GetNumberOfWorkAreas<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetOrigin<'a> {
 	pub origin: &'a mut POINT,
 }
@@ -1327,7 +1275,6 @@ unsafe impl<'a> MsgSend for GetOrigin<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetOutlineColor {}
 
 unsafe impl MsgSend for GetOutlineColor {
@@ -1350,7 +1297,6 @@ unsafe impl MsgSend for GetOutlineColor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelectedColumn {}
 
 unsafe impl MsgSend for GetSelectedColumn {
@@ -1373,7 +1319,6 @@ unsafe impl MsgSend for GetSelectedColumn {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelectedCount {}
 
 unsafe impl MsgSend for GetSelectedCount {
@@ -1396,7 +1341,6 @@ unsafe impl MsgSend for GetSelectedCount {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelectionMark {}
 
 unsafe impl MsgSend for GetSelectionMark {
@@ -1419,7 +1363,6 @@ unsafe impl MsgSend for GetSelectionMark {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetStringWidth {
 	pub text: WString,
 }
@@ -1444,7 +1387,6 @@ unsafe impl MsgSend for GetStringWidth {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSubItemRect<'a> {
 	pub item_index: u32,
 	pub subitem_index: u32,
@@ -1475,7 +1417,6 @@ unsafe impl<'a> MsgSend for GetSubItemRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextBkColor {}
 
 unsafe impl MsgSend for GetTextBkColor {
@@ -1498,7 +1439,6 @@ unsafe impl MsgSend for GetTextBkColor {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTextColor {}
 
 unsafe impl MsgSend for GetTextColor {
@@ -1521,7 +1461,6 @@ unsafe impl MsgSend for GetTextColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTileInfo<'a, 'b> {
 	pub info: &'b mut LVTILEINFO<'a>,
 }
@@ -1546,7 +1485,6 @@ unsafe impl<'a, 'b> MsgSend for GetTileInfo<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTileViewInfo<'a> {
 	pub info: &'a mut LVTILEVIEWINFO,
 }
@@ -1571,7 +1509,6 @@ unsafe impl<'a> MsgSend for GetTileViewInfo<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTooltips {}
 
 unsafe impl MsgSend for GetTooltips {
@@ -1597,7 +1534,6 @@ unsafe impl MsgSend for GetTooltips {
 /// other checks must be made.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTopIndex {}
 
 unsafe impl MsgSend for GetTopIndex {
@@ -1620,7 +1556,6 @@ unsafe impl MsgSend for GetTopIndex {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetUnicodeFormat {}
 
 unsafe impl MsgSend for GetUnicodeFormat {
@@ -1643,7 +1578,6 @@ unsafe impl MsgSend for GetUnicodeFormat {
 /// message, which has no parameters.
 ///
 /// Return type: `co::LV_VIEW`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetView {}
 
 unsafe impl MsgSend for GetView {
@@ -1666,7 +1600,6 @@ unsafe impl MsgSend for GetView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetViewRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -1691,7 +1624,6 @@ unsafe impl<'a> MsgSend for GetViewRect<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetWorkAreas<'a> {
 	pub rects: &'a mut [RECT],
 }
@@ -1716,7 +1648,6 @@ unsafe impl<'a> MsgSend for GetWorkAreas<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HasGroup {
 	pub id: u32,
 }
@@ -1741,7 +1672,6 @@ unsafe impl MsgSend for HasGroup {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HitTest<'a> {
 	pub info: &'a mut LVHITTESTINFO,
 }
@@ -1766,7 +1696,6 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertColumn<'a, 'b> {
 	pub index: u32,
 	pub lvcolumn: &'b LVCOLUMN<'a>,
@@ -1792,7 +1721,6 @@ unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub lvgroup: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
@@ -1817,7 +1745,6 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub lvgroup: &'h LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
@@ -1842,7 +1769,6 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertItem<'a, 'b> {
 	pub lvitem: &'b LVITEM<'a>,
 }
@@ -1867,7 +1793,6 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct InsertMarkHitTest<'a> {
 	pub point: POINT,
 	pub lvinsertmark: &'a LVINSERTMARK,
@@ -1893,7 +1818,6 @@ unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsGroupViewEnabled {}
 
 unsafe impl MsgSend for IsGroupViewEnabled {
@@ -1916,7 +1840,6 @@ unsafe impl MsgSend for IsGroupViewEnabled {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct IsItemVisible {
 	pub index: u32,
 }
@@ -1941,7 +1864,6 @@ unsafe impl MsgSend for IsItemVisible {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct MapIdToIndex {
 	pub id: u32,
 }
@@ -1966,7 +1888,6 @@ unsafe impl MsgSend for MapIdToIndex {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct MapIndexToId {
 	pub index: u32,
 }
@@ -1991,7 +1912,6 @@ unsafe impl MsgSend for MapIndexToId {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct RedrawItems {
 	pub first_index: u32,
 	pub last_index: u32,
@@ -2013,7 +1933,7 @@ unsafe impl MsgSend for RedrawItems {
 	}
 }
 
-pub_struct_msg_empty! { RemoveAllGroups: co::LVM::REMOVEALLGROUPS.into(); "comctl";
+pub_struct_msg_empty! { RemoveAllGroups: co::LVM::REMOVEALLGROUPS.into();
 	/// [`LVM_REMOVEALLGROUPS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-removeallgroups)
 	/// message, which has no parameters.
 	///
@@ -2024,7 +1944,6 @@ pub_struct_msg_empty! { RemoveAllGroups: co::LVM::REMOVEALLGROUPS.into(); "comct
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct RemoveGroup {
 	pub id: u32,
 }
@@ -2049,7 +1968,6 @@ unsafe impl MsgSend for RemoveGroup {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Scroll {
 	pub horizontal: i32,
 	pub vertical: i32,
@@ -2075,7 +1993,6 @@ unsafe impl MsgSend for Scroll {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBkColor {
 	pub color: Option<COLORREF>,
 }
@@ -2100,7 +2017,6 @@ unsafe impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBkImage<'a, 'b> {
 	pub lvbkimage: &'b LVBKIMAGE<'a>,
 }
@@ -2125,7 +2041,6 @@ unsafe impl<'a, 'b> MsgSend for SetBkImage<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCallbackMask {
 	pub mask: co::LVIS,
 }
@@ -2150,7 +2065,6 @@ unsafe impl MsgSend for SetCallbackMask {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetColumn<'a, 'b> {
 	pub index: u32,
 	pub lvcolumn: &'b LVCOLUMN<'a>,
@@ -2176,7 +2090,6 @@ unsafe impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetColumnOrderArray<'a> {
 	pub order: &'a [u32],
 }
@@ -2201,7 +2114,6 @@ unsafe impl<'a> MsgSend for SetColumnOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetColumnWidth {
 	pub index: u32,
 	pub width: u32,
@@ -2227,7 +2139,6 @@ unsafe impl MsgSend for SetColumnWidth {
 /// message parameters.
 ///
 /// Return type: `co::LVS_EX`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetExtendedListViewStyle {
 	pub style: co::LVS_EX,
 	pub mask: co::LVS_EX,
@@ -2253,7 +2164,6 @@ unsafe impl MsgSend for SetExtendedListViewStyle {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub id: u32,
 	pub info: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>
@@ -2279,7 +2189,6 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c,
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetGroupMetrics<'a> {
 	pub info: &'a LVGROUPMETRICS,
 }
@@ -2304,7 +2213,6 @@ unsafe impl<'a> MsgSend for SetGroupMetrics<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<HCURSOR>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetHotCursor {
 	pub hcursor: Option<HCURSOR>,
 }
@@ -2329,7 +2237,6 @@ unsafe impl MsgSend for SetHotCursor {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetHotItem {
 	pub index: Option<u32>,
 }
@@ -2354,7 +2261,6 @@ unsafe impl MsgSend for SetHotItem {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetHoverTime {
 	pub ms: Option<u32>,
 }
@@ -2379,7 +2285,6 @@ unsafe impl MsgSend for SetHoverTime {
 /// message parameters.
 ///
 /// Return type: `SIZE`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetIconSpacing {
 	pub size: SIZE,
 }
@@ -2404,7 +2309,6 @@ unsafe impl MsgSend for SetIconSpacing {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetImageList {
 	pub kind: co::LVSIL,
 	pub himagelist: HIMAGELIST,
@@ -2430,7 +2334,6 @@ unsafe impl MsgSend for SetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetInfoTip<'a, 'b> {
 	pub info: &'b LVSETINFOTIP<'a>,
 }
@@ -2455,7 +2358,6 @@ unsafe impl<'a, 'b> MsgSend for SetInfoTip<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetInsertMark<'a> {
 	pub info: &'a LVINSERTMARK,
 }
@@ -2480,7 +2382,6 @@ unsafe impl<'a> MsgSend for SetInsertMark<'a> {
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetInsertMarkColor {
 	pub color: COLORREF,
 }
@@ -2505,7 +2406,6 @@ unsafe impl MsgSend for SetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItem<'a, 'b> {
 	pub lvitem: &'b LVITEM<'a>,
 }
@@ -2530,7 +2430,6 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemCount {
 	pub count: u32,
 	pub behavior: co::LVSICF,
@@ -2556,7 +2455,6 @@ unsafe impl MsgSend for SetItemCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemPosition {
 	pub index: u32,
 	pub position: POINT,
@@ -2582,7 +2480,6 @@ unsafe impl MsgSend for SetItemPosition {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemPosition32 {
 	pub index: u32,
 	pub position: POINT,
@@ -2608,7 +2505,6 @@ unsafe impl MsgSend for SetItemPosition32 {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemState<'a, 'b> {
 	pub index: Option<u32>,
 	pub lvitem: &'b LVITEM<'a>,
@@ -2634,7 +2530,6 @@ unsafe impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetItemText<'a, 'b> {
 	pub index: u32,
 	pub lvitem: &'b LVITEM<'a>,
@@ -2660,7 +2555,6 @@ unsafe impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetOutlineColor {
 	pub color: COLORREF,
 }
@@ -2685,7 +2579,6 @@ unsafe impl MsgSend for SetOutlineColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSelectedColumn {
 	pub index: u32,
 }
@@ -2710,7 +2603,6 @@ unsafe impl MsgSend for SetSelectedColumn {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSelectionMark {
 	pub index: Option<u32>,
 }
@@ -2735,7 +2627,6 @@ unsafe impl MsgSend for SetSelectionMark {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTextBkColor {
 	pub color: Option<COLORREF>,
 }
@@ -2760,7 +2651,6 @@ unsafe impl MsgSend for SetTextBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTextColor {
 	pub color: Option<COLORREF>,
 }
@@ -2785,7 +2675,6 @@ unsafe impl MsgSend for SetTextColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTileInfo<'a, 'b> {
 	pub info: &'b LVTILEINFO<'a>,
 }
@@ -2810,7 +2699,6 @@ unsafe impl<'a, 'b> MsgSend for SetTileInfo<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTileViewInfo<'a> {
 	pub info: &'a LVTILEVIEWINFO,
 }
@@ -2835,7 +2723,6 @@ unsafe impl<'a> MsgSend for SetTileViewInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTooltips {
 	pub tooltip: Option<HWND>,
 }
@@ -2860,7 +2747,6 @@ unsafe impl MsgSend for SetTooltips {
 /// message parameters.
 ///
 /// Return type: `bool`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
@@ -2885,7 +2771,6 @@ unsafe impl MsgSend for SetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetView {
 	pub view: co::LV_VIEW,
 }
@@ -2910,7 +2795,6 @@ unsafe impl MsgSend for SetView {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetWorkAreas<'a> {
 	pub rects: Option<&'a [RECT]>,
 }
@@ -2935,7 +2819,6 @@ unsafe impl<'a> MsgSend for SetWorkAreas<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortGroups {
 	pub callback: Option<PFNLVGROUPCOMPARE>,
 	pub param: Option<isize>,
@@ -2961,7 +2844,6 @@ unsafe impl MsgSend for SortGroups {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortItems {
 	pub param: isize,
 	pub callback: PFNLVCOMPARE,
@@ -2987,7 +2869,6 @@ unsafe impl MsgSend for SortItems {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SortItemsEx {
 	pub param: isize,
 	pub callback: PFNLVCOMPARE,
@@ -3013,7 +2894,6 @@ unsafe impl MsgSend for SortItemsEx {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SubItemHitTest<'a> {
 	pub info: &'a mut LVHITTESTINFO,
 }
@@ -3038,7 +2918,6 @@ unsafe impl<'a> MsgSend for SubItemHitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct Update {
 	pub index: u32,
 }

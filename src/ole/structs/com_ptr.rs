@@ -1,5 +1,4 @@
 /// A pointer to pointer to a COM virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(transparent)]
 #[derive(Clone, Copy)]
 pub struct ComPtr(pub(crate) *mut *mut std::ffi::c_void);

@@ -26,7 +26,6 @@ use crate::user::decl::{
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct RadioButton {
 	base: BaseNativeControl,
 	opts_id: OptsId<RadioButtonOpts>,
@@ -191,7 +190,6 @@ impl RadioButton {
 
 /// Options to create a [`RadioButton`](crate::gui::RadioButton)
 /// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct RadioButtonOpts {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

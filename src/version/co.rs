@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types)]
 
-const_ordinary! { VFT: u32: "version";
+const_ordinary! { VFT: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileType` (`u32`).
 	=>
 	=>
@@ -13,7 +13,7 @@ const_ordinary! { VFT: u32: "version";
 	STATIC_LIB 0x0000_0007
 }
 
-const_ordinary! { VFT2: u32: "version";
+const_ordinary! { VFT2: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileSubType` (`u32`).
 	=>
 	=>
@@ -36,7 +36,7 @@ const_ordinary! { VFT2: u32: "version";
 	FONT_TRUETYPE 0x0000_0003
 }
 
-const_ordinary! { VOS: u32: "version";
+const_ordinary! { VOS: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileOS` (`u32`).
 	=>
 	=>
@@ -60,7 +60,7 @@ const_ordinary! { VOS: u32: "version";
 	NT_WINDOWS32 0x0004_0004
 }
 
-const_bitflag! { VS_FF: u32: "version";
+const_bitflag! { VS_FF: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileFlags` (`u32`).
 	=>
 	=>

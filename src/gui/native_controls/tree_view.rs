@@ -31,7 +31,6 @@ struct Obj { // actual fields of TreeView
 /// Native
 /// [tree view](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct TreeView(Pin<Arc<Obj>>);
 
@@ -183,7 +182,6 @@ impl TreeView {
 
 /// Options to create a [`TreeView`](crate::gui::TreeView) programmatically with
 /// [`TreeView::new`](crate::gui::TreeView::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct TreeViewOpts {
 	/// Control position within parent client area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

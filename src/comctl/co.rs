@@ -2,7 +2,7 @@
 
 use crate::co::{CB, EM, WM};
 
-const_ordinary! { ADRF: u32: "comctl";
+const_ordinary! { ADRF: u32;
 	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`).
 	///
 	/// Don't seem to be defined anywhere; unconfirmed values.
@@ -14,7 +14,7 @@ const_ordinary! { ADRF: u32: "comctl";
 	DRAWIMAGE 3
 }
 
-const_wm! { BCM: "comctl";
+const_wm! { BCM;
 	/// Button control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
 	/// (`u32`) from comctl.
@@ -35,7 +35,7 @@ const_wm! { BCM: "comctl";
 	SETSHIELD Self::FIRST.0 + 0x000c
 }
 
-const_nm! { BCN: "comctl";
+const_nm! { BCN;
 	/// Button control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`i32`).
@@ -46,7 +46,7 @@ const_nm! { BCN: "comctl";
 	DROPDOWN Self::FIRST.0 + 0x0002
 }
 
-const_bitflag! { BCSIF: u32: "comctl";
+const_bitflag! { BCSIF: u32;
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
 	=>
 	=>
@@ -56,7 +56,7 @@ const_bitflag! { BCSIF: u32: "comctl";
 	SIZE 0x0008
 }
 
-const_bitflag! { BCSS: u32: "comctl";
+const_bitflag! { BCSS: u32;
 	/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `uSplitStyle` (`u32`).
 	=>
 	=>
@@ -66,7 +66,7 @@ const_bitflag! { BCSS: u32: "comctl";
 	IMAGE 0x0008
 }
 
-const_ordinary! { BIA: u32: "comctl";
+const_ordinary! { BIA: u32;
 	/// [`BUTTON_IMAGELIST`](crate::BUTTON_IMAGELIST) `uAlign` (`u32`).
 	///
 	/// Originally has `BUTTON_IMAGELIST_ALIGN_` prefix.
@@ -79,7 +79,7 @@ const_ordinary! { BIA: u32: "comctl";
 	CENTER 4
 }
 
-const_ws! { BTNS: u8: "comctl";
+const_ws! { BTNS: u8;
 	/// Toolbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-control-and-button-styles)
 	/// (`u8`).
@@ -97,7 +97,7 @@ const_ws! { BTNS: u8: "comctl";
 	WHOLEDROPDOWN 0x80
 }
 
-const_ordinary! { CAL: u32: "comctl";
+const_ordinary! { CAL: u32;
 	/// [`MCM_GETCALID`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalid)
 	/// return type calendar IDs (`u32`).
 	=>
@@ -132,7 +132,7 @@ const_ordinary! { CAL: u32: "comctl";
 	UMALQURA 23
 }
 
-const_values! { CB: "comctl";
+const_values! { CB;
 	FIRST 0x1700
 	=>
 	SETMINVISIBLE Self::FIRST.0 + 1
@@ -141,7 +141,7 @@ const_values! { CB: "comctl";
 	GETCUEBANNER Self::FIRST.0 + 4
 }
 
-const_wm! { CBEM: "comctl";
+const_wm! { CBEM;
 	/// ComboBoxEx control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
 	/// (`u32`).
@@ -162,7 +162,7 @@ const_wm! { CBEM: "comctl";
 	GETITEM WM::USER.0 + 13
 }
 
-const_wsex! { CBES_EX: "comctl";
+const_wsex! { CBES_EX;
 	/// Extended combo box
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
 	/// (`u32`).
@@ -176,7 +176,7 @@ const_wsex! { CBES_EX: "comctl";
 	TEXTENDELLIPSIS 0x0000_0020
 }
 
-const_wm! { CCM: "comctl";
+const_wm! { CCM;
 	/// Generic common controls
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/common-controls-intro)
 	/// (`u32`).
@@ -196,7 +196,7 @@ const_wm! { CCM: "comctl";
 	DPISCALE Self::FIRST.0 + 0xc
 }
 
-const_bitflag! { CDDS: u32: "comctl";
+const_bitflag! { CDDS: u32;
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
 	=>
 	=>
@@ -212,7 +212,7 @@ const_bitflag! { CDDS: u32: "comctl";
 	SUBITEM 0x0002_0000
 }
 
-const_bitflag! { CDIS: u32: "comctl";
+const_bitflag! { CDIS: u32;
 	/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState` (`u32`).
 	=>
 	=>
@@ -231,7 +231,7 @@ const_bitflag! { CDIS: u32: "comctl";
 	DROPHILITED 0x1000
 }
 
-const_ordinary! { CDRF: u32: "comctl";
+const_ordinary! { CDRF: u32;
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
 	/// return value (`u32`).
 	=>
@@ -247,7 +247,7 @@ const_ordinary! { CDRF: u32: "comctl";
 	NOTIFYPOSTERASE 0x0000_0040
 }
 
-const_wm! { DTM: "comctl";
+const_wm! { DTM;
 	/// Date and time picker control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
 	/// (`u32`).
@@ -271,7 +271,7 @@ const_wm! { DTM: "comctl";
 	GETIDEALSIZE Self::FIRST.0 + 15
 }
 
-const_nm! { DTN: "comctl";
+const_nm! { DTN;
 	/// Date and time picker control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
 	/// (`i32`).
@@ -288,7 +288,7 @@ const_nm! { DTN: "comctl";
 	WMKEYDOWN Self::FIRST.0 - 4
 }
 
-const_ws! { DTS: u32: "comctl";
+const_ws! { DTS: u32;
 	/// Date and time picker control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
 	/// (`u32`).
@@ -304,7 +304,7 @@ const_ws! { DTS: u32: "comctl";
 	RIGHTALIGN 0x0020
 }
 
-const_values! { EM: "comctl";
+const_values! { EM;
 	FIRST 0x1500
 	=>
 	SETCUEBANNER Self::FIRST.0 + 1
@@ -332,7 +332,7 @@ const_values! { EM: "comctl";
 	GETFILELINECOUNT Self::FIRST.0 + 23
 }
 
-const_bitflag! { EMF: u32: "comctl";
+const_bitflag! { EMF: u32;
 	/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
 	=>
 	=>
@@ -340,7 +340,7 @@ const_bitflag! { EMF: u32: "comctl";
 	CENTERED 0x0000_0001
 }
 
-const_bitflag! { GDT: u32: "comctl";
+const_bitflag! { GDT: u32;
 	/// [`NMDATETIMECHANGE`](crate::NMDATETIMECHANGE) and
 	/// [`NMDATETIMESTRING`](crate::NMDATETIMESTRING) `dwFlags` (`u32`).
 	=>
@@ -349,7 +349,7 @@ const_bitflag! { GDT: u32: "comctl";
 	NONE 1
 }
 
-const_ordinary! { GDTR: u32: "comctl";
+const_ordinary! { GDTR: u32;
 	/// [`dtm::GetRange`](crate::msg::dtm::GetRange) return value (`u32`).
 	=>
 	=>
@@ -357,14 +357,14 @@ const_ordinary! { GDTR: u32: "comctl";
 	MAX 0x0002
 }
 
-const_ordinary! { GMR: u32: "comctl";
+const_ordinary! { GMR: u32;
 	=>
 	=>
 	VISIBLE 0
 	DAYSTATE 1
 }
 
-const_bitflag! { HICF: u32: "comctl";
+const_bitflag! { HICF: u32;
 	/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags` (`u32`).
 	=>
 	=>
@@ -379,7 +379,7 @@ const_bitflag! { HICF: u32: "comctl";
 	TOGGLEDROPDOWN 0x0000_0100
 }
 
-const_bitflag! { HDF: i32: "comctl";
+const_bitflag! { HDF: i32;
 	/// [`HDITEM`](crate::HDITEM) `fmt` (`i32`).
 	=>
 	=>
@@ -404,7 +404,7 @@ const_bitflag! { HDF: i32: "comctl";
 	SPLITBUTTON 0x100_0000
 }
 
-const_ordinary! { HDFT: u32: "comctl";
+const_ordinary! { HDFT: u32;
 	/// [`HDITEM`](crate::HDITEM) `typeFilter` (`i32`).
 	=>
 	=>
@@ -414,7 +414,7 @@ const_ordinary! { HDFT: u32: "comctl";
 	HASNOVALUE 0x8000
 }
 
-const_bitflag! { HDI: i32: "comctl";
+const_bitflag! { HDI: i32;
 	/// [`HDITEM`](crate::HDITEM) `mask` (`i32`).
 	=>
 	=>
@@ -431,7 +431,7 @@ const_bitflag! { HDI: i32: "comctl";
 	STATE 0x0200
 }
 
-const_ordinary! { HDIS: u32: "comctl";
+const_ordinary! { HDIS: u32;
 	/// [`HDITEM`](crate::HDITEM) `state` (`i32`).
 	=>
 	=>
@@ -440,7 +440,7 @@ const_ordinary! { HDIS: u32: "comctl";
 	FOCUSED 0x0000_0001
 }
 
-const_wm! { HDM: "comctl";
+const_wm! { HDM;
 	/// Header control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
 	/// (`u32`).
@@ -475,7 +475,7 @@ const_wm! { HDM: "comctl";
 	SETFOCUSEDITEM Self::FIRST.0 + 28
 }
 
-const_nm! { HDN: "comctl";
+const_nm! { HDN;
 	/// Header control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications)
 	/// (`i32`).
@@ -503,7 +503,7 @@ const_nm! { HDN: "comctl";
 	OVERFLOWCLICK Self::FIRST.0 - 19
 }
 
-const_ws! { HDS: u32: "comctl";
+const_ws! { HDS: u32;
 	/// Header control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/header-control-styles)
 	/// (`u32`).
@@ -522,7 +522,7 @@ const_ws! { HDS: u32: "comctl";
 	OVERFLOW 0x1000
 }
 
-const_ordinary! { HDSIL: u8: "comctl";
+const_ordinary! { HDSIL: u8;
 	/// [`hdm::GetImageList`](crate::msg::hdm::GetImageList) and
 	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList) `which` (`u8`).
 	=>
@@ -531,7 +531,7 @@ const_ordinary! { HDSIL: u8: "comctl";
 	STATE 1
 }
 
-const_bitflag! { HHT: u32: "comctl";
+const_bitflag! { HHT: u32;
 	/// [`HDHITTESTINFO`](crate::HDHITTESTINFO) `flags` (`u32`).
 	=>
 	=>
@@ -550,7 +550,7 @@ const_bitflag! { HHT: u32: "comctl";
 	ONOVERFLOW 0x4000
 }
 
-const_bitflag! { ICC: u32: "comctl";
+const_bitflag! { ICC: u32;
 	/// [`INITCOMMONCONTROLSEX`](crate::INITCOMMONCONTROLSEX) `icc` (`u32`).
 	=>
 	=>
@@ -593,7 +593,7 @@ const_bitflag! { ICC: u32: "comctl";
 	WIN95_CLASSES 0x0000_00ff
 }
 
-const_ordinary! { IDB: usize: "comctl";
+const_ordinary! { IDB: usize;
 	/// [`TBADDBITMAP`](crate::TBADDBITMAP) `nID` (`usize`).
 	=>
 	=>
@@ -609,7 +609,7 @@ const_ordinary! { IDB: usize: "comctl";
 	HIST_PRESSED 15
 }
 
-const_bitflag! { ILC: u32: "comctl";
+const_bitflag! { ILC: u32;
 	/// [`HIMAGELIST::Create`](crate::prelude::comctl_Himagelist::Create)
 	/// `flags` (`u32`).
 	=>
@@ -646,7 +646,7 @@ const_bitflag! { ILC: u32: "comctl";
 	ORIGINALSIZE 0x0001_0000
 }
 
-const_bitflag! { ILD: u32: "comctl";
+const_bitflag! { ILD: u32;
 	/// [`IMAGELISTDRAWFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).
 	=>
@@ -668,7 +668,7 @@ const_bitflag! { ILD: u32: "comctl";
 	BLEND Self::BLEND50.0
 }
 
-const_bitflag! { ILS: u32: "comctl";
+const_bitflag! { ILS: u32;
 	/// [`IMAGELISTSTATEFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
 	/// enumeration (`u32`).
 	=>
@@ -680,7 +680,7 @@ const_bitflag! { ILS: u32: "comctl";
 	ALPHA 0x0000_0008
 }
 
-const_wm! { IPM: "comctl";
+const_wm! { IPM;
 	/// IP address control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages)
 	/// (`u32`).
@@ -694,7 +694,7 @@ const_wm! { IPM: "comctl";
 	ISBLANK WM::USER.0 + 105
 }
 
-const_nm! { IPN: "comctl";
+const_nm! { IPN;
 	/// IP address control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications)
 	/// (`i32`).
@@ -704,7 +704,7 @@ const_nm! { IPN: "comctl";
 	FIELDCHANGED Self::FIRST.0 - 0
 }
 
-const_bitflag! { LIF: u32: "comctl";
+const_bitflag! { LIF: u32;
 	/// [`LITEM`](crate::LITEM) `mask` (`u32`).
 	=>
 	=>
@@ -714,7 +714,7 @@ const_bitflag! { LIF: u32: "comctl";
 	URL 0x0000_0008
 }
 
-const_bitflag! { LIS: u32: "comctl";
+const_bitflag! { LIS: u32;
 	/// [`LITEM`](crate::LITEM) `state` (`u32`).
 	=>
 	=>
@@ -725,7 +725,7 @@ const_bitflag! { LIS: u32: "comctl";
 	DEFAULTCOLORS 0x0000_0010
 }
 
-const_wm! { LM: "comctl";
+const_wm! { LM;
 	/// SysLink control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)
 	/// (`u32`).
@@ -738,7 +738,7 @@ const_wm! { LM: "comctl";
 	GETIDEALSIZE Self::GETIDEALHEIGHT.0
 }
 
-const_bitflag! { LVKF: u32: "comctl";
+const_bitflag! { LVKF: u32;
 	/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags` (`u32`).
 	=>
 	=>
@@ -747,7 +747,7 @@ const_bitflag! { LVKF: u32: "comctl";
 	SHIFT 0x0004
 }
 
-const_ordinary! { LV_VIEW: u32: "comctl";
+const_ordinary! { LV_VIEW: u32;
 	/// ListView
 	/// [views](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 	/// (`u32`).
@@ -760,7 +760,7 @@ const_ordinary! { LV_VIEW: u32: "comctl";
 	TILE 0x0004
 }
 
-const_ordinary! { LVA: u16: "comctl";
+const_ordinary! { LVA: u16;
 	/// [`lvm::Arrange`](crate::msg::lvm::Arrange) arrangement (`u16`).
 	=>
 	=>
@@ -768,7 +768,7 @@ const_ordinary! { LVA: u16: "comctl";
 	SNAPTOGRID 0x0005
 }
 
-const_bitflag! { LVBKIF: u32: "comctl";
+const_bitflag! { LVBKIF: u32;
 	/// [`LVBKIMAGE`](crate::LVBKIMAGE) `uFlags` (`u32`).
 	=>
 	=>
@@ -784,7 +784,7 @@ const_bitflag! { LVBKIF: u32: "comctl";
 	FLAG_ALPHABLEND 0x2000_0000
 }
 
-const_ordinary! { LVCDI: u32: "comctl";
+const_ordinary! { LVCDI: u32;
 	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `dwItemType` (`u32`).
 	=>
 	=>
@@ -793,7 +793,7 @@ const_ordinary! { LVCDI: u32: "comctl";
 	ITEMSLIST 0x0000_0002
 }
 
-const_bitflag! { LVCF: u32: "comctl";
+const_bitflag! { LVCF: u32;
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
 	=>
 	=>
@@ -808,7 +808,7 @@ const_bitflag! { LVCF: u32: "comctl";
 	WIDTH 0x0002
 }
 
-const_bitflag! { LVCFMT_C: i32: "comctl";
+const_bitflag! { LVCFMT_C: i32;
 	/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`i32`).
 	=>
 	=>
@@ -825,7 +825,7 @@ const_bitflag! { LVCFMT_C: i32: "comctl";
 	SPLITBUTTON 0x100_0000
 }
 
-const_bitflag! { LVCFMT_I: i32: "comctl";
+const_bitflag! { LVCFMT_I: i32;
 	/// [`LVITEM`](crate::LVITEM) `piColFmt` (`i32`).
 	=>
 	=>
@@ -836,7 +836,7 @@ const_bitflag! { LVCFMT_I: i32: "comctl";
 	TILE_PLACEMENTMASK Self::LINE_BREAK.0 | Self::FILL.0
 }
 
-const_ordinary! { LVFF: u32: "comctl";
+const_ordinary! { LVFF: u32;
 	/// [`LVFOOTERINFO`](crate::LVFOOTERINFO) `mask` (`u32`).
 	=>
 	=>
@@ -845,7 +845,7 @@ const_ordinary! { LVFF: u32: "comctl";
 	ITEMCOUNT 0x0001
 }
 
-const_bitflag! { LVFI: u32: "comctl";
+const_bitflag! { LVFI: u32;
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `flags` (`u32`).
 	=>
 	=>
@@ -857,7 +857,7 @@ const_bitflag! { LVFI: u32: "comctl";
 	NEARESTXY 0x0040
 }
 
-const_ordinary! { LVFIF: u32: "comctl";
+const_ordinary! { LVFIF: u32;
 	/// [`LVFOOTERITEM`](crate::LVFOOTERITEM) `mask` (`u32`).
 	=>
 	=>
@@ -865,7 +865,7 @@ const_ordinary! { LVFIF: u32: "comctl";
 	STATE 0x0002
 }
 
-const_ordinary! { LVFIS: u32: "comctl";
+const_ordinary! { LVFIS: u32;
 	/// [`LVFOOTERITEM`](crate::LVFOOTERITEM) `state` (`u32`).
 	=>
 	=>
@@ -874,7 +874,7 @@ const_ordinary! { LVFIS: u32: "comctl";
 	FOCUSED 0x0001
 }
 
-const_bitflag! { LVGA_FH: u32: "comctl";
+const_bitflag! { LVGA_FH: u32;
 	/// [`LVGROUP`](crate::LVGROUP) `uAlign` (`u32`).
 	///
 	/// These constants are composed of both
@@ -889,7 +889,7 @@ const_bitflag! { LVGA_FH: u32: "comctl";
 	HEADER_RIGHT LVGA_HEADER::RIGHT.0
 }
 
-const_ordinary! { LVGA_HEADER: u32: "comctl";
+const_ordinary! { LVGA_HEADER: u32;
 	/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `uAlign` (`u32`).
 	=>
 	=>
@@ -898,7 +898,7 @@ const_ordinary! { LVGA_HEADER: u32: "comctl";
 	RIGHT 0x0000_0004
 }
 
-const_bitflag! { LVGF: u32: "comctl";
+const_bitflag! { LVGF: u32;
 	/// [`LVGROUP`](crate::LVGROUP) `mask` (`u32`).
 	=>
 	=>
@@ -919,7 +919,7 @@ const_bitflag! { LVGF: u32: "comctl";
 	SUBSETITEMS 0x0001_0000
 }
 
-const_ordinary! { LVGGR: i32: "comctl";
+const_ordinary! { LVGGR: i32;
 	/// [`lvm::GetGroupRect`](crate::msg::lvm::GetGroupRect) `flags` (`i32`).
 	=>
 	=>
@@ -929,7 +929,7 @@ const_ordinary! { LVGGR: i32: "comctl";
 	SUBSETLINK 3
 }
 
-const_ordinary! { LVGIT: u32: "comctl";
+const_ordinary! { LVGIT: u32;
 	/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags` (`u32`).
 	=>
 	=>
@@ -937,7 +937,7 @@ const_ordinary! { LVGIT: u32: "comctl";
 	UNFOLDED 0x0001
 }
 
-const_bitflag! { LVGMF: u32: "comctl";
+const_bitflag! { LVGMF: u32;
 	/// [`LVGROUPMETRICS`](crate::LVGROUPMETRICS) `mask` (`u32`).
 	=>
 	=>
@@ -947,7 +947,7 @@ const_bitflag! { LVGMF: u32: "comctl";
 	TEXTCOLOR 0x0000_0004
 }
 
-const_bitflag! { LVGS: u32: "comctl";
+const_bitflag! { LVGS: u32;
 	/// [`LVGROUP`](crate::LVGROUP) `state` (`u32`).
 	=>
 	=>
@@ -962,7 +962,7 @@ const_bitflag! { LVGS: u32: "comctl";
 	SUBSETLINKFOCUSED 0x0000_0080
 }
 
-const_bitflag! { LVHT: u32: "comctl";
+const_bitflag! { LVHT: u32;
 	/// [`LVHITTESTINFO`](crate::LVHITTESTINFO) `flags` (`u32`).
 	=>
 	=>
@@ -987,7 +987,7 @@ const_bitflag! { LVHT: u32: "comctl";
 	EX_FOOTER 0x0800_0000
 }
 
-const_ordinary! { LVI_GROUPID: i32: "comctl";
+const_ordinary! { LVI_GROUPID: i32;
 	/// [`LVITEM`](crate::LVITEM) `iGroupId` (`i32`).
 	=>
 	=>
@@ -995,7 +995,7 @@ const_ordinary! { LVI_GROUPID: i32: "comctl";
 	I_GROUPIDNONE -2
 }
 
-const_bitflag! { LVIF: u32: "comctl";
+const_bitflag! { LVIF: u32;
 	/// [`LVITEM`](crate::LVITEM) `mask` (`u32`).
 	=>
 	=>
@@ -1010,7 +1010,7 @@ const_bitflag! { LVIF: u32: "comctl";
 	TEXT 0x0000_0001
 }
 
-const_ordinary! { LVIM: u32: "comctl";
+const_ordinary! { LVIM: u32;
 	/// [`LVINSERTMARK`](crate::LVINSERTMARK) `dwFlags` (`u32`).
 	=>
 	=>
@@ -1019,7 +1019,7 @@ const_ordinary! { LVIM: u32: "comctl";
 	AFTER 0x0000_0001
 }
 
-const_ordinary! { LVIR: u8: "comctl";
+const_ordinary! { LVIR: u8;
 	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) `portion` (`u8`).
 	=>
 	=>
@@ -1029,7 +1029,7 @@ const_ordinary! { LVIR: u8: "comctl";
 	SELECTBOUNDS 3
 }
 
-const_bitflag! { LVIS: u32: "comctl";
+const_bitflag! { LVIS: u32;
 	/// ListView item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
 	/// (`u32`).
@@ -1047,7 +1047,7 @@ const_bitflag! { LVIS: u32: "comctl";
 	STATEIMAGEMASK 0xf000
 }
 
-const_ordinary! { LVSIL: u8: "comctl";
+const_ordinary! { LVSIL: u8;
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) `kind` (`u8`).
 	=>
 	=>
@@ -1057,7 +1057,7 @@ const_ordinary! { LVSIL: u8: "comctl";
 	GROUPHEADER 3
 }
 
-const_wm! { LVM: "comctl";
+const_wm! { LVM;
 	/// List view control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages)
 	/// (`u32`).
@@ -1192,7 +1192,7 @@ const_wm! { LVM: "comctl";
 	GETNEXTITEMINDEX Self::FIRST.0 + 211
 }
 
-const_nm! { LVN: "comctl";
+const_nm! { LVN;
 	/// List view control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications)
 	/// (`i32`).
@@ -1228,7 +1228,7 @@ const_nm! { LVN: "comctl";
 	GETEMPTYMARKUP Self::FIRST.0 - 87
 }
 
-const_bitflag! { LVNI: u32: "comctl";
+const_bitflag! { LVNI: u32;
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) relationship (`u32`).
 	=>
 	=>
@@ -1247,7 +1247,7 @@ const_bitflag! { LVNI: u32: "comctl";
 	TORIGHT 0x0800
 }
 
-const_ws! { LVS: u32: "comctl";
+const_ws! { LVS: u32;
 	/// List view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
 	/// (`u32`).
@@ -1277,7 +1277,7 @@ const_ws! { LVS: u32: "comctl";
 	NOSORTHEADER 0x8000
 }
 
-const_wsex! { LVS_EX: "comctl";
+const_wsex! { LVS_EX;
 	/// Extended list view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
 	/// (`u32`).
@@ -1317,7 +1317,7 @@ const_wsex! { LVS_EX: "comctl";
 	UNDERLINEHOT 0x0000_0800
 }
 
-const_bitflag! { LVSICF: u32: "comctl";
+const_bitflag! { LVSICF: u32;
 	/// [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) `behavior` (`u32`).
 	=>
 	=>
@@ -1327,7 +1327,7 @@ const_bitflag! { LVSICF: u32: "comctl";
 	NOSCROLL 0x0000_0002
 }
 
-const_bitflag! { LVTVIF: u32: "comctl";
+const_bitflag! { LVTVIF: u32;
 	/// [`LVTILEVIEWINFO`](crate::LVTILEVIEWINFO) `dwFlags` (`u32`).
 	=>
 	=>
@@ -1338,7 +1338,7 @@ const_bitflag! { LVTVIF: u32: "comctl";
 	EXTENDED 0x0000_0004
 }
 
-const_bitflag! { LVTVIM: u32: "comctl";
+const_bitflag! { LVTVIM: u32;
 	/// [`LVTILEVIEWINFO`](crate::LVTILEVIEWINFO) `dwMask` (`u32`).
 	=>
 	=>
@@ -1347,7 +1347,7 @@ const_bitflag! { LVTVIM: u32: "comctl";
 	LABELMARGIN 0x0000_0004
 }
 
-const_ws! { LWS: u32: "comctl";
+const_ws! { LWS: u32;
 	/// SysLink control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
 	/// (`u32`).
@@ -1370,7 +1370,7 @@ const_ws! { LWS: u32: "comctl";
 	RIGHT 0x0020
 }
 
-const_bitflag! { MCGIF: u32: "comctl";
+const_bitflag! { MCGIF: u32;
 	=>
 	=>
 	DATE 0x0000_0001
@@ -1378,7 +1378,7 @@ const_bitflag! { MCGIF: u32: "comctl";
 	NAME 0x0000_0004
 }
 
-const_ordinary! { MCGIP: u32: "comctl";
+const_ordinary! { MCGIP: u32;
 	/// [`MCGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
 	/// `dwPart` (`u32`).
 	=>
@@ -1394,7 +1394,7 @@ const_ordinary! { MCGIP: u32: "comctl";
 	CALENDARCELL 8
 }
 
-const_bitflag! { MCHT: u32: "comctl";
+const_bitflag! { MCHT: u32;
 	/// [`MCHITTESTINFO`](crate::MCHITTESTINFO) `uHit` (`u32`).
 	=>
 	=>
@@ -1420,7 +1420,7 @@ const_bitflag! { MCHT: u32: "comctl";
 	CALENDARDATEMAX MCHT::CALENDAR.0 | 0x0005
 }
 
-const_wm! { MCM: "comctl";
+const_wm! { MCM;
 	/// Month calendar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)
 	/// (`u32`).
@@ -1461,7 +1461,7 @@ const_wm! { MCM: "comctl";
 	SETCURRENTVIEW Self::FIRST.0 + 32
 }
 
-const_ordinary! { MCMV: u32: "comctl";
+const_ordinary! { MCMV: u32;
 	/// [`NMVIEWCHANGE`](crate::NMVIEWCHANGE) `dwOldView` and `dwNewView` (`u32`).
 	=>
 	=>
@@ -1471,7 +1471,7 @@ const_ordinary! { MCMV: u32: "comctl";
 	CENTURY 3
 }
 
-const_nm! { MCN: "comctl";
+const_nm! { MCN;
 	/// Month calendar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
 	/// (`i32`).
@@ -1484,7 +1484,7 @@ const_nm! { MCN: "comctl";
 	VIEWCHANGE Self::FIRST.0 - 4
 }
 
-const_ws! { MCS: u32: "comctl";
+const_ws! { MCS: u32;
 	/// Month calendar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`).
@@ -1502,7 +1502,7 @@ const_ws! { MCS: u32: "comctl";
 	NOSELCHANGEONNAV 0x0100
 }
 
-const_ordinary! { MCSC: u8: "comctl";
+const_ordinary! { MCSC: u8;
 	/// [`dtm::GetMcColor`](crate::msg::dtm::GetMcColor) color (`u8`).
 	=>
 	=>
@@ -1514,7 +1514,7 @@ const_ordinary! { MCSC: u8: "comctl";
 	TRAILINGTEXT 5
 }
 
-const_ordinary! { NM: i32: "comctl";
+const_ordinary! { NM: i32;
 	/// [`wm::Notify`](crate::msg::wm::Notify) notification codes (`i32`).
 	///
 	/// **Note:** Control-specific notification codes have their own types,
@@ -1543,7 +1543,7 @@ const_ordinary! { NM: i32: "comctl";
 	THEMECHANGED Self::FIRST.0 - 22
 }
 
-const_ws! { PBS: u32: "comctl";
+const_ws! { PBS: u32;
 	/// Progress bar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`).
@@ -1555,7 +1555,7 @@ const_ws! { PBS: u32: "comctl";
 	SMOOTHREVERSE 0x10
 }
 
-const_wm! { PBM: "comctl";
+const_wm! { PBM;
 	/// Progress bar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
 	/// (`u32`).
@@ -1579,7 +1579,7 @@ const_wm! { PBM: "comctl";
 	GETSTATE WM::USER.0 + 17
 }
 
-const_ordinary! { PBST: u32: "comctl";
+const_ordinary! { PBST: u32;
 	/// Progress bar
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 	/// (`u32`).
@@ -1592,7 +1592,7 @@ const_ordinary! { PBST: u32: "comctl";
 	PAUSED 0x0003
 }
 
-const_wm! { RB: "comctl";
+const_wm! { RB;
 	/// Rebar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-messages)
 	/// (`u32`).
@@ -1642,7 +1642,7 @@ const_wm! { RB: "comctl";
 	SETBANDWIDTH WM::USER.0 + 44
 }
 
-const_nm! { RBN: "comctl";
+const_nm! { RBN;
 	/// Rebar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-notifications)
 	/// (`i32`).
@@ -1664,7 +1664,7 @@ const_nm! { RBN: "comctl";
 	AUTOBREAK Self::FIRST.0 - 22
 }
 
-const_ws! { RBS: u32: "comctl";
+const_ws! { RBS: u32;
 	/// Rebar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
 	/// (`u32`).
@@ -1680,7 +1680,7 @@ const_ws! { RBS: u32: "comctl";
 	DBLCLKTOGGLE 0x0000_8000
 }
 
-const_wm! { SB: "comctl";
+const_wm! { SB;
 	/// Status bar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
 	/// (`u32`).
@@ -1705,7 +1705,7 @@ const_wm! { SB: "comctl";
 	SETBKCOLOR CCM::SETBKCOLOR.0
 }
 
-const_ws! { SBARS: u32: "comctl";
+const_ws! { SBARS: u32;
 	/// Status bar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`).
@@ -1717,7 +1717,7 @@ const_ws! { SBARS: u32: "comctl";
 	TOOLTIPS 0x0800
 }
 
-const_nm! { SBN: "comctl";
+const_nm! { SBN;
 	/// Status bar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
 	/// (`i32`).
@@ -1727,7 +1727,7 @@ const_nm! { SBN: "comctl";
 	SIMPLEMODECHANGE Self::FIRST.0 - 0
 }
 
-const_ordinary! { SBT: u16: "comctl";
+const_ordinary! { SBT: u16;
 	/// [`sb::GetText`](crate::msg::sb::GetText),
 	/// [`sb::GetTextLength`](crate::msg::sb::GetTextLength) and
 	/// [`sb::SetText`](crate::msg::sb::SetText) drawing operation (`u16`).
@@ -1741,7 +1741,7 @@ const_ordinary! { SBT: u16: "comctl";
 	NOTABPARSING 0x0800
 }
 
-const_wm! { STM: "comctl";
+const_wm! { STM;
 	/// Static control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
 	/// (`u32`).
@@ -1753,7 +1753,7 @@ const_wm! { STM: "comctl";
 	GETIMAGE 0x0173
 }
 
-const_ordinary! { TB: i32: "comctl";
+const_ordinary! { TB: i32;
 	/// [`NMTRBTHUMBPOSCHANGING`](crate::NMTRBTHUMBPOSCHANGING) `nReason`
 	/// (`i32`).
 	=>
@@ -1769,7 +1769,7 @@ const_ordinary! { TB: i32: "comctl";
 	ENDTRACK 8
 }
 
-const_bitflag! { TBBF: u32: "comctl";
+const_bitflag! { TBBF: u32;
 	/// [`tbm::GetBitmapFlags`](crate::msg::tbm::GetBitmapFlags) return value
 	/// (`u32`).
 	=>
@@ -1777,7 +1777,7 @@ const_bitflag! { TBBF: u32: "comctl";
 	LARGE 0x0001
 }
 
-const_bitflag! { TBIF: u32: "comctl";
+const_bitflag! { TBIF: u32;
 	/// [`TBBUTTONINFO`](crate::TBBUTTONINFO) `dwFlags` (`u32`).
 	=>
 	=>
@@ -1791,7 +1791,7 @@ const_bitflag! { TBIF: u32: "comctl";
 	BYINDEX 0x8000_0000
 }
 
-const_ordinary! { TBIMHT: u32: "comctl";
+const_ordinary! { TBIMHT: u32;
 	/// [`TBINSERTMARK`](crate::TBINSERTMARK) `dwFlags` (`u32`).
 	=>
 	=>
@@ -1801,7 +1801,7 @@ const_ordinary! { TBIMHT: u32: "comctl";
 	BACKGROUND 0x0000_0002
 }
 
-const_wm! { TBM: "comctl";
+const_wm! { TBM;
 	/// Toolbar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages)
 	/// (`u32`).
@@ -1905,7 +1905,7 @@ const_wm! { TBM: "comctl";
 	SETWINDOWTHEME CCM::SETWINDOWTHEME.0
 }
 
-const_bitflag! { TBMF: u32: "comctl";
+const_bitflag! { TBMF: u32;
 	/// [`TBMETRICS`](crate::TBMETRICS) `dwMask` (`u32`).
 	=>
 	=>
@@ -1914,7 +1914,7 @@ const_bitflag! { TBMF: u32: "comctl";
 	BUTTONSPACING 0x0000_0004
 }
 
-const_nm! { TBN: "comctl";
+const_nm! { TBN;
 	/// Toolbar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-notifications)
 	/// (`i32`).
@@ -1948,7 +1948,7 @@ const_nm! { TBN: "comctl";
 	WRAPHOTITEM Self::FIRST.0 - 24
 }
 
-const_ws! { TBS: u32: "comctl";
+const_ws! { TBS: u32;
 	/// Trackbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
 	/// (`u32`).
@@ -1973,7 +1973,7 @@ const_ws! { TBS: u32: "comctl";
 	TRANSPARENTBKGND 0x1000
 }
 
-const_bitflag! { TBSTATE: u8: "comctl";
+const_bitflag! { TBSTATE: u8;
 	/// Toolbar button
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-button-states)
 	/// (`u8`).
@@ -1991,7 +1991,7 @@ const_bitflag! { TBSTATE: u8: "comctl";
 	MARKED 0x80
 }
 
-const_wsex! { TBSTYLE_EX: "comctl";
+const_wsex! { TBSTYLE_EX;
 	/// Extended toolbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-extended-styles)
 	/// (`u32`).
@@ -2005,7 +2005,7 @@ const_wsex! { TBSTYLE_EX: "comctl";
 	DOUBLEBUFFER 0x0000_0080
 }
 
-const_bitflag! { TCIS: u32: "comctl";
+const_bitflag! { TCIS: u32;
 	/// Tab control item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
 	/// (`u32`).
@@ -2017,7 +2017,7 @@ const_bitflag! { TCIS: u32: "comctl";
 	HIGHLIGHTED 0x0002
 }
 
-const_wm! { TCM: "comctl";
+const_wm! { TCM;
 	/// Tab control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages)
 	/// (`u32`).
@@ -2055,7 +2055,7 @@ const_wm! { TCM: "comctl";
 	GETUNICODEFORMAT CCM::GETUNICODEFORMAT.0
 }
 
-const_nm! { TCN: "comctl";
+const_nm! { TCN;
 	/// Tab control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
 	/// (`i32`).
@@ -2069,7 +2069,7 @@ const_nm! { TCN: "comctl";
 	SELCHANGING Self::FIRST.0 - 2
 }
 
-const_ws! { TCS: u32: "comctl";
+const_ws! { TCS: u32;
 	/// Tab control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
 	/// (`u32`).
@@ -2097,7 +2097,7 @@ const_ws! { TCS: u32: "comctl";
 	FOCUSNEVER 0x8000
 }
 
-const_wsex! { TCS_EX: "comctl";
+const_wsex! { TCS_EX;
 	/// Extended tab control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
 	/// (`u32`).
@@ -2107,7 +2107,7 @@ const_wsex! { TCS_EX: "comctl";
 	REGISTERDROP 0x0000_0002
 }
 
-const_ordinary! { TD_ICON: u16: "comctl";
+const_ordinary! { TD_ICON: u16;
 	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog)
 	/// `pszIcon` and [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
 	/// `pszMainIcon` (`u16`). Originally has `TD` prefix and `ICON` suffix.
@@ -2119,7 +2119,7 @@ const_ordinary! { TD_ICON: u16: "comctl";
 	SHIELD 0xfffc
 }
 
-const_bitflag! { TDCBF: i32: "comctl";
+const_bitflag! { TDCBF: i32;
 	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
 	///
@@ -2134,7 +2134,7 @@ const_bitflag! { TDCBF: i32: "comctl";
 	CLOSE 0x0020
 }
 
-const_bitflag! { TDF: i32: "comctl";
+const_bitflag! { TDF: i32;
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwFlags` (`i32`).
 	=>
 	=>
@@ -2158,7 +2158,7 @@ const_bitflag! { TDF: i32: "comctl";
 	SIZE_TO_CONTENT 0x0100_0000
 }
 
-const_wm! { TRBM: "comctl";
+const_wm! { TRBM;
 	/// Trackbar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
 	/// (`u32`).
@@ -2204,7 +2204,7 @@ const_wm! { TRBM: "comctl";
 	GETUNICODEFORMAT CCM::GETUNICODEFORMAT.0
 }
 
-const_nm! { TRBN: "comctl";
+const_nm! { TRBN;
 	/// Trackbar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
 	/// (`i32`).
@@ -2214,7 +2214,7 @@ const_nm! { TRBN: "comctl";
 	THUMBPOSCHANGING Self::FIRST.0 - 1
 }
 
-const_ordinary! { TTI: i32: "comctl";
+const_ordinary! { TTI: i32;
 	/// [`EDITBALLOONTIP`](crate::EDITBALLOONTIP) ttiIcon (`i32`).
 	=>
 	=>
@@ -2227,7 +2227,7 @@ const_ordinary! { TTI: i32: "comctl";
 	ERROR_LARGE 6
 }
 
-const_ordinary! { TVE: u32: "comctl";
+const_ordinary! { TVE: u32;
 	/// [`tvm::Expand`](crate::msg::tvm::Expand) `action` (`u32`).
 	=>
 	=>
@@ -2238,7 +2238,7 @@ const_ordinary! { TVE: u32: "comctl";
 	COLLAPSERESET 0x8000
 }
 
-const_ordinary! { TVGN: u32: "comctl";
+const_ordinary! { TVGN: u32;
 	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) `which` (`u32`).
 	=>
 	=>
@@ -2258,7 +2258,7 @@ const_ordinary! { TVGN: u32: "comctl";
 	TVSI_NOSINGLEEXPAND 0x8000
 }
 
-const_ordinary! { TVI: isize: "comctl";
+const_ordinary! { TVI: isize;
 	/// [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter` (`isize`).
 	=>
 	=>
@@ -2268,7 +2268,7 @@ const_ordinary! { TVI: isize: "comctl";
 	SORT -0x0fffd
 }
 
-const_bitflag! { TVIF: u32: "comctl";
+const_bitflag! { TVIF: u32;
 	/// [`TVITEM`](crate::TVITEM) `mask` (`u32`).
 	=>
 	=>
@@ -2284,7 +2284,7 @@ const_bitflag! { TVIF: u32: "comctl";
 	EXPANDEDIMAGE 0x0200
 }
 
-const_bitflag! { TVIS: u32: "comctl";
+const_bitflag! { TVIS: u32;
 	/// Tree view item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
 	/// (`u32`)
@@ -2304,7 +2304,7 @@ const_bitflag! { TVIS: u32: "comctl";
 	USERMASK 0xf000
 }
 
-const_bitflag! { TVIS_EX: u32: "comctl";
+const_bitflag! { TVIS_EX: u32;
 	/// [`TVITEMEX`](crate::TVITEMEX) `uStateEx` (`u32`).
 	=>
 	=>
@@ -2316,7 +2316,7 @@ const_bitflag! { TVIS_EX: u32: "comctl";
 	HWND 0x0000
 }
 
-const_wm! { TVM: "comctl";
+const_wm! { TVM;
 	/// Tree view control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
 	/// (`u32`).
@@ -2376,7 +2376,7 @@ const_wm! { TVM: "comctl";
 	GETITEMPARTRECT Self::FIRST.0 + 72
 }
 
-const_nm! { TVN: "comctl";
+const_nm! { TVN;
 	/// Tree view control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
 	/// (`i32`).
@@ -2402,7 +2402,7 @@ const_nm! { TVN: "comctl";
 	ASYNCDRAW Self::FIRST.0 - 20
 }
 
-const_ws! { TVS: u32: "comctl";
+const_ws! { TVS: u32;
 	/// Tree view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
 	/// (`u32`).
@@ -2426,7 +2426,7 @@ const_ws! { TVS: u32: "comctl";
 	NOHSCROLL 0x8000
 }
 
-const_wsex! { TVS_EX: "comctl";
+const_wsex! { TVS_EX;
 	/// Extended tree view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
 	/// (`u32`).
@@ -2447,7 +2447,7 @@ const_wsex! { TVS_EX: "comctl";
 	DRAWIMAGEASYNC 0x0400
 }
 
-const_ordinary! { TVSIL: u8: "comctl";
+const_ordinary! { TVSIL: u8;
 	/// [`tvm::GetImageList`](crate::msg::tvm::GetImageList) and
 	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList) `kind`.
 	=>
@@ -2456,7 +2456,7 @@ const_ordinary! { TVSIL: u8: "comctl";
 	STATE 2
 }
 
-const_wm! { UDM: "comctl";
+const_wm! { UDM;
 	/// Up-down control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages)
 	/// (`u32`).
@@ -2480,7 +2480,7 @@ const_wm! { UDM: "comctl";
 	GETPOS32 WM::USER.0 + 114
 }
 
-const_nm! { UDN: "comctl";
+const_nm! { UDN;
 	/// Up-down control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
 	/// (`i32`).
@@ -2490,7 +2490,7 @@ const_nm! { UDN: "comctl";
 	DELTAPOS Self::FIRST.0 - 1
 }
 
-const_ws! { UDS: u32: "comctl";
+const_ws! { UDS: u32;
 	/// Up-down control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
 	/// (`u32`).
@@ -2507,7 +2507,7 @@ const_ws! { UDS: u32: "comctl";
 	HOTTRACK 0x0100
 }
 
-const_ordinary! { VK_DIR: u16: "comctl";
+const_ordinary! { VK_DIR: u16;
 	/// [`LVFINDINFO`](crate::LVFINDINFO) `vkDirection` (`u16`).
 	=>
 	=>

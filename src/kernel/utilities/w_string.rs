@@ -7,7 +7,6 @@ use crate::kernel::decl::{MultiByteToWideChar, Encoding, SysResult};
 ///
 /// This is struct is mostly used internally by the library, as a bridge between
 /// Windows and Rust strings.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[derive(Clone, Debug)]
 pub struct WString {
 	vec_u16: Vec<u16>,

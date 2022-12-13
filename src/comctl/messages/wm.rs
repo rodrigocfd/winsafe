@@ -7,7 +7,6 @@ use crate::prelude::{MsgSend, MsgSendRecv};
 /// message parameters.
 ///
 /// Return type: `isize`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 #[derive(Clone, Copy)]
 pub struct Notify<'a> {
 	pub nmhdr: &'a NMHDR,

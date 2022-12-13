@@ -9,7 +9,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`IFileSinkFilter`](crate::IFileSinkFilter) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IFileSinkFilterVT {
 	pub IUnknownVT: IUnknownVT,
@@ -17,8 +16,7 @@ pub struct IFileSinkFilterVT {
 	pub GetCurFile: fn(ComPtr, *mut PSTR, PVOID) -> HRES,
 }
 
-com_interface! { IFileSinkFilter: "dshow";
-	"a2104830-7c70-11cf-8bce-00aa00a3f1a6";
+com_interface! { IFileSinkFilter: "a2104830-7c70-11cf-8bce-00aa00a3f1a6";
 	/// [`IFileSinkFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
 	/// COM interface over [`IFileSinkFilterVT`](crate::vt::IFileSinkFilterVT).
 	///
@@ -37,7 +35,6 @@ impl dshow_IFileSinkFilter for IFileSinkFilter {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// [`IFileSinkFilter::GetCurFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-getcurfile)
 	/// method.

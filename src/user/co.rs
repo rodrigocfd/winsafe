@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-const_bitflag! { ACCELF: u8: "user";
+const_bitflag! { ACCELF: u8;
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
 	///
 	/// Originally has `F` prefix.
@@ -17,7 +17,7 @@ const_bitflag! { ACCELF: u8: "user";
 	ALT 0x10
 }
 
-const_ordinary! { APPCOMMAND: u16: "user";
+const_ordinary! { APPCOMMAND: u16;
 	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) commands (`u16`).
 	=>
 	=>
@@ -77,7 +77,7 @@ const_ordinary! { APPCOMMAND: u16: "user";
 	DWM_FLIP3D 54
 }
 
-const_wm! { BM: "user";
+const_wm! { BM;
 	/// Button control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
 	/// (`u32`).
@@ -94,7 +94,7 @@ const_wm! { BM: "user";
 	SETDONTCLICK 0x00f8
 }
 
-const_cmd! { BN: "user";
+const_cmd! { BN;
 	/// Button control `WM_COMMAND`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`u16`).
@@ -113,7 +113,7 @@ const_cmd! { BN: "user";
 	KILLFOCUS 7
 }
 
-const_ws! { BS: u32: "user";
+const_ws! { BS: u32;
 	/// Button control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/button-styles)
 	/// (`u32`).
@@ -149,7 +149,7 @@ const_ws! { BS: u32: "user";
 	RIGHTBUTTON Self::LEFTTEXT.0
 }
 
-const_ordinary! { BST: u32: "user";
+const_ordinary! { BST: u32;
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) return value (`u32`).
 	=>
 	=>
@@ -160,7 +160,7 @@ const_ordinary! { BST: u32: "user";
 	FOCUS 0x0008
 }
 
-const_wm! { CB: "user";
+const_wm! { CB;
 	/// Combo box control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages)
 	/// (`u32`).
@@ -203,7 +203,7 @@ const_wm! { CB: "user";
 	GETCOMBOBOXINFO 0x0164
 }
 
-const_cmd! { CBN: "user";
+const_cmd! { CBN;
 	/// Combo box control `WM_COMMAND`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
 	/// (`u16`).
@@ -222,7 +222,7 @@ const_cmd! { CBN: "user";
 	SELENDCANCEL 10
 }
 
-const_ws! { CBS: u32: "user";
+const_ws! { CBS: u32;
 	/// Combo box control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`).
@@ -243,7 +243,7 @@ const_ws! { CBS: u32: "user";
 	LOWERCASE 0x4000
 }
 
-const_bitflag! { CDS: u32: "user";
+const_bitflag! { CDS: u32;
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `flags` (`u32`).
 	=>
 	=>
@@ -260,7 +260,7 @@ const_bitflag! { CDS: u32: "user";
 	VIDEOPARAMETERS 0x0000_0020
 }
 
-const_ordinary! { CF: u32: "user";
+const_ordinary! { CF: u32;
 	/// Standard clipboard
 	/// [formats](https://learn.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
 	/// (`u32`).
@@ -294,7 +294,7 @@ const_ordinary! { CF: u32: "user";
 	GDIOBJLAST 0x03ff
 }
 
-const_ordinary! { COLOR: i32: "user";
+const_ordinary! { COLOR: i32;
 	/// System
 	/// [colors](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 	/// (`i32`).
@@ -338,7 +338,7 @@ const_ordinary! { COLOR: i32: "user";
 	BTNHILIGHT Self::BTNHIGHLIGHT.0
 }
 
-const_ordinary! { CLR: u32: "user";
+const_ordinary! { CLR: u32;
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
 	=>
 	=>
@@ -346,7 +346,7 @@ const_ordinary! { CLR: u32: "user";
 	DEFAULT 0xff00_0000
 }
 
-const_ordinary! { CMD: u16: "user";
+const_ordinary! { CMD: u16;
 	/// [`wm::Command`](crate::msg::wm::Command) notification codes (`u16`).
 	///
 	/// **Note:** Control-specific notification codes have their own types,
@@ -357,7 +357,7 @@ const_ordinary! { CMD: u16: "user";
 	Accelerator 1
 }
 
-const_bitflag! { CS: u32: "user";
+const_bitflag! { CS: u32;
 	/// Window class
 	/// [`styles`](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).
@@ -378,7 +378,7 @@ const_bitflag! { CS: u32: "user";
 	DROPSHADOW 0x00020000
 }
 
-const_bitflag! { DDL: u16: "user";
+const_bitflag! { DDL: u16;
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
 	=>
@@ -394,7 +394,7 @@ const_bitflag! { DDL: u16: "user";
 	EXCLUSIVE 0x8000
 }
 
-const_ordinary! { DISP_CHANGE: i32: "user";
+const_ordinary! { DISP_CHANGE: i32;
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) return value
 	/// (`u32`).
 	=>
@@ -409,7 +409,7 @@ const_ordinary! { DISP_CHANGE: i32: "user";
 	BADDUALVIEW -6
 }
 
-const_bitflag! { DISPLAY_DEVICE: u32: "user";
+const_bitflag! { DISPLAY_DEVICE: u32;
 	/// [`DISPLAY_DEVICE`](crate::DISPLAY_DEVICE) `StateFlags` (`u32`).
 	=>
 	=>
@@ -431,7 +431,7 @@ const_bitflag! { DISPLAY_DEVICE: u32: "user";
 	ATTACHED 0x0000_0002
 }
 
-const_bitflag! { DM: u32: "user";
+const_bitflag! { DM: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmFields` (`u32`).
 	=>
 	=>
@@ -467,7 +467,7 @@ const_bitflag! { DM: u32: "user";
 	DISPLAYFIXEDOUTPUT 0x2000_0000
 }
 
-const_ordinary! { DMBIN: i16: "user";
+const_ordinary! { DMBIN: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDefaultSource` (`i16`).
 	=>
 	=>
@@ -492,7 +492,7 @@ const_ordinary! { DMBIN: i16: "user";
 	USER 256
 }
 
-const_ordinary! { DMCOLOR: i16: "user";
+const_ordinary! { DMCOLOR: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmColor` (`i16`).
 	=>
 	=>
@@ -502,7 +502,7 @@ const_ordinary! { DMCOLOR: i16: "user";
 	COLOR 2
 }
 
-const_ordinary! { DMDFO: u32: "user";
+const_ordinary! { DMDFO: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayFixedOutput` (`u32`).
 	=>
 	=>
@@ -511,7 +511,7 @@ const_ordinary! { DMDFO: u32: "user";
 	CENTER 2
 }
 
-const_bitflag! { DMDISPLAYFLAGS: u32: "user";
+const_bitflag! { DMDISPLAYFLAGS: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayFlags` (`u32`).
 	=>
 	=>
@@ -521,7 +521,7 @@ const_bitflag! { DMDISPLAYFLAGS: u32: "user";
 	TEXTMODE 0x0000_0004
 }
 
-const_ordinary! { DMDITHER: u32: "user";
+const_ordinary! { DMDITHER: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDitherType` (`u32`).
 	=>
 	=>
@@ -551,7 +551,7 @@ const_ordinary! { DMDITHER: u32: "user";
 	USER 256
 }
 
-const_ordinary! { DMDO: u32: "user";
+const_ordinary! { DMDO: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayOrientation` (`u32`).
 	=>
 	=>
@@ -561,7 +561,7 @@ const_ordinary! { DMDO: u32: "user";
 	D270 3
 }
 
-const_ordinary! { DMDUP: i16: "user";
+const_ordinary! { DMDUP: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDuplex` (`i16`).
 	=>
 	=>
@@ -572,7 +572,7 @@ const_ordinary! { DMDUP: i16: "user";
 	HORIZONTAL 3
 }
 
-const_ordinary! { DMICM: u32: "user";
+const_ordinary! { DMICM: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmICMIntent` (`u32`).
 	=>
 	=>
@@ -590,7 +590,7 @@ const_ordinary! { DMICM: u32: "user";
 	USER 256
 }
 
-const_ordinary! { DMICMMETHOD: u32: "user";
+const_ordinary! { DMICMMETHOD: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmICMMethod` (`u32`).
 	=>
 	=>
@@ -608,7 +608,7 @@ const_ordinary! { DMICMMETHOD: u32: "user";
 	USER 256
 }
 
-const_ordinary! { DMMEDIA: u32: "user";
+const_ordinary! { DMMEDIA: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmMediaType` (`u32`).
 	=>
 	=>
@@ -624,7 +624,7 @@ const_ordinary! { DMMEDIA: u32: "user";
 	USER 256
 }
 
-const_ordinary! { DMNUP: u32: "user";
+const_ordinary! { DMNUP: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmNup` (`u32`).
 	=>
 	=>
@@ -634,7 +634,7 @@ const_ordinary! { DMNUP: u32: "user";
 	ONEUP 2
 }
 
-const_ordinary! { DMORIENT: i16: "user";
+const_ordinary! { DMORIENT: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmOrientation` (`i16`).
 	=>
 	=>
@@ -644,7 +644,7 @@ const_ordinary! { DMORIENT: i16: "user";
 	LANDSCAPE 2
 }
 
-const_ordinary! { DMPAPER: i16: "user";
+const_ordinary! { DMPAPER: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmPaperSize` (`i16`).
 	=>
 	=>
@@ -886,7 +886,7 @@ const_ordinary! { DMPAPER: i16: "user";
 	USER 256
 }
 
-const_ordinary! { DMRES: i16: "user";
+const_ordinary! { DMRES: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmPrintQuality` (`i16`).
 	=>
 	=>
@@ -898,7 +898,7 @@ const_ordinary! { DMRES: i16: "user";
 	HIGH -4
 }
 
-const_ordinary! { DMTT: i16: "user";
+const_ordinary! { DMTT: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmTTOption` (`i16`).
 	=>
 	=>
@@ -914,7 +914,7 @@ const_ordinary! { DMTT: i16: "user";
 	DOWNLOAD_OUTLINE 4
 }
 
-const_ordinary! { DLGC: u16: "user";
+const_ordinary! { DLGC: u16;
 	/// [`wm::GetDlgCode`](crate::msg::wm::GetDlgCode) return value (`u16`).
 	=>
 	=>
@@ -933,7 +933,7 @@ const_ordinary! { DLGC: u16: "user";
 	WANTTAB 0x0002
 }
 
-const_ordinary! { DLGID: u16: "user";
+const_ordinary! { DLGID: u16;
 	/// Dialog built-in IDs (`u16`). These are also returned from
 	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) and
 	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog).
@@ -950,7 +950,7 @@ const_ordinary! { DLGID: u16: "user";
 	CONTINUE 11
 }
 
-const_bitflag! { EC: u16: "user";
+const_bitflag! { EC: u16;
 	/// [`em::GetImeStatus`](crate::msg::em::SetMargins) margins to set (`u16`).
 	=>
 	=>
@@ -959,7 +959,7 @@ const_bitflag! { EC: u16: "user";
 	USEFONTINFO 0xffff
 }
 
-const_bitflag! { EDD: u32: "user";
+const_bitflag! { EDD: u32;
 	/// [`EnumDisplayDevices`](crate::EnumDisplayDevices) `flags` (`u32`).
 	=>
 	=>
@@ -968,7 +968,7 @@ const_bitflag! { EDD: u32: "user";
 	GET_DEVICE_INTERFACE_NAME 0x0000_0001
 }
 
-const_bitflag! { EDS: u32: "user";
+const_bitflag! { EDS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `flags` (`u32`).
 	=>
 	=>
@@ -976,7 +976,7 @@ const_bitflag! { EDS: u32: "user";
 	ROTATEDMODE 0x0000_0004
 }
 
-const_bitflag! { EIMES: u16: "user";
+const_bitflag! { EIMES: u16;
 	/// [`em::GetImeStatus`](crate::msg::em::GetImeStatus) and
 	/// [`em::SetImeStatus`](crate::msg::em::SetImeStatus) status (`u16`).
 	=>
@@ -986,7 +986,7 @@ const_bitflag! { EIMES: u16: "user";
 	COMPLETECOMPSTRKILLFOCUS 0x0004
 }
 
-const_wm! { EM: "user";
+const_wm! { EM;
 	/// Edit control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
 	/// (`u32`).
@@ -1034,7 +1034,7 @@ const_wm! { EM: "user";
 	ENABLEFEATURE 0x00da
 }
 
-const_cmd! { EN: "user";
+const_cmd! { EN;
 	/// Edit control `WM_COMMAND`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
 	/// (`u16`).
@@ -1054,7 +1054,7 @@ const_cmd! { EN: "user";
 	AFTER_PASTE 0x0801
 }
 
-const_bitflag! { ENDSESSION: u32: "user";
+const_bitflag! { ENDSESSION: u32;
 	/// [`wm::EndSession`](crate::msg::wm::EndSession) event (`u32`).
 	=>
 	=>
@@ -1064,7 +1064,7 @@ const_bitflag! { ENDSESSION: u32: "user";
 	LOGOFF 0x8000_0000
 }
 
-const_ordinary! { ENUM_SETTINGS: u32: "user";
+const_ordinary! { ENUM_SETTINGS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `mode_num`
 	/// (`u32`).
 	///
@@ -1075,7 +1075,7 @@ const_ordinary! { ENUM_SETTINGS: u32: "user";
 	REGISTRY -2i32 as u32
 }
 
-const_ws! { ES: u32: "user";
+const_ws! { ES: u32;
 	/// Edit control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
 	/// (`u32`).
@@ -1097,7 +1097,7 @@ const_ws! { ES: u32: "user";
 	NUMBER 0x2000
 }
 
-const_ordinary! { FAPPCOMMAND: u16: "user";
+const_ordinary! { FAPPCOMMAND: u16;
 	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) input event (`u16`).
 	=>
 	=>
@@ -1106,7 +1106,7 @@ const_ordinary! { FAPPCOMMAND: u16: "user";
 	OEM 0x1000
 }
 
-const_bitflag! { GA: u32: "user";
+const_bitflag! { GA: u32;
 	/// [`HWND::GetAncestor`](crate::prelude::user_Hwnd::GetAncestor) `flags`
 	/// (`u32`).
 	=>
@@ -1134,7 +1134,7 @@ const_bitflag! { GA: u32: "user";
 	ROOTOWNER 3
 }
 
-const_ordinary! { GCLP: i32: "user";
+const_ordinary! { GCLP: i32;
 	/// [`HWND::GetClassLongPtr`](crate::prelude::user_Hwnd::GetClassLongPtr)
 	/// `index` (`i32`).
 	///
@@ -1153,7 +1153,7 @@ const_ordinary! { GCLP: i32: "user";
 	HICONSM -34
 }
 
-const_bitflag! { GMDI: u32: "user";
+const_bitflag! { GMDI: u32;
 	/// [`HMENU::GetMenuDefaultItem`](crate::prelude::user_Hmenu::GetMenuDefaultItem)
 	/// `flags` (`u32`).
 	=>
@@ -1162,7 +1162,7 @@ const_bitflag! { GMDI: u32: "user";
 	GOINTOPOPUPS 0x0002
 }
 
-const_bitflag! { GUI: u32: "user";
+const_bitflag! { GUI: u32;
 	/// [`GUITHREADINFO`](crate::GUITHREADINFO) `flags` (`u32`).
 	=>
 	=>
@@ -1173,7 +1173,7 @@ const_bitflag! { GUI: u32: "user";
 	SYSTEMMENUMODE 0x0000_0008
 }
 
-const_ordinary! { GW: u32: "user";
+const_ordinary! { GW: u32;
 	/// [`HWND::GetWindow`](crate::prelude::user_Hwnd::GetWindow) `cmd` (`u32`).
 	=>
 	=>
@@ -1187,7 +1187,7 @@ const_ordinary! { GW: u32: "user";
 	MAX 6
 }
 
-const_ordinary! { GWL_C: i8: "user";
+const_ordinary! { GWL_C: i8;
 	/// [`wm::StyleChanged`](crate::msg::wm::StyleChanged) and
 	/// [`wm::StyleChanging`](crate::msg::wm::StyleChanging) change (`i8`).
 	///
@@ -1198,7 +1198,7 @@ const_ordinary! { GWL_C: i8: "user";
 	STYLE -16
 }
 
-const_ordinary! { GWLP: i32: "user";
+const_ordinary! { GWLP: i32;
 	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
 	/// and
 	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
@@ -1220,7 +1220,7 @@ const_ordinary! { GWLP: i32: "user";
 	DWLP_USER Self::DWLP_DLGPROC.0 + std::mem::size_of::<isize>() as i32
 }
 
-const_ordinary! { HELPINFO: i32: "user";
+const_ordinary! { HELPINFO: i32;
 	/// [`HELPINFO`](crate::HELPINFO) `iContextType` (`i32`).
 	=>
 	=>
@@ -1228,7 +1228,7 @@ const_ordinary! { HELPINFO: i32: "user";
 	MENUITEM 0x0002
 }
 
-const_ordinary! { HELPW: u32: "user";
+const_ordinary! { HELPW: u32;
 	/// [`HWND::WinHelp`](crate::prelude::user_Hwnd::WinHelp) `uCommand`
 	/// (`u32`).
 	=>
@@ -1256,7 +1256,7 @@ const_ordinary! { HELPW: u32: "user";
 	TCARD_OTHER_CALLER 0x0011
 }
 
-const_ordinary! { HT: u16: "user";
+const_ordinary! { HT: u16;
 	/// [`wm::NcHitTest`](crate::msg::wm::NcHitTest),
 	/// [`wm::SetCursor`](crate::msg::wm::SetCursor) `hit_test` (`u16`).
 	=>
@@ -1289,7 +1289,7 @@ const_ordinary! { HT: u16: "user";
 	ZOOM 9
 }
 
-const_ordinary! { HWND_PLACE: isize: "user";
+const_ordinary! { HWND_PLACE: isize;
 	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos)
 	/// `hWndInsertAfter` (`isize`).
 	=>
@@ -1300,7 +1300,7 @@ const_ordinary! { HWND_PLACE: isize: "user";
 	NOTOPMOST -2
 }
 
-const_ordinary! { ICON_SZ: u8: "user";
+const_ordinary! { ICON_SZ: u8;
 	/// [`wm::SetIcon`](crate::msg::wm::SetIcon) icon size (`u8`).
 	///
 	/// Originally has `ICON` prefix.
@@ -1310,7 +1310,7 @@ const_ordinary! { ICON_SZ: u8: "user";
 	BIG 1
 }
 
-const_ordinary! { IDC: u32: "user";
+const_ordinary! { IDC: u32;
 	/// [`HINSTANCE::LoadCursor`](crate::prelude::user_Hinstance::LoadCursor)
 	/// `lpCursorName` (`u32`).
 	=>
@@ -1333,7 +1333,7 @@ const_ordinary! { IDC: u32: "user";
 	PERSON 32672
 }
 
-const_ordinary! { IDI: u32: "user";
+const_ordinary! { IDI: u32;
 	/// [`HINSTANCE::LoadIcon`](crate::prelude::user_Hinstance::LoadIcon)
 	/// `lpIconName` (`u32`).
 	=>
@@ -1350,7 +1350,7 @@ const_ordinary! { IDI: u32: "user";
 	INFORMATION Self::ASTERISK.0
 }
 
-const_ordinary! { IMAGE_TYPE: u8: "user";
+const_ordinary! { IMAGE_TYPE: u8;
 	/// [`bm::GetImage`](crate::msg::bm::GetImage) `img_type`;
 	/// [`stm::GetImage`](crate::msg::stm::GetImage) `img_type` (`u8`).
 	///
@@ -1364,7 +1364,7 @@ const_ordinary! { IMAGE_TYPE: u8: "user";
 }
 
 #[cfg(target_pointer_width = "64")]
-const_bitflag! { ISMEX: u32: "user";
+const_bitflag! { ISMEX: u32;
 	/// [`InSendMessageEx`](crate::InSendMessageEx) return value (`u32`).
 	///
 	/// **Note:** This constant doesn't exist in x32.
@@ -1377,7 +1377,7 @@ const_bitflag! { ISMEX: u32: "user";
 	SEND 0x0000_0001
 }
 
-const_wm! { LB: "user";
+const_wm! { LB;
 	/// List box control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages)
 	/// (`u32`).
@@ -1426,7 +1426,7 @@ const_wm! { LB: "user";
 	GETLISTBOXINFO 0x01b2
 }
 
-const_cmd! { LBN: "user";
+const_cmd! { LBN;
 	/// List box control `WM_COMMAND`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications)
 	/// (`u16`).
@@ -1440,7 +1440,7 @@ const_cmd! { LBN: "user";
 	KILLFOCUS 5
 }
 
-const_ws! { LBS: u32: "user";
+const_ws! { LBS: u32;
 	/// List box control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-box-styles)
 	/// (`u32`).
@@ -1465,7 +1465,7 @@ const_ws! { LBS: u32: "user";
 	STANDARD Self::NOTIFY.0 | Self::SORT.0 | WS::VSCROLL.0 | WS::BORDER.0
 }
 
-const_bitflag! { LR: u32: "user";
+const_bitflag! { LR: u32;
 	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap),
 	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor)
 	/// and
@@ -1488,7 +1488,7 @@ const_bitflag! { LR: u32: "user";
 	SHARED 0x0000_8000
 }
 
-const_ordinary! { LSFW: u32: "user";
+const_ordinary! { LSFW: u32;
 	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `lock_code`
 	/// (`u32`).
 	=>
@@ -1497,7 +1497,7 @@ const_ordinary! { LSFW: u32: "user";
 	UNLOCK 2
 }
 
-const_bitflag! { MB: u32: "user";
+const_bitflag! { MB: u32;
 	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) `flags`
 	/// (`u32`).
 	=>
@@ -1631,7 +1631,7 @@ const_bitflag! { MB: u32: "user";
 	SERVICE_NOTIFICATION 0x0020_0000
 }
 
-const_bitflag! { MIIM: u32: "user";
+const_bitflag! { MIIM: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
 	=>
 	=>
@@ -1643,7 +1643,7 @@ const_bitflag! { MIIM: u32: "user";
 	APPLYTOSUBMENUS 0x8000_0000
 }
 
-const_bitflag! { MIM: u32: "user";
+const_bitflag! { MIM: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
 	=>
 	=>
@@ -1655,7 +1655,7 @@ const_bitflag! { MIM: u32: "user";
 	APPLYTOSUBMENUS 0x8000_0000
 }
 
-const_bitflag! { MK: u16: "user";
+const_bitflag! { MK: u16;
 	/// [`wm::LButtonDown`](crate::msg::wm::LButtonDown) (and similar) virtual
 	/// keys (`u16`).
 	=>
@@ -1670,7 +1670,7 @@ const_bitflag! { MK: u16: "user";
 	ALT 0x20 // from oleidl.h
 }
 
-const_bitflag! { MF: u32: "user";
+const_bitflag! { MF: u32;
 	/// [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu) `flags`,
 	/// [`HMENU::GetMenuState`](crate::prelude::user_Hmenu::GetMenuState) return
 	/// value,
@@ -1707,7 +1707,7 @@ const_bitflag! { MF: u32: "user";
 	MOUSESELECT 0x0000_8000
 }
 
-const_bitflag! { MFS: u32: "user";
+const_bitflag! { MFS: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
 	=>
 	=>
@@ -1721,7 +1721,7 @@ const_bitflag! { MFS: u32: "user";
 	DEFAULT MF::DEFAULT.0
 }
 
-const_bitflag! { MFT: u32: "user";
+const_bitflag! { MFT: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType` (`u32`).
 	=>
 	=>
@@ -1736,7 +1736,7 @@ const_bitflag! { MFT: u32: "user";
 	RIGHTJUSTIFY MF::RIGHTJUSTIFY.0
 }
 
-const_ordinary! { MND: u8: "user";
+const_ordinary! { MND: u8;
 	/// [`wm::MenuDrag`](crate::msg::wm::MenuDrag) return value (`u8`).
 	=>
 	=>
@@ -1744,7 +1744,7 @@ const_ordinary! { MND: u8: "user";
 	ENDMENU 1
 }
 
-const_bitflag! { MNS: u32: "user";
+const_bitflag! { MNS: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
 	=>
 	=>
@@ -1756,7 +1756,7 @@ const_bitflag! { MNS: u32: "user";
 	CHECKORBMP 0x0400_0000
 }
 
-const_ordinary! { MONITOR: u32: "user";
+const_ordinary! { MONITOR: u32;
 	/// [`HMONITOR::MonitorFromPoint`](crate::prelude::user_Hmonitor::MonitorFromPoint),
 	/// [`HMONITOR::MonitorFromRect`](crate::prelude::user_Hmonitor::MonitorFromRect),
 	/// [`HWND::MonitorFromWindow`](crate::prelude::user_Hwnd::MonitorFromWindow)
@@ -1768,7 +1768,7 @@ const_ordinary! { MONITOR: u32: "user";
 	DEFAULTTONEAREST 0x0000_0002
 }
 
-const_ordinary! { MONITORINFOF: u32: "user";
+const_ordinary! { MONITORINFOF: u32;
 	/// [`MONITORINFO`](crate::MONITORINFO) `dwFlags` (`u32`).
 	=>
 	=>
@@ -1777,7 +1777,7 @@ const_ordinary! { MONITORINFOF: u32: "user";
 	PRIMARY 0x0000_0001
 }
 
-const_ordinary! { MSGF: u8: "user";
+const_ordinary! { MSGF: u8;
 	/// [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason (`u8`).
 	=>
 	=>
@@ -1785,7 +1785,7 @@ const_ordinary! { MSGF: u8: "user";
 	MENU 2
 }
 
-const_ordinary! { OBJID: u32: "user";
+const_ordinary! { OBJID: u32;
 	/// [`HWND::GetMenuBarInfo`](crate::prelude::user_Hwnd::GetMenuBarInfo)
 	/// `idObject` (`i32`).
 	=>
@@ -1795,7 +1795,7 @@ const_ordinary! { OBJID: u32: "user";
 	SYSMENU 0xffff_ffff
 }
 
-const_ordinary! { OBM: u32: "user";
+const_ordinary! { OBM: u32;
 	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap)
 	/// OEM image identifier (`u32`).
 	=>
@@ -1837,7 +1837,7 @@ const_ordinary! { OBM: u32: "user";
 	OLD_RESTORE 32755
 }
 
-const_ordinary! { OCR: u32: "user";
+const_ordinary! { OCR: u32;
 	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor)
 	/// and
 	/// [`HCURSOR::SetSystemCursor`](crate::prelude::user_Hcursor::SetSystemCursor)
@@ -1861,7 +1861,7 @@ const_ordinary! { OCR: u32: "user";
 	HELP 32651
 }
 
-const_bitflag! { ODA: u32: "user";
+const_bitflag! { ODA: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemAction` (`u32`).
 	=>
 	=>
@@ -1870,7 +1870,7 @@ const_bitflag! { ODA: u32: "user";
 	FOCUS 0x0004
 }
 
-const_bitflag! { ODS: u32: "user";
+const_bitflag! { ODS: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemState` (`u32`).
 	=>
 	=>
@@ -1887,7 +1887,7 @@ const_bitflag! { ODS: u32: "user";
 	NOFOCUSRECT 0x0200
 }
 
-const_ordinary! { ODT: u32: "user";
+const_ordinary! { ODT: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `CtlType` (`u32`).
 	=>
 	=>
@@ -1900,7 +1900,7 @@ const_ordinary! { ODT: u32: "user";
 	LISTVIEW 102
 }
 
-const_ordinary! { ODT_C: u32: "user";
+const_ordinary! { ODT_C: u32;
 	/// [`COMPAREITEMSTRUCT`](crate::COMPAREITEMSTRUCT) and
 	/// [`DELETEITEMSTRUCT`](crate::DELETEITEMSTRUCT) `CtlType` (`u32`).
 	///
@@ -1911,7 +1911,7 @@ const_ordinary! { ODT_C: u32: "user";
 	COMBOBOX ODT::COMBOBOX.0
 }
 
-const_ordinary! { OIC: u32: "user";
+const_ordinary! { OIC: u32;
 	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::user_Hinstance::LoadImageIcon)
 	/// OEM icon identifier (`u32`).
 	=>
@@ -1928,7 +1928,7 @@ const_ordinary! { OIC: u32: "user";
 	SHIELD 32518
 }
 
-const_bitflag! { PM: u32: "user";
+const_bitflag! { PM: u32;
 	/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
 	=>
 	=>
@@ -1942,7 +1942,7 @@ const_bitflag! { PM: u32: "user";
 	QS_SENDMESSAGE QS::SENDMESSAGE.0 << 16
 }
 
-const_bitflag! { QS: u32: "user";
+const_bitflag! { QS: u32;
 	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags` (`u32`).
 	=>
 	=>
@@ -1963,7 +1963,7 @@ const_bitflag! { QS: u32: "user";
 	ALLINPUT Self::INPUT.0 | Self::POSTMESSAGE.0 | Self::TIMER.0 | Self::PAINT.0 | Self::HOTKEY.0 | Self::SENDMESSAGE.0
 }
 
-const_bitflag! { RDW: u32: "user";
+const_bitflag! { RDW: u32;
 	/// [`HWND::RedrawWindow`](crate::prelude::user_Hwnd::RedrawWindow) `flags`
 	/// (`u32`).
 	=>
@@ -1982,7 +1982,7 @@ const_bitflag! { RDW: u32: "user";
 	NOFRAME 0x0800
 }
 
-const_ordinary! { REGION: i32: "user";
+const_ordinary! { REGION: i32;
 	/// [`HWND::GetUpdateRgn`](crate::prelude::user_Hwnd::GetUpdateRgn),
 	/// [`HWND::GetWindowRgn`](crate::prelude::user_Hwnd::GetWindowRgn) and
 	/// [`HDC::SelectObjectRgn`](crate::prelude::gdi_Hdc::SelectObjectRgn)
@@ -1994,7 +1994,7 @@ const_ordinary! { REGION: i32: "user";
 	COMPLEX 3
 }
 
-const_ordinary! { SB_EM: u16: "user";
+const_ordinary! { SB_EM: u16;
 	/// [`em::Scroll`](crate::msg::em::Scroll) action.
 	///
 	/// Originally has `SB` prefix.
@@ -2006,7 +2006,7 @@ const_ordinary! { SB_EM: u16: "user";
 	PAGEDOWN 3
 }
 
-const_ordinary! { SB_REQ: u16: "user";
+const_ordinary! { SB_REQ: u16;
 	/// [`wm::HScroll`](crate::msg::wm::HScroll) and
 	/// [`wm::VScroll`](crate::msg::wm::VScroll) request (`u16`).
 	///
@@ -2030,7 +2030,7 @@ const_ordinary! { SB_REQ: u16: "user";
 	ENDSCROLL 8
 }
 
-const_ordinary! { SBB: i32: "user";
+const_ordinary! { SBB: i32;
 	/// [`HWND::GetScrollInfo`](crate::prelude::user_Hwnd::GetScrollInfo),
 	/// [`HWND::SetScrollInfo`](crate::prelude::user_Hwnd::SetScrollInfo) and
 	/// [`HWND::SetScrollRange`](crate::prelude::user_Hwnd::SetScrollRange)
@@ -2042,7 +2042,7 @@ const_ordinary! { SBB: i32: "user";
 	CTL 2
 }
 
-const_ordinary! { SC: u32: "user";
+const_ordinary! { SC: u32;
 	/// [`wm::SysCommand`](crate::msg::wm::SysCommand) type of system command
 	/// requested (`u32`).
 	=>
@@ -2068,7 +2068,7 @@ const_ordinary! { SC: u32: "user";
 	VSCROLL 0xf070
 }
 
-const_bitflag! { SIF: u32: "user";
+const_bitflag! { SIF: u32;
 	/// [`SCROLLINFO`](crate::SCROLLINFO) `fMask` (`u32`).
 	=>
 	=>
@@ -2080,7 +2080,7 @@ const_bitflag! { SIF: u32: "user";
 	ALL Self::RANGE.0 | Self::PAGE.0 | Self::POS.0 | Self::TRACKPOS.0
 }
 
-const_ordinary! { SIZE_R: u8: "user";
+const_ordinary! { SIZE_R: u8;
 	/// [`wm::Size`](crate::msg::wm::Size) request (`u8`).
 	=>
 	=>
@@ -2099,7 +2099,7 @@ const_ordinary! { SIZE_R: u8: "user";
 	MAXHIDE 4
 }
 
-const_ordinary! { SM: i32: "user";
+const_ordinary! { SM: i32;
 	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `index` (`i32`).
 	=>
 	=>
@@ -2218,7 +2218,7 @@ const_ordinary! { SM: i32: "user";
 	SYSTEMDOCKED 0x2004
 }
 
-const_bitflag! { SMTO: u32: "user";
+const_bitflag! { SMTO: u32;
 	/// [`SendMessageTimeout`](crate::prelude::user_Hwnd::SendMessageTimeout)
 	/// `flags` (`u32`).
 	=>
@@ -2230,7 +2230,7 @@ const_bitflag! { SMTO: u32: "user";
 	ERRORONEXIT 0x0020
 }
 
-const_ordinary! { SPI: u32: "user";
+const_ordinary! { SPI: u32;
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `action` (`u32`).
 	=>
 	=>
@@ -2377,7 +2377,7 @@ const_ordinary! { SPI: u32: "user";
 	SETDOCKMOVING 0x0091
 }
 
-const_bitflag! { SPIF: u32: "user";
+const_bitflag! { SPIF: u32;
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `win_ini` (`u32`).
 	=>
 	=>
@@ -2388,7 +2388,7 @@ const_bitflag! { SPIF: u32: "user";
 	SENDCHANGE Self::SENDWININICHANGE.0
 }
 
-const_ws! { SS: u32: "user";
+const_ws! { SS: u32;
 	/// Label control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/static-control-styles)
 	/// (`u32`).
@@ -2427,7 +2427,7 @@ const_ws! { SS: u32: "user";
 	WORDELLIPSIS 0x0000_c000
 }
 
-const_bitflag! { STATE_SYSTEM: u32: "user";
+const_bitflag! { STATE_SYSTEM: u32;
 	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and
 	/// `stateButton`, [`TITLEBARINFOEX`](crate::TITLEBARINFOEX) `rgstate`,
 	/// [`COMBOBOXINFO`](crate::COMBOBOXINFO) `stateButton` (`u32`).
@@ -2469,7 +2469,7 @@ const_bitflag! { STATE_SYSTEM: u32: "user";
 	VALID 0x3fff_ffff
 }
 
-const_cmd! { STN: "user";
+const_cmd! { STN;
 	/// Static control `WM_COMMAND`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
 	/// (`u16`).
@@ -2481,7 +2481,7 @@ const_cmd! { STN: "user";
 	DISABLE 3
 }
 
-const_bitflag! { SWP: u32: "user";
+const_bitflag! { SWP: u32;
 	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos) `flags`
 	/// (`u32`).
 	=>
@@ -2503,7 +2503,7 @@ const_bitflag! { SWP: u32: "user";
 	ASYNCWINDOWPOS 0x4000
 }
 
-const_ordinary! { SW_S: u8: "user";
+const_ordinary! { SW_S: u8;
 	/// [`wm::ShowWindow`](crate::msg::wm::ShowWindow) status (`u8`).
 	///
 	/// Originally has `SW` prefix.
@@ -2515,7 +2515,7 @@ const_ordinary! { SW_S: u8: "user";
 	OTHERUNZOOM 4
 }
 
-const_bitflag! { TME: u32: "user";
+const_bitflag! { TME: u32;
 	/// [`TrackMouseEvent`](crate::TrackMouseEvent) `dwFlags` (`u32`).
 	=>
 	=>
@@ -2526,7 +2526,7 @@ const_bitflag! { TME: u32: "user";
 	QUERY 0x4000_0000
 }
 
-const_bitflag! { TPM: u32: "user";
+const_bitflag! { TPM: u32;
 	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu) `flags`
 	/// (`u32`).
 	=>
@@ -2553,7 +2553,7 @@ const_bitflag! { TPM: u32: "user";
 	WORKAREA 0x10000
 }
 
-const_ordinary! { UOI: i32: "user";
+const_ordinary! { UOI: i32;
 	/// [`HPROCESS::SetUserObjectInformation`](crate::prelude::user_Hprocess::SetUserObjectInformation)
 	/// `index` (`i32`).
 	=>
@@ -2562,7 +2562,7 @@ const_ordinary! { UOI: i32: "user";
 	TIMERPROC_EXCEPTION_SUPPRESSION 7
 }
 
-const_ordinary! { VK: u16: "user";
+const_ordinary! { VK: u16;
 	/// [Virtual key codes](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
 	=>
@@ -2876,7 +2876,7 @@ const_ordinary! { VK: u16: "user";
 	OEM_CLEAR 0xfe
 }
 
-const_ordinary! { WA: u16: "user";
+const_ordinary! { WA: u16;
 	/// [`wm::Activate`](crate::msg::wm::Activate) activation state (`u16`).
 	=>
 	=>
@@ -2885,7 +2885,7 @@ const_ordinary! { WA: u16: "user";
 	CLICKACTIVE 2
 }
 
-const_ordinary! { WDA: u32: "user";
+const_ordinary! { WDA: u32;
 	/// [`HWND::GetWindowDisplayAffinity`](crate::prelude::user_Hwnd::GetWindowDisplayAffinity)
 	/// and
 	/// [`HWND::SetWindowDisplayAffinity`](crate::prelude::user_Hwnd::SetWindowDisplayAffinity)
@@ -2897,7 +2897,7 @@ const_ordinary! { WDA: u32: "user";
 	EXCLUDEFROMCAPTURE 0x0000_0011
 }
 
-const_ordinary! { WH: i32: "user";
+const_ordinary! { WH: i32;
 	/// [`HHOOK::CallNextHookEx`](crate::prelude::user_Hhook::CallNextHookEx)
 	/// `code` and
 	/// [`HHOOK::SetWindowsHookEx`](crate::prelude::user_Hhook::SetWindowsHookEx)
@@ -2921,7 +2921,7 @@ const_ordinary! { WH: i32: "user";
 	MOUSE_LL 14
 }
 
-const_bitflag! { WPF: u32: "user";
+const_bitflag! { WPF: u32;
 	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags` (`u32`).
 	=>
 	=>
@@ -2930,7 +2930,7 @@ const_bitflag! { WPF: u32: "user";
 	ASYNCWINDOWPLACEMENT 0x0004
 }
 
-const_ordinary! { WM: u32: "user";
+const_ordinary! { WM: u32;
 	/// Window message codes (`u32`).
 	///
 	/// **Note:** Control-specific messages have their own types, which are
@@ -3196,7 +3196,7 @@ const_ordinary! { WM: u32: "user";
 	USER 0x0400
 }
 
-const_ordinary! { WMPN: u16: "user";
+const_ordinary! { WMPN: u16;
 	/// [`wm::ParentNotify`](crate::msg::wm::ParentNotify) event (`u16`).
 	=>
 	=>
@@ -3209,7 +3209,7 @@ const_ordinary! { WMPN: u16: "user";
 	POINTERDOWN WM::POINTERDOWN.0 as u16
 }
 
-const_ordinary! { WMSZ: u8: "user";
+const_ordinary! { WMSZ: u8;
 	/// [`wm::Sizing`](crate::msg::wm::Sizing) window edge (`u8`).
 	=>
 	=>
@@ -3223,7 +3223,7 @@ const_ordinary! { WMSZ: u8: "user";
 	BOTTOMRIGHT 8
 }
 
-const_bitflag! { WS: u32: "user";
+const_bitflag! { WS: u32;
 	/// Window
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles)
 	/// (`u32`).
@@ -3334,7 +3334,7 @@ const_bitflag! { WS: u32: "user";
 	CHILDWINDOW Self::CHILD.0
 }
 
-const_bitflag! { WS_EX: u32: "user";
+const_bitflag! { WS_EX: u32;
 	/// Extended window
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
 	/// (`u32`).
@@ -3484,7 +3484,7 @@ const_bitflag! { WS_EX: u32: "user";
 	NOACTIVATE 0x0800_0000
 }
 
-const_bitflag! { WVR: u32: "user";
+const_bitflag! { WVR: u32;
 	/// [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize) return flags (`u32`).
 	=>
 	=>

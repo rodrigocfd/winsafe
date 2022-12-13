@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+
 pub(in crate::shell) mod ffi;
 pub(crate) mod privs;
 

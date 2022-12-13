@@ -9,7 +9,6 @@ use crate::ole::decl::GUID;
 
 /// [`AM_MEDIA_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct AM_MEDIA_TYPE<'a> {
 	pub majortype: co::MEDIATYPE,
@@ -52,7 +51,6 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 
 /// [`DVINFO`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-dvinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 #[derive(Default)]
 pub struct DVINFO {
@@ -67,7 +65,6 @@ pub struct DVINFO {
 
 /// [`MFVideoNormalizedRect`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ns-evr-mfvideonormalizedrect)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 #[derive(Default, Clone, Copy, PartialEq)]
 pub struct MFVideoNormalizedRect {
@@ -96,7 +93,6 @@ impl MFVideoNormalizedRect {
 
 /// [`PIN_INFO`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-pin_info)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct PIN_INFO {
 	pub pFilter: IBaseFilter,

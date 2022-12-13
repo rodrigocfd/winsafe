@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-const_no_debug_display! { CDERR: u32: "comdlg";
+const_no_debug_display! { CDERR: u32;
 	/// Common dialog box
 	/// [error codes](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror).
 	///

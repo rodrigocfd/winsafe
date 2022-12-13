@@ -9,7 +9,6 @@ use crate::user::messages::WndMsg;
 /// Used in functions like
 /// [`SendMessage`](crate::prelude::user_Hwnd::SendMessage) and
 /// [`DefWindowProc`](`crate::prelude::user_Hwnd::DefWindowProc`).
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub unsafe trait MsgSend {
 	/// The specific type of the value returned by the message.
 	type RetType;
@@ -31,7 +30,6 @@ pub unsafe trait MsgSend {
 ///
 /// Allows the conversion from and to the generic [`WndMsg`](crate::msg::WndMsg)
 /// parameters, and also defines the return type of the message.
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub unsafe trait MsgSendRecv: MsgSend {
 	/// Converts the generic [`WndMsg`](crate::msg::WndMsg) parameters struct
 	/// into the specific message struct.

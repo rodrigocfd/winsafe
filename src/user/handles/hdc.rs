@@ -7,7 +7,7 @@ use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::{HMONITOR, RECT};
 
-impl_handle! { HDC: "user";
+impl_handle! { HDC;
 	/// Handle to a
 	/// [device context](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdc).
 }
@@ -22,7 +22,6 @@ impl user_Hdc for HDC {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hdc: Handle {
 	/// [`EnumDisplayMonitors`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors)
 	/// method.

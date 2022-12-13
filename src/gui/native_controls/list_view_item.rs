@@ -14,7 +14,6 @@ use crate::user::decl::RECT;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone, Copy)]
 pub struct ListViewItem<'a> {
 	owner: &'a ListView,

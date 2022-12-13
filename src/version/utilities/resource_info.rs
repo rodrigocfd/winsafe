@@ -45,7 +45,6 @@ use crate::version::decl::{GetFileVersionInfo, VarQueryValue, VS_FIXEDFILEINFO};
 /// }
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 pub struct ResourceInfo {
 	res_buf: Vec<u8>,
 }
@@ -98,7 +97,6 @@ impl ResourceInfo {
 
 /// An language block of [`ResourceInfo`](crate::ResourceInfo), composed of a
 /// language ID and a code page.
-#[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 pub struct ResourceInfoBlock<'a> {
 	res_info: &'a ResourceInfo,
 	lang_id: LANGID,

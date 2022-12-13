@@ -19,8 +19,7 @@ pub struct IFileSaveDialogVT {
 	pub ApplyProperties: fn(ComPtr, ComPtr, ComPtr, HANDLE, ComPtr) -> HRES,
 }
 
-com_interface! { IFileSaveDialog: "shell";
-	"84bccd23-5fde-4cdb-aea4-af64b83d78ab";
+com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	/// [`IFileSaveDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
 	/// COM interface over [`IFileSaveDialogVT`](crate::vt::IFileSaveDialogVT).
 	///

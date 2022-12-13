@@ -8,7 +8,6 @@ use crate::user::privs::zero_as_err;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
@@ -36,7 +35,6 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetMinVisible {}
 
 unsafe impl MsgSend for GetMinVisible {
@@ -59,7 +57,6 @@ unsafe impl MsgSend for GetMinVisible {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCueBanner {
 	pub text: WString,
 }
@@ -87,7 +84,6 @@ unsafe impl MsgSend for SetCueBanner {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetMinVisible {
 	pub num_items: u32,
 }

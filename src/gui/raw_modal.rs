@@ -177,7 +177,6 @@ impl RawModal {
 
 /// Options to create a [`WindowModal`](crate::gui::WindowModal)
 /// programmatically with [`WindowModal::new`](crate::gui::WindowModal::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowModalOpts {
 	/// Window class name to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).

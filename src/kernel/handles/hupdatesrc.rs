@@ -9,7 +9,7 @@ use crate::kernel::decl::{
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
-impl_handle! { HUPDATERSRC: "kernel";
+impl_handle! { HUPDATERSRC;
 	/// Handle to an
 	/// [updateable resource](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew).
 	/// Originally just a `HANDLE`.
@@ -25,7 +25,6 @@ impl kernel_Hupdatersrc for HUPDATERSRC {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub trait kernel_Hupdatersrc: Handle {
 	/// [`BeginUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
 	/// static method.
@@ -72,7 +71,6 @@ pub trait kernel_Hupdatersrc: Handle {
 /// calls
 /// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 pub struct HupdatersrcGuard {
 	pub(crate) hupdatersrc: HUPDATERSRC,
 }

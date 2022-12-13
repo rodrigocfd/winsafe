@@ -6,7 +6,7 @@ use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{MONITORINFO, POINT, RECT};
 
-impl_handle! { HMONITOR: "user";
+impl_handle! { HMONITOR;
 	/// Handle to a
 	/// [display monitor](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmonitor).
 }
@@ -21,7 +21,6 @@ impl user_Hmonitor for HMONITOR {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "user")))]
 pub trait user_Hmonitor: Handle {
 	/// [`GetMonitorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow)
 	/// method.

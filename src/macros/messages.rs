@@ -3,14 +3,13 @@
 /// Struct for a message that has no parameters and no meaningful return value.
 macro_rules! pub_struct_msg_empty {
 	(
-		$name:ident : $wmconst:expr; $feature:literal;
+		$name:ident : $wmconst:expr;
 		$( #[$msdn:meta] )*
 	) => {
 		$( #[$msdn] )*
 		/// message, which has no parameters.
 		///
 		/// Return type: `()`.
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		#[derive(Clone, Copy)]
 		pub struct $name {}
 
@@ -36,11 +35,11 @@ macro_rules! pub_struct_msg_empty {
 /// return value.
 macro_rules! pub_struct_msg_empty_handleable {
 	(
-		$name:ident : $wmconst:expr; $feature:literal;
+		$name:ident : $wmconst:expr;
 		$( #[$msdn:meta] )*
 	) => {
 		pub_struct_msg_empty! {
-			$name : $wmconst; $feature;
+			$name : $wmconst;
 			$( #[$msdn] )*
 		}
 
@@ -55,14 +54,13 @@ macro_rules! pub_struct_msg_empty_handleable {
 /// Struct for WM_CHAR-based handleable messages.
 macro_rules! pub_struct_msg_char {
 	(
-		$name:ident : $wmconst:expr; $feature:literal;
+		$name:ident : $wmconst:expr;
 		$( #[$msdn:meta] )*
 	) => {
 		$( #[$msdn] )*
 		/// message parameters.
 		///
 		/// Return type: `()`.
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		pub struct $name {
 			pub char_code: u16,
 			pub repeat_count: u16,
@@ -118,14 +116,13 @@ macro_rules! pub_struct_msg_char {
 /// Struct for WM_CTLCOLOR* handleable messages.
 macro_rules! pub_struct_msg_ctlcolor {
 	(
-		$name:ident : $wmconst:expr; $feature:literal;
+		$name:ident : $wmconst:expr;
 		$( #[$msdn:meta] )*
 	) => {
 		$( #[$msdn] )*
 		/// message parameters.
 		///
 		/// Return type: `HBRUSH`.
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		pub struct $name {
 			pub hdc: crate::user::decl::HDC,
 			pub hwnd: crate::user::decl::HWND,
@@ -161,14 +158,13 @@ macro_rules! pub_struct_msg_ctlcolor {
 /// Struct for WM_*BUTTON* handleable messages and others.
 macro_rules! pub_struct_msg_button {
 	(
-		$name:ident : $wmconst:expr; $feature:literal;
+		$name:ident : $wmconst:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
 		/// message parameters.
 		///
 		/// Return type: `()`.
-		#[cfg_attr(docsrs, doc(cfg(feature = $feature)))]
 		pub struct $name {
 			pub vkey_code: co::VK,
 			pub coords: POINT,

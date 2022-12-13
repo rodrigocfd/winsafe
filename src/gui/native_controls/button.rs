@@ -31,7 +31,6 @@ struct Obj { // actual fields of Button
 /// Native
 /// [button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
 /// control.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 #[derive(Clone)]
 pub struct Button(Pin<Arc<Obj>>);
 
@@ -174,7 +173,6 @@ impl Button {
 
 /// Options to create a [`Button`](crate::gui::Button) programmatically with
 /// [`Button::new`](crate::gui::Button::new).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct ButtonOpts {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

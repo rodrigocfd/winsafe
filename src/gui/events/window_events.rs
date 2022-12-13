@@ -23,7 +23,6 @@ pub(in crate::gui) enum ProcessResult {
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub struct WindowEvents {
 	msgs: FuncStore< // ordinary WM messages
 		co::WM,
@@ -80,7 +79,6 @@ impl GuiEvents for WindowEvents {
 
 /// Exposes the basic window message methods of
 /// [`WindowEvents`](crate::gui::events::WindowEvents).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub trait GuiEvents {
 	/// Event to any [window message](crate::co::WM).
 	///

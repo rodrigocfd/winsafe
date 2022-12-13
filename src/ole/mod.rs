@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "ole")))]
+
 pub(in crate::ole) mod ffi;
 pub(crate) mod privs;
 

@@ -9,7 +9,6 @@ use crate::user::privs::zero_as_err;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
@@ -37,7 +36,6 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct HideBalloonTip {}
 
 unsafe impl MsgSend for HideBalloonTip {
@@ -60,7 +58,6 @@ unsafe impl MsgSend for HideBalloonTip {
 /// message parameters..
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetCueBanner {
 	pub show_even_with_focus: bool,
 	pub text: WString,
@@ -86,7 +83,6 @@ unsafe impl MsgSend for SetCueBanner {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ShowBalloonTip<'a, 'b, 'c> {
 	pub info: &'c EDITBALLOONTIP<'a, 'b>,
 }

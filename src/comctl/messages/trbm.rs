@@ -8,7 +8,6 @@ use crate::user::privs::zero_as_none;
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ClearSel {
 	pub redraw: bool,
 }
@@ -33,7 +32,6 @@ unsafe impl MsgSend for ClearSel {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ClearTics {
 	pub redraw: bool,
 }
@@ -58,7 +56,6 @@ unsafe impl MsgSend for ClearTics {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetBuddy {
 	pub left_above: bool,
 }
@@ -83,7 +80,6 @@ unsafe impl MsgSend for GetBuddy {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetChannelRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -108,7 +104,6 @@ unsafe impl<'a> MsgSend for GetChannelRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetLineSize {}
 
 unsafe impl MsgSend for GetLineSize {
@@ -131,7 +126,6 @@ unsafe impl MsgSend for GetLineSize {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetNumTics {}
 
 unsafe impl MsgSend for GetNumTics {
@@ -154,7 +148,6 @@ unsafe impl MsgSend for GetNumTics {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPageSize {}
 
 unsafe impl MsgSend for GetPageSize {
@@ -177,7 +170,6 @@ unsafe impl MsgSend for GetPageSize {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetPos {}
 
 unsafe impl MsgSend for GetPos {
@@ -200,7 +192,6 @@ unsafe impl MsgSend for GetPos {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRangeMax {}
 
 unsafe impl MsgSend for GetRangeMax {
@@ -223,7 +214,6 @@ unsafe impl MsgSend for GetRangeMax {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetRangeMin {}
 
 unsafe impl MsgSend for GetRangeMin {
@@ -246,7 +236,6 @@ unsafe impl MsgSend for GetRangeMin {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelEnd {}
 
 unsafe impl MsgSend for GetSelEnd {
@@ -269,7 +258,6 @@ unsafe impl MsgSend for GetSelEnd {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetSelStart {}
 
 unsafe impl MsgSend for GetSelStart {
@@ -292,7 +280,6 @@ unsafe impl MsgSend for GetSelStart {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetThumbLength {}
 
 unsafe impl MsgSend for GetThumbLength {
@@ -315,7 +302,6 @@ unsafe impl MsgSend for GetThumbLength {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetThumbRect<'a> {
 	pub rect: &'a mut RECT,
 }
@@ -340,7 +326,6 @@ unsafe impl<'a> MsgSend for GetThumbRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetTooltips {}
 
 unsafe impl MsgSend for GetTooltips {
@@ -363,7 +348,6 @@ unsafe impl MsgSend for GetTooltips {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetBuddy {
 	pub left_above: bool,
 	pub hwnd_buddy: HWND,
@@ -389,7 +373,6 @@ unsafe impl MsgSend for SetBuddy {
 /// message parameters.
 ///
 /// Return type: `u32`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetPageSize {
 	pub page_size: u32,
 }
@@ -414,7 +397,6 @@ unsafe impl MsgSend for SetPageSize {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetPos {
 	pub redraw: bool,
 	pub pos: u32,
@@ -440,7 +422,6 @@ unsafe impl MsgSend for SetPos {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetPosNotify {
 	pub pos: u32,
 }
@@ -465,7 +446,6 @@ unsafe impl MsgSend for SetPosNotify {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetRangeMax {
 	pub redraw: bool,
 	pub max: u32,
@@ -491,7 +471,6 @@ unsafe impl MsgSend for SetRangeMax {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetRangeMin {
 	pub redraw: bool,
 	pub min: u32,
@@ -517,7 +496,6 @@ unsafe impl MsgSend for SetRangeMin {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSelEnd {
 	pub redraw: bool,
 	pub end: u32,
@@ -543,7 +521,6 @@ unsafe impl MsgSend for SetSelEnd {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetSelStart {
 	pub redraw: bool,
 	pub start: u32,
@@ -569,7 +546,6 @@ unsafe impl MsgSend for SetSelStart {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetThumbLength {
 	pub length: u32,
 }
@@ -594,7 +570,6 @@ unsafe impl MsgSend for SetThumbLength {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTicFreq {
 	pub freq: u32,
 }
@@ -619,7 +594,6 @@ unsafe impl MsgSend for SetTicFreq {
 /// message parameters.
 ///
 /// Return type: `()`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetTooltips {
 	pub hwnd_tooltip: HWND,
 }

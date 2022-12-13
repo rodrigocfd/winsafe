@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "comdlg")))]
+
 pub(in crate::comdlg) mod ffi;
 
 mod aliases;

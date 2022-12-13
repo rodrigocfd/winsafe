@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, doc(cfg(feature = "user")))]
+
 pub(in crate::user) mod ffi;
 pub(crate) mod privs;
 

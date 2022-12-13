@@ -2,7 +2,7 @@
 
 use crate::co::DROPEFFECT;
 
-const_ordinary! { FO: u32: "shell";
+const_ordinary! { FO: u32;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).
 	=>
 	=>
@@ -12,7 +12,7 @@ const_ordinary! { FO: u32: "shell";
 	RENAME 0x0004
 }
 
-const_bitflag! { FOF: u16: "shell";
+const_bitflag! { FOF: u16;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `fFlags` (`u16`).
 	=>
 	=>
@@ -35,7 +35,7 @@ const_bitflag! { FOF: u16: "shell";
 	NO_UI Self::SILENT.0 | Self::NOCONFIRMATION.0 | Self::NOERRORUI.0 | Self::NOCONFIRMMKDIR.0
 }
 
-const_bitflag! { FOS: u32: "shell";
+const_bitflag! { FOS: u32;
 	/// [`_FILEOPENDIALOGOPTIONS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
 	=>
@@ -137,7 +137,7 @@ const_bitflag! { FOS: u32: "shell";
 	SUPPORTSTREAMABLEITEMS 0x8000_0000
 }
 
-const_ordinary! { FDAP: u32: "shell";
+const_ordinary! { FDAP: u32;
 	/// [`FDAP`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fdap)
 	/// enumeration (`u32`).
 	=>
@@ -146,7 +146,7 @@ const_ordinary! { FDAP: u32: "shell";
 	TOP 1
 }
 
-const_bitflag! { KF: u32: "shell";
+const_bitflag! { KF: u32;
 	/// [`KNOWN_FOLDER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-known_folder_flag)
 	/// enumeration (`u32`).
 	=>
@@ -169,7 +169,7 @@ const_bitflag! { KF: u32: "shell";
 	ALIAS_ONLY 0x8000_0000
 }
 
-const_bitflag! { NIF: u32: "shell";
+const_bitflag! { NIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `uFlags` (`u32`).
 	=>
 	=>
@@ -183,7 +183,7 @@ const_bitflag! { NIF: u32: "shell";
 	SHOWTIP 0x0000_0080
 }
 
-const_bitflag! { NIIF: u32: "shell";
+const_bitflag! { NIIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwInfoFlags` (`u32`).
 	=>
 	=>
@@ -197,7 +197,7 @@ const_bitflag! { NIIF: u32: "shell";
 	RESPECT_QUIET_TIME 0x0000_0080
 }
 
-const_ordinary! { NIM: u32: "shell";
+const_ordinary! { NIM: u32;
 	/// [`Shell_NotifyIcon`](crate::Shell_NotifyIcon) `message` (`u32`).
 	=>
 	=>
@@ -208,7 +208,7 @@ const_ordinary! { NIM: u32: "shell";
 	SETVERSION 0x0000_0004
 }
 
-const_bitflag! { NIS: u32: "shell";
+const_bitflag! { NIS: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwState` and `dwStateFlags`
 	/// (`u32`).
 	=>
@@ -217,7 +217,7 @@ const_bitflag! { NIS: u32: "shell";
 	SHAREDICON 0x0000_0002
 }
 
-const_ordinary! { SE_ERR: u32: "shell";
+const_ordinary! { SE_ERR: u32;
 	/// [`HWND::ShellExecute`](crate::prelude::shell_Hwnd::ShellExecute) return
 	/// value (`u32`).
 	=>
@@ -238,7 +238,7 @@ const_ordinary! { SE_ERR: u32: "shell";
 	NOASSOC 31
 }
 
-const_bitflag! { SFGAO: u32: "shell";
+const_bitflag! { SFGAO: u32;
 	/// [`SFGAO`](https://learn.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
 	=>
@@ -279,7 +279,7 @@ const_bitflag! { SFGAO: u32: "shell";
 	PKEYSFGAOMASK 0x8104_4000
 }
 
-const_ordinary! { SHARD: u32: "shell";
+const_ordinary! { SHARD: u32;
 	/// [`SHARD`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-shard)
 	/// enumeration (`u32`).
 	=>
@@ -294,7 +294,7 @@ const_ordinary! { SHARD: u32: "shell";
 	SHELLITEM 0x0000_0008
 }
 
-const_bitflag! { SHGFI: u32: "shell";
+const_bitflag! { SHGFI: u32;
 	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `flags` (`u32`).
 	=>
 	=>
@@ -318,7 +318,7 @@ const_bitflag! { SHGFI: u32: "shell";
 	OVERLAYINDEX 0x0000_0040
 }
 
-const_bitflag! { SHGSI: u32: "shell";
+const_bitflag! { SHGSI: u32;
 	/// [`SHGetStockIconInfo`](crate::SHGetStockIconInfo) `flags` (`u32`).
 	=>
 	=>
@@ -334,7 +334,7 @@ const_bitflag! { SHGSI: u32: "shell";
 	SHELLICONSIZE SHGFI::SHELLICONSIZE.0
 }
 
-const_ordinary! { SIGDN: u32: "shell";
+const_ordinary! { SIGDN: u32;
 	/// [`SIGDN`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
 	/// enumeration (`u32`).
 	=>
@@ -378,7 +378,7 @@ const_ordinary! { SIGDN: u32: "shell";
 	PARENTRELATIVEFORUI 0x8009_4001
 }
 
-const_ordinary! { SIID: u32: "shell";
+const_ordinary! { SIID: u32;
 	/// [`SHSTOCKICONID`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ne-shellapi-shstockiconid)
 	/// enumeration, [`SHGetStockIconInfo`](crate::SHGetStockIconInfo) `siid`
 	/// (`u32`).
@@ -480,7 +480,7 @@ const_ordinary! { SIID: u32: "shell";
 	MAX_ICONS 181
 }
 
-const_bitflag! { SLGP: u32: "shell";
+const_bitflag! { SLGP: u32;
 	/// [`IShellLink::GetPath`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
 	=>
@@ -491,7 +491,7 @@ const_bitflag! { SLGP: u32: "shell";
 	RELATIVEPRIORITY 0x8
 }
 
-const_bitflag! { SLR: u32: "shell";
+const_bitflag! { SLR: u32;
 	/// [`IShellLink::Resolve`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
 	=>
@@ -513,7 +513,7 @@ const_bitflag! { SLR: u32: "shell";
 	NO_OBJECT_ID 0x2000
 }
 
-const_ordinary! { STPFLAG: u32: "shell";
+const_ordinary! { STPFLAG: u32;
 	/// [`STPFLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
 	/// enumeration (`u32`).
 	=>
@@ -525,7 +525,7 @@ const_ordinary! { STPFLAG: u32: "shell";
 	USEAPPPEEKWHENACTIVE 0x8
 }
 
-const_ordinary! { TBPF: u32: "shell";
+const_ordinary! { TBPF: u32;
 	/// [`ITaskbarList3::SetProgressState`](crate::prelude::shell_ITaskbarList3::SetProgressState)
 	/// `tbpFlags` (`u32`).
 	=>

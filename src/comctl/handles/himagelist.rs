@@ -8,7 +8,7 @@ use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HBITMAP, HICON, POINT, SIZE};
 
-impl_handle! { HIMAGELIST: "comctl";
+impl_handle! { HIMAGELIST;
 	/// Handle to an
 	/// [image list](https://learn.microsoft.com/en-us/windows/win32/controls/image-lists).
 }
@@ -23,7 +23,6 @@ impl comctl_Himagelist for HIMAGELIST {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_Add`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
 	/// method.

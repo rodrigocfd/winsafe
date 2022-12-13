@@ -2,7 +2,7 @@
 
 use crate::co::CLSID;
 
-const_guid_values! { CLSID: "dshow";
+const_guid_values! { CLSID;
 	AviDest "e2510970-f137-11ce-8b67-00aa00a3f1a6"
 	EnhancedVideoRenderer "fa10746c-9b63-4b6c-bc49-fc300ea5f256"
 	FileWriter "8596e5f0-0da5-11d0-bd21-00a0c911ce86"
@@ -10,7 +10,7 @@ const_guid_values! { CLSID: "dshow";
 	NullRenderer "c1f400a4-3f08-11d3-9f0b-006008039e37"
 }
 
-const_guid! { DSHOW_SERVICE: "dshow";
+const_guid! { DSHOW_SERVICE;
 	/// [`IMFGetService::GetService`](`crate::prelude::dshow_IMFGetService::GetService`)
 	/// `service_guid` (`GUID`).
 	=>
@@ -21,7 +21,7 @@ const_guid! { DSHOW_SERVICE: "dshow";
 	VIDEO_ZOOM_RECT "7aaa1638-1b7f-4c93-bd89-5b9c9fb6fcf0"
 }
 
-const_guid! { MEDIA_FORMAT: "dshow";
+const_guid! { MEDIA_FORMAT;
 	/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `formattype`, originally with
 	/// `FORMAT` prefix (`GUID`).
 	=>
@@ -35,7 +35,7 @@ const_guid! { MEDIA_FORMAT: "dshow";
 	WaveFormatEx "05589f81-c356-11ce-bf01-00aa0055595a"
 }
 
-const_guid! { MEDIATYPE: "dshow";
+const_guid! { MEDIATYPE;
 	/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `majortype` (`GUID`).
 	=>
 	AnalogAudio "0482dee1-7817-11cf-8a03-00aa006ecb65"
@@ -55,7 +55,7 @@ const_guid! { MEDIATYPE: "dshow";
 	Video "73646976-0000-0010-8000-00aa00389b71"
 }
 
-const_guid! { TIME_FORMAT: "dshow";
+const_guid! { TIME_FORMAT;
 	/// [`IMediaSeeking::SetTimeFormat`](crate::prelude::dshow_IMediaSeeking::SetTimeFormat)
 	/// `format` (`GUID`).
 	=>

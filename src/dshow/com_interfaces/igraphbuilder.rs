@@ -9,7 +9,6 @@ use crate::prelude::{dshow_IFilterGraph, ole_IUnknown};
 use crate::vt::IFilterGraphVT;
 
 /// [`IGraphBuilder`](crate::IGraphBuilder) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IGraphBuilderVT {
 	pub IFilterGraphVT: IFilterGraphVT,
@@ -22,8 +21,7 @@ pub struct IGraphBuilderVT {
 	pub ShouldOperationContinue: fn(ComPtr) -> HRES,
 }
 
-com_interface! { IGraphBuilder: "dshow";
-	"56a868a9-0ad4-11ce-b03a-0020af0ba770";
+com_interface! { IGraphBuilder: "56a868a9-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IGraphBuilder`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-igraphbuilder)
 	/// COM interface over [`IGraphBuilderVT`](crate::vt::IGraphBuilderVT).
 	///
@@ -57,7 +55,6 @@ impl dshow_IGraphBuilder for IGraphBuilder {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// [`IGraphBuilder::Abort`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
 	/// method.

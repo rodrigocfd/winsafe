@@ -7,14 +7,12 @@ use crate::kernel::privs::bool_to_sysresult;
 
 /// [`InitCommonControls`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub fn InitCommonControls() {
 	unsafe { comctl::ffi::InitCommonControls() }
 }
 
 /// [`InitCommonControlsEx`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrolsex)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe { comctl::ffi::InitCommonControlsEx(icce as *const _ as  _) }
@@ -23,7 +21,6 @@ pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
 
 /// [`InitMUILanguage`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initmuilanguage)
 /// function.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub fn InitMUILanguage(ui_lang: LANGID) {
 	unsafe { comctl::ffi::InitMUILanguage(ui_lang.0) }
 }

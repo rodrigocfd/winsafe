@@ -7,7 +7,6 @@ use crate::kernel::decl::{
 
 /// [`VS_FIXEDFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "version")))]
 #[repr(C)]
 pub struct VS_FIXEDFILEINFO {
 	dwSignature: u32,

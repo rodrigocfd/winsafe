@@ -10,7 +10,6 @@ use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
 
 /// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 #[derive(Default)]
 pub struct ACL {
@@ -23,7 +22,6 @@ pub struct ACL {
 
 /// [`BY_HANDLE_FILE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 #[derive(Default)]
 pub struct BY_HANDLE_FILE_INFORMATION {
@@ -41,7 +39,6 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 
 /// [`FILETIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 #[derive(Default, Clone, Eq, PartialEq)]
 pub struct FILETIME {
@@ -51,7 +48,6 @@ pub struct FILETIME {
 
 /// [`HEAPLIST32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-heaplist32)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct HEAPLIST32 {
 	dwSize: usize,
@@ -64,7 +60,6 @@ impl_default_with_size!(HEAPLIST32, dwSize);
 
 /// [`LANGID`](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers)
 /// language identifier.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct LANGID(pub(crate) u16);
@@ -113,7 +108,6 @@ impl LANGID {
 
 /// [`LCID`](https://learn.microsoft.com/en-us/windows/win32/intl/locale-identifiers)
 /// locale identifier.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(transparent)]
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct LCID(pub(crate) u32);
@@ -156,7 +150,6 @@ impl LCID {
 
 /// [`MODULEENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct MODULEENTRY32 {
 	dwSize: u32,
@@ -180,7 +173,6 @@ impl MODULEENTRY32 {
 
 /// [`MEMORYSTATUSEX`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-memorystatusex)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct MEMORYSTATUSEX {
 	dwLength: u32,
@@ -198,7 +190,6 @@ impl_default_with_size!(MEMORYSTATUSEX, dwLength);
 
 /// [`OSVERSIONINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct OSVERSIONINFOEX {
 	dwOSVersionInfoSize: u32,
@@ -222,7 +213,6 @@ impl OSVERSIONINFOEX {
 
 /// [`OVERLAPPED`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct OVERLAPPED {
 	pub Internal: usize,
@@ -235,7 +225,6 @@ impl_default!(OVERLAPPED);
 
 /// [`PROCESS_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct PROCESS_INFORMATION {
 	pub hProcess: HPROCESS,
@@ -248,7 +237,6 @@ impl_default!(PROCESS_INFORMATION);
 
 /// [`SECURITY_DESCRIPTOR`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct SECURITY_DESCRIPTOR {
 	pub Revision: u8,
@@ -262,7 +250,6 @@ pub struct SECURITY_DESCRIPTOR {
 
 /// [`PROCESSENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct PROCESSENTRY32 {
 	dwSize: u32,
@@ -285,7 +272,6 @@ impl PROCESSENTRY32 {
 
 /// [`SECURITY_ATTRIBUTES`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct SECURITY_ATTRIBUTES<'a> {
 	nLength: u32,
@@ -304,7 +290,6 @@ impl<'a> SECURITY_ATTRIBUTES<'a> {
 
 /// [`STARTUPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct STARTUPINFO<'a, 'b> {
 	cb: u32,
@@ -350,7 +335,6 @@ impl<'a, 'b> STARTUPINFO<'a, 'b> {
 
 /// [`SYSTEM_INFO`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/ns-sysinfoapi-system_info)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct SYSTEM_INFO {
 	pub wProcessorArchitecture: co::PROCESSOR_ARCHITECTURE,
@@ -370,7 +354,6 @@ impl_default!(SYSTEM_INFO);
 
 /// [`SYSTEMTIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 #[derive(Default, Clone, Eq, PartialEq)]
 pub struct SYSTEMTIME {
@@ -386,7 +369,6 @@ pub struct SYSTEMTIME {
 
 /// [`THREADENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-threadentry32)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct THREADENTRY32 {
 	dwSize: u32,
@@ -402,7 +384,6 @@ impl_default_with_size!(THREADENTRY32, dwSize);
 
 /// [`TIME_ZONE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 #[derive(Default)]
 pub struct TIME_ZONE_INFORMATION {
@@ -422,7 +403,6 @@ impl TIME_ZONE_INFORMATION {
 
 /// [`WIN32_FIND_DATA`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-win32_find_dataw)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 #[repr(C)]
 pub struct WIN32_FIND_DATA {
 	pub dwFileAttributes: co::FILE_ATTRIBUTE,

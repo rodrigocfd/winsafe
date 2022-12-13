@@ -10,7 +10,6 @@ use crate::user::decl::{COLORREF, HWND, RECT, SIZE};
 use crate::vt::IUnknownVT;
 
 /// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 #[repr(C)]
 pub struct IMFVideoDisplayControlVT {
 	pub IUnknownVT: IUnknownVT,
@@ -32,8 +31,7 @@ pub struct IMFVideoDisplayControlVT {
 	pub GetFullscreen: fn(ComPtr, *mut BOOL) -> HRES,
 }
 
-com_interface! { IMFVideoDisplayControl: "dshow";
-	"a490b1e4-ab84-4d31-a1b2-181e03b1077a";
+com_interface! { IMFVideoDisplayControl: "a490b1e4-ab84-4d31-a1b2-181e03b1077a";
 	/// [`IMFVideoDisplayControl`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
 	/// COM interface over
 	/// [`IMFVideoDisplayControlVT`](crate::vt::IMFVideoDisplayControlVT).
@@ -69,7 +67,6 @@ impl dshow_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 	/// method.

@@ -16,7 +16,6 @@ use crate::user::decl::{
 /// [`WindowMainOpts`](crate::gui::WindowMainOpts),
 /// [`WindowModalOpts`](crate::gui::WindowModalOpts) or
 /// [`WindowControlOpts`](crate::gui::WindowControlOpts).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub enum Brush {
 	/// A solid [system color](co::COLOR).
 	Color(co::COLOR),
@@ -38,7 +37,6 @@ impl Brush {
 /// [`WindowMainOpts`](crate::gui::WindowMainOpts),
 /// [`WindowModalOpts`](crate::gui::WindowModalOpts) or
 /// [`WindowControlOpts`](crate::gui::WindowControlOpts).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub enum Cursor {
 	/// A cursor handle, previously loaded by you.
 	Handle(HCURSOR),
@@ -66,7 +64,6 @@ impl Cursor {
 /// [`WindowMainOpts`](crate::gui::WindowMainOpts),
 /// [`WindowModalOpts`](crate::gui::WindowModalOpts) or
 /// [`WindowControlOpts`](crate::gui::WindowControlOpts).
-#[cfg_attr(docsrs, doc(cfg(feature = "gui")))]
 pub enum Icon {
 	/// An icon handle, previously loaded by you.
 	Handle(HICON),

@@ -7,7 +7,6 @@ use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
 /// [`ISequentialStream`](crate::ISequentialStream) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct ISequentialStreamVT {
 	pub IUnknownVT: IUnknownVT,
@@ -15,8 +14,7 @@ pub struct ISequentialStreamVT {
 	pub Write: fn(ComPtr, PCVOID, u32, *mut u32) -> HRES,
 }
 
-com_interface! { ISequentialStream: "ole";
-	"0c733a30-2a1c-11ce-ade5-00aa0044773d";
+com_interface! { ISequentialStream: "0c733a30-2a1c-11ce-ade5-00aa0044773d";
 	/// [`ISequentialStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-isequentialstream)
 	/// COM interface over [`ISequentialStreamVT`](crate::vt::ISequentialStreamVT).
 	///
@@ -35,7 +33,6 @@ impl ole_ISequentialStream for ISequentialStream {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 pub trait ole_ISequentialStream: ole_IUnknown {
 	/// [`ISequentialStream::Read`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-read)
 	/// method.

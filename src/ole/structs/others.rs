@@ -6,7 +6,6 @@ use crate::co;
 
 /// [`FORMATETC`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-formatetc)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 pub struct FORMATETC<'a> {
 	cfFormat: u16,
@@ -37,7 +36,6 @@ impl<'a> FORMATETC<'a> {
 
 /// [`DVTARGETDEVICE`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-dvtargetdevice)
 /// struct.
-#[cfg_attr(docsrs, doc(cfg(feature = "ole")))]
 #[repr(C)]
 #[derive(Default)]
 pub struct DVTARGETDEVICE {

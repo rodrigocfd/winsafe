@@ -10,7 +10,6 @@ use crate::user::privs::zero_as_err;
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HICON>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetIcon {}
 
 unsafe impl MsgSend for GetIcon {
@@ -33,7 +32,6 @@ unsafe impl MsgSend for GetIcon {
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIconCurMeta>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
@@ -64,7 +62,6 @@ unsafe impl MsgSend for GetImage {
 /// message parameters.
 ///
 /// Return type: `SysResult<HICON>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetIcon {
 	pub icon: HICON,
 }
@@ -89,7 +86,6 @@ unsafe impl MsgSend for SetIcon {
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIconCurMeta>`.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct SetImage {
 	pub image: BmpIconCurMeta,
 }
