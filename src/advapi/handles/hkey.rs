@@ -401,6 +401,9 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegQueryMultipleValues`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regquerymultiplevaluesw)
 	/// method.
 	///
+	/// This method is a multi-value version of
+	/// [`HKEY::RegQueryValueEx`](crate::prelude::advapi_Hkey::RegQueryValueEx).
+	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID).
 	///
@@ -520,8 +523,8 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegQueryValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
 	/// method.
 	///
-	/// The data type will be automatically queried with a first call to
-	/// `RegQueryValueEx`.
+	/// This method is a single-value version of
+	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::advapi_Hkey::RegQueryMultipleValues).
 	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
