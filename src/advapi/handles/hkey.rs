@@ -4,6 +4,7 @@ use std::ops::Deref;
 
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
+use crate::advapi::privs::VALENT;
 use crate::kernel::decl::{FILETIME, SysResult, WString};
 use crate::prelude::Handle;
 
@@ -196,9 +197,6 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
 	/// method.
-	///
-	/// The data type will be automatically queried with a first call to
-	/// `RegGetValue`.
 	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
@@ -398,6 +396,125 @@ pub trait advapi_Hkey: Handle {
 				err => return Err(err),
 			}
 		}
+	}
+
+	/// [`RegQueryMultipleValues`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regquerymultiplevaluesw)
+	/// method.
+	///
+	/// Note that this method validates some race conditions, returning
+	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID).
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HKEY, RegistryValue};
+	///
+	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	///     "Control Panel\\Desktop",
+	///     co::REG_OPTION::default(),
+	///     co::KEY::READ,
+	/// )?;
+	///
+	/// for val in hkey.RegQueryMultipleValues(&["DpiScalingVer", "WallPaper"])? {
+	///     match val {
+	///         RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///         RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///         RegistryValue::Sz(str) => println!("String: {}", str),
+	///         RegistryValue::MultiSz(strs) => {
+	///            println!("Multi string:");
+	///            for s in strs.iter() {
+	///                print!("[{}] ", s);
+	///            }
+	///            println!("");
+	///         },
+	///         RegistryValue::Binary(bin) => {
+	///             println!("Binary:");
+	///             for b in bin.iter() {
+	///                 print!("{:02x} ", b);
+	///             }
+	///             println!("");
+	///         },
+	///         RegistryValue::None => println!("No value"),
+	///     }
+	/// }
+	///
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn RegQueryMultipleValues(&self,
+		value_names: &[impl AsRef<str>]) -> SysResult<Vec<RegistryValue>>
+	{
+		let mut valents1 = vec![VALENT::default(); value_names.len()];
+		let value_names_w = value_names.iter()
+			.zip(valents1.iter_mut())
+			.map(|(value_name, valent)| {
+				let value_name_w = WString::from_str(value_name.as_ref());
+				valent.ve_valuename = unsafe { value_name_w.as_ptr() as _ };
+				value_name_w
+			})
+			.collect::<Vec<_>>();
+		let mut data_len1 = u32::default();
+
+		// Query data types and lenghts.
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegQueryMultipleValuesW(
+					self.as_ptr(),
+					valents1.as_mut_ptr() as _,
+					value_names.len() as _,
+					std::ptr::null_mut(),
+					&mut data_len1,
+				)
+			} as _,
+		) {
+			co::ERROR::MORE_DATA => {},
+			err => return Err(err),
+		}
+
+		// Alloc the receiving block.
+		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
+
+		let mut valents2 = value_names_w.iter()
+			.map(|value_name_w| {
+				let mut valent = VALENT::default();
+				valent.ve_valuename = unsafe { value_name_w.as_ptr() as _ };
+				valent
+			})
+			.collect::<Vec<_>>();
+		let mut data_len2 = data_len1;
+
+		// Retrieve the values content.
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegQueryMultipleValuesW(
+					self.as_ptr(),
+					valents2.as_mut_ptr() as _,
+					value_names.len() as _,
+					buf.as_mut_ptr() as _,
+					&mut data_len2,
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => {},
+			err => return Err(err),
+		}
+
+		if data_len1 != data_len2 {
+			// Race condition: someone modified the data content in between our calls.
+			return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
+		}
+
+		Ok(
+			valents2.iter() // first VALENT array is not filled with len/type values
+				.map(|v2| unsafe {
+					RegistryValue::from_raw(
+						v2.buf_projection(&buf).to_vec(),
+						v2.ve_type,
+					)
+				})
+				.collect::<Vec<_>>()
+		)
 	}
 
 	/// [`RegQueryValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
