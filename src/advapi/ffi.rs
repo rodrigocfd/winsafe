@@ -5,6 +5,8 @@ extern_sys! { "advapi32";
 	EncryptFileW(PCSTR) -> BOOL
 	EncryptionDisable(PCSTR, BOOL) -> BOOL
 	GetUserNameW(PSTR, *mut u32) -> BOOL
+	InitializeSecurityDescriptor(PVOID, u32) -> BOOL
+	IsValidSecurityDescriptor(PCVOID) -> BOOL
 	RegCloseKey(HANDLE) -> i32
 	RegDeleteKeyExW(HANDLE, PCSTR, u32, u32) -> i32
 	RegDeleteKeyW(HANDLE, PCSTR) -> i32

@@ -237,15 +237,18 @@ impl_default!(PROCESS_INFORMATION);
 
 /// [`SECURITY_DESCRIPTOR`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
 /// struct.
+///
+/// This struct is created by
+/// [`InitializeSecurityDescriptor`](crate::InitializeSecurityDescriptor).
 #[repr(C)]
 pub struct SECURITY_DESCRIPTOR {
 	pub Revision: u8,
-   pub Sbz1: u8,
-   pub Control: u16,
-   pub Owner: *mut std::ffi::c_void,
-   pub Group: *mut std::ffi::c_void,
-   pub Sacl: *mut ACL,
-   pub Dacl: *mut ACL,
+	pub Sbz1: u8,
+	pub Control: co::SE,
+	pub Owner: *mut std::ffi::c_void,
+	pub Group: *mut std::ffi::c_void,
+	pub Sacl: *mut ACL,
+	pub Dacl: *mut ACL,
 }
 
 /// [`PROCESSENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)

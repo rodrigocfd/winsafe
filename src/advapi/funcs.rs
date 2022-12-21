@@ -1,8 +1,10 @@
 #![allow(non_snake_case)]
 
 use crate::advapi;
-use crate::advapi::privs::UNLEN;
-use crate::kernel::decl::{GetLastError, SysResult, WString};
+use crate::advapi::privs::{SECURITY_DESCRIPTOR_REVISION, UNLEN};
+use crate::kernel::decl::{
+	GetLastError, SECURITY_DESCRIPTOR, SysResult, WString,
+};
 use crate::kernel::privs::bool_to_sysresult;
 
 /// [`DecryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
@@ -49,4 +51,36 @@ pub fn GetUserName() -> SysResult<String> {
 		0 => Err(GetLastError()),
 		_ => Ok(buf.to_string()),
 	}
+}
+
+/// [`InitializeSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-initializesecuritydescriptor)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::InitializeSecurityDescriptor;
+///
+/// let security_descriptor = InitializeSecurityDescriptor()?;
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+#[must_use]
+pub fn InitializeSecurityDescriptor() -> SysResult<SECURITY_DESCRIPTOR> {
+	let mut sd = unsafe { std::mem::zeroed::<SECURITY_DESCRIPTOR>() };
+	bool_to_sysresult(
+		unsafe {
+			advapi::ffi::InitializeSecurityDescriptor(
+				&mut sd as *mut _ as _,
+				SECURITY_DESCRIPTOR_REVISION,
+			)
+		},
+	).map(|_| sd)
+}
+
+/// [`IsValidSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-isvalidsecuritydescriptor)
+/// function.
+#[must_use]
+pub fn IsValidSecurityDescriptor(sd: &SECURITY_DESCRIPTOR) -> bool {
+	unsafe { advapi::ffi::IsValidSecurityDescriptor(sd as *const _ as _) != 0 }
 }

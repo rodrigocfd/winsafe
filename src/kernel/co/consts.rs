@@ -740,6 +740,27 @@ const_ordinary! { SCS: u32;
 	W_64BIT_BINARY 6
 }
 
+const_bitflag! { SE: u16;
+	/// [`SECURITY_DESCRIPTOR_CONTROL`](https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-control)
+	/// bit flags (`u16`).
+	=>
+	=>
+	OWNER_DEFAULTED 0x0001
+	GROUP_DEFAULTED 0x0002
+	DACL_PRESENT 0x0004
+	DACL_DEFAULTED 0x0008
+	SACL_PRESENT 0x0010
+	SACL_DEFAULTED 0x0020
+	DACL_AUTO_INHERIT_REQ 0x0100
+	SACL_AUTO_INHERIT_REQ 0x0200
+	DACL_AUTO_INHERITED 0x0400
+	SACL_AUTO_INHERITED 0x0800
+	DACL_PROTECTED 0x1000
+	SACL_PROTECTED 0x2000
+	RM_CONTROL_VALID 0x4000
+	SELF_RELATIVE 0x8000
+}
+
 const_bitflag! { SECTION: u32;
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	=>
