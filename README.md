@@ -34,9 +34,9 @@ Plus, below are the numbers of native FFI items implemented:
 
 | Native FFI item | Count |
 | - | - |
-| Functions | 530 |
-| Constants | 11,776 |
-| Handles | 35 |
+| Functions | 533 |
+| Constants | 11,792 |
+| Handles | 36 |
 | COM interfaces | 36 |
 | COM methods | 172 |
 
@@ -67,8 +67,9 @@ The following Cargo features are available so far:
 | `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://learn.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
 | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |
 | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
-| **`gui`** | **The WinSafe high-level GUI structs** |
+| **`gui`** | **The WinSafe high-level GUI abstractions** |
 | `kernel` | Kernel32.dll, all others will include it |
+| `ktm` | Ktmw32.dll, the [Kernel Transaction Manager](https://learn.microsoft.com/en-us/windows/win32/ktm/ktm-security-and-access-rights) |
 | `msimg` | Msimg32.dll |
 | `ole` | OLE and basic COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |

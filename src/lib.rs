@@ -34,19 +34,20 @@
 //!
 //! | Feature | Description |
 //! | - | - |
-//! | `advapi` | Advapi32.dll, for Windows Registry |
+//! | `advapi` | Advapi32.dll, for [Windows Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry) |
 //! | `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
 //! | `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://learn.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
 //! | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |
 //! | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
-//! | **[`gui`](crate::gui)** | **The WinSafe high-level GUI structs** |
-//! | `kernel` | Kernel32.dll, required by all others |
+//! | **`gui`** | **The WinSafe high-level GUI abstractions** |
+//! | `kernel` | Kernel32.dll, all others will include it |
+//! | `ktm` | Ktmw32.dll, the [Kernel Transaction Manager](https://learn.microsoft.com/en-us/windows/win32/ktm/ktm-security-and-access-rights) |
 //! | `msimg` | Msimg32.dll |
 //! | `ole` | OLE and basic COM support |
 //! | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
 //! | `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
-//! | `user` | User32.dll, the basic Windows UI support |
-//! | `uxtheme` | UxTheme.dll, extended UI theming |
+//! | `user` | User32.dll, the basic Windows GUI support |
+//! | `uxtheme` | UxTheme.dll, extended window theming |
 //! | `version` | Version.dll, to manipulate *.exe version info |
 //!
 //! Note that a Cargo feature may depend on other features, which will be
@@ -271,6 +272,7 @@
 #[cfg(feature = "dshow")] mod dshow;
 #[cfg(feature = "gdi")] mod gdi;
 #[cfg(feature = "kernel")] mod kernel;
+#[cfg(feature = "ktm")] mod ktm;
 #[cfg(feature = "msimg")] mod msimg;
 #[cfg(feature = "ole")] mod ole;
 #[cfg(feature = "oleaut")] mod oleaut;
@@ -293,6 +295,7 @@
 #[cfg(feature = "dshow")] pub use dshow::decl::*;
 #[cfg(feature = "gdi")] pub use gdi::decl::*;
 #[cfg(feature = "kernel")] pub use kernel::decl::*;
+#[cfg(feature = "ktm")] pub use ktm::decl::*;
 #[cfg(feature = "ole")] pub use ole::decl::*;
 #[cfg(feature = "oleaut")] pub use oleaut::decl::*;
 #[cfg(feature = "shell")] pub use shell::decl::*;
@@ -317,6 +320,7 @@ pub mod co {
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::co::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;
+	#[cfg(feature = "ktm")] pub use super::ktm::co::*;
 	#[cfg(feature = "ole")] pub use super::ole::co::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::co::*;
 	#[cfg(feature = "shell")] pub use super::shell::co::*;
@@ -538,6 +542,7 @@ pub mod prelude {
 	#[cfg(feature = "gdi")] pub use super::gdi::traits::*;
 	#[cfg(feature = "gui")] pub use super::gui::traits::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::traits::*;
+	#[cfg(feature = "ktm")] pub use super::ktm::traits::*;
 	#[cfg(feature = "msimg")] pub use super::msimg::traits::*;
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
