@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::WString;
+use crate::kernel::decl::{GUID, WString};
 use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, GUID, HrResult};
+use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{ole_IUnknown, shell_IModalWindow};
 use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};

@@ -1,4 +1,4 @@
-use crate::ole::decl::GUID;
+use crate::kernel::decl::GUID;
 
 /// [`PROPERTYKEY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
 /// struct.

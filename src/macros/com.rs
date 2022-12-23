@@ -78,16 +78,16 @@ macro_rules! const_guid {
 		$( #[$doc] )*
 		#[repr(transparent)]
 		#[derive(Clone, Copy, Eq, PartialEq, Hash)]
-		pub struct $name(crate::ole::decl::GUID);
+		pub struct $name(crate::kernel::decl::GUID);
 
-		impl From<crate::ole::decl::GUID> for $name {
-			fn from(guid: crate::ole::decl::GUID) -> Self {
+		impl From<crate::kernel::decl::GUID> for $name {
+			fn from(guid: crate::kernel::decl::GUID) -> Self {
 				Self(guid)
 			}
 		}
 
-		impl AsRef<crate::ole::decl::GUID> for $name {
-			fn as_ref(&self) -> &crate::ole::decl::GUID {
+		impl AsRef<crate::kernel::decl::GUID> for $name {
+			fn as_ref(&self) -> &crate::kernel::decl::GUID {
 				&self.0
 			}
 		}
@@ -112,7 +112,7 @@ macro_rules! const_guid {
 			/// ```
 			#[must_use]
 			pub const fn new(guid_str: &str) -> $name {
-				Self(crate::ole::decl::GUID::new(guid_str))
+				Self(crate::kernel::decl::GUID::new(guid_str))
 			}
 		}
 
