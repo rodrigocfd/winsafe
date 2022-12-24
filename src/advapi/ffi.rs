@@ -8,6 +8,9 @@ extern_sys! { "advapi32";
 	InitializeSecurityDescriptor(PVOID, u32) -> BOOL
 	IsValidSecurityDescriptor(PCVOID) -> BOOL
 	RegCloseKey(HANDLE) -> i32
+	RegConnectRegistryW(PCSTR, HANDLE, *mut HANDLE) -> i32
+	RegCopyTreeW(HANDLE, PCSTR, HANDLE) -> i32
+	RegCreateKeyExW(HANDLE, PCSTR, u32, PCSTR, u32, u32, PCVOID, *mut HANDLE, *mut u32) -> i32
 	RegDeleteKeyExW(HANDLE, PCSTR, u32, u32) -> i32
 	RegDeleteKeyW(HANDLE, PCSTR) -> i32
 	RegDeleteTreeW(HANDLE, PCSTR) -> i32

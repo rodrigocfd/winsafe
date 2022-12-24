@@ -5,7 +5,7 @@ use std::ops::Deref;
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
 use crate::advapi::privs::VALENT;
-use crate::kernel::decl::{FILETIME, SysResult, WString};
+use crate::kernel::decl::{FILETIME, SECURITY_ATTRIBUTES, SysResult, WString};
 use crate::prelude::Handle;
 
 impl_handle! { HKEY;
@@ -46,6 +46,92 @@ pub trait advapi_Hkey: Handle {
 	predef_key!(CURRENT_USER_LOCAL_SETTINGS, 0x8000_0007);
 	predef_key!(PERFORMANCE_TEXT, 0x8000_0050);
 	predef_key!(PERFORMANCE_NLSTEXT, 0x8000_0060);
+
+	/// [`RegConnectRegistry`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regconnectregistryw)
+	/// static method.
+	///
+	/// # Panics
+	///
+	/// Panics if `predef_key` is different from:
+	///
+	/// - [`HKEY::LOCAL_MACHINE`](crate::prelude::advapi_Hkey::LOCAL_MACHINE);
+	/// - [`HKEY::PERFORMANCE_DATA`](crate::prelude::advapi_Hkey::PERFORMANCE_DATA);
+	/// - [`HKEY::USERS`](crate::prelude::advapi_Hkey::USERS).
+	#[must_use]
+	fn RegConnectRegistry(
+		machine_name: Option<&str>, predef_hkey: HKEY) -> SysResult<HkeyGuard>
+	{
+		if predef_hkey != HKEY::LOCAL_MACHINE
+			&& predef_hkey != HKEY::PERFORMANCE_DATA
+			&& predef_hkey != HKEY::USERS
+		{
+			panic!("Invalid predef_key.");
+		}
+
+		let mut hkey = HKEY::NULL;
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegConnectRegistryW(
+					WString::from_opt_str(machine_name).as_ptr(),
+					predef_hkey.as_ptr(),
+					&mut hkey.0,
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(HkeyGuard { hkey }),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegCopyTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew)
+	/// method.
+	fn RegCopyTree(&self, sub_key: &str, dest: &HKEY) -> SysResult<()> {
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegCopyTreeW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+					dest.as_ptr(),
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegCreateKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeyexw)
+	/// method.
+	#[must_use]
+	fn RegCreateKeyEx(&self,
+		sub_key: &str,
+		class: Option<&str>,
+		options: co::REG_OPTION,
+		access_rights: co::KEY,
+		security_attributes: Option<&SECURITY_ATTRIBUTES>) -> SysResult<(HkeyGuard, co::REG_DISPOSITION)>
+	{
+		let mut hkey = HKEY::NULL;
+		let mut disposition = co::REG_DISPOSITION::NoValue;
+
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegCreateKeyExW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+					0,
+					WString::from_opt_str(class).as_ptr(),
+					options.0,
+					access_rights.0,
+					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+					&mut hkey.0,
+					&mut disposition.0,
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok((HkeyGuard { hkey }, disposition)),
+			err => Err(err),
+		}
+	}
 
 	/// [`RegDeleteKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyw)
 	/// method.

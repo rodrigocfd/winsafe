@@ -44,6 +44,17 @@ const_ordinary! { REG: u32;
 	QWORD_LITTLE_ENDIAN 11
 }
 
+const_ordinary! { REG_DISPOSITION: u32;
+	/// [`HKEY::RegCreateKeyEx`](crate::prelude::advapi_Hkey::RegCreateKeyEx)
+	/// creation disposition (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	CREATED_NEW_KEY 0x0000_0001
+	OPENED_EXISTING_KEY 0x0000_0002
+}
+
 const_bitflag! { REG_OPTION: u32;
 	/// [`HKEY::RegOpenKeyEx`](crate::prelude::advapi_Hkey::RegOpenKeyEx)
 	/// `options` (`u32`).
