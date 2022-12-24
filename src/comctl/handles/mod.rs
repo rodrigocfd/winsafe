@@ -5,7 +5,7 @@ pub mod decl {
 	pub use super::himagelist::HIMAGELIST;
 
 	impl_handle! { HTREEITEM;
-		/// Handle to an
+		/// Handle to a
 		/// [tree view item](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls).
 	}
 }

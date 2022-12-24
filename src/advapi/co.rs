@@ -3,8 +3,8 @@
 use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS};
 
 const_bitflag! { KEY: u32;
-	/// [`HKEY::RegOpenKeyEx`](crate::prelude::advapi_Hkey::RegOpenKeyEx)
-	/// `access_rights` (`u32`).
+	/// [Registry access rights](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights)
+	/// (`u32`).
 	=>
 	=>
 	QUERY_VALUE 0x0001
@@ -51,7 +51,9 @@ const_ordinary! { REG_DISPOSITION: u32;
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
+	/// The key did not exist and was created.
 	CREATED_NEW_KEY 0x0000_0001
+	/// The key existed and was simply opened without being changed.
 	OPENED_EXISTING_KEY 0x0000_0002
 }
 

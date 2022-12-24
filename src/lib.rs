@@ -261,11 +261,6 @@
 
 // Declarations of modules themselves.
 
-#[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
-#[cfg(all(feature = "comctl", feature = "ole"))] mod comctl_ole;
-#[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
-#[cfg(all(feature = "dshow", feature = "gdi"))] mod dshow_gdi;
-#[cfg(all(feature = "gdi", feature = "ole"))] mod gdi_ole;
 #[cfg(feature = "advapi")] mod advapi;
 #[cfg(feature = "comctl")] mod comctl;
 #[cfg(feature = "comdlg")] mod comdlg;
@@ -280,6 +275,12 @@
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
+#[cfg(all(feature = "advapi", feature = "ktm"))] mod advapi_ktm;
+#[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
+#[cfg(all(feature = "comctl", feature = "ole"))] mod comctl_ole;
+#[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
+#[cfg(all(feature = "dshow", feature = "gdi"))] mod dshow_gdi;
+#[cfg(all(feature = "gdi", feature = "ole"))] mod gdi_ole;
 
 // The gui module itself is public.
 
@@ -532,6 +533,7 @@ pub mod prelude {
 	//! ```rust,no_run
 	//! use winsafe::prelude::*;
 	//! ```
+	#[cfg(all(feature = "advapi", feature = "ktm"))] pub use super::advapi_ktm::traits::*;
 	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
