@@ -8,6 +8,8 @@ use crate::prelude::{Handle, MsgSendRecv, user_Hinstance, user_Hwnd};
 use crate::user::decl::HWND;
 
 /// Base to all dialog windows.
+///
+/// Owns the window procedure for all dialog windows.
 pub(in crate::gui) struct DlgBase {
 	base: Base,
 	dialog_id: u16,
@@ -151,6 +153,7 @@ impl DlgBase {
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
+			ref_self.base.clear_events(); // prevents circular references
 		}
 
 		Ok(match process_result {

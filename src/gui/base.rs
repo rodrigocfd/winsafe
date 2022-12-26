@@ -84,6 +84,7 @@ impl Base {
 		&self.user_events
 	}
 
+	/// If the user added a closure to the given message, run it.
 	pub(in crate::gui) fn process_user_message(&self,
 		wm_any: WndMsg) -> AnyResult<ProcessResult>
 	{
@@ -98,10 +99,17 @@ impl Base {
 		&self.privileged_events
 	}
 
+	/// If the library added a closure to the given message, run it.
 	pub(in crate::gui) fn process_privileged_messages(&self,
 		wm_any: WndMsg) -> AnyResult<()>
 	{
 		self.privileged_events.process_all_messages(wm_any)
+	}
+
+	/// Removes all user and privileged events.
+	pub(in crate::gui) fn clear_events(&self) {
+		self.user_events.clear();
+		self.privileged_events.clear();
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,

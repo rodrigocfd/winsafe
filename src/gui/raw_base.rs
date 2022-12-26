@@ -93,6 +93,8 @@ impl Icon {
 //------------------------------------------------------------------------------
 
 /// Base to all ordinary windows.
+///
+/// Owns the window procedure for all ordinary windows.
 pub(in crate::gui) struct RawBase {
 	base: Base,
 }
@@ -280,6 +282,7 @@ impl RawBase {
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
+			ref_self.base.clear_events(); // prevents circular references
 		}
 
 		Ok(match process_result {

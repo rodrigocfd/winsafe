@@ -39,6 +39,11 @@ impl WindowEvents {
 		self.msgs.is_empty()
 	}
 
+	/// Removes all stored events.
+	pub(in crate::gui) fn clear(&self) {
+		self.msgs.clear();
+	}
+
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
 	pub(in crate::gui) fn process_one_message(&self,

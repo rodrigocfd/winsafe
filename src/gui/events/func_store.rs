@@ -49,4 +49,10 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 	pub(in crate::gui) fn is_empty(&self) -> bool {
 		self.elems.is_empty()
 	}
+
+	/// Removes all identifiers and closures.
+	pub(in crate::gui) fn clear(&self) {
+		let elems = self.elems.as_mut();
+		elems.clear();
+	}
 }

@@ -27,6 +27,8 @@ pub enum OptsId<P> {
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.
+///
+/// Owns the window procedure for all subclassed native child controls.
 pub(in crate::gui) struct BaseNativeControl {
 	hwnd: VeryUnsafeCell<HWND>,
 	parent_ptr: NonNull<Base>, // base of WindowControl, WindowMain or WindowModal
@@ -152,6 +154,10 @@ impl BaseNativeControl {
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
+			if !ptr_self.is_null() {
+				let ref_self = unsafe { &mut *ptr_self };
+				ref_self.subclass_events.clear(); // prevent circular references
+			}
 		}
 
 		Ok(match process_result {

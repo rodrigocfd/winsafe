@@ -48,6 +48,14 @@ impl WindowEventsAll {
 		}
 	}
 
+	/// Removes all stored events.
+	pub(in crate::gui) fn clear(&self) {
+		self.tmrs.clear();
+		self.cmds.clear();
+		self.nfys.clear();
+		self.window_events.clear();
+	}
+
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
 	pub(in crate::gui) fn process_one_message(&self,
