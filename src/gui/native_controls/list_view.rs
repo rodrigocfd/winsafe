@@ -85,6 +85,11 @@ impl ListView {
 	/// Instantiates a new `ListView` object, to be created on the parent window
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	///
+	/// # Panics
+	///
+	/// Panics if the parent window was already created – that is, you cannot
+	/// dynamically create a `ListView` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ListViewOpts) -> ListView {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -121,6 +126,11 @@ impl ListView {
 	/// **Note:** The optional `context_menu` is shared: it must be destroyed
 	/// manually after the control is destroyed. But note that menus loaded from
 	/// resources don't need to be destroyed.
+	///
+	/// # Panics
+	///
+	/// Panics if the parent dialog was already created – that is, you cannot
+	/// dynamically create a `ListView` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

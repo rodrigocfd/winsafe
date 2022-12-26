@@ -80,6 +80,11 @@ impl Button {
 	/// Instantiates a new `Button` object, to be created on the parent window
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	///
+	/// # Panics
+	///
+	/// Panics if the parent window was already created – that is, you cannot
+	/// dynamically create a `Button` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ButtonOpts) -> Button {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -108,6 +113,11 @@ impl Button {
 
 	/// Instantiates a new `Button` object, to be loaded from a dialog resource
 	/// with [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	///
+	/// # Panics
+	///
+	/// Panics if the parent dialog was already created – that is, you cannot
+	/// dynamically create a `Button` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

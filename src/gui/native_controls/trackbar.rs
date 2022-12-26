@@ -77,6 +77,11 @@ impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	///
+	/// # Panics
+	///
+	/// Panics if the parent window was already created – that is, you cannot
+	/// dynamically create a `Trackbar` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: TrackbarOpts) -> Trackbar {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -106,6 +111,11 @@ impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be loaded from a dialog
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	///
+	/// # Panics
+	///
+	/// Panics if the parent dialog was already created – that is, you cannot
+	/// dynamically create a `Trackbar` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

@@ -95,6 +95,11 @@ impl StatusBar {
 	/// window with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	///
+	/// # Panics
+	///
+	/// Panics if the parent window was already created – that is, you cannot
+	/// dynamically create a `StatusBar` in an event closure.
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run

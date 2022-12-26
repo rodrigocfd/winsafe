@@ -58,6 +58,9 @@ impl RadioGroup {
 	/// # Panics
 	///
 	/// Panics if `opts` is empty.
+	///
+	/// Panics if the parent window was already created – that is, you cannot
+	/// dynamically create a `RadioGroup` in an event closure.
 	#[must_use]
 	pub fn new(
 		parent: &impl GuiParent,
@@ -116,6 +119,9 @@ impl RadioGroup {
 	/// # Panics
 	///
 	/// Panics if `ctrls` is empty.
+	///
+	/// Panics if the parent dialog was already created – that is, you cannot
+	/// dynamically create a `RadioGroup` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,

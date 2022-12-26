@@ -79,6 +79,11 @@ impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	///
+	/// # Panics
+	///
+	/// Panics if the parent window was already created – that is, you cannot
+	/// dynamically create a `ListBox` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ListBoxOpts) -> ListBox {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
@@ -107,6 +112,11 @@ impl ListBox {
 
 	/// Instantiates a new `ListBox` object, to be loaded from a dialog resource
 	/// with [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	///
+	/// # Panics
+	///
+	/// Panics if the parent dialog was already created – that is, you cannot
+	/// dynamically create a `ListBox` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
