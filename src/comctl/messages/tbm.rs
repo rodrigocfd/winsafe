@@ -1401,3 +1401,152 @@ unsafe impl<'a> MsgSend for ReplaceBitmap<'a> {
 		}
 	}
 }
+
+/// [`TB_SETANCHORHIGHLIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setanchorhighlight)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct SetAnchorHighlight {
+	pub enable: bool,
+}
+
+unsafe impl MsgSend for SetAnchorHighlight {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETANCHORHIGHLIGHT.into(),
+			wparam: self.enable as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_SETBITMAPSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setbitmapsize)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetBitmapSize {
+	pub width: u16,
+	pub height: u16,
+}
+
+unsafe impl MsgSend for SetBitmapSize {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETBITMAPSIZE.into(),
+			wparam: 0,
+			lparam: MAKEDWORD(self.width, self.height) as _,
+		}
+	}
+}
+
+/// [`TB_SETBUTTONINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setbuttoninfo)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetButtonInfo<'a, 'b> {
+	pub btn_identifier: u32,
+	pub info: &'b TBBUTTONINFO<'a>,
+}
+
+unsafe impl<'a, 'b> MsgSend for SetButtonInfo<'a, 'b> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETBUTTONINFO.into(),
+			wparam: self.btn_identifier as _,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`TB_SETBUTTONSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setbuttonsize)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetButtonSize {
+	pub width: u16,
+	pub height: u16,
+}
+
+unsafe impl MsgSend for SetButtonSize {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETBUTTONSIZE.into(),
+			wparam: 0,
+			lparam: MAKEDWORD(self.width, self.height) as _,
+		}
+	}
+}
+
+/// [`TB_SETBUTTONWIDTH`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setbuttonwidth)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetButtonWidth {
+	pub min_width: u16,
+	pub max_width: u16,
+}
+
+unsafe impl MsgSend for SetButtonWidth {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETBUTTONWIDTH.into(),
+			wparam: 0,
+			lparam: MAKEDWORD(self.min_width, self.max_width) as _,
+		}
+	}
+}
+
+/// [`TB_SETCMDID`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setcmdid)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetCmdId {
+	pub btn_index: u32,
+	pub cmd_id: u16,
+}
+
+unsafe impl MsgSend for SetCmdId {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETCMDID.into(),
+			wparam: self.btn_index as _,
+			lparam: self.cmd_id as _,
+		}
+	}
+}
