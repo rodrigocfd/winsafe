@@ -15,6 +15,7 @@ use crate::user::decl::{
 	IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, RECT, SCROLLINFO, SIZE,
 	TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
 };
+use crate::user::privs::zero_as_none;
 
 impl_handle! { HWND;
 	/// Handle to a
@@ -601,6 +602,22 @@ pub trait user_Hwnd: Handle {
 				err => Err(err),
 			},
 		}
+	}
+
+	/// [`GetUpdateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdaterect)
+	/// method.
+	#[must_use]
+	fn GetUpdateRect(&self, erase: bool) -> Option<RECT> {
+		let mut rc = RECT::default();
+		zero_as_none(
+			unsafe {
+				user::ffi::GetUpdateRect(
+					self.as_ptr(),
+					&mut rc as *mut _ as _,
+					erase as _,
+				)
+			} as _,
+		).map(|_| rc)
 	}
 
 	/// [`GetUpdateRgn`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getupdatergn)

@@ -50,6 +50,7 @@ extern_sys! { "user32";
 	DialogBoxParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> isize
 	DispatchMessageW(PCVOID) -> isize
 	DrawMenuBar(HANDLE) -> BOOL
+	DrawText(HANDLE, PCSTR, i32, PVOID, u32) -> i32
 	EmptyClipboard() -> BOOL
 	EnableMenuItem(HANDLE, u32, u32) -> BOOL
 	EnableWindow(HANDLE, BOOL) -> BOOL
@@ -114,6 +115,7 @@ extern_sys! { "user32";
 	GetSystemMenu(HANDLE, BOOL) -> HANDLE
 	GetSystemMetrics(i32) -> i32
 	GetTopWindow(HANDLE) -> HANDLE
+	GetUpdateRect(HANDLE, PVOID, BOOL) -> BOOL
 	GetUpdateRgn(HANDLE, HANDLE, BOOL) -> i32
 	GetWindow(HANDLE, u32) -> HANDLE
 	GetWindowDC(HANDLE) -> HANDLE
@@ -214,6 +216,7 @@ extern_sys! { "user32";
 	ValidateRect(HANDLE, PCVOID) -> BOOL
 	ValidateRgn(HANDLE, HANDLE) -> BOOL
 	WaitMessage() -> BOOL
+	WindowFromDC(HANDLE) -> HANDLE
 	WindowFromPhysicalPoint(i32, i32) -> HANDLE
 	WindowFromPoint(i32, i32) -> HANDLE
 	WinHelpW(HANDLE, PCSTR, u32, usize) -> BOOL

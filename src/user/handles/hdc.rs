@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::SysResult;
+use crate::{co, user};
+use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
-use crate::user;
-use crate::user::decl::{HMONITOR, RECT};
+use crate::user::decl::{HMONITOR, HWND, RECT};
 
 impl_handle! { HDC;
 	/// Handle to a
@@ -23,6 +23,26 @@ impl user_Hdc for HDC {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hdc: Handle {
+	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtext)
+	/// method.
+	fn DrawText(&self,
+		text: &str, bounds: &RECT, format: co::DT) -> SysResult<i32>
+	{
+		let wtext = WString::from_str(text);
+		match unsafe {
+			user::ffi::DrawText(
+				self.as_ptr(),
+				wtext.as_ptr(),
+				wtext.str_len() as _,
+				bounds as *const _ as _,
+				format.0,
+			)
+		} {
+			0 => Err(GetLastError()),
+			i => Ok(i),
+		}
+	}
+
 	/// [`EnumDisplayMonitors`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors)
 	/// method.
 	///
@@ -59,6 +79,16 @@ pub trait user_Hdc: Handle {
 				)
 			},
 		)
+	}
+
+	/// [`WindowFromDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromdc)
+	/// method.
+	#[must_use]
+	fn WindowFromDC(&self) -> Option<HWND> {
+		match HWND(unsafe { user::ffi::WindowFromDC(self.as_ptr()) as _ }) {
+			HWND::NULL => None,
+			handle => Some(handle),
+		}
 	}
 }
 
