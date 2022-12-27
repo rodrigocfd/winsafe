@@ -92,9 +92,7 @@ impl<'a> TreeViewItem<'a> {
 	/// Returns whether a scroll occurred and no items were expanded.
 	pub fn ensure_visible(&self) -> bool {
 		self.owner.hwnd()
-			.SendMessage(tvm::EnsureVisible {
-				hitem: unsafe { self.hitem.raw_copy() },
-			}) != 0
+			.SendMessage(tvm::EnsureVisible { hitem: &self.hitem }) != 0
 	}
 
 	/// Expands or collapse the item by sending a
@@ -120,7 +118,7 @@ impl<'a> TreeViewItem<'a> {
 	pub fn is_expanded(&self) -> bool {
 		self.owner.hwnd()
 			.SendMessage(tvm::GetItemState {
-				hitem: unsafe { self.hitem.raw_copy() },
+				hitem: &self.hitem,
 				mask: co::TVIS::EXPANDED,
 			})
 			.has(co::TVIS::EXPANDED)
@@ -158,7 +156,7 @@ impl<'a> TreeViewItem<'a> {
 		self.owner.hwnd()
 			.SendMessage(tvm::GetNextItem {
 				relationship: co::TVGN::PARENT,
-				hitem: Some(unsafe { self.hitem.raw_copy() }),
+				hitem: Some(&self.hitem),
 			})
 			.map(|hitem| TreeViewItem::new(self.owner, hitem))
 	}

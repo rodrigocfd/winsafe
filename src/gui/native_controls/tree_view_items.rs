@@ -115,8 +115,7 @@ impl<'a> Iterator for TreeViewItemIter<'a> {
 		self.current = self.owner.hwnd()
 			.SendMessage(tvm::GetNextItem {
 				relationship: self.relationship,
-				hitem: self.current.as_ref()
-					.map(|tvi| unsafe { tvi.htreeitem().raw_copy() }),
+				hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 			})
 			.map(|hitem| self.owner.items().get(hitem));
 
@@ -154,8 +153,7 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 			self.current = self.owner.hwnd()
 				.SendMessage(tvm::GetNextItem {
 					relationship: co::TVGN::CHILD,
-					hitem: self.current.as_ref()
-						.map(|tvi| unsafe { tvi.htreeitem().raw_copy() }),
+					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 				})
 				.map(|hitem| self.owner.items().get(hitem));
 
@@ -165,8 +163,7 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 			self.current = self.owner.hwnd()
 				.SendMessage(tvm::GetNextItem {
 					relationship: co::TVGN::NEXT,
-					hitem: self.current.as_ref()
-						.map(|tvi| unsafe { tvi.htreeitem().raw_copy() }),
+					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 				})
 				.map(|hitem| self.owner.items().get(hitem));
 		}

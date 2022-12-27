@@ -6,7 +6,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::HINST_COMMCTRL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
@@ -1456,7 +1456,7 @@ unsafe impl MsgSend for SetBitmapSize {
 ///
 /// Return type: `SysResult<()>`.
 pub struct SetButtonInfo<'a, 'b> {
-	pub btn_identifier: u32,
+	pub btn_cmd_id: u16,
 	pub info: &'b TBBUTTONINFO<'a>,
 }
 
@@ -1470,7 +1470,7 @@ unsafe impl<'a, 'b> MsgSend for SetButtonInfo<'a, 'b> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETBUTTONINFO.into(),
-			wparam: self.btn_identifier as _,
+			wparam: self.btn_cmd_id as _,
 			lparam: self.info as *const _ as _,
 		}
 	}
@@ -1547,6 +1547,54 @@ unsafe impl MsgSend for SetCmdId {
 			msg_id: co::TBM::SETCMDID.into(),
 			wparam: self.btn_index as _,
 			lparam: self.cmd_id as _,
+		}
+	}
+}
+
+/// [`TB_SETCOLORSCHEME`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setcolorscheme)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetColorScheme<'a> {
+	pub scheme: &'a COLORSCHEME,
+}
+
+unsafe impl<'a> MsgSend for SetColorScheme<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETCOLORSCHEME.into(),
+			wparam: 0,
+			lparam: self.scheme as *const _ as _,
+		}
+	}
+}
+
+/// [`TB_SETDISABLEDIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setdisabledimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+pub struct SetDisabledImageList<'a> {
+	pub himagelist: &'a HIMAGELIST,
+}
+
+unsafe impl<'a> MsgSend for SetDisabledImageList<'a> {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETDISABLEDIMAGELIST.into(),
+			wparam: 0,
+			lparam: unsafe { self.himagelist.as_ptr() } as _,
 		}
 	}
 }

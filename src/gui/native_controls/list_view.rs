@@ -272,7 +272,7 @@ impl ListView {
 	///
 	/// Returns the previous image list, if any.
 	pub fn set_image_list(&self,
-		kind: co::LVSIL, himagelist: HIMAGELIST) -> Option<HIMAGELIST>
+		kind: co::LVSIL, himagelist: &HIMAGELIST) -> Option<HIMAGELIST>
 	{
 		self.hwnd().SendMessage(lvm::SetImageList { kind, himagelist })
 	}

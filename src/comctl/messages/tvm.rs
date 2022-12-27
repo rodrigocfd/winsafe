@@ -3,7 +3,7 @@ use crate::comctl::decl::{HIMAGELIST, HTREEITEM, TVINSERTSTRUCT, TVITEMEX};
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
@@ -83,11 +83,11 @@ unsafe impl MsgSend for EndEditLabelNow {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct EnsureVisible {
-	pub hitem: HTREEITEM,
+pub struct EnsureVisible<'a> {
+	pub hitem: &'a HTREEITEM,
 }
 
-unsafe impl MsgSend for EnsureVisible {
+unsafe impl<'a> MsgSend for EnsureVisible<'a> {
 	type RetType = u32;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -98,7 +98,7 @@ unsafe impl MsgSend for EnsureVisible {
 		WndMsg {
 			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
-			lparam: self.hitem.0 as _,
+			lparam: unsafe { self.hitem.as_ptr() } as _,
 		}
 	}
 }
@@ -359,12 +359,12 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `co::TVIS`.
-pub struct GetItemState {
-	pub hitem: HTREEITEM,
+pub struct GetItemState<'a> {
+	pub hitem: &'a HTREEITEM,
 	pub mask: co::TVIS,
 }
 
-unsafe impl MsgSend for GetItemState {
+unsafe impl<'a> MsgSend for GetItemState<'a> {
 	type RetType = co::TVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -374,7 +374,7 @@ unsafe impl MsgSend for GetItemState {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMSTATE.into(),
-			wparam: self.hitem.0 as _,
+			wparam: unsafe { self.hitem.as_ptr() } as _,
 			lparam: self.mask.0 as _,
 		}
 	}
@@ -409,12 +409,12 @@ unsafe impl MsgSend for GetLineColor {
 /// message parameters.
 ///
 /// Return type: `Option<HTREEITEM>`.
-pub struct GetNextItem {
+pub struct GetNextItem<'a> {
 	pub relationship: co::TVGN,
-	pub hitem: Option<HTREEITEM>,
+	pub hitem: Option<&'a HTREEITEM>,
 }
 
-unsafe impl MsgSend for GetNextItem {
+unsafe impl<'a> MsgSend for GetNextItem<'a> {
 	type RetType = Option<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -425,7 +425,7 @@ unsafe impl MsgSend for GetNextItem {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.0 as _,
-			lparam: self.hitem.as_ref().map(|h| h.0 as _).unwrap_or_default(),
+			lparam: self.hitem.map_or(0, |h| unsafe { h.as_ptr() } as _),
 		}
 	}
 }
@@ -546,12 +546,12 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SelectItem {
+pub struct SelectItem<'a> {
 	pub action: co::TVGN,
-	pub hitem: HTREEITEM,
+	pub hitem: &'a HTREEITEM,
 }
 
-unsafe impl MsgSend for SelectItem {
+unsafe impl<'a> MsgSend for SelectItem<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -562,7 +562,7 @@ unsafe impl MsgSend for SelectItem {
 		WndMsg {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.0 as _,
-			lparam: self.hitem.0 as _,
+			lparam: unsafe { self.hitem.as_ptr() } as _,
 		}
 	}
 }
@@ -571,11 +571,11 @@ unsafe impl MsgSend for SelectItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetHot {
-	pub hitem: Option<HTREEITEM>,
+pub struct SetHot<'a> {
+	pub hitem: Option<&'a HTREEITEM>,
 }
 
-unsafe impl MsgSend for SetHot {
+unsafe impl<'a> MsgSend for SetHot<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -586,7 +586,7 @@ unsafe impl MsgSend for SetHot {
 		WndMsg {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
-			lparam: self.hitem.as_ref().map_or(0, |h| h.0 as _),
+			lparam: self.hitem.map_or(0, |h| unsafe { h.as_ptr() } as _),
 		}
 	}
 }
@@ -595,12 +595,12 @@ unsafe impl MsgSend for SetHot {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct SetImageList {
+pub struct SetImageList<'a> {
 	pub kind: co::TVSIL,
-	pub himglist: Option<HIMAGELIST>,
+	pub himglist: Option<&'a HIMAGELIST>,
 }
 
-unsafe impl MsgSend for SetImageList {
+unsafe impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -611,7 +611,7 @@ unsafe impl MsgSend for SetImageList {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himglist.as_ref().map_or(0, |h| h.0 as _),
+			lparam: self.himglist.map_or(0, |h| unsafe { h.as_ptr() } as _),
 		}
 	}
 }
@@ -668,11 +668,11 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct ShowInfoTip {
-	pub hitem: HTREEITEM,
+pub struct ShowInfoTip<'a> {
+	pub hitem: &'a HTREEITEM,
 }
 
-unsafe impl MsgSend for ShowInfoTip {
+unsafe impl<'a> MsgSend for ShowInfoTip<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -683,7 +683,7 @@ unsafe impl MsgSend for ShowInfoTip {
 		WndMsg {
 			msg_id: co::TVM::SHOWINFOTIP.into(),
 			wparam: 0,
-			lparam: self.hitem.0 as _,
+			lparam: unsafe { self.hitem.as_ptr() } as _,
 		}
 	}
 }

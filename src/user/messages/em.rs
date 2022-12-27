@@ -1,7 +1,7 @@
 use crate::co;
 use crate::kernel::decl::{HIWORD, HLOCAL, LOWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{EDITWORDBREAKPROC, POINT, RECT, SIZE};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
@@ -593,11 +593,11 @@ pub_struct_msg_empty! { ScrollCaret: co::EM::SCROLLCARET.into();
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetHandle {
-	pub handle: HLOCAL,
+pub struct SetHandle<'a> {
+	pub handle: &'a HLOCAL,
 }
 
-unsafe impl MsgSend for SetHandle {
+unsafe impl<'a> MsgSend for SetHandle<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -607,7 +607,7 @@ unsafe impl MsgSend for SetHandle {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETHANDLE.into(),
-			wparam: self.handle.0 as _,
+			wparam: unsafe { self.handle.as_ptr() } as _,
 			lparam: 0,
 		}
 	}
