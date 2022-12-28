@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	THREADENTRY32,
 };
 use crate::kernel::guard::HandleGuard;
-use crate::kernel::privs::invalidate_handle;
+use crate::kernel::privs::replace_handle_value;
 use crate::prelude::Handle;
 
 impl_handle! { HPROCESSLIST;
@@ -182,7 +182,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),
@@ -208,7 +208,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),
@@ -234,7 +234,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),
@@ -260,7 +260,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),
@@ -286,7 +286,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),
@@ -312,7 +312,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),
@@ -338,7 +338,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),
@@ -364,7 +364,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					invalidate_handle(self);
+					replace_handle_value(self, Self::INVALID);
 					Ok(false)
 				},
 				err => Err(err),

@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
+use crate::kernel::privs::{bool_to_sysresult, replace_handle_value};
 use crate::prelude::Handle;
 use crate::user;
 
@@ -43,7 +43,7 @@ pub trait user_Hicon: Handle {
 		let ret = bool_to_sysresult(
 			unsafe { user::ffi::DestroyIcon(self.as_ptr()) },
 		);
-		invalidate_handle(self);
+		replace_handle_value(self, Self::INVALID);
 		ret
 	}
 }

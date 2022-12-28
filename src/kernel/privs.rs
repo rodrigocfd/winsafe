@@ -31,11 +31,11 @@ pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 	}
 }
 
-/// Forcibly sets the handle to `Self::INVALID`, preventing further operations.
-pub(crate) fn invalidate_handle<H>(h: &H)
+/// Forcibly replaces the underlying handle value.
+pub(crate) fn replace_handle_value<H>(h: &H, new: H)
 	where H: Handle,
 {
-	*unsafe { &mut *(h as *const H as *mut H) } = H::INVALID;
+	*unsafe { &mut *(h as *const H as *mut H) } = new;
 }
 
 /// Converts a string to a ISO-8859-1 null-terminated byte array.

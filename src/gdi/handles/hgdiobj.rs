@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::invalidate_handle;
+use crate::kernel::privs::replace_handle_value;
 use crate::prelude::Handle;
 
 /// Any
@@ -32,7 +32,7 @@ pub trait gdi_Hgdiobj: Handle {
 			},
 			_ => Ok(()),
 		};
-		invalidate_handle(self);
+		replace_handle_value(self, Self::INVALID);
 		ret
 	}
 }

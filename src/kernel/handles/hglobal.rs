@@ -2,7 +2,9 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, GMEM_INVALID_HANDLE};
+use crate::kernel::privs::{
+	bool_to_sysresult, GMEM_INVALID_HANDLE, replace_handle_value,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HGLOBAL;
@@ -74,7 +76,7 @@ pub trait kernel_Hglobal: Handle {
 		unsafe {
 			kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0).as_mut()
 				.map(|ptr| {
-					*{ &mut *(self as *const _ as *mut _) } = Self::from_ptr(ptr);
+					replace_handle_value(self, Self::from_ptr(ptr));
 				})
 		}.ok_or_else(|| GetLastError())
 	}

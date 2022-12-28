@@ -8,7 +8,7 @@ use crate::kernel::decl::{
 	GetLastError, HINSTANCE, SetLastError, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{bool_to_sysresult, invalidate_handle};
+use crate::kernel::privs::{bool_to_sysresult, replace_handle_value};
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
@@ -226,7 +226,7 @@ pub trait user_Hwnd: Handle {
 		let ret = bool_to_sysresult(
 			unsafe { user::ffi::DestroyWindow(self.as_ptr()) },
 		);
-		invalidate_handle(self);
+		replace_handle_value(self, Self::INVALID);
 		ret
 	}
 

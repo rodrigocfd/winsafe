@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::invalidate_handle;
+use crate::kernel::privs::replace_handle_value;
 use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::ACCEL;
@@ -49,7 +49,7 @@ pub trait user_Haccel: Handle {
 		let ret = unsafe {
 			user::ffi::DestroyAcceleratorTable(self.as_ptr()) != 0
 		};
-		invalidate_handle(self);
+		replace_handle_value(self, Self::INVALID);
 		ret
 	}
 }

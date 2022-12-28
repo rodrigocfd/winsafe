@@ -16,6 +16,9 @@ use crate::prelude::{Handle, kernel_Hfindfile, kernel_Hinstance, NativeBitflag};
 /// Returns an iterator over the files and folders within a directory.
 /// Optionally, a wildcard can be specified to filter files by name.
 ///
+/// This is a high-level abstraction over [`HFINDFILE`](crate::HFINDFILE)
+/// iteration functions.
+///
 /// # Examples
 ///
 /// Listing all text files in a directory:
