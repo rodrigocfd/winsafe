@@ -2,6 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::invalidate_handle;
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -32,12 +33,15 @@ pub trait user_Hdwp: Handle {
 
 	/// [`DeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
 	/// method.
+	///
+	/// Originally this method returns the handle to the reallocated memory
+	/// object; here the original handle is automatically updated.
 	fn DeferWindowPos(&self,
 		hwnd: &HWND,
 		hwnd_insert_after: HwndPlace,
 		top_left: POINT,
 		sz: SIZE,
-		flags: co::SWP) -> SysResult<HDWP>
+		flags: co::SWP) -> SysResult<()>
 	{
 		unsafe {
 			user::ffi::DeferWindowPos(
@@ -47,8 +51,13 @@ pub trait user_Hdwp: Handle {
 				top_left.x, top_left.y, sz.cx, sz.cy,
 				flags.0,
 			).as_mut()
-		}.map(|ptr| HDWP(ptr))
-			.ok_or_else(|| GetLastError())
+				.map(|ptr| {
+					*{ &mut *(self as *const _ as *mut _) } = Self::from_ptr(ptr);
+				})
+		}.ok_or_else(|| {
+			invalidate_handle(self); // prevent EndDeferWindowPos()
+			GetLastError()
+		})
 	}
 }
 
