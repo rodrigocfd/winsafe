@@ -1598,3 +1598,293 @@ unsafe impl<'a> MsgSend for SetDisabledImageList<'a> {
 		}
 	}
 }
+
+/// [`TB_SETDRAWTEXTFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setdrawtextflags)
+/// message parameters.
+///
+/// Return type: `co::DT`.
+pub struct SetDrawTextFlags {
+	pub mask: co::DT,
+	pub draw: co::DT,
+}
+
+unsafe impl MsgSend for SetDrawTextFlags {
+	type RetType = co::DT;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::DT(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETDRAWTEXTFLAGS.into(),
+			wparam: self.mask.0 as _,
+			lparam: self.draw.0 as _,
+		}
+	}
+}
+
+/// [`TB_SETEXTENDEDSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setextendedstyle)
+/// message parameters.
+///
+/// Return type: `co::TBSTYLE_EX`.
+pub struct SetExtendedStyle {
+	pub style: co::TBSTYLE_EX,
+}
+
+unsafe impl MsgSend for SetExtendedStyle {
+	type RetType = co::TBSTYLE_EX;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::TBSTYLE_EX(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETEXTENDEDSTYLE.into(),
+			wparam: 0,
+			lparam: self.style.0 as _,
+		}
+	}
+}
+
+/// [`TB_SETHOTIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-sethotimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+pub struct SetHotImageList<'a> {
+	pub himagelist: &'a HIMAGELIST,
+}
+
+unsafe impl<'a> MsgSend for SetHotImageList<'a> {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETHOTIMAGELIST.into(),
+			wparam: 0,
+			lparam: unsafe { self.himagelist.as_ptr() } as _,
+		}
+	}
+}
+
+/// [`TB_SETHOTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-sethotitem)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct SetHotItem {
+	pub index: Option<u32>,
+}
+
+unsafe impl MsgSend for SetHotItem {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_none(v).map(|idx| idx as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETHOTITEM.into(),
+			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_SETHOTITEM2`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-sethotitem2)
+/// message parameters.
+///
+/// Return type: `Option<u32>`.
+pub struct SetHotItem2 {
+	pub index: Option<u32>,
+	pub flags: co::HICF,
+}
+
+unsafe impl MsgSend for SetHotItem2 {
+	type RetType = Option<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_none(v).map(|idx| idx as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETHOTITEM2.into(),
+			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
+			lparam: self.flags.0 as _,
+		}
+	}
+}
+
+/// [`TB_SETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+pub struct SetImageList<'a> {
+	pub himagelist: &'a HIMAGELIST,
+}
+
+unsafe impl<'a> MsgSend for SetImageList<'a> {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETIMAGELIST.into(),
+			wparam: 0,
+			lparam: unsafe { self.himagelist.as_ptr() } as _,
+		}
+	}
+}
+
+/// [`TB_SETINDENT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setindent)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetIndent {
+	pub pixels: u32,
+}
+
+unsafe impl MsgSend for SetIndent {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETINDENT.into(),
+			wparam: self.pixels as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_SETINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setinsertmark)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetInsertMark<'a> {
+	pub info: &'a TBINSERTMARK,
+}
+
+unsafe impl<'a> MsgSend for SetInsertMark<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETINSERTMARK.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
+		}
+	}
+}
+
+/// [`TB_SETINSERTMARKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setinsertmarkcolor)
+/// message parameters.
+///
+/// Return type: `COLORREF`.
+pub struct SetInsertMarkColor {
+	pub color: COLORREF,
+}
+
+unsafe impl MsgSend for SetInsertMarkColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETINSERTMARKCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.0 as _,
+		}
+	}
+}
+
+/// [`TB_SETLISTGAP`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setlistgap)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetListGap {
+	pub gap: u32,
+}
+
+unsafe impl MsgSend for SetListGap {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETLISTGAP.into(),
+			wparam: self.gap as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_SETMAXTEXTROWS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setmaxtextrows)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetMaxTextRows {
+	pub max_rows: u32,
+}
+
+unsafe impl MsgSend for SetMaxTextRows {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETMAXTEXTROWS.into(),
+			wparam: self.max_rows as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_SETMETRICS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setmetrics)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetMetrics<'a> {
+	pub metrics: &'a TBMETRICS,
+}
+
+unsafe impl<'a> MsgSend for SetMetrics<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETMETRICS.into(),
+			wparam: 0,
+			lparam: self.metrics as *const _ as _,
+		}
+	}
+}
