@@ -21,7 +21,11 @@ impl user_Hinstance for HINSTANCE {}
 pub trait user_Hinstance: Handle {
 	/// [`CreateDialogParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// method.
-	fn CreateDialogParam(&self,
+	///
+	/// # Safety
+	///
+	/// To create a dialog, you must provide a dialog procedure.
+	unsafe fn CreateDialogParam(&self,
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
@@ -41,7 +45,11 @@ pub trait user_Hinstance: Handle {
 
 	/// [`DialogBoxParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
 	/// method.
-	fn DialogBoxParam(&self,
+	///
+	/// # Safety
+	///
+	/// To create a dialog, you must provide a dialog procedure.
+	unsafe fn DialogBoxParam(&self,
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,

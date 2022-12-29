@@ -13,14 +13,24 @@ use crate::oleaut::decl::{
 pub trait oleaut_Variant {
 	/// Returns a reference to the raw data being held.
 	///
-	/// Used internally by the library.
+	/// # Safety
+	///
+	/// The raw binary data has no guarantees.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn raw(&self) -> &[u8; 16];
 
 	/// Creates an object straight from raw data. Up to 16 `u8` elements will be
 	/// actually copied.
 	///
-	/// Used internally by the library.
+	/// # Safety
+	///
+	/// Be sure the binary data is correct.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn from_raw(vt: co::VT, data: &[u8]) -> Self;
 

@@ -13,10 +13,12 @@ impl ComPtr {
 	/// Converts the underlying raw pointer converted to a specific virtual
 	/// table pointer.
 	///
-	/// **Note:** Be sure the pointer actually points to the given virtual table
-	/// type.
+	/// # Safety
 	///
-	/// Used internally by the library.
+	/// Be sure the pointer actually points to the given virtual table type.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	pub const unsafe fn into_ptr<T>(self) -> *mut *mut T {
 		self.0 as *mut *mut T
@@ -24,7 +26,13 @@ impl ComPtr {
 
 	/// Creates a null pointer to a COM virtual table.
 	///
-	/// Used internally by the library.
+	/// # Safety
+	///
+	/// A null pointer to a COM virtual table has no practical use, and calling
+	/// methods upon it is undefined behavior.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	pub const unsafe fn null() -> Self {
 		Self(std::ptr::null_mut())

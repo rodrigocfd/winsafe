@@ -35,7 +35,8 @@ pub trait Handle: Sized
 	/// Be sure the pointer has the correct type and isn't owned by anyone else,
 	/// otherwise you may cause memory access violations.
 	///
-	/// This method is used internally by the library.
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self;
 
@@ -47,7 +48,8 @@ pub trait Handle: Sized
 	/// opaque pointer to an internal Windows structure, and no dereferencings
 	/// should be attempted.
 	///
-	/// This method is used internally by the library.
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn as_ptr(&self) -> *mut std::ffi::c_void;
 

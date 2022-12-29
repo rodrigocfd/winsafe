@@ -45,8 +45,10 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 /// [`VarQueryValue`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
 /// function.
 ///
-/// **Note:** The returned pointer and size vary according to `lpSubBlock`. If
-/// you set it wrong, you're likely to cause a buffer overrun.
+/// # Safety
+///
+/// The returned pointer and size vary according to `lpSubBlock`. If you set it
+/// wrong, you're likely to cause a buffer overrun.
 ///
 /// This function is rather tricky, consider using
 /// [`ResourceInfo`](crate::ResourceInfo).

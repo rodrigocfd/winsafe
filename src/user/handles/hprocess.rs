@@ -19,8 +19,10 @@ pub trait user_Hprocess: Handle {
 	/// [`SetUserObjectInformation`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
 	/// method.
 	///
-	/// **Note:** The `pv_info` type varies according to `index`. If you set it
-	/// wrong, you're likely to cause a buffer overrun.
+	/// # Safety
+	///
+	/// The `pv_info` type varies according to `index`. If you set it wrong,
+	/// you're likely to cause a buffer overrun.
 	unsafe fn SetUserObjectInformation<T>(&self,
 		index: co::UOI, pv_info: &mut T) -> SysResult<()>
 	{

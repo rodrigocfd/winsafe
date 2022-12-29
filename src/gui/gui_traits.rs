@@ -80,8 +80,11 @@ pub trait GuiParent: GuiWindow {
 	///
 	/// # Safety
 	///
-	/// The returned pointer must be cast to a specific struct used internally
-	/// by the library. This method is for internal use only.
+	/// The returned pointer must be cast to the specific underlying window
+	/// struct.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void;
 }

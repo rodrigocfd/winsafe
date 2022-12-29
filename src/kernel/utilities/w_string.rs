@@ -134,8 +134,11 @@ impl WString {
 	///
 	/// # Panics
 	///
-	/// Panics if the buffer wasn't previously allocated. Be sure to alloc
-	/// enough room, otherwise a buffer overrun may occur.
+	/// Panics if the buffer wasn't previously allocated.
+	///
+	/// # Safety
+	///
+	/// Be sure to alloc enough room, otherwise a buffer overrun may occur.
 	#[must_use]
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		if self.vec_u16.is_empty() {
@@ -150,9 +153,11 @@ impl WString {
 	/// const pointer to the internal UTF-16 string buffer, to be passed to
 	/// native Win32 functions.
 	///
-	/// **Note:** Returns a null pointer if the buffer wasn't previously
-	/// allocated. Make sure the `WString` object outlives the function call,
-	/// otherwise it will point to an invalid memory location.
+	/// # Safety
+	///
+	/// Returns a null pointer if the buffer wasn't previously allocated. Make
+	/// sure the `WString` object outlives the function call, otherwise it will
+	/// point to an invalid memory location.
 	#[must_use]
 	pub unsafe fn as_ptr(&self) -> *const u16 {
 		if self.vec_u16.is_empty() {
@@ -199,10 +204,12 @@ impl WString {
 	///
 	/// If the new size is zero, the internal buffer is deallocated.
 	///
-	/// **Note:** The internal memory can be moved after a realloc, so if you're
-	/// using a pointer to the internal buffer, it may then point to an invalid
-	/// memory location. After a realloc, the following methods must be called
-	/// again:
+	/// # Safety
+	///
+	/// The internal memory can be moved after a realloc, so if you're using a
+	/// pointer to the internal buffer, it may then point to an invalid memory
+	/// location. After a realloc, the following methods must be called again:
+	///
 	/// * [`as_mut_ptr`](crate::WString::as_mut_ptr);
 	/// * [`as_ptr`](crate::WString::as_ptr).
 	pub unsafe fn buf_realloc(&mut self, new_size: usize) {

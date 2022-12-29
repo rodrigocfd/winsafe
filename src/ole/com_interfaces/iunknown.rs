@@ -55,19 +55,37 @@ pub trait ole_IUnknown: Clone + From<ComPtr> {
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// won't be called.
 	///
-	/// **Note:** Be sure to release the pointer, otherwise, as the name of this
-	/// method implies, you will cause a resource leak.
+	/// # Safety
+	///
+	/// Be sure to release the pointer, otherwise, as the name of this method
+	/// implies, you will cause a resource leak.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn leak(&mut self) -> ComPtr;
 
 	/// Returns the pointer to the underlying COM virtual table.
+	///
+	/// # Safety
+	///
+	/// The returned pointer is allocated and alive in the source COM interface,
+	/// and should not be released. Do not cast this pointer into anything else.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn ptr(&self) -> ComPtr;
 
 	/// Returns a reference to the underlying COM virtual table.
 	///
-	/// **Note:** Be sure the pointer has the correct virtual table type (or
-	/// inherits from it), and it is not null.
+	/// # Safety
+	///
+	/// Be sure the pointer has the correct virtual table type (or inherits from
+	/// it), and is not null.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	unsafe fn vt_ref<T>(&self) -> &T;
 

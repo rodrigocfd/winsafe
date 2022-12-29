@@ -59,14 +59,16 @@ impl DlgBase {
 
 		// Our hwnd member is set during WM_INITDIALOG processing; already set
 		// when CreateDialogParam returns.
-		self.base.parent_hinstance().CreateDialogParam(
-			IdStr::Id(self.dialog_id),
-			self.base.parent().map(|parent| parent.hwnd()),
-			Self::dialog_proc,
-			// Pass pointer to Self.
-			// At this moment, the parent struct is already created and pinned.
-			Some(self as *const _ as _),
-		).unwrap();
+		unsafe {
+			self.base.parent_hinstance().CreateDialogParam(
+				IdStr::Id(self.dialog_id),
+				self.base.parent().map(|parent| parent.hwnd()),
+				Self::dialog_proc,
+				// Pass pointer to Self.
+				// At this moment, the parent struct is already created and pinned.
+				Some(self as *const _ as _),
+			)
+		}.unwrap();
 	}
 
 	pub(in crate::gui) fn dialog_box_param(&self) -> i32 {
@@ -76,14 +78,16 @@ impl DlgBase {
 
 		// Our hwnd member is set during WM_INITDIALOG processing; already set
 		// when DialogBoxParam returns.
-		let ret = self.base.parent_hinstance().DialogBoxParam(
-			IdStr::Id(self.dialog_id),
-			self.base.parent().map(|parent| parent.hwnd()),
-			Self::dialog_proc,
-			// Pass pointer to Self.
-			// At this moment, the parent struct is already created and pinned.
-			Some(self as *const _ as _),
-		).unwrap();
+		let ret = unsafe {
+			self.base.parent_hinstance().DialogBoxParam(
+				IdStr::Id(self.dialog_id),
+				self.base.parent().map(|parent| parent.hwnd()),
+				Self::dialog_proc,
+				// Pass pointer to Self.
+				// At this moment, the parent struct is already created and pinned.
+				Some(self as *const _ as _),
+			)
+		}.unwrap();
 
 		ret as _
 	}

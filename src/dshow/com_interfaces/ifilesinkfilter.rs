@@ -39,9 +39,11 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// [`IFileSinkFilter::GetCurFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-getcurfile)
 	/// method.
 	///
-	/// **Note:** If you pass an [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE)
-	/// reference to `pmt`, its `pbFormat` field may return a valid reference to
-	/// a format block. If so, you must free it with
+	/// # Safety
+	///
+	/// If you pass an [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) reference to
+	/// `pmt`, its `pbFormat` field may return a valid reference to a format
+	/// block. If so, you must free it with
 	/// [`CoTaskMemFree`](crate::CoTaskMemFree), or you'll have a memory leak.
 	///
 	/// # Examples

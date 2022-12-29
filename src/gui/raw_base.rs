@@ -186,7 +186,7 @@ impl RawBase {
 
 	pub(in crate::gui) fn register_class(&self, wcx: &mut WNDCLASSEX) -> ATOM {
 		SetLastError(co::ERROR::SUCCESS);
-		match RegisterClassEx(&wcx) {
+		match unsafe { RegisterClassEx(&wcx) } {
 			Ok(atom) => atom,
 			Err(err) => match err {
 				co::ERROR::CLASS_ALREADY_EXISTS => {

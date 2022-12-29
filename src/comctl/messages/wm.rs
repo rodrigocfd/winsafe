@@ -39,6 +39,10 @@ unsafe impl<'a> MsgSendRecv for Notify<'a> {
 impl<'a> Notify<'a> {
 	/// Casts the `NMHDR` reference into a derived struct.
 	///
+	/// # Safety
+	///
+	/// The casting must be done to the correct struct.
+	///
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
@@ -46,6 +50,10 @@ impl<'a> Notify<'a> {
 	}
 
 	/// Casts the `NMHDR` mutable reference into a derived struct.
+	///
+	/// # Safety
+	///
+	/// The casting must be done to the correct struct.
 	///
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.

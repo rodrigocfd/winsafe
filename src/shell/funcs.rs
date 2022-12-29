@@ -144,8 +144,10 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 /// [`SHAddToRecentDocs`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)
 /// function.
 ///
-/// **Note:** The `pv` type varies according to `uFlags`. If you set it wrong,
-/// you're likely to cause a buffer overrun.
+/// # Safety
+///
+/// The `pv` type varies according to `uFlags`. If you set it wrong, you're
+/// likely to cause a buffer overrun.
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 	shell::ffi::SHAddToRecentDocs(flags.0, pv as *const _ as _);
 }

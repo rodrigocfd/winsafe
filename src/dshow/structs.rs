@@ -32,6 +32,8 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 
 	/// Returns the `pbFormat` field.
 	///
+	/// # Safety
+	///
 	/// Varies according to the `formattype`. If you set it wrong, you're likely
 	/// to cause a buffer overrun.
 	#[must_use]
@@ -40,6 +42,8 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 	}
 
 	/// Sets the `pbFormat` field.
+	///
+	/// # Safety
 	///
 	/// Varies according to the `formattype`. If you set it wrong, you're likely
 	/// to cause a buffer overrun.

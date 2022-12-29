@@ -27,6 +27,9 @@ impl RegistryValue {
 	///
 	/// Assumes the binary data block has the correct content, according to the
 	/// informed [`co::REG`](crate::co::REG).
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	pub unsafe fn from_raw(buf: Vec<u8>, reg_type: co::REG) -> RegistryValue {
 		match reg_type {
@@ -75,7 +78,6 @@ impl RegistryValue {
 		}
 	}
 
-	#[must_use]
 	fn as_ptr_with_len_str(str_buf: &WString) -> (*const std::ffi::c_void, u32) {
 		(
 			unsafe { str_buf.as_ptr() as *const std::ffi::c_void },

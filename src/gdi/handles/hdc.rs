@@ -261,8 +261,9 @@ pub trait gdi_Hdc: Handle {
 	/// [`GetDIBits`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdibits)
 	/// method.
 	///
-	/// **Note:** If `bmpDataBuf` is smaller than needed, you'll have a buffer
-	/// overflow.
+	/// # Safety
+	///
+	/// If `bmpDataBuf` is smaller than needed, you'll have a buffer overflow.
 	///
 	/// # Examples
 	///

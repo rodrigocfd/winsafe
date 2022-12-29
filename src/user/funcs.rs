@@ -119,6 +119,8 @@ pub fn ClipCursor(rc: Option<&RECT>) -> SysResult<()> {
 /// [`DispatchMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessagew)
 /// function.
 ///
+/// # Safety
+///
 /// This function is used internally in window loops. Avoid using it in other
 /// situations.
 pub unsafe fn DispatchMessage(msg: &MSG) -> isize {
@@ -540,7 +542,12 @@ pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 
 /// [`RegisterClassEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
 /// function.
-pub fn RegisterClassEx(wcx: &WNDCLASSEX) -> SysResult<ATOM> {
+///
+/// # Safety
+///
+/// In order to register a window class name, you must reset the global error
+/// with [`SetLastError`](crate::SetLastError) and provide a window procedure.
+pub unsafe fn RegisterClassEx(wcx: &WNDCLASSEX) -> SysResult<ATOM> {
 	match unsafe { user::ffi::RegisterClassExW(wcx as *const _ as _) } {
 		0 => Err(GetLastError()),
 		atom => Ok(ATOM(atom)),
@@ -570,8 +577,10 @@ pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 /// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
 /// function.
 ///
-/// **Note:** The returned pointer must be correctly cast to the memory block
-/// specified by `format`.
+/// # Safety
+///
+/// The returned pointer must be correctly cast to the memory block specified by
+/// `format`.
 pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
 	user::ffi::GetClipboardData(format.0)
 		.as_mut()
@@ -582,8 +591,10 @@ pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
 /// [`SetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
 /// function.
 ///
-/// **Note:** The `hmem` memory block must be correctly allocated and contain
-/// the type specified by `format`.
+/// # Safety
+///
+/// The `hmem` memory block must be correctly allocated and contain the type
+/// specified by `format`.
 pub unsafe fn SetClipboardData(
 	format: co::CF, hmem: *mut u8) -> SysResult<*mut u8>
 {
@@ -620,8 +631,10 @@ pub fn SoundSentry() -> bool {
 /// [`SystemParametersInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)
 /// function.
 ///
-/// **Note:** The `pv_param` type varies according to `action`. If you set it
-/// wrong, you're likely to cause a buffer overrun.
+/// # Safety
+///
+/// The `pv_param` type varies according to `action`. If you set it wrong,
+/// you're likely to cause a buffer overrun.
 pub unsafe fn SystemParametersInfo<T>(
 	action: co::SPI,
 	ui_param: u32,
