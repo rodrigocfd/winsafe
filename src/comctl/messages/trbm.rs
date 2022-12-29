@@ -1,8 +1,9 @@
 use crate::co;
+use crate::kernel::decl::{MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{HWND, RECT};
-use crate::user::privs::zero_as_none;
+use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 
 /// [`TBM_CLEARSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-clearsel)
 /// message parameters.
@@ -322,6 +323,54 @@ unsafe impl<'a> MsgSend for GetThumbRect<'a> {
 	}
 }
 
+/// [`TBM_GETTIC`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-gettic)
+/// message parameters.
+///
+/// Return type: `SysResult<u32>`.
+pub struct GetTic {
+	pub index: u32,
+}
+
+unsafe impl MsgSend for GetTic {
+	type RetType = SysResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_err(v).map(|v| v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TRBM::GETTIC.into(),
+			wparam: self.index as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TBM_GETTICPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getticpos)
+/// message parameters.
+///
+/// Return type: `SysResult<u32>`.
+pub struct GetTicPos {
+	pub index: u32,
+}
+
+unsafe impl MsgSend for GetTicPos {
+	type RetType = SysResult<u32>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_err(v).map(|v| v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TRBM::GETTICPOS.into(),
+			wparam: self.index as _,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`TBM_GETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-gettooltips)
 /// message, which has no parameters.
 ///
@@ -338,6 +387,28 @@ unsafe impl MsgSend for GetTooltips {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TRBM::GETTOOLTIPS.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TBM_GETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-getunicodeformat)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+pub struct GetUnicodeFormat {}
+
+unsafe impl MsgSend for GetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
 		}
@@ -365,6 +436,30 @@ unsafe impl MsgSend for SetBuddy {
 			msg_id: co::TRBM::SETBUDDY.into(),
 			wparam: self.left_above as _,
 			lparam: self.hwnd_buddy.0 as _,
+		}
+	}
+}
+
+/// [`TBM_SETLINESIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setlinesize)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct SetLineSize {
+	pub size: u32,
+}
+
+unsafe impl MsgSend for SetLineSize {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TRBM::SETLINESIZE.into(),
+			wparam: 0,
+			lparam: self.size as _,
 		}
 	}
 }
@@ -442,6 +537,32 @@ unsafe impl MsgSend for SetPosNotify {
 	}
 }
 
+/// [`TBM_SETRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setrange)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetRange {
+	pub redraw: bool,
+	pub min_pos: u16,
+	pub max_pos: u16,
+}
+
+unsafe impl MsgSend for SetRange {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TRBM::SETRANGE.into(),
+			wparam: self.redraw as _,
+			lparam: MAKEDWORD(self.min_pos, self.max_pos) as _,
+		}
+	}
+}
+
 /// [`TBM_SETRANGEMAX`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setrangemax)
 /// message parameters.
 ///
@@ -488,6 +609,32 @@ unsafe impl MsgSend for SetRangeMin {
 			msg_id: co::TRBM::SETRANGEMIN.into(),
 			wparam: self.redraw as _,
 			lparam: self.min as _,
+		}
+	}
+}
+
+/// [`TBM_SETSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setsel)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetSel {
+	pub redraw: bool,
+	pub start_pos: u16,
+	pub end_pos: u16,
+}
+
+unsafe impl MsgSend for SetSel {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TRBM::SETSEL.into(),
+			wparam: self.redraw as _,
+			lparam: MAKEDWORD(self.start_pos, self.end_pos) as _,
 		}
 	}
 }
@@ -566,6 +713,30 @@ unsafe impl MsgSend for SetThumbLength {
 	}
 }
 
+/// [`TBM_SETTIC`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-settic)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetTic {
+	pub pos: u32,
+}
+
+unsafe impl MsgSend for SetTic {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TRBM::SETTIC.into(),
+			wparam: 0,
+			lparam: self.pos as _,
+		}
+	}
+}
+
 /// [`TBM_SETTICFREQ`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setticfreq)
 /// message parameters.
 ///
@@ -590,6 +761,30 @@ unsafe impl MsgSend for SetTicFreq {
 	}
 }
 
+/// [`TBM_SETTIPSIDE`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-settipside)
+/// message parameters.
+///
+/// Return type: `co::TBTS`.
+pub struct SetTipSide {
+	pub location: co::TBTS,
+}
+
+unsafe impl MsgSend for SetTipSide {
+	type RetType = co::TBTS;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		co::TBTS(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TRBM::SETTIPSIDE.into(),
+			wparam: self.location.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`TBM_SETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-settooltips)
 /// message parameters.
 ///
@@ -609,6 +804,30 @@ unsafe impl MsgSend for SetTooltips {
 		WndMsg {
 			msg_id: co::TRBM::SETTOOLTIPS.into(),
 			wparam: self.hwnd_tooltip.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TBM_SETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-setunicodeformat)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct SetUnicodeFormat {
+	pub use_unicode: bool,
+}
+
+unsafe impl MsgSend for SetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETUNICODEFORMAT.into(),
+			wparam: self.use_unicode as _,
 			lparam: 0,
 		}
 	}

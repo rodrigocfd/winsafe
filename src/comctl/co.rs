@@ -2005,6 +2005,16 @@ const_wsex! { TBSTYLE_EX;
 	DOUBLEBUFFER 0x0000_0080
 }
 
+const_ordinary! { TBTS: u8;
+	/// [`trbm::SetTipSide`](crate::msg::trbm::SetTipSide) `location` (`u8`).
+	=>
+	=>
+	TOP 0
+	LEFT 1
+	BOTTOM 2
+	RIGHT 3
+}
+
 const_bitflag! { TCIS: u32;
 	/// Tab control item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
