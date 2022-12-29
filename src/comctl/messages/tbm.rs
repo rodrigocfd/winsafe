@@ -6,7 +6,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::HINST_COMMCTRL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
@@ -1594,7 +1594,7 @@ unsafe impl<'a> MsgSend for SetDisabledImageList<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETDISABLEDIMAGELIST.into(),
 			wparam: 0,
-			lparam: unsafe { self.himagelist.as_ptr() } as _,
+			lparam: self.himagelist.0 as _,
 		}
 	}
 }
@@ -1667,7 +1667,7 @@ unsafe impl<'a> MsgSend for SetHotImageList<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETHOTIMAGELIST.into(),
 			wparam: 0,
-			lparam: unsafe { self.himagelist.as_ptr() } as _,
+			lparam: self.himagelist.0 as _,
 		}
 	}
 }
@@ -1740,7 +1740,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETIMAGELIST.into(),
 			wparam: 0,
-			lparam: unsafe { self.himagelist.as_ptr() } as _,
+			lparam: self.himagelist.0 as _,
 		}
 	}
 }

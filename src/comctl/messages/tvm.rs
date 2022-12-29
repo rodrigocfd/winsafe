@@ -3,7 +3,7 @@ use crate::comctl::decl::{HIMAGELIST, HTREEITEM, TVINSERTSTRUCT, TVITEMEX};
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
@@ -98,7 +98,7 @@ unsafe impl<'a> MsgSend for EnsureVisible<'a> {
 		WndMsg {
 			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
-			lparam: unsafe { self.hitem.as_ptr() } as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }
@@ -374,7 +374,7 @@ unsafe impl<'a> MsgSend for GetItemState<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMSTATE.into(),
-			wparam: unsafe { self.hitem.as_ptr() } as _,
+			wparam: self.hitem.0 as _,
 			lparam: self.mask.0 as _,
 		}
 	}
@@ -425,7 +425,7 @@ unsafe impl<'a> MsgSend for GetNextItem<'a> {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.0 as _,
-			lparam: self.hitem.map_or(0, |h| unsafe { h.as_ptr() } as _),
+			lparam: self.hitem.map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -562,7 +562,7 @@ unsafe impl<'a> MsgSend for SelectItem<'a> {
 		WndMsg {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.0 as _,
-			lparam: unsafe { self.hitem.as_ptr() } as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }
@@ -586,7 +586,7 @@ unsafe impl<'a> MsgSend for SetHot<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
-			lparam: self.hitem.map_or(0, |h| unsafe { h.as_ptr() } as _),
+			lparam: self.hitem.map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -611,7 +611,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himglist.map_or(0, |h| unsafe { h.as_ptr() } as _),
+			lparam: self.himglist.map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -683,7 +683,7 @@ unsafe impl<'a> MsgSend for ShowInfoTip<'a> {
 		WndMsg {
 			msg_id: co::TVM::SHOWINFOTIP.into(),
 			wparam: 0,
-			lparam: unsafe { self.hitem.as_ptr() } as _,
+			lparam: self.hitem.0 as _,
 		}
 	}
 }

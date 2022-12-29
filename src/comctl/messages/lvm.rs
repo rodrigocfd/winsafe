@@ -7,7 +7,7 @@ use crate::comctl::decl::{
 };
 use crate::kernel::decl::{MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HCURSOR, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
@@ -2325,7 +2325,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::LVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: unsafe { self.himagelist.as_ptr() } as _,
+			lparam: self.himagelist.0 as _,
 		}
 	}
 }

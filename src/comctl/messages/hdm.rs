@@ -2,7 +2,7 @@ use crate::co;
 use crate::comctl::decl::{HDHITTESTINFO, HDITEM, HDLAYOUT, HIMAGELIST, PtIdx};
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::RECT;
 use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 
@@ -557,7 +557,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
 			wparam: self.which.0 as _,
-			lparam: self.himagelist.map_or(0, |h| unsafe { h.as_ptr() } as _),
+			lparam: self.himagelist.map_or(0, |h| h.0 as _),
 		}
 	}
 }

@@ -2,7 +2,7 @@ use crate::co;
 use crate::gdi::decl::HFONT;
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::privs::zero_as_err;
 
 /// [`DTM_GETMCFONT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getmcfont)
@@ -46,7 +46,7 @@ unsafe impl<'a> MsgSend for SetMcFont<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCFONT.into(),
-			wparam: unsafe { self.hfont.as_ptr() } as _,
+			wparam: self.hfont.0 as _,
 			lparam: self.redraw as _,
 		}
 	}
