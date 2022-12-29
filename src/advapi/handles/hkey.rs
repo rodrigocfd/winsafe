@@ -59,11 +59,11 @@ pub trait advapi_Hkey: Handle {
 	/// - [`HKEY::USERS`](crate::prelude::advapi_Hkey::USERS).
 	#[must_use]
 	fn RegConnectRegistry(
-		machine_name: Option<&str>, predef_hkey: HKEY) -> SysResult<HkeyGuard>
+		machine_name: Option<&str>, predef_hkey: &HKEY) -> SysResult<HkeyGuard>
 	{
-		if predef_hkey != HKEY::LOCAL_MACHINE
-			&& predef_hkey != HKEY::PERFORMANCE_DATA
-			&& predef_hkey != HKEY::USERS
+		if *predef_hkey != HKEY::LOCAL_MACHINE
+			&& *predef_hkey != HKEY::PERFORMANCE_DATA
+			&& *predef_hkey != HKEY::USERS
 		{
 			panic!("Invalid predef_key.");
 		}

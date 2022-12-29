@@ -27,7 +27,7 @@ pub trait advapi_ktm_Hkey: Handle {
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
-		htransaction: HTRANSACTION) -> SysResult<(HkeyGuard, co::REG_DISPOSITION)>
+		htransaction: &HTRANSACTION) -> SysResult<(HkeyGuard, co::REG_DISPOSITION)>
 	{
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
@@ -61,7 +61,7 @@ pub trait advapi_ktm_Hkey: Handle {
 		sub_key: &str,
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
-		htransaction: HTRANSACTION) -> SysResult<HkeyGuard>
+		htransaction: &HTRANSACTION) -> SysResult<HkeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
 		match co::ERROR(

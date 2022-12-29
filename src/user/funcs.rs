@@ -654,7 +654,7 @@ pub fn TranslateMessage(msg: &MSG) -> bool {
 
 /// [`UnregisterClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
-pub fn UnregisterClass(class_name: &str, hinst: HINSTANCE) -> SysResult<()> {
+pub fn UnregisterClass(class_name: &str, hinst: &HINSTANCE) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
 			user::ffi::UnregisterClassW(

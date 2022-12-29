@@ -79,7 +79,7 @@ impl DlgMain {
 			.transpose()
 			.unwrap();
 
-		self.set_icon_if_any(hinst);
+		self.set_icon_if_any(&hinst);
 		self.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
 		Base::run_main_loop(haccel.as_ref()) // blocks until window is closed
@@ -98,7 +98,7 @@ impl DlgMain {
 		});
 	}
 
-	fn set_icon_if_any(&self, hinst: HINSTANCE) {
+	fn set_icon_if_any(&self, hinst: &HINSTANCE) {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {
