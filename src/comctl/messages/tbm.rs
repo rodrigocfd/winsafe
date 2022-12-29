@@ -1888,3 +1888,224 @@ unsafe impl<'a> MsgSend for SetMetrics<'a> {
 		}
 	}
 }
+
+/// [`TB_SETPADDING`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setpadding)
+/// message parameters.
+///
+/// Return type: `(u16, u16)`.
+pub struct SetPadding {
+	pub horizontal: u16,
+	pub vertical: u16,
+}
+
+unsafe impl MsgSend for SetPadding {
+	type RetType = (u16, u16);
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as _), HIWORD(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETPADDING.into(),
+			wparam: 0,
+			lparam: MAKEDWORD(self.horizontal, self.vertical) as _,
+		}
+	}
+}
+
+/// [`TB_SETPARENT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setparent)
+/// message parameters.
+///
+/// Return type: `Option<HWND>`.
+pub struct SetParent<'a> {
+	pub hparent: &'a HWND
+}
+
+unsafe impl<'a> MsgSend for SetParent<'a> {
+	type RetType = Option<HWND>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HWND(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETPARENT.into(),
+			wparam: 0,
+			lparam: self.hparent.0 as _,
+		}
+	}
+}
+
+/// [`TB_SETPRESSEDIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setpressedimagelist)
+/// message, which has no parameters.
+///
+/// Return type: `Option<HIMAGELIST>`.
+pub struct SetPressedImageList<'a> {
+	pub index: u32,
+	pub himagelist: Option<&'a HIMAGELIST>,
+}
+
+unsafe impl<'a> MsgSend for SetPressedImageList<'a> {
+	type RetType = Option<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETPRESSEDIMAGELIST.into(),
+			wparam: self.index as _,
+			lparam: self.himagelist.map_or(0, |h| h.0 as _),
+		}
+	}
+}
+
+/// [`TB_SETROWS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setrows)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetRows<'a> {
+	pub num_rows: u16,
+	pub create_more: bool,
+	pub bounds: &'a mut RECT,
+}
+
+unsafe impl<'a> MsgSend for SetRows<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETROWS.into(),
+			wparam: MAKEDWORD(self.num_rows, self.create_more as _) as _,
+			lparam: self.bounds as *mut _ as _,
+		}
+	}
+}
+
+/// [`TB_SETSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setstate)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetState {
+	pub btn_cmd_id: u16,
+	pub state: co::BTNS,
+}
+
+unsafe impl MsgSend for SetState {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETSTATE.into(),
+			wparam: self.btn_cmd_id as _,
+			lparam: MAKEDWORD(self.state.0 as _, 0) as _,
+		}
+	}
+}
+
+/// [`TB_SETSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setstyle)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetStyle {
+	pub style: co::BTNS,
+}
+
+unsafe impl MsgSend for SetStyle {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETSTYLE.into(),
+			wparam: 0,
+			lparam: self.style.0 as _,
+		}
+	}
+}
+
+/// [`TB_SETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setstyle)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetTooltips<'a> {
+	pub htooltips: &'a HWND,
+}
+
+unsafe impl<'a> MsgSend for SetTooltips<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETTOOLTIPS.into(),
+			wparam: self.htooltips.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_SETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setunicodeformat)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct SetUnicodeFormat {
+	pub use_unicode: bool,
+}
+
+unsafe impl MsgSend for SetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETUNICODEFORMAT.into(),
+			wparam: self.use_unicode as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TB_SETWINDOWTHEME`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setwindowtheme)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetWindowTheme {
+	pub visual_style: WString,
+}
+
+unsafe impl MsgSend for SetWindowTheme {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TBM::SETWINDOWTHEME.into(),
+			wparam: 0,
+			lparam: unsafe { self.visual_style.as_ptr() } as _,
+		}
+	}
+}
