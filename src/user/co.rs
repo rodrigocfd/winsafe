@@ -3262,6 +3262,8 @@ const_bitflag! { WS: u32;
 	/// convertible to `WS`.
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	/// The window is an overlapped window. An overlapped window has a title bar
 	/// and a border. Same as the `WS::TILED` style.
 	OVERLAPPED 0x0000_0000
@@ -3373,6 +3375,8 @@ const_bitflag! { WS_EX: u32;
 	/// are convertible to `WS`.
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	/// The window has a double border; the window can optionally be created
 	/// with a title bar by specifying the
 	/// [`WS::CAPTION`](crate::co::WS::CAPTION) style in the dwStyle parameter.
