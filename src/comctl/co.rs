@@ -2268,6 +2268,24 @@ const_ordinary! { TVGN: u32;
 	TVSI_NOSINGLEEXPAND 0x8000
 }
 
+const_bitflag! { TVHT: u32;
+	/// [`TVHITTESTINFO`](crate::TVHITTESTINFO) `flags` (`u32`).
+	=>
+	=>
+	NOWHERE 0x0001
+	ONITEMICON 0x0002
+	ONITEMLABEL 0x0004
+	ONITEM TVHT::ONITEMICON.0 | TVHT::ONITEMLABEL.0 | TVHT::ONITEMSTATEICON.0
+	ONITEMINDENT 0x0008
+	ONITEMBUTTON 0x0010
+	ONITEMRIGHT 0x0020
+	ONITEMSTATEICON 0x0040
+	ABOVE 0x0100
+	BELOW 0x0200
+	TORIGHT 0x0400
+	TOLEFT 0x0800
+}
+
 const_ordinary! { TVI: isize;
 	/// [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter` (`isize`).
 	=>
@@ -2324,6 +2342,14 @@ const_bitflag! { TVIS_EX: u32;
 	FLAT 0x0001
 	/// This value is not declared in any header, it may not be accurate.
 	HWND 0x0000
+}
+
+const_bitflag! { TVSBF: u32;
+	/// [`tvm::SetBorder`](crate::msg::tvm::SetBorder) `action` (`u32`).
+	=>
+	=>
+	XBORDER 0x0000_0001
+	YBORDER 0x0000_0002
 }
 
 const_wm! { TVM;

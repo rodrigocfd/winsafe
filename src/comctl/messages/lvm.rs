@@ -84,7 +84,7 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|h| HIMAGELIST(h as _))
+		zero_as_err(v).map(|p| HIMAGELIST(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -178,7 +178,7 @@ unsafe impl MsgSend for EditLabel {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|h| HWND(h as _))
+		zero_as_err(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -437,7 +437,7 @@ unsafe impl MsgSend for GetEditControl {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|h| HWND(h as _))
+		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1515,7 +1515,7 @@ unsafe impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|h| HWND(h as _))
+		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2213,11 +2213,11 @@ unsafe impl<'a> MsgSend for SetGroupMetrics<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<HCURSOR>`.
-pub struct SetHotCursor {
-	pub hcursor: Option<HCURSOR>,
+pub struct SetHotCursor<'a> {
+	pub hcursor: Option<&'a HCURSOR>,
 }
 
-unsafe impl MsgSend for SetHotCursor {
+unsafe impl<'a> MsgSend for SetHotCursor<'a> {
 	type RetType = Option<HCURSOR>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -2228,7 +2228,7 @@ unsafe impl MsgSend for SetHotCursor {
 		WndMsg {
 			msg_id: co::LVM::SETHOTCURSOR.into(),
 			wparam: 0,
-			lparam: self.hcursor.as_ref().map_or(0, |h| h.0 as _),
+			lparam: self.hcursor.map_or(0, |h| h.0 as _),
 		}
 	}
 }
@@ -2723,21 +2723,21 @@ unsafe impl<'a> MsgSend for SetTileViewInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct SetTooltips {
-	pub tooltip: Option<HWND>,
+pub struct SetTooltips<'a> {
+	pub tooltip: Option<&'a HWND>,
 }
 
-unsafe impl MsgSend for SetTooltips {
+unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|h| HWND(h as _))
+		zero_as_none(v).map(|p| HWND(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETTOOLTIPS.into(),
-			wparam: self.tooltip.as_ref().map_or(0, |h| h.0 as _),
+			wparam: self.tooltip.map_or(0, |h| h.0 as _),
 			lparam: 0,
 		}
 	}

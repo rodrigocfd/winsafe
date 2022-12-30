@@ -550,7 +550,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|h| HIMAGELIST(h as _))
+		zero_as_none(v).map(|p| HIMAGELIST(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

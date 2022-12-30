@@ -224,7 +224,7 @@ pub fn SHGetFileInfo(
 pub fn SHGetKnownFolderPath(
 	folder_id: &co::KNOWNFOLDERID,
 	flags: co::KF,
-	token: Option<HACCESSTOKEN>) -> HrResult<String>
+	token: Option<&HACCESSTOKEN>) -> HrResult<String>
 {
 	let mut pstr: *mut u16 = std::ptr::null_mut();
 	ok_to_hrresult(

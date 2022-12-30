@@ -1204,6 +1204,15 @@ impl TBREPLACEBITMAP {
 	}
 }
 
+/// [`TVHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvhittestinfo)
+/// struct.
+#[repr(C)]
+pub struct TVHITTESTINFO {
+	pub pt: POINT,
+	pub flags: co::TVHT,
+	pub hitem: HTREEITEM,
+}
+
 /// [`TVINSERTSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
 /// struct.
 #[repr(C)]

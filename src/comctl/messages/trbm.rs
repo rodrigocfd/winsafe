@@ -419,12 +419,12 @@ unsafe impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct SetBuddy {
+pub struct SetBuddy<'a> {
 	pub left_above: bool,
-	pub hwnd_buddy: HWND,
+	pub hwnd_buddy: &'a HWND,
 }
 
-unsafe impl MsgSend for SetBuddy {
+unsafe impl<'a> MsgSend for SetBuddy<'a> {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -789,11 +789,11 @@ unsafe impl MsgSend for SetTipSide {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetTooltips {
-	pub hwnd_tooltip: HWND,
+pub struct SetTooltips<'a> {
+	pub hwnd_tooltip: &'a HWND,
 }
 
-unsafe impl MsgSend for SetTooltips {
+unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	type RetType = ();
 
 	fn convert_ret(&self, _: isize) -> Self::RetType {

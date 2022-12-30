@@ -1,21 +1,47 @@
 use crate::co;
-use crate::comctl::decl::{HIMAGELIST, HTREEITEM, TVINSERTSTRUCT, TVITEMEX};
+use crate::comctl::decl::{
+	HIMAGELIST, HTREEITEM, TVHITTESTINFO, TVINSERTSTRUCT, TVITEMEX,
+};
 use crate::comctl::privs::CLR_DEFAULT;
-use crate::kernel::decl::SysResult;
+use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
+/// [`TVM_CREATEDRAGIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-createdragimage)
+/// message parameters.
+///
+/// Return type: `SysResult<HIMAGELIST>`.
+pub struct CreateDragImage<'a> {
+	pub hitem: &'a HTREEITEM,
+}
+
+unsafe impl<'a> MsgSend for CreateDragImage<'a> {
+	type RetType = SysResult<HIMAGELIST>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HIMAGELIST(p as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::CREATEDRAGIMAGE.into(),
+			wparam: 0,
+			lparam: self.hitem.0 as _,
+		}
+	}
+}
+
 /// [`TVM_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-deleteitem)
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteItem {
-	pub hitem: HTREEITEM,
+pub struct DeleteItem<'a> {
+	pub hitem: &'a HTREEITEM,
 }
 
-unsafe impl MsgSend for DeleteItem {
+unsafe impl<'a> MsgSend for DeleteItem<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -35,11 +61,11 @@ unsafe impl MsgSend for DeleteItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct EditLabel {
-	pub hitem: HTREEITEM,
+pub struct EditLabel<'a> {
+	pub hitem: &'a HTREEITEM,
 }
 
-unsafe impl MsgSend for EditLabel {
+unsafe impl<'a> MsgSend for EditLabel<'a> {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -107,12 +133,12 @@ unsafe impl<'a> MsgSend for EnsureVisible<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Expand {
+pub struct Expand<'a> {
 	pub action: co::TVE,
-	pub hitem: HTREEITEM,
+	pub hitem: &'a HTREEITEM,
 }
 
-unsafe impl MsgSend for Expand {
+unsafe impl<'a> MsgSend for Expand<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -280,6 +306,30 @@ unsafe impl MsgSend for GetInsertMarkColor {
 			msg_id: co::TVM::GETINSERTMARKCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_GETISEARCHSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getisearchstring)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct GetISearchString<'a> {
+	pub buf: &'a mut WString,
+}
+
+unsafe impl<'a> MsgSend for GetISearchString<'a> {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETISEARCHSTRING.into(),
+			wparam: 0,
+			lparam: unsafe { self.buf.as_mut_ptr() } as _,
 		}
 	}
 }
@@ -496,6 +546,28 @@ unsafe impl MsgSend for GetTooltips {
 	}
 }
 
+/// [`HDM_GETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getunicodeformat)
+/// message, which has no parameters.
+///
+/// Return type: `bool`.
+pub struct GetUnicodeFormat {}
+
+unsafe impl MsgSend for GetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::GETUNICODEFORMAT.into(),
+			wparam: 0,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`TVM_GETVISIBLECOUNT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-getvisiblecount)
 /// message, which has no parameters.
 ///
@@ -514,6 +586,30 @@ unsafe impl MsgSend for GetVisibleCount {
 			msg_id: co::TVM::GETVISIBLECOUNT.into(),
 			wparam: 0,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_HITTEST`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-hittest)
+/// message parameters.
+///
+/// Return type: `Option<HTREEITEM>`.
+pub struct HitTest<'a> {
+	pub info: &'a TVHITTESTINFO,
+}
+
+unsafe impl<'a> MsgSend for HitTest<'a> {
+	type RetType = Option<HTREEITEM>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HTREEITEM(p as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::HITTEST.into(),
+			wparam: 0,
+			lparam: &mut self.info as *mut _ as _,
 		}
 	}
 }
@@ -542,6 +638,54 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	}
 }
 
+/// [`TVM_MAPACCIDTOHTREEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-mapaccidtohtreeitem)
+/// message parameters.
+///
+/// Return type: `Option<HTREEITEM>`.
+pub struct MapAccIdToHtreeitem {
+	pub acc_id: u32,
+}
+
+unsafe impl MsgSend for MapAccIdToHtreeitem {
+	type RetType = SysResult<HTREEITEM>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|p| HTREEITEM(p as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::MAPACCIDTOHTREEITEM.into(),
+			wparam: self.acc_id as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_MAPHTREEITEMTOACCID`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-maphtreeitemtoaccid)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct MapHtreeitemToAccId<'a> {
+	pub hitem: &'a HTREEITEM,
+}
+
+unsafe impl<'a> MsgSend for MapHtreeitemToAccId<'a> {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::MAPHTREEITEMTOACCID.into(),
+			wparam: self.hitem.0 as _,
+			lparam: 0,
+		}
+	}
+}
+
 /// [`TVM_SELECTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-selectitem)
 /// message parameters.
 ///
@@ -563,6 +707,84 @@ unsafe impl<'a> MsgSend for SelectItem<'a> {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.0 as _,
 			lparam: self.hitem.0 as _,
+		}
+	}
+}
+
+/// [`TVM_SETAUTOSCROLLINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setautoscrollinfo)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct SetAutoScrollInfo {
+	pub pixels_per_second: u32,
+	pub redraw_interval: u32,
+}
+
+unsafe impl MsgSend for SetAutoScrollInfo {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETAUTOSCROLLINFO.into(),
+			wparam: self.pixels_per_second as _,
+			lparam: self.redraw_interval as _,
+		}
+	}
+}
+
+/// [`TVM_SETBKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setbkcolor)
+/// message parameters.
+///
+/// Return type: `Option<COLORREF>`.
+pub struct SetBkColor {
+	pub color: Option<COLORREF>,
+}
+
+unsafe impl MsgSend for SetBkColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			v => Some(COLORREF(v as _)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETBKCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.map_or(-1, |color| color.0 as _),
+		}
+	}
+}
+
+/// [`TVM_SETBORDER`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setborder)
+/// message parameters.
+///
+/// Return type: `(u16, u16)`.
+pub struct SetBorder {
+	pub action: co::TVSBF,
+	pub left: u16,
+	pub top: u16,
+}
+
+unsafe impl MsgSend for SetBorder {
+	type RetType = (u16, u16);
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as _), HIWORD(v as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETBORDER.into(),
+			wparam: self.action.0 as _,
+			lparam: MAKEDWORD(self.left, self.top) as _,
 		}
 	}
 }

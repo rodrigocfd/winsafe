@@ -49,7 +49,7 @@ impl<'a> TreeViewItems<'a> {
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete_all(&self) {
 		self.owner.hwnd()
-			.SendMessage(tvm::DeleteItem { hitem: HTREEITEM::NULL })
+			.SendMessage(tvm::DeleteItem { hitem: &HTREEITEM::NULL })
 			.unwrap();
 	}
 

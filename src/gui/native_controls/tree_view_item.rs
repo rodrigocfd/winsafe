@@ -67,9 +67,7 @@ impl<'a> TreeViewItem<'a> {
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete(&self) {
 		self.owner.hwnd()
-			.SendMessage(tvm::DeleteItem {
-				hitem: unsafe { self.hitem.raw_copy() },
-			})
+			.SendMessage(tvm::DeleteItem { hitem: &self.hitem })
 			.unwrap();
 	}
 
@@ -79,9 +77,7 @@ impl<'a> TreeViewItem<'a> {
 	/// Returns a handle to the edit control.
 	pub fn edit_label(&self) -> HWND {
 		self.owner.hwnd()
-			.SendMessage(tvm::EditLabel {
-				hitem: unsafe { self.hitem.raw_copy() },
-			})
+			.SendMessage(tvm::EditLabel { hitem: &self.hitem })
 			.unwrap()
 	}
 
@@ -100,7 +96,7 @@ impl<'a> TreeViewItem<'a> {
 	pub fn expand(&self, expand: bool) {
 		self.owner.hwnd()
 			.SendMessage(tvm::Expand {
-				hitem: unsafe { self.hitem.raw_copy() },
+				hitem: &self.hitem,
 				action: if expand { co::TVE::EXPAND } else { co::TVE::COLLAPSE },
 			})
 			.unwrap();

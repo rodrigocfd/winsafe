@@ -254,12 +254,12 @@ unsafe impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetIcon {
+pub struct SetIcon<'a> {
 	pub part_index: u8,
-	pub hicon: Option<HICON>,
+	pub hicon: Option<&'a HICON>,
 }
 
-unsafe impl MsgSend for SetIcon {
+unsafe impl<'a> MsgSend for SetIcon<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
@@ -270,7 +270,7 @@ unsafe impl MsgSend for SetIcon {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
-			lparam: self.hicon.as_ref().map(|h| h.0 as _).unwrap_or_default(),
+			lparam: self.hicon.map_or(0, |p| p.0 as _),
 		}
 	}
 }

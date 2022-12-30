@@ -62,11 +62,11 @@ unsafe impl MsgSend for GetImage {
 /// message parameters.
 ///
 /// Return type: `SysResult<HICON>`.
-pub struct SetIcon {
-	pub icon: HICON,
+pub struct SetIcon<'a> {
+	pub icon: &'a HICON,
 }
 
-unsafe impl MsgSend for SetIcon {
+unsafe impl<'a> MsgSend for SetIcon<'a> {
 	type RetType = SysResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
