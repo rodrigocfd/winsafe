@@ -496,6 +496,14 @@ pub mod msg {
 	}
 
 	#[cfg(feature = "comctl")]
+	pub mod tcm {
+		//! Tab control
+		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages),
+		//! whose constants have [`TCM`](crate::co::TCM) prefix.
+		pub use super::super::comctl::messages::tcm::*;
+	}
+
+	#[cfg(feature = "comctl")]
 	pub mod trbm {
 		//! Trackbar control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages),
