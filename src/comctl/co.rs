@@ -2015,6 +2015,17 @@ const_ordinary! { TBTS: u8;
 	RIGHT 3
 }
 
+const_bitflag! { TCIF: u32;
+	/// [`TCITEM`](crate::TCITEM) `mask` (`u32`).
+	=>
+	=>
+	TEXT 0x0001
+	IMAGE 0x0002
+	RTLREADING 0x0004
+	PARAM 0x0008
+	STATE 0x0010
+}
+
 const_bitflag! { TCIS: u32;
 	/// Tab control item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)

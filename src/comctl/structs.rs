@@ -1204,6 +1204,27 @@ impl TBREPLACEBITMAP {
 	}
 }
 
+/// [`TCITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tcitemw)
+/// struct.
+#[repr(C)]
+pub struct TCITEM<'a> {
+	pub mask: co::TCIF,
+	pub dwState: co::TCIS,
+	pub dwStateMask: co::TCIS,
+	pszText: *mut u16,
+	cchTextMax: i32,
+	pub iImage: i32,
+	pub lParam: isize,
+
+	_pszText: PhantomData<&'a mut u16>,
+}
+
+impl_default!(TCITEM, 'a);
+
+impl<'a> TCITEM<'a> {
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+}
+
 /// [`TVHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvhittestinfo)
 /// struct.
 #[repr(C)]

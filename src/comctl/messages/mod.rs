@@ -9,6 +9,7 @@ pub mod pbm;
 pub mod sb;
 pub mod stm;
 pub mod tbm;
+pub mod tcm;
 pub mod trbm;
 pub mod tvm;
 pub mod wm;
