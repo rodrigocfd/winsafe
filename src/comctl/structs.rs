@@ -5,7 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::comctl::decl::{
 	BmpIdbRes, BmpInstId, HIMAGELIST, HTREEITEM, IdxStr, PFNLVGROUPCOMPARE,
-	TreeitemTvi,
+	PFNTVCOMPARE, TreeitemTvi,
 };
 use crate::comctl::privs::{HINST_COMMCTRL, L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
 use crate::kernel::decl::{HINSTANCE, IdStr, SYSTEMTIME, WString};
@@ -1289,3 +1289,14 @@ impl_default!(TVITEM, 'a);
 impl<'a> TVITEM<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
 }
+
+/// [`TVSORTCB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvsortcb)
+/// struct.
+#[repr(C)]
+pub struct TVSORTCB {
+	pub hParent: HTREEITEM,
+	pub lpfnCompare: Option<PFNTVCOMPARE>,
+	pub lParam: isize,
+}
+
+impl_default!(TVSORTCB);

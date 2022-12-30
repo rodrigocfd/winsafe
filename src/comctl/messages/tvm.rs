@@ -1,6 +1,6 @@
 use crate::co;
 use crate::comctl::decl::{
-	HIMAGELIST, HTREEITEM, TVHITTESTINFO, TVINSERTSTRUCT, TVITEMEX,
+	HIMAGELIST, HTREEITEM, TVHITTESTINFO, TVINSERTSTRUCT, TVITEMEX, TVSORTCB,
 };
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
@@ -862,6 +862,55 @@ unsafe impl MsgSend for SetIndent {
 	}
 }
 
+/// [`TVM_SETINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setinsertmark)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetInsertMark<'a> {
+	pub insert_after: bool,
+	pub hitem: &'a HTREEITEM,
+}
+
+unsafe impl<'a> MsgSend for SetInsertMark<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETINSERTMARK.into(),
+			wparam: self.insert_after as _,
+			lparam: self.hitem.0 as _,
+		}
+	}
+}
+
+/// [`TVM_SETINSERTMARKCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setinsertmarkcolor)
+/// message parameters.
+///
+/// Return type: `COLORREF`.
+pub struct SetInsertMarkColor {
+	pub color: COLORREF,
+}
+
+unsafe impl MsgSend for SetInsertMarkColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETINSERTMARKCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.0 as _,
+		}
+	}
+}
+
 /// [`TVM_SETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setitem)
 /// message parameters.
 ///
@@ -882,6 +931,153 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 			msg_id: co::TVM::SETITEM.into(),
 			wparam: 0,
 			lparam: self.tvitem as *const _ as _,
+		}
+	}
+}
+
+/// [`TVM_SETITEMHEIGHT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setitemheight)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct SetItemHeight {
+	pub height: Option<u32>,
+}
+
+unsafe impl MsgSend for SetItemHeight {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETITEMHEIGHT.into(),
+			wparam: self.height.map_or(-1, |h| h as _) as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_SETLINECOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setlinecolor)
+/// message parameters.
+///
+/// Return type: `COLORREF`.
+pub struct SetLineColor {
+	pub color: Option<COLORREF>,
+}
+
+unsafe impl MsgSend for SetLineColor {
+	type RetType = COLORREF;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		COLORREF(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETLINECOLOR.into(),
+			wparam: 0,
+			lparam: self.color.map_or(CLR_DEFAULT, |c| c.0 as _) as _,
+		}
+	}
+}
+
+/// [`TVM_SETSCROLLTIME`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setscrolltime)
+/// message parameters.
+///
+/// Return type: `u32`.
+pub struct SetScrollTime {
+	pub time_ms: u32,
+}
+
+unsafe impl MsgSend for SetScrollTime {
+	type RetType = u32;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v as _
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETSCROLLTIME.into(),
+			wparam: self.time_ms as _,
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_SETTEXTCOLOR`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-settextcolor)
+/// message parameters.
+///
+/// Return type: `Option<COLORREF>`.
+pub struct SetTextColor {
+	pub color: Option<COLORREF>,
+}
+
+unsafe impl MsgSend for SetTextColor {
+	type RetType = Option<COLORREF>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		match v {
+			-1 => None,
+			v => Some(COLORREF(v as _)),
+		}
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETTEXTCOLOR.into(),
+			wparam: 0,
+			lparam: self.color.map_or(-1, |color| color.0 as _),
+		}
+	}
+}
+
+/// [`TVM_SETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-settooltips)
+/// message parameters.
+///
+/// Return type: `Option<HWND>`.
+pub struct SetTooltips<'a> {
+	pub htooltips: Option<&'a HWND>,
+}
+
+unsafe impl<'a> MsgSend for SetTooltips<'a> {
+	type RetType = Option<HWND>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HWND(p as _))
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETTOOLTIPS.into(),
+			wparam: self.htooltips.map_or(0, |h| h.0 as _),
+			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_SETUNICODEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setunicodeformat)
+/// message parameters.
+///
+/// Return type: `bool`.
+pub struct SetUnicodeFormat {
+	pub use_unicode: bool,
+}
+
+unsafe impl MsgSend for SetUnicodeFormat {
+	type RetType = bool;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		v != 0
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SETUNICODEFORMAT.into(),
+			wparam: self.use_unicode as _,
+			lparam: 0,
 		}
 	}
 }
@@ -930,6 +1126,30 @@ unsafe impl MsgSend for SortChildren {
 			msg_id: co::TVM::SORTCHILDREN.into(),
 			wparam: self.recursive as _,
 			lparam: 0,
+		}
+	}
+}
+
+/// [`TVM_SORTCHILDRENCB`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-sortchildrencb)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SortChildrenCb<'a> {
+	pub info: &'a TVSORTCB,
+}
+
+unsafe impl<'a> MsgSend for SortChildrenCb<'a> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TVM::SORTCHILDRENCB.into(),
+			wparam: 0,
+			lparam: self.info as *const _ as _,
 		}
 	}
 }

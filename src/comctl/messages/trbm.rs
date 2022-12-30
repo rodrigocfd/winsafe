@@ -790,7 +790,7 @@ unsafe impl MsgSend for SetTipSide {
 ///
 /// Return type: `()`.
 pub struct SetTooltips<'a> {
-	pub hwnd_tooltip: &'a HWND,
+	pub htooltips: Option<&'a HWND>,
 }
 
 unsafe impl<'a> MsgSend for SetTooltips<'a> {
@@ -803,7 +803,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TRBM::SETTOOLTIPS.into(),
-			wparam: self.hwnd_tooltip.0 as _,
+			wparam: self.htooltips.map_or(0, |h| h.0 as _),
 			lparam: 0,
 		}
 	}

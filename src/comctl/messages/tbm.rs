@@ -2038,12 +2038,12 @@ unsafe impl MsgSend for SetStyle {
 	}
 }
 
-/// [`TB_SETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-setstyle)
+/// [`TB_SETTOOLTIPS`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-settooltips)
 /// message parameters.
 ///
 /// Return type: `()`.
 pub struct SetTooltips<'a> {
-	pub htooltips: &'a HWND,
+	pub htooltips: Option<&'a HWND>,
 }
 
 unsafe impl<'a> MsgSend for SetTooltips<'a> {
@@ -2056,7 +2056,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.0 as _,
+			wparam: self.htooltips.map_or(0, |h| h.0 as _),
 			lparam: 0,
 		}
 	}

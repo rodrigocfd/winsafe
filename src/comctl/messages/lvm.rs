@@ -2724,7 +2724,7 @@ unsafe impl<'a> MsgSend for SetTileViewInfo<'a> {
 ///
 /// Return type: `Option<HWND>`.
 pub struct SetTooltips<'a> {
-	pub tooltip: Option<&'a HWND>,
+	pub htooltips: Option<&'a HWND>,
 }
 
 unsafe impl<'a> MsgSend for SetTooltips<'a> {
@@ -2737,7 +2737,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETTOOLTIPS.into(),
-			wparam: self.tooltip.map_or(0, |h| h.0 as _),
+			wparam: self.htooltips.map_or(0, |h| h.0 as _),
 			lparam: 0,
 		}
 	}

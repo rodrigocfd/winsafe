@@ -22,6 +22,16 @@ pub type PFNLVGROUPCOMPARE =
 	) -> i32;
 
 /// Type alias to
+/// [`PFNTVCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvsortcb)
+/// callback function.
+pub type PFNTVCOMPARE =
+	extern "system" fn(
+		lParam1: isize,
+		lParam2: isize,
+		lParamSort: isize,
+	) -> i32;
+
+/// Type alias to
 /// [`SUBCLASSPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-subclassproc)
 /// callback function.
 pub type SUBCLASSPROC =
