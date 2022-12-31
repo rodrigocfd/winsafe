@@ -33,6 +33,10 @@ extern_sys! { "gdi32";
 	FillRgn(HANDLE, HANDLE, HANDLE) -> BOOL
 	FlattenPath(HANDLE) -> BOOL
 	FrameRgn(HANDLE, HANDLE, HANDLE, i32, i32) -> BOOL
+	GdiFlush() -> BOOL
+	GdiGetBatchLimit() -> u32
+	GdiSetBatchLimit(u32) -> u32
+	GetBkColor(HANDLE) -> u32
 	GetBkMode(HANDLE) -> i32
 	GetDCBrushColor(HANDLE) -> u32
 	GetDCPenColor(HANDLE) -> u32

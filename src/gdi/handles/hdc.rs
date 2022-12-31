@@ -228,6 +228,16 @@ pub trait gdi_Hdc: Handle {
 		)
 	}
 
+	/// [`GetBkColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkcolor)
+	/// method.
+	#[must_use]
+	fn GetBkColor(&self) -> SysResult<COLORREF> {
+		match unsafe { gdi::ffi::GetBkColor(self.as_ptr()) } {
+			CLR_INVALID => Err(GetLastError()),
+			c => Ok(COLORREF(c)),
+		}
+	}
+
 	/// [`GetBkMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkmode)
 	/// method.
 	#[must_use]

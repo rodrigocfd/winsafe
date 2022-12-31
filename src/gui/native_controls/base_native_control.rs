@@ -122,10 +122,12 @@ impl BaseNativeControl {
 				BASE_SUBCLASS_ID
 			};
 
-			self.hwnd().SetWindowSubclass(
-				Self::subclass_proc, subclass_id,
-				self as *const _ as _, // pass pointer to self
-			).unwrap()
+			unsafe {
+				self.hwnd().SetWindowSubclass(
+					Self::subclass_proc, subclass_id,
+					self as *const _ as _, // pass pointer to self
+				)
+			}.unwrap()
 		}
 	}
 

@@ -56,7 +56,11 @@ pub trait comctl_Hwnd: Handle {
 
 	/// [`SetWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
 	/// method.
-	fn SetWindowSubclass(&self,
+	///
+	/// # Safety
+	///
+	/// You must provide a subclass procedure.
+	unsafe fn SetWindowSubclass(&self,
 		subclass_proc: SUBCLASSPROC,
 		subclass_id: usize, ref_data: usize) -> SysResult<()>
 	{

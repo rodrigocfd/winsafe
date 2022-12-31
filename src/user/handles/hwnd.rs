@@ -166,8 +166,8 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Safety
 	///
-	/// To create a window, you must use a properly registered class name and
-	/// provide a window procedure.
+	/// To create a window, you must use a properly registered class name and,
+	/// if a custom window, provide a window procedure.
 	unsafe fn CreateWindowEx(
 		ex_style: co::WS_EX,
 		class_name: AtomStr,
