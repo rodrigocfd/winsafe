@@ -1204,6 +1204,16 @@ impl TBREPLACEBITMAP {
 	}
 }
 
+/// [`TCHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tchittestinfo)
+/// struct.
+#[repr(C)]
+pub struct TCHITTESTINFO {
+	pub pt: POINT,
+	pub flags: co::TCHT,
+}
+
+impl_default!(TCHITTESTINFO);
+
 /// [`TCITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tcitemw)
 /// struct.
 #[repr(C)]

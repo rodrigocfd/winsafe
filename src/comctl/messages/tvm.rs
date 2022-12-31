@@ -819,7 +819,7 @@ unsafe impl<'a> MsgSend for SetHot<'a> {
 /// Return type: `Option<HIMAGELIST>`.
 pub struct SetImageList<'a> {
 	pub kind: co::TVSIL,
-	pub himglist: Option<&'a HIMAGELIST>,
+	pub himagelist: Option<&'a HIMAGELIST>,
 }
 
 unsafe impl<'a> MsgSend for SetImageList<'a> {
@@ -833,7 +833,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himglist.map_or(0, |h| h.0 as _),
+			lparam: self.himagelist.map_or(0, |h| h.0 as _),
 		}
 	}
 }

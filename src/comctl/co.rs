@@ -2015,6 +2015,16 @@ const_ordinary! { TBTS: u8;
 	RIGHT 3
 }
 
+const_ordinary! { TCHT: u32;
+	/// [`TCHITTESTINFO`](crate::TCHITTESTINFO) `flags` (`u32`).
+	=>
+	=>
+	NOWHERE 0x0001
+	ONITEMICON 0x0002
+	ONITEMLABEL 0x0004
+	ONITEM TCHT::ONITEMICON.0 | TCHT::ONITEMLABEL.0
+}
+
 const_bitflag! { TCIF: u32;
 	/// [`TCITEM`](crate::TCITEM) `mask` (`u32`).
 	=>

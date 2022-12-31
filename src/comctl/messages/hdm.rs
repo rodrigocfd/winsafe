@@ -543,7 +543,7 @@ unsafe impl MsgSend for SetHotDivider {
 /// Return type: `Option<HIMAGELIST>`.
 pub struct SetImageList<'a> {
 	pub which: co::HDSIL,
-	pub himagelist: Option<&'a HIMAGELIST>,
+	pub himagelist: &'a HIMAGELIST,
 }
 
 unsafe impl<'a> MsgSend for SetImageList<'a> {
@@ -557,7 +557,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
 			wparam: self.which.0 as _,
-			lparam: self.himagelist.map_or(0, |h| h.0 as _),
+			lparam: self.himagelist.0 as _,
 		}
 	}
 }
