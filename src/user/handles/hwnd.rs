@@ -8,7 +8,7 @@ use crate::kernel::decl::{
 	GetLastError, HINSTANCE, SetLastError, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{bool_to_sysresult, replace_handle_value};
+use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, replace_handle_value};
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
@@ -688,6 +688,21 @@ pub trait user_Hwnd: Handle {
 
 		#[cfg(target_pointer_width = "64")]
 		unsafe { user::ffi::GetWindowLongPtrW(self.as_ptr(), index.0) }
+	}
+
+	/// [`GetWindowModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowmodulefilenamew)
+	/// method.
+	#[must_use]
+	fn GetWindowModuleFileName(&self) -> String {
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
+		unsafe {
+			user::ffi::GetWindowModuleFileNameW(
+				self.as_ptr(),
+				buf.as_mut_ptr(),
+				buf.buf_len() as u32 - 1,
+			);
+		}
+		buf.to_string()
 	}
 
 	/// [`GetWindowPlacement`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowplacement)

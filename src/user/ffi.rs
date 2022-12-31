@@ -23,6 +23,7 @@ extern_sys! { "user32";
 	BeginDeferWindowPos(i32) -> HANDLE
 	BeginPaint(HANDLE, PVOID) -> HANDLE
 	BringWindowToTop(HANDLE) -> BOOL
+	BroadcastSystemMessageW(u32, *mut u32, u32, usize, isize) -> i32
 	CallNextHookEx(HANDLE, i32, usize, isize) -> isize
 	ChangeDisplaySettingsExW(PCSTR, PVOID, PVOID, u32, PVOID) -> i32
 	ChangeDisplaySettingsW(PVOID, u32) -> i32
@@ -121,6 +122,7 @@ extern_sys! { "user32";
 	GetWindowDC(HANDLE) -> HANDLE
 	GetWindowDisplayAffinity(HANDLE, PVOID) -> BOOL
 	GetWindowInfo(HANDLE, PVOID) -> BOOL
+	GetWindowModuleFileNameW(HANDLE, PSTR, u32) -> u32
 	GetWindowPlacement(HANDLE, PVOID) -> BOOL
 	GetWindowRect(HANDLE, PVOID) -> BOOL
 	GetWindowRgn(HANDLE, HANDLE) -> i32
@@ -168,6 +170,7 @@ extern_sys! { "user32";
 	RealGetWindowClassW(HANDLE, PSTR, i32) -> u32
 	RedrawWindow(HANDLE, PCVOID, HANDLE, u32) -> BOOL
 	RegisterClassExW(PCVOID) -> u16
+	RegisterWindowMessageW(PCSTR) -> u32
 	ReleaseCapture() -> BOOL
 	ReleaseDC(HANDLE, HANDLE) -> i32
 	RemoveMenu(HANDLE, u32, u32) -> BOOL

@@ -149,6 +149,37 @@ const_ws! { BS: u32;
 	RIGHTBUTTON Self::LEFTTEXT.0
 }
 
+const_bitflag! { BSM: u32;
+	/// [`BroadcastSystemMessage`](crate::BroadcastSystemMessage) `info` and
+	/// return value (`u32`).
+	=>
+	=>
+	ALLCOMPONENTS 0x0000_0000
+	VXDS 0x0000_0001
+	NETDRIVER 0x0000_0002
+	INSTALLABLEDRIVERS 0x0000_0004
+	APPLICATIONS 0x0000_0008
+	ALLDESKTOPS 0x0000_0010
+}
+
+const_bitflag! { BSF: u32;
+	/// [`BroadcastSystemMessage`](crate::BroadcastSystemMessage) `flags`
+	/// (`u32`).
+	=>
+	=>
+	QUERY 0x0000_0001
+	IGNORECURRENTTASK 0x0000_0002
+	FLUSHDISK 0x0000_0004
+	NOHANG 0x0000_0008
+	POSTMESSAGE 0x0000_0010
+	FORCEIFHUNG 0x0000_0020
+	NOTIMEOUTIFNOTHUNG 0x0000_0040
+	ALLOWSFW 0x0000_0080
+	SENDNOTIFYMESSAGE 0x0000_0100
+	RETURNHDESK 0x0000_0200
+	LUID 0x0000_0400
+}
+
 const_ordinary! { BST: u32;
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) return value (`u32`).
 	=>

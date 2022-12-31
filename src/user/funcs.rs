@@ -60,6 +60,32 @@ pub fn AttachThreadInput(
 	)
 }
 
+/// [`BroadcastSystemMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-broadcastsystemmessage)
+/// function.
+pub fn BroadcastSystemMessage<M>(
+	flags: co::BSF, info: co::BSM, msg: M) -> SysResult<co::BSM>
+	where M: MsgSend,
+{
+	let mut msg = msg;
+	let wm_any = msg.as_generic_wm();
+
+	let mut info_ret = info;
+
+	if unsafe {
+		user::ffi::BroadcastSystemMessageW(
+			flags.0,
+			&mut info_ret.0 as _,
+			wm_any.msg_id.0,
+			wm_any.wparam,
+			wm_any.lparam,
+		)
+	} > 0 {
+		Ok(info_ret)
+	} else {
+		Err(GetLastError())
+	}
+}
+
 /// [`ChangeDisplaySettings`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changedisplaysettingsw)
 /// function.
 pub fn ChangeDisplaySettings(
@@ -328,6 +354,21 @@ pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 	unsafe { user::ffi::GetAsyncKeyState(virt_key.0 as _) != 0 }
 }
 
+/// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
+/// function.
+///
+/// # Safety
+///
+/// The returned pointer must be correctly cast to the memory block specified by
+/// `format`.
+#[must_use]
+pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
+	user::ffi::GetClipboardData(format.0)
+		.as_mut()
+		.map(|hmem| hmem as *mut _ as _)
+		.ok_or_else(|| GetLastError())
+}
+
 /// [`GetClipboardSequenceNumber`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardsequencenumber)
 /// function.
 #[must_use]
@@ -554,6 +595,18 @@ pub unsafe fn RegisterClassEx(wcx: &WNDCLASSEX) -> SysResult<ATOM> {
 	}
 }
 
+/// [`RegisterWindowMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerwindowmessagew)
+/// function.
+#[must_use]
+pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
+	match unsafe {
+			user::ffi::RegisterWindowMessageW(WString::from_str(s).as_ptr())
+	} {
+		0 => Err(GetLastError()),
+		id => Ok(id),
+	}
+}
+
 /// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 /// function.
 pub fn ReleaseCapture() -> SysResult<()> {
@@ -572,20 +625,6 @@ pub fn SetCaretBlinkTime(milliseconds: u32) -> SysResult<()> {
 /// function.
 pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 	bool_to_sysresult(unsafe { user::ffi::SetCaretPos(x, y) })
-}
-
-/// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
-/// function.
-///
-/// # Safety
-///
-/// The returned pointer must be correctly cast to the memory block specified by
-/// `format`.
-pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
-	user::ffi::GetClipboardData(format.0)
-		.as_mut()
-		.map(|hmem| hmem as *mut _ as _)
-		.ok_or_else(|| GetLastError())
 }
 
 /// [`SetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
