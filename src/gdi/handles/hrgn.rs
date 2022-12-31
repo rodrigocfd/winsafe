@@ -2,10 +2,17 @@
 
 use crate::{co, gdi};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::prelude::gdi_Hgdiobj;
+use crate::prelude::GdiObject;
 use crate::user::decl::{HRGN, RECT, SIZE};
 
-impl gdi_Hgdiobj for HRGN {}
+impl GdiObject for HRGN {
+	type SelectRet = co::REGION;
+
+	unsafe fn convert_sel_ret(v: *mut std::ffi::c_void) -> Self::SelectRet {
+		co::REGION(v as _)
+	}
+}
+
 impl gdi_Hrgn for HRGN {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -16,12 +23,12 @@ impl gdi_Hrgn for HRGN {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hrgn: gdi_Hgdiobj {
+pub trait gdi_Hrgn: GdiObject {
 	/// [`CreateRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> SysResult<HRGN> {
 		unsafe {
@@ -36,7 +43,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<HRGN> {
 		unsafe { gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _).as_mut() }
@@ -48,7 +55,7 @@ pub trait gdi_Hrgn: gdi_Hgdiobj {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateRoundRectRgn(
 		bounds: RECT, size: SIZE) -> SysResult<HRGN>

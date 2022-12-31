@@ -3,7 +3,7 @@
 use crate::{co, gdi};
 use crate::gdi::decl::LOGPEN;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::prelude::gdi_Hgdiobj;
+use crate::prelude::GdiObject;
 use crate::user::decl::COLORREF;
 
 impl_handle! { HPEN;
@@ -12,7 +12,14 @@ impl_handle! { HPEN;
 	/// GDI object.
 }
 
-impl gdi_Hgdiobj for HPEN {}
+impl GdiObject for HPEN {
+	type SelectRet = HPEN;
+
+	unsafe fn convert_sel_ret(v: *mut std::ffi::c_void) -> Self::SelectRet {
+		HPEN(v)
+	}
+}
+
 impl gdi_Hpen for HPEN {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -23,7 +30,7 @@ impl gdi_Hpen for HPEN {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hpen: gdi_Hgdiobj {
+pub trait gdi_Hpen: GdiObject {
 	/// [`CreatePen`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// static method.
 	#[must_use]

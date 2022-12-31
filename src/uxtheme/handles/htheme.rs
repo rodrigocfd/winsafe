@@ -97,7 +97,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn GetThemeBackgroundRegion(&self,
 		hdc: &HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>

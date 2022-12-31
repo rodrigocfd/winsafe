@@ -9,7 +9,7 @@ use crate::gui::msg_error::MsgError;
 use crate::kernel::decl::MulDiv;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{
-	gdi_Hdc, gdi_Hfont, gdi_Hgdiobj, Handle, NativeBitflag, user_Hwnd,
+	gdi_Hdc, gdi_Hfont, GdiObject, Handle, NativeBitflag, user_Hwnd,
 	uxtheme_Htheme, uxtheme_Hwnd,
 };
 use crate::user::decl::{
@@ -146,7 +146,7 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SIZE {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC().unwrap();
 	let clone_dc = desktop_hdc.CreateCompatibleDC().unwrap();
-	let prev_hfont = clone_dc.SelectObjectFont(ui_font()).unwrap();
+	let prev_hfont = clone_dc.SelectObject(ui_font()).unwrap();
 
 	let mut bounds = if text.is_empty() {
 		clone_dc.GetTextExtentPoint32("Pj").unwrap() // just a placeholder to get the text height
@@ -158,7 +158,7 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SIZE {
 		bounds.cx = 0; // if no text was given, return just the height
 	}
 
-	clone_dc.SelectObjectFont(&prev_hfont).unwrap();
+	clone_dc.SelectObject(&prev_hfont).unwrap();
 	bounds
 }
 

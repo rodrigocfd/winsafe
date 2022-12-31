@@ -3,7 +3,7 @@
 use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::prelude::gdi_Hgdiobj;
+use crate::prelude::GdiObject;
 use crate::user::decl::SIZE;
 
 impl_handle! { HFONT;
@@ -11,7 +11,14 @@ impl_handle! { HFONT;
 	/// [font](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 }
 
-impl gdi_Hgdiobj for HFONT {}
+impl GdiObject for HFONT {
+	type SelectRet = HFONT;
+
+	unsafe fn convert_sel_ret(v: *mut std::ffi::c_void) -> Self::SelectRet {
+		HFONT(v)
+	}
+}
+
 impl gdi_Hfont for HFONT {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -22,12 +29,12 @@ impl gdi_Hfont for HFONT {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hfont: gdi_Hgdiobj {
+pub trait gdi_Hfont: GdiObject {
 	/// [`CreateFont`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
+	/// [`HFONT::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateFont(
 		sz: SIZE, escapement: i32, orientation: i32,
@@ -55,7 +62,7 @@ pub trait gdi_Hfont: gdi_Hgdiobj {
 	/// static method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
+	/// [`HFONT::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<HFONT> {
 		unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _).as_mut() }

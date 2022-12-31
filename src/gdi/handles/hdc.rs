@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
-use crate::gdi::decl::{BITMAPINFO, HFONT, HPEN, TEXTMETRIC};
+use crate::gdi::decl::{BITMAPINFO, TEXTMETRIC};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::Handle;
+use crate::prelude::{GdiObject, Handle};
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
 };
@@ -139,8 +139,7 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
-	/// call.
+	/// [`HBITMAP::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateCompatibleBitmap(&self, cx: i32, cy: i32) -> SysResult<HBITMAP> {
 		unsafe {
@@ -288,7 +287,7 @@ pub trait gdi_Hdc: Handle {
 	/// let hdc_screen = w::HWND::DESKTOP.GetDC()?;
 	/// let hbmp = hdc_screen.CreateCompatibleBitmap(cx_screen, cy_screen)?;
 	/// let hdc_mem = hdc_screen.CreateCompatibleDC()?;
-	/// let hbmp_old = hdc_mem.SelectObjectBitmap(&hbmp)?;
+	/// let hbmp_old = hdc_mem.SelectObject(&hbmp)?;
 	///
 	/// hdc_mem.BitBlt(w::POINT::new(0, 0), w::SIZE::new(cx_screen, cy_screen),
 	///     &hdc_screen, w::POINT::new(0, 0), co::ROP::SRCCOPY)?;
@@ -322,7 +321,7 @@ pub trait gdi_Hdc: Handle {
 	/// fo.write(bi.bmiHeader.serialize())?;
 	/// fo.write(&data_buf)?;
 	///
-	/// hdc_mem.SelectObjectBitmap(&hbmp_old)?;
+	/// hdc_mem.SelectObject(&hbmp_old)?;
 	/// hbmp.DeleteObject()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -505,7 +504,7 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	///
 	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject) call.
+	/// [`HRGN::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn PathToRegion(&self) -> SysResult<HRGN> {
 		unsafe { gdi::ffi::PathToRegion(self.as_ptr()).as_mut() }
@@ -637,43 +636,15 @@ pub trait gdi_Hdc: Handle {
 	}
 
 	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
-	/// method for [`HBITMAP`](crate::HBITMAP).
-	fn SelectObjectBitmap(&self, hbmp: &HBITMAP) -> SysResult<HBITMAP> {
-		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hbmp.0).as_mut() }
-			.map(|ptr| HBITMAP(ptr))
-			.ok_or_else(|| GetLastError())
-	}
-
-	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
-	/// method for [`HBRUSH`](crate::HBRUSH).
-	fn SelectObjectBrush(&self, hbr: &HBRUSH) -> SysResult<HBRUSH> {
-		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hbr.0).as_mut() }
-			.map(|ptr| HBRUSH(ptr))
-			.ok_or_else(|| GetLastError())
-	}
-
-	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
-	/// method for [`HFONT`](crate::HFONT).
-	fn SelectObjectFont(&self, hfont: &HFONT) -> SysResult<HFONT> {
-		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hfont.0).as_mut() }
-			.map(|ptr| HFONT(ptr))
-			.ok_or_else(|| GetLastError())
-	}
-
-	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
-	/// method for [`HPEN`](crate::HPEN).
-	fn SelectObjectPen(&self, hpen: &HPEN) -> SysResult<HPEN> {
-		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hpen.0).as_mut() }
-			.map(|ptr| HPEN(ptr))
-			.ok_or_else(|| GetLastError())
-	}
-
-	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
-	/// method for [`HRGN`](crate::HRGN).
-	fn SelectObjectRgn(&self, hrgn: &HRGN) -> SysResult<co::REGION> {
-		unsafe { gdi::ffi::SelectObject(self.as_ptr(), hrgn.0).as_mut() }
-			.map(|ptr| co::REGION(ptr as *mut _ as _))
-			.ok_or_else(|| GetLastError())
+	/// method.
+	fn SelectObject<G>(&self, hgdiobj: &G) -> SysResult<G::SelectRet>
+		where G: GdiObject,
+	{
+		unsafe {
+			gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr())
+				.as_mut()
+				.map(|ptr| G::convert_sel_ret(ptr))
+		}.ok_or_else(|| GetLastError())
 	}
 
 	/// [`SetArcDirection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)

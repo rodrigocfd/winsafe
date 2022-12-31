@@ -170,7 +170,7 @@ unsafe impl MsgSend for GetExtendedStyle {
 /// [`TCM_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tcm-getimagelist)
 /// message, which has no parameters.
 ///
-/// Return type: SysResult<HIMAGELIST>.
+/// Return type: `SysResult<HIMAGELIST>`.
 pub struct GetImageList {}
 
 unsafe impl MsgSend for GetImageList {

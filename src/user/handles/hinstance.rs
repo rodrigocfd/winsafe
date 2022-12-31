@@ -164,8 +164,7 @@ pub trait user_Hinstance: Handle {
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	///
 	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::gdi_Hgdiobj::DeleteObject)
-	/// call.
+	/// [`HBITMAP::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn LoadImageBitmap(&self,
 		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<HBITMAP>
