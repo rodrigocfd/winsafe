@@ -83,9 +83,13 @@ pub trait shell_Hdrop: Handle {
 	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
 	/// method.
 	///
+	/// # Safety
+	///
+	/// The `buf` must be allocated with the correct length.
+	///
 	/// This method is rather tricky, consider using
 	/// [`HDROP::iter`](crate::prelude::shell_Hdrop::iter).
-	fn DragQueryFile(&self,
+	unsafe fn DragQueryFile(&self,
 		ifile: Option<u32>, buf: Option<&mut WString>) -> SysResult<u32>
 	{
 		let cch = buf.as_ref().map_or(0, |buf| buf.buf_len());
@@ -147,9 +151,9 @@ impl<'a, H> Iterator for DropsIter<'a, H>
 			return None;
 		}
 
-		match self.hdrop
-			.DragQueryFile(Some(self.current), Some(&mut self.buffer))
-		{
+		match unsafe {
+			self.hdrop.DragQueryFile(Some(self.current), Some(&mut self.buffer))
+		} {
 			Err(e) => {
 				self.current = self.count; // no further iterations will be made
 				Some(Err(e))
@@ -169,7 +173,7 @@ impl<'a, H> DropsIter<'a, H>
 		Ok(Self {
 			hdrop,
 			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
-			count: hdrop.DragQueryFile(None, None)?,
+			count: unsafe { hdrop.DragQueryFile(None, None)? },
 			current: 0,
 		})
 	}

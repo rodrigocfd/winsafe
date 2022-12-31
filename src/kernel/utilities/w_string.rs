@@ -153,11 +153,12 @@ impl WString {
 	/// const pointer to the internal UTF-16 string buffer, to be passed to
 	/// native Win32 functions.
 	///
+	/// Safely returns a null pointer if the buffer wasn't previously allocated.
+	///
 	/// # Safety
 	///
-	/// Returns a null pointer if the buffer wasn't previously allocated. Make
-	/// sure the `WString` object outlives the function call, otherwise it will
-	/// point to an invalid memory location.
+	/// Make sure the `WString` object outlives the function call, otherwise it
+	/// will point to an invalid memory location.
 	#[must_use]
 	pub unsafe fn as_ptr(&self) -> *const u16 {
 		if self.vec_u16.is_empty() {
@@ -197,7 +198,7 @@ impl WString {
 	}
 
 	/// Resizes the internal buffer, to be used as a buffer for native Win32
-	/// functions. All UTF-16 chars will be set to zero.
+	/// functions. All new UTF-16 chars will be set to zero.
 	///
 	/// The underlying `Vec` will be resized with a call to
 	/// [`Vec::resize`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.resize).
@@ -263,6 +264,25 @@ impl WString {
 	#[must_use]
 	pub fn str_len(&self) -> usize {
 		unsafe { kernel::ffi::lstrlenW(self.as_ptr()) as _ }
+	}
+
+	/// Wrapper to
+	/// [`lstrcat`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrcatw).
+	///
+	/// Appends a string onto the current one, repositioning the null terminator
+	/// at the end of the new string. If the internal buffer hasn't been
+	/// allocated yet, simply calls
+	/// [`WString::from_str`](crate::WString::from_str).
+	pub fn append(&mut self, s: &str) {
+		if self.buf_is_empty() {
+			*self = Self::from_str(s)
+		} else {
+			let new_text = Self::from_str(s);
+			unsafe {
+				self.buf_realloc(self.str_len() + new_text.str_len() + 1);
+				kernel::ffi::lstrcatW(self.as_mut_ptr(), new_text.as_ptr());
+			}
+		}
 	}
 
 	/// Converts into
@@ -348,7 +368,6 @@ impl WString {
 		Ok(wstr)
 	}
 
-	#[must_use]
 	fn parse_ansi(data: &[u8]) -> Vec<u16> {
 		let the_len = data.iter()
 			.position(|ch| *ch == 0x00) // a terminating null means end of the string
@@ -360,7 +379,6 @@ impl WString {
 		str16
 	}
 
-	#[must_use]
 	fn parse_utf16(data: &[u8], is_big_endian: bool) -> Vec<u16> {
 		let data = if data.len() % 2 == 1 {
 			&data[..data.len() - 1] // if odd number of bytes, discard last one
