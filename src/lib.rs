@@ -22,7 +22,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! winsafe = { version = "0.0.11", features = [] }
+//! winsafe = { version = "0.0.12", features = [] }
 //! ```
 //!
 //! Then you must enable the
