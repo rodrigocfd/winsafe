@@ -166,8 +166,14 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Safety
 	///
-	/// To create a window, you must use a properly registered class name and,
-	/// if a custom window, provide a window procedure.
+	/// This method will create raw dynamic windows and controls outside the
+	/// library safety – it's up to you to handle all the messages. You must use
+	/// a properly registered class name and, if creating a custom window,
+	/// provide its own window procedure.
+	///
+	/// The usable ID range for dynamic child controls goes from 1 to 19,999.
+	/// IDs starting from 20,000 are used internally by the library, do not use
+	/// them.
 	unsafe fn CreateWindowEx(
 		ex_style: co::WS_EX,
 		class_name: AtomStr,
