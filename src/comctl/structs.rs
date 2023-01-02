@@ -132,15 +132,8 @@ pub struct HDLAYOUT<'a, 'b> {
 impl_default!(HDLAYOUT, 'a, 'b);
 
 impl<'a, 'b> HDLAYOUT<'a, 'b> {
-	/// Sets the field.
-	pub fn set_prc(&mut self, rc: Option<&'a mut RECT>) {
-		self.prc = rc.map(|rc| rc as _).unwrap_or(std::ptr::null_mut());
-	}
-
-	/// Sets the field.
-	pub fn set_pwpos(&mut self, pos: Option<&'b mut WINDOWPOS>) {
-		self.pwpos = pos.map(|pos| pos as _).unwrap_or(std::ptr::null_mut());
-	}
+	pub_fn_ptr_get_set!('a, prc, set_prc, RECT);
+	pub_fn_ptr_get_set!('b, pwpos, set_pwpos, WINDOWPOS);
 }
 
 /// [`INITCOMMONCONTROLSEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-initcommoncontrolsex)
@@ -969,6 +962,17 @@ pub struct NMSELCHANGE {
 	pub stSelStart: SYSTEMTIME,
 	pub stSelEnd: SYSTEMTIME,
 }
+
+/// [`NMTCKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtckeydown)
+/// struct.
+#[repr(C)]
+pub struct NMTCKEYDOWN {
+	pub hdr: NMHDR,
+	pub wVKey: co::VK,
+	pub flags: u32,
+}
+
+impl_default!(NMTCKEYDOWN);
 
 /// [`NMTREEVIEW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtreevieww)
 /// struct.

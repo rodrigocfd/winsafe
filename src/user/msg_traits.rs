@@ -25,7 +25,7 @@ pub unsafe trait MsgSend {
 }
 
 /// Parameters of a message which can be sent and handled (received).
-/// Implemented by [WndMsg](crate::msg::WndMsg) and all
+/// Implemented by [`WndMsg`](crate::msg::WndMsg) and all
 /// [msg::wm](`crate::msg::wm`) messages.
 ///
 /// Allows the conversion from and to the generic [`WndMsg`](crate::msg::WndMsg)

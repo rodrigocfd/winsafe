@@ -172,6 +172,22 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 	};
 }
 
+/// WM_NOTIFY message, no parameters, returns bool.
+macro_rules! pub_fn_nfy_noparm_boolret {
+	(
+		$name:ident, $nfy:expr,
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		pub fn $name<F>(&self, func: F)
+			where F: Fn() -> AnyResult<bool> + 'static,
+		{
+			self.0.wm_notify($nfy,
+				move |_| Ok(Some(func()? as _)));
+		}
+	};
+}
+
 /// WM_NOTIFY message, with parameters, returns bool.
 macro_rules! pub_fn_nfy_withparm_boolret {
 	(

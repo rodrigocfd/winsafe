@@ -4,9 +4,31 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::comctl_ole::decl::{IconId, IconIdTdicon, PFTASKDIALOGCALLBACK};
+use crate::comctl::decl::NMHDR;
 use crate::kernel::decl::HINSTANCE;
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
+use crate::ole::decl::ComPtr;
 use crate::user::decl::{HICON, HWND};
+
+/// [`NMOBJECTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmobjectnotify)
+/// struct.
+#[repr(C)]
+pub struct NMOBJECTNOTIFY<'a> {
+	pub hdr: NMHDR,
+	pub iItem: i32,
+	piid: *mut co::IID,
+	pub Object: ComPtr,
+	pub hrResult: co::HRESULT,
+	pub dwFlags: u32,
+
+	_piid: PhantomData<&'a mut co::IID>,
+}
+
+impl_default!(NMOBJECTNOTIFY, 'a);
+
+impl<'a> NMOBJECTNOTIFY<'a> {
+	pub_fn_ptr_get_set!('a, piid, set_piid, co::IID);
+}
 
 /// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
