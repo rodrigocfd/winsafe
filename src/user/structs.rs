@@ -595,18 +595,22 @@ pub struct MINMAXINFO {
 	pub ptMaxTrackSize: POINT,
 }
 
-/// [`MONITORINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfo)
+/// [`MONITORINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-monitorinfoexw)
 /// struct.
 #[repr(C)]
-#[derive(Clone)]
-pub struct MONITORINFO {
+pub struct MONITORINFOEX {
 	cbSize: u32,
 	pub rcMonitor: RECT,
 	pub rcWork: RECT,
 	pub dwFlags: co::MONITORINFOF,
+	szDevice: [u16; CCHDEVICENAME],
 }
 
-impl_default_with_size!(MONITORINFO, cbSize);
+impl_default_with_size!(MONITORINFOEX, cbSize);
+
+impl MONITORINFOEX {
+	pub_fn_string_arr_get_set!(szDevice, set_szDevice);
+}
 
 /// [`NCCALCSIZE_PARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params)
 /// struct.

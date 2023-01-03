@@ -4,7 +4,7 @@ use crate::{co, user};
 use crate::kernel::decl::SysResult;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
-use crate::user::decl::{MONITORINFO, POINT, RECT};
+use crate::user::decl::{MONITORINFOEX, POINT, RECT};
 
 impl_handle! { HMONITOR;
 	/// Handle to a
@@ -29,16 +29,18 @@ pub trait user_Hmonitor: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{HMONITOR, MONITORINFO};
+	/// use winsafe::{HMONITOR, MONITORINFOEX};
 	///
 	/// let hmon: HMONITOR; // initialized somewhere
 	/// # let hmon = HMONITOR::NULL;
 	///
-	/// let mut mi = MONITORINFO::default();
+	/// let mut mi = MONITORINFOEX::default();
 	/// hmon.GetMonitorInfo(&mut mi)?;
+	///
+	/// println!("{}", mi.szDevice());
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn GetMonitorInfo(&self, mi: &mut MONITORINFO) -> SysResult<()> {
+	fn GetMonitorInfo(&self, mi: &mut MONITORINFOEX) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::GetMonitorInfoW(self.as_ptr(), mi as *mut _ as _)
