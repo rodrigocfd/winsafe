@@ -1830,7 +1830,7 @@ const_ordinary! { MONITOR: u32;
 }
 
 const_ordinary! { MONITORINFOF: u32;
-	/// [`MONITORINFO`](crate::MONITORINFO) `dwFlags` (`u32`).
+	/// [`MONITORINFOEX`](crate::MONITORINFOEX) `dwFlags` (`u32`).
 	=>
 	=>
 	/// None of the actual values (zero).
@@ -2046,8 +2046,8 @@ const_bitflag! { RDW: u32;
 const_ordinary! { REGION: i32;
 	/// [`HWND::GetUpdateRgn`](crate::prelude::user_Hwnd::GetUpdateRgn),
 	/// [`HWND::GetWindowRgn`](crate::prelude::user_Hwnd::GetWindowRgn) and
-	/// [`HDC::SelectObjectRgn`](crate::prelude::gdi_Hdc::SelectObjectRgn)
-	/// return value (`i32`).
+	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) return
+	/// value (`i32`).
 	=>
 	=>
 	NULL 1

@@ -5,7 +5,7 @@ use std::ops::Deref;
 
 use crate::{co, user};
 use crate::kernel::decl::{
-	GetLastError, HINSTANCE, SetLastError, SysResult, WString,
+	GetLastError, HINSTANCE, HIWORD, LOWORD, SetLastError, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, replace_handle_value};
@@ -946,6 +946,29 @@ pub trait user_Hwnd: Handle {
 		}
 	}
 
+	/// [`LockWindowUpdate`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-lockwindowupdate)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::HWND;
+	///
+	/// let hwnd: HWND; // initialized somewhere
+	/// # let hwnd = HWND::NULL;
+	///
+	/// // Lock the window – only one window can be locked at a time.
+	/// hwnd.LockWindowUpdate()?;
+	///
+	/// // After all operations, unlock the currently locked window.
+	/// HWND::NULL.LockWindowUpdate()?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	fn LockWindowUpdate(&self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { user::ffi::LockWindowUpdate(self.as_ptr()) })
+	}
+
 	/// [`LogicalToPhysicalPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-logicaltophysicalpoint)
 	/// method.
 	fn LogicalToPhysicalPoint(&self, pt: *mut POINT) -> SysResult<()> {
@@ -962,6 +985,25 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
+	/// [`MapWindowPoints`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints)
+	/// method.
+	fn MapWindowPoints(&self,
+		hdest: &HWND, points: &mut [POINT]) -> SysResult<(i16, i16)>
+	{
+		SetLastError(co::ERROR::SUCCESS);
+		match unsafe {
+			user::ffi::MapWindowPoints(
+				self.as_ptr(),
+				hdest.as_ptr(),
+				points.as_mut_ptr() as _,
+				points.len() as _,
+			)
+		} {
+			0 => Err(GetLastError()),
+			n => Ok((LOWORD(n as _) as _, HIWORD(n as _) as _)),
+		}
+	}
+
 	/// [`MessageBox`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw)
 	/// method.
 	///
@@ -976,7 +1018,7 @@ pub trait user_Hwnd: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND};
 	///
-	/// let my_hwnd: HWND; // initialized somewhere
+	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
 	/// hwnd.MessageBox("Hello, world", "title",

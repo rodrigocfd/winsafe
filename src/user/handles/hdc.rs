@@ -81,6 +81,20 @@ pub trait user_Hdc: Handle {
 		)
 	}
 
+	/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
+	/// method.
+	fn InvertRect(&self, rc: &RECT) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe { user::ffi::InvertRect(self.as_ptr(), rc as *const _ as _) },
+		)
+	}
+
+	/// [`PaintDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-paintdesktop)
+	/// method.
+	fn PaintDesktop(&self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { user::ffi::PaintDesktop(self.as_ptr()) })
+	}
+
 	/// [`WindowFromDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromdc)
 	/// method.
 	#[must_use]

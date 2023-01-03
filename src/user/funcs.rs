@@ -499,6 +499,14 @@ pub fn InSendMessage() -> bool {
 	unsafe { user::ffi::InSendMessage() != 0 }
 }
 
+/// [`InflateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect)
+/// function.
+pub fn InflateRect(rc: &mut RECT, dx: i32, dy: i32) -> SysResult<()> {
+	bool_to_sysresult(
+		unsafe { user::ffi::InflateRect(rc as *mut _ as _, dx, dy) },
+	)
+}
+
 /// [`InSendMessageEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessageex)
 /// function.
 ///
@@ -507,6 +515,22 @@ pub fn InSendMessage() -> bool {
 #[must_use]
 pub fn InSendMessageEx() -> co::ISMEX {
 	co::ISMEX(unsafe { user::ffi::InSendMessageEx()})
+}
+
+/// [`IntersectRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect)
+/// function.
+pub fn IntersectRect(
+	dest: &mut RECT, src1: &RECT, src2: &RECT) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			user::ffi::IntersectRect(
+				dest as *mut _ as _,
+				src1 as *const _ as _,
+				src2 as *const _ as _,
+			)
+		},
+	)
 }
 
 /// [`IsGUIThread`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
@@ -524,6 +548,13 @@ pub fn IsGUIThread(convert_to_gui_thread: bool) -> SysResult<bool> {
 	}
 }
 
+/// [`IsRectEmpty`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isrectempty)
+/// function.
+#[must_use]
+pub fn IsRectEmpty(rc: &RECT) -> bool {
+	unsafe { user::ffi::IsRectEmpty(rc as *const _ as _) != 0 }
+}
+
 /// [`IsWow64Message`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswow64message)
 /// function.
 #[must_use]
@@ -537,6 +568,12 @@ pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe { user::ffi::LockSetForegroundWindow(lock_code.0) },
 	)
+}
+
+/// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
+/// function.
+pub fn OffsetRect(rc: &mut RECT, dx: i32, dy: i32) -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::OffsetRect(rc as *mut _ as _, dx, dy) })
 }
 
 /// [`PeekMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
@@ -579,6 +616,12 @@ pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 			)
 		}
 	)
+}
+
+/// [`PtInRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect)
+/// function.
+pub fn PtInRect(rc: &RECT, pt: POINT) -> bool {
+	unsafe { user::ffi::PtInRect(rc as *const _ as _, pt.x, pt.y) != 0 }
 }
 
 /// [`RegisterClassEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
@@ -667,6 +710,22 @@ pub fn SoundSentry() -> bool {
 	unsafe { user::ffi::SoundSentry() != 0 }
 }
 
+/// [`SubtractRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-subtractrect)
+/// function.
+pub fn SubtractRect(
+	dest: &mut RECT, src1: &RECT, src2: &RECT) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			user::ffi::SubtractRect(
+				dest as *mut _ as _,
+				src1 as *const _ as _,
+				src2 as *const _ as _,
+			)
+		},
+	)
+}
+
 /// [`SystemParametersInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)
 /// function.
 ///
@@ -702,6 +761,20 @@ pub fn TrackMouseEvent(tme: &mut TRACKMOUSEEVENT) -> SysResult<()> {
 /// function.
 pub fn TranslateMessage(msg: &MSG) -> bool {
 	unsafe { user::ffi::TranslateMessage(msg as *const _ as _) != 0 }
+}
+
+/// [`UnionRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unionrect)
+/// function.
+pub fn UnionRect(dest: &mut RECT, src1: &RECT, src2: &RECT) -> SysResult<()> {
+	bool_to_sysresult(
+		unsafe {
+			user::ffi::UnionRect(
+				dest as *mut _ as _,
+				src1 as *const _ as _,
+				src2 as *const _ as _,
+			)
+		},
+	)
 }
 
 /// [`UnregisterClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)

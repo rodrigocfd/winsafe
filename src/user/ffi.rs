@@ -131,15 +131,19 @@ extern_sys! { "user32";
 	GetWindowTextW(HANDLE, PSTR, i32) -> i32
 	GetWindowThreadProcessId(HANDLE, *mut u32) -> u32
 	HiliteMenuItem(HANDLE, HANDLE, u32, u32) -> BOOL
+	InflateRect(PVOID, i32, i32) -> BOOL
 	InSendMessage() -> BOOL
 	InsertMenuItemW(HANDLE, u32, BOOL, PCVOID) -> BOOL
+	IntersectRect(PVOID, PCVOID, PCVOID) -> BOOL
 	InvalidateRect(HANDLE, PCVOID, BOOL) -> BOOL
 	InvalidateRgn(HANDLE, HANDLE, BOOL) -> BOOL
+	InvertRect(HANDLE, PCVOID) -> BOOL
 	IsChild(HANDLE, HANDLE) -> BOOL
 	IsDialogMessageW(HANDLE, PVOID) -> BOOL
 	IsGUIThread(BOOL) -> BOOL
 	IsIconic(HANDLE) -> BOOL
 	IsMenu(HANDLE) -> BOOL
+	IsRectEmpty(PVOID) -> BOOL
 	IsWindow(HANDLE) -> BOOL
 	IsWindowEnabled(HANDLE) -> BOOL
 	IsWindowUnicode(HANDLE) -> BOOL
@@ -154,18 +158,23 @@ extern_sys! { "user32";
 	LoadMenuW(HANDLE, PCSTR) -> HANDLE
 	LoadStringW(HANDLE, u32, PSTR, i32) -> i32
 	LockSetForegroundWindow(u32) -> BOOL
+	LockWindowUpdate(HANDLE) -> BOOL
 	LogicalToPhysicalPoint(HANDLE, PVOID) -> BOOL
 	MapDialogRect(HANDLE, PVOID) -> BOOL
+	MapWindowPoints(HANDLE, HANDLE, PVOID, u32) -> i32
 	MessageBoxW(HANDLE, PCSTR, PCSTR, u32) -> i32
 	MonitorFromPoint(i32, i32, u32) -> HANDLE
 	MonitorFromRect(PCVOID, u32) -> HANDLE
 	MonitorFromWindow(HANDLE, u32) -> HANDLE
 	MoveWindow(HANDLE, i32, i32, i32, i32, BOOL) -> BOOL
+	OffsetRect(PVOID, i32, i32) -> BOOL
 	OpenClipboard(HANDLE) -> BOOL
+	PaintDesktop(HANDLE) -> BOOL
 	PeekMessageW(PVOID, HANDLE, u32, u32, u32) -> BOOL
 	PostMessageW(HANDLE, u32, usize, isize) -> BOOL
 	PostQuitMessage(i32)
 	PostThreadMessageW(u32, u32, usize, isize) -> BOOL
+	PtInRect(PCVOID, i32, i32) -> BOOL
 	RealChildWindowFromPoint(HANDLE, i32, i32) -> HANDLE
 	RealGetWindowClassW(HANDLE, PSTR, i32) -> u32
 	RedrawWindow(HANDLE, PCVOID, HANDLE, u32) -> BOOL
@@ -208,12 +217,14 @@ extern_sys! { "user32";
 	ShowWindow(HANDLE, i32) -> BOOL
 	ShowWindowAsync(HANDLE, i32) -> BOOL
 	SoundSentry() -> BOOL
+	SubtractRect(PVOID, PCVOID, PCVOID) -> BOOL
 	SystemParametersInfoW(u32, u32, PVOID, u32) -> BOOL
 	TrackMouseEvent(PVOID) -> BOOL
 	TrackPopupMenu(HANDLE, u32, i32, i32, i32, HANDLE, PCVOID) -> BOOL
 	TranslateAcceleratorW(HANDLE, HANDLE, PVOID) -> i32
 	TranslateMessage(PCVOID) -> BOOL
 	UnhookWindowsHookEx(HANDLE) -> BOOL
+	UnionRect(PVOID, PCVOID, PCVOID) -> BOOL
 	UnregisterClassW(PCSTR, HANDLE) -> BOOL
 	UpdateWindow(HANDLE) -> BOOL
 	ValidateRect(HANDLE, PCVOID) -> BOOL
