@@ -149,6 +149,23 @@ impl WindowEventsAll {
 	/// specific command notifications, which will give you the correct message
 	/// parameters. This generic method should be used only when you have a
 	/// custom, non-standard window notification.
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, gui, msg, AnyResult};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// const ID_BTN: u16 = 1000;
+	///
+	/// wnd.on().wm_command(co::BN::CLICKED, ID_BTN,
+	///     move || -> AnyResult<()> {
+	///         println!("Button clicked!");
+	///         Ok(())
+	///     },
+	/// );
+	/// ```
 	pub fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{

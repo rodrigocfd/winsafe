@@ -266,10 +266,12 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_destroy(move || -> AnyResult<()> {
-		///     println!("Window is gone, goodbye!");
-		///     Ok(())
-		/// });
+		/// wnd.on().wm_destroy(
+		///     move || -> AnyResult<()> {
+		///         println!("Window is gone, goodbye!");
+		///         Ok(())
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -291,13 +293,15 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_drop_files(move |p: msg::wm::DropFiles| -> AnyResult<()> {
-		///     for dropped_file in p.hdrop.iter()? {
-		///         let dropped_file = dropped_file?;
-		///         println!("Dropped: {}", dropped_file);
-		///     }
-		///     Ok(())
-		/// });
+		/// wnd.on().wm_drop_files(
+		///     move |p: msg::wm::DropFiles| -> AnyResult<()> {
+		///         for dropped_file in p.hdrop.iter()? {
+		///             let dropped_file = dropped_file?;
+		///             println!("Dropped: {}", dropped_file);
+		///         }
+		///         Ok(())
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -421,11 +425,12 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// let wnd = wnd.clone(); // to pass into the closure
-		/// wnd.on().wm_init_dialog(move |p: msg::wm::InitDialog| -> AnyResult<bool> {
-		///     println!("Focused HWND: {}", p.hwnd_focus);
-		///     Ok(true)
-		/// });
+		/// wnd.on().wm_init_dialog(
+		///     move |p: msg::wm::InitDialog| -> AnyResult<bool> {
+		///         println!("Focused HWND: {}", p.hwnd_focus);
+		///         Ok(true)
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -462,11 +467,12 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// let wnd = wnd.clone(); // to pass into the closure
-		/// wnd.on().wm_l_button_dbl_clk(move |p: msg::wm::LButtonDblClk| -> AnyResult<()> {
-		///     println!("Point: {}x{}", p.coords.x, p.coords.y);
-		///     Ok(())
-		/// });
+		/// wnd.on().wm_l_button_dbl_clk(
+		///     move |p: msg::wm::LButtonDblClk| -> AnyResult<()> {
+		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
+		///         Ok(())
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -483,11 +489,12 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// let wnd = wnd.clone(); // to pass into the closure
-		/// wnd.on().wm_l_button_down(move |p: msg::wm::LButtonDown| -> AnyResult<()> {
-		///     println!("Point: {}x{}", p.coords.x, p.coords.y);
-		///     Ok(())
-		/// });
+		/// wnd.on().wm_l_button_down(
+		///     move |p: msg::wm::LButtonDown| -> AnyResult<()> {
+		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
+		///         Ok(())
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -616,7 +623,7 @@ pub trait GuiEvents {
 		/// wnd.on().wm_paint({
 		///     let wnd = wnd.clone(); // to pass into the closure
 		///     move || -> AnyResult<()> {
-		///         let hdc = wnd.hwnd().BeginPaint()?;
+		///         let hdc = wnd.hwnd().BeginPaint()?; // EndPaint() called automatically
 		///
 		///         // hdc painting...
 		///
