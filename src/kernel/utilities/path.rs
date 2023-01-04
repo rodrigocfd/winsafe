@@ -308,7 +308,12 @@ impl<'a> Iterator for DirListIter<'a> {
 		};
 
 		if found {
-			Some(Ok(format!("{}\\{}", self.dir_path, self.wfd.cFileName())))
+			let file_name = self.wfd.cFileName();
+			if file_name == "." || file_name == ".." { // skip these
+				self.next()
+			} else {
+				Some(Ok(format!("{}\\{}", self.dir_path, self.wfd.cFileName())))
+			}
 		} else {
 			None
 		}
