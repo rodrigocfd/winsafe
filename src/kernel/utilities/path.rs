@@ -38,7 +38,32 @@ pub fn dir_list<'a>(
 	dir_path: &'a str,
 	filter: Option<&'a str>) -> impl Iterator<Item = SysResult<String>> + 'a
 {
-	DirListIter::new(dir_path, filter)
+	DirListIter::new(dir_path.to_owned(), filter)
+}
+
+/// Returns an interator over the files within a directory, and all its
+/// subdirectories, recursively.
+///
+/// This is a high-level abstraction over [`HFINDFILE`](crate::HFINDFILE)
+/// iteration functions.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::path;
+///
+/// for file_path in path::dir_walk("C:\\temp") {
+///     let file_path = file_path?;
+///     println!("{}", file_path);
+/// }
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+#[must_use]
+pub fn dir_walk<'a>(
+	dir_path: &'a str) -> impl Iterator<Item = SysResult<String>> + 'a
+{
+	DirWalkIter::new(dir_path.to_owned())
 }
 
 /// Returns the path of the current EXE file, without the EXE filename, and
@@ -262,7 +287,7 @@ pub fn split_parts(full_path: &str) -> Vec<&str> {
 //------------------------------------------------------------------------------
 
 struct DirListIter<'a> {
-	dir_path: &'a str,
+	dir_path: String,
 	filter: Option<&'a str>,
 	hfind: Option<HfindfileGuard>,
 	wfd: WIN32_FIND_DATA,
@@ -321,12 +346,77 @@ impl<'a> Iterator for DirListIter<'a> {
 }
 
 impl<'a> DirListIter<'a> {
-	fn new(dir_path: &'a str, filter: Option<&'a str>) -> Self {
+	fn new(dir_path: String, filter: Option<&'a str>) -> Self {
 		Self {
-			dir_path: rtrim_backslash(dir_path),
+			dir_path: rtrim_backslash(&dir_path).to_owned(),
 			filter,
 			hfind: None,
 			wfd: WIN32_FIND_DATA::default(),
+			no_more: false,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct DirWalkIter<'a> {
+	runner: DirListIter<'a>,
+	subdir_runner: Option<Box<DirWalkIter<'a>>>,
+	no_more: bool,
+}
+
+impl<'a> Iterator for DirWalkIter<'a> {
+	type Item = SysResult<String>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.no_more {
+			return None;
+		}
+
+		match &mut self.subdir_runner {
+			None => {
+				let cur_file = self.runner.next();
+				match cur_file {
+					None => None,
+					Some(cur_file) => {
+						match cur_file {
+							Err(e) => {
+								self.no_more = true; // prevent further iterations
+								Some(Err(e))
+							},
+							Ok(cur_file) => {
+								if is_directory(&cur_file) {
+									self.subdir_runner = Some(Box::new(Self::new(cur_file))); // recursively
+									self.next()
+								} else {
+									Some(Ok(cur_file))
+								}
+							},
+						}
+					},
+				}
+			},
+			Some(subdir_runner) => {
+				let inner_file = subdir_runner.next();
+				match inner_file {
+					None => { // subdir_runner finished his work
+						self.subdir_runner = None;
+						self.next()
+					},
+					Some(inner_file) => {
+						Some(inner_file)
+					},
+				}
+			},
+		}
+	}
+}
+
+impl<'a> DirWalkIter<'a> {
+	fn new(dir_path: String) -> Self {
+		Self {
+			runner: DirListIter::new(dir_path, None),
+			subdir_runner: None,
 			no_more: false,
 		}
 	}
