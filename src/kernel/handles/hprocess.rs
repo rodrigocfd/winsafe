@@ -39,7 +39,7 @@ pub trait kernel_Hprocess: Handle {
 		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		inherit_handles: bool,
 		creation_flags: co::CREATE,
-		environment: Option<Vec<String>>,
+		environment: Option<Vec<(&str, &str)>>,
 		current_dir: Option<&str>,
 		si: &mut STARTUPINFO) -> SysResult<ProcessInformationGuard>
 	{
@@ -55,8 +55,13 @@ pub trait kernel_Hprocess: Handle {
 					thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					inherit_handles as _,
 					creation_flags.0,
-					environment.as_ref()
-						.map_or(std::ptr::null_mut(), |lp| WString::from_str_vec(lp).as_ptr() as _),
+					environment.map_or(std::ptr::null_mut(), |environment| {
+						WString::from_str_vec(
+							&environment.iter()
+								.map(|(name, val)| format!("{}={}", name, val))
+								.collect::<Vec<_>>()
+						).as_ptr() as _
+					}),
 					WString::from_opt_str(current_dir).as_ptr(),
 					si as *mut _ as _,
 					&mut pi as *mut _ as _,
