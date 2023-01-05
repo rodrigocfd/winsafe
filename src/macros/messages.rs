@@ -62,7 +62,7 @@ macro_rules! pub_struct_msg_char {
 		///
 		/// Return type: `()`.
 		pub struct $name {
-			pub char_code: u16,
+			pub char_code: co::VK,
 			pub repeat_count: u16,
 			pub scan_code: u8,
 			pub is_extended_key: bool,
@@ -81,7 +81,7 @@ macro_rules! pub_struct_msg_char {
 			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
-					wparam: self.char_code as _,
+					wparam: self.char_code.0 as _,
 					lparam: crate::kernel::decl::MAKEDWORD(
 						self.repeat_count,
 						crate::kernel::decl::MAKEWORD(
@@ -100,7 +100,7 @@ macro_rules! pub_struct_msg_char {
 			fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
-					char_code: p.wparam as _,
+					char_code: co::VK(p.wparam as _),
 					repeat_count: LOWORD(p.lparam as _),
 					scan_code: LOBYTE(HIWORD(p.lparam as _)),
 					is_extended_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0000_0001) != 0,
