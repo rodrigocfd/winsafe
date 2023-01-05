@@ -20,6 +20,9 @@ mod radio_button;
 mod radio_group;
 mod status_bar_parts;
 mod status_bar;
+mod tab_item;
+mod tab_items;
+mod tab;
 mod trackbar;
 mod tree_view_item;
 mod tree_view_items;
@@ -38,6 +41,7 @@ pub use progress_bar::{ProgressBar, ProgressBarOpts};
 pub use radio_button::{RadioButton, RadioButtonOpts};
 pub use radio_group::RadioGroup;
 pub use status_bar::{StatusBar, StatusBarPart};
+pub use tab::{Tab, TabOpts};
 pub use trackbar::{Trackbar, TrackbarOpts};
 pub use tree_view::{TreeView, TreeViewOpts};
 
@@ -49,6 +53,8 @@ pub mod spec {
 	pub use super::list_view_item::ListViewItem;
 	pub use super::list_view_items::ListViewItems;
 	pub use super::status_bar_parts::StatusBarParts;
+	pub use super::tab_item::TabItem;
+	pub use super::tab_items::TabItems;
 	pub use super::tree_view_item::TreeViewItem;
 	pub use super::tree_view_items::TreeViewItems;
 }

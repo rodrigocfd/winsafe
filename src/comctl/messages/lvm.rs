@@ -1698,7 +1698,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// Return type: `SysResult<u32>`.
 pub struct InsertColumn<'a, 'b> {
 	pub index: u32,
-	pub lvcolumn: &'b LVCOLUMN<'a>,
+	pub column: &'b LVCOLUMN<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
@@ -1712,7 +1712,7 @@ unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 		WndMsg {
 			msg_id: co::LVM::INSERTCOLUMN.into(),
 			wparam: self.index as _,
-			lparam: self.lvcolumn as *const _ as _,
+			lparam: self.column as *const _ as _,
 		}
 	}
 }
@@ -1722,7 +1722,7 @@ unsafe impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 ///
 /// Return type: `SysResult<u32>`.
 pub struct InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	pub lvgroup: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
+	pub group: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
 unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
@@ -1736,7 +1736,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 
 		WndMsg {
 			msg_id: co::LVM::INSERTGROUP.into(),
 			wparam: 0,
-			lparam: self.lvgroup as *const _ as _,
+			lparam: self.group as *const _ as _,
 		}
 	}
 }
@@ -1746,7 +1746,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 
 ///
 /// Return type: `()`.
 pub struct InsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
-	pub lvgroup: &'h LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
+	pub group: &'h LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
 unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
@@ -1760,7 +1760,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b
 		WndMsg {
 			msg_id: co::LVM::INSERTGROUPSORTED.into(),
 			wparam: 0,
-			lparam: self.lvgroup as *const _ as _,
+			lparam: self.group as *const _ as _,
 		}
 	}
 }
@@ -1770,7 +1770,7 @@ unsafe impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b
 ///
 /// Return type: `SysResult<u32>`.
 pub struct InsertItem<'a, 'b> {
-	pub lvitem: &'b LVITEM<'a>,
+	pub item: &'b LVITEM<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
@@ -1784,7 +1784,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 		WndMsg {
 			msg_id: co::LVM::INSERTITEM.into(),
 			wparam: 0,
-			lparam: self.lvitem as *const _ as _,
+			lparam: self.item as *const _ as _,
 		}
 	}
 }
@@ -1795,7 +1795,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// Return type: `SysResult<()>`.
 pub struct InsertMarkHitTest<'a> {
 	pub point: POINT,
-	pub lvinsertmark: &'a LVINSERTMARK,
+	pub insert_mark: &'a LVINSERTMARK,
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
@@ -1809,7 +1809,7 @@ unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
 		WndMsg {
 			msg_id: co::LVM::INSERTMARKHITTEST.into(),
 			wparam: &self.point as *const _ as _,
-			lparam: self.lvinsertmark as *const _ as _,
+			lparam: self.insert_mark as *const _ as _,
 		}
 	}
 }

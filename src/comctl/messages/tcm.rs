@@ -104,14 +104,14 @@ unsafe impl MsgSend for DeselectAll {
 /// [`TCM_GETCURFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/tcm-getcurfocus)
 /// message, which has no parameters.
 ///
-/// Return type: `u32`.
+/// Return type: `Option<u32>`.
 pub struct GetCurFocus {}
 
 unsafe impl MsgSend for GetCurFocus {
-	type RetType = u32;
+	type RetType = Option<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		v as _
+		minus1_as_none(v).map(|i| i as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -518,6 +518,31 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 			msg_id: co::TCM::SETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.himagelist.0 as _,
+		}
+	}
+}
+
+/// [`TCM_SETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tcm-setitem)
+/// message parameters.
+///
+/// Return type: `SysResult<()>`.
+pub struct SetItem<'a, 'b> {
+	pub index: u32,
+	pub item: &'b TCITEM<'a>,
+}
+
+unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
+	type RetType = SysResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		zero_as_err(v).map(|_| ())
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::TCM::SETITEM.into(),
+			wparam: self.index as _,
+			lparam: self.item as *const _ as _,
 		}
 	}
 }

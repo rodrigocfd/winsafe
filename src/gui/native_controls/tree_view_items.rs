@@ -40,7 +40,7 @@ impl<'a> TreeViewItems<'a> {
 		tvis.itemex = tvix;
 
 		let new_hitem = self.owner.hwnd()
-			.SendMessage(tvm::InsertItem { tvinsertstruct: &mut tvis })
+			.SendMessage(tvm::InsertItem { item: &mut tvis })
 			.unwrap();
 		self.get(new_hitem)
 	}

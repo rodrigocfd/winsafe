@@ -619,7 +619,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 ///
 /// Return type: `SysResult<HTREEITEM>`.
 pub struct InsertItem<'a, 'b> {
-	pub tvinsertstruct: &'b TVINSERTSTRUCT<'a>,
+	pub item: &'b TVINSERTSTRUCT<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
@@ -633,7 +633,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 		WndMsg {
 			msg_id: co::TVM::INSERTITEM.into(),
 			wparam: 0,
-			lparam: self.tvinsertstruct as *const _ as _,
+			lparam: self.item as *const _ as _,
 		}
 	}
 }

@@ -71,7 +71,7 @@ impl<'a> ListViewItems<'a> {
 
 		let new_item = self.get( // retrieve the item newly added
 			self.owner.hwnd()
-				.SendMessage(lvm::InsertItem { lvitem: &lvi })
+				.SendMessage(lvm::InsertItem { item: &lvi })
 				.unwrap(),
 		);
 
@@ -135,7 +135,7 @@ impl<'a> ListViewItems<'a> {
 			.map(|idx| self.get(idx))
 	}
 
-	/// Retrieves the index of the focused item by sending an
+	/// Retrieves the focused item by sending an
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
 	#[must_use]
 	pub fn focused(&self) -> Option<ListViewItem<'a>> {

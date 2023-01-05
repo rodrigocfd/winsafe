@@ -55,7 +55,7 @@ impl<'a> ListViewColumns<'a> {
 			self.owner.hwnd()
 				.SendMessage(lvm::InsertColumn {
 					index: 0xffff, // insert as the last columns
-					lvcolumn: &lvc,
+					column: &lvc,
 				})
 				.unwrap();
 		}

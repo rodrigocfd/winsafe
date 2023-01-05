@@ -368,7 +368,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 /// Return type: `SysResult<u32>`.
 pub struct InsertItem<'a, 'b> {
 	pub index_after: u32,
-	pub hditem: &'b HDITEM<'a>,
+	pub item: &'b HDITEM<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
@@ -382,7 +382,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 		WndMsg {
 			msg_id: co::HDM::INSERTITEM.into(),
 			wparam: self.index_after as _,
-			lparam: self.hditem as *const _ as _,
+			lparam: self.item as *const _ as _,
 		}
 	}
 }
