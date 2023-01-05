@@ -85,6 +85,8 @@ const_ws! { BTNS: u8;
 	/// (`u8`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	BUTTON 0x00
 	SEP 0x01
 	CHECK 0x02
@@ -168,6 +170,8 @@ const_wsex! { CBES_EX;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	NOEDITIMAGE 0x0000_0001
 	NOEDITIMAGEINDENT 0x0000_0002
 	PATHWORDBREAKPROC 0x0000_0004
@@ -294,6 +298,8 @@ const_ws! { DTS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	UPDOWN 0x0001
 	SHOWNONE 0x0002
 	SHORTDATEFORMAT 0x0000
@@ -509,6 +515,8 @@ const_ws! { HDS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	HORZ 0x0000
 	BUTTONS 0x0002
 	HOTTRACK 0x0004
@@ -1253,6 +1261,8 @@ const_ws! { LVS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	ICON 0x0000
 	REPORT 0x0001
 	SMALLICON 0x0002
@@ -1353,6 +1363,8 @@ const_ws! { LWS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	/// The background mix mode is transparent.
 	TRANSPARENT 0x0001
 	/// When the link has keyboard focus and the user presses Enter the
@@ -1549,6 +1561,8 @@ const_ws! { PBS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	SMOOTH 0x01
 	VERTICAL 0x04
 	MARQUEE 0x08
@@ -1670,6 +1684,8 @@ const_ws! { RBS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	TOOLTIPS 0x0000_0100
 	VARHEIGHT 0x0000_0200
 	BANDBORDERS 0x0000_0400
@@ -1954,6 +1970,8 @@ const_ws! { TBS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	AUTOTICKS 0x0001
 	VERT 0x0002
 	HORZ 0x0000
@@ -1997,6 +2015,8 @@ const_wsex! { TBSTYLE_EX;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	DRAWDDARROWS 0x0000_0001
 	MIXEDBUTTONS 0x0000_0008
 	HIDECLIPPEDBUTTONS 0x0000_0010
@@ -2106,6 +2126,8 @@ const_ws! { TCS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	SCROLLOPPOSITE 0x0001
 	BOTTOM 0x0002
 	RIGHT 0x0002
@@ -2134,6 +2156,8 @@ const_wsex! { TCS_EX;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	FLATSEPARATORS 0x0000_0001
 	REGISTERDROP 0x0000_0002
 }
@@ -2465,6 +2489,8 @@ const_ws! { TVS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	HASBUTTONS 0x0001
 	HASLINES 0x0002
 	LINESATROOT 0x0004
@@ -2553,6 +2579,8 @@ const_ws! { UDS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	WRAP 0x0001
 	SETBUDDYINT 0x0002
 	ALIGNRIGHT 0x0004

@@ -119,6 +119,8 @@ const_ws! { BS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	PUSHBUTTON 0x0000_0000
 	DEFPUSHBUTTON 0x0000_0001
 	CHECKBOX 0x0000_0002
@@ -259,6 +261,8 @@ const_ws! { CBS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	SIMPLE 0x0001
 	DROPDOWN 0x0002
 	DROPDOWNLIST 0x0003
@@ -1142,6 +1146,8 @@ const_ws! { ES: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	LEFT 0x0000
 	CENTER 0x0001
 	RIGHT 0x0002
@@ -1507,6 +1513,8 @@ const_ws! { LBS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	NOTIFY 0x0001
 	SORT 0x0002
 	NOREDRAW 0x0004
@@ -2455,6 +2463,8 @@ const_ws! { SS: u32;
 	/// (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	LEFT 0x0000_0000
 	CENTER 0x0000_0001
 	RIGHT 0x0000_0002
