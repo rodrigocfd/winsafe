@@ -127,6 +127,10 @@ pub trait user_Hwnd: Handle {
 
 	/// [`ClientToScreen`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen)
 	/// method.
+	///
+	/// If you need to convert a [`RECT`](crate::RECT), see the
+	/// [`HWND::ClientToScreenRc`](crate::prelude::user_Hwnd::ClientToScreenRc)
+	/// method.
 	fn ClientToScreen(&self, pt: &mut POINT) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { user::ffi::ClientToScreen(self.as_ptr(), pt as *mut _ as _) },
@@ -1169,6 +1173,10 @@ pub trait user_Hwnd: Handle {
 
 	/// [`ScreenToClient`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient)
 	/// method.
+	///
+	/// If you need to convert a [`RECT`](crate::RECT), see the
+	/// [`HWND::ScreenToClientRc`](crate::prelude::user_Hwnd::ScreenToClientRc)
+	/// method.
 	fn ScreenToClient(&self, pt: &mut POINT) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
@@ -1421,6 +1429,24 @@ pub trait user_Hwnd: Handle {
 
 	/// [`SetWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HWND, HwndPlace, POINT, SIZE};
+	///
+	/// let hwnd: HWND; // initialized somewhere
+	/// # let hwnd = HWND::NULL;
+	///
+	/// hwnd.SetWindowPos(
+	///     HwndPlace::None,
+	///     POINT::new(10, 10),
+	///     SIZE::default(),
+	///     co::SWP::NOZORDER | co::SWP::NOSIZE,
+	/// )?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	fn SetWindowPos(&self,
 		hwnd_insert_after: HwndPlace,
 		pos: POINT, size: SIZE, flags: co::SWP) -> SysResult<()>

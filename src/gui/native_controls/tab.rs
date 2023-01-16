@@ -179,7 +179,7 @@ impl Tab {
 		}
 
 		self.0.children.iter()
-			.for_each(|(text, _)| unsafe {self.items().add(text); }); // add the tabs
+			.for_each(|(text, _)| unsafe { self.items().add(text); }); // add the tabs
 		self.display_tab(0)?; // 1st tab selected by default
 
 		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
