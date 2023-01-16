@@ -2,7 +2,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::{post_quit_error, ui_font};
-use crate::kernel::decl::{AnyResult, IdStr};
+use crate::kernel::decl::{AnyResult, IdStr, SysResult};
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{Handle, MsgSendRecv, user_Hinstance, user_Hwnd};
 use crate::user::decl::HWND;
@@ -52,7 +52,7 @@ impl DlgBase {
 		self.base.parent()
 	}
 
-	pub(in crate::gui) fn create_dialog_param(&self) {
+	pub(in crate::gui) fn create_dialog_param(&self) -> SysResult<()> {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
@@ -60,18 +60,20 @@ impl DlgBase {
 		// Our hwnd member is set during WM_INITDIALOG processing; already set
 		// when CreateDialogParam returns.
 		unsafe {
-			self.base.parent_hinstance().CreateDialogParam(
+			self.base.parent_hinstance()?.CreateDialogParam(
 				IdStr::Id(self.dialog_id),
 				self.base.parent().map(|parent| parent.hwnd()),
 				Self::dialog_proc,
 				// Pass pointer to Self.
 				// At this moment, the parent struct is already created and pinned.
 				Some(self as *const _ as _),
-			)
-		}.unwrap();
+			)?;
+		}
+
+		Ok(())
 	}
 
-	pub(in crate::gui) fn dialog_box_param(&self) -> i32 {
+	pub(in crate::gui) fn dialog_box_param(&self) -> SysResult<i32> {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
@@ -79,17 +81,17 @@ impl DlgBase {
 		// Our hwnd member is set during WM_INITDIALOG processing; already set
 		// when DialogBoxParam returns.
 		let ret = unsafe {
-			self.base.parent_hinstance().DialogBoxParam(
+			self.base.parent_hinstance()?.DialogBoxParam(
 				IdStr::Id(self.dialog_id),
 				self.base.parent().map(|parent| parent.hwnd()),
 				Self::dialog_proc,
 				// Pass pointer to Self.
 				// At this moment, the parent struct is already created and pinned.
 				Some(self as *const _ as _),
-			)
-		}.unwrap();
+			)?
+		};
 
-		ret as _
+		Ok(ret as _)
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)

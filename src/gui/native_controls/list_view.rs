@@ -14,6 +14,7 @@ use crate::gui::native_controls::base_native_control::{
 use crate::gui::native_controls::list_view_columns::ListViewColumns;
 use crate::gui::native_controls::list_view_items::ListViewItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
+use crate::kernel::decl::SysResult;
 use crate::msg::{lvm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
@@ -111,7 +112,7 @@ impl ListView {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
-			self2.create(horz, vert);
+			self2.create(horz, vert)?;
 			Ok(None) // not meaningful
 		});
 
@@ -154,7 +155,7 @@ impl ListView {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior.0, resize_behavior.1);
+			self2.create(resize_behavior.0, resize_behavior.1)?;
 			Ok(true) // not meaningful
 		});
 
@@ -162,20 +163,20 @@ impl ListView {
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) {
+	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = opts.size;
 				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
 
 				self.0.base.create_window(
 					"SysListView32", None, pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.list_view_style.into(),
-				);
+				)?;
 
 				if opts.list_view_ex_style != co::LVS_EX::NoValue {
 					self.set_extended_style(true, opts.list_view_ex_style);
@@ -186,7 +187,7 @@ impl ListView {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
 	}
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {

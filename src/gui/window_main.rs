@@ -130,14 +130,14 @@ impl WindowMain {
 				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, &mut b_val).unwrap();
 		}
 
-		create_ui_font();
+		create_ui_font().unwrap();
 
 		let res = match &self.0 {
 			RawDlg::Raw(r) => r.run_main(cmd_show),
 			RawDlg::Dlg(d) => d.run_main(cmd_show),
 		};
 
-		delete_ui_font(); // cleanup
+		delete_ui_font().ok(); // cleanup; ignore errors
 		res
 	}
 }

@@ -12,7 +12,7 @@ use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
-use crate::kernel::decl::WString;
+use crate::kernel::decl::{SysResult, WString};
 use crate::msg::{em, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
@@ -106,7 +106,7 @@ impl Edit {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
-			self2.create(horz, vert);
+			self2.create(horz, vert)?;
 			Ok(None) // not meaningful
 		});
 
@@ -141,27 +141,27 @@ impl Edit {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior.0, resize_behavior.1);
+			self2.create(resize_behavior.0, resize_behavior.1)?;
 			Ok(true) // not meaningful
 		});
 
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) {
+	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
 				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
 
 				self.0.base.create_window(
 					"EDIT", Some(&opts.text), pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.edit_style.into(),
-				);
+				)?;
 
 				self.hwnd().SendMessage(wm::SetFont {
 					hfont: unsafe { ui_font().raw_copy() },
@@ -171,7 +171,7 @@ impl Edit {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
 	}
 
 	/// Hides any balloon tip by sending an

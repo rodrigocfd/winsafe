@@ -83,11 +83,11 @@ impl RawMain {
 			&parent_hinst,
 			opts.class_style, &opts.class_icon, &opts.class_icon,
 			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
-			&mut class_name_buf);
-		let atom = self.0.raw_base.register_class(&mut wcx);
+			&mut class_name_buf).unwrap();
+		let atom = self.0.raw_base.register_class(&mut wcx).unwrap();
 
 		let mut wnd_sz = opts.size;
-		multiply_dpi(None, Some(&mut wnd_sz));
+		multiply_dpi(None, Some(&mut wnd_sz)).unwrap();
 
 		let screen_sz = SIZE::new(
 			GetSystemMetrics(co::SM::CXSCREEN),
@@ -120,7 +120,7 @@ impl RawMain {
 			},
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
-		);
+		).unwrap();
 
 		self.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		self.hwnd().UpdateWindow().unwrap();

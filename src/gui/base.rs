@@ -6,7 +6,7 @@ use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
 use crate::gui::msg_error::MsgResult;
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::{AnyResult, HINSTANCE};
+use crate::kernel::decl::{AnyResult, HINSTANCE, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::{GuiEvents, GuiParent, Handle, kernel_Hinstance, user_Hwnd};
 use crate::user::decl::{
@@ -69,11 +69,12 @@ impl Base {
 		self.parent_ptr.map(move |parent| unsafe { parent.as_ref() })
 	}
 
-	pub(in crate::gui) fn parent_hinstance(&self) -> HINSTANCE {
-		self.parent().map_or_else(
-			|| HINSTANCE::GetModuleHandle(None).unwrap(),
-			|parent| parent.hwnd().hinstance(),
-		)
+	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {
+		Ok(if let Some(parent) = self.parent() {
+			parent.hwnd().hinstance()
+		} else {
+			HINSTANCE::GetModuleHandle(None)?
+		})
 	}
 
 	/// User events can be overriden; only the last one is executed.
@@ -113,7 +114,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
-		hchild: &HWND, horz: Horz, vert: Vert)
+		hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
 	{
 		self.layout_arranger.as_mut().add(&self.hwnd, hchild, horz, vert)
 	}
@@ -169,7 +170,7 @@ impl Base {
 		// clonable.
 		let layout_arranger = self.layout_arranger.clone();
 		self.privileged_events.wm_size(move |p| {
-			layout_arranger.rearrange(&p);
+			layout_arranger.rearrange(&p)?;
 			Ok(()) // not meaningful
 		});
 

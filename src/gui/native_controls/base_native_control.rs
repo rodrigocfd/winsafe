@@ -5,7 +5,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::AnyResult;
+use crate::kernel::decl::{AnyResult, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::{comctl_Hwnd, Handle, user_Hwnd};
 use crate::user::decl::{AtomStr, HWND, IdMenu, POINT, SIZE};
@@ -72,7 +72,7 @@ impl BaseNativeControl {
 		sz: SIZE,
 		ctrl_id: u16,
 		ex_styles: co::WS_EX,
-		styles: co::WS)
+		styles: co::WS) -> SysResult<()>
 	{
 		let hparent = self.parent().hwnd();
 
@@ -92,10 +92,11 @@ impl BaseNativeControl {
 				IdMenu::Id(ctrl_id),
 				&hparent.hinstance(),
 				None,
-			).unwrap()
+			)?
 		};
 
 		self.install_subclass_if_needed();
+		Ok(())
 	}
 
 	pub(in crate::gui) fn create_dlg(&self, ctrl_id: u16) {

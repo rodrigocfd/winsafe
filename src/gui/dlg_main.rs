@@ -7,7 +7,7 @@ use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::msg_error::MsgResult;
-use crate::kernel::decl::{AnyResult, HINSTANCE, IdStr};
+use crate::kernel::decl::{AnyResult, HINSTANCE, IdStr, SysResult};
 use crate::msg::wm;
 use crate::prelude::{GuiEvents, kernel_Hinstance, user_Hinstance, user_Hwnd};
 use crate::user::decl::{HWND, IdOicStr, PostQuitMessage, SIZE};
@@ -72,14 +72,14 @@ impl DlgMain {
 	pub(in crate::gui) fn run_main(&self,
 		cmd_show: Option<co::SW>) -> MsgResult<i32>
 	{
-		self.0.dlg_base.create_dialog_param();
+		self.0.dlg_base.create_dialog_param().unwrap();
 		let hinst = HINSTANCE::GetModuleHandle(None).unwrap();
 		let haccel = self.0.accel_table_id
 			.map(|id| hinst.LoadAccelerators(IdStr::Id(id))) // resources are automatically freed
 			.transpose()
 			.unwrap();
 
-		self.set_icon_if_any(&hinst);
+		self.set_icon_if_any(&hinst).unwrap();
 		self.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
 		Base::run_main_loop(haccel.as_ref()) // blocks until window is closed
@@ -88,7 +88,7 @@ impl DlgMain {
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
 		self.on().wm_close(move || {
-			self2.hwnd().DestroyWindow().unwrap();
+			self2.hwnd().DestroyWindow().ok(); // ignore errors
 			Ok(())
 		});
 
@@ -98,21 +98,22 @@ impl DlgMain {
 		});
 	}
 
-	fn set_icon_if_any(&self, hinst: &HINSTANCE) {
+	fn set_icon_if_any(&self, hinst: &HINSTANCE) -> SysResult<()> {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {
 			self.hwnd().SendMessage(wm::SetIcon {
 				hicon: hinst.LoadImageIcon(
-					IdOicStr::Id(id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR).unwrap(),
+					IdOicStr::Id(id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?,
 				size: co::ICON_SZ::SMALL,
 			});
 
 			self.hwnd().SendMessage(wm::SetIcon {
 				hicon: hinst.LoadImageIcon(
-					IdOicStr::Id(id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR).unwrap(),
+					IdOicStr::Id(id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?,
 				size: co::ICON_SZ::BIG,
 			});
 		}
+		Ok(())
 	}
 }

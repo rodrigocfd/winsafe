@@ -108,6 +108,6 @@ impl WindowModal {
 		match &self.0 {
 			RawDlg::Raw(r) => r.show_modal(),
 			RawDlg::Dlg(d) => d.show_modal(),
-		}
+		}.unwrap()
 	}
 }

@@ -11,7 +11,7 @@ use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
-use crate::kernel::decl::SYSTEMTIME;
+use crate::kernel::decl::{SysResult, SYSTEMTIME};
 use crate::msg::{dtm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
@@ -104,7 +104,7 @@ impl DateTimePicker {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
-			self2.create(horz, vert);
+			self2.create(horz, vert)?;
 			Ok(None) // not meaningful
 		});
 
@@ -140,14 +140,14 @@ impl DateTimePicker {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior.0, resize_behavior.1);
+			self2.create(resize_behavior.0, resize_behavior.1)?;
 			Ok(true) // not meaningful
 		});
 
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) {
+	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		if vert == Vert::Resize {
 			panic!("DateTimePicker cannot be resized with Vert::Resize.");
 		}
@@ -157,14 +157,14 @@ impl DateTimePicker {
 				let mut pos = opts.position;
 				let mut sz = SIZE::new(opts.width as _, 21); // default height
 				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz));
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
 
 				self.0.base.create_window(
 					"SysDateTimePick32", None, pos, sz,
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.date_time_picker_style.into(),
-				);
+				)?;
 
 				if sz.cx == 0 { // use ideal width?
 					let mut sz_ideal = SIZE::default();
@@ -175,7 +175,7 @@ impl DateTimePicker {
 
 					self.hwnd().SetWindowPos(
 						HwndPlace::None, POINT::default(), sz,
-						co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
+						co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 				}
 
 				self.hwnd().SendMessage(wm::SetFont {
@@ -186,7 +186,7 @@ impl DateTimePicker {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
 	}
 
 	/// Retrieves the currently selected date by sending a

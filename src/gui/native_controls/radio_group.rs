@@ -11,6 +11,7 @@ use crate::gui::events::RadioGroupEvents;
 use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
+use crate::kernel::decl::SysResult;
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
 };
@@ -106,7 +107,7 @@ impl RadioGroup {
 		let self2 = new_self.clone();
 		let horz_verts = horz_verts.clone();
 		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
-			self2.create(horz_verts.as_ref());
+			self2.create(horz_verts.as_ref())?;
 			Ok(None) // not meaningful
 		});
 		new_self
@@ -158,16 +159,17 @@ impl RadioGroup {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(horz_verts.as_ref());
+			self2.create(horz_verts.as_ref())?;
 			Ok(true) // not meaningful
 		});
 		new_self
 	}
 
-	fn create(&self, horz_vert: &[(Horz, Vert)]) {
+	fn create(&self, horz_vert: &[(Horz, Vert)]) -> SysResult<()> {
 		for (i, radio) in self.0.radios.iter().enumerate() {
-			radio.create(horz_vert[i].0, horz_vert[i].1); // create each RadioButton sequentially
+			radio.create(horz_vert[i].0, horz_vert[i].1)?; // create each RadioButton sequentially
 		}
+		Ok(())
 	}
 
 	/// Returns an iterator over the internal

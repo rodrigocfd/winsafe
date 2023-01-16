@@ -11,7 +11,7 @@ use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::kernel::decl::SYSTEMTIME;
+use crate::kernel::decl::{SysResult, SYSTEMTIME};
 use crate::msg::mcm;
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
@@ -105,7 +105,7 @@ impl MonthCalendar {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
-			self2.create(horz, vert);
+			self2.create(horz, vert)?;
 			Ok(None) // not meaningful
 		});
 		new_self
@@ -140,14 +140,14 @@ impl MonthCalendar {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior.0, resize_behavior.1);
+			self2.create(resize_behavior.0, resize_behavior.1)?;
 			Ok(true) // not meaningful
 		});
 
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) {
+	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		if horz == Horz::Resize {
 			panic!("MonthCalendar cannot be resized with Horz::Resize.");
 		} else if vert == Vert::Resize {
@@ -157,27 +157,27 @@ impl MonthCalendar {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
-				multiply_dpi_or_dtu(self.0.base.parent(), Some(&mut pos), None);
+				multiply_dpi_or_dtu(self.0.base.parent(), Some(&mut pos), None)?;
 
 				self.0.base.create_window(
 					"SysMonthCal32", None, pos, SIZE::new(0, 0),
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.month_calendar_style.into(),
-				);
+				)?;
 
 				let mut bounds_rect = RECT::default();
 				self.hwnd().SendMessage(mcm::GetMinReqRect {
 					bounds_rect: &mut bounds_rect,
-				}).unwrap();
+				})?;
 				self.hwnd().SetWindowPos(HwndPlace::None, POINT::default(),
 					SIZE::new(bounds_rect.right, bounds_rect.bottom),
-					co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
+					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 			},
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
 	}
 
 	/// Retrieves the currently selected date by sending a

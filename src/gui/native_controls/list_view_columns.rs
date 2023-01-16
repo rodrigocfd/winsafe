@@ -43,7 +43,7 @@ impl<'a> ListViewColumns<'a> {
 	pub fn add(&self, texts_and_widths: &[(impl AsRef<str>, u32)]) {
 		for (text, width) in texts_and_widths.iter() {
 			let mut col_cx = SIZE::new(*width as _, 0);
-			multiply_dpi(None, Some(&mut col_cx));
+			multiply_dpi(None, Some(&mut col_cx)).unwrap();
 
 			let mut lvc = LVCOLUMN::default();
 			lvc.mask = co::LVCF::TEXT | co::LVCF::WIDTH;
@@ -114,7 +114,7 @@ impl<'a> ListViewColumns<'a> {
 	/// Width will be adjusted to match current system DPI.
 	pub fn set_width(&self, column_index: u32, width: u32) {
 		let mut col_cx = SIZE::new(width as _, 0);
-		multiply_dpi(None, Some(&mut col_cx));
+		multiply_dpi(None, Some(&mut col_cx)).unwrap();
 
 		self.owner.hwnd()
 			.SendMessage(lvm::SetColumnWidth {

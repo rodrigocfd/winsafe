@@ -2,7 +2,9 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::privs::post_quit_error;
-use crate::kernel::decl::{AnyResult, HINSTANCE, SetLastError, WString};
+use crate::kernel::decl::{
+	AnyResult, HINSTANCE, SetLastError, SysResult, WString,
+};
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{
 	gdi_Hbrush, Handle, MsgSendRecv, user_Hinstance, user_Hwnd,
@@ -50,13 +52,13 @@ pub enum Cursor {
 
 impl Cursor {
 	/// Converts the contents of `Cursor` to `HCURSOR`.
-	pub fn as_hcursor(&self, hinst: &HINSTANCE) -> HCURSOR {
-		match self {
+	pub fn as_hcursor(&self, hinst: &HINSTANCE) -> SysResult<HCURSOR> {
+		Ok(match self {
 			Cursor::Handle(h) => unsafe { h.raw_copy() },
-			Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id)).unwrap(),
-			Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc)).unwrap(),
-			Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone())).unwrap(),
-		}
+			Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?,
+			Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?,
+			Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?,
+		})
 	}
 }
 
@@ -79,14 +81,14 @@ pub enum Icon {
 
 impl Icon {
 	/// Converts the contents of `Icon` to `HICON`.
-	pub fn as_hicon(&self, hinst: &HINSTANCE) -> HICON {
-		match self {
+	pub fn as_hicon(&self, hinst: &HINSTANCE) -> SysResult<HICON> {
+		Ok(match self {
 			Icon::Handle(h) => unsafe { h.raw_copy() },
-			Icon::Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id)).unwrap(),
-			Icon::Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi)).unwrap(),
+			Icon::Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id))?,
+			Icon::Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi))?,
 			Icon::None => HICON::NULL,
-			Icon::Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone())).unwrap(),
-		}
+			Icon::Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone()))?,
+		})
 	}
 }
 
@@ -133,7 +135,7 @@ impl RawBase {
 		self.base.parent()
 	}
 
-	pub(in crate::gui) fn parent_hinstance(&self) -> HINSTANCE {
+	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {
 		self.base.parent_hinstance()
 	}
 
@@ -158,15 +160,15 @@ impl RawBase {
 		class_bg_brush: &'a Brush,
 		class_cursor: &'a Cursor,
 		wcx: &mut WNDCLASSEX<'a>,
-		class_name_buf: &'a mut WString)
+		class_name_buf: &'a mut WString) -> SysResult<()>
 	{
 		wcx.lpfnWndProc = Some(Self::window_proc);
 		wcx.hInstance = unsafe { hinst.raw_copy() };
 		wcx.style = class_style;
-		wcx.hIcon = class_icon.as_hicon(hinst);
-		wcx.hIconSm = class_icon_sm.as_hicon(hinst);
+		wcx.hIcon = class_icon.as_hicon(hinst)?;
+		wcx.hIconSm = class_icon_sm.as_hicon(hinst)?;
 		wcx.hbrBackground = class_bg_brush.as_hbrush();
-		wcx.hCursor = class_cursor.as_hcursor(hinst);
+		wcx.hCursor = class_cursor.as_hcursor(hinst)?;
 
 		if wcx.lpszClassName().is_none() { // an actual class name was not provided?
 			*class_name_buf = WString::from_str(
@@ -182,19 +184,23 @@ impl RawBase {
 			);
 			wcx.set_lpszClassName(Some(class_name_buf));
 		}
+
+		Ok(())
 	}
 
-	pub(in crate::gui) fn register_class(&self, wcx: &mut WNDCLASSEX) -> ATOM {
+	pub(in crate::gui) fn register_class(&self,
+		wcx: &mut WNDCLASSEX) -> SysResult<ATOM>
+	{
 		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { RegisterClassEx(&wcx) } {
-			Ok(atom) => atom,
+			Ok(atom) => Ok(atom),
 			Err(err) => match err {
 				co::ERROR::CLASS_ALREADY_EXISTS => {
 					// https://devblogs.microsoft.com/oldnewthing/20150429-00/?p=44984
 					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 					// Retrieve ATOM of existing window class.
 					let hinst = unsafe { wcx.hInstance.raw_copy() };
-					hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap(), wcx).unwrap()
+					Ok(hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap(), wcx)?)
 				},
 				_ => panic!(),
 			},
@@ -209,7 +215,7 @@ impl RawBase {
 		pos: POINT,
 		sz: SIZE,
 		ex_styles: co::WS_EX,
-		styles: co::WS)
+		styles: co::WS) -> SysResult<()>
 	{
 		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");
@@ -225,12 +231,14 @@ impl RawBase {
 				pos, sz,
 				self.base.parent().map(|parent| parent.hwnd()),
 				hmenu,
-				&self.base.parent_hinstance(),
+				&self.base.parent_hinstance()?,
 				// Pass pointer to Self.
 				// At this moment, the parent struct is already created and pinned.
 				Some(self as *const _ as _),
-			).unwrap();
+			)?;
 		}
+
+		Ok(())
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)

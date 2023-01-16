@@ -13,6 +13,7 @@ use crate::gui::native_controls::base_native_control::{
 use crate::gui::privs::{
 	auto_ctrl_id, calc_text_bound_box_check, multiply_dpi_or_dtu, ui_font,
 };
+use crate::kernel::decl::SysResult;
 use crate::msg::{bm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
@@ -121,7 +122,7 @@ impl CheckBox {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
-			self2.create(horz, vert);
+			self2.create(horz, vert)?;
 			Ok(None) // not meaningful
 		});
 
@@ -157,26 +158,26 @@ impl CheckBox {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior.0, resize_behavior.1);
+			self2.create(resize_behavior.0, resize_behavior.1)?;
 			Ok(true) // not meaningful
 		});
 
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) {
+	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), None);
+					self.0.base.parent(), Some(&mut pos), None)?;
 
 				let mut sz = opts.size;
 				if sz.cx == -1 && sz.cy == -1 {
-					sz = calc_text_bound_box_check(&opts.text); // resize to fit text
+					sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
 				} else {
 					multiply_dpi_or_dtu(
-						self.0.base.parent(), None, Some(&mut sz)); // user-defined size
+						self.0.base.parent(), None, Some(&mut sz))?; // user-defined size
 				}
 
 				self.0.base.create_window(
@@ -184,7 +185,7 @@ impl CheckBox {
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
-				);
+				)?;
 
 				self.hwnd().SendMessage(wm::SetFont {
 					hfont: unsafe { ui_font().raw_copy() },
@@ -197,7 +198,7 @@ impl CheckBox {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
 	}
 
 	/// Retrieves the current check state by sending a
@@ -260,7 +261,7 @@ impl CheckBox {
 	/// the control to exactly fit the new text.
 	pub fn set_text_and_resize(&self, text: &str) {
 		self.set_text(text);
-		let bound_box = calc_text_bound_box_check(text);
+		let bound_box = calc_text_bound_box_check(text).unwrap();
 		self.hwnd().SetWindowPos(
 			HwndPlace::None, POINT::default(), bound_box,
 			co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();

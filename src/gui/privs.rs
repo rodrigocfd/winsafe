@@ -6,7 +6,7 @@ use crate::co;
 use crate::gdi::decl::{HFONT, NONCLIENTMETRICS};
 use crate::gui::base::Base;
 use crate::gui::msg_error::MsgError;
-use crate::kernel::decl::MulDiv;
+use crate::kernel::decl::{AnyResult, MulDiv, SysResult};
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{
 	gdi_Hdc, gdi_Hfont, GdiObject, Handle, NativeBitflag, user_Hwnd,
@@ -36,26 +36,28 @@ pub(in crate::gui) fn post_quit_error(
 static mut UI_HFONT: Option<HFONT> = None;
 
 /// Creates the global UI font object.
-pub(in crate::gui) fn create_ui_font() {
+pub(in crate::gui) fn create_ui_font() -> SysResult<()> {
 	let mut ncm = NONCLIENTMETRICS::default();
 	unsafe {
 		SystemParametersInfo(
 			co::SPI::GETNONCLIENTMETRICS,
 			std::mem::size_of::<NONCLIENTMETRICS>() as _,
 			&mut ncm, co::SPIF::NoValue,
-		).unwrap();
-		UI_HFONT = Some(HFONT::CreateFontIndirect(&ncm.lfMenuFont).unwrap());
+		)?;
+		UI_HFONT = Some(HFONT::CreateFontIndirect(&ncm.lfMenuFont)?);
 	}
+	Ok(())
 }
 
 /// Frees the global UI font object.
-pub(in crate::gui) fn delete_ui_font() {
+pub(in crate::gui) fn delete_ui_font() -> SysResult<()> {
 	unsafe {
 		if let Some(hfont) = &UI_HFONT {
-			hfont.DeleteObject().unwrap();
+			hfont.DeleteObject()?;
 			UI_HFONT = None;
 		}
 	}
+	Ok(())
 }
 
 /// Retrieves the global UI font object, or panics if not created yet.
@@ -87,11 +89,11 @@ static mut DPI: POINT = POINT::new(0, 0);
 
 /// Multiplies the given coordinates by current system DPI.
 pub(in crate::gui) fn multiply_dpi(
-	pt: Option<&mut POINT>, sz: Option<&mut SIZE>)
+	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> SysResult<()>
 {
 	unsafe {
 		if (pt.is_some() || sz.is_some()) && DPI.x == 0 { // DPI not cached yet?
-			let screen_dc = HWND::NULL.GetDC().unwrap();
+			let screen_dc = HWND::NULL.GetDC()?;
 			DPI.x = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSX); // cache
 			DPI.y = screen_dc.GetDeviceCaps(co::GDC::LOGPIXELSY);
 		}
@@ -105,12 +107,14 @@ pub(in crate::gui) fn multiply_dpi(
 			sz.cy = MulDiv(sz.cy, DPI.y, 96);
 		}
 	}
+	Ok(())
 }
 
 /// If parent is a dialog, converts Dialog Template Units to pixels; otherwise
 /// multiplies by current DPI factor.
 pub(in crate::gui) fn multiply_dpi_or_dtu(
-	parent_base: &Base, pt: Option<&mut POINT>, sz: Option<&mut SIZE>)
+	parent_base: &Base,
+	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> SysResult<()>
 {
 	if parent_base.is_dialog() {
 		let mut rc = RECT::default();
@@ -123,7 +127,7 @@ pub(in crate::gui) fn multiply_dpi_or_dtu(
 			rc.bottom = sz.cy;
 		});
 
-		parent_base.hwnd().MapDialogRect(&mut rc).unwrap();
+		parent_base.hwnd().MapDialogRect(&mut rc)?;
 		let (mut pt, mut sz) = (pt, sz);
 		pt.as_mut().map(|pt| {
 			pt.x = rc.left;
@@ -135,37 +139,39 @@ pub(in crate::gui) fn multiply_dpi_or_dtu(
 		});
 
 	} else {
-		multiply_dpi(pt, sz)
+		multiply_dpi(pt, sz)?;
 	}
+
+	Ok(())
 }
 
 //------------------------------------------------------------------------------
 
 /// Calculates the bound rectangle to fit the text with current system font.
-pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SIZE {
+pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SysResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
-	let desktop_hdc = desktop_hwnd.GetDC().unwrap();
-	let clone_dc = desktop_hdc.CreateCompatibleDC().unwrap();
-	let prev_hfont = clone_dc.SelectObject(ui_font()).unwrap();
+	let desktop_hdc = desktop_hwnd.GetDC()?;
+	let clone_dc = desktop_hdc.CreateCompatibleDC()?;
+	let prev_hfont = clone_dc.SelectObject(ui_font())?;
 
 	let mut bounds = if text.is_empty() {
-		clone_dc.GetTextExtentPoint32("Pj").unwrap() // just a placeholder to get the text height
+		clone_dc.GetTextExtentPoint32("Pj")? // just a placeholder to get the text height
 	} else {
-		clone_dc.GetTextExtentPoint32(&remove_accelerator_ampersands(text)).unwrap()
+		clone_dc.GetTextExtentPoint32(&remove_accelerator_ampersands(text))?
 	};
 
 	if text.is_empty() {
 		bounds.cx = 0; // if no text was given, return just the height
 	}
 
-	clone_dc.SelectObject(&prev_hfont).unwrap();
-	bounds
+	clone_dc.SelectObject(&prev_hfont)?;
+	Ok(bounds)
 }
 
 /// Calculates the bound rectangle to fit the text with current system font,
 /// adding a check box.
-pub(in crate::gui) fn calc_text_bound_box_check(text: &str) -> SIZE {
-	let mut bound_box = calc_text_bound_box(text);
+pub(in crate::gui) fn calc_text_bound_box_check(text: &str) -> SysResult<SIZE> {
+	let mut bound_box = calc_text_bound_box(text)?;
 	bound_box.cx += GetSystemMetrics(co::SM::CXMENUCHECK) // https://stackoverflow.com/a/1165052/6923555
 		+ GetSystemMetrics(co::SM::CXEDGE);
 
@@ -174,7 +180,7 @@ pub(in crate::gui) fn calc_text_bound_box_check(text: &str) -> SIZE {
 		bound_box.cy = cy_check; // if the check is taller than the font, use its height
 	}
 
-	bound_box
+	Ok(bound_box)
 }
 
 fn remove_accelerator_ampersands(text: &str) -> String {
@@ -198,7 +204,9 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 //------------------------------------------------------------------------------
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) {
+pub(in crate::gui) fn paint_control_borders(
+	hwnd: &HWND, wm_ncp: wm::NcPaint) -> AnyResult<()>
+{
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
 	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as _);
@@ -206,28 +214,30 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) {
 		|| !IsThemeActive()
 		|| !IsAppThemed()
 	{
-		return;
+		return Ok(());
 	}
 
-	let mut rc = hwnd.GetWindowRect().unwrap(); // window outmost coordinates, including margins
-	hwnd.ScreenToClientRc(&mut rc).unwrap();
+	let mut rc = hwnd.GetWindowRect()?; // window outmost coordinates, including margins
+	hwnd.ScreenToClientRc(&mut rc)?;
 	rc.left += 2; rc.top += 2; rc.right += 2; rc.bottom += 2; // because it comes up anchored at -2,-2
 
-	let hdc = hwnd.GetWindowDC().unwrap();
+	let hdc = hwnd.GetWindowDC()?;
 
 	if let Some(htheme) = hwnd.OpenThemeData("LISTVIEW") {
 		// Draw only the borders to avoid flickering.
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.left, top: rc.top, right: rc.left + 2, bottom: rc.bottom }).unwrap();
+			RECT { left: rc.left, top: rc.top, right: rc.left + 2, bottom: rc.bottom })?;
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.left, top: rc.top, right: rc.right, bottom: rc.top + 2 }).unwrap();
+			RECT { left: rc.left, top: rc.top, right: rc.right, bottom: rc.top + 2 })?;
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.right - 2, top: rc.top, right: rc.right, bottom: rc.bottom }).unwrap();
+			RECT { left: rc.right - 2, top: rc.top, right: rc.right, bottom: rc.bottom })?;
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom }).unwrap();
+			RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom })?;
 	}
+
+	Ok(())
 }

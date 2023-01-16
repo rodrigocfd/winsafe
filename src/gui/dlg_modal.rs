@@ -6,7 +6,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEventsAll;
-use crate::kernel::decl::AnyResult;
+use crate::kernel::decl::{AnyResult, SysResult};
 use crate::prelude::{GuiEvents, user_Hwnd};
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -59,7 +59,7 @@ impl DlgModal {
 		self.0.dlg_base.run_ui_thread(func);
 	}
 
-	pub(in crate::gui) fn show_modal(&self) -> i32 {
+	pub(in crate::gui) fn show_modal(&self) -> SysResult<i32> {
 		self.0.dlg_base.dialog_box_param()
 	}
 
@@ -67,8 +67,8 @@ impl DlgModal {
 		let self2 = self.clone();
 		self.0.dlg_base.privileged_on().wm_init_dialog(move |_| {
 			let hwnd = self2.hwnd();
-			let rc = hwnd.GetWindowRect().unwrap();
-			let rc_parent = hwnd.GetParent().unwrap().GetWindowRect().unwrap();
+			let rc = hwnd.GetWindowRect()?;
+			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 			hwnd.SetWindowPos( // center modal on parent
 				HwndPlace::None,
 				POINT::new(
@@ -77,13 +77,13 @@ impl DlgModal {
 				),
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
-			).unwrap();
+			)?;
 			Ok(true) // not meaningful
 		});
 
 		let self2 = self.clone();
 		self.on().wm_close(move || {
-			self2.hwnd().EndDialog(co::DLGID::CANCEL.0 as _).unwrap();
+			self2.hwnd().EndDialog(co::DLGID::CANCEL.0 as _)?;
 			Ok(())
 		});
 	}

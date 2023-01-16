@@ -4,6 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
+use crate::kernel::decl::SysResult;
 use crate::msg::wm;
 use crate::prelude::{Handle, user_Hdwp, user_Hwnd};
 use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
@@ -75,24 +76,24 @@ impl LayoutArranger {
 	/// Adds a new child control to the internal list, so this control will have
 	/// its position and size rearranged when requested.
 	pub(in crate::gui) fn add(&self,
-		hparent: &HWND, hchild: &HWND, horz: Horz, vert: Vert)
+		hparent: &HWND, hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
 	{
 		if *hparent == HWND::NULL || *hchild == HWND::NULL {
 			panic!("Cannot add resizer entries before window/control creation.");
 		}
 
 		if horz == Horz::None && vert == Vert::None {
-			return; // nothing to do, don't even add it
+			return Ok(()); // nothing to do, don't even add it
 		}
 
 		if self.0.ctrls.is_empty() { // first control being added?
-			let rc_parent = hparent.GetClientRect().unwrap();
+			let rc_parent = hparent.GetClientRect()?;
 			*self.0.sz_parent_orig.as_mut() =
 				SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
 		}
 
-		let mut rc_orig = hchild.GetWindowRect().unwrap();
-		hparent.ScreenToClientRc(&mut rc_orig).unwrap(); // control client coordinates relative to parent
+		let mut rc_orig = hchild.GetWindowRect()?;
+		hparent.ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
 
 		self.0.ctrls.as_mut().push(
 			ChildInfo {
@@ -102,17 +103,19 @@ impl LayoutArranger {
 				vert,
 			},
 		);
+
+		Ok(())
 	}
 
 	/// Rearranges all child controls to fit the new width/height of parent
 	/// window.
-	pub(in crate::gui) fn rearrange(&self, p: &wm::Size) {
+	pub(in crate::gui) fn rearrange(&self, p: &wm::Size) -> SysResult<()> {
 		if self.0.ctrls.is_empty() // no controls
 			|| p.request == co::SIZE_R::MINIMIZED { // we're minimized
-			return;
+			return Ok(());
 		}
 
-		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as _).unwrap();
+		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as _)?;
 
 		for ctrl in self.0.ctrls.iter() {
 			let mut uflags = co::SWP::NOZORDER;
@@ -148,7 +151,9 @@ impl LayoutArranger {
 					},
 				),
 				uflags,
-			).unwrap();
+			)?;
 		}
+
+		Ok(())
 	}
 }

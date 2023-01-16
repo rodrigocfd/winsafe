@@ -8,7 +8,7 @@ use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-use crate::kernel::decl::{AnyResult, WString};
+use crate::kernel::decl::{AnyResult, SysResult, WString};
 use crate::prelude::{GuiEvents, Handle, user_Hwnd};
 use crate::user::decl::{
 	AdjustWindowRectEx, DispatchMessage, GetMessage, HWND, IdMenu, MSG, POINT,
@@ -70,25 +70,25 @@ impl RawModal {
 		self.0.raw_base.run_ui_thread(func);
 	}
 
-	pub(in crate::gui) fn show_modal(&self) -> i32 {
+	pub(in crate::gui) fn show_modal(&self) -> SysResult<i32> {
 		let hparent = self.0.raw_base.parent().unwrap().hwnd();
 		let opts = &self.0.opts;
 
-		let parent_hinst = self.0.raw_base.parent_hinstance();
+		let parent_hinst = self.0.raw_base.parent_hinstance()?;
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
 			&parent_hinst,
 			opts.class_style, &opts.class_icon, &opts.class_icon,
 			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
-			&mut class_name_buf);
-		let atom = self.0.raw_base.register_class(&mut wcx);
+			&mut class_name_buf)?;
+		let atom = self.0.raw_base.register_class(&mut wcx)?;
 
 		*self.0.hchild_prev_focus_parent.as_mut() = HWND::GetFocus().unwrap_or(HWND::NULL);
 		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
 
 		let mut wnd_sz = opts.size;
-		multiply_dpi(None, Some(&mut wnd_sz));
+		multiply_dpi(None, Some(&mut wnd_sz))?;
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
 			left: 0,
@@ -96,11 +96,11 @@ impl RawModal {
 			right: wnd_sz.cx,
 			bottom: wnd_sz.cy,
 		};
-		AdjustWindowRectEx(&mut wnd_rc, opts.style, false, opts.ex_style).unwrap();
+		AdjustWindowRectEx(&mut wnd_rc, opts.style, false, opts.ex_style)?;
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
-		let rc_parent = hparent.GetWindowRect().unwrap(); // relative to screen
+		let rc_parent = hparent.GetWindowRect()?; // relative to screen
 		let wnd_pos = POINT {
 			x: rc_parent.left + (rc_parent.right - rc_parent.left) / 2 - wnd_sz.cx / 2, // center on parent
 			y: rc_parent.top + (rc_parent.bottom - rc_parent.top) / 2 - wnd_sz.cy / 2
@@ -112,9 +112,9 @@ impl RawModal {
 			IdMenu::None,
 			wnd_pos, wnd_sz,
 			opts.ex_style, opts.style,
-		);
+		)?;
 
-		self.run_modal_loop()
+		Ok(self.run_modal_loop())
 	}
 
 	fn run_modal_loop(&self) -> i32 {

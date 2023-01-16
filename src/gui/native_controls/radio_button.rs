@@ -99,19 +99,19 @@ impl RadioButton {
 		}
 	}
 
-	pub(in crate::gui) fn create(&self, horz: Horz, vert: Vert) {
+	pub(in crate::gui) fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = opts.position;
 				multiply_dpi_or_dtu(
-					self.base.parent(), Some(&mut pos), None);
+					self.base.parent(), Some(&mut pos), None)?;
 
 				let mut sz = opts.size;
 					if sz.cx == -1 && sz.cy == -1 {
-						sz = calc_text_bound_box_check(&opts.text); // resize to fit text
+						sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
 					} else {
 						multiply_dpi_or_dtu(
-							self.base.parent(), None, Some(&mut sz)); // user-defined size
+							self.base.parent(), None, Some(&mut sz))?; // user-defined size
 					}
 
 				self.base.create_window( // may panic
@@ -119,7 +119,7 @@ impl RadioButton {
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
-				);
+				)?;
 
 				self.hwnd().SendMessage(wm::SetFont {
 					hfont: unsafe { ui_font().raw_copy() },
@@ -132,8 +132,9 @@ impl RadioButton {
 			},
 		}
 
-		self.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert);
+		self.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)?;
 		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
+		Ok(())
 	}
 
 	/// Emulates the click event for the radio button by sending a
@@ -179,7 +180,7 @@ impl RadioButton {
 	/// the control to exactly fit the new text.
 	pub fn set_text_and_resize(&self, text: &str) {
 		self.set_text(text);
-		let bound_box = calc_text_bound_box_check(text);
+		let bound_box = calc_text_bound_box_check(text).unwrap();
 		self.hwnd().SetWindowPos(
 			HwndPlace::None, POINT::default(),
 			bound_box, co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();

@@ -10,6 +10,7 @@ use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
+use crate::kernel::decl::SysResult;
 use crate::msg::{sb, wm};
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
@@ -141,7 +142,7 @@ impl StatusBar {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
-			self2.create();
+			self2.create()?;
 			Ok(None) // not meaningful
 		});
 
@@ -155,11 +156,11 @@ impl StatusBar {
 		new_self
 	}
 
-	fn create(&self) {
+	fn create(&self) -> SysResult<()> {
 		for part in self.0.parts_info.as_mut().iter_mut() {
 			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 				let mut col_cx = SIZE::new(*width as _, 0);
-				multiply_dpi_or_dtu(self.0.base.parent(), None, Some(&mut col_cx));
+				multiply_dpi_or_dtu(self.0.base.parent(), None, Some(&mut col_cx))?;
 				*width = col_cx.cx as _;
 			}
 		}
@@ -182,14 +183,16 @@ impl StatusBar {
 				} else {
 					co::SBARS::NoValue
 				}.into(),
-		);
+		)?;
 
 		// Force first resizing, so the panels are created.
-		let parent_rc = hparent.GetClientRect().unwrap();
+		let parent_rc = hparent.GetClientRect()?;
 		self.resize(&mut wm::Size {
 			client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
 			request: co::SIZE_R::RESTORED,
 		});
+
+		Ok(())
 	}
 
 	fn resize(&self, p: &mut wm::Size) {

@@ -76,20 +76,20 @@ impl RawControl {
 		self.0.raw_base.parent().unwrap().privileged_on().wm(parent.creation_msg(), move |_| {
 			let opts = &self2.0.opts;
 
-			let parent_hinst = self2.0.raw_base.parent_hinstance();
+			let parent_hinst = self2.0.raw_base.parent_hinstance()?;
 			let mut wcx = WNDCLASSEX::default();
 			let mut class_name_buf = WString::default();
 			RawBase::fill_wndclassex(
 				&parent_hinst,
 				opts.class_style, &opts.class_icon, &opts.class_icon,
 				&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
-				&mut class_name_buf);
-			let atom = self2.0.raw_base.register_class(&mut wcx);
+				&mut class_name_buf)?;
+			let atom = self2.0.raw_base.register_class(&mut wcx)?;
 
 			let mut wnd_pos = opts.position;
 			let mut wnd_sz = opts.size;
 			multiply_dpi_or_dtu(self2.0.raw_base.parent().unwrap(),
-				Some(&mut wnd_pos), Some(&mut wnd_sz));
+				Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
 			self2.0.raw_base.create_window(
 				atom,
@@ -97,16 +97,16 @@ impl RawControl {
 				IdMenu::Id(opts.ctrl_id),
 				wnd_pos, wnd_sz,
 				opts.ex_style, opts.style,
-			);
+			)?;
 
 			self2.0.raw_base.parent().unwrap()
-				.add_to_layout_arranger(self2.hwnd(), horz, vert);
+				.add_to_layout_arranger(self2.hwnd(), horz, vert)?;
 			Ok(None) // not meaningful
 		});
 
 		let self2 = self.clone();
 		self.on().wm_nc_paint(move |p| {
-			paint_control_borders(self2.hwnd(), p);
+			paint_control_borders(self2.hwnd(), p)?;
 			Ok(())
 		});
 	}
