@@ -32,9 +32,45 @@ impl<'a> TabItem<'a> {
 
 	/// Deletes the item by sending a
 	/// [`tcm::DeleteItem`](crate::msg::tcm::DeleteItem) message.
-	pub fn delete(&self) {
+	///
+	/// # Safety
+	///
+	/// If you delete a tab automatically created, which has a container window
+	/// attached to it, the rendering will be out-of-order.
+	pub unsafe fn delete(&self) {
 		self.owner.hwnd()
 			.SendMessage(tcm::DeleteItem { index: self.index })
+			.unwrap();
+	}
+
+	/// Retrieves the user-defined value by sending an
+	/// [`tcm::GetItem`](crate::msg::tcm::GetItem) message.
+	#[must_use]
+	pub fn lparam(&self) -> isize {
+		let mut tci = TCITEM::default();
+		tci.mask = co::TCIF::PARAM;
+
+		self.owner.hwnd()
+			.SendMessage(tcm::GetItem {
+				index: self.index,
+				item: &mut tci,
+			})
+			.unwrap();
+		tci.lParam
+	}
+
+	/// Sets the user-defined value by sending an
+	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
+	pub fn set_lparam(&self, lparam: isize) {
+		let mut tci = TCITEM::default();
+		tci.mask = co::TCIF::PARAM;
+		tci.lParam = lparam;
+
+		self.owner.hwnd()
+			.SendMessage(tcm::SetItem {
+				index: self.index,
+				item: &mut tci,
+			})
 			.unwrap();
 	}
 

@@ -128,7 +128,7 @@ impl RadioButton {
 				if opts.selected { self.select(true); }
 			},
 			OptsId::Dlg(ctrl_id) => {
-				self.base.create_dlg(*ctrl_id); // may panic
+				self.base.create_dlg(*ctrl_id)?; // may panic
 			},
 		}
 

@@ -116,7 +116,9 @@ impl Base {
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
 		hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
 	{
-		self.layout_arranger.as_mut().add(&self.hwnd, hchild, horz, vert)
+		self.layout_arranger.as_mut()
+			.add_child(&self.hwnd, hchild, horz, vert)?;
+		Ok(())
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)

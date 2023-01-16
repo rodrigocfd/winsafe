@@ -159,7 +159,7 @@ pub struct WindowControlOpts {
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
+	/// Defaults to 100 x 80.
 	pub size: SIZE,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -198,7 +198,7 @@ impl Default for WindowControlOpts {
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
 			class_bg_brush: Brush::Color(co::COLOR::WINDOW),
 			position: POINT { x: 0, y: 0 },
-			size: SIZE { cx: 0, cy: 0 },
+			size: SIZE { cx: 100, cy: 80 },
 			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
 			ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,

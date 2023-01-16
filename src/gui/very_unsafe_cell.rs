@@ -9,6 +9,7 @@ pub(in crate::gui) struct VeryUnsafeCell<T>(UnsafeCell<T>);
 
 impl<T> Deref for VeryUnsafeCell<T> {
 	type Target = T;
+
 	fn deref(&self) -> &Self::Target {
 		unsafe { &*self.0.get() } // immutable reference
 	}

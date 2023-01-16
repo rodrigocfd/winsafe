@@ -174,7 +174,7 @@ impl MonthCalendar {
 					SIZE::new(bounds_rect.right, bounds_rect.bottom),
 					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id)?,
 		}
 
 		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)

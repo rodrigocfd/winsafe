@@ -19,10 +19,17 @@ impl<'a> TabItems<'a> {
 		Self { owner }
 	}
 
-	/// Appends a new item by sending a
+	/// Manually appends a new tab by sending a
 	/// [`tcm::InsertItem`](crate::msg::tcm::InsertItem) message, and returns
 	/// the newly added item.
-	pub fn add(&self, title: &str) -> TabItem<'a> {
+	///
+	/// # Safety
+	///
+	/// By adding a tab item manually, you are responsible for all the message
+	/// handling. Prefer adding items automatically by filling the
+	/// [`TabOpts::items`](crate::gui::TabOpts::items) member when calling the
+	/// [`Tab::new`](crate::gui::Tab::new) function.
+	pub unsafe fn add(&self, title: &str) -> TabItem<'a> {
 		let mut wtitle = WString::from_str(title);
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::TEXT;
@@ -49,7 +56,12 @@ impl<'a> TabItems<'a> {
 
 	/// Deletes all items by sending a
 	/// [`tcm::DeleteAllItems`](crate::msg::tcm::DeleteAllItems) message.
-	pub fn delete(&self) {
+	///
+	/// # Safety
+	///
+	/// If you delete a tab automatically created, which has a container window
+	/// attached to it, the rendering will be out-of-order.
+	pub unsafe fn delete_all(&self) {
 		self.owner.hwnd()
 			.SendMessage(tcm::DeleteAllItems {})
 			.unwrap();

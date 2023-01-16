@@ -1,6 +1,7 @@
 use std::any::Any;
 
 use crate::gui::events::{WindowEvents, WindowEventsAll};
+use crate::gui::window_control::WindowControl;
 use crate::kernel::decl::AnyResult;
 use crate::msg::wm;
 use crate::prelude::{Handle, user_Hwnd};
@@ -279,4 +280,13 @@ pub trait GuiNativeControlEvents<E> {
 	/// control creation.
 	#[must_use]
 	fn on(&self) -> &E;
+}
+
+/// Any window which can be rendered inside a native [`Tab`](crate::gui::Tab)
+/// control.
+pub trait GuiTab {
+	/// Returns a reference to the [`WindowControl`](crate::gui::WindowControl)
+	/// member.
+	#[must_use]
+	fn as_ctrl(&self) -> &WindowControl;
 }

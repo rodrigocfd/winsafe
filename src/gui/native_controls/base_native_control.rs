@@ -95,11 +95,11 @@ impl BaseNativeControl {
 			)?
 		};
 
-		self.install_subclass_if_needed();
+		self.install_subclass_if_needed()?;
 		Ok(())
 	}
 
-	pub(in crate::gui) fn create_dlg(&self, ctrl_id: u16) {
+	pub(in crate::gui) fn create_dlg(&self, ctrl_id: u16) -> SysResult<()> {
 		if !self.parent().is_dialog() {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
@@ -112,11 +112,12 @@ impl BaseNativeControl {
 			panic!("Cannot create control before parent window creation.");
 		}
 
-		*self.hwnd.as_mut() = hparent.GetDlgItem(ctrl_id).unwrap();
-		self.install_subclass_if_needed();
+		*self.hwnd.as_mut() = hparent.GetDlgItem(ctrl_id)?;
+		self.install_subclass_if_needed()?;
+		Ok(())
 	}
 
-	fn install_subclass_if_needed(&self) {
+	fn install_subclass_if_needed(&self) -> SysResult<()> {
 		if !self.subclass_events.is_empty() {
 			let subclass_id = unsafe {
 				BASE_SUBCLASS_ID += 1;
@@ -127,9 +128,10 @@ impl BaseNativeControl {
 				self.hwnd().SetWindowSubclass(
 					Self::subclass_proc, subclass_id,
 					self as *const _ as _, // pass pointer to self
-				)
-			}.unwrap()
+				)?;
+			}
 		}
+		Ok(())
 	}
 
 	extern "system" fn subclass_proc(

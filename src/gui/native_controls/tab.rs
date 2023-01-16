@@ -11,19 +11,20 @@ use crate::gui::native_controls::base_native_control::{
 	BaseNativeControl, OptsId,
 };
 use crate::gui::native_controls::tab_items::TabItems;
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
+use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::kernel::decl::SysResult;
-use crate::msg::tcm;
+use crate::msg::{tcm, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, user_Hwnd,
+	GuiNativeControlEvents, GuiParent, GuiTab, GuiWindow, Handle, user_Hwnd,
 };
-use crate::user::decl::{HWND, POINT, SIZE};
+use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
 struct Obj { // actual fields of Tab
 	base: BaseNativeControl,
 	opts_id: OptsId<TabOpts>,
 	events: TabEvents,
+	children: Vec<(String, Box<dyn GuiTab>)>,
 	_pin: PhantomPinned,
 }
 
@@ -86,8 +87,9 @@ impl Tab {
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: TabOpts) -> Tab {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
-		let opts = TabOpts::define_ctrl_id(opts);
+		let mut opts = TabOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+		let children = opts.items.drain(..).collect::<Vec<_>>();
 
 		let new_self = Self(
 			Arc::pin(
@@ -95,6 +97,7 @@ impl Tab {
 					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Wnd(opts),
 					events: TabEvents::new(parent_ref, ctrl_id),
+					children,
 					_pin: PhantomPinned,
 				},
 			),
@@ -106,6 +109,7 @@ impl Tab {
 			Ok(None) // not meaningful
 		});
 
+		new_self.default_message_handlers(parent_ref, ctrl_id);
 		new_self
 	}
 
@@ -120,7 +124,8 @@ impl Tab {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> Tab
+		resize_behavior: (Horz, Vert),
+		items: Vec<(String, Box<dyn GuiTab>)>) -> Tab
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 
@@ -130,6 +135,7 @@ impl Tab {
 					base: BaseNativeControl::new(parent_ref),
 					opts_id: OptsId::Dlg(ctrl_id),
 					events: TabEvents::new(parent_ref, ctrl_id),
+					children: items,
 					_pin: PhantomPinned,
 				},
 			),
@@ -141,6 +147,7 @@ impl Tab {
 			Ok(true) // not meaningful
 		});
 
+		new_self.default_message_handlers(parent_ref, ctrl_id);
 		new_self
 	}
 
@@ -159,14 +166,59 @@ impl Tab {
 					opts.window_style | opts.tab_style.into(),
 				)?;
 
+				self.hwnd().SendMessage(wm::SetFont {
+					hfont: unsafe { ui_font().raw_copy() },
+					redraw: true,
+				});
+
 				if opts.tab_ex_style != co::TCS_EX::NoValue {
 					self.set_extended_style(true, opts.tab_ex_style);
 				}
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id)?,
 		}
 
+		self.0.children.iter()
+			.for_each(|(text, _)| unsafe {self.items().add(text); }); // add the tabs
+		self.display_tab(0)?; // 1st tab selected by default
+
 		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
+	}
+
+	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
+		let self2 = self.clone();
+		parent.privileged_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, move |_| {
+			if let Some(sel_item) = self2.items().selected() {
+				self2.display_tab(sel_item.index())?;
+			}
+			Ok(None) // not meaningful
+		})
+	}
+
+	fn display_tab(&self, index: u32) -> SysResult<()> {
+		self.0.children.iter()
+			.enumerate()
+			.filter(|(i, _)| *i != index as usize)
+			.for_each(|(_, (_, item))| {
+				item.as_ctrl().hwnd().ShowWindow(co::SW::HIDE); // hide all others
+			});
+
+		if let Some((_, item)) = self.0.children.get(index as usize) {
+			let mut rc = self.hwnd().GetWindowRect()?;
+			self.hwnd().GetParent()?.ScreenToClientRc(&mut rc)?;
+			self.hwnd().SendMessage(tcm::AdjustRect {
+				display_rect: false,
+				rect: &mut rc,
+			});
+			item.as_ctrl().hwnd().SetWindowPos(
+				HwndPlace::None,
+				POINT::new(rc.left, rc.top),
+				SIZE::new(rc.right - rc.left, rc.bottom - rc.top),
+				co::SWP::NOZORDER | co::SWP::SHOWWINDOW,
+			)?;
+		}
+
+		Ok(())
 	}
 
 	/// Exposes the item methods.
@@ -242,6 +294,17 @@ pub struct TabOpts {
 	///
 	/// Defaults to `Vert::None`.
 	pub vert_resize: Vert,
+
+	/// Items to be added as soon as the control is created. The tuple contains
+	/// the title of the tab and the window to be rendered inside of it.
+	///
+	/// Note that, in o order to make the focus rotation work properly, the
+	/// child windows must be created with the
+	/// [`co::WS_EX::CONTROLPARENT`](crate::co::WS_EX::CONTROLPARENT) extended
+	/// style.
+	///
+	/// Defaults to none.
+	pub items: Vec<(String, Box<dyn GuiTab>)>,
 }
 
 impl Default for TabOpts {
@@ -256,6 +319,7 @@ impl Default for TabOpts {
 			ctrl_id: 0,
 			horz_resize: Horz::None,
 			vert_resize: Vert::None,
+			items: Vec::default(),
 		}
 	}
 }

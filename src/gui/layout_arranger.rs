@@ -56,7 +56,7 @@ struct Obj { // actual fields of LayoutArranger
 
 //------------------------------------------------------------------------------
 
-/// Rearranges the controls according to predefined rules.
+/// Rearranges the stored controls according to their predefined rules.
 #[derive(Clone)]
 pub(in crate::gui) struct LayoutArranger(Pin<Arc<Obj>>);
 
@@ -75,7 +75,7 @@ impl LayoutArranger {
 
 	/// Adds a new child control to the internal list, so this control will have
 	/// its position and size rearranged when requested.
-	pub(in crate::gui) fn add(&self,
+	pub(in crate::gui) fn add_child(&self,
 		hparent: &HWND, hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
 	{
 		if *hparent == HWND::NULL || *hchild == HWND::NULL {
@@ -103,7 +103,6 @@ impl LayoutArranger {
 				vert,
 			},
 		);
-
 		Ok(())
 	}
 

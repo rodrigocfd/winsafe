@@ -172,7 +172,7 @@ impl ComboBox {
 				self.items().add(&opts.items);
 				self.items().select(opts.selected_item);
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id),
+			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id)?,
 		}
 
 		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
