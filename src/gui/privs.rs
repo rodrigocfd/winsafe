@@ -4,13 +4,14 @@ use std::error::Error;
 
 use crate::co;
 use crate::gdi::decl::{HFONT, NONCLIENTMETRICS};
+use crate::gdi::guard::GdiObjectGuard;
 use crate::gui::base::Base;
 use crate::gui::msg_error::MsgError;
 use crate::kernel::decl::{AnyResult, MulDiv, SysResult};
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{
-	gdi_Hdc, gdi_Hfont, GdiObject, Handle, NativeBitflag, user_Hwnd,
-	uxtheme_Htheme, uxtheme_Hwnd,
+	gdi_Hdc, gdi_Hfont, Handle, NativeBitflag, user_Hwnd, uxtheme_Htheme,
+	uxtheme_Hwnd,
 };
 use crate::user::decl::{
 	GetSystemMetrics, HWND, POINT, PostQuitMessage, RECT, SIZE,
@@ -33,7 +34,7 @@ pub(in crate::gui) fn post_quit_error(
 //------------------------------------------------------------------------------
 
 /// Global UI font object.
-static mut UI_HFONT: Option<HFONT> = None;
+static mut UI_HFONT: Option<GdiObjectGuard<HFONT>> = None;
 
 /// Creates the global UI font object.
 pub(in crate::gui) fn create_ui_font() -> SysResult<()> {
@@ -42,7 +43,8 @@ pub(in crate::gui) fn create_ui_font() -> SysResult<()> {
 		SystemParametersInfo(
 			co::SPI::GETNONCLIENTMETRICS,
 			std::mem::size_of::<NONCLIENTMETRICS>() as _,
-			&mut ncm, co::SPIF::NoValue,
+			&mut ncm,
+			co::SPIF::NoValue,
 		)?;
 		UI_HFONT = Some(HFONT::CreateFontIndirect(&ncm.lfMenuFont)?);
 	}
@@ -50,14 +52,8 @@ pub(in crate::gui) fn create_ui_font() -> SysResult<()> {
 }
 
 /// Frees the global UI font object.
-pub(in crate::gui) fn delete_ui_font() -> SysResult<()> {
-	unsafe {
-		if let Some(hfont) = &UI_HFONT {
-			hfont.DeleteObject()?;
-			UI_HFONT = None;
-		}
-	}
-	Ok(())
+pub(in crate::gui) fn delete_ui_font() {
+	unsafe { UI_HFONT = None; } // https://users.rust-lang.org/t/why-drop-trait-not-called-when-use-global-static
 }
 
 /// Retrieves the global UI font object, or panics if not created yet.
@@ -152,7 +148,7 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SysResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC()?;
 	let clone_dc = desktop_hdc.CreateCompatibleDC()?;
-	let prev_hfont = clone_dc.SelectObject(ui_font())?;
+	let _prev_font = clone_dc.SelectObject(ui_font())?;
 
 	let mut bounds = if text.is_empty() {
 		clone_dc.GetTextExtentPoint32("Pj")? // just a placeholder to get the text height
@@ -163,8 +159,6 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SysResult<SIZE> {
 	if text.is_empty() {
 		bounds.cx = 0; // if no text was given, return just the height
 	}
-
-	clone_dc.SelectObject(&prev_hfont)?;
 	Ok(bounds)
 }
 

@@ -61,6 +61,18 @@ pub trait user_Hwnd: Handle {
 	/// [`BeginPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-beginpaint)
 	/// method.
 	///
+	/// In the original C implementation, `BeginPaint` returns a handle which
+	/// must be passed to
+	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint),
+	/// as a cleanup operation. Also, you must allocate and pass a
+	/// [`PAINTSTRUCT`](crate::PAINTSTRUCT) object.
+	///
+	/// Here, the cleanup is performed automatically, because `BeginPaint`
+	/// returns an [`HdcPaintGuard`](crate::guard::HdcPaintGuard), which stores
+	/// the `PAINTSTRUCT` and automatically calls `EndPaint` when the guard goes
+	/// out of scope. You must, however, keep the guard alive, otherwise the
+	/// cleanup will be performed right away.
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -72,21 +84,12 @@ pub trait user_Hwnd: Handle {
 	///
 	/// let hdc = hwnd.BeginPaint()?;
 	///
-	/// println!("Erase background? {}", hdc.paintstruct().fErase());
-	/// println!("Painting area: {}", hdc.paintstruct().rcPaint);
-	///
 	/// // hdc painting...
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	///
-	/// Note that the [`HDC`](crate::HDC) guard returned by this method must be
-	/// kept alive while the painting is made, even if you won't use it
-	/// directly. This is necessary because, when the guard goes out of scope,
-	/// it will automatically call
-	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
-	///
-	/// In the example below, the `HDC` is not used, but the returned guard is
-	/// kept alive:
+	/// If you don't use the returned device context handle, you must still keep
+	/// the guard alive:
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -95,7 +98,7 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
-	/// let _hdc = hwnd.BeginPaint()?; // keep the returned guard alive
+	/// let _hdc = hwnd.BeginPaint()?; // keep guard alive
 	///
 	/// // hdc painting...
 	/// # Ok::<_, winsafe::co::ERROR>(())
@@ -1083,12 +1086,15 @@ pub trait user_Hwnd: Handle {
 	/// [`OpenClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openclipboard)
 	/// method.
 	///
-	/// Note that the guard returned by this method must be kept alive while you
-	/// work upon the clipboard. This is necessary because, when the guard goes
-	/// out of scope, it will automatically call
-	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard).
+	/// In the original C implementation, you must call
+	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
+	/// as a cleanup operation.
 	///
-	/// In the example below, the returned guard is kept alive:
+	/// Here, the cleanup is performed automatically, because `OpenClipboard`
+	/// returns a [`ClipboardGuard`](crate::guard::ClipboardGuard), which
+	/// automatically calls `CloseClipboard` when the guard goes out of scope.
+	/// You must, however, keep the guard alive, otherwise the cleanup will be
+	/// performed right away.
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -1097,7 +1103,7 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
-	/// let _hdc = hwnd.OpenClipboard()?; // keep the returned guard alive
+	/// let _hdc = hwnd.OpenClipboard()?; // keep guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]

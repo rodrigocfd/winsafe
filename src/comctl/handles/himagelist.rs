@@ -27,8 +27,8 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_Add`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
 	/// method.
 	///
-	/// **Note:** A copy of the bitmap is made, and this copy is then stored.
-	/// You're still responsible for freeing the original bitmap.
+	/// A copy of the bitmap is made and stored in the image list, so you're
+	/// free to release the original bitmap.
 	fn Add(&self,
 		hbmp_image: &HBITMAP, hbmp_mask: Option<&HBITMAP>) -> SysResult<u32>
 	{
@@ -47,8 +47,8 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_AddIcon`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addicon)
 	/// method.
 	///
-	/// **Note:** A copy of the bitmap is made, and this copy is then stored.
-	/// You're still responsible for freeing the original bitmap.
+	/// A copy of the icon is made and stored in the image list, so you're free
+	/// to release the original icon.
 	fn AddIcon(&self, hicon: &HICON) -> SysResult<u32> {
 		self.ReplaceIcon(None, hicon)
 	}
@@ -56,8 +56,8 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_AddMasked`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addmasked)
 	/// method.
 	///
-	/// **Note:** A copy of the bitmap is made, and this copy is then stored.
-	/// You're still responsible for freeing the original bitmap.
+	/// A copy of the bitmap is made and stored in the image list, so you're
+	/// free to release the original bitmap.
 	fn AddMasked(&self,
 		hbmp_image: &HBITMAP, color_mask: COLORREF) -> SysResult<u32>
 	{
@@ -74,12 +74,15 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_BeginDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_begindrag)
 	/// method.
 	///
-	/// Note that the guard returned by this method must be kept alive while you
-	/// work on the drag. This is necessary because, when the guard goes out of
-	/// scope, it will automatically call
-	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag).
+	/// In the original C implementation, you must call
+	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
+	/// as a cleanup operation.
 	///
-	/// In the example below, the returned guard is kept alive:
+	/// Here, the cleanup is performed automatically, because `BeginDrag`
+	/// returns an [`HimagelistDragGuard`](crate::guard::HimagelistDragGuard),
+	/// which automatically calls `ImageList_EndDrag` when the guard goes out of
+	/// scope. You must, however, keep the guard alive, otherwise the
+	/// cleanup will be performed right away.
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -88,7 +91,7 @@ pub trait comctl_Himagelist: Handle {
 	/// let himgl: HIMAGELIST; // initialized somewhere
 	/// # let himgl = HIMAGELIST::NULL;
 	///
-	/// let _drag = himgl.BeginDrag(0, POINT::new(0, 0))?; // keep the returned guard alive
+	/// let _drag = himgl.BeginDrag(0, POINT::new(0, 0))?; // keep guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn BeginDrag(&self,

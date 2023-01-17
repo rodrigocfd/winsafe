@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, uxtheme};
+use crate::gdi::guard::GdiObjectGuard;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
@@ -95,15 +96,11 @@ pub trait uxtheme_Htheme: Handle {
 
 	/// [`GetThemeBackgroundRegion`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn GetThemeBackgroundRegion(&self,
-		hdc: &HDC, part_state: co::VS, rc: RECT) -> HrResult<HRGN>
+		hdc: &HDC, part_state: co::VS, rc: RECT) -> HrResult<GdiObjectGuard<HRGN>>
 	{
-		let mut hrgn = HRGN::NULL;
-
+		let mut handle = HRGN::NULL;
 		ok_to_hrresult(
 			unsafe {
 				uxtheme::ffi::GetThemeBackgroundRegion(
@@ -112,10 +109,10 @@ pub trait uxtheme_Htheme: Handle {
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
-					&mut hrgn as *mut _ as _,
+					&mut handle as *mut _ as _,
 				)
 			},
-		).map(|_| hrgn)
+		).map(|_| GdiObjectGuard { handle })
 	}
 
 	/// [`GetThemeColor`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
@@ -125,7 +122,6 @@ pub trait uxtheme_Htheme: Handle {
 		part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF>
 	{
 		let mut color = COLORREF(0);
-
 		ok_to_hrresult(
 			unsafe {
 				uxtheme::ffi::GetThemeColor(

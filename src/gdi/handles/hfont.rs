@@ -2,6 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
+use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::prelude::GdiObject;
 use crate::user::decl::SIZE;
@@ -11,14 +12,7 @@ impl_handle! { HFONT;
 	/// [font](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 }
 
-impl GdiObject for HFONT {
-	type SelectRet = HFONT;
-
-	unsafe fn convert_sel_ret(v: *mut std::ffi::c_void) -> Self::SelectRet {
-		HFONT(v)
-	}
-}
-
+impl GdiObject for HFONT {}
 impl gdi_Hfont for HFONT {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -32,9 +26,6 @@ impl gdi_Hfont for HFONT {}
 pub trait gdi_Hfont: GdiObject {
 	/// [`CreateFont`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateFont(
 		sz: SIZE, escapement: i32, orientation: i32,
@@ -42,7 +33,7 @@ pub trait gdi_Hfont: GdiObject {
 		char_set: co::CHARSET,
 		out_precision: co::OUT_PRECIS, clip_precision: co::CLIP,
 		quality: co::QUALITY, pitch_and_family: co::PITCH,
-		face_name: &str) -> SysResult<HFONT>
+		face_name: &str) -> SysResult<GdiObjectGuard<HFONT>>
 	{
 		unsafe {
 			gdi::ffi::CreateFontW(
@@ -54,19 +45,16 @@ pub trait gdi_Hfont: GdiObject {
 				quality.0 as _, pitch_and_family.0 as _,
 				WString::from_str(face_name).as_ptr(),
 			).as_mut()
-		}.map(|ptr| HFONT(ptr))
+		}.map(|ptr| GdiObjectGuard { handle: HFONT(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HFONT::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
-	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<HFONT> {
+	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<GdiObjectGuard<HFONT>> {
 		unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _).as_mut() }
-			.map(|ptr| HFONT(ptr))
+			.map(|ptr| GdiObjectGuard { handle: HFONT(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 

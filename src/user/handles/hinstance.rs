@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
+use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, SysResult, WString};
 use crate::prelude::Handle;
 use crate::user::decl::{
@@ -162,18 +163,15 @@ pub trait user_Hinstance: Handle {
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
-	///
-	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn LoadImageBitmap(&self,
-		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<HBITMAP>
+		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<GdiObjectGuard<HBITMAP>>
 	{
 		unsafe {
 			user::ffi::LoadImageW(
 				self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0,
 			).as_mut()
-		}.map(|ptr| HBITMAP(ptr))
+		}.map(|ptr| GdiObjectGuard { handle: HBITMAP(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 

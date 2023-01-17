@@ -12,7 +12,8 @@ pub mod decl {
 }
 
 pub mod guard {
-	pub use super::hdc::HdcDeleteGuard;
+	pub use super::gdi_traits::GdiObjectGuard;
+	pub use super::hdc::{HdcDeleteGuard, SelectObjectGuard};
 }
 
 pub mod traits {

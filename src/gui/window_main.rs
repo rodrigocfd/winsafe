@@ -137,7 +137,7 @@ impl WindowMain {
 			RawDlg::Dlg(d) => d.run_main(cmd_show),
 		};
 
-		delete_ui_font().ok(); // cleanup; ignore errors
+		delete_ui_font(); // cleanup
 		res
 	}
 }

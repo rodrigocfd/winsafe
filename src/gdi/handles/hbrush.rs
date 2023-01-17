@@ -2,19 +2,13 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGBRUSH;
+use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::GdiObject;
 use crate::user::decl::{COLORREF, HBITMAP, HBRUSH};
 
-impl GdiObject for HBRUSH {
-	type SelectRet = HBRUSH;
-
-	unsafe fn convert_sel_ret(v: *mut std::ffi::c_void) -> Self::SelectRet {
-		HBRUSH(v)
-	}
-}
-
+impl GdiObject for HBRUSH {}
 impl gdi_Hbrush for HBRUSH {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -38,51 +32,39 @@ pub trait gdi_Hbrush: GdiObject {
 
 	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
-	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<HBRUSH> {
+	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<GdiObjectGuard<HBRUSH>> {
 		unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _).as_mut() }
-			.map(|ptr| HBRUSH(ptr))
+			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreateHatchBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateHatchBrush(
-		hatch: co::HS, color: COLORREF) -> SysResult<HBRUSH>
+		hatch: co::HS, color: COLORREF) -> SysResult<GdiObjectGuard<HBRUSH>>
 	{
 		unsafe { gdi::ffi::CreateHatchBrush(hatch.0, color.0).as_mut() }
-			.map(|ptr| HBRUSH(ptr))
+			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
-	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<HBRUSH> {
+	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<GdiObjectGuard<HBRUSH>> {
 		unsafe { gdi::ffi::CreatePatternBrush(hbmp.0).as_mut() }
-			.map(|ptr| HBRUSH(ptr))
+			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
 	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HBRUSH::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
-	fn CreateSolidBrush(color: COLORREF) -> SysResult<HBRUSH> {
+	fn CreateSolidBrush(color: COLORREF) -> SysResult<GdiObjectGuard<HBRUSH>> {
 		unsafe { gdi::ffi::CreateSolidBrush(color.0).as_mut() }
-			.map(|ptr| HBRUSH(ptr))
+			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 

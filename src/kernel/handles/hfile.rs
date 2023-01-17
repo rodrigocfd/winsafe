@@ -160,12 +160,15 @@ pub trait kernel_Hfile: Handle {
 	/// [`LockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// method.
 	///
-	/// Note that the guard returned by this method must be kept alive while the
-	/// lock is used. This is necessary because, when the guard goes out of
-	/// scope, it will automatically call
-	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile).
+	/// In the original C implementation, you must call
+	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-unlockfile)
+	/// as a cleanup operation.
 	///
-	/// In the example below, the guard is kept alive:
+	/// Here, the cleanup is performed automatically, because `LockFile` returns
+	/// an [`HfileLockGuard`](crate::guard::HfileLockGuard), which automatically
+	/// calls `UnlockFile` when the guard goes out of scope. You must, however,
+	/// keep the guard alive, otherwise the cleanup will be performed right
+	/// away.
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -176,7 +179,7 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// let total_size = hfile.GetFileSizeEx()?;
 	///
-	/// let _lock = hfile.LockFile(0, total_size as _)?; // keep the returned guard alive
+	/// let _lock = hfile.LockFile(0, total_size as _)?; // keep guard alive
 	///
 	/// // file read/write operations...
 	/// # Ok::<_, winsafe::co::ERROR>(())

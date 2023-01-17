@@ -1,7 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::any::TypeId;
+
 use crate::{co, gdi};
 use crate::gdi::decl::{BITMAPINFO, TEXTMETRIC};
+use crate::gdi::guard::GdiObjectGuard;
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::bool_to_sysresult;
@@ -137,14 +140,13 @@ pub trait gdi_Hdc: Handle {
 
 	/// [`CreateCompatibleBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
-	fn CreateCompatibleBitmap(&self, cx: i32, cy: i32) -> SysResult<HBITMAP> {
+	fn CreateCompatibleBitmap(&self,
+		cx: i32, cy: i32) -> SysResult<GdiObjectGuard<HBITMAP>>
+	{
 		unsafe {
 			gdi::ffi::CreateCompatibleBitmap(self.as_ptr(), cx, cy).as_mut()
-		}.map(|ptr| HBITMAP(ptr))
+		}.map(|ptr| GdiObjectGuard { handle: HBITMAP(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -287,7 +289,7 @@ pub trait gdi_Hdc: Handle {
 	/// let hdc_screen = w::HWND::DESKTOP.GetDC()?;
 	/// let hbmp = hdc_screen.CreateCompatibleBitmap(cx_screen, cy_screen)?;
 	/// let hdc_mem = hdc_screen.CreateCompatibleDC()?;
-	/// let hbmp_old = hdc_mem.SelectObject(&hbmp)?;
+	/// let _hbmp_guard = hdc_mem.SelectObject(&*hbmp)?;
 	///
 	/// hdc_mem.BitBlt(w::POINT::new(0, 0), w::SIZE::new(cx_screen, cy_screen),
 	///     &hdc_screen, w::POINT::new(0, 0), co::ROP::SRCCOPY)?;
@@ -320,9 +322,6 @@ pub trait gdi_Hdc: Handle {
 	/// fo.write(bfh.serialize())?;
 	/// fo.write(bi.bmiHeader.serialize())?;
 	/// fo.write(&data_buf)?;
-	///
-	/// hdc_mem.SelectObject(&hbmp_old)?;
-	/// hbmp.DeleteObject()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	unsafe fn GetDIBits(&self,
@@ -502,13 +501,10 @@ pub trait gdi_Hdc: Handle {
 
 	/// [`PathToRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pathtoregion)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HRGN::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
-	fn PathToRegion(&self) -> SysResult<HRGN> {
+	fn PathToRegion(&self) -> SysResult<GdiObjectGuard<HRGN>> {
 		unsafe { gdi::ffi::PathToRegion(self.as_ptr()).as_mut() }
-			.map(|ptr| HRGN(ptr))
+			.map(|ptr| GdiObjectGuard { handle: HRGN(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
@@ -637,14 +633,57 @@ pub trait gdi_Hdc: Handle {
 
 	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method.
-	fn SelectObject<G>(&self, hgdiobj: &G) -> SysResult<G::SelectRet>
+	///
+	/// In the original C implementation, `SelectObject` returns a handle to the
+	/// object being replaced. You must perform a cleanup operation, calling
+	/// `SelectObject` again, passing the handle to the replaced object.
+	///
+	/// Here, the cleanup is performed automatically, because `SelectObject`
+	/// returns a [`SelectObjectGuard`](crate::guard::SelectObjectGuard), which
+	/// stores the replaced handle and calls `SelectObject` automatically when
+	/// the guard goes out of scope. You must, however, keep the guard alive,
+	/// otherwise the cleanup will be performed right away.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, COLORREF, HDC, HPEN};
+	///
+	/// let hdc: HDC; // initialized somewhere
+	/// # let hdc = HDC::NULL;
+	///
+	/// let hpen = HPEN::CreatePen(
+	///     co::PS::SOLID,
+	///     1,
+	///     COLORREF::new(0xff, 0x00, 0x88),
+	/// )?;
+	///
+	/// let _pen_guard = hdc.SelectObject(&*hpen); // keep guard alive
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn SelectObject<G>(&self, hgdiobj: &G) -> SysResult<SelectObjectGuard<'_, Self, G>>
 		where G: GdiObject,
 	{
 		unsafe {
 			gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr())
 				.as_mut()
-				.map(|ptr| G::convert_sel_ret(ptr))
-		}.ok_or_else(|| GetLastError())
+		}.map(|ptr| {
+			if hgdiobj.type_id() == TypeId::of::<HRGN>() {
+				SelectObjectGuard {
+					hdc: self,
+					prev_hgdi: G::NULL, // regions don't need cleanup
+					region: Some(co::REGION(ptr as *mut _ as _)),
+				}
+			} else {
+				SelectObjectGuard {
+					hdc: self,
+					prev_hgdi: unsafe { G::from_ptr(ptr) },
+					region: None,
+				}
+			}
+		}).ok_or_else(|| GetLastError())
 	}
 
 	/// [`SetArcDirection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)
@@ -877,4 +916,49 @@ handle_guard! { HdcDeleteGuard: HDC;
 	/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
 	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
 	/// when the object goes out of scope.
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for
+/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) calls, which
+/// automatically selects the previous GDI object at the end of the scope.
+pub struct SelectObjectGuard<'a, H, G>
+	where H: gdi_Hdc,
+		G: GdiObject,
+{
+	pub(crate) hdc: &'a H,
+	pub(crate) prev_hgdi: G,
+	pub(crate) region: Option<co::REGION>,
+}
+
+impl<'a, H, G> Drop for SelectObjectGuard<'a, H, G>
+	where H: gdi_Hdc,
+		G: GdiObject,
+{
+	fn drop(&mut self) {
+		if let Some(h) = self.hdc.as_opt() {
+			if let Some(g) = self.prev_hgdi.as_opt() {
+				unsafe { gdi::ffi::SelectObject(h.as_ptr(), g.as_ptr()); } // ignore errors
+			}
+		}
+	}
+}
+
+impl<'a, H, G> SelectObjectGuard<'a, H, G>
+	where H: gdi_Hdc,
+		G: GdiObject,
+{
+	/// Returns a handle to the object that has been replaced.
+	pub const fn prev_object(&self) -> &G {
+		&self.prev_hgdi
+	}
+
+	/// Returns the region information returned by the source
+	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) call, if
+	/// the [`GdiObject`](crate::prelude::GdiObject) was an
+	/// [`HRGN`](crate::HRGN); otherwise returns `None`.
+	pub const fn region(&self) -> Option<co::REGION> {
+		self.region
+	}
 }

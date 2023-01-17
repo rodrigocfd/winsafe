@@ -2,18 +2,12 @@
 
 use crate::gdi;
 use crate::gdi::decl::BITMAP;
+use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::prelude::GdiObject;
 use crate::user::decl::{HBITMAP, SIZE};
 
-impl GdiObject for HBITMAP {
-	type SelectRet = HBITMAP;
-
-	unsafe fn convert_sel_ret(v: *mut std::ffi::c_void) -> Self::SelectRet {
-		HBITMAP(v)
-	}
-}
-
+impl GdiObject for HBITMAP {}
 impl gdi_Hbitmap for HBITMAP {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -27,19 +21,16 @@ impl gdi_Hbitmap for HBITMAP {}
 pub trait gdi_Hbitmap: GdiObject {
 	/// [`CreateBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
 	/// static method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HBITMAP::DeleteObject`](crate::prelude::GdiObject::DeleteObject) call.
 	#[must_use]
 	fn CreateBitmap(
 		sz: SIZE, num_planes: u32,
-		bit_count: u32, bits: *mut u8) -> SysResult<HBITMAP>
+		bit_count: u32, bits: *mut u8) -> SysResult<GdiObjectGuard<HBITMAP>>
 	{
 		unsafe {
 			gdi::ffi::CreateBitmap(
 				sz.cx, sz.cy, num_planes, bit_count, bits as _,
 			).as_mut()
-		}.map(|ptr| HBITMAP(ptr))
+		}.map(|ptr| GdiObjectGuard { handle: HBITMAP(ptr) })
 			.ok_or_else(|| GetLastError())
 	}
 
