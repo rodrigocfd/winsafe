@@ -40,7 +40,7 @@ pub mod decl {
 
 pub mod guard {
 	pub use super::hdwp::HdwpGuard;
-	pub use super::hwnd::{ClipboardGuard, HdcPaintGuard, HdcReleaseGuard};
+	pub use super::hwnd::{ClipboardGuard, HdcPaintGuard, HdcReleaseGuard, HwndCaptureGuard};
 }
 
 pub mod traits {

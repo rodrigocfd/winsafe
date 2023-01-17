@@ -1103,7 +1103,17 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	///
-	/// let _hdc = hwnd.OpenClipboard()?; // keep guard alive
+	/// let _hclip = hwnd.OpenClipboard()?; // keep guard alive
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	///
+	/// You can also open the clipboard without an `HWND` owner:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::HWND;
+	///
+	/// let _hclip = HWND::NULL.OpenClipboard()?; // keep guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -1294,12 +1304,12 @@ pub trait user_Hwnd: Handle {
 
 	/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
 	/// method.
-	///
-	/// **Note:** Must be paired with a
-	/// [`ReleaseCapture`](crate::ReleaseCapture) call.
-	fn SetCapture(&self) -> Option<HWND> {
-		unsafe { user::ffi::SetCapture(self.as_ptr()).as_mut() }
-			.map(|ptr| HWND(ptr))
+	fn SetCapture(&self) -> HwndCaptureGuard<'_, Self> {
+		HwndCaptureGuard {
+			_hwnd: self,
+			hwnd_prev: unsafe { user::ffi::SetCapture(self.as_ptr()).as_mut() }
+				.map(|ptr| HWND(ptr))
+		}
 	}
 
 	/// [`SetFocus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
@@ -1677,7 +1687,11 @@ impl<'a, H> Drop for HdcReleaseGuard<'a, H>
 	where H: user_Hwnd,
 {
 	fn drop(&mut self) {
-		unsafe { user::ffi::ReleaseDC(self.hwnd.as_ptr(), self.hdc.as_ptr()); } // ignore errors
+		if let Some(h) = self.hwnd.as_opt() {
+			if let Some(dc) = self.hdc.as_opt() {
+				unsafe { user::ffi::ReleaseDC(h.as_ptr(), dc.as_ptr()); } // ignore errors
+			}
+		}
 	}
 }
 
@@ -1688,5 +1702,35 @@ impl<'a, H> Deref for HdcReleaseGuard<'a, H>
 
 	fn deref(&self) -> &Self::Target {
 		&self.hdc
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`HWND`](crate::HWND) which automatically calls
+/// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
+/// when the object goes out of scope.
+pub struct HwndCaptureGuard<'a, H>
+	where H: user_Hwnd,
+{
+	pub(crate) _hwnd: &'a H,
+	pub(crate) hwnd_prev: Option<HWND>,
+}
+
+impl<'a, H> Drop for HwndCaptureGuard<'a, H>
+	where H: user_Hwnd,
+{
+	fn drop(&mut self) {
+		unsafe { user::ffi::ReleaseCapture(); } // ignore errors
+	}
+}
+
+impl<'a, H> HwndCaptureGuard<'a, H>
+	where H: user_Hwnd,
+{
+	/// Returns a handle to the window that had previously captured the mouse,
+	/// if any.
+	pub const fn prev_hwnd(&self) -> Option<&HWND> {
+		self.hwnd_prev.as_ref()
 	}
 }

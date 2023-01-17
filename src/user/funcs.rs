@@ -650,12 +650,6 @@ pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
 	}
 }
 
-/// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
-/// function.
-pub fn ReleaseCapture() -> SysResult<()> {
-	bool_to_sysresult(unsafe { user::ffi::ReleaseCapture() })
-}
-
 /// [`SetCaretBlinkTime`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)
 /// function.
 pub fn SetCaretBlinkTime(milliseconds: u32) -> SysResult<()> {
