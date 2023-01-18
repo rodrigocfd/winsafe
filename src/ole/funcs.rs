@@ -2,6 +2,7 @@
 
 use crate::{co, ole};
 use crate::ole::decl::{ComPtr, HrResult, IUnknown};
+use crate::ole::guard::ComLibraryGuard;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
 
@@ -56,34 +57,40 @@ pub fn CoCreateInstance<T>(
 /// [`CoInitializeEx`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)
 /// function, which
 /// [initializes](https://learn.microsoft.com/en-us/windows/win32/learnwin32/initializing-the-com-library)
-/// the COM library. Returns some error codes as success status.
+/// the COM library. When succeeding, returns an informational error code.
 ///
-/// **Note:** Must be paired with a [`CoUninitialize`](crate::CoUninitialize)
-/// call.
+/// In the original C implementation, you must call
+/// [`CoUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
+/// as a cleanup operation.
+///
+/// Here, the cleanup is performed automatically, because `CoInitializeEx`
+/// returns a [`ComLibraryGuard`](crate::guard::ComLibraryGuard), which
+/// automatically calls `CoUninitialize` when the guard goes out of scope. You
+/// must, however, keep the guard alive, otherwise the cleanup will be performed
+/// right away.
 ///
 /// # Examples
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{co, CoInitializeEx, CoUninitialize};
+/// use winsafe::{co, CoInitializeEx};
 ///
-/// CoInitializeEx(
+/// let _com_lib = CoInitializeEx( // keep guard alive
 ///     co::COINIT::APARTMENTTHREADED
-///     | co::COINIT::DISABLE_OLE1DDE)?;
+///     | co::COINIT::DISABLE_OLE1DDE,
+/// )?;
 ///
 /// // program runs...
-///
-/// CoUninitialize();
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<co::HRESULT> {
-	let code = co::HRESULT(
+pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<ComLibraryGuard> {
+	let hr = co::HRESULT(
 		unsafe { ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.0) },
 	);
-	match code {
+	match hr {
 		co::HRESULT::S_OK
 		| co::HRESULT::S_FALSE
-		| co::HRESULT::RPC_E_CHANGED_MODE => Ok(code),
+		| co::HRESULT::RPC_E_CHANGED_MODE => Ok(ComLibraryGuard { hr }),
 		hr => Err(hr),
 	}
 }
@@ -145,14 +152,4 @@ pub unsafe fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
 	} else {
 		Ok(p as _)
 	}
-}
-
-/// [`CoUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
-/// function.
-///
-/// **Note:** Must be called **after** all COM interfaces have been released,
-/// otherwise you'll get a segmentation fault error with
-/// `STATUS_ACCESS_VIOLATION` code.
-pub fn CoUninitialize() {
-	unsafe { ole::ffi::CoUninitialize() }
 }

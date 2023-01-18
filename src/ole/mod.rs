@@ -3,6 +3,7 @@
 pub(in crate::ole) mod ffi;
 pub(crate) mod privs;
 pub mod co;
+pub mod guard;
 
 mod aliases;
 mod com_interfaces;
